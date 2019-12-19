@@ -5,6 +5,6 @@ module.exports = {
   transpileDependencies: [
     'vue-plugin-helper-decorator',
     'vuetify'
-  ]
-  // publicPath: process.env.VUE_APP_PATH
+  ],
+  publicPath: `/${process.env.VUE_APP_PATH}`
 }

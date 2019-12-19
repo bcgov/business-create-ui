@@ -23,7 +23,8 @@ export const fetchConfig = (): Promise<any> => {
   sessionStorage.setItem('AUTH_URL', authUrl)
   console.log('Set Auth URL to: ' + authUrl)
 
-  const url = `/config/configuration.json`
+  const url = `${origin}/${vueAppPath}/config/configuration.json`
+  console.log(url)
   const headers = {
     'Accept': 'application/json',
     'ResponseType': 'application/json',

@@ -18,7 +18,7 @@ import App from './App.vue'
 
 // Helpers
 import { fetchConfig, haveKcTokens } from '@/utils'
-// import TokenServices from 'sbc-common-components/src/services/token.services'
+import TokenServices from 'sbc-common-components/src/services/token.services'
 
 // get rid of "You are running Vue in development mode" console message
 Vue.config.productionTip = false
@@ -55,12 +55,12 @@ fetchConfig()
       return // do not execute remaining code
     }
 
-    // // start token service to refresh KC token periodically
-    // console.info('Starting token refresh service...')
-    // const tokenServices = new TokenServices()
-    // tokenServices.initUsingUrl(sessionStorage.getItem('KEYCLOAK_CONFIG_URL') || '')
-    //   .then(() => tokenServices.scheduleRefreshTimer())
-    //   .catch(err => console.error(err))
+    // start token service to refresh KC token periodically
+    console.info('Starting token refresh service...')
+    const tokenServices = new TokenServices()
+    tokenServices.initUsingUrl(sessionStorage.getItem('KEYCLOAK_CONFIG_URL') || '')
+      .then(() => tokenServices.scheduleRefreshTimer())
+      .catch(err => console.error(err))
 
     new Vue({
       vuetify,
