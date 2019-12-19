@@ -1,18 +1,56 @@
 <template>
-  <div class="stateExample">
-    <h1>This is an about page that contains an example for state</h1>
-    <ul>
-      <li>{{ stateText }}</li>
-    </ul>
-  </div>
+  <v-card>
+    <div class="stateExample">
+      <h1>This is an about page that contains an example for state</h1>
+      <p>{{ stateModel.stateText }}</p>
+    </div>
+
+    <!-- Resourced Component example #1 -->
+    <ResourceExample
+      :name="getName(1)"
+      :message="getMessage(1)"
+    />
+
+    <!-- Resourced Component example #2-->
+    <ResourceExample
+      :name="getName(2)"
+      :message="getMessage(2)"
+    />
+  </v-card>
 </template>
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
-import { State } from 'vuex-class'
+// Libraries
+import { Component, Mixins } from 'vue-property-decorator'
+import { Action, State } from 'vuex-class'
 
-@Component
-export default class Testing extends Vue {
-  // This is a value passed into the component from the store
-  @State stateText: string | undefined
+// Components
+import { ResourceExample } from '@/components/common'
+
+// Mixins
+import { ResourceLookupMixin } from '@/mixins'
+
+// Resources
+import { ExternalResource } from '@/resources'
+
+@Component({
+  components: {
+    ResourceExample
+  }
+})
+export default class Testing extends Mixins(ResourceLookupMixin) {
+  // Initialize State
+  @State stateModel!: string
+
+  // Initialize Actions
+  @Action setName: any
+  @Action setResource: any
+
+  created () {
+    // Example of setting the State of a string
+    this.setName('Testing My Actions and Mutations: Congratulations... it worked!')
+
+    // Example of setting the State of a Resource
+    this.setResource(ExternalResource)
+  }
 }
 </script>

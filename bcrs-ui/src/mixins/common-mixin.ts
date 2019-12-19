@@ -11,6 +11,6 @@ export default class CommonMixin extends Vue {
    * @param msg The msg to return.
    */
   sendMsg (msg: string): string {
-    return `${msg} - msg created by sendMsg mixin`
+    return msg ? `${msg} - msg created by sendMsg mixin` : 'Error, no Message'
   }
 }

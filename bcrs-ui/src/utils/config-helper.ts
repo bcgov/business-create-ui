@@ -1,9 +1,12 @@
-import axios from 'axios'
+import axios from '@/utils/axios-auth'
 
 /**
  * fetch config from environment and API
+ *
+ * @return A Promise to get & set session storage URLS with appropriate paths
  */
-export const fetchConfig = () => {
+export const fetchConfig = (): Promise<any> => {
+  console.log('Fetch Config called')
   const origin: string = window.location.origin
   const vueAppPath: string = process.env.VUE_APP_PATH
   const vueAppAuthPath:string = process.env.VUE_APP_AUTH_PATH
@@ -42,6 +45,10 @@ export const fetchConfig = () => {
       sessionStorage.setItem('PAY_API_URL', payApiUrl)
       console.log('Set Pay API URL to: ' + payApiUrl)
 
+      const keycloakConfigUrl = response.data['KEYCLOAK_CONFIG_URL']
+      sessionStorage.setItem('KEYCLOAK_CONFIG_URL', keycloakConfigUrl)
+      console.info('Set KeyCloak config URL to: ' + keycloakConfigUrl)
+
       // Extend the window with type
       let myWindow = window as any
 
@@ -51,4 +58,15 @@ export const fetchConfig = () => {
       myWindow['ldClientId'] = response.data['LD_CLIENT_ID']
       console.log('Set LD Client Id.')
     })
+}
+
+/**
+ * Validate the KeyCloak tokens
+ *
+ * @return A boolean indicating if all keycloak variations exist
+ */
+export const haveKcTokens = (): boolean => {
+  return Boolean(sessionStorage.getItem('KEYCLOAK_TOKEN') &&
+    sessionStorage.getItem('KEYCLOAK_REFRESH_TOKEN') &&
+    sessionStorage.getItem('KEYCLOAK_ID_TOKEN'))
 }

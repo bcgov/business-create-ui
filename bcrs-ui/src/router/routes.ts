@@ -6,20 +6,30 @@ export const routes = [
   {
     path: '/',
     name: 'home',
-    component: Home
+    component: Home,
+    meta: {
+      requiresAuth: false
+    }
   },
   {
     path: '/MixinExample',
     name: 'mixinExample',
-    component: MixinExample
+    component: MixinExample,
+    meta: {
+      requiresAuth: false
+    }
   },
   {
     path: '/StateExample',
     name: 'stateExample',
-    component: StateExample
+    component: StateExample,
+    meta: {
+      requiresAuth: false
+    }
   },
   {
     // default/fallback route
     path: '*',
     redirect: '/'
-  }]
+  }
+]

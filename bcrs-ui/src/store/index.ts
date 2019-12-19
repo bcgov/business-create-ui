@@ -1,25 +1,29 @@
+// Libraries
 import Vue from 'vue'
-import Vuex from 'vuex'
+import Vuex, { Store } from 'vuex'
 
 // State
-import { stateText } from './state'
+import { stateModel, resourceModel } from './state'
 
 // Actions
+import { setName, setResource } from './actions'
 
 // Mutations
-
-// Getters
+import { mutateName, mutateResource } from '@/store/mutations'
 
 Vue.use(Vuex)
 
-export const store = new Vuex.Store({
+export const store: Store<any> = new Vuex.Store({
   state: {
-    stateText
+    stateModel,
+    resourceModel
   },
   mutations: {
+    mutateName,
+    mutateResource
   },
   actions: {
-  },
-  modules: {
+    setName,
+    setResource
   }
 })

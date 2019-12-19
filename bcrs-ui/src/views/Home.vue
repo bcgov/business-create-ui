@@ -5,9 +5,12 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+// Libraries
 import { Component, Vue } from 'vue-property-decorator'
-import HelloWorld from '@/components/HelloWorld.vue'
+
+// Components
+import { HelloWorld } from '@/components/Home'
 
 @Component({
   components: {
