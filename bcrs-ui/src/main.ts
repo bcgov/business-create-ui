@@ -60,7 +60,7 @@ fetchConfig()
     const tokenServices = new TokenServices()
     tokenServices.initUsingUrl(sessionStorage.getItem('KEYCLOAK_CONFIG_URL') || '')
       .then(() => tokenServices.scheduleRefreshTimer())
-      .catch(err => console.error(err))
+      .catch((err: string) => console.error(err))
 
     new Vue({
       vuetify,

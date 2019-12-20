@@ -1,4 +1,3 @@
-
 export const setName = ({ commit }: any, name: string): void => {
   commit('mutateName', name)
 }
