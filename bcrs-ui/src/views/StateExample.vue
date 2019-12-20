@@ -33,7 +33,7 @@ import { ResourceLookupMixin } from '@/mixins'
 import { ExternalResource } from '@/resources'
 
 // Interfaces
-import { StateModelIF } from '@/interfaces'
+import { StateModelIF, ActionBindingIF } from '@/interfaces'
 
 @Component({
   components: {
@@ -45,8 +45,8 @@ export default class Testing extends Mixins(ResourceLookupMixin) {
   @State stateModel!: StateModelIF
 
   // Initialize Actions
-  @Action setName: any
-  @Action setResource: any
+  @Action setName!: ActionBindingIF
+  @Action setResource!: ActionBindingIF
 
   created () {
     // Example of setting the State of a string

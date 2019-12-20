@@ -4,3 +4,7 @@ import { ActionContext } from 'vuex'
 export interface ActionIF {
   (x: ActionContext<string, any>, y: any): void
 }
+
+export interface ActionBindingIF {
+  (x: any): void
+}
