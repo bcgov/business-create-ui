@@ -13,7 +13,7 @@ import { mutateName, mutateResource } from '@/store/mutations'
 
 Vue.use(Vuex)
 
-export const store: Store<any> = new Vuex.Store({
+export const store: Store<any> = new Vuex.Store<any>({
   state: {
     stateModel,
     resourceModel

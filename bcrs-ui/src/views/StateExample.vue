@@ -32,6 +32,9 @@ import { ResourceLookupMixin } from '@/mixins'
 // Resources
 import { ExternalResource } from '@/resources'
 
+// Interfaces
+import { StateModelIF } from '@/interfaces'
+
 @Component({
   components: {
     ResourceExample
@@ -39,7 +42,7 @@ import { ExternalResource } from '@/resources'
 })
 export default class Testing extends Mixins(ResourceLookupMixin) {
   // Initialize State
-  @State stateModel!: string
+  @State stateModel!: StateModelIF
 
   // Initialize Actions
   @Action setName: any

@@ -1,3 +1,5 @@
-export const stateModel: object = {
-  stateText: '' as string
+import { StateModelIF } from '@/interfaces'
+
+export const stateModel: StateModelIF = {
+  stateText: 'Base State Text'
 }

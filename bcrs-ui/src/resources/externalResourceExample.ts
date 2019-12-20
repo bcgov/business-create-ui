@@ -2,7 +2,7 @@ export const ExternalResource = [
   {
     id: 1,
     displayName: 'Cameron',
-    message: 'Hola, Coma Estas?'
+    message: 'Hola, Como Estas?'
   },
   {
     id: 2,
