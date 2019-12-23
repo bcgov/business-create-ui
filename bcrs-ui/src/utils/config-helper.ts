@@ -6,7 +6,6 @@ import axios from '@/utils/axios-auth'
  * @return A Promise to get & set session storage URLS with appropriate paths
  */
 export const fetchConfig = (): Promise<any> => {
-  console.log('Fetch Config called')
   const origin: string = window.location.origin
   const vueAppPath: string = process.env.VUE_APP_PATH
   const vueAppAuthPath:string = process.env.VUE_APP_AUTH_PATH

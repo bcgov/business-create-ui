@@ -40,7 +40,7 @@ import { StateModelIF, ActionBindingIF } from '@/interfaces'
     ResourceExample
   }
 })
-export default class Testing extends Mixins(ResourceLookupMixin) {
+export default class StateExample extends Mixins(ResourceLookupMixin) {
   // Initialize State
   @State stateModel!: StateModelIF
 
