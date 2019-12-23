@@ -48,15 +48,6 @@ export const fetchConfig = (): Promise<any> => {
       const keycloakConfigUrl = response.data['KEYCLOAK_CONFIG_URL']
       sessionStorage.setItem('KEYCLOAK_CONFIG_URL', keycloakConfigUrl)
       console.info('Set KeyCloak config URL to: ' + keycloakConfigUrl)
-
-      // Extend the window with type
-      let myWindow = window as any
-
-      myWindow.addressCompleteKey = response.data['ADDRESS_COMPLETE_KEY']
-      console.log('Set Address Complete Key.')
-
-      myWindow['ldClientId'] = response.data['LD_CLIENT_ID']
-      console.log('Set LD Client Id.')
     })
 }
 
