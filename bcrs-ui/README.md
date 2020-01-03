@@ -1,4 +1,4 @@
-# hello-world
+# vuet-ts-test
 
 ## Project setup
 ```
