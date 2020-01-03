@@ -1,16 +1,11 @@
 <template>
   <v-app id="app">
-
-    <sbc-header ref="sbcHeader" :brandLink="origin" :authURL="authAPIURL" />
-
     <div class="app-body">
+      <Header/>
       <main>
         <router-view />
       </main>
     </div>
-
-    <sbc-footer />
-
   </v-app>
 </template>
 
@@ -19,13 +14,11 @@
 import { Component, Vue } from 'vue-property-decorator'
 
 // Components
-import SbcHeader from 'sbc-common-components/src/components/SbcHeader.vue'
-import SbcFooter from 'sbc-common-components/src/components/SbcFooter.vue'
+import { Header } from '@/components/common'
 
 @Component({
   components: {
-    SbcHeader,
-    SbcFooter
+    Header
   }
 })
 export default class App extends Vue {}

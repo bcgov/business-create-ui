@@ -1,12 +1,12 @@
 {
-  "name": "vuet-ts-test",
+  "name": "vue-frontEnd-Framework",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "test:unit": "vue-cli-service test:unit"
+    "test:unit": "vue-cli-service test:unit --testPathPattern=."
   },
   "dependencies": {
     "@mdi/font": "^4.5.95",

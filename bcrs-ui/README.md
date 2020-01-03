@@ -1,4 +1,4 @@
-# vuet-ts-test
+# Vue-FrontEnd-Framework
 
 ## Project setup
 ```

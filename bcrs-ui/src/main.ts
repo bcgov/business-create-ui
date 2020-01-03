@@ -3,8 +3,8 @@ import 'regenerator-runtime/runtime' // to use transpiled generator functions
 
 // Vue Libraries
 import Vue from 'vue'
-import vuetify from './plugins/vuetify'
-import router from './router'
+import vuetify from '@/plugins/vuetify'
+import router from '@/router'
 import { store } from '@/store'
 
 // Styles
