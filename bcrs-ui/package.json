@@ -1,5 +1,5 @@
 {
-  "name": "vue-frontEnd-Framework",
+  "name": "hello-world",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -13,7 +13,6 @@
     "axios": "^0.18.0",
     "core-js": "^3.4.4",
     "css-loader": "^0.28.11",
-    "keycloak-js": "^6.0.0",
     "regenerator-runtime": "^0.13.3",
     "sbc-common-components": "2.0.30",
     "vue": "^2.6.10",
