@@ -14,7 +14,7 @@
     "core-js": "^3.4.4",
     "css-loader": "^0.28.11",
     "regenerator-runtime": "^0.13.3",
-    "sbc-common-components": "2.0.30",
+    "sbc-common-components": "2.0.32",
     "vue": "^2.6.10",
     "vuex-class": "^0.3.2",
     "vue-class-component": "^7.0.2",

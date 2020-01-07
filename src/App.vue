@@ -1,10 +1,12 @@
 <template>
   <v-app id="app">
     <div class="app-body">
-      <Header/>
+      <SbcHeader />
+      <EntityInfo />
       <main>
         <router-view />
       </main>
+      <SbcFooter />
     </div>
   </v-app>
 </template>
@@ -14,11 +16,15 @@
 import { Component, Vue } from 'vue-property-decorator'
 
 // Components
-import { Header } from '@/components/common'
+import SbcHeader from 'sbc-common-components/src/components/SbcHeader.vue'
+import SbcFooter from 'sbc-common-components/src/components/SbcFooter.vue'
+import { EntityInfo } from '@/components/common'
 
 @Component({
   components: {
-    Header
+    SbcHeader,
+    SbcFooter,
+    EntityInfo
   }
 })
 export default class App extends Vue {}
