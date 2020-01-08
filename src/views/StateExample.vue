@@ -3,6 +3,7 @@
     <div class="stateExample">
       <h1>This is an about page that contains an example for state</h1>
       <p>{{ stateModel.stateText }}</p>
+      <p>{{ tombStoneModel.keycloakRoles }}</p>
     </div>
 
     <!-- Resourced Component example #1 -->
@@ -33,7 +34,7 @@ import { ResourceLookupMixin } from '@/mixins'
 import { ExternalResource } from '@/resources'
 
 // Interfaces
-import { StateModelIF, ActionBindingIF } from '@/interfaces'
+import { StateModelIF, TombStoneIF, ActionBindingIF } from '@/interfaces'
 
 @Component({
   components: {
@@ -43,6 +44,7 @@ import { StateModelIF, ActionBindingIF } from '@/interfaces'
 export default class StateExample extends Mixins(ResourceLookupMixin) {
   // Initialize State
   @State stateModel!: StateModelIF
+  @State tombStoneModel!: TombStoneIF
 
   // Initialize Actions
   @Action setName!: ActionBindingIF

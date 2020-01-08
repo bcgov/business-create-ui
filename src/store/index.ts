@@ -3,27 +3,30 @@ import Vue from 'vue'
 import Vuex, { Store } from 'vuex'
 
 // State
-import { stateModel, resourceModel } from './state'
+import { stateModel, resourceModel, tombStoneModel } from './state'
 
 // Actions
-import { setName, setResource } from './actions'
+import { setName, setResource, setTombStone } from './actions'
 
 // Mutations
-import { mutateName, mutateResource } from '@/store/mutations'
+import { mutateName, mutateResource, mutateTombStone } from '@/store/mutations'
 
 Vue.use(Vuex)
 
 export const store: Store<any> = new Vuex.Store<any>({
   state: {
     stateModel,
-    resourceModel
+    resourceModel,
+    tombStoneModel
   },
   mutations: {
     mutateName,
-    mutateResource
+    mutateResource,
+    mutateTombStone
   },
   actions: {
     setName,
-    setResource
+    setResource,
+    setTombStone
   }
 })
