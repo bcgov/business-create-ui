@@ -59,7 +59,7 @@ export default class AuthenticationService {
    * @param token The token to be decoded & parsed.
    * @return A Parsed Token.
    */
-  parseJwt = (token: string) => {
+  parseJwt = (token: string): JwtIF => {
     try {
       const base64Url = token.split('.')[1]
       const base64 = decodeURIComponent(window.atob(base64Url).split('').map(function (c) {
@@ -75,7 +75,7 @@ export default class AuthenticationService {
    * Get the roles from the parsed JWT.
    * @param jwt The JWT from which the roles are parsed.
    */
-  getKeycloakRoles = (jwt: JwtIF) => {
+  getKeycloakRoles = (jwt: JwtIF): Array<string> => {
     const keycloakRoles = jwt.roles
     if (keycloakRoles && keycloakRoles.length > 0) {
       return keycloakRoles
