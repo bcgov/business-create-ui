@@ -5,5 +5,6 @@ export interface StateModelIF {
 
 // Tombstone State model
 export interface TombStoneIF {
-  keycloakRoles: Array<string>
+  keycloakRoles: Array<string>,
+  authRoles: Array<string>
 }

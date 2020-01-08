@@ -6,6 +6,10 @@ export const mutateResource = (state: any, resource: object) => {
   state.resourceModel = resource
 }
 
-export const mutateTombStone = (state: any, tombStone: Array<string>) => {
-  state.tombStoneModel.keycloakRoles = tombStone
+export const mutateKeycloakRoles = (state: any, keyCloakRoles: Array<string>) => {
+  state.tombStoneModel.keycloakRoles = keyCloakRoles
+}
+
+export const mutateAuthRoles = (state: any, authRoles: Array<string>) => {
+  state.tombStoneModel.authRoles = authRoles
 }

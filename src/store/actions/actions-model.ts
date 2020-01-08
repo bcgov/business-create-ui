@@ -8,6 +8,10 @@ export const setResource: ActionIF = ({ commit }, resource): void => {
   commit('mutateResource', resource)
 }
 
-export const setTombStone: ActionIF = ({ commit }, tombstone): void => {
-  commit('mutateTombStone', tombstone)
+export const setKeyCloakRoles: ActionIF = ({ commit }, keyCloakRoles): void => {
+  commit('mutateKeycloakRoles', keyCloakRoles)
+}
+
+export const setAuthRoles: ActionIF = ({ commit }, authRoles): void => {
+  commit('mutateAuthRoles', authRoles)
 }

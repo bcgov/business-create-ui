@@ -4,6 +4,7 @@
       <h1>This is an about page that contains an example for state</h1>
       <p>{{ stateModel.stateText }}</p>
       <p>{{ tombStoneModel.keycloakRoles }}</p>
+      <p>{{ tombStoneModel.authRoles }}</p>
     </div>
 
     <!-- Resourced Component example #1 -->

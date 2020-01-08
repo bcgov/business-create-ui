@@ -6,10 +6,10 @@ import Vuex, { Store } from 'vuex'
 import { stateModel, resourceModel, tombStoneModel } from './state'
 
 // Actions
-import { setName, setResource, setTombStone } from './actions'
+import { setName, setResource, setKeyCloakRoles, setAuthRoles } from './actions'
 
 // Mutations
-import { mutateName, mutateResource, mutateTombStone } from '@/store/mutations'
+import { mutateName, mutateResource, mutateKeycloakRoles, mutateAuthRoles } from '@/store/mutations'
 
 Vue.use(Vuex)
 
@@ -22,11 +22,13 @@ export const store: Store<any> = new Vuex.Store<any>({
   mutations: {
     mutateName,
     mutateResource,
-    mutateTombStone
+    mutateKeycloakRoles,
+    mutateAuthRoles
   },
   actions: {
     setName,
     setResource,
-    setTombStone
+    setKeyCloakRoles,
+    setAuthRoles
   }
 })
