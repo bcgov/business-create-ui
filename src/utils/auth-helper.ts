@@ -5,7 +5,7 @@ import axios from '@/utils/axios-auth'
 import { store } from '@/store'
 
 // Constants
-import { SET_KEYCLOAK_ROLES, SET_AUTH_ROLES } from '@/constants'
+import { SET_KEYCLOAK_ROLES, SET_AUTH_ROLES } from '@/store/constants'
 
 // Interfaces
 import { JwtIF, AuthIF } from '@/interfaces'

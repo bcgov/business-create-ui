@@ -5,6 +5,9 @@ import Vuex, { Store } from 'vuex'
 // State
 import { stateModel, resourceModel, tombStoneModel } from './state'
 
+// Getters
+import { isRoleStaff, isRoleEdit, isRoleView } from '@/store/getters'
+
 // Actions
 import { setName, setResource, setKeyCloakRoles, setAuthRoles } from './actions'
 
@@ -18,6 +21,11 @@ export const store: Store<any> = new Vuex.Store<any>({
     stateModel,
     resourceModel,
     tombStoneModel
+  },
+  getters: {
+    isRoleStaff,
+    isRoleEdit,
+    isRoleView
   },
   mutations: {
     mutateName,

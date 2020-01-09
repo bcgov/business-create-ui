@@ -1,4 +1,4 @@
-import { ActionIF } from '@/interfaces/action-interface'
+import { ActionIF } from '@/interfaces/store-interfaces/action-interface'
 
 export const setName: ActionIF = ({ commit }, name): void => {
   commit('mutateName', name)
