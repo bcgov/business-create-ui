@@ -1,4 +1,4 @@
-// Interface to define the state model example
+// State model example
 export interface StateModelIF {
   stateText: string | undefined
 }

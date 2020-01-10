@@ -3,6 +3,14 @@
     <div class="stateExample">
       <h1>This is an about page that contains an example for state</h1>
       <p>{{ stateModel.stateText }}</p>
+      <p>{{ tombStoneModel.keycloakRoles }}</p>
+      <p>{{ tombStoneModel.authRoles }}</p>
+    </div>
+
+    <div class="gettersExample">
+      <h1>This section gives examples of getter Usage</h1>
+      <p>{{ isRoleView }}</p>
+      <p>{{ isRoleStaff }}</p>
     </div>
 
     <!-- Resourced Component example #1 -->
@@ -21,7 +29,7 @@
 <script lang="ts">
 // Libraries
 import { Component, Mixins } from 'vue-property-decorator'
-import { Action, State } from 'vuex-class'
+import { Action, Getter, State } from 'vuex-class'
 
 // Components
 import { ResourceExample } from '@/components/common'
@@ -33,7 +41,7 @@ import { ResourceLookupMixin } from '@/mixins'
 import { ExternalResource } from '@/resources'
 
 // Interfaces
-import { StateModelIF, ActionBindingIF } from '@/interfaces'
+import { StateModelIF, TombStoneIF, ActionBindingIF, GetterIF } from '@/interfaces'
 
 @Component({
   components: {
@@ -43,6 +51,11 @@ import { StateModelIF, ActionBindingIF } from '@/interfaces'
 export default class StateExample extends Mixins(ResourceLookupMixin) {
   // Initialize State
   @State stateModel!: StateModelIF
+  @State tombStoneModel!: TombStoneIF
+
+  // Initialize Getters
+  @Getter isRoleStaff!: GetterIF
+  @Getter isRoleView!: GetterIF
 
   // Initialize Actions
   @Action setName!: ActionBindingIF

@@ -3,27 +3,40 @@ import Vue from 'vue'
 import Vuex, { Store } from 'vuex'
 
 // State
-import { stateModel, resourceModel } from './state'
+import { stateModel, resourceModel, tombStoneModel } from './state'
+
+// Getters
+import { isRoleStaff, isRoleEdit, isRoleView } from '@/store/getters'
 
 // Actions
-import { setName, setResource } from './actions'
+import { setName, setResource, setKeyCloakRoles, setAuthRoles } from './actions'
 
 // Mutations
-import { mutateName, mutateResource } from '@/store/mutations'
+import { mutateName, mutateResource, mutateKeycloakRoles, mutateAuthRoles } from '@/store/mutations'
 
 Vue.use(Vuex)
 
 export const store: Store<any> = new Vuex.Store<any>({
   state: {
     stateModel,
-    resourceModel
+    resourceModel,
+    tombStoneModel
+  },
+  getters: {
+    isRoleStaff,
+    isRoleEdit,
+    isRoleView
   },
   mutations: {
     mutateName,
-    mutateResource
+    mutateResource,
+    mutateKeycloakRoles,
+    mutateAuthRoles
   },
   actions: {
     setName,
-    setResource
+    setResource,
+    setKeyCloakRoles,
+    setAuthRoles
   }
 })
