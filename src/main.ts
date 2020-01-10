@@ -43,26 +43,26 @@ sessionStorage.setItem('USER_FULL_NAME', 'Firstname Lastname')
 fetchConfig()
   .then(async () => {
     // ensure we have the necessary Keycloak tokens
-    if (!haveKcTokens()) {
-      console.info('Redirecting to Auth URL...')
-      const authUrl: string | null = sessionStorage.getItem('AUTH_URL')
-      // assume Auth URL is always reachable
-      authUrl && window.location.assign(authUrl)
-      return // do not execute remaining code
-    }
-
-    // start token service to refresh KC token periodically
-    console.info('Starting token refresh service...')
-    const tokenServices = new TokenServices()
-    await tokenServices.initUsingUrl(sessionStorage.getItem('KEYCLOAK_CONFIG_URL') || '')
-      .then(() => tokenServices.scheduleRefreshTimer())
-      .catch((err: string) => console.error(err))
-
-    // Store KeyCloak & Auth roles
-    console.info('Fetching JWT Roles and Authentication roles...')
-    const authService = new AuthenticationService()
-    await authService.getJwtRoles()
-    await authService.getAuthorizations()
+    // if (!haveKcTokens()) {
+    //   console.info('Redirecting to Auth URL...')
+    //   const authUrl: string | null = sessionStorage.getItem('AUTH_URL')
+    //   // assume Auth URL is always reachable
+    //   authUrl && window.location.assign(authUrl)
+    //   return // do not execute remaining code
+    // }
+    //
+    // // start token service to refresh KC token periodically
+    // console.info('Starting token refresh service...')
+    // const tokenServices = new TokenServices()
+    // await tokenServices.initUsingUrl(sessionStorage.getItem('KEYCLOAK_CONFIG_URL') || '')
+    //   .then(() => tokenServices.scheduleRefreshTimer())
+    //   .catch((err: string) => console.error(err))
+    //
+    // // Store KeyCloak & Auth roles
+    // console.info('Fetching JWT Roles and Authentication roles...')
+    // const authService = new AuthenticationService()
+    // await authService.getJwtRoles()
+    // await authService.getAuthorizations()
 
     // Mount Vue
     new Vue({
