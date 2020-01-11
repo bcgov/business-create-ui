@@ -54,7 +54,6 @@ export default class EntityInfo extends Vue {
 }
 </script>
 
-<!-- eslint-disable max-len -->
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
 

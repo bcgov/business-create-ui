@@ -1,34 +1,61 @@
 import Home from '@/views/Home.vue'
 import MixinExample from '@/views/MixinExample.vue'
 import StateExample from '@/views/StateExample.vue'
+import DefineCompany from '@/views/DefineCompany.vue'
+import ReviewConfirm from '@/views/ReviewConfirm.vue'
 
 export const routes = [
   {
     path: '/',
-    name: 'home',
-    component: Home,
+    redirect: '/define-company'
+  },
+  // {
+  //   path: '/home',
+  //   name: 'home',
+  //   component: Home,
+  //   meta: {
+  //     requiresAuth: false
+  //   }
+  // },
+  // {
+  //   path: '/MixinExample',
+  //   name: 'mixinExample',
+  //   component: MixinExample,
+  //   meta: {
+  //     requiresAuth: false
+  //   }
+  // },
+  // {
+  //   path: '/StateExample',
+  //   name: 'stateExample',
+  //   component: StateExample,
+  //   meta: {
+  //     requiresAuth: false
+  //   }
+  // },
+  {
+    path: '/define-company',
+    name: 'define-company',
+    component: DefineCompany,
     meta: {
-      requiresAuth: false
+      step: 1,
+      label: 'Define Your Company',
+      requiresAuth: true
     }
   },
   {
-    path: '/MixinExample',
-    name: 'mixinExample',
-    component: MixinExample,
+    path: '/review-confirm',
+    name: 'review-confirm',
+    component: ReviewConfirm,
     meta: {
-      requiresAuth: false
-    }
-  },
-  {
-    path: '/StateExample',
-    name: 'stateExample',
-    component: StateExample,
-    meta: {
-      requiresAuth: false
+      step: 2,
+      label: 'Review and Confirm',
+      requiresAuth: true
     }
   },
   {
     // default/fallback route
+    // must be last
     path: '*',
     redirect: '/'
   }

@@ -7,3 +7,6 @@ export * from './store-interfaces/state-interface'
 export * from './store-interfaces/action-interface'
 export * from './store-interfaces/tombstone-interface'
 export * from './store-interfaces/getter-interface'
+
+// Others
+export * from './filingData-interface'
