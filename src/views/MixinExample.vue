@@ -4,6 +4,7 @@
     <h2>Testing Mixins: {{ sendMsg('My First Message')}}</h2>
   </div>
 </template>
+
 <script>
 import { Component, Mixins } from 'vue-property-decorator'
 import { CommonMixin } from '@/mixins'

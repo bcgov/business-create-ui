@@ -26,6 +26,7 @@
     />
   </v-card>
 </template>
+
 <script lang="ts">
 // Libraries
 import { Component, Mixins } from 'vue-property-decorator'
