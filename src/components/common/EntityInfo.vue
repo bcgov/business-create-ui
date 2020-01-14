@@ -10,20 +10,23 @@
           <v-list-item-title class="header-title" id="entity-title">
             <span>Register a BC Business</span>
           </v-list-item-title>
+
         </v-list-item-content>
 
-        <!--- Name Request Header --->
+        <!--- Header With NR Data --->
         <v-list-item-content id="nr-header" v-show="nameReqData">
 
           <!-- Subtitle -->
           <v-list-item-subtitle class="entity-subtitle">
-            <span>Register a BC Benefit Company</span>
+            <span>Incorporate a BC Benefit Company</span>
           </v-list-item-subtitle>
 
           <!-- Company Name -->
           <v-list-item-title class="header-title" id="entity-legal-name">
-            <span>XYZ.inc</span>
+            <span>XYZ Inc.</span>
           </v-list-item-title>
+
+          <!-- TODO: display Designation? See mockup. -->
 
           <!-- Company Number -->
           <v-list-item-subtitle class="business-info">
@@ -48,9 +51,11 @@ import { Component, Vue } from 'vue-property-decorator'
 @Component
 export default class EntityInfo extends Vue {
   // Local Properties
-  // Boolean representing the presence of a Name Request Response
-  // *Temp: To be determined dynamically based on API Response from Name Request*
-  private nameReqData: boolean | undefined = false
+  /**
+   * Boolean representing the presence of a Name Request Response.
+   * TODO: look at entity data in store, which was set from API response from Name Request
+   */
+  private nameReqData: boolean | undefined = true
 }
 </script>
 

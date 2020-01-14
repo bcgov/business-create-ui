@@ -1,7 +1,7 @@
 import { shallowMount } from '@vue/test-utils'
 import { HelloWorld } from '@/components/Home'
 
-describe('HelloWorld.vue', () => {
+describe('Hello World component', () => {
   it('renders props.msg when passed', () => {
     const msg = 'new message'
     const wrapper = shallowMount(HelloWorld, {

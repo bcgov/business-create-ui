@@ -1,1 +1,2 @@
-export * from './role-getters'
+export * from './tombstone-getters'
+export * from './state-getters'

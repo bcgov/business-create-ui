@@ -11,7 +11,7 @@ import { ResourceExample } from '@/components/common'
 Vue.use(Vuetify)
 let vuetify = new Vuetify({})
 
-describe('HelloWorld.vue', () => {
+describe('State Example component', () => {
   let wrapper: any
 
   beforeEach(() => {

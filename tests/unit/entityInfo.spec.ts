@@ -9,7 +9,7 @@ import { EntityInfo } from '@/components/common'
 Vue.use(Vuetify)
 let vuetify = new Vuetify({})
 
-describe('EntityInfo.vue', () => {
+describe('Entity Info component', () => {
   let wrapper: any
 
   beforeEach(() => {

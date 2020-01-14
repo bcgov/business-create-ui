@@ -46,13 +46,18 @@
       <actions />
     </main>
 
+    <!-- FOR DEBUGGING -->
+    <pre>{{stateModel}}</pre>
+    <pre>{{tombStoneModel}}</pre>
+
     <sbc-footer />
   </v-app>
 </template>
 
 <script lang="ts">
 // Libraries
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue, Watch } from 'vue-property-decorator'
+import { Action, State } from 'vuex-class'
 
 // Components
 import SbcHeader from 'sbc-common-components/src/components/SbcHeader.vue'
@@ -61,7 +66,7 @@ import SbcFeeSummary from 'sbc-common-components/src/components/SbcFeeSummary.vu
 import { EntityInfo, Stepper, Actions } from '@/components/common'
 
 // Interfaces
-import { FilingDataIF } from '@/interfaces'
+import { StateModelIF, TombStoneIF, ActionBindingIF, FilingDataIF } from '@/interfaces'
 
 // Enums
 import { EntityTypes, FilingCodes } from '@/enums'
@@ -77,25 +82,50 @@ import { EntityTypes, FilingCodes } from '@/enums'
   }
 })
 export default class App extends Vue {
+  // Global state
+  @State stateModel!: StateModelIF
+  @State tombStoneModel!: TombStoneIF
+
+  // Global actions
+  @Action setCurrentStep!: ActionBindingIF
+
   private filingData: Array<FilingDataIF> = []
   private totalFee: number = 0
 
+  // Lifecycle event
   private created (): void {
     this.filingData.push({ filingTypeCode: FilingCodes.INCORPORATION_BC, entityType: EntityTypes.BCOMP })
   }
 
+  /**
+   * The origin URL.
+   */
   private get origin (): string {
     const root = window.location.origin || ''
     const path = process.env.VUE_APP_PATH
     return `${root}/${path}`
   }
 
+  /**
+   * The Pay API URL.
+   */
   private get payApiUrl (): string | null {
     return sessionStorage.getItem('PAY_API_URL')
   }
 
+  /**
+   * The Auth API URL.
+   */
   private get authApiUrl (): string | null {
     return sessionStorage.getItem('AUTH_API_URL')
+  }
+
+  /**
+   * Method called when $route property changes.
+   */
+  @Watch('$route', { immediate: true })
+  private onRouteChanged (): void {
+    this.setCurrentStep(this.$route.meta.step)
   }
 }
 </script>
