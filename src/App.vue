@@ -52,7 +52,8 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue, Mixins } from 'vue-property-decorator'
+import { mapState, mapActions } from 'vuex'
 
 // Components
 import SbcHeader from 'sbc-common-components/src/components/SbcHeader.vue'
@@ -60,11 +61,18 @@ import SbcFooter from 'sbc-common-components/src/components/SbcFooter.vue'
 import SbcFeeSummary from 'sbc-common-components/src/components/SbcFeeSummary.vue'
 import { EntityInfo, Stepper, Actions } from '@/components/common'
 
+// Mixins
+import { DateMixin } from '@/mixins'
+
 // Interfaces
-import { FilingDataIF } from '@/interfaces'
+import { FilingDataIF, ActionBindingIF, CertifyStatementIF } from '@/interfaces'
+
+import { CertifyStatementResource } from '@/resources'
 
 // Enums
 import { EntityTypes, FilingCodes } from '@/enums'
+
+import { State, Action } from 'vuex-class'
 
 @Component({
   components: {
@@ -76,12 +84,23 @@ import { EntityTypes, FilingCodes } from '@/enums'
     Actions
   }
 })
-export default class App extends Vue {
+export default class App extends Mixins(DateMixin) {
   private filingData: Array<FilingDataIF> = []
   private totalFee: number = 0
+  private entityType: string = 'CP'
+  private certifyStatementResource: CertifyStatementIF
+
+  @Action('setEntityType') setEntityType: ActionBindingIF
+  @Action('setCurrentDate') setCurrentDate: ActionBindingIF
+  @Action('setCertifyStatementResource') setCertifyStatementResource: ActionBindingIF
 
   private created (): void {
     this.filingData.push({ filingTypeCode: FilingCodes.INCORPORATION_BC, entityType: EntityTypes.BCOMP })
+    this.setEntityType(this.entityType)
+    this.setCurrentDate(this.dateToUsableString(new Date()))
+    const certify = CertifyStatementResource.find(x => x.entityType === this.entityType)
+    console.log(certify)
+    this.setCertifyStatementResource(certify)
   }
 
   private get origin (): string {

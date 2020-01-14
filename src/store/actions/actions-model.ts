@@ -15,3 +15,19 @@ export const setKeyCloakRoles: ActionIF = ({ commit }, keyCloakRoles): void => {
 export const setAuthRoles: ActionIF = ({ commit }, authRoles): void => {
   commit('mutateAuthRoles', authRoles)
 }
+
+export const setEntityType: ActionIF = ({ commit }, entityType): void => {
+  commit('mutateEntityType', entityType)
+}
+
+export const setCurrentDate: ActionIF = ({ commit }, currentDate): void => {
+  commit('mutateCurrentDate', currentDate)
+}
+
+export const setCertifyStatementResource: ActionIF = ({ commit }, certifyStatementResource): void => {
+  commit('mutateCertifyStatementResource', certifyStatementResource)
+}
+
+export const setCertifyState: ActionIF = ({ commit }, certifyState): void => {
+  commit('mutateCertifyState', certifyState)
+}

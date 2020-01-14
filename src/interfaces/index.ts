@@ -10,3 +10,5 @@ export * from './store-interfaces/getter-interface'
 
 // Others
 export * from './filingData-interface'
+export * from './resource-interfaces/certifyStatement-interface'
+export * from './stepper-interfaces/certify-interface'

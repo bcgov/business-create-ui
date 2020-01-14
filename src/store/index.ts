@@ -9,10 +9,12 @@ import { stateModel, resourceModel, tombStoneModel } from './state'
 import { isRoleStaff, isRoleEdit, isRoleView } from '@/store/getters'
 
 // Actions
-import { setName, setResource, setKeyCloakRoles, setAuthRoles } from './actions'
+import { setName, setResource, setKeyCloakRoles, setAuthRoles, setEntityType,
+  setCurrentDate, setCertifyStatementResource, setCertifyState } from './actions'
 
 // Mutations
-import { mutateName, mutateResource, mutateKeycloakRoles, mutateAuthRoles } from '@/store/mutations'
+import { mutateName, mutateResource, mutateKeycloakRoles, mutateAuthRoles,
+  mutateEntityType, mutateCurrentDate, mutateCertifyStatementResource, mutateCertifyState } from '@/store/mutations'
 
 Vue.use(Vuex)
 
@@ -31,12 +33,20 @@ export const store: Store<any> = new Vuex.Store<any>({
     mutateName,
     mutateResource,
     mutateKeycloakRoles,
-    mutateAuthRoles
+    mutateAuthRoles,
+    mutateEntityType,
+    mutateCurrentDate,
+    mutateCertifyStatementResource,
+    mutateCertifyState
   },
   actions: {
     setName,
     setResource,
     setKeyCloakRoles,
-    setAuthRoles
+    setAuthRoles,
+    setEntityType,
+    setCurrentDate,
+    setCertifyStatementResource,
+    setCertifyState
   }
 })
