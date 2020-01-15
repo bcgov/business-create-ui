@@ -29,7 +29,6 @@ describe('State Example component', () => {
   })
 
   it('displays the appropriate welcome message', () => {
-    expect(wrapper.vm.$el.querySelector('.stateExample').textContent)
-      .toContain('Congratulations... it worked!')
+    expect(wrapper.vm.$el.querySelector('.stateExample').textContent).toContain('This is an about page')
   })
 })
