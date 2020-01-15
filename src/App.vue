@@ -98,9 +98,7 @@ export default class App extends Mixins(DateMixin) {
     this.filingData.push({ filingTypeCode: FilingCodes.INCORPORATION_BC, entityType: EntityTypes.BCOMP })
     this.setEntityType(this.entityType)
     this.setCurrentDate(this.dateToUsableString(new Date()))
-    const certify = CertifyStatementResource.find(x => x.entityType === this.entityType)
-    console.log(certify)
-    this.setCertifyStatementResource(certify)
+    this.setCertifyStatementResource(CertifyStatementResource.find(x => x.entityType === this.entityType))
   }
 
   private get origin (): string {

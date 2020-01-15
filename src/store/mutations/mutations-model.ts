@@ -25,7 +25,7 @@ export const mutateCurrentDate = (state: any, currentDate: string) => {
 }
 
 export const mutateCertifyStatementResource = (state: any, certifyStatementResource: CertifyStatementIF) => {
-  state.stateModel.certifyStatementResource = certifyStatementResource
+  state.resourceModel.certifyStatementResource = certifyStatementResource
 }
 
 export const mutateCertifyState = (state: any, certifyState: CertifyIF) => {

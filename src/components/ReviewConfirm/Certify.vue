@@ -58,7 +58,10 @@ export default class Certify extends Vue {
   @Prop({ default: false })
   private isCertified: boolean
 
-  @Prop({ default: {} })
+  @Prop({ default: () => {
+    return {}
+  }
+  })
   private certifyStatementResource: CertifyStatementIF
 
   /**

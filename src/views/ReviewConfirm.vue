@@ -42,7 +42,7 @@ import { CertifyStatementIF, ActionBindingIF } from '../interfaces'
 export default class ReviewConfirm extends Mixins(ResourceLookupMixin) {
    @State(state => state.stateModel.currentDate) readonly currentDate!: string
 
-   @State(state => state.stateModel.certifyStatementResource)
+   @State(state => state.resourceModel.certifyStatementResource)
    readonly certifyStatementResource!: CertifyStatementIF
 
    @Action('setCertifyState') setCertifyState: ActionBindingIF
