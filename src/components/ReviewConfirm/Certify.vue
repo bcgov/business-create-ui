@@ -33,7 +33,7 @@
         </ul>
       </p>
       <p></p>
-      <p class="certify-clause">Date: {{date}}</p>
+      <p class="certify-date">Date: {{date}}</p>
       <p class="certify-clause">
         {{certifyStatementResource.certifyClause}}
       </p>
@@ -145,7 +145,7 @@ export default class Certify extends Vue {
   min-width: 35rem;
 }
 
-.certify-clause {
+.certify-clause, .certify-date{
   padding-left: 2rem;
   color: black;
   font-size: 0.875rem;
