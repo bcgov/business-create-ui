@@ -16,11 +16,10 @@
               <span class="font-weight-bold">Benefit Company NR</span>
             </v-btn>
 
-            <v-btn id="select-CP-btn" large color="success" :disabled="isEntityType" @click="onClickCP()">
+            <v-btn id="select-cp-btn" large color="success" :disabled="isEntityType" @click="onClickCP()">
               <span class="font-weight-bold">Cooperative Association NR</span>
             </v-btn>
 
-            <!-- FOR TESTING ONLY -->
             <v-btn id="reset-btn" large :disabled="!isEntityType" @click="onClickReset()">
               <v-icon>mdi-undo</v-icon>
               <span>Reset</span>
@@ -95,6 +94,7 @@ export default class DefineCompany extends Vue {
 }
 
 .value.name-request {
+  width: 100%;
   min-width: 24rem;
 }
 

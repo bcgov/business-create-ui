@@ -46,7 +46,7 @@
       <actions />
     </main>
 
-    <!-- FOR DEBUGGING -->
+    <!-- FOR TESTING ONLY -->
     <pre>{{stateModel}}</pre>
     <pre>{{tombStoneModel}}</pre>
 

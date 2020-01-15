@@ -21,7 +21,6 @@ describe('Actions component', () => {
     const localVue = createLocalVue()
     localVue.use(VueRouter)
     const router = mockRouter.mock()
-    // router.push({ name: 'dashboard', query: { filing_id: '123' } }) // example for future
     wrapper = shallowMount(Actions, { localVue, store, router, vuetify })
   })
 

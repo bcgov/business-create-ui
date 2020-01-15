@@ -27,7 +27,7 @@ export default class ReviewConfirm extends Vue {
 
   // Lifecycle event
   private created (): void {
-    // if basic stuff isn't set, go to step 1
+    // if basic stuff isn't set, route back to step 1
     if (!this.isEntityType) {
       this.$router.push('/')
     }

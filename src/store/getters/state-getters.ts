@@ -13,7 +13,6 @@ export const isShowBackBtn = (state: any): boolean => {
  * Whether Review and Confirm button should be displayed.
  */
 export const isShowReviewConfirmBtn = (state: any): boolean => {
-  console.log('state =', state)
   return (!!state.tombStoneModel.entityType && state.stateModel.currentStep < 5)
 }
 

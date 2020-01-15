@@ -29,7 +29,7 @@ describe('Entity Info component', () => {
   it('renders the Name Request header when the NR Data is present and not the initial header', () => {
     wrapper.vm.nameReqData = true
     expect(wrapper.vm.$el.querySelector('#nr-header').textContent)
-      .toContain('Register a BC Benefit Company')
+      .toContain('Incorporate a BC Benefit Company')
     expect(wrapper.vm.$el.querySelector('#no-nr-header').style.display).toBe('none')
   })
 })

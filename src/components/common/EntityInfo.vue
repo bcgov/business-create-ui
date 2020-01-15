@@ -55,7 +55,7 @@ export default class EntityInfo extends Vue {
    * Boolean representing the presence of a Name Request Response.
    * TODO: look at entity data in store, which was set from API response from Name Request
    */
-  private nameReqData: boolean | undefined = true
+  private nameReqData: boolean | undefined = false
 }
 </script>
 

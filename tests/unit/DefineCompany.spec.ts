@@ -22,6 +22,12 @@ describe('Define Company component', () => {
   })
 
   it('renders the component properly', () => {
-    // FUTURE
+    // verify page content
+    expect(wrapper.find('h2').text()).toContain('Company Name')
+
+    // verify initial button state
+    expect(wrapper.find('#select-bc-btn').attributes('disabled')).toBeUndefined()
+    expect(wrapper.find('#select-cp-btn').attributes('disabled')).toBeUndefined()
+    expect(wrapper.find('#reset-btn').attributes('disabled')).toBe('true')
   })
 })
