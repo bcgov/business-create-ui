@@ -11,7 +11,7 @@ import { ResourceExample } from '@/components/common'
 Vue.use(Vuetify)
 let vuetify = new Vuetify({})
 
-describe('HelloWorld.vue', () => {
+describe('State Example component', () => {
   let wrapper: any
 
   beforeEach(() => {
@@ -29,7 +29,6 @@ describe('HelloWorld.vue', () => {
   })
 
   it('displays the appropriate welcome message', () => {
-    expect(wrapper.vm.$el.querySelector('.stateExample').textContent)
-      .toContain('Congratulations... it worked!')
+    expect(wrapper.vm.$el.querySelector('.stateExample').textContent).toContain('This is an about page')
   })
 })
