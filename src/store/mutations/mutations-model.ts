@@ -1,7 +1,3 @@
-export const mutateName = (state: any, name: string) => {
-  state.stateModel.stateText = name
-}
-
 export const mutateCurrentStep = (state: any, currentStep: boolean) => {
   state.stateModel.currentStep = currentStep
 }

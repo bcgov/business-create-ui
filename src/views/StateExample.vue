@@ -2,9 +2,9 @@
   <v-card>
     <div class="stateExample">
       <h1>This is an about page that contains an example for state</h1>
-      <p>{{ stateModel.stateText }}</p>
-      <p>{{ tombStoneModel.keycloakRoles }}</p>
-      <p>{{ tombStoneModel.authRoles }}</p>
+      <p>Current Step: {{ stateModel.currentStep }}</p>
+      <p>Keycloak Roles: {{ tombStoneModel.keycloakRoles }}</p>
+      <p>Auth Roles: {{ tombStoneModel.authRoles }}</p>
     </div>
 
     <div class="gettersExample">
@@ -59,14 +59,10 @@ export default class StateExample extends Mixins(ResourceLookupMixin) {
   @Getter isRoleView!: GetterIF
 
   // Global actions
-  @Action setName!: ActionBindingIF
   @Action setResource!: ActionBindingIF
 
   // Lifecycle event
   private created ():void {
-    // Example of setting the State of a string
-    this.setName('Testing My Actions and Mutations: Congratulations... it worked!')
-
     // Example of setting the State of a Resource
     this.setResource(ExternalResource)
   }

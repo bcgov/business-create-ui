@@ -10,11 +10,11 @@ import { isRoleStaff, isRoleEdit, isRoleView, isEntityType, isTypeBcomp, isTypeC
   isShowBackBtn, isShowReviewConfirmBtn, isShowFilePayBtn, isEnableFilePayBtn, isBusySaving } from '@/store/getters'
 
 // Mutations
-import { mutateName, mutateCurrentStep, mutateIsSaving, mutateIsSavingResuming, mutateIsFilingPaying,
+import { mutateCurrentStep, mutateIsSaving, mutateIsSavingResuming, mutateIsFilingPaying,
   mutateEntityType, mutateResource, mutateKeycloakRoles, mutateAuthRoles } from '@/store/mutations'
 
 // Actions
-import { setName, setCurrentStep, setIsSaving, setIsSavingResuming, setIsFilingPaying,
+import { setCurrentStep, setIsSaving, setIsSavingResuming, setIsFilingPaying,
   setEntityType, setResource, setKeyCloakRoles, setAuthRoles } from './actions'
 
 Vue.use(Vuex)
@@ -39,7 +39,6 @@ export const store: Store<any> = new Vuex.Store<any>({
     isBusySaving
   },
   mutations: {
-    mutateName,
     mutateCurrentStep,
     mutateIsSaving,
     mutateIsSavingResuming,
@@ -50,7 +49,6 @@ export const store: Store<any> = new Vuex.Store<any>({
     mutateAuthRoles
   },
   actions: {
-    setName,
     setCurrentStep,
     setIsSaving,
     setIsSavingResuming,

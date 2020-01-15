@@ -1,9 +1,5 @@
 import { ActionIF } from '@/interfaces/store-interfaces/action-interface'
 
-export const setName: ActionIF = ({ commit }, name): void => {
-  commit('mutateName', name)
-}
-
 export const setCurrentStep: ActionIF = ({ commit }, currentStep): void => {
   commit('mutateCurrentStep', currentStep)
 }
