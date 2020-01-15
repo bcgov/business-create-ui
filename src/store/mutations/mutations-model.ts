@@ -1,11 +1,12 @@
 import { CertifyStatementIF, CertifyIF } from '@/interfaces'
+import { ExternalResourceIF } from '@/interfaces/resource-interfaces/ExternalResourceIF'
 
 export const mutateName = (state: any, name: string) => {
   state.stateModel.stateText = name
 }
 
-export const mutateResource = (state: any, resource: object) => {
-  state.resourceModel = resource
+export const mutateResource = (state: any, resource: ExternalResourceIF) => {
+  state.resourceModel.externalResource = resource
 }
 
 export const mutateKeycloakRoles = (state: any, keyCloakRoles: Array<string>) => {
