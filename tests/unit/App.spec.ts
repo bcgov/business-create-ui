@@ -13,7 +13,7 @@ import SbcFeeSummary from 'sbc-common-components/src/components/SbcFeeSummary.vu
 import { EntityInfo, Stepper, Actions } from '@/components/common'
 
 // Other
-import mockRouter from './mockRouter'
+import mockRouter from './MockRouter'
 
 Vue.use(Vuetify)
 let vuetify = new Vuetify({})

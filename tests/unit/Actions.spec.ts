@@ -9,7 +9,7 @@ import { shallowMount, createLocalVue } from '@vue/test-utils'
 import { Actions } from '@/components/common'
 
 // Other
-import mockRouter from './mockRouter'
+import mockRouter from './MockRouter'
 
 Vue.use(Vuetify)
 let vuetify = new Vuetify({})

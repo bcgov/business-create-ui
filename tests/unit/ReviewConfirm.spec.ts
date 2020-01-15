@@ -9,7 +9,7 @@ import { shallowMount, createLocalVue } from '@vue/test-utils'
 import ReviewConfirm from '@/views/ReviewConfirm.vue'
 
 // Other
-import mockRouter from './mockRouter'
+import mockRouter from './MockRouter'
 
 Vue.use(Vuetify)
 let vuetify = new Vuetify({})
