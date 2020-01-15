@@ -6,15 +6,18 @@ import Vuex, { Store } from 'vuex'
 import { stateModel, resourceModel, tombStoneModel } from './state'
 
 // Getters
-import { isRoleStaff, isRoleEdit, isRoleView } from '@/store/getters'
-
-// Actions
-import { setName, setResource, setKeyCloakRoles, setAuthRoles, setEntityType,
-  setCurrentDate, setCertifyStatementResource, setCertifyState } from './actions'
+import { isRoleStaff, isRoleEdit, isRoleView, isEntityType, isTypeBcomp, isTypeCoop,
+  isShowBackBtn, isShowReviewConfirmBtn, isShowFilePayBtn, isEnableFilePayBtn, isBusySaving } from '@/store/getters'
 
 // Mutations
-import { mutateName, mutateResource, mutateKeycloakRoles, mutateAuthRoles,
-  mutateEntityType, mutateCurrentDate, mutateCertifyStatementResource, mutateCertifyState } from '@/store/mutations'
+import { mutateCurrentStep, mutateIsSaving, mutateIsSavingResuming, mutateIsFilingPaying,
+  mutateEntityType, mutateResource, mutateKeycloakRoles, mutateAuthRoles,
+  mutateCurrentDate, mutateCertifyStatementResource, mutateCertifyState } from '@/store/mutations'
+
+// Actions
+import { setCurrentStep, setIsSaving, setIsSavingResuming, setIsFilingPaying,
+  setEntityType, setResource, setKeyCloakRoles, setAuthRoles, setCurrentDate,
+  setCertifyStatementResource, setCertifyState } from './actions'
 
 Vue.use(Vuex)
 
@@ -27,24 +30,38 @@ export const store: Store<any> = new Vuex.Store<any>({
   getters: {
     isRoleStaff,
     isRoleEdit,
-    isRoleView
+    isRoleView,
+    isEntityType,
+    isTypeBcomp,
+    isTypeCoop,
+    isShowBackBtn,
+    isShowReviewConfirmBtn,
+    isShowFilePayBtn,
+    isEnableFilePayBtn,
+    isBusySaving
   },
   mutations: {
-    mutateName,
+    mutateCurrentStep,
+    mutateIsSaving,
+    mutateIsSavingResuming,
+    mutateIsFilingPaying,
+    mutateEntityType,
     mutateResource,
     mutateKeycloakRoles,
     mutateAuthRoles,
-    mutateEntityType,
     mutateCurrentDate,
     mutateCertifyStatementResource,
     mutateCertifyState
   },
   actions: {
-    setName,
+    setCurrentStep,
+    setIsSaving,
+    setIsSavingResuming,
+    setIsFilingPaying,
+    setEntityType,
     setResource,
     setKeyCloakRoles,
     setAuthRoles,
-    setEntityType,
     setCurrentDate,
     setCertifyStatementResource,
     setCertifyState

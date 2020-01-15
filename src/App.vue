@@ -46,13 +46,18 @@
       <actions />
     </main>
 
+    <!-- FOR TESTING ONLY -->
+    <pre>{{stateModel}}</pre>
+    <pre>{{tombStoneModel}}</pre>
+
     <sbc-footer />
   </v-app>
 </template>
 
 <script lang="ts">
 // Libraries
-import { Component, Vue, Mixins } from 'vue-property-decorator'
+import { Component, Vue, Watch, Mixins } from 'vue-property-decorator'
+import { Action, State } from 'vuex-class'
 
 // Components
 import SbcHeader from 'sbc-common-components/src/components/SbcHeader.vue'
@@ -64,14 +69,12 @@ import { EntityInfo, Stepper, Actions } from '@/components/common'
 import { DateMixin } from '@/mixins'
 
 // Interfaces
-import { FilingDataIF, ActionBindingIF, CertifyStatementIF } from '@/interfaces'
+import { FilingDataIF, ActionBindingIF, CertifyStatementIF, StateModelIF, TombStoneIF } from '@/interfaces'
 
 import { CertifyStatementResource } from '@/resources'
 
 // Enums
 import { EntityTypes, FilingCodes } from '@/enums'
-
-import { State, Action } from 'vuex-class'
 
 @Component({
   components: {
@@ -84,6 +87,13 @@ import { State, Action } from 'vuex-class'
   }
 })
 export default class App extends Mixins(DateMixin) {
+  // Global state
+  @State stateModel!: StateModelIF
+  @State tombStoneModel!: TombStoneIF
+
+  // Global actions
+  @Action setCurrentStep!: ActionBindingIF
+
   private filingData: Array<FilingDataIF> = []
   private totalFee: number = 0
   private entityType: string = 'CP'
@@ -92,6 +102,7 @@ export default class App extends Mixins(DateMixin) {
   @Action('setCurrentDate') setCurrentDate!: ActionBindingIF
   @Action('setCertifyStatementResource') setCertifyStatementResource!: ActionBindingIF
 
+  // Lifecycle event
   private created (): void {
     this.filingData.push({ filingTypeCode: FilingCodes.INCORPORATION_BC, entityType: EntityTypes.BCOMP })
     this.setEntityType(this.entityType)
@@ -99,18 +110,35 @@ export default class App extends Mixins(DateMixin) {
     this.setCertifyStatementResource(CertifyStatementResource.find(x => x.entityType === this.entityType))
   }
 
+  /**
+   * The origin URL.
+   */
   private get origin (): string {
     const root = window.location.origin || ''
     const path = process.env.VUE_APP_PATH
     return `${root}/${path}`
   }
 
+  /**
+   * The Pay API URL.
+   */
   private get payApiUrl (): string | null {
     return sessionStorage.getItem('PAY_API_URL')
   }
 
+  /**
+   * The Auth API URL.
+   */
   private get authApiUrl (): string | null {
     return sessionStorage.getItem('AUTH_API_URL')
+  }
+
+  /**
+   * Method called when $route property changes.
+   */
+  @Watch('$route', { immediate: true })
+  private onRouteChanged (): void {
+    this.setCurrentStep(this.$route.meta.step)
   }
 }
 </script>

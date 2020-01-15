@@ -3,7 +3,7 @@ import axios from '@/utils/axios-auth'
 /**
  * fetch config from environment and API
  *
- * @return A Promise to get & set session storage URLS with appropriate paths
+ * @returns A Promise to get & set session storage URLS with appropriate paths
  */
 export const fetchConfig = (): Promise<any> => {
   const origin: string = window.location.origin
@@ -54,7 +54,7 @@ export const fetchConfig = (): Promise<any> => {
 /**
  * Validate the KeyCloak tokens
  *
- * @return A boolean indicating if all keycloak variations exist
+ * @returns A boolean indicating if all keycloak variations exist
  */
 export const haveKcTokens = (): boolean => {
   return Boolean(sessionStorage.getItem('KEYCLOAK_TOKEN') &&

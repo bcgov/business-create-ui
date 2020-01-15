@@ -6,5 +6,9 @@ export const stateModel: StateModelIF = {
   certifyState: {
     certifyFormValid: false,
     certifiedBy: null
-  }
+  },
+  currentStep: 1,
+  isSaving: false,
+  isSavingResuming: false,
+  isFilingPaying: false
 }

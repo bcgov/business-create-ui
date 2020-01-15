@@ -44,7 +44,7 @@ export default class AuthenticationService {
 
   /**
    * Get the token and Parse it from keycloak token.
-   * @return A parsed JWT.
+   * @returns A parsed JWT.
    */
   getJWT = (): JwtIF => {
     const token = sessionStorage.getItem('KEYCLOAK_TOKEN')
@@ -57,7 +57,7 @@ export default class AuthenticationService {
   /**
    * Decode and parse the JWT to a readable state.
    * @param token The token to be decoded & parsed.
-   * @return A Parsed Token.
+   * @returns A Parsed Token.
    */
   parseJwt = (token: string): JwtIF => {
     try {

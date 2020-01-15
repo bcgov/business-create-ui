@@ -19,6 +19,7 @@ import { HelloWorld } from '@/components/Home'
 })
 export default class Home extends Vue {}
 </script>
+
 <style lang="scss">
   .home {
     font-family: 'Avenir', Helvetica, Arial, sans-serif;

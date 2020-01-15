@@ -9,7 +9,7 @@ import { EntityInfo } from '@/components/common'
 Vue.use(Vuetify)
 let vuetify = new Vuetify({})
 
-describe('EntityInfo.vue', () => {
+describe('Entity Info component', () => {
   let wrapper: any
 
   beforeEach(() => {
@@ -29,7 +29,7 @@ describe('EntityInfo.vue', () => {
   it('renders the Name Request header when the NR Data is present and not the initial header', () => {
     wrapper.vm.nameReqData = true
     expect(wrapper.vm.$el.querySelector('#nr-header').textContent)
-      .toContain('Register a BC Benefit Company')
+      .toContain('Incorporate a BC Benefit Company')
     expect(wrapper.vm.$el.querySelector('#no-nr-header').style.display).toBe('none')
   })
 })

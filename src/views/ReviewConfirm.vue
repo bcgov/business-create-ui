@@ -4,7 +4,7 @@
       <h2>5. Review</h2>
     </header>
 
-    <v-card flat class="review-confirm-container">
+    <v-card flat class="step-container">
       <section>
         <!--Summary component goes here -->
       </section>
@@ -26,11 +26,11 @@
 <script lang="ts">
 // Libraries
 import { Component, Vue, Mixins, Watch } from 'vue-property-decorator'
-import { State, Action } from 'vuex-class'
+import { State, Action, Getter } from 'vuex-class'
 
 import { Certify } from '@/components/ReviewConfirm'
-import { ResourceLookupMixin } from '../mixins'
-import { CertifyStatementIF, ActionBindingIF } from '../interfaces'
+import { ResourceLookupMixin } from '@/mixins'
+import { CertifyStatementIF, ActionBindingIF, GetterIF } from '@/interfaces'
 
 @Component({
   components: {
@@ -44,6 +44,17 @@ export default class ReviewConfirm extends Mixins(ResourceLookupMixin) {
    readonly certifyStatementResource!: CertifyStatementIF
 
    @Action('setCertifyState') setCertifyState!: ActionBindingIF
+
+   // Global getters
+  @Getter isEntityType!: GetterIF
+
+  // Lifecycle event
+  private created (): void {
+    // if basic stuff isn't set, route back to step 1
+    if (!this.isEntityType) {
+      this.$router.push('/')
+    }
+  }
 
   // properties for Certify component
   private certifiedBy:string = ''
@@ -73,8 +84,7 @@ export default class ReviewConfirm extends Mixins(ResourceLookupMixin) {
 </script>
 
 <style lang="scss">
-.review-confirm-container {
-  margin-top: 1rem;
-  padding: 1.25rem;
+.step-container {
+  height: 15rem; // FOR TESTING ONLY
 }
 </style>

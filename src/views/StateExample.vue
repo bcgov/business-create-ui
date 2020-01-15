@@ -2,9 +2,9 @@
   <v-card>
     <div class="stateExample">
       <h1>This is an about page that contains an example for state</h1>
-      <p>{{ stateModel.stateText }}</p>
-      <p>{{ tombStoneModel.keycloakRoles }}</p>
-      <p>{{ tombStoneModel.authRoles }}</p>
+      <p>Current Step: {{ stateModel.currentStep }}</p>
+      <p>Keycloak Roles: {{ tombStoneModel.keycloakRoles }}</p>
+      <p>Auth Roles: {{ tombStoneModel.authRoles }}</p>
     </div>
 
     <div class="gettersExample">
@@ -30,7 +30,7 @@
 <script lang="ts">
 // Libraries
 import { Component, Mixins } from 'vue-property-decorator'
-import { Action, Getter, State } from 'vuex-class'
+import { State, Getter, Action } from 'vuex-class'
 
 // Components
 import { ResourceExample } from '@/components/common'
@@ -42,7 +42,7 @@ import { ResourceLookupMixin } from '@/mixins'
 import { ExternalResource } from '@/resources'
 
 // Interfaces
-import { StateModelIF, TombStoneIF, ActionBindingIF, GetterIF } from '@/interfaces'
+import { StateModelIF, TombStoneIF, GetterIF, ActionBindingIF } from '@/interfaces'
 
 @Component({
   components: {
@@ -50,22 +50,19 @@ import { StateModelIF, TombStoneIF, ActionBindingIF, GetterIF } from '@/interfac
   }
 })
 export default class StateExample extends Mixins(ResourceLookupMixin) {
-  // Initialize State
+  // Global state
   @State stateModel!: StateModelIF
   @State tombStoneModel!: TombStoneIF
 
-  // Initialize Getters
+  // Global getters
   @Getter isRoleStaff!: GetterIF
   @Getter isRoleView!: GetterIF
 
-  // Initialize Actions
-  @Action setName!: ActionBindingIF
+  // Global actions
   @Action setResource!: ActionBindingIF
 
-  created () {
-    // Example of setting the State of a string
-    this.setName('Testing My Actions and Mutations: Congratulations... it worked!')
-
+  // Lifecycle event
+  private created ():void {
     // Example of setting the State of a Resource
     this.setResource(ExternalResource)
   }
