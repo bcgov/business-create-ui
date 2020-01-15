@@ -47,8 +47,8 @@
     </main>
 
     <!-- FOR TESTING ONLY -->
-    <pre>{{stateModel}}</pre>
-    <pre>{{tombStoneModel}}</pre>
+    <!--<pre>{{stateModel}}</pre>
+    <pre>{{tombStoneModel}}</pre>-->
 
     <sbc-footer />
   </v-app>

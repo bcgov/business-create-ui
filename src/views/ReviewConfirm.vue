@@ -1,25 +1,23 @@
 <template>
   <div>
-    <header>
-      <h2>5. Review</h2>
-    </header>
-
-    <v-card flat class="step-container">
+    <v-container>
       <section>
-        <!--Summary component goes here -->
+        <header>
+          <h2>Review</h2>
+        </header>
       </section>
       <section>
           <header>
-                <h2>2. Completing Party Statement</h2>
-              </header>
-              <Certify
-                :isCertified.sync="isCertified"
-                :certifiedBy.sync="certifiedBy"
-                @valid="certifyFormValid=$event"
-                :date="currentDate"
-                :certifyStatementResource="certifyStatementResource"/>
+            <h2>Completing Party Statement</h2>
+          </header>
+          <Certify
+          :isCertified.sync="isCertified"
+          :certifiedBy.sync="certifiedBy"
+          @valid="certifyFormValid=$event"
+          :date="currentDate"
+          :certifyStatementResource="certifyStatementResource"/>
       </section>
-    </v-card>
+    </v-container>
   </div>
 </template>
 
@@ -85,6 +83,7 @@ export default class ReviewConfirm extends Mixins(ResourceLookupMixin) {
 
 <style lang="scss">
 .step-container {
-  height: 15rem; // FOR TESTING ONLY
+  margin-top: 1rem;
+  padding: 1.25rem;
 }
 </style>
