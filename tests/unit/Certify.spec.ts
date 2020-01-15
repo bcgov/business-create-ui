@@ -32,11 +32,11 @@ const whitespaceCertifier = '  Some  Certifier  '
 const defaultDate = '2019-01-01'
 const certifyClause = 'Certify Clause'
 const certifyStatementHeader = 'Certify Statement Header'
-const certifyStatementLines =  [
-    'Statement Line 1',
-    'Statement Line 2',
-    'Statement Line 3'
-  ]
+const certifyStatementLines = [
+  'Statement Line 1',
+  'Statement Line 2',
+  'Statement Line 3'
+]
 
 /**
  * Returns the last event for a given name, to be used for testing event propagation in response to component changes.
@@ -104,7 +104,7 @@ describe('Certify', () => {
     const wrapper: Wrapper<Certify> = createComponent(trimmedCertifier)
     const statement: Wrapper<Vue> = wrapper.find(certifyStatementLinesSelector)
 
-    // The text should contain the certifier name.     
+    // The text should contain the certifier name.
     expect(statement.text()).toContain(certifyStatementLines[0])
     expect(statement.text()).toContain(certifyStatementLines[1])
     expect(statement.text()).toContain(certifyStatementLines[2])
@@ -114,7 +114,7 @@ describe('Certify', () => {
     const wrapper: Wrapper<Certify> = createComponent(trimmedCertifier)
     const statement: Wrapper<Vue> = wrapper.find(certifyClauseSelector)
 
-    // The text should contain the certifier name.    
+    // The text should contain the certifier name.
     expect(statement.text()).toContain(certifyClause)
   })
 
