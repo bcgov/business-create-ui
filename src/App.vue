@@ -53,7 +53,6 @@
 <script lang="ts">
 // Libraries
 import { Component, Vue, Mixins } from 'vue-property-decorator'
-import { mapState, mapActions } from 'vuex'
 
 // Components
 import SbcHeader from 'sbc-common-components/src/components/SbcHeader.vue'
@@ -88,11 +87,10 @@ export default class App extends Mixins(DateMixin) {
   private filingData: Array<FilingDataIF> = []
   private totalFee: number = 0
   private entityType: string = 'CP'
-  private certifyStatementResource: CertifyStatementIF
 
-  @Action('setEntityType') setEntityType: ActionBindingIF
-  @Action('setCurrentDate') setCurrentDate: ActionBindingIF
-  @Action('setCertifyStatementResource') setCertifyStatementResource: ActionBindingIF
+  @Action('setEntityType') setEntityType!: ActionBindingIF
+  @Action('setCurrentDate') setCurrentDate!: ActionBindingIF
+  @Action('setCertifyStatementResource') setCertifyStatementResource!: ActionBindingIF
 
   private created (): void {
     this.filingData.push({ filingTypeCode: FilingCodes.INCORPORATION_BC, entityType: EntityTypes.BCOMP })

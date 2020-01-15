@@ -44,7 +44,7 @@
 <script lang="ts">
 import { Component, Vue, Prop, Emit } from 'vue-property-decorator'
 import { State } from 'vuex-class'
-import { CertifyStatementIF } from '../../interfaces'
+import { CertifyStatementIF } from '@/interfaces'
 
 @Component({})
 export default class Certify extends Vue {

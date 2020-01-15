@@ -17,9 +17,7 @@
                 :certifiedBy.sync="certifiedBy"
                 @valid="certifyFormValid=$event"
                 :date="currentDate"
-                :certifyStatementResource="certifyStatementResource"
-
-              />
+                :certifyStatementResource="certifyStatementResource"/>
       </section>
     </v-card>
   </div>
@@ -45,7 +43,7 @@ export default class ReviewConfirm extends Mixins(ResourceLookupMixin) {
    @State(state => state.resourceModel.certifyStatementResource)
    readonly certifyStatementResource!: CertifyStatementIF
 
-   @Action('setCertifyState') setCertifyState: ActionBindingIF
+   @Action('setCertifyState') setCertifyState!: ActionBindingIF
 
   // properties for Certify component
   private certifiedBy:string = ''

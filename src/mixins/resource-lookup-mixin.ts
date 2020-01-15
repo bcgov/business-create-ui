@@ -3,7 +3,7 @@ import { Component, Vue } from 'vue-property-decorator'
 import { State } from 'vuex-class'
 
 // Interfaces
-import { ExternalResourceIF } from '@/interfaces/resource-interfaces/ExternalResourceIF'
+import { ExternalResourceIF } from '@/interfaces'
 
 /**
  * Mixin for components to retrieve text/settings from json resource.

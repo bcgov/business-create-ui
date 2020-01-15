@@ -2,5 +2,5 @@
 export interface TombStoneIF {
   keycloakRoles: Array<string>,
   authRoles: Array<string>,
-  entityType: string
+  entityType: string | null
 }
