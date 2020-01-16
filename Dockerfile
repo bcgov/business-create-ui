@@ -7,6 +7,6 @@ COPY . .
 RUN npm run build
 
 # production stage
-FROM docker.pkg.github.com/bcregistry/base_images/caddy:20200113 as prod
+FROM docker.pkg.github.com/bcregistry/base_images/caddy:20200115 as prod
 RUN mkdir /srv/basePath
 COPY --from=build-stage /app/dist /srv/basePath
