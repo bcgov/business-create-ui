@@ -8,7 +8,7 @@
             filled
             persistent-hint
             id="certified-by-textfield"
-            label="[Default Completing Party value]"
+            label="[Completing Party First Name Middle Name Last Name]"
             hint="Enter the Name of the Completing Party"
             :value="certifiedBy"
             @input="emitCertifiedBy"

@@ -46,5 +46,5 @@ export const mutateCertifyStatementResource = (state: any, certifyStatementResou
 }
 
 export const mutateCertifyState = (state: any, certifyState: CertifyIF) => {
-  state.certifyState = certifyState
+  state.stateModel.certifyState = certifyState
 }
