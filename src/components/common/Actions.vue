@@ -94,7 +94,7 @@ export default class Actions extends Vue {
    * Method called when Cancel button is clicked.
    */
   private onCancel (): void {
-    const authUrl = sessionStorage.getItem('AUTH_URL')
+    const authUrl = sessionStorage.getItem('AUTH_URL') || ''
     // assume Auth URL is always reachable
     window.location.assign(authUrl)
   }

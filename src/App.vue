@@ -47,8 +47,8 @@
     </main>
 
     <!-- FOR TESTING ONLY -->
-    <pre>{{stateModel}}</pre>
-    <pre>{{tombStoneModel}}</pre>
+    <!--<pre>{{stateModel}}</pre>
+    <pre>{{tombStoneModel}}</pre>-->
 
     <sbc-footer />
   </v-app>
@@ -56,7 +56,7 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Vue, Watch } from 'vue-property-decorator'
+import { Component, Vue, Watch, Mixins } from 'vue-property-decorator'
 import { Action, State } from 'vuex-class'
 
 // Components
@@ -65,8 +65,13 @@ import SbcFooter from 'sbc-common-components/src/components/SbcFooter.vue'
 import SbcFeeSummary from 'sbc-common-components/src/components/SbcFeeSummary.vue'
 import { EntityInfo, Stepper, Actions } from '@/components/common'
 
+// Mixins
+import { DateMixin } from '@/mixins'
+
 // Interfaces
-import { StateModelIF, TombStoneIF, ActionBindingIF, FilingDataIF } from '@/interfaces'
+import { FilingDataIF, ActionBindingIF, CertifyStatementIF, StateModelIF, TombStoneIF } from '@/interfaces'
+
+import { CertifyStatementResource } from '@/resources'
 
 // Enums
 import { EntityTypes, FilingCodes } from '@/enums'
@@ -81,7 +86,7 @@ import { EntityTypes, FilingCodes } from '@/enums'
     Actions
   }
 })
-export default class App extends Vue {
+export default class App extends Mixins(DateMixin) {
   // Global state
   @State stateModel!: StateModelIF
   @State tombStoneModel!: TombStoneIF
@@ -91,10 +96,18 @@ export default class App extends Vue {
 
   private filingData: Array<FilingDataIF> = []
   private totalFee: number = 0
+  private entityType: string = 'CP'
+
+  @Action('setEntityType') setEntityType!: ActionBindingIF
+  @Action('setCurrentDate') setCurrentDate!: ActionBindingIF
+  @Action('setCertifyStatementResource') setCertifyStatementResource!: ActionBindingIF
 
   // Lifecycle event
   private created (): void {
     this.filingData.push({ filingTypeCode: FilingCodes.INCORPORATION_BC, entityType: EntityTypes.BCOMP })
+    this.setEntityType(this.entityType)
+    this.setCurrentDate(this.dateToUsableString(new Date()))
+    this.setCertifyStatementResource(CertifyStatementResource.find(x => x.entityType === this.entityType))
   }
 
   /**

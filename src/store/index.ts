@@ -11,11 +11,13 @@ import { isRoleStaff, isRoleEdit, isRoleView, isEntityType, isTypeBcomp, isTypeC
 
 // Mutations
 import { mutateCurrentStep, mutateIsSaving, mutateIsSavingResuming, mutateIsFilingPaying,
-  mutateEntityType, mutateResource, mutateKeycloakRoles, mutateAuthRoles } from '@/store/mutations'
+  mutateEntityType, mutateResource, mutateKeycloakRoles, mutateAuthRoles,
+  mutateCurrentDate, mutateCertifyStatementResource, mutateCertifyState } from '@/store/mutations'
 
 // Actions
 import { setCurrentStep, setIsSaving, setIsSavingResuming, setIsFilingPaying,
-  setEntityType, setResource, setKeyCloakRoles, setAuthRoles } from './actions'
+  setEntityType, setResource, setKeyCloakRoles, setAuthRoles, setCurrentDate,
+  setCertifyStatementResource, setCertifyState } from './actions'
 
 Vue.use(Vuex)
 
@@ -46,7 +48,10 @@ export const store: Store<any> = new Vuex.Store<any>({
     mutateEntityType,
     mutateResource,
     mutateKeycloakRoles,
-    mutateAuthRoles
+    mutateAuthRoles,
+    mutateCurrentDate,
+    mutateCertifyStatementResource,
+    mutateCertifyState
   },
   actions: {
     setCurrentStep,
@@ -56,6 +61,9 @@ export const store: Store<any> = new Vuex.Store<any>({
     setEntityType,
     setResource,
     setKeyCloakRoles,
-    setAuthRoles
+    setAuthRoles,
+    setCurrentDate,
+    setCertifyStatementResource,
+    setCertifyState
   }
 })

@@ -1,5 +1,5 @@
 // Utils Interfaces
-export * from './utils-interfaces/resource-interface'
+export * from './resource-interfaces/resource-interface'
 export * from './utils-interfaces/utils-interface'
 
 // Store Interfaces
@@ -10,3 +10,6 @@ export * from './store-interfaces/getter-interface'
 
 // Others
 export * from './filingData-interface'
+export * from './resource-interfaces/component-resource-interfaces/certifyStatement-interface'
+export * from './stepper-interfaces/certify-interface'
+export * from './resource-interfaces/ExternalResourceIF'

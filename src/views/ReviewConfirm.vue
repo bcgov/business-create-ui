@@ -1,28 +1,49 @@
 <template>
   <div>
-    <header>
-      <h2>5. Review</h2>
-    </header>
-
-    <v-card flat class="step-container">
+    <v-container>
       <section>
-        Review/confirm component goes here.
+        <header>
+          <h2>Review</h2>
+        </header>
       </section>
-    </v-card>
+      <section>
+          <header>
+            <h2>Completing Party Statement</h2>
+          </header>
+          <Certify
+          :certifiedBy="certifiedBy"
+          @valid="onCertifyFormValidChange($event)"
+          @certifiedByChange="onCertifiedByChange($event)"
+          :date="currentDate"
+          :certifyStatementResource="certifyStatementResource"/>
+      </section>
+    </v-container>
   </div>
 </template>
 
 <script lang="ts">
 // Libraries
-import { Component, Vue } from 'vue-property-decorator'
-import { Getter } from 'vuex-class'
+import { Component, Vue, Mixins, Watch } from 'vue-property-decorator'
+import { State, Action, Getter } from 'vuex-class'
 
-// Interfaces
-import { GetterIF } from '@/interfaces'
+import { Certify } from '@/components/ReviewConfirm'
+import { ResourceLookupMixin } from '@/mixins'
+import { CertifyStatementIF, ActionBindingIF, GetterIF } from '@/interfaces'
 
-@Component({})
-export default class ReviewConfirm extends Vue {
-  // Global getters
+@Component({
+  components: {
+    Certify
+  }
+})
+export default class ReviewConfirm extends Mixins(ResourceLookupMixin) {
+   @State(state => state.stateModel.currentDate) readonly currentDate!: string
+
+   @State(state => state.resourceModel.certifyStatementResource)
+   readonly certifyStatementResource!: CertifyStatementIF
+
+   @Action('setCertifyState') setCertifyState!: ActionBindingIF
+
+   // Global getters
   @Getter isEntityType!: GetterIF
 
   // Lifecycle event
@@ -32,11 +53,36 @@ export default class ReviewConfirm extends Vue {
       this.$router.push('/')
     }
   }
+
+  // properties for Certify component
+  private certifiedBy:string = ''
+  private certifyFormValid:boolean = false
+
+  private onCertifyFormValidChange (val: boolean): void {
+    this.certifyFormValid = val
+    this.setCertifyState(
+      {
+        certifyFormValid: val,
+        certifiedBy: this.certifiedBy
+      }
+    )
+  }
+
+  private onCertifiedByChange (val: string): void {
+    this.certifiedBy = val
+    this.setCertifyState(
+      {
+        certifyFormValid: this.certifyFormValid,
+        certifiedBy: val
+      }
+    )
+  }
 }
 </script>
 
 <style lang="scss">
 .step-container {
-  height: 15rem; // FOR TESTING ONLY
+  margin-top: 1rem;
+  padding: 1.25rem;
 }
 </style>
