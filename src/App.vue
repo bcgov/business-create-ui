@@ -97,7 +97,6 @@ export default class App extends Mixins(DateMixin) {
   private filingData: Array<FilingDataIF> = []
   private totalFee: number = 0
 
-  @Action('setEntityType') setEntityType!: ActionBindingIF
   @Action('setCurrentDate') setCurrentDate!: ActionBindingIF
   @Action('setCertifyStatementResource') setCertifyStatementResource!: ActionBindingIF
 
