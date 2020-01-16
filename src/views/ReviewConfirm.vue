@@ -11,9 +11,9 @@
             <h2>Completing Party Statement</h2>
           </header>
           <Certify
-          :isCertified.sync="isCertified"
-          :certifiedBy.sync="certifiedBy"
-          @valid="certifyFormValid=$event"
+          :certifiedBy="certifiedBy"
+          @valid="onCertifyFormValidChange($event)"
+          @certifiedByChange="onCertifiedByChange($event)"
           :date="currentDate"
           :certifyStatementResource="certifyStatementResource"/>
       </section>
@@ -56,11 +56,10 @@ export default class ReviewConfirm extends Mixins(ResourceLookupMixin) {
 
   // properties for Certify component
   private certifiedBy:string = ''
-  private isCertified:boolean = false
   private certifyFormValid:boolean = false
 
-  @Watch('certifyFormValid')
-  private onCertifyFormValid (val: boolean): void {
+  private onCertifyFormValidChange (val: boolean): void {
+    this.certifyFormValid = val
     this.setCertifyState(
       {
         certifyFormValid: val,
@@ -69,8 +68,8 @@ export default class ReviewConfirm extends Mixins(ResourceLookupMixin) {
     )
   }
 
-  @Watch('certifiedBy')
-  private onCertifiedByChange (val: boolean): void {
+  private onCertifiedByChange (val: string): void {
+    this.certifiedBy = val
     this.setCertifyState(
       {
         certifyFormValid: this.certifyFormValid,
