@@ -63,7 +63,7 @@ function getLastEvent (wrapper: Wrapper<Certify>, name: string): any {
  * @returns a Wrapper<Certify> object with the given parameters.
  */
 function createComponent (
-  certifiedBy: string = undefined,
+  certifiedBy: string | undefined = undefined,
   date: string = defaultDate,
   certifyStatementResource: CertifyStatementIF = {
     entityType: 'CP',
@@ -205,7 +205,6 @@ describe('Certify', () => {
     const wrapper: Wrapper<Certify> = createComponent(' ')
     const inputElement: Wrapper<Vue> = wrapper.find(certifiedBySelector)
     inputElement.setValue(whitespaceCertifier)
-    console.log(inputElement.text())
     // The last "update:certifiedBy" event should be a trimmed version of the input.
     expect(getLastEvent(wrapper, 'certifiedByChange')).toMatch(trimmedCertifier)
   })

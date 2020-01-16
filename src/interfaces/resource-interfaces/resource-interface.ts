@@ -3,6 +3,6 @@ import { ExternalResourceIF } from './ExternalResourceIF'
 
 // Interface to define the resource model example
 export interface ResourceIF {
-  certifyStatementResource: CertifyStatementIF;
-  externalResource: ExternalResourceIF;
+  certifyStatementResource: CertifyStatementIF | null;
+  externalResource: ExternalResourceIF | null;
 }
