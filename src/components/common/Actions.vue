@@ -66,16 +66,22 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Mixins } from 'vue-property-decorator'
 import { State, Getter, Action } from 'vuex-class'
 
 // Interfaces
-import { StateModelIF, GetterIF, ActionBindingIF } from '@/interfaces'
+import { StateModelIF, GetterIF, ActionBindingIF, TombStoneIF, NameRequestIF } from '@/interfaces'
+
+// Mixins
+import { ApiMixin } from '@/mixins'
 
 @Component
-export default class Actions extends Vue {
+export default class Actions extends Mixins(ApiMixin) {
   // Global state
   @State stateModel!: StateModelIF
+  @State tombStoneModel!: TombStoneIF
+  @State(state => state.nameRequestModel.filingId)
+  readonly filingId!: number
 
   // Global getters
   @Getter isEntityType!: GetterIF
@@ -90,13 +96,15 @@ export default class Actions extends Vue {
   @Action setIsSavingResuming!: ActionBindingIF
   @Action setIsFilingPaying!: ActionBindingIF
 
+  // Local Properties
+  private authUrl = sessionStorage.getItem('AUTH_URL') || ''
+
   /**
    * Method called when Cancel button is clicked.
    */
   private onCancel (): void {
-    const authUrl = sessionStorage.getItem('AUTH_URL') || ''
     // assume Auth URL is always reachable
-    window.location.assign(authUrl)
+    window.location.assign(this.authUrl)
   }
 
   /**
@@ -105,7 +113,7 @@ export default class Actions extends Vue {
    */
   private async onClickSave (): Promise<void> {
     this.setIsSaving(true)
-    await this.sleep(1000)
+    await this.saveFiling(true, this.filingId)
     this.setIsSaving(false)
   }
 
@@ -115,8 +123,9 @@ export default class Actions extends Vue {
    */
   private async onClickSaveResume (): Promise<void> {
     this.setIsSavingResuming(true)
-    await this.sleep(1000)
+    await this.saveFiling(true, this.filingId)
     this.setIsSavingResuming(false)
+    window.location.assign(this.authUrl)
   }
 
   /**
@@ -125,7 +134,7 @@ export default class Actions extends Vue {
    */
   private async onClickFilePay (): Promise<void> {
     this.setIsFilingPaying(true)
-    await this.sleep(1000)
+    await this.saveFiling(false, this.filingId)
     this.setIsFilingPaying(false)
   }
 

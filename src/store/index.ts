@@ -3,7 +3,7 @@ import Vue from 'vue'
 import Vuex, { Store } from 'vuex'
 
 // State
-import { stateModel, resourceModel, tombStoneModel } from './state'
+import { stateModel, resourceModel, tombStoneModel, nameRequestModel } from './state'
 
 // Getters
 import { isRoleStaff, isRoleEdit, isRoleView, isEntityType, isTypeBcomp, isTypeCoop,
@@ -13,13 +13,13 @@ import { isRoleStaff, isRoleEdit, isRoleView, isEntityType, isTypeBcomp, isTypeC
 import { mutateCurrentStep, mutateIsSaving, mutateIsSavingResuming, mutateIsFilingPaying,
   mutateEntityType, mutateResource, mutateKeycloakRoles, mutateAuthRoles,
   mutateCurrentDate, mutateCertifyStatementResource, mutateCertifyState,
-  mutateBusinessContact, mutateDefineCompanyStepValidity } from '@/store/mutations'
+  mutateBusinessContact, mutateDefineCompanyStepValidity, mutateNameRequestState } from '@/store/mutations'
 
 // Actions
 import { setCurrentStep, setIsSaving, setIsSavingResuming, setIsFilingPaying,
   setEntityType, setResource, setKeyCloakRoles, setAuthRoles, setCurrentDate,
   setCertifyStatementResource, setCertifyState, setBusinessContact,
-  setDefineCompanyStepValidity } from './actions'
+  setDefineCompanyStepValidity, setNameRequestState } from './actions'
 
 Vue.use(Vuex)
 
@@ -27,7 +27,8 @@ export const store: Store<any> = new Vuex.Store<any>({
   state: {
     stateModel,
     resourceModel,
-    tombStoneModel
+    tombStoneModel,
+    nameRequestModel
   },
   getters: {
     isRoleStaff,
@@ -55,7 +56,8 @@ export const store: Store<any> = new Vuex.Store<any>({
     mutateCertifyStatementResource,
     mutateCertifyState,
     mutateBusinessContact,
-    mutateDefineCompanyStepValidity
+    mutateDefineCompanyStepValidity,
+    mutateNameRequestState
   },
   actions: {
     setCurrentStep,
@@ -70,6 +72,7 @@ export const store: Store<any> = new Vuex.Store<any>({
     setCertifyStatementResource,
     setCertifyState,
     setBusinessContact,
-    setDefineCompanyStepValidity
+    setDefineCompanyStepValidity,
+    setNameRequestState
   }
 })

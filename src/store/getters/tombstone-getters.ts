@@ -14,13 +14,13 @@ export const isRoleView = (state: any): boolean => {
 }
 
 export const isEntityType = (state: any): boolean => {
-  return !!state.tombStoneModel.entityType
+  return !!state.nameRequestModel.entityType
 }
 
 export const isTypeBcomp = (state: any): boolean => {
-  return (state.tombStoneModel.entityType === EntityTypes.BCOMP)
+  return (state.nameRequestModel.entityType === EntityTypes.BCOMP)
 }
 
 export const isTypeCoop = (state: any): boolean => {
-  return (state.tombStoneModel.entityType === EntityTypes.COOP)
+  return (state.nameRequestModel.entityType === EntityTypes.COOP)
 }

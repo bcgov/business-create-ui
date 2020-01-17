@@ -65,7 +65,7 @@ import { EntityInfo, Stepper, Actions } from '@/components/common'
 import { DateMixin } from '@/mixins'
 
 // Interfaces
-import { FilingDataIF, ActionBindingIF, CertifyStatementIF, TombStoneIF } from '@/interfaces'
+import { FilingDataIF, ActionBindingIF, CertifyStatementIF, TombStoneIF, NameRequestIF } from '@/interfaces'
 
 import { CertifyStatementResource } from '@/resources'
 
@@ -85,6 +85,7 @@ import { EntityTypes, FilingCodes } from '@/enums'
 export default class App extends Mixins(DateMixin) {
   // Global state
   @State tombStoneModel!: TombStoneIF
+  @State nameRequestModel!: NameRequestIF
 
   // Global actions
   @Action setCurrentStep!: ActionBindingIF
@@ -92,13 +93,17 @@ export default class App extends Mixins(DateMixin) {
   private filingData: Array<FilingDataIF> = []
   private totalFee: number = 0
 
-  @Action('setCurrentDate') setCurrentDate!: ActionBindingIF
-  @Action('setCertifyStatementResource') setCertifyStatementResource!: ActionBindingIF
+  @Action setCurrentDate!: ActionBindingIF
+  @Action setCertifyStatementResource!: ActionBindingIF
+  @Action setNameRequestState!: ActionBindingIF
 
   // Lifecycle event
   private created (): void {
     this.filingData.push({ filingTypeCode: FilingCodes.INCORPORATION_BC, entityType: EntityTypes.BCOMP })
     this.setCurrentDate(this.dateToUsableString(new Date()))
+
+    // Placeholder to assign the NR Data we are expecting *Development Purpose*
+    this.setNameRequestState({ nrNumber: 'NR1234567', entityType: 'CP', filingId: null })
   }
 
   /**
@@ -132,7 +137,7 @@ export default class App extends Mixins(DateMixin) {
     this.setCurrentStep(this.$route.meta.step)
   }
 
-  @Watch('tombStoneModel.entityType')
+  @Watch('nameRequestModel.entityType')
   private onEntityTypeChanged (val:string | null) : void{
     this.setCertifyStatementResource(val ? CertifyStatementResource
       .find(x => x.entityType === val) : null)

@@ -25,7 +25,7 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Vue, Mixins, Watch } from 'vue-property-decorator'
+import { Component, Mixins } from 'vue-property-decorator'
 import { State, Action, Getter } from 'vuex-class'
 
 // Interfaces
@@ -44,15 +44,18 @@ import { ResourceLookupMixin } from '@/mixins'
   }
 })
 export default class ReviewConfirm extends Mixins(ResourceLookupMixin) {
-   @State(state => state.stateModel.currentDate) readonly currentDate!: string
-   @State(state => state.stateModel.certifyState) readonly certifyState!: CertifyIF
+  @State(state => state.stateModel.currentDate)
+  readonly currentDate!: string
 
-   @State(state => state.resourceModel.certifyStatementResource)
-   readonly certifyStatementResource!: CertifyStatementIF
+  @State(state => state.stateModel.certifyState)
+  readonly certifyState!: CertifyIF
 
-   @Action('setCertifyState') setCertifyState!: ActionBindingIF
+  @State(state => state.resourceModel.certifyStatementResource)
+  readonly certifyStatementResource!: CertifyStatementIF
 
-   // Global getters
+  @Action setCertifyState!: ActionBindingIF
+
+  // Global getters
   @Getter isEntityType!: GetterIF
 
   // Lifecycle event
