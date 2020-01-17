@@ -11,7 +11,7 @@
             <h2>Completing Party Statement</h2>
           </header>
           <Certify
-          :certifiedBy="certifiedBy"
+          :certifiedBy="certifyState.certifiedBy"
           @valid="onCertifyFormValidChange($event)"
           @certifiedByChange="onCertifiedByChange($event)"
           :date="currentDate"
@@ -28,7 +28,7 @@ import { State, Action, Getter } from 'vuex-class'
 
 import { Certify } from '@/components/ReviewConfirm'
 import { ResourceLookupMixin } from '@/mixins'
-import { CertifyStatementIF, ActionBindingIF, GetterIF } from '@/interfaces'
+import { CertifyStatementIF, ActionBindingIF, GetterIF, CertifyIF } from '@/interfaces'
 
 @Component({
   components: {
@@ -37,6 +37,7 @@ import { CertifyStatementIF, ActionBindingIF, GetterIF } from '@/interfaces'
 })
 export default class ReviewConfirm extends Mixins(ResourceLookupMixin) {
    @State(state => state.stateModel.currentDate) readonly currentDate!: string
+   @State(state => state.stateModel.certifyState) readonly certifyState!: CertifyIF
 
    @State(state => state.resourceModel.certifyStatementResource)
    readonly certifyStatementResource!: CertifyStatementIF
@@ -54,25 +55,19 @@ export default class ReviewConfirm extends Mixins(ResourceLookupMixin) {
     }
   }
 
-  // properties for Certify component
-  private certifiedBy:string = ''
-  private certifyFormValid:boolean = false
-
   private onCertifyFormValidChange (val: boolean): void {
-    this.certifyFormValid = val
     this.setCertifyState(
       {
         certifyFormValid: val,
-        certifiedBy: this.certifiedBy
+        certifiedBy: this.certifyState.certifiedBy
       }
     )
   }
 
   private onCertifiedByChange (val: string): void {
-    this.certifiedBy = val
     this.setCertifyState(
       {
-        certifyFormValid: this.certifyFormValid,
+        certifyFormValid: this.certifyState.certifyFormValid,
         certifiedBy: val
       }
     )
