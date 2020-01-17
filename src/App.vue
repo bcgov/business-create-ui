@@ -12,7 +12,7 @@
       </div>
     </transition>
 
-    <sbc-header ref="sbcHeader" :brandLink="origin" :authURL="authApiUrl" />
+    <sbc-header ref="sbcHeader" />
 
     <main class="app-body">
       <entity-info />
@@ -102,26 +102,10 @@ export default class App extends Mixins(DateMixin) {
   }
 
   /**
-   * The origin URL.
-   */
-  private get origin (): string {
-    const root = window.location.origin || ''
-    const path = process.env.VUE_APP_PATH
-    return `${root}/${path}`
-  }
-
-  /**
    * The Pay API URL.
    */
   private get payApiUrl (): string | null {
     return sessionStorage.getItem('PAY_API_URL')
-  }
-
-  /**
-   * The Auth API URL.
-   */
-  private get authApiUrl (): string | null {
-    return sessionStorage.getItem('AUTH_API_URL')
   }
 
   /**
@@ -136,6 +120,11 @@ export default class App extends Mixins(DateMixin) {
   private onEntityTypeChanged (val:string | null) : void{
     this.setCertifyStatementResource(val ? CertifyStatementResource
       .find(x => x.entityType === val) : null)
+  }
+
+  // FOR FUTURE USE TO SUPPORT EXIT IN ERROR DIALOGS
+  private onClickExit (): void {
+    (this.$refs.form as Vue & { logout: () => void }).logout()
   }
 }
 </script>

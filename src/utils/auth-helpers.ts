@@ -11,42 +11,30 @@ import { SET_KEYCLOAK_ROLES, SET_AUTH_ROLES } from '@/store/constants'
 import { JwtIF, AuthIF } from '@/interfaces'
 
 /**
- * An Auth Helper class to handle fetching and setting authorizations for entities from the Auth API.
+ * A class to handle authentication using Keycloak token.
  */
-export default class AuthenticationService {
-  // Authentication Properties
-  private authAPIURL: string | null
-  private businessId: string | null
-
+export class AuthenticationService {
   /**
-   * Constructor to initialize properties.
+   * Gets the JWT, parses it, and stores the Keycloak roles.
    */
-  constructor () {
-    this.authAPIURL = sessionStorage.getItem('AUTH_API_URL')
-    this.businessId = sessionStorage.getItem('BUSINESS_IDENTIFIER')
-  }
-
-  /**
-   * Parent method to handle the Get, Parse and Storing of the keycloak roles.
-   */
-  getJwtRoles = (): void => {
+  getJwtRoles (): void {
     try {
       // get initial data
       const jwt = this.getJWT()
       const keycloakRoles = this.getKeycloakRoles(jwt)
 
-      // Set the keycloak roles to store
+      // set the keycloak roles to store
       store.dispatch(SET_KEYCLOAK_ROLES, keycloakRoles)
     } catch (error) {
-      throw new Error('Error Fetching Keycloak roles')
+      throw new Error('Error fetching Keycloak roles')
     }
   }
 
   /**
-   * Get the token and Parse it from keycloak token.
+   * Gets the JWT from session storage and parses it.
    * @returns A parsed JWT.
    */
-  getJWT = (): JwtIF => {
+  private getJWT (): JwtIF {
     const token = sessionStorage.getItem('KEYCLOAK_TOKEN')
     if (token) {
       return this.parseJwt(token)
@@ -55,11 +43,11 @@ export default class AuthenticationService {
   }
 
   /**
-   * Decode and parse the JWT to a readable state.
+   * Decodes and parses the token to a readable state.
    * @param token The token to be decoded & parsed.
-   * @returns A Parsed Token.
+   * @returns A parsed JWT.
    */
-  parseJwt = (token: string): JwtIF => {
+  private parseJwt (token: string): JwtIF {
     try {
       const base64Url = token.split('.')[1]
       const base64 = decodeURIComponent(window.atob(base64Url).split('').map(function (c) {
@@ -72,25 +60,40 @@ export default class AuthenticationService {
   }
 
   /**
-   * Get the roles from the parsed JWT.
-   * @param jwt The JWT from which the roles are parsed.
+   * Gets the Keycloak roles from the parsed JWT.
+   * @param jwt The parsed JWT.
    */
-  getKeycloakRoles = (jwt: JwtIF): Array<string> => {
+  private getKeycloakRoles (jwt: JwtIF): Array<string> {
     const keycloakRoles = jwt.roles
     if (keycloakRoles && keycloakRoles.length > 0) {
       return keycloakRoles
     }
-    throw new Error('Error getting Keycloak roles')
+    throw new Error('Invalid Keycloak roles')
+  }
+}
+
+/**
+ * A class to handle authorizations from the Auth API.
+ */
+export class AuthorizationService {
+  // Local Properties
+  private authAPIURL: string | null
+
+  /**
+   * Initialize local properties.
+   */
+  constructor () {
+    this.authAPIURL = sessionStorage.getItem('AUTH_API_URL')
   }
 
   /**
-   * Method to retrieve authorizations for specific entities.
-   * @param businessId The id of the specified business.
-   * @returns A promise of data from the Auth Endpoint.
+   * Retrieves authorizations for specified entity and stores the auth roles.
+   * @param businessId The business id of the entity.
+   * @returns A promise of data from the Auth endpoint.
    */
-  getAuthorizations (): Promise<any> {
+  getAuthorizations (businessId: string): Promise<any> {
     try {
-      const url = this.businessId + '/authorizations'
+      const url = businessId + '/authorizations'
       const config = {
         baseURL: this.authAPIURL + 'entities/'
       }
@@ -101,10 +104,10 @@ export default class AuthenticationService {
   }
 
   /**
-   * Method to validate and store auth roles.
-   * @param response The response data to be parsed and stored.
+   * Parses, validates and stores the auth roles.
+   * @param response The Auth response data.
    */
-  storeAuthRoles (response: AuthIF): void {
+  private storeAuthRoles (response: AuthIF): void {
     const authRoles = response && response.data && response.data.roles
     if (authRoles && authRoles.length > 0) {
       // set auth roles to store

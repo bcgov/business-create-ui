@@ -20,8 +20,8 @@ export const setResource: ActionIF = ({ commit }, resource): void => {
   commit('mutateResource', resource)
 }
 
-export const setKeyCloakRoles: ActionIF = ({ commit }, keyCloakRoles): void => {
-  commit('mutateKeycloakRoles', keyCloakRoles)
+export const setKeycloakRoles: ActionIF = ({ commit }, keycloakRoles): void => {
+  commit('mutateKeycloakRoles', keycloakRoles)
 }
 
 export const setAuthRoles: ActionIF = ({ commit }, authRoles): void => {
