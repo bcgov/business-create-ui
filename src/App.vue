@@ -96,18 +96,14 @@ export default class App extends Mixins(DateMixin) {
 
   private filingData: Array<FilingDataIF> = []
   private totalFee: number = 0
-  private entityType: string = 'CP'
 
-  @Action('setEntityType') setEntityType!: ActionBindingIF
   @Action('setCurrentDate') setCurrentDate!: ActionBindingIF
   @Action('setCertifyStatementResource') setCertifyStatementResource!: ActionBindingIF
 
   // Lifecycle event
   private created (): void {
     this.filingData.push({ filingTypeCode: FilingCodes.INCORPORATION_BC, entityType: EntityTypes.BCOMP })
-    this.setEntityType(this.entityType)
     this.setCurrentDate(this.dateToUsableString(new Date()))
-    this.setCertifyStatementResource(CertifyStatementResource.find(x => x.entityType === this.entityType))
   }
 
   /**
@@ -139,6 +135,12 @@ export default class App extends Mixins(DateMixin) {
   @Watch('$route', { immediate: true })
   private onRouteChanged (): void {
     this.setCurrentStep(this.$route.meta.step)
+  }
+
+  @Watch('tombStoneModel.entityType')
+  private onEntityTypeChanged (val:string | null) : void{
+    this.setCertifyStatementResource(val ? CertifyStatementResource
+      .find(x => x.entityType === val) : null)
   }
 }
 </script>

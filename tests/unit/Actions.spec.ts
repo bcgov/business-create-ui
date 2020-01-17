@@ -24,6 +24,24 @@ describe('Actions component', () => {
     wrapper = shallowMount(Actions, { localVue, store, router, vuetify })
   })
 
+  it('Disables File and Pay button when certify from is not valid', () => {
+    // verify File and Pay button state
+    store.state.stateModel.certifyState = {
+      certifyFormValid: false,
+      certifiedBy: 'Some Certifier'
+    }
+    expect(wrapper.find('#file-pay-btn').attributes('disabled')).toBe('true')
+  })
+
+  it('Enables File and Pay button when certify from is valid', () => {
+    store.state.stateModel.certifyState = {
+      certifyFormValid: true,
+      certifiedBy: 'Some certifier'
+    }
+    // verify File and Pay button state
+    expect(wrapper.find('#file-pay-btn').attributes('disabled')).toBeUndefined()
+  })
+
   afterEach(() => {
     wrapper.destroy()
   })

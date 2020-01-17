@@ -32,7 +32,8 @@ export const isEnableFilePayBtn = (state: any): boolean => {
   const step3Valid = true // FOR TESTING ONLY
   const step4Valid = true // FOR TESTING ONLY
   const step5Valid = true // FOR TESTING ONLY
-  return (step1Valid && step2Valid && step3Valid && step4Valid && step5Valid)
+  return (step1Valid && step2Valid && step3Valid && step4Valid && step5Valid &&
+    state.stateModel.certifyState.certifyFormValid)
 }
 
 /**
