@@ -46,10 +46,6 @@
       <actions />
     </main>
 
-    <!-- FOR TESTING ONLY -->
-    <!--<pre>{{stateModel}}</pre>
-    <pre>{{tombStoneModel}}</pre>-->
-
     <sbc-footer />
   </v-app>
 </template>
@@ -69,7 +65,7 @@ import { EntityInfo, Stepper, Actions } from '@/components/common'
 import { DateMixin } from '@/mixins'
 
 // Interfaces
-import { FilingDataIF, ActionBindingIF, CertifyStatementIF, StateModelIF, TombStoneIF } from '@/interfaces'
+import { FilingDataIF, ActionBindingIF, CertifyStatementIF, TombStoneIF } from '@/interfaces'
 
 import { CertifyStatementResource } from '@/resources'
 
@@ -88,7 +84,6 @@ import { EntityTypes, FilingCodes } from '@/enums'
 })
 export default class App extends Mixins(DateMixin) {
   // Global state
-  @State stateModel!: StateModelIF
   @State tombStoneModel!: TombStoneIF
 
   // Global actions
