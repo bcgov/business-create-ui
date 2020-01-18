@@ -26,12 +26,12 @@
 
             <stepper class="mt-10" />
 
-            <router-view class="app-router-view mt-10" />
+            <router-view class="mt-10" />
           </v-col>
 
           <v-col cols="12" lg="3" style="position: relative">
             <aside>
-              <affix relative-element-selector=".app-router-view" :offset="{ top: 120, bottom: 40 }">
+              <affix relative-element-selector=".col-lg-9" :offset="{ top: 86, bottom: 12 }">
                 <sbc-fee-summary
                   v-bind:filingData="[...filingData]"
                   v-bind:payURL="payApiUrl"
@@ -144,3 +144,6 @@ export default class App extends Mixins(DateMixin) {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+</style>
