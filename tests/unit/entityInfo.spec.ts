@@ -23,7 +23,7 @@ describe('Entity Info component', () => {
     wrapper.destroy()
   })
 
-  it('renders initial header when Name Request Data is empty and not the name request data sections', () => {
+  it('renders initial header when EntityType has not yet been determined', () => {
     expect(wrapper.vm.$el.querySelector('#no-nr-header').textContent)
       .toContain('Register a BC Business')
     expect(wrapper.vm.$el.querySelector('#nr-header').style.display).toBe('none')
