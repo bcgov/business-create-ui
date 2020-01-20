@@ -3,7 +3,7 @@
     <v-container>
       <v-list-item three-line id="entity-info-header">
 
-        <!---Initial Header --->
+        <!-- Initial Header -->
         <v-list-item-content id="no-nr-header" v-show="!isEntityType">
 
           <!-- Intro Title -->
@@ -13,13 +13,13 @@
 
         </v-list-item-content>
 
-        <!--- Header With NR Data --->
+        <!-- Header With NR Data -->
         <v-list-item-content id="nr-header" v-show="isEntityType">
 
           <!-- Subtitle -->
           <v-list-item-subtitle class="entity-subtitle">
             <span v-if="isTypeBcomp">Incorporate a BC Benefit Company</span>
-            <span v-if="isTypeCoop">Incorporate a BC Cooperative</span>
+            <span v-if="isTypeCoop">Incorporate a BC Cooperative Association</span>
           </v-list-item-subtitle>
 
           <!-- Company Name -->
@@ -56,9 +56,6 @@ import { TombStoneIF, GetterIF } from '@/interfaces'
 
 @Component
 export default class EntityInfo extends Vue {
-  // Global State
-  @State tombStoneModel!: TombStoneIF
-
   // Global getters
   @Getter isEntityType!: GetterIF
   @Getter isTypeBcomp!: GetterIF
