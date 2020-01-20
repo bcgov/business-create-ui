@@ -87,7 +87,7 @@ export default class DefineCompany extends Vue {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .step-container {
   height: 15rem; // FOR TESTING ONLY
   padding: 1.25rem;

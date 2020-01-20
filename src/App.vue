@@ -26,12 +26,12 @@
 
             <stepper class="mt-10" />
 
-            <router-view class="app-router-view mt-10" />
+            <router-view class="mt-10" />
           </v-col>
 
           <v-col cols="12" lg="3" style="position: relative">
             <aside>
-              <affix relative-element-selector=".app-router-view" :offset="{ top: 120, bottom: 40 }">
+              <affix relative-element-selector=".col-lg-9" :offset="{ top: 86, bottom: 12 }">
                 <sbc-fee-summary
                   v-bind:filingData="[...filingData]"
                   v-bind:payURL="payApiUrl"
@@ -45,10 +45,6 @@
 
       <actions />
     </main>
-
-    <!-- FOR TESTING ONLY -->
-    <!--<pre>{{stateModel}}</pre>
-    <pre>{{tombStoneModel}}</pre>-->
 
     <sbc-footer />
   </v-app>
@@ -69,7 +65,7 @@ import { EntityInfo, Stepper, Actions } from '@/components/common'
 import { DateMixin } from '@/mixins'
 
 // Interfaces
-import { FilingDataIF, ActionBindingIF, CertifyStatementIF, StateModelIF, TombStoneIF } from '@/interfaces'
+import { FilingDataIF, ActionBindingIF, CertifyStatementIF, TombStoneIF } from '@/interfaces'
 
 import { CertifyStatementResource } from '@/resources'
 
@@ -88,7 +84,6 @@ import { EntityTypes, FilingCodes } from '@/enums'
 })
 export default class App extends Mixins(DateMixin) {
   // Global state
-  @State stateModel!: StateModelIF
   @State tombStoneModel!: TombStoneIF
 
   // Global actions
@@ -144,3 +139,6 @@ export default class App extends Mixins(DateMixin) {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+</style>
