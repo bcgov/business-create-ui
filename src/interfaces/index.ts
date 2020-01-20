@@ -11,5 +11,5 @@ export * from './store-interfaces/getter-interface'
 // Others
 export * from './filingData-interface'
 export * from './resource-interfaces/component-resource-interfaces/certifyStatement-interface'
-export * from './stepper-interfaces/certify-interface'
+export * from './stepper-interfaces/ReviewConfirm/certify-interface'
 export * from './resource-interfaces/ExternalResourceIF'

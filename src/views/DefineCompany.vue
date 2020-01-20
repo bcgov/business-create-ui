@@ -1,9 +1,9 @@
 <template>
   <div>
+    <section>
     <header>
       <h2>1. Company Name</h2>
     </header>
-
     <v-card flat class="step-container">
       <div class="meta-container">
         <label>Name Request</label>
@@ -28,27 +28,55 @@
         </div>
       </div>
     </v-card>
+    </section>
+<p></p>
+    <section>
+      <header>
+        <h2>3. Business Contact Information</h2>
+      </header>
+      <BusinessContactForm
+      :initialValue = businessContact
+      :isEditing = true
+      :showErrors = showErrors
+      @contactInfoChange = "onBusinessContactInfoChange($event)"
+      @contactInfoFormValidityChange = "onBusinessContactFormValidityChange($event)"/>
+    </section>
   </div>
 </template>
 
 <script lang="ts">
 // Libraries
 import { Component, Vue } from 'vue-property-decorator'
-import { Getter, Action } from 'vuex-class'
+import { Getter, Action, State } from 'vuex-class'
 
 // Interfaces
 import { GetterIF, ActionBindingIF } from '@/interfaces'
 
+import BusinessContactForm from '@/components/DefineCompany/BusinessContactInfo.vue'
+
 // Enums
 import { EntityTypes } from '@/enums'
+import { BusinessContactIF } from '../interfaces/stepper-interfaces/DefineCompany/business-contact-interface'
 
-@Component({})
+@Component({
+  components: {
+    BusinessContactForm
+  }
+})
 export default class DefineCompany extends Vue {
+  // State
+  @State(state => state.stateModel.defineCompanyStep.businessContact)
+  readonly businessContact!: BusinessContactIF
+
   // Global getters
   @Getter isEntityType!: GetterIF
 
   // Global actions
   @Action setEntityType!: ActionBindingIF
+  @Action setBusinessContact!: ActionBindingIF
+  @Action setDefineCompanyStepValidity!: ActionBindingIF
+
+  private businessContactFormValid:boolean = false
 
   /**
    * Method called when Benefit Company button is clicked.
@@ -84,12 +112,25 @@ export default class DefineCompany extends Vue {
   private onClickReset (): void {
     this.setEntityType(null)
   }
+
+  private onBusinessContactInfoChange (businessContact: BusinessContactIF): void {
+    this.setBusinessContact(businessContact)
+  }
+
+  private onBusinessContactFormValidityChange (validity: boolean): void {
+    this.businessContactFormValid = validity
+    this.setDefineCompanyStepValidity(this.businessContactFormValid)
+  }
+
+  private get showErrors (): boolean {
+    return Boolean(this.$route.query.showErrors)
+  }
 }
 </script>
 
 <style lang="scss">
 .step-container {
-  height: 15rem; // FOR TESTING ONLY
+  margin-top: 1rem;
   padding: 1.25rem;
 }
 
