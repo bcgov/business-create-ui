@@ -103,7 +103,7 @@ export default class BusinessContactInfo extends Vue {
   ]
 
   private extensionRules = [
-    (v: any) => !v || (v.length === 0 && v.length < 3) || 'Extension is invalid'
+    (v: any) => !v || (v.length >= 0 || v.length <= 3) || 'Extension is invalid'
   ]
 
   private emailMustMatch (): string {
