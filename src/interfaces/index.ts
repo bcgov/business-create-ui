@@ -12,7 +12,6 @@ export * from './store-interfaces/getter-interface'
 export * from './stepper-interfaces/DefineCompany/business-contact-interface'
 export * from './stepper-interfaces/DefineCompany/define-company-interface'
 export * from './stepper-interfaces/ReviewConfirm/certify-interface'
-export * from './stepper-interfaces/ReviewConfirm/certify-interface'
 
 // Others
 export * from './filingData-interface'
