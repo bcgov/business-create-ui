@@ -1,10 +1,10 @@
 <template>
   <div id="entity-info">
     <v-container>
-      <v-list-item three-line>
+      <v-list-item three-line id="entity-info-header">
 
-        <!---Initial Header --->
-        <v-list-item-content id="no-nr-header" v-show="!nameReqData">
+        <!-- Initial Header -->
+        <v-list-item-content id="no-nr-header" v-show="!isEntityType">
 
           <!-- Intro Title -->
           <v-list-item-title class="header-title" id="entity-title">
@@ -13,12 +13,13 @@
 
         </v-list-item-content>
 
-        <!--- Header With NR Data --->
-        <v-list-item-content id="nr-header" v-show="nameReqData">
+        <!-- Header With NR Data -->
+        <v-list-item-content id="nr-header" v-show="isEntityType">
 
           <!-- Subtitle -->
           <v-list-item-subtitle class="entity-subtitle">
-            <span>Incorporate a BC Benefit Company</span>
+            <span v-if="isTypeBcomp">Incorporate a BC Benefit Company</span>
+            <span v-if="isTypeCoop">Incorporate a BC Cooperative Association</span>
           </v-list-item-subtitle>
 
           <!-- Company Name -->
@@ -46,16 +47,19 @@
 </template>
 
 <script lang="ts">
+// Libraries
 import { Component, Vue } from 'vue-property-decorator'
+import { State, Getter } from 'vuex-class'
+
+// Interfaces
+import { TombStoneIF, GetterIF } from '@/interfaces'
 
 @Component
 export default class EntityInfo extends Vue {
-  // Local Properties
-  /**
-   * Boolean representing the presence of a Name Request Response.
-   * TODO: look at entity data in store, which was set from API response from Name Request
-   */
-  private nameReqData: boolean | undefined = false
+  // Global getters
+  @Getter isEntityType!: GetterIF
+  @Getter isTypeBcomp!: GetterIF
+  @Getter isTypeCoop!: GetterIF
 }
 </script>
 
@@ -64,6 +68,10 @@ export default class EntityInfo extends Vue {
 
 #entity-info {
   background: $BCgovInputBG;
+}
+
+#entity-info-header {
+  padding: 0!important;
 }
 
 .container {

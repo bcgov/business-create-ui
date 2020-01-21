@@ -5,7 +5,7 @@ on:
     branches:
       - master
 env:
-  IMAGE_NAME: business_create
+  IMAGE_NAME: business-create
 
 jobs:
   build:
@@ -38,14 +38,15 @@ jobs:
           CI: true
 
       - name: Log into registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
+        run: echo "${{ secrets.OKD_SA_SECRET }}" | docker login ${{ secrets.OKD_REGISTRY }} -u ${{ secrets.OKD_SA_NAME }} --password-stdin
 
       - name: Build image
         run: docker build . --file Dockerfile --tag image
 
       - name: Push image
         run: |
-          IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME
+          #IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME
+          IMAGE_ID=${{ secrets.OKD_REGISTRY }}/${{ secrets.OKD_REPOSITORY }}/$IMAGE_NAME
           # Strip git ref prefix from version
           VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
           # Strip "v" prefix from tag name

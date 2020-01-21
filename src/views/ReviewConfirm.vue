@@ -82,8 +82,9 @@ export default class ReviewConfirm extends Mixins(ResourceLookupMixin) {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .review-confirm-container {
+  margin-top: 1rem;
   padding: 1.25rem;
   padding-bottom: 0.5rem;
   line-height: 1.2rem;
