@@ -10,10 +10,11 @@
          </span>
       </div>
       <div class="business-contact-container">
-      <BusinessContactForm
-      :initialValue = businessContact
-      :isEditing = false /></div>
-      </v-card>
+        <BusinessContactInfo
+        :initialValue = businessContact
+        :isEditing = false />
+      </div>
+    </v-card>
 </template>
 
 <script lang="ts">
@@ -22,14 +23,14 @@ import { Component, Vue } from 'vue-property-decorator'
 import { Getter, Action, State } from 'vuex-class'
 
 // Interfaces
-import { BusinessContactIF } from '@/interfaces/stepper-interfaces/DefineCompany/business-contact-interface'
+import { BusinessContactIF } from '@/interfaces'
 
 // Components
-import BusinessContactForm from '@/components/DefineCompany/BusinessContactInfo.vue'
+import { BusinessContactInfo } from '@/components/DefineCompany'
 
 @Component({
   components: {
-    BusinessContactForm
+    BusinessContactInfo
   }
 })
 export default class SummaryDefineCompany extends Vue {
@@ -44,12 +45,14 @@ export default class SummaryDefineCompany extends Vue {
 
 <style lang="scss">
 .defineCompanyStepErrorMessage {
-  padding: 1.25rem;
+  padding-top: 1.25rem;
+  padding-left: 1.25rem;
   font-weight: bold;
   color:#1976d2;
 }
 
 .business-contact-container{
-  padding-left: 1.25rem;
+  padding-left: 1.75rem;
+  padding-top: 1.25rem;
 }
 </style>

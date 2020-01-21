@@ -59,14 +59,17 @@
 </template>
 
 <script lang="ts">
+// Libraries
 import { Component, Vue, Prop, Watch, Emit } from 'vue-property-decorator'
 import { mask } from 'vue-the-mask'
-import { BusinessContactIF } from '@/interfaces/stepper-interfaces/DefineCompany/business-contact-interface'
+
+// Interfaces
+import { BusinessContactIF } from '@/interfaces'
 
 @Component({
   directives: { mask }
 })
-export default class BusinessContactForm extends Vue {
+export default class BusinessContactInfo extends Vue {
   // Props
  @Prop({
    default: ():BusinessContactIF => ({

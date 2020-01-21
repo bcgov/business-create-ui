@@ -10,10 +10,10 @@ import { Component, Vue } from 'vue-property-decorator'
 import { Getter, Action, State } from 'vuex-class'
 
 // Interfaces
-import { BusinessContactIF } from '@/interfaces/stepper-interfaces/DefineCompany/business-contact-interface'
+import { BusinessContactIF } from '@/interfaces'
 
 // Components
-import SummaryDefineCompany from '@/components/Summary/SummaryDefineCompany.vue'
+import { SummaryDefineCompany } from '@/components/Summary'
 
 @Component({
   components: {

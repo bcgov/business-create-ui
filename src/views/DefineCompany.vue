@@ -34,7 +34,7 @@
       <header>
         <h2>3. Business Contact Information</h2>
       </header>
-      <BusinessContactForm
+      <BusinessContactInfo
       :initialValue = businessContact
       :isEditing = true
       :showErrors = showErrors
@@ -50,17 +50,17 @@ import { Component, Vue } from 'vue-property-decorator'
 import { Getter, Action, State } from 'vuex-class'
 
 // Interfaces
-import { GetterIF, ActionBindingIF } from '@/interfaces'
-import { BusinessContactIF } from '@/interfaces/stepper-interfaces/DefineCompany/business-contact-interface'
-
-import BusinessContactForm from '@/components/DefineCompany/BusinessContactInfo.vue'
+import { GetterIF, ActionBindingIF, BusinessContactIF } from '@/interfaces'
 
 // Enums
 import { EntityTypes } from '@/enums'
 
+// Components
+import { BusinessContactInfo } from '@/components/DefineCompany'
+
 @Component({
   components: {
-    BusinessContactForm
+    BusinessContactInfo
   }
 })
 export default class DefineCompany extends Vue {
@@ -76,6 +76,7 @@ export default class DefineCompany extends Vue {
   @Action setBusinessContact!: ActionBindingIF
   @Action setDefineCompanyStepValidity!: ActionBindingIF
 
+  // Local Properties
   private businessContactFormValid:boolean = false
 
   /**
