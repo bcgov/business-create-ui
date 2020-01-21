@@ -38,6 +38,10 @@ describe('Actions component', () => {
       certifyFormValid: true,
       certifiedBy: 'Some certifier'
     }
+
+    store.state.stateModel.defineCompanyStep = {
+      defineCompanyStepValid: true
+    }
     // verify File and Pay button state
     expect(wrapper.find('#file-pay-btn').attributes('disabled')).toBeUndefined()
   })

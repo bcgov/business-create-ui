@@ -1,20 +1,26 @@
 // Libraries
 import Vue from 'vue'
 import Vuetify from 'vuetify'
+import VueRouter from 'vue-router'
 import { store } from '@/store'
-import { shallowMount } from '@vue/test-utils'
+import { shallowMount, createLocalVue } from '@vue/test-utils'
+import mockRouter from './mockRouter'
 
 // Components
 import DefineCompany from '@/views/DefineCompany.vue'
 
 Vue.use(Vuetify)
 let vuetify = new Vuetify({})
+const localVue = createLocalVue()
+localVue.use(VueRouter)
+const router = mockRouter.mock()
 
 describe('Define Company component', () => {
   let wrapper: any
 
   beforeEach(() => {
-    wrapper = shallowMount(DefineCompany, { store, vuetify })
+    router.push({ name: 'define-company', query: {} })
+    wrapper = shallowMount(DefineCompany, { localVue, store, router, vuetify })
   })
 
   afterEach(() => {
