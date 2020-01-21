@@ -29,7 +29,7 @@
       </div>
     </v-card>
     </section>
-<p></p>
+    <p></p>
     <section>
       <header>
         <h2>3. Business Contact Information</h2>
@@ -51,12 +51,12 @@ import { Getter, Action, State } from 'vuex-class'
 
 // Interfaces
 import { GetterIF, ActionBindingIF } from '@/interfaces'
+import { BusinessContactIF } from '@/interfaces/stepper-interfaces/DefineCompany/business-contact-interface'
 
 import BusinessContactForm from '@/components/DefineCompany/BusinessContactInfo.vue'
 
 // Enums
 import { EntityTypes } from '@/enums'
-import { BusinessContactIF } from '../interfaces/stepper-interfaces/DefineCompany/business-contact-interface'
 
 @Component({
   components: {

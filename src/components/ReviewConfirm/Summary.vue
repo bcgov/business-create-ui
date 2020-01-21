@@ -1,7 +1,7 @@
 <template>
-  <v-container class="summary-container">
+  <div class="summary-container">
     <SummaryDefineCompany/>
-  </v-container>
+  </div>
 </template>
 
 <script lang="ts">

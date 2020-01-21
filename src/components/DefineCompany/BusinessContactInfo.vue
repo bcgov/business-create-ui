@@ -107,12 +107,14 @@ export default class BusinessContactForm extends Vue {
     return (this.contact.email === this.contact.confirmEmail) ? '' : 'Email addresses must match'
   }
 
+  // Life cycle methods
   private mounted (): void {
     if (this.showErrors) {
       (this.$refs.form as Vue & { validate: () => boolean }).validate()
     }
   }
 
+  // Watchers
   @Watch('initialValue', { deep: true, immediate: true })
   private onContactPropValueChanged (): void {
     this.contact = this.initialValue
@@ -128,6 +130,7 @@ export default class BusinessContactForm extends Vue {
     this.emitContactFormState(val)
   }
 
+  // Events
   @Emit('contactInfoChange')
   private emitContactInfo (contactInfo : BusinessContactIF): void { }
 
