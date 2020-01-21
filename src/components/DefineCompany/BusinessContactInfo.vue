@@ -48,7 +48,7 @@
               filled label="Extension"
               persistent-hint
               :rules="extensionRules"
-              v-mask="'###'"
+              v-mask="'#####'"
               v-model="contact.phoneExtension">
             </v-text-field>
           </v-col>
@@ -103,7 +103,7 @@ export default class BusinessContactInfo extends Vue {
   ]
 
   private extensionRules = [
-    (v: any) => !v || (v.length >= 0 || v.length <= 3) || 'Extension is invalid'
+    (v: any) => !v || (v.length >= 0 || v.length <= 5) || 'Extension is invalid'
   ]
 
   private emailMustMatch (): string {
