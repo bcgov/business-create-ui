@@ -53,16 +53,16 @@ import { CertifyStatementIF } from '@/interfaces'
 export default class Certify extends Vue {
   // Props passed into this component.
   @Prop({ default: '' })
-  private date: string
+  private date!: string
 
   @Prop({ default: '' })
-  private certifiedBy: string
+  private certifiedBy!: string
 
   @Prop({ default: () => {
     return {}
   }
   })
-  private certifyStatementResource: CertifyStatementIF
+  private certifyStatementResource!: CertifyStatementIF
 
   // Properties
   private isCertified: boolean = false

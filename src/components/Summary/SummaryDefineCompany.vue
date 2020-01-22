@@ -52,5 +52,6 @@ export default class SummaryDefineCompany extends Vue {
 .business-contact-container {
   padding-left: 1.75rem;
   padding-top: 1.25rem;
+  padding-bottom: 1.25rem;
 }
 </style>

@@ -29,8 +29,7 @@
         </div>
       </v-card>
     </section>
-    <p></p>
-    <section>
+    <section class="mt-4">
       <header>
         <h2>3. Business Contact Information</h2>
       </header>

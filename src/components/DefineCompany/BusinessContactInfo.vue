@@ -69,21 +69,14 @@ import { BusinessContactIF } from '@/interfaces'
 })
 export default class BusinessContactInfo extends Vue {
   // Props
- @Prop({
-   default: ():BusinessContactIF => ({
-     email: '',
-     confirmEmail: '',
-     phone: '',
-     phoneExtension: ''
-   })
- })
-  private initialValue: BusinessContactIF
+  @Prop()
+  private initialValue!: BusinessContactIF
 
   @Prop({ default: false })
-  private isEditing: boolean
+  private isEditing!: boolean
 
   @Prop({ default: false })
-  private showErrors: boolean
+  private showErrors!: boolean
 
   // Properties
   private contact: BusinessContactIF = this.initialValue
@@ -92,8 +85,8 @@ export default class BusinessContactInfo extends Vue {
 
   // Rules
   private emailRules = [
-    (v: any) => !!v || 'Email address is required',
-    (v: any) => /.+@.+\..+/.test(v) || 'Valid email is required'
+    (v: string) => !!v || 'Email address is required',
+    (v: string) => /.+@.+\..+/.test(v) || 'Valid email is required'
   ]
 
   private phoneRules = [
