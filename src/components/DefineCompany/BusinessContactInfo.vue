@@ -1,8 +1,10 @@
 <template>
   <div>
     <div v-if="!isEditing">
-      <div>Email Address: {{ contact.email }}</div>
-      <div>Phone: {{ contact.phone }} ext:{{ contact.phoneExtension }}</div>
+      <div>Email Address: {{ !!contact.email ? contact.email : 'Not entered'}}</div>
+      <div>Phone: {{ !!contact.phone ? contact.phone : 'Not entered' }}
+        Ext: {{ !!contact.phoneExtension ? contact.phoneExtension : 'Not entered' }}
+      </div>
     </div>
     <v-card flat class="business-contact-container" v-else>
       <v-form v-model="formValid" ref="form">
@@ -44,7 +46,6 @@
               filled
               label="Extension"
               persistent-hint
-              :rules="extensionRules"
               v-mask="'#####'"
               v-model="contact.phoneExtension"
             >
@@ -91,10 +92,6 @@ export default class BusinessContactInfo extends Vue {
 
   private phoneRules = [
     (v: any) => !v || (v.length === 0 || v.length === 14) || 'Phone number is invalid'
-  ]
-
-  private extensionRules = [
-    (v: any) => !v || (v.length >= 0 || v.length <= 5) || 'Extension is invalid'
   ]
 
   private emailMustMatch (): string {
