@@ -12,7 +12,7 @@ export const stateModel: StateModelIF = {
   isSavingResuming: false,
   isFilingPaying: false,
   defineCompanyStep: {
-    defineCompanyStepValid: false,
+    valid: false,
     businessContact: {
       email: '',
       confirmEmail: '',

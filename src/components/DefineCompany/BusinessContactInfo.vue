@@ -1,20 +1,14 @@
 <template>
   <div>
     <div v-if="!isEditing">
-      <div>Email Address: {{contact.email}}</div>
-      <div>Phone: {{contact.phone}}   ext:{{contact.phoneExtension}}</div>
+      <div>Email Address: {{ contact.email }}</div>
+      <div>Phone: {{ contact.phone }} ext:{{ contact.phoneExtension }}</div>
     </div>
-    <v-card flat class="business-contact-container">
-      <v-form v-model="formValid"  v-if="isEditing" ref="form">
+    <v-card flat class="business-contact-container" v-else>
+      <v-form v-model="formValid" ref="form">
         <v-row>
           <v-col cols="12">
-            <v-text-field
-              filled
-              label="Email Address"
-              req
-              persistent-hint
-              :rules="emailRules"
-              v-model="contact.email">
+            <v-text-field filled label="Email Address" req persistent-hint :rules="emailRules" v-model="contact.email">
             </v-text-field>
           </v-col>
         </v-row>
@@ -26,7 +20,8 @@
               req
               persistent-hint
               :error-messages="emailMustMatch()"
-              v-model="contact.confirmEmail">
+              v-model="contact.confirmEmail"
+            >
             </v-text-field>
           </v-col>
         </v-row>
@@ -40,21 +35,24 @@
               type="tel"
               v-mask="['(###) ###-####']"
               v-model="contact.phone"
-              :rules="phoneRules">
+              :rules="phoneRules"
+            >
             </v-text-field>
           </v-col>
           <v-col cols="3">
             <v-text-field
-              filled label="Extension"
+              filled
+              label="Extension"
               persistent-hint
               :rules="extensionRules"
               v-mask="'#####'"
-              v-model="contact.phoneExtension">
+              v-model="contact.phoneExtension"
+            >
             </v-text-field>
           </v-col>
         </v-row>
       </v-form>
-      </v-card>
+    </v-card>
   </div>
 </template>
 

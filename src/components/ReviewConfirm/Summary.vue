@@ -7,10 +7,6 @@
 <script lang="ts">
 // Libraries
 import { Component, Vue } from 'vue-property-decorator'
-import { Getter, Action, State } from 'vuex-class'
-
-// Interfaces
-import { BusinessContactIF } from '@/interfaces'
 
 // Components
 import { SummaryDefineCompany } from '@/components/Summary'

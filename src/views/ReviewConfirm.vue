@@ -5,18 +5,19 @@
         <header>
           <h2>Review</h2>
         </header>
-        <Summary/>
+        <Summary />
       </section>
       <section>
-          <header>
-            <h2>Completing Party Statement</h2>
-          </header>
-          <Certify
+        <header>
+          <h2>Completing Party Statement</h2>
+        </header>
+        <Certify
           :certifiedBy="certifyState.certifiedBy"
           @valid="onCertifyFormValidChange($event)"
           @certifiedByChange="onCertifiedByChange($event)"
           :date="currentDate"
-          :certifyStatementResource="certifyStatementResource"/>
+          :certifyStatementResource="certifyStatementResource"
+        />
       </section>
     </v-container>
   </div>

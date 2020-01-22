@@ -55,5 +55,5 @@ export const mutateBusinessContact = (state: any, businessContact: BusinessConta
 }
 
 export const mutateDefineCompanyStepValidity = (state: any, validity: boolean) => {
-  state.stateModel.defineCompanyStep.defineCompanyStepValid = validity
+  state.stateModel.defineCompanyStep.valid = validity
 }

@@ -1,33 +1,33 @@
 <template>
   <div>
     <section>
-    <header>
-      <h2>1. Company Name</h2>
-    </header>
-    <v-card flat class="step-container">
-      <div class="meta-container">
-        <label>Name Request</label>
+      <header>
+        <h2>1. Company Name</h2>
+      </header>
+      <v-card flat class="step-container">
+        <div class="meta-container">
+          <label>Name Request</label>
 
-        <div class="value name-request">
-          <p>Generate a Name Request (NR):</p>
+          <div class="value name-request">
+            <p>Generate a Name Request (NR):</p>
 
-          <v-container id="business-buttons-container" class="list-item justify-space-between">
-            <v-btn id="select-bc-btn" large color="primary" :disabled="isEntityType" @click="onClickBC()">
-              <span class="font-weight-bold">Benefit Company NR</span>
-            </v-btn>
+            <v-container id="business-buttons-container" class="list-item justify-space-between">
+              <v-btn id="select-bc-btn" large color="primary" :disabled="isEntityType" @click="onClickBC()">
+                <span class="font-weight-bold">Benefit Company NR</span>
+              </v-btn>
 
-            <v-btn id="select-cp-btn" large color="success" :disabled="isEntityType" @click="onClickCP()">
-              <span class="font-weight-bold">Cooperative Association NR</span>
-            </v-btn>
+              <v-btn id="select-cp-btn" large color="success" :disabled="isEntityType" @click="onClickCP()">
+                <span class="font-weight-bold">Cooperative Association NR</span>
+              </v-btn>
 
-            <v-btn id="reset-btn" large :disabled="!isEntityType" @click="onClickReset()">
-              <v-icon>mdi-undo</v-icon>
-              <span>Reset</span>
-            </v-btn>
-          </v-container>
+              <v-btn id="reset-btn" large :disabled="!isEntityType" @click="onClickReset()">
+                <v-icon>mdi-undo</v-icon>
+                <span>Reset</span>
+              </v-btn>
+            </v-container>
+          </div>
         </div>
-      </div>
-    </v-card>
+      </v-card>
     </section>
     <p></p>
     <section>
@@ -35,11 +35,12 @@
         <h2>3. Business Contact Information</h2>
       </header>
       <BusinessContactInfo
-      :initialValue = businessContact
-      :isEditing = true
-      :showErrors = showErrors
-      @contactInfoChange = "onBusinessContactInfoChange($event)"
-      @contactInfoFormValidityChange = "onBusinessContactFormValidityChange($event)"/>
+        :initialValue="businessContact"
+        :isEditing="true"
+        :showErrors="showErrors"
+        @contactInfoChange="onBusinessContactInfoChange($event)"
+        @contactInfoFormValidityChange="onBusinessContactFormValidityChange($event)"
+      />
     </section>
   </div>
 </template>
@@ -75,9 +76,6 @@ export default class DefineCompany extends Vue {
   @Action setEntityType!: ActionBindingIF
   @Action setBusinessContact!: ActionBindingIF
   @Action setDefineCompanyStepValidity!: ActionBindingIF
-
-  // Local Properties
-  private businessContactFormValid:boolean = false
 
   /**
    * Method called when Benefit Company button is clicked.
@@ -119,8 +117,7 @@ export default class DefineCompany extends Vue {
   }
 
   private onBusinessContactFormValidityChange (validity: boolean): void {
-    this.businessContactFormValid = validity
-    this.setDefineCompanyStepValidity(this.businessContactFormValid)
+    this.setDefineCompanyStepValidity(validity)
   }
 
   private get showErrors (): boolean {

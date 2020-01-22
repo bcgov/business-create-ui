@@ -27,7 +27,7 @@ export const isShowFilePayBtn = (state: any): boolean => {
  * Whether File and Pay button should be enabled.
  */
 export const isEnableFilePayBtn = (state: any): boolean => {
-  const step1Valid = state.stateModel.defineCompanyStep.defineCompanyStepValid
+  const step1Valid = state.stateModel.defineCompanyStep.valid
   const step2Valid = true // FOR TESTING ONLY
   const step3Valid = true // FOR TESTING ONLY
   const step4Valid = true // FOR TESTING ONLY
