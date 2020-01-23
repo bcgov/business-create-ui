@@ -4,7 +4,7 @@ import Vuetify from 'vuetify'
 import VueRouter from 'vue-router'
 import { store } from '@/store'
 import { shallowMount, createLocalVue } from '@vue/test-utils'
-import mockRouter from './mockRouter'
+import mockRouter from './MockRouter'
 
 // Components
 import DefineCompany from '@/views/DefineCompany.vue'
