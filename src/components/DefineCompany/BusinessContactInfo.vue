@@ -1,16 +1,23 @@
 <template>
   <div>
     <div v-if="!isEditing">
-      <div>Email Address: {{ !!contact.email ? contact.email : 'Not entered'}}</div>
-      <div>Phone: {{ !!contact.phone ? contact.phone : 'Not entered' }}
+      <div id="lbl-email">Email Address: {{ !!contact.email ? contact.email : 'Not entered'}}</div>
+      <div id="lbl-phone">Phone: {{ !!contact.phone ? contact.phone : 'Not entered' }}
         Ext: {{ !!contact.phoneExtension ? contact.phoneExtension : 'Not entered' }}
       </div>
     </div>
     <v-card flat class="business-contact-container" v-else>
-      <v-form v-model="formValid" ref="form">
-        <v-row>
+      <v-form v-model="formValid" ref="form" name="business-contact-form">
+       <v-row>
           <v-col cols="12">
-            <v-text-field filled label="Email Address" req persistent-hint :rules="emailRules" v-model="contact.email">
+            <v-text-field
+              filled
+              label="Email Address"
+              req
+              persistent-hint
+              :rules="emailRules"
+              v-model="contact.email"
+              id="txt-email">
             </v-text-field>
           </v-col>
         </v-row>
@@ -23,7 +30,7 @@
               persistent-hint
               :error-messages="emailMustMatch()"
               v-model="contact.confirmEmail"
-            >
+              id="txt-confirm-email">
             </v-text-field>
           </v-col>
         </v-row>
@@ -38,7 +45,7 @@
               v-mask="['(###) ###-####']"
               v-model="contact.phone"
               :rules="phoneRules"
-            >
+              id="txt-phone">
             </v-text-field>
           </v-col>
           <v-col cols="3">
@@ -48,7 +55,7 @@
               persistent-hint
               v-mask="'#####'"
               v-model="contact.phoneExtension"
-            >
+              id="txt-phone-extension">
             </v-text-field>
           </v-col>
         </v-row>
@@ -125,8 +132,8 @@ export default class BusinessContactInfo extends Vue {
   @Emit('contactInfoChange')
   private emitContactInfo (contactInfo : BusinessContactIF): void { }
 
-   @Emit('contactInfoFormValidityChange')
-  private emitContactFormState (validity : boolean): void { }
+  @Emit('contactInfoFormValidityChange')
+  private emitContactFormState (validity : boolean): void {}
 }
 </script>
 
