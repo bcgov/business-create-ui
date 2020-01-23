@@ -152,8 +152,9 @@ describe('BusinessContactInfo', () => {
   it('displays error message when user enters invalid phone number', async () => {
     const wrapper: Wrapper<BusinessContactInfo> = createComponent(email, email)
     const inputElement: Wrapper<Vue> = wrapper.find(phoneSelector)
-    await wrapper.vm.$nextTick()
     inputElement.setValue(invalidPhoneNumber)
+    inputElement.trigger('change')
+    await wrapper.vm.$nextTick()
     expect(getLastEvent(wrapper, formDataChangeEvent)).toStrictEqual({ email: email,
       confirmEmail: email,
       phone: '(11',
