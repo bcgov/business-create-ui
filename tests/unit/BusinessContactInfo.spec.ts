@@ -125,6 +125,7 @@ describe('BusinessContactInfo', () => {
       phone: '',
       phoneExtension: ''
     })
+    await wrapper.vm.$nextTick()
     expect(wrapper.find(formSelector).text()).toContain('Valid email is required')
   })
 
