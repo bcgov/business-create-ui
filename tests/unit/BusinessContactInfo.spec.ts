@@ -79,6 +79,7 @@ describe('BusinessContactInfo', () => {
     expect((<HTMLInputElement> wrapper.find(confirmEmailSelector).element).value).toEqual(email)
     expect((<HTMLInputElement> wrapper.find(phoneSelector).element).value).toEqual('')
     expect((<HTMLInputElement> wrapper.find(phoneExtensionSelector).element).value).toEqual('')
+    wrapper.destroy()
   })
 
   it('form is valid for correct input', async () => {
@@ -90,6 +91,7 @@ describe('BusinessContactInfo', () => {
       phone: '',
       phoneExtension: ''
     })
+    wrapper.destroy()
   })
 
   it('form is invalid for wrong email', async () => {
@@ -101,6 +103,7 @@ describe('BusinessContactInfo', () => {
       phone: '',
       phoneExtension: ''
     })
+    wrapper.destroy()
   })
 
   it('form is invalid for wrong optional phone number field', async () => {
@@ -112,6 +115,7 @@ describe('BusinessContactInfo', () => {
       phone: '(11',
       phoneExtension: ''
     })
+    wrapper.destroy()
   })
 
   it('displays error message when user enters invalid email', async () => {
@@ -127,6 +131,7 @@ describe('BusinessContactInfo', () => {
     })
     await wrapper.vm.$nextTick()
     expect(wrapper.find(formSelector).text()).toContain('Valid email is required')
+    wrapper.destroy()
   })
 
   it('displays error message when email and confirmEmail do not match', async () => {
@@ -141,11 +146,13 @@ describe('BusinessContactInfo', () => {
       phoneExtension: ''
     })
     expect(wrapper.find(formSelector).text()).toContain('Email addresses must match')
+    wrapper.destroy()
   })
 
   it('displays error message when user enters invalid phone number', async () => {
     const wrapper: Wrapper<BusinessContactInfo> = createComponent(email, email)
     const inputElement: Wrapper<Vue> = wrapper.find(phoneSelector)
+    await wrapper.vm.$nextTick()
     inputElement.setValue(invalidPhoneNumber)
     await wrapper.vm.$nextTick()
     expect(getLastEvent(wrapper, formValidEvent)).toBe(false)
@@ -155,6 +162,7 @@ describe('BusinessContactInfo', () => {
       phoneExtension: ''
     })
     expect(wrapper.find(formSelector).text()).toContain('Phone number is invalid')
+    wrapper.destroy()
   })
 
   it('displays read only data in non editing mode', async () => {
@@ -163,5 +171,6 @@ describe('BusinessContactInfo', () => {
     expect(wrapper.find(readOnlyPhoneSelector).text()).toContain('Phone: ' + phoneNumber)
     expect(wrapper.find(readOnlyPhoneSelector).text()).toContain('Ext: ' + extension)
     expect(wrapper.find(formSelector).exists()).toBeFalsy()
+    wrapper.destroy()
   })
 })
