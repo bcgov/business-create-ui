@@ -154,13 +154,13 @@ describe('BusinessContactInfo', () => {
     const inputElement: Wrapper<Vue> = wrapper.find(phoneSelector)
     await wrapper.vm.$nextTick()
     inputElement.setValue(invalidPhoneNumber)
-    await wrapper.vm.$nextTick()
-    expect(getLastEvent(wrapper, formValidEvent)).toBe(false)
     expect(getLastEvent(wrapper, formDataChangeEvent)).toStrictEqual({ email: email,
       confirmEmail: email,
       phone: '(11',
       phoneExtension: ''
     })
+    await wrapper.vm.$nextTick()
+    expect(getLastEvent(wrapper, formValidEvent)).toBe(false)
     expect(wrapper.find(formSelector).text()).toContain('Phone number is invalid')
     wrapper.destroy()
   })
