@@ -45,8 +45,12 @@ function getLastEvent (wrapper: Wrapper<BusinessContactInfo>, name: string): any
 /**
  * Creates and mounts a component, so that it can be tested.
  *
- * @param businessContact the value to pass to the component for the name input. The default value is 'undefined'.
- * @returns a Wrapper<Certify> object with the given parameters.
+ * @param email The email address. The default value is ''.
+ * @param confirmEmail The confirm email address. The default value is ''.
+ * @param phone The phone number. The default value is ''.
+ * @param phoneExtension The phone extension. The default value is ''.
+ * @param isEditing Indicates whether the component is in editing or readonly mode. The default value is true.
+ * @returns a Wrapper<BusinessContactInfo> object with the given parameters.
  */
 function createComponent (
   email: string = '',
