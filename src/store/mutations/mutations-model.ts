@@ -1,5 +1,6 @@
 import { CertifyStatementIF, CertifyIF } from '@/interfaces'
 import { ExternalResourceIF } from '@/interfaces/resource-interfaces/ExternalResourceIF'
+import { BusinessContactIF } from '@/interfaces/stepper-interfaces/DefineCompany/business-contact-interface'
 
 export const mutateName = (state: any, name: string) => {
   state.stateModel.stateText = name
@@ -47,4 +48,12 @@ export const mutateCertifyStatementResource = (state: any, certifyStatementResou
 
 export const mutateCertifyState = (state: any, certifyState: CertifyIF) => {
   state.stateModel.certifyState = certifyState
+}
+
+export const mutateBusinessContact = (state: any, businessContact: BusinessContactIF) => {
+  state.stateModel.defineCompanyStep.businessContact = businessContact
+}
+
+export const mutateDefineCompanyStepValidity = (state: any, validity: boolean) => {
+  state.stateModel.defineCompanyStep.valid = validity
 }

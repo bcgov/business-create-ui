@@ -42,26 +42,30 @@
 </template>
 
 <script lang="ts">
+// Libraries
 import { Component, Vue, Prop, Emit } from 'vue-property-decorator'
 import { State } from 'vuex-class'
+
+// Interfaces
 import { CertifyStatementIF } from '@/interfaces'
 
 @Component({})
 export default class Certify extends Vue {
   // Props passed into this component.
   @Prop({ default: '' })
-  private date: string
+  private date!: string
 
   @Prop({ default: '' })
-  private certifiedBy: string
-
-  private isCertified: boolean = false
+  private certifiedBy!: string
 
   @Prop({ default: () => {
     return {}
   }
   })
-  private certifyStatementResource: CertifyStatementIF
+  private certifyStatementResource!: CertifyStatementIF
+
+  // Properties
+  private isCertified: boolean = false
 
   /**
    * Lifecycle callback to always give the parent a "valid" event for its property values.

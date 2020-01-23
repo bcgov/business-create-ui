@@ -1,21 +1,23 @@
 <template>
   <div>
-    <v-container>
+    <v-container class="review-confirm-container">
       <section>
         <header>
           <h2>Review</h2>
         </header>
+        <Summary />
       </section>
       <section>
-          <header>
-            <h2>Completing Party Statement</h2>
-          </header>
-          <Certify
+        <header>
+          <h2>Completing Party Statement</h2>
+        </header>
+        <Certify
           :certifiedBy="certifyState.certifiedBy"
           @valid="onCertifyFormValidChange($event)"
           @certifiedByChange="onCertifiedByChange($event)"
           :date="currentDate"
-          :certifyStatementResource="certifyStatementResource"/>
+          :certifyStatementResource="certifyStatementResource"
+        />
       </section>
     </v-container>
   </div>
@@ -26,13 +28,19 @@
 import { Component, Vue, Mixins, Watch } from 'vue-property-decorator'
 import { State, Action, Getter } from 'vuex-class'
 
-import { Certify } from '@/components/ReviewConfirm'
-import { ResourceLookupMixin } from '@/mixins'
+// Interfaces
 import { CertifyStatementIF, ActionBindingIF, GetterIF, CertifyIF } from '@/interfaces'
+
+// Components
+import { Certify, Summary } from '@/components/ReviewConfirm'
+
+// Mixins
+import { ResourceLookupMixin } from '@/mixins'
 
 @Component({
   components: {
-    Certify
+    Certify,
+    Summary
   }
 })
 export default class ReviewConfirm extends Mixins(ResourceLookupMixin) {
@@ -76,8 +84,15 @@ export default class ReviewConfirm extends Mixins(ResourceLookupMixin) {
 </script>
 
 <style lang="scss" scoped>
-.step-container {
+.review-confirm-container {
   margin-top: 1rem;
   padding: 1.25rem;
+  padding-bottom: 0.5rem;
+  line-height: 1.2rem;
+  font-size: 0.875rem;
+
+  >section{
+    padding-top: 1rem
+  }
 }
 </style>

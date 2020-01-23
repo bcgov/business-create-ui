@@ -43,3 +43,11 @@ export const setCertifyStatementResource: ActionIF = ({ commit }, certifyStateme
 export const setCertifyState: ActionIF = ({ commit }, certifyState): void => {
   commit('mutateCertifyState', certifyState)
 }
+
+export const setBusinessContact: ActionIF = ({ commit }, businessContact): void => {
+  commit('mutateBusinessContact', businessContact)
+}
+
+export const setDefineCompanyStepValidity: ActionIF = ({ commit }, validity): void => {
+  commit('mutateDefineCompanyStepValidity', validity)
+}

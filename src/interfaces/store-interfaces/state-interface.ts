@@ -1,4 +1,5 @@
-import { CertifyIF } from '../stepper-interfaces/certify-interface'
+import { CertifyIF } from '../stepper-interfaces/ReviewConfirm/certify-interface'
+import { DefineCompanyIF } from '../stepper-interfaces/DefineCompany/define-company-interface'
 
 // State model example
 export interface StateModelIF {
@@ -9,4 +10,5 @@ export interface StateModelIF {
   isSaving: boolean
   isSavingResuming: boolean
   isFilingPaying: boolean
+  defineCompanyStep: DefineCompanyIF
 }

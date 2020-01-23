@@ -1,54 +1,80 @@
 <template>
   <div>
-    <header>
-      <h2>1. Company Name</h2>
-    </header>
+    <section>
+      <header>
+        <h2>1. Company Name</h2>
+      </header>
+      <v-card flat class="step-container">
+        <div class="meta-container">
+          <label>Name Request</label>
 
-    <v-card flat class="step-container">
-      <div class="meta-container">
-        <label>Name Request</label>
+          <div class="value name-request">
+            <p>Generate a Name Request (NR):</p>
 
-        <div class="value name-request">
-          <p>Generate a Name Request (NR):</p>
+            <v-container id="business-buttons-container" class="list-item justify-space-between">
+              <v-btn id="select-bc-btn" large color="primary" :disabled="isEntityType" @click="onClickBC()">
+                <span class="font-weight-bold">Benefit Company NR</span>
+              </v-btn>
 
-          <v-container id="business-buttons-container" class="list-item justify-space-between">
-            <v-btn id="select-bc-btn" large color="primary" :disabled="isEntityType" @click="onClickBC()">
-              <span class="font-weight-bold">Benefit Company NR</span>
-            </v-btn>
+              <v-btn id="select-cp-btn" large color="success" :disabled="isEntityType" @click="onClickCP()">
+                <span class="font-weight-bold">Cooperative Association NR</span>
+              </v-btn>
 
-            <v-btn id="select-cp-btn" large color="success" :disabled="isEntityType" @click="onClickCP()">
-              <span class="font-weight-bold">Cooperative Association NR</span>
-            </v-btn>
-
-            <v-btn id="reset-btn" large :disabled="!isEntityType" @click="onClickReset()">
-              <v-icon>mdi-undo</v-icon>
-              <span>Reset</span>
-            </v-btn>
-          </v-container>
+              <v-btn id="reset-btn" large :disabled="!isEntityType" @click="onClickReset()">
+                <v-icon>mdi-undo</v-icon>
+                <span>Reset</span>
+              </v-btn>
+            </v-container>
+          </div>
         </div>
-      </div>
-    </v-card>
+      </v-card>
+    </section>
+    <section class="mt-4">
+      <header>
+        <h2>3. Business Contact Information</h2>
+      </header>
+      <BusinessContactInfo
+        :initialValue="businessContact"
+        :isEditing="true"
+        :showErrors="showErrors"
+        @contactInfoChange="onBusinessContactInfoChange($event)"
+        @contactInfoFormValidityChange="onBusinessContactFormValidityChange($event)"
+      />
+    </section>
   </div>
 </template>
 
 <script lang="ts">
 // Libraries
 import { Component, Vue } from 'vue-property-decorator'
-import { Getter, Action } from 'vuex-class'
+import { Getter, Action, State } from 'vuex-class'
 
 // Interfaces
-import { GetterIF, ActionBindingIF } from '@/interfaces'
+import { GetterIF, ActionBindingIF, BusinessContactIF } from '@/interfaces'
 
 // Enums
 import { EntityTypes } from '@/enums'
 
-@Component({})
+// Components
+import { BusinessContactInfo } from '@/components/DefineCompany'
+
+@Component({
+  components: {
+    BusinessContactInfo
+  }
+})
 export default class DefineCompany extends Vue {
+  // State
+  @State(state => state.stateModel.defineCompanyStep.businessContact)
+  readonly businessContact!: BusinessContactIF
+
   // Global getters
   @Getter isEntityType!: GetterIF
 
   // Global actions
   @Action setEntityType!: ActionBindingIF
+  @Action setBusinessContact!: ActionBindingIF
+  @Action setDefineCompanyStepValidity!: ActionBindingIF
 
   /**
    * Method called when Benefit Company button is clicked.
@@ -84,12 +110,24 @@ export default class DefineCompany extends Vue {
   private onClickReset (): void {
     this.setEntityType(null)
   }
+
+  private onBusinessContactInfoChange (businessContact: BusinessContactIF): void {
+    this.setBusinessContact(businessContact)
+  }
+
+  private onBusinessContactFormValidityChange (validity: boolean): void {
+    this.setDefineCompanyStepValidity(validity)
+  }
+
+  private get showErrors (): boolean {
+    return Boolean(this.$route.query.showErrors)
+  }
 }
 </script>
 
 <style lang="scss" scoped>
 .step-container {
-  height: 15rem; // FOR TESTING ONLY
+  margin-top: 1rem;
   padding: 1.25rem;
 }
 
