@@ -2,10 +2,6 @@ import { CertifyStatementIF, CertifyIF, NameRequestIF } from '@/interfaces'
 import { ExternalResourceIF } from '@/interfaces/resource-interfaces/ExternalResourceIF'
 import { BusinessContactIF } from '@/interfaces/stepper-interfaces/DefineCompany/business-contact-interface'
 
-export const mutateName = (state: any, name: string) => {
-  state.stateModel.stateText = name
-}
-
 export const mutateCurrentStep = (state: any, currentStep: boolean) => {
   state.stateModel.currentStep = currentStep
 }
@@ -59,5 +55,9 @@ export const mutateDefineCompanyStepValidity = (state: any, validity: boolean) =
 }
 
 export const mutateNameRequestState = (state: any, nameRequestState: NameRequestIF) => {
-  state.nameRequestModel = nameRequestState
+  state.stateModel.defineCompanyStep.nameRequest = nameRequestState
+}
+
+export const mutateFilingId = (state: any, filingId: number) => {
+  state.stateModel.defineCompanyStep.nameRequest.filingId = filingId
 }

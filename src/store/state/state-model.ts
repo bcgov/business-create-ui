@@ -1,7 +1,6 @@
 import { StateModelIF } from '@/interfaces'
 
 export const stateModel: StateModelIF = {
-  stateText: 'Base State Text',
   currentDate: null,
   certifyState: {
     certifyFormValid: false,
@@ -18,6 +17,11 @@ export const stateModel: StateModelIF = {
       confirmEmail: '',
       phone: '',
       phoneExtension: ''
+    },
+    nameRequest: {
+      nrNumber: '',
+      entityType: '',
+      filingId: null
     }
   }
 }

@@ -70,7 +70,7 @@ import { Component, Mixins } from 'vue-property-decorator'
 import { State, Getter, Action } from 'vuex-class'
 
 // Interfaces
-import { StateModelIF, GetterIF, ActionBindingIF, TombStoneIF, NameRequestIF } from '@/interfaces'
+import { StateModelIF, GetterIF, ActionBindingIF, TombStoneIF } from '@/interfaces'
 
 // Mixins
 import { ApiMixin } from '@/mixins'
@@ -80,8 +80,6 @@ export default class Actions extends Mixins(ApiMixin) {
   // Global state
   @State stateModel!: StateModelIF
   @State tombStoneModel!: TombStoneIF
-  @State(state => state.nameRequestModel.filingId)
-  readonly filingId!: number
 
   // Global getters
   @Getter isEntityType!: GetterIF
@@ -113,7 +111,7 @@ export default class Actions extends Mixins(ApiMixin) {
    */
   private async onClickSave (): Promise<void> {
     this.setIsSaving(true)
-    await this.saveFiling(true, this.filingId)
+    await this.saveFiling(true)
     this.setIsSaving(false)
   }
 
@@ -123,7 +121,7 @@ export default class Actions extends Mixins(ApiMixin) {
    */
   private async onClickSaveResume (): Promise<void> {
     this.setIsSavingResuming(true)
-    await this.saveFiling(true, this.filingId)
+    await this.saveFiling(true)
     this.setIsSavingResuming(false)
     window.location.assign(this.authUrl)
   }
@@ -134,7 +132,7 @@ export default class Actions extends Mixins(ApiMixin) {
    */
   private async onClickFilePay (): Promise<void> {
     this.setIsFilingPaying(true)
-    await this.saveFiling(false, this.filingId)
+    await this.saveFiling(false)
     this.setIsFilingPaying(false)
   }
 

@@ -52,7 +52,7 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Vue, Watch, Mixins } from 'vue-property-decorator'
+import { Component, Watch, Mixins } from 'vue-property-decorator'
 import { Action, State } from 'vuex-class'
 
 // Components
@@ -65,7 +65,7 @@ import { EntityInfo, Stepper, Actions } from '@/components/common'
 import { DateMixin } from '@/mixins'
 
 // Interfaces
-import { FilingDataIF, ActionBindingIF, CertifyStatementIF, TombStoneIF, NameRequestIF } from '@/interfaces'
+import { FilingDataIF, ActionBindingIF, StateModelIF } from '@/interfaces'
 
 import { CertifyStatementResource } from '@/resources'
 
@@ -84,8 +84,7 @@ import { EntityTypes, FilingCodes } from '@/enums'
 })
 export default class App extends Mixins(DateMixin) {
   // Global state
-  @State tombStoneModel!: TombStoneIF
-  @State nameRequestModel!: NameRequestIF
+  @State stateModel!: StateModelIF
 
   // Global actions
   @Action setCurrentStep!: ActionBindingIF
@@ -103,7 +102,10 @@ export default class App extends Mixins(DateMixin) {
     this.setCurrentDate(this.dateToUsableString(new Date()))
 
     // Placeholder to assign the NR Data we are expecting *Development Purpose*
-    this.setNameRequestState({ nrNumber: 'NR1234567', entityType: 'CP', filingId: null })
+    this.setNameRequestState({ nrNumber: 'NR7654321', entityType: 'BC', filingId: null })
+
+    // Placeholder to assign the NR Data we are expecting *Development Purpose*
+    // this.setNameRequestState({ nrNumber: 'NR1234567', entityType: 'CP', filingId: 54321 })
   }
 
   /**
@@ -137,7 +139,7 @@ export default class App extends Mixins(DateMixin) {
     this.setCurrentStep(this.$route.meta.step)
   }
 
-  @Watch('nameRequestModel.entityType')
+  @Watch('stateModel.defineCompanyStep.nameRequest.entityType')
   private onEntityTypeChanged (val:string | null) : void{
     this.setCertifyStatementResource(val ? CertifyStatementResource
       .find(x => x.entityType === val) : null)

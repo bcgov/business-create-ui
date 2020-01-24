@@ -55,3 +55,7 @@ export const setDefineCompanyStepValidity: ActionIF = ({ commit }, validity): vo
 export const setNameRequestState: ActionIF = ({ commit }, nameRequestState): void => {
   commit('mutateNameRequestState', nameRequestState)
 }
+
+export const setFilingId: ActionIF = ({ commit }, filingId): void => {
+  commit('mutateFilingId', filingId)
+}

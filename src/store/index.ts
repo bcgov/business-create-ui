@@ -3,23 +3,23 @@ import Vue from 'vue'
 import Vuex, { Store } from 'vuex'
 
 // State
-import { stateModel, resourceModel, tombStoneModel, nameRequestModel } from './state'
+import { stateModel, resourceModel, tombStoneModel } from './state'
 
 // Getters
 import { isRoleStaff, isRoleEdit, isRoleView, isEntityType, isTypeBcomp, isTypeCoop,
-  isShowBackBtn, isShowReviewConfirmBtn, isShowFilePayBtn, isEnableFilePayBtn, isBusySaving } from '@/store/getters'
+  isShowBackBtn, isShowReviewConfirmBtn, isShowFilePayBtn, isEnableFilePayBtn, isBusySaving,
+  getFilingId, getBusinessIdentifier } from '@/store/getters'
 
 // Mutations
-import { mutateCurrentStep, mutateIsSaving, mutateIsSavingResuming, mutateIsFilingPaying,
-  mutateEntityType, mutateResource, mutateKeycloakRoles, mutateAuthRoles,
-  mutateCurrentDate, mutateCertifyStatementResource, mutateCertifyState,
-  mutateBusinessContact, mutateDefineCompanyStepValidity, mutateNameRequestState } from '@/store/mutations'
+import { mutateCurrentStep, mutateIsSaving, mutateIsSavingResuming, mutateIsFilingPaying, mutateEntityType,
+  mutateResource, mutateKeycloakRoles, mutateAuthRoles, mutateCurrentDate, mutateCertifyStatementResource,
+  mutateCertifyState, mutateBusinessContact, mutateDefineCompanyStepValidity, mutateNameRequestState,
+  mutateFilingId } from '@/store/mutations'
 
 // Actions
-import { setCurrentStep, setIsSaving, setIsSavingResuming, setIsFilingPaying,
-  setEntityType, setResource, setKeyCloakRoles, setAuthRoles, setCurrentDate,
-  setCertifyStatementResource, setCertifyState, setBusinessContact,
-  setDefineCompanyStepValidity, setNameRequestState } from './actions'
+import { setCurrentStep, setIsSaving, setIsSavingResuming, setIsFilingPaying, setEntityType, setResource,
+  setKeyCloakRoles, setAuthRoles, setCurrentDate, setCertifyStatementResource, setCertifyState, setBusinessContact,
+  setDefineCompanyStepValidity, setNameRequestState, setFilingId } from './actions'
 
 Vue.use(Vuex)
 
@@ -27,8 +27,7 @@ export const store: Store<any> = new Vuex.Store<any>({
   state: {
     stateModel,
     resourceModel,
-    tombStoneModel,
-    nameRequestModel
+    tombStoneModel
   },
   getters: {
     isRoleStaff,
@@ -41,7 +40,9 @@ export const store: Store<any> = new Vuex.Store<any>({
     isShowReviewConfirmBtn,
     isShowFilePayBtn,
     isEnableFilePayBtn,
-    isBusySaving
+    isBusySaving,
+    getFilingId,
+    getBusinessIdentifier
   },
   mutations: {
     mutateCurrentStep,
@@ -57,7 +58,8 @@ export const store: Store<any> = new Vuex.Store<any>({
     mutateCertifyState,
     mutateBusinessContact,
     mutateDefineCompanyStepValidity,
-    mutateNameRequestState
+    mutateNameRequestState,
+    mutateFilingId
   },
   actions: {
     setCurrentStep,
@@ -73,6 +75,7 @@ export const store: Store<any> = new Vuex.Store<any>({
     setCertifyState,
     setBusinessContact,
     setDefineCompanyStepValidity,
-    setNameRequestState
+    setNameRequestState,
+    setFilingId
   }
 })
