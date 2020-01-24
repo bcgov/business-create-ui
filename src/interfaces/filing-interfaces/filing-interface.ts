@@ -9,6 +9,7 @@ export interface IncorporationFilingIF {
   },
   incorporation: {
     nameRequest: {
+      nrNumber: string;
       legalType: string;
     },
     offices: {

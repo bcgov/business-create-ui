@@ -122,6 +122,7 @@ export default class Actions extends Mixins(ApiMixin) {
     this.setIsSavingResuming(true)
     await this.saveFiling(true)
     this.setIsSavingResuming(false)
+    window.location.assign(this.authUrl)
   }
 
   /**

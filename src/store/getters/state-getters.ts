@@ -9,21 +9,21 @@ import { EntityTypes } from '@/enums'
  * Whether the client has staff keycloak role
  */
 export const isRoleStaff = (state: any): boolean => {
-  return state.tombStoneModel.keycloakRoles.includes('staff')
+  return state.stateModel.tombstone.keycloakRoles.includes('staff')
 }
 
 /**
  * Whether the client has edit permissions
  */
 export const isRoleEdit = (state: any): boolean => {
-  return state.tombStoneModel.authRoles.includes('edit')
+  return state.stateModel.tombstone.authRoles.includes('edit')
 }
 
 /**
  * Whether the client has view permissions
  */
 export const isRoleView = (state: any): boolean => {
-  return state.tombStoneModel.authRoles.includes('view')
+  return state.stateModel.tombstone.authRoles.includes('view')
 }
 
 /**

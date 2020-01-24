@@ -40,7 +40,10 @@ describe('Actions component', () => {
     }
 
     store.state.stateModel.defineCompanyStep = {
-      valid: true
+      valid: true,
+      nameRequest: {
+        entityType: 'BC'
+      }
     }
     // verify File and Pay button state
     expect(wrapper.find('#file-pay-btn').attributes('disabled')).toBeUndefined()

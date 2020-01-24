@@ -16,10 +16,6 @@ export const setIsFilingPaying: ActionIF = ({ commit }, isFilingPaying): void =>
   commit('mutateIsFilingPaying', isFilingPaying)
 }
 
-export const setEntityType: ActionIF = ({ commit }, entityType): void => {
-  commit('mutateEntityType', entityType)
-}
-
 export const setResource: ActionIF = ({ commit }, resource): void => {
   commit('mutateResource', resource)
 }

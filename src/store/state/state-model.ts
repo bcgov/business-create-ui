@@ -1,7 +1,11 @@
 import { StateModelIF } from '@/interfaces'
 
 export const stateModel: StateModelIF = {
-  currentDate: null,
+  tombstone: {
+    keycloakRoles: [],
+    authRoles: []
+  },
+  currentDate: '',
   certifyState: {
     certifyFormValid: false,
     certifiedBy: ''

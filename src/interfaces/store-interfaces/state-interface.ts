@@ -1,8 +1,9 @@
-import { CertifyIF, DefineCompanyIF } from '@/interfaces'
+import { CertifyIF, DefineCompanyIF, TombStoneIF } from '@/interfaces'
 
 // State model example
 export interface StateModelIF {
-  currentDate: string | null;
+  tombstone: TombStoneIF,
+  currentDate: string;
   certifyState: CertifyIF;
   currentStep: number;
   isSaving: boolean;

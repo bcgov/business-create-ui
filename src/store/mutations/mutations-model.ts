@@ -18,20 +18,16 @@ export const mutateIsFilingPaying = (state: any, isFilingPaying: boolean) => {
   state.stateModel.isFilingPaying = isFilingPaying
 }
 
-export const mutateEntityType = (state: any, entityType: string) => {
-  state.tombStoneModel.entityType = entityType
-}
-
 export const mutateResource = (state: any, resource: ExternalResourceIF) => {
   state.resourceModel.externalResource = resource
 }
 
 export const mutateKeycloakRoles = (state: any, keyCloakRoles: Array<string>) => {
-  state.tombStoneModel.keycloakRoles = keyCloakRoles
+  state.stateModel.tombstone.keycloakRoles = keyCloakRoles
 }
 
 export const mutateAuthRoles = (state: any, authRoles: Array<string>) => {
-  state.tombStoneModel.authRoles = authRoles
+  state.stateModel.tombstone.authRoles = authRoles
 }
 
 export const mutateCurrentDate = (state: any, currentDate: string) => {
