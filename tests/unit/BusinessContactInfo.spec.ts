@@ -160,6 +160,7 @@ describe('BusinessContactInfo', () => {
       phone: '(11',
       phoneExtension: ''
     })
+    await wrapper.vm.$nextTick()
     expect(getLastEvent(wrapper, formValidEvent)).toBe(false)
     expect(wrapper.find(formSelector).text()).toContain('Phone number is invalid')
     wrapper.destroy()
