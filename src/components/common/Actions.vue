@@ -70,7 +70,7 @@ import { Component, Mixins } from 'vue-property-decorator'
 import { State, Getter, Action } from 'vuex-class'
 
 // Interfaces
-import { StateModelIF, GetterIF, ActionBindingIF, TombStoneIF } from '@/interfaces'
+import { StateModelIF, GetterIF, ActionBindingIF } from '@/interfaces'
 
 // Mixins
 import { ApiMixin } from '@/mixins'
@@ -79,7 +79,6 @@ import { ApiMixin } from '@/mixins'
 export default class Actions extends Mixins(ApiMixin) {
   // Global state
   @State stateModel!: StateModelIF
-  @State tombStoneModel!: TombStoneIF
 
   // Global getters
   @Getter isEntityType!: GetterIF
@@ -123,7 +122,6 @@ export default class Actions extends Mixins(ApiMixin) {
     this.setIsSavingResuming(true)
     await this.saveFiling(true)
     this.setIsSavingResuming(false)
-    window.location.assign(this.authUrl)
   }
 
   /**

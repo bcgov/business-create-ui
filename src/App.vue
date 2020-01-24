@@ -94,18 +94,11 @@ export default class App extends Mixins(DateMixin) {
 
   @Action setCurrentDate!: ActionBindingIF
   @Action setCertifyStatementResource!: ActionBindingIF
-  @Action setNameRequestState!: ActionBindingIF
 
   // Lifecycle event
   private created (): void {
     this.filingData.push({ filingTypeCode: FilingCodes.INCORPORATION_BC, entityType: EntityTypes.BCOMP })
     this.setCurrentDate(this.dateToUsableString(new Date()))
-
-    // Placeholder to assign the NR Data we are expecting *Development Purpose*
-    this.setNameRequestState({ nrNumber: 'NR7654321', entityType: 'BC', filingId: null })
-
-    // Placeholder to assign the NR Data we are expecting *Development Purpose*
-    // this.setNameRequestState({ nrNumber: 'NR1234567', entityType: 'CP', filingId: 54321 })
   }
 
   /**

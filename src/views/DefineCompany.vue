@@ -75,40 +75,29 @@ export default class DefineCompany extends Vue {
   @Action setEntityType!: ActionBindingIF
   @Action setBusinessContact!: ActionBindingIF
   @Action setDefineCompanyStepValidity!: ActionBindingIF
+  @Action setNameRequestState!: ActionBindingIF
 
   /**
    * Method called when Benefit Company button is clicked.
    */
   private onClickBC (): void {
-    this.setEntityType(EntityTypes.BCOMP)
-
-    // TODO: implement this instead of above?
-    // this.setNameRequestData({
-    //   entityType: EntityTypes.BCOMP,
-    //   companyName: 'XYZ Inc.',
-    //   companyNumber: 'NR1234567'
-    // })
+    // Placeholder to assign the NR Data we are expecting *Development Purpose*
+    this.setNameRequestState({ nrNumber: 'NR7654321', entityType: EntityTypes.BCOMP, filingId: null })
   }
 
   /**
    * Method called when Cooperative Association button is clicked.
    */
   private onClickCP (): void {
-    this.setEntityType(EntityTypes.COOP)
-
-    // TODO: implement this instead of above?
-    // this.setNameRequestData({
-    //   entityType: EntityTypes.COOP,
-    //   companyName: 'XYZ Inc.',
-    //   companyNumber: 'NR1234567'
-    // })
+    // Placeholder to assign the NR Data we are expecting *Development Purpose*
+    this.setNameRequestState({ nrNumber: 'NR7654321', entityType: EntityTypes.COOP, filingId: null })
   }
 
   /**
    * Method called when Reset Entity Type button is clicked.
    */
   private onClickReset (): void {
-    this.setEntityType(null)
+    this.setNameRequestState({})
   }
 
   private onBusinessContactInfoChange (businessContact: BusinessContactIF): void {
