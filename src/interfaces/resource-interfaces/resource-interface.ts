@@ -1,5 +1,4 @@
-import { CertifyStatementIF } from './component-resource-interfaces/certifyStatement-interface'
-import { ExternalResourceIF } from './ExternalResourceIF'
+import { CertifyStatementIF, ExternalResourceIF } from '@/interfaces'
 
 // Interface to define the resource model example
 export interface ResourceIF {
