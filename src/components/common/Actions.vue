@@ -73,10 +73,10 @@ import { State, Getter, Action } from 'vuex-class'
 import { StateModelIF, GetterIF, ActionBindingIF } from '@/interfaces'
 
 // Mixins
-import { ApiMixin, FilingTemplateMixin } from '@/mixins'
+import { FilingTemplateMixin, LegalApiMixin } from '@/mixins'
 
 @Component
-export default class Actions extends Mixins(ApiMixin, FilingTemplateMixin) {
+export default class Actions extends Mixins(FilingTemplateMixin, LegalApiMixin) {
   // Global state
   @State stateModel!: StateModelIF
 

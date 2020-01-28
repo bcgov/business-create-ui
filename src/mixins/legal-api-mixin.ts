@@ -10,7 +10,7 @@ import { StateModelIF, ActionBindingIF, GetterIF, IncorporationFilingIF } from '
  * Mixin that provides the integration with the legal api.
  */
 @Component
-export default class ApiMixin extends Vue {
+export default class LegalApiMixin extends Vue {
   // Global state
   @State stateModel!: StateModelIF
 
