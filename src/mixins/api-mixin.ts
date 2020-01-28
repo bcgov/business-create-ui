@@ -34,10 +34,10 @@ export default class ApiMixin extends Vue {
 
       // If have a filing id, update an existing filing
       if (filingId && filingId > 0) {
-        this.axiosPut(isDraft, filing, filingId)
+        this.updateFiling(isDraft, filing, filingId)
       } else {
         // Set the filingId to store
-        const response = await this.axiosPost(isDraft, filing)
+        const response = await this.createFiling(isDraft, filing)
         // Assign a filing Id from the response to the state
         if (response && response.header) {
           this.setFilingId(response.header.filingId)
@@ -57,7 +57,7 @@ export default class ApiMixin extends Vue {
    * Future: We can use this method to parse and sort the data into store.
    * @param filingId filing id if this resuming an existing draft
    */
-  async getFiling (filingId: number): Promise<any> {
+  async fetchDraft (filingId: number): Promise<any> {
     try {
       const filing = await this.getFiling(filingId)
       // TODO: Parse the filing into store. Either here or using another method.
@@ -73,7 +73,7 @@ export default class ApiMixin extends Vue {
    * @param isDraft Boolean indicating if this filing is a draft.
    * @param data The object body of the request.
    */
-  axiosPost (isDraft: boolean, data: object): Promise<any> {
+  createFiling (isDraft: boolean, data: object): Promise<any> {
     // Assign the url business identifier
     let url = this.getBusinessIdentifier
 
@@ -93,7 +93,7 @@ export default class ApiMixin extends Vue {
    * @param data The object body of the request.
    * @param filingId Optional filing id if this resuming an existing draft
    */
-  axiosPut (isDraft: boolean, data: object, filingId: number): Promise<any> {
+  updateFiling (isDraft: boolean, data: object, filingId: number): Promise<any> {
     // Assign the url business identifier
     let url = `${this.getBusinessIdentifier}/filings/`
 
@@ -111,7 +111,7 @@ export default class ApiMixin extends Vue {
    * Method to make a simple axios Get request.
    * @param filingId Optional filing id if this resuming an existing draft
    */
-  axiosGet (filingId: number): Promise<any> {
+  getFiling (filingId: number): Promise<any> {
     // Assign the url business identifier
     let url = `${this.getBusinessIdentifier}/filings/${filingId}`
 
