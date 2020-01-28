@@ -73,10 +73,10 @@ import { State, Getter, Action } from 'vuex-class'
 import { StateModelIF, GetterIF, ActionBindingIF } from '@/interfaces'
 
 // Mixins
-import { ApiMixin } from '@/mixins'
+import { ApiMixin, FilingTemplateMixin } from '@/mixins'
 
 @Component
-export default class Actions extends Mixins(ApiMixin) {
+export default class Actions extends Mixins(ApiMixin, FilingTemplateMixin) {
   // Global state
   @State stateModel!: StateModelIF
 
@@ -110,7 +110,8 @@ export default class Actions extends Mixins(ApiMixin) {
    */
   private async onClickSave (): Promise<void> {
     this.setIsSaving(true)
-    await this.saveFiling(true)
+    const filing = await this.buildFiling()
+    await this.saveFiling(filing, true)
     this.setIsSaving(false)
   }
 
@@ -120,7 +121,8 @@ export default class Actions extends Mixins(ApiMixin) {
    */
   private async onClickSaveResume (): Promise<void> {
     this.setIsSavingResuming(true)
-    await this.saveFiling(true)
+    const filing = await this.buildFiling()
+    await this.saveFiling(filing, true)
     this.setIsSavingResuming(false)
     window.location.assign(this.authUrl)
   }
@@ -131,7 +133,8 @@ export default class Actions extends Mixins(ApiMixin) {
    */
   private async onClickFilePay (): Promise<void> {
     this.setIsFilingPaying(true)
-    await this.saveFiling(false)
+    const filing = await this.buildFiling()
+    await this.saveFiling(filing, false)
     this.setIsFilingPaying(false)
   }
 

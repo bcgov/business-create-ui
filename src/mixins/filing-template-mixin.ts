@@ -28,7 +28,7 @@ export default class FilingTemplateMixin extends Vue {
   private registeredOffice!: BaseAddressObjIF
   private recordsOffice!: BaseAddressObjIF
 
-  buildfiling (): IncorporationFilingIF {
+  buildFiling (): IncorporationFilingIF {
     this.name = 'incorporationApplication'
     this.certifiedBy = this.stateModel.certifyState.certifiedBy
     this.email = this.stateModel.defineCompanyStep.businessContact.email

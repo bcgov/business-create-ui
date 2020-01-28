@@ -1,19 +1,16 @@
 // Libraries
 import axios from '@/utils/axios-auth'
-import { Component, Mixins, Vue } from 'vue-property-decorator'
+import { Component, Vue } from 'vue-property-decorator'
 import { State, Action, Getter } from 'vuex-class'
 
 // Interfaces
-import { StateModelIF, ActionBindingIF, GetterIF } from '@/interfaces'
-
-// Utils
-import { FilingTemplateMixin } from '@/mixins'
+import { StateModelIF, ActionBindingIF, GetterIF, IncorporationFilingIF } from '@/interfaces'
 
 /**
  * Mixin that provides the integration with the legal api.
  */
 @Component
-export default class ApiMixin extends Mixins(FilingTemplateMixin) {
+export default class ApiMixin extends Vue {
   // Global state
   @State stateModel!: StateModelIF
 
@@ -31,18 +28,16 @@ export default class ApiMixin extends Mixins(FilingTemplateMixin) {
    * @param isDraft Boolean indicating if this filing is a draft
    * @param filingId Optional filing id if this resuming an existing draft
    */
-  async saveFiling (isDraft: boolean): Promise<any> {
+  async saveFiling (filing: IncorporationFilingIF, isDraft: boolean): Promise<any> {
     try {
-      // Construct Filing from Store based on entity type
-      const filingData = await this.buildfiling()
       let filingId = this.getFilingId
-      console.log(filingData)
+
       // If have a filing id, update an existing filing
       if (filingId && filingId > 0) {
-        this.axiosPut(isDraft, filingData, filingId)
+        this.axiosPut(isDraft, filing, filingId)
       } else {
         // Set the filingId to store
-        const response = await this.axiosPost(isDraft, filingData)
+        const response = await this.axiosPost(isDraft, filing)
         // Assign a filing Id from the response to the state
         if (response && response.header) {
           this.setFilingId(response.header.filingId)
