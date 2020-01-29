@@ -37,7 +37,7 @@ export default class LegalApiMixin extends Vue {
         this.updateFiling(isDraft, filing, filingId)
       } else {
         // Set the filingId to store
-        const response = await this.createFiling(isDraft, filing)
+        const response = await this.createFiling(filing)
         // Assign a filing Id from the response to the state
         if (response && response.header) {
           this.setFilingId(response.header.filingId)
@@ -73,14 +73,8 @@ export default class LegalApiMixin extends Vue {
    * @param isDraft Boolean indicating if this filing is a draft.
    * @param data The object body of the request.
    */
-  createFiling (isDraft: boolean, data: object): Promise<any> {
-    // Assign the url business identifier
-    let url = this.getBusinessIdentifier
-
-    // Append URL appropriately if Draft
-    if (isDraft) url += `?draft=true`
-
-    return axios.post(url, data).then(res => {
+  createFiling (data: object): Promise<any> {
+    return axios.post('', data).then(res => {
       if (!res) {
         throw new Error('invalid API response')
       }
