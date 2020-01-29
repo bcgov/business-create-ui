@@ -4,9 +4,7 @@ import 'regenerator-runtime/runtime' // to use transpiled generator functions
 // Vue Libraries
 import Vue from 'vue'
 import vuetify from '@/plugins/vuetify'
-//
-// TODO: add Vuelidate
-//
+import Vuelidate from 'vuelidate'
 import router from '@/router'
 import { store } from '@/store'
 import Affix from 'vue-affix'
@@ -30,6 +28,7 @@ import TokenServices from 'sbc-common-components/src/services/token.services'
 Vue.config.productionTip = false
 
 Vue.use(Affix)
+Vue.use(Vuelidate)
 Vue.use(Vue2Filters)
 
 // ********************** THIS IS FOR TESTING & DEVELOPMENT ONLY ***************************************

@@ -1,4 +1,4 @@
-import { StateModelIF } from '@/interfaces'
+import { StateModelIF, AddressIF } from '@/interfaces'
 
 export const stateModel: StateModelIF = {
   stateText: 'Base State Text',
@@ -18,6 +18,7 @@ export const stateModel: StateModelIF = {
       confirmEmail: '',
       phone: '',
       phoneExtension: ''
-    }
+    },
+    officeAddresses: null
   }
 }

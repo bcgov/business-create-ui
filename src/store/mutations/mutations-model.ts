@@ -1,4 +1,4 @@
-import { CertifyStatementIF, CertifyIF } from '@/interfaces'
+import { CertifyStatementIF, CertifyIF, IncorporationAddressIf } from '@/interfaces'
 import { ExternalResourceIF } from '@/interfaces/resource-interfaces/ExternalResourceIF'
 import { BusinessContactIF } from '@/interfaces/stepper-interfaces/DefineCompany/business-contact-interface'
 
@@ -56,4 +56,8 @@ export const mutateBusinessContact = (state: any, businessContact: BusinessConta
 
 export const mutateDefineCompanyStepValidity = (state: any, validity: boolean) => {
   state.stateModel.defineCompanyStep.valid = validity
+}
+
+export const mutateOfficeAddresses = (state: any, address: IncorporationAddressIf) => {
+  state.stateModel.defineCompanyStep.officeAddresses = address
 }

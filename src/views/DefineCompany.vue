@@ -29,6 +29,15 @@
         </div>
       </v-card>
     </section>
+    <section class="mt-4" v-if="isEntityType">
+      <header>
+        <h2>2. Registered and Records Office Addresses</h2>
+      </header>
+      <OfficeAddresses
+        :inputAddresses="addresses"
+        @update:addresses="onAddressChange($event)"
+        @valid="onAddressFormValidityChange($event)"/>
+    </section>
     <section class="mt-4">
       <header>
         <h2>3. Business Contact Information</h2>
@@ -50,17 +59,18 @@ import { Component, Vue } from 'vue-property-decorator'
 import { Getter, Action, State } from 'vuex-class'
 
 // Interfaces
-import { GetterIF, ActionBindingIF, BusinessContactIF } from '@/interfaces'
+import { GetterIF, ActionBindingIF, BusinessContactIF, IncorporationAddressIf, AddressIF } from '@/interfaces'
 
 // Enums
 import { EntityTypes } from '@/enums'
 
 // Components
-import { BusinessContactInfo } from '@/components/DefineCompany'
+import { BusinessContactInfo, OfficeAddresses } from '@/components/DefineCompany'
 
 @Component({
   components: {
-    BusinessContactInfo
+    BusinessContactInfo,
+    OfficeAddresses
   }
 })
 export default class DefineCompany extends Vue {
@@ -68,13 +78,20 @@ export default class DefineCompany extends Vue {
   @State(state => state.stateModel.defineCompanyStep.businessContact)
   readonly businessContact!: BusinessContactIF
 
+  @State(state => state.stateModel.defineCompanyStep.officeAddresses)
+  readonly addresses!: AddressIF
+
   // Global getters
   @Getter isEntityType!: GetterIF
 
   // Global actions
   @Action setEntityType!: ActionBindingIF
   @Action setBusinessContact!: ActionBindingIF
+  @Action setOfficeAddresses!: ActionBindingIF
   @Action setDefineCompanyStepValidity!: ActionBindingIF
+
+  private businessContactFormValid: boolean = false
+  private addressFormValid: boolean = false
 
   /**
    * Method called when Benefit Company button is clicked.
@@ -116,7 +133,17 @@ export default class DefineCompany extends Vue {
   }
 
   private onBusinessContactFormValidityChange (validity: boolean): void {
-    this.setDefineCompanyStepValidity(validity)
+    this.businessContactFormValid = validity
+    this.setDefineCompanyStepValidity(this.businessContactFormValid && this.addressFormValid)
+  }
+
+  private onAddressChange (address: IncorporationAddressIf): void {
+    this.setOfficeAddresses(address)
+  }
+
+  private onAddressFormValidityChange (validity: boolean): void {
+    this.addressFormValid = validity
+    this.setDefineCompanyStepValidity(this.businessContactFormValid && this.addressFormValid)
   }
 
   private get showErrors (): boolean {

@@ -51,3 +51,7 @@ export const setBusinessContact: ActionIF = ({ commit }, businessContact): void 
 export const setDefineCompanyStepValidity: ActionIF = ({ commit }, validity): void => {
   commit('mutateDefineCompanyStepValidity', validity)
 }
+
+export const setOfficeAddresses: ActionIF = ({ commit }, address): void => {
+  commit('mutateOfficeAddresses', address)
+}

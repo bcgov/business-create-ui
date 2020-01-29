@@ -10,6 +10,7 @@ export * from './store-interfaces/getter-interface'
 
 // Stepper Interfaces
 export * from './stepper-interfaces/DefineCompany/business-contact-interface'
+export * from './stepper-interfaces/DefineCompany/address-interface'
 export * from './stepper-interfaces/DefineCompany/define-company-interface'
 export * from './stepper-interfaces/ReviewConfirm/certify-interface'
 
