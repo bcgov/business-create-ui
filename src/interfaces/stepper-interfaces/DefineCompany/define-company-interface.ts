@@ -1,6 +1,6 @@
-import { BusinessContactIF } from './business-contact-interface'
+import { BusinessContactIF, NameRequestIF } from '@/interfaces'
 
 export interface DefineCompanyIF {
     valid: boolean
-    businessContact : BusinessContactIF;
+    businessContact : BusinessContactIF
 }

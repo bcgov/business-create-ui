@@ -1,10 +1,6 @@
-import { CertifyStatementIF, CertifyIF } from '@/interfaces'
+import { CertifyStatementIF, CertifyIF, NameRequestIF } from '@/interfaces'
 import { ExternalResourceIF } from '@/interfaces/resource-interfaces/ExternalResourceIF'
 import { BusinessContactIF } from '@/interfaces/stepper-interfaces/DefineCompany/business-contact-interface'
-
-export const mutateName = (state: any, name: string) => {
-  state.stateModel.stateText = name
-}
 
 export const mutateCurrentStep = (state: any, currentStep: boolean) => {
   state.stateModel.currentStep = currentStep
@@ -22,20 +18,16 @@ export const mutateIsFilingPaying = (state: any, isFilingPaying: boolean) => {
   state.stateModel.isFilingPaying = isFilingPaying
 }
 
-export const mutateEntityType = (state: any, entityType: string) => {
-  state.tombStoneModel.entityType = entityType
-}
-
 export const mutateResource = (state: any, resource: ExternalResourceIF) => {
   state.resourceModel.externalResource = resource
 }
 
 export const mutateKeycloakRoles = (state: any, keyCloakRoles: Array<string>) => {
-  state.tombStoneModel.keycloakRoles = keyCloakRoles
+  state.stateModel.tombstone.keycloakRoles = keyCloakRoles
 }
 
 export const mutateAuthRoles = (state: any, authRoles: Array<string>) => {
-  state.tombStoneModel.authRoles = authRoles
+  state.stateModel.tombstone.authRoles = authRoles
 }
 
 export const mutateCurrentDate = (state: any, currentDate: string) => {
@@ -56,4 +48,12 @@ export const mutateBusinessContact = (state: any, businessContact: BusinessConta
 
 export const mutateDefineCompanyStepValidity = (state: any, validity: boolean) => {
   state.stateModel.defineCompanyStep.valid = validity
+}
+
+export const mutateNameRequestState = (state: any, nameRequestState: NameRequestIF) => {
+  state.stateModel.nameRequest = nameRequestState
+}
+
+export const mutateFilingId = (state: any, filingId: number) => {
+  state.stateModel.nameRequest.filingId = filingId
 }

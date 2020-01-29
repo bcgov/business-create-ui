@@ -16,10 +16,6 @@ export const setIsFilingPaying: ActionIF = ({ commit }, isFilingPaying): void =>
   commit('mutateIsFilingPaying', isFilingPaying)
 }
 
-export const setEntityType: ActionIF = ({ commit }, entityType): void => {
-  commit('mutateEntityType', entityType)
-}
-
 export const setResource: ActionIF = ({ commit }, resource): void => {
   commit('mutateResource', resource)
 }
@@ -50,4 +46,12 @@ export const setBusinessContact: ActionIF = ({ commit }, businessContact): void 
 
 export const setDefineCompanyStepValidity: ActionIF = ({ commit }, validity): void => {
   commit('mutateDefineCompanyStepValidity', validity)
+}
+
+export const setNameRequestState: ActionIF = ({ commit }, nameRequestState): void => {
+  commit('mutateNameRequestState', nameRequestState)
+}
+
+export const setFilingId: ActionIF = ({ commit }, filingId): void => {
+  commit('mutateFilingId', filingId)
 }

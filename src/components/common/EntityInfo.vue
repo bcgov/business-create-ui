@@ -49,10 +49,10 @@
 <script lang="ts">
 // Libraries
 import { Component, Vue } from 'vue-property-decorator'
-import { State, Getter } from 'vuex-class'
+import { Getter } from 'vuex-class'
 
 // Interfaces
-import { TombStoneIF, GetterIF } from '@/interfaces'
+import { GetterIF } from '@/interfaces'
 
 @Component
 export default class EntityInfo extends Vue {

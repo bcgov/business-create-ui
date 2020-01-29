@@ -44,7 +44,6 @@
 <script lang="ts">
 // Libraries
 import { Component, Vue, Prop, Emit } from 'vue-property-decorator'
-import { State } from 'vuex-class'
 
 // Interfaces
 import { CertifyStatementIF } from '@/interfaces'

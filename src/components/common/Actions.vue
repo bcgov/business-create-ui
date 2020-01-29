@@ -66,14 +66,17 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Mixins } from 'vue-property-decorator'
 import { State, Getter, Action } from 'vuex-class'
 
 // Interfaces
 import { StateModelIF, GetterIF, ActionBindingIF } from '@/interfaces'
 
+// Mixins
+import { FilingTemplateMixin, LegalApiMixin } from '@/mixins'
+
 @Component
-export default class Actions extends Vue {
+export default class Actions extends Mixins(FilingTemplateMixin, LegalApiMixin) {
   // Global state
   @State stateModel!: StateModelIF
 
@@ -90,13 +93,15 @@ export default class Actions extends Vue {
   @Action setIsSavingResuming!: ActionBindingIF
   @Action setIsFilingPaying!: ActionBindingIF
 
+  // Local Properties
+  private authUrl = sessionStorage.getItem('AUTH_URL') || ''
+
   /**
    * Method called when Cancel button is clicked.
    */
   private onCancel (): void {
-    const authUrl = sessionStorage.getItem('AUTH_URL') || ''
     // assume Auth URL is always reachable
-    window.location.assign(authUrl)
+    window.location.assign(this.authUrl)
   }
 
   /**
@@ -105,7 +110,8 @@ export default class Actions extends Vue {
    */
   private async onClickSave (): Promise<void> {
     this.setIsSaving(true)
-    await this.sleep(1000)
+    const filing = await this.buildFiling()
+    await this.saveFiling(filing, true)
     this.setIsSaving(false)
   }
 
@@ -115,8 +121,10 @@ export default class Actions extends Vue {
    */
   private async onClickSaveResume (): Promise<void> {
     this.setIsSavingResuming(true)
-    await this.sleep(1000)
+    const filing = await this.buildFiling()
+    await this.saveFiling(filing, true)
     this.setIsSavingResuming(false)
+    window.location.assign(this.authUrl)
   }
 
   /**
@@ -125,17 +133,9 @@ export default class Actions extends Vue {
    */
   private async onClickFilePay (): Promise<void> {
     this.setIsFilingPaying(true)
-    await this.sleep(1000)
+    const filing = await this.buildFiling()
+    await this.saveFiling(filing, false)
     this.setIsFilingPaying(false)
-  }
-
-  /**
-   * Method that "sleeps" for specified timeout. Must be called from async method.
-   * @param ms Delay to sleep, in milliseconds.
-   * @returns A promise to await upon.
-   */
-  private sleep (ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms))
   }
 }
 </script>

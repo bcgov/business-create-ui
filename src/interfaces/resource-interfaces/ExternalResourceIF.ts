@@ -1,5 +1,5 @@
 export interface ExternalResourceIF {
-  id: number,
-  displayName: string,
+  id: number
+  displayName: string
   message: string
 }

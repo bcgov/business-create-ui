@@ -52,7 +52,7 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Vue, Watch, Mixins } from 'vue-property-decorator'
+import { Component, Watch, Mixins } from 'vue-property-decorator'
 import { Action, State } from 'vuex-class'
 
 // Components
@@ -65,7 +65,7 @@ import { EntityInfo, Stepper, Actions } from '@/components/common'
 import { DateMixin } from '@/mixins'
 
 // Interfaces
-import { FilingDataIF, ActionBindingIF, CertifyStatementIF, TombStoneIF } from '@/interfaces'
+import { FilingDataIF, ActionBindingIF, StateModelIF } from '@/interfaces'
 
 import { CertifyStatementResource } from '@/resources'
 
@@ -84,7 +84,7 @@ import { EntityTypes, FilingCodes } from '@/enums'
 })
 export default class App extends Mixins(DateMixin) {
   // Global state
-  @State tombStoneModel!: TombStoneIF
+  @State stateModel!: StateModelIF
 
   // Global actions
   @Action setCurrentStep!: ActionBindingIF
@@ -92,8 +92,8 @@ export default class App extends Mixins(DateMixin) {
   private filingData: Array<FilingDataIF> = []
   private totalFee: number = 0
 
-  @Action('setCurrentDate') setCurrentDate!: ActionBindingIF
-  @Action('setCertifyStatementResource') setCertifyStatementResource!: ActionBindingIF
+  @Action setCurrentDate!: ActionBindingIF
+  @Action setCertifyStatementResource!: ActionBindingIF
 
   // Lifecycle event
   private created (): void {
@@ -132,7 +132,7 @@ export default class App extends Mixins(DateMixin) {
     this.setCurrentStep(this.$route.meta.step)
   }
 
-  @Watch('tombStoneModel.entityType')
+  @Watch('stateModel.nameRequest.entityType')
   private onEntityTypeChanged (val:string | null) : void{
     this.setCertifyStatementResource(val ? CertifyStatementResource
       .find(x => x.entityType === val) : null)
