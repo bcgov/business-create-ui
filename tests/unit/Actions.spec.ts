@@ -38,12 +38,9 @@ describe('Actions component', () => {
       certifyFormValid: true,
       certifiedBy: 'Some certifier'
     }
-
+    store.state.stateModel.nameRequest = { entityType: 'BC' }
     store.state.stateModel.defineCompanyStep = {
-      valid: true,
-      nameRequest: {
-        entityType: 'BC'
-      }
+      valid: true
     }
     // verify File and Pay button state
     expect(wrapper.find('#file-pay-btn').attributes('disabled')).toBeUndefined()

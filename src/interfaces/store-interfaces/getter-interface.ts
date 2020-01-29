@@ -1,3 +1,3 @@
 export interface GetterIF {
-  (x: any): any;
+  (x: any): any
 }

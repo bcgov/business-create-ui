@@ -132,7 +132,7 @@ export default class App extends Mixins(DateMixin) {
     this.setCurrentStep(this.$route.meta.step)
   }
 
-  @Watch('stateModel.defineCompanyStep.nameRequest.entityType')
+  @Watch('stateModel.nameRequest.entityType')
   private onEntityTypeChanged (val:string | null) : void{
     this.setCertifyStatementResource(val ? CertifyStatementResource
       .find(x => x.entityType === val) : null)

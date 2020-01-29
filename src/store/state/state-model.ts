@@ -5,6 +5,11 @@ export const stateModel: StateModelIF = {
     keycloakRoles: [],
     authRoles: []
   },
+  nameRequest: {
+    nrNumber: '',
+    entityType: '',
+    filingId: null
+  },
   currentDate: '',
   certifyState: {
     certifyFormValid: false,
@@ -21,11 +26,6 @@ export const stateModel: StateModelIF = {
       confirmEmail: '',
       phone: '',
       phoneExtension: ''
-    },
-    nameRequest: {
-      nrNumber: '',
-      entityType: '',
-      filingId: null
     }
   }
 }

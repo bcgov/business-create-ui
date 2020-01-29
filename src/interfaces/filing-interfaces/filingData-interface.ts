@@ -1,4 +1,4 @@
 export interface FilingDataIF {
-  filingTypeCode: string;
-  entityType: string;
+  filingTypeCode: string
+  entityType: string
 }

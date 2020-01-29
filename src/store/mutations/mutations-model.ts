@@ -51,9 +51,9 @@ export const mutateDefineCompanyStepValidity = (state: any, validity: boolean) =
 }
 
 export const mutateNameRequestState = (state: any, nameRequestState: NameRequestIF) => {
-  state.stateModel.defineCompanyStep.nameRequest = nameRequestState
+  state.stateModel.nameRequest = nameRequestState
 }
 
 export const mutateFilingId = (state: any, filingId: number) => {
-  state.stateModel.defineCompanyStep.nameRequest.filingId = filingId
+  state.stateModel.nameRequest.filingId = filingId
 }

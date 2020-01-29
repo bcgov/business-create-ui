@@ -34,8 +34,8 @@ export default class FilingTemplateMixin extends Vue {
     this.email = this.stateModel.defineCompanyStep.businessContact.email
     this.phone = this.stateModel.defineCompanyStep.businessContact.phone
     this.date = this.stateModel.currentDate
-    this.nrNumber = this.stateModel.defineCompanyStep.nameRequest.nrNumber
-    this.legalType = this.stateModel.defineCompanyStep.nameRequest.entityType
+    this.nrNumber = this.stateModel.nameRequest.nrNumber
+    this.legalType = this.stateModel.nameRequest.entityType
 
     // Temporary assignment of addresses. Will need to check for properties before assignment
     this.registeredOffice = {

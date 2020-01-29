@@ -30,35 +30,35 @@ export const isRoleView = (state: any): boolean => {
  * A boolean indicating whether the entity type has been identified
  */
 export const isEntityType = (state: any): boolean => {
-  return !!state.stateModel.defineCompanyStep.nameRequest.entityType
+  return !!state.stateModel.nameRequest.entityType
 }
 
 /**
  * A boolean indicating whether the entity type is a BCOMP
  */
 export const isTypeBcomp = (state: any): boolean => {
-  return (state.stateModel.defineCompanyStep.nameRequest.entityType === EntityTypes.BCOMP)
+  return (state.stateModel.nameRequest.entityType === EntityTypes.BCOMP)
 }
 
 /**
  * A boolean indicating whether the entity type is a COOP
  */
 export const isTypeCoop = (state: any): boolean => {
-  return (state.stateModel.defineCompanyStep.nameRequest.entityType === EntityTypes.COOP)
+  return (state.stateModel.nameRequest.entityType === EntityTypes.COOP)
 }
 
 /**
  * Return a filingId if it exists
  */
 export const getFilingId = (state: any): number => {
-  return state.stateModel.defineCompanyStep.nameRequest.filingId
+  return state.stateModel.nameRequest.filingId
 }
 
 /**
  * Return a business identifier if it exists
  */
 export const getBusinessIdentifier = (state: any): string => {
-  return state.stateModel.defineCompanyStep.nameRequest.nrNumber
+  return state.stateModel.nameRequest.nrNumber
 }
 
 /**
@@ -72,7 +72,7 @@ export const isShowBackBtn = (state: any): boolean => {
  * Whether Review and Confirm button should be displayed.
  */
 export const isShowReviewConfirmBtn = (state: any): boolean => {
-  return (!!state.stateModel.defineCompanyStep.nameRequest.entityType && state.stateModel.currentStep < 5)
+  return (!!state.stateModel.nameRequest.entityType && state.stateModel.currentStep < 5)
 }
 
 /**
