@@ -6,7 +6,7 @@ import axios from '@/utils/axios-auth'
  * Fetches config from environment and API.
  * @returns A promise to get & set session storage keys with appropriate values.
  */
-export const fetchConfig = (): Promise<any> => {
+export function fetchConfig (): Promise<any> {
   const origin: string = window.location.origin
   const vueAppPath: string = process.env.VUE_APP_PATH
 
@@ -58,7 +58,7 @@ export const fetchConfig = (): Promise<any> => {
  * Verifies that we have all the Keycloak tokens.
  * @returns A boolean indicating if all Keycloak keys exist.
  */
-export const haveKcTokens = (): boolean => {
+export function haveKcTokens (): boolean {
   return Boolean(sessionStorage.getItem('KEYCLOAK_TOKEN') &&
     sessionStorage.getItem('KEYCLOAK_REFRESH_TOKEN') &&
     sessionStorage.getItem('KEYCLOAK_ID_TOKEN'))
