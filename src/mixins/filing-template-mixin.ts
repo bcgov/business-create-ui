@@ -73,28 +73,32 @@ export default class FilingTemplateMixin extends Vue {
     }
 
     const filing = {
-      header: {
-        name: this.name,
-        certifiedBy: this.certifiedBy,
-        email: this.email,
-        date: this.date
-      },
-      incorporation: {
-        nameRequest: {
-          nrNumber: this.nrNumber,
-          legalType: this.legalType
-        },
-        offices: {
-          registeredOffice: this.registeredOffice
-        },
-        contactPoint: {
+      filing: {
+        header: {
+          name: this.name,
+          certifiedBy: this.certifiedBy,
           email: this.email,
-          phone: this.phone
+          date: this.date
+        },
+        incorporationApplication: {
+          nameRequest: {
+            nrNumber: this.nrNumber,
+            legalType: this.legalType
+          },
+          offices: {
+            registeredOffice: this.registeredOffice
+          },
+          contactPoint: {
+            email: this.email,
+            phone: this.phone
+          }
         }
       }
     }
 
-    if (this.isTypeBcomp) Object.assign(filing.incorporation.offices, { recordsOffice: this.recordsOffice })
+    if (this.isTypeBcomp) {
+      Object.assign(filing.filing.incorporationApplication.offices, { recordsOffice: this.recordsOffice })
+    }
     return filing
   }
 }
