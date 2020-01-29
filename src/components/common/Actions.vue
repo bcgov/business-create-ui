@@ -137,15 +137,6 @@ export default class Actions extends Mixins(FilingTemplateMixin, LegalApiMixin) 
     await this.saveFiling(filing, false)
     this.setIsFilingPaying(false)
   }
-
-  /**
-   * Method that "sleeps" for specified timeout. Must be called from async method.
-   * @param ms Delay to sleep, in milliseconds.
-   * @returns A promise to await upon.
-   */
-  private sleep (ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms))
-  }
 }
 </script>
 
