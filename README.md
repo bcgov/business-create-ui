@@ -1,4 +1,7 @@
-# Vue-FrontEnd-Framework
+# Registry application that is used to create a business.
+
+![PR CI](https://github.com/bcgov/bcrs-business-create-ui/workflows/PR%20CI/badge.svg)
+![Build CI](https://github.com/bcgov/bcrs-business-create-ui/workflows/Build%20CI/badge.svg)
 
 ## Project setup
 ```
