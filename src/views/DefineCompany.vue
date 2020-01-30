@@ -31,13 +31,9 @@
     </section>
     <section class="mt-4" v-if="isEntityType">
       <header>
-        <h2 v-if="entityFilter(EntityTypes.BCOMP)">2. Registered and Records Office Addresses</h2>
-        <h2 v-else-if="entityFilter(EntityTypes.COOP)">2. Registered Office Addresses</h2>
-        <p v-if="entityFilter(EntityTypes.BCOMP)">
-          Enter the business' Registered Office and Records Office Mailing and Delivery Addresses.
-        </p>
-        <p v-else-if="entityFilter(EntityTypes.COOP)">
-          Enter the business' Registered Office Mailing and Delivery Addresses.
+        <h2>2. Registered <span v-if="entityFilter(EntityTypes.BCOMP)">and Records</span> Office Addresses</h2>
+        <p>Enter the business' Registered Office <span v-if="entityFilter(EntityTypes.BCOMP)">and Records Office
+          </span> Mailing and Delivery Addresses.
         </p>
       </header>
       <OfficeAddresses

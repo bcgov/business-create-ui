@@ -52,8 +52,8 @@ export function fetchConfig (): Promise<any> {
       sessionStorage.setItem('KEYCLOAK_CONFIG_URL', keycloakConfigUrl)
       console.info('Set Keycloak config URL to: ' + keycloakConfigUrl)
 
-      const addressCompleteKey = response.data['ADDRESS_COMPLETE_KEY']
-      window['addressCompleteKey'] = addressCompleteKey
+      const addressCompleteKey = response.data['ADDRESS_COMPLETE_KEY'];
+      (<any>window).addressCompleteKey = addressCompleteKey
       console.info('Set Address Complete Key.')
     })
 }

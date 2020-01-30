@@ -41,8 +41,8 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Vue, Mixins } from 'vue-property-decorator'
-import { Getter, Action, State } from 'vuex-class'
+import { Component, Mixins } from 'vue-property-decorator'
+import { State } from 'vuex-class'
 
 // Interfaces
 import { BusinessContactIF, IncorporationAddressIf } from '@/interfaces'

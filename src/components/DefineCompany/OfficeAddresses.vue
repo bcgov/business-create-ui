@@ -172,10 +172,7 @@ import { officeAddressSchema } from '@/schemas'
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
 
 // Interfaces
-import { BaseAddressObjIF, IncorporationAddressIf, AddressIF } from '@/interfaces'
-
-// Constants
-import { ADDRESSCHANGED } from '@/constants'
+import { IncorporationAddressIf, AddressIF } from '@/interfaces'
 
 // Enums
 import { EntityTypes } from '@/enums'
