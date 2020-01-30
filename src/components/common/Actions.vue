@@ -111,7 +111,7 @@ export default class Actions extends Mixins(FilingTemplateMixin, LegalApiMixin) 
   private async onClickSave (): Promise<void> {
     this.setIsSaving(true)
     const filing = await this.buildFiling()
-    await this.saveFiling(filing, true)
+    await this.saveFiling(filing)
     this.setIsSaving(false)
   }
 
@@ -122,7 +122,7 @@ export default class Actions extends Mixins(FilingTemplateMixin, LegalApiMixin) 
   private async onClickSaveResume (): Promise<void> {
     this.setIsSavingResuming(true)
     const filing = await this.buildFiling()
-    await this.saveFiling(filing, true)
+    await this.saveFiling(filing)
     this.setIsSavingResuming(false)
     window.location.assign(this.authUrl)
   }
@@ -134,7 +134,7 @@ export default class Actions extends Mixins(FilingTemplateMixin, LegalApiMixin) 
   private async onClickFilePay (): Promise<void> {
     this.setIsFilingPaying(true)
     const filing = await this.buildFiling()
-    await this.saveFiling(filing, false)
+    await this.completeFiling(filing)
     this.setIsFilingPaying(false)
   }
 }

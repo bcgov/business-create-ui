@@ -24,22 +24,22 @@ export default class LegalApiMixin extends Vue {
   @Action setFilingId!: ActionBindingIF
 
   /**
-   * Method to save a draft or real filing.
-   * @param isDraft Boolean indicating if this filing is a draft
-   * @param filingId Optional filing id if this resuming an existing draft
+   * Method to save a filing.
+   * @param filing Filing body to be saved.
    */
-  async saveFiling (filing: IncorporationFilingIF, isDraft: boolean): Promise<any> {
+  async saveFiling (filing: IncorporationFilingIF): Promise<any> {
     try {
       let filingId = this.getFilingId
 
       // If have a filing id, update an existing filing
       if (filingId && filingId > 0) {
-        await this.updateFiling(isDraft, filing, filingId)
+        await this.updateFiling(filing)
       } else {
         // Set the filingId to store
         const response = await this.createFiling(filing)
+
         // Assign a filing Id from the response to the state
-        if (response && response.header) {
+        if (response && response.header && response.header.filingId) {
           this.setFilingId(response.header.filingId)
         } else {
           throw new Error('invalid API response')
@@ -53,9 +53,35 @@ export default class LegalApiMixin extends Vue {
   }
 
   /**
+   * Method to complete a filing and proceed to payment.
+   * @param filing The filing body to be saved and submitted.
+   */
+  async completeFiling (filing: IncorporationFilingIF): Promise<any> {
+    try {
+      await this.saveFiling(filing)
+      let filingId = this.getFilingId
+
+      if (filingId) {
+        // Assign the url business identifier
+        let url = `${this.getBusinessIdentifier}/filings/${filingId}`
+
+        return axios.put(url, filing).then(res => {
+          if (!res) {
+            throw new Error('invalid API response')
+          }
+        })
+      }
+    } catch (e) {
+      if (e) {
+        // TODO:  Trigger some error dialog. Will catch any errors from the Api calls
+      }
+    }
+  }
+
+  /**
    * Method to get a filing in progress.
    * Future: We can use this method to parse and sort the data into store.
-   * @param filingId filing id if this resuming an existing draft
+   * @param filingId filing id if this resuming an existing draft.
    */
   async fetchDraft (filingId: number): Promise<any> {
     try {
@@ -70,7 +96,6 @@ export default class LegalApiMixin extends Vue {
 
   /**
    * Method to make a simple axios Post request.
-   * @param isDraft Boolean indicating if this filing is a draft.
    * @param data The object body of the request.
    */
   private createFiling (data: object): Promise<any> {
@@ -83,16 +108,12 @@ export default class LegalApiMixin extends Vue {
 
   /**
    * Method to make a simple axios Put request.
-   * @param isDraft Boolean indicating if this filing is a draft
    * @param data The object body of the request.
-   * @param filingId Optional filing id if this resuming an existing draft
+   * @param filingId Optional filing id if this resuming an existing draft.
    */
-  private updateFiling (isDraft: boolean, data: object, filingId: number): Promise<any> {
+  private updateFiling (data: object): Promise<any> {
     // Assign the url business identifier
-    let url = `${this.getBusinessIdentifier}/filings/`
-
-    // Append URL appropriately if Draft
-    isDraft ? url += `${filingId}?draft=true` : url += filingId
+    let url = `${this.getBusinessIdentifier}`
 
     return axios.put(url, data).then(res => {
       if (!res) {
@@ -103,7 +124,7 @@ export default class LegalApiMixin extends Vue {
 
   /**
    * Method to make a simple axios Get request.
-   * @param filingId Optional filing id if this resuming an existing draft
+   * @param filingId Optional filing id if this resuming an existing draft.
    */
   private getFiling (filingId: number): Promise<any> {
     // Assign the url business identifier
