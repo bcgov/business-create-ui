@@ -168,8 +168,8 @@ describe('BusinessContactInfo', () => {
 
   it('displays read only data in non editing mode', async () => {
     const wrapper: Wrapper<BusinessContactInfo> = createComponent(email, email, phoneNumber, extension, false)
-    expect(wrapper.find(readOnlyEmailSelector).text()).toEqual('Email Address: ' + email)
-    expect(wrapper.find(readOnlyPhoneSelector).text()).toContain('Phone: ' + phoneNumber)
+    expect(wrapper.find(readOnlyEmailSelector).text()).toEqual(email)
+    expect(wrapper.find(readOnlyPhoneSelector).text()).toContain(phoneNumber)
     expect(wrapper.find(readOnlyPhoneSelector).text()).toContain('Ext: ' + extension)
     expect(wrapper.find(formSelector).exists()).toBeFalsy()
     wrapper.destroy()

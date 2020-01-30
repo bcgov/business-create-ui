@@ -31,8 +31,14 @@
     </section>
     <section class="mt-4" v-if="isEntityType">
       <header>
-        <h2>2. Registered and Records Office Addresses</h2>
-        <p>Enter the business' Registered Office and Records Office Mailing and Delivery Addresses.</p>
+        <h2 v-if="entityFilter(EntityTypes.BCOMP)">2. Registered and Records Office Addresses</h2>
+        <h2 v-else-if="entityFilter(EntityTypes.COOP)">2. Registered Office Addresses</h2>
+        <p v-if="entityFilter(EntityTypes.BCOMP)">
+          Enter the business' Registered Office and Records Office Mailing and Delivery Addresses.
+        </p>
+        <p v-else-if="entityFilter(EntityTypes.COOP)">
+          Enter the business' Registered Office Mailing and Delivery Addresses.
+        </p>
       </header>
       <OfficeAddresses
         :inputAddresses="addresses"
@@ -46,26 +52,29 @@
            communicate with the company in the future, including sending the following documents and
            notifications: a Certificate of Incorporation, a certified copy of the Incorporation Application,
            a certified copy of the Notice of Articles, payment receipts, and optional notifications such as
-           Annual Report reminders.</p>
+           Annual Report reminders.
+        </p>
       </header>
       <BusinessContactInfo
         :initialValue="businessContact"
         :isEditing="true"
         :showErrors="showErrors"
         @contactInfoChange="onBusinessContactInfoChange($event)"
-        @contactInfoFormValidityChange="onBusinessContactFormValidityChange($event)"
-      />
+        @contactInfoFormValidityChange="onBusinessContactFormValidityChange($event)"/>
     </section>
   </div>
 </template>
 
 <script lang="ts">
 // Libraries
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue, Mixins } from 'vue-property-decorator'
 import { Getter, Action, State } from 'vuex-class'
 
 // Interfaces
 import { GetterIF, ActionBindingIF, BusinessContactIF, IncorporationAddressIf, AddressIF } from '@/interfaces'
+
+// Mixins
+import { EntityFilterMixin } from '@/mixins'
 
 // Enums
 import { EntityTypes } from '@/enums'
@@ -79,7 +88,7 @@ import { BusinessContactInfo, OfficeAddresses } from '@/components/DefineCompany
     OfficeAddresses
   }
 })
-export default class DefineCompany extends Vue {
+export default class DefineCompany extends Mixins(EntityFilterMixin) {
   // State
   @State(state => state.stateModel.defineCompanyStep.businessContact)
   readonly businessContact!: BusinessContactIF
@@ -99,6 +108,9 @@ export default class DefineCompany extends Vue {
 
   private businessContactFormValid: boolean = false
   private addressFormValid: boolean = false
+
+  // Entity Enum
+  readonly EntityTypes: {} = EntityTypes
 
   /**
    * Method called when Benefit Company button is clicked.

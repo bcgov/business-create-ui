@@ -6,11 +6,11 @@
         </v-flex>
         <v-flex md4>
           <div><label><strong>Email Address</strong></label></div>
-          <div>{{ !!contact.email ? contact.email : 'Not entered'}}</div>
+          <div id="lbl-email">{{ !!contact.email ? contact.email : 'Not entered'}}</div>
         </v-flex>
         <v-flex md4>
           <div><label><strong>Phone Number</strong></label></div>
-          <div>{{ !!contact.phone ? contact.phone : 'Not entered' }}
+          <div id="lbl-phone">{{ !!contact.phone ? contact.phone : 'Not entered' }}
             Ext: {{ !!contact.phoneExtension ? contact.phoneExtension : 'Not entered' }}
           </div>
         </v-flex>

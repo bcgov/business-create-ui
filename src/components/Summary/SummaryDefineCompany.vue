@@ -65,16 +65,16 @@ import { EntityTypes } from '@/enums'
 export default class SummaryDefineCompany extends Mixins(EntityFilterMixin) {
   // State
   @State(state => state.stateModel.defineCompanyStep.valid)
-  readonly valid!: boolean;
+  readonly valid!: boolean
 
   @State(state => state.stateModel.defineCompanyStep.businessContact)
-  readonly businessContact!: BusinessContactIF;
+  readonly businessContact!: BusinessContactIF
 
   @State(state => state.stateModel.defineCompanyStep.officeAddresses)
-  readonly addresses!: IncorporationAddressIf;
+  readonly addresses!: IncorporationAddressIf
 
   // Entity Enum
-  readonly EntityTypes: {} = EntityTypes;
+  readonly EntityTypes: {} = EntityTypes
 }
 </script>
 
