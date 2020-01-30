@@ -1,5 +1,5 @@
 <template>
-  <div id="office-addresses" class="office-address-container">
+  <div id="office-addresses">
     <div v-if="!isEditing">
       <v-layout row>
         <v-flex md4><label><strong>Registered Office</strong></label></v-flex>
@@ -408,9 +408,6 @@ export default class OfficeAddresses extends Mixins(CommonMixin, EntityFilterMix
 </script>
 
 <style lang="scss" scoped>
-.office-address-container {
-   padding-top: 1.25rem;
-}
 
 .address-list-container {
   padding: 1rem;

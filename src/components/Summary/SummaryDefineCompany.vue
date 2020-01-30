@@ -14,6 +14,22 @@
       </span>
     </div>
     <div class="section-container">
+      <!--TODO: Replace container content with Name Request Summary when it is ready -->
+      <v-layout row>
+        <v-flex md4>
+          <label><strong>Company Name</strong></label>
+        </v-flex>
+        <v-flex md8>
+          <div class="company-name">XYZ Inc.</div>
+          <div class="company-type">
+            <span v-if="entityFilter(EntityTypes.BCOMP)">BC Benefit Company</span>
+            <span v-else-if="entityFilter(EntityTypes.COOP)">BC Cooperative Association</span>
+          </div>
+        </v-flex>
+      </v-layout>
+    </div>
+    <v-divider/>
+    <div class="section-container">
       <OfficeAddresses :inputAddresses="addresses" :isEditing="false" />
     </div>
     <v-divider/>
@@ -25,7 +41,7 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue, Mixins } from 'vue-property-decorator'
 import { Getter, Action, State } from 'vuex-class'
 
 // Interfaces
@@ -34,13 +50,19 @@ import { BusinessContactIF, IncorporationAddressIf } from '@/interfaces'
 // Components
 import { BusinessContactInfo, OfficeAddresses } from '@/components/DefineCompany'
 
+// Mixins
+import { EntityFilterMixin } from '@/mixins'
+
+// Enums
+import { EntityTypes } from '@/enums'
+
 @Component({
   components: {
     BusinessContactInfo,
     OfficeAddresses
   }
 })
-export default class SummaryDefineCompany extends Vue {
+export default class SummaryDefineCompany extends Mixins(EntityFilterMixin) {
   // State
   @State(state => state.stateModel.defineCompanyStep.valid)
   readonly valid!: boolean;
@@ -50,6 +72,9 @@ export default class SummaryDefineCompany extends Vue {
 
   @State(state => state.stateModel.defineCompanyStep.officeAddresses)
   readonly addresses!: IncorporationAddressIf;
+
+  // Entity Enum
+  readonly EntityTypes: {} = EntityTypes;
 }
 </script>
 
@@ -73,9 +98,18 @@ export default class SummaryDefineCompany extends Vue {
   padding: 1.25rem;
 }
 
-  .define-company-title {
-    padding-left: 0.5rem;
-    padding-top: 0.2rem
-  }
+.define-company-title {
+ padding-left: 0.5rem;
+ padding-top: 0.2rem
+}
+
+.company-name {
+  font-size: 1.5rem;
+  font-weight: bold
+}
+
+.company-type{
+  padding-top: 0.5rem
+}
 
 </style>
