@@ -51,10 +51,10 @@
       </v-layout>
     </div>
     <v-card flat v-else>
-      <ul class="list address-list show-address-form">
+      <ul class="list address-list address-form">
         <!-- Registered Office Section -->
         <div class="address-edit-header">
-          <label class="address-edit-title">Registered Office</label>
+          <span>mdi-company</span><label class="address-edit-title">Registered Office</label>
         </div>
 
         <!-- Registered Mailing Address -->
@@ -494,7 +494,7 @@ label:first-child {
 }
 
 // Registered Office Address Form Behavior
-.show-address-form {
+.address-form {
   li:first-child {
     padding-bottom: 0;
   }

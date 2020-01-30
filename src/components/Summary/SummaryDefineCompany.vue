@@ -1,5 +1,9 @@
 <template>
   <v-card flat>
+     <div class="define-company-header">
+        <v-icon>mdi-domain</v-icon>
+        <label class="define-company-title"><strong>Your Company</strong></label>
+    </div>
     <div v-if="!valid" class="defineCompanyStepErrorMessage">
       <span>
         <v-icon color="#1976d2">mdi-information-outline</v-icon>
@@ -62,4 +66,16 @@ export default class SummaryDefineCompany extends Vue {
   padding-top: 1.25rem;
   padding-bottom: 1.25rem;
 }
+
+.define-company-header {
+  display: flex;
+  background-color: rgba(1, 51, 102, 0.15);
+  padding: 1.25rem;
+}
+
+  .define-company-title {
+    padding-left: 0.5rem;
+    padding-top: 0.2rem
+  }
+
 </style>
