@@ -54,7 +54,7 @@
       <ul class="list address-list address-form">
         <!-- Registered Office Section -->
         <div class="address-edit-header">
-          <span>mdi-company</span><label class="address-edit-title">Registered Office</label>
+          <label class="address-edit-title">Registered Office</label>
         </div>
 
         <!-- Registered Mailing Address -->
