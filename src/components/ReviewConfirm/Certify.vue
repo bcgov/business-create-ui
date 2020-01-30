@@ -57,10 +57,7 @@ export default class Certify extends Vue {
   @Prop({ default: '' })
   private certifiedBy!: string
 
-  @Prop({ default: () => {
-    return {}
-  }
-  })
+  @Prop({ default: () => {} })
   private certifyStatementResource!: CertifyStatementIF
 
   // Properties

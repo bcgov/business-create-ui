@@ -1,16 +1,16 @@
+/* eslint-disable no-console */
+
 import axios from '@/utils/axios-auth'
 
 /**
- * fetch config from environment and API
- *
- * @returns A Promise to get & set session storage URLS with appropriate paths
+ * Fetches config from environment and API.
+ * @returns A promise to get & set session storage keys with appropriate values.
  */
-export const fetchConfig = (): Promise<any> => {
+export function fetchConfig (): Promise<any> {
   const origin: string = window.location.origin
   const vueAppPath: string = process.env.VUE_APP_PATH
-  const vueAppAuthPath:string = process.env.VUE_APP_AUTH_PATH
 
-  if (!vueAppPath || !vueAppAuthPath) {
+  if (!vueAppPath) {
     throw new Error('failed to get env variables')
   }
 
@@ -18,12 +18,7 @@ export const fetchConfig = (): Promise<any> => {
   sessionStorage.setItem('BASE_URL', baseUrl)
   console.log('Set Base URL to: ' + baseUrl)
 
-  const authUrl: string = `${origin}/${vueAppAuthPath}/`
-  sessionStorage.setItem('AUTH_URL', authUrl)
-  console.log('Set Auth URL to: ' + authUrl)
-
   const url = `${origin}/${vueAppPath}/config/configuration.json`
-  console.log(url)
   const headers = {
     'Accept': 'application/json',
     'ResponseType': 'application/json',
@@ -37,6 +32,14 @@ export const fetchConfig = (): Promise<any> => {
       axios.defaults.baseURL = apiUrl
       console.log('Set Legal API URL to: ' + apiUrl)
 
+      const authUrl: string = response.data['AUTH_URL']
+      sessionStorage.setItem('AUTH_URL', authUrl)
+      console.log('Set Auth URL to: ' + authUrl)
+
+      const signinUrl: string = response.data['SIGNIN_URL']
+      sessionStorage.setItem('SIGNIN_URL', signinUrl)
+      console.log('Set Signin URL to: ' + signinUrl)
+
       const authApiUrl: string = response.data['AUTH_API_URL']
       sessionStorage.setItem('AUTH_API_URL', authApiUrl)
       console.log('Set Auth API URL to: ' + authApiUrl)
@@ -47,16 +50,15 @@ export const fetchConfig = (): Promise<any> => {
 
       const keycloakConfigUrl = response.data['KEYCLOAK_CONFIG_URL']
       sessionStorage.setItem('KEYCLOAK_CONFIG_URL', keycloakConfigUrl)
-      console.info('Set KeyCloak config URL to: ' + keycloakConfigUrl)
+      console.info('Set Keycloak config URL to: ' + keycloakConfigUrl)
     })
 }
 
 /**
- * Validate the KeyCloak tokens
- *
- * @returns A boolean indicating if all keycloak variations exist
+ * Verifies that we have all the Keycloak tokens.
+ * @returns A boolean indicating if all Keycloak keys exist.
  */
-export const haveKcTokens = (): boolean => {
+export function haveKcTokens (): boolean {
   return Boolean(sessionStorage.getItem('KEYCLOAK_TOKEN') &&
     sessionStorage.getItem('KEYCLOAK_REFRESH_TOKEN') &&
     sessionStorage.getItem('KEYCLOAK_ID_TOKEN'))

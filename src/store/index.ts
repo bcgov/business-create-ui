@@ -18,7 +18,7 @@ import { mutateCurrentStep, mutateIsSaving, mutateIsSavingResuming, mutateIsFili
 
 // Actions
 import { setCurrentStep, setIsSaving, setIsSavingResuming, setIsFilingPaying, setResource,
-  setKeyCloakRoles, setAuthRoles, setCurrentDate, setCertifyStatementResource, setCertifyState, setBusinessContact,
+  setKeycloakRoles, setAuthRoles, setCurrentDate, setCertifyStatementResource, setCertifyState, setBusinessContact,
   setDefineCompanyStepValidity, setNameRequestState, setFilingId } from './actions'
 
 Vue.use(Vuex)
@@ -65,7 +65,7 @@ export const store: Store<any> = new Vuex.Store<any>({
     setIsSavingResuming,
     setIsFilingPaying,
     setResource,
-    setKeyCloakRoles,
+    setKeycloakRoles,
     setAuthRoles,
     setCurrentDate,
     setCertifyStatementResource,

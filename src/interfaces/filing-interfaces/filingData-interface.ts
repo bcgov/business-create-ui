@@ -1,4 +1,6 @@
 export interface FilingDataIF {
-  filingTypeCode: string
-  entityType: string
+  filingDescription?: string;
+  filingTypeCode: string;
+  entityType: string;
+  waiveFees?: boolean;
 }
