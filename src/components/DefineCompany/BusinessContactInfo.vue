@@ -1,11 +1,20 @@
 <template>
   <div>
-    <div v-if="!isEditing">
-      <div id="lbl-email">Email Address: {{ !!contact.email ? contact.email : 'Not entered'}}</div>
-      <div id="lbl-phone">Phone: {{ !!contact.phone ? contact.phone : 'Not entered' }}
-        Ext: {{ !!contact.phoneExtension ? contact.phoneExtension : 'Not entered' }}
-      </div>
-    </div>
+     <v-layout row v-if="!isEditing">
+        <v-flex md4>
+          <label><strong>Registered Office Information</strong></label>
+        </v-flex>
+        <v-flex md4>
+          <div><label><strong>Email Address</strong></label></div>
+          <div>{{ !!contact.email ? contact.email : 'Not entered'}}</div>
+        </v-flex>
+        <v-flex md4>
+          <div><label><strong>Phone Number</strong></label></div>
+          <div>{{ !!contact.phone ? contact.phone : 'Not entered' }}
+            Ext: {{ !!contact.phoneExtension ? contact.phoneExtension : 'Not entered' }}
+          </div>
+        </v-flex>
+    </v-layout>
     <v-card flat class="business-contact-container" v-else>
       <v-form v-model="formValid" ref="form" name="business-contact-form">
        <v-row>

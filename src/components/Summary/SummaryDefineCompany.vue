@@ -9,7 +9,11 @@
         </router-link>
       </span>
     </div>
-    <div class="business-contact-container">
+    <div class="section-container">
+      <OfficeAddresses :inputAddresses="addresses" :isEditing="false" />
+    </div>
+    <v-divider/>
+    <div class="section-container">
       <BusinessContactInfo :initialValue="businessContact" :isEditing="false" />
     </div>
   </v-card>
@@ -21,14 +25,15 @@ import { Component, Vue } from 'vue-property-decorator'
 import { Getter, Action, State } from 'vuex-class'
 
 // Interfaces
-import { BusinessContactIF } from '@/interfaces'
+import { BusinessContactIF, IncorporationAddressIf } from '@/interfaces'
 
 // Components
-import { BusinessContactInfo } from '@/components/DefineCompany'
+import { BusinessContactInfo, OfficeAddresses } from '@/components/DefineCompany'
 
 @Component({
   components: {
-    BusinessContactInfo
+    BusinessContactInfo,
+    OfficeAddresses
   }
 })
 export default class SummaryDefineCompany extends Vue {
@@ -38,6 +43,9 @@ export default class SummaryDefineCompany extends Vue {
 
   @State(state => state.stateModel.defineCompanyStep.businessContact)
   readonly businessContact!: BusinessContactIF;
+
+  @State(state => state.stateModel.defineCompanyStep.officeAddresses)
+  readonly addresses!: IncorporationAddressIf;
 }
 </script>
 
@@ -49,8 +57,8 @@ export default class SummaryDefineCompany extends Vue {
   color: #1976d2;
 }
 
-.business-contact-container {
-  padding-left: 1.75rem;
+.section-container {
+  padding-left: 2rem;
   padding-top: 1.25rem;
   padding-bottom: 1.25rem;
 }

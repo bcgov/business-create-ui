@@ -32,6 +32,7 @@
     <section class="mt-4" v-if="isEntityType">
       <header>
         <h2>2. Registered and Records Office Addresses</h2>
+        <p>Enter the business' Registered Office and Records Office Mailing and Delivery Addresses.</p>
       </header>
       <OfficeAddresses
         :inputAddresses="addresses"
