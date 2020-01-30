@@ -53,7 +53,7 @@ export default class LegalApiMixin extends Vue {
   }
 
   /**
-   * Method to complete a filing and proceed to payment.
+   * Method to complete a filing.
    * @param filing The filing body to be saved and submitted.
    */
   async completeFiling (filing: IncorporationFilingIF): Promise<any> {

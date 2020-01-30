@@ -30,7 +30,6 @@ describe('Actions component', () => {
 
   it('Disables File and Pay button when certify from is not valid', () => {
     // verify File and Pay button state
-    store.state.stateModel.defineCompanyStep.valid = false
     store.state.stateModel.certifyState = {
       certifyFormValid: false,
       certifiedBy: 'Some Certifier'
@@ -231,8 +230,6 @@ describe('Actions Filing Functionality', () => {
 
     expect(window.location.assign).toHaveBeenCalledWith(baseUrl)
   })
-
-  // ****
 
   it('Calls the buildFiling method when onClickFilePay is called', async () => {
     const mockBuildFiling = jest.spyOn(wrapper.vm, 'buildFiling')
