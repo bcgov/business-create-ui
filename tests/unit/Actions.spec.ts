@@ -58,7 +58,7 @@ describe('Actions component', () => {
 describe('Actions Filing Functionality', () => {
   let wrapper: any
   const { assign } = window.location
-  sessionStorage.setItem('AUTH_URL', `myhost/${process.env.VUE_APP_AUTH_PATH}`)
+  sessionStorage.setItem('AUTH_URL', `myhost/basePath/auth`)
 
   const filing = {
     filing: {
