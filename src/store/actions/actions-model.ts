@@ -16,16 +16,12 @@ export const setIsFilingPaying: ActionIF = ({ commit }, isFilingPaying): void =>
   commit('mutateIsFilingPaying', isFilingPaying)
 }
 
-export const setEntityType: ActionIF = ({ commit }, entityType): void => {
-  commit('mutateEntityType', entityType)
-}
-
 export const setResource: ActionIF = ({ commit }, resource): void => {
   commit('mutateResource', resource)
 }
 
-export const setKeyCloakRoles: ActionIF = ({ commit }, keyCloakRoles): void => {
-  commit('mutateKeycloakRoles', keyCloakRoles)
+export const setKeycloakRoles: ActionIF = ({ commit }, keycloakRoles): void => {
+  commit('mutateKeycloakRoles', keycloakRoles)
 }
 
 export const setAuthRoles: ActionIF = ({ commit }, authRoles): void => {
@@ -54,4 +50,12 @@ export const setDefineCompanyStepValidity: ActionIF = ({ commit }, validity): vo
 
 export const setOfficeAddresses: ActionIF = ({ commit }, address): void => {
   commit('mutateOfficeAddresses', address)
+}
+
+export const setNameRequestState: ActionIF = ({ commit }, nameRequestState): void => {
+  commit('mutateNameRequestState', nameRequestState)
+}
+
+export const setFilingId: ActionIF = ({ commit }, filingId): void => {
+  commit('mutateFilingId', filingId)
 }

@@ -44,7 +44,6 @@
 <script lang="ts">
 // Libraries
 import { Component, Vue, Prop, Emit } from 'vue-property-decorator'
-import { State } from 'vuex-class'
 
 // Interfaces
 import { CertifyStatementIF } from '@/interfaces'
@@ -58,10 +57,7 @@ export default class Certify extends Vue {
   @Prop({ default: '' })
   private certifiedBy!: string
 
-  @Prop({ default: () => {
-    return {}
-  }
-  })
+  @Prop({ default: () => {} })
   private certifyStatementResource!: CertifyStatementIF
 
   // Properties

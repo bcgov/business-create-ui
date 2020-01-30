@@ -1,4 +1,4 @@
 export interface CertifyIF {
-    certifyFormValid: boolean;
-    certifiedBy: string;
+    certifyFormValid: boolean
+    certifiedBy: string
   }

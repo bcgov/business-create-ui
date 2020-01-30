@@ -12,7 +12,7 @@
       </div>
     </transition>
 
-    <sbc-header ref="sbcHeader" :brandLink="origin" :authURL="authApiUrl" />
+    <sbc-header ref="sbcHeader" />
 
     <main class="app-body">
       <entity-info />
@@ -52,7 +52,7 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Vue, Watch, Mixins } from 'vue-property-decorator'
+import { Component, Watch, Mixins } from 'vue-property-decorator'
 import { Action, State } from 'vuex-class'
 
 // Components
@@ -65,7 +65,7 @@ import { EntityInfo, Stepper, Actions } from '@/components/common'
 import { DateMixin } from '@/mixins'
 
 // Interfaces
-import { FilingDataIF, ActionBindingIF, CertifyStatementIF, TombStoneIF } from '@/interfaces'
+import { FilingDataIF, ActionBindingIF, StateModelIF } from '@/interfaces'
 
 import { CertifyStatementResource } from '@/resources'
 
@@ -84,7 +84,7 @@ import { EntityTypes, FilingCodes } from '@/enums'
 })
 export default class App extends Mixins(DateMixin) {
   // Global state
-  @State tombStoneModel!: TombStoneIF
+  @State stateModel!: StateModelIF
 
   // Global actions
   @Action setCurrentStep!: ActionBindingIF
@@ -92,22 +92,13 @@ export default class App extends Mixins(DateMixin) {
   private filingData: Array<FilingDataIF> = []
   private totalFee: number = 0
 
-  @Action('setCurrentDate') setCurrentDate!: ActionBindingIF
-  @Action('setCertifyStatementResource') setCertifyStatementResource!: ActionBindingIF
+  @Action setCurrentDate!: ActionBindingIF
+  @Action setCertifyStatementResource!: ActionBindingIF
 
   // Lifecycle event
   private created (): void {
     this.filingData.push({ filingTypeCode: FilingCodes.INCORPORATION_BC, entityType: EntityTypes.BCOMP })
     this.setCurrentDate(this.dateToUsableString(new Date()))
-  }
-
-  /**
-   * The origin URL.
-   */
-  private get origin (): string {
-    const root = window.location.origin || ''
-    const path = process.env.VUE_APP_PATH
-    return `${root}/${path}`
   }
 
   /**
@@ -118,13 +109,6 @@ export default class App extends Mixins(DateMixin) {
   }
 
   /**
-   * The Auth API URL.
-   */
-  private get authApiUrl (): string | null {
-    return sessionStorage.getItem('AUTH_API_URL')
-  }
-
-  /**
    * Method called when $route property changes.
    */
   @Watch('$route', { immediate: true })
@@ -132,10 +116,15 @@ export default class App extends Mixins(DateMixin) {
     this.setCurrentStep(this.$route.meta.step)
   }
 
-  @Watch('tombStoneModel.entityType')
+  @Watch('stateModel.nameRequest.entityType')
   private onEntityTypeChanged (val:string | null) : void{
     this.setCertifyStatementResource(val ? CertifyStatementResource
       .find(x => x.entityType === val) : null)
+  }
+
+  // FOR FUTURE USE TO SUPPORT EXIT IN ERROR DIALOGS
+  private onClickExit (): void {
+    (this.$refs.form as Vue & { logout: () => void }).logout()
   }
 }
 </script>

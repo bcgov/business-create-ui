@@ -38,7 +38,7 @@ describe('Actions component', () => {
       certifyFormValid: true,
       certifiedBy: 'Some certifier'
     }
-
+    store.state.stateModel.nameRequest = { entityType: 'BC' }
     store.state.stateModel.defineCompanyStep = {
       valid: true
     }

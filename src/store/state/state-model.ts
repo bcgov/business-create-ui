@@ -1,8 +1,16 @@
 import { StateModelIF, AddressIF } from '@/interfaces'
 
 export const stateModel: StateModelIF = {
-  stateText: 'Base State Text',
-  currentDate: null,
+  tombstone: {
+    keycloakRoles: [],
+    authRoles: []
+  },
+  nameRequest: {
+    nrNumber: '',
+    entityType: '',
+    filingId: null
+  },
+  currentDate: '',
   certifyState: {
     certifyFormValid: false,
     certifiedBy: ''

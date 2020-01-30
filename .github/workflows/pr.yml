@@ -36,19 +36,3 @@ jobs:
           npm run test:unit
         env:
           CI: true
-
-      - name: Log into registry
-        run: echo "${{ secrets.OKD_SA_SECRET }}" | docker login ${{ secrets.OKD_REGISTRY }} -u ${{ secrets.OKD_SA_NAME }} --password-stdin
-
-      - name: Build image
-        run: docker build . --file Dockerfile --tag image
-
-      - name: Push image
-        run: |
-          IMAGE_ID=${{ secrets.OKD_REGISTRY }}/${{ secrets.OKD_REPOSITORY }}/$IMAGE_NAME
-          # Strip git ref prefix from version
-          VERSION=$(echo "PR""${{ github.ref }}" | sed 's/[-].*$//')
-          echo IMAGE_ID=$IMAGE_ID
-          echo VERSION=$VERSION
-          docker tag image $IMAGE_ID:$VERSION
-          docker push $IMAGE_ID:$VERSION

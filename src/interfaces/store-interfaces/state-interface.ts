@@ -1,10 +1,10 @@
-import { CertifyIF } from '../stepper-interfaces/ReviewConfirm/certify-interface'
-import { DefineCompanyIF } from '../stepper-interfaces/DefineCompany/define-company-interface'
+import { CertifyIF, DefineCompanyIF, NameRequestIF, TombStoneIF } from '@/interfaces'
 
 // State model example
 export interface StateModelIF {
-  stateText: string | undefined
-  currentDate: string | null
+  tombstone: TombStoneIF
+  nameRequest: NameRequestIF
+  currentDate: string
   certifyState: CertifyIF
   currentStep: number
   isSaving: boolean
