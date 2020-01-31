@@ -48,6 +48,10 @@ export const setDefineCompanyStepValidity: ActionIF = ({ commit }, validity): vo
   commit('mutateDefineCompanyStepValidity', validity)
 }
 
+export const setOfficeAddresses: ActionIF = ({ commit }, address): void => {
+  commit('mutateOfficeAddresses', address)
+}
+
 export const setNameRequestState: ActionIF = ({ commit }, nameRequestState): void => {
   commit('mutateNameRequestState', nameRequestState)
 }

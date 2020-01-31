@@ -29,44 +29,68 @@
         </div>
       </v-card>
     </section>
+    <section class="mt-4" v-if="isEntityType">
+      <header>
+        <h2>2. Registered <span v-if="entityFilter(EntityTypes.BCOMP)">and Records</span> Office Addresses</h2>
+        <p>Enter the business' Registered Office <span v-if="entityFilter(EntityTypes.BCOMP)">and Records Office
+          </span> Mailing and Delivery Addresses.
+        </p>
+      </header>
+      <OfficeAddresses
+        :inputAddresses="addresses"
+        @update:addresses="onAddressChange($event)"
+        @valid="onAddressFormValidityChange($event)"/>
+    </section>
     <section class="mt-4">
       <header>
-        <h2>3. Business Contact Information</h2>
+        <h2>3. Registered Office Information</h2>
+        <p>Enter the contact information for the Registered Office. The Corporate Registry will use this to
+           communicate with the company in the future, including sending the following documents and
+           notifications: a Certificate of Incorporation, a certified copy of the Incorporation Application,
+           a certified copy of the Notice of Articles, payment receipts, and optional notifications such as
+           Annual Report reminders.
+        </p>
       </header>
       <BusinessContactInfo
         :initialValue="businessContact"
         :isEditing="true"
         :showErrors="showErrors"
         @contactInfoChange="onBusinessContactInfoChange($event)"
-        @contactInfoFormValidityChange="onBusinessContactFormValidityChange($event)"
-      />
+        @contactInfoFormValidityChange="onBusinessContactFormValidityChange($event)"/>
     </section>
   </div>
 </template>
 
 <script lang="ts">
 // Libraries
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue, Mixins } from 'vue-property-decorator'
 import { Getter, Action, State } from 'vuex-class'
 
 // Interfaces
-import { GetterIF, ActionBindingIF, BusinessContactIF } from '@/interfaces'
+import { GetterIF, ActionBindingIF, BusinessContactIF, IncorporationAddressIf, AddressIF } from '@/interfaces'
+
+// Mixins
+import { EntityFilterMixin } from '@/mixins'
 
 // Enums
 import { EntityTypes } from '@/enums'
 
 // Components
-import { BusinessContactInfo } from '@/components/DefineCompany'
+import { BusinessContactInfo, OfficeAddresses } from '@/components/DefineCompany'
 
 @Component({
   components: {
-    BusinessContactInfo
+    BusinessContactInfo,
+    OfficeAddresses
   }
 })
-export default class DefineCompany extends Vue {
+export default class DefineCompany extends Mixins(EntityFilterMixin) {
   // State
   @State(state => state.stateModel.defineCompanyStep.businessContact)
   readonly businessContact!: BusinessContactIF
+
+  @State(state => state.stateModel.defineCompanyStep.officeAddresses)
+  readonly addresses!: AddressIF
 
   // Global getters
   @Getter isEntityType!: GetterIF
@@ -74,8 +98,15 @@ export default class DefineCompany extends Vue {
   // Global actions
   @Action setEntityType!: ActionBindingIF
   @Action setBusinessContact!: ActionBindingIF
+  @Action setOfficeAddresses!: ActionBindingIF
   @Action setDefineCompanyStepValidity!: ActionBindingIF
   @Action setNameRequestState!: ActionBindingIF
+
+  private businessContactFormValid: boolean = false
+  private addressFormValid: boolean = false
+
+  // Entity Enum
+  readonly EntityTypes: {} = EntityTypes
 
   /**
    * Method called when Benefit Company button is clicked.
@@ -105,7 +136,17 @@ export default class DefineCompany extends Vue {
   }
 
   private onBusinessContactFormValidityChange (validity: boolean): void {
-    this.setDefineCompanyStepValidity(validity)
+    this.businessContactFormValid = validity
+    this.setDefineCompanyStepValidity(this.businessContactFormValid && this.addressFormValid)
+  }
+
+  private onAddressChange (address: IncorporationAddressIf): void {
+    this.setOfficeAddresses(address)
+  }
+
+  private onAddressFormValidityChange (validity: boolean): void {
+    this.addressFormValid = validity
+    this.setDefineCompanyStepValidity(this.businessContactFormValid && this.addressFormValid)
   }
 
   private get showErrors (): boolean {
@@ -150,6 +191,12 @@ export default class DefineCompany extends Vue {
 #business-buttons-container {
   .v-btn + .v-btn {
     margin-left: 0.5rem;
+  }
+}
+
+header {
+  p {
+    padding-top:0.5rem
   }
 }
 </style>

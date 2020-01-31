@@ -15,6 +15,7 @@ export * from './filing-interfaces/filing-interface'
 
 // Stepper Interfaces
 export * from './stepper-interfaces/DefineCompany/business-contact-interface'
+export * from './stepper-interfaces/DefineCompany/address-interface'
 export * from './stepper-interfaces/DefineCompany/define-company-interface'
 export * from './stepper-interfaces/ReviewConfirm/certify-interface'
 

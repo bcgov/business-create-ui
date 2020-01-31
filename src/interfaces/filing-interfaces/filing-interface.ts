@@ -1,4 +1,4 @@
-import { BaseAddressObjIF } from '@/interfaces/address-interfaces/address-interface'
+import { IncorporationAddressIf } from '@/interfaces/stepper-interfaces/DefineCompany/address-interface'
 
 export interface IncorporationFilingIF {
   filing: {
@@ -13,10 +13,7 @@ export interface IncorporationFilingIF {
         nrNumber: string
         legalType: string
       },
-      offices: {
-        registeredOffice: BaseAddressObjIF
-        recordsOffice?: BaseAddressObjIF
-      },
+      offices: IncorporationAddressIf | null,
       contactPoint: {
         email: string
         phone: string
