@@ -4,7 +4,6 @@ import { State, Getter } from 'vuex-class'
 
 // Interfaces
 import { StateModelIF, IncorporationFilingIF, GetterIF } from '@/interfaces'
-import { BaseAddressObjIF } from '@/interfaces/stepper-interfaces/DefineCompany/address-interface'
 
 /**
  * Mixin that provides the integration with the legal api.
@@ -25,8 +24,6 @@ export default class FilingTemplateMixin extends Vue {
   private date!: string
   private nrNumber!: string
   private legalType!: string
-  private registeredOffice!: BaseAddressObjIF
-  private recordsOffice!: BaseAddressObjIF
 
   buildFiling (): IncorporationFilingIF {
     this.name = 'incorporationApplication'
@@ -36,41 +33,6 @@ export default class FilingTemplateMixin extends Vue {
     this.date = this.stateModel.currentDate
     this.nrNumber = this.stateModel.nameRequest.nrNumber
     this.legalType = this.stateModel.nameRequest.entityType
-
-    // Temporary assignment of addresses. Will need to check for properties before assignment
-    this.registeredOffice = {
-      deliveryAddress: {
-        addressCity: 'someCity',
-        addressCountry: 'someCountry',
-        addressRegion: 'someRegion',
-        postalCode: 'somePostalCode',
-        streetAddress: 'someStreet'
-      },
-      mailingAddress: {
-        addressCity: 'someCity',
-        addressCountry: 'someCountry',
-        addressRegion: 'someRegion',
-        postalCode: 'somePostalCode',
-        streetAddress: 'someStreet'
-      }
-    }
-
-    this.recordsOffice = {
-      deliveryAddress: {
-        addressCity: 'someCity',
-        addressCountry: 'someCountry',
-        addressRegion: 'someRegion',
-        postalCode: 'somePostalCode',
-        streetAddress: 'someStreet'
-      },
-      mailingAddress: {
-        addressCity: 'someCity',
-        addressCountry: 'someCountry',
-        addressRegion: 'someRegion',
-        postalCode: 'somePostalCode',
-        streetAddress: 'someStreet'
-      }
-    }
 
     const filing = {
       filing: {
