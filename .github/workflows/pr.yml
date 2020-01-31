@@ -36,3 +36,8 @@ jobs:
           npm run test:unit
         env:
           CI: true
+      - name: build to check strictness
+        run: |
+          npm run build
+        env:
+          CI: true
