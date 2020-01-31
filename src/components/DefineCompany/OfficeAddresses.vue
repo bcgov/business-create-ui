@@ -345,7 +345,6 @@ export default class OfficeAddresses extends Mixins(CommonMixin, EntityFilterMix
         this.deliveryAddressValid = isValid
         break
       case 'mailingAddress':
-        console.log('Mailing Address valid' + isValid)
         this.mailingAddressValid = isValid
         break
       case 'recDeliveryAddress':

@@ -85,19 +85,13 @@ export default class FilingTemplateMixin extends Vue {
             nrNumber: this.nrNumber,
             legalType: this.legalType
           },
-          offices: {
-            registeredOffice: this.registeredOffice
-          },
+          offices: this.stateModel.defineCompanyStep.officeAddresses,
           contactPoint: {
             email: this.email,
             phone: this.phone
           }
         }
       }
-    }
-
-    if (this.isTypeBcomp) {
-      Object.assign(filing.filing.incorporationApplication.offices, { recordsOffice: this.recordsOffice })
     }
     return filing
   }
