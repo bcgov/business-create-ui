@@ -1,4 +1,4 @@
-import { StateModelIF, AddressIF } from '@/interfaces'
+import { StateModelIF } from '@/interfaces'
 
 export const stateModel: StateModelIF = {
   tombstone: {

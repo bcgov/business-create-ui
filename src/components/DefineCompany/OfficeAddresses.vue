@@ -7,7 +7,7 @@
           <label><strong>Mailing Address</strong></label>
           <mailing-address
             :address="mailingAddress"
-            :editing="isEditing"
+            :editing="false"
             v-if="!isEmptyAddress(mailingAddress)"/>
           <div v-else>Not entered</div>
         </v-flex>
@@ -16,7 +16,7 @@
           <delivery-address
             v-if="!isEmptyAddress(deliveryAddress) && !inheritMailingAddress"
             :address="deliveryAddress"
-            :editing="isEditing"/>
+            :editing="false"/>
           <div v-else>
             <span v-if="isEmptyAddress(deliveryAddress)">Not entered</span>
             <span v-else>Same as Mailing Address</span>
@@ -29,7 +29,7 @@
           <label><strong>Mailing Address</strong></label>
            <mailing-address
             :address="recMailingAddress"
-            :editing="isEditing"
+            :editing="false"
             v-if="!inheritRegisteredAddress && !isEmptyAddress(recMailingAddress)"/>
            <div v-else>
              <span v-if="isEmptyAddress(recMailingAddress)">Not entered</span>
@@ -41,7 +41,7 @@
           <delivery-address
             v-if="!inheritRecMailingAddress && !inheritRegisteredAddress && !isEmptyAddress(recDeliveryAddress)"
             :address="recDeliveryAddress"
-            :editing="isEditing"/>
+            :editing="false"/>
           <div v-else>
             <span v-if="isEmptyAddress(recDeliveryAddress)">Not entered</span>
             <span v-else-if="inheritRegisteredAddress">Same as Registered Office</span>
@@ -50,6 +50,8 @@
         </v-flex>
       </v-layout>
     </div>
+
+    <!-- Address Form -->
     <v-card flat v-else>
       <ul class="list address-list address-form">
         <!-- Registered Office Section -->
@@ -65,7 +67,7 @@
               <div class="address-wrapper">
                 <mailing-address
                   :address="mailingAddress"
-                  :editing="isEditing"
+                  :editing="true"
                   :schema="addressSchema"
                   @update:address="updateAddress('mailingAddress', mailingAddress, $event)"
                   @valid="updateAddressValid('mailingAddress', $event)"/>
@@ -91,7 +93,7 @@
                 <delivery-address
                   v-if="!inheritMailingAddress"
                   :address="deliveryAddress"
-                  :editing="isEditing"
+                  :editing="true"
                   :schema="addressSchema"
                   @update:address="updateAddress('deliveryAddress', deliveryAddress, $event)"
                   @valid="updateAddressValid('deliveryAddress', $event)"/>
@@ -102,12 +104,11 @@
 
         <!--Records Office Address section -->
         <div v-if="entityFilter(EntityTypes.BCOMP)">
-          <div class="address-edit-header" v-if="isEditing">
+          <div class="address-edit-header">
             <label class="address-edit-title">Records Office</label>
             <v-checkbox
               class="records-inherit-checkbox"
               label="Same as Registered Office"
-              v-if="isEditing"
               v-model="inheritRegisteredAddress"
               v-on:change="setRecordOfficeToRegisteredOffice()"/>
           </div>
@@ -120,7 +121,7 @@
                   <div class="address-wrapper">
                     <mailing-address
                       :address="recMailingAddress"
-                      :editing="isEditing"
+                      :editing="true"
                       :schema="addressSchema"
                       @update:address="updateAddress('recMailingAddress', recMailingAddress, $event)"
                       @valid="updateAddressValid('recMailingAddress', $event)"/>
@@ -145,7 +146,7 @@
                     v-if="!isSame(recMailingAddress, recDeliveryAddress, 'actions') || !inheritRecMailingAddress">
                     <delivery-address
                       :address="recDeliveryAddress"
-                      :editing="isEditing"
+                      :editing="true"
                       :schema="addressSchema"
                       @update:address="updateAddress('recDeliveryAddress', recDeliveryAddress, $event)"
                       @valid="updateAddressValid('recDeliveryAddress', $event)"/>
