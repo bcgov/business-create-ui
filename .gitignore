@@ -88,6 +88,9 @@ venv.bak/
 .env.local
 .env.*.local
 
+# Template parameter files
+k8s/*.param
+
 # Spyder project settings
 .spyderproject
 .spyproject

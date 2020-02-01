@@ -35,7 +35,6 @@
                 <sbc-fee-summary
                   v-bind:filingData="[...filingData]"
                   v-bind:payURL="payApiUrl"
-                  @total-fee="totalFee=$event"
                 />
               </affix>
             </aside>
@@ -88,16 +87,13 @@ export default class App extends Mixins(DateMixin) {
 
   // Global actions
   @Action setCurrentStep!: ActionBindingIF
-
-  private filingData: Array<FilingDataIF> = []
-  private totalFee: number = 0
-
   @Action setCurrentDate!: ActionBindingIF
   @Action setCertifyStatementResource!: ActionBindingIF
 
+  private filingData: Array<FilingDataIF> = []
+
   // Lifecycle event
   private created (): void {
-    this.filingData.push({ filingTypeCode: FilingCodes.INCORPORATION_BC, entityType: EntityTypes.BCOMP })
     this.setCurrentDate(this.dateToUsableString(new Date()))
   }
 
@@ -117,7 +113,18 @@ export default class App extends Mixins(DateMixin) {
   }
 
   @Watch('stateModel.nameRequest.entityType')
-  private onEntityTypeChanged (val:string | null) : void{
+  private onEntityTypeChanged (val: string | null) : void {
+    switch (val) {
+      case EntityTypes.BCOMP:
+        this.filingData.push({ filingTypeCode: FilingCodes.INCORPORATION_BC, entityType: EntityTypes.BCOMP })
+        break
+      case EntityTypes.COOP:
+        this.filingData.push({ filingTypeCode: FilingCodes.INCORPORATION_CP, entityType: EntityTypes.COOP })
+        break
+      default:
+        this.filingData = []
+    }
+
     this.setCertifyStatementResource(val ? CertifyStatementResource
       .find(x => x.entityType === val) : null)
   }

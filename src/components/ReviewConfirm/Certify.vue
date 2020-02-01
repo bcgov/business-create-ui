@@ -149,7 +149,7 @@ export default class Certify extends Vue {
 }
 
 .certify-stmt {
-  display:inline;
+  display: inline;
   font-size: 0.875rem;
   color: black;
 }
