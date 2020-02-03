@@ -26,7 +26,7 @@
 
             <stepper class="mt-10" />
 
-            <router-view class="mt-10" />
+            <router-view />
           </v-col>
 
           <v-col cols="12" lg="3" style="position: relative">

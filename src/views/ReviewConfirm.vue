@@ -1,25 +1,24 @@
 <template>
   <div>
-    <v-container class="review-confirm-container">
-      <section>
-        <header>
-          <h2>Review</h2>
-        </header>
-        <Summary />
-      </section>
-      <section>
-        <header>
-          <h2>Completing Party Statement</h2>
-        </header>
-        <Certify
-          :certifiedBy="certifyState.certifiedBy"
-          @valid="onCertifyFormValidChange($event)"
-          @certifiedByChange="onCertifiedByChange($event)"
-          :date="currentDate"
-          :certifyStatementResource="certifyStatementResource"
-        />
-      </section>
-    </v-container>
+    <section class="mt-10">
+      <header>
+        <h2>Review</h2>
+      </header>
+      <Summary />
+    </section>
+
+    <section class="mt-10">
+      <header>
+        <h2>Completing Party Statement</h2>
+      </header>
+      <Certify
+        :certifiedBy="certifyState.certifiedBy"
+        @valid="onCertifyFormValidChange($event)"
+        @certifiedByChange="onCertifiedByChange($event)"
+        :date="currentDate"
+        :certifyStatementResource="certifyStatementResource"
+      />
+    </section>
   </div>
 </template>
 
@@ -87,15 +86,4 @@ export default class ReviewConfirm extends Mixins(ResourceLookupMixin) {
 </script>
 
 <style lang="scss" scoped>
-.review-confirm-container {
-  margin-top: 1rem;
-  padding: 1.25rem;
-  padding-bottom: 0.5rem;
-  line-height: 1.2rem;
-  font-size: 0.875rem;
-
-  >section{
-    padding-top: 1rem
-  }
-}
 </style>
