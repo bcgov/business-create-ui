@@ -21,7 +21,6 @@ export default class Summary extends Vue { }
 
 <style lang="scss">
 .summary-container {
-  margin-top:1rem;
-  padding-top:1rem;
+  margin-top: 1rem;
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <section>
+    <section class="mt-10">
       <header>
         <h2>1. Company Name</h2>
       </header>
@@ -29,7 +29,8 @@
         </div>
       </v-card>
     </section>
-    <section class="mt-4" v-if="isEntityType">
+
+    <section class="mt-10" v-if="isEntityType">
       <header>
         <h2>2. Registered <span v-if="entityFilter(EntityTypes.BCOMP)">and Records</span> Office Addresses</h2>
         <p>Enter the business' Registered Office <span v-if="entityFilter(EntityTypes.BCOMP)">and Records Office
@@ -41,7 +42,8 @@
         @update:addresses="onAddressChange($event)"
         @valid="onAddressFormValidityChange($event)"/>
     </section>
-    <section class="mt-4">
+
+    <section class="mt-10" v-if="isEntityType">
       <header>
         <h2>3. Registered Office Information</h2>
         <p>Enter the contact information for the Registered Office. The Corporate Registry will use this to
