@@ -114,7 +114,6 @@ export default class Actions extends Mixins(FilingTemplateMixin, LegalApiMixin) 
       const filing = await this.buildFiling()
       await this.saveFiling(filing, true)
     } catch (e) {
-      alert(e)
       // TODO:  Trigger some error dialog. Will catch any errors from the Api calls
     }
     this.setIsSaving(false)
@@ -130,7 +129,6 @@ export default class Actions extends Mixins(FilingTemplateMixin, LegalApiMixin) 
       const filing = await this.buildFiling()
       await this.saveFiling(filing, true)
     } catch (e) {
-      alert(e)
       // TODO:  Trigger some error dialog. Will catch any errors from the Api calls
     }
     this.setIsSavingResuming(false)
@@ -147,7 +145,6 @@ export default class Actions extends Mixins(FilingTemplateMixin, LegalApiMixin) 
       const filing = await this.buildFiling()
       await this.saveFiling(filing, false)
     } catch (e) {
-      alert(e)
       // TODO:  Trigger some error dialog. Will catch any errors from the Api calls
     }
     this.setIsFilingPaying(false)
