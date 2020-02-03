@@ -123,6 +123,7 @@ describe('Actions Filing Functionality', () => {
     store.state.stateModel.certifyState.certifiedBy = 'somePerson'
     store.state.stateModel.defineCompanyStep.businessContact = { email: 'someEmail', phone: '123-456-7890' }
     store.state.stateModel.currentDate = '2020/01/29'
+    store.state.stateModel.defineCompanyStep.officeAddresses = filing.filing.incorporationApplication.offices
 
     const localVue = createLocalVue()
     localVue.use(VueRouter)
