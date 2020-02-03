@@ -110,8 +110,13 @@ export default class Actions extends Mixins(FilingTemplateMixin, LegalApiMixin) 
    */
   private async onClickSave (): Promise<void> {
     this.setIsSaving(true)
-    const filing = await this.buildFiling()
-    await this.saveFiling(filing)
+    try {
+      const filing = await this.buildFiling()
+      await this.saveFiling(filing, true)
+    } catch (e) {
+      alert(e)
+      // TODO:  Trigger some error dialog. Will catch any errors from the Api calls
+    }
     this.setIsSaving(false)
   }
 
@@ -121,8 +126,13 @@ export default class Actions extends Mixins(FilingTemplateMixin, LegalApiMixin) 
    */
   private async onClickSaveResume (): Promise<void> {
     this.setIsSavingResuming(true)
-    const filing = await this.buildFiling()
-    await this.saveFiling(filing)
+    try {
+      const filing = await this.buildFiling()
+      await this.saveFiling(filing, true)
+    } catch (e) {
+      alert(e)
+      // TODO:  Trigger some error dialog. Will catch any errors from the Api calls
+    }
     this.setIsSavingResuming(false)
     window.location.assign(this.authUrl)
   }
@@ -133,8 +143,13 @@ export default class Actions extends Mixins(FilingTemplateMixin, LegalApiMixin) 
    */
   private async onClickFilePay (): Promise<void> {
     this.setIsFilingPaying(true)
-    const filing = await this.buildFiling()
-    await this.completeFiling(filing)
+    try {
+      const filing = await this.buildFiling()
+      await this.saveFiling(filing, false)
+    } catch (e) {
+      alert(e)
+      // TODO:  Trigger some error dialog. Will catch any errors from the Api calls
+    }
     this.setIsFilingPaying(false)
   }
 }

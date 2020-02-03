@@ -175,7 +175,7 @@ describe('Actions Filing Functionality', () => {
     expect(mockBuildFiling).toHaveBeenCalled()
     expect(mockBuildFiling).toHaveReturned()
 
-    expect(mockSaveFiling).toHaveBeenCalledWith(filing)
+    expect(mockSaveFiling).toHaveBeenCalledWith(filing, true)
 
     // verify no redirection
     expect(window.location.assign).not.toHaveBeenCalled()
@@ -222,7 +222,7 @@ describe('Actions Filing Functionality', () => {
     expect(mockBuildFiling).toHaveBeenCalled()
     expect(mockBuildFiling).toHaveReturned()
 
-    expect(mockSaveFiling).toHaveBeenCalledWith(filing)
+    expect(mockSaveFiling).toHaveBeenCalledWith(filing, true)
 
     // verify redirection
     // TODO: To update when dashboard URLs are established
@@ -247,11 +247,11 @@ describe('Actions Filing Functionality', () => {
   })
 
   it('Calls the completeFiling method when onClickFilePay is called', async () => {
-    const mockCompleteFiling = jest.spyOn(wrapper.vm, 'completeFiling')
+    const mockSaveFiling = jest.spyOn(wrapper.vm, 'saveFiling')
 
     await wrapper.vm.onClickFilePay()
 
-    expect(mockCompleteFiling).toHaveBeenCalled()
+    expect(mockSaveFiling).toHaveBeenCalled()
 
     // verify no redirection
     expect(window.location.assign).not.toHaveBeenCalled()
@@ -262,14 +262,14 @@ describe('Actions Filing Functionality', () => {
 
   it('Calls the completeFiling method when onClickFilePay is called with the correct filing structure', async () => {
     const mockBuildFiling = jest.spyOn(wrapper.vm, 'buildFiling')
-    const mockCompleteFiling = jest.spyOn(wrapper.vm, 'completeFiling')
+    const mockSaveFiling = jest.spyOn(wrapper.vm, 'saveFiling')
 
     await wrapper.vm.onClickFilePay()
 
     expect(mockBuildFiling).toHaveBeenCalled()
     expect(mockBuildFiling).toHaveReturned()
 
-    expect(mockCompleteFiling).toHaveBeenCalledWith(filing)
+    expect(mockSaveFiling).toHaveBeenCalledWith(filing, false)
 
     // verify no redirection
     expect(window.location.assign).not.toHaveBeenCalled()

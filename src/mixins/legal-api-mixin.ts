@@ -25,57 +25,29 @@ export default class LegalApiMixin extends Vue {
 
   /**
    * Method to save a filing.
+   * @param isDraft Boolean indicating whether to complete filing.
    * @param filing Filing body to be saved.
    */
-  async saveFiling (filing: IncorporationFilingIF): Promise<any> {
-    try {
-      let filingId = this.getFilingId
+  async saveFiling (filing: IncorporationFilingIF, isDraft: boolean): Promise<any> {
+    let filingId = this.getFilingId
 
-      // If have a filing id, update an existing filing
-      if (filingId && filingId > 0) {
-        await this.updateFiling(filing)
+    // If have a filing id, update an existing filing
+    if (filingId && filingId > 0) {
+      await this.updateFiling(filing)
+    } else {
+      // Set the filingId to store
+      const response = await this.createFiling(filing)
+
+      // Assign a filing Id from the response to the state
+      if (response && response.header && response.header.filingId) {
+        this.setFilingId(response.header.filingId)
       } else {
-        // Set the filingId to store
-        const response = await this.createFiling(filing)
-
-        // Assign a filing Id from the response to the state
-        if (response && response.header && response.header.filingId) {
-          this.setFilingId(response.header.filingId)
-        } else {
-          throw new Error('invalid API response')
-        }
-      }
-    } catch (e) {
-      if (e) {
-        // TODO:  Trigger some error dialog. Will catch any errors from the Api calls
+        throw new Error('invalid API response')
       }
     }
-  }
 
-  /**
-   * Method to complete a filing.
-   * @param filing The filing body to be saved and submitted.
-   */
-  async completeFiling (filing: IncorporationFilingIF): Promise<any> {
-    try {
-      await this.saveFiling(filing)
-      let filingId = this.getFilingId
-
-      if (filingId) {
-        // Assign the url business identifier
-        let url = `${this.getBusinessIdentifier}/filings/${filingId}`
-
-        return axios.put(url, filing).then(res => {
-          if (!res) {
-            throw new Error('invalid API response')
-          }
-        })
-      }
-    } catch (e) {
-      if (e) {
-        // TODO:  Trigger some error dialog. Will catch any errors from the Api calls
-      }
-    }
+    // Complete a filing if not draft
+    if (!isDraft) await this.completeFiling(filing)
   }
 
   /**
@@ -109,7 +81,6 @@ export default class LegalApiMixin extends Vue {
   /**
    * Method to make a simple axios Put request.
    * @param data The object body of the request.
-   * @param filingId Optional filing id if this resuming an existing draft.
    */
   private updateFiling (data: object): Promise<any> {
     // Assign the url business identifier
@@ -135,5 +106,26 @@ export default class LegalApiMixin extends Vue {
         throw new Error('invalid API response')
       }
     })
+  }
+
+  /**
+   * Method to complete a filing.
+   * @param filing The filing body to be saved and submitted.
+   */
+  private completeFiling (filing: IncorporationFilingIF): Promise<any> {
+    let filingId = this.getFilingId
+
+    if (filingId) {
+      // Assign the url business identifier
+      let url = `${this.getBusinessIdentifier}/filings/${filingId}`
+
+      return axios.put(url, filing).then(res => {
+        if (!res) {
+          throw new Error('invalid API response')
+        }
+      })
+    } else {
+      throw new Error('invalid API response')
+    }
   }
 }
