@@ -1,7 +1,7 @@
 <template>
   <div id="office-addresses">
     <div v-if="!isEditing">
-      <v-layout row>
+      <v-layout row id="summary-registered-address">
         <v-flex md4><label><strong>Registered Office</strong></label></v-flex>
         <v-flex md4>
           <label><strong>Mailing Address</strong></label>
@@ -23,7 +23,7 @@
           </div>
         </v-flex>
       </v-layout>
-      <v-layout row v-if="entityFilter(EntityTypes.BCOMP)" class="mt-4">
+      <v-layout row id="summary-records-address" v-if="entityFilter(EntityTypes.BCOMP)" class="mt-4">
         <v-flex md4><label><strong>Records Office</strong></label></v-flex>
         <v-flex md4>
           <label><strong>Mailing Address</strong></label>
@@ -66,6 +66,7 @@
             <div class="meta-container__inner">
               <div class="address-wrapper">
                 <mailing-address
+                  id="address-registered-mailing"
                   :address="mailingAddress"
                   :editing="true"
                   :schema="addressSchema"
@@ -83,6 +84,7 @@
             <div class="meta-container__inner">
               <div class="form__row">
                 <v-checkbox
+                  id="registered-mailing-same-chkbx"
                   class="inherit-checkbox"
                   label="Same as Mailing Address"
                   v-model="inheritMailingAddress"
@@ -91,6 +93,7 @@
               <div class="address-wrapper"
                    v-if="!isSame(mailingAddress, deliveryAddress, 'actions') || !inheritMailingAddress">
                 <delivery-address
+                  id="address-registered-delivery"
                   v-if="!inheritMailingAddress"
                   :address="deliveryAddress"
                   :editing="true"
@@ -107,6 +110,7 @@
           <div class="address-edit-header">
             <label class="address-edit-title">Records Office</label>
             <v-checkbox
+              id="records-mailing-same-chkbx"
               class="records-inherit-checkbox"
               label="Same as Registered Office"
               v-model="inheritRegisteredAddress"
@@ -120,6 +124,7 @@
                 <div class="meta-container__inner">
                   <div class="address-wrapper">
                     <mailing-address
+                      id="address-records-mailing"
                       :address="recMailingAddress"
                       :editing="true"
                       :schema="addressSchema"
@@ -145,6 +150,7 @@
                     class="address-wrapper"
                     v-if="!isSame(recMailingAddress, recDeliveryAddress, 'actions') || !inheritRecMailingAddress">
                     <delivery-address
+                      id="address-records-delivery"
                       :address="recDeliveryAddress"
                       :editing="true"
                       :schema="addressSchema"

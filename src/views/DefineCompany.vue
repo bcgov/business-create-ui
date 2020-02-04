@@ -31,7 +31,7 @@
     </section>
 
     <section class="mt-10" v-show="isEntityType">
-      <header>
+      <header id="office-address-header">
         <h2>2. Registered <span v-if="entityFilter(EntityTypes.BCOMP)">and Records</span> Office Addresses</h2>
         <p>Enter the business' Registered Office <span v-if="entityFilter(EntityTypes.BCOMP)">and Records Office
           </span> Mailing and Delivery Addresses.
