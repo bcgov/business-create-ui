@@ -20,10 +20,30 @@ let vuetify = new Vuetify({})
 describe('OfficeAddresses as a COOP', () => {
   let wrapper: any
 
+  const registeredOffice = {
+    registeredOffice: {
+      deliveryAddress: {
+        addressCity: 'someCity',
+        addressCountry: 'someCountry',
+        addressRegion: 'someRegion',
+        postalCode: 'somePostalCode',
+        streetAddress: 'someStreet'
+      },
+      mailingAddress: {
+        addressCity: 'someCity',
+        addressCountry: 'someCountry',
+        addressRegion: 'someRegion',
+        postalCode: 'somePostalCode',
+        streetAddress: 'someStreet'
+      }
+    }
+  }
+
   beforeEach(() => {
     const localVue = createLocalVue()
     wrapper = shallowMount(OfficeAddresses, {
       propsData: {
+        inputAddresses: registeredOffice,
         isEditing: true
       },
       localVue,
@@ -39,10 +59,6 @@ describe('OfficeAddresses as a COOP', () => {
   beforeAll(() => {
     // init store
     store.state.stateModel.nameRequest.entityType = 'CP'
-  })
-
-  it('loads the current office addresses properly from a draft filing', () => {
-    // TODO: Test for data when we are retrieving drafts
   })
 
   it('does not show the summary ui when editing', () => {
@@ -66,15 +82,66 @@ describe('OfficeAddresses as a COOP', () => {
     expect(wrapper.vm.$el.querySelector('#address-registered-mailing')).toBeDefined()
     expect(wrapper.vm.$el.querySelector('#address-registered-delivery')).toBeDefined()
   })
+
+  it('loads the current office addresses properly from a draft filing', () => {
+    const deliveryAddress = wrapper.vm.addresses.registeredOffice.deliveryAddress
+    expect(deliveryAddress['streetAddress']).toEqual('someStreet')
+    expect(deliveryAddress['addressCity']).toEqual('someCity')
+    expect(deliveryAddress['addressRegion']).toEqual('someRegion')
+    expect(deliveryAddress['postalCode']).toEqual('somePostalCode')
+    expect(deliveryAddress['addressCountry']).toEqual('someCountry')
+
+    const mailingAddress = wrapper.vm.addresses.registeredOffice.mailingAddress
+    expect(mailingAddress['streetAddress']).toEqual('someStreet')
+    expect(mailingAddress['addressCity']).toEqual('someCity')
+    expect(mailingAddress['addressRegion']).toEqual('someRegion')
+    expect(mailingAddress['postalCode']).toEqual('somePostalCode')
+    expect(mailingAddress['addressCountry']).toEqual('someCountry')
+  })
 })
 
 describe('OfficeAddresses as a BCOMP', () => {
   let wrapper: any
 
+  const registeredOffice = {
+    deliveryAddress: {
+      addressCity: 'someCity',
+      addressCountry: 'someCountry',
+      addressRegion: 'someRegion',
+      postalCode: 'somePostalCode',
+      streetAddress: 'someStreet'
+    },
+    mailingAddress: {
+      addressCity: 'someCity',
+      addressCountry: 'someCountry',
+      addressRegion: 'someRegion',
+      postalCode: 'somePostalCode',
+      streetAddress: 'someStreet'
+    }
+  }
+
+  const recordsOffice = {
+    deliveryAddress: {
+      addressCity: 'someRecCity',
+      addressCountry: 'someRecCountry',
+      addressRegion: 'someRecRegion',
+      postalCode: 'someRecPostalCode',
+      streetAddress: 'someRecStreet'
+    },
+    mailingAddress: {
+      addressCity: 'someRecCity',
+      addressCountry: 'someRecCountry',
+      addressRegion: 'someRecRegion',
+      postalCode: 'someRecPostalCode',
+      streetAddress: 'someRecStreet'
+    }
+  }
+
   beforeEach(() => {
     const localVue = createLocalVue()
     wrapper = shallowMount(OfficeAddresses, {
       propsData: {
+        inputAddresses: { registeredOffice, recordsOffice },
         isEditing: true
       },
       localVue,
@@ -92,26 +159,22 @@ describe('OfficeAddresses as a BCOMP', () => {
     store.state.stateModel.nameRequest.entityType = 'BC'
   })
 
-  it('loads the current office addresses properly from a draft filing', () => {
-    // TODO: Test for data when we are retrieving drafts
-  })
-
   it('does not show the summary ui when editing', () => {
     expect(wrapper.vm.$el.querySelector('#summary-registered-address')).toBeNull()
     expect(wrapper.vm.$el.querySelector('#summary-records-address')).toBeNull()
   })
 
-  it('displays the ui for registered mailing and NOT delivery address or Records Office when new filing', () => {
+  it('displays the ui for mailing and NOT delivery address for Records & Registered Office when new filing', () => {
     expect(wrapper.vm.$el.querySelector('#address-registered-mailing')).toBeDefined()
     expect(wrapper.vm.$el.querySelector('#address-registered-delivery')).toBeNull()
-    expect(wrapper.vm.$el.querySelector('#address-records-mailing')).toBeNull()
+    expect(wrapper.vm.$el.querySelector('#address-records-mailing')).toBeDefined()
     expect(wrapper.vm.$el.querySelector('#address-records-delivery')).toBeNull()
   })
 
   it('displays the ui for registered mailing and NOT delivery address when new filing', () => {
     // Verify no ui for registered delivery address
     expect(wrapper.vm.$el.querySelector('#address-registered-delivery')).toBeNull()
-    expect(wrapper.vm.$el.querySelector('#address-records-mailing')).toBeNull()
+    expect(wrapper.vm.$el.querySelector('#address-records-mailing')).toBeDefined()
     expect(wrapper.vm.$el.querySelector('#address-records-delivery')).toBeNull()
 
     // un-Check the 'same as mailing' checkbox ( Default is checked )
@@ -126,6 +189,36 @@ describe('OfficeAddresses as a BCOMP', () => {
     expect(wrapper.vm.$el.querySelector('#address-registered-delivery')).toBeDefined()
     expect(wrapper.vm.$el.querySelector('#address-records-mailing')).toBeDefined()
     expect(wrapper.vm.$el.querySelector('#address-records-delivery')).toBeDefined()
+  })
+
+  it('loads the current office addresses properly from a draft filing', () => {
+    const deliveryAddress = wrapper.vm.addresses.registeredOffice.deliveryAddress
+    expect(deliveryAddress['streetAddress']).toEqual('someStreet')
+    expect(deliveryAddress['addressCity']).toEqual('someCity')
+    expect(deliveryAddress['addressRegion']).toEqual('someRegion')
+    expect(deliveryAddress['postalCode']).toEqual('somePostalCode')
+    expect(deliveryAddress['addressCountry']).toEqual('someCountry')
+
+    const mailingAddress = wrapper.vm.addresses.registeredOffice.mailingAddress
+    expect(mailingAddress['streetAddress']).toEqual('someStreet')
+    expect(mailingAddress['addressCity']).toEqual('someCity')
+    expect(mailingAddress['addressRegion']).toEqual('someRegion')
+    expect(mailingAddress['postalCode']).toEqual('somePostalCode')
+    expect(mailingAddress['addressCountry']).toEqual('someCountry')
+
+    const recDeliveryAddress = wrapper.vm.addresses.recordsOffice.deliveryAddress
+    expect(recDeliveryAddress['streetAddress']).toEqual('someRecStreet')
+    expect(recDeliveryAddress['addressCity']).toEqual('someRecCity')
+    expect(recDeliveryAddress['addressRegion']).toEqual('someRecRegion')
+    expect(recDeliveryAddress['postalCode']).toEqual('someRecPostalCode')
+    expect(recDeliveryAddress['addressCountry']).toEqual('someRecCountry')
+
+    const recMailingAddress = wrapper.vm.addresses.recordsOffice.mailingAddress
+    expect(recMailingAddress['streetAddress']).toEqual('someRecStreet')
+    expect(recMailingAddress['addressCity']).toEqual('someRecCity')
+    expect(recMailingAddress['addressRegion']).toEqual('someRecRegion')
+    expect(recMailingAddress['postalCode']).toEqual('someRecPostalCode')
+    expect(recMailingAddress['addressCountry']).toEqual('someRecCountry')
   })
 })
 

@@ -250,8 +250,8 @@ export default class OfficeAddresses extends Mixins(CommonMixin, EntityFilterMix
         this.addresses.registeredOffice.mailingAddress)
 
       if (this.entityFilter(EntityTypes.BCOMP)) {
-        this.recDeliveryAddress = this.addresses.recordsOffice!.deliveryAddress
-        this.recMailingAddress = this.addresses.recordsOffice!.mailingAddress
+        this.recDeliveryAddress = this.addresses.recordsOffice && this.addresses.recordsOffice.deliveryAddress
+        this.recMailingAddress = this.addresses.recordsOffice && this.addresses.recordsOffice.mailingAddress
         this.inheritRegisteredAddress = (
           this.isSame(this.addresses.registeredOffice.deliveryAddress, this.addresses.recordsOffice!.deliveryAddress) &&
           this.isSame(this.addresses.registeredOffice.mailingAddress, this.addresses.recordsOffice!.mailingAddress)

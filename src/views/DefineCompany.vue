@@ -131,6 +131,7 @@ export default class DefineCompany extends Mixins(EntityFilterMixin) {
    */
   private onClickReset (): void {
     this.setNameRequestState({})
+    this.setOfficeAddresses(null)
   }
 
   private onBusinessContactInfoChange (businessContact: BusinessContactIF): void {
