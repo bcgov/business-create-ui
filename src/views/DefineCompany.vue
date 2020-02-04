@@ -30,7 +30,7 @@
       </v-card>
     </section>
 
-    <section class="mt-10" v-if="isEntityType">
+    <section class="mt-10" v-show="isEntityType">
       <header>
         <h2>2. Registered <span v-if="entityFilter(EntityTypes.BCOMP)">and Records</span> Office Addresses</h2>
         <p>Enter the business' Registered Office <span v-if="entityFilter(EntityTypes.BCOMP)">and Records Office
@@ -43,7 +43,7 @@
         @valid="onAddressFormValidityChange($event)"/>
     </section>
 
-    <section class="mt-10" v-if="isEntityType">
+    <section class="mt-10" v-show="isEntityType">
       <header>
         <h2>3. Registered Office Information</h2>
         <p>Enter the contact information for the Registered Office. The Corporate Registry will use this to
