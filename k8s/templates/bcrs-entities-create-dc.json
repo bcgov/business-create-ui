@@ -111,7 +111,7 @@
             "kind": "ConfigMap",
             "apiVersion": "v1",
             "data": {
-                "configuration.json": "{\"API_URL\":\"${API_URL}\",\"AUTH_API_URL\":\"${AUTH_API_URL}\",\"PAY_API_URL\":\"${PAY_API_URL}\",\"REPORT_SVC_URL\":\"${REPORT_SVC_URL}\",\"KEYCLOAK_CONFIG_URL\":\"${KEYCLOAK_CONFIG_URL}\",\"ADDRESS_COMPLETE_KEY\":\"${ADDRESS_COMPLETE_KEY}\",\"LD_CLIENT_ID\":\"${LD_CLIENT_ID}\"}"
+                "configuration.json": "{\"API_URL\":\"${API_URL}\",{\"AUTH_URL\":\"${AUTH_URL}\",{\"SIGNIN_URL\":\"${SIGNIN_URL}\",\"AUTH_API_URL\":\"${AUTH_API_URL}\",\"PAY_API_URL\":\"${PAY_API_URL}\",\"REPORT_SVC_URL\":\"${REPORT_SVC_URL}\",\"KEYCLOAK_CONFIG_URL\":\"${KEYCLOAK_CONFIG_URL}\",\"ADDRESS_COMPLETE_KEY\":\"${ADDRESS_COMPLETE_KEY}\",\"LD_CLIENT_ID\":\"${LD_CLIENT_ID}\"}"
             },
             "metadata": {
                 "name": "${NAME}-${TAG_NAME}-configuration",
@@ -264,6 +264,20 @@
             "name": "API_URL",
             "displayName": "Legal API URL",
             "description": "The URL to the Legal API.",
+            "required": false,
+            "value": ""
+        },
+        {
+            "name": "AUTH_URL",
+            "displayName": "Authentication URL",
+            "description": "The URL to the Authentication site.",
+            "required": false,
+            "value": ""
+        },
+        {
+            "name": "SIGNIN_URL",
+            "displayName": "Signin URL",
+            "description": "The URL to the Signin site.",
             "required": false,
             "value": ""
         },
