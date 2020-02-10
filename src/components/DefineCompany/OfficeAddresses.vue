@@ -6,7 +6,8 @@
         <v-flex md4>
           <label><strong>Mailing Address</strong></label>
           <mailing-address
-            :address="mailingAddress"
+            :key="keyTest"
+            :address="addresses.registeredOffice.mailingAddress"
             :editing="false"
             v-if="!isEmptyAddress(mailingAddress)"/>
           <div v-else>Not entered</div>
@@ -186,6 +187,7 @@ import { EntityTypes } from '@/enums'
 
 // Mixins
 import { CommonMixin, EntityFilterMixin } from '@/mixins'
+import { Getter } from 'vuex-class'
 
 @Component({
   components: {
@@ -203,11 +205,14 @@ export default class OfficeAddresses extends Mixins(CommonMixin, EntityFilterMix
   @Prop({ default: null })
   readonly inputAddresses!: IncorporationAddressIf | null;
 
-  private addresses: IncorporationAddressIf | null = this.inputAddresses;
-
   // Whether to show the editable forms for the addresses (true) or just the static display addresses (false).
   @Prop({ default: true })
   private isEditing!: boolean;
+
+  @Getter getOfficeAddresses: any
+
+  // Local Properties
+  private addresses: IncorporationAddressIf | null = this.inputAddresses;
 
   // The two addresses that are the current state of the BaseAddress components.
   private deliveryAddress = {} as AddressIF;
@@ -235,13 +240,20 @@ export default class OfficeAddresses extends Mixins(CommonMixin, EntityFilterMix
   // The Address schema containing Vuelidate rules.
   private addressSchema: {} = officeAddressSchema;
 
+  private keyTest: number = 1
+
   // Entity Enum
   readonly EntityTypes: {} = EntityTypes;
 
   /**
    * Lifecycle callback to set up the component when it is mounted.
    */
-  private mounted (): void {
+  private created (): void {
+    this.setAddresses()
+    this.emitValid()
+  }
+
+  private setAddresses (): void {
     if (this.addresses) {
       this.deliveryAddress = this.addresses.registeredOffice.deliveryAddress
       this.mailingAddress = this.addresses.registeredOffice.mailingAddress
@@ -257,11 +269,10 @@ export default class OfficeAddresses extends Mixins(CommonMixin, EntityFilterMix
           this.isSame(this.addresses.registeredOffice.mailingAddress, this.addresses.recordsOffice!.mailingAddress)
         )
         this.inheritRecMailingAddress = this.isSame(
-          this.addresses.recordsOffice!.deliveryAddress,
-          this.addresses.recordsOffice!.mailingAddress)
+                this.addresses.recordsOffice!.deliveryAddress,
+                this.addresses.recordsOffice!.mailingAddress)
       }
     }
-    this.emitValid()
   }
 
   // Computed values.

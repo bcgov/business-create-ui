@@ -26,7 +26,7 @@
 
             <stepper class="mt-10" />
 
-            <router-view />
+            <router-view :key="isDraft"/>
           </v-col>
 
           <v-col cols="12" lg="3" style="position: relative">
@@ -61,7 +61,7 @@ import SbcFeeSummary from 'sbc-common-components/src/components/SbcFeeSummary.vu
 import { EntityInfo, Stepper, Actions } from '@/components/common'
 
 // Mixins
-import { DateMixin } from '@/mixins'
+import { DateMixin, FilingTemplateMixin, LegalApiMixin } from '@/mixins'
 
 // Interfaces
 import { FilingDataIF, ActionBindingIF, StateModelIF } from '@/interfaces'
@@ -81,7 +81,7 @@ import { EntityTypes, FilingCodes } from '@/enums'
     Actions
   }
 })
-export default class App extends Mixins(DateMixin) {
+export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApiMixin) {
   // Global state
   @State stateModel!: StateModelIF
 
@@ -90,11 +90,27 @@ export default class App extends Mixins(DateMixin) {
   @Action setCurrentDate!: ActionBindingIF
   @Action setCertifyStatementResource!: ActionBindingIF
 
+  // Local Properties
   private filingData: Array<FilingDataIF> = []
+  private isDraft: boolean = false
 
-  // Lifecycle event
-  private created (): void {
+  private async created (): Promise<any> {
+    // Mock the nrNumber and Data
+    await this.setNameRequestState({ nrNumber: 'NR7654446', entityType: 'BC', filingId: null })
+
     this.setCurrentDate(this.dateToUsableString(new Date()))
+    try {
+      // Retrieve draft filing if it exists for the nrNumber specified
+      const draft = await this.fetchDraft()
+
+      // Parse the draft data into the ui if it exists
+      draft && await this.parseDraft(draft)
+
+      // Inform the router view we are resuming a draft and to update ui
+      this.isDraft = true
+    } catch (e) {
+      // TODO: Catch a flag from the api, if there is an error to be handled.
+    }
   }
 
   /**

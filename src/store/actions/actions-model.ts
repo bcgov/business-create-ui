@@ -52,6 +52,14 @@ export const setOfficeAddresses: ActionIF = ({ commit }, address): void => {
   commit('mutateOfficeAddresses', address)
 }
 
+export const setRegisteredOffice: ActionIF = ({ commit }, address): void => {
+  commit('mutateRegisteredOffice', address)
+}
+
+export const setRecordsOffice: ActionIF = ({ commit }, address): void => {
+  commit('mutateRecordsOffice', address)
+}
+
 export const setNameRequestState: ActionIF = ({ commit }, nameRequestState): void => {
   commit('mutateNameRequestState', nameRequestState)
 }
