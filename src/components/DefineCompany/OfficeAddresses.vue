@@ -6,7 +6,7 @@
         <v-flex md4>
           <label><strong>Mailing Address</strong></label>
           <mailing-address
-            :address="addresses.registeredOffice.mailingAddress"
+            :address="mailingAddress"
             :editing="false"
             v-if="!isEmptyAddress(mailingAddress)"/>
           <div v-else>Not entered</div>
@@ -263,8 +263,8 @@ export default class OfficeAddresses extends Mixins(CommonMixin, EntityFilterMix
           this.isSame(this.addresses.registeredOffice.mailingAddress, this.addresses.recordsOffice!.mailingAddress)
         )
         this.inheritRecMailingAddress = this.isSame(
-                this.addresses.recordsOffice!.deliveryAddress,
-                this.addresses.recordsOffice!.mailingAddress)
+          this.addresses.recordsOffice!.deliveryAddress,
+          this.addresses.recordsOffice!.mailingAddress)
       }
     }
   }
