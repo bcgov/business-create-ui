@@ -6,7 +6,6 @@
         <v-flex md4>
           <label><strong>Mailing Address</strong></label>
           <mailing-address
-            :key="keyTest"
             :address="addresses.registeredOffice.mailingAddress"
             :editing="false"
             v-if="!isEmptyAddress(mailingAddress)"/>

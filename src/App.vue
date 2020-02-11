@@ -97,7 +97,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
 
   private async created (): Promise<any> {
     // Mock the nrNumber and Data
-    await this.setNameRequestState({ nrNumber: 'NR7654450', entityType: 'BC', filingId: null })
+    await this.setNameRequestState({ nrNumber: 'NR7654455', entityType: 'BC', filingId: null })
     this.setCurrentDate(this.dateToUsableString(new Date()))
 
     try {
