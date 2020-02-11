@@ -64,7 +64,7 @@ import { EntityInfo, Stepper, Actions } from '@/components/common'
 import { DateMixin, FilingTemplateMixin, LegalApiMixin } from '@/mixins'
 
 // Interfaces
-import { FilingDataIF, ActionBindingIF, StateModelIF } from '@/interfaces'
+import { FilingDataIF, ActionBindingIF, StateModelIF, IncorporationFilingIF } from '@/interfaces'
 
 import { CertifyStatementResource } from '@/resources'
 
@@ -92,19 +92,20 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
 
   // Local Properties
   private filingData: Array<FilingDataIF> = []
+  private draftFiling: IncorporationFilingIF
   private isDraft: boolean = false
 
   private async created (): Promise<any> {
     // Mock the nrNumber and Data
-    await this.setNameRequestState({ nrNumber: 'NR7654446', entityType: 'BC', filingId: null })
-
+    await this.setNameRequestState({ nrNumber: 'NR7654450', entityType: 'BC', filingId: null })
     this.setCurrentDate(this.dateToUsableString(new Date()))
+
     try {
       // Retrieve draft filing if it exists for the nrNumber specified
-      const draft = await this.fetchDraft()
+      this.draftFiling = await this.fetchDraft()
 
-      // Parse the draft data into the ui if it exists
-      draft && await this.parseDraft(draft)
+      // Parse the draft data into the store if it exists
+      this.draftFiling && await this.parseDraft(this.draftFiling)
 
       // Inform the router view we are resuming a draft and to update ui
       this.isDraft = true

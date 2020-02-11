@@ -2,6 +2,8 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify'
 import VueRouter from 'vue-router'
+import axios from '@/utils/axios-auth'
+import sinon from 'sinon'
 import { store } from '@/store'
 import { shallowMount, createLocalVue } from '@vue/test-utils'
 
@@ -30,6 +32,7 @@ describe('App component', () => {
 
   afterEach(() => {
     wrapper.destroy()
+    sinon.restore()
   })
 
   it('renders the sub-components properly', () => {
@@ -39,5 +42,74 @@ describe('App component', () => {
     expect(wrapper.find(EntityInfo).exists()).toBe(true)
     expect(wrapper.find(Stepper).exists()).toBe(true)
     expect(wrapper.find(Actions).exists()).toBe(true)
+  })
+
+  it('loads a draft filing into store', async () => {
+    // Mock Filing response from api
+    const data = {
+      header: {
+        name: 'incorporationApplication',
+        filingId: 12345,
+        status: 'draft'
+      },
+      incorporationApplication: {
+        contactPoint: {
+          email: 'mockEmail@mock.com',
+          phone: '(250) 123-4567'
+        },
+        nameRequest: {
+          legalType: 'BC',
+          nrNumber: 'NR7654446'
+        },
+        offices: {
+          registeredOffice: {
+            deliveryAddress: {
+              streetAddress: 'delivery_address - address line one',
+              addressCity: 'delivery_address city',
+              addressCountry: 'delivery_address country',
+              postalCode: 'H0H0H0',
+              addressRegion: 'BC'
+            },
+            mailingAddress: {
+              streetAddress: 'mailing_address - address line one',
+              addressCity: 'mailing_address city',
+              addressCountry: 'mailing_address country',
+              postalCode: 'H0H0H0',
+              addressRegion: 'BC'
+            }
+          },
+          recordsOffice: {
+            deliveryAddress: {
+              streetAddress: 'delivery_address - address line one',
+              addressCity: 'delivery_address city',
+              addressCountry: 'delivery_address country',
+              postalCode: 'H0H0H0',
+              addressRegion: 'BC'
+            },
+            mailingAddress: {
+              streetAddress: 'mailing_address - address line one',
+              addressCity: 'mailing_address city',
+              addressCountry: 'mailing_address country',
+              postalCode: 'H0H0H0',
+              addressRegion: 'BC'
+            }
+          }
+        }
+      }
+    }
+    await wrapper.vm.parseDraft(data)
+
+    // Validate nrData
+    expect(store.state.stateModel.nameRequest.entityType).toBe('BC')
+    expect(store.state.stateModel.nameRequest.filingId).toBe(12345)
+
+    // Validate Office Addresses
+    expect(store.state.stateModel.defineCompanyStep.officeAddresses.registeredOffice)
+      .toBe(data.incorporationApplication.offices.registeredOffice)
+    expect(store.state.stateModel.defineCompanyStep.officeAddresses.recordsOffice)
+      .toBe(data.incorporationApplication.offices.recordsOffice)
+
+    // Validate Contact Info
+    expect(store.state.stateModel.defineCompanyStep.businessContact).toBe(data.incorporationApplication.contactPoint)
   })
 })

@@ -187,7 +187,6 @@ import { EntityTypes } from '@/enums'
 
 // Mixins
 import { CommonMixin, EntityFilterMixin } from '@/mixins'
-import { Getter } from 'vuex-class'
 
 @Component({
   components: {
@@ -208,8 +207,6 @@ export default class OfficeAddresses extends Mixins(CommonMixin, EntityFilterMix
   // Whether to show the editable forms for the addresses (true) or just the static display addresses (false).
   @Prop({ default: true })
   private isEditing!: boolean;
-
-  @Getter getOfficeAddresses: any
 
   // Local Properties
   private addresses: IncorporationAddressIf | null = this.inputAddresses;
@@ -240,8 +237,6 @@ export default class OfficeAddresses extends Mixins(CommonMixin, EntityFilterMix
   // The Address schema containing Vuelidate rules.
   private addressSchema: {} = officeAddressSchema;
 
-  private keyTest: number = 1
-
   // Entity Enum
   readonly EntityTypes: {} = EntityTypes;
 
@@ -254,7 +249,7 @@ export default class OfficeAddresses extends Mixins(CommonMixin, EntityFilterMix
   }
 
   private setAddresses (): void {
-    if (this.addresses) {
+    if (this.addresses.registeredOffice) {
       this.deliveryAddress = this.addresses.registeredOffice.deliveryAddress
       this.mailingAddress = this.addresses.registeredOffice.mailingAddress
       this.inheritMailingAddress = this.isSame(

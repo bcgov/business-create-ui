@@ -60,11 +60,14 @@ export default class FilingTemplateMixin extends Vue {
    * Method to parse a received draft filing into the store
    * @param draftFiling The draft filing body to be parsed and assigned to store
    */
-  async parseDraft (draftFiling: any): Promise<any> {
+  parseDraft (draftFiling: any): void {
     try {
       // Set nameRequest data
-      this.setNameRequestState({ entityType: draftFiling.incorporationApplication.nameRequest.legalType,
-        filingId: draftFiling.header.filingId })
+      this.setNameRequestState({
+        nrNumber: draftFiling.incorporationApplication.nameRequest.nrNumber,
+        entityType: draftFiling.incorporationApplication.nameRequest.legalType,
+        filingId: draftFiling.header.filingId
+      })
 
       // Set Office Addresses
       this.setRegisteredOffice(draftFiling.incorporationApplication.offices.registeredOffice)
