@@ -2,8 +2,6 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify'
 import VueRouter from 'vue-router'
-import axios from '@/utils/axios-auth'
-import sinon from 'sinon'
 import { store } from '@/store'
 import { shallowMount, createLocalVue } from '@vue/test-utils'
 
@@ -32,7 +30,6 @@ describe('App component', () => {
 
   afterEach(() => {
     wrapper.destroy()
-    sinon.restore()
   })
 
   it('renders the sub-components properly', () => {
