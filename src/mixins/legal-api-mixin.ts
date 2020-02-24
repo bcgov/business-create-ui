@@ -61,7 +61,7 @@ export default class LegalApiMixin extends Vue {
    * @param data The object body of the request.
    */
   private createFiling (data: object): Promise<any> {
-    return axios.post('', data).then(res => {
+    return axios.post('businesses', data).then(res => {
       // Assign a filing Id from the response to the state
       if (res && res.data && res.data.filing && res.data.filing.header && res.data.filing.header.filingId) {
         this.setFilingId(res.data.filing.header.filingId)
@@ -77,7 +77,7 @@ export default class LegalApiMixin extends Vue {
    */
   private updateFiling (data: object): Promise<any> {
     // Assign the url business identifier
-    let url = `/${this.getBusinessIdentifier}`
+    let url = `businesses/${this.getBusinessIdentifier}`
 
     return axios.put(url, data).then(res => {
       if (!res) {
@@ -91,7 +91,7 @@ export default class LegalApiMixin extends Vue {
    */
   private getDraftFiling (): Promise<any> {
     // Assign the url business identifier
-    let url = `/${this.getBusinessIdentifier}/tasks`
+    let url = `businesses/${this.getBusinessIdentifier}/tasks`
 
     return axios.get(url).then(res => {
       if (res.data.tasks) {
@@ -112,7 +112,7 @@ export default class LegalApiMixin extends Vue {
 
     if (filingId) {
       // Assign the url business identifier
-      let url = `/${this.getBusinessIdentifier}/filings/${filingId}`
+      let url = `businesses/${this.getBusinessIdentifier}/filings/${filingId}`
 
       return axios.put(url, filing).then(res => {
         if (!res) {

@@ -26,8 +26,6 @@ export default class FilingTemplateMixin extends Vue {
   @Action setDefineCompanyStepValidity!: ActionBindingIF
   @Action setNameRequestState!: ActionBindingIF
   @Action setFilingId!: ActionBindingIF
-  @Action setRegisteredOffice!: ActionBindingIF
-  @Action setRecordsOffice!: ActionBindingIF
 
   /**
    * Method to construct a filing body when making an api request
@@ -69,9 +67,8 @@ export default class FilingTemplateMixin extends Vue {
         filingId: draftFiling.header.filingId
       })
 
-      // Set Office Addresses
-      this.setRegisteredOffice(draftFiling.incorporationApplication.offices.registeredOffice)
-      this.setRecordsOffice(draftFiling.incorporationApplication.offices.recordsOffice)
+      // // Set Office Addresses
+      this.setOfficeAddresses(draftFiling.incorporationApplication.offices)
 
       // Set Contact Info
       this.setBusinessContact(draftFiling.incorporationApplication.contactPoint)

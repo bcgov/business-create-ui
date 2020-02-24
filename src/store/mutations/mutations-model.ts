@@ -53,14 +53,6 @@ export const mutateOfficeAddresses = (state: any, addresses: IncorporationAddres
   state.stateModel.defineCompanyStep.officeAddresses = addresses
 }
 
-export const mutateRegisteredOffice = (state: any, address: BaseAddressObjIF) => {
-  state.stateModel.defineCompanyStep.officeAddresses.registeredOffice = address
-}
-
-export const mutateRecordsOffice = (state: any, address: BaseAddressObjIF) => {
-  state.stateModel.defineCompanyStep.officeAddresses.recordsOffice = address
-}
-
 export const mutateNameRequestState = (state: any, nameRequestState: NameRequestIF) => {
   state.stateModel.nameRequest = nameRequestState
 }

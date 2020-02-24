@@ -89,6 +89,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
   @Action setCurrentStep!: ActionBindingIF
   @Action setCurrentDate!: ActionBindingIF
   @Action setCertifyStatementResource!: ActionBindingIF
+  @Action setNameRequestState!: ActionBindingIF
 
   // Local Properties
   private filingData: Array<FilingDataIF> = []
@@ -97,7 +98,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
 
   private async created (): Promise<any> {
     // Mock the nrNumber and Data
-    await this.setNameRequestState({ nrNumber: 'NR7654458', entityType: 'BC', filingId: null })
+    this.setNameRequestState({ nrNumber: 'NR7654459', entityType: 'BC', filingId: null })
     this.setCurrentDate(this.dateToUsableString(new Date()))
 
     try {
@@ -105,7 +106,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
       this.draftFiling = await this.fetchDraft()
 
       // Parse the draft data into the store if it exists
-      this.draftFiling && await this.parseDraft(this.draftFiling)
+      this.draftFiling && this.parseDraft(this.draftFiling)
 
       // Inform the router view we are resuming a draft and to update ui
       this.isDraft = true

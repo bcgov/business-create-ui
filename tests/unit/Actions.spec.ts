@@ -58,7 +58,7 @@ describe('Actions component', () => {
 describe('Actions Filing Functionality', () => {
   let wrapper: any
   const { assign } = window.location
-  sessionStorage.setItem('AUTH_URL', `myhost/basePath/auth`)
+  sessionStorage.setItem('AUTH_URL', `myhost/basePath/auth/`)
 
   const filing = {
     filing: {
@@ -195,7 +195,7 @@ describe('Actions Filing Functionality', () => {
 
     // verify redirection
     // TODO: To update when dashboard URLs are established
-    const baseUrl = 'myhost/basePath/auth'
+    const baseUrl = 'myhost/basePath/auth/'
 
     expect(window.location.assign).toHaveBeenCalledWith(baseUrl)
   })
@@ -209,7 +209,7 @@ describe('Actions Filing Functionality', () => {
 
     // verify redirection
     // TODO: To update when dashboard URLs are established
-    const baseUrl = 'myhost/basePath/auth'
+    const baseUrl = 'myhost/basePath/auth/'
 
     expect(window.location.assign).toHaveBeenCalledWith(baseUrl)
   })
@@ -227,7 +227,7 @@ describe('Actions Filing Functionality', () => {
 
     // verify redirection
     // TODO: To update when dashboard URLs are established
-    const baseUrl = 'myhost/basePath/auth'
+    const baseUrl = 'myhost/basePath/auth/'
 
     expect(window.location.assign).toHaveBeenCalledWith(baseUrl)
   })
