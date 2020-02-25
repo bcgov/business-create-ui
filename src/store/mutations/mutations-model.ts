@@ -1,6 +1,5 @@
-import { CertifyStatementIF, CertifyIF, IncorporationAddressIf, NameRequestIF } from '@/interfaces'
-import { ExternalResourceIF } from '@/interfaces/resource-interfaces/ExternalResourceIF'
-import { BusinessContactIF } from '@/interfaces/stepper-interfaces/DefineCompany/business-contact-interface'
+import { CertifyStatementIF, CertifyIF, IncorporationAddressIf, NameRequestIF, BaseAddressObjIF,
+  ExternalResourceIF, BusinessContactIF } from '@/interfaces'
 
 export const mutateCurrentStep = (state: any, currentStep: boolean) => {
   state.stateModel.currentStep = currentStep
@@ -50,8 +49,8 @@ export const mutateDefineCompanyStepValidity = (state: any, validity: boolean) =
   state.stateModel.defineCompanyStep.valid = validity
 }
 
-export const mutateOfficeAddresses = (state: any, address: IncorporationAddressIf) => {
-  state.stateModel.defineCompanyStep.officeAddresses = address
+export const mutateOfficeAddresses = (state: any, addresses: IncorporationAddressIf) => {
+  state.stateModel.defineCompanyStep.officeAddresses = addresses
 }
 
 export const mutateNameRequestState = (state: any, nameRequestState: NameRequestIF) => {

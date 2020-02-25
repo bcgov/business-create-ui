@@ -27,6 +27,6 @@ export const stateModel: StateModelIF = {
       phone: '',
       phoneExtension: ''
     },
-    officeAddresses: null
+    officeAddresses: {}
   }
 }

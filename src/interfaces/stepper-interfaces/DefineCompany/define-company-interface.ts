@@ -3,5 +3,5 @@ import { BusinessContactIF, NameRequestIF, IncorporationAddressIf } from '@/inte
 export interface DefineCompanyIF {
     valid: boolean
     businessContact : BusinessContactIF,
-    officeAddresses : IncorporationAddressIf | null
+    officeAddresses : IncorporationAddressIf | {}
 }

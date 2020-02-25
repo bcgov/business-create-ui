@@ -13,7 +13,7 @@ export interface IncorporationFilingIF {
         nrNumber: string
         legalType: string
       },
-      offices: IncorporationAddressIf | null,
+      offices: IncorporationAddressIf | {},
       contactPoint: {
         email: string
         phone: string

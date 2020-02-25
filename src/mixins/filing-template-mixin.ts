@@ -1,9 +1,12 @@
 // Libraries
 import { Component, Vue } from 'vue-property-decorator'
-import { State, Getter } from 'vuex-class'
+import { State, Getter, Action } from 'vuex-class'
 
 // Interfaces
-import { StateModelIF, IncorporationFilingIF, GetterIF } from '@/interfaces'
+import { ActionBindingIF, StateModelIF, IncorporationFilingIF, GetterIF } from '@/interfaces'
+
+// Constants
+import { INCORPORATION_APPLICATION } from '@/constants'
 
 /**
  * Mixin that provides the integration with the legal api.
@@ -16,45 +19,61 @@ export default class FilingTemplateMixin extends Vue {
   // Global Getters
   @Getter isTypeBcomp!: GetterIF
 
-  // Filing Properties
-  private name!: string
-  private certifiedBy!: string
-  private email!: string
-  private phone!: string
-  private date!: string
-  private nrNumber!: string
-  private legalType!: string
+  // Global actions
+  @Action setEntityType!: ActionBindingIF
+  @Action setBusinessContact!: ActionBindingIF
+  @Action setOfficeAddresses!: ActionBindingIF
+  @Action setDefineCompanyStepValidity!: ActionBindingIF
+  @Action setNameRequestState!: ActionBindingIF
+  @Action setFilingId!: ActionBindingIF
 
+  /**
+   * Method to construct a filing body when making an api request
+   */
   buildFiling (): IncorporationFilingIF {
-    this.name = 'incorporationApplication'
-    this.certifiedBy = this.stateModel.certifyState.certifiedBy
-    this.email = this.stateModel.defineCompanyStep.businessContact.email
-    this.phone = this.stateModel.defineCompanyStep.businessContact.phone
-    this.date = this.stateModel.currentDate
-    this.nrNumber = this.stateModel.nameRequest.nrNumber
-    this.legalType = this.stateModel.nameRequest.entityType
-
-    const filing = {
+    return {
       filing: {
         header: {
-          name: this.name,
-          certifiedBy: this.certifiedBy,
-          email: this.email,
-          date: this.date
+          name: INCORPORATION_APPLICATION,
+          certifiedBy: this.stateModel.certifyState.certifiedBy,
+          email: this.stateModel.defineCompanyStep.businessContact.email,
+          date: this.stateModel.currentDate
         },
         incorporationApplication: {
           nameRequest: {
-            nrNumber: this.nrNumber,
-            legalType: this.legalType
+            nrNumber: this.stateModel.nameRequest.nrNumber,
+            legalType: this.stateModel.nameRequest.entityType
           },
           offices: this.stateModel.defineCompanyStep.officeAddresses,
           contactPoint: {
-            email: this.email,
-            phone: this.phone
+            email: this.stateModel.defineCompanyStep.businessContact.email,
+            phone: this.stateModel.defineCompanyStep.businessContact.phone
           }
         }
       }
     }
-    return filing
+  }
+
+  /**
+   * Method to parse a received draft filing into the store
+   * @param draftFiling The draft filing body to be parsed and assigned to store
+   */
+  parseDraft (draftFiling: any): void {
+    try {
+      // Set nameRequest data
+      this.setNameRequestState({
+        nrNumber: draftFiling.incorporationApplication.nameRequest.nrNumber,
+        entityType: draftFiling.incorporationApplication.nameRequest.legalType,
+        filingId: draftFiling.header.filingId
+      })
+
+      // // Set Office Addresses
+      this.setOfficeAddresses(draftFiling.incorporationApplication.offices)
+
+      // Set Contact Info
+      this.setBusinessContact(draftFiling.incorporationApplication.contactPoint)
+    } catch (e) {
+      // TODO: Throw a flag to the ui from here, if we want to trigger error handling in ui
+    }
   }
 }

@@ -62,6 +62,13 @@ export const getBusinessIdentifier = (state: any): string => {
 }
 
 /**
+ * Return Office addresses
+ */
+export const getOfficeAddresses = (state: any): string => {
+  return state.stateModel.defineCompanyStep.officeAddresses
+}
+
+/**
  * Whether Back button should be displayed.
  */
 export const isShowBackBtn = (state: any): boolean => {

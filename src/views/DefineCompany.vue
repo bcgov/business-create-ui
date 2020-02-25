@@ -65,11 +65,11 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Vue, Mixins } from 'vue-property-decorator'
+import { Component, Mixins } from 'vue-property-decorator'
 import { Getter, Action, State } from 'vuex-class'
 
 // Interfaces
-import { GetterIF, ActionBindingIF, BusinessContactIF, IncorporationAddressIf, AddressIF } from '@/interfaces'
+import { GetterIF, ActionBindingIF, BusinessContactIF, IncorporationAddressIf } from '@/interfaces'
 
 // Mixins
 import { EntityFilterMixin } from '@/mixins'
@@ -92,7 +92,7 @@ export default class DefineCompany extends Mixins(EntityFilterMixin) {
   readonly businessContact!: BusinessContactIF
 
   @State(state => state.stateModel.defineCompanyStep.officeAddresses)
-  readonly addresses!: AddressIF
+  readonly addresses!: IncorporationAddressIf
 
   // Global getters
   @Getter isEntityType!: GetterIF

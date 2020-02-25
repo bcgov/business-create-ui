@@ -30,20 +30,12 @@ export default class LegalApiMixin extends Vue {
    */
   async saveFiling (filing: IncorporationFilingIF, isDraft: boolean): Promise<any> {
     let filingId = this.getFilingId
-
     // If have a filing id, update an existing filing
     if (filingId && filingId > 0) {
       await this.updateFiling(filing)
     } else {
       // Set the filingId to store
-      const response = await this.createFiling(filing)
-
-      // Assign a filing Id from the response to the state
-      if (response && response.header && response.header.filingId) {
-        this.setFilingId(response.header.filingId)
-      } else {
-        throw new Error('invalid API response')
-      }
+      await this.createFiling(filing)
     }
 
     // Complete a filing if not draft
@@ -53,16 +45,14 @@ export default class LegalApiMixin extends Vue {
   /**
    * Method to get a filing in progress.
    * Future: We can use this method to parse and sort the data into store.
-   * @param filingId filing id if this resuming an existing draft.
    */
-  async fetchDraft (filingId: number): Promise<any> {
+  async fetchDraft (): Promise<any> {
     try {
-      const filing = await this.getFiling(filingId)
-      // TODO: Parse the filing into store. Either here or using another method.
+      // Retrieve the Draft filingId from this identifiers tasks
+      return await this.getDraftFiling()
     } catch (e) {
-      if (e) {
-        // TODO:  Trigger some error dialog. Will catch any errors from the Api calls
-      }
+      // TODO: Throw a flag to the ui from here, if we want to trigger error handling in ui
+      throw new Error('Invalid API Response')
     }
   }
 
@@ -71,8 +61,11 @@ export default class LegalApiMixin extends Vue {
    * @param data The object body of the request.
    */
   private createFiling (data: object): Promise<any> {
-    return axios.post('', data).then(res => {
-      if (!res) {
+    return axios.post('businesses', data).then(res => {
+      // Assign a filing Id from the response to the state
+      if (res && res.data && res.data.filing && res.data.filing.header && res.data.filing.header.filingId) {
+        this.setFilingId(res.data.filing.header.filingId)
+      } else {
         throw new Error('invalid API response')
       }
     })
@@ -84,7 +77,7 @@ export default class LegalApiMixin extends Vue {
    */
   private updateFiling (data: object): Promise<any> {
     // Assign the url business identifier
-    let url = `${this.getBusinessIdentifier}`
+    let url = `businesses/${this.getBusinessIdentifier}`
 
     return axios.put(url, data).then(res => {
       if (!res) {
@@ -94,15 +87,17 @@ export default class LegalApiMixin extends Vue {
   }
 
   /**
-   * Method to make a simple axios Get request.
-   * @param filingId Optional filing id if this resuming an existing draft.
+   * Method to make a simple axios Get request on the draft filings.
    */
-  private getFiling (filingId: number): Promise<any> {
+  private getDraftFiling (): Promise<any> {
     // Assign the url business identifier
-    let url = `${this.getBusinessIdentifier}/filings/${filingId}`
+    let url = `businesses/${this.getBusinessIdentifier}/tasks`
 
     return axios.get(url).then(res => {
-      if (!res) {
+      if (res.data.tasks) {
+        this.setFilingId(res.data.tasks[0].task.filing.header.filingId)
+        return res.data.tasks[0].task.filing
+      } else {
         throw new Error('invalid API response')
       }
     })
@@ -117,7 +112,7 @@ export default class LegalApiMixin extends Vue {
 
     if (filingId) {
       // Assign the url business identifier
-      let url = `${this.getBusinessIdentifier}/filings/${filingId}`
+      let url = `businesses/${this.getBusinessIdentifier}/filings/${filingId}`
 
       return axios.put(url, filing).then(res => {
         if (!res) {

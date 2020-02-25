@@ -225,10 +225,45 @@ describe('OfficeAddresses as a BCOMP', () => {
 describe('OfficeAddresses Summary UI', () => {
   let wrapper: any
 
+  const registeredOffice = {
+    deliveryAddress: {
+      addressCity: 'someCity',
+      addressCountry: 'someCountry',
+      addressRegion: 'someRegion',
+      postalCode: 'somePostalCode',
+      streetAddress: 'someStreet'
+    },
+    mailingAddress: {
+      addressCity: 'someCity',
+      addressCountry: 'someCountry',
+      addressRegion: 'someRegion',
+      postalCode: 'somePostalCode',
+      streetAddress: 'someStreet'
+    }
+  }
+
+  const recordsOffice = {
+    deliveryAddress: {
+      addressCity: 'someRecCity',
+      addressCountry: 'someRecCountry',
+      addressRegion: 'someRecRegion',
+      postalCode: 'someRecPostalCode',
+      streetAddress: 'someRecStreet'
+    },
+    mailingAddress: {
+      addressCity: 'someRecCity',
+      addressCountry: 'someRecCountry',
+      addressRegion: 'someRecRegion',
+      postalCode: 'someRecPostalCode',
+      streetAddress: 'someRecStreet'
+    }
+  }
+
   beforeEach(() => {
     const localVue = createLocalVue()
     wrapper = shallowMount(OfficeAddresses, {
       propsData: {
+        inputAddresses: { registeredOffice, recordsOffice },
         isEditing: false
       },
       localVue,

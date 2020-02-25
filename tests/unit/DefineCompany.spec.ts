@@ -19,7 +19,6 @@ describe('Define Company component', () => {
   let wrapper: any
 
   beforeEach(() => {
-    router.push({ name: 'define-company', query: {} })
     wrapper = shallowMount(DefineCompany, { localVue, store, router, vuetify })
   })
 

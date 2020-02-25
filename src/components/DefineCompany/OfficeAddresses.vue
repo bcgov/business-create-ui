@@ -203,11 +203,12 @@ export default class OfficeAddresses extends Mixins(CommonMixin, EntityFilterMix
   @Prop({ default: null })
   readonly inputAddresses!: IncorporationAddressIf | null;
 
-  private addresses: IncorporationAddressIf | null = this.inputAddresses;
-
   // Whether to show the editable forms for the addresses (true) or just the static display addresses (false).
   @Prop({ default: true })
   private isEditing!: boolean;
+
+  // Local Properties
+  private addresses: IncorporationAddressIf | null = this.inputAddresses;
 
   // The two addresses that are the current state of the BaseAddress components.
   private deliveryAddress = {} as AddressIF;
@@ -241,8 +242,13 @@ export default class OfficeAddresses extends Mixins(CommonMixin, EntityFilterMix
   /**
    * Lifecycle callback to set up the component when it is mounted.
    */
-  private mounted (): void {
-    if (this.addresses) {
+  private created (): void {
+    this.setAddresses()
+    this.emitValid()
+  }
+
+  private setAddresses (): void {
+    if (this.addresses.registeredOffice) {
       this.deliveryAddress = this.addresses.registeredOffice.deliveryAddress
       this.mailingAddress = this.addresses.registeredOffice.mailingAddress
       this.inheritMailingAddress = this.isSame(
@@ -261,7 +267,6 @@ export default class OfficeAddresses extends Mixins(CommonMixin, EntityFilterMix
           this.addresses.recordsOffice!.mailingAddress)
       }
     }
-    this.emitValid()
   }
 
   // Computed values.
