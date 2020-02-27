@@ -129,6 +129,7 @@ describe('Actions Filing Functionality', () => {
     localVue.use(VueRouter)
     const router = mockRouter.mock()
     wrapper = shallowMount(Actions, { localVue, store, router, vuetify })
+    jest.spyOn(wrapper.vm, 'createFiling').mockImplementation()
   })
 
   afterEach(() => {
