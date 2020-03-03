@@ -58,7 +58,7 @@ export function fetchConfig (): Promise<any> {
 
       const ldClientId = response.data['LD_CLIENT_ID'];
       (<any>window).ldClientId = ldClientId
-      console.info('Set LD Client Id.' + ldClientId)
+      console.info('Set LD Client Id.')
     })
 }
 
