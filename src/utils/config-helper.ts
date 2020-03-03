@@ -55,6 +55,10 @@ export function fetchConfig (): Promise<any> {
       const addressCompleteKey = response.data['ADDRESS_COMPLETE_KEY'];
       (<any>window).addressCompleteKey = addressCompleteKey
       console.info('Set Address Complete Key.')
+
+      const ldClientId = response.data['LD_CLIENT_ID'];
+      (<any>window).ldClientId = ldClientId
+      console.info('Set LD Client Id.' + ldClientId)
     })
 }
 
