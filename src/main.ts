@@ -10,6 +10,7 @@ import router from '@/router'
 import { store } from '@/store'
 import Affix from 'vue-affix'
 import Vue2Filters from 'vue2-filters' // needed by SbcFeeSummary
+import { featureFlags, initLDClient } from '@/common/FeatureFlags'
 
 // Styles
 // NB: order matters - do not change
@@ -37,6 +38,7 @@ Vue.use(Vue2Filters)
  */
 fetchConfig()
   .then(async () => {
+    await initLDClient()
     /*
     // ensure we have the necessary Keycloak tokens
     if (!haveKcTokens()) {
@@ -61,13 +63,14 @@ fetchConfig()
     // const authzSerice = new AuthorizationService() // FUTURE
     // await authzSerice.getAuthorizations('NR123456') // FUTURE
     */
-
-    new Vue({
-      vuetify,
-      router,
-      store,
-      render: h => h(App)
-    }).$mount('#app')
+    if (featureFlags.getFlag('bcrs-create-ui-enabled')) {
+      new Vue({
+        vuetify,
+        router,
+        store,
+        render: h => h(App)
+      }).$mount('#app')
+    }
   })
   .catch((error: string) => {
     /**

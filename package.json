@@ -14,6 +14,8 @@
     "axios": "^0.18.1",
     "core-js": "^3.6.4",
     "css-loader": "^0.28.11",
+    "launchdarkly-js-client-sdk": "^2.17.0",
+    "lodash": "^4.17.15",
     "regenerator-runtime": "^0.13.3",
     "sbc-common-components": "2.0.41",
     "vue": "^2.6.11",
@@ -21,10 +23,9 @@
     "vue-router": "^3.1.5",
     "vue-the-mask": "^0.11.1",
     "vue2-filters": "^0.9.1",
-    "vuetify": "^2.2.8",
-    "vuex": "^3.1.2",
     "vuelidate": "^0.7.4",
-    "lodash": "^4.17.15"
+    "vuetify": "^2.2.8",
+    "vuex": "^3.1.2"
   },
   "devDependencies": {
     "@types/jest": "^24.9.1",
