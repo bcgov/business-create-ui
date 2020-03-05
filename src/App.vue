@@ -155,4 +155,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
 </script>
 
 <style lang="scss" scoped>
+.app-header {
+  z-index: 1000;
+}
 </style>
