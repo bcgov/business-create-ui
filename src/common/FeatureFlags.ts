@@ -44,7 +44,7 @@ class FeatureFlags {
 export const initLDClient = () : Promise<any> => {
   var user = { 'anonymous': true }
 
-  let ldClient = initialize(window['ldClientId'], user)
+  let ldClient = initialize(window['ldClientId'] || 'empty-key', user)
 
   return new Promise((resolve) => {
     ldClient.on('initialized', () => {
