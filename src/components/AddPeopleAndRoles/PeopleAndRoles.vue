@@ -39,7 +39,8 @@
       :initialValue="currentOrgPerson"
       :activeIndex="activeIndex"
       :nextId="nextId"
-      @addEditPerson="onAddEditOrgPerson($event)" />
+      @addEditPerson="onAddEditOrgPerson($event)"
+      @resetEvent="onResetEvent()" />
     </v-card>
 
     <v-card flat class="people-roles-container" v-if="orgPersonList.length > 0">
@@ -137,14 +138,16 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
     // Edit Person.
       newList.splice(this.activeIndex, 1, person)
     }
+    this.setOrgPersonList(newList)
+    // Call validate here to check over al1 rules like the minimum number
+    // of directors and other rules are met. Also set the step validity in that method
+  }
+
+  private onResetEvent (): void {
     this.currentOrgPerson = null
     this.activeIndex = -1
     this.addEditInProgress = false
     this.showOrgPersonForm = false
-
-    this.setOrgPersonList(newList)
-    // Call validate here to check over al1 rules like the minimum number
-    // of directors and other rules are met. Also set the step validity in that method
   }
 
   private hasRole (roleName: string) : boolean {

@@ -3,22 +3,24 @@
     <ul class="list add-person">
       <li class="add-person-container">
         <div class="meta-container">
-          <label class="add-person-header">Add Person</label>
+          <label class="add-person-header" v-if="isPerson">Add Person</label>
+          <label class="add-person-header" v-if="isOrg">Add Corporation or Firm</label>
           <div class="meta-container__inner">
             <v-form
-              ref="addPersonForm"
+              ref="addPersonOrgForm"
               class="appoint-form"
-              v-model="addPersonFormValid"
+              v-model="addPersonOrgFormValid"
               v-on:submit.prevent="addPerson"
               lazy-validation>
-              <label class="sub-header">Person's Name</label>
-              <div class="form__row three-column">
+              <label class="sub-header" v-if="isPerson">Person's Name</label>
+              <label class="sub-header" v-if="isOrg">Corporation or Firm Name</label>
+              <div class="form__row three-column" v-if="isPerson">
                 <v-text-field
                   filled
                   class="item"
                   label="First Name"
                   id="person__first-name"
-                  v-model="person.firstName"
+                  v-model="orgPerson.firstName"
                   :rules="firstNameRules"
                 />
                 <v-text-field
@@ -26,7 +28,7 @@
                   class="item"
                   label="Middle Name"
                   id="person__middle-name"
-                  v-model="person.middleName"
+                  v-model="orgPerson.middleName"
                   :rules="middleNameRules"
                 />
                 <v-text-field
@@ -34,15 +36,32 @@
                   class="item"
                   label="Last Name"
                   id="person__last-name"
-                  v-model="person.lastName"
+                  v-model="orgPerson.lastName"
                   :rules="lastNameRules"
+                />
+              </div>
+              <div v-if="isOrg" class="org-name-container">
+                <v-text-field
+                  filled
+                  class="item"
+                  label="Full Legal Corporation or Firm Name"
+                  id="firm-name"
+                  v-model="orgPerson.orgName"
+                  :rules="orgNameRules"
                 />
               </div>
               <label class="sub-header">Roles</label>
               <v-row>
-                <v-col cols="4"><v-checkbox v-model="isCompletingParty" label="Completing Party"/></v-col>
-                <v-col cols="4"><v-checkbox v-model="isIncorporator" label="Incorporator"/></v-col>
-                <v-col cols="4"><v-checkbox v-model="isDirector" label="Director"/></v-col>
+                <v-col cols="4" v-if="isPerson">
+                  <v-checkbox v-model="isCompletingParty" label="Completing Party"/>
+                </v-col>
+                <v-col cols="4">
+                  <v-checkbox v-model="isIncorporator" label="Incorporator"
+                  :disabled="isOrg"/>
+                </v-col>
+                <v-col cols="4" v-if="isPerson">
+                  <v-checkbox v-model="isDirector" label="Director"/>
+                </v-col>
               </v-row>
 
               <label class="sub-header">Mailing Address</label>
@@ -73,7 +92,7 @@
 
               <div class="form__row form__btns">
                 <v-btn color="error" disabled>Remove</v-btn>
-                <v-btn class="form-primary-btn" @click="validateAddPersonForm()" color="primary">Done</v-btn>
+                <v-btn class="form-primary-btn" @click="validateaddPersonOrgForm()" color="primary">Done</v-btn>
                 <v-btn class="form-cancel-btn" @click="resetAddPersonData()">Cancel</v-btn>
               </div>
             </v-form>
@@ -91,12 +110,6 @@ import { Component, Vue, Prop, Watch, Emit, Mixins } from 'vue-property-decorato
 // Interfaces
 import { OrgPersonIF, BaseAddressObjIF, BaseAddressType, FormType } from '@/interfaces'
 
-// Mixins
-import { EntityFilterMixin } from '@/mixins'
-
-// Enums
-import { EntityTypes } from '@/enums'
-
 // Components
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
 
@@ -108,10 +121,10 @@ import { addressSchema } from '@/schemas'
     BaseAddress
   }
 })
-export default class OrgPerson extends Mixins(EntityFilterMixin) {
+export default class OrgPerson extends Vue {
    // Refs
    $refs!: {
-    addPersonForm: FormType,
+    addPersonOrgForm: FormType,
     mailingAddressNew: BaseAddressType,
     deliveryAddressNew: BaseAddressType
   }
@@ -127,7 +140,7 @@ export default class OrgPerson extends Mixins(EntityFilterMixin) {
   private nextId: number
 
   // Data Properties
-  private person: OrgPersonIF = this.initialValue
+  private orgPerson: OrgPersonIF = this.initialValue
   private inProgressMailingAddress = null
   private inProgressDeliveryAddress = null
   private inheritMailingAddress: boolean = true
@@ -135,9 +148,7 @@ export default class OrgPerson extends Mixins(EntityFilterMixin) {
   private isCompletingParty: boolean = false
   private isIncorporator: boolean = false
   private isDirector: boolean = false
-  private addPersonFormValid: boolean = true
-
-  readonly EntityTypes: {} = EntityTypes
+  private addPersonOrgFormValid: boolean = true
 
   // Rules
   private readonly firstNameRules: Array<Function> = [
@@ -157,12 +168,18 @@ export default class OrgPerson extends Mixins(EntityFilterMixin) {
     v => !/\s$/g.test(v) || 'Invalid spaces' // trailing spaces
   ]
 
+  private readonly orgNameRules: Array<Function> = [
+    v => !!v || 'A firm name is required',
+    v => !/^\s/g.test(v) || 'Invalid spaces', // leading spaces
+    v => !/\s$/g.test(v) || 'Invalid spaces' // trailing spaces
+  ]
+
   // Life cycle methods
   private mounted (): void {
-    if (this.person) {
-      this.isDirector = this.person.roles.includes('Director')
-      this.isIncorporator = this.person.roles.includes('Incorporator')
-      this.isCompletingParty = this.person.roles.includes('Completing Party')
+    if (this.orgPerson) {
+      this.isDirector = this.orgPerson.roles.includes('Director')
+      this.isIncorporator = this.orgPerson.roles.includes('Incorporator')
+      this.isCompletingParty = this.orgPerson.roles.includes('Completing Party')
     }
   }
 
@@ -174,18 +191,18 @@ export default class OrgPerson extends Mixins(EntityFilterMixin) {
     this.inProgressDeliveryAddress = val
   }
 
-  private validateAddPersonForm (): void {
-    var addPersonFormIsValid = this.$refs.addPersonForm.validate()
+  private validateaddPersonOrgForm (): void {
+    var addPersonOrgFormIsValid = this.$refs.addPersonOrgForm.validate()
     var mailingAddressFormIsValid = this.$refs.mailingAddressNew.$refs.addressForm.validate()
     if (this.$refs.deliveryAddressNew) {
       var deliveryAddressFormIsValid = this.$refs.deliveryAddressNew.$refs.addressForm.validate()
-      if (addPersonFormIsValid && mailingAddressFormIsValid && deliveryAddressFormIsValid) {
+      if (addPersonOrgFormIsValid && mailingAddressFormIsValid && deliveryAddressFormIsValid) {
         const person: OrgPersonIF = this.addPerson()
         this.resetAddPersonData()
         this.emitPersonInfo(person)
       }
     } else {
-      if (addPersonFormIsValid && mailingAddressFormIsValid) {
+      if (addPersonOrgFormIsValid && mailingAddressFormIsValid) {
         const person: OrgPersonIF = this.addPerson()
         this.resetAddPersonData()
         this.emitPersonInfo(person)
@@ -197,7 +214,7 @@ export default class OrgPerson extends Mixins(EntityFilterMixin) {
    * Local helper push the current director data into the list.
    */
   private addPerson (): OrgPersonIF {
-    let personToAdd: OrgPersonIF = { ...this.person }
+    let personToAdd: OrgPersonIF = { ...this.orgPerson }
     personToAdd.id = this.nextId
     personToAdd.address = this.setPersonAddress()
     personToAdd.roles = this.setPersonRoles()
@@ -235,16 +252,29 @@ export default class OrgPerson extends Mixins(EntityFilterMixin) {
    * Reset the add person form and other attributes
    */
   private resetAddPersonData (): void {
-    this.$refs.addPersonForm.reset()
+    this.$refs.addPersonOrgForm.reset()
     this.$refs.mailingAddressNew.$refs.addressForm.reset()
     if (this.$refs.deliveryAddressNew) {
       this.$refs.deliveryAddressNew.$refs.addressForm.reset()
     }
+
+    this.emitResetEvent()
+  }
+
+  get isPerson (): boolean {
+    return this.orgPerson && this.orgPerson.type === 'Person'
+  }
+
+  get isOrg (): boolean {
+    return this.orgPerson && this.orgPerson.type === 'Org'
   }
 
   // Events
   @Emit('addEditPerson')
   private emitPersonInfo (personInfo : OrgPersonIF): void { }
+
+  @Emit('resetEvent')
+  private emitResetEvent (): void { }
 }
 </script>
 
@@ -360,6 +390,10 @@ li {
 
 .address-wrapper {
   margin-top: 1.5rem;
+}
+
+.org-name-container {
+  padding-top: 1rem;
 }
 
 @media (min-width: 768px) {
