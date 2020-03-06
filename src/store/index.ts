@@ -14,13 +14,13 @@ import { isRoleStaff, isRoleEdit, isRoleView, isEntityType, isTypeBcomp, isTypeC
 import { mutateCurrentStep, mutateIsSaving, mutateIsSavingResuming, mutateIsFilingPaying,
   mutateResource, mutateKeycloakRoles, mutateAuthRoles, mutateCurrentDate, mutateCertifyStatementResource,
   mutateCertifyState, mutateBusinessContact, mutateDefineCompanyStepValidity, mutateNameRequestState,
-  mutateFilingId, mutateOfficeAddresses, mutatePersonList, mutateAddPeopleAndRoleStepValidity }
+  mutateFilingId, mutateOfficeAddresses, mutateOrgPersonList, mutateAddPeopleAndRoleStepValidity }
   from '@/store/mutations'
 
 // Actions
 import { setCurrentStep, setIsSaving, setIsSavingResuming, setIsFilingPaying, setResource,
   setKeycloakRoles, setAuthRoles, setCurrentDate, setCertifyStatementResource, setCertifyState, setBusinessContact,
-  setDefineCompanyStepValidity, setNameRequestState, setFilingId, setOfficeAddresses, setPersonList,
+  setDefineCompanyStepValidity, setNameRequestState, setFilingId, setOfficeAddresses, setOrgPersonList,
   setAddPeopleAndRoleStepValidity } from './actions'
 
 Vue.use(Vuex)
@@ -62,7 +62,7 @@ export const store: Store<any> = new Vuex.Store<any>({
     mutateNameRequestState,
     mutateFilingId,
     mutateOfficeAddresses,
-    mutatePersonList,
+    mutateOrgPersonList,
     mutateAddPeopleAndRoleStepValidity
 
   },
@@ -82,7 +82,7 @@ export const store: Store<any> = new Vuex.Store<any>({
     setNameRequestState,
     setFilingId,
     setOfficeAddresses,
-    setPersonList,
+    setOrgPersonList,
     setAddPeopleAndRoleStepValidity
   }
 })

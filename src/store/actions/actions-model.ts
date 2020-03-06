@@ -60,8 +60,8 @@ export const setFilingId: ActionIF = ({ commit }, filingId): void => {
   commit('mutateFilingId', filingId)
 }
 
-export const setPersonList = ({ commit }, people) => {
-  commit('mutatePersonList', people)
+export const setOrgPersonList = ({ commit }, orgPeople) => {
+  commit('mutateOrgPersonList', orgPeople)
 }
 
 export const setAddPeopleAndRoleStepValidity = ({ commit }, validity) => {

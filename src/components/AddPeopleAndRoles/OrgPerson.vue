@@ -108,7 +108,7 @@ import { addressSchema } from '@/schemas'
     BaseAddress
   }
 })
-export default class AddEditPerson extends Mixins(EntityFilterMixin) {
+export default class OrgPerson extends Mixins(EntityFilterMixin) {
    // Refs
    $refs!: {
     addPersonForm: FormType,

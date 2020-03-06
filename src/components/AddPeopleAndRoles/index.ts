@@ -1,9 +1,9 @@
 import PeopleAndRoles from './PeopleAndRoles.vue'
 import ListPeopleAndRoles from './ListPeopleAndRoles.vue'
-import AddEditPerson from './AddEditPerson.vue'
+import OrgPerson from './OrgPerson.vue'
 
 export {
   PeopleAndRoles,
-  AddEditPerson,
+  OrgPerson,
   ListPeopleAndRoles
 }

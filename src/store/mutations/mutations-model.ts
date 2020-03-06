@@ -53,8 +53,8 @@ export const mutateOfficeAddresses = (state: any, addresses: IncorporationAddres
   state.stateModel.defineCompanyStep.officeAddresses = addresses
 }
 
-export const mutatePersonList = (state: any, people: OrgPersonIF[]) => {
-  state.stateModel.addPeopleAndRoleStep.people = people
+export const mutateOrgPersonList = (state: any, orgPeople: OrgPersonIF[]) => {
+  state.stateModel.addPeopleAndRoleStep.orgPeople = orgPeople
 }
 
 export const mutateAddPeopleAndRoleStepValidity = (state: any, validity: boolean) => {

@@ -31,6 +31,6 @@ export const stateModel: StateModelIF = {
   },
   addPeopleAndRoleStep: {
     valid: false,
-    people: []
+    orgPeople: []
   }
 }
