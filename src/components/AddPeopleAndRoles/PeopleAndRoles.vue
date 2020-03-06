@@ -6,23 +6,43 @@
     </p>
     Your application must include the following:
     <ul>
-      <li><v-icon color='blue'>mdi-check</v-icon>The Completing Party</li>
-      <li>At least one Incorporator</li>
-      <li>At least one Director</li>
+      <li><v-icon color='blue' v-if="hasRole('Completing Party')">mdi-check</v-icon>The Completing Party</li>
+      <li><v-icon color='blue' v-if="hasRole('Incorporator')">mdi-check</v-icon>At least one Incorporator</li>
+      <li><v-icon color='blue' v-if="hasRole('Director')">mdi-check</v-icon>At least one Director</li>
     </ul>
-    <div class="btn-panel">
-      <v-btn outlined color="primary" @click="initAddCompletingParty()"
-      :disabled="showAddEditPersonForm" v-show="personList.length === 0">
+    <div class="btn-panel" v-show="personList.length === 0">
+      <v-btn outlined color="primary" @click="addPerson(['Completing Party'])"
+      :disabled="showAddEditPersonForm">
         <v-icon>mdi-account-multiple-plus</v-icon>
         <span>Start by Adding the Completing Party</span>
       </v-btn>
     </div>
-    <v-card flat class="people-roles-container" v-if="personList.length > 0 || showAddEditPersonForm">
+    <div class="btn-panel"  v-show="personList.length > 0">
+      <v-btn outlined color="primary" @click="addPerson([])"
+      :disabled="showAddEditPersonForm">
+        <v-icon>mdi-account-multiple-plus</v-icon>
+        <span>Add a Person</span>
+      </v-btn>
+      <v-btn outlined color="primary" :disabled="showAddEditPersonForm" class="spacedButton">
+        <v-icon>mdi-account-multiple-plus</v-icon>
+        <span>Add a Corporation or Firm</span>
+      </v-btn>
+      <v-btn outlined color="primary" @click="addPerson(['Completing Party'])"
+      :disabled="showAddEditPersonForm"  class="spacedButton" v-if="!hasRole('Completing Party')">
+        <v-icon>mdi-account-multiple-plus</v-icon>
+        <span>Add the Completing Party</span>
+      </v-btn>
+    </div>
+    <v-card flat class="people-roles-container" v-if="showAddEditPersonForm">
       <AddEditPerson v-if="showAddEditPersonForm"
       :initialValue="currentPerson"
       :activeIndex="activePersonIndex"
       :nextId="nextPersonId"
       @addEditPerson="onAddEditPerson($event)" />
+    </v-card>
+
+    <v-card flat class="people-roles-container" v-if="personList.length > 0">
+      <ListPeopleAndRoles v-if="personList.length > 0"/>
     </v-card>
   </div>
 </template>
@@ -43,13 +63,15 @@ import { EntityTypes } from '@/enums'
 
 // Components
 import AddEditPerson from './AddEditPerson.vue'
+import ListPeopleAndRoles from './ListPeopleAndRoles.vue'
 
 // Schemas
 import { addressSchema } from '@/schemas'
 
 @Component({
   components: {
-    AddEditPerson
+    AddEditPerson,
+    ListPeopleAndRoles
   }
 })
 export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
@@ -93,16 +115,17 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
   readonly EntityTypes: {} = EntityTypes
 
   // Methods
-  private initAddCompletingParty (): void {
+  private addPerson (rolesToInitialize: string[]): void {
     this.currentPerson = this.newPerson
-    this.currentPerson.roles = ['Completing Party']
-    this.activePersonIndex = null
+    this.currentPerson.roles = rolesToInitialize
+    this.activePersonIndex = -1
     this.nextPersonId = this.personList.length + 1
     this.personAddEditInProgress = true
     this.showAddEditPersonForm = true
   }
 
   private onAddEditPerson (person: OrgPersonIF): void {
+    console.log(this.activePersonIndex)
     let modifiedPersonList: OrgPersonIF[] = Object.assign([], this.personList)
     // New Person.
     if (this.activePersonIndex === -1) {
@@ -117,8 +140,13 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
     this.showAddEditPersonForm = false
 
     this.setPersonList(modifiedPersonList)
-    // Call validate here to check whether over al rules like the minimum number
+    // Call validate here to check over al1 rules like the minimum number
     // of directors and other rules are met. Also set the step validity in that method
+  }
+
+  private hasRole (roleName: string) : boolean {
+    const peopleWithSpecifiedRole: OrgPersonIF[] = this.personList.filter(people => people.roles.includes(roleName))
+    return peopleWithSpecifiedRole.length > 0
   }
 }
 </script>
@@ -143,5 +171,8 @@ ul, p {
   font-size: 1rem;
   font-weight: 700;
   line-height: 1.5rem;
+}
+.spacedButton {
+  margin-left: 0.5rem
 }
 </style>
