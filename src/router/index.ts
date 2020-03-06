@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import VueRouter from 'vue-router'
+import VueRouter, { Route } from 'vue-router'
 import { routes } from './routes'
 
 // Enums for Keycloak
@@ -28,6 +28,12 @@ router.beforeEach((to, from, next) => {
         query: { redirect: to.fullPath }
       })
     }
+  }
+
+  // Currently only activate if the from route has a nrNumber query param
+  if (from.query.nrNumber && !to.query.nrNumber) {
+    // Carry over route params and allow the target route to overwrite any params with the same key
+    return next({ path: to.path, query: { ...from.query, ...to.query } })
   }
 
   // FUTURE: We will want to do something to handle expired tokens here at some point.

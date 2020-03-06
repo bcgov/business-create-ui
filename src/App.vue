@@ -1,10 +1,24 @@
 <template>
   <v-app class="app-container" id="app">
-    <!-- FUTURE: dialogs go here -->
+    <!-- Dialogs -->
+    <NameRequestInvalidErrorDialog
+      :dialog="nameRequestInvalidErrorDialog"
+      @okay="nrOkay()"
+      @redirect="redirectToBusinessUrl()"
+      :type="nameRequestInvalidType"
+      attach="#app"
+    />
+
+    <AccountAuthorizationDialog
+      :dialog="accountAuthorizationErrorDialog"
+      @exit="redirectToBusinessUrl()"
+      @retry="evaluateNRPreconditions()"
+      attach="#app"
+    />
 
     <!-- Initial Page Load Transition -->
     <transition name="fade">
-      <div class="loading-container fade-out">
+      <div class="loading-container fade-out" v-show="evaluatingPreconditions">
         <div class="loading__content">
           <v-progress-circular color="primary" size="50" indeterminate />
           <div class="loading-msg">Loading...</div>
@@ -14,7 +28,7 @@
 
     <sbc-header ref="sbcHeader" />
 
-    <main class="app-body">
+    <main class="app-body" v-if="!evaluatingPreconditions">
       <entity-info />
 
       <v-container class="view-container pt-4">
@@ -53,6 +67,7 @@
 // Libraries
 import { Component, Watch, Mixins } from 'vue-property-decorator'
 import { Action, State } from 'vuex-class'
+import axios from '@/utils/axios-auth'
 
 // Components
 import SbcHeader from 'sbc-common-components/src/components/SbcHeader.vue'
@@ -60,8 +75,11 @@ import SbcFooter from 'sbc-common-components/src/components/SbcFooter.vue'
 import SbcFeeSummary from 'sbc-common-components/src/components/SbcFeeSummary.vue'
 import { EntityInfo, Stepper, Actions } from '@/components/common'
 
+// Dialogs
+import { AccountAuthorizationDialog, NameRequestInvalidErrorDialog } from '@/components/dialogs'
+
 // Mixins
-import { DateMixin, FilingTemplateMixin, LegalApiMixin } from '@/mixins'
+import { DateMixin, FilingTemplateMixin, LegalApiMixin, NameXApiMixin } from '@/mixins'
 
 // Interfaces
 import { FilingDataIF, ActionBindingIF, StateModelIF, IncorporationFilingIF } from '@/interfaces'
@@ -70,6 +88,7 @@ import { CertifyStatementResource } from '@/resources'
 
 // Enums
 import { EntityTypes, FilingCodes } from '@/enums'
+import { NameRequestStates } from './enums/nameRequestStates'
 
 @Component({
   components: {
@@ -78,10 +97,12 @@ import { EntityTypes, FilingCodes } from '@/enums'
     SbcFeeSummary,
     EntityInfo,
     Stepper,
-    Actions
+    Actions,
+    NameRequestInvalidErrorDialog,
+    AccountAuthorizationDialog
   }
 })
-export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApiMixin) {
+export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApiMixin, NameXApiMixin) {
   // Global state
   @State stateModel!: StateModelIF
 
@@ -90,26 +111,126 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
   @Action setCurrentDate!: ActionBindingIF
   @Action setCertifyStatementResource!: ActionBindingIF
   @Action setNameRequestState!: ActionBindingIF
+  @Action setAuthRoles: ActionBindingIF
 
   // Local Properties
   private filingData: Array<FilingDataIF> = []
   private draftFiling: IncorporationFilingIF
+  private isDraft: boolean = false
+  private accountAuthorizationErrorDialog: boolean = false
+  private nameRequestInvalidErrorDialog: boolean = false
+  private nameRequestInvalidType: string = ''
+  private evaluatingPreconditions: boolean = true
 
   private async created (): Promise<any> {
-    // Mock the nrNumber and Data:
-    this.setNameRequestState({ nrNumber: 'NR7654560', entityType: 'BC' })
+    // Mock the nrNumber and Data
+    const nameRequest = await this.evaluateNRPreconditions()
+    if (nameRequest && nameRequest.nrNum && nameRequest.isConsumable) {
+      // TODO: Handling different NR Formats
+      // Will probably change once we proxy through legal API with a consistent format
+      this.setNameRequestState({ nrNumber: nameRequest.nrNum.replace('NR ', ''), entityType: 'BC', filingId: null })
+      this.setCurrentDate(this.dateToUsableString(new Date()))
 
-    this.setCurrentDate(this.dateToUsableString(new Date()))
+      try {
+        // Retrieve draft filing if it exists for the nrNumber specified
+        this.draftFiling = await this.fetchDraft()
 
-    try {
-      // Retrieve draft filing if it exists for the nrNumber specified
-      this.draftFiling = await this.fetchDraft()
+        // Parse the draft data into the store if it exists
+        this.draftFiling && this.parseDraft(this.draftFiling)
 
-      // Parse the draft data into the store if it exists
-      this.draftFiling && this.parseDraft(this.draftFiling)
-    } catch (e) {
-      // TODO: Catch a flag from the api, if there is an error to be handled.
+        // Inform the router view we are resuming a draft and to update ui
+        this.isDraft = true
+      } catch (e) {
+        // TODO: Catch a flag from the api, if there is an error to be handled.
+      }
     }
+    this.evaluatingPreconditions = false
+  }
+
+  /**
+   * Redirect to business URL
+   */
+  private redirectToBusinessUrl () : void {
+    const businessUrl: string = sessionStorage.getItem('BUSINESSES_URL') || ''
+    window.location.assign(businessUrl)
+  }
+
+  private authAPIURL () {
+    return sessionStorage.getItem('AUTH_API_URL')
+  }
+  /**
+   * Fetch Authorizations by NR number
+   */
+  private getNRAuthorizations (nrNumber) {
+    const url = nrNumber + '/authorizations'
+    const config = {
+      baseURL: this.authAPIURL() + 'entities/'
+    }
+    return axios.get(url, config)
+  }
+
+  private storeAuthRoles (response) {
+    // NB: roles array may contain 'view', 'edit' or nothing
+    const authRoles = response && response.data && response.data.roles
+    if (authRoles && authRoles.length > 0) {
+      this.setAuthRoles(authRoles)
+    } else {
+      throw new Error('Invalid auth roles')
+    }
+  }
+
+  /**
+   * Evaluate Name Request pre conditions
+   */
+  private async evaluateNRPreconditions () {
+    // Clear error conditions in the event this is invoked more than one time (retry)
+    this.nameRequestInvalidErrorDialog = false
+    this.accountAuthorizationErrorDialog = false
+
+    const queryNrNumber : string = this.$route.query.nrNumber as string
+    // Name request not found, show error dialog
+    if (!queryNrNumber) {
+      this.nameRequestInvalidType = NameRequestStates.NOTFOUND
+      this.nameRequestInvalidErrorDialog = true
+      return
+    }
+
+    return this.getNRAuthorizations(queryNrNumber).then(async data => {
+      this.storeAuthRoles(data) // throws if no role
+      await this.intializeNameXToken() // TODO : temporary token retrieval code
+      const nrResponse = await this.queryNameRequest(queryNrNumber)
+
+      // NR not found
+      if (!nrResponse) {
+        this.nameRequestInvalidType = NameRequestStates.NOTFOUND
+        this.nameRequestInvalidErrorDialog = true
+      }
+      const nr = this.isNRConsumable(nrResponse)
+      // Show error dialogs if the NR is not in a consumable state
+      if (!nr.isConsumable) {
+        nrResponse.isConsumable = false
+        if (nr.expired) {
+          // NR Expired
+          this.nameRequestInvalidType = NameRequestStates.EXPIRED
+          this.nameRequestInvalidErrorDialog = true
+        } else if (!nr.approved) {
+          // NR not in an approve state
+          this.nameRequestInvalidType = NameRequestStates.NOTAPPROVED
+          this.nameRequestInvalidErrorDialog = true
+        } else if (nr.approved) {
+          // NR is approved, but has been consumed
+          this.nameRequestInvalidType = NameRequestStates.CONSUMED
+          this.nameRequestInvalidErrorDialog = true
+        }
+      } else {
+        nrResponse.isConsumable = true
+      }
+      return nrResponse
+    }).catch(error => {
+      // eslint-disable-next-line no-console
+      console.error(error)
+      this.accountAuthorizationErrorDialog = true
+    })
   }
 
   /**
@@ -147,6 +268,10 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
   // FOR FUTURE USE TO SUPPORT EXIT IN ERROR DIALOGS
   private onClickExit (): void {
     (this.$refs.form as Vue & { logout: () => void }).logout()
+  }
+
+  private nrOkay () : void {
+    this.nameRequestInvalidErrorDialog = false
   }
 }
 </script>
