@@ -1,6 +1,7 @@
 // Utils Interfaces
 export * from './resource-interfaces/resource-interface'
 export * from './utils-interfaces/utils-interface'
+export * from './utils-interfaces/form-interface'
 
 // Store Interfaces
 export * from './store-interfaces/state-interface'
@@ -17,6 +18,8 @@ export * from './filing-interfaces/filing-interface'
 export * from './stepper-interfaces/DefineCompany/business-contact-interface'
 export * from './stepper-interfaces/DefineCompany/address-interface'
 export * from './stepper-interfaces/DefineCompany/define-company-interface'
+export * from './stepper-interfaces/AddPeopleAndRole/org-person-interface'
+export * from './stepper-interfaces/AddPeopleAndRole/add-people-role-interface'
 export * from './stepper-interfaces/ReviewConfirm/certify-interface'
 
 // Others

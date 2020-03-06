@@ -1,4 +1,5 @@
 import { CertifyIF, DefineCompanyIF, NameRequestIF, TombStoneIF } from '@/interfaces'
+import { PeopleAndRoleIF } from '../stepper-interfaces/AddPeopleAndRole/add-people-role-interface'
 
 // State model example
 export interface StateModelIF {
@@ -11,4 +12,5 @@ export interface StateModelIF {
   isSavingResuming: boolean
   isFilingPaying: boolean
   defineCompanyStep: DefineCompanyIF
+  addPeopleAndRoleStep: PeopleAndRoleIF
 }

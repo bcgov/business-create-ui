@@ -28,5 +28,9 @@ export const stateModel: StateModelIF = {
       phoneExtension: ''
     },
     officeAddresses: {}
+  },
+  addPeopleAndRoleStep: {
+    valid: false,
+    people: []
   }
 }

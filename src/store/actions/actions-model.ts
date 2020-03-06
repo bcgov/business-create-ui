@@ -59,3 +59,11 @@ export const setNameRequestState: ActionIF = ({ commit }, nameRequestState): voi
 export const setFilingId: ActionIF = ({ commit }, filingId): void => {
   commit('mutateFilingId', filingId)
 }
+
+export const setPersonList = ({ commit }, people) => {
+  commit('mutatePersonList', people)
+}
+
+export const setAddPeopleAndRoleStepValidity = ({ commit }, validity) => {
+  commit('mutateAddPeopleAndRoleStepValidity', validity)
+}

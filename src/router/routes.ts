@@ -3,6 +3,7 @@
 // import StateExample from '@/views/StateExample.vue'
 import DefineCompany from '@/views/DefineCompany.vue'
 import ReviewConfirm from '@/views/ReviewConfirm.vue'
+import AddPeopleAndRoles from '@/views/AddPeopleAndRoles.vue'
 
 export const routes = [
   {
@@ -40,6 +41,16 @@ export const routes = [
     meta: {
       step: 1,
       label: 'Define Your Company',
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/add-people-roles',
+    name: 'add-people-roles',
+    component: AddPeopleAndRoles,
+    meta: {
+      step: 2,
+      label: 'Add People and Roles',
       requiresAuth: true
     }
   },

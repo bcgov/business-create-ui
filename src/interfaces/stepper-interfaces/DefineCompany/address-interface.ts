@@ -10,7 +10,7 @@ export interface AddressIF {
 
 // Interface to define the joint base address response
 export interface BaseAddressObjIF {
-    deliveryAddress: AddressIF;
+    deliveryAddress?: AddressIF;
     mailingAddress: AddressIF;
   }
 
@@ -18,4 +18,8 @@ export interface BaseAddressObjIF {
 export interface IncorporationAddressIf {
     registeredOffice: BaseAddressObjIF;
     recordsOffice?: BaseAddressObjIF;
-  }
+}
+
+export interface BaseAddressType extends Vue {
+  $refs: any;
+}
