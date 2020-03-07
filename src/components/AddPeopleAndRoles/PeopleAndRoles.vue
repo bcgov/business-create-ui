@@ -6,9 +6,18 @@
     </p>
     Your application must include the following:
     <ul>
-      <li><v-icon color='blue' v-if="hasRole('Completing Party')">mdi-check</v-icon>The Completing Party</li>
-      <li><v-icon color='blue' v-if="hasRole('Incorporator')">mdi-check</v-icon>At least one Incorporator</li>
-      <li><v-icon color='blue' v-if="hasRole('Director')">mdi-check</v-icon>At least one Director</li>
+      <li>
+        <v-icon color='blue' v-if="hasRole('Completing Party')">mdi-check</v-icon>
+        <span class='chk-list-item-txt'>The Completing Party</span>
+      </li>
+      <li>
+        <v-icon color='blue' v-if="hasRole('Incorporator')">mdi-check</v-icon>
+        <span class='chk-list-item-txt'>At least one Incorporator</span>
+      </li>
+      <li>
+        <v-icon color='blue' v-if="hasRole('Director')">mdi-check</v-icon>
+        <span class='chk-list-item-txt'>At least one Director</span>
+      </li>
     </ul>
     <div class="btn-panel" v-show="orgPersonList.length === 0">
       <v-btn outlined color="primary" @click="addOrgPerson(['Completing Party'], 'Person')"
@@ -167,7 +176,16 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
   margin-top: 1rem;
   padding: 1.25rem;
 }
-ul, p {
+ul {
+  padding-top: 0.5rem;
+  list-style: none;
+  margin-left: 0;
+  padding-left: 1rem
+}
+li {
+  padding-top:0.25rem
+}
+p{
   padding-top: 0.5rem;
 }
 .btn-panel {
@@ -181,5 +199,8 @@ ul, p {
 }
 .spacedButton {
   margin-left: 0.5rem
+}
+.chk-list-item-txt {
+  margin-left: 0.5rem;
 }
 </style>
