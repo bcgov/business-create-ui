@@ -53,7 +53,7 @@
     </v-card>
 
     <v-card flat class="people-roles-container" v-if="orgPersonList.length > 0">
-      <ListPeopleAndRoles v-if="orgPersonList.length > 0"/>
+      <ListPeopleAndRoles v-if="orgPersonList.length > 0" :personList="orgPersonList"/>
     </v-card>
   </div>
 </template>
@@ -174,7 +174,7 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
 }
 .people-roles-container {
   margin-top: 1rem;
-  padding: 1.25rem;
+  padding: .5rem;
 }
 ul {
   padding-top: 0.5rem;
