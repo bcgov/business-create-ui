@@ -3,9 +3,10 @@
 
       <!-- List Headers -->
       <v-row class="people-roles-header list-item__subtitle" no-gutters>
-        <v-col v-for="(title, index) in headers" :key="index">
+        <v-col v-for="(title, index) in tableHeaders" :key="index">
           <span>{{title}}</span>
         </v-col>
+        <!-- Spacer Column -->
         <v-col sm="1"></v-col>
       </v-row>
 
@@ -15,8 +16,13 @@
         v-for="(person, index) in personList"
         :key="index"
         no-gutters>
-        <v-col>
-        <span><strong>{{person.firstName}} {{person.middleName}} {{person.lastName}}</strong></span>
+        <v-col class="text-truncate">
+          <v-tooltip bottom :disabled="formatName(person).length < 25" color="primary">
+            <template v-slot:activator="{ on }">
+              <span v-on="on" class="people-roles-title"><strong>{{formatName(person)}}</strong></span>
+            </template>
+            <span>{{formatName(person)}}</span>
+          </v-tooltip>
         </v-col>
         <v-col>
           <base-address :address="person.address.mailingAddress" />
@@ -52,7 +58,7 @@
                 </template>
                 <v-list class="actions__more-actions">
                   <v-list-item @click="doSomething(person.id)">
-                    <v-list-item-title>Delete</v-list-item-title>
+                    <v-list-item-title><v-icon>mdi-delete</v-icon>Remove</v-list-item-title>
                   </v-list-item>
                 </v-list>
               </v-menu>
@@ -87,7 +93,14 @@ export default class ListPeopleAndRoles extends Vue {
   @Prop({ default: '' })
   private personList: Array<OrgPersonIF>
 
-  private headers = ['Name', 'Mailing Address', 'Delivery Address', 'Roles']
+  private isTrue = true
+
+  private tableHeaders: Array<string> = ['Name', 'Mailing Address', 'Delivery Address', 'Roles']
+
+  private formatName (person: any): string {
+    return person.orgName ? person.orgName
+      : `${person.firstName} ${person.middleName || ''} ${person.lastName}`
+  }
 
   private doSomething (id: number): void {
     console.log('Doing Something with' + id)
@@ -109,6 +122,10 @@ export default class ListPeopleAndRoles extends Vue {
   padding-top: .5rem;
   border-top: 1px solid #d1d1d1;
   font-size: 14px;
+
+  .people-roles-title {
+    color: #474747;
+  }
 
   .actions {
     position: absolute;
