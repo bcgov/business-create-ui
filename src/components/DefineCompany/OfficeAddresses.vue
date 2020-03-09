@@ -340,6 +340,7 @@ export default class OfficeAddresses extends Mixins(CommonMixin, EntityFilterMix
         }
         break
       default:
+        // eslint-disable-next-line no-console
         console.log(`Error: Address- ${addressChangedEntity} not found`)
     }
     this.emitAddresses()
@@ -365,6 +366,7 @@ export default class OfficeAddresses extends Mixins(CommonMixin, EntityFilterMix
         this.recMailingAddressValid = isValid
         break
       default:
+        // eslint-disable-next-line no-console
         console.log(`Error: Address- ${addressToValidate} not found`)
     }
     this.emitValid()
