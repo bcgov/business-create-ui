@@ -71,8 +71,8 @@ export default class Stepper extends Vue {
       id: 'step-2-btn',
       icon: 'mdi-account-multiple-plus',
       text: 'Add People\nand Roles',
-      to: '/people-roles',
-      disabled: true,
+      to: '/add-people-roles',
+      disabled: this.isBusySaving,
       valid: this.step2Valid
     },
     {

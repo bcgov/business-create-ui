@@ -94,7 +94,7 @@ export const isShowFilePayBtn = (state: any): boolean => {
  */
 export const isEnableFilePayBtn = (state: any): boolean => {
   const step1Valid = state.stateModel.defineCompanyStep.valid
-  const step2Valid = true // FOR TESTING ONLY
+  const step2Valid = state.stateModel.addPeopleAndRoleStep.valid // FOR TESTING ONLY
   const step3Valid = true // FOR TESTING ONLY
   const step4Valid = true // FOR TESTING ONLY
   const step5Valid = true // FOR TESTING ONLY
