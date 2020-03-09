@@ -49,11 +49,13 @@
       :activeIndex="activeIndex"
       :nextId="nextId"
       @addEditPerson="onAddEditOrgPerson($event)"
-      @resetEvent="onResetEvent()" />
+      @removePersonEvent="onRemovePerson($event)"
+      @resetEvent="resetData()" />
     </v-card>
 
     <v-card flat class="people-roles-container" v-if="orgPersonList.length > 0">
-      <ListPeopleAndRoles v-if="orgPersonList.length > 0" :personList="orgPersonList"/>
+      <ListPeopleAndRoles v-if="orgPersonList.length > 0" :personList="orgPersonList"
+        @editPerson="editOrgPerson($event)"/>
     </v-card>
   </div>
 </template>
@@ -97,6 +99,7 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
   readonly orgPersonList: OrgPersonIF[]
 
   @Action setOrgPersonList!: ActionBindingIF
+  @Action setAddPeopleAndRoleStepValidity!: ActionBindingIF
 
   private newOrgPerson: OrgPersonIF = {
     id: null,
@@ -133,7 +136,15 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
     this.currentOrgPerson.roles = rolesToInitialize
     this.currentOrgPerson.type = type
     this.activeIndex = -1
-    this.nextId = this.orgPersonList.length + 1
+    this.nextId = this.orgPersonList.length
+    this.addEditInProgress = true
+    this.showOrgPersonForm = true
+  }
+
+  private editOrgPerson (index: number) : void {
+    console.log('Edit Person Index ' + index)
+    this.currentOrgPerson = this.orgPersonList[index]
+    this.activeIndex = index
     this.addEditInProgress = true
     this.showOrgPersonForm = true
   }
@@ -148,11 +159,36 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
       newList.splice(this.activeIndex, 1, person)
     }
     this.setOrgPersonList(newList)
-    // Call validate here to check over al1 rules like the minimum number
-    // of directors and other rules are met. Also set the step validity in that method
+    this.setAddPeopleAndRoleStepValidity(this.hasValidRoles())
   }
 
-  private onResetEvent (): void {
+  private onRemovePerson (index: Number) : void {
+    console.log('Remove Person Index ' + index)
+    let newList: OrgPersonIF[] = Object.assign([], this.orgPersonList)
+    if (this.activeIndex > -1) {
+      newList.splice(this.activeIndex, 1)
+    }
+    this.setOrgPersonList(newList)
+    this.resetData()
+    this.setAddPeopleAndRoleStepValidity(this.hasValidRoles())
+  }
+
+  private hasValidRoles () : boolean {
+    const numOfDirector: number =
+    this.orgPersonList.filter(people => people.roles.includes('Director')).length
+    const numOfIncorporator: number =
+    this.orgPersonList.filter(people => people.roles.includes('Incorporator')).length
+    const numOfCompletingParty: number =
+    this.orgPersonList.filter(people => people.roles.includes('Incorporator')).length
+
+    if (this.entityFilter(EntityTypes.BCOMP)) {
+      return numOfCompletingParty === 1 && numOfIncorporator >= 1 && numOfDirector >= 1
+    } else if (this.entityFilter(EntityTypes.COOP)) {
+      return numOfCompletingParty === 1 && numOfIncorporator >= 3 && numOfDirector >= 3
+    }
+  }
+
+  private resetData (): void {
     this.currentOrgPerson = null
     this.activeIndex = -1
     this.addEditInProgress = false
@@ -174,7 +210,7 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
 }
 .people-roles-container {
   margin-top: 1rem;
-  padding: .5rem;
+  padding: 1.25rem;
 }
 ul {
   padding-top: 0.5rem;

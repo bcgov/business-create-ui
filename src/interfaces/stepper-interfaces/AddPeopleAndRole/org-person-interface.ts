@@ -8,5 +8,5 @@ export interface OrgPersonIF {
     lastName: string;
     orgName: string
     roles: string[];
-    address: BaseAddressObjIF | {};
+    address: BaseAddressObjIF;
 }

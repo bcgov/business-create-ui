@@ -3,15 +3,20 @@
     <ul class="list add-person">
       <li class="add-person-container">
         <div class="meta-container">
-          <label class="add-person-header" v-if="isPerson">Add Person</label>
-          <label class="add-person-header" v-if="isOrg">Add Corporation or Firm</label>
+          <label class="add-person-header" v-if="isPerson">
+            <span v-if="activeIndex===-1">Add Person</span>
+            <span v-else>Edit Person</span>
+          </label>
+          <label class="add-person-header" v-if="isOrg">
+            <span v-if="activeIndex===-1">Add Corporation or Firm</span>
+            <span v-else>Edit Corporation or Firm</span>
+          </label>
           <div class="meta-container__inner">
             <v-form
               ref="addPersonOrgForm"
               class="appoint-form"
               v-model="addPersonOrgFormValid"
-              v-on:submit.prevent="addPerson"
-              lazy-validation>
+              v-on:submit.prevent="addPerson">
               <label class="sub-header" v-if="isPerson">Person's Name</label>
               <label class="sub-header" v-if="isOrg">Corporation or Firm Name</label>
               <div class="form__row three-column" v-if="isPerson">
@@ -53,11 +58,14 @@
               <label class="sub-header">Roles</label>
               <v-row>
                 <v-col cols="4" v-if="isPerson">
-                  <v-checkbox v-model="isCompletingParty" label="Completing Party"/>
+                  <v-checkbox v-model="isCompletingParty" label="Completing Party"
+                  :disabled="isRoleLocked('Completing Party')"
+                  v-bind:class="{'highlightedRole': isRoleLocked('Completing Party')}"/>
                 </v-col>
                 <v-col cols="4">
                   <v-checkbox v-model="isIncorporator" label="Incorporator"
-                  :disabled="isOrg"/>
+                  :disabled="isRoleLocked('Incorporator')"
+                  v-bind:class="{'highlightedRole': isRoleLocked('Incorporator')}"/>
                 </v-col>
                 <v-col cols="4" v-if="isPerson">
                   <v-checkbox v-model="isDirector" label="Director"/>
@@ -70,7 +78,8 @@
                   ref="mailingAddressNew"
                   :editing="true"
                   :schema="personAddressSchema"
-                  @update:address="updateMailingAddress"/>
+                  @update:address="updateMailingAddress"
+                  @valid="updateMailingAddressValidity"/>
               </div>
 
               <div class="form__row" v-if="isDirector">
@@ -85,14 +94,16 @@
                       ref="deliveryAddressNew"
                       :editing="true"
                       :schema="personAddressSchema"
-                      @update:address="updateDeliveryAddress"/>
+                      @update:address="updateDeliveryAddress"
+                      @valid="updateDeliveryAddressValidity"/>
                   </div>
                 </div>
               </div>
 
               <div class="form__row form__btns">
-                <v-btn color="error" disabled>Remove</v-btn>
-                <v-btn class="form-primary-btn" @click="validateaddPersonOrgForm()" color="primary">Done</v-btn>
+                <v-btn color="error" :disabled="activeIndex===-1" @click="removePerson()">Remove</v-btn>
+                <v-btn class="form-primary-btn" @click="validateAddPersonOrgForm()" color="primary"
+                :disabled="!isFormValid()">Done</v-btn>
                 <v-btn class="form-cancel-btn" @click="resetAddPersonData()">Cancel</v-btn>
               </div>
             </v-form>
@@ -149,6 +160,8 @@ export default class OrgPerson extends Vue {
   private isIncorporator: boolean = false
   private isDirector: boolean = false
   private addPersonOrgFormValid: boolean = true
+  private mailingAddressValid: boolean = false
+  private deliveryAddressValid: boolean = false
 
   // Rules
   private readonly firstNameRules: Array<Function> = [
@@ -180,9 +193,14 @@ export default class OrgPerson extends Vue {
       this.isDirector = this.orgPerson.roles.includes('Director')
       this.isIncorporator = this.orgPerson.roles.includes('Incorporator')
       this.isCompletingParty = this.orgPerson.roles.includes('Completing Party')
+      this.inProgressMailingAddress = this.orgPerson.address.mailingAddress
+      if (this.isDirector) {
+        this.inProgressDeliveryAddress = this.orgPerson.address.deliveryAddress
+      }
     }
   }
 
+  // Event Handlers
   private updateMailingAddress (val): void {
     this.inProgressMailingAddress = val
   }
@@ -191,23 +209,29 @@ export default class OrgPerson extends Vue {
     this.inProgressDeliveryAddress = val
   }
 
-  private validateaddPersonOrgForm (): void {
-    var addPersonOrgFormIsValid = this.$refs.addPersonOrgForm.validate()
-    var mailingAddressFormIsValid = this.$refs.mailingAddressNew.$refs.addressForm.validate()
-    if (this.$refs.deliveryAddressNew) {
-      var deliveryAddressFormIsValid = this.$refs.deliveryAddressNew.$refs.addressForm.validate()
-      if (addPersonOrgFormIsValid && mailingAddressFormIsValid && deliveryAddressFormIsValid) {
-        const person: OrgPersonIF = this.addPerson()
-        this.resetAddPersonData()
-        this.emitPersonInfo(person)
-      }
-    } else {
-      if (addPersonOrgFormIsValid && mailingAddressFormIsValid) {
-        const person: OrgPersonIF = this.addPerson()
-        this.resetAddPersonData()
-        this.emitPersonInfo(person)
-      }
+  private updateMailingAddressValidity (val: boolean): void {
+    this.mailingAddressValid = val
+  }
+
+  private updateDeliveryAddressValidity (val): void {
+    this.deliveryAddressValid = val
+  }
+
+  // Methods
+  private validateAddPersonOrgForm (): void {
+    if (this.isFormValid()) {
+      const person: OrgPersonIF = this.addPerson()
+      this.resetAddPersonData()
+      this.emitPersonInfo(person)
     }
+  }
+
+  private isFormValid () : boolean {
+    let isFormValid: boolean = this.addPersonOrgFormValid && this.mailingAddressValid
+    if (this.isDirector && !this.inheritMailingAddress) {
+      isFormValid = isFormValid && this.deliveryAddressValid
+    }
+    return isFormValid
   }
 
   /**
@@ -248,9 +272,6 @@ export default class OrgPerson extends Vue {
     return roles
   }
 
-  /**
-   * Reset the add person form and other attributes
-   */
   private resetAddPersonData (): void {
     this.$refs.addPersonOrgForm.reset()
     this.$refs.mailingAddressNew.$refs.addressForm.reset()
@@ -259,6 +280,14 @@ export default class OrgPerson extends Vue {
     }
 
     this.emitResetEvent()
+  }
+
+  private isRoleLocked (role: string) : boolean {
+    return this.orgPerson.roles.includes(role) && this.activeIndex === -1
+  }
+
+  private removePerson (): void {
+    this.emitRemovePersonEvent(this.activeIndex)
   }
 
   get isPerson (): boolean {
@@ -271,10 +300,13 @@ export default class OrgPerson extends Vue {
 
   // Events
   @Emit('addEditPerson')
-  private emitPersonInfo (personInfo : OrgPersonIF): void { }
+  private emitPersonInfo (personInfo: OrgPersonIF): void { }
 
   @Emit('resetEvent')
   private emitResetEvent (): void { }
+
+  @Emit('removePersonEvent')
+  private emitRemovePersonEvent (activeIndex: Number): void { }
 }
 </script>
 
@@ -406,5 +438,16 @@ li {
       width: 8rem;
     }
   }
+}
+
+.highlightedRole {
+    opacity: 0.5;
+    mix-blend-mode: normal;
+    border-radius: 2px;
+    border-color: rgb(140, 140, 140);
+    background-color: rgb(55, 164, 71);
+    color: rgb(255, 255, 255) s!important;
+    font-weight: bold;
+    margin-bottom: 1rem;
 }
 </style>

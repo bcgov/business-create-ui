@@ -66,7 +66,7 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Vue, Prop } from 'vue-property-decorator'
+import { Component, Vue, Prop, Emit } from 'vue-property-decorator'
 import { State } from 'vuex-class'
 
 // Components
@@ -90,8 +90,11 @@ export default class ListPeopleAndRoles extends Vue {
   private headers = ['Name', 'Mailing Address', 'Delivery Address', 'Roles']
 
   private doSomething (id: number): void {
-    console.log('Doing Something with' + id)
+    this.emitPersonInfo(id)
   }
+
+  @Emit('editPerson')
+  private emitPersonInfo (index: number): void { }
 }
 </script>
 
