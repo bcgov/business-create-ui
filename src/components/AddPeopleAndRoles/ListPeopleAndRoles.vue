@@ -8,7 +8,7 @@
       </div>
 
       <!-- Summary Warning -->
-      <div v-if="isSummary && true" class="defineCompanyStepErrorMessage">
+      <div v-if="isSummary && showErrorSummary" class="defineCompanyStepErrorMessage">
       <span>
         <v-icon color="#1976d2">mdi-information-outline</v-icon>
         This step is not complete.
@@ -111,6 +111,9 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
   // Store Properties
   @Prop({ default: '' })
   private personList: Array<OrgPersonIF>
+
+   @Prop()
+  private showErrorSummary: boolean
 
   @Prop({ default: false })
   private isSummary: boolean
