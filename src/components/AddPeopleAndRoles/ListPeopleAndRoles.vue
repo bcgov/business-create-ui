@@ -1,96 +1,98 @@
 <template>
   <div id="people-roles-list">
     <v-card flat>
-      <!-- Summary Header -->
-      <div class="people-roles-summary-header" v-if="isSummary">
-        <v-icon>mdi-account</v-icon>
-        <label class="people-roles-title"><strong>People and Roles</strong></label>
+
+      <!-- Summary Section -->
+      <div v-if="isSummary">
+        <!-- Summary Header -->
+        <div class="people-roles-summary-header" >
+          <v-icon>mdi-account</v-icon>
+          <label class="people-roles-title"><strong>People and Roles</strong></label>
+        </div>
+
+        <!-- Summary Warning -->
+        <div v-if="!isValid" class="people-roles-invalid-message">
+          <span>
+            <v-icon color="#1976d2">mdi-information-outline</v-icon>
+            This step is not complete.
+            <router-link :to="{ path: '/add-people-roles', query: { showErrors: true } }">
+              Return to this step to complete it.
+            </router-link>
+          </span>
+        </div>
       </div>
 
-      <!-- Summary Warning -->
-      <div v-if="isSummary && showErrorSummary" class="defineCompanyStepErrorMessage">
-      <span>
-        <v-icon color="#1976d2">mdi-information-outline</v-icon>
-        This step is not complete.
-        <router-link :to="{ path: '/add-people-roles', query: { showErrors: true } }">
-          Return to this step to complete it.
-        </router-link>
-      </span>
-      </div>
-
-      <!-- List Headers -->
-      <v-row class="people-roles-header list-item__subtitle" no-gutters>
-        <v-col v-for="(title, index) in tableHeaders" :key="index">
-          <span>{{title}}</span>
-        </v-col>
-        <!-- Spacer Column -->
-        <v-col sm="1" v-if="!isSummary"></v-col>
-      </v-row>
-
-      <!-- List Content -->
-      <v-row
-        class="people-roles-content"
-        :class="{ 'list-item__subtitle': !isSummary }"
-        v-for="(person, index) in personList"
-        :key="index"
-        no-gutters>
-        <v-col class="text-truncate">
-          <v-tooltip top :disabled="formatName(person).length < 25" color="primary">
-            <template v-slot:activator="{ on }">
-              <span v-on="on" class="people-roles-title"><strong>{{formatName(person)}}</strong></span>
-            </template>
-            <span>{{formatName(person)}}</span>
-          </v-tooltip>
-        </v-col>
-        <v-col>
-          <base-address :address="person.address.mailingAddress" />
-        </v-col>
-        <v-col>
-          <p v-if="isSame(person.address.mailingAddress, person.address.deliveryAddress)">Same as Mailing Address</p>
-          <base-address v-else :address="person.address.deliveryAddress"/>
-        </v-col>
-        <v-col>
-          <div v-if="person.roles.length>0">
-            <v-col v-for="(role, index) in person.roles" :key="index" class="col-roles">
-            <span>{{role}}</span>
+      <!-- List Display Section -->
+      <div v-if="isValid || !isSummary">
+        <!-- List Headers -->
+        <v-row class="people-roles-header list-item__subtitle" no-gutters>
+          <v-col v-for="(title, index) in tableHeaders" :key="index">
+            <span>{{title}}</span>
           </v-col>
-          </div>
-          <div v-else>
-             <v-icon color="rgb(232, 156, 48)" small>mdi-alert</v-icon>
-             <span class="warningText">Add Role</span>
-          </div>
-        </v-col>
+          <!-- Spacer Column -->
+          <v-col sm="1" v-if="!isSummary"></v-col>
+        </v-row>
 
-        <!-- Actions Column -->
-        <v-col sm="1" v-if="!isSummary">
-          <div class="actions">
-            <span class="edit-action">
-              <v-btn small text color="primary" :disabled="false"
-                :id="'person-' + person.id + '-change-btn'"
-                @click="emitPersonInfo(index)">
-                <v-icon small>mdi-pencil</v-icon>
-                <span>Edit</span>
-              </v-btn>
-            </span>
+        <!-- List Content -->
+        <v-row
+          class="people-roles-content"
+          :class="{ 'list-item__subtitle': !isSummary }"
+          v-for="(person, index) in personList"
+          :key="index"
+          no-gutters>
+          <v-col class="text-truncate">
+            <v-tooltip top :disabled="formatName(person).length < 25" color="primary">
+              <template v-slot:activator="{ on }">
+                <span v-on="on" class="people-roles-title"><strong>{{formatName(person)}}</strong></span>
+              </template>
+              <span>{{formatName(person)}}</span>
+            </v-tooltip>
+          </v-col>
+          <v-col>
+            <base-address :address="person.address.mailingAddress" />
+          </v-col>
+          <v-col>
+            <p v-if="isSame(person.address.mailingAddress, person.address.deliveryAddress)">Same as Mailing Address</p>
+            <base-address v-else :address="person.address.deliveryAddress"/>
+          </v-col>
+          <v-col>
+            <v-col v-for="(role, index) in person.roles" :key="index" class="col-roles">
+              <span>{{role}}</span>
+            </v-col>
+          </v-col>
 
-            <!-- more actions menu -->
-            <span>
-              <v-menu offset-y>
-                <template v-slot:activator="{ on }">
-                  <v-btn text small color="primary" class="actions__more-actions__btn" v-on="on">
-                    <v-icon>mdi-menu-down</v-icon>
-                  </v-btn>
-                </template>
-                <v-list class="actions__more-actions">
-                  <v-list-item @click="removePerson(person.id)">
-                    <v-list-item-title><v-icon>mdi-delete</v-icon>Remove</v-list-item-title>
-                  </v-list-item>
-                </v-list>
-              </v-menu>
-            </span>
-          </div>
-        </v-col>
-      </v-row>
+          <!-- Actions Column -->
+          <v-col sm="1" v-if="!isSummary">
+            <div class="actions">
+              <span class="edit-action">
+                <v-btn small text color="primary" :disabled="false"
+                  :id="'person-' + person.id + '-change-btn'"
+                  @click="doSomething(person.id)"
+                >
+                  <v-icon small>mdi-pencil</v-icon>
+                  <span>Edit</span>
+                </v-btn>
+              </span>
+
+              <!-- more actions menu -->
+              <span>
+                <v-menu offset-y>
+                  <template v-slot:activator="{ on }">
+                    <v-btn text small color="primary" class="actions__more-actions__btn" v-on="on">
+                      <v-icon>mdi-menu-down</v-icon>
+                    </v-btn>
+                  </template>
+                  <v-list class="actions__more-actions">
+                    <v-list-item @click="doSomething(person.id)">
+                      <v-list-item-title><v-icon>mdi-delete</v-icon>Remove</v-list-item-title>
+                    </v-list-item>
+                  </v-list>
+                </v-menu>
+              </span>
+            </div>
+          </v-col>
+        </v-row>
+      </div>
     </v-card>
   </div>
 </template>
@@ -124,6 +126,9 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
   @Prop({ default: false })
   private isSummary: boolean
 
+  @Prop({ default: false })
+  private isValid: boolean
+
   // Local Properties
   private tableHeaders: Array<string> = ['Name', 'Mailing Address', 'Delivery Address', 'Roles']
 
@@ -154,9 +159,8 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
   padding: 1.25rem;
 }
 
-.defineCompanyStepErrorMessage {
-  padding-top: 1.25rem;
-  padding-left: 1.25rem;
+.people-roles-invalid-message {
+  padding: 1.25rem;
   font-weight: bold;
   color: #1976d2;
 }
