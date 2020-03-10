@@ -52,8 +52,8 @@
       @resetEvent="onResetEvent()" />
     </v-card>
 
-    <v-card flat class="people-roles-container" v-if="orgPersonList.length > 0">
-      <ListPeopleAndRoles v-if="orgPersonList.length > 0" :personList="orgPersonList"/>
+    <v-card flat v-if="orgPersonList.length > 0">
+      <ListPeopleAndRoles v-if="orgPersonList.length > 0" :personList="orgPersonList" :isSummary="false"/>
     </v-card>
   </div>
 </template>
