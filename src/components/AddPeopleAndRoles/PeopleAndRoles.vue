@@ -55,7 +55,7 @@
 
     <v-card flat class="people-roles-container" v-if="orgPersonList.length > 0" :disabled="showOrgPersonForm">
       <ListPeopleAndRoles v-if="orgPersonList.length > 0" :personList="orgPersonList"
-        @editPerson="editOrgPerson($event)"/>
+        @editPerson="editOrgPerson($event)" :isSummary="false"/>
     </v-card>
   </div>
 </template>
