@@ -71,7 +71,7 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Vue, Prop, Watch, Emit, Mixins } from 'vue-property-decorator'
+import { Component, Prop, Watch, Emit, Mixins } from 'vue-property-decorator'
 import { Action, State } from 'vuex-class'
 
 // Interfaces
