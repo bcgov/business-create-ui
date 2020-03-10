@@ -93,7 +93,7 @@ export default class Stepper extends Vue {
     },
     {
       id: 'step-5-btn',
-      icon: 'mdi-file-document-box-check-outline',
+      icon: 'mdi-text-box-check-outline',
       text: 'Review\nand Confirm',
       to: '/review-confirm',
       disabled: this.isBusySaving,
