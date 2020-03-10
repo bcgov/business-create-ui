@@ -3,15 +3,20 @@
     <ul class="list add-person">
       <li class="add-person-container">
         <div class="meta-container">
-          <label class="add-person-header" v-if="isPerson">Add Person</label>
-          <label class="add-person-header" v-if="isOrg">Add Corporation or Firm</label>
+          <label class="add-person-header" v-if="isPerson">
+            <span v-if="activeIndex===-1">Add Person</span>
+            <span v-else>Edit Person</span>
+          </label>
+          <label class="add-person-header" v-if="isOrg">
+            <span v-if="activeIndex===-1">Add Corporation or Firm</span>
+            <span v-else>Edit Corporation or Firm</span>
+          </label>
           <div class="meta-container__inner">
             <v-form
               ref="addPersonOrgForm"
               class="appoint-form"
               v-model="addPersonOrgFormValid"
-              v-on:submit.prevent="addPerson"
-              lazy-validation>
+              v-on:submit.prevent="addPerson">
               <label class="sub-header" v-if="isPerson">Person's Name</label>
               <label class="sub-header" v-if="isOrg">Corporation or Firm Name</label>
               <div class="form__row three-column" v-if="isPerson">
@@ -53,11 +58,15 @@
               <label class="sub-header">Roles</label>
               <v-row>
                 <v-col cols="4" v-if="isPerson">
-                  <v-checkbox v-model="isCompletingParty" label="Completing Party"/>
+                  <v-checkbox v-model="isCompletingParty" label="Completing Party"
+                  :disabled="isRoleLocked('Completing Party')"
+                  v-bind:class="{'highlightedRole': isRoleLocked('Completing Party')}"/>
                 </v-col>
                 <v-col cols="4">
-                  <v-checkbox v-model="isIncorporator" label="Incorporator"
-                  :disabled="isOrg"/>
+                  <v-checkbox v-model="isIncorporator"
+                  :label="incorporatorLabel"
+                  :disabled="isRoleLocked('Incorporator') || orgPerson.type === 'Org'"
+                  v-bind:class="{'highlightedRole': isRoleLocked('Incorporator') || orgPerson.type === 'Org'}"/>
                 </v-col>
                 <v-col cols="4" v-if="isPerson">
                   <v-checkbox v-model="isDirector" label="Director"/>
@@ -70,7 +79,9 @@
                   ref="mailingAddressNew"
                   :editing="true"
                   :schema="personAddressSchema"
-                  @update:address="updateMailingAddress"/>
+                  :address="inProgressMailingAddress"
+                  @update:address="updateMailingAddress"
+                  @valid="updateMailingAddressValidity"/>
               </div>
 
               <div class="form__row" v-if="isDirector">
@@ -85,15 +96,18 @@
                       ref="deliveryAddressNew"
                       :editing="true"
                       :schema="personAddressSchema"
-                      @update:address="updateDeliveryAddress"/>
+                      :address="inProgressDeliveryAddress"
+                      @update:address="updateDeliveryAddress"
+                      @valid="updateDeliveryAddressValidity"/>
                   </div>
                 </div>
               </div>
 
               <div class="form__row form__btns">
-                <v-btn color="error" disabled>Remove</v-btn>
-                <v-btn class="form-primary-btn" @click="validateaddPersonOrgForm()" color="primary">Done</v-btn>
-                <v-btn class="form-cancel-btn" @click="resetAddPersonData()">Cancel</v-btn>
+                <v-btn color="error" :disabled="activeIndex===-1" @click="removePerson()">Remove</v-btn>
+                <v-btn class="form-primary-btn" @click="validateAddPersonOrgForm()" color="primary"
+                :disabled="!isFormValid()">Done</v-btn>
+                <v-btn class="form-cancel-btn" @click="resetAddPersonData(true)">Cancel</v-btn>
               </div>
             </v-form>
           </div>
@@ -108,10 +122,16 @@
 import { Component, Vue, Prop, Watch, Emit, Mixins } from 'vue-property-decorator'
 
 // Interfaces
-import { OrgPersonIF, BaseAddressObjIF, BaseAddressType, FormType } from '@/interfaces'
+import { OrgPersonIF, BaseAddressObjIF, BaseAddressType, FormType, AddressIF } from '@/interfaces'
 
 // Components
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
+
+// Mixins
+import { EntityFilterMixin, CommonMixin } from '@/mixins'
+
+// Enums
+import { EntityTypes } from '@/enums'
 
 // Schemas
 import { addressSchema } from '@/schemas'
@@ -121,7 +141,7 @@ import { addressSchema } from '@/schemas'
     BaseAddress
   }
 })
-export default class OrgPerson extends Vue {
+export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
    // Refs
    $refs!: {
     addPersonOrgForm: FormType,
@@ -140,15 +160,23 @@ export default class OrgPerson extends Vue {
   private nextId: number
 
   // Data Properties
-  private orgPerson: OrgPersonIF = this.initialValue
-  private inProgressMailingAddress = null
-  private inProgressDeliveryAddress = null
+  private orgPerson: OrgPersonIF
+  private addPersonOrgFormValid: boolean = true
+
+  // Address related properties
+  private inProgressMailingAddress:AddressIF
+  private inProgressDeliveryAddress:AddressIF
   private inheritMailingAddress: boolean = true
   private personAddressSchema: {} = addressSchema
+  private mailingAddressValid: boolean = false
+  private deliveryAddressValid: boolean = false
+
+  // Roles
   private isCompletingParty: boolean = false
   private isIncorporator: boolean = false
   private isDirector: boolean = false
-  private addPersonOrgFormValid: boolean = true
+
+  readonly EntityTypes: {} = EntityTypes
 
   // Rules
   private readonly firstNameRules: Array<Function> = [
@@ -175,14 +203,21 @@ export default class OrgPerson extends Vue {
   ]
 
   // Life cycle methods
-  private mounted (): void {
-    if (this.orgPerson) {
+  private created (): void {
+    if (this.initialValue) {
+      this.orgPerson = { ...this.initialValue }
       this.isDirector = this.orgPerson.roles.includes('Director')
       this.isIncorporator = this.orgPerson.roles.includes('Incorporator')
       this.isCompletingParty = this.orgPerson.roles.includes('Completing Party')
+      this.inProgressMailingAddress = { ...this.orgPerson.address.mailingAddress }
+      if (this.isDirector) {
+        this.inProgressDeliveryAddress = { ...this.orgPerson.address.deliveryAddress }
+        this.inheritMailingAddress = this.isSame(this.inProgressMailingAddress, this.inProgressDeliveryAddress)
+      }
     }
   }
 
+  // Event Handlers
   private updateMailingAddress (val): void {
     this.inProgressMailingAddress = val
   }
@@ -191,23 +226,29 @@ export default class OrgPerson extends Vue {
     this.inProgressDeliveryAddress = val
   }
 
-  private validateaddPersonOrgForm (): void {
-    var addPersonOrgFormIsValid = this.$refs.addPersonOrgForm.validate()
-    var mailingAddressFormIsValid = this.$refs.mailingAddressNew.$refs.addressForm.validate()
-    if (this.$refs.deliveryAddressNew) {
-      var deliveryAddressFormIsValid = this.$refs.deliveryAddressNew.$refs.addressForm.validate()
-      if (addPersonOrgFormIsValid && mailingAddressFormIsValid && deliveryAddressFormIsValid) {
-        const person: OrgPersonIF = this.addPerson()
-        this.resetAddPersonData()
-        this.emitPersonInfo(person)
-      }
-    } else {
-      if (addPersonOrgFormIsValid && mailingAddressFormIsValid) {
-        const person: OrgPersonIF = this.addPerson()
-        this.resetAddPersonData()
-        this.emitPersonInfo(person)
-      }
+  private updateMailingAddressValidity (val: boolean): void {
+    this.mailingAddressValid = val
+  }
+
+  private updateDeliveryAddressValidity (val): void {
+    this.deliveryAddressValid = val
+  }
+
+  // Methods
+  private validateAddPersonOrgForm (): void {
+    if (this.isFormValid()) {
+      const person: OrgPersonIF = this.addPerson()
+      this.emitPersonInfo(person)
+      this.resetAddPersonData(false)
     }
+  }
+
+  private isFormValid () : boolean {
+    let isFormValid: boolean = this.addPersonOrgFormValid && this.mailingAddressValid
+    if (this.isDirector && !this.inheritMailingAddress) {
+      isFormValid = isFormValid && this.deliveryAddressValid
+    }
+    return isFormValid
   }
 
   /**
@@ -215,7 +256,9 @@ export default class OrgPerson extends Vue {
    */
   private addPerson (): OrgPersonIF {
     let personToAdd: OrgPersonIF = { ...this.orgPerson }
-    personToAdd.id = this.nextId
+    if (this.activeIndex === -1) {
+      personToAdd.id = this.nextId
+    }
     personToAdd.address = this.setPersonAddress()
     personToAdd.roles = this.setPersonRoles()
     return personToAdd
@@ -248,17 +291,23 @@ export default class OrgPerson extends Vue {
     return roles
   }
 
-  /**
-   * Reset the add person form and other attributes
-   */
-  private resetAddPersonData (): void {
+  private resetAddPersonData (emitEvent: boolean): void {
     this.$refs.addPersonOrgForm.reset()
     this.$refs.mailingAddressNew.$refs.addressForm.reset()
     if (this.$refs.deliveryAddressNew) {
       this.$refs.deliveryAddressNew.$refs.addressForm.reset()
     }
+    if (emitEvent) {
+      this.emitResetEvent()
+    }
+  }
 
-    this.emitResetEvent()
+  private isRoleLocked (role: string) : boolean {
+    return this.orgPerson.roles.includes(role) && this.activeIndex === -1
+  }
+
+  private removePerson (): void {
+    this.emitRemovePersonEvent(this.activeIndex)
   }
 
   get isPerson (): boolean {
@@ -269,12 +318,19 @@ export default class OrgPerson extends Vue {
     return this.orgPerson && this.orgPerson.type === 'Org'
   }
 
+  get incorporatorLabel () : string {
+    return this.entityFilter(EntityTypes.BCOMP) ? 'Incorporator' : 'Subscriber'
+  }
+
   // Events
   @Emit('addEditPerson')
-  private emitPersonInfo (personInfo : OrgPersonIF): void { }
+  private emitPersonInfo (personInfo: OrgPersonIF): void { }
 
   @Emit('resetEvent')
   private emitResetEvent (): void { }
+
+  @Emit('removePersonEvent')
+  private emitRemovePersonEvent (activeIndex: Number): void { }
 }
 </script>
 
@@ -403,8 +459,19 @@ li {
     > label:first-child {
       flex: 0 0 auto;
       margin-right: 1rem;
-      width: 8rem;
+      width: 10rem;
     }
   }
+}
+
+.highlightedRole {
+    opacity: 0.5;
+    mix-blend-mode: normal;
+    border-radius: 2px;
+    border-color: rgb(140, 140, 140);
+    background-color: rgb(55, 164, 71);
+    color: rgb(255, 255, 255) s!important;
+    font-weight: bold;
+    margin-bottom: 1rem;
 }
 </style>

@@ -61,8 +61,7 @@
             <span class="edit-action">
               <v-btn small text color="primary" :disabled="false"
                 :id="'person-' + person.id + '-change-btn'"
-                @click="doSomething(person.id)"
-              >
+                @click="emitPersonInfo(index)">
                 <v-icon small>mdi-pencil</v-icon>
                 <span>Edit</span>
               </v-btn>
@@ -77,7 +76,7 @@
                   </v-btn>
                 </template>
                 <v-list class="actions__more-actions">
-                  <v-list-item @click="doSomething(person.id)">
+                  <v-list-item @click="removePerson(person.id)">
                     <v-list-item-title><v-icon>mdi-delete</v-icon>Remove</v-list-item-title>
                   </v-list-item>
                 </v-list>
@@ -92,7 +91,7 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Prop, Mixins } from 'vue-property-decorator'
+import { Component, Prop, Mixins, Emit } from 'vue-property-decorator'
 
 // Components
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
@@ -128,9 +127,10 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
       : `${filing.firstName} ${filing.middleName || ''} ${filing.lastName}`
   }
 
-  private doSomething (id: number): void {
-    console.log('Doing Something with' + id)
-  }
+  private removePerson (index: number): void { }
+
+  @Emit('editPerson')
+  private emitPersonInfo (index: number): void { }
 }
 </script>
 
