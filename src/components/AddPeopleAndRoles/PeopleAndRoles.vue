@@ -22,29 +22,29 @@
     <div class="btn-panel" v-show="orgPersonList.length === 0">
       <v-btn outlined color="primary" @click="addOrgPerson(['Completing Party'], 'Person')"
       :disabled="showOrgPersonForm">
-        <v-icon>mdi-account-multiple-plus</v-icon>
+        <v-icon>mdi-account-plus-outline</v-icon>
         <span>Start by Adding the Completing Party</span>
       </v-btn>
     </div>
     <div class="btn-panel"  v-show="orgPersonList.length > 0">
       <v-btn outlined color="primary" @click="addOrgPerson([], 'Person')"
       :disabled="showOrgPersonForm">
-        <v-icon>mdi-account-multiple-plus</v-icon>
+        <v-icon>mdi-account-plus</v-icon>
         <span>Add a Person</span>
       </v-btn>
       <v-btn outlined color="primary" :disabled="showOrgPersonForm" class="spacedButton"
       @click="addOrgPerson(['Incorporator'], 'Org')">
-        <v-icon>mdi-account-multiple-plus</v-icon>
+        <v-icon>mdi-domain-plus</v-icon>
         <span>Add a Corporation or Firm</span>
       </v-btn>
       <v-btn outlined color="primary" @click="addOrgPerson(['Completing Party'], 'Person')"
       :disabled="showOrgPersonForm"  class="spacedButton" v-if="!hasRole('Completing Party')">
-        <v-icon>mdi-account-multiple-plus</v-icon>
+        <v-icon>mdi-account-plus-outline</v-icon>
         <span>Add the Completing Party</span>
       </v-btn>
     </div>
     <v-card flat class="people-roles-container" v-if="showOrgPersonForm">
-      <OrgPerson v-if="showOrgPersonForm"
+      <OrgPerson v-show="showOrgPersonForm"
       :initialValue="currentOrgPerson"
       :activeIndex="activeIndex"
       :nextId="nextId"
@@ -53,7 +53,7 @@
       @resetEvent="resetData()" />
     </v-card>
 
-    <v-card flat class="people-roles-container" v-if="orgPersonList.length > 0">
+    <v-card flat class="people-roles-container" v-if="orgPersonList.length > 0" :disabled="showOrgPersonForm">
       <ListPeopleAndRoles v-if="orgPersonList.length > 0" :personList="orgPersonList"
         @editPerson="editOrgPerson($event)"/>
     </v-card>
@@ -132,7 +132,7 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
 
   // Methods
   private addOrgPerson (rolesToInitialize: string[], type: string): void {
-    this.currentOrgPerson = this.newOrgPerson
+    this.currentOrgPerson = { ...this.newOrgPerson }
     this.currentOrgPerson.roles = rolesToInitialize
     this.currentOrgPerson.type = type
     this.activeIndex = -1
@@ -142,8 +142,7 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
   }
 
   private editOrgPerson (index: number) : void {
-    console.log('Edit Person Index ' + index)
-    this.currentOrgPerson = this.orgPersonList[index]
+    this.currentOrgPerson = { ...this.orgPersonList[index] }
     this.activeIndex = index
     this.addEditInProgress = true
     this.showOrgPersonForm = true
@@ -160,17 +159,17 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
     }
     this.setOrgPersonList(newList)
     this.setAddPeopleAndRoleStepValidity(this.hasValidRoles())
+    this.resetData()
   }
 
   private onRemovePerson (index: Number) : void {
-    console.log('Remove Person Index ' + index)
     let newList: OrgPersonIF[] = Object.assign([], this.orgPersonList)
     if (this.activeIndex > -1) {
       newList.splice(this.activeIndex, 1)
     }
     this.setOrgPersonList(newList)
-    this.resetData()
     this.setAddPeopleAndRoleStepValidity(this.hasValidRoles())
+    this.resetData()
   }
 
   private hasValidRoles () : boolean {

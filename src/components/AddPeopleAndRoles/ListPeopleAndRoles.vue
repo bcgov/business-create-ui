@@ -16,7 +16,10 @@
         :key="index"
         no-gutters>
         <v-col>
-        <span><strong>{{person.firstName}} {{person.middleName}} {{person.lastName}}</strong></span>
+        <span v-if="person.type==='Person'">
+          <strong>{{person.firstName}} {{person.middleName}} {{person.lastName}}</strong>
+        </span>
+        <span v-if="person.type==='Org'"><strong>{{person.orgName}}</strong></span>
         </v-col>
         <v-col>
           <base-address :address="person.address.mailingAddress" />

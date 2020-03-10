@@ -63,9 +63,10 @@
                   v-bind:class="{'highlightedRole': isRoleLocked('Completing Party')}"/>
                 </v-col>
                 <v-col cols="4">
-                  <v-checkbox v-model="isIncorporator" label="Incorporator"
-                  :disabled="isRoleLocked('Incorporator')"
-                  v-bind:class="{'highlightedRole': isRoleLocked('Incorporator')}"/>
+                  <v-checkbox v-model="isIncorporator"
+                  :label="incorporatorLabel"
+                  :disabled="isRoleLocked('Incorporator') || orgPerson.type === 'Org'"
+                  v-bind:class="{'highlightedRole': isRoleLocked('Incorporator') || orgPerson.type === 'Org'}"/>
                 </v-col>
                 <v-col cols="4" v-if="isPerson">
                   <v-checkbox v-model="isDirector" label="Director"/>
@@ -78,6 +79,7 @@
                   ref="mailingAddressNew"
                   :editing="true"
                   :schema="personAddressSchema"
+                  :address="inProgressMailingAddress"
                   @update:address="updateMailingAddress"
                   @valid="updateMailingAddressValidity"/>
               </div>
@@ -94,6 +96,7 @@
                       ref="deliveryAddressNew"
                       :editing="true"
                       :schema="personAddressSchema"
+                      :address="inProgressDeliveryAddress"
                       @update:address="updateDeliveryAddress"
                       @valid="updateDeliveryAddressValidity"/>
                   </div>
@@ -104,7 +107,7 @@
                 <v-btn color="error" :disabled="activeIndex===-1" @click="removePerson()">Remove</v-btn>
                 <v-btn class="form-primary-btn" @click="validateAddPersonOrgForm()" color="primary"
                 :disabled="!isFormValid()">Done</v-btn>
-                <v-btn class="form-cancel-btn" @click="resetAddPersonData()">Cancel</v-btn>
+                <v-btn class="form-cancel-btn" @click="resetAddPersonData(true)">Cancel</v-btn>
               </div>
             </v-form>
           </div>
@@ -119,10 +122,16 @@
 import { Component, Vue, Prop, Watch, Emit, Mixins } from 'vue-property-decorator'
 
 // Interfaces
-import { OrgPersonIF, BaseAddressObjIF, BaseAddressType, FormType } from '@/interfaces'
+import { OrgPersonIF, BaseAddressObjIF, BaseAddressType, FormType, AddressIF } from '@/interfaces'
 
 // Components
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
+
+// Mixins
+import { EntityFilterMixin, CommonMixin } from '@/mixins'
+
+// Enums
+import { EntityTypes } from '@/enums'
 
 // Schemas
 import { addressSchema } from '@/schemas'
@@ -132,7 +141,7 @@ import { addressSchema } from '@/schemas'
     BaseAddress
   }
 })
-export default class OrgPerson extends Vue {
+export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
    // Refs
    $refs!: {
     addPersonOrgForm: FormType,
@@ -151,17 +160,23 @@ export default class OrgPerson extends Vue {
   private nextId: number
 
   // Data Properties
-  private orgPerson: OrgPersonIF = this.initialValue
-  private inProgressMailingAddress = null
-  private inProgressDeliveryAddress = null
+  private orgPerson: OrgPersonIF
+  private addPersonOrgFormValid: boolean = true
+
+  // Address related properties
+  private inProgressMailingAddress:AddressIF
+  private inProgressDeliveryAddress:AddressIF
   private inheritMailingAddress: boolean = true
   private personAddressSchema: {} = addressSchema
+  private mailingAddressValid: boolean = false
+  private deliveryAddressValid: boolean = false
+
+  // Roles
   private isCompletingParty: boolean = false
   private isIncorporator: boolean = false
   private isDirector: boolean = false
-  private addPersonOrgFormValid: boolean = true
-  private mailingAddressValid: boolean = false
-  private deliveryAddressValid: boolean = false
+
+  readonly EntityTypes: {} = EntityTypes
 
   // Rules
   private readonly firstNameRules: Array<Function> = [
@@ -188,14 +203,16 @@ export default class OrgPerson extends Vue {
   ]
 
   // Life cycle methods
-  private mounted (): void {
-    if (this.orgPerson) {
+  private created (): void {
+    if (this.initialValue) {
+      this.orgPerson = { ...this.initialValue }
       this.isDirector = this.orgPerson.roles.includes('Director')
       this.isIncorporator = this.orgPerson.roles.includes('Incorporator')
       this.isCompletingParty = this.orgPerson.roles.includes('Completing Party')
-      this.inProgressMailingAddress = this.orgPerson.address.mailingAddress
+      this.inProgressMailingAddress = { ...this.orgPerson.address.mailingAddress }
       if (this.isDirector) {
-        this.inProgressDeliveryAddress = this.orgPerson.address.deliveryAddress
+        this.inProgressDeliveryAddress = { ...this.orgPerson.address.deliveryAddress }
+        this.inheritMailingAddress = this.isSame(this.inProgressMailingAddress, this.inProgressDeliveryAddress)
       }
     }
   }
@@ -221,8 +238,8 @@ export default class OrgPerson extends Vue {
   private validateAddPersonOrgForm (): void {
     if (this.isFormValid()) {
       const person: OrgPersonIF = this.addPerson()
-      this.resetAddPersonData()
       this.emitPersonInfo(person)
+      this.resetAddPersonData(false)
     }
   }
 
@@ -272,14 +289,15 @@ export default class OrgPerson extends Vue {
     return roles
   }
 
-  private resetAddPersonData (): void {
+  private resetAddPersonData (emitEvent: boolean): void {
     this.$refs.addPersonOrgForm.reset()
     this.$refs.mailingAddressNew.$refs.addressForm.reset()
     if (this.$refs.deliveryAddressNew) {
       this.$refs.deliveryAddressNew.$refs.addressForm.reset()
     }
-
-    this.emitResetEvent()
+    if (emitEvent) {
+      this.emitResetEvent()
+    }
   }
 
   private isRoleLocked (role: string) : boolean {
@@ -296,6 +314,10 @@ export default class OrgPerson extends Vue {
 
   get isOrg (): boolean {
     return this.orgPerson && this.orgPerson.type === 'Org'
+  }
+
+  get incorporatorLabel () : string {
+    return this.entityFilter(EntityTypes.BCOMP) ? 'Incorporator' : 'Subscriber'
   }
 
   // Events
@@ -435,7 +457,7 @@ li {
     > label:first-child {
       flex: 0 0 auto;
       margin-right: 1rem;
-      width: 8rem;
+      width: 10rem;
     }
   }
 }
