@@ -61,7 +61,7 @@
             <span class="edit-action">
               <v-btn small text color="primary" :disabled="false"
                 :id="'person-' + person.id + '-change-btn'"
-                @click="emitPersonInfo(person.id)">
+                @click="emitPersonInfo(index)">
                 <v-icon small>mdi-pencil</v-icon>
                 <span>Edit</span>
               </v-btn>
