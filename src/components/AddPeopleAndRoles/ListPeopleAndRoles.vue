@@ -8,7 +8,7 @@
       </div>
 
       <!-- Summary Warning -->
-      <div v-if="isSummary && true" class="defineCompanyStepErrorMessage">
+      <div v-if="isSummary && showErrorSummary" class="defineCompanyStepErrorMessage">
       <span>
         <v-icon color="#1976d2">mdi-information-outline</v-icon>
         This step is not complete.
@@ -50,9 +50,15 @@
           <base-address v-else :address="person.address.deliveryAddress"/>
         </v-col>
         <v-col>
-          <v-col v-for="(role, index) in person.roles" :key="index" class="col-roles">
+          <div v-if="person.roles.length>0">
+            <v-col v-for="(role, index) in person.roles" :key="index" class="col-roles">
             <span>{{role}}</span>
           </v-col>
+          </div>
+          <div v-else>
+             <v-icon color="rgb(232, 156, 48)" small>mdi-alert</v-icon>
+             <span class="warningText">Add Role</span>
+          </div>
         </v-col>
 
         <!-- Actions Column -->
@@ -111,6 +117,9 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
   // Store Properties
   @Prop({ default: '' })
   private personList: Array<OrgPersonIF>
+
+   @Prop()
+  private showErrorSummary: boolean
 
   @Prop({ default: false })
   private isSummary: boolean
@@ -192,6 +201,12 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
   .col-roles {
     padding: 0rem!important;
   }
+}
+
+.warningText {
+  color: rgb(232, 156, 48);
+  margin-left: 0.1rem;
+  padding-top: 0.1rem;
 }
 
 </style>

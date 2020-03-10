@@ -40,6 +40,7 @@ export default class Stepper extends Vue {
   readonly step1Valid!: boolean;
 
   // FUTURE - map these to states as above
+  @State(state => state.stateModel.addPeopleAndRoleStep.valid)
   readonly step2Valid!: boolean;
   readonly step3Valid!: boolean;
   readonly step4Valid!: boolean;

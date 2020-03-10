@@ -7,15 +7,18 @@
     Your application must include the following:
     <ul>
       <li>
-        <v-icon color='blue' v-if="hasRole('Completing Party')">mdi-check</v-icon>
+        <v-icon color='blue' v-if="hasRole('Completing Party', 1, 'EXACT')">mdi-check</v-icon>
+        <span v-else><v-icon color='red' v-if="showErrors">mdi-close</v-icon></span>
         <span class='chk-list-item-txt'>The Completing Party</span>
       </li>
       <li>
-        <v-icon color='blue' v-if="hasRole('Incorporator')">mdi-check</v-icon>
+        <v-icon color='blue' v-if="hasRole('Incorporator', 1, 'ATLEAST')">mdi-check</v-icon>
+        <span v-else><v-icon color='red' v-if="showErrors">mdi-close</v-icon></span>
         <span class='chk-list-item-txt'>At least one Incorporator</span>
       </li>
       <li>
-        <v-icon color='blue' v-if="hasRole('Director')">mdi-check</v-icon>
+        <v-icon color='blue' v-if="hasRole('Director', 1, 'ATLEAST')">mdi-check</v-icon>
+        <span v-else><v-icon color='red' v-if="showErrors">mdi-close</v-icon></span>
         <span class='chk-list-item-txt'>At least one Director</span>
       </li>
     </ul>
@@ -38,7 +41,7 @@
         <span>Add a Corporation or Firm</span>
       </v-btn>
       <v-btn outlined color="primary" @click="addOrgPerson(['Completing Party'], 'Person')"
-      :disabled="showOrgPersonForm"  class="spacedButton" v-if="!hasRole('Completing Party')">
+      :disabled="showOrgPersonForm"  class="spacedButton" v-if="!hasRole('Completing Party', 1, 'ATLEAST')">
         <v-icon>mdi-account-plus-outline</v-icon>
         <span>Add the Completing Party</span>
       </v-btn>
@@ -55,7 +58,7 @@
 
     <v-card flat class="people-roles-container" v-if="orgPersonList.length > 0" :disabled="showOrgPersonForm">
       <ListPeopleAndRoles v-if="orgPersonList.length > 0" :personList="orgPersonList"
-        @editPerson="editOrgPerson($event)" :isSummary="false"/>
+        @editPerson="editOrgPerson($event)" :isSummary="false" />
     </v-card>
   </div>
 </template>
@@ -194,10 +197,18 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
     this.showOrgPersonForm = false
   }
 
-  private hasRole (roleName: string) : boolean {
+  private hasRole (roleName: string, count:number, mode:string) : boolean {
     const orgPersonWithSpecifiedRole: OrgPersonIF[] =
     this.orgPersonList.filter(people => people.roles.includes(roleName))
-    return orgPersonWithSpecifiedRole.length > 0
+    if (mode === 'EXACT') {
+      return orgPersonWithSpecifiedRole.length === count
+    } else if (mode === 'ATLEAST') {
+      return orgPersonWithSpecifiedRole.length >= count
+    }
+  }
+
+  private get showErrors (): boolean {
+    return Boolean(this.$route.query.showErrors)
   }
 }
 </script>
