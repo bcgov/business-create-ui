@@ -58,9 +58,12 @@
       @removeCompletingPartyRole="removeCompletingPartyAssignment()" />
     </v-card>
 
-    <v-card flat class="people-roles-container" v-if="orgPersonList.length > 0" :disabled="showOrgPersonForm">
-      <ListPeopleAndRoles v-if="orgPersonList.length > 0" :personList="orgPersonList"
-        @editPerson="editOrgPerson($event)" :isSummary="false" />
+    <v-card flat v-if="orgPersonList.length > 0" :disabled="showOrgPersonForm" >
+      <ListPeopleAndRoles
+        v-if="orgPersonList.length > 0"
+        :personList="orgPersonList"
+        :isSummary="false"
+        @editPerson="editOrgPerson($event)"/>
     </v-card>
   </div>
 </template>
