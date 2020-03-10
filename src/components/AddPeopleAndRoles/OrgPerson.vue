@@ -256,7 +256,9 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
    */
   private addPerson (): OrgPersonIF {
     let personToAdd: OrgPersonIF = { ...this.orgPerson }
-    personToAdd.id = this.nextId
+    if (this.activeIndex === -1) {
+      personToAdd.id = this.nextId
+    }
     personToAdd.address = this.setPersonAddress()
     personToAdd.roles = this.setPersonRoles()
     return personToAdd
