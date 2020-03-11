@@ -29,7 +29,7 @@
     </div>
 
     <!-- List Display Section -->
-    <div id="people-roles-list" v-if="!showErrorSummary || !isSummary">
+    <div id="people-roles-list">
       <!-- List Headers -->
       <v-row class="people-roles-header list-item__subtitle" no-gutters>
         <v-col v-for="(title, index) in tableHeaders" :key="index">
@@ -64,9 +64,15 @@
           <base-address v-else class="peoples-roles-delivery-address" :address="person.address.deliveryAddress"/>
         </v-col>
         <v-col>
-          <v-col v-for="(role, index) in person.roles" :key="index" class="col-roles">
-            <span>{{role}}</span>
-          </v-col>
+          <div v-if="person.roles.length>0">
+            <v-col v-for="(role, index) in person.roles" :key="index" class="col-roles">
+              <span>{{role}}</span>
+            </v-col>
+          </div>
+          <div v-else>
+             <v-icon color="rgb(232, 156, 48)" small>mdi-alert</v-icon>
+             <span class="warningText">Add Role</span>
+          </div>
         </v-col>
 
         <!-- Actions Column -->
