@@ -7,41 +7,41 @@
     Your application must include the following:
     <ul>
       <li>
-        <v-icon color='blue' v-if="hasRole('Completing Party', 1, 'EXACT')">mdi-check</v-icon>
+        <v-icon color='blue' v-if="hasRole(Roles.COMPLETING_PARTY, 1, 'EXACT')">mdi-check</v-icon>
         <span v-else><v-icon color='red' v-if="showErrors">mdi-close</v-icon></span>
         <span class='chk-list-item-txt'>The Completing Party</span>
       </li>
       <li>
-        <v-icon color='blue' v-if="hasRole('Incorporator', 1, 'ATLEAST')">mdi-check</v-icon>
+        <v-icon color='blue' v-if="hasRole(Roles.INCORPORATOR, 1, 'ATLEAST')">mdi-check</v-icon>
         <span v-else><v-icon color='red' v-if="showErrors">mdi-close</v-icon></span>
         <span class='chk-list-item-txt'>At least one Incorporator</span>
       </li>
       <li>
-        <v-icon color='blue' v-if="hasRole('Director', 1, 'ATLEAST')">mdi-check</v-icon>
+        <v-icon color='blue' v-if="hasRole(Roles.DIRECTOR, 1, 'ATLEAST')">mdi-check</v-icon>
         <span v-else><v-icon color='red' v-if="showErrors">mdi-close</v-icon></span>
         <span class='chk-list-item-txt'>At least one Director</span>
       </li>
     </ul>
     <div class="btn-panel" v-show="orgPersonList.length === 0">
-      <v-btn outlined color="primary" @click="addOrgPerson(['Completing Party'], 'Person')"
+      <v-btn outlined color="primary" @click="addOrgPerson([ Roles.COMPLETING_PARTY ], IncorporatorTypes.PERSON)"
       :disabled="showOrgPersonForm">
         <v-icon>mdi-account-plus-outline</v-icon>
         <span>Start by Adding the Completing Party</span>
       </v-btn>
     </div>
     <div class="btn-panel"  v-show="orgPersonList.length > 0">
-      <v-btn outlined color="primary" @click="addOrgPerson([], 'Person')"
+      <v-btn outlined color="primary" @click="addOrgPerson([], IncorporatorTypes.PERSON)"
       :disabled="showOrgPersonForm">
         <v-icon>mdi-account-plus</v-icon>
         <span>Add a Person</span>
       </v-btn>
       <v-btn outlined color="primary" :disabled="showOrgPersonForm" class="spacedButton"
-      @click="addOrgPerson(['Incorporator'], 'Org')">
+      @click="addOrgPerson([Roles.INCORPORATOR], IncorporatorTypes.CORPORATION)">
         <v-icon>mdi-domain-plus</v-icon>
         <span>Add a Corporation or Firm</span>
       </v-btn>
-      <v-btn outlined color="primary" @click="addOrgPerson(['Completing Party'], 'Person')"
-      :disabled="showOrgPersonForm"  class="spacedButton" v-if="!hasRole('Completing Party', 1, 'ATLEAST')">
+      <v-btn outlined color="primary" @click="addOrgPerson([Roles.COMPLETING_PARTY], IncorporatorTypes.PERSON)"
+      :disabled="showOrgPersonForm"  class="spacedButton" v-if="!hasRole(Roles.COMPLETING_PARTY, 1, 'ATLEAST')">
         <v-icon>mdi-account-plus-outline</v-icon>
         <span>Add the Completing Party</span>
       </v-btn>
@@ -51,9 +51,11 @@
       :initialValue="currentOrgPerson"
       :activeIndex="activeIndex"
       :nextId="nextId"
+      :existingCompletingParty="completingParty"
       @addEditPerson="onAddEditOrgPerson($event)"
       @removePersonEvent="onRemovePerson($event)"
-      @resetEvent="resetData()" />
+      @resetEvent="resetData()"
+      @removeCompletingPartyRole="removeCompletingPartyAssignment()" />
     </v-card>
 
     <v-card flat class="people-roles-container" v-if="orgPersonList.length > 0" :disabled="showOrgPersonForm">
@@ -75,7 +77,7 @@ import { OrgPersonIF, BaseAddressObjIF, BaseAddressType, FormType, ActionBinding
 import { EntityFilterMixin } from '@/mixins'
 
 // Enums
-import { EntityTypes } from '@/enums'
+import { EntityTypes, Roles, IncorporatorTypes } from '@/enums'
 
 // Components
 import OrgPerson from './OrgPerson.vue'
@@ -129,9 +131,11 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
   private activeIndex: number = -1
   private addEditInProgress: boolean = false
   private currentOrgPerson: OrgPersonIF | null = null
-  private nextId: Number = -1
+  private nextId: number = -1
 
   readonly EntityTypes: {} = EntityTypes
+  readonly Roles: {} = Roles
+  readonly IncorporatorTypes: {} = IncorporatorTypes
 
   // Methods
   private addOrgPerson (rolesToInitialize: string[], type: string): void {
@@ -139,7 +143,7 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
     this.currentOrgPerson.roles = rolesToInitialize
     this.currentOrgPerson.type = type
     this.activeIndex = -1
-    this.nextId = this.orgPersonList.length
+    this.nextId = (this.orgPersonList.length === 0) ? 0 : this.orgPersonList[this.orgPersonList.length - 1].id + 1
     this.addEditInProgress = true
     this.showOrgPersonForm = true
   }
@@ -175,18 +179,13 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
     this.resetData()
   }
 
-  private hasValidRoles () : boolean {
-    const numOfDirector: number =
-    this.orgPersonList.filter(people => people.roles.includes('Director')).length
-    const numOfIncorporator: number =
-    this.orgPersonList.filter(people => people.roles.includes('Incorporator')).length
-    const numOfCompletingParty: number =
-    this.orgPersonList.filter(people => people.roles.includes('Incorporator')).length
-
-    if (this.entityFilter(EntityTypes.BCOMP)) {
-      return numOfCompletingParty === 1 && numOfIncorporator >= 1 && numOfDirector >= 1
-    } else if (this.entityFilter(EntityTypes.COOP)) {
-      return numOfCompletingParty === 1 && numOfIncorporator >= 3 && numOfDirector >= 3
+  private removeCompletingPartyAssignment () {
+    let newList: OrgPersonIF[] = Object.assign([], this.orgPersonList)
+    const cpList = newList.filter(people => people.roles.includes(Roles.COMPLETING_PARTY))
+    if (cpList.length > 0) {
+      let completingParty : OrgPersonIF = cpList[0]
+      completingParty.roles = completingParty.roles.filter(role => role !== Roles.COMPLETING_PARTY)
+      this.setOrgPersonList(newList)
     }
   }
 
@@ -195,6 +194,23 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
     this.activeIndex = -1
     this.addEditInProgress = false
     this.showOrgPersonForm = false
+  }
+
+  private hasValidRoles () : boolean {
+    const numOfDirector: number =
+    this.orgPersonList.filter(people => people.roles.includes(Roles.DIRECTOR)).length
+    const numOfIncorporator: number =
+    this.orgPersonList.filter(people => people.roles.includes(Roles.INCORPORATOR)).length
+    const numOfCompletingParty: number =
+    this.orgPersonList.filter(people => people.roles.includes(Roles.COMPLETING_PARTY)).length
+    const numOfPeopleWithNoRoles:number =
+    this.orgPersonList.filter(people => people.roles.length === 0).length
+
+    if (this.entityFilter(EntityTypes.BCOMP)) {
+      return numOfCompletingParty === 1 && numOfIncorporator >= 1 && numOfDirector >= 1 && numOfPeopleWithNoRoles === 0
+    } else if (this.entityFilter(EntityTypes.COOP)) {
+      return numOfCompletingParty === 1 && numOfIncorporator >= 3 && numOfDirector >= 3 && numOfPeopleWithNoRoles === 0
+    }
   }
 
   private hasRole (roleName: string, count:number, mode:string) : boolean {
@@ -209,6 +225,15 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
 
   private get showErrors (): boolean {
     return Boolean(this.$route.query.showErrors)
+  }
+
+  private get completingParty () : OrgPersonIF {
+    let cp: OrgPersonIF | null = null
+    const cpList = this.orgPersonList.filter(people => people.roles.includes(Roles.COMPLETING_PARTY))
+    if (cpList.length > 0) {
+      cp = cpList[0]
+    }
+    return cp
   }
 }
 </script>

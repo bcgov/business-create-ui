@@ -1,7 +1,7 @@
 import { BaseAddressObjIF } from '@/interfaces'
 
 export interface OrgPersonIF {
-    id: Number| null
+    id: number| null
     type: string;
     firstName: string;
     middleName?: string;
