@@ -1,100 +1,105 @@
 <template>
-  <div id="people-roles-list">
-    <v-card flat>
+  <v-card flat id="people-roles">
 
-      <!-- Summary Section -->
-      <div v-if="isSummary">
-        <!-- Summary Header -->
-        <div class="people-roles-summary-header" >
-          <v-icon>mdi-account</v-icon>
-          <label class="people-roles-title"><strong>People and Roles</strong></label>
-        </div>
+    <ConfirmRemoveDialog
+      :dialog="dialog"
+      attach="#people-roles"
+      @confirm="emitRemovePerson(personId)"
+      @exit="dialog = false"
+    />
 
-        <!-- Summary Warning -->
-        <div v-if="!isValid" class="people-roles-invalid-message">
-          <span>
-            <v-icon color="#1976d2">mdi-information-outline</v-icon>
-            This step is not complete.
-            <router-link :to="{ path: '/add-people-roles', query: { showErrors: true } }">
-              Return to this step to complete it.
-            </router-link>
-          </span>
-        </div>
+    <!-- Summary Section -->
+    <div id="people-roles-summary" v-if="isSummary">
+      <!-- Summary Header -->
+      <div class="people-roles-summary-header" >
+        <v-icon>mdi-account</v-icon>
+        <label class="people-roles-title"><strong>People and Roles</strong></label>
       </div>
 
-      <!-- List Display Section -->
-      <div v-if="isValid || !isSummary">
-        <!-- List Headers -->
-        <v-row class="people-roles-header list-item__subtitle" no-gutters>
-          <v-col v-for="(title, index) in tableHeaders" :key="index">
-            <span>{{title}}</span>
-          </v-col>
-          <!-- Spacer Column -->
-          <v-col sm="1" v-if="!isSummary"></v-col>
-        </v-row>
-
-        <!-- List Content -->
-        <v-row
-          class="people-roles-content"
-          :class="{ 'list-item__subtitle': !isSummary }"
-          v-for="(person, index) in personList"
-          :key="index"
-          no-gutters>
-          <v-col class="text-truncate">
-            <v-tooltip top :disabled="formatName(person).length < 25" color="primary">
-              <template v-slot:activator="{ on }">
-                <span v-on="on" class="people-roles-title"><strong>{{formatName(person)}}</strong></span>
-              </template>
-              <span>{{formatName(person)}}</span>
-            </v-tooltip>
-          </v-col>
-          <v-col>
-            <base-address :address="person.address.mailingAddress" />
-          </v-col>
-          <v-col>
-            <p v-if="isSame(person.address.mailingAddress, person.address.deliveryAddress)">Same as Mailing Address</p>
-            <base-address v-else :address="person.address.deliveryAddress"/>
-          </v-col>
-          <v-col>
-            <v-col v-for="(role, index) in person.roles" :key="index" class="col-roles">
-              <span>{{role}}</span>
-            </v-col>
-          </v-col>
-
-          <!-- Actions Column -->
-          <v-col sm="1" v-if="!isSummary">
-            <div class="actions">
-              <span class="edit-action">
-                <v-btn small text color="primary" :disabled="false"
-                  :id="'person-' + person.id + '-change-btn'"
-                  @click="emitPersonInfo(person.id)"
-                >
-                  <v-icon small>mdi-pencil</v-icon>
-                  <span>Edit</span>
-                </v-btn>
-              </span>
-
-              <!-- more actions menu -->
-              <span>
-                <v-menu offset-y>
-                  <template v-slot:activator="{ on }">
-                    <v-btn text small color="primary" class="actions__more-actions__btn" v-on="on">
-                      <v-icon>mdi-menu-down</v-icon>
-                    </v-btn>
-                  </template>
-                  <v-list class="actions__more-actions">
-                    <v-list-item @click="doSomething(person.id)">
-                      <v-list-item-title><v-icon>mdi-delete</v-icon>Remove</v-list-item-title>
-                    </v-list-item>
-                  </v-list>
-                </v-menu>
-              </span>
-            </div>
-          </v-col>
-        </v-row>
+      <!-- Summary Warning -->
+      <div v-if="showErrorSummary" class="people-roles-invalid-message">
+        <span>
+          <v-icon color="#1976d2">mdi-information-outline</v-icon>
+          This step is not complete.
+          <router-link :to="{ path: '/add-people-roles', query: { showErrors: true } }">
+            Return to this step to complete it.
+          </router-link>
+        </span>
       </div>
-    </v-card>
-  </div>
+    </div>
+
+    <!-- List Display Section -->
+    <div id="people-roles-list" v-if="!showErrorSummary || !isSummary">
+      <!-- List Headers -->
+      <v-row class="people-roles-header list-item__subtitle" no-gutters>
+        <v-col v-for="(title, index) in tableHeaders" :key="index">
+          <span>{{title}}</span>
+        </v-col>
+        <!-- Spacer Column For Actions -->
+        <v-col sm="1" v-if="!isSummary"></v-col>
+      </v-row>
+
+      <!-- List Content -->
+      <v-row
+        class="people-roles-content"
+        :class="{ 'list-item__subtitle': !isSummary }"
+        v-for="(person, index) in personList"
+        :key="index"
+        no-gutters>
+        <v-col class="text-truncate">
+          <v-tooltip top :disabled="formatName(person).length < 25" color="primary">
+            <template v-slot:activator="{ on }">
+              <span v-on="on" class="people-roles-title"><strong>{{formatName(person)}}</strong></span>
+            </template>
+            <span>{{formatName(person)}}</span>
+          </v-tooltip>
+        </v-col>
+        <v-col>
+          <base-address :address="person.address.mailingAddress" />
+        </v-col>
+        <v-col>
+          <p v-if="isSame(person.address.mailingAddress, person.address.deliveryAddress)">Same as Mailing Address</p>
+          <base-address v-else :address="person.address.deliveryAddress"/>
+        </v-col>
+        <v-col>
+          <v-col v-for="(role, index) in person.roles" :key="index" class="col-roles">
+            <span>{{role}}</span>
+          </v-col>
+        </v-col>
+
+        <!-- Actions Column -->
+        <v-col sm="1" v-if="!isSummary">
+          <div class="actions">
+            <span class="edit-action">
+              <v-btn small text color="primary" :disabled="false"
+                :id="'person-' + person.id + '-change-btn'"
+                @click="emitPersonInfo(person.id)"
+              >
+                <v-icon small>mdi-pencil</v-icon>
+                <span>Edit</span>
+              </v-btn>
+            </span>
+
+            <!-- more actions menu -->
+            <span>
+              <v-menu offset-y>
+                <template v-slot:activator="{ on }">
+                  <v-btn text small color="primary" class="actions__more-actions__btn" v-on="on">
+                    <v-icon>mdi-menu-down</v-icon>
+                  </v-btn>
+                </template>
+                <v-list class="actions__more-actions">
+                  <v-list-item @click="confirmRemove(person.id)">
+                    <v-list-item-title><v-icon>mdi-delete</v-icon>Remove</v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </v-menu>
+            </span>
+          </div>
+        </v-col>
+      </v-row>
+    </div>
+  </v-card>
 </template>
 
 <script lang="ts">
@@ -104,6 +109,9 @@ import { Component, Prop, Mixins, Emit } from 'vue-property-decorator'
 // Components
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
 
+// Dialogs
+import { ConfirmRemoveDialog } from '@/components/dialogs'
+
 // Mixins
 import CommonMixin from '@/mixins/common-mixin'
 
@@ -112,7 +120,8 @@ import { OrgPersonIF } from '@/interfaces'
 
 @Component({
   components: {
-    BaseAddress
+    BaseAddress,
+    ConfirmRemoveDialog
   }
 })
 export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
@@ -120,36 +129,56 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
   @Prop({ default: '' })
   private personList: Array<OrgPersonIF>
 
-   @Prop()
+  @Prop({ default: false })
   private showErrorSummary: boolean
 
   @Prop({ default: false })
   private isSummary: boolean
 
-  @Prop({ default: false })
-  private isValid: boolean
-
   // Local Properties
-  private tableHeaders: Array<string> = ['Name', 'Mailing Address', 'Delivery Address', 'Roles']
+  readonly tableHeaders: Array<string> = ['Name', 'Mailing Address', 'Delivery Address', 'Roles']
+  private dialog: boolean = false
+  private personId: number
 
   /**
-   * Return the appropriate Corporation or filers name
-   * @param filing The filing body
+   * Determine if Corporation or Person by name.
+   * @param filing The filing body which contains the name/title.
+   * @returns The appropriate Corporation or Person name.
    */
   private formatName (filing: any): string {
     return filing.orgName ? filing.orgName
       : `${filing.firstName} ${filing.middleName || ''} ${filing.lastName}`
   }
 
-  private removePerson (index: number): void { }
+  /**
+   * Identify and confirm the removal of a person/org through dialog.
+   * @param index The active index which is subject to removal.
+   */
+  confirmRemove (index: number): void {
+    this.personId = index
+    this.dialog = true
+  }
 
+  /**
+   * Emit an index and event to the parent to handle removal.
+   * @param index The active index which is subject to removal.
+   */
+  @Emit('removePerson')
+  private emitRemovePerson (index: number): void {
+    this.dialog = false
+  }
+
+  /**
+   * Emit an index and event to the parent to handle editing.
+   * @param index The active index which is subject to change.
+   */
   @Emit('editPerson')
   private emitPersonInfo (index: number): void { }
 }
 </script>
 
 <style lang="scss" scoped>
-#people-roles-list {
+#people-roles {
   margin-top: 1rem;
 }
 

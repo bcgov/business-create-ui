@@ -63,7 +63,8 @@
         v-if="orgPersonList.length > 0"
         :personList="orgPersonList"
         :isSummary="false"
-        @editPerson="editOrgPerson($event)"/>
+        @editPerson="editOrgPerson($event)"
+        @removePerson="onRemovePerson($event)"/>
     </v-card>
   </div>
 </template>
@@ -172,7 +173,8 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
     this.resetData()
   }
 
-  private onRemovePerson (index: Number) : void {
+  private onRemovePerson (index: number) : void {
+    this.activeIndex = index
     let newList: OrgPersonIF[] = Object.assign([], this.orgPersonList)
     if (this.activeIndex > -1) {
       newList.splice(this.activeIndex, 1)
