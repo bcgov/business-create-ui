@@ -2,6 +2,7 @@
 export * from './resource-interfaces/resource-interface'
 export * from './utils-interfaces/utils-interface'
 export * from './utils-interfaces/form-interface'
+export * from './utils-interfaces/dialog-interface'
 
 // Store Interfaces
 export * from './store-interfaces/state-interface'
