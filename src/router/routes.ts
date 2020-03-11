@@ -21,24 +21,6 @@ export const routes = [
     }
   },
   {
-    path: '/signin/:idpHint/:redirectUrl',
-    name: 'signin-redirect',
-    component: SigninView,
-    props: true,
-    meta: {
-      requiresAuth: false
-    }
-  },
-  {
-    path: '/signin/:idpHint/:redirectUrl/:redirectUrlLoginFail',
-    name: 'signin-redirect-fail',
-    component: SigninView,
-    props: true,
-    meta: {
-      requiresAuth: false
-    }
-  },
-  {
     path: '/signout',
     name: 'signout',
     component: SignoutView,

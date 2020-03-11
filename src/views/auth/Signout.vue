@@ -15,7 +15,7 @@ import SbcSignout from 'sbc-common-components/src/components/SbcSignout.vue'
   }
 })
 export default class SignoutView extends Vue {
-  private redirectUrl = `${window.location.origin}/${process.env.VUE_APP_PATH}`
+  private redirectUrl = sessionStorage.getItem('AUTH_URL');
 }
 
 </script>
