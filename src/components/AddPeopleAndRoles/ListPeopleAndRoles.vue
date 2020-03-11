@@ -152,7 +152,7 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
   private personId: number
 
   /**
-   * Determine if Corporation or Person by name.
+   * Determine if Corporation/Firm or Person.
    * @param filing The filing body which contains the name/title.
    * @returns The appropriate Corporation or Person name.
    */
