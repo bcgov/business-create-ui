@@ -10,7 +10,6 @@ import { store } from '@/store'
 
 // Utils
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
-import { toHaveRouteName } from 'vue-test-utils-helpers'
 
 // Components
 import { ListPeopleAndRoles } from '@/components/AddPeopleAndRoles'

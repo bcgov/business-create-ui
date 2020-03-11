@@ -143,9 +143,6 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
   @Prop({ default: false })
   private isSummary: boolean
 
-  @Prop({ default: false })
-  private isValid: boolean
-
   // Local Properties
   readonly tableHeaders: Array<string> = ['Name', 'Mailing Address', 'Delivery Address', 'Roles']
   private dialog: boolean = false
