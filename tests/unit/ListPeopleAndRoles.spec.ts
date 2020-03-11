@@ -94,14 +94,6 @@ describe('List People And Roles', () => {
     }
   })
 
-  afterEach(() => {
-    // window.location.assign = assign
-  })
-
-  beforeAll(() => {
-    // init store
-  })
-
   it('does not show the peoples / roles list if there is no data to display', () => {
     const wrapper = wrapperFactory()
     const displayListCount = wrapper.vm.$el.querySelectorAll('.people-roles-content').length
