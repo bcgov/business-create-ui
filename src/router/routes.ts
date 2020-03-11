@@ -20,6 +20,7 @@ export const routes = [
       requiresAuth: false
     }
   },
+  // This route is consumed by SbcHeader
   {
     path: '/signout',
     name: 'signout',
