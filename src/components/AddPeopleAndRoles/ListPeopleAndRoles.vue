@@ -21,7 +21,7 @@
         <span>
           <v-icon color="#1976d2">mdi-information-outline</v-icon>
           This step is not complete.
-          <router-link :to="{ path: '/add-people-roles', query: { showErrors: true } }">
+          <router-link id="router-link" :to="{ path: '/add-people-roles', query: { showErrors: true } }">
             Return to this step to complete it.
           </router-link>
         </span>
@@ -55,11 +55,13 @@
           </v-tooltip>
         </v-col>
         <v-col>
-          <base-address :address="person.address.mailingAddress" />
+          <base-address class="peoples-roles-mailing-address" :address="person.address.mailingAddress" />
         </v-col>
         <v-col>
-          <p v-if="isSame(person.address.mailingAddress, person.address.deliveryAddress)">Same as Mailing Address</p>
-          <base-address v-else :address="person.address.deliveryAddress"/>
+          <p v-if="isSame(person.address.mailingAddress, person.address.deliveryAddress)"
+            class="peoples-roles-delivery-address">Same as Mailing Address
+          </p>
+          <base-address v-else class="peoples-roles-delivery-address" :address="person.address.deliveryAddress"/>
         </v-col>
         <v-col>
           <v-col v-for="(role, index) in person.roles" :key="index" class="col-roles">
@@ -71,7 +73,7 @@
         <v-col sm="1" v-if="!isSummary">
           <div class="actions">
             <span class="edit-action">
-              <v-btn small text color="primary" :disabled="false"
+              <v-btn small text color="primary"
                 :id="'person-' + person.id + '-change-btn'"
                 @click="emitPersonInfo(person.id)"
               >
