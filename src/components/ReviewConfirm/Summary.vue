@@ -1,8 +1,7 @@
 <template>
   <div class="summary-container">
     <SummaryDefineCompany />
-    <ListPeopleAndRoles v-if="orgPersonList.length > 0" :personList="orgPersonList" :isSummary="true"
-      :showErrorSummary="!stepValid"/>
+    <ListPeopleAndRoles :personList="orgPersonList" :isSummary="true" :showErrorSummary="!stepValid"/>
   </div>
 </template>
 

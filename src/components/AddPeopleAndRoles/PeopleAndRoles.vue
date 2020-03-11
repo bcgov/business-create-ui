@@ -58,9 +58,13 @@
       @removeCompletingPartyRole="removeCompletingPartyAssignment()" />
     </v-card>
 
-    <v-card flat class="people-roles-container" v-if="orgPersonList.length > 0" :disabled="showOrgPersonForm">
-      <ListPeopleAndRoles v-if="orgPersonList.length > 0" :personList="orgPersonList"
-        @editPerson="editOrgPerson($event)" :isSummary="false" />
+    <v-card flat v-if="orgPersonList.length > 0" :disabled="showOrgPersonForm" >
+      <ListPeopleAndRoles
+        v-if="orgPersonList.length > 0"
+        :personList="orgPersonList"
+        :isSummary="false"
+        @editPerson="editOrgPerson($event)"
+        @removePerson="onRemovePerson($event)"/>
     </v-card>
   </div>
 </template>
@@ -169,7 +173,8 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
     this.resetData()
   }
 
-  private onRemovePerson (index: Number) : void {
+  private onRemovePerson (index: number) : void {
+    this.activeIndex = index
     let newList: OrgPersonIF[] = Object.assign([], this.orgPersonList)
     if (this.activeIndex > -1) {
       newList.splice(this.activeIndex, 1)
