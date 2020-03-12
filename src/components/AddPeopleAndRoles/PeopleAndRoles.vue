@@ -7,41 +7,42 @@
     Your application must include the following:
     <ul>
       <li>
-        <v-icon color='blue' v-if="hasRole(Roles.COMPLETING_PARTY, 1, 'EXACT')">mdi-check</v-icon>
-        <span v-else><v-icon color='red' v-if="showErrors">mdi-close</v-icon></span>
+        <v-icon color='blue' v-if="hasRole(Roles.COMPLETING_PARTY, 1, 'EXACT')" class="cp-valid">mdi-check</v-icon>
+        <span v-else><v-icon color='red' v-if="showErrors" class="cp-invalid">mdi-close</v-icon></span>
         <span class='chk-list-item-txt'>The Completing Party</span>
       </li>
       <li>
-        <v-icon color='blue' v-if="hasRole(Roles.INCORPORATOR, 1, 'ATLEAST')">mdi-check</v-icon>
-        <span v-else><v-icon color='red' v-if="showErrors">mdi-close</v-icon></span>
+        <v-icon color='blue' v-if="hasRole(Roles.INCORPORATOR, 1, 'ATLEAST')" class="incorp-valid">mdi-check</v-icon>
+        <span v-else><v-icon color='red' v-if="showErrors" class="incorp-invalid">mdi-close</v-icon></span>
         <span class='chk-list-item-txt'>At least one Incorporator</span>
       </li>
       <li>
-        <v-icon color='blue' v-if="hasRole(Roles.DIRECTOR, 1, 'ATLEAST')">mdi-check</v-icon>
-        <span v-else><v-icon color='red' v-if="showErrors">mdi-close</v-icon></span>
+        <v-icon color='blue' v-if="hasRole(Roles.DIRECTOR, 1, 'ATLEAST')" class="dir-valid">mdi-check</v-icon>
+        <span v-else><v-icon color='red' v-if="showErrors" class="dir-invalid">mdi-close</v-icon></span>
         <span class='chk-list-item-txt'>At least one Director</span>
       </li>
     </ul>
-    <div class="btn-panel" v-show="orgPersonList.length === 0">
+    <div class="btn-panel" v-if="orgPersonList.length === 0">
       <v-btn outlined color="primary" @click="addOrgPerson([ Roles.COMPLETING_PARTY ], IncorporatorTypes.PERSON)"
-      :disabled="showOrgPersonForm">
+      :disabled="showOrgPersonForm" id="btn-start-add-cp">
         <v-icon>mdi-account-plus-outline</v-icon>
         <span>Start by Adding the Completing Party</span>
       </v-btn>
     </div>
-    <div class="btn-panel"  v-show="orgPersonList.length > 0">
+    <div class="btn-panel"  v-if="orgPersonList.length > 0">
       <v-btn outlined color="primary" @click="addOrgPerson([], IncorporatorTypes.PERSON)"
-      :disabled="showOrgPersonForm">
+      :disabled="showOrgPersonForm" id="btn-add-person">
         <v-icon>mdi-account-plus</v-icon>
         <span>Add a Person</span>
       </v-btn>
       <v-btn outlined color="primary" :disabled="showOrgPersonForm" class="spacedButton"
-      @click="addOrgPerson([Roles.INCORPORATOR], IncorporatorTypes.CORPORATION)">
+      @click="addOrgPerson([Roles.INCORPORATOR], IncorporatorTypes.CORPORATION)" id="btn-add-corp">
         <v-icon>mdi-domain-plus</v-icon>
         <span>Add a Corporation or Firm</span>
       </v-btn>
       <v-btn outlined color="primary" @click="addOrgPerson([Roles.COMPLETING_PARTY], IncorporatorTypes.PERSON)"
-      :disabled="showOrgPersonForm"  class="spacedButton" v-if="!hasRole(Roles.COMPLETING_PARTY, 1, 'ATLEAST')">
+      :disabled="showOrgPersonForm"  class="spacedButton" v-if="!hasRole(Roles.COMPLETING_PARTY, 1, 'ATLEAST')"
+      id="btn-add-cp">
         <v-icon>mdi-account-plus-outline</v-icon>
         <span>Add the Completing Party</span>
       </v-btn>
