@@ -52,7 +52,7 @@
 <script lang="ts">
 // Libraries
 import { Component, Watch, Mixins } from 'vue-property-decorator'
-import { Action, Getter, State } from 'vuex-class'
+import { Action, State } from 'vuex-class'
 
 // Components
 import SbcHeader from 'sbc-common-components/src/components/SbcHeader.vue'
@@ -64,7 +64,7 @@ import { EntityInfo, Stepper, Actions } from '@/components/common'
 import { DateMixin, FilingTemplateMixin, LegalApiMixin } from '@/mixins'
 
 // Interfaces
-import { FilingDataIF, ActionBindingIF, StateModelIF, IncorporationFilingIF, GetterIF } from '@/interfaces'
+import { FilingDataIF, ActionBindingIF, StateModelIF, IncorporationFilingIF } from '@/interfaces'
 
 import { CertifyStatementResource } from '@/resources'
 
@@ -85,9 +85,6 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
   // Global state
   @State stateModel!: StateModelIF
 
-  // Getters
-  @Getter getFilingId
-
   // Global actions
   @Action setCurrentStep!: ActionBindingIF
   @Action setCurrentDate!: ActionBindingIF
@@ -99,8 +96,9 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
   private draftFiling: IncorporationFilingIF
 
   private async created (): Promise<any> {
-    // Mock the nrNumber and Data: UnComment to Mock a NEW NR or a return NR to save and get draft filings
+    // Mock the nrNumber and Data:
     this.setNameRequestState({ nrNumber: 'NR7654560', entityType: 'BC' })
+
     this.setCurrentDate(this.dateToUsableString(new Date()))
 
     try {
@@ -111,7 +109,6 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
       this.draftFiling && this.parseDraft(this.draftFiling)
     } catch (e) {
       // TODO: Catch a flag from the api, if there is an error to be handled.
-      console.log(e)
     }
   }
 
