@@ -90,6 +90,7 @@ export default class SummaryDefineCompany extends Mixins(EntityFilterMixin) {
   padding-left: 2rem;
   padding-top: 1.25rem;
   padding-bottom: 1.25rem;
+  font-size: 14px;
 }
 
 .define-company-header {
