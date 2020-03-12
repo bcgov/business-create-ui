@@ -10,7 +10,6 @@ import { store } from '@/store'
 
 // Utils
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
-import { toHaveRouteName } from 'vue-test-utils-helpers'
 
 // Components
 import { ListPeopleAndRoles } from '@/components/AddPeopleAndRoles'
@@ -93,14 +92,6 @@ describe('List People And Roles', () => {
         vuetify
       })
     }
-  })
-
-  afterEach(() => {
-    // window.location.assign = assign
-  })
-
-  beforeAll(() => {
-    // init store
   })
 
   it('does not show the peoples / roles list if there is no data to display', () => {
