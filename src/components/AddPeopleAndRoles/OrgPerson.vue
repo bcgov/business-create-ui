@@ -181,6 +181,7 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
   private personAddressSchema: {} = addressSchema
   private mailingAddressValid: boolean = false
   private deliveryAddressValid: boolean = false
+  private reassignCompletingParty : boolean = false
 
   // Roles
   private isCompletingParty: boolean = false
@@ -257,6 +258,9 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
   // Methods
   private validateAddPersonOrgForm (): void {
     if (this.isFormValid()) {
+      if (this.reassignCompletingParty) {
+        this.emitReassignCompletingPartyEvent()
+      }
       const person: OrgPersonIF = this.addPerson()
       this.emitPersonInfo(person)
       this.resetAddPersonData(false)
@@ -285,7 +289,7 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
       }
     ).then(async (confirm) => {
       if (confirm) {
-        this.emitReassignCompletingPartyEvent()
+        this.reassignCompletingParty = true
       }
     }).catch(() => {
       this.isCompletingParty = false
