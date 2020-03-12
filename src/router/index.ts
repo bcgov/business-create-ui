@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import { routes } from './routes'
-import KeyCloakService from 'sbc-common-components/src/services/keycloak.services'
 
 // Enums for Keycloak
 import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'

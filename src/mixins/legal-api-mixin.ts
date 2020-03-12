@@ -32,10 +32,10 @@ export default class LegalApiMixin extends Vue {
     let filingId = this.getFilingId
     // If have a filing id, update an existing filing
     if (filingId && filingId > 0) {
-      await this.updateFiling(filing)
+      await this.updateFiling(filing, isDraft)
     } else {
       // Set the filingId to store
-      await this.createFiling(filing)
+      await this.createFiling(filing, isDraft)
     }
 
     // Complete a filing if not draft
@@ -52,16 +52,21 @@ export default class LegalApiMixin extends Vue {
       return await this.getDraftFiling()
     } catch (e) {
       // TODO: Throw a flag to the ui from here, if we want to trigger error handling in ui
-      throw new Error('Invalid API Response')
     }
   }
 
   /**
    * Method to make a simple axios Post request.
    * @param data The object body of the request.
+   * @param isDraft Boolean indicating whether to complete filing.
    */
-  private createFiling (data: object): Promise<any> {
-    return axios.post('businesses', data).then(res => {
+  private createFiling (data: object, isDraft: boolean): Promise<any> {
+    let url = `businesses`
+    if (isDraft) {
+      url += '?draft=true'
+    }
+
+    return axios.post(url, data).then(res => {
       // Assign a filing Id from the response to the state
       if (res && res.data && res.data.filing && res.data.filing.header && res.data.filing.header.filingId) {
         this.setFilingId(res.data.filing.header.filingId)
@@ -74,10 +79,16 @@ export default class LegalApiMixin extends Vue {
   /**
    * Method to make a simple axios Put request.
    * @param data The object body of the request.
+   * @param isDraft Boolean indicating whether to complete filing.
    */
-  private updateFiling (data: object): Promise<any> {
+  private updateFiling (data: object, isDraft: boolean): Promise<any> {
+    let filingId = this.getFilingId
+
     // Assign the url business identifier
-    let url = `businesses/${this.getBusinessIdentifier}`
+    let url = `businesses/${this.getBusinessIdentifier}/filings/${filingId}`
+    if (isDraft) {
+      url += '?draft=true'
+    }
 
     return axios.put(url, data).then(res => {
       if (!res) {

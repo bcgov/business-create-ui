@@ -26,7 +26,7 @@
 
             <stepper class="mt-10" />
 
-            <router-view :key="isDraft"/>
+            <router-view />
           </v-col>
 
           <v-col cols="12" lg="3" style="position: relative">
@@ -52,7 +52,7 @@
 <script lang="ts">
 // Libraries
 import { Component, Watch, Mixins } from 'vue-property-decorator'
-import { Action, State } from 'vuex-class'
+import { Action, Getter, State } from 'vuex-class'
 
 // Components
 import SbcHeader from 'sbc-common-components/src/components/SbcHeader.vue'
@@ -64,7 +64,7 @@ import { EntityInfo, Stepper, Actions } from '@/components/common'
 import { DateMixin, FilingTemplateMixin, LegalApiMixin } from '@/mixins'
 
 // Interfaces
-import { FilingDataIF, ActionBindingIF, StateModelIF, IncorporationFilingIF } from '@/interfaces'
+import { FilingDataIF, ActionBindingIF, StateModelIF, IncorporationFilingIF, GetterIF } from '@/interfaces'
 
 import { CertifyStatementResource } from '@/resources'
 
@@ -85,6 +85,9 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
   // Global state
   @State stateModel!: StateModelIF
 
+  // Getters
+  @Getter getFilingId
+
   // Global actions
   @Action setCurrentStep!: ActionBindingIF
   @Action setCurrentDate!: ActionBindingIF
@@ -94,28 +97,23 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
   // Local Properties
   private filingData: Array<FilingDataIF> = []
   private draftFiling: IncorporationFilingIF
-  private isDraft: boolean = false
 
-  // TODO: Need to find a proper fix here. Currently its setting the isDraft property
-  //   on each page load, and auth does a redirect, triggering this.
-  // private async created (): Promise<any> {
-  //   // Mock the nrNumber and Data
-  //   this.setNameRequestState({ nrNumber: 'NR7654459', entityType: 'BC', filingId: null })
-  //   this.setCurrentDate(this.dateToUsableString(new Date()))
+  private async created (): Promise<any> {
+    // Mock the nrNumber and Data: UnComment to Mock a NEW NR or a return NR to save and get draft filings
+    this.setNameRequestState({ nrNumber: 'NR7654560', entityType: 'BC' })
+    this.setCurrentDate(this.dateToUsableString(new Date()))
 
-  //   try {
-  //     // Retrieve draft filing if it exists for the nrNumber specified
-  //     this.draftFiling = await this.fetchDraft()
+    try {
+      // Retrieve draft filing if it exists for the nrNumber specified
+      this.draftFiling = await this.fetchDraft()
 
-  //     // Parse the draft data into the store if it exists
-  //     this.draftFiling && this.parseDraft(this.draftFiling)
-
-  //     // Inform the router view we are resuming a draft and to update ui
-  //     this.isDraft = true
-  //   } catch (e) {
-  //     // TODO: Catch a flag from the api, if there is an error to be handled.
-  //   }
-  // }
+      // Parse the draft data into the store if it exists
+      this.draftFiling && this.parseDraft(this.draftFiling)
+    } catch (e) {
+      // TODO: Catch a flag from the api, if there is an error to be handled.
+      console.log(e)
+    }
+  }
 
   /**
    * The Pay API URL.
