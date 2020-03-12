@@ -175,7 +175,7 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
 
   private onRemovePerson (index: number) : void {
     let newList: OrgPersonIF[] = Object.assign([], this.orgPersonList)
-    newList.splice(this.activeIndex, 1)
+    newList.splice(index, 1)
     this.setOrgPersonList(newList)
     this.setAddPeopleAndRoleStepValidity(this.hasValidRoles())
     this.resetData()

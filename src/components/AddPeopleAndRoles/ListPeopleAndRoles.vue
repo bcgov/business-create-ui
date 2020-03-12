@@ -81,7 +81,7 @@
             <span class="edit-action">
               <v-btn small text color="primary"
                 :id="'person-' + person.id + '-change-btn'"
-                @click="emitPersonInfo(person.id)"
+                @click="emitPersonInfo(index)"
               >
                 <v-icon small>mdi-pencil</v-icon>
                 <span>Edit</span>
@@ -97,7 +97,7 @@
                   </v-btn>
                 </template>
                 <v-list class="actions__more-actions">
-                  <v-list-item @click="confirmRemove(person.id)">
+                  <v-list-item @click="confirmRemove(index)">
                     <v-list-item-title><v-icon>mdi-delete</v-icon>Remove</v-list-item-title>
                   </v-list-item>
                 </v-list>
@@ -181,7 +181,7 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
    * @param index The active index which is subject to change.
    */
   @Emit('editPerson')
-  private emitPersonInfo (index: number): void { }
+  private emitPersonInfo (index: number): void {}
 }
 </script>
 

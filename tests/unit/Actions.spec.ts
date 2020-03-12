@@ -46,6 +46,9 @@ describe('Actions component', () => {
     store.state.stateModel.defineCompanyStep = {
       valid: true
     }
+    store.state.stateModel.addPeopleAndRoleStep = {
+      valid: true
+    }
     // verify File and Pay button state
     expect(wrapper.find('#file-pay-btn').attributes('disabled')).toBeUndefined()
   })
