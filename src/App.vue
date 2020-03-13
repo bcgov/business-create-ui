@@ -26,7 +26,7 @@
 
             <stepper class="mt-10" />
 
-            <router-view :key="isDraft"/>
+            <router-view />
           </v-col>
 
           <v-col cols="12" lg="3" style="position: relative">
@@ -94,28 +94,23 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
   // Local Properties
   private filingData: Array<FilingDataIF> = []
   private draftFiling: IncorporationFilingIF
-  private isDraft: boolean = false
 
-  // TODO: Need to find a proper fix here. Currently its setting the isDraft property
-  //   on each page load, and auth does a redirect, triggering this.
-  // private async created (): Promise<any> {
-  //   // Mock the nrNumber and Data
-  //   this.setNameRequestState({ nrNumber: 'NR7654459', entityType: 'BC', filingId: null })
-  //   this.setCurrentDate(this.dateToUsableString(new Date()))
+  private async created (): Promise<any> {
+    // Mock the nrNumber and Data:
+    this.setNameRequestState({ nrNumber: 'NR7654560', entityType: 'BC' })
 
-  //   try {
-  //     // Retrieve draft filing if it exists for the nrNumber specified
-  //     this.draftFiling = await this.fetchDraft()
+    this.setCurrentDate(this.dateToUsableString(new Date()))
 
-  //     // Parse the draft data into the store if it exists
-  //     this.draftFiling && this.parseDraft(this.draftFiling)
+    try {
+      // Retrieve draft filing if it exists for the nrNumber specified
+      this.draftFiling = await this.fetchDraft()
 
-  //     // Inform the router view we are resuming a draft and to update ui
-  //     this.isDraft = true
-  //   } catch (e) {
-  //     // TODO: Catch a flag from the api, if there is an error to be handled.
-  //   }
-  // }
+      // Parse the draft data into the store if it exists
+      this.draftFiling && this.parseDraft(this.draftFiling)
+    } catch (e) {
+      // TODO: Catch a flag from the api, if there is an error to be handled.
+    }
+  }
 
   /**
    * The Pay API URL.
