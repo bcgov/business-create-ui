@@ -24,7 +24,7 @@ import App from './App.vue'
 
 // Helpers
 import { fetchConfig, haveKcTokens, AuthenticationService, AuthorizationService } from '@/utils'
-import TokenServices from 'sbc-common-components/src/services/token.services'
+import KeycloakService from 'sbc-common-components/src/services/keycloak.services'
 
 // get rid of "You are running Vue in development mode" console message
 Vue.config.productionTip = false
@@ -39,6 +39,11 @@ Vue.use(Vue2Filters)
 fetchConfig()
   .then(async () => {
     await initLDClient()
+
+    // set keycloak config file's location to the sbc-common-components
+    await KeycloakService.setKeycloakConfigUrl(sessionStorage.getItem('KEYCLOAK_CONFIG_URL'))
+
+    /*
     /*
     // ensure we have the necessary Keycloak tokens
     if (!haveKcTokens()) {
