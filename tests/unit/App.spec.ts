@@ -25,7 +25,7 @@ describe('App component', () => {
     const localVue = createLocalVue()
     localVue.use(VueRouter)
     const router = mockRouter.mock()
-    wrapper = shallowMount(App, { localVue, store, router, vuetify, stubs: { Affix: true } })
+    wrapper = shallowMount(App, { sync: false, localVue, store, router, vuetify, stubs: { Affix: true } })
   })
 
   afterEach(() => {

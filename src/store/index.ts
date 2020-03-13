@@ -1,6 +1,7 @@
 // Libraries
 import Vue from 'vue'
 import Vuex, { Store } from 'vuex'
+import createPersistedState from 'vuex-persistedstate'
 
 // State
 import { stateModel, resourceModel } from './state'
@@ -26,6 +27,9 @@ import { setCurrentStep, setIsSaving, setIsSavingResuming, setIsFilingPaying, se
 Vue.use(Vuex)
 
 export const store: Store<any> = new Vuex.Store<any>({
+  plugins: [createPersistedState({
+    storage: window.sessionStorage
+  })],
   state: {
     stateModel,
     resourceModel

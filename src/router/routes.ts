@@ -1,6 +1,3 @@
-// import Home from '@/views/Home.vue'
-// import MixinExample from '@/views/MixinExample.vue'
-// import StateExample from '@/views/StateExample.vue'
 import DefineCompany from '@/views/DefineCompany.vue'
 import ReviewConfirm from '@/views/ReviewConfirm.vue'
 import AddPeopleAndRoles from '@/views/AddPeopleAndRoles.vue'
@@ -10,7 +7,9 @@ import SignoutView from '@/views/auth/Signout.vue'
 export const routes = [
   {
     path: '/',
-    redirect: '/define-company'
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: '/signin/:idpHint',

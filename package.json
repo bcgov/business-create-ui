@@ -53,6 +53,7 @@
     "vue-test-utils-helpers": "git+https://github.com/AmpleOrganics/vue-test-utils-helpers.git",
     "vuetify-loader": "^1.4.3",
     "vuex-class": "^0.3.2",
+    "vuex-persistedstate": "^2.7.1",
     "vuex-module-decorators": "^0.16.1"
   }
 }
