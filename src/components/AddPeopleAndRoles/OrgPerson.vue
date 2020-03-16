@@ -58,19 +58,25 @@
                   />
                 </div>
                 <label class="sub-header">Roles</label>
-                <v-row>
+                <v-row align="center" justify="center">
                   <v-col cols="4" v-if="isPerson">
-                    <v-checkbox v-model="isCompletingParty" label="Completing Party"
-                    :disabled="isRoleLocked(Roles.COMPLETING_PARTY)"
-                    v-bind:class="{'highlightedRole': isRoleLocked(Roles.COMPLETING_PARTY)}"
-                    @change="assignCompletingPartyRole()" id='cp-checkbox'/>
+                    <div :class="{'highlightedRole': isRoleLocked(Roles.COMPLETING_PARTY)}">
+                      <v-checkbox v-model="isCompletingParty"
+                      id='cp-checkbox'
+                      label="Completing Party"
+                      :disabled="isRoleLocked(Roles.COMPLETING_PARTY)"
+                      @change="assignCompletingPartyRole()"
+                      />
+                    </div>
                   </v-col>
                   <v-col cols="4">
-                    <v-checkbox v-model="isIncorporator"
-                    :label="incorporatorLabel"
-                    :disabled="isRoleLocked(Roles.INCORPORATOR) || orgPerson.type === IncorporatorTypes.CORPORATION"
-                    v-bind:class="{'highlightedRole':
-                    isRoleLocked(Roles.INCORPORATOR) || orgPerson.type === IncorporatorTypes.CORPORATION}"/>
+                    <div :class="{'highlightedRole':
+                      isRoleLocked(Roles.INCORPORATOR) || orgPerson.type === IncorporatorTypes.CORPORATION}">
+                      <v-checkbox v-model="isIncorporator"
+                      :label="incorporatorLabel"
+                      :disabled="isRoleLocked(Roles.INCORPORATOR) || orgPerson.type === IncorporatorTypes.CORPORATION"
+                      />
+                    </div>
                   </v-col>
                   <v-col cols="4" v-if="isPerson">
                     <v-checkbox v-model="isDirector" label="Director"/>
@@ -108,11 +114,11 @@
                 </div>
 
                 <div class="form__row form__btns">
-                  <v-btn color="error" :disabled="activeIndex===-1" @click="removePerson()"
+                  <v-btn large color="error" :disabled="activeIndex===-1" @click="removePerson()"
                   id='btn-remove'>Remove</v-btn>
-                  <v-btn class="form-primary-btn" @click="validateAddPersonOrgForm()" color="primary"
+                  <v-btn large class="form-primary-btn" @click="validateAddPersonOrgForm()" color="primary"
                   :disabled="!isFormValid()" id='btn-done'>Done</v-btn>
-                  <v-btn class="form-cancel-btn" @click="resetAddPersonData(true)" id='btn-cancel'>Cancel</v-btn>
+                  <v-btn large class="form-cancel-btn" @click="resetAddPersonData(true)" id='btn-cancel'>Cancel</v-btn>
                 </div>
               </v-form>
             </div>
@@ -141,7 +147,7 @@ import { EntityFilterMixin, CommonMixin } from '@/mixins'
 import { EntityTypes, Roles, IncorporatorTypes } from '@/enums'
 
 // Schemas
-import { addressSchema } from '@/schemas'
+import { personAddressSchema } from '@/schemas'
 
 @Component({
   components: {
@@ -179,7 +185,7 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
   private inProgressMailingAddress:AddressIF
   private inProgressDeliveryAddress:AddressIF
   private inheritMailingAddress: boolean = true
-  private personAddressSchema: {} = addressSchema
+  private personAddressSchema: {} = personAddressSchema
   private mailingAddressValid: boolean = false
   private deliveryAddressValid: boolean = false
   private reassignCompletingParty : boolean = false
@@ -189,32 +195,36 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
   private isIncorporator: boolean = false
   private isDirector: boolean = false
 
-  readonly EntityTypes: {} = EntityTypes
-  readonly Roles: {} = Roles
-  readonly IncorporatorTypes: {} = IncorporatorTypes
+  readonly EntityTypes = EntityTypes
+  readonly Roles = Roles
+  readonly IncorporatorTypes = IncorporatorTypes
 
   // Rules
   private readonly firstNameRules: Array<Function> = [
     v => !!v || 'A first name is required',
     v => !/^\s/g.test(v) || 'Invalid spaces', // leading spaces
-    v => !/\s$/g.test(v) || 'Invalid spaces' // trailing spaces
+    v => !/\s$/g.test(v) || 'Invalid spaces', // trailing spaces
+    v => !/^.{30}/.test(v) || 'Cannot exceed 30 characters' // maximum character count
   ]
 
   private readonly middleNameRules: Array<Function> = [
     v => !/^\s/g.test(v) || 'Invalid spaces', // leading spaces
-    v => !/\s$/g.test(v) || 'Invalid spaces' // trailing spaces
+    v => !/\s$/g.test(v) || 'Invalid spaces', // trailing spaces
+    v => !/^.{30}/.test(v) || 'Cannot exceed 30 characters' // maximum character count
   ]
 
   private readonly lastNameRules: Array<Function> = [
     v => !!v || 'A last name is required',
     v => !/^\s/g.test(v) || 'Invalid spaces', // leading spaces
-    v => !/\s$/g.test(v) || 'Invalid spaces' // trailing spaces
+    v => !/\s$/g.test(v) || 'Invalid spaces', // trailing spaces
+    v => !/^.{30}/.test(v) || 'Cannot exceed 30 characters' // maximum character count
   ]
 
   private readonly orgNameRules: Array<Function> = [
     v => !!v || 'A firm name is required',
     v => !/^\s/g.test(v) || 'Invalid spaces', // leading spaces
-    v => !/\s$/g.test(v) || 'Invalid spaces' // trailing spaces
+    v => !/\s$/g.test(v) || 'Invalid spaces', // trailing spaces
+    v => !/^.{155}/.test(v) || 'Cannot exceed 155 characters' // maximum character count
   ]
 
   // Life cycle methods
@@ -373,7 +383,7 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
   }
 
   get incorporatorLabel () : string {
-    return this.entityFilter(EntityTypes.BCOMP) ? Roles.INCORPORATOR : 'Subscriber'
+    return this.entityFilter(EntityTypes.BCOMP) ? Roles.INCORPORATOR : Roles.SUBSCRIBER
   }
 
   // Events
@@ -529,7 +539,7 @@ li {
     background-color: rgb(55, 164, 71);
     color: rgb(255, 255, 255) !important;
     font-weight: bold;
-    margin-bottom: 1rem;
+    padding: .25rem;
 }
 ::v-deep .theme--light.v-label--is-disabled {
       color: white !important

@@ -9,7 +9,7 @@ import { stateModel, resourceModel } from './state'
 // Getters
 import { isRoleStaff, isRoleEdit, isRoleView, isEntityType, isTypeBcomp, isTypeCoop,
   isShowBackBtn, isShowReviewConfirmBtn, isShowFilePayBtn, isEnableFilePayBtn, isBusySaving,
-  getFilingId, getBusinessIdentifier, getOfficeAddresses } from '@/store/getters'
+  getFilingId, getBusinessIdentifier, getOfficeAddresses, isApplicationValid } from '@/store/getters'
 
 // Mutations
 import { mutateCurrentStep, mutateIsSaving, mutateIsSavingResuming, mutateIsFilingPaying,
@@ -48,7 +48,8 @@ export const store: Store<any> = new Vuex.Store<any>({
     isBusySaving,
     getFilingId,
     getBusinessIdentifier,
-    getOfficeAddresses
+    getOfficeAddresses,
+    isApplicationValid
   },
   mutations: {
     mutateCurrentStep,

@@ -36,11 +36,10 @@ export default class AddPeopleAndRoles extends Mixins(EntityFilterMixin) {
   @Getter isEntityType!: GetterIF
 
   // Global actions
-  @Action setPeopleAndRoles!: ActionBindingIF
   @Action setAddPeopleRolesStepValidity!: ActionBindingIF
 
   // Entity Enum
-  readonly EntityTypes: {} = EntityTypes
+  readonly EntityTypes = EntityTypes
 }
 </script>
 

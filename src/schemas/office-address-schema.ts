@@ -32,7 +32,7 @@ export const officeAddressSchema = {
   }
 }
 
-export const addressSchema = {
+export const personAddressSchema = {
   streetAddress: {
     required,
     maxLength: maxLength(50)

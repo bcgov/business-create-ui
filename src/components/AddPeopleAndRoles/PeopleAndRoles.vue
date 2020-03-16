@@ -82,14 +82,11 @@ import { OrgPersonIF, BaseAddressObjIF, BaseAddressType, FormType, ActionBinding
 import { EntityFilterMixin } from '@/mixins'
 
 // Enums
-import { EntityTypes, Roles, IncorporatorTypes } from '@/enums'
+import { EntityTypes, Roles, IncorporatorTypes, Modes } from '@/enums'
 
 // Components
 import OrgPerson from './OrgPerson.vue'
 import ListPeopleAndRoles from './ListPeopleAndRoles.vue'
-
-// Schemas
-import { addressSchema } from '@/schemas'
 
 @Component({
   components: {
@@ -138,9 +135,9 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
   private currentOrgPerson: OrgPersonIF | null = null
   private nextId: number = -1
 
-  readonly EntityTypes: {} = EntityTypes
-  readonly Roles: {} = Roles
-  readonly IncorporatorTypes: {} = IncorporatorTypes
+  readonly EntityTypes = EntityTypes
+  readonly Roles = Roles
+  readonly IncorporatorTypes = IncorporatorTypes
 
   // Methods
   private addOrgPerson (rolesToInitialize: string[], type: string): void {
@@ -219,9 +216,9 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
   private hasRole (roleName: string, count:number, mode:string) : boolean {
     const orgPersonWithSpecifiedRole: OrgPersonIF[] =
     this.orgPersonList.filter(people => people.roles.includes(roleName))
-    if (mode === 'EXACT') {
+    if (mode === Modes.EXACT) {
       return orgPersonWithSpecifiedRole.length === count
-    } else if (mode === 'ATLEAST') {
+    } else if (mode === Modes.AT_LEAST) {
       return orgPersonWithSpecifiedRole.length >= count
     }
   }
@@ -231,12 +228,7 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
   }
 
   private get completingParty () : OrgPersonIF {
-    let cp: OrgPersonIF | null = null
-    const cpList = this.orgPersonList.filter(people => people.roles.includes(Roles.COMPLETING_PARTY))
-    if (cpList.length > 0) {
-      cp = cpList[0]
-    }
-    return cp
+    return this.orgPersonList.find(people => people.roles.includes(Roles.COMPLETING_PARTY))
   }
 }
 </script>
@@ -248,7 +240,6 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
 }
 .people-roles-container {
   margin-top: 1rem;
-  padding: 1.25rem;
 }
 ul {
   padding-top: 0.5rem;
@@ -263,7 +254,7 @@ p{
   padding-top: 0.5rem;
 }
 .btn-panel {
-  padding-top: 0.5rem;
+  padding: 2rem 0 2rem 0;
 }
 .sub-header {
   padding-bottom: 1.5rem;

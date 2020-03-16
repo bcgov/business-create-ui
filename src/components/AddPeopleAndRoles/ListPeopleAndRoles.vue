@@ -134,7 +134,7 @@ import { OrgPersonIF } from '@/interfaces'
 })
 export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
   // Store Properties
-  @Prop({ default: '' })
+  @Prop({ default: [] })
   private personList: Array<OrgPersonIF>
 
   @Prop({ default: false })
@@ -186,13 +186,15 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
 </script>
 
 <style lang="scss" scoped>
+@import '@/assets/styles/theme.scss';
+
 #people-roles {
   margin-top: 1rem;
 }
 
 .people-roles-summary-header {
   display: flex;
-  background-color: rgba(1, 51, 102, 0.15);
+  background-color: $gray1;
   padding: 1.25rem;
 }
 
@@ -227,7 +229,7 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
     }
 
     .v-btn {
-      min-width: 1rem;
+      min-width: .5rem;
     }
 
     .v-btn + .v-btn {
@@ -236,11 +238,16 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
   }
 }
 
+.v-list-item {
+  min-height: 0;
+  padding: 0 1rem 0 .5rem;
+}
+
 .col {
   padding: .25rem;
 
   .col-roles {
-    padding: 0rem!important;
+    padding: 0!important;
   }
 }
 

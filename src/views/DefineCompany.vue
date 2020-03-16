@@ -108,7 +108,7 @@ export default class DefineCompany extends Mixins(EntityFilterMixin) {
   private addressFormValid: boolean = false
 
   // Entity Enum
-  readonly EntityTypes: {} = EntityTypes
+  readonly EntityTypes = EntityTypes
 
   /**
    * Method called when Benefit Company button is clicked.
