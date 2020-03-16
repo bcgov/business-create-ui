@@ -25,26 +25,24 @@ import { Getter, State } from 'vuex-class'
 // Interfaces
 import { GetterIF } from '@/interfaces'
 
-// Enums
-import { EntityTypes } from '@/enums'
-
 @Component
 export default class Stepper extends Vue {
   // Global getters
   @Getter isBusySaving!: GetterIF
   @Getter isTypeBcomp!: GetterIF
   @Getter isTypeCoop!: GetterIF
+  @Getter isApplicationValid!: GetterIF
 
   // State
   @State(state => state.stateModel.defineCompanyStep.valid)
   readonly step1Valid!: boolean;
 
-  // FUTURE - map these to states as above
   @State(state => state.stateModel.addPeopleAndRoleStep.valid)
   readonly step2Valid!: boolean;
-  readonly step3Valid!: boolean;
-  readonly step4Valid!: boolean;
-  readonly step5Valid!: boolean;
+
+  // FUTURE - map these to states as above
+  readonly step3Valid!: boolean
+  readonly step4Valid!: boolean
 
   // Getter to use a particular set of steps
   private get steps (): Array<any> {
@@ -98,7 +96,7 @@ export default class Stepper extends Vue {
       text: 'Review\nand Confirm',
       to: '/review-confirm',
       disabled: this.isBusySaving,
-      valid: this.step5Valid
+      valid: this.isApplicationValid
     }]
   }
 
@@ -142,7 +140,7 @@ export default class Stepper extends Vue {
       text: 'Review\nand Confirm',
       to: '/review-confirm',
       disabled: this.isBusySaving,
-      valid: this.step5Valid
+      valid: this.isApplicationValid
     }]
   }
 

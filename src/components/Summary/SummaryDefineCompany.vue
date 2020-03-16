@@ -74,7 +74,7 @@ export default class SummaryDefineCompany extends Mixins(EntityFilterMixin) {
   readonly addresses!: IncorporationAddressIf
 
   // Entity Enum
-  readonly EntityTypes: {} = EntityTypes
+  readonly EntityTypes = EntityTypes
 }
 </script>
 

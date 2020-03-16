@@ -1,7 +1,7 @@
 <template>
   <div class="summary-container">
     <SummaryDefineCompany />
-    <ListPeopleAndRoles :personList="orgPersonList" :isSummary="true" :showErrorSummary="!stepValid"/>
+    <ListPeopleAndRoles :personList="orgPersonList" :isSummary="true" :showErrorSummary="!step2Valid"/>
   </div>
 </template>
 
@@ -29,7 +29,7 @@ export default class Summary extends Vue {
   readonly orgPersonList: OrgPersonIF[]
 
   @State(state => state.stateModel.addPeopleAndRoleStep.valid)
-  readonly stepValid: boolean
+  readonly step2Valid: boolean
 }
 </script>
 
