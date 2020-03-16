@@ -527,8 +527,12 @@ li {
     border-radius: 2px;
     border-color: rgb(140, 140, 140);
     background-color: rgb(55, 164, 71);
-    color: rgb(255, 255, 255) s!important;
+    color: rgb(255, 255, 255) !important;
     font-weight: bold;
     margin-bottom: 1rem;
 }
+::v-deep .theme--light.v-label--is-disabled {
+      color: white !important
+
+ }
 </style>
