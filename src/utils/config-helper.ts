@@ -42,10 +42,9 @@ export function fetchConfig (): Promise<any> {
 
       // TODO: There should be a bit of a cleanup here to ensure these use the same prop-name.
       // -- VUE_APP_AUTH_ROOT_API is expected by sbc-common-components
-      const authApiUrl: string = response.data['AUTH_API_URL']
-      sessionStorage.setItem('AUTH_API_URL', authApiUrl)
-      sessionStorage.setItem('VUE_APP_AUTH_ROOT_API', response.data['VUE_APP_AUTH_ROOT_API'])
-      console.log('Set Auth API URL to: ' + authApiUrl)
+      const authApiUrl: string = response.data['VUE_APP_AUTH_ROOT_API']
+      sessionStorage.setItem('VUE_APP_AUTH_ROOT_API', authApiUrl)
+      console.log('Set Auth VUE_APP_AUTH_ROOT_APIL to: ' + authApiUrl)
 
       const payApiUrl: string = response.data['PAY_API_URL']
       sessionStorage.setItem('PAY_API_URL', payApiUrl)
