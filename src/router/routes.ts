@@ -1,39 +1,44 @@
-// import Home from '@/views/Home.vue'
-// import MixinExample from '@/views/MixinExample.vue'
-// import StateExample from '@/views/StateExample.vue'
 import DefineCompany from '@/views/DefineCompany.vue'
 import ReviewConfirm from '@/views/ReviewConfirm.vue'
 import AddPeopleAndRoles from '@/views/AddPeopleAndRoles.vue'
+import SigninView from '@/views/auth/Signin.vue'
+import SignoutView from '@/views/auth/Signout.vue'
 
 export const routes = [
   {
     path: '/',
-    redirect: '/define-company'
+    meta: {
+      requiresAuth: true
+    }
   },
-  // {
-  //   path: '/home',
-  //   name: 'home',
-  //   component: Home,
-  //   meta: {
-  //     requiresAuth: false
-  //   }
-  // },
-  // {
-  //   path: '/MixinExample',
-  //   name: 'mixinExample',
-  //   component: MixinExample,
-  //   meta: {
-  //     requiresAuth: false
-  //   }
-  // },
-  // {
-  //   path: '/StateExample',
-  //   name: 'stateExample',
-  //   component: StateExample,
-  //   meta: {
-  //     requiresAuth: false
-  //   }
-  // },
+  {
+    path: '/signin/:idpHint',
+    name: 'signin',
+    component: SigninView,
+    props: true,
+    meta: {
+      requiresAuth: false
+    }
+  },
+  // This route is consumed by SbcHeader
+  {
+    path: '/signout',
+    name: 'signout',
+    component: SignoutView,
+    props: true,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/signout/:redirectUrl',
+    name: 'signout-redirect',
+    component: SignoutView,
+    props: true,
+    meta: {
+      requiresAuth: true
+    }
+  },
   {
     path: '/define-company',
     name: 'define-company',

@@ -38,7 +38,5 @@ describe('Review Confirm component', () => {
     expect(wrapper.find('h2').text()).toContain('Review')
   })
 
-  it('routes back to step 1 when Entity Type isn\'t set', () => {
-    expect(vm.$route.name).toBe('define-company')
-  })
+  // TODO: Expand unit testing for validation on step 5. Include routing to appropriate steps from error links.
 })

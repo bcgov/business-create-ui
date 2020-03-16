@@ -2,13 +2,9 @@
   "compilerOptions": {
     "target": "esnext",
     "module": "esnext",
+    "strict": true,
     "noImplicitAny": false,
-    "noImplicitThis": true,
-    "alwaysStrict": true,
-    "strictBindCallApply": true,
     "strictNullChecks": false,
-    "strictFunctionTypes": true,
-    "strictPropertyInitialization": false,
     "jsx": "preserve",
     "importHelpers": true,
     "moduleResolution": "node",
@@ -42,6 +38,7 @@
     "tests/**/*.tsx"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "dist"
   ]
 }

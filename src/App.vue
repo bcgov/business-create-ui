@@ -26,7 +26,7 @@
 
             <stepper class="mt-10" />
 
-            <router-view :key="isDraft"/>
+            <router-view />
           </v-col>
 
           <v-col cols="12" lg="3" style="position: relative">
@@ -94,11 +94,11 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
   // Local Properties
   private filingData: Array<FilingDataIF> = []
   private draftFiling: IncorporationFilingIF
-  private isDraft: boolean = false
 
   private async created (): Promise<any> {
-    // Mock the nrNumber and Data
-    this.setNameRequestState({ nrNumber: 'NR7654459', entityType: 'BC', filingId: null })
+    // Mock the nrNumber and Data:
+    this.setNameRequestState({ nrNumber: 'NR7654560', entityType: 'BC' })
+
     this.setCurrentDate(this.dateToUsableString(new Date()))
 
     try {
@@ -107,9 +107,6 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
 
       // Parse the draft data into the store if it exists
       this.draftFiling && this.parseDraft(this.draftFiling)
-
-      // Inform the router view we are resuming a draft and to update ui
-      this.isDraft = true
     } catch (e) {
       // TODO: Catch a flag from the api, if there is an error to be handled.
     }
