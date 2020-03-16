@@ -231,6 +231,8 @@ describe('OrgPerson', () => {
     inputElement.setValue('     ')
     inputElement.trigger('change')
     await wrapper.vm.$nextTick()
+    await flushPromises()
+    await wrapper.vm.$nextTick()
     expect(wrapper.find(formSelector).text()).toContain('Invalid spaces')
     expect(wrapper.vm.$data.addPersonOrgFormValid).toBe(false)
     wrapper.destroy()
