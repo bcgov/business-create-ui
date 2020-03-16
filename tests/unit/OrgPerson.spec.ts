@@ -247,6 +247,8 @@ describe('OrgPerson', () => {
     inputElement2.setValue('')
     inputElement2.trigger('change')
     await wrapper.vm.$nextTick()
+    await flushPromises()
+    await wrapper.vm.$nextTick()
     expect(wrapper.find(formSelector).text()).toContain('A first name is required')
     expect(wrapper.find(formSelector).text()).toContain('A last name is required')
     expect(wrapper.vm.$data.addPersonOrgFormValid).toBe(false)
