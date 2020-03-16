@@ -63,7 +63,7 @@
                     <v-checkbox v-model="isCompletingParty" label="Completing Party"
                     :disabled="isRoleLocked(Roles.COMPLETING_PARTY)"
                     v-bind:class="{'highlightedRole': isRoleLocked(Roles.COMPLETING_PARTY)}"
-                    @change="assignCompletingPartyRole()"/>
+                    @change="assignCompletingPartyRole()" id='cp-checkbox'/>
                   </v-col>
                   <v-col cols="4">
                     <v-checkbox v-model="isIncorporator"
@@ -108,10 +108,11 @@
                 </div>
 
                 <div class="form__row form__btns">
-                  <v-btn color="error" :disabled="activeIndex===-1" @click="removePerson()">Remove</v-btn>
+                  <v-btn color="error" :disabled="activeIndex===-1" @click="removePerson()"
+                  id='btn-remove'>Remove</v-btn>
                   <v-btn class="form-primary-btn" @click="validateAddPersonOrgForm()" color="primary"
-                  :disabled="!isFormValid()">Done</v-btn>
-                  <v-btn class="form-cancel-btn" @click="resetAddPersonData(true)">Cancel</v-btn>
+                  :disabled="!isFormValid()" id='btn-done'>Done</v-btn>
+                  <v-btn class="form-cancel-btn" @click="resetAddPersonData(true)" id='btn-cancel'>Cancel</v-btn>
                 </div>
               </v-form>
             </div>
@@ -171,7 +172,7 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
   private existingCompletingParty: OrgPersonIF
 
   // Data Properties
-  private orgPerson: OrgPersonIF
+  private orgPerson: OrgPersonIF = null
   private addPersonOrgFormValid: boolean = true
 
   // Address related properties
@@ -380,7 +381,7 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
   private emitPersonInfo (personInfo: OrgPersonIF): void { }
 
   @Emit('resetEvent')
-  private emitResetEvent (): void { }
+  private emitResetEvent (): void {}
 
   @Emit('removePersonEvent')
   private emitRemovePersonEvent (activeIndex: Number): void { }
