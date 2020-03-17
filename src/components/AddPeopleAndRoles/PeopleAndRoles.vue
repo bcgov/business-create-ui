@@ -72,11 +72,11 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Prop, Watch, Emit, Mixins } from 'vue-property-decorator'
+import { Component, Mixins } from 'vue-property-decorator'
 import { Action, State } from 'vuex-class'
 
 // Interfaces
-import { OrgPersonIF, BaseAddressObjIF, BaseAddressType, FormType, ActionBindingIF } from '@/interfaces'
+import { OrgPersonIF, BaseAddressType, FormType, ActionBindingIF } from '@/interfaces'
 
 // Mixins
 import { EntityFilterMixin } from '@/mixins'

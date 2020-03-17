@@ -71,7 +71,7 @@
           </div>
           <div v-else>
              <v-icon color="rgb(232, 156, 48)" small>mdi-alert</v-icon>
-             <span class="warningText">Add Role</span>
+             <span class="warning-text">Add Role</span>
           </div>
         </v-col>
 
@@ -134,7 +134,7 @@ import { OrgPersonIF } from '@/interfaces'
 })
 export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
   // Store Properties
-  @Prop({ default: [] })
+  @Prop()
   private personList: Array<OrgPersonIF>
 
   @Prop({ default: false })
@@ -201,7 +201,7 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
 .people-roles-invalid-message {
   padding: 1.25rem;
   font-weight: bold;
-  color: #1976d2;
+  color: $BCgovABlue2;
 }
 
 .people-roles-header {
@@ -213,11 +213,11 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
 .people-roles-content {
   margin-top: .5rem;
   padding: .5rem 1.25rem .5rem 1.25rem;
-  border-top: 1px solid #d1d1d1;
+  border-top: 1px solid $gray1;
   font-size: 14px;
 
   .people-roles-title {
-    color: #474747;
+    color: $gray7;
   }
 
   .actions {
@@ -225,7 +225,7 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
     right: 0;
 
     .edit-action {
-      border-right: 1px solid #d1d1d1;
+      border-right: 1px solid $gray1;
     }
 
     .v-btn {
@@ -251,10 +251,12 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
   }
 }
 
-.warningText {
-  color: rgb(232, 156, 48);
-  margin-left: 0.1rem;
-  padding-top: 0.1rem;
+.warning-text {
+  position: relative;
+  top: 2px;
+  left: 2px;
+  color: $BCgovGold9
+
 }
 
 </style>
