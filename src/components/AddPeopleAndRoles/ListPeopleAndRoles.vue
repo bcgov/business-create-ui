@@ -121,7 +121,7 @@ import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
 import { ConfirmRemoveDialog } from '@/components/dialogs'
 
 // Mixins
-import CommonMixin from '@/mixins/common-mixin'
+import { CommonMixin } from '@/mixins'
 
 // Interfaces
 import { OrgPersonIF } from '@/interfaces'
