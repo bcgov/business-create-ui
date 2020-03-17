@@ -127,7 +127,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
     if (nameRequest && nameRequest.nrNum && nameRequest.isConsumable) {
       // TODO: Handling different NR Formats
       // Will probably change once we proxy through legal API with a consistent format
-      this.setNameRequestState({ nrNumber: nameRequest.nrNum.replace('NR ', ''), entityType: 'BC', filingId: null })
+      this.setNameRequestState({ nrNumber: nameRequest.nrNum.replace('NR ', ''), entityType: nameRequest.requestTypeCd, filingId: null })
       this.setCurrentDate(this.dateToUsableString(new Date()))
 
       try {
