@@ -83,7 +83,7 @@ export class AuthorizationService {
    * Initialize local properties.
    */
   constructor () {
-    this.authAPIURL = sessionStorage.getItem('AUTH_API_URL')
+    this.authAPIURL = sessionStorage.getItem('VUE_APP_AUTH_ROOT_API')
   }
 
   /**
