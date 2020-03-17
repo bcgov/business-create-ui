@@ -18,7 +18,7 @@
 
     <!-- Initial Page Load Transition -->
     <transition name="fade">
-      <div class="loading-container fade-out" v-show="evaluatingPreconditions">
+      <div class="loading-container" v-show="evaluatingPreconditions">
         <div class="loading__content">
           <v-progress-circular color="primary" size="50" indeterminate />
           <div class="loading-msg">Loading...</div>
@@ -87,8 +87,7 @@ import { FilingDataIF, ActionBindingIF, StateModelIF, IncorporationFilingIF } fr
 import { CertifyStatementResource } from '@/resources'
 
 // Enums
-import { EntityTypes, FilingCodes } from '@/enums'
-import { NameRequestStates } from './enums/nameRequestStates'
+import { EntityTypes, FilingCodes, NameRequestStates } from '@/enums'
 
 @Component({
   components: {
@@ -123,7 +122,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
   private evaluatingPreconditions: boolean = true
 
   private async created (): Promise<any> {
-    // Mock the nrNumber and Data
+    // Evaluate name request pre conditions
     const nameRequest = await this.evaluateNRPreconditions()
     if (nameRequest && nameRequest.nrNum && nameRequest.isConsumable) {
       // TODO: Handling different NR Formats
