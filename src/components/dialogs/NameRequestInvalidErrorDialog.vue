@@ -40,7 +40,7 @@ import { NameRequestStates } from '@/enums/nameRequestStates'
 })
 export default class NameRequestInvalidErrorDialog extends Vue {
   // NameRequestStates Enum
-  readonly NameRequestStates: {} = NameRequestStates
+  readonly NameRequestStates = NameRequestStates
   // Prop to display the dialog.
   @Prop() private dialog: boolean
 

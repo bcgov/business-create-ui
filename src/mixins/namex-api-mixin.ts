@@ -18,7 +18,7 @@ export default class NameXApiMixin extends Vue {
    * Temporary method for initializing a namex api token for development
    * This will be removed in the future when supporting dependencies are in place
    */
-  async intializeNameXToken () {
+  async intializeNameXToken () : Promise<any> {
     return axios.request({
       url: this.tokenUrl,
       method: 'post',

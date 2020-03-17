@@ -115,7 +115,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
   // Local Properties
   private filingData: Array<FilingDataIF> = []
   private draftFiling: IncorporationFilingIF
-  private isDraft: boolean = false
+
   private accountAuthorizationErrorDialog: boolean = false
   private nameRequestInvalidErrorDialog: boolean = false
   private nameRequestInvalidType: string = ''
@@ -139,9 +139,6 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
 
         // Parse the draft data into the store if it exists
         this.draftFiling && this.parseDraft(this.draftFiling)
-
-        // Inform the router view we are resuming a draft and to update ui
-        this.isDraft = true
       } catch (e) {
         // TODO: Catch a flag from the api, if there is an error to be handled.
       }
@@ -157,21 +154,21 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
     window.location.assign(businessUrl)
   }
 
-  private authAPIURL () {
-    return sessionStorage.getItem('AUTH_API_URL')
+  private authAPIURL (): string {
+    return sessionStorage.getItem('VUE_APP_AUTH_ROOT_API')
   }
   /**
    * Fetch Authorizations by NR number
    */
-  private getNRAuthorizations (nrNumber) {
+  private getNRAuthorizations (nrNumber: string) : Promise<any> {
     const url = nrNumber + '/authorizations'
     const config = {
-      baseURL: this.authAPIURL() + 'entities/'
+      baseURL: this.authAPIURL() + '/entities/'
     }
     return axios.get(url, config)
   }
 
-  private storeAuthRoles (response) {
+  private storeAuthRoles (response): void {
     // NB: roles array may contain 'view', 'edit' or nothing
     const authRoles = response && response.data && response.data.roles
     if (authRoles && authRoles.length > 0) {
