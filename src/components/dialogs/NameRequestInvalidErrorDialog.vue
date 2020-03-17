@@ -1,8 +1,8 @@
 <template>
   <v-dialog v-model="dialog" width="45rem" persistent :attach="attach" content-class="namerequest-invalid-error-dialog">
     <v-card>
-      <v-card-title v-if="type === NameRequestStates.NOTFOUND">Name Request Not Found</v-card-title>
-      <v-card-title v-else>Name Request Invalid</v-card-title>
+      <v-card-title id="dialog-title" v-if="type === NameRequestStates.NOTFOUND">Name Request Not Found</v-card-title>
+      <v-card-title id="dialog-title" v-else>Name Request Invalid</v-card-title>
       <v-card-text>
         <p class="genErr" v-if="type === NameRequestStates.EXPIRED">
           The specified name request has expired.</p>
@@ -16,7 +16,7 @@
         <p class="genErr" v-else-if="type === NameRequestStates.NOTFOUND">
           The specified name request number could not be found.</p>
 
-        <p class="genErr" v-else>An unexpected error has occurred</p>
+        <p class="genErr" v-else>An unexpected error has occurred.</p>
       </v-card-text>
 
       <v-divider></v-divider>
@@ -25,7 +25,7 @@
         <v-btn v-if="type === NameRequestStates.NOTFOUND || type === NameRequestStates.CONSUMED"
                 id="dialog-redirect-button" color="primary" text @click="redirect()">Back to Dashboard</v-btn>
 
-        <v-btn v-else id="dialog-exit-button" color="primary" text @click="okay()">OK</v-btn>
+        <v-btn v-else id="dialog-ok-button" color="primary" text @click="okay()">OK</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
