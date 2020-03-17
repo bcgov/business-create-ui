@@ -9,3 +9,4 @@
   "VUE_APP_AUTH_ROOT_API": "https://auth-api-dev.pathfinder.gov.bc.ca/api/v1/",
   "BUSINESSES_URL": "https://dev.bcregistry.ca/cooperatives/auth/business/" 
 }
+
