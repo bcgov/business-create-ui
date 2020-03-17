@@ -1,18 +1,23 @@
 <template>
   <div>
+
     <confirm-dialog ref="reassignCPDialog" attach="#addEditPersonContainer"/>
+
     <v-expand-transition id="addEditPersonContainer">
       <ul class="list add-person">
         <li class="add-person-container">
           <div class="meta-container">
-            <label class="add-person-header" v-if="isPerson">
-              <span v-if="activeIndex===-1">Add Person</span>
-              <span v-else>Edit Person</span>
-            </label>
-            <label class="add-person-header" v-if="isOrg">
+
+            <label class="add-person-header" v-if="isOrg && entityFilter(EntityTypes.BCOMP)">
               <span v-if="activeIndex===-1">Add Corporation or Firm</span>
               <span v-else>Edit Corporation or Firm</span>
             </label>
+
+            <label class="add-person-header" v-if="isOrg && entityFilter(EntityTypes.COOP)">
+              <span v-if="activeIndex===-1">Add Organization</span>
+              <span v-else>Edit Organization</span>
+            </label>
+
             <div class="meta-container__inner">
               <v-form
                 ref="addPersonOrgForm"
@@ -123,6 +128,7 @@
               </v-form>
             </div>
           </div>
+
         </li>
       </ul>
     </v-expand-transition>
@@ -131,7 +137,7 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Vue, Prop, Watch, Emit, Mixins } from 'vue-property-decorator'
+import { Component, Prop, Emit, Mixins } from 'vue-property-decorator'
 
 // Interfaces
 import { OrgPersonIF, BaseAddressObjIF, BaseAddressType, FormType, AddressIF, DialogType } from '@/interfaces'
@@ -338,11 +344,11 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
     if (this.isCompletingParty) {
       roles.push(Roles.COMPLETING_PARTY)
     }
-    if (this.isDirector) {
-      roles.push(Roles.DIRECTOR)
-    }
     if (this.isIncorporator) {
       roles.push(Roles.INCORPORATOR)
+    }
+    if (this.isDirector) {
+      roles.push(Roles.DIRECTOR)
     }
     return roles
   }
@@ -375,11 +381,11 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
   }
 
   get isPerson (): boolean {
-    return this.orgPerson && this.orgPerson.type === IncorporatorTypes.PERSON
+    return this.orgPerson?.type === IncorporatorTypes.PERSON
   }
 
   get isOrg (): boolean {
-    return this.orgPerson && this.orgPerson.type === IncorporatorTypes.CORPORATION
+    return this.orgPerson?.type === IncorporatorTypes.CORPORATION
   }
 
   get incorporatorLabel () : string {
