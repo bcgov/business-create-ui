@@ -63,7 +63,7 @@
                   />
                 </div>
                 <label class="sub-header">Roles</label>
-                <v-row align="center" justify="center">
+                <v-row>
                   <v-col cols="4" v-if="isPerson">
                     <div :class="{'highlightedRole': isRoleLocked(Roles.COMPLETING_PARTY)}">
                       <v-checkbox v-model="isCompletingParty"
