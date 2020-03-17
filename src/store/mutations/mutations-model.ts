@@ -1,5 +1,5 @@
 import { CertifyStatementIF, CertifyIF, IncorporationAddressIf, NameRequestIF, BaseAddressObjIF,
-  ExternalResourceIF, BusinessContactIF } from '@/interfaces'
+  ExternalResourceIF, BusinessContactIF, OrgPersonIF } from '@/interfaces'
 
 export const mutateCurrentStep = (state: any, currentStep: boolean) => {
   state.stateModel.currentStep = currentStep
@@ -51,6 +51,14 @@ export const mutateDefineCompanyStepValidity = (state: any, validity: boolean) =
 
 export const mutateOfficeAddresses = (state: any, addresses: IncorporationAddressIf) => {
   state.stateModel.defineCompanyStep.officeAddresses = addresses
+}
+
+export const mutateOrgPersonList = (state: any, orgPeople: OrgPersonIF[]) => {
+  state.stateModel.addPeopleAndRoleStep.orgPeople = orgPeople
+}
+
+export const mutateAddPeopleAndRoleStepValidity = (state: any, validity: boolean) => {
+  state.stateModel.addPeopleAndRoleStep.valid = validity
 }
 
 export const mutateNameRequestState = (state: any, nameRequestState: NameRequestIF) => {

@@ -9,18 +9,20 @@ import { stateModel, resourceModel } from './state'
 // Getters
 import { isRoleStaff, isRoleEdit, isRoleView, isEntityType, isTypeBcomp, isTypeCoop,
   isShowBackBtn, isShowReviewConfirmBtn, isShowFilePayBtn, isEnableFilePayBtn, isBusySaving,
-  getFilingId, getBusinessIdentifier, getOfficeAddresses } from '@/store/getters'
+  getFilingId, getBusinessIdentifier, getOfficeAddresses, isApplicationValid } from '@/store/getters'
 
 // Mutations
 import { mutateCurrentStep, mutateIsSaving, mutateIsSavingResuming, mutateIsFilingPaying,
   mutateResource, mutateKeycloakRoles, mutateAuthRoles, mutateCurrentDate, mutateCertifyStatementResource,
   mutateCertifyState, mutateBusinessContact, mutateDefineCompanyStepValidity, mutateNameRequestState,
-  mutateFilingId, mutateOfficeAddresses } from '@/store/mutations'
+  mutateFilingId, mutateOfficeAddresses, mutateOrgPersonList, mutateAddPeopleAndRoleStepValidity }
+  from '@/store/mutations'
 
 // Actions
 import { setCurrentStep, setIsSaving, setIsSavingResuming, setIsFilingPaying, setResource,
   setKeycloakRoles, setAuthRoles, setCurrentDate, setCertifyStatementResource, setCertifyState, setBusinessContact,
-  setDefineCompanyStepValidity, setNameRequestState, setFilingId, setOfficeAddresses } from './actions'
+  setDefineCompanyStepValidity, setNameRequestState, setFilingId, setOfficeAddresses, setOrgPersonList,
+  setAddPeopleAndRoleStepValidity } from './actions'
 
 Vue.use(Vuex)
 
@@ -46,7 +48,8 @@ export const store: Store<any> = new Vuex.Store<any>({
     isBusySaving,
     getFilingId,
     getBusinessIdentifier,
-    getOfficeAddresses
+    getOfficeAddresses,
+    isApplicationValid
   },
   mutations: {
     mutateCurrentStep,
@@ -63,7 +66,10 @@ export const store: Store<any> = new Vuex.Store<any>({
     mutateDefineCompanyStepValidity,
     mutateNameRequestState,
     mutateFilingId,
-    mutateOfficeAddresses
+    mutateOfficeAddresses,
+    mutateOrgPersonList,
+    mutateAddPeopleAndRoleStepValidity
+
   },
   actions: {
     setCurrentStep,
@@ -80,6 +86,8 @@ export const store: Store<any> = new Vuex.Store<any>({
     setDefineCompanyStepValidity,
     setNameRequestState,
     setFilingId,
-    setOfficeAddresses
+    setOfficeAddresses,
+    setOrgPersonList,
+    setAddPeopleAndRoleStepValidity
   }
 })

@@ -234,10 +234,10 @@ export default class OfficeAddresses extends Mixins(CommonMixin, EntityFilterMix
   private inheritRegisteredAddress: boolean = true;
 
   // The Address schema containing Vuelidate rules.
-  private addressSchema: {} = officeAddressSchema;
+  private addressSchema = officeAddressSchema;
 
   // Entity Enum
-  readonly EntityTypes: {} = EntityTypes;
+  readonly EntityTypes = EntityTypes;
 
   /**
    * Lifecycle callback to set up the component when it is mounted.

@@ -23,7 +23,7 @@ import '@/assets/styles/overrides.scss'
 import App from './App.vue'
 
 // Helpers
-import { fetchConfig, haveKcTokens, AuthenticationService, AuthorizationService } from '@/utils'
+import { fetchConfig } from '@/utils'
 import KeycloakService from 'sbc-common-components/src/services/keycloak.services'
 
 // get rid of "You are running Vue in development mode" console message
@@ -43,31 +43,6 @@ fetchConfig()
     // set keycloak config file's location to the sbc-common-components
     await KeycloakService.setKeycloakConfigUrl(sessionStorage.getItem('KEYCLOAK_CONFIG_URL'))
 
-    /*
-    /*
-    // ensure we have the necessary Keycloak tokens
-    if (!haveKcTokens()) {
-      console.info('Redirecting to Signin URL...') // eslint-disable-line no-console
-      const signinUrl: string = sessionStorage.getItem('SIGNIN_URL') || ''
-      const returnUrl: string = encodeURIComponent(window.location.href)
-      // assume Signin URL is always reachable
-      signinUrl && returnUrl && window.location.assign(signinUrl + returnUrl)
-      return // do not execute remaining code
-    }
-
-    // start token service to refresh KC token periodically
-    console.info('Starting token refresh service...') // eslint-disable-line no-console
-    const tokenServices = new TokenServices()
-    await tokenServices.initUsingUrl(sessionStorage.getItem('KEYCLOAK_CONFIG_URL') || '')
-      .then(() => tokenServices.scheduleRefreshTimer())
-
-    // Authentication and Authorization
-    console.info('Fetching JWT Roles and Authentication roles...') // eslint-disable-line no-console
-    const authnService = new AuthenticationService()
-    await authnService.getJwtRoles()
-    // const authzSerice = new AuthorizationService() // FUTURE
-    // await authzSerice.getAuthorizations('NR123456') // FUTURE
-    */
     if (featureFlags.getFlag('bcrs-create-ui-enabled')) {
       new Vue({
         vuetify,
