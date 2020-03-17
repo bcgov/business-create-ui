@@ -38,7 +38,8 @@
       <v-btn outlined color="primary" :disabled="showOrgPersonForm" class="spacedButton"
       @click="addOrgPerson([Roles.INCORPORATOR], IncorporatorTypes.CORPORATION)" id="btn-add-corp">
         <v-icon>mdi-domain-plus</v-icon>
-        <span>Add a Corporation or Firm</span>
+        <span v-if="entityFilter(EntityTypes.BCOMP)">Add a Corporation or Firm</span>
+        <span v-if="entityFilter(EntityTypes.COOP)">Add Organization</span>
       </v-btn>
       <v-btn outlined color="primary" @click="addOrgPerson([Roles.COMPLETING_PARTY], IncorporatorTypes.PERSON)"
       :disabled="showOrgPersonForm"  class="spacedButton" v-if="!hasRole(Roles.COMPLETING_PARTY, 1, 'ATLEAST')"

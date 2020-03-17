@@ -70,7 +70,7 @@
             </v-col>
           </div>
           <div v-else>
-             <v-icon color="rgb(232, 156, 48)" small>mdi-alert</v-icon>
+             <v-icon color="$BCgovGold9" small>mdi-alert</v-icon>
              <span class="warning-text">Add Role</span>
           </div>
         </v-col>
@@ -121,7 +121,7 @@ import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
 import { ConfirmRemoveDialog } from '@/components/dialogs'
 
 // Mixins
-import { CommonMixin } from '@/mixins'
+import { CommonMixin, EntityFilterMixin } from '@/mixins'
 
 // Interfaces
 import { OrgPersonIF } from '@/interfaces'
@@ -132,7 +132,7 @@ import { OrgPersonIF } from '@/interfaces'
     ConfirmRemoveDialog
   }
 })
-export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
+export default class ListPeopleAndRoles extends Mixins(CommonMixin, EntityFilterMixin) {
   // Store Properties
   @Prop()
   private personList: Array<OrgPersonIF>

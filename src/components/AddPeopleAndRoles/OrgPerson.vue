@@ -12,9 +12,14 @@
               <span v-else>Edit Person</span>
             </label>
 
-            <label class="add-person-header" v-if="isOrg">
+            <label class="add-person-header" v-if="isOrg && entityFilter(EntityTypes.BCOMP)">
               <span v-if="activeIndex===-1">Add Corporation or Firm</span>
               <span v-else>Edit Corporation or Firm</span>
+            </label>
+
+            <label class="add-person-header" v-if="isOrg && entityFilter(EntityTypes.COOP)">
+              <span v-if="activeIndex===-1">Add Organization</span>
+              <span v-else>Edit Organization</span>
             </label>
 
             <div class="meta-container__inner">
