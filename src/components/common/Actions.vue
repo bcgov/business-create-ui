@@ -5,16 +5,14 @@
       <v-btn id="save-btn" large
         :disabled="!isEntityType || isBusySaving"
         :loading="stateModel.isSaving"
-        @click="onClickSave()"
-      >
+        @click="onClickSave()">
         <span>Save</span>
       </v-btn>
 
       <v-btn id="save-resume-btn" large
         :disabled="!isEntityType || isBusySaving"
         :loading="stateModel.isSavingResuming"
-        @click="onClickSaveResume()"
-      >
+        @click="onClickSaveResume()">
         <span>Save and Resume Later</span>
       </v-btn>
     </div>
@@ -22,10 +20,9 @@
     <div class="buttons-right">
       <v-fade-transition hide-on-leave>
         <v-btn id="back-btn" large outlined
-          to="/define-company"
+          v-bind:to="previousRoute"
           v-show="isShowBackBtn"
-          :disabled="isBusySaving"
-        >
+          :disabled="isBusySaving">
           <v-icon>mdi-chevron-left</v-icon>
           <span>Back</span>
         </v-btn>
@@ -33,11 +30,10 @@
 
       <v-fade-transition hide-on-leave>
         <v-btn id="review-confirm-btn" large color="primary"
-          to="/review-confirm"
+          v-bind:to="nextRoute"
           v-show="isShowReviewConfirmBtn"
-          :disabled="isBusySaving"
-        >
-          <span>Review and Confirm</span>
+          :disabled="isBusySaving">
+          <span>{{ nextButtonLabel }}</span>
           <v-icon>mdi-chevron-right</v-icon>
         </v-btn>
       </v-fade-transition>
@@ -47,16 +43,14 @@
           v-show="isShowFilePayBtn"
           :disabled="!isEnableFilePayBtn || isBusySaving"
           :loading="stateModel.isFilingPaying"
-          @click="onClickFilePay()"
-        >
+          @click="onClickFilePay()">
           <span>File and Pay</span>
         </v-btn>
       </v-fade-transition>
 
       <v-btn id="cancels-btn" large
         :disabled="isBusySaving"
-        @click="onCancel()"
-      >
+        @click="onCancel()">
         <span>Cancel</span>
       </v-btn>
     </div>
@@ -75,6 +69,8 @@ import { StateModelIF, GetterIF, ActionBindingIF } from '@/interfaces'
 // Mixins
 import { FilingTemplateMixin, LegalApiMixin } from '@/mixins'
 
+import { routes } from '@/router/routes'
+
 @Component
 export default class Actions extends Mixins(FilingTemplateMixin, LegalApiMixin) {
   // Global state
@@ -87,6 +83,7 @@ export default class Actions extends Mixins(FilingTemplateMixin, LegalApiMixin) 
   @Getter isShowFilePayBtn!: GetterIF
   @Getter isEnableFilePayBtn!: GetterIF
   @Getter isBusySaving!: GetterIF
+  @Getter getSteps!: Array<any>
 
   // Global actions
   @Action setIsSaving!: ActionBindingIF
@@ -148,6 +145,45 @@ export default class Actions extends Mixins(FilingTemplateMixin, LegalApiMixin) 
       // TODO:  Trigger some error dialog. Will catch any errors from the Api calls
     }
     this.setIsFilingPaying(false)
+  }
+
+  private get nextRoute (): string | null {
+    let nextRoute: string|null = null
+    const currentStep: number| null = this.$router.currentRoute.meta
+      ? this.$router.currentRoute.meta.step : null
+    if (currentStep && currentStep < this.stateModel.maxStep) {
+      const next = routes.find(route => (route.meta && route.meta.step === currentStep + 1))
+      if (next) {
+        nextRoute = next.path
+      }
+    }
+    return nextRoute
+  }
+
+  private get previousRoute (): string | null {
+    let previousRoute: string|null = null
+    const currentStep: number| null = this.$router.currentRoute.meta
+      ? this.$router.currentRoute.meta.step : null
+    if (currentStep && currentStep > this.stateModel.minStep) {
+      const next = routes.find(route => (route.meta && route.meta.step === currentStep - 1))
+      if (next) {
+        previousRoute = next.path
+      }
+    }
+    return previousRoute
+  }
+
+  private get nextButtonLabel (): string {
+    let btnLabel: string = ''
+    const currentStep: number| null = this.$router.currentRoute.meta
+      ? this.$router.currentRoute.meta.step : null
+    if (currentStep && currentStep < this.stateModel.maxStep) {
+      const next = this.getSteps.find(step => step.step === currentStep + 1)
+      if (next) {
+        btnLabel = next.text.replace('\n', ' ')
+      }
+    }
+    return btnLabel
   }
 }
 </script>

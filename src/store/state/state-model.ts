@@ -16,6 +16,8 @@ export const stateModel: StateModelIF = {
     certifiedBy: ''
   },
   currentStep: 1,
+  minStep: 1,
+  maxStep: 3,
   isSaving: false,
   isSavingResuming: false,
   isFilingPaying: false,
