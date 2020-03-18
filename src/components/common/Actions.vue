@@ -20,7 +20,7 @@
     <div class="buttons-right">
       <v-fade-transition hide-on-leave>
         <v-btn id="back-btn" large outlined
-          v-bind:to="previousRoute"
+          :to="previousRoute"
           v-show="isShowBackBtn"
           :disabled="isBusySaving">
           <v-icon>mdi-chevron-left</v-icon>
@@ -30,7 +30,7 @@
 
       <v-fade-transition hide-on-leave>
         <v-btn id="review-confirm-btn" large color="primary"
-          v-bind:to="nextRoute"
+          :to="nextRoute"
           v-show="isShowReviewConfirmBtn"
           :disabled="isBusySaving">
           <span>{{ nextButtonLabel }}</span>
@@ -162,8 +162,7 @@ export default class Actions extends Mixins(FilingTemplateMixin, LegalApiMixin) 
   }
 
   private next () : any {
-    const currentStep: number| null = this.$router.currentRoute.meta
-      ? this.$router.currentRoute.meta.step : null
+    const currentStep: number| null = this.$router.currentRoute.meta?.step
     if (currentStep && currentStep < this.stateModel.maxStep) {
       return this.getSteps.find(step => step.step === currentStep + 1)
     }
@@ -171,8 +170,7 @@ export default class Actions extends Mixins(FilingTemplateMixin, LegalApiMixin) 
   }
 
   private get previousRoute (): string | null {
-    const currentStep: number| null = this.$router.currentRoute.meta
-      ? this.$router.currentRoute.meta.step : null
+    const currentStep: number| null = this.$router.currentRoute.meta?.step
     if (currentStep && currentStep > this.stateModel.minStep) {
       const previous = this.getSteps.find(step => step.step === currentStep - 1)
       if (previous) {
