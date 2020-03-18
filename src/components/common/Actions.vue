@@ -69,8 +69,6 @@ import { StateModelIF, GetterIF, ActionBindingIF } from '@/interfaces'
 // Mixins
 import { FilingTemplateMixin, LegalApiMixin } from '@/mixins'
 
-import { routes } from '@/router/routes'
-
 @Component
 export default class Actions extends Mixins(FilingTemplateMixin, LegalApiMixin) {
   // Global state
@@ -148,42 +146,40 @@ export default class Actions extends Mixins(FilingTemplateMixin, LegalApiMixin) 
   }
 
   private get nextRoute (): string | null {
-    let nextRoute: string|null = null
-    const currentStep: number| null = this.$router.currentRoute.meta
-      ? this.$router.currentRoute.meta.step : null
-    if (currentStep && currentStep < this.stateModel.maxStep) {
-      const next = routes.find(route => (route.meta && route.meta.step === currentStep + 1))
-      if (next) {
-        nextRoute = next.path
-      }
+    const nextStep = this.next()
+    if (nextStep) {
+      return nextStep.to
     }
-    return nextRoute
-  }
-
-  private get previousRoute (): string | null {
-    let previousRoute: string|null = null
-    const currentStep: number| null = this.$router.currentRoute.meta
-      ? this.$router.currentRoute.meta.step : null
-    if (currentStep && currentStep > this.stateModel.minStep) {
-      const next = routes.find(route => (route.meta && route.meta.step === currentStep - 1))
-      if (next) {
-        previousRoute = next.path
-      }
-    }
-    return previousRoute
+    return null
   }
 
   private get nextButtonLabel (): string {
-    let btnLabel: string = ''
+    const nextStep = this.next()
+    if (nextStep) {
+      return nextStep.text.replace('\n', ' ')
+    }
+    return ''
+  }
+
+  private next () : any {
     const currentStep: number| null = this.$router.currentRoute.meta
       ? this.$router.currentRoute.meta.step : null
     if (currentStep && currentStep < this.stateModel.maxStep) {
-      const next = this.getSteps.find(step => step.step === currentStep + 1)
-      if (next) {
-        btnLabel = next.text.replace('\n', ' ')
+      return this.getSteps.find(step => step.step === currentStep + 1)
+    }
+    return null
+  }
+
+  private get previousRoute (): string | null {
+    const currentStep: number| null = this.$router.currentRoute.meta
+      ? this.$router.currentRoute.meta.step : null
+    if (currentStep && currentStep > this.stateModel.minStep) {
+      const previous = this.getSteps.find(step => step.step === currentStep - 1)
+      if (previous) {
+        return previous.to
       }
     }
-    return btnLabel
+    return null
   }
 }
 </script>
