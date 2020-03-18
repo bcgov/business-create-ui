@@ -8,8 +8,6 @@ export interface StateModelIF {
   currentDate: string
   certifyState: CertifyIF
   currentStep: number
-  minStep: number
-  maxStep: number
   isSaving: boolean
   isSavingResuming: boolean
   isFilingPaying: boolean

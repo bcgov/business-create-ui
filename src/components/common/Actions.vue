@@ -82,6 +82,7 @@ export default class Actions extends Mixins(FilingTemplateMixin, LegalApiMixin) 
   @Getter isEnableFilePayBtn!: GetterIF
   @Getter isBusySaving!: GetterIF
   @Getter getSteps!: Array<any>
+  @Getter getMaxStep!: number
 
   // Global actions
   @Action setIsSaving!: ActionBindingIF
@@ -163,7 +164,7 @@ export default class Actions extends Mixins(FilingTemplateMixin, LegalApiMixin) 
 
   private next () : any {
     const currentStep: number| null = this.$router.currentRoute.meta?.step
-    if (currentStep && currentStep < this.stateModel.maxStep) {
+    if (currentStep && currentStep < this.getMaxStep) {
       return this.getSteps.find(step => step.step === currentStep + 1)
     }
     return null
@@ -171,7 +172,7 @@ export default class Actions extends Mixins(FilingTemplateMixin, LegalApiMixin) 
 
   private get previousRoute (): string | null {
     const currentStep: number| null = this.$router.currentRoute.meta?.step
-    if (currentStep && currentStep > this.stateModel.minStep) {
+    if (currentStep && currentStep > 1) {
       const previous = this.getSteps.find(step => step.step === currentStep - 1)
       if (previous) {
         return previous.to

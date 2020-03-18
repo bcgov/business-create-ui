@@ -72,21 +72,21 @@ export const getOfficeAddresses = (state: any): string => {
  * Whether Back button should be displayed.
  */
 export const isShowBackBtn = (state: any): boolean => {
-  return (state.stateModel.currentStep > state.stateModel.minStep)
+  return (state.stateModel.currentStep > 1)
 }
 
 /**
  * Whether Review and Confirm button should be displayed.
  */
-export const isShowReviewConfirmBtn = (state: any): boolean => {
-  return (!!state.stateModel.nameRequest.entityType && state.stateModel.currentStep < state.stateModel.maxStep)
+export const isShowReviewConfirmBtn = (state: any, getters:any): boolean => {
+  return (!!state.stateModel.nameRequest.entityType && state.stateModel.currentStep < getters.getMaxStep)
 }
 
 /**
  * Whether File and Pay button should be displayed.
  */
-export const isShowFilePayBtn = (state: any): boolean => {
-  return (state.stateModel.currentStep === state.stateModel.maxStep)
+export const isShowFilePayBtn = (state: any, getters:any): boolean => {
+  return (state.stateModel.currentStep === getters.getMaxStep)
 }
 
 /**
@@ -166,4 +166,8 @@ export const getSteps = (state: any, getters:any): Array<any> => {
     valid: getters.isApplicationValid
   }]
   return steps
+}
+
+export const getMaxStep = (state: any, getters:any): number => {
+  return getters.getSteps ? getters.getSteps.filter(step => step.step !== -1).length : -1
 }
