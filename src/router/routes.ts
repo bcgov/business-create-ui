@@ -1,6 +1,8 @@
 import DefineCompany from '@/views/DefineCompany.vue'
 import ReviewConfirm from '@/views/ReviewConfirm.vue'
 import AddPeopleAndRoles from '@/views/AddPeopleAndRoles.vue'
+import Step3Container from '@/views/Step3Container.vue'
+import Step4Container from '@/views/Step4Container.vue'
 import SigninView from '@/views/auth/Signin.vue'
 import SignoutView from '@/views/auth/Signout.vue'
 
@@ -59,16 +61,32 @@ export const routes = [
       requiresAuth: true
     }
   },
-  //
-  // TODO: handle steps differently because they
-  //       differ depending on company type (BC, CP)
-  //
+  {
+    path: '/step-3',
+    name: 'Step-3',
+    component: Step3Container,
+    meta: {
+      step: -1,
+      label: 'Add People and Roles',
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/step-4',
+    name: 'Step-4',
+    component: Step4Container,
+    meta: {
+      step: -1,
+      label: 'Add People and Roles',
+      requiresAuth: true
+    }
+  },
   {
     path: '/review-confirm',
     name: 'review-confirm',
     component: ReviewConfirm,
     meta: {
-      step: 5,
+      step: 3,
       label: 'Review and Confirm',
       requiresAuth: true
     }

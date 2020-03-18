@@ -42,7 +42,7 @@
         </v-row>
       </v-container>
 
-      <actions />
+      <actions :key="$route.path"/>
     </main>
 
     <sbc-footer />

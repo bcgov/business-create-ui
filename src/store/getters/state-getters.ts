@@ -78,15 +78,15 @@ export const isShowBackBtn = (state: any): boolean => {
 /**
  * Whether Review and Confirm button should be displayed.
  */
-export const isShowReviewConfirmBtn = (state: any): boolean => {
-  return (!!state.stateModel.nameRequest.entityType && state.stateModel.currentStep < 5)
+export const isShowReviewConfirmBtn = (state: any, getters:any): boolean => {
+  return (!!state.stateModel.nameRequest.entityType && state.stateModel.currentStep < getters.getMaxStep)
 }
 
 /**
  * Whether File and Pay button should be displayed.
  */
-export const isShowFilePayBtn = (state: any): boolean => {
-  return (state.stateModel.currentStep === 5)
+export const isShowFilePayBtn = (state: any, getters:any): boolean => {
+  return (state.stateModel.currentStep === getters.getMaxStep)
 }
 
 /**
@@ -114,4 +114,60 @@ export const isBusySaving = (state: any): boolean => {
  */
 export const isApplicationValid = (state: any): boolean => {
   return (state.stateModel.defineCompanyStep.valid && state.stateModel.addPeopleAndRoleStep.valid)
+}
+
+/**
+ * Steps to be displayed in the stepper
+ */
+export const getSteps = (state: any, getters:any): Array<any> => {
+  const steps: Array<any> = [{
+    id: 'step-1-btn',
+    step: 1,
+    icon: 'mdi-domain',
+    text: 'Define Your\nCompany',
+    to: '/define-company',
+    disabled: getters.isBusySaving,
+    valid: state.stateModel.defineCompanyStep.valid
+  },
+  {
+    id: 'step-2-btn',
+    step: 2,
+    icon: 'mdi-account-multiple-plus',
+    text: 'Add People\nand Roles',
+    to: '/add-people-roles',
+    disabled: getters.isBusySaving,
+    valid: state.stateModel.addPeopleAndRoleStep.valid
+  },
+  {
+    id: 'step-3-btn',
+    step: -1,
+    icon: getters.isTypeBcomp ? 'mdi-sitemap' : 'mdi-format-list-text',
+    text: getters.isTypeBcomp ? 'Create Share\nStructure' : 'Create\nRules',
+    to: '/step-3',
+    disabled: true,
+    valid: false
+  },
+  {
+    id: 'step-4-btn',
+    step: -1,
+    icon: getters.isTypeBcomp ? 'mdi-handshake' : 'mdi-file-document-box-multiple',
+    text: getters.isTypeBcomp ? 'Incorporation\nAgreement' : 'Create\nMemorandum',
+    to: '/step-4',
+    disabled: true,
+    valid: false
+  },
+  {
+    id: 'step-5-btn',
+    step: 3,
+    icon: getters.isTypeBcomp ? 'mdi-text-box-check-outline' : 'mdi-file-document-box-check-outline',
+    text: 'Review\nand Confirm',
+    to: '/review-confirm',
+    disabled: getters.isBusySaving,
+    valid: getters.isApplicationValid
+  }]
+  return steps
+}
+
+export const getMaxStep = (state: any, getters:any): number => {
+  return getters.getSteps ? getters.getSteps.filter(step => step.step !== -1).length : -1
 }
