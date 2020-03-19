@@ -76,11 +76,12 @@
                   </v-col>
                   <v-col cols="4">
                     <div :class="{'highlightedRole':
-                      isRoleLocked(Roles.INCORPORATOR) || orgPerson.partyType === IncorporatorTypes.CORPORATION}">
+                      isRoleLocked(Roles.INCORPORATOR) ||
+                      orgPerson.person.partyType === IncorporatorTypes.CORPORATION}">
                       <v-checkbox v-model="isIncorporator"
                       :label="incorporatorLabel"
                       :disabled="isRoleLocked(Roles.INCORPORATOR) ||
-                      orgPerson.partyType === IncorporatorTypes.CORPORATION"
+                      orgPerson.person.partyType === IncorporatorTypes.CORPORATION"
                       />
                     </div>
                   </v-col>
@@ -238,6 +239,7 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
   private created (): void {
     if (this.initialValue) {
       this.orgPerson = { ...this.initialValue }
+      this.orgPerson.person = { ...this.initialValue.person }
       this.isDirector = this.orgPerson.roles.includes(Roles.DIRECTOR)
       this.isIncorporator = this.orgPerson.roles.includes(Roles.INCORPORATOR)
       this.isCompletingParty = this.orgPerson.roles.includes(Roles.COMPLETING_PARTY)
@@ -319,6 +321,7 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
    */
   private addPerson (): OrgPersonIF {
     let personToAdd: OrgPersonIF = { ...this.orgPerson }
+    personToAdd.person = { ...this.orgPerson.person }
     if (this.activeIndex === -1) {
       personToAdd.person.id = this.nextId
     }
