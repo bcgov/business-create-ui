@@ -111,7 +111,7 @@
             "kind": "ConfigMap",
             "apiVersion": "v1",
             "data": {
-                "configuration.json": "{\"API_URL\":\"${API_URL}\",{\"AUTH_URL\":\"${AUTH_URL}\",{\"SIGNIN_URL\":\"${SIGNIN_URL}\",\"VUE_APP_AUTH_ROOT_API\":\"${VUE_APP_AUTH_ROOT_API}\",\"PAY_API_URL\":\"${PAY_API_URL}\",\"REPORT_SVC_URL\":\"${REPORT_SVC_URL}\",\"KEYCLOAK_CONFIG_URL\":\"${KEYCLOAK_CONFIG_URL}\",\"ADDRESS_COMPLETE_KEY\":\"${ADDRESS_COMPLETE_KEY}\",\"LD_CLIENT_ID\":\"${LD_CLIENT_ID}\"}"
+                "configuration.json": "{\"API_URL\":\"${API_URL}\",{\"AUTH_URL\":\"${AUTH_URL}\",{\"SIGNIN_URL\":\"${SIGNIN_URL}\",\"VUE_APP_AUTH_ROOT_API\":\"${VUE_APP_AUTH_ROOT_API}\",\"BUSINESSES_URL\":\"${BUSINESSES_URL}\",\"PAY_API_URL\":\"${PAY_API_URL}\",\"REPORT_SVC_URL\":\"${REPORT_SVC_URL}\",\"KEYCLOAK_CONFIG_URL\":\"${KEYCLOAK_CONFIG_URL}\",\"ADDRESS_COMPLETE_KEY\":\"${ADDRESS_COMPLETE_KEY}\",\"LD_CLIENT_ID\":\"${LD_CLIENT_ID}\"}"
             },
             "metadata": {
                 "name": "${NAME}-${TAG_NAME}-configuration",
@@ -285,6 +285,13 @@
             "name": "VUE_APP_AUTH_ROOT_API",
             "displayName": "Authorization API URL",
             "description": "The URL to the authorization service API.",
+            "required": false,
+            "value": ""
+        },
+        {
+            "name": "BUSINESSES_URL",
+            "displayName": "Businesses Dashboard URL",
+            "description": "The URL to the businesses dashboard.",
             "required": false,
             "value": ""
         },
