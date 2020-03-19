@@ -28,7 +28,7 @@
 
     <sbc-header ref="sbcHeader" />
 
-    <main class="app-body" v-if="!evaluatingPreconditions">
+    <main class="app-body">
       <entity-info />
 
       <v-container class="view-container pt-4">
@@ -89,6 +89,9 @@ import { CertifyStatementResource } from '@/resources'
 // Enums
 import { EntityTypes, FilingCodes, NameRequestStates } from '@/enums'
 
+// Enums for Keycloak
+import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
+
 @Component({
   components: {
     SbcHeader,
@@ -104,6 +107,8 @@ import { EntityTypes, FilingCodes, NameRequestStates } from '@/enums'
 export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApiMixin, NameXApiMixin) {
   // Global state
   @State stateModel!: StateModelIF
+  @State(state => state.stateModel.tombstone.authenticated)
+  readonly authenticated: boolean
 
   // Global actions
   @Action setCurrentStep!: ActionBindingIF
@@ -111,6 +116,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
   @Action setCertifyStatementResource!: ActionBindingIF
   @Action setNameRequestState!: ActionBindingIF
   @Action setAuthRoles: ActionBindingIF
+  @Action setAuthenticated: ActionBindingIF
 
   // Local Properties
   private filingData: Array<FilingDataIF> = []
@@ -122,6 +128,19 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
   private evaluatingPreconditions: boolean = true
 
   private async created (): Promise<any> {
+    // Check for keycloak token to see if authenticated
+    // (Keycloak service does not seem to be always ready here, so we check session storage )
+    // Fresh logins will initiate fetch data through the sign in component
+    // and the authenticated flag via vuex
+    if (sessionStorage.getItem(SessionStorageKeys.KeyCloakToken)) {
+      this.fetchData()
+    }
+  }
+
+  /**
+   * Fetch data required for NR and draft filing
+   */
+  private async fetchData () {
     // Evaluate name request pre conditions
     const nameRequest = await this.evaluateNRPreconditions()
     if (nameRequest && nameRequest.nrNum && nameRequest.isConsumable) {
@@ -163,7 +182,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
   private getNRAuthorizations (nrNumber: string) : Promise<any> {
     const url = nrNumber + '/authorizations'
     const config = {
-      baseURL: this.authAPIURL() + '/entities/'
+      baseURL: this.authAPIURL() + 'entities/'
     }
     return axios.get(url, config)
   }
@@ -247,7 +266,18 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
     this.setCurrentStep(this.$route.meta.step)
   }
 
-  @Watch('stateModel.nameRequest.entityType')
+  /**
+   * Method called when the authenticated state changes.
+   * Used to determine if we are ready to go evaluate all preconditions and fetch required data
+   */
+  @Watch('authenticated')
+  private onAuthenticatedChange (): void {
+    if (this.authenticated) {
+      this.fetchData()
+    }
+  }
+
+  @Watch('state.nameRequest.entityType')
   private onEntityTypeChanged (val: string | null) : void {
     switch (val) {
       case EntityTypes.BCOMP:

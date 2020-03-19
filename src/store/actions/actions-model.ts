@@ -28,6 +28,10 @@ export const setAuthRoles: ActionIF = ({ commit }, authRoles): void => {
   commit('mutateAuthRoles', authRoles)
 }
 
+export const setAuthenticated: ActionIF = ({ commit }, authenticated): void => {
+  commit('mutateAuthenticated', authenticated)
+}
+
 export const setCurrentDate: ActionIF = ({ commit }, currentDate): void => {
   commit('mutateCurrentDate', currentDate)
 }
