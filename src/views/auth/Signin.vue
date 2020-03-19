@@ -41,6 +41,13 @@ export default class SigninView extends Vue {
       // Decode the redirect uri
       let redirectPath : string = decodeURIComponent(url)
       let redirectSplit: string[] = redirectPath.split('/?redirect=')
+
+      // redirect param comes in differently when accessed via the root route,
+      // if split unsuccessful
+      // check for root path expected format e.g /?nrNumber=12345
+      if (redirectSplit && redirectSplit.length === 1) {
+        redirectSplit = redirectPath.split('/')
+      }
       if (redirectSplit && redirectSplit.length >= 2 && redirectSplit[1].indexOf('?') >= 0) {
         // Split into query param strings
         let queryParams: string[] = redirectSplit[1].split('?')

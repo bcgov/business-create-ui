@@ -131,7 +131,9 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
     // Check for keycloak token to see if authenticated
     // (Keycloak service does not seem to be always ready here, so we check session storage )
     // Fresh logins will initiate fetch data through the sign in component
-    // and the authenticated flag via vuex
+    // and the authenticated flag via vuex. This is required for when a user refreshes the page
+    // and they are already authenticated, so the data is refetched since the watcher for authenticated
+    // does not get re-triggered
     if (sessionStorage.getItem(SessionStorageKeys.KeyCloakToken)) {
       this.fetchData()
     }
