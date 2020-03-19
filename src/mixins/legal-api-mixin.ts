@@ -61,7 +61,7 @@ export default class LegalApiMixin extends Vue {
    * @param isDraft Boolean indicating whether to complete filing.
    */
   private createFiling (data: object, isDraft: boolean): Promise<any> {
-    let url = `businesses`
+    let url = ''
     if (isDraft) {
       url += '?draft=true'
     }
@@ -85,7 +85,7 @@ export default class LegalApiMixin extends Vue {
     let filingId = this.getFilingId
 
     // Assign the url business identifier
-    let url = `businesses/${this.getBusinessIdentifier}/filings/${filingId}`
+    let url = `${this.getBusinessIdentifier}/filings/${filingId}`
     if (isDraft) {
       url += '?draft=true'
     }
@@ -102,7 +102,7 @@ export default class LegalApiMixin extends Vue {
    */
   private getDraftFiling (): Promise<any> {
     // Assign the url business identifier
-    let url = `businesses/${this.getBusinessIdentifier}/tasks`
+    let url = `${this.getBusinessIdentifier}/tasks`
 
     return axios.get(url).then(res => {
       if (res.data.tasks) {
@@ -123,7 +123,7 @@ export default class LegalApiMixin extends Vue {
 
     if (filingId) {
       // Assign the url business identifier
-      let url = `businesses/${this.getBusinessIdentifier}/filings/${filingId}`
+      let url = `${this.getBusinessIdentifier}/filings/${filingId}`
 
       return axios.put(url, filing).then(res => {
         if (!res) {
