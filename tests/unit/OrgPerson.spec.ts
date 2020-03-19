@@ -33,12 +33,14 @@ const cancelButtonSelector: string = '#btn-cancel'
 const formSelector: string = '.appoint-form'
 
 const validPersonData: OrgPersonIF = {
-  'id': 0,
-  'firstName': 'Adam',
-  'lastName': 'Smith',
-  'middleName': 'D',
-  'orgName': '',
-  'type': 'Person',
+  'person': {
+    'id': 0,
+    'firstName': 'Adam',
+    'lastName': 'Smith',
+    'middleName': 'D',
+    'orgName': '',
+    'partyType': 'Person'
+  },
   'roles': ['Director', 'Completing Party'],
   'address': {
     'mailingAddress': {
@@ -61,12 +63,14 @@ const validPersonData: OrgPersonIF = {
 }
 
 const validIncorporator: OrgPersonIF = {
-  'id': 1,
-  'firstName': 'Adam',
-  'lastName': 'Smith',
-  'middleName': 'D',
-  'orgName': '',
-  'type': 'Person',
+  'person': {
+    'id': 0,
+    'firstName': 'Adam',
+    'lastName': 'Smith',
+    'middleName': 'D',
+    'orgName': '',
+    'partyType': 'Person'
+  },
   'roles': ['Incorporator'],
   'address': {
     'mailingAddress': {
@@ -89,12 +93,14 @@ const validIncorporator: OrgPersonIF = {
 }
 
 const validOrgData: OrgPersonIF = {
-  'id': 0,
-  'firstName': '',
-  'lastName': '',
-  'middleName': '',
-  'orgName': 'Test Org',
-  'type': 'Org',
+  'person': {
+    'id': 0,
+    'firstName': '',
+    'lastName': '',
+    'middleName': '',
+    'orgName': 'Test Org',
+    'partyType': 'Org'
+  },
   'roles': ['Incorporator'],
   'address': {
     'mailingAddress': {
@@ -174,7 +180,7 @@ describe('OrgPerson', () => {
 
   it('Displays form data for org', async () => {
     const wrapper: Wrapper<OrgPerson> = createComponent(validOrgData, -1, 0, null)
-    expect((<HTMLInputElement> wrapper.find(orgNameSelector).element).value).toEqual(validOrgData['orgName'])
+    expect((<HTMLInputElement> wrapper.find(orgNameSelector).element).value).toEqual(validOrgData['person']['orgName'])
     await wrapper.vm.$nextTick()
     expect(wrapper.find(doneButtonSelector).attributes('disabled')).toBeUndefined()
     expect(wrapper.find(removeButtonSelector).attributes('disabled')).toBeDefined()
@@ -184,9 +190,9 @@ describe('OrgPerson', () => {
 
   it('Displays form data for person', async () => {
     const wrapper: Wrapper<OrgPerson> = createComponent(validPersonData, 0, 0, null)
-    expect((<HTMLInputElement> wrapper.find(firstNameSelector).element).value).toEqual(validPersonData['firstName'])
-    expect((<HTMLInputElement> wrapper.find(middleNameSelector).element).value).toEqual(validPersonData['middleName'])
-    expect((<HTMLInputElement> wrapper.find(lastNameSelector).element).value).toEqual(validPersonData['lastName'])
+    expect((<HTMLInputElement> wrapper.find(firstNameSelector).element).value).toEqual(validPersonData['person']['firstName'])
+    expect((<HTMLInputElement> wrapper.find(middleNameSelector).element).value).toEqual(validPersonData['person']['middleName'])
+    expect((<HTMLInputElement> wrapper.find(lastNameSelector).element).value).toEqual(validPersonData['person']['lastName'])
     await wrapper.vm.$nextTick()
     expect(wrapper.find(doneButtonSelector).attributes('disabled')).toBeUndefined()
     expect(wrapper.find(removeButtonSelector).attributes('disabled')).toBeUndefined()
@@ -216,7 +222,7 @@ describe('OrgPerson', () => {
 
   it('Clicking Done button emits event for add edit person/org', async () => {
     const wrapper: Wrapper<OrgPerson> = createComponent(validOrgData, -1, 0, null)
-    expect((<HTMLInputElement> wrapper.find(orgNameSelector).element).value).toEqual(validOrgData['orgName'])
+    expect((<HTMLInputElement> wrapper.find(orgNameSelector).element).value).toEqual(validOrgData['person']['orgName'])
     await wrapper.vm.$nextTick()
     expect(wrapper.find(doneButtonSelector).attributes('disabled')).toBeUndefined()
     wrapper.find(doneButtonSelector).trigger('click')

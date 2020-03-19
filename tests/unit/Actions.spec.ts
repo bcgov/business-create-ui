@@ -113,7 +113,41 @@ describe('Actions Filing Functionality', () => {
         contactPoint: {
           email: 'someEmail',
           phone: '123-456-7890'
-        }
+        },
+        parties: [
+          {
+            person: {
+              id: 0,
+              firstName: 'Cameron',
+              lastName: 'Bowler',
+              middleName: 'D',
+              orgName: '',
+              partyType: 'Person'
+            },
+            address: {
+              mailingAddress: {
+                streetAddress: '122-12210 Boul De Pierrefonds',
+                streetAddressAdditional: '',
+                addressCity: 'Pierrefonds',
+                addressRegion: 'QC',
+                postalCode: 'H9A 2X6',
+                addressCountry: 'CA'
+              },
+              deliveryAddress: {
+                streetAddress: '122-12210 Boul De Pierrefonds',
+                streetAddressAdditional: '',
+                addressCity: 'Pierrefonds',
+                addressRegion: 'QC',
+                postalCode: 'H9A 2X6',
+                addressCountry: 'CA'
+              }
+            },
+            roles: [
+              'Completing Party',
+              'Director'
+            ]
+          }
+        ]
       }
     }
   }
@@ -127,6 +161,7 @@ describe('Actions Filing Functionality', () => {
     store.state.stateModel.defineCompanyStep.businessContact = { email: 'someEmail', phone: '123-456-7890' }
     store.state.stateModel.currentDate = '2020/01/29'
     store.state.stateModel.defineCompanyStep.officeAddresses = filing.filing.incorporationApplication.offices
+    store.state.stateModel.addPeopleAndRoleStep.orgPeople = filing.filing.incorporationApplication.parties
 
     const localVue = createLocalVue()
     localVue.use(VueRouter)

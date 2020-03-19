@@ -110,12 +110,14 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
   @Action setAddPeopleAndRoleStepValidity!: ActionBindingIF
 
   private newOrgPerson: OrgPersonIF = {
-    id: null,
-    firstName: '',
-    lastName: '',
-    middleName: '',
-    orgName: '',
-    type: '',
+    person: {
+      id: null,
+      firstName: '',
+      lastName: '',
+      middleName: '',
+      orgName: '',
+      partyType: ''
+    },
     roles: [],
     address: {
       mailingAddress: {
@@ -144,9 +146,10 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
   private addOrgPerson (rolesToInitialize: string[], type: string): void {
     this.currentOrgPerson = { ...this.newOrgPerson }
     this.currentOrgPerson.roles = rolesToInitialize
-    this.currentOrgPerson.type = type
+    this.currentOrgPerson.person.partyType = type
     this.activeIndex = -1
-    this.nextId = (this.orgPersonList.length === 0) ? 0 : this.orgPersonList[this.orgPersonList.length - 1].id + 1
+    this.nextId = (this.orgPersonList.length === 0)
+      ? 0 : this.orgPersonList[this.orgPersonList.length - 1].person.id + 1
     this.addEditInProgress = true
     this.showOrgPersonForm = true
   }

@@ -134,7 +134,7 @@ import { OrgPersonIF } from '@/interfaces'
 })
 export default class ListPeopleAndRoles extends Mixins(CommonMixin, EntityFilterMixin) {
   // Store Properties
-  @Prop({ default: [] })
+  @Prop()
   private personList: Array<OrgPersonIF>
 
   @Prop({ default: false })
@@ -154,8 +154,8 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin, EntityFilter
    * @returns The appropriate Corporation or Person name.
    */
   private formatName (filing: any): string {
-    return filing.orgName ? filing.orgName
-      : `${filing.firstName} ${filing.middleName || ''} ${filing.lastName}`
+    return filing.person.orgName ? filing.person.orgName
+      : `${filing.person.firstName} ${filing.person.middleName || ''} ${filing.person.lastName}`
   }
 
   /**

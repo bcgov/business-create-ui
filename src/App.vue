@@ -65,7 +65,7 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Watch, Mixins } from 'vue-property-decorator'
+import { Component, Vue, Watch, Mixins } from 'vue-property-decorator'
 import { Action, State } from 'vuex-class'
 import axios from '@/utils/axios-auth'
 

@@ -17,7 +17,8 @@ export interface IncorporationFilingIF {
       contactPoint: {
         email: string
         phone: string
-      }
+      },
+      parties: any[]
     }
   }
 }

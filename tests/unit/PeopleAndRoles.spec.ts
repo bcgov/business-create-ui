@@ -40,12 +40,14 @@ function resetStore (): void {
 function getPersonList (roles: string[] = [completingPartyRole]) : any {
   const mockPersonList = [
     {
-      'id': 0,
-      'firstName': 'Adam',
-      'lastName': 'Smith',
-      'middleName': 'D',
-      'orgName': '',
-      'type': 'Person',
+      'person': {
+        'id': 0,
+        'firstName': 'Adam',
+        'lastName': 'Smith',
+        'middleName': 'D',
+        'orgName': '',
+        'type': 'Person'
+      },
       'roles': roles,
       'address': {
         'mailingAddress': {
