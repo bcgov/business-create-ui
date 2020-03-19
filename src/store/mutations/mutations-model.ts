@@ -29,6 +29,10 @@ export const mutateAuthRoles = (state: any, authRoles: Array<string>) => {
   state.stateModel.tombstone.authRoles = authRoles
 }
 
+export const mutateAuthenticated = (state: any, authenticated: boolean) => {
+  state.stateModel.tombstone.authenticated = authenticated
+}
+
 export const mutateCurrentDate = (state: any, currentDate: string) => {
   state.stateModel.currentDate = currentDate
 }

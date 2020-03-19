@@ -14,16 +14,17 @@ import { isRoleStaff, isRoleEdit, isRoleView, isEntityType, isTypeBcomp, isTypeC
 
 // Mutations
 import { mutateCurrentStep, mutateIsSaving, mutateIsSavingResuming, mutateIsFilingPaying,
-  mutateResource, mutateKeycloakRoles, mutateAuthRoles, mutateCurrentDate, mutateCertifyStatementResource,
-  mutateCertifyState, mutateBusinessContact, mutateDefineCompanyStepValidity, mutateNameRequestState,
-  mutateFilingId, mutateOfficeAddresses, mutateOrgPersonList, mutateAddPeopleAndRoleStepValidity }
+  mutateResource, mutateKeycloakRoles, mutateAuthRoles, mutateAuthenticated, mutateCurrentDate,
+  mutateCertifyStatementResource, mutateCertifyState, mutateBusinessContact, mutateDefineCompanyStepValidity,
+  mutateNameRequestState, mutateFilingId, mutateOfficeAddresses, mutateOrgPersonList,
+  mutateAddPeopleAndRoleStepValidity }
   from '@/store/mutations'
 
 // Actions
 import { setCurrentStep, setIsSaving, setIsSavingResuming, setIsFilingPaying, setResource,
-  setKeycloakRoles, setAuthRoles, setCurrentDate, setCertifyStatementResource, setCertifyState, setBusinessContact,
-  setDefineCompanyStepValidity, setNameRequestState, setFilingId, setOfficeAddresses, setOrgPersonList,
-  setAddPeopleAndRoleStepValidity } from './actions'
+  setKeycloakRoles, setAuthRoles, setAuthenticated, setCurrentDate, setCertifyStatementResource, setCertifyState,
+  setBusinessContact, setDefineCompanyStepValidity, setNameRequestState, setFilingId, setOfficeAddresses,
+  setOrgPersonList, setAddPeopleAndRoleStepValidity } from './actions'
 
 Vue.use(Vuex)
 
@@ -62,6 +63,7 @@ export const store: Store<any> = new Vuex.Store<any>({
     mutateResource,
     mutateKeycloakRoles,
     mutateAuthRoles,
+    mutateAuthenticated,
     mutateCurrentDate,
     mutateCertifyStatementResource,
     mutateCertifyState,
@@ -82,6 +84,7 @@ export const store: Store<any> = new Vuex.Store<any>({
     setResource,
     setKeycloakRoles,
     setAuthRoles,
+    setAuthenticated,
     setCurrentDate,
     setCertifyStatementResource,
     setCertifyState,
