@@ -7,6 +7,6 @@
   "ADDRESS_COMPLETE_KEY": "RH99-RN99-GB72-FW86",
   "LD_CLIENT_ID": "5e5d5af4574f7e09ab53d03b",
   "VUE_APP_AUTH_ROOT_API": "https://auth-api-dev.pathfinder.gov.bc.ca/api/v1/",
-  "BUSINESSES_URL": "https://dev.bcregistry.ca/cooperatives/auth/business/" 
+  "BUSINESSES_URL": "https://dev.bcregistry.ca/cooperatives/auth/business/"
 }
 

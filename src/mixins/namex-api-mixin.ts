@@ -43,7 +43,7 @@ export default class NameXApiMixin extends Vue {
   async queryNameRequest (nrNumber: string): Promise<any> {
     if (nrNumber) {
       // TODO FIX - Override until we can proxy through legal api
-      let url = `https://namex-dev.pathfinder.gov.bc.ca/api/v1/requests/NR ${nrNumber}`
+      let url = `https://namex-dev.pathfinder.gov.bc.ca/api/v1/requests/${nrNumber}`
       let config = {
         headers: {
           'Authorization': `Bearer ${this.token}`

@@ -142,6 +142,10 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
   readonly Roles = Roles
   readonly IncorporatorTypes = IncorporatorTypes
 
+  mounted (): void {
+    this.setAddPeopleAndRoleStepValidity(this.hasValidRoles())
+  }
+
   // Methods
   private addOrgPerson (rolesToInitialize: string[], type: string): void {
     this.currentOrgPerson = { ...this.newOrgPerson }

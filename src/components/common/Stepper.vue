@@ -20,7 +20,7 @@
 <script lang="ts">
 // Libraries
 import { Component, Vue } from 'vue-property-decorator'
-import { Getter, State } from 'vuex-class'
+import { Getter } from 'vuex-class'
 
 // Interfaces
 import { GetterIF } from '@/interfaces'

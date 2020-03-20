@@ -110,6 +110,10 @@ export default class DefineCompany extends Mixins(EntityFilterMixin) {
   // Entity Enum
   readonly EntityTypes = EntityTypes
 
+  mounted () {
+    this.setDefineCompanyStepValidity(this.businessContactFormValid && this.addressFormValid)
+  }
+
   /**
    * Method called when Benefit Company button is clicked.
    */

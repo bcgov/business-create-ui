@@ -194,7 +194,7 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin, EntityFilter
 
 .people-roles-summary-header {
   display: flex;
-  background-color: $gray1;
+  background-color: rgba(1, 51, 102, 0.15);
   padding: 1.25rem;
 }
 

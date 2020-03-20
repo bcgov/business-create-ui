@@ -149,10 +149,11 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
       // TODO: Handling different NR Formats
       // Will probably change once we proxy through legal API with a consistent format
       this.setNameRequestState(
-        { nrNumber: nameRequest.nrNum.replace('NR ', ''),
-          entityType: nameRequest.requestTypeCd,
+        { nrNumber: nameRequest.nrNum,
+          entityType: EntityTypes.BCOMP,
           filingId: null })
       this.setCurrentDate(this.dateToUsableString(new Date()))
+      this.onEntityTypeChanged(this.stateModel.nameRequest.entityType)
 
       try {
         // Retrieve draft filing if it exists for the nrNumber specified
