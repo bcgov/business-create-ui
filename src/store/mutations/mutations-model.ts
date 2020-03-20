@@ -1,5 +1,5 @@
-import { CertifyStatementIF, CertifyIF, IncorporationAddressIf, NameRequestIF, BaseAddressObjIF,
-  ExternalResourceIF, BusinessContactIF, OrgPersonIF } from '@/interfaces'
+import { CertifyStatementIF, CertifyIF, IncorporationAddressIf, NameRequestIF,
+  ExternalResourceIF, BusinessContactIF, OrgPersonIF, ShareClassIF } from '@/interfaces'
 
 export const mutateCurrentStep = (state: any, currentStep: boolean) => {
   state.stateModel.currentStep = currentStep
@@ -71,4 +71,12 @@ export const mutateNameRequestState = (state: any, nameRequestState: NameRequest
 
 export const mutateFilingId = (state: any, filingId: number) => {
   state.stateModel.nameRequest.filingId = filingId
+}
+
+export const mutateShareClasses = (state: any, shareClasses: ShareClassIF[]) => {
+  state.stateModel.createShareStructureStep.shareClasses = shareClasses
+}
+
+export const mutateCreateShareStructureStepValidity = (state: any, validity: boolean) => {
+  state.stateModel.createShareStructureStep.valid = validity
 }

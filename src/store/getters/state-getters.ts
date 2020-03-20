@@ -140,26 +140,26 @@ export const getSteps = (state: any, getters:any): Array<any> => {
   },
   {
     id: 'step-3-btn',
-    step: -1,
+    step: 3,
     icon: getters.isTypeBcomp ? 'mdi-sitemap' : 'mdi-format-list-text',
     text: getters.isTypeBcomp ? 'Create Share\nStructure' : 'Create\nRules',
-    to: '/step-3',
-    disabled: true,
-    valid: false
+    to: getters.isTypeBcomp ? '/create-share-structure' : '/create-rules',
+    disabled: getters.isTypeBcomp ? getters.isBusySaving : true,
+    valid: getters.isTypeBcomp ? state.stateModel.createShareStructureStep.valid : false
   },
   {
     id: 'step-4-btn',
     step: -1,
-    icon: getters.isTypeBcomp ? 'mdi-handshake' : 'mdi-file-document-box-multiple',
+    icon: getters.isTypeBcomp ? 'mdi-handshake' : 'mdi-text-box-multiple',
     text: getters.isTypeBcomp ? 'Incorporation\nAgreement' : 'Create\nMemorandum',
-    to: '/step-4',
+    to: getters.isTypeBcomp ? '/incorporation-agreement' : '/create-memorandum',
     disabled: true,
     valid: false
   },
   {
     id: 'step-5-btn',
-    step: 3,
-    icon: getters.isTypeBcomp ? 'mdi-text-box-check-outline' : 'mdi-file-document-box-check-outline',
+    step: 4,
+    icon: 'mdi-text-box-check-outline',
     text: 'Review\nand Confirm',
     to: '/review-confirm',
     disabled: getters.isBusySaving,

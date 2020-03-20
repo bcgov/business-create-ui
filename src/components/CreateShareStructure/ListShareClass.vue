@@ -1,7 +1,5 @@
-<!--Container for share structure or rules depending on the type of entity-->
 <template>
-  <div>
-  </div>
+<div></div>
 </template>
 
 <script lang="ts">
@@ -9,7 +7,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 
 @Component({})
-export default class Step3Container extends Vue {}
+export default class ListShareClass extends Vue {}
 </script>
 
 <style lang="scss" scoped>

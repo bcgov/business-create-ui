@@ -71,3 +71,11 @@ export const setOrgPersonList = ({ commit }, orgPeople) => {
 export const setAddPeopleAndRoleStepValidity = ({ commit }, validity) => {
   commit('mutateAddPeopleAndRoleStepValidity', validity)
 }
+
+export const setShareClasses = ({ commit }, shareClasses) => {
+  commit('mutateShareClasses', shareClasses)
+}
+
+export const setCreateShareStructureStepValidity = ({ commit }, validity) => {
+  commit('mutateCreateShareStructureStepValidity', validity)
+}

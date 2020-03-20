@@ -33,5 +33,9 @@ export const stateModel: StateModelIF = {
   addPeopleAndRoleStep: {
     valid: false,
     orgPeople: []
+  },
+  createShareStructureStep: {
+    valid: false,
+    shareClasses: []
   }
 }

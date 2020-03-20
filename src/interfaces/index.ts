@@ -21,6 +21,7 @@ export * from './stepper-interfaces/DefineCompany/address-interface'
 export * from './stepper-interfaces/DefineCompany/define-company-interface'
 export * from './stepper-interfaces/AddPeopleAndRole/org-person-interface'
 export * from './stepper-interfaces/AddPeopleAndRole/add-people-role-interface'
+export * from './stepper-interfaces/CreateShareStructure/create-share-structure-interface'
 export * from './stepper-interfaces/ReviewConfirm/certify-interface'
 
 // Others
