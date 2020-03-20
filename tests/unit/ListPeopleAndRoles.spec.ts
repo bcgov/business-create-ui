@@ -24,12 +24,14 @@ describe('List People And Roles', () => {
 
   const mockPersonList = [
     {
-      'id': 0,
-      'firstName': 'Cameron',
-      'lastName': 'Bowler',
-      'middleName': 'D',
-      'orgName': '',
-      'type': 'Person',
+      'person': {
+        'id': 0,
+        'firstName': 'Cameron',
+        'lastName': 'Bowler',
+        'middleName': 'D',
+        'orgName': '',
+        'partyType': 'Person'
+      },
       'roles': [
         'Completing Party',
         'Director'
@@ -54,12 +56,14 @@ describe('List People And Roles', () => {
       }
     },
     {
-      'id': 1,
-      'firstName': '',
-      'lastName': '',
-      'middleName': '',
-      'orgName': 'Sysco Foods Company',
-      'type': 'Org',
+      'person': {
+        'id': 1,
+        'firstName': '',
+        'lastName': '',
+        'middleName': '',
+        'orgName': 'Sysco Foods Company',
+        'partyType': 'Org'
+      },
       'roles': [
         'Incorporator'
       ],
