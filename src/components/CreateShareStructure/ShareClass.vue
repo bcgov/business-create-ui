@@ -1,7 +1,5 @@
-<!--Container for Incorporation Agreement or Memorandum depending on the type of entity-->
 <template>
-  <div>
-  </div>
+<div/>
 </template>
 
 <script lang="ts">
@@ -9,7 +7,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 
 @Component({})
-export default class Step4Container extends Vue {}
+export default class ShareClass extends Vue {}
 </script>
 
 <style lang="scss" scoped>
