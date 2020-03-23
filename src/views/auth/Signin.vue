@@ -1,6 +1,6 @@
 <template>
 <sbc-signin
-    @sync-user-profile-ready="redirectOnLogin()"
+    @keycloak-session-ready="redirectOnLogin()"
   ></sbc-signin>
 </template>
 
@@ -23,6 +23,7 @@ import { ActionBindingIF } from '@/interfaces'
 export default class SigninView extends Vue {
   @Action setAuthenticated: ActionBindingIF
 
+  // Called when keycloak-session-ready event is emitted which indicates the user is authenticated
   private async redirectOnLogin () {
     this.setAuthenticated(true)
     this.$router.push(
@@ -62,6 +63,7 @@ export default class SigninView extends Vue {
         }
       }
     }
+    console.log('queryParam', paramConfig)
     return paramConfig
   }
 }
