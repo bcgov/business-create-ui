@@ -64,7 +64,7 @@ const validPersonData: OrgPersonIF = {
 
 const validIncorporator: OrgPersonIF = {
   'person': {
-    'id': 0,
+    'id': 1,
     'firstName': 'Adam',
     'lastName': 'Smith',
     'middleName': 'D',
