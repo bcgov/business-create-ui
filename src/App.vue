@@ -150,10 +150,10 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
       // Will probably change once we proxy through legal API with a consistent format
       this.setNameRequestState(
         { nrNumber: nameRequest.nrNum,
+          // TODO: Implement this check when POST-MVP: entityType: nameRequest.requestTypeCd,
           entityType: EntityTypes.BCOMP,
           filingId: null })
       this.setCurrentDate(this.dateToUsableString(new Date()))
-      this.onEntityTypeChanged(this.stateModel.nameRequest.entityType)
 
       try {
         // Retrieve draft filing if it exists for the nrNumber specified
@@ -280,7 +280,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
     }
   }
 
-  @Watch('state.nameRequest.entityType')
+  @Watch('stateModel.nameRequest.entityType')
   private onEntityTypeChanged (val: string | null) : void {
     switch (val) {
       case EntityTypes.BCOMP:

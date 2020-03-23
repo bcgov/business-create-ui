@@ -154,7 +154,7 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin, EntityFilter
    * @returns The appropriate Corporation or Person name.
    */
   private formatName (filing: any): string {
-    return filing.person.orgName ? filing.person.orgName
+    return filing?.person?.orgName ? filing?.person?.orgName
       : `${filing.person.firstName} ${filing.person.middleName || ''} ${filing.person.lastName}`
   }
 
