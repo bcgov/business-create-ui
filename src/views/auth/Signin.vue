@@ -63,7 +63,6 @@ export default class SigninView extends Vue {
         }
       }
     }
-    console.log('queryParam', paramConfig)
     return paramConfig
   }
 }
