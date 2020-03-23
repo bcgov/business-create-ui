@@ -9,6 +9,7 @@ Vue.use(VueRouter)
 
 const router = new VueRouter({
   mode: 'history',
+  // set base URL for Vue Router
   base: process.env.BASE_URL,
   routes,
   scrollBehavior (to, from, savedPosition) {

@@ -1,6 +1,5 @@
 // Utils Interfaces
 export * from './resource-interfaces/resource-interface'
-export * from './utils-interfaces/utils-interface'
 export * from './utils-interfaces/form-interface'
 export * from './utils-interfaces/dialog-interface'
 

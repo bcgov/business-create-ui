@@ -127,7 +127,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
   private nameRequestInvalidType: string = ''
   private evaluatingPreconditions: boolean = true
 
-  private async created (): Promise<any> {
+  private async created (): Promise<void> {
     // Check for keycloak token to see if authenticated
     // (Keycloak service does not seem to be always ready here, so we check session storage )
     // Fresh logins will initiate fetch data through the sign in component
@@ -135,14 +135,14 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
     // and they are already authenticated, so the data is refetched since the watcher for authenticated
     // does not get re-triggered
     if (sessionStorage.getItem(SessionStorageKeys.KeyCloakToken)) {
-      this.fetchData()
+      await this.fetchData()
     }
   }
 
   /**
    * Fetch data required for NR and draft filing
    */
-  private async fetchData () {
+  private async fetchData (): Promise<void> {
     // Evaluate name request pre conditions
     const nameRequest = await this.evaluateNRPreconditions()
     if (nameRequest && nameRequest.nrNum && nameRequest.isConsumable) {
@@ -171,21 +171,23 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
   /**
    * Redirect to business URL
    */
-  private redirectToBusinessUrl () : void {
+  private redirectToBusinessUrl (): void {
     const businessUrl: string = sessionStorage.getItem('BUSINESSES_URL') || ''
     window.location.assign(businessUrl)
   }
 
-  private authAPIURL (): string {
-    return sessionStorage.getItem('VUE_APP_AUTH_ROOT_API')
+  /** The URL of the Auth API. */
+  private get authApiUrl (): string | null {
+    return sessionStorage.getItem('AUTH_API_URL')
   }
+
   /**
    * Fetch Authorizations by NR number
    */
-  private getNRAuthorizations (nrNumber: string) : Promise<any> {
+  private getNRAuthorizations (nrNumber: string): Promise<any> {
     const url = nrNumber + '/authorizations'
     const config = {
-      baseURL: this.authAPIURL() + 'entities/'
+      baseURL: this.authApiUrl + 'entities/'
     }
     return axios.get(url, config)
   }
@@ -203,7 +205,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
   /**
    * Evaluate Name Request pre conditions
    */
-  private async evaluateNRPreconditions () {
+  private async evaluateNRPreconditions (): Promise<any> {
     // Clear error conditions in the event this is invoked more than one time (retry)
     this.nameRequestInvalidErrorDialog = false
     this.accountAuthorizationErrorDialog = false
@@ -254,9 +256,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
     })
   }
 
-  /**
-   * The Pay API URL.
-   */
+  /** The URL of the Pay API. */
   private get payApiUrl (): string | null {
     return sessionStorage.getItem('PAY_API_URL')
   }
@@ -280,8 +280,8 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
     }
   }
 
-  @Watch('stateModel.nameRequest.entityType')
-  private onEntityTypeChanged (val: string | null) : void {
+  @Watch('state.nameRequest.entityType')
+  private onEntityTypeChanged (val: string | null): void {
     switch (val) {
       case EntityTypes.BCOMP:
         this.filingData.push({ filingTypeCode: FilingCodes.INCORPORATION_BC, entityType: EntityTypes.BCOMP })
@@ -293,8 +293,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
         this.filingData = []
     }
 
-    this.setCertifyStatementResource(val ? CertifyStatementResource
-      .find(x => x.entityType === val) : null)
+    this.setCertifyStatementResource(val ? CertifyStatementResource.find(x => x.entityType === val) : null)
   }
 
   // FOR FUTURE USE TO SUPPORT EXIT IN ERROR DIALOGS
@@ -302,7 +301,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
     (this.$refs.form as Vue & { logout: () => void }).logout()
   }
 
-  private nrOkay () : void {
+  private nrOkay (): void {
     this.nameRequestInvalidErrorDialog = false
   }
 }
