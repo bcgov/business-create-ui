@@ -92,7 +92,7 @@ export default class LegalApiMixin extends Vue {
    * @param data The object body of the request.
    * @param isDraft Boolean indicating whether to complete filing.
    */
-  private async updateFiling (filing: IncorporationFilingIF, isDraft: boolean): Promise<any> {
+  private updateFiling (filing: IncorporationFilingIF, isDraft: boolean): Promise<any> {
     let filingId = this.getFilingId
 
     // Assign the url business identifier
