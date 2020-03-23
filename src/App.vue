@@ -150,7 +150,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
       // Will probably change once we proxy through legal API with a consistent format
       this.setNameRequestState(
         { nrNumber: nameRequest.nrNum,
-          entityType: EntityTypes.BCOMP,
+          entityType: nameRequest.requestTypeCd,
           filingId: null })
       this.setCurrentDate(this.dateToUsableString(new Date()))
       this.onEntityTypeChanged(this.stateModel.nameRequest.entityType)
@@ -193,7 +193,6 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
   private storeAuthRoles (response): void {
     // NB: roles array may contain 'view', 'edit' or nothing
     const authRoles = response && response.data && response.data.roles
-    console.log(response)
     if (authRoles && authRoles.length > 0) {
       this.setAuthRoles(authRoles)
     } else {
