@@ -146,11 +146,11 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
     // Evaluate name request pre conditions
     const nameRequest = await this.evaluateNRPreconditions()
     if (nameRequest && nameRequest.nrNum && nameRequest.isConsumable) {
-      // TODO: Handling different NR Formats
+      // TODO: Handling different NR Formats & accept the EntityType dynamically once Namex provides it.
       // Will probably change once we proxy through legal API with a consistent format
       this.setNameRequestState(
         { nrNumber: nameRequest.nrNum,
-          entityType: nameRequest.requestTypeCd,
+          entityType: EntityTypes.BCOMP,
           filingId: null })
       this.setCurrentDate(this.dateToUsableString(new Date()))
       this.onEntityTypeChanged(this.stateModel.nameRequest.entityType)
