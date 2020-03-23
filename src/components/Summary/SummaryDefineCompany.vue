@@ -79,6 +79,8 @@ export default class SummaryDefineCompany extends Mixins(EntityFilterMixin) {
 </script>
 
 <style lang="scss">
+@import '@/assets/styles/theme.scss';
+
 .defineCompanyStepErrorMessage {
   padding-top: 1.25rem;
   padding-left: 1.25rem;
@@ -95,7 +97,7 @@ export default class SummaryDefineCompany extends Mixins(EntityFilterMixin) {
 
 .define-company-header {
   display: flex;
-  background-color: rgba(1, 51, 102, 0.15);
+  background-color: $BCgovBlue5O;
   padding: 1.25rem;
 }
 

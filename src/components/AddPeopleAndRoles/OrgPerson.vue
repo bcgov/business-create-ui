@@ -343,8 +343,8 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
     return personAddress
   }
 
-  private setPersonRoles (): string [] {
-    let roles: string[] = []
+  private setPersonRoles (): Roles [] {
+    let roles: Roles[] = []
     if (this.isCompletingParty) {
       roles.push(Roles.COMPLETING_PARTY)
     }
@@ -368,7 +368,7 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
     }
   }
 
-  private isRoleLocked (role: string) : boolean {
+  private isRoleLocked (role: Roles) : boolean {
     return this.orgPerson.roles.includes(role) && this.activeIndex === -1
   }
 

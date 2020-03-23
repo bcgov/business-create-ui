@@ -1,5 +1,5 @@
 import { IncorporationAddressIf } from '@/interfaces/stepper-interfaces/DefineCompany/address-interface'
-import { OrgPersonIF } from '@/interfaces';
+import { OrgPersonIF } from '@/interfaces'
 
 export interface IncorporationFilingIF {
   filing: {

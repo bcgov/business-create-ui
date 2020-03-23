@@ -116,7 +116,7 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
       lastName: '',
       middleName: '',
       orgName: '',
-      partyType: ''
+      partyType: null
     },
     roles: [],
     address: {
@@ -147,7 +147,7 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
   }
 
   // Methods
-  private addOrgPerson (rolesToInitialize: string[], type: string): void {
+  private addOrgPerson (rolesToInitialize: Roles[], type: IncorporatorTypes): void {
     this.currentOrgPerson = { ...this.newOrgPerson }
     this.currentOrgPerson.roles = rolesToInitialize
     this.currentOrgPerson.person.partyType = type
@@ -221,7 +221,7 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
     }
   }
 
-  private hasRole (roleName: string, count:number, mode:string) : boolean {
+  private hasRole (roleName: Roles, count:number, mode:string) : boolean {
     const orgPersonWithSpecifiedRole: OrgPersonIF[] =
     this.orgPersonList.filter(people => people.roles.includes(roleName))
     if (mode === Modes.EXACT) {

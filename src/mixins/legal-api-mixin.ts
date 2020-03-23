@@ -30,16 +30,27 @@ export default class LegalApiMixin extends Vue {
    */
   async saveFiling (filing: IncorporationFilingIF, isDraft: boolean): Promise<any> {
     let filingId = this.getFilingId
+    let filingComplete
     // If have a filing id, update an existing filing
     if (filingId && filingId > 0) {
-      await this.updateFiling(filing, isDraft)
+      filingComplete = await this.updateFiling(filing, isDraft)
     } else {
       // Set the filingId to store
-      await this.createFiling(filing, isDraft)
+      filingComplete = await this.createFiling(filing, isDraft)
     }
 
-    // Complete a filing if not draft
-    if (!isDraft) await this.completeFiling(filing)
+    if (!isDraft && filingComplete) {
+      const paymentToken = filingComplete.header.paymentToken
+      const baseUrl = sessionStorage.getItem('BASE_URL')
+      const returnURL = encodeURIComponent(baseUrl + 'review-confirm?nrNumber=' +
+        filingComplete.incorporationApplication.nameRequest.nrNumber)
+      const authUrl = sessionStorage.getItem('AUTH_URL')
+      const payURL = authUrl + 'makepayment/' + paymentToken + '/' + returnURL
+
+      // assume Pay URL is always reachable
+      // otherwise, user will have to retry payment later
+      window.location.assign(payURL)
+    }
   }
 
   /**
@@ -61,7 +72,7 @@ export default class LegalApiMixin extends Vue {
    * @param isDraft Boolean indicating whether to complete filing.
    */
   private createFiling (data: object, isDraft: boolean): Promise<any> {
-    let url = 'https://legal-api-dev.pathfinder.gov.bc.ca/api/v1/businesses'
+    let url = 'businesses'
     if (isDraft) {
       url += '?draft=true'
     }
@@ -81,16 +92,18 @@ export default class LegalApiMixin extends Vue {
    * @param data The object body of the request.
    * @param isDraft Boolean indicating whether to complete filing.
    */
-  private updateFiling (data: object, isDraft: boolean): Promise<any> {
+  private async updateFiling (filing: IncorporationFilingIF, isDraft: boolean): Promise<any> {
     let filingId = this.getFilingId
 
     // Assign the url business identifier
-    let url = `${this.getBusinessIdentifier}/filings/${filingId}`
+    let url = `businesses/${this.getBusinessIdentifier}/filings/${filingId}`
+
+    // Complete a filing if not draft
     if (isDraft) {
       url += '?draft=true'
     }
 
-    return axios.put(url, data).then(res => {
+    return axios.put(url, filing).then(res => {
       if (!res) {
         throw new Error('invalid API response')
       }
@@ -102,7 +115,7 @@ export default class LegalApiMixin extends Vue {
    */
   private getDraftFiling (): Promise<any> {
     // Assign the url business identifier
-    let url = `${this.getBusinessIdentifier}/tasks`
+    let url = `businesses/${this.getBusinessIdentifier}/tasks`
 
     return axios.get(url).then(res => {
       if (res.data.tasks) {
@@ -112,26 +125,5 @@ export default class LegalApiMixin extends Vue {
         throw new Error('invalid API response')
       }
     })
-  }
-
-  /**
-   * Method to complete a filing.
-   * @param filing The filing body to be saved and submitted.
-   */
-  private completeFiling (filing: IncorporationFilingIF): Promise<any> {
-    let filingId = this.getFilingId
-
-    if (filingId) {
-      // Assign the url business identifier
-      let url = `${this.getBusinessIdentifier}/filings/${filingId}`
-
-      return axios.put(url, filing).then(res => {
-        if (!res) {
-          throw new Error('invalid API response')
-        }
-      })
-    } else {
-      throw new Error('invalid API response')
-    }
   }
 }

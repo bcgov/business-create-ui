@@ -4,7 +4,6 @@ import { mount, Wrapper, createLocalVue } from '@vue/test-utils'
 import flushPromises from 'flush-promises'
 
 import { OrgPerson } from '@/components/AddPeopleAndRoles'
-import { OrgPersonIF } from '@/interfaces'
 
 // Store
 import { store } from '@/store'
@@ -32,7 +31,7 @@ const removeButtonSelector: string = '#btn-remove'
 const cancelButtonSelector: string = '#btn-cancel'
 const formSelector: string = '.appoint-form'
 
-const validPersonData: OrgPersonIF = {
+const validPersonData = {
   'person': {
     'id': 0,
     'firstName': 'Adam',
@@ -62,7 +61,7 @@ const validPersonData: OrgPersonIF = {
   }
 }
 
-const validIncorporator: OrgPersonIF = {
+const validIncorporator = {
   'person': {
     'id': 1,
     'firstName': 'Adam',
@@ -92,7 +91,7 @@ const validIncorporator: OrgPersonIF = {
   }
 }
 
-const validOrgData: OrgPersonIF = {
+const validOrgData = {
   'person': {
     'id': 0,
     'firstName': '',
@@ -134,10 +133,10 @@ function getLastEvent (wrapper: Wrapper<OrgPerson>, name: string): any {
  * @returns a Wrapper<OrgPerson> object with the given parameters.
  */
 function createComponent (
-  person: OrgPersonIF,
+  person: any,
   activeIndex: number = -1,
   nextId: number = -1,
-  existingCompletingParty: OrgPersonIF
+  existingCompletingParty: any
 ): Wrapper<OrgPerson> {
   const localVue = createLocalVue()
   localVue.use(Vuetify)
@@ -288,7 +287,7 @@ describe('OrgPerson', () => {
 
     expect(wrapper.emitted().addEditPerson).toBeTruthy()
     expect(wrapper.emitted(addEditPersonEvent).length).toBe(1)
-    let incorporatorWithAddedRole: OrgPersonIF = { ...validIncorporator }
+    let incorporatorWithAddedRole = { ...validIncorporator }
     incorporatorWithAddedRole.roles = ['Completing Party', 'Incorporator']
     delete incorporatorWithAddedRole.address.deliveryAddress
 
