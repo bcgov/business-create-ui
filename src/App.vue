@@ -193,6 +193,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
   private storeAuthRoles (response): void {
     // NB: roles array may contain 'view', 'edit' or nothing
     const authRoles = response && response.data && response.data.roles
+    console.log(response)
     if (authRoles && authRoles.length > 0) {
       this.setAuthRoles(authRoles)
     } else {

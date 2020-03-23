@@ -270,7 +270,7 @@ describe('OrgPerson', () => {
     wrapper.destroy()
   })
 
-  it.only('Emits events correctly on confirming reassign completing party', async () => {
+  it('Emits events correctly on confirming reassign completing party', async () => {
     const wrapper: Wrapper<OrgPerson> = createComponent(validIncorporator, -1, 1, validPersonData)
     const cpCheckBox: Wrapper<Vue> = wrapper.find(completingPartyChkBoxSelector)
     cpCheckBox.setChecked(true)

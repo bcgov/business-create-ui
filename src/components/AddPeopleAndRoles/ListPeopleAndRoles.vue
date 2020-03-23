@@ -134,7 +134,7 @@ import { OrgPersonIF } from '@/interfaces'
 })
 export default class ListPeopleAndRoles extends Mixins(CommonMixin, EntityFilterMixin) {
   // Store Properties
-  @Prop()
+  @Prop({ default: () => [] })
   private personList: Array<OrgPersonIF>
 
   @Prop({ default: false })

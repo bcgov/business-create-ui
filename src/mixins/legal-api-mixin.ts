@@ -62,7 +62,6 @@ export default class LegalApiMixin extends Vue {
    */
   private createFiling (data: object, isDraft: boolean): Promise<any> {
     let url = 'https://legal-api-dev.pathfinder.gov.bc.ca/api/v1/businesses'
-    // let url = ''
     if (isDraft) {
       url += '?draft=true'
     }
@@ -90,8 +89,7 @@ export default class LegalApiMixin extends Vue {
     if (isDraft) {
       url += '?draft=true'
     }
-    console.log('Completing Filing')
-    console.log(data)
+
     return axios.put(url, data).then(res => {
       if (!res) {
         throw new Error('invalid API response')
