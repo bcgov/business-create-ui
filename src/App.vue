@@ -65,7 +65,7 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Watch, Mixins } from 'vue-property-decorator'
+import { Component, Vue, Watch, Mixins } from 'vue-property-decorator'
 import { Action, State } from 'vuex-class'
 import axios from '@/utils/axios-auth'
 
@@ -146,11 +146,12 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
     // Evaluate name request pre conditions
     const nameRequest = await this.evaluateNRPreconditions()
     if (nameRequest && nameRequest.nrNum && nameRequest.isConsumable) {
-      // TODO: Handling different NR Formats
+      // TODO: Handling different NR Formats & accept the EntityType dynamically once Namex provides it.
       // Will probably change once we proxy through legal API with a consistent format
       this.setNameRequestState(
-        { nrNumber: nameRequest.nrNum.replace('NR ', ''),
-          entityType: nameRequest.requestTypeCd,
+        { nrNumber: nameRequest.nrNum,
+          // TODO: Implement this check when POST-MVP: entityType: nameRequest.requestTypeCd,
+          entityType: EntityTypes.BCOMP,
           filingId: null })
       this.setCurrentDate(this.dateToUsableString(new Date()))
 
@@ -279,7 +280,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
     }
   }
 
-  @Watch('state.nameRequest.entityType')
+  @Watch('stateModel.nameRequest.entityType')
   private onEntityTypeChanged (val: string | null) : void {
     switch (val) {
       case EntityTypes.BCOMP:

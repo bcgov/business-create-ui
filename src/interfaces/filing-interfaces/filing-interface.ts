@@ -1,4 +1,5 @@
 import { IncorporationAddressIf } from '@/interfaces/stepper-interfaces/DefineCompany/address-interface'
+import { OrgPersonIF } from '@/interfaces'
 
 export interface IncorporationFilingIF {
   filing: {
@@ -17,7 +18,8 @@ export interface IncorporationFilingIF {
       contactPoint: {
         email: string
         phone: string
-      }
+      },
+      parties: OrgPersonIF[]
     }
   }
 }

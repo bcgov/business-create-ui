@@ -3,7 +3,7 @@ import { Component, Vue } from 'vue-property-decorator'
 import { State, Getter, Action } from 'vuex-class'
 
 // Interfaces
-import { ActionBindingIF, StateModelIF, IncorporationFilingIF, GetterIF } from '@/interfaces'
+import { ActionBindingIF, StateModelIF, IncorporationFilingIF, GetterIF, OrgPersonIF } from '@/interfaces'
 
 // Constants
 import { INCORPORATION_APPLICATION } from '@/constants'
@@ -25,6 +25,7 @@ export default class FilingTemplateMixin extends Vue {
   @Action setOfficeAddresses!: ActionBindingIF
   @Action setDefineCompanyStepValidity!: ActionBindingIF
   @Action setNameRequestState!: ActionBindingIF
+  @Action setOrgPersonList!: ActionBindingIF
   @Action setFilingId!: ActionBindingIF
 
   /**
@@ -48,7 +49,8 @@ export default class FilingTemplateMixin extends Vue {
           contactPoint: {
             email: this.stateModel.defineCompanyStep.businessContact.email,
             phone: this.stateModel.defineCompanyStep.businessContact.phone
-          }
+          },
+          parties: this.stateModel.addPeopleAndRoleStep.orgPeople
         }
       }
     }
@@ -72,6 +74,9 @@ export default class FilingTemplateMixin extends Vue {
 
       // Set Contact Info
       this.setBusinessContact(draftFiling.incorporationApplication.contactPoint)
+
+      // Set Persons and Organizations
+      this.setOrgPersonList(draftFiling.incorporationApplication.parties)
     } catch (e) {
       // TODO: Throw a flag to the ui from here, if we want to trigger error handling in ui
     }

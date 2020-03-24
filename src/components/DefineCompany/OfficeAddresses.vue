@@ -170,6 +170,7 @@
 <script lang="ts">
 // Libraries
 import { Component, Emit, Prop, Watch, Mixins } from 'vue-property-decorator'
+import { State } from 'vuex-class'
 import { isEmpty } from 'lodash'
 
 // Schemas
@@ -179,7 +180,7 @@ import { officeAddressSchema } from '@/schemas'
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
 
 // Interfaces
-import { IncorporationAddressIf, AddressIF } from '@/interfaces'
+import { IncorporationAddressIf, AddressIF, StateModelIF } from '@/interfaces'
 
 // Enums
 import { EntityTypes } from '@/enums'
@@ -206,6 +207,8 @@ export default class OfficeAddresses extends Mixins(CommonMixin, EntityFilterMix
   // Whether to show the editable forms for the addresses (true) or just the static display addresses (false).
   @Prop({ default: true })
   private isEditing!: boolean;
+
+  @State stateModel!: StateModelIF
 
   // Local Properties
   private addresses: IncorporationAddressIf | null = this.inputAddresses;
@@ -256,15 +259,15 @@ export default class OfficeAddresses extends Mixins(CommonMixin, EntityFilterMix
         this.addresses.registeredOffice.mailingAddress)
 
       if (this.entityFilter(EntityTypes.BCOMP)) {
-        this.recDeliveryAddress = this.addresses.recordsOffice!.deliveryAddress
-        this.recMailingAddress = this.addresses.recordsOffice!.mailingAddress
+        this.recDeliveryAddress = this.addresses.recordsOffice?.deliveryAddress
+        this.recMailingAddress = this.addresses.recordsOffice?.mailingAddress
         this.inheritRegisteredAddress = (
-          this.isSame(this.addresses.registeredOffice.deliveryAddress, this.addresses.recordsOffice!.deliveryAddress) &&
-          this.isSame(this.addresses.registeredOffice.mailingAddress, this.addresses.recordsOffice!.mailingAddress)
+          this.isSame(this.addresses.registeredOffice.deliveryAddress, this.addresses.recordsOffice?.deliveryAddress) &&
+          this.isSame(this.addresses.registeredOffice.mailingAddress, this.addresses.recordsOffice?.mailingAddress)
         )
         this.inheritRecMailingAddress = this.isSame(
-          this.addresses.recordsOffice!.deliveryAddress,
-          this.addresses.recordsOffice!.mailingAddress)
+          this.addresses.recordsOffice?.deliveryAddress,
+          this.addresses.recordsOffice?.mailingAddress)
       }
     }
   }
@@ -375,6 +378,13 @@ export default class OfficeAddresses extends Mixins(CommonMixin, EntityFilterMix
   // Watchers.
   @Watch('formValid')
   private onFormValidityChange (val:boolean): void{
+    this.emitValid()
+  }
+
+  @Watch('stateModel.defineCompanyStep.officeAddresses', { deep: true, immediate: true })
+  private updateAddresses (): void {
+    this.addresses = this.inputAddresses
+    this.setAddresses()
     this.emitValid()
   }
 

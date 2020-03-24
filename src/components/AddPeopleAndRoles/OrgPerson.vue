@@ -32,7 +32,7 @@
                     class="item"
                     label="First Name"
                     id="person__first-name"
-                    v-model="orgPerson.firstName"
+                    v-model="orgPerson.person.firstName"
                     :rules="firstNameRules"
                   />
                   <v-text-field
@@ -40,7 +40,7 @@
                     class="item"
                     label="Middle Name"
                     id="person__middle-name"
-                    v-model="orgPerson.middleName"
+                    v-model="orgPerson.person.middleName"
                     :rules="middleNameRules"
                   />
                   <v-text-field
@@ -48,7 +48,7 @@
                     class="item"
                     label="Last Name"
                     id="person__last-name"
-                    v-model="orgPerson.lastName"
+                    v-model="orgPerson.person.lastName"
                     :rules="lastNameRules"
                   />
                 </div>
@@ -58,7 +58,7 @@
                     class="item"
                     label="Full Legal Corporation or Firm Name"
                     id="firm-name"
-                    v-model="orgPerson.orgName"
+                    v-model="orgPerson.person.orgName"
                     :rules="orgNameRules"
                   />
                 </div>
@@ -76,10 +76,12 @@
                   </v-col>
                   <v-col cols="4">
                     <div :class="{'highlightedRole':
-                      isRoleLocked(Roles.INCORPORATOR) || orgPerson.type === IncorporatorTypes.CORPORATION}">
+                      isRoleLocked(Roles.INCORPORATOR) ||
+                      orgPerson.person.partyType === IncorporatorTypes.CORPORATION}">
                       <v-checkbox v-model="isIncorporator"
                       :label="incorporatorLabel"
-                      :disabled="isRoleLocked(Roles.INCORPORATOR) || orgPerson.type === IncorporatorTypes.CORPORATION"
+                      :disabled="isRoleLocked(Roles.INCORPORATOR) ||
+                      orgPerson.person.partyType === IncorporatorTypes.CORPORATION"
                       />
                     </div>
                   </v-col>
@@ -237,6 +239,7 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
   private created (): void {
     if (this.initialValue) {
       this.orgPerson = { ...this.initialValue }
+      this.orgPerson.person = { ...this.initialValue.person }
       this.isDirector = this.orgPerson.roles.includes(Roles.DIRECTOR)
       this.isIncorporator = this.orgPerson.roles.includes(Roles.INCORPORATOR)
       this.isCompletingParty = this.orgPerson.roles.includes(Roles.COMPLETING_PARTY)
@@ -267,7 +270,7 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
 
   private assignCompletingPartyRole (): void {
     if (this.isCompletingParty && this.existingCompletingParty &&
-      this.orgPerson.id !== this.existingCompletingParty.id) {
+      this.orgPerson.person.id !== this.existingCompletingParty.person.id) {
       this.confirmReassignPerson()
     }
   }
@@ -318,8 +321,9 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
    */
   private addPerson (): OrgPersonIF {
     let personToAdd: OrgPersonIF = { ...this.orgPerson }
+    personToAdd.person = { ...this.orgPerson.person }
     if (this.activeIndex === -1) {
-      personToAdd.id = this.nextId
+      personToAdd.person.id = this.nextId
     }
     personToAdd.address = this.setPersonAddress()
     personToAdd.roles = this.setPersonRoles()
@@ -339,8 +343,8 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
     return personAddress
   }
 
-  private setPersonRoles (): string [] {
-    let roles: string[] = []
+  private setPersonRoles (): Roles [] {
+    let roles: Roles[] = []
     if (this.isCompletingParty) {
       roles.push(Roles.COMPLETING_PARTY)
     }
@@ -364,7 +368,7 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
     }
   }
 
-  private isRoleLocked (role: string) : boolean {
+  private isRoleLocked (role: Roles) : boolean {
     return this.orgPerson.roles.includes(role) && this.activeIndex === -1
   }
 
@@ -374,18 +378,18 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
 
   private reassignPersonErrorMessage () : string {
     let errorMessage: string =
-    `<p>The Completing Party role is already assigned to ${this.existingCompletingParty.firstName}
-     ${this.existingCompletingParty.middleName || ''} ${this.existingCompletingParty.lastName}.</p>
+    `<p>The Completing Party role is already assigned to ${this.existingCompletingParty.person.firstName}
+     ${this.existingCompletingParty.person.middleName || ''} ${this.existingCompletingParty.person.lastName}.</p>
      <p>Selecting "Completing Party" here will change the Completing Party.</p>`
     return errorMessage
   }
 
   get isPerson (): boolean {
-    return this.orgPerson?.type === IncorporatorTypes.PERSON
+    return this.orgPerson.person?.partyType === IncorporatorTypes.PERSON
   }
 
   get isOrg (): boolean {
-    return this.orgPerson?.type === IncorporatorTypes.CORPORATION
+    return this.orgPerson.person?.partyType === IncorporatorTypes.CORPORATION
   }
 
   get incorporatorLabel () : string {

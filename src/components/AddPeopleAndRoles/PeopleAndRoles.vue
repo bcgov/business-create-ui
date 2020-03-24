@@ -110,12 +110,14 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
   @Action setAddPeopleAndRoleStepValidity!: ActionBindingIF
 
   private newOrgPerson: OrgPersonIF = {
-    id: null,
-    firstName: '',
-    lastName: '',
-    middleName: '',
-    orgName: '',
-    type: '',
+    person: {
+      id: null,
+      firstName: '',
+      lastName: '',
+      middleName: '',
+      orgName: '',
+      partyType: null
+    },
     roles: [],
     address: {
       mailingAddress: {
@@ -140,13 +142,18 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
   readonly Roles = Roles
   readonly IncorporatorTypes = IncorporatorTypes
 
+  mounted (): void {
+    this.setAddPeopleAndRoleStepValidity(this.hasValidRoles())
+  }
+
   // Methods
-  private addOrgPerson (rolesToInitialize: string[], type: string): void {
+  private addOrgPerson (rolesToInitialize: Roles[], type: IncorporatorTypes): void {
     this.currentOrgPerson = { ...this.newOrgPerson }
     this.currentOrgPerson.roles = rolesToInitialize
-    this.currentOrgPerson.type = type
+    this.currentOrgPerson.person.partyType = type
     this.activeIndex = -1
-    this.nextId = (this.orgPersonList.length === 0) ? 0 : this.orgPersonList[this.orgPersonList.length - 1].id + 1
+    this.nextId = (this.orgPersonList.length === 0)
+      ? 0 : this.orgPersonList[this.orgPersonList.length - 1].person.id + 1
     this.addEditInProgress = true
     this.showOrgPersonForm = true
   }
@@ -214,7 +221,7 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
     }
   }
 
-  private hasRole (roleName: string, count:number, mode:string) : boolean {
+  private hasRole (roleName: Roles, count:number, mode:string) : boolean {
     const orgPersonWithSpecifiedRole: OrgPersonIF[] =
     this.orgPersonList.filter(people => people.roles.includes(roleName))
     if (mode === Modes.EXACT) {
