@@ -280,7 +280,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
     }
   }
 
-  @Watch('state.nameRequest.entityType')
+  @Watch('stateModel.nameRequest.entityType')
   private onEntityTypeChanged (val: string | null): void {
     switch (val) {
       case EntityTypes.BCOMP:
