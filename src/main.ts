@@ -4,7 +4,7 @@ import 'regenerator-runtime/runtime' // to use transpiled generator functions
 
 // Vue Libraries
 import Vue from 'vue'
-import vuetify from '@/plugins/vuetify'
+import Vuetify from 'vuetify/lib'
 import Vuelidate from 'vuelidate'
 import router from '@/router'
 import { store } from '@/store'
@@ -24,11 +24,12 @@ import App from './App.vue'
 
 // Helpers
 import { fetchConfig } from '@/utils'
-import KeycloakService from 'sbc-common-components/src/services/keycloak.services'
+import KeyCloakService from 'sbc-common-components/src/services/keycloak.services'
 
 // get rid of "You are running Vue in development mode" console message
 Vue.config.productionTip = false
 
+Vue.use(Vuetify)
 Vue.use(Affix)
 Vue.use(Vuelidate)
 Vue.use(Vue2Filters)
@@ -38,14 +39,15 @@ Vue.use(Vue2Filters)
  */
 fetchConfig()
   .then(async () => {
+    // initialize Launch Darkly
     await initLDClient()
 
-    // set keycloak config file's location to the sbc-common-components
-    await KeycloakService.setKeycloakConfigUrl(sessionStorage.getItem('KEYCLOAK_CONFIG_URL'))
+    // configure KeyCloak Service
+    await KeyCloakService.setKeycloakConfigUrl(sessionStorage.getItem('KEYCLOAK_CONFIG_PATH'))
 
     if (featureFlags.getFlag('bcrs-create-ui-enabled')) {
       new Vue({
-        vuetify,
+        vuetify: new Vuetify({ iconfont: 'mdi' }),
         router,
         store,
         render: h => h(App)

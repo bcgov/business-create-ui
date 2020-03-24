@@ -179,7 +179,8 @@ describe('OrgPerson', () => {
 
   it('Displays form data for org', async () => {
     const wrapper: Wrapper<OrgPerson> = createComponent(validOrgData, -1, 0, null)
-    expect((<HTMLInputElement> wrapper.find(orgNameSelector).element).value).toEqual(validOrgData['person']['orgName'])
+    expect((<HTMLInputElement> wrapper.find(orgNameSelector).element).value)
+      .toEqual(validOrgData['person']['orgName'])
     await wrapper.vm.$nextTick()
     expect(wrapper.find(doneButtonSelector).attributes('disabled')).toBeUndefined()
     expect(wrapper.find(removeButtonSelector).attributes('disabled')).toBeDefined()
@@ -189,9 +190,12 @@ describe('OrgPerson', () => {
 
   it('Displays form data for person', async () => {
     const wrapper: Wrapper<OrgPerson> = createComponent(validPersonData, 0, 0, null)
-    expect((<HTMLInputElement> wrapper.find(firstNameSelector).element).value).toEqual(validPersonData['person']['firstName'])
-    expect((<HTMLInputElement> wrapper.find(middleNameSelector).element).value).toEqual(validPersonData['person']['middleName'])
-    expect((<HTMLInputElement> wrapper.find(lastNameSelector).element).value).toEqual(validPersonData['person']['lastName'])
+    expect((<HTMLInputElement> wrapper.find(firstNameSelector).element).value)
+      .toEqual(validPersonData['person']['firstName'])
+    expect((<HTMLInputElement> wrapper.find(middleNameSelector).element).value)
+      .toEqual(validPersonData['person']['middleName'])
+    expect((<HTMLInputElement> wrapper.find(lastNameSelector).element).value)
+      .toEqual(validPersonData['person']['lastName'])
     await wrapper.vm.$nextTick()
     expect(wrapper.find(doneButtonSelector).attributes('disabled')).toBeUndefined()
     expect(wrapper.find(removeButtonSelector).attributes('disabled')).toBeUndefined()
@@ -221,7 +225,8 @@ describe('OrgPerson', () => {
 
   it('Clicking Done button emits event for add edit person/org', async () => {
     const wrapper: Wrapper<OrgPerson> = createComponent(validOrgData, -1, 0, null)
-    expect((<HTMLInputElement> wrapper.find(orgNameSelector).element).value).toEqual(validOrgData['person']['orgName'])
+    expect((<HTMLInputElement> wrapper.find(orgNameSelector).element).value)
+      .toEqual(validOrgData['person']['orgName'])
     await wrapper.vm.$nextTick()
     expect(wrapper.find(doneButtonSelector).attributes('disabled')).toBeUndefined()
     wrapper.find(doneButtonSelector).trigger('click')
