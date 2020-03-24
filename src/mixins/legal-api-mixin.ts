@@ -41,8 +41,8 @@ export default class LegalApiMixin extends Vue {
 
     if (!isDraft && filingComplete) {
       const paymentToken = filingComplete.header.paymentToken
-      const baseUrl = sessionStorage.getItem('BASE_URL')
-      const returnURL = encodeURIComponent(baseUrl + 'cooperatives/auth') // Future: Redirect to Dash
+      const businessUrl: string = sessionStorage.getItem('BUSINESSES_URL') || ''
+      const returnURL = encodeURIComponent(businessUrl) // Future: Redirect to Dashboard
       const authUrl = sessionStorage.getItem('AUTH_URL')
       const payURL = authUrl + 'makepayment/' + paymentToken + '/' + returnURL
 
