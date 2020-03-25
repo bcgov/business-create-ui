@@ -11,7 +11,9 @@
             mdi-check-circle
           </v-icon>
         </div>
-        <div class="step__label pre-line">{{step.text}}</div>
+        <v-btn class="step__label pre-line" text color="primary" :to=step.to :disabled=step.disabled>
+          {{step.text}}
+        </v-btn>
       </div>
     </template>
   </v-container>
