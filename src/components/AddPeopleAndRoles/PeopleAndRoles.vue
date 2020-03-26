@@ -119,16 +119,14 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
       partyType: null
     },
     roles: [],
-    address: {
-      mailingAddress: {
-        streetAddress: '',
-        streetAddressAdditional: '',
-        addressCity: '',
-        addressRegion: '',
-        postalCode: '',
-        addressCountry: '',
-        deliveryInstructions: ''
-      }
+    mailingAddress: {
+      streetAddress: '',
+      streetAddressAdditional: '',
+      addressCity: '',
+      addressRegion: '',
+      postalCode: '',
+      addressCountry: '',
+      deliveryInstructions: ''
     }
   }
 

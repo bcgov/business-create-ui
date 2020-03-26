@@ -73,7 +73,11 @@ export default class FilingTemplateMixin extends Vue {
       this.setOfficeAddresses(draftFiling.incorporationApplication.offices)
 
       // Set Contact Info
-      this.setBusinessContact(draftFiling.incorporationApplication.contactPoint)
+      const draftContact = {
+        ...draftFiling.incorporationApplication.contactPoint,
+        confirmEmail: draftFiling.incorporationApplication.contactPoint.email
+      }
+      this.setBusinessContact(draftContact)
 
       // Set Persons and Organizations
       this.setOrgPersonList(draftFiling.incorporationApplication.parties)

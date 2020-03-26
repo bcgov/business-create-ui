@@ -52,6 +52,7 @@ describe('App component', () => {
       incorporationApplication: {
         contactPoint: {
           email: 'mockEmail@mock.com',
+          confirmEmail: 'mockEmail@mock.com',
           phone: '(250) 123-4567'
         },
         nameRequest: {
@@ -102,11 +103,11 @@ describe('App component', () => {
 
     // Validate Office Addresses
     expect(store.state.stateModel.defineCompanyStep.officeAddresses.registeredOffice)
-      .toBe(data.incorporationApplication.offices.registeredOffice)
+      .toStrictEqual(data.incorporationApplication.offices.registeredOffice)
     expect(store.state.stateModel.defineCompanyStep.officeAddresses.recordsOffice)
-      .toBe(data.incorporationApplication.offices.recordsOffice)
+      .toStrictEqual(data.incorporationApplication.offices.recordsOffice)
 
     // Validate Contact Info
-    expect(store.state.stateModel.defineCompanyStep.businessContact).toBe(data.incorporationApplication.contactPoint)
+    expect(store.state.stateModel.defineCompanyStep.businessContact).toStrictEqual(data.incorporationApplication.contactPoint)
   })
 })

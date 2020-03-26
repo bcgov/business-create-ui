@@ -55,13 +55,13 @@
           </v-tooltip>
         </v-col>
         <v-col>
-          <base-address class="peoples-roles-mailing-address" :address="person.address.mailingAddress" />
+          <base-address class="peoples-roles-mailing-address" :address="person.mailingAddress" />
         </v-col>
         <v-col>
-          <p v-if="isSame(person.address.mailingAddress, person.address.deliveryAddress)"
+          <p v-if="isSame(person.mailingAddress, person.deliveryAddress)"
             class="peoples-roles-delivery-address">Same as Mailing Address
           </p>
-          <base-address v-else class="peoples-roles-delivery-address" :address="person.address.deliveryAddress"/>
+          <base-address v-else class="peoples-roles-delivery-address" :address="person.deliveryAddress"/>
         </v-col>
         <v-col>
           <div v-if="person.roles.length>0">

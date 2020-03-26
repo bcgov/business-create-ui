@@ -41,23 +41,21 @@ const validPersonData = {
     'partyType': 'Person'
   },
   'roles': ['Director', 'Completing Party'],
-  'address': {
-    'mailingAddress': {
-      'streetAddress': '123 Fake Street',
-      'streetAddressAdditional': '',
-      'addressCity': 'Victoria',
-      'addressRegion': 'BC',
-      'postalCode': 'V8Z 5C6',
-      'addressCountry': 'CA'
-    },
-    'deliveryAddress': {
-      'streetAddress': '123 Fake Street',
-      'streetAddressAdditional': '',
-      'addressCity': 'Victoria',
-      'addressRegion': 'BC',
-      'postalCode': 'V8Z 5C6',
-      'addressCountry': 'CA'
-    }
+  'mailingAddress': {
+    'streetAddress': '123 Fake Street',
+    'streetAddressAdditional': '',
+    'addressCity': 'Victoria',
+    'addressRegion': 'BC',
+    'postalCode': 'V8Z 5C6',
+    'addressCountry': 'CA'
+  },
+  'deliveryAddress': {
+    'streetAddress': '123 Fake Street',
+    'streetAddressAdditional': '',
+    'addressCity': 'Victoria',
+    'addressRegion': 'BC',
+    'postalCode': 'V8Z 5C6',
+    'addressCountry': 'CA'
   }
 }
 
@@ -71,23 +69,21 @@ const validIncorporator = {
     'partyType': 'Person'
   },
   'roles': ['Incorporator'],
-  'address': {
-    'mailingAddress': {
-      'streetAddress': '123 Fake Street',
-      'streetAddressAdditional': '',
-      'addressCity': 'Victoria',
-      'addressRegion': 'BC',
-      'postalCode': 'V8Z 5C6',
-      'addressCountry': 'CA'
-    },
-    'deliveryAddress': {
-      'streetAddress': '123 Fake Street',
-      'streetAddressAdditional': '',
-      'addressCity': 'Victoria',
-      'addressRegion': 'BC',
-      'postalCode': 'V8Z 5C6',
-      'addressCountry': 'CA'
-    }
+  'mailingAddress': {
+    'streetAddress': '123 Fake Street',
+    'streetAddressAdditional': '',
+    'addressCity': 'Victoria',
+    'addressRegion': 'BC',
+    'postalCode': 'V8Z 5C6',
+    'addressCountry': 'CA'
+  },
+  'deliveryAddress': {
+    'streetAddress': '123 Fake Street',
+    'streetAddressAdditional': '',
+    'addressCity': 'Victoria',
+    'addressRegion': 'BC',
+    'postalCode': 'V8Z 5C6',
+    'addressCountry': 'CA'
   }
 }
 
@@ -101,15 +97,13 @@ const validOrgData = {
     'partyType': 'Org'
   },
   'roles': ['Incorporator'],
-  'address': {
-    'mailingAddress': {
-      'streetAddress': '3942 Fake Street',
-      'streetAddressAdditional': '',
-      'addressCity': 'Victoria',
-      'addressRegion': 'BC',
-      'postalCode': 'V8Z 5C6',
-      'addressCountry': 'CA'
-    }
+  'mailingAddress': {
+    'streetAddress': '3942 Fake Street',
+    'streetAddressAdditional': '',
+    'addressCity': 'Victoria',
+    'addressRegion': 'BC',
+    'postalCode': 'V8Z 5C6',
+    'addressCountry': 'CA'
   }
 }
 
@@ -294,7 +288,6 @@ describe('OrgPerson', () => {
     expect(wrapper.emitted(addEditPersonEvent).length).toBe(1)
     let incorporatorWithAddedRole = { ...validIncorporator }
     incorporatorWithAddedRole.roles = ['Completing Party', 'Incorporator']
-    delete incorporatorWithAddedRole.address.deliveryAddress
 
     expect(wrapper.emitted(addEditPersonEvent)[0][0]).toStrictEqual(incorporatorWithAddedRole)
 

@@ -1,4 +1,4 @@
-import { BaseAddressObjIF } from '@/interfaces'
+import { AddressIF } from '@/interfaces'
 import { Roles, IncorporatorTypes } from '@/enums'
 
 export interface OrgPersonIF {
@@ -11,5 +11,6 @@ export interface OrgPersonIF {
     orgName: string
   },
   roles: Roles[];
-  address: BaseAddressObjIF;
+  mailingAddress: AddressIF;
+  deliveryAddress?: AddressIF;
 }

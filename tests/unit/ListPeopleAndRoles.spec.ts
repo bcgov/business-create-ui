@@ -36,23 +36,21 @@ describe('List People And Roles', () => {
         'Completing Party',
         'Director'
       ],
-      'address': {
-        'mailingAddress': {
-          'streetAddress': '122-12210 Boul De Pierrefonds',
-          'streetAddressAdditional': '',
-          'addressCity': 'Pierrefonds',
-          'addressRegion': 'QC',
-          'postalCode': 'H9A 2X6',
-          'addressCountry': 'CA'
-        },
-        'deliveryAddress': {
-          'streetAddress': '122-12210 Boul De Pierrefonds',
-          'streetAddressAdditional': '',
-          'addressCity': 'Pierrefonds',
-          'addressRegion': 'QC',
-          'postalCode': 'H9A 2X6',
-          'addressCountry': 'CA'
-        }
+      'mailingAddress': {
+        'streetAddress': '122-12210 Boul De Pierrefonds',
+        'streetAddressAdditional': '',
+        'addressCity': 'Pierrefonds',
+        'addressRegion': 'QC',
+        'postalCode': 'H9A 2X6',
+        'addressCountry': 'CA'
+      },
+      'deliveryAddress': {
+        'streetAddress': '122-12210 Boul De Pierrefonds',
+        'streetAddressAdditional': '',
+        'addressCity': 'Pierrefonds',
+        'addressRegion': 'QC',
+        'postalCode': 'H9A 2X6',
+        'addressCountry': 'CA'
       }
     },
     {
@@ -67,15 +65,13 @@ describe('List People And Roles', () => {
       'roles': [
         'Incorporator'
       ],
-      'address': {
-        'mailingAddress': {
-          'streetAddress': '12-1044 Boul 21De Normandie',
-          'streetAddressAdditional': '',
-          'addressCity': 'Saint-Jean-Sur-Richelieu',
-          'addressRegion': 'QC',
-          'postalCode': 'J3A 1H7',
-          'addressCountry': 'CA'
-        }
+      'mailingAddress': {
+        'streetAddress': '12-1044 Boul 21De Normandie',
+        'streetAddressAdditional': '',
+        'addressCity': 'Saint-Jean-Sur-Richelieu',
+        'addressRegion': 'QC',
+        'postalCode': 'J3A 1H7',
+        'addressCountry': 'CA'
       }
     }
   ]
@@ -156,7 +152,7 @@ describe('List People And Roles', () => {
   })
 
   it('displays the correct addresses text when mailing and delivery do NOT match', () => {
-    mockPersonList[0].address.deliveryAddress.streetAddress = '123 Different rd'
+    mockPersonList[0].deliveryAddress.streetAddress = '123 Different rd'
     // Mounting the Wrapper to allow for the test to reach into the baseAddress component to validate data
     const wrapper = mount(ListPeopleAndRoles, { propsData: { personList: mockPersonList }, vuetify })
 

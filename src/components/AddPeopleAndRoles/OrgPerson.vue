@@ -243,9 +243,9 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
       this.isDirector = this.orgPerson.roles.includes(Roles.DIRECTOR)
       this.isIncorporator = this.orgPerson.roles.includes(Roles.INCORPORATOR)
       this.isCompletingParty = this.orgPerson.roles.includes(Roles.COMPLETING_PARTY)
-      this.inProgressMailingAddress = { ...this.orgPerson.address.mailingAddress }
+      this.inProgressMailingAddress = { ...this.orgPerson.mailingAddress }
       if (this.isDirector) {
-        this.inProgressDeliveryAddress = { ...this.orgPerson.address.deliveryAddress }
+        this.inProgressDeliveryAddress = { ...this.orgPerson.deliveryAddress }
         this.inheritMailingAddress = this.isSame(this.inProgressMailingAddress, this.inProgressDeliveryAddress)
       }
     }
@@ -325,22 +325,17 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
     if (this.activeIndex === -1) {
       personToAdd.person.id = this.nextId
     }
-    personToAdd.address = this.setPersonAddress()
+    personToAdd.mailingAddress = { ...this.inProgressMailingAddress }
+    if (this.isDirector) personToAdd.deliveryAddress = this.setPersonDeliveryAddress()
     personToAdd.roles = this.setPersonRoles()
     return personToAdd
   }
 
-  private setPersonAddress (): BaseAddressObjIF {
-    let personAddress: BaseAddressObjIF = {
-      mailingAddress: { ...this.inProgressMailingAddress }
+  private setPersonDeliveryAddress (): AddressIF {
+    if (this.inheritMailingAddress) {
+      this.inProgressDeliveryAddress = this.inProgressMailingAddress
     }
-    if (this.isDirector) {
-      if (this.inheritMailingAddress) {
-        this.inProgressDeliveryAddress = this.inProgressMailingAddress
-      }
-      personAddress = { ...personAddress, deliveryAddress: { ...this.inProgressDeliveryAddress } }
-    }
-    return personAddress
+    return { ...this.inProgressDeliveryAddress }
   }
 
   private setPersonRoles (): Roles [] {
