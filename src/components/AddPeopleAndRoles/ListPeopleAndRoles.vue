@@ -80,7 +80,7 @@
           <div class="actions">
             <span class="edit-action">
               <v-btn small text color="primary"
-                :id="'person-' + officer.id + '-change-btn'"
+                :id="'officer-' + officer.id + '-change-btn'"
                 @click="emitPersonInfo(index)"
               >
                 <v-icon small>mdi-pencil</v-icon>

@@ -48,7 +48,7 @@ export const isTypeCoop = (state: any): boolean => {
 }
 
 /**
- *
+ * Return the current date
  */
 export const getCurrentDate = (state: any): string => {
   return state.stateModel.currentDate

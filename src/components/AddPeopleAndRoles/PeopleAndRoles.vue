@@ -1,4 +1,3 @@
-import {Roles} from '@/enums';
 <template>
   <div>
     <p>
@@ -78,12 +77,16 @@ import {Roles} from '@/enums';
 // Libraries
 import { Component, Mixins } from 'vue-property-decorator'
 import { Action, State } from 'vuex-class'
+
 // Interfaces
 import { ActionBindingIF, BaseAddressType, FormType, OrgPersonIF, RolesIF } from '@/interfaces'
+
 // Mixins
 import { EntityFilterMixin } from '@/mixins'
+
 // Enums
 import { EntityTypes, IncorporatorTypes, Modes, Roles } from '@/enums'
+
 // Components
 import OrgPerson from './OrgPerson.vue'
 import ListPeopleAndRoles from './ListPeopleAndRoles.vue'
