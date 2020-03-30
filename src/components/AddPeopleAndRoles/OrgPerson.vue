@@ -142,7 +142,7 @@
 import { Component, Prop, Emit, Mixins } from 'vue-property-decorator'
 
 // Interfaces
-import { OrgPersonIF, BaseAddressObjIF, BaseAddressType, FormType, AddressIF, DialogType } from '@/interfaces'
+import { OrgPersonIF, BaseAddressType, FormType, AddressIF, DialogType, RolesIF } from '@/interfaces'
 
 // Components
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
@@ -156,6 +156,7 @@ import { EntityTypes, Roles, IncorporatorTypes } from '@/enums'
 
 // Schemas
 import { personAddressSchema } from '@/schemas'
+import { Getter } from 'vuex-class'
 
 @Component({
   components: {
@@ -184,6 +185,8 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
 
   @Prop()
   private existingCompletingParty: OrgPersonIF
+
+  @Getter getCurrentDate: string
 
   // Data Properties
   private orgPerson: OrgPersonIF = null
@@ -240,9 +243,9 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
     if (this.initialValue) {
       this.orgPerson = { ...this.initialValue }
       this.orgPerson.officer = { ...this.initialValue.officer }
-      this.isDirector = this.orgPerson.roles.includes(Roles.DIRECTOR)
-      this.isIncorporator = this.orgPerson.roles.includes(Roles.INCORPORATOR)
-      this.isCompletingParty = this.orgPerson.roles.includes(Roles.COMPLETING_PARTY)
+      this.isDirector = this.orgPerson.roles.some(party => party.roleType === Roles.DIRECTOR)
+      this.isIncorporator = this.orgPerson.roles.some(party => party.roleType === Roles.INCORPORATOR)
+      this.isCompletingParty = this.orgPerson.roles.some(party => party.roleType === Roles.COMPLETING_PARTY)
       this.inProgressMailingAddress = { ...this.orgPerson.mailingAddress }
       if (this.isDirector) {
         this.inProgressDeliveryAddress = { ...this.orgPerson.deliveryAddress }
@@ -338,16 +341,16 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
     return { ...this.inProgressDeliveryAddress }
   }
 
-  private setPersonRoles (): Roles [] {
-    let roles: Roles[] = []
+  private setPersonRoles (): RolesIF[] {
+    let roles: RolesIF[] = []
     if (this.isCompletingParty) {
-      roles.push(Roles.COMPLETING_PARTY)
+      roles.push({ roleType: Roles.COMPLETING_PARTY, appointmentDate: this.getCurrentDate })
     }
     if (this.isIncorporator) {
-      roles.push(Roles.INCORPORATOR)
+      roles.push({ roleType: Roles.INCORPORATOR, appointmentDate: this.getCurrentDate })
     }
     if (this.isDirector) {
-      roles.push(Roles.DIRECTOR)
+      roles.push({ roleType: Roles.DIRECTOR, appointmentDate: this.getCurrentDate })
     }
     return roles
   }
@@ -364,7 +367,7 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
   }
 
   private isRoleLocked (role: Roles) : boolean {
-    return this.orgPerson.roles.includes(role) && this.activeIndex === -1
+    return this.orgPerson.roles.some(party => party.roleType === role) && this.activeIndex === -1
   }
 
   private removePerson (): void {

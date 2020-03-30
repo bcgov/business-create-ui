@@ -40,7 +40,10 @@ const validPersonData = {
     'orgName': '',
     'partyType': 'Person'
   },
-  'roles': ['Director', 'Completing Party'],
+  'roles': [
+    { 'roleType': 'Director', 'appointmentDate': '2020-03-30' },
+    { 'roleType': 'Completing Party', 'appointmentDate': '2020-03-30' }
+  ],
   'mailingAddress': {
     'streetAddress': '123 Fake Street',
     'streetAddressAdditional': '',
@@ -68,7 +71,9 @@ const validIncorporator = {
     'orgName': '',
     'partyType': 'Person'
   },
-  'roles': ['Incorporator'],
+  'roles': [
+    { 'roleType': 'Incorporator', 'appointmentDate': '2020-03-30' }
+  ],
   'mailingAddress': {
     'streetAddress': '123 Fake Street',
     'streetAddressAdditional': '',
@@ -96,7 +101,9 @@ const validOrgData = {
     'orgName': 'Test Org',
     'partyType': 'Org'
   },
-  'roles': ['Incorporator'],
+  'roles': [
+    { 'roleType': 'Incorporator', 'appointmentDate': '2020-03-30' }
+  ],
   'mailingAddress': {
     'streetAddress': '3942 Fake Street',
     'streetAddressAdditional': '',
@@ -150,6 +157,7 @@ function createComponent (
 }
 
 store.state.stateModel.nameRequest.entityType = 'BCOMP'
+store.state.stateModel.currentDate = '2020-03-30'
 
 describe('OrgPerson', () => {
   it('Loads the component and sets data for person', async () => {
@@ -287,7 +295,10 @@ describe('OrgPerson', () => {
     expect(wrapper.emitted().addEditPerson).toBeTruthy()
     expect(wrapper.emitted(addEditPersonEvent).length).toBe(1)
     let incorporatorWithAddedRole = { ...validIncorporator }
-    incorporatorWithAddedRole.roles = ['Completing Party', 'Incorporator']
+    incorporatorWithAddedRole.roles = [
+      { roleType: 'Completing Party', appointmentDate: '2020-03-30' },
+      { roleType: 'Incorporator', appointmentDate: '2020-03-30' }
+    ]
 
     expect(wrapper.emitted(addEditPersonEvent)[0][0]).toStrictEqual(incorporatorWithAddedRole)
 

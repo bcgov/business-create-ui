@@ -13,6 +13,7 @@ import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 
 // Components
 import { PeopleAndRoles } from '@/components/AddPeopleAndRoles'
+import { RolesIF } from '@/interfaces'
 
 Vue.use(Vuetify)
 Vue.use(Vuelidate)
@@ -29,7 +30,7 @@ const appointForm: string = '.appoint-form'
 const checkCompletingParty: string = '.cp-valid'
 const checkDirector: string = '.dir-valid'
 const checkIncorporator: string = '.incorp-valid'
-const completingPartyRole: string = 'Completing Party'
+const completingPartyRole = { 'roleType': 'Completing Party', 'appointmentDate': '2020-03-30' }
 const directorRole: string = 'Director'
 const incorporatorRole: string = 'Incorporator'
 
@@ -37,7 +38,7 @@ function resetStore (): void {
   store.state.stateModel.addPeopleAndRoleStep.orgPeople = []
 }
 
-function getPersonList (roles: string[] = [completingPartyRole]) : any {
+function getPersonList (roles = [completingPartyRole]) : any {
   const mockPersonList = [
     {
       'officer': {
@@ -125,7 +126,9 @@ describe('People And Roles', () => {
   })
 
   it('shows Add Completing Party Button when people list is not empty and has no Completing Party', () => {
-    store.state.stateModel.addPeopleAndRoleStep.orgPeople = getPersonList(['Director'])
+    store.state.stateModel.addPeopleAndRoleStep.orgPeople = getPersonList([
+      { 'roleType': 'Director', 'appointmentDate': '2020-03-30' }
+    ])
     const wrapper = wrapperFactory()
     expect(wrapper.find(btnAddCompletingParty).exists()).toBeTruthy()
     wrapper.destroy()
@@ -163,7 +166,10 @@ describe('People And Roles', () => {
   })
 
   it('Shows check mark next to roles added', () => {
-    store.state.stateModel.addPeopleAndRoleStep.orgPeople = getPersonList(['Director', 'Incorporator'])
+    store.state.stateModel.addPeopleAndRoleStep.orgPeople = getPersonList([
+      { 'roleType': 'Director', 'appointmentDate': '2020-03-30' },
+      { 'roleType': 'Incorporator', 'appointmentDate': '2020-03-30' }
+    ])
     const wrapper = wrapperFactory()
     expect(wrapper.find(checkIncorporator).exists()).toBeTruthy()
     expect(wrapper.find(checkDirector).exists()).toBeTruthy()

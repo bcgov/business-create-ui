@@ -33,8 +33,8 @@ describe('List People And Roles', () => {
         'partyType': 'Person'
       },
       'roles': [
-        'Completing Party',
-        'Director'
+        { 'roleType': 'Completing Party', 'appointmentDate': '2020-03-30' },
+        { 'roleType': 'Director', 'appointmentDate': '2020-03-30' }
       ],
       'mailingAddress': {
         'streetAddress': '122-12210 Boul De Pierrefonds',
@@ -63,7 +63,7 @@ describe('List People And Roles', () => {
         'partyType': 'Org'
       },
       'roles': [
-        'Incorporator'
+        { 'roleType': 'Incorporator', 'appointmentDate': '2020-03-30' }
       ],
       'mailingAddress': {
         'streetAddress': '12-1044 Boul 21De Normandie',

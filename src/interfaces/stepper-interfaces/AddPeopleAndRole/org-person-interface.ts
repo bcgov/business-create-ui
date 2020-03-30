@@ -1,5 +1,5 @@
-import { AddressIF } from '@/interfaces'
-import { Roles, IncorporatorTypes } from '@/enums'
+import { AddressIF, RolesIF } from '@/interfaces'
+import { IncorporatorTypes } from '@/enums'
 
 export interface OrgPersonIF {
   officer: {
@@ -10,7 +10,7 @@ export interface OrgPersonIF {
     lastName: string;
     orgName: string
   },
-  roles: Roles[];
+  roles: RolesIF[];
   mailingAddress: AddressIF;
   deliveryAddress?: AddressIF;
 }
