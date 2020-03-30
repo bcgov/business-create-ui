@@ -246,28 +246,40 @@ export default class OfficeAddresses extends Mixins(CommonMixin, EntityFilterMix
    * Lifecycle callback to set up the component when it is mounted.
    */
   private created (): void {
-    this.setAddresses()
+    // First load, determine inherited flags based on address values
+    this.setAddresses(true)
     this.emitValid()
   }
 
-  private setAddresses (): void {
+  /**
+   * Set address data
+   * @param loadInheritedFlags used to update inherited flags based on isSame checks if true
+   */
+
+  private setAddresses (loadInheritedFlags: boolean): void {
     if (this.addresses.registeredOffice) {
       this.deliveryAddress = this.addresses.registeredOffice.deliveryAddress
       this.mailingAddress = this.addresses.registeredOffice.mailingAddress
-      this.inheritMailingAddress = this.isSame(
-        this.addresses.registeredOffice.deliveryAddress,
-        this.addresses.registeredOffice.mailingAddress)
-
+      if (loadInheritedFlags) {
+        this.inheritMailingAddress = this.isSame(
+          this.addresses.registeredOffice.deliveryAddress,
+          this.addresses.registeredOffice.mailingAddress)
+      }
       if (this.entityFilter(EntityTypes.BCOMP)) {
         this.recDeliveryAddress = this.addresses.recordsOffice?.deliveryAddress
         this.recMailingAddress = this.addresses.recordsOffice?.mailingAddress
-        this.inheritRegisteredAddress = (
-          this.isSame(this.addresses.registeredOffice.deliveryAddress, this.addresses.recordsOffice?.deliveryAddress) &&
-          this.isSame(this.addresses.registeredOffice.mailingAddress, this.addresses.recordsOffice?.mailingAddress)
-        )
-        this.inheritRecMailingAddress = this.isSame(
-          this.addresses.recordsOffice?.deliveryAddress,
-          this.addresses.recordsOffice?.mailingAddress)
+        if (loadInheritedFlags) {
+          this.inheritRegisteredAddress = (
+            this.isSame(this.addresses.registeredOffice.deliveryAddress,
+                        this.addresses.recordsOffice?.deliveryAddress) &&
+            this.isSame(this.addresses.registeredOffice.mailingAddress,
+                        this.addresses.recordsOffice?.mailingAddress)
+          )
+          this.inheritRecMailingAddress = this.isSame(
+            this.addresses.recordsOffice?.deliveryAddress,
+            this.addresses.recordsOffice?.mailingAddress
+          )
+        }
       }
     }
   }
@@ -384,7 +396,7 @@ export default class OfficeAddresses extends Mixins(CommonMixin, EntityFilterMix
   @Watch('stateModel.defineCompanyStep.officeAddresses', { deep: true, immediate: true })
   private updateAddresses (): void {
     this.addresses = this.inputAddresses
-    this.setAddresses()
+    this.setAddresses(false)
     this.emitValid()
   }
 
