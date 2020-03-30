@@ -2,7 +2,7 @@ import { AddressIF } from '@/interfaces'
 import { Roles, IncorporatorTypes } from '@/enums'
 
 export interface OrgPersonIF {
-  person: {
+  officer: {
     id: number | null
     partyType: IncorporatorTypes;
     firstName: string;

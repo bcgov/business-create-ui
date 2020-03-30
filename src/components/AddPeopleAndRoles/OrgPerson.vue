@@ -32,7 +32,7 @@
                     class="item"
                     label="First Name"
                     id="person__first-name"
-                    v-model="orgPerson.person.firstName"
+                    v-model="orgPerson.officer.firstName"
                     :rules="firstNameRules"
                   />
                   <v-text-field
@@ -40,7 +40,7 @@
                     class="item"
                     label="Middle Name"
                     id="person__middle-name"
-                    v-model="orgPerson.person.middleName"
+                    v-model="orgPerson.officer.middleName"
                     :rules="middleNameRules"
                   />
                   <v-text-field
@@ -48,7 +48,7 @@
                     class="item"
                     label="Last Name"
                     id="person__last-name"
-                    v-model="orgPerson.person.lastName"
+                    v-model="orgPerson.officer.lastName"
                     :rules="lastNameRules"
                   />
                 </div>
@@ -58,7 +58,7 @@
                     class="item"
                     label="Full Legal Corporation or Firm Name"
                     id="firm-name"
-                    v-model="orgPerson.person.orgName"
+                    v-model="orgPerson.officer.orgName"
                     :rules="orgNameRules"
                   />
                 </div>
@@ -77,11 +77,11 @@
                   <v-col cols="4">
                     <div :class="{'highlightedRole':
                       isRoleLocked(Roles.INCORPORATOR) ||
-                      orgPerson.person.partyType === IncorporatorTypes.CORPORATION}">
+                      orgPerson.officer.partyType === IncorporatorTypes.CORPORATION}">
                       <v-checkbox v-model="isIncorporator"
                       :label="incorporatorLabel"
                       :disabled="isRoleLocked(Roles.INCORPORATOR) ||
-                      orgPerson.person.partyType === IncorporatorTypes.CORPORATION"
+                      orgPerson.officer.partyType === IncorporatorTypes.CORPORATION"
                       />
                     </div>
                   </v-col>
@@ -239,7 +239,7 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
   private created (): void {
     if (this.initialValue) {
       this.orgPerson = { ...this.initialValue }
-      this.orgPerson.person = { ...this.initialValue.person }
+      this.orgPerson.officer = { ...this.initialValue.officer }
       this.isDirector = this.orgPerson.roles.includes(Roles.DIRECTOR)
       this.isIncorporator = this.orgPerson.roles.includes(Roles.INCORPORATOR)
       this.isCompletingParty = this.orgPerson.roles.includes(Roles.COMPLETING_PARTY)
@@ -270,7 +270,7 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
 
   private assignCompletingPartyRole (): void {
     if (this.isCompletingParty && this.existingCompletingParty &&
-      this.orgPerson.person.id !== this.existingCompletingParty.person.id) {
+      this.orgPerson.officer.id !== this.existingCompletingParty.officer.id) {
       this.confirmReassignPerson()
     }
   }
@@ -321,9 +321,9 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
    */
   private addPerson (): OrgPersonIF {
     let personToAdd: OrgPersonIF = { ...this.orgPerson }
-    personToAdd.person = { ...this.orgPerson.person }
+    personToAdd.officer = { ...this.orgPerson.officer }
     if (this.activeIndex === -1) {
-      personToAdd.person.id = this.nextId
+      personToAdd.officer.id = this.nextId
     }
     personToAdd.mailingAddress = { ...this.inProgressMailingAddress }
     if (this.isDirector) personToAdd.deliveryAddress = this.setPersonDeliveryAddress()
@@ -373,18 +373,18 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
 
   private reassignPersonErrorMessage () : string {
     let errorMessage: string =
-    `<p>The Completing Party role is already assigned to ${this.existingCompletingParty.person.firstName}
-     ${this.existingCompletingParty.person.middleName || ''} ${this.existingCompletingParty.person.lastName}.</p>
+    `<p>The Completing Party role is already assigned to ${this.existingCompletingParty.officer.firstName}
+     ${this.existingCompletingParty.officer.middleName || ''} ${this.existingCompletingParty.officer.lastName}.</p>
      <p>Selecting "Completing Party" here will change the Completing Party.</p>`
     return errorMessage
   }
 
   get isPerson (): boolean {
-    return this.orgPerson.person?.partyType === IncorporatorTypes.PERSON
+    return this.orgPerson.officer?.partyType === IncorporatorTypes.PERSON
   }
 
   get isOrg (): boolean {
-    return this.orgPerson.person?.partyType === IncorporatorTypes.CORPORATION
+    return this.orgPerson.officer?.partyType === IncorporatorTypes.CORPORATION
   }
 
   get incorporatorLabel () : string {

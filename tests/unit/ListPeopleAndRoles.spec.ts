@@ -24,7 +24,7 @@ describe('List People And Roles', () => {
 
   const mockPersonList = [
     {
-      'person': {
+      'officer': {
         'id': 0,
         'firstName': 'Cameron',
         'lastName': 'Bowler',
@@ -54,7 +54,7 @@ describe('List People And Roles', () => {
       }
     },
     {
-      'person': {
+      'officer': {
         'id': 1,
         'firstName': '',
         'lastName': '',
