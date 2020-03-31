@@ -1,8 +1,8 @@
-import { BaseAddressObjIF } from '@/interfaces'
-import { Roles, IncorporatorTypes } from '@/enums'
+import { AddressIF, RolesIF } from '@/interfaces'
+import { IncorporatorTypes } from '@/enums'
 
 export interface OrgPersonIF {
-  person: {
+  officer: {
     id: number | null
     partyType: IncorporatorTypes;
     firstName: string;
@@ -10,6 +10,7 @@ export interface OrgPersonIF {
     lastName: string;
     orgName: string
   },
-  roles: Roles[];
-  address: BaseAddressObjIF;
+  roles: RolesIF[];
+  mailingAddress: AddressIF;
+  deliveryAddress?: AddressIF;
 }

@@ -32,7 +32,7 @@ const cancelButtonSelector: string = '#btn-cancel'
 const formSelector: string = '.appoint-form'
 
 const validPersonData = {
-  'person': {
+  'officer': {
     'id': 0,
     'firstName': 'Adam',
     'lastName': 'Smith',
@@ -40,29 +40,30 @@ const validPersonData = {
     'orgName': '',
     'partyType': 'Person'
   },
-  'roles': ['Director', 'Completing Party'],
-  'address': {
-    'mailingAddress': {
-      'streetAddress': '123 Fake Street',
-      'streetAddressAdditional': '',
-      'addressCity': 'Victoria',
-      'addressRegion': 'BC',
-      'postalCode': 'V8Z 5C6',
-      'addressCountry': 'CA'
-    },
-    'deliveryAddress': {
-      'streetAddress': '123 Fake Street',
-      'streetAddressAdditional': '',
-      'addressCity': 'Victoria',
-      'addressRegion': 'BC',
-      'postalCode': 'V8Z 5C6',
-      'addressCountry': 'CA'
-    }
+  'roles': [
+    { 'roleType': 'Director', 'appointmentDate': '2020-03-30' },
+    { 'roleType': 'Completing Party', 'appointmentDate': '2020-03-30' }
+  ],
+  'mailingAddress': {
+    'streetAddress': '123 Fake Street',
+    'streetAddressAdditional': '',
+    'addressCity': 'Victoria',
+    'addressRegion': 'BC',
+    'postalCode': 'V8Z 5C6',
+    'addressCountry': 'CA'
+  },
+  'deliveryAddress': {
+    'streetAddress': '123 Fake Street',
+    'streetAddressAdditional': '',
+    'addressCity': 'Victoria',
+    'addressRegion': 'BC',
+    'postalCode': 'V8Z 5C6',
+    'addressCountry': 'CA'
   }
 }
 
 const validIncorporator = {
-  'person': {
+  'officer': {
     'id': 1,
     'firstName': 'Adam',
     'lastName': 'Smith',
@@ -70,29 +71,29 @@ const validIncorporator = {
     'orgName': '',
     'partyType': 'Person'
   },
-  'roles': ['Incorporator'],
-  'address': {
-    'mailingAddress': {
-      'streetAddress': '123 Fake Street',
-      'streetAddressAdditional': '',
-      'addressCity': 'Victoria',
-      'addressRegion': 'BC',
-      'postalCode': 'V8Z 5C6',
-      'addressCountry': 'CA'
-    },
-    'deliveryAddress': {
-      'streetAddress': '123 Fake Street',
-      'streetAddressAdditional': '',
-      'addressCity': 'Victoria',
-      'addressRegion': 'BC',
-      'postalCode': 'V8Z 5C6',
-      'addressCountry': 'CA'
-    }
+  'roles': [
+    { 'roleType': 'Incorporator', 'appointmentDate': '2020-03-30' }
+  ],
+  'mailingAddress': {
+    'streetAddress': '123 Fake Street',
+    'streetAddressAdditional': '',
+    'addressCity': 'Victoria',
+    'addressRegion': 'BC',
+    'postalCode': 'V8Z 5C6',
+    'addressCountry': 'CA'
+  },
+  'deliveryAddress': {
+    'streetAddress': '123 Fake Street',
+    'streetAddressAdditional': '',
+    'addressCity': 'Victoria',
+    'addressRegion': 'BC',
+    'postalCode': 'V8Z 5C6',
+    'addressCountry': 'CA'
   }
 }
 
 const validOrgData = {
-  'person': {
+  'officer': {
     'id': 0,
     'firstName': '',
     'lastName': '',
@@ -100,16 +101,16 @@ const validOrgData = {
     'orgName': 'Test Org',
     'partyType': 'Org'
   },
-  'roles': ['Incorporator'],
-  'address': {
-    'mailingAddress': {
-      'streetAddress': '3942 Fake Street',
-      'streetAddressAdditional': '',
-      'addressCity': 'Victoria',
-      'addressRegion': 'BC',
-      'postalCode': 'V8Z 5C6',
-      'addressCountry': 'CA'
-    }
+  'roles': [
+    { 'roleType': 'Incorporator', 'appointmentDate': '2020-03-30' }
+  ],
+  'mailingAddress': {
+    'streetAddress': '3942 Fake Street',
+    'streetAddressAdditional': '',
+    'addressCity': 'Victoria',
+    'addressRegion': 'BC',
+    'postalCode': 'V8Z 5C6',
+    'addressCountry': 'CA'
   }
 }
 
@@ -156,6 +157,7 @@ function createComponent (
 }
 
 store.state.stateModel.nameRequest.entityType = 'BCOMP'
+store.state.stateModel.currentDate = '2020-03-30'
 
 describe('OrgPerson', () => {
   it('Loads the component and sets data for person', async () => {
@@ -180,7 +182,7 @@ describe('OrgPerson', () => {
   it('Displays form data for org', async () => {
     const wrapper: Wrapper<OrgPerson> = createComponent(validOrgData, -1, 0, null)
     expect((<HTMLInputElement> wrapper.find(orgNameSelector).element).value)
-      .toEqual(validOrgData['person']['orgName'])
+      .toEqual(validOrgData['officer']['orgName'])
     await wrapper.vm.$nextTick()
     expect(wrapper.find(doneButtonSelector).attributes('disabled')).toBeUndefined()
     expect(wrapper.find(removeButtonSelector).attributes('disabled')).toBeDefined()
@@ -191,11 +193,11 @@ describe('OrgPerson', () => {
   it('Displays form data for person', async () => {
     const wrapper: Wrapper<OrgPerson> = createComponent(validPersonData, 0, 0, null)
     expect((<HTMLInputElement> wrapper.find(firstNameSelector).element).value)
-      .toEqual(validPersonData['person']['firstName'])
+      .toEqual(validPersonData['officer']['firstName'])
     expect((<HTMLInputElement> wrapper.find(middleNameSelector).element).value)
-      .toEqual(validPersonData['person']['middleName'])
+      .toEqual(validPersonData['officer']['middleName'])
     expect((<HTMLInputElement> wrapper.find(lastNameSelector).element).value)
-      .toEqual(validPersonData['person']['lastName'])
+      .toEqual(validPersonData['officer']['lastName'])
     await wrapper.vm.$nextTick()
     expect(wrapper.find(doneButtonSelector).attributes('disabled')).toBeUndefined()
     expect(wrapper.find(removeButtonSelector).attributes('disabled')).toBeUndefined()
@@ -226,7 +228,7 @@ describe('OrgPerson', () => {
   it('Clicking Done button emits event for add edit person/org', async () => {
     const wrapper: Wrapper<OrgPerson> = createComponent(validOrgData, -1, 0, null)
     expect((<HTMLInputElement> wrapper.find(orgNameSelector).element).value)
-      .toEqual(validOrgData['person']['orgName'])
+      .toEqual(validOrgData['officer']['orgName'])
     await wrapper.vm.$nextTick()
     expect(wrapper.find(doneButtonSelector).attributes('disabled')).toBeUndefined()
     wrapper.find(doneButtonSelector).trigger('click')
@@ -293,8 +295,10 @@ describe('OrgPerson', () => {
     expect(wrapper.emitted().addEditPerson).toBeTruthy()
     expect(wrapper.emitted(addEditPersonEvent).length).toBe(1)
     let incorporatorWithAddedRole = { ...validIncorporator }
-    incorporatorWithAddedRole.roles = ['Completing Party', 'Incorporator']
-    delete incorporatorWithAddedRole.address.deliveryAddress
+    incorporatorWithAddedRole.roles = [
+      { roleType: 'Completing Party', appointmentDate: '2020-03-30' },
+      { roleType: 'Incorporator', appointmentDate: '2020-03-30' }
+    ]
 
     expect(wrapper.emitted(addEditPersonEvent)[0][0]).toStrictEqual(incorporatorWithAddedRole)
 

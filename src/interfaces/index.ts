@@ -22,6 +22,7 @@ export * from './stepper-interfaces/AddPeopleAndRole/org-person-interface'
 export * from './stepper-interfaces/AddPeopleAndRole/add-people-role-interface'
 export * from './stepper-interfaces/CreateShareStructure/create-share-structure-interface'
 export * from './stepper-interfaces/ReviewConfirm/certify-interface'
+export * from './stepper-interfaces/AddPeopleAndRole/roles-array-interface'
 
 // Others
 export * from './resource-interfaces/component-resource-interfaces/certifyStatement-interface'

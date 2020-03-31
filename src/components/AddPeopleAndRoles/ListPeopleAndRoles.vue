@@ -43,30 +43,30 @@
       <v-row
         class="people-roles-content"
         :class="{ 'list-item__subtitle': !isSummary }"
-        v-for="(person, index) in personList"
+        v-for="(officer, index) in personList"
         :key="index"
         no-gutters>
         <v-col class="text-truncate">
-          <v-tooltip top :disabled="formatName(person).length < 25" color="primary">
+          <v-tooltip top :disabled="formatName(officer).length < 25" color="primary">
             <template v-slot:activator="{ on }">
-              <span v-on="on" class="people-roles-title"><strong>{{formatName(person)}}</strong></span>
+              <span v-on="on" class="people-roles-title"><strong>{{formatName(officer)}}</strong></span>
             </template>
-            <span>{{formatName(person)}}</span>
+            <span>{{formatName(officer)}}</span>
           </v-tooltip>
         </v-col>
         <v-col>
-          <base-address class="peoples-roles-mailing-address" :address="person.address.mailingAddress" />
+          <base-address class="peoples-roles-mailing-address" :address="officer.mailingAddress" />
         </v-col>
         <v-col>
-          <p v-if="isSame(person.address.mailingAddress, person.address.deliveryAddress)"
+          <p v-if="isSame(officer.mailingAddress, officer.deliveryAddress)"
             class="peoples-roles-delivery-address">Same as Mailing Address
           </p>
-          <base-address v-else class="peoples-roles-delivery-address" :address="person.address.deliveryAddress"/>
+          <base-address v-else class="peoples-roles-delivery-address" :address="officer.deliveryAddress"/>
         </v-col>
         <v-col>
-          <div v-if="person.roles.length>0">
-            <v-col v-for="(role, index) in person.roles" :key="index" class="col-roles">
-              <span>{{role}}</span>
+          <div v-if="officer.roles.length>0">
+            <v-col v-for="(role, index) in officer.roles" :key="index" class="col-roles">
+              <span>{{role.roleType}}</span>
             </v-col>
           </div>
           <div v-else>
@@ -80,7 +80,7 @@
           <div class="actions">
             <span class="edit-action">
               <v-btn small text color="primary"
-                :id="'person-' + person.id + '-change-btn'"
+                :id="'officer-' + officer.id + '-change-btn'"
                 @click="emitPersonInfo(index)"
               >
                 <v-icon small>mdi-pencil</v-icon>
@@ -154,8 +154,8 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin, EntityFilter
    * @returns The appropriate Corporation or Person name.
    */
   private formatName (filing: any): string {
-    return filing?.person?.orgName ? filing?.person?.orgName
-      : `${filing.person.firstName} ${filing.person.middleName || ''} ${filing.person.lastName}`
+    return filing?.officer?.orgName ? filing?.officer?.orgName
+      : `${filing.officer.firstName} ${filing.officer.middleName || ''} ${filing.officer.lastName}`
   }
 
   /**

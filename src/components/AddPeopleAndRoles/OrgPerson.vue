@@ -32,7 +32,7 @@
                     class="item"
                     label="First Name"
                     id="person__first-name"
-                    v-model="orgPerson.person.firstName"
+                    v-model="orgPerson.officer.firstName"
                     :rules="firstNameRules"
                   />
                   <v-text-field
@@ -40,7 +40,7 @@
                     class="item"
                     label="Middle Name"
                     id="person__middle-name"
-                    v-model="orgPerson.person.middleName"
+                    v-model="orgPerson.officer.middleName"
                     :rules="middleNameRules"
                   />
                   <v-text-field
@@ -48,7 +48,7 @@
                     class="item"
                     label="Last Name"
                     id="person__last-name"
-                    v-model="orgPerson.person.lastName"
+                    v-model="orgPerson.officer.lastName"
                     :rules="lastNameRules"
                   />
                 </div>
@@ -58,7 +58,7 @@
                     class="item"
                     label="Full Legal Corporation or Firm Name"
                     id="firm-name"
-                    v-model="orgPerson.person.orgName"
+                    v-model="orgPerson.officer.orgName"
                     :rules="orgNameRules"
                   />
                 </div>
@@ -77,11 +77,11 @@
                   <v-col cols="4">
                     <div :class="{'highlightedRole':
                       isRoleLocked(Roles.INCORPORATOR) ||
-                      orgPerson.person.partyType === IncorporatorTypes.CORPORATION}">
+                      orgPerson.officer.partyType === IncorporatorTypes.CORPORATION}">
                       <v-checkbox v-model="isIncorporator"
                       :label="incorporatorLabel"
                       :disabled="isRoleLocked(Roles.INCORPORATOR) ||
-                      orgPerson.person.partyType === IncorporatorTypes.CORPORATION"
+                      orgPerson.officer.partyType === IncorporatorTypes.CORPORATION"
                       />
                     </div>
                   </v-col>
@@ -142,7 +142,7 @@
 import { Component, Prop, Emit, Mixins } from 'vue-property-decorator'
 
 // Interfaces
-import { OrgPersonIF, BaseAddressObjIF, BaseAddressType, FormType, AddressIF, DialogType } from '@/interfaces'
+import { OrgPersonIF, BaseAddressType, FormType, AddressIF, DialogType, RolesIF } from '@/interfaces'
 
 // Components
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
@@ -156,6 +156,7 @@ import { EntityTypes, Roles, IncorporatorTypes } from '@/enums'
 
 // Schemas
 import { personAddressSchema } from '@/schemas'
+import { Getter } from 'vuex-class'
 
 @Component({
   components: {
@@ -184,6 +185,8 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
 
   @Prop()
   private existingCompletingParty: OrgPersonIF
+
+  @Getter getCurrentDate: string
 
   // Data Properties
   private orgPerson: OrgPersonIF = null
@@ -239,13 +242,13 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
   private created (): void {
     if (this.initialValue) {
       this.orgPerson = { ...this.initialValue }
-      this.orgPerson.person = { ...this.initialValue.person }
-      this.isDirector = this.orgPerson.roles.includes(Roles.DIRECTOR)
-      this.isIncorporator = this.orgPerson.roles.includes(Roles.INCORPORATOR)
-      this.isCompletingParty = this.orgPerson.roles.includes(Roles.COMPLETING_PARTY)
-      this.inProgressMailingAddress = { ...this.orgPerson.address.mailingAddress }
+      this.orgPerson.officer = { ...this.initialValue.officer }
+      this.isDirector = this.orgPerson.roles.some(party => party.roleType === Roles.DIRECTOR)
+      this.isIncorporator = this.orgPerson.roles.some(party => party.roleType === Roles.INCORPORATOR)
+      this.isCompletingParty = this.orgPerson.roles.some(party => party.roleType === Roles.COMPLETING_PARTY)
+      this.inProgressMailingAddress = { ...this.orgPerson.mailingAddress }
       if (this.isDirector) {
-        this.inProgressDeliveryAddress = { ...this.orgPerson.address.deliveryAddress }
+        this.inProgressDeliveryAddress = { ...this.orgPerson.deliveryAddress }
         this.inheritMailingAddress = this.isSame(this.inProgressMailingAddress, this.inProgressDeliveryAddress)
       }
     }
@@ -270,7 +273,7 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
 
   private assignCompletingPartyRole (): void {
     if (this.isCompletingParty && this.existingCompletingParty &&
-      this.orgPerson.person.id !== this.existingCompletingParty.person.id) {
+      this.orgPerson.officer.id !== this.existingCompletingParty.officer.id) {
       this.confirmReassignPerson()
     }
   }
@@ -321,38 +324,33 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
    */
   private addPerson (): OrgPersonIF {
     let personToAdd: OrgPersonIF = { ...this.orgPerson }
-    personToAdd.person = { ...this.orgPerson.person }
+    personToAdd.officer = { ...this.orgPerson.officer }
     if (this.activeIndex === -1) {
-      personToAdd.person.id = this.nextId
+      personToAdd.officer.id = this.nextId
     }
-    personToAdd.address = this.setPersonAddress()
+    personToAdd.mailingAddress = { ...this.inProgressMailingAddress }
+    if (this.isDirector) personToAdd.deliveryAddress = this.setPersonDeliveryAddress()
     personToAdd.roles = this.setPersonRoles()
     return personToAdd
   }
 
-  private setPersonAddress (): BaseAddressObjIF {
-    let personAddress: BaseAddressObjIF = {
-      mailingAddress: { ...this.inProgressMailingAddress }
+  private setPersonDeliveryAddress (): AddressIF {
+    if (this.inheritMailingAddress) {
+      this.inProgressDeliveryAddress = this.inProgressMailingAddress
     }
-    if (this.isDirector) {
-      if (this.inheritMailingAddress) {
-        this.inProgressDeliveryAddress = this.inProgressMailingAddress
-      }
-      personAddress = { ...personAddress, deliveryAddress: { ...this.inProgressDeliveryAddress } }
-    }
-    return personAddress
+    return { ...this.inProgressDeliveryAddress }
   }
 
-  private setPersonRoles (): Roles [] {
-    let roles: Roles[] = []
+  private setPersonRoles (): RolesIF[] {
+    let roles: RolesIF[] = []
     if (this.isCompletingParty) {
-      roles.push(Roles.COMPLETING_PARTY)
+      roles.push({ roleType: Roles.COMPLETING_PARTY, appointmentDate: this.getCurrentDate })
     }
     if (this.isIncorporator) {
-      roles.push(Roles.INCORPORATOR)
+      roles.push({ roleType: Roles.INCORPORATOR, appointmentDate: this.getCurrentDate })
     }
     if (this.isDirector) {
-      roles.push(Roles.DIRECTOR)
+      roles.push({ roleType: Roles.DIRECTOR, appointmentDate: this.getCurrentDate })
     }
     return roles
   }
@@ -369,7 +367,7 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
   }
 
   private isRoleLocked (role: Roles) : boolean {
-    return this.orgPerson.roles.includes(role) && this.activeIndex === -1
+    return this.orgPerson.roles.some(party => party.roleType === role) && this.activeIndex === -1
   }
 
   private removePerson (): void {
@@ -378,18 +376,18 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
 
   private reassignPersonErrorMessage () : string {
     let errorMessage: string =
-    `<p>The Completing Party role is already assigned to ${this.existingCompletingParty.person.firstName}
-     ${this.existingCompletingParty.person.middleName || ''} ${this.existingCompletingParty.person.lastName}.</p>
+    `<p>The Completing Party role is already assigned to ${this.existingCompletingParty.officer.firstName}
+     ${this.existingCompletingParty.officer.middleName || ''} ${this.existingCompletingParty.officer.lastName}.</p>
      <p>Selecting "Completing Party" here will change the Completing Party.</p>`
     return errorMessage
   }
 
   get isPerson (): boolean {
-    return this.orgPerson.person?.partyType === IncorporatorTypes.PERSON
+    return this.orgPerson.officer?.partyType === IncorporatorTypes.PERSON
   }
 
   get isOrg (): boolean {
-    return this.orgPerson.person?.partyType === IncorporatorTypes.CORPORATION
+    return this.orgPerson.officer?.partyType === IncorporatorTypes.CORPORATION
   }
 
   get incorporatorLabel () : string {

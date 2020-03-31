@@ -48,6 +48,13 @@ export const isTypeCoop = (state: any): boolean => {
 }
 
 /**
+ * Return the current date
+ */
+export const getCurrentDate = (state: any): string => {
+  return state.stateModel.currentDate
+}
+
+/**
  * Return a filingId if it exists
  */
 export const getFilingId = (state: any): number => {
