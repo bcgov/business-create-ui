@@ -9,6 +9,14 @@ import { NameRequestStates } from '@/enums/nameRequestStates'
 @Component
 export default class NameRequestMixin extends Vue {
   /**
+   * Returns True if NR is valid.
+   * @param nr the name request response payload
+   * */
+  isNrValid (nr: any): boolean {
+    return (nr && nr.expirationDate && nr.names[0]?.name && nr.nrNum && nr.requestTypeCd)
+  }
+
+  /**
    * Method to check if a name request response payload is consumable
    * @param nr the name request response payload
    */
@@ -39,18 +47,5 @@ export default class NameRequestMixin extends Vue {
     }
 
     return { isConsumable: true, expired: false, approved: true }
-  }
-
-  /**
-   * Fetch Authorizations by NR number
-   * @param nr the name request number (e.g NR 1234567)
-   */
-  getNRAuthorizations (nrNumber: string): Promise<any> {
-    const authUrl = sessionStorage.getItem('AUTH_API_URL')
-    const url = `${nrNumber}/authorizations`
-    const config = {
-      baseURL: authUrl + 'entities/'
-    }
-    return axios.get(url, config)
   }
 }

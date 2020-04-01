@@ -216,6 +216,13 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
         this.nameRequestInvalidType = NameRequestStates.NOTFOUND
         this.nameRequestInvalidErrorDialog = true
       }
+
+      // Check if NR response is valid
+      if (!this.isNrValid(nrResponse)) {
+        this.nameRequestInvalidType = NameRequestStates.INVALID
+        this.nameRequestInvalidErrorDialog = true
+      }
+
       const nr = this.isNRConsumable(nrResponse)
       // Show error dialogs if the NR is not in a consumable state
       if (!nr.isConsumable) {

@@ -127,6 +127,19 @@ export default class LegalApiMixin extends Vue {
   }
 
   /**
+   * Fetch Authorizations by NR number
+   * @param nr the name request number (e.g NR 1234567)
+   */
+  getNRAuthorizations (nrNumber: string): Promise<any> {
+    const authUrl = sessionStorage.getItem('AUTH_API_URL')
+    const url = `${nrNumber}/authorizations`
+    const config = {
+      baseURL: authUrl + 'entities/'
+    }
+    return axios.get(url, config)
+  }
+
+  /**
    * Method to query name request results.
    * @param nrNumber the name request number. eg: NR 123456789
    */
