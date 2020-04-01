@@ -125,4 +125,27 @@ export default class LegalApiMixin extends Vue {
       }
     })
   }
+
+  /**
+   * Method to query name request results.
+   * @param nrNumber the name request number. eg: NR 123456789
+   */
+  async queryNameRequest (nrNumber: string): Promise<any> {
+    if (nrNumber) {
+      let url = `nameRequests/${nrNumber}`
+
+      return axios.get(url).then(res => {
+        if (!res) {
+          throw new Error('invalid API response')
+        }
+        return res.data
+      }).catch(err => {
+        if (err && !err.response) {
+          return undefined
+        }
+      })
+    } else {
+      throw new Error('NR number is required.')
+    }
+  }
 }
