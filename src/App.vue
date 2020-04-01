@@ -79,7 +79,7 @@ import { EntityInfo, Stepper, Actions } from '@/components/common'
 import { AccountAuthorizationDialog, NameRequestInvalidErrorDialog } from '@/components/dialogs'
 
 // Mixins
-import { DateMixin, FilingTemplateMixin, LegalApiMixin, NameXApiMixin } from '@/mixins'
+import { DateMixin, FilingTemplateMixin, LegalApiMixin, NameRequestMixin } from '@/mixins'
 
 // Interfaces
 import { FilingDataIF, ActionBindingIF, StateModelIF, IncorporationFilingIF } from '@/interfaces'
@@ -104,7 +104,7 @@ import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
     AccountAuthorizationDialog
   }
 })
-export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApiMixin, NameXApiMixin) {
+export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApiMixin, NameRequestMixin) {
   // Global state
   @State stateModel!: StateModelIF
   @State(state => state.stateModel.tombstone.authenticated)
@@ -181,17 +181,6 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
     return sessionStorage.getItem('AUTH_API_URL')
   }
 
-  /**
-   * Fetch Authorizations by NR number
-   */
-  private getNRAuthorizations (nrNumber: string): Promise<any> {
-    const url = nrNumber + '/authorizations'
-    const config = {
-      baseURL: this.authApiUrl + 'entities/'
-    }
-    return axios.get(url, config)
-  }
-
   private storeAuthRoles (response): void {
     // NB: roles array may contain 'view', 'edit' or nothing
     const authRoles = response && response.data && response.data.roles
@@ -220,7 +209,6 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
 
     return this.getNRAuthorizations(queryNrNumber).then(async data => {
       this.storeAuthRoles(data) // throws if no role
-      await this.intializeNameXToken() // TODO : temporary token retrieval code
       const nrResponse = await this.queryNameRequest(queryNrNumber)
 
       // NR not found
@@ -228,6 +216,13 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
         this.nameRequestInvalidType = NameRequestStates.NOTFOUND
         this.nameRequestInvalidErrorDialog = true
       }
+
+      // Check if NR response is valid
+      if (!this.isNrValid(nrResponse)) {
+        this.nameRequestInvalidType = NameRequestStates.INVALID
+        this.nameRequestInvalidErrorDialog = true
+      }
+
       const nr = this.isNRConsumable(nrResponse)
       // Show error dialogs if the NR is not in a consumable state
       if (!nr.isConsumable) {

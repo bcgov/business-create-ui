@@ -92,4 +92,21 @@ describe('NameRequestInvalidErrorDialog - Displays Error/Warning messages', () =
     expect(wrapper.find('#dialog-ok-button').exists()).toBe(true)
     wrapper.destroy()
   })
+
+  it('displays name request invalid error message', () => {
+    const wrapper = shallowMount(NameRequestInvalidErrorDialog,
+      {
+        vuetify,
+        propsData: {
+          dialog: true,
+          type: NameRequestStates.INVALID
+        }
+      })
+
+    expect(wrapper.find('#dialog-title').text()).toBe('Name Request Invalid')
+    expect(wrapper.find('.genErr').text()).toBe('The specified name request number returned an invalid response.')
+    expect(wrapper.find('#dialog-redirect-button').exists()).toBe(false)
+    expect(wrapper.find('#dialog-ok-button').exists()).toBe(true)
+    wrapper.destroy()
+  })
 })

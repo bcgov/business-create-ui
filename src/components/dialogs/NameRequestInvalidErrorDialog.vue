@@ -16,6 +16,9 @@
         <p class="genErr" v-else-if="type === NameRequestStates.NOTFOUND">
           The specified name request number could not be found.</p>
 
+        <p class="genErr" v-else-if="type === NameRequestStates.INVALID">
+          The specified name request number returned an invalid response.</p>
+
         <p class="genErr" v-else>An unexpected error has occurred.</p>
       </v-card-text>
 
