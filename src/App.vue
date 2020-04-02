@@ -26,7 +26,7 @@
       </div>
     </transition>
 
-    <sbc-header ref="sbcHeader" />
+    <sbc-header />
 
     <main class="app-body">
       <entity-info />
@@ -68,6 +68,7 @@
 import { Component, Vue, Watch, Mixins } from 'vue-property-decorator'
 import { Action, State } from 'vuex-class'
 import axios from '@/utils/axios-auth'
+import TokenService from 'sbc-common-components/src/services/token.services'
 
 // Components
 import SbcHeader from 'sbc-common-components/src/components/SbcHeader.vue'
@@ -127,6 +128,12 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
   private nameRequestInvalidType: string = ''
   private evaluatingPreconditions: boolean = true
 
+  /**
+   * Instance of the token refresh service.
+   * Needs to exist for lifetime of app.
+   */
+  private tokenService = new TokenService()
+
   private async created (): Promise<void> {
     // Check for keycloak token to see if authenticated
     // (Keycloak service does not seem to be always ready here, so we check session storage )
@@ -135,8 +142,16 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
     // and they are already authenticated, so the data is refetched since the watcher for authenticated
     // does not get re-triggered
     if (sessionStorage.getItem(SessionStorageKeys.KeyCloakToken)) {
+      await this.startTokenService()
       await this.fetchData()
     }
+  }
+
+  /** Starts token service to refresh KC token periodically. */
+  private async startTokenService (): Promise<void> {
+    console.info('Starting token refresh service...') // eslint-disable-line no-console
+    await this.tokenService.init()
+    this.tokenService.scheduleRefreshTimer()
   }
 
   /**
@@ -223,6 +238,13 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
         this.nameRequestInvalidErrorDialog = true
       }
 
+      // FOR DEBUGGING ONLY - REMOVE WHEN TEST NR DATA IS FIXED
+      const expireDays = this.daysFromToday(nrResponse.expirationDate)
+      if (isNaN(expireDays) || expireDays < 1) {
+        const tomorrowMs = Date.now() + this.MS_IN_A_DAY
+        nrResponse.expirationDate = new Date(tomorrowMs)
+      }
+
       const nr = this.isNRConsumable(nrResponse)
       // Show error dialogs if the NR is not in a consumable state
       if (!nr.isConsumable) {
@@ -269,9 +291,10 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
    * Used to determine if we are ready to go evaluate all preconditions and fetch required data
    */
   @Watch('authenticated')
-  private onAuthenticatedChange (): void {
+  private async onAuthenticatedChange (): Promise<void> {
     if (this.authenticated) {
-      this.fetchData()
+      await this.startTokenService()
+      await this.fetchData()
     }
   }
 
@@ -302,7 +325,8 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
+// place app header on top of dialogs (and therefore still usable)
 .app-header {
   z-index: 1000;
 }

@@ -9,11 +9,16 @@ import { NameRequestStates } from '@/enums/nameRequestStates'
 @Component
 export default class NameRequestMixin extends Vue {
   /**
-   * Returns True if NR is valid.
+   * Returns True if the Name Request data is valid.
    * @param nr the name request response payload
    * */
   isNrValid (nr: any): boolean {
-    return (nr && nr.expirationDate && nr.names[0]?.name && nr.nrNum && nr.requestTypeCd)
+    return (nr &&
+      nr.state &&
+      nr.expirationDate &&
+      nr.names?.length > 0 &&
+      nr.nrNum &&
+      nr.requestTypeCd)
   }
 
   /**

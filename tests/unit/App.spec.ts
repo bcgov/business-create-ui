@@ -108,6 +108,7 @@ describe('App component', () => {
       .toStrictEqual(data.incorporationApplication.offices.recordsOffice)
 
     // Validate Contact Info
-    expect(store.state.stateModel.defineCompanyStep.businessContact).toStrictEqual(data.incorporationApplication.contactPoint)
+    expect(store.state.stateModel.defineCompanyStep.businessContact)
+      .toStrictEqual(data.incorporationApplication.contactPoint)
   })
 })
