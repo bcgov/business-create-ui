@@ -161,6 +161,9 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
 
         // Parse the draft data into the store if it exists
         this.draftFiling && this.parseDraft(this.draftFiling)
+
+        // Initialize Fee Summary & Resources
+        this.initEntity(this.stateModel.nameRequest.entityType)
       } catch (e) {
         // TODO: Catch a flag from the api, if there is an error to be handled.
       }
@@ -257,6 +260,26 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
   }
 
   /**
+   * Initialize the UI based on the entity type.
+   *  entityType The type of entity initiating an incorporation
+   */
+  private initEntity (entityType: string | null): void {
+    switch (entityType) {
+      case EntityTypes.BCOMP:
+        this.filingData.push({ filingTypeCode: FilingCodes.INCORPORATION_BC, entityType: EntityTypes.BCOMP })
+        break
+      case EntityTypes.COOP:
+        this.filingData.push({ filingTypeCode: FilingCodes.INCORPORATION_CP, entityType: EntityTypes.COOP })
+        break
+      default:
+        this.filingData = []
+    }
+
+    this.setCertifyStatementResource(entityType ? CertifyStatementResource.find(x => x.entityType === entityType)
+      : null)
+  }
+
+  /**
    * Method called when $route property changes.
    */
   @Watch('$route', { immediate: true })
@@ -273,22 +296,6 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
     if (this.authenticated) {
       this.fetchData()
     }
-  }
-
-  @Watch('stateModel.nameRequest.entityType')
-  private onEntityTypeChanged (val: string | null): void {
-    switch (val) {
-      case EntityTypes.BCOMP:
-        this.filingData.push({ filingTypeCode: FilingCodes.INCORPORATION_BC, entityType: EntityTypes.BCOMP })
-        break
-      case EntityTypes.COOP:
-        this.filingData.push({ filingTypeCode: FilingCodes.INCORPORATION_CP, entityType: EntityTypes.COOP })
-        break
-      default:
-        this.filingData = []
-    }
-
-    this.setCertifyStatementResource(val ? CertifyStatementResource.find(x => x.entityType === val) : null)
   }
 
   // FOR FUTURE USE TO SUPPORT EXIT IN ERROR DIALOGS
