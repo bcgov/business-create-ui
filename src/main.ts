@@ -34,18 +34,20 @@ Vue.use(Affix)
 Vue.use(Vuelidate)
 Vue.use(Vue2Filters)
 
-/**
- * Fetch config from server, then load Vue.
- */
+//
+// Fetch config from server, then load Vue.
+//
 fetchConfig()
   .then(async () => {
     // initialize Launch Darkly
     await initLDClient()
 
     // configure KeyCloak Service
+    console.info('Starting Keycloak service...') // eslint-disable-line no-console
     await KeyCloakService.setKeycloakConfigUrl(sessionStorage.getItem('KEYCLOAK_CONFIG_PATH'))
 
     if (featureFlags.getFlag('bcrs-create-ui-enabled')) {
+      console.info('Starting app...') // eslint-disable-line no-console
       new Vue({
         vuetify: new Vuetify({ iconfont: 'mdi' }),
         router,
