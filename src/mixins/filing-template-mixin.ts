@@ -62,7 +62,7 @@ export default class FilingTemplateMixin extends Vue {
    */
   parseDraft (draftFiling: any): void {
     try {
-      // // Set Office Addresses
+      // Set Office Addresses
       this.setOfficeAddresses(draftFiling.incorporationApplication.offices)
 
       // Set Contact Info

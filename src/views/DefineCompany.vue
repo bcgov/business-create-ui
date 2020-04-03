@@ -83,7 +83,6 @@ export default class DefineCompany extends Mixins(EntityFilterMixin) {
   @Action setBusinessContact!: ActionBindingIF
   @Action setOfficeAddresses!: ActionBindingIF
   @Action setDefineCompanyStepValidity!: ActionBindingIF
-  @Action setNameRequestState!: ActionBindingIF
 
   private businessContactFormValid: boolean = false
   private addressFormValid: boolean = false
@@ -93,30 +92,6 @@ export default class DefineCompany extends Mixins(EntityFilterMixin) {
 
   mounted () {
     this.setDefineCompanyStepValidity(this.businessContactFormValid && this.addressFormValid)
-  }
-
-  /**
-   * Method called when Benefit Company button is clicked.
-   */
-  private onClickBC (): void {
-    // Placeholder to assign the NR Data we are expecting *Development Purpose*
-    this.setNameRequestState({ nrNumber: 'NR7654321', entityType: EntityTypes.BCOMP, filingId: null })
-  }
-
-  /**
-   * Method called when Cooperative Association button is clicked.
-   */
-  private onClickCP (): void {
-    // Placeholder to assign the NR Data we are expecting *Development Purpose*
-    this.setNameRequestState({ nrNumber: 'NR7654321', entityType: EntityTypes.COOP, filingId: null })
-  }
-
-  /**
-   * Method called when Reset Entity Type button is clicked.
-   */
-  private onClickReset (): void {
-    this.setNameRequestState({})
-    this.setOfficeAddresses(null)
   }
 
   private onBusinessContactInfoChange (businessContact: BusinessContactIF): void {

@@ -81,7 +81,7 @@ export default class SummaryDefineCompany extends Mixins(EntityFilterMixin) {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
 
 .defineCompanyStepErrorMessage {
