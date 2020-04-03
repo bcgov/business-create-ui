@@ -238,13 +238,6 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
         this.nameRequestInvalidErrorDialog = true
       }
 
-      // FOR DEBUGGING ONLY - REMOVE WHEN TEST NR DATA IS FIXED
-      const expireDays = this.daysFromToday(nrResponse.expirationDate)
-      if (isNaN(expireDays) || expireDays < 1) {
-        const tomorrowMs = Date.now() + this.MS_IN_A_DAY
-        nrResponse.expirationDate = new Date(tomorrowMs)
-      }
-
       const nr = this.isNRConsumable(nrResponse)
       // Show error dialogs if the NR is not in a consumable state
       if (!nr.isConsumable) {
