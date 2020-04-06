@@ -3,21 +3,26 @@
       <header id="share-structure-header">
         <h2>1. Create Your Authorized Share Structure</h2>
       </header>
-     <ListShareStructure />
+     <ListShareClass :shareClasses="shareClasses"/>
     </section>
 </template>
 
 <script lang="ts">
 // Libraries
 import { Component, Vue } from 'vue-property-decorator'
+import { State } from 'vuex-class'
 
 // Components
-import { ListShareStructure } from '@/components/ShareStructure'
+import { ListShareClass } from '@/components/CreateShareStructure'
 
 @Component({
-  components: { ListShareStructure }
+  components: { ListShareClass }
 })
-export default class CreateShareStructure extends Vue {}
+export default class CreateShareStructure extends Vue {
+    // State
+    @State(state => state.stateModel.createShareStructureStep.shareClasses)
+    readonly shareClasses: any[]
+}
 </script>
 
 <style lang="scss" scoped>
