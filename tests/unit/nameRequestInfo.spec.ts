@@ -61,41 +61,41 @@ describe('NameRequest Info component', () => {
     const nrListSelector = '#name-request-info ul li'
     const itemCount = wrapper.vm.$el.querySelectorAll(nrListSelector).length
 
-    expect(itemCount).toEqual(6)
+    expect(itemCount).toEqual(5)
+    expect(wrapper.find('#condition-consent').exists()).toBe(false)
 
     const title = wrapper.vm.$el.querySelectorAll(nrListSelector)[0]
     const entityType = wrapper.vm.$el.querySelectorAll(nrListSelector)[1]
     const requestType = wrapper.vm.$el.querySelectorAll(nrListSelector)[2]
     const expiryDate = wrapper.vm.$el.querySelectorAll(nrListSelector)[3]
     const status = wrapper.vm.$el.querySelectorAll(nrListSelector)[4]
-    const conditionConsent = wrapper.vm.$el.querySelectorAll(nrListSelector)[5]
+
     expect(title.textContent).toBeDefined()
     expect(entityType.textContent).toContain('Entity Type:')
     expect(requestType.textContent).toContain('Request Type:')
     expect(expiryDate.textContent).toContain('Expiry Date:')
     expect(status.textContent).toContain('Status:')
-    expect(conditionConsent.textContent).toContain('Condition/Consent:')
   })
 
-  it('renders the Name Request information with no data', () => {
+  it('renders the Name Request information with data', () => {
     wrapper.vm.$store.state.stateModel.nameRequest = { ...mockNrData }
     const nrListSelector = '#name-request-info ul li'
     const itemCount = wrapper.vm.$el.querySelectorAll(nrListSelector).length
 
-    expect(itemCount).toEqual(6)
+    expect(itemCount).toEqual(5)
+    expect(wrapper.find('#condition-consent').exists()).toBe(false)
 
     const title = wrapper.vm.$el.querySelectorAll(nrListSelector)[0]
     const entityType = wrapper.vm.$el.querySelectorAll(nrListSelector)[1]
     const requestType = wrapper.vm.$el.querySelectorAll(nrListSelector)[2]
     const expiryDate = wrapper.vm.$el.querySelectorAll(nrListSelector)[3]
     const status = wrapper.vm.$el.querySelectorAll(nrListSelector)[4]
-    const conditionConsent = wrapper.vm.$el.querySelectorAll(nrListSelector)[5]
+
     expect(title.textContent).toContain('NR 1234567 - MADRONA BREAD BASKET INC.')
     expect(entityType.textContent).toContain('Entity Type: BC Benefit Company')
     expect(requestType.textContent).toContain('Request Type: New Business')
     expect(expiryDate.textContent).toContain('Expiry Date: Jun 24, 2020')
     expect(status.textContent).toContain('Status: APPROVED')
-    expect(conditionConsent.textContent).toContain('Condition/Consent: ')
   })
 
   it('renders the Name Request applicant information with data', () => {
@@ -115,7 +115,7 @@ describe('NameRequest Info component', () => {
     expect(phone.textContent).toContain('Phone: 250-356-9090')
   })
 
-  it('renders the Name Request applicant information with data', () => {
+  it('renders the Name Request applicant information with no data', () => {
     const nrListSelector = '#name-request-applicant-info ul li'
     const itemCount = wrapper.vm.$el.querySelectorAll(nrListSelector).length
 
@@ -160,6 +160,7 @@ describe('NameRequest Info component', () => {
     const itemCount = wrapper.vm.$el.querySelectorAll(nrListSelector).length
 
     expect(itemCount).toEqual(6)
+    expect(wrapper.find('#condition-consent').exists()).toBe(true)
 
     const title = wrapper.vm.$el.querySelectorAll(nrListSelector)[0]
     const entityType = wrapper.vm.$el.querySelectorAll(nrListSelector)[1]
@@ -184,6 +185,7 @@ describe('NameRequest Info component', () => {
     const itemCount = wrapper.vm.$el.querySelectorAll(nrListSelector).length
 
     expect(itemCount).toEqual(6)
+    expect(wrapper.find('#condition-consent').exists()).toBe(true)
 
     const title = wrapper.vm.$el.querySelectorAll(nrListSelector)[0]
     const entityType = wrapper.vm.$el.querySelectorAll(nrListSelector)[1]

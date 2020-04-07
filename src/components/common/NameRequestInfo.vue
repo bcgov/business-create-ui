@@ -15,7 +15,9 @@
           <li> Request Type: {{ requestType() }}</li>
           <li class="mt-4">Expiry Date: {{ formattedExpirationDate() }}</li>
           <li>Status: {{ getNameRequestDetails.status }}</li>
-          <li>Condition/Consent: {{ conditionConsent() }}</li>
+          <li id="condition-consent" v-if="getNameRequestDetails.status === NameRequestStates.CONDITIONAL">
+            Condition/Consent: {{ conditionConsent() }}
+          </li>
         </ul>
       </v-col>
     </v-row>
@@ -54,6 +56,9 @@ import { DateMixin } from '@/mixins'
 
 @Component
 export default class NameRequestInfo extends Mixins(DateMixin) {
+  // Template Enums
+  readonly NameRequestStates = NameRequestStates
+
   // Global getters
   @Getter isEntityType!: GetterIF;
   @Getter isTypeBcomp!: GetterIF;
