@@ -4,6 +4,7 @@
 
 // Enums
 import { EntityTypes } from '@/enums'
+import { NameRequestDetailsIF, NameRequestApplicantIF } from '@/interfaces'
 
 /**
  * Whether the client has staff keycloak role
@@ -55,17 +56,38 @@ export const getCurrentDate = (state: any): string => {
 }
 
 /**
- * Return a filingId if it exists
+ * Return a filingId
  */
 export const getFilingId = (state: any): number => {
   return state.stateModel.nameRequest.filingId
 }
 
 /**
- * Return a business identifier if it exists
+ * Return a business identifier
  */
 export const getBusinessIdentifier = (state: any): string => {
   return state.stateModel.nameRequest.nrNumber
+}
+
+/**
+ * Return the approved name of a name request
+ */
+export const getApprovedName = (state: any): string => {
+  return state.stateModel.nameRequest.details.approvedName
+}
+
+/**
+ * Return name request details
+ */
+export const getNameRequestDetails = (state: any): NameRequestDetailsIF => {
+  return state.stateModel.nameRequest.details
+}
+
+/**
+ * Return name request applicant information
+ */
+export const getNameRequestApplicant = (state: any): NameRequestApplicantIF => {
+  return state.stateModel.nameRequest.applicant
 }
 
 /**

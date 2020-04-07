@@ -15,16 +15,9 @@
 
         <!-- Header With NR Data -->
         <v-list-item-content id="nr-header" v-show="isEntityType">
-
-          <!-- Subtitle -->
-          <v-list-item-subtitle class="entity-subtitle">
-            <span v-if="isTypeBcomp">Incorporate a BC Benefit Company</span>
-            <span v-if="isTypeCoop">Incorporate a BC Cooperative Association</span>
-          </v-list-item-subtitle>
-
           <!-- Company Name -->
           <v-list-item-title class="header-title" id="entity-legal-name">
-            <span>XYZ Inc.</span>
+            <span>{{ getApprovedName }}</span>
           </v-list-item-title>
 
           <!-- TODO: display Designation? See mockup. -->
@@ -32,9 +25,9 @@
           <!-- Company Number -->
           <v-list-item-subtitle class="business-info">
             <dl>
-              <dt>Name Request No:</dt>
+              <dt> {{ entityTitle() }} Name Request No:</dt>
               <dd class="ml-2" id="entity-nr-number">
-                <span>NR1234567</span>
+                <span>{{ getBusinessIdentifier }}</span>
               </dd>
             </dl>
           </v-list-item-subtitle>
@@ -60,7 +53,21 @@ export default class EntityInfo extends Vue {
   @Getter isEntityType!: GetterIF
   @Getter isTypeBcomp!: GetterIF
   @Getter isTypeCoop!: GetterIF
+  @Getter getBusinessIdentifier!: GetterIF
+  @Getter getApprovedName!: GetterIF
+
+  /** The entity title  */
+  private entityTitle (): string {
+    if (this.isTypeBcomp) {
+      return 'Incorporate a BC Benefit Company'
+    } else if (this.isTypeCoop) {
+      return 'Incorporate a BC Cooperative Association'
+    }
+
+    return ''
+  }
 }
+
 </script>
 
 <style lang="scss" scoped>
