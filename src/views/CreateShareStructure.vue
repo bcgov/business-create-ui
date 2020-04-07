@@ -3,7 +3,8 @@
       <header id="share-structure-header">
         <h2>1. Create Your Authorized Share Structure</h2>
       </header>
-     <ListShareClass :shareClasses="shareClasses"/>
+     <ListShareClass
+       :shareClasses="shareClasses" />
     </section>
 </template>
 
