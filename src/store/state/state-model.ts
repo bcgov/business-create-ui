@@ -1,4 +1,4 @@
-import { StateModelIF } from '@/interfaces'
+import { StateModelIF, NameRequestApplicantIF, NameRequestDetailsIF } from '@/interfaces'
 
 export const stateModel: StateModelIF = {
   tombstone: {
@@ -9,8 +9,8 @@ export const stateModel: StateModelIF = {
   nameRequest: {
     nrNumber: '',
     entityType: '',
-    details: {},
-    applicant: {},
+    details: {} as NameRequestDetailsIF,
+    applicant: {} as NameRequestApplicantIF,
     filingId: null
   },
   currentDate: '',

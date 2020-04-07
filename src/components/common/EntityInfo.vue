@@ -48,7 +48,7 @@ import { Getter } from 'vuex-class'
 import { GetterIF } from '@/interfaces'
 
 @Component
-export default class EntityInfo extends Mixins() {
+export default class EntityInfo extends Vue {
   // Global getters
   @Getter isEntityType!: GetterIF
   @Getter isTypeBcomp!: GetterIF
@@ -57,7 +57,7 @@ export default class EntityInfo extends Mixins() {
   @Getter getApprovedName!: GetterIF
 
   /** The entity title  */
-  entityTitle (): string {
+  private entityTitle (): string {
     if (this.isTypeBcomp) {
       return 'Incorporate a BC Benefit Company'
     } else if (this.isTypeCoop) {

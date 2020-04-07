@@ -8,12 +8,12 @@
       </v-col>
       <v-col>
         <ul>
-          <li class="name-request-title mb-4">
+          <li class="name-request-title">
             <strong>{{ getBusinessIdentifier }}</strong> - {{ getNameRequestDetails.approvedName}}
           </li>
-          <li>Entity Type: {{ entityTypeDescription() }}</li>
-          <li class="mb-4"> Request Type: {{ requestType() }}</li>
-          <li>Expiry Date: {{ formattedExpirationDate() }}</li>
+          <li class="mt-4">Entity Type: {{ entityTypeDescription() }}</li>
+          <li> Request Type: {{ requestType() }}</li>
+          <li class="mt-4">Expiry Date: {{ formattedExpirationDate() }}</li>
           <li>Status: {{ getNameRequestDetails.status }}</li>
           <li>Condition/Consent: {{ conditionConsent() }}</li>
         </ul>
@@ -61,10 +61,9 @@ export default class NameRequestInfo extends Mixins(DateMixin) {
   @Getter getBusinessIdentifier!: GetterIF;
   @Getter getNameRequestDetails!: NameRequestDetailsIF;
   @Getter getNameRequestApplicant!: NameRequestApplicantIF;
-  getName = getName
 
   /** The entity title  */
-  entityTypeDescription () :string {
+  private entityTypeDescription () :string {
     if (this.isTypeBcomp) {
       return 'BC Benefit Company'
     } else if (this.isTypeCoop) {
@@ -75,17 +74,17 @@ export default class NameRequestInfo extends Mixins(DateMixin) {
   }
 
   /** The request type */
-  requestType () : string {
+  private requestType () : string {
     return 'New Business'
   }
 
   /** Return formatted expiration date */
-  formattedExpirationDate () : string {
+  private formattedExpirationDate () : string {
     return this.toReadableDate(this.getNameRequestDetails.expirationDate)
   }
 
   /** Return consent received string by checking if conditional and if consent has been received */
-  conditionConsent (): string {
+  private conditionConsent (): string {
     if (this.getNameRequestDetails.status === NameRequestStates.CONDITIONAL) {
       return this.getNameRequestDetails.consentFlag === 'R' ? 'Received' : 'Not Received'
     }
@@ -94,7 +93,7 @@ export default class NameRequestInfo extends Mixins(DateMixin) {
   }
 
   /** Return formatted applicant name */
-  applicantName () : string {
+  private applicantName () : string {
     let name = this.getNameRequestApplicant.firstName
     if (this.getNameRequestApplicant.middleName) {
       name = `${name} ${this.getNameRequestApplicant.middleName} ${this.getNameRequestApplicant.lastName}`
@@ -105,13 +104,13 @@ export default class NameRequestInfo extends Mixins(DateMixin) {
   }
 
   /** Return formatted address string */
-  applicantAddress () : string {
+  private applicantAddress () : string {
     // Get Address info
     const city = this.getNameRequestApplicant.city
     const stateProvince = this.getNameRequestApplicant.stateProvinceCode
     const postal = this.getNameRequestApplicant.postalCode
     const country = this.getNameRequestApplicant.countryTypeCode
-      ? this.getName(this.getNameRequestApplicant.countryTypeCode) : ''
+      ? getName(this.getNameRequestApplicant.countryTypeCode) : ''
 
     // Build address lines
     let address = this.getNameRequestApplicant.addressLine1

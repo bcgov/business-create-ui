@@ -15,7 +15,7 @@ export default class NameRequestMixin extends Vue {
    * @param filingId the filing id
    */
   generateNameRequestState (nr: any, filingId: number): NameRequestIF {
-    const approvedName = nr.names.filter(name => name.state === NameRequestStates.APPROVED)[0].name
+    const approvedName = nr.names.find(name => name.state === NameRequestStates.APPROVED).name
     return {
       nrNumber: nr.nrNum,
       // TODO: Update entityType to use nr.requestTypeCd when namex supports our entity types
