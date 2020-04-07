@@ -71,7 +71,24 @@ export const stateModel: StateModelIF = {
       parValue: null,
       currency: '',
       hasRightsOrRestrictions: false,
-      series: []
+      series: [
+        {
+          id: 1,
+          name: 'Share Series 1',
+          priority: 1,
+          hasMaximumShares: true,
+          maxNumberOfShares: 50,
+          hasRightsOrRestrictions: false
+        },
+        {
+          id: 2,
+          name: 'Share Series 2',
+          priority: 2,
+          hasMaximumShares: true,
+          maxNumberOfShares: 100,
+          hasRightsOrRestrictions: false
+        }
+      ]
     },
     {
       id: 3,
