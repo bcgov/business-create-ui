@@ -20,7 +20,7 @@
           <label><strong>Company Name</strong></label>
         </v-flex>
         <v-flex md8>
-          <div class="company-name">XYZ Inc.</div>
+          <div class="company-name">{{ getApprovedName }}</div>
           <div class="company-type">
             <span v-if="entityFilter(EntityTypes.BCOMP)">BC Benefit Company</span>
             <span v-else-if="entityFilter(EntityTypes.COOP)">BC Cooperative Association</span>
@@ -42,10 +42,10 @@
 <script lang="ts">
 // Libraries
 import { Component, Mixins } from 'vue-property-decorator'
-import { State } from 'vuex-class'
+import { Getter, State } from 'vuex-class'
 
 // Interfaces
-import { BusinessContactIF, IncorporationAddressIf } from '@/interfaces'
+import { BusinessContactIF, GetterIF, IncorporationAddressIf } from '@/interfaces'
 
 // Components
 import { BusinessContactInfo, OfficeAddresses } from '@/components/DefineCompany'
@@ -63,6 +63,9 @@ import { EntityTypes } from '@/enums'
   }
 })
 export default class SummaryDefineCompany extends Mixins(EntityFilterMixin) {
+  // Getters
+  @Getter getApprovedName: GetterIF
+
   // State
   @State(state => state.stateModel.defineCompanyStep.valid)
   readonly valid!: boolean

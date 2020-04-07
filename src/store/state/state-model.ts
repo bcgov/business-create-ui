@@ -9,6 +9,8 @@ export const stateModel: StateModelIF = {
   nameRequest: {
     nrNumber: '',
     entityType: '',
+    details: {},
+    applicant: {},
     filingId: null
   },
   currentDate: '',

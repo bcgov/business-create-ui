@@ -5,28 +5,7 @@
         <h2>1. Company Name</h2>
       </header>
       <v-card flat class="step-container">
-        <div class="meta-container">
-          <label>Name Request</label>
-
-          <div class="value name-request">
-            <p>Generate a Name Request (NR):</p>
-
-            <v-container id="business-buttons-container" class="list-item justify-space-between">
-              <v-btn id="select-bc-btn" large color="primary" :disabled="isEntityType" @click="onClickBC()">
-                <span class="font-weight-bold">Benefit Company NR</span>
-              </v-btn>
-
-              <v-btn id="select-cp-btn" large color="success" :disabled="isEntityType" @click="onClickCP()">
-                <span class="font-weight-bold">Cooperative Association NR</span>
-              </v-btn>
-
-              <v-btn id="reset-btn" large :disabled="!isEntityType" @click="onClickReset()">
-                <v-icon>mdi-undo</v-icon>
-                <span>Reset</span>
-              </v-btn>
-            </v-container>
-          </div>
-        </div>
+          <name-request-info />
       </v-card>
     </section>
 
@@ -79,10 +58,12 @@ import { EntityTypes } from '@/enums'
 
 // Components
 import { BusinessContactInfo, OfficeAddresses } from '@/components/DefineCompany'
+import { NameRequestInfo } from '@/components/common'
 
 @Component({
   components: {
     BusinessContactInfo,
+    NameRequestInfo,
     OfficeAddresses
   }
 })
