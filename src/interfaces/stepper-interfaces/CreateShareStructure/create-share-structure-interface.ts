@@ -8,12 +8,11 @@ export interface ShareClassIF {
     type?: string; // Indicates whether class or series
     name: string;
     priority: number;
-    maxNumberOfShares: number | null;
     hasMaximumShares?: boolean;
+    maxNumberOfShares: number | null;
+    hasParValue?: boolean;
     parValue?: number | null;
     currency?: string;
-    hasNoMaximumShares?: boolean;
-    hasNoPar?: boolean;
     hasRightsOrRestrictions: boolean;
     series?: ShareClassIF[];
 }

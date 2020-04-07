@@ -37,14 +37,13 @@
                     <v-btn text small
                       color="primary"
                       class="actions__more-actions__btn"
-                      v-on="on"
-                      @click="emitAddSeries(row.item)"
-                    >
+                      v-on="on">
                       <v-icon>mdi-menu-down</v-icon>
                     </v-btn>
                   </template>
                   <v-list class="more-actions">
-                    <v-list-item class="actions-dropdown_item" v-show="true">
+                    <v-list-item class="actions-dropdown_item"
+                    v-show="row.item.hasRightsOrRestrictions" @click="emitAddSeries(row.index)">
                       <v-list-item-subtitle><v-icon>mdi-playlist-plus</v-icon> Add Series</v-list-item-subtitle>
                     </v-list-item>
                     <v-list-item
@@ -235,21 +234,21 @@ export default class ListShareClass extends Vue {
    * Emit an class and event to the parent to handle editing.
    * @param addSeries The series item to be edited.
    */
-  @Emit('emitAddSeries')
+  @Emit('addSeries')
   private emitAddSeries (index: number): void {}
 
   /**
    * Emit an class and event to the parent to handle editing.
    * @param classItem The series item to be edited.
    */
-  @Emit('emitClass')
+  @Emit('editClass')
   private emitShareClass (index: number): void {}
 
   /**
    * Emit an  series item and event to the parent to handle editing.
    * @param seriesItem The series item to be edited.
    */
-  @Emit('emitSeries')
+  @Emit('editSeries')
   private emitShareSeries (index: number, seriesIndex: number): void {}
 }
 </script>
