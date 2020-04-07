@@ -43,7 +43,7 @@
                   </template>
                   <v-list class="more-actions">
                     <v-list-item class="actions-dropdown_item"
-                    v-show="row.item.hasRightsOrRestrictions" @click="emitAddSeries(row.index)">
+                    :disabled="!row.item.hasRightsOrRestrictions" @click="emitAddSeries(row.index)">
                       <v-list-item-subtitle><v-icon>mdi-playlist-plus</v-icon> Add Series</v-list-item-subtitle>
                     </v-list-item>
                     <v-list-item
