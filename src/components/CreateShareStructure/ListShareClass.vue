@@ -82,7 +82,6 @@
           <td>{{row.item.parValue ? `$${row.item.parValue}.00` : 'No Par Value'}}</td>
           <td>{{row.item.currency}}</td>
           <td>{{seriesItem.hasRightsOrRestrictions ? 'Yes' : 'No'}}</td>
-<<<<<<< HEAD
 
           <!-- Share Series Edit Btn -->
           <td>
