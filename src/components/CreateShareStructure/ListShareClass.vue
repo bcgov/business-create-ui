@@ -123,7 +123,6 @@
                     <template v-slot:activator="{ on }">
                       <v-btn text small color="primary"
                         class="actions__more-actions__btn" v-on="on"
-                        @click="emitShareSeries(row.index, index)"
                       >
                         <v-icon>mdi-menu-down</v-icon>
                       </v-btn>
