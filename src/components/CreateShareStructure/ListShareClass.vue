@@ -24,7 +24,7 @@
                 <v-btn small text color="primary"
                  :id="'Class-' + 0 + '-change-btn'"
                  @click="emitShareClass(row.index)"
-                >
+                 :disabled="componentDisabled">
                   <v-icon small>mdi-pencil</v-icon>
                   <span>Edit</span>
                 </v-btn>
@@ -32,7 +32,7 @@
 
               <!-- Share Class Dropdown Actions -->
               <span>
-                <v-menu offset-y>
+                <v-menu offset-y  :disabled="componentDisabled">
                   <template v-slot:activator="{ on }">
                     <v-btn text small
                       color="primary"
@@ -152,6 +152,9 @@ import 'array.prototype.move'
 export default class ListShareClass extends Vue {
   @Prop({ default: () => [] })
   private shareClasses: any
+
+  @Prop()
+  private componentDisabled: boolean
 
   private headers: Array<any> = [
     {
