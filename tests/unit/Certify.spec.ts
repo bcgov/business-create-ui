@@ -73,7 +73,7 @@ function createComponent (
     certifyClause: certifyClause
   }
 ): Wrapper<Certify> {
-  return mount(Certify, { sync: false,
+  return mount(Certify, {
     propsData: {
       certifiedBy,
       date,

@@ -1,5 +1,26 @@
 <template>
-  <v-card flat id="share-structure">
+  <v-card flat id="share-structure" v-if="shareClasses.length > 0">
+
+    <!-- Summary Section -->
+    <div id="share-summary" v-if="isSummary">
+      <!-- Summary Header -->
+      <div class="share-summary-header" >
+        <v-icon>mdi-file-tree</v-icon>
+        <label class="share-summary-header-title"><strong> Share Structure</strong></label>
+      </div>
+
+      <!-- Summary Warning -->
+      <div v-if="showErrorSummary" class="share-summary-invalid-message">
+        <span>
+          <v-icon color="#1976d2">mdi-information-outline</v-icon>
+          This step is not complete.
+          <router-link id="router-link" :to="{ path: '/create-share-structure', query: { showErrors: true } }">
+            Return to this step to complete it.
+          </router-link>
+        </span>
+      </div>
+    </div>
+
     <v-data-table
       :headers="headers"
       :items="shareClasses"
@@ -18,11 +39,11 @@
           <td>{{row.item.hasRightsOrRestrictions ? 'Yes' : 'No'}}</td>
 
           <!-- Share Class Edit Btn -->
-          <td>
+          <td v-if="!isSummary">
             <div class="actions">
               <span class="edit-action">
                 <v-btn small text color="primary"
-                 :id="'Class-' + 0 + '-change-btn'"
+                 :id="'Class-' + row.index + '-change-btn'"
                  @click="emitShareClass(row.index)"
                  :disabled="componentDisabled">
                   <v-icon small>mdi-pencil</v-icon>
@@ -73,7 +94,7 @@
         </tr>
 
         <!-- Share Series rows -->
-        <tr v-for="(seriesItem, index) in row.item.series" :key="`Series: ${seriesItem.id}`"
+        <tr v-for="(seriesItem, index) in row.item.series" :key="`Class:${row.index}-Series:${index}`"
             class="series-row"
             :class="{ 'series-row-last': index === row.item.series.length - 1}"
         >
@@ -84,12 +105,12 @@
           <td>{{seriesItem.hasRightsOrRestrictions ? 'Yes' : 'No'}}</td>
 
           <!-- Share Series Edit Btn -->
-          <td>
+          <td v-if="!isSummary">
             <div class="actions">
               <span class="edit-action">
                 <v-btn small text color="primary"
-                       :id="'Series-' + 0 + '-change-btn'"
-                       @click="emitShareSeries(row.index, index)"
+                   :id="'Series-' + index + '-change-btn'"
+                   @click="emitShareSeries(row.index, index)"
                 >
                   <v-icon small>mdi-pencil</v-icon>
                   <span>Edit</span>
@@ -100,7 +121,10 @@
               <span>
                   <v-menu offset-y>
                     <template v-slot:activator="{ on }">
-                      <v-btn text small color="primary" class="actions__more-actions__btn" v-on="on">
+                      <v-btn text small color="primary"
+                        class="actions__more-actions__btn" v-on="on"
+                        @click="emitShareSeries(row.index, index)"
+                      >
                         <v-icon>mdi-menu-down</v-icon>
                       </v-btn>
                     </template>
@@ -155,6 +179,12 @@ export default class ListShareClass extends Vue {
 
   @Prop()
   private componentDisabled: boolean
+
+  @Prop()
+  private isSummary: boolean
+
+  @Prop({ default: false })
+  private showErrorSummary: boolean
 
   private headers: Array<any> = [
     {
@@ -257,60 +287,80 @@ export default class ListShareClass extends Vue {
 </script>
 
 <style lang="scss" scoped>
-  @import '@/assets/styles/theme.scss';
+@import '@/assets/styles/theme.scss';
 
-  .class-row td:not(:first-child) {
-    color: $gray6;
+#share-structure {
+  margin-top: 1rem;
+}
+
+.share-summary-header {
+  display: flex;
+  background-color: $BCgovBlue5O;
+  padding: 1.25rem;
+
+  .share-summary-header-title {
+    padding-left: .5rem;
+  }
+}
+
+.share-summary-invalid-message {
+  padding: 1.25rem;
+  font-weight: bold;
+  color: $BCgovABlue2;
+}
+
+.class-row td:not(:first-child) {
+  color: $gray6;
+}
+
+.class-row-has-series td {
+  border-bottom: none!important;
+}
+
+.series-row {
+  .series-name {
+    padding-left: 2rem;
   }
 
-  .class-row-has-series td {
+  td {
     border-bottom: none!important;
   }
 
-  .series-row {
-    .series-name {
-      padding-left: 2rem;
-    }
+  td:not(:first-child){
+    color: $gray6;
+  }
+}
 
-    td {
-      border-bottom: none!important;
-    }
+.series-row-last td {
+  border-bottom: thin solid rgba(0, 0, 0, 0.12)!important;
+}
 
-    td:not(:first-child){
-      color: $gray6;
-    }
+.actions {
+  display: flex;
+
+  .edit-action {
+    border-right: 1px solid $gray1;
   }
 
-  .series-row-last td {
-    border-bottom: thin solid rgba(0, 0, 0, 0.12)!important;
+  .v-btn {
+    min-width: .5rem;
   }
 
-  .actions {
-    display: flex;
+  .v-btn + .v-btn {
+    margin-left: 0.5rem;
+  }
+}
 
-    .edit-action {
-      border-right: 1px solid $gray1;
-    }
+.more-actions {
+  padding: 2px 0;
 
-    .v-btn {
-      min-width: .5rem;
-    }
-
-    .v-btn + .v-btn {
-      margin-left: 0.5rem;
-    }
+  .item-disabled {
+    opacity: .5;
   }
 
-  .more-actions {
-    padding: 2px 0;
-
-    .item-disabled {
-      opacity: .5;
-    }
-
-    .actions-dropdown_item {
-      min-height: 0!important;
-      margin: 1rem 0;
-    }
+  .actions-dropdown_item {
+    min-height: 0!important;
+    margin: 1rem 0;
   }
+}
 </style>
