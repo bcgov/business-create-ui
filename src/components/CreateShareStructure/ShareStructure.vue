@@ -1,0 +1,382 @@
+<template>
+  <div>
+    <v-expand-transition id="addShareStructureContainer">
+      <ul class="list add-share-structure">
+        <li class="add-share-structure-container">
+          <div class="meta-container">
+            <label class="add-share-structure-header">
+              <span v-if="activeIndex === -1">Add Share {{shareStructure.type}}</span>
+              <span v-else>Edit Share {{shareStructure.type}}</span>
+            </label>
+
+            <div class="meta-container__inner">
+              <v-form
+                ref="shareStructureForm"
+                class="share-structure-form"
+                v-model="formValid"
+                v-on:submit.prevent="addShareStructure">
+                <v-text-field
+                  filled
+                  class="item"
+                  :label="shareStructure.type + ' Name [Shares]'"
+                  :hint="'Enter the name of the  '+ shareStructure.type.toLowerCase() +
+                  '  - the words &quot;Shares&quot; is automatically added'"
+                  id="name"
+                  v-model="shareStructure.name"
+                  :rules="nameRules"
+                  suffix="Shares"
+                  persistent-hint/>
+
+                <v-divider class="separator" />
+
+                <v-radio-group
+                  v-model="hasNoMaximumShares"
+                  column
+                  class="radio-group-full-width"
+                  @change="changeMaximumShareFlag()">
+                  <v-radio :value="false">
+                    <template v-slot:label>
+                      <v-text-field
+                        filled
+                        class="item"
+                        :label="'Maximum Number in ' + shareStructure.type"
+                        id="maxShares"
+                        v-model="shareStructure.maxNumberOfShares"
+                        persistent-hint
+                        :hint="'Maximum number of shares in the ' + shareStructure.type"
+                        :rules="getMaximumShareRule()"
+                        :disabled="hasNoMaximumShares"/>
+                    </template>
+                  </v-radio>
+                  <v-radio :value="true" label="No maximum" />
+                </v-radio-group>
+
+                <v-divider class="separator" />
+
+                <v-radio-group
+                  v-model="hasNoParValue"
+                  column
+                  class="radio-group-full-width"
+                  @change="changeParValueFlag()" v-show="isClass">
+                  <v-radio :value="false">
+                    <template v-slot:label>
+                      <v-row>
+                        <v-col cols="6">
+                          <v-text-field
+                            filled
+                            class="item"
+                            label="Par Value"
+                            id="maxShares"
+                            v-model="shareStructure.parValue"
+                            :rules="getParValueRule()"/>
+                        </v-col>
+                        <v-col cols="6">
+                          <v-select
+                            class="item"
+                            :items="currencyList"
+                            filled
+                            label="Currency"
+                            v-model="shareStructure.currency"
+                            :rules="getCurrencyRule()"/>
+                        </v-col>
+                      </v-row>
+                    </template>
+                  </v-radio>
+                  <v-radio :value="true" label="No par value" />
+                </v-radio-group>
+
+                <div v-show="isSeries">
+                    <v-row v-if="shareStructure.hasParValue">
+                        <v-col cols="6">
+                            <v-text-field
+                            class="item"
+                            label="Par Value"
+                            id="maxShares"
+                            v-model="shareStructure.parValue"
+                            :disabled="true"
+                            width="10"/>
+                        </v-col>
+                        <v-col cols="6">
+                            <v-text-field
+                            class="item"
+                            label="Currency"
+                            v-model="shareStructure.currency"
+                            :disabled="true"/>
+                        </v-col>
+                    </v-row>
+                    <v-label v-else>No par value</v-label>
+                </div>
+
+                <v-divider class="separator" />
+
+                <div class="form__row">
+                  <v-checkbox
+                    :label="'This share ' + shareStructure.type.toLowerCase() + ' has special rights or restrictions'"
+                    v-model="shareStructure.hasRightsOrRestrictions"/>
+                </div>
+
+                <div class="form__row form__btns">
+                  <v-btn large color="error" :disabled="activeIndex === -1"
+                    @click="removeShareStructure()" id="btn-remove">Remove</v-btn>
+
+                  <v-btn large color="primary" class="form-primary-btn"
+                    @click="validateForm()" :disabled="!formValid" id="btn-done">Done</v-btn>
+
+                  <v-btn large class="form-cancel-btn" @click="resetFormAndData(true)" id="btn-cancel">Cancel</v-btn>
+                </div>
+              </v-form>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </v-expand-transition>
+  </div>
+</template>
+
+<script lang="ts">
+// Libraries
+import { Component, Prop, Emit, Mixins, Vue } from 'vue-property-decorator'
+
+// Interfaces
+import { ShareClassIF, FormType } from '@/interfaces'
+
+// Mixins
+import { CommonMixin } from '@/mixins'
+
+import { Getter } from 'vuex-class'
+
+@Component({})
+export default class ShareStructure extends Vue {
+  // Refs
+  $refs!: {
+    shareStructureForm: FormType
+  };
+
+  // Props
+  @Prop()
+  private initialValue!: ShareClassIF
+
+  @Prop()
+  private activeIndex: number
+
+  @Prop()
+  private parentIndex: number
+
+  @Prop()
+  private nextId: number
+
+  // Data Properties
+  private shareStructure: ShareClassIF = null
+  private formValid: boolean = true
+  private hasNoMaximumShares: boolean = false
+  private hasNoParValue: boolean = false
+
+  private excludedWordsList: string [] = ['share', 'shares', 'value']
+
+  // Rules
+  private readonly nameRules: Array<Function> = [
+    v => !!v || 'A name is required',
+    v => !/^\s/g.test(v) || 'Invalid spaces', // leading spaces
+    v => !/\s$/g.test(v) || 'Invalid spaces', // trailing spaces
+    v => !(v.split(' ').some(r => this.excludedWordsList.includes(r.toLowerCase()))) ||
+    'Name should not contain any of the words share, shares or value'
+  ];
+
+  private getMaximumShareRule (): Array<Function> {
+    if (!this.hasNoMaximumShares) {
+      return [v => !!v || 'Maximum share value is required', v => /^\d+$/.test(v) || 'Must be a number']
+    }
+    return []
+  }
+
+  private getParValueRule (): Array<Function> {
+    if (!this.hasNoParValue) {
+      return [v => !!v || 'Par value is required',
+        v => (v < 1 && /^\d+(\.\d{0,3})?$/.test(v)) || 'Amounts less than 1 can be entered with up to 3 decimal place']
+    }
+    return []
+  }
+
+  private getCurrencyRule (): Array<Function> {
+    if (!this.hasNoParValue) {
+      return [v => !!v || 'Currency is required']
+    }
+    return []
+  }
+
+  // Life cycle methods
+  private created (): void {
+    if (this.initialValue) {
+      this.shareStructure = { ...this.initialValue }
+      this.hasNoMaximumShares = !this.shareStructure.hasMaximumShares
+      this.hasNoParValue = !this.shareStructure.hasParValue
+
+      if (this.activeIndex !== -1) {
+        const name = this.shareStructure.name
+        this.shareStructure.name = name.substr(0, name.indexOf(' Shares'))
+      }
+    }
+  }
+
+  // Methods
+  private validateForm (): void {
+    if (this.formValid) {
+      const shareStructure: ShareClassIF = this.addShareStructure()
+      this.emitAddShareStructureEvent(shareStructure)
+      this.resetFormAndData(false)
+    }
+  }
+
+  private emitAddShareStructureEvent (shareStructure: ShareClassIF): void {
+    if (this.isClass) {
+      this.emitAddEditShareClassEvent(shareStructure)
+    } else if (this.isSeries) {
+      this.emitAddEditShareSeriesEvent(shareStructure)
+    }
+  }
+
+  private addShareStructure (): ShareClassIF {
+    let shareStructureToAdd: ShareClassIF = { ...this.shareStructure }
+    if (this.activeIndex === -1) {
+      shareStructureToAdd.id = this.nextId
+    }
+    shareStructureToAdd.name = `${shareStructureToAdd.name} Shares`
+    shareStructureToAdd.hasMaximumShares = !this.hasNoMaximumShares
+    shareStructureToAdd.hasParValue = !this.hasNoParValue
+    return shareStructureToAdd
+  }
+
+  private removeShareStructure (): void {
+    if (this.isClass) {
+      this.emitRemoveShareClassEvent(this.activeIndex)
+    } else if (this.isSeries) {
+      this.emitRemoveShareSeriesEvent(this.activeIndex)
+    }
+  }
+
+  private resetFormAndData (emitEvent: boolean): void {
+    this.$refs.shareStructureForm.reset()
+    if (emitEvent) {
+      this.emitResetEvent()
+    }
+  }
+
+  private changeMaximumShareFlag () {
+    if (this.hasNoMaximumShares) {
+      this.shareStructure.maxNumberOfShares = null
+    }
+  }
+
+  private changeParValueFlag () {
+    if (this.hasNoParValue) {
+      this.shareStructure.currency = null
+      this.shareStructure.parValue = null
+    }
+  }
+  // Getters
+  get isClass (): boolean {
+    return this.shareStructure.type === 'Class'
+  }
+
+  get isSeries (): boolean {
+    return this.shareStructure.type === 'Series'
+  }
+
+  get currencyList (): Array<any> {
+    return ['CAD', 'USD', { divider: true }, 'INR']
+  }
+
+  // Events
+  @Emit('addEditClass')
+  private emitAddEditShareClassEvent (shareClass: ShareClassIF): void {}
+
+  @Emit('addEditSeries')
+  private emitAddEditShareSeriesEvent (shareSeries: ShareClassIF): void {}
+
+  @Emit('removeClass')
+  private emitRemoveShareClassEvent (shareClassIndex: number): void {}
+
+  @Emit('removeSeries')
+  private emitRemoveShareSeriesEvent (shareSeriesIndex: number): void {}
+
+  @Emit('resetEvent')
+  private emitResetEvent (): void {}
+}
+</script>
+
+<style lang="scss" scoped>
+[class^="col"] {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+ul,
+p {
+  padding-top: 0.5rem;
+}
+li {
+  list-style: None;
+  padding-top: 0.25rem;
+}
+.add-share-structure {
+  .add-share-structure-container {
+    padding: 1.25rem;
+
+    .meta-container {
+      > label:first-child {
+        margin-bottom: 1.5rem;
+      }
+    }
+  }
+}
+
+.meta-container {
+  display: flex;
+  flex-flow: column nowrap;
+  position: relative;
+
+  > label:first-child {
+    font-weight: 700;
+  }
+
+  &__inner {
+    flex: 1 1 auto;
+  }
+
+  .actions {
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    .v-btn {
+      min-width: 4rem;
+    }
+
+    .v-btn + .v-btn {
+      margin-left: 0.5rem;
+    }
+  }
+}
+
+.add-share-structure-header {
+  font-size: 1rem;
+  font-weight: bold;
+  line-height: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .meta-container {
+    flex-flow: row nowrap;
+
+    > label:first-child {
+      flex: 0 0 auto;
+      margin-right: 1rem;
+      width: 10rem;
+    }
+  }
+}
+
+.separator {
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
