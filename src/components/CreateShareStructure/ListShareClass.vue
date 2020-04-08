@@ -1,5 +1,5 @@
 <template>
-  <v-card flat id="share-structure" v-if="shareClasses.length > 0">
+  <v-card flat id="share-structure">
 
     <!-- Summary Section -->
     <div id="share-summary" v-if="isSummary">
