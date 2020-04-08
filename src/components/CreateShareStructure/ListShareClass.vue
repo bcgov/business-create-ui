@@ -1,5 +1,5 @@
 <template>
-  <v-card flat id="share-structure">
+  <v-card flat id="share-structure" v-if="shareClasses.length > 0">
     <v-data-table
       :headers="headers"
       :items="shareClasses"
@@ -22,7 +22,7 @@
             <div class="actions">
               <span class="edit-action">
                 <v-btn small text color="primary"
-                 :id="'Class-' + 0 + '-change-btn'"
+                 :id="'Class-' + row.index + '-change-btn'"
                  @click="emitShareClass(row.index)"
                  :disabled="componentDisabled">
                   <v-icon small>mdi-pencil</v-icon>
@@ -73,7 +73,7 @@
         </tr>
 
         <!-- Share Series rows -->
-        <tr v-for="(seriesItem, index) in row.item.series" :key="`Series: ${seriesItem.id}`"
+        <tr v-for="(seriesItem, index) in row.item.series" :key="`Class:${row.index}-Series:${index}`"
             class="series-row"
             :class="{ 'series-row-last': index === row.item.series.length - 1}"
         >
@@ -88,8 +88,8 @@
             <div class="actions">
               <span class="edit-action">
                 <v-btn small text color="primary"
-                       :id="'Series-' + 0 + '-change-btn'"
-                       @click="emitShareSeries(row.index, index)"
+                   :id="'Series-' + index + '-change-btn'"
+                   @click="emitShareSeries(row.index, index)"
                 >
                   <v-icon small>mdi-pencil</v-icon>
                   <span>Edit</span>
@@ -100,7 +100,10 @@
               <span>
                   <v-menu offset-y>
                     <template v-slot:activator="{ on }">
-                      <v-btn text small color="primary" class="actions__more-actions__btn" v-on="on">
+                      <v-btn text small color="primary"
+                        class="actions__more-actions__btn" v-on="on"
+                        @click="emitShareSeries(row.index, index)"
+                      >
                         <v-icon>mdi-menu-down</v-icon>
                       </v-btn>
                     </template>
