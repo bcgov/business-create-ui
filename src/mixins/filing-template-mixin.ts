@@ -62,13 +62,6 @@ export default class FilingTemplateMixin extends Vue {
    */
   parseDraft (draftFiling: any): void {
     try {
-      // Set nameRequest data
-      this.setNameRequestState({
-        nrNumber: draftFiling.incorporationApplication.nameRequest.nrNumber,
-        entityType: draftFiling.incorporationApplication.nameRequest.legalType,
-        filingId: draftFiling.header.filingId
-      })
-
       // // Set Office Addresses
       this.setOfficeAddresses(draftFiling.incorporationApplication.offices)
 

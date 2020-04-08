@@ -163,13 +163,15 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
     if (nameRequest && nameRequest.nrNum && nameRequest.isConsumable) {
       this.setNameRequestState(this.generateNameRequestState(nameRequest, null))
       this.setCurrentDate(this.dateToUsableString(new Date()))
-
       try {
         // Retrieve draft filing if it exists for the nrNumber specified
         this.draftFiling = await this.fetchDraft()
-
-        // Parse the draft data into the store if it exists
-        this.draftFiling && this.parseDraft(this.draftFiling)
+        // Parse the draft and update nr data into the store if it exists
+        if (this.draftFiling) {
+          this.parseDraft(this.draftFiling)
+          this.setNameRequestState(
+            this.generateNameRequestState(nameRequest, this.draftFiling.filing.header.filingId))
+        }
 
         // Initialize Fee Summary & Resources
         this.initEntity(this.stateModel.nameRequest.entityType)
