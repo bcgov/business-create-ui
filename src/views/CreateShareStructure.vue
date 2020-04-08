@@ -163,9 +163,33 @@ export default class CreateShareStructure extends Vue {
     this.resetData()
   }
 
+  private addEditShareSeries (shareSeries: ShareClassIF): void {
+    let newList: ShareClassIF[] = Object.assign([], this.shareClasses)
+    const parentShareClass = newList[this.parentIndex]
+    // New Share Structue.
+    if (this.activeIndex === -1) {
+      parentShareClass.series.push(shareSeries)
+    } else {
+      // Edit Share Structure.
+      parentShareClass.series.splice(this.activeIndex, 1, shareSeries)
+    }
+    this.setShareClasses(newList)
+    this.setCreateShareStructureStepValidity(this.shareClasses.length > 0)
+    this.resetData()
+  }
+
   private removeShareClass (index: number): void {
     let newList: ShareClassIF[] = Object.assign([], this.shareClasses)
     newList.splice(index, 1)
+    this.setShareClasses(newList)
+    this.setCreateShareStructureStepValidity(this.shareClasses.length > 0)
+    this.resetData()
+  }
+
+  private removeShareSeries (index: number): void {
+    let newList: ShareClassIF[] = Object.assign([], this.shareClasses)
+    const parentShareClass = newList[this.parentIndex]
+    parentShareClass.series.splice(index, 1)
     this.setShareClasses(newList)
     this.setCreateShareStructureStepValidity(this.shareClasses.length > 0)
     this.resetData()
