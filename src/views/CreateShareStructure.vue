@@ -33,6 +33,7 @@
         @addEditClass="addEditShareClass($event)"
         @addEditSeries="addEditShareSeries($event)"
         @removeClass="removeShareClass($event)"
+        @removeSeries="removeSeries"
         @resetEvent="resetData()"/>
     </v-card>
     <ListShareClass v-if="this.shareClasses.length > 0"
@@ -40,7 +41,9 @@
     :componentDisabled="showShareStructureForm"
     @editClass="initShareClassForEdit($event)"
     @removeClass="removeShareClass($event)"
-    @addSeries="initNewShareSeries($event)"/>
+    @addSeries="initNewShareSeries($event)"
+    @editSeries="editSeries"
+    @removeSeries="removeSeries"/>
   </section>
 </template>
 
@@ -163,6 +166,26 @@ export default class CreateShareStructure extends Vue {
     this.resetData()
   }
 
+  private editSeries (index: number, seriesIndex: number): void {
+    this.activeIndex = seriesIndex
+    this.parentIndex = index
+    const parentShareClass = this.shareClasses[this.parentIndex]
+    this.currentShareStructure = { ...parentShareClass.series[this.activeIndex] }
+    this.addEditInProgress = true
+    this.showShareStructureForm = true
+  }
+
+  private removeSeries (index: number, seriesIndex: number): void {
+    this.activeIndex = seriesIndex
+    this.parentIndex = index
+    let newList: ShareClassIF[] = Object.assign([], this.shareClasses)
+    const parentShareClass = newList[this.parentIndex]
+    parentShareClass.series.splice(this.activeIndex, 1)
+    this.setShareClasses(newList)
+    this.setCreateShareStructureStepValidity(this.shareClasses.length > 0)
+    this.resetData()
+  }
+
   private addEditShareSeries (shareSeries: ShareClassIF): void {
     let newList: ShareClassIF[] = Object.assign([], this.shareClasses)
     const parentShareClass = newList[this.parentIndex]
@@ -181,15 +204,6 @@ export default class CreateShareStructure extends Vue {
   private removeShareClass (index: number): void {
     let newList: ShareClassIF[] = Object.assign([], this.shareClasses)
     newList.splice(index, 1)
-    this.setShareClasses(newList)
-    this.setCreateShareStructureStepValidity(this.shareClasses.length > 0)
-    this.resetData()
-  }
-
-  private removeShareSeries (index: number): void {
-    let newList: ShareClassIF[] = Object.assign([], this.shareClasses)
-    const parentShareClass = newList[this.parentIndex]
-    parentShareClass.series.splice(index, 1)
     this.setShareClasses(newList)
     this.setCreateShareStructureStepValidity(this.shareClasses.length > 0)
     this.resetData()
