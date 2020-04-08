@@ -250,7 +250,7 @@ export default class ShareStructure extends Vue {
     if (this.isClass) {
       this.emitRemoveShareClassEvent(this.activeIndex)
     } else if (this.isSeries) {
-      this.emitRemoveShareSeriesEvent(this.activeIndex)
+      this.emitRemoveShareSeriesEvent(this.parentIndex, this.activeIndex)
     }
   }
 
@@ -297,7 +297,7 @@ export default class ShareStructure extends Vue {
   private emitRemoveShareClassEvent (shareClassIndex: number): void {}
 
   @Emit('removeSeries')
-  private emitRemoveShareSeriesEvent (shareSeriesIndex: number): void {}
+  private emitRemoveShareSeriesEvent (parentIndex:number, shareSeriesIndex: number): void {}
 
   @Emit('resetEvent')
   private emitResetEvent (): void {}
