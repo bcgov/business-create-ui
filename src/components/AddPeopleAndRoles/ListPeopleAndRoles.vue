@@ -206,7 +206,7 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin, EntityFilter
 
 .people-roles-header {
   padding: .5rem 1.25rem .5rem 1.25rem;
-  font-size: 12px;
+  font-size: 0.875rem;
   margin-top: 1rem;
 }
 
@@ -214,7 +214,7 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin, EntityFilter
   margin-top: .5rem;
   padding: .5rem 1.25rem .5rem 1.25rem;
   border-top: 1px solid $gray1;
-  font-size: 14px;
+  font-size: 0.875rem;
 
   .people-roles-title {
     color: $gray7;
