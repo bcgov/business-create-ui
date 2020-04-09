@@ -25,10 +25,10 @@
 <script lang="ts">
 // Libraries
 import { Component, Mixins } from 'vue-property-decorator'
-import { State, Action, Getter } from 'vuex-class'
+import { State, Action } from 'vuex-class'
 
 // Interfaces
-import { CertifyStatementIF, ActionBindingIF, GetterIF, CertifyIF } from '@/interfaces'
+import { CertifyStatementIF, ActionBindingIF, CertifyIF } from '@/interfaces'
 
 // Components
 import { Certify, Summary } from '@/components/ReviewConfirm'
@@ -53,17 +53,6 @@ export default class ReviewConfirm extends Mixins(ResourceLookupMixin) {
   readonly certifyStatementResource!: CertifyStatementIF
 
   @Action setCertifyState!: ActionBindingIF
-
-  // Global getters
-  @Getter isEntityType!: GetterIF
-
-  // Lifecycle event
-  private created (): void {
-    // if basic stuff isn't set, route back to step 1
-    if (!this.isEntityType) {
-      this.$router.push('/')
-    }
-  }
 
   private onCertifyFormValidChange (val: boolean): void {
     this.setCertifyState(
