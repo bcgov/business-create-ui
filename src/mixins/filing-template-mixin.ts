@@ -27,6 +27,7 @@ export default class FilingTemplateMixin extends Vue {
   @Action setNameRequestState!: ActionBindingIF
   @Action setOrgPersonList!: ActionBindingIF
   @Action setFilingId!: ActionBindingIF
+  @Action setCertifyState!: ActionBindingIF
 
   /**
    * Method to construct a filing body when making an api request
@@ -75,6 +76,12 @@ export default class FilingTemplateMixin extends Vue {
 
       // Set Persons and Organizations
       this.setOrgPersonList(draftFiling.incorporationApplication.parties)
+
+      // Set Certified By
+      this.setCertifyState({
+        certifyFormValid: false, // always override this
+        certifiedBy: draftFiling.header.certifiedBy
+      })
     } catch (e) {
       // TODO: Throw a flag to the ui from here, if we want to trigger error handling in ui
     }
