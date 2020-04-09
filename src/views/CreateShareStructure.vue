@@ -30,6 +30,7 @@
         :activeIndex="activeIndex"
         :nextId="nextId"
         :parentIndex="parentIndex"
+        :shareClasses="shareClasses"
         @addEditClass="addEditShareClass($event)"
         @addEditSeries="addEditShareSeries($event)"
         @removeClass="removeShareClass($event)"
