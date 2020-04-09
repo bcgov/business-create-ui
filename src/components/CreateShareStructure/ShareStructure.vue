@@ -32,20 +32,22 @@
                 <v-radio-group
                   v-model="hasNoMaximumShares"
                   column
-                  class="radio-group-full-width"
+                  class="radio-group"
                   @change="changeMaximumShareFlag()">
                   <v-radio :value="false">
                     <template v-slot:label>
+                      <v-row><v-col cols="6">
                       <v-text-field
                         filled
                         class="item"
-                        :label="'Maximum Number in ' + shareStructure.type"
+                        label="Maximum Number of Shares"
                         id="maxShares"
                         v-model="shareStructure.maxNumberOfShares"
                         persistent-hint
-                        :hint="'Maximum number of shares in the ' + shareStructure.type"
+                        :hint="'Enter the maximum number of shares in the ' + shareStructure.type"
                         :rules="getMaximumShareRule()"
                         :disabled="hasNoMaximumShares"/>
+                    </v-col></v-row>
                     </template>
                   </v-radio>
                   <v-radio :value="true" label="No maximum" />
@@ -56,7 +58,7 @@
                 <v-radio-group
                   v-model="hasNoParValue"
                   column
-                  class="radio-group-full-width"
+                  class="radio-group"
                   @change="changeParValueFlag()" v-show="isClass">
                   <v-radio :value="false">
                     <template v-slot:label>
@@ -66,18 +68,30 @@
                             filled
                             class="item"
                             label="Par Value"
-                            id="maxShares"
+                            id="txt-par-value"
                             v-model="shareStructure.parValue"
-                            :rules="getParValueRule()"/>
+                            :rules="getParValueRule()"
+                            hint="Enter the initial value of each share"
+                            persistent-hint/>
                         </v-col>
                         <v-col cols="6">
                           <v-select
                             class="item"
-                            :items="currencyList"
+                            :items="getCurrencyList()"
                             filled
                             label="Currency"
                             v-model="shareStructure.currency"
-                            :rules="getCurrencyRule()"/>
+                            :rules="getCurrencyRule()"
+                            item-text="`${data.item.name}, ${data.item.code}`"
+                            item-value="code"
+                            id='txt-currency'>
+                            <template slot="selection" slot-scope="data">
+                               {{ data.item.name }} ({{ data.item.code }})
+                            </template>
+                            <template slot="item" slot-scope="data">
+                              {{ data.item.name }} ({{ data.item.code }})
+                            </template>
+                          </v-select>
                         </v-col>
                       </v-row>
                     </template>
@@ -92,7 +106,7 @@
                             class="item"
                             label="Par Value"
                             id="maxShares"
-                            v-model="shareStructure.parValue"
+                            :value="shareStructure.parValue"
                             :disabled="true"
                             width="10"/>
                         </v-col>
@@ -100,7 +114,7 @@
                             <v-text-field
                             class="item"
                             label="Currency"
-                            v-model="shareStructure.currency"
+                            :value="`${getCurrencyNameByCode(shareStructure.currency)} (${shareStructure.currency})`"
                             :disabled="true"/>
                         </v-col>
                     </v-row>
@@ -141,12 +155,12 @@ import { Component, Prop, Emit, Mixins, Vue } from 'vue-property-decorator'
 import { ShareClassIF, FormType } from '@/interfaces'
 
 // Mixins
-import { CommonMixin } from '@/mixins'
+import { CommonMixin, CurrencyLookupMixin } from '@/mixins'
 
 import { Getter } from 'vuex-class'
 
 @Component({})
-export default class ShareStructure extends Vue {
+export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
   // Refs
   $refs!: {
     shareStructureForm: FormType
@@ -273,6 +287,7 @@ export default class ShareStructure extends Vue {
       this.shareStructure.parValue = null
     }
   }
+
   // Getters
   get isClass (): boolean {
     return this.shareStructure.type === 'Class'
@@ -280,10 +295,6 @@ export default class ShareStructure extends Vue {
 
   get isSeries (): boolean {
     return this.shareStructure.type === 'Series'
-  }
-
-  get currencyList (): Array<any> {
-    return ['CAD', 'USD', { divider: true }, 'INR']
   }
 
   // Events
@@ -378,5 +389,9 @@ li {
 .separator {
   margin-top: 0.5rem;
   margin-bottom: 1rem;
+}
+
+.radio-group {
+  padding-top:0.875rem
 }
 </style>
