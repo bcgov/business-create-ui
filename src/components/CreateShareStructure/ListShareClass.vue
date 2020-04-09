@@ -33,7 +33,7 @@
         <!-- Share Class Rows-->
         <tr :key="row.item.id" class="class-row" :class="{ 'class-row-has-series': row.item.series.length}">
           <td class="list-item__title">{{row.item.name}}</td>
-          <td>{{row.item.maxNumberOfShares}}</td>
+          <td>{{row.item.maxNumberOfShares || 'No Maximum'}}</td>
           <td>{{row.item.parValue ? `$${row.item.parValue}.00` : 'No Par Value'}}</td>
           <td>{{row.item.currency}}</td>
           <td>{{row.item.hasRightsOrRestrictions ? 'Yes' : 'No'}}</td>
@@ -63,8 +63,11 @@
                     </v-btn>
                   </template>
                   <v-list class="more-actions">
-                    <v-list-item class="actions-dropdown_item"
-                    :disabled="!row.item.hasRightsOrRestrictions" @click="emitAddSeries(row.index)">
+                    <v-list-item
+                      class="actions-dropdown_item"
+                      :class="{ 'item-disabled': !row.item.hasRightsOrRestrictions }"
+                      :disabled="!row.item.hasRightsOrRestrictions"
+                      @click="emitAddSeries(row.index)">
                       <v-list-item-subtitle><v-icon>mdi-playlist-plus</v-icon> Add Series</v-list-item-subtitle>
                     </v-list-item>
                     <v-list-item
@@ -99,7 +102,7 @@
             :class="{ 'series-row-last': index === row.item.series.length - 1}"
         >
           <td class="series-name"><span>{{seriesItem.name}}</span></td>
-          <td>{{seriesItem.maxNumberOfShares}}</td>
+          <td>{{seriesItem.maxNumberOfShares || 'No Maximum'}}</td>
           <td>{{row.item.parValue ? `$${row.item.parValue}.00` : 'No Par Value'}}</td>
           <td>{{row.item.currency}}</td>
           <td>{{seriesItem.hasRightsOrRestrictions ? 'Yes' : 'No'}}</td>
