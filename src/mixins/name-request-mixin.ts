@@ -1,5 +1,4 @@
 // Libraries
-import axios from '@/utils/axios-auth'
 import { Component, Vue } from 'vue-property-decorator'
 import { NameRequestStates, EntityTypes } from '@/enums'
 import { NameRequestIF } from '@/interfaces'
@@ -54,7 +53,7 @@ export default class NameRequestMixin extends Vue {
    * */
   isNrValid (nr: any): boolean {
     // TODO: implement check for supported entity types when namex supports BCOMP
-    return (nr &&
+    return Boolean(nr &&
       nr.state &&
       nr.expirationDate &&
       nr.names?.length > 0 &&
@@ -63,10 +62,11 @@ export default class NameRequestMixin extends Vue {
   }
 
   /**
-   * Method to check if a name request response payload is consumable
+   * Checks if a name request response payload is consumable.
    * @param nr the name request response payload
+   * @returns an object with result flags
    */
-  isNRConsumable (nr : any) : { isConsumable: boolean, expired: boolean, approved: boolean } {
+  isNRConsumable (nr: any) : { isConsumable: boolean, expired: boolean, approved: boolean } {
     // Ensure a name request payload is provided
     if (!nr) {
       throw new Error('isNRConsumable() : no NR provided')

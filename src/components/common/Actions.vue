@@ -5,14 +5,16 @@
       <v-btn id="save-btn" large
         :disabled="!isEntityType || isBusySaving"
         :loading="stateModel.isSaving"
-        @click="onClickSave()">
+        @click="onClickSave()"
+      >
         <span>Save</span>
       </v-btn>
 
       <v-btn id="save-resume-btn" large
         :disabled="!isEntityType || isBusySaving"
         :loading="stateModel.isSavingResuming"
-        @click="onClickSaveResume()">
+        @click="onClickSaveResume()"
+      >
         <span>Save and Resume Later</span>
       </v-btn>
     </div>
@@ -22,7 +24,8 @@
         <v-btn id="back-btn" large outlined
           :to="previousRoute"
           v-show="isShowBackBtn"
-          :disabled="isBusySaving">
+          :disabled="isBusySaving"
+        >
           <v-icon>mdi-chevron-left</v-icon>
           <span>Back</span>
         </v-btn>
@@ -32,7 +35,8 @@
         <v-btn id="review-confirm-btn" large color="primary"
           :to="nextRoute"
           v-show="isShowReviewConfirmBtn"
-          :disabled="isBusySaving">
+          :disabled="isBusySaving"
+        >
           <span>{{ nextButtonLabel }}</span>
           <v-icon>mdi-chevron-right</v-icon>
         </v-btn>
@@ -43,14 +47,16 @@
           v-show="isShowFilePayBtn"
           :disabled="!isEnableFilePayBtn || isBusySaving"
           :loading="stateModel.isFilingPaying"
-          @click="onClickFilePay()">
+          @click="onClickFilePay()"
+        >
           <span>File and Pay</span>
         </v-btn>
       </v-fade-transition>
 
       <v-btn id="cancels-btn" large
         :disabled="isBusySaving"
-        @click="onCancel()">
+        @click="onClickCancel()"
+      >
         <span>Cancel</span>
       </v-btn>
     </div>
@@ -89,96 +95,140 @@ export default class Actions extends Mixins(FilingTemplateMixin, LegalApiMixin) 
   @Action setIsSavingResuming!: ActionBindingIF
   @Action setIsFilingPaying!: ActionBindingIF
 
-  // Local Properties
-  private authUrl = sessionStorage.getItem('AUTH_URL') || ''
+  /** The URL to the Authentication site. */
+  private get authUrl (): string {
+    return sessionStorage.getItem('AUTH_URL')
+  }
 
-  /**
-   * Method called when Cancel button is clicked.
-   */
-  private onCancel (): void {
-    // assume Auth URL is always reachable
-    window.location.assign(this.authUrl)
+  /** The URL to the Business Dashboard. */
+  private get dashboardUrl (): string {
+    return sessionStorage.getItem('DASHBOARD_URL')
+  }
+
+  /** Called when Cancel button is clicked. */
+  private onClickCancel (): void {
+    // FUTURE: need check for unsaved data
+    this.redirectToDashboard()
   }
 
   /**
-   * Method called when Save button is clicked.
-   * @returns A promise (ie, this is an async method).
+   * Called when Save button is clicked.
+   * @returns a promise (ie, this is an async method)
    */
   private async onClickSave (): Promise<void> {
+    // prevent double saving
+    if (this.isBusySaving) return
+
     this.setIsSaving(true)
+    let filingComplete
+
     try {
       const filing = await this.buildFiling()
-      await this.saveFiling(filing, true)
+      filingComplete = await this.saveFiling(filing, true)
     } catch (e) {
-      // TODO:  Trigger some error dialog. Will catch any errors from the Api calls
+      // TODO: Trigger some error dialog. Will catch any errors from the API calls.
     }
+
     this.setIsSaving(false)
   }
 
   /**
-   * Method called when Save and Resume button is clicked.
-   * @returns A promise (ie, this is an async method).
+   * Called when Save and Resume Later button is clicked.
+   * @returns a promise (ie, this is an async method)
    */
   private async onClickSaveResume (): Promise<void> {
+    // prevent double saving
+    if (this.isBusySaving) return
+
     this.setIsSavingResuming(true)
+    let filingComplete
+
     try {
       const filing = await this.buildFiling()
-      await this.saveFiling(filing, true)
+      filingComplete = await this.saveFiling(filing, true)
     } catch (e) {
-      // TODO:  Trigger some error dialog. Will catch any errors from the Api calls
+      // TODO: Trigger some error dialog. Will catch any errors from the API calls.
     }
+
     this.setIsSavingResuming(false)
-    window.location.assign(this.authUrl)
+    this.redirectToDashboard()
   }
 
   /**
-   * Method called when File and Pay button is clicked.
-   * @returns A promise (ie, this is an async method).
+   * Called when File and Pay button is clicked.
+   * @returns a promise (ie, this is an async method)
    */
   private async onClickFilePay (): Promise<void> {
+    // prevent double saving
+    if (this.isBusySaving) return
+
     this.setIsFilingPaying(true)
+    let filingComplete
+
     try {
       const filing = await this.buildFiling()
-      await this.saveFiling(filing, false)
+      filingComplete = await this.saveFiling(filing, false)
     } catch (e) {
-      // TODO:  Trigger some error dialog. Will catch any errors from the Api calls
+      // TODO: Trigger some error dialog. Will catch any errors from the API calls.
     }
+
     this.setIsFilingPaying(false)
-  }
 
-  private get nextRoute (): string | null {
-    const nextStep = this.next()
-    if (nextStep) {
-      return nextStep.to
+    const paymentToken = filingComplete?.header?.paymentToken
+    if (paymentToken) {
+      const queryNrNumber = this.$route.query.nrNumber as string
+      const returnURL = encodeURIComponent(this.dashboardUrl + queryNrNumber)
+      const payURL = this.authUrl + 'makepayment/' + paymentToken + '/' + returnURL
+
+      // assume Pay URL is always reachable
+      // otherwise user will have to retry payment later
+      window.location.assign(payURL)
+    } else {
+      // TODO: Trigger some error dialog.
     }
-    return null
   }
 
+  // TODO: should this be a getter or a function?
+  /** Route to next step. */
+  private get nextRoute (): string | undefined {
+    const nextStep = this.next()
+    return nextStep?.to || null
+  }
+
+  /** Label for Next button. */
   private get nextButtonLabel (): string {
     const nextStep = this.next()
-    if (nextStep) {
-      return nextStep.text.replace('\n', ' ')
-    }
-    return ''
+    return nextStep ? nextStep.text.replace('\n', ' ') : ''
   }
 
-  private next () : any {
-    const currentStep: number| null = this.$router.currentRoute.meta?.step
+  /** Returns next step. */
+  private next (): any {
+    const currentStep: number | undefined = this.$router.currentRoute.meta?.step
     if (currentStep && currentStep < this.getMaxStep) {
       return this.getSteps.find(step => step.step === currentStep + 1)
     }
     return null
   }
 
-  private get previousRoute (): string | null {
-    const currentStep: number| null = this.$router.currentRoute.meta?.step
+  /** Route to previous step. */
+  private get previousRoute (): string | undefined {
+    const prevStep = this.prev()
+    return prevStep?.to || null
+  }
+
+  /** Returns previous step. */
+  private prev (): any {
+    const currentStep: number | undefined = this.$router.currentRoute.meta?.step
     if (currentStep && currentStep > 1) {
-      const previous = this.getSteps.find(step => step.step === currentStep - 1)
-      if (previous) {
-        return previous.to
-      }
+      return this.getSteps.find(step => step.step === currentStep - 1)
     }
     return null
+  }
+
+  /** Redirects to dashboard URL. */
+  private redirectToDashboard (): void {
+    const queryNrNumber = this.$route.query.nrNumber as string
+    window.location.assign(this.dashboardUrl + queryNrNumber)
   }
 }
 </script>

@@ -2,15 +2,12 @@ import Vue from 'vue'
 import VueRouter, { Route } from 'vue-router'
 import { routes } from './routes'
 
-// Enums for Keycloak
-import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
-
 Vue.use(VueRouter)
 
 const router = new VueRouter({
   mode: 'history',
   // set base URL for Vue Router
-  base: process.env.BASE_URL,
+  base: sessionStorage.getItem('VUE_ROUTER_BASE'),
   routes,
   scrollBehavior (to, from, savedPosition) {
     // see https://router.vuejs.org/guide/advanced/scroll-behavior.html
@@ -19,26 +16,44 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  // If the route requires authentication
-  if (to.matched.some(record => record.meta.requiresAuth)) {
-    // If we  dont have a token
-    if (!sessionStorage.getItem(SessionStorageKeys.KeyCloakToken)) {
-      // Send them to the bcsc login
-      return next({
-        path: `/signin/bcsc${to.path}`,
-        query: { redirect: to.fullPath }
-      })
-    }
+  if (requiresAuth(to) && !isAuthenticated()) {
+    // this route needs authentication, so re-route to signin
+    // NB: save current route for future redirect
+    next({
+      name: 'signin',
+      query: { redirect: to.fullPath }
+    })
+  } else if (!isSigninRoute(to) && !isSignoutRoute(to) && !to.query?.nrNumber) {
+    // for normal routes, re-route along with query params
+    next({
+      name: to.name,
+      query: { ...from.query, ...to.query }
+    })
+  } else {
+    // otherwise just proceed normally
+    next()
   }
-
-  // Currently only activate if the from route has a nrNumber query param
-  if (from.query.nrNumber && !to.query.nrNumber) {
-    // Carry over route params and allow the target route to overwrite any params with the same key
-    return next({ path: to.path, query: { ...from.query, ...to.query } })
-  }
-
-  // FUTURE: We will want to do something to handle expired tokens here at some point.
-
-  next()
 })
+
+/** Returns True if route requires authentication, else False. */
+function requiresAuth (route: Route): boolean {
+  return route.matched.some(r => r.meta?.requiresAuth)
+}
+
+/** Returns True if user is authenticated, else False. */
+function isAuthenticated (): boolean {
+  // FUTURE: also check that token isn't expired!
+  return Boolean(sessionStorage.getItem('KEYCLOAK_TOKEN'))
+}
+
+/** Returns True if route is Signin, else False. */
+function isSigninRoute (route: Route): boolean {
+  return Boolean(route.name === 'signin')
+}
+
+/** Returns True if route is Signout, else False. */
+function isSignoutRoute (route: Route): boolean {
+  return Boolean(route.name === 'signout')
+}
+
 export default router

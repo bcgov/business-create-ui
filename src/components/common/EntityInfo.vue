@@ -25,10 +25,8 @@
           <!-- Company Number -->
           <v-list-item-subtitle class="business-info">
             <dl>
-              <dt> {{ entityTitle() }} Name Request No:</dt>
-              <dd class="ml-2" id="entity-nr-number">
-                <span>{{ getBusinessIdentifier }}</span>
-              </dd>
+              <dt>{{ entityTitle() }}</dt>
+              <dd>Name Request No: <span id="entity-nr-number">{{ getBusinessIdentifier }}</span></dd>
             </dl>
           </v-list-item-subtitle>
 
@@ -106,11 +104,11 @@ dd, dt {
   float: left;
 }
 
-dt {
-  position: relative;
-}
+// dt {
+//   position: relative;
+// }
 
-dd + dt:before {
+dt + dd:before {
   content: "•";
   display: inline-block;
   margin-right: 0.75rem;

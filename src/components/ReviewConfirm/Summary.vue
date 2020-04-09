@@ -33,7 +33,7 @@ export default class Summary extends Vue {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .summary-container {
   margin-top: 1rem;
 }

@@ -2,5 +2,4 @@
 export interface TombStoneIF {
   keycloakRoles: Array<string>
   authRoles: Array<string>
-  authenticated: boolean
 }

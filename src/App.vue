@@ -4,60 +4,62 @@
     <NameRequestInvalidErrorDialog
       :dialog="nameRequestInvalidErrorDialog"
       @okay="nrOkay()"
-      @redirect="redirectToBusinessUrl()"
+      @redirect="redirectToDashboard()"
       :type="nameRequestInvalidType"
       attach="#app"
     />
 
     <AccountAuthorizationDialog
       :dialog="accountAuthorizationErrorDialog"
-      @exit="redirectToBusinessUrl()"
+      @exit="redirectToDashboard()"
       @retry="evaluateNRPreconditions()"
       attach="#app"
     />
 
     <!-- Initial Page Load Transition -->
     <transition name="fade">
-      <div class="loading-container" v-show="evaluatingPreconditions">
+      <div class="loading-container" v-show="!haveData">
         <div class="loading__content">
           <v-progress-circular color="primary" size="50" indeterminate />
-          <div class="loading-msg">Loading...</div>
+          <div class="loading-msg">Loading</div>
         </div>
       </div>
     </transition>
 
     <sbc-header />
 
-    <main class="app-body">
-      <entity-info />
+    <div class="app-body">
+      <main v-if="!isErrorDialog">
+        <entity-info />
 
-      <v-container class="view-container pt-4">
-        <v-row>
-          <v-col cols="12" lg="9">
-            <header>
-              <h1>Incorporation Application</h1>
-            </header>
+        <v-container class="view-container pt-4">
+          <v-row>
+            <v-col cols="12" lg="9">
+              <header>
+                <h1>Incorporation Application</h1>
+              </header>
 
-            <stepper class="mt-10" />
+              <stepper class="mt-10" />
 
-            <router-view />
-          </v-col>
+              <router-view />
+            </v-col>
 
-          <v-col cols="12" lg="3" style="position: relative">
-            <aside>
-              <affix relative-element-selector=".col-lg-9" :offset="{ top: 86, bottom: 12 }">
-                <sbc-fee-summary
-                  v-bind:filingData="[...filingData]"
-                  v-bind:payURL="payApiUrl"
-                />
-              </affix>
-            </aside>
-          </v-col>
-        </v-row>
-      </v-container>
+            <v-col cols="12" lg="3" style="position: relative">
+              <aside>
+                <affix relative-element-selector=".col-lg-9" :offset="{ top: 86, bottom: 12 }">
+                  <sbc-fee-summary
+                    v-bind:filingData="[...filingData]"
+                    v-bind:payURL="payApiUrl"
+                  />
+                </affix>
+              </aside>
+            </v-col>
+          </v-row>
+        </v-container>
 
-      <actions :key="$route.path"/>
-    </main>
+        <actions :key="$route.path"/>
+      </main>
+    </div>
 
     <sbc-footer />
   </v-app>
@@ -90,9 +92,6 @@ import { CertifyStatementResource } from '@/resources'
 // Enums
 import { EntityTypes, FilingCodes, NameRequestStates } from '@/enums'
 
-// Enums for Keycloak
-import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
-
 @Component({
   components: {
     SbcHeader,
@@ -108,8 +107,6 @@ import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
 export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApiMixin, NameRequestMixin) {
   // Global state
   @State stateModel!: StateModelIF
-  @State(state => state.stateModel.tombstone.authenticated)
-  readonly authenticated: boolean
 
   // Global actions
   @Action setCurrentStep!: ActionBindingIF
@@ -117,60 +114,87 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
   @Action setCertifyStatementResource!: ActionBindingIF
   @Action setNameRequestState!: ActionBindingIF
   @Action setAuthRoles: ActionBindingIF
-  @Action setAuthenticated: ActionBindingIF
+  @Action setDefineCompanyStepValidity!: ActionBindingIF
+  @Action setAddPeopleAndRoleStepValidity!: ActionBindingIF
+  @Action setCreateShareStructureStepValidity!: ActionBindingIF
 
   // Local Properties
   private filingData: Array<FilingDataIF> = []
-  private draftFiling: IncorporationFilingIF
-
   private accountAuthorizationErrorDialog: boolean = false
   private nameRequestInvalidErrorDialog: boolean = false
   private nameRequestInvalidType: string = ''
-  private evaluatingPreconditions: boolean = true
+  private haveData: boolean = false
+  private setValidity: boolean = true
 
   /**
    * Instance of the token refresh service.
    * Needs to exist for lifetime of app.
    */
-  private tokenService = new TokenService()
+  private tokenService: TokenService = null
 
-  private async created (): Promise<void> {
-    // Check for keycloak token to see if authenticated
-    // (Keycloak service does not seem to be always ready here, so we check session storage )
-    // Fresh logins will initiate fetch data through the sign in component
-    // and the authenticated flag via vuex. This is required for when a user refreshes the page
-    // and they are already authenticated, so the data is refetched since the watcher for authenticated
-    // does not get re-triggered
-    if (sessionStorage.getItem(SessionStorageKeys.KeyCloakToken)) {
-      await this.startTokenService()
-      await this.fetchData()
-    }
+  /** The URL of the Pay API. */
+  private get payApiUrl (): string {
+    return sessionStorage.getItem('PAY_API_URL')
+  }
+
+  /** The Name Request Number from the route. */
+  private get queryNrNumber (): string {
+    return this.$route.query.nrNumber as string
+  }
+
+  /** True if route is Signin. */
+  private get isSigninRoute (): boolean {
+    return Boolean(this.$route.name === 'signin')
+  }
+
+  /** True if route is Signout. */
+  private get isSignoutRoute (): boolean {
+    return Boolean(this.$route.name === 'signout')
+  }
+
+  /** True if an error dialog is displayed. */
+  private get isErrorDialog (): boolean {
+    return (this.accountAuthorizationErrorDialog || this.nameRequestInvalidErrorDialog)
+  }
+
+  /** True if Jest is running the code. */
+  private get isJestRunning (): boolean {
+    return (process.env.JEST_WORKER_ID !== undefined)
   }
 
   /** Starts token service to refresh KC token periodically. */
   private async startTokenService (): Promise<void> {
+    // only initialize once
+    // don't start during Jest tests as it messes up the test JWT
+    if (this.tokenService || this.isJestRunning) return Promise.resolve()
+
     console.info('Starting token refresh service...') // eslint-disable-line no-console
+    this.tokenService = new TokenService()
     await this.tokenService.init()
     this.tokenService.scheduleRefreshTimer()
   }
 
   /**
-   * Fetch data required for NR and draft filing
+   * Fetches data required for NR and draft filing.
    */
   private async fetchData (): Promise<void> {
-    // Evaluate name request pre conditions
+    // only fetch data once
+    if (this.haveData) return Promise.resolve()
+
+    // Evaluate name request pre-conditions
     const nameRequest = await this.evaluateNRPreconditions()
     if (nameRequest && nameRequest.nrNum && nameRequest.isConsumable) {
       this.setNameRequestState(this.generateNameRequestState(nameRequest, null))
       this.setCurrentDate(this.dateToUsableString(new Date()))
       try {
         // Retrieve draft filing if it exists for the nrNumber specified
-        this.draftFiling = await this.fetchDraft()
-        // Parse the draft and update nr data into the store if it exists
-        if (this.draftFiling) {
-          this.parseDraft(this.draftFiling)
+        const draftFiling = await this.fetchDraft()
+
+        // Parse the draft and update NR data into the store if it exists
+        if (draftFiling) {
+          this.parseDraft(draftFiling)
           this.setNameRequestState(
-            this.generateNameRequestState(nameRequest, this.draftFiling.filing.header.filingId))
+            this.generateNameRequestState(nameRequest, +draftFiling.header.filingId))
         }
 
         // Initialize Fee Summary & Resources
@@ -179,20 +203,24 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
         // TODO: Catch a flag from the api, if there is an error to be handled.
       }
     }
-    this.evaluatingPreconditions = false
+    this.haveData = true
   }
 
-  /**
-   * Redirect to business URL
-   */
-  private redirectToBusinessUrl (): void {
-    const businessUrl: string = sessionStorage.getItem('BUSINESSES_URL') || ''
-    window.location.assign(businessUrl)
+  /** Sets the validity state of all pages. */
+  private setPageValidity (): void {
+    if (this.setValidity) {
+      // FUTURE: implement this (ticket #3342)
+      // this.setDefineCompanyStepValidity(true) // (this.businessContactFormValid && this.addressFormValid)
+      // this.setAddPeopleAndRoleStepValidity(true) // (this.hasValidRoles())
+      // this.setCreateShareStructureStepValidity(true) // ...
+      this.setValidity = false
+    }
   }
 
-  /** The URL of the Auth API. */
-  private get authApiUrl (): string | null {
-    return sessionStorage.getItem('AUTH_API_URL')
+  /** Redirects to dashboard URL. */
+  private redirectToDashboard (): void {
+    const dashboardUrl = sessionStorage.getItem('DASHBOARD_URL')
+    window.location.assign(dashboardUrl + this.queryNrNumber)
   }
 
   private storeAuthRoles (response): void {
@@ -206,24 +234,23 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
   }
 
   /**
-   * Evaluate Name Request pre conditions
+   * Evaluates Name Request pre-conditions.
    */
   private async evaluateNRPreconditions (): Promise<any> {
     // Clear error conditions in the event this is invoked more than one time (retry)
     this.nameRequestInvalidErrorDialog = false
     this.accountAuthorizationErrorDialog = false
 
-    const queryNrNumber : string = this.$route.query.nrNumber as string
     // Name request not found, show error dialog
-    if (!queryNrNumber) {
+    if (!this.queryNrNumber) {
       this.nameRequestInvalidType = NameRequestStates.NOTFOUND
       this.nameRequestInvalidErrorDialog = true
       return
     }
 
-    return this.getNRAuthorizations(queryNrNumber).then(async data => {
+    return this.getNRAuthorizations(this.queryNrNumber).then(async data => {
       this.storeAuthRoles(data) // throws if no role
-      const nrResponse = await this.queryNameRequest(queryNrNumber)
+      const nrResponse = await this.queryNameRequest(this.queryNrNumber)
 
       // NR not found
       if (!nrResponse) {
@@ -265,16 +292,11 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
     })
   }
 
-  /** The URL of the Pay API. */
-  private get payApiUrl (): string | null {
-    return sessionStorage.getItem('PAY_API_URL')
-  }
-
   /**
-   * Initialize the UI based on the entity type.
-   *  entityType The type of entity initiating an incorporation
+   * Initializes the UI based on the entity type.
+   * @param entityType the type of entity initiating an incorporation
    */
-  private initEntity (entityType: string | null): void {
+  private initEntity (entityType: string): void {
     switch (entityType) {
       case EntityTypes.BCOMP:
         this.filingData.push({ filingTypeCode: FilingCodes.INCORPORATION_BC, entityType: EntityTypes.BCOMP })
@@ -286,33 +308,23 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
         this.filingData = []
     }
 
-    this.setCertifyStatementResource(entityType ? CertifyStatementResource.find(x => x.entityType === entityType)
-      : null)
+    this.setCertifyStatementResource(
+      entityType ? CertifyStatementResource.find(x => x.entityType === entityType) : null
+    )
   }
 
   /**
-   * Method called when $route property changes.
+   * Method called when $route property changes. Used to init app.
    */
   @Watch('$route', { immediate: true })
-  private onRouteChanged (): void {
-    this.setCurrentStep(this.$route.meta.step)
-  }
-
-  /**
-   * Method called when the authenticated state changes.
-   * Used to determine if we are ready to go evaluate all preconditions and fetch required data
-   */
-  @Watch('authenticated')
-  private async onAuthenticatedChange (): Promise<void> {
-    if (this.authenticated) {
+  private async onRouteChanged (): Promise<void> {
+    // don't init if we are still on signin or signout route
+    if (!this.isSigninRoute && !this.isSignoutRoute) {
+      this.setCurrentStep(this.$route.meta?.step)
       await this.startTokenService()
       await this.fetchData()
+      this.setPageValidity()
     }
-  }
-
-  // FOR FUTURE USE TO SUPPORT EXIT IN ERROR DIALOGS
-  private onClickExit (): void {
-    (this.$refs.form as Vue & { logout: () => void }).logout()
   }
 
   private nrOkay (): void {
@@ -321,7 +333,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 // place app header on top of dialogs (and therefore still usable)
 .app-header {
   z-index: 1000;

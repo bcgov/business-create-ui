@@ -3,15 +3,14 @@ import { StateModelIF, NameRequestApplicantIF, NameRequestDetailsIF } from '@/in
 export const stateModel: StateModelIF = {
   tombstone: {
     keycloakRoles: [],
-    authRoles: [],
-    authenticated: false
+    authRoles: []
   },
   nameRequest: {
     nrNumber: '',
     entityType: '',
     details: {} as NameRequestDetailsIF,
     applicant: {} as NameRequestApplicantIF,
-    filingId: null
+    filingId: null as number
   },
   currentDate: '',
   certifyState: {
@@ -28,7 +27,7 @@ export const stateModel: StateModelIF = {
       email: '',
       confirmEmail: '',
       phone: '',
-      phoneExtension: ''
+      extension: ''
     },
     officeAddresses: {}
   },

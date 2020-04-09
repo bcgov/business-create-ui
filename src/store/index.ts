@@ -6,7 +6,7 @@ import Vuex, { Store } from 'vuex'
 import { stateModel, resourceModel } from './state'
 
 // Getters
-import { isRoleStaff, isRoleEdit, isRoleView, isEntityType, isTypeBcomp, isTypeCoop,
+import { isRoleStaff, isAuthEdit, isAuthView, isEntityType, isTypeBcomp, isTypeCoop,
   isShowBackBtn, isShowReviewConfirmBtn, isShowFilePayBtn, isEnableFilePayBtn, isBusySaving,
   getFilingId, getBusinessIdentifier, getApprovedName, getNameRequestDetails, getNameRequestApplicant,
   getOfficeAddresses, isApplicationValid, getSteps, getMaxStep, getCurrentDate }
@@ -14,7 +14,7 @@ import { isRoleStaff, isRoleEdit, isRoleView, isEntityType, isTypeBcomp, isTypeC
 
 // Mutations
 import { mutateCurrentStep, mutateIsSaving, mutateIsSavingResuming, mutateIsFilingPaying,
-  mutateResource, mutateKeycloakRoles, mutateAuthRoles, mutateAuthenticated, mutateCurrentDate,
+  mutateResource, mutateKeycloakRoles, mutateAuthRoles, mutateCurrentDate,
   mutateCertifyStatementResource, mutateCertifyState, mutateBusinessContact, mutateDefineCompanyStepValidity,
   mutateNameRequestState, mutateFilingId, mutateOfficeAddresses, mutateOrgPersonList,
   mutateAddPeopleAndRoleStepValidity, mutateShareClasses, mutateCreateShareStructureStepValidity }
@@ -22,7 +22,7 @@ import { mutateCurrentStep, mutateIsSaving, mutateIsSavingResuming, mutateIsFili
 
 // Actions
 import { setCurrentStep, setIsSaving, setIsSavingResuming, setIsFilingPaying, setResource,
-  setKeycloakRoles, setAuthRoles, setAuthenticated, setCurrentDate, setCertifyStatementResource, setCertifyState,
+  setKeycloakRoles, setAuthRoles, setCurrentDate, setCertifyStatementResource, setCertifyState,
   setBusinessContact, setDefineCompanyStepValidity, setNameRequestState, setFilingId, setOfficeAddresses,
   setOrgPersonList, setAddPeopleAndRoleStepValidity, setShareClasses,
   setCreateShareStructureStepValidity } from './actions'
@@ -36,8 +36,8 @@ export const store: Store<any> = new Vuex.Store<any>({
   },
   getters: {
     isRoleStaff,
-    isRoleEdit,
-    isRoleView,
+    isAuthEdit,
+    isAuthView,
     isEntityType,
     isTypeBcomp,
     isTypeCoop,
@@ -65,7 +65,6 @@ export const store: Store<any> = new Vuex.Store<any>({
     mutateResource,
     mutateKeycloakRoles,
     mutateAuthRoles,
-    mutateAuthenticated,
     mutateCurrentDate,
     mutateCertifyStatementResource,
     mutateCertifyState,
@@ -87,7 +86,6 @@ export const store: Store<any> = new Vuex.Store<any>({
     setResource,
     setKeycloakRoles,
     setAuthRoles,
-    setAuthenticated,
     setCurrentDate,
     setCertifyStatementResource,
     setCertifyState,

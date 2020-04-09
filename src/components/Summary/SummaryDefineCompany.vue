@@ -81,7 +81,7 @@ export default class SummaryDefineCompany extends Mixins(EntityFilterMixin) {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
 
 .defineCompanyStepErrorMessage {
@@ -95,7 +95,7 @@ export default class SummaryDefineCompany extends Mixins(EntityFilterMixin) {
   padding-left: 2rem;
   padding-top: 1.25rem;
   padding-bottom: 1.25rem;
-  font-size: 14px;
+  font-size: 0.875rem;
 }
 
 .define-company-header {
@@ -110,7 +110,7 @@ export default class SummaryDefineCompany extends Mixins(EntityFilterMixin) {
 }
 
 .company-name {
-  font-size: 1.5rem;
+  font-size: 1.375rem;
   font-weight: bold
 }
 

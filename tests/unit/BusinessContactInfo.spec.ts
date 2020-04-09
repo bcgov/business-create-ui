@@ -17,7 +17,7 @@ const formDataChangeEvent = 'contactInfoChange'
 const emailSelector: string = '#txt-email'
 const confirmEmailSelector: string = '#txt-confirm-email'
 const phoneSelector: string = '#txt-phone'
-const phoneExtensionSelector: string = '#txt-phone-extension'
+const extensionSelector: string = '#txt-phone-extension'
 const formSelector: string = '[name="business-contact-form"]'
 const readOnlyEmailSelector: string = '#lbl-email'
 const readOnlyPhoneSelector: string = '#lbl-phone'
@@ -48,7 +48,7 @@ function getLastEvent (wrapper: Wrapper<BusinessContactInfo>, name: string): any
  * @param email The email address. The default value is ''.
  * @param confirmEmail The confirm email address. The default value is ''.
  * @param phone The phone number. The default value is ''.
- * @param phoneExtension The phone extension. The default value is ''.
+ * @param extension The phone extension. The default value is ''.
  * @param isEditing Indicates whether the component is in editing or readonly mode. The default value is true.
  * @returns a Wrapper<BusinessContactInfo> object with the given parameters.
  */
@@ -56,14 +56,14 @@ function createComponent (
   email: string = '',
   confirmEmail: string = '',
   phone: string = '',
-  phoneExtension: string = '',
+  extension: string = '',
   isEditing: boolean = true
 ): Wrapper<BusinessContactInfo> {
   const businessContact: BusinessContactIF = {
-    email: email,
-    confirmEmail: confirmEmail,
-    phone: phone,
-    phoneExtension: phoneExtension
+    email,
+    confirmEmail,
+    phone,
+    extension
   }
   return mount(BusinessContactInfo, {
     sync: false,
@@ -78,7 +78,7 @@ describe('BusinessContactInfo', () => {
     expect((<HTMLInputElement> wrapper.find(emailSelector).element).value).toEqual(email)
     expect((<HTMLInputElement> wrapper.find(confirmEmailSelector).element).value).toEqual(email)
     expect((<HTMLInputElement> wrapper.find(phoneSelector).element).value).toEqual('')
-    expect((<HTMLInputElement> wrapper.find(phoneExtensionSelector).element).value).toEqual('')
+    expect((<HTMLInputElement> wrapper.find(extensionSelector).element).value).toEqual('')
     wrapper.destroy()
   })
 
@@ -89,7 +89,7 @@ describe('BusinessContactInfo', () => {
     expect(getLastEvent(wrapper, formDataChangeEvent)).toStrictEqual({ email: email,
       confirmEmail: email,
       phone: '',
-      phoneExtension: ''
+      extension: ''
     })
     wrapper.destroy()
   })
@@ -101,7 +101,7 @@ describe('BusinessContactInfo', () => {
     expect(getLastEvent(wrapper, formDataChangeEvent)).toStrictEqual({ email: invalidEmail,
       confirmEmail: invalidEmail,
       phone: '',
-      phoneExtension: ''
+      extension: ''
     })
     wrapper.destroy()
   })
@@ -113,7 +113,7 @@ describe('BusinessContactInfo', () => {
     expect(getLastEvent(wrapper, formDataChangeEvent)).toStrictEqual({ email: email,
       confirmEmail: email,
       phone: '(11',
-      phoneExtension: ''
+      extension: ''
     })
     wrapper.destroy()
   })
@@ -127,7 +127,7 @@ describe('BusinessContactInfo', () => {
     expect(getLastEvent(wrapper, formDataChangeEvent)).toStrictEqual({ email: invalidEmail,
       confirmEmail: email,
       phone: '',
-      phoneExtension: ''
+      extension: ''
     })
     await wrapper.vm.$nextTick()
     expect(wrapper.find(formSelector).text()).toContain('Valid email is required')
@@ -143,7 +143,7 @@ describe('BusinessContactInfo', () => {
     expect(getLastEvent(wrapper, formDataChangeEvent)).toStrictEqual({ email: invalidEmail,
       confirmEmail: email,
       phone: '',
-      phoneExtension: ''
+      extension: ''
     })
     expect(wrapper.find(formSelector).text()).toContain('Email addresses must match')
     wrapper.destroy()
@@ -158,7 +158,7 @@ describe('BusinessContactInfo', () => {
     expect(getLastEvent(wrapper, formDataChangeEvent)).toStrictEqual({ email: email,
       confirmEmail: email,
       phone: '(11',
-      phoneExtension: ''
+      extension: ''
     })
     await wrapper.vm.$nextTick()
     expect(getLastEvent(wrapper, formValidEvent)).toBe(false)
