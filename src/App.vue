@@ -114,6 +114,9 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
   @Action setCertifyStatementResource!: ActionBindingIF
   @Action setNameRequestState!: ActionBindingIF
   @Action setAuthRoles: ActionBindingIF
+  @Action setDefineCompanyStepValidity!: ActionBindingIF
+  @Action setAddPeopleAndRoleStepValidity!: ActionBindingIF
+  @Action setCreateShareStructureStepValidity!: ActionBindingIF
 
   // Local Properties
   private filingData: Array<FilingDataIF> = []
@@ -121,6 +124,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
   private nameRequestInvalidErrorDialog: boolean = false
   private nameRequestInvalidType: string = ''
   private haveData: boolean = false
+  private setValidity: boolean = true
 
   /**
    * Instance of the token refresh service.
@@ -200,6 +204,17 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
       }
     }
     this.haveData = true
+  }
+
+  /** Sets the validity state of all pages. */
+  private setPageValidity (): void {
+    if (this.setValidity) {
+      // FUTURE: implement this (ticket #3342)
+      // this.setDefineCompanyStepValidity(true) // (this.businessContactFormValid && this.addressFormValid)
+      // this.setAddPeopleAndRoleStepValidity(true) // (this.hasValidRoles())
+      // this.setCreateShareStructureStepValidity(true) // ...
+      this.setValidity = false
+    }
   }
 
   /** Redirects to dashboard URL. */
@@ -308,6 +323,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
       this.setCurrentStep(this.$route.meta?.step)
       await this.startTokenService()
       await this.fetchData()
+      this.setPageValidity()
     }
   }
 

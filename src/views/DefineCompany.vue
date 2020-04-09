@@ -91,7 +91,8 @@ export default class DefineCompany extends Mixins(EntityFilterMixin) {
   readonly EntityTypes = EntityTypes
 
   mounted () {
-    this.setDefineCompanyStepValidity(this.businessContactFormValid && this.addressFormValid)
+    // always false initially
+    // this.setDefineCompanyStepValidity(this.businessContactFormValid && this.addressFormValid)
   }
 
   private onBusinessContactInfoChange (businessContact: BusinessContactIF): void {
