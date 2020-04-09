@@ -48,7 +48,8 @@ export default class FilingTemplateMixin extends Vue {
           offices: this.stateModel.defineCompanyStep.officeAddresses,
           contactPoint: {
             email: this.stateModel.defineCompanyStep.businessContact.email,
-            phone: this.stateModel.defineCompanyStep.businessContact.phone
+            phone: this.stateModel.defineCompanyStep.businessContact.phone,
+            extension: this.stateModel.defineCompanyStep.businessContact.extension
           },
           parties: this.stateModel.addPeopleAndRoleStep.orgPeople
         }

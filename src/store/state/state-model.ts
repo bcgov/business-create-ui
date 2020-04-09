@@ -27,7 +27,7 @@ export const stateModel: StateModelIF = {
       email: '',
       confirmEmail: '',
       phone: '',
-      phoneExtension: ''
+      extension: ''
     },
     officeAddresses: {}
   },
