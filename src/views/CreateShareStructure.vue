@@ -136,7 +136,11 @@ export default class CreateShareStructure extends Vue {
   }
 
   private initNewShareSeries (shareClassIndex: number): void {
-    const parentShareClass = this.shareClasses[shareClassIndex]
+    this.activeIndex = -1
+    this.parentIndex = shareClassIndex
+
+    let newList: ShareClassIF[] = [...this.shareClasses]
+    const parentShareClass = newList[shareClassIndex]
     const shareSeries = parentShareClass.series
     this.currentShareStructure = { ...this.newShareSeries }
     this.currentShareStructure.hasParValue = parentShareClass.hasParValue
@@ -144,8 +148,6 @@ export default class CreateShareStructure extends Vue {
     this.currentShareStructure.currency = parentShareClass.currency
     this.currentShareStructure.priority =
     shareSeries.length === 0 ? 1 : shareSeries[shareSeries.length - 1].priority + 1
-    this.activeIndex = -1
-    this.parentIndex = shareClassIndex
     this.nextId = shareSeries.length === 0 ? 1 : (shareSeries.reduce(
       (prev, current) => (prev.id > current.id) ? prev : current)).id + 1
     this.addEditInProgress = true
@@ -153,7 +155,7 @@ export default class CreateShareStructure extends Vue {
   }
 
   private addEditShareClass (shareStructure: ShareClassIF): void {
-    let newList: ShareClassIF[] = Object.assign([], this.shareClasses)
+    let newList: ShareClassIF[] = [...this.shareClasses]
     // New Share Structue.
     if (this.activeIndex === -1) {
       newList.push(shareStructure)
@@ -169,8 +171,8 @@ export default class CreateShareStructure extends Vue {
   private editSeries (index: number, seriesIndex: number): void {
     this.activeIndex = seriesIndex
     this.parentIndex = index
-    const parentShareClass = this.shareClasses[this.parentIndex]
-    this.currentShareStructure = { ...parentShareClass.series[this.activeIndex] }
+    let newList: ShareClassIF[] = [...this.shareClasses]
+    this.currentShareStructure = { ...newList[this.parentIndex].series[this.activeIndex] }
     this.addEditInProgress = true
     this.showShareStructureForm = true
   }
@@ -178,7 +180,7 @@ export default class CreateShareStructure extends Vue {
   private removeSeries (index: number, seriesIndex: number): void {
     this.activeIndex = seriesIndex
     this.parentIndex = index
-    let newList: ShareClassIF[] = Object.assign([], this.shareClasses)
+    let newList: ShareClassIF[] = [...this.shareClasses]
     const parentShareClass = newList[this.parentIndex]
     parentShareClass.series.splice(this.activeIndex, 1)
     this.setShareClasses(newList)
@@ -187,22 +189,23 @@ export default class CreateShareStructure extends Vue {
   }
 
   private addEditShareSeries (shareSeries: ShareClassIF): void {
-    let newList: ShareClassIF[] = Object.assign([], this.shareClasses)
+    let newList: ShareClassIF[] = [...this.shareClasses]
     const parentShareClass = newList[this.parentIndex]
+    let series = [...parentShareClass.series]
     // New Share Structue.
     if (this.activeIndex === -1) {
-      parentShareClass.series.push(shareSeries)
+      series.push(shareSeries)
     } else {
       // Edit Share Structure.
-      parentShareClass.series.splice(this.activeIndex, 1, shareSeries)
+      series.splice(this.activeIndex, 1, shareSeries)
     }
+    parentShareClass.series = series
     this.setShareClasses(newList)
-    this.setCreateShareStructureStepValidity(this.shareClasses.length > 0)
     this.resetData()
   }
 
   private removeShareClass (index: number): void {
-    let newList: ShareClassIF[] = Object.assign([], this.shareClasses)
+    let newList: ShareClassIF[] = [...this.shareClasses]
     newList.splice(index, 1)
     this.setShareClasses(newList)
     this.setCreateShareStructureStepValidity(this.shareClasses.length > 0)
@@ -215,6 +218,7 @@ export default class CreateShareStructure extends Vue {
     this.addEditInProgress = false
     this.showShareStructureForm = false
     this.parentIndex = -1
+    this.nextId = -1
   }
 
   private get showErrors (): boolean {
