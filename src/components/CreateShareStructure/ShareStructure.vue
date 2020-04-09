@@ -23,7 +23,7 @@
                   '  - the words &quot;Shares&quot; is automatically added'"
                   id="name"
                   v-model="shareStructure.name"
-                  :rules="nameRules"
+                  :rules="getNameRule()"
                   suffix="Shares"
                   persistent-hint/>
 
@@ -179,6 +179,9 @@ export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
   @Prop()
   private nextId: number
 
+  @Prop()
+  private shareClasses: ShareClassIF[]
+
   // Data Properties
   private shareStructure: ShareClassIF = null
   private formValid: boolean = true
@@ -188,19 +191,33 @@ export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
   private excludedWordsList: string [] = ['share', 'shares', 'value']
 
   // Rules
-  private readonly nameRules: Array<Function> = [
-    v => !!v || 'A name is required',
-    v => !/^\s/g.test(v) || 'Invalid spaces', // leading spaces
-    v => !/\s$/g.test(v) || 'Invalid spaces', // trailing spaces
-    v => !(v.split(' ').some(r => this.excludedWordsList.includes(r.toLowerCase()))) ||
+  private getNameRule (): Array<Function> {
+    let rules: Array<Function> = [
+      v => !!v || 'A name is required',
+      v => !/^\s/g.test(v) || 'Invalid spaces', // leading spaces
+      v => !/\s$/g.test(v) || 'Invalid spaces', // trailing spaces
+      v => !(v.split(' ').some(r => this.excludedWordsList.includes(r.toLowerCase()))) ||
     'Name should not contain any of the words share, shares or value'
-  ];
+    ]
+    if (this.shareStructure.type === 'Class' && this.activeIndex === -1) {
+      rules.push(
+        v => !(this.shareClasses.some(s => s.name.split(' Shares')[0].toLowerCase() === v.toLowerCase())) ||
+      'Share class name nust be unique'
+      )
+    }
+    return rules
+  }
 
   private getMaximumShareRule (): Array<Function> {
+    let rules: Array<Function> = []
     if (!this.hasNoMaximumShares) {
-      return [v => !!v || 'Maximum share value is required', v => /^\d+$/.test(v) || 'Must be a number']
+      rules = [v => !!v || 'Maximum share value is required', v => /^\d+$/.test(v) || 'Must be a number']
+      if (this.shareStructure.type === 'Series' && this.shareClasses[this.parentIndex].hasMaximumShares) {
+        rules.push(v => v <= this.shareClasses[this.parentIndex].maxNumberOfShares ||
+        'Value must be less than or equal to maximum shares of the class')
+      }
     }
-    return []
+    return rules
   }
 
   private getParValueRule (): Array<Function> {
