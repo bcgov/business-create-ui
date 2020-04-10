@@ -147,7 +147,7 @@
                       >
                         <v-list-item-subtitle><v-icon>mdi-arrow-down</v-icon> Move Down</v-list-item-subtitle>
                       </v-list-item>
-                      <v-list-item class="actions-dropdown_item" @click="emitRemoveSeries(index)">
+                      <v-list-item class="actions-dropdown_item" @click="emitRemoveSeries(row.index, index)">
                         <v-list-item-subtitle><v-icon>mdi-delete</v-icon> Remove</v-list-item-subtitle>
                       </v-list-item>
                     </v-list>
