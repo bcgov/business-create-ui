@@ -183,9 +183,10 @@ export default class CreateShareStructure extends Vue {
     this.parentIndex = index
     let newList: ShareClassIF[] = [...this.shareClasses]
     const parentShareClass = newList[this.parentIndex]
-    parentShareClass.series.splice(this.activeIndex, 1)
+    let series = [...parentShareClass.series]
+    series.splice(this.activeIndex, 1)
+    parentShareClass.series = series
     this.setShareClasses(newList)
-    this.setCreateShareStructureStepValidity(this.shareClasses.length > 0)
     this.resetData()
   }
 

@@ -17,11 +17,10 @@
                 v-on:submit.prevent="addShareStructure">
                 <v-text-field
                   filled
-                  class="item"
                   :label="shareStructure.type + ' Name [Shares]'"
                   :hint="'Enter the name of the  '+ shareStructure.type.toLowerCase() +
                   '  - the words &quot;Shares&quot; is automatically added'"
-                  id="name"
+                  id="txt-name"
                   v-model="shareStructure.name"
                   :rules="getNameRule()"
                   suffix="Shares"
@@ -39,9 +38,8 @@
                       <v-row><v-col cols="6">
                       <v-text-field
                         filled
-                        class="item"
                         label="Maximum Number of Shares"
-                        id="maxShares"
+                        id="txt-max-shares"
                         v-model="shareStructure.maxNumberOfShares"
                         persistent-hint
                         :hint="'Enter the maximum number of shares in the ' + shareStructure.type"
@@ -50,7 +48,7 @@
                     </v-col></v-row>
                     </template>
                   </v-radio>
-                  <v-radio :value="true" label="No maximum" />
+                  <v-radio :value="true" label="No maximum" id="lbl-no-maximum"/>
                 </v-radio-group>
 
                 <v-divider class="separator" />
@@ -66,7 +64,6 @@
                         <v-col cols="6">
                           <v-text-field
                             filled
-                            class="item"
                             label="Par Value"
                             id="txt-par-value"
                             v-model="shareStructure.parValue"
@@ -76,7 +73,6 @@
                         </v-col>
                         <v-col cols="6">
                           <v-select
-                            class="item"
                             :items="getCurrencyList()"
                             filled
                             label="Currency"
@@ -96,35 +92,35 @@
                       </v-row>
                     </template>
                   </v-radio>
-                  <v-radio :value="true" label="No par value" />
+                  <v-radio :value="true" label="No par value" id="no-par"/>
                 </v-radio-group>
 
                 <div v-show="isSeries">
                     <v-row v-if="shareStructure.hasParValue">
                         <v-col cols="6">
                             <v-text-field
-                            class="item"
                             label="Par Value"
-                            id="maxShares"
+                            id="txt-par-value"
                             :value="shareStructure.parValue"
                             :disabled="true"
                             width="10"/>
                         </v-col>
                         <v-col cols="6">
                             <v-text-field
-                            class="item"
+                            id="txt-currency"
                             label="Currency"
                             :value="`${getCurrencyNameByCode(shareStructure.currency)} (${shareStructure.currency})`"
                             :disabled="true"/>
                         </v-col>
                     </v-row>
-                    <v-label v-else>No par value</v-label>
+                    <v-label id='lbl-no-par' v-else>No par value</v-label>
                 </div>
 
                 <v-divider class="separator" />
 
                 <div class="form__row">
                   <v-checkbox
+                     id="special-rights-check-box"
                     :label="'This share ' + shareStructure.type.toLowerCase() + ' has special rights or restrictions'"
                     v-model="shareStructure.hasRightsOrRestrictions"/>
                 </div>
@@ -155,9 +151,7 @@ import { Component, Prop, Emit, Mixins, Vue } from 'vue-property-decorator'
 import { ShareClassIF, FormType } from '@/interfaces'
 
 // Mixins
-import { CommonMixin, CurrencyLookupMixin } from '@/mixins'
-
-import { Getter } from 'vuex-class'
+import { CurrencyLookupMixin } from '@/mixins'
 
 @Component({})
 export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
@@ -197,13 +191,12 @@ export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
       v => !/^\s/g.test(v) || 'Invalid spaces', // leading spaces
       v => !/\s$/g.test(v) || 'Invalid spaces', // trailing spaces
       v => !(v.split(' ').some(r => this.excludedWordsList.includes(r.toLowerCase()))) ||
-    'Name should not contain any of the words share, shares or value'
+      'Name should not contain any of the words share, shares or value'
     ]
-    if (this.shareStructure.type === 'Class' && this.activeIndex === -1) {
+    if (this.isClass && this.activeIndex === -1) {
       rules.push(
-        v => !(this.shareClasses.some(s => s.name.split(' Shares')[0].toLowerCase() === v.toLowerCase())) ||
-      'Share class name nust be unique'
-      )
+        v => !(this.shareClasses.find(s => s.name.split(' Shares')[0].toLowerCase() === v.toLowerCase())) ||
+        'Share class name nust be unique')
     }
     return rules
   }
@@ -212,8 +205,8 @@ export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
     let rules: Array<Function> = []
     if (!this.hasNoMaximumShares) {
       rules = [v => !!v || 'Maximum share value is required', v => /^\d+$/.test(v) || 'Must be a number']
-      if (this.shareStructure.type === 'Series' && this.shareClasses[this.parentIndex].hasMaximumShares) {
-        rules.push(v => v <= this.shareClasses[this.parentIndex].maxNumberOfShares ||
+      if (this.isSeries && this.shareClasses[this.parentIndex].hasMaximumShares) {
+        rules.push(v => Number(v) <= Number(this.shareClasses[this.parentIndex].maxNumberOfShares) ||
         'Value must be less than or equal to maximum shares of the class')
       }
     }
@@ -333,12 +326,7 @@ export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
 </script>
 
 <style lang="scss" scoped>
-[class^="col"] {
-  padding-top: 0;
-  padding-bottom: 0;
-}
-ul,
-p {
+ul{
   padding-top: 0.5rem;
 }
 li {
@@ -368,20 +356,6 @@ li {
 
   &__inner {
     flex: 1 1 auto;
-  }
-
-  .actions {
-    position: absolute;
-    top: 0;
-    right: 0;
-
-    .v-btn {
-      min-width: 4rem;
-    }
-
-    .v-btn + .v-btn {
-      margin-left: 0.5rem;
-    }
   }
 }
 
