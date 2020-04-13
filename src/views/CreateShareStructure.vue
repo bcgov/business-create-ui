@@ -11,8 +11,8 @@
     <!-- Help Section -->
     <span class="help-btn" @click="helpToggle = !helpToggle">
       <v-icon color="#1976d2" style="padding-right: 5px">mdi-help-circle-outline</v-icon>
-      <span v-show="!helpToggle">Help with Share Structure</span>
-      <span v-show="helpToggle"> Hide Help</span>
+      <span v-if="!helpToggle">Help with Share Structure</span>
+      <span v-else>Hide Help</span>
     </span>
     <section v-show="helpToggle" class="share-structure-help">
       <header id="share-structure-help-header"><h2>Share Structure Help</h2></header>
@@ -140,7 +140,7 @@ export default class CreateShareStructure extends Vue {
     'type': 'Class',
     'name': 'Sample Shares',
     'hasMaximumShares': true,
-    'maxNumberOfShares': 1000000,
+    'maxNumberOfShares': 1000,
     'hasParValue': true,
     'parValue': 1,
     'currency': 'CAD',
