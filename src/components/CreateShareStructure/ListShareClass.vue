@@ -34,7 +34,7 @@
         <tr :key="row.item.id" class="class-row" :class="{ 'class-row-has-series': row.item.series.length}">
           <td class="list-item__title">{{row.item.name}}</td>
           <td>{{row.item.maxNumberOfShares || 'No Maximum'}}</td>
-          <td>{{row.item.parValue ? `$${row.item.parValue}.00` : 'No Par Value'}}</td>
+          <td>{{row.item.parValue ? `$${row.item.parValue}` : 'No Par Value'}}</td>
           <td>{{row.item.currency}}</td>
           <td>{{row.item.hasRightsOrRestrictions ? 'Yes' : 'No'}}</td>
 
