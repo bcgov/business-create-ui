@@ -6,19 +6,19 @@ import VueRouter from 'vue-router'
 import mockRouter from './MockRouter'
 
 // Store
-import { store } from '@/store'
+import { getVuexStore } from '@/store'
 
 // Utils
-import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
+import { createLocalVue, mount } from '@vue/test-utils'
 
 // Components
 import { PeopleAndRoles } from '@/components/AddPeopleAndRoles'
-import { RolesIF } from '@/interfaces'
 
 Vue.use(Vuetify)
 Vue.use(Vuelidate)
 
-let vuetify = new Vuetify({})
+const vuetify = new Vuetify({})
+const store = getVuexStore()
 
 // Input field selectors to test changes to the DOM elements.
 const btnStartAddCompletingParty: string = '#btn-start-add-cp'

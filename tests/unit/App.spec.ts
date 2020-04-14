@@ -4,7 +4,7 @@ import Vuetify from 'vuetify'
 import VueRouter from 'vue-router'
 import flushPromises from 'flush-promises'
 import sinon from 'sinon'
-import { store } from '@/store'
+import { getVuexStore } from '@/store'
 import { shallowMount, createLocalVue } from '@vue/test-utils'
 import axios from '@/utils/axios-auth'
 
@@ -19,7 +19,9 @@ import { EntityInfo, Stepper, Actions } from '@/components/common'
 import mockRouter from './MockRouter'
 
 Vue.use(Vuetify)
-let vuetify = new Vuetify({})
+
+const vuetify = new Vuetify({})
+const store = getVuexStore()
 
 // Mock filing data
 const filingData = {

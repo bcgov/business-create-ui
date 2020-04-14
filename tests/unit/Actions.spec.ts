@@ -2,7 +2,7 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify'
 import VueRouter from 'vue-router'
-import { store } from '@/store'
+import { getVuexStore } from '@/store'
 import { shallowMount, createLocalVue } from '@vue/test-utils'
 
 // Components
@@ -12,7 +12,9 @@ import { Actions } from '@/components/common'
 import mockRouter from './MockRouter'
 
 Vue.use(Vuetify)
-let vuetify = new Vuetify({})
+
+const vuetify = new Vuetify({})
+const store = getVuexStore()
 
 describe('Actions component', () => {
   let wrapper: any

@@ -6,13 +6,14 @@ import flushPromises from 'flush-promises'
 import { OrgPerson } from '@/components/AddPeopleAndRoles'
 
 // Store
-import { store } from '@/store'
+import { getVuexStore } from '@/store'
 import Vuelidate from 'vuelidate'
 
 Vue.use(Vuetify)
 Vue.use(Vuelidate)
 
-let vuetify = new Vuetify({})
+const vuetify = new Vuetify({})
+const store = getVuexStore()
 
 // Events
 const addEditPersonEvent: string = 'addEditPerson'

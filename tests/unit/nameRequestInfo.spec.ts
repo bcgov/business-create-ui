@@ -3,7 +3,7 @@ import Vue from 'vue'
 import Vuetify from 'vuetify'
 
 // Store
-import { store } from '@/store'
+import { getVuexStore } from '@/store'
 
 // Components
 import { mount } from '@vue/test-utils'
@@ -11,7 +11,9 @@ import { NameRequestInfo } from '@/components/common'
 import { NameRequestStates } from '@/enums'
 
 Vue.use(Vuetify)
-let vuetify = new Vuetify({})
+
+const vuetify = new Vuetify({})
+const store = getVuexStore()
 
 describe('NameRequest Info component', () => {
   let wrapper: any
