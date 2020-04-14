@@ -1,14 +1,16 @@
 // Libraries
 import Vue from 'vue'
 import Vuetify from 'vuetify'
-import { store } from '@/store'
+import { getVuexStore } from '@/store'
 import { shallowMount } from '@vue/test-utils'
 
 // Components
 import { Stepper } from '@/components/common'
 
 Vue.use(Vuetify)
-let vuetify = new Vuetify({})
+
+const vuetify = new Vuetify({})
+const store = getVuexStore()
 
 describe('Stepper component', () => {
   let wrapper: any

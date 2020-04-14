@@ -6,8 +6,8 @@ import 'regenerator-runtime/runtime' // to use transpiled generator functions
 import Vue from 'vue'
 import Vuetify from 'vuetify/lib'
 import Vuelidate from 'vuelidate'
-import router from '@/router'
-import { store } from '@/store'
+import { getVueRouter } from '@/router'
+import { getVuexStore } from '@/store'
 import Affix from 'vue-affix'
 import Vue2Filters from 'vue2-filters' // needed by SbcFeeSummary
 import { featureFlags, initLDClient } from '@/common/FeatureFlags'
@@ -46,6 +46,10 @@ fetchConfig()
       // configure KeyCloak Service
       console.info('Starting Keycloak service...') // eslint-disable-line no-console
       await KeycloakService.setKeycloakConfigUrl(sessionStorage.getItem('KEYCLOAK_CONFIG_PATH'))
+
+      // get Vue objects only after we have config
+      const router = getVueRouter()
+      const store = getVuexStore()
 
       // start Vue application
       console.info('Starting app...') // eslint-disable-line no-console

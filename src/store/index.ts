@@ -1,6 +1,6 @@
 // Libraries
 import Vue from 'vue'
-import Vuex, { Store } from 'vuex'
+import Vuex from 'vuex'
 
 // State
 import { stateModel, resourceModel } from './state'
@@ -27,76 +27,83 @@ import { setCurrentStep, setIsSaving, setIsSavingResuming, setIsFilingPaying, se
   setOrgPersonList, setAddPeopleAndRoleStepValidity, setShareClasses,
   setCreateShareStructureStepValidity } from './actions'
 
-Vue.use(Vuex)
+/**
+ * Configures and returns Vuex Store.
+ */
+export function getVuexStore () {
+  Vue.use(Vuex)
 
-export const store: Store<any> = new Vuex.Store<any>({
-  state: {
-    stateModel,
-    resourceModel
-  },
-  getters: {
-    isRoleStaff,
-    isAuthEdit,
-    isAuthView,
-    isEntityType,
-    isTypeBcomp,
-    isTypeCoop,
-    isShowBackBtn,
-    isShowReviewConfirmBtn,
-    isShowFilePayBtn,
-    isEnableFilePayBtn,
-    isBusySaving,
-    getApprovedName,
-    getBusinessIdentifier,
-    getFilingId,
-    getNameRequestApplicant,
-    getNameRequestDetails,
-    getOfficeAddresses,
-    isApplicationValid,
-    getSteps,
-    getMaxStep,
-    getCurrentDate
-  },
-  mutations: {
-    mutateCurrentStep,
-    mutateIsSaving,
-    mutateIsSavingResuming,
-    mutateIsFilingPaying,
-    mutateResource,
-    mutateKeycloakRoles,
-    mutateAuthRoles,
-    mutateCurrentDate,
-    mutateCertifyStatementResource,
-    mutateCertifyState,
-    mutateBusinessContact,
-    mutateDefineCompanyStepValidity,
-    mutateNameRequestState,
-    mutateFilingId,
-    mutateOfficeAddresses,
-    mutateOrgPersonList,
-    mutateAddPeopleAndRoleStepValidity,
-    mutateShareClasses,
-    mutateCreateShareStructureStepValidity
-  },
-  actions: {
-    setCurrentStep,
-    setIsSaving,
-    setIsSavingResuming,
-    setIsFilingPaying,
-    setResource,
-    setKeycloakRoles,
-    setAuthRoles,
-    setCurrentDate,
-    setCertifyStatementResource,
-    setCertifyState,
-    setBusinessContact,
-    setDefineCompanyStepValidity,
-    setNameRequestState,
-    setFilingId,
-    setOfficeAddresses,
-    setOrgPersonList,
-    setAddPeopleAndRoleStepValidity,
-    setShareClasses,
-    setCreateShareStructureStepValidity
-  }
-})
+  const store = new Vuex.Store<any>({
+    state: {
+      stateModel,
+      resourceModel
+    },
+    getters: {
+      isRoleStaff,
+      isAuthEdit,
+      isAuthView,
+      isEntityType,
+      isTypeBcomp,
+      isTypeCoop,
+      isShowBackBtn,
+      isShowReviewConfirmBtn,
+      isShowFilePayBtn,
+      isEnableFilePayBtn,
+      isBusySaving,
+      getApprovedName,
+      getBusinessIdentifier,
+      getFilingId,
+      getNameRequestApplicant,
+      getNameRequestDetails,
+      getOfficeAddresses,
+      isApplicationValid,
+      getSteps,
+      getMaxStep,
+      getCurrentDate
+    },
+    mutations: {
+      mutateCurrentStep,
+      mutateIsSaving,
+      mutateIsSavingResuming,
+      mutateIsFilingPaying,
+      mutateResource,
+      mutateKeycloakRoles,
+      mutateAuthRoles,
+      mutateCurrentDate,
+      mutateCertifyStatementResource,
+      mutateCertifyState,
+      mutateBusinessContact,
+      mutateDefineCompanyStepValidity,
+      mutateNameRequestState,
+      mutateFilingId,
+      mutateOfficeAddresses,
+      mutateOrgPersonList,
+      mutateAddPeopleAndRoleStepValidity,
+      mutateShareClasses,
+      mutateCreateShareStructureStepValidity
+    },
+    actions: {
+      setCurrentStep,
+      setIsSaving,
+      setIsSavingResuming,
+      setIsFilingPaying,
+      setResource,
+      setKeycloakRoles,
+      setAuthRoles,
+      setCurrentDate,
+      setCertifyStatementResource,
+      setCertifyState,
+      setBusinessContact,
+      setDefineCompanyStepValidity,
+      setNameRequestState,
+      setFilingId,
+      setOfficeAddresses,
+      setOrgPersonList,
+      setAddPeopleAndRoleStepValidity,
+      setShareClasses,
+      setCreateShareStructureStepValidity
+    }
+  })
+
+  return store
+}

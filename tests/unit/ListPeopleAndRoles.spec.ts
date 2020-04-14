@@ -6,7 +6,7 @@ import VueRouter from 'vue-router'
 import mockRouter from './MockRouter'
 
 // Store
-import { store } from '@/store'
+import { getVuexStore } from '@/store'
 
 // Utils
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
@@ -17,7 +17,8 @@ import { ListPeopleAndRoles } from '@/components/AddPeopleAndRoles'
 Vue.use(Vuetify)
 Vue.use(Vuelidate)
 
-let vuetify = new Vuetify({})
+const vuetify = new Vuetify({})
+const store = getVuexStore()
 
 describe('List People And Roles', () => {
   let wrapperFactory: any

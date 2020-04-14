@@ -2,7 +2,7 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify'
 import VueRouter from 'vue-router'
-import { store } from '@/store'
+import { getVuexStore } from '@/store'
 import { shallowMount, createLocalVue } from '@vue/test-utils'
 import mockRouter from './MockRouter'
 
@@ -10,7 +10,10 @@ import mockRouter from './MockRouter'
 import DefineCompany from '@/views/DefineCompany.vue'
 
 Vue.use(Vuetify)
-let vuetify = new Vuetify({})
+
+const vuetify = new Vuetify({})
+const store = getVuexStore()
+
 const localVue = createLocalVue()
 localVue.use(VueRouter)
 const router = mockRouter.mock()

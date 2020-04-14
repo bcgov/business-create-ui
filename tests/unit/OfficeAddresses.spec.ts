@@ -4,7 +4,7 @@ import Vuelidate from 'vuelidate'
 import Vuetify from 'vuetify'
 
 // Store
-import { store } from '@/store'
+import { getVuexStore } from '@/store'
 
 // Utils
 import { createLocalVue, shallowMount } from '@vue/test-utils'
@@ -15,7 +15,8 @@ import { OfficeAddresses } from '@/components/DefineCompany'
 Vue.use(Vuetify)
 Vue.use(Vuelidate)
 
-let vuetify = new Vuetify({})
+const vuetify = new Vuetify({})
+const store = getVuexStore()
 
 describe('OfficeAddresses as a COOP', () => {
   let wrapper: any

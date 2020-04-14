@@ -3,14 +3,16 @@ import Vue from 'vue'
 import Vuetify from 'vuetify'
 
 // Store
-import { store } from '@/store'
+import { getVuexStore } from '@/store'
 
 // Components
 import { mount } from '@vue/test-utils'
 import { EntityInfo } from '@/components/common'
 
 Vue.use(Vuetify)
-let vuetify = new Vuetify({})
+
+const vuetify = new Vuetify({})
+const store = getVuexStore()
 
 describe('Entity Info component', () => {
   let wrapper: any
