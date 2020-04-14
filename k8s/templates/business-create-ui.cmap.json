@@ -13,7 +13,7 @@
             "kind": "ConfigMap",
             "apiVersion": "v1",
             "data": {
-                "configuration.json": "{\n\"API_URL\":\"${API_URL}\",\n\"AUTH_API_URL\":\"${AUTH_API_URL}\",\n\"BUSINESSES_URL\":\"${BUSINESSES_URL}\",\n\"PAY_API_URL\":\"${PAY_API_URL}\",\n\"REPORT_SVC_URL\":\"${REPORT_SVC_URL}\",\n\"KEYCLOAK_CONFIG_URL\":\"${KEYCLOAK_CONFIG_URL}\",\n\"ADDRESS_COMPLETE_KEY\":\"${ADDRESS_COMPLETE_KEY}\",\n\"LD_CLIENT_ID\":\"${LD_CLIENT_ID}\"}"
+                "configuration.json": "{\n\"LEGAL_API_URL\":\"${LEGAL_API_URL}\",\n\"AUTH_API_URL\":\"${AUTH_API_URL}\",\n\"BUSINESSES_URL\":\"${BUSINESSES_URL}\",\n\"PAY_API_URL\":\"${PAY_API_URL}\",\n\"DASHBOARD_URL\":\"${DASHBOARD_URL}\",\n\"KEYCLOAK_CONFIG_URL\":\"${KEYCLOAK_CONFIG_URL}\",\n\"ADDRESS_COMPLETE_KEY\":\"${ADDRESS_COMPLETE_KEY}\",\n\"LD_CLIENT_ID\":\"${LD_CLIENT_ID}\"}"
             },
             "metadata": {
                 "name": "${NAME}-${TAG_NAME}-configuration",
