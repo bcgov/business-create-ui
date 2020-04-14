@@ -69,6 +69,14 @@ export function fetchConfig (): Promise<any> {
 
       const ldClientId: string = response.data['LD_CLIENT_ID'];
       (<any>window).ldClientId = ldClientId
-      console.info('Set Launch Darkly Client ID.')
+      console.info('Set LD Client Id.')
+
+      const businessesUrl = response.data['BUSINESSES_URL']
+      sessionStorage.setItem('BUSINESSES_URL', businessesUrl)
+      console.log('Set Businesses URL to: ' + businessesUrl)
+
+      const sentryDsn = response.data['SENTRY_DSN'];
+      (<any>window).sentryDsn = sentryDsn
+      console.log('Set Sentry dsn.')
     })
 }

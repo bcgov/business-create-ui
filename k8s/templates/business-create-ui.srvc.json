@@ -1,0 +1,61 @@
+{
+    "kind": "Template",
+    "apiVersion": "v1",
+    "metadata": {
+        "annotations": {
+            "description": "${TEMPLATE_DESCRIPTION}",
+            "tags": "${NAME}-${TAG_NAME}"
+        },
+        "name": "${NAME}-${TAG_NAME}-service-template"
+    },
+    "objects": [
+        {
+            "kind": "Service",
+            "apiVersion": "v1",
+            "metadata": {
+                "labels": {
+                    "app": "${NAME}-${TAG_NAME}"
+                },
+                "name": "${NAME}-${TAG_NAME}"
+            },
+            "spec": {
+                "ports": [
+                    {
+                        "name": "8080-tcp",
+                        "port": 8080,
+                        "protocol": "TCP",
+                        "targetPort": 8080
+                    }
+                ],
+                "selector": {
+                    "deploymentconfig": "${NAME}-${TAG_NAME}"
+                },
+                "sessionAffinity": "None",
+                "type": "ClusterIP"
+            }
+        }
+    ],
+    "parameters": [
+        {
+            "name": "NAME",
+            "displayName": "Name",
+            "description": "The name assigned to all of the OpenShift resources associated to this app.",
+            "required": true,
+            "value": "business-create-ui"
+        },
+        {
+            "name": "TEMPLATE_DESCRIPTION",
+            "displayName": "DESCRIPTION",
+            "description": "Description of what this deploy template is for.",
+            "required": true,
+            "value": "Template for the service."
+        },
+        {
+            "name": "TAG_NAME",
+            "displayName": "Environment TAG name",
+            "description": "The TAG name for this environment, e.g., dev, test, prod, or PR",
+            "required": true,
+            "value": "dev"
+        }
+    ]
+}

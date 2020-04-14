@@ -1,0 +1,113 @@
+{
+    "kind": "Template",
+    "apiVersion": "v1",
+    "metadata": {
+        "annotations": {
+            "description": "${TEMPLATE_DESCRIPTION}",
+            "tags": "${NAME}-${TAG_NAME}"
+        },
+        "name": "${NAME}-${TAG_NAME}-keycloak-configmap-template"
+    },
+    "objects": [
+        {
+            "kind": "ConfigMap",
+            "apiVersion": "v1",
+            "data": {
+                "keycloak.json": "{\n\"realm\":\"${REALM}\",\n\"auth-server-url\":\"${AUTH_SERVER_URL}\",\n\"ssl-required\":\"${SSL_REQUIRED}\",\n\"resource\":\"RESOURCE\",\n\"verify-token-audience\":${VERIFY_TOKEN_AUDIENCE},\n\"credentials\":{\"secret\": \"${KC_SECRET}\"},\n\"use-resource-role-mappings\":${USE_RESOURCE_ROLE_MAPPINGS},\n\"confidential-port\":${CONFIDENTIAL_PORT}\n}"
+            },
+            "metadata": {
+                "name": "${NAME}-${TAG_NAME}-keycloak-config",
+                "labels": {
+                    "app": "${NAME}-${TAG_NAME}",
+                    "app-group": "${APP_GROUP}-${TAG_NAME}"
+                }
+            }
+        }
+    ],
+    "parameters": [
+        {
+            "name": "NAME",
+            "displayName": "Name",
+            "description": "The name assigned to all of the OpenShift resources associated to this app.",
+            "required": true,
+            "value": "business-create-ui"
+        },
+        {
+            "name": "TEMPLATE_DESCRIPTION",
+            "displayName": "DESCRIPTION",
+            "description": "Description of what this deploy template is for.",
+            "required": true,
+            "value": "Template for the keycloak config map."
+        },
+        {
+            "name": "APP_GROUP",
+            "displayName": "App Group",
+            "description": "The name assigned to all of the deployments in this project.",
+            "required": true,
+            "value": "business-create"
+        },
+        {
+            "name": "TAG_NAME",
+            "displayName": "Environment TAG name",
+            "description": "The TAG name for this environment, e.g., dev, test, prod, or PR",
+            "required": true,
+            "value": "dev"
+        },
+        {
+            "name": "REALM",
+            "displayName": "Realm",
+            "description": "Keycloak auth realm.",
+            "required": false,
+            "value": ""
+        },
+        {
+            "name": "AUTH_SERVER_URL",
+            "displayName": "Auth Server Url",
+            "description": "Keycloak Auth Url.",
+            "required": false,
+            "value": ""
+        },
+        {
+            "name": "SSL_REQUIRED",
+            "displayName": "SSL Required",
+            "description": "Type of ssl required.",
+            "required": false,
+            "value": ""
+        },
+        {
+            "name": "RESOURCE",
+            "displayName": "Resource",
+            "description": "Keycloak resource.",
+            "required": false,
+            "value": ""
+        },
+        {
+            "name": "VERIFY_TOKEN_AUDIENCE",
+            "displayName": "Verify Token Audience",
+            "description": "Keycloak config option.",
+            "required": false,
+            "value": ""
+        },
+        {
+            "name": "KC_SECRET",
+            "displayName": "Keycloak Secret",
+            "description": "Keycloak Secret.",
+            "required": false,
+            "value": ""
+        },
+        {
+            "name": "USE_RESOURCE_ROLE_MAPPINGS",
+            "displayName": "Use Resource Role Mappings",
+            "description": "Keycloak config option.",
+            "required": false,
+            "value": ""
+        },
+        {
+            "name": "CONFIDENTIAL_PORT",
+            "displayName": "Confidential Port",
+            "description": "Confidential Port.",
+            "required": false,
+            "value": ""
+        }
+    ]
+}

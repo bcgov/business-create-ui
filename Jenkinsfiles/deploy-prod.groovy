@@ -19,10 +19,11 @@
 //   -> hudson.model.DirectoryBrowserSupport.CSP : removes restrictions on CSS file load, thus html pages of test reports are displayed pretty
 //   See: https://docs.openshift.com/container-platform/3.9/using_images/other_images/jenkins.html for a complete list of JENKINS env vars
 // define constants
-def NAMESPACE = 'namesapce'
-def COMPONENT_NAME = 'bcrs-entities-create-ui'
-def TAG_NAME = 'prod'
+def NAMESPACE = 'mpgxod'
+def COMPONENT_NAME = 'business-create'
 def SOURCE_TAG = 'test'
+def DEPLOY_TAG = 'prod'
+def PREV_TAG = "${DEPLOY_TAG}-previous"
 
 // define groovy functions
 import groovy.json.JsonOutput
@@ -48,26 +49,29 @@ properties([
 
 node {
     def old_version
-    stage("Tag ${COMPONENT_NAME}:${TAG_NAME}") {
+    stage("Deploy ${COMPONENT_NAME}:${DEPLOY_TAG}") {
         script {
             openshift.withCluster() {
-                openshift.withProject("${NAMESPACE}-${TAG_NAME}") {
-                    old_version = openshift.selector('dc', "${COMPONENT_NAME}-${TAG_NAME}").object().status.latestVersion
+                openshift.withProject("${NAMESPACE}-${DEPLOY_TAG}") {
+                    old_version = openshift.selector('dc', "${COMPONENT_NAME}").object().status.latestVersion
                 }
             }
             openshift.withCluster() {
                 openshift.withProject() {
-                    echo "Tagging ${COMPONENT_NAME}:${TAG_NAME}-previous"
-                    def IMAGE_HASH = getImageTagHash("${COMPONENT_NAME}", "${TAG_NAME}")
-                    echo "IMAGE_HASH: ${IMAGE_HASH}"
-                    openshift.tag("${COMPONENT_NAME}@${IMAGE_HASH}", "${COMPONENT_NAME}:${TAG_NAME}-previous")
 
-                    echo "Tagging ${COMPONENT_NAME} for deployment to ${TAG_NAME} ..."
+                    echo "Tagging ${COMPONENT_NAME}:${DEPLOY_TAG} to ${DEPLOY_TAG}-previous ..."
+
                     // Don't tag with BUILD_ID so the pruner can do it's job; it won't delete tagged images.
                     // Tag the images for deployment based on the image's hash
+                    def IMAGE_HASH = getImageTagHash("${COMPONENT_NAME}", "${DEPLOY_TAG}")
+                    echo "IMAGE_HASH: ${IMAGE_HASH}"
+                    openshift.tag("${COMPONENT_NAME}@${IMAGE_HASH}", "${COMPONENT_NAME}:${DEPLOY_TAG}-previous")
+
+                    echo "Tagging ${COMPONENT_NAME} for deployment to ${DEPLOY_TAG} ..."
+
                     IMAGE_HASH = getImageTagHash("${COMPONENT_NAME}", "${SOURCE_TAG}")
                     echo "IMAGE_HASH: ${IMAGE_HASH}"
-                    openshift.tag("${COMPONENT_NAME}@${IMAGE_HASH}", "${COMPONENT_NAME}:${TAG_NAME}")
+                    openshift.tag("${COMPONENT_NAME}@${IMAGE_HASH}", "${COMPONENT_NAME}:${DEPLOY_TAG}")
                 }
             }
         }
@@ -76,17 +80,18 @@ node {
         sleep 10
         script {
             openshift.withCluster() {
-                openshift.withProject("${NAMESPACE}-${TAG_NAME}") {
-                    def new_version = openshift.selector('dc', "${COMPONENT_NAME}-${TAG_NAME}").object().status.latestVersion
+                openshift.withProject("${NAMESPACE}-${DEPLOY_TAG}") {
+                    def new_version = openshift.selector('dc', "${COMPONENT_NAME}").object().status.latestVersion
                     if (new_version == old_version) {
                         echo "New deployment was not triggered."
                         currentBuild.result = "FAILURE"
+                        return
                     }
-                    def pod_selector = openshift.selector('pod', [ app:"${COMPONENT_NAME}-${TAG_NAME}" ])
+                    def pod_selector = openshift.selector('pod', [ app:"${COMPONENT_NAME}-${DEPLOY_TAG}" ])
                     pod_selector.untilEach {
                         deployment = it.objects()[0].metadata.labels.deployment
                         echo deployment
-                        if (deployment ==  "${COMPONENT_NAME}-${TAG_NAME}-${new_version}" && it.objects()[0].status.phase == 'Running' && it.objects()[0].status.containerStatuses[0].ready) {
+                        if (deployment ==  "${COMPONENT_NAME}-${DEPLOY_TAG}-${new_version}" && it.objects()[0].status.phase == 'Running' && it.objects()[0].status.containerStatuses[0].ready) {
                             return true
                         } else {
                             echo "Pod for new deployment not ready"
@@ -98,4 +103,4 @@ node {
             }
         }
     }
-}//end node
+}
