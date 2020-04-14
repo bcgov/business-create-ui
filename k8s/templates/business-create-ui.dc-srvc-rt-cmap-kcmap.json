@@ -123,11 +123,7 @@
             "kind": "ConfigMap",
             "apiVersion": "v1",
             "data": {
-<<<<<<< HEAD:k8s/templates/bcrs-entities-create-dc.json
-                "configuration.json": "{\"LEGAL_API_URL\":\"${LEGAL_API_URL}\",{\"AUTH_URL\":\"${AUTH_URL}\",\"AUTH_API_URL\":\"${AUTH_API_URL}\",\"BUSINESSES_URL\":\"${BUSINESSES_URL}\",\"DASHBOARD_URL\":\"${DASHBOARD_URL}\",\"PAY_API_URL\":\"${PAY_API_URL}\",\"REPORT_SVC_URL\":\"${REPORT_SVC_URL}\",\"KEYCLOAK_CONFIG_PATH\":\"${KEYCLOAK_CONFIG_PATH}\",\"ADDRESS_COMPLETE_KEY\":\"${ADDRESS_COMPLETE_KEY}\",\"LD_CLIENT_ID\":\"${LD_CLIENT_ID}\"}"
-=======
-                "configuration.json": "{\n\"API_URL\":\"${API_URL}\",\n\"AUTH_API_URL\":\"${AUTH_API_URL}\",\n\"BUSINESSES_URL\":\"${BUSINESSES_URL}\",\n\"PAY_API_URL\":\"${PAY_API_URL}\",\n\"REPORT_SVC_URL\":\"${REPORT_SVC_URL}\",\n\"KEYCLOAK_CONFIG_URL\":\"${KEYCLOAK_CONFIG_URL}\",\n\"ADDRESS_COMPLETE_KEY\":\"${ADDRESS_COMPLETE_KEY}\",\n\"LD_CLIENT_ID\":\"${LD_CLIENT_ID}\"}"
->>>>>>> all json/param/jenkinsfiles in place and sentry configured:k8s/templates/business-create-ui.dc-srvc-rt-cmap-kcmap.json
+                "configuration.json": "{\n\"AUTH_API_URL\":\"${AUTH_API_URL}\",\n\"BUSINESSES_URL\":\"${BUSINESSES_URL}\",\n\"PAY_API_URL\":\"${PAY_API_URL}\",\n\"REPORT_SVC_URL\":\"${REPORT_SVC_URL}\",\n\"KEYCLOAK_CONFIG_URL\":\"${KEYCLOAK_CONFIG_URL}\",\n\"ADDRESS_COMPLETE_KEY\":\"${ADDRESS_COMPLETE_KEY}\",\n\"LD_CLIENT_ID\":\"${LD_CLIENT_ID}\"}"
             },
             "metadata": {
                 "name": "${NAME}-${TAG_NAME}-configuration",
@@ -291,8 +287,8 @@
             "value": "/businesses/create/"
         },
         {
-            "name": "API_URL",
-            "displayName": "API URL",
+            "name": "LEGAL_API_URL",
+            "displayName": "LEGAL API URL",
             "description": "The URL to the Legal API.",
             "required": false,
             "value": ""

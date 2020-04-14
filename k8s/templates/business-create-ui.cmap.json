@@ -54,8 +54,8 @@
             "value": "dev"
         },
         {
-            "name": "API_URL",
-            "displayName": "API URL",
+            "name": "LEGAL_API_URL",
+            "displayName": "LEGAL API URL",
             "description": "The URL to the Legal API.",
             "required": false,
             "value": ""
@@ -82,9 +82,9 @@
             "value": ""
         },
         {
-            "name": "REPORT_SVC_URL",
-            "displayName": "Report Service API URL",
-            "description": "The URL to the Report Service API.",
+            "name": "DASHBOARD_URL",
+            "displayName": "Business Dashboard URL",
+            "description": "The URL to the Business Dashboard (Filings UI).",
             "required": false,
             "value": ""
         },
