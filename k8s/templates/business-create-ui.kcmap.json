@@ -13,7 +13,7 @@
             "kind": "ConfigMap",
             "apiVersion": "v1",
             "data": {
-                "keycloak.json": "{\n\"realm\":\"${REALM}\",\n\"auth-server-url\":\"${AUTH_SERVER_URL}\",\n\"ssl-required\":\"${SSL_REQUIRED}\",\n\"resource\":\"RESOURCE\",\n\"verify-token-audience\":${VERIFY_TOKEN_AUDIENCE},\n\"credentials\":{\"secret\": \"${KC_SECRET}\"},\n\"use-resource-role-mappings\":${USE_RESOURCE_ROLE_MAPPINGS},\n\"confidential-port\":${CONFIDENTIAL_PORT}\n}"
+                "keycloak.json": "{\n\"realm\":\"${REALM}\",\n\"auth-server-url\":\"${AUTH_SERVER_URL}\",\n\"ssl-required\":\"${SSL_REQUIRED}\",\n\"resource\":\"${RESOURCE}\",\n\"verify-token-audience\":${VERIFY_TOKEN_AUDIENCE},\n\"credentials\":{\"secret\": \"${KC_SECRET}\"},\n\"use-resource-role-mappings\":${USE_RESOURCE_ROLE_MAPPINGS},\n\"confidential-port\":${CONFIDENTIAL_PORT}\n}"
             },
             "metadata": {
                 "name": "${NAME}-${TAG_NAME}-keycloak-config",
