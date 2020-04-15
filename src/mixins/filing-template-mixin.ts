@@ -27,6 +27,7 @@ export default class FilingTemplateMixin extends Vue {
   @Action setNameRequestState!: ActionBindingIF
   @Action setOrgPersonList!: ActionBindingIF
   @Action setFilingId!: ActionBindingIF
+  @Action setCertifyState!: ActionBindingIF
 
   /**
    * Method to construct a filing body when making an api request
@@ -48,7 +49,8 @@ export default class FilingTemplateMixin extends Vue {
           offices: this.stateModel.defineCompanyStep.officeAddresses,
           contactPoint: {
             email: this.stateModel.defineCompanyStep.businessContact.email,
-            phone: this.stateModel.defineCompanyStep.businessContact.phone
+            phone: this.stateModel.defineCompanyStep.businessContact.phone,
+            extension: this.stateModel.defineCompanyStep.businessContact.extension
           },
           parties: this.stateModel.addPeopleAndRoleStep.orgPeople
         }
@@ -62,14 +64,7 @@ export default class FilingTemplateMixin extends Vue {
    */
   parseDraft (draftFiling: any): void {
     try {
-      // Set nameRequest data
-      this.setNameRequestState({
-        nrNumber: draftFiling.incorporationApplication.nameRequest.nrNumber,
-        entityType: draftFiling.incorporationApplication.nameRequest.legalType,
-        filingId: draftFiling.header.filingId
-      })
-
-      // // Set Office Addresses
+      // Set Office Addresses
       this.setOfficeAddresses(draftFiling.incorporationApplication.offices)
 
       // Set Contact Info
@@ -81,6 +76,12 @@ export default class FilingTemplateMixin extends Vue {
 
       // Set Persons and Organizations
       this.setOrgPersonList(draftFiling.incorporationApplication.parties)
+
+      // Set Certified By
+      this.setCertifyState({
+        certifyFormValid: false, // always override this
+        certifiedBy: draftFiling.header.certifiedBy
+      })
     } catch (e) {
       // TODO: Throw a flag to the ui from here, if we want to trigger error handling in ui
     }

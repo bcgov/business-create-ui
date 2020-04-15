@@ -5,28 +5,7 @@
         <h2>1. Company Name</h2>
       </header>
       <v-card flat class="step-container">
-        <div class="meta-container">
-          <label>Name Request</label>
-
-          <div class="value name-request">
-            <p>Generate a Name Request (NR):</p>
-
-            <v-container id="business-buttons-container" class="list-item justify-space-between">
-              <v-btn id="select-bc-btn" large color="primary" :disabled="isEntityType" @click="onClickBC()">
-                <span class="font-weight-bold">Benefit Company NR</span>
-              </v-btn>
-
-              <v-btn id="select-cp-btn" large color="success" :disabled="isEntityType" @click="onClickCP()">
-                <span class="font-weight-bold">Cooperative Association NR</span>
-              </v-btn>
-
-              <v-btn id="reset-btn" large :disabled="!isEntityType" @click="onClickReset()">
-                <v-icon>mdi-undo</v-icon>
-                <span>Reset</span>
-              </v-btn>
-            </v-container>
-          </div>
-        </div>
+          <name-request-info />
       </v-card>
     </section>
 
@@ -79,10 +58,12 @@ import { EntityTypes } from '@/enums'
 
 // Components
 import { BusinessContactInfo, OfficeAddresses } from '@/components/DefineCompany'
+import { NameRequestInfo } from '@/components/common'
 
 @Component({
   components: {
     BusinessContactInfo,
+    NameRequestInfo,
     OfficeAddresses
   }
 })
@@ -102,7 +83,6 @@ export default class DefineCompany extends Mixins(EntityFilterMixin) {
   @Action setBusinessContact!: ActionBindingIF
   @Action setOfficeAddresses!: ActionBindingIF
   @Action setDefineCompanyStepValidity!: ActionBindingIF
-  @Action setNameRequestState!: ActionBindingIF
 
   private businessContactFormValid: boolean = false
   private addressFormValid: boolean = false
@@ -111,31 +91,8 @@ export default class DefineCompany extends Mixins(EntityFilterMixin) {
   readonly EntityTypes = EntityTypes
 
   mounted () {
-    this.setDefineCompanyStepValidity(this.businessContactFormValid && this.addressFormValid)
-  }
-
-  /**
-   * Method called when Benefit Company button is clicked.
-   */
-  private onClickBC (): void {
-    // Placeholder to assign the NR Data we are expecting *Development Purpose*
-    this.setNameRequestState({ nrNumber: 'NR7654321', entityType: EntityTypes.BCOMP, filingId: null })
-  }
-
-  /**
-   * Method called when Cooperative Association button is clicked.
-   */
-  private onClickCP (): void {
-    // Placeholder to assign the NR Data we are expecting *Development Purpose*
-    this.setNameRequestState({ nrNumber: 'NR7654321', entityType: EntityTypes.COOP, filingId: null })
-  }
-
-  /**
-   * Method called when Reset Entity Type button is clicked.
-   */
-  private onClickReset (): void {
-    this.setNameRequestState({})
-    this.setOfficeAddresses(null)
+    // always false initially
+    // this.setDefineCompanyStepValidity(this.businessContactFormValid && this.addressFormValid)
   }
 
   private onBusinessContactInfoChange (businessContact: BusinessContactIF): void {

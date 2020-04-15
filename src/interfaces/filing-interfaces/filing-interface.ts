@@ -8,6 +8,7 @@ export interface IncorporationFilingIF {
       certifiedBy: string
       email: string
       date: string
+      filingId?: number // Optional as this is not required when building a filing - causes an error for new filings
     },
     incorporationApplication: {
       nameRequest: {
@@ -18,6 +19,7 @@ export interface IncorporationFilingIF {
       contactPoint: {
         email: string
         phone: string
+        extension: string
       },
       parties: OrgPersonIF[]
     }

@@ -1,79 +1,103 @@
-// This is the business logic that allows the Stepper, the Actions, and
-// any other component that needs to know how they should behave (ie,
-// what to show or enable).
-
 // Enums
 import { EntityTypes } from '@/enums'
+import { NameRequestDetailsIF, NameRequestApplicantIF } from '@/interfaces'
 
 /**
- * Whether the client has staff keycloak role
+ * Whether the user has "staff" keycloak role.
  */
 export const isRoleStaff = (state: any): boolean => {
   return state.stateModel.tombstone.keycloakRoles.includes('staff')
 }
 
 /**
- * Whether the client has edit permissions
+ * Whether the user is authorized to edit.
  */
-export const isRoleEdit = (state: any): boolean => {
+export const isAuthEdit = (state: any): boolean => {
   return state.stateModel.tombstone.authRoles.includes('edit')
 }
 
 /**
- * Whether the client has view permissions
+ * Whether the user is authorized to view.
  */
-export const isRoleView = (state: any): boolean => {
+export const isAuthView = (state: any): boolean => {
   return state.stateModel.tombstone.authRoles.includes('view')
 }
 
 /**
- * A boolean indicating whether the entity type has been identified
+ * Whether the entity type has been identified.
  */
 export const isEntityType = (state: any): boolean => {
   return !!state.stateModel.nameRequest.entityType
 }
 
 /**
- * A boolean indicating whether the entity type is a BCOMP
+ * Whether the entity is a BCOMP.
  */
 export const isTypeBcomp = (state: any): boolean => {
   return (state.stateModel.nameRequest.entityType === EntityTypes.BCOMP)
 }
 
 /**
- * A boolean indicating whether the entity type is a COOP
+ * Whether the entity is a COOP.
  */
 export const isTypeCoop = (state: any): boolean => {
   return (state.stateModel.nameRequest.entityType === EntityTypes.COOP)
 }
 
 /**
- * Return the current date
+ * Returns the current date.
  */
 export const getCurrentDate = (state: any): string => {
   return state.stateModel.currentDate
 }
 
 /**
- * Return a filingId if it exists
+ * Returns the filing id.
  */
 export const getFilingId = (state: any): number => {
   return state.stateModel.nameRequest.filingId
 }
 
 /**
- * Return a business identifier if it exists
+ * Returns the business identifier.
  */
 export const getBusinessIdentifier = (state: any): string => {
   return state.stateModel.nameRequest.nrNumber
 }
 
 /**
- * Return Office addresses
+ * Returns the approved name of a name request.
+ */
+export const getApprovedName = (state: any): string => {
+  return state.stateModel.nameRequest.details.approvedName
+}
+
+/**
+ * Returns name request details.
+ */
+export const getNameRequestDetails = (state: any): NameRequestDetailsIF => {
+  return state.stateModel.nameRequest.details
+}
+
+/**
+ * Returns name request applicant information.
+ */
+export const getNameRequestApplicant = (state: any): NameRequestApplicantIF => {
+  return state.stateModel.nameRequest.applicant
+}
+
+/**
+ * Returns the office addresses.
  */
 export const getOfficeAddresses = (state: any): string => {
   return state.stateModel.defineCompanyStep.officeAddresses
 }
+
+//
+// Below is the business logic that allows the Stepper, the Actions, and
+// any other component that needs to know how they should behave (ie,
+// what to show or enable).
+//
 
 /**
  * Whether Back button should be displayed.
@@ -85,14 +109,14 @@ export const isShowBackBtn = (state: any): boolean => {
 /**
  * Whether Review and Confirm button should be displayed.
  */
-export const isShowReviewConfirmBtn = (state: any, getters:any): boolean => {
+export const isShowReviewConfirmBtn = (state: any, getters: any): boolean => {
   return (!!state.stateModel.nameRequest.entityType && state.stateModel.currentStep < getters.getMaxStep)
 }
 
 /**
  * Whether File and Pay button should be displayed.
  */
-export const isShowFilePayBtn = (state: any, getters:any): boolean => {
+export const isShowFilePayBtn = (state: any, getters: any): boolean => {
   return (state.stateModel.currentStep === getters.getMaxStep)
 }
 
@@ -117,16 +141,16 @@ export const isBusySaving = (state: any): boolean => {
 }
 
 /**
- * Validate all the incorporation steps
+ * Whether all the incorporation steps are valid.
  */
 export const isApplicationValid = (state: any): boolean => {
   return (state.stateModel.defineCompanyStep.valid && state.stateModel.addPeopleAndRoleStep.valid)
 }
 
 /**
- * Steps to be displayed in the stepper
+ * Returns the array of steps.
  */
-export const getSteps = (state: any, getters:any): Array<any> => {
+export const getSteps = (state: any, getters: any): Array<any> => {
   const steps: Array<any> = [{
     id: 'step-1-btn',
     step: 1,
@@ -175,6 +199,9 @@ export const getSteps = (state: any, getters:any): Array<any> => {
   return steps
 }
 
-export const getMaxStep = (state: any, getters:any): number => {
+/**
+ * Returns the maximum step number.
+ */
+export const getMaxStep = (state: any, getters: any): number => {
   return getters.getSteps ? getters.getSteps.filter(step => step.step !== -1).length : -1
 }

@@ -1,15 +1,16 @@
-import { StateModelIF } from '@/interfaces'
+import { StateModelIF, NameRequestApplicantIF, NameRequestDetailsIF } from '@/interfaces'
 
 export const stateModel: StateModelIF = {
   tombstone: {
     keycloakRoles: [],
-    authRoles: [],
-    authenticated: false
+    authRoles: []
   },
   nameRequest: {
     nrNumber: '',
     entityType: '',
-    filingId: null
+    details: {} as NameRequestDetailsIF,
+    applicant: {} as NameRequestApplicantIF,
+    filingId: null as number
   },
   currentDate: '',
   certifyState: {
@@ -26,7 +27,7 @@ export const stateModel: StateModelIF = {
       email: '',
       confirmEmail: '',
       phone: '',
-      phoneExtension: ''
+      extension: ''
     },
     officeAddresses: {}
   },

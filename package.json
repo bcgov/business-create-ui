@@ -46,6 +46,7 @@
     "flush-promises": "^1.0.2",
     "sass": "^1.26.2",
     "sass-loader": "^8.0.2",
+    "sinon": "^9.0.2",
     "typescript": "^3.8.3",
     "vue-class-component": "^7.2.2",
     "vue-cli-plugin-vuetify": "^2.0.5",
@@ -55,7 +56,6 @@
     "vue-test-utils-helpers": "git+https://github.com/AmpleOrganics/vue-test-utils-helpers.git",
     "vuetify-loader": "^1.4.3",
     "vuex-class": "^0.3.2",
-    "vuex-persistedstate": "^2.7.1",
     "vuex-module-decorators": "^0.16.1"
   }
 }

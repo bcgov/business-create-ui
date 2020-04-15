@@ -1,11 +1,11 @@
-import EntityInfo from './EntityInfo.vue'
-import ResourceExample from './ResourceExample.vue'
-import Stepper from './Stepper.vue'
 import Actions from './Actions.vue'
+import EntityInfo from './EntityInfo.vue'
+import NameRequestInfo from './NameRequestInfo.vue'
+import Stepper from './Stepper.vue'
 
 export {
+  Actions,
   EntityInfo,
-  ResourceExample,
-  Stepper,
-  Actions
+  NameRequestInfo,
+  Stepper
 }

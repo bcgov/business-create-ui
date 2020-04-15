@@ -2,7 +2,7 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify'
 import VueRouter from 'vue-router'
-import { store } from '@/store'
+import { getVuexStore } from '@/store'
 import { shallowMount, createLocalVue } from '@vue/test-utils'
 
 // Components
@@ -12,7 +12,9 @@ import { Actions } from '@/components/common'
 import mockRouter from './MockRouter'
 
 Vue.use(Vuetify)
-let vuetify = new Vuetify({})
+
+const vuetify = new Vuetify({})
+const store = getVuexStore()
 
 describe('Actions component', () => {
   let wrapper: any
@@ -64,6 +66,7 @@ describe('Actions Filing Functionality', () => {
   let wrapper: any
   const { assign } = window.location
   sessionStorage.setItem('AUTH_URL', `myhost/basePath/auth/`)
+  sessionStorage.setItem('DASHBOARD_URL', `myhost/cooperatives/`)
 
   const filing = {
     filing: {
@@ -155,6 +158,7 @@ describe('Actions Filing Functionality', () => {
   }
 
   beforeEach(() => {
+    // mock the window.location.assign function
     delete window.location
     window.location = { assign: jest.fn() } as any
 
@@ -168,6 +172,7 @@ describe('Actions Filing Functionality', () => {
     const localVue = createLocalVue()
     localVue.use(VueRouter)
     const router = mockRouter.mock()
+    router.push({ name: 'define-company', query: { nrNumber: 'NR 1234567' } })
     wrapper = shallowMount(Actions, { localVue, store, router, vuetify })
     jest.spyOn(wrapper.vm, 'createFiling').mockImplementation()
   })
@@ -177,56 +182,39 @@ describe('Actions Filing Functionality', () => {
     wrapper.destroy()
   })
 
-  it('Calls the buildFiling method when clickSave is called', async () => {
-    const mockBuildFiling = jest.spyOn(wrapper.vm, 'buildFiling')
-
+  it('Calls the buildFiling method when onClickSave is called', async () => {
     // Mock the function call
-    // Work around to interact with the stubbed vuetify button component in ShallowMount
-    await wrapper.vm.onClickSave()
-
-    expect(mockBuildFiling).toHaveBeenCalled()
-    expect(mockBuildFiling).toHaveReturned()
-
-    // verify no redirection
-    expect(window.location.assign).not.toHaveBeenCalled()
-
-    // verify no routing
-    expect(wrapper.vm.$route.name).toBeNull()
-  })
-
-  it('Calls the saveFiling method when clickSave is called', async () => {
-    const mockSaveFiling = jest.spyOn(wrapper.vm, 'saveFiling')
-
-    await wrapper.vm.onClickSave()
-
-    expect(mockSaveFiling).toHaveBeenCalled()
-
-    // verify no redirection
-    expect(window.location.assign).not.toHaveBeenCalled()
-
-    // verify no routing
-    expect(wrapper.vm.$route.name).toBeNull()
-  })
-
-  it('Calls the saveFiling method when clickSave is called with the correct filing structure', async () => {
     const mockBuildFiling = jest.spyOn(wrapper.vm, 'buildFiling')
-    const mockSaveFiling = jest.spyOn(wrapper.vm, 'saveFiling')
 
+    // Work-around to interact with the stubbed vuetify button component in ShallowMount
     await wrapper.vm.onClickSave()
 
     expect(mockBuildFiling).toHaveBeenCalled()
     expect(mockBuildFiling).toHaveReturned()
+
+    // verify no redirection
+    expect(window.location.assign).not.toHaveBeenCalled()
+
+    // verify no routing
+    expect(wrapper.vm.$route.name).toBe('define-company')
+  })
+
+  it('Calls the saveFiling method with the correct filing structure when onClickSave is called', async () => {
+    const mockSaveFiling = jest.spyOn(wrapper.vm, 'saveFiling')
+
+    await wrapper.vm.onClickSave()
 
     expect(mockSaveFiling).toHaveBeenCalledWith(filing, true)
+    expect(mockSaveFiling).toHaveReturned()
 
     // verify no redirection
     expect(window.location.assign).not.toHaveBeenCalled()
 
     // verify no routing
-    expect(wrapper.vm.$route.name).toBeNull()
+    expect(wrapper.vm.$route.name).toBe('define-company')
   })
 
-  it('Calls the buildFiling method when clickSaveResume is called', async () => {
+  it('Calls the buildFiling method when onClickSaveResume is called', async () => {
     const mockBuildFiling = jest.spyOn(wrapper.vm, 'buildFiling')
 
     await wrapper.vm.onClickSaveResume()
@@ -235,88 +223,68 @@ describe('Actions Filing Functionality', () => {
     expect(mockBuildFiling).toHaveReturned()
 
     // verify redirection
-    // TODO: To update when dashboard URLs are established
-    const baseUrl = 'myhost/basePath/auth/'
+    const baseUrl = 'myhost/cooperatives/NR 1234567'
 
     expect(window.location.assign).toHaveBeenCalledWith(baseUrl)
   })
 
-  it('Calls the saveFiling method when clickSaveResume is called', async () => {
+  it('Calls the saveFiling method with the correct filing structure when onClickSaveResume is called', async () => {
     const mockSaveFiling = jest.spyOn(wrapper.vm, 'saveFiling')
 
     await wrapper.vm.onClickSaveResume()
-
-    expect(mockSaveFiling).toHaveBeenCalled()
-
-    // verify redirection
-    // TODO: To update when dashboard URLs are established
-    const baseUrl = 'myhost/basePath/auth/'
-
-    expect(window.location.assign).toHaveBeenCalledWith(baseUrl)
-  })
-
-  it('Calls the saveFiling method when clickSaveResume is called with the correct filing structure', async () => {
-    const mockBuildFiling = jest.spyOn(wrapper.vm, 'buildFiling')
-    const mockSaveFiling = jest.spyOn(wrapper.vm, 'saveFiling')
-
-    await wrapper.vm.onClickSaveResume()
-
-    expect(mockBuildFiling).toHaveBeenCalled()
-    expect(mockBuildFiling).toHaveReturned()
 
     expect(mockSaveFiling).toHaveBeenCalledWith(filing, true)
+    expect(mockSaveFiling).toHaveReturned()
 
     // verify redirection
-    // TODO: To update when dashboard URLs are established
-    const baseUrl = 'myhost/basePath/auth/'
+    const baseUrl = 'myhost/cooperatives/NR 1234567'
 
     expect(window.location.assign).toHaveBeenCalledWith(baseUrl)
   })
 
   it('Calls the buildFiling method when onClickFilePay is called', async () => {
     const mockBuildFiling = jest.spyOn(wrapper.vm, 'buildFiling')
+    const mockSaveFiling = jest.spyOn(wrapper.vm, 'saveFiling')
+      .mockImplementation(() => Promise.resolve({ header: { paymentToken: 789 } })) // required for save
 
     await wrapper.vm.onClickFilePay()
 
     expect(mockBuildFiling).toHaveBeenCalled()
     expect(mockBuildFiling).toHaveReturned()
 
-    // verify no redirection
-    expect(window.location.assign).not.toHaveBeenCalled()
+    // verify redirection
+    const baseUrl = 'myhost/basePath/auth/makepayment/789/myhost%2Fcooperatives%2FNR%201234567'
 
-    // verify no routing
-    expect(wrapper.vm.$route.name).toBeNull()
+    expect(window.location.assign).toHaveBeenCalledWith(baseUrl)
   })
 
-  it('Calls the completeFiling method when onClickFilePay is called', async () => {
+  it('Calls the saveFiling method with the correct filing structure when onClickFilePay is called', async () => {
     const mockSaveFiling = jest.spyOn(wrapper.vm, 'saveFiling')
+      .mockImplementation(() => Promise.resolve({ header: { paymentToken: 789 } }))
 
     await wrapper.vm.onClickFilePay()
 
-    expect(mockSaveFiling).toHaveBeenCalled()
+    expect(mockSaveFiling).toHaveBeenCalledWith(filing, false)
+    expect(mockSaveFiling).toHaveReturned()
 
-    // verify no redirection
-    expect(window.location.assign).not.toHaveBeenCalled()
+    // verify redirection
+    const baseUrl = 'myhost/basePath/auth/makepayment/789/myhost%2Fcooperatives%2FNR%201234567'
 
-    // verify no routing
-    expect(wrapper.vm.$route.name).toBeNull()
+    expect(window.location.assign).toHaveBeenCalledWith(baseUrl)
   })
 
-  it('Calls the completeFiling method when onClickFilePay is called with the correct filing structure', async () => {
+  it('Redirects to Dashboard when onClickCancel is called', async () => {
     const mockBuildFiling = jest.spyOn(wrapper.vm, 'buildFiling')
     const mockSaveFiling = jest.spyOn(wrapper.vm, 'saveFiling')
 
-    await wrapper.vm.onClickFilePay()
+    await wrapper.vm.onClickCancel()
 
-    expect(mockBuildFiling).toHaveBeenCalled()
-    expect(mockBuildFiling).toHaveReturned()
+    expect(mockBuildFiling).not.toHaveBeenCalled()
+    expect(mockSaveFiling).not.toHaveBeenCalled()
 
-    expect(mockSaveFiling).toHaveBeenCalledWith(filing, false)
+    // verify redirection
+    const baseUrl = 'myhost/cooperatives/NR 1234567'
 
-    // verify no redirection
-    expect(window.location.assign).not.toHaveBeenCalled()
-
-    // verify no routing
-    expect(wrapper.vm.$route.name).toBeNull()
+    expect(window.location.assign).toHaveBeenCalledWith(baseUrl)
   })
 })

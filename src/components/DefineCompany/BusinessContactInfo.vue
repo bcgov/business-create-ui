@@ -11,7 +11,7 @@
         <v-flex md4>
           <div><label><strong>Phone Number</strong></label></div>
           <div id="lbl-phone">{{ !!contact.phone ? contact.phone : 'Not entered' }}
-            Ext: {{ !!contact.phoneExtension ? contact.phoneExtension : 'Not entered' }}
+            Ext: {{ !!contact.extension ? contact.extension : 'Not entered' }}
           </div>
         </v-flex>
     </v-layout>
@@ -63,7 +63,7 @@
               label="Extension"
               persistent-hint
               v-mask="'#####'"
-              v-model="contact.phoneExtension"
+              v-model="contact.extension"
               id="txt-phone-extension">
             </v-text-field>
           </v-col>

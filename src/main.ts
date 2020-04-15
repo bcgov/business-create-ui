@@ -6,8 +6,8 @@ import 'regenerator-runtime/runtime' // to use transpiled generator functions
 import Vue from 'vue'
 import Vuetify from 'vuetify/lib'
 import Vuelidate from 'vuelidate'
-import router from '@/router'
-import { store } from '@/store'
+import { getVueRouter } from '@/router'
+import { getVuexStore } from '@/store'
 import Affix from 'vue-affix'
 import Vue2Filters from 'vue2-filters' // needed by SbcFeeSummary
 import { featureFlags, initLDClient } from '@/common/FeatureFlags'
@@ -24,7 +24,7 @@ import App from './App.vue'
 
 // Helpers
 import { fetchConfig } from '@/utils'
-import KeyCloakService from 'sbc-common-components/src/services/keycloak.services'
+import KeycloakService from 'sbc-common-components/src/services/keycloak.services'
 
 // get rid of "You are running Vue in development mode" console message
 Vue.config.productionTip = false
@@ -42,11 +42,16 @@ fetchConfig()
     // initialize Launch Darkly
     await initLDClient()
 
-    // configure KeyCloak Service
-    console.info('Starting Keycloak service...') // eslint-disable-line no-console
-    await KeyCloakService.setKeycloakConfigUrl(sessionStorage.getItem('KEYCLOAK_CONFIG_PATH'))
-
     if (featureFlags.getFlag('bcrs-create-ui-enabled')) {
+      // configure KeyCloak Service
+      console.info('Starting Keycloak service...') // eslint-disable-line no-console
+      await KeycloakService.setKeycloakConfigUrl(sessionStorage.getItem('KEYCLOAK_CONFIG_PATH'))
+
+      // get Vue objects only after we have config
+      const router = getVueRouter()
+      const store = getVuexStore()
+
+      // start Vue application
       console.info('Starting app...') // eslint-disable-line no-console
       new Vue({
         vuetify: new Vuetify({ iconfont: 'mdi' }),
@@ -56,14 +61,19 @@ fetchConfig()
       }).$mount('#app')
     }
   })
-  .catch((error: string) => {
+  .catch(error => {
     /**
      * This catches any un-handled errors from fetchConfig()
      * or anything else in then() block above.
      */
     console.error(error) // eslint-disable-line no-console
-    alert('There was an error starting this page. (See console for details.)' +
-      '\n\n' +
-      'Click OK to go to Cooperatives Online.')
-    window.location.assign('/cooperatives/auth/') // TODO: update this when new URLs are in place
+    // try to redirect to Business Registry home page
+    const businessesUrl = sessionStorage.getItem('BUSINESSES_URL')
+    if (businessesUrl) {
+      // assume Businesses URL is always reachable
+      window.location.assign(businessesUrl)
+    } else {
+      alert('There was an error starting this page. (See console for details.)\n' +
+        'Please try again later.')
+    }
   })

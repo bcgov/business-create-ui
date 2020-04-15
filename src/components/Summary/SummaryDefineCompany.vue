@@ -20,7 +20,7 @@
           <label><strong>Company Name</strong></label>
         </v-flex>
         <v-flex md8>
-          <div class="company-name">XYZ Inc.</div>
+          <div class="company-name">{{ getApprovedName }}</div>
           <div class="company-type">
             <span v-if="entityFilter(EntityTypes.BCOMP)">BC Benefit Company</span>
             <span v-else-if="entityFilter(EntityTypes.COOP)">BC Cooperative Association</span>
@@ -42,10 +42,10 @@
 <script lang="ts">
 // Libraries
 import { Component, Mixins } from 'vue-property-decorator'
-import { State } from 'vuex-class'
+import { Getter, State } from 'vuex-class'
 
 // Interfaces
-import { BusinessContactIF, IncorporationAddressIf } from '@/interfaces'
+import { BusinessContactIF, GetterIF, IncorporationAddressIf } from '@/interfaces'
 
 // Components
 import { BusinessContactInfo, OfficeAddresses } from '@/components/DefineCompany'
@@ -63,6 +63,9 @@ import { EntityTypes } from '@/enums'
   }
 })
 export default class SummaryDefineCompany extends Mixins(EntityFilterMixin) {
+  // Getters
+  @Getter getApprovedName: GetterIF
+
   // State
   @State(state => state.stateModel.defineCompanyStep.valid)
   readonly valid!: boolean
@@ -78,7 +81,7 @@ export default class SummaryDefineCompany extends Mixins(EntityFilterMixin) {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
 
 .defineCompanyStepErrorMessage {
@@ -92,7 +95,7 @@ export default class SummaryDefineCompany extends Mixins(EntityFilterMixin) {
   padding-left: 2rem;
   padding-top: 1.25rem;
   padding-bottom: 1.25rem;
-  font-size: 14px;
+  font-size: 0.875rem;
 }
 
 .define-company-header {
@@ -107,7 +110,7 @@ export default class SummaryDefineCompany extends Mixins(EntityFilterMixin) {
 }
 
 .company-name {
-  font-size: 1.5rem;
+  font-size: 1.375rem;
   font-weight: bold
 }
 
