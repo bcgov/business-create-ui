@@ -73,8 +73,7 @@ function createComponent (
       shareClasses: shareClasses
     },
     store,
-    vuetify,
-    sync: false
+    vuetify
   })
 }
 

@@ -94,8 +94,7 @@ describe('List Shares and Series', () => {
       vuetify,
       propsData: {
         shareClasses: shareClasses
-      },
-      sync: false
+      }
     })
   })
 
