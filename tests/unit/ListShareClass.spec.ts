@@ -94,7 +94,8 @@ describe('List Shares and Series', () => {
       vuetify,
       propsData: {
         shareClasses: shareClasses
-      }
+      },
+      sync: false
     })
   })
 
@@ -123,7 +124,7 @@ describe('List Shares and Series', () => {
 
     expect(classListItem1.querySelectorAll('td')[0].textContent).toContain('Common Shares 2')
     expect(classListItem1.querySelectorAll('td')[1].textContent).toContain(10000)
-    expect(classListItem1.querySelectorAll('td')[2].textContent).toContain('$1.00')
+    expect(classListItem1.querySelectorAll('td')[2].textContent).toContain('$1')
     expect(classListItem1.querySelectorAll('td')[3].textContent).toContain('Canadian Dollar ($CDN)')
     expect(classListItem1.querySelectorAll('td')[4].textContent).toContain('Yes')
 
