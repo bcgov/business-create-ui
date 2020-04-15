@@ -48,7 +48,7 @@
                     </v-col></v-row>
                     </template>
                   </v-radio>
-                  <v-radio :value="true" label="No maximum" id="lbl-no-maximum"/>
+                  <v-radio :value="true" label="No maximum" id="lbl-no-maximum" v-if="isNoMaxSharesVisible"/>
                 </v-radio-group>
 
                 <v-divider class="separator" />
@@ -58,14 +58,14 @@
                   column
                   class="radio-group"
                   @change="changeParValueFlag()" v-show="isClass">
-                  <v-radio :value="false">
+                  <v-radio :value="false" id="radio-par-value">
                     <template v-slot:label>
                       <v-row>
                         <v-col cols="6">
                           <v-text-field
                             filled
                             label="Par Value"
-                            id="txt-par-value"
+                            id="class-par-value"
                             v-model="shareStructure.parValue"
                             :rules="getParValueRule()"
                             hint="Enter the initial value of each share"
@@ -80,7 +80,7 @@
                             :rules="getCurrencyRule()"
                             item-text="`${data.item.name}, ${data.item.code}`"
                             item-value="code"
-                            id='txt-currency'>
+                            id='class-currency'>
                             <template slot="selection" slot-scope="data">
                                {{ data.item.name }} ({{ data.item.code }})
                             </template>
@@ -92,7 +92,7 @@
                       </v-row>
                     </template>
                   </v-radio>
-                  <v-radio :value="true" label="No par value" id="no-par"/>
+                  <v-radio :value="true" label="No par value" id="radio-no-par"/>
                 </v-radio-group>
 
                 <div v-show="isSeries">
@@ -100,14 +100,14 @@
                         <v-col cols="6">
                             <v-text-field
                             label="Par Value"
-                            id="txt-par-value"
+                            id="series-par-value"
                             :value="shareStructure.parValue"
                             :disabled="true"
                             width="10"/>
                         </v-col>
                         <v-col cols="6">
                             <v-text-field
-                            id="txt-currency"
+                            id="series-currency"
                             label="Currency"
                             :value="`${getCurrencyNameByCode(shareStructure.currency)} (${shareStructure.currency})`"
                             :disabled="true"/>
@@ -182,21 +182,27 @@ export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
   private hasNoMaximumShares: boolean = false
   private hasNoParValue: boolean = false
 
-  private excludedWordsList: string [] = ['share', 'shares', 'value']
+  private excludedWordsListForClass: string [] = ['share', 'shares', 'value']
+  private excludedWordsListForSeries: string [] = ['share', 'shares']
 
   // Rules
   private getNameRule (): Array<Function> {
     let rules: Array<Function> = [
       v => !!v || 'A name is required',
       v => !/^\s/g.test(v) || 'Invalid spaces', // leading spaces
-      v => !/\s$/g.test(v) || 'Invalid spaces', // trailing spaces
-      v => !(v.split(' ').some(r => this.excludedWordsList.includes(r.toLowerCase()))) ||
-      'Name should not contain any of the words share, shares or value'
+      v => !/\s$/g.test(v) || 'Invalid spaces' // trailing spaces
     ]
     if (this.isClass && this.activeIndex === -1) {
       rules.push(
         v => !(this.shareClasses.find(s => s.name.split(' Shares')[0].toLowerCase() === v.toLowerCase())) ||
-        'Share class name nust be unique')
+        'Class name must be unique')
+      rules.push(v => !(v.split(' ').some(r => this.excludedWordsListForClass.includes(r.toLowerCase()))) ||
+      'Class name should not contain any of the words share, shares or value')
+    } else if (this.isSeries && this.activeIndex === -1) {
+      rules.push(v => !(this.shareClasses[this.parentIndex].series.find(s =>
+        s.name.split(' Shares')[0].toLowerCase() === v.toLowerCase())) || 'Series name must be unique')
+      rules.push(v => !(v.split(' ').some(r => this.excludedWordsListForSeries.includes(r.toLowerCase()))) ||
+      'Series name should not contain any of the words share or shares')
     }
     return rules
   }
@@ -204,10 +210,15 @@ export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
   private getMaximumShareRule (): Array<Function> {
     let rules: Array<Function> = []
     if (!this.hasNoMaximumShares) {
-      rules = [v => !!v || 'Maximum share value is required', v => /^\d+$/.test(v) || 'Must be a number']
+      rules = [
+        v => !!v || 'Maximum share value is required',
+        v => /^\d+$/.test(v) || 'Must be a number greater than 0']
       if (this.isSeries && this.shareClasses[this.parentIndex].hasMaximumShares) {
-        rules.push(v => Number(v) <= Number(this.shareClasses[this.parentIndex].maxNumberOfShares) ||
-        'Value must be less than or equal to maximum shares of the class')
+        const currentSum = this.shareClasses[this.parentIndex].series
+          .reduce((a, b) => +a + +b.maxNumberOfShares, 0)
+        rules.push(v => +v + currentSum <= +this.shareClasses[this.parentIndex].maxNumberOfShares ||
+        'The number for the series (or all series combined, if there are multiple under ' +
+        'a class) cannot exceed the number for the class')
       }
     }
     return rules
@@ -215,8 +226,11 @@ export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
 
   private getParValueRule (): Array<Function> {
     if (!this.hasNoParValue) {
-      return [v => !!v || 'Par value is required',
-        v => (v < 1 && /^\d+(\.\d{0,3})?$/.test(v)) || 'Amounts less than 1 can be entered with up to 3 decimal place']
+      return [
+        v => !!v || 'Par value is required',
+        v => v > 0 || 'Amount must be greater than 0',
+        v => (v < 1) ? (/^\d+(\.\d{0,3})?$/.test(v) || 'Amounts less than 1 can be entered with up to 3 decimal place')
+          : (/^\d+(\.\d{1,2})?$/.test(v) || 'Amounts greater than 1 can be entered with up to 2 decimal place')]
     }
     return []
   }
@@ -305,6 +319,10 @@ export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
 
   get isSeries (): boolean {
     return this.shareStructure.type === 'Series'
+  }
+
+  get isNoMaxSharesVisible () : boolean {
+    return this.isSeries ? !(this.shareClasses[this.parentIndex].hasMaximumShares) : true
   }
 
   // Events
