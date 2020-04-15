@@ -116,7 +116,7 @@ export default class CreateShareStructure extends Vue {
     maxNumberOfShares: null,
     hasParValue: true,
     parValue: null,
-    currency: null,
+    currency: 'CAD',
     hasRightsOrRestrictions: false,
     series: []
   }
