@@ -7,11 +7,12 @@ import { ShareStructure } from '@/components/CreateShareStructure'
 import { ShareClassIF } from '@/interfaces'
 
 // Store
-import { store } from '@/store'
+import { getVuexStore } from '@/store'
 
 Vue.use(Vuetify)
 
 let vuetify = new Vuetify({})
+const store = getVuexStore()
 
 // Events
 const addEditShareClassEvent: string = 'addEditClass'
