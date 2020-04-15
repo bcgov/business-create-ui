@@ -14,4 +14,6 @@ export interface StateModelIF {
   defineCompanyStep: DefineCompanyIF
   addPeopleAndRoleStep: PeopleAndRoleIF
   createShareStructureStep: ShareStructureIF
+  ignoreChanges: boolean
+  haveChanges: boolean
 }

@@ -93,6 +93,16 @@ export const getOfficeAddresses = (state: any): string => {
   return state.stateModel.defineCompanyStep.officeAddresses
 }
 
+/** Whether we are ignoring data changes. */
+export const ignoreChanges = (state: any): boolean => {
+  return state.stateModel.ignoreChanges
+}
+
+/** Whether there are unsaved data changes. */
+export const haveChanges = (state: any): boolean => {
+  return state.stateModel.haveChanges
+}
+
 //
 // Below is the business logic that allows the Stepper, the Actions, and
 // any other component that needs to know how they should behave (ie,
@@ -130,7 +140,7 @@ export const isEnableFilePayBtn = (state: any): boolean => {
   const step4Valid = true // FOR TESTING ONLY
   const step5Valid = true // FOR TESTING ONLY
   return (step1Valid && step2Valid && step3Valid && step4Valid && step5Valid &&
-    state.stateModel.certifyState.certifyFormValid)
+    state.stateModel.certifyState.valid)
 }
 
 /**

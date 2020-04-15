@@ -16,6 +16,11 @@
       attach="#app"
     />
 
+    <confirm-dialog
+      ref="confirm"
+      attach="#app"
+    />
+
     <!-- Initial Page Load Transition -->
     <transition name="fade">
       <div class="loading-container" v-show="!haveData">
@@ -48,8 +53,8 @@
               <aside>
                 <affix relative-element-selector=".col-lg-9" :offset="{ top: 86, bottom: 12 }">
                   <sbc-fee-summary
-                    v-bind:filingData="[...filingData]"
-                    v-bind:payURL="payApiUrl"
+                    :filingData="[...filingData]"
+                    :payURL="payApiUrl"
                   />
                 </affix>
               </aside>
@@ -57,7 +62,10 @@
           </v-row>
         </v-container>
 
-        <actions :key="$route.path"/>
+        <actions
+          :key="$route.path"
+          @goToDashboard="goToDashboard"
+        />
       </main>
     </div>
 
@@ -68,7 +76,7 @@
 <script lang="ts">
 // Libraries
 import { Component, Vue, Watch, Mixins } from 'vue-property-decorator'
-import { Action, State } from 'vuex-class'
+import { State, Action, Getter } from 'vuex-class'
 import axios from '@/utils/axios-auth'
 import TokenService from 'sbc-common-components/src/services/token.services'
 
@@ -78,18 +86,11 @@ import SbcFooter from 'sbc-common-components/src/components/SbcFooter.vue'
 import SbcFeeSummary from 'sbc-common-components/src/components/SbcFeeSummary.vue'
 import { EntityInfo, Stepper, Actions } from '@/components/common'
 
-// Dialogs
-import { AccountAuthorizationDialog, NameRequestInvalidErrorDialog } from '@/components/dialogs'
-
-// Mixins
+// Dialogs, mixins, interfaces, etc
+import { AccountAuthorizationDialog, NameRequestInvalidErrorDialog, ConfirmDialog } from '@/components/dialogs'
 import { DateMixin, FilingTemplateMixin, LegalApiMixin, NameRequestMixin } from '@/mixins'
-
-// Interfaces
-import { FilingDataIF, ActionBindingIF, StateModelIF, IncorporationFilingIF } from '@/interfaces'
-
+import { FilingDataIF, ActionBindingIF, IncorporationFilingIF, ConfirmDialogType } from '@/interfaces'
 import { CertifyStatementResource } from '@/resources'
-
-// Enums
 import { EntityTypes, FilingCodes, NameRequestStates } from '@/enums'
 
 @Component({
@@ -101,12 +102,22 @@ import { EntityTypes, FilingCodes, NameRequestStates } from '@/enums'
     Stepper,
     Actions,
     NameRequestInvalidErrorDialog,
-    AccountAuthorizationDialog
+    AccountAuthorizationDialog,
+    ConfirmDialog
   }
 })
 export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApiMixin, NameRequestMixin) {
+  // Refs
+  $refs!: {
+    confirm: ConfirmDialogType
+  }
+
   // Global state
-  @State stateModel!: StateModelIF
+  @State(state => state.stateModel.nameRequest.entityType)
+  readonly entityType!: string
+
+  // Global getters
+  @Getter haveChanges!: boolean
 
   // Global actions
   @Action setCurrentStep!: ActionBindingIF
@@ -117,6 +128,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
   @Action setDefineCompanyStepValidity!: ActionBindingIF
   @Action setAddPeopleAndRoleStepValidity!: ActionBindingIF
   @Action setCreateShareStructureStepValidity!: ActionBindingIF
+  @Action setHaveChanges!: ActionBindingIF
 
   // Local Properties
   private filingData: Array<FilingDataIF> = []
@@ -142,16 +154,6 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
     return this.$route.query.nrNumber as string
   }
 
-  /** True if route is Signin. */
-  private get isSigninRoute (): boolean {
-    return Boolean(this.$route.name === 'signin')
-  }
-
-  /** True if route is Signout. */
-  private get isSignoutRoute (): boolean {
-    return Boolean(this.$route.name === 'signout')
-  }
-
   /** True if an error dialog is displayed. */
   private get isErrorDialog (): boolean {
     return (this.accountAuthorizationErrorDialog || this.nameRequestInvalidErrorDialog)
@@ -160,6 +162,52 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
   /** True if Jest is running the code. */
   private get isJestRunning (): boolean {
     return (process.env.JEST_WORKER_ID !== undefined)
+  }
+
+  /** Called when component is created. */
+  private created (): void {
+    // before unloading this page, if there are changes then prompt user
+    window.onbeforeunload = (event) => {
+      if (this.haveChanges) {
+        event.preventDefault()
+        // NB: custom text is not supported in all browsers
+        event.returnValue = 'You have unsaved changes. Are you sure you want to leave?'
+      }
+    }
+  }
+
+  /** Called to redirect to dashboard. */
+  private goToDashboard (): void {
+    // check if there are no data changes
+    if (!this.haveChanges) {
+      // redirect to dashboard
+      const dashboardUrl = sessionStorage.getItem('DASHBOARD_URL')
+      window.location.assign(dashboardUrl + this.queryNrNumber)
+      return
+    }
+
+    // open confirmation dialog and wait for response
+    this.$refs.confirm.open(
+      'Unsaved Changes',
+      'You have unsaved changes in your Incorporation Application. Do you want to exit?',
+      {
+        width: '45rem',
+        persistent: true,
+        yes: 'Return to my application',
+        no: null,
+        cancel: 'Exit without saving'
+      }
+    ).then(() => {
+      // if we get here, Yes was clicked
+      // nothing to do
+    }).catch(() => {
+      // if we get here, Cancel was clicked
+      // ignore changes
+      this.setHaveChanges(false)
+      // redirect to dashboard
+      const dashboardUrl = sessionStorage.getItem('DASHBOARD_URL')
+      window.location.assign(dashboardUrl + this.queryNrNumber)
+    })
   }
 
   /** Starts token service to refresh KC token periodically. */
@@ -174,9 +222,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
     this.tokenService.scheduleRefreshTimer()
   }
 
-  /**
-   * Fetches data required for NR and draft filing.
-   */
+  /** Fetches data required for NR and draft filing. */
   private async fetchData (): Promise<void> {
     // only fetch data once
     if (this.haveData) return Promise.resolve()
@@ -197,13 +243,18 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
             this.generateNameRequestState(nameRequest, +draftFiling.header.filingId))
         }
 
-        // Initialize Fee Summary & Resources
-        this.initEntity(this.stateModel.nameRequest.entityType)
+        // Initialize Fee Summary
+        this.initEntity(this.entityType)
+
+        // Set the resources
+        this.setCertifyStatementResource(CertifyStatementResource.find(x => x.entityType === this.entityType))
       } catch (e) {
         // TODO: Catch a flag from the api, if there is an error to be handled.
       }
     }
     this.haveData = true
+    // wait for things to stabilize, then reset flag
+    Vue.nextTick(() => this.setHaveChanges(false))
   }
 
   /** Sets the validity state of all pages. */
@@ -233,9 +284,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
     }
   }
 
-  /**
-   * Evaluates Name Request pre-conditions.
-   */
+  /** Evaluates Name Request pre-conditions. */
   private async evaluateNRPreconditions (): Promise<any> {
     // Clear error conditions in the event this is invoked more than one time (retry)
     this.nameRequestInvalidErrorDialog = false
@@ -307,19 +356,16 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
       default:
         this.filingData = []
     }
-
-    this.setCertifyStatementResource(
-      entityType ? CertifyStatementResource.find(x => x.entityType === entityType) : null
-    )
   }
 
-  /**
-   * Method called when $route property changes. Used to init app.
-   */
+  /** Called when $route property changes. Used to init app. */
   @Watch('$route', { immediate: true })
   private async onRouteChanged (): Promise<void> {
+    const isSigninRoute = (this.$route.name === 'signin')
+    const isSignoutRoute = (this.$route.name === 'signout')
+
     // don't init if we are still on signin or signout route
-    if (!this.isSigninRoute && !this.isSignoutRoute) {
+    if (!isSigninRoute && !isSignoutRoute) {
       this.setCurrentStep(this.$route.meta?.step)
       await this.startTokenService()
       await this.fetchData()
@@ -327,6 +373,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
     }
   }
 
+  /** Called when user clicks OK in error dialog, to close the dialog. */
   private nrOkay (): void {
     this.nameRequestInvalidErrorDialog = false
   }
