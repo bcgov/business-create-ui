@@ -308,6 +308,13 @@
             "value": ""
         },
         {
+            "name": "AUTH_URL",
+            "displayName": "Auth URL",
+            "description": "The URL to authenticate with entities.",
+            "required": false,
+            "value": ""
+        },
+        {
             "name": "DASHBOARD_URL",
             "displayName": "Business Dashboard URL",
             "description": "The URL to the Business Dashboard (Filings UI).",
