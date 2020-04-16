@@ -163,7 +163,7 @@ describe('App component', () => {
     localVue.use(VueRouter)
     const router = mockRouter.mock()
     router.push({ name: 'define-company', query: { nrNumber: 'NR 1234567' } })
-    wrapper = shallowMount(App, { sync: false, localVue, store, router, vuetify, stubs: { Affix: true } })
+    wrapper = shallowMount(App, { localVue, store, router, vuetify, stubs: { Affix: true } })
 
     // wait for all queries to complete
     await flushPromises()
