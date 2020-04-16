@@ -3,9 +3,7 @@
 ## How to build the openshift environment
 
 ### Images
-This repo has implemented github actions to build and push the new image into our *tools* environment in OpenShift when a PR is merged. Significance in OpenShift environment:
-- no build config (image is built already)
-- no build/dev pipeline (image is tagged to dev already)
+This repo has implemented github actions to build and push the new image into our *tools* environment in OpenShift when a PR is merged. The significance in the OpenShift environment is there's no need for a build config or build pipeline.
 
 You will still need to build the image stream (`oc create imagestream <name>`) and create tags for *dev, test, test-previous, prod and prod-previous* (`oc tag <namespace-tools>/<image name>:<source> <namespace-tools>/<image name>:<destination>`)
 
@@ -16,7 +14,7 @@ There are 5 objects you need to create in OpenShift for the UI to run: deploymen
 
 1. **Setup parameters** Alter, or copy the *bcrs-entities-create-ui-build-pipeline.param* updating the values for your pipeline.
 2. **Create the pipeline** process the template referencing your parameter file. `oc process -f templates/business-create-ui.pipeline.json --param-file=business-create-ui.pipeline.param  | oc create -f -`
-3. **Create the Jenkinsfile** this is the code that the pipeline runs. In the Jenkisnfile folder for this repo there should be 2 groovy files *deploy-test.groovy* and *deploy-prod.groovy*. These should contain code to tag the current image of the environment to -previous and then tag the source image to the current image. Next it should verify that the new image tag triggered a new deployment. Finally, it should run any automated integration tests and report if they succeed or not.
+3. **Create the Jenkinsfile** this is the code that the pipeline runs. In the Jenkisnfile folder for this repo there should be 3 groovy files *deploy-dev.groovy*, *deploy-test.groovy* and *deploy-prod.groovy*. These should contain code to tag the current image of the environment to -previous and then tag the source image to the current image. Next it should verify that the new image tag triggered a new deployment. Finally, it should run any automated integration tests and report if they succeed or not.
 
 ## Updating OpenShift Environment
 
