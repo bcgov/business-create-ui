@@ -14,13 +14,15 @@ export const stateModel: StateModelIF = {
   },
   currentDate: '',
   certifyState: {
-    certifyFormValid: false,
+    valid: false,
     certifiedBy: ''
   },
   currentStep: 1,
   isSaving: false,
   isSavingResuming: false,
   isFilingPaying: false,
+  ignoreChanges: false,
+  haveChanges: false,
   defineCompanyStep: {
     valid: false,
     businessContact: {

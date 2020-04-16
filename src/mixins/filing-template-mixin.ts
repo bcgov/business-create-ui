@@ -77,9 +77,9 @@ export default class FilingTemplateMixin extends Vue {
       // Set Persons and Organizations
       this.setOrgPersonList(draftFiling.incorporationApplication.parties)
 
-      // Set Certified By
+      // Set Certify Form
       this.setCertifyState({
-        certifyFormValid: false, // always override this
+        valid: false,
         certifiedBy: draftFiling.header.certifiedBy
       })
     } catch (e) {

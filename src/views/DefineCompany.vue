@@ -44,7 +44,7 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Mixins } from 'vue-property-decorator'
+import { Component, Mixins, Vue } from 'vue-property-decorator'
 import { Getter, Action, State } from 'vuex-class'
 
 // Interfaces
@@ -83,6 +83,7 @@ export default class DefineCompany extends Mixins(EntityFilterMixin) {
   @Action setBusinessContact!: ActionBindingIF
   @Action setOfficeAddresses!: ActionBindingIF
   @Action setDefineCompanyStepValidity!: ActionBindingIF
+  @Action setIgnoreChanges!: ActionBindingIF
 
   private businessContactFormValid: boolean = false
   private addressFormValid: boolean = false
@@ -90,7 +91,16 @@ export default class DefineCompany extends Mixins(EntityFilterMixin) {
   // Entity Enum
   readonly EntityTypes = EntityTypes
 
-  mounted () {
+  /** Called when component is created. */
+  private created (): void {
+    // ignore data changes until page has loaded
+    this.setIgnoreChanges(true)
+    Vue.nextTick(() => {
+      this.setIgnoreChanges(false)
+    })
+  }
+
+  private mounted () {
     // always false initially
     // this.setDefineCompanyStepValidity(this.businessContactFormValid && this.addressFormValid)
   }

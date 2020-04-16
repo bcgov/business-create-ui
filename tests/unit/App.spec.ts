@@ -14,6 +14,7 @@ import SbcHeader from 'sbc-common-components/src/components/SbcHeader.vue'
 import SbcFooter from 'sbc-common-components/src/components/SbcFooter.vue'
 import SbcFeeSummary from 'sbc-common-components/src/components/SbcFeeSummary.vue'
 import { EntityInfo, Stepper, Actions } from '@/components/common'
+import { ConfirmDialog } from '@/components/dialogs'
 
 // Other
 import mockRouter from './MockRouter'
@@ -22,6 +23,11 @@ Vue.use(Vuetify)
 
 const vuetify = new Vuetify({})
 const store = getVuexStore()
+
+// Boilerplate to prevent the complaint "[Vuetify] Unable to locate target [data-app]"
+const app: HTMLDivElement = document.createElement('div')
+app.setAttribute('data-app', 'true')
+document.body.append(app)
 
 // Mock filing data
 const filingData = {
@@ -119,9 +125,15 @@ const nrData = {
 
 describe('App component', () => {
   let wrapper: any
+  const { assign } = window.location
   sessionStorage.setItem('AUTH_URL', `myhost/basePath/auth/`)
+  sessionStorage.setItem('DASHBOARD_URL', `myhost/cooperatives/`)
 
   beforeEach(async () => {
+    // mock the window.location.assign function
+    delete window.location
+    window.location = { assign: jest.fn() } as any
+
     const get = sinon.stub(axios, 'get')
 
     // GET authorizations (role)
@@ -159,17 +171,26 @@ describe('App component', () => {
           }
       })))
 
+    // create a Local Vue and install router on it
     const localVue = createLocalVue()
     localVue.use(VueRouter)
     const router = mockRouter.mock()
     router.push({ name: 'define-company', query: { nrNumber: 'NR 1234567' } })
-    wrapper = shallowMount(App, { sync: false, localVue, store, router, vuetify, stubs: { Affix: true } })
+    wrapper = shallowMount(App, {
+      sync: false,
+      localVue,
+      store,
+      router,
+      vuetify,
+      stubs: { Affix: true, ConfirmDialog }
+    })
 
     // wait for all queries to complete
     await flushPromises()
   })
 
   afterEach(() => {
+    window.location.assign = assign
     sinon.restore()
     wrapper.destroy()
   })
@@ -228,5 +249,38 @@ describe('App component', () => {
     expect(store.state.stateModel.nameRequest.applicant.postalCode).toBe(nrData.applicants.postalCd)
     expect(store.state.stateModel.nameRequest.applicant.stateProvinceCode)
       .toBe(nrData.applicants.stateProvinceCd)
+  })
+
+  it('shows confirm popup if exiting before saving changes', async () => {
+    // simulate that we have unsaved changes
+    store.state.stateModel.haveChanges = true
+
+    // call Go To Dashboard event handler
+    await wrapper.vm.goToDashboard()
+
+    // verify that dialog is showing
+    const dialog = wrapper.find('.confirm-dialog')
+    expect(dialog.classes('v-dialog--active')).toBe(true)
+    expect(dialog.isVisible()).toBe(true)
+    expect(dialog.text()).toContain('You have unsaved changes')
+
+    // verify no redirection
+    expect(window.location.assign).not.toHaveBeenCalled()
+  })
+
+  it('redirects to dashboard if exiting after saving changes', async () => {
+    // simulate that we have no unsaved changes
+    store.state.stateModel.haveChanges = false
+
+    // call Go To Dashboard event handler
+    await wrapper.vm.goToDashboard()
+
+    // verify that dialog does not exist
+    const dialog = wrapper.find('.confirm-dialog')
+    expect(dialog.exists()).toBe(false)
+
+    // verify redirection
+    const baseUrl = 'myhost/cooperatives/NR 1234567'
+    expect(window.location.assign).toHaveBeenCalledWith(baseUrl)
   })
 })
