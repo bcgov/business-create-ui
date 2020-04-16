@@ -33,7 +33,7 @@ describe('Actions component', () => {
   it('Disables File and Pay button when certify from is not valid', () => {
     // verify File and Pay button state
     store.state.stateModel.certifyState = {
-      certifyFormValid: false,
+      valid: false,
       certifiedBy: 'Some Certifier'
     }
     expect(wrapper.find('#file-pay-btn').attributes('disabled')).toBe('true')
@@ -41,7 +41,7 @@ describe('Actions component', () => {
 
   it('Enables File and Pay button when certify from is valid', async () => {
     store.state.stateModel.certifyState = {
-      certifyFormValid: true,
+      valid: true,
       certifiedBy: 'Some certifier'
     }
     store.state.stateModel.nameRequest = { entityType: 'BC' }
@@ -222,10 +222,9 @@ describe('Actions Filing Functionality', () => {
     expect(mockBuildFiling).toHaveBeenCalled()
     expect(mockBuildFiling).toHaveReturned()
 
-    // verify redirection
-    const baseUrl = 'myhost/cooperatives/NR 1234567'
-
-    expect(window.location.assign).toHaveBeenCalledWith(baseUrl)
+    // also verify event emission
+    const events = wrapper.emitted('goToDashboard')
+    expect(events.length).toBe(1)
   })
 
   it('Calls the saveFiling method with the correct filing structure when onClickSaveResume is called', async () => {
@@ -236,10 +235,9 @@ describe('Actions Filing Functionality', () => {
     expect(mockSaveFiling).toHaveBeenCalledWith(filing, true)
     expect(mockSaveFiling).toHaveReturned()
 
-    // verify redirection
-    const baseUrl = 'myhost/cooperatives/NR 1234567'
-
-    expect(window.location.assign).toHaveBeenCalledWith(baseUrl)
+    // also verify event emission
+    const events = wrapper.emitted('goToDashboard')
+    expect(events.length).toBe(1)
   })
 
   it('Calls the buildFiling method when onClickFilePay is called', async () => {
@@ -273,7 +271,7 @@ describe('Actions Filing Functionality', () => {
     expect(window.location.assign).toHaveBeenCalledWith(baseUrl)
   })
 
-  it('Redirects to Dashboard when onClickCancel is called', async () => {
+  it('Emits "Go To Dashboard" event when onClickCancel is called', async () => {
     const mockBuildFiling = jest.spyOn(wrapper.vm, 'buildFiling')
     const mockSaveFiling = jest.spyOn(wrapper.vm, 'saveFiling')
 
@@ -282,9 +280,8 @@ describe('Actions Filing Functionality', () => {
     expect(mockBuildFiling).not.toHaveBeenCalled()
     expect(mockSaveFiling).not.toHaveBeenCalled()
 
-    // verify redirection
-    const baseUrl = 'myhost/cooperatives/NR 1234567'
-
-    expect(window.location.assign).toHaveBeenCalledWith(baseUrl)
+    // verify event emission
+    const events = wrapper.emitted('goToDashboard')
+    expect(events.length).toBe(1)
   })
 })

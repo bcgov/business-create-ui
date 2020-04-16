@@ -9,23 +9,25 @@ import { stateModel, resourceModel } from './state'
 import { isRoleStaff, isAuthEdit, isAuthView, isEntityType, isTypeBcomp, isTypeCoop,
   isShowBackBtn, isShowReviewConfirmBtn, isShowFilePayBtn, isEnableFilePayBtn, isBusySaving,
   getFilingId, getBusinessIdentifier, getApprovedName, getNameRequestDetails, getNameRequestApplicant,
-  getOfficeAddresses, isApplicationValid, getSteps, getMaxStep, getCurrentDate }
+  getOfficeAddresses, isApplicationValid, getSteps, getMaxStep, getCurrentDate, ignoreChanges,
+  haveChanges }
   from '@/store/getters'
 
 // Mutations
 import { mutateCurrentStep, mutateIsSaving, mutateIsSavingResuming, mutateIsFilingPaying,
-  mutateResource, mutateKeycloakRoles, mutateAuthRoles, mutateCurrentDate,
+  mutateKeycloakRoles, mutateAuthRoles, mutateCurrentDate,
   mutateCertifyStatementResource, mutateCertifyState, mutateBusinessContact, mutateDefineCompanyStepValidity,
   mutateNameRequestState, mutateFilingId, mutateOfficeAddresses, mutateOrgPersonList,
-  mutateAddPeopleAndRoleStepValidity, mutateShareClasses, mutateCreateShareStructureStepValidity }
+  mutateAddPeopleAndRoleStepValidity, mutateShareClasses, mutateCreateShareStructureStepValidity,
+  mutateIgnoreChanges, mutateHaveChanges }
   from '@/store/mutations'
 
 // Actions
-import { setCurrentStep, setIsSaving, setIsSavingResuming, setIsFilingPaying, setResource,
+import { setCurrentStep, setIsSaving, setIsSavingResuming, setIsFilingPaying,
   setKeycloakRoles, setAuthRoles, setCurrentDate, setCertifyStatementResource, setCertifyState,
   setBusinessContact, setDefineCompanyStepValidity, setNameRequestState, setFilingId, setOfficeAddresses,
   setOrgPersonList, setAddPeopleAndRoleStepValidity, setShareClasses,
-  setCreateShareStructureStepValidity } from './actions'
+  setCreateShareStructureStepValidity, setIgnoreChanges, setHaveChanges } from './actions'
 
 /**
  * Configures and returns Vuex Store.
@@ -59,14 +61,15 @@ export function getVuexStore () {
       isApplicationValid,
       getSteps,
       getMaxStep,
-      getCurrentDate
+      getCurrentDate,
+      ignoreChanges,
+      haveChanges
     },
     mutations: {
       mutateCurrentStep,
       mutateIsSaving,
       mutateIsSavingResuming,
       mutateIsFilingPaying,
-      mutateResource,
       mutateKeycloakRoles,
       mutateAuthRoles,
       mutateCurrentDate,
@@ -80,14 +83,15 @@ export function getVuexStore () {
       mutateOrgPersonList,
       mutateAddPeopleAndRoleStepValidity,
       mutateShareClasses,
-      mutateCreateShareStructureStepValidity
+      mutateCreateShareStructureStepValidity,
+      mutateIgnoreChanges,
+      mutateHaveChanges
     },
     actions: {
       setCurrentStep,
       setIsSaving,
       setIsSavingResuming,
       setIsFilingPaying,
-      setResource,
       setKeycloakRoles,
       setAuthRoles,
       setCurrentDate,
@@ -101,7 +105,9 @@ export function getVuexStore () {
       setOrgPersonList,
       setAddPeopleAndRoleStepValidity,
       setShareClasses,
-      setCreateShareStructureStepValidity
+      setCreateShareStructureStepValidity,
+      setIgnoreChanges,
+      setHaveChanges
     }
   })
 

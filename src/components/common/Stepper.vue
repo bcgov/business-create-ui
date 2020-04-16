@@ -1,7 +1,7 @@
 <template>
   <v-container id="step-buttons-container">
     <template v-for="(step, index) in getSteps">
-      <div class="step" v-bind:key="index">
+      <div class="step" :key="index">
         <div class="step__indicator">
           <div class="step__line"></div>
           <v-btn class="step__icon" :id=step.id outlined fab color="primary" :to=step.to :disabled=step.disabled>

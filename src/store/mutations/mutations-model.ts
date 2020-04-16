@@ -1,5 +1,17 @@
 import { CertifyStatementIF, CertifyIF, IncorporationAddressIf, NameRequestIF,
-  ExternalResourceIF, BusinessContactIF, OrgPersonIF, ShareClassIF } from '@/interfaces'
+  BusinessContactIF, OrgPersonIF, ShareClassIF } from '@/interfaces'
+
+export const mutateCertifyStatementResource = (state: any, certifyStatementResource: CertifyStatementIF) => {
+  state.resourceModel.certifyStatementResource = certifyStatementResource
+}
+
+export const mutateKeycloakRoles = (state: any, keyCloakRoles: Array<string>) => {
+  state.stateModel.tombstone.keycloakRoles = keyCloakRoles
+}
+
+export const mutateAuthRoles = (state: any, authRoles: Array<string>) => {
+  state.stateModel.tombstone.authRoles = authRoles
+}
 
 export const mutateCurrentStep = (state: any, currentStep: boolean) => {
   state.stateModel.currentStep = currentStep
@@ -17,32 +29,19 @@ export const mutateIsFilingPaying = (state: any, isFilingPaying: boolean) => {
   state.stateModel.isFilingPaying = isFilingPaying
 }
 
-export const mutateResource = (state: any, resource: ExternalResourceIF) => {
-  state.resourceModel.externalResource = resource
-}
-
-export const mutateKeycloakRoles = (state: any, keyCloakRoles: Array<string>) => {
-  state.stateModel.tombstone.keycloakRoles = keyCloakRoles
-}
-
-export const mutateAuthRoles = (state: any, authRoles: Array<string>) => {
-  state.stateModel.tombstone.authRoles = authRoles
-}
-
 export const mutateCurrentDate = (state: any, currentDate: string) => {
   state.stateModel.currentDate = currentDate
-}
-
-export const mutateCertifyStatementResource = (state: any, certifyStatementResource: CertifyStatementIF) => {
-  state.resourceModel.certifyStatementResource = certifyStatementResource
+  if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
 }
 
 export const mutateCertifyState = (state: any, certifyState: CertifyIF) => {
   state.stateModel.certifyState = certifyState
+  if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
 }
 
 export const mutateBusinessContact = (state: any, businessContact: BusinessContactIF) => {
   state.stateModel.defineCompanyStep.businessContact = businessContact
+  if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
 }
 
 export const mutateDefineCompanyStepValidity = (state: any, validity: boolean) => {
@@ -51,10 +50,12 @@ export const mutateDefineCompanyStepValidity = (state: any, validity: boolean) =
 
 export const mutateOfficeAddresses = (state: any, addresses: IncorporationAddressIf) => {
   state.stateModel.defineCompanyStep.officeAddresses = addresses
+  if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
 }
 
 export const mutateOrgPersonList = (state: any, orgPeople: OrgPersonIF[]) => {
   state.stateModel.addPeopleAndRoleStep.orgPeople = orgPeople
+  if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
 }
 
 export const mutateAddPeopleAndRoleStepValidity = (state: any, validity: boolean) => {
@@ -71,8 +72,17 @@ export const mutateFilingId = (state: any, filingId: number) => {
 
 export const mutateShareClasses = (state: any, shareClasses: ShareClassIF[]) => {
   state.stateModel.createShareStructureStep.shareClasses = shareClasses
+  if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
 }
 
 export const mutateCreateShareStructureStepValidity = (state: any, validity: boolean) => {
   state.stateModel.createShareStructureStep.valid = validity
+}
+
+export const mutateIgnoreChanges = (state: any, ignoreChanges: boolean) => {
+  state.stateModel.ignoreChanges = ignoreChanges
+}
+
+export const mutateHaveChanges = (state: any, haveChanges: boolean) => {
+  state.stateModel.haveChanges = haveChanges
 }

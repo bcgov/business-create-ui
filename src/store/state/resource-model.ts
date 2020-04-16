@@ -1,6 +1,5 @@
 import { ResourceIF } from '@/interfaces'
 
 export const resourceModel: ResourceIF = {
-  certifyStatementResource: null,
-  externalResource: null
+  certifyStatementResource: null
 }

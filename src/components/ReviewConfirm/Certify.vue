@@ -1,6 +1,6 @@
 <template>
   <v-card flat id="step-5-container">
-    <div class="certify-container">
+    <div class="certify-container" v-if="certifyStatementResource">
       <div class="certifiedby-container">
         <label>Legal Name</label>
         <div class="value certifiedby">
@@ -27,7 +27,7 @@
       </v-checkbox>
       <p>
         <ul class="certify-statements">
-          <li v-for="(statement, index) in certifyStatementResource.certifyStatements" v-bind:key="index">
+          <li v-for="(statement, index) in certifyStatementResource.certifyStatements" :key="index">
               {{ statement }}
           </li>
         </ul>
@@ -61,7 +61,7 @@ export default class Certify extends Vue {
   private certifyStatementResource!: CertifyStatementIF
 
   // Properties
-  private isCertified: boolean = false
+  private isCertified: boolean = false // always false initially
 
   /**
    * Lifecycle callback to always give the parent a "valid" event for its property values.
@@ -79,7 +79,7 @@ export default class Certify extends Vue {
     return this.certifiedBy && this.certifiedBy.replace(/\s+/g, ' ').trim()
   }
 
-   @Emit('certifiedByChange')
+   @Emit('certifiedBy')
   private emitCertifiedBy (certifiedBy: string): string {
     // remove repeated inline whitespace, and leading/trailing whitespace
     certifiedBy = certifiedBy && certifiedBy.replace(/\s+/g, ' ').trim()
