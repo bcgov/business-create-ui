@@ -106,7 +106,6 @@ export default class SummaryDefineCompany extends Mixins(EntityFilterMixin) {
 
 .define-company-title {
  padding-left: 0.5rem;
- padding-top: 0.2rem
 }
 
 .company-name {

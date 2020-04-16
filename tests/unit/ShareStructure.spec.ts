@@ -36,17 +36,12 @@ const cancelButtonSelector: string = '#btn-cancel'
 const formSelector: string = '.share-structure-form'
 
 /**
- * Returns the last event for a given name, to be used for testing event propagation in response to component changes.
- *
- * @param wrapper the wrapper for the component that is being tested.
- * @param name the name of the event that is to be returned.
- *
- * @returns the value of the last named event for the wrapper.
+ * Utility method to get around with the timing issues
  */
-function getLastEvent (wrapper: Wrapper<ShareStructure>, name: string): any {
-  const eventsList: Array<any> = wrapper.emitted(name)
-  const events: Array<any> = eventsList[eventsList.length - 1]
-  return events[0]
+async function waitForUpdate (wrapper: Wrapper<Vue>) {
+  await wrapper.vm.$nextTick()
+  await flushPromises()
+  await wrapper.vm.$nextTick()
 }
 
 /**
@@ -211,9 +206,7 @@ describe('ShareStructure', () => {
     const inputElement: Wrapper<Vue> = wrapper.find(nameSelector)
     inputElement.setValue('Class A')
     inputElement.trigger('change')
-    await wrapper.vm.$nextTick()
-    await flushPromises()
-    await wrapper.vm.$nextTick()
+    await waitForUpdate(wrapper)
     expect(wrapper.find(formSelector).text()).toContain('Class name must be unique')
     expect(wrapper.vm.$data.formValid).toBe(false)
     wrapper.destroy()
@@ -228,9 +221,7 @@ describe('ShareStructure', () => {
     const inputElement: Wrapper<Vue> = wrapper.find(nameSelector)
     inputElement.setValue('Series A')
     inputElement.trigger('change')
-    await wrapper.vm.$nextTick()
-    await flushPromises()
-    await wrapper.vm.$nextTick()
+    await waitForUpdate(wrapper)
     expect(wrapper.find(formSelector).text()).toContain('Series name must be unique')
     expect(wrapper.vm.$data.formValid).toBe(false)
     wrapper.destroy()
@@ -243,9 +234,7 @@ describe('ShareStructure', () => {
     const inputElement: Wrapper<Vue> = wrapper.find(nameSelector)
     inputElement.setValue('Class A value')
     inputElement.trigger('change')
-    await wrapper.vm.$nextTick()
-    await flushPromises()
-    await wrapper.vm.$nextTick()
+    await waitForUpdate(wrapper)
     expect(wrapper.find(formSelector).text())
       .toContain('Class name should not contain any of the words share, shares or value')
     expect(wrapper.vm.$data.formValid).toBe(false)
@@ -259,9 +248,7 @@ describe('ShareStructure', () => {
     const inputElement: Wrapper<Vue> = wrapper.find(nameSelector)
     inputElement.setValue('Series A share')
     inputElement.trigger('change')
-    await wrapper.vm.$nextTick()
-    await flushPromises()
-    await wrapper.vm.$nextTick()
+    await waitForUpdate(wrapper)
     expect(wrapper.find(formSelector).text())
       .toContain('Series name should not contain any of the words share or shares')
     expect(wrapper.vm.$data.formValid).toBe(false)
@@ -275,9 +262,7 @@ describe('ShareStructure', () => {
     const inputElement: Wrapper<Vue> = wrapper.find(classParValue)
     inputElement.setValue(-2)
     inputElement.trigger('change')
-    await wrapper.vm.$nextTick()
-    await flushPromises()
-    await wrapper.vm.$nextTick()
+    await waitForUpdate(wrapper)
     expect(wrapper.find(formSelector).text())
       .toContain('Amount must be greater than 0')
     expect(wrapper.vm.$data.formValid).toBe(false)
@@ -291,9 +276,7 @@ describe('ShareStructure', () => {
     const inputElement: Wrapper<Vue> = wrapper.find(classParValue)
     inputElement.setValue(0.1111)
     inputElement.trigger('change')
-    await wrapper.vm.$nextTick()
-    await flushPromises()
-    await wrapper.vm.$nextTick()
+    await waitForUpdate(wrapper)
     expect(wrapper.find(formSelector).text())
       .toContain('Amounts less than 1 can be entered with up to 3 decimal place')
     expect(wrapper.vm.$data.formValid).toBe(false)
@@ -307,9 +290,7 @@ describe('ShareStructure', () => {
     const inputElement: Wrapper<Vue> = wrapper.find(classParValue)
     inputElement.setValue(1.234)
     inputElement.trigger('change')
-    await wrapper.vm.$nextTick()
-    await flushPromises()
-    await wrapper.vm.$nextTick()
+    await waitForUpdate(wrapper)
     expect(wrapper.find(formSelector).text())
       .toContain('Amounts greater than 1 can be entered with up to 2 decimal place')
     expect(wrapper.vm.$data.formValid).toBe(false)
@@ -323,9 +304,7 @@ describe('ShareStructure', () => {
     const inputElement: Wrapper<Vue> = wrapper.find(txtMaxShares)
     inputElement.setValue(0.11)
     inputElement.trigger('change')
-    await wrapper.vm.$nextTick()
-    await flushPromises()
-    await wrapper.vm.$nextTick()
+    await waitForUpdate(wrapper)
     expect(wrapper.find(formSelector).text()).toContain('Must be a number greater than 0')
     expect(wrapper.vm.$data.formValid).toBe(false)
     wrapper.destroy()
@@ -339,9 +318,7 @@ describe('ShareStructure', () => {
     const inputElement: Wrapper<Vue> = wrapper.find(txtMaxShares)
     inputElement.setValue(200)
     inputElement.trigger('change')
-    await wrapper.vm.$nextTick()
-    await flushPromises()
-    await wrapper.vm.$nextTick()
+    await waitForUpdate(wrapper)
     expect(wrapper.find(formSelector).text())
       .toContain('The number for the series (or all series combined, if there are multiple under ' +
       'a class) cannot exceed the number for the class')
@@ -358,9 +335,7 @@ describe('ShareStructure', () => {
     const inputElement: Wrapper<Vue> = wrapper.find(txtMaxShares)
     inputElement.setValue(150)
     inputElement.trigger('change')
-    await wrapper.vm.$nextTick()
-    await flushPromises()
-    await wrapper.vm.$nextTick()
+    await waitForUpdate(wrapper)
     expect(wrapper.find(formSelector).text())
       .toContain('The number for the series (or all series combined, if there are multiple under ' +
       'a class) cannot exceed the number for the class')
