@@ -42,11 +42,11 @@ Vue.use(Vue2Filters)
 fetchConfig()
   .then(async () => {
     // initialize Sentry
+    console.info('Initializaing Sentry...') // eslint-disable-line no-console
     Sentry.init({
       dsn: window['sentryDsn'],
       integrations: [new Integrations.Vue({ Vue, attachProps: true })]
     })
-    console.info('Sentry initialized.')
     // initialize Launch Darkly
     await initLDClient()
 

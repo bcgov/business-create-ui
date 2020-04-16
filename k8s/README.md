@@ -5,12 +5,12 @@
 ### Images
 This repo has implemented github actions to build and push the new image into our *tools* environment in OpenShift when a PR is merged. Significance in OpenShift environment:
 - no build config (image is built already)
-- no build/dev pipeline (image pushed into dev already)
+- no build/dev pipeline (image is tagged to dev already)
 
 You will still need to build the image stream (`oc create imagestream <name>`) and create tags for *dev, test, test-previous, prod and prod-previous* (`oc tag <namespace-tools>/<image name>:<source> <namespace-tools>/<image name>:<destination>`)
 
 ### Deployment Objects
-There are 5 objects you need to create in OpenShift for the UI to run: deployment config, service, route, and config map. By updating the param file values in *bcrs-business-create-ui.dc-srvc-rt-cmap.param* to what you need for the OpenShift environment and running `oc process -f templates/business-create-ui.dc-srvc-rt-cmap-kcmap.json --param-file=business-create-ui.dc-srvc-rt-cmap-kcmap.param  | oc create -f -` you will create all 5 objects.
+There are 5 objects you need to create in OpenShift for the UI to run: deployment config, service, route, config map and keycloak config map. By updating the param file values in *bcrs-business-create-ui.dc-srvc-rt-cmap.param* to what you need for the OpenShift environment and running `oc process -f templates/business-create-ui.dc-srvc-rt-cmap-kcmap.json --param-file=business-create-ui.dc-srvc-rt-cmap-kcmap.param  | oc create -f -` you will create all 5 objects.
 
 ### Build the test/prod pipelines
 
