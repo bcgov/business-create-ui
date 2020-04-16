@@ -1,0 +1,127 @@
+{
+    "kind": "Template",
+    "apiVersion": "v1",
+    "metadata": {
+        "annotations": {
+            "description": "${TEMPLATE_DESCRIPTION}",
+            "tags": "${NAME}-${TAG_NAME}"
+        },
+        "name": "${NAME}-${TAG_NAME}-configmap-template"
+    },
+    "objects": [
+        {
+            "kind": "ConfigMap",
+            "apiVersion": "v1",
+            "data": {
+                "configuration.json": "{\n\"LEGAL_API_URL\":\"${LEGAL_API_URL}\",\n\"AUTH_API_URL\":\"${AUTH_API_URL}\",\n\"BUSINESSES_URL\":\"${BUSINESSES_URL}\",\n\"AUTH_URL\":\"${AUTH_URL}\",\n\"PAY_API_URL\":\"${PAY_API_URL}\",\n\"DASHBOARD_URL\":\"${DASHBOARD_URL}\",\n\"KEYCLOAK_CONFIG_PATH\":\"${KEYCLOAK_CONFIG_PATH}\",\n\"ADDRESS_COMPLETE_KEY\":\"${ADDRESS_COMPLETE_KEY}\",\n\"LD_CLIENT_ID\":\"${LD_CLIENT_ID}\",\n\"SENTRY_DSN\":\"${SENTRY_DSN}\"}"
+            },
+            "metadata": {
+                "name": "${NAME}-${TAG_NAME}-configuration",
+                "labels": {
+                    "app": "${NAME}-${TAG_NAME}",
+                    "app-group": "${APP_GROUP}-${TAG_NAME}"
+                }
+            }
+        }
+    ],
+    "parameters": [
+        {
+            "name": "NAME",
+            "displayName": "Name",
+            "description": "The name assigned to all of the OpenShift resources associated to this app.",
+            "required": true,
+            "value": "business-create-ui"
+        },
+        {
+            "name": "TEMPLATE_DESCRIPTION",
+            "displayName": "DESCRIPTION",
+            "description": "Description of what this deploy template is for.",
+            "required": true,
+            "value": "Template for a config map."
+        },
+        {
+            "name": "APP_GROUP",
+            "displayName": "App Group",
+            "description": "The name assigned to all of the deployments in this project.",
+            "required": true,
+            "value": "business-create"
+        },
+        {
+            "name": "TAG_NAME",
+            "displayName": "Environment TAG name",
+            "description": "The TAG name for this environment, e.g., dev, test, prod, or PR",
+            "required": true,
+            "value": "dev"
+        },
+        {
+            "name": "LEGAL_API_URL",
+            "displayName": "LEGAL API URL",
+            "description": "The URL to the Legal API.",
+            "required": false,
+            "value": ""
+        },
+        {
+            "name": "AUTH_API_URL",
+            "displayName": "Authorization API URL",
+            "description": "The URL to the authorization service API.",
+            "required": false,
+            "value": ""
+        },
+        {
+            "name": "AUTH_URL",
+            "displayName": "Auth URL",
+            "description": "The URL to authenticate with entities.",
+            "required": false,
+            "value": ""
+        },
+        {
+            "name": "BUSINESSES_URL",
+            "displayName": "Businesses Dashboard URL",
+            "description": "The URL to the businesses dashboard.",
+            "required": false,
+            "value": ""
+        },
+        {
+            "name": "PAY_API_URL",
+            "displayName": "Payment API URL",
+            "description": "The URL to the payment API.",
+            "required": false,
+            "value": ""
+        },
+        {
+            "name": "DASHBOARD_URL",
+            "displayName": "Business Dashboard URL",
+            "description": "The URL to the Business Dashboard (Filings UI).",
+            "required": false,
+            "value": ""
+        },
+        {
+            "name": "KEYCLOAK_CONFIG_PATH",
+            "displayName": "Keycloak Config Path",
+            "description": "The path to the Keycloak config file.",
+            "required": false,
+            "value": ""
+        },
+        {
+            "name": "ADDRESS_COMPLETE_KEY",
+            "displayName": "AddressComplete Key",
+            "description": "The access key to the Canada Post AddressComplete service.",
+            "required": false,
+            "value": ""
+        },
+        {
+            "name": "LD_CLIENT_ID",
+            "displayName": "LaunchDarkly client id",
+            "description": "The LaunchDarkly client id.",
+            "required": false,
+            "value": ""
+        },
+        {
+            "name": "SENTRY_DSN",
+            "displayName": "Sentry DSN",
+            "description": "DSN for sentry intitialization.",
+            "required": false,
+            "value": ""
+        }
+    ]
+}

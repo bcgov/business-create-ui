@@ -1,0 +1,19 @@
+#=========================================================
+# Template parameters for:
+# Project: business-create-ui
+# Component: config map
+# Action: build
+# Template File: templates/business-create-ui.cmap.json
+#=========================================================
+NAME="business-create"
+TAG_NAME="dev"
+LEGAL_API_URL="https://legal-api-dev.pathfinder.gov.bc.ca/api/v1/businesses/"
+AUTH_API_URL="https://auth-api-dev.pathfinder.gov.bc.ca/api/v1/"
+BUSINESSES_URL="https://dev.bcregistry.ca/cooperatives/auth/"
+AUTH_URL="https://dev.bcregistry.ca/cooperatives/auth/"
+PAY_API_URL="https://pay-api-dev.pathfinder.gov.bc.ca/api/v1/"
+DASHBOARD_URL="https://dev.bcregistry.ca/cooperatives/"
+KEYCLOAK_CONFIG_PATH="https://dev.bcregistry.ca/cooperatives/auth/config/kc/keycloak.json"
+ADDRESS_COMPLETE_KEY="xxxx-xxxx-xxxx-xxxx"
+LD_CLIENT_ID=""
+SENTRY_DSN=""

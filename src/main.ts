@@ -11,6 +11,8 @@ import { getVuexStore } from '@/store'
 import Affix from 'vue-affix'
 import Vue2Filters from 'vue2-filters' // needed by SbcFeeSummary
 import { featureFlags, initLDClient } from '@/common/FeatureFlags'
+import * as Sentry from '@sentry/browser'
+import * as Integrations from '@sentry/integrations'
 
 // Styles
 // NB: order matters - do not change
@@ -39,6 +41,12 @@ Vue.use(Vue2Filters)
 //
 fetchConfig()
   .then(async () => {
+    // initialize Sentry
+    console.info('Initializaing Sentry...') // eslint-disable-line no-console
+    Sentry.init({
+      dsn: window['sentryDsn'],
+      integrations: [new Integrations.Vue({ Vue, attachProps: true })]
+    })
     // initialize Launch Darkly
     await initLDClient()
 
