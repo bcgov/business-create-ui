@@ -198,7 +198,7 @@ describe('Certify', () => {
     inputElement.setValue(trimmedCertifier)
 
     // The last "update:certifiedBy" event should match the input.
-    expect(getLastEvent(wrapper, 'certifiedByChange')).toMatch(trimmedCertifier)
+    expect(getLastEvent(wrapper, 'certifiedBy')).toMatch(trimmedCertifier)
   })
 
   it('has update event for trimmed certifiedBy', () => {
@@ -206,15 +206,28 @@ describe('Certify', () => {
     const inputElement: Wrapper<Vue> = wrapper.find(certifiedBySelector)
     inputElement.setValue(whitespaceCertifier)
     // The last "update:certifiedBy" event should be a trimmed version of the input.
-    expect(getLastEvent(wrapper, 'certifiedByChange')).toMatch(trimmedCertifier)
+    expect(getLastEvent(wrapper, 'certifiedBy')).toMatch(trimmedCertifier)
   })
 
-  it('has update event for isCertified', () => {
+  it('has update event for isCertified = true', () => {
     const wrapper: Wrapper<Certify> = createComponent()
     const checkboxElement: Wrapper<Vue> = wrapper.find(isCertifiedSelector)
-    checkboxElement.setChecked()
+    // toggle checkbox to guarantee a change event
+    checkboxElement.setChecked(false)
+    checkboxElement.setChecked(true)
 
     // The last "update:isCertified" event should indicate that the checkbox is checked.
     expect(getLastEvent(wrapper, 'isCertified')).toBe(true)
+  })
+
+  it('has update event for isCertified = false', () => {
+    const wrapper: Wrapper<Certify> = createComponent()
+    const checkboxElement: Wrapper<Vue> = wrapper.find(isCertifiedSelector)
+    // toggle checkbox to guarantee a change event
+    checkboxElement.setChecked(true)
+    checkboxElement.setChecked(false)
+
+    // The last "update:isCertified" event should indicate that the checkbox is unchecked.
+    expect(getLastEvent(wrapper, 'isCertified')).toBe(false)
   })
 })

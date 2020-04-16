@@ -1,7 +1,6 @@
 // Utils Interfaces
-export * from './resource-interfaces/resource-interface'
-export * from './utils-interfaces/form-interface'
-export * from './utils-interfaces/dialog-interface'
+export * from './utils-interfaces/form-type'
+export * from './utils-interfaces/confirm-dialog-type'
 
 // Store Interfaces
 export * from './store-interfaces/state-interface'
@@ -26,4 +25,4 @@ export * from './stepper-interfaces/AddPeopleAndRole/roles-array-interface'
 
 // Others
 export * from './resource-interfaces/component-resource-interfaces/certifyStatement-interface'
-export * from './resource-interfaces/ExternalResourceIF'
+export * from './resource-interfaces/resource-interface'

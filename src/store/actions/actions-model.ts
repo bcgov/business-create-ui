@@ -16,10 +16,6 @@ export const setIsFilingPaying: ActionIF = ({ commit }, isFilingPaying): void =>
   commit('mutateIsFilingPaying', isFilingPaying)
 }
 
-export const setResource: ActionIF = ({ commit }, resource): void => {
-  commit('mutateResource', resource)
-}
-
 export const setKeycloakRoles: ActionIF = ({ commit }, keycloakRoles): void => {
   commit('mutateKeycloakRoles', keycloakRoles)
 }
@@ -74,4 +70,12 @@ export const setShareClasses = ({ commit }, shareClasses) => {
 
 export const setCreateShareStructureStepValidity = ({ commit }, validity) => {
   commit('mutateCreateShareStructureStepValidity', validity)
+}
+
+export const setIgnoreChanges: ActionIF = ({ commit }, ignoreChanges): void => {
+  commit('mutateIgnoreChanges', ignoreChanges)
+}
+
+export const setHaveChanges: ActionIF = ({ commit }, haveChanges): void => {
+  commit('mutateHaveChanges', haveChanges)
 }

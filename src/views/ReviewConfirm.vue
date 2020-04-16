@@ -13,8 +13,8 @@
       </header>
       <Certify
         :certifiedBy="certifyState.certifiedBy"
-        @valid="onCertifyFormValidChange($event)"
-        @certifiedByChange="onCertifiedByChange($event)"
+        @valid="onValid($event)"
+        @certifiedBy="onCertifiedBy($event)"
         :date="currentDate"
         :certifyStatementResource="certifyStatementResource"
       />
@@ -24,7 +24,7 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Mixins } from 'vue-property-decorator'
+import { Component, Mixins, Vue } from 'vue-property-decorator'
 import { State, Action } from 'vuex-class'
 
 // Interfaces
@@ -33,16 +33,13 @@ import { CertifyStatementIF, ActionBindingIF, CertifyIF } from '@/interfaces'
 // Components
 import { Certify, Summary } from '@/components/ReviewConfirm'
 
-// Mixins
-import { ResourceLookupMixin } from '@/mixins'
-
 @Component({
   components: {
     Certify,
     Summary
   }
 })
-export default class ReviewConfirm extends Mixins(ResourceLookupMixin) {
+export default class ReviewConfirm extends Mixins() {
   @State(state => state.stateModel.currentDate)
   readonly currentDate!: string
 
@@ -53,20 +50,32 @@ export default class ReviewConfirm extends Mixins(ResourceLookupMixin) {
   readonly certifyStatementResource!: CertifyStatementIF
 
   @Action setCertifyState!: ActionBindingIF
+  @Action setIgnoreChanges!: ActionBindingIF
 
-  private onCertifyFormValidChange (val: boolean): void {
+  /** Called when component is created. */
+  private created (): void {
+    // ignore data changes until page has loaded
+    this.setIgnoreChanges(true)
+    Vue.nextTick(() => {
+      this.setIgnoreChanges(false)
+    })
+  }
+
+  /** Handler for Valid change event. */
+  private onValid (val: boolean): void {
     this.setCertifyState(
       {
-        certifyFormValid: val,
+        valid: val,
         certifiedBy: this.certifyState.certifiedBy
       }
     )
   }
 
-  private onCertifiedByChange (val: string): void {
+  /** Handler for CertifiedBy change event. */
+  private onCertifiedBy (val: string): void {
     this.setCertifyState(
       {
-        certifyFormValid: this.certifyState.certifyFormValid,
+        valid: this.certifyState.valid,
         certifiedBy: val
       }
     )

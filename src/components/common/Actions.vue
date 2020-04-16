@@ -53,7 +53,7 @@
         </v-btn>
       </v-fade-transition>
 
-      <v-btn id="cancels-btn" large
+      <v-btn id="app-cancel-btn" large
         :disabled="isBusySaving"
         @click="onClickCancel()"
       >
@@ -66,7 +66,7 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Mixins } from 'vue-property-decorator'
+import { Component, Mixins, Emit } from 'vue-property-decorator'
 import { State, Getter, Action } from 'vuex-class'
 
 // Interfaces
@@ -75,7 +75,7 @@ import { StateModelIF, GetterIF, ActionBindingIF } from '@/interfaces'
 // Mixins
 import { FilingTemplateMixin, LegalApiMixin } from '@/mixins'
 
-@Component
+@Component({})
 export default class Actions extends Mixins(FilingTemplateMixin, LegalApiMixin) {
   // Global state
   @State stateModel!: StateModelIF
@@ -94,21 +94,11 @@ export default class Actions extends Mixins(FilingTemplateMixin, LegalApiMixin) 
   @Action setIsSaving!: ActionBindingIF
   @Action setIsSavingResuming!: ActionBindingIF
   @Action setIsFilingPaying!: ActionBindingIF
-
-  /** The URL to the Authentication site. */
-  private get authUrl (): string {
-    return sessionStorage.getItem('AUTH_URL')
-  }
-
-  /** The URL to the Business Dashboard. */
-  private get dashboardUrl (): string {
-    return sessionStorage.getItem('DASHBOARD_URL')
-  }
+  @Action setHaveChanges!: ActionBindingIF
 
   /** Called when Cancel button is clicked. */
   private onClickCancel (): void {
-    // FUTURE: need check for unsaved data
-    this.redirectToDashboard()
+    this.emitGoToDashboard()
   }
 
   /**
@@ -125,6 +115,8 @@ export default class Actions extends Mixins(FilingTemplateMixin, LegalApiMixin) 
     try {
       const filing = await this.buildFiling()
       filingComplete = await this.saveFiling(filing, true)
+      // reset flag
+      this.setHaveChanges(false)
     } catch (e) {
       // TODO: Trigger some error dialog. Will catch any errors from the API calls.
     }
@@ -146,12 +138,14 @@ export default class Actions extends Mixins(FilingTemplateMixin, LegalApiMixin) 
     try {
       const filing = await this.buildFiling()
       filingComplete = await this.saveFiling(filing, true)
+      // reset flag
+      this.setHaveChanges(false)
     } catch (e) {
       // TODO: Trigger some error dialog. Will catch any errors from the API calls.
     }
 
     this.setIsSavingResuming(false)
-    this.redirectToDashboard()
+    this.emitGoToDashboard()
   }
 
   /**
@@ -168,6 +162,8 @@ export default class Actions extends Mixins(FilingTemplateMixin, LegalApiMixin) 
     try {
       const filing = await this.buildFiling()
       filingComplete = await this.saveFiling(filing, false)
+      // reset flag
+      this.setHaveChanges(false)
     } catch (e) {
       // TODO: Trigger some error dialog. Will catch any errors from the API calls.
     }
@@ -176,32 +172,34 @@ export default class Actions extends Mixins(FilingTemplateMixin, LegalApiMixin) 
 
     const paymentToken = filingComplete?.header?.paymentToken
     if (paymentToken) {
+      // redirect to pay and return to the dashboard
+      const authUrl = sessionStorage.getItem('AUTH_URL')
+      const dashboardUrl = sessionStorage.getItem('DASHBOARD_URL')
       const queryNrNumber = this.$route.query.nrNumber as string
-      const returnURL = encodeURIComponent(this.dashboardUrl + queryNrNumber)
-      const payURL = this.authUrl + 'makepayment/' + paymentToken + '/' + returnURL
+      const returnUrl = encodeURIComponent(dashboardUrl + queryNrNumber)
+      const payUrl = authUrl + 'makepayment/' + paymentToken + '/' + returnUrl
 
       // assume Pay URL is always reachable
       // otherwise user will have to retry payment later
-      window.location.assign(payURL)
+      window.location.assign(payUrl)
     } else {
       // TODO: Trigger some error dialog.
     }
   }
 
-  // TODO: should this be a getter or a function?
-  /** Route to next step. */
+  /** The route to the next step. */
   private get nextRoute (): string | undefined {
     const nextStep = this.next()
     return nextStep?.to || null
   }
 
-  /** Label for Next button. */
+  /** Label for the Next button. */
   private get nextButtonLabel (): string {
     const nextStep = this.next()
     return nextStep ? nextStep.text.replace('\n', ' ') : ''
   }
 
-  /** Returns next step. */
+  /** Returns the next step. */
   private next (): any {
     const currentStep: number | undefined = this.$router.currentRoute.meta?.step
     if (currentStep && currentStep < this.getMaxStep) {
@@ -210,13 +208,13 @@ export default class Actions extends Mixins(FilingTemplateMixin, LegalApiMixin) 
     return null
   }
 
-  /** Route to previous step. */
+  /** The route to the previous step. */
   private get previousRoute (): string | undefined {
     const prevStep = this.prev()
     return prevStep?.to || null
   }
 
-  /** Returns previous step. */
+  /** Returns the previous step. */
   private prev (): any {
     const currentStep: number | undefined = this.$router.currentRoute.meta?.step
     if (currentStep && currentStep > 1) {
@@ -225,11 +223,9 @@ export default class Actions extends Mixins(FilingTemplateMixin, LegalApiMixin) 
     return null
   }
 
-  /** Redirects to dashboard URL. */
-  private redirectToDashboard (): void {
-    const queryNrNumber = this.$route.query.nrNumber as string
-    window.location.assign(this.dashboardUrl + queryNrNumber)
-  }
+  /** Emits Go To Dashboard event. */
+  @Emit('goToDashboard')
+  private emitGoToDashboard (): void { }
 }
 </script>
 

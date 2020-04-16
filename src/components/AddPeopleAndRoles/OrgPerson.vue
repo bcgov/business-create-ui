@@ -1,7 +1,7 @@
 <template>
   <div>
 
-    <confirm-dialog ref="reassignCPDialog" attach="#addEditPersonContainer"/>
+    <confirm-dialog ref="reassignCPDialog" attach="#addEditPersonContainer" />
 
     <v-expand-transition id="addEditPersonContainer">
       <ul class="list add-person">
@@ -142,7 +142,7 @@
 import { Component, Prop, Emit, Mixins } from 'vue-property-decorator'
 
 // Interfaces
-import { OrgPersonIF, BaseAddressType, FormType, AddressIF, DialogType, RolesIF } from '@/interfaces'
+import { OrgPersonIF, BaseAddressType, FormType, AddressIF, ConfirmDialogType, RolesIF } from '@/interfaces'
 
 // Components
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
@@ -170,7 +170,7 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
     addPersonOrgForm: FormType,
     mailingAddressNew: BaseAddressType,
     deliveryAddressNew: BaseAddressType,
-    reassignCPDialog: DialogType
+    reassignCPDialog: ConfirmDialogType
   }
 
   // Props

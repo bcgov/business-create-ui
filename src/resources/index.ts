@@ -1,6 +1,2 @@
 
-import { CertifyStatementResource } from './certifyStatementResource'
-
-export {
-  CertifyStatementResource
-}
+export * from './certifyStatementResource'

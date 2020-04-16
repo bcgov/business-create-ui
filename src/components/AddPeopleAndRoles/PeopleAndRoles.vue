@@ -142,7 +142,7 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
   readonly Roles = Roles
   readonly IncorporatorTypes = IncorporatorTypes
 
-  mounted (): void {
+  private mounted (): void {
     this.setAddPeopleAndRoleStepValidity(this.hasValidRoles())
   }
 
