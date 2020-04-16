@@ -2,7 +2,7 @@
 import Vue from 'vue'
 import Vuelidate from 'vuelidate'
 import Vuetify from 'vuetify'
-import flushPromises from 'flush-promises'
+import { getVuexStore } from '@/store'
 
 // Utils
 import { createLocalVue, mount } from '@vue/test-utils'
@@ -12,9 +12,13 @@ import { ListShareClass } from '@/components/CreateShareStructure'
 
 Vue.use(Vuetify)
 Vue.use(Vuelidate)
+const vuetify = new Vuetify({})
+const localVue = createLocalVue()
+
+// Store
+const store = getVuexStore()
 
 describe('List Shares and Series', () => {
-  let vuetify
   let wrapper
 
   const shareClasses = [
@@ -86,12 +90,10 @@ describe('List Shares and Series', () => {
     }]
 
   beforeEach(() => {
-    const localVue = createLocalVue()
-    vuetify = new Vuetify({})
-
     wrapper = mount(ListShareClass, {
       localVue,
       vuetify,
+      store,
       propsData: {
         shareClasses: shareClasses
       }
@@ -152,5 +154,32 @@ describe('List Shares and Series', () => {
     expect(seriesListItem2.querySelectorAll('td')[2].textContent).toContain('No Par Value')
     expect(seriesListItem2.querySelectorAll('td')[3].textContent).toContain('')
     expect(seriesListItem2.querySelectorAll('td')[4].textContent).toContain('No')
+  })
+
+  it('assigns the correct data for ShareClasses after moving an item', async () => {
+    // Validate the Class values pre move
+    expect(wrapper.vm.$props.shareClasses[0].name).toBe('Common Shares')
+    expect(wrapper.vm.$props.shareClasses[1].name).toBe('Non-voting Shares')
+
+    // Validate the Series values pre move
+    expect(wrapper.vm.$props.shareClasses[0].series[0].name).toBe('Share Series 1')
+    expect(wrapper.vm.$props.shareClasses[0].series[1].name).toBe('Share Series 2')
+
+    // Identify and click the dropdown menu
+    const dropDownMenu = wrapper.find('.actions__more-actions__btn')
+    await dropDownMenu.trigger('click')
+
+    expect(wrapper.find('.move-up-selector').exists()).toBe(true)
+    expect(wrapper.find('.move-down-selector').exists()).toBe(true)
+
+    const moveDown = wrapper.find('.move-down-selector')
+    await moveDown.trigger('click')
+
+    // Validate class data post move
+    expect(wrapper.vm.$props.shareClasses[0].name).toBe('Non-voting Shares')
+    expect(wrapper.vm.$props.shareClasses[1].name).toBe('Common Shares')
+
+    // Validate series data post move
+    expect(wrapper.vm.$props.shareClasses[0].series[0].name).toBe('Share Series 3')
   })
 })
