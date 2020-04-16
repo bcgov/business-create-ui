@@ -43,7 +43,7 @@
             <div class="actions">
               <span class="edit-action">
                 <v-btn small text color="primary"
-                 :id="'Class-' + row.index + '-change-btn'"
+                 :id="'class-' + row.index + '-change-btn'"
                  @click="emitShareClass(row.index)"
                  :disabled="componentDisabled">
                   <v-icon small>mdi-pencil</v-icon>
@@ -76,7 +76,9 @@
                       @click="moveIndex(row.index, 'up')"
                       :disabled="isMoveDisabled(row.index, 'up')"
                     >
-                      <v-list-item-subtitle><v-icon>mdi-arrow-up</v-icon> Move Up</v-list-item-subtitle>
+                      <v-list-item-subtitle class="move-up-selector">
+                        <v-icon>mdi-arrow-up</v-icon> Move Up
+                      </v-list-item-subtitle>
                     </v-list-item>
                     <v-list-item
                       class="actions-dropdown_item"
@@ -84,7 +86,9 @@
                       @click="moveIndex(row.index, 'down')"
                       :disabled="isMoveDisabled(row.index, 'down')"
                     >
-                      <v-list-item-subtitle><v-icon>mdi-arrow-down</v-icon> Move Down</v-list-item-subtitle>
+                      <v-list-item-subtitle class="move-down-selector">
+                        <v-icon>mdi-arrow-down</v-icon> Move Down
+                      </v-list-item-subtitle>
                     </v-list-item>
                     <v-list-item class="actions-dropdown_item" @click="emitRemoveClass(row.index)">
                       <v-list-item-subtitle><v-icon>mdi-delete</v-icon> Remove</v-list-item-subtitle>
@@ -137,7 +141,9 @@
                         @click="moveIndex(row.index, 'up', index)"
                         :disabled="isMoveDisabled(row.index, 'up', index)"
                       >
-                        <v-list-item-subtitle><v-icon>mdi-arrow-up</v-icon> Move Up</v-list-item-subtitle>
+                        <v-list-item-subtitle class="move-up-selector">
+                          <v-icon>mdi-arrow-up</v-icon> Move Up
+                        </v-list-item-subtitle>
                       </v-list-item>
                       <v-list-item
                         class="actions-dropdown_item"
@@ -145,7 +151,9 @@
                         @click="moveIndex(row.index, 'down', index)"
                         :disabled="isMoveDisabled(row.index, 'down', index)"
                       >
-                        <v-list-item-subtitle><v-icon>mdi-arrow-down</v-icon> Move Down</v-list-item-subtitle>
+                        <v-list-item-subtitle class="move-down-selector">
+                          <v-icon>mdi-arrow-down</v-icon> Move Down
+                        </v-list-item-subtitle>
                       </v-list-item>
                       <v-list-item class="actions-dropdown_item" @click="emitRemoveSeries(row.index, index)">
                         <v-list-item-subtitle><v-icon>mdi-delete</v-icon> Remove</v-list-item-subtitle>
