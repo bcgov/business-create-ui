@@ -24,7 +24,7 @@ describe('List Shares and Series', () => {
       priority: 0,
       maxNumberOfShares: 10000,
       parValue: 1.58,
-      currency: 'Canadian Dollar ($CDN)',
+      currency: 'CAD',
       hasRightsOrRestrictions: true,
       series: [
         {
@@ -70,7 +70,7 @@ describe('List Shares and Series', () => {
       priority: 2,
       maxNumberOfShares: 10000,
       parValue: 0.568,
-      currency: 'Canadian Dollar ($CDN)',
+      currency: 'CAD',
       hasRightsOrRestrictions: true,
       series: []
     },
@@ -122,15 +122,15 @@ describe('List Shares and Series', () => {
     const classListItem1 = wrapper.vm.$el.querySelectorAll('.v-data-table .class-row')[2]
 
     expect(classListItem1.querySelectorAll('td')[0].textContent).toContain('Common Shares 2')
-    expect(classListItem1.querySelectorAll('td')[1].textContent).toContain(10000)
+    expect(classListItem1.querySelectorAll('td')[1].textContent).toContain('10,000')
     expect(classListItem1.querySelectorAll('td')[2].textContent).toContain('0.568')
-    expect(classListItem1.querySelectorAll('td')[3].textContent).toContain('Canadian Dollar ($CDN)')
+    expect(classListItem1.querySelectorAll('td')[3].textContent).toContain('CAD')
     expect(classListItem1.querySelectorAll('td')[4].textContent).toContain('Yes')
 
     const classListItem2 = wrapper.vm.$el.querySelectorAll('.v-data-table .class-row')[3]
 
     expect(classListItem2.querySelectorAll('td')[0].textContent).toContain('Non-voting Shares 2')
-    expect(classListItem2.querySelectorAll('td')[1].textContent).toContain(1000)
+    expect(classListItem2.querySelectorAll('td')[1].textContent).toContain('1,000')
     expect(classListItem2.querySelectorAll('td')[2].textContent).toContain('No Par Value')
     expect(classListItem2.querySelectorAll('td')[3].textContent).toContain('')
     expect(classListItem2.querySelectorAll('td')[4].textContent).toContain('No')
@@ -142,7 +142,7 @@ describe('List Shares and Series', () => {
     expect(seriesListItem1.querySelectorAll('td')[0].textContent).toContain('Share Series 2')
     expect(seriesListItem1.querySelectorAll('td')[1].textContent).toContain(100)
     expect(seriesListItem1.querySelectorAll('td')[2].textContent).toContain('1.58')
-    expect(seriesListItem1.querySelectorAll('td')[3].textContent).toContain('Canadian Dollar ($CDN)')
+    expect(seriesListItem1.querySelectorAll('td')[3].textContent).toContain('CAD')
     expect(seriesListItem1.querySelectorAll('td')[4].textContent).toContain('No')
 
     const seriesListItem2 = wrapper.vm.$el.querySelectorAll('.v-data-table .series-row')[2]

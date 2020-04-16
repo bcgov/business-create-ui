@@ -33,7 +33,7 @@
         <!-- Share Class Rows-->
         <tr :key="row.item.id" class="class-row" :class="{ 'class-row-has-series': row.item.series.length}">
           <td class="list-item__title">{{row.item.name}}</td>
-          <td>{{row.item.maxNumberOfShares || 'No Maximum'}}</td>
+          <td>{{row.item.maxNumberOfShares ? (+row.item.maxNumberOfShares).toLocaleString() : 'No Maximum'}}</td>
           <td>{{row.item.parValue ? row.item.parValue : 'No Par Value'}}</td>
           <td>{{row.item.currency}}</td>
           <td>{{row.item.hasRightsOrRestrictions ? 'Yes' : 'No'}}</td>
@@ -102,7 +102,8 @@
             :class="{ 'series-row-last': index === row.item.series.length - 1}"
         >
           <td class="series-name"><span>{{seriesItem.name}}</span></td>
-          <td>{{seriesItem.maxNumberOfShares || 'No Maximum'}}</td>
+          <td>{{seriesItem.maxNumberOfShares ? (+seriesItem.maxNumberOfShares).toLocaleString()
+            : 'No Maximum'}}</td>
           <td>{{row.item.parValue ? row.item.parValue : 'No Par Value'}}</td>
           <td>{{row.item.currency}}</td>
           <td>{{seriesItem.hasRightsOrRestrictions ? 'Yes' : 'No'}}</td>
