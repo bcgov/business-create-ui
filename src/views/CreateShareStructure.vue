@@ -10,7 +10,7 @@
 
     <!-- Help Section -->
     <span class="help-btn" @click="helpToggle = !helpToggle">
-      <v-icon color="#1976d2" style="padding-right: 5px">mdi-help-circle-outline</v-icon>
+      <v-icon color="blue darken-2" style="padding-right: 5px">mdi-help-circle-outline</v-icon>
       <span v-if="!helpToggle">Help with Share Structure</span>
       <span v-else>Hide Help</span>
     </span>
@@ -71,13 +71,13 @@
         @resetEvent="resetData()"/>
     </v-card>
     <ListShareClass v-if="this.shareClasses.length > 0"
-    :shareClasses="shareClasses"
-    :componentDisabled="showShareStructureForm"
-    @editClass="initShareClassForEdit($event)"
-    @removeClass="removeShareClass($event)"
-    @addSeries="initNewShareSeries($event)"
-    @editSeries="editSeries"
-    @removeSeries="removeSeries"/>
+      :shareClasses="shareClasses"
+      :componentDisabled="showShareStructureForm"
+      @editClass="initShareClassForEdit($event)"
+      @removeClass="removeShareClass($event)"
+      @addSeries="initNewShareSeries($event)"
+      @editSeries="editSeries"
+      @removeSeries="removeSeries"/>
   </section>
 </template>
 
@@ -306,7 +306,7 @@ p{
 }
 
 .btn-panel {
-  padding: 2rem 0 2rem 0;
+  padding: 2rem 0;
 }
 
 .help-btn {

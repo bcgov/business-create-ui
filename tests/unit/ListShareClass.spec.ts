@@ -23,7 +23,7 @@ describe('List Shares and Series', () => {
       name: 'Common Shares',
       priority: 0,
       maxNumberOfShares: 10000,
-      parValue: 1.00,
+      parValue: 1.58,
       currency: 'Canadian Dollar ($CDN)',
       hasRightsOrRestrictions: true,
       series: [
@@ -69,7 +69,7 @@ describe('List Shares and Series', () => {
       name: 'Common Shares 2',
       priority: 2,
       maxNumberOfShares: 10000,
-      parValue: 1.00,
+      parValue: 0.568,
       currency: 'Canadian Dollar ($CDN)',
       hasRightsOrRestrictions: true,
       series: []
@@ -123,7 +123,7 @@ describe('List Shares and Series', () => {
 
     expect(classListItem1.querySelectorAll('td')[0].textContent).toContain('Common Shares 2')
     expect(classListItem1.querySelectorAll('td')[1].textContent).toContain(10000)
-    expect(classListItem1.querySelectorAll('td')[2].textContent).toContain('$1')
+    expect(classListItem1.querySelectorAll('td')[2].textContent).toContain('0.568')
     expect(classListItem1.querySelectorAll('td')[3].textContent).toContain('Canadian Dollar ($CDN)')
     expect(classListItem1.querySelectorAll('td')[4].textContent).toContain('Yes')
 
@@ -141,7 +141,7 @@ describe('List Shares and Series', () => {
 
     expect(seriesListItem1.querySelectorAll('td')[0].textContent).toContain('Share Series 2')
     expect(seriesListItem1.querySelectorAll('td')[1].textContent).toContain(100)
-    expect(seriesListItem1.querySelectorAll('td')[2].textContent).toContain('$1.00')
+    expect(seriesListItem1.querySelectorAll('td')[2].textContent).toContain('1.58')
     expect(seriesListItem1.querySelectorAll('td')[3].textContent).toContain('Canadian Dollar ($CDN)')
     expect(seriesListItem1.querySelectorAll('td')[4].textContent).toContain('No')
 

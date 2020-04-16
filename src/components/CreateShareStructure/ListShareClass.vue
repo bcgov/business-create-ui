@@ -12,7 +12,7 @@
       <!-- Summary Warning -->
       <div v-if="showErrorSummary" class="share-summary-invalid-message">
         <span>
-          <v-icon color="#1976d2">mdi-information-outline</v-icon>
+          <v-icon color="blue darken-2">mdi-information-outline</v-icon>
           This step is not complete.
           <router-link id="router-link" :to="{ path: '/create-share-structure', query: { showErrors: true } }">
             Return to this step to complete it.
@@ -24,9 +24,9 @@
     <v-data-table
       :headers="headers"
       :items="shareClasses"
-      :disable-pagination="true"
-      :disable-sort="true"
-      :hide-default-footer="true"
+      disable-pagination
+      disable-sort
+      hide-default-footer
     >
       <template v-slot:item="row" class="share-data-table">
 
@@ -34,7 +34,7 @@
         <tr :key="row.item.id" class="class-row" :class="{ 'class-row-has-series': row.item.series.length}">
           <td class="list-item__title">{{row.item.name}}</td>
           <td>{{row.item.maxNumberOfShares || 'No Maximum'}}</td>
-          <td>{{row.item.parValue ? `$${row.item.parValue}` : 'No Par Value'}}</td>
+          <td>{{row.item.parValue ? row.item.parValue : 'No Par Value'}}</td>
           <td>{{row.item.currency}}</td>
           <td>{{row.item.hasRightsOrRestrictions ? 'Yes' : 'No'}}</td>
 
@@ -43,7 +43,7 @@
             <div class="actions">
               <span class="edit-action">
                 <v-btn small text color="primary"
-                 :id="'Class-' + row.index + '-change-btn'"
+                 :id="'class-' + row.index + '-change-btn'"
                  @click="emitShareClass(row.index)"
                  :disabled="componentDisabled">
                   <v-icon small>mdi-pencil</v-icon>
@@ -97,13 +97,13 @@
         </tr>
 
         <!-- Share Series rows -->
-        <tr v-for="(seriesItem, index) in row.item.series" :key="`Class:${row.index}-Series:${index}`"
+        <tr v-for="(seriesItem, index) in row.item.series" :key="`class:${row.index}-Series:${index}`"
             class="series-row"
             :class="{ 'series-row-last': index === row.item.series.length - 1}"
         >
           <td class="series-name"><span>{{seriesItem.name}}</span></td>
           <td>{{seriesItem.maxNumberOfShares || 'No Maximum'}}</td>
-          <td>{{row.item.parValue ? `$${row.item.parValue}.00` : 'No Par Value'}}</td>
+          <td>{{row.item.parValue ? row.item.parValue : 'No Par Value'}}</td>
           <td>{{row.item.currency}}</td>
           <td>{{seriesItem.hasRightsOrRestrictions ? 'Yes' : 'No'}}</td>
 
@@ -112,7 +112,7 @@
             <div class="actions">
               <span class="edit-action">
                 <v-btn small text color="primary"
-                   :id="'Series-' + index + '-change-btn'"
+                   :id="'series-' + index + '-change-btn'"
                    @click="emitShareSeries(row.index, index)"
                 >
                   <v-icon small>mdi-pencil</v-icon>
@@ -166,15 +166,7 @@
 import { Component, Prop, Vue, Emit } from 'vue-property-decorator'
 import 'array.prototype.move'
 
-// Components
-
-// Dialogs
-
-// Mixins
-
-// Interfaces
-
-    @Component({})
+@Component({})
 export default class ListShareClass extends Vue {
   @Prop({ default: () => [] })
   private shareClasses: any
