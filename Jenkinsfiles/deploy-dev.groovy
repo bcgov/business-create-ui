@@ -53,7 +53,7 @@ node {
         script {
             openshift.withCluster() {
                 openshift.withProject("${NAMESPACE}-${DEPLOY_TAG}") {
-                    old_version = openshift.selector('dc', "${COMPONENT_NAME}").object().status.latestVersion
+                    old_version = openshift.selector('dc', "${COMPONENT_NAME}-${DEPLOY_TAG}").object().status.latestVersion
                 }
             }
             openshift.withCluster() {
@@ -81,7 +81,7 @@ node {
         script {
             openshift.withCluster() {
                 openshift.withProject("${NAMESPACE}-${DEPLOY_TAG}") {
-                    def new_version = openshift.selector('dc', "${COMPONENT_NAME}").object().status.latestVersion
+                    def new_version = openshift.selector('dc', "${COMPONENT_NAME}-${DEPLOY_TAG}").object().status.latestVersion
                     if (new_version == old_version) {
                         echo "New deployment was not triggered."
                         currentBuild.result = "FAILURE"
