@@ -365,4 +365,17 @@ describe('ShareStructure', () => {
     expect(wrapper.find('#lbl-no-maximum').exists()).toBe(false)
     wrapper.destroy()
   })
+
+  it('Currency dropdown loads and model change is reflected in the drop down selection', async () => {
+    const shareClass = createShareStructure(null, 1, 'Class', 'Class A', true, 100, true, 0.50, 'CAD', true)
+    const wrapper: Wrapper<ShareStructure> = createComponent(shareClass, 0, -1, 0, [])
+    const items = wrapper.find('.v-select').props('items')
+    expect(items.length).toBe(157)
+    expect(wrapper.vm.$data.shareStructure.currency).toBe('CAD')
+    expect(wrapper.find('.v-select').text()).toContain('Canadian dollar (CAD)')
+    shareClass.currency = 'USD'
+    wrapper.setData({ shareStructure: shareClass })
+    await waitForUpdate(wrapper)
+    expect(wrapper.find('.v-select').text()).toContain('United States dollar (USD)')
+  })
 })
