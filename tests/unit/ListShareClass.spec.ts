@@ -17,6 +17,7 @@ const localVue = createLocalVue()
 
 // Store
 const store = getVuexStore()
+document.body.setAttribute('data-app', 'true')
 
 describe('List Shares and Series', () => {
   let wrapper

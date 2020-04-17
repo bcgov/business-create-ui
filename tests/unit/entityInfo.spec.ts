@@ -40,4 +40,12 @@ describe('Entity Info component', () => {
       expect(wrapper.vm.$el.querySelector('#no-nr-header').style.display).toBe('none')
     })
   })
+
+  it('renders the Name Request header when the EntityType(CP) is present and not the initial header', async () => {
+    wrapper.vm.$store.state.stateModel.nameRequest.entityType = 'CP'
+    await Vue.nextTick(() => {
+      expect(wrapper.vm.$el.querySelector('#nr-header').textContent).toContain('Incorporate a BC Cooperative')
+      expect(wrapper.vm.$el.querySelector('#no-nr-header').style.display).toBe('none')
+    })
+  })
 })

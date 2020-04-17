@@ -37,7 +37,7 @@
         information and infrastructure on establishing an authorized share structure.
       </p>
       <p>Refer to this
-       <a href="https://www2.gov.bc.ca/gov/content/employment-business/business/managing-a-business/permits-licences/businesses-incorporated-companies">link</a>
+       <a :href="helpLink">link</a>
        to obtain more information on incorporating a company</p>
       <u class="help-btn" @click="helpToggle = !helpToggle"><small>Hide Help</small></u>
     </section>
@@ -283,6 +283,11 @@ export default class CreateShareStructure extends Vue {
 
   private get showErrors (): boolean {
     return Boolean(this.$route.query.showErrors)
+  }
+
+  private get helpLink () : string {
+    return 'https://www2.gov.bc.ca/gov/content/employment-business/business/' +
+    'managing-a-business/permits-licences/businesses-incorporated-companies'
   }
 }
 </script>
