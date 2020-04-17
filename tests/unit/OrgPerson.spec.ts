@@ -145,7 +145,6 @@ function createComponent (
   document.body.setAttribute('data-app', 'true')
   return mount(OrgPerson, {
     localVue,
-    sync: false,
     propsData: {
       initialValue: person,
       activeIndex: activeIndex,

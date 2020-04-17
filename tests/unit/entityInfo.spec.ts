@@ -31,17 +31,21 @@ describe('Entity Info component', () => {
     expect(wrapper.vm.$el.querySelector('#nr-header').style.display).toBe('none')
   })
 
-  it('renders the Name Request header when the EntityType(BC) is present and not the initial header', () => {
+  it('renders the Name Request header when the EntityType(BC) is present and not the initial header', async () => {
     wrapper.vm.$store.state.stateModel.nameRequest.entityType = 'BC'
-    expect(wrapper.vm.$el.querySelector('#nr-header').textContent)
-      .toContain('Incorporate a BC Benefit Company')
-    expect(wrapper.vm.$el.querySelector('#no-nr-header').style.display).toBe('none')
+
+    await Vue.nextTick(() => {
+      expect(wrapper.vm.$el.querySelector('#nr-header').textContent)
+        .toContain('Incorporate a BC Benefit Company')
+      expect(wrapper.vm.$el.querySelector('#no-nr-header').style.display).toBe('none')
+    })
   })
 
-  it('renders the Name Request header when the EntityType(CP) is present and not the initial header', () => {
+  it('renders the Name Request header when the EntityType(CP) is present and not the initial header', async () => {
     wrapper.vm.$store.state.stateModel.nameRequest.entityType = 'CP'
-    expect(wrapper.vm.$el.querySelector('#nr-header').textContent)
-      .toContain('Incorporate a BC Cooperative')
-    expect(wrapper.vm.$el.querySelector('#no-nr-header').style.display).toBe('none')
+    await Vue.nextTick(() => {
+      expect(wrapper.vm.$el.querySelector('#nr-header').textContent).toContain('Incorporate a BC Cooperative')
+      expect(wrapper.vm.$el.querySelector('#no-nr-header').style.display).toBe('none')
+    })
   })
 })

@@ -66,7 +66,6 @@ function createComponent (
     extension
   }
   return mount(BusinessContactInfo, {
-    sync: false,
     propsData: { initialValue: businessContact, isEditing: isEditing },
     vuetify
   })

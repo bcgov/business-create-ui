@@ -196,6 +196,11 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin, EntityFilter
   display: flex;
   background-color: $BCgovBlue5O;
   padding: 1.25rem;
+
+  .people-roles-title {
+    padding-left: .5rem;
+  }
+
 }
 
 .people-roles-invalid-message {

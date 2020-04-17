@@ -40,9 +40,11 @@ describe('Define Company component', () => {
     expect(wrapper.vm.$el.querySelector('#office-address-header').textContent).not.toContain('Records')
   })
 
-  it('does display records office in the office address header when entity is a BCOMP', () => {
+  it('does display records office in the office address header when entity is a BCOMP', async () => {
     store.state.stateModel.nameRequest.entityType = 'BC'
 
-    expect(wrapper.vm.$el.querySelector('#office-address-header').textContent).toContain('Records')
+    await Vue.nextTick(() => {
+      expect(wrapper.vm.$el.querySelector('#office-address-header').textContent).toContain('Records')
+    })
   })
 })

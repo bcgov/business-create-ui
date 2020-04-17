@@ -39,7 +39,7 @@ describe('Actions component', () => {
     expect(wrapper.find('#file-pay-btn').attributes('disabled')).toBe('true')
   })
 
-  it('Enables File and Pay button when certify from is valid', () => {
+  it('Enables File and Pay button when certify from is valid', async () => {
     store.state.stateModel.certifyState = {
       valid: true,
       certifiedBy: 'Some certifier'
@@ -51,8 +51,10 @@ describe('Actions component', () => {
     store.state.stateModel.addPeopleAndRoleStep = {
       valid: true
     }
-    // verify File and Pay button state
-    expect(wrapper.find('#file-pay-btn').attributes('disabled')).toBeUndefined()
+    await Vue.nextTick(() => {
+      // verify File and Pay button state
+      expect(wrapper.find('#file-pay-btn').attributes('disabled')).toBeUndefined()
+    })
   })
 
   it('renders the component properly', () => {
