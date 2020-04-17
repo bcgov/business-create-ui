@@ -36,7 +36,9 @@
         complex share structure, you should seek professional advice or purchase an incorporation guide for detailed
         information and infrastructure on establishing an authorized share structure.
       </p>
-      <p>Refer to <a href="">helpLinkGoesHere</a> to obtain more information on incorporating a company</p>
+      <p>Refer to this
+       <a href="https://www2.gov.bc.ca/gov/content/employment-business/business/managing-a-business/permits-licences/businesses-incorporated-companies">link</a>
+       to obtain more information on incorporating a company</p>
       <u class="help-btn" @click="helpToggle = !helpToggle"><small>Hide Help</small></u>
     </section>
 
