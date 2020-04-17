@@ -21,8 +21,8 @@
 // define constants
 def NAMESPACE = 'mpgxod'
 def COMPONENT_NAME = 'business-create'
-def SOURCE_TAG = 'test'
-def DEPLOY_TAG = 'prod'
+def SOURCE_TAG = 'latest'
+def DEPLOY_TAG = 'dev'
 def PREV_TAG = "${DEPLOY_TAG}-previous"
 
 // define groovy functions

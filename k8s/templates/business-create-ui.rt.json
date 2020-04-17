@@ -1,0 +1,99 @@
+{
+    "kind": "Template",
+    "apiVersion": "v1",
+    "metadata": {
+        "annotations": {
+            "description": "${TEMPLATE_DESCRIPTION}",
+            "tags": "${NAME}-${TAG_NAME}"
+        },
+        "name": "${NAME}-${TAG_NAME}-route-template"
+    },
+    "objects": [
+        {
+            "apiVersion": "route.openshift.io/v1",
+            "kind": "Route",
+            "metadata": {
+                "labels": {
+                    "app": "${NAME}-${TAG_NAME}",
+                    "app-group": "${APP_GROUP}-${TAG_NAME}"
+                },
+                "name": "${NAME}-${TAG_NAME}"
+            },
+            "spec": {
+                "host": "${DOMAIN}",
+                "path": "${PATH}",
+                "port": {
+                    "targetPort": "8080-tcp"
+                },
+                "tls": {
+                    "insecureEdgeTerminationPolicy": "Redirect",
+                    "termination": "edge"
+                },
+                "to": {
+                    "kind": "Service",
+                    "name": "${NAME}-${TAG_NAME}",
+                    "weight": 100
+                },
+                "wildcardPolicy": "None"
+            },
+            "status": {
+                "ingress": [
+                    {
+                        "conditions": [
+                            {
+                                "type": "Admitted"
+                            }
+                        ],
+                        "host": "${DOMAIN}",
+                        "routerName": "router",
+                        "wildcardPolicy": "None"
+                    }
+                ]
+            }
+        }
+    ],
+    "parameters": [
+        {
+            "name": "NAME",
+            "displayName": "Name",
+            "description": "The name assigned to all of the OpenShift resources associated to this app.",
+            "required": true,
+            "value": "business-create-ui"
+        },
+        {
+            "name": "TEMPLATE_DESCRIPTION",
+            "displayName": "DESCRIPTION",
+            "description": "Description of what this deploy template is for.",
+            "required": true,
+            "value": "Template for the route."
+        },
+        {
+            "name": "APP_GROUP",
+            "displayName": "App Group",
+            "description": "The name assigned to all of the deployments in this project.",
+            "required": true,
+            "value": "business-create"
+        },
+        {
+            "name": "TAG_NAME",
+            "displayName": "Environment TAG name",
+            "description": "The TAG name for this environment, e.g., dev, test, prod, or PR",
+            "required": true,
+            "value": "dev"
+        },
+        {
+            "name": "DOMAIN",
+            "displayName": "Domain name.",
+            "description": "The FQDN of the service.",
+            "required": false,
+            "value": "business-create-dev.pathfinder.gov.bc.ca"
+        },
+        {
+            "name": "PATH",
+            "displayName": "URL Path",
+            "description": "The path portion of the URL",
+            "required": false,
+            "value": "/businesses/create/"
+        }
+    ]
+}
