@@ -28,6 +28,7 @@ export default class FilingTemplateMixin extends Vue {
   @Action setOrgPersonList!: ActionBindingIF
   @Action setFilingId!: ActionBindingIF
   @Action setCertifyState!: ActionBindingIF
+  @Action setShareClasses!: ActionBindingIF
 
   /**
    * Method to construct a filing body when making an api request
@@ -52,7 +53,8 @@ export default class FilingTemplateMixin extends Vue {
             phone: this.stateModel.defineCompanyStep.businessContact.phone,
             extension: this.stateModel.defineCompanyStep.businessContact.extension
           },
-          parties: this.stateModel.addPeopleAndRoleStep.orgPeople
+          parties: this.stateModel.addPeopleAndRoleStep.orgPeople,
+          shareClasses: this.stateModel.createShareStructureStep.shareClasses
         }
       }
     }
@@ -76,6 +78,9 @@ export default class FilingTemplateMixin extends Vue {
 
       // Set Persons and Organizations
       this.setOrgPersonList(draftFiling.incorporationApplication.parties)
+
+      // Set Share Structure
+      this.setShareClasses(draftFiling.incorporationApplication.shareClasses)
 
       // Set Certify Form
       this.setCertifyState({

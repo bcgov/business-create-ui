@@ -121,35 +121,110 @@ describe('Actions Filing Functionality', () => {
         },
         parties: [
           {
-            person: {
-              id: 0,
-              firstName: 'Cameron',
-              lastName: 'Bowler',
-              middleName: 'D',
+            officer: {
+              id: 1,
+              firstName: 'Joe',
+              lastName: 'Swanson',
+              middleName: 'P',
               orgName: '',
-              partyType: 'Person'
+              partyType: 'person'
             },
-            address: {
-              mailingAddress: {
-                streetAddress: '122-12210 Boul De Pierrefonds',
-                streetAddressAdditional: '',
-                addressCity: 'Pierrefonds',
-                addressRegion: 'QC',
-                postalCode: 'H9A 2X6',
-                addressCountry: 'CA'
-              },
-              deliveryAddress: {
-                streetAddress: '122-12210 Boul De Pierrefonds',
-                streetAddressAdditional: '',
-                addressCity: 'Pierrefonds',
-                addressRegion: 'QC',
-                postalCode: 'H9A 2X6',
-                addressCountry: 'CA'
-              }
+            mailingAddress: {
+              streetAddress: 'mailing_address-addresslineone',
+              streetAddressAdditional: '',
+              addressCity: 'mailing_addresscity',
+              addressCountry: 'CA',
+              postalCode: 'H0H0H0',
+              addressRegion: 'BC'
             },
+            deliveryAddress: {
+              streetAddress: 'delivery_address-addresslineone',
+              streetAddressAdditional: '',
+              addressCity: 'delivery_addresscity',
+              addressCountry: 'CA',
+              postalCode: 'H0H0H0',
+              addressRegion: 'BC'
+            },
+            appointmentDate: '2018-01-01',
             roles: [
-              'Completing Party',
-              'Director'
+              {
+                roleType: 'CompletingParty',
+                appointmentDate: '2018-01-01'
+              },
+              {
+                roleType: 'Director',
+                appointmentDate: '2018-01-01'
+              }
+            ]
+          },
+          {
+            officer: {
+              id: 2,
+              firstName: '',
+              lastName: '',
+              middleName: '',
+              orgName: 'XyzInc.',
+              partyType: 'org'
+            },
+            mailingAddress: {
+              streetAddress: 'mailing_address-addresslineone',
+              streetAddressAdditional: '',
+              addressCity: 'mailing_addresscity',
+              addressCountry: 'CA',
+              postalCode: 'H0H0H0',
+              addressRegion: 'BC'
+            },
+            appointmentDate: '2018-01-01',
+            roles: [
+              {
+                roleType: 'Incorporator',
+                appointmentDate: '2018-01-01'
+              }
+            ]
+          }
+        ],
+        shareClasses: [
+          {
+            id: 1,
+            name: 'ShareClass1',
+            priority: 1,
+            hasMaximumShares: true,
+            maxNumberOfShares: 100,
+            hasParValue: true,
+            parValue: 10,
+            currency: 'CAD',
+            hasRightsOrRestrictions: false,
+            series: [
+              {
+                id: 1,
+                name: 'ShareSeries1',
+                priority: 1,
+                hasMaximumShares: true,
+                maxNumberOfShares: 50,
+                hasRightsOrRestrictions: false
+              },
+              {
+                id: 2,
+                name: 'ShareSeries2',
+                priority: 2,
+                hasMaximumShares: true,
+                maxNumberOfShares: 100,
+                hasRightsOrRestrictions: false
+              }
+            ]
+          },
+          {
+            id: 2,
+            name: 'ShareClass2',
+            priority: 1,
+            hasMaximumShares: false,
+            maxNumberOfShares: null,
+            hasParValue: false,
+            parValue: null,
+            currency: null,
+            hasRightsOrRestrictions: true,
+            series: [
+
             ]
           }
         ]
@@ -168,6 +243,7 @@ describe('Actions Filing Functionality', () => {
     store.state.stateModel.currentDate = '2020/01/29'
     store.state.stateModel.defineCompanyStep.officeAddresses = filing.filing.incorporationApplication.offices
     store.state.stateModel.addPeopleAndRoleStep.orgPeople = filing.filing.incorporationApplication.parties
+    store.state.stateModel.createShareStructureStep.shareClasses = filing.filing.incorporationApplication.shareClasses
 
     const localVue = createLocalVue()
     localVue.use(VueRouter)

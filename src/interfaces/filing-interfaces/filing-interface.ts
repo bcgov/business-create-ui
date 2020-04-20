@@ -1,5 +1,5 @@
 import { IncorporationAddressIf } from '@/interfaces/stepper-interfaces/DefineCompany/address-interface'
-import { OrgPersonIF } from '@/interfaces'
+import { OrgPersonIF, ShareClassIF } from '@/interfaces'
 
 export interface IncorporationFilingIF {
   filing: {
@@ -21,7 +21,8 @@ export interface IncorporationFilingIF {
         phone: string
         extension: string
       },
-      parties: OrgPersonIF[]
+      parties: OrgPersonIF[],
+      shareClasses: ShareClassIF[]
     }
   }
 }

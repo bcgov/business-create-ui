@@ -79,7 +79,116 @@ const filingData = {
           addressRegion: 'BC'
         }
       }
-    }
+    },
+    parties: [
+      {
+        officer: {
+          id: 1,
+          firstName: 'Joe',
+          lastName: 'Swanson',
+          middleName: 'P',
+          orgName: '',
+          partyType: 'person'
+        },
+        mailingAddress: {
+          streetAddress: 'mailing_address-addresslineone',
+          streetAddressAdditional: '',
+          addressCity: 'mailing_addresscity',
+          addressCountry: 'CA',
+          postalCode: 'H0H0H0',
+          addressRegion: 'BC'
+        },
+        deliveryAddress: {
+          streetAddress: 'delivery_address-addresslineone',
+          streetAddressAdditional: '',
+          addressCity: 'delivery_addresscity',
+          addressCountry: 'CA',
+          postalCode: 'H0H0H0',
+          addressRegion: 'BC'
+        },
+        appointmentDate: '2018-01-01',
+        roles: [
+          {
+            roleType: 'CompletingParty',
+            appointmentDate: '2018-01-01'
+          },
+          {
+            roleType: 'Director',
+            appointmentDate: '2018-01-01'
+          }
+        ]
+      },
+      {
+        officer: {
+          id: 2,
+          firstName: '',
+          lastName: '',
+          middleName: '',
+          orgName: 'XyzInc.',
+          partyType: 'org'
+        },
+        mailingAddress: {
+          streetAddress: 'mailing_address-addresslineone',
+          streetAddressAdditional: '',
+          addressCity: 'mailing_addresscity',
+          addressCountry: 'CA',
+          postalCode: 'H0H0H0',
+          addressRegion: 'BC'
+        },
+        appointmentDate: '2018-01-01',
+        roles: [
+          {
+            roleType: 'Incorporator',
+            appointmentDate: '2018-01-01'
+          }
+        ]
+      }
+    ],
+    shareClasses: [
+      {
+        id: 1,
+        name: 'ShareClass1',
+        priority: 1,
+        hasMaximumShares: true,
+        maxNumberOfShares: 100,
+        hasParValue: true,
+        parValue: 10,
+        currency: 'CAD',
+        hasRightsOrRestrictions: false,
+        series: [
+          {
+            id: 1,
+            name: 'ShareSeries1',
+            priority: 1,
+            hasMaximumShares: true,
+            maxNumberOfShares: 50,
+            hasRightsOrRestrictions: false
+          },
+          {
+            id: 2,
+            name: 'ShareSeries2',
+            priority: 2,
+            hasMaximumShares: true,
+            maxNumberOfShares: 100,
+            hasRightsOrRestrictions: false
+          }
+        ]
+      },
+      {
+        id: 2,
+        name: 'ShareClass2',
+        priority: 1,
+        hasMaximumShares: false,
+        maxNumberOfShares: null,
+        hasParValue: false,
+        parValue: null,
+        currency: null,
+        hasRightsOrRestrictions: true,
+        series: [
+
+        ]
+      }
+    ]
   }
 }
 
@@ -211,6 +320,14 @@ describe('App component', () => {
     // Validate Contact Info
     expect(store.state.stateModel.defineCompanyStep.businessContact)
       .toStrictEqual(filingData.incorporationApplication.contactPoint)
+
+    // Validate People And Roles
+    expect(store.state.stateModel.addPeopleAndRoleStep.orgPeople)
+      .toStrictEqual(filingData.incorporationApplication.parties)
+
+    // Validate Share Structure
+    expect(store.state.stateModel.createShareStructureStep.shareClasses)
+      .toStrictEqual(filingData.incorporationApplication.shareClasses)
   })
 
   it('loads a name request into the store', () => {
