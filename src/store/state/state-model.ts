@@ -13,6 +13,11 @@ export const stateModel: StateModelIF = {
     filingId: null as number
   },
   currentDate: '',
+  incorporationDateTime: {
+    valid: false,
+    isFutureEffective: false,
+    effectiveDateTime: null
+  },
   certifyState: {
     valid: false,
     certifiedBy: ''

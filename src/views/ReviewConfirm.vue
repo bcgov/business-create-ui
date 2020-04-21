@@ -6,6 +6,12 @@
       </header>
       <Summary />
     </section>
+    <section class="mt-10">
+      <header>
+        <h2>Incorporation Date Time</h2>
+      </header>
+      <IncorporationDateTime />
+    </section>
 
     <section class="mt-10">
       <header>
@@ -31,11 +37,12 @@ import { State, Action } from 'vuex-class'
 import { CertifyStatementIF, ActionBindingIF, CertifyIF } from '@/interfaces'
 
 // Components
-import { Certify, Summary } from '@/components/ReviewConfirm'
+import { Certify, IncorporationDateTime, Summary } from '@/components/ReviewConfirm'
 
 @Component({
   components: {
     Certify,
+    IncorporationDateTime,
     Summary
   }
 })
