@@ -8,6 +8,7 @@ export interface IncorporationFilingIF {
       certifiedBy: string
       email: string
       date: string
+      effectiveDate: string
       filingId?: number // Optional as this is not required when building a filing - causes an error for new filings
     },
     incorporationApplication: {

@@ -74,7 +74,8 @@ describe('Actions Filing Functionality', () => {
         name: 'incorporationApplication',
         certifiedBy: 'somePerson',
         email: 'someEmail',
-        date: '2020/01/29'
+        date: '2020/01/29',
+        effectiveDate: '2020-04-23T22:01:00.000Z'
       },
       incorporationApplication: {
         nameRequest: {
@@ -241,6 +242,7 @@ describe('Actions Filing Functionality', () => {
     store.state.stateModel.certifyState.certifiedBy = 'somePerson'
     store.state.stateModel.defineCompanyStep.businessContact = { email: 'someEmail', phone: '123-456-7890' }
     store.state.stateModel.currentDate = '2020/01/29'
+    store.state.stateModel.incorporationDateTime.futureEffectiveDate = filing.filing.header.effectiveDate
     store.state.stateModel.defineCompanyStep.officeAddresses = filing.filing.incorporationApplication.offices
     store.state.stateModel.addPeopleAndRoleStep.orgPeople = filing.filing.incorporationApplication.parties
     store.state.stateModel.createShareStructureStep.shareClasses = filing.filing.incorporationApplication.shareClasses

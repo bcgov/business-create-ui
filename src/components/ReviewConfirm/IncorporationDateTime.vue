@@ -1,72 +1,305 @@
 <template>
   <v-card flat id="incorporation-date-time">
     <v-row>
-      <v-spacer></v-spacer>
-      <v-col cols="12" sm="6" md="4">
-        <h3>Incorporation Date and Time</h3>
+      <v-col cols="10" sm="5" md="3">
+        <label>Incorporation Date and Time</label>
       </v-col>
-      <v-col cols="12" sm="6" md="4">
-
+      <v-col cols="14" sm="8" md="6">
         <v-radio-group
           column
-          class="radio-group">
+          class="radio-group"
+          v-model="selectDate">
           <v-radio
-            :value="true"
-            v-model="isImmediate"
-            label="Immediate (Upon Filing)">
+            label="Immediate (Upon Filing)"
+            value="isImmediate">
           </v-radio>
           <v-radio
-            :value="false"
-            v-model="hasEffectiveDatetime"
-            label="A date / time in the future">
+            label="A date / time in the future"
+            value="isFutureEffective">
           </v-radio>
-          <v-radio :value="true" label="No maximum" id="lbl-no-maximum" v-if="isNoMaxSharesVisible"/>
         </v-radio-group>
-
-        <v-menu
-          v-model="menu2"
-          :close-on-content-click="false"
-          :nudge-right="40"
-          transition="scale-transition"
-          offset-y
-          min-width="290px"
-        >
-          <template v-slot:activator="{ on }">
-            <v-text-field
-              v-model="date"
-              :rules="false"
-              placeholder="Date"
-              append-icon="mdi-calendar"
-              v-on="on"
-              readonly
-              filled
-            />
-          </template>
-          <v-date-picker v-model="date" @input="menu2 = false"></v-date-picker>
-        </v-menu>
+        <div class="date-time-selectors">
+          <v-menu
+            :close-on-content-click="false"
+            :nudge-right="40"
+            transition="scale-transition"
+            offset-y
+            min-width="290px"
+          >
+            <template v-slot:activator="{ on }">
+              <v-text-field
+                placeholder="Date"
+                append-icon="mdi-calendar"
+                v-model="dateText"
+                :disabled="!isFutureEffective"
+                v-on="on"
+                readonly
+                filled
+              />
+            </template>
+            <v-date-picker
+              v-model="datePicker"
+              :min=getCurrentDate
+              :max=maxDate>
+            </v-date-picker>
+          </v-menu>
+          <v-row>
+            <v-col cols="10" sm="6" md="3">
+              <v-select
+                label="Hour"
+                :items="hours"
+                v-model="selectHour"
+                :disabled="!isFutureEffective"
+                filled
+              ></v-select>
+            </v-col>
+            <v-col cols="10" sm="6" md="3">
+              <v-select
+                label="Minute"
+                :items="minutes"
+                v-model="selectMinute"
+                :disabled="!isFutureEffective"
+                filled
+              ></v-select>
+            </v-col>
+            <v-col cols="10" sm="6" md="3">
+              <v-select
+                :items="timePeriod"
+                v-model="selectPeriod"
+                :disabled="!isFutureEffective"
+                filled
+              ></v-select>
+            </v-col>
+            <v-col cols="10" sm="6" md="3">
+              <p>Pacific Time</p>
+            </v-col>
+          </v-row>
+        </div>
       </v-col>
       <v-col cols="12" sm="6" md="4"></v-col>
-      <v-spacer></v-spacer>
     </v-row>
   </v-card>
 </template>
 
 <script lang="ts">
 // Libraries
-import { Component, Vue, Prop, Emit } from 'vue-property-decorator'
+import { Component, Mixins, Watch } from 'vue-property-decorator'
+import { Action, Getter, State } from 'vuex-class'
+
+// Mixins
+import { DateMixin } from '@/mixins'
+
+// Constants
+import { ISIMMEDIATE, ISFUTUREEFFECTIVE } from '@/constants'
 
 // Interfaces
-import { DateTimeIF } from '@/interfaces'
+import { ActionBindingIF, DateTimeIF } from '@/interfaces'
 
 @Component({})
-export default class IncorporationDateTime extends Vue {
-  private isImmediate: boolean
-  private hasEffectiveDatetime: boolean
+export default class IncorporationDateTime extends Mixins(DateMixin) {
+  // Global State
+  @State(state => state.stateModel.incorporationDateTime)
+  readonly incorporationDateTime!: DateTimeIF
+
+  // Global Actions
+  @Action setIsImmediate!: ActionBindingIF
+  @Action setIsFutureEffective!: ActionBindingIF
+  @Action setFutureEffectiveDate!: ActionBindingIF
+
+  @Getter getCurrentDate: string
+
+  // Local properties
+  private isImmediate: boolean = null
+  private isFutureEffective: boolean = null
+
+  // Date properties
+  private selectDate: string = ''
+  private dateText: string = ''
+  private datePicker: string = ''
+
+  // Time properties
+  private selectHour: string = ''
+  private selectMinute: string = ''
+  private selectPeriod: string = 'AM'
+
+  // Date Time Selectors
+  private hours: Array<string> = [...Array(12).keys()]
+    .map(num => (++num).toLocaleString('en-US'))
+  private minutes: Array<string> = [...Array(60).keys()]
+    .map(num => num.toLocaleString('en-US', { minimumIntegerDigits: 2 }))
+  private timePeriod: Array<string> = ['AM', 'PM']
+
+  /** Lifecycle Hook to run when component mounts */
+  mounted (): void {
+    this.deconstructDateTime()
+  }
+
+  /**  Clear the selected Date and time */
+  private clearDateTimes (): void {
+    // Clear Date
+    this.dateText = ''
+    this.datePicker = ''
+
+    // Clear Times
+    this.selectHour = ''
+    this.selectMinute = ''
+    this.selectPeriod = 'AM'
+
+    // Clear Future Effective from store / fee summary
+    this.setIsFutureEffective(false)
+    this.setFutureEffectiveDate('')
+  }
+
+  /** Construct the Date Object for storage */
+  private constructDate (): void {
+    if (this.isFutureEffective) {
+      // Format the selected date string and create Date
+      const dateString = this.dateText.replace(/-/g, ', ')
+      const dateToValidate = new Date(dateString)
+
+      // Create references & Apply time period
+      let hours = +this.selectHour
+      const minutes = +this.selectMinute
+
+      if (this.selectPeriod === 'AM' && +this.selectHour === 12) {
+        dateToValidate.setDate(dateToValidate.getDate() - 1)
+        hours = +this.selectHour + 12
+      } else if (this.selectPeriod === 'PM' && +this.selectHour !== 12) {
+        hours = +this.selectHour + 12
+      }
+
+      // Apply selected hours and minutes
+      dateToValidate.setHours(hours, minutes)
+      this.setFutureEffectiveDate(dateToValidate.toISOString())
+    }
+  }
+
+  /** Parse the DateTime from store */
+  private deconstructDateTime (): void {
+    // Set the chosen filing time option
+    for (let [key, val] of Object.entries(this.incorporationDateTime)) {
+      if (val === true) this.selectDate = key
+    }
+
+    // Reference Store and create date object
+    const effectiveDate = this.incorporationDateTime.futureEffectiveDate
+    const dateToParse = effectiveDate && new Date(effectiveDate)
+
+    if (dateToParse) {
+      // Parse the Date
+      const year = dateToParse.getFullYear()
+      const month = dateToParse.getMonth()
+      const day = dateToParse.getDate()
+
+      // Parse the Time and display DateTime
+      if (year && month && day) {
+        let hour = dateToParse.getHours()
+        const minute = dateToParse.getMinutes()
+        let amPm
+        if (hour >= 12) {
+          hour -= 12
+          amPm = 'PM'
+        } else {
+          amPm = 'AM'
+        }
+
+        this.dateText = `${year}-${month + 1}-${day}`
+        this.selectHour = hour.toLocaleString()
+        this.selectMinute = minute.toLocaleString('en-US', { minimumIntegerDigits: 2 })
+        this.selectPeriod = amPm
+      }
+    }
+  }
+
+  /** The maximum date that can be entered. */
+  private get maxDate (): string {
+    const maxDate = new Date()
+    maxDate.setDate(new Date().getDate() + 10)
+
+    return this.dateToUsableString(maxDate)
+  }
+
+  /**
+   * Set date text to date chosen in date picker.
+   * @param val The date selected
+   */
+  @Watch('datePicker')
+  private onFutureEffectiveDate (val: string): void {
+    this.dateText = val
+    this.constructDate()
+  }
+
+  /**
+   * Set hour text from selected dropdown.
+   * @param val The hour selected
+   */
+  @Watch('selectHour')
+  private onHourUpdate (val: string): void {
+    this.constructDate()
+  }
+
+  /**
+   * Set minute text from selected dropdown.
+   * @param val The minute selected
+   */
+  @Watch('selectMinute')
+  private onMinuteUpdate (val: string): void {
+    this.constructDate()
+  }
+
+  /**
+   * Set minute text from selected dropdown.
+   * @param val The time period selected
+   */
+  @Watch('selectPeriod')
+  private onPeriodUpdate (val: string): void {
+    this.constructDate()
+  }
+
+  /**
+   * Set the selected DateTime choice
+   * @param val The value of the selected radio button
+   */
+  @Watch('selectDate')
+  private setDateTimeChoice (val) {
+    this.isImmediate = val === ISIMMEDIATE
+    this.isFutureEffective = val === ISFUTUREEFFECTIVE
+
+    // Clear DateTimes when immediate is selected
+    if (this.isImmediate) {
+      this.setIsImmediate(true)
+      this.clearDateTimes()
+    } else {
+      this.isFutureEffective && this.setIsFutureEffective(true)
+      this.setIsImmediate(false)
+    }
+  }
 }
 </script>
 
 <style lang="scss" scoped>
   #incorporation-date-time {
     margin-top: 1rem;
+    padding: 1.25rem;
+    line-height: 1.2rem;
+    font-size: 0.875rem;
   }
+
+  label {
+    font-weight: 700;
+  }
+
+  .radio-group {
+    padding-top: 0;
+    margin-top: 0;
+
+    .v-radio {
+      padding-bottom: .5rem;
+    }
+  }
+
+  .date-time-selectors {
+    margin-left: 2rem;
+  }
+
 </style>

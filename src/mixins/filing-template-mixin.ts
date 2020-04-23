@@ -29,6 +29,7 @@ export default class FilingTemplateMixin extends Vue {
   @Action setFilingId!: ActionBindingIF
   @Action setCertifyState!: ActionBindingIF
   @Action setShareClasses!: ActionBindingIF
+  @Action setFutureEffectiveDate!: ActionBindingIF
 
   /**
    * Method to construct a filing body when making an api request
@@ -40,7 +41,8 @@ export default class FilingTemplateMixin extends Vue {
           name: INCORPORATION_APPLICATION,
           certifiedBy: this.stateModel.certifyState.certifiedBy,
           email: this.stateModel.defineCompanyStep.businessContact.email,
-          date: this.stateModel.currentDate
+          date: this.stateModel.currentDate,
+          effectiveDate: this.stateModel.incorporationDateTime.futureEffectiveDate
         },
         incorporationApplication: {
           nameRequest: {
@@ -86,6 +88,11 @@ export default class FilingTemplateMixin extends Vue {
       this.setCertifyState({
         valid: false,
         certifiedBy: draftFiling.header.certifiedBy
+      })
+
+      // Set Future Effective Time
+      this.setFutureEffectiveDate({
+        futureEffectiveDate: draftFiling.header.effectiveDate
       })
     } catch (e) {
       // TODO: Throw a flag to the ui from here, if we want to trigger error handling in ui
