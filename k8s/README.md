@@ -22,4 +22,5 @@ To update one of the OpenShift objects (such as a config map or deployment confi
 
 1. **update the template** Alter the template of the object you are changing (business-create-ui._object_.json) and also update the template containing all the objects (business-create-ui.dc-srvc-rt-cmap-kcmap.json)
 2. **update the param file** Add/delete the changes you need to the params to the `business-create-ui.dc-srvc-rt-cmap-kcmap.param` file and the `business-create-ui.`_object_`.param` file. Also update the values for each param corresponding to the environment you are updating in OpenShift
+##### NOTE: Do not commit the new values for the parameters into GitHub (this is viewable to the public), but do commit the new parameters so that the next person knows which values they need to look up for updating the object
 3. **update the object in OpenShift** Run the oc command over the environment you are updating `oc process -f templates/business-create-ui.`_object_`.json --param-file=business-create-ui.dc-srvc-rt-cmap-kcmap.param  | oc replace -f -`
