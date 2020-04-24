@@ -43,7 +43,7 @@
               :max=maxDate>
             </v-date-picker>
           </v-menu>
-          <v-row>
+          <v-row class>
             <v-col cols="12" sm="6" md="3">
               <v-select
                 label="Hour"
@@ -53,6 +53,7 @@
                 filled
               ></v-select>
             </v-col>
+            <span :class="{ 'disabled': !isFutureEffective, 'time-colon': true }">:</span>
             <v-col cols="12" sm="6" md="3">
               <v-select
                 label="Minute"
@@ -70,13 +71,12 @@
                 filled
               ></v-select>
             </v-col>
-            <v-col cols="12" sm="6" md="3" class="label-col">
-              <span class="time-zone-label">Pacific Time</span>
+            <v-col cols="12" sm="6" md="2" class="label-col">
+              <span class="time-zone-label" :class="{ 'disabled': !isFutureEffective }">Pacific Time</span>
             </v-col>
           </v-row>
         </div>
       </v-col>
-      <v-col cols="12" sm="6" md="4"></v-col>
     </v-row>
   </v-card>
 </template>
@@ -84,7 +84,7 @@
 <script lang="ts">
 // Libraries
 import { Component, Mixins, Watch, Emit, Prop } from 'vue-property-decorator'
-import { Action, Getter } from 'vuex-class'
+import { Action } from 'vuex-class'
 
 // Mixins
 import { DateMixin } from '@/mixins'
@@ -107,7 +107,6 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
   // Local properties
   private isImmediate: boolean = null
   private isFutureEffective: boolean = null
-  // private dateTimeToValidate: Date = null
 
   // Date properties
   private selectDate: string = ''
@@ -144,7 +143,6 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
 
     // Clear Future Effective from store / fee summary
     this.setIsFutureEffective(false)
-    // this.dateTimeToValidate = null
     this.emitDateTime('')
   }
 
@@ -184,24 +182,24 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
 
     // Reference Store and create date object
     const effectiveDate = this.incorporationDateTime.futureEffectiveDate
-    const dateToParse = effectiveDate && new Date(effectiveDate)
+    // const dateToParse = effectiveDate && new Date(effectiveDate)
 
-    if (dateToParse) {
+    if (effectiveDate) {
       // Parse the Date
-      const year = dateToParse.getFullYear()
-      const month = dateToParse.getMonth()
-      const day = dateToParse.getDate()
+      const year = effectiveDate.getFullYear()
+      const month = effectiveDate.getMonth()
+      const day = effectiveDate.getDate()
 
       // Parse the Time and display DateTime
       if (year && month && day) {
-        let hour = dateToParse.getHours()
-        const minute = dateToParse.getMinutes()
-        let amPm
-        if (hour >= 12) {
+        let hour = effectiveDate.getHours()
+        const minute = effectiveDate.getMinutes()
+        const amPm = hour >= 12 ? 'PM' : 'AM'
+
+        if (hour > 12) {
           hour -= 12
-          amPm = 'PM'
-        } else {
-          amPm = 'AM'
+        } else if (hour === 0) {
+          hour = 12
         }
 
         this.dateText = `${year}-${month + 1}-${day}`
@@ -341,6 +339,16 @@ label {
   margin-left: 2rem;
 }
 
+.time-colon {
+  padding-top: 2rem;
+  font-size: 25px;
+}
+@media (max-width: 768px) {
+  .time-colon {
+    display: none;
+  }
+}
+
 .label-col {
   position: relative;
 }
@@ -348,6 +356,9 @@ label {
 .time-zone-label {
   position: absolute;
   bottom: 40%;
+}
+
+.disabled {
   color: $gray6;
 }
 </style>

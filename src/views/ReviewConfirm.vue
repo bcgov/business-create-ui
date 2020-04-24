@@ -100,7 +100,6 @@ export default class ReviewConfirm extends Mixins() {
 
   /** Handler for Valid DateTime change event. */
   private onValidDateTime (val: boolean): void {
-    console.log(val)
     this.setIncorporationDateTimeValid(val)
   }
 
