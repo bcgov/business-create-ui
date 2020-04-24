@@ -5,7 +5,7 @@ import ReviewConfirm from './ReviewConfirm.vue'
 import SignIn from './auth/Signin.vue'
 import SignOut from './auth/Signout.vue'
 
-export {
+export default {
   CreateShareStructure,
   AddPeopleAndRoles,
   DefineCompany,

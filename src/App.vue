@@ -95,10 +95,7 @@ import SbcHeader from 'sbc-common-components/src/components/SbcHeader.vue'
 import SbcFooter from 'sbc-common-components/src/components/SbcFooter.vue'
 import SbcFeeSummary from 'sbc-common-components/src/components/SbcFeeSummary.vue'
 import { EntityInfo, Stepper, Actions } from '@/components/common'
-import {
-  AddPeopleAndRoles, CreateShareStructure, DefineCompany, ReviewConfirm,
-  SignIn, SignOut
-} from '@/views'
+import Views from '@/views'
 
 // Dialogs, mixins, interfaces, etc
 import { AccountAuthorizationDialog, NameRequestInvalidErrorDialog, ConfirmDialog } from '@/components/dialogs'
@@ -118,12 +115,7 @@ import { EntityTypes, FilingCodes, RouteNames, NameRequestStates } from '@/enums
     NameRequestInvalidErrorDialog,
     AccountAuthorizationDialog,
     ConfirmDialog,
-    AddPeopleAndRoles,
-    CreateShareStructure,
-    DefineCompany,
-    ReviewConfirm,
-    SignIn,
-    SignOut
+    ...Views
   }
 })
 export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApiMixin, NameRequestMixin) {
