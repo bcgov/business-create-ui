@@ -3,7 +3,7 @@ import { Component, Vue } from 'vue-property-decorator'
 import { State, Getter, Action } from 'vuex-class'
 
 // Interfaces
-import { ActionBindingIF, StateModelIF, IncorporationFilingIF, GetterIF, OrgPersonIF } from '@/interfaces'
+import { ActionBindingIF, StateModelIF, IncorporationFilingIF, GetterIF } from '@/interfaces'
 
 // Constants
 import { INCORPORATION_APPLICATION } from '@/constants'
@@ -30,6 +30,8 @@ export default class FilingTemplateMixin extends Vue {
   @Action setCertifyState!: ActionBindingIF
   @Action setShareClasses!: ActionBindingIF
   @Action setFutureEffectiveDate!: ActionBindingIF
+  @Action setIsImmediate!: ActionBindingIF
+  @Action setIsFutureEffective!: ActionBindingIF
 
   /**
    * Method to construct a filing body when making an api request
@@ -37,7 +39,8 @@ export default class FilingTemplateMixin extends Vue {
   buildFiling (): IncorporationFilingIF {
     // Format DateTime for Filing
     const effectiveDate = this.stateModel.incorporationDateTime.futureEffectiveDate
-    const formattedDateTime = effectiveDate && effectiveDate.toISOString()
+    const formattedDateTime = effectiveDate &&
+      (effectiveDate.toISOString()).replace('Z', '+00:00')
 
     // Build and return filing
     return {
@@ -47,7 +50,7 @@ export default class FilingTemplateMixin extends Vue {
           certifiedBy: this.stateModel.certifyState.certifiedBy,
           email: this.stateModel.defineCompanyStep.businessContact.email,
           date: this.stateModel.currentDate,
-          ...(formattedDateTime && { effectiveDate: formattedDateTime })
+          effectiveDate: formattedDateTime || ''
         },
         incorporationApplication: {
           nameRequest: {
@@ -72,6 +75,7 @@ export default class FilingTemplateMixin extends Vue {
    * @param draftFiling The draft filing body to be parsed and assigned to store
    */
   parseDraft (draftFiling: any): void {
+    console.log(draftFiling)
     try {
       // Set Office Addresses
       this.setOfficeAddresses(draftFiling.incorporationApplication.offices)
@@ -96,9 +100,9 @@ export default class FilingTemplateMixin extends Vue {
       })
 
       // Set Future Effective Time
-      this.setFutureEffectiveDate({
-        futureEffectiveDate: draftFiling.header.effectiveDate
-      })
+      this.setFutureEffectiveDate(draftFiling.header.effectiveDate)
+      this.setIsImmediate(draftFiling.header.effectiveDate === '')
+      this.setIsFutureEffective(draftFiling.header.effectiveDate !== '')
     } catch (e) {
       // TODO: Throw a flag to the ui from here, if we want to trigger error handling in ui
     }

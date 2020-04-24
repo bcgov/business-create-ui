@@ -28,6 +28,7 @@
           >
             <template v-slot:activator="{ on }">
               <v-text-field
+                id="date-text-field"
                 placeholder="Date"
                 append-icon="mdi-calendar"
                 v-model="dateText"
@@ -46,6 +47,7 @@
           <v-row class>
             <v-col cols="12" sm="6" md="3">
               <v-select
+                id="hour-selector"
                 label="Hour"
                 :items="hours"
                 v-model="selectHour"
@@ -56,6 +58,7 @@
             <span :class="{ 'disabled': !isFutureEffective, 'time-colon': true }">:</span>
             <v-col cols="12" sm="6" md="3">
               <v-select
+                id="minute-selector"
                 label="Minute"
                 :items="minutes"
                 v-model="selectMinute"
@@ -65,6 +68,7 @@
             </v-col>
             <v-col cols="12" sm="6" md="3">
               <v-select
+                id="am-pm-selector"
                 :items="timePeriod"
                 v-model="selectPeriod"
                 :disabled="!isFutureEffective"
@@ -105,8 +109,8 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
   @Action setIsFutureEffective!: ActionBindingIF
 
   // Local properties
-  private isImmediate: boolean = null
-  private isFutureEffective: boolean = null
+  private isImmediate: boolean = false
+  private isFutureEffective: boolean = false
 
   // Date properties
   private selectDate: string = ''
@@ -143,7 +147,7 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
 
     // Clear Future Effective from store / fee summary
     this.setIsFutureEffective(false)
-    this.emitDateTime(null)
+    this.emitDateTime('')
   }
 
   /** Construct the Date Object for storage */
@@ -182,18 +186,18 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
 
     // Reference Store and create date object
     const effectiveDate = this.incorporationDateTime.futureEffectiveDate
-    // const dateToParse = effectiveDate && new Date(effectiveDate)
+    const dateToParse = new Date(effectiveDate)
 
-    if (effectiveDate) {
+    if (dateToParse) {
       // Parse the Date
-      const year = effectiveDate.getFullYear()
-      const month = effectiveDate.getMonth()
-      const day = effectiveDate.getDate()
+      const year = dateToParse.getFullYear()
+      const month = dateToParse.getMonth()
+      const day = dateToParse.getDate()
 
       // Parse the Time and display DateTime
       if (year && month && day) {
-        let hour = effectiveDate.getHours()
-        const minute = effectiveDate.getMinutes()
+        let hour = dateToParse.getHours()
+        const minute = dateToParse.getMinutes()
         const amPm = hour >= 12 ? 'PM' : 'AM'
 
         if (hour > 12) {
