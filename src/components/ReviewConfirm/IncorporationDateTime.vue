@@ -1,10 +1,10 @@
 <template>
   <v-card flat id="incorporation-date-time">
     <v-row>
-      <v-col cols="10" sm="5" md="3">
+      <v-col cols="12" sm="5" md="3">
         <label>Incorporation Date and Time</label>
       </v-col>
-      <v-col cols="14" sm="8" md="6">
+      <v-col cols="12" sm="8" md="6">
         <v-radio-group
           column
           class="radio-group"
@@ -44,7 +44,7 @@
             </v-date-picker>
           </v-menu>
           <v-row>
-            <v-col cols="10" sm="6" md="3">
+            <v-col cols="12" sm="6" md="3">
               <v-select
                 label="Hour"
                 :items="hours"
@@ -53,7 +53,7 @@
                 filled
               ></v-select>
             </v-col>
-            <v-col cols="10" sm="6" md="3">
+            <v-col cols="12" sm="6" md="3">
               <v-select
                 label="Minute"
                 :items="minutes"
@@ -62,7 +62,7 @@
                 filled
               ></v-select>
             </v-col>
-            <v-col cols="10" sm="6" md="3">
+            <v-col cols="12" sm="6" md="3">
               <v-select
                 :items="timePeriod"
                 v-model="selectPeriod"
@@ -70,8 +70,8 @@
                 filled
               ></v-select>
             </v-col>
-            <v-col cols="10" sm="6" md="3">
-              <p>Pacific Time</p>
+            <v-col cols="12" sm="6" md="3" style="position: relative">
+              <span class="time-zone-label">Pacific Time</span>
             </v-col>
           </v-row>
         </div>
@@ -83,8 +83,8 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Mixins, Watch } from 'vue-property-decorator'
-import { Action, Getter, State } from 'vuex-class'
+import { Component, Mixins, Watch, Emit, Prop } from 'vue-property-decorator'
+import { Action, Getter } from 'vuex-class'
 
 // Mixins
 import { DateMixin } from '@/mixins'
@@ -97,20 +97,19 @@ import { ActionBindingIF, DateTimeIF } from '@/interfaces'
 
 @Component({})
 export default class IncorporationDateTime extends Mixins(DateMixin) {
-  // Global State
-  @State(state => state.stateModel.incorporationDateTime)
-  readonly incorporationDateTime!: DateTimeIF
+  @Prop()
+  private incorporationDateTime!: DateTimeIF
 
   // Global Actions
   @Action setIsImmediate!: ActionBindingIF
   @Action setIsFutureEffective!: ActionBindingIF
-  @Action setFutureEffectiveDate!: ActionBindingIF
 
   @Getter getCurrentDate: string
 
   // Local properties
   private isImmediate: boolean = null
   private isFutureEffective: boolean = null
+  private isDateTimeValid: boolean = null
 
   // Date properties
   private selectDate: string = ''
@@ -147,7 +146,7 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
 
     // Clear Future Effective from store / fee summary
     this.setIsFutureEffective(false)
-    this.setFutureEffectiveDate('')
+    this.emitDateTime('')
   }
 
   /** Construct the Date Object for storage */
@@ -170,8 +169,12 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
 
       // Apply selected hours and minutes
       dateToValidate.setHours(hours, minutes)
-      this.setFutureEffectiveDate(dateToValidate.toISOString())
+
+      // Validate and Set DateTime
+      this.isValidDateTime(dateToValidate)
+      this.emitDateTime(dateToValidate.toISOString())
     }
+    this.emitIsValidDateTime()
   }
 
   /** Parse the DateTime from store */
@@ -211,6 +214,16 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
     }
   }
 
+  /** Validate the DateTime */
+  private isValidDateTime (dateToValidate: any): void {
+    const startDate = new Date()
+    const timeDiff = dateToValidate.getTime() - startDate.getTime()
+    const timeDiffInMinutes = Math.floor(timeDiff / 1000 / 60)
+
+    // Time set must be more than 2 minutes and less than 10 days
+    this.isDateTimeValid = timeDiffInMinutes > 2 && timeDiffInMinutes < 14400
+  }
+
   /** The maximum date that can be entered. */
   private get maxDate (): string {
     const maxDate = new Date()
@@ -218,6 +231,9 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
 
     return this.dateToUsableString(maxDate)
   }
+
+  // Rules
+  private readonly dateTimeRules: Array<Function> = []
 
   /**
    * Set date text to date chosen in date picker.
@@ -273,33 +289,50 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
       this.isFutureEffective && this.setIsFutureEffective(true)
       this.setIsImmediate(false)
     }
+    this.emitIsValidDateTime()
   }
+
+  @Emit('valid')
+  private emitIsValidDateTime (): boolean {
+    return this.isImmediate
+  }
+
+  @Emit('dateTime')
+  private emitDateTime (val): void {}
 }
 </script>
 
 <style lang="scss" scoped>
-  #incorporation-date-time {
-    margin-top: 1rem;
-    padding: 1.25rem;
-    line-height: 1.2rem;
-    font-size: 0.875rem;
+@import '@/assets/styles/theme.scss';
+
+#incorporation-date-time {
+  margin-top: 1rem;
+  padding: 1.25rem;
+  padding-bottom: 0!important;
+  line-height: 1.2rem;
+  font-size: 0.875rem;
+}
+
+label {
+  font-weight: 700;
+}
+
+.radio-group {
+  padding-top: 0;
+  margin-top: 0;
+
+  .v-radio {
+    padding-bottom: .5rem;
   }
+}
 
-  label {
-    font-weight: 700;
-  }
+.date-time-selectors {
+  margin-left: 2rem;
+}
 
-  .radio-group {
-    padding-top: 0;
-    margin-top: 0;
-
-    .v-radio {
-      padding-bottom: .5rem;
-    }
-  }
-
-  .date-time-selectors {
-    margin-left: 2rem;
-  }
-
+.time-zone-label {
+  position: absolute;
+  bottom: 40%;
+  color: $gray6;
+}
 </style>

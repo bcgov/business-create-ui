@@ -10,7 +10,11 @@
       <header>
         <h2>Incorporation Date Time</h2>
       </header>
-      <IncorporationDateTime />
+      <IncorporationDateTime
+        :incorporationDateTime="incorporationDateTime"
+        @valid="onValidDateTime($event)"
+        @dateTime="setDateTime($event)"
+      />
     </section>
 
     <section class="mt-10">
@@ -34,7 +38,7 @@ import { Component, Mixins, Vue } from 'vue-property-decorator'
 import { State, Action } from 'vuex-class'
 
 // Interfaces
-import { CertifyStatementIF, ActionBindingIF, CertifyIF } from '@/interfaces'
+import { CertifyStatementIF, ActionBindingIF, CertifyIF, DateTimeIF } from '@/interfaces'
 
 // Components
 import { Certify, IncorporationDateTime, Summary } from '@/components/ReviewConfirm'
@@ -56,6 +60,12 @@ export default class ReviewConfirm extends Mixins() {
   @State(state => state.resourceModel.certifyStatementResource)
   readonly certifyStatementResource!: CertifyStatementIF
 
+  // Global State
+  @State(state => state.stateModel.incorporationDateTime)
+  readonly incorporationDateTime!: DateTimeIF
+
+  @Action setIncorporationDateTimeValid!: ActionBindingIF
+  @Action setFutureEffectiveDate!: ActionBindingIF
   @Action setCertifyState!: ActionBindingIF
   @Action setIgnoreChanges!: ActionBindingIF
 
@@ -86,6 +96,16 @@ export default class ReviewConfirm extends Mixins() {
         certifiedBy: val
       }
     )
+  }
+
+  /** Handler for Valid DateTime change event. */
+  private onValidDateTime (val: boolean): void {
+    this.setIncorporationDateTimeValid(val)
+  }
+
+  /** Handler for setting DateTime. */
+  private setDateTime (val: string): void {
+    this.setFutureEffectiveDate(val)
   }
 }
 </script>

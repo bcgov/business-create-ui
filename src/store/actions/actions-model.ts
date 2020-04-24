@@ -40,6 +40,10 @@ export const setFutureEffectiveDate: ActionIF = ({ commit }, futureEffectiveDate
   commit('mutateFutureEffectiveDate', futureEffectiveDate)
 }
 
+export const setIncorporationDateTimeValid: ActionIF = ({ commit }, incorporationDateTimeValid): void => {
+  commit('mutateIncorporationDateTimeValid', incorporationDateTimeValid)
+}
+
 export const setCertifyStatementResource: ActionIF = ({ commit }, certifyStatementResource): void => {
   commit('mutateCertifyStatementResource', certifyStatementResource)
 }

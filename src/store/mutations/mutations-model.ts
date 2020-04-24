@@ -1,5 +1,7 @@
-import { CertifyStatementIF, CertifyIF, IncorporationAddressIf, NameRequestIF,
-  BusinessContactIF, OrgPersonIF, ShareClassIF } from '@/interfaces'
+import {
+  CertifyStatementIF, CertifyIF, IncorporationAddressIf, NameRequestIF,
+  BusinessContactIF, OrgPersonIF, ShareClassIF, DateTimeIF
+} from '@/interfaces'
 
 export const mutateCertifyStatementResource = (state: any, certifyStatementResource: CertifyStatementIF) => {
   state.resourceModel.certifyStatementResource = certifyStatementResource
@@ -46,6 +48,11 @@ export const mutateIsFutureEffective = (state: any, isFutureEffective: boolean) 
 
 export const mutateFutureEffectiveDate = (state: any, futureEffectiveDate: string) => {
   state.stateModel.incorporationDateTime.futureEffectiveDate = futureEffectiveDate
+  if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
+}
+
+export const mutateIncorporationDateTimeValid = (state: any, incorporationDateTimeValid: boolean) => {
+  state.stateModel.incorporationDateTime.valid = incorporationDateTimeValid
   if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
 }
 
