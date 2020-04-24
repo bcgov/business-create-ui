@@ -35,6 +35,11 @@ export default class FilingTemplateMixin extends Vue {
    * Method to construct a filing body when making an api request
    */
   buildFiling (): IncorporationFilingIF {
+    // Format DateTime for Filing
+    const effectiveDate = this.stateModel.incorporationDateTime.futureEffectiveDate
+    const formattedDateTime = effectiveDate && effectiveDate.toISOString()
+
+    // Build and return filing
     return {
       filing: {
         header: {
@@ -42,7 +47,7 @@ export default class FilingTemplateMixin extends Vue {
           certifiedBy: this.stateModel.certifyState.certifiedBy,
           email: this.stateModel.defineCompanyStep.businessContact.email,
           date: this.stateModel.currentDate,
-          effectiveDate: this.stateModel.incorporationDateTime.futureEffectiveDate
+          effectiveDate: formattedDateTime
         },
         incorporationApplication: {
           nameRequest: {

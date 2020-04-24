@@ -4,7 +4,7 @@
       <v-col cols="12" sm="5" md="3">
         <label>Incorporation Date and Time</label>
       </v-col>
-      <v-col cols="12" sm="8" md="6">
+      <v-col cols="12" sm="8" md="7">
         <v-radio-group
           column
           class="radio-group"
@@ -39,7 +39,7 @@
             </template>
             <v-date-picker
               v-model="datePicker"
-              :min=getCurrentDate
+              :min=minDate
               :max=maxDate>
             </v-date-picker>
           </v-menu>
@@ -70,7 +70,7 @@
                 filled
               ></v-select>
             </v-col>
-            <v-col cols="12" sm="6" md="3" style="position: relative">
+            <v-col cols="12" sm="6" md="3" class="label-col">
               <span class="time-zone-label">Pacific Time</span>
             </v-col>
           </v-row>
@@ -104,12 +104,10 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
   @Action setIsImmediate!: ActionBindingIF
   @Action setIsFutureEffective!: ActionBindingIF
 
-  @Getter getCurrentDate: string
-
   // Local properties
   private isImmediate: boolean = null
   private isFutureEffective: boolean = null
-  private isDateTimeValid: boolean = null
+  // private dateTimeToValidate: Date = null
 
   // Date properties
   private selectDate: string = ''
@@ -146,6 +144,7 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
 
     // Clear Future Effective from store / fee summary
     this.setIsFutureEffective(false)
+    // this.dateTimeToValidate = null
     this.emitDateTime('')
   }
 
@@ -170,9 +169,8 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
       // Apply selected hours and minutes
       dateToValidate.setHours(hours, minutes)
 
-      // Validate and Set DateTime
-      this.isValidDateTime(dateToValidate)
-      this.emitDateTime(dateToValidate.toISOString())
+      // Set DateTime
+      this.emitDateTime(dateToValidate)
     }
     this.emitIsValidDateTime()
   }
@@ -214,14 +212,24 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
     }
   }
 
-  /** Validate the DateTime */
-  private isValidDateTime (dateToValidate: any): void {
-    const startDate = new Date()
-    const timeDiff = dateToValidate.getTime() - startDate.getTime()
-    const timeDiffInMinutes = Math.floor(timeDiff / 1000 / 60)
+  /** Validate the DateTime is within the allowed range */
+  private isValidDateTime (): boolean {
+    if (this.incorporationDateTime.futureEffectiveDate) {
+      const startDate = new Date()
+      const timeDiff = this.incorporationDateTime.futureEffectiveDate.getTime() - startDate.getTime()
+      const timeDiffInMinutes = Math.floor(timeDiff / 1000 / 60)
 
-    // Time set must be more than 2 minutes and less than 10 days
-    this.isDateTimeValid = timeDiffInMinutes > 2 && timeDiffInMinutes < 14400
+      // Time set must be more than 2 minutes and less than 10 days
+      return timeDiffInMinutes > 2 && timeDiffInMinutes < 14400
+    }
+    return false
+  }
+
+  /** The maximum date that can be entered. */
+  private get minDate (): string {
+    const minDate = new Date()
+
+    return this.dateToUsableString(minDate)
   }
 
   /** The maximum date that can be entered. */
@@ -233,6 +241,7 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
   }
 
   // Rules
+  // TODO: Apply rules to selector fields?
   private readonly dateTimeRules: Array<Function> = []
 
   /**
@@ -292,11 +301,14 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
     this.emitIsValidDateTime()
   }
 
+  /** Emit DateTime Valid event. */
   @Emit('valid')
   private emitIsValidDateTime (): boolean {
-    return this.isImmediate
+    return this.isImmediate ? true
+      : this.isFutureEffective && this.isValidDateTime()
   }
 
+  /** Emit DateTime. */
   @Emit('dateTime')
   private emitDateTime (val): void {}
 }
@@ -308,7 +320,6 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
 #incorporation-date-time {
   margin-top: 1rem;
   padding: 1.25rem;
-  padding-bottom: 0!important;
   line-height: 1.2rem;
   font-size: 0.875rem;
 }
@@ -328,6 +339,10 @@ label {
 
 .date-time-selectors {
   margin-left: 2rem;
+}
+
+.label-col {
+  position: relative;
 }
 
 .time-zone-label {

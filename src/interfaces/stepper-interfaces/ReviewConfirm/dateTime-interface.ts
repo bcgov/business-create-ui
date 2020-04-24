@@ -2,5 +2,5 @@ export interface DateTimeIF {
   valid: boolean
   isImmediate: boolean
   isFutureEffective: boolean
-  futureEffectiveDate: string
+  futureEffectiveDate: Date
 }
