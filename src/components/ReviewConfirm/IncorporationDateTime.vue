@@ -143,7 +143,7 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
 
     // Clear Future Effective from store / fee summary
     this.setIsFutureEffective(false)
-    this.emitDateTime('')
+    this.emitDateTime(null)
   }
 
   /** Construct the Date Object for storage */
