@@ -52,10 +52,10 @@
               <!-- Only render when data is ready, or validation can't be properly evaluated. -->
               <template v-if="haveData">
                 <!-- Using v-show to pre-create/mount components so validation on stepper is shown -->
-                <define-company v-show="isRouteName(RouteNames.DEFINE_COMPANY)" />
-                <add-people-and-roles v-show="isRouteName(RouteNames.ADD_PEOPLE_AND_ROLES)" />
-                <create-share-structure v-show="isRouteName(RouteNames.CREATE_SHARE_STRUCTURE)" />
-                <review-confirm v-show="isRouteName(RouteNames.REVIEW_CONFIRM)" />
+                <component :key="step.step" v-for="step in getSteps"
+                  :is="step.component"
+                  v-show="isRouteName(step.to)"
+                />
               </template>
             </v-col>
 
@@ -130,6 +130,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
 
   // Global getters
   @Getter haveChanges!: boolean
+  @Getter getSteps!: Array<any>
 
   // Global actions
   @Action setCurrentStep!: ActionBindingIF

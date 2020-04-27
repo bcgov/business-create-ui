@@ -1,5 +1,5 @@
 // Enums
-import { EntityTypes } from '@/enums'
+import { EntityTypes, RouteNames } from '@/enums'
 import { NameRequestDetailsIF, NameRequestApplicantIF } from '@/interfaces'
 
 /**
@@ -166,36 +166,41 @@ export const getSteps = (state: any, getters: any): Array<any> => {
     step: 1,
     icon: 'mdi-domain',
     text: 'Define Your\nCompany',
-    to: '/define-company',
+    to: RouteNames.DEFINE_COMPANY,
     disabled: getters.isBusySaving,
-    valid: state.stateModel.defineCompanyStep.valid
+    valid: state.stateModel.defineCompanyStep.valid,
+    component: 'define-company'
   },
   {
     id: 'step-2-btn',
     step: 2,
     icon: 'mdi-account-multiple-plus',
     text: 'Add People\nand Roles',
-    to: '/add-people-roles',
+    to: RouteNames.ADD_PEOPLE_AND_ROLES,
     disabled: getters.isBusySaving,
-    valid: state.stateModel.addPeopleAndRoleStep.valid
+    valid: state.stateModel.addPeopleAndRoleStep.valid,
+    component: 'add-people-and-roles'
+
   },
   {
     id: 'step-3-btn',
     step: 3,
     icon: getters.isTypeBcomp ? 'mdi-sitemap' : 'mdi-format-list-text',
     text: getters.isTypeBcomp ? 'Create Share\nStructure' : 'Create\nRules',
-    to: getters.isTypeBcomp ? '/create-share-structure' : '/create-rules',
+    to: getters.isTypeBcomp ? RouteNames.CREATE_SHARE_STRUCTURE : RouteNames.CREATE_RULES,
     disabled: getters.isTypeBcomp ? getters.isBusySaving : true,
-    valid: getters.isTypeBcomp ? state.stateModel.createShareStructureStep.valid : false
+    valid: getters.isTypeBcomp ? state.stateModel.createShareStructureStep.valid : false,
+    component: getters.isTypeBcomp ? 'create-share-structure' : 'create-rules'
   },
   {
     id: 'step-4-btn',
     step: -1,
     icon: getters.isTypeBcomp ? 'mdi-handshake' : 'mdi-text-box-multiple',
     text: getters.isTypeBcomp ? 'Incorporation\nAgreement' : 'Create\nMemorandum',
-    to: getters.isTypeBcomp ? '/incorporation-agreement' : '/create-memorandum',
+    to: getters.isTypeBcomp ? RouteNames.INCORPORATION_AGREEMENT : RouteNames.CREATE_MEMORANDUM,
     disabled: true,
-    valid: false
+    valid: false,
+    component: undefined // TODO TO BE IMPLEMENTED
   },
   {
     id: 'step-5-btn',
@@ -204,7 +209,8 @@ export const getSteps = (state: any, getters: any): Array<any> => {
     text: 'Review\nand Confirm',
     to: '/review-confirm',
     disabled: getters.isBusySaving,
-    valid: getters.isApplicationValid
+    valid: getters.isApplicationValid,
+    component: 'review-confirm'
   }]
   return steps
 }
