@@ -23,7 +23,6 @@ describe('Incorporation Date Time', () => {
 
   const dateTimeDefault = {
     valid: false,
-    isImmediate: false,
     isFutureEffective: false,
     effectiveDate: null
   }

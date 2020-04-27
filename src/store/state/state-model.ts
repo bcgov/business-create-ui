@@ -15,7 +15,6 @@ export const stateModel: StateModelIF = {
   currentDate: '',
   incorporationDateTime: {
     valid: false,
-    isImmediate: false,
     isFutureEffective: false,
     effectiveDate: null
   },

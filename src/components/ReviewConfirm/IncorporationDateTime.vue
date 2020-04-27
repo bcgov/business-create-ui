@@ -105,7 +105,6 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
   private incorporationDateTime!: DateTimeIF
 
   // Global Actions
-  @Action setIsImmediate!: ActionBindingIF
   @Action setIsFutureEffective!: ActionBindingIF
 
   // Local properties
@@ -181,9 +180,8 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
   private deconstructDateTime (): void {
     if (this.incorporationDateTime) {
       // Set the chosen filing time option
-      for (let [key, val] of Object.entries(this.incorporationDateTime)) {
-        if (val === true) this.selectDate = key
-      }
+      this.selectDate = this.incorporationDateTime.isFutureEffective ? ISFUTUREEFFECTIVE : ISIMMEDIATE
+
       // Reference Store and create date object
       const effectiveDate = this.incorporationDateTime.effectiveDate
       const dateToParse = effectiveDate && new Date(effectiveDate)
@@ -289,16 +287,14 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
    */
   @Watch('selectDate')
   private setDateTimeChoice (val) {
-    this.isImmediate = val === ISIMMEDIATE
     this.isFutureEffective = val === ISFUTUREEFFECTIVE
+    this.isImmediate = !this.isFutureEffective
 
     // Clear DateTimes when immediate is selected
     if (this.isImmediate) {
-      this.setIsImmediate(true)
       this.clearDateTimes()
     } else {
       this.isFutureEffective && this.setIsFutureEffective(true)
-      this.setIsImmediate(false)
     }
     this.emitIsValidDateTime()
   }

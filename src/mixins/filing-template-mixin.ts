@@ -30,7 +30,6 @@ export default class FilingTemplateMixin extends Vue {
   @Action setCertifyState!: ActionBindingIF
   @Action setShareClasses!: ActionBindingIF
   @Action setEffectiveDate!: ActionBindingIF
-  @Action setIsImmediate!: ActionBindingIF
   @Action setIsFutureEffective!: ActionBindingIF
 
   /**
@@ -100,7 +99,6 @@ export default class FilingTemplateMixin extends Vue {
 
       // Set Future Effective Time
       this.setEffectiveDate(draftFiling.header.effectiveDate)
-      this.setIsImmediate(!draftFiling.header.effectiveDate)
       this.setIsFutureEffective(!!draftFiling.header.effectiveDate)
     } catch (e) {
       // TODO: Throw a flag to the ui from here, if we want to trigger error handling in ui

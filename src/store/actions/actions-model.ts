@@ -28,10 +28,6 @@ export const setCurrentDate: ActionIF = ({ commit }, currentDate): void => {
   commit('mutateCurrentDate', currentDate)
 }
 
-export const setIsImmediate: ActionIF = ({ commit }, isImmediate): void => {
-  commit('mutateIsImmediate', isImmediate)
-}
-
 export const setIsFutureEffective: ActionIF = ({ commit }, isFutureEffective): void => {
   commit('mutateIsFutureEffective', isFutureEffective)
 }

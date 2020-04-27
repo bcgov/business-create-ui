@@ -36,11 +36,6 @@ export const mutateCurrentDate = (state: any, currentDate: string) => {
   if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
 }
 
-export const mutateIsImmediate = (state: any, isImmediate: boolean) => {
-  state.stateModel.incorporationDateTime.isImmediate = isImmediate
-  if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
-}
-
 export const mutateIsFutureEffective = (state: any, isFutureEffective: boolean) => {
   state.stateModel.incorporationDateTime.isFutureEffective = isFutureEffective
   if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
