@@ -24,13 +24,12 @@ describe('List Shares and Series', () => {
   const dateTimeDefault = {
     valid: false,
     isImmediate: false,
-    isFutureEffective: true,
+    isFutureEffective: false,
     futureEffectiveDate: null
   }
 
   beforeEach(() => {
     const localVue = createLocalVue()
-    store.state.stateModel.incorporationDateTime.isFutureEffective = true
 
     wrapperFactory = (propsData) => {
       return mount(IncorporationDateTime, {
@@ -126,18 +125,4 @@ describe('List Shares and Series', () => {
     // Verify the Valid emit event is true
     expect(wrapper.emitted().valid).toEqual([[false]])
   })
-
-  // it('emits an invalid state when the Future Effective is selected and an invalid date is selected', async () => {
-  //   const wrapper = wrapperFactory({ incorporationDateTime: dateTimeDefault })
-  //
-  //   const radioInput = wrapper.findAll('input[type="radio"]')
-  //   const radioIsFutureEffective = radioInput.at(1)
-  //   await radioIsFutureEffective.trigger('click')
-  //
-  //   wrapper.vm.selectDate = '2020-04-25'
-  //   // const hourSelector =
-  //
-  //   // Verify the Valid emit event is true
-  //   expect(wrapper.emitted().valid).toEqual([[true]])
-  // })
 })

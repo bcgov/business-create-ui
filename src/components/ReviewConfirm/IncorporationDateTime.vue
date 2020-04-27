@@ -179,37 +179,38 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
 
   /** Parse the DateTime from store */
   private deconstructDateTime (): void {
-    // Set the chosen filing time option
-    for (let [key, val] of Object.entries(this.incorporationDateTime)) {
-      if (val === true) this.selectDate = key
-    }
+    if (this.incorporationDateTime) {
+      // Set the chosen filing time option
+      for (let [key, val] of Object.entries(this.incorporationDateTime)) {
+        if (val === true) this.selectDate = key
+      }
+      // Reference Store and create date object
+      const effectiveDate = this.incorporationDateTime.futureEffectiveDate
+      const dateToParse = effectiveDate && new Date(effectiveDate)
 
-    // Reference Store and create date object
-    const effectiveDate = this.incorporationDateTime.futureEffectiveDate
-    const dateToParse = new Date(effectiveDate)
+      if (dateToParse) {
+        // Parse the Date
+        const year = dateToParse.getFullYear()
+        const month = dateToParse.getMonth()
+        const day = dateToParse.getDate()
 
-    if (dateToParse) {
-      // Parse the Date
-      const year = dateToParse.getFullYear()
-      const month = dateToParse.getMonth()
-      const day = dateToParse.getDate()
+        // Parse the Time and display DateTime
+        if (year && month && day) {
+          let hour = dateToParse.getHours()
+          const minute = dateToParse.getMinutes()
+          const amPm = hour >= 12 ? 'PM' : 'AM'
 
-      // Parse the Time and display DateTime
-      if (year && month && day) {
-        let hour = dateToParse.getHours()
-        const minute = dateToParse.getMinutes()
-        const amPm = hour >= 12 ? 'PM' : 'AM'
+          if (hour > 12) {
+            hour -= 12
+          } else if (hour === 0) {
+            hour = 12
+          }
 
-        if (hour > 12) {
-          hour -= 12
-        } else if (hour === 0) {
-          hour = 12
+          this.dateText = `${year}-${month + 1}-${day}`
+          this.selectHour = hour.toLocaleString()
+          this.selectMinute = minute.toLocaleString('en-US', { minimumIntegerDigits: 2 })
+          this.selectPeriod = amPm
         }
-
-        this.dateText = `${year}-${month + 1}-${day}`
-        this.selectHour = hour.toLocaleString()
-        this.selectMinute = minute.toLocaleString('en-US', { minimumIntegerDigits: 2 })
-        this.selectPeriod = amPm
       }
     }
   }
@@ -217,8 +218,11 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
   /** Validate the DateTime is within the allowed range */
   private isValidDateTime (): boolean {
     if (this.incorporationDateTime.futureEffectiveDate) {
+      const effectiveDate = this.incorporationDateTime.futureEffectiveDate
+      const dateToParse = new Date(effectiveDate)
       const startDate = new Date()
-      const timeDiff = this.incorporationDateTime.futureEffectiveDate.getTime() - startDate.getTime()
+
+      const timeDiff = dateToParse.getTime() - startDate.getTime()
       const timeDiffInMinutes = Math.floor(timeDiff / 1000 / 60)
 
       // Time set must be more than 2 minutes and less than 10 days
@@ -241,10 +245,6 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
 
     return this.dateToUsableString(maxDate)
   }
-
-  // Rules
-  // TODO: Apply rules to selector fields?
-  private readonly dateTimeRules: Array<Function> = []
 
   /**
    * Set date text to date chosen in date picker.

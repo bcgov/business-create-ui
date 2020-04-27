@@ -51,6 +51,9 @@ describe('Actions component', () => {
     store.state.stateModel.addPeopleAndRoleStep = {
       valid: true
     }
+    store.state.stateModel.incorporationDateTime = {
+      valid: true
+    }
     await Vue.nextTick(() => {
       // verify File and Pay button state
       expect(wrapper.find('#file-pay-btn').attributes('disabled')).toBeUndefined()
@@ -75,7 +78,7 @@ describe('Actions Filing Functionality', () => {
         certifiedBy: 'somePerson',
         email: 'someEmail',
         date: '2020/01/29',
-        effectiveDate: '2020-04-23T22:01:00.000Z'
+        effectiveDate: '2020-05-05T00:30:00.000+00:00'
       },
       incorporationApplication: {
         nameRequest: {
@@ -242,7 +245,7 @@ describe('Actions Filing Functionality', () => {
     store.state.stateModel.certifyState.certifiedBy = 'somePerson'
     store.state.stateModel.defineCompanyStep.businessContact = { email: 'someEmail', phone: '123-456-7890' }
     store.state.stateModel.currentDate = '2020/01/29'
-    store.state.stateModel.incorporationDateTime.futureEffectiveDate = filing.filing.header.effectiveDate
+    store.state.stateModel.incorporationDateTime.futureEffectiveDate = new Date('2020-05-05T00:30:00.000Z')
     store.state.stateModel.defineCompanyStep.officeAddresses = filing.filing.incorporationApplication.offices
     store.state.stateModel.addPeopleAndRoleStep.orgPeople = filing.filing.incorporationApplication.parties
     store.state.stateModel.createShareStructureStep.shareClasses = filing.filing.incorporationApplication.shareClasses

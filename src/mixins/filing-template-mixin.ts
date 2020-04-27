@@ -75,7 +75,6 @@ export default class FilingTemplateMixin extends Vue {
    * @param draftFiling The draft filing body to be parsed and assigned to store
    */
   parseDraft (draftFiling: any): void {
-    console.log(draftFiling)
     try {
       // Set Office Addresses
       this.setOfficeAddresses(draftFiling.incorporationApplication.offices)
@@ -101,8 +100,8 @@ export default class FilingTemplateMixin extends Vue {
 
       // Set Future Effective Time
       this.setFutureEffectiveDate(draftFiling.header.effectiveDate)
-      this.setIsImmediate(draftFiling.header.effectiveDate === '')
-      this.setIsFutureEffective(draftFiling.header.effectiveDate !== '')
+      this.setIsImmediate(!draftFiling.header.effectiveDate)
+      this.setIsFutureEffective(!!draftFiling.header.effectiveDate)
     } catch (e) {
       // TODO: Throw a flag to the ui from here, if we want to trigger error handling in ui
     }
