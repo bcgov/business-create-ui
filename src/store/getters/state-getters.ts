@@ -207,7 +207,7 @@ export const getSteps = (state: any, getters: any): Array<any> => {
     step: 4,
     icon: 'mdi-text-box-check-outline',
     text: 'Review\nand Confirm',
-    to: '/review-confirm',
+    to: RouteNames.REVIEW_CONFIRM,
     disabled: getters.isBusySaving,
     valid: getters.isApplicationValid,
     component: 'review-confirm'
