@@ -181,6 +181,7 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
     if (this.incorporationDateTime) {
       // Set the chosen filing time option
       this.selectDate = this.incorporationDateTime.isFutureEffective ? ISFUTUREEFFECTIVE : ISIMMEDIATE
+      this.isFutureEffective = this.selectDate === ISFUTUREEFFECTIVE
 
       // Reference Store and create date object
       const effectiveDate = this.incorporationDateTime.effectiveDate
@@ -316,7 +317,6 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
 @import '@/assets/styles/theme.scss';
 
 #incorporation-date-time {
-  margin-top: 1rem;
   padding: 1.25rem;
   line-height: 1.2rem;
   font-size: 0.875rem;

@@ -49,7 +49,7 @@ export default class FilingTemplateMixin extends Vue {
           certifiedBy: this.stateModel.certifyState.certifiedBy,
           email: this.stateModel.defineCompanyStep.businessContact.email,
           date: this.stateModel.currentDate,
-          effectiveDate: formattedDateTime || ''
+          effectiveDate: formattedDateTime || null
         },
         incorporationApplication: {
           nameRequest: {

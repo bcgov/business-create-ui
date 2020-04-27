@@ -9,6 +9,13 @@
     <section class="mt-10">
       <header>
         <h2>Incorporation Date Time</h2>
+        <div class="list-item">
+          <p class="list-item__subtitle">Select the Date and Time of incorporation for your business. You may select a
+            date up to 10 days in the future (note: there is an additional fee of $100 to enter and incorporation date
+            in the future). Unless a business has special requirements, most businesses select an immediate Date and
+            Time of Incorporation.
+          </p>
+        </div>
       </header>
       <IncorporationDateTime
         :incorporationDateTime="incorporationDateTime"

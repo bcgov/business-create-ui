@@ -101,7 +101,7 @@ export default class LegalApiMixin extends Vue {
     if (isDraft) {
       url += '?draft=true'
     }
-
+    console.log(filing)
     return axios.put(url, filing).then(res => {
       const filing = res?.data?.filing
       const filingId = +filing?.header?.filingId

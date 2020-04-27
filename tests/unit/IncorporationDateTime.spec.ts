@@ -5,7 +5,7 @@ import Vuetify from 'vuetify'
 import { getVuexStore } from '@/store'
 
 // Utils
-import { createLocalVue, mount } from '@vue/test-utils'
+import { createLocalVue, mount, Wrapper } from '@vue/test-utils'
 
 // Components
 import { IncorporationDateTime } from '@/components/ReviewConfirm'
@@ -18,13 +18,41 @@ const vuetify = new Vuetify({})
 const store = getVuexStore()
 document.body.setAttribute('data-app', 'true')
 
+/**
+ * Returns the last event for a given name, to be used for testing event propagation in response to component changes.
+ *
+ * @param wrapper the wrapper for the component that is being tested.
+ * @param name the name of the event that is to be returned.
+ *
+ * @returns the value of the last named event for the wrapper.
+ */
+function getLastEvent (wrapper: Wrapper<IncorporationDateTime>, name: string): any {
+  const eventsList: Array<any> = wrapper.emitted(name)
+  const events: Array<any> = eventsList[eventsList.length - 1]
+
+  return events[0]
+}
+
 describe('Incorporation Date Time', () => {
   let wrapperFactory: any
+  const today = new Date()
 
   const dateTimeDefault = {
     valid: false,
     isFutureEffective: false,
     effectiveDate: null
+  }
+
+  const dateTimeValid = {
+    valid: false,
+    isFutureEffective: false,
+    effectiveDate: today.setDate(today.getDate() + 5)
+  }
+
+  const dateTimeInvalid = {
+    valid: false,
+    isFutureEffective: false,
+    effectiveDate: today.setDate(today.getDate() + 11)
   }
 
   beforeEach(() => {
@@ -58,8 +86,13 @@ describe('Incorporation Date Time', () => {
     expect(radioIsFutureEffective.attributes('aria-checked')).toBe('false')
   })
 
-  it('confirms the selector fields are disabled if future effective is NOT selected', () => {
+  it('confirms the selector fields are disabled if future effective is NOT selected', async () => {
     const wrapper = wrapperFactory({ incorporationDateTime: dateTimeDefault })
+
+    const radioInput = wrapper.findAll('input[type="radio"]')
+    const radioIsImmediate = radioInput.at(0)
+
+    await radioIsImmediate.trigger('click')
 
     expect(wrapper.find('#date-text-field').attributes('disabled')).toBe('disabled')
     expect(wrapper.find('#hour-selector').attributes('disabled')).toBe('disabled')
@@ -123,5 +156,31 @@ describe('Incorporation Date Time', () => {
 
     // Verify the Valid emit event is true
     expect(wrapper.emitted().valid).toEqual([[false]])
+  })
+
+  it('emits a valid state when the Future Effecting is selected and DateTime is valid', async () => {
+    const wrapper = wrapperFactory({ incorporationDateTime: dateTimeValid })
+
+    const radioInput = wrapper.findAll('input[type="radio"]')
+    const radioIsFutureEffective = radioInput.at(1)
+    await radioIsFutureEffective.trigger('click')
+
+    const validEvent = getLastEvent(wrapper, 'valid')
+
+    // Verify the Valid emit event is false at this point
+    expect(validEvent).toEqual(true)
+  })
+
+  it('emits a invalid state when the Future Effecting is selected and DateTime is invalid', async () => {
+    const wrapper = wrapperFactory({ incorporationDateTime: dateTimeInvalid })
+
+    const radioInput = wrapper.findAll('input[type="radio"]')
+    const radioIsFutureEffective = radioInput.at(1)
+    await radioIsFutureEffective.trigger('click')
+
+    const invalidEvent = getLastEvent(wrapper, 'valid')
+
+    // Verify the Valid emit event is false at this point
+    expect(invalidEvent).toEqual(false)
   })
 })
