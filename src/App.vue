@@ -99,7 +99,7 @@ import Views from '@/views'
 // Dialogs, mixins, interfaces, etc
 import { AccountAuthorizationDialog, NameRequestInvalidErrorDialog, ConfirmDialog } from '@/components/dialogs'
 import { DateMixin, FilingTemplateMixin, LegalApiMixin, NameRequestMixin } from '@/mixins'
-import { FilingDataIF, ActionBindingIF, IncorporationFilingIF, ConfirmDialogType } from '@/interfaces'
+import { FilingDataIF, ActionBindingIF, ConfirmDialogType } from '@/interfaces'
 import { CertifyStatementResource } from '@/resources'
 import { EntityTypes, FilingCodes, RouteNames, NameRequestStates } from '@/enums'
 

@@ -18,14 +18,14 @@ const vuetify = new Vuetify({})
 const store = getVuexStore()
 document.body.setAttribute('data-app', 'true')
 
-describe('List Shares and Series', () => {
+describe('Incorporation Date Time', () => {
   let wrapperFactory: any
 
   const dateTimeDefault = {
     valid: false,
     isImmediate: false,
     isFutureEffective: false,
-    futureEffectiveDate: null
+    effectiveDate: null
   }
 
   beforeEach(() => {

@@ -64,8 +64,8 @@ export default class ReviewConfirm extends Mixins() {
   @State(state => state.stateModel.incorporationDateTime)
   readonly incorporationDateTime!: DateTimeIF
 
-  @Action setIncorporationDateTimeValid!: ActionBindingIF
-  @Action setFutureEffectiveDate!: ActionBindingIF
+  @Action setIsIncorporationDateTimeValid!: ActionBindingIF
+  @Action setEffectiveDate!: ActionBindingIF
   @Action setCertifyState!: ActionBindingIF
   @Action setIgnoreChanges!: ActionBindingIF
 
@@ -100,12 +100,12 @@ export default class ReviewConfirm extends Mixins() {
 
   /** Handler for Valid DateTime change event. */
   private onValidDateTime (val: boolean): void {
-    this.setIncorporationDateTimeValid(val)
+    this.setIsIncorporationDateTimeValid(val)
   }
 
   /** Handler for setting DateTime. */
   private setDateTime (val: string): void {
-    this.setFutureEffectiveDate(val)
+    this.setEffectiveDate(val)
   }
 }
 </script>

@@ -29,7 +29,7 @@ export default class FilingTemplateMixin extends Vue {
   @Action setFilingId!: ActionBindingIF
   @Action setCertifyState!: ActionBindingIF
   @Action setShareClasses!: ActionBindingIF
-  @Action setFutureEffectiveDate!: ActionBindingIF
+  @Action setEffectiveDate!: ActionBindingIF
   @Action setIsImmediate!: ActionBindingIF
   @Action setIsFutureEffective!: ActionBindingIF
 
@@ -38,7 +38,7 @@ export default class FilingTemplateMixin extends Vue {
    */
   buildFiling (): IncorporationFilingIF {
     // Format DateTime for Filing
-    const effectiveDate = this.stateModel.incorporationDateTime.futureEffectiveDate
+    const effectiveDate = this.stateModel.incorporationDateTime.effectiveDate
     const formattedDateTime = effectiveDate &&
       (effectiveDate.toISOString()).replace('Z', '+00:00')
 
@@ -99,7 +99,7 @@ export default class FilingTemplateMixin extends Vue {
       })
 
       // Set Future Effective Time
-      this.setFutureEffectiveDate(draftFiling.header.effectiveDate)
+      this.setEffectiveDate(draftFiling.header.effectiveDate)
       this.setIsImmediate(!draftFiling.header.effectiveDate)
       this.setIsFutureEffective(!!draftFiling.header.effectiveDate)
     } catch (e) {

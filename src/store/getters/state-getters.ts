@@ -154,7 +154,8 @@ export const isBusySaving = (state: any): boolean => {
  */
 export const isApplicationValid = (state: any): boolean => {
   return (state.stateModel.defineCompanyStep.valid && state.stateModel.addPeopleAndRoleStep.valid &&
-    state.stateModel.createShareStructureStep.valid && state.stateModel.incorporationDateTime.valid)
+    state.stateModel.createShareStructureStep.valid && state.stateModel.incorporationDateTime.valid &&
+    state.stateModel.certifyState.valid)
 }
 
 /**

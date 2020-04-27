@@ -185,7 +185,7 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
         if (val === true) this.selectDate = key
       }
       // Reference Store and create date object
-      const effectiveDate = this.incorporationDateTime.futureEffectiveDate
+      const effectiveDate = this.incorporationDateTime.effectiveDate
       const dateToParse = effectiveDate && new Date(effectiveDate)
 
       if (dateToParse) {
@@ -217,8 +217,8 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
 
   /** Validate the DateTime is within the allowed range */
   private isValidDateTime (): boolean {
-    if (this.incorporationDateTime.futureEffectiveDate) {
-      const effectiveDate = this.incorporationDateTime.futureEffectiveDate
+    if (this.incorporationDateTime.effectiveDate) {
+      const effectiveDate = this.incorporationDateTime.effectiveDate
       const dateToParse = new Date(effectiveDate)
       const startDate = new Date()
 
@@ -226,7 +226,7 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
       const timeDiffInMinutes = Math.floor(timeDiff / 1000 / 60)
 
       // Time set must be more than 2 minutes and less than 10 days
-      return timeDiffInMinutes > 2 && timeDiffInMinutes < 14400
+      return timeDiffInMinutes >= 2 && timeDiffInMinutes <= 14400
     }
     return false
   }
@@ -251,7 +251,7 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
    * @param val The date selected
    */
   @Watch('datePicker')
-  private onFutureEffectiveDate (val: string): void {
+  private onEffectiveDate (val: string): void {
     this.dateText = val
     this.constructDate()
   }
