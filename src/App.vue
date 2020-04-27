@@ -45,8 +45,18 @@
               </header>
 
               <stepper class="mt-10" />
+              <!-- Sign in and sign out components -->
+              <sign-in v-if="isRouteName(RouteNames.SIGN_IN)" />
+              <sign-out v-if="isRouteName(RouteNames.SIGN_OUT)" />
 
-              <router-view />
+              <!-- Only render when data is ready, or validation can't be properly evaluated. -->
+              <template v-if="haveData">
+                <!-- Using v-show to pre-create/mount components so validation on stepper is shown -->
+                <component :key="step.step" v-for="step in getSteps"
+                  :is="step.component"
+                  v-show="isRouteName(step.to)"
+                />
+              </template>
             </v-col>
 
             <v-col cols="12" lg="3" style="position: relative">
@@ -85,13 +95,14 @@ import SbcHeader from 'sbc-common-components/src/components/SbcHeader.vue'
 import SbcFooter from 'sbc-common-components/src/components/SbcFooter.vue'
 import SbcFeeSummary from 'sbc-common-components/src/components/SbcFeeSummary.vue'
 import { EntityInfo, Stepper, Actions } from '@/components/common'
+import Views from '@/views'
 
 // Dialogs, mixins, interfaces, etc
 import { AccountAuthorizationDialog, NameRequestInvalidErrorDialog, ConfirmDialog } from '@/components/dialogs'
 import { DateMixin, FilingTemplateMixin, LegalApiMixin, NameRequestMixin } from '@/mixins'
 import { FilingDataIF, ActionBindingIF, IncorporationFilingIF, ConfirmDialogType } from '@/interfaces'
 import { CertifyStatementResource } from '@/resources'
-import { EntityTypes, FilingCodes, NameRequestStates } from '@/enums'
+import { EntityTypes, FilingCodes, RouteNames, NameRequestStates } from '@/enums'
 
 @Component({
   components: {
@@ -103,7 +114,8 @@ import { EntityTypes, FilingCodes, NameRequestStates } from '@/enums'
     Actions,
     NameRequestInvalidErrorDialog,
     AccountAuthorizationDialog,
-    ConfirmDialog
+    ConfirmDialog,
+    ...Views
   }
 })
 export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApiMixin, NameRequestMixin) {
@@ -118,6 +130,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
 
   // Global getters
   @Getter haveChanges!: boolean
+  @Getter getSteps!: Array<any>
 
   // Global actions
   @Action setCurrentStep!: ActionBindingIF
@@ -137,6 +150,9 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
   private nameRequestInvalidType: string = ''
   private haveData: boolean = false
   private setValidity: boolean = true
+
+  // Template Enums
+  readonly RouteNames = RouteNames
 
   /**
    * Instance of the token refresh service.
@@ -162,6 +178,11 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
   /** True if Jest is running the code. */
   private get isJestRunning (): boolean {
     return (process.env.JEST_WORKER_ID !== undefined)
+  }
+
+  /** Helper to check is the current route matches */
+  private isRouteName (routeName: string) : boolean {
+    return this.$route.name === routeName
   }
 
   /** Called when component is created. */

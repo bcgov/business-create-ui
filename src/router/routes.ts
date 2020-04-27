@@ -4,12 +4,13 @@ import DefineCompany from '@/views/DefineCompany.vue'
 import ReviewConfirm from '@/views/ReviewConfirm.vue'
 import SigninView from '@/views/auth/Signin.vue'
 import SignoutView from '@/views/auth/Signout.vue'
+import { RouteNames } from '@/enums'
 
 export const routes = [
   {
     // router.beforeEach() routes here:
     path: '/signin',
-    name: 'signin',
+    name: RouteNames.SIGN_IN,
     component: SigninView,
     meta: {
       requiresAuth: false
@@ -18,7 +19,7 @@ export const routes = [
   {
     // SbcHeader.logout() redirects here:
     path: '/signout',
-    name: 'signout',
+    name: RouteNames.SIGN_OUT,
     component: SignoutView,
     meta: {
       requiresAuth: false
@@ -26,7 +27,7 @@ export const routes = [
   },
   {
     path: '/define-company',
-    name: 'define-company',
+    name: RouteNames.DEFINE_COMPANY,
     component: DefineCompany,
     meta: {
       step: 1,
@@ -36,7 +37,7 @@ export const routes = [
   },
   {
     path: '/add-people-roles',
-    name: 'add-people-roles',
+    name: RouteNames.ADD_PEOPLE_AND_ROLES,
     component: AddPeopleAndRoles,
     meta: {
       step: 2,
@@ -46,7 +47,7 @@ export const routes = [
   },
   {
     path: '/create-share-structure',
-    name: 'create-share-structure',
+    name: RouteNames.CREATE_SHARE_STRUCTURE,
     component: CreateShareStructure,
     meta: {
       step: 3,
@@ -56,7 +57,7 @@ export const routes = [
   },
   {
     path: '/review-confirm',
-    name: 'review-confirm',
+    name: RouteNames.REVIEW_CONFIRM,
     component: ReviewConfirm,
     meta: {
       step: 4,
