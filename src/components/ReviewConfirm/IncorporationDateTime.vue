@@ -54,7 +54,6 @@
                 :disabled="!isFutureEffective"
                 :rules="hourRules"
                 filled
-                dense
               ></v-combobox>
             </v-col>
             <span :class="{ 'disabled': !isFutureEffective, 'time-colon': true }">:</span>
@@ -67,7 +66,6 @@
                 :disabled="!isFutureEffective"
                 :rules="minuteRules"
                 filled
-                dense
               ></v-combobox>
             </v-col>
             <v-col cols="12" sm="6" md="3">
