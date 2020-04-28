@@ -20,7 +20,7 @@
         </v-radio-group>
         <div class="date-time-selectors">
           <v-menu
-            :close-on-content-click="false"
+            :close-on-content-click="true"
             :nudge-right="40"
             transition="scale-transition"
             offset-y
@@ -46,25 +46,29 @@
           </v-menu>
           <v-row class>
             <v-col cols="12" sm="6" md="3">
-              <v-select
+              <v-combobox
                 id="hour-selector"
-                label="Hour"
                 :items="hours"
+                label="Hour"
                 v-model="selectHour"
                 :disabled="!isFutureEffective"
+                :rules="hourRules"
                 filled
-              ></v-select>
+                dense
+              ></v-combobox>
             </v-col>
             <span :class="{ 'disabled': !isFutureEffective, 'time-colon': true }">:</span>
             <v-col cols="12" sm="6" md="3">
-              <v-select
+              <v-combobox
                 id="minute-selector"
                 label="Minute"
                 :items="minutes"
                 v-model="selectMinute"
                 :disabled="!isFutureEffective"
+                :rules="minuteRules"
                 filled
-              ></v-select>
+                dense
+              ></v-combobox>
             </v-col>
             <v-col cols="12" sm="6" md="3">
               <v-select
@@ -117,8 +121,8 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
   private datePicker: string = ''
 
   // Time properties
-  private selectHour: string = ''
-  private selectMinute: string = ''
+  private selectHour: string[] = []
+  private selectMinute: string[] = []
   private selectPeriod: string = 'AM'
 
   // Date Time Selectors
@@ -127,6 +131,20 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
   private minutes: Array<string> = [...Array(60).keys()]
     .map(num => num.toLocaleString('en-US', { minimumIntegerDigits: 2 }))
   private timePeriod: Array<string> = ['AM', 'PM']
+
+  /** The array of validations rules for the AGM Date text field. */
+  private get hourRules (): Array<Function> {
+    return [
+      v => this.isFutureEffective && (/^([1-9]|1[012])$/.test(v) || 'An hour between 1 and 12 is required.')
+    ]
+  }
+
+  /** The array of validations rules for the AGM Date text field. */
+  private get minuteRules (): Array<Function> {
+    return [
+      v => this.isFutureEffective && (/^([0-5]?[0-9])$/.test(v) || 'A second between 1 and 59 is required.')
+    ]
+  }
 
   /** Lifecycle Hook to run when component mounts */
   mounted (): void {
@@ -140,8 +158,8 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
     this.datePicker = ''
 
     // Clear Times
-    this.selectHour = ''
-    this.selectMinute = ''
+    this.selectHour = []
+    this.selectMinute = []
     this.selectPeriod = 'AM'
 
     // Clear Future Effective from store / fee summary
@@ -206,8 +224,8 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
           }
 
           this.dateText = `${year}-${month + 1}-${day}`
-          this.selectHour = hour.toLocaleString()
-          this.selectMinute = minute.toLocaleString('en-US', { minimumIntegerDigits: 2 })
+          this.selectHour = [hour.toLocaleString()]
+          this.selectMinute = [minute.toLocaleString('en-US', { minimumIntegerDigits: 2 })]
           this.selectPeriod = amPm
         }
       }

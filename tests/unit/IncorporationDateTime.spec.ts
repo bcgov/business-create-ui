@@ -9,6 +9,7 @@ import { createLocalVue, mount, Wrapper } from '@vue/test-utils'
 
 // Components
 import { IncorporationDateTime } from '@/components/ReviewConfirm'
+import get = Reflect.get;
 
 Vue.use(Vuetify)
 Vue.use(Vuelidate)
@@ -143,8 +144,10 @@ describe('Incorporation Date Time', () => {
     const radioIsImmediate = radioInput.at(0)
     await radioIsImmediate.trigger('click')
 
+    const validEvent = getLastEvent(wrapper, 'valid')
+
     // Verify the Valid emit event is true
-    expect(wrapper.emitted().valid).toEqual([[true]])
+    expect(validEvent).toEqual(true)
   })
 
   it('emits an invalid state when the Future Effective is selected and no date is selected', async () => {
