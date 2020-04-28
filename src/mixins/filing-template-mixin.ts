@@ -3,7 +3,7 @@ import { Component, Vue } from 'vue-property-decorator'
 import { State, Getter, Action } from 'vuex-class'
 
 // Interfaces
-import { ActionBindingIF, StateModelIF, IncorporationFilingIF, GetterIF, OrgPersonIF } from '@/interfaces'
+import { ActionBindingIF, StateModelIF, IncorporationFilingIF, GetterIF } from '@/interfaces'
 
 // Constants
 import { INCORPORATION_APPLICATION } from '@/constants'
@@ -29,18 +29,27 @@ export default class FilingTemplateMixin extends Vue {
   @Action setFilingId!: ActionBindingIF
   @Action setCertifyState!: ActionBindingIF
   @Action setShareClasses!: ActionBindingIF
+  @Action setEffectiveDate!: ActionBindingIF
+  @Action setIsFutureEffective!: ActionBindingIF
 
   /**
    * Method to construct a filing body when making an api request
    */
   buildFiling (): IncorporationFilingIF {
+    // Format DateTime for Filing
+    const effectiveDate = this.stateModel.incorporationDateTime.effectiveDate
+    const formattedDateTime = effectiveDate &&
+      (effectiveDate.toISOString()).replace('Z', '+00:00')
+
+    // Build and return filing
     return {
       filing: {
         header: {
           name: INCORPORATION_APPLICATION,
           certifiedBy: this.stateModel.certifyState.certifiedBy,
           email: this.stateModel.defineCompanyStep.businessContact.email,
-          date: this.stateModel.currentDate
+          date: this.stateModel.currentDate,
+          effectiveDate: formattedDateTime || null
         },
         incorporationApplication: {
           nameRequest: {
@@ -87,6 +96,10 @@ export default class FilingTemplateMixin extends Vue {
         valid: false,
         certifiedBy: draftFiling.header.certifiedBy
       })
+
+      // Set Future Effective Time
+      this.setEffectiveDate(draftFiling.header.effectiveDate)
+      this.setIsFutureEffective(!!draftFiling.header.effectiveDate)
     } catch (e) {
       // TODO: Throw a flag to the ui from here, if we want to trigger error handling in ui
     }

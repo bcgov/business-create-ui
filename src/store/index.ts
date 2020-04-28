@@ -19,7 +19,8 @@ import { mutateCurrentStep, mutateIsSaving, mutateIsSavingResuming, mutateIsFili
   mutateCertifyStatementResource, mutateCertifyState, mutateBusinessContact, mutateDefineCompanyStepValidity,
   mutateNameRequestState, mutateFilingId, mutateOfficeAddresses, mutateOrgPersonList,
   mutateAddPeopleAndRoleStepValidity, mutateShareClasses, mutateCreateShareStructureStepValidity,
-  mutateIgnoreChanges, mutateHaveChanges }
+  mutateIgnoreChanges, mutateHaveChanges, mutateIsFutureEffective, mutateEffectiveDate,
+  mutateIsIncorporationDateTimeValid }
   from '@/store/mutations'
 
 // Actions
@@ -27,7 +28,8 @@ import { setCurrentStep, setIsSaving, setIsSavingResuming, setIsFilingPaying,
   setKeycloakRoles, setAuthRoles, setCurrentDate, setCertifyStatementResource, setCertifyState,
   setBusinessContact, setDefineCompanyStepValidity, setNameRequestState, setFilingId, setOfficeAddresses,
   setOrgPersonList, setAddPeopleAndRoleStepValidity, setShareClasses,
-  setCreateShareStructureStepValidity, setIgnoreChanges, setHaveChanges } from './actions'
+  setCreateShareStructureStepValidity, setIgnoreChanges, setHaveChanges, setIsFutureEffective,
+  setEffectiveDate, setIsIncorporationDateTimeValid } from './actions'
 
 /**
  * Configures and returns Vuex Store.
@@ -85,7 +87,10 @@ export function getVuexStore () {
       mutateShareClasses,
       mutateCreateShareStructureStepValidity,
       mutateIgnoreChanges,
-      mutateHaveChanges
+      mutateHaveChanges,
+      mutateIsFutureEffective,
+      mutateEffectiveDate,
+      mutateIsIncorporationDateTimeValid
     },
     actions: {
       setCurrentStep,
@@ -107,7 +112,10 @@ export function getVuexStore () {
       setShareClasses,
       setCreateShareStructureStepValidity,
       setIgnoreChanges,
-      setHaveChanges
+      setHaveChanges,
+      setIsFutureEffective,
+      setEffectiveDate,
+      setIsIncorporationDateTimeValid
     }
   })
 

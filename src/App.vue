@@ -87,7 +87,6 @@
 // Libraries
 import { Component, Vue, Watch, Mixins } from 'vue-property-decorator'
 import { State, Action, Getter } from 'vuex-class'
-import axios from '@/utils/axios-auth'
 import TokenService from 'sbc-common-components/src/services/token.services'
 
 // Components
@@ -100,7 +99,7 @@ import Views from '@/views'
 // Dialogs, mixins, interfaces, etc
 import { AccountAuthorizationDialog, NameRequestInvalidErrorDialog, ConfirmDialog } from '@/components/dialogs'
 import { DateMixin, FilingTemplateMixin, LegalApiMixin, NameRequestMixin } from '@/mixins'
-import { FilingDataIF, ActionBindingIF, IncorporationFilingIF, ConfirmDialogType } from '@/interfaces'
+import { FilingDataIF, ActionBindingIF, ConfirmDialogType } from '@/interfaces'
 import { CertifyStatementResource } from '@/resources'
 import { EntityTypes, FilingCodes, RouteNames, NameRequestStates } from '@/enums'
 
@@ -127,6 +126,9 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
   // Global state
   @State(state => state.stateModel.nameRequest.entityType)
   readonly entityType!: string
+
+  @State(state => state.stateModel.incorporationDateTime.isFutureEffective)
+  readonly isFutureEffective!: boolean
 
   // Global getters
   @Getter haveChanges!: boolean
@@ -265,7 +267,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
         }
 
         // Initialize Fee Summary
-        this.initEntity(this.entityType)
+        this.initEntityFees()
 
         // Set the resources
         this.setCertifyStatementResource(CertifyStatementResource.find(x => x.entityType === this.entityType))
@@ -362,17 +364,23 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
     })
   }
 
-  /**
-   * Initializes the UI based on the entity type.
-   * @param entityType the type of entity initiating an incorporation
-   */
-  private initEntity (entityType: string): void {
-    switch (entityType) {
+  /** Initializes the Fee Summary based on the entity type. */
+  @Watch('isFutureEffective')
+  private initEntityFees (): void {
+    switch (this.entityType) {
       case EntityTypes.BCOMP:
-        this.filingData.push({ filingTypeCode: FilingCodes.INCORPORATION_BC, entityType: EntityTypes.BCOMP })
+        this.filingData = [{
+          filingTypeCode: FilingCodes.INCORPORATION_BC,
+          entityType: EntityTypes.BCOMP,
+          futureEffective: this.isFutureEffective
+        }]
         break
       case EntityTypes.COOP:
-        this.filingData.push({ filingTypeCode: FilingCodes.INCORPORATION_CP, entityType: EntityTypes.COOP })
+        this.filingData = [{
+          filingTypeCode: FilingCodes.INCORPORATION_CP,
+          entityType: EntityTypes.COOP,
+          futureEffective: this.isFutureEffective
+        }]
         break
       default:
         this.filingData = []

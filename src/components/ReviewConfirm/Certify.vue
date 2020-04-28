@@ -79,7 +79,7 @@ export default class Certify extends Vue {
     return this.certifiedBy && this.certifiedBy.replace(/\s+/g, ' ').trim()
   }
 
-   @Emit('certifiedBy')
+  @Emit('certifiedBy')
   private emitCertifiedBy (certifiedBy: string): string {
     // remove repeated inline whitespace, and leading/trailing whitespace
     certifiedBy = certifiedBy && certifiedBy.replace(/\s+/g, ' ').trim()
@@ -89,11 +89,11 @@ export default class Certify extends Vue {
 
   // Emit an update event when checkbox changes.
   @Emit('isCertified')
-   private emitIsCertified (isCertified: boolean): boolean {
-     this.isCertified = isCertified
-     this.emitValid(Boolean(this.trimmedCertifiedBy && isCertified))
-     return isCertified
-   }
+  private emitIsCertified (isCertified: boolean): boolean {
+    this.isCertified = isCertified
+    this.emitValid(Boolean(this.trimmedCertifiedBy && isCertified))
+    return isCertified
+  }
 
   // Emit an event indicating whether or not the form is valid.
   @Emit('valid')

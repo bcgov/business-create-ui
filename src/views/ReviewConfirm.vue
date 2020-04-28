@@ -6,6 +6,23 @@
       </header>
       <Summary />
     </section>
+    <section class="mt-10">
+      <header>
+        <h2>Incorporation Date and Time</h2>
+        <div class="list-item">
+          <p class="list-item__subtitle">Select the Date and Time of incorporation for your business. You may select a
+            date up to 10 days in the future (note: there is an additional fee of $100 to enter and incorporation date
+            in the future). Unless a business has special requirements, most businesses select an immediate Date and
+            Time of Incorporation.
+          </p>
+        </div>
+      </header>
+      <IncorporationDateTime
+        :incorporationDateTime="incorporationDateTime"
+        @valid="onValidDateTime($event)"
+        @dateTime="setDateTime($event)"
+      />
+    </section>
 
     <section class="mt-10">
       <header>
@@ -28,14 +45,15 @@ import { Component, Mixins, Vue } from 'vue-property-decorator'
 import { State, Action } from 'vuex-class'
 
 // Interfaces
-import { CertifyStatementIF, ActionBindingIF, CertifyIF } from '@/interfaces'
+import { CertifyStatementIF, ActionBindingIF, CertifyIF, DateTimeIF } from '@/interfaces'
 
 // Components
-import { Certify, Summary } from '@/components/ReviewConfirm'
+import { Certify, IncorporationDateTime, Summary } from '@/components/ReviewConfirm'
 
 @Component({
   components: {
     Certify,
+    IncorporationDateTime,
     Summary
   }
 })
@@ -49,6 +67,12 @@ export default class ReviewConfirm extends Mixins() {
   @State(state => state.resourceModel.certifyStatementResource)
   readonly certifyStatementResource!: CertifyStatementIF
 
+  // Global State
+  @State(state => state.stateModel.incorporationDateTime)
+  readonly incorporationDateTime!: DateTimeIF
+
+  @Action setIsIncorporationDateTimeValid!: ActionBindingIF
+  @Action setEffectiveDate!: ActionBindingIF
   @Action setCertifyState!: ActionBindingIF
   @Action setIgnoreChanges!: ActionBindingIF
 
@@ -79,6 +103,16 @@ export default class ReviewConfirm extends Mixins() {
         certifiedBy: val
       }
     )
+  }
+
+  /** Handler for Valid DateTime change event. */
+  private onValidDateTime (val: boolean): void {
+    this.setIsIncorporationDateTimeValid(val)
+  }
+
+  /** Handler for setting DateTime. */
+  private setDateTime (val: string): void {
+    this.setEffectiveDate(val)
   }
 }
 </script>

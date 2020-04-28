@@ -51,6 +51,9 @@ describe('Actions component', () => {
     store.state.stateModel.addPeopleAndRoleStep = {
       valid: true
     }
+    store.state.stateModel.incorporationDateTime = {
+      valid: true
+    }
     await Vue.nextTick(() => {
       // verify File and Pay button state
       expect(wrapper.find('#file-pay-btn').attributes('disabled')).toBeUndefined()
@@ -65,6 +68,8 @@ describe('Actions component', () => {
 describe('Actions Filing Functionality', () => {
   let wrapper: any
   const { assign } = window.location
+  const inputDate = new Date(new Date().setDate(new Date().getDate() + 5))
+  const formattedEffectiveDate = inputDate.toISOString().replace('Z', '+00:00')
   sessionStorage.setItem('AUTH_URL', `myhost/basePath/auth/`)
   sessionStorage.setItem('DASHBOARD_URL', `myhost/cooperatives/`)
 
@@ -74,7 +79,8 @@ describe('Actions Filing Functionality', () => {
         name: 'incorporationApplication',
         certifiedBy: 'somePerson',
         email: 'someEmail',
-        date: '2020/01/29'
+        date: '2020/01/29',
+        effectiveDate: formattedEffectiveDate
       },
       incorporationApplication: {
         nameRequest: {
@@ -241,6 +247,7 @@ describe('Actions Filing Functionality', () => {
     store.state.stateModel.certifyState.certifiedBy = 'somePerson'
     store.state.stateModel.defineCompanyStep.businessContact = { email: 'someEmail', phone: '123-456-7890' }
     store.state.stateModel.currentDate = '2020/01/29'
+    store.state.stateModel.incorporationDateTime.effectiveDate = inputDate
     store.state.stateModel.defineCompanyStep.officeAddresses = filing.filing.incorporationApplication.offices
     store.state.stateModel.addPeopleAndRoleStep.orgPeople = filing.filing.incorporationApplication.parties
     store.state.stateModel.createShareStructureStep.shareClasses = filing.filing.incorporationApplication.shareClasses

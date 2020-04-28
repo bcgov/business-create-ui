@@ -28,6 +28,18 @@ export const setCurrentDate: ActionIF = ({ commit }, currentDate): void => {
   commit('mutateCurrentDate', currentDate)
 }
 
+export const setIsFutureEffective: ActionIF = ({ commit }, isFutureEffective): void => {
+  commit('mutateIsFutureEffective', isFutureEffective)
+}
+
+export const setEffectiveDate: ActionIF = ({ commit }, effectiveDate): void => {
+  commit('mutateEffectiveDate', effectiveDate)
+}
+
+export const setIsIncorporationDateTimeValid: ActionIF = ({ commit }, incorporationDateTimeValid): void => {
+  commit('mutateIsIncorporationDateTimeValid', incorporationDateTimeValid)
+}
+
 export const setCertifyStatementResource: ActionIF = ({ commit }, certifyStatementResource): void => {
   commit('mutateCertifyStatementResource', certifyStatementResource)
 }

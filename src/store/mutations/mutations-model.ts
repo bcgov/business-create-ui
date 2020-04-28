@@ -1,5 +1,7 @@
-import { CertifyStatementIF, CertifyIF, IncorporationAddressIf, NameRequestIF,
-  BusinessContactIF, OrgPersonIF, ShareClassIF } from '@/interfaces'
+import {
+  CertifyStatementIF, CertifyIF, IncorporationAddressIf, NameRequestIF,
+  BusinessContactIF, OrgPersonIF, ShareClassIF
+} from '@/interfaces'
 
 export const mutateCertifyStatementResource = (state: any, certifyStatementResource: CertifyStatementIF) => {
   state.resourceModel.certifyStatementResource = certifyStatementResource
@@ -31,6 +33,21 @@ export const mutateIsFilingPaying = (state: any, isFilingPaying: boolean) => {
 
 export const mutateCurrentDate = (state: any, currentDate: string) => {
   state.stateModel.currentDate = currentDate
+  if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
+}
+
+export const mutateIsFutureEffective = (state: any, isFutureEffective: boolean) => {
+  state.stateModel.incorporationDateTime.isFutureEffective = isFutureEffective
+  if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
+}
+
+export const mutateEffectiveDate = (state: any, effectiveDate: string) => {
+  state.stateModel.incorporationDateTime.effectiveDate = effectiveDate
+  if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
+}
+
+export const mutateIsIncorporationDateTimeValid = (state: any, incorporationDateTimeValid: boolean) => {
+  state.stateModel.incorporationDateTime.valid = incorporationDateTimeValid
   if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
 }
 

@@ -138,9 +138,8 @@ export const isEnableFilePayBtn = (state: any): boolean => {
   const step2Valid = state.stateModel.addPeopleAndRoleStep.valid
   const step3Valid = true // FOR TESTING ONLY
   const step4Valid = true // FOR TESTING ONLY
-  const step5Valid = true // FOR TESTING ONLY
-  return (step1Valid && step2Valid && step3Valid && step4Valid && step5Valid &&
-    state.stateModel.certifyState.valid)
+  const step5Valid = state.stateModel.certifyState.valid && state.stateModel.incorporationDateTime.valid
+  return (step1Valid && step2Valid && step3Valid && step4Valid && step5Valid)
 }
 
 /**
@@ -154,7 +153,9 @@ export const isBusySaving = (state: any): boolean => {
  * Whether all the incorporation steps are valid.
  */
 export const isApplicationValid = (state: any): boolean => {
-  return (state.stateModel.defineCompanyStep.valid && state.stateModel.addPeopleAndRoleStep.valid)
+  return (state.stateModel.defineCompanyStep.valid && state.stateModel.addPeopleAndRoleStep.valid &&
+    state.stateModel.createShareStructureStep.valid && state.stateModel.incorporationDateTime.valid &&
+    state.stateModel.certifyState.valid)
 }
 
 /**
