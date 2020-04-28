@@ -20,7 +20,7 @@
         </v-radio-group>
         <div class="date-time-selectors">
           <v-menu
-            :close-on-content-click="true"
+            close-on-content-click
             :nudge-right="40"
             transition="scale-transition"
             offset-y
