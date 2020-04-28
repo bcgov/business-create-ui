@@ -8,7 +8,7 @@
     </section>
     <section class="mt-10">
       <header>
-        <h2>Incorporation Date Time</h2>
+        <h2>Incorporation Date and Time</h2>
         <div class="list-item">
           <p class="list-item__subtitle">Select the Date and Time of incorporation for your business. You may select a
             date up to 10 days in the future (note: there is an additional fee of $100 to enter and incorporation date

@@ -158,7 +158,7 @@ describe('Incorporation Date Time', () => {
     expect(wrapper.emitted().valid).toEqual([[false]])
   })
 
-  it('emits a valid state when the Future Effecting is selected and DateTime is valid', async () => {
+  it('emits a valid state when the Future Effective is selected and DateTime is valid', async () => {
     const wrapper = wrapperFactory({ incorporationDateTime: dateTimeValid })
 
     const radioInput = wrapper.findAll('input[type="radio"]')
@@ -171,7 +171,7 @@ describe('Incorporation Date Time', () => {
     expect(validEvent).toEqual(true)
   })
 
-  it('emits a invalid state when the Future Effecting is selected and DateTime is invalid', async () => {
+  it('emits a invalid state when the Future Effective is selected and DateTime is invalid', async () => {
     const wrapper = wrapperFactory({ incorporationDateTime: dateTimeInvalid })
 
     const radioInput = wrapper.findAll('input[type="radio"]')
