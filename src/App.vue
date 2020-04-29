@@ -151,7 +151,6 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
   private nameRequestInvalidErrorDialog: boolean = false
   private nameRequestInvalidType: string = ''
   private haveData: boolean = false
-  private setValidity: boolean = true
 
   // Template Enums
   readonly RouteNames = RouteNames
@@ -280,17 +279,6 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
     Vue.nextTick(() => this.setHaveChanges(false))
   }
 
-  /** Sets the validity state of all pages. */
-  private setPageValidity (): void {
-    if (this.setValidity) {
-      // FUTURE: implement this (ticket #3342)
-      // this.setDefineCompanyStepValidity(true) // (this.businessContactFormValid && this.addressFormValid)
-      // this.setAddPeopleAndRoleStepValidity(true) // (this.hasValidRoles())
-      // this.setCreateShareStructureStepValidity(true) // ...
-      this.setValidity = false
-    }
-  }
-
   /** Redirects to dashboard URL. */
   private redirectToDashboard (): void {
     const dashboardUrl = sessionStorage.getItem('DASHBOARD_URL')
@@ -398,7 +386,6 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
       this.setCurrentStep(this.$route.meta?.step)
       await this.startTokenService()
       await this.fetchData()
-      this.setPageValidity()
     }
   }
 
