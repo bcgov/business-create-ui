@@ -85,7 +85,8 @@ describe('Actions Filing Functionality', () => {
       incorporationApplication: {
         nameRequest: {
           nrNumber: 'NR1234567',
-          legalType: 'BC'
+          legalType: 'BC',
+          legalName: 'Test'
         },
         offices: {
           registeredOffice: {
@@ -243,7 +244,8 @@ describe('Actions Filing Functionality', () => {
     delete window.location
     window.location = { assign: jest.fn() } as any
 
-    store.state.stateModel.nameRequest = { entityType: 'BC', nrNumber: 'NR1234567' }
+    store.state.stateModel.nameRequest =
+      { entityType: 'BC', nrNumber: 'NR1234567', details: { approvedName: 'Test' } }
     store.state.stateModel.certifyState.certifiedBy = 'somePerson'
     store.state.stateModel.defineCompanyStep.businessContact = { email: 'someEmail', phone: '123-456-7890' }
     store.state.stateModel.currentDate = '2020/01/29'
