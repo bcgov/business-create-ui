@@ -79,7 +79,7 @@
             </v-col>
             <v-col cols="12" sm="6" md="2" class="label-col">
               <span class="time-zone-label" :class="{ 'disabled': !isFutureEffective }">Pacific Time</span>
-            </v-col>{{isUnderTime}}
+            </v-col>
           </v-row>
           <v-row>
             <v-col
@@ -281,8 +281,10 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
     if (this.incorporationDateTime.effectiveDate) {
       const startDate = new Date()
       const effectiveDate = this.incorporationDateTime.effectiveDate
-      const diff = (effectiveDate.getTime() - startDate.getTime()) / 1000
-      return diff <= 0
+
+      // Calculate time diff
+      const diff = Math.floor((effectiveDate.getTime() - startDate.getTime()) / 1000 / 60)
+      return diff <= 2
     }
   }
 
