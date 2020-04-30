@@ -71,7 +71,7 @@ export default class FilingTemplateMixin extends Vue {
     }
     // Pass the effective date only for a future effective filing.
     if (formattedDateTime) {
-      filing['filing']['header']['effectiveDate'] = formattedDateTime
+      filing.filing.header.effectiveDate = formattedDateTime
     }
     return filing
   }
