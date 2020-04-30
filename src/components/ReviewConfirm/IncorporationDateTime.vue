@@ -18,7 +18,7 @@
             value="isFutureEffective">
           </v-radio>
         </v-radio-group>
-        <div class="date-time-selectors">
+        <v-form ref="dateTimeForm" class="date-time-selectors">
           <v-menu
             close-on-content-click
             :nudge-right="40"
@@ -92,7 +92,7 @@
               </p>
             </v-col>
           </v-row>
-        </div>
+        </v-form>
       </v-col>
     </v-row>
   </v-card>
@@ -110,10 +110,15 @@ import { DateMixin } from '@/mixins'
 import { ISIMMEDIATE, ISFUTUREEFFECTIVE } from '@/constants'
 
 // Interfaces
-import { ActionBindingIF, DateTimeIF } from '@/interfaces'
+import { ActionBindingIF, DateTimeIF, FormType } from '@/interfaces'
 
 @Component({})
 export default class IncorporationDateTime extends Mixins(DateMixin) {
+  // Refs
+  $refs!: {
+    dateTimeForm: FormType,
+  }
+
   @Prop()
   private incorporationDateTime!: DateTimeIF
 
@@ -356,6 +361,7 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
   @Watch('incorporationDateTime.valid')
   private reValidateDateTime () {
     this.constructDate()
+    this.$refs.dateTimeForm.validate()
   }
 
   /** Emit DateTime Valid event. */
