@@ -87,4 +87,24 @@ export default class DateMixin extends Vue {
     const dateLocalMs = new Date(date).setHours(0, 0, 0, 0)
     return Math.round((dateLocalMs - todayLocalMs) / this.MS_IN_A_DAY)
   }
+
+  /** Validate the DateTime is within the allowed range */
+  isValidDateTime (dateToValidate: Date, ignoreTime: boolean = false): boolean {
+    if (dateToValidate) {
+      const startDate = new Date()
+
+      // Ignore the time difference if the user has input a Date before time.
+      if (ignoreTime && dateToValidate.getDate() === startDate.getDate()) {
+        return true
+      }
+
+      // Calculate time diff
+      const timeDiff = dateToValidate.getTime() - startDate.getTime()
+      const timeDiffInMinutes = Math.floor(timeDiff / 1000 / 60)
+
+      // Time set must be more than 2 minutes and less than 10 days
+      return timeDiffInMinutes >= 2 && timeDiffInMinutes <= 14400
+    }
+    return false
+  }
 }
