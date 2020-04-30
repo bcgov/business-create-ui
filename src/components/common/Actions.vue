@@ -166,7 +166,6 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
       this.setIsIncorporationDateTimeValid(false)
       this.setIsFilingPaying(false)
       window.scrollTo({ top: 1250, behavior: 'smooth' })
-      console.log(this.stateModel.incorporationDateTime.valid)
       return
     }
 
