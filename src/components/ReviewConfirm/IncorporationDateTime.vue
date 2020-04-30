@@ -32,9 +32,9 @@
                 placeholder="Date"
                 append-icon="mdi-calendar"
                 v-model="dateText"
+                :rules="dateRules"
                 :disabled="!isFutureEffective"
                 v-on="on"
-                readonly
                 filled
               />
             </template>
@@ -44,14 +44,14 @@
               :max=maxDate>
             </v-date-picker>
           </v-menu>
-          <v-row class>
+          <v-row>
             <v-col cols="12" sm="6" md="3">
               <v-combobox
                 id="hour-selector"
                 :items="hours"
                 label="Hour"
                 v-model="selectHour"
-                :disabled="!isFutureEffective"
+                :disabled="!isFutureEffective || !dateText"
                 :rules="hourRules"
                 filled
               ></v-combobox>
@@ -63,7 +63,7 @@
                 label="Minute"
                 :items="minutes"
                 v-model="selectMinute"
-                :disabled="!isFutureEffective"
+                :disabled="!isFutureEffective || !dateText"
                 :rules="minuteRules"
                 filled
               ></v-combobox>
@@ -73,12 +73,20 @@
                 id="am-pm-selector"
                 :items="timePeriod"
                 v-model="selectPeriod"
-                :disabled="!isFutureEffective"
+                :disabled="!isFutureEffective || !dateText"
                 filled
               ></v-select>
             </v-col>
             <v-col cols="12" sm="6" md="2" class="label-col">
               <span class="time-zone-label" :class="{ 'disabled': !isFutureEffective }">Pacific Time</span>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col class="validation-alert" v-if="isFutureEffective && dateText && !isValidDateTime()">
+              <p class="validation-alert-msg">
+                <span v-if="!isOverMaxDateTime">The time must be at least {{minTime()}} for the selected date</span>
+                <span v-else>The time can't be greater than {{maxTime()}} for the selected date</span>
+              </p>
             </v-col>
           </v-row>
         </div>
@@ -112,6 +120,7 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
   // Local properties
   private isImmediate: boolean = false
   private isFutureEffective: boolean = false
+  private isOverMaxDateTime: boolean = false
 
   // Date properties
   private selectDate: string = ''
@@ -130,17 +139,30 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
     .map(num => num.toLocaleString('en-US', { minimumIntegerDigits: 2 }))
   private timePeriod: Array<string> = ['AM', 'PM']
 
-  /** The array of validations rules for the AGM Date text field. */
-  private get hourRules (): Array<Function> {
+  /** The array of validations rules for the effective date Date field. */
+  private get dateRules (): Array<Function> {
+    // Define today and 10 days from now
+    const minDate = this.toReadableDate(this.minDate)
+    const maxDate = this.toReadableDate((this.maxDate))
+    const expectedDateFormat = /^(19|20)\d\d[-.](0[1-9]|1[012])[-.](0[1-9]|[12][0-9]|3[01])$/
+
     return [
-      v => this.isFutureEffective && (/^([1-9]|1[012])$/.test(v) || 'An hour between 1 and 12 is required.')
+      v => this.isFutureEffective && ((expectedDateFormat.test(v) && this.isValidDateTime(true)) ||
+        `Date must be between ${minDate} and ${maxDate}`)
     ]
   }
 
-  /** The array of validations rules for the AGM Date text field. */
+  /** The array of validations rules for effective date hours field. */
+  private get hourRules (): Array<Function> {
+    return [
+      v => this.dateText !== '' && (/^([1-9]|1[012])$/.test(v) || '')
+    ]
+  }
+
+  /** The array of validations rules for the effective date minutes field. */
   private get minuteRules (): Array<Function> {
     return [
-      v => this.isFutureEffective && (/^([0-5]?[0-9])$/.test(v) || 'A second between 1 and 59 is required.')
+      v => this.dateText !== '' && (/^([0-5]?[0-9])$/.test(v) || '')
     ]
   }
 
@@ -173,8 +195,8 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
       const dateToValidate = new Date(dateString)
 
       // Create references & Apply time period
-      let hours = +this.selectHour
-      const minutes = +this.selectMinute
+      let hours = this.selectHour && +this.selectHour
+      const minutes = this.selectMinute && +this.selectMinute
 
       if (this.selectPeriod === 'AM' && +this.selectHour === 12) {
         dateToValidate.setDate(dateToValidate.getDate() - 1)
@@ -204,41 +226,42 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
       const dateToParse = effectiveDate && new Date(effectiveDate)
 
       if (dateToParse) {
-        // Parse the Date
-        const year = dateToParse.getFullYear()
-        const month = dateToParse.getMonth()
-        const day = dateToParse.getDate()
-
         // Parse the Time and display DateTime
-        if (year && month && day) {
-          let hour = dateToParse.getHours()
-          const minute = dateToParse.getMinutes()
-          const amPm = hour >= 12 ? 'PM' : 'AM'
+        let hour = dateToParse.getHours()
+        const minute = dateToParse.getMinutes()
+        const amPm = hour >= 12 ? 'PM' : 'AM'
 
-          if (hour > 12) {
-            hour -= 12
-          } else if (hour === 0) {
-            hour = 12
-          }
-
-          this.dateText = `${year}-${month + 1}-${day}`
-          this.selectHour = [hour.toLocaleString()]
-          this.selectMinute = [minute.toLocaleString('en-US', { minimumIntegerDigits: 2 })]
-          this.selectPeriod = amPm
+        if (hour > 12) {
+          hour -= 12
+        } else if (hour === 0) {
+          hour = 12
         }
+
+        this.dateText = this.dateToUsableString(dateToParse)
+        this.selectHour = [hour.toLocaleString()]
+        this.selectMinute = [minute.toLocaleString('en-US', { minimumIntegerDigits: 2 })]
+        this.selectPeriod = amPm
       }
     }
   }
 
   /** Validate the DateTime is within the allowed range */
-  private isValidDateTime (): boolean {
+  private isValidDateTime (ignoreTime: boolean = false): boolean {
     if (this.incorporationDateTime.effectiveDate) {
       const effectiveDate = this.incorporationDateTime.effectiveDate
-      const dateToParse = new Date(effectiveDate)
       const startDate = new Date()
 
-      const timeDiff = dateToParse.getTime() - startDate.getTime()
+      // Ignore the time difference if the user has input a Date before time.
+      if (ignoreTime && effectiveDate.getDate() === startDate.getDate()) {
+        return true
+      }
+
+      // Calculate time diff
+      const timeDiff = effectiveDate.getTime() - startDate.getTime()
       const timeDiffInMinutes = Math.floor(timeDiff / 1000 / 60)
+
+      // Flag for identifying over/under
+      this.isOverMaxDateTime = timeDiffInMinutes > 14400
 
       // Time set must be more than 2 minutes and less than 10 days
       return timeDiffInMinutes >= 2 && timeDiffInMinutes <= 14400
@@ -250,7 +273,7 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
   private get minDate (): string {
     const minDate = new Date()
 
-    return this.dateToUsableString(minDate)
+    return minDate.toISOString()
   }
 
   /** The maximum date that can be entered. */
@@ -258,16 +281,42 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
     const maxDate = new Date()
     maxDate.setDate(new Date().getDate() + 10)
 
-    return this.dateToUsableString(maxDate)
+    return maxDate.toISOString()
+  }
+
+  /** The minimum time that can be entered. */
+  private minTime (): string {
+    return new Date(new Date().getTime() + 180000)
+      .toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })
+  }
+
+  /** The maximum time that can be entered. */
+  private maxTime (): string {
+    const maxDate = new Date(new Date().setDate(new Date().getDate() + 10))
+    return new Date(maxDate.getTime())
+      .toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })
   }
 
   /**
-   * Set date text to date chosen in date picker.
+   * Set date text to Date chosen in date picker.
    * @param val The date selected
    */
   @Watch('datePicker')
   private onEffectiveDate (val: string): void {
     this.dateText = val
+    this.constructDate()
+  }
+
+  /**
+   * Set Date based on user typed input.
+   * @param val The date input
+   */
+  @Watch('dateText')
+  private onEffectiveDateManual (val: string): void {
+    // Clear Times
+    this.selectHour = []
+    this.selectMinute = []
+    this.selectPeriod = 'AM'
     this.constructDate()
   }
 
@@ -376,5 +425,19 @@ label {
 
 .disabled {
   color: $gray6;
+}
+
+.validation-alert {
+  position: relative;
+
+  .validation-alert-msg {
+    line-height: 12px;
+    position: absolute;
+    top: -2rem;
+    padding: 0 12px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #ff5252 !important;
+  }
 }
 </style>
