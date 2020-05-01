@@ -108,7 +108,7 @@ describe('Incorporation Date Time', () => {
     const radioIsFutureEffective = radioInput.at(1)
 
     await radioIsFutureEffective.trigger('click')
-    wrapper.vm.dateText = '2020-05-11'
+    wrapper.vm.dateText = new Date().toISOString().split('T')[0]
 
     Vue.nextTick(() => {
       expect(wrapper.find('#date-text-field').attributes('disabled')).toBe(undefined)
@@ -126,7 +126,7 @@ describe('Incorporation Date Time', () => {
     const radioIsFutureEffective = radioInput.at(1)
 
     await radioIsFutureEffective.trigger('click')
-    wrapper.vm.dateText = '2020-05-11'
+    wrapper.vm.dateText = new Date().toISOString().split('T')[0]
 
     Vue.nextTick(async () => {
       expect(wrapper.find('#date-text-field').attributes('disabled')).toBe(undefined)
@@ -191,5 +191,68 @@ describe('Incorporation Date Time', () => {
 
     // Verify the Valid emit event is false at this point
     expect(invalidEvent).toEqual(false)
+  })
+
+  it('displays an invalid Date Alert when the Date is invalid', async () => {
+    const wrapper = wrapperFactory({ incorporationDateTime: dateTimeInvalid })
+
+    const radioInput = wrapper.findAll('input[type="radio"]')
+    const radioIsFutureEffective = radioInput.at(1)
+    await radioIsFutureEffective.trigger('click')
+
+    const minDate = wrapper.vm.toReadableDate(wrapper.vm.minDate)
+    const maxDate = wrapper.vm.toReadableDate((wrapper.vm.maxDate))
+
+    Vue.nextTick(() => {
+      expect(wrapper.vm.$el.querySelector('.date-time-selectors').textContent)
+        .toContain(`Date must be between ${minDate} and ${maxDate}`)
+
+      const invalidEvent = getLastEvent(wrapper, 'valid')
+
+      // Verify the Valid emit event is false at this point
+      expect(invalidEvent).toEqual(false)
+    })
+  })
+
+  it('displays an invalid Time Alert when the time selected is not AT LEAST 2 minutes ahead', async () => {
+    dateTimeDefault.effectiveDate = new Date()
+    const wrapper = wrapperFactory({ incorporationDateTime: dateTimeDefault })
+
+    const radioInput = wrapper.findAll('input[type="radio"]')
+    const radioIsFutureEffective = radioInput.at(1)
+    await radioIsFutureEffective.trigger('click')
+
+    const minTime = wrapper.vm.minTime
+
+    Vue.nextTick(() => {
+      expect(wrapper.vm.$el.querySelector('.date-time-selectors').textContent)
+        .toContain(`The time must be at least ${minTime} for the selected date`)
+
+      const invalidEvent = getLastEvent(wrapper, 'valid')
+
+      // Verify the Valid emit event is false at this point
+      expect(invalidEvent).toEqual(false)
+    })
+  })
+
+  it('displays an invalid Time Alert when time selected is past current time on the 10th day', async () => {
+    dateTimeDefault.effectiveDate = new Date(today.setDate(today.getDate() + 10))
+    const wrapper = wrapperFactory({ incorporationDateTime: dateTimeDefault })
+
+    const radioInput = wrapper.findAll('input[type="radio"]')
+    const radioIsFutureEffective = radioInput.at(1)
+    await radioIsFutureEffective.trigger('click')
+
+    const maxTime = wrapper.vm.maxTime
+
+    Vue.nextTick(() => {
+      expect(wrapper.vm.$el.querySelector('.date-time-selectors').textContent)
+        .toContain(`Time The time can't be greater than ${maxTime} for the selected date`)
+
+      const invalidEvent = getLastEvent(wrapper, 'valid')
+
+      // Verify the Valid emit event is false at this point
+      expect(invalidEvent).toEqual(false)
+    })
   })
 })

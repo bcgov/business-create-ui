@@ -87,8 +87,8 @@
               v-if="isFutureEffective && dateText && !isValidDateTime(incorporationDateTime.effectiveDate)"
             >
               <p class="validation-alert-msg">
-                <span v-if="isUnderTime">The time must be at least {{minTime()}} for the selected date</span>
-                <span v-else>The time can't be greater than {{maxTime()}} for the selected date</span>
+                <span v-if="isUnderTime">The time must be at least {{minTime}} for the selected date</span>
+                <span v-else>The time can't be greater than {{maxTime}} for the selected date</span>
               </p>
             </v-col>
           </v-row>
@@ -269,13 +269,13 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
   }
 
   /** The minimum time that can be entered. */
-  private minTime (): string {
+  private get minTime (): string {
     return new Date(new Date().getTime() + 180000)
       .toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })
   }
 
   /** The maximum time that can be entered. */
-  private maxTime (): string {
+  private get maxTime (): string {
     const maxDate = new Date(new Date().setDate(new Date().getDate() + 10))
     return new Date(maxDate.getTime())
       .toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })
