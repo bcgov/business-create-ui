@@ -47,13 +47,13 @@ describe('Incorporation Date Time', () => {
   const dateTimeValid = {
     valid: false,
     isFutureEffective: false,
-    effectiveDate: today.setDate(today.getDate() + 5)
+    effectiveDate: new Date(today.setDate(today.getDate() + 5))
   }
 
   const dateTimeInvalid = {
     valid: false,
     isFutureEffective: false,
-    effectiveDate: today.setDate(today.getDate() + 11)
+    effectiveDate: new Date(today.setDate(today.getDate() + 11))
   }
 
   beforeEach(() => {
@@ -108,11 +108,14 @@ describe('Incorporation Date Time', () => {
     const radioIsFutureEffective = radioInput.at(1)
 
     await radioIsFutureEffective.trigger('click')
+    wrapper.vm.dateText = '2020-05-11'
 
-    expect(wrapper.find('#date-text-field').attributes('disabled')).toBe(undefined)
-    expect(wrapper.find('#hour-selector').attributes('disabled')).toBe(undefined)
-    expect(wrapper.find('#minute-selector').attributes('disabled')).toBe(undefined)
-    expect(wrapper.find('#am-pm-selector').attributes('disabled')).toBe(undefined)
+    Vue.nextTick(() => {
+      expect(wrapper.find('#date-text-field').attributes('disabled')).toBe(undefined)
+      expect(wrapper.find('#hour-selector').attributes('disabled')).toBe(undefined)
+      expect(wrapper.find('#minute-selector').attributes('disabled')).toBe(undefined)
+      expect(wrapper.find('#am-pm-selector').attributes('disabled')).toBe(undefined)
+    })
   })
 
   it('confirms the selector fields are toggled to disabled if Immediate Filing is selected', async () => {
@@ -123,18 +126,21 @@ describe('Incorporation Date Time', () => {
     const radioIsFutureEffective = radioInput.at(1)
 
     await radioIsFutureEffective.trigger('click')
+    wrapper.vm.dateText = '2020-05-11'
 
-    expect(wrapper.find('#date-text-field').attributes('disabled')).toBe(undefined)
-    expect(wrapper.find('#hour-selector').attributes('disabled')).toBe(undefined)
-    expect(wrapper.find('#minute-selector').attributes('disabled')).toBe(undefined)
-    expect(wrapper.find('#am-pm-selector').attributes('disabled')).toBe(undefined)
+    Vue.nextTick(async () => {
+      expect(wrapper.find('#date-text-field').attributes('disabled')).toBe(undefined)
+      expect(wrapper.find('#hour-selector').attributes('disabled')).toBe(undefined)
+      expect(wrapper.find('#minute-selector').attributes('disabled')).toBe(undefined)
+      expect(wrapper.find('#am-pm-selector').attributes('disabled')).toBe(undefined)
 
-    await radioIsImmediate.trigger('click')
+      await radioIsImmediate.trigger('click')
 
-    expect(wrapper.find('#date-text-field').attributes('disabled')).toBe('disabled')
-    expect(wrapper.find('#hour-selector').attributes('disabled')).toBe('disabled')
-    expect(wrapper.find('#minute-selector').attributes('disabled')).toBe('disabled')
-    expect(wrapper.find('#am-pm-selector').attributes('disabled')).toBe('disabled')
+      expect(wrapper.find('#date-text-field').attributes('disabled')).toBe('disabled')
+      expect(wrapper.find('#hour-selector').attributes('disabled')).toBe('disabled')
+      expect(wrapper.find('#minute-selector').attributes('disabled')).toBe('disabled')
+      expect(wrapper.find('#am-pm-selector').attributes('disabled')).toBe('disabled')
+    })
   })
 
   it('emits a valid state when the Immediate Filing is selected', async () => {

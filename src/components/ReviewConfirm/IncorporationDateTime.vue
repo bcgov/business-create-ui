@@ -128,7 +128,6 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
   // Local properties
   private isImmediate: boolean = false
   private isFutureEffective: boolean = false
-  private isOverMaxDateTime: boolean = false
 
   // Date properties
   private selectDate: string = ''
