@@ -222,7 +222,7 @@ describe('Incorporation Date Time', () => {
     const radioIsFutureEffective = radioInput.at(1)
     await radioIsFutureEffective.trigger('click')
 
-    const minTime = wrapper.vm.minTime
+    const minTime = wrapper.vm.minTime()
 
     Vue.nextTick(() => {
       expect(wrapper.vm.$el.querySelector('.date-time-selectors').textContent)
@@ -243,7 +243,7 @@ describe('Incorporation Date Time', () => {
     const radioIsFutureEffective = radioInput.at(1)
     await radioIsFutureEffective.trigger('click')
 
-    const maxTime = wrapper.vm.maxTime
+    const maxTime = wrapper.vm.maxTime()
 
     Vue.nextTick(() => {
       expect(wrapper.vm.$el.querySelector('.date-time-selectors').textContent)
