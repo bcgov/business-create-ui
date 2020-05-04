@@ -10,9 +10,10 @@
         </v-flex>
         <v-flex md4>
           <div><label><strong>Phone Number</strong></label></div>
-          <div id="lbl-phone">{{ !!contact.phone ? contact.phone : 'Not entered' }}
-            Ext: {{ !!contact.extension ? contact.extension : 'Not entered' }}
+          <div id="lbl-phone" v-if="!!contact.phone">{{ contact.phone }}
+            <span v-if="!!contact.extension">Ext: {{ contact.extension }}</span>
           </div>
+          <div id="lbl-phone" v-else>Not entered</div>
         </v-flex>
     </v-layout>
     <v-card flat class="business-contact-container" v-else>
@@ -64,6 +65,7 @@
               persistent-hint
               v-mask="'#####'"
               v-model="contact.extension"
+              :disabled="!contact.phone"
               id="txt-phone-extension">
             </v-text-field>
           </v-col>
