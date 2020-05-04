@@ -73,12 +73,14 @@ import { State, Getter, Action } from 'vuex-class'
 import { StateModelIF, GetterIF, ActionBindingIF } from '@/interfaces'
 
 // Mixins
-import { FilingTemplateMixin, LegalApiMixin } from '@/mixins'
+import { DateMixin, FilingTemplateMixin, LegalApiMixin } from '@/mixins'
 
 @Component({})
-export default class Actions extends Mixins(FilingTemplateMixin, LegalApiMixin) {
+export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, LegalApiMixin) {
   // Global state
   @State stateModel!: StateModelIF
+  @State(state => state.stateModel.incorporationDateTime.effectiveDate)
+  readonly effectiveDate!: Date
 
   // Global getters
   @Getter isEntityType!: GetterIF
@@ -95,6 +97,7 @@ export default class Actions extends Mixins(FilingTemplateMixin, LegalApiMixin) 
   @Action setIsSavingResuming!: ActionBindingIF
   @Action setIsFilingPaying!: ActionBindingIF
   @Action setHaveChanges!: ActionBindingIF
+  @Action setIsIncorporationDateTimeValid!: ActionBindingIF
 
   /** Called when Cancel button is clicked. */
   private onClickCancel (): void {
@@ -158,6 +161,13 @@ export default class Actions extends Mixins(FilingTemplateMixin, LegalApiMixin) 
 
     this.setIsFilingPaying(true)
     let filingComplete
+
+    if (!this.isValidDateTime(this.effectiveDate)) {
+      this.setIsIncorporationDateTimeValid(false)
+      this.setIsFilingPaying(false)
+      window.scrollTo({ top: 1250, behavior: 'smooth' })
+      return
+    }
 
     try {
       const filing = await this.buildFiling()

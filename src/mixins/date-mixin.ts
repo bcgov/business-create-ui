@@ -18,6 +18,7 @@ export default class DateMixin extends Vue {
     const yyyy = date.getFullYear().toString()
     const mm = (date.getMonth() + 1).toString().padStart(2, '0')
     const dd = date.getDate().toString().padStart(2, '0')
+
     return `${yyyy}-${mm}-${dd}`
   }
 
@@ -85,5 +86,24 @@ export default class DateMixin extends Vue {
     const todayLocalMs = new Date().setHours(0, 0, 0, 0)
     const dateLocalMs = new Date(date).setHours(0, 0, 0, 0)
     return Math.round((dateLocalMs - todayLocalMs) / this.MS_IN_A_DAY)
+  }
+
+  /** Validate the DateTime is within the allowed range */
+  isValidDateTime (dateToValidate: Date, ignoreTime: boolean = false): boolean {
+    if (dateToValidate) {
+      const startDate = new Date()
+
+      // Condition (if the Date input is the same day as today) to return when we want to skip hour/minute validations,
+      // to prevent showing Date Validators before Time is selected.
+      if (ignoreTime && dateToValidate.getDate() === startDate.getDate()) return true
+
+      // Calculate time diff
+      const timeDiff = dateToValidate.getTime() - Date.now()
+      const timeDiffInMinutes = Math.floor(timeDiff / 1000 / 60)
+
+      // Time set must be more than 2 minutes and less than 10 days
+      return timeDiffInMinutes >= 2 && timeDiffInMinutes <= 14400
+    }
+    return false
   }
 }
