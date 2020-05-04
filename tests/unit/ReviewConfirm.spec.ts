@@ -16,7 +16,7 @@ Vue.use(Vuetify)
 const vuetify = new Vuetify({})
 const store = getVuexStore()
 
-describe('Review Confirm component', () => {
+describe('Review Confirm view', () => {
   let wrapper: any
   let vm: any
 

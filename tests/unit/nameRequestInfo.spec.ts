@@ -8,14 +8,13 @@ import { getVuexStore } from '@/store'
 // Components
 import { mount } from '@vue/test-utils'
 import { NameRequestInfo } from '@/components/common'
-import { NameRequestStates } from '@/enums'
 
 Vue.use(Vuetify)
 
 const vuetify = new Vuetify({})
 const store = getVuexStore()
 
-describe('NameRequest Info component', () => {
+describe('Name Request Info component', () => {
   let wrapper: any
   const mockNrData = {
     'nrNumber': 'NR 1234567',
@@ -160,7 +159,7 @@ describe('NameRequest Info component', () => {
 
   it('renders the Name Request information with consent received', async () => {
     wrapper.vm.$store.state.stateModel.nameRequest = { ...mockNrData }
-    wrapper.vm.$store.state.stateModel.nameRequest.details.status = NameRequestStates.CONDITIONAL
+    wrapper.vm.$store.state.stateModel.nameRequest.details.status = 'CONDITIONAL'
     wrapper.vm.$store.state.stateModel.nameRequest.details.consentFlag = 'R'
 
     await Vue.nextTick()
@@ -185,7 +184,7 @@ describe('NameRequest Info component', () => {
 
   it('renders the Name Request information with consent not received', async () => {
     wrapper.vm.$store.state.stateModel.nameRequest = { ...mockNrData }
-    wrapper.vm.$store.state.stateModel.nameRequest.details.status = NameRequestStates.CONDITIONAL
+    wrapper.vm.$store.state.stateModel.nameRequest.details.status = 'CONDITIONAL'
     wrapper.vm.$store.state.stateModel.nameRequest.details.consentFlag = null
 
     await Vue.nextTick()

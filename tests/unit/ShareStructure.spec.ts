@@ -105,7 +105,7 @@ function createShareStructure (
 store.state.stateModel.nameRequest.entityType = 'BCOMP'
 store.state.stateModel.currentDate = '2020-03-30'
 
-describe('ShareStructure', () => {
+describe('Share Structure component', () => {
   it('Loads the component and sets data for share structure', async () => {
     const shareClass = createShareStructure(null, 1, 'Class', 'Class A', true, 100, true, 0.50, 'CAD', true)
     const wrapper: Wrapper<ShareStructure> = createComponent(shareClass, -1, 1, null, [])

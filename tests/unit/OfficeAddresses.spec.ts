@@ -18,7 +18,7 @@ Vue.use(Vuelidate)
 const vuetify = new Vuetify({})
 const store = getVuexStore()
 
-describe('OfficeAddresses as a COOP', () => {
+describe('Office Addresses component - COOP', () => {
   let wrapper: any
 
   const registeredOffice = {
@@ -101,7 +101,7 @@ describe('OfficeAddresses as a COOP', () => {
   })
 })
 
-describe('OfficeAddresses as a BCOMP', () => {
+describe('Office Addresses component - BCOMP', () => {
   let wrapper: any
 
   const registeredOffice = {
@@ -223,7 +223,7 @@ describe('OfficeAddresses as a BCOMP', () => {
   })
 })
 
-describe('OfficeAddresses Summary UI', () => {
+describe('Office Addresses component - Summary UI', () => {
   let wrapper: any
 
   const registeredOffice = {

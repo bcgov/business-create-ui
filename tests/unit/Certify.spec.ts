@@ -82,7 +82,7 @@ function createComponent (
   })
 }
 
-describe('Certify', () => {
+describe('Certify component', () => {
   it('has date displayed', () => {
     const wrapper: Wrapper<Certify> = createComponent()
 

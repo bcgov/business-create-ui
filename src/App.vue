@@ -1,19 +1,41 @@
 <template>
   <v-app class="app-container" id="app">
     <!-- Dialogs -->
-    <NameRequestInvalidErrorDialog
-      :dialog="nameRequestInvalidErrorDialog"
-      @okay="nrOkay()"
-      @redirect="redirectToDashboard()"
-      :type="nameRequestInvalidType"
+    <name-request-invalid-error-dialog
       attach="#app"
+      :dialog="nameRequestInvalidErrorDialog"
+      :type="nameRequestInvalidType"
+      @okay="nameRequestInvalidErrorDialog = false"
+      @redirect="goToDashboard(true)"
     />
 
-    <AccountAuthorizationDialog
-      :dialog="accountAuthorizationErrorDialog"
-      @exit="redirectToDashboard()"
-      @retry="evaluateNRPreconditions()"
+    <account-authorization-dialog
       attach="#app"
+      :dialog="accountAuthorizationDialog"
+      @exit="goToDashboard(true)"
+      @retry="fetchData()"
+    />
+
+    <fetch-error-dialog
+      attach="#app"
+      :dialog="fetchErrorDialog"
+      @exit="goToDashboard(true)"
+      @retry="fetchData()"
+    />
+
+    <payment-error-dialog
+      attach="#app"
+      :dialog="paymentErrorDialog"
+      @exit="goToDashboard(true)"
+    />
+
+    <save-error-dialog
+      attach="#app"
+      :dialog="saveErrorDialog"
+      :errors="saveErrors"
+      :warnings="saveWarnings"
+      @exit="goToDashboard(true)"
+      @okay="saveErrorDialog = false"
     />
 
     <confirm-dialog
@@ -52,9 +74,11 @@
               <!-- Only render when data is ready, or validation can't be properly evaluated. -->
               <template v-if="haveData">
                 <!-- Using v-show to pre-create/mount components so validation on stepper is shown -->
-                <component :key="step.step" v-for="step in getSteps"
-                  :is="step.component"
+                <component
+                  v-for="step in getSteps"
                   v-show="isRouteName(step.to)"
+                  :is="step.component"
+                  :key="step.step"
                 />
               </template>
             </v-col>
@@ -74,7 +98,7 @@
 
         <actions
           :key="$route.path"
-          @goToDashboard="goToDashboard"
+          @goToDashboard="goToDashboard()"
         />
       </main>
     </div>
@@ -88,6 +112,7 @@
 import { Component, Vue, Watch, Mixins } from 'vue-property-decorator'
 import { State, Action, Getter } from 'vuex-class'
 import TokenService from 'sbc-common-components/src/services/token.services'
+import { BAD_REQUEST, PAYMENT_REQUIRED } from 'http-status-codes'
 
 // Components
 import SbcHeader from 'sbc-common-components/src/components/SbcHeader.vue'
@@ -97,7 +122,8 @@ import { EntityInfo, Stepper, Actions } from '@/components/common'
 import Views from '@/views'
 
 // Dialogs, mixins, interfaces, etc
-import { AccountAuthorizationDialog, NameRequestInvalidErrorDialog, ConfirmDialog } from '@/components/dialogs'
+import { AccountAuthorizationDialog, NameRequestInvalidErrorDialog, ConfirmDialog, FetchErrorDialog,
+  PaymentErrorDialog, SaveErrorDialog } from '@/components/dialogs'
 import { DateMixin, FilingTemplateMixin, LegalApiMixin, NameRequestMixin } from '@/mixins'
 import { FilingDataIF, ActionBindingIF, ConfirmDialogType } from '@/interfaces'
 import { CertifyStatementResource } from '@/resources'
@@ -113,6 +139,9 @@ import { EntityTypes, FilingCodes, RouteNames, NameRequestStates } from '@/enums
     Actions,
     NameRequestInvalidErrorDialog,
     AccountAuthorizationDialog,
+    FetchErrorDialog,
+    PaymentErrorDialog,
+    SaveErrorDialog,
     ConfirmDialog,
     ...Views
   }
@@ -147,10 +176,15 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
 
   // Local Properties
   private filingData: Array<FilingDataIF> = []
-  private accountAuthorizationErrorDialog: boolean = false
+  private accountAuthorizationDialog: boolean = false
+  private fetchErrorDialog: boolean = false
+  private paymentErrorDialog: boolean = false
+  private saveErrorDialog: boolean = false
   private nameRequestInvalidErrorDialog: boolean = false
   private nameRequestInvalidType: string = ''
   private haveData: boolean = false
+  private saveErrors: Array<object> = []
+  private saveWarnings: Array<object> = []
 
   // Template Enums
   readonly RouteNames = RouteNames
@@ -167,13 +201,19 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
   }
 
   /** The Name Request Number from the route. */
-  private get queryNrNumber (): string {
+  private get nrNumber (): string {
     return this.$route.query.nrNumber as string
   }
 
   /** True if an error dialog is displayed. */
   private get isErrorDialog (): boolean {
-    return (this.accountAuthorizationErrorDialog || this.nameRequestInvalidErrorDialog)
+    return (
+      this.accountAuthorizationDialog ||
+      this.nameRequestInvalidErrorDialog ||
+      this.fetchErrorDialog ||
+      this.paymentErrorDialog ||
+      this.saveErrorDialog
+    )
   }
 
   /** True if Jest is running the code. */
@@ -196,15 +236,39 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
         event.returnValue = 'You have unsaved changes. Are you sure you want to leave?'
       }
     }
+
+    // listen for save error event
+    this.$root.$on('save-error-event', error => {
+      console.log('Save error =', error) // eslint-disable-line no-console
+      // process errors/warnings
+      switch (error?.response?.status) {
+        case PAYMENT_REQUIRED:
+          this.paymentErrorDialog = true
+          break
+        case BAD_REQUEST:
+          this.saveErrors = error?.response?.data?.errors || []
+          this.saveWarnings = error?.response?.data?.warnings || []
+          this.saveErrorDialog = true
+          break
+        default:
+          this.saveErrorDialog = true
+      }
+    })
+  }
+
+  /** Called when component is destroyed. */
+  private destroyed (): void {
+    // stop listening for save error event
+    this.$root.$off('save-error-event')
   }
 
   /** Called to redirect to dashboard. */
-  private goToDashboard (): void {
+  private goToDashboard (force: boolean = false): void {
     // check if there are no data changes
-    if (!this.haveChanges) {
+    if (!this.haveChanges || force) {
       // redirect to dashboard
       const dashboardUrl = sessionStorage.getItem('DASHBOARD_URL')
-      window.location.assign(dashboardUrl + this.queryNrNumber)
+      window.location.assign(dashboardUrl + this.nrNumber)
       return
     }
 
@@ -228,7 +292,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
       this.setHaveChanges(false)
       // redirect to dashboard
       const dashboardUrl = sessionStorage.getItem('DASHBOARD_URL')
-      window.location.assign(dashboardUrl + this.queryNrNumber)
+      window.location.assign(dashboardUrl + this.nrNumber)
     })
   }
 
@@ -236,7 +300,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
   private async startTokenService (): Promise<void> {
     // only initialize once
     // don't start during Jest tests as it messes up the test JWT
-    if (this.tokenService || this.isJestRunning) return Promise.resolve()
+    if (this.tokenService || this.isJestRunning) return
 
     console.info('Starting token refresh service...') // eslint-disable-line no-console
     this.tokenService = new TokenService()
@@ -244,25 +308,73 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
     this.tokenService.scheduleRefreshTimer()
   }
 
-  /** Fetches data required for NR and draft filing. */
-  private async fetchData (): Promise<void> {
-    // only fetch data once
-    if (this.haveData) return Promise.resolve()
+  /** Fetches NR data and fetches draft filing. */
+  private async fetchData (routeChanged: boolean = false): Promise<void> {
+    // only fetch data on first route change
+    if (routeChanged && this.haveData) return
 
-    // Evaluate name request pre-conditions
-    const nameRequest = await this.evaluateNRPreconditions()
-    if (nameRequest && nameRequest.nrNum && nameRequest.isConsumable) {
-      this.setNameRequestState(this.generateNameRequestState(nameRequest, null))
+    // reset errors in case this method is invoked more than once (ie, retry)
+    this.resetFlags()
+
+    try {
       this.setCurrentDate(this.dateToUsableString(new Date()))
+
+      // ensure we have a NR number
+      if (!this.nrNumber) {
+        this.nameRequestInvalidType = NameRequestStates.NOT_FOUND
+        this.nameRequestInvalidErrorDialog = true
+        return // go to finally()
+      }
+
+      // ensure user is authorized to use this NR
+      await this.checkAuth().catch(error => {
+        console.log('Auth error =', error) // eslint-disable-line no-console
+        this.accountAuthorizationDialog = true
+        throw error // go to catch()
+      })
+
+      // fetch NR data
+      const nrResponse = await this.fetchNameRequest(this.nrNumber).catch(error => {
+        console.log('NR error =', error) // eslint-disable-line no-console
+        this.nameRequestInvalidErrorDialog = true
+        throw error // go to catch()
+      })
+
+      // ensure NR was found
+      if (!nrResponse) {
+        this.nameRequestInvalidType = NameRequestStates.NOT_FOUND
+        this.nameRequestInvalidErrorDialog = true
+        return // go to finally()
+      }
+
+      // ensure NR is valid
+      if (!this.isNrValid(nrResponse)) {
+        this.nameRequestInvalidType = NameRequestStates.INVALID
+        this.nameRequestInvalidErrorDialog = true
+        return // go to finally()
+      }
+
+      // ensure NR is consumable
+      const state = this.getNrState(nrResponse)
+      if (!state || state !== NameRequestStates.APPROVED) {
+        this.nameRequestInvalidType = state || NameRequestStates.INVALID
+        this.nameRequestInvalidErrorDialog = true
+        return // go to finally()
+      }
+
+      // if we get this far, the NR is good to go!
+      nrResponse.isConsumable = true
+
+      this.setNameRequestState(this.generateNameRequestState(nrResponse, null))
+
       try {
-        // Retrieve draft filing if it exists for the nrNumber specified
+        // Retrieve draft filing if it exists for the NR Number specified
         const draftFiling = await this.fetchDraft()
 
         // Parse the draft and update NR data into the store if it exists
         if (draftFiling) {
           this.parseDraft(draftFiling)
-          this.setNameRequestState(
-            this.generateNameRequestState(nameRequest, +draftFiling.header.filingId))
+          this.setNameRequestState(this.generateNameRequestState(nrResponse, +draftFiling.header.filingId))
         }
 
         // Initialize Fee Summary
@@ -270,86 +382,45 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
 
         // Set the resources
         this.setCertifyStatementResource(CertifyStatementResource.find(x => x.entityType === this.entityType))
-      } catch (e) {
-        // TODO: Catch a flag from the api, if there is an error to be handled.
+      } catch (error) {
+        console.log('Fetch error =', error) // eslint-disable-line no-console
+        this.fetchErrorDialog = true
+        throw error // go to catch()
       }
+    } catch (e) {
+      // errors should be handled above
+      // just fall through to finally()
+    } finally {
+      this.haveData = true
+      // wait for things to stabilize, then reset flag
+      Vue.nextTick(() => this.setHaveChanges(false))
     }
-    this.haveData = true
-    // wait for things to stabilize, then reset flag
-    Vue.nextTick(() => this.setHaveChanges(false))
   }
 
-  /** Redirects to dashboard URL. */
-  private redirectToDashboard (): void {
-    const dashboardUrl = sessionStorage.getItem('DASHBOARD_URL')
-    window.location.assign(dashboardUrl + this.queryNrNumber)
+  /** Resets all error flags/states. */
+  private resetFlags (): void {
+    this.haveData = false
+    this.nameRequestInvalidErrorDialog = false
+    this.accountAuthorizationDialog = false
+    this.fetchErrorDialog = false
+    this.paymentErrorDialog = false
+    this.saveErrorDialog = false
+    this.saveErrors = []
+    this.saveWarnings = []
   }
 
-  private storeAuthRoles (response): void {
-    // NB: roles array may contain 'view', 'edit' or nothing
-    const authRoles = response && response.data && response.data.roles
+  /** Gets authorizations from Auth API and verifies roles. */
+  private async checkAuth (): Promise<any> {
+    // NB: will throw if API error
+    const response = await this.getNrAuthorizations(this.nrNumber)
+
+    // NB: roles array may contain 'view', 'edit', 'staff' or nothing
+    const authRoles = response?.data?.roles
     if (authRoles && authRoles.length > 0) {
       this.setAuthRoles(authRoles)
     } else {
       throw new Error('Invalid auth roles')
     }
-  }
-
-  /** Evaluates Name Request pre-conditions. */
-  private async evaluateNRPreconditions (): Promise<any> {
-    // Clear error conditions in the event this is invoked more than one time (retry)
-    this.nameRequestInvalidErrorDialog = false
-    this.accountAuthorizationErrorDialog = false
-
-    // Name request not found, show error dialog
-    if (!this.queryNrNumber) {
-      this.nameRequestInvalidType = NameRequestStates.NOTFOUND
-      this.nameRequestInvalidErrorDialog = true
-      return
-    }
-
-    return this.getNRAuthorizations(this.queryNrNumber).then(async data => {
-      this.storeAuthRoles(data) // throws if no role
-      const nrResponse = await this.queryNameRequest(this.queryNrNumber)
-
-      // NR not found
-      if (!nrResponse) {
-        this.nameRequestInvalidType = NameRequestStates.NOTFOUND
-        this.nameRequestInvalidErrorDialog = true
-      }
-
-      // Check if NR response is valid
-      if (!this.isNrValid(nrResponse)) {
-        this.nameRequestInvalidType = NameRequestStates.INVALID
-        this.nameRequestInvalidErrorDialog = true
-      }
-
-      const nr = this.isNRConsumable(nrResponse)
-      // Show error dialogs if the NR is not in a consumable state
-      if (!nr.isConsumable) {
-        nrResponse.isConsumable = false
-        if (nr.expired) {
-          // NR Expired
-          this.nameRequestInvalidType = NameRequestStates.EXPIRED
-          this.nameRequestInvalidErrorDialog = true
-        } else if (!nr.approved) {
-          // NR not in an approve state
-          this.nameRequestInvalidType = NameRequestStates.NOTAPPROVED
-          this.nameRequestInvalidErrorDialog = true
-        } else if (nr.approved) {
-          // NR is approved, but has been consumed
-          this.nameRequestInvalidType = NameRequestStates.CONSUMED
-          this.nameRequestInvalidErrorDialog = true
-        }
-      } else {
-        nrResponse.isConsumable = true
-      }
-      return nrResponse
-    }).catch(error => {
-      // eslint-disable-next-line no-console
-      console.error(error)
-      this.accountAuthorizationErrorDialog = true
-    })
   }
 
   /** Initializes the Fee Summary based on the entity type. */
@@ -385,13 +456,8 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
     if (!isSigninRoute && !isSignoutRoute) {
       this.setCurrentStep(this.$route.meta?.step)
       await this.startTokenService()
-      await this.fetchData()
+      await this.fetchData(true)
     }
-  }
-
-  /** Called when user clicks OK in error dialog, to close the dialog. */
-  private nrOkay (): void {
-    this.nameRequestInvalidErrorDialog = false
   }
 }
 </script>

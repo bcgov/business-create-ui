@@ -24,10 +24,8 @@ Vue.use(Vuetify)
 const vuetify = new Vuetify({})
 const store = getVuexStore()
 
-// Boilerplate to prevent the complaint "[Vuetify] Unable to locate target [data-app]"
-const app: HTMLDivElement = document.createElement('div')
-app.setAttribute('data-app', 'true')
-document.body.append(app)
+// Prevent the warning "[Vuetify] Unable to locate target [data-app]"
+document.body.setAttribute('data-app', 'true')
 
 // Mock filing data
 const filingData = {

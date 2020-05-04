@@ -73,7 +73,7 @@ function getPersonList (roles = [completingPartyRole]) : any {
   return mockPersonList
 }
 
-describe('People And Roles', () => {
+describe('People And Roles component', () => {
   let wrapperFactory: any
 
   beforeEach(() => {
