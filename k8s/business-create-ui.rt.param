@@ -8,4 +8,4 @@
 NAME="business-create"
 TAG_NAME="dev"
 DOMAIN="business-create-dev.pathfinder.gov.bc.ca"
-PATH="/businesses/create/"
+PATH="/businesses/create"
