@@ -93,7 +93,7 @@ export default class DateMixin extends Vue {
     if (dateToValidate) {
       const startDate = new Date()
 
-      // Condition to return the method when we want to skip hour/minute validations,
+      // Condition (if the Date input is the same day as today) to return when we want to skip hour/minute validations,
       // to prevent showing Date Validators before Time is selected.
       if (ignoreTime && dateToValidate.getDate() === startDate.getDate()) return true
 
