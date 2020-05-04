@@ -93,13 +93,12 @@ export default class DateMixin extends Vue {
     if (dateToValidate) {
       const startDate = new Date()
 
-      // Ignore the time difference if the user has input a Date before time.
-      if (ignoreTime && dateToValidate.getDate() === startDate.getDate()) {
-        return true
-      }
+      // Condition to return the method when we want to skip hour/minute validations,
+      // to prevent showing Date Validators before Time is selected.
+      if (ignoreTime && dateToValidate.getDate() === startDate.getDate()) return true
 
       // Calculate time diff
-      const timeDiff = dateToValidate.getTime() - startDate.getTime()
+      const timeDiff = dateToValidate.getTime() - Date.now()
       const timeDiffInMinutes = Math.floor(timeDiff / 1000 / 60)
 
       // Time set must be more than 2 minutes and less than 10 days

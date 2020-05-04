@@ -270,24 +270,24 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
 
   /** The minimum time that can be entered. */
   private get minTime (): string {
-    return new Date(new Date().getTime() + 180000)
+    return new Date(Date.now() + 180000)
       .toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })
   }
 
   /** The maximum time that can be entered. */
   private get maxTime (): string {
-    const maxDate = new Date(new Date().setDate(new Date().getDate() + 10))
+    const maxDate = new Date()
+    maxDate.setDate(maxDate.getDate() + 10)
     return new Date(maxDate.getTime())
       .toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })
   }
 
   private get isUnderTime (): boolean {
     if (this.incorporationDateTime.effectiveDate) {
-      const startDate = new Date()
       const effectiveDate = this.incorporationDateTime.effectiveDate
 
       // Calculate time diff
-      const diff = Math.floor((effectiveDate.getTime() - startDate.getTime()) / 1000 / 60)
+      const diff = Math.floor((effectiveDate.getTime() - Date.now()) / 1000 / 60)
       return diff <= 2
     }
   }
