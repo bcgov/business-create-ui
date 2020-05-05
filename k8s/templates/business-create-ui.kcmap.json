@@ -13,7 +13,7 @@
             "kind": "ConfigMap",
             "apiVersion": "v1",
             "data": {
-                "keycloak.json": "{\n\"realm\":\"${REALM}\",\n\"auth-server-url\":\"${AUTH_SERVER_URL}\",\n\"ssl-required\":\"${SSL_REQUIRED}\",\n\"resource\":\"${RESOURCE}\",\n\"verify-token-audience\":${VERIFY_TOKEN_AUDIENCE},\n\"credentials\":{\"secret\": \"${KC_SECRET}\"},\n\"use-resource-role-mappings\":${USE_RESOURCE_ROLE_MAPPINGS},\n\"confidential-port\":${CONFIDENTIAL_PORT}\n}"
+                "keycloak.json": "{\n\"realm\":\"${REALM}\",\n\"auth-server-url\":\"${AUTH_SERVER_URL}\",\n\"ssl-required\":\"${SSL_REQUIRED}\",\n\"resource\":\"${RESOURCE}\",\n\"credentials\":{\"secret\": \"${KC_SECRET}\"},\n\"confidential-port\":${CONFIDENTIAL_PORT}\n}"
             },
             "metadata": {
                 "name": "${NAME}-${TAG_NAME}-keycloak-config",
@@ -82,23 +82,9 @@
             "value": ""
         },
         {
-            "name": "VERIFY_TOKEN_AUDIENCE",
-            "displayName": "Verify Token Audience",
-            "description": "Keycloak config option.",
-            "required": false,
-            "value": ""
-        },
-        {
             "name": "KC_SECRET",
             "displayName": "Keycloak Secret",
             "description": "Keycloak Secret.",
-            "required": false,
-            "value": ""
-        },
-        {
-            "name": "USE_RESOURCE_ROLE_MAPPINGS",
-            "displayName": "Use Resource Role Mappings",
-            "description": "Keycloak config option.",
             "required": false,
             "value": ""
         },

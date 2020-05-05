@@ -3,7 +3,8 @@ import { Component, Vue } from 'vue-property-decorator'
 import { State, Getter, Action } from 'vuex-class'
 
 // Interfaces
-import { ActionBindingIF, StateModelIF, IncorporationFilingIF, GetterIF } from '@/interfaces'
+import { ActionBindingIF, StateModelIF, IncorporationFilingIF, GetterIF,
+  NameRequestDetailsIF } from '@/interfaces'
 
 // Constants
 import { INCORPORATION_APPLICATION } from '@/constants'
@@ -18,6 +19,7 @@ export default class FilingTemplateMixin extends Vue {
 
   // Global Getters
   @Getter isTypeBcomp!: GetterIF
+  @Getter getApprovedName!: string
 
   // Global actions
   @Action setEntityType!: ActionBindingIF
@@ -42,19 +44,19 @@ export default class FilingTemplateMixin extends Vue {
       (effectiveDate.toISOString()).replace('Z', '+00:00')
 
     // Build and return filing
-    return {
+    let filing:IncorporationFilingIF = {
       filing: {
         header: {
           name: INCORPORATION_APPLICATION,
           certifiedBy: this.stateModel.certifyState.certifiedBy,
           email: this.stateModel.defineCompanyStep.businessContact.email,
-          date: this.stateModel.currentDate,
-          effectiveDate: formattedDateTime || null
+          date: this.stateModel.currentDate
         },
         incorporationApplication: {
           nameRequest: {
             nrNumber: this.stateModel.nameRequest.nrNumber,
-            legalType: this.stateModel.nameRequest.entityType
+            legalType: this.stateModel.nameRequest.entityType,
+            legalName: this.getApprovedName
           },
           offices: this.stateModel.defineCompanyStep.officeAddresses,
           contactPoint: {
@@ -67,6 +69,11 @@ export default class FilingTemplateMixin extends Vue {
         }
       }
     }
+    // Pass the effective date only for a future effective filing.
+    if (formattedDateTime) {
+      filing.filing.header.effectiveDate = formattedDateTime
+    }
+    return filing
   }
 
   /**
