@@ -1,20 +1,22 @@
 // Libraries
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Mixins } from 'vue-property-decorator'
 import { NameRequestStates, EntityTypes } from '@/enums'
 import { NameRequestIF } from '@/interfaces'
+import { DateMixin } from '@/mixins'
 
 /**
  * Name request mixin for processing NR responses
  */
 @Component
-export default class NameRequestMixin extends Vue {
+export default class NameRequestMixin extends Mixins(DateMixin) {
   /**
    * Generate name request state for the store
    * @param nr the name request response payload
    * @param filingId the filing id
    */
   generateNameRequestState (nr: any, filingId: number): NameRequestIF {
-    const approvedName = nr.names.find(name => name.state === NameRequestStates.APPROVED).name
+    const approvedName = nr.names.find(name => name.state === NameRequestStates.APPROVED)?.name
+
     return {
       nrNumber: nr.nrNum,
       // TODO: Update entityType to use nr.requestTypeCd when namex supports our entity types
@@ -62,36 +64,39 @@ export default class NameRequestMixin extends Vue {
   }
 
   /**
-   * Checks if a name request response payload is consumable.
+   * Returns the Name Request's state.
    * @param nr the name request response payload
-   * @returns an object with result flags
    */
-  isNRConsumable (nr: any) : { isConsumable: boolean, expired: boolean, approved: boolean } {
-    // Ensure a name request payload is provided
+  getNrState (nr: any): NameRequestStates {
+    // Ensure a NR payload is provided.
     if (!nr) {
-      throw new Error('isNRConsumable() : no NR provided')
-    }
-    // Check if NR response has expired
-    if (new Date(nr.expirationDate) < new Date()) {
-      return { isConsumable: false, expired: true, approved: false }
+      return null
     }
 
-    // If the NR root state is not APPROVED, this NR is not consumable
+    // If the NR is expired, it is not consumable.
+    const expireDays = this.daysFromToday(nr.expirationDate)
+    if (isNaN(expireDays) || expireDays < 1) {
+      return NameRequestStates.EXPIRED
+    }
+
+    // If the NR is awaiting consent, it is not consumable.
+    if (nr.state === NameRequestStates.CONDITIONAL && nr.consentFlag !== 'R') {
+      return NameRequestStates.NEED_CONSENT
+    }
+
+    // If the NR's root state is not APPROVED, it is not consumable.
     if (nr.state !== NameRequestStates.APPROVED) {
-      return { isConsumable: false, expired: false, approved: false }
+      return NameRequestStates.NOT_APPROVED
     }
 
-    // Check if the name request has already been consumed
-    let hasBeenConsumed = false
-    nr.names.forEach((name: { consumptionDate: any; }) => {
-      if (name.consumptionDate) {
-        hasBeenConsumed = true
-      }
-    })
-    if (hasBeenConsumed) {
-      return { isConsumable: false, expired: false, approved: true }
+    // NB: from here down, the NR is APPROVED (but maybe not consumable)
+
+    // If the NR has already been consumed, it is not consumable.
+    if (nr.names.some(name => name.consumptionDate)) {
+      return NameRequestStates.CONSUMED
     }
 
-    return { isConsumable: true, expired: false, approved: true }
+    // Otherwise, the NR is consumable.
+    return NameRequestStates.APPROVED
   }
 }

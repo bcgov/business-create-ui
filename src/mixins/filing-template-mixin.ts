@@ -81,34 +81,30 @@ export default class FilingTemplateMixin extends Vue {
    * @param draftFiling The draft filing body to be parsed and assigned to store
    */
   parseDraft (draftFiling: any): void {
-    try {
-      // Set Office Addresses
-      this.setOfficeAddresses(draftFiling.incorporationApplication.offices)
+    // Set Office Addresses
+    this.setOfficeAddresses(draftFiling.incorporationApplication.offices)
 
-      // Set Contact Info
-      const draftContact = {
-        ...draftFiling.incorporationApplication.contactPoint,
-        confirmEmail: draftFiling.incorporationApplication.contactPoint.email
-      }
-      this.setBusinessContact(draftContact)
-
-      // Set Persons and Organizations
-      this.setOrgPersonList(draftFiling.incorporationApplication.parties)
-
-      // Set Share Structure
-      this.setShareClasses(draftFiling.incorporationApplication.shareClasses)
-
-      // Set Certify Form
-      this.setCertifyState({
-        valid: false,
-        certifiedBy: draftFiling.header.certifiedBy
-      })
-
-      // Set Future Effective Time
-      this.setEffectiveDate(draftFiling.header.effectiveDate)
-      this.setIsFutureEffective(!!draftFiling.header.effectiveDate)
-    } catch (e) {
-      // TODO: Throw a flag to the ui from here, if we want to trigger error handling in ui
+    // Set Contact Info
+    const draftContact = {
+      ...draftFiling.incorporationApplication.contactPoint,
+      confirmEmail: draftFiling.incorporationApplication.contactPoint.email
     }
+    this.setBusinessContact(draftContact)
+
+    // Set Persons and Organizations
+    this.setOrgPersonList(draftFiling.incorporationApplication.parties)
+
+    // Set Share Structure
+    this.setShareClasses(draftFiling.incorporationApplication.shareClasses)
+
+    // Set Certify Form
+    this.setCertifyState({
+      valid: false,
+      certifiedBy: draftFiling.header.certifiedBy
+    })
+
+    // Set Future Effective Time
+    this.setEffectiveDate(draftFiling.header.effectiveDate)
+    this.setIsFutureEffective(!!draftFiling.header.effectiveDate)
   }
 }

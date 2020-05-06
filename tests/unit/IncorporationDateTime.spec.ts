@@ -34,7 +34,7 @@ function getLastEvent (wrapper: Wrapper<IncorporationDateTime>, name: string): a
   return events[0]
 }
 
-describe('Incorporation Date Time', () => {
+describe('Incorporation Date Time component', () => {
   let wrapperFactory: any
   const today = new Date()
 

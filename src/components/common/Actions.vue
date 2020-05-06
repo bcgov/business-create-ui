@@ -120,8 +120,8 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
       filingComplete = await this.saveFiling(filing, true)
       // reset flag
       this.setHaveChanges(false)
-    } catch (e) {
-      // TODO: Trigger some error dialog. Will catch any errors from the API calls.
+    } catch (error) {
+      this.$root.$emit('save-error-event', error)
     }
 
     this.setIsSaving(false)
@@ -143,8 +143,10 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
       filingComplete = await this.saveFiling(filing, true)
       // reset flag
       this.setHaveChanges(false)
-    } catch (e) {
-      // TODO: Trigger some error dialog. Will catch any errors from the API calls.
+    } catch (error) {
+      this.$root.$emit('save-error-event', error)
+      this.setIsSavingResuming(false)
+      return
     }
 
     this.setIsSavingResuming(false)
@@ -174,8 +176,10 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
       filingComplete = await this.saveFiling(filing, false)
       // reset flag
       this.setHaveChanges(false)
-    } catch (e) {
-      // TODO: Trigger some error dialog. Will catch any errors from the API calls.
+    } catch (error) {
+      this.$root.$emit('save-error-event', error)
+      this.setIsFilingPaying(false)
+      return
     }
 
     this.setIsFilingPaying(false)
@@ -185,15 +189,16 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
       // redirect to pay and return to the dashboard
       const authUrl = sessionStorage.getItem('AUTH_URL')
       const dashboardUrl = sessionStorage.getItem('DASHBOARD_URL')
-      const queryNrNumber = this.$route.query.nrNumber as string
-      const returnUrl = encodeURIComponent(dashboardUrl + queryNrNumber)
+      const nrNumber = this.$route.query.nrNumber as string
+      const returnUrl = encodeURIComponent(dashboardUrl + nrNumber)
       const payUrl = authUrl + 'makepayment/' + paymentToken + '/' + returnUrl
 
       // assume Pay URL is always reachable
       // otherwise user will have to retry payment later
       window.location.assign(payUrl)
     } else {
-      // TODO: Trigger some error dialog.
+      const error = new Error('Missing Payment Token')
+      this.$root.$emit('save-error-event', error)
     }
   }
 

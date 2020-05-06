@@ -36,52 +36,47 @@ Vue.use(Affix)
 Vue.use(Vuelidate)
 Vue.use(Vue2Filters)
 
-//
-// Fetch config from server, then load Vue.
-//
-fetchConfig()
-  .then(async () => {
-    // initialize Sentry
-    console.info('Initializaing Sentry...') // eslint-disable-line no-console
-    Sentry.init({
-      dsn: window['sentryDsn'],
-      integrations: [new Integrations.Vue({ Vue, attachProps: true })]
-    })
-    // initialize Launch Darkly
-    await initLDClient()
+// main code
+async function start () {
+  // fetch config from environment and API
+  // must come first as inits below depend on config
+  await fetchConfig()
 
-    if (featureFlags.getFlag('bcrs-create-ui-enabled')) {
-      // configure KeyCloak Service
-      console.info('Starting Keycloak service...') // eslint-disable-line no-console
-      await KeycloakService.setKeycloakConfigUrl(sessionStorage.getItem('KEYCLOAK_CONFIG_PATH'))
-
-      // get Vue objects only after we have config
-      const router = getVueRouter()
-      const store = getVuexStore()
-
-      // start Vue application
-      console.info('Starting app...') // eslint-disable-line no-console
-      new Vue({
-        vuetify: new Vuetify({ iconfont: 'mdi' }),
-        router,
-        store,
-        render: h => h(App)
-      }).$mount('#app')
-    }
+  // initialize Sentry
+  console.info('Initializing Sentry...') // eslint-disable-line no-console
+  Sentry.init({
+    dsn: window['sentryDsn'],
+    integrations: [new Integrations.Vue({ Vue, attachProps: true })]
   })
-  .catch(error => {
-    /**
-     * This catches any un-handled errors from fetchConfig()
-     * or anything else in then() block above.
-     */
-    console.error(error) // eslint-disable-line no-console
-    // try to redirect to Business Registry home page
-    const businessesUrl = sessionStorage.getItem('BUSINESSES_URL')
-    if (businessesUrl) {
-      // assume Businesses URL is always reachable
-      window.location.assign(businessesUrl)
-    } else {
-      alert('There was an error starting this page. (See console for details.)\n' +
-        'Please try again later.')
-    }
-  })
+
+  // initialize Launch Darkly
+  await initLDClient()
+
+  // check app feature flag
+  if (featureFlags.getFlag('bcrs-create-ui-enabled')) {
+    // configure KeyCloak Service
+    console.info('Starting Keycloak service...') // eslint-disable-line no-console
+    await KeycloakService.setKeycloakConfigUrl(sessionStorage.getItem('KEYCLOAK_CONFIG_PATH'))
+
+    // start Vue application
+    console.info('Starting app...') // eslint-disable-line no-console
+    new Vue({
+      vuetify: new Vuetify({ iconfont: 'mdi' }),
+      router: getVueRouter(),
+      store: getVuexStore(),
+      render: h => h(App)
+    }).$mount('#app')
+  }
+}
+
+// execution and error handling
+start().catch(error => {
+  console.error(error) // eslint-disable-line no-console
+  alert('There was an error starting this page.\nPlease try again later.')
+  // try to redirect to Business Registry home page
+  const businessesUrl = null // sessionStorage.getItem('BUSINESSES_URL')
+  if (businessesUrl) {
+    // assume Businesses URL is always reachable
+    window.location.assign(businessesUrl)
+  }
+})

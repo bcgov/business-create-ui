@@ -6,13 +6,14 @@ import axios from '@/utils/axios-auth'
  * Fetches config from environment and API.
  * @returns A promise to get & set session storage keys with appropriate values.
  */
-export function fetchConfig (): Promise<any> {
+export async function fetchConfig (): Promise<any> {
+  // get config from environment
   const origin: string = window.location.origin
   const processEnvVueAppPath: string = process.env.VUE_APP_PATH
   const processEnvBaseUrl = process.env.BASE_URL
 
   if (!origin || !processEnvVueAppPath || !processEnvBaseUrl) {
-    throw new Error('Missing environment variables')
+    return Promise.reject(new Error('Missing environment variables'))
   }
 
   // set Base URL for returning from redirects
@@ -24,6 +25,9 @@ export function fetchConfig (): Promise<any> {
   sessionStorage.setItem('VUE_ROUTER_BASE', processEnvBaseUrl)
   console.log('Set Vue Router Base to: ' + processEnvBaseUrl)
 
+  // fetch config from API
+  // eg, http://localhost:8080/basePath/config/configuration.json
+  // eg, https://business-create-dev.pathfinder.gov.bc.ca/businesses/create/config/configuration.json
   const url = `${origin}/${processEnvVueAppPath}/config/configuration.json`
   const headers = {
     'Accept': 'application/json',
@@ -31,48 +35,48 @@ export function fetchConfig (): Promise<any> {
     'Cache-Control': 'no-cache'
   }
 
-  return axios
-    .get(url, { headers })
-    .then(response => {
-      const businessesUrl: string = response.data['BUSINESSES_URL']
-      sessionStorage.setItem('BUSINESSES_URL', businessesUrl)
-      console.log('Set Businesses URL to: ' + businessesUrl)
+  const response = await axios.get(url, { headers }).catch(() => {
+    return Promise.reject(new Error('Could not fetch configuration.json'))
+  })
 
-      const authUrl: string = response.data['AUTH_URL']
-      sessionStorage.setItem('AUTH_URL', authUrl)
-      console.log('Set Auth URL to: ' + authUrl)
+  const businessesUrl: string = response.data['BUSINESSES_URL']
+  sessionStorage.setItem('BUSINESSES_URL', businessesUrl)
+  console.log('Set Businesses URL to: ' + businessesUrl)
 
-      const dashboardUrl: string = response.data['DASHBOARD_URL']
-      sessionStorage.setItem('DASHBOARD_URL', dashboardUrl)
-      console.log('Set Dashboard URL to: ' + dashboardUrl)
+  const authUrl: string = response.data['AUTH_URL']
+  sessionStorage.setItem('AUTH_URL', authUrl)
+  console.log('Set Auth URL to: ' + authUrl)
 
-      const legalApiUrl: string = response.data['LEGAL_API_URL']
-      // set base URL for axios calls
-      axios.defaults.baseURL = legalApiUrl
-      console.log('Set Legal API URL to: ' + legalApiUrl)
+  const dashboardUrl: string = response.data['DASHBOARD_URL']
+  sessionStorage.setItem('DASHBOARD_URL', dashboardUrl)
+  console.log('Set Dashboard URL to: ' + dashboardUrl)
 
-      const authApiUrl: string = response.data['AUTH_API_URL']
-      sessionStorage.setItem('AUTH_API_URL', authApiUrl)
-      console.log('Set Auth API URL to: ' + authApiUrl)
+  const legalApiUrl: string = response.data['LEGAL_API_URL']
+  // set base URL for axios calls
+  axios.defaults.baseURL = legalApiUrl
+  console.log('Set Legal API URL to: ' + legalApiUrl)
 
-      const payApiUrl: string = response.data['PAY_API_URL']
-      sessionStorage.setItem('PAY_API_URL', payApiUrl)
-      console.log('Set Pay API URL to: ' + payApiUrl)
+  const authApiUrl: string = response.data['AUTH_API_URL']
+  sessionStorage.setItem('AUTH_API_URL', authApiUrl)
+  console.log('Set Auth API URL to: ' + authApiUrl)
 
-      const keycloakConfigPath: string = response.data['KEYCLOAK_CONFIG_PATH']
-      sessionStorage.setItem('KEYCLOAK_CONFIG_PATH', keycloakConfigPath)
-      console.info('Set Keycloak Config Path to: ' + keycloakConfigPath)
+  const payApiUrl: string = response.data['PAY_API_URL']
+  sessionStorage.setItem('PAY_API_URL', payApiUrl)
+  console.log('Set Pay API URL to: ' + payApiUrl)
 
-      const addressCompleteKey: string = response.data['ADDRESS_COMPLETE_KEY'];
-      (<any>window).addressCompleteKey = addressCompleteKey
-      console.info('Set Address Complete Key.')
+  const keycloakConfigPath: string = response.data['KEYCLOAK_CONFIG_PATH']
+  sessionStorage.setItem('KEYCLOAK_CONFIG_PATH', keycloakConfigPath)
+  console.info('Set Keycloak Config Path to: ' + keycloakConfigPath)
 
-      const ldClientId: string = response.data['LD_CLIENT_ID'];
-      (<any>window).ldClientId = ldClientId
-      console.info('Set Launch Darkly Client ID.')
+  const addressCompleteKey: string = response.data['ADDRESS_COMPLETE_KEY'];
+  (<any>window).addressCompleteKey = addressCompleteKey
+  console.info('Set Address Complete Key.')
 
-      const sentryDsn = response.data['SENTRY_DSN'];
-      (<any>window).sentryDsn = sentryDsn
-      console.log('Set Sentry dsn.')
-    })
+  const ldClientId: string = response.data['LD_CLIENT_ID'];
+  (<any>window).ldClientId = ldClientId
+  console.info('Set Launch Darkly Client ID.')
+
+  const sentryDsn = response.data['SENTRY_DSN'];
+  (<any>window).sentryDsn = sentryDsn
+  console.log('Set Sentry DSN.')
 }

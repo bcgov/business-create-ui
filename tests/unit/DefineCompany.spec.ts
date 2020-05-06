@@ -18,7 +18,7 @@ const localVue = createLocalVue()
 localVue.use(VueRouter)
 const router = mockRouter.mock()
 
-describe('Define Company component', () => {
+describe('Define Company view', () => {
   let wrapper: any
 
   beforeEach(() => {

@@ -65,7 +65,7 @@ describe('Actions component', () => {
   })
 })
 
-describe('Actions Filing Functionality', () => {
+describe('Actions component - Filing Functionality', () => {
   let wrapper: any
   const { assign } = window.location
   const inputDate = new Date(new Date().setDate(new Date().getDate() + 5))

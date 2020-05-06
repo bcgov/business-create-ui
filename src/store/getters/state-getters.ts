@@ -104,9 +104,8 @@ export const haveChanges = (state: any): boolean => {
 }
 
 //
-// Below is the business logic that allows the Stepper, the Actions, and
-// any other component that needs to know how they should behave (ie,
-// what to show or enable).
+// Below is the business logic that allows the Stepper, the Actions, etc
+// to know how they should behave (ie, what to show or enable).
 //
 
 /**

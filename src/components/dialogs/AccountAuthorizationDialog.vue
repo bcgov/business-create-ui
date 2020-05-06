@@ -8,7 +8,7 @@
           retry to access this name request now, or you can exit and return to the dashboard.</p>
       </v-card-text>
 
-      <v-divider></v-divider>
+      <v-divider class="my-0"></v-divider>
 
       <v-card-actions>
         <v-btn id="dialog-exit-button" color="primary" text @click="exit()">Exit</v-btn>
@@ -22,10 +22,7 @@
 <script lang="ts">
 import { Component, Vue, Prop, Emit } from 'vue-property-decorator'
 
-@Component({
-  computed: {},
-  components: { }
-})
+@Component({})
 export default class AccountAuthorizationDialog extends Vue {
   // Prop to display the dialog.
   @Prop() private dialog: boolean

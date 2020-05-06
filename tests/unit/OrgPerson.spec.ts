@@ -159,7 +159,7 @@ function createComponent (
 store.state.stateModel.nameRequest.entityType = 'BCOMP'
 store.state.stateModel.currentDate = '2020-03-30'
 
-describe('OrgPerson', () => {
+describe('Org Person component', () => {
   it('Loads the component and sets data for person', async () => {
     const wrapper: Wrapper<OrgPerson> = createComponent(validPersonData, -1, 0, null)
     expect(wrapper.vm.$data.orgPerson).toStrictEqual(validPersonData)

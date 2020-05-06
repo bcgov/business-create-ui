@@ -71,7 +71,7 @@ function createComponent (
   })
 }
 
-describe('BusinessContactInfo', () => {
+describe('Business Contact Info component', () => {
   it('Loads the component and sets data for valid data', async () => {
     const wrapper: Wrapper<BusinessContactInfo> = createComponent(email, email)
     expect((<HTMLInputElement> wrapper.find(emailSelector).element).value).toEqual(email)

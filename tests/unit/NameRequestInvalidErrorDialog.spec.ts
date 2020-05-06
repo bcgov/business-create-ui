@@ -2,111 +2,128 @@ import Vue from 'vue'
 import Vuetify from 'vuetify'
 import { shallowMount } from '@vue/test-utils'
 import { NameRequestInvalidErrorDialog } from '@/components/dialogs'
-import { NameRequestStates } from '@/enums'
 
 Vue.use(Vuetify)
 
 const vuetify = new Vuetify({})
 
-describe('NameRequestInvalidErrorDialog - Displays Error/Warning messages', () => {
-  it('displays name request not found message', () => {
+describe('Name Request Invalid Error Dialog', () => {
+  it('displays Not Found message', () => {
     const wrapper = shallowMount(NameRequestInvalidErrorDialog,
       {
         vuetify,
         propsData: {
           dialog: true,
-          type: NameRequestStates.NOTFOUND
+          type: 'NOT_FOUND'
         }
       })
 
-    expect(wrapper.find('#dialog-title').text()).toBe('Name Request Not Found')
-    expect(wrapper.find('.genErr').text()).toBe('The specified name request number could not be found.')
+    expect(wrapper.find('#dialog-title').text()).toBe('Invalid Name Request')
+    expect(wrapper.find('.genErr').text()).toBe('The specified name request could not be found.')
     expect(wrapper.find('#dialog-redirect-button').exists()).toBe(true)
     expect(wrapper.find('#dialog-ok-button').exists()).toBe(false)
     wrapper.destroy()
   })
 
-  it('displays name request expired message', () => {
+  it('displays Expired message', () => {
     const wrapper = shallowMount(NameRequestInvalidErrorDialog,
       {
         vuetify,
         propsData: {
           dialog: true,
-          type: NameRequestStates.EXPIRED
+          type: 'EXPIRED'
         }
       })
 
-    expect(wrapper.find('#dialog-title').text()).toBe('Name Request Invalid')
+    expect(wrapper.find('#dialog-title').text()).toBe('Invalid Name Request')
     expect(wrapper.find('.genErr').text()).toBe('The specified name request has expired.')
     expect(wrapper.find('#dialog-redirect-button').exists()).toBe(false)
     expect(wrapper.find('#dialog-ok-button').exists()).toBe(true)
     wrapper.destroy()
   })
 
-  it('displays name request consumed message', () => {
+  it('displays Already Consumed message', () => {
     const wrapper = shallowMount(NameRequestInvalidErrorDialog,
       {
         vuetify,
         propsData: {
           dialog: true,
-          type: NameRequestStates.CONSUMED
+          type: 'CONSUMED'
         }
       })
 
-    expect(wrapper.find('#dialog-title').text()).toBe('Name Request Invalid')
+    expect(wrapper.find('#dialog-title').text()).toBe('Invalid Name Request')
     expect(wrapper.find('.genErr').text()).toBe('The specified name request has already been consumed.')
     expect(wrapper.find('#dialog-redirect-button').exists()).toBe(true)
     expect(wrapper.find('#dialog-ok-button').exists()).toBe(false)
     wrapper.destroy()
   })
 
-  it('displays name request not approved message', () => {
+  it('displays Not Approved message', () => {
     const wrapper = shallowMount(NameRequestInvalidErrorDialog,
       {
         vuetify,
         propsData: {
           dialog: true,
-          type: NameRequestStates.NOTAPPROVED
+          type: 'NOT_APPROVED'
         }
       })
 
-    expect(wrapper.find('#dialog-title').text()).toBe('Name Request Invalid')
+    expect(wrapper.find('#dialog-title').text()).toBe('Invalid Name Request')
     expect(wrapper.find('.genErr').text()).toBe('The specified name request has not been approved.')
     expect(wrapper.find('#dialog-redirect-button').exists()).toBe(false)
     expect(wrapper.find('#dialog-ok-button').exists()).toBe(true)
     wrapper.destroy()
   })
-  it('displays name request unexpected error message', () => {
+
+  it('displays Unexpected Error message', () => {
     const wrapper = shallowMount(NameRequestInvalidErrorDialog,
       {
         vuetify,
         propsData: {
           dialog: true,
-          type: ''
+          type: undefined
         }
       })
 
-    expect(wrapper.find('#dialog-title').text()).toBe('Name Request Invalid')
+    expect(wrapper.find('#dialog-title').text()).toBe('Invalid Name Request')
     expect(wrapper.find('.genErr').text()).toBe('An unexpected error has occurred.')
+    expect(wrapper.find('#dialog-redirect-button').exists()).toBe(true)
+    expect(wrapper.find('#dialog-ok-button').exists()).toBe(false)
+    wrapper.destroy()
+  })
+
+  it('displays Awaiting Consent message', () => {
+    const wrapper = shallowMount(NameRequestInvalidErrorDialog,
+      {
+        vuetify,
+        propsData: {
+          dialog: true,
+          type: 'NEED_CONSENT'
+        }
+      })
+
+    expect(wrapper.find('#dialog-title').text()).toBe('Invalid Name Request')
+    expect(wrapper.find('.genErr').text()).toBe('The specified name request is awaiting consent.')
     expect(wrapper.find('#dialog-redirect-button').exists()).toBe(false)
     expect(wrapper.find('#dialog-ok-button').exists()).toBe(true)
     wrapper.destroy()
   })
 
-  it('displays name request invalid error message', () => {
+  it('displays Invalid Response message', () => {
     const wrapper = shallowMount(NameRequestInvalidErrorDialog,
       {
         vuetify,
         propsData: {
           dialog: true,
-          type: NameRequestStates.INVALID
+          type: 'INVALID'
         }
       })
 
-    expect(wrapper.find('#dialog-title').text()).toBe('Name Request Invalid')
-    expect(wrapper.find('.genErr').text()).toBe('The specified name request number returned an invalid response.')
-    expect(wrapper.find('#dialog-redirect-button').exists()).toBe(false)
-    expect(wrapper.find('#dialog-ok-button').exists()).toBe(true)
+    expect(wrapper.find('#dialog-title').text()).toBe('Invalid Name Request')
+    expect(wrapper.find('.genErr').text()).toBe('The specified name request data is invalid.')
+    expect(wrapper.find('#dialog-redirect-button').exists()).toBe(true)
+    expect(wrapper.find('#dialog-ok-button').exists()).toBe(false)
     wrapper.destroy()
   })
 })
