@@ -39,7 +39,7 @@ import ErrorContact from '@/components/common/ErrorContact.vue'
   components: { ErrorContact }
 })
 export default class PaymentErrorDialog extends Vue {
-   @Getter isRoleStaff!: boolean
+  @Getter isRoleStaff!: boolean
 
   /** Prop to display the dialog. */
   @Prop() private dialog: boolean
