@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter, { Route } from 'vue-router'
 import { routes } from './routes'
+import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
 
 /**
  * Configures and returns Vue Router.
@@ -47,7 +48,7 @@ export function getVueRouter () {
   /** Returns True if user is authenticated, else False. */
   function isAuthenticated (): boolean {
     // FUTURE: also check that token isn't expired!
-    return Boolean(sessionStorage.getItem('KEYCLOAK_TOKEN'))
+    return Boolean(sessionStorage.getItem(SessionStorageKeys.KeyCloakToken))
   }
 
   /** Returns True if route is Signin, else False. */
