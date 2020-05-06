@@ -79,6 +79,11 @@ export default class NameRequestMixin extends Mixins(DateMixin) {
       return NameRequestStates.EXPIRED
     }
 
+    // If the NR is awaiting consent, it is not consumable.
+    if (nr.state === NameRequestStates.CONDITIONAL && nr.consentFlag !== 'R') {
+      return NameRequestStates.NEED_CONSENT
+    }
+
     // If the NR's root state is not APPROVED, it is not consumable.
     if (nr.state !== NameRequestStates.APPROVED) {
       return NameRequestStates.NOT_APPROVED
@@ -89,11 +94,6 @@ export default class NameRequestMixin extends Mixins(DateMixin) {
     // If the NR has already been consumed, it is not consumable.
     if (nr.names.some(name => name.consumptionDate)) {
       return NameRequestStates.CONSUMED
-    }
-
-    // If the NR is awaiting consent, it is not consumable.
-    if (nr.consentFlag === false) {
-      return NameRequestStates.NEED_CONSENT
     }
 
     // Otherwise, the NR is consumable.
