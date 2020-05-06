@@ -127,7 +127,10 @@ import { AccountAuthorizationDialog, NameRequestInvalidErrorDialog, ConfirmDialo
 import { DateMixin, FilingTemplateMixin, LegalApiMixin, NameRequestMixin } from '@/mixins'
 import { FilingDataIF, ActionBindingIF, ConfirmDialogType } from '@/interfaces'
 import { CertifyStatementResource } from '@/resources'
+
+// Enums and Constants
 import { EntityTypes, FilingCodes, RouteNames, NameRequestStates } from '@/enums'
+import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
 
 @Component({
   components: {
@@ -301,11 +304,32 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
     // only initialize once
     // don't start during Jest tests as it messes up the test JWT
     if (this.tokenService || this.isJestRunning) return
+    try {
+      console.info('Starting token refresh service...') // eslint-disable-line no-console
+      this.tokenService = new TokenService()
+      await this.tokenService.init()
+      this.tokenService.scheduleRefreshTimer()
+    } catch (error) {
+      // Happens when the refresh token has expired in session storage
+      // reload to get new tokens
 
-    console.info('Starting token refresh service...') // eslint-disable-line no-console
-    this.tokenService = new TokenService()
-    await this.tokenService.init()
-    this.tokenService.scheduleRefreshTimer()
+      // eslint-disable-next-line no-console
+      console.log('Could not initialize token refresher: ', error)
+      this.clearKeycloakSession()
+      location.reload()
+    }
+  }
+
+  /**
+   * Clears Keycloak token information from session storage
+   */
+  private clearKeycloakSession () : void {
+    sessionStorage.removeItem(SessionStorageKeys.KeyCloakToken)
+    sessionStorage.removeItem(SessionStorageKeys.KeyCloakIdToken)
+    sessionStorage.removeItem(SessionStorageKeys.KeyCloakRefreshToken)
+    sessionStorage.removeItem(SessionStorageKeys.UserFullName)
+    sessionStorage.removeItem(SessionStorageKeys.UserKcId)
+    sessionStorage.removeItem(SessionStorageKeys.UserAccountType)
   }
 
   /** Fetches NR data and fetches draft filing. */
