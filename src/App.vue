@@ -112,7 +112,7 @@
 import { Component, Vue, Watch, Mixins } from 'vue-property-decorator'
 import { State, Action, Getter } from 'vuex-class'
 import TokenService from 'sbc-common-components/src/services/token.services'
-import { BAD_REQUEST, PAYMENT_REQUIRED } from 'http-status-codes'
+import { BAD_REQUEST, PAYMENT_REQUIRED, FORBIDDEN } from 'http-status-codes'
 
 // Components
 import SbcHeader from 'sbc-common-components/src/components/SbcHeader.vue'
@@ -246,6 +246,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
           this.paymentErrorDialog = true
           break
         case BAD_REQUEST:
+        case FORBIDDEN:
           this.saveErrors = error?.response?.data?.errors || []
           this.saveWarnings = error?.response?.data?.warnings || []
           this.saveErrorDialog = true

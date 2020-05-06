@@ -10,7 +10,7 @@ import { DateMixin } from '@/mixins'
 @Component
 export default class NameRequestMixin extends Mixins(DateMixin) {
   /**
-   * Generate name request state for the store
+   * Generates name request state for the store.
    * @param nr the name request response payload
    * @param filingId the filing id
    */
@@ -49,6 +49,7 @@ export default class NameRequestMixin extends Mixins(DateMixin) {
       }
     }
   }
+
   /**
    * Returns True if the Name Request data is valid.
    * @param nr the name request response payload
