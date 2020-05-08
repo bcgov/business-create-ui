@@ -164,7 +164,7 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
     this.setIsFilingPaying(true)
     let filingComplete
 
-    if (!this.isValidDateTime(this.effectiveDate)) {
+    if (this.effectiveDate && !this.isValidDateTime(this.effectiveDate)) {
       this.setIsIncorporationDateTimeValid(false)
       this.setIsFilingPaying(false)
       window.scrollTo({ top: 1250, behavior: 'smooth' })
