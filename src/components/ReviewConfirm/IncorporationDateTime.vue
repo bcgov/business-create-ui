@@ -40,6 +40,7 @@
             </template>
             <v-date-picker
               v-model="datePicker"
+              landscape
               :min=minDate
               :max=maxDate>
             </v-date-picker>
