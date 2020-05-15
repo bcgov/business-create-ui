@@ -16,20 +16,19 @@ describe('BcolErrorDialog - Verify parameters passed in are displayed correctly'
         propsData: {
           filingType: 'Incorporation Application',
           bcolObject: {
-              title: "Error",
-              detail: "A BCOL payment error has occured"
+            title: 'Error',
+            detail: 'A BCOL payment error has occured'
           }
         },
         store,
         vuetify
       })
-    const vm: any = wrapper.vm
 
     expect(wrapper.find('#dialog-title').text()).toBe('Payment Incomplete - Error')
     expect(wrapper.find('#dialog-content').text())
       .toContain('A BCOL payment error has occured')
     expect(wrapper.find('#dialog-header').text())
-    .toBe('This Incorporation Application could not be filed for the following reason:')
+      .toBe('This Incorporation Application could not be filed for the following reason:')
     expect(wrapper.find('#dialog-retry-button')).toBeDefined()
 
     wrapper.destroy()

@@ -7,7 +7,7 @@
         <p class="genErr" id="dialog-header">
           This {{filingType}} could not be filed for the following reason:
         </p>
-        <p class="genErr" id="dialog-content">{{bcolObject.detail}}</p>
+        <p class="genErr" id="dialog-content" v-html="bcolObject.detail"></p>
 
         <template v-if="!isRoleStaff">
           <p class="genErr">
@@ -29,17 +29,12 @@
 
 <script lang="ts">
 import { Component, Vue, Prop, Emit } from 'vue-property-decorator'
-import { mapGetters } from 'vuex'
+import { Getter } from 'vuex-class'
 
-@Component({
-  computed: {
-    // Property definition for runtime environment.
-    ...mapGetters(['isRoleStaff'])
-  }
-})
+@Component({})
 export default class BcolErrorDialog extends Vue {
   // Getter definition for static type checking.
-  readonly isRoleStaff!: boolean
+  @Getter isRoleStaff!: boolean
 
   @Prop() private filingType: string
 
@@ -52,7 +47,7 @@ export default class BcolErrorDialog extends Vue {
   @Emit() private exit () { }
 
   private get bcolDialog (): boolean {
-    return this.bcolObject != null
+    return !!this.bcolObject
   }
 }
 </script>
