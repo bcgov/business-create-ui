@@ -23,7 +23,7 @@
 <script lang="ts">
 import { Component, Vue, Prop, Emit } from 'vue-property-decorator'
 
-@Component
+@Component({})
 export default class ConfirmRemoveDialog extends Vue {
   // Prop to display the dialog.
   @Prop() private dialog: boolean

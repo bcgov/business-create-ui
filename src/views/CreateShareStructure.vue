@@ -285,7 +285,7 @@ export default class CreateShareStructure extends Vue {
     return Boolean(this.$route.query.showErrors)
   }
 
-  private get helpLink () : string {
+  private get helpLink (): string {
     return 'https://www2.gov.bc.ca/gov/content/employment-business/business/' +
     'managing-a-business/permits-licences/businesses-incorporated-companies'
   }

@@ -225,7 +225,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
   }
 
   /** Helper to check is the current route matches */
-  private isRouteName (routeName: string) : boolean {
+  private isRouteName (routeName: string): boolean {
     return this.$route.name === routeName
   }
 
@@ -324,7 +324,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
   /**
    * Clears Keycloak token information from session storage
    */
-  private clearKeycloakSession () : void {
+  private clearKeycloakSession (): void {
     sessionStorage.removeItem(SessionStorageKeys.KeyCloakToken)
     sessionStorage.removeItem(SessionStorageKeys.KeyCloakIdToken)
     sessionStorage.removeItem(SessionStorageKeys.KeyCloakRefreshToken)

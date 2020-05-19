@@ -299,13 +299,13 @@ export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
     }
   }
 
-  private changeMaximumShareFlag () {
+  private changeMaximumShareFlag (): void {
     if (this.hasNoMaximumShares) {
       this.shareStructure.maxNumberOfShares = null
     }
   }
 
-  private changeParValueFlag () {
+  private changeParValueFlag (): void {
     if (this.hasNoParValue) {
       this.shareStructure.currency = null
       this.shareStructure.parValue = null
@@ -321,7 +321,7 @@ export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
     return this.shareStructure.type === 'Series'
   }
 
-  get isNoMaxSharesVisible () : boolean {
+  get isNoMaxSharesVisible (): boolean {
     return this.isSeries ? !(this.shareClasses[this.parentIndex].hasMaximumShares) : true
   }
 
@@ -336,7 +336,7 @@ export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
   private emitRemoveShareClassEvent (shareClassIndex: number): void {}
 
   @Emit('removeSeries')
-  private emitRemoveShareSeriesEvent (parentIndex:number, shareSeriesIndex: number): void {}
+  private emitRemoveShareSeriesEvent (parentIndex: number, shareSeriesIndex: number): void {}
 
   @Emit('resetEvent')
   private emitResetEvent (): void {}

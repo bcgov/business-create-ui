@@ -48,7 +48,7 @@ import { Component, Mixins, Vue } from 'vue-property-decorator'
 import { Getter, Action, State } from 'vuex-class'
 
 // Interfaces
-import { GetterIF, ActionBindingIF, BusinessContactIF, IncorporationAddressIf } from '@/interfaces'
+import { GetterIF, ActionBindingIF, BusinessContactIF, IncorporationAddressIf, AddressIF } from '@/interfaces'
 
 // Mixins
 import { EntityFilterMixin } from '@/mixins'
@@ -93,16 +93,51 @@ export default class DefineCompany extends Mixins(EntityFilterMixin) {
 
   /** Called when component is created. */
   private created (): void {
-    // ignore data changes until page has loaded
+    // temporarily ignore data changes
     this.setIgnoreChanges(true)
+
+    // if no addresses were fetched, set default addresses
+    if (!this.addresses.registeredOffice && !this.addresses.recordsOffice) {
+      this.setDefaultAddresses()
+    }
+
+    // watch data changes once page has loaded (in next tick)
     Vue.nextTick(() => {
       this.setIgnoreChanges(false)
     })
   }
 
-  private mounted () {
-    // always false initially
-    // this.setDefineCompanyStepValidity(this.businessContactFormValid && this.addressFormValid)
+  /** Sets default addresses in filing. (Will get overwritten by a fetched draft filing if there is one.) */
+  private setDefaultAddresses (): void {
+    const defaultAddress: AddressIF = {
+      addressCity: '',
+      addressCountry: 'CA',
+      addressRegion: 'BC',
+      deliveryInstructions: '',
+      postalCode: '',
+      streetAddress: '',
+      streetAddressAdditional: ''
+    }
+
+    if (this.entityFilter(EntityTypes.BCOMP)) {
+      this.setOfficeAddresses({
+        registeredOffice: {
+          mailingAddress: defaultAddress,
+          deliveryAddress: defaultAddress
+        },
+        recordsOffice: {
+          mailingAddress: defaultAddress,
+          deliveryAddress: defaultAddress
+        }
+      })
+    } else {
+      this.setOfficeAddresses({
+        registeredOffice: {
+          mailingAddress: defaultAddress,
+          deliveryAddress: defaultAddress
+        }
+      })
+    }
   }
 
   private onBusinessContactInfoChange (businessContact: BusinessContactIF): void {

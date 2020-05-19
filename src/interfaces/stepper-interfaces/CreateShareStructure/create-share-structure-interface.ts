@@ -1,10 +1,10 @@
 export interface ShareStructureIF {
     valid: boolean;
-    shareClasses : ShareClassIF[];
+    shareClasses: ShareClassIF[];
 }
 
 export interface ShareClassIF {
-    id: number| null;
+    id: number | null;
     type?: string; // Indicates whether class or series
     name: string;
     priority: number;

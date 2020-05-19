@@ -83,8 +83,9 @@ function createShareStructure (
   hasParValue = true,
   parValue = null,
   currency = null,
-  hasRightsOrRestrictions = false) : ShareClassIF {
-  const shareStructure : ShareClassIF = {
+  hasRightsOrRestrictions = false
+): ShareClassIF {
+  const shareStructure: ShareClassIF = {
     id: id,
     priority: priority,
     type: type,
