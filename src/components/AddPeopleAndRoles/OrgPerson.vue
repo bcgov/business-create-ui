@@ -193,13 +193,13 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
   private addPersonOrgFormValid: boolean = true
 
   // Address related properties
-  private inProgressMailingAddress:AddressIF
-  private inProgressDeliveryAddress:AddressIF
+  private inProgressMailingAddress: AddressIF
+  private inProgressDeliveryAddress: AddressIF
   private inheritMailingAddress: boolean = true
   private personAddressSchema: {} = personAddressSchema
   private mailingAddressValid: boolean = false
   private deliveryAddressValid: boolean = false
-  private reassignCompletingParty : boolean = false
+  private reassignCompletingParty: boolean = false
 
   // Roles
   private isCompletingParty: boolean = false
@@ -290,7 +290,7 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
     }
   }
 
-  private isFormValid () : boolean {
+  private isFormValid (): boolean {
     let isFormValid: boolean = this.addPersonOrgFormValid && this.mailingAddressValid
     if (this.isDirector && !this.inheritMailingAddress) {
       isFormValid = isFormValid && this.deliveryAddressValid
@@ -366,7 +366,7 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
     }
   }
 
-  private isRoleLocked (role: Roles) : boolean {
+  private isRoleLocked (role: Roles): boolean {
     return this.orgPerson.roles.some(party => party.roleType === role) && this.activeIndex === -1
   }
 
@@ -374,7 +374,7 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
     this.emitRemovePersonEvent(this.activeIndex)
   }
 
-  private reassignPersonErrorMessage () : string {
+  private reassignPersonErrorMessage (): string {
     let errorMessage: string =
     `<p>The Completing Party role is already assigned to ${this.existingCompletingParty.officer.firstName}
      ${this.existingCompletingParty.officer.middleName || ''} ${this.existingCompletingParty.officer.lastName}.</p>
@@ -390,7 +390,7 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
     return this.orgPerson.officer?.partyType === IncorporatorTypes.CORPORATION
   }
 
-  get incorporatorLabel () : string {
+  get incorporatorLabel (): string {
     return this.entityFilter(EntityTypes.BCOMP) ? Roles.INCORPORATOR : Roles.SUBSCRIBER
   }
 
@@ -405,7 +405,7 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
   private emitRemovePersonEvent (activeIndex: Number): void { }
 
   @Emit('removeCompletingPartyRole')
-  private emitReassignCompletingPartyEvent () : void {}
+  private emitReassignCompletingPartyEvent (): void {}
 }
 </script>
 

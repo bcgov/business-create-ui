@@ -38,7 +38,7 @@ function resetStore (): void {
   store.state.stateModel.addPeopleAndRoleStep.orgPeople = []
 }
 
-function getPersonList (roles = [completingPartyRole]) : any {
+function getPersonList (roles = [completingPartyRole]): any {
   const mockPersonList = [
     {
       'officer': {

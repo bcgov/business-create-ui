@@ -54,7 +54,7 @@ import { GetterIF, NameRequestDetailsIF, NameRequestApplicantIF } from '@/interf
 // Mixins
 import { DateMixin } from '@/mixins'
 
-@Component
+@Component({})
 export default class NameRequestInfo extends Mixins(DateMixin) {
   // Template Enums
   readonly NameRequestStates = NameRequestStates
@@ -68,7 +68,7 @@ export default class NameRequestInfo extends Mixins(DateMixin) {
   @Getter getNameRequestApplicant!: NameRequestApplicantIF;
 
   /** The entity title  */
-  private entityTypeDescription () :string {
+  private entityTypeDescription (): string {
     if (this.isTypeBcomp) {
       return 'BC Benefit Company'
     } else if (this.isTypeCoop) {
@@ -79,12 +79,12 @@ export default class NameRequestInfo extends Mixins(DateMixin) {
   }
 
   /** The request type */
-  private requestType () : string {
+  private requestType (): string {
     return 'New Business'
   }
 
   /** Return formatted expiration date */
-  private formattedExpirationDate () : string {
+  private formattedExpirationDate (): string {
     return this.toReadableDate(this.getNameRequestDetails.expirationDate)
   }
 
@@ -98,7 +98,7 @@ export default class NameRequestInfo extends Mixins(DateMixin) {
   }
 
   /** Return formatted applicant name */
-  private applicantName () : string {
+  private applicantName (): string {
     let name = this.getNameRequestApplicant.firstName
     if (this.getNameRequestApplicant.middleName) {
       name = `${name} ${this.getNameRequestApplicant.middleName} ${this.getNameRequestApplicant.lastName}`
@@ -109,7 +109,7 @@ export default class NameRequestInfo extends Mixins(DateMixin) {
   }
 
   /** Return formatted address string */
-  private applicantAddress () : string {
+  private applicantAddress (): string {
     // Get Address info
     const city = this.getNameRequestApplicant.city
     const stateProvince = this.getNameRequestApplicant.stateProvinceCode

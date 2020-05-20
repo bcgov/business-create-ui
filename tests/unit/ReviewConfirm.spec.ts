@@ -18,14 +18,12 @@ const store = getVuexStore()
 
 describe('Review Confirm view', () => {
   let wrapper: any
-  let vm: any
 
   beforeEach(() => {
     const localVue = createLocalVue()
     localVue.use(VueRouter)
     const router = mockRouter.mock()
     wrapper = shallowMount(ReviewConfirm, { localVue, store, router, vuetify })
-    vm = wrapper.vm as any
   })
 
   afterEach(() => {

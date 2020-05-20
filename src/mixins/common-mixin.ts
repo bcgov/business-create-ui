@@ -4,7 +4,7 @@ import { omit, isEqual } from 'lodash'
 /**
  * Mixin that provides some useful common utilities.
  */
-@Component
+@Component({})
 export default class CommonMixin extends Vue {
   /**
    * This is an example mixin that will return a msg.

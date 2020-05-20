@@ -7,7 +7,7 @@ import { DateMixin } from '@/mixins'
 /**
  * Name request mixin for processing NR responses
  */
-@Component
+@Component({})
 export default class NameRequestMixin extends Mixins(DateMixin) {
   /**
    * Generates name request state for the store.

@@ -45,15 +45,9 @@ describe('Actions component', () => {
       certifiedBy: 'Some certifier'
     }
     store.state.stateModel.nameRequest = { entityType: 'BC' }
-    store.state.stateModel.defineCompanyStep = {
-      valid: true
-    }
-    store.state.stateModel.addPeopleAndRoleStep = {
-      valid: true
-    }
-    store.state.stateModel.incorporationDateTime = {
-      valid: true
-    }
+    store.state.stateModel.defineCompanyStep = { valid: true }
+    store.state.stateModel.addPeopleAndRoleStep = { valid: true }
+    store.state.stateModel.incorporationDateTime = { valid: true }
     await Vue.nextTick(() => {
       // verify File and Pay button state
       expect(wrapper.find('#file-pay-btn').attributes('disabled')).toBeUndefined()
@@ -259,7 +253,10 @@ describe('Actions component - Filing Functionality', () => {
     const router = mockRouter.mock()
     router.push({ name: 'define-company', query: { nrNumber: 'NR 1234567' } })
     wrapper = shallowMount(Actions, { localVue, store, router, vuetify })
+
+    // Mock the function calls that may used by saveFiling below
     jest.spyOn(wrapper.vm, 'createFiling').mockImplementation()
+    jest.spyOn(wrapper.vm, 'updateFiling').mockImplementation()
   })
 
   afterEach(() => {
@@ -325,27 +322,15 @@ describe('Actions component - Filing Functionality', () => {
     expect(events.length).toBe(1)
   })
 
-  it('Calls the buildFiling method when onClickFilePay is called', async () => {
+  it('Calls the buildFiling and saveFiling methods when onClickFilePay is called', async () => {
     const mockBuildFiling = jest.spyOn(wrapper.vm, 'buildFiling')
     const mockSaveFiling = jest.spyOn(wrapper.vm, 'saveFiling')
-      .mockImplementation(() => Promise.resolve({ header: { paymentToken: 789 } })) // required for save
+      .mockImplementation(() => Promise.resolve({ header: { paymentToken: 789 } }))
 
     await wrapper.vm.onClickFilePay()
 
     expect(mockBuildFiling).toHaveBeenCalled()
     expect(mockBuildFiling).toHaveReturned()
-
-    // verify redirection
-    const baseUrl = 'myhost/basePath/auth/makepayment/789/myhost%2Fcooperatives%2FNR%201234567'
-
-    expect(window.location.assign).toHaveBeenCalledWith(baseUrl)
-  })
-
-  it('Calls the saveFiling method with the correct filing structure when onClickFilePay is called', async () => {
-    const mockSaveFiling = jest.spyOn(wrapper.vm, 'saveFiling')
-      .mockImplementation(() => Promise.resolve({ header: { paymentToken: 789 } }))
-
-    await wrapper.vm.onClickFilePay()
 
     expect(mockSaveFiling).toHaveBeenCalledWith(filing, false)
     expect(mockSaveFiling).toHaveReturned()

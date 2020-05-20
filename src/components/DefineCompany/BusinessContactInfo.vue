@@ -100,7 +100,7 @@ export default class BusinessContactInfo extends Vue {
   // Properties
   private contact: BusinessContactIF = this.initialValue
 
-  private formValid : boolean = false
+  private formValid: boolean = false
 
   // Rules
   private emailRules = [
@@ -138,16 +138,16 @@ export default class BusinessContactInfo extends Vue {
   }
 
   @Watch('formValid')
-  private onFormValidityChange (val:boolean): void{
+  private onFormValidityChange (val: boolean): void {
     this.emitContactFormState(val)
   }
 
   // Events
   @Emit('contactInfoChange')
-  private emitContactInfo (contactInfo : BusinessContactIF): void { }
+  private emitContactInfo (contactInfo: BusinessContactIF): void { }
 
   @Emit('contactInfoFormValidityChange')
-  private emitContactFormState (validity : boolean): void {}
+  private emitContactFormState (validity: boolean): void { }
 }
 </script>
 

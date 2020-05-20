@@ -1,4 +1,5 @@
 import { required, maxLength } from 'vuelidate/lib/validators'
+
 // The Address schema containing Vuelidate rules.
 // NB: This should match the subject JSON schema.
 export const officeAddressSchema = {
@@ -16,12 +17,12 @@ export const officeAddressSchema = {
   addressCountry: {
     required,
     // FUTURE: create new validation function isCountry('CA')
-    isCanada: (val:string) => Boolean(val === 'CA')
+    isCanada: (val: string) => Boolean(val === 'CA')
   },
   addressRegion: {
     maxLength: maxLength(2),
     // FUTURE: create new validation function isRegion('BC')
-    isBC: (val:string) => Boolean(val === 'BC')
+    isBC: (val: string) => Boolean(val === 'BC')
   },
   postalCode: {
     required,

@@ -3,8 +3,7 @@ import { Component, Vue } from 'vue-property-decorator'
 import { State, Getter, Action } from 'vuex-class'
 
 // Interfaces
-import { ActionBindingIF, StateModelIF, IncorporationFilingIF, GetterIF,
-  NameRequestDetailsIF } from '@/interfaces'
+import { ActionBindingIF, StateModelIF, IncorporationFilingIF, GetterIF } from '@/interfaces'
 
 // Constants
 import { INCORPORATION_APPLICATION } from '@/constants'
@@ -12,16 +11,16 @@ import { INCORPORATION_APPLICATION } from '@/constants'
 /**
  * Mixin that provides the integration with the legal api.
  */
-@Component
+@Component({})
 export default class FilingTemplateMixin extends Vue {
-  // Global state
+  // Global State
   @State stateModel!: StateModelIF
 
   // Global Getters
   @Getter isTypeBcomp!: GetterIF
   @Getter getApprovedName!: string
 
-  // Global actions
+  // Global Actions
   @Action setEntityType!: ActionBindingIF
   @Action setBusinessContact!: ActionBindingIF
   @Action setOfficeAddresses!: ActionBindingIF
@@ -34,9 +33,7 @@ export default class FilingTemplateMixin extends Vue {
   @Action setEffectiveDate!: ActionBindingIF
   @Action setIsFutureEffective!: ActionBindingIF
 
-  /**
-   * Method to construct a filing body when making an api request
-   */
+  /** Constructs a filing body, used when saving a filing. */
   buildFiling (): IncorporationFilingIF {
     // Format DateTime for Filing
     const effectiveDate = this.stateModel.incorporationDateTime.effectiveDate
@@ -77,8 +74,8 @@ export default class FilingTemplateMixin extends Vue {
   }
 
   /**
-   * Method to parse a received draft filing into the store
-   * @param draftFiling The draft filing body to be parsed and assigned to store
+   * Parses a fetched draft filing into the store.
+   * @param draftFiling the draft filing body to be parsed
    */
   parseDraft (draftFiling: any): void {
     // Set Office Addresses

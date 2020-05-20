@@ -19,32 +19,59 @@ localVue.use(VueRouter)
 const router = mockRouter.mock()
 
 describe('Define Company view', () => {
-  let wrapper: any
+  it('renders the component properly', () => {
+    const wrapper = shallowMount(DefineCompany, { localVue, store, router, vuetify })
 
-  beforeEach(() => {
-    wrapper = shallowMount(DefineCompany, { localVue, store, router, vuetify })
-  })
+    // verify page content
+    expect(wrapper.find('h2').text()).toContain('Company Name')
 
-  afterEach(() => {
+    // ensure there are no saved addresses to interfere with other tests
+    const addresses = store.state.stateModel.defineCompanyStep.officeAddresses
+    delete addresses.registeredOffice
+    delete addresses.recordsOffice
+
     wrapper.destroy()
   })
 
-  it('renders the component properly', () => {
-    // verify page content
-    expect(wrapper.find('h2').text()).toContain('Company Name')
-  })
-
-  it('does not display records office in the office address header when entity is a COOP', () => {
+  it('doesn\'t display records office in the office address header when entity is a COOP', () => {
     store.state.stateModel.nameRequest.entityType = 'CP'
+    const wrapper = shallowMount(DefineCompany, { localVue, store, router, vuetify })
 
     expect(wrapper.vm.$el.querySelector('#office-address-header').textContent).not.toContain('Records')
+
+    // verify default addresses
+    const addresses = store.state.stateModel.defineCompanyStep.officeAddresses
+    expect(addresses.registeredOffice.mailingAddress.addressCountry).toBe('CA')
+    expect(addresses.registeredOffice.mailingAddress.addressRegion).toBe('BC')
+    expect(addresses.registeredOffice.deliveryAddress.addressCountry).toBe('CA')
+    expect(addresses.registeredOffice.deliveryAddress.addressRegion).toBe('BC')
+    expect(addresses.recordsOffice).toBeUndefined()
+
+    // ensure there are no saved addresses to interfere with other tests
+    delete addresses.registeredOffice
+    delete addresses.recordsOffice
+
+    wrapper.destroy()
   })
 
-  it('does display records office in the office address header when entity is a BCOMP', async () => {
+  it('displays records office in the office address header when entity is a BCOMP', () => {
     store.state.stateModel.nameRequest.entityType = 'BC'
+    const wrapper = shallowMount(DefineCompany, { localVue, store, router, vuetify })
 
-    await Vue.nextTick(() => {
-      expect(wrapper.vm.$el.querySelector('#office-address-header').textContent).toContain('Records')
-    })
+    expect(wrapper.vm.$el.querySelector('#office-address-header').textContent).toContain('Records')
+
+    // verify default addresses
+    const addresses = store.state.stateModel.defineCompanyStep.officeAddresses
+    expect(addresses.registeredOffice).not.toBeUndefined()
+    expect(addresses.recordsOffice.mailingAddress.addressCountry).toBe('CA')
+    expect(addresses.recordsOffice.mailingAddress.addressRegion).toBe('BC')
+    expect(addresses.recordsOffice.deliveryAddress.addressCountry).toBe('CA')
+    expect(addresses.recordsOffice.deliveryAddress.addressRegion).toBe('BC')
+
+    // ensure there are no saved addresses to interfere with other tests
+    delete addresses.registeredOffice
+    delete addresses.recordsOffice
+
+    wrapper.destroy()
   })
 })

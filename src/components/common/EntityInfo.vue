@@ -45,7 +45,7 @@ import { Getter } from 'vuex-class'
 // Interfaces
 import { GetterIF } from '@/interfaces'
 
-@Component
+@Component({})
 export default class EntityInfo extends Vue {
   // Global getters
   @Getter isEntityType!: GetterIF

@@ -10,7 +10,7 @@ import { StateModelIF, ActionBindingIF, GetterIF, IncorporationFilingIF } from '
 /**
  * Mixin that provides the integration with the legal api.
  */
-@Component
+@Component({})
 export default class LegalApiMixin extends Vue {
   readonly NAME_REQUEST = 'nameRequest'
   readonly INCORPORATION_APPLICATION = 'incorporationApplication'
