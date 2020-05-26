@@ -413,10 +413,12 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
       // fetch NR data
       const nrResponse = await this.fetchNameRequest(nameRequest.nrNumber).catch(error => {
         console.log('NR error =', error) // eslint-disable-line no-console
-        this.nameRequestInvalidErrorDialog = true
-        throw error // go to catch()
+        // this.nameRequestInvalidErrorDialog = true
+        // throw error // go to catch()
+        return {}
       })
       // ensure NR was found
+      debugger
       if (!nrResponse) {
         this.nameRequestInvalidType = NameRequestStates.NOT_FOUND
         this.nameRequestInvalidErrorDialog = true
@@ -440,6 +442,10 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
       this.setNameRequestState(this.generateNameRequestState(nrResponse, filing.Id))
     } catch (ex) {
     }
+  }
+
+  private populateNameRequest (filing: any): void {
+
   }
 
   /** Resets all error flags/states. */
