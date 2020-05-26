@@ -28,7 +28,7 @@ export function getVueRouter () {
         name: 'signin',
         query: { redirect: to.fullPath }
       })
-    } else if (!isSigninRoute(to) && !isSignoutRoute(to) && !to.query?.nrNumber) {
+    } else if (!isSigninRoute(to) && !isSignoutRoute(to) && !to.query?.id) {
       // for normal routes, re-route along with query params
       next({
         name: to.name,

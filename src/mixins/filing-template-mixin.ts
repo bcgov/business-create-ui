@@ -8,6 +8,8 @@ import { ActionBindingIF, StateModelIF, IncorporationFilingIF, GetterIF } from '
 // Constants
 import { INCORPORATION_APPLICATION } from '@/constants'
 
+// Enums
+import { EntityTypes } from '@/enums'
 /**
  * Mixin that provides the integration with the legal api.
  */
@@ -19,8 +21,8 @@ export default class FilingTemplateMixin extends Vue {
   // Global Getters
   @Getter isTypeBcomp!: GetterIF
   @Getter getApprovedName!: string
-
-  // Global Actions
+  @Getter getBusinessIdentifier!: string
+  // Global actions
   @Action setEntityType!: ActionBindingIF
   @Action setBusinessContact!: ActionBindingIF
   @Action setOfficeAddresses!: ActionBindingIF
@@ -51,6 +53,10 @@ export default class FilingTemplateMixin extends Vue {
           date: this.stateModel.currentDate,
           folioNumber: this.stateModel.defineCompanyStep.folioNumber
         },
+        business: {
+          legalType: this.stateModel.entityType,
+          identifier: this.getBusinessIdentifier
+        },
         incorporationApplication: {
           nameRequest: {
             nrNumber: this.stateModel.nameRequest.nrNumber,
@@ -76,23 +82,74 @@ export default class FilingTemplateMixin extends Vue {
   }
 
   /**
-   * Parses a fetched draft filing into the store.
-   * @param draftFiling the draft filing body to be parsed
+   *
+   * @param draftFiling
+   */
+  /**
+   * Method to construct a filing body when making an api request
+   */
+  buildEmptyFiling (): IncorporationFilingIF {
+    // Format DateTime for Filing
+    const effectiveDate = new Date()
+    const formattedDateTime = effectiveDate &&
+      (effectiveDate.toISOString()).replace('Z', '+00:00')
+
+    // Build and return filing
+    let filing:IncorporationFilingIF = {
+      filing: {
+        header: {
+          name: INCORPORATION_APPLICATION,
+          certifiedBy: '',
+          email: '',
+          date: this.stateModel.currentDate
+        },
+        business: {
+          legalType: EntityTypes.BCOMP,
+          identifier: this.getBusinessIdentifier
+        },
+        incorporationApplication: {
+          nameRequest: {
+            nrNumber: this.stateModel.tempId,
+            legalType: EntityTypes.BCOMP,
+            legalName: this.getApprovedName
+          },
+          offices: {
+          },
+          contactPoint: {
+            email: '',
+            phone: '',
+            extension: ''
+          },
+          parties: [],
+          shareClasses: []
+        }
+      }
+    }
+    // Pass the effective date only for a future effective filing.
+    if (formattedDateTime) {
+      filing.filing.header.effectiveDate = formattedDateTime
+    }
+    return filing
+  }
+  /**
+   * Method to parse a received draft filing into the store
+   * @param draftFiling The draft filing body to be parsed and assigned to store
    */
   parseDraft (draftFiling: any): void {
     // Set Office Addresses
+    if (!draftFiling.incorporationApplication) {
+      draftFiling = (this.buildEmptyFiling()).filing
+    }
+    this.setEntityType(draftFiling.business.legalType)
     this.setOfficeAddresses(draftFiling.incorporationApplication.offices)
-
     // Set Contact Info
     const draftContact = {
       ...draftFiling.incorporationApplication.contactPoint,
       confirmEmail: draftFiling.incorporationApplication.contactPoint.email
     }
     this.setBusinessContact(draftContact)
-
     // Set Persons and Organizations
     this.setOrgPersonList(draftFiling.incorporationApplication.parties)
-
     // Set Share Structure
     this.setShareClasses(draftFiling.incorporationApplication.shareClasses)
 

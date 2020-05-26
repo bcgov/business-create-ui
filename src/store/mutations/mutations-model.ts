@@ -3,6 +3,10 @@ import {
   BusinessContactIF, OrgPersonIF, ShareClassIF, AccountInformationIF
 } from '@/interfaces'
 
+export const mutateTemporaryId = (state: any, tempId: string) => {
+  state.stateModel.tempId = tempId
+}
+
 export const mutateCertifyStatementResource = (state: any, certifyStatementResource: CertifyStatementIF) => {
   state.resourceModel.certifyStatementResource = certifyStatementResource
 }
@@ -110,4 +114,8 @@ export const mutateIgnoreChanges = (state: any, ignoreChanges: boolean) => {
 
 export const mutateHaveChanges = (state: any, haveChanges: boolean) => {
   state.stateModel.haveChanges = haveChanges
+}
+
+export const mutateEntityType = (state: any, entityType) => {
+  state.stateModel.entityType = entityType
 }

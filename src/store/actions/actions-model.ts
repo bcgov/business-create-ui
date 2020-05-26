@@ -1,5 +1,13 @@
 import { ActionIF } from '@/interfaces/store-interfaces/action-interface'
 
+export const setEntityType = ({ commit }, entityType): void => {
+  commit('mutateEntityType', entityType)
+}
+
+export const setTemporaryId = ({ commit }, tempId): void => {
+  commit('mutateTemporaryId', tempId)
+}
+
 export const setCurrentStep: ActionIF = ({ commit }, currentStep): void => {
   commit('mutateCurrentStep', currentStep)
 }

@@ -52,12 +52,12 @@ export default class LegalApiMixin extends Vue {
    */
   async fetchDraft (): Promise<any> {
     // get the draft filing from the tasks endpoint
-    const url = `businesses/${this.getBusinessIdentifier}/tasks`
+    const url = `businesses/${this.getBusinessIdentifier}/filings`
     return axios.get(url)
       .then(response => {
         // look at only the first task
-        const todoName = response?.data?.tasks[0]?.task?.todo?.header?.name
-        const filing = response?.data?.tasks[0]?.task?.filing
+        const todoName = response?.data?.filing?.header?.name
+        const filing = response?.data?.filing
         const filingName = filing?.header?.name
         const filingId = +filing?.header?.filingId // may be NaN
         if (todoName === this.NAME_REQUEST) {

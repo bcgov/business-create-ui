@@ -9,6 +9,8 @@ export interface StateModelIF {
   currentDate: string
   certifyState: CertifyIF
   currentStep: number
+  tempId: string
+  entityType: string
   isSaving: boolean
   isSavingResuming: boolean
   isFilingPaying: boolean

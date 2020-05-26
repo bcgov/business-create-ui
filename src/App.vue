@@ -156,7 +156,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
   }
 
   // Global state
-  @State(state => state.stateModel.nameRequest.entityType)
+  @State(state => state.stateModel.entityType)
   readonly entityType!: string
 
   @State(state => state.stateModel.incorporationDateTime.isFutureEffective)
@@ -177,6 +177,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
   @Action setCreateShareStructureStepValidity!: ActionBindingIF
   @Action setHaveChanges!: ActionBindingIF
   @Action setAccountInformation!: ActionBindingIF
+  @Action setTemporaryId!: ActionBindingIF
 
   // Local Properties
   private filingData: Array<FilingDataIF> = []
@@ -204,6 +205,10 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
     return sessionStorage.getItem('PAY_API_URL')
   }
 
+  /** The Temporary Registration Id from the route */
+  private get tempId (): string {
+    return this.$route.query.id as string
+  }
   /** The Name Request Number from the route. */
   private get nrNumber (): string {
     return this.$route.query.nrNumber as string
@@ -347,7 +352,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
       this.setCurrentDate(this.dateToUsableString(new Date()))
 
       // ensure we have a NR number
-      if (!this.nrNumber) {
+      if (!this.tempId) {
         this.nameRequestInvalidType = NameRequestStates.NOT_FOUND
         this.nameRequestInvalidErrorDialog = true
         return // go to finally()
@@ -360,14 +365,17 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
         throw error // go to catch()
       })
 
+      /*
       // fetch NR data
-      const nrResponse = await this.fetchNameRequest(this.nrNumber).catch(error => {
+      const nrResponse = await this.fetchNameRequest(this.tempId).catch(error => {
         console.log('NR error =', error) // eslint-disable-line no-console
-        this.nameRequestInvalidErrorDialog = true
-        throw error // go to catch()
+        // this.nameRequestInvalidErrorDialog = true
+        // throw error // go to catch()
+        return {}
       })
 
       // ensure NR was found
+      debugger
       if (!nrResponse) {
         this.nameRequestInvalidType = NameRequestStates.NOT_FOUND
         this.nameRequestInvalidErrorDialog = true
@@ -393,15 +401,16 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
       nrResponse.isConsumable = true
 
       this.setNameRequestState(this.generateNameRequestState(nrResponse, null))
-
+      */
       try {
+        this.setTemporaryId(this.tempId)
         // Retrieve draft filing if it exists for the NR Number specified
         const draftFiling = await this.fetchDraft()
 
         // Parse the draft and update NR data into the store if it exists
         if (draftFiling) {
           this.parseDraft(draftFiling)
-          this.setNameRequestState(this.generateNameRequestState(nrResponse, +draftFiling.header.filingId))
+          // this.setNameRequestState(this.generateNameRequestState(nrResponse, +draftFiling.header.filingId))
         }
 
         // Initialize Fee Summary
@@ -424,6 +433,10 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
     }
   }
 
+  private populateNameRequest (filing: any): void {
+
+  }
+
   /** Resets all error flags/states. */
   private resetFlags (): void {
     this.haveData = false
@@ -439,8 +452,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
   /** Gets authorizations from Auth API and verifies roles. */
   private async checkAuth (): Promise<any> {
     // NB: will throw if API error
-    const response = await this.getNrAuthorizations(this.nrNumber)
-
+    const response = await this.getNrAuthorizations(this.tempId)
     // NB: roles array may contain 'view', 'edit', 'staff' or nothing
     const authRoles = response?.data?.roles
     if (authRoles && authRoles.length > 0) {

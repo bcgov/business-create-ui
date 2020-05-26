@@ -27,21 +27,21 @@ export const isAuthView = (state: any): boolean => {
  * Whether the entity type has been identified.
  */
 export const isEntityType = (state: any): boolean => {
-  return !!state.stateModel.nameRequest.entityType
+  return !!state.stateModel.entityType
 }
 
 /**
  * Whether the entity is a BCOMP.
  */
 export const isTypeBcomp = (state: any): boolean => {
-  return (state.stateModel.nameRequest.entityType === EntityTypes.BCOMP)
+  return (state.stateModel.entityType === EntityTypes.BCOMP)
 }
 
 /**
  * Whether the entity is a COOP.
  */
 export const isTypeCoop = (state: any): boolean => {
-  return (state.stateModel.nameRequest.entityType === EntityTypes.COOP)
+  return (state.stateModel.entityType === EntityTypes.COOP)
 }
 
 /**
@@ -76,9 +76,8 @@ export const getFilingId = (state: any): number => {
  * Returns the business identifier.
  */
 export const getBusinessIdentifier = (state: any): string => {
-  return state.stateModel.nameRequest.nrNumber
+  return state.stateModel.tempId
 }
-
 /**
  * Returns the folio number.
  */
