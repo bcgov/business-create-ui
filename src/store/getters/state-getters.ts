@@ -66,6 +66,13 @@ export const getBusinessIdentifier = (state: any): string => {
 }
 
 /**
+ * Returns the folio number.
+ */
+export const getFolioNumber = (state: any): string => {
+  return state.stateModel.defineCompanyStep.folioNumber
+}
+
+/**
  * Returns the approved name of a name request.
  */
 export const getApprovedName = (state: any): string => {

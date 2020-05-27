@@ -36,7 +36,8 @@ export const stateModel: StateModelIF = {
       phone: '',
       extension: ''
     },
-    officeAddresses: {}
+    officeAddresses: {},
+    folioNumber: null
   },
   addPeopleAndRoleStep: {
     valid: false,

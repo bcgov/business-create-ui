@@ -8,14 +8,14 @@ import { stateModel, resourceModel } from './state'
 // Getters
 import { isRoleStaff, isAuthEdit, isAuthView, isEntityType, isTypeBcomp, isTypeCoop,
   isShowBackBtn, isShowReviewConfirmBtn, isShowFilePayBtn, isEnableFilePayBtn, isBusySaving,
-  getFilingId, getBusinessIdentifier, getApprovedName, getNameRequestDetails, getNameRequestApplicant,
+  getFilingId, getBusinessIdentifier, getApprovedName, getFolioNumber, getNameRequestDetails, getNameRequestApplicant,
   getOfficeAddresses, isApplicationValid, getSteps, getMaxStep, getCurrentDate, ignoreChanges,
   haveChanges }
   from '@/store/getters'
 
 // Mutations
 import { mutateCurrentStep, mutateIsSaving, mutateIsSavingResuming, mutateIsFilingPaying,
-  mutateKeycloakRoles, mutateAuthRoles, mutateCurrentDate,
+  mutateKeycloakRoles, mutateAuthRoles, mutateCurrentDate, mutateFolioNumber,
   mutateCertifyStatementResource, mutateCertifyState, mutateBusinessContact, mutateDefineCompanyStepValidity,
   mutateNameRequestState, mutateFilingId, mutateOfficeAddresses, mutateOrgPersonList,
   mutateAddPeopleAndRoleStepValidity, mutateShareClasses, mutateCreateShareStructureStepValidity,
@@ -26,8 +26,8 @@ import { mutateCurrentStep, mutateIsSaving, mutateIsSavingResuming, mutateIsFili
 // Actions
 import { setCurrentStep, setIsSaving, setIsSavingResuming, setIsFilingPaying,
   setKeycloakRoles, setAuthRoles, setCurrentDate, setCertifyStatementResource, setCertifyState,
-  setBusinessContact, setDefineCompanyStepValidity, setNameRequestState, setFilingId, setOfficeAddresses,
-  setOrgPersonList, setAddPeopleAndRoleStepValidity, setShareClasses,
+  setBusinessContact, setDefineCompanyStepValidity, setNameRequestState, setFilingId, setFolioNumber,
+  setOfficeAddresses, setOrgPersonList, setAddPeopleAndRoleStepValidity, setShareClasses,
   setCreateShareStructureStepValidity, setIgnoreChanges, setHaveChanges, setIsFutureEffective,
   setEffectiveDate, setIsIncorporationDateTimeValid } from './actions'
 
@@ -57,6 +57,7 @@ export function getVuexStore () {
       getApprovedName,
       getBusinessIdentifier,
       getFilingId,
+      getFolioNumber,
       getNameRequestApplicant,
       getNameRequestDetails,
       getOfficeAddresses,
@@ -81,6 +82,7 @@ export function getVuexStore () {
       mutateDefineCompanyStepValidity,
       mutateNameRequestState,
       mutateFilingId,
+      mutateFolioNumber,
       mutateOfficeAddresses,
       mutateOrgPersonList,
       mutateAddPeopleAndRoleStepValidity,
@@ -106,6 +108,7 @@ export function getVuexStore () {
       setDefineCompanyStepValidity,
       setNameRequestState,
       setFilingId,
+      setFolioNumber,
       setOfficeAddresses,
       setOrgPersonList,
       setAddPeopleAndRoleStepValidity,

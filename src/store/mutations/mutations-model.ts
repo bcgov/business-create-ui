@@ -79,6 +79,10 @@ export const mutateAddPeopleAndRoleStepValidity = (state: any, validity: boolean
   state.stateModel.addPeopleAndRoleStep.valid = validity
 }
 
+export const mutateFolioNumber = (state: any, folioNumber: string) => {
+  state.stateModel.defineCompanyStep.folioNumber = folioNumber
+}
+
 export const mutateNameRequestState = (state: any, nameRequestState: NameRequestIF) => {
   state.stateModel.nameRequest = nameRequestState
 }
