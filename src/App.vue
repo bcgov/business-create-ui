@@ -371,7 +371,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
           emptyFiling = this.buildFiling()
         }
 
-        draftFiling = { ...draftFiling, ...emptyFiling.filing }
+        draftFiling = { ...emptyFiling.filing, ...draftFiling }
 
         // Parse the draft and update NR data into the store if it exists
         if (draftFiling) {
@@ -442,10 +442,6 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
       this.setNameRequestState(this.generateNameRequestState(nrResponse, filing.Id))
     } catch (ex) {
     }
-  }
-
-  private populateNameRequest (filing: any): void {
-
   }
 
   /** Resets all error flags/states. */
