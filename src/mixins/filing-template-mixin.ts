@@ -39,7 +39,7 @@ export default class FilingTemplateMixin extends Vue {
   /** Constructs a filing body, used when saving a filing. */
   buildFiling (): IncorporationFilingIF {
     // Format DateTime for Filing
-    const effectiveDate = this.stateModel.incorporationDateTime.effectiveDate
+    const effectiveDate = this.stateModel?.incorporationDateTime?.effectiveDate || ''
     const formattedDateTime = effectiveDate &&
       (effectiveDate.toISOString()).replace('Z', '+00:00')
 
@@ -48,29 +48,24 @@ export default class FilingTemplateMixin extends Vue {
       filing: {
         header: {
           name: INCORPORATION_APPLICATION,
-          certifiedBy: this.stateModel.certifyState.certifiedBy,
-          email: this.stateModel.defineCompanyStep.businessContact.email,
-          date: this.stateModel.currentDate,
+          certifiedBy: this.stateModel?.certifyState?.certifiedBy,
+          email: this.stateModel?.defineCompanyStep?.businessContact?.email,
+          date: this.stateModel?.currentDate,
           folioNumber: this.stateModel.defineCompanyStep.folioNumber
         },
         business: {
-          legalType: this.stateModel.entityType,
+          legalType: this.stateModel?.entityType,
           identifier: this.getBusinessIdentifier
         },
         incorporationApplication: {
-          nameRequest: {
-            nrNumber: this.stateModel.nameRequest.nrNumber,
-            legalType: this.stateModel.nameRequest.entityType,
-            legalName: this.getApprovedName
-          },
-          offices: this.stateModel.defineCompanyStep.officeAddresses,
+          offices: this.stateModel?.defineCompanyStep?.officeAddresses,
           contactPoint: {
-            email: this.stateModel.defineCompanyStep.businessContact.email,
-            phone: this.stateModel.defineCompanyStep.businessContact.phone,
-            extension: this.stateModel.defineCompanyStep.businessContact.extension
+            email: this.stateModel?.defineCompanyStep?.businessContact?.email,
+            phone: this.stateModel?.defineCompanyStep?.businessContact?.phone,
+            extension: this.stateModel?.defineCompanyStep?.businessContact?.extension
           },
-          parties: this.stateModel.addPeopleAndRoleStep.orgPeople,
-          shareClasses: this.stateModel.createShareStructureStep.shareClasses
+          parties: this.stateModel?.addPeopleAndRoleStep?.orgPeople,
+          shareClasses: this.stateModel?.createShareStructureStep?.shareClasses
         }
       }
     }
@@ -108,11 +103,6 @@ export default class FilingTemplateMixin extends Vue {
           identifier: this.getBusinessIdentifier
         },
         incorporationApplication: {
-          nameRequest: {
-            nrNumber: this.stateModel.tempId,
-            legalType: EntityTypes.BCOMP,
-            legalName: this.getApprovedName
-          },
           offices: {
           },
           contactPoint: {
@@ -136,10 +126,6 @@ export default class FilingTemplateMixin extends Vue {
    * @param draftFiling The draft filing body to be parsed and assigned to store
    */
   parseDraft (draftFiling: any): void {
-    // Set Office Addresses
-    if (!draftFiling.incorporationApplication) {
-      draftFiling = (this.buildEmptyFiling()).filing
-    }
     this.setEntityType(draftFiling.business.legalType)
     this.setOfficeAddresses(draftFiling.incorporationApplication.offices)
     // Set Contact Info

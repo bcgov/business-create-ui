@@ -209,10 +209,6 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
   private get tempId (): string {
     return this.$route.query.id as string
   }
-  /** The Name Request Number from the route. */
-  private get nrNumber (): string {
-    return this.$route.query.nrNumber as string
-  }
 
   /** True if an error dialog is displayed. */
   private get isErrorDialog (): boolean {
@@ -278,7 +274,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
     if (!this.haveChanges || force) {
       // redirect to dashboard
       const dashboardUrl = sessionStorage.getItem('DASHBOARD_URL')
-      window.location.assign(dashboardUrl + this.nrNumber)
+      // TODO: window.location.assign(dashboardUrl + this.nrNumber)
       return
     }
 
@@ -302,7 +298,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
       this.setHaveChanges(false)
       // redirect to dashboard
       const dashboardUrl = sessionStorage.getItem('DASHBOARD_URL')
-      window.location.assign(dashboardUrl + this.nrNumber)
+      // TODO: window.location.assign(dashboardUrl + this.nrNumber)
     })
   }
 
@@ -365,47 +361,17 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
         throw error // go to catch()
       })
 
-      /*
-      // fetch NR data
-      const nrResponse = await this.fetchNameRequest(this.tempId).catch(error => {
-        console.log('NR error =', error) // eslint-disable-line no-console
-        // this.nameRequestInvalidErrorDialog = true
-        // throw error // go to catch()
-        return {}
-      })
-
-      // ensure NR was found
-      debugger
-      if (!nrResponse) {
-        this.nameRequestInvalidType = NameRequestStates.NOT_FOUND
-        this.nameRequestInvalidErrorDialog = true
-        return // go to finally()
-      }
-
-      // ensure NR is valid
-      if (!this.isNrValid(nrResponse)) {
-        this.nameRequestInvalidType = NameRequestStates.INVALID
-        this.nameRequestInvalidErrorDialog = true
-        return // go to finally()
-      }
-
-      // ensure NR is consumable
-      const state = this.getNrState(nrResponse)
-      if (!state || state !== NameRequestStates.APPROVED) {
-        this.nameRequestInvalidType = state || NameRequestStates.INVALID
-        this.nameRequestInvalidErrorDialog = true
-        return // go to finally()
-      }
-
-      // if we get this far, the NR is good to go!
-      nrResponse.isConsumable = true
-
-      this.setNameRequestState(this.generateNameRequestState(nrResponse, null))
-      */
       try {
         this.setTemporaryId(this.tempId)
         // Retrieve draft filing if it exists for the NR Number specified
-        const draftFiling = await this.fetchDraft()
+        let draftFiling = await this.fetchDraft()
+        let emptyFiling = this.buildEmptyFiling()
+        if (draftFiling?.incorporationApplication?.nameRequest) {
+          await this.populateNameRequest(draftFiling)
+          emptyFiling = this.buildFiling()
+        }
+
+        draftFiling = { ...draftFiling, ...emptyFiling.filing }
 
         // Parse the draft and update NR data into the store if it exists
         if (draftFiling) {
@@ -433,8 +399,47 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
     }
   }
 
-  private populateNameRequest (filing: any): void {
+  private async populateNameRequest (filing: any): Promise<void> {
+    try {
+      this.setCurrentDate(this.dateToUsableString(new Date()))
+      let nameRequest = filing.incorporationApplication.nameRequest
+      // ensure we have a NR number
 
+      if (!nameRequest.nrNumber) {
+        this.nameRequestInvalidType = NameRequestStates.NOT_FOUND
+        this.nameRequestInvalidErrorDialog = true
+        return // go to finally()
+      }
+      // fetch NR data
+      const nrResponse = await this.fetchNameRequest(nameRequest.nrNumber).catch(error => {
+        console.log('NR error =', error) // eslint-disable-line no-console
+        this.nameRequestInvalidErrorDialog = true
+        throw error // go to catch()
+      })
+      // ensure NR was found
+      if (!nrResponse) {
+        this.nameRequestInvalidType = NameRequestStates.NOT_FOUND
+        this.nameRequestInvalidErrorDialog = true
+        return // go to finally()
+      }
+      // ensure NR is valid
+      if (!this.isNrValid(nrResponse)) {
+        this.nameRequestInvalidType = NameRequestStates.INVALID
+        this.nameRequestInvalidErrorDialog = true
+        return // go to finally()
+      }
+      // ensure NR is consumable
+      const state = this.getNrState(nrResponse)
+      if (!state || state !== NameRequestStates.APPROVED) {
+        this.nameRequestInvalidType = state || NameRequestStates.INVALID
+        this.nameRequestInvalidErrorDialog = true
+        return // go to finally()
+      }
+      // if we get this far, the NR is good to go!
+      nrResponse.isConsumable = true
+      this.setNameRequestState(this.generateNameRequestState(nrResponse, filing.Id))
+    } catch (ex) {
+    }
   }
 
   /** Resets all error flags/states. */

@@ -60,9 +60,7 @@ export default class LegalApiMixin extends Vue {
         const filing = response?.data?.filing
         const filingName = filing?.header?.name
         const filingId = +filing?.header?.filingId // may be NaN
-        if (todoName === this.NAME_REQUEST) {
-          return null // no draft (task is still a NR)
-        }
+
         if (filingName !== this.INCORPORATION_APPLICATION || !filingId) {
           throw new Error('Invalid API response')
         }

@@ -139,7 +139,7 @@ export const isShowBackBtn = (state: any): boolean => {
  * Whether Review and Confirm button should be displayed.
  */
 export const isShowReviewConfirmBtn = (state: any, getters: any): boolean => {
-  return (!!state.stateModel.nameRequest.entityType && state.stateModel.currentStep < getters.getMaxStep)
+  return (!!state.stateModel.entityType && state.stateModel.currentStep < getters.getMaxStep)
 }
 
 /**

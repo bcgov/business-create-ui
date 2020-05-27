@@ -19,7 +19,7 @@ export default class NameRequestMixin extends Mixins(DateMixin) {
 
     return {
       nrNumber: nr.nrNum,
-      // TODO: Update entityType to use nr.requestTypeCd when namex supports our entity types
+      // TODO: Remove?
       entityType: EntityTypes.BCOMP,
       filingId: filingId,
       applicant: {

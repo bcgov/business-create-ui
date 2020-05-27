@@ -17,7 +17,7 @@ export interface IncorporationFilingIF {
       identifier: string
     },
     incorporationApplication: {
-      nameRequest: {
+      nameRequest?: {
         nrNumber: string
         legalType: string
         legalName: string
