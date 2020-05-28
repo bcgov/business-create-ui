@@ -1,6 +1,6 @@
 import {
   CertifyStatementIF, CertifyIF, IncorporationAddressIf, NameRequestIF,
-  BusinessContactIF, OrgPersonIF, ShareClassIF
+  BusinessContactIF, OrgPersonIF, ShareClassIF, AccountInformationIF
 } from '@/interfaces'
 
 export const mutateCertifyStatementResource = (state: any, certifyStatementResource: CertifyStatementIF) => {
@@ -77,6 +77,14 @@ export const mutateOrgPersonList = (state: any, orgPeople: OrgPersonIF[]) => {
 
 export const mutateAddPeopleAndRoleStepValidity = (state: any, validity: boolean) => {
   state.stateModel.addPeopleAndRoleStep.valid = validity
+}
+
+export const mutateFolioNumber = (state: any, folioNumber: string) => {
+  state.stateModel.defineCompanyStep.folioNumber = folioNumber
+}
+
+export const mutateAccountInformation = (state: any, accountInfo: AccountInformationIF) => {
+  state.stateModel.accountInformation = accountInfo
 }
 
 export const mutateNameRequestState = (state: any, nameRequestState: NameRequestIF) => {

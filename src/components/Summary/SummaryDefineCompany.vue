@@ -36,6 +36,9 @@
     <div class="section-container">
       <BusinessContactInfo :initialValue="businessContact" :isEditing="false" />
     </div>
+    <div class="section-container" v-if="isPremiumAccount">
+      <FolioNumber :initialValue="folioNumber" :isEditing="false" />
+    </div>
   </v-card>
 </template>
 
@@ -48,7 +51,7 @@ import { Getter, State } from 'vuex-class'
 import { BusinessContactIF, GetterIF, IncorporationAddressIf } from '@/interfaces'
 
 // Components
-import { BusinessContactInfo, OfficeAddresses } from '@/components/DefineCompany'
+import { FolioNumber, BusinessContactInfo, OfficeAddresses } from '@/components/DefineCompany'
 
 // Mixins
 import { EntityFilterMixin } from '@/mixins'
@@ -59,12 +62,14 @@ import { EntityTypes } from '@/enums'
 @Component({
   components: {
     BusinessContactInfo,
-    OfficeAddresses
+    OfficeAddresses,
+    FolioNumber
   }
 })
 export default class SummaryDefineCompany extends Mixins(EntityFilterMixin) {
   // Getters
   @Getter getApprovedName: GetterIF
+  @Getter isPremiumAccount: GetterIF
 
   // State
   @State(state => state.stateModel.defineCompanyStep.valid)
@@ -75,6 +80,9 @@ export default class SummaryDefineCompany extends Mixins(EntityFilterMixin) {
 
   @State(state => state.stateModel.defineCompanyStep.officeAddresses)
   readonly addresses!: IncorporationAddressIf
+
+  @State(state => state.stateModel.defineCompanyStep.folioNumber)
+  readonly folioNumber!: string
 
   // Entity Enum
   readonly EntityTypes = EntityTypes

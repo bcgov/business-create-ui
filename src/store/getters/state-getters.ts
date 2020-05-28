@@ -1,5 +1,5 @@
 // Enums
-import { EntityTypes, RouteNames } from '@/enums'
+import { AccountTypes, EntityTypes, RouteNames } from '@/enums'
 import { NameRequestDetailsIF, NameRequestApplicantIF } from '@/interfaces'
 
 /**
@@ -45,6 +45,20 @@ export const isTypeCoop = (state: any): boolean => {
 }
 
 /**
+ * Whether the current account is a premium account
+ */
+export const isPremiumAccount = (state: any): boolean => {
+  return (state.stateModel.accountInformation.accountType === AccountTypes.PREMIUM)
+}
+
+/**
+ * Returns the current account id
+ */
+export const getAccountId = (state: any): number => {
+  return state.stateModel.accountInformation.id
+}
+
+/**
  * Returns the current date.
  */
 export const getCurrentDate = (state: any): string => {
@@ -63,6 +77,13 @@ export const getFilingId = (state: any): number => {
  */
 export const getBusinessIdentifier = (state: any): string => {
   return state.stateModel.nameRequest.nrNumber
+}
+
+/**
+ * Returns the folio number.
+ */
+export const getFolioNumber = (state: any): string => {
+  return state.stateModel.defineCompanyStep.folioNumber
 }
 
 /**

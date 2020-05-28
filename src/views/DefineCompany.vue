@@ -39,6 +39,21 @@
         @contactInfoChange="onBusinessContactInfoChange($event)"
         @contactInfoFormValidityChange="onBusinessContactFormValidityChange($event)"/>
     </section>
+    <section class="mt-10" v-if="isEntityType && isPremiumAccount">
+      <header id="folio-number-header">
+        <h2>4. Folio / Reference Number (optional)</h2>
+        <p>Add an optional Folio or Reference Number about this business for your own tracking purposes.
+           This information is not used by the BC Business Registry.
+        </p>
+      </header>
+      <v-card flat class="step-container">
+          <FolioNumber
+            :initialValue="folioNumber"
+            :isEditing="true"
+            @folioNumberChange="onFolioNumberChange($event)"
+          />
+      </v-card>
+    </section>
   </div>
 </template>
 
@@ -57,12 +72,13 @@ import { EntityFilterMixin } from '@/mixins'
 import { EntityTypes } from '@/enums'
 
 // Components
-import { BusinessContactInfo, OfficeAddresses } from '@/components/DefineCompany'
+import { BusinessContactInfo, FolioNumber, OfficeAddresses } from '@/components/DefineCompany'
 import { NameRequestInfo } from '@/components/common'
 
 @Component({
   components: {
     BusinessContactInfo,
+    FolioNumber,
     NameRequestInfo,
     OfficeAddresses
   }
@@ -75,12 +91,17 @@ export default class DefineCompany extends Mixins(EntityFilterMixin) {
   @State(state => state.stateModel.defineCompanyStep.officeAddresses)
   readonly addresses!: IncorporationAddressIf
 
+  @State(state => state.stateModel.defineCompanyStep.folioNumber)
+  readonly folioNumber!: string
+
   // Global getters
   @Getter isEntityType!: GetterIF
+  @Getter isPremiumAccount!: GetterIF
 
   // Global actions
   @Action setEntityType!: ActionBindingIF
   @Action setBusinessContact!: ActionBindingIF
+  @Action setFolioNumber!: ActionBindingIF
   @Action setOfficeAddresses!: ActionBindingIF
   @Action setDefineCompanyStepValidity!: ActionBindingIF
   @Action setIgnoreChanges!: ActionBindingIF
@@ -156,6 +177,10 @@ export default class DefineCompany extends Mixins(EntityFilterMixin) {
   private onAddressFormValidityChange (validity: boolean): void {
     this.addressFormValid = validity
     this.setDefineCompanyStepValidity(this.businessContactFormValid && this.addressFormValid)
+  }
+
+  private onFolioNumberChange (folioNumber: string): void {
+    this.setFolioNumber(folioNumber)
   }
 
   private get showErrors (): boolean {

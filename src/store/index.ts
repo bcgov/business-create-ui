@@ -6,18 +6,18 @@ import Vuex from 'vuex'
 import { stateModel, resourceModel } from './state'
 
 // Getters
-import { isRoleStaff, isAuthEdit, isAuthView, isEntityType, isTypeBcomp, isTypeCoop,
-  isShowBackBtn, isShowReviewConfirmBtn, isShowFilePayBtn, isEnableFilePayBtn, isBusySaving,
-  getFilingId, getBusinessIdentifier, getApprovedName, getNameRequestDetails, getNameRequestApplicant,
+import { isRoleStaff, isAuthEdit, isAuthView, isEntityType, isTypeBcomp, isPremiumAccount, isTypeCoop,
+  getAccountId, isShowBackBtn, isShowReviewConfirmBtn, isShowFilePayBtn, isEnableFilePayBtn, isBusySaving,
+  getFilingId, getBusinessIdentifier, getApprovedName, getFolioNumber, getNameRequestDetails, getNameRequestApplicant,
   getOfficeAddresses, isApplicationValid, getSteps, getMaxStep, getCurrentDate, ignoreChanges,
   haveChanges }
   from '@/store/getters'
 
 // Mutations
 import { mutateCurrentStep, mutateIsSaving, mutateIsSavingResuming, mutateIsFilingPaying,
-  mutateKeycloakRoles, mutateAuthRoles, mutateCurrentDate,
+  mutateKeycloakRoles, mutateAuthRoles, mutateCurrentDate, mutateFolioNumber,
   mutateCertifyStatementResource, mutateCertifyState, mutateBusinessContact, mutateDefineCompanyStepValidity,
-  mutateNameRequestState, mutateFilingId, mutateOfficeAddresses, mutateOrgPersonList,
+  mutateAccountInformation, mutateNameRequestState, mutateFilingId, mutateOfficeAddresses, mutateOrgPersonList,
   mutateAddPeopleAndRoleStepValidity, mutateShareClasses, mutateCreateShareStructureStepValidity,
   mutateIgnoreChanges, mutateHaveChanges, mutateIsFutureEffective, mutateEffectiveDate,
   mutateIsIncorporationDateTimeValid }
@@ -26,10 +26,10 @@ import { mutateCurrentStep, mutateIsSaving, mutateIsSavingResuming, mutateIsFili
 // Actions
 import { setCurrentStep, setIsSaving, setIsSavingResuming, setIsFilingPaying,
   setKeycloakRoles, setAuthRoles, setCurrentDate, setCertifyStatementResource, setCertifyState,
-  setBusinessContact, setDefineCompanyStepValidity, setNameRequestState, setFilingId, setOfficeAddresses,
-  setOrgPersonList, setAddPeopleAndRoleStepValidity, setShareClasses,
+  setBusinessContact, setDefineCompanyStepValidity, setNameRequestState, setFilingId, setFolioNumber,
+  setOfficeAddresses, setOrgPersonList, setAddPeopleAndRoleStepValidity, setShareClasses,
   setCreateShareStructureStepValidity, setIgnoreChanges, setHaveChanges, setIsFutureEffective,
-  setEffectiveDate, setIsIncorporationDateTimeValid } from './actions'
+  setEffectiveDate, setIsIncorporationDateTimeValid, setAccountInformation } from './actions'
 
 /**
  * Configures and returns Vuex Store.
@@ -54,9 +54,12 @@ export function getVuexStore () {
       isShowFilePayBtn,
       isEnableFilePayBtn,
       isBusySaving,
+      isPremiumAccount,
+      getAccountId,
       getApprovedName,
       getBusinessIdentifier,
       getFilingId,
+      getFolioNumber,
       getNameRequestApplicant,
       getNameRequestDetails,
       getOfficeAddresses,
@@ -68,6 +71,7 @@ export function getVuexStore () {
       haveChanges
     },
     mutations: {
+      mutateAccountInformation,
       mutateCurrentStep,
       mutateIsSaving,
       mutateIsSavingResuming,
@@ -81,6 +85,7 @@ export function getVuexStore () {
       mutateDefineCompanyStepValidity,
       mutateNameRequestState,
       mutateFilingId,
+      mutateFolioNumber,
       mutateOfficeAddresses,
       mutateOrgPersonList,
       mutateAddPeopleAndRoleStepValidity,
@@ -93,6 +98,7 @@ export function getVuexStore () {
       mutateIsIncorporationDateTimeValid
     },
     actions: {
+      setAccountInformation,
       setCurrentStep,
       setIsSaving,
       setIsSavingResuming,
@@ -106,6 +112,7 @@ export function getVuexStore () {
       setDefineCompanyStepValidity,
       setNameRequestState,
       setFilingId,
+      setFolioNumber,
       setOfficeAddresses,
       setOrgPersonList,
       setAddPeopleAndRoleStepValidity,

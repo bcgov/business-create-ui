@@ -176,6 +176,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
   @Action setAddPeopleAndRoleStepValidity!: ActionBindingIF
   @Action setCreateShareStructureStepValidity!: ActionBindingIF
   @Action setHaveChanges!: ActionBindingIF
+  @Action setAccountInformation!: ActionBindingIF
 
   // Local Properties
   private filingData: Array<FilingDataIF> = []
@@ -331,6 +332,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
     sessionStorage.removeItem(SessionStorageKeys.UserFullName)
     sessionStorage.removeItem(SessionStorageKeys.UserKcId)
     sessionStorage.removeItem(SessionStorageKeys.UserAccountType)
+    sessionStorage.removeItem(SessionStorageKeys.CurrentAccount)
   }
 
   /** Fetches NR data and fetches draft filing. */
@@ -448,6 +450,14 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
     }
   }
 
+  /** Gets account information (e.g. Premium account) and loads it into the state model */
+  private loadAccountInformation (): void {
+    if (sessionStorage.getItem(SessionStorageKeys.CurrentAccount)) {
+      const accountInfo = JSON.parse(sessionStorage.getItem(SessionStorageKeys.CurrentAccount))
+      this.setAccountInformation(accountInfo)
+    }
+  }
+
   /** Initializes the Fee Summary based on the entity type. */
   @Watch('isFutureEffective')
   private initEntityFees (): void {
@@ -481,6 +491,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
     if (!isSigninRoute && !isSignoutRoute) {
       this.setCurrentStep(this.$route.meta?.step)
       await this.startTokenService()
+      this.loadAccountInformation()
       await this.fetchData(true)
     }
   }

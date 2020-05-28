@@ -32,6 +32,7 @@ export default class FilingTemplateMixin extends Vue {
   @Action setShareClasses!: ActionBindingIF
   @Action setEffectiveDate!: ActionBindingIF
   @Action setIsFutureEffective!: ActionBindingIF
+  @Action setFolioNumber!: ActionBindingIF
 
   /** Constructs a filing body, used when saving a filing. */
   buildFiling (): IncorporationFilingIF {
@@ -47,7 +48,8 @@ export default class FilingTemplateMixin extends Vue {
           name: INCORPORATION_APPLICATION,
           certifiedBy: this.stateModel.certifyState.certifiedBy,
           email: this.stateModel.defineCompanyStep.businessContact.email,
-          date: this.stateModel.currentDate
+          date: this.stateModel.currentDate,
+          folioNumber: this.stateModel.defineCompanyStep.folioNumber
         },
         incorporationApplication: {
           nameRequest: {
@@ -103,5 +105,8 @@ export default class FilingTemplateMixin extends Vue {
     // Set Future Effective Time
     this.setEffectiveDate(draftFiling.header.effectiveDate)
     this.setIsFutureEffective(!!draftFiling.header.effectiveDate)
+
+    // Set Folio Number
+    this.setFolioNumber(draftFiling.header.folioNumber)
   }
 }

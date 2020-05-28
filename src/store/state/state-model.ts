@@ -5,6 +5,12 @@ export const stateModel: StateModelIF = {
     keycloakRoles: [],
     authRoles: []
   },
+  accountInformation: {
+    accountType: '',
+    id: null,
+    label: '',
+    type: ''
+  },
   nameRequest: {
     nrNumber: '',
     entityType: '',
@@ -36,7 +42,8 @@ export const stateModel: StateModelIF = {
       phone: '',
       extension: ''
     },
-    officeAddresses: {}
+    officeAddresses: {},
+    folioNumber: null
   },
   addPeopleAndRoleStep: {
     valid: false,
