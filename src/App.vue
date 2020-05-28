@@ -113,7 +113,7 @@ import { Component, Vue, Watch, Mixins } from 'vue-property-decorator'
 import { State, Action, Getter } from 'vuex-class'
 import TokenService from 'sbc-common-components/src/services/token.services'
 import { BAD_REQUEST, PAYMENT_REQUIRED, FORBIDDEN } from 'http-status-codes'
-
+import { merge } from 'lodash'
 // Components
 import SbcHeader from 'sbc-common-components/src/components/SbcHeader.vue'
 import SbcFooter from 'sbc-common-components/src/components/SbcFooter.vue'
@@ -274,7 +274,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
     if (!this.haveChanges || force) {
       // redirect to dashboard
       const dashboardUrl = sessionStorage.getItem('DASHBOARD_URL')
-      // TODO: window.location.assign(dashboardUrl + this.nrNumber)
+      window.location.assign(dashboardUrl + this.getBusinessIdentifier)
       return
     }
 
@@ -298,7 +298,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
       this.setHaveChanges(false)
       // redirect to dashboard
       const dashboardUrl = sessionStorage.getItem('DASHBOARD_URL')
-      // TODO: window.location.assign(dashboardUrl + this.nrNumber)
+      window.location.assign(dashboardUrl + this.getBusinessIdentifier)
     })
   }
 
@@ -418,7 +418,6 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
         return {}
       })
       // ensure NR was found
-      debugger
       if (!nrResponse) {
         this.nameRequestInvalidType = NameRequestStates.NOT_FOUND
         this.nameRequestInvalidErrorDialog = true

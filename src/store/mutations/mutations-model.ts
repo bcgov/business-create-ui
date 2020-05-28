@@ -96,7 +96,7 @@ export const mutateNameRequestState = (state: any, nameRequestState: NameRequest
 }
 
 export const mutateFilingId = (state: any, filingId: number) => {
-  state.stateModel.nameRequest.filingId = filingId
+  state.stateModel.filingId = filingId
 }
 
 export const mutateShareClasses = (state: any, shareClasses: ShareClassIF[]) => {

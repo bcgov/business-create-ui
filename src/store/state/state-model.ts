@@ -31,6 +31,7 @@ export const stateModel: StateModelIF = {
   tempId: '',
   entityType: '',
   currentStep: 1,
+  filingId: null,
   isSaving: false,
   isSavingResuming: false,
   isFilingPaying: false,

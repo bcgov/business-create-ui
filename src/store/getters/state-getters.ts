@@ -69,7 +69,7 @@ export const getCurrentDate = (state: any): string => {
  * Returns the filing id.
  */
 export const getFilingId = (state: any): number => {
-  return state.stateModel.nameRequest.filingId
+  return state.stateModel.filingId
 }
 
 /**

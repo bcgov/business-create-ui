@@ -66,7 +66,7 @@ export default class LegalApiMixin extends Vue {
         }
         // save Filing ID from the header
         this.setFilingId(filingId)
-        return filing
+        return this.formatEmptyFiling(filing)
       })
       .catch((error) => {
         if (error?.response?.status === NOT_FOUND) {
@@ -162,5 +162,28 @@ export default class LegalApiMixin extends Vue {
         }
         throw error
       })
+  }
+
+  formatEmptyFiling (filing: any): IncorporationFilingIF {
+    let toReturn = filing
+
+    if (!toReturn.incorporationApplication?.offices) {
+      toReturn.incorporationApplication.offices = []
+    }
+    if (!toReturn.incorporationApplication?.contactPoint) {
+      toReturn.incorporationApplication.contactPoint = {
+        email: '',
+        phone: '',
+        extension: ''
+      }
+    }
+    if (!toReturn.incorporationApplication?.parties) {
+      toReturn.incorporationApplication.parties = []
+    }
+    if (!toReturn.incorporationApplication?.shareClasses) {
+      toReturn.incorporationApplication.shareClasses = []
+    }
+
+    return toReturn
   }
 }

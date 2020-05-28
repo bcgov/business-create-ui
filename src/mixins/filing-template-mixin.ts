@@ -48,27 +48,36 @@ export default class FilingTemplateMixin extends Vue {
       filing: {
         header: {
           name: INCORPORATION_APPLICATION,
-          certifiedBy: this.stateModel?.certifyState?.certifiedBy,
-          email: this.stateModel?.defineCompanyStep?.businessContact?.email,
-          date: this.stateModel?.currentDate,
+          certifiedBy: this.stateModel?.certifyState?.certifiedBy ?? '',
+          email: this.stateModel?.defineCompanyStep?.businessContact?.email ?? '',
+          date: this.stateModel?.currentDate ?? '',
           folioNumber: this.stateModel.defineCompanyStep.folioNumber
         },
         business: {
-          legalType: this.stateModel?.entityType,
-          identifier: this.getBusinessIdentifier
+          legalType: this.stateModel?.entityType ?? '',
+          identifier: this.getBusinessIdentifier ?? ''
         },
         incorporationApplication: {
-          offices: this.stateModel?.defineCompanyStep?.officeAddresses,
+          offices: this.stateModel?.defineCompanyStep?.officeAddresses ?? {},
           contactPoint: {
-            email: this.stateModel?.defineCompanyStep?.businessContact?.email,
-            phone: this.stateModel?.defineCompanyStep?.businessContact?.phone,
-            extension: this.stateModel?.defineCompanyStep?.businessContact?.extension
+            email: this.stateModel?.defineCompanyStep?.businessContact?.email ?? '',
+            phone: this.stateModel?.defineCompanyStep?.businessContact?.phone ?? '',
+            extension: this.stateModel?.defineCompanyStep?.businessContact?.extension ?? ''
           },
-          parties: this.stateModel?.addPeopleAndRoleStep?.orgPeople,
-          shareClasses: this.stateModel?.createShareStructureStep?.shareClasses
+          parties: this.stateModel?.addPeopleAndRoleStep?.orgPeople ?? [],
+          shareClasses: this.stateModel?.createShareStructureStep?.shareClasses ?? []
         }
       }
     }
+
+    if (this.stateModel.nameRequest) {
+      let nrObj = {}
+      nrObj.nrNumber = this.stateModel.nameRequest?.nrNumber
+      nrObj.legalType = this.stateModel?.entityType
+      nrObj.legalName = this.getApprovedName
+      filing.filing.incorporationApplication.nameRequest = nrObj
+    }
+
     // Pass the effective date only for a future effective filing.
     if (formattedDateTime) {
       filing.filing.header.effectiveDate = formattedDateTime

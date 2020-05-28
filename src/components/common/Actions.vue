@@ -190,8 +190,8 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
       // redirect to pay and return to the dashboard
       const authUrl = sessionStorage.getItem('AUTH_URL')
       const dashboardUrl = sessionStorage.getItem('DASHBOARD_URL')
-      const nrNumber = this.$route.query.nrNumber as string
-      const returnUrl = encodeURIComponent(dashboardUrl + nrNumber)
+      // const nrNumber = this.$route.query.nrNumber as string
+      const returnUrl = encodeURIComponent(dashboardUrl + this.getBusinessIdentifier)
       const payUrl = authUrl + 'makepayment/' + paymentToken + '/' + returnUrl
 
       // assume Pay URL is always reachable
@@ -199,7 +199,7 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
       if (!paymentCompleted) {
         window.location.assign(payUrl)
       } else {
-        window.location.assign(dashboardUrl + nrNumber)
+        window.location.assign(dashboardUrl + this.getBusinessIdentifier)
       }
     } else {
       const error = new Error('Missing Payment Token')
