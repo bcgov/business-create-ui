@@ -1,5 +1,5 @@
 // Enums
-import { EntityTypes, RouteNames } from '@/enums'
+import { AccountTypes, EntityTypes, RouteNames } from '@/enums'
 import { NameRequestDetailsIF, NameRequestApplicantIF } from '@/interfaces'
 
 /**
@@ -42,6 +42,20 @@ export const isTypeBcomp = (state: any): boolean => {
  */
 export const isTypeCoop = (state: any): boolean => {
   return (state.stateModel.nameRequest.entityType === EntityTypes.COOP)
+}
+
+/**
+ * Whether the current account is a premium account
+ */
+export const isPremiumAccount = (state: any): boolean => {
+  return (state.stateModel.accountInformation.accountType === AccountTypes.PREMIUM)
+}
+
+/**
+ * Returns the current account id
+ */
+export const getAccountId = (state: any): number => {
+  return state.stateModel.accountInformation.id
 }
 
 /**

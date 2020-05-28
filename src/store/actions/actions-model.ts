@@ -64,6 +64,10 @@ export const setFolioNumber: ActionIF = ({ commit }, folioNumber): void => {
   commit('mutateFolioNumber', folioNumber)
 }
 
+export const setAccountInformation: ActionIF = ({ commit }, accountInfo): void => {
+  commit('mutateAccountInformation', accountInfo)
+}
+
 export const setNameRequestState: ActionIF = ({ commit }, nameRequestState): void => {
   commit('mutateNameRequestState', nameRequestState)
 }

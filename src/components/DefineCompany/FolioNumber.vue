@@ -1,6 +1,15 @@
 <template>
   <div id="folio-number">
-    <v-row>
+    <v-layout row v-if="!isEditing" id='folio-number-read-only'>
+        <v-flex md4>
+          <label><strong>Folio Information</strong></label>
+        </v-flex>
+        <v-flex md4>
+          <div><label><strong>Folio Number</strong></label></div>
+          <div id="lbl-folio-number">{{ !!folioNumber ? folioNumber : 'Not entered'}}</div>
+        </v-flex>
+    </v-layout>
+    <v-row v-else id='folio-number-editing'>
       <v-col>
         <label>Folio Number</label>
       </v-col>
@@ -30,6 +39,9 @@ export default class FolioNumber extends Vue {
   @Prop()
   private initialValue!: string
 
+  @Prop({ default: false })
+  private isEditing!: boolean
+
   // Data variables
   private folioNumber:string = null
 
@@ -38,6 +50,11 @@ export default class FolioNumber extends Vue {
     if (this.initialValue) {
       this.folioNumber = this.initialValue
     }
+  }
+
+  @Watch('initialValue', { deep: true, immediate: true })
+  private onFolioNumberPropValueChanged (): void {
+    this.folioNumber = this.initialValue
   }
 
   /**

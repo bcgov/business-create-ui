@@ -49,6 +49,7 @@
       <v-card flat class="step-container">
           <FolioNumber
             :initialValue="folioNumber"
+            :isEditing="true"
             @folioNumberChange="onFolioNumberChange($event)"
           />
       </v-card>
@@ -95,6 +96,7 @@ export default class DefineCompany extends Mixins(EntityFilterMixin) {
 
   // Global getters
   @Getter isEntityType!: GetterIF
+  @Getter isPremiumAccount!: GetterIF
 
   // Global actions
   @Action setEntityType!: ActionBindingIF
@@ -183,11 +185,6 @@ export default class DefineCompany extends Mixins(EntityFilterMixin) {
 
   private get showErrors (): boolean {
     return Boolean(this.$route.query.showErrors)
-  }
-
-  private get isPremiumAccount (): boolean {
-    // TODO: update to check session when available in common components
-    return Boolean(sessionStorage.getItem('CURRENT_ACCOUNT') === 'PREMIUM')
   }
 }
 </script>

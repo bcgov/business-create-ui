@@ -1,9 +1,10 @@
-import { CertifyIF, DefineCompanyIF, NameRequestIF, TombStoneIF, PeopleAndRoleIF,
+import { AccountInformationIF, CertifyIF, DefineCompanyIF, NameRequestIF, TombStoneIF, PeopleAndRoleIF,
   ShareStructureIF, DateTimeIF } from '@/interfaces'
 
 // State model example
 export interface StateModelIF {
   tombstone: TombStoneIF
+  accountInformation: AccountInformationIF
   nameRequest: NameRequestIF
   currentDate: string
   certifyState: CertifyIF

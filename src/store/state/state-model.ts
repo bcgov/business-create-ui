@@ -5,6 +5,12 @@ export const stateModel: StateModelIF = {
     keycloakRoles: [],
     authRoles: []
   },
+  accountInformation: {
+    accountType: '',
+    id: null,
+    label: '',
+    type: ''
+  },
   nameRequest: {
     nrNumber: '',
     entityType: '',

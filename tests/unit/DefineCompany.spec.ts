@@ -77,7 +77,7 @@ describe('Define Company view', () => {
 
   it('displays folio number when it is a premium account', () => {
     store.state.stateModel.nameRequest.entityType = 'BC'
-    sessionStorage.setItem('CURRENT_ACCOUNT', 'PREMIUM')
+    store.state.stateModel.accountInformation.accountType = 'PREMIUM'
     const wrapper = shallowMount(DefineCompany, { localVue, store, router, vuetify })
 
     expect(wrapper.find('#folio-number-header').exists()).toBe(true)
@@ -88,7 +88,7 @@ describe('Define Company view', () => {
 
   it('doesn\'t display folio number when it is not a premium account', () => {
     store.state.stateModel.nameRequest.entityType = 'BC'
-    sessionStorage.removeItem('CURRENT_ACCOUNT')
+    store.state.stateModel.accountInformation.accountType = 'BASIC'
     const wrapper = shallowMount(DefineCompany, { localVue, store, router, vuetify })
 
     expect(wrapper.find('#folio-number-header').exists()).toBe(false)
