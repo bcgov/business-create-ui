@@ -7,14 +7,6 @@ export interface NameRequestIF {
   filingId: number | null
 }
 
-// Account information interface
-export interface AccountInformationIF {
-  accountType: string
-  id: number
-  label: string
-  type: string
-}
-
 // Name request response details interface
 export interface NameRequestDetailsIF {
   approvedName: string

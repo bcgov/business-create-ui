@@ -8,6 +8,7 @@ export * from './store-interfaces/action-interface'
 export * from './store-interfaces/getter-interface'
 export * from './store-interfaces/state-interfaces/tombstone-interface'
 export * from './store-interfaces/state-interfaces/name-request-interface'
+export * from './store-interfaces/state-interfaces/account-information-interface'
 
 // Filing Interfaces
 export * from './filing-interfaces/filingData-interface'
