@@ -21,7 +21,7 @@ export default class LegalApiMixin extends Vue {
   // Global Getters
   @Getter isTypeBcomp!: GetterIF
   @Getter getFilingId!: number
-  @Getter getBusinessIdentifier!: string
+  @Getter getTempId!: string
 
   // Store Actions
   @Action setNameRequestState!: ActionBindingIF
@@ -52,7 +52,7 @@ export default class LegalApiMixin extends Vue {
    */
   async fetchDraft (): Promise<any> {
     // get the draft filing from the tasks endpoint
-    const url = `businesses/${this.getBusinessIdentifier}/filings`
+    const url = `businesses/${this.getTempId}/filings`
     return axios.get(url)
       .then(response => {
         // look at only the first task
@@ -108,7 +108,7 @@ export default class LegalApiMixin extends Vue {
    */
   private updateFiling (filing: IncorporationFilingIF, isDraft: boolean): Promise<any> {
     // put updated filing to filings endpoint
-    let url = `businesses/${this.getBusinessIdentifier}/filings/${this.getFilingId}`
+    let url = `businesses/${this.getTempId}/filings/${this.getFilingId}`
     if (isDraft) {
       url += '?draft=true'
     }
@@ -163,7 +163,7 @@ export default class LegalApiMixin extends Vue {
       })
   }
 
-  /** 
+  /**
     * Ensure consisent object structure for an incorporation application
     * whether it contains a Name Request or not, and whether it is an initial
     * draft or it has been previously saved. Object merging does not

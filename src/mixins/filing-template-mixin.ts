@@ -21,8 +21,8 @@ export default class FilingTemplateMixin extends Vue {
   // Global Getters
   @Getter isTypeBcomp!: GetterIF
   @Getter getApprovedName!: string
-  @Getter getBusinessIdentifier!: string
-  
+  @Getter getTempId!: string
+
   // Global actions
   @Action setEntityType!: ActionBindingIF
   @Action setBusinessContact!: ActionBindingIF
@@ -56,7 +56,7 @@ export default class FilingTemplateMixin extends Vue {
         },
         business: {
           legalType: this.stateModel?.entityType ?? '',
-          identifier: this.getBusinessIdentifier ?? ''
+          identifier: this.getTempId ?? ''
         },
         incorporationApplication: {
           offices: this.stateModel?.defineCompanyStep?.officeAddresses ?? {},
@@ -93,6 +93,7 @@ export default class FilingTemplateMixin extends Vue {
    */
   parseDraft (draftFiling: any): void {
     this.setEntityType(draftFiling.business.legalType)
+    // Set Office Addresses
     this.setOfficeAddresses(draftFiling.incorporationApplication.offices)
     // Set Contact Info
     const draftContact = {

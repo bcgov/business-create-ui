@@ -52,7 +52,7 @@ export default class EntityInfo extends Vue {
   @Getter isTypeBcomp!: GetterIF
   @Getter isTypeCoop!: GetterIF
   @Getter getNameRequestNumber!: GetterIF
-  @Getter getBusinessIdentifier!: GetterIF
+  @Getter getTempId!: GetterIF
   @Getter getApprovedName!: GetterIF
 
   /** The entity title  */

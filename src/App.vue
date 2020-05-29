@@ -164,7 +164,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
   // Global getters
   @Getter haveChanges!: boolean
   @Getter getSteps!: Array<any>
-
+  @Getter getTempId!: string
   // Global actions
   @Action setCurrentStep!: ActionBindingIF
   @Action setCurrentDate!: ActionBindingIF
@@ -176,7 +176,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
   @Action setCreateShareStructureStepValidity!: ActionBindingIF
   @Action setHaveChanges!: ActionBindingIF
   @Action setAccountInformation!: ActionBindingIF
-  @Action setTemporaryId!: ActionBindingIF
+  @Action setTempId!: ActionBindingIF
 
   // Local Properties
   private filingData: Array<FilingDataIF> = []
@@ -202,11 +202,6 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
   /** The URL of the Pay API. */
   private get payApiUrl (): string {
     return sessionStorage.getItem('PAY_API_URL')
-  }
-
-  /** The Temporary Registration Id from the route */
-  private get tempId (): string {
-    return this.$route.query.id as string
   }
 
   /** True if an error dialog is displayed. */
@@ -273,7 +268,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
     if (!this.haveChanges || force) {
       // redirect to dashboard
       const dashboardUrl = sessionStorage.getItem('DASHBOARD_URL')
-      window.location.assign(dashboardUrl + this.getBusinessIdentifier)
+      window.location.assign(dashboardUrl + this.getTempId)
       return
     }
 
@@ -297,7 +292,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
       this.setHaveChanges(false)
       // redirect to dashboard
       const dashboardUrl = sessionStorage.getItem('DASHBOARD_URL')
-      window.location.assign(dashboardUrl + this.getBusinessIdentifier)
+      window.location.assign(dashboardUrl + this.getTempId)
     })
   }
 
@@ -345,14 +340,15 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
 
     try {
       this.setCurrentDate(this.dateToUsableString(new Date()))
-
+      const tempId = this.$route.query?.id
       // ensure we have a Temporary Registration number
-      if (!this.tempId) {
+      if (!tempId) {
         this.nameRequestInvalidType = NameRequestStates.NOT_FOUND
         this.nameRequestInvalidErrorDialog = true
         return // go to finally()
       }
 
+      this.setTempId(tempId)
       // ensure user is authorized to use this IA
       await this.checkAuth().catch(error => {
         console.log('Auth error =', error) // eslint-disable-line no-console
@@ -361,7 +357,6 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
       })
 
       try {
-        this.setTemporaryId(this.tempId)
         // Retrieve draft filing if it exists for the IA Number specified
         let draftFiling = await this.fetchDraft()
         let emptyFiling = this.buildFiling()
@@ -436,7 +431,8 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
       // if we get this far, the NR is good to go!
       nrResponse.isConsumable = true
       this.setNameRequestState(this.generateNameRequestState(nrResponse, filing.Id))
-    } catch (ex) {
+    } catch (e) {
+      // errors should be handled above
     }
   }
 
@@ -455,7 +451,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
   /** Gets authorizations from Auth API and verifies roles. */
   private async checkAuth (): Promise<any> {
     // NB: will throw if API error
-    const response = await this.getNrAuthorizations(this.tempId)
+    const response = await this.getNrAuthorizations(this.getTempId)
     // NB: roles array may contain 'view', 'edit', 'staff' or nothing
     const authRoles = response?.data?.roles
     if (authRoles && authRoles.length > 0) {

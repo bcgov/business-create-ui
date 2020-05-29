@@ -263,7 +263,6 @@ describe('Actions component - Filing Functionality', () => {
     wrapper = shallowMount(Actions, { localVue, store, router, vuetify })
 
     // Mock the function calls that may used by saveFiling below
-    // jest.spyOn(wrapper.vm, 'createFiling').mockImplementation()
     jest.spyOn(wrapper.vm, 'updateFiling').mockImplementation()
   })
 

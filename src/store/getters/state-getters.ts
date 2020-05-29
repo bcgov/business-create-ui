@@ -75,7 +75,7 @@ export const getFilingId = (state: any): number => {
 /**
  * Returns the business identifier.
  */
-export const getBusinessIdentifier = (state: any): string => {
+export const getTempId = (state: any): string => {
   return state.stateModel.tempId
 }
 /**

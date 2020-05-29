@@ -4,8 +4,8 @@ export const setEntityType = ({ commit }, entityType): void => {
   commit('mutateEntityType', entityType)
 }
 
-export const setTemporaryId = ({ commit }, tempId): void => {
-  commit('mutateTemporaryId', tempId)
+export const setTempId = ({ commit }, tempId): void => {
+  commit('mutateTempId', tempId)
 }
 
 export const setCurrentStep: ActionIF = ({ commit }, currentStep): void => {

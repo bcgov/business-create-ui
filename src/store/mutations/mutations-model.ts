@@ -3,7 +3,7 @@ import {
   BusinessContactIF, OrgPersonIF, ShareClassIF, AccountInformationIF
 } from '@/interfaces'
 
-export const mutateTemporaryId = (state: any, tempId: string) => {
+export const mutateTempId = (state: any, tempId: string) => {
   state.stateModel.tempId = tempId
 }
 

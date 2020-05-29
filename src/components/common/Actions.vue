@@ -153,10 +153,10 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
     this.emitGoToDashboard()
   }
 
-   /**
-   * Called when File and Pay button is clicked.
-   * @returns a promise (ie, this is an async method)
-   */
+  /**
+  * Called when File and Pay button is clicked.
+  * @returns a promise (ie, this is an async method)
+  */
   private async onClickFilePay (): Promise<void> {
     // prevent double saving
     if (this.isBusySaving) return
@@ -189,7 +189,7 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
       // redirect to pay and return to the dashboard
       const authUrl = sessionStorage.getItem('AUTH_URL')
       const dashboardUrl = sessionStorage.getItem('DASHBOARD_URL')
-      const returnUrl = encodeURIComponent(dashboardUrl + this.getBusinessIdentifier)
+      const returnUrl = encodeURIComponent(dashboardUrl + this.getTempId)
       const payUrl = authUrl + 'makepayment/' + paymentToken + '/' + returnUrl
 
       // assume Pay URL is always reachable
