@@ -400,33 +400,32 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
       if (!nameRequest.nrNumber) {
         this.nameRequestInvalidType = NameRequestStates.NOT_FOUND
         this.nameRequestInvalidErrorDialog = true
-        return // go to finally()
+        return
       }
       // fetch NR data
       const nrResponse = await this.fetchNameRequest(nameRequest.nrNumber).catch(error => {
         console.log('NR error =', error) // eslint-disable-line no-console
-        // this.nameRequestInvalidErrorDialog = true
-        // throw error // go to catch()
-        return {}
+        this.nameRequestInvalidErrorDialog = true
+        return
       })
       // ensure NR was found
       if (!nrResponse) {
         this.nameRequestInvalidType = NameRequestStates.NOT_FOUND
         this.nameRequestInvalidErrorDialog = true
-        return // go to finally()
+        return
       }
       // ensure NR is valid
       if (!this.isNrValid(nrResponse)) {
         this.nameRequestInvalidType = NameRequestStates.INVALID
         this.nameRequestInvalidErrorDialog = true
-        return // go to finally()
+        return
       }
       // ensure NR is consumable
       const state = this.getNrState(nrResponse)
       if (!state || state !== NameRequestStates.APPROVED) {
         this.nameRequestInvalidType = state || NameRequestStates.INVALID
         this.nameRequestInvalidErrorDialog = true
-        return // go to finally()
+        return
       }
       // if we get this far, the NR is good to go!
       nrResponse.isConsumable = true
