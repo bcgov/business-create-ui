@@ -347,14 +347,14 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
     try {
       this.setCurrentDate(this.dateToUsableString(new Date()))
 
-      // ensure we have a NR number
+      // ensure we have a Temporary Registration number
       if (!this.tempId) {
         this.nameRequestInvalidType = NameRequestStates.NOT_FOUND
         this.nameRequestInvalidErrorDialog = true
         return // go to finally()
       }
 
-      // ensure user is authorized to use this NR
+      // ensure user is authorized to use this IA
       await this.checkAuth().catch(error => {
         console.log('Auth error =', error) // eslint-disable-line no-console
         this.accountAuthorizationDialog = true
@@ -363,7 +363,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
 
       try {
         this.setTemporaryId(this.tempId)
-        // Retrieve draft filing if it exists for the NR Number specified
+        // Retrieve draft filing if it exists for the IA Number specified
         let draftFiling = await this.fetchDraft()
         let emptyFiling = this.buildFiling()
         if (draftFiling?.incorporationApplication?.nameRequest) {
@@ -372,7 +372,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
 
         draftFiling = { ...emptyFiling.filing, ...draftFiling }
 
-        // Parse the draft and update NR data into the store if it exists
+        // Parse the draft and update Incorporation data into the store if it exists
         if (draftFiling) {
           this.parseDraft(draftFiling)
         }
@@ -400,8 +400,8 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
   private async processNameRequest (filing: any): Promise<void> {
     try {
       let nameRequest = filing.incorporationApplication.nameRequest
-      // ensure we have a NR number
 
+      // ensure we have an NR number
       if (!nameRequest.nrNumber) {
         this.nameRequestInvalidType = NameRequestStates.NOT_FOUND
         this.nameRequestInvalidErrorDialog = true
