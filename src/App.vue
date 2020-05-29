@@ -113,7 +113,6 @@ import { Component, Vue, Watch, Mixins } from 'vue-property-decorator'
 import { State, Action, Getter } from 'vuex-class'
 import TokenService from 'sbc-common-components/src/services/token.services'
 import { BAD_REQUEST, PAYMENT_REQUIRED, FORBIDDEN } from 'http-status-codes'
-import { merge } from 'lodash'
 // Components
 import SbcHeader from 'sbc-common-components/src/components/SbcHeader.vue'
 import SbcFooter from 'sbc-common-components/src/components/SbcFooter.vue'
