@@ -163,6 +163,14 @@ export default class LegalApiMixin extends Vue {
       })
   }
 
+  /** 
+    * Ensure consisent object structure for an incorporation application
+    * whether it contains a Name Request or not, and whether it is an initial
+    * draft or it has been previously saved. Object merging does not
+    * work very well otherwise (due to nested properties)
+    * @param filing The filing fetched from legal-api
+    * @returns the filing in safe-empty state if applicable
+  */
   formatEmptyFiling (filing: any): IncorporationFilingIF {
     let toReturn = filing
     if (toReturn.incorporationApplication) {

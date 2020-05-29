@@ -397,6 +397,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
     }
   }
 
+  /** Set up any required fields/ validation if a Name request is present */
   private async processNameRequest (filing: any): Promise<void> {
     try {
       let nameRequest = filing.incorporationApplication.nameRequest
