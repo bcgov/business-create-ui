@@ -76,6 +76,10 @@ describe('Actions component - Filing Functionality', () => {
         date: '2020/01/29',
         effectiveDate: formattedEffectiveDate
       },
+      business: {
+        identifier: 'T1234567',
+        legalType: 'BC'
+      },
       incorporationApplication: {
         nameRequest: {
           nrNumber: 'NR1234567',
@@ -118,6 +122,7 @@ describe('Actions component - Filing Functionality', () => {
         },
         contactPoint: {
           email: 'someEmail',
+          extension: "",
           phone: '123-456-7890'
         },
         parties: [
@@ -247,15 +252,17 @@ describe('Actions component - Filing Functionality', () => {
     store.state.stateModel.defineCompanyStep.officeAddresses = filing.filing.incorporationApplication.offices
     store.state.stateModel.addPeopleAndRoleStep.orgPeople = filing.filing.incorporationApplication.parties
     store.state.stateModel.createShareStructureStep.shareClasses = filing.filing.incorporationApplication.shareClasses
+    store.state.stateModel.filingId = 1234
+    store.state.stateModel.entityType = 'BC'
+    store.state.stateModel.tempId = 'T1234567'
 
     const localVue = createLocalVue()
     localVue.use(VueRouter)
     const router = mockRouter.mock()
-    router.push({ name: 'define-company', query: { nrNumber: 'NR 1234567' } })
+    router.push({ name: 'define-company', query: { id: 'T1234567' } })
     wrapper = shallowMount(Actions, { localVue, store, router, vuetify })
 
     // Mock the function calls that may used by saveFiling below
-    jest.spyOn(wrapper.vm, 'createFiling').mockImplementation()
     jest.spyOn(wrapper.vm, 'updateFiling').mockImplementation()
   })
 
@@ -336,7 +343,7 @@ describe('Actions component - Filing Functionality', () => {
     expect(mockSaveFiling).toHaveReturned()
 
     // verify redirection
-    const baseUrl = 'myhost/basePath/auth/makepayment/789/myhost%2Fcooperatives%2FNR%201234567'
+    const baseUrl = 'myhost/basePath/auth/makepayment/789/myhost%2Fcooperatives%2FT1234567'
 
     expect(window.location.assign).toHaveBeenCalledWith(baseUrl)
   })

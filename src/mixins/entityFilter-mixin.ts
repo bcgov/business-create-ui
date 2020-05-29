@@ -6,7 +6,7 @@ import { State } from 'vuex-class'
  */
 @Component({})
 export default class EntityFilterMixin extends Vue {
-  @State(state => state.stateModel.nameRequest.entityType)
+  @State(state => state.stateModel.entityType)
   readonly entityType!: string
 
   /**

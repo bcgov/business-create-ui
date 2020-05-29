@@ -55,7 +55,7 @@ describe('Define Company view', () => {
   })
 
   it('displays records office in the office address header when entity is a BCOMP', () => {
-    store.state.stateModel.nameRequest.entityType = 'BC'
+    store.state.stateModel.entityType = 'BC'
     const wrapper = shallowMount(DefineCompany, { localVue, store, router, vuetify })
 
     expect(wrapper.vm.$el.querySelector('#office-address-header').textContent).toContain('Records')

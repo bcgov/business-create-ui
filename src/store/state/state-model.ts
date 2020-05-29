@@ -28,7 +28,10 @@ export const stateModel: StateModelIF = {
     valid: false,
     certifiedBy: ''
   },
+  tempId: '',
+  entityType: '',
   currentStep: 1,
+  filingId: null,
   isSaving: false,
   isSavingResuming: false,
   isFilingPaying: false,

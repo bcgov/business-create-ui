@@ -6,11 +6,11 @@ import Vuex from 'vuex'
 import { stateModel, resourceModel } from './state'
 
 // Getters
-import { isRoleStaff, isAuthEdit, isAuthView, isEntityType, isTypeBcomp, isPremiumAccount, isTypeCoop,
-  getAccountId, isShowBackBtn, isShowReviewConfirmBtn, isShowFilePayBtn, isEnableFilePayBtn, isBusySaving,
-  getFilingId, getBusinessIdentifier, getApprovedName, getFolioNumber, getNameRequestDetails, getNameRequestApplicant,
+import { isRoleStaff, isAuthEdit, isAuthView, isEntityType, isPremiumAccount, isTypeBcomp, isTypeCoop,
+  isShowBackBtn, isShowReviewConfirmBtn, isShowFilePayBtn, isEnableFilePayBtn, isBusySaving,
+  getFilingId, getTempId, getApprovedName, getAccountId, getFolioNumber, getNameRequestDetails, getNameRequestApplicant,
   getOfficeAddresses, isApplicationValid, getSteps, getMaxStep, getCurrentDate, ignoreChanges,
-  haveChanges }
+  haveChanges, getNameRequestNumber }
   from '@/store/getters'
 
 // Mutations
@@ -20,7 +20,7 @@ import { mutateCurrentStep, mutateIsSaving, mutateIsSavingResuming, mutateIsFili
   mutateAccountInformation, mutateNameRequestState, mutateFilingId, mutateOfficeAddresses, mutateOrgPersonList,
   mutateAddPeopleAndRoleStepValidity, mutateShareClasses, mutateCreateShareStructureStepValidity,
   mutateIgnoreChanges, mutateHaveChanges, mutateIsFutureEffective, mutateEffectiveDate,
-  mutateIsIncorporationDateTimeValid }
+  mutateIsIncorporationDateTimeValid, mutateTempId, mutateEntityType }
   from '@/store/mutations'
 
 // Actions
@@ -29,7 +29,7 @@ import { setCurrentStep, setIsSaving, setIsSavingResuming, setIsFilingPaying,
   setBusinessContact, setDefineCompanyStepValidity, setNameRequestState, setFilingId, setFolioNumber,
   setOfficeAddresses, setOrgPersonList, setAddPeopleAndRoleStepValidity, setShareClasses,
   setCreateShareStructureStepValidity, setIgnoreChanges, setHaveChanges, setIsFutureEffective,
-  setEffectiveDate, setIsIncorporationDateTimeValid, setAccountInformation } from './actions'
+  setEffectiveDate, setIsIncorporationDateTimeValid, setAccountInformation, setTempId, setEntityType } from './actions'
 
 /**
  * Configures and returns Vuex Store.
@@ -57,7 +57,7 @@ export function getVuexStore () {
       isPremiumAccount,
       getAccountId,
       getApprovedName,
-      getBusinessIdentifier,
+      getTempId,
       getFilingId,
       getFolioNumber,
       getNameRequestApplicant,
@@ -68,7 +68,8 @@ export function getVuexStore () {
       getMaxStep,
       getCurrentDate,
       ignoreChanges,
-      haveChanges
+      haveChanges,
+      getNameRequestNumber
     },
     mutations: {
       mutateAccountInformation,
@@ -95,7 +96,9 @@ export function getVuexStore () {
       mutateHaveChanges,
       mutateIsFutureEffective,
       mutateEffectiveDate,
-      mutateIsIncorporationDateTimeValid
+      mutateIsIncorporationDateTimeValid,
+      mutateTempId,
+      mutateEntityType
     },
     actions: {
       setAccountInformation,
@@ -122,7 +125,9 @@ export function getVuexStore () {
       setHaveChanges,
       setIsFutureEffective,
       setEffectiveDate,
-      setIsIncorporationDateTimeValid
+      setIsIncorporationDateTimeValid,
+      setTempId,
+      setEntityType
     }
   })
 

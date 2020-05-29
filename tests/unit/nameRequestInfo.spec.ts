@@ -43,6 +43,10 @@ describe('Name Request Info component', () => {
   }
 
   beforeEach(() => {
+    // Entity type will always be set with or without an NR
+    store.state.stateModel.entityType = 'BC'
+    // Temp Id will always be set with or without an NR
+    store.state.stateModel.tempId = 'T1234567'
     wrapper = mount(NameRequestInfo, { vuetify, store })
   })
 

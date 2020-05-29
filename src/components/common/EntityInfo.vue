@@ -26,7 +26,7 @@
           <v-list-item-subtitle class="business-info">
             <dl>
               <dt>{{ entityTitle() }}</dt>
-              <dd>Name Request No: <span id="entity-nr-number">{{ getBusinessIdentifier }}</span></dd>
+              <dd>Name Request No: <span id="entity-nr-number">{{ getNameRequestNumber }}</span></dd>
             </dl>
           </v-list-item-subtitle>
 
@@ -51,7 +51,8 @@ export default class EntityInfo extends Vue {
   @Getter isEntityType!: GetterIF
   @Getter isTypeBcomp!: GetterIF
   @Getter isTypeCoop!: GetterIF
-  @Getter getBusinessIdentifier!: GetterIF
+  @Getter getNameRequestNumber!: GetterIF
+  @Getter getTempId!: GetterIF
   @Getter getApprovedName!: GetterIF
 
   /** The entity title  */

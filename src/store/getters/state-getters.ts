@@ -27,21 +27,21 @@ export const isAuthView = (state: any): boolean => {
  * Whether the entity type has been identified.
  */
 export const isEntityType = (state: any): boolean => {
-  return !!state.stateModel.nameRequest.entityType
+  return !!state.stateModel.entityType
 }
 
 /**
  * Whether the entity is a BCOMP.
  */
 export const isTypeBcomp = (state: any): boolean => {
-  return (state.stateModel.nameRequest.entityType === EntityTypes.BCOMP)
+  return (state.stateModel.entityType === EntityTypes.BCOMP)
 }
 
 /**
  * Whether the entity is a COOP.
  */
 export const isTypeCoop = (state: any): boolean => {
-  return (state.stateModel.nameRequest.entityType === EntityTypes.COOP)
+  return (state.stateModel.entityType === EntityTypes.COOP)
 }
 
 /**
@@ -69,16 +69,15 @@ export const getCurrentDate = (state: any): string => {
  * Returns the filing id.
  */
 export const getFilingId = (state: any): number => {
-  return state.stateModel.nameRequest.filingId
+  return state.stateModel.filingId
 }
 
 /**
  * Returns the business identifier.
  */
-export const getBusinessIdentifier = (state: any): string => {
-  return state.stateModel.nameRequest.nrNumber
+export const getTempId = (state: any): string => {
+  return state.stateModel.tempId
 }
-
 /**
  * Returns the folio number.
  */
@@ -93,6 +92,9 @@ export const getApprovedName = (state: any): string => {
   return state.stateModel.nameRequest.details.approvedName
 }
 
+export const getNameRequestNumber = (state: any): string => {
+  return state.stateModel.nameRequest.nrNumber
+}
 /**
  * Returns name request details.
  */
@@ -140,7 +142,7 @@ export const isShowBackBtn = (state: any): boolean => {
  * Whether Review and Confirm button should be displayed.
  */
 export const isShowReviewConfirmBtn = (state: any, getters: any): boolean => {
-  return (!!state.stateModel.nameRequest.entityType && state.stateModel.currentStep < getters.getMaxStep)
+  return (!!state.stateModel.entityType && state.stateModel.currentStep < getters.getMaxStep)
 }
 
 /**

@@ -34,6 +34,10 @@ const filingData = {
     filingId: 12345,
     status: 'draft'
   },
+  business: {
+    identifier: 'T1234567',
+    legalType: 'BC'
+  },
   incorporationApplication: {
     contactPoint: {
       email: 'mockEmail@mock.com',
@@ -230,6 +234,116 @@ const nrData = {
   state: 'APPROVED'
 }
 
+const baseIaData = {
+  header: {
+    name: 'incorporationApplication',
+    filingId: 54321,
+    status: 'draft'
+  },
+  business: {
+    identifier: 'T7654321',
+    legalType: 'BC'
+  }
+}
+
+describe('Numbered company setup', () => {
+  let wrapper: any
+  const { assign } = window.location
+  sessionStorage.setItem('AUTH_URL', `myhost/basePath/auth/`)
+  sessionStorage.setItem('DASHBOARD_URL', `myhost/cooperatives/`)
+
+  beforeEach(async () => {
+    // mock the window.location.assign function
+    delete window.location
+    window.location = { assign: jest.fn() } as any
+
+    const get = sinon.stub(axios, 'get')
+
+    // GET authorizations (role)
+    get.withArgs('T7654321/authorizations')
+      .returns(new Promise((resolve) => resolve({
+        data:
+          {
+            roles: ['edit', 'view']
+          }
+      })))
+
+    get.withArgs('businesses/T7654321/filings')
+      .returns(new Promise(resolve => resolve({
+        data:
+        {
+          filing: {
+            ...baseIaData
+          }
+        }
+      })))
+
+    // create a Local Vue and install router on it
+    const localVue = createLocalVue()
+    localVue.use(VueRouter)
+    const router = mockRouter.mock()
+    router.push({ name: 'define-company', query: { id: 'T7654321' } })
+    wrapper = shallowMount(App, { localVue, store, router, vuetify, stubs: { Affix: true, ConfirmDialog } })
+
+    // wait for all queries to complete
+    await flushPromises()
+  })
+
+  it('loads a draft filing into the store', () => {
+    // Validate IA for numbered company
+    expect(store.state.stateModel.entityType).toBe('BC')
+    expect(store.state.stateModel.filingId).toBe(54321)
+
+    // Validate no offices are loaded
+    expect(store.state.stateModel.defineCompanyStep.officeAddresses)
+      .toBeDefined()
+    expect(store.state.stateModel.defineCompanyStep.officeAddresses.recordsOffice)
+      .toBeUndefined()
+
+    // Validate Contact Info
+    expect(store.state.stateModel.defineCompanyStep.businessContact)
+      .toBeDefined()
+
+    // Validate Share Structure
+    expect(store.state.stateModel.createShareStructureStep.shareClasses)
+      .toBeDefined()
+  })
+
+  it('Does not load a name request into the store', () => {
+    // All Name request specific fields should be empty
+    expect(store.state.stateModel.nameRequest.nrNumber).toEqual("")
+    expect(store.state.stateModel.filingId).toBe(54321)
+
+    // Validate no NR Details
+    expect(store.state.stateModel.nameRequest.details.approvedName).toBeUndefined()
+    expect(store.state.stateModel.nameRequest.details.status).toBeUndefined()
+    expect(store.state.stateModel.nameRequest.details.consentFlag).toBeUndefined()
+    expect(store.state.stateModel.nameRequest.details.expirationDate).toBeUndefined()
+
+    // Validate no NR Applicant
+    expect(store.state.stateModel.nameRequest.applicant.firstName).toBeUndefined()
+    expect(store.state.stateModel.nameRequest.applicant.middleName).toBeUndefined()
+    expect(store.state.stateModel.nameRequest.applicant.lastName).toBeUndefined()
+    expect(store.state.stateModel.nameRequest.applicant.emailAddress).toBeUndefined()
+    expect(store.state.stateModel.nameRequest.applicant.phoneNumber).toBeUndefined()
+    expect(store.state.stateModel.nameRequest.applicant.addressLine1).toBeUndefined()
+    expect(store.state.stateModel.nameRequest.applicant.addressLine2).toBeUndefined()
+    expect(store.state.stateModel.nameRequest.applicant.addressLine3).toBeUndefined()
+    expect(store.state.stateModel.nameRequest.applicant.city).toBeUndefined()
+    expect(store.state.stateModel.nameRequest.applicant.countryTypeCode)
+    .toBeUndefined()
+    expect(store.state.stateModel.nameRequest.applicant.postalCode).toBeUndefined()
+    expect(store.state.stateModel.nameRequest.applicant.stateProvinceCode)
+    .toBeUndefined()
+  })
+
+  afterEach(() => {
+    window.location.assign = assign
+    sinon.restore()
+    wrapper.destroy()
+  })
+})
+
 describe('App component', () => {
   let wrapper: any
   const { assign } = window.location
@@ -244,7 +358,7 @@ describe('App component', () => {
     const get = sinon.stub(axios, 'get')
 
     // GET authorizations (role)
-    get.withArgs('NR 1234567/authorizations')
+    get.withArgs('T1234567/authorizations')
       .returns(new Promise((resolve) => resolve({
         data:
           {
@@ -253,7 +367,7 @@ describe('App component', () => {
       })))
 
     // GET NR data
-    get.withArgs('nameRequests/NR 1234567')
+    get.withArgs('nameRequests/NR1234567')
       .returns(new Promise(resolve => resolve({
         data:
           {
@@ -261,28 +375,21 @@ describe('App component', () => {
           }
       })))
 
-    // GET tasks
-    get.withArgs('businesses/NR 1234567/tasks')
+    get.withArgs('businesses/T1234567/filings')
       .returns(new Promise(resolve => resolve({
         data:
-          {
-            tasks: [
-              {
-                task: {
-                  filing: {
-                    ...filingData
-                  }
-                }
-              }
-            ]
+        {
+          filing: {
+            ...filingData
           }
+        }
       })))
 
     // create a Local Vue and install router on it
     const localVue = createLocalVue()
     localVue.use(VueRouter)
     const router = mockRouter.mock()
-    router.push({ name: 'define-company', query: { nrNumber: 'NR 1234567' } })
+    router.push({ name: 'define-company', query: { id: 'T1234567' } })
     wrapper = shallowMount(App, { localVue, store, router, vuetify, stubs: { Affix: true, ConfirmDialog } })
 
     // wait for all queries to complete
@@ -306,8 +413,8 @@ describe('App component', () => {
 
   it('loads a draft filing into the store', () => {
     // Validate Name Request
-    expect(store.state.stateModel.nameRequest.entityType).toBe('BC')
-    expect(store.state.stateModel.nameRequest.filingId).toBe(12345)
+    expect(store.state.stateModel.entityType).toBe('BC')
+    expect(store.state.stateModel.filingId).toBe(12345)
 
     // Validate Office Addresses
     expect(store.state.stateModel.defineCompanyStep.officeAddresses.registeredOffice)
@@ -330,9 +437,9 @@ describe('App component', () => {
 
   it('loads a name request into the store', () => {
     // Validate Name Request
-    expect(store.state.stateModel.nameRequest.entityType).toBe(nrData.requestTypeCd)
+    expect(store.state.stateModel.entityType).toBe(nrData.requestTypeCd)
     expect(store.state.stateModel.nameRequest.nrNumber).toBe(nrData.nrNum)
-    expect(store.state.stateModel.nameRequest.filingId).toBe(12345)
+    expect(store.state.stateModel.filingId).toBe(12345)
     expect(store.state.stateModel.nameRequest.details).toBeDefined()
     expect(store.state.stateModel.nameRequest.applicant).toBeDefined()
 
@@ -388,7 +495,7 @@ describe('App component', () => {
     expect(dialog.exists()).toBe(false)
 
     // verify redirection
-    const baseUrl = 'myhost/cooperatives/NR 1234567'
+    const baseUrl = 'myhost/cooperatives/T1234567'
     expect(window.location.assign).toHaveBeenCalledWith(baseUrl)
   })
 })

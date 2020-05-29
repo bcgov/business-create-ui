@@ -8,6 +8,8 @@ import { ActionBindingIF, StateModelIF, IncorporationFilingIF, GetterIF } from '
 // Constants
 import { INCORPORATION_APPLICATION } from '@/constants'
 
+// Enums
+import { EntityTypes } from '@/enums'
 /**
  * Mixin that provides the integration with the legal api.
  */
@@ -19,8 +21,9 @@ export default class FilingTemplateMixin extends Vue {
   // Global Getters
   @Getter isTypeBcomp!: GetterIF
   @Getter getApprovedName!: string
+  @Getter getTempId!: string
 
-  // Global Actions
+  // Global actions
   @Action setEntityType!: ActionBindingIF
   @Action setBusinessContact!: ActionBindingIF
   @Action setOfficeAddresses!: ActionBindingIF
@@ -37,7 +40,7 @@ export default class FilingTemplateMixin extends Vue {
   /** Constructs a filing body, used when saving a filing. */
   buildFiling (): IncorporationFilingIF {
     // Format DateTime for Filing
-    const effectiveDate = this.stateModel.incorporationDateTime.effectiveDate
+    const effectiveDate = this.stateModel?.incorporationDateTime?.effectiveDate || ''
     const formattedDateTime = effectiveDate &&
       (effectiveDate.toISOString()).replace('Z', '+00:00')
 
@@ -46,28 +49,37 @@ export default class FilingTemplateMixin extends Vue {
       filing: {
         header: {
           name: INCORPORATION_APPLICATION,
-          certifiedBy: this.stateModel.certifyState.certifiedBy,
-          email: this.stateModel.defineCompanyStep.businessContact.email,
-          date: this.stateModel.currentDate,
+          certifiedBy: this.stateModel?.certifyState?.certifiedBy || '',
+          email: this.stateModel?.defineCompanyStep?.businessContact?.email || '',
+          date: this.stateModel?.currentDate || '',
           folioNumber: this.stateModel.defineCompanyStep.folioNumber
         },
+        business: {
+          legalType: this.stateModel?.entityType || '',
+          identifier: this.getTempId || ''
+        },
         incorporationApplication: {
-          nameRequest: {
-            nrNumber: this.stateModel.nameRequest.nrNumber,
-            legalType: this.stateModel.nameRequest.entityType,
-            legalName: this.getApprovedName
-          },
-          offices: this.stateModel.defineCompanyStep.officeAddresses,
+          offices: this.stateModel?.defineCompanyStep?.officeAddresses || {},
           contactPoint: {
-            email: this.stateModel.defineCompanyStep.businessContact.email,
-            phone: this.stateModel.defineCompanyStep.businessContact.phone,
-            extension: this.stateModel.defineCompanyStep.businessContact.extension
+            email: this.stateModel?.defineCompanyStep?.businessContact?.email || '',
+            phone: this.stateModel?.defineCompanyStep?.businessContact?.phone || '',
+            extension: this.stateModel?.defineCompanyStep?.businessContact?.extension || ''
           },
-          parties: this.stateModel.addPeopleAndRoleStep.orgPeople,
-          shareClasses: this.stateModel.createShareStructureStep.shareClasses
+          parties: this.stateModel?.addPeopleAndRoleStep?.orgPeople || [],
+          shareClasses: this.stateModel?.createShareStructureStep?.shareClasses || []
         }
       }
     }
+
+    if (this.stateModel?.nameRequest?.nrNumber) {
+      let nrObj = {
+        nrNumber: this.stateModel.nameRequest?.nrNumber,
+        legalType: this.stateModel?.entityType,
+        legalName: this.getApprovedName
+      }
+      filing.filing.incorporationApplication.nameRequest = nrObj
+    }
+
     // Pass the effective date only for a future effective filing.
     if (formattedDateTime) {
       filing.filing.header.effectiveDate = formattedDateTime
@@ -76,23 +88,21 @@ export default class FilingTemplateMixin extends Vue {
   }
 
   /**
-   * Parses a fetched draft filing into the store.
-   * @param draftFiling the draft filing body to be parsed
+   * Method to parse a received draft filing into the store
+   * @param draftFiling The draft filing body to be parsed and assigned to store
    */
   parseDraft (draftFiling: any): void {
+    this.setEntityType(draftFiling.business.legalType)
     // Set Office Addresses
     this.setOfficeAddresses(draftFiling.incorporationApplication.offices)
-
     // Set Contact Info
     const draftContact = {
       ...draftFiling.incorporationApplication.contactPoint,
       confirmEmail: draftFiling.incorporationApplication.contactPoint.email
     }
     this.setBusinessContact(draftContact)
-
     // Set Persons and Organizations
     this.setOrgPersonList(draftFiling.incorporationApplication.parties)
-
     // Set Share Structure
     this.setShareClasses(draftFiling.incorporationApplication.shareClasses)
 

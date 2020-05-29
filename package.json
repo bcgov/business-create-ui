@@ -6,7 +6,8 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "test:unit": "vue-cli-service test:unit --testPathPattern"
+    "test:unit": "vue-cli-service test:unit --testPathPattern",
+    "test:debug": "node --inspect-brk node_modules/.bin/vue-cli-service test:unit --testPathPattern --no-cache --watch --runInBand"
   },
   "dependencies": {
     "@babel/compat-data": "^7.8.6",

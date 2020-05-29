@@ -3,6 +3,10 @@ import {
   BusinessContactIF, OrgPersonIF, ShareClassIF, AccountInformationIF
 } from '@/interfaces'
 
+export const mutateTempId = (state: any, tempId: string) => {
+  state.stateModel.tempId = tempId
+}
+
 export const mutateCertifyStatementResource = (state: any, certifyStatementResource: CertifyStatementIF) => {
   state.resourceModel.certifyStatementResource = certifyStatementResource
 }
@@ -92,7 +96,7 @@ export const mutateNameRequestState = (state: any, nameRequestState: NameRequest
 }
 
 export const mutateFilingId = (state: any, filingId: number) => {
-  state.stateModel.nameRequest.filingId = filingId
+  state.stateModel.filingId = filingId
 }
 
 export const mutateShareClasses = (state: any, shareClasses: ShareClassIF[]) => {
@@ -110,4 +114,8 @@ export const mutateIgnoreChanges = (state: any, ignoreChanges: boolean) => {
 
 export const mutateHaveChanges = (state: any, haveChanges: boolean) => {
   state.stateModel.haveChanges = haveChanges
+}
+
+export const mutateEntityType = (state: any, entityType) => {
+  state.stateModel.entityType = entityType
 }

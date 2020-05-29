@@ -9,7 +9,7 @@
       <v-col>
         <ul>
           <li class="name-request-title">
-            <strong>{{ getBusinessIdentifier }}</strong> - {{ getNameRequestDetails.approvedName}}
+            <strong>{{ getNameRequestNumber }}</strong> - {{ getNameRequestDetails.approvedName}}
           </li>
           <li class="mt-4">Entity Type: {{ entityTypeDescription() }}</li>
           <li> Request Type: {{ requestType() }}</li>
@@ -63,7 +63,8 @@ export default class NameRequestInfo extends Mixins(DateMixin) {
   @Getter isEntityType!: GetterIF;
   @Getter isTypeBcomp!: GetterIF;
   @Getter isTypeCoop!: GetterIF;
-  @Getter getBusinessIdentifier!: GetterIF;
+  @Getter getTempId!: GetterIF;
+  @Getter getNameRequestNumber!: GetterIF;
   @Getter getNameRequestDetails!: NameRequestDetailsIF;
   @Getter getNameRequestApplicant!: NameRequestApplicantIF;
 
