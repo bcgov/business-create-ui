@@ -6,9 +6,9 @@ import Vuex from 'vuex'
 import { stateModel, resourceModel } from './state'
 
 // Getters
-import { isRoleStaff, isAuthEdit, isAuthView, isEntityType, isTypeBcomp, isTypeCoop,
+import { isRoleStaff, isAuthEdit, isAuthView, isEntityType, isPremiumAccount, isTypeBcomp, isTypeCoop,
   isShowBackBtn, isShowReviewConfirmBtn, isShowFilePayBtn, isEnableFilePayBtn, isBusySaving,
-  getFilingId, getTempId, getApprovedName, getFolioNumber, getNameRequestDetails, getNameRequestApplicant,
+  getFilingId, getTempId, getApprovedName, getAccountId, getFolioNumber, getNameRequestDetails, getNameRequestApplicant,
   getOfficeAddresses, isApplicationValid, getSteps, getMaxStep, getCurrentDate, ignoreChanges,
   haveChanges, getNameRequestNumber }
   from '@/store/getters'
