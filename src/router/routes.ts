@@ -71,7 +71,7 @@ export const routes = [
     name: RouteNames.REVIEW_CONFIRM,
     component: ReviewConfirm,
     meta: {
-      step: 4,
+      step: 5,
       label: 'Review and Confirm',
       requiresAuth: true
     }

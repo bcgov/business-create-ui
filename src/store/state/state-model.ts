@@ -59,6 +59,6 @@ export const stateModel: StateModelIF = {
   },
   incorporationAgreementStep: {
     valid: false,
-    incorporationAgreementType: null
+    agreementType: null
   }
 }
