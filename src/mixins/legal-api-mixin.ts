@@ -41,8 +41,8 @@ export default class LegalApiMixin extends Vue {
     if (this.getFilingId && this.getFilingId > 0) {
       return this.updateFiling(filing, isDraft)
     } else {
-      // otherwise create a new filing
-      return this.createFiling(filing, isDraft)
+      // This should never happen. Filing Id should always be present
+      throw new Error('Invalid filing Id')
     }
   }
 
@@ -73,31 +73,6 @@ export default class LegalApiMixin extends Vue {
         }
         throw error
       })
-  }
-
-  /**
-   * Creates a new filing.
-   * @param data the object body of the request
-   * @param isDraft boolean indicating whether to save draft or complete filing
-   * @returns a promise to return the created filing
-   */
-  private createFiling (data: object, isDraft: boolean): Promise<any> {
-    // post new filing to businesses endpoint
-    let url = 'businesses'
-    if (isDraft) {
-      url += '?draft=true'
-    }
-
-    return axios.post(url, data).then(response => {
-      // save Filing ID from the header
-      const filing = response?.data?.filing
-      const filingId = +filing?.header?.filingId
-      if (!filing || !filingId) {
-        throw new Error('Invalid API response')
-      }
-      this.setFilingId(filingId)
-      return filing
-    })
   }
 
   /**
