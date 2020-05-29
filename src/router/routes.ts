@@ -1,5 +1,6 @@
 import AddPeopleAndRoles from '@/views/AddPeopleAndRoles.vue'
 import CreateShareStructure from '@/views/CreateShareStructure.vue'
+import IncorporationAgreement from '@/views/IncorporationAgreement.vue'
 import DefineCompany from '@/views/DefineCompany.vue'
 import ReviewConfirm from '@/views/ReviewConfirm.vue'
 import SigninView from '@/views/auth/Signin.vue'
@@ -52,6 +53,16 @@ export const routes = [
     meta: {
       step: 3,
       label: 'Create Share Structure',
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/incorporation-agreement',
+    name: RouteNames.INCORPORATION_AGREEMENT,
+    component: IncorporationAgreement,
+    meta: {
+      step: 4,
+      label: 'Incorporation Agreement',
       requiresAuth: true
     }
   },

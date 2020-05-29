@@ -155,11 +155,11 @@ export const isShowFilePayBtn = (state: any, getters: any): boolean => {
 /**
  * Whether File and Pay button should be enabled.
  */
-export const isEnableFilePayBtn = (state: any): boolean => {
+export const isEnableFilePayBtn = (state: any, getters: any): boolean => {
   const step1Valid = state.stateModel.defineCompanyStep.valid
   const step2Valid = state.stateModel.addPeopleAndRoleStep.valid
-  const step3Valid = true // FOR TESTING ONLY
-  const step4Valid = true // FOR TESTING ONLY
+  const step3Valid = getters.isTypeBcomp ? state.stateModel.createShareStructureStep.valid : false
+  const step4Valid = getters.isTypeBcomp ? state.stateModel.incorporationAgreementStep.valid : false
   const step5Valid = state.stateModel.certifyState.valid && state.stateModel.incorporationDateTime.valid
   return (step1Valid && step2Valid && step3Valid && step4Valid && step5Valid)
 }
@@ -177,7 +177,7 @@ export const isBusySaving = (state: any): boolean => {
 export const isApplicationValid = (state: any): boolean => {
   return (state.stateModel.defineCompanyStep.valid && state.stateModel.addPeopleAndRoleStep.valid &&
     state.stateModel.createShareStructureStep.valid && state.stateModel.incorporationDateTime.valid &&
-    state.stateModel.certifyState.valid)
+    state.stateModel.incorporationAgreementStep.valid && state.stateModel.certifyState.valid)
 }
 
 /**
@@ -217,17 +217,17 @@ export const getSteps = (state: any, getters: any): Array<any> => {
   },
   {
     id: 'step-4-btn',
-    step: -1,
+    step: 4,
     icon: getters.isTypeBcomp ? 'mdi-handshake' : 'mdi-text-box-multiple',
     text: getters.isTypeBcomp ? 'Incorporation\nAgreement' : 'Create\nMemorandum',
     to: getters.isTypeBcomp ? RouteNames.INCORPORATION_AGREEMENT : RouteNames.CREATE_MEMORANDUM,
-    disabled: true,
-    valid: false,
-    component: undefined // TODO TO BE IMPLEMENTED
+    disabled: getters.isTypeBcomp ? getters.isBusySaving : true,
+    valid: getters.isTypeBcomp ? state.stateModel.incorporationAgreementStep.valid : false,
+    component: getters.isTypeBcomp ? 'incorporation-agreement' : undefined
   },
   {
     id: 'step-5-btn',
-    step: 4,
+    step: 5,
     icon: 'mdi-text-box-check-outline',
     text: 'Review\nand Confirm',
     to: RouteNames.REVIEW_CONFIRM,

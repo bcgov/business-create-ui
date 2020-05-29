@@ -24,6 +24,7 @@ export * from './stepper-interfaces/CreateShareStructure/create-share-structure-
 export * from './stepper-interfaces/ReviewConfirm/certify-interface'
 export * from './stepper-interfaces/AddPeopleAndRole/roles-array-interface'
 export * from './stepper-interfaces/ReviewConfirm/dateTime-interface'
+export * from './stepper-interfaces/IncorporationAgreement/incorporation-agreement-interface'
 
 // Others
 export * from './resource-interfaces/component-resource-interfaces/certifyStatement-interface'

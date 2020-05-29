@@ -1,5 +1,5 @@
 import { AccountInformationIF, CertifyIF, DefineCompanyIF, NameRequestIF, TombStoneIF, PeopleAndRoleIF,
-  ShareStructureIF, DateTimeIF } from '@/interfaces'
+  ShareStructureIF, DateTimeIF, IncorporationAgreementIF } from '@/interfaces'
 
 // State model example
 export interface StateModelIF {
@@ -18,6 +18,7 @@ export interface StateModelIF {
   defineCompanyStep: DefineCompanyIF
   addPeopleAndRoleStep: PeopleAndRoleIF
   createShareStructureStep: ShareStructureIF
+  incorporationAgreementStep: IncorporationAgreementIF
   incorporationDateTime: DateTimeIF
   ignoreChanges: boolean
   haveChanges: boolean
