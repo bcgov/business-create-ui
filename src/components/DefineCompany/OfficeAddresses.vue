@@ -10,7 +10,7 @@
             v-if="!isEmptyAddress(mailingAddress)"
             :address="mailingAddress"
             :editing="false"/>
-          <div v-else>Not entered</div>
+          <div v-else>(Not entered)</div>
         </v-flex>
 
         <v-flex md4>
@@ -19,7 +19,7 @@
             v-if="!isEmptyAddress(deliveryAddress) && !inheritMailingAddress"
             :address="deliveryAddress"
             :editing="false"/>
-          <div v-else-if="isEmptyAddress(deliveryAddress)">Not entered</div>
+          <div v-else-if="isEmptyAddress(deliveryAddress)">(Not entered)</div>
           <div v-else>Same as Mailing Address</div>
         </v-flex>
       </v-layout>
@@ -32,7 +32,7 @@
             v-if="!inheritRegisteredAddress && !isEmptyAddress(recMailingAddress)"
             :address="recMailingAddress"
             :editing="false"/>
-          <div v-else-if="isEmptyAddress(recMailingAddress)">Not entered</div>
+          <div v-else-if="isEmptyAddress(recMailingAddress)">(Not entered)</div>
           <div v-else>Same as Registered Office</div>
         </v-flex>
 
@@ -42,7 +42,7 @@
             v-if="!inheritRecMailingAddress && !inheritRegisteredAddress && !isEmptyAddress(recDeliveryAddress)"
             :address="recDeliveryAddress"
             :editing="false"/>
-          <div v-else-if="isEmptyAddress(recDeliveryAddress)">Not entered</div>
+          <div v-else-if="isEmptyAddress(recDeliveryAddress)">(Not entered)</div>
           <div v-else-if="inheritRegisteredAddress">Same as Registered Office</div>
           <div v-else>Same as Mailing Address</div>
         </v-flex>
@@ -208,6 +208,7 @@ export default class OfficeAddresses extends Mixins(CommonMixin, EntityFilterMix
   @Prop({ default: true })
   private isEditing!: boolean;
 
+  // Global state
   @State stateModel!: StateModelIF
 
   // Local Properties
@@ -240,9 +241,9 @@ export default class OfficeAddresses extends Mixins(CommonMixin, EntityFilterMix
   // Entity Enum
   readonly EntityTypes = EntityTypes;
 
-  /** Lifecycle callback to set up the component when it is created. */
+  /** Called when component is created. */
   private created (): void {
-    // First load, determine inherited flags based on address values
+    // on first load, determine inherited flags based on address values and update parent
     this.setAddresses(true)
     this.emitValid()
   }

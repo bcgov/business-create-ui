@@ -32,6 +32,10 @@ export const setAuthRoles: ActionIF = ({ commit }, authRoles): void => {
   commit('mutateAuthRoles', authRoles)
 }
 
+export const setUserEmail: ActionIF = ({ commit }, userEmail): void => {
+  commit('mutateUserEmail', userEmail)
+}
+
 export const setCurrentDate: ActionIF = ({ commit }, currentDate): void => {
   commit('mutateCurrentDate', currentDate)
 }

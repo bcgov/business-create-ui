@@ -19,6 +19,10 @@ export const mutateAuthRoles = (state: any, authRoles: Array<string>) => {
   state.stateModel.tombstone.authRoles = authRoles
 }
 
+export const mutateUserEmail = (state: any, userEmail: string) => {
+  state.stateModel.tombstone.userEmail = userEmail
+}
+
 export const mutateCurrentStep = (state: any, currentStep: boolean) => {
   state.stateModel.currentStep = currentStep
 }

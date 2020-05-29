@@ -45,7 +45,7 @@ export default class FolioNumber extends Vue {
   // Data variables
   private folioNumber:string = null
 
-  // Life cycle methods
+  /** Called when component is created. */
   private created (): void {
     if (this.initialValue) {
       this.folioNumber = this.initialValue
@@ -73,11 +73,12 @@ export default class FolioNumber extends Vue {
 </script>
 
 <style lang="scss" scoped>
-  .row .col:first-child {
-      width: 12rem;
-      max-width: 12rem;
-  }
-  label {
-    font-weight: 700;
-  }
+.row .col:first-child {
+  width: 12rem;
+  max-width: 12rem;
+}
+
+label {
+  font-weight: 700;
+}
 </style>

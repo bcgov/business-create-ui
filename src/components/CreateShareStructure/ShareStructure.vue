@@ -242,7 +242,7 @@ export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
     return []
   }
 
-  // Life cycle methods
+  /** Called when component is created. */
   private created (): void {
     if (this.initialValue) {
       this.shareStructure = { ...this.initialValue }
@@ -344,13 +344,15 @@ export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
 </script>
 
 <style lang="scss" scoped>
-ul{
+ul {
   padding-top: 0.5rem;
 }
+
 li {
   list-style: None;
   padding-top: 0.25rem;
 }
+
 .add-share-structure {
   .add-share-structure-container {
     padding: 1.25rem;

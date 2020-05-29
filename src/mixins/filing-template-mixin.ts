@@ -15,10 +15,10 @@ import { EntityTypes } from '@/enums'
  */
 @Component({})
 export default class FilingTemplateMixin extends Vue {
-  // Global State
+  // Global state
   @State stateModel!: StateModelIF
 
-  // Global Getters
+  // Global getters
   @Getter isTypeBcomp!: GetterIF
   @Getter getApprovedName!: string
   @Getter getTempId!: string
@@ -50,7 +50,6 @@ export default class FilingTemplateMixin extends Vue {
         header: {
           name: INCORPORATION_APPLICATION,
           certifiedBy: this.stateModel?.certifyState?.certifiedBy || '',
-          email: this.stateModel?.defineCompanyStep?.businessContact?.email || '',
           date: this.stateModel?.currentDate || '',
           folioNumber: this.stateModel.defineCompanyStep.folioNumber
         },
@@ -92,17 +91,25 @@ export default class FilingTemplateMixin extends Vue {
    * @param draftFiling The draft filing body to be parsed and assigned to store
    */
   parseDraft (draftFiling: any): void {
+    // FUTURE: set types so each of these validate their parameters
+    // ref: https://www.typescriptlang.org/docs/handbook/generics.html
+
+    // Set Entity Type
     this.setEntityType(draftFiling.business.legalType)
+
     // Set Office Addresses
     this.setOfficeAddresses(draftFiling.incorporationApplication.offices)
+
     // Set Contact Info
     const draftContact = {
       ...draftFiling.incorporationApplication.contactPoint,
       confirmEmail: draftFiling.incorporationApplication.contactPoint.email
     }
     this.setBusinessContact(draftContact)
+
     // Set Persons and Organizations
     this.setOrgPersonList(draftFiling.incorporationApplication.parties)
+
     // Set Share Structure
     this.setShareClasses(draftFiling.incorporationApplication.shareClasses)
 

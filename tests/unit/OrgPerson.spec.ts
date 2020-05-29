@@ -39,7 +39,8 @@ const validPersonData = {
     'lastName': 'Smith',
     'middleName': 'D',
     'orgName': '',
-    'partyType': 'Person'
+    'partyType': 'Person',
+    'email': 'completing-party@example.com'
   },
   'roles': [
     { 'roleType': 'Director', 'appointmentDate': '2020-03-30' },

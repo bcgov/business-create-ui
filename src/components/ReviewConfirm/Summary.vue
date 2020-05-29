@@ -27,7 +27,7 @@ import { OrgPersonIF, ShareClassIF } from '@/interfaces'
   }
 })
 export default class Summary extends Vue {
-  // State
+  // Global state
   @State(state => state.stateModel.addPeopleAndRoleStep.orgPeople)
   readonly orgPersonList: OrgPersonIF[]
 

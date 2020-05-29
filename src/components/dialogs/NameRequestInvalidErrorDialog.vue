@@ -69,5 +69,4 @@ export default class NameRequestInvalidErrorDialog extends Vue {
 </script>
 
 <style lang="scss" scoped>
-// @import '@/assets/styles/theme.scss';
 </style>

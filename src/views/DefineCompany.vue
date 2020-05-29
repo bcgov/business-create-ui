@@ -84,7 +84,7 @@ import { NameRequestInfo } from '@/components/common'
   }
 })
 export default class DefineCompany extends Mixins(EntityFilterMixin) {
-  // State
+  // Global state
   @State(state => state.stateModel.defineCompanyStep.businessContact)
   readonly businessContact!: BusinessContactIF
 

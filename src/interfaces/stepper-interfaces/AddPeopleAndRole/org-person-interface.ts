@@ -8,7 +8,8 @@ export interface OrgPersonIF {
     firstName: string;
     middleName?: string;
     lastName: string;
-    orgName: string
+    orgName: string;
+    email?: string | null;
   },
   roles: RolesIF[];
   mailingAddress: AddressIF;

@@ -48,5 +48,4 @@ export default class FetchErrorDialog extends Vue {
 </script>
 
 <style lang="scss" scoped>
-// @import '@/assets/styles/theme.scss';
 </style>

@@ -101,11 +101,11 @@ import { ListShareClass, ShareStructure } from '@/components/CreateShareStructur
   }
 })
 export default class CreateShareStructure extends Vue {
-  // State
+  // Global state
   @State(state => state.stateModel.createShareStructureStep.shareClasses)
   readonly shareClasses: ShareClassIF[]
 
-  // Actions
+  // Glbal actions
   @Action setShareClasses!: ActionBindingIF
   @Action setCreateShareStructureStepValidity!: ActionBindingIF
   @Action setIgnoreChanges!: ActionBindingIF
@@ -160,7 +160,7 @@ export default class CreateShareStructure extends Vue {
   private nextId: number = -1
   private helpToggle: boolean = false
 
-  // Lifecycle methods
+  /** Called when component is created. */
   private created (): void {
     // ignore data changes until page has loaded
     this.setIgnoreChanges(true)

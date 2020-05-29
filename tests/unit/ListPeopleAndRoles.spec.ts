@@ -31,7 +31,8 @@ describe('List People And Roles component', () => {
         'lastName': 'Bowler',
         'middleName': 'D',
         'orgName': '',
-        'partyType': 'Person'
+        'partyType': 'Person',
+        'email': 'completing-party@example.com'
       },
       'roles': [
         { 'roleType': 'Completing Party', 'appointmentDate': '2020-03-30' },

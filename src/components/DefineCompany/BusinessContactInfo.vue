@@ -6,14 +6,14 @@
         </v-flex>
         <v-flex md4>
           <div><label><strong>Email Address</strong></label></div>
-          <div id="lbl-email">{{ !!contact.email ? contact.email : 'Not entered'}}</div>
+          <div id="lbl-email">{{ !!contact.email ? contact.email : '(Not entered)'}}</div>
         </v-flex>
         <v-flex md4>
           <div><label><strong>Phone Number</strong></label></div>
           <div id="lbl-phone" v-if="!!contact.phone">{{ contact.phone }}
             <span v-if="!!contact.extension">Ext: {{ contact.extension }}</span>
           </div>
-          <div id="lbl-phone" v-else>Not entered</div>
+          <div id="lbl-phone" v-else>(Not entered)</div>
         </v-flex>
     </v-layout>
     <v-card flat class="business-contact-container" v-else>
@@ -152,11 +152,12 @@ export default class BusinessContactInfo extends Vue {
 </script>
 
 <style lang="scss" scoped>
-  [class^="col"] {
-    padding-top: 0;
-    padding-bottom: 0;
-  }
-  .business-contact-container {
+[class^="col"] {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.business-contact-container {
   margin-top: 1rem;
   padding: 1.25rem;
 }

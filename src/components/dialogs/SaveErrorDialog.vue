@@ -94,5 +94,4 @@ export default class SaveErrorDialog extends Vue {
 </script>
 
 <style lang="scss" scoped>
-// @import '@/assets/styles/theme.scss';
 </style>
