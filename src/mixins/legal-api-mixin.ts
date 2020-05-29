@@ -56,12 +56,11 @@ export default class LegalApiMixin extends Vue {
     return axios.get(url)
       .then(response => {
         // look at only the first task
-        const todoName = response?.data?.filing?.header?.name
         const filing = response?.data?.filing
         const filingName = filing?.header?.name
         const filingId = +filing?.header?.filingId // may be NaN
 
-        if (filingName !== this.INCORPORATION_APPLICATION || !filingId) {
+        if (!filing || filingName !== this.INCORPORATION_APPLICATION || !filingId) {
           throw new Error('Invalid API response')
         }
         // save Filing ID from the header

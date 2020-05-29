@@ -367,8 +367,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
         let draftFiling = await this.fetchDraft()
         let emptyFiling = this.buildFiling()
         if (draftFiling?.incorporationApplication?.nameRequest) {
-          await this.populateNameRequest(draftFiling)
-          emptyFiling = this.buildFiling()
+          await this.processNameRequest(draftFiling)
         }
 
         draftFiling = { ...emptyFiling.filing, ...draftFiling }
@@ -376,7 +375,6 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
         // Parse the draft and update NR data into the store if it exists
         if (draftFiling) {
           this.parseDraft(draftFiling)
-          // this.setNameRequestState(this.generateNameRequestState(nrResponse, +draftFiling.header.filingId))
         }
 
         // Initialize Fee Summary
@@ -399,9 +397,8 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
     }
   }
 
-  private async populateNameRequest (filing: any): Promise<void> {
+  private async processNameRequest (filing: any): Promise<void> {
     try {
-      this.setCurrentDate(this.dateToUsableString(new Date()))
       let nameRequest = filing.incorporationApplication.nameRequest
       // ensure we have a NR number
 

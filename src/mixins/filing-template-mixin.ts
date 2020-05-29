@@ -22,6 +22,7 @@ export default class FilingTemplateMixin extends Vue {
   @Getter isTypeBcomp!: GetterIF
   @Getter getApprovedName!: string
   @Getter getBusinessIdentifier!: string
+  
   // Global actions
   @Action setEntityType!: ActionBindingIF
   @Action setBusinessContact!: ActionBindingIF
