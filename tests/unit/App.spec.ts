@@ -34,6 +34,10 @@ const filingData = {
     filingId: 12345,
     status: 'draft'
   },
+  business: {
+    identifier: 'T1234567',
+    legalType: 'BC'
+  },
   incorporationApplication: {
     contactPoint: {
       email: 'mockEmail@mock.com',
@@ -244,7 +248,7 @@ describe('App component', () => {
     const get = sinon.stub(axios, 'get')
 
     // GET authorizations (role)
-    get.withArgs('NR 1234567/authorizations')
+    get.withArgs('T1234567/authorizations')
       .returns(new Promise((resolve) => resolve({
         data:
           {
@@ -253,7 +257,7 @@ describe('App component', () => {
       })))
 
     // GET NR data
-    get.withArgs('nameRequests/NR 1234567')
+    get.withArgs('nameRequests/NR1234567')
       .returns(new Promise(resolve => resolve({
         data:
           {
@@ -261,6 +265,17 @@ describe('App component', () => {
           }
       })))
 
+    get.withArgs('businesses/T1234567/filings')
+      .returns(new Promise(resolve => resolve({
+        data:
+        {
+          filing: {
+            ...filingData
+          }
+        }
+      })))
+
+    // businesses/${this.getBusinessIdentifier}/filings
     // GET tasks
     get.withArgs('businesses/NR 1234567/tasks')
       .returns(new Promise(resolve => resolve({
@@ -282,7 +297,7 @@ describe('App component', () => {
     const localVue = createLocalVue()
     localVue.use(VueRouter)
     const router = mockRouter.mock()
-    router.push({ name: 'define-company', query: { nrNumber: 'NR 1234567' } })
+    router.push({ name: 'define-company', query: { id: 'T1234567' } })
     wrapper = shallowMount(App, { localVue, store, router, vuetify, stubs: { Affix: true, ConfirmDialog } })
 
     // wait for all queries to complete
@@ -306,8 +321,9 @@ describe('App component', () => {
 
   it('loads a draft filing into the store', () => {
     // Validate Name Request
-    expect(store.state.stateModel.nameRequest.entityType).toBe('BC')
-    expect(store.state.stateModel.nameRequest.filingId).toBe(12345)
+    console.log(store.state.stateModel.entityType)
+    expect(store.state.stateModel.entityType).toBe('BC')
+    expect(store.state.stateModel.filingId).toBe(12345)
 
     // Validate Office Addresses
     expect(store.state.stateModel.defineCompanyStep.officeAddresses.registeredOffice)
@@ -330,9 +346,9 @@ describe('App component', () => {
 
   it('loads a name request into the store', () => {
     // Validate Name Request
-    expect(store.state.stateModel.nameRequest.entityType).toBe(nrData.requestTypeCd)
+    expect(store.state.stateModel.entityType).toBe(nrData.requestTypeCd)
     expect(store.state.stateModel.nameRequest.nrNumber).toBe(nrData.nrNum)
-    expect(store.state.stateModel.nameRequest.filingId).toBe(12345)
+    expect(store.state.stateModel.filingId).toBe(12345)
     expect(store.state.stateModel.nameRequest.details).toBeDefined()
     expect(store.state.stateModel.nameRequest.applicant).toBeDefined()
 
@@ -388,7 +404,7 @@ describe('App component', () => {
     expect(dialog.exists()).toBe(false)
 
     // verify redirection
-    const baseUrl = 'myhost/cooperatives/NR 1234567'
+    const baseUrl = 'myhost/cooperatives/T1234567'
     expect(window.location.assign).toHaveBeenCalledWith(baseUrl)
   })
 })

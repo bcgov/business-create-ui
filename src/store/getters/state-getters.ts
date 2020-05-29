@@ -92,6 +92,9 @@ export const getApprovedName = (state: any): string => {
   return state.stateModel.nameRequest.details.approvedName
 }
 
+export const getNameRequestNumber = (state: any): string => {
+  return state.stateModel.nameRequest.nrNumber
+}
 /**
  * Returns name request details.
  */

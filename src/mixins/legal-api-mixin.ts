@@ -166,24 +166,24 @@ export default class LegalApiMixin extends Vue {
 
   formatEmptyFiling (filing: any): IncorporationFilingIF {
     let toReturn = filing
-
-    if (!toReturn.incorporationApplication?.offices) {
-      toReturn.incorporationApplication.offices = []
-    }
-    if (!toReturn.incorporationApplication?.contactPoint) {
-      toReturn.incorporationApplication.contactPoint = {
-        email: '',
-        phone: '',
-        extension: ''
+    if (toReturn.incorporationApplication) {
+      if (!toReturn.incorporationApplication?.offices) {
+        toReturn.incorporationApplication.offices = []
+      }
+      if (!toReturn.incorporationApplication?.contactPoint) {
+        toReturn.incorporationApplication.contactPoint = {
+          email: '',
+          phone: '',
+          extension: ''
+        }
+      }
+      if (!toReturn.incorporationApplication?.parties) {
+        toReturn.incorporationApplication.parties = []
+      }
+      if (!toReturn.incorporationApplication?.shareClasses) {
+        toReturn.incorporationApplication.shareClasses = []
       }
     }
-    if (!toReturn.incorporationApplication?.parties) {
-      toReturn.incorporationApplication.parties = []
-    }
-    if (!toReturn.incorporationApplication?.shareClasses) {
-      toReturn.incorporationApplication.shareClasses = []
-    }
-
     return toReturn
   }
 }

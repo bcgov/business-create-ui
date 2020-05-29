@@ -365,7 +365,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
         this.setTemporaryId(this.tempId)
         // Retrieve draft filing if it exists for the NR Number specified
         let draftFiling = await this.fetchDraft()
-        let emptyFiling = this.buildEmptyFiling()
+        let emptyFiling = this.buildFiling()
         if (draftFiling?.incorporationApplication?.nameRequest) {
           await this.populateNameRequest(draftFiling)
           emptyFiling = this.buildFiling()

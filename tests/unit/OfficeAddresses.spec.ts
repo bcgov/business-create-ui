@@ -59,7 +59,7 @@ describe('Office Addresses component - COOP', () => {
 
   beforeAll(() => {
     // init store
-    store.state.stateModel.nameRequest.entityType = 'CP'
+    store.state.stateModel.entityType = 'CP'
   })
 
   it('does not show the summary ui when editing', () => {
@@ -157,7 +157,7 @@ describe('Office Addresses component - BCOMP', () => {
 
   beforeAll(() => {
     // init store
-    store.state.stateModel.nameRequest.entityType = 'BC'
+    store.state.stateModel.entityType = 'BC'
   })
 
   it('does not show the summary ui when editing', () => {

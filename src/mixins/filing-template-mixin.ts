@@ -70,11 +70,12 @@ export default class FilingTemplateMixin extends Vue {
       }
     }
 
-    if (this.stateModel.nameRequest) {
-      let nrObj = {}
-      nrObj.nrNumber = this.stateModel.nameRequest?.nrNumber
-      nrObj.legalType = this.stateModel?.entityType
-      nrObj.legalName = this.getApprovedName
+    if (this.stateModel?.nameRequest?.nrNumber) {
+      let nrObj = {
+        nrNumber: this.stateModel.nameRequest?.nrNumber,
+        legalType: this.stateModel?.entityType,
+        legalName: this.getApprovedName
+      }
       filing.filing.incorporationApplication.nameRequest = nrObj
     }
 
@@ -85,51 +86,6 @@ export default class FilingTemplateMixin extends Vue {
     return filing
   }
 
-  /**
-   *
-   * @param draftFiling
-   */
-  /**
-   * Method to construct a filing body when making an api request
-   */
-  buildEmptyFiling (): IncorporationFilingIF {
-    // Format DateTime for Filing
-    const effectiveDate = new Date()
-    const formattedDateTime = effectiveDate &&
-      (effectiveDate.toISOString()).replace('Z', '+00:00')
-
-    // Build and return filing
-    let filing:IncorporationFilingIF = {
-      filing: {
-        header: {
-          name: INCORPORATION_APPLICATION,
-          certifiedBy: '',
-          email: '',
-          date: this.stateModel.currentDate
-        },
-        business: {
-          legalType: EntityTypes.BCOMP,
-          identifier: this.getBusinessIdentifier
-        },
-        incorporationApplication: {
-          offices: {
-          },
-          contactPoint: {
-            email: '',
-            phone: '',
-            extension: ''
-          },
-          parties: [],
-          shareClasses: []
-        }
-      }
-    }
-    // Pass the effective date only for a future effective filing.
-    if (formattedDateTime) {
-      filing.filing.header.effectiveDate = formattedDateTime
-    }
-    return filing
-  }
   /**
    * Method to parse a received draft filing into the store
    * @param draftFiling The draft filing body to be parsed and assigned to store
