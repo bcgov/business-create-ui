@@ -146,26 +146,7 @@
       <header id="share-structure-header">
         <h2>3. Confirm Incorporation Agreement and Article Completion</h2>
       </header>
-      <div style="margin-left:1rem;">
-        <v-radio-group v-model="agreementType" @change="changeAgreementType">
-          <v-radio value="sample">
-            <template slot="label">
-              <span>
-                The <b>Sample Incorporation Agreement and Benefit Company Articles</b> containing a benefit provision
-                have been completed and a copy added to the company's record book.
-              </span>
-            </template>
-          </v-radio>
-          <v-radio value="custom" class="mt-2">
-            <template slot="label">
-              <span>
-                A <b>custom Incorporation Agreement and custom Benefit Company Articles</b> containing a benefit
-                provision have been completed and a copy added to the company's record book.
-              </span>
-            </template>
-          </v-radio>
-        </v-radio-group>
-      </div>
+      <AgreementType/>
     </section>
   </div>
 </template>
@@ -173,49 +154,16 @@
 <script lang="ts">
 // Libraries
 import { Component, Vue } from 'vue-property-decorator'
-import { Action, State } from 'vuex-class'
+import { AgreementType } from '@/components/IncorporationAgreement'
 
-// Interfaces
-import { ActionBindingIF, FormType, ShareClassIF } from '@/interfaces'
-
-@Component
+@Component({
+  components: {
+    AgreementType
+  }
+})
 export default class IncorporationAgreement extends Vue {
-  // State
-  @State(state => state.stateModel.incorporationAgreementStep.agreementType)
-  readonly agreementTypeState: string | null
-
-  // Actions
-  @Action setIncorporationAgreementStepData!: ActionBindingIF
-  @Action setIgnoreChanges!: ActionBindingIF
-
   private helpToggle: boolean = false
   private readMoreFlag: boolean = false
-  private agreementType: string | null = null
-
-  // Lifecycle methods
-  private created (): void {
-    // temporarily ignore data changes
-    this.setIgnoreChanges(true)
-    this.agreementType = this.agreementTypeState
-    // watch data changes once page has loaded (in next tick)
-    Vue.nextTick(() => {
-      this.setIgnoreChanges(false)
-    })
-  }
-
-  mounted (): void {
-    this.setIncorporationAgreementStepData({
-      valid: !!this.agreementType,
-      agreementType: this.agreementType
-    })
-  }
-
-  private changeAgreementType (): void {
-    this.setIncorporationAgreementStepData({
-      valid: !!this.agreementType,
-      agreementType: this.agreementType
-    })
-  }
 
   private get documentURL (): string {
     return 'https://www2.gov.bc.ca/assets/gov/employment-business-and-economic-development/' +
@@ -303,5 +251,4 @@ p{
   width: 215px;
   height: 267px;
 }
-
 </style>
