@@ -19,7 +19,12 @@
             </span>
         </div>
         <!-- Summary Content -->
-        <div v-else class="summary-desc">{{ selectedAgreementDescription }}</div>
+        <div v-else class="summary-desc">
+            <div><v-icon color="green" class="agreement-valid-icon">mdi-check</v-icon></div>
+             <div>
+                {{ selectedAgreementDescription }}
+            </div>
+        </div>
       </v-card>
     </div>
     <div v-else style="margin-left:1rem;">
@@ -136,5 +141,11 @@ export default class AgreementType extends Vue {
 .summary-desc {
     padding: 1rem;
     font-size: 0.875rem;
+    display: flex;
+    justify-content: center;
+}
+
+.agreement-valid-icon {
+    padding-right: 0.5rem;
 }
 </style>
