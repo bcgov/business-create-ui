@@ -47,6 +47,8 @@ describe('Actions component', () => {
     store.state.stateModel.nameRequest = { entityType: 'BC' }
     store.state.stateModel.defineCompanyStep = { valid: true }
     store.state.stateModel.addPeopleAndRoleStep = { valid: true }
+    store.state.stateModel.createShareStructureStep = { valid: true }
+    store.state.stateModel.incorporationAgreementStep = { valid: true }
     store.state.stateModel.incorporationDateTime = { valid: true }
     await Vue.nextTick(() => {
       // verify File and Pay button state
@@ -235,7 +237,10 @@ describe('Actions component - Filing Functionality', () => {
 
             ]
           }
-        ]
+        ],
+        incorporationAgreement: {
+          agreementType: 'sample'
+        }
       }
     }
   }
@@ -276,6 +281,8 @@ describe('Actions component - Filing Functionality', () => {
     store.state.stateModel.filingId = 1234
     store.state.stateModel.entityType = 'BC'
     store.state.stateModel.tempId = 'T1234567'
+    store.state.stateModel.incorporationAgreementStep.agreementType =
+      filing.filing.incorporationApplication.incorporationAgreement.agreementType
 
     const localVue = createLocalVue()
     localVue.use(VueRouter)

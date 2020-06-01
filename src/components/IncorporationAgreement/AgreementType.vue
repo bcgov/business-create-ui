@@ -30,7 +30,8 @@
     <div v-else style="margin-left:1rem;">
       <v-card flat>
         <v-radio-group v-model="agreementType" @change="changeAgreementType" class="agreement-option-list">
-          <v-radio v-for="(item, index) in incorporationAgreementTypes" :key="index" :value="item.code">
+          <v-radio v-for="(item, index) in incorporationAgreementTypes"
+           :key="index" :value="item.code" :id="`agreement-type-${item.code}`">
             <template slot="label">
               <div v-html="item.description" class="agreement-option"/>
             </template>
