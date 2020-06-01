@@ -28,13 +28,15 @@
       </v-card>
     </div>
     <div v-else style="margin-left:1rem;">
-      <v-radio-group v-model="agreementType" @change="changeAgreementType">
-        <v-radio v-for="(item, index) in incorporationAgreementTypes" :key="index" :value="item.code">
-          <template slot="label">
-            <div v-html="item.desc"/>
-          </template>
-        </v-radio>
-      </v-radio-group>
+      <v-card flat>
+        <v-radio-group v-model="agreementType" @change="changeAgreementType" class="agreement-option-list">
+          <v-radio v-for="(item, index) in incorporationAgreementTypes" :key="index" :value="item.code">
+            <template slot="label">
+              <div v-html="item.description" class="agreement-option"/>
+            </template>
+          </v-radio>
+        </v-radio-group>
+      </v-card>
     </div>
   </div>
 </template>
@@ -46,25 +48,11 @@ import { Action, State } from 'vuex-class'
 
 // Interfaces
 import { ActionBindingIF } from '@/interfaces'
+import { AgreementTypeResource } from '@/resources'
 
 @Component
 export default class AgreementType extends Vue {
-   incorporationAgreementTypes = [
-     {
-       code: 'sample',
-       desc: 'The <b>Sample Incorporation Agreement and Benefit Company Articles</b> containing a benefit ' +
-                'provision have been completed and a copy added to the company\'s record book.',
-       summaryDesc: 'The Sample Incorporation Agreement and Benefit Company Articles containing a benefit ' +
-                'provision have been completed and a copy added to the company\'s record book.'
-     },
-     {
-       code: 'custom',
-       desc: 'A <b>custom Incorporation Agreement and custom Benefit Company Articles</b> containing ' +
-              'a benefit provision have been completed and a copy added to the company\'s record book.',
-       summaryDesc: 'A custom Incorporation Agreement and custom Benefit Company Articles containing ' +
-              'a benefit provision have been completed and a copy added to the company\'s record book.'
-     }
-   ]
+   private incorporationAgreementTypes = AgreementTypeResource
 
   // State
   @State(state => state.stateModel.incorporationAgreementStep.agreementType)
@@ -109,7 +97,8 @@ export default class AgreementType extends Vue {
 
   private get selectedAgreementDescription () : string {
     if (this.agreementTypeState) {
-      return this.incorporationAgreementTypes.find(item => item.code === this.agreementTypeState).summaryDesc
+      return this.incorporationAgreementTypes.find(item => item.code === this.agreementTypeState)
+        .summaryDescription
     } else { return '' }
   }
 }
@@ -147,5 +136,14 @@ export default class AgreementType extends Vue {
 
 .agreement-valid-icon {
     padding-right: 0.5rem;
+}
+
+.agreement-option-list {
+  padding: 1.5rem;
+}
+
+.agreement-option {
+  padding-top: 1rem;
+  color: #495057;
 }
 </style>
