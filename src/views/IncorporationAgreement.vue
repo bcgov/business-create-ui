@@ -136,7 +136,7 @@
         </span>
       </div>
        <div class="download-link">
-          <img src="@/assets/images/agreement_preview.png" class="preview-image"/>
+          <img src="@/assets/images/BCRegistries_Sample_IncoporationAgreement_x2.png" class="preview-image"/>
         </div>
         <div class="template-details">
           (check your share structure before using)
