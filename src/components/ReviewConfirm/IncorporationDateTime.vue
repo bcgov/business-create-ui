@@ -257,16 +257,18 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
   /** The minimum date that can be entered. */
   private get minDate (): string {
     const minDate = new Date()
+    const localIsoMinDate = new Date(minDate.getTime() - (minDate.getTimezoneOffset() * 60000)).toISOString()
 
-    return minDate.toISOString()
+    return localIsoMinDate
   }
 
   /** The maximum date that can be entered. */
   private get maxDate (): string {
     const maxDate = new Date()
     maxDate.setDate(new Date().getDate() + 10)
+    const localIsoMaxDate = new Date(maxDate.getTime() - (maxDate.getTimezoneOffset() * 60000)).toISOString()
 
-    return maxDate.toISOString()
+    return localIsoMaxDate
   }
 
   /** The minimum time that can be entered. */

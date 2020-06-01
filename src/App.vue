@@ -406,7 +406,6 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
       const nrResponse = await this.fetchNameRequest(nameRequest.nrNumber).catch(error => {
         console.log('NR error =', error) // eslint-disable-line no-console
         this.nameRequestInvalidErrorDialog = true
-        return
       })
       // ensure NR was found
       if (!nrResponse) {
