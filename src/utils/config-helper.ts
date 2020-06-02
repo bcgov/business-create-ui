@@ -39,6 +39,17 @@ export async function fetchConfig (): Promise<any> {
     return Promise.reject(new Error('Could not fetch configuration.json'))
   })
 
+  /**
+   * authConfig is a workaround to fix the user settings call as it expects a URL with no trailing slash.
+   * This will be removed when a fix is made to sbc-common-components to handle this
+   */
+  const authConfig = {
+    'VUE_APP_AUTH_ROOT_API': response.data['SBC_CONFIG_AUTH_API_URL']
+  }
+  const authConfigString = JSON.stringify(authConfig)
+  sessionStorage.setItem('AUTH_API_CONFIG', authConfigString)
+  console.log('AUTH_API_CONFIG: ' + authConfigString)
+
   const businessesUrl: string = response.data['BUSINESSES_URL']
   sessionStorage.setItem('BUSINESSES_URL', businessesUrl)
   console.log('Set Businesses URL to: ' + businessesUrl)
