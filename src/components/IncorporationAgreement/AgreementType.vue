@@ -30,7 +30,7 @@
     <div v-else class="m1-1">
       <v-card flat>
         <v-radio-group v-model="agreementType" @change="changeAgreementType" class="agreement-option-list">
-          <v-radio v-for="(item, index) in incorporationAgreementTypes"
+          <v-radio v-for="(item, index) in incorporationAgreementTypeResource"
            :key="index" :value="item.code" :id="`agreement-type-${item.code}`">
             <template slot="label">
               <div v-html="item.description" class="agreement-option"/>
@@ -53,7 +53,7 @@ import { AgreementTypeResource } from '@/resources'
 
 @Component
 export default class AgreementType extends Vue {
-   private incorporationAgreementTypes = AgreementTypeResource
+   private incorporationAgreementTypeResource = AgreementTypeResource
 
   // State
   @State(state => state.stateModel.incorporationAgreementStep.agreementType)
@@ -98,7 +98,7 @@ export default class AgreementType extends Vue {
 
   private get selectedAgreementDescription () : string {
     if (this.agreementTypeState) {
-      return this.incorporationAgreementTypes.find(item => item.code === this.agreementTypeState)
+      return this.incorporationAgreementTypeResource.find(item => item.code === this.agreementTypeState)
         .summaryDescription
     } else { return '' }
   }
