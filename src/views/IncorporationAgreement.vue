@@ -194,12 +194,6 @@ import { AgreementType } from '@/components/IncorporationAgreement'
 export default class IncorporationAgreement extends Vue {
   private helpToggle: boolean = false
   private readMoreFlag: boolean = false
-
-  private get documentURL (): string {
-    return 'https://www2.gov.bc.ca/assets/gov/employment-business-and-economic-development/' +
-    'business-management/permits-licences-and-registration/registries-forms/' +
-    'benefit_company__corporation_agreement.pdf'
-  }
 }
 </script>
 
@@ -280,8 +274,8 @@ a {
   padding-top: 1rem;
   padding-bottom: 1rem;
   margin-left: 1rem;
-  border-top: solid 1px #DEE2E6;
-  border-bottom: solid 1px #DEE2E6;
+  border-top: solid 1px $gray3;
+  border-bottom: solid 1px $gray3;
 }
 
 .share-structure-check-panel {

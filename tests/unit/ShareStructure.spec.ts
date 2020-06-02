@@ -103,7 +103,7 @@ function createShareStructure (
   return shareStructure
 }
 
-store.state.stateModel.nameRequest.entityType = 'BCOMP'
+store.state.stateModel.nameRequest.entityType = 'BC'
 store.state.stateModel.currentDate = '2020-03-30'
 
 describe('Share Structure component', () => {

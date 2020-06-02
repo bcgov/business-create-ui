@@ -27,7 +27,7 @@
         </div>
       </v-card>
     </div>
-    <div v-else style="margin-left:1rem;">
+    <div v-else class="m1-1">
       <v-card flat>
         <v-radio-group v-model="agreementType" @change="changeAgreementType" class="agreement-option-list">
           <v-radio v-for="(item, index) in incorporationAgreementTypes"
@@ -145,6 +145,6 @@ export default class AgreementType extends Vue {
 
 .agreement-option {
   padding-top: 1rem;
-  color: #495057;
+  color: $gray7;
 }
 </style>

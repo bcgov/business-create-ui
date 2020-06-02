@@ -119,8 +119,7 @@ export default class FilingTemplateMixin extends Vue {
 
     // Set Incorporation Agreement
     this.setIncorporationAgreementStepData({
-      valid: !!draftFiling.incorporationApplication.incorporationAgreement.agreementType,
-      agreementType: draftFiling.incorporationApplication.incorporationAgreement.agreementType
+      agreementType: draftFiling.incorporationApplication.incorporationAgreement?.agreementType
     })
 
     // Set Certify Form

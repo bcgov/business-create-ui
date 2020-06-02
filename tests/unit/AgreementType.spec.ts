@@ -53,7 +53,7 @@ function createComponent (showErrorSummary:boolean = false, isSummary:boolean = 
   })
 }
 
-store.state.stateModel.nameRequest.entityType = 'BCOMP'
+store.state.stateModel.nameRequest.entityType = 'BC'
 store.state.stateModel.currentDate = '2020-03-30'
 
 describe('Share Structure component', () => {
@@ -71,7 +71,6 @@ describe('Share Structure component', () => {
     expect(wrapper.find(sampleTypeSelector).attributes('aria-checked')).toBe('true')
     expect(wrapper.find(customTypeSelector).attributes('aria-checked')).toBe('false')
     store.state.stateModel.incorporationAgreementStep.agreementType = null
-    await waitForUpdate(wrapper)
     wrapper.destroy()
   })
 
