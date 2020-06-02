@@ -11,7 +11,7 @@
         <!-- Summary Warning -->
         <div v-if="showErrorSummary" class="agreement-invalid-message">
             <span>
-            <v-icon color="#1976d2">mdi-information-outline</v-icon>
+            <v-icon color="blue darken-2">mdi-information-outline</v-icon>
             This step is not complete.
             <router-link id="router-link" :to="{ path: '/incorporation-agreement' }">
                 Return to this step to complete it.
@@ -27,7 +27,7 @@
         </div>
       </v-card>
     </div>
-    <div v-else class="m1-1">
+    <div v-else>
       <v-card flat>
         <v-radio-group v-model="agreementType" @change="changeAgreementType" class="agreement-option-list">
           <v-radio v-for="(item, index) in incorporationAgreementTypeResource"

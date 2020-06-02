@@ -79,7 +79,7 @@ describe('Share Structure component', () => {
     const wrapper: Wrapper<AgreementType> = createComponent(false, true)
     await waitForUpdate(wrapper)
     expect(wrapper.find(summaryTextSelector).text()).toContain(
-      'The Sample Incorporation Agreement and Benefit Company Articles containing a benefit ' +
+      'The sample Incorporation Agreement and Benefit Company Articles containing a benefit ' +
       'provision have been completed and a copy added to the company\'s record book.')
     wrapper.destroy()
   })

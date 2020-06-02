@@ -19,7 +19,7 @@
       <!-- Summary Warning -->
       <div v-if="showErrorSummary" class="people-roles-invalid-message">
         <span>
-          <v-icon color="#1976d2">mdi-information-outline</v-icon>
+          <v-icon color="blue darken-2">mdi-information-outline</v-icon>
           This step is not complete.
           <router-link id="router-link" :to="{ path: '/add-people-roles', query: { showErrors: true } }">
             Return to this step to complete it.

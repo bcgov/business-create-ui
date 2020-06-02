@@ -326,7 +326,7 @@ p{
 
 .help-btn {
   cursor: pointer;
-  color: #1976d2;
+  color: $primary-blue;
   vertical-align:middle;
 }
 

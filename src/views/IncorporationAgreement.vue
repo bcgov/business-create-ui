@@ -21,7 +21,7 @@
             <span v-on="on" class="tool-tip"> Benefit Company Articles</span>
           </template>
           <span>
-            The Articles for a benefit company must state the benefits the company intends to provide to society, as
+            The Articles for a Benefit Company must state the benefits the company intends to provide to society, as
             well as outlining the rules and procedures for corporate matters such as holding meetings, issuing and
             transferring shares, and duties of directors and officers.
           </span>
@@ -32,7 +32,7 @@
             <span v-on="on" class="tool-tip"> benefit provision</span>
           </template>
           <span>
-            Clauses in the Articles which specify the public benefits to be promoted by the benefit company and the
+            Clauses in the Articles which specify the public benefits to be promoted by the Benefit Company and the
             company’s commitment to promote those benefits and to conduct business in a responsible and sustainable
             manner.
           </span>
@@ -47,10 +47,10 @@
         <span v-else>Hide Help</span>
       </span>
       <section v-show="helpToggle" class="incorporation-agreement-help">
-        <h4>What is the Sample Incorporation Agreement and Benefit Company Articles?</h4>
+        <h4>What is the sample Incorporation Agreement and Benefit Company Articles?</h4>
         <ul>
           <li>
-            The Sample Incorporation Agreement and Benefit Company Articles is a template that you can use to create an
+            The sample Incorporation Agreement and Benefit Company Articles is a template that you can use to create an
             incorporation agreement and articles for your company. It uses all the standard provisions suggested by
             legislation and also includes a place to specify the company’s benefit provision.
           </li>
@@ -70,7 +70,7 @@
             A Benefit Company must include a benefit provision in its Articles.
           </li>
         </ul>
-        <h4>Can I use the Sample Incorporation Agreement and Benefit Company Articles?</h4>
+        <h4>Can I use the sample Incorporation Agreement and Benefit Company Articles?</h4>
         <h4>
           <span><v-icon color="green" class="article-stmt-icon">mdi-check</v-icon></span>
           <span>You can use the sample Articles if:</span>
@@ -126,7 +126,7 @@
         <h2>2. Sample Templates</h2>
       </header>
       <p>
-        For your convenience, we have provided a sample Incorporation Agreement and a set of Sample Benefit Company
+        For your convenience, we have provided a sample Incorporation Agreement and a set of sample Benefit Company
         Articles.
       </p>
       <div>
@@ -164,7 +164,7 @@
               <span>
                 <v-icon color="blue">mdi-file-pdf-outline</v-icon>
                 <a href="/files/benefit_company__corporation_agreement.pdf" download>
-                  Download the Sample Incorporation Agreement and Benefit Company Articles
+                  Download the sample Incorporation Agreement and Benefit Company Articles
                 </a>
               </span>
             </div>
@@ -223,18 +223,18 @@ p{
 
 a {
   text-decoration: none;
-  color: #1976d2;
+  color: $primary-blue;
 }
 
 .help-btn {
   cursor: pointer;
-  color: #1976d2;
+  color: $primary-blue;
   vertical-align:middle;
 }
 
 .read-more-btn {
   cursor: pointer;
-  color: #1976d2;
+  color: $primary-blue;
 }
 
 .incorporation-agreement-help {
@@ -307,4 +307,5 @@ a {
 .read-more-line {
   padding-top: 0.5rem
 }
+
 </style>

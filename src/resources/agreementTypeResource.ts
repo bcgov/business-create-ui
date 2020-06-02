@@ -3,9 +3,9 @@ import { IncorporationAgreementTypeIF } from '@/interfaces'
 export const AgreementTypeResource: IncorporationAgreementTypeIF[] = [
   {
     code: 'sample',
-    description: 'The <b>Sample Incorporation Agreement and Benefit Company Articles</b> containing a benefit ' +
+    description: 'The <b>sample Incorporation Agreement and Benefit Company Articles</b> containing a benefit ' +
                'provision have been completed and a copy added to the company\'s record book.',
-    summaryDescription: 'The Sample Incorporation Agreement and Benefit Company Articles containing a benefit ' +
+    summaryDescription: 'The sample Incorporation Agreement and Benefit Company Articles containing a benefit ' +
                'provision have been completed and a copy added to the company\'s record book.'
   },
   {
