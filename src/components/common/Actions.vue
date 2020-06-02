@@ -79,6 +79,7 @@ import { DateMixin, FilingTemplateMixin, LegalApiMixin } from '@/mixins'
 export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, LegalApiMixin) {
   // Global state
   @State stateModel!: StateModelIF
+
   @State(state => state.stateModel.incorporationDateTime.effectiveDate)
   readonly effectiveDate!: Date
 

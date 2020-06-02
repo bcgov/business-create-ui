@@ -6,30 +6,34 @@ import Vuex from 'vuex'
 import { stateModel, resourceModel } from './state'
 
 // Getters
-import { isRoleStaff, isAuthEdit, isAuthView, isEntityType, isPremiumAccount, isTypeBcomp, isTypeCoop,
+import {
+  isRoleStaff, isAuthEdit, isAuthView, isEntityType, isPremiumAccount, isTypeBcomp, isTypeCoop,
   isShowBackBtn, isShowReviewConfirmBtn, isShowFilePayBtn, isEnableFilePayBtn, isBusySaving,
   getFilingId, getTempId, getApprovedName, getAccountId, getFolioNumber, getNameRequestDetails, getNameRequestApplicant,
   getOfficeAddresses, isApplicationValid, getSteps, getMaxStep, getCurrentDate, ignoreChanges,
-  haveChanges, getNameRequestNumber }
-  from '@/store/getters'
+  haveChanges, getNameRequestNumber
+} from '@/store/getters'
 
 // Mutations
-import { mutateCurrentStep, mutateIsSaving, mutateIsSavingResuming, mutateIsFilingPaying,
-  mutateKeycloakRoles, mutateAuthRoles, mutateCurrentDate, mutateFolioNumber,
+import {
+  mutateCurrentStep, mutateIsSaving, mutateIsSavingResuming, mutateIsFilingPaying,
+  mutateKeycloakRoles, mutateAuthRoles, mutateUserEmail, mutateCurrentDate, mutateFolioNumber,
   mutateCertifyStatementResource, mutateCertifyState, mutateBusinessContact, mutateDefineCompanyStepValidity,
   mutateAccountInformation, mutateNameRequestState, mutateFilingId, mutateOfficeAddresses, mutateOrgPersonList,
   mutateAddPeopleAndRoleStepValidity, mutateShareClasses, mutateCreateShareStructureStepValidity,
   mutateIgnoreChanges, mutateHaveChanges, mutateIsFutureEffective, mutateEffectiveDate,
-  mutateIsIncorporationDateTimeValid, mutateTempId, mutateEntityType }
-  from '@/store/mutations'
+  mutateIsIncorporationDateTimeValid, mutateTempId, mutateEntityType
+} from '@/store/mutations'
 
 // Actions
-import { setCurrentStep, setIsSaving, setIsSavingResuming, setIsFilingPaying,
-  setKeycloakRoles, setAuthRoles, setCurrentDate, setCertifyStatementResource, setCertifyState,
+import {
+  setCurrentStep, setIsSaving, setIsSavingResuming, setIsFilingPaying,
+  setKeycloakRoles, setAuthRoles, setUserEmail, setCurrentDate, setCertifyStatementResource, setCertifyState,
   setBusinessContact, setDefineCompanyStepValidity, setNameRequestState, setFilingId, setFolioNumber,
   setOfficeAddresses, setOrgPersonList, setAddPeopleAndRoleStepValidity, setShareClasses,
   setCreateShareStructureStepValidity, setIgnoreChanges, setHaveChanges, setIsFutureEffective,
-  setEffectiveDate, setIsIncorporationDateTimeValid, setAccountInformation, setTempId, setEntityType } from './actions'
+  setEffectiveDate, setIsIncorporationDateTimeValid, setAccountInformation, setTempId, setEntityType
+} from './actions'
 
 /**
  * Configures and returns Vuex Store.
@@ -79,6 +83,7 @@ export function getVuexStore () {
       mutateIsFilingPaying,
       mutateKeycloakRoles,
       mutateAuthRoles,
+      mutateUserEmail,
       mutateCurrentDate,
       mutateCertifyStatementResource,
       mutateCertifyState,
@@ -108,6 +113,7 @@ export function getVuexStore () {
       setIsFilingPaying,
       setKeycloakRoles,
       setAuthRoles,
+      setUserEmail,
       setCurrentDate,
       setCertifyStatementResource,
       setCertifyState,

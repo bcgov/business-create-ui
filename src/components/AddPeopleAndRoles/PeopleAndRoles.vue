@@ -7,58 +7,75 @@
     Your application must include the following:
     <ul>
       <li>
-        <v-icon color='blue' v-if="hasRole(Roles.COMPLETING_PARTY, 1, 'EXACT')" class="cp-valid">mdi-check</v-icon>
-        <span v-else><v-icon color='red' v-if="showErrors" class="cp-invalid">mdi-close</v-icon></span>
+        <v-icon v-if="hasRole(Roles.COMPLETING_PARTY, 1, 'EXACT')" color="blue" class="cp-valid">mdi-check</v-icon>
+        <v-icon v-else-if="showErrors" color="red" class="cp-invalid">mdi-close</v-icon>
         <span class='chk-list-item-txt'>The Completing Party</span>
       </li>
       <li>
-        <v-icon color='blue' v-if="hasRole(Roles.INCORPORATOR, 1, 'ATLEAST')" class="incorp-valid">mdi-check</v-icon>
-        <span v-else><v-icon color='red' v-if="showErrors" class="incorp-invalid">mdi-close</v-icon></span>
+        <v-icon v-if="hasRole(Roles.INCORPORATOR, 1, 'ATLEAST')" color="blue" class="incorp-valid">mdi-check</v-icon>
+        <v-icon v-else-if="showErrors" color="red" class="incorp-invalid">mdi-close</v-icon>
         <span class='chk-list-item-txt'>At least one Incorporator</span>
       </li>
       <li>
-        <v-icon color='blue' v-if="hasRole(Roles.DIRECTOR, 1, 'ATLEAST')" class="dir-valid">mdi-check</v-icon>
-        <span v-else><v-icon color='red' v-if="showErrors" class="dir-invalid">mdi-close</v-icon></span>
+        <v-icon v-if="hasRole(Roles.DIRECTOR, 1, 'ATLEAST')" color="blue" class="dir-valid">mdi-check</v-icon>
+        <v-icon v-else-if="showErrors" color="red" class="dir-invalid">mdi-close</v-icon>
         <span class='chk-list-item-txt'>At least one Director</span>
       </li>
     </ul>
 
     <div class="btn-panel" v-if="orgPersonList.length === 0">
-      <v-btn outlined color="primary"
+      <v-btn
+        id="btn-start-add-cp"
+        outlined
+        color="primary"
+        :disabled="showOrgPersonForm"
         @click="addOrgPerson([{ roleType: Roles.COMPLETING_PARTY }], IncorporatorTypes.PERSON)"
-        :disabled="showOrgPersonForm" id="btn-start-add-cp"
       >
         <v-icon>mdi-account-plus-outline</v-icon>
         <span>Start by Adding the Completing Party</span>
       </v-btn>
     </div>
 
-    <div class="btn-panel"  v-if="orgPersonList.length > 0">
-      <v-btn outlined color="primary" @click="addOrgPerson([], IncorporatorTypes.PERSON)"
-        :disabled="showOrgPersonForm" id="btn-add-person"
+    <div class="btn-panel" v-if="orgPersonList.length > 0">
+      <v-btn
+        id="btn-add-person"
+        outlined
+        color="primary"
+        :disabled="showOrgPersonForm"
+        @click="addOrgPerson([], IncorporatorTypes.PERSON)"
       >
         <v-icon>mdi-account-plus</v-icon>
         <span>Add a Person</span>
       </v-btn>
-      <v-btn outlined color="primary" :disabled="showOrgPersonForm" class="spacedButton"
-        @click="addOrgPerson([{ roleType: Roles.INCORPORATOR }], IncorporatorTypes.CORPORATION)" id="btn-add-corp"
+      <v-btn
+        id="btn-add-corp"
+        outlined
+        color="primary"
+        class="spacedButton"
+        :disabled="showOrgPersonForm"
+        @click="addOrgPerson([{ roleType: Roles.INCORPORATOR }], IncorporatorTypes.CORPORATION)"
       >
         <v-icon>mdi-domain-plus</v-icon>
         <span v-if="entityFilter(EntityTypes.BCOMP)">Add a Corporation or Firm</span>
         <span v-if="entityFilter(EntityTypes.COOP)">Add Organization</span>
       </v-btn>
-      <v-btn outlined color="primary"
-        @click="addOrgPerson([{ roleType: Roles.COMPLETING_PARTY }], IncorporatorTypes.PERSON)"
-        :disabled="showOrgPersonForm"  class="spacedButton" v-if="!hasRole(Roles.COMPLETING_PARTY, 1, 'ATLEAST')"
+      <v-btn
+        v-if="!hasRole(Roles.COMPLETING_PARTY, 1, 'ATLEAST')"
         id="btn-add-cp"
+        outlined
+        color="primary"
+        class="spacedButton"
+        :disabled="showOrgPersonForm"
+        @click="addOrgPerson([{ roleType: Roles.COMPLETING_PARTY }], IncorporatorTypes.PERSON)"
       >
         <v-icon>mdi-account-plus-outline</v-icon>
         <span>Add the Completing Party</span>
       </v-btn>
     </div>
 
-    <v-card flat class="people-roles-container" v-if="showOrgPersonForm">
-      <OrgPerson v-show="showOrgPersonForm"
+    <v-card v-if="showOrgPersonForm" flat class="people-roles-container">
+      <OrgPerson
+        v-show="showOrgPersonForm"
         :initialValue="currentOrgPerson"
         :activeIndex="activeIndex"
         :nextId="nextId"
@@ -66,16 +83,17 @@
         @addEditPerson="onAddEditOrgPerson($event)"
         @removePersonEvent="onRemovePerson($event)"
         @resetEvent="resetData()"
-        @removeCompletingPartyRole="removeCompletingPartyAssignment()" />
+        @removeCompletingPartyRole="removeCompletingPartyAssignment()"
+      />
     </v-card>
 
-    <v-card flat v-if="orgPersonList.length > 0" :disabled="showOrgPersonForm" >
+    <v-card v-if="orgPersonList.length > 0" flat :disabled="showOrgPersonForm" >
       <ListPeopleAndRoles
-          v-if="orgPersonList.length > 0"
-          :personList="orgPersonList"
-          :isSummary="false"
-          @editPerson="editOrgPerson($event)"
-          @removePerson="onRemovePerson($event)" />
+        :personList="orgPersonList"
+        :isSummary="false"
+        @editPerson="editOrgPerson($event)"
+        @removePerson="onRemovePerson($event)"
+      />
     </v-card>
   </div>
 </template>
@@ -105,10 +123,14 @@ import ListPeopleAndRoles from './ListPeopleAndRoles.vue'
   }
 })
 export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
-  // State
+  // Global state
   @State(state => state.stateModel.addPeopleAndRoleStep.orgPeople)
-  readonly orgPersonList: OrgPersonIF[]
+  readonly orgPersonList!: OrgPersonIF[]
 
+  @State(state => state.stateModel.tombstone.userEmail)
+  readonly userEmail!: string
+
+  // Global actions
   @Action setOrgPersonList!: ActionBindingIF
   @Action setAddPeopleAndRoleStepValidity!: ActionBindingIF
 
@@ -119,7 +141,8 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
       lastName: '',
       middleName: '',
       orgName: '',
-      partyType: null
+      partyType: null,
+      email: null
     },
     roles: [],
     mailingAddress: {
@@ -167,14 +190,20 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
   }
 
   private onAddEditOrgPerson (person: OrgPersonIF): void {
-    let newList: OrgPersonIF[] = Object.assign([], this.orgPersonList)
-    // New Person.
+    // if this is the completing party, assign email address from user profile
+    if (person.roles.some(role => role.roleType === Roles.COMPLETING_PARTY)) {
+      person.officer.email = this.userEmail
+    }
+
+    const newList: OrgPersonIF[] = Object.assign([], this.orgPersonList)
     if (this.activeIndex === -1) {
+      // Add Person.
       newList.push(person)
     } else {
-    // Edit Person.
+      // Edit Person.
       newList.splice(this.activeIndex, 1, person)
     }
+    // set updated list
     this.setOrgPersonList(newList)
     this.setAddPeopleAndRoleStepValidity(this.hasValidRoles())
     this.resetData()
@@ -190,10 +219,14 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
 
   private removeCompletingPartyAssignment () {
     const newList: OrgPersonIF[] = Object.assign([], this.orgPersonList)
-    const cpList = newList.filter(people => people.roles.some(party => party.roleType === Roles.COMPLETING_PARTY))
-    if (cpList.length > 0) {
-      const completingParty: OrgPersonIF = cpList[0]
-      completingParty.roles = completingParty.roles.filter(party => party.roleType !== Roles.COMPLETING_PARTY)
+    const completingParty =
+      newList.find(people => people.roles.some(role => role.roleType === Roles.COMPLETING_PARTY))
+    if (completingParty) {
+      // remove the Completing Party role
+      completingParty.roles = completingParty.roles.filter(role => role.roleType !== Roles.COMPLETING_PARTY)
+      // remove email address that we got from user profile
+      completingParty.officer.email = null
+      // set updated list
       this.setOrgPersonList(newList)
     }
   }

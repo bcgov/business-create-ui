@@ -6,7 +6,6 @@ export interface IncorporationFilingIF {
     header: {
       name: string
       certifiedBy: string
-      email: string
       date: string
       effectiveDate?: string // Optional and should be set only for future effective filings
       filingId?: number // Optional as this is not required when building a filing - causes an error for new filings

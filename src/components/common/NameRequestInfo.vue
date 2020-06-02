@@ -9,7 +9,7 @@
       <v-col>
         <ul>
           <li class="name-request-title">
-            <strong>{{ getNameRequestNumber }}</strong> - {{ getNameRequestDetails.approvedName}}
+            <strong>{{ getNameRequestNumber }}</strong> - {{ getNameRequestDetails.approvedName }}
           </li>
           <li class="mt-4">Entity Type: {{ entityTypeDescription() }}</li>
           <li> Request Type: {{ requestType() }}</li>
@@ -133,19 +133,18 @@ export default class NameRequestInfo extends Mixins(DateMixin) {
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/styles/theme.scss";
-  .row .col:first-child {
-      width: 12rem;
-      max-width: 12rem;
-  }
+.row .col:first-child {
+  width: 12rem;
+  max-width: 12rem;
+}
 
-  ul {
-    margin: 0;
-    padding: 0;
-    list-style-type: none;
-  }
+ul {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
 
-  li.name-request-title {
-    font-size: 1.25rem;
-  }
+li.name-request-title {
+  font-size: 1.25rem;
+}
 </style>

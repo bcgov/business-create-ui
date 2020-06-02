@@ -14,17 +14,21 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify'
 import { mount, Wrapper } from '@vue/test-utils'
+import { getVuexStore } from '@/store'
 
 import Certify from '@/components/ReviewConfirm/Certify.vue'
 import { CertifyStatementIF } from '@/interfaces'
 
 Vue.use(Vuetify)
 
+const vuetify = new Vuetify({})
+const store = getVuexStore()
+
 // Input field selectors to test changes to the DOM elements.
 const certifiedBySelector: string = 'input[type=text]'
 const isCertifiedSelector: string = 'input[type=checkbox]'
 const certifyStmtHeaderSelector: string = '.certify-stmt'
-const certifyStatementLinesSelector: string = '.certify-statements'
+const certifyStatementListSelector: string = '.certify-statements'
 const certifyClauseSelector: string = '.certify-clause'
 
 const trimmedCertifier = 'Some Certifier'
@@ -74,6 +78,8 @@ function createComponent (
   }
 ): Wrapper<Certify> {
   return mount(Certify, {
+    vuetify,
+    store,
     propsData: {
       certifiedBy,
       date,
@@ -83,6 +89,14 @@ function createComponent (
 }
 
 describe('Certify component', () => {
+  beforeEach(() => {
+    store.state.stateModel.defineCompanyStep.businessContact.email = 'registered-office@example.com'
+    store.state.stateModel.addPeopleAndRoleStep.orgPeople.push({
+      officer: { email: 'completing-party@example.com' },
+      roles: [{ roleType: 'Completing Party' }]
+    })
+  })
+
   it('has date displayed', () => {
     const wrapper: Wrapper<Certify> = createComponent()
 
@@ -94,25 +108,25 @@ describe('Certify component', () => {
     const wrapper: Wrapper<Certify> = createComponent(trimmedCertifier)
     const statement: Wrapper<Vue> = wrapper.find(certifyStmtHeaderSelector)
 
-    // The text should contain the certifier name.
+    // The text should contain the certifier statement header.
     expect(statement.text()).toContain(certifyStatementHeader)
   })
 
   it('has certify statements', () => {
     const wrapper: Wrapper<Certify> = createComponent(trimmedCertifier)
-    const statement: Wrapper<Vue> = wrapper.find(certifyStatementLinesSelector)
+    const statements: Wrapper<Vue> = wrapper.find(certifyStatementListSelector)
 
-    // The text should contain the certifier name.
-    expect(statement.text()).toContain(certifyStatementLines[0])
-    expect(statement.text()).toContain(certifyStatementLines[1])
-    expect(statement.text()).toContain(certifyStatementLines[2])
+    // The text should contain each certify statement.
+    expect(statements.text()).toContain(certifyStatementLines[0])
+    expect(statements.text()).toContain(certifyStatementLines[1])
+    expect(statements.text()).toContain(certifyStatementLines[2])
   })
 
   it('has certify clause', () => {
     const wrapper: Wrapper<Certify> = createComponent(trimmedCertifier)
     const statement: Wrapper<Vue> = wrapper.find(certifyClauseSelector)
 
-    // The text should contain the certifier name.
+    // The text should contain the certify clause.
     expect(statement.text()).toContain(certifyClause)
   })
 
@@ -120,7 +134,7 @@ describe('Certify component', () => {
     const wrapper: Wrapper<Certify> = createComponent(trimmedCertifier)
     const statement: Wrapper<Vue> = wrapper.find(certifyStmtHeaderSelector)
 
-    // The text should contain the certifier name.
+    // The text should contain the trimmed certifier name.
     expect(statement.text()).toContain(trimmedCertifier)
   })
 
@@ -130,6 +144,13 @@ describe('Certify component', () => {
 
     // The text should contain the trimmed certifier name.
     expect(statement.text()).toContain(trimmedCertifier)
+  })
+
+  it('has email addresses', () => {
+    const wrapper: Wrapper<Certify> = createComponent()
+
+    expect(wrapper.findAll('.email-addresses li').at(0).text()).toContain('registered-office@example.com')
+    expect(wrapper.findAll('.email-addresses li').at(1).text()).toContain('completing-party@example.com')
   })
 
   it('is invalid when no props are defined', () => {
@@ -143,6 +164,7 @@ describe('Certify component', () => {
     const wrapper: Wrapper<Certify> = createComponent(trimmedCertifier)
     const checkboxElement: Wrapper<Vue> = wrapper.find(isCertifiedSelector)
     checkboxElement.setChecked(false)
+
     // The last "valid" event should indicate that the form is invalid.
     expect(getLastEvent(wrapper, 'valid')).toBe(false)
   })
@@ -205,6 +227,7 @@ describe('Certify component', () => {
     const wrapper: Wrapper<Certify> = createComponent(' ')
     const inputElement: Wrapper<Vue> = wrapper.find(certifiedBySelector)
     inputElement.setValue(whitespaceCertifier)
+
     // The last "update:certifiedBy" event should be a trimmed version of the input.
     expect(getLastEvent(wrapper, 'certifiedBy')).toMatch(trimmedCertifier)
   })

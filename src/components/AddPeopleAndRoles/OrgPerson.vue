@@ -1,6 +1,5 @@
 <template>
   <div>
-
     <confirm-dialog ref="reassignCPDialog" attach="#addEditPersonContainer" />
 
     <v-expand-transition id="addEditPersonContainer">
@@ -23,7 +22,8 @@
                 ref="addPersonOrgForm"
                 class="appoint-form"
                 v-model="addPersonOrgFormValid"
-                v-on:submit.prevent="addPerson">
+                v-on:submit.prevent="addPerson"
+              >
                 <label class="sub-header" v-if="isPerson">Person's Name</label>
                 <label class="sub-header" v-if="isOrg">Corporation or Firm Name</label>
                 <div class="form__row three-column" v-if="isPerson">
@@ -66,27 +66,30 @@
                 <v-row>
                   <v-col cols="4" v-if="isPerson">
                     <div :class="{'highlightedRole': isRoleLocked(Roles.COMPLETING_PARTY)}">
-                      <v-checkbox v-model="isCompletingParty"
-                      id='cp-checkbox'
-                      label="Completing Party"
-                      :disabled="isRoleLocked(Roles.COMPLETING_PARTY)"
-                      @change="assignCompletingPartyRole()"
+                      <v-checkbox
+                        v-model="isCompletingParty"
+                        id='cp-checkbox'
+                        label="Completing Party"
+                        :disabled="isRoleLocked(Roles.COMPLETING_PARTY)"
+                        @change="assignCompletingPartyRole()"
                       />
                     </div>
                   </v-col>
                   <v-col cols="4">
-                    <div :class="{'highlightedRole':
+                    <div :class="{ 'highlightedRole':
                       isRoleLocked(Roles.INCORPORATOR) ||
-                      orgPerson.officer.partyType === IncorporatorTypes.CORPORATION}">
-                      <v-checkbox v-model="isIncorporator"
-                      :label="incorporatorLabel"
-                      :disabled="isRoleLocked(Roles.INCORPORATOR) ||
-                      orgPerson.officer.partyType === IncorporatorTypes.CORPORATION"
+                      orgPerson.officer.partyType === IncorporatorTypes.CORPORATION }"
+                    >
+                      <v-checkbox
+                        v-model="isIncorporator"
+                        :label="incorporatorLabel"
+                        :disabled="isRoleLocked(Roles.INCORPORATOR) ||
+                        orgPerson.officer.partyType === IncorporatorTypes.CORPORATION"
                       />
                     </div>
                   </v-col>
                   <v-col cols="4" v-if="isPerson">
-                    <v-checkbox v-model="isDirector" label="Director"/>
+                    <v-checkbox v-model="isDirector" label="Director" />
                   </v-col>
                 </v-row>
 
@@ -98,14 +101,16 @@
                     :schema="personAddressSchema"
                     :address="inProgressMailingAddress"
                     @update:address="updateMailingAddress"
-                    @valid="updateMailingAddressValidity"/>
+                    @valid="updateMailingAddressValidity"
+                  />
                 </div>
 
                 <div class="form__row" v-if="isDirector">
                   <v-checkbox
                     class="inherit-checkbox"
                     label="Delivery Address same as Mailing Address"
-                    v-model="inheritMailingAddress"/>
+                    v-model="inheritMailingAddress"
+                  />
                   <div v-if="!inheritMailingAddress">
                     <label class="sub-header">Delivery Address</label>
                     <div class="address-wrapper">
@@ -115,16 +120,17 @@
                         :schema="personAddressSchema"
                         :address="inProgressDeliveryAddress"
                         @update:address="updateDeliveryAddress"
-                        @valid="updateDeliveryAddressValidity"/>
+                        @valid="updateDeliveryAddressValidity"
+                      />
                     </div>
                   </div>
                 </div>
 
                 <div class="form__row form__btns">
                   <v-btn large color="error" :disabled="activeIndex===-1" @click="removePerson()"
-                  id='btn-remove'>Remove</v-btn>
+                    id='btn-remove'>Remove</v-btn>
                   <v-btn large class="form-primary-btn" @click="validateAddPersonOrgForm()" color="primary"
-                  :disabled="!isFormValid()" id='btn-done'>Done</v-btn>
+                    :disabled="!isFormValid()" id='btn-done'>Done</v-btn>
                   <v-btn large class="form-cancel-btn" @click="resetAddPersonData(true)" id='btn-cancel'>Cancel</v-btn>
                 </div>
               </v-form>
@@ -238,7 +244,7 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
     v => !/^.{155}/.test(v) || 'Cannot exceed 155 characters' // maximum character count
   ]
 
-  // Life cycle methods
+  /** Called when component is created. */
   private created (): void {
     if (this.initialValue) {
       this.orgPerson = { ...this.initialValue }
@@ -273,7 +279,8 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
 
   private assignCompletingPartyRole (): void {
     if (this.isCompletingParty && this.existingCompletingParty &&
-      this.orgPerson.officer.id !== this.existingCompletingParty.officer.id) {
+      this.orgPerson.officer.id !== this.existingCompletingParty.officer.id
+    ) {
       this.confirmReassignPerson()
     }
   }
@@ -315,6 +322,7 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
         this.reassignCompletingParty = true
       }
     }).catch(() => {
+      // clear the checkbox
       this.isCompletingParty = false
     })
   }
@@ -329,7 +337,9 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
       personToAdd.officer.id = this.nextId
     }
     personToAdd.mailingAddress = { ...this.inProgressMailingAddress }
-    if (this.isDirector) personToAdd.deliveryAddress = this.setPersonDeliveryAddress()
+    if (this.isDirector) {
+      personToAdd.deliveryAddress = this.setPersonDeliveryAddress()
+    }
     personToAdd.roles = this.setPersonRoles()
     return personToAdd
   }
@@ -367,7 +377,7 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
   }
 
   private isRoleLocked (role: Roles): boolean {
-    return this.orgPerson.roles.some(party => party.roleType === role) && this.activeIndex === -1
+    return (this.orgPerson.roles.some(party => party.roleType === role) && this.activeIndex === -1)
   }
 
   private removePerson (): void {
@@ -375,22 +385,29 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
   }
 
   private reassignPersonErrorMessage (): string {
-    let errorMessage: string =
-    `<p>The Completing Party role is already assigned to ${this.existingCompletingParty.officer.firstName}
-     ${this.existingCompletingParty.officer.middleName || ''} ${this.existingCompletingParty.officer.lastName}.</p>
-     <p>Selecting "Completing Party" here will change the Completing Party.</p>`
-    return errorMessage
+    return `The Completing Party role is already assigned to ${this.existingCompletingPartyName}.\n` +
+      'Selecting "Completing Party" here will change the Completing Party.'
   }
 
-  get isPerson (): boolean {
+  /** The formatted, existing completing party name. */
+  private get existingCompletingPartyName (): string {
+    let name = this.existingCompletingParty.officer.firstName
+    if (this.existingCompletingParty.officer.middleName) {
+      name += ` ${this.existingCompletingParty.officer.middleName}`
+    }
+    name += ` ${this.existingCompletingParty.officer.lastName}`
+    return name
+  }
+
+  private get isPerson (): boolean {
     return this.orgPerson.officer?.partyType === IncorporatorTypes.PERSON
   }
 
-  get isOrg (): boolean {
+  private get isOrg (): boolean {
     return this.orgPerson.officer?.partyType === IncorporatorTypes.CORPORATION
   }
 
-  get incorporatorLabel (): string {
+  private get incorporatorLabel (): string {
     return this.entityFilter(EntityTypes.BCOMP) ? Roles.INCORPORATOR : Roles.SUBSCRIBER
   }
 
@@ -414,20 +431,25 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
   padding-top: 0;
   padding-bottom: 0;
 }
+
 .people-roles-container {
   margin-top: 1rem;
   padding: 1.25rem;
 }
+
 ul, p {
   padding-top: 0.5rem;
 }
+
 li {
   list-style: None;
   padding-top: 0.25rem;
 }
+
 .btn-panel {
   padding-top: 0.5rem;
 }
+
 .form__row.three-column {
   display: flex;
   flex-flow: row nowrap;
@@ -540,17 +562,17 @@ li {
 }
 
 .highlightedRole {
-    opacity: 0.5;
-    mix-blend-mode: normal;
-    border-radius: 2px;
-    border-color: rgb(140, 140, 140);
-    background-color: rgb(55, 164, 71);
-    color: rgb(255, 255, 255) !important;
-    font-weight: bold;
-    padding: .25rem;
+  opacity: 0.5;
+  mix-blend-mode: normal;
+  border-radius: 2px;
+  border-color: rgb(140, 140, 140);
+  background-color: rgb(55, 164, 71);
+  color: rgb(255, 255, 255) !important;
+  font-weight: bold;
+  padding: .25rem;
 }
-::v-deep .theme--light.v-label--is-disabled {
-      color: white !important
 
+::v-deep .theme--light.v-label--is-disabled {
+  color: white !important;
  }
 </style>

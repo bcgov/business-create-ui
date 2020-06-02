@@ -71,7 +71,7 @@ export default class SummaryDefineCompany extends Mixins(EntityFilterMixin) {
   @Getter getApprovedName: GetterIF
   @Getter isPremiumAccount: GetterIF
 
-  // State
+  // Global state
   @State(state => state.stateModel.defineCompanyStep.valid)
   readonly valid!: boolean
 

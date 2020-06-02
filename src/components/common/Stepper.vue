@@ -5,14 +5,14 @@
         <div class="step__indicator">
           <div class="step__line"></div>
           <v-btn class="step__icon" :id=step.id outlined fab color="primary" :to=step.to :disabled=step.disabled>
-            <v-icon>{{step.icon}}</v-icon>
+            <v-icon>{{ step.icon }}</v-icon>
           </v-btn>
           <v-icon class="step__icon2" size="30" color="green darken-1" v-show=step.valid>
             mdi-check-circle
           </v-icon>
         </div>
         <v-btn class="step__label pre-line" text color="primary" :to=step.to :disabled=step.disabled>
-          {{step.text}}
+          {{ step.text }}
         </v-btn>
       </div>
     </template>

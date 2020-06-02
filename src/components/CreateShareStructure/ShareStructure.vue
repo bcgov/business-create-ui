@@ -5,8 +5,8 @@
         <li class="add-share-structure-container">
           <div class="meta-container">
             <label class="add-share-structure-header">
-              <span v-if="activeIndex === -1">Add Share {{shareStructure.type}}</span>
-              <span v-else>Edit Share {{shareStructure.type}}</span>
+              <span v-if="activeIndex === -1">Add Share {{ shareStructure.type }}</span>
+              <span v-else>Edit Share {{ shareStructure.type }}</span>
             </label>
 
             <div class="meta-container__inner">
@@ -242,7 +242,7 @@ export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
     return []
   }
 
-  // Life cycle methods
+  /** Called when component is created. */
   private created (): void {
     if (this.initialValue) {
       this.shareStructure = { ...this.initialValue }
@@ -344,13 +344,15 @@ export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
 </script>
 
 <style lang="scss" scoped>
-ul{
+ul {
   padding-top: 0.5rem;
 }
+
 li {
   list-style: None;
   padding-top: 0.25rem;
 }
+
 .add-share-structure {
   .add-share-structure-container {
     padding: 1.25rem;

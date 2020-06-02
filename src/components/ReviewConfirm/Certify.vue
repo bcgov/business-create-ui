@@ -15,28 +15,42 @@
           />
         </div>
       </div>
+
       <v-checkbox
+        hide-details
         :value="isCertified"
         @change="emitIsCertified"
       >
         <template slot="label">
           <div class="certify-stmt">
-            I, <b>{{trimmedCertifiedBy || '[Legal Name]'}}</b>, {{certifyStatementResource.certifyStatementHeader}}
+            I, <b>{{ trimmedCertifiedBy || '[Legal Name]' }}</b>, {{ certifyStatementResource.certifyStatementHeader }}
           </div>
         </template>
       </v-checkbox>
-      <p>
-        <ul class="certify-statements">
-          <li v-for="(statement, index) in certifyStatementResource.certifyStatements" :key="index">
-              {{ statement }}
+      <ul class="certify-statements mt-4">
+        <li v-for="(statement, index) in certifyStatementResource.certifyStatements" :key="`statement-${index}`">
+          {{ statement }}
           </li>
-        </ul>
+      </ul>
+
+      <p class="certify-date mt-4">Date: {{ date }}</p>
+      <p class="certify-clause">{{ certifyStatementResource.certifyClause }}</p>
+
+      <p class="emails-line mt-4">
+        Copies of the incorporation documents will be sent to the following email addresses:
       </p>
-      <p></p>
-      <p class="certify-date">Date: {{date}}</p>
-      <p class="certify-clause">
-        {{certifyStatementResource.certifyClause}}
-      </p>
+      <ul class="email-addresses">
+        <li>
+          <span>Registered office email address:</span>&nbsp;
+          <a v-if="regOfficeEmail" :href="`mailto:${regOfficeEmail}`">{{ regOfficeEmail }}</a>
+          <span v-else>(Not entered)</span>
+        </li>
+        <li>
+          <span>Completing party email address:</span>&nbsp;
+          <a v-if="completingPartyEmail" :href="`mailto:${completingPartyEmail}`">{{ completingPartyEmail }}</a>
+          <span v-else>(Not entered)</span>
+        </li>
+      </ul>
     </div>
   </v-card>
 </template>
@@ -44,13 +58,24 @@
 <script lang="ts">
 // Libraries
 import { Component, Vue, Prop, Emit } from 'vue-property-decorator'
+import { State } from 'vuex-class'
 
 // Interfaces
-import { CertifyStatementIF } from '@/interfaces'
+import { CertifyStatementIF, OrgPersonIF } from '@/interfaces'
+
+// Enums
+import { Roles } from '@/enums'
 
 @Component({})
 export default class Certify extends Vue {
-  // Props passed into this component.
+  // Global state
+  @State(state => state.stateModel.defineCompanyStep.businessContact.email)
+  readonly regOfficeEmail!: string
+
+  @State(state => state.stateModel.addPeopleAndRoleStep.orgPeople)
+  readonly orgPersonList!: OrgPersonIF[]
+
+  // Props passed into this component
   @Prop({ default: '' })
   private date!: string
 
@@ -63,17 +88,24 @@ export default class Certify extends Vue {
   // Properties
   private isCertified: boolean = false // always false initially
 
-  /**
-   * Lifecycle callback to always give the parent a "valid" event for its property values.
-   */
+  /** Called when component is created. */
   private created (): void {
+    // always give the parent a "valid" event for its property values
     this.emitValid(Boolean(this.trimmedCertifiedBy && this.isCertified))
   }
 
-  /**
-   * Computed value.
-   * @returns The trimmed "Certified By" string (may be '').
-   */
+  /** The Completing Party's email address. */
+  private get completingPartyEmail (): string | null {
+    const completingParty =
+      this.orgPersonList.find(person => {
+        return !!person.roles?.some(role => {
+          return (role.roleType === Roles.COMPLETING_PARTY)
+        })
+      })
+    return completingParty?.officer?.email || null
+  }
+
+  /** The trimmed "Certified By" string (may be ''). */
   private get trimmedCertifiedBy (): string {
     // remove repeated inline whitespace, and leading/trailing whitespace
     return this.certifiedBy && this.certifiedBy.replace(/\s+/g, ' ').trim()
@@ -102,7 +134,6 @@ export default class Certify extends Vue {
 </script>
 
 <style lang="scss" scoped>
-
 #step-5-container {
   margin-top: 1rem;
   padding-bottom: 0.5rem;
@@ -142,21 +173,23 @@ export default class Certify extends Vue {
   min-width: 35rem;
 }
 
-.certify-clause, .certify-date{
-  padding-left: 2rem;
-  color: black;
-  font-size: 0.875rem;
-}
-
 .certify-stmt {
   display: inline;
   font-size: 0.875rem;
   color: black;
 }
 
-ul.certify-statements {
-  padding-left:3rem;
-  padding-top: 0.5rem;
+.certify-clause,
+.certify-date,
+.emails-line {
+  padding-left: 2rem;
+  color: black;
+  font-size: 0.875rem;
+}
+
+ul.certify-statements,
+ul.email-addresses {
+  padding-left: 3rem;
   list-style-type: square;
 }
 </style>

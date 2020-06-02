@@ -40,8 +40,8 @@ const filingData = {
   },
   incorporationApplication: {
     contactPoint: {
-      email: 'mockEmail@mock.com',
-      confirmEmail: 'mockEmail@mock.com',
+      email: 'registered-office@example.com',
+      confirmEmail: 'registered-office@example.com',
       phone: '(250) 123-4567'
     },
     nameRequest: {
@@ -90,7 +90,8 @@ const filingData = {
           lastName: 'Swanson',
           middleName: 'P',
           orgName: '',
-          partyType: 'person'
+          partyType: 'person',
+          email: 'completing-party@example.com'
         },
         mailingAddress: {
           streetAddress: 'mailing_address-addresslineone',
@@ -259,8 +260,19 @@ describe('Numbered company setup', () => {
 
     const get = sinon.stub(axios, 'get')
 
+    // GET current user
+    get.withArgs('users/@me')
+      .returns(new Promise((resolve) => resolve({
+        data:
+        {
+          contacts: [{
+            email: 'completing-party@example.com'
+          }]
+        }
+      })))
+
     // GET authorizations (role)
-    get.withArgs('T7654321/authorizations')
+    get.withArgs('entities/T7654321/authorizations')
       .returns(new Promise((resolve) => resolve({
         data:
           {
@@ -268,6 +280,7 @@ describe('Numbered company setup', () => {
           }
       })))
 
+    // GET IA filing
     get.withArgs('businesses/T7654321/filings')
       .returns(new Promise(resolve => resolve({
         data:
@@ -311,7 +324,7 @@ describe('Numbered company setup', () => {
 
   it('Does not load a name request into the store', () => {
     // All Name request specific fields should be empty
-    expect(store.state.stateModel.nameRequest.nrNumber).toEqual("")
+    expect(store.state.stateModel.nameRequest.nrNumber).toEqual('')
     expect(store.state.stateModel.filingId).toBe(54321)
 
     // Validate no NR Details
@@ -331,10 +344,10 @@ describe('Numbered company setup', () => {
     expect(store.state.stateModel.nameRequest.applicant.addressLine3).toBeUndefined()
     expect(store.state.stateModel.nameRequest.applicant.city).toBeUndefined()
     expect(store.state.stateModel.nameRequest.applicant.countryTypeCode)
-    .toBeUndefined()
+      .toBeUndefined()
     expect(store.state.stateModel.nameRequest.applicant.postalCode).toBeUndefined()
     expect(store.state.stateModel.nameRequest.applicant.stateProvinceCode)
-    .toBeUndefined()
+      .toBeUndefined()
   })
 
   afterEach(() => {
@@ -357,8 +370,19 @@ describe('App component', () => {
 
     const get = sinon.stub(axios, 'get')
 
+    // GET current user
+    get.withArgs('users/@me')
+      .returns(new Promise((resolve) => resolve({
+        data:
+          {
+            contacts: [{
+              email: 'completing-party@example.com'
+            }]
+          }
+      })))
+
     // GET authorizations (role)
-    get.withArgs('T1234567/authorizations')
+    get.withArgs('entities/T1234567/authorizations')
       .returns(new Promise((resolve) => resolve({
         data:
           {
@@ -375,6 +399,7 @@ describe('App component', () => {
           }
       })))
 
+    // GET IA filing
     get.withArgs('businesses/T1234567/filings')
       .returns(new Promise(resolve => resolve({
         data:
@@ -409,6 +434,12 @@ describe('App component', () => {
     expect(wrapper.find(EntityInfo).exists()).toBe(true)
     expect(wrapper.find(Stepper).exists()).toBe(true)
     expect(wrapper.find(Actions).exists()).toBe(true)
+  })
+
+  it('gets auth and user info properly', () => {
+    expect(store.getters.isAuthEdit).toBe(true)
+    expect(store.getters.isAuthView).toBe(true)
+    expect(store.state.stateModel.tombstone.userEmail).toBe('completing-party@example.com')
   })
 
   it('loads a draft filing into the store', () => {

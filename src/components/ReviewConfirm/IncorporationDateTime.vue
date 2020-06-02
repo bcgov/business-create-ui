@@ -88,8 +88,8 @@
               v-if="isFutureEffective && dateText && !isValidDateTime(incorporationDateTime.effectiveDate)"
             >
               <p class="validation-alert-msg">
-                <span v-if="isUnderTime">The time must be at least {{minTime()}} for the selected date</span>
-                <span v-else>The time can't be greater than {{maxTime()}} for the selected date</span>
+                <span v-if="isUnderTime">The time must be at least {{ minTime() }} for the selected date</span>
+                <span v-else>The time can't be greater than {{ maxTime() }} for the selected date</span>
               </p>
             </v-col>
           </v-row>

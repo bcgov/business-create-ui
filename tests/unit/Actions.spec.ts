@@ -62,17 +62,18 @@ describe('Actions component', () => {
 describe('Actions component - Filing Functionality', () => {
   let wrapper: any
   const { assign } = window.location
-  const inputDate = new Date(new Date().setDate(new Date().getDate() + 5))
-  const formattedEffectiveDate = inputDate.toISOString().replace('Z', '+00:00')
+  const effectiveDate = new Date(new Date().setDate(new Date().getDate() + 5))
+  const formattedEffectiveDate = effectiveDate.toISOString().replace('Z', '+00:00')
+
   sessionStorage.setItem('AUTH_URL', `myhost/basePath/auth/`)
   sessionStorage.setItem('DASHBOARD_URL', `myhost/cooperatives/`)
 
+  // the filing body that would get sent to the API
   const filing = {
     filing: {
       header: {
         name: 'incorporationApplication',
-        certifiedBy: 'somePerson',
-        email: 'someEmail',
+        certifiedBy: 'Certified By',
         date: '2020/01/29',
         effectiveDate: formattedEffectiveDate
       },
@@ -121,9 +122,9 @@ describe('Actions component - Filing Functionality', () => {
           }
         },
         contactPoint: {
-          email: 'someEmail',
-          extension: "",
-          phone: '123-456-7890'
+          email: 'registered-office@example.com',
+          phone: '111-222-3333',
+          extension: '444'
         },
         parties: [
           {
@@ -133,7 +134,8 @@ describe('Actions component - Filing Functionality', () => {
               lastName: 'Swanson',
               middleName: 'P',
               orgName: '',
-              partyType: 'person'
+              partyType: 'person',
+              email: 'completing-party@example.com'
             },
             mailingAddress: {
               streetAddress: 'mailing_address-addresslineone',
@@ -243,12 +245,31 @@ describe('Actions component - Filing Functionality', () => {
     delete window.location
     window.location = { assign: jest.fn() } as any
 
-    store.state.stateModel.nameRequest =
-      { entityType: 'BC', nrNumber: 'NR1234567', details: { approvedName: 'Test' } }
-    store.state.stateModel.certifyState.certifiedBy = 'somePerson'
-    store.state.stateModel.defineCompanyStep.businessContact = { email: 'someEmail', phone: '123-456-7890' }
+    // init store
     store.state.stateModel.currentDate = '2020/01/29'
-    store.state.stateModel.incorporationDateTime.effectiveDate = inputDate
+    store.state.stateModel.nameRequest = {
+      entityType: 'BC',
+      nrNumber: 'NR1234567',
+      details: { approvedName: 'Test' }
+    }
+    store.state.stateModel.tombstone = {
+      keycloakRoles: [],
+      authRoles: [],
+      userEmail: 'completing-party@example.com'
+    }
+    store.state.stateModel.certifyState.certifiedBy = filing.filing.header.certifiedBy
+    store.state.stateModel.defineCompanyStep.businessContact = {
+      email: filing.filing.incorporationApplication.contactPoint.email,
+      phone: filing.filing.incorporationApplication.contactPoint.phone,
+      extension: filing.filing.incorporationApplication.contactPoint.extension
+    }
+    store.state.stateModel.incorporationDateTime.effectiveDate = effectiveDate
+    store.state.stateModel.defineCompanyStep.businessContact = {
+      email: 'registered-office@example.com',
+      confirmEmail: 'registered-office@example.com',
+      phone: '111-222-3333',
+      extension: '444'
+    }
     store.state.stateModel.defineCompanyStep.officeAddresses = filing.filing.incorporationApplication.offices
     store.state.stateModel.addPeopleAndRoleStep.orgPeople = filing.filing.incorporationApplication.parties
     store.state.stateModel.createShareStructureStep.shareClasses = filing.filing.incorporationApplication.shareClasses

@@ -165,11 +165,13 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
   @Getter haveChanges!: boolean
   @Getter getSteps!: Array<any>
   @Getter getTempId!: string
+
   // Global actions
   @Action setCurrentStep!: ActionBindingIF
   @Action setCurrentDate!: ActionBindingIF
   @Action setCertifyStatementResource!: ActionBindingIF
   @Action setNameRequestState!: ActionBindingIF
+  @Action setUserEmail: ActionBindingIF
   @Action setAuthRoles: ActionBindingIF
   @Action setDefineCompanyStepValidity!: ActionBindingIF
   @Action setAddPeopleAndRoleStepValidity!: ActionBindingIF
@@ -340,6 +342,14 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
 
     try {
       this.setCurrentDate(this.dateToUsableString(new Date()))
+
+      // get user info
+      await this.getUserInfo().catch(error => {
+        console.log('User error =', error) // eslint-disable-line no-console
+        this.accountAuthorizationDialog = true
+        throw error // go to catch()
+      })
+
       const tempId = this.$route.query?.id
       // ensure we have a Temporary Registration number
       if (!tempId) {
@@ -347,8 +357,8 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
         this.nameRequestInvalidErrorDialog = true
         return // go to finally()
       }
-
       this.setTempId(tempId)
+
       // ensure user is authorized to use this IA
       await this.checkAuth().catch(error => {
         console.log('Auth error =', error) // eslint-disable-line no-console
@@ -406,7 +416,6 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
       const nrResponse = await this.fetchNameRequest(nameRequest.nrNumber).catch(error => {
         console.log('NR error =', error) // eslint-disable-line no-console
         this.nameRequestInvalidErrorDialog = true
-        return
       })
       // ensure NR was found
       if (!nrResponse) {
@@ -447,7 +456,20 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
     this.saveWarnings = []
   }
 
-  /** Gets authorizations from Auth API and verifies roles. */
+  /** Gets current user info and stores it. */
+  private async getUserInfo (): Promise<any> {
+    // NB: will throw if API error
+    const response = await this.getCurrentUser()
+    // NB: just save email for now
+    const email = response?.data?.contacts[0].email
+    if (email) {
+      this.setUserEmail(email)
+    } else {
+      throw new Error('Invalid user info')
+    }
+  }
+
+  /** Gets authorizations from Auth API, verifies roles, and stores them. */
   private async checkAuth (): Promise<any> {
     // NB: will throw if API error
     const response = await this.getNrAuthorizations(this.getTempId)

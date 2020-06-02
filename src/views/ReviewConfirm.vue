@@ -29,11 +29,11 @@
         <h2>Completing Party Statement</h2>
       </header>
       <Certify
+        :date="currentDate"
         :certifiedBy="certifyState.certifiedBy"
+        :certifyStatementResource="certifyStatementResource"
         @valid="onValid($event)"
         @certifiedBy="onCertifiedBy($event)"
-        :date="currentDate"
-        :certifyStatementResource="certifyStatementResource"
       />
     </section>
   </div>
@@ -58,6 +58,7 @@ import { Certify, IncorporationDateTime, Summary } from '@/components/ReviewConf
   }
 })
 export default class ReviewConfirm extends Mixins() {
+  // Global state
   @State(state => state.stateModel.currentDate)
   readonly currentDate!: string
 
@@ -67,7 +68,6 @@ export default class ReviewConfirm extends Mixins() {
   @State(state => state.resourceModel.certifyStatementResource)
   readonly certifyStatementResource!: CertifyStatementIF
 
-  // Global State
   @State(state => state.stateModel.incorporationDateTime)
   readonly incorporationDateTime!: DateTimeIF
 
