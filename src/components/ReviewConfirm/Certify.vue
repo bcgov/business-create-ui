@@ -23,18 +23,18 @@
       >
         <template slot="label">
           <div class="certify-stmt">
-            I, <b>{{trimmedCertifiedBy || '[Legal Name]'}}</b>, {{certifyStatementResource.certifyStatementHeader}}
+            I, <b>{{ trimmedCertifiedBy || '[Legal Name]' }}</b>, {{ certifyStatementResource.certifyStatementHeader }}
           </div>
         </template>
       </v-checkbox>
       <ul class="certify-statements mt-4">
         <li v-for="(statement, index) in certifyStatementResource.certifyStatements" :key="`statement-${index}`">
-          {{statement}}
+          {{ statement }}
           </li>
       </ul>
 
-      <p class="certify-date mt-4">Date: {{date}}</p>
-      <p class="certify-clause">{{certifyStatementResource.certifyClause}}</p>
+      <p class="certify-date mt-4">Date: {{ date }}</p>
+      <p class="certify-clause">{{ certifyStatementResource.certifyClause }}</p>
 
       <p class="emails-line mt-4">
         Copies of the incorporation documents will be sent to the following email addresses:
@@ -42,12 +42,12 @@
       <ul class="email-addresses">
         <li>
           <span>Registered office email address:</span>&nbsp;
-          <a v-if="regOfficeEmail" :href="`mailto:${regOfficeEmail}`">{{regOfficeEmail}}</a>
+          <a v-if="regOfficeEmail" :href="`mailto:${regOfficeEmail}`">{{ regOfficeEmail }}</a>
           <span v-else>(Not entered)</span>
         </li>
         <li>
           <span>Completing party email address:</span>&nbsp;
-          <a v-if="completingPartyEmail" :href="`mailto:${completingPartyEmail}`">{{completingPartyEmail}}</a>
+          <a v-if="completingPartyEmail" :href="`mailto:${completingPartyEmail}`">{{ completingPartyEmail }}</a>
           <span v-else>(Not entered)</span>
         </li>
       </ul>

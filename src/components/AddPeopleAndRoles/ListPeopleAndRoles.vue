@@ -33,7 +33,7 @@
       <!-- List Headers -->
       <v-row class="people-roles-header list-item__subtitle" no-gutters>
         <v-col v-for="(title, index) in tableHeaders" :key="index">
-          <span>{{title}}</span>
+          <span>{{ title }}</span>
         </v-col>
         <!-- Spacer Column For Actions -->
         <v-col sm="1" v-if="!isSummary"></v-col>
@@ -49,9 +49,9 @@
         <v-col class="text-truncate">
           <v-tooltip top :disabled="formatName(officer).length < 25" color="primary">
             <template v-slot:activator="{ on }">
-              <span v-on="on" class="people-roles-title"><strong>{{formatName(officer)}}</strong></span>
+              <span v-on="on" class="people-roles-title"><strong>{{ formatName(officer) }}</strong></span>
             </template>
-            <span>{{formatName(officer)}}</span>
+            <span>{{ formatName(officer) }}</span>
           </v-tooltip>
         </v-col>
         <v-col>
@@ -66,7 +66,7 @@
         <v-col>
           <div v-if="officer.roles.length>0">
             <v-col v-for="(role, index) in officer.roles" :key="index" class="col-roles">
-              <span>{{role.roleType}}</span>
+              <span>{{ role.roleType }}</span>
             </v-col>
           </div>
           <div v-else>

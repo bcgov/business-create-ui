@@ -18,7 +18,7 @@
         <div class="genErr mb-4" v-if="numErrors > 0">
           <p>We were unable to save your application due to the following errors:</p>
           <ul>
-            <li v-for="(error, index) in errors" :key="index">{{error.error}}</li>
+            <li v-for="(error, index) in errors" :key="index">{{ error.error }}</li>
           </ul>
         </div>
 
@@ -26,7 +26,7 @@
         <div class="genErr mb-4" v-if="numWarnings > 0">
           <p>Please note the following warnings:</p>
           <ul>
-            <li v-for="(warning, index) in warnings" :key="index">{{warning.warning}}</li>
+            <li v-for="(warning, index) in warnings" :key="index">{{ warning.warning }}</li>
           </ul>
         </div>
 

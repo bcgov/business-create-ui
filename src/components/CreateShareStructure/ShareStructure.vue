@@ -5,8 +5,8 @@
         <li class="add-share-structure-container">
           <div class="meta-container">
             <label class="add-share-structure-header">
-              <span v-if="activeIndex === -1">Add Share {{shareStructure.type}}</span>
-              <span v-else>Edit Share {{shareStructure.type}}</span>
+              <span v-if="activeIndex === -1">Add Share {{ shareStructure.type }}</span>
+              <span v-else>Edit Share {{ shareStructure.type }}</span>
             </label>
 
             <div class="meta-container__inner">

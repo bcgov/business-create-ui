@@ -9,7 +9,7 @@
       <v-col>
         <ul>
           <li class="name-request-title">
-            <strong>{{ getNameRequestNumber }}</strong> - {{ getNameRequestDetails.approvedName}}
+            <strong>{{ getNameRequestNumber }}</strong> - {{ getNameRequestDetails.approvedName }}
           </li>
           <li class="mt-4">Entity Type: {{ entityTypeDescription() }}</li>
           <li> Request Type: {{ requestType() }}</li>

@@ -6,7 +6,7 @@
         </v-flex>
         <v-flex md4>
           <div><label><strong>Folio Number</strong></label></div>
-          <div id="lbl-folio-number">{{ !!folioNumber ? folioNumber : 'Not entered'}}</div>
+          <div id="lbl-folio-number">{{ !!folioNumber ? folioNumber : 'Not entered' }}</div>
         </v-flex>
     </v-layout>
     <v-row v-else id='folio-number-editing'>
