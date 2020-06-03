@@ -59,6 +59,7 @@ store.state.stateModel.currentDate = '2020-03-30'
 describe('Share Structure component', () => {
   it('Loads the component in edit mode and both agreement types are not selected', async () => {
     const wrapper: Wrapper<AgreementType> = createComponent()
+    await waitForUpdate(wrapper)
     expect(wrapper.find(sampleTypeSelector).attributes('aria-checked')).toBe('false')
     expect(wrapper.find(customTypeSelector).attributes('aria-checked')).toBe('false')
     wrapper.destroy()
