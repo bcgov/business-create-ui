@@ -93,7 +93,6 @@ export default class FilingTemplateMixin extends Vue {
   parseDraft (draftFiling: any): void {
     // FUTURE: set types so each of these validate their parameters
     // ref: https://www.typescriptlang.org/docs/handbook/generics.html
-
     // Set Entity Type
     this.setEntityType(draftFiling.business.legalType)
 
@@ -119,9 +118,13 @@ export default class FilingTemplateMixin extends Vue {
       certifiedBy: draftFiling.header.certifiedBy
     })
 
+    // Date check to improve UX and work around default effectiveDate set by backend.
+    const draftEffectiveDate = draftFiling.header.effectiveDate
+    const effectiveDate = draftEffectiveDate < new Date().toISOString() ? null : draftEffectiveDate
+
     // Set Future Effective Time
-    this.setEffectiveDate(draftFiling.header.effectiveDate)
-    this.setIsFutureEffective(!!draftFiling.header.effectiveDate)
+    this.setEffectiveDate(effectiveDate)
+    this.setIsFutureEffective(!!effectiveDate)
 
     // Set Folio Number
     this.setFolioNumber(draftFiling.header.folioNumber)
