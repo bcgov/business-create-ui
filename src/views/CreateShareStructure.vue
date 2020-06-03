@@ -29,7 +29,7 @@
         <ListShareClass :shareClasses="sharesHelpSample"/>
       </div>
       <p><small>Sample Share Structure</small></p>
-      <h4>Important Information About the Company's Share Structure</h4>
+      <h3>Important Information About the Company's Share Structure</h3>
       <p>
         The staff at the Corporate Registry cannot provide advice on how to set up your company's share structure. If
         you do not understand what an authorized share structure is or what its purpose is or believe you need a more

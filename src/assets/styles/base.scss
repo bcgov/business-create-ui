@@ -54,7 +54,7 @@ h1, h2, h3, h4 {
   color: $gray9;
 }
 
-h1, h2, h3 {
+h1, h2{
   letter-spacing: -0.04rem;
   font-weight: 700;
 }
@@ -66,6 +66,12 @@ h1 {
 
 h2 {
   font-size: 1.125rem;
+}
+
+h3 {
+  font-size: 0.95rem;   
+  font-weight: 700;
+  line-height: 2.25rem;
 }
 
 p {

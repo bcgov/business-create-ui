@@ -47,77 +47,83 @@
         <span v-else>Hide Help</span>
       </span>
       <section v-show="helpToggle" class="incorporation-agreement-help">
-        <h4>What is the sample Incorporation Agreement and Benefit Company Articles?</h4>
-        <ul>
-          <li>
-            The sample Incorporation Agreement and Benefit Company Articles is a template that you can use to create an
-            incorporation agreement and articles for your company. It uses all the standard provisions suggested by
-            legislation and also includes a place to specify the company’s benefit provision.
-          </li>
-          <li>
-            If you would like to customize any other provisions in the Articles, you cannot use this sample. We
-            recommend seeking professional assistance from a lawyer or accountant to help you prepare your Articles.
-          </li>
-        </ul>
-
-        <h4>What is a Benefit Provision?</h4>
-        <ul>
-          <li>
-            A Benefit Provision is a statement by the company of its public benefits and its commitments to promote
-            those public benefits and to conduct business in a responsible and sustainable manner.
-          </li>
-          <li>
-            A Benefit Company must include a benefit provision in its Articles.
-          </li>
-        </ul>
-        <h4>Can I use the sample Incorporation Agreement and Benefit Company Articles?</h4>
-        <h4>
-          <span><v-icon color="green" class="article-stmt-icon">mdi-check</v-icon></span>
-          <span>You can use the sample Articles if:</span>
-        </h4>
-        <ul class="articles-statements">
-          <li>
-            <div>
-              There are no special rights or restrictions attached to any class or series of shares in the corporation’s
-              authorized share structure
-            </div>
-            <div>AND</div>
-          </li>
-          <li>
-            You do not wish to change any of the standard provisions in the sample Articles.
-          </li>
-        </ul>
-        <h4>
-          <span><v-icon color="red" class="article-stmt-icon">mdi-close</v-icon></span>
-          <span>You cannot use the sample Articles if</span>
-        </h4>
-        <ul class="articles-statements">
-          <li>
-            <div>
-              There are special rights or restrictions attached to any class or series of shares in the corporation’s
-              authorized share structure
-            </div>
-            <div>OR</div>
-          </li>
-          <li>
-            You wish to change any of the standard provisions in the sample Articles.
-          </li>
-        </ul>
-        <div class="articles-statements-footer">
-          In this case, you need to create a unique Incorporation Agreement and set of Articles for the company and
-          outline these special rights or restrictions in the Articles. We recommend seeking professional assistance
-          from a lawyer or accountant to help you prepare your Incorporation Agreement and Articles.
+        <div class="help-section">
+          <h3>What is the sample Incorporation Agreement and Benefit Company Articles?</h3>
+          <ul>
+            <li>
+              The sample Incorporation Agreement and Benefit Company Articles is a template that you can use
+              to create an incorporation agreement and articles for your company. It uses all the standard
+              provisions suggested by legislation and also includes a place to specify the company’s benefit
+              provision.
+            </li>
+            <li>
+              If you would like to customize any other provisions in the Articles, you cannot use this sample. We
+              recommend seeking professional assistance from a lawyer or accountant to help you prepare your Articles.
+            </li>
+          </ul>
         </div>
-
-        <h4>Retain the signed Incorporation Agreement and Benefit Company Articles</h4>
-        <ul>
-          <li>
-            The company is required to keep signed copies of the Incorporation Agreement and Articles in the company’s
-            record book. For a complete list of records a company is required to keep please see section 42 of the
-            Business Corporations Act.
-          </li>
-        </ul>
-
+        <div class="help-section">
+          <h3>What is a Benefit Provision?</h3>
+          <ul>
+            <li>
+              A Benefit Provision is a statement by the company of its public benefits and its commitments to promote
+              those public benefits and to conduct business in a responsible and sustainable manner.
+            </li>
+            <li>
+              A Benefit Company must include a benefit provision in its Articles.
+            </li>
+          </ul>
+        </div>
+        <div class="help-section">
+          <h3>Can I use the sample Incorporation Agreement and Benefit Company Articles?</h3>
+          <h3>
+            <span><v-icon color="green" class="article-stmt-icon">mdi-check</v-icon></span>
+            <span>You can use the sample Articles if:</span>
+          </h3>
+          <ul class="articles-statements">
+            <li>
+              <div>
+                There are no special rights or restrictions attached to any class or series of shares in
+                the corporation’s authorized share structure
+              </div>
+              <div>AND</div>
+            </li>
+            <li>
+              You do not wish to change any of the standard provisions in the sample Articles.
+            </li>
+          </ul>
+          <h3>
+            <span><v-icon color="red" class="article-stmt-icon">mdi-close</v-icon></span>
+            <span>You cannot use the sample Articles if</span>
+          </h3>
+          <ul class="articles-statements">
+            <li>
+              <div>
+                There are special rights or restrictions attached to any class or series of shares in the corporation’s
+                authorized share structure
+              </div>
+              <div>OR</div>
+            </li>
+            <li>
+              You wish to change any of the standard provisions in the sample Articles.
+            </li>
+          </ul>
+          <div class="articles-statements-footer">
+            In this case, you need to create a unique Incorporation Agreement and set of Articles for the company and
+            outline these special rights or restrictions in the Articles. We recommend seeking professional assistance
+            from a lawyer or accountant to help you prepare your Incorporation Agreement and Articles.
+          </div>
+        </div>
+        <div class="help-section">
+          <h3>Retain the signed Incorporation Agreement and Benefit Company Articles</h3>
+          <ul>
+            <li>
+              The company is required to keep signed copies of the Incorporation Agreement and Articles in the company’s
+              record book. For a complete list of records a company is required to keep please see section 42 of the
+              Business Corporations Act.
+            </li>
+          </ul>
+        </div>
         <u class="help-btn" @click="helpToggle = !helpToggle"><small>Hide Help</small></u>
       </section>
     </section>
@@ -306,6 +312,10 @@ a {
 
 .read-more-line {
   padding-top: 0.5rem
+}
+
+.help-section{
+  padding-top: 1rem;
 }
 
 </style>
