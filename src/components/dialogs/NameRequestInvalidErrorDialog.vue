@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="dialog" width="45rem" persistent :attach="attach" content-class="namerequest-invalid-error-dialog">
     <v-card>
-      <v-card-title id="dialog-title">Invalid Name Request</v-card-title>
+      <v-card-title id="dialog-title">Invalid Incorporation Application</v-card-title>
 
       <v-card-text>
         <p class="genErr" v-if="type === NameRequestStates.EXPIRED">

@@ -1,38 +1,63 @@
 <template>
   <div id="name-request-summary">
-    <v-row id="name-request-info">
+    <template v-if="getNameRequestNumber">
+      <v-row id="name-request-info">
+        <v-col>
+          <label>
+            <strong>Name Request</strong>
+          </label>
+        </v-col>
+        <v-col>
+          <ul class="name-request-list-items">
+            <li class="name-request-title">
+              <strong>{{ getNameRequestNumber }}</strong> - {{ getNameRequestDetails.approvedName }}
+            </li>
+            <li class="mt-4"><strong>Entity Type:</strong> {{ entityTypeDescription() }}</li>
+            <li><strong>Request Type:</strong> {{ requestType() }}</li>
+            <li class="mt-4"><strong>Expiry Date:</strong> {{ formattedExpirationDate() }}</li>
+            <li><strong>Status:</strong> {{ getNameRequestDetails.status }}</li>
+            <li id="condition-consent" v-if="getNameRequestDetails.status === NameRequestStates.CONDITIONAL">
+              <strong>Condition/Consent:</strong> {{ conditionConsent() }}
+            </li>
+          </ul>
+        </v-col>
+      </v-row>
+      <v-row id="name-request-applicant-info">
+        <v-col>
+          <label>
+            <strong>Name Request Applicant</strong>
+          </label>
+        </v-col>
+        <v-col>
+          <ul>
+            <li><strong>Name:</strong> {{ applicantName() }}</li>
+            <li><strong>Address:</strong> {{ applicantAddress() }}</li>
+            <li><strong>Email:</strong> {{ getNameRequestApplicant.emailAddress }}</li>
+            <li><strong>Phone:</strong> {{ getNameRequestApplicant.phoneNumber }}</li>
+          </ul>
+        </v-col>
+      </v-row>
+    </template>
+    <v-row v-else id="numbered-company-info">
       <v-col>
         <label>
-          <strong>Name Request</strong>
+          <strong>Name</strong>
         </label>
       </v-col>
       <v-col>
-        <ul>
-          <li class="name-request-title">
-            <strong>{{ getNameRequestNumber }}</strong> - {{ getNameRequestDetails.approvedName }}
+        <ul class="numbered-company-list-items">
+          <li class="numbered-company-title">
+            <strong>[Incorporation Number]</strong> B.C. Ltd.
           </li>
-          <li class="mt-4">Entity Type: {{ entityTypeDescription() }}</li>
-          <li> Request Type: {{ requestType() }}</li>
-          <li class="mt-4">Expiry Date: {{ formattedExpirationDate() }}</li>
-          <li>Status: {{ getNameRequestDetails.status }}</li>
-          <li id="condition-consent" v-if="getNameRequestDetails.status === NameRequestStates.CONDITIONAL">
-            Condition/Consent: {{ conditionConsent() }}
+          <li class="mt-4"><strong>Entity Type:</strong> {{ entityTypeDescription() }}</li>
+          <li><strong>Request Type:</strong> {{ requestType() }}</li>
+          <li class="bullet-point mt-4 ml-5">You will be filing this Incorporation Application for a company created by
+            adding "B.C. Ltd." after the Incorporation Number.
           </li>
-        </ul>
-      </v-col>
-    </v-row>
-    <v-row id="name-request-applicant-info">
-      <v-col>
-        <label>
-          <strong>Name Request Applicant</strong>
-        </label>
-      </v-col>
-      <v-col>
-        <ul>
-          <li>Name: {{ applicantName() }}</li>
-          <li>Address: {{ applicantAddress() }}</li>
-          <li>Email: {{ getNameRequestApplicant.emailAddress }}</li>
-          <li>Phone: {{ getNameRequestApplicant.phoneNumber }}</li>
+          <li class="bullet-point ml-5">Your Incorporation Number will be generated at the end of the filing
+            transaction.
+          </li>
+          <li class="bullet-point ml-5">It is not possible to request a specific Incorporation Number.</li>
         </ul>
       </v-col>
     </v-row>
@@ -139,12 +164,23 @@ export default class NameRequestInfo extends Mixins(DateMixin) {
 }
 
 ul {
+  font-size: .875rem;
   margin: 0;
   padding: 0;
   list-style-type: none;
 }
 
-li.name-request-title {
+li.name-request-title, li.numbered-company-title {
   font-size: 1.25rem;
+}
+
+ul.numbered-company-list-items {
+
+  .bullet-point::before {
+    content: "\2022";
+    display: inline-block;
+    width: 1.5em;
+    margin-left: -1.5em;
+  }
 }
 </style>

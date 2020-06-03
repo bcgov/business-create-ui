@@ -20,7 +20,7 @@
           <label><strong>Company Name</strong></label>
         </v-flex>
         <v-flex md8>
-          <div class="company-name">{{ getApprovedName }}</div>
+          <div class="company-name">{{ getApprovedName || '[Incorporation Number] B.C. Ltd.' }}</div>
           <div class="company-type">
             <span v-if="entityFilter(EntityTypes.BCOMP)">BC Benefit Company</span>
             <span v-else-if="entityFilter(EntityTypes.COOP)">BC Cooperative Association</span>
