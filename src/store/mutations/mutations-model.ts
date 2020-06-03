@@ -1,6 +1,6 @@
 import {
   CertifyStatementIF, CertifyIF, IncorporationAddressIf, NameRequestIF,
-  BusinessContactIF, OrgPersonIF, ShareClassIF, AccountInformationIF
+  BusinessContactIF, OrgPersonIF, ShareClassIF, AccountInformationIF, IncorporationAgreementIF
 } from '@/interfaces'
 
 export const mutateTempId = (state: any, tempId: string) => {
@@ -110,6 +110,11 @@ export const mutateShareClasses = (state: any, shareClasses: ShareClassIF[]) => 
 
 export const mutateCreateShareStructureStepValidity = (state: any, validity: boolean) => {
   state.stateModel.createShareStructureStep.valid = validity
+}
+
+export const mutateIncorporationAgreementStepData = (state: any, stepData: IncorporationAgreementIF) => {
+  state.stateModel.incorporationAgreementStep = stepData
+  if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
 }
 
 export const mutateIgnoreChanges = (state: any, ignoreChanges: boolean) => {

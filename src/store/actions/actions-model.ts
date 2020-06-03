@@ -104,6 +104,10 @@ export const setCreateShareStructureStepValidity = ({ commit }, validity) => {
   commit('mutateCreateShareStructureStepValidity', validity)
 }
 
+export const setIncorporationAgreementStepData: ActionIF = ({ commit }, stepData): void => {
+  commit('mutateIncorporationAgreementStepData', stepData)
+}
+
 export const setIgnoreChanges: ActionIF = ({ commit }, ignoreChanges): void => {
   commit('mutateIgnoreChanges', ignoreChanges)
 }

@@ -6,7 +6,7 @@
     </div>
     <div v-if="!valid" class="defineCompanyStepErrorMessage">
       <span>
-        <v-icon color="#1976d2">mdi-information-outline</v-icon>
+        <v-icon color="blue darken-2">mdi-information-outline</v-icon>
         This step is not complete.
         <router-link :to="{ path: '/define-company', query: { showErrors: true } }">
           Return to this step to complete it.
@@ -96,7 +96,7 @@ export default class SummaryDefineCompany extends Mixins(EntityFilterMixin) {
   padding-top: 1.25rem;
   padding-left: 1.25rem;
   font-weight: bold;
-  color: #1976d2;
+  color: $primary-blue;
 }
 
 .section-container {

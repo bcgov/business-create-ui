@@ -22,7 +22,7 @@ import {
   mutateAccountInformation, mutateNameRequestState, mutateFilingId, mutateOfficeAddresses, mutateOrgPersonList,
   mutateAddPeopleAndRoleStepValidity, mutateShareClasses, mutateCreateShareStructureStepValidity,
   mutateIgnoreChanges, mutateHaveChanges, mutateIsFutureEffective, mutateEffectiveDate,
-  mutateIsIncorporationDateTimeValid, mutateTempId, mutateEntityType
+  mutateIsIncorporationDateTimeValid, mutateTempId, mutateEntityType, mutateIncorporationAgreementStepData
 } from '@/store/mutations'
 
 // Actions
@@ -32,7 +32,8 @@ import {
   setBusinessContact, setDefineCompanyStepValidity, setNameRequestState, setFilingId, setFolioNumber,
   setOfficeAddresses, setOrgPersonList, setAddPeopleAndRoleStepValidity, setShareClasses,
   setCreateShareStructureStepValidity, setIgnoreChanges, setHaveChanges, setIsFutureEffective,
-  setEffectiveDate, setIsIncorporationDateTimeValid, setAccountInformation, setTempId, setEntityType
+  setEffectiveDate, setIsIncorporationDateTimeValid, setAccountInformation, setTempId, setEntityType,
+  setIncorporationAgreementStepData
 } from './actions'
 
 /**
@@ -103,7 +104,8 @@ export function getVuexStore () {
       mutateEffectiveDate,
       mutateIsIncorporationDateTimeValid,
       mutateTempId,
-      mutateEntityType
+      mutateEntityType,
+      mutateIncorporationAgreementStepData
     },
     actions: {
       setAccountInformation,
@@ -133,7 +135,8 @@ export function getVuexStore () {
       setEffectiveDate,
       setIsIncorporationDateTimeValid,
       setTempId,
-      setEntityType
+      setEntityType,
+      setIncorporationAgreementStepData
     }
   })
 

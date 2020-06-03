@@ -191,7 +191,10 @@ const filingData = {
 
         ]
       }
-    ]
+    ],
+    incorporationAgreement: {
+      agreementType: 'sample'
+    }
   }
 }
 

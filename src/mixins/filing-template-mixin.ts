@@ -36,6 +36,7 @@ export default class FilingTemplateMixin extends Vue {
   @Action setEffectiveDate!: ActionBindingIF
   @Action setIsFutureEffective!: ActionBindingIF
   @Action setFolioNumber!: ActionBindingIF
+  @Action setIncorporationAgreementStepData!: ActionBindingIF
 
   /** Constructs a filing body, used when saving a filing. */
   buildFiling (): IncorporationFilingIF {
@@ -65,7 +66,10 @@ export default class FilingTemplateMixin extends Vue {
             extension: this.stateModel?.defineCompanyStep?.businessContact?.extension || ''
           },
           parties: this.stateModel?.addPeopleAndRoleStep?.orgPeople || [],
-          shareClasses: this.stateModel?.createShareStructureStep?.shareClasses || []
+          shareClasses: this.stateModel?.createShareStructureStep?.shareClasses || [],
+          incorporationAgreement: {
+            agreementType: this.stateModel.incorporationAgreementStep.agreementType
+          }
         }
       }
     }
@@ -112,6 +116,11 @@ export default class FilingTemplateMixin extends Vue {
 
     // Set Share Structure
     this.setShareClasses(draftFiling.incorporationApplication.shareClasses)
+
+    // Set Incorporation Agreement
+    this.setIncorporationAgreementStepData({
+      agreementType: draftFiling.incorporationApplication.incorporationAgreement?.agreementType
+    })
 
     // Set Certify Form
     this.setCertifyState({

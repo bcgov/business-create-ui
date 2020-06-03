@@ -28,7 +28,10 @@ export interface IncorporationFilingIF {
         extension: string
       },
       parties: OrgPersonIF[],
-      shareClasses: ShareClassIF[]
+      shareClasses: ShareClassIF[],
+      incorporationAgreement: {
+        agreementType: string
+      }
     }
   }
 }

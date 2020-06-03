@@ -1,8 +1,9 @@
 <template>
   <div class="summary-container">
-    <SummaryDefineCompany />
+    <SummaryDefineCompany/>
     <ListPeopleAndRoles :personList="orgPersonList" :isSummary="true" :showErrorSummary="!step2Valid" />
     <ListShareClass :shareClasses="shareClasses" :isSummary="true" :showErrorSummary="!step3Valid"/>
+    <AgreementType :isSummary="true" :showErrorSummary="!step4Valid"/>
   </div>
 </template>
 
@@ -15,6 +16,7 @@ import { State } from 'vuex-class'
 import { SummaryDefineCompany } from '@/components/Summary'
 import { ListPeopleAndRoles } from '@/components/AddPeopleAndRoles'
 import { ListShareClass } from '@/components/CreateShareStructure'
+import { AgreementType } from '@/components/IncorporationAgreement'
 
 // Interfaces
 import { OrgPersonIF, ShareClassIF } from '@/interfaces'
@@ -23,7 +25,8 @@ import { OrgPersonIF, ShareClassIF } from '@/interfaces'
   components: {
     ListShareClass,
     ListPeopleAndRoles,
-    SummaryDefineCompany
+    SummaryDefineCompany,
+    AgreementType
   }
 })
 export default class Summary extends Vue {
@@ -39,6 +42,9 @@ export default class Summary extends Vue {
 
   @State(state => state.stateModel.createShareStructureStep.valid)
   readonly step3Valid: boolean
+
+  @State(state => state.stateModel.incorporationAgreementStep.valid)
+  readonly step4Valid: boolean
 }
 </script>
 
