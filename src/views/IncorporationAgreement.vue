@@ -169,7 +169,7 @@
             <div class="download-link-container">
               <span>
                 <v-icon color="blue">mdi-file-pdf-outline</v-icon>
-                <a href="/files/benefit_company__corporation_agreement.pdf" download>
+                <a :href="documentURL" download>
                   Download the sample Incorporation Agreement and Benefit Company Articles
                 </a>
               </span>
@@ -200,6 +200,11 @@ import { AgreementType } from '@/components/IncorporationAgreement'
 export default class IncorporationAgreement extends Vue {
   private helpToggle: boolean = false
   private readMoreFlag: boolean = false
+
+  private get documentURL ():string {
+    return sessionStorage.getItem('BASE_URL') +
+    'files/benefit_company__corporation_agreement.pdf'
+  }
 }
 </script>
 
