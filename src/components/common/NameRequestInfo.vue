@@ -51,12 +51,11 @@
           </li>
           <li class="mt-4"><strong>Entity Type:</strong> {{ entityTypeDescription() }}</li>
           <li><strong>Request Type:</strong> {{ requestType() }}</li>
-          <li class="bullet-point mt-4 ml-5">
-            You will be filing this Incorporation Application for a company created by adding "B.C. Ltd." after the
-            Incorporation Number.
+          <li class="bullet-point mt-4 ml-5">You will be filing this Incorporation Application for a company created by
+            adding "B.C. Ltd." after the Incorporation Number.
           </li>
-          <li class="bullet-point ml-5">
-            Your Incorporation Number will be generated at the end of the filing transaction.
+          <li class="bullet-point ml-5">Your Incorporation Number will be generated at the end of the filing
+            transaction.
           </li>
           <li class="bullet-point ml-5">It is not possible to request a specific Incorporation Number.</li>
         </ul>
