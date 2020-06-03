@@ -26,7 +26,10 @@
           <v-list-item-subtitle class="business-info">
             <dl>
               <dt>{{ entityTitle() }}</dt>
-              <dd>Name Request No: <span id="entity-nr-number">{{ getNameRequestNumber }}</span></dd>
+              <dd v-if="!!getNameRequestNumber">Name Request No:
+                <span id="entity-nr-number">{{ getNameRequestNumber }}</span>
+              </dd>
+              <dd v-else>Numbered Benefit Company</dd>
             </dl>
           </v-list-item-subtitle>
 
@@ -58,7 +61,7 @@ export default class EntityInfo extends Vue {
   /** The entity title  */
   private entityTitle (): string {
     if (this.isTypeBcomp) {
-      return 'Incorporate a BC Benefit Company'
+      return 'BC Benefit Company Incorporation Application'
     } else if (this.isTypeCoop) {
       return 'Incorporate a BC Cooperative Association'
     }

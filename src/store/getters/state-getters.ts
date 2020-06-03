@@ -89,7 +89,7 @@ export const getFolioNumber = (state: any): string => {
  * Returns the approved name of a name request.
  */
 export const getApprovedName = (state: any): string => {
-  return state.stateModel.nameRequest.details.approvedName
+  return state.stateModel.nameRequest.details.approvedName || 'Numbered Benefit Company'
 }
 
 export const getNameRequestNumber = (state: any): string => {
