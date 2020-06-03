@@ -3,33 +3,21 @@
     <v-container>
       <v-list-item three-line id="entity-info-header">
 
-        <!-- Initial Header -->
-        <v-list-item-content id="no-nr-header" v-show="!isEntityType">
-
-          <!-- Intro Title -->
-          <v-list-item-title class="header-title" id="entity-title">
-            <span>Register a BC Business</span>
-          </v-list-item-title>
-
-        </v-list-item-content>
-
-        <!-- Header With NR Data -->
+        <!-- Header -->
         <v-list-item-content id="nr-header" v-show="isEntityType">
           <!-- Company Name -->
           <v-list-item-title class="header-title" id="entity-legal-name">
-            <span>{{ getApprovedName }}</span>
+            <span>{{ getApprovedName || 'Numbered Benefit Company' }}</span>
           </v-list-item-title>
-
-          <!-- TODO: display Designation? See mockup. -->
 
           <!-- Company Number -->
           <v-list-item-subtitle class="business-info">
             <dl>
               <dt>{{ entityTitle() }}</dt>
-              <dd v-if="!!getNameRequestNumber">Name Request No:
+              <dd v-if="getNameRequestNumber">Name Request No:
                 <span id="entity-nr-number">{{ getNameRequestNumber }}</span>
               </dd>
-              <dd v-else>Numbered Benefit Company</dd>
+              <dd v-else id="entity-numbered-label">Numbered Benefit Company</dd>
             </dl>
           </v-list-item-subtitle>
 

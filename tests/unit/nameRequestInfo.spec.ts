@@ -47,6 +47,7 @@ describe('Name Request Info component', () => {
     store.state.stateModel.entityType = 'BC'
     // Temp Id will always be set with or without an NR
     store.state.stateModel.tempId = 'T1234567'
+    store.state.stateModel.nameRequest.nrNumber = mockNrData.nrNumber
     wrapper = mount(NameRequestInfo, { vuetify, store })
   })
 
@@ -210,5 +211,49 @@ describe('Name Request Info component', () => {
     expect(expiryDate.textContent).toContain('Expiry Date: Jun 24, 2020')
     expect(status.textContent).toContain('Status: CONDITIONAL')
     expect(conditionConsent.textContent).toContain('Condition/Consent: Not Received')
+  })
+})
+
+describe('Name Request Info component without an NR', () => {
+  let wrapper: any
+
+  beforeEach(() => {
+    // Entity type will always be set with or without an NR
+    store.state.stateModel.entityType = 'BC'
+    // Temp Id will always be set with or without an NR
+    store.state.stateModel.tempId = 'T1234567'
+    store.state.stateModel.nameRequest.nrNumber = null
+    wrapper = mount(NameRequestInfo, { vuetify, store })
+  })
+
+  afterEach(() => {
+    wrapper.destroy()
+  })
+
+  it('renders numbered company info', () => {
+    expect(wrapper.vm.$el.querySelector('#numbered-company-info').textContent)
+      .toContain('Name')
+
+    expect(wrapper.vm.$el.querySelector('.numbered-company-list-items')).toBeDefined()
+  })
+
+  it('renders the numbered company content', () => {
+    const listItems = wrapper.vm.$el.querySelectorAll('.numbered-company-list-items li')
+
+    const title = listItems[0]
+    const entityType = listItems[1]
+    const requestType = listItems[2]
+    const bulletOne = listItems[3]
+    const bulletTwo = listItems[4]
+    const bulletThree = listItems[5]
+
+    expect(title.textContent).toContain('[Incorporation Number] B.C. Ltd.')
+    expect(entityType.textContent).toContain('Entity Type: BC Benefit Company')
+    expect(requestType.textContent).toContain('Request Type: New Business')
+
+    expect(bulletOne.textContent).toContain('You will be filing this Incorporation Application')
+    expect(bulletTwo.textContent).toContain('Your Incorporation Number will be generated at the end')
+    expect(bulletThree.textContent).toContain('It is not possible to request a specific Incorporation Number')
+
   })
 })
