@@ -52,7 +52,8 @@ export default class FilingTemplateMixin extends Vue {
           name: INCORPORATION_APPLICATION,
           certifiedBy: this.stateModel?.certifyState?.certifiedBy || '',
           date: this.stateModel?.currentDate || '',
-          folioNumber: this.stateModel.defineCompanyStep.folioNumber
+          folioNumber: this.stateModel.defineCompanyStep.folioNumber,
+          isFutureEffective: this.stateModel.incorporationDateTime.isFutureEffective
         },
         business: {
           legalType: this.stateModel?.entityType || '',
