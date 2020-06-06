@@ -16,6 +16,7 @@ const store = getVuexStore()
 
 describe('Name Request Info component', () => {
   let wrapper: any
+
   const mockNrData = {
     'nrNumber': 'NR 1234567',
     'entityType': 'BC',
@@ -187,6 +188,31 @@ describe('Name Request Info component', () => {
     expect(conditionConsent.textContent).toContain('Condition/Consent: Received')
   })
 
+  it('renders the Name Request information with consent waived', async () => {
+    wrapper.vm.$store.state.stateModel.nameRequest = { ...mockNrData }
+    wrapper.vm.$store.state.stateModel.nameRequest.details.status = 'CONDITIONAL'
+    wrapper.vm.$store.state.stateModel.nameRequest.details.consentFlag = 'N'
+
+    await Vue.nextTick()
+
+    const nrListSelector = '#name-request-info ul li'
+    const itemCount = wrapper.vm.$el.querySelectorAll(nrListSelector).length
+    const title = wrapper.vm.$el.querySelectorAll(nrListSelector)[0]
+    const entityType = wrapper.vm.$el.querySelectorAll(nrListSelector)[1]
+    const requestType = wrapper.vm.$el.querySelectorAll(nrListSelector)[2]
+    const expiryDate = wrapper.vm.$el.querySelectorAll(nrListSelector)[3]
+    const status = wrapper.vm.$el.querySelectorAll(nrListSelector)[4]
+    const conditionConsent = wrapper.vm.$el.querySelectorAll(nrListSelector)[5]
+    expect(itemCount).toEqual(6)
+    expect(wrapper.find('#condition-consent').exists()).toBe(true)
+    expect(title.textContent).toContain('NR 1234567 - MADRONA BREAD BASKET INC.')
+    expect(entityType.textContent).toContain('Entity Type: BC Benefit Company')
+    expect(requestType.textContent).toContain('Request Type: New Business')
+    expect(expiryDate.textContent).toContain('Expiry Date: Jun 24, 2020')
+    expect(status.textContent).toContain('Status: CONDITIONAL')
+    expect(conditionConsent.textContent).toContain('Condition/Consent: Waived')
+  })
+
   it('renders the Name Request information with consent not received', async () => {
     wrapper.vm.$store.state.stateModel.nameRequest = { ...mockNrData }
     wrapper.vm.$store.state.stateModel.nameRequest.details.status = 'CONDITIONAL'
@@ -254,6 +280,5 @@ describe('Name Request Info component without an NR', () => {
     expect(bulletOne.textContent).toContain('You will be filing this Incorporation Application')
     expect(bulletTwo.textContent).toContain('Your Incorporation Number will be generated at the end')
     expect(bulletThree.textContent).toContain('It is not possible to request a specific Incorporation Number')
-
   })
 })

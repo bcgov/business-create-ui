@@ -404,7 +404,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
   /** Set up any required fields/ validation if a Name request is present */
   private async processNameRequest (filing: any): Promise<void> {
     try {
-      let nameRequest = filing.incorporationApplication.nameRequest
+      const nameRequest = filing.incorporationApplication.nameRequest
 
       // ensure we have an NR number
       if (!nameRequest.nrNumber) {
@@ -431,7 +431,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
       }
       // ensure NR is consumable
       const state = this.getNrState(nrResponse)
-      if (!state || state !== NameRequestStates.APPROVED) {
+      if (state !== NameRequestStates.APPROVED && state !== NameRequestStates.CONDITIONAL) {
         this.nameRequestInvalidType = state || NameRequestStates.INVALID
         this.nameRequestInvalidErrorDialog = true
         return

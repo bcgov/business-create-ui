@@ -68,8 +68,8 @@ import { EntityTypes } from '@/enums'
 })
 export default class SummaryDefineCompany extends Mixins(EntityFilterMixin) {
   // Getters
-  @Getter getApprovedName: GetterIF
-  @Getter isPremiumAccount: GetterIF
+  @Getter getApprovedName!: GetterIF
+  @Getter isPremiumAccount!: GetterIF
 
   // Global state
   @State(state => state.stateModel.defineCompanyStep.valid)
