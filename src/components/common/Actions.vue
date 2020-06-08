@@ -191,13 +191,12 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
       // redirect to pay and return to the dashboard
       const authUrl = sessionStorage.getItem('AUTH_URL')
       const dashboardUrl = sessionStorage.getItem('DASHBOARD_URL')
-      // const nrNumber = this.$route.query.nrNumber as string
-      const returnUrl = encodeURIComponent(dashboardUrl + this.getTempId)
-      const payUrl = authUrl + 'makepayment/' + paymentToken + '/' + returnUrl
 
       // assume Pay URL is always reachable
       // otherwise user will have to retry payment later
       if (!paymentCompleted) {
+        const returnUrl = encodeURIComponent(dashboardUrl + this.getTempId)
+        const payUrl = authUrl + 'makepayment/' + paymentToken + '/' + returnUrl
         window.location.assign(payUrl)
       } else {
         // Payment has been completed, redirect to dashboard without going through pay
