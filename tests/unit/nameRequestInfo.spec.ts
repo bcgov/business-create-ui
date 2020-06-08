@@ -163,6 +163,31 @@ describe('Name Request Info component', () => {
     expect(phone.textContent).toContain('Phone: 250-356-9090')
   })
 
+  it('renders the Name Request information with consent not required', async () => {
+    wrapper.vm.$store.state.stateModel.nameRequest = { ...mockNrData }
+    wrapper.vm.$store.state.stateModel.nameRequest.details.status = 'CONDITIONAL'
+    wrapper.vm.$store.state.stateModel.nameRequest.details.consentFlag = null
+
+    await Vue.nextTick()
+
+    const nrListSelector = '#name-request-info ul li'
+    const itemCount = wrapper.vm.$el.querySelectorAll(nrListSelector).length
+    const title = wrapper.vm.$el.querySelectorAll(nrListSelector)[0]
+    const entityType = wrapper.vm.$el.querySelectorAll(nrListSelector)[1]
+    const requestType = wrapper.vm.$el.querySelectorAll(nrListSelector)[2]
+    const expiryDate = wrapper.vm.$el.querySelectorAll(nrListSelector)[3]
+    const status = wrapper.vm.$el.querySelectorAll(nrListSelector)[4]
+    const conditionConsent = wrapper.vm.$el.querySelectorAll(nrListSelector)[5]
+    expect(itemCount).toEqual(6)
+    expect(wrapper.find('#condition-consent').exists()).toBe(true)
+    expect(title.textContent).toContain('NR 1234567 - MADRONA BREAD BASKET INC.')
+    expect(entityType.textContent).toContain('Entity Type: BC Benefit Company')
+    expect(requestType.textContent).toContain('Request Type: New Business')
+    expect(expiryDate.textContent).toContain('Expiry Date: Jun 24, 2020')
+    expect(status.textContent).toContain('Status: CONDITIONAL')
+    expect(conditionConsent.textContent).toContain('Condition/Consent: Not Required')
+  })
+
   it('renders the Name Request information with consent received', async () => {
     wrapper.vm.$store.state.stateModel.nameRequest = { ...mockNrData }
     wrapper.vm.$store.state.stateModel.nameRequest.details.status = 'CONDITIONAL'
@@ -213,10 +238,10 @@ describe('Name Request Info component', () => {
     expect(conditionConsent.textContent).toContain('Condition/Consent: Waived')
   })
 
-  it('renders the Name Request information with consent not received', async () => {
+  it('renders the Name Request information with consent required', async () => {
     wrapper.vm.$store.state.stateModel.nameRequest = { ...mockNrData }
     wrapper.vm.$store.state.stateModel.nameRequest.details.status = 'CONDITIONAL'
-    wrapper.vm.$store.state.stateModel.nameRequest.details.consentFlag = null
+    wrapper.vm.$store.state.stateModel.nameRequest.details.consentFlag = 'Y'
 
     await Vue.nextTick()
 

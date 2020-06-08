@@ -124,6 +124,9 @@ export default class NameRequestInfo extends Mixins(DateMixin) {
     if (this.getNameRequestDetails.status === NameRequestStates.APPROVED) {
       return this.NOT_REQUIRED_STATE
     }
+    if (this.getNameRequestDetails.consentFlag === null) {
+      return this.NOT_REQUIRED_STATE
+    }
     if (this.getNameRequestDetails.consentFlag === 'R') {
       return this.RECEIVED_STATE
     }
