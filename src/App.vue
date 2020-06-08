@@ -523,8 +523,13 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
     if (!isSigninRoute && !isSignoutRoute) {
       this.setCurrentStep(this.$route.meta?.step)
       await this.startTokenService()
-      this.loadAccountInformation()
       await this.fetchData(true)
+
+      // Allow user settings account information to load into session storage before checking
+      // There can be a timing issue when a session is first established where account information
+      // is not available right away in session storage
+      await Vue.nextTick()
+      this.loadAccountInformation()
     }
   }
 }
