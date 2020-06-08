@@ -29,6 +29,12 @@
       @exit="goToDashboard(true)"
     />
 
+    <bcol-error-dialog
+     attach="#app"
+     :bcolObject="bcolObj"
+     filingType="Incorporation Application"
+     @exit="goToDashboard(true)"/>
+
     <save-error-dialog
       attach="#app"
       :dialog="saveErrorDialog"
@@ -121,9 +127,9 @@ import { EntityInfo, Stepper, Actions } from '@/components/common'
 import Views from '@/views'
 
 // Dialogs, mixins, interfaces, etc
-import { AccountAuthorizationDialog, NameRequestInvalidErrorDialog, ConfirmDialog, FetchErrorDialog,
+import { AccountAuthorizationDialog, BcolErrorDialog, NameRequestInvalidErrorDialog, ConfirmDialog, FetchErrorDialog,
   PaymentErrorDialog, SaveErrorDialog } from '@/components/dialogs'
-import { DateMixin, FilingTemplateMixin, LegalApiMixin, NameRequestMixin } from '@/mixins'
+import { BcolMixin, DateMixin, FilingTemplateMixin, LegalApiMixin, NameRequestMixin } from '@/mixins'
 import { FilingDataIF, ActionBindingIF, ConfirmDialogType } from '@/interfaces'
 import { CertifyStatementResource } from '@/resources'
 
@@ -145,10 +151,11 @@ import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
     PaymentErrorDialog,
     SaveErrorDialog,
     ConfirmDialog,
+    BcolErrorDialog,
     ...Views
   }
 })
-export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApiMixin, NameRequestMixin) {
+export default class App extends Mixins(BcolMixin, DateMixin, FilingTemplateMixin, LegalApiMixin, NameRequestMixin) {
   // Refs
   $refs!: {
     confirm: ConfirmDialogType
@@ -185,6 +192,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
   private accountAuthorizationDialog: boolean = false
   private fetchErrorDialog: boolean = false
   private paymentErrorDialog: boolean = false
+  private bcolObj: object = null
   private saveErrorDialog: boolean = false
   private nameRequestInvalidErrorDialog: boolean = false
   private nameRequestInvalidType: string = ''
@@ -210,6 +218,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
   private get isErrorDialog (): boolean {
     return (
       this.accountAuthorizationDialog ||
+      this.bcolObj != null ||
       this.nameRequestInvalidErrorDialog ||
       this.fetchErrorDialog ||
       this.paymentErrorDialog ||
@@ -239,12 +248,17 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
     }
 
     // listen for save error event
-    this.$root.$on('save-error-event', error => {
+    this.$root.$on('save-error-event', async error => {
       console.log('Save error =', error) // eslint-disable-line no-console
       // process errors/warnings
       switch (error?.response?.status) {
         case PAYMENT_REQUIRED:
-          this.paymentErrorDialog = true
+          const errObj = await this.getErrorObj(this.getErrorCode(error))
+          if (errObj) {
+            this.bcolObj = errObj
+          } else {
+            this.paymentErrorDialog = true
+          }
           break
         case BAD_REQUEST:
         case FORBIDDEN:
@@ -447,6 +461,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
   /** Resets all error flags/states. */
   private resetFlags (): void {
     this.haveData = false
+    this.bcolObj = null
     this.nameRequestInvalidErrorDialog = false
     this.accountAuthorizationDialog = false
     this.fetchErrorDialog = false

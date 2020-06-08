@@ -186,16 +186,22 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
     this.setIsFilingPaying(false)
 
     const paymentToken = filingComplete?.header?.paymentToken
+    const paymentCompleted = filingComplete.header?.paymentStatusCode === 'COMPLETED'
     if (paymentToken) {
       // redirect to pay and return to the dashboard
       const authUrl = sessionStorage.getItem('AUTH_URL')
       const dashboardUrl = sessionStorage.getItem('DASHBOARD_URL')
-      const returnUrl = encodeURIComponent(dashboardUrl + this.getTempId)
-      const payUrl = authUrl + 'makepayment/' + paymentToken + '/' + returnUrl
 
       // assume Pay URL is always reachable
       // otherwise user will have to retry payment later
-      window.location.assign(payUrl)
+      if (!paymentCompleted) {
+        const returnUrl = encodeURIComponent(dashboardUrl + this.getTempId)
+        const payUrl = authUrl + 'makepayment/' + paymentToken + '/' + returnUrl
+        window.location.assign(payUrl)
+      } else {
+        // Payment has been completed, redirect to dashboard without going through pay
+        window.location.assign(dashboardUrl + this.getTempId)
+      }
     } else {
       const error = new Error('Missing Payment Token')
       this.$root.$emit('save-error-event', error)
