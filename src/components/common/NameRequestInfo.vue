@@ -17,7 +17,7 @@
             <li class="mt-4"><strong>Expiry Date:</strong> {{ formattedExpirationDate() }}</li>
             <li><strong>Status:</strong> {{ getNameRequestDetails.status }}</li>
             <li id="condition-consent" v-if="getNameRequestDetails.status === NameRequestStates.CONDITIONAL">
-              <strong>Condition/Consent:</strong> {{ conditionConsent() }}
+              <strong>Condition/Consent:</strong> {{ conditionConsent }}
             </li>
           </ul>
         </v-col>
@@ -84,6 +84,11 @@ export default class NameRequestInfo extends Mixins(DateMixin) {
   // Template Enums
   readonly NameRequestStates = NameRequestStates
 
+  readonly RECEIVED_STATE = 'Received'
+  readonly NOT_RECEIVED_STATE = 'Not Received'
+  readonly NOT_REQUIRED_STATE = 'Not Required'
+  readonly WAIVED_STATE = 'Waived'
+
   // Global getters
   @Getter isEntityType!: GetterIF;
   @Getter isTypeBcomp!: GetterIF;
@@ -114,13 +119,21 @@ export default class NameRequestInfo extends Mixins(DateMixin) {
     return this.toReadableDate(this.getNameRequestDetails.expirationDate)
   }
 
-  /** Return consent received string by checking if conditional and if consent has been received */
-  private conditionConsent (): string {
-    if (this.getNameRequestDetails.status === NameRequestStates.CONDITIONAL) {
-      return this.getNameRequestDetails.consentFlag === 'R' ? 'Received' : 'Not Received'
+  /** Return condition/consent string */
+  private get conditionConsent (): string {
+    if (this.getNameRequestDetails.status === NameRequestStates.APPROVED) {
+      return this.NOT_REQUIRED_STATE
     }
-
-    return ''
+    if (this.getNameRequestDetails.consentFlag === null) {
+      return this.NOT_REQUIRED_STATE
+    }
+    if (this.getNameRequestDetails.consentFlag === 'R') {
+      return this.RECEIVED_STATE
+    }
+    if (this.getNameRequestDetails.consentFlag === 'N') {
+      return this.WAIVED_STATE
+    }
+    return this.NOT_RECEIVED_STATE
   }
 
   /** Return formatted applicant name */

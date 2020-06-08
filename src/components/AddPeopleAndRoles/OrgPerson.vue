@@ -192,7 +192,7 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
   @Prop()
   private existingCompletingParty: OrgPersonIF
 
-  @Getter getCurrentDate: string
+  @Getter getCurrentDate!: string
 
   // Data Properties
   private orgPerson: OrgPersonIF = null
