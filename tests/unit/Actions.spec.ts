@@ -86,9 +86,9 @@ describe('Actions component - Filing Functionality', () => {
       },
       incorporationApplication: {
         nameRequest: {
-          nrNumber: 'NR1234567',
+          nrNumber: 'NR 1234567',
           legalType: 'BC',
-          legalName: 'Test'
+          legalName: 'My Name Request Inc.'
         },
         offices: {
           registeredOffice: {
@@ -255,8 +255,8 @@ describe('Actions component - Filing Functionality', () => {
     store.state.stateModel.currentDate = '2020/01/29'
     store.state.stateModel.nameRequest = {
       entityType: 'BC',
-      nrNumber: 'NR1234567',
-      details: { approvedName: 'Test' }
+      nrNumber: 'NR 1234567',
+      details: { approvedName: 'My Name Request Inc.' }
     }
     store.state.stateModel.tombstone = {
       keycloakRoles: [],

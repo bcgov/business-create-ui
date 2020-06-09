@@ -9,9 +9,9 @@ import { stateModel, resourceModel } from './state'
 import {
   isRoleStaff, isAuthEdit, isAuthView, isEntityType, isPremiumAccount, isTypeBcomp, isTypeCoop,
   isShowBackBtn, isShowReviewConfirmBtn, isShowFilePayBtn, isEnableFilePayBtn, isBusySaving,
-  getFilingId, getTempId, getApprovedName, getAccountId, getFolioNumber, getNameRequestDetails, getNameRequestApplicant,
-  getOfficeAddresses, isApplicationValid, getSteps, getMaxStep, getCurrentDate, ignoreChanges,
-  haveChanges, getNameRequestNumber
+  getFilingId, getTempId, isNamedBusiness, getNameRequestNumber, getApprovedName, getAccountId,
+  getFolioNumber, getNameRequestDetails, getNameRequestApplicant, getOfficeAddresses,
+  isApplicationValid, getSteps, getMaxStep, getCurrentDate, ignoreChanges, haveChanges
 } from '@/store/getters'
 
 // Mutations
@@ -61,6 +61,8 @@ export function getVuexStore () {
       isBusySaving,
       isPremiumAccount,
       getAccountId,
+      isNamedBusiness,
+      getNameRequestNumber,
       getApprovedName,
       getTempId,
       getFilingId,
@@ -73,8 +75,7 @@ export function getVuexStore () {
       getMaxStep,
       getCurrentDate,
       ignoreChanges,
-      haveChanges,
-      getNameRequestNumber
+      haveChanges
     },
     mutations: {
       mutateAccountInformation,

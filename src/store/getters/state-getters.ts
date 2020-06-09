@@ -86,15 +86,27 @@ export const getFolioNumber = (state: any): string => {
 }
 
 /**
+ * Whether this IA is for a Named Business.
+ */
+export const isNamedBusiness = (state: any): boolean => {
+  // a named business has a NR number
+  return !!state.stateModel.nameRequest.nrNumber
+}
+
+/**
+ * Returns the NR number of a name request.
+ */
+export const getNameRequestNumber = (state: any): string => {
+  return state.stateModel.nameRequest.nrNumber
+}
+
+/**
  * Returns the approved name of a name request.
  */
 export const getApprovedName = (state: any): string => {
   return state.stateModel.nameRequest.details.approvedName
 }
 
-export const getNameRequestNumber = (state: any): string => {
-  return state.stateModel.nameRequest.nrNumber
-}
 /**
  * Returns name request details.
  */

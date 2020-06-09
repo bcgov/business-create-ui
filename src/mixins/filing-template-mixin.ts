@@ -8,10 +8,8 @@ import { ActionBindingIF, StateModelIF, IncorporationFilingIF, GetterIF } from '
 // Constants
 import { INCORPORATION_APPLICATION } from '@/constants'
 
-// Enums
-import { EntityTypes } from '@/enums'
 /**
- * Mixin that provides the integration with the legal api.
+ * Mixin that provides the integration with the Legal API.
  */
 @Component({})
 export default class FilingTemplateMixin extends Vue {
@@ -20,6 +18,8 @@ export default class FilingTemplateMixin extends Vue {
 
   // Global getters
   @Getter isTypeBcomp!: GetterIF
+  @Getter isNamedBusiness!: boolean
+  @Getter getNameRequestNumber!: string
   @Getter getApprovedName!: string
   @Getter getTempId!: string
 
@@ -30,7 +30,6 @@ export default class FilingTemplateMixin extends Vue {
   @Action setDefineCompanyStepValidity!: ActionBindingIF
   @Action setNameRequestState!: ActionBindingIF
   @Action setOrgPersonList!: ActionBindingIF
-  @Action setFilingId!: ActionBindingIF
   @Action setCertifyState!: ActionBindingIF
   @Action setShareClasses!: ActionBindingIF
   @Action setEffectiveDate!: ActionBindingIF
@@ -38,36 +37,39 @@ export default class FilingTemplateMixin extends Vue {
   @Action setFolioNumber!: ActionBindingIF
   @Action setIncorporationAgreementStepData!: ActionBindingIF
 
-  /** Constructs a filing body, used when saving a filing. */
+  /** Constructs a filing body from store data. Used when saving a filing. */
   buildFiling (): IncorporationFilingIF {
-    // Format DateTime for Filing
-    const effectiveDate = this.stateModel?.incorporationDateTime?.effectiveDate || ''
+    // Format DateTime for filing.
+    const effectiveDate = this.stateModel.incorporationDateTime.effectiveDate
     const formattedDateTime = effectiveDate &&
       (effectiveDate.toISOString()).replace('Z', '+00:00')
 
-    // Build and return filing
-    let filing:IncorporationFilingIF = {
+    // Build filing.
+    const filing: IncorporationFilingIF = {
       filing: {
         header: {
           name: INCORPORATION_APPLICATION,
-          certifiedBy: this.stateModel?.certifyState?.certifiedBy || '',
-          date: this.stateModel?.currentDate || '',
+          certifiedBy: this.stateModel.certifyState.certifiedBy,
+          date: this.stateModel.currentDate,
           folioNumber: this.stateModel.defineCompanyStep.folioNumber,
           isFutureEffective: this.stateModel.incorporationDateTime.isFutureEffective
         },
         business: {
-          legalType: this.stateModel?.entityType || '',
-          identifier: this.getTempId || ''
+          legalType: this.stateModel.entityType,
+          identifier: this.getTempId
         },
         incorporationApplication: {
-          offices: this.stateModel?.defineCompanyStep?.officeAddresses || {},
-          contactPoint: {
-            email: this.stateModel?.defineCompanyStep?.businessContact?.email || '',
-            phone: this.stateModel?.defineCompanyStep?.businessContact?.phone || '',
-            extension: this.stateModel?.defineCompanyStep?.businessContact?.extension || ''
+          nameRequest: {
+            legalType: this.stateModel.entityType
           },
-          parties: this.stateModel?.addPeopleAndRoleStep?.orgPeople || [],
-          shareClasses: this.stateModel?.createShareStructureStep?.shareClasses || [],
+          offices: this.stateModel.defineCompanyStep.officeAddresses,
+          contactPoint: {
+            email: this.stateModel.defineCompanyStep.businessContact.email,
+            phone: this.stateModel.defineCompanyStep.businessContact.phone,
+            extension: this.stateModel.defineCompanyStep.businessContact.extension
+          },
+          parties: this.stateModel.addPeopleAndRoleStep.orgPeople,
+          shareClasses: this.stateModel.createShareStructureStep.shareClasses,
           incorporationAgreement: {
             agreementType: this.stateModel.incorporationAgreementStep.agreementType
           }
@@ -75,13 +77,10 @@ export default class FilingTemplateMixin extends Vue {
       }
     }
 
-    if (this.stateModel?.nameRequest?.nrNumber) {
-      let nrObj = {
-        nrNumber: this.stateModel.nameRequest?.nrNumber,
-        legalType: this.stateModel?.entityType,
-        legalName: this.getApprovedName
-      }
-      filing.filing.incorporationApplication.nameRequest = nrObj
+    // If this is a named IA then save Name Request Number and Approved Name.
+    if (this.isNamedBusiness) {
+      filing.filing.incorporationApplication.nameRequest.nrNumber = this.getNameRequestNumber
+      filing.filing.incorporationApplication.nameRequest.legalName = this.getApprovedName
     }
 
     // Pass the effective date only for a future effective filing.
@@ -92,12 +91,15 @@ export default class FilingTemplateMixin extends Vue {
   }
 
   /**
-   * Method to parse a received draft filing into the store
-   * @param draftFiling The draft filing body to be parsed and assigned to store
+   * Parses a draft filing into the store.
+   * @param draftFiling the draft filing body to be parsed
    */
   parseDraft (draftFiling: any): void {
     // FUTURE: set types so each of these validate their parameters
     // ref: https://www.typescriptlang.org/docs/handbook/generics.html
+
+    // NB: don't parse Name Request object -- NR is fetched from namex/NRO instead
+
     // Set Entity Type
     this.setEntityType(draftFiling.business.legalType)
 
