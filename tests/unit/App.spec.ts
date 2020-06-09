@@ -46,7 +46,8 @@ const filingData = {
     },
     nameRequest: {
       legalType: 'BC',
-      nrNumber: 'NR1234567'
+      nrNumber: 'NR 1234567',
+      legalName: 'My Name Request Inc.'
     },
     offices: {
       registeredOffice: {
@@ -238,18 +239,6 @@ const nrData = {
   state: 'APPROVED'
 }
 
-const baseIaData = {
-  header: {
-    name: 'incorporationApplication',
-    filingId: 54321,
-    status: 'draft'
-  },
-  business: {
-    identifier: 'T7654321',
-    legalType: 'BC'
-  }
-}
-
 describe('Numbered company setup', () => {
   let wrapper: any
   const { assign } = window.location
@@ -289,7 +278,20 @@ describe('Numbered company setup', () => {
         data:
         {
           filing: {
-            ...baseIaData
+            header: {
+              name: 'incorporationApplication',
+              filingId: 54321,
+              status: 'draft'
+            },
+            business: {
+              identifier: 'T7654321',
+              legalType: 'BC'
+            },
+            incorporationApplication: {
+              nameRequest: {
+                legalType: 'BC'
+              }
+            }
           }
         }
       })))
@@ -325,7 +327,7 @@ describe('Numbered company setup', () => {
       .toBeDefined()
   })
 
-  it('Does not load a name request into the store', () => {
+  it('does not load a name request into the store', () => {
     // All Name request specific fields should be empty
     expect(store.state.stateModel.nameRequest.nrNumber).toEqual('')
     expect(store.state.stateModel.filingId).toBe(54321)
@@ -394,7 +396,7 @@ describe('App component', () => {
       })))
 
     // GET NR data
-    get.withArgs('nameRequests/NR1234567')
+    get.withArgs('nameRequests/NR 1234567')
       .returns(new Promise(resolve => resolve({
         data:
           {
@@ -446,9 +448,11 @@ describe('App component', () => {
   })
 
   it('loads a draft filing into the store', () => {
-    // Validate Name Request
-    expect(store.state.stateModel.entityType).toBe('BC')
+    // Validate Filing ID - set by fetchDraft()
     expect(store.state.stateModel.filingId).toBe(12345)
+
+    // Validate Entity Type
+    expect(store.state.stateModel.entityType).toBe('BC')
 
     // Validate Office Addresses
     expect(store.state.stateModel.defineCompanyStep.officeAddresses.registeredOffice)
@@ -467,6 +471,10 @@ describe('App component', () => {
     // Validate Share Structure
     expect(store.state.stateModel.createShareStructureStep.shareClasses)
       .toStrictEqual(filingData.incorporationApplication.shareClasses)
+
+    // Validate Incorporation Agreement
+    expect(store.state.stateModel.incorporationAgreementStep.agreementType)
+      .toStrictEqual(filingData.incorporationApplication.incorporationAgreement.agreementType)
   })
 
   it('loads a name request into the store', () => {
@@ -493,11 +501,9 @@ describe('App component', () => {
     expect(store.state.stateModel.nameRequest.applicant.addressLine2).toBe(nrData.applicants.addrLine2)
     expect(store.state.stateModel.nameRequest.applicant.addressLine3).toBe(nrData.applicants.addrLine3)
     expect(store.state.stateModel.nameRequest.applicant.city).toBe(nrData.applicants.city)
-    expect(store.state.stateModel.nameRequest.applicant.countryTypeCode)
-      .toBe(nrData.applicants.countryTypeCd)
+    expect(store.state.stateModel.nameRequest.applicant.countryTypeCode).toBe(nrData.applicants.countryTypeCd)
     expect(store.state.stateModel.nameRequest.applicant.postalCode).toBe(nrData.applicants.postalCd)
-    expect(store.state.stateModel.nameRequest.applicant.stateProvinceCode)
-      .toBe(nrData.applicants.stateProvinceCd)
+    expect(store.state.stateModel.nameRequest.applicant.stateProvinceCode).toBe(nrData.applicants.stateProvinceCd)
   })
 
   it('shows confirm popup if exiting before saving changes', async () => {

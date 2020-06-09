@@ -381,18 +381,28 @@ export default class App extends Mixins(BcolMixin, DateMixin, FilingTemplateMixi
       })
 
       try {
-        // Retrieve draft filing if it exists for the IA Number specified
+        // fetch draft filing
         let draftFiling = await this.fetchDraft()
-        let emptyFiling = this.buildFiling()
-        if (draftFiling?.incorporationApplication?.nameRequest) {
-          await this.processNameRequest(draftFiling)
-        }
 
+        // merge draft properties into empty filing so all properties are initialized
+        const emptyFiling = this.buildFiling()
         draftFiling = { ...emptyFiling.filing, ...draftFiling }
 
-        // Parse the draft and update Incorporation data into the store if it exists
+        // parse draft filing into the store
         if (draftFiling) {
           this.parseDraft(draftFiling)
+        }
+
+        // verify nameRequest object
+        const nameRequest = draftFiling?.incorporationApplication?.nameRequest
+        if (!nameRequest) {
+          // there should be a nameRequest object but continue even if it doesn't exist
+          // TODO: after MVP, add a real check here
+          console.log('Filing should have nameRequest object') // eslint-disable-line no-console
+        }
+        // if we have a NR number, fetch the NR
+        if (nameRequest?.nrNumber) {
+          await this.processNameRequest(draftFiling)
         }
 
         // Initialize Fee Summary
@@ -415,34 +425,33 @@ export default class App extends Mixins(BcolMixin, DateMixin, FilingTemplateMixi
     }
   }
 
-  /** Set up any required fields/ validation if a Name request is present */
+  /** Fetches NR and validates it. */
   private async processNameRequest (filing: any): Promise<void> {
     try {
-      const nameRequest = filing.incorporationApplication.nameRequest
+      const nrNumber = filing.incorporationApplication.nameRequest.nrNumber
 
-      // ensure we have an NR number
-      if (!nameRequest.nrNumber) {
-        this.nameRequestInvalidType = NameRequestStates.NOT_FOUND
-        this.nameRequestInvalidErrorDialog = true
-        return
-      }
       // fetch NR data
-      const nrResponse = await this.fetchNameRequest(nameRequest.nrNumber).catch(error => {
+      const nrResponse = await this.fetchNameRequest(nrNumber).catch(error => {
         console.log('NR error =', error) // eslint-disable-line no-console
         this.nameRequestInvalidErrorDialog = true
       })
+
       // ensure NR was found
       if (!nrResponse) {
         this.nameRequestInvalidType = NameRequestStates.NOT_FOUND
         this.nameRequestInvalidErrorDialog = true
         return
       }
+
       // ensure NR is valid
       if (!this.isNrValid(nrResponse)) {
         this.nameRequestInvalidType = NameRequestStates.INVALID
         this.nameRequestInvalidErrorDialog = true
         return
       }
+
+      // TODO: verify that nrResponse.entityTypeCd === business.legalType
+
       // ensure NR is consumable
       const state = this.getNrState(nrResponse)
       if (state !== NameRequestStates.APPROVED && state !== NameRequestStates.CONDITIONAL) {
@@ -451,8 +460,8 @@ export default class App extends Mixins(BcolMixin, DateMixin, FilingTemplateMixi
         return
       }
       // if we get this far, the NR is good to go!
-      nrResponse.isConsumable = true
-      this.setNameRequestState(this.generateNameRequestState(nrResponse, filing.Id))
+      const nameRequestState = this.generateNameRequestState(nrResponse, filing.Id)
+      this.setNameRequestState(nameRequestState)
     } catch (e) {
       // errors should be handled above
     }
