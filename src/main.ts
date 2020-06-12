@@ -72,9 +72,10 @@ async function start () {
 // execution and error handling
 start().catch(error => {
   console.error(error) // eslint-disable-line no-console
-  alert('There was an error starting this page.\nPlease try again later.')
+  alert('There was an error starting this page. (See console for details.)\n' +
+    'Please try again later.')
   // try to redirect to Business Registry home page
-  const businessesUrl = null // sessionStorage.getItem('BUSINESSES_URL')
+  const businessesUrl = sessionStorage.getItem('BUSINESSES_URL')
   if (businessesUrl) {
     // assume Businesses URL is always reachable
     window.location.assign(businessesUrl)
