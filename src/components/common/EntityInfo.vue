@@ -1,6 +1,15 @@
 <template>
   <div id="entity-info">
     <v-container>
+      <v-breadcrumbs :items="breadcrumbs" divider=">" class="breadcrumb mb-5">
+        <v-breadcrumbs-item
+          slot="item"
+          slot-scope="{ item }"
+          exact
+          :href="item.href">
+          {{ item.text }}
+        </v-breadcrumbs-item>
+      </v-breadcrumbs>
       <v-list-item three-line id="entity-info-header">
 
         <!-- Header -->
@@ -56,6 +65,26 @@ export default class EntityInfo extends Vue {
 
     return ''
   }
+
+  /** Get route breadcrumbs. */
+  private get breadcrumbs (): Array<any> {
+    return [
+      {
+        text: 'Manage Businesses Dashboard',
+        disabled: false,
+        href: `${sessionStorage.getItem('AUTH_URL')}business`
+      },
+      {
+        text: this.getApprovedName || 'Numbered Benefit Company',
+        disabled: false,
+        href: `${sessionStorage.getItem('DASHBOARD_URL')}${this.getTempId}`
+      },
+      {
+        text: this.entityTitle(),
+        disabled: false
+      }
+    ]
+  }
 }
 
 </script>
@@ -65,6 +94,24 @@ export default class EntityInfo extends Vue {
 
 #entity-info {
   background: $BCgovInputBG;
+
+  .breadcrumb {
+    padding: 0;
+  }
+
+  .v-breadcrumbs li {
+    font-size: .75rem;
+  }
+
+  ::v-deep {
+    .v-breadcrumbs a {
+      color: $gray8;
+    }
+
+    .v-breadcrumbs a:hover {
+      color: $BCgovABlue3;
+    }
+  }
 }
 
 #entity-info-header {
