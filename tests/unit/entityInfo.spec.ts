@@ -1,14 +1,13 @@
 // Libraries
 import Vue from 'vue'
 import Vuetify from 'vuetify'
-import Vuex from 'vuex'
 
 // Store
 import { getVuexStore } from '@/store'
 
 // Components
 import { mount } from '@vue/test-utils'
-import { EntityInfo, NameRequestInfo } from '@/components/common'
+import { EntityInfo } from '@/components/common'
 
 Vue.use(Vuetify)
 
@@ -45,6 +44,20 @@ describe('Entity Info component with an NR', () => {
     expect(wrapper.vm.$el.querySelector('#entity-nr-number').textContent)
       .toContain('NR 1234567')
   })
+
+  it('displays the breadcrumb correctly as a named benefit company', async () => {
+    const breadcrumbs = wrapper.findAll('.v-breadcrumbs li')
+
+    const crumb1 = breadcrumbs.at(0)
+    const divider = breadcrumbs.at(1)// Divider is present every odd index
+    const crumb2 = breadcrumbs.at(2)
+    const crumb3 = breadcrumbs.at(4)
+
+    expect(crumb1.text()).toStrictEqual('Manage Businesses Dashboard')
+    expect(divider.text()).toStrictEqual('>')
+    expect(crumb2.text()).toStrictEqual('Xyz Ltd.')
+    expect(crumb3.text()).toStrictEqual('BC Benefit Company Incorporation Application')
+  })
 })
 
 describe('Entity Info component without an NR', () => {
@@ -77,5 +90,19 @@ describe('Entity Info component without an NR', () => {
 
     expect(wrapper.vm.$el.querySelector('#entity-numbered-label').textContent)
       .toContain('Numbered Benefit Company')
+  })
+
+  it('displays the breadcrumb correctly as a numbered benefit company', async () => {
+    const breadcrumbs = wrapper.findAll('.v-breadcrumbs li')
+
+    const crumb1 = breadcrumbs.at(0)
+    const divider = breadcrumbs.at(1)// Divider is present every odd index
+    const crumb2 = breadcrumbs.at(2)
+    const crumb3 = breadcrumbs.at(4)
+
+    expect(crumb1.text()).toStrictEqual('Manage Businesses Dashboard')
+    expect(divider.text()).toStrictEqual('>')
+    expect(crumb2.text()).toStrictEqual('Numbered Benefit Company')
+    expect(crumb3.text()).toStrictEqual('BC Benefit Company Incorporation Application')
   })
 })
