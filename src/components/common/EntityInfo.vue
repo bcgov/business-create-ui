@@ -6,7 +6,6 @@
           slot="item"
           slot-scope="{ item }"
           exact
-          :to="item.to"
           :href="item.href">
           {{ item.text }}
         </v-breadcrumbs-item>
@@ -78,13 +77,11 @@ export default class EntityInfo extends Vue {
       {
         text: this.getApprovedName || 'Numbered Benefit Company',
         disabled: false,
-        exact: true,
         href: `${sessionStorage.getItem('DASHBOARD_URL')}${this.getTempId}`
       },
       {
         text: this.entityTitle(),
-        disabled: false,
-        exact: true
+        disabled: false
       }
     ]
   }
