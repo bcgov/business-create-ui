@@ -1,12 +1,12 @@
 <template>
   <div>
     <section class="mt-10 benefit-company-statement" v-if="isTypeBcomp">
-        <header>
-          <h2>{{ BenefitCompanyStatementResource.title }}</h2>
-        </header>
-        <p class="mt-5">
-          {{ BenefitCompanyStatementResource.description }}
-        </p>
+      <header>
+        <h2>{{ BenefitCompanyStatementResource.title }}</h2>
+      </header>
+      <p class="mt-5">
+        {{ BenefitCompanyStatementResource.description }}
+      </p>
     </section>
 
     <section class="mt-10">

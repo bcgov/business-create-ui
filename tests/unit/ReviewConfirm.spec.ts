@@ -42,6 +42,7 @@ describe('Review Confirm view', () => {
     const wrapper = shallowMount(ReviewConfirm, { localVue, store, router, vuetify })
 
     expect(wrapper.find('.benefit-company-statement').exists()).toBe(true)
+    expect(wrapper.find('.benefit-company-statement p').text()).toContain('This company is a benefit company and')
 
     wrapper.destroy()
   })
