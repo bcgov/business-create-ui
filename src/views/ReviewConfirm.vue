@@ -1,13 +1,11 @@
 <template>
   <div>
-    <section class="mt-10 benefit-company-statement" v-if="isTypeBcomp">
-      <header>
-        <h2>{{ BenefitCompanyStatementResource.title }}</h2>
-      </header>
-      <p class="mt-5">
+    <div class="mt-10 benefit-company-statement" v-if="isTypeBcomp">
+      <p>
+        <span class="benefit-company-statement-label">{{ BenefitCompanyStatementResource.title }}:</span>
         {{ BenefitCompanyStatementResource.description }}
       </p>
-    </section>
+    </div>
 
     <section class="mt-10">
       <header>
@@ -137,4 +135,8 @@ export default class ReviewConfirm extends Mixins() {
 </script>
 
 <style lang="scss" scoped>
+.benefit-company-statement-label {
+  letter-spacing: -0.04rem;
+  font-weight: 700;
+}
 </style>

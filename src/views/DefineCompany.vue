@@ -1,13 +1,11 @@
 <template>
   <div>
-    <section class="mt-10 benefit-company-statement" v-if="isTypeBcomp">
-      <header>
-        <h2>{{ BenefitCompanyStatementResource.title }}</h2>
-      </header>
-      <p class="mt-5">
-        {{ BenefitCompanyStatementResource.description }}
-      </p>
-    </section>
+    <div class="mt-10 benefit-company-statement" v-if="isTypeBcomp">
+        <p>
+          <span class="benefit-company-statement-label">{{ BenefitCompanyStatementResource.title }}:</span>
+          {{ BenefitCompanyStatementResource.description }}
+        </p>
+    </div>
 
     <section class="mt-10">
       <header>
@@ -248,5 +246,10 @@ header {
   p {
     padding-top:0.5rem
   }
+}
+
+.benefit-company-statement-label {
+  letter-spacing: -0.04rem;
+  font-weight: 700;
 }
 </style>
