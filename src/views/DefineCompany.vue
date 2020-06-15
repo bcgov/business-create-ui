@@ -1,5 +1,14 @@
 <template>
   <div>
+    <section class="mt-10 benefit-company-statement" v-if="isTypeBcomp">
+        <header>
+          <h2>{{ BenefitCompanyStatementResource.title }}</h2>
+        </header>
+        <p class="mt-5">
+          {{ BenefitCompanyStatementResource.description }}
+        </p>
+    </section>
+
     <section class="mt-10">
       <header>
         <h2>1. Company Name</h2>
@@ -71,6 +80,9 @@ import { EntityFilterMixin } from '@/mixins'
 // Enums
 import { EntityTypes } from '@/enums'
 
+// Resources
+import { BenefitCompanyStatementResource } from '@/resources'
+
 // Components
 import { BusinessContactInfo, FolioNumber, OfficeAddresses } from '@/components/DefineCompany'
 import { NameRequestInfo } from '@/components/common'
@@ -97,6 +109,7 @@ export default class DefineCompany extends Mixins(EntityFilterMixin) {
   // Global getters
   @Getter isEntityType!: GetterIF
   @Getter isPremiumAccount!: GetterIF
+  @Getter isTypeBcomp!: GetterIF
 
   // Global actions
   @Action setEntityType!: ActionBindingIF
@@ -105,6 +118,9 @@ export default class DefineCompany extends Mixins(EntityFilterMixin) {
   @Action setOfficeAddresses!: ActionBindingIF
   @Action setDefineCompanyStepValidity!: ActionBindingIF
   @Action setIgnoreChanges!: ActionBindingIF
+
+  // Resources
+  readonly BenefitCompanyStatementResource = BenefitCompanyStatementResource
 
   private businessContactFormValid: boolean = false
   private addressFormValid: boolean = false

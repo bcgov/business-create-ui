@@ -95,4 +95,22 @@ describe('Define Company view', () => {
 
     wrapper.destroy()
   })
+
+  it('displays benefit company statement when it is a BC', () => {
+    store.state.stateModel.entityType = 'BC'
+    const wrapper = shallowMount(DefineCompany, { localVue, store, router, vuetify })
+
+    expect(wrapper.find('.benefit-company-statement').exists()).toBe(true)
+
+    wrapper.destroy()
+  })
+
+  it('doesn\'t display benefit company statement when it is not a BC', () => {
+    store.state.stateModel.entityType = 'CP'
+    const wrapper = shallowMount(DefineCompany, { localVue, store, router, vuetify })
+
+    expect(wrapper.find('.benefit-company-statement').exists()).toBe(false)
+
+    wrapper.destroy()
+  })
 })
