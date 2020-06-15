@@ -1,5 +1,12 @@
 <template>
   <div>
+    <div class="mt-10 benefit-company-statement" v-if="isTypeBcomp">
+      <p>
+        <span class="benefit-company-statement-label">{{ BenefitCompanyStatementResource.title }}:</span>
+        {{ BenefitCompanyStatementResource.description }}
+      </p>
+    </div>
+
     <section class="mt-10">
       <header>
         <h2>Review</h2>
@@ -42,13 +49,16 @@
 <script lang="ts">
 // Libraries
 import { Component, Mixins, Vue } from 'vue-property-decorator'
-import { State, Action } from 'vuex-class'
+import { State, Action, Getter } from 'vuex-class'
 
 // Interfaces
-import { CertifyStatementIF, ActionBindingIF, CertifyIF, DateTimeIF } from '@/interfaces'
+import { CertifyStatementIF, ActionBindingIF, CertifyIF, DateTimeIF, GetterIF } from '@/interfaces'
 
 // Components
 import { Certify, IncorporationDateTime, Summary } from '@/components/ReviewConfirm'
+
+// Resources
+import { BenefitCompanyStatementResource } from '@/resources'
 
 @Component({
   components: {
@@ -71,10 +81,17 @@ export default class ReviewConfirm extends Mixins() {
   @State(state => state.stateModel.incorporationDateTime)
   readonly incorporationDateTime!: DateTimeIF
 
+  // Global Getters
+  @Getter isTypeBcomp!: GetterIF
+
+  // Global Actions
   @Action setIsIncorporationDateTimeValid!: ActionBindingIF
   @Action setEffectiveDate!: ActionBindingIF
   @Action setCertifyState!: ActionBindingIF
   @Action setIgnoreChanges!: ActionBindingIF
+
+  // Resources
+  readonly BenefitCompanyStatementResource = BenefitCompanyStatementResource
 
   /** Called when component is created. */
   private created (): void {
@@ -118,4 +135,8 @@ export default class ReviewConfirm extends Mixins() {
 </script>
 
 <style lang="scss" scoped>
+.benefit-company-statement-label {
+  letter-spacing: -0.04rem;
+  font-weight: 700;
+}
 </style>

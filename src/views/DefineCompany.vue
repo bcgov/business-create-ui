@@ -1,5 +1,12 @@
 <template>
   <div>
+    <div class="mt-10 benefit-company-statement" v-if="isTypeBcomp">
+        <p>
+          <span class="benefit-company-statement-label">{{ BenefitCompanyStatementResource.title }}:</span>
+          {{ BenefitCompanyStatementResource.description }}
+        </p>
+    </div>
+
     <section class="mt-10">
       <header>
         <h2>1. Company Name</h2>
@@ -28,7 +35,7 @@
         <p>Enter the contact information for the Registered Office. The Corporate Registry will use this to
            communicate with the company in the future, including sending the following documents and
            notifications: a Certificate of Incorporation, a certified copy of the Incorporation Application,
-           a certified copy of the Notice of Articles, payment receipts, and optional notifications such as
+           a certified copy of the Notice of Articles, payment receipts, and notifications such as
            Annual Report reminders.
         </p>
       </header>
@@ -71,6 +78,9 @@ import { EntityFilterMixin } from '@/mixins'
 // Enums
 import { EntityTypes } from '@/enums'
 
+// Resources
+import { BenefitCompanyStatementResource } from '@/resources'
+
 // Components
 import { BusinessContactInfo, FolioNumber, OfficeAddresses } from '@/components/DefineCompany'
 import { NameRequestInfo } from '@/components/common'
@@ -97,6 +107,7 @@ export default class DefineCompany extends Mixins(EntityFilterMixin) {
   // Global getters
   @Getter isEntityType!: GetterIF
   @Getter isPremiumAccount!: GetterIF
+  @Getter isTypeBcomp!: GetterIF
 
   // Global actions
   @Action setEntityType!: ActionBindingIF
@@ -105,6 +116,9 @@ export default class DefineCompany extends Mixins(EntityFilterMixin) {
   @Action setOfficeAddresses!: ActionBindingIF
   @Action setDefineCompanyStepValidity!: ActionBindingIF
   @Action setIgnoreChanges!: ActionBindingIF
+
+  // Resources
+  readonly BenefitCompanyStatementResource = BenefitCompanyStatementResource
 
   private businessContactFormValid: boolean = false
   private addressFormValid: boolean = false
@@ -232,5 +246,10 @@ header {
   p {
     padding-top:0.5rem
   }
+}
+
+.benefit-company-statement-label {
+  letter-spacing: -0.04rem;
+  font-weight: 700;
 }
 </style>
