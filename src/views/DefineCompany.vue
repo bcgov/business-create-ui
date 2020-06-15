@@ -37,7 +37,7 @@
         <p>Enter the contact information for the Registered Office. The Corporate Registry will use this to
            communicate with the company in the future, including sending the following documents and
            notifications: a Certificate of Incorporation, a certified copy of the Incorporation Application,
-           a certified copy of the Notice of Articles, payment receipts, and optional notifications such as
+           a certified copy of the Notice of Articles, payment receipts, and notifications such as
            Annual Report reminders.
         </p>
       </header>
