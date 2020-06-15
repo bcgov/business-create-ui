@@ -26,7 +26,7 @@
         of shares, each class must be assigned an identifying name such as Class A, Class B, etc.
       </p>
       <div id="share-structure-sample">
-        <ListShareClass :shareClasses="sharesHelpSample"/>
+        <ListShareClass :shareClasses="sharesHelpSample" :isSummary="true"/>
       </div>
       <p><small>Sample Share Structure</small></p>
       <h3>Important Information About the Company's Share Structure</h3>
