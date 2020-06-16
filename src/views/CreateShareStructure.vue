@@ -26,7 +26,7 @@
         of shares, each class must be assigned an identifying name such as Class A, Class B, etc.
       </p>
       <div id="share-structure-sample">
-        <ListShareClass :shareClasses="sharesHelpSample"/>
+        <ListShareClass :shareClasses="sharesHelpSample" :isSummary="true"/>
       </div>
       <p><small>Sample Share Structure</small></p>
       <h3>Important Information About the Company's Share Structure</h3>
@@ -141,13 +141,13 @@ export default class CreateShareStructure extends Vue {
     'id': 1,
     'priority': 0,
     'type': 'Class',
-    'name': 'Sample Shares',
+    'name': 'Common Shares',
     'hasMaximumShares': true,
-    'maxNumberOfShares': 1000,
-    'hasParValue': true,
-    'parValue': 1,
-    'currency': 'CAD',
-    'hasRightsOrRestrictions': true,
+    'maxNumberOfShares': 10000,
+    'hasParValue': false,
+    'parValue': null,
+    'currency': null,
+    'hasRightsOrRestrictions': false,
     'series': []
   }]
 

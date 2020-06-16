@@ -213,9 +213,22 @@ export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
       rules = [
         v => !!v || 'Maximum share value is required',
         v => /^\d+$/.test(v) || 'Must be a number greater than 0']
+      // To prevent changing share class value to a lower value after adding series.
+      if (this.isClass && this.activeIndex !== -1 && !this.hasNoMaximumShares &&
+       this.shareStructure.series.length > 0) {
+        const seriesSum = this.shareStructure.series.reduce((a, b) => +a + +b.maxNumberOfShares, 0)
+        rules.push(v => +v >= seriesSum ||
+        'The number for the series (or all series combined, if there are multiple under ' +
+        'a class) cannot exceed the number for the class')
+      }
       if (this.isSeries && this.shareClasses[this.parentIndex].hasMaximumShares) {
-        const currentSum = this.shareClasses[this.parentIndex].series
-          .reduce((a, b) => +a + +b.maxNumberOfShares, 0)
+        let filteredSeries = this.shareClasses[this.parentIndex].series
+        // The series is in edit mode and should be avoided from the calculating the total
+        if (this.activeIndex !== -1) {
+          filteredSeries = filteredSeries.filter((series) => (
+            series.id !== this.shareClasses[this.parentIndex].series[this.activeIndex].id))
+        }
+        const currentSum = filteredSeries.reduce((a, b) => +a + +b.maxNumberOfShares, 0)
         rules.push(v => +v + currentSum <= +this.shareClasses[this.parentIndex].maxNumberOfShares ||
         'The number for the series (or all series combined, if there are multiple under ' +
         'a class) cannot exceed the number for the class')
