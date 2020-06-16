@@ -4,32 +4,34 @@
 # Component: deployment config, service, route, config map, kc config map
 # Action: build
 # Template File: templates/business-create-ui.dc-srvc-rt-cmap-kcmap.json
+# Hint: oc process -n mpgxod-dev -f templates/business-create-ui.dc-srvc-rt-cmap-kcmap.json --param-file=business-create-ui.dc-srvc-rt-cmap-kcmap.param
+# Hint: oc process -n mpgxod-dev -f templates/business-create-ui.dc-srvc-rt-cmap-kcmap.json --param-file=business-create-ui.dc-srvc-rt-cmap-kcmap.param | oc replace -n mpgxod-dev -f -
 #=========================================================
 NAME="business-create"
 DOCKER_REGISTRY="docker-registry.default.svc:5000"
 IMAGE_NAMESPACE="mpgxod-tools"
-TAG_NAME="test"
+TAG_NAME="dev"
 REPLICAS="1"
 UPDATE_PERIOD_SECONDS="1"
 INTERVAL_SECONDS="1"
 TIMEOUT_SECONDS="600"
 MAX_UNAVAILABLE="25%"
 MAX_SURGE="25%"
-DOMAIN="business-create-test.pathfinder.gov.bc.ca"
+DOMAIN="business-create-dev.pathfinder.gov.bc.ca"
 PATH="/businesses/create/"
 # For config maps
-LEGAL_API_URL="https://legal-api-test.pathfinder.gov.bc.ca/api/v1/businesses/"
-AUTH_API_URL="https://auth-api-test.pathfinder.gov.bc.ca/api/v1/"
-BUSINESSES_URL="https://test.bcregistry.ca/cooperatives/auth/"
-PAY_API_URL="https://pay-api-test.pathfinder.gov.bc.ca/api/v1/"
-DASHBOARD_URL="https://test.bcregistry.ca/cooperatives/"
-KEYCLOAK_CONFIG_PATH="https://test.bcregistry.ca/cooperatives/auth/config/kc/keycloak.json"
-ADDRESS_COMPLETE_KEY=""
-LD_CLIENT_ID=""
-SENTRY_DSN=""
-REALM="fcf0kpqr"
-AUTH_SERVER_URL="https://sso-test.pathfinder.gov.bc.ca/auth"
+LEGAL_API_URL="https://legal-api-dev.pathfinder.gov.bc.ca/api/v1/businesses/"
+AUTH_API_URL="https://auth-api-dev.pathfinder.gov.bc.ca/api/v1/"
+BUSINESSES_URL="https://dev.bcregistry.ca/businesses/auth/"
+PAY_API_URL="https://pay-api-dev.pathfinder.gov.bc.ca/api/v1/"
+DASHBOARD_URL="https://dev.bcregistry.ca/businesses/"
+KEYCLOAK_CONFIG_PATH="https://dev.bcregistry.ca/businesses/auth/config/kc/keycloak.json"
+ADDRESS_COMPLETE_KEY=<valid key>
+LD_CLIENT_ID=<valid id>
+SENTRY_DSN="https://7a2b69c9ba524798863e43434a38011b@o265919.ingest.sentry.io/1529856"
+REALM=<keycloak-realm>
+AUTH_SERVER_URL="https://sso-dev.pathfinder.gov.bc.ca/auth"
 SSL_REQUIRED="external"
-RESOURCE=""
-KC_SECRET=""
+RESOURCE=<keycloak-resource>
+KC_SECRET=<keycloak-secret>
 CONFIDENTIAL_PORT="0"

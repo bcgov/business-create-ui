@@ -1,7 +1,7 @@
 {
-  "BUSINESSES_URL": "https://dev.bcregistry.ca/cooperatives/auth/",
-  "AUTH_URL": "https://dev.bcregistry.ca/cooperatives/auth/",
-  "DASHBOARD_URL": "https://dev.bcregistry.ca/cooperatives/",
+  "BUSINESSES_URL": "https://dev.bcregistry.ca/business/auth/",
+  "AUTH_URL": "https://dev.bcregistry.ca/business/auth/",
+  "DASHBOARD_URL": "https://dev.bcregistry.ca/business/",
   "LEGAL_API_URL": "https://legal-api-dev.pathfinder.gov.bc.ca/api/v1/",
   "AUTH_API_URL": "https://auth-api-dev.pathfinder.gov.bc.ca/api/v1/",
   "SBC_CONFIG_AUTH_API_URL": "https://auth-api-dev.pathfinder.gov.bc.ca/api/v1",
