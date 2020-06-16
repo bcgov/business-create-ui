@@ -397,4 +397,20 @@ describe('Share Structure component', () => {
     expect(wrapper.vm.$data.formValid).toBe(false)
     wrapper.destroy()
   })
+
+  it('Does not show error message if series max shares is changed to lower than class max shares', async () => {
+    const shareClass = createShareStructure(null, 1, 'Class', 'Class A', true, 100, true, 0.50, 'CAD', true)
+    const shareSeries = createShareStructure(1, 1, 'Series', 'Series A', true, 100, true, 0.50, 'CAD', true)
+    shareClass.series.push(shareSeries)
+    const wrapper: Wrapper<ShareStructure> = createComponent(shareSeries, 0, -1, 0, [shareClass])
+    const inputElement: Wrapper<Vue> = wrapper.find(txtMaxShares)
+    inputElement.setValue(20)
+    inputElement.trigger('change')
+    await waitForUpdate(wrapper)
+    expect(wrapper.find(formSelector).text())
+      .not.toContain('The number for the series (or all series combined, if there are multiple under ' +
+      'a class) cannot exceed the number for the class')
+    wrapper.destroy()
+  })
+
 })
