@@ -396,7 +396,7 @@ export default class App extends Mixins(BcolMixin, DateMixin, FilingTemplateMixi
         // If there is an existing filing, check if it is in a valid state to be edited
         if (draftFiling) {
           this.invalidIncorporationApplicationDialog = this.hasInvalidFilingState(draftFiling)
-          return
+          if (this.invalidIncorporationApplicationDialog) return
         }
         // merge draft properties into empty filing so all properties are initialized
         const emptyFiling = this.buildFiling()
