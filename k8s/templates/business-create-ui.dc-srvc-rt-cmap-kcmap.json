@@ -123,7 +123,7 @@
             "kind": "ConfigMap",
             "apiVersion": "v1",
             "data": {
-                "configuration.json": "{\n\"LEGAL_API_URL\":\"${LEGAL_API_URL}\",\n\"AUTH_API_URL\":\"${AUTH_API_URL}\",\n\"BUSINESSES_URL\":\"${BUSINESSES_URL}\",\n\"AUTH_URL\":\"${AUTH_URL}\",\n\"PAY_API_URL\":\"${PAY_API_URL}\",\n\"DASHBOARD_URL\":\"${DASHBOARD_URL}\",\n\"KEYCLOAK_CONFIG_PATH\":\"${KEYCLOAK_CONFIG_PATH}\",\n\"ADDRESS_COMPLETE_KEY\":\"${ADDRESS_COMPLETE_KEY}\",\n\"LD_CLIENT_ID\":\"${LD_CLIENT_ID}\",\n\"SENTRY_DSN\":\"${SENTRY_DSN}\"\n}"
+                "configuration.json": "{\n\"LEGAL_API_URL\":\"${LEGAL_API_URL}\",\n\"AUTH_API_URL\":\"${AUTH_API_URL}\",\n\"SBC_CONFIG_AUTH_API_URL\":\"${SBC_CONFIG_AUTH_API_URL}\",\n\"BUSINESSES_URL\":\"${BUSINESSES_URL}\",\n\"AUTH_URL\":\"${AUTH_URL}\",\n\"PAY_API_URL\":\"${PAY_API_URL}\",\n\"DASHBOARD_URL\":\"${DASHBOARD_URL}\",\n\"KEYCLOAK_CONFIG_PATH\":\"${KEYCLOAK_CONFIG_PATH}\",\n\"ADDRESS_COMPLETE_KEY\":\"${ADDRESS_COMPLETE_KEY}\",\n\"LD_CLIENT_ID\":\"${LD_CLIENT_ID}\",\n\"SENTRY_DSN\":\"${SENTRY_DSN}\"\n}"
             },
             "metadata": {
                 "name": "${NAME}-${TAG_NAME}-configuration",
@@ -276,63 +276,63 @@
             "name": "DOMAIN",
             "displayName": "Domain name.",
             "description": "The FQDN of the service.",
-            "required": false,
+            "required": true,
             "value": "business-create-dev.pathfinder.gov.bc.ca"
         },
         {
             "name": "PATH",
             "displayName": "URL Path",
             "description": "The path portion of the URL",
-            "required": false,
+            "required": true,
             "value": "/businesses/create/"
         },
         {
             "name": "LEGAL_API_URL",
             "displayName": "LEGAL API URL",
             "description": "The URL to the Legal API.",
-            "required": false,
+            "required": true,
             "value": ""
         },
         {
             "name": "AUTH_API_URL",
             "displayName": "Authorization API URL",
             "description": "The URL to the authorization service API.",
-            "required": false,
+            "required": true,
             "value": ""
         },
         {
             "name": "BUSINESSES_URL",
             "displayName": "Businesses Registry URL",
             "description": "The URL to the Business Registry home page.",
-            "required": false,
+            "required": true,
             "value": ""
         },
         {
             "name": "AUTH_URL",
             "displayName": "Auth URL",
             "description": "The URL to authenticate with entities.",
-            "required": false,
+            "required": true,
             "value": ""
         },
         {
             "name": "DASHBOARD_URL",
             "displayName": "Business Dashboard URL",
             "description": "The URL to the Business Dashboard (Filings UI).",
-            "required": false,
+            "required": true,
             "value": ""
         },
         {
             "name": "PAY_API_URL",
             "displayName": "Payment API URL",
             "description": "The URL to the payment API.",
-            "required": false,
+            "required": true,
             "value": ""
         },
         {
-            "name": "REPORT_SVC_URL",
-            "displayName": "Report Service API URL",
-            "description": "The URL to the Report Service API.",
-            "required": false,
+            "name": "SBC_CONFIG_AUTH_API_URL",
+            "displayName": "Auth URL",
+            "description": "The auth URL with no slash.",
+            "required": true,
             "value": ""
         },
         {
@@ -367,42 +367,42 @@
             "name": "REALM",
             "displayName": "Realm",
             "description": "Keycloak auth realm.",
-            "required": false,
+            "required": true,
             "value": ""
         },
         {
             "name": "AUTH_SERVER_URL",
             "displayName": "Auth Server Url",
             "description": "Keycloak Auth Url.",
-            "required": false,
+            "required": true,
             "value": ""
         },
         {
             "name": "SSL_REQUIRED",
             "displayName": "SSL Required",
             "description": "Type of ssl required.",
-            "required": false,
+            "required": true,
             "value": ""
         },
         {
             "name": "RESOURCE",
             "displayName": "Resource",
             "description": "Keycloak resource.",
-            "required": false,
+            "required": true,
             "value": ""
         },
         {
             "name": "KC_SECRET",
             "displayName": "Keycloak Secret",
             "description": "Keycloak Secret.",
-            "required": false,
+            "required": true,
             "value": ""
         },
         {
             "name": "CONFIDENTIAL_PORT",
             "displayName": "Confidential Port",
             "description": "Confidential Port.",
-            "required": false,
+            "required": true,
             "value": ""
         },
         {
