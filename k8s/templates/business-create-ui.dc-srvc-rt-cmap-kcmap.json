@@ -331,7 +331,7 @@
         {
             "name": "SBC_CONFIG_AUTH_API_URL",
             "displayName": "Auth URL",
-            "description": "The uth URL with no slash.",
+            "description": "The auth URL with no slash.",
             "required": true,
             "value": ""
         },
