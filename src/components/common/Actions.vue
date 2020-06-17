@@ -183,8 +183,6 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
       return
     }
 
-    this.setIsFilingPaying(false)
-
     const paymentToken = filingComplete?.header?.paymentToken
     const paymentCompleted = filingComplete.header?.paymentStatusCode === 'COMPLETED'
     if (paymentToken) {
@@ -205,6 +203,7 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
     } else {
       const error = new Error('Missing Payment Token')
       this.$root.$emit('save-error-event', error)
+      this.setIsFilingPaying(false)
     }
   }
 
