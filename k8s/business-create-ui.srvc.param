@@ -1,9 +1,0 @@
-#=========================================================
-# Template parameters for:
-# Project: business-create-ui
-# Component: service
-# Action: build
-# Template File: templates/business-create-ui.srvc.json
-#=========================================================
-NAME="business-create"
-TAG_NAME="dev"
