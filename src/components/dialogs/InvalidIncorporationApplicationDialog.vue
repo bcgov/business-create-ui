@@ -6,7 +6,7 @@
 
       <v-card-text>
         <p class="genErr">The incorporation application you are attempting to open does not exist -
-          it may have been filed, it maybe pending filing or payment.</p>
+          it may have been filed, or it may be pending filing or payment.</p>
       </v-card-text>
 
       <v-divider class="my-0"></v-divider>
