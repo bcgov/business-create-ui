@@ -229,6 +229,7 @@ export default class App extends Mixins(BcolMixin, DateMixin, FilingTemplateMixi
       this.bcolObj != null ||
       this.nameRequestInvalidErrorDialog ||
       this.fetchErrorDialog ||
+      this.invalidIncorporationApplicationDialog ||
       this.paymentErrorDialog ||
       this.saveErrorDialog
     )
@@ -395,6 +396,7 @@ export default class App extends Mixins(BcolMixin, DateMixin, FilingTemplateMixi
         // If there is an existing filing, check if it is in a valid state to be edited
         if (draftFiling) {
           this.invalidIncorporationApplicationDialog = this.hasInvalidFilingState(draftFiling)
+          return
         }
         // merge draft properties into empty filing so all properties are initialized
         const emptyFiling = this.buildFiling()
@@ -490,6 +492,7 @@ export default class App extends Mixins(BcolMixin, DateMixin, FilingTemplateMixi
     this.haveData = false
     this.bcolObj = null
     this.nameRequestInvalidErrorDialog = false
+    this.invalidIncorporationApplicationDialog = false
     this.accountAuthorizationDialog = false
     this.fetchErrorDialog = false
     this.paymentErrorDialog = false
