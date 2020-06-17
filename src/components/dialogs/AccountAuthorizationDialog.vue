@@ -1,11 +1,11 @@
 <template>
   <v-dialog v-model="dialog" width="45rem" persistent :attach="attach" content-class="account-authorization-dialog">
     <v-card>
-      <v-card-title>Account Authorization</v-card-title>
+      <v-card-title id="dialog-title">Account Authorization</v-card-title>
 
       <v-card-text>
-        <p class="genErr">This account appears to be unable to access this name request. You can
-          retry to access this name request now, or you can exit and return to the dashboard.</p>
+        <p class="genErr">This account appears to be unable to access this name request, incorporation application,
+          or business. You can retry, or you can exit and return to the dashboard.</p>
       </v-card-text>
 
       <v-divider class="my-0"></v-divider>

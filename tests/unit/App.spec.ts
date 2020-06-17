@@ -32,7 +32,7 @@ const filingData = {
   header: {
     name: 'incorporationApplication',
     filingId: 12345,
-    status: 'draft'
+    status: 'DRAFT'
   },
   business: {
     identifier: 'T1234567',
@@ -281,7 +281,7 @@ describe('Numbered company setup', () => {
             header: {
               name: 'incorporationApplication',
               filingId: 54321,
-              status: 'draft'
+              status: 'DRAFT'
             },
             business: {
               identifier: 'T7654321',

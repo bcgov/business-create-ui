@@ -1,6 +1,7 @@
 export * from './accountTypes'
 export * from './entityTypes'
 export * from './filingCodes'
+export * from './filingStatus'
 export * from './roles'
 export * from './incorporatorTypes'
 export * from './modes'

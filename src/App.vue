@@ -16,6 +16,12 @@
       @retry="fetchData()"
     />
 
+    <invalid-incorporation-application-dialog
+      attach="#app"
+      :dialog="invalidIncorporationApplicationDialog"
+      @exit="goToDashboard(true)"
+    />
+
     <fetch-error-dialog
       attach="#app"
       :dialog="fetchErrorDialog"
@@ -128,13 +134,13 @@ import Views from '@/views'
 
 // Dialogs, mixins, interfaces, etc
 import { AccountAuthorizationDialog, BcolErrorDialog, NameRequestInvalidErrorDialog, ConfirmDialog, FetchErrorDialog,
-  PaymentErrorDialog, SaveErrorDialog } from '@/components/dialogs'
+  InvalidIncorporationApplicationDialog, PaymentErrorDialog, SaveErrorDialog } from '@/components/dialogs'
 import { BcolMixin, DateMixin, FilingTemplateMixin, LegalApiMixin, NameRequestMixin } from '@/mixins'
 import { FilingDataIF, ActionBindingIF, ConfirmDialogType } from '@/interfaces'
 import { CertifyStatementResource } from '@/resources'
 
 // Enums and Constants
-import { EntityTypes, FilingCodes, RouteNames, NameRequestStates } from '@/enums'
+import { EntityTypes, FilingCodes, FilingStatus, RouteNames, NameRequestStates } from '@/enums'
 import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
 
 @Component({
@@ -148,6 +154,7 @@ import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
     NameRequestInvalidErrorDialog,
     AccountAuthorizationDialog,
     FetchErrorDialog,
+    InvalidIncorporationApplicationDialog,
     PaymentErrorDialog,
     SaveErrorDialog,
     ConfirmDialog,
@@ -191,6 +198,7 @@ export default class App extends Mixins(BcolMixin, DateMixin, FilingTemplateMixi
   private filingData: Array<FilingDataIF> = []
   private accountAuthorizationDialog: boolean = false
   private fetchErrorDialog: boolean = false
+  private invalidIncorporationApplicationDialog: boolean = false
   private paymentErrorDialog: boolean = false
   private bcolObj: object = null
   private saveErrorDialog: boolean = false
@@ -221,6 +229,7 @@ export default class App extends Mixins(BcolMixin, DateMixin, FilingTemplateMixi
       this.bcolObj != null ||
       this.nameRequestInvalidErrorDialog ||
       this.fetchErrorDialog ||
+      this.invalidIncorporationApplicationDialog ||
       this.paymentErrorDialog ||
       this.saveErrorDialog
     )
@@ -384,6 +393,11 @@ export default class App extends Mixins(BcolMixin, DateMixin, FilingTemplateMixi
         // fetch draft filing
         let draftFiling = await this.fetchDraft()
 
+        // If there is an existing filing, check if it is in a valid state to be edited
+        if (draftFiling) {
+          this.invalidIncorporationApplicationDialog = this.hasInvalidFilingState(draftFiling)
+          if (this.invalidIncorporationApplicationDialog) return
+        }
         // merge draft properties into empty filing so all properties are initialized
         const emptyFiling = this.buildFiling()
         draftFiling = { ...emptyFiling.filing, ...draftFiling }
@@ -423,6 +437,12 @@ export default class App extends Mixins(BcolMixin, DateMixin, FilingTemplateMixi
       // wait for things to stabilize, then reset flag
       Vue.nextTick(() => this.setHaveChanges(false))
     }
+  }
+
+  /** Used to check if the filing is in a valid state for changes. */
+  private hasInvalidFilingState (filing: any): boolean {
+    const filingStatus = filing.header.status
+    return filingStatus !== FilingStatus.DRAFT
   }
 
   /** Fetches NR and validates it. */
@@ -472,6 +492,7 @@ export default class App extends Mixins(BcolMixin, DateMixin, FilingTemplateMixi
     this.haveData = false
     this.bcolObj = null
     this.nameRequestInvalidErrorDialog = false
+    this.invalidIncorporationApplicationDialog = false
     this.accountAuthorizationDialog = false
     this.fetchErrorDialog = false
     this.paymentErrorDialog = false
