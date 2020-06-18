@@ -3,18 +3,61 @@ import Vue from 'vue'
 import Vuetify from 'vuetify'
 import VueRouter from 'vue-router'
 import { getVuexStore } from '@/store'
-import { shallowMount, createLocalVue } from '@vue/test-utils'
+import { shallowMount, createLocalVue, createWrapper } from '@vue/test-utils'
+import sinon from 'sinon'
+import axios from '@/utils/axios-auth'
 
 // Components
 import { Actions } from '@/components/common'
 
 // Other
 import mockRouter from './MockRouter'
+import { NameRequestStates } from '@/enums'
 
 Vue.use(Vuetify)
 
 const vuetify = new Vuetify({})
 const store = getVuexStore()
+
+// Mock NR data
+const nrData = {
+  applicants: {
+    addrLine1: 'address line 1',
+    addrLine2: 'address line 2',
+    addrLine3: 'address line 3',
+    city: 'Victoria',
+    countryTypeCd: 'CA',
+    emailAddress: 'tester@test.com',
+    firstName: 'John',
+    lastName: 'Doe',
+    middleName: 'Joe',
+    phoneNumber: '250-111-2222',
+    postalCd: 'V1V 1A2',
+    stateProvinceCd: 'BC'
+  },
+  consentFlag: 'R',
+  corpNum: null,
+  expirationDate: 'Thu, 31 Dec 2099 23:59:59 GMT',
+  requestTypeCd: 'BC',
+  names: [
+    {
+      choice: 1,
+      consumptionDate: null,
+      corpNum: null,
+      name: 'ABC 1234',
+      state: 'APPROVED'
+    },
+    {
+      choice: 2,
+      consumptionDate: null,
+      corpNum: null,
+      name: 'CDE 1234',
+      state: 'NE'
+    }
+  ],
+  nrNum: 'NR 1234567',
+  state: 'APPROVED'
+}
 
 describe('Actions component', () => {
   let wrapper: any
@@ -250,6 +293,16 @@ describe('Actions component - Filing Functionality', () => {
     // mock the window.location.assign function
     delete window.location
     window.location = { assign: jest.fn() } as any
+    const get = sinon.stub(axios, 'get')
+
+    // GET NR data
+    get.withArgs('nameRequests/NR 1234567')
+      .returns(new Promise(resolve => resolve({
+        data:
+          {
+            ...nrData
+          }
+      })))
 
     // init store
     store.state.stateModel.currentDate = '2020/01/29'
@@ -297,6 +350,7 @@ describe('Actions component - Filing Functionality', () => {
 
   afterEach(() => {
     window.location.assign = assign
+    sinon.restore()
     wrapper.destroy()
   })
 
@@ -389,5 +443,81 @@ describe('Actions component - Filing Functionality', () => {
     // verify event emission
     const events = wrapper.emitted('goToDashboard')
     expect(events.length).toBe(1)
+  })
+})
+
+describe('Emits error event if NR validation fails in file and pay', () => {
+  let wrapper: any
+  const { assign } = window.location
+  const effectiveDate = new Date(new Date().setDate(new Date().getDate() + 5))
+  const formattedEffectiveDate = effectiveDate.toISOString().replace('Z', '+00:00')
+
+  sessionStorage.setItem('AUTH_URL', `myhost/basePath/auth/`)
+  sessionStorage.setItem('DASHBOARD_URL', `myhost/cooperatives/`)
+
+  beforeEach(async () => {
+    // mock the window.location.assign function
+    delete window.location
+    window.location = { assign: jest.fn() } as any
+
+    const get = sinon.stub(axios, 'get')
+
+    let expiredNR = { ...nrData }
+    expiredNR['expirationDate'] = 'Thu, 31 Dec 2019 23:59:59 GMT'
+
+    // GET NR data
+    get.withArgs('nameRequests/NR 1234567')
+      .returns(new Promise(resolve => resolve({
+        data: expiredNR
+      })))
+
+
+    // init store
+    store.state.stateModel.currentDate = '2020/01/29'
+    store.state.stateModel.nameRequest = {
+      entityType: 'BC',
+      nrNumber: 'NR 1234567',
+      details: { approvedName: 'My Name Request Inc.' }
+    }
+    store.state.stateModel.tombstone = {
+      keycloakRoles: [],
+      authRoles: [],
+      userEmail: 'completing-party@example.com'
+    }
+    store.state.stateModel.certifyState = {
+      valid: true,
+      certifiedBy: 'Some certifier'
+    }
+    store.state.stateModel.entityType = 'BC'
+    store.state.stateModel.defineCompanyStep = { valid: true }
+    store.state.stateModel.addPeopleAndRoleStep = { valid: true }
+    store.state.stateModel.createShareStructureStep = { valid: true }
+    store.state.stateModel.incorporationAgreementStep = { valid: true }
+    store.state.stateModel.incorporationDateTime = { valid: true }
+
+    const localVue = createLocalVue()
+    localVue.use(VueRouter)
+    const router = mockRouter.mock()
+    router.push({ name: 'review-confirm', query: { id: 'T1234567' } })
+    wrapper = shallowMount(Actions, { localVue, store, router, vuetify })
+  })
+
+  afterEach(() => {
+    window.location.assign = assign
+    sinon.restore()
+    wrapper.destroy()
+  })
+
+  it('Emits the error event for an expired NR', async () => {
+    const mockBuildFiling = jest.spyOn(wrapper.vm, 'buildFiling')
+
+    await wrapper.vm.onClickFilePay()
+
+    const rootWrapper = createWrapper(wrapper.vm.$root)
+
+    expect(rootWrapper.emitted('name-request-invalid-error')).toEqual([['EXPIRED']])
+    expect(mockBuildFiling).not.toHaveBeenCalled()
+    expect(window.location.assign).not.toHaveBeenCalled()
+    expect(wrapper.vm.$route.name).toBe('review-confirm')
   })
 })
