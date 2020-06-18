@@ -243,7 +243,7 @@ describe('Numbered company setup', () => {
   let wrapper: any
   const { assign } = window.location
   sessionStorage.setItem('AUTH_URL', `myhost/basePath/auth/`)
-  sessionStorage.setItem('DASHBOARD_URL', `myhost/cooperatives/`)
+  sessionStorage.setItem('DASHBOARD_URL', `myhost/business/`)
 
   beforeEach(async () => {
     // mock the window.location.assign function
@@ -366,7 +366,7 @@ describe('App component', () => {
   let wrapper: any
   const { assign } = window.location
   sessionStorage.setItem('AUTH_URL', `myhost/basePath/auth/`)
-  sessionStorage.setItem('DASHBOARD_URL', `myhost/cooperatives/`)
+  sessionStorage.setItem('DASHBOARD_URL', `myhost/business/`)
 
   beforeEach(async () => {
     // mock the window.location.assign function
@@ -535,7 +535,7 @@ describe('App component', () => {
     expect(dialog.exists()).toBe(false)
 
     // verify redirection
-    const baseUrl = 'myhost/cooperatives/T1234567'
+    const baseUrl = 'myhost/business/T1234567'
     expect(window.location.assign).toHaveBeenCalledWith(baseUrl)
   })
 })

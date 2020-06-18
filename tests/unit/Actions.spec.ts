@@ -69,7 +69,7 @@ describe('Actions component - Filing Functionality', () => {
   const formattedEffectiveDate = effectiveDate.toISOString().replace('Z', '+00:00')
 
   sessionStorage.setItem('AUTH_URL', `myhost/basePath/auth/`)
-  sessionStorage.setItem('DASHBOARD_URL', `myhost/cooperatives/`)
+  sessionStorage.setItem('DASHBOARD_URL', `myhost/business/`)
 
   // the filing body that would get sent to the API
   const filing = {
@@ -372,7 +372,7 @@ describe('Actions component - Filing Functionality', () => {
     expect(mockSaveFiling).toHaveReturned()
 
     // verify redirection
-    const baseUrl = 'myhost/basePath/auth/makepayment/789/myhost%2Fcooperatives%2FT1234567'
+    const baseUrl = 'myhost/basePath/auth/makepayment/789/myhost%2Fbusiness%2FT1234567'
 
     expect(window.location.assign).toHaveBeenCalledWith(baseUrl)
   })
