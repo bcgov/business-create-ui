@@ -262,6 +262,7 @@ export default class App extends Mixins(BcolMixin, DateMixin, FilingTemplateMixi
       // process errors/warnings
       switch (error?.response?.status) {
         case PAYMENT_REQUIRED:
+          this.haveChanges = false
           const errObj = await this.getErrorObj(this.getErrorCode(error))
           if (errObj) {
             this.bcolObj = errObj
