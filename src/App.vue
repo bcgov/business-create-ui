@@ -304,7 +304,7 @@ export default class App extends Mixins(BcolMixin, DateMixin, FilingTemplateMixi
     // stop listening for save error event
     this.$root.$off('save-error-event')
     this.$root.$off('name-request-invalid-errort')
-    this.$root.$off('name-request-fetch-error')
+    this.$root.$off('name-request-retrieve-error')
   }
 
   private goToManageBusinessDashboard () : void {
