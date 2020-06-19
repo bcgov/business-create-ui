@@ -177,7 +177,7 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
       return
     }
     // If it is a named company IA, validate NR before filing submission
-    if (this.isNamedBusiness && this.getNameRequestNumber) {
+    if (this.isNamedBusiness) {
       try {
         await this.validateNameRequest(this.getNameRequestNumber)
       } catch (error) {

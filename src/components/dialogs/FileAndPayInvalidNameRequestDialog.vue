@@ -12,8 +12,8 @@
             </b>
           </p>
           <p>If you still wish to incorporate a Benefit Company, please contact Registry Staff as soon as possible.</p>
-          <div class="mt-5">IMPORTANT:</div>
-          <div>
+          <div class="mt-5 info-section">IMPORTANT:</div>
+          <div class="info-section">
             Once the reservation period for a Name Request expires or is otherwise cancelled, that name becomes
             available to anyone wishing to start their business with that name.
           </div>

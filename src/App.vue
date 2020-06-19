@@ -239,7 +239,8 @@ export default class App extends Mixins(BcolMixin, DateMixin, FilingTemplateMixi
       this.fetchErrorDialog ||
       this.invalidIncorporationApplicationDialog ||
       this.paymentErrorDialog ||
-      this.saveErrorDialog
+      this.saveErrorDialog ||
+      this.fileAndPayInvalidNameRequestDialog
     )
   }
 
@@ -310,7 +311,7 @@ export default class App extends Mixins(BcolMixin, DateMixin, FilingTemplateMixi
   private goToManageBusinessDashboard () : void {
     this.fileAndPayInvalidNameRequestDialog = false
     const manageBusinessUrl = `${sessionStorage.getItem('AUTH_URL')}business`
-    window.onbeforeunload = null
+    this.setHaveChanges(false)
     window.location.assign(manageBusinessUrl)
   }
 
@@ -524,6 +525,7 @@ export default class App extends Mixins(BcolMixin, DateMixin, FilingTemplateMixi
     this.fetchErrorDialog = false
     this.paymentErrorDialog = false
     this.saveErrorDialog = false
+    this.fileAndPayInvalidNameRequestDialog = false
     this.saveErrors = []
     this.saveWarnings = []
   }
