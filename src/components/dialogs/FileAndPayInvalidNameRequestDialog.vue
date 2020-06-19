@@ -6,8 +6,8 @@
         <!-- display errors -->
         <div class="genErr mb-4">
           <p>
-            <b
-              >The Name Request {{ getNameRequestNumber }} and the Incorporation Application for
+            <b>
+              The Name Request {{ getNameRequestNumber }} and the Incorporation Application for
               {{ getApprovedName }} are no longer valid.
             </b>
           </p>
