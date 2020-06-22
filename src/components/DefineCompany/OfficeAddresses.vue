@@ -213,6 +213,15 @@ export default class OfficeAddresses extends Mixins(CommonMixin, EntityFilterMix
 
   // Local Properties
   private addresses: IncorporationAddressIf | null = this.inputAddresses;
+  private defaultAddress: AddressIF = {
+    addressCity: '',
+    addressCountry: 'CA',
+    addressRegion: 'BC',
+    deliveryInstructions: '',
+    postalCode: '',
+    streetAddress: '',
+    streetAddressAdditional: ''
+  }
 
   // The 4 addresses that are the current state of the BaseAddress components:
   private mailingAddress = {} as AddressIF;
@@ -313,8 +322,17 @@ export default class OfficeAddresses extends Mixins(CommonMixin, EntityFilterMix
   private setDeliveryAddressToMailingAddress (): void {
     if (this.inheritMailingAddress) {
       this.deliveryAddress = { ...this.mailingAddress }
-      this.emitAddresses()
+    } else {
+      // Clear to default
+      this.deliveryAddress = { ...this.defaultAddress }
     }
+
+    // Records delivery address also needs to be updated if inherited
+    if (this.inheritRegisteredAddress) {
+      this.recDeliveryAddress = { ...this.deliveryAddress }
+    }
+
+    this.emitAddresses()
   }
 
   /** Sets the Records office addresses to the Registered office addresses. */
@@ -322,18 +340,24 @@ export default class OfficeAddresses extends Mixins(CommonMixin, EntityFilterMix
     if (this.inheritRegisteredAddress) {
       this.recDeliveryAddress = { ...this.deliveryAddress }
       this.recMailingAddress = { ...this.mailingAddress }
-      this.emitAddresses()
     } else {
       this.inheritRecMailingAddress = this.inheritMailingAddress
+      // Clear to defaults
+      this.recMailingAddress = { ...this.defaultAddress }
+      this.recDeliveryAddress = { ...this.defaultAddress }
     }
+    this.emitAddresses()
   }
 
   /** Sets the Records Delivery Address to Records Mailing Address. */
   private setRecordDeliveryAddressToMailingAddress (): void {
     if (this.inheritRecMailingAddress) {
       this.recDeliveryAddress = { ...this.recMailingAddress }
-      this.emitAddresses()
+    } else {
+      // Clear to default
+      this.recDeliveryAddress = { ...this.defaultAddress }
     }
+    this.emitAddresses()
   }
 
   private updateAddress (addressChangedEntity: string, baseAddress: AddressIF, newAddress: AddressIF): void {
