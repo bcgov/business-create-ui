@@ -192,15 +192,21 @@ export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
       v => !/^\s/g.test(v) || 'Invalid spaces', // leading spaces
       v => !/\s$/g.test(v) || 'Invalid spaces' // trailing spaces
     ]
-    if (this.isClass && this.activeIndex === -1) {
+    if (this.isClass) {
       rules.push(
-        v => !(this.shareClasses.find(s => s.name.split(' Shares')[0].toLowerCase() === v.toLowerCase())) ||
-        'Class name must be unique')
+        v => !(this.shareClasses
+          .find((s, index) => {
+            // Don't apply uniqueness check to self
+            return index !== this.activeIndex && s.name.split(' Shares')[0].toLowerCase() === v.toLowerCase()
+          })) || 'Class name must be unique')
       rules.push(v => !(v.split(' ').some(r => this.excludedWordsListForClass.includes(r.toLowerCase()))) ||
       'Class name should not contain any of the words share, shares or value')
-    } else if (this.isSeries && this.activeIndex === -1) {
-      rules.push(v => !(this.shareClasses[this.parentIndex].series.find(s =>
-        s.name.split(' Shares')[0].toLowerCase() === v.toLowerCase())) || 'Series name must be unique')
+    } else if (this.isSeries) {
+      rules.push(v => !(this.shareClasses[this.parentIndex].series
+        .find((s, index) => {
+          // Don't apply uniqueness check to self
+          return index !== this.activeIndex && s.name.split(' Shares')[0].toLowerCase() === v.toLowerCase()
+        })) || 'Series name must be unique')
       rules.push(v => !(v.split(' ').some(r => this.excludedWordsListForSeries.includes(r.toLowerCase()))) ||
       'Series name should not contain any of the words share or shares')
     }
