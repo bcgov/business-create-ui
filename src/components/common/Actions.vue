@@ -73,10 +73,13 @@ import { State, Getter, Action } from 'vuex-class'
 import { StateModelIF, GetterIF, ActionBindingIF } from '@/interfaces'
 
 // Mixins
-import { DateMixin, FilingTemplateMixin, LegalApiMixin } from '@/mixins'
+import { DateMixin, FilingTemplateMixin, LegalApiMixin, NameRequestMixin } from '@/mixins'
+
+// Enums
+import { NameRequestStates } from '@/enums'
 
 @Component({})
-export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, LegalApiMixin) {
+export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, LegalApiMixin, NameRequestMixin) {
   // Global state
   @State stateModel!: StateModelIF
 
@@ -92,6 +95,8 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
   @Getter isBusySaving!: GetterIF
   @Getter getSteps!: Array<any>
   @Getter getMaxStep!: number
+  @Getter isNamedBusiness!: boolean
+  @Getter getNameRequestNumber!: string
 
   // Global actions
   @Action setIsSaving!: ActionBindingIF
@@ -171,6 +176,19 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
       window.scrollTo({ top: 1250, behavior: 'smooth' })
       return
     }
+    /** If it is a named company IA, validate NR before filing submission. This method is different
+     * from the processNameRequest method in App.vue. This method shows a generic message if
+     * the Name Request is not valid and clicking ok in the pop up redirects to the Manage Businesses
+     * dashboard */
+
+    if (this.isNamedBusiness) {
+      try {
+        await this.validateNameRequest(this.getNameRequestNumber)
+      } catch (error) {
+        this.setIsFilingPaying(false)
+        return
+      }
+    }
 
     try {
       const filing = await this.buildFiling()
@@ -204,6 +222,26 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
       const error = new Error('Missing Payment Token')
       this.$root.$emit('save-error-event', error)
       this.setIsFilingPaying(false)
+    }
+  }
+
+  /** Fetches NR and validates it. */
+  private async validateNameRequest (nrNumber: string): Promise<void> {
+    let nrResponse = await this.fetchNameRequest(nrNumber).catch(error => {
+      this.$root.$emit('name-request-retrieve-error')
+      throw new Error(error)
+    })
+
+    if (!nrResponse || !this.isNrValid(nrResponse)) {
+      this.$root.$emit('name-request-invalid-error', NameRequestStates.INVALID)
+      throw new Error('Invalid Name Request')
+    }
+
+    // ensure NR is consumable
+    const state = this.getNrState(nrResponse)
+    if (state !== NameRequestStates.APPROVED && state !== NameRequestStates.CONDITIONAL) {
+      this.$root.$emit('name-request-invalid-error', state || NameRequestStates.INVALID)
+      throw new Error('Invalid Name request')
     }
   }
 

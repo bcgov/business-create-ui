@@ -412,5 +412,4 @@ describe('Share Structure component', () => {
       'a class) cannot exceed the number for the class')
     wrapper.destroy()
   })
-
 })

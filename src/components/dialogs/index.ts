@@ -7,6 +7,7 @@ import InvalidIncorporationApplicationDialog from './InvalidIncorporationApplica
 import NameRequestInvalidErrorDialog from './NameRequestInvalidErrorDialog.vue'
 import PaymentErrorDialog from './PaymentErrorDialog.vue'
 import SaveErrorDialog from './SaveErrorDialog.vue'
+import FileAndPayInvalidNameRequestDialog from './FileAndPayInvalidNameRequestDialog.vue'
 
 export {
   AccountAuthorizationDialog,
@@ -17,5 +18,6 @@ export {
   InvalidIncorporationApplicationDialog,
   NameRequestInvalidErrorDialog,
   PaymentErrorDialog,
-  SaveErrorDialog
+  SaveErrorDialog,
+  FileAndPayInvalidNameRequestDialog
 }

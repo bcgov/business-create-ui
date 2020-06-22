@@ -9,6 +9,11 @@
       @redirect="goToDashboard(true)"
     />
 
+    <file-and-pay-invalid-name-request-dialog
+     attach="#app"
+     :dialog="fileAndPayInvalidNameRequestDialog"
+     @okay="goToManageBusinessDashboard()"/>
+
     <account-authorization-dialog
       attach="#app"
       :dialog="accountAuthorizationDialog"
@@ -134,7 +139,8 @@ import Views from '@/views'
 
 // Dialogs, mixins, interfaces, etc
 import { AccountAuthorizationDialog, BcolErrorDialog, NameRequestInvalidErrorDialog, ConfirmDialog, FetchErrorDialog,
-  InvalidIncorporationApplicationDialog, PaymentErrorDialog, SaveErrorDialog } from '@/components/dialogs'
+  InvalidIncorporationApplicationDialog, PaymentErrorDialog, SaveErrorDialog,
+  FileAndPayInvalidNameRequestDialog } from '@/components/dialogs'
 import { BcolMixin, DateMixin, FilingTemplateMixin, LegalApiMixin, NameRequestMixin } from '@/mixins'
 import { FilingDataIF, ActionBindingIF, ConfirmDialogType } from '@/interfaces'
 import { CertifyStatementResource } from '@/resources'
@@ -159,6 +165,7 @@ import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
     SaveErrorDialog,
     ConfirmDialog,
     BcolErrorDialog,
+    FileAndPayInvalidNameRequestDialog,
     ...Views
   }
 })
@@ -207,6 +214,7 @@ export default class App extends Mixins(BcolMixin, DateMixin, FilingTemplateMixi
   private haveData: boolean = false
   private saveErrors: Array<object> = []
   private saveWarnings: Array<object> = []
+  private fileAndPayInvalidNameRequestDialog: boolean = false
 
   // Template Enums
   readonly RouteNames = RouteNames
@@ -231,7 +239,8 @@ export default class App extends Mixins(BcolMixin, DateMixin, FilingTemplateMixi
       this.fetchErrorDialog ||
       this.invalidIncorporationApplicationDialog ||
       this.paymentErrorDialog ||
-      this.saveErrorDialog
+      this.saveErrorDialog ||
+      this.fileAndPayInvalidNameRequestDialog
     )
   }
 
@@ -279,12 +288,31 @@ export default class App extends Mixins(BcolMixin, DateMixin, FilingTemplateMixi
           this.saveErrorDialog = true
       }
     })
+
+    this.$root.$on('name-request-invalid-error', async error => {
+      console.log('NR error during File and Pay =', error) // eslint-disable-line no-console
+      this.fileAndPayInvalidNameRequestDialog = true
+    })
+
+    this.$root.$on('name-request-retrieve-error', async () => {
+      console.log('Error while retrieving NR during File and Pay') // eslint-disable-line no-console
+      this.nameRequestInvalidErrorDialog = true
+    })
   }
 
   /** Called when component is destroyed. */
   private destroyed (): void {
     // stop listening for save error event
     this.$root.$off('save-error-event')
+    this.$root.$off('name-request-invalid-errort')
+    this.$root.$off('name-request-retrieve-error')
+  }
+
+  private goToManageBusinessDashboard () : void {
+    this.fileAndPayInvalidNameRequestDialog = false
+    const manageBusinessUrl = `${sessionStorage.getItem('AUTH_URL')}business`
+    this.setHaveChanges(false)
+    window.location.assign(manageBusinessUrl)
   }
 
   /** Called to redirect to dashboard. */
@@ -414,7 +442,10 @@ export default class App extends Mixins(BcolMixin, DateMixin, FilingTemplateMixi
           // TODO: after MVP, add a real check here
           console.log('Filing should have nameRequest object') // eslint-disable-line no-console
         }
-        // if we have a NR number, fetch the NR
+        /** Fetches and validates the NR and sets the data to the store. This method is different
+         * from the validateNameRequest method in Actions.vue. This method sets the data to
+         * the store shows a specific message for different invalid states and redirection is to the
+         * Filings Dashboard */
         if (nameRequest?.nrNumber) {
           await this.processNameRequest(draftFiling)
         }
@@ -497,6 +528,7 @@ export default class App extends Mixins(BcolMixin, DateMixin, FilingTemplateMixi
     this.fetchErrorDialog = false
     this.paymentErrorDialog = false
     this.saveErrorDialog = false
+    this.fileAndPayInvalidNameRequestDialog = false
     this.saveErrors = []
     this.saveWarnings = []
   }
