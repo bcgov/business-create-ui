@@ -290,12 +290,12 @@ export default class App extends Mixins(BcolMixin, DateMixin, FilingTemplateMixi
     })
 
     this.$root.$on('name-request-invalid-error', async error => {
-      console.log('NR error during File and Pay =', error)
+      console.log('NR error during File and Pay =', error) // eslint-disable-line no-console
       this.fileAndPayInvalidNameRequestDialog = true
     })
 
     this.$root.$on('name-request-retrieve-error', async () => {
-      console.log('Error while retrieving NR during File and Pay')
+      console.log('Error while retrieving NR during File and Pay') // eslint-disable-line no-console
       this.nameRequestInvalidErrorDialog = true
     })
   }
