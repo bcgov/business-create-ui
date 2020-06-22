@@ -7,7 +7,7 @@ import Vuetify from 'vuetify'
 import { getVuexStore } from '@/store'
 
 // Utils
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { createLocalVue, shallowMount, mount } from '@vue/test-utils'
 
 // Components
 import { OfficeAddresses } from '@/components/DefineCompany'
@@ -220,6 +220,137 @@ describe('Office Addresses component - BCOMP', () => {
     expect(recMailingAddress['addressRegion']).toEqual('someRecRegion')
     expect(recMailingAddress['postalCode']).toEqual('someRecPostalCode')
     expect(recMailingAddress['addressCountry']).toEqual('someRecCountry')
+  })
+})
+
+describe('same as checkboxes reset addresses to default when unchecked - BCOMP', () => {
+  let wrapper: any
+
+  const registeredOffice = {
+    deliveryAddress: {
+      addressCity: 'someCity',
+      addressCountry: 'someCountry',
+      addressRegion: 'someRegion',
+      postalCode: 'somePostalCode',
+      streetAddress: 'someStreet'
+    },
+    mailingAddress: {
+      addressCity: 'someCity',
+      addressCountry: 'someCountry',
+      addressRegion: 'someRegion',
+      postalCode: 'somePostalCode',
+      streetAddress: 'someStreet'
+    }
+  }
+
+  beforeEach(() => {
+    const localVue = createLocalVue()
+    wrapper = mount(OfficeAddresses, {
+      propsData: {
+        inputAddresses: { registeredOffice, recordsOffice: registeredOffice },
+        isEditing: true
+      },
+      localVue,
+      store,
+      vuetify
+    })
+  })
+
+  afterEach(() => {
+    wrapper.destroy()
+  })
+
+  beforeAll(() => {
+    // init store
+    store.state.stateModel.entityType = 'BC'
+  })
+
+  it('should reset registered and records delivery addresses', async () => {
+    // Verify no ui for registered delivery address
+    expect(wrapper.vm.$el.querySelector('#address-registered-delivery')).toBeNull()
+    expect(wrapper.vm.$el.querySelector('#address-records-mailing')).toBeDefined()
+    expect(wrapper.vm.$el.querySelector('#address-records-delivery')).toBeNull()
+
+    // un-Check the 'same as mailing' checkbox ( Default is checked )
+    const checkbox1 = wrapper.find('#registered-mailing-same-chkbx')
+    checkbox1.trigger('click')
+    await Vue.nextTick()
+
+    expect(wrapper.vm.$el.querySelector('#address-registered-delivery')).toBeDefined()
+    expect(wrapper.vm.$el.querySelector('#address-records-mailing')).toBeDefined()
+    expect(wrapper.vm.$el.querySelector('#address-records-delivery')).toBeNull()
+
+    const deliveryAddress = wrapper.vm.$data.deliveryAddress
+    expect(deliveryAddress['streetAddress']).toEqual('')
+    expect(deliveryAddress['addressCity']).toEqual('')
+    expect(deliveryAddress['addressRegion']).toEqual('BC')
+    expect(deliveryAddress['postalCode']).toEqual('')
+    expect(deliveryAddress['addressCountry']).toEqual('CA')
+
+    const mailingAddress = wrapper.vm.$data.mailingAddress
+    expect(mailingAddress['streetAddress']).toEqual('someStreet')
+    expect(mailingAddress['addressCity']).toEqual('someCity')
+    expect(mailingAddress['addressRegion']).toEqual('someRegion')
+    expect(mailingAddress['postalCode']).toEqual('somePostalCode')
+    expect(mailingAddress['addressCountry']).toEqual('someCountry')
+
+    const recMailingAddress = wrapper.vm.$data.recMailingAddress
+    expect(recMailingAddress['streetAddress']).toEqual('someStreet')
+    expect(recMailingAddress['addressCity']).toEqual('someCity')
+    expect(recMailingAddress['addressRegion']).toEqual('someRegion')
+    expect(recMailingAddress['postalCode']).toEqual('somePostalCode')
+    expect(recMailingAddress['addressCountry']).toEqual('someCountry')
+
+    const recDeliveryAddress = wrapper.vm.$data.recDeliveryAddress
+    expect(recDeliveryAddress['streetAddress']).toEqual('')
+    expect(recDeliveryAddress['addressCity']).toEqual('')
+    expect(recDeliveryAddress['addressRegion']).toEqual('BC')
+    expect(recDeliveryAddress['postalCode']).toEqual('')
+    expect(recDeliveryAddress['addressCountry']).toEqual('CA')
+  })
+
+  it('should reset records delivery and mailing addresses', async () => {
+    // Verify no ui for registered delivery address
+    expect(wrapper.vm.$el.querySelector('#address-registered-delivery')).toBeNull()
+    expect(wrapper.vm.$el.querySelector('#address-records-mailing')).toBeDefined()
+    expect(wrapper.vm.$el.querySelector('#address-records-delivery')).toBeNull()
+
+    // un-Check the 'Same as Registered Office' checkbox ( Default is checked )
+    const checkbox1 = wrapper.find('#records-mailing-same-chkbx')
+    checkbox1.trigger('click')
+    await Vue.nextTick()
+
+    expect(wrapper.vm.$el.querySelector('#address-registered-delivery')).toBeDefined()
+    expect(wrapper.vm.$el.querySelector('#address-records-mailing')).toBeDefined()
+    expect(wrapper.vm.$el.querySelector('#address-records-delivery')).toBeNull()
+
+    const deliveryAddress = wrapper.vm.$data.deliveryAddress
+    expect(deliveryAddress['streetAddress']).toEqual('someStreet')
+    expect(deliveryAddress['addressCity']).toEqual('someCity')
+    expect(deliveryAddress['addressRegion']).toEqual('someRegion')
+    expect(deliveryAddress['postalCode']).toEqual('somePostalCode')
+    expect(deliveryAddress['addressCountry']).toEqual('someCountry')
+
+    const mailingAddress = wrapper.vm.$data.mailingAddress
+    expect(mailingAddress['streetAddress']).toEqual('someStreet')
+    expect(mailingAddress['addressCity']).toEqual('someCity')
+    expect(mailingAddress['addressRegion']).toEqual('someRegion')
+    expect(mailingAddress['postalCode']).toEqual('somePostalCode')
+    expect(mailingAddress['addressCountry']).toEqual('someCountry')
+
+    const recMailingAddress = wrapper.vm.$data.recMailingAddress
+    expect(recMailingAddress['streetAddress']).toEqual('')
+    expect(recMailingAddress['addressCity']).toEqual('')
+    expect(recMailingAddress['addressRegion']).toEqual('BC')
+    expect(recMailingAddress['postalCode']).toEqual('')
+    expect(recMailingAddress['addressCountry']).toEqual('CA')
+
+    const recDeliveryAddress = wrapper.vm.$data.recDeliveryAddress
+    expect(recDeliveryAddress['streetAddress']).toEqual('')
+    expect(recDeliveryAddress['addressCity']).toEqual('')
+    expect(recDeliveryAddress['addressRegion']).toEqual('BC')
+    expect(recDeliveryAddress['postalCode']).toEqual('')
+    expect(recDeliveryAddress['addressCountry']).toEqual('CA')
   })
 })
 
