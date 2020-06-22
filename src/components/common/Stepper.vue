@@ -1,17 +1,17 @@
 <template>
   <v-container id="step-buttons-container">
     <template v-for="(step, index) in getSteps">
-      <div class="step" :key="index">
+      <div class="step" :key="index" @click="goTo(step)">
         <div class="step__indicator">
           <div class="step__line"></div>
-          <v-btn class="step__icon" :id=step.id outlined fab color="primary" :to=step.to :disabled=step.disabled>
-            <v-icon>{{ step.icon }}</v-icon>
+          <v-btn class="step__btn" :id=step.id outlined fab color="primary" :disabled=step.disabled :ripple="false" :class="{ 'filled': false }">
+            <v-icon class="step__icon">{{ step.icon }}</v-icon>
           </v-btn>
-          <v-icon class="step__icon2" size="30" color="green darken-1" v-show=step.valid>
+          <v-icon class="step__btn2" size="30" color="green darken-1" v-show=step.valid>
             mdi-check-circle
           </v-icon>
         </div>
-        <v-btn class="step__label pre-line" text color="primary" :to=step.to :disabled=step.disabled>
+        <v-btn class="step__label pre-line" text color="primary" :ripple="false" :disabled=step.disabled>
           {{ step.text }}
         </v-btn>
       </div>
@@ -30,6 +30,20 @@ import { GetterIF } from '@/interfaces'
 @Component({})
 export default class Stepper extends Vue {
   @Getter getSteps!: GetterIF
+
+  private goTo (step: any): void {
+    // if (!this.isCurrentStep(step))
+    try {
+      this.$router.push(step.to)
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  // private isCurrentStep (step: any): boolean {
+  //   console.log(this.$route.path)
+  //   return this.$route.path === step.to
+  // }
 }
 </script>
 
@@ -44,12 +58,34 @@ export default class Stepper extends Vue {
   background: $BCgovInputBG;
 }
 
+.v-btn:before {
+  background-color: $BCgovInputBG;
+}
+
 .step {
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
   align-items: center;
   justify-content: center;
+}
+
+.step:hover {
+  cursor: pointer;
+
+  .step__btn {
+    background-color: #1976d2;
+    color: $BCgovInputBG;
+  }
+
+  .step__icon {
+    color: $BCgovInputBG !important;
+  }
+}
+
+.filled {
+  background-color: #1976d2;
+  color: $BCgovInputBG;
 }
 
 .step__indicator {
@@ -72,19 +108,23 @@ export default class Stepper extends Vue {
   display: none;
 }
 
-.step__icon {
+.step__btn {
   position: relative;
   background-color: $BCgovInputBG;
   z-index: 2;
 }
 
-.step__icon2 {
+.step__btn2 {
   position: relative;
   margin-top: -32px;
   margin-left: -16px;
   background: $BCgovInputBG;
   border-radius: 50%;
   z-index: 3;
+}
+
+.step__icon {
+  color: #1976d2 !important;
 }
 
 .step__label {
