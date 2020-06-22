@@ -442,7 +442,10 @@ export default class App extends Mixins(BcolMixin, DateMixin, FilingTemplateMixi
           // TODO: after MVP, add a real check here
           console.log('Filing should have nameRequest object') // eslint-disable-line no-console
         }
-        // if we have a NR number, fetch the NR
+        /** Fetches and validates the NR and sets the data to the store. This method is different
+         * from the validateNameRequest method in Actions.vue. This method sets the data to
+         * the store shows a specific message for different invalid states and redirection is to the
+         * Filings Dashboard */
         if (nameRequest?.nrNumber) {
           await this.processNameRequest(draftFiling)
         }

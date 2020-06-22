@@ -176,7 +176,11 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
       window.scrollTo({ top: 1250, behavior: 'smooth' })
       return
     }
-    // If it is a named company IA, validate NR before filing submission
+    /** If it is a named company IA, validate NR before filing submission. This method is different
+     * from the processNameRequest method in App.vue. This method shows a generic message if
+     * the Name Request is not valid and clicking ok in the pop up redirects to the Manage Businesses
+     * dashboard */
+
     if (this.isNamedBusiness) {
       try {
         await this.validateNameRequest(this.getNameRequestNumber)
