@@ -1,7 +1,7 @@
 <template>
   <v-container id="step-buttons-container">
     <template v-for="(step, index) in getSteps">
-      <div class="step" :key="index" @click="goTo(step)">
+      <div class="step" :key="index" @click="goTo(step)" v-on:keyup.tab="goTo(step)">
         <div class="step__indicator">
           <div class="step__line"></div>
           <v-btn
