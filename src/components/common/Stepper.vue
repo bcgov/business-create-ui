@@ -4,8 +4,16 @@
       <div class="step" :key="index" @click="goTo(step)">
         <div class="step__indicator">
           <div class="step__line"></div>
-          <v-btn class="step__btn" :id=step.id outlined fab color="primary" :disabled=step.disabled :ripple="false" :class="{ 'filled': false }">
-            <v-icon class="step__icon">{{ step.icon }}</v-icon>
+          <v-btn
+            class="step__btn"
+            :id=step.id
+            outlined
+            fab
+            color="primary"
+            :disabled=step.disabled
+            :ripple="false"
+            :class="{ 'selected': isCurrentStep(step) }">
+            <v-icon class="step__icon" :class="{ 'selected': isCurrentStep(step) }">{{ step.icon }}</v-icon>
           </v-btn>
           <v-icon class="step__btn2" size="30" color="green darken-1" v-show=step.valid>
             mdi-check-circle
@@ -20,7 +28,6 @@
 </template>
 
 <script lang="ts">
-// Libraries
 import { Component, Vue } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 
@@ -31,19 +38,13 @@ import { GetterIF } from '@/interfaces'
 export default class Stepper extends Vue {
   @Getter getSteps!: GetterIF
 
-  private goTo (step: any): void {
-    // if (!this.isCurrentStep(step))
-    try {
-      this.$router.push(step.to)
-    } catch (e) {
-      console.log(e)
-    }
+  private goTo (step) {
+    this.$router.push(step.to).catch(error => error)
   }
 
-  // private isCurrentStep (step: any): boolean {
-  //   console.log(this.$route.path)
-  //   return this.$route.path === step.to
-  // }
+  private isCurrentStep (step): boolean {
+    return this.$route.name === step.to
+  }
 }
 </script>
 
@@ -79,13 +80,13 @@ export default class Stepper extends Vue {
   }
 
   .step__icon {
-    color: $BCgovInputBG !important;
+    color: $BCgovInputBG;
   }
 }
 
-.filled {
-  background-color: #1976d2;
-  color: $BCgovInputBG;
+.selected {
+  background-color: #1976d2 !important;
+  color: $BCgovInputBG !important;
 }
 
 .step__indicator {
@@ -124,7 +125,7 @@ export default class Stepper extends Vue {
 }
 
 .step__icon {
-  color: #1976d2 !important;
+  color: #1976d2;
 }
 
 .step__label {
