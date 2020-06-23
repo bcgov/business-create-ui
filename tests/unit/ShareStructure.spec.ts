@@ -441,4 +441,17 @@ describe('Share Structure component', () => {
     expect(wrapper.vm.$data.formValid).toBe(false)
     wrapper.destroy()
   })
+  it('Do not show error if par value < 1 does not have 0 before decimal ', async () => {
+    const existingShareClass = createShareStructure(null, 1, 'Class', 'Class A', true, 100, true, 0.50, 'CAD', true)
+    const shareClass = createShareStructure(null, 1, 'Class', 'Class B', true, 100, true, 0.50, 'CAD', true)
+    const wrapper: Wrapper<ShareStructure> = createComponent(shareClass, -1, 1, null, [existingShareClass])
+    const inputElement: Wrapper<Vue> = wrapper.find(classParValue)
+    inputElement.setValue(.01) // eslint-disable-line no-floating-decimal
+    inputElement.trigger('change')
+    await waitForUpdate(wrapper)
+    expect(wrapper.find(formSelector).text())
+      .not.toContain('Amounts less than 1 can be entered with up to 3 decimal place')
+    expect(wrapper.vm.$data.formValid).toBe(true)
+    wrapper.destroy()
+  })
 })
