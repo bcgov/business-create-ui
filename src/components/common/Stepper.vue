@@ -28,6 +28,7 @@
 </template>
 
 <script lang="ts">
+// Libraries
 import { Component, Vue } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 
