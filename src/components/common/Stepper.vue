@@ -5,15 +5,15 @@
         <div class="step__indicator">
           <div class="step__line"></div>
           <v-btn
-            class="step__btn"
-            :id=step.id
-            outlined
-            fab
+            outlined fab
             color="primary"
+            :id=step.id
+            class="step__btn"
+            tabindex="-1"
             :disabled=step.disabled
             :ripple="false"
-            :class="{ 'selected': isCurrentStep(step) }">
-            <v-icon class="step__icon" :class="{ 'selected': isCurrentStep(step) }">{{ step.icon }}</v-icon>
+            :class="{ 'selected-btn': isCurrentStep(step) }">
+            <v-icon class="step__icon" :class="{ 'selected-icon': isCurrentStep(step) }">{{ step.icon }}</v-icon>
           </v-btn>
           <v-icon class="step__btn2" size="30" color="green darken-1" v-show=step.valid>
             mdi-check-circle
@@ -61,7 +61,7 @@ export default class Stepper extends Vue {
 }
 
 .v-btn:before {
-  background-color: $BCgovInputBG;
+  background-color: $BCgovInputBG !important;
 }
 
 .step {
@@ -76,17 +76,26 @@ export default class Stepper extends Vue {
   cursor: pointer;
 
   .step__btn {
-    background-color: #1976d2;
+    background: linear-gradient(rgba(25,118,210, .8), rgba(25,118,210, .8)),
+                linear-gradient(rgba(255, 255, 255, 1), rgba(255, 255, 255, 1)); // first bg is layered on top
     color: $BCgovInputBG;
+  }
+
+  .v-btn:before {
+    background-color: #1976d2;
   }
 
   .step__icon {
     color: $BCgovInputBG;
+    background: inherit;
   }
 }
 
-.selected {
+.selected-btn {
   background-color: #1976d2 !important;
+}
+
+.selected-icon {
   color: $BCgovInputBG !important;
 }
 
@@ -114,6 +123,10 @@ export default class Stepper extends Vue {
   position: relative;
   background-color: $BCgovInputBG;
   z-index: 2;
+  .step__icon {
+    color: #1976d2;
+    background-color: inherit;
+  }
 }
 
 .step__btn2 {
@@ -123,10 +136,6 @@ export default class Stepper extends Vue {
   background: $BCgovInputBG;
   border-radius: 50%;
   z-index: 3;
-}
-
-.step__icon {
-  color: #1976d2;
 }
 
 .step__label {
