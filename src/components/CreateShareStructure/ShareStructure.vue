@@ -184,13 +184,13 @@ export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
 
   private excludedWordsListForClass: string [] = ['share', 'shares', 'value']
   private excludedWordsListForSeries: string [] = ['share', 'shares']
-
   // Rules
   private getNameRule (): Array<Function> {
     let rules: Array<Function> = [
       v => !!v || 'A name is required',
       v => !/^\s/g.test(v) || 'Invalid spaces', // leading spaces
-      v => !/\s$/g.test(v) || 'Invalid spaces' // trailing spaces
+      v => !/\s$/g.test(v) || 'Invalid spaces', // leading spaces
+      v => /^([^0-9]*)$/g.test(v) || 'Name should not contain numbers'
     ]
     if (this.isClass) {
       rules.push(
