@@ -456,7 +456,7 @@ describe('Share Structure component', () => {
     wrapper.destroy()
   })
 
-  it('Do not show error if par value < 1 does not have 0 before decimal ', async () => {
+  it('Shows error if the share structure name contains number', async () => {
     const shareClass = createShareStructure(null, 1, 'Class', 'Class B', true, 100, true, 0.50, 'CAD', true)
     const wrapper: Wrapper<ShareStructure> = createComponent(shareClass, -1, 1, null, [])
     const inputElement: Wrapper<Vue> = wrapper.find(nameSelector)
