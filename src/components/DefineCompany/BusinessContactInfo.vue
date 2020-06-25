@@ -77,16 +77,19 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Vue, Prop, Watch, Emit } from 'vue-property-decorator'
+import { Component, Vue, Prop, Watch, Emit, Mixins } from 'vue-property-decorator'
 import { mask } from 'vue-the-mask'
 
 // Interfaces
 import { BusinessContactIF } from '@/interfaces'
 
+// Mixins
+import { CommonMixin } from '@/mixins'
+
 @Component({
   directives: { mask }
 })
-export default class BusinessContactInfo extends Vue {
+export default class BusinessContactInfo extends Mixins(CommonMixin) {
   // Props
   @Prop()
   private initialValue!: BusinessContactIF
@@ -101,6 +104,15 @@ export default class BusinessContactInfo extends Vue {
   private contact: BusinessContactIF = this.initialValue
 
   private formValid: boolean = false
+
+  // Used as an initial comparison to re-validate the form
+  // This is so we don't flag errors for a new application right away
+  private defaultBusinessContact: BusinessContactIF = {
+    email: '',
+    confirmEmail: '',
+    phone: '',
+    extension: ''
+  }
 
   // Rules
   private emailRules = [
@@ -123,6 +135,8 @@ export default class BusinessContactInfo extends Vue {
   private mounted (): void {
     if (this.showErrors) {
       (this.$refs.form as Vue & { validate: () => boolean }).validate()
+    } else if (this.$refs.form && !this.isSame(this.initialValue, this.defaultBusinessContact)) {
+      (this.$refs.form as any).validate()
     }
   }
 
