@@ -354,6 +354,136 @@ describe('same as checkboxes reset addresses to default when unchecked - BCOMP',
   })
 })
 
+describe('should properly emit valid - BCOMP', () => {
+  let wrapper: any
+  const localVue = createLocalVue()
+  const invalidDeliveryAddress = {
+    addressCity: 'someCity',
+    addressCountry: 'someCountry',
+    addressRegion: 'someRegion',
+    postalCode: 'somePostalCode',
+    streetAddress: 'someStreet'
+  }
+
+  const invalidMailingAddress = {
+    addressCity: 'someCity',
+    addressCountry: 'someCountry',
+    addressRegion: 'someRegion',
+    postalCode: 'somePostalCode',
+    streetAddress: 'someStreet'
+  }
+
+  const validDeliveryAddress = {
+    addressCity: 'someCity1',
+    addressCountry: 'CA',
+    addressRegion: 'BC',
+    postalCode: 'somePostalCode',
+    streetAddress: 'someStreet'
+  }
+
+  const validMailingAddress = {
+    addressCity: 'someCity2',
+    addressCountry: 'CA',
+    addressRegion: 'BC',
+    postalCode: 'somePostalCode',
+    streetAddress: 'someStreet'
+  }
+
+  afterEach(() => {
+    wrapper.destroy()
+  })
+
+  beforeAll(() => {
+    // init store
+    store.state.stateModel.entityType = 'BC'
+  })
+
+  it('should emit valid form', async () => {
+    wrapper = mount(OfficeAddresses, {
+      propsData: {
+        inputAddresses: {
+          registeredOffice: { deliveryAddress: validDeliveryAddress, mailingAddress: validMailingAddress },
+          recordsOffice: { deliveryAddress: validDeliveryAddress, mailingAddress: validMailingAddress } },
+        isEditing: true
+      },
+      localVue,
+      store,
+      vuetify
+    })
+    await Vue.nextTick()
+
+    expect(wrapper.emitted('valid').pop()).toEqual([true])
+  })
+
+  it('should emit invalid with invalid registered delivery address', async () => {
+    wrapper = mount(OfficeAddresses, {
+      propsData: {
+        inputAddresses: {
+          registeredOffice: { deliveryAddress: invalidDeliveryAddress, mailingAddress: validMailingAddress },
+          recordsOffice: { deliveryAddress: validDeliveryAddress, mailingAddress: validMailingAddress } },
+        isEditing: true
+      },
+      localVue,
+      store,
+      vuetify
+    })
+    await Vue.nextTick()
+
+    expect(wrapper.emitted('valid').pop()).toEqual([false])
+  })
+
+  it('should emit invalid with invalid registered mailing address', async () => {
+    wrapper = mount(OfficeAddresses, {
+      propsData: {
+        inputAddresses: {
+          registeredOffice: { deliveryAddress: validDeliveryAddress, mailingAddress: invalidMailingAddress },
+          recordsOffice: { deliveryAddress: validDeliveryAddress, mailingAddress: validMailingAddress } },
+        isEditing: true
+      },
+      localVue,
+      store,
+      vuetify
+    })
+    await Vue.nextTick()
+
+    expect(wrapper.emitted('valid').pop()).toEqual([false])
+  })
+
+  it('should emit invalid with invalid records delivery address', async () => {
+    wrapper = mount(OfficeAddresses, {
+      propsData: {
+        inputAddresses: {
+          registeredOffice: { deliveryAddress: validDeliveryAddress, mailingAddress: validMailingAddress },
+          recordsOffice: { deliveryAddress: invalidDeliveryAddress, mailingAddress: validMailingAddress } },
+        isEditing: true
+      },
+      localVue,
+      store,
+      vuetify
+    })
+    await Vue.nextTick()
+
+    expect(wrapper.emitted('valid').pop()).toEqual([false])
+  })
+
+  it('should emit invalid with invalid records mailing address', async () => {
+    wrapper = mount(OfficeAddresses, {
+      propsData: {
+        inputAddresses: {
+          registeredOffice: { deliveryAddress: validDeliveryAddress, mailingAddress: validMailingAddress },
+          recordsOffice: { deliveryAddress: validDeliveryAddress, mailingAddress: invalidMailingAddress } },
+        isEditing: true
+      },
+      localVue,
+      store,
+      vuetify
+    })
+    await Vue.nextTick()
+
+    expect(wrapper.emitted('valid').pop()).toEqual([false])
+  })
+})
+
 describe('Office Addresses component - Summary UI', () => {
   let wrapper: any
 
