@@ -90,7 +90,7 @@
               </div>
               <div class="address-wrapper"
                    v-if="!isSame(mailingAddress, deliveryAddress, 'actions') || !inheritMailingAddress">
-                <delivery-address ref='regDeliveryAddress'
+                <delivery-address ref="regDeliveryAddress"
                   id="address-registered-delivery"
                   v-if="!inheritMailingAddress"
                   :address="deliveryAddress"
