@@ -63,7 +63,7 @@
             <label>Mailing Address</label>
             <div class="meta-container__inner">
               <div class="address-wrapper">
-                <mailing-address
+                <mailing-address ref="regMailingAddress"
                   id="address-registered-mailing"
                   :address="mailingAddress"
                   :editing="true"
@@ -90,7 +90,7 @@
               </div>
               <div class="address-wrapper"
                    v-if="!isSame(mailingAddress, deliveryAddress, 'actions') || !inheritMailingAddress">
-                <delivery-address
+                <delivery-address ref="regDeliveryAddress"
                   id="address-registered-delivery"
                   v-if="!inheritMailingAddress"
                   :address="deliveryAddress"
@@ -122,7 +122,7 @@
                 <label>Mailing Address</label>
                 <div class="meta-container__inner">
                   <div class="address-wrapper">
-                    <mailing-address
+                    <mailing-address ref="recMailingAddress"
                       id="address-records-mailing"
                       :address="recMailingAddress"
                       :editing="true"
@@ -149,7 +149,7 @@
                   <div
                     class="address-wrapper"
                     v-if="!isSame(recMailingAddress, recDeliveryAddress, 'actions') || !inheritRecMailingAddress">
-                    <delivery-address
+                    <delivery-address ref="recDeliveryAddress"
                       id="address-records-delivery"
                       :address="recDeliveryAddress"
                       :editing="true"
@@ -180,7 +180,7 @@ import { officeAddressSchema } from '@/schemas'
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
 
 // Interfaces
-import { IncorporationAddressIf, AddressIF, StateModelIF } from '@/interfaces'
+import { IncorporationAddressIf, AddressIF, FormType, StateModelIF } from '@/interfaces'
 
 // Enums
 import { EntityTypes } from '@/enums'
@@ -195,6 +195,13 @@ import { CommonMixin, EntityFilterMixin } from '@/mixins'
   }
 })
 export default class OfficeAddresses extends Mixins(CommonMixin, EntityFilterMixin) {
+  // Refs for sbc common base address components so we can access form validation
+  $refs!: {
+    regMailingAddress: any,
+    regDeliveryAddress: any,
+    recMailingAddress: any,
+    recDeliveryAddress: any
+  }
   /**
    * Addresses object from the parent page.
    * If this is null then this is a new filing; otherwise these are the addresses from a draft/navigation
@@ -257,6 +264,36 @@ export default class OfficeAddresses extends Mixins(CommonMixin, EntityFilterMix
     this.emitValid()
   }
 
+  private mounted (): void {
+    /**
+     * Check if addresses are the default values, if not re-validate so resumed applications show errors on start up
+     */
+
+    // Registered Mailing Address
+    if (this.$refs.regMailingAddress?.$refs?.addressForm && !this.isSame(this.mailingAddress, this.defaultAddress)) {
+      this.$refs.regMailingAddress.$refs.addressForm.validate()
+    }
+    // Registered Delivery Address
+    if (this.$refs.regDeliveryAddress?.$refs?.addressForm && !this.inheritMailingAddress &&
+        !this.isSame(this.deliveryAddress, this.defaultAddress)) {
+      this.$refs.regDeliveryAddress.$refs.addressForm.validate()
+    }
+    // If records address is not inherited - check if we need to re-validate these
+    if (!this.inheritRegisteredAddress) {
+      // Records Mailing Address
+      if (this.$refs.recMailingAddress?.$refs?.addressForm &&
+        !this.isSame(this.recMailingAddress, this.defaultAddress)) {
+        this.$refs.recMailingAddress.$refs.addressForm.validate()
+      }
+
+      // Records Delivery Address
+      if (this.$refs.recMailingAddress?.$refs?.addressForm && !this.inheritRecMailingAddress &&
+          !this.isSame(this.recDeliveryAddress, this.defaultAddress)) {
+        this.$refs.recDeliveryAddress.$refs.addressForm.validate()
+      }
+    }
+  }
+
   /**
    * Sets address data.
    * @param loadInheritedFlags used to update inherited flags based on isSame checks if true
@@ -302,12 +339,13 @@ export default class OfficeAddresses extends Mixins(CommonMixin, EntityFilterMix
   //
   /** Whether the address form is valid. */
   private get formValid (): boolean {
-    return (
-      this.deliveryAddressValid &&
-      (this.inheritMailingAddress || this.mailingAddressValid) &&
-      this.recDeliveryAddressValid &&
-      (this.inheritRecMailingAddress || this.recMailingAddressValid)
-    )
+    const registeredOfficeValid = this.mailingAddressValid &&
+      (this.deliveryAddressValid || this.inheritMailingAddress)
+
+    const recordsOfficeValid = this.inheritRegisteredAddress ||
+      (this.recMailingAddressValid && (this.inheritRecMailingAddress || this.recDeliveryAddressValid))
+
+    return registeredOfficeValid && recordsOfficeValid
   }
 
   /** Whether the address object is empty. */
