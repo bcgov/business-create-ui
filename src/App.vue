@@ -396,13 +396,6 @@ export default class App extends Mixins(BcolMixin, DateMixin, FilingTemplateMixi
     try {
       this.setCurrentDate(this.dateToUsableString(new Date()))
 
-      // get user info
-      await this.getUserInfo().catch(error => {
-        console.log('User error =', error) // eslint-disable-line no-console
-        this.accountAuthorizationDialog = true
-        throw error // go to catch()
-      })
-
       const tempId = this.$route.query?.id
       // ensure we have a Temporary Registration number
       if (!tempId) {
@@ -411,6 +404,13 @@ export default class App extends Mixins(BcolMixin, DateMixin, FilingTemplateMixi
         return // go to finally()
       }
       this.setTempId(tempId)
+
+      // get user info
+      await this.getUserInfo().catch(error => {
+        console.log('User error =', error) // eslint-disable-line no-console
+        this.accountAuthorizationDialog = true
+        throw error // go to catch()
+      })
 
       // ensure user is authorized to use this IA
       await this.checkAuth().catch(error => {
