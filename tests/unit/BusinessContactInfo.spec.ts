@@ -83,7 +83,7 @@ describe('Business Contact Info component', () => {
 
   it('form is valid for correct input', async () => {
     const wrapper: Wrapper<BusinessContactInfo> = createComponent(email, email)
-    await wrapper.vm.$nextTick()
+    await Vue.nextTick()
     expect(getLastEvent(wrapper, formValidEvent)).toBe(true)
     expect(getLastEvent(wrapper, formDataChangeEvent)).toStrictEqual({ email: email,
       confirmEmail: email,
@@ -95,7 +95,7 @@ describe('Business Contact Info component', () => {
 
   it('form is invalid for wrong email', async () => {
     const wrapper: Wrapper<BusinessContactInfo> = createComponent(invalidEmail, invalidEmail)
-    await wrapper.vm.$nextTick()
+    await Vue.nextTick()
     expect(getLastEvent(wrapper, formValidEvent)).toBe(false)
     expect(getLastEvent(wrapper, formDataChangeEvent)).toStrictEqual({ email: invalidEmail,
       confirmEmail: invalidEmail,
@@ -107,7 +107,7 @@ describe('Business Contact Info component', () => {
 
   it('form is invalid for wrong optional phone number field', async () => {
     const wrapper: Wrapper<BusinessContactInfo> = createComponent(email, email, invalidPhoneNumber)
-    await wrapper.vm.$nextTick()
+    await Vue.nextTick()
     expect(getLastEvent(wrapper, formValidEvent)).toBe(false)
     expect(getLastEvent(wrapper, formDataChangeEvent)).toStrictEqual({ email: email,
       confirmEmail: email,
@@ -121,14 +121,14 @@ describe('Business Contact Info component', () => {
     const wrapper: Wrapper<BusinessContactInfo> = createComponent(email, email)
     const inputElement: Wrapper<Vue> = wrapper.find(emailSelector)
     inputElement.setValue(invalidEmail)
-    await wrapper.vm.$nextTick()
+    await Vue.nextTick()
     expect(getLastEvent(wrapper, formValidEvent)).toBe(false)
     expect(getLastEvent(wrapper, formDataChangeEvent)).toStrictEqual({ email: invalidEmail,
       confirmEmail: email,
       phone: '',
       extension: ''
     })
-    await wrapper.vm.$nextTick()
+    await Vue.nextTick()
     expect(wrapper.find(formSelector).text()).toContain('Valid email is required')
     wrapper.destroy()
   })
@@ -137,7 +137,7 @@ describe('Business Contact Info component', () => {
     const wrapper: Wrapper<BusinessContactInfo> = createComponent(email, email)
     const inputElement: Wrapper<Vue> = wrapper.find(emailSelector)
     inputElement.setValue(invalidEmail)
-    await wrapper.vm.$nextTick()
+    await Vue.nextTick()
     expect(getLastEvent(wrapper, formValidEvent)).toBe(false)
     expect(getLastEvent(wrapper, formDataChangeEvent)).toStrictEqual({ email: invalidEmail,
       confirmEmail: email,
@@ -153,13 +153,13 @@ describe('Business Contact Info component', () => {
     const inputElement: Wrapper<Vue> = wrapper.find(phoneSelector)
     inputElement.setValue(invalidPhoneNumber)
     inputElement.trigger('change')
-    await wrapper.vm.$nextTick()
+    await Vue.nextTick()
     expect(getLastEvent(wrapper, formDataChangeEvent)).toStrictEqual({ email: email,
       confirmEmail: email,
       phone: '(11',
       extension: ''
     })
-    await wrapper.vm.$nextTick()
+    await Vue.nextTick()
     expect(getLastEvent(wrapper, formValidEvent)).toBe(false)
     expect(wrapper.find(formSelector).text()).toContain('Phone number is invalid')
     wrapper.destroy()

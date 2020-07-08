@@ -221,27 +221,27 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
     v => !!v || 'A first name is required',
     v => !/^\s/g.test(v) || 'Invalid spaces', // leading spaces
     v => !/\s$/g.test(v) || 'Invalid spaces', // trailing spaces
-    v => !/^.{30}/.test(v) || 'Cannot exceed 30 characters' // maximum character count
+    v => (v?.length <= 30) || 'Cannot exceed 30 characters' // maximum character count
   ]
 
   private readonly middleNameRules: Array<Function> = [
     v => !/^\s/g.test(v) || 'Invalid spaces', // leading spaces
     v => !/\s$/g.test(v) || 'Invalid spaces', // trailing spaces
-    v => !/^.{30}/.test(v) || 'Cannot exceed 30 characters' // maximum character count
+    v => (!v || v.length <= 30) || 'Cannot exceed 30 characters' // maximum character count
   ]
 
   private readonly lastNameRules: Array<Function> = [
     v => !!v || 'A last name is required',
     v => !/^\s/g.test(v) || 'Invalid spaces', // leading spaces
     v => !/\s$/g.test(v) || 'Invalid spaces', // trailing spaces
-    v => !/^.{30}/.test(v) || 'Cannot exceed 30 characters' // maximum character count
+    v => (v?.length <= 30) || 'Cannot exceed 30 characters' // maximum character count
   ]
 
   private readonly orgNameRules: Array<Function> = [
     v => !!v || 'A firm name is required',
     v => !/^\s/g.test(v) || 'Invalid spaces', // leading spaces
     v => !/\s$/g.test(v) || 'Invalid spaces', // trailing spaces
-    v => !/^.{155}/.test(v) || 'Cannot exceed 155 characters' // maximum character count
+    v => (v?.length <= 155) || 'Cannot exceed 155 characters' // maximum character count
   ]
 
   /** Called when component is created. */

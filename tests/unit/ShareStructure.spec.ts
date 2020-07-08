@@ -39,9 +39,9 @@ const formSelector: string = '.share-structure-form'
  * Utility method to get around with the timing issues
  */
 async function waitForUpdate (wrapper: Wrapper<Vue>) {
-  await wrapper.vm.$nextTick()
+  await Vue.nextTick()
   await flushPromises()
-  await wrapper.vm.$nextTick()
+  await Vue.nextTick()
 }
 
 /**
@@ -113,14 +113,14 @@ describe('Share Structure component', () => {
     expect(wrapper.vm.$data.shareStructure).toStrictEqual(shareClass)
     expect(wrapper.vm.$data.hasNoMaximumShares).toBe(false)
     expect(wrapper.vm.$data.hasNoParValue).toBe(false)
-    await wrapper.vm.$nextTick()
+    await Vue.nextTick()
     wrapper.destroy()
   })
 
   it('Displays form data for share class with max shares and par value', async () => {
     const shareClass = createShareStructure(null, 1, 'Class', 'Class A', true, 100, true, 0.50, 'CAD', true)
     const wrapper: Wrapper<ShareStructure> = createComponent(shareClass, -1, 1, null, [])
-    await wrapper.vm.$nextTick()
+    await Vue.nextTick()
     expect((<HTMLInputElement> wrapper.find(nameSelector).element).value)
       .toEqual(shareClass['name'])
     expect((<HTMLInputElement> wrapper.find(txtMaxShares).element).value)
@@ -139,7 +139,7 @@ describe('Share Structure component', () => {
   it('Displays form data for share class with no max shares and no par value', async () => {
     const shareClass = createShareStructure(null, 1, 'Class', 'Class A', false, null, false, null, null, true)
     const wrapper: Wrapper<ShareStructure> = createComponent(shareClass, -1, 1, null, [])
-    await wrapper.vm.$nextTick()
+    await Vue.nextTick()
     expect((<HTMLInputElement> wrapper.find(nameSelector).element).value)
       .toEqual(shareClass['name'])
     expect(wrapper.find(parValueSelector).attributes('aria-checked')).toBe('false')
