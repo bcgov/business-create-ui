@@ -4,8 +4,8 @@
       <v-flex md4>
         <label><strong>Folio Information</strong></label>
       </v-flex>
-      <v-flex md4>
-        <div><label><strong>Folio Number</strong></label></div>
+      <v-flex md8>
+        <label><strong>Folio Number</strong></label>
         <div id="lbl-folio-number">{{ !!folioNumber ? folioNumber : 'Not entered' }}</div>
       </v-flex>
     </v-layout>

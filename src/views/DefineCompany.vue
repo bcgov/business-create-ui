@@ -1,10 +1,10 @@
 <template>
   <div>
     <div class="mt-10 benefit-company-statement" v-if="isTypeBcomp">
-        <p>
-          <span class="benefit-company-statement-label">{{ BenefitCompanyStatementResource.title }}:</span>
-          {{ BenefitCompanyStatementResource.description }}
-        </p>
+      <p>
+        <span class="benefit-company-statement-label">{{ BenefitCompanyStatementResource.title }}:</span>
+        {{ BenefitCompanyStatementResource.description }}
+      </p>
     </div>
 
     <section class="mt-10">
@@ -12,7 +12,7 @@
         <h2>1. Company Name</h2>
       </header>
       <v-card flat class="step-container">
-          <name-request-info />
+        <name-request-info />
       </v-card>
     </section>
 
@@ -26,7 +26,8 @@
       <OfficeAddresses
         :inputAddresses="addresses"
         @update:addresses="onAddressChange($event)"
-        @valid="onAddressFormValidityChange($event)"/>
+        @valid="onAddressFormValidityChange($event)"
+      />
     </section>
 
     <section class="mt-10" v-show="isEntityType">
@@ -44,7 +45,8 @@
         :isEditing="true"
         :showErrors="showErrors"
         @contactInfoChange="onBusinessContactInfoChange($event)"
-        @contactInfoFormValidityChange="onBusinessContactFormValidityChange($event)"/>
+        @contactInfoFormValidityChange="onBusinessContactFormValidityChange($event)"
+      />
     </section>
     <section class="mt-10" v-if="isEntityType && isPremiumAccount">
       <header id="folio-number-header">
@@ -54,11 +56,11 @@
         </p>
       </header>
       <v-card flat class="step-container">
-          <FolioNumber
-            :initialValue="folioNumber"
-            :isEditing="true"
-            @folioNumberChange="onFolioNumberChange($event)"
-          />
+        <FolioNumber
+          :initialValue="folioNumber"
+          :isEditing="true"
+          @folioNumberChange="onFolioNumberChange($event)"
+        />
       </v-card>
     </section>
   </div>

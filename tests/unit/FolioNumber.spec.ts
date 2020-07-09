@@ -55,7 +55,7 @@ describe('Folio number component', () => {
     })
     const input = wrapper.find('#folio-number-text-field')
     input.setValue('123ABCabc')
-    await input.trigger('change')
+    input.trigger('change')
     await flushPromises()
 
     expect(wrapper.findAll('.v-messages__message').length).toBe(0)
