@@ -25,9 +25,9 @@ const summaryTextSelector: string = '.summary-desc'
  * Utility method to get around with the timing issues
  */
 async function waitForUpdate (wrapper: Wrapper<Vue>) {
-  await wrapper.vm.$nextTick()
+  await Vue.nextTick()
   await flushPromises()
-  await wrapper.vm.$nextTick()
+  await Vue.nextTick()
 }
 
 /**

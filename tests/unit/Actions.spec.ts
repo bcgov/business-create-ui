@@ -94,10 +94,10 @@ describe('Actions component', () => {
     store.state.stateModel.createShareStructureStep = { valid: true }
     store.state.stateModel.incorporationAgreementStep = { valid: true }
     store.state.stateModel.incorporationDateTime = { valid: true }
-    await Vue.nextTick(() => {
-      // verify File and Pay button state
-      expect(wrapper.find('#file-pay-btn').attributes('disabled')).toBeUndefined()
-    })
+    await Vue.nextTick()
+
+    // verify File and Pay button state
+    expect(wrapper.find('#file-pay-btn').attributes('disabled')).toBeUndefined()
   })
 
   it('renders the component properly', () => {

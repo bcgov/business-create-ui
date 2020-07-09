@@ -176,7 +176,7 @@ describe('Org Person component', () => {
     expect(wrapper.vm.$data.isIncorporator).toBe(true)
     expect(wrapper.vm.$data.isDirector).toBe(false)
     expect(wrapper.vm.$data.isCompletingParty).toBe(false)
-    await wrapper.vm.$nextTick()
+    await Vue.nextTick()
     wrapper.destroy()
   })
 
@@ -184,7 +184,7 @@ describe('Org Person component', () => {
     const wrapper: Wrapper<OrgPerson> = createComponent(validOrgData, -1, 0, null)
     expect((<HTMLInputElement> wrapper.find(orgNameSelector).element).value)
       .toEqual(validOrgData['officer']['orgName'])
-    await wrapper.vm.$nextTick()
+    await Vue.nextTick()
     expect(wrapper.find(doneButtonSelector).attributes('disabled')).toBeUndefined()
     expect(wrapper.find(removeButtonSelector).attributes('disabled')).toBeDefined()
     expect(wrapper.find(cancelButtonSelector).attributes('disabled')).toBeUndefined()
@@ -199,7 +199,7 @@ describe('Org Person component', () => {
       .toEqual(validPersonData['officer']['middleName'])
     expect((<HTMLInputElement> wrapper.find(lastNameSelector).element).value)
       .toEqual(validPersonData['officer']['lastName'])
-    await wrapper.vm.$nextTick()
+    await Vue.nextTick()
     expect(wrapper.find(doneButtonSelector).attributes('disabled')).toBeUndefined()
     expect(wrapper.find(removeButtonSelector).attributes('disabled')).toBeUndefined()
     expect(wrapper.find(cancelButtonSelector).attributes('disabled')).toBeUndefined()
@@ -221,7 +221,7 @@ describe('Org Person component', () => {
   it('Clicking remove button emits event', async () => {
     const wrapper: Wrapper<OrgPerson> = createComponent(validOrgData, 0, 0, null)
     wrapper.find(removeButtonSelector).trigger('click')
-    await wrapper.vm.$nextTick()
+    await Vue.nextTick()
     expect(getLastEvent(wrapper, removePersonEvent)).toBe(0)
     wrapper.destroy()
   })
@@ -230,49 +230,116 @@ describe('Org Person component', () => {
     const wrapper: Wrapper<OrgPerson> = createComponent(validOrgData, -1, 0, null)
     expect((<HTMLInputElement> wrapper.find(orgNameSelector).element).value)
       .toEqual(validOrgData['officer']['orgName'])
-    await wrapper.vm.$nextTick()
+    await Vue.nextTick()
     expect(wrapper.find(doneButtonSelector).attributes('disabled')).toBeUndefined()
     wrapper.find(doneButtonSelector).trigger('click')
-    await wrapper.vm.$nextTick()
+    await Vue.nextTick()
     expect(getLastEvent(wrapper, addEditPersonEvent)).toStrictEqual(validOrgData)
+    wrapper.destroy()
+  })
+
+  it('Does not display error message when user enters valid org name', async () => {
+    const wrapper: Wrapper<OrgPerson> = createComponent(validOrgData, -1, 0, null)
+    const inputElement: Wrapper<Vue> = wrapper.find(orgNameSelector)
+
+    inputElement.setValue('Valid Org Name')
+    inputElement.trigger('change')
+    await flushPromises()
+
+    expect(wrapper.find(formSelector).text()).not.toContain('Invalid spaces')
+    expect(wrapper.vm.$data.addPersonOrgFormValid).toBe(true)
+
     wrapper.destroy()
   })
 
   it('Displays error message when user enters invalid org name', async () => {
     const wrapper: Wrapper<OrgPerson> = createComponent(validOrgData, -1, 0, null)
     const inputElement: Wrapper<Vue> = wrapper.find(orgNameSelector)
-    inputElement.setValue('     ')
+
+    inputElement.setValue(' Invalid Org Name ')
     inputElement.trigger('change')
-    await wrapper.vm.$nextTick()
     await flushPromises()
-    await wrapper.vm.$nextTick()
+
     expect(wrapper.find(formSelector).text()).toContain('Invalid spaces')
     expect(wrapper.vm.$data.addPersonOrgFormValid).toBe(false)
+
     wrapper.destroy()
   })
 
-  it('displays error message when user enters invalid person name', async () => {
+  it('Does not display error message when user enters valid person names', async () => {
     const wrapper: Wrapper<OrgPerson> = createComponent(validPersonData, -1, 0, null)
     const inputElement1: Wrapper<Vue> = wrapper.find(firstNameSelector)
-    const inputElement2: Wrapper<Vue> = wrapper.find(lastNameSelector)
+    const inputElement2: Wrapper<Vue> = wrapper.find(middleNameSelector)
+    const inputElement3: Wrapper<Vue> = wrapper.find(lastNameSelector)
+
+    inputElement1.setValue('First')
+    inputElement1.trigger('change')
+    inputElement2.setValue('Middle')
+    inputElement2.trigger('change')
+    inputElement3.setValue('Last')
+    inputElement3.trigger('change')
+    await flushPromises()
+
+    expect(wrapper.findAll('.v-messages__message').length).toBe(0)
+    expect(wrapper.vm.$data.addPersonOrgFormValid).toBe(true)
+
+    wrapper.destroy()
+  })
+
+  it('Displays error message when user does not enter person names', async () => {
+    const wrapper: Wrapper<OrgPerson> = createComponent(validPersonData, -1, 0, null)
+    const inputElement1: Wrapper<Vue> = wrapper.find(firstNameSelector)
+    const inputElement2: Wrapper<Vue> = wrapper.find(middleNameSelector)
+    const inputElement3: Wrapper<Vue> = wrapper.find(lastNameSelector)
+
     inputElement1.setValue('')
     inputElement1.trigger('change')
     inputElement2.setValue('')
     inputElement2.trigger('change')
-    await wrapper.vm.$nextTick()
+    inputElement3.setValue('')
+    inputElement3.trigger('change')
     await flushPromises()
-    await wrapper.vm.$nextTick()
-    expect(wrapper.find(formSelector).text()).toContain('A first name is required')
-    expect(wrapper.find(formSelector).text()).toContain('A last name is required')
+
+    const messages = wrapper.findAll('.v-messages__message')
+    expect(messages.length).toBe(2)
+    expect(messages.at(0).text()).toBe('A first name is required')
+    expect(messages.at(1).text()).toBe('A last name is required')
     expect(wrapper.vm.$data.addPersonOrgFormValid).toBe(false)
+
     wrapper.destroy()
   })
 
-  it('shows popup if there is a completing party', async () => {
+  it('Displays error message when user enters person names that are too long', async () => {
+    const wrapper: Wrapper<OrgPerson> = createComponent(validPersonData, -1, 0, null)
+    const inputElement1: Wrapper<Vue> = wrapper.find(firstNameSelector)
+    const inputElement2: Wrapper<Vue> = wrapper.find(middleNameSelector)
+    const inputElement3: Wrapper<Vue> = wrapper.find(lastNameSelector)
+
+    inputElement1.setValue('1234567890123456789012345678901')
+    inputElement1.trigger('change')
+    inputElement2.setValue('1234567890123456789012345678901')
+    inputElement2.trigger('change')
+    inputElement3.setValue('1234567890123456789012345678901')
+    inputElement3.trigger('change')
+    await Vue.nextTick()
+    await flushPromises()
+    await Vue.nextTick()
+
+    const messages = wrapper.findAll('.v-messages__message')
+    expect(messages.length).toBe(3)
+    expect(messages.at(0).text()).toBe('Cannot exceed 30 characters')
+    expect(messages.at(1).text()).toBe('Cannot exceed 30 characters')
+    expect(messages.at(2).text()).toBe('Cannot exceed 30 characters')
+    expect(wrapper.vm.$data.addPersonOrgFormValid).toBe(false)
+
+    wrapper.destroy()
+  })
+
+  it('Shows popup if there is a completing party', async () => {
     const wrapper: Wrapper<OrgPerson> = createComponent(validIncorporator, -1, 0, validPersonData)
     const cpCheckBox: Wrapper<Vue> = wrapper.find(completingPartyChkBoxSelector)
     cpCheckBox.setChecked(true)
-    await wrapper.vm.$nextTick()
+    await Vue.nextTick()
     expect(wrapper.vm.$refs.reassignCPDialog).toBeTruthy()
     wrapper.destroy()
   })
@@ -281,14 +348,14 @@ describe('Org Person component', () => {
     const wrapper: Wrapper<OrgPerson> = createComponent(validIncorporator, -1, 1, validPersonData)
     const cpCheckBox: Wrapper<Vue> = wrapper.find(completingPartyChkBoxSelector)
     cpCheckBox.setChecked(true)
-    await wrapper.vm.$nextTick()
+    await Vue.nextTick()
     const reassignDialog: any = wrapper.vm.$refs.reassignCPDialog
     expect(reassignDialog).toBeTruthy()
     await reassignDialog.onClickYes()
     await flushPromises()
     expect(wrapper.vm.$data.reassignCompletingParty).toBe(true)
     wrapper.find(doneButtonSelector).trigger('click')
-    await wrapper.vm.$nextTick()
+    await Vue.nextTick()
 
     expect(wrapper.emitted().removeCompletingPartyRole).toBeTruthy()
     expect(wrapper.emitted(reassignCompletingPartyEvent).length).toBe(1)
@@ -309,7 +376,7 @@ describe('Org Person component', () => {
   it('Emits cancel event', async () => {
     const wrapper: Wrapper<OrgPerson> = createComponent(validPersonData, -1, 0, null)
     wrapper.find(cancelButtonSelector).trigger('click')
-    await wrapper.vm.$nextTick()
+    await Vue.nextTick()
     expect(wrapper.emitted().resetEvent).toBeTruthy()
     expect(wrapper.emitted(formResetEvent).length).toBe(1)
     wrapper.destroy()
