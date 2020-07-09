@@ -19,6 +19,7 @@ export const stateModel: StateModelIF = {
     applicant: {},
     filingId: null
   },
+  nameTranslations: [],
   currentDate: '',
   incorporationDateTime: {
     valid: false,

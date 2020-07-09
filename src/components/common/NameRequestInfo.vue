@@ -1,5 +1,6 @@
 <template>
   <div id="name-request-summary">
+    <confirm-dialog ref="confirmTranslationRemovalDialog" attach="#name-request-summary" />
     <template v-if="getNameRequestNumber">
       <v-row id="name-request-info">
         <v-col>
@@ -37,6 +38,51 @@
           </ul>
         </v-col>
       </v-row>
+      <!-- Name Translation -->
+      <v-row id="name-translation-info">
+        <v-col>
+          <label>
+            <strong>Name Translation</strong>
+          </label>
+        </v-col>
+        <v-col>
+          <v-checkbox
+            v-model="hasNameTranslation"
+            id='name-translation-checkbox'
+            label="This company uses one of more translations of its name outside of Canada."
+            @click.native="checkboxConfirmRemoval()"
+          />
+          <template v-if="hasNameTranslation">
+            <p><b>Note:</b> Name translations must use the Latin
+              Alphabet (English, French, etc.). Names that use other writing systems must spell the name phonetically
+              in English or French.
+            </p>
+            <!-- Add new Name Translation -->
+            <v-btn outlined color="primary" @click="isAddingNameTranslation = true" :disabled="isAddingNameTranslation">
+              <v-icon>mdi-plus</v-icon>
+              <span>Add a Name Translation</span>
+            </v-btn>
+          </template>
+        </v-col>
+      </v-row>
+      <v-row v-if="hasNameTranslation" id="name-translation-container">
+        <!-- Spacer Column -->
+        <v-col></v-col>
+        <v-col>
+          <add-name-translation
+            v-if="isAddingNameTranslation"
+            :edit-name-translation="editingNameTranslation"
+            @addTranslation="addName($event)"
+            @cancelTranslation="isAddingNameTranslation = false"
+          />
+          <list-name-translations
+            v-if="getNameTranslations.length"
+            :translationsList="getNameTranslations"
+            @editNameTranslation="editNameTranslation($event)"
+            @removeNameTranslation="removeNameTranslation($event)"
+          />
+        </v-col>
+      </v-row>
     </template>
     <v-row v-else id="numbered-company-info">
       <v-col>
@@ -66,28 +112,60 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Mixins, Vue } from 'vue-property-decorator'
-import { Getter } from 'vuex-class'
+import { Component, Mixins } from 'vue-property-decorator'
+import { Action, Getter, State } from 'vuex-class'
 import { getName } from 'country-list'
+
+// Components
+import { ConfirmDialog } from '@/components/dialogs'
+import { ListNameTranslations, AddNameTranslation } from '@/components/DefineCompany'
 
 // Enums
 import { NameRequestStates } from '@/enums'
 
 // Interfaces
-import { GetterIF, NameRequestDetailsIF, NameRequestApplicantIF } from '@/interfaces'
+import {
+  GetterIF,
+  NameRequestDetailsIF,
+  NameRequestApplicantIF,
+  ConfirmDialogType,
+  ActionBindingIF
+} from '@/interfaces'
 
 // Mixins
 import { DateMixin } from '@/mixins'
 
-@Component({})
+@Component({
+  components: {
+    ListNameTranslations,
+    AddNameTranslation,
+    ConfirmDialog
+  }
+})
 export default class NameRequestInfo extends Mixins(DateMixin) {
+  // Refs
+  $refs!: {
+    confirmTranslationRemovalDialog: ConfirmDialogType
+  }
+
   // Template Enums
   readonly NameRequestStates = NameRequestStates
+  private hasNameTranslation = false
+  private isAddingNameTranslation = true
+  private editingNameTranslation = ''
+  private editIndex: number
 
   readonly RECEIVED_STATE = 'Received'
   readonly NOT_RECEIVED_STATE = 'Not Received'
   readonly NOT_REQUIRED_STATE = 'Not Required'
   readonly WAIVED_STATE = 'Waived'
+
+  // Global Store
+  @State(state => state.stateModel.nameTranslations)
+  readonly nameTranslations!: Array<string>
+
+  // Global Actions
+  @Action setNameTranslationState!: ActionBindingIF
 
   // Global getters
   @Getter isEntityType!: GetterIF;
@@ -97,6 +175,7 @@ export default class NameRequestInfo extends Mixins(DateMixin) {
   @Getter getNameRequestNumber!: GetterIF;
   @Getter getNameRequestDetails!: NameRequestDetailsIF;
   @Getter getNameRequestApplicant!: NameRequestApplicantIF;
+  @Getter getNameTranslations: Array<string>;
 
   /** The entity title  */
   private entityTypeDescription (): string {
@@ -167,10 +246,79 @@ export default class NameRequestInfo extends Mixins(DateMixin) {
 
     return `${address}, ${city}, ${stateProvince}, ${postal}, ${country}`
   }
+
+  /** Add a name translation to store
+   *
+   * @param name The name to add
+   */
+  private addName (name: string): void {
+    const nameTranslations = Object.assign([], this.getNameTranslations)
+    this.editIndex > -1
+      ? nameTranslations[this.editIndex] = name
+      : nameTranslations.push(name)
+
+    this.setNameTranslationState(nameTranslations)
+    this.isAddingNameTranslation = false
+    this.editIndex = -1
+    this.editingNameTranslation = ''
+  }
+
+  /** Edit a name translation
+   *
+   * @param index Index number of the name to edit
+   */
+  private editNameTranslation (index: number): void {
+    const nameTranslations = Object.assign([], this.getNameTranslations)
+    this.editingNameTranslation = nameTranslations[index]
+    this.editIndex = index
+    this.isAddingNameTranslation = true
+  }
+
+  /** Remove a name translation from store
+   *
+   * @param index Index number of the name to remove
+   */
+  private removeNameTranslation (index: number): void {
+    const nameTranslations = Object.assign([], this.getNameTranslations)
+    nameTranslations.splice(index, 1)
+    this.setNameTranslationState(nameTranslations)
+  }
+
+  /** Checkbox handler */
+  private checkboxConfirmRemoval (): void {
+    if (this.getNameTranslations.length) this.confirmTranslationRemoval()
+  }
+
+  /** Handling of confirm dialog */
+  private confirmTranslationRemoval () {
+    // open confirmation dialog and wait for response
+    this.$refs.confirmTranslationRemovalDialog.open(
+      'Remove All Name Translations',
+      'De-selecting the Name Translation option will remove all name translations.',
+      {
+        width: '45rem',
+        persistent: true,
+        yes: 'Remove All Translations',
+        no: null,
+        cancel: 'Cancel'
+      }
+    ).then(async (confirm) => {
+      if (confirm) {
+        this.setNameTranslationState([])
+      }
+    }).catch(() => {
+      // clear the checkbox
+      this.hasNameTranslation = true
+    })
+  }
 }
 </script>
 
 <style lang="scss" scoped>
+p {
+  font-size: 0.875rem;
+}
+
 .row .col:first-child {
   width: 12rem;
   max-width: 12rem;
@@ -194,6 +342,15 @@ ul.numbered-company-list-items {
     display: inline-block;
     width: 1.5em;
     margin-left: -1.5em;
+  }
+}
+
+#name-translation-info {
+  display: flex;
+  align-items: baseline;
+
+  .v-input--selection-controls .v-input__slot > .v-label, .v-input--selection-controls .v-radio > .v-label {
+    font-size: 0.875rem;
   }
 }
 </style>

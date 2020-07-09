@@ -84,6 +84,10 @@ export const setNameRequestState: ActionIF = ({ commit }, nameRequestState): voi
   commit('mutateNameRequestState', nameRequestState)
 }
 
+export const setNameTranslationState: ActionIF = ({ commit }, nameTranslationState): void => {
+  commit('mutateNameTranslation', nameTranslationState)
+}
+
 export const setFilingId: ActionIF = ({ commit }, filingId): void => {
   commit('mutateFilingId', filingId)
 }

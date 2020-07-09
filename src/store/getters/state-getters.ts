@@ -122,6 +122,13 @@ export const getNameRequestApplicant = (state: any): NameRequestApplicantIF => {
 }
 
 /**
+ * Returns name request name translations.
+ */
+export const getNameTranslations = (state: any): Array<string> => {
+  return state.stateModel.nameTranslations
+}
+
+/**
  * Returns the office addresses.
  */
 export const getOfficeAddresses = (state: any): string => {
