@@ -16,9 +16,16 @@
       </v-row>
       <v-row>
         <v-col class="form__btns pt-0">
-          <v-btn large color="error" id='btn-remove' disabled>Remove</v-btn>
-          <v-btn large class="form-primary-btn" color="primary" id='btn-done' :disabled="!nameTranslationForm"
-               @click="addTranslation()">Done</v-btn>
+          <v-btn large color="error" id='btn-remove'
+            :disabled="!editNameTranslation"
+            @click="removeTranslation">
+              Remove
+          </v-btn>
+          <v-btn large color="primary" id='btn-done' class="form-primary-btn"
+            :disabled="!nameTranslationForm"
+            @click="addTranslation">
+              Done
+          </v-btn>
           <v-btn large class="form-cancel-btn" id='btn-cancel' @click="cancelTranslation">Cancel</v-btn>
         </v-col>
       </v-row>
@@ -28,7 +35,7 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Emit, Prop, Vue, Watch } from 'vue-property-decorator'
+import { Component, Emit, Prop, Vue } from 'vue-property-decorator'
 
 @Component({})
 export default class NameTranslation extends Vue {
@@ -51,12 +58,15 @@ export default class NameTranslation extends Vue {
 
   // Events
   @Emit('addTranslation')
-  private addTranslation (index = null): string {
+  private addTranslation (): string {
     return this.nameTranslation
   }
 
   @Emit('cancelTranslation')
   private cancelTranslation (): void {}
+
+  @Emit('removeTranslation')
+  private removeTranslation (): void {}
 }
 </script>
 

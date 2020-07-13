@@ -38,7 +38,7 @@
           </ul>
         </v-col>
       </v-row>
-      <!-- Name Translation -->
+      <!-- Name Translation Interface -->
       <v-row id="name-translation-info">
         <v-col>
           <label>
@@ -50,7 +50,7 @@
             v-model="hasNameTranslation"
             id='name-translation-checkbox'
             label="This company uses one of more translations of its name outside of Canada."
-            @click.native="checkboxConfirmRemoval()"
+            @click.native="confirmNameTranslation()"
           />
           <template v-if="hasNameTranslation">
             <p><b>Note:</b> Name translations must use the Latin
@@ -65,6 +65,7 @@
           </template>
         </v-col>
       </v-row>
+      <!-- Name Translation Handling Components -->
       <v-row v-if="hasNameTranslation" id="name-translation-container">
         <!-- Spacer Column -->
         <v-col></v-col>
@@ -73,10 +74,12 @@
             v-if="isAddingNameTranslation"
             :edit-name-translation="editingNameTranslation"
             @addTranslation="addName($event)"
-            @cancelTranslation="isAddingNameTranslation = false"
+            @cancelTranslation="cancelNameTranslation()"
+            @removeTranslation="removeNameTranslation(editIndex)"
           />
           <list-name-translations
-            v-if="getNameTranslations.length"
+            v-if="getNameTranslations && getNameTranslations.length"
+            :isAddingNameTranslation="isAddingNameTranslation"
             :translationsList="getNameTranslations"
             @editNameTranslation="editNameTranslation($event)"
             @removeNameTranslation="removeNameTranslation($event)"
@@ -112,7 +115,7 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Mixins } from 'vue-property-decorator'
+import { Component, Emit, Mixins } from 'vue-property-decorator'
 import { Action, Getter, State } from 'vuex-class'
 import { getName } from 'country-list'
 
@@ -150,6 +153,8 @@ export default class NameRequestInfo extends Mixins(DateMixin) {
 
   // Template Enums
   readonly NameRequestStates = NameRequestStates
+
+  // Local Properties
   private hasNameTranslation = false
   private isAddingNameTranslation = true
   private editingNameTranslation = ''
@@ -175,7 +180,14 @@ export default class NameRequestInfo extends Mixins(DateMixin) {
   @Getter getNameRequestNumber!: GetterIF;
   @Getter getNameRequestDetails!: NameRequestDetailsIF;
   @Getter getNameRequestApplicant!: NameRequestApplicantIF;
-  @Getter getNameTranslations: Array<string>;
+  @Getter getNameTranslations!: Array<string>;
+
+  mounted () {
+    if (this.nameTranslations?.length) {
+      this.isAddingNameTranslation = false
+      this.hasNameTranslation = true
+    }
+  }
 
   /** The entity title  */
   private entityTypeDescription (): string {
@@ -258,9 +270,8 @@ export default class NameRequestInfo extends Mixins(DateMixin) {
       : nameTranslations.push(name)
 
     this.setNameTranslationState(nameTranslations)
-    this.isAddingNameTranslation = false
-    this.editIndex = -1
-    this.editingNameTranslation = ''
+    this.emitHasNameTranslation(this.validateNameTranslation())
+    this.cancelNameTranslation()
   }
 
   /** Edit a name translation
@@ -274,7 +285,7 @@ export default class NameRequestInfo extends Mixins(DateMixin) {
     this.isAddingNameTranslation = true
   }
 
-  /** Remove a name translation from store
+  /** Remove a name translation
    *
    * @param index Index number of the name to remove
    */
@@ -282,34 +293,52 @@ export default class NameRequestInfo extends Mixins(DateMixin) {
     const nameTranslations = Object.assign([], this.getNameTranslations)
     nameTranslations.splice(index, 1)
     this.setNameTranslationState(nameTranslations)
+    this.emitHasNameTranslation(this.validateNameTranslation())
+    this.cancelNameTranslation()
   }
 
-  /** Checkbox handler */
-  private checkboxConfirmRemoval (): void {
-    if (this.getNameTranslations.length) this.confirmTranslationRemoval()
+  /** Cancel */
+  private cancelNameTranslation (): void {
+    this.isAddingNameTranslation = false
+    this.editingNameTranslation = ''
+    this.editIndex = -1
   }
 
-  /** Handling of confirm dialog */
-  private confirmTranslationRemoval () {
-    // open confirmation dialog and wait for response
-    this.$refs.confirmTranslationRemovalDialog.open(
-      'Remove All Name Translations',
-      'De-selecting the Name Translation option will remove all name translations.',
-      {
-        width: '45rem',
-        persistent: true,
-        yes: 'Remove All Translations',
-        no: null,
-        cancel: 'Cancel'
-      }
-    ).then(async (confirm) => {
-      if (confirm) {
-        this.setNameTranslationState([])
-      }
-    }).catch(() => {
-      // clear the checkbox
-      this.hasNameTranslation = true
-    })
+  /** Handle confirm dialog */
+  private confirmNameTranslation () {
+    this.emitHasNameTranslation(this.validateNameTranslation())
+    if (this.getNameTranslations?.length) {
+      // open confirmation dialog and wait for response
+      this.$refs.confirmTranslationRemovalDialog.open(
+        'Remove All Name Translations',
+        'De-selecting the Name Translation option will remove all name translations.',
+        {
+          width: '45rem',
+          persistent: true,
+          yes: 'Remove All Translations',
+          no: null,
+          cancel: 'Cancel'
+        }
+      ).then(async (confirm) => {
+        if (confirm) {
+          this.setNameTranslationState([])
+        }
+      }).catch(() => {
+        // clear the checkbox
+        this.hasNameTranslation = true
+      })
+    }
+  }
+
+  /** Validate */
+  private validateNameTranslation (): boolean {
+    return this.hasNameTranslation ? !!this.getNameTranslations.length : true
+  }
+
+  // Events
+  @Emit('hasNameTranslation')
+  private emitHasNameTranslation (val: boolean): boolean {
+    return val
   }
 }
 </script>

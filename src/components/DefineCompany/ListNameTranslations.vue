@@ -51,18 +51,27 @@
         <v-col>
           <div class="actions">
             <span class="edit-action">
-              <v-btn small text color="primary"
-               @click="emitNameEdit(index)"
-              >
-                <v-icon small>mdi-pencil</v-icon>
-                <span>Edit</span>
+              <v-btn
+                small
+                text
+                color="primary"
+                :disabled="isAddingNameTranslation"
+                @click="emitNameEdit(index)">
+                  <v-icon small>mdi-pencil</v-icon>
+                  <span>Edit</span>
               </v-btn>
             </span>
             <!-- more actions menu -->
             <span>
               <v-menu offset-y>
                 <template v-slot:activator="{ on }">
-                  <v-btn text small color="primary" class="actions__more-actions__btn" v-on="on">
+                  <v-btn
+                    text
+                    small
+                    v-on="on"
+                    color="primary"
+                    class="actions__more-actions__btn"
+                    :disabled="isAddingNameTranslation">
                     <v-icon>mdi-menu-down</v-icon>
                   </v-btn>
                 </template>
@@ -100,6 +109,9 @@ import { CommonMixin, EntityFilterMixin } from '@/mixins'
 export default class ListNameTranslations extends Mixins(CommonMixin, EntityFilterMixin) {
   @Prop({ default: () => [] })
   private translationsList: Array<string>
+
+  @Prop({ default: false })
+  private isAddingNameTranslation: boolean
 
   /**
    * Emit an index and event to the parent to handle editing.

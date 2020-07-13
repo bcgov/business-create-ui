@@ -9,10 +9,10 @@
 
     <section class="mt-10">
       <header>
-        <h2>1. Company Name</h2>
+        <h2>1. Company Name</h2>{{hasValidNameTranslation}}
       </header>
       <v-card flat class="step-container">
-        <name-request-info />
+        <name-request-info @hasNameTranslation="onNameTranslation($event)"/>
       </v-card>
     </section>
 
@@ -124,6 +124,7 @@ export default class DefineCompany extends Mixins(EntityFilterMixin) {
 
   private businessContactFormValid: boolean = false
   private addressFormValid: boolean = false
+  private hasValidNameTranslation: boolean = true
 
   // Entity Enum
   readonly EntityTypes = EntityTypes
@@ -177,13 +178,18 @@ export default class DefineCompany extends Mixins(EntityFilterMixin) {
     }
   }
 
+  private onNameTranslation (validity: boolean): void {
+    this.hasValidNameTranslation = validity
+    this.setDefineCompanyStepValidity(this.businessContactFormValid && this.addressFormValid && this.hasValidNameTranslation)
+  }
+
   private onBusinessContactInfoChange (businessContact: BusinessContactIF): void {
     this.setBusinessContact(businessContact)
   }
 
   private onBusinessContactFormValidityChange (validity: boolean): void {
     this.businessContactFormValid = validity
-    this.setDefineCompanyStepValidity(this.businessContactFormValid && this.addressFormValid)
+    this.setDefineCompanyStepValidity(this.businessContactFormValid && this.addressFormValid && this.hasValidNameTranslation)
   }
 
   private onAddressChange (address: IncorporationAddressIf): void {
@@ -192,7 +198,7 @@ export default class DefineCompany extends Mixins(EntityFilterMixin) {
 
   private onAddressFormValidityChange (validity: boolean): void {
     this.addressFormValid = validity
-    this.setDefineCompanyStepValidity(this.businessContactFormValid && this.addressFormValid)
+    this.setDefineCompanyStepValidity(this.businessContactFormValid && this.addressFormValid && this.hasValidNameTranslation)
   }
 
   private onFolioNumberChange (folioNumber: string): void {
