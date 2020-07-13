@@ -1,7 +1,5 @@
-import {
-  AccountInformationIF, CertifyIF, DefineCompanyIF, NameRequestIF, TombStoneIF, PeopleAndRoleIF,
-  ShareStructureIF, DateTimeIF, IncorporationAgreementIF
-} from '@/interfaces'
+import { AccountInformationIF, CertifyIF, DefineCompanyIF, NameRequestIF, TombStoneIF, PeopleAndRoleIF,
+  ShareStructureIF, DateTimeIF, IncorporationAgreementIF } from '@/interfaces'
 
 // State model example
 export interface StateModelIF {

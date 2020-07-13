@@ -27,12 +27,12 @@
           </div>
         </v-flex>
       </v-layout>
-      <v-layout row class="mt-3" v-if="getNameTranslations && getNameTranslations.length">
+      <v-layout row v-if="getNameTranslations && getNameTranslations.length" class="mt-3">
         <v-flex md4>
           <label><strong>Name Translation</strong></label>
         </v-flex>
         <v-flex md8>
-          <div v-for="(name, index) in getNameTranslations" :key="`name_translation_${index}`">{{ name }}</div>
+          <div v-for="(name, index) in getNameTranslations" :key="`name_translation_${index}`">{{name}}</div>
         </v-flex>
       </v-layout>
     </div>

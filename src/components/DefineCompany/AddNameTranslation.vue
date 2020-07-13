@@ -9,8 +9,7 @@
             persistent-hint
             label="Enter Name Translation"
             v-model="nameTranslation"
-            :rules="nameTranslationRules"
-            >
+            :rules="nameTranslationRules">
           </v-text-field>
         </v-col>
       </v-row>
@@ -26,7 +25,10 @@
             @click="addTranslation">
               Done
           </v-btn>
-          <v-btn large class="form-cancel-btn" id='btn-cancel' @click="cancelTranslation">Cancel</v-btn>
+          <v-btn large class="form-cancel-btn" id='btn-cancel'
+            @click="cancelTranslation">
+              Cancel
+          </v-btn>
         </v-col>
       </v-row>
     </v-form>
@@ -52,7 +54,9 @@ export default class NameTranslation extends Vue {
     v => /^[a-z|0-9A-Z]+(?: [a-z|0-9A-Z]+)*$/.test(v) || 'Invalid character', // numbers, letters and single spaces only
     v => (!v || v.length <= 50) || 'Cannot exceed 50 characters' // maximum character count
   ]
+
   mounted () {
+    // Editing an existing name translation
     if (this.editNameTranslation) this.nameTranslation = this.editNameTranslation
   }
 

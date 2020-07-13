@@ -1,37 +1,10 @@
 <template>
   <v-card flat id="name-translations-list">
-
-<!--    <ConfirmRemoveDialog-->
-<!--      :dialog="dialog"-->
-<!--      attach="#list-name-translations"-->
-<!--      @confirm="emitRemovePerson(personId)"-->
-<!--      @exit="dialog = false"-->
-<!--    />-->
-
-    <!-- Summary Section -->
-<!--    <div id="people-roles-summary" v-if="isSummary">-->
-<!--      &lt;!&ndash; Summary Header &ndash;&gt;-->
-<!--      <div class="people-roles-summary-header" >-->
-<!--        <v-icon>mdi-account</v-icon>-->
-<!--        <label class="people-roles-title"><strong>People and Roles</strong></label>-->
-<!--      </div>-->
-
-<!--      &lt;!&ndash; Summary Warning &ndash;&gt;-->
-<!--      <div v-if="showErrorSummary" class="people-roles-invalid-message">-->
-<!--        <span>-->
-<!--          <v-icon color="blue darken-2">mdi-information-outline</v-icon>-->
-<!--          This step is not complete.-->
-<!--          <router-link id="router-link" :to="{ path: '/add-people-roles', query: { showErrors: true } }">-->
-<!--            Return to this step to complete it.-->
-<!--          </router-link>-->
-<!--        </span>-->
-<!--      </div>-->
-<!--    </div>-->
-
     <!-- List Display Section -->
     <div id="name-translations-header">
+
       <!-- List Headers -->
-      <v-row class="name-translation-title people-roles-header list-item__subtitle" no-gutters>
+      <v-row class="name-translation-title list-item__subtitle" no-gutters>
         <v-col>
           <h3>Name Translations:</h3>
         </v-col>
@@ -93,8 +66,6 @@
 // Libraries
 import { Component, Prop, Mixins, Emit } from 'vue-property-decorator'
 
-// Components
-
 // Dialogs
 import { ConfirmRemoveDialog } from '@/components/dialogs'
 
@@ -136,10 +107,12 @@ export default class ListNameTranslations extends Mixins(CommonMixin, EntityFilt
     .name-translation-title {
       display: flex;
       background-color: $BCgovBlue5O;
+      padding: .5rem 1.25rem .5rem 1.25rem;
+      font-size: 0.875rem;
+      margin-top: 1rem;
     }
 
     .names-translation-content {
-      margin-top: .5rem;
       padding: .5rem 1.25rem .5rem 1.25rem;
       border-top: 1px solid $gray1;
       font-size: 0.875rem;
@@ -166,80 +139,4 @@ export default class ListNameTranslations extends Mixins(CommonMixin, EntityFilt
       }
     }
   }
-
-  #people-roles {
-    margin-top: 1rem;
-  }
-
-  .people-roles-summary-header {
-    display: flex;
-    background-color: $BCgovBlue5O;
-    padding: 1.25rem;
-
-    .people-roles-title {
-      padding-left: .5rem;
-    }
-
-  }
-
-  .people-roles-invalid-message {
-    padding: 1.25rem;
-    font-weight: bold;
-    color: $BCgovABlue2;
-  }
-
-  .people-roles-header {
-    padding: .5rem 1.25rem .5rem 1.25rem;
-    font-size: 0.875rem;
-    margin-top: 1rem;
-  }
-
-  .names-translation-content {
-    margin-top: .5rem;
-    padding: .5rem 1.25rem .5rem 1.25rem;
-    border-top: 1px solid $gray1;
-    font-size: 0.875rem;
-
-    .people-roles-title {
-      color: $gray7;
-    }
-
-    .actions {
-      position: absolute;
-      right: 0;
-
-      .edit-action {
-        border-right: 1px solid $gray1;
-      }
-
-      .v-btn {
-        min-width: .5rem;
-      }
-
-      .v-btn + .v-btn {
-        margin-left: 0.5rem;
-      }
-    }
-  }
-
-  .v-list-item {
-    min-height: 0;
-    padding: 0 1rem 0 .5rem;
-  }
-
-  .col {
-    padding: .25rem;
-
-    .col-roles {
-      padding: 0!important;
-    }
-  }
-
-  .warning-text {
-    position: relative;
-    top: 2px;
-    left: 2px;
-    color: $BCgovGold9
-  }
-
 </style>

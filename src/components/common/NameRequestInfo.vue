@@ -38,7 +38,7 @@
           </ul>
         </v-col>
       </v-row>
-      <!-- Name Translation Interface -->
+      <!-- Name Translation Option -->
       <v-row id="name-translation-info">
         <v-col>
           <label>
@@ -57,7 +57,6 @@
               Alphabet (English, French, etc.). Names that use other writing systems must spell the name phonetically
               in English or French.
             </p>
-            <!-- Add new Name Translation -->
             <v-btn outlined color="primary" @click="isAddingNameTranslation = true" :disabled="isAddingNameTranslation">
               <v-icon>mdi-plus</v-icon>
               <span>Add a Name Translation</span>
@@ -65,7 +64,7 @@
           </template>
         </v-col>
       </v-row>
-      <!-- Name Translation Handling Components -->
+      <!-- Name Translation Components -->
       <v-row v-if="hasNameTranslation" id="name-translation-container">
         <!-- Spacer Column -->
         <v-col></v-col>
@@ -259,24 +258,29 @@ export default class NameRequestInfo extends Mixins(DateMixin) {
     return `${address}, ${city}, ${stateProvince}, ${postal}, ${country}`
   }
 
-  /** Add a name translation to store
+  /** Add or update a name translation
    *
    * @param name The name to add
    */
   private addName (name: string): void {
     const nameTranslations = Object.assign([], this.getNameTranslations)
+
+    // Handle name translation adds or updates
     this.editIndex > -1
       ? nameTranslations[this.editIndex] = name
       : nameTranslations.push(name)
 
     this.setNameTranslationState(nameTranslations)
+
+    // Emit Validation
     this.emitHasNameTranslation(this.validateNameTranslation())
+
     this.cancelNameTranslation()
   }
 
-  /** Edit a name translation
+  /** Pass an index of the name translation to be edited
    *
-   * @param index Index number of the name to edit
+   * @param index Index number of the name translation to edit
    */
   private editNameTranslation (index: number): void {
     const nameTranslations = Object.assign([], this.getNameTranslations)
@@ -287,26 +291,29 @@ export default class NameRequestInfo extends Mixins(DateMixin) {
 
   /** Remove a name translation
    *
-   * @param index Index number of the name to remove
+   * @param index Index number of the name translation to remove
    */
   private removeNameTranslation (index: number): void {
     const nameTranslations = Object.assign([], this.getNameTranslations)
     nameTranslations.splice(index, 1)
+
     this.setNameTranslationState(nameTranslations)
+
+    // Emit Validation
     this.emitHasNameTranslation(this.validateNameTranslation())
+
     this.cancelNameTranslation()
   }
 
-  /** Cancel */
+  /** Cancel adding or editing of name translation */
   private cancelNameTranslation (): void {
     this.isAddingNameTranslation = false
     this.editingNameTranslation = ''
     this.editIndex = -1
   }
 
-  /** Handle confirm dialog */
+  /** Handle name translation checkbox logic */
   private confirmNameTranslation () {
-    this.emitHasNameTranslation(this.validateNameTranslation())
     if (this.getNameTranslations?.length) {
       // open confirmation dialog and wait for response
       this.$refs.confirmTranslationRemovalDialog.open(
@@ -328,17 +335,20 @@ export default class NameRequestInfo extends Mixins(DateMixin) {
         this.hasNameTranslation = true
       })
     }
+
+    // Emit Validation
+    this.emitHasNameTranslation(this.validateNameTranslation())
   }
 
-  /** Validate */
+  /** Validate name translation */
   private validateNameTranslation (): boolean {
     return this.hasNameTranslation ? !!this.getNameTranslations.length : true
   }
 
   // Events
   @Emit('hasNameTranslation')
-  private emitHasNameTranslation (val: boolean): boolean {
-    return val
+  private emitHasNameTranslation (hasNameTranslation: boolean): boolean {
+    return hasNameTranslation
   }
 }
 </script>

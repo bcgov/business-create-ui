@@ -122,7 +122,7 @@ export const getNameRequestApplicant = (state: any): NameRequestApplicantIF => {
 }
 
 /**
- * Returns name request name translations.
+ * Returns name translations.
  */
 export const getNameTranslations = (state: any): Array<string> => {
   return state.stateModel.nameTranslations
