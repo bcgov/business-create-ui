@@ -64,20 +64,17 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Prop, Mixins, Emit } from 'vue-property-decorator'
+import { Component, Prop, Vue, Emit } from 'vue-property-decorator'
 
 // Dialogs
 import { ConfirmRemoveDialog } from '@/components/dialogs'
-
-// Mixins
-import { CommonMixin, EntityFilterMixin } from '@/mixins'
 
 @Component({
   components: {
     ConfirmRemoveDialog
   }
 })
-export default class ListNameTranslations extends Mixins(CommonMixin, EntityFilterMixin) {
+export default class ListNameTranslations extends Vue {
   @Prop({ default: () => [] })
   private translationsList: Array<string>
 

@@ -1,7 +1,7 @@
 <template>
   <div id="name-translation">
     <!-- Name Translation form -->
-    <v-form v-model="nameTranslationForm" ref="ntForm" name="business-contact-form">
+    <v-form v-model="nameTranslationForm" ref="ntForm" name="name-translation-form">
       <v-row>
         <v-col class="pb-0">
           <v-text-field
@@ -50,8 +50,8 @@ export default class NameTranslation extends Vue {
 
   // Validation Rules
   private readonly nameTranslationRules: Array<Function> = [
-    v => !!v || 'A name is required', // is not empty
-    v => /^[a-z|0-9A-Z]+(?: [a-z|0-9A-Z]+)*$/.test(v) || 'Invalid character', // numbers, letters and single spaces only
+    v => !!v || 'A name translation is required', // is not empty
+    v => /^[a-zA-ZÀ-ÿ()[\]+*#$/%-.]+(?: [a-zA-ZÀ-ÿ()[\]+*#$/%-.]+)*$/.test(v) || 'Invalid character', // numbers, letters and single spaces only
     v => (!v || v.length <= 50) || 'Cannot exceed 50 characters' // maximum character count
   ]
 

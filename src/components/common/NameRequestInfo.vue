@@ -38,53 +38,6 @@
           </ul>
         </v-col>
       </v-row>
-      <!-- Name Translation Option -->
-      <v-row id="name-translation-info">
-        <v-col>
-          <label>
-            <strong>Name Translation</strong>
-          </label>
-        </v-col>
-        <v-col>
-          <v-checkbox
-            v-model="hasNameTranslation"
-            id='name-translation-checkbox'
-            label="This company uses one of more translations of its name outside of Canada."
-            @click.native="confirmNameTranslation()"
-          />
-          <template v-if="hasNameTranslation">
-            <p><b>Note:</b> Name translations must use the Latin
-              Alphabet (English, French, etc.). Names that use other writing systems must spell the name phonetically
-              in English or French.
-            </p>
-            <v-btn outlined color="primary" @click="isAddingNameTranslation = true" :disabled="isAddingNameTranslation">
-              <v-icon>mdi-plus</v-icon>
-              <span>Add a Name Translation</span>
-            </v-btn>
-          </template>
-        </v-col>
-      </v-row>
-      <!-- Name Translation Components -->
-      <v-row v-if="hasNameTranslation" id="name-translation-container">
-        <!-- Spacer Column -->
-        <v-col></v-col>
-        <v-col>
-          <add-name-translation
-            v-if="isAddingNameTranslation"
-            :edit-name-translation="editingNameTranslation"
-            @addTranslation="addName($event)"
-            @cancelTranslation="cancelNameTranslation()"
-            @removeTranslation="removeNameTranslation(editIndex)"
-          />
-          <list-name-translations
-            v-if="getNameTranslations && getNameTranslations.length"
-            :isAddingNameTranslation="isAddingNameTranslation"
-            :translationsList="getNameTranslations"
-            @editNameTranslation="editNameTranslation($event)"
-            @removeNameTranslation="removeNameTranslation($event)"
-          />
-        </v-col>
-      </v-row>
     </template>
     <v-row v-else id="numbered-company-info">
       <v-col>
@@ -107,6 +60,53 @@
           </li>
           <li class="bullet-point ml-5">It is not possible to request a specific Incorporation Number.</li>
         </ul>
+      </v-col>
+    </v-row>
+    <!-- Name Translation Option -->
+    <v-row id="name-translation-info">
+      <v-col>
+        <label>
+          <strong>Name Translation</strong>
+        </label>
+      </v-col>
+      <v-col>
+        <v-checkbox
+          v-model="hasNameTranslation"
+          id='name-translation-checkbox'
+          label="This company uses one of more translations of its name outside of Canada."
+          @click.native="confirmNameTranslation()"
+        />
+        <template v-if="hasNameTranslation">
+          <p><b>Note:</b> Name translations must use the Latin
+            Alphabet (English, French, etc.). Names that use other writing systems must spell the name phonetically
+            in English or French.
+          </p>
+          <v-btn outlined color="primary" @click="isAddingNameTranslation = true" :disabled="isAddingNameTranslation">
+            <v-icon>mdi-plus</v-icon>
+            <span>Add a Name Translation</span>
+          </v-btn>
+        </template>
+      </v-col>
+    </v-row>
+    <!-- Name Translation Components -->
+    <v-row v-if="hasNameTranslation" id="name-translation-container">
+      <!-- Spacer Column -->
+      <v-col></v-col>
+      <v-col>
+        <add-name-translation
+          v-if="isAddingNameTranslation"
+          :edit-name-translation="editingNameTranslation"
+          @addTranslation="addName($event)"
+          @cancelTranslation="cancelNameTranslation()"
+          @removeTranslation="removeNameTranslation(editIndex)"
+        />
+        <list-name-translations
+          v-if="getNameTranslations && getNameTranslations.length"
+          :isAddingNameTranslation="isAddingNameTranslation"
+          :translationsList="getNameTranslations"
+          @editNameTranslation="editNameTranslation($event)"
+          @removeNameTranslation="removeNameTranslation($event)"
+        />
       </v-col>
     </v-row>
   </div>
