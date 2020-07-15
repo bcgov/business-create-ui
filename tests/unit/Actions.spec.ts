@@ -180,7 +180,7 @@ describe('Emits error event if NR validation fails in file and pay', () => {
   })
 })
 
-describe.only('Actions component - Filing Functionality', () => {
+describe('Actions component - Filing Functionality', () => {
   let wrapper: any
   const { assign } = window.location
   const effectiveDate = new Date(new Date().setDate(new Date().getDate() + 5))
@@ -409,11 +409,13 @@ describe.only('Actions component - Filing Functionality', () => {
       extension: '444'
     }
     store.state.stateModel.defineCompanyStep.officeAddresses = filing.filing.incorporationApplication.offices
+    store.state.stateModel.defineCompanyStep.folioNumber = filing.filing.header.folioNumber
     store.state.stateModel.addPeopleAndRoleStep.orgPeople = filing.filing.incorporationApplication.parties
     store.state.stateModel.createShareStructureStep.shareClasses = filing.filing.incorporationApplication.shareClasses
     store.state.stateModel.filingId = 1234
     store.state.stateModel.entityType = 'BC'
     store.state.stateModel.tempId = 'T1234567'
+    store.state.stateModel.incorporationDateTime.isFutureEffective = filing.filing.header.isFutureEffective
     store.state.stateModel.incorporationAgreementStep.agreementType =
       filing.filing.incorporationApplication.incorporationAgreement.agreementType
 

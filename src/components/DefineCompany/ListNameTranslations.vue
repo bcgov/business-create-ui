@@ -1,8 +1,5 @@
 <template>
   <v-card flat id="name-translations-list">
-    <!-- List Display Section -->
-    <div id="name-translations-header">
-
       <!-- List Headers -->
       <v-row class="name-translation-title list-item__subtitle" no-gutters>
         <v-col>
@@ -14,7 +11,7 @@
       <v-row
         class="names-translation-content"
         v-for="(translation, index) in translationsList"
-        :key="index"
+        :key="`name_translation_${index}`"
         no-gutters>
         <v-col class="text-truncate">
          <span class="name-title">{{translation}}</span>
@@ -58,7 +55,6 @@
           </div>
         </v-col>
       </v-row>
-    </div>
   </v-card>
 </template>
 
@@ -66,14 +62,7 @@
 // Libraries
 import { Component, Prop, Vue, Emit } from 'vue-property-decorator'
 
-// Dialogs
-import { ConfirmRemoveDialog } from '@/components/dialogs'
-
-@Component({
-  components: {
-    ConfirmRemoveDialog
-  }
-})
+@Component({})
 export default class ListNameTranslations extends Vue {
   @Prop({ default: () => [] })
   private translationsList: Array<string>

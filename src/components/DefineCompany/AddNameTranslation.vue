@@ -1,12 +1,13 @@
 <template>
   <div id="name-translation">
     <!-- Name Translation form -->
-    <v-form v-model="nameTranslationForm" ref="ntForm" name="name-translation-form">
+    <v-form v-model="nameTranslationForm" class="name-translation-form">
       <v-row>
         <v-col class="pb-0">
           <v-text-field
             filled
             persistent-hint
+            id="name-translation-input"
             label="Enter Name Translation"
             v-model="nameTranslation"
             :rules="nameTranslationRules">
@@ -15,17 +16,17 @@
       </v-row>
       <v-row>
         <v-col class="form__btns pt-0">
-          <v-btn large color="error" id='btn-remove'
+          <v-btn large color="error" id="btn-remove"
             :disabled="!editNameTranslation"
             @click="removeTranslation">
               Remove
           </v-btn>
-          <v-btn large color="primary" id='btn-done' class="form-primary-btn"
+          <v-btn large color="primary" id="btn-done" class="form-primary-btn"
             :disabled="!nameTranslationForm"
             @click="addTranslation">
               Done
           </v-btn>
-          <v-btn large class="form-cancel-btn" id='btn-cancel'
+          <v-btn large class="form-cancel-btn" id="btn-cancel"
             @click="cancelTranslation">
               Cancel
           </v-btn>

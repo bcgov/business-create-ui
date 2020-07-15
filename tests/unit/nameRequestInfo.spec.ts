@@ -8,11 +8,13 @@ import { getVuexStore } from '@/store'
 // Components
 import { mount } from '@vue/test-utils'
 import { NameRequestInfo } from '@/components/common'
+import { AddNameTranslation, ListNameTranslations } from '@/components/DefineCompany'
 
 Vue.use(Vuetify)
 
 const vuetify = new Vuetify({})
 const store = getVuexStore()
+document.body.setAttribute('data-app', 'true')
 
 describe('Name Request Info component', () => {
   let wrapper: any
@@ -262,6 +264,46 @@ describe('Name Request Info component', () => {
     expect(expiryDate.textContent).toContain('Expiry Date: Jun 24, 2020')
     expect(status.textContent).toContain('Status: CONDITIONAL')
     expect(conditionConsent.textContent).toContain('Condition/Consent: Not Received')
+  })
+
+  it('renders the option for name translation', async () => {
+    wrapper.vm.$store.state.stateModel.nameRequest = { ...mockNrData }
+
+    expect(wrapper.find('#name-translation-info').exists()).toBeTruthy()
+    expect(wrapper.vm.hasNameTranslation).toBe(false)
+
+    expect(wrapper.find('#name-translation-container').exists()).toBeFalsy()
+  })
+
+  it('renders the add name translation component', async () => {
+    wrapper.vm.$store.state.stateModel.nameRequest = { ...mockNrData }
+
+    expect(wrapper.find('#name-translation-info').exists()).toBeTruthy()
+    expect(wrapper.vm.hasNameTranslation).toBe(false)
+
+    wrapper.find('#name-translation-checkbox').trigger('click')
+
+    await Vue.nextTick()
+
+    expect(wrapper.find('#name-translation-container').exists()).toBeTruthy()
+    expect(wrapper.find(AddNameTranslation).exists()).toBeTruthy()
+    expect(wrapper.find(ListNameTranslations).exists()).toBeFalsy()
+  })
+
+  it('renders the list name translation component', async () => {
+    wrapper.vm.$store.state.stateModel.nameTranslations = ['Mock Name Translation', 'Another Mock Name Translation']
+    wrapper.vm.$store.state.stateModel.nameRequest = { ...mockNrData }
+
+    await Vue.nextTick()
+
+    expect(wrapper.find('#name-translation-info').exists()).toBeTruthy()
+    expect(wrapper.vm.hasNameTranslation).toBe(true)
+
+    await Vue.nextTick()
+
+    expect(wrapper.find('#name-translation-container').exists()).toBeTruthy()
+    expect(wrapper.find(AddNameTranslation).exists()).toBeFalsy()
+    expect(wrapper.find(ListNameTranslations).exists()).toBeTruthy()
   })
 })
 

@@ -6,7 +6,7 @@ export interface StateModelIF {
   tombstone: TombStoneIF
   accountInformation: AccountInformationIF
   nameRequest: NameRequestIF
-  nameTranslations?: Array<string>
+  nameTranslations: Array<string>
   currentDate: string
   certifyState: CertifyIF
   currentStep: number

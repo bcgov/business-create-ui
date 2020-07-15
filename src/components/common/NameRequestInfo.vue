@@ -73,9 +73,11 @@
         <v-checkbox
           v-model="hasNameTranslation"
           id='name-translation-checkbox'
-          label="This company uses one of more translations of its name outside of Canada."
-          @click.native="confirmNameTranslation()"
-        />
+          @click.native="confirmNameTranslation()">
+          <span slot='label' class="translation-checkbox-label">
+            This company uses one of more translations of its name outside of Canada.
+          </span>
+        </v-checkbox>
         <template v-if="hasNameTranslation">
           <p><b>Note:</b> Name translations must use the Latin
             Alphabet (English, French, etc.). Names that use other writing systems must spell the name phonetically
@@ -101,7 +103,7 @@
           @removeTranslation="removeNameTranslation(editIndex)"
         />
         <list-name-translations
-          v-if="getNameTranslations && getNameTranslations.length"
+          v-if="getNameTranslations && getNameTranslations.length > 0"
           :isAddingNameTranslation="isAddingNameTranslation"
           :translationsList="getNameTranslations"
           @editNameTranslation="editNameTranslation($event)"
@@ -114,7 +116,7 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Emit, Mixins } from 'vue-property-decorator'
+import { Component, Emit, Mixins, Watch } from 'vue-property-decorator'
 import { Action, Getter, State } from 'vuex-class'
 import { getName } from 'country-list'
 
@@ -157,7 +159,7 @@ export default class NameRequestInfo extends Mixins(DateMixin) {
   private hasNameTranslation = false
   private isAddingNameTranslation = true
   private editingNameTranslation = ''
-  private editIndex: number
+  private editIndex = -1
 
   readonly RECEIVED_STATE = 'Received'
   readonly NOT_RECEIVED_STATE = 'Not Received'
@@ -180,13 +182,6 @@ export default class NameRequestInfo extends Mixins(DateMixin) {
   @Getter getNameRequestDetails!: NameRequestDetailsIF;
   @Getter getNameRequestApplicant!: NameRequestApplicantIF;
   @Getter getNameTranslations!: Array<string>;
-
-  mounted () {
-    if (this.nameTranslations?.length) {
-      this.isAddingNameTranslation = false
-      this.hasNameTranslation = true
-    }
-  }
 
   /** The entity title  */
   private entityTypeDescription (): string {
@@ -314,7 +309,7 @@ export default class NameRequestInfo extends Mixins(DateMixin) {
 
   /** Handle name translation checkbox logic */
   private confirmNameTranslation () {
-    if (this.getNameTranslations?.length) {
+    if (this.getNameTranslations?.length > 0) {
       // open confirmation dialog and wait for response
       this.$refs.confirmTranslationRemovalDialog.open(
         'Remove All Name Translations',
@@ -329,6 +324,7 @@ export default class NameRequestInfo extends Mixins(DateMixin) {
       ).then(async (confirm) => {
         if (confirm) {
           this.setNameTranslationState([])
+          this.hasNameTranslation = false
         }
       }).catch(() => {
         // clear the checkbox
@@ -342,7 +338,7 @@ export default class NameRequestInfo extends Mixins(DateMixin) {
 
   /** Validate name translation */
   private validateNameTranslation (): boolean {
-    return this.hasNameTranslation ? !!this.getNameTranslations.length : true
+    return this.hasNameTranslation ? this.getNameTranslations.length > 0 : true
   }
 
   // Events
@@ -350,46 +346,57 @@ export default class NameRequestInfo extends Mixins(DateMixin) {
   private emitHasNameTranslation (hasNameTranslation: boolean): boolean {
     return hasNameTranslation
   }
+
+  @Watch('nameTranslations', { deep: true, immediate: true })
+  private updateNameTranslation (): void {
+    if (this.nameTranslations?.length > 0) {
+      this.isAddingNameTranslation = false
+      this.hasNameTranslation = true
+    }
+  }
 }
 </script>
 
 <style lang="scss" scoped>
-p {
-  font-size: 0.875rem;
-}
+  @import '@/assets/styles/theme.scss';
 
-.row .col:first-child {
-  width: 12rem;
-  max-width: 12rem;
-}
-
-ul {
-  font-size: .875rem;
-  margin: 0;
-  padding: 0;
-  list-style-type: none;
-}
-
-li.name-request-title, li.numbered-company-title {
-  font-size: 1.25rem;
-}
-
-ul.numbered-company-list-items {
-
-  .bullet-point::before {
-    content: "\2022";
-    display: inline-block;
-    width: 1.5em;
-    margin-left: -1.5em;
-  }
-}
-
-#name-translation-info {
-  display: flex;
-  align-items: baseline;
-
-  .v-input--selection-controls .v-input__slot > .v-label, .v-input--selection-controls .v-radio > .v-label {
+  p {
     font-size: 0.875rem;
   }
+
+  .row .col:first-child {
+    width: 12rem;
+    max-width: 12rem;
+  }
+
+  ul {
+    font-size: .875rem;
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+  }
+
+  li.name-request-title, li.numbered-company-title {
+    font-size: 1.25rem;
+  }
+
+  ul.numbered-company-list-items {
+
+    .bullet-point::before {
+      content: "\2022";
+      display: inline-block;
+      width: 1.5em;
+      margin-left: -1.5em;
+    }
+  }
+
+  #name-translation-info {
+    display: flex;
+    align-items: baseline;
+
+    .translation-checkbox-label {
+      font-size: 0.875rem;
+      color: $gray9;
+    }
 }
 </style>
