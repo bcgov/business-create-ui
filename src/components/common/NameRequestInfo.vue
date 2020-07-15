@@ -338,7 +338,7 @@ export default class NameRequestInfo extends Mixins(DateMixin) {
 
   /** Validate name translation */
   private validateNameTranslation (): boolean {
-    return this.hasNameTranslation ? this.getNameTranslations.length > 0 : true
+    return this.hasNameTranslation ? this.getNameTranslations?.length > 0 : true
   }
 
   // Events
