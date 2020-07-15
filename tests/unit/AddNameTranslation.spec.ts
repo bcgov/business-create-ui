@@ -82,7 +82,7 @@ describe('Add Name Translation component', () => {
     wrapper.vm.$el.querySelector(addTranslationInput).textContent = 'Mock Name Translation'
     wrapper.find(addTranslationInput).setValue('MockNameTranslation')
     wrapper.find(addTranslationInput).trigger('change')
-    await Vue.nextTick()
+    await flushPromises()
 
     wrapper.find(addTranslationInput).trigger('input')
     expect(wrapper.find(addTranslationInput).text()).toEqual('Mock Name Translation')
