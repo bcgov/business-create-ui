@@ -100,6 +100,34 @@ describe('Add Name Translation component', () => {
     wrapper.destroy()
   })
 
+  it('enables the Done button when the input field meets validation rules in French characters', async () => {
+    const wrapper = wrapperFactory()
+
+    // Verify input field
+    expect(wrapper.find(addTranslationInput).exists()).toBeTruthy()
+
+    // Set Input field values
+    wrapper.vm.$el.querySelector(addTranslationInput).textContent = 'Nom commercial simulé'
+    wrapper.find(addTranslationInput).setValue('Nom commercial simulé')
+    wrapper.find(addTranslationInput).trigger('change')
+    await flushPromises()
+
+    wrapper.find(addTranslationInput).trigger('input')
+    expect(wrapper.find(addTranslationInput).text()).toEqual('Nom commercial simulé')
+
+    // Verify Action btns and there states
+    expect(wrapper.find(doneBtn).exists()).toBeTruthy()
+    expect(wrapper.find(doneBtn).attributes('disabled')).toBeUndefined()
+
+    expect(wrapper.find(removeBtn).exists()).toBeTruthy()
+    expect(wrapper.find(removeBtn).attributes('disabled')).toBeTruthy()
+
+    expect(wrapper.find(cancelBtn).exists()).toBeTruthy()
+    expect(wrapper.find(cancelBtn).attributes('disabled')).toBeUndefined()
+
+    wrapper.destroy()
+  })
+
   it('disables the Done button when the input field does NOT meet validation rules', async () => {
     const wrapper = wrapperFactory()
 
