@@ -11,7 +11,7 @@ import {
   isShowBackBtn, isShowReviewConfirmBtn, isShowFilePayBtn, isEnableFilePayBtn, isBusySaving,
   getFilingId, getTempId, isNamedBusiness, getNameRequestNumber, getApprovedName, getAccountId,
   getFolioNumber, getNameRequestDetails, getNameRequestApplicant, getOfficeAddresses,
-  isApplicationValid, getSteps, getMaxStep, getCurrentDate, ignoreChanges, haveChanges
+  isApplicationValid, getSteps, getMaxStep, getCurrentDate, ignoreChanges, haveChanges, getNameTranslations
 } from '@/store/getters'
 
 // Mutations
@@ -22,7 +22,8 @@ import {
   mutateAccountInformation, mutateNameRequestState, mutateFilingId, mutateOfficeAddresses, mutateOrgPersonList,
   mutateAddPeopleAndRoleStepValidity, mutateShareClasses, mutateCreateShareStructureStepValidity,
   mutateIgnoreChanges, mutateHaveChanges, mutateIsFutureEffective, mutateEffectiveDate,
-  mutateIsIncorporationDateTimeValid, mutateTempId, mutateEntityType, mutateIncorporationAgreementStepData
+  mutateIsIncorporationDateTimeValid, mutateTempId, mutateEntityType, mutateIncorporationAgreementStepData,
+  mutateNameTranslation
 } from '@/store/mutations'
 
 // Actions
@@ -33,7 +34,7 @@ import {
   setOfficeAddresses, setOrgPersonList, setAddPeopleAndRoleStepValidity, setShareClasses,
   setCreateShareStructureStepValidity, setIgnoreChanges, setHaveChanges, setIsFutureEffective,
   setEffectiveDate, setIsIncorporationDateTimeValid, setAccountInformation, setTempId, setEntityType,
-  setIncorporationAgreementStepData
+  setIncorporationAgreementStepData, setNameTranslationState
 } from './actions'
 
 /**
@@ -75,7 +76,8 @@ export function getVuexStore () {
       getMaxStep,
       getCurrentDate,
       ignoreChanges,
-      haveChanges
+      haveChanges,
+      getNameTranslations
     },
     mutations: {
       mutateAccountInformation,
@@ -106,7 +108,8 @@ export function getVuexStore () {
       mutateIsIncorporationDateTimeValid,
       mutateTempId,
       mutateEntityType,
-      mutateIncorporationAgreementStepData
+      mutateIncorporationAgreementStepData,
+      mutateNameTranslation
     },
     actions: {
       setAccountInformation,
@@ -137,7 +140,8 @@ export function getVuexStore () {
       setIsIncorporationDateTimeValid,
       setTempId,
       setEntityType,
-      setIncorporationAgreementStepData
+      setIncorporationAgreementStepData,
+      setNameTranslationState
     }
   })
 

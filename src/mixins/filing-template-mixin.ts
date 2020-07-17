@@ -27,6 +27,7 @@ export default class FilingTemplateMixin extends Vue {
   @Action setEntityType!: ActionBindingIF
   @Action setBusinessContact!: ActionBindingIF
   @Action setOfficeAddresses!: ActionBindingIF
+  @Action setNameTranslationState!: ActionBindingIF
   @Action setDefineCompanyStepValidity!: ActionBindingIF
   @Action setNameRequestState!: ActionBindingIF
   @Action setOrgPersonList!: ActionBindingIF
@@ -62,6 +63,7 @@ export default class FilingTemplateMixin extends Vue {
           nameRequest: {
             legalType: this.stateModel.entityType
           },
+          nameTranslations: this.stateModel.nameTranslations,
           offices: this.stateModel.defineCompanyStep.officeAddresses,
           contactPoint: {
             email: this.stateModel.defineCompanyStep.businessContact.email,
@@ -105,6 +107,9 @@ export default class FilingTemplateMixin extends Vue {
 
     // Set Office Addresses
     this.setOfficeAddresses(draftFiling.incorporationApplication.offices)
+
+    // Set Name Translations
+    this.setNameTranslationState(draftFiling.incorporationApplication.nameTranslations)
 
     // Set Contact Info
     const draftContact = {

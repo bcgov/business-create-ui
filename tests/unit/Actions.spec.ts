@@ -196,7 +196,9 @@ describe('Actions component - Filing Functionality', () => {
         name: 'incorporationApplication',
         certifiedBy: 'Certified By',
         date: '2020/01/29',
-        effectiveDate: formattedEffectiveDate
+        effectiveDate: formattedEffectiveDate,
+        folioNumber: null,
+        isFutureEffective: false
       },
       business: {
         identifier: 'T1234567',
@@ -208,6 +210,7 @@ describe('Actions component - Filing Functionality', () => {
           legalType: 'BC',
           legalName: 'My Name Request Inc.'
         },
+        nameTranslations: [],
         offices: {
           registeredOffice: {
             deliveryAddress: {
@@ -386,6 +389,7 @@ describe('Actions component - Filing Functionality', () => {
       nrNumber: 'NR 1234567',
       details: { approvedName: 'My Name Request Inc.' }
     }
+    store.state.stateModel.nameTranslations = []
     store.state.stateModel.tombstone = {
       keycloakRoles: [],
       authRoles: [],
@@ -405,11 +409,13 @@ describe('Actions component - Filing Functionality', () => {
       extension: '444'
     }
     store.state.stateModel.defineCompanyStep.officeAddresses = filing.filing.incorporationApplication.offices
+    store.state.stateModel.defineCompanyStep.folioNumber = filing.filing.header.folioNumber
     store.state.stateModel.addPeopleAndRoleStep.orgPeople = filing.filing.incorporationApplication.parties
     store.state.stateModel.createShareStructureStep.shareClasses = filing.filing.incorporationApplication.shareClasses
     store.state.stateModel.filingId = 1234
     store.state.stateModel.entityType = 'BC'
     store.state.stateModel.tempId = 'T1234567'
+    store.state.stateModel.incorporationDateTime.isFutureEffective = filing.filing.header.isFutureEffective
     store.state.stateModel.incorporationAgreementStep.agreementType =
       filing.filing.incorporationApplication.incorporationAgreement.agreementType
 

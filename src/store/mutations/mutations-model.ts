@@ -99,6 +99,10 @@ export const mutateNameRequestState = (state: any, nameRequestState: NameRequest
   state.stateModel.nameRequest = nameRequestState
 }
 
+export const mutateNameTranslation = (state: any, nameTranslationState: Array<string>) => {
+  state.stateModel.nameTranslations = nameTranslationState
+}
+
 export const mutateFilingId = (state: any, filingId: number) => {
   state.stateModel.filingId = filingId
 }
