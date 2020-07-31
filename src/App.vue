@@ -373,16 +373,11 @@ export default class App extends Mixins(BcolMixin, DateMixin, FilingTemplateMixi
     }
   }
 
-  /**
-   * Clears Keycloak token information from session storage
-   */
+  /** Clears Keycloak token information from session storage. */
   private clearKeycloakSession (): void {
     sessionStorage.removeItem(SessionStorageKeys.KeyCloakToken)
-    sessionStorage.removeItem(SessionStorageKeys.KeyCloakIdToken)
     sessionStorage.removeItem(SessionStorageKeys.KeyCloakRefreshToken)
-    sessionStorage.removeItem(SessionStorageKeys.UserFullName)
-    sessionStorage.removeItem(SessionStorageKeys.UserKcId)
-    sessionStorage.removeItem(SessionStorageKeys.UserAccountType)
+    sessionStorage.removeItem(SessionStorageKeys.KeyCloakIdToken)
     sessionStorage.removeItem(SessionStorageKeys.CurrentAccount)
   }
 
