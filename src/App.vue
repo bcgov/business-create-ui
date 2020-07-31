@@ -128,7 +128,7 @@
 // Libraries
 import { Component, Vue, Watch, Mixins } from 'vue-property-decorator'
 import { State, Action, Getter } from 'vuex-class'
-import TokenService from 'sbc-common-components/src/services/token.services'
+import KeycloakService from 'sbc-common-components/src/services/keycloak.services'
 import { BAD_REQUEST, PAYMENT_REQUIRED, FORBIDDEN, UNPROCESSABLE_ENTITY } from 'http-status-codes'
 // Components
 import SbcHeader from 'sbc-common-components/src/components/SbcHeader.vue'
@@ -219,11 +219,8 @@ export default class App extends Mixins(BcolMixin, DateMixin, FilingTemplateMixi
   // Template Enums
   readonly RouteNames = RouteNames
 
-  /**
-   * Instance of the token refresh service.
-   * Needs to exist for lifetime of app.
-   */
-  private tokenService: TokenService = null
+  /** Whether the token refresh service is initialized. */
+  private tokenService: boolean = false
 
   /** The URL of the Pay API. */
   private get payApiUrl (): string {
@@ -359,9 +356,8 @@ export default class App extends Mixins(BcolMixin, DateMixin, FilingTemplateMixi
     if (this.tokenService || this.isJestRunning) return
     try {
       console.info('Starting token refresh service...') // eslint-disable-line no-console
-      this.tokenService = new TokenService()
-      await this.tokenService.init()
-      this.tokenService.scheduleRefreshTimer()
+      await KeycloakService.initializeToken()
+      this.tokenService = true
     } catch (error) {
       // Happens when the refresh token has expired in session storage
       // reload to get new tokens
@@ -373,16 +369,11 @@ export default class App extends Mixins(BcolMixin, DateMixin, FilingTemplateMixi
     }
   }
 
-  /**
-   * Clears Keycloak token information from session storage
-   */
+  /** Clears Keycloak token information from session storage. */
   private clearKeycloakSession (): void {
     sessionStorage.removeItem(SessionStorageKeys.KeyCloakToken)
-    sessionStorage.removeItem(SessionStorageKeys.KeyCloakIdToken)
     sessionStorage.removeItem(SessionStorageKeys.KeyCloakRefreshToken)
-    sessionStorage.removeItem(SessionStorageKeys.UserFullName)
-    sessionStorage.removeItem(SessionStorageKeys.UserKcId)
-    sessionStorage.removeItem(SessionStorageKeys.UserAccountType)
+    sessionStorage.removeItem(SessionStorageKeys.KeyCloakIdToken)
     sessionStorage.removeItem(SessionStorageKeys.CurrentAccount)
   }
 
