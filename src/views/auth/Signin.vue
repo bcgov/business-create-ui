@@ -1,5 +1,5 @@
 <template>
-  <sbc-signin @keycloak-session-ready="onSessionReady()" />
+  <sbc-signin @sync-user-profile-ready="onSessionReady()" />
 </template>
 
 <script lang="ts">
