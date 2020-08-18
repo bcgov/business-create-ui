@@ -120,7 +120,7 @@
       </main>
     </div>
 
-    <sbc-footer />
+    <sbc-footer :appNameVersionStr=appNameVersionStr />
   </v-app>
 </template>
 
@@ -244,6 +244,11 @@ export default class App extends Mixins(BcolMixin, DateMixin, FilingTemplateMixi
   /** True if Jest is running the code. */
   private get isJestRunning (): boolean {
     return (process.env.JEST_WORKER_ID !== undefined)
+  }
+
+  /** The app name and version string. */
+  private get appNameVersionStr (): string {
+    return `${process.env.PACKAGE_NAME} V${process.env.PACKAGE_VERSION}`
   }
 
   /** Helper to check is the current route matches */
