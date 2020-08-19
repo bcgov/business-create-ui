@@ -120,7 +120,7 @@
       </main>
     </div>
 
-    <sbc-footer />
+    <sbc-footer :aboutText=aboutText />
   </v-app>
 </template>
 
@@ -244,6 +244,11 @@ export default class App extends Mixins(BcolMixin, DateMixin, FilingTemplateMixi
   /** True if Jest is running the code. */
   private get isJestRunning (): boolean {
     return (process.env.JEST_WORKER_ID !== undefined)
+  }
+
+  /** The About text. */
+  private get aboutText (): string {
+    return process.env.ABOUT_TEXT
   }
 
   /** Helper to check is the current route matches */
