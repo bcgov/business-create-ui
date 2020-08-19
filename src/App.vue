@@ -120,7 +120,7 @@
       </main>
     </div>
 
-    <sbc-footer :appNameVersionStr=appNameVersionStr />
+    <sbc-footer :aboutText=aboutText />
   </v-app>
 </template>
 
@@ -246,9 +246,9 @@ export default class App extends Mixins(BcolMixin, DateMixin, FilingTemplateMixi
     return (process.env.JEST_WORKER_ID !== undefined)
   }
 
-  /** The app name and version string. */
-  private get appNameVersionStr (): string {
-    return `${process.env.PACKAGE_NAME} V${process.env.PACKAGE_VERSION}`
+  /** The About text. */
+  private get aboutText (): string {
+    return process.env.ABOUT_TEXT
   }
 
   /** Helper to check is the current route matches */
