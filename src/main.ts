@@ -71,6 +71,7 @@ async function start () {
 
 // execution and error handling
 start().catch(error => {
+  Sentry.captureException(error)
   console.error(error) // eslint-disable-line no-console
   alert('There was an error starting this page. (See console for details.)\n' +
     'Please try again later.')
