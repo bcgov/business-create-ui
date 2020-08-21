@@ -459,6 +459,9 @@ export default class App extends Mixins(BcolMixin, DateMixin, FilingTemplateMixi
         // Set the resources
         this.setCertifyStatementResource(CertifyStatementResource.find(x => x.entityType === this.entityType))
       } catch (error) {
+        // logging exception to sentry due to incomplete business data.
+        // at this point system doesn't know why its incomplete.
+        // since its not an expected behaviour it could be better to track.
         Sentry.captureException(error)
         console.log('Fetch error =', error) // eslint-disable-line no-console
         this.fetchErrorDialog = true
