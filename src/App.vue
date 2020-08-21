@@ -130,6 +130,8 @@ import { Component, Vue, Watch, Mixins } from 'vue-property-decorator'
 import { State, Action, Getter } from 'vuex-class'
 import KeycloakService from 'sbc-common-components/src/services/keycloak.services'
 import { BAD_REQUEST, PAYMENT_REQUIRED, FORBIDDEN, UNPROCESSABLE_ENTITY } from 'http-status-codes'
+import * as Sentry from '@sentry/browser'
+
 // Components
 import SbcHeader from 'sbc-common-components/src/components/SbcHeader.vue'
 import SbcFooter from 'sbc-common-components/src/components/SbcFooter.vue'
@@ -138,9 +140,11 @@ import { EntityInfo, Stepper, Actions } from '@/components/common'
 import Views from '@/views'
 
 // Dialogs, mixins, interfaces, etc
-import { AccountAuthorizationDialog, BcolErrorDialog, NameRequestInvalidErrorDialog, ConfirmDialog, FetchErrorDialog,
+import {
+  AccountAuthorizationDialog, BcolErrorDialog, NameRequestInvalidErrorDialog, ConfirmDialog, FetchErrorDialog,
   InvalidIncorporationApplicationDialog, PaymentErrorDialog, SaveErrorDialog,
-  FileAndPayInvalidNameRequestDialog } from '@/components/dialogs'
+  FileAndPayInvalidNameRequestDialog
+} from '@/components/dialogs'
 import { BcolMixin, DateMixin, FilingTemplateMixin, LegalApiMixin, NameRequestMixin } from '@/mixins'
 import { FilingDataIF, ActionBindingIF, ConfirmDialogType } from '@/interfaces'
 import { CertifyStatementResource } from '@/resources'
@@ -313,7 +317,7 @@ export default class App extends Mixins(BcolMixin, DateMixin, FilingTemplateMixi
     this.$root.$off('name-request-retrieve-error')
   }
 
-  private goToManageBusinessDashboard () : void {
+  private goToManageBusinessDashboard (): void {
     this.fileAndPayInvalidNameRequestDialog = false
     const manageBusinessUrl = `${sessionStorage.getItem('AUTH_URL')}business`
     this.setHaveChanges(false)
@@ -455,6 +459,10 @@ export default class App extends Mixins(BcolMixin, DateMixin, FilingTemplateMixi
         // Set the resources
         this.setCertifyStatementResource(CertifyStatementResource.find(x => x.entityType === this.entityType))
       } catch (error) {
+        // logging exception to sentry due to incomplete business data.
+        // at this point system doesn't know why its incomplete.
+        // since its not an expected behaviour it could be better to track.
+        Sentry.captureException(error)
         console.log('Fetch error =', error) // eslint-disable-line no-console
         this.fetchErrorDialog = true
         throw error // go to catch()
