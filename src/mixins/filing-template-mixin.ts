@@ -73,7 +73,9 @@ export default class FilingTemplateMixin extends Vue {
             extension: this.stateModel.defineCompanyStep.businessContact.extension
           },
           parties: this.stateModel.addPeopleAndRoleStep.orgPeople,
-          shareClasses: this.stateModel.createShareStructureStep.shareClasses,
+          shareStructure: {
+            shareClasses: this.stateModel.createShareStructureStep.shareClasses
+          },
           incorporationAgreement: {
             agreementType: this.stateModel.incorporationAgreementStep.agreementType
           }
@@ -124,7 +126,8 @@ export default class FilingTemplateMixin extends Vue {
     this.setOrgPersonList(draftFiling.incorporationApplication.parties)
 
     // Set Share Structure
-    this.setShareClasses(draftFiling.incorporationApplication.shareClasses)
+    this.setShareClasses(draftFiling.incorporationApplication.shareStructure
+      ? draftFiling.incorporationApplication.shareStructure.shareClasses : [])
 
     // Set Incorporation Agreement
     this.setIncorporationAgreementStepData({
