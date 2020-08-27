@@ -317,51 +317,53 @@ describe('Actions component - Filing Functionality', () => {
             ]
           }
         ],
-        shareClasses: [
-          {
-            id: 1,
-            name: 'ShareClass1',
-            priority: 1,
-            hasMaximumShares: true,
-            maxNumberOfShares: 100,
-            hasParValue: true,
-            parValue: 10,
-            currency: 'CAD',
-            hasRightsOrRestrictions: false,
-            series: [
-              {
-                id: 1,
-                name: 'ShareSeries1',
-                priority: 1,
-                hasMaximumShares: true,
-                maxNumberOfShares: 50,
-                hasRightsOrRestrictions: false
-              },
-              {
-                id: 2,
-                name: 'ShareSeries2',
-                priority: 2,
-                hasMaximumShares: true,
-                maxNumberOfShares: 100,
-                hasRightsOrRestrictions: false
-              }
-            ]
-          },
-          {
-            id: 2,
-            name: 'ShareClass2',
-            priority: 1,
-            hasMaximumShares: false,
-            maxNumberOfShares: null,
-            hasParValue: false,
-            parValue: null,
-            currency: null,
-            hasRightsOrRestrictions: true,
-            series: [
+        shareStructure: {
+          shareClasses: [
+            {
+              id: 1,
+              name: 'ShareClass1',
+              priority: 1,
+              hasMaximumShares: true,
+              maxNumberOfShares: 100,
+              hasParValue: true,
+              parValue: 10,
+              currency: 'CAD',
+              hasRightsOrRestrictions: false,
+              series: [
+                {
+                  id: 1,
+                  name: 'ShareSeries1',
+                  priority: 1,
+                  hasMaximumShares: true,
+                  maxNumberOfShares: 50,
+                  hasRightsOrRestrictions: false
+                },
+                {
+                  id: 2,
+                  name: 'ShareSeries2',
+                  priority: 2,
+                  hasMaximumShares: true,
+                  maxNumberOfShares: 100,
+                  hasRightsOrRestrictions: false
+                }
+              ]
+            },
+            {
+              id: 2,
+              name: 'ShareClass2',
+              priority: 1,
+              hasMaximumShares: false,
+              maxNumberOfShares: null,
+              hasParValue: false,
+              parValue: null,
+              currency: null,
+              hasRightsOrRestrictions: true,
+              series: [
 
-            ]
-          }
-        ],
+              ]
+            }
+          ]
+        },
         incorporationAgreement: {
           agreementType: 'sample'
         }
@@ -413,7 +415,8 @@ describe('Actions component - Filing Functionality', () => {
     store.state.stateModel.defineCompanyStep.officeAddresses = filing.filing.incorporationApplication.offices
     store.state.stateModel.defineCompanyStep.folioNumber = filing.filing.header.folioNumber
     store.state.stateModel.addPeopleAndRoleStep.orgPeople = filing.filing.incorporationApplication.parties
-    store.state.stateModel.createShareStructureStep.shareClasses = filing.filing.incorporationApplication.shareClasses
+    store.state.stateModel.createShareStructureStep.shareClasses =
+      filing.filing.incorporationApplication.shareStructure.shareClasses
     store.state.stateModel.filingId = 1234
     store.state.stateModel.entityType = 'BC'
     store.state.stateModel.tempId = 'T1234567'
