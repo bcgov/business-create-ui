@@ -137,3 +137,5 @@ yarn-error.log*
 # Misc backups
 *.bak
 
+# IDE history
+.history
