@@ -103,7 +103,7 @@ function createShareStructure (
   return shareStructure
 }
 
-store.state.stateModel.nameRequest.entityType = 'BC'
+store.state.stateModel.nameRequest.entityType = 'BEN'
 store.state.stateModel.currentDate = '2020-03-30'
 
 describe('Share Structure component', () => {
@@ -121,11 +121,11 @@ describe('Share Structure component', () => {
     const shareClass = createShareStructure(null, 1, 'Class', 'Class A', true, 100, true, 0.50, 'CAD', true)
     const wrapper: Wrapper<ShareStructure> = createComponent(shareClass, -1, 1, null, [])
     await Vue.nextTick()
-    expect((<HTMLInputElement> wrapper.find(nameSelector).element).value)
+    expect((<HTMLInputElement>wrapper.find(nameSelector).element).value)
       .toEqual(shareClass['name'])
-    expect((<HTMLInputElement> wrapper.find(txtMaxShares).element).value)
+    expect((<HTMLInputElement>wrapper.find(txtMaxShares).element).value)
       .toEqual(shareClass['maxNumberOfShares'].toString())
-    expect((<HTMLInputElement> wrapper.find(classParValue).element).value)
+    expect((<HTMLInputElement>wrapper.find(classParValue).element).value)
       .toEqual(shareClass['parValue'].toString())
     expect(wrapper.find(parValueSelector).attributes('aria-checked')).toBe('true')
     expect(wrapper.find(noParValueSelector).attributes('aria-checked')).toBe('false')
@@ -140,7 +140,7 @@ describe('Share Structure component', () => {
     const shareClass = createShareStructure(null, 1, 'Class', 'Class A', false, null, false, null, null, true)
     const wrapper: Wrapper<ShareStructure> = createComponent(shareClass, -1, 1, null, [])
     await Vue.nextTick()
-    expect((<HTMLInputElement> wrapper.find(nameSelector).element).value)
+    expect((<HTMLInputElement>wrapper.find(nameSelector).element).value)
       .toEqual(shareClass['name'])
     expect(wrapper.find(parValueSelector).attributes('aria-checked')).toBe('false')
     expect(wrapper.find(noParValueSelector).attributes('aria-checked')).toBe('true')
@@ -322,7 +322,7 @@ describe('Share Structure component', () => {
     await waitForUpdate(wrapper)
     expect(wrapper.find(formSelector).text())
       .toContain('The number for the series (or all series combined, if there are multiple under ' +
-      'a class) cannot exceed the number for the class')
+        'a class) cannot exceed the number for the class')
     expect(wrapper.vm.$data.formValid).toBe(false)
     wrapper.destroy()
   })
@@ -339,7 +339,7 @@ describe('Share Structure component', () => {
     await waitForUpdate(wrapper)
     expect(wrapper.find(formSelector).text())
       .toContain('The number for the series (or all series combined, if there are multiple under ' +
-      'a class) cannot exceed the number for the class')
+        'a class) cannot exceed the number for the class')
     expect(wrapper.vm.$data.formValid).toBe(false)
     wrapper.destroy()
   })
@@ -349,10 +349,10 @@ describe('Share Structure component', () => {
     const shareSeries = createShareStructure(1, 1, 'Series', 'Series A', true, 100, true, 0.50, 'CAD', true)
     shareClass.series.push(shareSeries)
     const wrapper: Wrapper<ShareStructure> = createComponent(shareSeries, 0, -1, 0, [shareClass])
-    expect((<HTMLInputElement> wrapper.find(seriesParValue).element).value)
+    expect((<HTMLInputElement>wrapper.find(seriesParValue).element).value)
       .toEqual(shareSeries['parValue'].toString())
     expect(wrapper.find(seriesParValue).attributes('disabled')).toBe('disabled')
-    expect((<HTMLInputElement> wrapper.find(seriesCurrency).element).value)
+    expect((<HTMLInputElement>wrapper.find(seriesCurrency).element).value)
       .toEqual('Canadian dollar (CAD)')
     expect(wrapper.find(seriesCurrency).attributes('disabled')).toBe('disabled')
     wrapper.destroy()
@@ -393,7 +393,7 @@ describe('Share Structure component', () => {
     await waitForUpdate(wrapper)
     expect(wrapper.find(formSelector).text())
       .toContain('The number for the series (or all series combined, if there are multiple under ' +
-      'a class) cannot exceed the number for the class')
+        'a class) cannot exceed the number for the class')
     expect(wrapper.vm.$data.formValid).toBe(false)
     wrapper.destroy()
   })
@@ -409,7 +409,7 @@ describe('Share Structure component', () => {
     await waitForUpdate(wrapper)
     expect(wrapper.find(formSelector).text())
       .not.toContain('The number for the series (or all series combined, if there are multiple under ' +
-      'a class) cannot exceed the number for the class')
+        'a class) cannot exceed the number for the class')
     wrapper.destroy()
   })
 

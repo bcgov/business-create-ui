@@ -9,7 +9,7 @@ const vuetify = new Vuetify({})
 const store = getVuexStore()
 
 store.state.stateModel.nameRequest = {
-  entityType: 'BC',
+  entityType: 'BEN',
   nrNumber: 'NR 1234567',
   details: { approvedName: 'My Name Request Inc.' }
 }
@@ -34,7 +34,7 @@ describe('FileAndPayInvalidNameRequestDialog - Verify that dialog is displayed c
       .toContain('Registries contact information:')
     expect(wrapper.findAll('.info-section').at(0).text()).toContain('IMPORTANT:')
     expect(wrapper.findAll('.info-section').at(1).text()).toContain('Once the reservation period for a Name Request ' +
-    'expires or is otherwise cancelled, that name becomes')
+      'expires or is otherwise cancelled, that name becomes')
     expect(wrapper.findAll('.info-section').at(1).text())
       .toContain('available to anyone wishing to start their business with that name.')
     expect(wrapper.find('#dialog-okay-button')).toBeDefined()

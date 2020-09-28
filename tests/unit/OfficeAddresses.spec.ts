@@ -157,7 +157,7 @@ describe('Office Addresses component - BCOMP', () => {
 
   beforeAll(() => {
     // init store
-    store.state.stateModel.entityType = 'BC'
+    store.state.stateModel.entityType = 'BEN'
   })
 
   it('does not show the summary ui when editing', () => {
@@ -262,7 +262,7 @@ describe('same as checkboxes reset addresses to default when unchecked - BCOMP',
 
   beforeAll(() => {
     // init store
-    store.state.stateModel.entityType = 'BC'
+    store.state.stateModel.entityType = 'BEN'
   })
 
   it('should reset registered and records delivery addresses', async () => {
@@ -395,7 +395,7 @@ describe('should properly emit valid - BCOMP', () => {
 
   beforeAll(() => {
     // init store
-    store.state.stateModel.entityType = 'BC'
+    store.state.stateModel.entityType = 'BEN'
   })
 
   it('should emit valid form', async () => {
@@ -403,7 +403,8 @@ describe('should properly emit valid - BCOMP', () => {
       propsData: {
         inputAddresses: {
           registeredOffice: { deliveryAddress: validDeliveryAddress, mailingAddress: validMailingAddress },
-          recordsOffice: { deliveryAddress: validDeliveryAddress, mailingAddress: validMailingAddress } },
+          recordsOffice: { deliveryAddress: validDeliveryAddress, mailingAddress: validMailingAddress }
+        },
         isEditing: true
       },
       localVue,
@@ -420,7 +421,8 @@ describe('should properly emit valid - BCOMP', () => {
       propsData: {
         inputAddresses: {
           registeredOffice: { deliveryAddress: invalidDeliveryAddress, mailingAddress: validMailingAddress },
-          recordsOffice: { deliveryAddress: validDeliveryAddress, mailingAddress: validMailingAddress } },
+          recordsOffice: { deliveryAddress: validDeliveryAddress, mailingAddress: validMailingAddress }
+        },
         isEditing: true
       },
       localVue,
@@ -437,7 +439,8 @@ describe('should properly emit valid - BCOMP', () => {
       propsData: {
         inputAddresses: {
           registeredOffice: { deliveryAddress: validDeliveryAddress, mailingAddress: invalidMailingAddress },
-          recordsOffice: { deliveryAddress: validDeliveryAddress, mailingAddress: validMailingAddress } },
+          recordsOffice: { deliveryAddress: validDeliveryAddress, mailingAddress: validMailingAddress }
+        },
         isEditing: true
       },
       localVue,
@@ -454,7 +457,8 @@ describe('should properly emit valid - BCOMP', () => {
       propsData: {
         inputAddresses: {
           registeredOffice: { deliveryAddress: validDeliveryAddress, mailingAddress: validMailingAddress },
-          recordsOffice: { deliveryAddress: invalidDeliveryAddress, mailingAddress: validMailingAddress } },
+          recordsOffice: { deliveryAddress: invalidDeliveryAddress, mailingAddress: validMailingAddress }
+        },
         isEditing: true
       },
       localVue,
@@ -471,7 +475,8 @@ describe('should properly emit valid - BCOMP', () => {
       propsData: {
         inputAddresses: {
           registeredOffice: { deliveryAddress: validDeliveryAddress, mailingAddress: validMailingAddress },
-          recordsOffice: { deliveryAddress: validDeliveryAddress, mailingAddress: invalidMailingAddress } },
+          recordsOffice: { deliveryAddress: validDeliveryAddress, mailingAddress: invalidMailingAddress }
+        },
         isEditing: true
       },
       localVue,
@@ -540,7 +545,7 @@ describe('Office Addresses component - Summary UI', () => {
 
   beforeAll(() => {
     // init store
-    store.state.stateModel.nameRequest.entityType = 'BC'
+    store.state.stateModel.nameRequest.entityType = 'BEN'
   })
 
   it('displays the summary ui when in summary mode', () => {

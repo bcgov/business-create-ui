@@ -55,7 +55,7 @@ describe('Define Company view', () => {
   })
 
   it('displays records office in the office address header when entity is a BCOMP', () => {
-    store.state.stateModel.entityType = 'BC'
+    store.state.stateModel.entityType = 'BEN'
     const wrapper = shallowMount(DefineCompany, { localVue, store, router, vuetify })
 
     expect(wrapper.vm.$el.querySelector('#office-address-header').textContent).toContain('Records')
@@ -76,7 +76,7 @@ describe('Define Company view', () => {
   })
 
   it('displays folio number when it is a premium account', () => {
-    store.state.stateModel.nameRequest.entityType = 'BC'
+    store.state.stateModel.nameRequest.entityType = 'BEN'
     store.state.stateModel.accountInformation.accountType = 'PREMIUM'
     const wrapper = shallowMount(DefineCompany, { localVue, store, router, vuetify })
 
@@ -87,7 +87,7 @@ describe('Define Company view', () => {
   })
 
   it('doesn\'t display folio number when it is not a premium account', () => {
-    store.state.stateModel.nameRequest.entityType = 'BC'
+    store.state.stateModel.nameRequest.entityType = 'BEN'
     store.state.stateModel.accountInformation.accountType = 'BASIC'
     const wrapper = shallowMount(DefineCompany, { localVue, store, router, vuetify })
 
@@ -97,7 +97,7 @@ describe('Define Company view', () => {
   })
 
   it('displays benefit company statement when it is a BC', () => {
-    store.state.stateModel.entityType = 'BC'
+    store.state.stateModel.entityType = 'BEN'
     const wrapper = shallowMount(DefineCompany, { localVue, store, router, vuetify })
 
     expect(wrapper.find('.benefit-company-statement').exists()).toBe(true)

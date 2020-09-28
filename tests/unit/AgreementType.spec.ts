@@ -35,7 +35,7 @@ async function waitForUpdate (wrapper: Wrapper<Vue>) {
  *
  * @returns a Wrapper<AgreementType> object with the given parameters.
  */
-function createComponent (showErrorSummary:boolean = false, isSummary:boolean = false): Wrapper<AgreementType> {
+function createComponent (showErrorSummary: boolean = false, isSummary: boolean = false): Wrapper<AgreementType> {
   const localVue = createLocalVue()
   localVue.use(VueRouter)
   const router = mockRouter.mock()
@@ -53,7 +53,7 @@ function createComponent (showErrorSummary:boolean = false, isSummary:boolean = 
   })
 }
 
-store.state.stateModel.nameRequest.entityType = 'BC'
+store.state.stateModel.nameRequest.entityType = 'BEN'
 store.state.stateModel.currentDate = '2020-03-30'
 
 describe('Share Structure component', () => {

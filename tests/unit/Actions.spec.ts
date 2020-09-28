@@ -87,8 +87,8 @@ describe('Actions component', () => {
       valid: true,
       certifiedBy: 'Some certifier'
     }
-    store.state.stateModel.entityType = 'BC'
-    store.state.stateModel.nameRequest = { entityType: 'BC' }
+    store.state.stateModel.entityType = 'BEN'
+    store.state.stateModel.nameRequest = { entityType: 'BEN' }
     store.state.stateModel.defineCompanyStep = { valid: true }
     store.state.stateModel.addPeopleAndRoleStep = { valid: true }
     store.state.stateModel.createShareStructureStep = { valid: true }
@@ -133,7 +133,7 @@ describe('Emits error event if NR validation fails in file and pay', () => {
     // init store
     store.state.stateModel.currentDate = '2020/01/29'
     store.state.stateModel.nameRequest = {
-      entityType: 'BC',
+      entityType: 'BEN',
       nrNumber: 'NR 1234567',
       details: { approvedName: 'My Name Request Inc.' }
     }
@@ -146,7 +146,7 @@ describe('Emits error event if NR validation fails in file and pay', () => {
       valid: true,
       certifiedBy: 'Some certifier'
     }
-    store.state.stateModel.entityType = 'BC'
+    store.state.stateModel.entityType = 'BEN'
     store.state.stateModel.defineCompanyStep = { valid: true }
     store.state.stateModel.addPeopleAndRoleStep = { valid: true }
     store.state.stateModel.createShareStructureStep = { valid: true }
@@ -202,12 +202,12 @@ describe('Actions component - Filing Functionality', () => {
       },
       business: {
         identifier: 'T1234567',
-        legalType: 'BC'
+        legalType: 'BEN'
       },
       incorporationApplication: {
         nameRequest: {
           nrNumber: 'NR 1234567',
-          legalType: 'BC',
+          legalType: 'BEN',
           legalName: 'My Name Request Inc.'
         },
         nameTranslations: {
@@ -381,15 +381,15 @@ describe('Actions component - Filing Functionality', () => {
     get.withArgs('nameRequests/NR 1234567')
       .returns(new Promise(resolve => resolve({
         data:
-          {
-            ...nrData
-          }
+        {
+          ...nrData
+        }
       })))
 
     // init store
     store.state.stateModel.currentDate = '2020/01/29'
     store.state.stateModel.nameRequest = {
-      entityType: 'BC',
+      entityType: 'BEN',
       nrNumber: 'NR 1234567',
       details: { approvedName: 'My Name Request Inc.' }
     }
@@ -418,7 +418,7 @@ describe('Actions component - Filing Functionality', () => {
     store.state.stateModel.createShareStructureStep.shareClasses =
       filing.filing.incorporationApplication.shareStructure.shareClasses
     store.state.stateModel.filingId = 1234
-    store.state.stateModel.entityType = 'BC'
+    store.state.stateModel.entityType = 'BEN'
     store.state.stateModel.tempId = 'T1234567'
     store.state.stateModel.incorporationDateTime.isFutureEffective = filing.filing.header.isFutureEffective
     store.state.stateModel.incorporationAgreementStep.agreementType =
