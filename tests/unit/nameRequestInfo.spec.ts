@@ -21,7 +21,7 @@ describe('Name Request Info component', () => {
 
   const mockNrData = {
     'nrNumber': 'NR 1234567',
-    'entityType': 'BC',
+    'entityType': 'BEN',
     'filingId': null,
     'applicant': {
       'addressLine1': '45 Frasier Drive',
@@ -47,7 +47,7 @@ describe('Name Request Info component', () => {
 
   beforeEach(() => {
     // Entity type will always be set with or without an NR
-    store.state.stateModel.entityType = 'BC'
+    store.state.stateModel.entityType = 'BEN'
     // Temp Id will always be set with or without an NR
     store.state.stateModel.tempId = 'T1234567'
     store.state.stateModel.nameRequest.nrNumber = mockNrData.nrNumber
@@ -312,7 +312,7 @@ describe('Name Request Info component without an NR', () => {
 
   beforeEach(() => {
     // Entity type will always be set with or without an NR
-    store.state.stateModel.entityType = 'BC'
+    store.state.stateModel.entityType = 'BEN'
     // Temp Id will always be set with or without an NR
     store.state.stateModel.tempId = 'T1234567'
     store.state.stateModel.nameRequest.nrNumber = null

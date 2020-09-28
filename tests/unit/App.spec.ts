@@ -36,7 +36,7 @@ const filingData = {
   },
   business: {
     identifier: 'T1234567',
-    legalType: 'BC'
+    legalType: 'BEN'
   },
   incorporationApplication: {
     contactPoint: {
@@ -45,7 +45,7 @@ const filingData = {
       phone: '(250) 123-4567'
     },
     nameRequest: {
-      legalType: 'BC',
+      legalType: 'BEN',
       nrNumber: 'NR 1234567',
       legalName: 'My Name Request Inc.'
     },
@@ -220,7 +220,7 @@ const nrData = {
   consentFlag: 'R',
   corpNum: null,
   expirationDate: 'Thu, 31 Dec 2099 23:59:59 GMT',
-  requestTypeCd: 'BC',
+  requestTypeCd: 'BEN',
   names: [
     {
       choice: 1,
@@ -269,9 +269,9 @@ describe('Numbered company setup', () => {
     get.withArgs('entities/T7654321/authorizations')
       .returns(new Promise((resolve) => resolve({
         data:
-          {
-            roles: ['edit', 'view']
-          }
+        {
+          roles: ['edit', 'view']
+        }
       })))
 
     // GET IA filing
@@ -287,11 +287,11 @@ describe('Numbered company setup', () => {
             },
             business: {
               identifier: 'T7654321',
-              legalType: 'BC'
+              legalType: 'BEN'
             },
             incorporationApplication: {
               nameRequest: {
-                legalType: 'BC'
+                legalType: 'BEN'
               }
             }
           }
@@ -311,7 +311,7 @@ describe('Numbered company setup', () => {
 
   it('loads a draft filing into the store', () => {
     // Validate IA for numbered company
-    expect(store.state.stateModel.entityType).toBe('BC')
+    expect(store.state.stateModel.entityType).toBe('BEN')
     expect(store.state.stateModel.filingId).toBe(54321)
 
     // Validate no offices are loaded
@@ -381,29 +381,29 @@ describe('App component', () => {
     get.withArgs('users/@me')
       .returns(new Promise((resolve) => resolve({
         data:
-          {
-            contacts: [{
-              email: 'completing-party@example.com'
-            }]
-          }
+        {
+          contacts: [{
+            email: 'completing-party@example.com'
+          }]
+        }
       })))
 
     // GET authorizations (role)
     get.withArgs('entities/T1234567/authorizations')
       .returns(new Promise((resolve) => resolve({
         data:
-          {
-            roles: ['edit', 'view']
-          }
+        {
+          roles: ['edit', 'view']
+        }
       })))
 
     // GET NR data
     get.withArgs('nameRequests/NR 1234567')
       .returns(new Promise(resolve => resolve({
         data:
-          {
-            ...nrData
-          }
+        {
+          ...nrData
+        }
       })))
 
     // GET IA filing
@@ -454,7 +454,7 @@ describe('App component', () => {
     expect(store.state.stateModel.filingId).toBe(12345)
 
     // Validate Entity Type
-    expect(store.state.stateModel.entityType).toBe('BC')
+    expect(store.state.stateModel.entityType).toBe('BEN')
 
     // Validate Office Addresses
     expect(store.state.stateModel.defineCompanyStep.officeAddresses.registeredOffice)

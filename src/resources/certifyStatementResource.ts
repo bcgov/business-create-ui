@@ -1,5 +1,5 @@
 export const CertifyStatementResource = [{
-  entityType: 'BC',
+  entityType: 'BEN',
   displayName: 'Benefit Company',
   certifyStatementHeader: 'the Completing Party, have examined the Benefit Company ' +
     'Articles and the Incorporation Agreement applicable to the company that is to be ' +

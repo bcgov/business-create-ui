@@ -157,7 +157,7 @@ function createComponent (
   })
 }
 
-store.state.stateModel.nameRequest.entityType = 'BC'
+store.state.stateModel.nameRequest.entityType = 'BEN'
 store.state.stateModel.currentDate = '2020-03-30'
 
 describe('Org Person component', () => {
@@ -182,7 +182,7 @@ describe('Org Person component', () => {
 
   it('Displays form data for org', async () => {
     const wrapper: Wrapper<OrgPerson> = createComponent(validOrgData, -1, 0, null)
-    expect((<HTMLInputElement> wrapper.find(orgNameSelector).element).value)
+    expect((<HTMLInputElement>wrapper.find(orgNameSelector).element).value)
       .toEqual(validOrgData['officer']['orgName'])
     await Vue.nextTick()
     expect(wrapper.find(doneButtonSelector).attributes('disabled')).toBeUndefined()
@@ -193,11 +193,11 @@ describe('Org Person component', () => {
 
   it('Displays form data for person', async () => {
     const wrapper: Wrapper<OrgPerson> = createComponent(validPersonData, 0, 0, null)
-    expect((<HTMLInputElement> wrapper.find(firstNameSelector).element).value)
+    expect((<HTMLInputElement>wrapper.find(firstNameSelector).element).value)
       .toEqual(validPersonData['officer']['firstName'])
-    expect((<HTMLInputElement> wrapper.find(middleNameSelector).element).value)
+    expect((<HTMLInputElement>wrapper.find(middleNameSelector).element).value)
       .toEqual(validPersonData['officer']['middleName'])
-    expect((<HTMLInputElement> wrapper.find(lastNameSelector).element).value)
+    expect((<HTMLInputElement>wrapper.find(lastNameSelector).element).value)
       .toEqual(validPersonData['officer']['lastName'])
     await Vue.nextTick()
     expect(wrapper.find(doneButtonSelector).attributes('disabled')).toBeUndefined()
@@ -228,7 +228,7 @@ describe('Org Person component', () => {
 
   it('Clicking Done button emits event for add edit person/org', async () => {
     const wrapper: Wrapper<OrgPerson> = createComponent(validOrgData, -1, 0, null)
-    expect((<HTMLInputElement> wrapper.find(orgNameSelector).element).value)
+    expect((<HTMLInputElement>wrapper.find(orgNameSelector).element).value)
       .toEqual(validOrgData['officer']['orgName'])
     await Vue.nextTick()
     expect(wrapper.find(doneButtonSelector).attributes('disabled')).toBeUndefined()

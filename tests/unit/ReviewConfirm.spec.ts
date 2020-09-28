@@ -29,7 +29,7 @@ describe('Review Confirm view', () => {
 
   it('renders the component properly', () => {
     // init store
-    store.state.entityType = 'BC'
+    store.state.entityType = 'BEN'
 
     wrapper = shallowMount(ReviewConfirm, { localVue, store, router, vuetify })
 
@@ -38,7 +38,7 @@ describe('Review Confirm view', () => {
   })
 
   it('displays benefit company statement when it is a BC', () => {
-    store.state.stateModel.entityType = 'BC'
+    store.state.stateModel.entityType = 'BEN'
     const wrapper = shallowMount(ReviewConfirm, { localVue, store, router, vuetify })
 
     expect(wrapper.find('.benefit-company-statement').exists()).toBe(true)
