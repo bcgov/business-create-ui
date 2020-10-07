@@ -33,6 +33,11 @@ jobs:
           npm run test:unit
         env:
           CI: true
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          name: codecov-business-create
+          fail_ci_if_error: true
       - name: build to check strictness
         run: |
           npm run build
