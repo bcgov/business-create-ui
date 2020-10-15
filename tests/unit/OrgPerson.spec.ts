@@ -116,6 +116,29 @@ const validOrgData = {
   }
 }
 
+const emptyPerson = {
+  officer: {
+    id: null,
+    firstName: '',
+    lastName: '',
+    middleName: '',
+    orgName: '',
+    partyType: 'Person',
+    email: null
+  },
+  roles: [],
+  mailingAddress: {
+    streetAddress: '',
+    streetAddressAdditional: '',
+    addressCity: '',
+    addressRegion: '',
+    postalCode: '',
+    addressCountry: '',
+    deliveryInstructions: ''
+  },
+  action: null
+}
+
 /**
  * Returns the last event for a given name, to be used for testing event propagation in response to component changes.
  *
@@ -164,18 +187,18 @@ describe('Org Person component', () => {
   it('Loads the component and sets data for person', async () => {
     const wrapper: Wrapper<OrgPerson> = createComponent(validPersonData, -1, 0, null)
     expect(wrapper.vm.$data.orgPerson).toStrictEqual(validPersonData)
-    expect(wrapper.vm.$data.isIncorporator).toBe(false)
-    expect(wrapper.vm.$data.isDirector).toBe(true)
-    expect(wrapper.vm.$data.isCompletingParty).toBe(true)
+    expect((wrapper.vm as any).isIncorporator).toBe(false)
+    expect((wrapper.vm as any).isDirector).toBe(true)
+    expect((wrapper.vm as any).isCompletingParty).toBe(true)
     wrapper.destroy()
   })
 
   it('Loads the component and sets data for org', async () => {
     const wrapper: Wrapper<OrgPerson> = createComponent(validOrgData, -1, 0, null)
     expect(wrapper.vm.$data.orgPerson).toStrictEqual(validOrgData)
-    expect(wrapper.vm.$data.isIncorporator).toBe(true)
-    expect(wrapper.vm.$data.isDirector).toBe(false)
-    expect(wrapper.vm.$data.isCompletingParty).toBe(false)
+    expect((wrapper.vm as any).isIncorporator).toBe(true)
+    expect((wrapper.vm as any).isDirector).toBe(false)
+    expect((wrapper.vm as any).isCompletingParty).toBe(false)
     await Vue.nextTick()
     wrapper.destroy()
   })
@@ -379,6 +402,36 @@ describe('Org Person component', () => {
     await Vue.nextTick()
     expect(wrapper.emitted().resetEvent).toBeTruthy()
     expect(wrapper.emitted(formResetEvent).length).toBe(1)
+    wrapper.destroy()
+  })
+
+  it('Displays errors and does not submit form when clicking Done button and form is invalid', async () => {
+    const wrapper = createComponent(emptyPerson, NaN, 0, null)
+
+    // verify that button is not disabled, then click it
+    const button = wrapper.find(doneButtonSelector)
+    expect(button.attributes('disabled')).toBeUndefined()
+    button.trigger('click')
+    await Vue.nextTick()
+
+    // get a list of error messages
+    const wrappers = wrapper.findAll('.v-messages__message')
+    const messages: Array<string> = []
+    for (let i = 0; i < wrappers.length; i++) {
+      messages.push(wrappers.at(i).text())
+    }
+
+    // verify some error messages
+    expect(messages.includes('A first name is required'))
+    expect(messages.includes('A last name is required'))
+    expect(messages.includes('A role is required'))
+    expect(messages.includes('This field is required'))
+
+    // verify no events were emitted
+    expect(wrapper.emitted(reassignCompletingPartyEvent)).toBeUndefined()
+    expect(wrapper.emitted(addEditPersonEvent)).toBeUndefined()
+    expect(wrapper.emitted(formResetEvent)).toBeUndefined()
+
     wrapper.destroy()
   })
 })

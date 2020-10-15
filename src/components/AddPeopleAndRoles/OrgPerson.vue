@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <div id="addEditPersonContainer">
     <confirm-dialog ref="reassignCPDialog" attach="#addEditPersonContainer" />
 
-    <v-expand-transition id="addEditPersonContainer">
+    <v-expand-transition>
       <ul class="list add-person">
         <li class="add-person-container">
           <div class="meta-container">
@@ -22,8 +22,9 @@
                 ref="addPersonOrgForm"
                 class="appoint-form"
                 v-model="addPersonOrgFormValid"
-                v-on:submit.prevent="addPerson"
+                v-on:submit.prevent
               >
+                <!-- Person/Org's Name -->
                 <label class="sub-header" v-if="isPerson">Person's Name</label>
                 <label class="sub-header" v-if="isOrg">Corporation or Firm Name</label>
                 <div class="form__row three-column" v-if="isPerson">
@@ -62,37 +63,46 @@
                     :rules="orgNameRules"
                   />
                 </div>
+
+                <!-- Roles -->
                 <label class="sub-header">Roles</label>
                 <v-row>
                   <v-col cols="4" v-if="isPerson">
-                    <div :class="{'highlightedRole': isRoleLocked(Roles.COMPLETING_PARTY)}">
+                    <div :class="{ 'highlightedRole': isRoleLocked(Roles.COMPLETING_PARTY) }">
                       <v-checkbox
-                        v-model="isCompletingParty"
-                        id='cp-checkbox'
-                        label="Completing Party"
+                        id="cp-checkbox"
+                        v-model="selectedRoles"
+                        :value="Roles.COMPLETING_PARTY"
+                        :label="Roles.COMPLETING_PARTY"
                         :disabled="isRoleLocked(Roles.COMPLETING_PARTY)"
+                        :rules="roleRules"
                         @change="assignCompletingPartyRole()"
                       />
                     </div>
                   </v-col>
                   <v-col cols="4">
-                    <div :class="{ 'highlightedRole':
-                      isRoleLocked(Roles.INCORPORATOR) ||
-                      orgPerson.officer.partyType === IncorporatorTypes.CORPORATION }"
+                    <div :class="{ 'highlightedRole': isRoleLocked(Roles.INCORPORATOR) || isOrg }"
                     >
                       <v-checkbox
-                        v-model="isIncorporator"
+                        v-model="selectedRoles"
+                        :value="Roles.INCORPORATOR"
                         :label="incorporatorLabel"
-                        :disabled="isRoleLocked(Roles.INCORPORATOR) ||
-                        orgPerson.officer.partyType === IncorporatorTypes.CORPORATION"
+                        :disabled="isRoleLocked(Roles.INCORPORATOR) || isOrg"
+                        :rules="roleRules"
                       />
                     </div>
                   </v-col>
                   <v-col cols="4" v-if="isPerson">
-                    <v-checkbox v-model="isDirector" label="Director" />
+                    <v-checkbox
+                      v-model="selectedRoles"
+                      :value="Roles.DIRECTOR"
+                      :label="Roles.DIRECTOR"
+                      :rules="roleRules"
+                    />
                   </v-col>
                 </v-row>
 
+                <!-- Mailing Address -->
                 <label class="sub-header">Mailing Address</label>
                 <div class="address-wrapper">
                   <base-address
@@ -105,6 +115,7 @@
                   />
                 </div>
 
+                <!-- Delivery Address (for directors only) -->
                 <div class="form__row" v-if="isDirector">
                   <v-checkbox
                     class="inherit-checkbox"
@@ -126,12 +137,15 @@
                   </div>
                 </div>
 
+                <!-- Action Buttons -->
                 <div class="form__row form__btns">
-                  <v-btn large color="error" :disabled="activeIndex===-1" @click="removePerson()"
-                    id='btn-remove'>Remove</v-btn>
-                  <v-btn large class="form-primary-btn" @click="validateAddPersonOrgForm()" color="primary"
-                    :disabled="!isFormValid()" id='btn-done'>Done</v-btn>
-                  <v-btn large class="form-cancel-btn" @click="resetAddPersonData(true)" id='btn-cancel'>Cancel</v-btn>
+                  <v-btn id="btn-remove" large color="error"
+                    :disabled="activeIndex === -1"
+                    @click="emitRemovePersonEvent(activeIndex)">Remove</v-btn>
+                  <v-btn id="btn-done" large color="primary" class="ml-auto"
+                    @click="validateAddPersonOrgForm()">Done</v-btn>
+                  <v-btn id="btn-cancel" large outlined color="primary"
+                    @click="resetAddPersonData(true)">Cancel</v-btn>
                 </div>
               </v-form>
             </div>
@@ -196,21 +210,19 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
 
   // Data Properties
   private orgPerson: OrgPersonIF = null
-  private addPersonOrgFormValid: boolean = true
+  private addPersonOrgFormValid = true
 
   // Address related properties
   private inProgressMailingAddress: AddressIF
   private inProgressDeliveryAddress: AddressIF
-  private inheritMailingAddress: boolean = true
+  private inheritMailingAddress = true
   private personAddressSchema: {} = personAddressSchema
-  private mailingAddressValid: boolean = false
-  private deliveryAddressValid: boolean = false
-  private reassignCompletingParty: boolean = false
+  private mailingAddressValid = false
+  private deliveryAddressValid = false
+  private reassignCompletingParty = false
 
-  // Roles
-  private isCompletingParty: boolean = false
-  private isIncorporator: boolean = false
-  private isDirector: boolean = false
+  /** Model value for roles checboxes. */
+  private selectedRoles: Array<Roles> = []
 
   readonly EntityTypes = EntityTypes
   readonly Roles = Roles
@@ -244,14 +256,35 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
     v => (v?.length <= 155) || 'Cannot exceed 155 characters' // maximum character count
   ]
 
+  /** True if Completing Party is checked. */
+  private get isCompletingParty (): boolean {
+    return this.selectedRoles.includes(Roles.COMPLETING_PARTY)
+  }
+
+  /** True if Incorporator is checked. */
+  private get isIncorporator (): boolean {
+    return this.selectedRoles.includes(Roles.INCORPORATOR)
+  }
+
+  /** True if Director is checked. */
+  private get isDirector (): boolean {
+    return this.selectedRoles.includes(Roles.DIRECTOR)
+  }
+
+  /** The validation rules for the roles. */
+  private get roleRules (): Array<Function> {
+    return [ () => this.selectedRoles.length > 0 || 'A role is required' ]
+  }
+
   /** Called when component is created. */
   private created (): void {
     if (this.initialValue) {
       this.orgPerson = { ...this.initialValue }
       this.orgPerson.officer = { ...this.initialValue.officer }
-      this.isDirector = this.orgPerson.roles.some(party => party.roleType === Roles.DIRECTOR)
-      this.isIncorporator = this.orgPerson.roles.some(party => party.roleType === Roles.INCORPORATOR)
-      this.isCompletingParty = this.orgPerson.roles.some(party => party.roleType === Roles.COMPLETING_PARTY)
+
+      // set checkbox array
+      this.selectedRoles = this.orgPerson.roles.map(r => r.roleType)
+
       this.inProgressMailingAddress = { ...this.orgPerson.mailingAddress }
       if (this.isDirector) {
         this.inProgressDeliveryAddress = { ...this.orgPerson.deliveryAddress }
@@ -278,7 +311,7 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
   }
 
   private assignCompletingPartyRole (): void {
-    if (this.isCompletingParty && this.existingCompletingParty &&
+    if (this.orgPerson && this.isCompletingParty && this.existingCompletingParty &&
       this.orgPerson.officer.id !== this.existingCompletingParty.officer.id
     ) {
       this.confirmReassignPerson()
@@ -287,22 +320,22 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
 
   // Methods
   private validateAddPersonOrgForm (): void {
-    if (this.isFormValid()) {
+    // validate the main form and address form(s)
+    this.$refs.addPersonOrgForm.validate()
+    this.$refs.mailingAddressNew.$refs.addressForm.validate()
+    if (this.$refs.deliveryAddressNew) {
+      this.$refs.deliveryAddressNew.$refs.addressForm.validate()
+    }
+
+    // only proceed if form is valid
+    if (this.isFormValid) {
       if (this.reassignCompletingParty) {
         this.emitReassignCompletingPartyEvent()
       }
       const person: OrgPersonIF = this.addPerson()
       this.emitPersonInfo(person)
-      this.resetAddPersonData(false)
+      this.resetAddPersonData(false) // don't emit event
     }
-  }
-
-  private isFormValid (): boolean {
-    let isFormValid: boolean = this.addPersonOrgFormValid && this.mailingAddressValid
-    if (this.isDirector && !this.inheritMailingAddress) {
-      isFormValid = isFormValid && this.deliveryAddressValid
-    }
-    return isFormValid
   }
 
   private confirmReassignPerson () {
@@ -322,8 +355,8 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
         this.reassignCompletingParty = true
       }
     }).catch(() => {
-      // clear the checkbox
-      this.isCompletingParty = false
+      // remove the role
+      this.selectedRoles = this.selectedRoles.filter(r => r !== Roles.COMPLETING_PARTY)
     })
   }
 
@@ -380,10 +413,6 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
     return (this.orgPerson.roles.some(party => party.roleType === role) && this.activeIndex === -1)
   }
 
-  private removePerson (): void {
-    this.emitRemovePersonEvent(this.activeIndex)
-  }
-
   private reassignPersonErrorMessage (): string {
     return `The Completing Party role is already assigned to ${this.existingCompletingPartyName}.\n` +
       'Selecting "Completing Party" here will change the Completing Party.'
@@ -399,10 +428,21 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
     return name
   }
 
+  /** True if the form is valid. */
+  private get isFormValid (): boolean {
+    let isFormValid = (this.addPersonOrgFormValid && this.mailingAddressValid)
+    if (this.isDirector && !this.inheritMailingAddress) {
+      isFormValid = (isFormValid && this.deliveryAddressValid)
+    }
+    return isFormValid
+  }
+
+  /** True if current data object is a person. */
   private get isPerson (): boolean {
     return this.orgPerson.officer?.partyType === IncorporatorTypes.PERSON
   }
 
+  /** True if current data object is an organization (corporation/firm). */
   private get isOrg (): boolean {
     return this.orgPerson.officer?.partyType === IncorporatorTypes.CORPORATION
   }
@@ -411,15 +451,15 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
     return this.entityFilter(EntityTypes.BCOMP) ? Roles.INCORPORATOR : Roles.SUBSCRIBER
   }
 
-  // Events
+  // Event emitters
   @Emit('addEditPerson')
-  private emitPersonInfo (personInfo: OrgPersonIF): void { }
+  private emitPersonInfo (personInfo: OrgPersonIF): void {}
 
   @Emit('resetEvent')
   private emitResetEvent (): void {}
 
   @Emit('removePersonEvent')
-  private emitRemovePersonEvent (activeIndex: Number): void { }
+  private emitRemovePersonEvent (activeIndex: number): void {}
 
   @Emit('removeCompletingPartyRole')
   private emitReassignCompletingPartyEvent (): void {}
@@ -569,7 +609,7 @@ li {
   background-color: rgb(55, 164, 71);
   color: rgb(255, 255, 255) !important;
   font-weight: bold;
-  padding: .25rem;
+  padding: 0.25rem;
 }
 
 ::v-deep .theme--light.v-label--is-disabled {

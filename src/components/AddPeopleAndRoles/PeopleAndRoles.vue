@@ -8,17 +8,17 @@
     <ul>
       <li>
         <v-icon v-if="hasRole(Roles.COMPLETING_PARTY, 1, 'EXACT')" color="blue" class="cp-valid">mdi-check</v-icon>
-        <v-icon v-else-if="showErrors" color="red" class="cp-invalid">mdi-close</v-icon>
+        <v-icon v-else :color="showErrors ? 'red': 'transparent'" class="cp-invalid">mdi-close</v-icon>
         <span class='chk-list-item-txt'>The Completing Party</span>
       </li>
       <li>
         <v-icon v-if="hasRole(Roles.INCORPORATOR, 1, 'ATLEAST')" color="blue" class="incorp-valid">mdi-check</v-icon>
-        <v-icon v-else-if="showErrors" color="red" class="incorp-invalid">mdi-close</v-icon>
+        <v-icon v-else :color="showErrors ? 'red': 'transparent'" class="incorp-invalid">mdi-close</v-icon>
         <span class='chk-list-item-txt'>At least one Incorporator</span>
       </li>
       <li>
         <v-icon v-if="hasRole(Roles.DIRECTOR, 1, 'ATLEAST')" color="blue" class="dir-valid">mdi-check</v-icon>
-        <v-icon v-else-if="showErrors" color="red" class="dir-invalid">mdi-close</v-icon>
+        <v-icon v-else :color="showErrors ? 'red': 'transparent'" class="dir-invalid">mdi-close</v-icon>
         <span class='chk-list-item-txt'>At least one Director</span>
       </li>
     </ul>
