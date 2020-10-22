@@ -25,14 +25,11 @@ const btnStartAddCompletingParty: string = '#btn-start-add-cp'
 const btnAddPerson: string = '#btn-add-person'
 const btnAddCompletingParty: string = '#btn-add-cp'
 const btnAddCorp: string = '#btn-add-corp'
-const btnPanel: string = '.btn-panel'
 const appointForm: string = '.appoint-form'
 const checkCompletingParty: string = '.cp-valid'
 const checkDirector: string = '.dir-valid'
 const checkIncorporator: string = '.incorp-valid'
-const completingPartyRole = { 'roleType': 'Completing Party', 'appointmentDate': '2020-03-30' }
-const directorRole: string = 'Director'
-const incorporatorRole: string = 'Incorporator'
+const completingPartyRole = { roleType: 'Completing Party', appointmentDate: '2020-03-30' }
 
 function resetStore (): void {
   store.state.stateModel.addPeopleAndRoleStep.orgPeople = []
@@ -150,7 +147,6 @@ describe('People And Roles component', () => {
     await Vue.nextTick()
     expect(wrapper.vm.$data.showOrgPersonForm).toBe(true)
     expect(wrapper.vm.$data.addEditInProgress).toBe(true)
-    expect(wrapper.vm.$data.nextId).toBe(1)
     wrapper.destroy()
     resetStore()
   })

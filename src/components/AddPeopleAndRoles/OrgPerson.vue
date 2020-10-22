@@ -68,26 +68,26 @@
                 <label class="sub-header">Roles</label>
                 <v-row>
                   <v-col cols="4" v-if="isPerson">
-                    <div :class="{ 'highlightedRole': isRoleLocked(Roles.COMPLETING_PARTY) }">
+                    <div :class="{ 'highlightedRole': isRoleLocked(RoleTypes.COMPLETING_PARTY) }">
                       <v-checkbox
                         id="cp-checkbox"
                         v-model="selectedRoles"
-                        :value="Roles.COMPLETING_PARTY"
-                        :label="Roles.COMPLETING_PARTY"
-                        :disabled="isRoleLocked(Roles.COMPLETING_PARTY)"
+                        :value="RoleTypes.COMPLETING_PARTY"
+                        :label="RoleTypes.COMPLETING_PARTY"
+                        :disabled="isRoleLocked(RoleTypes.COMPLETING_PARTY)"
                         :rules="roleRules"
                         @change="assignCompletingPartyRole()"
                       />
                     </div>
                   </v-col>
                   <v-col cols="4">
-                    <div :class="{ 'highlightedRole': isRoleLocked(Roles.INCORPORATOR) || isOrg }"
+                    <div :class="{ 'highlightedRole': isRoleLocked(RoleTypes.INCORPORATOR) || isOrg }"
                     >
                       <v-checkbox
                         v-model="selectedRoles"
-                        :value="Roles.INCORPORATOR"
+                        :value="RoleTypes.INCORPORATOR"
                         :label="incorporatorLabel"
-                        :disabled="isRoleLocked(Roles.INCORPORATOR) || isOrg"
+                        :disabled="isRoleLocked(RoleTypes.INCORPORATOR) || isOrg"
                         :rules="roleRules"
                       />
                     </div>
@@ -95,8 +95,8 @@
                   <v-col cols="4" v-if="isPerson">
                     <v-checkbox
                       v-model="selectedRoles"
-                      :value="Roles.DIRECTOR"
-                      :label="Roles.DIRECTOR"
+                      :value="RoleTypes.DIRECTOR"
+                      :label="RoleTypes.DIRECTOR"
                       :rules="roleRules"
                     />
                   </v-col>
@@ -160,6 +160,7 @@
 <script lang="ts">
 // Libraries
 import { Component, Prop, Emit, Mixins } from 'vue-property-decorator'
+import { v4 as uuidv4 } from 'uuid'
 
 // Interfaces
 import { OrgPersonIF, BaseAddressType, FormType, AddressIF, ConfirmDialogType, RolesIF } from '@/interfaces'
@@ -172,7 +173,7 @@ import { ConfirmDialog } from '@/components/dialogs'
 import { EntityFilterMixin, CommonMixin } from '@/mixins'
 
 // Enums
-import { EntityTypes, Roles, IncorporatorTypes } from '@/enums'
+import { EntityTypes, RoleTypes, IncorporatorTypes } from '@/enums'
 
 // Schemas
 import { personAddressSchema } from '@/schemas'
@@ -201,9 +202,6 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
   private activeIndex: number
 
   @Prop()
-  private nextId: number
-
-  @Prop()
   private existingCompletingParty: OrgPersonIF
 
   @Getter getCurrentDate!: string
@@ -222,10 +220,11 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
   private reassignCompletingParty = false
 
   /** Model value for roles checboxes. */
-  private selectedRoles: Array<Roles> = []
+  private selectedRoles: Array<RoleTypes> = []
 
+  // enums for template
   readonly EntityTypes = EntityTypes
-  readonly Roles = Roles
+  readonly RoleTypes = RoleTypes
   readonly IncorporatorTypes = IncorporatorTypes
 
   // Rules
@@ -258,17 +257,17 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
 
   /** True if Completing Party is checked. */
   private get isCompletingParty (): boolean {
-    return this.selectedRoles.includes(Roles.COMPLETING_PARTY)
+    return this.selectedRoles.includes(RoleTypes.COMPLETING_PARTY)
   }
 
   /** True if Incorporator is checked. */
   private get isIncorporator (): boolean {
-    return this.selectedRoles.includes(Roles.INCORPORATOR)
+    return this.selectedRoles.includes(RoleTypes.INCORPORATOR)
   }
 
   /** True if Director is checked. */
   private get isDirector (): boolean {
-    return this.selectedRoles.includes(Roles.DIRECTOR)
+    return this.selectedRoles.includes(RoleTypes.DIRECTOR)
   }
 
   /** The validation rules for the roles. */
@@ -356,7 +355,7 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
       }
     }).catch(() => {
       // remove the role
-      this.selectedRoles = this.selectedRoles.filter(r => r !== Roles.COMPLETING_PARTY)
+      this.selectedRoles = this.selectedRoles.filter(r => r !== RoleTypes.COMPLETING_PARTY)
     })
   }
 
@@ -364,17 +363,18 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
    * Local helper push the current director data into the list.
    */
   private addPerson (): OrgPersonIF {
-    let personToAdd: OrgPersonIF = { ...this.orgPerson }
-    personToAdd.officer = { ...this.orgPerson.officer }
+    let person: OrgPersonIF = { ...this.orgPerson }
+    person.officer = { ...this.orgPerson.officer }
     if (this.activeIndex === -1) {
-      personToAdd.officer.id = this.nextId
+      // assign a new (random) ID
+      person.officer.id = uuidv4()
     }
-    personToAdd.mailingAddress = { ...this.inProgressMailingAddress }
+    person.mailingAddress = { ...this.inProgressMailingAddress }
     if (this.isDirector) {
-      personToAdd.deliveryAddress = this.setPersonDeliveryAddress()
+      person.deliveryAddress = this.setPersonDeliveryAddress()
     }
-    personToAdd.roles = this.setPersonRoles()
-    return personToAdd
+    person.roles = this.setPersonRoles()
+    return person
   }
 
   private setPersonDeliveryAddress (): AddressIF {
@@ -387,13 +387,13 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
   private setPersonRoles (): RolesIF[] {
     let roles: RolesIF[] = []
     if (this.isCompletingParty) {
-      roles.push({ roleType: Roles.COMPLETING_PARTY, appointmentDate: this.getCurrentDate })
+      roles.push({ roleType: RoleTypes.COMPLETING_PARTY, appointmentDate: this.getCurrentDate })
     }
     if (this.isIncorporator) {
-      roles.push({ roleType: Roles.INCORPORATOR, appointmentDate: this.getCurrentDate })
+      roles.push({ roleType: RoleTypes.INCORPORATOR, appointmentDate: this.getCurrentDate })
     }
     if (this.isDirector) {
-      roles.push({ roleType: Roles.DIRECTOR, appointmentDate: this.getCurrentDate })
+      roles.push({ roleType: RoleTypes.DIRECTOR, appointmentDate: this.getCurrentDate })
     }
     return roles
   }
@@ -409,7 +409,7 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
     }
   }
 
-  private isRoleLocked (role: Roles): boolean {
+  private isRoleLocked (role: RoleTypes): boolean {
     return (this.orgPerson.roles.some(party => party.roleType === role) && this.activeIndex === -1)
   }
 
@@ -448,7 +448,7 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
   }
 
   private get incorporatorLabel (): string {
-    return this.entityFilter(EntityTypes.BCOMP) ? Roles.INCORPORATOR : Roles.SUBSCRIBER
+    return this.entityFilter(EntityTypes.BCOMP) ? RoleTypes.INCORPORATOR : RoleTypes.SUBSCRIBER
   }
 
   // Event emitters

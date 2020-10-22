@@ -80,7 +80,7 @@
           <div class="actions">
             <span class="edit-action">
               <v-btn small text color="primary"
-                :id="'officer-' + officer.id + '-change-btn'"
+                :id="`officer-${index}-change-btn`"
                 @click="emitPersonInfo(index)"
               >
                 <v-icon small>mdi-pencil</v-icon>
@@ -198,9 +198,8 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin, EntityFilter
   padding: 1.25rem;
 
   .people-roles-title {
-    padding-left: .5rem;
+    padding-left: 0.5rem;
   }
-
 }
 
 .people-roles-invalid-message {
@@ -210,14 +209,14 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin, EntityFilter
 }
 
 .people-roles-header {
-  padding: .5rem 1.25rem .5rem 1.25rem;
+  padding: 0.5rem 1.25rem 0.5rem 1.25rem;
   font-size: 0.875rem;
   margin-top: 1rem;
 }
 
 .people-roles-content {
-  margin-top: .5rem;
-  padding: .5rem 1.25rem .5rem 1.25rem;
+  margin-top: 0.5rem;
+  padding: 0.5rem 1.25rem 0.5rem 1.25rem;
   border-top: 1px solid $gray1;
   font-size: 0.875rem;
 
@@ -234,7 +233,7 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin, EntityFilter
     }
 
     .v-btn {
-      min-width: .5rem;
+      min-width: 0.5rem;
     }
 
     .v-btn + .v-btn {
@@ -245,14 +244,14 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin, EntityFilter
 
 .v-list-item {
   min-height: 0;
-  padding: 0 1rem 0 .5rem;
+  padding: 0 1rem 0 0.5rem;
 }
 
 .col {
-  padding: .25rem;
+  padding: 0.25rem;
 
   .col-roles {
-    padding: 0!important;
+    padding: 0 !important;
   }
 }
 
@@ -260,7 +259,6 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin, EntityFilter
   position: relative;
   top: 2px;
   left: 2px;
-  color: $BCgovGold9
+  color: $BCgovGold9;
 }
-
 </style>

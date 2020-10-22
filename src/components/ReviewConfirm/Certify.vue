@@ -64,7 +64,7 @@ import { State } from 'vuex-class'
 import { CertifyStatementIF, OrgPersonIF } from '@/interfaces'
 
 // Enums
-import { Roles } from '@/enums'
+import { RoleTypes } from '@/enums'
 
 @Component({})
 export default class Certify extends Vue {
@@ -99,7 +99,7 @@ export default class Certify extends Vue {
     const completingParty =
       this.orgPersonList.find(person => {
         return !!person.roles?.some(role => {
-          return (role.roleType === Roles.COMPLETING_PARTY)
+          return (role.roleType === RoleTypes.COMPLETING_PARTY)
         })
       })
     return completingParty?.officer?.email || null
