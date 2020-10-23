@@ -5,7 +5,7 @@
     <div id="share-summary" v-if="isSummary">
       <!-- Summary Header -->
       <div class="share-summary-header" >
-        <v-icon>mdi-file-tree</v-icon>
+        <v-icon>mdi-sitemap</v-icon>
         <label class="share-summary-header-title"><strong> Share Structure</strong></label>
       </div>
 
