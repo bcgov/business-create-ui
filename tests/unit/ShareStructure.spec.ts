@@ -86,16 +86,16 @@ function createShareStructure (
   hasRightsOrRestrictions = false
 ): ShareClassIF {
   const shareStructure: ShareClassIF = {
-    id: id,
-    priority: priority,
-    type: type,
-    name: name,
-    hasMaximumShares: hasMaximumShares,
-    maxNumberOfShares: maxNumberOfShares,
-    hasParValue: hasParValue,
-    parValue: parValue,
-    currency: currency,
-    hasRightsOrRestrictions: hasRightsOrRestrictions
+    id,
+    priority,
+    type,
+    name,
+    hasMaximumShares,
+    maxNumberOfShares,
+    hasParValue,
+    parValue,
+    currency,
+    hasRightsOrRestrictions
   }
   if (type === 'Class') {
     shareStructure['series'] = []
