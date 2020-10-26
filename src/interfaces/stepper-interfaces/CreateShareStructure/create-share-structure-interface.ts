@@ -4,7 +4,7 @@ export interface ShareStructureIF {
 }
 
 export interface ShareClassIF {
-    id: number | null;
+    id: string;
     type?: string; // Indicates whether class or series
     name: string;
     priority: number;
