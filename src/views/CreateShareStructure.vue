@@ -63,7 +63,7 @@
         v-show="showShareStructureForm"
         :initialValue="currentShareStructure"
         :activeIndex="activeIndex"
-        :nextId="nextId"
+        :shareId="shareId"
         :parentIndex="parentIndex"
         :shareClasses="shareClasses"
         @addEditClass="addEditShareClass($event)"
@@ -87,6 +87,7 @@
 // Libraries
 import { Component, Vue } from 'vue-property-decorator'
 import { Action, State } from 'vuex-class'
+import { v4 as uuidv4 } from 'uuid'
 
 // Interfaces
 import { ActionBindingIF, FormType, ShareClassIF } from '@/interfaces'
@@ -138,7 +139,7 @@ export default class CreateShareStructure extends Vue {
   }
 
   private sharesHelpSample: ShareClassIF[] = [{
-    'id': 1,
+    'id': '1',
     'priority': 0,
     'type': 'Class',
     'name': 'Common Shares',
@@ -157,7 +158,7 @@ export default class CreateShareStructure extends Vue {
 
   private activeIndex: number = -1
   private parentIndex: number = -1
-  private nextId: number = -1
+  private shareId: string = ''
   private helpToggle: boolean = false
 
   /** Called when component is created. */
@@ -179,8 +180,7 @@ export default class CreateShareStructure extends Vue {
     this.shareClasses.length === 0 ? 1 : this.shareClasses[this.shareClasses.length - 1].priority + 1
     this.activeIndex = -1
     this.parentIndex = -1
-    this.nextId = this.shareClasses.length === 0 ? 1 : (this.shareClasses.reduce(
-      (prev, current) => (prev.id > current.id) ? prev : current)).id + 1
+    this.shareId = uuidv4()
     this.addEditInProgress = true
     this.showShareStructureForm = true
   }
@@ -207,8 +207,7 @@ export default class CreateShareStructure extends Vue {
     this.currentShareStructure.currency = parentShareClass.currency
     this.currentShareStructure.priority =
     shareSeries.length === 0 ? 1 : shareSeries[shareSeries.length - 1].priority + 1
-    this.nextId = shareSeries.length === 0 ? 1 : (shareSeries.reduce(
-      (prev, current) => (prev.id > current.id) ? prev : current)).id + 1
+    this.shareId = uuidv4()
     this.addEditInProgress = true
     this.showShareStructureForm = true
   }
@@ -278,7 +277,7 @@ export default class CreateShareStructure extends Vue {
     this.addEditInProgress = false
     this.showShareStructureForm = false
     this.parentIndex = -1
-    this.nextId = -1
+    this.shareId = ''
   }
 
   private get showErrors (): boolean {

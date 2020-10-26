@@ -171,7 +171,7 @@ export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
   private parentIndex: number
 
   @Prop()
-  private nextId: number
+  private shareId: string
 
   @Prop()
   private shareClasses: ShareClassIF[]
@@ -295,7 +295,7 @@ export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
   private addShareStructure (): ShareClassIF {
     let shareStructureToAdd: ShareClassIF = { ...this.shareStructure }
     if (this.activeIndex === -1) {
-      shareStructureToAdd.id = this.nextId
+      shareStructureToAdd.id = this.shareId
     }
     shareStructureToAdd.name = `${shareStructureToAdd.name} Shares`
     shareStructureToAdd.hasMaximumShares = !this.hasNoMaximumShares
