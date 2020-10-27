@@ -50,7 +50,9 @@ async function start () {
   })
 
   // initialize Launch Darkly
-  await initLDClient()
+  if (window['ldClientId']) {
+    await initLDClient()
+  }
 
   // check app feature flag
   if (featureFlags.getFlag('bcrs-create-ui-enabled')) {
