@@ -545,7 +545,14 @@ export default class App extends Mixins(BcolMixin, DateMixin, FilingTemplateMixi
     // NB: will throw if API error
     const response = await this.getCurrentUser()
     // NB: just save email for now
-    const email = response?.data?.contacts[0].email
+    let email
+    if (response?.data?.contacts?.length > 0) {
+      // this is a BCSC user
+      email = response?.data?.contacts[0].email
+    } else if (response?.data?.email) {
+      // this is a IDIR user
+      email = response?.data?.email
+    }
     if (email) {
       this.setUserEmail(email)
     } else {
