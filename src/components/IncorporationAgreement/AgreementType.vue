@@ -4,7 +4,7 @@
       <v-card flat>
         <!-- Summary Header -->
         <div class="agreement-summary-header">
-            <v-icon>mdi-handshake</v-icon>
+            <v-icon color="#38598A">mdi-handshake</v-icon>
             <label class="agreement-summary-title">
                 <strong>Incorporation Agreement and Benefit Company Articles</strong>
             </label>
