@@ -139,7 +139,7 @@
 
                 <!-- Action Buttons -->
                 <div class="form__row form__btns">
-                  <v-btn id="btn-remove" large color="error"
+                  <v-btn id="btn-remove" large outline color="error"
                     :disabled="activeIndex === -1"
                     @click="emitRemovePersonEvent(activeIndex)">Remove</v-btn>
                   <v-btn id="btn-done" large color="primary" class="ml-auto"
