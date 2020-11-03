@@ -4,27 +4,27 @@
       <v-card flat>
         <!-- Summary Header -->
         <div class="agreement-summary-header">
-            <v-icon color="#38598A">mdi-handshake</v-icon>
-            <label class="agreement-summary-title">
-                <strong>Incorporation Agreement and Benefit Company Articles</strong>
-            </label>
+          <v-icon color="#38598A">mdi-handshake</v-icon>
+          <label class="agreement-summary-title">
+            <strong>Incorporation Agreement and Benefit Company Articles</strong>
+          </label>
         </div>
 
         <!-- Summary Warning -->
         <div v-if="showErrorSummary" class="agreement-invalid-message">
-            <span>
+          <span>
             <v-icon color="blue darken-2">mdi-information-outline</v-icon>
             This step is not complete.
             <router-link id="router-link" :to="{ path: '/incorporation-agreement' }">
-                Return to this step to complete it.
+              Return to this step to complete it.
             </router-link>
-            </span>
+          </span>
         </div>
         <!-- Summary Content -->
         <div v-else class="summary-desc">
-            <div><v-icon color="green" class="agreement-valid-icon">mdi-check</v-icon></div>
-             <div>
-                {{ selectedAgreementDescription }}
+          <div><v-icon color="green darken-2" class="agreement-valid-icon">mdi-check</v-icon></div>
+            <div>
+              {{ selectedAgreementDescription }}
             </div>
         </div>
       </v-card>
@@ -33,7 +33,8 @@
       <v-card flat>
         <v-radio-group v-model="agreementType" @change="changeAgreementType" class="agreement-option-list">
           <v-radio v-for="(item, index) in incorporationAgreementTypeResource"
-           :key="index" :value="item.code" :id="`agreement-type-${item.code}`">
+            :key="index" :value="item.code" :id="`agreement-type-${item.code}`"
+          >
             <template slot="label">
               <div v-html="item.description" class="agreement-option"/>
             </template>

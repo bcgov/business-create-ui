@@ -7,19 +7,19 @@
     Your application must include the following:
     <ul>
       <li>
-        <v-icon v-if="hasRole(RoleTypes.COMPLETING_PARTY, 1, 'EXACT')" color="blue" class="cp-valid"
+        <v-icon v-if="hasRole(RoleTypes.COMPLETING_PARTY, 1, 'EXACT')" color="green darken-2" class="cp-valid"
           >mdi-check</v-icon>
         <v-icon v-else :color="showErrors ? 'red': 'transparent'" class="cp-invalid">mdi-close</v-icon>
         <span class='chk-list-item-txt'>The Completing Party</span>
       </li>
       <li>
-        <v-icon v-if="hasRole(RoleTypes.INCORPORATOR, 1, 'ATLEAST')" color="blue" class="incorp-valid"
+        <v-icon v-if="hasRole(RoleTypes.INCORPORATOR, 1, 'ATLEAST')" color="green darken-2" class="incorp-valid"
           >mdi-check</v-icon>
         <v-icon v-else :color="showErrors ? 'red': 'transparent'" class="incorp-invalid">mdi-close</v-icon>
         <span class='chk-list-item-txt'>At least one Incorporator</span>
       </li>
       <li>
-        <v-icon v-if="hasRole(RoleTypes.DIRECTOR, 1, 'ATLEAST')" color="blue" class="dir-valid"
+        <v-icon v-if="hasRole(RoleTypes.DIRECTOR, 1, 'ATLEAST')" color="green darken-2" class="dir-valid"
           >mdi-check</v-icon>
         <v-icon v-else :color="showErrors ? 'red': 'transparent'" class="dir-invalid">mdi-close</v-icon>
         <span class='chk-list-item-txt'>At least one Director</span>
