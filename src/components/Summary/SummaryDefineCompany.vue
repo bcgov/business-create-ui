@@ -1,7 +1,7 @@
 <template>
   <v-card flat>
      <div class="define-company-header">
-        <v-icon>mdi-domain</v-icon>
+        <v-icon color="#38598A">mdi-domain</v-icon>
         <label class="define-company-title"><strong>Your Company</strong></label>
     </div>
     <div v-if="!valid" class="defineCompanyStepErrorMessage">

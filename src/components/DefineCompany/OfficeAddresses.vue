@@ -89,7 +89,7 @@
                   v-on:change="setDeliveryAddressToMailingAddress()"/>
               </div>
               <div class="address-wrapper"
-                   v-if="!isSame(mailingAddress, deliveryAddress, 'actions') || !inheritMailingAddress">
+                   v-if="!isSame(mailingAddress, deliveryAddress, ['actions']) || !inheritMailingAddress">
                 <delivery-address ref="regDeliveryAddress"
                   id="address-registered-delivery"
                   v-if="!inheritMailingAddress"
@@ -148,7 +148,7 @@
                   </div>
                   <div
                     class="address-wrapper"
-                    v-if="!isSame(recMailingAddress, recDeliveryAddress, 'actions') || !inheritRecMailingAddress">
+                    v-if="!isSame(recMailingAddress, recDeliveryAddress, ['actions']) || !inheritRecMailingAddress">
                     <delivery-address ref="recDeliveryAddress"
                       id="address-records-delivery"
                       :address="recDeliveryAddress"

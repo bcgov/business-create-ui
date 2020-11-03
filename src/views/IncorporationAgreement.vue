@@ -77,7 +77,7 @@
         <div class="help-section">
           <h3>Can I use the sample Incorporation Agreement and Benefit Company Articles?</h3>
           <h3>
-            <span><v-icon color="green" class="article-stmt-icon">mdi-check</v-icon></span>
+            <span><v-icon color="green darken-2" class="article-stmt-icon">mdi-check</v-icon></span>
             <span>You can use the sample Articles if:</span>
           </h3>
           <ul class="articles-statements">

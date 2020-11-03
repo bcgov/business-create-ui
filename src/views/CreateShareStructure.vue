@@ -45,8 +45,8 @@
     <p>Your application must include the following:</p>
     <ul>
       <li>
-        <v-icon color="blue" v-if="shareClasses.length > 0" class="cp-valid">mdi-check</v-icon>
-        <span v-else><v-icon color="red" v-if="showErrors" class="cp-invalid">mdi-close</v-icon></span>
+        <v-icon v-if="shareClasses.length > 0" color="green darken-2" class="cp-valid">mdi-check</v-icon>
+        <v-icon v-else :color="showErrors ? 'red': 'transparent'" class="cp-invalid">mdi-close</v-icon>
         <span class="chk-list-item-txt">At least one Class of Shares</span>
       </li>
     </ul>

@@ -12,7 +12,7 @@
     <div id="people-roles-summary" v-if="isSummary">
       <!-- Summary Header -->
       <div class="people-roles-summary-header" >
-        <v-icon>mdi-account-multiple-plus</v-icon>
+        <v-icon color="#38598A">mdi-account-multiple-plus</v-icon>
         <label class="people-roles-title"><strong>People and Roles</strong></label>
       </div>
 
