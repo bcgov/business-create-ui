@@ -210,9 +210,7 @@ describe('Actions component - Filing Functionality', () => {
           legalType: 'BEN',
           legalName: 'My Name Request Inc.'
         },
-        nameTranslations: {
-          new: []
-        },
+        nameTranslations: [],
         offices: {
           registeredOffice: {
             deliveryAddress: {

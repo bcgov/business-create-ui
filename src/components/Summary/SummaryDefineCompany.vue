@@ -32,7 +32,9 @@
           <label><strong>Name Translation</strong></label>
         </v-flex>
         <v-flex md8>
-          <div v-for="(name, index) in getNameTranslations" :key="`name_translation_${index}`">{{name}}</div>
+          <div v-for="(nameTranslation, index) in getNameTranslations" :key="`name_translation_${index}`">
+            {{nameTranslation.name}}
+          </div>
         </v-flex>
       </v-layout>
     </div>
@@ -56,7 +58,7 @@ import { Component, Mixins } from 'vue-property-decorator'
 import { Getter, State } from 'vuex-class'
 
 // Interfaces
-import { BusinessContactIF, GetterIF, IncorporationAddressIf } from '@/interfaces'
+import { BusinessContactIF, GetterIF, IncorporationAddressIf, NameTranslationIF } from '@/interfaces'
 
 // Components
 import { FolioNumber, BusinessContactInfo, OfficeAddresses } from '@/components/DefineCompany'
@@ -78,7 +80,7 @@ export default class SummaryDefineCompany extends Mixins(EntityFilterMixin) {
   // Getters
   @Getter getApprovedName!: GetterIF
   @Getter isPremiumAccount!: GetterIF
-  @Getter getNameTranslations!: Array<string>
+  @Getter getNameTranslations!: NameTranslationIF[]
 
   // Global state
   @State(state => state.stateModel.defineCompanyStep.valid)

@@ -133,7 +133,8 @@ import {
   NameRequestDetailsIF,
   NameRequestApplicantIF,
   ConfirmDialogType,
-  ActionBindingIF
+  ActionBindingIF,
+  NameTranslationIF
 } from '@/interfaces'
 
 // Mixins
@@ -168,7 +169,7 @@ export default class NameRequestInfo extends Mixins(DateMixin) {
 
   // Global Store
   @State(state => state.stateModel.nameTranslations)
-  readonly nameTranslations!: Array<string>
+  readonly nameTranslations!: NameTranslationIF[]
 
   // Global Actions
   @Action setNameTranslationState!: ActionBindingIF
@@ -181,7 +182,7 @@ export default class NameRequestInfo extends Mixins(DateMixin) {
   @Getter getNameRequestNumber!: GetterIF;
   @Getter getNameRequestDetails!: NameRequestDetailsIF;
   @Getter getNameRequestApplicant!: NameRequestApplicantIF;
-  @Getter getNameTranslations!: Array<string>;
+  @Getter getNameTranslations!: NameTranslationIF[];
 
   /** The entity title  */
   private entityTypeDescription (): string {
@@ -262,8 +263,8 @@ export default class NameRequestInfo extends Mixins(DateMixin) {
 
     // Handle name translation adds or updates
     this.editIndex > -1
-      ? nameTranslations[this.editIndex] = name
-      : nameTranslations.push(name)
+      ? nameTranslations[this.editIndex].name = name
+      : nameTranslations.push({ name: name })
 
     this.setNameTranslationState(nameTranslations)
 
@@ -279,7 +280,7 @@ export default class NameRequestInfo extends Mixins(DateMixin) {
    */
   private editNameTranslation (index: number): void {
     const nameTranslations = Object.assign([], this.getNameTranslations)
-    this.editingNameTranslation = nameTranslations[index]
+    this.editingNameTranslation = nameTranslations[index].name
     this.editIndex = index
     this.isAddingNameTranslation = true
   }

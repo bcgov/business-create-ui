@@ -14,7 +14,7 @@
         :key="`name_translation_${index}`"
         no-gutters>
         <v-col class="text-truncate">
-         <span class="name-title">{{translation}}</span>
+         <span class="name-title">{{translation.name}}</span>
         </v-col>
 
         <!-- Actions Column -->
@@ -62,10 +62,13 @@
 // Libraries
 import { Component, Prop, Vue, Emit } from 'vue-property-decorator'
 
+// Interfaces
+import { NameTranslationIF } from '@/interfaces'
+
 @Component({})
 export default class ListNameTranslations extends Vue {
   @Prop({ default: () => [] })
-  private translationsList: Array<string>
+  private translationsList: NameTranslationIF[]
 
   @Prop({ default: false })
   private isAddingNameTranslation: boolean
