@@ -1,6 +1,6 @@
 // Enums
 import { AccountTypes, EntityTypes, RouteNames } from '@/enums'
-import { NameRequestDetailsIF, NameRequestApplicantIF } from '@/interfaces'
+import { NameRequestDetailsIF, NameRequestApplicantIF, NameTranslationIF } from '@/interfaces'
 
 /**
  * Whether the user has "staff" keycloak role.
@@ -124,7 +124,7 @@ export const getNameRequestApplicant = (state: any): NameRequestApplicantIF => {
 /**
  * Returns name translations.
  */
-export const getNameTranslations = (state: any): Array<string> => {
+export const getNameTranslations = (state: any): NameTranslationIF[] => {
   return state.stateModel.nameTranslations
 }
 

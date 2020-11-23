@@ -1,5 +1,5 @@
 import { IncorporationAddressIf } from '@/interfaces/stepper-interfaces/DefineCompany/address-interface'
-import { OrgPersonIF, ShareClassIF } from '@/interfaces'
+import { NameTranslationIF, OrgPersonIF, ShareClassIF } from '@/interfaces'
 
 /** Interface for incorporation filing data saved to the Legal API. */
 export interface IncorporationFilingIF {
@@ -24,9 +24,7 @@ export interface IncorporationFilingIF {
         nrNumber?: string // only set when there is an NR
         legalName?: string // only set when there is an NR
       },
-      nameTranslations: {
-        new: Array<string>
-      },
+      nameTranslations: NameTranslationIF[],
       offices: IncorporationAddressIf | {},
       contactPoint: {
         email: string

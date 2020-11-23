@@ -1,12 +1,12 @@
 import { AccountInformationIF, CertifyIF, DefineCompanyIF, NameRequestIF, TombStoneIF, PeopleAndRoleIF,
-  ShareStructureIF, DateTimeIF, IncorporationAgreementIF } from '@/interfaces'
+  ShareStructureIF, DateTimeIF, IncorporationAgreementIF, NameTranslationIF } from '@/interfaces'
 
 // State model example
 export interface StateModelIF {
   tombstone: TombStoneIF
   accountInformation: AccountInformationIF
   nameRequest: NameRequestIF
-  nameTranslations: Array<string>
+  nameTranslations: NameTranslationIF[]
   currentDate: string
   certifyState: CertifyIF
   currentStep: number

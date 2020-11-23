@@ -63,9 +63,7 @@ export default class FilingTemplateMixin extends Vue {
           nameRequest: {
             legalType: this.stateModel.entityType
           },
-          nameTranslations: {
-            new: this.stateModel.nameTranslations
-          },
+          nameTranslations: this.stateModel.nameTranslations,
           offices: this.stateModel.defineCompanyStep.officeAddresses,
           contactPoint: {
             email: this.stateModel.defineCompanyStep.businessContact.email,
@@ -113,7 +111,7 @@ export default class FilingTemplateMixin extends Vue {
     this.setOfficeAddresses(draftFiling.incorporationApplication.offices)
 
     // Set Name Translations
-    this.setNameTranslationState(draftFiling.incorporationApplication.nameTranslations?.new)
+    this.setNameTranslationState(draftFiling.incorporationApplication.nameTranslations || [])
 
     // Set Contact Info
     const draftContact = {
