@@ -1,6 +1,6 @@
 {
   "name": "bcrs-business-create-ui",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "private": true,
   "appName": "Create UI",
   "sbcName": "SBC Common Components",
