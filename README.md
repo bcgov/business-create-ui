@@ -4,7 +4,7 @@
 [![codecov](https://codecov.io/gh/bcgov/bcrs-business-create-ui/branch/master/graph/badge.svg)](https://codecov.io/gh/bcgov/bcrs-business-create-ui)
 ![PR CI](https://github.com/bcgov/bcrs-business-create-ui/workflows/PR%20CI/badge.svg)
 ![Build CI](https://github.com/bcgov/bcrs-business-create-ui/workflows/Build%20CI/badge.svg)
-![Lifecycle](https://img.shields.io/badge/Lifecycle-Stable-97ca00)
+[![img](https://img.shields.io/badge/Lifecycle-Stable-97ca00)](https://github.com/bcgov/repomountie/blob/master/doc/lifecycle-badges.md)
 
 ## Project setup
 ```
