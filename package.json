@@ -17,7 +17,7 @@
     "@sentry/browser": "^5.21.1",
     "@sentry/integrations": "^5.21.1",
     "array.prototype.move": "0.0.4",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "http-status-codes": "^1.4.0",
     "launchdarkly-js-client-sdk": "^2.18.0",
