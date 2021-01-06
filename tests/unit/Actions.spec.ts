@@ -12,7 +12,6 @@ import { Actions } from '@/components/common'
 
 // Other
 import mockRouter from './MockRouter'
-import { NameRequestStates } from '@/enums'
 
 Vue.use(Vuetify)
 
@@ -499,7 +498,12 @@ describe('Actions component - Filing Functionality', () => {
   it('Calls the buildFiling and saveFiling methods when onClickFilePay is called', async () => {
     const mockBuildFiling = jest.spyOn(wrapper.vm, 'buildFiling')
     const mockSaveFiling = jest.spyOn(wrapper.vm, 'saveFiling')
-      .mockImplementation(() => Promise.resolve({ header: { paymentToken: 789 } }))
+      .mockImplementation(() => Promise.resolve({
+        header: {
+          paymentToken: 789,
+          isPaymentActionRequired: true
+        }
+      }))
 
     await wrapper.vm.onClickFilePay()
 

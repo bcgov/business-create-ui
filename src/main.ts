@@ -10,7 +10,6 @@ import { getVueRouter } from '@/router'
 import { getVuexStore } from '@/store'
 import Affix from 'vue-affix'
 import Vue2Filters from 'vue2-filters' // needed by SbcFeeSummary
-import { featureFlags, initLDClient } from '@/common/FeatureFlags'
 import * as Sentry from '@sentry/browser'
 import * as Integrations from '@sentry/integrations'
 
@@ -25,7 +24,7 @@ import '@/assets/styles/overrides.scss'
 import App from './App.vue'
 
 // Helpers
-import { fetchConfig } from '@/utils'
+import { fetchConfig, initLdClient } from '@/utils'
 import KeycloakService from 'sbc-common-components/src/services/keycloak.services'
 
 // get rid of "You are running Vue in development mode" console message
@@ -51,24 +50,21 @@ async function start () {
 
   // initialize Launch Darkly
   if (window['ldClientId']) {
-    await initLDClient()
+    await initLdClient()
   }
 
-  // check app feature flag
-  if (featureFlags.getFlag('bcrs-create-ui-enabled')) {
-    // configure KeyCloak Service
-    console.info('Starting Keycloak service...') // eslint-disable-line no-console
-    await KeycloakService.setKeycloakConfigUrl(sessionStorage.getItem('KEYCLOAK_CONFIG_PATH'))
+  // configure KeyCloak Service
+  console.info('Starting Keycloak service...') // eslint-disable-line no-console
+  await KeycloakService.setKeycloakConfigUrl(sessionStorage.getItem('KEYCLOAK_CONFIG_PATH'))
 
-    // start Vue application
-    console.info('Starting app...') // eslint-disable-line no-console
-    new Vue({
-      vuetify: new Vuetify({ iconfont: 'mdi' }),
-      router: getVueRouter(),
-      store: getVuexStore(),
-      render: h => h(App)
-    }).$mount('#app')
-  }
+  // start Vue application
+  console.info('Starting app...') // eslint-disable-line no-console
+  new Vue({
+    vuetify: new Vuetify({ iconfont: 'mdi' }),
+    router: getVueRouter(),
+    store: getVuexStore(),
+    render: h => h(App)
+  }).$mount('#app')
 }
 
 // execution and error handling
