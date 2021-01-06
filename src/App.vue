@@ -131,6 +131,7 @@ import { State, Action, Getter } from 'vuex-class'
 import KeycloakService from 'sbc-common-components/src/services/keycloak.services'
 import { BAD_REQUEST, PAYMENT_REQUIRED, FORBIDDEN, UNPROCESSABLE_ENTITY } from 'http-status-codes'
 import * as Sentry from '@sentry/browser'
+import { updateLdUser } from '@/utils'
 
 // Components
 import SbcHeader from 'sbc-common-components/src/components/SbcHeader.vue'
@@ -407,10 +408,16 @@ export default class App extends Mixins(BcolMixin, DateMixin, FilingTemplateMixi
       this.setTempId(tempId)
 
       // get user info
-      await this.getUserInfo().catch(error => {
-        console.log('User error =', error) // eslint-disable-line no-console
+      const userInfo = await this.getUserInfo().catch(error => {
+        console.log('User info error =', error) // eslint-disable-line no-console
         this.accountAuthorizationDialog = true
         throw error // go to catch()
+      })
+
+      // update Launch Darkly
+      await this.updateLaunchDarkly(userInfo).catch(error => {
+        // just log the error -- no need to halt app
+        console.log('Launch Darkly update error =', error) // eslint-disable-line no-console
       })
 
       // ensure user is authorized to use this IA
@@ -558,6 +565,20 @@ export default class App extends Mixins(BcolMixin, DateMixin, FilingTemplateMixi
     } else {
       throw new Error('Invalid user info')
     }
+    return response.data
+  }
+
+  /** Updates Launch Darkly with current user info. */
+  private async updateLaunchDarkly (userInfo: any): Promise<void> {
+    // since username is unique, use it as the user key
+    const key: string = userInfo.username
+    const email: string = userInfo.contacts[0]?.email || userInfo.email
+    const firstName: string = userInfo?.firstname
+    const lastName: string = userInfo?.lastname
+    // remove leading { and trailing } and tokenize string
+    const custom: any = { roles: userInfo.roles?.slice(1, -1).split(',') }
+
+    await updateLdUser(key, email, firstName, lastName, custom)
   }
 
   /** Gets authorizations from Auth API, verifies roles, and stores them. */
