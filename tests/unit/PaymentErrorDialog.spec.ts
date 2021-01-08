@@ -25,9 +25,9 @@ describe('Payment Error Dialog', () => {
 
     expect(wrapper.attributes('contentclass')).toBe('payment-error-dialog')
     expect(wrapper.isVisible()).toBe(true)
-    expect(wrapper.find('#dialog-title').text()).toBe('Unable to Process Payment')
+    expect(wrapper.find('#dialog-title').text()).toBe('Unable to process payment')
     expect(wrapper.findAll('p').length).toBe(1)
-    expect(wrapper.findAll('p').at(0).text()).toContain('We are unable to process payments')
+    expect(wrapper.findAll('p').at(0).text()).toContain('We are unable to process your payment')
     expect(wrapper.find(ErrorContact).exists()).toBe(false)
     expect(wrapper.find('#dialog-exit-button').exists()).toBe(true)
 
@@ -45,9 +45,9 @@ describe('Payment Error Dialog', () => {
 
     expect(wrapper.attributes('contentclass')).toBe('payment-error-dialog')
     expect(wrapper.isVisible()).toBe(true)
-    expect(wrapper.find('#dialog-title').text()).toBe('Unable to Process Payment')
+    expect(wrapper.find('#dialog-title').text()).toBe('Unable to process payment')
     expect(wrapper.findAll('p').length).toBe(3)
-    expect(wrapper.findAll('p').at(0).text()).toContain('We are unable to process payments')
+    expect(wrapper.findAll('p').at(0).text()).toContain('We are unable to process your payment')
     expect(wrapper.findAll('p').at(1).text()).toContain('PayBC is normally available')
     expect(wrapper.findAll('p').at(2).text()).toContain('If this error persists')
     expect(wrapper.findAll('li').length).toBe(3)

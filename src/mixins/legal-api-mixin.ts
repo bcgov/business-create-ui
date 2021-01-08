@@ -1,50 +1,25 @@
 // Libraries
 import axios from '@/utils/axios-auth'
 import { Component, Vue } from 'vue-property-decorator'
-import { State, Action, Getter } from 'vuex-class'
+import { Action, Getter } from 'vuex-class'
 import { NOT_FOUND } from 'http-status-codes'
 
 // Interfaces
-import { StateModelIF, ActionBindingIF, GetterIF, IncorporationFilingIF } from '@/interfaces'
+import { ActionBindingIF, IncorporationFilingIF } from '@/interfaces'
 
 /**
- * Mixin that provides the integration with the legal api.
+ * Mixin that provides integration with the Legal API.
  */
 @Component({})
 export default class LegalApiMixin extends Vue {
-  readonly NAME_REQUEST = 'nameRequest'
   readonly INCORPORATION_APPLICATION = 'incorporationApplication'
 
-  // Global state
-  @State stateModel!: StateModelIF
-
   // Global Getters
-  @Getter isTypeBcomp!: GetterIF
   @Getter getFilingId!: number
   @Getter getTempId!: string
 
   // Store Actions
-  @Action setNameRequestState!: ActionBindingIF
   @Action setFilingId!: ActionBindingIF
-
-  /**
-   * Saves a filing.
-   * @param isDraft boolean indicating whether to complete filing
-   * @param filing filing body to be saved
-   * @returns a promise to return the saved filing
-   */
-  async saveFiling (filing: IncorporationFilingIF, isDraft: boolean): Promise<any> {
-    if (!filing) throw new Error('Invalid parameter \'filing\'')
-    if (typeof isDraft !== 'boolean') throw new Error('Invalid parameter \'isDraft\'')
-
-    // if we have a Filing ID, update an existing filing
-    if (this.getFilingId && this.getFilingId > 0) {
-      return this.updateFiling(filing, isDraft)
-    } else {
-      // This should never happen. Filing Id should always be present
-      throw new Error('Invalid filing Id')
-    }
-  }
 
   /**
    * Fetches a draft filing.
@@ -58,7 +33,7 @@ export default class LegalApiMixin extends Vue {
         // look at only the first task
         const filing = response?.data?.filing
         const filingName = filing?.header?.name
-        const filingId = +filing?.header?.filingId // may be NaN
+        const filingId = +filing?.header?.filingId || 0
 
         if (!filing || filingName !== this.INCORPORATION_APPLICATION || !filingId) {
           throw new Error('Invalid API response')
@@ -77,13 +52,17 @@ export default class LegalApiMixin extends Vue {
 
   /**
    * Updates an existing filing.
-   * @param data the object body of the request
-   * @param isDraft boolean indicating whether to save draft or complete filing
+   * @param filing the object body of the request
+   * @param isDraft boolean indicating whether to save draft or complete the filing
    * @returns a promise to return the updated filing
    */
-  private updateFiling (filing: IncorporationFilingIF, isDraft: boolean): Promise<any> {
+  async updateFiling (filing: IncorporationFilingIF, isDraft: boolean): Promise<any> {
+    if (!filing) throw new Error('updateFiling(), invalid filing')
+    const filingId = this.getFilingId
+    if (!filingId) throw new Error('updateFiling(), invalid filing id')
+
     // put updated filing to filings endpoint
-    let url = `businesses/${this.getTempId}/filings/${this.getFilingId}`
+    let url = `businesses/${this.getTempId}/filings/${filingId}`
     if (isDraft) {
       url += '?draft=true'
     }
@@ -96,6 +75,7 @@ export default class LegalApiMixin extends Vue {
       }
       return filing
     })
+    // NB: for error handling, see "save-error-event"
   }
 
   /**

@@ -36,18 +36,16 @@
 
     <payment-error-dialog
       attach="#app"
+      filingName="Application"
       :dialog="paymentErrorDialog"
+      :errors="saveErrors"
+      :warnings="saveWarnings"
       @exit="goToDashboard(true)"
     />
 
-    <bcol-error-dialog
-     attach="#app"
-     :bcolObject="bcolObj"
-     filingType="Incorporation Application"
-     @exit="goToDashboard(true)"/>
-
     <save-error-dialog
       attach="#app"
+      filingName="Application"
       :dialog="saveErrorDialog"
       :errors="saveErrors"
       :warnings="saveWarnings"
@@ -129,7 +127,7 @@
 import { Component, Vue, Watch, Mixins } from 'vue-property-decorator'
 import { State, Action, Getter } from 'vuex-class'
 import KeycloakService from 'sbc-common-components/src/services/keycloak.services'
-import { BAD_REQUEST, PAYMENT_REQUIRED, FORBIDDEN, UNPROCESSABLE_ENTITY } from 'http-status-codes'
+import { PAYMENT_REQUIRED } from 'http-status-codes'
 import * as Sentry from '@sentry/browser'
 import { updateLdUser } from '@/utils'
 
@@ -142,11 +140,11 @@ import Views from '@/views'
 
 // Dialogs, mixins, interfaces, etc
 import {
-  AccountAuthorizationDialog, BcolErrorDialog, NameRequestInvalidErrorDialog, ConfirmDialog, FetchErrorDialog,
+  AccountAuthorizationDialog, NameRequestInvalidErrorDialog, ConfirmDialog, FetchErrorDialog,
   InvalidIncorporationApplicationDialog, PaymentErrorDialog, SaveErrorDialog,
   FileAndPayInvalidNameRequestDialog
 } from '@/components/dialogs'
-import { BcolMixin, DateMixin, FilingTemplateMixin, LegalApiMixin, NameRequestMixin } from '@/mixins'
+import { DateMixin, FilingTemplateMixin, LegalApiMixin, NameRequestMixin } from '@/mixins'
 import { FilingDataIF, ActionBindingIF, ConfirmDialogType } from '@/interfaces'
 import { CertifyStatementResource } from '@/resources'
 
@@ -169,12 +167,11 @@ import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
     PaymentErrorDialog,
     SaveErrorDialog,
     ConfirmDialog,
-    BcolErrorDialog,
     FileAndPayInvalidNameRequestDialog,
     ...Views
   }
 })
-export default class App extends Mixins(BcolMixin, DateMixin, FilingTemplateMixin, LegalApiMixin, NameRequestMixin) {
+export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApiMixin, NameRequestMixin) {
   // Refs
   $refs!: {
     confirm: ConfirmDialogType
@@ -212,7 +209,6 @@ export default class App extends Mixins(BcolMixin, DateMixin, FilingTemplateMixi
   private fetchErrorDialog: boolean = false
   private invalidIncorporationApplicationDialog: boolean = false
   private paymentErrorDialog: boolean = false
-  private bcolObj: object = null
   private saveErrorDialog: boolean = false
   private nameRequestInvalidErrorDialog: boolean = false
   private nameRequestInvalidType: string = ''
@@ -236,7 +232,6 @@ export default class App extends Mixins(BcolMixin, DateMixin, FilingTemplateMixi
   private get isErrorDialog (): boolean {
     return (
       this.accountAuthorizationDialog ||
-      this.bcolObj != null ||
       this.nameRequestInvalidErrorDialog ||
       this.fetchErrorDialog ||
       this.invalidIncorporationApplicationDialog ||
@@ -274,28 +269,17 @@ export default class App extends Mixins(BcolMixin, DateMixin, FilingTemplateMixi
 
     // listen for save error event
     this.$root.$on('save-error-event', async error => {
-      console.log('Save error =', error) // eslint-disable-line no-console
-      // process errors/warnings
-      switch (error?.response?.status) {
-        case PAYMENT_REQUIRED:
-          // Changes were saved if a 402 is received. haveChanges flag is cleared.
-          this.haveChanges = false
-          const errObj = await this.getErrorObj(this.getErrorCode(error))
-          if (errObj) {
-            this.bcolObj = errObj
-          } else {
-            this.paymentErrorDialog = true
-          }
-          break
-        case BAD_REQUEST:
-        case FORBIDDEN:
-        case UNPROCESSABLE_ENTITY:
-          this.saveErrors = error?.response?.data?.errors || []
-          this.saveWarnings = error?.response?.data?.warnings || []
-          this.saveErrorDialog = true
-          break
-        default:
-          this.saveErrorDialog = true
+      // save errors/warnings
+      this.saveErrors = error?.response?.data?.errors || []
+      this.saveWarnings = error?.response?.data?.warnings || []
+
+      if (error?.response?.status === PAYMENT_REQUIRED) {
+        // changes were saved if a 402 is received, so clear flag
+        this.haveChanges = false
+        this.paymentErrorDialog = true
+      } else {
+        console.log('save error =', error) // eslint-disable-line no-console
+        this.saveErrorDialog = true
       }
     })
 
@@ -535,7 +519,6 @@ export default class App extends Mixins(BcolMixin, DateMixin, FilingTemplateMixi
   /** Resets all error flags/states. */
   private resetFlags (): void {
     this.haveData = false
-    this.bcolObj = null
     this.nameRequestInvalidErrorDialog = false
     this.invalidIncorporationApplicationDialog = false
     this.accountAuthorizationDialog = false

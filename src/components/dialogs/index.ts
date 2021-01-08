@@ -1,5 +1,4 @@
 import AccountAuthorizationDialog from './AccountAuthorizationDialog.vue'
-import BcolErrorDialog from './BcolErrorDialog.vue'
 import ConfirmDialog from './ConfirmDialog.vue'
 import ConfirmRemoveDialog from './ConfimRemoveDialog.vue'
 import FetchErrorDialog from './FetchErrorDialog.vue'
@@ -11,7 +10,6 @@ import FileAndPayInvalidNameRequestDialog from './FileAndPayInvalidNameRequestDi
 
 export {
   AccountAuthorizationDialog,
-  BcolErrorDialog,
   ConfirmDialog,
   ConfirmRemoveDialog,
   FetchErrorDialog,
