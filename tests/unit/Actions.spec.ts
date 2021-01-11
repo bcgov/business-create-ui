@@ -495,6 +495,41 @@ describe('Actions component - Filing Functionality', () => {
     expect(events.length).toBe(1)
   })
 
+  it('Emits the error event for a PAD error', async () => {
+    const padErrorFiling = {
+      'errors': [
+        {
+          'message': 'Your account is in the 3 day PAD confirmation period. You will be able to do transactions only ' +
+            'after the period is over.',
+          'payment_error_type': 'ACCOUNT_IN_PAD_CONFIRMATION_PERIOD'
+        }
+      ],
+      'filing': filing
+    }
+    const mockBuildFiling = jest.spyOn(wrapper.vm, 'buildFiling')
+    const mockUpdateFiling = jest.spyOn(wrapper.vm, 'updateFiling')
+      .mockImplementation(() => {
+        return Promise.reject(padErrorFiling)
+      })
+
+    await wrapper.vm.onClickFilePay()
+    await Vue.nextTick()
+
+    expect(mockBuildFiling).toHaveBeenCalled()
+    expect(mockBuildFiling).toHaveReturned()
+
+    expect(mockUpdateFiling).toHaveBeenCalledWith(filing, false)
+    expect(mockUpdateFiling).toHaveReturned()
+
+    const rootWrapper = createWrapper(wrapper.vm.$root)
+    const events = rootWrapper.emitted('save-error-event')
+    expect(events.length).toBe(1)
+    expect(events[0][0].errors[0].message).toBe('Your account is in the 3 day PAD confirmation period. You ' +
+      'will be able to do transactions only after the period is over.')
+
+    expect(window.location.assign).not.toHaveBeenCalled()
+  })
+
   it('Calls the buildFiling and updateFiling methods when onClickFilePay is called', async () => {
     const mockBuildFiling = jest.spyOn(wrapper.vm, 'buildFiling')
     const mockUpdateFiling = jest.spyOn(wrapper.vm, 'updateFiling')
