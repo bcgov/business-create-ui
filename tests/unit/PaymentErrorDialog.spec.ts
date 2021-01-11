@@ -14,6 +14,12 @@ const store = getVuexStore()
 document.body.setAttribute('data-app', 'true')
 
 describe('Payment Error Dialog', () => {
+  const padError = [{
+    message: `Your account is in the 3 day PAD confirmation period. You will be able to do transactions only after
+    the period is over.`,
+    payment_error_type: 'ACCOUNT_IN_PAD_CONFIRMATION_PERIOD'
+  }]
+
   it('renders the component properly as a staff user', () => {
     store.state.stateModel.tombstone.keycloakRoles = ['staff', 'edit', 'view']
     const wrapper = shallowMount(PaymentErrorDialog,
@@ -77,6 +83,33 @@ describe('Payment Error Dialog', () => {
     await Vue.nextTick()
 
     expect(wrapper.emitted('exit').length).toBe(1)
+
+    wrapper.destroy()
+  })
+
+  it('renders PAD error messages correctly when they are present', () => {
+    store.state.stateModel.tombstone.keycloakRoles = ['edit', 'view']
+    const wrapper = shallowMount(PaymentErrorDialog,
+      {
+        vuetify,
+        store,
+        propsData: { dialog: true, errors: padError }
+      })
+
+    expect(wrapper.attributes('contentclass')).toBe('payment-error-dialog')
+    expect(wrapper.isVisible()).toBe(true)
+    expect(wrapper.find('#dialog-title').text()).toBe('Unable to process payment')
+    expect(wrapper.findAll('p').length).toBe(3)
+    expect(wrapper.findAll('p').at(0).text()).toContain('We are unable to process your payment')
+    expect(wrapper.findAll('p').at(1).text()).toContain(
+      'We were unable to process your payment due to the following errors:'
+    )
+    expect(wrapper.findAll('p').at(2).text()).toContain('If this error persists')
+    expect(wrapper.findAll('li').length).toBe(1)
+    expect(wrapper.findAll('li').at(0).text()).toContain(padError[0].message)
+
+    expect(wrapper.find(ErrorContact).exists()).toBe(true)
+    expect(wrapper.find('#dialog-exit-button').exists()).toBe(true)
 
     wrapper.destroy()
   })
