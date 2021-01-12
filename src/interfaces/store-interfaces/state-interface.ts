@@ -13,7 +13,7 @@ export interface StateModelIF {
   tempId: string
   entityType: string
   isSaving: boolean
-  filingId: string
+  filingId: number
   isSavingResuming: boolean
   isFilingPaying: boolean
   defineCompanyStep: DefineCompanyIF

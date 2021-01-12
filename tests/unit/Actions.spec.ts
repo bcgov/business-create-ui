@@ -427,7 +427,7 @@ describe('Actions component - Filing Functionality', () => {
     router.push({ name: 'define-company', query: { id: 'T1234567' } })
     wrapper = shallowMount(Actions, { localVue, store, router, vuetify })
 
-    // Mock the function calls that may used by saveFiling below
+    // Mock the function calls that may used by updateFiling below
     jest.spyOn(wrapper.vm, 'updateFiling').mockImplementation()
   })
 
@@ -454,13 +454,13 @@ describe('Actions component - Filing Functionality', () => {
     expect(wrapper.vm.$route.name).toBe('define-company')
   })
 
-  it('Calls the saveFiling method with the correct filing structure when onClickSave is called', async () => {
-    const mockSaveFiling = jest.spyOn(wrapper.vm, 'saveFiling')
+  it('Calls the updateFiling method with the correct filing structure when onClickSave is called', async () => {
+    const mockUpdateFiling = jest.spyOn(wrapper.vm, 'updateFiling')
 
     await wrapper.vm.onClickSave()
 
-    expect(mockSaveFiling).toHaveBeenCalledWith(filing, true)
-    expect(mockSaveFiling).toHaveReturned()
+    expect(mockUpdateFiling).toHaveBeenCalledWith(filing, true)
+    expect(mockUpdateFiling).toHaveReturned()
 
     // verify no redirection
     expect(window.location.assign).not.toHaveBeenCalled()
@@ -482,22 +482,57 @@ describe('Actions component - Filing Functionality', () => {
     expect(events.length).toBe(1)
   })
 
-  it('Calls the saveFiling method with the correct filing structure when onClickSaveResume is called', async () => {
-    const mockSaveFiling = jest.spyOn(wrapper.vm, 'saveFiling')
+  it('Calls the updateFiling method with the correct filing structure when onClickSaveResume is called', async () => {
+    const mockUpdateFiling = jest.spyOn(wrapper.vm, 'updateFiling')
 
     await wrapper.vm.onClickSaveResume()
 
-    expect(mockSaveFiling).toHaveBeenCalledWith(filing, true)
-    expect(mockSaveFiling).toHaveReturned()
+    expect(mockUpdateFiling).toHaveBeenCalledWith(filing, true)
+    expect(mockUpdateFiling).toHaveReturned()
 
     // also verify event emission
     const events = wrapper.emitted('goToDashboard')
     expect(events.length).toBe(1)
   })
 
-  it('Calls the buildFiling and saveFiling methods when onClickFilePay is called', async () => {
+  it('Emits the error event for a PAD error', async () => {
+    const padErrorFiling = {
+      'errors': [
+        {
+          'message': 'Your account is in the 3 day PAD confirmation period. You will be able to do transactions only ' +
+            'after the period is over.',
+          'payment_error_type': 'ACCOUNT_IN_PAD_CONFIRMATION_PERIOD'
+        }
+      ],
+      'filing': filing
+    }
     const mockBuildFiling = jest.spyOn(wrapper.vm, 'buildFiling')
-    const mockSaveFiling = jest.spyOn(wrapper.vm, 'saveFiling')
+    const mockUpdateFiling = jest.spyOn(wrapper.vm, 'updateFiling')
+      .mockImplementation(() => {
+        return Promise.reject(padErrorFiling)
+      })
+
+    await wrapper.vm.onClickFilePay()
+    await Vue.nextTick()
+
+    expect(mockBuildFiling).toHaveBeenCalled()
+    expect(mockBuildFiling).toHaveReturned()
+
+    expect(mockUpdateFiling).toHaveBeenCalledWith(filing, false)
+    expect(mockUpdateFiling).toHaveReturned()
+
+    const rootWrapper = createWrapper(wrapper.vm.$root)
+    const events = rootWrapper.emitted('save-error-event')
+    expect(events.length).toBe(1)
+    expect(events[0][0].errors[0].message).toBe('Your account is in the 3 day PAD confirmation period. You ' +
+      'will be able to do transactions only after the period is over.')
+
+    expect(window.location.assign).not.toHaveBeenCalled()
+  })
+
+  it('Calls the buildFiling and updateFiling methods when onClickFilePay is called', async () => {
+    const mockBuildFiling = jest.spyOn(wrapper.vm, 'buildFiling')
+    const mockUpdateFiling = jest.spyOn(wrapper.vm, 'updateFiling')
       .mockImplementation(() => Promise.resolve({
         header: {
           paymentToken: 789,
@@ -510,8 +545,8 @@ describe('Actions component - Filing Functionality', () => {
     expect(mockBuildFiling).toHaveBeenCalled()
     expect(mockBuildFiling).toHaveReturned()
 
-    expect(mockSaveFiling).toHaveBeenCalledWith(filing, false)
-    expect(mockSaveFiling).toHaveReturned()
+    expect(mockUpdateFiling).toHaveBeenCalledWith(filing, false)
+    expect(mockUpdateFiling).toHaveReturned()
 
     // verify redirection
     const baseUrl = 'myhost/basePath/auth/makepayment/789/myhost%2Fbusiness%2FT1234567'
@@ -521,12 +556,12 @@ describe('Actions component - Filing Functionality', () => {
 
   it('Emits "Go To Dashboard" event when onClickCancel is called', async () => {
     const mockBuildFiling = jest.spyOn(wrapper.vm, 'buildFiling')
-    const mockSaveFiling = jest.spyOn(wrapper.vm, 'saveFiling')
+    const mockUpdateFiling = jest.spyOn(wrapper.vm, 'updateFiling')
 
     await wrapper.vm.onClickCancel()
 
     expect(mockBuildFiling).not.toHaveBeenCalled()
-    expect(mockSaveFiling).not.toHaveBeenCalled()
+    expect(mockUpdateFiling).not.toHaveBeenCalled()
 
     // verify event emission
     const events = wrapper.emitted('goToDashboard')

@@ -25,10 +25,10 @@ describe('Save Error Dialog', () => {
 
     expect(wrapper.attributes('contentclass')).toBe('save-error-dialog')
     expect(wrapper.isVisible()).toBe(true)
-    expect(wrapper.find('#dialog-title').text()).toBe('Unable to Save Application')
+    expect(wrapper.find('#dialog-title').text()).toBe('Unable to save Application')
     expect(wrapper.findAll('p').length).toBe(2)
-    expect(wrapper.findAll('p').at(0).text()).toContain('We were unable to save your application.')
-    expect(wrapper.findAll('p').at(1).text()).toContain('If you exit this application')
+    expect(wrapper.findAll('p').at(0).text()).toContain('We were unable to save your Application.')
+    expect(wrapper.findAll('p').at(1).text()).toContain('If you exit this Application')
     expect(wrapper.find('#dialog-exit-button').exists()).toBe(true)
     expect(wrapper.find('#dialog-okay-button').exists()).toBe(true)
 
@@ -46,10 +46,10 @@ describe('Save Error Dialog', () => {
 
     expect(wrapper.attributes('contentclass')).toBe('save-error-dialog')
     expect(wrapper.isVisible()).toBe(true)
-    expect(wrapper.find('#dialog-title').text()).toBe('Unable to Save Application')
+    expect(wrapper.find('#dialog-title').text()).toBe('Unable to save Application')
     expect(wrapper.findAll('p').length).toBe(3)
-    expect(wrapper.findAll('p').at(0).text()).toContain('We were unable to save your application.')
-    expect(wrapper.findAll('p').at(1).text()).toContain('If you exit this application')
+    expect(wrapper.findAll('p').at(0).text()).toContain('We were unable to save your Application.')
+    expect(wrapper.findAll('p').at(1).text()).toContain('If you exit this Application')
     expect(wrapper.findAll('p').at(2).text()).toContain('If this error persists')
     expect(wrapper.find(ErrorContact).exists()).toBe(true)
     expect(wrapper.find('#dialog-exit-button').exists()).toBe(true)
@@ -73,9 +73,9 @@ describe('Save Error Dialog', () => {
         }
       })
 
-    expect(wrapper.find('#dialog-title').text()).toBe('Unable to Save Application')
+    expect(wrapper.find('#dialog-title').text()).toBe('Unable to save Application')
     expect(wrapper.findAll('p').length).toBe(2)
-    expect(wrapper.findAll('p').at(0).text()).toContain('We were unable to save your application due')
+    expect(wrapper.findAll('p').at(0).text()).toContain('We were unable to save your Application due')
     expect(wrapper.findAll('p').at(1).text()).toContain('If this error persists')
     expect(wrapper.findAll('li').length).toBe(2)
     expect(wrapper.findAll('li').at(0).text()).toBe('Test Error 1')
@@ -101,7 +101,7 @@ describe('Save Error Dialog', () => {
         }
       })
 
-    expect(wrapper.find('#dialog-title').text()).toBe('Application Saved With Warnings')
+    expect(wrapper.find('#dialog-title').text()).toBe('Application saved with warnings')
     expect(wrapper.findAll('p').length).toBe(2)
     expect(wrapper.findAll('p').at(0).text()).toContain('Please note the following warnings')
     expect(wrapper.findAll('p').at(1).text()).toContain('If this error persists')
@@ -127,9 +127,9 @@ describe('Save Error Dialog', () => {
         }
       })
 
-    expect(wrapper.find('#dialog-title').text()).toBe('Unable to Save Application')
+    expect(wrapper.find('#dialog-title').text()).toBe('Unable to save Application')
     expect(wrapper.findAll('p').length).toBe(3)
-    expect(wrapper.findAll('p').at(0).text()).toContain('We were unable to save your application due')
+    expect(wrapper.findAll('p').at(0).text()).toContain('We were unable to save your Application due')
     expect(wrapper.findAll('p').at(1).text()).toContain('Please note the following warnings')
     expect(wrapper.findAll('p').at(2).text()).toContain('If this error persists')
     expect(wrapper.findAll('li').length).toBe(2)
