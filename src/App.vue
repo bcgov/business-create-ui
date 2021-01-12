@@ -275,7 +275,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
 
       if (error?.response?.status === PAYMENT_REQUIRED) {
         // changes were saved if a 402 is received, so clear flag
-        this.haveChanges = false
+        this.setHaveChanges(false)
         this.paymentErrorDialog = true
       } else {
         console.log('save error =', error) // eslint-disable-line no-console
