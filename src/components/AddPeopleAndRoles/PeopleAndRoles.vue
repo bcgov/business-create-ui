@@ -1,8 +1,8 @@
 <template>
   <div>
     <p>
-      Add the people and corporations/firms who will have a role in your company. People can have multiple roles;
-      Corporation/firms can only be Incorporators.
+      Add the people and Corporations/firms who will have a role in your company. People can have multiple roles;
+      Corporations/firms can only be Incorporators.
     </p>
     Your application must include the following:
     <ul>
