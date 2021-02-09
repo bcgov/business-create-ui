@@ -18,7 +18,7 @@
         <h2>Incorporation Date and Time</h2>
         <div class="list-item">
           <p class="list-item__subtitle">Select the Date and Time of incorporation for your business. You may select a
-            date up to 10 days in the future (note: there is an <strong>additional fee of $100</strong> to enter and
+            date up to 10 days in the future (note: there is an <strong>additional fee of $100</strong> to enter an
             incorporation date in the future). Unless a business has special requirements, most businesses select an
             immediate Date and Time of Incorporation.
           </p>
