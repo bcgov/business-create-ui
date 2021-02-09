@@ -32,7 +32,7 @@
 
     <section class="mt-10" v-show="isEntityType">
       <header>
-        <h2>3. Registered Office Information</h2>
+        <h2>3. Registered Office Contact Information</h2>
         <p>Enter the contact information for the Registered Office. The Corporate Registry will use this to
            communicate with the company in the future, including sending the following documents and
            notifications: a Certificate of Incorporation, a certified copy of the Incorporation Application,
