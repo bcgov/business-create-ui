@@ -1,9 +1,9 @@
 # Registry application that is used to create a business.
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](../LICENSE)
-[![codecov](https://codecov.io/gh/bcgov/bcrs-business-create-ui/branch/master/graph/badge.svg)](https://codecov.io/gh/bcgov/bcrs-business-create-ui)
-![PR CI](https://github.com/bcgov/bcrs-business-create-ui/workflows/PR%20CI/badge.svg)
-![Build CI](https://github.com/bcgov/bcrs-business-create-ui/workflows/Build%20CI/badge.svg)
+[![codecov](https://codecov.io/gh/bcgov/business-create-ui/branch/main/graph/badge.svg)](https://codecov.io/gh/bcgov/business-create-ui)
+![PR CI](https://github.com/bcgov/business-create-ui/workflows/PR%20CI/badge.svg)
+![Build CI](https://github.com/bcgov/business-create-ui/workflows/Build%20CI/badge.svg)
 [![img](https://img.shields.io/badge/Lifecycle-Stable-97ca00)](https://github.com/bcgov/repomountie/blob/master/doc/lifecycle-badges.md)
 
 ## Project setup

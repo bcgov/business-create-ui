@@ -48,12 +48,12 @@ parameters:
   displayName: Git Repo URL
   name: GIT_REPO_URL
   required: true
-  value: https://github.com/bcgov/bcrs-business-create-ui.git
+  value: https://github.com/bcgov/business-create-ui.git
 - description: The git reference or branch.
   displayName: Git Reference
   name: GIT_REF
   required: true
-  value: master
+  value: main
 - description: The Jenkinsfile this pipeline should use.
   displayName: The Jenksinfile this pipeline should use.
   name: JENKINS_FILE
