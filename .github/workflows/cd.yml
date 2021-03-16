@@ -3,7 +3,7 @@ name: Business Create UI CD
 on:
   push:
     branches:
-      - master
+      - main
   workflow_dispatch:
     inputs:
       environement:
@@ -14,15 +14,15 @@ on:
 jobs:
   business-create-ui-cd:
     runs-on: ubuntu-20.04
-    if: github.repository == 'bcgov/bcrs-business-create-ui'
+    if: github.repository == 'bcgov/business-create-ui'
     steps:
       - uses: actions/checkout@v2
       - name: Set env by input
         run: |
           echo "TAG_NAME=${{ github.event.inputs.environement }}" >> $GITHUB_ENV
 
-      - name: Set env by master branch
-        if: env.TAG_NAME == '' && github.ref == 'refs/heads/master'
+      - name: Set env by main branch
+        if: env.TAG_NAME == '' && github.ref == 'refs/heads/main'
         run: |
           echo "TAG_NAME=dev" >> $GITHUB_ENV
 
