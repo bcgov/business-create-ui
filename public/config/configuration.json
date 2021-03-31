@@ -6,7 +6,7 @@
   "AUTH_URL":"https://dev.bcregistry.ca/business/auth/",
   "PAY_API_URL":"https://pay-api-dev.apps.silver.devops.gov.bc.ca/api/v1/",
   "DASHBOARD_URL":"https://dev.bcregistry.ca/business/",
-  "KEYCLOAK_CONFIG_PATH":"https://business-create-dev.apps.silver.devops.gov.bc.ca/businesses/create/config/kc/keycloak.json",
+  "KEYCLOAK_CONFIG_PATH":"/local-keycloak-config-url/keycloak.json",
   "ADDRESS_COMPLETE_KEY":"",
   "LD_CLIENT_ID":"5e6142dd29b3030a850285b3",
   "SENTRY_DSN":""
