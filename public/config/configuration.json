@@ -1,13 +1,13 @@
 {
-  "BUSINESSES_URL": "https://dev.bcregistry.ca/business/auth/",
-  "AUTH_URL": "https://dev.bcregistry.ca/business/auth/",
-  "DASHBOARD_URL": "https://dev.bcregistry.ca/business/",
-  "LEGAL_API_URL": "https://legal-api-dev.pathfinder.gov.bc.ca/api/v1/",
-  "AUTH_API_URL": "https://auth-api-dev.pathfinder.gov.bc.ca/api/v1/",
-  "SBC_CONFIG_AUTH_API_URL": "https://auth-api-dev.pathfinder.gov.bc.ca/api/v1",
-  "PAY_API_URL": "https://pay-api-dev.pathfinder.gov.bc.ca/api/v1/",
-  "KEYCLOAK_CONFIG_PATH": "/local-keycloak-config-url/keycloak.json",
-  "ADDRESS_COMPLETE_KEY": "",
-  "LD_CLIENT_ID": "",
-  "SENTRY_DSN": ""
+  "LEGAL_API_URL":"https://legal-api-dev.apps.silver.devops.gov.bc.ca/api/v1/",
+  "AUTH_API_URL":"https://auth-api-dev.apps.silver.devops.gov.bc.ca/api/v1/",
+  "SBC_CONFIG_AUTH_API_URL":"https://auth-api-dev.apps.silver.devops.gov.bc.ca/api/v1",
+  "BUSINESSES_URL":"https://dev.bcregistry.ca/business/auth/",
+  "AUTH_URL":"https://dev.bcregistry.ca/business/auth/",
+  "PAY_API_URL":"https://pay-api-dev.apps.silver.devops.gov.bc.ca/api/v1/",
+  "DASHBOARD_URL":"https://dev.bcregistry.ca/business/",
+  "KEYCLOAK_CONFIG_PATH":"https://business-create-dev.apps.silver.devops.gov.bc.ca/businesses/create/config/kc/keycloak.json",
+  "ADDRESS_COMPLETE_KEY":"",
+  "LD_CLIENT_ID":"5e6142dd29b3030a850285b3",
+  "SENTRY_DSN":""
 }
