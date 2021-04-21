@@ -1,6 +1,6 @@
 {
   "name": "business-create-ui",
-  "version": "1.5.4",
+  "version": "1.5.6",
   "private": true,
   "appName": "Create UI",
   "sbcName": "SBC Common Components",
@@ -23,7 +23,7 @@
     "launchdarkly-js-client-sdk": "^2.18.0",
     "lodash": "^4.17.20",
     "regenerator-runtime": "^0.13.7",
-    "sbc-common-components": "2.4.8",
+    "sbc-common-components": "2.4.15",
     "uuid": "^8.3.1",
     "vue": "^2.6.11",
     "vue-affix": "^0.5.2",
