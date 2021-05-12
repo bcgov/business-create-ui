@@ -217,8 +217,10 @@ export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
     let rules: Array<Function> = []
     if (!this.hasNoMaximumShares) {
       rules = [
-        v => !!v || 'Maximum share value is required',
-        v => /^\d+$/.test(v) || 'Must be a number greater than 0']
+        (v: string) => (v !== null && v !== '') || 'Number of shares is required',
+        (v: string) => /^-?\d+$/.test(v) || 'Must be a whole number',
+        (v: string) => +v > 0 || 'Number must be greater than 0'
+      ]
       // To prevent changing share class value to a lower value after adding series.
       if (this.isClass && this.activeIndex !== -1 && !this.hasNoMaximumShares &&
        this.shareStructure.series.length > 0) {
