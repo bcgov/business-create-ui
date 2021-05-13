@@ -79,9 +79,9 @@ function createShareStructure (
   type,
   name,
   hasMaximumShares = true,
-  maxNumberOfShares = null,
+  maxNumberOfShares = null as number,
   hasParValue = true,
-  parValue = null,
+  parValue = null as number,
   currency = null,
   hasRightsOrRestrictions = false
 ): ShareClassIF {
@@ -319,6 +319,7 @@ describe('Share Structure component', () => {
 
     expect(wrapper.find(formSelector).text()).toContain('Number of shares is required')
     expect(wrapper.vm.$data.formValid).toBe(false)
+
     wrapper.destroy()
   })
 
@@ -335,6 +336,7 @@ describe('Share Structure component', () => {
 
     expect(wrapper.find(formSelector).text()).toContain('Must be a whole number')
     expect(wrapper.vm.$data.formValid).toBe(false)
+
     wrapper.destroy()
   })
 
@@ -359,6 +361,24 @@ describe('Share Structure component', () => {
 
     expect(wrapper.find(formSelector).text()).toContain('Number must be greater than 0')
     expect(wrapper.vm.$data.formValid).toBe(false)
+
+    wrapper.destroy()
+  })
+
+  it('Shows error message if maximum shares is not less than 16 digits', async () => {
+    const existingShareClass = createShareStructure(null, 1, 'Class', 'Class A', true, 100, true, 0.50, 'CAD', true)
+    const shareClass = createShareStructure(null, 1, 'Class', 'Class B', true, 100, true, 0.50, 'CAD', true)
+    const wrapper: Wrapper<ShareStructure> = createComponent(shareClass, -1, '1', null, [existingShareClass])
+    const inputElement: Wrapper<Vue> = wrapper.find(txtMaxShares)
+
+    // try 16 digits
+    inputElement.setValue(1234567890123456)
+    inputElement.trigger('change')
+    await waitForUpdate(wrapper)
+
+    expect(wrapper.find(formSelector).text()).toContain('Number must be less than 16 digits')
+    expect(wrapper.vm.$data.formValid).toBe(false)
+
     wrapper.destroy()
   })
 
