@@ -17,11 +17,12 @@ export default class FilingTemplateMixin extends Vue {
   @State stateModel!: StateModelIF
 
   // Global getters
-  @Getter isTypeBcomp!: GetterIF
+  @Getter isTypeBcomp!: boolean
   @Getter isNamedBusiness!: boolean
   @Getter getNameRequestNumber!: string
   @Getter getApprovedName!: string
   @Getter getTempId!: string
+  @Getter isRoleStaff!: boolean
 
   // Global actions
   @Action setEntityType!: ActionBindingIF
@@ -53,7 +54,8 @@ export default class FilingTemplateMixin extends Vue {
           certifiedBy: this.stateModel.certifyState.certifiedBy,
           date: this.stateModel.currentDate,
           folioNumber: this.stateModel.defineCompanyStep.folioNumber,
-          isFutureEffective: this.stateModel.incorporationDateTime.isFutureEffective
+          isFutureEffective: this.stateModel.incorporationDateTime.isFutureEffective,
+          isStaff: this.isRoleStaff
         },
         business: {
           legalType: this.stateModel.entityType,

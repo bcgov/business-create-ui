@@ -12,6 +12,7 @@ export interface IncorporationFilingIF {
       filingId?: number // Optional as this is not required when building a filing - causes an error for new filings
       folioNumber?: string // Optional to the user and only displayed for certain account types
       isFutureEffective: boolean
+      isStaff: boolean
     },
     business: {
       legalType: string,

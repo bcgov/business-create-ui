@@ -197,7 +197,8 @@ describe('Actions component - Filing Functionality', () => {
         date: '2020/01/29',
         effectiveDate: formattedEffectiveDate,
         folioNumber: null,
-        isFutureEffective: false
+        isFutureEffective: false,
+        isStaff: false
       },
       business: {
         identifier: 'T1234567',
