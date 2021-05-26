@@ -1,12 +1,33 @@
 // Enums
 import { AccountTypes, EntityTypes, RouteNames } from '@/enums'
-import { NameRequestDetailsIF, NameRequestApplicantIF, NameTranslationIF } from '@/interfaces'
+import {
+  CertifyStatementIF,
+  NameRequestDetailsIF,
+  NameRequestApplicantIF,
+  NameTranslationIF,
+  ResourceIF, IncorporationAgreementIF, IncorporationAgreementTypeIF
+} from '@/interfaces'
 
 /**
  * Whether the user has "staff" keycloak role.
  */
 export const isRoleStaff = (state: any): boolean => {
   return state.stateModel.tombstone.keycloakRoles.includes('staff')
+}
+
+/** The company rules and values based on entity type. */
+export const getCompanyResources = (state: any): ResourceIF => {
+  return state.resourceModel
+}
+
+/** The company rules and values based on entity type. */
+export const getCompletingPartyStatement = (state: any): CertifyStatementIF => {
+  return state.resourceModel.reviewAndConfirm.completingPartyStatement
+}
+
+/** The company rules and values based on entity type. */
+export const getIncorporationAgreement = (state: any): IncorporationAgreementTypeIF => {
+  return state.resourceModel.incorporationAgreement
 }
 
 /**

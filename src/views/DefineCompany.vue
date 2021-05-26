@@ -2,8 +2,8 @@
   <div>
     <div class="mt-10 benefit-company-statement" v-if="isTypeBcomp">
       <p>
-        <span class="benefit-company-statement-label">{{ BenefitCompanyStatementResource.title }}:</span>
-        {{ BenefitCompanyStatementResource.description }}
+        <span class="benefit-company-statement-label">{{ getCompanyResources.title }}:</span>
+        {{ getCompanyResources.description }}
       </p>
     </div>
 
@@ -72,16 +72,20 @@ import { Component, Mixins, Vue } from 'vue-property-decorator'
 import { Getter, Action, State } from 'vuex-class'
 
 // Interfaces
-import { GetterIF, ActionBindingIF, BusinessContactIF, IncorporationAddressIf, AddressIF } from '@/interfaces'
+import {
+  GetterIF,
+  ActionBindingIF,
+  BusinessContactIF,
+  IncorporationAddressIf,
+  AddressIF,
+  ResourceIF
+} from '@/interfaces'
 
 // Mixins
 import { EntityFilterMixin } from '@/mixins'
 
 // Enums
 import { EntityTypes } from '@/enums'
-
-// Resources
-import { BenefitCompanyStatementResource } from '@/resources'
 
 // Components
 import { BusinessContactInfo, FolioNumber, OfficeAddresses } from '@/components/DefineCompany'
@@ -107,6 +111,7 @@ export default class DefineCompany extends Mixins(EntityFilterMixin) {
   readonly folioNumber!: string
 
   // Global getters
+  @Getter getCompanyResources!: ResourceIF
   @Getter isEntityType!: GetterIF
   @Getter isPremiumAccount!: GetterIF
   @Getter isTypeBcomp!: GetterIF
@@ -118,9 +123,6 @@ export default class DefineCompany extends Mixins(EntityFilterMixin) {
   @Action setOfficeAddresses!: ActionBindingIF
   @Action setDefineCompanyStepValidity!: ActionBindingIF
   @Action setIgnoreChanges!: ActionBindingIF
-
-  // Resources
-  readonly BenefitCompanyStatementResource = BenefitCompanyStatementResource
 
   private businessContactFormValid: boolean = false
   private addressFormValid: boolean = false

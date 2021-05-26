@@ -146,7 +146,7 @@ import {
 } from '@/components/dialogs'
 import { DateMixin, FilingTemplateMixin, LegalApiMixin, NameRequestMixin } from '@/mixins'
 import { FilingDataIF, ActionBindingIF, ConfirmDialogType } from '@/interfaces'
-import { CertifyStatementResource } from '@/resources'
+import { CompanyResources } from '@/resources'
 
 // Enums and Constants
 import { EntityTypes, FilingCodes, FilingStatus, RouteNames, NameRequestStates } from '@/enums'
@@ -192,7 +192,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
   // Global actions
   @Action setCurrentStep!: ActionBindingIF
   @Action setCurrentDate!: ActionBindingIF
-  @Action setCertifyStatementResource!: ActionBindingIF
+  @Action setCompanyResources!: ActionBindingIF
   @Action setNameRequestState!: ActionBindingIF
   @Action setUserEmail: ActionBindingIF
   @Action setAuthRoles: ActionBindingIF
@@ -448,7 +448,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
         this.initEntityFees()
 
         // Set the resources
-        this.setCertifyStatementResource(CertifyStatementResource.find(x => x.entityType === this.entityType))
+        this.setCompanyResources(CompanyResources.find(x => x.entityType === this.entityType))
       } catch (error) {
         // logging exception to sentry due to incomplete business data.
         // at this point system doesn't know why its incomplete.

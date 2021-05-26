@@ -70,8 +70,6 @@ function createComponent (
   certifiedBy: string | undefined = undefined,
   date: string = defaultDate,
   certifyStatementResource: CertifyStatementIF = {
-    entityType: 'CP',
-    displayName: 'Cooperatives',
     certifyStatementHeader: certifyStatementHeader,
     certifyStatements: certifyStatementLines,
     certifyClause: certifyClause

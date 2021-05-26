@@ -1,11 +1,15 @@
 import {
   CertifyStatementIF, CertifyIF, IncorporationAddressIf, NameRequestIF,
   BusinessContactIF, OrgPersonIF, ShareClassIF, AccountInformationIF, IncorporationAgreementIF,
-  NameTranslationIF
+  NameTranslationIF, ResourceIF
 } from '@/interfaces'
 
 export const mutateTempId = (state: any, tempId: string) => {
   state.stateModel.tempId = tempId
+}
+
+export const mutateCompanyResources = (state: any, companyResources: ResourceIF): void => {
+  state.resourceModel = companyResources
 }
 
 export const mutateCertifyStatementResource = (state: any, certifyStatementResource: CertifyStatementIF) => {
