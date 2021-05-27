@@ -8,7 +8,7 @@ export const UnlimitedCompanyResource: ResourceIF = {
   title: 'Unlimited Company Statement',
   description: null,
   statement: null,
-  nameRequestType: NameRequestTypes.CC,
+  nameRequestType: NameRequestTypes.UL,
   steps: [
     {
       id: 'step-1-btn',
