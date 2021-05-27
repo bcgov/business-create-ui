@@ -1,5 +1,6 @@
 import { ResourceIF } from '@/interfaces'
 import { NameRequestTypes, RouteNames } from '@/enums'
+import { BaseStepsTemplate } from './stepTemplates'
 import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 
 export const LimitedCompanyResource: ResourceIF = {
@@ -9,49 +10,7 @@ export const LimitedCompanyResource: ResourceIF = {
   description: null,
   statement: null,
   nameRequestType: NameRequestTypes.CR,
-  steps: [
-    {
-      id: 'step-1-btn',
-      step: 1,
-      icon: 'mdi-domain',
-      text: 'Define Your\nCompany',
-      to: RouteNames.DEFINE_COMPANY,
-      component: 'define-company'
-    },
-    {
-      id: 'step-2-btn',
-      step: 2,
-      icon: 'mdi-account-multiple-plus',
-      text: 'Add People\nand Roles',
-      to: RouteNames.ADD_PEOPLE_AND_ROLES,
-      component: 'add-people-and-roles'
-
-    },
-    {
-      id: 'step-3-btn',
-      step: 3,
-      icon: 'mdi-sitemap',
-      text: 'Create Share\nStructure',
-      to: RouteNames.CREATE_SHARE_STRUCTURE,
-      component: 'create-share-structure'
-    },
-    {
-      id: 'step-4-btn',
-      step: 4,
-      icon: 'mdi-handshake',
-      text: 'Incorporation\nAgreement',
-      to: RouteNames.INCORPORATION_AGREEMENT,
-      component: 'incorporation-agreement'
-    },
-    {
-      id: 'step-5-btn',
-      step: 5,
-      icon: 'mdi-text-box-check-outline',
-      text: 'Review\nand Confirm',
-      to: RouteNames.REVIEW_CONFIRM,
-      component: 'review-confirm'
-    }
-  ],
+  steps: BaseStepsTemplate,
   directors: {
     countMinimum: 1
   },
