@@ -145,7 +145,7 @@ import {
   FileAndPayInvalidNameRequestDialog
 } from '@/components/dialogs'
 import { DateMixin, FilingTemplateMixin, LegalApiMixin, NameRequestMixin } from '@/mixins'
-import { FilingDataIF, ActionBindingIF, ConfirmDialogType } from '@/interfaces'
+import { FilingDataIF, ActionBindingIF, ConfirmDialogType, StepIF } from '@/interfaces'
 import { CompanyResources } from '@/resources'
 
 // Enums and Constants
@@ -186,7 +186,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
 
   // Global getters
   @Getter haveChanges!: boolean
-  @Getter getSteps!: Array<any>
+  @Getter getSteps!: Array<StepIF>
   @Getter getTempId!: string
 
   // Global actions

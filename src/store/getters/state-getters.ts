@@ -1,11 +1,9 @@
 // Enums
 import { AccountTypes, EntityTypes, RouteNames } from '@/enums'
 import {
-  CertifyStatementIF,
   NameRequestDetailsIF,
   NameRequestApplicantIF,
-  NameTranslationIF,
-  ResourceIF, IncorporationAgreementIF, IncorporationAgreementTypeIF
+  NameTranslationIF
 } from '@/interfaces'
 
 /**
@@ -13,21 +11,6 @@ import {
  */
 export const isRoleStaff = (state: any): boolean => {
   return state.stateModel.tombstone.keycloakRoles.includes('staff')
-}
-
-/** The company rules and values based on entity type. */
-export const getCompanyResources = (state: any): ResourceIF => {
-  return state.resourceModel
-}
-
-/** The company rules and values based on entity type. */
-export const getCompletingPartyStatement = (state: any): CertifyStatementIF => {
-  return state.resourceModel.reviewAndConfirm.completingPartyStatement
-}
-
-/** The company rules and values based on entity type. */
-export const getIncorporationAgreement = (state: any): IncorporationAgreementTypeIF => {
-  return state.resourceModel.incorporationAgreement
 }
 
 /**
@@ -211,6 +194,26 @@ export const isBusySaving = (state: any): boolean => {
   return (state.stateModel.isSaving || state.stateModel.isSavingResuming || state.stateModel.isFilingPaying)
 }
 
+/** Is true when the step is valid. */
+export const isDefineCompanyValid = (state: any): boolean => {
+  return state.stateModel.defineCompanyStep.valid
+}
+
+/** Is true when the step is valid. */
+export const isAddPeopleAndRolesValid = (state: any): boolean => {
+  return state.stateModel.addPeopleAndRoleStep.valid
+}
+
+/** Is true when the step is valid. */
+export const isCreateShareStructureValid = (state: any): boolean => {
+  return state.stateModel.createShareStructureStep.valid
+}
+
+/** Is true when the step is valid. */
+export const isIncorporationAgreementValid = (state: any): boolean => {
+  return state.stateModel.incorporationAgreementStep.valid
+}
+
 /**
  * Whether all the incorporation steps are valid.
  */
@@ -218,64 +221,6 @@ export const isApplicationValid = (state: any): boolean => {
   return (state.stateModel.defineCompanyStep.valid && state.stateModel.addPeopleAndRoleStep.valid &&
     state.stateModel.createShareStructureStep.valid && state.stateModel.incorporationDateTime.valid &&
     state.stateModel.incorporationAgreementStep.valid && state.stateModel.certifyState.valid)
-}
-
-/**
- * Returns the array of steps.
- */
-export const getSteps = (state: any, getters: any): Array<any> => {
-  const steps: Array<any> = [{
-    id: 'step-1-btn',
-    step: 1,
-    icon: 'mdi-domain',
-    text: 'Define Your\nCompany',
-    to: RouteNames.DEFINE_COMPANY,
-    disabled: getters.isBusySaving,
-    valid: state.stateModel.defineCompanyStep.valid,
-    component: 'define-company'
-  },
-  {
-    id: 'step-2-btn',
-    step: 2,
-    icon: 'mdi-account-multiple-plus',
-    text: 'Add People\nand Roles',
-    to: RouteNames.ADD_PEOPLE_AND_ROLES,
-    disabled: getters.isBusySaving,
-    valid: state.stateModel.addPeopleAndRoleStep.valid,
-    component: 'add-people-and-roles'
-
-  },
-  {
-    id: 'step-3-btn',
-    step: 3,
-    icon: getters.isTypeBcomp ? 'mdi-sitemap' : 'mdi-format-list-text',
-    text: getters.isTypeBcomp ? 'Create Share\nStructure' : 'Create\nRules',
-    to: getters.isTypeBcomp ? RouteNames.CREATE_SHARE_STRUCTURE : RouteNames.CREATE_RULES,
-    disabled: getters.isTypeBcomp ? getters.isBusySaving : true,
-    valid: getters.isTypeBcomp ? state.stateModel.createShareStructureStep.valid : false,
-    component: getters.isTypeBcomp ? 'create-share-structure' : 'create-rules'
-  },
-  {
-    id: 'step-4-btn',
-    step: 4,
-    icon: getters.isTypeBcomp ? 'mdi-handshake' : 'mdi-text-box-multiple',
-    text: getters.isTypeBcomp ? 'Incorporation\nAgreement' : 'Create\nMemorandum',
-    to: getters.isTypeBcomp ? RouteNames.INCORPORATION_AGREEMENT : RouteNames.CREATE_MEMORANDUM,
-    disabled: getters.isTypeBcomp ? getters.isBusySaving : true,
-    valid: getters.isTypeBcomp ? state.stateModel.incorporationAgreementStep.valid : false,
-    component: getters.isTypeBcomp ? 'incorporation-agreement' : undefined
-  },
-  {
-    id: 'step-5-btn',
-    step: 5,
-    icon: 'mdi-text-box-check-outline',
-    text: 'Review\nand Confirm',
-    to: RouteNames.REVIEW_CONFIRM,
-    disabled: getters.isBusySaving,
-    valid: getters.isApplicationValid,
-    component: 'review-confirm'
-  }]
-  return steps
 }
 
 /**

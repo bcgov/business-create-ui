@@ -2,10 +2,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-// State
-import { stateModel, resourceModel } from './state'
-
 // Store modules
+import * as State from './state'
 import * as Getters from './getters'
 import * as Mutations from './mutations'
 import * as Actions from './actions'
@@ -17,10 +15,7 @@ export function getVuexStore () {
   Vue.use(Vuex)
 
   const store = new Vuex.Store<any>({
-    state: {
-      resourceModel,
-      stateModel
-    },
+    state: { ...State },
     getters: { ...Getters },
     mutations: { ...Mutations },
     actions: { ...Actions }

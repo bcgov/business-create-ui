@@ -6,7 +6,8 @@ export const resourceModel: ResourceIF = {
   title: '',
   description: '',
   statement: '',
-  nameRequestType: '',
+  nameRequestType: null,
+  steps: [],
   directors: {
     countMinimum: null
   },

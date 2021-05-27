@@ -9,8 +9,9 @@ export const CooperativeResource: ResourceIF = {
   description: null,
   statement: null,
   nameRequestType: null, // TBD
+  steps: [],
   directors: {
-    countMinimum: null // TBD
+    countMinimum: 3
   },
   shareClasses: {
     countMinimum: null // TBD

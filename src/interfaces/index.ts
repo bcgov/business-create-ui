@@ -30,4 +30,5 @@ export * from './stepper-interfaces/IncorporationAgreement/incorporation-agreeme
 // Others
 export * from './resource-interfaces/component-resource-interfaces/certifyStatement-interface'
 export * from './resource-interfaces/component-resource-interfaces/agreement-types-interface'
+export * from './resource-interfaces/component-resource-interfaces/step-interface'
 export * from './resource-interfaces/resource-interface'

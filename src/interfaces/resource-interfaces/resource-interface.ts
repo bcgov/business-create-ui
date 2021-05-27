@@ -1,5 +1,7 @@
 // Interface to define the resource model example
 import { IncorporationAgreementTypeIF } from '@/interfaces'
+import { NameRequestTypes } from '@/enums'
+import { StepIF } from './component-resource-interfaces/step-interface'
 
 export interface ResourceIF {
   entityType: string,
@@ -7,7 +9,8 @@ export interface ResourceIF {
   title: string
   description: string
   statement: string
-  nameRequestType: string
+  nameRequestType: NameRequestTypes
+  steps: Array<StepIF>
   directors: {
     countMinimum: number
   }

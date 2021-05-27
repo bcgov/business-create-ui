@@ -10,12 +10,12 @@
             :id=step.id
             class="step__btn"
             tabindex="-1"
-            :disabled=step.disabled
+            :disabled=isBusySaving
             :ripple="false"
             :class="{ 'selected-btn': isCurrentStep(step) }">
             <v-icon class="step__icon" :class="{ 'selected-icon': isCurrentStep(step) }">{{ step.icon }}</v-icon>
           </v-btn>
-          <v-icon class="step__btn2" size="30" color="green darken-1" v-show=step.valid>
+          <v-icon class="step__btn2" size="30" color="green darken-1" v-show=isValid(step.to)>
             mdi-check-circle
           </v-icon>
         </div>
@@ -33,11 +33,40 @@ import { Component, Vue } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 
 // Interfaces
-import { GetterIF } from '@/interfaces'
+import { RouteNames } from '@/enums'
 
 @Component({})
 export default class Stepper extends Vue {
-  @Getter getSteps!: GetterIF
+  @Getter getSteps!: Array<any>
+  @Getter isBusySaving!: boolean
+  @Getter isDefineCompanyValid!: boolean
+  @Getter isAddPeopleAndRolesValid!: boolean
+  @Getter isCreateShareStructureValid!: boolean
+  @Getter isIncorporationAgreementValid!: boolean
+  @Getter isApplicationValid!: boolean
+
+  /** Returns true if the step route is valid. */
+  private isValid (route: RouteNames): boolean {
+    switch (route) {
+      case RouteNames.DEFINE_COMPANY:
+        return this.isDefineCompanyValid
+
+      case RouteNames.ADD_PEOPLE_AND_ROLES:
+        return this.isAddPeopleAndRolesValid
+
+      case RouteNames.CREATE_SHARE_STRUCTURE:
+        return this.isCreateShareStructureValid
+
+      case RouteNames.INCORPORATION_AGREEMENT:
+        return this.isIncorporationAgreementValid
+
+      case RouteNames.REVIEW_CONFIRM:
+        return this.isApplicationValid
+
+      default:
+        return false
+    }
+  }
 
   private goTo (step) {
     this.$router.push(step.to).catch(error => error)
