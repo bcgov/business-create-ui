@@ -448,7 +448,10 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
         this.initEntityFees()
 
         // Set the resources
-        this.setCompanyResources(CompanyResources.find(x => x.entityType === this.entityType))
+        // An unknown entity type will need to be handled here
+        const companyResources = CompanyResources.find(x => x.entityType === this.entityType)
+        if (companyResources) this.setCompanyResources(companyResources)
+        else throw new Error('Invalid Entity Type')
       } catch (error) {
         // logging exception to sentry due to incomplete business data.
         // at this point system doesn't know why its incomplete.
