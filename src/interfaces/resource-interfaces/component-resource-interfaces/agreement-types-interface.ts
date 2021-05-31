@@ -1,5 +1,5 @@
 export interface IncorporationAgreementTypeIF {
-    code: string,
-    description: string,
-    summaryDescription: string
-  }
+  code: string,
+  description: string,
+  summaryDescription: string
+}

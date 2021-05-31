@@ -1,60 +1,42 @@
-// Libraries
-import Vue from 'vue'
-import Vuetify from 'vuetify'
-import VueRouter from 'vue-router'
-import { getVuexStore } from '@/store'
-import { shallowMount, createLocalVue } from '@vue/test-utils'
-
-// Components
+import { shallowWrapperFactory } from '../jest-wrapper-factory'
 import ReviewConfirm from '@/views/ReviewConfirm.vue'
 
-// Other
-import mockRouter from './MockRouter'
+// Test Case Data
+const reviewConfirmTestCases = [
+  {
+    entityType: 'CP',
+    headerTitle: 'Review',
+    hasStatement: false,
+    statement: ''
+  },
+  {
+    entityType: 'BEN',
+    headerTitle: 'Review',
+    hasStatement: true,
+    statement: 'This company is a benefit company'
+  }
+]
 
-Vue.use(Vuetify)
+for (const test of reviewConfirmTestCases) {
+  describe(`Review Confirm view for a ${test.entityType}`, () => {
+    let wrapper: any
 
-const vuetify = new Vuetify({})
-const store = getVuexStore()
+    it('renders the component properly', () => {
+      wrapper = shallowWrapperFactory(ReviewConfirm, null, { entityType: test.entityType })
 
-const localVue = createLocalVue()
-localVue.use(VueRouter)
-const router = mockRouter.mock()
+      // verify page content
+      expect(wrapper.find('h2').text()).toContain(test.headerTitle)
+    })
 
-describe('Review Confirm view', () => {
-  let wrapper: any
+    it('displays benefit company statement', () => {
+      wrapper = shallowWrapperFactory(ReviewConfirm, null, { entityType: test.entityType })
 
-  afterEach(() => {
-    wrapper.destroy()
+      expect(wrapper.find('.benefit-company-statement').exists()).toBe(test.hasStatement)
+
+      if (test.hasStatement) {
+        expect(wrapper.find('.benefit-company-statement p').text()).toContain(test.statement)
+      }
+    })
+    // TODO: Expand unit testing for validation on step 5. Include routing to appropriate steps from error links.
   })
-
-  it('renders the component properly', () => {
-    // init store
-    store.state.entityType = 'BEN'
-
-    wrapper = shallowMount(ReviewConfirm, { localVue, store, router, vuetify })
-
-    // verify page content
-    expect(wrapper.find('h2').text()).toContain('Review')
-  })
-
-  it('displays benefit company statement when it is a BC', () => {
-    store.state.stateModel.entityType = 'BEN'
-    const wrapper = shallowMount(ReviewConfirm, { localVue, store, router, vuetify })
-
-    expect(wrapper.find('.benefit-company-statement').exists()).toBe(true)
-    expect(wrapper.find('.benefit-company-statement p').text()).toContain('This company is a benefit company and')
-
-    wrapper.destroy()
-  })
-
-  it('doesn\'t display benefit company statement when it is not a BC', () => {
-    store.state.stateModel.entityType = 'CP'
-    const wrapper = shallowMount(ReviewConfirm, { localVue, store, router, vuetify })
-
-    expect(wrapper.find('.benefit-company-statement').exists()).toBe(false)
-
-    wrapper.destroy()
-  })
-
-  // TODO: Expand unit testing for validation on step 5. Include routing to appropriate steps from error links.
-})
+}

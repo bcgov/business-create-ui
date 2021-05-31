@@ -145,8 +145,8 @@ import {
   FileAndPayInvalidNameRequestDialog
 } from '@/components/dialogs'
 import { DateMixin, FilingTemplateMixin, LegalApiMixin, NameRequestMixin } from '@/mixins'
-import { FilingDataIF, ActionBindingIF, ConfirmDialogType } from '@/interfaces'
-import { CertifyStatementResource } from '@/resources'
+import { FilingDataIF, ActionBindingIF, ConfirmDialogType, StepIF } from '@/interfaces'
+import { CompanyResources } from '@/resources'
 
 // Enums and Constants
 import { EntityTypes, FilingCodes, FilingStatus, RouteNames, NameRequestStates } from '@/enums'
@@ -186,13 +186,13 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
 
   // Global getters
   @Getter haveChanges!: boolean
-  @Getter getSteps!: Array<any>
+  @Getter getSteps!: Array<StepIF>
   @Getter getTempId!: string
 
   // Global actions
   @Action setCurrentStep!: ActionBindingIF
   @Action setCurrentDate!: ActionBindingIF
-  @Action setCertifyStatementResource!: ActionBindingIF
+  @Action setCompanyResources!: ActionBindingIF
   @Action setNameRequestState!: ActionBindingIF
   @Action setUserEmail: ActionBindingIF
   @Action setAuthRoles: ActionBindingIF
@@ -448,7 +448,10 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
         this.initEntityFees()
 
         // Set the resources
-        this.setCertifyStatementResource(CertifyStatementResource.find(x => x.entityType === this.entityType))
+        // An unknown entity type will need to be handled here
+        const companyResources = CompanyResources.find(x => x.entityType === this.entityType)
+        if (companyResources) this.setCompanyResources(companyResources)
+        else throw new Error('Invalid Entity Type')
       } catch (error) {
         // logging exception to sentry due to incomplete business data.
         // at this point system doesn't know why its incomplete.

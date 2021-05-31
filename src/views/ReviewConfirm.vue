@@ -2,8 +2,8 @@
   <div>
     <div class="mt-10 benefit-company-statement" v-if="isTypeBcomp">
       <p>
-        <span class="benefit-company-statement-label">{{ BenefitCompanyStatementResource.title }}:</span>
-        {{ BenefitCompanyStatementResource.description }}
+        <span class="benefit-company-statement-label">{{ getCompanyResources.title }}:</span>
+        {{ getCompanyResources.description }}
       </p>
     </div>
 
@@ -38,7 +38,7 @@
       <Certify
         :date="currentDate"
         :certifiedBy="certifyState.certifiedBy"
-        :certifyStatementResource="certifyStatementResource"
+        :certifyStatementResource="getCompletingPartyStatement"
         @valid="onValid($event)"
         @certifiedBy="onCertifiedBy($event)"
       />
@@ -52,13 +52,10 @@ import { Component, Mixins, Vue } from 'vue-property-decorator'
 import { State, Action, Getter } from 'vuex-class'
 
 // Interfaces
-import { CertifyStatementIF, ActionBindingIF, CertifyIF, DateTimeIF, GetterIF } from '@/interfaces'
+import { CertifyStatementIF, ActionBindingIF, CertifyIF, DateTimeIF, GetterIF, ResourceIF } from '@/interfaces'
 
 // Components
 import { Certify, IncorporationDateTime, Summary } from '@/components/ReviewConfirm'
-
-// Resources
-import { BenefitCompanyStatementResource } from '@/resources'
 
 @Component({
   components: {
@@ -75,13 +72,12 @@ export default class ReviewConfirm extends Mixins() {
   @State(state => state.stateModel.certifyState)
   readonly certifyState!: CertifyIF
 
-  @State(state => state.resourceModel.certifyStatementResource)
-  readonly certifyStatementResource!: CertifyStatementIF
-
   @State(state => state.stateModel.incorporationDateTime)
   readonly incorporationDateTime!: DateTimeIF
 
   // Global Getters
+  @Getter getCompanyResources!: ResourceIF
+  @Getter getCompletingPartyStatement!: CertifyStatementIF
   @Getter isTypeBcomp!: GetterIF
 
   // Global Actions
@@ -89,9 +85,6 @@ export default class ReviewConfirm extends Mixins() {
   @Action setEffectiveDate!: ActionBindingIF
   @Action setCertifyState!: ActionBindingIF
   @Action setIgnoreChanges!: ActionBindingIF
-
-  // Resources
-  readonly BenefitCompanyStatementResource = BenefitCompanyStatementResource
 
   /** Called when component is created. */
   private created (): void {

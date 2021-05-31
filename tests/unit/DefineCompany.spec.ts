@@ -5,6 +5,7 @@ import VueRouter from 'vue-router'
 import { getVuexStore } from '@/store'
 import { shallowMount, createLocalVue } from '@vue/test-utils'
 import mockRouter from './MockRouter'
+import { CompanyResources } from '@/resources'
 
 // Components
 import DefineCompany from '@/views/DefineCompany.vue'
@@ -98,6 +99,7 @@ describe('Define Company view', () => {
 
   it('displays benefit company statement when it is a BC', () => {
     store.state.stateModel.entityType = 'BEN'
+    store.state.resourceModel = CompanyResources.find(x => x.entityType === store.state.stateModel.entityType)
     const wrapper = shallowMount(DefineCompany, { localVue, store, router, vuetify })
 
     expect(wrapper.find('.benefit-company-statement').exists()).toBe(true)

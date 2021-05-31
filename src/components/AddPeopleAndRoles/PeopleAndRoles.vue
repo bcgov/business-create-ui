@@ -19,10 +19,10 @@
         <span class='chk-list-item-txt'>At least one Incorporator</span>
       </li>
       <li>
-        <v-icon v-if="hasRole(RoleTypes.DIRECTOR, 1, 'ATLEAST')" color="green darken-2" class="dir-valid"
-          >mdi-check</v-icon>
+        <v-icon v-if="hasRole(RoleTypes.DIRECTOR, getMinimumDirectorCount, 'ATLEAST')" color="green darken-2"
+          class="dir-valid">mdi-check</v-icon>
         <v-icon v-else :color="showErrors ? 'red': 'transparent'" class="dir-invalid">mdi-close</v-icon>
-        <span class='chk-list-item-txt'>At least one Director</span>
+        <span class='chk-list-item-txt'>At least {{NumWord[getMinimumDirectorCount]}} {{directorVerbiage}}</span>
       </li>
     </ul>
 
@@ -103,7 +103,7 @@
 <script lang="ts">
 // Libraries
 import { Component, Mixins } from 'vue-property-decorator'
-import { Action, State } from 'vuex-class'
+import { Action, Getter, State } from 'vuex-class'
 
 // Interfaces
 import { ActionBindingIF, OrgPersonIF, RolesIF } from '@/interfaces'
@@ -112,7 +112,7 @@ import { ActionBindingIF, OrgPersonIF, RolesIF } from '@/interfaces'
 import { EntityFilterMixin } from '@/mixins'
 
 // Enums
-import { EntityTypes, IncorporatorTypes, Modes, RoleTypes } from '@/enums'
+import { EntityTypes, IncorporatorTypes, Modes, NumWord, RoleTypes } from '@/enums'
 
 // Components
 import OrgPerson from './OrgPerson.vue'
@@ -131,6 +131,8 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
 
   @State(state => state.stateModel.tombstone.userEmail)
   readonly userEmail!: string
+
+  @Getter getMinimumDirectorCount!: number
 
   // Global actions
   @Action setOrgPersonList!: ActionBindingIF
@@ -167,6 +169,11 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
   readonly EntityTypes = EntityTypes
   readonly RoleTypes = RoleTypes
   readonly IncorporatorTypes = IncorporatorTypes
+  readonly NumWord = NumWord
+
+  private get directorVerbiage (): string {
+    return this.getMinimumDirectorCount > 1 ? 'Directors' : 'Director'
+  }
 
   private mounted (): void {
     this.setAddPeopleAndRoleStepValidity(this.hasValidRoles())
@@ -248,9 +255,11 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
     const numOfPeopleWithNoRoles = this.orgPersonList.filter(people => people.roles.length === 0).length
 
     if (this.entityFilter(EntityTypes.BCOMP)) {
-      return numOfCompletingParty === 1 && numOfIncorporator >= 1 && numOfDirector >= 1 && numOfPeopleWithNoRoles === 0
+      return numOfCompletingParty === 1 && numOfIncorporator >= 1 && numOfDirector >= this.getMinimumDirectorCount &&
+        numOfPeopleWithNoRoles === 0
     } else if (this.entityFilter(EntityTypes.COOP)) {
-      return numOfCompletingParty === 1 && numOfIncorporator >= 3 && numOfDirector >= 3 && numOfPeopleWithNoRoles === 0
+      return numOfCompletingParty === 1 && numOfIncorporator >= 3 && numOfDirector >= this.getMinimumDirectorCount &&
+        numOfPeopleWithNoRoles === 0
     }
   }
 

@@ -5,7 +5,7 @@
 export enum RouteNames {
     SIGN_IN = 'signin',
     SIGN_OUT = 'signout',
-    ADD_PEOPLE_AND_ROLES = 'add-people-roles',
+    ADD_PEOPLE_AND_ROLES = 'add-people-and-roles',
     CREATE_MEMORANDUM = 'create-memorandum',
     CREATE_RULES = 'create-rules',
     CREATE_SHARE_STRUCTURE = 'create-share-structure',

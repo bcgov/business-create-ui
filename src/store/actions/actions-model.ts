@@ -1,7 +1,12 @@
 import { ActionIF } from '@/interfaces/store-interfaces/action-interface'
+import { ResourceIF } from '@/interfaces'
 
 export const setEntityType = ({ commit }, entityType): void => {
   commit('mutateEntityType', entityType)
+}
+
+export const setCompanyResources = ({ commit }, companyResources: ResourceIF): void => {
+  commit('mutateCompanyResources', companyResources)
 }
 
 export const setTempId = ({ commit }, tempId): void => {

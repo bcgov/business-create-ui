@@ -37,7 +37,7 @@ export const routes = [
     }
   },
   {
-    path: '/add-people-roles',
+    path: '/add-people-and-roles',
     name: RouteNames.ADD_PEOPLE_AND_ROLES,
     component: AddPeopleAndRoles,
     meta: {

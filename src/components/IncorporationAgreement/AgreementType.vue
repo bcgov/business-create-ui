@@ -23,16 +23,14 @@
         <!-- Summary Content -->
         <div v-else class="summary-desc">
           <div><v-icon color="green darken-2" class="agreement-valid-icon">mdi-check</v-icon></div>
-            <div>
-              {{ selectedAgreementDescription }}
-            </div>
+            <div v-html="agreementTypeDescription"></div>
         </div>
       </v-card>
     </div>
     <div v-else>
       <v-card flat>
         <v-radio-group v-model="agreementType" @change="changeAgreementType" class="agreement-option-list">
-          <v-radio v-for="(item, index) in incorporationAgreementTypeResource"
+          <v-radio v-for="(item, index) in getIncorporationAgreement"
             :key="index" :value="item.code" :id="`agreement-type-${item.code}`"
           >
             <template slot="label">
@@ -48,16 +46,13 @@
 <script lang="ts">
 // Libraries
 import { Component, Vue, Prop } from 'vue-property-decorator'
-import { Action, State } from 'vuex-class'
+import { Action, Getter, State } from 'vuex-class'
 
 // Interfaces
-import { ActionBindingIF } from '@/interfaces'
-import { AgreementTypeResource } from '@/resources'
+import { ActionBindingIF, IncorporationAgreementTypeIF } from '@/interfaces'
 
 @Component
 export default class AgreementType extends Vue {
-   private incorporationAgreementTypeResource = AgreementTypeResource
-
   // State
   @State(state => state.stateModel.incorporationAgreementStep.agreementType)
   readonly agreementTypeState: string | null
@@ -68,11 +63,18 @@ export default class AgreementType extends Vue {
   @Prop({ default: false })
   private isSummary: boolean
 
+  // Global getters
+  @Getter getIncorporationAgreement!: Array<IncorporationAgreementTypeIF>
+
   // Actions
   @Action setIncorporationAgreementStepData!: ActionBindingIF
   @Action setIgnoreChanges!: ActionBindingIF
 
   private agreementType: string | null = null
+
+  private get agreementTypeDescription (): string {
+    return this.getIncorporationAgreement.find(x => x.code === this.agreementTypeState)?.description
+  }
 
   // Lifecycle methods
   private created (): void {
@@ -97,13 +99,6 @@ export default class AgreementType extends Vue {
       valid: !!this.agreementType,
       agreementType: this.agreementType
     })
-  }
-
-  private get selectedAgreementDescription () : string {
-    if (this.agreementTypeState) {
-      return this.incorporationAgreementTypeResource.find(item => item.code === this.agreementTypeState)
-        .summaryDescription
-    } else { return '' }
   }
 }
 </script>

@@ -1,4 +1,14 @@
+import { ResourceIF } from '@/interfaces'
+import { BenefitCompanyResource } from '@/resources/benefitCompany'
+import { LimitedCompanyResource } from '@/resources/limitedCompany'
+import { UnlimitedCompanyResource } from '@/resources/unlimitedCompany'
+import { CommunityContributionCompanyResource } from '@/resources/communityContributionCompany'
+import { CooperativeResource } from '@/resources/cooperative'
 
-export * from './certifyStatementResource'
-export * from './agreementTypeResource'
-export * from './benefitCompanyStatementResource'
+export const CompanyResources: Array<ResourceIF> = [
+  BenefitCompanyResource,
+  LimitedCompanyResource,
+  UnlimitedCompanyResource,
+  CommunityContributionCompanyResource,
+  CooperativeResource
+]

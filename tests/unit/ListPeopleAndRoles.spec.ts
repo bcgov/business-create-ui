@@ -1,27 +1,8 @@
-// Libraries
-import Vue from 'vue'
-import Vuelidate from 'vuelidate'
-import Vuetify from 'vuetify'
-import VueRouter from 'vue-router'
-import mockRouter from './MockRouter'
-
-// Store
-import { getVuexStore } from '@/store'
-
-// Utils
-import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
-
-// Components
+import { wrapperFactory, shallowWrapperFactory } from '../jest-wrapper-factory'
 import { ListPeopleAndRoles } from '@/components/AddPeopleAndRoles'
 
-Vue.use(Vuetify)
-Vue.use(Vuelidate)
-
-const vuetify = new Vuetify({})
-const store = getVuexStore()
-
 describe('List People And Roles component', () => {
-  let wrapperFactory: any
+  let wrapper: any
 
   const mockPersonList = [
     {
@@ -78,26 +59,8 @@ describe('List People And Roles component', () => {
     }
   ]
 
-  beforeEach(() => {
-    const localVue = createLocalVue()
-    localVue.use(VueRouter)
-    const router = mockRouter.mock()
-
-    wrapperFactory = (propsData) => {
-      return shallowMount(ListPeopleAndRoles, {
-        propsData: {
-          ...propsData
-        },
-        localVue,
-        router,
-        store,
-        vuetify
-      })
-    }
-  })
-
   it('does not show the peoples / roles list if there is no data to display', () => {
-    const wrapper = wrapperFactory()
+    wrapper = shallowWrapperFactory(ListPeopleAndRoles)
     const displayListCount = wrapper.vm.$el.querySelectorAll('.people-roles-content').length
 
     expect(displayListCount).toEqual(0)
@@ -105,7 +68,7 @@ describe('List People And Roles component', () => {
   })
 
   it('displays the correct amount of peoples / roles list when data is present', () => {
-    const wrapper = wrapperFactory({ personList: mockPersonList })
+    wrapper = shallowWrapperFactory(ListPeopleAndRoles, { personList: mockPersonList })
     const displayListCount = wrapper.vm.$el.querySelectorAll('.people-roles-content').length
 
     expect(displayListCount).toEqual(2)
@@ -113,8 +76,7 @@ describe('List People And Roles component', () => {
   })
 
   it('displays the correct name data in the peoples / roles list', () => {
-    // Mounting the Wrapper to allow for the test to reach into the vuetify tooltip to validate data
-    const wrapper = mount(ListPeopleAndRoles, { propsData: { personList: mockPersonList }, vuetify })
+    wrapper = wrapperFactory(ListPeopleAndRoles, { personList: mockPersonList })
 
     const peoplesListItem1 = wrapper.vm.$el.querySelectorAll('.people-roles-content')[0]
     const peoplesListItem2 = wrapper.vm.$el.querySelectorAll('.people-roles-content')[1]
@@ -128,7 +90,7 @@ describe('List People And Roles component', () => {
 
   it('displays the correct address data in the peoples / roles list', () => {
     // Mounting the Wrapper to allow for the test to reach into the baseAddress component to validate data
-    const wrapper = mount(ListPeopleAndRoles, { propsData: { personList: mockPersonList }, vuetify })
+    wrapper = wrapperFactory(ListPeopleAndRoles, { personList: mockPersonList })
 
     const peoplesListItem1 = wrapper.vm.$el.querySelectorAll('.people-roles-content')[0]
     const peoplesListItem2 = wrapper.vm.$el.querySelectorAll('.people-roles-content')[1]
@@ -142,7 +104,7 @@ describe('List People And Roles component', () => {
 
   it('displays the `same as Mailing Address` text when mailing and delivery match', () => {
     // Mounting the Wrapper to allow for the test to reach into the baseAddress component to validate data
-    const wrapper = mount(ListPeopleAndRoles, { propsData: { personList: mockPersonList }, vuetify })
+    wrapper = wrapperFactory(ListPeopleAndRoles, { personList: mockPersonList })
 
     const peoplesListItem = wrapper.vm.$el.querySelectorAll('.people-roles-content')[0]
 
@@ -156,7 +118,7 @@ describe('List People And Roles component', () => {
   it('displays the correct addresses text when mailing and delivery do NOT match', () => {
     mockPersonList[0].deliveryAddress.streetAddress = '123 Different rd'
     // Mounting the Wrapper to allow for the test to reach into the baseAddress component to validate data
-    const wrapper = mount(ListPeopleAndRoles, { propsData: { personList: mockPersonList }, vuetify })
+    wrapper = wrapperFactory(ListPeopleAndRoles, { personList: mockPersonList })
 
     const peoplesListItem = wrapper.vm.$el.querySelectorAll('.people-roles-content')[0]
 
@@ -171,7 +133,7 @@ describe('List People And Roles component', () => {
   })
 
   it('displays the correct roles', () => {
-    const wrapper = wrapperFactory({ personList: mockPersonList })
+    wrapper = shallowWrapperFactory(ListPeopleAndRoles, { personList: mockPersonList })
     const peoplesListItem1 = wrapper.vm.$el.querySelectorAll('.people-roles-content')[0]
     const peoplesListItem2 = wrapper.vm.$el.querySelectorAll('.people-roles-content')[1]
 
@@ -184,7 +146,7 @@ describe('List People And Roles component', () => {
   })
 
   it('displays the actions menu when viewed not in summary view', () => {
-    const wrapper = wrapperFactory({ personList: mockPersonList })
+    wrapper = shallowWrapperFactory(ListPeopleAndRoles, { personList: mockPersonList })
     const peoplesListItem1 = wrapper.vm.$el.querySelectorAll('.people-roles-content')[0]
     const peoplesListItem2 = wrapper.vm.$el.querySelectorAll('.people-roles-content')[1]
 
@@ -193,7 +155,7 @@ describe('List People And Roles component', () => {
   })
 
   it('does NOT display the actions menu when viewed in summary view', () => {
-    const wrapper = wrapperFactory({ personList: mockPersonList, isSummary: true })
+    wrapper = wrapperFactory(ListPeopleAndRoles, { personList: mockPersonList, isSummary: true })
     const peoplesListItem1 = wrapper.vm.$el.querySelectorAll('.people-roles-content')[0]
     const peoplesListItem2 = wrapper.vm.$el.querySelectorAll('.people-roles-content')[1]
 
@@ -202,20 +164,25 @@ describe('List People And Roles component', () => {
   })
 
   it('displays the Summary header when in summary view', () => {
-    const wrapper = wrapperFactory({ personList: mockPersonList, isSummary: true })
+    wrapper = shallowWrapperFactory(ListPeopleAndRoles, { personList: mockPersonList, isSummary: true })
 
     expect(wrapper.vm.$el.querySelector('.people-roles-summary-header').textContent)
       .toContain('People and Roles')
   })
 
   it('does NOT display the Summary header when NOT in summary view', () => {
-    const wrapper = wrapperFactory({ personList: mockPersonList })
+    wrapper = shallowWrapperFactory(ListPeopleAndRoles, { personList: mockPersonList })
 
     expect(wrapper.vm.$el.querySelector('.people-roles-summary-header')).toBeNull()
   })
 
   it('displays invalid warning message when in summary view and step 2 data is invalid', () => {
-    const wrapper = wrapperFactory({ personList: mockPersonList, showErrorSummary: true, isSummary: true })
+    wrapper = shallowWrapperFactory(ListPeopleAndRoles,
+      {
+        personList: mockPersonList,
+        showErrorSummary: true,
+        isSummary: true
+      })
 
     expect(wrapper.vm.$el.querySelector('.people-roles-invalid-message').textContent)
       .toContain('This step is not complete.')
@@ -225,22 +192,18 @@ describe('List People And Roles component', () => {
   })
 
   it('sends you to step 2 when the error message link is clicked', () => {
-    const localVue = createLocalVue()
-    localVue.use(VueRouter)
-    const router = mockRouter.mock()
-    const wrapper = mount(ListPeopleAndRoles,
+    wrapper = wrapperFactory(ListPeopleAndRoles,
       {
-        propsData: { personList: mockPersonList, showErrorSummary: true, isSummary: true
-        },
-        vuetify,
-        localVue,
-        router
+        personList: mockPersonList,
+        showErrorSummary: true,
+        isSummary: true
       })
+
     expect(wrapper.vm.$route.name).toBeNull()
 
     const errorLink = wrapper.find('#router-link')
     errorLink.trigger('click')
 
-    expect(wrapper.vm.$route.name).toBe('add-people-roles')
+    expect(wrapper.vm.$route.name).toBe('add-people-and-roles')
   })
 })
