@@ -64,7 +64,7 @@ export default class AgreementType extends Vue {
   private isSummary: boolean
 
   // Global getters
-  @Getter getIncorporationAgreement!: IncorporationAgreementTypeIF
+  @Getter getIncorporationAgreement!: Array<IncorporationAgreementTypeIF>
 
   // Actions
   @Action setIncorporationAgreementStepData!: ActionBindingIF
