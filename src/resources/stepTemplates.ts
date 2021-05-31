@@ -1,4 +1,4 @@
-import { RouteNames } from '@/enums'
+import { RouteNames, ViewComponentNames } from '@/enums'
 
 /** The base step template.
  * Currently used for BEN, BC, ULC and CCC.
@@ -10,7 +10,7 @@ export const BaseStepsTemplate = [
     icon: 'mdi-domain',
     text: 'Define Your\nCompany',
     to: RouteNames.DEFINE_COMPANY,
-    component: RouteNames.DEFINE_COMPANY
+    component: ViewComponentNames.DEFINE_COMPANY
   },
   {
     id: 'step-2-btn',
@@ -18,7 +18,7 @@ export const BaseStepsTemplate = [
     icon: 'mdi-account-multiple-plus',
     text: 'Add People\nand Roles',
     to: RouteNames.ADD_PEOPLE_AND_ROLES,
-    component: RouteNames.ADD_PEOPLE_AND_ROLES
+    component: ViewComponentNames.ADD_PEOPLE_AND_ROLES
 
   },
   {
@@ -27,7 +27,7 @@ export const BaseStepsTemplate = [
     icon: 'mdi-sitemap',
     text: 'Create Share\nStructure',
     to: RouteNames.CREATE_SHARE_STRUCTURE,
-    component: RouteNames.CREATE_SHARE_STRUCTURE
+    component: ViewComponentNames.CREATE_SHARE_STRUCTURE
   },
   {
     id: 'step-4-btn',
@@ -35,7 +35,7 @@ export const BaseStepsTemplate = [
     icon: 'mdi-handshake',
     text: 'Incorporation\nAgreement',
     to: RouteNames.INCORPORATION_AGREEMENT,
-    component: RouteNames.INCORPORATION_AGREEMENT
+    component: ViewComponentNames.INCORPORATION_AGREEMENT
   },
   {
     id: 'step-5-btn',
@@ -43,6 +43,6 @@ export const BaseStepsTemplate = [
     icon: 'mdi-text-box-check-outline',
     text: 'Review\nand Confirm',
     to: RouteNames.REVIEW_CONFIRM,
-    component: RouteNames.REVIEW_CONFIRM
+    component: ViewComponentNames.REVIEW_CONFIRM
   }
 ]

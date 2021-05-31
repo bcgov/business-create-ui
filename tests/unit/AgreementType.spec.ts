@@ -1,116 +1,198 @@
 import Vue from 'vue'
-import Vuetify from 'vuetify'
-import { mount, Wrapper, createLocalVue } from '@vue/test-utils'
-import flushPromises from 'flush-promises'
-import VueRouter from 'vue-router'
-import mockRouter from './MockRouter'
-
+import { wrapperFactory } from '../jest-wrapper-factory'
 import { AgreementType } from '@/components/IncorporationAgreement'
-
-// Store
-import { getVuexStore } from '@/store'
-
-Vue.use(Vuetify)
-
-let vuetify = new Vuetify({})
-const store = getVuexStore()
+import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 
 // Input field selectors to test changes to the DOM elements.
-const sampleTypeSelector: string = '#agreement-type-sample'
-const customTypeSelector: string = '#agreement-type-custom'
+const typeSelector: string = '#agreement-type-'
 const summaryErrorMessageSelector: string = '.agreement-invalid-message'
 const summaryTextSelector: string = '.summary-desc'
 
-/**
- * Utility method to get around with the timing issues
- */
-async function waitForUpdate (wrapper: Wrapper<Vue>) {
-  await Vue.nextTick()
-  await flushPromises()
-  await Vue.nextTick()
-}
-
-/**
- * Creates and mounts a component, so that it can be tested.
- *
- * @returns a Wrapper<AgreementType> object with the given parameters.
- */
-function createComponent (showErrorSummary: boolean = false, isSummary: boolean = false): Wrapper<AgreementType> {
-  const localVue = createLocalVue()
-  localVue.use(VueRouter)
-  const router = mockRouter.mock()
-  localVue.use(Vuetify)
-  document.body.setAttribute('data-app', 'true')
-  return mount(AgreementType, {
-    localVue,
-    propsData: {
-      showErrorSummary: showErrorSummary,
-      isSummary: isSummary
+const agreementTypeTestCases = [
+  {
+    entityType: CorpTypeCd.COOP,
+    sampleAgreement: {
+      agreementType: 'sample'
     },
-    router,
-    store,
-    vuetify
+    customAgreement: {
+      agreementType: 'custom'
+    },
+    sampleSummaryText: '',
+    customSummaryText: ''
+  },
+  {
+    entityType: CorpTypeCd.BENEFIT_COMPANY,
+    sampleAgreement: {
+      agreementType: 'sample'
+    },
+    customAgreement: {
+      agreementType: 'custom'
+    },
+    sampleSummaryText: 'The sample Incorporation Agreement and Benefit Company Articles containing a benefit ' +
+      'provision have been completed and a copy added to the company\'s record book.',
+    customSummaryText: 'A custom Incorporation Agreement and custom Benefit Company Articles containing ' +
+      'a benefit provision have been completed and a copy added to the company\'s record book.'
+  },
+  {
+    entityType: CorpTypeCd.BC_COMPANY,
+    sampleAgreement: {
+      agreementType: 'Table-1'
+    },
+    customAgreement: {
+      agreementType: 'custom'
+    },
+    sampleSummaryText: 'BC COMPANY description placeholder',
+    customSummaryText: 'BC COMPANY description placeholder'
+  },
+  {
+    entityType: CorpTypeCd.BC_ULC_COMPANY,
+    sampleAgreement: {
+      agreementType: 'Table-1'
+    },
+    customAgreement: {
+      agreementType: 'custom'
+    },
+    sampleSummaryText: 'BC ULC description placeholder',
+    customSummaryText: 'BC ULC description placeholder'
+  },
+  {
+    entityType: CorpTypeCd.BC_CCC,
+    sampleAgreement: {
+      agreementType: 'sample'
+    },
+    customAgreement: {
+      agreementType: 'custom'
+    },
+    sampleSummaryText: 'BC CCC description placeholder',
+    customSummaryText: 'BC CCC description placeholder'
+  }
+]
+
+for (const test of agreementTypeTestCases) {
+  describe(`Share Structure component for a ${GetCorpFullDescription(test.entityType)}`, () => {
+    let wrapper: any
+
+    it('Loads the component in edit mode and both agreement types are not selected', () => {
+      wrapper = wrapperFactory(
+        AgreementType,
+        null,
+        {
+          entityType: test.entityType,
+          incorporationAgreementStep: ''
+        }
+      )
+      const sampleSelector = `${typeSelector}${test.sampleAgreement.agreementType}`
+      const customSelector = `${typeSelector}${test.customAgreement.agreementType}`
+
+      expect(wrapper.find(sampleSelector).attributes('aria-checked')).toBe('false')
+      expect(wrapper.find(customSelector).attributes('aria-checked')).toBe('false')
+    })
+
+    it('Selects the radio button if the value is set in the store', () => {
+      wrapper = wrapperFactory(
+        AgreementType,
+        null,
+        {
+          entityType: test.entityType,
+          incorporationAgreementStep: test.sampleAgreement
+        }
+      )
+      const sampleSelector = `${typeSelector}${test.sampleAgreement.agreementType}`
+      const customSelector = `${typeSelector}${test.customAgreement.agreementType}`
+
+      expect(wrapper.find(sampleSelector).attributes('aria-checked')).toBe('true')
+      expect(wrapper.find(customSelector).attributes('aria-checked')).toBe('false')
+    })
+
+    it('Displays the summary text for sample agreement type', () => {
+      wrapper = wrapperFactory(
+        AgreementType,
+        { isSummary: true },
+        {
+          entityType: test.entityType,
+          incorporationAgreementStep: test.sampleAgreement
+        }
+      )
+
+      expect(wrapper.find(summaryTextSelector).text()).toContain(test.sampleSummaryText)
+    })
+
+    it('Displays the summary text for custom agreement type', () => {
+      wrapper = wrapperFactory(
+        AgreementType,
+        { isSummary: true },
+        {
+          entityType: test.entityType,
+          incorporationAgreementStep: test.customAgreement
+        }
+      )
+
+      expect(wrapper.find(summaryTextSelector).text()).toContain(test.customSummaryText)
+    })
+
+    it('Displays the error message in summary view if no agreement type is selected', () => {
+      wrapper = wrapperFactory(
+        AgreementType,
+        {
+          isSummary: true,
+          showErrorSummary: true
+        },
+        {
+          entityType: test.entityType
+        }
+      )
+
+      expect(wrapper.find(summaryErrorMessageSelector).text()).toContain('This step is not complete.')
+    })
+
+    it('Updates the store correctly if a sample agreement type is selected', async () => {
+      wrapper = wrapperFactory(
+        AgreementType,
+        null,
+        {
+          entityType: test.entityType,
+          incorporationAgreementStep: {
+            agreementType: null
+          }
+        }
+      )
+
+      // Verify agreement type is null
+      expect(wrapper.vm.$data.agreementType).toBe(null)
+
+      // Select the Sample Radio btn
+      const sampleSelector = `${typeSelector}${test.sampleAgreement.agreementType}`
+      const radio = wrapper.find(sampleSelector)
+      radio.trigger('click')
+      await Vue.nextTick()
+
+      // Verify state is updated
+      expect(wrapper.vm.$data.agreementType).toBe(test.sampleAgreement.agreementType)
+    })
+
+    it('Updates the store correctly if a custom agreement type is selected', async () => {
+      wrapper = wrapperFactory(
+        AgreementType,
+        null,
+        {
+          entityType: test.entityType,
+          incorporationAgreementStep: {
+            agreementType: null
+          }
+        }
+      )
+
+      // Verify agreement type is null
+      expect(wrapper.vm.$data.agreementType).toBe(null)
+
+      // Select the Sample Radio btn
+      const customSelector = `${typeSelector}${test.customAgreement.agreementType}`
+      const radio = wrapper.find(customSelector)
+      radio.trigger('click')
+      await Vue.nextTick()
+
+      // Verify state is updated
+      expect(wrapper.vm.$data.agreementType).toBe(test.customAgreement.agreementType)
+    })
   })
 }
-
-store.state.stateModel.nameRequest.entityType = 'BEN'
-store.state.stateModel.currentDate = '2020-03-30'
-
-describe('Share Structure component', () => {
-  it('Loads the component in edit mode and both agreement types are not selected', async () => {
-    const wrapper: Wrapper<AgreementType> = createComponent()
-    await waitForUpdate(wrapper)
-    expect(wrapper.find(sampleTypeSelector).attributes('aria-checked')).toBe('false')
-    expect(wrapper.find(customTypeSelector).attributes('aria-checked')).toBe('false')
-    wrapper.destroy()
-  })
-
-  it('Selects the radio button if the value is set in the store', async () => {
-    store.state.stateModel.incorporationAgreementStep.agreementType = 'sample'
-    const wrapper: Wrapper<AgreementType> = createComponent()
-    await waitForUpdate(wrapper)
-    expect(wrapper.find(sampleTypeSelector).attributes('aria-checked')).toBe('true')
-    expect(wrapper.find(customTypeSelector).attributes('aria-checked')).toBe('false')
-    store.state.stateModel.incorporationAgreementStep.agreementType = null
-    wrapper.destroy()
-  })
-
-  it('Displays the summary text for sample agreement type', async () => {
-    store.state.stateModel.incorporationAgreementStep.agreementType = 'sample'
-    const wrapper: Wrapper<AgreementType> = createComponent(false, true)
-    await waitForUpdate(wrapper)
-    expect(wrapper.find(summaryTextSelector).text()).toContain(
-      'The sample Incorporation Agreement and Benefit Company Articles containing a benefit ' +
-      'provision have been completed and a copy added to the company\'s record book.')
-    wrapper.destroy()
-  })
-
-  it('Displays the summary text for custom agreement type', async () => {
-    store.state.stateModel.incorporationAgreementStep.agreementType = 'custom'
-    const wrapper: Wrapper<AgreementType> = createComponent(false, true)
-    await waitForUpdate(wrapper)
-    expect(wrapper.find(summaryTextSelector).text()).toContain(
-      'A custom Incorporation Agreement and custom Benefit Company Articles containing ' +
-      'a benefit provision have been completed and a copy added to the company\'s record book.')
-    wrapper.destroy()
-  })
-
-  it('Displays the error message in summary view if no agreement type is selected', async () => {
-    store.state.stateModel.incorporationAgreementStep.agreementType = 'null'
-    const wrapper: Wrapper<AgreementType> = createComponent(true, true)
-    await waitForUpdate(wrapper)
-    expect(wrapper.find(summaryErrorMessageSelector).text()).toContain('This step is not complete.')
-    wrapper.destroy()
-  })
-
-  it('Updates the store correctly if an agreement type is selected', async () => {
-    store.state.stateModel.incorporationAgreementStep.agreementType = 'null'
-    const wrapper: Wrapper<AgreementType> = createComponent(false, false)
-    const radio = wrapper.find(sampleTypeSelector)
-    radio.trigger('click')
-    await waitForUpdate(wrapper)
-    expect(store.state.stateModel.incorporationAgreementStep.agreementType).toBe('sample')
-    expect(store.state.stateModel.incorporationAgreementStep.valid).toBeTruthy()
-    wrapper.destroy()
-  })
-})

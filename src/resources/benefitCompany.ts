@@ -1,5 +1,5 @@
 import { ResourceIF } from '@/interfaces'
-import { NameRequestTypes, RouteNames } from '@/enums'
+import { NameRequestTypes } from '@/enums'
 import { BaseStepsTemplate } from './stepTemplates'
 import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 

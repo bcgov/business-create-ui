@@ -23,9 +23,7 @@
         <!-- Summary Content -->
         <div v-else class="summary-desc">
           <div><v-icon color="green darken-2" class="agreement-valid-icon">mdi-check</v-icon></div>
-            <div>
-              {{ getIncorporationAgreement.description }}
-            </div>
+            <div v-html="agreementTypeDescription"></div>
         </div>
       </v-card>
     </div>
@@ -73,6 +71,10 @@ export default class AgreementType extends Vue {
   @Action setIgnoreChanges!: ActionBindingIF
 
   private agreementType: string | null = null
+
+  private get agreementTypeDescription (): string {
+    return this.getIncorporationAgreement.find(x => x.code === this.agreementTypeState)?.description
+  }
 
   // Lifecycle methods
   private created (): void {

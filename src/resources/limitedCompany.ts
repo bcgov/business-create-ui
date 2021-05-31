@@ -19,14 +19,14 @@ export const LimitedCompanyResource: ResourceIF = {
   },
   incorporationAgreement: [
     {
-      code: 'Table 1',
-      description: null, // TBD
-      summaryDescription: null // TBD
+      code: 'Table-1',
+      description: 'BC COMPANY description placeholder', // TBD
+      summaryDescription: 'BC COMPANY description placeholder' // TBD
     },
     {
       code: 'custom',
-      description: null, // TBD
-      summaryDescription: null // TBD
+      description: 'BC COMPANY description placeholder', // TBD
+      summaryDescription: 'BC COMPANY description placeholder' // TBD
     }
   ],
   reviewAndConfirm: {

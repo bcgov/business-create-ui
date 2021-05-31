@@ -20,13 +20,13 @@ export const CommunityContributionCompanyResource: ResourceIF = {
   incorporationAgreement: [
     {
       code: 'sample',
-      description: null, // TBD
-      summaryDescription: null // TBD
+      description: 'BC CCC description placeholder', // TBD
+      summaryDescription: 'BC CCC description placeholder' // TBD
     },
     {
       code: 'custom',
-      description: null, // TBD
-      summaryDescription: null // TBD
+      description: 'BC CCC description placeholder', // TBD
+      summaryDescription: 'BC CCC description placeholder' // TBD
     }
   ],
   reviewAndConfirm: {
