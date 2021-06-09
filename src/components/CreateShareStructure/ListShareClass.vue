@@ -14,7 +14,10 @@
         <span>
           <v-icon color="blue darken-2">mdi-information-outline</v-icon>
           This step is not complete.
-          <router-link id="router-link" :to="{ path: '/create-share-structure', query: { showErrors: true } }">
+          <router-link
+            id="router-link"
+            :to="{ path: `/${RouteNames.CREATE_SHARE_STRUCTURE}`, query: { showErrors: true } }"
+          >
             Return to this step to complete it.
           </router-link>
         </span>
@@ -175,6 +178,9 @@
 import { Component, Prop, Vue, Emit } from 'vue-property-decorator'
 import 'array.prototype.move'
 
+// Enums
+import { RouteNames } from '@/enums'
+
 @Component({})
 export default class ListShareClass extends Vue {
   @Prop({ default: () => [] })
@@ -189,6 +195,7 @@ export default class ListShareClass extends Vue {
   @Prop({ default: false })
   private showErrorSummary: boolean
 
+  readonly RouteNames = RouteNames
   private headers: Array<any> = [
     {
       text: 'Name of Share Class or Series',

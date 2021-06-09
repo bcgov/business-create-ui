@@ -1,8 +1,7 @@
-// Interface to define the resource model example
-import { IncorporationAgreementTypeIF } from '@/interfaces'
+import { FilingDataIF, HelpSectionIF, IncorporationAgreementTypeIF, StepIF } from '@/interfaces'
 import { NameRequestTypes } from '@/enums'
-import { StepIF } from './component-resource-interfaces/step-interface'
 
+// Interface to define the resource model
 export interface ResourceIF {
   entityType: string,
   displayName: string
@@ -11,13 +10,17 @@ export interface ResourceIF {
   statement: string
   nameRequestType: NameRequestTypes
   steps: Array<StepIF>
+  filingData: FilingDataIF
   directors: {
     countMinimum: number
   }
   shareClasses: {
     countMinimum: number
   }
-  incorporationAgreement: Array<IncorporationAgreementTypeIF>,
+  incorporationAgreement: {
+    helpSection: Array<HelpSectionIF>,
+    documents: Array<IncorporationAgreementTypeIF>
+  },
   reviewAndConfirm: {
     completingPartyStatement: {
       certifyStatementHeader: string

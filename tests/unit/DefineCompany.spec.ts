@@ -1,119 +1,98 @@
-// Libraries
-import Vue from 'vue'
-import Vuetify from 'vuetify'
-import VueRouter from 'vue-router'
-import { getVuexStore } from '@/store'
-import { shallowMount, createLocalVue } from '@vue/test-utils'
-import mockRouter from './MockRouter'
-import { CompanyResources } from '@/resources'
-
-// Components
+import { shallowWrapperFactory } from '../jest-wrapper-factory'
 import DefineCompany from '@/views/DefineCompany.vue'
 
-Vue.use(Vuetify)
+// Test Case Data
+const mockEntityInfo = [
+  {
+    entityType: 'CP',
+    description: ''
+  },
+  {
+    entityType: 'BEN',
+    description: `This company is a benefit company and, as such, has purposes that include conducting its business
+        in a responsible and sustainable manner and promoting one or more public benefits.`
+  },
+  {
+    entityType: 'BC',
+    description: ''
+  },
+  {
+    entityType: 'ULC',
+    description: `The shareholders of this company are jointly and severally liable to satisfy the debts and liabilities
+    of this company to the extent provided in section 51.3 of the Business Corporations Act.`
+  },
+  {
+    entityType: 'CC',
+    description: `This company is a community contribution company, and, as such, has purposes beneficial to society.
+    This company is restricted, in accordance with Part 2.2 of the BCA, in its ability to pay dividends and to
+    distribute its assets on dissolution or otherwise.`
+  }
+]
 
-const vuetify = new Vuetify({})
-const store = getVuexStore()
+for (const mock of mockEntityInfo) {
+  describe(`Define Company view for a Premium ${mock.entityType}`, () => {
+    let wrapper: any
 
-const localVue = createLocalVue()
-localVue.use(VueRouter)
-const router = mockRouter.mock()
+    // Conditional check for specific test scenarios
+    const itIf = (condition) => condition ? it : it.skip
 
-describe('Define Company view', () => {
-  it('renders the component properly', () => {
-    const wrapper = shallowMount(DefineCompany, { localVue, store, router, vuetify })
+    beforeEach(() => {
+      wrapper = shallowWrapperFactory(DefineCompany, null, {
+        entityType: mock.entityType,
+        accountInformation: {
+          accountType: 'PREMIUM'
+        }
+      })
+    })
 
-    // verify page content
-    expect(wrapper.find('h2').text()).toContain('Company Name')
+    it(`renders the component properly for a ${mock.entityType}`, () => {
+      // verify page content
+      expect(wrapper.find('h2').text()).toContain('Company Name')
+    })
 
-    // ensure there are no saved addresses to interfere with other tests
-    const addresses = store.state.stateModel.defineCompanyStep.officeAddresses
-    delete addresses.registeredOffice
-    delete addresses.recordsOffice
+    itIf(mock.entityType === 'CP')('doesn\'t display records office in the office address header when entity is a COOP', () => {
+      expect(wrapper.vm.$el.querySelector('#office-address-header').textContent).not.toContain('Records')
+    })
 
-    wrapper.destroy()
+    itIf(mock.entityType !== 'CP')('display records office in the office address header', () => {
+      expect(wrapper.vm.$el.querySelector('#office-address-header').textContent).toContain('Records')
+    })
+
+    it('displays folio number when it is a premium account', () => {
+      expect(wrapper.find('#folio-number-header').exists()).toBe(true)
+      expect(wrapper.find('#folio-number-header').text()).toContain('Folio / Reference Number (optional)')
+    })
+
+    it(`displays company statement`, () => {
+      expect(wrapper.find('.company-statement').exists()).toBe(true)
+      expect(wrapper.find('.company-statement p').text()).toContain(mock.description)
+
+      wrapper.destroy()
+    })
   })
 
-  it('doesn\'t display records office in the office address header when entity is a COOP', () => {
-    store.state.stateModel.nameRequest.entityType = 'CP'
-    const wrapper = shallowMount(DefineCompany, { localVue, store, router, vuetify })
+  describe(`Define Company view for a BASIC ${mock.entityType}`, () => {
+    let wrapper: any
 
-    expect(wrapper.vm.$el.querySelector('#office-address-header').textContent).not.toContain('Records')
+    // Conditional check for specific test scenarios
+    const itIf = (condition) => condition ? it : it.skip
 
-    // verify default addresses
-    const addresses = store.state.stateModel.defineCompanyStep.officeAddresses
-    expect(addresses.registeredOffice.mailingAddress.addressCountry).toBe('CA')
-    expect(addresses.registeredOffice.mailingAddress.addressRegion).toBe('BC')
-    expect(addresses.registeredOffice.deliveryAddress.addressCountry).toBe('CA')
-    expect(addresses.registeredOffice.deliveryAddress.addressRegion).toBe('BC')
-    expect(addresses.recordsOffice).toBeUndefined()
+    beforeEach(() => {
+      wrapper = shallowWrapperFactory(DefineCompany, null, {
+        entityType: mock.entityType,
+        accountInformation: {
+          accountType: 'BASIC'
+        }
+      })
+    })
 
-    // ensure there are no saved addresses to interfere with other tests
-    delete addresses.registeredOffice
-    delete addresses.recordsOffice
+    it(`renders the component properly for a ${mock.entityType}`, () => {
+      // verify page content
+      expect(wrapper.find('h2').text()).toContain('Company Name')
+    })
 
-    wrapper.destroy()
+    it('doesn\'t display folio number when it is not a premium account', () => {
+      expect(wrapper.find('#folio-number-header').exists()).toBe(false)
+    })
   })
-
-  it('displays records office in the office address header when entity is a BCOMP', () => {
-    store.state.stateModel.entityType = 'BEN'
-    const wrapper = shallowMount(DefineCompany, { localVue, store, router, vuetify })
-
-    expect(wrapper.vm.$el.querySelector('#office-address-header').textContent).toContain('Records')
-
-    // verify default addresses
-    const addresses = store.state.stateModel.defineCompanyStep.officeAddresses
-    expect(addresses.registeredOffice).not.toBeUndefined()
-    expect(addresses.recordsOffice.mailingAddress.addressCountry).toBe('CA')
-    expect(addresses.recordsOffice.mailingAddress.addressRegion).toBe('BC')
-    expect(addresses.recordsOffice.deliveryAddress.addressCountry).toBe('CA')
-    expect(addresses.recordsOffice.deliveryAddress.addressRegion).toBe('BC')
-
-    // ensure there are no saved addresses to interfere with other tests
-    delete addresses.registeredOffice
-    delete addresses.recordsOffice
-
-    wrapper.destroy()
-  })
-
-  it('displays folio number when it is a premium account', () => {
-    store.state.stateModel.nameRequest.entityType = 'BEN'
-    store.state.stateModel.accountInformation.accountType = 'PREMIUM'
-    const wrapper = shallowMount(DefineCompany, { localVue, store, router, vuetify })
-
-    expect(wrapper.find('#folio-number-header').exists()).toBe(true)
-    expect(wrapper.find('#folio-number-header').text()).toContain('Folio / Reference Number (optional)')
-
-    wrapper.destroy()
-  })
-
-  it('doesn\'t display folio number when it is not a premium account', () => {
-    store.state.stateModel.nameRequest.entityType = 'BEN'
-    store.state.stateModel.accountInformation.accountType = 'BASIC'
-    const wrapper = shallowMount(DefineCompany, { localVue, store, router, vuetify })
-
-    expect(wrapper.find('#folio-number-header').exists()).toBe(false)
-
-    wrapper.destroy()
-  })
-
-  it('displays benefit company statement when it is a BC', () => {
-    store.state.stateModel.entityType = 'BEN'
-    store.state.resourceModel = CompanyResources.find(x => x.entityType === store.state.stateModel.entityType)
-    const wrapper = shallowMount(DefineCompany, { localVue, store, router, vuetify })
-
-    expect(wrapper.find('.benefit-company-statement').exists()).toBe(true)
-    expect(wrapper.find('.benefit-company-statement p').text()).toContain('This company is a benefit company and')
-
-    wrapper.destroy()
-  })
-
-  it('doesn\'t display benefit company statement when it is not a BC', () => {
-    store.state.stateModel.entityType = 'CP'
-    const wrapper = shallowMount(DefineCompany, { localVue, store, router, vuetify })
-
-    expect(wrapper.find('.benefit-company-statement').exists()).toBe(false)
-
-    wrapper.destroy()
-  })
-})
+}

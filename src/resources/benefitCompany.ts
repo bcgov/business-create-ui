@@ -1,5 +1,5 @@
 import { ResourceIF } from '@/interfaces'
-import { NameRequestTypes } from '@/enums'
+import { FilingCodes, NameRequestTypes } from '@/enums'
 import { BaseStepsTemplate } from './stepTemplates'
 import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 
@@ -12,28 +12,78 @@ export const BenefitCompanyResource: ResourceIF = {
   statement: null,
   nameRequestType: NameRequestTypes.BC,
   steps: BaseStepsTemplate,
+  filingData: {
+    filingTypeCode: FilingCodes.INCORPORATION_BC,
+    entityType: CorpTypeCd.BENEFIT_COMPANY
+  },
   directors: {
     countMinimum: 1
   },
   shareClasses: {
     countMinimum: 1
   },
-  incorporationAgreement: [
-    {
-      code: 'sample',
-      description: 'The <b>sample Incorporation Agreement and Benefit Company Articles</b> containing a benefit ' +
-        'provision have been completed and a copy added to the company\'s record book.',
-      summaryDescription: 'The sample Incorporation Agreement and Benefit Company Articles containing a benefit ' +
-        'provision have been completed and a copy added to the company\'s record book.'
-    },
-    {
-      code: 'custom',
-      description: 'A <b>custom Incorporation Agreement and custom Benefit Company Articles</b> containing ' +
-        'a benefit provision have been completed and a copy added to the company\'s record book.',
-      summaryDescription: 'A custom Incorporation Agreement and custom Benefit Company Articles containing ' +
-        'a benefit provision have been completed and a copy added to the company\'s record book.'
-    }
-  ],
+  incorporationAgreement: {
+    helpSection: [
+      {
+        header: `What is the sample Incorporation Agreement and Benefit Company Articles?`,
+        helpText: [
+          `The sample Incorporation Agreement and Benefit Company Articles is a template that you can use
+            to create an incorporation agreement and articles for your company. It uses all the standard
+            provisions suggested by legislation and also includes a place to specify the company’s benefit
+            provision.`,
+          `If you would like to customize any other provisions in the Articles, you cannot use this sample. We
+              recommend seeking professional assistance from a lawyer or accountant to help you prepare your Articles.`
+        ]
+      },
+      {
+        header: `What is a Benefit Provision?`,
+        helpText: [
+          `A Benefit Provision is a statement by the company of its public benefits and its commitments to promote
+              those public benefits and to conduct business in a responsible and sustainable manner.`,
+          `A Benefit Company must include a benefit provision in its Articles.`
+        ]
+      },
+      {
+        header: `Can I use the sample Incorporation Agreement and Benefit Company Articles?`
+      },
+      {
+        header: `You can use the sample Articles if:`,
+        icon: 'mdi-check',
+        iconColor: `green darken-2`,
+        statements: [
+          `There are no special rights or restrictions attached to any class or series of shares in
+            the corporation’s authorized share structure.`,
+          `You do not wish to change any of the standard provisions in the sample Articles.`
+        ]
+      },
+      {
+        header: `You cannot use the sample Articles if:`,
+        icon: 'mdi-close',
+        iconColor: `red`,
+        statements: [
+          `There are special rights or restrictions attached to any class or series of shares in the corporation’s
+            authorized share structure.`,
+          `You wish to change any of the standard provisions in the sample Articles.`
+        ]
+      }
+    ],
+    documents: [
+      {
+        code: 'sample',
+        description: 'The <b>sample Incorporation Agreement and Benefit Company Articles</b> containing a benefit ' +
+            'provision have been completed and a copy added to the company\'s record book.',
+        summaryDescription: 'The sample Incorporation Agreement and Benefit Company Articles containing a benefit ' +
+            'provision have been completed and a copy added to the company\'s record book.'
+      },
+      {
+        code: 'custom',
+        description: 'A <b>custom Incorporation Agreement and custom Benefit Company Articles</b> containing ' +
+          'a benefit provision have been completed and a copy added to the company\'s record book.',
+        summaryDescription: 'A custom Incorporation Agreement and custom Benefit Company Articles containing ' +
+          'a benefit provision have been completed and a copy added to the company\'s record book.'
+      }
+    ]
+  },
   reviewAndConfirm: {
     completingPartyStatement: {
       certifyStatementHeader: 'the Completing Party, have examined the Benefit Company ' +

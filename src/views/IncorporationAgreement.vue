@@ -1,12 +1,12 @@
 <template>
   <div>
     <section class="mt-10">
-      <header id="share-structure-header">
+      <header>
         <h2>1. Incorporation Agreement and Articles</h2>
       </header>
       <p>
         Before submitting your incorporation application you <b>must complete, sign, and date</b> an
-        <v-tooltip top color="primary">
+        <v-tooltip top max-width="20rem" color="primary">
           <template v-slot:activator="{ on }">
             <span v-on="on" class="tool-tip"> Incorporation Agreement</span>
           </template>
@@ -16,9 +16,9 @@
           </span>
         </v-tooltip>
         , and a set of
-        <v-tooltip top color="primary">
+        <v-tooltip top max-width="20rem" color="primary">
           <template v-slot:activator="{ on }">
-            <span v-on="on" class="tool-tip"> Benefit Company Articles</span>
+            <span v-on="on" class="tool-tip"> {{getEntityDescription}} Articles</span>
           </template>
           <span>
             The Articles for a Benefit Company must state the benefits the company intends to provide to society, as
@@ -27,7 +27,7 @@
           </span>
         </v-tooltip>
         containing a
-        <v-tooltip top color="primary">
+        <v-tooltip top max-width="20rem" color="primary">
           <template v-slot:activator="{ on }">
             <span v-on="on" class="tool-tip"> benefit provision</span>
           </template>
@@ -47,67 +47,30 @@
         <span v-else>Hide Help</span>
       </span>
       <section v-show="helpToggle" class="incorporation-agreement-help">
-        <div class="help-section">
-          <h3>What is the sample Incorporation Agreement and Benefit Company Articles?</h3>
-          <ul>
-            <li>
-              The sample Incorporation Agreement and Benefit Company Articles is a template that you can use
-              to create an incorporation agreement and articles for your company. It uses all the standard
-              provisions suggested by legislation and also includes a place to specify the company’s benefit
-              provision.
-            </li>
-            <li>
-              If you would like to customize any other provisions in the Articles, you cannot use this sample. We
-              recommend seeking professional assistance from a lawyer or accountant to help you prepare your Articles.
-            </li>
+        <div
+          v-for="(item, index) in getIncorporationAgreementHelp"
+          :id="`agreement-help-${index}`"
+          class="help-section"
+          :key="index"
+        >
+          <h3>
+            <v-icon v-if="item.icon" :color="item.iconColor" class="article-stmt-icon">{{item.icon}}</v-icon>
+            {{item.header}}
+          </h3>
+          <ul v-for="(text, index) in item.helpText"
+              :id="`agreement-help-text-${index}`"
+              class="help-section"
+              :key="index">
+            <li>{{text}}</li>
+          </ul>
+          <ul v-for="(text, index) in item.statements"
+              :id="`agreement-statements-${index}`"
+              class="articles-statements"
+              :key="index">
+            <li>{{text}}</li>
           </ul>
         </div>
         <div class="help-section">
-          <h3>What is a Benefit Provision?</h3>
-          <ul>
-            <li>
-              A Benefit Provision is a statement by the company of its public benefits and its commitments to promote
-              those public benefits and to conduct business in a responsible and sustainable manner.
-            </li>
-            <li>
-              A Benefit Company must include a benefit provision in its Articles.
-            </li>
-          </ul>
-        </div>
-        <div class="help-section">
-          <h3>Can I use the sample Incorporation Agreement and Benefit Company Articles?</h3>
-          <h3>
-            <span><v-icon color="green darken-2" class="article-stmt-icon">mdi-check</v-icon></span>
-            <span>You can use the sample Articles if:</span>
-          </h3>
-          <ul class="articles-statements">
-            <li>
-              <div>
-                There are no special rights or restrictions attached to any class or series of shares in
-                the corporation’s authorized share structure
-              </div>
-              <div>AND</div>
-            </li>
-            <li>
-              You do not wish to change any of the standard provisions in the sample Articles.
-            </li>
-          </ul>
-          <h3>
-            <span><v-icon color="red" class="article-stmt-icon">mdi-close</v-icon></span>
-            <span>You cannot use the sample Articles if</span>
-          </h3>
-          <ul class="articles-statements">
-            <li>
-              <div>
-                There are special rights or restrictions attached to any class or series of shares in the corporation’s
-                authorized share structure
-              </div>
-              <div>OR</div>
-            </li>
-            <li>
-              You wish to change any of the standard provisions in the sample Articles.
-            </li>
-          </ul>
           <div class="articles-statements-footer">
             In this case, you need to create a unique Incorporation Agreement and set of Articles for the company and
             outline these special rights or restrictions in the Articles. We recommend seeking professional assistance
@@ -115,7 +78,7 @@
           </div>
         </div>
         <div class="help-section">
-          <h3>Retain the signed Incorporation Agreement and Benefit Company Articles</h3>
+          <h3>Retain the signed Incorporation Agreement and {{getEntityDescription}} Articles</h3>
           <ul>
             <li>
               The company is required to keep signed copies of the Incorporation Agreement and Articles in the company’s
@@ -128,12 +91,12 @@
       </section>
     </section>
     <section class="mt-10">
-      <header id="share-structure-header">
+      <header>
         <h2>2. Sample Templates</h2>
       </header>
       <p>
-        For your convenience, we have provided a sample Incorporation Agreement and a set of sample Benefit Company
-        Articles.
+        For your convenience, we have provided a sample Incorporation Agreement and a set of sample
+        {{getEntityDescription}} Articles.
       </p>
       <div>
         <v-card flat class="share-structure-check-panel">
@@ -170,7 +133,7 @@
               <span>
                 <v-icon color="blue">mdi-file-pdf-outline</v-icon>
                 <a :href="documentURL" download>
-                  Download the sample Incorporation Agreement and Benefit Company Articles
+                  Download the sample Incorporation Agreement and {{getEntityDescription}} Articles
                 </a>
               </span>
             </div>
@@ -179,7 +142,7 @@
       </div>
     </section>
     <section class="mt-10">
-      <header id="share-structure-header">
+      <header>
         <h2>3. Confirm Incorporation Agreement and Article Completion</h2>
       </header>
       <AgreementType />
@@ -190,7 +153,10 @@
 <script lang="ts">
 // Libraries
 import { Component, Vue } from 'vue-property-decorator'
+import { Getter } from 'vuex-class'
 import { AgreementType } from '@/components/IncorporationAgreement'
+import { HelpSectionIF } from '@/interfaces'
+import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module/index'
 
 @Component({
   components: {
@@ -198,8 +164,18 @@ import { AgreementType } from '@/components/IncorporationAgreement'
   }
 })
 export default class IncorporationAgreement extends Vue {
+  // Global getter
+  @Getter getEntityType!: CorpTypeCd
+  @Getter getIncorporationAgreementHelp!: Array<HelpSectionIF>
+
+  // Local properties
   private helpToggle: boolean = false
   private readMoreFlag: boolean = false
+
+  /** The entity description,  */
+  private get getEntityDescription (): string {
+    return `${GetCorpFullDescription(this.getEntityType)}`
+  }
 
   private get documentURL ():string {
     return sessionStorage.getItem('BASE_URL') +

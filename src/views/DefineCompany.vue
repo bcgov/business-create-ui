@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div class="mt-10 benefit-company-statement" v-if="isTypeBcomp">
+    <div class="mt-10 company-statement">
       <p>
-        <span class="benefit-company-statement-label">{{ getCompanyResources.title }}:</span>
+        <span class="company-statement-label">{{ getCompanyResources.title }}:</span>
         {{ getCompanyResources.description }}
       </p>
     </div>
@@ -18,8 +18,8 @@
 
     <section class="mt-10" v-show="isEntityType">
       <header id="office-address-header">
-        <h2>2. Registered <span v-if="entityFilter(EntityTypes.BCOMP)">and Records</span> Office Addresses</h2>
-        <p>Enter the business' Registered Office <span v-if="entityFilter(EntityTypes.BCOMP)">and Records Office
+        <h2>2. Registered <span v-if="!entityFilter(EntityTypes.COOP)">and Records</span> Office Addresses</h2>
+        <p>Enter the business' Registered Office <span v-if="!entityFilter(EntityTypes.COOP)">and Records Office
           </span> Mailing and Delivery Addresses.
         </p>
       </header>
@@ -261,7 +261,7 @@ header {
   }
 }
 
-.benefit-company-statement-label {
+.company-statement-label {
   letter-spacing: -0.04rem;
   font-weight: 700;
 }

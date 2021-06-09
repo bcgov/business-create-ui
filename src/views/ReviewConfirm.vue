@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div class="mt-10 benefit-company-statement" v-if="isTypeBcomp">
+    <div class="mt-10 company-statement" v-if="isTypeBcomp">
       <p>
-        <span class="benefit-company-statement-label">{{ getCompanyResources.title }}:</span>
+        <span class="company-statement-label">{{ getCompanyResources.title }}:</span>
         {{ getCompanyResources.description }}
       </p>
     </div>
@@ -128,7 +128,7 @@ export default class ReviewConfirm extends Mixins() {
 </script>
 
 <style lang="scss" scoped>
-.benefit-company-statement-label {
+.company-statement-label {
   letter-spacing: -0.04rem;
   font-weight: 700;
 }

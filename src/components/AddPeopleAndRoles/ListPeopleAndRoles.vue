@@ -21,7 +21,10 @@
         <span>
           <v-icon color="blue darken-2">mdi-information-outline</v-icon>
           This step is not complete.
-          <router-link id="router-link" :to="{ path: '/add-people-and-roles', query: { showErrors: true } }">
+          <router-link
+            id="router-link"
+            :to="{ path: `/${RouteNames.ADD_PEOPLE_AND_ROLES}`, query: { showErrors: true } }"
+          >
             Return to this step to complete it.
           </router-link>
         </span>
@@ -123,8 +126,9 @@ import { ConfirmRemoveDialog } from '@/components/dialogs'
 // Mixins
 import { CommonMixin, EntityFilterMixin } from '@/mixins'
 
-// Interfaces
+// Interfaces & enums
 import { OrgPersonIF } from '@/interfaces'
+import { RouteNames } from '@/enums'
 
 @Component({
   components: {
@@ -145,6 +149,7 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin, EntityFilter
 
   // Local Properties
   readonly tableHeaders: Array<string> = ['Name', 'Mailing Address', 'Delivery Address', 'Roles']
+  readonly RouteNames = RouteNames
   private dialog: boolean = false
   private personId: number
 

@@ -13,7 +13,7 @@
             <li class="name-request-title">
               <strong>{{ getNameRequestNumber }}</strong> - {{ getNameRequestDetails.approvedName }}
             </li>
-            <li class="mt-4"><strong>Entity Type:</strong> {{ entityTypeDescription() }}</li>
+            <li class="mt-4"><strong>Entity Type:</strong> {{ getEntityTypeDescription }}</li>
             <li><strong>Request Type:</strong> {{ requestType() }}</li>
             <li class="mt-4"><strong>Expiry Date:</strong> {{ formattedExpirationDate() }}</li>
             <li><strong>Status:</strong> {{ getNameRequestDetails.status }}</li>
@@ -50,7 +50,7 @@
           <li class="numbered-company-title">
             <strong>[Incorporation Number]</strong> B.C. Ltd.
           </li>
-          <li class="mt-4"><strong>Entity Type:</strong> {{ entityTypeDescription() }}</li>
+          <li class="mt-4"><strong>Entity Type:</strong> {{ getEntityTypeDescription }}</li>
           <li><strong>Request Type:</strong> {{ requestType() }}</li>
           <li class="bullet-point mt-4 ml-5">You will be filing this Incorporation Application for a company created by
             adding "B.C. Ltd." after the Incorporation Number.
@@ -124,6 +124,9 @@ import { getName } from 'country-list'
 import { ConfirmDialog } from '@/components/dialogs'
 import { ListNameTranslations, AddNameTranslation } from '@/components/DefineCompany'
 
+// Modules
+import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module/index'
+
 // Enums
 import { NameRequestStates } from '@/enums'
 
@@ -176,8 +179,7 @@ export default class NameRequestInfo extends Mixins(DateMixin) {
 
   // Global getters
   @Getter isEntityType!: GetterIF;
-  @Getter isTypeBcomp!: GetterIF;
-  @Getter isTypeCoop!: GetterIF;
+  @Getter getEntityType!: CorpTypeCd
   @Getter getTempId!: GetterIF;
   @Getter getNameRequestNumber!: GetterIF;
   @Getter getNameRequestDetails!: NameRequestDetailsIF;
@@ -185,14 +187,8 @@ export default class NameRequestInfo extends Mixins(DateMixin) {
   @Getter getNameTranslations!: NameTranslationIF[];
 
   /** The entity title  */
-  private entityTypeDescription (): string {
-    if (this.isTypeBcomp) {
-      return 'BC Benefit Company'
-    } else if (this.isTypeCoop) {
-      return 'BC Cooperative Association'
-    }
-
-    return ''
+  private get getEntityTypeDescription (): string {
+    return `${GetCorpFullDescription(this.getEntityType)}`
   }
 
   /** The request type */

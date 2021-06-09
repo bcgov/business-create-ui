@@ -1,5 +1,5 @@
 import { ResourceIF } from '@/interfaces'
-import { NameRequestTypes, RouteNames } from '@/enums'
+import { FilingCodes, NameRequestTypes, RouteNames } from '@/enums'
 import { BaseStepsTemplate } from './stepTemplates'
 import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 
@@ -7,28 +7,78 @@ export const CommunityContributionCompanyResource: ResourceIF = {
   entityType: CorpTypeCd.BC_CCC,
   displayName: GetCorpFullDescription(CorpTypeCd.BC_CCC),
   title: 'Community Contribution Company Statement',
-  description: null,
+  description: `This company is a community contribution company, and, as such, has purposes beneficial to society.
+    This company is restricted, in accordance with Part 2.2 of the BCA, in its ability to pay dividends and to
+    distribute its assets on dissolution or otherwise.`,
   statement: null,
   nameRequestType: NameRequestTypes.CC,
   steps: BaseStepsTemplate,
+  filingData: {
+    filingTypeCode: FilingCodes.INCORPORATION_BC, // TBD
+    entityType: CorpTypeCd.BC_CCC
+  },
   directors: {
     countMinimum: 3
   },
   shareClasses: {
     countMinimum: 1
   },
-  incorporationAgreement: [
-    {
-      code: 'sample',
-      description: 'BC CCC description placeholder', // TBD
-      summaryDescription: 'BC CCC description placeholder' // TBD
-    },
-    {
-      code: 'custom',
-      description: 'BC CCC description placeholder', // TBD
-      summaryDescription: 'BC CCC description placeholder' // TBD
-    }
-  ],
+  incorporationAgreement: {
+    helpSection: [
+      {
+        header: `What is the sample Incorporation Agreement and Articles?`,
+        helpText: [
+          `The sample Incorporation Agreement and Articles is a template that you can use to create an incorporation
+            agreement and articles for your company. It uses all the standard provisions suggested by legislation and
+            also includes a place to specify the company’s community purposes.`,
+          `If you would like to customize any other provisions in the Articles, you cannot use this sample. We
+            recommend seeking professional assistance from a lawyer or accountant to help you prepare your Articles.`
+        ]
+      },
+      {
+        header: `What are the community purposes?`,
+        helpText: [
+          `One or more of the primary purposes of a community contribution company must be community purposes. These
+            purposes must be set out in the company’s articles.`
+        ]
+      },
+      {
+        header: `Can I use the sample Incorporation Agreement and Articles?`
+      },
+      {
+        header: `You can use the sample Articles if:`,
+        icon: 'mdi-check',
+        iconColor: `green darken-2`,
+        statements: [
+          `There are no special rights or restrictions attached to any class or series of shares in
+            the corporation’s authorized share structure.`,
+          `You do not wish to change any of the standard provisions in the sample Articles.`
+        ]
+      },
+      {
+        header: `You cannot use the sample Articles if:`,
+        icon: 'mdi-close',
+        iconColor: `red`,
+        statements: [
+          `There are special rights or restrictions attached to any class or series of shares in the corporation’s
+            authorized share structure.`,
+          `You wish to change any of the standard provisions in the sample Articles.`
+        ]
+      }
+    ],
+    documents: [
+      {
+        code: 'sample',
+        description: 'BC CCC description placeholder', // TBD
+        summaryDescription: 'BC CCC description placeholder' // TBD
+      },
+      {
+        code: 'custom',
+        description: 'BC CCC description placeholder', // TBD
+        summaryDescription: 'BC CCC description placeholder' // TBD
+      }
+    ]
+  },
   reviewAndConfirm: {
     completingPartyStatement: {
       certifyStatementHeader: 'the Completing Party, have examined the Community Contribution Company ' +

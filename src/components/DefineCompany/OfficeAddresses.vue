@@ -24,7 +24,7 @@
         </v-flex>
       </v-layout>
 
-      <v-layout row id="summary-records-address" v-if="entityFilter(EntityTypes.BCOMP)" class="mt-4">
+      <v-layout row id="summary-records-address" v-if="!entityFilter(EntityTypes.COOP)" class="mt-4">
         <v-flex md4><label><strong>Records Office</strong></label></v-flex>
         <v-flex md4>
           <label><strong>Mailing Address</strong></label>
@@ -104,7 +104,7 @@
         </li>
 
         <!--Records Office Address -->
-        <template v-if="entityFilter(EntityTypes.BCOMP)">
+        <template v-if="!entityFilter(EntityTypes.COOP)">
           <div class="address-edit-header">
             <label class="address-edit-title">Records Office</label>
             <v-checkbox
@@ -334,9 +334,7 @@ export default class OfficeAddresses extends Mixins(CommonMixin, EntityFilterMix
     }
   }
 
-  //
   // Getters (Computed Values)
-  //
   /** Whether the address form is valid. */
   private get formValid (): boolean {
     const registeredOfficeValid = this.mailingAddressValid &&
@@ -353,9 +351,7 @@ export default class OfficeAddresses extends Mixins(CommonMixin, EntityFilterMix
     return isEmpty(address)
   }
 
-  //
   // Event Handlers
-  //
   /** Sets the Registered Delivery Address to the Registered Mailing Address. */
   private setDeliveryAddressToMailingAddress (): void {
     if (this.inheritMailingAddress) {
@@ -456,9 +452,7 @@ export default class OfficeAddresses extends Mixins(CommonMixin, EntityFilterMix
     this.emitValid()
   }
 
-  //
   // Watchers
-  //
   @Watch('formValid')
   private onFormValidityChange (val: boolean): void {
     this.emitValid()
@@ -471,9 +465,7 @@ export default class OfficeAddresses extends Mixins(CommonMixin, EntityFilterMix
     this.emitValid()
   }
 
-  //
   // Event Emitters
-  //
   /** Emits the valid state of this address form. */
   @Emit('valid')
   private emitValid (): boolean {
@@ -483,7 +475,7 @@ export default class OfficeAddresses extends Mixins(CommonMixin, EntityFilterMix
   /** Emits updated addresses object to the parent page. */
   @Emit('update:addresses')
   private emitAddresses (): object {
-    if (this.entityFilter(EntityTypes.BCOMP)) {
+    if (!this.entityFilter(EntityTypes.COOP)) {
       return {
         registeredOffice: {
           deliveryAddress: this.deliveryAddress,

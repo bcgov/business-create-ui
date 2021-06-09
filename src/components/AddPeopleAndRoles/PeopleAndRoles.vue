@@ -254,13 +254,8 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
       .some(party => party.roleType === RoleTypes.COMPLETING_PARTY)).length
     const numOfPeopleWithNoRoles = this.orgPersonList.filter(people => people.roles.length === 0).length
 
-    if (this.entityFilter(EntityTypes.BCOMP)) {
-      return numOfCompletingParty === 1 && numOfIncorporator >= 1 && numOfDirector >= this.getMinimumDirectorCount &&
-        numOfPeopleWithNoRoles === 0
-    } else if (this.entityFilter(EntityTypes.COOP)) {
-      return numOfCompletingParty === 1 && numOfIncorporator >= 3 && numOfDirector >= this.getMinimumDirectorCount &&
-        numOfPeopleWithNoRoles === 0
-    }
+    return numOfCompletingParty === 1 && numOfIncorporator >= 1 && numOfDirector >= this.getMinimumDirectorCount &&
+      numOfPeopleWithNoRoles === 0
   }
 
   private hasRole (roleName: RoleTypes, count: number, mode: string): boolean {

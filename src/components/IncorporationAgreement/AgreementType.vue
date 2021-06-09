@@ -6,7 +6,7 @@
         <div class="agreement-summary-header">
           <v-icon color="#38598A">mdi-handshake</v-icon>
           <label class="agreement-summary-title">
-            <strong>Incorporation Agreement and Benefit Company Articles</strong>
+            <strong>Incorporation Agreement and {{getEntityDescription}} Articles</strong>
           </label>
         </div>
 
@@ -15,7 +15,7 @@
           <span>
             <v-icon color="blue darken-2">mdi-information-outline</v-icon>
             This step is not complete.
-            <router-link id="router-link" :to="{ path: '/incorporation-agreement' }">
+            <router-link id="router-link" :to="{ path: `/${RouteNames.INCORPORATION_AGREEMENT}` }">
               Return to this step to complete it.
             </router-link>
           </span>
@@ -30,7 +30,7 @@
     <div v-else>
       <v-card flat>
         <v-radio-group v-model="agreementType" @change="changeAgreementType" class="agreement-option-list">
-          <v-radio v-for="(item, index) in getIncorporationAgreement"
+          <v-radio v-for="(item, index) in getIncorporationAgreementDocuments"
             :key="index" :value="item.code" :id="`agreement-type-${item.code}`"
           >
             <template slot="label">
@@ -48,8 +48,12 @@
 import { Component, Vue, Prop } from 'vue-property-decorator'
 import { Action, Getter, State } from 'vuex-class'
 
-// Interfaces
+// Interfaces & enums
 import { ActionBindingIF, IncorporationAgreementTypeIF } from '@/interfaces'
+import { RouteNames } from '@/enums'
+
+// Modules
+import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module/index'
 
 @Component
 export default class AgreementType extends Vue {
@@ -64,16 +68,24 @@ export default class AgreementType extends Vue {
   private isSummary: boolean
 
   // Global getters
-  @Getter getIncorporationAgreement!: Array<IncorporationAgreementTypeIF>
+  @Getter getIncorporationAgreementDocuments!: Array<IncorporationAgreementTypeIF>
+  @Getter getEntityType!: CorpTypeCd
 
   // Actions
   @Action setIncorporationAgreementStepData!: ActionBindingIF
   @Action setIgnoreChanges!: ActionBindingIF
 
   private agreementType: string | null = null
+  readonly RouteNames = RouteNames
 
+  /** The entity description,  */
+  private get getEntityDescription (): string {
+    return `${GetCorpFullDescription(this.getEntityType)}`
+  }
+
+  /** The agreement type description. */
   private get agreementTypeDescription (): string {
-    return this.getIncorporationAgreement.find(x => x.code === this.agreementTypeState)?.description
+    return this.getIncorporationAgreementDocuments.find(x => x.code === this.agreementTypeState)?.description
   }
 
   // Lifecycle methods

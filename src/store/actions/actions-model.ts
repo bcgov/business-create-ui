@@ -124,3 +124,7 @@ export const setIgnoreChanges: ActionIF = ({ commit }, ignoreChanges): void => {
 export const setHaveChanges: ActionIF = ({ commit }, haveChanges): void => {
   commit('mutateHaveChanges', haveChanges)
 }
+
+export const setValidateSteps: ActionIF = ({ commit }, validate): void => {
+  commit('mutateValidateSteps', validate)
+}

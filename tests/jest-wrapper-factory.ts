@@ -52,8 +52,7 @@ export const wrapperFactory = (component, propsData = null, stateValues = null) 
 
 const applyStoreValues = (store, stateValues) => {
   // Set Company Resources
-  const companyResources = CompanyResources.find(x => x.entityType === stateValues.entityType)
-  store.state.resourceModel = companyResources
+  store.state.resourceModel = CompanyResources.find(x => x.entityType === stateValues.entityType)
 
   // Set individual state properties
   const stateKeys = Object.keys(stateValues)

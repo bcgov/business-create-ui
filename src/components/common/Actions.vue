@@ -45,7 +45,6 @@
       <v-fade-transition hide-on-leave>
         <v-btn id="file-pay-btn" large color="primary"
           v-show="isShowFilePayBtn"
-          :disabled="!isEnableFilePayBtn || isBusySaving"
           :loading="stateModel.isFilingPaying"
           @click="onClickFilePay()"
         >
@@ -91,7 +90,7 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
   @Getter isShowBackBtn!: GetterIF
   @Getter isShowReviewConfirmBtn!: GetterIF
   @Getter isShowFilePayBtn!: GetterIF
-  @Getter isEnableFilePayBtn!: GetterIF
+  @Getter isEnableFilePay!: GetterIF
   @Getter isBusySaving!: GetterIF
   @Getter getSteps!: Array<any>
   @Getter getMaxStep!: number
@@ -104,6 +103,7 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
   @Action setIsFilingPaying!: ActionBindingIF
   @Action setHaveChanges!: ActionBindingIF
   @Action setIsIncorporationDateTimeValid!: ActionBindingIF
+  @Action setValidateSteps!: ActionBindingIF
 
   /** Called when Cancel button is clicked. */
   private onClickCancel (): void {
@@ -164,65 +164,70 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
    * @returns a promise (ie, this is an async method)
    */
   private async onClickFilePay (): Promise<void> {
-    // prevent double saving
-    if (this.isBusySaving) return
-    this.setIsFilingPaying(true)
+    // Prompt Step validations
+    this.setValidateSteps(true)
 
-    if (this.effectiveDate && !this.isValidDateTime(this.effectiveDate)) {
-      this.setIsIncorporationDateTimeValid(false)
-      this.setIsFilingPaying(false)
-      window.scrollTo({ top: 1250, behavior: 'smooth' })
-      this.setIsFilingPaying(false)
-      return
-    }
+    if (this.isEnableFilePay) {
+      // prevent double saving
+      if (this.isBusySaving) return
+      this.setIsFilingPaying(true)
 
-    // If this is a named company IA, validate NR before filing submission. This method is different
-    // from the processNameRequest method in App.vue. This method shows a generic message if
-    // the Name Request is not valid and clicking ok in the pop up redirects to the Manage Businesses
-    // dashboard.
-    if (this.isNamedBusiness) {
-      try {
-        await this.validateNameRequest(this.getNameRequestNumber)
-      } catch (error) {
+      if (this.effectiveDate && !this.isValidDateTime(this.effectiveDate)) {
+        this.setIsIncorporationDateTimeValid(false)
+        this.setIsFilingPaying(false)
+        window.scrollTo({ top: 1250, behavior: 'smooth' })
         this.setIsFilingPaying(false)
         return
       }
-    }
 
-    let filingComplete: any
-    try {
-      const filing = await this.buildFiling()
-      filingComplete = await this.updateFiling(filing, false)
-      // clear flag
-      this.setHaveChanges(false)
-    } catch (error) {
-      this.$root.$emit('save-error-event', error)
-      this.setIsFilingPaying(false)
-      return
-    }
-
-    const paymentToken = filingComplete?.header?.paymentToken
-    if (paymentToken) {
-      const isPaymentActionRequired: boolean = filingComplete.header?.isPaymentActionRequired
-      const dashboardUrl = sessionStorage.getItem('DASHBOARD_URL')
-
-      // if payment action is required, redirect to Pay URL
-      if (isPaymentActionRequired) {
-        const authUrl = sessionStorage.getItem('AUTH_URL')
-        const returnUrl = encodeURIComponent(dashboardUrl + this.getTempId)
-        const payUrl = authUrl + 'makepayment/' + paymentToken + '/' + returnUrl
-        // assume Pay URL is always reachable
-        // otherwise user will have to retry payment later
-        window.location.assign(payUrl)
-      } else {
-        // redirect to Dashboard URL
-        window.location.assign(dashboardUrl + this.getTempId)
+      // If this is a named company IA, validate NR before filing submission. This method is different
+      // from the processNameRequest method in App.vue. This method shows a generic message if
+      // the Name Request is not valid and clicking ok in the pop up redirects to the Manage Businesses
+      // dashboard.
+      if (this.isNamedBusiness) {
+        try {
+          await this.validateNameRequest(this.getNameRequestNumber)
+        } catch (error) {
+          this.setIsFilingPaying(false)
+          return
+        }
       }
-    } else {
-      const error = new Error('Missing Payment Token')
-      this.$root.$emit('save-error-event', error)
-      this.setIsFilingPaying(false)
-    }
+
+      let filingComplete: any
+      try {
+        const filing = await this.buildFiling()
+        filingComplete = await this.updateFiling(filing, false)
+        // clear flag
+        this.setHaveChanges(false)
+      } catch (error) {
+        this.$root.$emit('save-error-event', error)
+        this.setIsFilingPaying(false)
+        return
+      }
+
+      const paymentToken = filingComplete?.header?.paymentToken
+      if (paymentToken) {
+        const isPaymentActionRequired: boolean = filingComplete.header?.isPaymentActionRequired
+        const dashboardUrl = sessionStorage.getItem('DASHBOARD_URL')
+
+        // if payment action is required, redirect to Pay URL
+        if (isPaymentActionRequired) {
+          const authUrl = sessionStorage.getItem('AUTH_URL')
+          const returnUrl = encodeURIComponent(dashboardUrl + this.getTempId)
+          const payUrl = authUrl + 'makepayment/' + paymentToken + '/' + returnUrl
+          // assume Pay URL is always reachable
+          // otherwise user will have to retry payment later
+          window.location.assign(payUrl)
+        } else {
+          // redirect to Dashboard URL
+          window.location.assign(dashboardUrl + this.getTempId)
+        }
+      } else {
+        const error = new Error('Missing Payment Token')
+        this.$root.$emit('save-error-event', error)
+        this.setIsFilingPaying(false)
+      }
+    } else window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   /** Fetches NR and validates it. */

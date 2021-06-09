@@ -18,6 +18,9 @@
           <v-icon class="step__btn2" size="30" color="green darken-1" v-show=isValid(step.to)>
             mdi-check-circle
           </v-icon>
+          <v-icon class="step__btn2" size="30" color="red darken-1" v-show="!isValid(step.to) && getValidateSteps">
+            mdi-close-circle
+          </v-icon>
         </div>
         <v-btn class="step__label pre-line" text color="primary" :ripple="false" :disabled=step.disabled>
           {{ step.text }}
@@ -44,6 +47,7 @@ export default class Stepper extends Vue {
   @Getter isCreateShareStructureValid!: boolean
   @Getter isIncorporationAgreementValid!: boolean
   @Getter isApplicationValid!: boolean
+  @Getter getValidateSteps!: boolean
 
   /** Returns true if the step route is valid. */
   private isValid (route: RouteNames): boolean {
