@@ -124,9 +124,6 @@ import { getName } from 'country-list'
 import { ConfirmDialog } from '@/components/dialogs'
 import { ListNameTranslations, AddNameTranslation } from '@/components/DefineCompany'
 
-// Modules
-import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module/index'
-
 // Enums
 import { CorpTypeCd, NameRequestStates } from '@/enums'
 
@@ -141,7 +138,7 @@ import {
 } from '@/interfaces'
 
 // Mixins
-import { DateMixin } from '@/mixins'
+import { DateMixin, EnumMixin } from '@/mixins'
 
 @Component({
   components: {
@@ -150,7 +147,7 @@ import { DateMixin } from '@/mixins'
     ConfirmDialog
   }
 })
-export default class NameRequestInfo extends Mixins(DateMixin) {
+export default class NameRequestInfo extends Mixins(DateMixin, EnumMixin) {
   // Refs
   $refs!: {
     confirmTranslationRemovalDialog: ConfirmDialogType
@@ -188,7 +185,7 @@ export default class NameRequestInfo extends Mixins(DateMixin) {
 
   /** The entity title  */
   private get getEntityTypeDescription (): string {
-    return `${GetCorpFullDescription(this.getEntityType)}`
+    return `${this.getCorpTypeDescription(this.getEntityType)}`
   }
 
   /** The request type */

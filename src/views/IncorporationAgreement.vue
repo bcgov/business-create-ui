@@ -152,22 +152,22 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Mixins } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 // Components
 import { AgreementType } from '@/components/IncorporationAgreement'
 // Interfaces and enums
 import { HelpSectionIF } from '@/interfaces'
 import { CorpTypeCd } from '@/enums'
-// Modules
-import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module/index'
+// Mixins
+import { EnumMixin } from '@/mixins'
 
 @Component({
   components: {
     AgreementType
   }
 })
-export default class IncorporationAgreement extends Vue {
+export default class IncorporationAgreement extends Mixins(EnumMixin) {
   // Global getter
   @Getter getEntityType!: CorpTypeCd
   @Getter getIncorporationAgreementHelp!: Array<HelpSectionIF>
@@ -178,7 +178,7 @@ export default class IncorporationAgreement extends Vue {
 
   /** The entity description,  */
   private get getEntityDescription (): string {
-    return `${GetCorpFullDescription(this.getEntityType)}`
+    return `${this.getCorpTypeDescription(this.getEntityType)}`
   }
 
   private get documentURL ():string {
