@@ -63,11 +63,10 @@ import { BusinessContactIF, GetterIF, IncorporationAddressIf, NameTranslationIF 
 import { FolioNumber, BusinessContactInfo, OfficeAddresses } from '@/components/DefineCompany'
 
 // Mixins
-import { EntityFilterMixin } from '@/mixins'
+import { EntityFilterMixin, EnumMixin } from '@/mixins'
 
 // Enums
 import { CorpTypeCd, RouteNames } from '@/enums'
-import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module/index'
 
 @Component({
   components: {
@@ -76,7 +75,7 @@ import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module
     FolioNumber
   }
 })
-export default class SummaryDefineCompany extends Mixins(EntityFilterMixin) {
+export default class SummaryDefineCompany extends Mixins(EntityFilterMixin, EnumMixin) {
   // Getters
   @Getter getApprovedName!: GetterIF
   @Getter getEntityType!: CorpTypeCd
@@ -98,7 +97,7 @@ export default class SummaryDefineCompany extends Mixins(EntityFilterMixin) {
 
   /** The entity description  */
   private get getEntityDescription (): string {
-    return `${GetCorpFullDescription(this.getEntityType)}`
+    return `${this.getCorpTypeDescription(this.getEntityType)}`
   }
 
   // Entity Enum

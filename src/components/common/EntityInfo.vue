@@ -47,7 +47,7 @@ import { GetterIF } from '@/interfaces'
 import { CorpTypeCd, FilingNames } from '@/enums'
 
 // Modules
-import EnumMixin from '@/mixins/enum-mixin'
+import { EnumMixin } from '@/mixins'
 
 @Component({})
 export default class EntityInfo extends Mixins(EnumMixin) {

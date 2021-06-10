@@ -53,7 +53,7 @@ import { ActionBindingIF, IncorporationAgreementTypeIF } from '@/interfaces'
 import { CorpTypeCd, RouteNames } from '@/enums'
 
 // Modules
-import EnumMixin from '@/mixins/enum-mixin'
+import { EnumMixin } from '@/mixins'
 
 @Component
 export default class AgreementType extends Mixins(EnumMixin) {
