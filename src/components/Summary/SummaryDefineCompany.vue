@@ -66,8 +66,8 @@ import { FolioNumber, BusinessContactInfo, OfficeAddresses } from '@/components/
 import { EntityFilterMixin } from '@/mixins'
 
 // Enums
-import { RouteNames } from '@/enums'
-import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module/index'
+import { CorpTypeCd, RouteNames } from '@/enums'
+import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module/index'
 
 @Component({
   components: {

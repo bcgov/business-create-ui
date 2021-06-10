@@ -125,10 +125,10 @@ import { ConfirmDialog } from '@/components/dialogs'
 import { ListNameTranslations, AddNameTranslation } from '@/components/DefineCompany'
 
 // Modules
-import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module/index'
+import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module/index'
 
 // Enums
-import { NameRequestStates } from '@/enums'
+import { CorpTypeCd, NameRequestStates } from '@/enums'
 
 // Interfaces
 import {

@@ -6,6 +6,7 @@ const mockEntityInfo = [
   {
     entityType: 'CP',
     description: 'BC Cooperative Association',
+    numberedDesc: 'Numbered Cooperative Association',
     tempId: 'T1234567',
     nameRequest: {
       nrNumber: 'NR 1234567',
@@ -17,6 +18,7 @@ const mockEntityInfo = [
   {
     entityType: 'BEN',
     description: 'BC Benefit Company',
+    numberedDesc: 'Numbered Benefit Company',
     tempId: 'T1234567',
     nameRequest: {
       nrNumber: 'NR 1234567',
@@ -28,6 +30,7 @@ const mockEntityInfo = [
   {
     entityType: 'BC',
     description: 'BC Limited Company',
+    numberedDesc: 'Numbered Limited Company',
     tempId: 'T1234567',
     nameRequest: {
       nrNumber: 'NR 1234567',
@@ -39,6 +42,7 @@ const mockEntityInfo = [
   {
     entityType: 'ULC',
     description: 'BC Unlimited Liability Company',
+    numberedDesc: 'Numbered Unlimited Liability Company',
     tempId: 'T1234567',
     nameRequest: {
       nrNumber: 'NR 1234567',
@@ -50,6 +54,7 @@ const mockEntityInfo = [
   {
     entityType: 'CC',
     description: 'BC Community Contribution Company',
+    numberedDesc: '',
     tempId: 'T1234567',
     nameRequest: {
       nrNumber: 'NR 1234567',
@@ -120,10 +125,10 @@ for (const mock of mockEntityInfo) {
           .toContain(`${mock.description} Incorporation Application`)
 
         expect(wrapper.vm.$el.querySelector('#entity-legal-name').textContent)
-          .toContain(`Numbered ${mock.description}`)
+          .toContain(`${mock.numberedDesc}`)
 
         expect(wrapper.vm.$el.querySelector('#entity-numbered-label').textContent)
-          .toContain(`Numbered ${mock.description}`)
+          .toContain(`${mock.numberedDesc}`)
       })
 
     it('displays the breadcrumb correctly as a numbered benefit company', async () => {
@@ -136,7 +141,7 @@ for (const mock of mockEntityInfo) {
 
       expect(crumb1.text()).toStrictEqual('Manage Businesses Dashboard')
       expect(divider.text()).toStrictEqual('>')
-      expect(crumb2.text()).toStrictEqual(`Numbered ${mock.description}`)
+      expect(crumb2.text()).toStrictEqual(`${mock.numberedDesc}`)
       expect(crumb3.text()).toStrictEqual(`${mock.description} Incorporation Application`)
     })
   })

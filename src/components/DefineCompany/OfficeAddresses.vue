@@ -24,7 +24,7 @@
         </v-flex>
       </v-layout>
 
-      <v-layout row id="summary-records-address" v-if="!entityFilter(EntityTypes.COOP)" class="mt-4">
+      <v-layout row id="summary-records-address" v-if="!entityFilter(CorpTypeCd.COOP)" class="mt-4">
         <v-flex md4><label><strong>Records Office</strong></label></v-flex>
         <v-flex md4>
           <label><strong>Mailing Address</strong></label>
@@ -104,7 +104,7 @@
         </li>
 
         <!--Records Office Address -->
-        <template v-if="!entityFilter(EntityTypes.COOP)">
+        <template v-if="!entityFilter(CorpTypeCd.COOP)">
           <div class="address-edit-header">
             <label class="address-edit-title">Records Office</label>
             <v-checkbox
@@ -180,10 +180,10 @@ import { officeAddressSchema } from '@/schemas'
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
 
 // Interfaces
-import { IncorporationAddressIf, AddressIF, FormType, StateModelIF } from '@/interfaces'
+import { IncorporationAddressIf, AddressIF, StateModelIF } from '@/interfaces'
 
 // Enums
-import { EntityTypes } from '@/enums'
+import { CorpTypeCd } from '@/enums'
 
 // Mixins
 import { CommonMixin, EntityFilterMixin } from '@/mixins'
@@ -255,7 +255,7 @@ export default class OfficeAddresses extends Mixins(CommonMixin, EntityFilterMix
   private addressSchema = officeAddressSchema;
 
   // Entity Enum
-  readonly EntityTypes = EntityTypes;
+  readonly CorpTypeCd = CorpTypeCd;
 
   /** Called when component is created. */
   private created (): void {
@@ -309,7 +309,7 @@ export default class OfficeAddresses extends Mixins(CommonMixin, EntityFilterMix
           this.addresses.registeredOffice.deliveryAddress
         )
       }
-      if (this.entityFilter(EntityTypes.BCOMP)) {
+      if (this.entityFilter(CorpTypeCd.BENEFIT_COMPANY)) {
         this.recMailingAddress = this.addresses.recordsOffice?.mailingAddress
         this.recDeliveryAddress = this.addresses.recordsOffice?.deliveryAddress
 
@@ -475,7 +475,7 @@ export default class OfficeAddresses extends Mixins(CommonMixin, EntityFilterMix
   /** Emits updated addresses object to the parent page. */
   @Emit('update:addresses')
   private emitAddresses (): object {
-    if (!this.entityFilter(EntityTypes.COOP)) {
+    if (!this.entityFilter(CorpTypeCd.COOP)) {
       return {
         registeredOffice: {
           deliveryAddress: this.deliveryAddress,

@@ -59,8 +59,8 @@
         @click="addOrgPerson([{ roleType: RoleTypes.INCORPORATOR }], IncorporatorTypes.CORPORATION)"
       >
         <v-icon>mdi-domain-plus</v-icon>
-        <span v-if="entityFilter(EntityTypes.BCOMP)">Add a Corporation or Firm</span>
-        <span v-if="entityFilter(EntityTypes.COOP)">Add Organization</span>
+        <span v-if="entityFilter(CorpTypeCd.BENEFIT_COMPANY)">Add a Corporation or Firm</span>
+        <span v-if="entityFilter(CorpTypeCd.COOP)">Add Organization</span>
       </v-btn>
       <v-btn
         v-if="!hasRole(RoleTypes.COMPLETING_PARTY, 1, 'ATLEAST')"
@@ -112,7 +112,7 @@ import { ActionBindingIF, OrgPersonIF, RolesIF } from '@/interfaces'
 import { EntityFilterMixin } from '@/mixins'
 
 // Enums
-import { EntityTypes, IncorporatorTypes, Modes, NumWord, RoleTypes } from '@/enums'
+import { CorpTypeCd, IncorporatorTypes, Modes, NumWord, RoleTypes } from '@/enums'
 
 // Components
 import OrgPerson from './OrgPerson.vue'
@@ -166,7 +166,7 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
   private currentOrgPerson: OrgPersonIF | null = null
 
   // enums for template
-  readonly EntityTypes = EntityTypes
+  readonly CorpTypeCd = CorpTypeCd
   readonly RoleTypes = RoleTypes
   readonly IncorporatorTypes = IncorporatorTypes
   readonly NumWord = NumWord
@@ -254,8 +254,8 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
       .some(party => party.roleType === RoleTypes.COMPLETING_PARTY)).length
     const numOfPeopleWithNoRoles = this.orgPersonList.filter(people => people.roles.length === 0).length
 
-    return numOfCompletingParty === 1 && numOfIncorporator >= 1 && numOfDirector >= this.getMinimumDirectorCount &&
-      numOfPeopleWithNoRoles === 0
+    return (numOfCompletingParty === 1 && numOfIncorporator >= 1 && numOfDirector >= this.getMinimumDirectorCount &&
+      numOfPeopleWithNoRoles === 0)
   }
 
   private hasRole (roleName: RoleTypes, count: number, mode: string): boolean {

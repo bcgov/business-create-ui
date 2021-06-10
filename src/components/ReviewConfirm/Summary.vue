@@ -10,7 +10,7 @@
 <script lang="ts">
 // Libraries
 import { Component, Vue } from 'vue-property-decorator'
-import { Getter, State } from 'vuex-class'
+import { State } from 'vuex-class'
 
 // Components
 import { SummaryDefineCompany } from '@/components/Summary'

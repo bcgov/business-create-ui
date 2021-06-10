@@ -45,18 +45,18 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Vue, Prop } from 'vue-property-decorator'
+import { Component, Vue, Prop, Mixins } from 'vue-property-decorator'
 import { Action, Getter, State } from 'vuex-class'
 
 // Interfaces & enums
 import { ActionBindingIF, IncorporationAgreementTypeIF } from '@/interfaces'
-import { RouteNames } from '@/enums'
+import { CorpTypeCd, RouteNames } from '@/enums'
 
 // Modules
-import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module/index'
+import EnumMixin from '@/mixins/enum-mixin'
 
 @Component
-export default class AgreementType extends Vue {
+export default class AgreementType extends Mixins(EnumMixin) {
   // State
   @State(state => state.stateModel.incorporationAgreementStep.agreementType)
   readonly agreementTypeState: string | null
@@ -80,7 +80,7 @@ export default class AgreementType extends Vue {
 
   /** The entity description,  */
   private get getEntityDescription (): string {
-    return `${GetCorpFullDescription(this.getEntityType)}`
+    return `${this.getCorpTypeDescription(this.getEntityType)}`
   }
 
   /** The agreement type description. */

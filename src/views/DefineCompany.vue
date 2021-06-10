@@ -18,8 +18,8 @@
 
     <section class="mt-10" v-show="isEntityType">
       <header id="office-address-header">
-        <h2>2. Registered <span v-if="!entityFilter(EntityTypes.COOP)">and Records</span> Office Addresses</h2>
-        <p>Enter the business' Registered Office <span v-if="!entityFilter(EntityTypes.COOP)">and Records Office
+        <h2>2. Registered <span v-if="!entityFilter(CorpTypeCd.COOP)">and Records</span> Office Addresses</h2>
+        <p>Enter the business' Registered Office <span v-if="!entityFilter(CorpTypeCd.COOP)">and Records Office
           </span> Mailing and Delivery Addresses.
         </p>
       </header>
@@ -85,7 +85,7 @@ import {
 import { EntityFilterMixin } from '@/mixins'
 
 // Enums
-import { EntityTypes } from '@/enums'
+import { CorpTypeCd } from '@/enums'
 
 // Components
 import { BusinessContactInfo, FolioNumber, OfficeAddresses } from '@/components/DefineCompany'
@@ -129,7 +129,7 @@ export default class DefineCompany extends Mixins(EntityFilterMixin) {
   private hasValidNameTranslation: boolean = true
 
   // Entity Enum
-  readonly EntityTypes = EntityTypes
+  readonly CorpTypeCd = CorpTypeCd
 
   /** Called when component is created. */
   private created (): void {
@@ -159,7 +159,7 @@ export default class DefineCompany extends Mixins(EntityFilterMixin) {
       streetAddressAdditional: ''
     }
 
-    if (this.entityFilter(EntityTypes.BCOMP)) {
+    if (this.entityFilter(CorpTypeCd.BENEFIT_COMPANY)) {
       this.setOfficeAddresses({
         registeredOffice: {
           mailingAddress: defaultAddress,

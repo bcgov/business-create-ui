@@ -1,7 +1,7 @@
 import { ResourceIF } from '@/interfaces'
-import { FilingCodes, NameRequestTypes } from '@/enums'
+import { CorpTypeCd, FilingCodes, NameRequestTypes } from '@/enums'
 import { BaseStepsTemplate } from './stepTemplates'
-import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
+import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 
 export const BenefitCompanyResource: ResourceIF = {
   entityType: CorpTypeCd.BENEFIT_COMPANY,

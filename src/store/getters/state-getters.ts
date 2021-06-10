@@ -1,5 +1,5 @@
 // Enums
-import { AccountTypes, EntityTypes, RouteNames } from '@/enums'
+import { AccountTypes, CorpTypeCd } from '@/enums'
 import {
   NameRequestDetailsIF,
   NameRequestApplicantIF,
@@ -37,7 +37,7 @@ export const isEntityType = (state: any): boolean => {
 /**
  * The current entityType.
  */
-export const getEntityType = (state: any): boolean => {
+export const getEntityType = (state: any): CorpTypeCd => {
   return state.stateModel.entityType
 }
 
@@ -45,14 +45,14 @@ export const getEntityType = (state: any): boolean => {
  * Whether the entity is a BCOMP.
  */
 export const isTypeBcomp = (state: any): boolean => {
-  return (state.stateModel.entityType === EntityTypes.BCOMP)
+  return (state.stateModel.entityType === CorpTypeCd.BENEFIT_COMPANY)
 }
 
 /**
  * Whether the entity is a COOP.
  */
 export const isTypeCoop = (state: any): boolean => {
-  return (state.stateModel.entityType === EntityTypes.COOP)
+  return (state.stateModel.entityType === CorpTypeCd.COOP)
 }
 
 /**

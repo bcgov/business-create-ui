@@ -150,9 +150,8 @@ import { FilingDataIF, ActionBindingIF, ConfirmDialogType, StepIF } from '@/inte
 import { CompanyResources } from '@/resources'
 
 // Enums and Constants
-import { EntityTypes, FilingCodes, FilingStatus, RouteNames, NameRequestStates } from '@/enums'
+import { FilingStatus, RouteNames, NameRequestStates } from '@/enums'
 import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
-import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 
 @Component({
   components: {
@@ -227,7 +226,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
   /** Whether the token refresh service is initialized. */
   private tokenService: boolean = false
 
-  /** Data for fee summary calculator. */
+  /** Data for fee summary component. */
   private get feeFilingData (): Array<FilingDataIF> {
     return this.getFilingData
       ? [{ ...this.getFilingData, futureEffective: this.isFutureEffective }]

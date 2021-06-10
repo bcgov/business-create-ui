@@ -154,9 +154,13 @@
 // Libraries
 import { Component, Vue } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
+// Components
 import { AgreementType } from '@/components/IncorporationAgreement'
+// Interfaces and enums
 import { HelpSectionIF } from '@/interfaces'
-import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module/index'
+import { CorpTypeCd } from '@/enums'
+// Modules
+import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module/index'
 
 @Component({
   components: {

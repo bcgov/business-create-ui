@@ -39,15 +39,18 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Mixins } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 
-// Interfaces
+// Interfaces & enums
 import { GetterIF } from '@/interfaces'
-import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
+import { CorpTypeCd, FilingNames } from '@/enums'
+
+// Modules
+import EnumMixin from '@/mixins/enum-mixin'
 
 @Component({})
-export default class EntityInfo extends Vue {
+export default class EntityInfo extends Mixins(EnumMixin) {
   // Global getters
   @Getter isEntityType!: GetterIF
   @Getter getEntityType!: CorpTypeCd
@@ -57,12 +60,12 @@ export default class EntityInfo extends Vue {
 
   /** The entity application title  */
   private get entityTitle (): string {
-    return `${GetCorpFullDescription(this.getEntityType)} Incorporation Application`
+    return `${this.getCorpTypeDescription(this.getEntityType)} ${FilingNames.INCORPORATION_APPLICATION}`
   }
 
   /** The numbered entity name */
   private get getNumberedEntityName (): string {
-    return `Numbered ${GetCorpFullDescription(this.getEntityType)}`
+    return `${this.getCorpTypeNumberedDescription(this.getEntityType)}`
   }
 
   /** Get route breadcrumbs. */

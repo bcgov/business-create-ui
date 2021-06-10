@@ -138,6 +138,6 @@ export const mutateEntityType = (state: any, entityType) => {
   state.stateModel.entityType = entityType
 }
 
-export const mutateValidateSteps = (state: any, validate) => {
+export const mutateValidateSteps = (state: any, validate: boolean) => {
   state.stateModel.validateSteps = validate
 }
