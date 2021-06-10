@@ -1,7 +1,7 @@
 export * from './accountTypes'
-export * from './entityTypes'
 export * from './filingCodes'
 export * from './filingStatus'
+export * from './filingNames'
 export * from './roleTypes'
 export * from './incorporatorTypes'
 export * from './modes'
@@ -10,3 +10,6 @@ export * from './nameRequestTypes'
 export * from './numWord'
 export * from './routeNames'
 export * from './viewComponentNames'
+
+// external enums
+export { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'

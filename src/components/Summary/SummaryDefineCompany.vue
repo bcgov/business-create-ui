@@ -8,7 +8,7 @@
       <span>
         <v-icon color="blue darken-2">mdi-information-outline</v-icon>
         This step is not complete.
-        <router-link :to="{ path: '/define-company', query: { showErrors: true } }">
+        <router-link :to="{ path: `/${RouteNames.DEFINE_COMPANY}`, query: { showErrors: true } }">
           Return to this step to complete it.
         </router-link>
       </span>
@@ -22,8 +22,7 @@
         <v-flex md8>
           <div class="company-name">{{ getApprovedName || '[Incorporation Number] B.C. Ltd.' }}</div>
           <div class="company-type">
-            <span v-if="entityFilter(EntityTypes.BCOMP)">BC Benefit Company</span>
-            <span v-else-if="entityFilter(EntityTypes.COOP)">BC Cooperative Association</span>
+            <span>{{ getEntityDescription }}</span>
           </div>
         </v-flex>
       </v-layout>
@@ -64,10 +63,10 @@ import { BusinessContactIF, GetterIF, IncorporationAddressIf, NameTranslationIF 
 import { FolioNumber, BusinessContactInfo, OfficeAddresses } from '@/components/DefineCompany'
 
 // Mixins
-import { EntityFilterMixin } from '@/mixins'
+import { EntityFilterMixin, EnumMixin } from '@/mixins'
 
 // Enums
-import { EntityTypes } from '@/enums'
+import { CorpTypeCd, RouteNames } from '@/enums'
 
 @Component({
   components: {
@@ -76,9 +75,10 @@ import { EntityTypes } from '@/enums'
     FolioNumber
   }
 })
-export default class SummaryDefineCompany extends Mixins(EntityFilterMixin) {
+export default class SummaryDefineCompany extends Mixins(EntityFilterMixin, EnumMixin) {
   // Getters
   @Getter getApprovedName!: GetterIF
+  @Getter getEntityType!: CorpTypeCd
   @Getter isPremiumAccount!: GetterIF
   @Getter getNameTranslations!: NameTranslationIF[]
 
@@ -95,8 +95,13 @@ export default class SummaryDefineCompany extends Mixins(EntityFilterMixin) {
   @State(state => state.stateModel.defineCompanyStep.folioNumber)
   readonly folioNumber!: string
 
+  /** The entity description  */
+  private get getEntityDescription (): string {
+    return `${this.getCorpTypeDescription(this.getEntityType)}`
+  }
+
   // Entity Enum
-  readonly EntityTypes = EntityTypes
+  readonly RouteNames = RouteNames
 }
 </script>
 

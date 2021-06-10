@@ -1,6 +1,6 @@
 import { ResourceIF } from '@/interfaces'
-import { NameRequestTypes } from '@/enums'
-import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
+import { CorpTypeCd, FilingCodes } from '@/enums'
+import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 
 export const CooperativeResource: ResourceIF = {
   entityType: CorpTypeCd.COOP,
@@ -10,24 +10,31 @@ export const CooperativeResource: ResourceIF = {
   statement: null,
   nameRequestType: null, // TBD
   steps: [],
+  filingData: {
+    filingTypeCode: FilingCodes.INCORPORATION_CP,
+    entityType: CorpTypeCd.COOP
+  },
   directors: {
     countMinimum: 3
   },
   shareClasses: {
     countMinimum: null // TBD
   },
-  incorporationAgreement: [
-    {
-      code: 'sample',
-      description: '',
-      summaryDescription: ''
-    },
-    {
-      code: 'custom',
-      description: '',
-      summaryDescription: ''
-    }
-  ],
+  incorporationAgreement: {
+    helpSection: [],
+    documents: [
+      {
+        code: 'sample',
+        description: '',
+        summaryDescription: ''
+      },
+      {
+        code: 'custom',
+        description: '',
+        summaryDescription: ''
+      }
+    ]
+  },
   reviewAndConfirm: {
     completingPartyStatement: {
       certifyStatementHeader: 'the Completing Party, have examined the Articles and ' +

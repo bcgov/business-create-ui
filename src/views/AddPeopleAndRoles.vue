@@ -20,9 +20,6 @@ import { GetterIF, ActionBindingIF } from '@/interfaces'
 // Mixins
 import { EntityFilterMixin } from '@/mixins'
 
-// Enums
-import { EntityTypes } from '@/enums'
-
 // Components
 import { PeopleAndRoles } from '@/components/AddPeopleAndRoles'
 
@@ -37,9 +34,6 @@ export default class AddPeopleAndRoles extends Mixins(EntityFilterMixin) {
 
   // Global actions
   @Action setIgnoreChanges!: ActionBindingIF
-
-  // Entity Enum
-  readonly EntityTypes = EntityTypes
 
   /** Called when component is created. */
   private created (): void {

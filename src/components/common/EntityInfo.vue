@@ -16,17 +16,17 @@
         <v-list-item-content id="nr-header" v-show="isEntityType">
           <!-- Company Name -->
           <v-list-item-title class="header-title" id="entity-legal-name">
-            <span>{{ getApprovedName || 'Numbered Benefit Company' }}</span>
+            <span>{{ getApprovedName || getNumberedEntityName }}</span>
           </v-list-item-title>
 
           <!-- Company Number -->
           <v-list-item-subtitle class="business-info">
             <dl>
-              <dt>{{ entityTitle() }}</dt>
+              <dt>{{ entityTitle }}</dt>
               <dd v-if="getNameRequestNumber">Name Request No:
                 <span id="entity-nr-number">{{ getNameRequestNumber }}</span>
               </dd>
-              <dd v-else id="entity-numbered-label">Numbered Benefit Company</dd>
+              <dd v-else id="entity-numbered-label">{{getNumberedEntityName}}</dd>
             </dl>
           </v-list-item-subtitle>
 
@@ -39,31 +39,33 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Mixins } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 
-// Interfaces
+// Interfaces & enums
 import { GetterIF } from '@/interfaces'
+import { CorpTypeCd, FilingNames } from '@/enums'
+
+// Modules
+import { EnumMixin } from '@/mixins'
 
 @Component({})
-export default class EntityInfo extends Vue {
+export default class EntityInfo extends Mixins(EnumMixin) {
   // Global getters
   @Getter isEntityType!: GetterIF
-  @Getter isTypeBcomp!: GetterIF
-  @Getter isTypeCoop!: GetterIF
+  @Getter getEntityType!: CorpTypeCd
   @Getter getNameRequestNumber!: GetterIF
   @Getter getTempId!: GetterIF
   @Getter getApprovedName!: GetterIF
 
-  /** The entity title  */
-  private entityTitle (): string {
-    if (this.isTypeBcomp) {
-      return 'BC Benefit Company Incorporation Application'
-    } else if (this.isTypeCoop) {
-      return 'Incorporate a BC Cooperative Association'
-    }
+  /** The entity application title  */
+  private get entityTitle (): string {
+    return `${this.getCorpTypeDescription(this.getEntityType)} ${FilingNames.INCORPORATION_APPLICATION}`
+  }
 
-    return ''
+  /** The numbered entity name */
+  private get getNumberedEntityName (): string {
+    return `${this.getCorpTypeNumberedDescription(this.getEntityType)}`
   }
 
   /** Get route breadcrumbs. */
@@ -75,12 +77,12 @@ export default class EntityInfo extends Vue {
         href: `${sessionStorage.getItem('AUTH_URL')}business`
       },
       {
-        text: this.getApprovedName || 'Numbered Benefit Company',
+        text: this.getApprovedName || this.getNumberedEntityName,
         disabled: false,
         href: `${sessionStorage.getItem('DASHBOARD_URL')}${this.getTempId}`
       },
       {
-        text: this.entityTitle(),
+        text: this.entityTitle,
         disabled: false
       }
     ]

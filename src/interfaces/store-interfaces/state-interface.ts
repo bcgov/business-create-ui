@@ -23,4 +23,5 @@ export interface StateModelIF {
   incorporationDateTime: DateTimeIF
   ignoreChanges: boolean
   haveChanges: boolean
+  validateSteps: boolean
 }

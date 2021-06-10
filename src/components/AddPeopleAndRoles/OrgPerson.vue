@@ -7,12 +7,12 @@
         <li class="add-person-container">
           <div class="meta-container">
 
-            <label class="add-person-header" v-if="isOrg && entityFilter(EntityTypes.BCOMP)">
+            <label class="add-person-header" v-if="isOrg && entityFilter(CorpTypeCd.BENEFIT_COMPANY)">
               <span v-if="activeIndex===-1">Add Corporation or Firm</span>
               <span v-else>Edit Corporation or Firm</span>
             </label>
 
-            <label class="add-person-header" v-if="isOrg && entityFilter(EntityTypes.COOP)">
+            <label class="add-person-header" v-if="isOrg && entityFilter(CorpTypeCd.COOP)">
               <span v-if="activeIndex===-1">Add Organization</span>
               <span v-else>Edit Organization</span>
             </label>
@@ -173,7 +173,7 @@ import { ConfirmDialog } from '@/components/dialogs'
 import { EntityFilterMixin, CommonMixin } from '@/mixins'
 
 // Enums
-import { EntityTypes, RoleTypes, IncorporatorTypes } from '@/enums'
+import { CorpTypeCd, RoleTypes, IncorporatorTypes } from '@/enums'
 
 // Schemas
 import { personAddressSchema } from '@/schemas'
@@ -223,7 +223,7 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
   private selectedRoles: Array<RoleTypes> = []
 
   // enums for template
-  readonly EntityTypes = EntityTypes
+  readonly CorpTypeCd = CorpTypeCd
   readonly RoleTypes = RoleTypes
   readonly IncorporatorTypes = IncorporatorTypes
 
@@ -448,7 +448,7 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
   }
 
   private get incorporatorLabel (): string {
-    return this.entityFilter(EntityTypes.BCOMP) ? RoleTypes.INCORPORATOR : RoleTypes.SUBSCRIBER
+    return this.entityFilter(CorpTypeCd.BENEFIT_COMPANY) ? RoleTypes.INCORPORATOR : RoleTypes.SUBSCRIBER
   }
 
   // Event emitters

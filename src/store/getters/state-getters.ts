@@ -1,5 +1,5 @@
 // Enums
-import { AccountTypes, EntityTypes, RouteNames } from '@/enums'
+import { AccountTypes, CorpTypeCd } from '@/enums'
 import {
   NameRequestDetailsIF,
   NameRequestApplicantIF,
@@ -35,17 +35,24 @@ export const isEntityType = (state: any): boolean => {
 }
 
 /**
+ * The current entityType.
+ */
+export const getEntityType = (state: any): CorpTypeCd => {
+  return state.stateModel.entityType
+}
+
+/**
  * Whether the entity is a BCOMP.
  */
 export const isTypeBcomp = (state: any): boolean => {
-  return (state.stateModel.entityType === EntityTypes.BCOMP)
+  return (state.stateModel.entityType === CorpTypeCd.BENEFIT_COMPANY)
 }
 
 /**
  * Whether the entity is a COOP.
  */
 export const isTypeCoop = (state: any): boolean => {
-  return (state.stateModel.entityType === EntityTypes.COOP)
+  return (state.stateModel.entityType === CorpTypeCd.COOP)
 }
 
 /**
@@ -178,11 +185,11 @@ export const isShowFilePayBtn = (state: any, getters: any): boolean => {
 /**
  * Whether File and Pay button should be enabled.
  */
-export const isEnableFilePayBtn = (state: any, getters: any): boolean => {
+export const isEnableFilePay = (state: any, getters: any): boolean => {
   const step1Valid = state.stateModel.defineCompanyStep.valid
   const step2Valid = state.stateModel.addPeopleAndRoleStep.valid
-  const step3Valid = getters.isTypeBcomp ? state.stateModel.createShareStructureStep.valid : false
-  const step4Valid = getters.isTypeBcomp ? state.stateModel.incorporationAgreementStep.valid : false
+  const step3Valid = state.stateModel.createShareStructureStep.valid
+  const step4Valid = state.stateModel.incorporationAgreementStep.valid
   const step5Valid = state.stateModel.certifyState.valid && state.stateModel.incorporationDateTime.valid
   return (step1Valid && step2Valid && step3Valid && step4Valid && step5Valid)
 }
@@ -214,18 +221,19 @@ export const isIncorporationAgreementValid = (state: any): boolean => {
   return state.stateModel.incorporationAgreementStep.valid
 }
 
-/**
- * Whether all the incorporation steps are valid.
- */
+/** Whether all the incorporation steps are valid. */
 export const isApplicationValid = (state: any): boolean => {
   return (state.stateModel.defineCompanyStep.valid && state.stateModel.addPeopleAndRoleStep.valid &&
     state.stateModel.createShareStructureStep.valid && state.stateModel.incorporationDateTime.valid &&
     state.stateModel.incorporationAgreementStep.valid && state.stateModel.certifyState.valid)
 }
 
-/**
- * Returns the maximum step number.
- */
+/** Returns the maximum step number. */
 export const getMaxStep = (state: any, getters: any): number => {
   return getters.getSteps ? getters.getSteps.filter(step => step.step !== -1).length : -1
+}
+
+/** Is true when the user has tried to submit a filing. */
+export const getValidateSteps = (state: any, getters: any): boolean => {
+  return state.stateModel.validateSteps
 }

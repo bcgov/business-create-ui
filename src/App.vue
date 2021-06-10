@@ -102,7 +102,7 @@
               <aside>
                 <affix relative-element-selector=".col-lg-9" :offset="{ top: 86, bottom: 12 }">
                   <sbc-fee-summary
-                    :filingData="[...filingData]"
+                    :filingData="feeFilingData"
                     :payURL="payApiUrl"
                   />
                 </affix>
@@ -150,7 +150,7 @@ import { FilingDataIF, ActionBindingIF, ConfirmDialogType, StepIF } from '@/inte
 import { CompanyResources } from '@/resources'
 
 // Enums and Constants
-import { EntityTypes, FilingCodes, FilingStatus, RouteNames, NameRequestStates } from '@/enums'
+import { FilingStatus, RouteNames, NameRequestStates } from '@/enums'
 import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
 
 @Component({
@@ -188,6 +188,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
 
   // Global getters
   @Getter haveChanges!: boolean
+  @Getter getFilingData!: FilingDataIF
   @Getter getSteps!: Array<StepIF>
   @Getter getTempId!: string
 
@@ -224,6 +225,13 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
 
   /** Whether the token refresh service is initialized. */
   private tokenService: boolean = false
+
+  /** Data for fee summary component. */
+  private get feeFilingData (): Array<FilingDataIF> {
+    return this.getFilingData
+      ? [{ ...this.getFilingData, futureEffective: this.isFutureEffective }]
+      : []
+  }
 
   /** The URL of the Pay API. */
   private get payApiUrl (): string {
@@ -446,9 +454,6 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
           await this.processNameRequest(draftFiling)
         }
 
-        // Initialize Fee Summary
-        this.initEntityFees()
-
         // Set the resources
         // An unknown entity type will need to be handled here
         const companyResources = CompanyResources.find(x => x.entityType === this.entityType)
@@ -587,29 +592,6 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
     if (sessionStorage.getItem(SessionStorageKeys.CurrentAccount)) {
       const accountInfo = JSON.parse(sessionStorage.getItem(SessionStorageKeys.CurrentAccount))
       this.setAccountInformation(accountInfo)
-    }
-  }
-
-  /** Initializes the Fee Summary based on the entity type. */
-  @Watch('isFutureEffective')
-  private initEntityFees (): void {
-    switch (this.entityType) {
-      case EntityTypes.BCOMP:
-        this.filingData = [{
-          filingTypeCode: FilingCodes.INCORPORATION_BC,
-          entityType: EntityTypes.BCOMP,
-          futureEffective: this.isFutureEffective
-        }]
-        break
-      case EntityTypes.COOP:
-        this.filingData = [{
-          filingTypeCode: FilingCodes.INCORPORATION_CP,
-          entityType: EntityTypes.COOP,
-          futureEffective: this.isFutureEffective
-        }]
-        break
-      default:
-        this.filingData = []
     }
   }
 

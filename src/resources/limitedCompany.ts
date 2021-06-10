@@ -1,7 +1,7 @@
 import { ResourceIF } from '@/interfaces'
-import { NameRequestTypes, RouteNames } from '@/enums'
+import { CorpTypeCd, FilingCodes, NameRequestTypes } from '@/enums'
 import { BaseStepsTemplate } from './stepTemplates'
-import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
+import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 
 export const LimitedCompanyResource: ResourceIF = {
   entityType: CorpTypeCd.BC_COMPANY,
@@ -11,24 +11,64 @@ export const LimitedCompanyResource: ResourceIF = {
   statement: null,
   nameRequestType: NameRequestTypes.CR,
   steps: BaseStepsTemplate,
+  filingData: {
+    filingTypeCode: FilingCodes.INCORPORATION_BC, // TBD
+    entityType: CorpTypeCd.BC_COMPANY
+  },
   directors: {
     countMinimum: 1
   },
   shareClasses: {
     countMinimum: 1
   },
-  incorporationAgreement: [
-    {
-      code: 'Table-1',
-      description: 'BC COMPANY description placeholder', // TBD
-      summaryDescription: 'BC COMPANY description placeholder' // TBD
-    },
-    {
-      code: 'custom',
-      description: 'BC COMPANY description placeholder', // TBD
-      summaryDescription: 'BC COMPANY description placeholder' // TBD
-    }
-  ],
+  incorporationAgreement: {
+    helpSection: [
+      {
+        header: `What is the sample Incorporation Agreement and Articles?`,
+        helpText: [
+          `The sample Incorporation Agreement and Articles is a template that you can use to create an incorporation
+            agreement and articles for your company. It uses all the standard provisions suggested by legislation.`,
+          `If you would like to customize any provisions in the Articles, you cannot use this sample. We recommend
+            seeking professional assistance from a lawyer or accountant to help you prepare your Articles.`
+        ]
+      },
+      {
+        header: `Can I use the sample Incorporation Agreement and Articles?`
+      },
+      {
+        header: `You can use the sample Articles if:`,
+        icon: 'mdi-check',
+        iconColor: `green darken-2`,
+        statements: [
+          `There are no special rights or restrictions attached to any class or series of shares in
+            the corporation’s authorized share structure.`,
+          `You do not wish to change any of the standard provisions in the sample Articles.`
+        ]
+      },
+      {
+        header: `You cannot use the sample Articles if:`,
+        icon: 'mdi-close',
+        iconColor: `red`,
+        statements: [
+          `There are special rights or restrictions attached to any class or series of shares in the corporation’s
+            authorized share structure.`,
+          `You wish to change any of the standard provisions in the sample Articles.`
+        ]
+      }
+    ],
+    documents: [
+      {
+        code: 'Table-1',
+        description: 'BC COMPANY description placeholder', // TBD
+        summaryDescription: 'BC COMPANY description placeholder' // TBD
+      },
+      {
+        code: 'custom',
+        description: 'BC COMPANY description placeholder', // TBD
+        summaryDescription: 'BC COMPANY description placeholder' // TBD
+      }
+    ]
+  },
   reviewAndConfirm: {
     completingPartyStatement: {
       certifyStatementHeader: 'the Completing Party, have examined the Limited Company ' +

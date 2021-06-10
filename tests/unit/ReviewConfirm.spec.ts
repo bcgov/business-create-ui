@@ -31,10 +31,10 @@ for (const test of reviewConfirmTestCases) {
     it('displays benefit company statement', () => {
       wrapper = shallowWrapperFactory(ReviewConfirm, null, { entityType: test.entityType })
 
-      expect(wrapper.find('.benefit-company-statement').exists()).toBe(test.hasStatement)
+      expect(wrapper.find('.company-statement').exists()).toBe(test.hasStatement)
 
       if (test.hasStatement) {
-        expect(wrapper.find('.benefit-company-statement p').text()).toContain(test.statement)
+        expect(wrapper.find('.company-statement p').text()).toContain(test.statement)
       }
     })
     // TODO: Expand unit testing for validation on step 5. Include routing to appropriate steps from error links.

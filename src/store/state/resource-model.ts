@@ -8,13 +8,14 @@ export const resourceModel: ResourceIF = {
   statement: '',
   nameRequestType: null,
   steps: [],
+  filingData: null,
   directors: {
     countMinimum: null
   },
   shareClasses: {
     countMinimum: null
   },
-  incorporationAgreement: [],
+  incorporationAgreement: null,
   reviewAndConfirm: {
     completingPartyStatement: {
       certifyStatementHeader: '',

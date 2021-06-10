@@ -137,3 +137,7 @@ export const mutateHaveChanges = (state: any, haveChanges: boolean) => {
 export const mutateEntityType = (state: any, entityType) => {
   state.stateModel.entityType = entityType
 }
+
+export const mutateValidateSteps = (state: any, validate: boolean) => {
+  state.stateModel.validateSteps = validate
+}

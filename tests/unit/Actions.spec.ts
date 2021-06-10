@@ -72,15 +72,6 @@ describe('Actions component', () => {
     wrapper.destroy()
   })
 
-  it('Disables File and Pay button when certify from is not valid', () => {
-    // verify File and Pay button state
-    store.state.stateModel.certifyState = {
-      valid: false,
-      certifiedBy: 'Some Certifier'
-    }
-    expect(wrapper.find('#file-pay-btn').attributes('disabled')).toBe('true')
-  })
-
   it('Enables File and Pay button when certify from is valid', async () => {
     store.state.stateModel.certifyState = {
       valid: true,
