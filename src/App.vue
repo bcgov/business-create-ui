@@ -69,7 +69,7 @@
     </transition>
 
     <sbc-header />
-
+    <PaySystemAlert />
     <div class="app-body">
       <main v-if="!isErrorDialog">
         <entity-info />
@@ -132,6 +132,7 @@ import * as Sentry from '@sentry/browser'
 import { updateLdUser } from '@/utils'
 
 // Components
+import PaySystemAlert from 'sbc-common-components/src/components/PaySystemAlert.vue'
 import SbcHeader from 'sbc-common-components/src/components/SbcHeader.vue'
 import SbcFooter from 'sbc-common-components/src/components/SbcFooter.vue'
 import SbcFeeSummary from 'sbc-common-components/src/components/SbcFeeSummary.vue'
@@ -154,6 +155,7 @@ import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
 
 @Component({
   components: {
+    PaySystemAlert,
     SbcHeader,
     SbcFooter,
     SbcFeeSummary,
