@@ -314,7 +314,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
 
   private goToManageBusinessDashboard (): void {
     this.fileAndPayInvalidNameRequestDialog = false
-    const manageBusinessUrl = `${sessionStorage.getItem('AUTH_URL')}business`
+    const manageBusinessUrl = `${sessionStorage.getItem('AUTH_WEB_URL')}business`
     this.setHaveChanges(false)
     window.location.assign(manageBusinessUrl)
   }
