@@ -147,3 +147,4 @@ yarn-error.log*
 # Firebase
 .firebase
 *.firebaserc
+firebase-debug.log
