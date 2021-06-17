@@ -241,7 +241,7 @@ export const getCertifyState = (state: any): CertifyIF => {
 
 /** Business contact email address. */
 export const getBusinessEmail = (state: any, getters: any): string => {
-  return state.stateModel.defineCompanyStep.businessContact?.email
+  return state.stateModel.defineCompanyStep.businessContact.email
 }
 
 /** The Completing Party's email address. */
