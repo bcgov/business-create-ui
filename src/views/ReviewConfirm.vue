@@ -86,7 +86,7 @@ export default class ReviewConfirm extends Mixins() {
   @Getter getCertifyState!: CertifyIF
   @Getter getCompanyResources!: ResourceIF
   @Getter getCompletingPartyStatement!: CertifyStatementIF
-  @Getter getCompletingPartyEmail!: string | null
+  @Getter getCompletingPartyEmail!: string
   @Getter isTypeBcomp!: GetterIF
   @Getter isRoleStaff!: boolean
 
