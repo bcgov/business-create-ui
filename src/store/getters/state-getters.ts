@@ -1,6 +1,7 @@
 // Enums
-import { AccountTypes, CorpTypeCd } from '@/enums'
+import { AccountTypes, CorpTypeCd, RoleTypes } from '@/enums'
 import {
+  CertifyIF,
   NameRequestDetailsIF,
   NameRequestApplicantIF,
   NameTranslationIF
@@ -190,7 +191,8 @@ export const isEnableFilePay = (state: any, getters: any): boolean => {
   const step2Valid = state.stateModel.addPeopleAndRoleStep.valid
   const step3Valid = state.stateModel.createShareStructureStep.valid
   const step4Valid = state.stateModel.incorporationAgreementStep.valid
-  const step5Valid = state.stateModel.certifyState.valid && state.stateModel.incorporationDateTime.valid
+  const step5Valid = (state.stateModel.certifyState.valid && state.stateModel.certifyState.certifiedBy) &&
+    state.stateModel.incorporationDateTime.valid
   return (step1Valid && step2Valid && step3Valid && step4Valid && step5Valid)
 }
 
@@ -225,7 +227,8 @@ export const isIncorporationAgreementValid = (state: any): boolean => {
 export const isApplicationValid = (state: any): boolean => {
   return (state.stateModel.defineCompanyStep.valid && state.stateModel.addPeopleAndRoleStep.valid &&
     state.stateModel.createShareStructureStep.valid && state.stateModel.incorporationDateTime.valid &&
-    state.stateModel.incorporationAgreementStep.valid && state.stateModel.certifyState.valid)
+    state.stateModel.incorporationAgreementStep.valid &&
+    (state.stateModel.certifyState.valid && state.stateModel.certifyState.certifiedBy))
 }
 
 /** Returns the maximum step number. */
@@ -236,4 +239,25 @@ export const getMaxStep = (state: any, getters: any): number => {
 /** Is true when the user has tried to submit a filing. */
 export const getValidateSteps = (state: any, getters: any): boolean => {
   return state.stateModel.validateSteps
+}
+
+/** The current state of the certify section. */
+export const getCertifyState = (state: any): CertifyIF => {
+  return state.stateModel.certifyState
+}
+
+/** Business contact email address. */
+export const getBusinessEmail = (state: any, getters: any): string => {
+  return state.stateModel.defineCompanyStep.businessContact.email
+}
+
+/** The Completing Party's email address. */
+export const getCompletingPartyEmail = (state: any): string | null => {
+  const completingParty =
+    state.stateModel.addPeopleAndRoleStep.orgPeople.find(person => {
+      return !!person.roles?.some(role => {
+        return (role.roleType === RoleTypes.COMPLETING_PARTY)
+      })
+    })
+  return completingParty?.officer?.email || null
 }

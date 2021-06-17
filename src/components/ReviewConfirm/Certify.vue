@@ -94,17 +94,6 @@ export default class Certify extends Vue {
     this.emitValid(Boolean(this.trimmedCertifiedBy && this.isCertified))
   }
 
-  /** The Completing Party's email address. */
-  private get completingPartyEmail (): string | null {
-    const completingParty =
-      this.orgPersonList.find(person => {
-        return !!person.roles?.some(role => {
-          return (role.roleType === RoleTypes.COMPLETING_PARTY)
-        })
-      })
-    return completingParty?.officer?.email || null
-  }
-
   /** The trimmed "Certified By" string (may be ''). */
   private get trimmedCertifiedBy (): string {
     // remove repeated inline whitespace, and leading/trailing whitespace
