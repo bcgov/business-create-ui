@@ -74,7 +74,7 @@ export default class EntityInfo extends Mixins(EnumMixin) {
       {
         text: 'Manage Businesses Dashboard',
         disabled: false,
-        href: `${sessionStorage.getItem('AUTH_URL')}business`
+        href: `${sessionStorage.getItem('AUTH_WEB_URL')}business`
       },
       {
         text: this.getApprovedName || this.getNumberedEntityName,

@@ -101,7 +101,7 @@ describe('Emits error event if NR validation fails in file and pay', () => {
   const effectiveDate = new Date(new Date().setDate(new Date().getDate() + 5))
   const formattedEffectiveDate = effectiveDate.toISOString().replace('Z', '+00:00')
 
-  sessionStorage.setItem('AUTH_URL', `myhost/basePath/auth/`)
+  sessionStorage.setItem('AUTH_WEB_URL', `myhost/basePath/auth/`)
   sessionStorage.setItem('DASHBOARD_URL', `myhost/business/`)
 
   beforeEach(async () => {
@@ -176,7 +176,7 @@ describe('Actions component - Filing Functionality', () => {
   const effectiveDate = new Date(new Date().setDate(new Date().getDate() + 5))
   const formattedEffectiveDate = effectiveDate.toISOString().replace('Z', '+00:00')
 
-  sessionStorage.setItem('AUTH_URL', `myhost/basePath/auth/`)
+  sessionStorage.setItem('AUTH_WEB_URL', `myhost/basePath/auth/`)
   sessionStorage.setItem('DASHBOARD_URL', `myhost/business/`)
 
   // the filing body that would get sent to the API

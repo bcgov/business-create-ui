@@ -88,6 +88,8 @@ env.bak/
 venv.bak/
 .env.local
 .env.*.local
+configuration.json.*
+keycloak.json.*
 
 # Template parameter files
 k8s/*.param

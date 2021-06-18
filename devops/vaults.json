@@ -14,9 +14,36 @@
         ]
     },
     {
+        "vault": "sentry",
+        "application": [
+            "entity"
+        ]
+    },
+    {
+        "vault": "launchdarkly",
+        "application": [
+            "business-create"
+        ]
+    },
+    {
+        "vault": "API",
+        "application": [
+            "auth-api",
+            "pay-api",
+            "legal-api",
+            "status-api"
+        ]
+    },
+    {
+        "vault": "web-url",
+        "application": [
+            "business",
+            "auth-web"
+        ]
+    },
+    {
         "vault": "entity",
         "application": [
-            "business-ui-base",
             "business-create-ui"
         ]
     }
