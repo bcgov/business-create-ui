@@ -86,11 +86,11 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
   readonly effectiveDate!: Date
 
   // Global getters
+  @Getter isApplicationValid!: GetterIF
   @Getter isEntityType!: GetterIF
   @Getter isShowBackBtn!: GetterIF
   @Getter isShowReviewConfirmBtn!: GetterIF
   @Getter isShowFilePayBtn!: GetterIF
-  @Getter isEnableFilePay!: GetterIF
   @Getter isBusySaving!: GetterIF
   @Getter getSteps!: Array<any>
   @Getter getMaxStep!: number
@@ -167,7 +167,7 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
     // Prompt Step validations
     this.setValidateSteps(true)
 
-    if (this.isEnableFilePay) {
+    if (this.isApplicationValid) {
       // prevent double saving
       if (this.isBusySaving) return
       this.setIsFilingPaying(true)

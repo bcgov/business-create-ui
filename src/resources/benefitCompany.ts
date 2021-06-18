@@ -86,11 +86,11 @@ export const BenefitCompanyResource: ResourceIF = {
   },
   reviewAndConfirm: {
     completingPartyStatement: {
-      certifyStatementHeader: 'the Completing Party, have examined the Benefit Company ' +
+      certifyStatementHeader: 'the Completing Party, have examined the Company ' +
         'Articles and the Incorporation Agreement applicable to the company that is to be ' +
         'incorporated by the filing of this Incorporation Application and confirm that:',
       certifyStatements: [
-        'The Benefit Company Articles and the Incorporation Agreement both contain a signature ' +
+        'The Company Articles and the Incorporation Agreement both contain a signature ' +
         'line for each person identified as an incorporator in the Incorporation Application ' +
         'with the name of that person set out legibly under the signature line,',
 

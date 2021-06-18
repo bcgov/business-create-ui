@@ -35,12 +35,20 @@
       <header>
         <h2>Completing Party Statement</h2>
       </header>
-      <Certify
-        :date="currentDate"
-        :certifiedBy="certifyState.certifiedBy"
-        :certifyStatementResource="getCompletingPartyStatement"
-        @valid="onValid($event)"
-        @certifiedBy="onCertifiedBy($event)"
+      <certify
+        :currentDate="currentDate"
+        :certifiedBy="getCertifyState.certifiedBy"
+        :isCertified="getCertifyState.valid"
+        :statements="getCompletingPartyStatement.certifyStatements"
+        :message="getCompletingPartyStatement.certifyClause"
+        :enableMailTo="true"
+        :businessEmail="getBusinessEmail"
+        :completingPartyEmail="getCompletingPartyEmail"
+        :isStaff="isRoleStaff"
+        :firstColumn="3"
+        :secondColumn="9"
+        @update:certifiedBy="onCertifiedBy($event)"
+        @update:isCertified="onIsCertified($event)"
       />
     </section>
   </div>
@@ -55,7 +63,8 @@ import { State, Action, Getter } from 'vuex-class'
 import { CertifyStatementIF, ActionBindingIF, CertifyIF, DateTimeIF, GetterIF, ResourceIF } from '@/interfaces'
 
 // Components
-import { Certify, IncorporationDateTime, Summary } from '@/components/ReviewConfirm'
+import { IncorporationDateTime, Summary } from '@/components/ReviewConfirm'
+import { Certify } from '@bcrs-shared-components/certify'
 
 @Component({
   components: {
@@ -69,16 +78,17 @@ export default class ReviewConfirm extends Mixins() {
   @State(state => state.stateModel.currentDate)
   readonly currentDate!: string
 
-  @State(state => state.stateModel.certifyState)
-  readonly certifyState!: CertifyIF
-
   @State(state => state.stateModel.incorporationDateTime)
   readonly incorporationDateTime!: DateTimeIF
 
   // Global Getters
+  @Getter getBusinessEmail!: string
+  @Getter getCertifyState!: CertifyIF
   @Getter getCompanyResources!: ResourceIF
   @Getter getCompletingPartyStatement!: CertifyStatementIF
+  @Getter getCompletingPartyEmail!: string
   @Getter isTypeBcomp!: GetterIF
+  @Getter isRoleStaff!: boolean
 
   // Global Actions
   @Action setIsIncorporationDateTimeValid!: ActionBindingIF
@@ -95,12 +105,22 @@ export default class ReviewConfirm extends Mixins() {
     })
   }
 
+  /** Called when component is mounted. */
+  mounted (): void {
+    this.setCertifyState(
+      {
+        valid: this.getCertifyState.valid,
+        certifiedBy: this.getCertifyState.certifiedBy
+      }
+    )
+  }
+
   /** Handler for Valid change event. */
-  private onValid (val: boolean): void {
+  private onIsCertified (val: boolean): void {
     this.setCertifyState(
       {
         valid: val,
-        certifiedBy: this.certifyState.certifiedBy
+        certifiedBy: this.getCertifyState.certifiedBy
       }
     )
   }
@@ -109,7 +129,7 @@ export default class ReviewConfirm extends Mixins() {
   private onCertifiedBy (val: string): void {
     this.setCertifyState(
       {
-        valid: this.certifyState.valid,
+        valid: this.getCertifyState.valid,
         certifiedBy: val
       }
     )

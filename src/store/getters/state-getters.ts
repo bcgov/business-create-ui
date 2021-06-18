@@ -1,6 +1,7 @@
 // Enums
-import { AccountTypes, CorpTypeCd } from '@/enums'
+import { AccountTypes, CorpTypeCd, RoleTypes } from '@/enums'
 import {
+  CertifyIF,
   NameRequestDetailsIF,
   NameRequestApplicantIF,
   NameTranslationIF
@@ -183,18 +184,6 @@ export const isShowFilePayBtn = (state: any, getters: any): boolean => {
 }
 
 /**
- * Whether File and Pay button should be enabled.
- */
-export const isEnableFilePay = (state: any, getters: any): boolean => {
-  const step1Valid = state.stateModel.defineCompanyStep.valid
-  const step2Valid = state.stateModel.addPeopleAndRoleStep.valid
-  const step3Valid = state.stateModel.createShareStructureStep.valid
-  const step4Valid = state.stateModel.incorporationAgreementStep.valid
-  const step5Valid = state.stateModel.certifyState.valid && state.stateModel.incorporationDateTime.valid
-  return (step1Valid && step2Valid && step3Valid && step4Valid && step5Valid)
-}
-
-/**
  * Whether app is busy saving or resuming.
  */
 export const isBusySaving = (state: any): boolean => {
@@ -223,9 +212,16 @@ export const isIncorporationAgreementValid = (state: any): boolean => {
 
 /** Whether all the incorporation steps are valid. */
 export const isApplicationValid = (state: any): boolean => {
-  return (state.stateModel.defineCompanyStep.valid && state.stateModel.addPeopleAndRoleStep.valid &&
-    state.stateModel.createShareStructureStep.valid && state.stateModel.incorporationDateTime.valid &&
-    state.stateModel.incorporationAgreementStep.valid && state.stateModel.certifyState.valid)
+  return (
+    state.stateModel.defineCompanyStep.valid &&
+    state.stateModel.addPeopleAndRoleStep.valid &&
+    state.stateModel.createShareStructureStep.valid &&
+    state.stateModel.incorporationDateTime.valid &&
+    state.stateModel.incorporationAgreementStep.valid &&
+    state.stateModel.incorporationDateTime.valid &&
+    state.stateModel.certifyState.valid &&
+    state.stateModel.certifyState.certifiedBy
+  )
 }
 
 /** Returns the maximum step number. */
@@ -236,4 +232,25 @@ export const getMaxStep = (state: any, getters: any): number => {
 /** Is true when the user has tried to submit a filing. */
 export const getValidateSteps = (state: any, getters: any): boolean => {
   return state.stateModel.validateSteps
+}
+
+/** The current state of the certify section. */
+export const getCertifyState = (state: any): CertifyIF => {
+  return state.stateModel.certifyState
+}
+
+/** Business contact email address. */
+export const getBusinessEmail = (state: any, getters: any): string => {
+  return state.stateModel.defineCompanyStep.businessContact.email
+}
+
+/** The Completing Party's email address. */
+export const getCompletingPartyEmail = (state: any): string => {
+  const completingParty =
+    state.stateModel.addPeopleAndRoleStep.orgPeople.find(person => {
+      return Boolean(person.roles?.some(role => {
+        return (role.roleType === RoleTypes.COMPLETING_PARTY)
+      }))
+    })
+  return completingParty?.officer?.email || null
 }
