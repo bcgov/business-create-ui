@@ -28,10 +28,10 @@ const agreementTypeTestCases = [
     customAgreement: {
       agreementType: 'custom'
     },
-    sampleSummaryText: 'The sample Incorporation Agreement and Benefit Company Articles containing a benefit ' +
-      'provision have been completed and a copy added to the company\'s record book.',
-    customSummaryText: 'A custom Incorporation Agreement and custom Benefit Company Articles containing ' +
-      'a benefit provision have been completed and a copy added to the company\'s record book.'
+    sampleSummaryText: 'The sample Incorporation Agreement and Company Articles containing a benefit ' +
+      'provision has been completed and a copy has been added to the company\'s record book.',
+    customSummaryText: 'The custom Incorporation Agreement and Company Articles containing a benefit ' +
+      'provision has been completed and a copy has been added to the company\'s record book.'
   },
   {
     entityType: CorpTypeCd.BC_COMPANY,
@@ -41,8 +41,10 @@ const agreementTypeTestCases = [
     customAgreement: {
       agreementType: 'custom'
     },
-    sampleSummaryText: 'BC COMPANY description placeholder',
-    customSummaryText: 'BC COMPANY description placeholder'
+    sampleSummaryText: 'The sample Incorporation Agreement and Company Articles containing a provision ' +
+      'has been completed and a copy has been added to the company\'s record book.',
+    customSummaryText: 'The custom Incorporation Agreement and Company Articles containing a provision ' +
+    'has been completed and a copy has been added to the company\'s record book.'
   },
   {
     entityType: CorpTypeCd.BC_ULC_COMPANY,
@@ -52,8 +54,10 @@ const agreementTypeTestCases = [
     customAgreement: {
       agreementType: 'custom'
     },
-    sampleSummaryText: 'BC ULC description placeholder',
-    customSummaryText: 'BC ULC description placeholder'
+    sampleSummaryText: 'The sample Incorporation Agreement and Company Articles containing a provision ' +
+      'has been completed and a copy has been added to the company\'s record book.',
+    customSummaryText: 'The custom Incorporation Agreement and Company Articles containing a provision ' +
+      'has been completed and a copy has been added to the company\'s record book.'
   },
   {
     entityType: CorpTypeCd.BC_CCC,
@@ -69,7 +73,7 @@ const agreementTypeTestCases = [
 ]
 
 for (const test of agreementTypeTestCases) {
-  describe(`Share Structure component for a ${GetCorpFullDescription(test.entityType)}`, () => {
+  describe(`Incorporation agreement component for a ${GetCorpFullDescription(test.entityType)}`, () => {
     let wrapper: any
 
     it('Loads the component in edit mode and both agreement types are not selected', () => {

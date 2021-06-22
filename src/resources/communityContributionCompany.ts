@@ -66,16 +66,15 @@ export const CommunityContributionCompanyResource: ResourceIF = {
         ]
       }
     ],
+    articleUrl: `Sample_articles.pdf`,
     documents: [
       {
         code: 'sample',
-        description: 'BC CCC description placeholder', // TBD
-        summaryDescription: 'BC CCC description placeholder' // TBD
+        description: 'BC CCC description placeholder' // TBD
       },
       {
         code: 'custom',
-        description: 'BC CCC description placeholder', // TBD
-        summaryDescription: 'BC CCC description placeholder' // TBD
+        description: 'BC CCC description placeholder' // TBD
       }
     ]
   },

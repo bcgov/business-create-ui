@@ -4,7 +4,9 @@
       <header>
         <h2>1. Incorporation Agreement and Articles</h2>
       </header>
-      <p>
+
+      <!-- Benefit Company header-->
+      <p v-if="isTypeBcomp">
         Before submitting your incorporation application you <b>must complete, sign, and date</b> an
         <v-tooltip top max-width="20rem" color="primary">
           <template v-slot:activator="{ on }">
@@ -18,7 +20,7 @@
         , and a set of
         <v-tooltip top max-width="20rem" color="primary">
           <template v-slot:activator="{ on }">
-            <span v-on="on" class="tool-tip"> {{getEntityDescription}} Articles</span>
+            <span v-on="on" class="tool-tip"> Benefit Company Articles</span>
           </template>
           <span>
             The Articles for a Benefit Company must state the benefits the company intends to provide to society, as
@@ -38,6 +40,30 @@
           </span>
         </v-tooltip>
         for the company you are about to incorporate.
+      </p>
+
+      <!-- All other entities -->
+      <p v-else>
+        Before submitting your incorporation application you <b>must complete, sign, and date</b> an
+        <v-tooltip top max-width="20rem" color="primary">
+          <template v-slot:activator="{ on }">
+            <span v-on="on" class="tool-tip"> Incorporation Agreement</span>
+          </template>
+          <span>
+            A document that is signed and dated by the people who agree to form the corporation. They are the
+            incorporators and the first shareholders of the corporation.
+          </span>
+        </v-tooltip>
+        , and a set of
+        <v-tooltip top max-width="20rem" color="primary">
+          <template v-slot:activator="{ on }">
+            <span v-on="on" class="tool-tip">Articles.</span>
+          </template>
+          <span>
+            A document that is signed and dated by the people who agree to form the corporation. They are the
+            incorporators and the first shareholders of the corporation.
+          </span>
+        </v-tooltip>
       </p>
 
       <!-- Help Section -->
@@ -133,7 +159,7 @@
               <span>
                 <v-icon color="blue">mdi-file-pdf-outline</v-icon>
                 <a :href="documentURL" download>
-                  Download the sample Incorporation Agreement and {{getEntityDescription}} Articles
+                  Download the sample Incorporation Agreement and Company Articles
                 </a>
               </span>
             </div>
@@ -169,8 +195,10 @@ import { EnumMixin } from '@/mixins'
 })
 export default class IncorporationAgreement extends Mixins(EnumMixin) {
   // Global getter
+  @Getter isTypeBcomp!: boolean
   @Getter getEntityType!: CorpTypeCd
   @Getter getIncorporationAgreementHelp!: Array<HelpSectionIF>
+  @Getter getSampleArticlesUrl!: string
 
   // Local properties
   private helpToggle: boolean = false
@@ -183,7 +211,7 @@ export default class IncorporationAgreement extends Mixins(EnumMixin) {
 
   private get documentURL ():string {
     return sessionStorage.getItem('BASE_URL') +
-    'files/benefit_company__corporation_agreement.pdf'
+    `files/${this.getSampleArticlesUrl}`
   }
 }
 </script>

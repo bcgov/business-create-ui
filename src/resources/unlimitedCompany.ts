@@ -57,16 +57,17 @@ export const UnlimitedCompanyResource: ResourceIF = {
         ]
       }
     ],
+    articleUrl: `Sample_articles.pdf`,
     documents: [
       {
         code: 'Table-1',
-        description: 'BC ULC description placeholder', // TBD
-        summaryDescription: 'BC ULC description placeholder' // TBD
+        description: 'The <b>sample Incorporation Agreement and Company Articles</b> containing a provision ' +
+          'has been completed and a copy has been added to the company\'s record book.'
       },
       {
         code: 'custom',
-        description: 'BC ULC description placeholder', // TBD
-        summaryDescription: 'BC ULC description placeholder' // TBD
+        description: 'The <b>custom Incorporation Agreement and Company Articles</b> containing a provision ' +
+          'has been completed and a copy has been added to the company\'s record book.'
       }
     ]
   },

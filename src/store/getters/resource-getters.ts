@@ -22,6 +22,11 @@ export const getIncorporationAgreementHelp = (state: any): Array<HelpSectionIF> 
   return state.resourceModel.incorporationAgreement.helpSection
 }
 
+/** The incorporation agreement sample article. */
+export const getSampleArticlesUrl = (state: any): string => {
+  return state.resourceModel.incorporationAgreement.articleUrl
+}
+
 /** The incorporation agreement options. */
 export const getIncorporationAgreementDocuments = (state: any): Array<IncorporationAgreementTypeIF> => {
   return state.resourceModel.incorporationAgreement.documents
