@@ -56,6 +56,13 @@ export const isTypeCoop = (state: any): boolean => {
 }
 
 /**
+ * Whether the entity is Community Contribution Company.
+ */
+export const isTypeCC = (state: any): boolean => {
+  return (state.stateModel.entityType === CorpTypeCd.BC_CCC)
+}
+
+/**
  * Whether the current account is a premium account
  */
 export const isPremiumAccount = (state: any): boolean => {

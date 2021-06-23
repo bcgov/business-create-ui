@@ -29,15 +29,32 @@
     </div>
     <div v-else>
       <v-card flat>
-        <v-radio-group v-model="agreementType" @change="changeAgreementType" class="agreement-option-list">
-          <v-radio v-for="(item, index) in getIncorporationAgreementDocuments"
-            :key="index" :value="item.code" :id="`agreement-type-${item.code}`"
+        <template v-if="isTypeCC">
+          <v-checkbox
+            v-for="(item, index) in getIncorporationAgreementDocuments"
+            :id="`agreement-type-${item.code}`"
+            class="agreement-option-list"
+            :key="index"
+            v-model="agreementType"
+            :value="item.code"
+            @change="changeAgreementType"
           >
             <template slot="label">
               <div v-html="item.description" class="agreement-option"/>
             </template>
-          </v-radio>
-        </v-radio-group>
+          </v-checkbox>
+        </template>
+        <template v-else>
+          <v-radio-group v-model="agreementType" @change="changeAgreementType" class="agreement-option-list">
+            <v-radio v-for="(item, index) in getIncorporationAgreementDocuments"
+                     :key="index" :value="item.code" :id="`agreement-type-${item.code}`"
+            >
+              <template slot="label">
+                <div v-html="item.description" class="agreement-option"/>
+              </template>
+            </v-radio>
+          </v-radio-group>
+        </template>
       </v-card>
     </div>
   </div>
@@ -70,6 +87,7 @@ export default class AgreementType extends Mixins(EnumMixin) {
   // Global getters
   @Getter getIncorporationAgreementDocuments!: Array<IncorporationAgreementTypeIF>
   @Getter getEntityType!: CorpTypeCd
+  @Getter isTypeCC!: boolean
 
   // Actions
   @Action setIncorporationAgreementStepData!: ActionBindingIF

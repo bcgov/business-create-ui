@@ -57,13 +57,27 @@
         , and a set of
         <v-tooltip top max-width="20rem" color="primary">
           <template v-slot:activator="{ on }">
-            <span v-on="on" class="tool-tip">Articles.</span>
+            <span v-on="on" class="tool-tip">Articles</span>
           </template>
           <span>
-            A document that is signed and dated by the people who agree to form the corporation. They are the
-            incorporators and the first shareholders of the corporation.
+            The articles for a company must outline the rules and procedures for corporate matters such as holding
+            meetings, issuing and transferring shares, and duties of directors and officers.
           </span>
         </v-tooltip>
+        <template v-if="isTypeCC">
+          containing the
+          <v-tooltip top max-width="20rem" color="primary">
+            <template v-slot:activator="{ on }">
+              <span v-on="on" class="tool-tip">community purposes</span>
+            </template>
+            <span>
+            One or more of the primary purposes of a community contribution company must be community purposes and those
+            community purposes must be set out in its articles.
+          </span>
+          </v-tooltip>
+          for the company you are about to incorporate.
+        </template>
+        <template v-else>.</template>
       </p>
 
       <!-- Help Section -->
@@ -96,83 +110,95 @@
             <li>{{text}}</li>
           </ul>
         </div>
-        <div class="help-section">
-          <div class="articles-statements-footer">
-            In this case, you need to create a unique Incorporation Agreement and set of Articles for the company and
-            outline these special rights or restrictions in the Articles. We recommend seeking professional assistance
-            from a lawyer or accountant to help you prepare your Incorporation Agreement and Articles.
+        <template v-if="!isTypeCC">
+          <div class="help-section">
+            <div class="articles-statements-footer">
+              In this case, you need to create a unique Incorporation Agreement and set of Articles for the company and
+              outline these special rights or restrictions in the Articles. We recommend seeking professional assistance
+              from a lawyer or accountant to help you prepare your Incorporation Agreement and Articles.
+            </div>
           </div>
-        </div>
-        <div class="help-section">
-          <h3>Retain the signed Incorporation Agreement and {{getEntityDescription}} Articles</h3>
-          <ul>
-            <li>
-              The company is required to keep signed copies of the Incorporation Agreement and Articles in the company’s
-              record book. For a complete list of records a company is required to keep please see section 42 of the
-              Business Corporations Act.
-            </li>
-          </ul>
-        </div>
+          <div class="help-section">
+            <h3>Retain the signed Incorporation Agreement and {{getEntityDescription}} Articles</h3>
+            <ul>
+              <li>
+                The company is required to keep signed copies of the Incorporation Agreement and Articles in the
+                company’s record book. For a complete list of records a company is required to keep please see section
+                42 of the Business Corporations Act.
+              </li>
+            </ul>
+          </div>
+        </template>
         <u class="help-btn" @click="helpToggle = !helpToggle"><small>Hide Help</small></u>
       </section>
     </section>
-    <section class="mt-10">
-      <header>
-        <h2>2. Sample Templates</h2>
-      </header>
-      <p>
-        For your convenience, we have provided a sample Incorporation Agreement and a set of sample
-        {{getEntityDescription}} Articles.
-      </p>
-      <div>
-        <v-card flat class="share-structure-check-panel">
-          <div class="share-structure-check-header">
-            <v-icon color="black">mdi-information-outline</v-icon>
-            <span> Share Structure Check:</span>
-          </div>
-          <div class="share-structure-check-text">
-            The sample articles CAN ONLY be used if the company's share structure DOES NOT contain a class or series
-            with special rights or restrictions.
-            <span class="read-more-btn" @click="readMoreFlag = true">
+    <template v-if="isTypeCC">
+      <section class="mt-10">
+        <header>
+          <h2>2. Confirm Incorporation Agreement and Article Completion</h2>
+        </header>
+        <AgreementType />
+      </section>
+    </template>
+    <template v-else>
+      <section class="mt-10">
+        <header>
+          <h2>2. Sample Templates</h2>
+        </header>
+        <p>
+          For your convenience, we have provided a sample Incorporation Agreement and a set of sample
+          {{getEntityDescription}} Articles.
+        </p>
+        <div>
+          <v-card flat class="share-structure-check-panel">
+            <div class="share-structure-check-header">
+              <v-icon color="black">mdi-information-outline</v-icon>
+              <span> Share Structure Check:</span>
+            </div>
+            <div class="share-structure-check-text">
+              The sample articles CAN ONLY be used if the company's share structure DOES NOT contain a class or series
+              with special rights or restrictions.
+              <span class="read-more-btn" @click="readMoreFlag = true">
               <span v-if="!readMoreFlag">Read more...</span>
             </span>
-            <div v-if="readMoreFlag">
-              <div class="read-more-line">
-                If the corporation's share structure contains a class or series with special rights or restrictions, you
-                need to create a unique set of Articles for the company and outline these special rights or restrictions
-                in the Articles.
-              </div>
-              <div class="read-more-line">
-                We recommend seeking professional assistance from a lawyer or accountant to help you prepare your
-                Incorporation Agreement and Articles.
-                <span class="read-more-btn" @click="readMoreFlag = false">
+              <div v-if="readMoreFlag">
+                <div class="read-more-line">
+                  If the corporation's share structure contains a class or series with special rights or restrictions,
+                  you need to create a unique set of Articles for the company and outline these special rights or
+                  restrictions in the Articles.
+                </div>
+                <div class="read-more-line">
+                  We recommend seeking professional assistance from a lawyer or accountant to help you prepare your
+                  Incorporation Agreement and Articles.
+                  <span class="read-more-btn" @click="readMoreFlag = false">
                   <span>Read less...</span>
                 </span>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="preview-download-container">
-            <div>
-              <img src="@/assets/images/BCRegistries_Sample_IncoporationAgreement_x2.png" class="preview-image" />
-            </div>
-            <div class="download-link-container">
+            <div class="preview-download-container">
+              <div>
+                <img src="@/assets/images/BCRegistries_Sample_IncoporationAgreement_x2.png" class="preview-image" />
+              </div>
+              <div class="download-link-container">
               <span>
                 <v-icon color="blue">mdi-file-pdf-outline</v-icon>
                 <a :href="documentURL" download>
                   Download the sample Incorporation Agreement and Company Articles
                 </a>
               </span>
+              </div>
             </div>
-          </div>
-        </v-card>
-      </div>
-    </section>
-    <section class="mt-10">
-      <header>
-        <h2>3. Confirm Incorporation Agreement and Article Completion</h2>
-      </header>
-      <AgreementType />
-    </section>
+          </v-card>
+        </div>
+      </section>
+      <section class="mt-10">
+        <header>
+          <h2>3. Confirm Incorporation Agreement and Article Completion</h2>
+        </header>
+        <AgreementType />
+      </section>
+    </template>
   </div>
 </template>
 
@@ -196,6 +222,7 @@ import { EnumMixin } from '@/mixins'
 export default class IncorporationAgreement extends Mixins(EnumMixin) {
   // Global getter
   @Getter isTypeBcomp!: boolean
+  @Getter isTypeCC!: boolean
   @Getter getEntityType!: CorpTypeCd
   @Getter getIncorporationAgreementHelp!: Array<HelpSectionIF>
   @Getter getSampleArticlesUrl!: string
