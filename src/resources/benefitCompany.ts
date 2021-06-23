@@ -71,12 +71,12 @@ export const BenefitCompanyResource: ResourceIF = {
     documents: [
       {
         code: 'sample',
-        description: 'The <b>sample Incorporation Agreement and Company Articles</b> containing a benefit provision ' +
+        description: 'The <b>sample Incorporation Agreement and Articles</b> containing a benefit provision ' +
         'has been completed and a copy has been added to the company\'s record book.'
       },
       {
         code: 'custom',
-        description: 'The <b>custom Incorporation Agreement and Company Articles</b> containing a benefit provision ' +
+        description: 'The <b>custom Incorporation Agreement and custom Articles</b> containing a benefit provision ' +
           'has been completed and a copy has been added to the company\'s record book.'
       }
     ]

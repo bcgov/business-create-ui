@@ -28,9 +28,9 @@ const agreementTypeTestCases = [
     customAgreement: {
       agreementType: 'custom'
     },
-    sampleSummaryText: 'The sample Incorporation Agreement and Company Articles containing a benefit ' +
+    sampleSummaryText: 'The sample Incorporation Agreement and Articles containing a benefit ' +
       'provision has been completed and a copy has been added to the company\'s record book.',
-    customSummaryText: 'The custom Incorporation Agreement and Company Articles containing a benefit ' +
+    customSummaryText: 'The custom Incorporation Agreement and custom Articles containing a benefit ' +
       'provision has been completed and a copy has been added to the company\'s record book.'
   },
   {
