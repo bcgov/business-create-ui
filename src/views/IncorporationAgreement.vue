@@ -225,7 +225,7 @@ export default class IncorporationAgreement extends Mixins(EnumMixin) {
   @Getter isTypeCC!: boolean
   @Getter getEntityType!: CorpTypeCd
   @Getter getIncorporationAgreementHelp!: Array<HelpSectionIF>
-  @Getter getSampleArticlesUrl!: string
+  @Getter getSampleArticle!: string
 
   // Local properties
   private helpToggle: boolean = false
@@ -238,7 +238,7 @@ export default class IncorporationAgreement extends Mixins(EnumMixin) {
 
   private get documentURL ():string {
     return sessionStorage.getItem('BASE_URL') +
-    `files/${this.getSampleArticlesUrl}`
+    `files/${this.getSampleArticle}`
   }
 }
 </script>

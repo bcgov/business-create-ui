@@ -57,7 +57,7 @@ export const LimitedCompanyResource: ResourceIF = {
         ]
       }
     ],
-    articleUrl: `Sample_articles.pdf`,
+    article: `Sample_articles.pdf`,
     documents: [
       {
         code: 'Table-1',

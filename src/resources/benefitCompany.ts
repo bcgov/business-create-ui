@@ -67,7 +67,7 @@ export const BenefitCompanyResource: ResourceIF = {
         ]
       }
     ],
-    articleUrl: `benefit_company__corporation_agreement.pdf`,
+    article: `benefit_company__corporation_agreement.pdf`,
     documents: [
       {
         code: 'sample',

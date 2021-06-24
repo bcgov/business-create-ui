@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div>{{agreementTypeState}}
     <div id="agreement-summary" v-if="isSummary">
       <v-card flat>
         <!-- Summary Header -->
@@ -76,7 +76,7 @@ import { EnumMixin } from '@/mixins'
 export default class AgreementType extends Mixins(EnumMixin) {
   // State
   @State(state => state.stateModel.incorporationAgreementStep.agreementType)
-  readonly agreementTypeState: string | null
+  readonly agreementTypeState: string
 
   @Prop({ default: false })
   private showErrorSummary: boolean

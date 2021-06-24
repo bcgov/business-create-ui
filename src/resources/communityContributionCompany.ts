@@ -47,7 +47,7 @@ export const CommunityContributionCompanyResource: ResourceIF = {
         ]
       }
     ],
-    articleUrl: `Sample_articles.pdf`,
+    article: `Sample_articles.pdf`,
     documents: [
       {
         code: 'sample',
