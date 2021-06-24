@@ -1,5 +1,5 @@
 <template>
-  <div>{{agreementTypeState}}
+  <div>
     <div id="agreement-summary" v-if="isSummary">
       <v-card flat>
         <!-- Summary Header -->
