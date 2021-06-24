@@ -24,19 +24,20 @@ export const LimitedCompanyResource: ResourceIF = {
   incorporationAgreement: {
     helpSection: [
       {
-        header: `What is the sample Incorporation Agreement and Articles?`,
+        header: `What is the sample Incorporation Agreement and Table 1 Articles?`,
         helpText: [
-          `The sample Incorporation Agreement and Articles is a template that you can use to create an incorporation
-            agreement and articles for your company. It uses all the standard provisions suggested by legislation.`,
+          `The sample Incorporation Agreement and Table 1 Articles is a template that you can use to create an
+            incorporation agreement and articles for your company. It uses all the standard provisions suggested by
+            legislation.`,
           `If you would like to customize any provisions in the Articles, you cannot use this sample. We recommend
             seeking professional assistance from a lawyer or accountant to help you prepare your Articles.`
         ]
       },
       {
-        header: `Can I use the sample Incorporation Agreement and Articles?`
+        header: `Can I use the sample Incorporation Agreement and Table 1 Articles?`
       },
       {
-        header: `You can use the sample Articles if:`,
+        header: `You can use the Incorporation Agreement and Table 1 Articles if:`,
         icon: 'mdi-check',
         iconColor: `green darken-2`,
         statements: [
@@ -46,7 +47,7 @@ export const LimitedCompanyResource: ResourceIF = {
         ]
       },
       {
-        header: `You cannot use the sample Articles if:`,
+        header: `You cannot use the Incorporation Agreement and Table 1 Articles if:`,
         icon: 'mdi-close',
         iconColor: `red`,
         statements: [
@@ -56,16 +57,17 @@ export const LimitedCompanyResource: ResourceIF = {
         ]
       }
     ],
+    article: `Sample_articles.pdf`,
     documents: [
       {
         code: 'Table-1',
-        description: 'BC COMPANY description placeholder', // TBD
-        summaryDescription: 'BC COMPANY description placeholder' // TBD
+        description: 'The <b>sample Incorporation Agreement and Table 1 Articles</b> containing a provision ' +
+          'has been completed and a copy has been added to the company\'s record book.'
       },
       {
         code: 'custom',
-        description: 'BC COMPANY description placeholder', // TBD
-        summaryDescription: 'BC COMPANY description placeholder' // TBD
+        description: 'The <b>custom Incorporation Agreement and custom Articles</b> containing a provision ' +
+          'has been completed and a copy has been added to the company\'s record book.'
       }
     ]
   },

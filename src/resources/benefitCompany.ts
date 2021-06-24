@@ -67,20 +67,17 @@ export const BenefitCompanyResource: ResourceIF = {
         ]
       }
     ],
+    article: `benefit_company__corporation_agreement.pdf`,
     documents: [
       {
         code: 'sample',
-        description: 'The <b>sample Incorporation Agreement and Benefit Company Articles</b> containing a benefit ' +
-            'provision have been completed and a copy added to the company\'s record book.',
-        summaryDescription: 'The sample Incorporation Agreement and Benefit Company Articles containing a benefit ' +
-            'provision have been completed and a copy added to the company\'s record book.'
+        description: 'The <b>sample Incorporation Agreement and Articles</b> containing a benefit provision ' +
+        'has been completed and a copy has been added to the company\'s record book.'
       },
       {
         code: 'custom',
-        description: 'A <b>custom Incorporation Agreement and custom Benefit Company Articles</b> containing ' +
-          'a benefit provision have been completed and a copy added to the company\'s record book.',
-        summaryDescription: 'A custom Incorporation Agreement and custom Benefit Company Articles containing ' +
-          'a benefit provision have been completed and a copy added to the company\'s record book.'
+        description: 'The <b>custom Incorporation Agreement and custom Articles</b> containing a benefit provision ' +
+          'has been completed and a copy has been added to the company\'s record book.'
       }
     ]
   },

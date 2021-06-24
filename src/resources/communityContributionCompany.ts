@@ -26,13 +26,9 @@ export const CommunityContributionCompanyResource: ResourceIF = {
   incorporationAgreement: {
     helpSection: [
       {
-        header: `What is the sample Incorporation Agreement and Articles?`,
+        header: `How do I create an Incorporation Agreement and Articles?`,
         helpText: [
-          `The sample Incorporation Agreement and Articles is a template that you can use to create an incorporation
-            agreement and articles for your company. It uses all the standard provisions suggested by legislation and
-            also includes a place to specify the company’s community purposes.`,
-          `If you would like to customize any other provisions in the Articles, you cannot use this sample. We
-            recommend seeking professional assistance from a lawyer or accountant to help you prepare your Articles.`
+          `We recommend seeking legal assistance in creating your Incorporation Agreement and Articles.`
         ]
       },
       {
@@ -43,39 +39,20 @@ export const CommunityContributionCompanyResource: ResourceIF = {
         ]
       },
       {
-        header: `Can I use the sample Incorporation Agreement and Articles?`
-      },
-      {
-        header: `You can use the sample Articles if:`,
-        icon: 'mdi-check',
-        iconColor: `green darken-2`,
-        statements: [
-          `There are no special rights or restrictions attached to any class or series of shares in
-            the corporation’s authorized share structure.`,
-          `You do not wish to change any of the standard provisions in the sample Articles.`
-        ]
-      },
-      {
-        header: `You cannot use the sample Articles if:`,
-        icon: 'mdi-close',
-        iconColor: `red`,
-        statements: [
-          `There are special rights or restrictions attached to any class or series of shares in the corporation’s
-            authorized share structure.`,
-          `You wish to change any of the standard provisions in the sample Articles.`
+        header: `Retain the signed Incorporation Agreement and Articles`,
+        helpText: [
+          `The company is required to keep signed copies of the Incorporation Agreement and Articles in the company’s
+          record book. For a complete list of records a company is required to keep please see section 42 of the
+          Business Corporations Act.`
         ]
       }
     ],
+    article: `Sample_articles.pdf`,
     documents: [
       {
         code: 'sample',
-        description: 'BC CCC description placeholder', // TBD
-        summaryDescription: 'BC CCC description placeholder' // TBD
-      },
-      {
-        code: 'custom',
-        description: 'BC CCC description placeholder', // TBD
-        summaryDescription: 'BC CCC description placeholder' // TBD
+        description: 'The <b>Incorporation Agreement and Articles</b> containing the community purposes has been ' +
+          'completed and a copy has been added to the company\'s record book.'
       }
     ]
   },

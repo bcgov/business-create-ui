@@ -19,6 +19,7 @@ export interface ResourceIF {
   }
   incorporationAgreement: {
     helpSection: Array<HelpSectionIF>,
+    article: string,
     documents: Array<IncorporationAgreementTypeIF>
   },
   reviewAndConfirm: {

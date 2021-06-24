@@ -22,16 +22,15 @@ export const CooperativeResource: ResourceIF = {
   },
   incorporationAgreement: {
     helpSection: [],
+    article: `Sample_articles.pdf`,
     documents: [
       {
         code: 'sample',
-        description: '',
-        summaryDescription: ''
+        description: ''
       },
       {
         code: 'custom',
-        description: '',
-        summaryDescription: ''
+        description: ''
       }
     ]
   },
