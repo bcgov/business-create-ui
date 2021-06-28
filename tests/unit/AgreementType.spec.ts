@@ -41,9 +41,9 @@ const agreementTypeTestCases = [
     customAgreement: {
       agreementType: 'custom'
     },
-    sampleSummaryText: 'The sample Incorporation Agreement and Table 1 Articles containing a provision ' +
+    sampleSummaryText: 'The sample Incorporation Agreement and Table 1 Articles ' +
       'has been completed and a copy has been added to the company\'s record book.',
-    customSummaryText: 'The custom Incorporation Agreement and custom Articles containing a provision ' +
+    customSummaryText: 'The custom Incorporation Agreement and custom Articles ' +
     'has been completed and a copy has been added to the company\'s record book.'
   },
   {
@@ -54,9 +54,9 @@ const agreementTypeTestCases = [
     customAgreement: {
       agreementType: 'custom'
     },
-    sampleSummaryText: 'The sample Incorporation Agreement and Table 1 Articles containing a provision ' +
+    sampleSummaryText: 'The sample Incorporation Agreement and Table 1 Articles ' +
       'has been completed and a copy has been added to the company\'s record book.',
-    customSummaryText: 'The custom Incorporation Agreement and custom Articles containing a provision ' +
+    customSummaryText: 'The custom Incorporation Agreement and custom Articles ' +
       'has been completed and a copy has been added to the company\'s record book.'
   }
 ]
