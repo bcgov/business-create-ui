@@ -123,8 +123,8 @@
             <ul>
               <li>
                 The company is required to keep signed copies of the Incorporation Agreement and Articles in the
-                company’s record book. For a complete list of records a company is required to keep please see section
-                42 of the Business Corporations Act.
+                company’s record book. For a complete list of records a company is required to keep please see
+                <a :href="section42Url" target="_blank">section 42</a> of the Business Corporations Act.
               </li>
             </ul>
           </div>
@@ -230,6 +230,7 @@ export default class IncorporationAgreement extends Mixins(EnumMixin) {
   // Local properties
   private helpToggle: boolean = false
   private readMoreFlag: boolean = false
+  readonly section42Url = `https://www.bclaws.gov.bc.ca/civix/document/id/complete/statreg/02057_02#section42`
 
   /** The entity description,  */
   private get getEntityDescription (): string {
