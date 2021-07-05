@@ -59,8 +59,8 @@
         @click="addOrgPerson([{ roleType: RoleTypes.INCORPORATOR }], IncorporatorTypes.CORPORATION)"
       >
         <v-icon>mdi-domain-plus</v-icon>
-        <span v-if="entityFilter(CorpTypeCd.BENEFIT_COMPANY)">Add a Corporation or Firm</span>
         <span v-if="entityFilter(CorpTypeCd.COOP)">Add Organization</span>
+        <span v-else>Add a Corporation or Firm</span>
       </v-btn>
       <v-btn
         v-if="!hasRole(RoleTypes.COMPLETING_PARTY, 1, 'ATLEAST')"
