@@ -6,7 +6,7 @@ import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module
 export const BenefitCompanyResource: ResourceIF = {
   entityType: CorpTypeCd.BENEFIT_COMPANY,
   displayName: GetCorpFullDescription(CorpTypeCd.BENEFIT_COMPANY),
-  title: 'Benefit Company Statement',
+  title: 'Benefit Company Statement:',
   description: `This company is a benefit company and, as such, has purposes that include conducting its business
         in a responsible and sustainable manner and promoting one or more public benefits.`,
   statement: null,

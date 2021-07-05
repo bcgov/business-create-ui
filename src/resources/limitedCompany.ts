@@ -6,7 +6,7 @@ import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module
 export const LimitedCompanyResource: ResourceIF = {
   entityType: CorpTypeCd.BC_COMPANY,
   displayName: GetCorpFullDescription(CorpTypeCd.BC_COMPANY),
-  title: 'Limited Company Statement',
+  title: null,
   description: null,
   statement: null,
   nameRequestType: NameRequestTypes.CR,
