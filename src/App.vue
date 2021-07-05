@@ -436,8 +436,6 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
 
         // parse draft filing into the store
         if (draftFiling) {
-          draftFiling.business.legalType = 'BC'
-          draftFiling.incorporationApplication.nameRequest.legalType = 'BC'
           this.parseDraft(draftFiling)
         }
 
