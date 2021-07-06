@@ -5,8 +5,8 @@ import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module
 export const CooperativeResource: ResourceIF = {
   entityType: CorpTypeCd.COOP,
   displayName: GetCorpFullDescription(CorpTypeCd.COOP),
-  title: null,
-  description: null,
+  title: 'title placeholder',
+  description: 'descriptor placeholder',
   statement: null,
   nameRequestType: null, // TBD
   steps: [],
