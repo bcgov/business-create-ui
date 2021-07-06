@@ -63,7 +63,7 @@ for (const mock of mockEntityInfo) {
       expect(wrapper.find('#folio-number-header').text()).toContain('Folio / Reference Number (optional)')
     })
 
-    it(`displays company statement`, () => {
+    itIf(mock.entityType !== 'BC')(`displays company statement`, () => {
       expect(wrapper.find('.company-statement').exists()).toBe(true)
       expect(wrapper.find('.company-statement p').text()).toContain(mock.description)
 

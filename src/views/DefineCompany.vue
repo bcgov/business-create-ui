@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="mt-10 company-statement">
-      <p>
-        <span class="company-statement-label">{{ getCompanyResources.title }}:</span>
+      <p v-if="getCompanyResources.title">
+        <span class="company-statement-label">{{ getCompanyResources.title }}</span>
         {{ getCompanyResources.description }}
       </p>
     </div>
