@@ -448,7 +448,7 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
   }
 
   private get incorporatorLabel (): string {
-    return this.entityFilter(CorpTypeCd.BENEFIT_COMPANY) ? RoleTypes.INCORPORATOR : RoleTypes.SUBSCRIBER
+    return this.entityFilter(CorpTypeCd.COOP) ? RoleTypes.SUBSCRIBER : RoleTypes.INCORPORATOR
   }
 
   // Event emitters
