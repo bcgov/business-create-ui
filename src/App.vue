@@ -152,7 +152,6 @@ import { CompanyResources } from '@/resources'
 // Enums and Constants
 import { FilingStatus, RouteNames, NameRequestStates } from '@/enums'
 import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
-import AuthServices from '@/services/auth.services'
 
 @Component({
   components: {
@@ -458,26 +457,23 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
           await this.processNameRequest(draftFiling)
         }
 
-        // set current profile name to store for field pre population
-        // proceed only if we are not staff
-        if (!this.isRoleStaff) {
-          // pre-populate submitting party name
-          const userInfo = await AuthServices.fetchUserInfo().catch(e => null)
-          if (userInfo) {
-            this.setCertifyState(
-              {
-                valid: this.getCertifyState.valid,
-                certifiedBy: `${userInfo.firstname} ${userInfo.lastname}`
-              }
-            )
-          }
-        }
-
         // Set the resources
         // An unknown entity type will need to be handled here
         const companyResources = CompanyResources.find(x => x.entityType === this.entityType)
         if (companyResources) this.setCompanyResources(companyResources)
         else throw new Error('Invalid Entity Type')
+
+        // set current profile name to store for field pre population
+        // proceed only if we are not staff
+        if (userInfo && !this.isRoleStaff) {
+          // pre-populate submitting party name
+          this.setCertifyState(
+            {
+              valid: this.getCertifyState.valid,
+              certifiedBy: `${userInfo.firstname} ${userInfo.lastname}`
+            }
+          )
+        }
       } catch (error) {
         // logging exception to sentry due to incomplete business data.
         // at this point system doesn't know why its incomplete.
