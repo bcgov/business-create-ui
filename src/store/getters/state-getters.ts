@@ -218,14 +218,26 @@ export const isIncorporationAgreementValid = (state: any): boolean => {
 }
 
 /** Whether all the incorporation steps are valid. */
-export const isApplicationValid = (state: any): boolean => {
-  return (
-    state.stateModel.defineCompanyStep.valid &&
-    state.stateModel.addPeopleAndRoleStep.valid &&
+export const isApplicationValid = (state: any, getters: any): boolean => {
+  // Base company steps
+  const isCompanyStepsValid = (
     state.stateModel.createShareStructureStep.valid &&
     state.stateModel.incorporationDateTime.valid &&
     state.stateModel.incorporationAgreementStep.valid &&
-    state.stateModel.incorporationDateTime.valid &&
+    state.stateModel.incorporationDateTime.valid
+  )
+
+  // Coop steps
+  const isCoopStepsValid = (
+    state.stateModel.createRulesStep.valid &&
+    state.stateModel.createMemorandumStep.valid
+  )
+
+  return (
+    state.stateModel.defineCompanyStep.valid &&
+    state.stateModel.addPeopleAndRoleStep.valid &&
+    // Validate different steps for Coops else validate company steps
+    getters.isTypeCoop ? isCoopStepsValid : isCompanyStepsValid &&
     state.stateModel.certifyState.valid &&
     state.stateModel.certifyState.certifiedBy
   )

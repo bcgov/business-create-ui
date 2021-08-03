@@ -62,7 +62,18 @@ async function start () {
   // start Vue application
   console.info('Starting app...') // eslint-disable-line no-console
   new Vue({
-    vuetify: new Vuetify({ iconfont: 'mdi' }),
+    vuetify: new Vuetify({
+      iconfont: 'mdi',
+      theme: {
+        themes: {
+          light: {
+            primary: '#1669bb', // same as $app-blue
+            success: '#1a9031', // same as $app-green
+            error: '#d3272c' // same as $app-red
+          }
+        }
+      }
+    }),
     router: getVueRouter(),
     store: getVuexStore(),
     render: h => h(App)

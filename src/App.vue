@@ -146,12 +146,13 @@ import {
   FileAndPayInvalidNameRequestDialog
 } from '@/components/dialogs'
 import { DateMixin, FilingTemplateMixin, LegalApiMixin, NameRequestMixin } from '@/mixins'
-import { FilingDataIF, ActionBindingIF, ConfirmDialogType, StepIF } from '@/interfaces'
+import { FilingDataIF, ActionBindingIF, ConfirmDialogType, StepIF, CertifyIF } from '@/interfaces'
 import { CompanyResources } from '@/resources'
 
 // Enums and Constants
 import { FilingStatus, RouteNames, NameRequestStates } from '@/enums'
 import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
+import AuthServices from '@/services/auth.services'
 
 @Component({
   components: {
@@ -188,11 +189,14 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
 
   // Global getters
   @Getter haveChanges!: boolean
+  @Getter getCertifyState!: CertifyIF
   @Getter getFilingData!: FilingDataIF
+  @Getter isRoleStaff!: boolean
   @Getter getSteps!: Array<StepIF>
   @Getter getTempId!: string
 
   // Global actions
+  @Action setCertifyState!: ActionBindingIF
   @Action setCurrentStep!: ActionBindingIF
   @Action setCurrentDate!: ActionBindingIF
   @Action setCompanyResources!: ActionBindingIF
@@ -452,6 +456,21 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
          * Filings Dashboard */
         if (nameRequest?.nrNumber) {
           await this.processNameRequest(draftFiling)
+        }
+
+        // set current profile name to store for field pre population
+        // proceed only if we are not staff
+        if (!this.isRoleStaff) {
+          // pre-populate submitting party name
+          const userInfo = await AuthServices.fetchUserInfo().catch(e => null)
+          if (userInfo) {
+            this.setCertifyState(
+              {
+                valid: this.getCertifyState.valid,
+                certifiedBy: `${userInfo.firstname} ${userInfo.lastname}`
+              }
+            )
+          }
         }
 
         // Set the resources

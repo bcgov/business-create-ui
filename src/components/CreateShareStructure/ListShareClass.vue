@@ -12,8 +12,8 @@
       <!-- Summary Warning -->
       <div v-if="showErrorSummary" class="share-summary-invalid-message">
         <span>
-          <v-icon color="blue darken-2">mdi-information-outline</v-icon>
-          This step is not complete.
+          <v-icon color="error">mdi-information-outline</v-icon>
+          <span class="error-text"> This step is not complete. </span>
           <router-link
             id="router-link"
             :to="{ path: `/${RouteNames.CREATE_SHARE_STRUCTURE}`, query: { showErrors: true } }"
@@ -315,7 +315,6 @@ export default class ListShareClass extends Vue {
 
 .share-summary-invalid-message {
   padding: 1.25rem;
-  font-weight: bold;
   color: $BCgovABlue2;
 }
 

@@ -12,6 +12,11 @@ export const getCompanyResources = (state: any): ResourceIF => {
   return state.resourceModel
 }
 
+/** The company rules and values based on entity type. */
+export const getDisplayName = (state: any): string => {
+  return state.resourceModel.displayName
+}
+
 /** The completing party statement resources. */
 export const getCompletingPartyStatement = (state: any): CertifyStatementIF => {
   return state.resourceModel.reviewAndConfirm.completingPartyStatement

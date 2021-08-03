@@ -58,9 +58,15 @@ export const stateModel: StateModelIF = {
     valid: false,
     shareClasses: []
   },
+  createRulesStep: {
+    valid: false
+  },
   incorporationAgreementStep: {
     valid: false,
     agreementType: null
+  },
+  createMemorandumStep: {
+    valid: false
   },
   validateSteps: false
 }

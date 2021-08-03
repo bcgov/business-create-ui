@@ -2,7 +2,21 @@
   <v-container id="action-buttons-container" class="list-item">
 
     <div class="buttons-left">
-      <v-btn id="save-btn" large
+      <v-btn
+        v-if="isSummaryStep"
+        id="app-summary-cancel-btn"
+        large outlined
+        color="primary"
+        :disabled="isBusySaving"
+        @click="onClickCancel()"
+      >
+        <span>Cancel</span>
+      </v-btn>
+
+      <v-btn
+        id="save-btn"
+        large outlined
+        color="primary"
         :disabled="!isEntityType || isBusySaving"
         :loading="stateModel.isSaving"
         @click="onClickSave()"
@@ -10,7 +24,10 @@
         <span>Save</span>
       </v-btn>
 
-      <v-btn id="save-resume-btn" large
+      <v-btn
+        id="save-resume-btn"
+        large outlined
+        color="primary"
         :disabled="!isEntityType || isBusySaving"
         :loading="stateModel.isSavingResuming"
         @click="onClickSaveResume()"
@@ -21,7 +38,10 @@
 
     <div class="buttons-right">
       <v-fade-transition hide-on-leave>
-        <v-btn id="back-btn" large outlined
+        <v-btn
+          id="back-btn"
+          large outlined
+          color="primary"
           :to="previousRoute"
           v-show="isShowBackBtn"
           :disabled="isBusySaving"
@@ -32,18 +52,24 @@
       </v-fade-transition>
 
       <v-fade-transition hide-on-leave>
-        <v-btn id="review-confirm-btn" large color="primary"
+        <v-btn
+          id="review-confirm-btn"
+          large
+          color="primary"
           :to="nextRoute"
           v-show="isShowReviewConfirmBtn"
           :disabled="isBusySaving"
         >
-          <span>{{ nextButtonLabel }}</span>
+          <span class="font-weight-bold">{{ nextButtonLabel }}</span>
           <v-icon>mdi-chevron-right</v-icon>
         </v-btn>
       </v-fade-transition>
 
       <v-fade-transition hide-on-leave>
-        <v-btn id="file-pay-btn" large color="primary"
+        <v-btn
+          id="file-pay-btn"
+          large
+          color="primary"
           v-show="isShowFilePayBtn"
           :loading="stateModel.isFilingPaying"
           @click="onClickFilePay()"
@@ -52,7 +78,11 @@
         </v-btn>
       </v-fade-transition>
 
-      <v-btn id="app-cancel-btn" large
+      <v-btn
+        v-if="!isSummaryStep"
+        id="app-cancel-btn"
+        large outlined
+        color="primary"
         :disabled="isBusySaving"
         @click="onClickCancel()"
       >
@@ -75,7 +105,7 @@ import { StateModelIF, GetterIF, ActionBindingIF } from '@/interfaces'
 import { DateMixin, FilingTemplateMixin, LegalApiMixin, NameRequestMixin } from '@/mixins'
 
 // Enums
-import { NameRequestStates } from '@/enums'
+import { NameRequestStates, RouteNames } from '@/enums'
 
 @Component({})
 export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, LegalApiMixin, NameRequestMixin) {
@@ -104,6 +134,10 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
   @Action setHaveChanges!: ActionBindingIF
   @Action setIsIncorporationDateTimeValid!: ActionBindingIF
   @Action setValidateSteps!: ActionBindingIF
+
+  private get isSummaryStep (): boolean {
+    return this.$route.name === RouteNames.REVIEW_CONFIRM
+  }
 
   /** Called when Cancel button is clicked. */
   private onClickCancel (): void {

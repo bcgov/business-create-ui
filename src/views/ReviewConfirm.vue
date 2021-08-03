@@ -9,20 +9,20 @@
 
     <section class="mt-10">
       <header>
-        <h2>Review</h2>
+        <h2>Review and Confirm</h2>
+        <p class="mt-1">Review the information in your application. If you need change or complete anything, return to
+          the step make the necessary change.</p>
       </header>
-      <Summary />
+      <Summary class="mt-6"/>
     </section>
-    <section class="mt-10">
+    <section v-if="!isTypeCoop" class="mt-10">
       <header>
         <h2>Incorporation Date and Time</h2>
-        <div class="list-item">
-          <p class="list-item__subtitle">Select the Date and Time of incorporation for your business. You may select a
-            date up to 10 days in the future (note: there is an <strong>additional fee of $100</strong> to enter an
-            incorporation date in the future). Unless a business has special requirements, most businesses select an
-            immediate Date and Time of Incorporation.
-          </p>
-        </div>
+        <p class="mt-1">Select the Date and Time of incorporation for your business. You may select
+          a date up to 10 days in the future (note: there is an <strong>additional fee of $100</strong> to enter an
+          incorporation date in the future). Unless a business has special requirements, most businesses select an
+          immediate Date and Time of Incorporation.
+        </p>
       </header>
       <IncorporationDateTime
         :incorporationDateTime="incorporationDateTime"
@@ -33,23 +33,28 @@
 
     <section class="mt-10">
       <header>
-        <h2>Completing Party Statement</h2>
+        <h2>Certify</h2>
+        <p class="mt-1">Enter the legal name of the person authorized to complete and submit this application.</p>
       </header>
-      <certify
-        :currentDate="currentDate"
-        :certifiedBy="getCertifyState.certifiedBy"
-        :isCertified="getCertifyState.valid"
-        :statements="getCompletingPartyStatement.certifyStatements"
-        :message="getCompletingPartyStatement.certifyClause"
-        :enableMailTo="true"
-        :businessEmail="getBusinessEmail"
-        :completingPartyEmail="getCompletingPartyEmail"
-        :isStaff="isRoleStaff"
-        :firstColumn="3"
-        :secondColumn="9"
-        @update:certifiedBy="onCertifiedBy($event)"
-        @update:isCertified="onIsCertified($event)"
-      />
+      <div :class="{ 'invalid-section': isCertifyInvalid }">
+        <certify
+          :currentDate="currentDate"
+          :certifiedBy="getCertifyState.certifiedBy"
+          :isCertified="getCertifyState.valid"
+          :statements="getCompletingPartyStatement.certifyStatements"
+          :message="getCompletingPartyStatement.certifyClause"
+          :enableMailTo="true"
+          :businessEmail="getBusinessEmail"
+          :completingPartyEmail="getCompletingPartyEmail"
+          :isStaff="isRoleStaff"
+          :firstColumn="3"
+          :secondColumn="9"
+          :invalidSection="isCertifyInvalid"
+          :disableEdit="!isRoleStaff"
+          @update:certifiedBy="onCertifiedBy($event)"
+          @update:isCertified="onIsCertified($event)"
+        />
+      </div>
     </section>
   </div>
 </template>
@@ -87,7 +92,9 @@ export default class ReviewConfirm extends Mixins() {
   @Getter getCompanyResources!: ResourceIF
   @Getter getCompletingPartyStatement!: CertifyStatementIF
   @Getter getCompletingPartyEmail!: string
+  @Getter getValidateSteps!: boolean
   @Getter isTypeBcomp!: GetterIF
+  @Getter isTypeCoop: boolean
   @Getter isRoleStaff!: boolean
 
   // Global Actions
@@ -106,13 +113,18 @@ export default class ReviewConfirm extends Mixins() {
   }
 
   /** Called when component is mounted. */
-  mounted (): void {
+  async mounted (): Promise<void> {
     this.setCertifyState(
       {
         valid: this.getCertifyState.valid,
         certifiedBy: this.getCertifyState.certifiedBy
       }
     )
+  }
+
+  /** Is true when the certify conditions are not met. */
+  private get isCertifyInvalid () {
+    return this.getValidateSteps && (!this.getCertifyState.certifiedBy || !this.getCertifyState.valid)
   }
 
   /** Handler for Valid change event. */

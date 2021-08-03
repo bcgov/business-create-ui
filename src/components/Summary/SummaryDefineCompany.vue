@@ -1,53 +1,55 @@
 <template>
   <v-card flat>
-     <div class="define-company-header">
-        <v-icon color="#38598A">mdi-domain</v-icon>
-        <label class="define-company-title"><strong>Your Company</strong></label>
+    <div class="define-company-header">
+      <v-icon color="#38598A">mdi-domain</v-icon>
+      <label class="define-company-title"><strong>Your {{ getDisplayName }}</strong></label>
     </div>
-    <div v-if="!valid" class="defineCompanyStepErrorMessage">
-      <span>
-        <v-icon color="blue darken-2">mdi-information-outline</v-icon>
-        This step is not complete.
-        <router-link :to="{ path: `/${RouteNames.DEFINE_COMPANY}`, query: { showErrors: true } }">
-          Return to this step to complete it.
-        </router-link>
-      </span>
-    </div>
-    <div class="section-container">
-      <!--TODO: Replace container content with Name Request Summary when it is ready -->
-      <v-layout row>
-        <v-flex md4>
-          <label><strong>Company Name</strong></label>
-        </v-flex>
-        <v-flex md8>
-          <div class="company-name">{{ getApprovedName || '[Incorporation Number] B.C. Ltd.' }}</div>
-          <div class="company-type">
-            <span>{{ getEntityDescription }}</span>
-          </div>
-        </v-flex>
-      </v-layout>
-      <v-layout row v-if="getNameTranslations && getNameTranslations.length" class="mt-3">
-        <v-flex md4>
-          <label><strong>Name Translation</strong></label>
-        </v-flex>
-        <v-flex md8>
-          <div v-for="(nameTranslation, index) in getNameTranslations" :key="`name_translation_${index}`">
-            {{nameTranslation.name}}
-          </div>
-        </v-flex>
-      </v-layout>
-    </div>
-    <v-divider/>
-    <div class="section-container">
-      <OfficeAddresses :inputAddresses="addresses" :isEditing="false" />
-    </div>
-    <v-divider/>
-    <div class="section-container">
-      <BusinessContactInfo :initialValue="businessContact" :isEditing="false" />
-    </div>
-    <div class="section-container" v-if="isPremiumAccount">
-      <FolioNumber :initialValue="folioNumber" :isEditing="false" />
-    </div>
+    <section :class="{ 'invalid-section': !valid && getValidateSteps }">
+      <div v-if="!valid" class="defineCompanyStepErrorMessage">
+        <span>
+          <v-icon color="error">mdi-information-outline</v-icon>
+          <span class="error-text"> This step is not complete. </span>
+          <router-link :to="{ path: `/${RouteNames.DEFINE_COMPANY}`, query: { showErrors: true } }">
+            Return to this step to complete it.
+          </router-link>
+        </span>
+      </div>
+      <div class="section-container">
+        <!--TODO: Replace container content with Name Request Summary when it is ready -->
+        <v-layout row>
+          <v-flex md4>
+            <label><strong>Name</strong></label>
+          </v-flex>
+          <v-flex md8>
+            <div class="company-name">{{ getApprovedName || '[Incorporation Number] B.C. Ltd.' }}</div>
+            <div class="company-type">
+              <span>{{ getEntityDescription }}</span>
+            </div>
+          </v-flex>
+        </v-layout>
+        <v-layout row v-if="getNameTranslations && getNameTranslations.length" class="mt-3">
+          <v-flex md4>
+            <label><strong>Name Translation</strong></label>
+          </v-flex>
+          <v-flex md8>
+            <div v-for="(nameTranslation, index) in getNameTranslations" :key="`name_translation_${index}`">
+              {{nameTranslation.name}}
+            </div>
+          </v-flex>
+        </v-layout>
+      </div>
+      <v-divider/>
+      <div class="section-container">
+        <OfficeAddresses :inputAddresses="addresses" :isEditing="false" />
+      </div>
+      <v-divider/>
+      <div class="section-container">
+        <BusinessContactInfo :initialValue="businessContact" :isEditing="false" />
+      </div>
+      <div class="section-container" v-if="isPremiumAccount">
+        <FolioNumber :initialValue="folioNumber" :isEditing="false" />
+      </div>
+    </section>
   </v-card>
 </template>
 
@@ -78,9 +80,11 @@ import { CorpTypeCd, RouteNames } from '@/enums'
 export default class SummaryDefineCompany extends Mixins(EntityFilterMixin, EnumMixin) {
   // Getters
   @Getter getApprovedName!: GetterIF
+  @Getter getDisplayName!: string
   @Getter getEntityType!: CorpTypeCd
   @Getter isPremiumAccount!: GetterIF
   @Getter getNameTranslations!: NameTranslationIF[]
+  @Getter getValidateSteps!: boolean
 
   // Global state
   @State(state => state.stateModel.defineCompanyStep.valid)
@@ -111,7 +115,6 @@ export default class SummaryDefineCompany extends Mixins(EntityFilterMixin, Enum
 .defineCompanyStepErrorMessage {
   padding-top: 1.25rem;
   padding-left: 1.25rem;
-  font-weight: bold;
   color: $primary-blue;
 }
 

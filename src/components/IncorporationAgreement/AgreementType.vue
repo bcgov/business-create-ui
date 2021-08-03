@@ -13,13 +13,18 @@
         <!-- Summary Warning -->
         <div v-if="showErrorSummary" class="agreement-invalid-message">
           <span>
-            <v-icon color="blue darken-2">mdi-information-outline</v-icon>
-            This step is not complete.
-            <router-link id="router-link" :to="{ path: `/${RouteNames.INCORPORATION_AGREEMENT}` }">
+            <v-icon color="error">mdi-information-outline</v-icon>
+            <span class="error-text"> This step is not complete. </span>
+            <router-link
+              id="router-link"
+              :to="{ path: `/${RouteNames.INCORPORATION_AGREEMENT}`,
+              query: { showErrors: true } }"
+            >
               Return to this step to complete it.
             </router-link>
           </span>
         </div>
+
         <!-- Summary Content -->
         <div v-else class="summary-desc">
           <div><v-icon color="green darken-2" class="agreement-valid-icon">mdi-check</v-icon></div>
@@ -148,7 +153,6 @@ export default class AgreementType extends Mixins(EnumMixin) {
 
 .agreement-invalid-message {
   padding: 1.25rem;
-  font-weight: bold;
   color: $BCgovABlue2;
 }
 

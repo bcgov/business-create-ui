@@ -1,4 +1,6 @@
 import AddPeopleAndRoles from '@/views/AddPeopleAndRoles.vue'
+import CreateMemorandum from '@/views/CreateMemorandum.vue'
+import CreateRules from '@/views/CreateRules.vue'
 import CreateShareStructure from '@/views/CreateShareStructure.vue'
 import IncorporationAgreement from '@/views/IncorporationAgreement.vue'
 import DefineCompany from '@/views/DefineCompany.vue'
@@ -57,12 +59,32 @@ export const routes = [
     }
   },
   {
+    path: '/create-rules',
+    name: RouteNames.CREATE_RULES,
+    component: CreateRules,
+    meta: {
+      step: 3,
+      label: 'Create Rules',
+      requiresAuth: true
+    }
+  },
+  {
     path: '/incorporation-agreement',
     name: RouteNames.INCORPORATION_AGREEMENT,
     component: IncorporationAgreement,
     meta: {
       step: 4,
       label: 'Incorporation Agreement',
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/create-memorandum',
+    name: RouteNames.CREATE_MEMORANDUM,
+    component: CreateMemorandum,
+    meta: {
+      step: 4,
+      label: 'Create Memorandum',
       requiresAuth: true
     }
   },
