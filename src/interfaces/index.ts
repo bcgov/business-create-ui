@@ -28,7 +28,7 @@ export * from './stepper-interfaces/ReviewConfirm/dateTime-interface'
 export * from './stepper-interfaces/IncorporationAgreement/incorporation-agreement-interface'
 export * from './stepper-interfaces/IncorporationAgreement/help-section-interface'
 export * from './stepper-interfaces/CreateRules/create-rules-interface'
-export * from './stepper-interfaces/CreateMemorandum/create-memorandum'
+export * from './stepper-interfaces/CreateMemorandum/create-memorandum-interface'
 
 // Others
 export * from './resource-interfaces/component-resource-interfaces/certifyStatement-interface'
