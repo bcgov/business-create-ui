@@ -4,14 +4,17 @@
       <v-card flat>
         <!-- Summary Header -->
         <div class="agreement-summary-header">
-          <v-icon color="#38598A">mdi-handshake</v-icon>
+          <v-icon color="dkBlue">mdi-handshake</v-icon>
           <label class="agreement-summary-title">
             <strong>Incorporation Agreement and {{getEntityDescription}} Articles</strong>
           </label>
         </div>
-
         <!-- Summary Warning -->
-        <div v-if="showErrorSummary" class="agreement-invalid-message">
+        <div
+          v-if="showErrorSummary"
+          class="agreement-invalid-message"
+          :class="{ 'invalid-section': getValidateSteps }"
+        >
           <span>
             <v-icon color="error">mdi-information-outline</v-icon>
             <span class="error-text"> This step is not complete. </span>
@@ -92,6 +95,7 @@ export default class AgreementType extends Mixins(EnumMixin) {
   // Global getters
   @Getter getIncorporationAgreementDocuments!: Array<IncorporationAgreementTypeIF>
   @Getter getEntityType!: CorpTypeCd
+  @Getter getValidateSteps!: boolean
   @Getter isTypeCC!: boolean
 
   // Actions

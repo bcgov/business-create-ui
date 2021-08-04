@@ -28,7 +28,13 @@
             mdi-close-circle
           </v-icon>
         </div>
-        <v-btn class="step__label pre-line" text color="primary" :ripple="false" :disabled=step.disabled>
+        <v-btn
+          class="step__label pre-line px-3"
+          text
+          :ripple="false"
+          :disabled=step.disabled
+          :class="[{'active__btn__text': isCurrentStep(step)}, 'inactive__btn__text']"
+        >
           {{ step.text }}
         </v-btn>
       </div>
@@ -121,7 +127,7 @@ export default class Stepper extends Vue {
   cursor: pointer;
 
   .step__btn {
-    background: linear-gradient(rgba(25,118,210, .8), rgba(25,118,210, .8)),
+    background: linear-gradient(rgba(25,118,210, 1), rgba(25,118,210, 1)),
                 linear-gradient(rgba(255, 255, 255, 1), rgba(255, 255, 255, 1)); // first bg is layered on top
     color: $BCgovInputBG;
   }
@@ -154,7 +160,7 @@ export default class Stepper extends Vue {
   position: absolute;
   top: 50%;
   left: 0;
-  height: 2px;
+  height: 1px;
   width: 100%;
   background-color: $gray5;
   transform: translateX(-50%);
@@ -176,6 +182,7 @@ export default class Stepper extends Vue {
 
 .step__btn2 {
   position: absolute;
+  margin-top: -5px;
   margin-left: -16px;
   background: $BCgovInputBG;
   border-radius: 50%;
@@ -185,5 +192,19 @@ export default class Stepper extends Vue {
 .step__label {
   margin-top: 10px;
   text-align: center;
+}
+
+.active__btn__text {
+  font-weight: bold;
+  color: $gray9 !important;
+}
+
+.inactive__btn__text {
+  color: $app-blue;
+}
+
+// Vuetify Overrides
+::v-deep .v-btn:not(.v-btn--round).v-size--default {
+  max-width: 64px;
 }
 </style>

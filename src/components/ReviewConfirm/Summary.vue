@@ -3,17 +3,18 @@
     <SummaryDefineCompany />
     <ListPeopleAndRoles :personList="orgPersonList" :isSummary="true" :showErrorSummary="!step2Valid" />
 
+    <!-- Company summary components -->
+    <template v-if="isBaseCompany">
+      <ListShareClass :shareClasses="shareClasses" :isSummary="true" :showErrorSummary="!step3Valid" />
+      <AgreementType :isSummary="true" :showErrorSummary="!step4Valid" />
+    </template>
+
     <!-- Coops summary components -->
-    <template v-if="isTypeCoop">
+    <template v-else>
       <UploadRules class="mt-4" :isSummary="true" />
       <UploadMemorandum class="mt-4" :isSummary="true" />
     </template>
 
-    <!-- Company summary components -->
-    <template v-else>
-      <ListShareClass :shareClasses="shareClasses" :isSummary="true" :showErrorSummary="!step3Valid" />
-      <AgreementType :isSummary="true" :showErrorSummary="!step4Valid" />
-    </template>
   </div>
 </template>
 
@@ -61,7 +62,7 @@ export default class Summary extends Vue {
   readonly step4Valid: boolean
 
   // Global Getters
-  @Getter isTypeCoop: boolean
+  @Getter isBaseCompany!: boolean
 }
 </script>
 

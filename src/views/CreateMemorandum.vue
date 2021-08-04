@@ -16,7 +16,7 @@ import { UploadMemorandum } from '@/components/CreateMemorandum'
     UploadMemorandum
   }
 })
-export default class CreateRules extends Vue {}
+export default class CreateMemorandum extends Vue {}
 </script>
 
 <style lang="scss" scoped>

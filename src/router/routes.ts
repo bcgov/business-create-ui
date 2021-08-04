@@ -34,7 +34,6 @@ export const routes = [
     component: DefineCompany,
     meta: {
       step: 1,
-      label: 'Define Your Company',
       requiresAuth: true
     }
   },
@@ -44,7 +43,6 @@ export const routes = [
     component: AddPeopleAndRoles,
     meta: {
       step: 2,
-      label: 'Add People and Roles',
       requiresAuth: true
     }
   },
@@ -54,7 +52,6 @@ export const routes = [
     component: CreateShareStructure,
     meta: {
       step: 3,
-      label: 'Create Share Structure',
       requiresAuth: true
     }
   },
@@ -64,7 +61,6 @@ export const routes = [
     component: CreateRules,
     meta: {
       step: 3,
-      label: 'Create Rules',
       requiresAuth: true
     }
   },
@@ -74,7 +70,6 @@ export const routes = [
     component: IncorporationAgreement,
     meta: {
       step: 4,
-      label: 'Incorporation Agreement',
       requiresAuth: true
     }
   },
@@ -84,7 +79,6 @@ export const routes = [
     component: CreateMemorandum,
     meta: {
       step: 4,
-      label: 'Create Memorandum',
       requiresAuth: true
     }
   },
@@ -94,7 +88,6 @@ export const routes = [
     component: ReviewConfirm,
     meta: {
       step: 5,
-      label: 'Review and Confirm',
       requiresAuth: true
     }
   },

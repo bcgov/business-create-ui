@@ -1,7 +1,7 @@
 <template>
   <v-card flat>
     <div class="define-company-header">
-      <v-icon color="#38598A">mdi-domain</v-icon>
+      <v-icon color="dkBlue">mdi-domain</v-icon>
       <label class="define-company-title"><strong>Your {{ getDisplayName }}</strong></label>
     </div>
     <section :class="{ 'invalid-section': !valid && getValidateSteps }">

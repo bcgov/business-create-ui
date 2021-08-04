@@ -64,6 +64,17 @@ export const isTypeCC = (state: any): boolean => {
 }
 
 /**
+ * Whether the entity is a base Company.
+ */
+export const isBaseCompany = (state: any, getters: any): boolean => {
+  return [
+    CorpTypeCd.BENEFIT_COMPANY,
+    CorpTypeCd.BC_CCC,
+    CorpTypeCd.BC_COMPANY,
+    CorpTypeCd.BC_ULC_COMPANY
+  ].includes(getters.getEntityType)
+}
+/**
  * Whether the current account is a premium account
  */
 export const isPremiumAccount = (state: any): boolean => {
@@ -217,10 +228,20 @@ export const isIncorporationAgreementValid = (state: any): boolean => {
   return state.stateModel.incorporationAgreementStep.valid
 }
 
+/** Is true when the step is valid. */
+export const isCreateRulesValid = (state: any): boolean => {
+  return state.stateModel.createRulesStep.valid
+}
+
+/** Is true when the step is valid. */
+export const isCreateMemorandumValid = (state: any): boolean => {
+  return state.stateModel.createMemorandumStep.valid
+}
+
 /** Whether all the incorporation steps are valid. */
 export const isApplicationValid = (state: any, getters: any): boolean => {
   // Base company steps
-  const isCompanyStepsValid = (
+  const isBaseStepsValid = (
     state.stateModel.createShareStructureStep.valid &&
     state.stateModel.incorporationDateTime.valid &&
     state.stateModel.incorporationAgreementStep.valid &&
@@ -237,7 +258,7 @@ export const isApplicationValid = (state: any, getters: any): boolean => {
     state.stateModel.defineCompanyStep.valid &&
     state.stateModel.addPeopleAndRoleStep.valid &&
     // Validate different steps for Coops else validate company steps
-    getters.isTypeCoop ? isCoopStepsValid : isCompanyStepsValid &&
+    getters.isBaseCompany ? isBaseStepsValid : isCoopStepsValid &&
     state.stateModel.certifyState.valid &&
     state.stateModel.certifyState.certifiedBy
   )

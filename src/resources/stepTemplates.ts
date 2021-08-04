@@ -61,7 +61,7 @@ export const CoopStepsTemplate = [
     id: 'step-2-btn',
     step: 2,
     icon: 'mdi-account-multiple-plus',
-    text: 'Add First\nDirectors',
+    text: 'Add People\nand Roles',
     to: RouteNames.ADD_PEOPLE_AND_ROLES,
     component: ViewComponentNames.ADD_PEOPLE_AND_ROLES
 

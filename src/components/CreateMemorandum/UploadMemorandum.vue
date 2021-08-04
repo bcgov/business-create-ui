@@ -5,12 +5,16 @@
     <div id="upload-memorandum-summary" v-if="isSummary">
       <!-- Summary Header -->
       <div class="upload-memorandum-summary-header" >
-        <v-icon color="#38598A">mdi-text-box-multiple</v-icon>
-        <label class="upload-memorandum-title"><strong>Memorandum</strong></label>
+        <v-icon color="dkBlue">mdi-text-box-multiple</v-icon>
+        <label class="upload-memorandum-title font-weight-bold">Memorandum</label>
       </div>
 
       <!-- Summary error message -->
-      <div v-if="!valid" class="upload-memorandum-error-message">
+      <div
+        v-if="!isCreateMemorandumValid"
+        class="upload-memorandum-error-message"
+        :class="{ 'invalid-section': getValidateSteps }"
+      >
         <span>
           <v-icon color="error">mdi-information-outline</v-icon>
           <span class="error-text"> This step is not complete. </span>
@@ -27,19 +31,19 @@
 <script lang="ts">
 // Libraries
 import { Component, Prop, Vue } from 'vue-property-decorator'
-import { State } from 'vuex-class'
+import { Getter } from 'vuex-class'
 
 // Enums
 import { RouteNames } from '@/enums'
 
 @Component({})
 export default class UploadMemorandum extends Vue {
-  // Global state
-  @State(state => state.stateModel.createRulesStep.valid)
-  readonly valid!: boolean
-
   @Prop({ default: false })
   private isSummary: boolean
+
+  // Global getters
+  @Getter getValidateSteps!: boolean
+  @Getter isCreateMemorandumValid!: boolean
 
   // Entity Enum
   readonly RouteNames = RouteNames

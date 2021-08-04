@@ -10,12 +10,12 @@
     <section class="mt-10">
       <header>
         <h2>Review and Confirm</h2>
-        <p class="mt-1">Review the information in your application. If you need change or complete anything, return to
-          the step make the necessary change.</p>
+        <p class="mt-1">Review the information in your application. If you need to change or complete anything, return
+          to the step to make the necessary change.</p>
       </header>
       <Summary class="mt-6"/>
     </section>
-    <section v-if="!isTypeCoop" class="mt-10">
+    <section v-if="isBaseCompany" class="mt-10">
       <header>
         <h2>Incorporation Date and Time</h2>
         <p class="mt-1">Select the Date and Time of incorporation for your business. You may select
@@ -93,8 +93,8 @@ export default class ReviewConfirm extends Mixins() {
   @Getter getCompletingPartyStatement!: CertifyStatementIF
   @Getter getCompletingPartyEmail!: string
   @Getter getValidateSteps!: boolean
-  @Getter isTypeBcomp!: GetterIF
-  @Getter isTypeCoop: boolean
+  @Getter isBaseCompany!: boolean
+  @Getter isTypeBcomp!: boolean
   @Getter isRoleStaff!: boolean
 
   // Global Actions
@@ -113,7 +113,7 @@ export default class ReviewConfirm extends Mixins() {
   }
 
   /** Called when component is mounted. */
-  async mounted (): Promise<void> {
+  mounted (): void {
     this.setCertifyState(
       {
         valid: this.getCertifyState.valid,

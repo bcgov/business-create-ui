@@ -5,12 +5,16 @@
     <div id="upload-rules-summary" v-if="isSummary">
       <!-- Summary Header -->
       <div class="upload-rules-summary-header" >
-        <v-icon color="#38598A">mdi-format-list-text</v-icon>
-        <label class="upload-rules-title"><strong>Rules</strong></label>
+        <v-icon color="dkBlue">mdi-format-list-text</v-icon>
+        <label class="upload-rules-title font-weight-bold">Rules</label>
       </div>
 
       <!-- Summary error message -->
-      <div v-if="!valid" class="upload-rules-error-message">
+      <div
+        v-if="!isCreateRulesValid"
+        class="upload-rules-error-message"
+        :class="{ 'invalid-section': getValidateSteps }"
+      >
         <span>
           <v-icon color="error">mdi-information-outline</v-icon>
           <span class="error-text"> This step is not complete. </span>
@@ -28,19 +32,19 @@
 <script lang="ts">
 // Libraries
 import { Component, Prop, Vue } from 'vue-property-decorator'
-import { State } from 'vuex-class'
+import { Getter } from 'vuex-class'
 
 // Enums
 import { RouteNames } from '@/enums'
 
 @Component({})
 export default class UploadRules extends Vue {
-  // Global state
-  @State(state => state.stateModel.createRulesStep.valid)
-  readonly valid!: boolean
-
   @Prop({ default: false })
   private isSummary: boolean
+
+  // Global getters
+  @Getter getValidateSteps!: boolean
+  @Getter isCreateRulesValid!: boolean
 
   // Entity Enum
   readonly RouteNames = RouteNames
