@@ -12,27 +12,13 @@
     <div id="people-roles-summary" v-if="isSummary">
       <!-- Summary Header -->
       <div class="people-roles-summary-header" >
-        <v-icon color="#38598A">mdi-account-multiple-plus</v-icon>
+        <v-icon color="dkBlue">mdi-account-multiple-plus</v-icon>
         <label class="people-roles-title"><strong>People and Roles</strong></label>
-      </div>
-
-      <!-- Summary Warning -->
-      <div v-if="showErrorSummary" class="people-roles-invalid-message">
-        <span>
-          <v-icon color="blue darken-2">mdi-information-outline</v-icon>
-          This step is not complete.
-          <router-link
-            id="router-link"
-            :to="{ path: `/${RouteNames.ADD_PEOPLE_AND_ROLES}`, query: { showErrors: true } }"
-          >
-            Return to this step to complete it.
-          </router-link>
-        </span>
       </div>
     </div>
 
     <!-- List Display Section -->
-    <div id="people-roles-list">
+    <div id="people-roles-list" :class="{ 'invalid-section': showErrorSummary && getValidateSteps }">
       <!-- List Headers -->
       <v-row class="people-roles-header list-item__subtitle" no-gutters>
         <v-col v-for="(title, index) in tableHeaders" :key="index">
@@ -41,6 +27,21 @@
         <!-- Spacer Column For Actions -->
         <v-col sm="1" v-if="!isSummary"></v-col>
       </v-row>
+
+      <!-- Summary Warning -->
+      <div v-if="showErrorSummary" class="people-roles-invalid-message">
+        <span>
+          <v-icon color="error">mdi-information-outline</v-icon>
+          <span class="error-text"> This step is not complete. </span>
+          <router-link
+            id="router-link"
+            :to="{ path: `/${RouteNames.ADD_PEOPLE_AND_ROLES}`,
+            query: { showErrors: true } }"
+          >
+            Return to this step to complete it.
+          </router-link>
+        </span>
+      </div>
 
       <!-- List Content -->
       <v-row
@@ -129,6 +130,7 @@ import { CommonMixin, EntityFilterMixin } from '@/mixins'
 // Interfaces & enums
 import { OrgPersonIF } from '@/interfaces'
 import { RouteNames } from '@/enums'
+import { Getter } from 'vuex-class'
 
 @Component({
   components: {
@@ -146,6 +148,9 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin, EntityFilter
 
   @Prop({ default: false })
   private isSummary: boolean
+
+  // Global Getters
+  @Getter getValidateSteps!: boolean
 
   // Local Properties
   readonly tableHeaders: Array<string> = ['Name', 'Mailing Address', 'Delivery Address', 'Roles']
@@ -209,14 +214,12 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin, EntityFilter
 
 .people-roles-invalid-message {
   padding: 1.25rem;
-  font-weight: bold;
   color: $BCgovABlue2;
 }
 
 .people-roles-header {
-  padding: 0.5rem 1.25rem 0.5rem 1.25rem;
+  padding: 1.5rem 1.25rem 0.5rem 1.25rem;
   font-size: 0.875rem;
-  margin-top: 1rem;
 }
 
 .people-roles-content {

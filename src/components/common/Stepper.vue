@@ -1,7 +1,13 @@
 <template>
-  <v-container id="step-buttons-container">
+  <v-card id="step-buttons-container">
     <template v-for="(step, index) in getSteps">
-      <div class="step" :key="index" @click="goTo(step)" v-on:keyup.tab="goTo(step)">
+      <div
+        class="step"
+        :key="index"
+        @click="goTo(step)"
+        v-on:keyup.tab="goTo(step)"
+        :class="{'active-step': isCurrentStep(step)}"
+      >
         <div class="step__indicator">
           <div class="step__line"></div>
           <v-btn
@@ -15,19 +21,25 @@
             :class="{ 'selected-btn': isCurrentStep(step) }">
             <v-icon class="step__icon" :class="{ 'selected-icon': isCurrentStep(step) }">{{ step.icon }}</v-icon>
           </v-btn>
-          <v-icon class="step__btn2" size="30" color="green darken-1" v-show=isValid(step.to)>
+          <v-icon class="step__btn2" size="30" color="success darken-1" v-show=isValid(step.to)>
             mdi-check-circle
           </v-icon>
-          <v-icon class="step__btn2" size="30" color="red darken-1" v-show="!isValid(step.to) && getValidateSteps">
+          <v-icon class="step__btn2" size="30" color="error darken-1" v-show="!isValid(step.to) && getValidateSteps">
             mdi-close-circle
           </v-icon>
         </div>
-        <v-btn class="step__label pre-line" text color="primary" :ripple="false" :disabled=step.disabled>
+        <v-btn
+          class="step__label pre-line px-3"
+          text
+          :ripple="false"
+          :disabled=step.disabled
+          :class="[{'active__btn__text': isCurrentStep(step)}, 'inactive__btn__text']"
+        >
           {{ step.text }}
         </v-btn>
       </div>
     </template>
-  </v-container>
+  </v-card>
 </template>
 
 <script lang="ts">
@@ -35,7 +47,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 
-// Interfaces
+// Enums
 import { RouteNames } from '@/enums'
 
 @Component({})
@@ -89,7 +101,7 @@ export default class Stepper extends Vue {
   display: flex;
   justify-content: space-evenly;
   margin: 0;
-  padding: 2rem 0;
+  padding: 0;
   background: $BCgovInputBG;
 }
 
@@ -103,13 +115,19 @@ export default class Stepper extends Vue {
   flex: 1 1 auto;
   align-items: center;
   justify-content: center;
+  padding: 1.75rem 0;
+  border-bottom: 3px solid transparent;
+}
+
+.active-step {
+  border-bottom: 3px solid $app-blue;
 }
 
 .step:hover {
   cursor: pointer;
 
   .step__btn {
-    background: linear-gradient(rgba(25,118,210, .8), rgba(25,118,210, .8)),
+    background: linear-gradient(rgba(25,118,210, 1), rgba(25,118,210, 1)),
                 linear-gradient(rgba(255, 255, 255, 1), rgba(255, 255, 255, 1)); // first bg is layered on top
     color: $BCgovInputBG;
   }
@@ -142,7 +160,7 @@ export default class Stepper extends Vue {
   position: absolute;
   top: 50%;
   left: 0;
-  height: 2px;
+  height: 1px;
   width: 100%;
   background-color: $gray5;
   transform: translateX(-50%);
@@ -163,8 +181,8 @@ export default class Stepper extends Vue {
 }
 
 .step__btn2 {
-  position: relative;
-  margin-top: -32px;
+  position: absolute;
+  margin-top: -5px;
   margin-left: -16px;
   background: $BCgovInputBG;
   border-radius: 50%;
@@ -174,5 +192,19 @@ export default class Stepper extends Vue {
 .step__label {
   margin-top: 10px;
   text-align: center;
+}
+
+.active__btn__text {
+  font-weight: bold;
+  color: $gray9 !important;
+}
+
+.inactive__btn__text {
+  color: $app-blue;
+}
+
+// Vuetify Overrides
+::v-deep .v-btn:not(.v-btn--round).v-size--default {
+  max-width: 64px;
 }
 </style>

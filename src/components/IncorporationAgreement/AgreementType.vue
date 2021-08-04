@@ -4,22 +4,30 @@
       <v-card flat>
         <!-- Summary Header -->
         <div class="agreement-summary-header">
-          <v-icon color="#38598A">mdi-handshake</v-icon>
+          <v-icon color="dkBlue">mdi-handshake</v-icon>
           <label class="agreement-summary-title">
             <strong>Incorporation Agreement and {{getEntityDescription}} Articles</strong>
           </label>
         </div>
-
         <!-- Summary Warning -->
-        <div v-if="showErrorSummary" class="agreement-invalid-message">
+        <div
+          v-if="showErrorSummary"
+          class="agreement-invalid-message"
+          :class="{ 'invalid-section': getValidateSteps }"
+        >
           <span>
-            <v-icon color="blue darken-2">mdi-information-outline</v-icon>
-            This step is not complete.
-            <router-link id="router-link" :to="{ path: `/${RouteNames.INCORPORATION_AGREEMENT}` }">
+            <v-icon color="error">mdi-information-outline</v-icon>
+            <span class="error-text"> This step is not complete. </span>
+            <router-link
+              id="router-link"
+              :to="{ path: `/${RouteNames.INCORPORATION_AGREEMENT}`,
+              query: { showErrors: true } }"
+            >
               Return to this step to complete it.
             </router-link>
           </span>
         </div>
+
         <!-- Summary Content -->
         <div v-else class="summary-desc">
           <div><v-icon color="green darken-2" class="agreement-valid-icon">mdi-check</v-icon></div>
@@ -87,6 +95,7 @@ export default class AgreementType extends Mixins(EnumMixin) {
   // Global getters
   @Getter getIncorporationAgreementDocuments!: Array<IncorporationAgreementTypeIF>
   @Getter getEntityType!: CorpTypeCd
+  @Getter getValidateSteps!: boolean
   @Getter isTypeCC!: boolean
 
   // Actions
@@ -148,7 +157,6 @@ export default class AgreementType extends Mixins(EnumMixin) {
 
 .agreement-invalid-message {
   padding: 1.25rem;
-  font-weight: bold;
   color: $BCgovABlue2;
 }
 

@@ -1,32 +1,47 @@
 <template>
   <div class="summary-container">
-    <SummaryDefineCompany/>
+    <SummaryDefineCompany />
     <ListPeopleAndRoles :personList="orgPersonList" :isSummary="true" :showErrorSummary="!step2Valid" />
-    <ListShareClass :shareClasses="shareClasses" :isSummary="true" :showErrorSummary="!step3Valid"/>
-    <AgreementType :isSummary="true" :showErrorSummary="!step4Valid"/>
+
+    <!-- Company summary components -->
+    <template v-if="isBaseCompany">
+      <ListShareClass :shareClasses="shareClasses" :isSummary="true" :showErrorSummary="!step3Valid" />
+      <AgreementType :isSummary="true" :showErrorSummary="!step4Valid" />
+    </template>
+
+    <!-- Coops summary components -->
+    <template v-else>
+      <UploadRules class="mt-4" :isSummary="true" />
+      <UploadMemorandum class="mt-4" :isSummary="true" />
+    </template>
+
   </div>
 </template>
 
 <script lang="ts">
 // Libraries
 import { Component, Vue } from 'vue-property-decorator'
-import { State } from 'vuex-class'
+import { Getter, State } from 'vuex-class'
 
 // Components
-import { SummaryDefineCompany } from '@/components/Summary'
+import { AgreementType } from '@/components/IncorporationAgreement'
 import { ListPeopleAndRoles } from '@/components/AddPeopleAndRoles'
 import { ListShareClass } from '@/components/CreateShareStructure'
-import { AgreementType } from '@/components/IncorporationAgreement'
+import { SummaryDefineCompany } from '@/components/Summary'
+import { UploadMemorandum } from '@/components/CreateMemorandum'
+import { UploadRules } from '@/components/CreateRules'
 
 // Interfaces
 import { OrgPersonIF, ShareClassIF } from '@/interfaces'
 
 @Component({
   components: {
+    AgreementType,
     ListShareClass,
     ListPeopleAndRoles,
     SummaryDefineCompany,
-    AgreementType
+    UploadMemorandum,
+    UploadRules
   }
 })
 export default class Summary extends Vue {
@@ -45,6 +60,9 @@ export default class Summary extends Vue {
 
   @State(state => state.stateModel.incorporationAgreementStep.valid)
   readonly step4Valid: boolean
+
+  // Global Getters
+  @Getter isBaseCompany!: boolean
 }
 </script>
 

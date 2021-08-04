@@ -69,7 +69,7 @@ h2 {
 }
 
 h3 {
-  font-size: 0.95rem;   
+  font-size: 0.95rem;
   font-weight: 700;
   line-height: 2.25rem;
 }
@@ -254,6 +254,14 @@ ul.list {
 
 .genErr {
   font-size: 0.9rem;
+}
+
+.error-text {
+  color: $app-red !important;
+}
+
+.invalid-section {
+  border-left: 3px solid $app-red;
 }
 
 .white-background {
