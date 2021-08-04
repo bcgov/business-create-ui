@@ -119,7 +119,7 @@
             </div>
           </div>
           <div class="help-section">
-            <h3>Retain the signed Incorporation Agreement and {{getEntityDescription}} Articles</h3>
+            <h3>Retain the signed Incorporation Agreement and {{ entityDescription }} Articles</h3>
             <ul>
               <li>
                 The company is required to keep signed copies of the Incorporation Agreement and Articles in the
@@ -147,7 +147,7 @@
         </header>
         <p>
           For your convenience, we have provided a sample Incorporation Agreement and a set of sample
-          {{getEntityDescription}} Articles.
+          {{ entityDescription }} Articles.
         </p>
         <div>
           <v-card flat class="share-structure-check-panel">
@@ -220,7 +220,6 @@ import { EnumMixin } from '@/mixins'
   }
 })
 export default class IncorporationAgreement extends Mixins(EnumMixin) {
-  // Global getter
   @Getter isTypeBcomp!: boolean
   @Getter isTypeCC!: boolean
   @Getter getEntityType!: CorpTypeCd
@@ -232,8 +231,8 @@ export default class IncorporationAgreement extends Mixins(EnumMixin) {
   private readMoreFlag: boolean = false
   readonly section42Url = `https://www.bclaws.gov.bc.ca/civix/document/id/complete/statreg/02057_02#section42`
 
-  /** The entity description,  */
-  private get getEntityDescription (): string {
+  /** The entity description. */
+  private get entityDescription (): string {
     return `${this.getCorpTypeDescription(this.getEntityType)}`
   }
 

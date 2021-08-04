@@ -90,23 +90,20 @@ import { CommonMixin } from '@/mixins'
   directives: { mask }
 })
 export default class BusinessContactInfo extends Mixins(CommonMixin) {
-  // Props
   @Prop()
-  private initialValue!: BusinessContactIF
+  private readonly initialValue!: BusinessContactIF
 
   @Prop({ default: false })
-  private isEditing!: boolean
+  private readonly isEditing!: boolean
 
   @Prop({ default: false })
-  private showErrors!: boolean
+  private readonly showErrors!: boolean
 
-  // Properties
   private contact: BusinessContactIF = this.initialValue
-
   private formValid: boolean = false
 
-  // Used as an initial comparison to re-validate the form
-  // This is so we don't flag errors for a new application right away
+  // Used as an initial comparison to re-validate the form.
+  // This is so we don't flag errors for a new application right away.
   private defaultBusinessContact: BusinessContactIF = {
     email: '',
     confirmEmail: '',
@@ -161,7 +158,7 @@ export default class BusinessContactInfo extends Mixins(CommonMixin) {
   private emitContactInfo (contactInfo: BusinessContactIF): void { }
 
   @Emit('contactInfoFormValidityChange')
-  private emitContactFormState (validity: boolean): void { }
+  private emitContactFormState (valid: boolean): void { }
 }
 </script>
 

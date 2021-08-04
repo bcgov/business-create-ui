@@ -1,9 +1,9 @@
 <template>
   <div>
     <div class="mt-10 company-statement" v-if="isTypeBcomp">
-      <p>
-        <span class="company-statement-label">{{ getCompanyResources.title }}:</span>
-        {{ getCompanyResources.description }}
+      <p v-if="getCompanyTitle">
+        <span class="company-statement-label">{{ getCompanyTitle }}:</span>
+        {{ getCompanyDescription }}
       </p>
     </div>
 
@@ -25,7 +25,7 @@
         </p>
       </header>
       <IncorporationDateTime
-        :incorporationDateTime="incorporationDateTime"
+        :incorporationDateTime="getIncorporationDateTime"
         @valid="onValidDateTime($event)"
         @dateTime="setDateTime($event)"
       />
@@ -38,13 +38,13 @@
       </header>
       <div :class="{ 'invalid-section': isCertifyInvalid }">
         <certify
-          :currentDate="currentDate"
+          :currentDate="getCurrentDate"
           :certifiedBy="getCertifyState.certifiedBy"
           :isCertified="getCertifyState.valid"
           :statements="getCompletingPartyStatement.certifyStatements"
           :message="getCompletingPartyStatement.certifyClause"
           :enableMailTo="true"
-          :businessEmail="getBusinessEmail"
+          :businessEmail="getBusinessContact.email"
           :completingPartyEmail="getCompletingPartyEmail"
           :isStaff="isRoleStaff"
           :firstColumn="3"
@@ -62,10 +62,12 @@
 <script lang="ts">
 // Libraries
 import { Component, Mixins, Vue } from 'vue-property-decorator'
-import { State, Action, Getter } from 'vuex-class'
+import { Action, Getter } from 'vuex-class'
 
 // Interfaces
-import { CertifyStatementIF, ActionBindingIF, CertifyIF, DateTimeIF, GetterIF, ResourceIF } from '@/interfaces'
+import {
+  ActionBindingIF, BusinessContactIF, CertifyIF, CertifyStatementIF, DateTimeIF, ResourceIF
+} from '@/interfaces'
 
 // Components
 import { IncorporationDateTime, Summary } from '@/components/ReviewConfirm'
@@ -79,25 +81,19 @@ import { Certify } from '@bcrs-shared-components/certify'
   }
 })
 export default class ReviewConfirm extends Mixins() {
-  // Global state
-  @State(state => state.stateModel.currentDate)
-  readonly currentDate!: string
-
-  @State(state => state.stateModel.incorporationDateTime)
-  readonly incorporationDateTime!: DateTimeIF
-
-  // Global Getters
-  @Getter getBusinessEmail!: string
+  @Getter getBusinessContact!: BusinessContactIF
   @Getter getCertifyState!: CertifyIF
-  @Getter getCompanyResources!: ResourceIF
+  @Getter getCompanyTitle!: string
+  @Getter getCompanyDescription!: string
   @Getter getCompletingPartyStatement!: CertifyStatementIF
   @Getter getCompletingPartyEmail!: string
   @Getter getValidateSteps!: boolean
   @Getter isBaseCompany!: boolean
   @Getter isTypeBcomp!: boolean
   @Getter isRoleStaff!: boolean
+  @Getter getCurrentDate!: string
+  @Getter getIncorporationDateTime!: DateTimeIF
 
-  // Global Actions
   @Action setIsIncorporationDateTimeValid!: ActionBindingIF
   @Action setEffectiveDate!: ActionBindingIF
   @Action setCertifyState!: ActionBindingIF
@@ -153,6 +149,7 @@ export default class ReviewConfirm extends Mixins() {
   }
 
   /** Handler for setting DateTime. */
+  // TODO: fix type (should be Date)
   private setDateTime (val: string): void {
     this.setEffectiveDate(val)
   }

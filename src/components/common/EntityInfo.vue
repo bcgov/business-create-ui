@@ -43,7 +43,6 @@ import { Component, Mixins } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 
 // Interfaces & enums
-import { GetterIF } from '@/interfaces'
 import { CorpTypeCd, FilingNames } from '@/enums'
 
 // Modules
@@ -51,24 +50,23 @@ import { EnumMixin } from '@/mixins'
 
 @Component({})
 export default class EntityInfo extends Mixins(EnumMixin) {
-  // Global getters
-  @Getter isEntityType!: GetterIF
+  @Getter isEntityType!: boolean
   @Getter getEntityType!: CorpTypeCd
-  @Getter getNameRequestNumber!: GetterIF
-  @Getter getTempId!: GetterIF
-  @Getter getApprovedName!: GetterIF
+  @Getter getNameRequestNumber!: string
+  @Getter getTempId!: string
+  @Getter getApprovedName!: string
 
-  /** The entity application title  */
+  /** The entity application title.  */
   private get entityTitle (): string {
     return `${this.getCorpTypeDescription(this.getEntityType)} ${FilingNames.INCORPORATION_APPLICATION}`
   }
 
-  /** The numbered entity name */
+  /** The numbered entity name. */
   private get getNumberedEntityName (): string {
     return `${this.getCorpTypeNumberedDescription(this.getEntityType)}`
   }
 
-  /** Get route breadcrumbs. */
+  /** The route breadcrumbs. */
   private get breadcrumbs (): Array<any> {
     return [
       {
@@ -88,7 +86,6 @@ export default class EntityInfo extends Mixins(EnumMixin) {
     ]
   }
 }
-
 </script>
 
 <style lang="scss" scoped>

@@ -41,17 +41,17 @@ import { NameRequestStates } from '@/enums/nameRequestStates'
 
 @Component({})
 export default class NameRequestInvalidErrorDialog extends Vue {
-  /** Enum definition for use in template. */
+  // Enum for template
   readonly NameRequestStates = NameRequestStates
 
   /** Prop to display the dialog. */
-  @Prop() private dialog: boolean
+  @Prop() private readonly dialog: boolean
 
   /** Prop to provide message type. */
-  @Prop({ default: null }) private type: NameRequestStates
+  @Prop({ default: null }) private readonly type: NameRequestStates
 
   /** Prop to provide attachment selector. */
-  @Prop() private attach: string
+  @Prop() private readonly attach: string
 
   /** True if user has Okay option. Otherwise user gets Redirect option. */
   private get showOkay (): boolean {

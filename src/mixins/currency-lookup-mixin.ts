@@ -169,7 +169,7 @@ export default class CurrencyLookupMixin extends Vue {
     return this.currencyList
   }
 
-  getCurrencyNameByCode (code: string): string | null {
+  getCurrencyNameByCode (code: string): string {
     const currency = this.currencyList.find(currency => currency.code === code)
     return currency?.name
   }

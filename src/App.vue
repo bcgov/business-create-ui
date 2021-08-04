@@ -125,7 +125,7 @@
 <script lang="ts">
 // Libraries
 import { Component, Vue, Watch, Mixins } from 'vue-property-decorator'
-import { State, Action, Getter } from 'vuex-class'
+import { Action, Getter } from 'vuex-class'
 import KeycloakService from 'sbc-common-components/src/services/keycloak.services'
 import { PAYMENT_REQUIRED } from 'http-status-codes'
 import * as Sentry from '@sentry/browser'
@@ -146,7 +146,7 @@ import {
   FileAndPayInvalidNameRequestDialog
 } from '@/components/dialogs'
 import { DateMixin, FilingTemplateMixin, LegalApiMixin, NameRequestMixin } from '@/mixins'
-import { FilingDataIF, ActionBindingIF, ConfirmDialogType, StepIF, CertifyIF } from '@/interfaces'
+import { ActionBindingIF, ConfirmDialogType, FilingDataIF, StepIF } from '@/interfaces'
 import { CompanyResources } from '@/resources'
 
 // Enums and Constants
@@ -179,38 +179,23 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
     confirm: ConfirmDialogType
   }
 
-  // Global state
-  @State(state => state.stateModel.entityType)
-  readonly entityType!: string
-
-  @State(state => state.stateModel.incorporationDateTime.isFutureEffective)
-  readonly isFutureEffective!: boolean
-
-  // Global getters
-  @Getter haveChanges!: boolean
-  @Getter getCertifyState!: CertifyIF
+  @Getter getHaveChanges!: boolean
   @Getter getFilingData!: FilingDataIF
   @Getter isRoleStaff!: boolean
   @Getter getSteps!: Array<StepIF>
-  @Getter getTempId!: string
 
-  // Global actions
-  @Action setCertifyState!: ActionBindingIF
   @Action setCurrentStep!: ActionBindingIF
   @Action setCurrentDate!: ActionBindingIF
   @Action setCompanyResources!: ActionBindingIF
-  @Action setNameRequestState!: ActionBindingIF
   @Action setUserEmail: ActionBindingIF
   @Action setAuthRoles: ActionBindingIF
-  @Action setDefineCompanyStepValidity!: ActionBindingIF
   @Action setAddPeopleAndRoleStepValidity!: ActionBindingIF
   @Action setCreateShareStructureStepValidity!: ActionBindingIF
   @Action setHaveChanges!: ActionBindingIF
   @Action setAccountInformation!: ActionBindingIF
   @Action setTempId!: ActionBindingIF
 
-  // Local Properties
-  private filingData: Array<FilingDataIF> = []
+  // Local properties
   private accountAuthorizationDialog: boolean = false
   private fetchErrorDialog: boolean = false
   private invalidIncorporationApplicationDialog: boolean = false
@@ -223,7 +208,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
   private saveWarnings: Array<object> = []
   private fileAndPayInvalidNameRequestDialog: boolean = false
 
-  // Template Enums
+  // Enum for template
   readonly RouteNames = RouteNames
 
   /** Whether the token refresh service is initialized. */
@@ -232,7 +217,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
   /** Data for fee summary component. */
   private get feeFilingData (): Array<FilingDataIF> {
     return this.getFilingData
-      ? [{ ...this.getFilingData, futureEffective: this.isFutureEffective }]
+      ? [{ ...this.getFilingData, futureEffective: this.getIncorporationDateTime.isFutureEffective }]
       : []
   }
 
@@ -273,7 +258,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
   private created (): void {
     // before unloading this page, if there are changes then prompt user
     window.onbeforeunload = (event) => {
-      if (this.haveChanges) {
+      if (this.getHaveChanges) {
         event.preventDefault()
         // NB: custom text is not supported in all browsers
         event.returnValue = 'You have unsaved changes. Are you sure you want to leave?'
@@ -325,7 +310,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
   /** Called to redirect to dashboard. */
   private goToDashboard (force: boolean = false): void {
     // check if there are no data changes
-    if (!this.haveChanges || force) {
+    if (!this.getHaveChanges || force) {
       // redirect to dashboard
       const dashboardUrl = sessionStorage.getItem('DASHBOARD_URL')
       window.location.assign(dashboardUrl + this.getTempId)
@@ -459,7 +444,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
 
         // Set the resources
         // An unknown entity type will need to be handled here
-        const companyResources = CompanyResources.find(x => x.entityType === this.entityType)
+        const companyResources = CompanyResources.find(x => x.entityType === this.getEntityType)
         if (companyResources) this.setCompanyResources(companyResources)
         else throw new Error('Invalid Entity Type')
 
@@ -581,8 +566,8 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
     // since username is unique, use it as the user key
     const key: string = userInfo.username
     const email: string = userInfo.contacts[0]?.email || userInfo.email
-    const firstName: string = userInfo?.firstname
-    const lastName: string = userInfo?.lastname
+    const firstName: string = userInfo.firstname
+    const lastName: string = userInfo.lastname
     // remove leading { and trailing } and tokenize string
     const custom: any = { roles: userInfo.roles?.slice(1, -1).split(',') }
 

@@ -14,11 +14,9 @@ import { ActionBindingIF, IncorporationFilingIF } from '@/interfaces'
 export default class LegalApiMixin extends Vue {
   readonly INCORPORATION_APPLICATION = 'incorporationApplication'
 
-  // Global Getters
   @Getter getFilingId!: number
   @Getter getTempId!: string
 
-  // Store Actions
   @Action setFilingId!: ActionBindingIF
 
   /**

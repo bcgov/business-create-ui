@@ -103,10 +103,10 @@
 <script lang="ts">
 // Libraries
 import { Component, Mixins } from 'vue-property-decorator'
-import { Action, Getter, State } from 'vuex-class'
+import { Action, Getter } from 'vuex-class'
 
 // Interfaces
-import { ActionBindingIF, OrgPersonIF, RolesIF } from '@/interfaces'
+import { ActionBindingIF, OrgPersonIF, PeopleAndRoleIF, RolesIF, TombstoneIF } from '@/interfaces'
 
 // Mixins
 import { EntityFilterMixin } from '@/mixins'
@@ -125,16 +125,10 @@ import ListPeopleAndRoles from './ListPeopleAndRoles.vue'
   }
 })
 export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
-  // Global state
-  @State(state => state.stateModel.addPeopleAndRoleStep.orgPeople)
-  readonly orgPersonList!: OrgPersonIF[]
-
-  @State(state => state.stateModel.tombstone.userEmail)
-  readonly userEmail!: string
-
   @Getter getMinimumDirectorCount!: number
+  @Getter getTombstone!: TombstoneIF
+  @Getter getAddPeopleAndRoleStep!: PeopleAndRoleIF
 
-  // Global actions
   @Action setOrgPersonList!: ActionBindingIF
   @Action setAddPeopleAndRoleStepValidity!: ActionBindingIF
 
@@ -163,13 +157,17 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
   private showOrgPersonForm: boolean = false
   private activeIndex: number = -1
   private addEditInProgress: boolean = false
-  private currentOrgPerson: OrgPersonIF | null = null
+  private currentOrgPerson: OrgPersonIF = null
 
-  // enums for template
+  // Enums for template
   readonly CorpTypeCd = CorpTypeCd
   readonly RoleTypes = RoleTypes
   readonly IncorporatorTypes = IncorporatorTypes
   readonly NumWord = NumWord
+
+  private get orgPersonList (): OrgPersonIF[] {
+    return this.getAddPeopleAndRoleStep.orgPeople
+  }
 
   private get directorVerbiage (): string {
     return this.getMinimumDirectorCount > 1 ? 'Directors' : 'Director'
@@ -199,7 +197,7 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
   private onAddEditOrgPerson (person: OrgPersonIF): void {
     // if this is the completing party, assign email address from user profile
     if (person.roles.find(role => role.roleType === RoleTypes.COMPLETING_PARTY)) {
-      person.officer.email = this.userEmail
+      person.officer.email = this.getTombstone.userEmail
     }
 
     const newList: OrgPersonIF[] = Object.assign([], this.orgPersonList)

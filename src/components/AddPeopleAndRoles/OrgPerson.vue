@@ -194,19 +194,13 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
     reassignCPDialog: ConfirmDialogType
   }
 
-  // Props
-  @Prop()
-  private initialValue!: OrgPersonIF
-
-  @Prop()
-  private activeIndex: number
-
-  @Prop()
-  private existingCompletingParty: OrgPersonIF
+  @Prop() private readonly initialValue!: OrgPersonIF
+  @Prop() private readonly activeIndex: number
+  @Prop() private readonly existingCompletingParty: OrgPersonIF
 
   @Getter getCurrentDate!: string
 
-  // Data Properties
+  // Local properties
   private orgPerson: OrgPersonIF = null
   private addPersonOrgFormValid = true
 
@@ -222,7 +216,7 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
   /** Model value for roles checboxes. */
   private selectedRoles: Array<RoleTypes> = []
 
-  // enums for template
+  // Enums for template
   readonly CorpTypeCd = CorpTypeCd
   readonly RoleTypes = RoleTypes
   readonly IncorporatorTypes = IncorporatorTypes

@@ -14,7 +14,7 @@
               <strong>{{ getNameRequestNumber }}</strong> - {{ getNameRequestDetails.approvedName }}
             </li>
             <li class="mt-4"><strong>Entity Type:</strong> {{ getEntityTypeDescription }}</li>
-            <li><strong>Request Type:</strong> {{ requestType() }}</li>
+            <li><strong>Request Type:</strong> {{ requestType }}</li>
             <li class="mt-4"><strong>Expiry Date:</strong> {{ formattedExpirationDate() }}</li>
             <li><strong>Status:</strong> {{ getNameRequestDetails.status }}</li>
             <li id="condition-consent" v-if="getNameRequestDetails.status === NameRequestStates.CONDITIONAL">
@@ -51,7 +51,7 @@
             <strong>[Incorporation Number]</strong> B.C. Ltd.
           </li>
           <li class="mt-4"><strong>Entity Type:</strong> {{ getEntityTypeDescription }}</li>
-          <li><strong>Request Type:</strong> {{ requestType() }}</li>
+          <li><strong>Request Type:</strong> {{ requestType }}</li>
           <li class="bullet-point mt-4 ml-5">You will be filing this Incorporation Application for a company created by
             adding "B.C. Ltd." after the Incorporation Number.
           </li>
@@ -117,7 +117,7 @@
 <script lang="ts">
 // Libraries
 import { Component, Emit, Mixins, Watch } from 'vue-property-decorator'
-import { Action, Getter, State } from 'vuex-class'
+import { Action, Getter } from 'vuex-class'
 import { getName } from 'country-list'
 
 // Components
@@ -129,7 +129,6 @@ import { CorpTypeCd, NameRequestStates } from '@/enums'
 
 // Interfaces
 import {
-  GetterIF,
   NameRequestDetailsIF,
   NameRequestApplicantIF,
   ConfirmDialogType,
@@ -153,10 +152,10 @@ export default class NameRequestInfo extends Mixins(DateMixin, EnumMixin) {
     confirmTranslationRemovalDialog: ConfirmDialogType
   }
 
-  // Template Enums
+  // Enum for template
   readonly NameRequestStates = NameRequestStates
 
-  // Local Properties
+  // Local properties
   private hasNameTranslation = false
   private isAddingNameTranslation = true
   private editingNameTranslation = ''
@@ -167,38 +166,30 @@ export default class NameRequestInfo extends Mixins(DateMixin, EnumMixin) {
   readonly NOT_REQUIRED_STATE = 'Not Required'
   readonly WAIVED_STATE = 'Waived'
 
-  // Global Store
-  @State(state => state.stateModel.nameTranslations)
-  readonly nameTranslations!: NameTranslationIF[]
-
-  // Global Actions
   @Action setNameTranslationState!: ActionBindingIF
 
-  // Global getters
-  @Getter isEntityType!: GetterIF;
   @Getter getEntityType!: CorpTypeCd
-  @Getter getTempId!: GetterIF;
-  @Getter getNameRequestNumber!: GetterIF;
-  @Getter getNameRequestDetails!: NameRequestDetailsIF;
-  @Getter getNameRequestApplicant!: NameRequestApplicantIF;
-  @Getter getNameTranslations!: NameTranslationIF[];
+  @Getter getNameRequestNumber!: string
+  @Getter getNameRequestDetails!: NameRequestDetailsIF
+  @Getter getNameRequestApplicant!: NameRequestApplicantIF
+  @Getter getNameTranslations!: NameTranslationIF[]
 
-  /** The entity title  */
+  /** The entity title.  */
   private get getEntityTypeDescription (): string {
     return `${this.getCorpTypeDescription(this.getEntityType)}`
   }
 
-  /** The request type */
-  private requestType (): string {
+  /** The request type. */
+  private get requestType (): string {
     return 'New Business'
   }
 
-  /** Return formatted expiration date */
+  /** Returns formatted expiration date. */
   private formattedExpirationDate (): string {
     return this.toReadableDate(this.getNameRequestDetails.expirationDate)
   }
 
-  /** Return condition/consent string */
+  /** The condition/consent string. */
   private get conditionConsent (): string {
     if (this.getNameRequestDetails.status === NameRequestStates.APPROVED) {
       return this.NOT_REQUIRED_STATE
@@ -215,7 +206,7 @@ export default class NameRequestInfo extends Mixins(DateMixin, EnumMixin) {
     return this.NOT_RECEIVED_STATE
   }
 
-  /** Return formatted applicant name */
+  /** Returns formatted applicant name. */
   private applicantName (): string {
     let name = this.getNameRequestApplicant.firstName
     if (this.getNameRequestApplicant.middleName) {
@@ -226,7 +217,7 @@ export default class NameRequestInfo extends Mixins(DateMixin, EnumMixin) {
     return name
   }
 
-  /** Return formatted address string */
+  /** Returns formatted address string. */
   private applicantAddress (): string {
     // Get Address info
     const city = this.getNameRequestApplicant.city
@@ -247,8 +238,8 @@ export default class NameRequestInfo extends Mixins(DateMixin, EnumMixin) {
     return `${address}, ${city}, ${stateProvince}, ${postal}, ${country}`
   }
 
-  /** Add or update a name translation
-   *
+  /**
+   * Adds or updates a name translation.
    * @param name The name to add
    */
   private addName (name: string): void {
@@ -267,8 +258,8 @@ export default class NameRequestInfo extends Mixins(DateMixin, EnumMixin) {
     this.cancelNameTranslation()
   }
 
-  /** Pass an index of the name translation to be edited
-   *
+  /**
+   * Sets specified name translation to be edited.
    * @param index Index number of the name translation to edit
    */
   private editNameTranslation (index: number): void {
@@ -278,8 +269,8 @@ export default class NameRequestInfo extends Mixins(DateMixin, EnumMixin) {
     this.isAddingNameTranslation = true
   }
 
-  /** Remove a name translation
-   *
+  /**
+   * Removes a name translation.
    * @param index Index number of the name translation to remove
    */
   private removeNameTranslation (index: number): void {
@@ -294,14 +285,14 @@ export default class NameRequestInfo extends Mixins(DateMixin, EnumMixin) {
     this.cancelNameTranslation()
   }
 
-  /** Cancel adding or editing of name translation */
+  /** Cancels adding or editing of name translation. */
   private cancelNameTranslation (): void {
     this.isAddingNameTranslation = false
     this.editingNameTranslation = ''
     this.editIndex = -1
   }
 
-  /** Handle name translation checkbox logic */
+  /** Handles name translation checkbox logic. */
   private confirmNameTranslation () {
     if (this.getNameTranslations?.length > 0) {
       // open confirmation dialog and wait for response
@@ -330,7 +321,7 @@ export default class NameRequestInfo extends Mixins(DateMixin, EnumMixin) {
     this.emitHasNameTranslation(this.validateNameTranslation())
   }
 
-  /** Validate name translation */
+  /** Validates name translation. */
   private validateNameTranslation (): boolean {
     return this.hasNameTranslation ? this.getNameTranslations?.length > 0 : true
   }
@@ -341,9 +332,9 @@ export default class NameRequestInfo extends Mixins(DateMixin, EnumMixin) {
     return hasNameTranslation
   }
 
-  @Watch('nameTranslations', { deep: true, immediate: true })
+  @Watch('getNameTranslations', { deep: true, immediate: true })
   private updateNameTranslation (): void {
-    if (this.nameTranslations?.length > 0) {
+    if (this.getNameTranslations?.length > 0) {
       this.isAddingNameTranslation = false
       this.hasNameTranslation = true
     }

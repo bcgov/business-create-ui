@@ -121,9 +121,8 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
   }
 
   @Prop()
-  private incorporationDateTime!: DateTimeIF
+  private readonly incorporationDateTime!: DateTimeIF
 
-  // Global Actions
   @Action setIsFutureEffective!: ActionBindingIF
 
   // Local properties
