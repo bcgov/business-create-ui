@@ -243,7 +243,6 @@ export const isApplicationValid = (state: any, getters: any): boolean => {
   // Base company steps
   const isBaseStepsValid = (
     state.stateModel.createShareStructureStep.valid &&
-    state.stateModel.incorporationDateTime.valid &&
     state.stateModel.incorporationAgreementStep.valid &&
     state.stateModel.incorporationDateTime.valid
   )
