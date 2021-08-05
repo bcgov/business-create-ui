@@ -86,11 +86,11 @@
 <script lang="ts">
 // Libraries
 import { Component, Vue } from 'vue-property-decorator'
-import { Action, State } from 'vuex-class'
+import { Action, Getter } from 'vuex-class'
 import { v4 as uuidv4 } from 'uuid'
 
 // Interfaces
-import { ActionBindingIF, FormType, ShareClassIF } from '@/interfaces'
+import { ActionBindingIF, ShareClassIF, ShareStructureIF } from '@/interfaces'
 
 // Components
 import { ListShareClass, ShareStructure } from '@/components/CreateShareStructure'
@@ -102,11 +102,8 @@ import { ListShareClass, ShareStructure } from '@/components/CreateShareStructur
   }
 })
 export default class CreateShareStructure extends Vue {
-  // Global state
-  @State(state => state.stateModel.createShareStructureStep.shareClasses)
-  readonly shareClasses: ShareClassIF[]
+  @Getter getCreateShareStructureStep!: ShareStructureIF
 
-  // Glbal actions
   @Action setShareClasses!: ActionBindingIF
   @Action setCreateShareStructureStepValidity!: ActionBindingIF
   @Action setIgnoreChanges!: ActionBindingIF
@@ -154,12 +151,16 @@ export default class CreateShareStructure extends Vue {
 
   private showShareStructureForm: boolean = false
   private addEditInProgress: boolean = false
-  private currentShareStructure: ShareClassIF | null = null
+  private currentShareStructure: ShareClassIF = null
 
   private activeIndex: number = -1
   private parentIndex: number = -1
   private shareId: string = ''
   private helpToggle: boolean = false
+
+  private get shareClasses (): ShareClassIF[] {
+    return this.getCreateShareStructureStep.shareClasses
+  }
 
   /** Called when component is created. */
   private created (): void {

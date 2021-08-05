@@ -64,19 +64,19 @@ export default class PaymentErrorDialog extends Vue {
   @Getter isRoleStaff!: boolean
 
   /** Prop containing filing name. */
-  @Prop({ default: 'Application' }) private filingName: string
+  @Prop({ default: 'Application' }) private readonly filingName: string
 
   /** Prop to display the dialog. */
-  @Prop() private dialog: boolean
+  @Prop() private readonly dialog: boolean
 
   /** Prop to provide attachment selector. */
-  @Prop() private attach: string
+  @Prop() private readonly attach: string
 
   /** Prop containing error messages. */
-  @Prop({ default: () => [] }) private errors: object[]
+  @Prop({ default: () => [] }) private readonly errors: any[]
 
   /** Prop containing warning messages. */
-  @Prop({ default: () => [] }) private warnings: object[]
+  @Prop({ default: () => [] }) private readonly warnings: any[]
 
   /** Pass click event to parent. */
   @Emit() private exit () { }

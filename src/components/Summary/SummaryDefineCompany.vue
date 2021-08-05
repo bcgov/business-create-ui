@@ -2,13 +2,15 @@
   <v-card flat>
     <div class="define-company-header">
       <v-icon color="dkBlue">mdi-domain</v-icon>
-      <label class="define-company-title"><strong>Your {{ getDisplayName }}</strong></label>
+      <label class="define-company-title"><strong>Your {{ getCompanyDisplayName }}</strong></label>
     </div>
-    <section :class="{ 'invalid-section': !valid && getValidateSteps }">
-      <div v-if="!valid" class="defineCompanyStepErrorMessage">
+    <section :class="{ 'invalid-section': !getDefineCompanyStep.valid && getValidateSteps }">
+      <div v-if="!getDefineCompanyStep.valid" class="defineCompanyStepErrorMessage">
         <span>
           <v-icon color="error">mdi-information-outline</v-icon>
-          <span class="error-text"> This step is not complete. </span>
+          &nbsp;
+          <span class="error-text">This step is not complete.</span>
+          &nbsp;
           <router-link :to="{ path: `/${RouteNames.DEFINE_COMPANY}`, query: { showErrors: true } }">
             Return to this step to complete it.
           </router-link>
@@ -23,7 +25,7 @@
           <v-flex md8>
             <div class="company-name">{{ getApprovedName || '[Incorporation Number] B.C. Ltd.' }}</div>
             <div class="company-type">
-              <span>{{ getEntityDescription }}</span>
+              <span>{{ entityDescription }}</span>
             </div>
           </v-flex>
         </v-layout>
@@ -40,14 +42,14 @@
       </div>
       <v-divider/>
       <div class="section-container">
-        <OfficeAddresses :inputAddresses="addresses" :isEditing="false" />
+        <OfficeAddresses :inputAddresses="getDefineCompanyStep.officeAddresses" :isEditing="false" />
       </div>
       <v-divider/>
       <div class="section-container">
-        <BusinessContactInfo :initialValue="businessContact" :isEditing="false" />
+        <BusinessContactInfo :initialValue="getDefineCompanyStep.businessContact" :isEditing="false" />
       </div>
       <div class="section-container" v-if="isPremiumAccount">
-        <FolioNumber :initialValue="folioNumber" :isEditing="false" />
+        <FolioNumber :initialValue="getDefineCompanyStep.folioNumber" :isEditing="false" />
       </div>
     </section>
   </v-card>
@@ -56,10 +58,10 @@
 <script lang="ts">
 // Libraries
 import { Component, Mixins } from 'vue-property-decorator'
-import { Getter, State } from 'vuex-class'
+import { Getter } from 'vuex-class'
 
 // Interfaces
-import { BusinessContactIF, GetterIF, IncorporationAddressIf, NameTranslationIF } from '@/interfaces'
+import { DefineCompanyIF, NameTranslationIF } from '@/interfaces'
 
 // Components
 import { FolioNumber, BusinessContactInfo, OfficeAddresses } from '@/components/DefineCompany'
@@ -68,7 +70,7 @@ import { FolioNumber, BusinessContactInfo, OfficeAddresses } from '@/components/
 import { EntityFilterMixin, EnumMixin } from '@/mixins'
 
 // Enums
-import { CorpTypeCd, RouteNames } from '@/enums'
+import { RouteNames } from '@/enums'
 
 @Component({
   components: {
@@ -79,32 +81,19 @@ import { CorpTypeCd, RouteNames } from '@/enums'
 })
 export default class SummaryDefineCompany extends Mixins(EntityFilterMixin, EnumMixin) {
   // Getters
-  @Getter getApprovedName!: GetterIF
-  @Getter getDisplayName!: string
-  @Getter getEntityType!: CorpTypeCd
-  @Getter isPremiumAccount!: GetterIF
+  @Getter getApprovedName!: string
+  @Getter getCompanyDisplayName!: string
+  @Getter isPremiumAccount!: boolean
   @Getter getNameTranslations!: NameTranslationIF[]
   @Getter getValidateSteps!: boolean
-
-  // Global state
-  @State(state => state.stateModel.defineCompanyStep.valid)
-  readonly valid!: boolean
-
-  @State(state => state.stateModel.defineCompanyStep.businessContact)
-  readonly businessContact!: BusinessContactIF
-
-  @State(state => state.stateModel.defineCompanyStep.officeAddresses)
-  readonly addresses!: IncorporationAddressIf
-
-  @State(state => state.stateModel.defineCompanyStep.folioNumber)
-  readonly folioNumber!: string
+  @Getter getDefineCompanyStep!: DefineCompanyIF
 
   /** The entity description  */
-  private get getEntityDescription (): string {
+  private get entityDescription (): string {
     return `${this.getCorpTypeDescription(this.getEntityType)}`
   }
 
-  // Entity Enum
+  // Enum for template
   readonly RouteNames = RouteNames
 }
 </script>
@@ -144,4 +133,7 @@ export default class SummaryDefineCompany extends Mixins(EntityFilterMixin, Enum
   padding-top: 0.5rem
 }
 
+.v-icon.mdi-information-outline {
+  margin-top: -2px;
+}
 </style>

@@ -1,177 +1,197 @@
-// Enums
 import { AccountTypes, CorpTypeCd, RoleTypes } from '@/enums'
 import {
+  AccountInformationIF,
+  BusinessContactIF,
   CertifyIF,
-  NameRequestDetailsIF,
+  CreateMemorandumIF,
+  CreateRulesIF,
+  DateTimeIF,
+  DefineCompanyIF,
+  IncorporationAddressIF,
+  IncorporationAgreementIF,
   NameRequestApplicantIF,
-  NameTranslationIF
+  NameRequestDetailsIF,
+  NameRequestIF,
+  NameTranslationIF,
+  PeopleAndRoleIF,
+  ShareStructureIF,
+  StateIF,
+  TombstoneIF
 } from '@/interfaces'
+import { getMaxStep } from './resource-getters'
 
-/**
- * Whether the user has "staff" keycloak role.
- */
-export const isRoleStaff = (state: any): boolean => {
-  return state.stateModel.tombstone.keycloakRoles.includes('staff')
+//
+// The getters in this file return values from the current state model.
+//
+
+/** Whether the user has "staff" keycloak role. */
+export const isRoleStaff = (state: StateIF): boolean => {
+  return getTombstone(state).keycloakRoles.includes('staff')
 }
 
-/**
- * Whether the user is authorized to edit.
- */
-export const isAuthEdit = (state: any): boolean => {
-  return state.stateModel.tombstone.authRoles.includes('edit')
+/** Whether the user is authorized to edit. */
+export const isAuthEdit = (state: StateIF): boolean => {
+  return getTombstone(state).authRoles.includes('edit')
 }
 
-/**
- * Whether the user is authorized to view.
- */
-export const isAuthView = (state: any): boolean => {
-  return state.stateModel.tombstone.authRoles.includes('view')
+/** Whether the user is authorized to view. */
+export const isAuthView = (state: StateIF): boolean => {
+  return getTombstone(state).authRoles.includes('view')
 }
 
-/**
- * Whether the entity type has been identified.
- */
-export const isEntityType = (state: any): boolean => {
-  return !!state.stateModel.entityType
+/** Whether the entity type has been identified. */
+export const isEntityType = (state: StateIF): boolean => {
+  return !!getEntityType(state)
 }
 
-/**
- * The current entityType.
- */
-export const getEntityType = (state: any): CorpTypeCd => {
+/** The current entityType. */
+export const getEntityType = (state: StateIF): CorpTypeCd => {
   return state.stateModel.entityType
 }
 
-/**
- * Whether the entity is a BCOMP.
- */
-export const isTypeBcomp = (state: any): boolean => {
+/** Whether the entity is a BCOMP. */
+export const isTypeBcomp = (state: StateIF): boolean => {
   return (state.stateModel.entityType === CorpTypeCd.BENEFIT_COMPANY)
 }
 
-/**
- * Whether the entity is a COOP.
- */
-export const isTypeCoop = (state: any): boolean => {
+/** Whether the entity is a COOP. */
+export const isTypeCoop = (state: StateIF): boolean => {
   return (state.stateModel.entityType === CorpTypeCd.COOP)
 }
 
-/**
- * Whether the entity is Community Contribution Company.
- */
-export const isTypeCC = (state: any): boolean => {
+/** Whether the entity is Community Contribution Company. */
+export const isTypeCC = (state: StateIF): boolean => {
   return (state.stateModel.entityType === CorpTypeCd.BC_CCC)
 }
 
-/**
- * Whether the entity is a base Company.
- */
-export const isBaseCompany = (state: any, getters: any): boolean => {
+/** The Account Information object. */
+export const getAccountInformation = (state: StateIF): AccountInformationIF => {
+  return state.stateModel.accountInformation
+}
+
+/** Whether the entity is a base company (BEN, CC, BC, ULC). */
+export const isBaseCompany = (state: StateIF): boolean => {
   return [
     CorpTypeCd.BENEFIT_COMPANY,
     CorpTypeCd.BC_CCC,
     CorpTypeCd.BC_COMPANY,
     CorpTypeCd.BC_ULC_COMPANY
-  ].includes(getters.getEntityType)
-}
-/**
- * Whether the current account is a premium account
- */
-export const isPremiumAccount = (state: any): boolean => {
-  return (state.stateModel.accountInformation.accountType === AccountTypes.PREMIUM)
+  ].includes(getEntityType(state))
 }
 
-/**
- * Returns the current account id
- */
-export const getAccountId = (state: any): number => {
-  return state.stateModel.accountInformation.id
+/** Whether the current account is a premium account. */
+export const isPremiumAccount = (state: StateIF): boolean => {
+  return (getAccountInformation(state).accountType === AccountTypes.PREMIUM)
 }
 
-/**
- * Returns the current date.
- */
-export const getCurrentDate = (state: any): string => {
+/** The Current Date. */
+export const getCurrentDate = (state: StateIF): string => {
   return state.stateModel.currentDate
 }
 
-/**
- * Returns the filing id.
- */
-export const getFilingId = (state: any): number => {
+/** The Filing ID. */
+export const getFilingId = (state: StateIF): number => {
   return state.stateModel.filingId
 }
 
-/**
- * Returns the business identifier.
- */
-export const getTempId = (state: any): string => {
+/** The Temporary Business Identifier. */
+export const getTempId = (state: StateIF): string => {
   return state.stateModel.tempId
 }
-/**
- * Returns the folio number.
- */
-export const getFolioNumber = (state: any): string => {
-  return state.stateModel.defineCompanyStep.folioNumber
-}
 
-/**
- * Whether this IA is for a Named Business.
- */
-export const isNamedBusiness = (state: any): boolean => {
+/** Whether this IA is for a Named Business. */
+export const isNamedBusiness = (state: StateIF): boolean => {
   // a named business has a NR number
-  return !!state.stateModel.nameRequest.nrNumber
+  return !!getNameRequestNumber(state)
 }
 
-/**
- * Returns the NR number of a name request.
- */
-export const getNameRequestNumber = (state: any): string => {
-  return state.stateModel.nameRequest.nrNumber
+/** The Number of a Name Request. */
+export const getNameRequestNumber = (state: StateIF): string => {
+  return getNameRequest(state).nrNumber
 }
 
-/**
- * Returns the approved name of a name request.
- */
-export const getApprovedName = (state: any): string => {
-  return state.stateModel.nameRequest.details.approvedName
+/** The Approved Name of a Name Request. */
+export const getApprovedName = (state: StateIF): string => {
+  return (getNameRequestDetails(state) as NameRequestDetailsIF).approvedName
 }
 
-/**
- * Returns name request details.
- */
-export const getNameRequestDetails = (state: any): NameRequestDetailsIF => {
-  return state.stateModel.nameRequest.details
+/** The Tombstone object. */
+export const getTombstone = (state: StateIF): TombstoneIF => {
+  return state.stateModel.tombstone
 }
 
-/**
- * Returns name request applicant information.
- */
-export const getNameRequestApplicant = (state: any): NameRequestApplicantIF => {
-  return state.stateModel.nameRequest.applicant
+/** The Company Step object. */
+export const getDefineCompanyStep = (state: StateIF): DefineCompanyIF => {
+  return state.stateModel.defineCompanyStep
 }
 
-/**
- * Returns name translations.
- */
-export const getNameTranslations = (state: any): NameTranslationIF[] => {
+/** The Business Contact object. */
+export const getBusinessContact = (state: StateIF): BusinessContactIF => {
+  return getDefineCompanyStep(state).businessContact
+}
+
+/** The Add People and Role object. */
+export const getAddPeopleAndRoleStep = (state: StateIF): PeopleAndRoleIF => {
+  return state.stateModel.addPeopleAndRoleStep
+}
+
+/** The Create Share Structure object. */
+export const getCreateShareStructureStep = (state: StateIF): ShareStructureIF => {
+  return state.stateModel.createShareStructureStep
+}
+
+/** The Create Rules object. */
+export const getCreateRulesStep = (state: StateIF): CreateRulesIF => {
+  return state.stateModel.createRulesStep
+}
+
+/** The Incorporation Agreement object. */
+export const getIncorporationAgreementStep = (state: StateIF): IncorporationAgreementIF => {
+  return state.stateModel.incorporationAgreementStep
+}
+
+/** The Create Memorandum object. */
+export const getCreateMemorandumStep = (state: StateIF): CreateMemorandumIF => {
+  return state.stateModel.createMemorandumStep
+}
+
+/** The Incorporation Date-Time object. */
+export const getIncorporationDateTime = (state: StateIF): DateTimeIF => {
+  return state.stateModel.incorporationDateTime
+}
+
+/** The Name Request object. */
+export const getNameRequest = (state: StateIF): NameRequestIF => {
+  return state.stateModel.nameRequest
+}
+
+/** The Name Request Details object. */
+export const getNameRequestDetails = (state: StateIF): NameRequestDetailsIF | {} => {
+  return getNameRequest(state).details
+}
+
+/** The Name Request Applicant object. */
+export const getNameRequestApplicant = (state: StateIF): NameRequestApplicantIF | {} => {
+  return getNameRequest(state).applicant
+}
+
+/** The Name Translations object array. */
+export const getNameTranslations = (state: StateIF): NameTranslationIF[] => {
   return state.stateModel.nameTranslations
 }
 
-/**
- * Returns the office addresses.
- */
-export const getOfficeAddresses = (state: any): string => {
-  return state.stateModel.defineCompanyStep.officeAddresses
+/** The Office Addresses object. */
+export const getOfficeAddresses = (state: StateIF): IncorporationAddressIF | {} => {
+  return getDefineCompanyStep(state).officeAddresses
 }
 
 /** Whether we are ignoring data changes. */
-export const ignoreChanges = (state: any): boolean => {
+export const ignoreChanges = (state: StateIF): boolean => {
   return state.stateModel.ignoreChanges
 }
 
 /** Whether there are unsaved data changes. */
-export const haveChanges = (state: any): boolean => {
+export const getHaveChanges = (state: StateIF): boolean => {
   return state.stateModel.haveChanges
 }
 
@@ -180,116 +200,108 @@ export const haveChanges = (state: any): boolean => {
 // to know how they should behave (ie, what to show or enable).
 //
 
-/**
- * Whether Back button should be displayed.
- */
-export const isShowBackBtn = (state: any): boolean => {
-  return (state.stateModel.currentStep > 1)
+/** The current step. */
+export const getCurrentStep = (state: StateIF): number => {
+  return state.stateModel.currentStep
 }
 
-/**
- * Whether Review and Confirm button should be displayed.
- */
-export const isShowReviewConfirmBtn = (state: any, getters: any): boolean => {
-  return (!!state.stateModel.entityType && state.stateModel.currentStep < getters.getMaxStep)
+/** Whether the app is busy saving. */
+export const isSaving = (state: StateIF): boolean => {
+  return state.stateModel.isSaving
 }
 
-/**
- * Whether File and Pay button should be displayed.
- */
-export const isShowFilePayBtn = (state: any, getters: any): boolean => {
-  return (state.stateModel.currentStep === getters.getMaxStep)
+/** Whether the app is busy saving and resuming. */
+export const isSavingResuming = (state: StateIF): boolean => {
+  return state.stateModel.isSavingResuming
 }
 
-/**
- * Whether app is busy saving or resuming.
- */
-export const isBusySaving = (state: any): boolean => {
-  return (state.stateModel.isSaving || state.stateModel.isSavingResuming || state.stateModel.isFilingPaying)
+/** Whether the app is busy filing and paying. */
+export const isFilingPaying = (state: StateIF): boolean => {
+  return state.stateModel.isFilingPaying
 }
 
-/** Is true when the step is valid. */
-export const isDefineCompanyValid = (state: any): boolean => {
-  return state.stateModel.defineCompanyStep.valid
+/** Whether the Back button should be displayed. */
+export const isShowBackBtn = (state: StateIF): boolean => {
+  return (getCurrentStep(state) > 1)
 }
 
-/** Is true when the step is valid. */
-export const isAddPeopleAndRolesValid = (state: any): boolean => {
-  return state.stateModel.addPeopleAndRoleStep.valid
+/** Whether the Review and Confirm button should be displayed. */
+export const isShowReviewConfirmBtn = (state: StateIF): boolean => {
+  return (!!getEntityType(state) && getCurrentStep(state) < getMaxStep(state))
 }
 
-/** Is true when the step is valid. */
-export const isCreateShareStructureValid = (state: any): boolean => {
-  return state.stateModel.createShareStructureStep.valid
+/** Whether the File and Pay button should be displayed. */
+export const isShowFilePayBtn = (state: StateIF): boolean => {
+  return (getCurrentStep(state) === getMaxStep(state))
+}
+
+/** Whether the app is busy saving or resuming. */
+export const isBusySaving = (state: StateIF): boolean => {
+  return (isSaving(state) || isSavingResuming(state) || isFilingPaying(state))
 }
 
 /** Is true when the step is valid. */
-export const isIncorporationAgreementValid = (state: any): boolean => {
-  return state.stateModel.incorporationAgreementStep.valid
+export const isDefineCompanyValid = (state: StateIF): boolean => {
+  return getDefineCompanyStep(state).valid
 }
 
 /** Is true when the step is valid. */
-export const isCreateRulesValid = (state: any): boolean => {
-  return state.stateModel.createRulesStep.valid
+export const isAddPeopleAndRolesValid = (state: StateIF): boolean => {
+  return getAddPeopleAndRoleStep(state).valid
 }
 
 /** Is true when the step is valid. */
-export const isCreateMemorandumValid = (state: any): boolean => {
-  return state.stateModel.createMemorandumStep.valid
+export const isCreateShareStructureValid = (state: StateIF): boolean => {
+  return getCreateShareStructureStep(state).valid
+}
+
+/** Is true when the step is valid. */
+export const isIncorporationAgreementValid = (state: StateIF): boolean => {
+  return getIncorporationAgreementStep(state).valid
 }
 
 /** Whether all the incorporation steps are valid. */
-export const isApplicationValid = (state: any, getters: any): boolean => {
+export const isApplicationValid = (state: StateIF): boolean => {
   // Base company steps
   const isBaseStepsValid = (
-    state.stateModel.createShareStructureStep.valid &&
-    state.stateModel.incorporationAgreementStep.valid &&
-    state.stateModel.incorporationDateTime.valid
+    getCreateShareStructureStep(state).valid &&
+    getIncorporationDateTime(state).valid &&
+    getIncorporationAgreementStep(state).valid
   )
 
   // Coop steps
   const isCoopStepsValid = (
-    state.stateModel.createRulesStep.valid &&
-    state.stateModel.createMemorandumStep.valid
+    getCreateRulesStep(state).valid &&
+    getCreateMemorandumStep(state).valid
   )
 
   return (
-    state.stateModel.defineCompanyStep.valid &&
-    state.stateModel.addPeopleAndRoleStep.valid &&
-    // Validate different steps for Coops else validate company steps
-    getters.isBaseCompany ? isBaseStepsValid : isCoopStepsValid &&
-    state.stateModel.certifyState.valid &&
-    state.stateModel.certifyState.certifiedBy
+    getDefineCompanyStep(state).valid &&
+    getAddPeopleAndRoleStep(state).valid &&
+    // Validate different steps for Base Companies vs Coops
+    isBaseCompany(state) ? isBaseStepsValid : isCoopStepsValid &&
+    getCertifyState(state).valid &&
+    !!getCertifyState(state).certifiedBy
   )
 }
 
-/** Returns the maximum step number. */
-export const getMaxStep = (state: any, getters: any): number => {
-  return getters.getSteps ? getters.getSteps.filter(step => step.step !== -1).length : -1
-}
-
 /** Is true when the user has tried to submit a filing. */
-export const getValidateSteps = (state: any, getters: any): boolean => {
+export const getValidateSteps = (state: StateIF): boolean => {
   return state.stateModel.validateSteps
 }
 
-/** The current state of the certify section. */
-export const getCertifyState = (state: any): CertifyIF => {
+/** The Certify State object. */
+export const getCertifyState = (state: StateIF): CertifyIF => {
   return state.stateModel.certifyState
 }
 
-/** Business contact email address. */
-export const getBusinessEmail = (state: any, getters: any): string => {
-  return state.stateModel.defineCompanyStep.businessContact.email
-}
-
 /** The Completing Party's email address. */
-export const getCompletingPartyEmail = (state: any): string => {
+export const getCompletingPartyEmail = (state: StateIF): string => {
   const completingParty =
-    state.stateModel.addPeopleAndRoleStep.orgPeople.find(person => {
+    getAddPeopleAndRoleStep(state).orgPeople.find(person => {
       return Boolean(person.roles?.some(role => {
         return (role.roleType === RoleTypes.COMPLETING_PARTY)
       }))
     })
-  return completingParty?.officer?.email || null
+  return (completingParty?.officer?.email || null)
 }

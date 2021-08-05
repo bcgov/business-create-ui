@@ -43,13 +43,13 @@ import { Component, Emit, Prop, Vue } from 'vue-property-decorator'
 @Component({})
 export default class NameTranslation extends Vue {
   @Prop({ default: '' })
-  private editNameTranslation: string
+  private readonly editNameTranslation: string
 
-  // Local Properties
+  // Local properties
   private nameTranslationForm: boolean = false
   private nameTranslation: string = ''
 
-  // Validation Rules
+  // Validation rules
   private readonly nameTranslationRules: Array<Function> = [
     v => !!v || 'A name translation is required', // is not empty
     v => /^[A-Za-zÀ-ÿ_@./#’&+-]+(?: [A-Za-zÀ-ÿ_@./#’&+-]+)*$/.test(v) || 'Invalid character', // English, French and single spaces

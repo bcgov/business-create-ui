@@ -160,30 +160,20 @@ export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
     shareStructureForm: FormType
   };
 
-  // Props
-  @Prop()
-  private initialValue!: ShareClassIF
+  @Prop() private readonly initialValue!: ShareClassIF
+  @Prop() private readonly activeIndex: number
+  @Prop() private readonly parentIndex: number
+  @Prop() private readonly shareId: string
+  @Prop() private readonly shareClasses: ShareClassIF[]
 
-  @Prop()
-  private activeIndex: number
-
-  @Prop()
-  private parentIndex: number
-
-  @Prop()
-  private shareId: string
-
-  @Prop()
-  private shareClasses: ShareClassIF[]
-
-  // Data Properties
+  // Local properties
   private shareStructure: ShareClassIF = null
   private formValid: boolean = true
   private hasNoMaximumShares: boolean = false
   private hasNoParValue: boolean = false
 
-  private excludedWordsListForClass: string [] = ['share', 'shares', 'value']
-  private excludedWordsListForSeries: string [] = ['share', 'shares']
+  private readonly excludedWordsListForClass: string [] = ['share', 'shares', 'value']
+  private readonly excludedWordsListForSeries: string [] = ['share', 'shares']
 
   // Rules
   private getNameRule (): Array<Function> {

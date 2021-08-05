@@ -17,7 +17,9 @@
         >
           <span>
             <v-icon color="error">mdi-information-outline</v-icon>
-            <span class="error-text"> This step is not complete. </span>
+            &nbsp;
+            <span class="error-text">This step is not complete.</span>
+            &nbsp;
             <router-link
               id="router-link"
               :to="{ path: `/${RouteNames.INCORPORATION_AGREEMENT}`,
@@ -71,10 +73,10 @@
 <script lang="ts">
 // Libraries
 import { Component, Vue, Prop, Mixins } from 'vue-property-decorator'
-import { Action, Getter, State } from 'vuex-class'
+import { Action, Getter } from 'vuex-class'
 
 // Interfaces & enums
-import { ActionBindingIF, IncorporationAgreementTypeIF } from '@/interfaces'
+import { ActionBindingIF, IncorporationAgreementIF, IncorporationAgreementTypeIF } from '@/interfaces'
 import { CorpTypeCd, RouteNames } from '@/enums'
 
 // Modules
@@ -82,27 +84,24 @@ import { EnumMixin } from '@/mixins'
 
 @Component
 export default class AgreementType extends Mixins(EnumMixin) {
-  // State
-  @State(state => state.stateModel.incorporationAgreementStep.agreementType)
-  readonly agreementTypeState: string
+  @Prop({ default: false })
+  private readonly showErrorSummary: boolean
 
   @Prop({ default: false })
-  private showErrorSummary: boolean
+  private readonly isSummary: boolean
 
-  @Prop({ default: false })
-  private isSummary: boolean
-
-  // Global getters
   @Getter getIncorporationAgreementDocuments!: Array<IncorporationAgreementTypeIF>
   @Getter getEntityType!: CorpTypeCd
   @Getter getValidateSteps!: boolean
   @Getter isTypeCC!: boolean
+  @Getter getIncorporationAgreementStep!: IncorporationAgreementIF
 
-  // Actions
   @Action setIncorporationAgreementStepData!: ActionBindingIF
   @Action setIgnoreChanges!: ActionBindingIF
 
-  private agreementType: string | null = null
+  private agreementType: string = null
+
+  // Enum for template
   readonly RouteNames = RouteNames
 
   /** The entity description,  */
@@ -112,14 +111,15 @@ export default class AgreementType extends Mixins(EnumMixin) {
 
   /** The agreement type description. */
   private get agreementTypeDescription (): string {
-    return this.getIncorporationAgreementDocuments.find(x => x.code === this.agreementTypeState)?.description
+    return this.getIncorporationAgreementDocuments
+      .find(x => x.code === this.getIncorporationAgreementStep.agreementType)?.description
   }
 
   // Lifecycle methods
   private created (): void {
     // temporarily ignore data changes
     this.setIgnoreChanges(true)
-    this.agreementType = this.agreementTypeState
+    this.agreementType = this.getIncorporationAgreementStep.agreementType
     // watch data changes once page has loaded (in next tick)
     Vue.nextTick(() => {
       this.setIgnoreChanges(false)
@@ -182,5 +182,9 @@ export default class AgreementType extends Mixins(EnumMixin) {
 .agreement-option {
   padding-top: 1rem;
   color: $gray7;
+}
+
+.v-icon.mdi-information-outline {
+  margin-top: -2px;
 }
 </style>

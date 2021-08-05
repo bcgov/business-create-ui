@@ -1,29 +1,37 @@
 // Libraries
 import { Component, Vue } from 'vue-property-decorator'
-import { State, Getter, Action } from 'vuex-class'
+import { Getter, Action } from 'vuex-class'
 
 // Interfaces
-import { ActionBindingIF, StateModelIF, IncorporationFilingIF, GetterIF } from '@/interfaces'
+import { ActionBindingIF, BusinessContactIF, CertifyIF, DateTimeIF, DefineCompanyIF,
+  IncorporationAgreementIF, IncorporationFilingIF, NameTranslationIF, PeopleAndRoleIF,
+  ShareStructureIF } from '@/interfaces'
 
 // Constants
 import { INCORPORATION_APPLICATION } from '@/constants'
+import { CorpTypeCd } from '@/enums'
 
 /**
  * Mixin that provides the integration with the Legal API.
  */
 @Component({})
 export default class FilingTemplateMixin extends Vue {
-  // Global state
-  @State stateModel!: StateModelIF
-
-  // Global getters
-  @Getter isTypeBcomp!: GetterIF
+  @Getter isTypeBcomp!: boolean
   @Getter isNamedBusiness!: boolean
   @Getter getNameRequestNumber!: string
   @Getter getApprovedName!: string
   @Getter getTempId!: string
+  @Getter getIncorporationDateTime!: DateTimeIF
+  @Getter getEntityType!: CorpTypeCd
+  @Getter getCurrentDate!: string
+  @Getter getCertifyState!: CertifyIF
+  @Getter getDefineCompanyStep!: DefineCompanyIF
+  @Getter getNameTranslations!: NameTranslationIF[]
+  @Getter getAddPeopleAndRoleStep!: PeopleAndRoleIF
+  @Getter getCreateShareStructureStep!: ShareStructureIF
+  @Getter getIncorporationAgreementStep!: IncorporationAgreementIF
+  @Getter getBusinessContact!: BusinessContactIF
 
-  // Global actions
   @Action setEntityType!: ActionBindingIF
   @Action setBusinessContact!: ActionBindingIF
   @Action setOfficeAddresses!: ActionBindingIF
@@ -41,7 +49,7 @@ export default class FilingTemplateMixin extends Vue {
   /** Constructs a filing body from store data. Used when saving a filing. */
   buildFiling (): IncorporationFilingIF {
     // Format DateTime for filing.
-    const effectiveDate = this.stateModel.incorporationDateTime.effectiveDate
+    const effectiveDate = this.getIncorporationDateTime.effectiveDate
     const formattedDateTime = effectiveDate &&
       (effectiveDate.toISOString()).replace('Z', '+00:00')
 
@@ -50,32 +58,32 @@ export default class FilingTemplateMixin extends Vue {
       filing: {
         header: {
           name: INCORPORATION_APPLICATION,
-          certifiedBy: this.stateModel.certifyState.certifiedBy,
-          date: this.stateModel.currentDate,
-          folioNumber: this.stateModel.defineCompanyStep.folioNumber,
-          isFutureEffective: this.stateModel.incorporationDateTime.isFutureEffective
+          certifiedBy: this.getCertifyState.certifiedBy,
+          date: this.getCurrentDate,
+          folioNumber: this.getDefineCompanyStep.folioNumber,
+          isFutureEffective: this.getIncorporationDateTime.isFutureEffective
         },
         business: {
-          legalType: this.stateModel.entityType,
+          legalType: this.getEntityType,
           identifier: this.getTempId
         },
         incorporationApplication: {
           nameRequest: {
-            legalType: this.stateModel.entityType
+            legalType: this.getEntityType
           },
-          nameTranslations: this.stateModel.nameTranslations,
-          offices: this.stateModel.defineCompanyStep.officeAddresses,
+          nameTranslations: this.getNameTranslations,
+          offices: this.getDefineCompanyStep.officeAddresses,
           contactPoint: {
-            email: this.stateModel.defineCompanyStep.businessContact.email,
-            phone: this.stateModel.defineCompanyStep.businessContact.phone,
-            extension: this.stateModel.defineCompanyStep.businessContact.extension
+            email: this.getBusinessContact.email,
+            phone: this.getBusinessContact.phone,
+            extension: this.getBusinessContact.extension
           },
-          parties: this.stateModel.addPeopleAndRoleStep.orgPeople,
+          parties: this.getAddPeopleAndRoleStep.orgPeople,
           shareStructure: {
-            shareClasses: this.stateModel.createShareStructureStep.shareClasses
+            shareClasses: this.getCreateShareStructureStep.shareClasses
           },
           incorporationAgreement: {
-            agreementType: this.stateModel.incorporationAgreementStep.agreementType
+            agreementType: this.getIncorporationAgreementStep.agreementType
           }
         }
       }
@@ -139,6 +147,7 @@ export default class FilingTemplateMixin extends Vue {
     })
 
     // Date check to improve UX and work around default effectiveDate set by backend.
+    // TODO: fix types (should be Date)
     const draftEffectiveDate = draftFiling.header.effectiveDate
     const effectiveDate = draftEffectiveDate < new Date().toISOString() ? null : draftEffectiveDate
 

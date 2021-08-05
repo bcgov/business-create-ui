@@ -29,12 +29,12 @@ const mockEntityInfo = [
   }
 ]
 
+// Conditional check for specific test scenarios
+const itIf = (condition) => condition ? it : it.skip
+
 for (const mock of mockEntityInfo) {
   describe(`Define Company view for a Premium ${mock.entityType}`, () => {
     let wrapper: any
-
-    // Conditional check for specific test scenarios
-    const itIf = (condition) => condition ? it : it.skip
 
     beforeEach(() => {
       wrapper = shallowWrapperFactory(DefineCompany, null, {
@@ -45,16 +45,22 @@ for (const mock of mockEntityInfo) {
       })
     })
 
+    afterEach(() => {
+      wrapper.destroy()
+    })
+
     it(`renders the component properly for a ${mock.entityType}`, () => {
       // verify page content
       expect(wrapper.find('h2').text()).toContain('Company Name')
     })
 
+    // eslint-disable-next-line max-len
     itIf(mock.entityType === 'CP')('doesn\'t display records office in the office address header when entity is a COOP', () => {
       expect(wrapper.vm.$el.querySelector('#office-address-header').textContent).not.toContain('Records')
     })
 
-    itIf(mock.entityType !== 'CP')('display records office in the office address header', () => {
+    // eslint-disable-next-line max-len
+    itIf(['BEN', 'ULC', 'CCC'].includes(mock.entityType))('displays records office in the office address header', () => {
       expect(wrapper.vm.$el.querySelector('#office-address-header').textContent).toContain('Records')
     })
 
@@ -63,19 +69,14 @@ for (const mock of mockEntityInfo) {
       expect(wrapper.find('#folio-number-header').text()).toContain('Folio / Reference Number (optional)')
     })
 
-    itIf(['BEN', 'ULC', 'CCC'].includes(mock.entityType))(`displays company statement`, () => {
+    itIf(['BEN', 'ULC', 'CCC'].includes(mock.entityType))('displays company statement', () => {
       expect(wrapper.find('.company-statement').exists()).toBe(true)
       expect(wrapper.find('.company-statement p').text()).toContain(mock.description)
-
-      wrapper.destroy()
     })
   })
 
-  describe(`Define Company view for a BASIC ${mock.entityType}`, () => {
+  describe(`Define Company view for a Basic ${mock.entityType}`, () => {
     let wrapper: any
-
-    // Conditional check for specific test scenarios
-    const itIf = (condition) => condition ? it : it.skip
 
     beforeEach(() => {
       wrapper = shallowWrapperFactory(DefineCompany, null, {
@@ -84,6 +85,10 @@ for (const mock of mockEntityInfo) {
           accountType: 'BASIC'
         }
       })
+    })
+
+    afterEach(() => {
+      wrapper.destroy()
     })
 
     it(`renders the component properly for a ${mock.entityType}`, () => {

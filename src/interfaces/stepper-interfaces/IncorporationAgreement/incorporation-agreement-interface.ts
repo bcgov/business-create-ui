@@ -1,4 +1,4 @@
-export interface IncorporationAgreementIF{
+export interface IncorporationAgreementIF {
     valid: boolean
-    agreementType: string | null
+    agreementType: string
 }

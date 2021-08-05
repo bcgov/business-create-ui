@@ -18,7 +18,7 @@
         large outlined
         color="primary"
         :disabled="!isEntityType || isBusySaving"
-        :loading="stateModel.isSaving"
+        :loading="isSaving"
         @click="onClickSave()"
       >
         <span>Save</span>
@@ -29,7 +29,7 @@
         large outlined
         color="primary"
         :disabled="!isEntityType || isBusySaving"
-        :loading="stateModel.isSavingResuming"
+        :loading="isSavingResuming"
         @click="onClickSaveResume()"
       >
         <span>Save and Resume Later</span>
@@ -71,7 +71,7 @@
           large
           color="primary"
           v-show="isShowFilePayBtn"
-          :loading="stateModel.isFilingPaying"
+          :loading="isFilingPaying"
           @click="onClickFilePay()"
         >
           <span>File and Pay</span>
@@ -96,10 +96,10 @@
 <script lang="ts">
 // Libraries
 import { Component, Mixins, Emit } from 'vue-property-decorator'
-import { State, Getter, Action } from 'vuex-class'
+import { Getter, Action } from 'vuex-class'
 
 // Interfaces
-import { StateModelIF, GetterIF, ActionBindingIF } from '@/interfaces'
+import { ActionBindingIF } from '@/interfaces'
 
 // Mixins
 import { DateMixin, FilingTemplateMixin, LegalApiMixin, NameRequestMixin } from '@/mixins'
@@ -109,25 +109,18 @@ import { NameRequestStates, RouteNames } from '@/enums'
 
 @Component({})
 export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, LegalApiMixin, NameRequestMixin) {
-  // Global state
-  @State stateModel!: StateModelIF
-
-  @State(state => state.stateModel.incorporationDateTime.effectiveDate)
-  readonly effectiveDate!: Date
-
-  // Global getters
-  @Getter isApplicationValid!: GetterIF
-  @Getter isEntityType!: GetterIF
-  @Getter isShowBackBtn!: GetterIF
-  @Getter isShowReviewConfirmBtn!: GetterIF
-  @Getter isShowFilePayBtn!: GetterIF
-  @Getter isBusySaving!: GetterIF
+  @Getter isApplicationValid!: boolean
+  @Getter isEntityType!: boolean
+  @Getter isShowBackBtn!: boolean
+  @Getter isShowReviewConfirmBtn!: boolean
+  @Getter isShowFilePayBtn!: boolean
+  @Getter isBusySaving!: boolean
   @Getter getSteps!: Array<any>
   @Getter getMaxStep!: number
-  @Getter isNamedBusiness!: boolean
-  @Getter getNameRequestNumber!: string
+  @Getter isSaving!: boolean
+  @Getter isSavingResuming!: boolean
+  @Getter isFilingPaying!: boolean
 
-  // Global actions
   @Action setIsSaving!: ActionBindingIF
   @Action setIsSavingResuming!: ActionBindingIF
   @Action setIsFilingPaying!: ActionBindingIF
@@ -206,7 +199,10 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
       if (this.isBusySaving) return
       this.setIsFilingPaying(true)
 
-      if (this.effectiveDate && !this.isValidDateTime(this.effectiveDate)) {
+      if (
+        this.getIncorporationDateTime.effectiveDate &&
+        !this.isValidDateTime(this.getIncorporationDateTime.effectiveDate)
+      ) {
         this.setIsIncorporationDateTimeValid(false)
         this.setIsFilingPaying(false)
         window.scrollTo({ top: 1250, behavior: 'smooth' })

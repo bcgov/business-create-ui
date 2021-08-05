@@ -25,10 +25,10 @@ import { Component, Vue, Prop, Emit } from 'vue-property-decorator'
 @Component({})
 export default class AccountAuthorizationDialog extends Vue {
   // Prop to display the dialog.
-  @Prop() private dialog: boolean
+  @Prop() private readonly dialog: boolean
 
   // Prop to provide attachment selector.
-  @Prop() private attach: string
+  @Prop() private readonly attach: string
 
   // Pass click events to parent.
   @Emit() private exit () { }
