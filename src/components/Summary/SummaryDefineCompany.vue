@@ -17,7 +17,7 @@
         </span>
       </div>
       <div class="section-container">
-        <!--TODO: Replace container content with Name Request Summary when it is ready -->
+        <!-- FUTURE: Replace container content with Name Request Summary when it is ready -->
         <v-layout row>
           <v-flex md4>
             <label><strong>Name</strong></label>

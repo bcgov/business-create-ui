@@ -429,11 +429,8 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
 
         // verify nameRequest object
         const nameRequest = draftFiling?.incorporationApplication?.nameRequest
-        if (!nameRequest) {
-          // there should be a nameRequest object but continue even if it doesn't exist
-          // TODO: after MVP, add a real check here
-          console.log('Filing should have nameRequest object') // eslint-disable-line no-console
-        }
+        if (!nameRequest) throw new Error('missing Name Request object')
+
         /** Fetches and validates the NR and sets the data to the store. This method is different
          * from the validateNameRequest method in Actions.vue. This method sets the data to
          * the store shows a specific message for different invalid states and redirection is to the
@@ -446,7 +443,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
         // An unknown entity type will need to be handled here
         const companyResources = CompanyResources.find(x => x.entityType === this.getEntityType)
         if (companyResources) this.setCompanyResources(companyResources)
-        else throw new Error('Invalid Entity Type')
+        else throw new Error('invalid Entity Type')
 
         // set current profile name to store for field pre population
         // proceed only if we are not staff
@@ -468,8 +465,9 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
         this.fetchErrorDialog = true
         throw error // go to catch()
       }
-    } catch (e) {
+    } catch (error) {
       // errors should be handled above
+      console.error('Unhandled error in fetchData() =', error) // eslint-disable-line no-console
       // just fall through to finally()
     } finally {
       this.haveData = true
@@ -504,25 +502,35 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
 
       // ensure NR is valid
       if (!this.isNrValid(nrResponse)) {
+        console.log('NR is not valid') // eslint-disable-line no-console
         this.nameRequestInvalidType = NameRequestStates.INVALID
         this.nameRequestInvalidErrorDialog = true
         return
       }
 
-      // TODO: verify that nrResponse.entityTypeCd === business.legalType
+      // ensure types match
+      if (this.nrTypeToEntityType(nrResponse) !== this.getEntityType) {
+        console.log('NR type doesn\'t match entity type') // eslint-disable-line no-console
+        this.nameRequestInvalidType = NameRequestStates.INVALID
+        this.nameRequestInvalidErrorDialog = true
+        return
+      }
 
       // ensure NR is consumable
       const state = this.getNrState(nrResponse)
       if (state !== NameRequestStates.APPROVED && state !== NameRequestStates.CONDITIONAL) {
+        console.log('NR is not consumable') // eslint-disable-line no-console
         this.nameRequestInvalidType = state || NameRequestStates.INVALID
         this.nameRequestInvalidErrorDialog = true
         return
       }
+
       // if we get this far, the NR is good to go!
       const nameRequestState = this.generateNameRequestState(nrResponse, filing.Id)
       this.setNameRequestState(nameRequestState)
-    } catch (e) {
+    } catch (error) {
       // errors should be handled above
+      console.error('Unhandled error in processNameRequest() =', error) // eslint-disable-line no-console
     }
   }
 
