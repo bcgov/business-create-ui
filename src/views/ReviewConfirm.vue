@@ -77,7 +77,7 @@ import { Action, Getter } from 'vuex-class'
 
 // Interfaces
 import {
-  ActionBindingIF, BusinessContactIF, CertifyIF, CertifyStatementIF, DateTimeIF, ResourceIF
+  ActionBindingIF, BusinessContactIF, CertifyIF, CertifyStatementIF, DateTimeIF
 } from '@/interfaces'
 
 // Components
