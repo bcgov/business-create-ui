@@ -297,11 +297,5 @@ export const getCertifyState = (state: StateIF): CertifyIF => {
 
 /** The Completing Party's email address. */
 export const getCompletingPartyEmail = (state: StateIF): string => {
-  const completingParty =
-    getAddPeopleAndRoleStep(state).orgPeople.find(person => {
-      return Boolean(person.roles?.some(role => {
-        return (role.roleType === RoleTypes.COMPLETING_PARTY)
-      }))
-    })
-  return (completingParty?.officer?.email || null)
+  return (state.stateModel.tombstone.userEmail)
 }

@@ -21,6 +21,14 @@
   transform: translateY(-8px) scale(0.75);
 }
 
+// V-Cards
+.v-card {
+  .v-card__text {
+    font-size: 1rem;
+    color: $gray7;
+  }
+}
+
 // Dialogs
 .v-dialog {
   margin: 2rem;
@@ -56,7 +64,7 @@
     margin-top: 0;
   }
 }
- 
+
 .v-expansion-panel-header.no-dropdown {
   .v-expansion-panel-header__icon{
     display: none;
