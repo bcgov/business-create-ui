@@ -12,8 +12,7 @@
         <!-- Summary Warning -->
         <div
           v-if="showErrorSummary"
-          class="agreement-invalid-message"
-          :class="{ 'invalid-section': getValidateSteps }"
+          class="agreement-invalid-message invalid-section"
         >
           <span>
             <v-icon color="error">mdi-information-outline</v-icon>

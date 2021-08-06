@@ -4,7 +4,7 @@
       <v-icon color="dkBlue">mdi-domain</v-icon>
       <label class="define-company-title"><strong>Your {{ getCompanyDisplayName }}</strong></label>
     </div>
-    <section :class="{ 'invalid-section': !getDefineCompanyStep.valid && getValidateSteps }">
+    <section :class="{ 'invalid-section': !getDefineCompanyStep.valid }">
       <div v-if="!getDefineCompanyStep.valid" class="defineCompanyStepErrorMessage">
         <span>
           <v-icon color="error">mdi-information-outline</v-icon>
