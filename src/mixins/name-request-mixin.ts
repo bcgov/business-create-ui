@@ -1,6 +1,6 @@
 // Libraries
 import { Component, Mixins } from 'vue-property-decorator'
-import { CorpTypeCd, NameRequestStates } from '@/enums'
+import { CorpTypeCd, NameRequestStates, NameRequestTypes } from '@/enums'
 import { NameRequestIF } from '@/interfaces'
 import { DateMixin } from '@/mixins'
 
@@ -17,8 +17,7 @@ export default class NameRequestMixin extends Mixins(DateMixin) {
   generateNameRequestState (nr: any, filingId: number): NameRequestIF {
     return {
       nrNumber: nr.nrNum,
-      // TODO: Update entityType to use nr.requestTypeCd when namex supports our entity types
-      entityType: CorpTypeCd.BENEFIT_COMPANY,
+      entityType: this.nrTypeToEntityType(nr),
       filingId: filingId,
       applicant: {
         // Address Information
@@ -30,11 +29,11 @@ export default class NameRequestMixin extends Mixins(DateMixin) {
         postalCode: nr.applicants.postalCd,
         stateProvinceCode: nr.applicants.stateProvinceCd,
 
-        // Application contact information
+        // Contact information
         emailAddress: nr.applicants.emailAddress,
         phoneNumber: nr.applicants.phoneNumber,
 
-        // Application name information
+        // Name information
         firstName: nr.applicants.firstName,
         middleName: nr.applicants.middleName,
         lastName: nr.applicants.lastName
@@ -53,13 +52,18 @@ export default class NameRequestMixin extends Mixins(DateMixin) {
    * @param nr the name request response payload
    * */
   isNrValid (nr: any): boolean {
-    // TODO: implement check for supported entity types when namex supports BCOMP
-    return Boolean(nr &&
+    // check all expected fields
+    // FUTURE: add more checks here as needed
+    return Boolean(
+      nr &&
+      nr.nrNum &&
+      nr.applicants &&
       nr.state &&
       nr.expirationDate &&
       nr.names?.length > 0 &&
-      nr.nrNum &&
-      nr.requestTypeCd)
+      this.nrTypeToEntityType(nr) &&
+      this._getApprovedName(nr)
+    )
   }
 
   /**
@@ -112,6 +116,21 @@ export default class NameRequestMixin extends Mixins(DateMixin) {
     if (nr.state === NameRequestStates.CONDITIONAL) {
       return nr.names.find(name => name.state === NameRequestStates.CONDITION).name
     }
-    return '' // should never happen
+    return null // should never happen
+  }
+
+  /**
+   * Returns the entity (corp) type that corresponds to the NR type.
+   * @param nr the name request response payload
+   */
+  nrTypeToEntityType (nr: any): CorpTypeCd {
+    switch (nr.entity_type_cd) {
+      case NameRequestTypes.BC: return CorpTypeCd.BENEFIT_COMPANY
+      case NameRequestTypes.CR: return CorpTypeCd.BC_CORPORATION
+      case NameRequestTypes.UL: return CorpTypeCd.BC_UNLIMITED
+      case NameRequestTypes.CC: return CorpTypeCd.BC_CCC
+      case NameRequestTypes.CP: return CorpTypeCd.COOP
+    }
+    return null // unknown entity type code
   }
 }

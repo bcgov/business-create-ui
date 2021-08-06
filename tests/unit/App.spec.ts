@@ -219,8 +219,8 @@ const nrData = {
   },
   consentFlag: 'R',
   corpNum: null,
+  entity_type_cd: 'BC',
   expirationDate: 'Thu, 31 Dec 2099 23:59:59 GMT',
-  requestTypeCd: 'BEN',
   names: [
     {
       choice: 1,
@@ -481,7 +481,7 @@ describe('App component', () => {
 
   it('loads a name request into the store', () => {
     // Validate Name Request
-    expect(store.state.stateModel.entityType).toBe(nrData.requestTypeCd)
+    expect(store.state.stateModel.entityType).toBe('BEN')
     expect(store.state.stateModel.nameRequest.nrNumber).toBe(nrData.nrNum)
     expect(store.state.stateModel.filingId).toBe(12345)
     expect(store.state.stateModel.nameRequest.details).toBeDefined()

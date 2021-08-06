@@ -36,8 +36,8 @@ const nrData = {
   },
   consentFlag: 'R',
   corpNum: null,
+  entity_type_cd: 'BC',
   expirationDate: 'Thu, 31 Dec 2099 23:59:59 GMT',
-  requestTypeCd: 'BC',
   names: [
     {
       choice: 1,

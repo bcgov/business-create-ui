@@ -192,7 +192,7 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
 
     // Clear Future Effective from store / fee summary
     this.setIsFutureEffective(false)
-    this.emitDateTime('')
+    this.emitDateTime(null)
   }
 
   /** Construct the Date Object for storage */
@@ -227,16 +227,13 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
     if (this.incorporationDateTime) {
       // Set the chosen filing time option
       this.selectDate = this.incorporationDateTime.isFutureEffective ? ISFUTUREEFFECTIVE : ISIMMEDIATE
-      this.isFutureEffective = this.selectDate === ISFUTUREEFFECTIVE
+      this.isFutureEffective = (this.selectDate === ISFUTUREEFFECTIVE)
 
-      // Reference Store and create date object
       const effectiveDate = this.incorporationDateTime.effectiveDate
-      const dateToParse = effectiveDate && new Date(effectiveDate)
-
-      if (dateToParse) {
+      if (effectiveDate) {
         // Parse the Time and display DateTime
-        let hour = dateToParse.getHours()
-        const minute = dateToParse.getMinutes()
+        let hour = effectiveDate.getHours()
+        const minute = effectiveDate.getMinutes()
         const amPm = hour >= 12 ? 'PM' : 'AM'
 
         if (hour > 12) {
@@ -245,7 +242,7 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
           hour = 12
         }
 
-        this.dateText = this.dateToUsableString(dateToParse)
+        this.dateText = this.dateToUsableString(effectiveDate)
         this.selectHour = [hour.toLocaleString()]
         this.selectMinute = [minute.toLocaleString('en-US', { minimumIntegerDigits: 2 })]
         this.selectPeriod = amPm
@@ -285,12 +282,11 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
   }
 
   private get isUnderTime (): boolean {
-    if (this.incorporationDateTime.effectiveDate) {
-      const effectiveDate = this.incorporationDateTime.effectiveDate
-
-      // Calculate time diff
+    const effectiveDate = this.incorporationDateTime.effectiveDate
+    if (effectiveDate) {
+      // Calculate time diff (in minutes)
       const diff = Math.floor((effectiveDate.getTime() - Date.now()) / 1000 / 60)
-      return diff <= 2
+      return (diff <= 2)
     }
   }
 
@@ -368,13 +364,13 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
   /** Emit DateTime Valid event. */
   @Emit('valid')
   private emitIsValidDateTime (): boolean {
-    return this.isImmediate ? true
-      : this.isFutureEffective && this.isValidDateTime(this.incorporationDateTime.effectiveDate)
+    if (this.isImmediate) return true
+    return (this.isFutureEffective && this.isValidDateTime(this.incorporationDateTime.effectiveDate))
   }
 
   /** Emit DateTime. */
   @Emit('dateTime')
-  private emitDateTime (val): void {}
+  private emitDateTime (val: Date): void {}
 }
 </script>
 

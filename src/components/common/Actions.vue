@@ -128,6 +128,11 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
   @Action setIsIncorporationDateTimeValid!: ActionBindingIF
   @Action setValidateSteps!: ActionBindingIF
 
+  /** Is True if Jest is running the code. */
+  get isJestRunning (): boolean {
+    return (process.env.JEST_WORKER_ID !== undefined)
+  }
+
   private get isSummaryStep (): boolean {
     return this.$route.name === RouteNames.REVIEW_CONFIRM
   }
@@ -205,7 +210,9 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
       ) {
         this.setIsIncorporationDateTimeValid(false)
         this.setIsFilingPaying(false)
-        window.scrollTo({ top: 1250, behavior: 'smooth' })
+
+        // don't call window.scrollTo during Jest tests because jsdom doesn't implement it
+        if (!this.isJestRunning) window.scrollTo({ top: 1250, behavior: 'smooth' })
         this.setIsFilingPaying(false)
         return
       }
@@ -257,7 +264,10 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
         this.$root.$emit('save-error-event', error)
         this.setIsFilingPaying(false)
       }
-    } else window.scrollTo({ top: 0, behavior: 'smooth' })
+    } else {
+      // don't call window.scrollTo during Jest tests because jsdom doesn't implement it
+      if (!this.isJestRunning) window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
   }
 
   /** Fetches NR and validates it. */
