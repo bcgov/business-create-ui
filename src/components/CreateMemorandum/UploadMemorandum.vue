@@ -12,8 +12,7 @@
       <!-- Summary error message -->
       <div
         v-if="!getCreateMemorandumStep.valid"
-        class="upload-memorandum-error-message"
-        :class="{ 'invalid-section': getValidateSteps }"
+        class="upload-memorandum-error-message invalid-section"
       >
         <span>
           <v-icon color="error">mdi-information-outline</v-icon>

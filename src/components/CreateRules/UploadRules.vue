@@ -12,8 +12,7 @@
       <!-- Summary error message -->
       <div
         v-if="!getCreateRulesStep.valid"
-        class="upload-rules-error-message"
-        :class="{ 'invalid-section': getValidateSteps }"
+        class="upload-rules-error-message invalid-section"
       >
         <span>
           <v-icon color="error">mdi-information-outline</v-icon>
