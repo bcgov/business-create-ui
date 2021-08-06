@@ -7,6 +7,7 @@
       </p>
     </div>
 
+    <!-- Step Summaries -->
     <section class="mt-10">
       <header>
         <h2>Review and Confirm</h2>
@@ -15,6 +16,8 @@
       </header>
       <Summary class="mt-6"/>
     </section>
+
+    <!-- Incorporation Date Time -->
     <section v-if="isBaseCompany" class="mt-10">
       <header>
         <h2>Incorporation Date and Time</h2>
@@ -31,6 +34,17 @@
       />
     </section>
 
+    <!-- Document Delivery -->
+    <section class="mt-10">
+      <header>
+        <h2>Document Delivery</h2>
+        <p class="mt-1">Copies of the incorporation documents will be sent to the following email addresses listed
+          below.
+        </p>
+      </header>
+      <DocumentDelivery />
+    </section>
+
     <section class="mt-10">
       <header>
         <h2>Certify</h2>
@@ -43,9 +57,6 @@
           :isCertified="getCertifyState.valid"
           :statements="getCompletingPartyStatement.certifyStatements"
           :message="getCompletingPartyStatement.certifyClause"
-          :enableMailTo="true"
-          :businessEmail="getBusinessContact.email"
-          :completingPartyEmail="getCompletingPartyEmail"
           :isStaff="isRoleStaff"
           :firstColumn="3"
           :secondColumn="9"
@@ -70,12 +81,13 @@ import {
 } from '@/interfaces'
 
 // Components
-import { IncorporationDateTime, Summary } from '@/components/ReviewConfirm'
+import { DocumentDelivery, IncorporationDateTime, Summary } from '@/components/ReviewConfirm'
 import { Certify } from '@bcrs-shared-components/certify'
 
 @Component({
   components: {
     Certify,
+    DocumentDelivery,
     IncorporationDateTime,
     Summary
   }
