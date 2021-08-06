@@ -1,13 +1,14 @@
-// Libraries
-import { Component, Vue } from 'vue-property-decorator'
+// Libraries and mixins
+import { Component, Mixins } from 'vue-property-decorator'
 import { Getter, Action } from 'vuex-class'
+import { DateMixin } from '@/mixins'
 
 // Interfaces
 import { ActionBindingIF, BusinessContactIF, CertifyIF, DateTimeIF, DefineCompanyIF,
   IncorporationAgreementIF, IncorporationFilingIF, NameTranslationIF, PeopleAndRoleIF,
   ShareStructureIF } from '@/interfaces'
 
-// Constants
+// Constants and enums
 import { INCORPORATION_APPLICATION } from '@/constants'
 import { CorpTypeCd } from '@/enums'
 
@@ -15,7 +16,7 @@ import { CorpTypeCd } from '@/enums'
  * Mixin that provides the integration with the Legal API.
  */
 @Component({})
-export default class FilingTemplateMixin extends Vue {
+export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Getter isTypeBcomp!: boolean
   @Getter isNamedBusiness!: boolean
   @Getter getNameRequestNumber!: string
@@ -48,11 +49,6 @@ export default class FilingTemplateMixin extends Vue {
 
   /** Constructs a filing body from store data. Used when saving a filing. */
   buildFiling (): IncorporationFilingIF {
-    // Format DateTime for filing.
-    const effectiveDate = this.getIncorporationDateTime.effectiveDate
-    const formattedDateTime = effectiveDate &&
-      (effectiveDate.toISOString()).replace('Z', '+00:00')
-
     // Build filing.
     const filing: IncorporationFilingIF = {
       filing: {
@@ -95,10 +91,12 @@ export default class FilingTemplateMixin extends Vue {
       filing.filing.incorporationApplication.nameRequest.legalName = this.getApprovedName
     }
 
-    // Pass the effective date only for a future effective filing.
-    if (formattedDateTime) {
-      filing.filing.header.effectiveDate = formattedDateTime
+    // If this is a future effective filing then save the effective date.
+    const effectiveDate = this.getIncorporationDateTime.effectiveDate
+    if (effectiveDate) {
+      filing.filing.header.effectiveDate = this.dateToApi(effectiveDate)
     }
+
     return filing
   }
 
@@ -146,10 +144,12 @@ export default class FilingTemplateMixin extends Vue {
       certifiedBy: draftFiling.header.certifiedBy
     })
 
-    // Date check to improve UX and work around default effectiveDate set by backend.
-    // TODO: fix types (should be Date)
-    const draftEffectiveDate = draftFiling.header.effectiveDate
-    const effectiveDate = draftEffectiveDate < new Date().toISOString() ? null : draftEffectiveDate
+    // Check that Effective Date is in the future, to improve UX and
+    // to work around the default effective date set by the back end.
+    // NB: may be undefined/null
+    const draftEffectiveDate = this.apiToDate(draftFiling.header.effectiveDate)
+    // NB: null is not >= "now"
+    const effectiveDate = (draftEffectiveDate >= new Date()) ? draftEffectiveDate : null
 
     // Set Future Effective Time
     this.setEffectiveDate(effectiveDate)

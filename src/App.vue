@@ -413,11 +413,12 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
         // fetch draft filing
         let draftFiling = await this.fetchDraft()
 
-        // If there is an existing filing, check if it is in a valid state to be edited
+        // if there is an existing filing, check if it is in a valid state to be edited
         if (draftFiling) {
           this.invalidIncorporationApplicationDialog = this.hasInvalidFilingState(draftFiling)
           if (this.invalidIncorporationApplicationDialog) return
         }
+
         // merge draft properties into empty filing so all properties are initialized
         const emptyFiling = this.buildFiling()
         draftFiling = { ...emptyFiling.filing, ...draftFiling }

@@ -106,4 +106,25 @@ export default class DateMixin extends Vue {
     }
     return false
   }
+
+  /**
+   * Converts a Date object to an API datetime string.
+   * @example 2021-08-05T16:56:50Z -> 2021-08-05T16:56:50+00:00
+   */
+  dateToApi (date: Date): string {
+    if (!date) return null
+    // replace "Zulu" timezone abbreviation with UTC offset
+    return date.toISOString().replace('Z', '+00:00')
+  }
+
+  /**
+   * Converts an API datetime string to a Date object.
+   * @example 2021-08-05T16:56:50.783101+00:00 -> 2021-08-05T16:56:50Z
+   */
+  apiToDate (date: string): Date {
+    if (!date) return null
+    // chop off the nanoseconds and UTC offset and append "Zulu" timezone abbreviation
+    date = date.slice(0, 19) + 'Z'
+    return new Date(date)
+  }
 }
