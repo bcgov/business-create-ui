@@ -12,10 +12,10 @@
 <script lang="ts">
 // Libraries
 import { Component, Mixins, Vue } from 'vue-property-decorator'
-import { Getter, Action, State } from 'vuex-class'
+import { Action } from 'vuex-class'
 
 // Interfaces
-import { GetterIF, ActionBindingIF } from '@/interfaces'
+import { ActionBindingIF } from '@/interfaces'
 
 // Mixins
 import { EntityFilterMixin } from '@/mixins'
@@ -29,10 +29,6 @@ import { PeopleAndRoles } from '@/components/AddPeopleAndRoles'
   }
 })
 export default class AddPeopleAndRoles extends Mixins(EntityFilterMixin) {
-  // Global getters
-  @Getter isEntityType!: GetterIF
-
-  // Global actions
   @Action setIgnoreChanges!: ActionBindingIF
 
   /** Called when component is created. */

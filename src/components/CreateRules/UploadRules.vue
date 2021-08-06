@@ -11,16 +11,18 @@
 
       <!-- Summary error message -->
       <div
-        v-if="!isCreateRulesValid"
+        v-if="!getCreateRulesStep.valid"
         class="upload-rules-error-message"
         :class="{ 'invalid-section': getValidateSteps }"
       >
         <span>
           <v-icon color="error">mdi-information-outline</v-icon>
-          <span class="error-text"> This step is not complete. </span>
-          <router-link :to="{ path: `/${RouteNames.CREATE_RULES}`, query: { showErrors: true } }">
-            Return to this step to complete it.
-          </router-link>
+          &nbsp;
+          <span class="error-text">This step is unfinished.</span>
+          &nbsp;
+          <router-link
+            :to="{ path: `/${RouteNames.CREATE_RULES}`, query: { showErrors: true } }"
+          >Return to this step to finish it</router-link>
         </span>
       </div>
     </div>
@@ -36,20 +38,19 @@ import { Getter } from 'vuex-class'
 
 // Enums
 import { RouteNames } from '@/enums'
+import { CreateRulesIF } from '@/interfaces'
 
 @Component({})
 export default class UploadRules extends Vue {
   @Prop({ default: false })
-  private isSummary: boolean
+  private readonly isSummary: boolean
 
-  // Global getters
+  @Getter getCreateRulesStep!: CreateRulesIF
   @Getter getValidateSteps!: boolean
-  @Getter isCreateRulesValid!: boolean
 
-  // Entity Enum
+  // Enum for template
   readonly RouteNames = RouteNames
 }
-
 </script>
 
 <style lang="scss" scoped>
@@ -68,5 +69,9 @@ export default class UploadRules extends Vue {
   padding-top: 1.25rem;
   padding-left: 1.25rem;
   color: $primary-blue;
+}
+
+.v-icon.mdi-information-outline {
+  margin-top: -2px;
 }
 </style>

@@ -19,7 +19,9 @@
       <div v-if="isSummary && showErrorSummary" class="people-roles-invalid-message">
         <span>
           <v-icon color="error">mdi-information-outline</v-icon>
-          <span class="error-text"> This step is unfinished. </span>
+          &nbsp;
+          <span class="error-text">This step is unfinished.</span>
+          &nbsp;
           <router-link
             id="router-link"
             :to="{ path: `/${RouteNames.ADD_PEOPLE_AND_ROLES}`, query: { showErrors: true } }"
@@ -135,19 +137,20 @@ import { Getter } from 'vuex-class'
   }
 })
 export default class ListPeopleAndRoles extends Mixins(CommonMixin, EntityFilterMixin) {
-  // Store Properties
   @Prop({ default: () => [] })
-  private personList: Array<OrgPersonIF>
+  private readonly personList: Array<OrgPersonIF>
 
   @Prop({ default: false })
-  private showErrorSummary: boolean
+  private readonly showErrorSummary: boolean
 
   @Prop({ default: false })
-  private isSummary: boolean
+  private readonly isSummary: boolean
 
-  // Local Properties
-  readonly tableHeaders: Array<string> = ['Name', 'Mailing Address', 'Delivery Address', 'Roles']
+  // Enum for template
   readonly RouteNames = RouteNames
+
+  // Local properties
+  private readonly tableHeaders: Array<string> = ['Name', 'Mailing Address', 'Delivery Address', 'Roles']
   private dialog: boolean = false
   private personId: number
 
@@ -261,5 +264,9 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin, EntityFilter
   top: 2px;
   left: 2px;
   color: $BCgovGold9;
+}
+
+.v-icon.mdi-information-outline {
+  margin-top: -2px;
 }
 </style>

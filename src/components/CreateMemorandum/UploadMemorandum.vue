@@ -11,16 +11,18 @@
 
       <!-- Summary error message -->
       <div
-        v-if="!isCreateMemorandumValid"
+        v-if="!getCreateMemorandumStep.valid"
         class="upload-memorandum-error-message"
         :class="{ 'invalid-section': getValidateSteps }"
       >
         <span>
           <v-icon color="error">mdi-information-outline</v-icon>
-          <span class="error-text"> This step is not complete. </span>
-          <router-link :to="{ path: `/${RouteNames.CREATE_MEMORANDUM}`, query: { showErrors: true } }">
-            Return to this step to complete it.
-          </router-link>
+          &nbsp;
+          <span class="error-text">This step is unfinished.</span>
+          &nbsp;
+          <router-link
+            :to="{ path: `/${RouteNames.CREATE_MEMORANDUM}`, query: { showErrors: true } }"
+          >Return to this step to finish it</router-link>
         </span>
       </div>
     </div>
@@ -28,6 +30,7 @@
     <v-card-title>Memorandum Placeholder component</v-card-title>
   </v-card>
 </template>
+
 <script lang="ts">
 // Libraries
 import { Component, Prop, Vue } from 'vue-property-decorator'
@@ -35,23 +38,24 @@ import { Getter } from 'vuex-class'
 
 // Enums
 import { RouteNames } from '@/enums'
+import { CreateMemorandumIF } from '@/interfaces'
 
 @Component({})
 export default class UploadMemorandum extends Vue {
   @Prop({ default: false })
-  private isSummary: boolean
+  private readonly isSummary: boolean
 
-  // Global getters
+  @Getter getCreateMemorandumStep!: CreateMemorandumIF
   @Getter getValidateSteps!: boolean
-  @Getter isCreateMemorandumValid!: boolean
 
-  // Entity Enum
+  // Enum for template
   readonly RouteNames = RouteNames
 }
 </script>
 
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
+
 .upload-memorandum-summary-header {
   display: flex;
   background-color: $BCgovBlue5O;
@@ -66,5 +70,9 @@ export default class UploadMemorandum extends Vue {
   padding-top: 1.25rem;
   padding-left: 1.25rem;
   color: $primary-blue;
+}
+
+.v-icon.mdi-information-outline {
+  margin-top: -2px;
 }
 </style>

@@ -1,9 +1,9 @@
 <template>
   <div>
     <div class="mt-10 company-statement">
-      <p v-if="getCompanyResources.title">
-        <span class="company-statement-label">{{ getCompanyResources.title }}</span>
-        {{ getCompanyResources.description }}
+      <p v-if="getCompanyTitle">
+        <span class="company-statement-label">{{ getCompanyTitle }}:</span>
+        {{ getCompanyDescription }}
       </p>
     </div>
 
@@ -44,10 +44,9 @@
            Annual Report reminders.
         </p>
       </header>
-      <div >
+      <div :class="{ 'invalid-section': showErrors && !businessContactFormValid }">
         <BusinessContactInfo
-          :class="{ 'invalid-section': showErrors && !businessContactFormValid }"
-          :initialValue="businessContact"
+          :initialValue="getDefineCompanyStep.businessContact"
           :isEditing="true"
           :showErrors="showErrors"
           @contactInfoChange="onBusinessContactInfoChange($event)"
@@ -64,7 +63,7 @@
       </header>
       <v-card flat class="step-container">
         <FolioNumber
-          :initialValue="folioNumber"
+          :initialValue="getDefineCompanyStep.folioNumber"
           :isEditing="true"
           @folioNumberChange="onFolioNumberChange($event)"
         />
@@ -76,16 +75,15 @@
 <script lang="ts">
 // Libraries
 import { Component, Mixins, Vue } from 'vue-property-decorator'
-import { Getter, Action, State } from 'vuex-class'
+import { Getter, Action } from 'vuex-class'
 
 // Interfaces
 import {
-  GetterIF,
   ActionBindingIF,
-  BusinessContactIF,
-  IncorporationAddressIf,
   AddressIF,
-  ResourceIF
+  BusinessContactIF,
+  DefineCompanyIF,
+  IncorporationAddressIF
 } from '@/interfaces'
 
 // Mixins
@@ -107,24 +105,14 @@ import { NameRequestInfo } from '@/components/common'
   }
 })
 export default class DefineCompany extends Mixins(EntityFilterMixin) {
-  // Global state
-  @State(state => state.stateModel.defineCompanyStep.businessContact)
-  readonly businessContact!: BusinessContactIF
-
-  @State(state => state.stateModel.defineCompanyStep.officeAddresses)
-  readonly addresses!: IncorporationAddressIf
-
-  @State(state => state.stateModel.defineCompanyStep.folioNumber)
-  readonly folioNumber!: string
-
-  // Global getters
-  @Getter getCompanyResources!: ResourceIF
-  @Getter isEntityType!: GetterIF
-  @Getter isPremiumAccount!: GetterIF
-  @Getter isTypeBcomp!: GetterIF
+  @Getter getCompanyTitle!: string
+  @Getter getCompanyDescription!: string
+  @Getter isEntityType!: boolean
+  @Getter isPremiumAccount!: boolean
+  @Getter isTypeBcomp!: boolean
+  @Getter getDefineCompanyStep!: DefineCompanyIF
   @Getter getValidateSteps!: boolean
 
-  // Global actions
   @Action setEntityType!: ActionBindingIF
   @Action setBusinessContact!: ActionBindingIF
   @Action setFolioNumber!: ActionBindingIF
@@ -136,8 +124,12 @@ export default class DefineCompany extends Mixins(EntityFilterMixin) {
   private addressFormValid: boolean = false
   private hasValidNameTranslation: boolean = true
 
-  // Entity Enum
+  // Enum for template
   readonly CorpTypeCd = CorpTypeCd
+
+  private get addresses (): IncorporationAddressIF {
+    return this.getDefineCompanyStep.officeAddresses as IncorporationAddressIF
+  }
 
   /** Called when component is created. */
   private created (): void {
@@ -188,8 +180,8 @@ export default class DefineCompany extends Mixins(EntityFilterMixin) {
     }
   }
 
-  private onNameTranslation (validity: boolean): void {
-    this.hasValidNameTranslation = validity
+  private onNameTranslation (valid: boolean): void {
+    this.hasValidNameTranslation = valid
     this.setDefineCompanyStepValidity(this.businessContactFormValid && this.addressFormValid &&
       this.hasValidNameTranslation)
   }
@@ -198,18 +190,18 @@ export default class DefineCompany extends Mixins(EntityFilterMixin) {
     this.setBusinessContact(businessContact)
   }
 
-  private onBusinessContactFormValidityChange (validity: boolean): void {
-    this.businessContactFormValid = validity
+  private onBusinessContactFormValidityChange (valid: boolean): void {
+    this.businessContactFormValid = valid
     this.setDefineCompanyStepValidity(this.businessContactFormValid && this.addressFormValid &&
       this.hasValidNameTranslation)
   }
 
-  private onAddressChange (address: IncorporationAddressIf): void {
+  private onAddressChange (address: IncorporationAddressIF): void {
     this.setOfficeAddresses(address)
   }
 
-  private onAddressFormValidityChange (validity: boolean): void {
-    this.addressFormValid = validity
+  private onAddressFormValidityChange (valid: boolean): void {
+    this.addressFormValid = valid
     this.setDefineCompanyStepValidity(this.businessContactFormValid && this.addressFormValid &&
       this.hasValidNameTranslation)
   }

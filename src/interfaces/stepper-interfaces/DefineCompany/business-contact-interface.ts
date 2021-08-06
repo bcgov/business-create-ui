@@ -1,4 +1,4 @@
-export interface BusinessContactIF{
+export interface BusinessContactIF {
     email: string
     confirmEmail: string
     phone: string

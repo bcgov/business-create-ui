@@ -12,7 +12,9 @@
       <div v-if="isSummary && showErrorSummary" class="share-summary-invalid-message">
         <span>
           <v-icon color="error">mdi-information-outline</v-icon>
-          <span class="error-text"> This step is unfinished. </span>
+          &nbsp;
+          <span class="error-text">This step is unfinished.</span>
+          &nbsp;
           <router-link
             id="router-link"
             :to="{ path: `/${RouteNames.CREATE_SHARE_STRUCTURE}`, query: { showErrors: true } }"
@@ -183,18 +185,22 @@ import { RouteNames } from '@/enums'
 @Component({})
 export default class ListShareClass extends Vue {
   @Prop({ default: () => [] })
-  private shareClasses: any
+  private readonly shareClasses: any
 
   @Prop()
-  private componentDisabled: boolean
+  private readonly componentDisabled: boolean
 
   @Prop()
-  private isSummary: boolean
+  private readonly isSummary: boolean
 
   @Prop({ default: false })
-  private showErrorSummary: boolean
+  private readonly showErrorSummary: boolean
 
+  @Getter getValidateSteps!: boolean
+
+  // Enum for template
   readonly RouteNames = RouteNames
+
   private headers: Array<any> = [
     {
       text: 'Name of Share Class or Series',
@@ -376,5 +382,9 @@ tbody {
     min-height: 0!important;
     margin: 1rem 0;
   }
+}
+
+.v-icon.mdi-information-outline {
+  margin-top: -2px;
 }
 </style>

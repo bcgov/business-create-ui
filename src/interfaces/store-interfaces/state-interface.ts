@@ -1,11 +1,23 @@
+import { CorpTypeCd } from '@/enums'
 import {
-  AccountInformationIF, CertifyIF, CreateMemorandumIF, CreateRulesIF, DefineCompanyIF, NameRequestIF,
-  TombStoneIF, PeopleAndRoleIF, ShareStructureIF, DateTimeIF, IncorporationAgreementIF, NameTranslationIF
+  AccountInformationIF,
+  CertifyIF,
+  CreateMemorandumIF,
+  CreateRulesIF,
+  DateTimeIF,
+  DefineCompanyIF,
+  IncorporationAgreementIF,
+  NameRequestIF,
+  NameTranslationIF,
+  PeopleAndRoleIF,
+  ResourceIF,
+  ShareStructureIF,
+  TombstoneIF
 } from '@/interfaces'
 
 // State model example
 export interface StateModelIF {
-  tombstone: TombStoneIF
+  tombstone: TombstoneIF
   accountInformation: AccountInformationIF
   nameRequest: NameRequestIF
   nameTranslations: NameTranslationIF[]
@@ -13,7 +25,7 @@ export interface StateModelIF {
   certifyState: CertifyIF
   currentStep: number
   tempId: string
-  entityType: string
+  entityType: CorpTypeCd
   isSaving: boolean
   filingId: number
   isSavingResuming: boolean
@@ -28,4 +40,9 @@ export interface StateModelIF {
   ignoreChanges: boolean
   haveChanges: boolean
   validateSteps: boolean
+}
+
+export interface StateIF {
+  stateModel: StateModelIF
+  resourceModel: ResourceIF
 }

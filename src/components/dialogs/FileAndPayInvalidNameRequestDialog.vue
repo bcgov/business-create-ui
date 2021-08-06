@@ -43,10 +43,10 @@ import ErrorContact from '@/components/common/ErrorContact.vue'
 })
 export default class FileAndPayInvalidNameRequestDialog extends Vue {
   /** Prop to display the dialog. */
-  @Prop() private dialog: boolean
+  @Prop() private readonly dialog: boolean
 
   /** Prop to provide attachment selector. */
-  @Prop() private attach: string
+  @Prop() private readonly attach: string
 
   @Getter getNameRequestNumber!: string
   @Getter getApprovedName!: string
