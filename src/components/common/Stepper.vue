@@ -85,7 +85,11 @@ export default class Stepper extends Vue {
   }
 
   private goTo (step) {
-    this.$router.push(step.to).catch(error => error)
+    if (!this.isValid(step.to) && this.getValidateSteps) {
+      this.$router.push({ name: step.to, query: { 'showErrors': 'true' } }).catch(error => error)
+    } else {
+      this.$router.push(step.to).catch(error => error)
+    }
   }
 
   private isCurrentStep (step): boolean {

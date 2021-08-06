@@ -4,14 +4,15 @@
       <v-icon color="dkBlue">mdi-domain</v-icon>
       <label class="define-company-title"><strong>Your {{ getDisplayName }}</strong></label>
     </div>
-    <section :class="{ 'invalid-section': !valid && getValidateSteps }">
+
+    <section :class="{ 'invalid-section': !valid }">
       <div v-if="!valid" class="defineCompanyStepErrorMessage">
         <span>
           <v-icon color="error">mdi-information-outline</v-icon>
-          <span class="error-text"> This step is not complete. </span>
-          <router-link :to="{ path: `/${RouteNames.DEFINE_COMPANY}`, query: { showErrors: true } }">
-            Return to this step to complete it.
-          </router-link>
+          <span class="error-text"> This step is unfinished. </span>
+          <router-link
+            :to="{ path: `/${RouteNames.DEFINE_COMPANY}`, query: { showErrors: true } }"
+          >Return to this step to finish it</router-link>
         </span>
       </div>
       <div class="section-container">
@@ -84,7 +85,6 @@ export default class SummaryDefineCompany extends Mixins(EntityFilterMixin, Enum
   @Getter getEntityType!: CorpTypeCd
   @Getter isPremiumAccount!: GetterIF
   @Getter getNameTranslations!: NameTranslationIF[]
-  @Getter getValidateSteps!: boolean
 
   // Global state
   @State(state => state.stateModel.defineCompanyStep.valid)
@@ -115,7 +115,7 @@ export default class SummaryDefineCompany extends Mixins(EntityFilterMixin, Enum
 .defineCompanyStepErrorMessage {
   padding-top: 1.25rem;
   padding-left: 1.25rem;
-  color: $primary-blue;
+  color: $app-red;
 }
 
 .section-container {

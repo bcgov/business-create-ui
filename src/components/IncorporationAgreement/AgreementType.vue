@@ -9,23 +9,19 @@
             <strong>Incorporation Agreement and {{getEntityDescription}} Articles</strong>
           </label>
         </div>
-        <!-- Summary Warning -->
-        <div
-          v-if="showErrorSummary"
-          class="agreement-invalid-message"
-          :class="{ 'invalid-section': getValidateSteps }"
-        >
-          <span>
-            <v-icon color="error">mdi-information-outline</v-icon>
-            <span class="error-text"> This step is not complete. </span>
-            <router-link
-              id="router-link"
-              :to="{ path: `/${RouteNames.INCORPORATION_AGREEMENT}`,
-              query: { showErrors: true } }"
-            >
-              Return to this step to complete it.
-            </router-link>
-          </span>
+
+        <div v-if="showErrorSummary" class="invalid-section">
+          <!-- Summary Warning -->
+          <div class="agreement-invalid-message">
+            <span>
+              <v-icon color="error">mdi-information-outline</v-icon>
+              <span class="error-text"> This step is unfinished. </span>
+              <router-link
+                id="router-link"
+                :to="{ path: `/${RouteNames.INCORPORATION_AGREEMENT}` }"
+              >Return to this step to finish it</router-link>
+            </span>
+          </div>
         </div>
 
         <!-- Summary Content -->
@@ -95,7 +91,6 @@ export default class AgreementType extends Mixins(EnumMixin) {
   // Global getters
   @Getter getIncorporationAgreementDocuments!: Array<IncorporationAgreementTypeIF>
   @Getter getEntityType!: CorpTypeCd
-  @Getter getValidateSteps!: boolean
   @Getter isTypeCC!: boolean
 
   // Actions
@@ -157,7 +152,7 @@ export default class AgreementType extends Mixins(EnumMixin) {
 
 .agreement-invalid-message {
   padding: 1.25rem;
-  color: $BCgovABlue2;
+  color: $app-red;
 }
 
 #agreement-summary {

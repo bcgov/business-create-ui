@@ -93,6 +93,7 @@
       <ListPeopleAndRoles
         :personList="orgPersonList"
         :isSummary="false"
+        :showErrorSummary="!step2Valid"
         @editPerson="editOrgPerson($event)"
         @removePerson="onRemovePerson($event)"
       />
@@ -131,6 +132,9 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
 
   @State(state => state.stateModel.tombstone.userEmail)
   readonly userEmail!: string
+
+  @State(state => state.stateModel.addPeopleAndRoleStep.valid)
+  readonly step2Valid: boolean
 
   @Getter getMinimumDirectorCount!: number
 

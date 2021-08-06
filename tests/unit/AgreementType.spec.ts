@@ -144,7 +144,7 @@ for (const test of agreementTypeTestCases) {
         }
       )
 
-      expect(wrapper.find(summaryErrorMessageSelector).text()).toContain('This step is not complete.')
+      expect(wrapper.find(summaryErrorMessageSelector).text()).toContain('This step is unfinished.')
     })
 
     it('Updates the store correctly if a sample agreement type is selected', async () => {
@@ -255,7 +255,7 @@ describe(`Incorporation agreement component for a Community Contribution Company
       }
     )
 
-    expect(wrapper.find(summaryErrorMessageSelector).text()).toContain('This step is not complete.')
+    expect(wrapper.find(summaryErrorMessageSelector).text()).toContain('This step is unfinished.')
   })
 
   it('Updates the store correctly if a sample agreement type is selected', async () => {

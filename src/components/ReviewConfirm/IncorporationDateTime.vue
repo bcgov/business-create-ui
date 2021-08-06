@@ -438,7 +438,7 @@ label {
     padding: 0 12px;
     font-size: 12px;
     font-weight: 500;
-    color: $BCgovInputError !important;
+    color: $app-red !important;
   }
 }
 </style>

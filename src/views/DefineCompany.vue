@@ -11,9 +11,11 @@
       <header>
         <h2>1. Company Name</h2>
       </header>
-      <v-card flat class="step-container">
-        <name-request-info @hasNameTranslation="onNameTranslation($event)"/>
-      </v-card>
+      <div :class="{ 'invalid-section': showErrors && !hasValidNameTranslation }">
+        <v-card flat class="step-container">
+          <name-request-info @hasNameTranslation="onNameTranslation($event)"/>
+        </v-card>
+      </div>
     </section>
 
     <section class="mt-10" v-show="isEntityType">
@@ -23,11 +25,13 @@
           </span> Mailing and Delivery Addresses.
         </p>
       </header>
-      <OfficeAddresses
-        :inputAddresses="addresses"
-        @update:addresses="onAddressChange($event)"
-        @valid="onAddressFormValidityChange($event)"
-      />
+      <div :class="{ 'invalid-section': showErrors && !addressFormValid }">
+        <OfficeAddresses
+          :inputAddresses="addresses"
+          @update:addresses="onAddressChange($event)"
+          @valid="onAddressFormValidityChange($event)"
+        />
+      </div>
     </section>
 
     <section class="mt-10" v-show="isEntityType">
@@ -40,13 +44,16 @@
            Annual Report reminders.
         </p>
       </header>
-      <BusinessContactInfo
-        :initialValue="businessContact"
-        :isEditing="true"
-        :showErrors="showErrors"
-        @contactInfoChange="onBusinessContactInfoChange($event)"
-        @contactInfoFormValidityChange="onBusinessContactFormValidityChange($event)"
-      />
+      <div >
+        <BusinessContactInfo
+          :class="{ 'invalid-section': showErrors && !businessContactFormValid }"
+          :initialValue="businessContact"
+          :isEditing="true"
+          :showErrors="showErrors"
+          @contactInfoChange="onBusinessContactInfoChange($event)"
+          @contactInfoFormValidityChange="onBusinessContactFormValidityChange($event)"
+        />
+      </div>
     </section>
     <section class="mt-10" v-if="isEntityType && isPremiumAccount">
       <header id="folio-number-header">
@@ -115,6 +122,7 @@ export default class DefineCompany extends Mixins(EntityFilterMixin) {
   @Getter isEntityType!: GetterIF
   @Getter isPremiumAccount!: GetterIF
   @Getter isTypeBcomp!: GetterIF
+  @Getter getValidateSteps!: boolean
 
   // Global actions
   @Action setEntityType!: ActionBindingIF
@@ -211,7 +219,7 @@ export default class DefineCompany extends Mixins(EntityFilterMixin) {
   }
 
   private get showErrors (): boolean {
-    return Boolean(this.$route.query.showErrors)
+    return Boolean(this.$route.query.showErrors) && this.getValidateSteps
   }
 }
 </script>
