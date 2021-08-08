@@ -27,6 +27,7 @@
       </header>
       <div :class="{ 'invalid-section': showErrors && !addressFormValid }">
         <OfficeAddresses
+          :showErrors="showErrors"
           :inputAddresses="addresses"
           @update:addresses="onAddressChange($event)"
           @valid="onAddressFormValidityChange($event)"
@@ -211,7 +212,7 @@ export default class DefineCompany extends Mixins(EntityFilterMixin) {
   }
 
   private get showErrors (): boolean {
-    return Boolean(this.$route.query.showErrors) && this.getValidateSteps
+    return Boolean(this.$route.query.showErrors)
   }
 }
 </script>

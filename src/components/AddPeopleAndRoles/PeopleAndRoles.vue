@@ -93,7 +93,7 @@
       <ListPeopleAndRoles
         :personList="orgPersonList"
         :isSummary="false"
-        :showErrorSummary="!step2Valid"
+        :showErrorSummary="!getAddPeopleAndRoleStep.valid"
         @editPerson="editOrgPerson($event)"
         @removePerson="onRemovePerson($event)"
       />
@@ -126,10 +126,6 @@ import ListPeopleAndRoles from './ListPeopleAndRoles.vue'
   }
 })
 export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
-  // Global state
-  @State(state => state.stateModel.addPeopleAndRoleStep.valid)
-  readonly step2Valid: boolean
-
   @Getter getMinimumDirectorCount!: number
   @Getter getTombstone!: TombstoneIF
   @Getter getAddPeopleAndRoleStep!: PeopleAndRoleIF
