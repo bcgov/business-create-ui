@@ -56,9 +56,9 @@
           id="review-confirm-btn"
           large
           color="primary"
-          :to="nextRoute"
           v-show="isShowReviewConfirmBtn"
           :disabled="isBusySaving"
+          @click="goToNext()"
         >
           <span class="font-weight-bold">{{ nextButtonLabel }}</span>
           <v-icon>mdi-chevron-right</v-icon>
@@ -280,16 +280,20 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
     }
   }
 
-  /** The route to the next step. */
-  private get nextRoute (): string | undefined {
-    const nextStep = this.next()
-    return nextStep?.to || null
-  }
-
   /** Label for the Next button. */
   private get nextButtonLabel (): string {
     const nextStep = this.next()
     return nextStep ? nextStep.text.replace('\n', ' ') : ''
+  }
+
+  private goToNext (): void {
+    const nextStep = this.next()
+    if (nextStep) {
+      // Setting showErrors undefined to help @Watch to trigger validation next time.
+      let showErrors = Boolean(this.$route.query.showErrors) &&
+                        nextStep.to !== RouteNames.REVIEW_CONFIRM ? 'true' : undefined
+      this.$router.push({ name: nextStep.to, query: { 'showErrors': showErrors } }).catch(error => error)
+    }
   }
 
   /** Returns the next step. */
