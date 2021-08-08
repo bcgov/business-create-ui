@@ -169,7 +169,6 @@
 
 <script lang="ts">
 // Libraries
-import Vue from 'vue'
 import { Component, Emit, Prop, Watch, Mixins } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 import { isEmpty } from 'lodash'
