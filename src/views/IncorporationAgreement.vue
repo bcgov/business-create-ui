@@ -35,7 +35,7 @@
           </template>
           <span>
             Clauses in the Articles which specify the public benefits to be promoted by the Benefit Company and the
-            company’s commitment to promote those benefits and to conduct business in a responsible and sustainable
+            company's commitment to promote those benefits and to conduct business in a responsible and sustainable
             manner.
           </span>
         </v-tooltip>

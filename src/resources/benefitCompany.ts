@@ -6,9 +6,9 @@ import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module
 export const BenefitCompanyResource: ResourceIF = {
   entityType: CorpTypeCd.BENEFIT_COMPANY,
   displayName: GetCorpFullDescription(CorpTypeCd.BENEFIT_COMPANY),
-  title: 'Benefit Company Statement:',
-  description: `This company is a benefit company and, as such, has purposes that include conducting its business
-        in a responsible and sustainable manner and promoting one or more public benefits.`,
+  title: 'Benefit Company Statement',
+  description: 'This company is a benefit company and, as such, has purposes that include conducting its business ' +
+    'in a responsible and sustainable manner and promoting one or more public benefits.',
   statement: null,
   nameRequestType: NameRequestTypes.BC,
   steps: BaseStepsTemplate,
@@ -29,17 +29,17 @@ export const BenefitCompanyResource: ResourceIF = {
         helpText: [
           `The sample Incorporation Agreement and Benefit Company Articles is a template that you can use
             to create an incorporation agreement and articles for your company. It uses all the standard
-            provisions suggested by legislation and also includes a place to specify the company’s benefit
+            provisions suggested by legislation and also includes a place to specify the company's benefit
             provision.`,
           `If you would like to customize any other provisions in the Articles, you cannot use this sample. We
-              recommend seeking professional assistance from a lawyer or accountant to help you prepare your Articles.`
+            recommend seeking professional assistance from a lawyer or accountant to help you prepare your Articles.`
         ]
       },
       {
         header: `What is a Benefit Provision?`,
         helpText: [
           `A Benefit Provision is a statement by the company of its public benefits and its commitments to promote
-              those public benefits and to conduct business in a responsible and sustainable manner.`,
+            those public benefits and to conduct business in a responsible and sustainable manner.`,
           `A Benefit Company must include a benefit provision in its Articles.`
         ]
       },
@@ -49,7 +49,7 @@ export const BenefitCompanyResource: ResourceIF = {
       {
         header: `You can use the sample Articles if:`,
         icon: 'mdi-check',
-        iconColor: `green darken-2`,
+        iconColor: 'green darken-2',
         statements: [
           `There are no special rights or restrictions attached to any class or series of shares in
             the corporation’s authorized share structure.`,
@@ -59,7 +59,7 @@ export const BenefitCompanyResource: ResourceIF = {
       {
         header: `You cannot use the sample Articles if:`,
         icon: 'mdi-close',
-        iconColor: `red`,
+        iconColor: 'red',
         statements: [
           `There are special rights or restrictions attached to any class or series of shares in the corporation’s
             authorized share structure.`,
@@ -67,12 +67,12 @@ export const BenefitCompanyResource: ResourceIF = {
         ]
       }
     ],
-    article: `benefit_company__corporation_agreement.pdf`,
+    article: 'benefit_company__corporation_agreement.pdf',
     documents: [
       {
         code: 'sample',
         description: 'The <b>sample Incorporation Agreement and Articles</b> containing a benefit provision ' +
-        'has been completed and a copy has been added to the company\'s record book.'
+          'has been completed and a copy has been added to the company\'s record book.'
       },
       {
         code: 'custom',
@@ -83,24 +83,25 @@ export const BenefitCompanyResource: ResourceIF = {
   },
   reviewAndConfirm: {
     completingPartyStatement: {
-      certifyStatementHeader: 'the Completing Party, have examined the Company ' +
-        'Articles and the Incorporation Agreement applicable to the company that is to be ' +
-        'incorporated by the filing of this Incorporation Application and confirm that:',
+      certifyStatementHeader: `the Completing Party, have examined the Company
+        Articles and the Incorporation Agreement applicable to the company that is to be
+        incorporated by the filing of this Incorporation Application and confirm that:`,
       certifyStatements: [
-        'The Company Articles and the Incorporation Agreement both contain a signature ' +
-        'line for each person identified as an incorporator in the Incorporation Application ' +
-        'with the name of that person set out legibly under the signature line,',
+        `The Company Articles and the Incorporation Agreement both contain a signature
+          line for each person identified as an incorporator in the Incorporation Application
+          with the name of that person set out legibly under the signature line,`,
 
-        'An original signature has been placed on each of those signature lines,',
+        `An original signature has been placed on each of those signature lines,`,
 
-        'I have no reason to believe that the signature placed on a signature line is not the ' +
-        'signature of the person whose name is set out under that signature line, and',
+        `I have no reason to believe that the signature placed on a signature line is not the
+          signature of the person whose name is set out under that signature line, and`,
 
-        'I have relevant knowledge of the company and that I am authorized to make this filing.'
+        `I have relevant knowledge of the company and that I am authorized to make this filing.`
       ],
-      certifyClause: 'Note: It is an offence to make a false or misleading statement in respect ' +
-        'of a material fact in a record submitted to the Corporate Registry for filing. ' +
-        'See section 427 of the Business Corporations Act.'
+      certifyClause: `Note: It is an offence to make a false or misleading statement in respect
+        of a material fact in a record submitted to the Corporate Registry for filing.
+        See section 427 of the Business Corporations Act.`,
+      entityDisplay: null
     }
   }
 }

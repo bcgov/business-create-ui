@@ -54,6 +54,7 @@
         <certify
           :currentDate="getCurrentDate"
           :certifiedBy="getCertifyState.certifiedBy"
+          :entityDisplay="getCompletingPartyStatement.entityDisplay"
           :isCertified="getCertifyState.valid"
           :statements="getCompletingPartyStatement.certifyStatements"
           :message="getCompletingPartyStatement.certifyClause"
