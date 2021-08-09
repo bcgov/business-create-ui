@@ -23,7 +23,7 @@ export const CooperativeResource: ResourceIF = {
   },
   incorporationAgreement: {
     helpSection: [],
-    article: `Sample_articles.pdf`,
+    article: 'Sample_articles.pdf',
     documents: [
       {
         code: 'sample',
@@ -37,11 +37,12 @@ export const CooperativeResource: ResourceIF = {
   },
   reviewAndConfirm: {
     completingPartyStatement: {
-      certifyStatementHeader: '',
+      certifyStatementHeader: null,
       certifyStatements: [],
-      certifyClause: 'Note: It is an offence to make a false or misleading statement in respect ' +
-        'of a material fact in a record submitted to the Corporate Registry for filing. ' +
-        'See section 427 of the Business Corporations Act.'
+      certifyClause: `Note: It is an offence to make a false or misleading statement in respect
+        of a material fact in a record submitted to the Corporate Registry for filing.
+        See section 200 of the Cooperative Association Act.`,
+      entityDisplay: 'cooperative association'
     }
   }
 }

@@ -39,17 +39,17 @@ export const LimitedCompanyResource: ResourceIF = {
       {
         header: `You can use the Incorporation Agreement and Table 1 Articles if:`,
         icon: 'mdi-check',
-        iconColor: `green darken-2`,
+        iconColor: 'green darken-2',
         statements: [
           `There are no special rights or restrictions attached to any class or series of shares in
-            the corporation’s authorized share structure.`,
+            the corporation's authorized share structure.`,
           `You do not wish to change any of the standard provisions in the sample Articles.`
         ]
       },
       {
         header: `You cannot use the Incorporation Agreement and Table 1 Articles if:`,
         icon: 'mdi-close',
-        iconColor: `red`,
+        iconColor: 'red',
         statements: [
           `There are special rights or restrictions attached to any class or series of shares in the corporation’s
             authorized share structure.`,
@@ -57,7 +57,7 @@ export const LimitedCompanyResource: ResourceIF = {
         ]
       }
     ],
-    article: `Sample_articles.pdf`,
+    article: 'Sample_articles.pdf',
     documents: [
       {
         code: 'Table-1',
@@ -73,20 +73,21 @@ export const LimitedCompanyResource: ResourceIF = {
   },
   reviewAndConfirm: {
     completingPartyStatement: {
-      certifyStatementHeader: 'the Completing Party, have examined the Company ' +
-        'Articles and the Incorporation Agreement applicable to the company that is to be ' +
-        'incorporated by the filing of this Incorporation Application and confirm that:',
+      certifyStatementHeader: `the Completing Party, have examined the Company
+        Articles and the Incorporation Agreement applicable to the company that is to be
+        incorporated by the filing of this Incorporation Application and confirm that:`,
       certifyStatements: [
-        'An original signature has been placed on each of those signature lines,',
+        `An original signature has been placed on each of those signature lines,`,
 
-        'I have no reason to believe that the signature placed on a signature line is not the ' +
-        'signature of the person whose name is set out under that signature line, and',
+        `I have no reason to believe that the signature placed on a signature line is not the
+          signature of the person whose name is set out under that signature line, and`,
 
-        'I have relevant knowledge of the company and that I am authorized to make this filing.'
+        `I have relevant knowledge of the company and that I am authorized to make this filing.`
       ],
-      certifyClause: 'Note: It is an offence to make a false or misleading statement in respect ' +
-        'of a material fact in a record submitted to the Corporate Registry for filing. ' +
-        'See section 427 of the Business Corporations Act.'
+      certifyClause: `Note: It is an offence to make a false or misleading statement in respect
+        of a material fact in a record submitted to the Corporate Registry for filing.
+        See section 427 of the Business Corporations Act.`,
+      entityDisplay: null
     }
   }
 }

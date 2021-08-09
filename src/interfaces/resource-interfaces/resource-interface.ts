@@ -27,6 +27,7 @@ export interface ResourceIF {
       certifyStatementHeader: string
       certifyStatements: Array<string>
       certifyClause: string
+      entityDisplay: string
     }
   }
 }

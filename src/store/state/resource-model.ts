@@ -18,9 +18,10 @@ export const resourceModel: ResourceIF = {
   incorporationAgreement: null,
   reviewAndConfirm: {
     completingPartyStatement: {
-      certifyStatementHeader: '',
+      certifyStatementHeader: null,
       certifyStatements: [],
-      certifyClause: ''
+      certifyClause: null,
+      entityDisplay: null
     }
   }
 }
