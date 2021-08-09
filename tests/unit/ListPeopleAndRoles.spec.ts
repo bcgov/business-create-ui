@@ -185,10 +185,10 @@ describe('List People And Roles component', () => {
       })
 
     expect(wrapper.vm.$el.querySelector('.people-roles-invalid-message').textContent)
-      .toContain('This step is not complete.')
+      .toContain('This step is unfinished.')
 
     expect(wrapper.vm.$el.querySelector('.people-roles-invalid-message').textContent)
-      .toContain('Return to this step to complete it.')
+      .toContain('Return to this step to finish it')
   })
 
   it('sends you to step 2 when the error message link is clicked', () => {

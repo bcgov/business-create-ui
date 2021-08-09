@@ -93,6 +93,7 @@
       <ListPeopleAndRoles
         :personList="orgPersonList"
         :isSummary="false"
+        :showErrorSummary="!getAddPeopleAndRoleStep.valid"
         @editPerson="editOrgPerson($event)"
         @removePerson="onRemovePerson($event)"
       />
@@ -103,7 +104,7 @@
 <script lang="ts">
 // Libraries
 import { Component, Mixins } from 'vue-property-decorator'
-import { Action, Getter } from 'vuex-class'
+import { Action, Getter, State } from 'vuex-class'
 
 // Interfaces
 import { ActionBindingIF, OrgPersonIF, PeopleAndRoleIF, RolesIF, TombstoneIF } from '@/interfaces'

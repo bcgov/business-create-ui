@@ -12,17 +12,16 @@
       <!-- Summary error message -->
       <div
         v-if="!getCreateRulesStep.valid"
-        class="upload-rules-error-message"
-        :class="{ 'invalid-section': getValidateSteps }"
+        class="upload-rules-error-message invalid-section"
       >
         <span>
           <v-icon color="error">mdi-information-outline</v-icon>
           &nbsp;
-          <span class="error-text">This step is not complete.</span>
+          <span class="error-text">This step is unfinished.</span>
           &nbsp;
-          <router-link :to="{ path: `/${RouteNames.CREATE_RULES}`, query: { showErrors: true } }">
-            Return to this step to complete it.
-          </router-link>
+          <router-link
+            :to="{ path: `/${RouteNames.CREATE_RULES}`, query: { showErrors: true } }"
+          >Return to this step to finish it</router-link>
         </span>
       </div>
     </div>

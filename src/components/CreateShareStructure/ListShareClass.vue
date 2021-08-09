@@ -2,25 +2,23 @@
   <v-card flat id="share-structure">
 
     <!-- Summary Header -->
-    <div id="share-summary" v-if="isSummary" class="share-summary-header">
+    <div class="share-summary-header" v-if="isSummary">
       <v-icon color="dkBlue">mdi-sitemap</v-icon>
       <label class="share-summary-header-title"><strong> Share Structure</strong></label>
     </div>
 
-    <section :class="{ 'invalid-section': showErrorSummary && getValidateSteps }">
+    <section :class="{ 'invalid-section': showErrorSummary }">
       <!-- Summary Warning -->
       <div v-if="isSummary && showErrorSummary" class="share-summary-invalid-message">
         <span>
           <v-icon color="error">mdi-information-outline</v-icon>
           &nbsp;
-          <span class="error-text">This step is not complete.</span>
+          <span class="error-text">This step is unfinished.</span>
           &nbsp;
           <router-link
             id="router-link"
             :to="{ path: `/${RouteNames.CREATE_SHARE_STRUCTURE}`, query: { showErrors: true } }"
-          >
-            Return to this step to complete it.
-          </router-link>
+          >Return to this step to finish it</router-link>
         </span>
       </div>
 
@@ -46,9 +44,10 @@
               <div class="actions">
                 <span class="edit-action">
                   <v-btn small text color="primary"
-                   :id="'class-' + row.index + '-change-btn'"
-                   @click="emitShareClass(row.index)"
-                   :disabled="componentDisabled">
+                    :id="'class-' + row.index + '-change-btn'"
+                    @click="emitShareClass(row.index)"
+                    :disabled="componentDisabled"
+                  >
                     <v-icon small>mdi-pencil</v-icon>
                     <span>Edit</span>
                   </v-btn>
@@ -120,8 +119,8 @@
               <div class="actions">
                 <span class="edit-action">
                   <v-btn small text color="primary"
-                     :id="'series-' + index + '-change-btn'"
-                     @click="emitShareSeries(row.index, index)"
+                    :id="'series-' + index + '-change-btn'"
+                    @click="emitShareSeries(row.index, index)"
                   >
                     <v-icon small>mdi-pencil</v-icon>
                     <span>Edit</span>
@@ -321,7 +320,7 @@ export default class ListShareClass extends Vue {
 
 .share-summary-invalid-message {
   padding: 1.25rem;
-  color: $BCgovABlue2;
+  color: $app-red;
 }
 
 tbody {

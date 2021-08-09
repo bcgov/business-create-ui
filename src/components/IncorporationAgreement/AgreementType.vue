@@ -12,21 +12,18 @@
         <!-- Summary Warning -->
         <div
           v-if="showErrorSummary"
-          class="agreement-invalid-message"
-          :class="{ 'invalid-section': getValidateSteps }"
+          class="agreement-invalid-message invalid-section"
         >
           <span>
             <v-icon color="error">mdi-information-outline</v-icon>
             &nbsp;
-            <span class="error-text">This step is not complete.</span>
+            <span class="error-text">This step is unfinished.</span>
             &nbsp;
             <router-link
               id="router-link"
               :to="{ path: `/${RouteNames.INCORPORATION_AGREEMENT}`,
               query: { showErrors: true } }"
-            >
-              Return to this step to complete it.
-            </router-link>
+            >Return to this step to finish it</router-link>
           </span>
         </div>
 
@@ -92,7 +89,6 @@ export default class AgreementType extends Mixins(EnumMixin) {
 
   @Getter getIncorporationAgreementDocuments!: Array<IncorporationAgreementTypeIF>
   @Getter getEntityType!: CorpTypeCd
-  @Getter getValidateSteps!: boolean
   @Getter isTypeCC!: boolean
   @Getter getIncorporationAgreementStep!: IncorporationAgreementIF
 
@@ -157,7 +153,7 @@ export default class AgreementType extends Mixins(EnumMixin) {
 
 .agreement-invalid-message {
   padding: 1.25rem;
-  color: $BCgovABlue2;
+  color: $app-red;
 }
 
 #agreement-summary {

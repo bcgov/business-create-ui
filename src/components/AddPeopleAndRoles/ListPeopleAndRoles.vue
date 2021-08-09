@@ -8,110 +8,106 @@
       @exit="dialog = false"
     />
 
-    <!-- Summary Section -->
-    <div id="people-roles-summary" v-if="isSummary">
-      <!-- Summary Header -->
-      <div class="people-roles-summary-header" >
-        <v-icon color="dkBlue">mdi-account-multiple-plus</v-icon>
-        <label class="people-roles-title"><strong>People and Roles</strong></label>
-      </div>
+    <!-- Summary Header -->
+    <div class="people-roles-summary-header" v-if="isSummary">
+      <v-icon color="dkBlue">mdi-account-multiple-plus</v-icon>
+      <label class="people-roles-title"><strong>People and Roles</strong></label>
     </div>
 
-    <!-- List Display Section -->
-    <div id="people-roles-list" :class="{ 'invalid-section': showErrorSummary && getValidateSteps }">
-      <!-- List Headers -->
-      <v-row class="people-roles-header list-item__subtitle" no-gutters>
-        <v-col v-for="(title, index) in tableHeaders" :key="index">
-          <span>{{ title }}</span>
-        </v-col>
-        <!-- Spacer Column For Actions -->
-        <v-col sm="1" v-if="!isSummary"></v-col>
-      </v-row>
-
+    <div :class="{ 'invalid-section': showErrorSummary }">
       <!-- Summary Warning -->
-      <div v-if="showErrorSummary" class="people-roles-invalid-message">
+      <div v-if="isSummary && showErrorSummary" class="people-roles-invalid-message">
         <span>
           <v-icon color="error">mdi-information-outline</v-icon>
           &nbsp;
-          <span class="error-text">This step is not complete.</span>
+          <span class="error-text">This step is unfinished.</span>
           &nbsp;
           <router-link
             id="router-link"
-            :to="{ path: `/${RouteNames.ADD_PEOPLE_AND_ROLES}`,
-            query: { showErrors: true } }"
-          >
-            Return to this step to complete it.
-          </router-link>
+            :to="{ path: `/${RouteNames.ADD_PEOPLE_AND_ROLES}`, query: { showErrors: true } }"
+          >Return to this step to finish it</router-link>
         </span>
       </div>
 
-      <!-- List Content -->
-      <v-row
-        class="people-roles-content"
-        :class="{ 'list-item__subtitle': !isSummary }"
-        v-for="(officer, index) in personList"
-        :key="index"
-        no-gutters>
-        <v-col class="text-truncate">
-          <v-tooltip top :disabled="formatName(officer).length < 25" color="primary">
-            <template v-slot:activator="{ on }">
-              <span v-on="on" class="people-roles-title"><strong>{{ formatName(officer) }}</strong></span>
-            </template>
-            <span>{{ formatName(officer) }}</span>
-          </v-tooltip>
-        </v-col>
-        <v-col>
-          <base-address class="peoples-roles-mailing-address" :address="officer.mailingAddress" />
-        </v-col>
-        <v-col>
-          <p v-if="isSame(officer.mailingAddress, officer.deliveryAddress)"
-            class="peoples-roles-delivery-address">Same as Mailing Address
-          </p>
-          <base-address v-else class="peoples-roles-delivery-address" :address="officer.deliveryAddress"/>
-        </v-col>
-        <v-col>
-          <div v-if="officer.roles.length>0">
-            <v-col v-for="(role, index) in officer.roles" :key="index" class="col-roles">
-              <span>{{ role.roleType }}</span>
-            </v-col>
-          </div>
-          <div v-else>
-            <v-icon color="$BCgovGold9" small>mdi-alert</v-icon>
-            <span class="warning-text">Add Role</span>
-          </div>
-        </v-col>
+      <!-- List Display Section -->
+      <div id="people-roles-list">
+        <!-- List Headers -->
+        <v-row class="people-roles-header list-item__subtitle" no-gutters>
+          <v-col v-for="(title, index) in tableHeaders" :key="index">
+            <span>{{ title }}</span>
+          </v-col>
+          <!-- Spacer Column For Actions -->
+          <v-col sm="1" v-if="!isSummary"></v-col>
+        </v-row>
 
-        <!-- Actions Column -->
-        <v-col sm="1" v-if="!isSummary">
-          <div class="actions">
-            <span class="edit-action">
-              <v-btn small text color="primary"
-                :id="`officer-${index}-change-btn`"
-                @click="emitPersonInfo(index)"
-              >
-                <v-icon small>mdi-pencil</v-icon>
-                <span>Edit</span>
-              </v-btn>
-            </span>
+        <!-- List Content -->
+        <v-row
+          class="people-roles-content"
+          :class="{ 'list-item__subtitle': !isSummary }"
+          v-for="(officer, index) in personList"
+          :key="index"
+          no-gutters>
+          <v-col class="text-truncate">
+            <v-tooltip top :disabled="formatName(officer).length < 25" color="primary">
+              <template v-slot:activator="{ on }">
+                <span v-on="on" class="people-roles-title"><strong>{{ formatName(officer) }}</strong></span>
+              </template>
+              <span>{{ formatName(officer) }}</span>
+            </v-tooltip>
+          </v-col>
+          <v-col>
+            <base-address class="peoples-roles-mailing-address" :address="officer.mailingAddress" />
+          </v-col>
+          <v-col>
+            <p v-if="isSame(officer.mailingAddress, officer.deliveryAddress)"
+              class="peoples-roles-delivery-address">Same as Mailing Address
+            </p>
+            <base-address v-else class="peoples-roles-delivery-address" :address="officer.deliveryAddress"/>
+          </v-col>
+          <v-col>
+            <div v-if="officer.roles.length>0">
+              <v-col v-for="(role, index) in officer.roles" :key="index" class="col-roles">
+                <span>{{ role.roleType }}</span>
+              </v-col>
+            </div>
+            <div v-else>
+              <v-icon color="$BCgovGold9" small>mdi-alert</v-icon>
+              <span class="warning-text">Add Role</span>
+            </div>
+          </v-col>
 
-            <!-- more actions menu -->
-            <span>
-              <v-menu offset-y>
-                <template v-slot:activator="{ on }">
-                  <v-btn text small color="primary" class="actions__more-actions__btn" v-on="on">
-                    <v-icon>mdi-menu-down</v-icon>
-                  </v-btn>
-                </template>
-                <v-list class="actions__more-actions">
-                  <v-list-item @click="confirmRemove(index)">
-                    <v-list-item-title><v-icon>mdi-delete</v-icon>Remove</v-list-item-title>
-                  </v-list-item>
-                </v-list>
-              </v-menu>
-            </span>
-          </div>
-        </v-col>
-      </v-row>
+          <!-- Actions Column -->
+          <v-col sm="1" v-if="!isSummary">
+            <div class="actions">
+              <span class="edit-action">
+                <v-btn small text color="primary"
+                  :id="`officer-${index}-change-btn`"
+                  @click="emitPersonInfo(index)"
+                >
+                  <v-icon small>mdi-pencil</v-icon>
+                  <span>Edit</span>
+                </v-btn>
+              </span>
+
+              <!-- more actions menu -->
+              <span>
+                <v-menu offset-y>
+                  <template v-slot:activator="{ on }">
+                    <v-btn text small color="primary" class="actions__more-actions__btn" v-on="on">
+                      <v-icon>mdi-menu-down</v-icon>
+                    </v-btn>
+                  </template>
+                  <v-list class="actions__more-actions">
+                    <v-list-item @click="confirmRemove(index)">
+                      <v-list-item-title><v-icon>mdi-delete</v-icon>Remove</v-list-item-title>
+                    </v-list-item>
+                  </v-list>
+                </v-menu>
+              </span>
+            </div>
+          </v-col>
+        </v-row>
+      </div>
     </div>
   </v-card>
 </template>
@@ -149,8 +145,6 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin, EntityFilter
 
   @Prop({ default: false })
   private readonly isSummary: boolean
-
-  @Getter getValidateSteps!: boolean
 
   // Enum for template
   readonly RouteNames = RouteNames
@@ -216,7 +210,7 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin, EntityFilter
 
 .people-roles-invalid-message {
   padding: 1.25rem;
-  color: $BCgovABlue2;
+  color: $app-red;
 }
 
 .people-roles-header {

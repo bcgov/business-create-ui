@@ -11,9 +11,11 @@
       <header>
         <h2>1. Company Name</h2>
       </header>
-      <v-card flat class="step-container">
-        <name-request-info @hasNameTranslation="onNameTranslation($event)"/>
-      </v-card>
+      <div :class="{ 'invalid-section': showErrors && !hasValidNameTranslation }">
+        <v-card flat class="step-container">
+          <name-request-info @hasNameTranslation="onNameTranslation($event)"/>
+        </v-card>
+      </div>
     </section>
 
     <section class="mt-10" v-show="isEntityType">
@@ -23,11 +25,14 @@
           </span> Mailing and Delivery Addresses.
         </p>
       </header>
-      <OfficeAddresses
-        :inputAddresses="addresses"
-        @update:addresses="onAddressChange($event)"
-        @valid="onAddressFormValidityChange($event)"
-      />
+      <div :class="{ 'invalid-section': showErrors && !addressFormValid }">
+        <OfficeAddresses
+          :showErrors="showErrors"
+          :inputAddresses="addresses"
+          @update:addresses="onAddressChange($event)"
+          @valid="onAddressFormValidityChange($event)"
+        />
+      </div>
     </section>
 
     <section class="mt-10" v-show="isEntityType">
@@ -40,13 +45,15 @@
            Annual Report reminders.
         </p>
       </header>
-      <BusinessContactInfo
-        :initialValue="getDefineCompanyStep.businessContact"
-        :isEditing="true"
-        :showErrors="showErrors"
-        @contactInfoChange="onBusinessContactInfoChange($event)"
-        @contactInfoFormValidityChange="onBusinessContactFormValidityChange($event)"
-      />
+      <div :class="{ 'invalid-section': showErrors && !businessContactFormValid }">
+        <BusinessContactInfo
+          :initialValue="getDefineCompanyStep.businessContact"
+          :isEditing="true"
+          :showErrors="showErrors"
+          @contactInfoChange="onBusinessContactInfoChange($event)"
+          @contactInfoFormValidityChange="onBusinessContactFormValidityChange($event)"
+        />
+      </div>
     </section>
     <section class="mt-10" v-if="isEntityType && isPremiumAccount">
       <header id="folio-number-header">
@@ -105,6 +112,7 @@ export default class DefineCompany extends Mixins(EntityFilterMixin) {
   @Getter isPremiumAccount!: boolean
   @Getter isTypeBcomp!: boolean
   @Getter getDefineCompanyStep!: DefineCompanyIF
+  @Getter getValidateSteps!: boolean
 
   @Action setEntityType!: ActionBindingIF
   @Action setBusinessContact!: ActionBindingIF

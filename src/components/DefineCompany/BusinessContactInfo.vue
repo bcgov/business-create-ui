@@ -128,8 +128,9 @@ export default class BusinessContactInfo extends Mixins(CommonMixin) {
     return (this.contact.email === this.contact.confirmEmail) ? '' : 'Email addresses must match'
   }
 
-  // Life cycle methods
-  private mounted (): void {
+  // Watchers
+  @Watch('showErrors')
+  private onShowErrorsChanged (): void {
     if (this.showErrors) {
       (this.$refs.form as Vue & { validate: () => boolean }).validate()
     } else if (this.$refs.form && !this.isSame(this.initialValue, this.defaultBusinessContact)) {
@@ -137,7 +138,6 @@ export default class BusinessContactInfo extends Mixins(CommonMixin) {
     }
   }
 
-  // Watchers
   @Watch('initialValue', { deep: true, immediate: true })
   private onContactPropValueChanged (): void {
     this.contact = this.initialValue

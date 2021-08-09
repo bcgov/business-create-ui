@@ -215,6 +215,9 @@ export default class OfficeAddresses extends Mixins(CommonMixin, EntityFilterMix
   @Prop({ default: true })
   private readonly isEditing!: boolean
 
+  @Prop({ default: false })
+  private readonly showErrors!: boolean
+
   @Getter getDefineCompanyStep!: DefineCompanyIF
 
   // Local properties
@@ -261,36 +264,6 @@ export default class OfficeAddresses extends Mixins(CommonMixin, EntityFilterMix
     // on first load, determine inherited flags based on address values and update parent
     this.setAddresses(true)
     this.emitValid()
-  }
-
-  private mounted (): void {
-    /**
-     * Check if addresses are the default values, if not re-validate so resumed applications show errors on start up
-     */
-
-    // Registered Mailing Address
-    if (this.$refs.regMailingAddress?.$refs?.addressForm && !this.isSame(this.mailingAddress, this.defaultAddress)) {
-      this.$refs.regMailingAddress.$refs.addressForm.validate()
-    }
-    // Registered Delivery Address
-    if (this.$refs.regDeliveryAddress?.$refs?.addressForm && !this.inheritMailingAddress &&
-        !this.isSame(this.deliveryAddress, this.defaultAddress)) {
-      this.$refs.regDeliveryAddress.$refs.addressForm.validate()
-    }
-    // If records address is not inherited - check if we need to re-validate these
-    if (!this.inheritRegisteredAddress) {
-      // Records Mailing Address
-      if (this.$refs.recMailingAddress?.$refs?.addressForm &&
-        !this.isSame(this.recMailingAddress, this.defaultAddress)) {
-        this.$refs.recMailingAddress.$refs.addressForm.validate()
-      }
-
-      // Records Delivery Address
-      if (this.$refs.recMailingAddress?.$refs?.addressForm && !this.inheritRecMailingAddress &&
-          !this.isSame(this.recDeliveryAddress, this.defaultAddress)) {
-        this.$refs.recDeliveryAddress.$refs.addressForm.validate()
-      }
-    }
   }
 
   /**
@@ -462,6 +435,29 @@ export default class OfficeAddresses extends Mixins(CommonMixin, EntityFilterMix
     this.addresses = this.inputAddresses
     this.setAddresses(false)
     this.emitValid()
+  }
+
+  // Watchers
+  @Watch('showErrors')
+  private onShowErrorsChanged (): void {
+    // Check if addresses are valid
+    if (this.showErrors && this.isEditing) {
+      // Registered Mailing Address
+      this.$refs.regMailingAddress.$refs.addressForm.validate()
+      if (!this.inheritMailingAddress) {
+        // Registered Delivery Address
+        this.$refs.regDeliveryAddress.$refs.addressForm.validate()
+      }
+
+      if (!this.entityFilter(CorpTypeCd.COOP) && !this.inheritRegisteredAddress) {
+        // Records Mailing Address
+        this.$refs.recMailingAddress.$refs.addressForm.validate()
+        if (!this.inheritRecMailingAddress) {
+          // Records Delivery Address
+          this.$refs.recDeliveryAddress.$refs.addressForm.validate()
+        }
+      }
+    }
   }
 
   // Event Emitters
