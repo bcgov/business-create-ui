@@ -1,9 +1,9 @@
 <template>
   <section class="mt-10">
-    <header id="share-structure-header">
+    <header>
       <h2>1. Create Your Authorized Share Structure</h2>
     </header>
-    <p>
+    <p id="create-share-structure">
       Add at least one class of shares. A share class consists of the name of the class, the maximum number of shares in
       the class (including any associated Series), a par value for the class, and the currency the shares are valued in.
     </p>
@@ -46,7 +46,7 @@
     <ul>
       <li>
         <v-icon v-if="shareClasses.length > 0" color="green darken-2" class="cp-valid">mdi-check</v-icon>
-        <v-icon v-else :color="showErrors ? 'red': 'transparent'" class="cp-invalid">mdi-close</v-icon>
+        <v-icon v-else :color="getShowErrors ? 'red': 'transparent'" class="cp-invalid">mdi-close</v-icon>
         <span class="chk-list-item-txt">At least one Class of Shares</span>
       </li>
     </ul>
@@ -85,12 +85,18 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Mixins, Vue, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import { v4 as uuidv4 } from 'uuid'
 
 // Interfaces
 import { ActionBindingIF, ShareClassIF, ShareStructureIF } from '@/interfaces'
+
+// Mixins
+import { CommonMixin } from '@/mixins'
+
+// Enums
+import { RouteNames } from '@/enums'
 
 // Components
 import { ListShareClass, ShareStructure } from '@/components/CreateShareStructure'
@@ -101,8 +107,9 @@ import { ListShareClass, ShareStructure } from '@/components/CreateShareStructur
     ShareStructure
   }
 })
-export default class CreateShareStructure extends Vue {
+export default class CreateShareStructure extends Mixins(CommonMixin) {
   @Getter getCreateShareStructureStep!: ShareStructureIF
+  @Getter getShowErrors!: boolean
 
   @Action setShareClasses!: ActionBindingIF
   @Action setCreateShareStructureStepValidity!: ActionBindingIF
@@ -281,13 +288,23 @@ export default class CreateShareStructure extends Vue {
     this.shareId = ''
   }
 
-  private get showErrors (): boolean {
-    return Boolean(this.$route.query.showErrors)
-  }
-
   private get helpLink (): string {
     return 'https://www2.gov.bc.ca/gov/content/employment-business/business/' +
     'managing-a-business/permits-licences/businesses-incorporated-companies'
+  }
+
+  @Watch('$route')
+  private async scrollToInvalidComponent (): Promise<void> {
+    if (this.getShowErrors && this.$route.name === RouteNames.CREATE_SHARE_STRUCTURE) {
+      // Scroll to invalid components.
+      await Vue.nextTick()
+      await this.validateAndScroll(
+        {
+          shareStructure: this.getCreateShareStructureStep.valid
+        },
+        ['create-share-structure']
+      )
+    }
   }
 }
 </script>

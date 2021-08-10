@@ -85,10 +85,7 @@ export default class Stepper extends Vue {
   }
 
   private goTo (step) {
-    // Setting showErrors undefined to help @Watch to trigger validation next time.
-    let showErrors = (!this.isValid(step.to) && this.getValidateSteps) &&
-                      step.to !== RouteNames.REVIEW_CONFIRM ? 'true' : undefined
-    this.$router.push({ name: step.to, query: { 'showErrors': showErrors } }).catch(error => error)
+    this.$router.push(step.to).catch(error => error)
   }
 
   private isCurrentStep (step): boolean {

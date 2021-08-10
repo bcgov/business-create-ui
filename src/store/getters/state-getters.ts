@@ -290,6 +290,11 @@ export const getValidateSteps = (state: StateIF): boolean => {
   return state.stateModel.validateSteps
 }
 
+/** Is true when the user should see the validation error in filing. */
+export const getShowErrors = (state: StateIF): boolean => {
+  return state.stateModel.showErrors
+}
+
 /** The Certify State object. */
 export const getCertifyState = (state: StateIF): CertifyIF => {
   return state.stateModel.certifyState

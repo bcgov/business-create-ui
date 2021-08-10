@@ -20,7 +20,7 @@
           <span class="error-text">This step is unfinished.</span>
           &nbsp;
           <router-link
-            :to="{ path: `/${RouteNames.CREATE_RULES}`, query: { showErrors: true } }"
+            :to="{ path: `/${RouteNames.CREATE_RULES}` }"
           >Return to this step to finish it</router-link>
         </span>
       </div>

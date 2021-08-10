@@ -24,7 +24,7 @@
           &nbsp;
           <router-link
             id="router-link"
-            :to="{ path: `/${RouteNames.ADD_PEOPLE_AND_ROLES}`, query: { showErrors: true } }"
+            :to="{ path: `/${RouteNames.ADD_PEOPLE_AND_ROLES}` }"
           >Return to this step to finish it</router-link>
         </span>
       </div>

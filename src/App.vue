@@ -145,7 +145,7 @@ import {
   InvalidIncorporationApplicationDialog, PaymentErrorDialog, SaveErrorDialog,
   FileAndPayInvalidNameRequestDialog
 } from '@/components/dialogs'
-import { DateMixin, FilingTemplateMixin, LegalApiMixin, NameRequestMixin } from '@/mixins'
+import { CommonMixin, DateMixin, FilingTemplateMixin, LegalApiMixin, NameRequestMixin } from '@/mixins'
 import { ActionBindingIF, ConfirmDialogType, FilingDataIF, StepIF } from '@/interfaces'
 import { CompanyResources } from '@/resources'
 
@@ -173,7 +173,7 @@ import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
     ...Views
   }
 })
-export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApiMixin, NameRequestMixin) {
+export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMixin, LegalApiMixin, NameRequestMixin) {
   // Refs
   $refs!: {
     confirm: ConfirmDialogType
@@ -194,6 +194,7 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
   @Action setHaveChanges!: ActionBindingIF
   @Action setAccountInformation!: ActionBindingIF
   @Action setTempId!: ActionBindingIF
+  @Action setShowErrors!: ActionBindingIF
 
   // Local properties
   private accountAuthorizationDialog: boolean = false
@@ -237,11 +238,6 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
       this.saveErrorDialog ||
       this.fileAndPayInvalidNameRequestDialog
     )
-  }
-
-  /** True if Jest is running the code. */
-  private get isJestRunning (): boolean {
-    return (process.env.JEST_WORKER_ID !== undefined)
   }
 
   /** The About text. */
@@ -607,8 +603,8 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
   /** Called when $route property changes. Used to init app. */
   @Watch('$route', { immediate: true })
   private async onRouteChanged (): Promise<void> {
-    const isSigninRoute = (this.$route.name === 'signin')
-    const isSignoutRoute = (this.$route.name === 'signout')
+    const isSigninRoute = (this.$route.name === RouteNames.SIGN_IN)
+    const isSignoutRoute = (this.$route.name === RouteNames.SIGN_OUT)
 
     // don't init if we are still on signin or signout route
     if (!isSigninRoute && !isSignoutRoute) {
@@ -621,6 +617,10 @@ export default class App extends Mixins(DateMixin, FilingTemplateMixin, LegalApi
       // is not available right away in session storage
       await Vue.nextTick()
       this.loadAccountInformation()
+    }
+
+    if (this.$route.name === RouteNames.REVIEW_CONFIRM) {
+      this.setShowErrors(true)
     }
   }
 }

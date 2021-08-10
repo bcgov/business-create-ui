@@ -11,7 +11,7 @@
       <header>
         <h2>1. Company Name</h2>
       </header>
-      <div :class="{ 'invalid-section': showErrors && !hasValidNameTranslation }">
+      <div :class="{ 'invalid-section': getShowErrors && !hasValidNameTranslation }">
         <v-card flat class="step-container">
           <name-request-info @hasNameTranslation="onNameTranslation($event)"/>
         </v-card>
@@ -25,9 +25,9 @@
           </span> Mailing and Delivery Addresses.
         </p>
       </header>
-      <div :class="{ 'invalid-section': showErrors && !addressFormValid }">
+      <div :class="{ 'invalid-section': getShowErrors && !addressFormValid }">
         <OfficeAddresses
-          :showErrors="showErrors"
+          :showErrors="getShowErrors"
           :inputAddresses="addresses"
           @update:addresses="onAddressChange($event)"
           @valid="onAddressFormValidityChange($event)"
@@ -45,11 +45,11 @@
            Annual Report reminders.
         </p>
       </header>
-      <div :class="{ 'invalid-section': showErrors && !businessContactFormValid }">
+      <div :class="{ 'invalid-section': getShowErrors && !businessContactFormValid }">
         <BusinessContactInfo
           :initialValue="getDefineCompanyStep.businessContact"
           :isEditing="true"
-          :showErrors="showErrors"
+          :showErrors="getShowErrors"
           @contactInfoChange="onBusinessContactInfoChange($event)"
           @contactInfoFormValidityChange="onBusinessContactFormValidityChange($event)"
         />
@@ -75,7 +75,7 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Mixins, Vue } from 'vue-property-decorator'
+import { Component, Mixins, Vue, Watch } from 'vue-property-decorator'
 import { Getter, Action } from 'vuex-class'
 
 // Interfaces
@@ -88,10 +88,10 @@ import {
 } from '@/interfaces'
 
 // Mixins
-import { EntityFilterMixin } from '@/mixins'
+import { CommonMixin, EntityFilterMixin } from '@/mixins'
 
 // Enums
-import { CorpTypeCd } from '@/enums'
+import { CorpTypeCd, RouteNames } from '@/enums'
 
 // Components
 import { BusinessContactInfo, FolioNumber, OfficeAddresses } from '@/components/DefineCompany'
@@ -105,7 +105,7 @@ import { NameRequestInfo } from '@/components/common'
     OfficeAddresses
   }
 })
-export default class DefineCompany extends Mixins(EntityFilterMixin) {
+export default class DefineCompany extends Mixins(CommonMixin, EntityFilterMixin) {
   @Getter getCompanyTitle!: string
   @Getter getCompanyDescription!: string
   @Getter isEntityType!: boolean
@@ -113,6 +113,7 @@ export default class DefineCompany extends Mixins(EntityFilterMixin) {
   @Getter isTypeBcomp!: boolean
   @Getter getDefineCompanyStep!: DefineCompanyIF
   @Getter getValidateSteps!: boolean
+  @Getter getShowErrors!: boolean
 
   @Action setEntityType!: ActionBindingIF
   @Action setBusinessContact!: ActionBindingIF
@@ -211,8 +212,20 @@ export default class DefineCompany extends Mixins(EntityFilterMixin) {
     this.setFolioNumber(folioNumber)
   }
 
-  private get showErrors (): boolean {
-    return Boolean(this.$route.query.showErrors)
+  @Watch('$route')
+  private async scrollToInvalidComponent (): Promise<void> {
+    if (this.getShowErrors && this.$route.name === RouteNames.DEFINE_COMPANY) {
+      // Scroll to invalid components.
+      await Vue.nextTick()
+      await this.validateAndScroll(
+        {
+          hasValidNameTranslation: this.hasValidNameTranslation,
+          addressFormValid: this.addressFormValid,
+          businessContactFormValid: this.businessContactFormValid
+        },
+        ['name-request-summary', 'office-addresses', 'business-contact-info']
+      )
+    }
   }
 }
 </script>

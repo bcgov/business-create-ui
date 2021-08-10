@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="people-and-roles">
     <p>
       Add the people and Corporations/firms who will have a role in your company. People can have multiple roles;
       Corporations/firms can only be Incorporators.
@@ -9,19 +9,19 @@
       <li>
         <v-icon v-if="hasRole(RoleTypes.COMPLETING_PARTY, 1, 'EXACT')" color="green darken-2" class="cp-valid"
           >mdi-check</v-icon>
-        <v-icon v-else :color="showErrors ? 'red': 'transparent'" class="cp-invalid">mdi-close</v-icon>
+        <v-icon v-else :color="getShowErrors ? 'red': 'transparent'" class="cp-invalid">mdi-close</v-icon>
         <span class='chk-list-item-txt'>The Completing Party</span>
       </li>
       <li>
         <v-icon v-if="hasRole(RoleTypes.INCORPORATOR, 1, 'ATLEAST')" color="green darken-2" class="incorp-valid"
           >mdi-check</v-icon>
-        <v-icon v-else :color="showErrors ? 'red': 'transparent'" class="incorp-invalid">mdi-close</v-icon>
+        <v-icon v-else :color="getShowErrors ? 'red': 'transparent'" class="incorp-invalid">mdi-close</v-icon>
         <span class='chk-list-item-txt'>At least one Incorporator</span>
       </li>
       <li>
         <v-icon v-if="hasRole(RoleTypes.DIRECTOR, getMinimumDirectorCount, 'ATLEAST')" color="green darken-2"
           class="dir-valid">mdi-check</v-icon>
-        <v-icon v-else :color="showErrors ? 'red': 'transparent'" class="dir-invalid">mdi-close</v-icon>
+        <v-icon v-else :color="getShowErrors ? 'red': 'transparent'" class="dir-invalid">mdi-close</v-icon>
         <span class='chk-list-item-txt'>At least {{NumWord[getMinimumDirectorCount]}} {{directorVerbiage}}</span>
       </li>
     </ul>
@@ -129,6 +129,7 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
   @Getter getMinimumDirectorCount!: number
   @Getter getTombstone!: TombstoneIF
   @Getter getAddPeopleAndRoleStep!: PeopleAndRoleIF
+  @Getter getShowErrors!: boolean
 
   @Action setOrgPersonList!: ActionBindingIF
   @Action setAddPeopleAndRoleStepValidity!: ActionBindingIF
@@ -266,10 +267,6 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
     } else if (mode === Modes.AT_LEAST) {
       return (orgPersonWithSpecifiedRole.length >= count)
     }
-  }
-
-  private get showErrors (): boolean {
-    return Boolean(this.$route.query.showErrors)
   }
 
   private get completingParty () : OrgPersonIF {

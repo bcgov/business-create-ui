@@ -12,7 +12,7 @@
           <span class="error-text">This step is unfinished.</span>
           &nbsp;
           <router-link
-            :to="{ path: `/${RouteNames.DEFINE_COMPANY}`, query: { showErrors: true } }"
+            :to="{ path: `/${RouteNames.DEFINE_COMPANY}` }"
           >Return to this step to finish it</router-link>
         </span>
       </div>

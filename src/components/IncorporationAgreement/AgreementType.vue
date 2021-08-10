@@ -21,8 +21,7 @@
             &nbsp;
             <router-link
               id="router-link"
-              :to="{ path: `/${RouteNames.INCORPORATION_AGREEMENT}`,
-              query: { showErrors: true } }"
+              :to="{ path: `/${RouteNames.INCORPORATION_AGREEMENT}` }"
             >Return to this step to finish it</router-link>
           </span>
         </div>

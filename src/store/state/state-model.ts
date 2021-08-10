@@ -68,5 +68,6 @@ export const stateModel: StateModelIF = {
   createMemorandumStep: {
     valid: false
   },
-  validateSteps: false
+  validateSteps: false,
+  showErrors: false
 }
