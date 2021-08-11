@@ -146,3 +146,7 @@ export const mutateEntityType = (state: StateIF, entityType: CorpTypeCd) => {
 export const mutateValidateSteps = (state: StateIF, validate: boolean) => {
   state.stateModel.validateSteps = validate
 }
+
+export const mutateShowErrors = (state: StateIF, showErrors: boolean) => {
+  state.stateModel.showErrors = showErrors
+}

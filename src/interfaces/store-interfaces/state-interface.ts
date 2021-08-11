@@ -40,6 +40,7 @@ export interface StateModelIF {
   ignoreChanges: boolean
   haveChanges: boolean
   validateSteps: boolean
+  showErrors: boolean
 }
 
 export interface StateIF {

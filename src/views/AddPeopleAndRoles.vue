@@ -11,14 +11,17 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Mixins, Vue } from 'vue-property-decorator'
-import { Action } from 'vuex-class'
+import { Component, Mixins, Vue, Watch } from 'vue-property-decorator'
+import { Action, Getter } from 'vuex-class'
 
 // Interfaces
-import { ActionBindingIF } from '@/interfaces'
+import { ActionBindingIF, PeopleAndRoleIF } from '@/interfaces'
 
 // Mixins
-import { EntityFilterMixin } from '@/mixins'
+import { CommonMixin, EntityFilterMixin } from '@/mixins'
+
+// Enums
+import { RouteNames } from '@/enums'
 
 // Components
 import { PeopleAndRoles } from '@/components/AddPeopleAndRoles'
@@ -28,7 +31,10 @@ import { PeopleAndRoles } from '@/components/AddPeopleAndRoles'
     PeopleAndRoles
   }
 })
-export default class AddPeopleAndRoles extends Mixins(EntityFilterMixin) {
+export default class AddPeopleAndRoles extends Mixins(CommonMixin, EntityFilterMixin) {
+  @Getter getShowErrors!: boolean
+  @Getter getAddPeopleAndRoleStep!: PeopleAndRoleIF
+
   @Action setIgnoreChanges!: ActionBindingIF
 
   /** Called when component is created. */
@@ -38,6 +44,20 @@ export default class AddPeopleAndRoles extends Mixins(EntityFilterMixin) {
     Vue.nextTick(() => {
       this.setIgnoreChanges(false)
     })
+  }
+
+  @Watch('$route')
+  private async scrollToInvalidComponent (): Promise<void> {
+    if (this.getShowErrors && this.$route.name === RouteNames.ADD_PEOPLE_AND_ROLES) {
+      // Scroll to invalid components.
+      await Vue.nextTick()
+      await this.validateAndScroll(
+        {
+          peopleAndRoles: this.getAddPeopleAndRoleStep.valid
+        },
+        ['people-and-roles']
+      )
+    }
   }
 }
 </script>

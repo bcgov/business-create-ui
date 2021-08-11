@@ -17,7 +17,7 @@
           &nbsp;
           <router-link
             id="router-link"
-            :to="{ path: `/${RouteNames.CREATE_SHARE_STRUCTURE}`, query: { showErrors: true } }"
+            :to="{ path: `/${RouteNames.CREATE_SHARE_STRUCTURE}` }"
           >Return to this step to finish it</router-link>
         </span>
       </div>

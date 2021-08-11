@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="business-contact-info">
      <v-layout row v-if="!isEditing">
         <v-flex md4>
           <label><strong>Registered Office Contact Information</strong></label>
