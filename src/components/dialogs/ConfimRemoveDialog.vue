@@ -9,7 +9,7 @@
         <p class="genErr">Remove this Person or Corporation or Firm from your Company?</p>
       </v-card-text>
 
-      <v-divider class="my-0"></v-divider>
+      <v-divider class="my-0" />
 
       <v-card-actions>
         <v-spacer></v-spacer>

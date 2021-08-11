@@ -10,7 +10,7 @@
     <v-card>
       <v-card-title>{{ title }}</v-card-title>
       <v-card-text class="black--text pre-wrap" v-show="!!message">{{ message }}</v-card-text>
-      <v-divider class="my-0" v-show="!!options.yes || !!options.no || !!options.cancel"></v-divider>
+      <v-divider class="my-0" v-show="!!options.yes || !!options.no || !!options.cancel" />
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn id="dialog-yes-button" color="primary" text v-show="!!options.yes"

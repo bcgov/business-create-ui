@@ -9,8 +9,8 @@ const mockEntityInfo = [
   },
   {
     entityType: 'BEN',
-    description: 'This company is a benefit company and, as such, has purposes that include conducting its business ' +
-      'in a responsible and sustainable manner and promoting one or more public benefits.'
+    description: 'This company is a benefit company and, as such, has purposes that include conducting its ' +
+      'business in a responsible and sustainable manner and promoting one or more public benefits.'
   },
   {
     entityType: 'BC',
@@ -23,9 +23,9 @@ const mockEntityInfo = [
   },
   {
     entityType: 'CC',
-    description: 'This company is a community contribution company, and, as such, has purposes beneficial to society. ' +
-      'This company is restricted, in accordance with Part 2.2 of the BCA, in its ability to pay dividends and to ' +
-      'distribute its assets on dissolution or otherwise.'
+    description: 'This company is a community contribution company, and, as such, has purposes beneficial to ' +
+      'society. This company is restricted, in accordance with Part 2.2 of the BCA, in its ability to pay ' +
+      'dividends and to distribute its assets on dissolution or otherwise.'
   }
 ]
 
@@ -51,7 +51,7 @@ for (const mock of mockEntityInfo) {
 
     it(`renders the component properly for a ${mock.entityType}`, () => {
       // verify page content
-      expect(wrapper.find('h2').text()).toContain('Company Name')
+      expect(wrapper.find('h2').text()).toContain('Name')
     })
 
     // eslint-disable-next-line max-len
@@ -93,7 +93,7 @@ for (const mock of mockEntityInfo) {
 
     it(`renders the component properly for a ${mock.entityType}`, () => {
       // verify page content
-      expect(wrapper.find('h2').text()).toContain('Company Name')
+      expect(wrapper.find('h2').text()).toContain('Name')
     })
 
     it('doesn\'t display folio number when it is not a premium account', () => {

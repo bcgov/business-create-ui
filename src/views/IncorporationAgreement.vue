@@ -86,9 +86,10 @@
         <span v-if="!helpToggle">Help with Incorporation Agreement and Articles</span>
         <span v-else>Hide Help</span>
       </span>
+
       <section v-show="helpToggle" class="incorporation-agreement-help">
         <div
-          v-for="(item, index) in getIncorporationAgreementHelp"
+          v-for="(item, index) in getIncorporationAgreementResource.helpSection"
           :id="`agreement-help-${index}`"
           class="help-section"
           :key="index"
@@ -132,14 +133,16 @@
         <u class="help-btn" @click="helpToggle = !helpToggle"><small>Hide Help</small></u>
       </section>
     </section>
+
     <template v-if="isTypeCC">
       <section class="mt-10">
         <header>
           <h2>2. Confirm Incorporation Agreement and Article Completion</h2>
         </header>
-        <AgreementType />
+        <AgreementType :showErrorSummary="!getIncorporationAgreementStep.valid" />
       </section>
     </template>
+
     <template v-else>
       <section class="mt-10">
         <header>
@@ -196,7 +199,7 @@
         <header>
           <h2>3. Confirm Incorporation Agreement and Article Completion</h2>
         </header>
-        <AgreementType />
+        <AgreementType :showErrorSummary="!getIncorporationAgreementStep.valid" />
       </section>
     </template>
   </div>
@@ -209,7 +212,7 @@ import { Getter } from 'vuex-class'
 // Components
 import { AgreementType } from '@/components/IncorporationAgreement'
 // Interfaces and enums
-import { HelpSectionIF } from '@/interfaces'
+import { IncorporationAgreementIF } from '@/interfaces'
 import { CorpTypeCd } from '@/enums'
 // Mixins
 import { EnumMixin } from '@/mixins'
@@ -223,7 +226,8 @@ export default class IncorporationAgreement extends Mixins(EnumMixin) {
   @Getter isTypeBcomp!: boolean
   @Getter isTypeCC!: boolean
   @Getter getEntityType!: CorpTypeCd
-  @Getter getIncorporationAgreementHelp!: Array<HelpSectionIF>
+  @Getter getIncorporationAgreementStep!: IncorporationAgreementIF
+  @Getter getIncorporationAgreementResource!: any
   @Getter getSampleArticle!: string
 
   // Local properties
@@ -251,7 +255,7 @@ ul {
 }
 
 li {
-  padding-top:0.25rem
+  padding-top: 0.25rem;
 }
 
 .articles-statements{
@@ -260,7 +264,7 @@ li {
 
 .articles-statements-footer {
   margin-left: 1.8rem;
-  margin-top: 1.2rem
+  margin-top: 1.2rem;
 }
 
 p{
@@ -275,7 +279,7 @@ a {
 .help-btn {
   cursor: pointer;
   color: $primary-blue;
-  vertical-align:middle;
+  vertical-align: middle;
 }
 
 .read-more-btn {
@@ -331,7 +335,7 @@ a {
 
 .share-structure-check-text {
   font-size: 0.875rem;
-  padding-left: 0.2rem
+  padding-left: 0.2rem;
 }
 
 .share-structure-check-header {
@@ -351,11 +355,10 @@ a {
 }
 
 .read-more-line {
-  padding-top: 0.5rem
+  padding-top: 0.5rem;
 }
 
 .help-section{
   padding-top: 1rem;
 }
-
 </style>

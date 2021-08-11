@@ -5,8 +5,8 @@
     <div id="upload-rules-summary" v-if="isSummary">
       <!-- Summary Header -->
       <div class="upload-rules-summary-header" >
-        <v-icon color="dkBlue">mdi-format-list-text</v-icon>
-        <label class="upload-rules-title font-weight-bold">Rules</label>
+        <v-icon color="appDkBlue">mdi-format-list-text</v-icon>
+        <label class="upload-rules-title pl-2"><strong>Rules</strong></label>
       </div>
 
       <!-- Summary error message -->
@@ -60,7 +60,7 @@ export default class UploadRules extends Vue {
   padding: 1.25rem;
 
   .upload-rules-title {
-    padding-left: 0.5rem;
+    color: $gray9;
   }
 }
 

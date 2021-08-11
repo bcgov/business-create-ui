@@ -117,7 +117,7 @@ import { ActionBindingIF, DateTimeIF, FormType } from '@/interfaces'
 export default class IncorporationDateTime extends Mixins(DateMixin) {
   // Refs
   $refs!: {
-    dateTimeForm: FormType,
+    dateTimeForm: FormType
   }
 
   @Prop()

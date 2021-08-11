@@ -1,10 +1,9 @@
 <template>
-  <v-card flat id="share-structure">
-
+  <v-card flat id="share-structure" class="rounded-0">
     <!-- Summary Header -->
     <div class="share-summary-header" v-if="isSummary">
-      <v-icon color="dkBlue">mdi-sitemap</v-icon>
-      <label class="share-summary-header-title"><strong> Share Structure</strong></label>
+      <v-icon color="appDkBlue">mdi-sitemap</v-icon>
+      <label class="share-summary-header-title pl-2"><strong>Share Structure</strong></label>
     </div>
 
     <section :class="{ 'invalid-section': showErrorSummary }">
@@ -314,7 +313,7 @@ export default class ListShareClass extends Vue {
   padding: 1.25rem;
 
   .share-summary-header-title {
-    padding-left: .5rem;
+    color: $gray9;
   }
 }
 

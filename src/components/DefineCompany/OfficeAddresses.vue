@@ -5,7 +5,7 @@
       <v-layout row id="summary-registered-address">
         <v-flex md4><label><strong>Registered Office</strong></label></v-flex>
         <v-flex md4>
-          <label><strong>Mailing Address</strong></label>
+          <label class="mailing-address-header"><strong>Mailing Address</strong></label>
           <mailing-address
             v-if="!isEmptyAddress(mailingAddress)"
             :address="mailingAddress"
@@ -14,7 +14,7 @@
         </v-flex>
 
         <v-flex md4>
-          <label><strong>Delivery Address</strong></label>
+          <label class="delivery-address-header"><strong>Delivery Address</strong></label>
           <delivery-address
             v-if="!isEmptyAddress(deliveryAddress) && !inheritMailingAddress"
             :address="deliveryAddress"
@@ -27,7 +27,7 @@
       <v-layout row id="summary-records-address" v-if="!entityFilter(CorpTypeCd.COOP)" class="mt-4">
         <v-flex md4><label><strong>Records Office</strong></label></v-flex>
         <v-flex md4>
-          <label><strong>Mailing Address</strong></label>
+          <label class="mailing-address-header"><strong>Mailing Address</strong></label>
           <mailing-address
             v-if="!inheritRegisteredAddress && !isEmptyAddress(recMailingAddress)"
             :address="recMailingAddress"
@@ -37,7 +37,7 @@
         </v-flex>
 
         <v-flex md4>
-          <label><strong>Delivery Address</strong></label>
+          <label class="delivery-address-header"><strong>Delivery Address</strong></label>
           <delivery-address
             v-if="!inheritRecMailingAddress && !inheritRegisteredAddress && !isEmptyAddress(recDeliveryAddress)"
             :address="recDeliveryAddress"
@@ -58,7 +58,7 @@
         </div>
 
         <!-- Registered Mailing Address -->
-        <li class="address-list-container">
+        <li class="address-list-container pa-4">
           <div class="meta-container">
             <label>Mailing Address</label>
             <div class="meta-container__inner">
@@ -76,7 +76,7 @@
         </li>
 
         <!-- Registered Delivery Address -->
-        <li class="address-list-container">
+        <li class="address-list-container pa-4">
           <div class="meta-container">
             <label>Delivery Address</label>
             <div class="meta-container__inner">
@@ -117,7 +117,7 @@
 
           <template v-if="!inheritRegisteredAddress">
             <!-- Records Mailing Address -->
-            <li class="address-list-container">
+            <li class="address-list-container pa-4">
               <div class="meta-container">
                 <label>Mailing Address</label>
                 <div class="meta-container__inner">
@@ -135,7 +135,7 @@
             </li>
 
             <!-- Records Delivery Address -->
-            <li class="address-list-container">
+            <li class="address-list-container pa-4">
               <div class="meta-container">
                 <label>Delivery Address</label>
                 <div class="meta-container__inner">
@@ -197,11 +197,12 @@ import { CommonMixin, EntityFilterMixin } from '@/mixins'
 export default class OfficeAddresses extends Mixins(CommonMixin, EntityFilterMixin) {
   // Refs for sbc common base address components so we can access form validation
   $refs!: {
-    regMailingAddress: any,
-    regDeliveryAddress: any,
-    recMailingAddress: any,
+    regMailingAddress: any
+    regDeliveryAddress: any
+    recMailingAddress: any
     recDeliveryAddress: any
   }
+
   /**
    * Addresses object from the parent page.
    * If this is null then this is a new filing; otherwise these are the addresses from a draft/navigation
@@ -494,9 +495,7 @@ export default class OfficeAddresses extends Mixins(CommonMixin, EntityFilterMix
 </script>
 
 <style lang="scss" scoped>
-.address-list-container {
-  padding: 1rem;
-}
+@import '@/assets/styles/theme.scss';
 
 .meta-container {
   display: flex;
@@ -504,15 +503,15 @@ export default class OfficeAddresses extends Mixins(CommonMixin, EntityFilterMix
   position: relative;
 }
 
-.meta-container__inner {
-  margin-top: 1rem;
-}
-
 label:first-child {
   font-weight: 700;
   &__inner {
     flex: 1 1 auto;
   }
+}
+
+.meta-container__inner {
+  margin-top: 1rem;
 }
 
 @media (min-width: 768px) {
@@ -600,5 +599,14 @@ ul {
     font-weight: bold;
     line-height: 1.375rem;
   }
+}
+
+label {
+  color: $gray9;
+}
+
+.mailing-address-header,
+.delivery-address-header {
+  font-size: 0.875rem;
 }
 </style>

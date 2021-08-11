@@ -26,7 +26,7 @@
                   suffix="Shares"
                   persistent-hint/>
 
-                <v-divider class="separator" />
+                <v-divider class="mt-2 mb-4" />
 
                 <v-radio-group
                   v-model="hasNoMaximumShares"
@@ -51,7 +51,7 @@
                   <v-radio :value="true" label="No maximum" id="lbl-no-maximum" v-if="isNoMaxSharesVisible"/>
                 </v-radio-group>
 
-                <v-divider class="separator" />
+                <v-divider class="mt-2 mb-4" />
 
                 <v-radio-group
                   v-model="hasNoParValue"
@@ -116,7 +116,7 @@
                     <v-label id='lbl-no-par' v-else>No par value</v-label>
                 </div>
 
-                <v-divider class="separator" />
+                <v-divider class="mt-2 mb-4" />
 
                 <div class="form__row">
                   <v-checkbox
@@ -158,7 +158,7 @@ export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
   // Refs
   $refs!: {
     shareStructureForm: FormType
-  };
+  }
 
   @Prop() private readonly initialValue!: ShareClassIF
   @Prop() private readonly activeIndex: number
@@ -407,11 +407,6 @@ li {
       width: 10rem;
     }
   }
-}
-
-.separator {
-  margin-top: 0.5rem;
-  margin-bottom: 1rem;
 }
 
 .radio-group {

@@ -106,6 +106,14 @@ export const setAddPeopleAndRoleStepValidity = ({ commit }, valid: boolean) => {
   commit('mutateAddPeopleAndRoleStepValidity', valid)
 }
 
+export const setRules = ({ commit }, rules: any) => {
+  commit('mutateRules', rules)
+}
+
+export const setMemorandum = ({ commit }, memorandum: any) => {
+  commit('mutateMemorandum', memorandum)
+}
+
 export const setShareClasses = ({ commit }, shareClasses: ShareClassIF[]) => {
   commit('mutateShareClasses', shareClasses)
 }

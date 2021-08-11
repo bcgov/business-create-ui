@@ -1,9 +1,10 @@
 <template>
-  <v-card flat>
+  <v-card flat class="rounded-0">
     <div class="define-company-header">
-      <v-icon color="dkBlue">mdi-domain</v-icon>
-      <label class="define-company-title"><strong>Your {{ getCompanyDisplayName }}</strong></label>
+      <v-icon color="appDkBlue">mdi-domain</v-icon>
+      <label class="define-company-title pl-2"><strong>Your {{ getCompanyDisplayName }}</strong></label>
     </div>
+
     <section :class="{ 'invalid-section': !getDefineCompanyStep.valid }">
       <div v-if="!getDefineCompanyStep.valid" class="defineCompanyStepErrorMessage">
         <span>
@@ -16,6 +17,7 @@
           >Return to this step to finish it</router-link>
         </span>
       </div>
+
       <div class="section-container">
         <!-- FUTURE: Replace container content with Name Request Summary when it is ready -->
         <v-layout row>
@@ -40,11 +42,15 @@
           </v-flex>
         </v-layout>
       </div>
-      <v-divider/>
+
+      <v-divider />
+
       <div class="section-container">
         <OfficeAddresses :inputAddresses="getDefineCompanyStep.officeAddresses" :isEditing="false" />
       </div>
-      <v-divider/>
+
+      <v-divider />
+
       <div class="section-container">
         <BusinessContactInfo :initialValue="getDefineCompanyStep.businessContact" :isEditing="false" />
       </div>
@@ -112,16 +118,21 @@ export default class SummaryDefineCompany extends Mixins(EntityFilterMixin, Enum
   padding-top: 1.25rem;
   padding-bottom: 1.25rem;
   font-size: 0.875rem;
+  color: $gray7;
+
+  label {
+    color: $gray9;
+  }
 }
 
 .define-company-header {
   display: flex;
   background-color: $BCgovBlue5O;
   padding: 1.25rem;
-}
 
-.define-company-title {
- padding-left: 0.5rem;
+  .define-company-title {
+    color: $gray9;
+  }
 }
 
 .company-name {

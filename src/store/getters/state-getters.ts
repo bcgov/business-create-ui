@@ -130,6 +130,16 @@ export const getBusinessContact = (state: StateIF): BusinessContactIF => {
   return getDefineCompanyStep(state).businessContact
 }
 
+/** The Rules object. */
+export const getRules = (state: StateIF): any => {
+  return {} // *** FUTURE
+}
+
+/** The Memorandum object. */
+export const getMemorandum = (state: StateIF): any => {
+  return {} // *** FUTURE
+}
+
 /** The Add People and Role object. */
 export const getAddPeopleAndRoleStep = (state: StateIF): PeopleAndRoleIF => {
   return state.stateModel.addPeopleAndRoleStep
@@ -290,7 +300,7 @@ export const getValidateSteps = (state: StateIF): boolean => {
   return state.stateModel.validateSteps
 }
 
-/** Is true when the user should see the validation error in filing. */
+/** Is true when the user should see the validation errors. */
 export const getShowErrors = (state: StateIF): boolean => {
   return state.stateModel.showErrors
 }

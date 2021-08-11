@@ -2,7 +2,7 @@
   <div>
     <section class="mt-10">
       <header id="people-role-header">
-        <h2>1. Add People or Corporations/Firms to your Application</h2>
+        <h2>{{ getPeopleAndRolesResource.header }}</h2>
       </header>
       <PeopleAndRoles/>
     </section>
@@ -15,7 +15,7 @@ import { Component, Mixins, Vue, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 
 // Interfaces
-import { ActionBindingIF, PeopleAndRoleIF } from '@/interfaces'
+import { ActionBindingIF, PeopleAndRoleIF, PeopleAndRolesResourceIF } from '@/interfaces'
 
 // Mixins
 import { CommonMixin, EntityFilterMixin } from '@/mixins'
@@ -34,6 +34,7 @@ import { PeopleAndRoles } from '@/components/AddPeopleAndRoles'
 export default class AddPeopleAndRoles extends Mixins(CommonMixin, EntityFilterMixin) {
   @Getter getShowErrors!: boolean
   @Getter getAddPeopleAndRoleStep!: PeopleAndRoleIF
+  @Getter getPeopleAndRolesResource!: PeopleAndRolesResourceIF
 
   @Action setIgnoreChanges!: ActionBindingIF
 
@@ -90,9 +91,7 @@ export default class AddPeopleAndRoles extends Mixins(CommonMixin, EntityFilterM
   }
 }
 
-header {
-  p {
-    padding-top:0.5rem
-  }
+header p {
+  padding-top: 0.5rem;
 }
 </style>

@@ -343,45 +343,44 @@ export default class NameRequestInfo extends Mixins(DateMixin, EnumMixin) {
 </script>
 
 <style lang="scss" scoped>
-  @import '@/assets/styles/theme.scss';
+@import '@/assets/styles/theme.scss';
 
-  p {
+p {
+  font-size: 0.875rem;
+}
+
+.row .col:first-child {
+  width: 12rem;
+  max-width: 12rem;
+}
+
+ul {
+  font-size: .875rem;
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+li.name-request-title, li.numbered-company-title {
+  font-size: 1.25rem;
+}
+
+ul.numbered-company-list-items {
+  .bullet-point::before {
+    content: "\2022";
+    display: inline-block;
+    width: 1.5em;
+    margin-left: -1.5em;
+  }
+}
+
+#name-translation-info {
+  display: flex;
+  align-items: baseline;
+
+  .translation-checkbox-label {
     font-size: 0.875rem;
+    color: $gray9;
   }
-
-  .row .col:first-child {
-    width: 12rem;
-    max-width: 12rem;
-  }
-
-  ul {
-    font-size: .875rem;
-    margin: 0;
-    padding: 0;
-    list-style-type: none;
-  }
-
-  li.name-request-title, li.numbered-company-title {
-    font-size: 1.25rem;
-  }
-
-  ul.numbered-company-list-items {
-
-    .bullet-point::before {
-      content: "\2022";
-      display: inline-block;
-      width: 1.5em;
-      margin-left: -1.5em;
-    }
-  }
-
-  #name-translation-info {
-    display: flex;
-    align-items: baseline;
-
-    .translation-checkbox-label {
-      font-size: 0.875rem;
-      color: $gray9;
-    }
 }
 </style>

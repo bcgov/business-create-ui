@@ -9,7 +9,7 @@
 
     <section class="mt-10">
       <header>
-        <h2>1. Company Name</h2>
+        <h2>1. Name</h2>
       </header>
       <div :class="{ 'invalid-section': getShowErrors && !hasValidNameTranslation }">
         <v-card flat class="step-container">

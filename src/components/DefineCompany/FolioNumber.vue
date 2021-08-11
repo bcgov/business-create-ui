@@ -11,7 +11,7 @@
     </v-layout>
     <v-row v-else id='folio-number-editing'>
       <v-col>
-        <label>Folio Number</label>
+        <label><strong>Folio Number</strong></label>
       </v-col>
       <v-col cols="12" sm="8" md="10">
         <v-form>
@@ -78,12 +78,14 @@ export default class FolioNumber extends Vue {
 </script>
 
 <style lang="scss" scoped>
+@import '@/assets/styles/theme.scss';
+
 .row .col:first-child {
   width: 12rem;
   max-width: 12rem;
 }
 
 label {
-  font-weight: 700;
+  color: $gray9;
 }
 </style>

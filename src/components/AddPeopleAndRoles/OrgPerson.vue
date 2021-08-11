@@ -7,15 +7,29 @@
         <li class="add-person-container">
           <div class="meta-container">
 
+            <!-- *** TODO: split into 2 columns -->
             <label class="add-person-header" v-if="isOrg && entityFilter(CorpTypeCd.BENEFIT_COMPANY)">
-              <span v-if="activeIndex===-1">Add Corporation or Firm</span>
+              <span v-if="activeIndex === -1">Add Corporation or Firm</span>
               <span v-else>Edit Corporation or Firm</span>
             </label>
 
             <label class="add-person-header" v-if="isOrg && entityFilter(CorpTypeCd.COOP)">
-              <span v-if="activeIndex===-1">Add Organization</span>
+              <span v-if="activeIndex === -1">Add Organization</span>
               <span v-else>Edit Organization</span>
             </label>
+
+            <!-- *** TODO: implement message box -->
+            <!-- <div class="message-box" v-if="isCompletingParty">
+              <p>
+                <strong>Important:</strong> The Completing Party information below is based on your
+                BC Registries account information. Your name cannot be changed here. Name changes must
+                be made through your account settings.
+              </p>
+              <p>
+                If you make changes to your address below, please update your address in the account
+                settings after you have completed thisfiling to ensure your information is up to date.
+              </p>
+            </div> -->
 
             <div class="meta-container__inner">
               <v-form
@@ -27,6 +41,7 @@
                 <!-- Person/Org's Name -->
                 <label class="sub-header" v-if="isPerson">Person's Name</label>
                 <label class="sub-header" v-if="isOrg">Corporation or Firm Name</label>
+
                 <div class="form__row three-column" v-if="isPerson">
                   <v-text-field
                     filled
@@ -35,6 +50,7 @@
                     id="person__first-name"
                     v-model="orgPerson.officer.firstName"
                     :rules="firstNameRules"
+                    :readonly="isCompletingParty"
                   />
                   <v-text-field
                     filled
@@ -43,6 +59,7 @@
                     id="person__middle-name"
                     v-model="orgPerson.officer.middleName"
                     :rules="middleNameRules"
+                    :readonly="isCompletingParty"
                   />
                   <v-text-field
                     filled
@@ -51,6 +68,7 @@
                     id="person__last-name"
                     v-model="orgPerson.officer.lastName"
                     :rules="lastNameRules"
+                    :readonly="isCompletingParty"
                   />
                 </div>
                 <div v-if="isOrg" class="org-name-container">
@@ -80,13 +98,12 @@
                       />
                     </div>
                   </v-col>
-                  <v-col cols="4">
-                    <div :class="{ 'highlightedRole': isRoleLocked(RoleTypes.INCORPORATOR) || isOrg }"
-                    >
+                  <v-col cols="4" v-if="addIncorporator">
+                    <div :class="{ 'highlightedRole': isRoleLocked(RoleTypes.INCORPORATOR) || isOrg }">
                       <v-checkbox
                         v-model="selectedRoles"
                         :value="RoleTypes.INCORPORATOR"
-                        :label="incorporatorLabel"
+                        :label="RoleTypes.INCORPORATOR"
                         :disabled="isRoleLocked(RoleTypes.INCORPORATOR) || isOrg"
                         :rules="roleRules"
                       />
@@ -188,15 +205,16 @@ import { Getter } from 'vuex-class'
 export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
    // Refs
    $refs!: {
-    addPersonOrgForm: FormType,
-    mailingAddressNew: BaseAddressType,
-    deliveryAddressNew: BaseAddressType,
+    addPersonOrgForm: FormType
+    mailingAddressNew: BaseAddressType
+    deliveryAddressNew: BaseAddressType
     reassignCPDialog: ConfirmDialogType
   }
 
   @Prop() private readonly initialValue!: OrgPersonIF
   @Prop() private readonly activeIndex: number
   @Prop() private readonly existingCompletingParty: OrgPersonIF
+  @Prop() private readonly addIncorporator: boolean
 
   @Getter getCurrentDate!: string
 
@@ -433,16 +451,12 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
 
   /** True if current data object is a person. */
   private get isPerson (): boolean {
-    return this.orgPerson.officer?.partyType === IncorporatorTypes.PERSON
+    return (this.orgPerson.officer?.partyType === IncorporatorTypes.PERSON)
   }
 
   /** True if current data object is an organization (corporation/firm). */
   private get isOrg (): boolean {
-    return this.orgPerson.officer?.partyType === IncorporatorTypes.CORPORATION
-  }
-
-  private get incorporatorLabel (): string {
-    return this.entityFilter(CorpTypeCd.COOP) ? RoleTypes.SUBSCRIBER : RoleTypes.INCORPORATOR
+    return (this.orgPerson.officer?.partyType === IncorporatorTypes.CORPORATION)
   }
 
   // Event emitters

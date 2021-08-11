@@ -36,9 +36,7 @@
         complex share structure, you should seek professional advice or purchase an incorporation guide for detailed
         information and infrastructure on establishing an authorized share structure.
       </p>
-      <p>Refer to this
-       <a :href="helpLink">link</a>
-       to obtain more information on incorporating a company</p>
+      <p>Refer to this <a :href="helpLink">link</a> to obtain more information on incorporating a company.</p>
       <u class="help-btn" @click="helpToggle = !helpToggle"><small>Hide Help</small></u>
     </section>
 
@@ -319,18 +317,18 @@ export default class CreateShareStructure extends Mixins(CommonMixin) {
 
 .add-share-structure-container {
   margin-top: 1rem;
-  margin-bottom:1rem;
+  margin-bottom: 1rem;
 }
 
 ul {
   padding-top: 0.5rem;
   list-style: none;
   margin-left: 0;
-  padding-left: 1rem
+  padding-left: 1rem;
 }
 
 li {
-  padding-top:0.25rem
+  padding-top: 0.25rem;
 }
 
 p{
@@ -344,7 +342,7 @@ p{
 .help-btn {
   cursor: pointer;
   color: $primary-blue;
-  vertical-align:middle;
+  vertical-align: middle;
 }
 
 .share-structure-help {

@@ -1,6 +1,5 @@
 <template>
-  <v-card flat id="people-roles">
-
+  <v-card flat id="people-roles" class="rounded-0">
     <ConfirmRemoveDialog
       :dialog="dialog"
       attach="#people-roles"
@@ -10,8 +9,8 @@
 
     <!-- Summary Header -->
     <div class="people-roles-summary-header" v-if="isSummary">
-      <v-icon color="dkBlue">mdi-account-multiple-plus</v-icon>
-      <label class="people-roles-title"><strong>People and Roles</strong></label>
+      <v-icon color="appDkBlue">mdi-account-multiple-plus</v-icon>
+      <label class="people-roles-title pl-2"><strong>People and Roles</strong></label>
     </div>
 
     <div :class="{ 'invalid-section': showErrorSummary }">
@@ -32,7 +31,7 @@
       <!-- List Display Section -->
       <div id="people-roles-list">
         <!-- List Headers -->
-        <v-row class="people-roles-header list-item__subtitle" no-gutters>
+        <v-row class="people-roles-header" no-gutters>
           <v-col v-for="(title, index) in tableHeaders" :key="index">
             <span>{{ title }}</span>
           </v-col>
@@ -43,30 +42,32 @@
         <!-- List Content -->
         <v-row
           class="people-roles-content"
-          :class="{ 'list-item__subtitle': !isSummary }"
-          v-for="(officer, index) in personList"
+          v-for="(orgPerson, index) in personList"
           :key="index"
-          no-gutters>
+          no-gutters
+        >
           <v-col class="text-truncate">
-            <v-tooltip top :disabled="formatName(officer).length < 25" color="primary">
+            <v-icon color="gray9" v-if="isPerson(orgPerson)">mdi-account</v-icon>
+            <v-icon color="gray9" v-if="isOrg(orgPerson)">mdi-domain</v-icon>
+            <v-tooltip top :disabled="formatName(orgPerson).length < 25" color="primary">
               <template v-slot:activator="{ on }">
-                <span v-on="on" class="people-roles-title"><strong>{{ formatName(officer) }}</strong></span>
+                <span v-on="on" class="people-roles-title ml-2"><strong>{{ formatName(orgPerson) }}</strong></span>
               </template>
-              <span>{{ formatName(officer) }}</span>
+              <span>{{ formatName(orgPerson) }}</span>
             </v-tooltip>
           </v-col>
           <v-col>
-            <base-address class="peoples-roles-mailing-address" :address="officer.mailingAddress" />
+            <base-address class="peoples-roles-mailing-address" :address="orgPerson.mailingAddress" />
           </v-col>
           <v-col>
-            <p v-if="isSame(officer.mailingAddress, officer.deliveryAddress)"
+            <p v-if="isSame(orgPerson.mailingAddress, orgPerson.deliveryAddress)"
               class="peoples-roles-delivery-address">Same as Mailing Address
             </p>
-            <base-address v-else class="peoples-roles-delivery-address" :address="officer.deliveryAddress"/>
+            <base-address v-else class="peoples-roles-delivery-address" :address="orgPerson.deliveryAddress"/>
           </v-col>
           <v-col>
-            <div v-if="officer.roles.length>0">
-              <v-col v-for="(role, index) in officer.roles" :key="index" class="col-roles">
+            <div v-if="orgPerson.roles.length > 0">
+              <v-col v-for="(role, index) in orgPerson.roles" :key="index" class="col-roles">
                 <span>{{ role.roleType }}</span>
               </v-col>
             </div>
@@ -127,8 +128,7 @@ import { CommonMixin, EntityFilterMixin } from '@/mixins'
 
 // Interfaces & enums
 import { OrgPersonIF } from '@/interfaces'
-import { RouteNames } from '@/enums'
-import { Getter } from 'vuex-class'
+import { IncorporatorTypes, RouteNames } from '@/enums'
 
 @Component({
   components: {
@@ -153,6 +153,16 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin, EntityFilter
   private readonly tableHeaders: Array<string> = ['Name', 'Mailing Address', 'Delivery Address', 'Roles']
   private dialog: boolean = false
   private personId: number
+
+  /** Returns true officer is a person. */
+  private isPerson (orgPerson: any): boolean {
+    return (orgPerson.officer?.partyType === IncorporatorTypes.PERSON)
+  }
+
+  /** Returns true if officer is an organization (corporation/firm). */
+  private isOrg (orgPerson: any): boolean {
+    return (orgPerson.officer?.partyType === IncorporatorTypes.CORPORATION)
+  }
 
   /**
    * Determine if Corporation/Firm or Person.
@@ -202,10 +212,6 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin, EntityFilter
   display: flex;
   background-color: $BCgovBlue5O;
   padding: 1.25rem;
-
-  .people-roles-title {
-    padding-left: 0.5rem;
-  }
 }
 
 .people-roles-invalid-message {
@@ -216,6 +222,12 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin, EntityFilter
 .people-roles-header {
   padding: 1.5rem 1.25rem 0.5rem 1.25rem;
   font-size: 0.875rem;
+  color: $gray9;
+  font-weight: bold;
+}
+
+.people-roles-title {
+  color: $gray9;
 }
 
 .people-roles-content {
@@ -223,10 +235,7 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin, EntityFilter
   padding: 0.5rem 1.25rem 0.5rem 1.25rem;
   border-top: 1px solid $gray1;
   font-size: 0.875rem;
-
-  .people-roles-title {
-    color: $gray7;
-  }
+  color: $gray7;
 
   .actions {
     position: absolute;
@@ -266,7 +275,11 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin, EntityFilter
   color: $BCgovGold9;
 }
 
-.v-icon.mdi-information-outline {
-  margin-top: -2px;
+.v-icon {
+  &.mdi-information-outline,
+  &.mdi-account,
+  &.mdi-domain {
+    margin-top: -2px;
+  }
 }
 </style>

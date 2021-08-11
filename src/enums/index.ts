@@ -9,6 +9,7 @@ export * from './nameRequestStates'
 export * from './nameRequestTypes'
 export * from './numWord'
 export * from './routeNames'
+export * from './rules'
 export * from './viewComponentNames'
 
 // external enums

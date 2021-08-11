@@ -1,0 +1,8 @@
+/** Unique values to identify rules. */
+export enum Rules {
+  NUM_COMPLETING_PARTY = 0,
+  NUM_DIRECTORS = 1,
+  NUM_INCORPORATORS = 2,
+  DIRECTOR_COUNTRY = 3,
+  DIRECTOR_PROVINCE = 4
+}

@@ -1,5 +1,5 @@
 import { ResourceIF } from '@/interfaces'
-import { CorpTypeCd, FilingCodes, NameRequestTypes } from '@/enums'
+import { CorpTypeCd, FilingCodes, NameRequestTypes, Rules } from '@/enums'
 import { BaseStepsTemplate } from './stepTemplates'
 import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 
@@ -7,18 +7,40 @@ export const CommunityContributionCompanyResource: ResourceIF = {
   entityType: CorpTypeCd.BC_CCC,
   displayName: GetCorpFullDescription(CorpTypeCd.BC_CCC),
   title: 'Community Contribution Company Statement',
-  description: 'This company is a community contribution company, and, as such, has purposes beneficial to society. ' +
-    'This company is restricted, in accordance with Part 2.2 of the BCA, in its ability to pay dividends and to ' +
-    'distribute its assets on dissolution or otherwise.',
+  description: 'This company is a community contribution company, and, as such, has purposes beneficial to ' +
+    'society. This company is restricted, in accordance with Part 2.2 of the BCA, in its ability to pay ' +
+    'dividends and to distribute its assets on dissolution or otherwise.',
   statement: null,
   nameRequestType: NameRequestTypes.CC,
   steps: BaseStepsTemplate,
   filingData: {
-    filingTypeCode: FilingCodes.INCORPORATION_BC, // TBD
-    entityType: CorpTypeCd.BC_CCC
+    entityType: CorpTypeCd.BC_CCC,
+    filingTypeCode: FilingCodes.INCORPORATION_CC
   },
-  directors: {
-    countMinimum: 3
+  peopleAndRoles: {
+    header: '1. Add People or Corporations/Firms to your Application',
+    blurb: `Add the people and Corporations/firms who will have a role in your company. People
+      can have multiple roles; Corporations/firms can only be Incorporators.`,
+    helpSection: null,
+    addIncorporator: true,
+    addOrganization: true,
+    rules: [
+      {
+        rule: Rules.NUM_COMPLETING_PARTY,
+        text: 'The Completing Party',
+        test: (num) => { return (num === 1) }
+      },
+      {
+        rule: Rules.NUM_INCORPORATORS,
+        text: 'At least one Incorporator',
+        test: (num) => { return (num >= 1) }
+      },
+      {
+        rule: Rules.NUM_DIRECTORS,
+        text: 'At least three Directors',
+        test: (num) => { return (num >= 3) }
+      }
+    ]
   },
   shareClasses: {
     countMinimum: 1
