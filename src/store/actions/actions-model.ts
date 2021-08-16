@@ -1,6 +1,6 @@
 import { ActionIF } from '@/interfaces/store-interfaces/action-interface'
 import {
-  AccountInformationIF, BusinessContactIF, CertifyIF, IncorporationAddressIF,
+  AccountInformationIF, AddressIF, BusinessContactIF, CertifyIF, IncorporationAddressIF,
   IncorporationAgreementIF, NameRequestIF, NameTranslationIF, OrgPersonIF, ResourceIF,
   ShareClassIF
 } from '@/interfaces'
@@ -44,6 +44,18 @@ export const setAuthRoles: ActionIF = ({ commit }, authRoles: Array<string>): vo
 
 export const setUserEmail: ActionIF = ({ commit }, userEmail: string): void => {
   commit('mutateUserEmail', userEmail)
+}
+
+export const setUserFirstName: ActionIF = ({ commit }, userFirstName: string): void => {
+  commit('mutateUserFirstName', userFirstName)
+}
+
+export const setUserLastName: ActionIF = ({ commit }, userLastName: string): void => {
+  commit('mutateUserLastName', userLastName)
+}
+
+export const setUserAddress: ActionIF = ({ commit }, userAddress: AddressIF): void => {
+  commit('mutateUserAddress', userAddress)
 }
 
 export const setCurrentDate: ActionIF = ({ commit }, currentDate: string): void => {

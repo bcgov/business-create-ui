@@ -71,7 +71,7 @@
         outlined
         color="primary"
         :disabled="showOrgPersonForm"
-        @click="addOrgPerson([{ roleType: RoleTypes.COMPLETING_PARTY }], IncorporatorTypes.PERSON)"
+        @click="addOrgPerson(RoleTypes.COMPLETING_PARTY, IncorporatorTypes.PERSON)"
       >
         <v-icon>mdi-account-plus-outline</v-icon>
         <span>Start by Adding the Completing Party</span>
@@ -84,7 +84,7 @@
         outlined
         color="primary"
         :disabled="showOrgPersonForm"
-        @click="addOrgPerson([], IncorporatorTypes.PERSON)"
+        @click="addOrgPerson(null, IncorporatorTypes.PERSON)"
       >
         <v-icon>mdi-account-plus</v-icon>
         <span>Add a Person</span>
@@ -96,7 +96,7 @@
         class="spacedButton"
         :disabled="showOrgPersonForm"
         v-if="getPeopleAndRolesResource.addOrganization"
-        @click="addOrgPerson([{ roleType: RoleTypes.INCORPORATOR }], IncorporatorTypes.CORPORATION)"
+        @click="addOrgPerson(RoleTypes.INCORPORATOR, IncorporatorTypes.CORPORATION)"
       >
         <v-icon>mdi-domain-plus</v-icon>
         <span v-if="entityFilter(CorpTypeCd.COOP)">Add Organization</span>
@@ -109,7 +109,7 @@
         color="primary"
         class="spacedButton"
         :disabled="showOrgPersonForm"
-        @click="addOrgPerson([{ roleType: RoleTypes.COMPLETING_PARTY }], IncorporatorTypes.PERSON)"
+        @click="addOrgPerson(RoleTypes.COMPLETING_PARTY, IncorporatorTypes.PERSON)"
       >
         <v-icon>mdi-account-plus-outline</v-icon>
         <span>Add the Completing Party</span>
@@ -148,8 +148,8 @@ import { Component, Mixins } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 
 // Interfaces
-import { ActionBindingIF, OrgPersonIF, PeopleAndRoleIF, PeopleAndRolesResourceIF,
-  RolesIF, TombstoneIF } from '@/interfaces'
+import { ActionBindingIF, AddressIF, EmptyAddress, EmptyOrgPerson, OrgPersonIF, PeopleAndRoleIF,
+  PeopleAndRolesResourceIF, TombstoneIF } from '@/interfaces'
 
 // Mixins
 import { EntityFilterMixin } from '@/mixins'
@@ -172,31 +172,12 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
   @Getter getAddPeopleAndRoleStep!: PeopleAndRoleIF
   @Getter getShowErrors!: boolean
   @Getter getPeopleAndRolesResource!: PeopleAndRolesResourceIF
+  @Getter getUserFirstName!: string
+  @Getter getUserLastName!: string
+  @Getter getUserAddress!: AddressIF
 
   @Action setOrgPersonList!: ActionBindingIF
   @Action setAddPeopleAndRoleStepValidity!: ActionBindingIF
-
-  private newOrgPerson: OrgPersonIF = {
-    officer: {
-      id: null as string,
-      firstName: '',
-      lastName: '',
-      middleName: '',
-      orgName: '',
-      partyType: null,
-      email: null
-    },
-    roles: [],
-    mailingAddress: {
-      streetAddress: '',
-      streetAddressAdditional: '',
-      addressCity: '',
-      addressRegion: '',
-      postalCode: '',
-      addressCountry: '',
-      deliveryInstructions: ''
-    }
-  }
 
   private helpToggle = false
   private showOrgPersonForm: boolean = false
@@ -295,10 +276,18 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
     this.setAddPeopleAndRoleStepValidity(this.hasValidRoles())
   }
 
-  private addOrgPerson (rolesToInitialize: RolesIF[], type: IncorporatorTypes): void {
-    this.currentOrgPerson = { ...this.newOrgPerson }
-    this.currentOrgPerson.roles = rolesToInitialize
-    this.currentOrgPerson.officer.partyType = type
+  private addOrgPerson (roleType: RoleTypes, partyType: IncorporatorTypes): void {
+    this.currentOrgPerson = { ...EmptyOrgPerson }
+    this.currentOrgPerson.roles = roleType ? [{ roleType }] : []
+    this.currentOrgPerson.officer.partyType = partyType
+
+    // pre-populate Completing Party's name and mailing address
+    if (roleType === RoleTypes.COMPLETING_PARTY && partyType === IncorporatorTypes.PERSON) {
+      this.currentOrgPerson.officer.firstName = this.getUserFirstName || ''
+      this.currentOrgPerson.officer.lastName = this.getUserLastName || ''
+      this.currentOrgPerson.mailingAddress = this.getUserAddress || { ...EmptyAddress }
+    }
+
     this.activeIndex = -1
     this.addEditInProgress = true
     this.showOrgPersonForm = true
@@ -429,13 +418,6 @@ p {
 
 .btn-panel {
   padding: 2rem 0 2rem 0;
-}
-
-.sub-header {
-  padding-bottom: 1.5rem;
-  font-size: 1rem;
-  font-weight: 700;
-  line-height: 1.5rem;
 }
 
 .spacedButton {

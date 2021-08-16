@@ -1,48 +1,57 @@
 <template>
-  <div id="addEditPersonContainer">
-    <confirm-dialog ref="reassignCPDialog" attach="#addEditPersonContainer" />
+  <div id="add-edit-org-person">
+
+    <confirm-dialog
+      ref="reassignCPDialog"
+      attach="add-edit-org-person"
+    />
 
     <v-expand-transition>
       <ul class="list add-person">
-        <li class="add-person-container">
+        <li class="add-person-container px-8 py-12">
           <div class="meta-container">
 
-            <!-- *** TODO: split into 2 columns -->
-            <label class="add-person-header" v-if="isOrg && entityFilter(CorpTypeCd.BENEFIT_COMPANY)">
+            <label class="add-org-header" v-if="isOrg && entityFilter(CorpTypeCd.BENEFIT_COMPANY)">
               <span v-if="activeIndex === -1">Add Corporation or Firm</span>
               <span v-else>Edit Corporation or Firm</span>
             </label>
 
-            <label class="add-person-header" v-if="isOrg && entityFilter(CorpTypeCd.COOP)">
+            <label class="add-org-header" v-if="isOrg && entityFilter(CorpTypeCd.COOP)">
               <span v-if="activeIndex === -1">Add Organization</span>
               <span v-else>Edit Organization</span>
             </label>
 
-            <!-- *** TODO: implement message box -->
-            <!-- <div class="message-box" v-if="isCompletingParty">
-              <p>
-                <strong>Important:</strong> The Completing Party information below is based on your
-                BC Registries account information. Your name cannot be changed here. Name changes must
-                be made through your account settings.
-              </p>
-              <p>
-                If you make changes to your address below, please update your address in the account
-                settings after you have completed thisfiling to ensure your information is up to date.
-              </p>
-            </div> -->
+            <label class="add-org-header" v-if="isPerson">
+              <span v-if="activeIndex === -1">Add Person</span>
+              <span v-else>Edit Person</span>
+            </label>
 
             <div class="meta-container__inner">
+              <v-card outlined class="message-box" v-if="isCompletingParty && !isRoleStaff">
+                <p>
+                  <strong>Important:</strong> The Completing Party information below is based on your
+                  BC Registries account information. Your name cannot be changed here. Name changes must
+                  be made through your account settings.
+                </p>
+                <p>
+                  If you make changes to your address below, please update your address in the account
+                  settings after you have completed thisfiling to ensure your information is up to date.
+                </p>
+              </v-card>
+
               <v-form
                 ref="addPersonOrgForm"
                 class="appoint-form"
+                :class="{ 'mt-8': isCompletingParty }"
                 v-model="addPersonOrgFormValid"
                 v-on:submit.prevent
               >
                 <!-- Person/Org's Name -->
-                <label class="sub-header" v-if="isPerson">Person's Name</label>
-                <label class="sub-header" v-if="isOrg">Corporation or Firm Name</label>
+                <div class="font-weight-bold" v-if="isPerson">Person's Name</div>
+                <div class="font-weight-bold" v-if="isOrg">Corporation or Firm Name</div>
 
-                <div class="form__row three-column" v-if="isPerson">
+                <div v-if="isPerson" class="form__row three-column mt-4">
+                  <!-- NB: only staff can change Completing Party names -->
                   <v-text-field
                     filled
                     class="item"
@@ -50,7 +59,7 @@
                     id="person__first-name"
                     v-model="orgPerson.officer.firstName"
                     :rules="firstNameRules"
-                    :readonly="isCompletingParty"
+                    :readonly="isCompletingParty && !isRoleStaff"
                   />
                   <v-text-field
                     filled
@@ -59,7 +68,7 @@
                     id="person__middle-name"
                     v-model="orgPerson.officer.middleName"
                     :rules="middleNameRules"
-                    :readonly="isCompletingParty"
+                    :readonly="isCompletingParty && !isRoleStaff"
                   />
                   <v-text-field
                     filled
@@ -68,10 +77,10 @@
                     id="person__last-name"
                     v-model="orgPerson.officer.lastName"
                     :rules="lastNameRules"
-                    :readonly="isCompletingParty"
+                    :readonly="isCompletingParty && !isRoleStaff"
                   />
                 </div>
-                <div v-if="isOrg" class="org-name-container">
+                <div v-if="isOrg" class="org-name-container mt-4">
                   <v-text-field
                     filled
                     class="item"
@@ -83,23 +92,24 @@
                 </div>
 
                 <!-- Roles -->
-                <label class="sub-header">Roles</label>
+                <div class="font-weight-bold mt-2">Roles</div>
                 <v-row>
                   <v-col cols="4" v-if="isPerson">
-                    <div :class="{ 'highlightedRole': isRoleLocked(RoleTypes.COMPLETING_PARTY) }">
+                    <div :class="{ 'highlighted-role': isRoleCompletingParty }">
+                      <!-- NB: only staff can change Completing Party role -->
                       <v-checkbox
                         id="cp-checkbox"
                         v-model="selectedRoles"
                         :value="RoleTypes.COMPLETING_PARTY"
                         :label="RoleTypes.COMPLETING_PARTY"
-                        :disabled="isRoleLocked(RoleTypes.COMPLETING_PARTY)"
-                        :rules="roleRules"
+                        :disabled="!isRoleStaff"
                         @change="assignCompletingPartyRole()"
                       />
                     </div>
                   </v-col>
+
                   <v-col cols="4" v-if="addIncorporator">
-                    <div :class="{ 'highlightedRole': isRoleLocked(RoleTypes.INCORPORATOR) || isOrg }">
+                    <div :class="{ 'highlighted-role': isRoleLocked(RoleTypes.INCORPORATOR) || isOrg }">
                       <v-checkbox
                         v-model="selectedRoles"
                         :value="RoleTypes.INCORPORATOR"
@@ -109,6 +119,7 @@
                       />
                     </div>
                   </v-col>
+
                   <v-col cols="4" v-if="isPerson">
                     <v-checkbox
                       v-model="selectedRoles"
@@ -120,7 +131,7 @@
                 </v-row>
 
                 <!-- Mailing Address -->
-                <label class="sub-header">Mailing Address</label>
+                <div class="font-weight-bold mt-4">Mailing Address</div>
                 <div class="address-wrapper">
                   <base-address
                     ref="mailingAddressNew"
@@ -140,7 +151,7 @@
                     v-model="inheritMailingAddress"
                   />
                   <div v-if="!inheritMailingAddress">
-                    <label class="sub-header">Delivery Address</label>
+                    <div class="font-weight-bold">Delivery Address</div>
                     <div class="address-wrapper">
                       <base-address
                         ref="deliveryAddressNew"
@@ -155,7 +166,7 @@
                 </div>
 
                 <!-- Action Buttons -->
-                <div class="form__row form__btns">
+                <div class="form__row form__btns mt-6">
                   <v-btn id="btn-remove" large outlined color="error"
                     :disabled="activeIndex === -1"
                     @click="emitRemovePersonEvent(activeIndex)">Remove</v-btn>
@@ -217,6 +228,7 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
   @Prop() private readonly addIncorporator: boolean
 
   @Getter getCurrentDate!: string
+  @Getter isRoleStaff!: boolean
 
   // Local properties
   private orgPerson: OrgPersonIF = null
@@ -421,8 +433,14 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
     }
   }
 
+  // *** FUTURE: fix or delete this (activeIndex is never -1 so this always returns false)
   private isRoleLocked (role: RoleTypes): boolean {
     return (this.orgPerson.roles.some(party => party.roleType === role) && this.activeIndex === -1)
+  }
+
+  /** True if current person has Completing Party role. */
+  private get isRoleCompletingParty (): boolean {
+    return this.orgPerson.roles.some(party => party.roleType === RoleTypes.COMPLETING_PARTY)
   }
 
   private reassignPersonErrorMessage (): string {
@@ -475,6 +493,8 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
 </script>
 
 <style lang="scss" scoped>
+@import '@/assets/styles/theme.scss';
+
 [class^="col"] {
   padding-top: 0;
   padding-bottom: 0;
@@ -529,18 +549,6 @@ li {
   flex: 1 1 auto;
 }
 
-.add-person {
-  .add-person-container {
-    padding: 1.25rem;
-
-    .meta-container {
-      > label:first-child {
-        margin-bottom: 1.5rem;
-      }
-    }
-  }
-}
-
 .meta-container {
   display: flex;
   flex-flow: column nowrap;
@@ -569,7 +577,7 @@ li {
   }
 }
 
-.add-person-header {
+.add-org-header {
   font-size: 1rem;
   font-weight: bold;
   line-height: 1.5rem;
@@ -582,19 +590,8 @@ li {
   padding-bottom: 0.5rem;
 }
 
-.sub-header {
-  padding-bottom: 1.5rem;
-  font-size: 1rem;
-  font-weight: 700;
-  line-height: 1.5rem;
-}
-
 .address-wrapper {
   margin-top: 1.5rem;
-}
-
-.org-name-container {
-  padding-top: 1rem;
 }
 
 @media (min-width: 768px) {
@@ -609,7 +606,7 @@ li {
   }
 }
 
-.highlightedRole {
+.highlighted-role {
   opacity: 0.5;
   mix-blend-mode: normal;
   border-radius: 2px;
@@ -620,7 +617,17 @@ li {
   padding: 0.25rem;
 }
 
-::v-deep .theme--light.v-label--is-disabled {
-  color: white !important;
- }
+.message-box {
+  background-color: $BCgovGold0;
+  border-color: $BCgovGold5;
+  border-radius: 0;
+
+  p {
+    margin: 1.25rem;
+    padding: 0;
+    font-size: 0.875rem;
+    letter-spacing: 0.01rem;
+    color: $gray7;
+  }
+}
 </style>

@@ -8,19 +8,8 @@ const typeSelector: string = '#agreement-type-'
 const summaryErrorMessageSelector: string = '.agreement-invalid-message'
 const summaryTextSelector: string = '.summary-desc'
 
+// NB: Agreement Type does not apply to COOPERATIVE
 const agreementTypeTestCases = [
-  // *** TODO: fix
-  // {
-  //   entityType: CorpTypeCd.COOP,
-  //   sampleAgreement: {
-  //     agreementType: 'sample'
-  //   },
-  //   customAgreement: {
-  //     agreementType: 'custom'
-  //   },
-  //   sampleSummaryText: '',
-  //   customSummaryText: ''
-  // },
   {
     entityType: CorpTypeCd.BENEFIT_COMPANY,
     sampleAgreement: {

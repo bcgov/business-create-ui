@@ -77,30 +77,6 @@ export default class LegalApiMixin extends Vue {
   }
 
   /**
-   * Fetches authorizations.
-   * @param iaNumber the temporary registration id for this IA (eg, T1234567)
-   * @returns a promise to return the authorizations object
-   */
-  getNrAuthorizations (iaNumber: string): Promise<any> {
-    if (!iaNumber) throw new Error('Invalid parameter \'nrNumber\'')
-
-    const url = `entities/${iaNumber}/authorizations`
-    const authUrl = sessionStorage.getItem('AUTH_API_URL')
-    const config = { baseURL: authUrl }
-    return axios.get(url, config)
-  }
-
-  /**
-   * Fetches current user data.
-   * @returns a promise to return the user data
-   */
-  getCurrentUser (): Promise<any> {
-    const authUrl = sessionStorage.getItem('AUTH_API_URL')
-    const config = { baseURL: authUrl }
-    return axios.get('users/@me', config)
-  }
-
-  /**
    * Fetches name request data.
    * @param nrNumber the name request number (eg, NR 1234567)
    * @returns a promise to return the NR data, or null if not found

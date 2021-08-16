@@ -1,6 +1,7 @@
 import { CorpTypeCd } from '@/enums'
 import {
   AccountInformationIF,
+  AddressIF,
   BusinessContactIF,
   CertifyIF,
   IncorporationAddressIF,
@@ -31,6 +32,18 @@ export const mutateAuthRoles = (state: StateIF, authRoles: Array<string>) => {
 
 export const mutateUserEmail = (state: StateIF, userEmail: string) => {
   state.stateModel.tombstone.userEmail = userEmail
+}
+
+export const mutateUserFirstName = (state: StateIF, userFirstName: string) => {
+  state.stateModel.tombstone.userFirstName = userFirstName
+}
+
+export const mutateUserLastName = (state: StateIF, userLastName: string) => {
+  state.stateModel.tombstone.userLastName = userLastName
+}
+
+export const mutateUserAddress = (state: StateIF, userAddress: AddressIF) => {
+  state.stateModel.tombstone.userAddress = userAddress
 }
 
 export const mutateCurrentStep = (state: StateIF, currentStep: number) => {

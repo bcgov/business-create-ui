@@ -1,6 +1,6 @@
 <template>
   <div id="create-rules">
-    <UploadRules class="mt-4"/>
+    <UploadRules class="mt-4" />
   </div>
 </template>
 

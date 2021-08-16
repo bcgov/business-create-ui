@@ -63,7 +63,7 @@
             <p v-if="isSame(orgPerson.mailingAddress, orgPerson.deliveryAddress)"
               class="peoples-roles-delivery-address">Same as Mailing Address
             </p>
-            <base-address v-else class="peoples-roles-delivery-address" :address="orgPerson.deliveryAddress"/>
+            <base-address v-else class="peoples-roles-delivery-address" :address="orgPerson.deliveryAddress" />
           </v-col>
           <v-col>
             <div v-if="orgPerson.roles.length > 0">

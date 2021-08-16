@@ -1,6 +1,7 @@
 import { AccountTypes, CorpTypeCd, RoleTypes } from '@/enums'
 import {
   AccountInformationIF,
+  AddressIF,
   BusinessContactIF,
   CertifyIF,
   CreateMemorandumIF,
@@ -310,7 +311,22 @@ export const getCertifyState = (state: StateIF): CertifyIF => {
   return state.stateModel.certifyState
 }
 
-/** The Completing Party's email address. */
-export const getCompletingPartyEmail = (state: StateIF): string => {
+/** The users's email address. */
+export const getUserEmail = (state: StateIF): string => {
   return (state.stateModel.tombstone.userEmail)
+}
+
+/** The user's first name. */
+export const getUserFirstName = (state: StateIF): string => {
+  return (state.stateModel.tombstone.userFirstName)
+}
+
+/** The user's last name. */
+export const getUserLastName = (state: StateIF): string => {
+  return (state.stateModel.tombstone.userLastName)
+}
+
+/** The user's address. */
+export const getUserAddress = (state: StateIF): AddressIF => {
+  return (state.stateModel.tombstone.userAddress)
 }

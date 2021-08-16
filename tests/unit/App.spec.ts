@@ -244,8 +244,10 @@ const nrData = {
 describe('Numbered company setup', () => {
   let wrapper: any
   const { assign } = window.location
-  sessionStorage.setItem('AUTH_WEB_URL', `myhost/basePath/auth/`)
-  sessionStorage.setItem('DASHBOARD_URL', `myhost/business/`)
+  sessionStorage.setItem('AUTH_WEB_URL', 'myhost/basePath/auth/')
+  sessionStorage.setItem('DASHBOARD_URL', 'myhost/business/')
+  sessionStorage.setItem('AUTH_API_URL', '')
+  sessionStorage.setItem('CURRENT_ACCOUNT', '{ "id": 668 }')
 
   beforeEach(async () => {
     // mock the window.location.assign function
@@ -254,14 +256,33 @@ describe('Numbered company setup', () => {
 
     const get = sinon.stub(axios, 'get')
 
-    // GET current user
+    // GET current user's info
     get.withArgs('users/@me')
       .returns(new Promise((resolve) => resolve({
         data:
         {
-          contacts: [{
-            email: 'completing-party@example.com'
-          }]
+          contacts: [
+            { email: 'completing-party@example.com' }
+          ],
+          firstname: 'Completing',
+          lastname: 'Party'
+        }
+      })))
+
+    // GET specified org's info
+    get.withArgs('orgs/668')
+      .returns(new Promise((resolve) => resolve({
+        data:
+        {
+          mailingAddress:
+          {
+            city: 'City',
+            country: 'CA',
+            region: 'BC',
+            postalCode: 'V8V 8V8',
+            street: '1234 Some Street',
+            streetAdditional: 'Suite ABC'
+          }
         }
       })))
 
@@ -367,8 +388,10 @@ describe('Numbered company setup', () => {
 describe('App component', () => {
   let wrapper: any
   const { assign } = window.location
-  sessionStorage.setItem('AUTH_WEB_URL', `myhost/basePath/auth/`)
-  sessionStorage.setItem('DASHBOARD_URL', `myhost/business/`)
+  sessionStorage.setItem('AUTH_WEB_URL', 'myhost/basePath/auth/')
+  sessionStorage.setItem('DASHBOARD_URL', 'myhost/business/')
+  sessionStorage.setItem('AUTH_API_URL', '')
+  sessionStorage.setItem('CURRENT_ACCOUNT', '{ "id": 668 }')
 
   beforeEach(async () => {
     // mock the window.location.assign function
@@ -377,14 +400,33 @@ describe('App component', () => {
 
     const get = sinon.stub(axios, 'get')
 
-    // GET current user
+    // GET current user's info
     get.withArgs('users/@me')
       .returns(new Promise((resolve) => resolve({
         data:
         {
-          contacts: [{
-            email: 'completing-party@example.com'
-          }]
+          contacts: [
+            { email: 'completing-party@example.com' }
+          ],
+          firstname: 'Completing',
+          lastname: 'Party'
+        }
+      })))
+
+    // GET specified org's info
+    get.withArgs('orgs/668')
+      .returns(new Promise((resolve) => resolve({
+        data:
+        {
+          mailingAddress:
+          {
+            city: 'City',
+            country: 'CA',
+            region: 'BC',
+            postalCode: 'V8V 8V8',
+            street: '1234 Some Street',
+            streetAdditional: 'Suite ABC'
+          }
         }
       })))
 

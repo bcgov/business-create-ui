@@ -13,7 +13,7 @@
       </header>
       <div :class="{ 'invalid-section': getShowErrors && !hasValidNameTranslation }">
         <v-card flat class="step-container">
-          <name-request-info @hasNameTranslation="onNameTranslation($event)"/>
+          <NameRequestInfo @hasNameTranslation="onNameTranslation($event)" />
         </v-card>
       </div>
     </section>

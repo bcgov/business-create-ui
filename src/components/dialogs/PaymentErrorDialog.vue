@@ -38,7 +38,7 @@
 
         <template v-if="!isRoleStaff">
           <p class="genErr">If this error persists, please contact us:</p>
-          <error-contact />
+          <ErrorContact />
         </template>
       </v-card-text>
 
