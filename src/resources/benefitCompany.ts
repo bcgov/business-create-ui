@@ -1,5 +1,5 @@
 import { ResourceIF } from '@/interfaces'
-import { CorpTypeCd, FilingCodes, NameRequestTypes } from '@/enums'
+import { CorpTypeCd, FilingCodes, NameRequestTypes, Rules } from '@/enums'
 import { BaseStepsTemplate } from './stepTemplates'
 import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 
@@ -7,17 +7,39 @@ export const BenefitCompanyResource: ResourceIF = {
   entityType: CorpTypeCd.BENEFIT_COMPANY,
   displayName: GetCorpFullDescription(CorpTypeCd.BENEFIT_COMPANY),
   title: 'Benefit Company Statement',
-  description: 'This company is a benefit company and, as such, has purposes that include conducting its business ' +
-    'in a responsible and sustainable manner and promoting one or more public benefits.',
+  description: 'This company is a benefit company and, as such, has purposes that include conducting its ' +
+    'business in a responsible and sustainable manner and promoting one or more public benefits.',
   statement: null,
   nameRequestType: NameRequestTypes.BC,
   steps: BaseStepsTemplate,
   filingData: {
-    filingTypeCode: FilingCodes.INCORPORATION_BC,
-    entityType: CorpTypeCd.BENEFIT_COMPANY
+    entityType: CorpTypeCd.BENEFIT_COMPANY,
+    filingTypeCode: FilingCodes.INCORPORATION_BEN
   },
-  directors: {
-    countMinimum: 1
+  peopleAndRoles: {
+    header: '1. Add People or Corporations/Firms to your Application',
+    blurb: `Add the people and Corporations/firms who will have a role in your company. People
+      can have multiple roles; Corporations/firms can only be Incorporators.`,
+    helpSection: null,
+    addIncorporator: true,
+    addOrganization: true,
+    rules: [
+      {
+        rule: Rules.NUM_COMPLETING_PARTY,
+        text: 'The Completing Party',
+        test: (num) => { return (num === 1) }
+      },
+      {
+        rule: Rules.NUM_INCORPORATORS,
+        text: 'At least one Incorporator',
+        test: (num) => { return (num >= 1) }
+      },
+      {
+        rule: Rules.NUM_DIRECTORS,
+        text: 'At least one Director',
+        test: (num) => { return (num >= 1) }
+      }
+    ]
   },
   shareClasses: {
     countMinimum: 1

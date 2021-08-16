@@ -1,30 +1,69 @@
 <template>
   <div id="people-and-roles">
-    <p>
-      Add the people and Corporations/firms who will have a role in your company. People can have multiple roles;
-      Corporations/firms can only be Incorporators.
+    <p v-if="getPeopleAndRolesResource.blurb" class="mb-0">
+      {{ getPeopleAndRolesResource.blurb }}
     </p>
-    Your application must include the following:
-    <ul>
-      <li>
-        <v-icon v-if="hasRole(RoleTypes.COMPLETING_PARTY, 1, 'EXACT')" color="green darken-2" class="cp-valid"
-          >mdi-check</v-icon>
-        <v-icon v-else :color="getShowErrors ? 'red': 'transparent'" class="cp-invalid">mdi-close</v-icon>
-        <span class='chk-list-item-txt'>The Completing Party</span>
-      </li>
-      <li>
-        <v-icon v-if="hasRole(RoleTypes.INCORPORATOR, 1, 'ATLEAST')" color="green darken-2" class="incorp-valid"
-          >mdi-check</v-icon>
-        <v-icon v-else :color="getShowErrors ? 'red': 'transparent'" class="incorp-invalid">mdi-close</v-icon>
-        <span class='chk-list-item-txt'>At least one Incorporator</span>
-      </li>
-      <li>
-        <v-icon v-if="hasRole(RoleTypes.DIRECTOR, getMinimumDirectorCount, 'ATLEAST')" color="green darken-2"
-          class="dir-valid">mdi-check</v-icon>
-        <v-icon v-else :color="getShowErrors ? 'red': 'transparent'" class="dir-invalid">mdi-close</v-icon>
-        <span class='chk-list-item-txt'>At least {{NumWord[getMinimumDirectorCount]}} {{directorVerbiage}}</span>
-      </li>
-    </ul>
+
+    <!-- Help Section -->
+    <div v-if="getPeopleAndRolesResource.helpSection" class="mt-5">
+      <span class="help-btn" @click="helpToggle = !helpToggle">
+        <v-icon color="blue darken-2" style="padding-right: 5px">mdi-help-circle-outline</v-icon>
+        <span v-if="!helpToggle">{{ getPeopleAndRolesResource.helpSection.header }}</span>
+        <span v-else>Hide Help</span>
+      </span>
+      <section v-show="helpToggle" class="people-and-roles-help">
+        <header id="people-and-roles-help-header"><h2>{{getPeopleAndRolesResource.helpSection.header}}</h2></header>
+        <p
+          v-for="(item, index) in getPeopleAndRolesResource.helpSection.helpText"
+          class="help-section"
+          :key="index"
+        >{{ item }}</p>
+        <u class="help-btn" @click="helpToggle = !helpToggle"><small>Hide Help</small></u>
+      </section>
+    </div>
+
+    <section class="mt-5">
+      <strong>Your application must include the following:</strong>
+      <ul>
+        <template v-for="(rule, index) in getPeopleAndRolesResource.rules">
+          <li v-if="rule.rule === Rules.NUM_COMPLETING_PARTY" :key="index">
+            <v-icon v-if="validNumCompletingParty" color="green darken-2"
+              class="cp-valid">mdi-check</v-icon>
+            <v-icon v-else-if="getShowErrors" color="red" class="cp-invalid">mdi-close</v-icon>
+            <v-icon v-else>mdi-circle-small</v-icon>
+            <span class="chk-list-item-txt">{{rule.text}}</span>
+          </li>
+          <li v-if="rule.rule === Rules.NUM_INCORPORATORS" :key="index">
+            <v-icon v-if="validMinimumIncorporators" color="green darken-2"
+              class="incorp-valid">mdi-check</v-icon>
+            <v-icon v-else-if="getShowErrors" color="red" class="incorp-invalid">mdi-close</v-icon>
+            <v-icon v-else>mdi-circle-small</v-icon>
+            <span class="chk-list-item-txt">{{rule.text}}</span>
+          </li>
+          <li v-if="rule.rule === Rules.NUM_DIRECTORS" :key="index">
+            <v-icon v-if="validMinimumDirectors" color="green darken-2"
+              class="dir-valid">mdi-check</v-icon>
+            <v-icon v-else-if="getShowErrors" color="red" class="dir-invalid">mdi-close</v-icon>
+            <v-icon v-else>mdi-circle-small</v-icon>
+            <span class="chk-list-item-txt">{{rule.text}}</span>
+          </li>
+          <li v-if="rule.rule === Rules.DIRECTOR_COUNTRY" :key="index">
+            <v-icon v-if="validDirectorCountry" color="green darken-2"
+              class="dir-valid">mdi-check</v-icon>
+            <v-icon v-else-if="getShowErrors" color="red" class="dir-invalid">mdi-close</v-icon>
+            <v-icon v-else>mdi-circle-small</v-icon>
+            <span class="chk-list-item-txt">{{rule.text}}</span>
+          </li>
+          <li v-if="rule.rule === Rules.DIRECTOR_PROVINCE" :key="index">
+            <v-icon v-if="validDirectorProvince" color="green darken-2"
+              class="dir-valid">mdi-check</v-icon>
+            <v-icon v-else-if="getShowErrors" color="red" class="dir-invalid">mdi-close</v-icon>
+            <v-icon v-else>mdi-circle-small</v-icon>
+            <span class="chk-list-item-txt">{{rule.text}}</span>
+          </li>
+        </template>
+      </ul>
+    </section>
 
     <div class="btn-panel" v-if="orgPersonList.length === 0">
       <v-btn
@@ -56,6 +95,7 @@
         color="primary"
         class="spacedButton"
         :disabled="showOrgPersonForm"
+        v-if="getPeopleAndRolesResource.addOrganization"
         @click="addOrgPerson([{ roleType: RoleTypes.INCORPORATOR }], IncorporatorTypes.CORPORATION)"
       >
         <v-icon>mdi-domain-plus</v-icon>
@@ -63,7 +103,7 @@
         <span v-else>Add a Corporation or Firm</span>
       </v-btn>
       <v-btn
-        v-if="!hasRole(RoleTypes.COMPLETING_PARTY, 1, 'ATLEAST')"
+        v-if="!validNumCompletingParty"
         id="btn-add-cp"
         outlined
         color="primary"
@@ -82,6 +122,7 @@
         :initialValue="currentOrgPerson"
         :activeIndex="activeIndex"
         :existingCompletingParty="completingParty"
+        :addIncorporator="getPeopleAndRolesResource.addIncorporator"
         @addEditPerson="onAddEditOrgPerson($event)"
         @removePersonEvent="onRemovePerson($event)"
         @resetEvent="resetData()"
@@ -104,16 +145,17 @@
 <script lang="ts">
 // Libraries
 import { Component, Mixins } from 'vue-property-decorator'
-import { Action, Getter, State } from 'vuex-class'
+import { Action, Getter } from 'vuex-class'
 
 // Interfaces
-import { ActionBindingIF, OrgPersonIF, PeopleAndRoleIF, RolesIF, TombstoneIF } from '@/interfaces'
+import { ActionBindingIF, OrgPersonIF, PeopleAndRoleIF, PeopleAndRolesResourceIF,
+  RolesIF, TombstoneIF } from '@/interfaces'
 
 // Mixins
 import { EntityFilterMixin } from '@/mixins'
 
 // Enums
-import { CorpTypeCd, IncorporatorTypes, Modes, NumWord, RoleTypes } from '@/enums'
+import { CorpTypeCd, IncorporatorTypes, NumWord, RoleTypes, Rules } from '@/enums'
 
 // Components
 import OrgPerson from './OrgPerson.vue'
@@ -126,10 +168,10 @@ import ListPeopleAndRoles from './ListPeopleAndRoles.vue'
   }
 })
 export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
-  @Getter getMinimumDirectorCount!: number
   @Getter getTombstone!: TombstoneIF
   @Getter getAddPeopleAndRoleStep!: PeopleAndRoleIF
   @Getter getShowErrors!: boolean
+  @Getter getPeopleAndRolesResource!: PeopleAndRolesResourceIF
 
   @Action setOrgPersonList!: ActionBindingIF
   @Action setAddPeopleAndRoleStepValidity!: ActionBindingIF
@@ -156,6 +198,7 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
     }
   }
 
+  private helpToggle = false
   private showOrgPersonForm: boolean = false
   private activeIndex: number = -1
   private addEditInProgress: boolean = false
@@ -166,20 +209,92 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
   readonly RoleTypes = RoleTypes
   readonly IncorporatorTypes = IncorporatorTypes
   readonly NumWord = NumWord
+  readonly Rules = Rules
 
+  /** The list of organizations/persons. */
   private get orgPersonList (): OrgPersonIF[] {
     return this.getAddPeopleAndRoleStep.orgPeople
   }
 
-  private get directorVerbiage (): string {
-    return this.getMinimumDirectorCount > 1 ? 'Directors' : 'Director'
+  /** The list of completing parties. */
+  private get completingParties (): OrgPersonIF[] {
+    return this.orgPersonList.filter(
+      people => people.roles.some(party => party.roleType === RoleTypes.COMPLETING_PARTY)
+    )
+  }
+
+  /** The list of incorporators. */
+  private get incorporators (): OrgPersonIF[] {
+    return this.orgPersonList.filter(
+      people => people.roles.some(party => party.roleType === RoleTypes.INCORPORATOR)
+    )
+  }
+
+  /** The list of directors. */
+  private get directors (): OrgPersonIF[] {
+    return this.orgPersonList.filter(
+      people => people.roles.some(party => party.roleType === RoleTypes.DIRECTOR)
+    )
+  }
+
+  /** The list of people without roles. */
+  private get peopleWithNoRoles (): OrgPersonIF[] {
+    return this.orgPersonList.filter(people => people.roles.length === 0)
+  }
+
+  /** Whether the Completing Party rule is valid. Always true if rule doesn't exist. */
+  private get validNumCompletingParty (): boolean {
+    const rule = this.getPeopleAndRolesResource.rules.find(r => r.rule === Rules.NUM_COMPLETING_PARTY)
+    if (!rule) return true
+    return rule.test(this.completingParties.length)
+  }
+
+  /** Whether the Minimum Incorporators rule is valid. Always true if rule doesn't exist. */
+  private get validMinimumIncorporators (): boolean {
+    const rule = this.getPeopleAndRolesResource.rules.find(r => r.rule === Rules.NUM_INCORPORATORS)
+    if (!rule) return true
+    return rule.test(this.incorporators.length)
+  }
+
+  /** Whether the Minimum Directors rule is valid. Always true if rule doesn't exist. */
+  private get validMinimumDirectors (): boolean {
+    const rule = this.getPeopleAndRolesResource.rules.find(r => r.rule === Rules.NUM_DIRECTORS)
+    if (!rule) return true
+    return rule.test(this.directors.length)
+  }
+
+  /** Whether the Director Country rule is valid. Always true if rule doesn't exist. */
+  private get validDirectorCountry (): boolean {
+    const rule = this.getPeopleAndRolesResource.rules.find(r => r.rule === Rules.DIRECTOR_COUNTRY)
+    if (!rule) return true
+    const num = this.directors.filter(d => rule.test(d.mailingAddress.addressCountry)).length
+    // evaluate this rule only when there are enough minimum directors
+    return (this.validMinimumDirectors && num > this.directors.length / 2) // more than half
+  }
+
+  /** Whether the Director Province rule is valid. Always true if rule doesn't exist. */
+  private get validDirectorProvince (): boolean {
+    const rule = this.getPeopleAndRolesResource.rules.find(r => r.rule === Rules.DIRECTOR_PROVINCE)
+    if (!rule) return true
+    const num = this.directors.filter(
+      d => rule.test(d.mailingAddress.addressCountry, d.mailingAddress.addressRegion)
+    ).length
+    return (num > 0) // at least one
+  }
+
+  /** Whether there are any people without roles. Used as a safety check. */
+  private get validPeopleWithNoRoles (): boolean {
+    return (this.peopleWithNoRoles.length > 0)
+  }
+
+  private get completingParty () : OrgPersonIF {
+    return this.orgPersonList.find(people => people.roles.some(party => party.roleType === RoleTypes.COMPLETING_PARTY))
   }
 
   private mounted (): void {
     this.setAddPeopleAndRoleStepValidity(this.hasValidRoles())
   }
 
-  // Methods
   private addOrgPerson (rolesToInitialize: RolesIF[], type: IncorporatorTypes): void {
     this.currentOrgPerson = { ...this.newOrgPerson }
     this.currentOrgPerson.roles = rolesToInitialize
@@ -246,67 +361,87 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
   }
 
   private hasValidRoles (): boolean {
-    const numOfDirector = this.orgPersonList.filter(people => people.roles
-      .some(party => party.roleType === RoleTypes.DIRECTOR)).length
-    const numOfIncorporator = this.orgPersonList.filter(people => people.roles
-      .some(party => party.roleType === RoleTypes.INCORPORATOR)).length
-    const numOfCompletingParty = this.orgPersonList.filter(people => people.roles
-      .some(party => party.roleType === RoleTypes.COMPLETING_PARTY)).length
-    const numOfPeopleWithNoRoles = this.orgPersonList.filter(people => people.roles.length === 0).length
-
-    return (numOfCompletingParty === 1 && numOfIncorporator >= 1 && numOfDirector >= this.getMinimumDirectorCount &&
-      numOfPeopleWithNoRoles === 0)
-  }
-
-  private hasRole (roleName: RoleTypes, count: number, mode: string): boolean {
-    const orgPersonWithSpecifiedRole =
-      this.orgPersonList.filter(people => people.roles.some(party => party.roleType === roleName))
-
-    if (mode === Modes.EXACT) {
-      return (orgPersonWithSpecifiedRole.length === count)
-    } else if (mode === Modes.AT_LEAST) {
-      return (orgPersonWithSpecifiedRole.length >= count)
-    }
-  }
-
-  private get completingParty () : OrgPersonIF {
-    return this.orgPersonList.find(people => people.roles.some(party => party.roleType === RoleTypes.COMPLETING_PARTY))
+    return (
+      this.validNumCompletingParty &&
+      this.validMinimumIncorporators &&
+      this.validMinimumDirectors &&
+      this.validDirectorCountry &&
+      this.validDirectorProvince &&
+      !this.validPeopleWithNoRoles
+    )
   }
 }
 </script>
 
 <style lang="scss" scoped>
-[class^="col"] {
-  padding-top: 0;
-  padding-bottom: 0;
+@import '@/assets/styles/theme.scss';
+
+.help-btn {
+  cursor: pointer;
+  color: $primary-blue;
+  vertical-align: middle;
 }
+
+.people-and-roles-help {
+  margin: 2rem 0;
+  border-top: 1px dashed $gray6;
+  border-bottom: 1px dashed $gray6;
+  padding: 1rem 0;
+
+  #people-and-roles-help-header {
+    display: flex;
+    justify-content: center;
+  }
+
+  h2, h4 {
+    padding: 1rem 0;
+  }
+
+  u {
+    display: flex;
+    direction: rtl;
+  }
+}
+
+.v-icon.mdi-help-circle-outline,
+.v-icon.mdi-circle-small {
+  margin-top: -2px;
+}
+
 .people-roles-container {
   margin-top: 1rem;
 }
+
 ul {
   padding-top: 0.5rem;
   list-style: none;
   margin-left: 0;
   padding-left: 1rem;
 }
+
 li {
   padding-top:0.25rem;
 }
-p{
+
+p {
   padding-top: 0.5rem;
 }
+
 .btn-panel {
   padding: 2rem 0 2rem 0;
 }
+
 .sub-header {
   padding-bottom: 1.5rem;
   font-size: 1rem;
   font-weight: 700;
   line-height: 1.5rem;
 }
+
 .spacedButton {
   margin-left: 0.5rem;
 }
+
 .chk-list-item-txt {
   margin-left: 0.5rem;
 }

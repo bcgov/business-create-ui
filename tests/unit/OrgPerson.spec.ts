@@ -161,7 +161,8 @@ function getLastEvent (wrapper: Wrapper<OrgPerson>, name: string): any {
 function createComponent (
   initialValue: any, // person
   activeIndex: number,
-  existingCompletingParty: any
+  existingCompletingParty: any,
+  addIncorporator: boolean = true
 ): Wrapper<OrgPerson> {
   const localVue = createLocalVue()
   localVue.use(Vuetify)
@@ -171,7 +172,8 @@ function createComponent (
     propsData: {
       initialValue,
       activeIndex,
-      existingCompletingParty
+      existingCompletingParty,
+      addIncorporator
     },
     store,
     vuetify

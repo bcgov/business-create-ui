@@ -5,8 +5,8 @@
     <div id="upload-memorandum-summary" v-if="isSummary">
       <!-- Summary Header -->
       <div class="upload-memorandum-summary-header" >
-        <v-icon color="dkBlue">mdi-text-box-multiple</v-icon>
-        <label class="upload-memorandum-title font-weight-bold">Memorandum</label>
+        <v-icon color="appDkBlue">mdi-text-box-multiple</v-icon>
+        <label class="upload-memorandum-title pl-2"><strong>Memorandum</strong></label>
       </div>
 
       <!-- Summary error message -->
@@ -61,7 +61,7 @@ export default class UploadMemorandum extends Vue {
   padding: 1.25rem;
 
   .upload-memorandum-title {
-    padding-left: 0.5rem;
+    color: $gray9;
   }
 }
 

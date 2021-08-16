@@ -1,6 +1,7 @@
 import { RouteNames, ViewComponentNames } from '@/enums'
 
-/** The base step template.
+/**
+ * The base step template.
  * Currently used for BEN, BC, ULC and CCC.
  */
 export const BaseStepsTemplate = [
@@ -47,7 +48,7 @@ export const BaseStepsTemplate = [
   }
 ]
 
-/** The step templates for COOPs. */
+/** The step template for COOPs. */
 export const CoopStepsTemplate = [
   {
     id: 'step-1-btn',

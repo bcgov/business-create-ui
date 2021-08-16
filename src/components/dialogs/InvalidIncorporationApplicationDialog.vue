@@ -9,7 +9,7 @@
           it may have been filed, or it may be pending filing or payment.</p>
       </v-card-text>
 
-      <v-divider class="my-0"></v-divider>
+      <v-divider class="my-0" />
 
       <v-card-actions>
         <v-spacer></v-spacer>
@@ -34,6 +34,3 @@ export default class InvalidIncorporationDialogDialog extends Vue {
   @Emit() private exit () { }
 }
 </script>
-
-<style lang="scss" scoped>
-</style>

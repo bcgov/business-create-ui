@@ -16,6 +16,7 @@
           <div id="lbl-phone" v-else>(Not entered)</div>
         </v-flex>
     </v-layout>
+
     <v-card flat class="business-contact-container" v-else>
       <v-form v-model="formValid" ref="form" name="business-contact-form">
        <v-row>
@@ -163,6 +164,8 @@ export default class BusinessContactInfo extends Mixins(CommonMixin) {
 </script>
 
 <style lang="scss" scoped>
+@import '@/assets/styles/theme.scss';
+
 [class^="col"] {
   padding-top: 0;
   padding-bottom: 0;
@@ -171,5 +174,9 @@ export default class BusinessContactInfo extends Mixins(CommonMixin) {
 .business-contact-container {
   margin-top: 1rem;
   padding: 1.25rem;
+}
+
+label {
+  color: $gray9;
 }
 </style>

@@ -1,7 +1,7 @@
 import { ResourceIF } from '@/interfaces'
 
 export const resourceModel: ResourceIF = {
-  entityType: '',
+  entityType: null,
   displayName: '',
   title: '',
   description: '',
@@ -9,8 +9,13 @@ export const resourceModel: ResourceIF = {
   nameRequestType: null,
   steps: [],
   filingData: null,
-  directors: {
-    countMinimum: null
+  peopleAndRoles: {
+    header: null,
+    blurb: null,
+    helpSection: null,
+    addIncorporator: null,
+    addOrganization: null,
+    rules: []
   },
   shareClasses: {
     countMinimum: null

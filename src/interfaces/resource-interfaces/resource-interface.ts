@@ -1,9 +1,10 @@
-import { FilingDataIF, HelpSectionIF, IncorporationAgreementTypeIF, StepIF } from '@/interfaces'
-import { NameRequestTypes } from '@/enums'
+import { FilingDataIF, HelpSectionIF, IncorporationAgreementTypeIF, PeopleAndRolesResourceIF,
+  StepIF } from '@/interfaces'
+import { CorpTypeCd, NameRequestTypes } from '@/enums'
 
 // Interface to define the resource model
 export interface ResourceIF {
-  entityType: string,
+  entityType: CorpTypeCd
   displayName: string
   title: string
   description: string
@@ -11,17 +12,7 @@ export interface ResourceIF {
   nameRequestType: NameRequestTypes
   steps: Array<StepIF>
   filingData: FilingDataIF
-  directors: {
-    countMinimum: number
-  }
-  shareClasses: {
-    countMinimum: number
-  }
-  incorporationAgreement: {
-    helpSection: Array<HelpSectionIF>,
-    article: string,
-    documents: Array<IncorporationAgreementTypeIF>
-  },
+  peopleAndRoles: PeopleAndRolesResourceIF
   reviewAndConfirm: {
     completingPartyStatement: {
       certifyStatementHeader: string
@@ -29,5 +20,15 @@ export interface ResourceIF {
       certifyClause: string
       entityDisplay: string
     }
+  }
+
+  // BEN / CC / BC / ULC only:
+  shareClasses?: {
+    countMinimum: number
+  }
+  incorporationAgreement?: {
+    helpSection: Array<HelpSectionIF>
+    article: string
+    documents: Array<IncorporationAgreementTypeIF>
   }
 }

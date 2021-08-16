@@ -27,29 +27,29 @@ export const getCompanyDisplayName = (state: StateIF): string => {
   return state.resourceModel.displayName
 }
 
+/** The People and Roles object. */
+export const getPeopleAndRolesResource = (state: StateIF): any => {
+  return state.resourceModel.peopleAndRoles
+}
+
 /** The completing party statement resources. */
 export const getCompletingPartyStatement = (state: StateIF): CertifyStatementIF => {
   return state.resourceModel.reviewAndConfirm.completingPartyStatement
 }
 
-/** The incorporation agreement help info. */
-export const getIncorporationAgreementHelp = (state: StateIF): Array<HelpSectionIF> => {
-  return state.resourceModel.incorporationAgreement.helpSection
+/** The Incoporation Agreement object. */
+export const getIncorporationAgreementResource = (state: StateIF): any => {
+  return state.resourceModel.incorporationAgreement
 }
 
 /** The incorporation agreement sample article. */
 export const getSampleArticle = (state: StateIF): string => {
-  return state.resourceModel.incorporationAgreement.article
+  return getIncorporationAgreementResource(state)?.article
 }
 
 /** The incorporation agreement options. */
 export const getIncorporationAgreementDocuments = (state: StateIF): Array<IncorporationAgreementTypeIF> => {
-  return state.resourceModel.incorporationAgreement.documents
-}
-
-/** The minimum directors required. */
-export const getMinimumDirectorCount = (state: StateIF): number => {
-  return state.resourceModel.directors.countMinimum
+  return getIncorporationAgreementResource(state)?.documents
 }
 
 /** The array of steps. */

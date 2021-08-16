@@ -33,6 +33,3 @@ export default class DocumentDelivery extends Vue {
   @Getter getCompletingPartyEmail!: string
 }
 </script>
-
-<style lang="scss" scoped>
-</style>

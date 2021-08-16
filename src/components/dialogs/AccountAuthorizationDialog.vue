@@ -8,7 +8,7 @@
           or business. You can retry, or you can exit and return to the dashboard.</p>
       </v-card-text>
 
-      <v-divider class="my-0"></v-divider>
+      <v-divider class="my-0" />
 
       <v-card-actions>
         <v-btn id="dialog-exit-button" color="primary" text @click="exit()">Exit</v-btn>
@@ -35,6 +35,3 @@ export default class AccountAuthorizationDialog extends Vue {
   @Emit() private retry () { }
 }
 </script>
-
-<style lang="scss" scoped>
-</style>

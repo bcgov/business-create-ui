@@ -22,7 +22,7 @@
         <ErrorContact />
       </v-card-text>
 
-      <v-divider class="my-0"></v-divider>
+      <v-divider class="my-0" />
 
       <!-- if there are errors, or neither errors nor warnings... -->
       <v-card-actions>
@@ -54,6 +54,3 @@ export default class FileAndPayInvalidNameRequestDialog extends Vue {
   @Emit() private okay () { }
 }
 </script>
-
-<style lang="scss" scoped>
-</style>

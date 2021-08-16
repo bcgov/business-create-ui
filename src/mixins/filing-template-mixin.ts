@@ -32,6 +32,8 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Getter getCreateShareStructureStep!: ShareStructureIF
   @Getter getIncorporationAgreementStep!: IncorporationAgreementIF
   @Getter getBusinessContact!: BusinessContactIF
+  @Getter getRules!: any
+  @Getter getMemorandum!: any
 
   @Action setEntityType!: ActionBindingIF
   @Action setBusinessContact!: ActionBindingIF
@@ -46,8 +48,13 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Action setIsFutureEffective!: ActionBindingIF
   @Action setFolioNumber!: ActionBindingIF
   @Action setIncorporationAgreementStepData!: ActionBindingIF
+  @Action setRules!: ActionBindingIF
+  @Action setMemorandum!: ActionBindingIF
 
-  /** Constructs a filing body from store data. Used when saving a filing. */
+  /**
+   * Constructs a filing body from store data. Used when saving a filing.
+   * @returns the filing body to save
+   */
   buildFiling (): IncorporationFilingIF {
     // Build filing.
     const filing: IncorporationFilingIF = {
@@ -74,24 +81,37 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
             phone: this.getBusinessContact.phone,
             extension: this.getBusinessContact.extension
           },
-          parties: this.getAddPeopleAndRoleStep.orgPeople,
-          shareStructure: {
-            shareClasses: this.getCreateShareStructureStep.shareClasses
-          },
-          incorporationAgreement: {
-            agreementType: this.getIncorporationAgreementStep.agreementType
-          }
+          parties: this.getAddPeopleAndRoleStep.orgPeople
         }
       }
     }
 
-    // If this is a named IA then save Name Request Number and Approved Name.
+    // Conditionally add the entity-specific sections.
+    switch (this.getEntityType) {
+      case CorpTypeCd.COOP:
+        filing.filing.incorporationApplication.rules = this.getRules
+        filing.filing.incorporationApplication.memorandum = this.getMemorandum
+        break
+      case CorpTypeCd.BENEFIT_COMPANY:
+      case CorpTypeCd.BC_CCC:
+      case CorpTypeCd.BC_COMPANY:
+      case CorpTypeCd.BC_ULC_COMPANY:
+        filing.filing.incorporationApplication.shareStructure = {
+          shareClasses: this.getCreateShareStructureStep.shareClasses
+        }
+        filing.filing.incorporationApplication.incorporationAgreement = {
+          agreementType: this.getIncorporationAgreementStep.agreementType
+        }
+        break
+    }
+
+    // If this is a named IA then add Name Request Number and Approved Name.
     if (this.isNamedBusiness) {
       filing.filing.incorporationApplication.nameRequest.nrNumber = this.getNameRequestNumber
       filing.filing.incorporationApplication.nameRequest.legalName = this.getApprovedName
     }
 
-    // If this is a future effective filing then save the effective date.
+    // If this is a future effective filing then add the effective date.
     const effectiveDate = this.getIncorporationDateTime.effectiveDate
     if (effectiveDate) {
       filing.filing.header.effectiveDate = this.dateToApi(effectiveDate)
@@ -101,8 +121,8 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   }
 
   /**
-   * Parses a draft filing into the store.
-   * @param draftFiling the draft filing body to be parsed
+   * Parses a draft filing into the store. Used when resuming a filing.
+   * @param draftFiling the filing body to parse
    */
   parseDraft (draftFiling: any): void {
     // FUTURE: set types so each of these validate their parameters
@@ -129,14 +149,27 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     // Set Persons and Organizations
     this.setOrgPersonList(draftFiling.incorporationApplication.parties)
 
-    // Set Share Structure
-    this.setShareClasses(draftFiling.incorporationApplication.shareStructure
-      ? draftFiling.incorporationApplication.shareStructure.shareClasses : [])
-
-    // Set Incorporation Agreement
-    this.setIncorporationAgreementStepData({
-      agreementType: draftFiling.incorporationApplication.incorporationAgreement?.agreementType
-    })
+    // Conditionally parse the entity-specific sections.
+    switch (this.getEntityType) {
+      case CorpTypeCd.COOP:
+        // Set Rules
+        this.setRules(draftFiling.incorporationApplication.rules)
+        // Set Memorandum
+        this.setMemorandum(draftFiling.incorporationApplication.memorandum)
+        break
+      case CorpTypeCd.BENEFIT_COMPANY:
+      case CorpTypeCd.BC_CCC:
+      case CorpTypeCd.BC_COMPANY:
+      case CorpTypeCd.BC_ULC_COMPANY:
+        // Set Share Structure
+        this.setShareClasses(draftFiling.incorporationApplication.shareStructure
+          ? draftFiling.incorporationApplication.shareStructure.shareClasses : [])
+        // Set Incorporation Agreement
+        this.setIncorporationAgreementStepData({
+          agreementType: draftFiling.incorporationApplication.incorporationAgreement?.agreementType
+        })
+        break
+    }
 
     // Set Certify Form
     this.setCertifyState({

@@ -352,5 +352,17 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
   .v-btn + .v-btn {
     margin-left: 0.5rem;
   }
+
+  .v-icon {
+    margin-top: 1px;
+
+    &.mdi-chevron-left {
+      margin-left: -8px;
+    }
+
+    &.mdi-chevron-right {
+      margin-right: -8px;
+    }
+  }
 }
 </style>

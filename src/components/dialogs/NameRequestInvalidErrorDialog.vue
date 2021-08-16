@@ -25,7 +25,7 @@
         <p class="genErr" v-else>An unexpected error has occurred.</p>
       </v-card-text>
 
-      <v-divider class="my-0"></v-divider>
+      <v-divider class="my-0" />
 
       <v-card-actions>
         <v-btn v-if="showOkay" id="dialog-ok-button" color="primary" text @click="okay()">OK</v-btn>
@@ -67,6 +67,3 @@ export default class NameRequestInvalidErrorDialog extends Vue {
   @Emit() private redirect () { }
 }
 </script>
-
-<style lang="scss" scoped>
-</style>

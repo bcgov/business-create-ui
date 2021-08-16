@@ -117,6 +117,16 @@ export const mutateFilingId = (state: StateIF, filingId: number) => {
   state.stateModel.filingId = filingId
 }
 
+export const mutateRules = (state: StateIF, rules: any) => {
+  // state.stateModel.rules = rules // *** FUTURE
+  if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
+}
+
+export const mutateMemorandum = (state: StateIF, memorandum: any) => {
+  // state.stateModel.memorandum = memorandum // *** FUTURE
+  if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
+}
+
 export const mutateShareClasses = (state: StateIF, shareClasses: ShareClassIF[]) => {
   state.stateModel.createShareStructureStep.shareClasses = shareClasses
   if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)

@@ -41,7 +41,7 @@
         </template>
       </v-card-text>
 
-      <v-divider class="my-0"></v-divider>
+      <v-divider class="my-0" />
 
       <!-- if there are errors, or neither errors nor warnings... -->
       <v-card-actions v-if="numErrors > 0 || numWarnings < 1">

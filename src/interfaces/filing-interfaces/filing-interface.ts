@@ -32,12 +32,18 @@ export interface IncorporationFilingIF {
         extension: string
       },
       parties: OrgPersonIF[],
-      shareStructure: {
+
+      // BEN / CC / BC / ULC only:
+      shareStructure?: {
         shareClasses: ShareClassIF[]
       },
-      incorporationAgreement: {
+      incorporationAgreement?: {
         agreementType: string
-      }
+      },
+
+      // CP only:
+      rules?: any,
+      memorandum?: any
     }
   }
 }

@@ -13,7 +13,7 @@
         </template>
       </v-card-text>
 
-      <v-divider class="my-0"></v-divider>
+      <v-divider class="my-0" />
 
       <v-card-actions>
         <v-btn id="dialog-exit-button" color="primary" text @click="exit()">Return to dashboard</v-btn>
@@ -46,6 +46,3 @@ export default class FetchErrorDialog extends Vue {
   @Emit() private retry () { }
 }
 </script>
-
-<style lang="scss" scoped>
-</style>
