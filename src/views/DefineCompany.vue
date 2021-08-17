@@ -8,7 +8,7 @@
     </div>
 
     <section class="mt-10">
-      <header>
+      <header id="name-request-info-header">
         <h2>1. Name</h2>
       </header>
       <div :class="{ 'invalid-section': getShowErrors && !hasValidNameTranslation }">
@@ -18,9 +18,21 @@
       </div>
     </section>
 
+    <section class="mt-10" v-show="isTypeCoop">
+      <header id="association-type-header">
+        <h2>2. Cooperative Association Type</h2>
+      </header>
+      <div :class="{ 'invalid-section': getShowErrors && !hasValidCooperativeType }">
+        <v-card flat class="step-container">
+          <CooperativeType :showErrors="getShowErrors" @hasCooperativeType="onCooperativeType($event)"/>
+        </v-card>
+      </div>
+    </section>
+
     <section class="mt-10" v-show="isEntityType">
       <header id="office-address-header">
-        <h2>2. Registered <span v-if="!entityFilter(CorpTypeCd.COOP)">and Records</span> Office Addresses</h2>
+        <h2>{{isTypeCoop ? 3 : 2 }}. Registered <span v-if="!entityFilter(CorpTypeCd.COOP)">and Records</span> Office
+          Addresses</h2>
         <p>Enter the business' Registered Office <span v-if="!entityFilter(CorpTypeCd.COOP)">and Records Office
           </span> Mailing and Delivery Addresses.
         </p>
@@ -36,8 +48,8 @@
     </section>
 
     <section class="mt-10" v-show="isEntityType">
-      <header>
-        <h2>3. Registered Office Contact Information</h2>
+      <header id="registered-office-contact-header">
+        <h2>{{isTypeCoop ? 4 : 3 }}. Registered Office Contact Information</h2>
         <p>Enter the contact information for the Registered Office. The Corporate Registry will use this to
            communicate with the company in the future, including sending the following documents and
            notifications: a Certificate of Incorporation, a certified copy of the Incorporation Application,
@@ -57,7 +69,7 @@
     </section>
     <section class="mt-10" v-if="isEntityType && isPremiumAccount">
       <header id="folio-number-header">
-        <h2>4. Folio / Reference Number (optional)</h2>
+        <h2>{{isTypeCoop ? 5 : 4 }}. Folio / Reference Number (optional)</h2>
         <p>Add an optional Folio or Reference Number about this business for your own tracking purposes.
            This information is not used by the BC Business Registry.
         </p>
@@ -91,15 +103,16 @@ import {
 import { CommonMixin, EntityFilterMixin } from '@/mixins'
 
 // Enums
-import { CorpTypeCd, RouteNames } from '@/enums'
+import { CoopType, CorpTypeCd, RouteNames } from '@/enums'
 
 // Components
-import { BusinessContactInfo, FolioNumber, OfficeAddresses } from '@/components/DefineCompany'
+import { BusinessContactInfo, CooperativeType, FolioNumber, OfficeAddresses } from '@/components/DefineCompany'
 import { NameRequestInfo } from '@/components/common'
 
 @Component({
   components: {
     BusinessContactInfo,
+    CooperativeType,
     FolioNumber,
     NameRequestInfo,
     OfficeAddresses
@@ -111,12 +124,14 @@ export default class DefineCompany extends Mixins(CommonMixin, EntityFilterMixin
   @Getter isEntityType!: boolean
   @Getter isPremiumAccount!: boolean
   @Getter isTypeBcomp!: boolean
+  @Getter isTypeCoop: boolean
   @Getter getDefineCompanyStep!: DefineCompanyIF
   @Getter getValidateSteps!: boolean
   @Getter getShowErrors!: boolean
 
   @Action setEntityType!: ActionBindingIF
   @Action setBusinessContact!: ActionBindingIF
+  @Action setCooperativeType!: ActionBindingIF
   @Action setFolioNumber!: ActionBindingIF
   @Action setOfficeAddresses!: ActionBindingIF
   @Action setDefineCompanyStepValidity!: ActionBindingIF
@@ -125,6 +140,7 @@ export default class DefineCompany extends Mixins(CommonMixin, EntityFilterMixin
   private businessContactFormValid: boolean = false
   private addressFormValid: boolean = false
   private hasValidNameTranslation: boolean = true
+  private hasValidCooperativeType: boolean = false
 
   // Enum for template
   readonly CorpTypeCd = CorpTypeCd
@@ -188,6 +204,11 @@ export default class DefineCompany extends Mixins(CommonMixin, EntityFilterMixin
       this.hasValidNameTranslation)
   }
 
+  private onCooperativeType (cooperativeType: CoopType): void {
+    this.hasValidCooperativeType = !!cooperativeType
+    this.setCooperativeType(cooperativeType)
+  }
+
   private onBusinessContactInfoChange (businessContact: BusinessContactIF): void {
     this.setBusinessContact(businessContact)
   }
@@ -220,10 +241,16 @@ export default class DefineCompany extends Mixins(CommonMixin, EntityFilterMixin
       await this.validateAndScroll(
         {
           hasValidNameTranslation: this.hasValidNameTranslation,
+          hasValidCooperativeType: this.isTypeCoop ? this.hasValidCooperativeType : true,
           addressFormValid: this.addressFormValid,
           businessContactFormValid: this.businessContactFormValid
         },
-        ['name-request-summary', 'office-addresses', 'business-contact-info']
+        [
+          'name-request-info-header',
+          'association-type-header',
+          'office-address-header',
+          'registered-office-contact-header'
+        ]
       )
     }
   }

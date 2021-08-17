@@ -1,4 +1,4 @@
-import { CorpTypeCd } from '@/enums'
+import { CoopType, CorpTypeCd } from '@/enums'
 import {
   AccountInformationIF,
   AddressIF,
@@ -26,10 +26,15 @@ export const mutateAuthRoles = (state: StateIF, authRoles: Array<string>) => {
   state.stateModel.tombstone.authRoles = authRoles
 }
 
+export const mutateCooperativeType = (state: StateIF, cooperativeType: CoopType) => {
+  state.stateModel.defineCompanyStep.cooperativeType = cooperativeType
+}
+
 export const mutateUserEmail = (state: StateIF, userEmail: string) => {
   state.stateModel.tombstone.userEmail = userEmail
 }
 
+<<<<<<< HEAD
 export const mutateUserFirstName = (state: StateIF, userFirstName: string) => {
   state.stateModel.tombstone.userFirstName = userFirstName
 }
@@ -40,6 +45,10 @@ export const mutateUserLastName = (state: StateIF, userLastName: string) => {
 
 export const mutateUserAddress = (state: StateIF, userAddress: AddressIF) => {
   state.stateModel.tombstone.userAddress = userAddress
+=======
+export const mutateUserPhone = (state: StateIF, userPhone: string) => {
+  state.stateModel.tombstone.userPhone = userPhone
+>>>>>>> Coop Association type and UX Updates
 }
 
 export const mutateCurrentStep = (state: StateIF, currentStep: number) => {

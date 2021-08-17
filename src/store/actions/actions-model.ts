@@ -4,7 +4,7 @@ import {
   IncorporationAgreementIF, NameRequestIF, NameTranslationIF, OrgPersonIF, ResourceIF,
   ShareClassIF
 } from '@/interfaces'
-import { CorpTypeCd } from '@/enums'
+import { CoopType, CorpTypeCd } from '@/enums'
 
 export const setEntityType = ({ commit }, entityType: CorpTypeCd): void => {
   commit('mutateEntityType', entityType)
@@ -42,6 +42,10 @@ export const setUserEmail: ActionIF = ({ commit }, userEmail: string): void => {
   commit('mutateUserEmail', userEmail)
 }
 
+export const setUserPhone: ActionIF = ({ commit }, userPhone: string): void => {
+  commit('mutateUserPhone', userPhone)
+}
+
 export const setUserFirstName: ActionIF = ({ commit }, userFirstName: string): void => {
   commit('mutateUserFirstName', userFirstName)
 }
@@ -76,6 +80,10 @@ export const setCertifyState: ActionIF = ({ commit }, certifyState: CertifyIF): 
 
 export const setBusinessContact: ActionIF = ({ commit }, businessContact: BusinessContactIF): void => {
   commit('mutateBusinessContact', businessContact)
+}
+
+export const setCooperativeType: ActionIF = ({ commit }, cooperativeType: CoopType): void => {
+  commit('mutateCooperativeType', cooperativeType)
 }
 
 export const setDefineCompanyStepValidity: ActionIF = ({ commit }, valid: boolean): void => {

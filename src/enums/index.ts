@@ -1,4 +1,5 @@
 export * from './accountTypes'
+export * from './coopType'
 export * from './filingCodes'
 export * from './filingStatus'
 export * from './filingNames'

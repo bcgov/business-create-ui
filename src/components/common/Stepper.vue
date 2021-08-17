@@ -121,6 +121,8 @@ export default class Stepper extends Vue {
 
 .active-step {
   border-bottom: 3px solid $app-blue;
+  border-bottom-left-radius: initial !important;
+  border-bottom-right-radius: initial !important;
 }
 
 .step:hover {
@@ -206,5 +208,10 @@ export default class Stepper extends Vue {
 // Vuetify Overrides
 ::v-deep .v-btn:not(.v-btn--round).v-size--default {
   max-width: 64px;
+}
+
+::v-deep .v-card > *:last-child:not(.v-btn):not(.v-chip) {
+  border-bottom: 3px solid red !important;
+  border-bottom-left-radius: 2px !important;
 }
 </style>

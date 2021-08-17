@@ -1,4 +1,4 @@
-import { AccountTypes, CorpTypeCd, RoleTypes } from '@/enums'
+import { AccountTypes, CoopType, CorpTypeCd, RoleTypes } from '@/enums'
 import {
   AccountInformationIF,
   AddressIF,
@@ -124,6 +124,11 @@ export const getTombstone = (state: StateIF): TombstoneIF => {
 /** The Company Step object. */
 export const getDefineCompanyStep = (state: StateIF): DefineCompanyIF => {
   return state.stateModel.defineCompanyStep
+}
+
+/** The Cooperative association type. */
+export const getCooperativeType = (state: StateIF): CoopType => {
+  return getDefineCompanyStep(state).cooperativeType
 }
 
 /** The Business Contact object. */
@@ -253,7 +258,9 @@ export const isBusySaving = (state: StateIF): boolean => {
 
 /** Is true when the step is valid. */
 export const isDefineCompanyValid = (state: StateIF): boolean => {
-  return getDefineCompanyStep(state).valid
+  const validCoopType = isTypeCoop(state) ? !!getCooperativeType(state) : true
+
+  return getDefineCompanyStep(state).valid && validCoopType
 }
 
 /** Is true when the step is valid. */
@@ -282,6 +289,7 @@ export const isApplicationValid = (state: StateIF): boolean => {
 
   // Coop steps
   const isCoopStepsValid = (
+    getCooperativeType(state) &&
     getCreateRulesStep(state).valid &&
     getCreateMemorandumStep(state).valid
   )
@@ -314,6 +322,11 @@ export const getCertifyState = (state: StateIF): CertifyIF => {
 /** The users's email address. */
 export const getUserEmail = (state: StateIF): string => {
   return (state.stateModel.tombstone.userEmail)
+}
+
+/** The users's phone number. */
+export const getUserPhone = (state: StateIF): string => {
+  return state.stateModel.tombstone.userPhone
 }
 
 /** The user's first name. */

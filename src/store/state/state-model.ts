@@ -4,6 +4,7 @@ export const stateModel: StateModelIF = {
   tombstone: {
     authRoles: [],
     userEmail: '',
+    userPhone: '',
     userFirstName: '',
     userLastName: '',
     userAddress: null
@@ -43,6 +44,7 @@ export const stateModel: StateModelIF = {
   haveChanges: false,
   defineCompanyStep: {
     valid: false,
+    cooperativeType: null,
     businessContact: {
       email: '',
       confirmEmail: '',

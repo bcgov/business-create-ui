@@ -1,7 +1,7 @@
 <template>
   <div id="entity-info">
     <v-container>
-      <v-breadcrumbs :items="breadcrumbs" divider=">" class="breadcrumb mb-5">
+      <v-breadcrumbs :items="breadcrumbs" divider=">" class="breadcrumb">
         <v-breadcrumbs-item
           slot="item"
           slot-scope="{ item }"
@@ -10,29 +10,33 @@
           {{ item.text }}
         </v-breadcrumbs-item>
       </v-breadcrumbs>
-      <v-list-item three-line id="entity-info-header">
+      <v-row no-gutters class="pt-3 pb-3">
+        <v-col cols="12" md="9">
+          <div id="nr-header" v-show="isEntityType">
+            <span class="header-title" id="entity-legal-name">{{ getApprovedName || getNumberedEntityName }}</span>
+          </div>
+          <div id="entity-title" class="business-info">
+            <span>{{ entityTitle }}</span>
+          </div>
+        </v-col>
 
-        <!-- Header -->
-        <v-list-item-content id="nr-header" v-show="isEntityType">
-          <!-- Company Name -->
-          <v-list-item-title class="header-title" id="entity-legal-name">
-            <span>{{ getApprovedName || getNumberedEntityName }}</span>
-          </v-list-item-title>
+        <v-col cols="12" md="3" class="business-info pl-5 pt-7">
+          <div v-if="getNameRequestNumber" id="entity-nr-number">
+            <span class="font-weight-bold">Name Request No:</span>
+            {{ getNameRequestNumber }}
+          </div>
 
-          <!-- Company Number -->
-          <v-list-item-subtitle class="business-info">
-            <dl>
-              <dt>{{ entityTitle }}</dt>
-              <dd v-if="getNameRequestNumber">Name Request No:
-                <span id="entity-nr-number">{{ getNameRequestNumber }}</span>
-              </dd>
-              <dd v-else id="entity-numbered-label">{{getNumberedEntityName}}</dd>
-            </dl>
-          </v-list-item-subtitle>
+          <div id="entity-business-email">
+            <span class="font-weight-bold">Email:</span>
+            {{ getCompletingPartyEmail || 'Not Available' }}
+          </div>
 
-        </v-list-item-content>
-
-      </v-list-item>
+          <div id="entity-business-phone">
+            <span class="font-weight-bold">Phone:</span>
+            {{ getUserPhone || 'Not Available' }}
+          </div>
+        </v-col>
+      </v-row>
     </v-container>
   </div>
 </template>
@@ -51,6 +55,8 @@ import { EnumMixin } from '@/mixins'
 @Component({})
 export default class EntityInfo extends Mixins(EnumMixin) {
   @Getter isEntityType!: boolean
+  @Getter getCompletingPartyEmail!: string
+  @Getter getUserPhone!: string
   @Getter getEntityType!: CorpTypeCd
   @Getter getNameRequestNumber!: string
   @Getter getTempId!: string
@@ -128,28 +134,31 @@ export default class EntityInfo extends Mixins(EnumMixin) {
 }
 
 .business-info {
-  display: flex;
-  justify-content: space-between;
+  color: $gray7;
+  font-size: .875rem;
 }
 
-dl {
-  display: inline-block;
-  overflow: hidden;
-  color: $gray6;
-}
-
-dd, dt {
-  float: left;
-}
+//dt {
+//  font-weight: bold;
+//}
+//
+//dd {
+//  color: $gray7;
+//  font-size: .875rem;
+//}
+//
+//dd, dt {
+//  float: left;
+//}
 
 // dt {
 //   position: relative;
 // }
 
-dt + dd:before {
-  content: "•";
-  display: inline-block;
-  margin-right: 0.75rem;
-  margin-left: 0.75rem;
-}
+//dt + dd:before {
+//  content: "•";
+//  display: inline-block;
+//  margin-right: 0.75rem;
+//  margin-left: 0.75rem;
+//}
 </style>

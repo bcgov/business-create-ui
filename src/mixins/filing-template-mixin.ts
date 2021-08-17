@@ -18,6 +18,7 @@ import { CorpTypeCd } from '@/enums'
 @Component({})
 export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Getter isTypeBcomp!: boolean
+  @Getter isTypeCoop!: boolean
   @Getter isNamedBusiness!: boolean
   @Getter getNameRequestNumber!: string
   @Getter getApprovedName!: string
@@ -37,6 +38,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
 
   @Action setEntityType!: ActionBindingIF
   @Action setBusinessContact!: ActionBindingIF
+  @Action setCooperativeType!: ActionBindingIF
   @Action setOfficeAddresses!: ActionBindingIF
   @Action setNameTranslationState!: ActionBindingIF
   @Action setDefineCompanyStepValidity!: ActionBindingIF
@@ -111,7 +113,14 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
       filing.filing.incorporationApplication.nameRequest.legalName = this.getApprovedName
     }
 
-    // If this is a future effective filing then add the effective date.
+    // If this is a Cooperative then save the cooperative association type.
+    if (this.isTypeCoop) {
+      filing.filing.incorporationApplication.cooperative = {
+        cooperativeAssociationType: this.getDefineCompanyStep.cooperativeType
+      }
+    }
+
+    // If this is a future effective filing then save the effective date.
     const effectiveDate = this.getIncorporationDateTime.effectiveDate
     if (effectiveDate) {
       filing.filing.header.effectiveDate = this.dateToApi(effectiveDate)
@@ -190,5 +199,10 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
 
     // Set Folio Number
     this.setFolioNumber(draftFiling.header.folioNumber)
+
+    // Set Cooperative Type if Coop
+    if (this.isTypeCoop) {
+      this.setCooperativeType(draftFiling.incorporationApplication.cooperative?.cooperativeAssociationType)
+    }
   }
 }
