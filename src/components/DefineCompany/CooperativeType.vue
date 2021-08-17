@@ -41,7 +41,7 @@ export default class CooperativeType extends Vue {
   @Getter getCooperativeType!: CoopType
 
   // Local properties
-  private cooperativeTypes: Array<string> = [
+  private cooperativeTypes: Array<CoopType> = [
     CoopType.COOPERATIVE,
     CoopType.HOUSING_COOPERATIVE,
     CoopType.COMMUNITY_SERVICE_COOPERATIVE
@@ -88,16 +88,16 @@ export default class CooperativeType extends Vue {
 
 ::v-deep .v-list-item--link:hover {
   background-color: #E4EDF7;
-  color: #1669BB !important;
+  color: $app-blue !important;
 }
 
 ::v-deep .v-list-item:hover {
   .v-list-item__title {
-    color: #1669BB !important;
+    color: $app-blue !important;
   }
 }
 
 ::v-deep .v-list-item--active .v-list-item__title, .v-list-item .v-list-item__subtitle {
-  color: #1669BB !important;
+  color: $app-blue !important;
 }
 </style>

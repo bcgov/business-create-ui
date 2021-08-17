@@ -134,6 +134,10 @@ export default class SummaryDefineCompany extends Mixins(EntityFilterMixin, Enum
   padding-bottom: 1.25rem;
   font-size: 1rem;
   color: $gray7;
+
+  label {
+    color: $gray9;
+  }
 }
 
 .define-company-header {

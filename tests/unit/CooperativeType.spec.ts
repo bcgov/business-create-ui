@@ -49,18 +49,5 @@ for (const mock of cooperativeTypeCases) {
         expect(wrapper.find('#cooperative-type').text()).toContain('This field is required')
       })
     }
-
-    // it('displays Not Entered text when computed values are absent', () => {
-    //   mock.tombstone.userEmail = ''
-    //   mock.defineCompanyStep.businessContact.email = ''
-    //
-    //   wrapper = shallowWrapperFactory(CooperativeType, null, {
-    //     entityType: mock.entityType,
-    //     tombstone: mock.tombstone,
-    //     defineCompanyStep: mock.defineCompanyStep
-    //   })
-    //   expect(wrapper.find('#completing-party-email').text()).toBe('Not entered')
-    //   expect(wrapper.find('#office-email').text()).toBe('Not entered')
-    // })
   })
 }

@@ -137,28 +137,4 @@ export default class EntityInfo extends Mixins(EnumMixin) {
   color: $gray7;
   font-size: .875rem;
 }
-
-//dt {
-//  font-weight: bold;
-//}
-//
-//dd {
-//  color: $gray7;
-//  font-size: .875rem;
-//}
-//
-//dd, dt {
-//  float: left;
-//}
-
-// dt {
-//   position: relative;
-// }
-
-//dt + dd:before {
-//  content: "•";
-//  display: inline-block;
-//  margin-right: 0.75rem;
-//  margin-left: 0.75rem;
-//}
 </style>
