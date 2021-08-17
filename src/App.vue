@@ -653,9 +653,8 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   /** Gets authorizations from Auth API, verifies roles, and stores them. */
   private async checkAuth (): Promise<any> {
     // NB: will throw if API error
-    const response = await AuthServices.fetchNrAuthorizations(this.getTempId)
+    const authRoles = await AuthServices.fetchNrAuthorizations(this.getTempId)
     // NB: roles array may contain 'view', 'edit', 'staff' or nothing
-    const authRoles = response?.data?.roles
     if (authRoles && authRoles.length > 0) {
       this.setAuthRoles(authRoles)
     } else {

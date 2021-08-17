@@ -25,9 +25,9 @@ import { getMaxStep } from './resource-getters'
 // The getters in this file return values from the current state model.
 //
 
-/** Whether the user has "staff" keycloak role. */
+/** Whether the user has "staff" auth role. */
 export const isRoleStaff = (state: StateIF): boolean => {
-  return getTombstone(state).keycloakRoles.includes('staff')
+  return getTombstone(state).authRoles.includes('staff')
 }
 
 /** Whether the user is authorized to edit. */

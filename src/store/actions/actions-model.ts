@@ -34,10 +34,6 @@ export const setIsFilingPaying: ActionIF = ({ commit }, isFilingPaying: boolean)
   commit('mutateIsFilingPaying', isFilingPaying)
 }
 
-export const setKeycloakRoles: ActionIF = ({ commit }, keycloakRoles: Array<string>): void => {
-  commit('mutateKeycloakRoles', keycloakRoles)
-}
-
 export const setAuthRoles: ActionIF = ({ commit }, authRoles: Array<string>): void => {
   commit('mutateAuthRoles', authRoles)
 }

@@ -22,10 +22,6 @@ export const mutateCompanyResources = (state: StateIF, companyResources: Resourc
   state.resourceModel = companyResources
 }
 
-export const mutateKeycloakRoles = (state: StateIF, keyCloakRoles: Array<string>) => {
-  state.stateModel.tombstone.keycloakRoles = keyCloakRoles
-}
-
 export const mutateAuthRoles = (state: StateIF, authRoles: Array<string>) => {
   state.stateModel.tombstone.authRoles = authRoles
 }

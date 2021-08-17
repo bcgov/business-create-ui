@@ -21,7 +21,7 @@ describe('Payment Error Dialog', () => {
   }]
 
   it('renders the component properly as a staff user', () => {
-    store.state.stateModel.tombstone.keycloakRoles = ['staff', 'edit', 'view']
+    store.state.stateModel.tombstone.authRoles = ['staff', 'edit', 'view']
     const wrapper = shallowMount(PaymentErrorDialog,
       {
         vuetify,
@@ -41,7 +41,7 @@ describe('Payment Error Dialog', () => {
   })
 
   it('renders the component properly as a regular user', () => {
-    store.state.stateModel.tombstone.keycloakRoles = ['edit', 'view']
+    store.state.stateModel.tombstone.authRoles = ['edit', 'view']
     const wrapper = shallowMount(PaymentErrorDialog,
       {
         vuetify,
@@ -88,7 +88,7 @@ describe('Payment Error Dialog', () => {
   })
 
   it('renders PAD error messages correctly when they are present', () => {
-    store.state.stateModel.tombstone.keycloakRoles = ['edit', 'view']
+    store.state.stateModel.tombstone.authRoles = ['edit', 'view']
     const wrapper = shallowMount(PaymentErrorDialog,
       {
         vuetify,
