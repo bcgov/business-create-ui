@@ -42,7 +42,7 @@
               <v-form
                 ref="addPersonOrgForm"
                 class="appoint-form"
-                :class="{ 'mt-8': isCompletingParty }"
+                :class="{ 'mt-8': isCompletingParty && !isRoleStaff }"
                 v-model="addPersonOrgFormValid"
                 v-on:submit.prevent
               >

@@ -133,12 +133,12 @@ export const getBusinessContact = (state: StateIF): BusinessContactIF => {
 
 /** The Rules object. */
 export const getRules = (state: StateIF): any => {
-  return {} // *** FUTURE
+  return {} // *** FUTURE: implement this
 }
 
 /** The Memorandum object. */
 export const getMemorandum = (state: StateIF): any => {
-  return {} // *** FUTURE
+  return {} // *** FUTURE: implement this
 }
 
 /** The Add People and Role object. */

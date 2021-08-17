@@ -131,12 +131,12 @@ export const mutateFilingId = (state: StateIF, filingId: number) => {
 }
 
 export const mutateRules = (state: StateIF, rules: any) => {
-  // state.stateModel.rules = rules // *** FUTURE
+  // state.stateModel.rules = rules // *** FUTURE: implement this
   if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
 }
 
 export const mutateMemorandum = (state: StateIF, memorandum: any) => {
-  // state.stateModel.memorandum = memorandum // *** FUTURE
+  // state.stateModel.memorandum = memorandum // *** FUTURE: implement this
   if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
 }
 

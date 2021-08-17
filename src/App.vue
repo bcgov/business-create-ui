@@ -464,7 +464,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
         // set current profile name to store for field pre population
         // proceed only if we are not staff
         if (userInfo && !this.isRoleStaff) {
-          // pre-populate submitting party name
+          // pre-populate Certified By name
           this.setCertifyState(
             {
               valid: this.getCertifyState.valid,
