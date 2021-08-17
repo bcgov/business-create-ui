@@ -31,10 +31,10 @@
 
     <section class="mt-10" v-show="isEntityType">
       <header id="office-address-header">
-        <h2>{{isTypeCoop ? 3 : 2 }}. Registered <span v-if="!entityFilter(CorpTypeCd.COOP)">and Records</span> Office
+        <h2>{{isTypeCoop ? 3 : 2 }}. Registered <span v-if="!isTypeCoop">and Records</span> Office
           Addresses</h2>
-        <p>Enter the business' Registered Office <span v-if="!entityFilter(CorpTypeCd.COOP)">and Records Office
-          </span> Mailing and Delivery Addresses.
+        <p>Enter the Registered Office <span v-if="!isTypeCoop">and Records Office
+          </span> Mailing and Delivery Addresses. All addresses must be located in BC.
         </p>
       </header>
       <div :class="{ 'invalid-section': getShowErrors && !addressFormValid }">
