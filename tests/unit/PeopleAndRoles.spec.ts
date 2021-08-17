@@ -14,6 +14,9 @@ import { createLocalVue, mount } from '@vue/test-utils'
 // Components
 import { PeopleAndRoles } from '@/components/AddPeopleAndRoles'
 
+// Resources
+import { BenefitCompanyResource } from '@/resources/benefitCompany'
+
 Vue.use(Vuetify)
 Vue.use(Vuelidate)
 
@@ -38,31 +41,31 @@ function resetStore (): void {
 function getPersonList (roles = [completingPartyRole]): any {
   const mockPersonList = [
     {
-      'officer': {
-        'id': 0,
-        'firstName': 'Adam',
-        'lastName': 'Smith',
-        'middleName': 'D',
-        'orgName': '',
-        'type': 'Person'
+      officer: {
+        id: 0,
+        firstName: 'Adam',
+        lastName: 'Smith',
+        middleName: 'D',
+        orgName: '',
+        type: 'Person'
       },
-      'roles': roles,
-      'address': {
-        'mailingAddress': {
-          'streetAddress': '123 Fake Street',
-          'streetAddressAdditional': '',
-          'addressCity': 'Victoria',
-          'addressRegion': 'BC',
-          'postalCode': 'V8Z 5C6',
-          'addressCountry': 'CA'
+      roles: roles,
+      address: {
+        mailingAddress: {
+          streetAddress: '123 Fake Street',
+          streetAddressAdditional: '',
+          addressCity: 'Victoria',
+          addressRegion: 'BC',
+          postalCode: 'V8Z 5C6',
+          addressCountry: 'CA'
         },
-        'deliveryAddress': {
-          'streetAddress': '123 Fake Street',
-          'streetAddressAdditional': '',
-          'addressCity': 'Victoria',
-          'addressRegion': 'BC',
-          'postalCode': 'V8Z 5C6',
-          'addressCountry': 'CA'
+        deliveryAddress: {
+          streetAddress: '123 Fake Street',
+          streetAddressAdditional: '',
+          addressCity: 'Victoria',
+          addressRegion: 'BC',
+          postalCode: 'V8Z 5C6',
+          addressCountry: 'CA'
         }
       }
     }
@@ -78,7 +81,9 @@ describe('People And Roles component', () => {
     localVue.use(VueRouter)
     const router = mockRouter.mock()
 
-    wrapperFactory = (propsData) => {
+    store.state.resourceModel = BenefitCompanyResource
+
+    wrapperFactory = () => {
       return mount(PeopleAndRoles, {
         localVue,
         router,
@@ -113,8 +118,7 @@ describe('People And Roles component', () => {
     resetStore()
   })
 
-  // *** TODO: fix
-  xit('shows Add Person and Add Corporation Button when people list is not empty', () => {
+  it('shows Add Person and Add Corporation Button when people list is not empty', () => {
     store.state.stateModel.addPeopleAndRoleStep.orgPeople = getPersonList()
     const wrapper = wrapperFactory()
     expect(wrapper.find(btnAddCorp).exists()).toBeTruthy()
@@ -123,8 +127,7 @@ describe('People And Roles component', () => {
     resetStore()
   })
 
-  // *** TODO: fix
-  xit('shows Add Completing Party Button when people list is not empty and has no Completing Party', () => {
+  it('shows Add Completing Party Button when people list is not empty and has no Completing Party', () => {
     store.state.stateModel.addPeopleAndRoleStep.orgPeople = getPersonList([
       { 'roleType': 'Director', 'appointmentDate': '2020-03-30' }
     ])
@@ -163,8 +166,7 @@ describe('People And Roles component', () => {
     resetStore()
   })
 
-  // *** TODO: fix
-  xit('Shows check mark next to roles added', () => {
+  it('Shows check mark next to roles added', () => {
     store.state.stateModel.addPeopleAndRoleStep.orgPeople = getPersonList([
       { 'roleType': 'Director', 'appointmentDate': '2020-03-30' },
       { 'roleType': 'Incorporator', 'appointmentDate': '2020-03-30' }
