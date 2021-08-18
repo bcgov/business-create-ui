@@ -20,18 +20,36 @@
 
     <section class="mt-10" v-show="isTypeCoop">
       <header id="association-type-header">
-        <h2>2. Cooperative Association Type
-          <v-tooltip top max-width="20rem" content-class="top-tooltip">
-            <template v-slot:activator="{ on }">
-              <v-icon v-on="on" color="primary" class="ml-1">mdi-information-outline</v-icon>
-            </template>
-            <span>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-              dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-              ex ea commodo consequat.
+        <h2>2. Cooperative Association Type</h2>
+        <!-- Help Section -->
+        <div class="mt-5">
+          <span class="help-btn" @click="coopHelpToggle = !coopHelpToggle">
+            <v-icon color="blue darken-2" style="padding-right: 5px">mdi-help-circle-outline</v-icon>
+            <span v-if="!coopHelpToggle">Help with Cooperative Association Types</span>
+            <span v-else>Hide Help</span>
           </span>
-          </v-tooltip>
-        </h2>
+          <section v-show="coopHelpToggle" class="coop-type-help">
+            <header id="coop-type-help-header"><h2>Help with Cooperative Association Types</h2></header>
+            <p class="help-section"><strong>Community Service Cooperatives</strong> are a particular kind of cooperative
+              recognized under the Cooperative Association Act. Community Service Cooperatives have a similar status to
+              that of non-profit societies. This type of cooperative also requires the inclusion of non-alterable
+              clauses in their rules to ensure they operate on a non-profit basis, and their purpose is charitable, or
+              to provide health, social, educational, or other community services. Community Service Cooperatives cannot
+              be Housing Cooperatives and cannot issue investment shares.
+            </p>
+            <p class="help-section"><strong>Housing Cooperatives</strong> are a specific type of cooperative
+              incorporated under the Cooperative Association Act that provides housing to its members. Members may
+              purchase shares to join the Housing Cooperative and elect directors who will govern the cooperative.
+              Housing Cooperatives cannot issue investment shares. The Cooperative Association Act details special
+              provisions for Housing Cooperatives that need to be considered when deciding to incorporate.
+            </p>
+            <p class="help-section">An <strong>Ordinary Cooperative</strong> is a cooperative that may have a wide
+              range of purposes and is neither a Housing nor a Community Service Cooperative. The cooperative may
+              operate as a for-profit association and may issue investment shares.
+            </p>
+            <u class="help-btn" @click="coopHelpToggle = !coopHelpToggle"><small>Hide Help</small></u>
+          </section>
+        </div>
       </header>
       <div :class="{ 'invalid-section': getShowErrors && !hasValidCooperativeType }">
         <v-card flat class="step-container">
@@ -152,6 +170,7 @@ export default class DefineCompany extends Mixins(CommonMixin, EntityFilterMixin
   private addressFormValid: boolean = false
   private hasValidNameTranslation: boolean = true
   private hasValidCooperativeType: boolean = false
+  private coopHelpToggle: boolean = false
 
   // Enum for template
   readonly CorpTypeCd = CorpTypeCd
@@ -269,6 +288,8 @@ export default class DefineCompany extends Mixins(CommonMixin, EntityFilterMixin
 </script>
 
 <style lang="scss" scoped>
+@import '@/assets/styles/theme.scss';
+
 .step-container {
   margin-top: 1rem;
   padding: 1.25rem;
@@ -316,5 +337,33 @@ header {
 .company-statement-label {
   letter-spacing: -0.04rem;
   font-weight: 700;
+}
+
+// Coop Type Help section
+.help-btn {
+  cursor: pointer;
+  color: $primary-blue;
+  vertical-align: middle;
+}
+
+.coop-type-help {
+  margin: 2rem 0;
+  border-top: 1px dashed $gray6;
+  border-bottom: 1px dashed $gray6;
+  padding: 1rem 0;
+
+  #coop-type-help-header {
+    display: flex;
+    justify-content: center;
+  }
+
+  h2, h4 {
+    padding: 1rem 0;
+  }
+
+  u {
+    display: flex;
+    direction: rtl;
+  }
 }
 </style>
