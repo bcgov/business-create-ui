@@ -20,7 +20,18 @@
 
     <section class="mt-10" v-show="isTypeCoop">
       <header id="association-type-header">
-        <h2>2. Cooperative Association Type</h2>
+        <h2>2. Cooperative Association Type
+          <v-tooltip top max-width="20rem" content-class="top-tooltip">
+            <template v-slot:activator="{ on }">
+              <v-icon v-on="on" color="primary" class="ml-1">mdi-information-outline</v-icon>
+            </template>
+            <span>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+              dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
+              ex ea commodo consequat.
+          </span>
+          </v-tooltip>
+        </h2>
       </header>
       <div :class="{ 'invalid-section': getShowErrors && !hasValidCooperativeType }">
         <v-card flat class="step-container">

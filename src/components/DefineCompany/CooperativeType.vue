@@ -2,7 +2,7 @@
   <v-form ref="cooperativeTypeForm" id="cooperative-type">
     <v-row class="py-3" no-gutters>
       <v-col>
-        <label class="font-weight-bold">Select Type</label>
+        <label><strong>Select Type</strong></label>
       </v-col>
       <v-col class="ml-n1">
         <v-select
@@ -31,7 +31,7 @@ import { FormType } from '@/interfaces'
 export default class CooperativeType extends Vue {
   // Refs
   $refs!: {
-    cooperativeTypeForm: FormType,
+    cooperativeTypeForm: FormType
   }
 
   @Prop({ default: false })
@@ -41,7 +41,7 @@ export default class CooperativeType extends Vue {
   @Getter getCooperativeType!: CoopType
 
   // Local properties
-  private cooperativeTypes: Array<CoopType> = [
+  private readonly cooperativeTypes: Array<CoopType> = [
     CoopType.COOPERATIVE,
     CoopType.HOUSING_COOPERATIVE,
     CoopType.COMMUNITY_SERVICE_COOPERATIVE

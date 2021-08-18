@@ -91,6 +91,8 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     // Conditionally add the entity-specific sections.
     switch (this.getEntityType) {
       case CorpTypeCd.COOP:
+        filing.filing.incorporationApplication.cooperative.cooperativeAssociationType =
+          this.getDefineCompanyStep.cooperativeType
         filing.filing.incorporationApplication.rules = this.getRules
         filing.filing.incorporationApplication.memorandum = this.getMemorandum
         break
@@ -111,13 +113,6 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     if (this.isNamedBusiness) {
       filing.filing.incorporationApplication.nameRequest.nrNumber = this.getNameRequestNumber
       filing.filing.incorporationApplication.nameRequest.legalName = this.getApprovedName
-    }
-
-    // If this is a Cooperative then save the cooperative association type.
-    if (this.isTypeCoop) {
-      filing.filing.incorporationApplication.cooperative = {
-        cooperativeAssociationType: this.getDefineCompanyStep.cooperativeType
-      }
     }
 
     // If this is a future effective filing then save the effective date.
@@ -161,6 +156,8 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     // Conditionally parse the entity-specific sections.
     switch (this.getEntityType) {
       case CorpTypeCd.COOP:
+        // Set Cooperative type
+        this.setCooperativeType(draftFiling.incorporationApplication.cooperative?.cooperativeAssociationType)
         // Set Rules
         this.setRules(draftFiling.incorporationApplication.rules)
         // Set Memorandum
@@ -199,10 +196,5 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
 
     // Set Folio Number
     this.setFolioNumber(draftFiling.header.folioNumber)
-
-    // Set Cooperative Type if Coop
-    if (this.isTypeCoop) {
-      this.setCooperativeType(draftFiling.incorporationApplication.cooperative?.cooperativeAssociationType)
-    }
   }
 }

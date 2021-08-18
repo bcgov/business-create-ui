@@ -258,9 +258,10 @@ export const isBusySaving = (state: StateIF): boolean => {
 
 /** Is true when the step is valid. */
 export const isDefineCompanyValid = (state: StateIF): boolean => {
-  const validCoopType = isTypeCoop(state) ? !!getCooperativeType(state) : true
+  // If entity is a Coop, check for Coop Type assignment, flagged valid for non-coop entities.
+  const isValidCoopType = isTypeCoop(state) ? !!getCooperativeType(state) : true
 
-  return getDefineCompanyStep(state).valid && validCoopType
+  return getDefineCompanyStep(state).valid && isValidCoopType
 }
 
 /** Is true when the step is valid. */
