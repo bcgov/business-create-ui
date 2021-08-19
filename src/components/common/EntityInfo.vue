@@ -28,7 +28,7 @@
 
           <div id="entity-business-email">
             <span class="font-weight-bold">Email:</span>
-            {{ getCompletingPartyEmail || 'Not Available' }}
+            {{ getUserEmail || 'Not Available' }}
           </div>
 
           <div id="entity-business-phone">
@@ -55,7 +55,7 @@ import { EnumMixin } from '@/mixins'
 @Component({})
 export default class EntityInfo extends Mixins(EnumMixin) {
   @Getter isEntityType!: boolean
-  @Getter getCompletingPartyEmail!: string
+  @Getter getUserEmail!: string
   @Getter getUserPhone!: string
   @Getter getEntityType!: CorpTypeCd
   @Getter getNameRequestNumber!: string

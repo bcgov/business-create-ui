@@ -1,10 +1,6 @@
 {
   "name": "business-create-ui",
-<<<<<<< HEAD
-  "version": "2.0.10",
-=======
-  "version": "2.0.9",
->>>>>>> Coop Association type and UX Updates
+  "version": "2.0.11",
   "private": true,
   "appName": "Create UI",
   "sbcName": "SBC Common Components",

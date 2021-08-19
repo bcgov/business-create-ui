@@ -22,7 +22,7 @@
       <header id="association-type-header">
         <h2>2. Cooperative Association Type</h2>
         <!-- Help Section -->
-        <div class="mt-5">
+        <div class="mt-4">
           <span class="help-btn" @click="coopHelpToggle = !coopHelpToggle">
             <v-icon color="blue darken-2" style="padding-right: 5px">mdi-help-circle-outline</v-icon>
             <span v-if="!coopHelpToggle">Help with Cooperative Association Types</span>
