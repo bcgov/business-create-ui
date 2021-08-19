@@ -42,9 +42,9 @@ export default class CooperativeType extends Vue {
 
   // Local properties
   private readonly cooperativeTypes: Array<CoopType> = [
-    CoopType.COOPERATIVE,
+    CoopType.COMMUNITY_SERVICE_COOPERATIVE,
     CoopType.HOUSING_COOPERATIVE,
-    CoopType.COMMUNITY_SERVICE_COOPERATIVE
+    CoopType.COOPERATIVE
   ]
 
   private cooperativeType: CoopType = null
