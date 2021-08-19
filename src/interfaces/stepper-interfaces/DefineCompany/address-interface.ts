@@ -28,3 +28,13 @@ export interface IncorporationAddressIF {
 export interface BaseAddressType extends Vue {
   $refs: any
 }
+
+export const EmptyAddress: AddressIF = {
+  streetAddress: '',
+  streetAddressAdditional: '',
+  addressCity: '',
+  addressRegion: '',
+  postalCode: '',
+  addressCountry: '',
+  deliveryInstructions: ''
+}

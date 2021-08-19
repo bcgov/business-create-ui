@@ -26,7 +26,7 @@
         of shares, each class must be assigned an identifying name such as Class A, Class B, etc.
       </p>
       <div id="share-structure-sample">
-        <ListShareClass :shareClasses="sharesHelpSample" :isSummary="true"/>
+        <ListShareClass :shareClasses="sharesHelpSample" :isSummary="true" />
       </div>
       <p><small>Sample Share Structure</small></p>
       <h3>Important Information About the Company's Share Structure</h3>
@@ -68,7 +68,8 @@
         @addEditSeries="addEditShareSeries($event)"
         @removeClass="removeShareClass($event)"
         @removeSeries="removeSeries"
-        @resetEvent="resetData()"/>
+        @resetEvent="resetData()"
+      />
     </v-card>
     <ListShareClass v-if="this.shareClasses.length > 0"
       :shareClasses="shareClasses"
@@ -77,7 +78,8 @@
       @removeClass="removeShareClass($event)"
       @addSeries="initNewShareSeries($event)"
       @editSeries="editSeries"
-      @removeSeries="removeSeries"/>
+      @removeSeries="removeSeries"
+    />
   </section>
 </template>
 

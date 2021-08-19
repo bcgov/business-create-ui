@@ -44,7 +44,7 @@
         @change="changeAgreementType"
       >
         <template slot="label">
-          <div v-html="item.description" class="agreement-option"/>
+          <div v-html="item.description" class="agreement-option" />
         </template>
       </v-checkbox>
     </div>
@@ -55,7 +55,7 @@
                   :key="index" :value="item.code" :id="`agreement-type-${item.code}`"
         >
           <template slot="label">
-            <div v-html="item.description" class="agreement-option"/>
+            <div v-html="item.description" class="agreement-option" />
           </template>
         </v-radio>
       </v-radio-group>

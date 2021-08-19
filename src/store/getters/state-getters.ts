@@ -1,6 +1,7 @@
 import { AccountTypes, CorpTypeCd, RoleTypes } from '@/enums'
 import {
   AccountInformationIF,
+  AddressIF,
   BusinessContactIF,
   CertifyIF,
   CreateMemorandumIF,
@@ -24,9 +25,9 @@ import { getMaxStep } from './resource-getters'
 // The getters in this file return values from the current state model.
 //
 
-/** Whether the user has "staff" keycloak role. */
+/** Whether the user has "staff" auth role. */
 export const isRoleStaff = (state: StateIF): boolean => {
-  return getTombstone(state).keycloakRoles.includes('staff')
+  return getTombstone(state).authRoles.includes('staff')
 }
 
 /** Whether the user is authorized to edit. */
@@ -132,12 +133,12 @@ export const getBusinessContact = (state: StateIF): BusinessContactIF => {
 
 /** The Rules object. */
 export const getRules = (state: StateIF): any => {
-  return {} // *** FUTURE
+  return {} // *** FUTURE: implement this
 }
 
 /** The Memorandum object. */
 export const getMemorandum = (state: StateIF): any => {
-  return {} // *** FUTURE
+  return {} // *** FUTURE: implement this
 }
 
 /** The Add People and Role object. */
@@ -310,7 +311,22 @@ export const getCertifyState = (state: StateIF): CertifyIF => {
   return state.stateModel.certifyState
 }
 
-/** The Completing Party's email address. */
-export const getCompletingPartyEmail = (state: StateIF): string => {
+/** The users's email address. */
+export const getUserEmail = (state: StateIF): string => {
   return (state.stateModel.tombstone.userEmail)
+}
+
+/** The user's first name. */
+export const getUserFirstName = (state: StateIF): string => {
+  return (state.stateModel.tombstone.userFirstName)
+}
+
+/** The user's last name. */
+export const getUserLastName = (state: StateIF): string => {
+  return (state.stateModel.tombstone.userLastName)
+}
+
+/** The user's address. */
+export const getUserAddress = (state: StateIF): AddressIF => {
+  return (state.stateModel.tombstone.userAddress)
 }

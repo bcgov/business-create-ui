@@ -12,7 +12,8 @@
     <file-and-pay-invalid-name-request-dialog
      attach="#app"
      :dialog="fileAndPayInvalidNameRequestDialog"
-     @okay="goToManageBusinessDashboard()"/>
+     @okay="goToManageBusinessDashboard()"
+    />
 
     <account-authorization-dialog
       attach="#app"
@@ -146,8 +147,9 @@ import {
   FileAndPayInvalidNameRequestDialog
 } from '@/components/dialogs'
 import { CommonMixin, DateMixin, FilingTemplateMixin, LegalApiMixin, NameRequestMixin } from '@/mixins'
-import { ActionBindingIF, ConfirmDialogType, FilingDataIF, StepIF } from '@/interfaces'
+import { AccountInformationIF, ActionBindingIF, AddressIF, ConfirmDialogType, FilingDataIF, StepIF } from '@/interfaces'
 import { CompanyResources } from '@/resources'
+import AuthServices from '@/services/auth.services'
 
 // Enums and Constants
 import { FilingStatus, RouteNames, NameRequestStates } from '@/enums'
@@ -187,8 +189,11 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   @Action setCurrentStep!: ActionBindingIF
   @Action setCurrentDate!: ActionBindingIF
   @Action setCompanyResources!: ActionBindingIF
-  @Action setUserEmail: ActionBindingIF
-  @Action setAuthRoles: ActionBindingIF
+  @Action setUserEmail!: ActionBindingIF
+  @Action setUserFirstName!: ActionBindingIF
+  @Action setUserLastName!: ActionBindingIF
+  @Action setUserAddress!: ActionBindingIF
+  @Action setAuthRoles!: ActionBindingIF
   @Action setAddPeopleAndRoleStepValidity!: ActionBindingIF
   @Action setCreateShareStructureStepValidity!: ActionBindingIF
   @Action setHaveChanges!: ActionBindingIF
@@ -386,8 +391,22 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       this.setTempId(tempId)
 
       // get user info
-      const userInfo = await this.getUserInfo().catch(error => {
+      const userInfo = await this.getSaveUserInfo().catch(error => {
         console.log('User info error =', error) // eslint-disable-line no-console
+        this.accountAuthorizationDialog = true
+        throw error // go to catch()
+      })
+
+      // get account info
+      const accountInfo = await this.getSaveAccountInfo().catch(error => {
+        console.log('Account info error =', error) // eslint-disable-line no-console
+        this.accountAuthorizationDialog = true
+        throw error // go to catch()
+      })
+
+      // get org info
+      const orgInfo = await this.getSaveOrgInfo(accountInfo?.id).catch(error => {
+        console.log('Org info error =', error) // eslint-disable-line no-console
         this.accountAuthorizationDialog = true
         throw error // go to catch()
       })
@@ -445,7 +464,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
         // set current profile name to store for field pre population
         // proceed only if we are not staff
         if (userInfo && !this.isRoleStaff) {
-          // pre-populate submitting party name
+          // pre-populate Certified By name
           this.setCertifyState(
             {
               valid: this.getCertifyState.valid,
@@ -545,25 +564,77 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     this.saveWarnings = []
   }
 
-  /** Gets current user info and stores it. */
-  private async getUserInfo (): Promise<any> {
+  /** Gets user info and stores user's email, first name and last name. */
+  private async getSaveUserInfo (): Promise<any> {
     // NB: will throw if API error
-    const response = await this.getCurrentUser()
-    // NB: just save email for now
-    let email
-    if (response?.data?.contacts?.length > 0) {
+    const userInfo = await AuthServices.fetchUserInfo()
+    if (!userInfo) throw new Error('Invalid user info')
+
+    if (userInfo.contacts?.length > 0 && userInfo.contacts[0].email) {
       // this is a BCSC user
-      email = response?.data?.contacts[0].email
-    } else if (response?.data?.email) {
-      // this is a IDIR user
-      email = response?.data?.email
-    }
-    if (email) {
-      this.setUserEmail(email)
+      this.setUserEmail(userInfo.contacts[0].email)
+    } else if (userInfo.email) {
+      // this is an IDIR user
+      this.setUserEmail(userInfo.email)
     } else {
-      throw new Error('Invalid user info')
+      throw new Error('Invalid user email')
     }
-    return response.data
+
+    if (!userInfo.firstname) throw new Error('Invalid user first name')
+    if (!userInfo.lastname) throw new Error('Invalid user last name')
+
+    this.setUserFirstName(userInfo.firstname)
+    this.setUserLastName(userInfo.lastname)
+
+    return userInfo
+  }
+
+  /** Gets account info and stores it. */
+  private async getSaveAccountInfo (): Promise<any> {
+    const currentAccount = sessionStorage.getItem(SessionStorageKeys.CurrentAccount)
+    if (!currentAccount) throw new Error('Invalid current account')
+
+    const currentAccountParsed = JSON.parse(currentAccount)
+    if (!currentAccountParsed) throw new Error('Invalid account info')
+
+    const accountInfo: AccountInformationIF = {
+      accountType: currentAccountParsed.accountType,
+      id: currentAccountParsed.id,
+      label: currentAccountParsed.label,
+      type: currentAccountParsed.type
+    }
+    this.setAccountInformation(accountInfo)
+
+    return currentAccountParsed
+  }
+
+  /** Gets org info and stores user's address. */
+  private async getSaveOrgInfo (orgId: number): Promise<any> {
+    if (!orgId) throw new Error('Invalid org id')
+
+    // NB: will throw if API error
+    const orgInfo = await AuthServices.fetchOrgInfo(orgId)
+    if (!orgInfo) throw new Error('Invalid org info')
+
+    const mailingAddress = orgInfo.mailingAddress
+    if (!mailingAddress) throw new Error('Invalid mailing address')
+
+    const userAddress: AddressIF = {
+      addressCity: mailingAddress.city,
+      addressCountry: mailingAddress.country,
+      addressRegion: mailingAddress.region,
+      postalCode: mailingAddress.postalCode,
+      streetAddress: mailingAddress.street,
+      streetAddressAdditional: mailingAddress.streetAdditional
+    }
+    this.setUserAddress(userAddress)
+
+    if (sessionStorage.getItem(SessionStorageKeys.CurrentAccount)) {
+      const accountInfo = JSON.parse(sessionStorage.getItem(SessionStorageKeys.CurrentAccount))
+      this.setAccountInformation(accountInfo)
+    }
+
+    return orgInfo
   }
 
   /** Updates Launch Darkly with current user info. */
@@ -582,21 +653,12 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   /** Gets authorizations from Auth API, verifies roles, and stores them. */
   private async checkAuth (): Promise<any> {
     // NB: will throw if API error
-    const response = await this.getNrAuthorizations(this.getTempId)
+    const authRoles = await AuthServices.fetchNrAuthorizations(this.getTempId)
     // NB: roles array may contain 'view', 'edit', 'staff' or nothing
-    const authRoles = response?.data?.roles
     if (authRoles && authRoles.length > 0) {
       this.setAuthRoles(authRoles)
     } else {
       throw new Error('Invalid auth roles')
-    }
-  }
-
-  /** Gets account information (e.g. Premium account) and loads it into the state model */
-  private loadAccountInformation (): void {
-    if (sessionStorage.getItem(SessionStorageKeys.CurrentAccount)) {
-      const accountInfo = JSON.parse(sessionStorage.getItem(SessionStorageKeys.CurrentAccount))
-      this.setAccountInformation(accountInfo)
     }
   }
 
@@ -610,13 +672,11 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     if (!isSigninRoute && !isSignoutRoute) {
       this.setCurrentStep(this.$route.meta?.step)
       await this.startTokenService()
-      await this.fetchData(true)
 
-      // Allow user settings account information to load into session storage before checking
-      // There can be a timing issue when a session is first established where account information
-      // is not available right away in session storage
+      // wait a moment for token to be available in session storage
       await Vue.nextTick()
-      this.loadAccountInformation()
+
+      await this.fetchData(true)
     }
 
     if (this.$route.name === RouteNames.REVIEW_CONFIRM) {

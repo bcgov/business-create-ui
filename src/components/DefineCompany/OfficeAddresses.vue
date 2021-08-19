@@ -9,7 +9,8 @@
           <mailing-address
             v-if="!isEmptyAddress(mailingAddress)"
             :address="mailingAddress"
-            :editing="false"/>
+            :editing="false"
+          />
           <div v-else>(Not entered)</div>
         </v-flex>
 
@@ -18,7 +19,8 @@
           <delivery-address
             v-if="!isEmptyAddress(deliveryAddress) && !inheritMailingAddress"
             :address="deliveryAddress"
-            :editing="false"/>
+            :editing="false"
+          />
           <div v-else-if="isEmptyAddress(deliveryAddress)">(Not entered)</div>
           <div v-else>Same as Mailing Address</div>
         </v-flex>
@@ -31,7 +33,8 @@
           <mailing-address
             v-if="!inheritRegisteredAddress && !isEmptyAddress(recMailingAddress)"
             :address="recMailingAddress"
-            :editing="false"/>
+            :editing="false"
+          />
           <div v-else-if="isEmptyAddress(recMailingAddress)">(Not entered)</div>
           <div v-else>Same as Registered Office</div>
         </v-flex>
@@ -41,7 +44,8 @@
           <delivery-address
             v-if="!inheritRecMailingAddress && !inheritRegisteredAddress && !isEmptyAddress(recDeliveryAddress)"
             :address="recDeliveryAddress"
-            :editing="false"/>
+            :editing="false"
+          />
           <div v-else-if="isEmptyAddress(recDeliveryAddress)">(Not entered)</div>
           <div v-else-if="inheritRegisteredAddress">Same as Registered Office</div>
           <div v-else>Same as Mailing Address</div>
@@ -69,7 +73,8 @@
                   :editing="true"
                   :schema="addressSchema"
                   @update:address="updateAddress('mailingAddress', mailingAddress, $event)"
-                  @valid="updateAddressValid('mailingAddress', $event)"/>
+                  @valid="updateAddressValid('mailingAddress', $event)"
+                />
               </div>
             </div>
           </div>
@@ -86,7 +91,8 @@
                   class="inherit-checkbox"
                   label="Same as Mailing Address"
                   v-model="inheritMailingAddress"
-                  v-on:change="setDeliveryAddressToMailingAddress()"/>
+                  v-on:change="setDeliveryAddressToMailingAddress()"
+                />
               </div>
               <div class="address-wrapper"
                    v-if="!isSame(mailingAddress, deliveryAddress, ['actions']) || !inheritMailingAddress">
@@ -97,7 +103,8 @@
                   :editing="true"
                   :schema="addressSchema"
                   @update:address="updateAddress('deliveryAddress', deliveryAddress, $event)"
-                  @valid="updateAddressValid('deliveryAddress', $event)"/>
+                  @valid="updateAddressValid('deliveryAddress', $event)"
+                />
               </div>
             </div>
           </div>
@@ -112,7 +119,8 @@
               class="records-inherit-checkbox"
               label="Same as Registered Office"
               v-model="inheritRegisteredAddress"
-              v-on:change="setRecordOfficeToRegisteredOffice()"/>
+              v-on:change="setRecordOfficeToRegisteredOffice()"
+            />
           </div>
 
           <template v-if="!inheritRegisteredAddress">
@@ -128,7 +136,8 @@
                       :editing="true"
                       :schema="addressSchema"
                       @update:address="updateAddress('recMailingAddress', recMailingAddress, $event)"
-                      @valid="updateAddressValid('recMailingAddress', $event)"/>
+                      @valid="updateAddressValid('recMailingAddress', $event)"
+                    />
                   </div>
                 </div>
               </div>
@@ -144,7 +153,8 @@
                       class="inherit-checkbox"
                       label="Same as Mailing Address"
                       v-model="inheritRecMailingAddress"
-                      v-on:change="setRecordDeliveryAddressToMailingAddress()"/>
+                      v-on:change="setRecordDeliveryAddressToMailingAddress()"
+                    />
                   </div>
                   <div
                     class="address-wrapper"
@@ -155,7 +165,8 @@
                       :editing="true"
                       :schema="addressSchema"
                       @update:address="updateAddress('recDeliveryAddress', recDeliveryAddress, $event)"
-                      @valid="updateAddressValid('recDeliveryAddress', $event)"/>
+                      @valid="updateAddressValid('recDeliveryAddress', $event)"
+                    />
                   </div>
                 </div>
               </div>

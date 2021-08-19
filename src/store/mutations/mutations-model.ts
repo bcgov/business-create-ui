@@ -1,6 +1,7 @@
 import { CorpTypeCd } from '@/enums'
 import {
   AccountInformationIF,
+  AddressIF,
   BusinessContactIF,
   CertifyIF,
   IncorporationAddressIF,
@@ -21,16 +22,24 @@ export const mutateCompanyResources = (state: StateIF, companyResources: Resourc
   state.resourceModel = companyResources
 }
 
-export const mutateKeycloakRoles = (state: StateIF, keyCloakRoles: Array<string>) => {
-  state.stateModel.tombstone.keycloakRoles = keyCloakRoles
-}
-
 export const mutateAuthRoles = (state: StateIF, authRoles: Array<string>) => {
   state.stateModel.tombstone.authRoles = authRoles
 }
 
 export const mutateUserEmail = (state: StateIF, userEmail: string) => {
   state.stateModel.tombstone.userEmail = userEmail
+}
+
+export const mutateUserFirstName = (state: StateIF, userFirstName: string) => {
+  state.stateModel.tombstone.userFirstName = userFirstName
+}
+
+export const mutateUserLastName = (state: StateIF, userLastName: string) => {
+  state.stateModel.tombstone.userLastName = userLastName
+}
+
+export const mutateUserAddress = (state: StateIF, userAddress: AddressIF) => {
+  state.stateModel.tombstone.userAddress = userAddress
 }
 
 export const mutateCurrentStep = (state: StateIF, currentStep: number) => {
@@ -118,12 +127,12 @@ export const mutateFilingId = (state: StateIF, filingId: number) => {
 }
 
 export const mutateRules = (state: StateIF, rules: any) => {
-  // state.stateModel.rules = rules // *** FUTURE
+  // state.stateModel.rules = rules // *** FUTURE: implement this
   if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
 }
 
 export const mutateMemorandum = (state: StateIF, memorandum: any) => {
-  // state.stateModel.memorandum = memorandum // *** FUTURE
+  // state.stateModel.memorandum = memorandum // *** FUTURE: implement this
   if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
 }
 

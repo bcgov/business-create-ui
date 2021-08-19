@@ -2,9 +2,11 @@ import { StateModelIF } from '@/interfaces'
 
 export const stateModel: StateModelIF = {
   tombstone: {
-    keycloakRoles: [],
     authRoles: [],
-    userEmail: ''
+    userEmail: '',
+    userFirstName: '',
+    userLastName: '',
+    userAddress: null
   },
   accountInformation: {
     accountType: '',

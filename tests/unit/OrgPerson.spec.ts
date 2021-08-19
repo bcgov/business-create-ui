@@ -1,13 +1,11 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify'
+import Vuelidate from 'vuelidate'
 import { mount, Wrapper, createLocalVue } from '@vue/test-utils'
 import flushPromises from 'flush-promises'
-
-import { OrgPerson } from '@/components/AddPeopleAndRoles'
-
-// Store
 import { getVuexStore } from '@/store'
-import Vuelidate from 'vuelidate'
+import { OrgPerson } from '@/components/AddPeopleAndRoles'
+import { EmptyOrgPerson } from '@/interfaces'
 
 Vue.use(Vuetify)
 Vue.use(Vuelidate)
@@ -116,28 +114,7 @@ const validOrgData = {
   }
 }
 
-const emptyPerson = {
-  officer: {
-    id: null as string,
-    firstName: '',
-    lastName: '',
-    middleName: '',
-    orgName: '',
-    partyType: 'Person',
-    email: null
-  },
-  roles: [],
-  mailingAddress: {
-    streetAddress: '',
-    streetAddressAdditional: '',
-    addressCity: '',
-    addressRegion: '',
-    postalCode: '',
-    addressCountry: '',
-    deliveryInstructions: ''
-  },
-  action: null
-}
+const emptyPerson = { ... EmptyOrgPerson }
 
 /**
  * Returns the last event for a given name, to be used for testing event propagation in response to component changes.
@@ -367,7 +344,9 @@ describe('Org Person component', () => {
   })
 
   it('Emits events correctly on confirming reassign completing party', async () => {
+    store.state.stateModel.tombstone.authRoles = ['staff']
     const wrapper: Wrapper<OrgPerson> = createComponent(validIncorporator, -1, validPersonData)
+
     const cpCheckBox: Wrapper<Vue> = wrapper.find(completingPartyChkBoxSelector)
     cpCheckBox.setChecked(true)
     await Vue.nextTick()
@@ -398,6 +377,7 @@ describe('Org Person component', () => {
     expect(event.roles[1].roleType).toBe('Incorporator')
 
     wrapper.destroy()
+    store.state.stateModel.tombstone.authRoles = []
   })
 
   it('Emits cancel event', async () => {

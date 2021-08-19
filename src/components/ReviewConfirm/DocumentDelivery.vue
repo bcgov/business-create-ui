@@ -13,7 +13,7 @@
         <label class="font-weight-bold">Completing Party</label>
       </v-col>
       <v-col :cols="9">
-        <v-card-text id="completing-party-email" class="pa-0">{{getCompletingPartyEmail || 'Not entered'}}</v-card-text>
+        <v-card-text id="completing-party-email" class="pa-0">{{getUserEmail || 'Not entered'}}</v-card-text>
       </v-col>
     </v-row>
   </v-card>
@@ -30,6 +30,6 @@ import { BusinessContactIF } from '@/interfaces'
 @Component({})
 export default class DocumentDelivery extends Vue {
   @Getter getBusinessContact!: BusinessContactIF
-  @Getter getCompletingPartyEmail!: string
+  @Getter getUserEmail!: string
 }
 </script>

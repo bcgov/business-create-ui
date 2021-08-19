@@ -24,7 +24,8 @@
                   v-model="shareStructure.name"
                   :rules="getNameRule()"
                   suffix="Shares"
-                  persistent-hint/>
+                  persistent-hint
+                />
 
                 <v-divider class="mt-2 mb-4" />
 
@@ -44,11 +45,12 @@
                         persistent-hint
                         :hint="'Enter the maximum number of shares in the ' + shareStructure.type"
                         :rules="getMaximumShareRule()"
-                        :disabled="hasNoMaximumShares"/>
+                        :disabled="hasNoMaximumShares"
+                      />
                     </v-col></v-row>
                     </template>
                   </v-radio>
-                  <v-radio :value="true" label="No maximum" id="lbl-no-maximum" v-if="isNoMaxSharesVisible"/>
+                  <v-radio :value="true" label="No maximum" id="lbl-no-maximum" v-if="isNoMaxSharesVisible" />
                 </v-radio-group>
 
                 <v-divider class="mt-2 mb-4" />
@@ -69,7 +71,8 @@
                             v-model="shareStructure.parValue"
                             :rules="getParValueRule()"
                             hint="Enter the initial value of each share"
-                            persistent-hint/>
+                            persistent-hint
+                          />
                         </v-col>
                         <v-col cols="6">
                           <v-select
@@ -80,7 +83,8 @@
                             :rules="getCurrencyRule()"
                             item-text="`${data.item.name}, ${data.item.code}`"
                             item-value="code"
-                            id='class-currency'>
+                            id='class-currency'
+                          >
                             <template slot="selection" slot-scope="data">
                                {{ data.item.name }} ({{ data.item.code }})
                             </template>
@@ -92,25 +96,27 @@
                       </v-row>
                     </template>
                   </v-radio>
-                  <v-radio :value="true" label="No par value" id="radio-no-par"/>
+                  <v-radio :value="true" label="No par value" id="radio-no-par" />
                 </v-radio-group>
 
                 <div v-show="isSeries">
                     <v-row v-if="shareStructure.hasParValue">
                         <v-col cols="6">
-                            <v-text-field
+                          <v-text-field
                             label="Par Value"
                             id="series-par-value"
                             :value="shareStructure.parValue"
                             :disabled="true"
-                            width="10"/>
+                            width="10"
+                          />
                         </v-col>
                         <v-col cols="6">
-                            <v-text-field
+                          <v-text-field
                             id="series-currency"
                             label="Currency"
                             :value="`${getCurrencyNameByCode(shareStructure.currency)} (${shareStructure.currency})`"
-                            :disabled="true"/>
+                            :disabled="true"
+                          />
                         </v-col>
                     </v-row>
                     <v-label id='lbl-no-par' v-else>No par value</v-label>
@@ -122,7 +128,8 @@
                   <v-checkbox
                      id="special-rights-check-box"
                     :label="'This share ' + shareStructure.type.toLowerCase() + ' has special rights or restrictions'"
-                    v-model="shareStructure.hasRightsOrRestrictions"/>
+                    v-model="shareStructure.hasRightsOrRestrictions"
+                  />
                 </div>
 
                 <div class="form__row form__btns">

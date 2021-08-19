@@ -128,7 +128,6 @@ describe('Emits error event if NR validation fails in file and pay', () => {
       details: { approvedName: 'My Name Request Inc.' }
     }
     store.state.stateModel.tombstone = {
-      keycloakRoles: [],
       authRoles: [],
       userEmail: 'completing-party@example.com'
     }
@@ -383,7 +382,6 @@ describe('Actions component - Filing Functionality', () => {
     }
     store.state.stateModel.nameTranslations = []
     store.state.stateModel.tombstone = {
-      keycloakRoles: [],
       authRoles: [],
       userEmail: 'completing-party@example.com'
     }

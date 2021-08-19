@@ -14,7 +14,7 @@
         <p class="mt-1">Review the information in your application. If you need to change or complete anything, return
           to the step to make the necessary change.</p>
       </header>
-      <Summary class="mt-6"/>
+      <Summary class="mt-6" />
     </section>
 
     <!-- Incorporation Date Time -->
@@ -51,7 +51,7 @@
         <p class="mt-1">Enter the legal name of the person authorized to complete and submit this application.</p>
       </header>
       <div :class="{ 'invalid-section': isCertifyInvalid }">
-        <certify
+        <Certify
           :currentDate="getCurrentDate"
           :certifiedBy="getCertifyState.certifiedBy"
           :entityDisplay="getCompletingPartyStatement.entityDisplay"
@@ -99,7 +99,6 @@ export default class ReviewConfirm extends Mixins() {
   @Getter getCompanyTitle!: string
   @Getter getCompanyDescription!: string
   @Getter getCompletingPartyStatement!: CertifyStatementIF
-  @Getter getCompletingPartyEmail!: string
   @Getter getValidateSteps!: boolean
   @Getter isBaseCompany!: boolean
   @Getter isTypeBcomp!: boolean

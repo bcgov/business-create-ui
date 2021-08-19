@@ -44,12 +44,12 @@ export const getIncorporationAgreementResource = (state: StateIF): any => {
 
 /** The incorporation agreement sample article. */
 export const getSampleArticle = (state: StateIF): string => {
-  return getIncorporationAgreementResource(state)?.article
+  return getIncorporationAgreementResource(state).article
 }
 
 /** The incorporation agreement options. */
 export const getIncorporationAgreementDocuments = (state: StateIF): Array<IncorporationAgreementTypeIF> => {
-  return getIncorporationAgreementResource(state)?.documents
+  return getIncorporationAgreementResource(state).documents
 }
 
 /** The array of steps. */

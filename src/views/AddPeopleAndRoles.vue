@@ -4,7 +4,7 @@
       <header id="people-role-header">
         <h2>{{ getPeopleAndRolesResource.header }}</h2>
       </header>
-      <PeopleAndRoles/>
+      <PeopleAndRoles />
     </section>
   </div>
 </template>
