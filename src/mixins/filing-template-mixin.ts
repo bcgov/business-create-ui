@@ -91,8 +91,9 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     // Conditionally add the entity-specific sections.
     switch (this.getEntityType) {
       case CorpTypeCd.COOP:
-        filing.filing.incorporationApplication.cooperative.cooperativeAssociationType =
-          this.getDefineCompanyStep.cooperativeType
+        filing.filing.incorporationApplication.cooperative = {
+          cooperativeAssociationType: this.getDefineCompanyStep.cooperativeType
+        }
         filing.filing.incorporationApplication.rules = this.getRules
         filing.filing.incorporationApplication.memorandum = this.getMemorandum
         break
