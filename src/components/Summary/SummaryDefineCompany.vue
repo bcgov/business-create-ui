@@ -5,8 +5,8 @@
       <label class="define-company-title pl-2"><strong>Your {{ getCompanyDisplayName }}</strong></label>
     </div>
 
-    <section :class="{ 'invalid-section': !getDefineCompanyStep.valid }">
-      <div v-if="!getDefineCompanyStep.valid" class="defineCompanyStepErrorMessage">
+    <section :class="{ 'invalid-section': !isDefineCompanyValid }">
+      <div v-if="!isDefineCompanyValid" class="defineCompanyStepErrorMessage">
         <span>
           <v-icon color="error">mdi-information-outline</v-icon>
           &nbsp;
@@ -19,28 +19,40 @@
       </div>
 
       <div class="section-container">
-        <!-- FUTURE: Replace container content with Name Request Summary when it is ready -->
-        <v-layout row>
-          <v-flex md4>
-            <label><strong>Name</strong></label>
-          </v-flex>
-          <v-flex md8>
+        <v-row no-gutters>
+          <v-col md="4">
+            <label class="font-weight-bold ml-n3">Name</label>
+          </v-col>
+          <v-col md="8">
             <div class="company-name">{{ getApprovedName || '[Incorporation Number] B.C. Ltd.' }}</div>
             <div class="company-type">
               <span>{{ entityDescription }}</span>
             </div>
-          </v-flex>
-        </v-layout>
-        <v-layout row v-if="getNameTranslations && getNameTranslations.length" class="mt-3">
-          <v-flex md4>
-            <label><strong>Name Translation</strong></label>
-          </v-flex>
-          <v-flex md8>
+          </v-col>
+        </v-row>
+        <v-row no-gutters v-if="getNameTranslations && getNameTranslations.length" class="mt-3">
+          <v-col md="4">
+            <label class="font-weight-bold ml-n3">Name Translation</label>
+          </v-col>
+          <v-col md="8">
             <div v-for="(nameTranslation, index) in getNameTranslations" :key="`name_translation_${index}`">
-              {{nameTranslation.name}}
+              {{ nameTranslation.name }}
             </div>
-          </v-flex>
-        </v-layout>
+          </v-col>
+        </v-row>
+      </div>
+      <v-divider/>
+      <div v-if="isTypeCoop" class="section-container">
+        <v-row no-gutters>
+          <v-col md="4">
+            <label class="font-weight-bold ml-n3">Type</label>
+          </v-col>
+          <v-col md="8">
+            <div class="cooperative-type ml-n1">
+              <span>{{ getCooperativeType || '(Not Entered)' }}</span>
+            </div>
+          </v-col>
+        </v-row>
       </div>
 
       <v-divider />
@@ -76,7 +88,7 @@ import { FolioNumber, BusinessContactInfo, OfficeAddresses } from '@/components/
 import { EntityFilterMixin, EnumMixin } from '@/mixins'
 
 // Enums
-import { RouteNames } from '@/enums'
+import { CoopType, RouteNames } from '@/enums'
 
 @Component({
   components: {
@@ -89,7 +101,10 @@ export default class SummaryDefineCompany extends Mixins(EntityFilterMixin, Enum
   // Getters
   @Getter getApprovedName!: string
   @Getter getCompanyDisplayName!: string
+  @Getter getCooperativeType!: CoopType
+  @Getter isDefineCompanyValid!: boolean
   @Getter isPremiumAccount!: boolean
+  @Getter isTypeCoop!: boolean
   @Getter getNameTranslations!: NameTranslationIF[]
   @Getter getValidateSteps!: boolean
   @Getter getDefineCompanyStep!: DefineCompanyIF
@@ -117,7 +132,7 @@ export default class SummaryDefineCompany extends Mixins(EntityFilterMixin, Enum
   padding-left: 2rem;
   padding-top: 1.25rem;
   padding-bottom: 1.25rem;
-  font-size: 0.875rem;
+  font-size: 1rem;
   color: $gray7;
 
   label {

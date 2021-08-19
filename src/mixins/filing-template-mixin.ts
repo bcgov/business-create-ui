@@ -18,6 +18,7 @@ import { CorpTypeCd } from '@/enums'
 @Component({})
 export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Getter isTypeBcomp!: boolean
+  @Getter isTypeCoop!: boolean
   @Getter isNamedBusiness!: boolean
   @Getter getNameRequestNumber!: string
   @Getter getApprovedName!: string
@@ -37,6 +38,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
 
   @Action setEntityType!: ActionBindingIF
   @Action setBusinessContact!: ActionBindingIF
+  @Action setCooperativeType!: ActionBindingIF
   @Action setOfficeAddresses!: ActionBindingIF
   @Action setNameTranslationState!: ActionBindingIF
   @Action setDefineCompanyStepValidity!: ActionBindingIF
@@ -89,6 +91,8 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     // Conditionally add the entity-specific sections.
     switch (this.getEntityType) {
       case CorpTypeCd.COOP:
+        filing.filing.incorporationApplication.cooperative.cooperativeAssociationType =
+          this.getDefineCompanyStep.cooperativeType
         filing.filing.incorporationApplication.rules = this.getRules
         filing.filing.incorporationApplication.memorandum = this.getMemorandum
         break
@@ -111,7 +115,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
       filing.filing.incorporationApplication.nameRequest.legalName = this.getApprovedName
     }
 
-    // If this is a future effective filing then add the effective date.
+    // If this is a future effective filing then save the effective date.
     const effectiveDate = this.getIncorporationDateTime.effectiveDate
     if (effectiveDate) {
       filing.filing.header.effectiveDate = this.dateToApi(effectiveDate)
@@ -152,6 +156,8 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     // Conditionally parse the entity-specific sections.
     switch (this.getEntityType) {
       case CorpTypeCd.COOP:
+        // Set Cooperative type
+        this.setCooperativeType(draftFiling.incorporationApplication.cooperative?.cooperativeAssociationType)
         // Set Rules
         this.setRules(draftFiling.incorporationApplication.rules)
         // Set Memorandum

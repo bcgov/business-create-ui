@@ -8,7 +8,7 @@
     </div>
 
     <section class="mt-10">
-      <header>
+      <header id="name-request-info-header">
         <h2>1. Name</h2>
       </header>
       <div :class="{ 'invalid-section': getShowErrors && !hasValidNameTranslation }">
@@ -18,11 +18,52 @@
       </div>
     </section>
 
+    <section class="mt-10" v-show="isTypeCoop">
+      <header id="association-type-header">
+        <h2>2. Cooperative Association Type</h2>
+        <!-- Help Section -->
+        <div class="mt-4">
+          <span class="help-btn" @click="coopHelpToggle = !coopHelpToggle">
+            <v-icon color="blue darken-2" style="padding-right: 5px">mdi-help-circle-outline</v-icon>
+            <span v-if="!coopHelpToggle">Help with Cooperative Association Types</span>
+            <span v-else>Hide Help</span>
+          </span>
+          <section v-show="coopHelpToggle" class="coop-type-help">
+            <header id="coop-type-help-header"><h2>Help with Cooperative Association Types</h2></header>
+            <p class="help-section"><strong>Community Service Cooperatives</strong> are a particular kind of cooperative
+              recognized under the Cooperative Association Act. Community Service Cooperatives have a similar status to
+              that of non-profit societies. This type of cooperative also requires the inclusion of non-alterable
+              clauses in their rules to ensure they operate on a non-profit basis, and their purpose is charitable, or
+              to provide health, social, educational, or other community services. Community Service Cooperatives cannot
+              be Housing Cooperatives and cannot issue investment shares.
+            </p>
+            <p class="help-section"><strong>Housing Cooperatives</strong> are a specific type of cooperative
+              incorporated under the Cooperative Association Act that provides housing to its members. Members may
+              purchase shares to join the Housing Cooperative and elect directors who will govern the cooperative.
+              Housing Cooperatives cannot issue investment shares. The Cooperative Association Act details special
+              provisions for Housing Cooperatives that need to be considered when deciding to incorporate.
+            </p>
+            <p class="help-section">An <strong>Ordinary Cooperative</strong> is a cooperative that may have a wide
+              range of purposes and is neither a Housing nor a Community Service Cooperative. The cooperative may
+              operate as a for-profit association and may issue investment shares.
+            </p>
+            <u class="help-btn" @click="coopHelpToggle = !coopHelpToggle"><small>Hide Help</small></u>
+          </section>
+        </div>
+      </header>
+      <div :class="{ 'invalid-section': getShowErrors && !hasValidCooperativeType }">
+        <v-card flat class="step-container">
+          <CooperativeType :showErrors="getShowErrors" @hasCooperativeType="onCooperativeType($event)"/>
+        </v-card>
+      </div>
+    </section>
+
     <section class="mt-10" v-show="isEntityType">
       <header id="office-address-header">
-        <h2>2. Registered <span v-if="!entityFilter(CorpTypeCd.COOP)">and Records</span> Office Addresses</h2>
-        <p>Enter the business' Registered Office <span v-if="!entityFilter(CorpTypeCd.COOP)">and Records Office
-          </span> Mailing and Delivery Addresses.
+        <h2>{{isTypeCoop ? 3 : 2 }}. Registered <span v-if="!isTypeCoop">and Records</span> Office
+          Addresses</h2>
+        <p>Enter the Registered Office <span v-if="!isTypeCoop">and Records Office
+          </span> Mailing and Delivery Addresses. All addresses must be located in BC.
         </p>
       </header>
       <div :class="{ 'invalid-section': getShowErrors && !addressFormValid }">
@@ -36,8 +77,8 @@
     </section>
 
     <section class="mt-10" v-show="isEntityType">
-      <header>
-        <h2>3. Registered Office Contact Information</h2>
+      <header id="registered-office-contact-header">
+        <h2>{{isTypeCoop ? 4 : 3 }}. Registered Office Contact Information</h2>
         <p>Enter the contact information for the Registered Office. The Corporate Registry will use this to
            communicate with the company in the future, including sending the following documents and
            notifications: a Certificate of Incorporation, a certified copy of the Incorporation Application,
@@ -57,7 +98,7 @@
     </section>
     <section class="mt-10" v-if="isEntityType && isPremiumAccount">
       <header id="folio-number-header">
-        <h2>4. Folio / Reference Number (optional)</h2>
+        <h2>{{isTypeCoop ? 5 : 4 }}. Folio / Reference Number (optional)</h2>
         <p>Add an optional Folio or Reference Number about this business for your own tracking purposes.
            This information is not used by the BC Business Registry.
         </p>
@@ -91,15 +132,16 @@ import {
 import { CommonMixin, EntityFilterMixin } from '@/mixins'
 
 // Enums
-import { CorpTypeCd, RouteNames } from '@/enums'
+import { CoopType, CorpTypeCd, RouteNames } from '@/enums'
 
 // Components
-import { BusinessContactInfo, FolioNumber, OfficeAddresses } from '@/components/DefineCompany'
+import { BusinessContactInfo, CooperativeType, FolioNumber, OfficeAddresses } from '@/components/DefineCompany'
 import { NameRequestInfo } from '@/components/common'
 
 @Component({
   components: {
     BusinessContactInfo,
+    CooperativeType,
     FolioNumber,
     NameRequestInfo,
     OfficeAddresses
@@ -111,12 +153,14 @@ export default class DefineCompany extends Mixins(CommonMixin, EntityFilterMixin
   @Getter isEntityType!: boolean
   @Getter isPremiumAccount!: boolean
   @Getter isTypeBcomp!: boolean
+  @Getter isTypeCoop: boolean
   @Getter getDefineCompanyStep!: DefineCompanyIF
   @Getter getValidateSteps!: boolean
   @Getter getShowErrors!: boolean
 
   @Action setEntityType!: ActionBindingIF
   @Action setBusinessContact!: ActionBindingIF
+  @Action setCooperativeType!: ActionBindingIF
   @Action setFolioNumber!: ActionBindingIF
   @Action setOfficeAddresses!: ActionBindingIF
   @Action setDefineCompanyStepValidity!: ActionBindingIF
@@ -125,6 +169,8 @@ export default class DefineCompany extends Mixins(CommonMixin, EntityFilterMixin
   private businessContactFormValid: boolean = false
   private addressFormValid: boolean = false
   private hasValidNameTranslation: boolean = true
+  private hasValidCooperativeType: boolean = false
+  private coopHelpToggle: boolean = false
 
   // Enum for template
   readonly CorpTypeCd = CorpTypeCd
@@ -188,6 +234,11 @@ export default class DefineCompany extends Mixins(CommonMixin, EntityFilterMixin
       this.hasValidNameTranslation)
   }
 
+  private onCooperativeType (cooperativeType: CoopType): void {
+    this.hasValidCooperativeType = !!cooperativeType
+    this.setCooperativeType(cooperativeType)
+  }
+
   private onBusinessContactInfoChange (businessContact: BusinessContactIF): void {
     this.setBusinessContact(businessContact)
   }
@@ -220,10 +271,16 @@ export default class DefineCompany extends Mixins(CommonMixin, EntityFilterMixin
       await this.validateAndScroll(
         {
           hasValidNameTranslation: this.hasValidNameTranslation,
+          hasValidCooperativeType: this.isTypeCoop ? this.hasValidCooperativeType : true,
           addressFormValid: this.addressFormValid,
           businessContactFormValid: this.businessContactFormValid
         },
-        ['name-request-summary', 'office-addresses', 'business-contact-info']
+        [
+          'name-request-info-header',
+          'association-type-header',
+          'office-address-header',
+          'registered-office-contact-header'
+        ]
       )
     }
   }
@@ -231,6 +288,8 @@ export default class DefineCompany extends Mixins(CommonMixin, EntityFilterMixin
 </script>
 
 <style lang="scss" scoped>
+@import '@/assets/styles/theme.scss';
+
 .step-container {
   margin-top: 1rem;
   padding: 1.25rem;
@@ -278,5 +337,33 @@ header {
 .company-statement-label {
   letter-spacing: -0.04rem;
   font-weight: 700;
+}
+
+// Coop Type Help section
+.help-btn {
+  cursor: pointer;
+  color: $primary-blue;
+  vertical-align: middle;
+}
+
+.coop-type-help {
+  margin: 2rem 0;
+  border-top: 1px dashed $gray6;
+  border-bottom: 1px dashed $gray6;
+  padding: 1rem 0;
+
+  #coop-type-help-header {
+    display: flex;
+    justify-content: center;
+  }
+
+  h2, h4 {
+    padding: 1rem 0;
+  }
+
+  u {
+    display: flex;
+    direction: rtl;
+  }
 }
 </style>

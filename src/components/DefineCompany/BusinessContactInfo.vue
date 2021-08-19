@@ -2,7 +2,7 @@
   <div id="business-contact-info">
      <v-layout row v-if="!isEditing">
         <v-flex md4>
-          <label><strong>Registered Office Contact Information</strong></label>
+          <label><strong>Registered Office <br>Contact Information</strong></label>
         </v-flex>
         <v-flex md4>
           <div><label><strong>Email Address</strong></label></div>

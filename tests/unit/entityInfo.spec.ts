@@ -78,11 +78,11 @@ for (const mock of mockEntityInfo) {
     })
 
     it(`renders the Name Request header when the EntityType(${mock.entityType}) is present`, async () => {
-      expect(wrapper.vm.$el.querySelector('#nr-header').textContent)
-        .toContain(`${mock.description} Incorporation Application`)
-
       expect(wrapper.vm.$el.querySelector('#entity-legal-name').textContent)
         .toContain('Xyz Ltd.')
+
+      expect(wrapper.vm.$el.querySelector('#entity-title').textContent)
+        .toContain(`${mock.description} Incorporation Application`)
 
       expect(wrapper.vm.$el.querySelector('#entity-nr-number').textContent)
         .toContain('NR 1234567')
@@ -121,14 +121,11 @@ for (const mock of mockEntityInfo) {
 
     it(`renders the Numbered Company header when the EntityType(${mock.entityType}) is present with no NR`,
       async () => {
-        expect(wrapper.vm.$el.querySelector('#nr-header').textContent)
-          .toContain(`${mock.description} Incorporation Application`)
-
         expect(wrapper.vm.$el.querySelector('#entity-legal-name').textContent)
           .toContain(`${mock.numberedDesc}`)
 
-        expect(wrapper.vm.$el.querySelector('#entity-numbered-label').textContent)
-          .toContain(`${mock.numberedDesc}`)
+        expect(wrapper.vm.$el.querySelector('#entity-title').textContent)
+          .toContain(`${mock.description} Incorporation Application`)
       })
 
     it('displays the breadcrumb correctly as a numbered benefit company', async () => {

@@ -40,10 +40,12 @@ export interface IncorporationFilingIF {
       incorporationAgreement?: {
         agreementType: string
       },
-
       // CP only:
       rules?: any,
       memorandum?: any
+      cooperative?: {
+        cooperativeAssociationType: string
+      }
     }
   }
 }

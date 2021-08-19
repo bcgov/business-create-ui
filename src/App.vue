@@ -190,6 +190,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   @Action setCurrentDate!: ActionBindingIF
   @Action setCompanyResources!: ActionBindingIF
   @Action setUserEmail!: ActionBindingIF
+  @Action setUserPhone: ActionBindingIF
   @Action setUserFirstName!: ActionBindingIF
   @Action setUserLastName!: ActionBindingIF
   @Action setUserAddress!: ActionBindingIF
@@ -578,6 +579,16 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       this.setUserEmail(userInfo.email)
     } else {
       throw new Error('Invalid user email')
+    }
+
+    if (userInfo.contacts?.length > 0 && userInfo.contacts[0].phone) {
+      // this is a BCSC user
+      this.setUserPhone(userInfo.contacts[0].phone)
+    } else if (userInfo.phone) {
+      // this is an IDIR user
+      this.setUserPhone(userInfo.phone)
+    } else {
+      throw new Error('Invalid user phone')
     }
 
     if (!userInfo.firstname) throw new Error('Invalid user first name')

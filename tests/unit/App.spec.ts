@@ -262,7 +262,9 @@ describe('Numbered company setup', () => {
         data:
         {
           contacts: [
-            { email: 'completing-party@example.com' }
+            { email: 'completing-party@example.com',
+              phone: '123-456-7890'
+            }
           ],
           firstname: 'Completing',
           lastname: 'Party'
@@ -406,7 +408,10 @@ describe('App component', () => {
         data:
         {
           contacts: [
-            { email: 'completing-party@example.com' }
+            {
+              email: 'completing-party@example.com',
+              phone: '123-456-7890'
+            }
           ],
           firstname: 'Completing',
           lastname: 'Party'
