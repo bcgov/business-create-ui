@@ -24,16 +24,16 @@ export const CooperativeResource: ResourceIF = {
       helpText: [
         `To be in compliance with the Cooperative Association Act (Section 72);`,
 
-        `A minimum of thress directors is required. The first directors of the co-op must be
-          appointed in writing by a majority of the subscribers. The majority of Directors must
-          reside in Canada and at least one Director must reside in BC.`,
+        `A minimum of three Directors is required. The First Directors of the Cooperative Association
+          must be appointed in writing by a majority of the subscribers. The majority of Directors
+          must reside in Canada and at least one Director must reside in BC.`,
 
-        `Full names and residential addresses of each of the first directors must be included. The
-          residential address of a director must be a complete physical address. BC Registries and
-          Online Services cannot accept general delivery, post office box numbers, rural routes,
-          sites or comp. numbers as part of the address. You must also include a postal code. If
-          an area does not have stree names or numbers, provide a description that would readily
-          allow a person to locate the director.`
+        `Full names and residential addresses of each of the First Directors must be included. The
+          residential address of a Director must be a complete physical address. BC Registries and
+          Online Services cannot accept general delivery, post office box numbers, rural routes, sites
+          or comp. numbers as part of the address. You must also include a postal code. If an area
+          does not have street names or numbers, provide a description that would readily allow a
+          person to locate the Director.`
       ]
     },
     addIncorporator: false,

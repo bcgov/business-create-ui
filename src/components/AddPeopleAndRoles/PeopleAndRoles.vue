@@ -70,6 +70,7 @@
         id="btn-start-add-cp"
         outlined
         color="primary"
+        class="btn-outlined-primary"
         :disabled="showOrgPersonForm"
         @click="addOrgPerson(RoleTypes.COMPLETING_PARTY, IncorporatorTypes.PERSON)"
       >
@@ -83,6 +84,7 @@
         id="btn-add-person"
         outlined
         color="primary"
+        class="btn-outlined-primary"
         :disabled="showOrgPersonForm"
         @click="addOrgPerson(null, IncorporatorTypes.PERSON)"
       >
@@ -93,7 +95,7 @@
         id="btn-add-corp"
         outlined
         color="primary"
-        class="spacedButton"
+        class="btn-outlined-primary ml-2"
         :disabled="showOrgPersonForm"
         v-if="getPeopleAndRolesResource.addOrganization"
         @click="addOrgPerson(RoleTypes.INCORPORATOR, IncorporatorTypes.CORPORATION)"
@@ -107,7 +109,7 @@
         id="btn-add-cp"
         outlined
         color="primary"
-        class="spacedButton"
+        class="btn-outlined-primary ml-2"
         :disabled="showOrgPersonForm"
         @click="addOrgPerson(RoleTypes.COMPLETING_PARTY, IncorporatorTypes.PERSON)"
       >
@@ -118,13 +120,12 @@
 
     <v-card v-if="showOrgPersonForm" flat class="people-roles-container">
       <OrgPerson
-        v-show="showOrgPersonForm"
         :initialValue="currentOrgPerson"
         :activeIndex="activeIndex"
         :existingCompletingParty="completingParty"
         :addIncorporator="getPeopleAndRolesResource.addIncorporator"
-        @addEditPerson="onAddEditOrgPerson($event)"
-        @removePersonEvent="onRemovePerson($event)"
+        @addEditPerson="onAddEditPerson($event)"
+        @removePerson="onRemovePerson($event)"
         @resetEvent="resetData()"
         @removeCompletingPartyRole="removeCompletingPartyAssignment()"
       />
@@ -135,7 +136,7 @@
         :personList="orgPersonList"
         :isSummary="false"
         :showErrorSummary="!getAddPeopleAndRoleStep.valid"
-        @editPerson="editOrgPerson($event)"
+        @editPerson="onEditPerson($event)"
         @removePerson="onRemovePerson($event)"
       />
     </v-card>
@@ -146,6 +147,7 @@
 // Libraries
 import { Component, Mixins } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
+import { cloneDeep } from 'lodash'
 
 // Interfaces
 import { ActionBindingIF, AddressIF, EmptyAddress, EmptyOrgPerson, OrgPersonIF, PeopleAndRoleIF,
@@ -180,9 +182,8 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
   @Action setAddPeopleAndRoleStepValidity!: ActionBindingIF
 
   private helpToggle = false
-  private showOrgPersonForm: boolean = false
-  private activeIndex: number = -1
-  private addEditInProgress: boolean = false
+  private showOrgPersonForm = false
+  private activeIndex = -1
   private currentOrgPerson: OrgPersonIF = null
 
   // Enums for template
@@ -268,16 +269,18 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
     return (this.peopleWithNoRoles.length > 0)
   }
 
+  /** The completing party (or undefined if not found). */
   private get completingParty () : OrgPersonIF {
     return this.orgPersonList.find(people => people.roles.some(party => party.roleType === RoleTypes.COMPLETING_PARTY))
   }
 
+  /** Sets this step's validity when component is mounted. */
   private mounted (): void {
     this.setAddPeopleAndRoleStepValidity(this.hasValidRoles())
   }
 
   private addOrgPerson (roleType: RoleTypes, partyType: IncorporatorTypes): void {
-    this.currentOrgPerson = { ...EmptyOrgPerson }
+    this.currentOrgPerson = cloneDeep(EmptyOrgPerson)
     this.currentOrgPerson.roles = roleType ? [{ roleType }] : []
     this.currentOrgPerson.officer.partyType = partyType
 
@@ -289,18 +292,16 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
     }
 
     this.activeIndex = -1
-    this.addEditInProgress = true
     this.showOrgPersonForm = true
   }
 
-  private editOrgPerson (index: number): void {
+  private onEditPerson (index: number): void {
     this.currentOrgPerson = { ...this.orgPersonList[index] }
     this.activeIndex = index
-    this.addEditInProgress = true
     this.showOrgPersonForm = true
   }
 
-  private onAddEditOrgPerson (person: OrgPersonIF): void {
+  private onAddEditPerson (person: OrgPersonIF): void {
     // if this is the completing party, assign email address from user profile
     if (person.roles.find(role => role.roleType === RoleTypes.COMPLETING_PARTY)) {
       person.officer.email = this.getTombstone.userEmail
@@ -345,7 +346,6 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
   private resetData (): void {
     this.currentOrgPerson = null
     this.activeIndex = -1
-    this.addEditInProgress = false
     this.showOrgPersonForm = false
   }
 
@@ -418,10 +418,6 @@ p {
 
 .btn-panel {
   padding: 2rem 0 2rem 0;
-}
-
-.spacedButton {
-  margin-left: 0.5rem;
 }
 
 .chk-list-item-txt {

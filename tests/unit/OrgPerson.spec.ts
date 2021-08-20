@@ -15,7 +15,7 @@ const store = getVuexStore()
 
 // Events
 const addEditPersonEvent: string = 'addEditPerson'
-const removePersonEvent: string = 'removePersonEvent'
+const removePerson: string = 'removePerson'
 const reassignCompletingPartyEvent: string = 'removeCompletingPartyRole'
 const formResetEvent: string = 'resetEvent'
 
@@ -114,7 +114,7 @@ const validOrgData = {
   }
 }
 
-const emptyPerson = { ... EmptyOrgPerson }
+const emptyPerson = { ...EmptyOrgPerson }
 
 /**
  * Returns the last event for a given name, to be used for testing event propagation in response to component changes.
@@ -222,7 +222,7 @@ describe('Org Person component', () => {
     const wrapper: Wrapper<OrgPerson> = createComponent(validOrgData, 0, null)
     wrapper.find(removeButtonSelector).trigger('click')
     await Vue.nextTick()
-    expect(getLastEvent(wrapper, removePersonEvent)).toBe(0)
+    expect(getLastEvent(wrapper, removePerson)).toBe(0)
     wrapper.destroy()
   })
 

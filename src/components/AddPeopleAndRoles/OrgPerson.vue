@@ -93,9 +93,9 @@
 
                 <!-- Roles -->
                 <div class="font-weight-bold mt-2">Roles</div>
-                <v-row>
-                  <v-col cols="4" v-if="isPerson">
-                    <div :class="{ 'highlighted-role': isRoleCompletingParty }">
+                <v-card flat rounded="sm" class="gray-card mt-4 px-4">
+                  <v-row>
+                    <v-col cols="4" v-if="isPerson && (isRoleCompletingParty || isRoleStaff)">
                       <!-- NB: only staff can change Completing Party role -->
                       <v-checkbox
                         id="cp-checkbox"
@@ -105,11 +105,9 @@
                         :disabled="!isRoleStaff"
                         @change="assignCompletingPartyRole()"
                       />
-                    </div>
-                  </v-col>
+                    </v-col>
 
-                  <v-col cols="4" v-if="addIncorporator">
-                    <div :class="{ 'highlighted-role': isRoleLocked(RoleTypes.INCORPORATOR) || isOrg }">
+                    <v-col cols="4" v-if="addIncorporator">
                       <v-checkbox
                         v-model="selectedRoles"
                         :value="RoleTypes.INCORPORATOR"
@@ -117,18 +115,18 @@
                         :disabled="isRoleLocked(RoleTypes.INCORPORATOR) || isOrg"
                         :rules="roleRules"
                       />
-                    </div>
-                  </v-col>
+                    </v-col>
 
-                  <v-col cols="4" v-if="isPerson">
-                    <v-checkbox
-                      v-model="selectedRoles"
-                      :value="RoleTypes.DIRECTOR"
-                      :label="RoleTypes.DIRECTOR"
-                      :rules="roleRules"
-                    />
-                  </v-col>
-                </v-row>
+                    <v-col cols="4" v-if="isPerson">
+                      <v-checkbox
+                        v-model="selectedRoles"
+                        :value="RoleTypes.DIRECTOR"
+                        :label="RoleTypes.DIRECTOR"
+                        :rules="roleRules"
+                      />
+                    </v-col>
+                  </v-row>
+                </v-card>
 
                 <!-- Mailing Address -->
                 <div class="font-weight-bold mt-4">Mailing Address</div>
@@ -136,7 +134,7 @@
                   <base-address
                     ref="mailingAddressNew"
                     :editing="true"
-                    :schema="personAddressSchema"
+                    :schema="PersonAddressSchema"
                     :address="inProgressMailingAddress"
                     @update:address="updateMailingAddress"
                     @valid="updateMailingAddressValidity"
@@ -156,7 +154,7 @@
                       <base-address
                         ref="deliveryAddressNew"
                         :editing="true"
-                        :schema="personAddressSchema"
+                        :schema="PersonAddressSchema"
                         :address="inProgressDeliveryAddress"
                         @update:address="updateDeliveryAddress"
                         @valid="updateDeliveryAddressValidity"
@@ -167,12 +165,20 @@
 
                 <!-- Action Buttons -->
                 <div class="form__row form__btns mt-6">
-                  <v-btn id="btn-remove" large outlined color="error"
+                  <v-btn
+                    id="btn-remove"
+                    large outlined color="error"
+                    class="btn-outlined-error"
                     :disabled="activeIndex === -1"
-                    @click="emitRemovePersonEvent(activeIndex)">Remove</v-btn>
-                  <v-btn id="btn-done" large color="primary" class="ml-auto"
+                    @click="emitRemovePerson(activeIndex)">Remove</v-btn>
+                  <v-btn
+                    id="btn-done"
+                    large color="primary"
+                    class="ml-auto"
                     @click="validateAddPersonOrgForm()">Done</v-btn>
-                  <v-btn id="btn-cancel" large outlined color="primary"
+                  <v-btn
+                    id="btn-cancel"
+                    large outlined color="primary"
                     @click="resetAddPersonData(true)">Cancel</v-btn>
                 </div>
               </v-form>
@@ -188,6 +194,7 @@
 <script lang="ts">
 // Libraries
 import { Component, Prop, Emit, Mixins } from 'vue-property-decorator'
+import { Getter } from 'vuex-class'
 import { v4 as uuidv4 } from 'uuid'
 
 // Interfaces
@@ -204,8 +211,7 @@ import { EntityFilterMixin, CommonMixin } from '@/mixins'
 import { CorpTypeCd, RoleTypes, IncorporatorTypes } from '@/enums'
 
 // Schemas
-import { personAddressSchema } from '@/schemas'
-import { Getter } from 'vuex-class'
+import { PersonAddressSchema } from '@/schemas'
 
 @Component({
   components: {
@@ -238,13 +244,15 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
   private inProgressMailingAddress: AddressIF
   private inProgressDeliveryAddress: AddressIF
   private inheritMailingAddress = true
-  private personAddressSchema: {} = personAddressSchema
   private mailingAddressValid = false
   private deliveryAddressValid = false
   private reassignCompletingParty = false
 
   /** Model value for roles checboxes. */
   private selectedRoles: Array<RoleTypes> = []
+
+  // Person Address schema for template
+  readonly PersonAddressSchema = PersonAddressSchema
 
   // Enums for template
   readonly CorpTypeCd = CorpTypeCd
@@ -334,7 +342,10 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
   }
 
   private assignCompletingPartyRole (): void {
-    if (this.orgPerson && this.isCompletingParty && this.existingCompletingParty &&
+    if (
+      this.orgPerson &&
+      this.isCompletingParty &&
+      this.existingCompletingParty &&
       this.orgPerson.officer.id !== this.existingCompletingParty.officer.id
     ) {
       this.confirmReassignPerson()
@@ -355,7 +366,7 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
       if (this.reassignCompletingParty) {
         this.emitReassignCompletingPartyEvent()
       }
-      const person: OrgPersonIF = this.addPerson()
+      const person = this.setPerson()
       this.emitPersonInfo(person)
       this.resetAddPersonData(false) // don't emit event
     }
@@ -383,10 +394,8 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
     })
   }
 
-  /**
-   * Local helper push the current director data into the list.
-   */
-  private addPerson (): OrgPersonIF {
+  /** Helper to set the current director data. */
+  private setPerson (): OrgPersonIF {
     let person: OrgPersonIF = { ...this.orgPerson }
     person.officer = { ...this.orgPerson.officer }
     if (this.activeIndex === -1) {
@@ -484,8 +493,8 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
   @Emit('resetEvent')
   private emitResetEvent (): void {}
 
-  @Emit('removePersonEvent')
-  private emitRemovePersonEvent (activeIndex: number): void {}
+  @Emit('removePerson')
+  private emitRemovePerson (activeIndex: number): void {}
 
   @Emit('removeCompletingPartyRole')
   private emitReassignCompletingPartyEvent (): void {}
@@ -606,17 +615,6 @@ li {
   }
 }
 
-.highlighted-role {
-  opacity: 0.5;
-  mix-blend-mode: normal;
-  border-radius: 2px;
-  border-color: rgb(140, 140, 140);
-  background-color: rgb(55, 164, 71);
-  color: rgb(255, 255, 255) !important;
-  font-weight: bold;
-  padding: 0.25rem;
-}
-
 .message-box {
   background-color: $BCgovGold0;
   border-color: $BCgovGold5;
@@ -629,5 +627,9 @@ li {
     letter-spacing: 0.01rem;
     color: $gray7;
   }
+}
+
+.gray-card {
+  background-color: rgba(0, 0, 0, 0.06);
 }
 </style>

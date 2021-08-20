@@ -151,7 +151,6 @@ describe('People And Roles component', () => {
     wrapper.find(btnAddPerson).trigger('click')
     await Vue.nextTick()
     expect(wrapper.vm.$data.showOrgPersonForm).toBe(true)
-    expect(wrapper.vm.$data.addEditInProgress).toBe(true)
     wrapper.destroy()
     resetStore()
   })

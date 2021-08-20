@@ -14,6 +14,25 @@
   }
 }
 
+// Disabled Buttons
+.theme--light.v-btn.v-btn--disabled.btn-outlined-primary {
+  color: $app-blue !important;
+  opacity: 0.4;
+
+  .v-icon {
+    color: $app-blue !important;
+  }
+}
+
+.theme--light.v-btn.v-btn--disabled.btn-outlined-error {
+  color: $app-red !important;
+  opacity: 0.4;
+
+  .v-icon {
+    color: $app-red !important;
+  }
+}
+
 // Text Inputs
 .v-text-field--box .v-label--active,
 .v-text-field--full-width .v-label--active,
@@ -75,10 +94,18 @@
   color: $gray3;
 }
 
+// Checkboxes
 .v-input--checkbox label {
   color: $gray7 !important;
 }
 
+// Disabled Checkboxes
+.theme--light.v-input--selection-controls.v-input--is-disabled:not(.v-input--indeterminate) .v-icon {
+  color: $app-blue !important;
+  opacity: 0.4;
+}
+
+// Tooltips
 .v-tooltip__content {
   background-color: RGB(73,80,87) !important;
   color: white !important;

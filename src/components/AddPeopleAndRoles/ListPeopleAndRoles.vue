@@ -3,7 +3,7 @@
     <ConfirmRemoveDialog
       :dialog="dialog"
       attach="#people-roles"
-      @confirm="emitRemovePerson(personId)"
+      @confirm="emitRemovePerson(activeIndex)"
       @exit="dialog = false"
     />
 
@@ -152,7 +152,7 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin, EntityFilter
   // Local properties
   private readonly tableHeaders: Array<string> = ['Name', 'Mailing Address', 'Delivery Address', 'Roles']
   private dialog: boolean = false
-  private personId: number
+  private activeIndex: number
 
   /** Returns true officer is a person. */
   private isPerson (orgPerson: any): boolean {
@@ -179,7 +179,7 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin, EntityFilter
    * @param index The active index which is subject to removal.
    */
   confirmRemove (index: number): void {
-    this.personId = index
+    this.activeIndex = index
     this.dialog = true
   }
 
@@ -188,7 +188,7 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin, EntityFilter
    * @param index The active index which is subject to removal.
    */
   @Emit('removePerson')
-  private emitRemovePerson (index: number): void {
+  private emitRemovePerson (activeIndex: number): void {
     this.dialog = false
   }
 

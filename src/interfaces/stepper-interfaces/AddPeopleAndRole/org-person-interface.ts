@@ -29,6 +29,7 @@ export const EmptyOfficer: OfficerIF = {
   email: null
 }
 
+// NB: use cloneDeep when assigning EmptyOrgPerson
 export const EmptyOrgPerson: OrgPersonIF = {
   officer: { ...EmptyOfficer },
   roles: [],

@@ -2,7 +2,7 @@ import { required, maxLength } from 'vuelidate/lib/validators'
 
 // The Address schema containing Vuelidate rules.
 // NB: This should match the subject JSON schema.
-export const officeAddressSchema = {
+export const OfficeAddressSchema = {
   streetAddress: {
     required,
     maxLength: maxLength(50)
@@ -33,7 +33,7 @@ export const officeAddressSchema = {
   }
 }
 
-export const personAddressSchema = {
+export const PersonAddressSchema = {
   streetAddress: {
     required,
     maxLength: maxLength(50)
