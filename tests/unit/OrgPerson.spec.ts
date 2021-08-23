@@ -15,7 +15,7 @@ const store = getVuexStore()
 
 // Events
 const addEditPersonEvent: string = 'addEditPerson'
-const removePersonEvent: string = 'removePersonEvent'
+const removePerson: string = 'removePerson'
 const reassignCompletingPartyEvent: string = 'removeCompletingPartyRole'
 const formResetEvent: string = 'resetEvent'
 
@@ -114,7 +114,7 @@ const validOrgData = {
   }
 }
 
-const emptyPerson = { ... EmptyOrgPerson }
+const emptyPerson = { ...EmptyOrgPerson }
 
 /**
  * Returns the last event for a given name, to be used for testing event propagation in response to component changes.
@@ -222,7 +222,7 @@ describe('Org Person component', () => {
     const wrapper: Wrapper<OrgPerson> = createComponent(validOrgData, 0, null)
     wrapper.find(removeButtonSelector).trigger('click')
     await Vue.nextTick()
-    expect(getLastEvent(wrapper, removePersonEvent)).toBe(0)
+    expect(getLastEvent(wrapper, removePerson)).toBe(0)
     wrapper.destroy()
   })
 
@@ -334,13 +334,18 @@ describe('Org Person component', () => {
     wrapper.destroy()
   })
 
-  it('Shows popup if there is a completing party', async () => {
+  it('Shows popup if there is already a completing party', async () => {
+    store.state.stateModel.tombstone.authRoles = ['staff']
     const wrapper: Wrapper<OrgPerson> = createComponent(validIncorporator, -1, validPersonData)
+
     const cpCheckBox: Wrapper<Vue> = wrapper.find(completingPartyChkBoxSelector)
     cpCheckBox.setChecked(true)
     await Vue.nextTick()
+
     expect(wrapper.vm.$refs.reassignCPDialog).toBeTruthy()
+
     wrapper.destroy()
+    store.state.stateModel.tombstone.authRoles = []
   })
 
   it('Emits events correctly on confirming reassign completing party', async () => {

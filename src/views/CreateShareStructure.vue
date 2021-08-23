@@ -157,7 +157,6 @@ export default class CreateShareStructure extends Mixins(CommonMixin) {
   }]
 
   private showShareStructureForm: boolean = false
-  private addEditInProgress: boolean = false
   private currentShareStructure: ShareClassIF = null
 
   private activeIndex: number = -1
@@ -189,7 +188,6 @@ export default class CreateShareStructure extends Mixins(CommonMixin) {
     this.activeIndex = -1
     this.parentIndex = -1
     this.shareId = uuidv4()
-    this.addEditInProgress = true
     this.showShareStructureForm = true
   }
 
@@ -198,7 +196,6 @@ export default class CreateShareStructure extends Mixins(CommonMixin) {
     this.currentShareStructure = { ...this.shareClasses[index] }
     this.activeIndex = index
     this.parentIndex = -1
-    this.addEditInProgress = true
     this.showShareStructureForm = true
   }
 
@@ -216,7 +213,6 @@ export default class CreateShareStructure extends Mixins(CommonMixin) {
     this.currentShareStructure.priority =
     shareSeries.length === 0 ? 1 : shareSeries[shareSeries.length - 1].priority + 1
     this.shareId = uuidv4()
-    this.addEditInProgress = true
     this.showShareStructureForm = true
   }
 
@@ -239,7 +235,6 @@ export default class CreateShareStructure extends Mixins(CommonMixin) {
     this.parentIndex = index
     let newList: ShareClassIF[] = [...this.shareClasses]
     this.currentShareStructure = { ...newList[this.parentIndex].series[this.activeIndex] }
-    this.addEditInProgress = true
     this.showShareStructureForm = true
   }
 
@@ -282,7 +277,6 @@ export default class CreateShareStructure extends Mixins(CommonMixin) {
   private resetData (): void {
     this.currentShareStructure = null
     this.activeIndex = -1
-    this.addEditInProgress = false
     this.showShareStructureForm = false
     this.parentIndex = -1
     this.shareId = ''

@@ -71,7 +71,7 @@
                   id="address-registered-mailing"
                   :address="mailingAddress"
                   :editing="true"
-                  :schema="addressSchema"
+                  :schema="OfficeAddressSchema"
                   @update:address="updateAddress('mailingAddress', mailingAddress, $event)"
                   @valid="updateAddressValid('mailingAddress', $event)"
                 />
@@ -101,7 +101,7 @@
                   v-if="!inheritMailingAddress"
                   :address="deliveryAddress"
                   :editing="true"
-                  :schema="addressSchema"
+                  :schema="OfficeAddressSchema"
                   @update:address="updateAddress('deliveryAddress', deliveryAddress, $event)"
                   @valid="updateAddressValid('deliveryAddress', $event)"
                 />
@@ -134,7 +134,7 @@
                       id="address-records-mailing"
                       :address="recMailingAddress"
                       :editing="true"
-                      :schema="addressSchema"
+                      :schema="OfficeAddressSchema"
                       @update:address="updateAddress('recMailingAddress', recMailingAddress, $event)"
                       @valid="updateAddressValid('recMailingAddress', $event)"
                     />
@@ -163,7 +163,7 @@
                       id="address-records-delivery"
                       :address="recDeliveryAddress"
                       :editing="true"
-                      :schema="addressSchema"
+                      :schema="OfficeAddressSchema"
                       @update:address="updateAddress('recDeliveryAddress', recDeliveryAddress, $event)"
                       @valid="updateAddressValid('recDeliveryAddress', $event)"
                     />
@@ -185,7 +185,7 @@ import { Getter } from 'vuex-class'
 import { isEmpty } from 'lodash'
 
 // Schemas
-import { officeAddressSchema } from '@/schemas'
+import { OfficeAddressSchema } from '@/schemas'
 
 // Components
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
@@ -265,8 +265,8 @@ export default class OfficeAddresses extends Mixins(CommonMixin, EntityFilterMix
   // State of the checkbox for determining whether the Record address is the same as the Registered address
   private inheritRegisteredAddress: boolean = true
 
-  // The Address schema containing Vuelidate rules.
-  private addressSchema = officeAddressSchema
+  // Office Address schema for template
+  readonly OfficeAddressSchema = OfficeAddressSchema
 
   // Enum for template
   readonly CorpTypeCd = CorpTypeCd
