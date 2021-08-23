@@ -353,7 +353,7 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
   private get disableIncorporatorRole (): boolean {
     // disable this role if it's locked (ie, pre-selected for a new person)
     // or if this is an org, which can only have this role
-    return this.isRoleLocked(RoleTypes.INCORPORATOR)
+    return (this.isRoleLocked(RoleTypes.INCORPORATOR) || this.isOrg)
   }
 
   /** Whether the Director role should be disabled. */
