@@ -327,7 +327,7 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
   private get showCompletingPartyRole (): boolean {
     const isRoleCompletingParty = !!this.orgPerson.roles.find(role => role.roleType === RoleTypes.COMPLETING_PARTY)
     // either this is the completing party,
-    // or this is staff adding a person
+    // or this is staff adding/editing a person
     return (isRoleCompletingParty || (this.isRoleStaff && this.isPerson))
   }
 
@@ -351,15 +351,14 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
 
   /** Whether the Incorporator role should be disabled. */
   private get disableIncorporatorRole (): boolean {
-    // disable this role if it's locked (ie, pre-selected for a new person)
-    // or if this is an org, which can only have this role
-    return (this.isRoleLocked(RoleTypes.INCORPORATOR) || this.isOrg)
+    // disable this role if it's the only role displayed
+    return (!this.showCompletingPartyRole && !this.showDirectorRole && this.showIncorporatorRole)
   }
 
   /** Whether the Director role should be disabled. */
   private get disableDirectorRole (): boolean {
-    // disable this role if it's locked (ie, pre-selected for a new person)
-    return this.isRoleLocked(RoleTypes.DIRECTOR)
+    // disable this role if it's the only role displayed
+    return (!this.showCompletingPartyRole && !this.showIncorporatorRole && this.showDirectorRole)
   }
 
   /** Called when component is created. */
@@ -496,12 +495,6 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
     if (emitEvent) {
       this.emitResetEvent()
     }
-  }
-
-  private isRoleLocked (role: RoleTypes): boolean {
-    // role is locked if we are adding a new person
-    // and the person already has the subject role assigned
-    return (this.activeIndex === -1 && !!this.orgPerson.roles.find(party => party.roleType === role))
   }
 
   private reassignPersonErrorMessage (): string {
