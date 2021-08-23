@@ -11,6 +11,7 @@
         <li class="add-person-container px-8 py-12">
           <div class="meta-container">
 
+            <!-- FUTURE: move header text to resource file so this component is generic -->
             <label class="add-org-header" v-if="isOrg && entityFilter(CorpTypeCd.BENEFIT_COMPANY)">
               <span v-if="activeIndex === -1">Add Corporation or Firm</span>
               <span v-else>Edit Corporation or Firm</span>
@@ -46,82 +47,87 @@
                 v-model="addPersonOrgFormValid"
                 v-on:submit.prevent
               >
-                <!-- Person/Org's Name -->
-                <div class="font-weight-bold" v-if="isPerson">Person's Name</div>
-                <div class="font-weight-bold" v-if="isOrg">Corporation or Firm Name</div>
+                <!-- Person Name -->
+                <template v-if="isPerson">
+                  <div class="font-weight-bold">Person's Name</div>
+                  <div class="form__row three-column mt-4">
+                    <!-- NB: only staff can change Completing Party names -->
+                    <v-text-field
+                      filled
+                      class="item"
+                      label="First Name"
+                      id="person__first-name"
+                      v-model="orgPerson.officer.firstName"
+                      :rules="firstNameRules"
+                      :readonly="isCompletingParty && !isRoleStaff"
+                    />
+                    <v-text-field
+                      filled
+                      class="item"
+                      label="Middle Name"
+                      id="person__middle-name"
+                      v-model="orgPerson.officer.middleName"
+                      :rules="middleNameRules"
+                      :readonly="isCompletingParty && !isRoleStaff"
+                    />
+                    <v-text-field
+                      filled
+                      class="item"
+                      label="Last Name"
+                      id="person__last-name"
+                      v-model="orgPerson.officer.lastName"
+                      :rules="lastNameRules"
+                      :readonly="isCompletingParty && !isRoleStaff"
+                    />
+                  </div>
+                </template>
 
-                <div v-if="isPerson" class="form__row three-column mt-4">
-                  <!-- NB: only staff can change Completing Party names -->
-                  <v-text-field
-                    filled
-                    class="item"
-                    label="First Name"
-                    id="person__first-name"
-                    v-model="orgPerson.officer.firstName"
-                    :rules="firstNameRules"
-                    :readonly="isCompletingParty && !isRoleStaff"
-                  />
-                  <v-text-field
-                    filled
-                    class="item"
-                    label="Middle Name"
-                    id="person__middle-name"
-                    v-model="orgPerson.officer.middleName"
-                    :rules="middleNameRules"
-                    :readonly="isCompletingParty && !isRoleStaff"
-                  />
-                  <v-text-field
-                    filled
-                    class="item"
-                    label="Last Name"
-                    id="person__last-name"
-                    v-model="orgPerson.officer.lastName"
-                    :rules="lastNameRules"
-                    :readonly="isCompletingParty && !isRoleStaff"
-                  />
-                </div>
-                <div v-if="isOrg" class="org-name-container mt-4">
-                  <v-text-field
-                    filled
-                    class="item"
-                    label="Full Legal Corporation or Firm Name"
-                    id="firm-name"
-                    v-model="orgPerson.officer.orgName"
-                    :rules="orgNameRules"
-                  />
-                </div>
+                <!-- Org's Name -->
+                <template v-if="isOrg">
+                  <div class="font-weight-bold">Corporation or Firm Name</div>
+                  <div class="org-name-container mt-4">
+                    <v-text-field
+                      filled
+                      class="item"
+                      label="Full Legal Corporation or Firm Name"
+                      id="firm-name"
+                      v-model="orgPerson.officer.orgName"
+                      :rules="orgNameRules"
+                    />
+                  </div>
+                </template>
 
                 <!-- Roles -->
                 <div class="font-weight-bold mt-2">Roles</div>
                 <v-card flat rounded="sm" class="gray-card mt-4 px-4">
                   <v-row>
-                    <v-col cols="4" v-if="isPerson && (isRoleCompletingParty || isRoleStaff)">
-                      <!-- NB: only staff can change Completing Party role -->
+                    <v-col cols="4" v-if="showCompletingPartyRole">
                       <v-checkbox
                         id="cp-checkbox"
                         v-model="selectedRoles"
                         :value="RoleTypes.COMPLETING_PARTY"
                         :label="RoleTypes.COMPLETING_PARTY"
-                        :disabled="!isRoleStaff"
+                        :disabled="disableCompletingPartyRole"
                         @change="assignCompletingPartyRole()"
                       />
                     </v-col>
 
-                    <v-col cols="4" v-if="addIncorporator">
+                    <v-col cols="4" v-if="showIncorporatorRole">
                       <v-checkbox
                         v-model="selectedRoles"
                         :value="RoleTypes.INCORPORATOR"
                         :label="RoleTypes.INCORPORATOR"
-                        :disabled="isRoleLocked(RoleTypes.INCORPORATOR) || isOrg"
+                        :disabled="disableIncorporatorRole"
                         :rules="roleRules"
                       />
                     </v-col>
 
-                    <v-col cols="4" v-if="isPerson">
+                    <v-col cols="4" v-if="showDirectorRole">
                       <v-checkbox
                         v-model="selectedRoles"
                         :value="RoleTypes.DIRECTOR"
                         :label="RoleTypes.DIRECTOR"
+                        :disabled="disableDirectorRole"
                         :rules="roleRules"
                       />
                     </v-col>
@@ -287,24 +293,73 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
     v => (v?.length <= 155) || 'Cannot exceed 155 characters' // maximum character count
   ]
 
-  /** True if Completing Party is checked. */
+  /** The validation rules for the roles. */
+  private get roleRules (): Array<Function> {
+    return [ () => this.selectedRoles.length > 0 || 'A role is required' ]
+  }
+
+  /** Whether Completing Party is checked. */
   private get isCompletingParty (): boolean {
     return this.selectedRoles.includes(RoleTypes.COMPLETING_PARTY)
   }
 
-  /** True if Incorporator is checked. */
+  /** Whether Incorporator is checked. */
   private get isIncorporator (): boolean {
     return this.selectedRoles.includes(RoleTypes.INCORPORATOR)
   }
 
-  /** True if Director is checked. */
+  /** Whether Director is checked. */
   private get isDirector (): boolean {
     return this.selectedRoles.includes(RoleTypes.DIRECTOR)
   }
 
-  /** The validation rules for the roles. */
-  private get roleRules (): Array<Function> {
-    return [ () => this.selectedRoles.length > 0 || 'A role is required' ]
+  /** Whether current data object is a person. */
+  private get isPerson (): boolean {
+    return (this.orgPerson.officer?.partyType === IncorporatorTypes.PERSON)
+  }
+
+  /** Whether current data object is an organization (corporation/firm). */
+  private get isOrg (): boolean {
+    return (this.orgPerson.officer?.partyType === IncorporatorTypes.CORPORATION)
+  }
+
+  /** Whether the Completing Party role should be shown. */
+  private get showCompletingPartyRole (): boolean {
+    const isRoleCompletingParty = !!this.orgPerson.roles.find(role => role.roleType === RoleTypes.COMPLETING_PARTY)
+    // either this is the completing party,
+    // or this is staff adding a person
+    return (isRoleCompletingParty || (this.isRoleStaff && this.isPerson))
+  }
+
+  /** Whether the Incorporator role should be shown. */
+  private get showIncorporatorRole (): boolean {
+    // show this role according to prop from parent parent component (ie, per resource file)
+    return this.addIncorporator
+  }
+
+  /** Whether the Director role should be shown. */
+  private get showDirectorRole (): boolean {
+    // only a person can be a director
+    return this.isPerson
+  }
+
+  /** Whether the Completing Party role should be disabled. */
+  private get disableCompletingPartyRole (): boolean {
+    // only staff can edit Completing Party role
+    return !this.isRoleStaff
+  }
+
+  /** Whether the Incorporator role should be disabled. */
+  private get disableIncorporatorRole (): boolean {
+    // disable this role if it's locked (ie, pre-selected for a new person)
+    // or if this is an org, which can only have this role
+    return this.isRoleLocked(RoleTypes.INCORPORATOR)
+  }
+
+  /** Whether the Director role should be disabled. */
+  private get disableDirectorRole (): boolean {
+    // disable this role if it's locked (ie, pre-selected for a new person)
+    return this.isRoleLocked(RoleTypes.DIRECTOR)
   }
 
   /** Called when component is created. */
@@ -316,6 +371,7 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
       // set checkbox array
       this.selectedRoles = this.orgPerson.roles.map(r => r.roleType)
 
+      // set address properties
       this.inProgressMailingAddress = { ...this.orgPerson.mailingAddress }
       if (this.isDirector) {
         this.inProgressDeliveryAddress = { ...this.orgPerson.deliveryAddress }
@@ -442,14 +498,10 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
     }
   }
 
-  // *** FUTURE: fix or delete this (activeIndex is never -1 so this always returns false)
   private isRoleLocked (role: RoleTypes): boolean {
-    return (this.orgPerson.roles.some(party => party.roleType === role) && this.activeIndex === -1)
-  }
-
-  /** True if current person has Completing Party role. */
-  private get isRoleCompletingParty (): boolean {
-    return this.orgPerson.roles.some(party => party.roleType === RoleTypes.COMPLETING_PARTY)
+    // role is locked if we are adding a new person
+    // and the person already has the subject role assigned
+    return (this.activeIndex === -1 && !!this.orgPerson.roles.find(party => party.roleType === role))
   }
 
   private reassignPersonErrorMessage (): string {
@@ -474,16 +526,6 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
       isFormValid = (isFormValid && this.deliveryAddressValid)
     }
     return isFormValid
-  }
-
-  /** True if current data object is a person. */
-  private get isPerson (): boolean {
-    return (this.orgPerson.officer?.partyType === IncorporatorTypes.PERSON)
-  }
-
-  /** True if current data object is an organization (corporation/firm). */
-  private get isOrg (): boolean {
-    return (this.orgPerson.officer?.partyType === IncorporatorTypes.CORPORATION)
   }
 
   // Event emitters

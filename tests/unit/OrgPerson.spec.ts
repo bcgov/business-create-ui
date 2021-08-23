@@ -334,13 +334,18 @@ describe('Org Person component', () => {
     wrapper.destroy()
   })
 
-  it('Shows popup if there is a completing party', async () => {
+  it('Shows popup if there is already a completing party', async () => {
+    store.state.stateModel.tombstone.authRoles = ['staff']
     const wrapper: Wrapper<OrgPerson> = createComponent(validIncorporator, -1, validPersonData)
+
     const cpCheckBox: Wrapper<Vue> = wrapper.find(completingPartyChkBoxSelector)
     cpCheckBox.setChecked(true)
     await Vue.nextTick()
+
     expect(wrapper.vm.$refs.reassignCPDialog).toBeTruthy()
+
     wrapper.destroy()
+    store.state.stateModel.tombstone.authRoles = []
   })
 
   it('Emits events correctly on confirming reassign completing party', async () => {

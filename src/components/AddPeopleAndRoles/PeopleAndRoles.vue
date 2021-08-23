@@ -280,8 +280,21 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
   }
 
   private addOrgPerson (roleType: RoleTypes, partyType: IncorporatorTypes): void {
+    // first assign empty org/person object
     this.currentOrgPerson = cloneDeep(EmptyOrgPerson)
-    this.currentOrgPerson.roles = roleType ? [{ roleType }] : []
+
+    if (roleType) {
+      // a role was provided - pre-select it
+      this.currentOrgPerson.roles = [{ roleType }]
+    } else if (this.validNumCompletingParty && !this.getPeopleAndRolesResource.addIncorporator) {
+      // only Director role is possible - pre-select it
+      this.currentOrgPerson.roles = [{ roleType: RoleTypes.DIRECTOR }]
+    } else {
+      // no roles pre-selected
+      this.currentOrgPerson.roles = []
+    }
+
+    // assign party type (org or person)
     this.currentOrgPerson.officer.partyType = partyType
 
     // pre-populate Completing Party's name and mailing address
@@ -291,8 +304,18 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
       this.currentOrgPerson.mailingAddress = this.getUserAddress || { ...EmptyAddress }
     }
 
+    // make a director's initial delivery address "same as" their mailing address
+    if (this.isDirector(this.currentOrgPerson)) {
+      this.currentOrgPerson.deliveryAddress = cloneDeep(this.currentOrgPerson.mailingAddress)
+    }
+
     this.activeIndex = -1
     this.showOrgPersonForm = true
+  }
+
+  /** Returns true if subject org/person is a director. */
+  private isDirector (orgPerson: OrgPersonIF): boolean {
+    return orgPerson.roles.some(role => role.roleType === RoleTypes.DIRECTOR)
   }
 
   private onEditPerson (index: number): void {
