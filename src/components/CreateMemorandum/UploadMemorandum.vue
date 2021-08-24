@@ -68,7 +68,7 @@ export default class UploadMemorandum extends Vue {
 .upload-memorandum-error-message {
   padding-top: 1.25rem;
   padding-left: 1.25rem;
-  color: $primary-blue;
+  color: $app-blue;
 }
 
 .v-icon.mdi-information-outline {

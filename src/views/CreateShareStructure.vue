@@ -10,7 +10,7 @@
 
     <!-- Help Section -->
     <span class="help-btn" @click="helpToggle = !helpToggle">
-      <v-icon color="blue darken-2" style="padding-right: 5px">mdi-help-circle-outline</v-icon>
+      <v-icon color="primary" style="padding-right: 5px">mdi-help-circle-outline</v-icon>
       <span v-if="!helpToggle">Help with Share Structure</span>
       <span v-else>Hide Help</span>
     </span>
@@ -44,7 +44,8 @@
     <ul>
       <li>
         <v-icon v-if="shareClasses.length > 0" color="green darken-2" class="cp-valid">mdi-check</v-icon>
-        <v-icon v-else :color="getShowErrors ? 'red': 'transparent'" class="cp-invalid">mdi-close</v-icon>
+        <v-icon v-else-if="getShowErrors" color="error" class="cp-invalid">mdi-close</v-icon>
+        <v-icon v-else>mdi-circle-small</v-icon>
         <span class="chk-list-item-txt">At least one Class of Shares</span>
       </li>
     </ul>
@@ -337,7 +338,7 @@ p{
 
 .help-btn {
   cursor: pointer;
-  color: $primary-blue;
+  color: $app-blue;
   vertical-align: middle;
 }
 

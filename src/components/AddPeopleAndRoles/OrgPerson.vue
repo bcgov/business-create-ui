@@ -36,7 +36,7 @@
                 </p>
                 <p>
                   If you make changes to your address below, please update your address in the account
-                  settings after you have completed thisfiling to ensure your information is up to date.
+                  settings after you have completed this filing to ensure your information is up to date.
                 </p>
               </v-card>
 
@@ -135,7 +135,7 @@
                 </v-card>
 
                 <!-- Mailing Address -->
-                <div class="font-weight-bold mt-4">Mailing Address</div>
+                <div class="font-weight-bold mt-8">Mailing Address</div>
                 <div class="address-wrapper">
                   <base-address
                     ref="mailingAddressNew"
@@ -155,7 +155,7 @@
                     v-model="inheritMailingAddress"
                   />
                   <div v-if="!inheritMailingAddress">
-                    <div class="font-weight-bold">Delivery Address</div>
+                    <div class="font-weight-bold mt-4">Delivery Address</div>
                     <div class="address-wrapper">
                       <base-address
                         ref="deliveryAddressNew"

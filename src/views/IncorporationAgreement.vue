@@ -82,7 +82,7 @@
 
       <!-- Help Section -->
       <span class="help-btn" @click="helpToggle = !helpToggle">
-        <v-icon color="blue darken-2" style="padding-right: 5px">mdi-help-circle-outline</v-icon>
+        <v-icon color="primary" style="padding-right: 5px">mdi-help-circle-outline</v-icon>
         <span v-if="!helpToggle">Help with Incorporation Agreement and Articles</span>
         <span v-else>Hide Help</span>
       </span>
@@ -273,18 +273,18 @@ p{
 
 a {
   text-decoration: none;
-  color: $primary-blue;
+  color: $app-blue;
 }
 
 .help-btn {
   cursor: pointer;
-  color: $primary-blue;
+  color: $app-blue;
   vertical-align: middle;
 }
 
 .read-more-btn {
   cursor: pointer;
-  color: $primary-blue;
+  color: $app-blue;
 }
 
 .incorporation-agreement-help {

@@ -40,6 +40,16 @@
   transform: translateY(-8px) scale(0.75);
 }
 
+// Disabled Text Fields
+.v-text-field.v-input--is-readonly {
+  pointer-events: none;
+
+  .v-input__slot:before {
+    border-style: dotted !important;
+    border-color: $gray7 !important;
+  }
+}
+
 // V-Cards
 .v-card {
   .v-card__text {
