@@ -86,8 +86,8 @@ export default class CooperativeType extends Vue {
   color: $gray7;
 }
 
-::v-deep .v-list-item--link:hover {
-  background-color: #E4EDF7;
+::v-deep .v-list-item--link:hover:not(.v-list-item--active) {
+  background-color: $gray1;
   color: $app-blue !important;
 }
 
