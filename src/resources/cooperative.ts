@@ -61,6 +61,46 @@ export const CooperativeResource: ResourceIF = {
       }
     ]
   },
+  createRules: {
+    helpSection: {
+      header: `Help with Rules of the Association`,
+      helpText: {
+        section1: {
+          label: 'Each Cooperative Association must set its own rules to cover:',
+          items: [
+            'Governance',
+            'Overarching goals, needs, and actions to fulfill its purpose',
+            'Election of directors',
+            'Requirements for membership',
+            'Financial information management',
+            'Special rights and restrictions related to investment shares',
+            'How meetings are conducted'
+          ]
+        },
+        section2: {
+          label: 'The Rules need to:',
+          items: [
+            'Balance the rights of individual members with the interests of the Cooperative Association as a whole',
+            `Address the requirements of
+                <a href="https://www.bclaws.gov.bc.ca/civix/document/id/complete/statreg/99028_01#section13"
+                   target="_blank">section 13 of the Cooperative Association Act
+                   <v-icon color="blue darken-2" style="padding-right: 5px">mdi-open-in-new</v-icon></a>
+
+                 and <a href="https://www.bclaws.gov.bc.ca/civix/document/id/complete/statreg/391_2000#section10"
+                   target="_blank">section 10 of the Cooperative Association Regulation</a>`,
+            'Be flexible enough to allow the Cooperative Association to respond to changing conditions'
+          ]
+        },
+        section3: {
+          items: [
+            `Applicants need to define their rules correctly. BC Registries is not responsible for verifying or offering
+              advice about creating rules. You may want to get advice from a lawyer for help setting up your rules.`,
+            'Use clear, concise, and consistent language to avoid confusion or disputes.'
+          ]
+        }
+      }
+    }
+  },
   reviewAndConfirm: {
     completingPartyStatement: {
       certifyStatementHeader: null,

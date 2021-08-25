@@ -193,6 +193,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   @Action setUserPhone: ActionBindingIF
   @Action setUserFirstName!: ActionBindingIF
   @Action setUserLastName!: ActionBindingIF
+  @Action setUserKeycloakGuid!: ActionBindingIF
   @Action setUserAddress!: ActionBindingIF
   @Action setAuthRoles!: ActionBindingIF
   @Action setAddPeopleAndRoleStepValidity!: ActionBindingIF
@@ -596,6 +597,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
 
     this.setUserFirstName(userInfo.firstname)
     this.setUserLastName(userInfo.lastname)
+    this.setUserKeycloakGuid(userInfo.keycloakGuid)
 
     return userInfo
   }

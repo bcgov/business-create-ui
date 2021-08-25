@@ -32,6 +32,11 @@ export const getPeopleAndRolesResource = (state: StateIF): any => {
   return state.resourceModel.peopleAndRoles
 }
 
+/** The Create Rules object. */
+export const getCreateRulesResource = (state: StateIF): any => {
+  return state.resourceModel.createRules
+}
+
 /** The completing party statement resources. */
 export const getCompletingPartyStatement = (state: StateIF): CertifyStatementIF => {
   return state.resourceModel.reviewAndConfirm.completingPartyStatement

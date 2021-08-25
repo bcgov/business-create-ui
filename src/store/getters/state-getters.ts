@@ -138,7 +138,7 @@ export const getBusinessContact = (state: StateIF): BusinessContactIF => {
 
 /** The Rules object. */
 export const getRules = (state: StateIF): any => {
-  return {} // *** FUTURE: implement this
+  return state.stateModel.createRulesStep
 }
 
 /** The Memorandum object. */
@@ -338,6 +338,11 @@ export const getUserFirstName = (state: StateIF): string => {
 /** The user's last name. */
 export const getUserLastName = (state: StateIF): string => {
   return (state.stateModel.tombstone.userLastName)
+}
+
+/** The user's keycloak guid. */
+export const getUserKeycloakGuid = (state: StateIF): string => {
+  return (state.stateModel.tombstone.userKeycloakGuid)
 }
 
 /** The user's address. */

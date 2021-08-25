@@ -1,3 +1,8 @@
+import { RulesDocIF } from '@/interfaces'
+
 export interface CreateRulesIF {
-  valid: boolean
+  valid: boolean,
+  rulesConfirmed: boolean,
+  rulesDoc: RulesDocIF
+  docKey: string
 }

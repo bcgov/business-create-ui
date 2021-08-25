@@ -2,7 +2,7 @@ import { ActionIF } from '@/interfaces/store-interfaces/action-interface'
 import {
   AccountInformationIF, AddressIF, BusinessContactIF, CertifyIF, IncorporationAddressIF,
   IncorporationAgreementIF, NameRequestIF, NameTranslationIF, OrgPersonIF, ResourceIF,
-  ShareClassIF
+  ShareClassIF, RulesDocIF
 } from '@/interfaces'
 import { CoopType, CorpTypeCd } from '@/enums'
 
@@ -52,6 +52,10 @@ export const setUserFirstName: ActionIF = ({ commit }, userFirstName: string): v
 
 export const setUserLastName: ActionIF = ({ commit }, userLastName: string): void => {
   commit('mutateUserLastName', userLastName)
+}
+
+export const setUserKeycloakGuid: ActionIF = ({ commit }, userKeycloakGuid: string): void => {
+  commit('mutateUserKeycloakGuid', userKeycloakGuid)
 }
 
 export const setUserAddress: ActionIF = ({ commit }, userAddress: AddressIF): void => {
@@ -124,6 +128,18 @@ export const setAddPeopleAndRoleStepValidity = ({ commit }, valid: boolean) => {
 
 export const setRules = ({ commit }, rules: any) => {
   commit('mutateRules', rules)
+}
+
+export const setRulesConfirmed: ActionIF = ({ commit }, rulesConfirmed: boolean): void => {
+  commit('mutateRulesConfirmed', rulesConfirmed)
+}
+
+export const setRulesDoc: ActionIF = ({ commit }, rulesDoc: RulesDocIF): void => {
+  commit('mutateRulesDoc', rulesDoc)
+}
+
+export const setRulesDocKey: ActionIF = ({ commit }, rulesDocKey: string): void => {
+  commit('mutateRulesDocKey', rulesDocKey)
 }
 
 export const setMemorandum = ({ commit }, memorandum: any) => {

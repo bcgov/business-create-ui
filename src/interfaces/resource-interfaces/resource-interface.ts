@@ -1,5 +1,5 @@
 import { FilingDataIF, HelpSectionIF, IncorporationAgreementTypeIF, PeopleAndRolesResourceIF,
-  StepIF } from '@/interfaces'
+  StepIF, CreateRulesResourceIF } from '@/interfaces'
 import { CorpTypeCd, NameRequestTypes } from '@/enums'
 
 // Interface to define the resource model
@@ -31,4 +31,7 @@ export interface ResourceIF {
     article: string
     documents: Array<IncorporationAgreementTypeIF>
   }
+
+  // CP only
+  createRules?: CreateRulesResourceIF
 }

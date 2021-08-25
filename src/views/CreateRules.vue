@@ -18,3 +18,7 @@ import { UploadRules } from '@/components/CreateRules'
 })
 export default class CreateRules extends Vue {}
 </script>
+
+<style lang="scss" scoped>
+@import '@/assets/styles/theme.scss';
+</style>
