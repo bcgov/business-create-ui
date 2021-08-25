@@ -24,7 +24,7 @@
         <!-- Help Section -->
         <div class="mt-4">
           <span class="help-btn" @click="coopHelpToggle = !coopHelpToggle">
-            <v-icon color="blue darken-2" style="padding-right: 5px">mdi-help-circle-outline</v-icon>
+            <v-icon color="primary" style="padding-right: 5px">mdi-help-circle-outline</v-icon>
             <span v-if="!coopHelpToggle">Help with Cooperative Association Types</span>
             <span v-else>Hide Help</span>
           </span>
@@ -342,7 +342,7 @@ header {
 // Coop Type Help section
 .help-btn {
   cursor: pointer;
-  color: $primary-blue;
+  color: $app-blue;
   vertical-align: middle;
 }
 
@@ -365,5 +365,10 @@ header {
     display: flex;
     direction: rtl;
   }
+}
+
+// Vuetify Overrides
+::v-deep .v-select__selection--comma {
+  overflow: inherit;
 }
 </style>

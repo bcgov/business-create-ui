@@ -22,7 +22,7 @@
 
         <v-col cols="12" md="3" class="business-info pl-5 pt-7">
           <div v-if="getNameRequestNumber" id="entity-nr-number">
-            <span class="font-weight-bold">Name Request No:</span>
+            <span class="font-weight-bold">Name Request:</span>
             {{ getNameRequestNumber }}
           </div>
 
