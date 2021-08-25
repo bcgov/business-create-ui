@@ -114,7 +114,7 @@ export default class EntityInfo extends Mixins(EnumMixin) {
     }
 
     .v-breadcrumbs a:hover {
-      color: $BCgovABlue3;
+      color: $app-blue;
     }
   }
 }

@@ -7,7 +7,7 @@
     <!-- Help Section -->
     <div v-if="getPeopleAndRolesResource.helpSection" class="mt-5">
       <span class="help-btn" @click="helpToggle = !helpToggle">
-        <v-icon color="blue darken-2" style="padding-right: 5px">mdi-help-circle-outline</v-icon>
+        <v-icon color="primary" style="padding-right: 5px">mdi-help-circle-outline</v-icon>
         <span v-if="!helpToggle">{{ getPeopleAndRolesResource.helpSection.header }}</span>
         <span v-else>Hide Help</span>
       </span>
@@ -29,35 +29,35 @@
           <li v-if="rule.rule === Rules.NUM_COMPLETING_PARTY" :key="index">
             <v-icon v-if="validNumCompletingParty" color="green darken-2"
               class="cp-valid">mdi-check</v-icon>
-            <v-icon v-else-if="getShowErrors" color="red" class="cp-invalid">mdi-close</v-icon>
+            <v-icon v-else-if="getShowErrors" color="error" class="cp-invalid">mdi-close</v-icon>
             <v-icon v-else>mdi-circle-small</v-icon>
             <span class="chk-list-item-txt">{{rule.text}}</span>
           </li>
           <li v-if="rule.rule === Rules.NUM_INCORPORATORS" :key="index">
             <v-icon v-if="validMinimumIncorporators" color="green darken-2"
               class="incorp-valid">mdi-check</v-icon>
-            <v-icon v-else-if="getShowErrors" color="red" class="incorp-invalid">mdi-close</v-icon>
+            <v-icon v-else-if="getShowErrors" color="error" class="incorp-invalid">mdi-close</v-icon>
             <v-icon v-else>mdi-circle-small</v-icon>
             <span class="chk-list-item-txt">{{rule.text}}</span>
           </li>
           <li v-if="rule.rule === Rules.NUM_DIRECTORS" :key="index">
             <v-icon v-if="validMinimumDirectors" color="green darken-2"
               class="dir-valid">mdi-check</v-icon>
-            <v-icon v-else-if="getShowErrors" color="red" class="dir-invalid">mdi-close</v-icon>
+            <v-icon v-else-if="getShowErrors" color="error" class="dir-invalid">mdi-close</v-icon>
             <v-icon v-else>mdi-circle-small</v-icon>
             <span class="chk-list-item-txt">{{rule.text}}</span>
           </li>
           <li v-if="rule.rule === Rules.DIRECTOR_COUNTRY" :key="index">
             <v-icon v-if="validDirectorCountry" color="green darken-2"
               class="dir-valid">mdi-check</v-icon>
-            <v-icon v-else-if="getShowErrors" color="red" class="dir-invalid">mdi-close</v-icon>
+            <v-icon v-else-if="getShowErrors" color="error" class="dir-invalid">mdi-close</v-icon>
             <v-icon v-else>mdi-circle-small</v-icon>
             <span class="chk-list-item-txt">{{rule.text}}</span>
           </li>
           <li v-if="rule.rule === Rules.DIRECTOR_PROVINCE" :key="index">
             <v-icon v-if="validDirectorProvince" color="green darken-2"
               class="dir-valid">mdi-check</v-icon>
-            <v-icon v-else-if="getShowErrors" color="red" class="dir-invalid">mdi-close</v-icon>
+            <v-icon v-else-if="getShowErrors" color="error" class="dir-invalid">mdi-close</v-icon>
             <v-icon v-else>mdi-circle-small</v-icon>
             <span class="chk-list-item-txt">{{rule.text}}</span>
           </li>
@@ -390,7 +390,7 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
 
 .help-btn {
   cursor: pointer;
-  color: $primary-blue;
+  color: $app-blue;
   vertical-align: middle;
 }
 

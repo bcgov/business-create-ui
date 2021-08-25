@@ -135,7 +135,7 @@ export default class Stepper extends Vue {
   }
 
   .v-btn:before {
-    background-color: #1976d2;
+    background-color: $app-blue;
   }
 
   .step__icon {
@@ -145,7 +145,7 @@ export default class Stepper extends Vue {
 }
 
 .selected-btn {
-  background-color: #1976d2 !important;
+  background-color: $app-blue !important;
 }
 
 .selected-icon {
@@ -177,7 +177,7 @@ export default class Stepper extends Vue {
   background-color: $BCgovInputBG;
   z-index: 2;
   .step__icon {
-    color: #1976d2;
+    color: $app-blue;
     background-color: inherit;
   }
 }

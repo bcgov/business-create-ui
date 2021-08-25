@@ -72,7 +72,7 @@ async function start () {
             success: '#1a9031', // same as $app-green
             error: '#d3272c', // same as $app-red
             gray7: '#495057', // same as $gray7
-            gray9: '#495057' // same as $gray9
+            gray9: '#212529' // same as $gray9
           }
         }
       }
