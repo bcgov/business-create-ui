@@ -588,7 +588,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       // this is an IDIR user
       this.setUserPhone(userInfo.phone)
     } else {
-      throw new Error('Invalid user phone')
+      console.log('Invalid user phone')
     }
 
     if (!userInfo.firstname) throw new Error('Invalid user first name')
