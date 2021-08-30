@@ -140,7 +140,7 @@ export const mutateFilingId = (state: StateIF, filingId: number) => {
 }
 
 export const mutateRules = (state: StateIF, rules: any) => {
-  state.stateModel.createRulesStep = rules // *** FUTURE
+  state.stateModel.createRulesStep = rules
   if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
 }
 

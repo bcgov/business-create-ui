@@ -137,7 +137,7 @@ export const getBusinessContact = (state: StateIF): BusinessContactIF => {
 }
 
 /** The Rules object. */
-export const getRules = (state: StateIF): any => {
+export const getRules = (state: StateIF): CreateRulesIF => {
   return state.stateModel.createRulesStep
 }
 

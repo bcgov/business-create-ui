@@ -14,7 +14,7 @@
           @change="fileChange"
           color="primary"
           prepend-icon
-          hint="File must be a PDF.  Maxinum 10MB."
+          hint="File must be a PDF.  Maximum 10MB."
           persistent-hint
         >
         </v-file-input>
@@ -68,13 +68,13 @@ export default class FileUploadPreview extends Vue {
     this.emitFileSelected(file)
   }
 
-  @Emit('file-selected')
+  @Emit('fileSelected')
   emitFileSelected (file) {
     this.isFileValid()
     return file
   }
 
-  @Emit('is-file-valid')
+  @Emit('isFileValid')
   isFileValid () {
     return this.$refs.fileUploadInput.validate()
   }
@@ -90,11 +90,10 @@ export default class FileUploadPreview extends Vue {
       margin-top: 10px !important
     }
     .v-input__slot{
-      background-color: $BCgovFineInputBG !important;
+      background-color: $gray1 !important;
     }
     .v-file-input__text{
-     color: var(--v-primary-base) !important;
-
+     color: $app-blue !important;
     }
   }
 }

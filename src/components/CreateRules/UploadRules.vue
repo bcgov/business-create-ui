@@ -14,18 +14,18 @@
           </v-tooltip>.
         </p>
       </header>
-
     </section>
+
     <!-- Help Section -->
     <div v-if="getCreateRulesResource.helpSection" class="mt-5">
       <span class="help-btn" @click="helpToggle = !helpToggle">
-        <v-icon color="blue darken-2" style="padding-right: 5px">mdi-help-circle-outline</v-icon>
+        <v-icon color="primary" style="padding-right: 5px">mdi-help-circle-outline</v-icon>
         <span v-if="!helpToggle">{{ getCreateRulesResource.helpSection.header }}</span>
         <span v-else>Hide Help</span>
       </span>
       <section v-show="helpToggle" class="create-rules-help">
         <header id="create-rules-help-header"><h2>{{getCreateRulesResource.helpSection.header}}</h2></header>
-        <p>
+        <p class="help-section-label-top">
           <b>{{getCreateRulesResource.helpSection.helpText.section1.label}}</b>
         </p>
         <ul>
@@ -36,8 +36,7 @@
           >{{ item }}
           </li>
         </ul>
-        <br/>
-        <p>
+        <p class="help-section-label">
           <b>{{getCreateRulesResource.helpSection.helpText.section2.label}}</b>
         </p>
         <ul>
@@ -48,7 +47,6 @@
           ><span v-html="item"></span>
           </li>
         </ul>
-        <br/>
         <p
           v-for="(item, index) in getCreateRulesResource.helpSection.helpText.section3.items"
           class="help-section"
@@ -87,9 +85,9 @@
         <v-col cols="9" >
           <FileUploadPreview
             :maxSize="MAX_FILE_SIZE"
-            v-bind:input-file="uploadRulesDoc"
-            @file-selected="fileSelected"
-            @is-file-valid="isFileUploadValidFn"
+            :inputFile="{...uploadRulesDoc}"
+            @fileSelected="fileSelected"
+            @isFileValid="isFileUploadValidFn"
           ></FileUploadPreview>
         </v-col>
       </v-row>
@@ -129,7 +127,8 @@ import FileUploadPreview from '@/components/common/FileUploadPreview.vue'
 export default class UploadRules extends Mixins(DocumentMixin) {
   @Prop({ default: false })
   private readonly isSummary: boolean
-  private MAX_FILE_SIZE = 10000 // 10 MB in KB
+
+  private MAX_FILE_SIZE = 10 * 1024 // 10 MB in KB
   private isFileUploadValid: boolean = false
   private uploadRulesDoc:File = null
   private helpToggle = false
@@ -168,10 +167,10 @@ export default class UploadRules extends Mixins(DocumentMixin) {
     this.isFileUploadValid = val
   }
 
-  private fileSelected (file) {
+  private async fileSelected (file) {
     if (file && this.isFileUploadValid) {
       this.setUploadRulesDoc(file)
-      this.uploadPendingDocsToStorage()
+      await this.uploadPendingDocsToStorage()
     } else {
       this.setUploadRulesDoc(null)
       this.updateDocKey(null)
@@ -224,10 +223,6 @@ export default class UploadRules extends Mixins(DocumentMixin) {
   color: $app-blue;
 }
 
-.v-icon.mdi-information-outline {
-  margin-top: -2px;
-}
-
 .help-btn {
   cursor: pointer;
   color: $app-blue;
@@ -253,9 +248,18 @@ export default class UploadRules extends Mixins(DocumentMixin) {
     display: flex;
     direction: rtl;
   }
+
+  .help-section-label-top {
+    margin-top: 4px;
+  }
+
+  .help-section-label {
+    margin-top: 15px;
+  }
 }
 
 .v-icon.mdi-help-circle-outline,
+.v-icon.mdi-information-outline,
 .v-icon.mdi-circle-small {
   margin-top: -2px;
 }
