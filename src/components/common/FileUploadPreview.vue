@@ -13,7 +13,6 @@
           show-size
           @change="fileChange"
           color="primary"
-          prepend-icon
           hint="File must be a PDF.  Maximum 10MB."
           persistent-hint
         >
@@ -94,6 +93,9 @@ export default class FileUploadPreview extends Vue {
     }
     .v-file-input__text{
      color: $app-blue !important;
+    }
+    .v-input__icon--prepend button {
+      color: $app-blue !important;
     }
   }
 }

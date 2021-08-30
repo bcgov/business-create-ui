@@ -5,12 +5,13 @@
     <section class="mt-10">
       <header>
         <h2>1. Rules of the Association</h2>
-        <p>Before submitting your incorporation application you must <b>complete, sign, and date</b>
-          <v-tooltip top max-width="20rem" color="primary">
+        <p>Before submitting your incorporation application you must <b>complete, sign, and date</b> the
+          <v-tooltip top max-width="20rem" color="primary" content-class="top-tooltip">
             <template v-slot:activator="{ on }">
-              <span v-on="on" class="tool-tip"> the Rules of Association</span>
+              <span v-on="on" class="tool-tip dotted-underline"> Rules of the Association</span>
             </template>
-            <span>Tooltip text goes here.  text is TBD.</span>
+            <span>Rules - a signed document which outlines rules and procedures for the Cooperative Association
+            and its members.</span>
           </v-tooltip>.
         </p>
       </header>
@@ -58,40 +59,55 @@
       </section>
     </div>
 
-    <section class="mt-10">
+    <section id="confirm-rules-section" class="mt-10">
       <header>
-        <h2>2. Upload Completed Rules</h2>
-        <p>
-          <v-checkbox
-            id="chk-confirm-rules"
-            v-model="rulesConfirmed"
-            label="I confirm the following items are included as required in the Rules of the Association."
-            @change="onRulesConfirmedChange()"
-          />
-          <ul>
-            <li>The cooperative name is identified <b>exactly</b> as followings in the rules:</li>
-            <p><b>{{getNameRequestDetails.approvedName}}</b></p>
-            <li>Each Subscriber and Witness has signed and dated the Rules of the Association and their name is printed
-              under their signature.</li>
-          </ul>
-        </p>
+        <h2>2. Confirm Rules Completion</h2>
       </header>
+      <v-card flat id="confirm-rules-card">
+        <v-checkbox
+          class="chk-rules"
+          id="chk-confirm-rules"
+          v-model="rulesConfirmed"
+          label="I confirm the following items are included as required in the Rules of the Association:"
+          @change="onRulesConfirmedChange()"
+        />
+        <ul>
+          <li>The Cooperative name is identified <b>exactly</b> as follows throughout the Memorandum:</li>
+          <p><b>{{getNameRequestDetails.approvedName}}</b></p>
+          <li>Each Subscriber and Witness has signed and dated the Rules of the Association and their name is
+            printed under their signature.</li>
+        </ul>
+      </v-card>
     </section>
-    <v-card flat id="upload-rules">
-      <v-row>
-        <v-col cols="2" >
-          <v-card-title style="padding-top:1px;font-size:medium;">Upload Rules</v-card-title>
-        </v-col>
-        <v-col cols="9" >
-          <FileUploadPreview
-            :maxSize="MAX_FILE_SIZE"
-            :inputFile="{...uploadRulesDoc}"
-            @fileSelected="fileSelected"
-            @isFileValid="isFileUploadValidFn"
-          ></FileUploadPreview>
-        </v-col>
-      </v-row>
-    </v-card>
+
+    <section id="upload-rules-section" class="mt-10">
+      <header>
+        <h2>3. Upload Rules</h2>
+        <ul>
+          <li>Must be set to fit onto 8 <sup>1</sup>&frasl;<sub>2</sub>" x 11" letter-size paper</li>
+          <li>Use a white background and a legible font with contrasting font colour</li>
+          <li>PDF file type (maximum 10 MB file size)</li>
+        </ul>
+        <div id="upload-rules-note">
+          <b>Note: </b>Do not upload Housing Cooperative occupancy agreements.
+        </div>
+      </header>
+      <v-card flat id="upload-rules-card">
+        <v-row>
+          <v-col id="upload-rules-card-left-col" cols="2">
+            <v-card-title class="upload-rules-vcard-title">Upload Rules</v-card-title>
+          </v-col>
+          <v-col id="upload-rules-card-right-col" cols="10">
+            <FileUploadPreview
+              :maxSize="MAX_FILE_SIZE"
+              :inputFile="uploadRulesDoc"
+              @fileSelected="fileSelected"
+              @isFileValid="isFileUploadValidFn"
+            ></FileUploadPreview>
+          </v-col>
+        </v-row>
+      </v-card>
+    </section>
   </div>
 </template>
 
@@ -207,6 +223,21 @@ export default class UploadRules extends Mixins(DocumentMixin) {
 
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
+header {
+  p {
+    padding-top:0.5rem
+  }
+}
+
+ul {
+  margin-left: 25px !important;
+  padding-left: 25px !important;
+}
+
+li {
+  margin-top: 15px !important;
+}
+
 .upload-rules-summary-header {
   display: flex;
   background-color: $BCgovBlue5O;
@@ -256,6 +287,49 @@ export default class UploadRules extends Mixins(DocumentMixin) {
   .help-section-label {
     margin-top: 15px;
   }
+}
+
+#confirm-rules-section {
+  #confirm-rules-card {
+    margin-top: 15px;
+    padding-top: 5px;
+    padding-bottom: 20px;
+    padding-left: 25px;
+  }
+}
+
+.chk-rules {
+  height: 2.5rem !important;
+}
+
+#upload-rules-section {
+  li {
+    margin-top: 15px !important;
+  }
+
+  #upload-rules-note {
+    font-size: 16px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+  }
+
+  #upload-rules-card {
+    #upload-rules-card-left-col {
+      padding-top:25px;
+    }
+
+    #upload-rules-card-right-col {
+      padding-top:25px;
+      padding-left:25px;
+      padding-right:30px;
+    }
+  }
+}
+
+.upload-rules-vcard-title {
+  padding-top:1px;
+  font-size: 17px;
+  font-weight:bold;
 }
 
 .v-icon.mdi-help-circle-outline,
