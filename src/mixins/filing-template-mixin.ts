@@ -4,9 +4,11 @@ import { Getter, Action } from 'vuex-class'
 import { DateMixin } from '@/mixins'
 
 // Interfaces
-import { ActionBindingIF, BusinessContactIF, CertifyIF, DateTimeIF, DefineCompanyIF,
-  IncorporationAgreementIF, IncorporationFilingIF, NameTranslationIF, PeopleAndRoleIF,
-  ShareStructureIF } from '@/interfaces'
+import {
+  ActionBindingIF, BusinessContactIF, CertifyIF, CreateRulesIF, DateTimeIF, DefineCompanyIF,
+  IncorporationAgreementIF, IncorporationFilingIF, NameTranslationIF, PeopleAndRoleIF, RulesDocIF,
+  ShareStructureIF
+} from '@/interfaces'
 
 // Constants and enums
 import { INCORPORATION_APPLICATION } from '@/constants'
@@ -94,10 +96,12 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     switch (this.getEntityType) {
       case CorpTypeCd.COOP:
         filing.filing.incorporationApplication.cooperative = {
-          cooperativeAssociationType: this.getDefineCompanyStep.cooperativeType
+          cooperativeAssociationType: this.getDefineCompanyStep.cooperativeType,
+          rulesFileKey: this.getRules.docKey,
+          rulesFileName: this.getRules.rulesDoc ? this.getRules.rulesDoc.name : null,
+          rulesFileSize: this.getRules.rulesDoc ? this.getRules.rulesDoc.size : null,
+          rulesFileLastModified: this.getRules.rulesDoc ? this.getRules.rulesDoc.lastModified : null
         }
-        filing.filing.incorporationApplication.rules = this.getRules
-        filing.filing.incorporationApplication.memorandum = this.getMemorandum
         break
       case CorpTypeCd.BENEFIT_COMPANY:
       case CorpTypeCd.BC_CCC:
@@ -162,7 +166,21 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
         // Set Cooperative type
         this.setCooperativeType(draftFiling.incorporationApplication.cooperative?.cooperativeAssociationType)
         // Set Rules
-        this.setRules(draftFiling.incorporationApplication.rules)
+        let rulesDoc:RulesDocIF = null
+        if (draftFiling.incorporationApplication.cooperative?.rulesFileKey) {
+          rulesDoc = {
+            name: draftFiling.incorporationApplication.cooperative?.rulesFileName,
+            lastModified: draftFiling.incorporationApplication.cooperative?.rulesFileLastModified,
+            size: draftFiling.incorporationApplication.cooperative?.rulesFileSize
+          }
+        }
+        const createRules:CreateRulesIF = {
+          valid: false,
+          rulesConfirmed: false,
+          rulesDoc: rulesDoc,
+          docKey: draftFiling.incorporationApplication.cooperative?.rulesFileKey
+        }
+        this.setRules(createRules)
         // Set Memorandum
         this.setMemorandum(draftFiling.incorporationApplication.memorandum)
         break
