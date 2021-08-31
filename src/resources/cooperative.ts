@@ -1,5 +1,5 @@
 import { ResourceIF } from '@/interfaces'
-import { CorpTypeCd, FilingCodes, NameRequestTypes, Rules } from '@/enums'
+import { CorpTypeCd, FilingCodes, NameRequestTypes, Rules, ItemTypes } from '@/enums'
 import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 import { CoopStepsTemplate } from '@/resources/stepTemplates'
 
@@ -80,21 +80,21 @@ export const CooperativeResource: ResourceIF = {
         section2: {
           label: 'The Rules need to:',
           items: [
-            { type: 'text', value: `Balance the rights of individual members with the interests of the Cooperative
+            { type: ItemTypes.TEXT, value: `Balance the rights of individual members with the interests of the Cooperative
               Association as a whole` },
-            { type: 'partialItems',
+            { type: ItemTypes.PARTIAL_ITEMS,
               value: [
-                { type: 'text', value: 'Address the requirements of ' },
+                { type: ItemTypes.TEXT, value: 'Address the requirements of ' },
                 {
-                  type: 'link',
+                  type: ItemTypes.LINK,
                   value: {
                     linkText: 'section 13 of the Cooperative Association Act',
                     href: 'https://www.bclaws.gov.bc.ca/civix/document/id/complete/statreg/99028_01#section13'
                   }
                 },
-                { type: 'text', value: ' and ' },
+                { type: ItemTypes.TEXT, value: ' and ' },
                 {
-                  type: 'link',
+                  type: ItemTypes.LINK,
                   value: {
                     linkText: 'section 10 of the Cooperative Association Regulation',
                     href: 'https://www.bclaws.gov.bc.ca/civix/document/id/complete/statreg/391_2000#section10'
@@ -102,7 +102,7 @@ export const CooperativeResource: ResourceIF = {
                 }
               ]
             },
-            { type: 'text',
+            { type: ItemTypes.TEXT,
               value: 'Be flexible enough to allow the Cooperative Association to respond to changing conditions' }
           ]
         },

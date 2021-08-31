@@ -35,7 +35,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Getter getCreateShareStructureStep!: ShareStructureIF
   @Getter getIncorporationAgreementStep!: IncorporationAgreementIF
   @Getter getBusinessContact!: BusinessContactIF
-  @Getter getRules!: any
+  @Getter getRules!: CreateRulesIF
   @Getter getMemorandum!: any
 
   @Action setEntityType!: ActionBindingIF

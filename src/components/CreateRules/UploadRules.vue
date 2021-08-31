@@ -46,11 +46,11 @@
             class="help-section"
             :key="index"
           >
-            <span v-if="item.type == 'text'" v-html="item.value"></span>
-            <span v-if="item.type == 'partialItems'">
+            <span v-if="item.type == ItemTypes.TEXT" v-html="item.value"></span>
+            <span v-if="item.type == ItemTypes.PARTIAL_ITEMS">
               <span v-for="(partialItem, index) in item.value" :key="index">
-                <span v-if="partialItem.type == 'text'" v-html="partialItem.value"></span>
-                <a v-if="partialItem.type=='link'"
+                <span v-if="partialItem.type == ItemTypes.TEXT" v-html="partialItem.value"></span>
+                <a v-if="partialItem.type == ItemTypes.LINK"
                    :href="partialItem.value.href"
                    target="_blank"
                 >{{partialItem.value.linkText}}
@@ -139,7 +139,7 @@ import {
 } from '@/interfaces'
 
 // Enums
-import { RouteNames } from '@/enums'
+import { RouteNames, ItemTypes } from '@/enums'
 
 // Mixins
 import { DocumentMixin } from '@/mixins'
@@ -153,9 +153,6 @@ import FileUploadPreview from '@/components/common/FileUploadPreview.vue'
   }
 })
 export default class UploadRules extends Mixins(DocumentMixin) {
-  @Prop({ default: false })
-  private readonly isSummary: boolean
-
   private MAX_FILE_SIZE = 10 * 1024 // 10 MB in KB
   private isFileUploadValid: boolean = false
   private uploadRulesDoc:File = null
@@ -176,6 +173,7 @@ export default class UploadRules extends Mixins(DocumentMixin) {
 
   // Enum for template
   readonly RouteNames = RouteNames
+  readonly ItemTypes = ItemTypes
 
   private setUploadRulesDoc (doc: File) {
     this.uploadRulesDoc = doc

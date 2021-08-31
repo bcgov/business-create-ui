@@ -22,7 +22,7 @@
 
     <!-- Coops summary components -->
     <template v-else>
-      <UploadRulesSummary class="mt-4" :isSummary="true" />
+      <UploadRulesSummary class="mt-4" />
       <UploadMemorandum class="mt-4" :isSummary="true" />
     </template>
   </div>

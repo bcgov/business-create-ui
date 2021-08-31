@@ -12,6 +12,7 @@ export * from './numWord'
 export * from './routeNames'
 export * from './rules'
 export * from './viewComponentNames'
+export * from './itemTypes'
 
 // external enums
 export { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'

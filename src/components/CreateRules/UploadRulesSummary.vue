@@ -1,7 +1,7 @@
 <template>
   <v-card flat>
     <!-- Summary Section -->
-    <div id="upload-rules-summary" v-if="isSummary">
+    <div id="upload-rules-summary">
       <!-- Summary Header -->
       <div class="upload-rules-summary-header" >
         <v-icon color="appDkBlue">mdi-format-list-text</v-icon>
@@ -28,7 +28,7 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Mixins, Prop, Vue } from 'vue-property-decorator'
+import { Component, Mixins, Prop } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 
 // Enums

@@ -2,7 +2,7 @@ import { ActionIF } from '@/interfaces/store-interfaces/action-interface'
 import {
   AccountInformationIF, AddressIF, BusinessContactIF, CertifyIF, IncorporationAddressIF,
   IncorporationAgreementIF, NameRequestIF, NameTranslationIF, OrgPersonIF, ResourceIF,
-  ShareClassIF, RulesDocIF
+  ShareClassIF, RulesDocIF, CreateRulesIF
 } from '@/interfaces'
 import { CoopType, CorpTypeCd } from '@/enums'
 
@@ -126,7 +126,7 @@ export const setAddPeopleAndRoleStepValidity = ({ commit }, valid: boolean) => {
   commit('mutateAddPeopleAndRoleStepValidity', valid)
 }
 
-export const setRules = ({ commit }, rules: any) => {
+export const setRules = ({ commit }, rules: CreateRulesIF) => {
   commit('mutateRules', rules)
 }
 

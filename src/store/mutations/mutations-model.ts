@@ -12,7 +12,8 @@ import {
   ResourceIF,
   ShareClassIF,
   StateIF,
-  RulesDocIF
+  RulesDocIF,
+  CreateRulesIF
 } from '@/interfaces'
 
 export const mutateTempId = (state: StateIF, tempId: string) => {
@@ -139,7 +140,7 @@ export const mutateFilingId = (state: StateIF, filingId: number) => {
   state.stateModel.filingId = filingId
 }
 
-export const mutateRules = (state: StateIF, rules: any) => {
+export const mutateRules = (state: StateIF, rules: CreateRulesIF) => {
   state.stateModel.createRulesStep = rules
   if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
 }
