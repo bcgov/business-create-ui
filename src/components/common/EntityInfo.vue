@@ -22,17 +22,17 @@
 
         <v-col cols="12" md="3" class="business-info pl-5 pt-7">
           <div v-if="getNameRequestNumber" id="entity-nr-number">
-            <span class="font-weight-bold">Name Request:</span>
+            <span class="font-weight-bold business-info-label">Name Request:</span>
             {{ getNameRequestNumber }}
           </div>
 
           <div id="entity-business-email">
-            <span class="font-weight-bold">Email:</span>
+            <span class="font-weight-bold business-info-label">Email:</span>
             {{ getUserEmail || 'Not Available' }}
           </div>
 
           <div id="entity-business-phone">
-            <span class="font-weight-bold">Phone:</span>
+            <span class="font-weight-bold business-info-label">Phone:</span>
             {{ getUserPhone || 'Not Available' }}
           </div>
         </v-col>
@@ -123,6 +123,10 @@ export default class EntityInfo extends Mixins(EnumMixin) {
   padding: 0!important;
 }
 
+#entity-title {
+  color: $gray7;
+}
+
 .container {
   padding-top: .5rem;
   padding-bottom: .5rem;
@@ -131,10 +135,15 @@ export default class EntityInfo extends Mixins(EnumMixin) {
 .header-title {
   font-size: 1.25rem;
   font-weight: bold;
+  color: $gray9;
 }
 
 .business-info {
   color: $gray7;
   font-size: .875rem;
+
+  .business-info-label {
+    color: $gray9;
+  }
 }
 </style>
