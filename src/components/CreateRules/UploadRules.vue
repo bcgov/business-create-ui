@@ -45,10 +45,22 @@
             v-for="(item, index) in getCreateRulesResource.helpSection.helpText.section2.items"
             class="help-section"
             :key="index"
-          ><span v-html="item"></span>
+          >
+            <span v-if="item.type == 'text'" v-html="item.value"></span>
+            <span v-if="item.type == 'partialItems'">
+              <span v-for="(partialItem, index) in item.value" :key="index">
+                <span v-if="partialItem.type == 'text'" v-html="partialItem.value"></span>
+                <a v-if="partialItem.type=='link'"
+                   :href="partialItem.value.href"
+                   target="_blank"
+                >{{partialItem.value.linkText}}
+                  <v-icon dense color="primary">mdi-open-in-new</v-icon>
+                </a>
+              </span>
+            </span>
           </li>
         </ul>
-        <p
+        <p id="help-text-section-3"
           v-for="(item, index) in getCreateRulesResource.helpSection.helpText.section3.items"
           class="help-section"
           :key="index"
@@ -287,6 +299,14 @@ li {
   .help-section-label {
     margin-top: 15px;
   }
+
+  #help-text-section-3 {
+    margin-top: 25px;
+  }
+
+  a {
+    text-decoration: none;
+  }
 }
 
 #confirm-rules-section {
@@ -334,7 +354,12 @@ li {
 
 .v-icon.mdi-help-circle-outline,
 .v-icon.mdi-information-outline,
+.v-icon.mdi-open-in-new,
 .v-icon.mdi-circle-small {
   margin-top: -2px;
+}
+
+.v-icon.mdi-open-in-new {
+  padding-bottom:1px;
 }
 </style>

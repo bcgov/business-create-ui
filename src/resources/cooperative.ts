@@ -80,15 +80,30 @@ export const CooperativeResource: ResourceIF = {
         section2: {
           label: 'The Rules need to:',
           items: [
-            'Balance the rights of individual members with the interests of the Cooperative Association as a whole',
-            `Address the requirements of
-                <a href="https://www.bclaws.gov.bc.ca/civix/document/id/complete/statreg/99028_01#section13"
-                   target="_blank">section 13 of the Cooperative Association Act
-                   <v-icon color="blue darken-2" style="padding-right: 5px">mdi-open-in-new</v-icon></a>
-
-                 and <a href="https://www.bclaws.gov.bc.ca/civix/document/id/complete/statreg/391_2000#section10"
-                   target="_blank">section 10 of the Cooperative Association Regulation</a>`,
-            'Be flexible enough to allow the Cooperative Association to respond to changing conditions'
+            { type: 'text', value: `Balance the rights of individual members with the interests of the Cooperative
+              Association as a whole` },
+            { type: 'partialItems',
+              value: [
+                { type: 'text', value: 'Address the requirements of ' },
+                {
+                  type: 'link',
+                  value: {
+                    linkText: 'section 13 of the Cooperative Association Act',
+                    href: 'https://www.bclaws.gov.bc.ca/civix/document/id/complete/statreg/99028_01#section13'
+                  }
+                },
+                { type: 'text', value: ' and ' },
+                {
+                  type: 'link',
+                  value: {
+                    linkText: 'section 10 of the Cooperative Association Regulation',
+                    href: 'https://www.bclaws.gov.bc.ca/civix/document/id/complete/statreg/391_2000#section10'
+                  }
+                }
+              ]
+            },
+            { type: 'text',
+              value: 'Be flexible enough to allow the Cooperative Association to respond to changing conditions' }
           ]
         },
         section3: {
