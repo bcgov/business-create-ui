@@ -237,7 +237,7 @@ describe('Actions component - Filing Functionality', () => {
         contactPoint: {
           email: 'registered-office@example.com',
           phone: '111-222-3333',
-          extension: '444'
+          extension: 444
         },
         parties: [
           {
@@ -396,7 +396,7 @@ describe('Actions component - Filing Functionality', () => {
       email: 'registered-office@example.com',
       confirmEmail: 'registered-office@example.com',
       phone: '111-222-3333',
-      extension: '444'
+      extension: 444
     }
     store.state.stateModel.defineCompanyStep.officeAddresses = filing.filing.incorporationApplication.offices
     store.state.stateModel.defineCompanyStep.folioNumber = filing.filing.header.folioNumber

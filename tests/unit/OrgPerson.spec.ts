@@ -37,7 +37,7 @@ const validPersonData = {
     lastName: 'Smith',
     middleName: 'D',
     orgName: '',
-    partyType: 'Person',
+    partyType: 'person',
     email: 'completing-party@example.com'
   },
   roles: [
@@ -69,7 +69,7 @@ const validIncorporator = {
     lastName: 'Smith',
     middleName: 'D',
     orgName: '',
-    partyType: 'Person'
+    partyType: 'person'
   },
   roles: [
     { roleType: 'Incorporator', appointmentDate: '2020-03-30' }
@@ -99,7 +99,7 @@ const validOrgData = {
     lastName: '',
     middleName: '',
     orgName: 'Test Org',
-    partyType: 'Org'
+    partyType: 'org'
   },
   roles: [
     { roleType: 'Incorporator', appointmentDate: '2020-03-30' }

@@ -29,7 +29,7 @@ export interface IncorporationFilingIF {
       contactPoint: {
         email: string
         phone: string
-        extension: string
+        extension?: number
       },
       parties: OrgPersonIF[],
 

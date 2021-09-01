@@ -117,8 +117,7 @@ export default class LegalApiMixin extends Vue {
       if (!toReturn.incorporationApplication?.contactPoint) {
         toReturn.incorporationApplication.contactPoint = {
           email: '',
-          phone: '',
-          extension: ''
+          phone: ''
         }
       }
       if (!toReturn.incorporationApplication?.parties) {

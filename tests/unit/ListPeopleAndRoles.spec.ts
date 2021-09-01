@@ -12,7 +12,7 @@ describe('List People And Roles component', () => {
         'lastName': 'Bowler',
         'middleName': 'D',
         'orgName': '',
-        'partyType': 'Person',
+        'partyType': 'person',
         'email': 'completing-party@example.com'
       },
       'roles': [
@@ -43,7 +43,7 @@ describe('List People And Roles component', () => {
         'lastName': '',
         'middleName': '',
         'orgName': 'Sysco Foods Company',
-        'partyType': 'Org'
+        'partyType': 'org'
       },
       'roles': [
         { 'roleType': 'Incorporator', 'appointmentDate': '2020-03-30' }
