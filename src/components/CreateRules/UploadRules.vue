@@ -79,9 +79,9 @@
         <v-checkbox
           class="chk-rules"
           id="chk-confirm-rules"
-          v-model="rulesConfirmed"
+          :value="getCreateRulesStep.rulesConfirmed"
           label="I confirm the following items are included as required in the Rules of the Association:"
-          @change="onRulesConfirmedChange()"
+          @change="onRulesConfirmedChange($event)"
         />
         <ul>
           <li>The Cooperative name is identified <b>exactly</b> as follows throughout the Memorandum:</li>
@@ -157,9 +157,6 @@ export default class UploadRules extends Mixins(DocumentMixin) {
   private isFileUploadValid: boolean = false
   private uploadRulesDoc:File = null
   private helpToggle = false
-  private rulesConfirmed: boolean = false
-  private docKey: string
-  private userKeycloakGuid: string
 
   @Getter getNameRequestDetails!: NameRequestDetailsIF
   @Getter getCreateRulesResource!: CreateRulesResourceIF
@@ -167,9 +164,7 @@ export default class UploadRules extends Mixins(DocumentMixin) {
   @Getter getValidateSteps!: boolean
   @Getter getUserKeycloakGuid!: string
 
-  @Action setRulesConfirmed!: ActionBindingIF
-  @Action setRulesDoc!: ActionBindingIF
-  @Action setRulesDocKey!: ActionBindingIF
+  @Action setRules!: ActionBindingIF
 
   // Enum for template
   readonly RouteNames = RouteNames
@@ -185,8 +180,11 @@ export default class UploadRules extends Mixins(DocumentMixin) {
         size: doc.size
       }
     }
-    this.setRulesDoc(rulesDoc)
-    this.updateDocKey(null)
+    this.setRules({
+      ...this.getCreateRulesStep,
+      rulesDoc: rulesDoc,
+      docKey: null
+    })
   }
 
   private isFileUploadValidFn (val) {
@@ -198,35 +196,37 @@ export default class UploadRules extends Mixins(DocumentMixin) {
       this.setUploadRulesDoc(file)
       await this.uploadPendingDocsToStorage()
     } else {
-      this.setUploadRulesDoc(null)
-      this.updateDocKey(null)
+      this.uploadRulesDoc = null
+      this.setRules({
+        ...this.getCreateRulesStep,
+        rulesDoc: null,
+        docKey: null
+      })
     }
-  }
-
-  private updateDocKey (key) {
-    this.docKey = key
-    this.setRulesDocKey(key)
   }
 
   public async uploadPendingDocsToStorage () {
-    const isPendingUpload = !this.docKey
+    const isPendingUpload = !this.getCreateRulesStep.docKey
     if (isPendingUpload && this.isFileUploadValid) {
-      const doc:DocumentUpload = await this.getPresignedUrl(this.uploadRulesDoc.name)
-      this.updateDocKey(doc.key)
-      const res = await this.uploadToUrl(doc.preSignedUrl, this.uploadRulesDoc, doc.key, this.userKeycloakGuid)
+      const doc:DocumentUpload = await this.getPresignedUrl(this.getCreateRulesStep.rulesDoc.name)
+      this.setRules({
+        ...this.getCreateRulesStep,
+        docKey: doc.key
+      })
+      const res = await this.uploadToUrl(doc.preSignedUrl, this.uploadRulesDoc, doc.key, this.getUserKeycloakGuid)
     }
   }
 
-  private onRulesConfirmedChange (): void {
-    this.setRulesConfirmed(this.rulesConfirmed.valueOf())
+  private onRulesConfirmedChange (rulesConfirmed: boolean): void {
+    this.setRules({
+      ...this.getCreateRulesStep,
+      rulesConfirmed: rulesConfirmed
+    })
   }
 
   /** Called when component is created. */
   private created (): void {
-    this.rulesConfirmed = this.getCreateRulesStep.rulesConfirmed
-    this.docKey = this.getCreateRulesStep.docKey
     this.uploadRulesDoc = this.getCreateRulesStep.rulesDoc as File
-    this.userKeycloakGuid = this.getUserKeycloakGuid
   }
 }
 </script>

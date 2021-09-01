@@ -130,18 +130,6 @@ export const setRules = ({ commit }, rules: CreateRulesIF) => {
   commit('mutateRules', rules)
 }
 
-export const setRulesConfirmed: ActionIF = ({ commit }, rulesConfirmed: boolean): void => {
-  commit('mutateRulesConfirmed', rulesConfirmed)
-}
-
-export const setRulesDoc: ActionIF = ({ commit }, rulesDoc: RulesDocIF): void => {
-  commit('mutateRulesDoc', rulesDoc)
-}
-
-export const setRulesDocKey: ActionIF = ({ commit }, rulesDocKey: string): void => {
-  commit('mutateRulesDocKey', rulesDocKey)
-}
-
 export const setMemorandum = ({ commit }, memorandum: any) => {
   commit('mutateMemorandum', memorandum)
 }

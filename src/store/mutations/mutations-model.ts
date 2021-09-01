@@ -145,18 +145,6 @@ export const mutateRules = (state: StateIF, rules: CreateRulesIF) => {
   if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
 }
 
-export const mutateRulesConfirmed = (state: StateIF, rulesConfirmed: boolean) => {
-  state.stateModel.createRulesStep.rulesConfirmed = rulesConfirmed
-}
-
-export const mutateRulesDoc = (state: StateIF, rulesDoc: RulesDocIF) => {
-  state.stateModel.createRulesStep.rulesDoc = rulesDoc
-}
-
-export const mutateRulesDocKey = (state: StateIF, rulesDocKey: string) => {
-  state.stateModel.createRulesStep.docKey = rulesDocKey
-}
-
 export const mutateMemorandum = (state: StateIF, memorandum: any) => {
   // state.stateModel.memorandum = memorandum // *** FUTURE: implement this
   if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)

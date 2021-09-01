@@ -136,11 +136,6 @@ export const getBusinessContact = (state: StateIF): BusinessContactIF => {
   return getDefineCompanyStep(state).businessContact
 }
 
-/** The Rules object. */
-export const getRules = (state: StateIF): CreateRulesIF => {
-  return state.stateModel.createRulesStep
-}
-
 /** The Memorandum object. */
 export const getMemorandum = (state: StateIF): any => {
   return {} // *** FUTURE: implement this

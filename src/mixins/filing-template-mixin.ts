@@ -35,7 +35,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Getter getCreateShareStructureStep!: ShareStructureIF
   @Getter getIncorporationAgreementStep!: IncorporationAgreementIF
   @Getter getBusinessContact!: BusinessContactIF
-  @Getter getRules!: CreateRulesIF
+  @Getter getCreateRulesStep!: CreateRulesIF
   @Getter getMemorandum!: any
 
   @Action setEntityType!: ActionBindingIF
@@ -97,10 +97,10 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
       case CorpTypeCd.COOP:
         filing.filing.incorporationApplication.cooperative = {
           cooperativeAssociationType: this.getDefineCompanyStep.cooperativeType,
-          rulesFileKey: this.getRules.docKey,
-          rulesFileName: this.getRules.rulesDoc ? this.getRules.rulesDoc.name : null,
-          rulesFileSize: this.getRules.rulesDoc ? this.getRules.rulesDoc.size : null,
-          rulesFileLastModified: this.getRules.rulesDoc ? this.getRules.rulesDoc.lastModified : null
+          rulesFileKey: this.getCreateRulesStep.docKey,
+          rulesFileName: this.getCreateRulesStep.rulesDoc ? this.getCreateRulesStep.rulesDoc.name : null,
+          rulesFileSize: this.getCreateRulesStep.rulesDoc ? this.getCreateRulesStep.rulesDoc.size : null,
+          rulesFileLastModified: this.getCreateRulesStep.rulesDoc ? this.getCreateRulesStep.rulesDoc.lastModified : null
         }
         break
       case CorpTypeCd.BENEFIT_COMPANY:
