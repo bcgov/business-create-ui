@@ -26,7 +26,7 @@ const email: string = 'test@abc.com'
 const invalidEmail: string = 'test@'
 const phoneNumber: string = '5555555555'
 const invalidPhoneNumber: string = '11'
-const extension: string = '4444'
+const extension: number = 4444
 
 /**
  * Returns the last event for a given name, to be used for testing event propagation in response to component changes.
@@ -56,14 +56,16 @@ function createComponent (
   email: string = '',
   confirmEmail: string = '',
   phone: string = '',
-  extension: string = '',
+  extension?: number,
   isEditing: boolean = true
 ): Wrapper<BusinessContactInfo> {
   const businessContact: BusinessContactIF = {
     email,
     confirmEmail,
     phone,
-    extension
+    ...extension
+      ? { extension }
+      : {}
   }
   return mount(BusinessContactInfo, {
     propsData: { initialValue: businessContact, isEditing: isEditing },
@@ -87,8 +89,7 @@ describe('Business Contact Info component', () => {
     expect(getLastEvent(wrapper, formValidEvent)).toBe(true)
     expect(getLastEvent(wrapper, formDataChangeEvent)).toStrictEqual({ email: email,
       confirmEmail: email,
-      phone: '',
-      extension: ''
+      phone: ''
     })
     wrapper.destroy()
   })
@@ -99,8 +100,7 @@ describe('Business Contact Info component', () => {
     expect(getLastEvent(wrapper, formValidEvent)).toBe(false)
     expect(getLastEvent(wrapper, formDataChangeEvent)).toStrictEqual({ email: invalidEmail,
       confirmEmail: invalidEmail,
-      phone: '',
-      extension: ''
+      phone: ''
     })
     wrapper.destroy()
   })
@@ -111,8 +111,7 @@ describe('Business Contact Info component', () => {
     expect(getLastEvent(wrapper, formValidEvent)).toBe(false)
     expect(getLastEvent(wrapper, formDataChangeEvent)).toStrictEqual({ email: email,
       confirmEmail: email,
-      phone: '(11',
-      extension: ''
+      phone: '(11'
     })
     wrapper.destroy()
   })
@@ -125,8 +124,7 @@ describe('Business Contact Info component', () => {
     expect(getLastEvent(wrapper, formValidEvent)).toBe(false)
     expect(getLastEvent(wrapper, formDataChangeEvent)).toStrictEqual({ email: invalidEmail,
       confirmEmail: email,
-      phone: '',
-      extension: ''
+      phone: ''
     })
     await Vue.nextTick()
     expect(wrapper.find(formSelector).text()).toContain('Valid email is required')
@@ -141,8 +139,7 @@ describe('Business Contact Info component', () => {
     expect(getLastEvent(wrapper, formValidEvent)).toBe(false)
     expect(getLastEvent(wrapper, formDataChangeEvent)).toStrictEqual({ email: invalidEmail,
       confirmEmail: email,
-      phone: '',
-      extension: ''
+      phone: ''
     })
     expect(wrapper.find(formSelector).text()).toContain('Email addresses must match')
     wrapper.destroy()
@@ -156,8 +153,7 @@ describe('Business Contact Info component', () => {
     await Vue.nextTick()
     expect(getLastEvent(wrapper, formDataChangeEvent)).toStrictEqual({ email: email,
       confirmEmail: email,
-      phone: '(11',
-      extension: ''
+      phone: '(11'
     })
     await Vue.nextTick()
     expect(getLastEvent(wrapper, formValidEvent)).toBe(false)

@@ -108,8 +108,7 @@ export default class BusinessContactInfo extends Mixins(CommonMixin) {
   private defaultBusinessContact: BusinessContactIF = {
     email: '',
     confirmEmail: '',
-    phone: '',
-    extension: ''
+    phone: ''
   }
 
   // Rules

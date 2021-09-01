@@ -81,7 +81,9 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
           contactPoint: {
             email: this.getBusinessContact.email,
             phone: this.getBusinessContact.phone,
-            extension: this.getBusinessContact.extension
+            ...this.getBusinessContact.extension
+              ? { extension: +this.getBusinessContact.extension }
+              : {}
           },
           parties: this.getAddPeopleAndRoleStep.orgPeople
         }

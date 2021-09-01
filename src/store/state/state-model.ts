@@ -48,8 +48,7 @@ export const stateModel: StateModelIF = {
     businessContact: {
       email: '',
       confirmEmail: '',
-      phone: '',
-      extension: ''
+      phone: ''
     },
     officeAddresses: {},
     folioNumber: null
