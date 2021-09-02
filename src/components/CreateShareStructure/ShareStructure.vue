@@ -41,7 +41,7 @@
                         filled
                         label="Maximum Number of Shares"
                         id="txt-max-shares"
-                        v-model="shareStructure.maxNumberOfShares"
+                        v-model.number="shareStructure.maxNumberOfShares"
                         persistent-hint
                         :hint="'Enter the maximum number of shares in the ' + shareStructure.type"
                         :rules="getMaximumShareRule()"
@@ -68,7 +68,7 @@
                             filled
                             label="Par Value"
                             id="class-par-value"
-                            v-model="shareStructure.parValue"
+                            v-model.number="shareStructure.parValue"
                             :rules="getParValueRule()"
                             hint="Enter the initial value of each share"
                             persistent-hint
@@ -214,7 +214,7 @@ export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
     let rules: Array<Function> = []
     if (!this.hasNoMaximumShares) {
       rules = [
-        (v: string) => !!v || 'Number of shares is required',
+        (v: string) => (v !== '' && v !== null && v !== undefined) || 'Number of shares is required',
         (v: string) => /^-?\d+$/.test(v) || 'Must be a whole number',
         (v: string) => (+v > 0) || 'Number must be greater than 0',
         (v: string) => (v && v.toString().length < 16) || 'Number must be less than 16 digits'
@@ -246,7 +246,7 @@ export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
   private getParValueRule (): Array<Function> {
     if (!this.hasNoParValue) {
       return [
-        v => !!v || 'Par value is required',
+        v => (v !== '' && v !== null && v !== undefined) || 'Par value is required',
         v => v > 0 || 'Amount must be greater than 0',
         v => (v < 1) ? (/^(\d+(\.\d{0,3})?|\.\d{0,3})$/.test(v) || 'Amounts less than 1 can be entered with up to 3 decimal place')
           : (/^\d+(\.\d{1,2})?$/.test(v) || 'Amounts greater than 1 can be entered with up to 2 decimal place')]
