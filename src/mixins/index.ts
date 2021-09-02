@@ -6,6 +6,7 @@ import LegalApiMixin from './legal-api-mixin'
 import EntityFilterMixin from '@/mixins/entityFilter-mixin'
 import NameRequestMixin from '@/mixins/name-request-mixin'
 import CurrencyLookupMixin from '@/mixins/currency-lookup-mixin'
+import DocumentMixin from '@/mixins/document-mixin'
 
 export {
   CommonMixin,
@@ -15,5 +16,6 @@ export {
   FilingTemplateMixin,
   LegalApiMixin,
   NameRequestMixin,
-  CurrencyLookupMixin
+  CurrencyLookupMixin,
+  DocumentMixin
 }

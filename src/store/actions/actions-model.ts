@@ -2,7 +2,7 @@ import { ActionIF } from '@/interfaces/store-interfaces/action-interface'
 import {
   AccountInformationIF, AddressIF, BusinessContactIF, CertifyIF, IncorporationAddressIF,
   IncorporationAgreementIF, NameRequestIF, NameTranslationIF, OrgPersonIF, ResourceIF,
-  ShareClassIF
+  ShareClassIF, RulesDocIF, CreateRulesIF
 } from '@/interfaces'
 import { CoopType, CorpTypeCd } from '@/enums'
 
@@ -52,6 +52,10 @@ export const setUserFirstName: ActionIF = ({ commit }, userFirstName: string): v
 
 export const setUserLastName: ActionIF = ({ commit }, userLastName: string): void => {
   commit('mutateUserLastName', userLastName)
+}
+
+export const setUserKeycloakGuid: ActionIF = ({ commit }, userKeycloakGuid: string): void => {
+  commit('mutateUserKeycloakGuid', userKeycloakGuid)
 }
 
 export const setUserAddress: ActionIF = ({ commit }, userAddress: AddressIF): void => {
@@ -122,7 +126,7 @@ export const setAddPeopleAndRoleStepValidity = ({ commit }, valid: boolean) => {
   commit('mutateAddPeopleAndRoleStepValidity', valid)
 }
 
-export const setRules = ({ commit }, rules: any) => {
+export const setRules = ({ commit }, rules: CreateRulesIF) => {
   commit('mutateRules', rules)
 }
 

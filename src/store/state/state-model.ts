@@ -7,6 +7,7 @@ export const stateModel: StateModelIF = {
     userPhone: '',
     userFirstName: '',
     userLastName: '',
+    userKeycloakGuid: null,
     userAddress: null
   },
   accountInformation: {
@@ -62,7 +63,10 @@ export const stateModel: StateModelIF = {
     shareClasses: []
   },
   createRulesStep: {
-    valid: false
+    valid: false,
+    rulesConfirmed: false,
+    rulesDoc: null,
+    docKey: null
   },
   incorporationAgreementStep: {
     valid: false,

@@ -122,6 +122,7 @@ k8s/*.param
 */*/.idea/*
 /**/.idea/*
 .idea/*
+*.iml
 
 # Log files
 npm-debug.log*

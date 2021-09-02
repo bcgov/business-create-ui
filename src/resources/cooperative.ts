@@ -1,5 +1,5 @@
 import { ResourceIF } from '@/interfaces'
-import { CorpTypeCd, FilingCodes, NameRequestTypes, Rules } from '@/enums'
+import { CorpTypeCd, FilingCodes, NameRequestTypes, Rules, ItemTypes } from '@/enums'
 import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 import { CoopStepsTemplate } from '@/resources/stepTemplates'
 
@@ -60,6 +60,61 @@ export const CooperativeResource: ResourceIF = {
         test: (country, province) => { return (country === 'CA' && province === 'BC') }
       }
     ]
+  },
+  createRules: {
+    helpSection: {
+      header: `Help with Rules of the Association`,
+      helpText: {
+        section1: {
+          label: 'Each Cooperative Association must set its own rules to cover:',
+          items: [
+            'Governance',
+            'Overarching goals, needs, and actions to fulfill its purpose',
+            'Election of directors',
+            'Requirements for membership',
+            'Financial information management',
+            'Special rights and restrictions related to investment shares',
+            'How meetings are conducted'
+          ]
+        },
+        section2: {
+          label: 'The Rules need to:',
+          items: [
+            { type: ItemTypes.TEXT, value: `Balance the rights of individual members with the interests of the Cooperative
+              Association as a whole` },
+            { type: ItemTypes.PARTIAL_ITEMS,
+              value: [
+                { type: ItemTypes.TEXT, value: 'Address the requirements of ' },
+                {
+                  type: ItemTypes.LINK,
+                  value: {
+                    linkText: 'section 13 of the Cooperative Association Act',
+                    href: 'https://www.bclaws.gov.bc.ca/civix/document/id/complete/statreg/99028_01#section13'
+                  }
+                },
+                { type: ItemTypes.TEXT, value: ' and ' },
+                {
+                  type: ItemTypes.LINK,
+                  value: {
+                    linkText: 'section 10 of the Cooperative Association Regulation',
+                    href: 'https://www.bclaws.gov.bc.ca/civix/document/id/complete/statreg/391_2000#section10'
+                  }
+                }
+              ]
+            },
+            { type: ItemTypes.TEXT,
+              value: 'Be flexible enough to allow the Cooperative Association to respond to changing conditions' }
+          ]
+        },
+        section3: {
+          items: [
+            `Applicants need to define their rules correctly. BC Registries is not responsible for verifying or offering
+              advice about creating rules. You may want to get advice from a lawyer for help setting up your rules.`,
+            'Use clear, concise, and consistent language to avoid confusion or disputes.'
+          ]
+        }
+      }
+    }
   },
   reviewAndConfirm: {
     completingPartyStatement: {

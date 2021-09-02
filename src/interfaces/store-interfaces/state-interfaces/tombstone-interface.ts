@@ -7,5 +7,6 @@ export interface TombstoneIF {
   userPhone: string // from auth user info
   userFirstName: string // from auth user info
   userLastName: string // from auth user info
+  userKeycloakGuid: string // from auth user info
   userAddress: AddressIF // from auth org info
 }

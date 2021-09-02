@@ -1,6 +1,7 @@
 // Utils Interfaces
 export * from './utils-interfaces/form-type'
 export * from './utils-interfaces/confirm-dialog-type'
+export * from './utils-interfaces/document-upload-interface'
 
 // Store Interfaces
 export * from './store-interfaces/state-interface'
@@ -27,7 +28,9 @@ export * from './stepper-interfaces/AddPeopleAndRole/roles-array-interface'
 export * from './stepper-interfaces/ReviewConfirm/dateTime-interface'
 export * from './stepper-interfaces/IncorporationAgreement/incorporation-agreement-interface'
 export * from './stepper-interfaces/IncorporationAgreement/help-section-interface'
+export * from './stepper-interfaces/CreateRules/create-rules-resource-interface'
 export * from './stepper-interfaces/CreateRules/create-rules-interface'
+export * from './stepper-interfaces/CreateRules/rules-doc-interface'
 export * from './stepper-interfaces/CreateMemorandum/create-memorandum-interface'
 
 // Others

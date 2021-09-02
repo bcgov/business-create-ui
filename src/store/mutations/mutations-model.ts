@@ -11,7 +11,9 @@ import {
   OrgPersonIF,
   ResourceIF,
   ShareClassIF,
-  StateIF
+  StateIF,
+  RulesDocIF,
+  CreateRulesIF
 } from '@/interfaces'
 
 export const mutateTempId = (state: StateIF, tempId: string) => {
@@ -44,6 +46,10 @@ export const mutateUserPhone = (state: StateIF, userPhone: string) => {
 
 export const mutateUserLastName = (state: StateIF, userLastName: string) => {
   state.stateModel.tombstone.userLastName = userLastName
+}
+
+export const mutateUserKeycloakGuid = (state: StateIF, userKeycloakGuid: string) => {
+  state.stateModel.tombstone.userKeycloakGuid = userKeycloakGuid
 }
 
 export const mutateUserAddress = (state: StateIF, userAddress: AddressIF) => {
@@ -134,8 +140,8 @@ export const mutateFilingId = (state: StateIF, filingId: number) => {
   state.stateModel.filingId = filingId
 }
 
-export const mutateRules = (state: StateIF, rules: any) => {
-  // state.stateModel.rules = rules // *** FUTURE: implement this
+export const mutateRules = (state: StateIF, rules: CreateRulesIF) => {
+  state.stateModel.createRulesStep = rules
   if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
 }
 
