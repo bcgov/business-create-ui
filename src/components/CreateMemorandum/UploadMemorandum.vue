@@ -4,7 +4,7 @@
     <!-- Summary Section -->
     <div id="upload-memorandum-summary" v-if="isSummary">
       <!-- Summary Header -->
-      <div class="upload-memorandum-summary-header" >
+      <div class="upload-memorandum-summary-header review-header">
         <v-icon color="appDkBlue">mdi-text-box-multiple</v-icon>
         <label class="upload-memorandum-title pl-2"><strong>Memorandum</strong></label>
       </div>

@@ -29,9 +29,13 @@ export default class DocumentMixin extends Vue {
       }
     }
 
-    let response = await axios.put(
-      url, file, options
-    )
-    return response
+    try {
+      let response = await axios.put(
+        url, file, options
+      )
+      return response
+    } catch (error) {
+      return error.response
+    }
   }
 }

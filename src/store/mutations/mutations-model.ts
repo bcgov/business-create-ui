@@ -145,6 +145,10 @@ export const mutateRules = (state: StateIF, rules: CreateRulesIF) => {
   if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
 }
 
+export const mutateRulesStepValidity = (state: StateIF, valid: boolean) => {
+  state.stateModel.createRulesStep.valid = valid
+}
+
 export const mutateMemorandum = (state: StateIF, memorandum: any) => {
   // state.stateModel.memorandum = memorandum // *** FUTURE: implement this
   if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
