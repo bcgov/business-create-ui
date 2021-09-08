@@ -49,7 +49,7 @@
           </v-col>
           <v-col md="8">
             <div class="cooperative-type ml-n1">
-              <span>{{ getCooperativeType || '(Not Entered)' }}</span>
+              <span>{{ getCooperativeType ? coopTypeToDescription(getCooperativeType) : '(Not Entered)' }}</span>
             </div>
           </v-col>
         </v-row>
