@@ -25,8 +25,7 @@ export const EmptyOfficer: OfficerIF = {
   lastName: '',
   middleName: '',
   orgName: '',
-  partyType: null,
-  email: null
+  partyType: null
 }
 
 // NB: use cloneDeep when assigning EmptyOrgPerson

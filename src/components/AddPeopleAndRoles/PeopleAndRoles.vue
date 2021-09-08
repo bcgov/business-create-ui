@@ -326,7 +326,9 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
 
   private onAddEditPerson (person: OrgPersonIF): void {
     // if this is the completing party, assign email address from user profile
-    if (person.roles.find(role => role.roleType === RoleTypes.COMPLETING_PARTY)) {
+    if (person.roles.find(role => role.roleType === RoleTypes.COMPLETING_PARTY) &&
+        // email cannot be null or empty
+        this.getTombstone.userEmail) {
       person.officer.email = this.getTombstone.userEmail
     }
 
@@ -360,7 +362,7 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
       // remove the Completing Party role
       completingParty.roles = completingParty.roles.filter(role => role.roleType !== RoleTypes.COMPLETING_PARTY)
       // remove email address that we got from user profile
-      completingParty.officer.email = null
+      delete completingParty.officer.email // schema doesn't accept null or empty string
       // set updated list
       this.setOrgPersonList(newList)
     }
