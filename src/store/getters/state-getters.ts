@@ -1,4 +1,4 @@
-import { AccountTypes, CoopType, CorpTypeCd, RoleTypes } from '@/enums'
+import { AccountTypes, CoopType, CorpTypeCd } from '@/enums'
 import {
   AccountInformationIF,
   AddressIF,
@@ -189,11 +189,6 @@ export const getNameRequestApplicant = (state: StateIF): NameRequestApplicantIF 
 /** The Name Translations object array. */
 export const getNameTranslations = (state: StateIF): NameTranslationIF[] => {
   return state.stateModel.nameTranslations
-}
-
-/** The Office Addresses object. */
-export const getOfficeAddresses = (state: StateIF): IncorporationAddressIF | {} => {
-  return getDefineCompanyStep(state).officeAddresses
 }
 
 /** Whether we are ignoring data changes. */

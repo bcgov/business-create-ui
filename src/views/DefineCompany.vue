@@ -53,7 +53,10 @@
       </header>
       <div :class="{ 'invalid-section': getShowErrors && !hasValidCooperativeType }">
         <v-card flat class="step-container">
-          <CooperativeType :showErrors="getShowErrors" @hasCooperativeType="onCooperativeType($event)"/>
+          <CooperativeType
+            :showErrors="getShowErrors"
+            @hasCooperativeType="onCooperativeType($event)"
+          />
         </v-card>
       </div>
     </section>
