@@ -10,7 +10,7 @@
           persistent-hint
           id="cooperative-type-input"
           label="Cooperative Association Type"
-          :items="cooperativeTypes"
+          :items="items"
           v-model="cooperativeType"
           :rules="cooperativeTypeRules"
         >
@@ -22,13 +22,14 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Emit, Watch, Vue, Prop } from 'vue-property-decorator'
+import { Component, Emit, Watch, Mixins, Prop } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 import { CoopType } from '@/enums'
 import { FormType } from '@/interfaces'
+import { EnumMixin } from '@/mixins'
 
 @Component({})
-export default class CooperativeType extends Vue {
+export default class CooperativeType extends Mixins(EnumMixin) {
   // Refs
   $refs!: {
     cooperativeTypeForm: FormType
@@ -41,10 +42,19 @@ export default class CooperativeType extends Vue {
   @Getter getCooperativeType!: CoopType
 
   // Local properties
-  private readonly cooperativeTypes: Array<CoopType> = [
-    CoopType.COMMUNITY_SERVICE_COOPERATIVE,
-    CoopType.HOUSING_COOPERATIVE,
-    CoopType.COOPERATIVE
+  private readonly items: Array<any> = [
+    {
+      value: CoopType.COMMUNITY_SERVICE_COOPERATIVE,
+      text: this.coopTypeToDescription(CoopType.COMMUNITY_SERVICE_COOPERATIVE)
+    },
+    {
+      value: CoopType.ORDINARY_COOPERATIVE,
+      text: this.coopTypeToDescription(CoopType.ORDINARY_COOPERATIVE)
+    },
+    {
+      value: CoopType.HOUSING_COOPERATIVE,
+      text: this.coopTypeToDescription(CoopType.HOUSING_COOPERATIVE)
+    }
   ]
 
   private cooperativeType: CoopType = null
@@ -67,7 +77,7 @@ export default class CooperativeType extends Vue {
   // Events
   @Watch('cooperativeType')
   @Emit('hasCooperativeType')
-  private addCooperativeType (): string {
+  private addCooperativeType (): CoopType {
     return this.cooperativeType
   }
 }

@@ -80,8 +80,8 @@ export const CooperativeResource: ResourceIF = {
         section2: {
           label: 'The Rules need to:',
           items: [
-            { type: ItemTypes.TEXT, value: `Balance the rights of individual members with the interests of the Cooperative
-              Association as a whole` },
+            { type: ItemTypes.TEXT, value: `Balance the rights of individual members with the interests of the
+              Cooperative Association as a whole` },
             { type: ItemTypes.PARTIAL_ITEMS,
               value: [
                 { type: ItemTypes.TEXT, value: 'Address the requirements of ' },
