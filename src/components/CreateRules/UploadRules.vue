@@ -400,7 +400,7 @@ li {
 
   // override default validation styling so checkbox does not turn red on validation error
   .v-input--selection-controls__input i {
-    color:rgba(0, 0, 0, 0.54) !important;
+    color: $app-lt-gray !important;
   }
 }
 

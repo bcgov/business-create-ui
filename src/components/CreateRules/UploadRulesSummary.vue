@@ -39,9 +39,7 @@ import { Getter } from 'vuex-class'
 import { RouteNames } from '@/enums'
 import { CreateRulesIF } from '@/interfaces'
 
-@Component({
-  components: {}
-})
+@Component({})
 export default class UploadRulesSummary extends Vue {
   @Getter getCreateRulesStep!: CreateRulesIF
 
@@ -83,7 +81,7 @@ export default class UploadRulesSummary extends Vue {
   .upload-success-chk {
     margin-right: 9px;
     font-size: 1.5rem;
-    color: #2e8540;
+    color: $app-dk-green;
   }
 
   #file-name-col {

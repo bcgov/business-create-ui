@@ -95,11 +95,7 @@ export default class FileUploadPreview extends Vue {
 
   @Watch('customErrorMessage')
   private onCustomErrorMessage (val: string): void {
-    if (val) {
-      this.customErrorMessages = [val]
-    } else {
-      this.customErrorMessages = []
-    }
+    this.customErrorMessages = val ? [val] : []
   }
 }
 </script>
