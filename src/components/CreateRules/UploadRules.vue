@@ -86,8 +86,9 @@
               @change="onRulesConfirmedChange($event)"
             />
             <ul>
-              <li>The Cooperative name is identified <b>exactly</b> as follows throughout the Memorandum:</li>
-              <div id="approved-name">{{getNameRequestDetails.approvedName}}</div>
+              <li>The Cooperative name is identified <b>exactly</b> as follows throughout the Memorandum:
+                <div id="approved-name" class="mt-n1">{{getNameRequestDetails.approvedName}}</div>
+              </li>
               <li>Each Subscriber and Witness has signed and dated the Rules of the Association and their name is
                 printed under their signature.</li>
             </ul>
@@ -168,8 +169,6 @@ export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
   }
 
   private INPUT_FILE_LABEL = 'Rules of Association'
-  private UPLOAD_FAILED_MESSAGE = 'An error occurred while uploading.  Please try again.'
-  private MAX_FILE_SIZE = 10 * 1024 // 10 MB in KB
   private hasValidUploadFile: boolean = false
   private hasRulesConfirmed: boolean = false
   private rulesConfirmed = false
@@ -394,8 +393,6 @@ li {
 
   #approved-name {
     font-weight: bold;
-    margin-top: -3px;
-    margin-left: 0px;
   }
 
   // override default validation styling so checkbox does not turn red on validation error

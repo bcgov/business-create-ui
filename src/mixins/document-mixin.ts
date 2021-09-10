@@ -5,6 +5,9 @@ import { DocumentUpload } from '@/interfaces'
 
 @Component({})
 export default class DocumentMixin extends Vue {
+  readonly UPLOAD_FAILED_MESSAGE = 'An error occurred while uploading.  Please try again.'
+  readonly MAX_FILE_SIZE = 10 * 1024 // 10 MB in KB
+
   async getPresignedUrl (fileName: string): Promise<DocumentUpload> {
     const url = `documents/${fileName}/signatures`
     return axios.get(url)
