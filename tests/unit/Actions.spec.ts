@@ -113,6 +113,7 @@ describe('Emits error event if NR validation fails in file and pay', () => {
 
     let expiredNR = { ...nrData }
     expiredNR['expirationDate'] = 'Thu, 31 Dec 2019 23:59:59 GMT'
+    expiredNR['state'] = 'EXPIRED'
 
     // GET NR data
     get.withArgs('nameRequests/NR 1234567')
