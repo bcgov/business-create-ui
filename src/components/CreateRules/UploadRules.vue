@@ -24,43 +24,49 @@
         </span>
         <section v-show="helpToggle" class="create-rules-help">
           <header id="create-rules-help-header"><h2>{{getCreateRulesResource.helpSection.header}}</h2></header>
-          <p class="help-section-label-top">
+          <p class="help-section-label mt-4">
             <b>{{getCreateRulesResource.helpSection.helpText.section1.label}}</b>
           </p>
           <ul>
             <li
               v-for="(item, index) in getCreateRulesResource.helpSection.helpText.section1.items"
-              class="help-section"
-              :key="index"
-            >{{ item }}
-            </li>
-          </ul>
-          <p class="help-section-label">
-            <b>{{getCreateRulesResource.helpSection.helpText.section2.label}}</b>
-          </p>
-          <ul>
-            <li
-              v-for="(item, index) in getCreateRulesResource.helpSection.helpText.section2.items"
-              class="help-section"
+              class="help-section mt-1"
               :key="index"
             >
-              <span v-if="item.type == ItemTypes.TEXT" v-html="item.value"></span>
-              <span v-if="item.type == ItemTypes.PARTIAL_ITEMS">
-                <span v-for="(partialItem, index) in item.value" :key="index">
-                  <span v-if="partialItem.type == ItemTypes.TEXT" v-html="partialItem.value"></span>
-                  <a v-if="partialItem.type == ItemTypes.LINK"
-                     :href="partialItem.value.href"
-                     target="_blank"
-                  >{{partialItem.value.linkText}}
-                    <v-icon dense color="primary">mdi-open-in-new</v-icon>
-                  </a>
-                </span>
-              </span>
+              <v-icon>mdi-circle-small</v-icon>
+              <span class="chk-list-item-txt">{{ item }}</span>
+            </li>
+          </ul>
+          <p class="help-section-label mt-4">
+            <b>{{getCreateRulesResource.helpSection.helpText.section2.label}}</b>
+          </p>
+          <ul class="mt-6">
+            <li
+              v-for="(item, index) in getCreateRulesResource.helpSection.helpText.section2.items"
+              class="help-section mt-n2"
+              :key="index"
+            >
+              <v-icon v-if="item.type == ItemTypes.TEXT">mdi-circle-small</v-icon>
+              <span v-if="item.type == ItemTypes.TEXT" v-html="item.value" class="chk-list-item-txt"></span>
+              <v-row v-if="item.type == ItemTypes.PARTIAL_ITEMS">
+                <v-col cols="1"><v-icon>mdi-circle-small</v-icon></v-col>
+                <v-col cols="11" class="ml-n12">
+                  <span v-for="(partialItem, index) in item.value" :key="index">
+                    <span v-if="partialItem.type == ItemTypes.TEXT" v-html="partialItem.value"></span>
+                    <a v-if="partialItem.type == ItemTypes.LINK"
+                       :href="partialItem.value.href"
+                       target="_blank"
+                    >{{partialItem.value.linkText}}
+                      <v-icon dense color="primary">mdi-open-in-new</v-icon>
+                    </a>
+                  </span>
+                </v-col>
+              </v-row>
             </li>
           </ul>
           <p id="help-text-section-3"
             v-for="(item, index) in getCreateRulesResource.helpSection.helpText.section3.items"
-            class="help-section"
+            class="help-section mt-6"
             :key="index"
           >{{ item }}
           </p>
@@ -74,7 +80,7 @@
         <h2>2. Confirm Rules Completion</h2>
       </header>
       <div :class="{ 'invalid-section': getShowErrors && !hasRulesConfirmed }">
-        <v-card flat id="confirm-rules-card">
+        <v-card flat id="confirm-rules-card" class="mt-4 pt-10 pb-6 pl-6 pr-6">
           <v-form ref="confirmRulesChk">
             <v-checkbox
               class="chk-rules"
@@ -86,11 +92,23 @@
               @change="onRulesConfirmedChange($event)"
             />
             <ul>
-              <li>The Cooperative name is identified <b>exactly</b> as follows throughout the Memorandum:
-                <div id="approved-name" class="mt-n1">{{getNameRequestDetails.approvedName}}</div>
+              <li class="mt-1">
+                <v-icon>mdi-circle-small</v-icon>
+                <span class="chk-list-item-txt">The Cooperative name is identified <b>exactly</b> as follows throughout
+                  the Memorandum:
+                </span>
+                <div id="approved-name" class="ml-9">{{getNameRequestDetails.approvedName}}</div>
               </li>
-              <li>Each Subscriber and Witness has signed and dated the Rules of the Association and their name is
-                printed under their signature.</li>
+              <li class="mt-1">
+                <v-row>
+                  <v-col cols="1"><v-icon>mdi-circle-small</v-icon></v-col>
+                  <v-col cols="11" class="ml-n11">
+                    <span>Each Subscriber and Witness has signed and dated the Rules of the
+                      Association and their name is printed under their signature.
+                    </span>
+                  </v-col>
+                </v-row>
+              </li>
             </ul>
           </v-form>
         </v-card>
@@ -100,22 +118,34 @@
     <section id="upload-rules-section" class="mt-10">
       <header id="upload-rules-header">
         <h2>3. Upload Rules</h2>
-        <ul>
-          <li>Must be set to fit onto 8 <sup>1</sup>&frasl;<sub>2</sub>" x 11" letter-size paper</li>
-          <li>Use a white background and a legible font with contrasting font colour</li>
-          <li>PDF file type (maximum 10 MB file size)</li>
+        <ul class="mt-5">
+          <li class="mt-1">
+            <v-icon>mdi-circle-small</v-icon>
+            <span class="chk-list-item-txt">Must be set to fit onto 8 <sup>1</sup>&frasl;<sub>2</sub>" x 11"
+              letter-size paper
+            </span>
+          </li>
+          <li class="mt-1">
+            <v-icon>mdi-circle-small</v-icon>
+            <span class="chk-list-item-txt">Use a white background and a legible font with contrasting font colour
+            </span>
+          </li>
+          <li class="mt-1">
+            <v-icon>mdi-circle-small</v-icon>
+            <span class="chk-list-item-txt">PDF file type (maximum 10 MB file size)</span>
+          </li>
         </ul>
-        <div id="upload-rules-note">
+        <div id="upload-rules-note" class="mt-7 mb-8">
           <b>Note: </b>Do not upload Housing Cooperative occupancy agreements.
         </div>
       </header>
       <div :class="{ 'invalid-section': getShowErrors && !hasValidUploadFile }">
-        <v-card flat id="upload-rules-card">
+        <v-card flat id="upload-rules-card" class="pt-10 pb-10 pl-6">
           <v-row>
-            <v-col id="upload-rules-card-left-col" cols="2">
-              <v-card-title class="upload-rules-vcard-title">Upload Rules</v-card-title>
+            <v-col id="upload-rules-card-left-col" cols="2" class="pt-6" >
+              <v-card-title class="upload-rules-vcard-title pl-0">Upload Rules</v-card-title>
             </v-col>
-            <v-col id="upload-rules-card-right-col" cols="10">
+            <v-col id="upload-rules-card-right-col" cols="10" class="pt-6 pl-6 pr-10">
               <FileUploadPreview
                 :inputFileLabel="INPUT_FILE_LABEL"
                 :maxSize="MAX_FILE_SIZE"
@@ -302,25 +332,11 @@ header {
 }
 
 ul {
-  margin-left: 45px;
-  padding-left: 0px;
   list-style: none;
 }
 
-// styling used to have custom bullets that use material design icons
-ul li::before {
-  // mdi-circle-small
-  content: '\F09DF';
-  font-family: 'Material Design Icons';
-  margin-left: -24px;
-  padding-left: 0;
-  font-size: 24px;
-}
-
-li {
-  margin-top: 0px !important;
-  color: $gray7;
-  vertical-align: -2px;
+.chk-list-item-txt {
+  margin-left: 0.5rem;
 }
 
 .upload-rules-summary-header {
@@ -365,32 +381,12 @@ li {
     direction: rtl;
   }
 
-  .help-section-label-top {
-    margin-top: 4px;
-  }
-
-  .help-section-label {
-    margin-top: 15px;
-  }
-
-  #help-text-section-3 {
-    margin-top: 25px;
-  }
-
   a {
     text-decoration: none;
   }
 }
 
 ::v-deep #confirm-rules-section {
-  #confirm-rules-card {
-    margin-top: 15px;
-    padding-top: 40px;
-    padding-bottom: 40px;
-    padding-left: 25px;
-    padding-right: 25px;
-  }
-
   #approved-name {
     font-weight: bold;
   }
@@ -410,30 +406,11 @@ li {
 #upload-rules-section {
   #upload-rules-note {
     font-size: 16px;
-    margin-top: 40px;
-    margin-bottom: 30px;
-  }
-
-  #upload-rules-card {
-    padding-top: 40px;
-    padding-bottom: 40px;
-    padding-left: 29px;
-
-    #upload-rules-card-left-col {
-      padding-top:25px;
-    }
-
-    #upload-rules-card-right-col {
-      padding-top: 25px;
-      padding-left: 25px;
-      padding-right: 40px;
-    }
   }
 }
 
 .upload-rules-vcard-title {
   padding-top: 1px;
-  padding-left: 0px;
   font-size: 17px;
   font-weight: bold;
 }
