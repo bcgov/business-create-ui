@@ -31,7 +31,7 @@ export default class DocumentMixin extends Vue {
         'Content-Disposition': `attachment; filename=${file.name}`
       }
     }
-    return axios.put(url)
+    return axios.put(url, file, options)
       .then(response => {
         return response
       }).catch(error => {

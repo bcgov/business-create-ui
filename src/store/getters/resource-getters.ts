@@ -1,10 +1,11 @@
 import {
-  CertifyStatementIF,
+  CertifyStatementIF, CreateRulesResourceIF,
   FilingDataIF,
   HelpSectionIF,
   IncorporationAgreementTypeIF,
   StateIF,
-  StepIF
+  StepIF,
+  CreateMemorandumResourceIF
 } from '@/interfaces'
 
 //
@@ -33,8 +34,13 @@ export const getPeopleAndRolesResource = (state: StateIF): any => {
 }
 
 /** The Create Rules object. */
-export const getCreateRulesResource = (state: StateIF): any => {
+export const getCreateRulesResource = (state: StateIF): CreateRulesResourceIF => {
   return state.resourceModel.createRules
+}
+
+/** The Create Memorandum object. */
+export const getCreateMemorandumResource = (state: StateIF): CreateMemorandumResourceIF => {
+  return state.resourceModel.createMemorandum
 }
 
 /** The completing party statement resources. */

@@ -116,6 +116,44 @@ export const CooperativeResource: ResourceIF = {
       }
     }
   },
+  createMemorandum: {
+    helpSection: {
+      header: `Help with Memorandum of Association`,
+      helpText: {
+        section1: {
+          items: [
+            `A memorandum should accurately reflect the intention and values of the Cooperative Association. Be detailed
+              and specific, but not too restrictive. This will avoid having to make changes later.`,
+            `To form a Cooperative Association, at least three subscribers who are responsible for the Cooperative
+              Association’s operation are required. They may be individuals or organizations such as a government,
+              First Nation, corporation, business, society or another Cooperative Association.`
+          ]
+        },
+        section2: {
+          label: 'Include in the Memorandum:',
+          items: [
+            'The name and purpose of the Cooperative Association',
+            'Restrictions on the business and powers of the Cooperative Association',
+            `The authorized share capital - list the number and the classes of shares that the cooperative association
+              can issue`,
+            `A statement that the liability of the members or investment shareholders is limited in accordance with
+              the Act`,
+            'An optional statement about provisions if the Cooperative Association closes down',
+            'The number, class and par value, if applicable, of shares subscribed for by the founding members'
+          ]
+        },
+        section3: {
+          label: `For Community Service Cooperative Associations that provide health, social, educational or other
+            community services, include:`,
+          items: [
+            'A provision that the association is a Community Service Cooperative',
+            'That the Association does not issue investment shares',
+            'That the purpose of the Association is charitable or that it provides the services listed above'
+          ]
+        }
+      }
+    }
+  },
   reviewAndConfirm: {
     completingPartyStatement: {
       certifyStatementHeader: null,

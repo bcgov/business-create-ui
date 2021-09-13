@@ -45,10 +45,16 @@ export interface IncorporationFilingIF {
       memorandum?: any
       cooperative?: {
         cooperativeAssociationType: string
+        rulesConfirmed: boolean
         rulesFileKey: string
         rulesFileName: string
-        rulesFileSize: number,
+        rulesFileSize: number
         rulesFileLastModified: number
+        memorandumConfirmed: boolean
+        memorandumFileKey: string
+        memorandumFileName: string
+        memorandumFileSize: number
+        memorandumFileLastModified: number
       }
     }
   }

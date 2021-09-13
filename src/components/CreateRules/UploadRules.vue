@@ -85,8 +85,7 @@
             <v-checkbox
               class="chk-rules"
               id="chk-confirm-rules"
-              :v-model="rulesConfirmed"
-              :value="getCreateRulesStep.rulesConfirmed"
+              v-model="rulesConfirmed"
               :rules="confirmCompletionRules"
               label="I confirm the following items are included as required in the Rules of the Association:"
               @change="onRulesConfirmedChange($event)"
@@ -173,9 +172,9 @@ import {
   ActionBindingIF,
   CreateRulesIF,
   CreateRulesResourceIF,
-  RulesDocIF,
   DocumentUpload,
-  NameRequestDetailsIF, ConfirmDialogType, FormType
+  NameRequestDetailsIF,
+  FormType
 } from '@/interfaces'
 
 // Enums
@@ -201,9 +200,10 @@ export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
   private INPUT_FILE_LABEL = 'Rules of Association'
   private hasValidUploadFile: boolean = false
   private hasRulesConfirmed: boolean = false
-  private rulesConfirmed = false
+  private rulesConfirmed: boolean = false
   private fileUploadCustomErrorMsg: string = ''
   private uploadRulesDoc:File = null
+  private uploadRulesDocKey: string = null
   private helpToggle = false
 
   @Getter getShowErrors!: boolean
@@ -226,19 +226,7 @@ export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
 
   private setUploadRulesDoc (doc: File) {
     this.uploadRulesDoc = doc
-    let rulesDoc:RulesDocIF = null
-    if (doc) {
-      rulesDoc = {
-        name: doc.name,
-        lastModified: doc.lastModified,
-        size: doc.size
-      }
-    }
-    this.setRules({
-      ...this.getCreateRulesStep,
-      rulesDoc: rulesDoc,
-      docKey: null
-    })
+    this.uploadRulesDocKey = null
   }
 
   private isFileUploadValidFn (val) {
@@ -249,11 +237,16 @@ export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
   private async fileSelected (file) {
     // reset state of file uploader to ensure not in manual error mode
     this.fileUploadCustomErrorMsg = ''
-    if (file && this.hasValidUploadFile) {
-      this.setUploadRulesDoc(file)
-      await this.uploadPendingDocsToStorage()
+    if (file) {
+      if (this.hasValidUploadFile) {
+        this.setUploadRulesDoc(file)
+        await this.uploadPendingDocsToStorage()
+      } else {
+        this.uploadRulesDocKey = null
+      }
     } else {
       this.uploadRulesDoc = null
+      this.uploadRulesDocKey = null
       this.setRules({
         ...this.getCreateRulesStep,
         rulesDoc: null,
@@ -263,13 +256,19 @@ export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
   }
 
   public async uploadPendingDocsToStorage () {
-    const isPendingUpload = !this.getCreateRulesStep.docKey
+    const isPendingUpload = !this.uploadRulesDocKey
     if (isPendingUpload && this.hasValidUploadFile) {
-      const doc:DocumentUpload = await this.getPresignedUrl(this.getCreateRulesStep.rulesDoc.name)
+      const doc:DocumentUpload = await this.getPresignedUrl(this.uploadRulesDoc.name)
       const res = await this.uploadToUrl(doc.preSignedUrl, this.uploadRulesDoc, doc.key, this.getUserKeycloakGuid)
       if (res && res.status === 200) {
+        const rulesDoc = {
+          name: this.uploadRulesDoc.name,
+          lastModified: this.uploadRulesDoc.lastModified,
+          size: this.uploadRulesDoc.size
+        }
         this.setRules({
           ...this.getCreateRulesStep,
+          rulesDoc: rulesDoc,
           docKey: doc.key
         })
       } else {
@@ -277,6 +276,7 @@ export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
         this.fileUploadCustomErrorMsg = this.UPLOAD_FAILED_MESSAGE
         this.hasValidUploadFile = false
         this.setRulesStepValidity(this.hasValidUploadFile && this.hasRulesConfirmed)
+        this.uploadRulesDocKey = null
       }
     }
   }
@@ -293,7 +293,11 @@ export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
   /** Called when component is created. */
   private created (): void {
     this.uploadRulesDoc = this.getCreateRulesStep.rulesDoc as File
-    this.rulesConfirmed = this.getCreateRulesStep.rulesConfirmed
+    this.uploadRulesDocKey = this.getCreateRulesStep.docKey
+    this.rulesConfirmed = !!this.getCreateRulesStep.rulesConfirmed
+    this.hasValidUploadFile = !!this.uploadRulesDocKey
+    this.hasRulesConfirmed = this.rulesConfirmed
+    this.setRulesStepValidity(this.hasValidUploadFile && this.hasRulesConfirmed)
   }
 
   @Watch('getShowErrors')
