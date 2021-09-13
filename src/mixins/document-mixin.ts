@@ -5,8 +5,11 @@ import { DocumentUpload } from '@/interfaces'
 
 @Component({})
 export default class DocumentMixin extends Vue {
+  readonly UPLOAD_FAILED_MESSAGE = 'An error occurred while uploading.  Please try again.'
+  readonly MAX_FILE_SIZE = 10 * 1024 // 10 MB in KB
+
   async getPresignedUrl (fileName: string): Promise<DocumentUpload> {
-    let url = `documents/${fileName}/signatures`
+    const url = `documents/${fileName}/signatures`
     return axios.get(url)
       .then(response => {
         const data = response?.data
@@ -20,7 +23,7 @@ export default class DocumentMixin extends Vue {
   }
 
   async uploadToUrl (url: string, file:File, key:String, userId: string): Promise<AxiosResponse> {
-    var options = {
+    const options = {
       headers: {
         'Content-Type': file.type,
         'x-amz-meta-userid': `${userId}`,
@@ -28,10 +31,11 @@ export default class DocumentMixin extends Vue {
         'Content-Disposition': `attachment; filename=${file.name}`
       }
     }
-
-    let response = await axios.put(
-      url, file, options
-    )
-    return response
+    return axios.put(url)
+      .then(response => {
+        return response
+      }).catch(error => {
+        return error.response
+      })
   }
 }

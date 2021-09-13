@@ -130,6 +130,10 @@ export const setRules = ({ commit }, rules: CreateRulesIF) => {
   commit('mutateRules', rules)
 }
 
+export const setRulesStepValidity: ActionIF = ({ commit }, valid: boolean): void => {
+  commit('mutateRulesStepValidity', valid)
+}
+
 export const setMemorandum = ({ commit }, memorandum: any) => {
   commit('mutateMemorandum', memorandum)
 }

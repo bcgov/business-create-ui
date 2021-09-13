@@ -15,6 +15,7 @@
           color="primary"
           hint="File must be a PDF.  Maximum 10MB."
           persistent-hint
+          :error-messages="customErrorMessages"
         >
         </v-file-input>
       </v-form>
@@ -23,7 +24,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Emit, Prop } from 'vue-property-decorator'
+import { Component, Emit, Prop, Watch } from 'vue-property-decorator'
 import Vue from 'vue'
 
 @Component({
@@ -31,24 +32,31 @@ import Vue from 'vue'
 })
 export default class FileUploadPreview extends Vue {
   @Prop() inputFile: File
+  @Prop({ default: 'File' }) inputFileLabel: string
   @Prop({ default: true }) isRequired: boolean
   @Prop({ default: 0 }) maxSize: number // in KB
+  @Prop({ default: false }) showErrors!: boolean
+  @Prop({ default: '' }) customErrorMessage: string
+
   private fileUpload = null
+  private customErrorMessages = []
 
   $refs: {
-    fileUploadInput: HTMLFormElement,
+    fileUploadInput: HTMLFormElement
   }
 
   private fileUploadRules = [
     (v) => {
       if (this.isRequired) {
-        return !!v || 'File is required'
+        return !!v || this.inputFileLabel + ' is required'
       }
       return true
     },
     (file) => {
       if (this.maxSize) {
-        return (file?.size <= (this.maxSize * 1000)) || 'File size exceed max allowed size'
+        const maxSizeMB = this.maxSize / 1024
+        const errorMsg = 'Exceeds maximum ' + maxSizeMB.toString() + ' MB file size'
+        return (file?.size <= (this.maxSize * 1024)) || errorMsg
       }
       return true
     }
@@ -76,6 +84,18 @@ export default class FileUploadPreview extends Vue {
   @Emit('isFileValid')
   isFileValid () {
     return this.$refs.fileUploadInput.validate()
+  }
+
+  @Watch('showErrors')
+  private onShowErrorsChanged (): void {
+    if (this.showErrors) {
+      this.$refs.fileUploadInput.validate()
+    }
+  }
+
+  @Watch('customErrorMessage')
+  private onCustomErrorMessage (val: string): void {
+    this.customErrorMessages = val ? [val] : []
   }
 }
 </script>
