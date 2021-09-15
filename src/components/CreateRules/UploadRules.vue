@@ -17,63 +17,63 @@
 
     <!-- Help Section -->
     <div v-if="getCreateRulesResource.helpSection" class="mt-5">
-        <span class="help-btn" @click="helpToggle = !helpToggle">
-          <v-icon color="primary" style="padding-right: 5px">mdi-help-circle-outline</v-icon>
-          <span v-if="!helpToggle">{{ getCreateRulesResource.helpSection.header }}</span>
-          <span v-else>Hide Help</span>
-        </span>
-        <section v-show="helpToggle" class="create-rules-help">
-          <header id="create-rules-help-header"><h2>{{getCreateRulesResource.helpSection.header}}</h2></header>
-          <p class="help-section-label mt-4">
-            <b>{{getCreateRulesResource.helpSection.helpText.section1.label}}</b>
-          </p>
-          <ul>
-            <li
-              v-for="(item, index) in getCreateRulesResource.helpSection.helpText.section1.items"
-              class="help-section mt-1"
-              :key="index"
-            >
-              <v-icon>mdi-circle-small</v-icon>
-              <span class="chk-list-item-txt">{{ item }}</span>
-            </li>
-          </ul>
-          <p class="help-section-label mt-4">
-            <b>{{getCreateRulesResource.helpSection.helpText.section2.label}}</b>
-          </p>
-          <ul class="mt-6">
-            <li
-              v-for="(item, index) in getCreateRulesResource.helpSection.helpText.section2.items"
-              class="help-section mt-n2"
-              :key="index"
-            >
-              <v-icon v-if="item.type == ItemTypes.TEXT">mdi-circle-small</v-icon>
-              <span v-if="item.type == ItemTypes.TEXT" v-html="item.value" class="chk-list-item-txt"></span>
-              <v-row v-if="item.type == ItemTypes.PARTIAL_ITEMS">
-                <v-col cols="1"><v-icon>mdi-circle-small</v-icon></v-col>
-                <v-col cols="11" class="ml-n12">
-                  <span v-for="(partialItem, index) in item.value" :key="index">
-                    <span v-if="partialItem.type == ItemTypes.TEXT" v-html="partialItem.value"></span>
-                    <a v-if="partialItem.type == ItemTypes.LINK"
-                       :href="partialItem.value.href"
-                       target="_blank"
-                    >{{partialItem.value.linkText}}
-                      <v-icon dense color="primary">mdi-open-in-new</v-icon>
-                    </a>
-                  </span>
-                </v-col>
-              </v-row>
-            </li>
-          </ul>
-          <p id="help-text-section-3"
-            v-for="(item, index) in getCreateRulesResource.helpSection.helpText.section3.items"
-            class="help-section mt-6"
+      <span class="help-btn" @click="helpToggle = !helpToggle">
+        <v-icon color="primary" style="padding-right: 5px">mdi-help-circle-outline</v-icon>
+        <span v-if="!helpToggle">{{ getCreateRulesResource.helpSection.header }}</span>
+        <span v-else>Hide Help</span>
+      </span>
+      <section v-show="helpToggle" class="create-rules-help">
+        <header id="create-rules-help-header"><h2>{{getCreateRulesResource.helpSection.header}}</h2></header>
+        <p class="help-section-label mt-4">
+          <b>{{getCreateRulesResource.helpSection.helpText.section1.label}}</b>
+        </p>
+        <ul>
+          <li
+            v-for="(item, index) in getCreateRulesResource.helpSection.helpText.section1.items"
+            class="help-section mt-1"
             :key="index"
-          >{{ item }}
-          </p>
+          >
+            <v-icon>mdi-circle-small</v-icon>
+            <span class="chk-list-item-txt">{{ item }}</span>
+          </li>
+        </ul>
+        <p class="help-section-label mt-4">
+          <b>{{getCreateRulesResource.helpSection.helpText.section2.label}}</b>
+        </p>
+        <ul class="mt-6">
+          <li
+            v-for="(item, index) in getCreateRulesResource.helpSection.helpText.section2.items"
+            class="help-section mt-n2"
+            :key="index"
+          >
+            <v-icon v-if="item.type === ItemTypes.TEXT">mdi-circle-small</v-icon>
+            <span v-if="item.type === ItemTypes.TEXT" v-html="item.value" class="chk-list-item-txt"></span>
+            <v-row v-if="item.type === ItemTypes.PARTIAL_ITEMS">
+              <v-col cols="1"><v-icon>mdi-circle-small</v-icon></v-col>
+              <v-col cols="11" class="ml-n12">
+                <span v-for="(partialItem, index) in item.value" :key="index">
+                  <span v-if="partialItem.type === ItemTypes.TEXT" v-html="partialItem.value"></span>
+                  <a v-if="partialItem.type === ItemTypes.LINK"
+                     :href="partialItem.value.href"
+                     target="_blank"
+                  >{{partialItem.value.linkText}}
+                    <v-icon dense color="primary">mdi-open-in-new</v-icon>
+                  </a>
+                </span>
+              </v-col>
+            </v-row>
+          </li>
+        </ul>
+        <p id="help-text-section-3"
+          v-for="(item, index) in getCreateRulesResource.helpSection.helpText.section3.items"
+          class="help-section mt-6"
+          :key="index"
+        >{{ item }}
+        </p>
 
-          <u class="help-btn" @click="helpToggle = !helpToggle"><small>Hide Help</small></u>
-        </section>
-      </div>
+        <u class="help-btn" @click="helpToggle = !helpToggle"><small>Hide Help</small></u>
+      </section>
+    </div>
 
     <section id="confirm-rules-section" class="mt-10">
       <header id="rules-confirm-header">
@@ -333,6 +333,7 @@ header {
 
 ul {
   list-style: none;
+  color: $gray7;
 }
 
 .chk-list-item-txt {
@@ -392,14 +393,14 @@ ul {
   }
 
   // override default validation styling so checkbox does not turn red on validation error
-  .v-input--selection-controls__input i {
+  .v-input--selection-controls__input .error--text{
     color: $app-lt-gray !important;
   }
 }
 
 .chk-rules {
-  margin-top: 0px;
-  padding-top: 0px;
+  margin-top: 0;
+  padding-top: 0;
   height: 2.5rem !important;
 }
 
