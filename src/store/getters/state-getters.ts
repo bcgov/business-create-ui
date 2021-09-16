@@ -298,11 +298,14 @@ export const isApplicationValid = (state: StateIF): boolean => {
   return (
     getDefineCompanyStep(state).valid &&
     getAddPeopleAndRoleStep(state).valid &&
+    isCertifyValid(state) &&
     // Validate different steps for Base Companies vs Coops
-    isBaseCompany(state) ? isBaseStepsValid : isCoopStepsValid &&
-    getCertifyState(state).valid &&
-    !!getCertifyState(state).certifiedBy
+    isBaseCompany(state) ? isBaseStepsValid : isCoopStepsValid
   )
+}
+
+export const isCertifyValid = (state: StateIF): boolean => {
+  return getCertifyState(state).valid && !!getCertifyState(state).certifiedBy
 }
 
 /** Is true when the user has tried to submit a filing. */

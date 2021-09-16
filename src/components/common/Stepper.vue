@@ -60,7 +60,7 @@ export default class Stepper extends Vue {
   @Getter isMemorandumValid!: boolean
   @Getter isCreateShareStructureValid!: boolean
   @Getter isIncorporationAgreementValid!: boolean
-  @Getter isApplicationValid!: boolean
+  @Getter isCertifyValid!: boolean
   @Getter getValidateSteps!: boolean
 
   /** Returns true if the step route is valid. */
@@ -85,7 +85,7 @@ export default class Stepper extends Vue {
         return this.isMemorandumValid
 
       case RouteNames.REVIEW_CONFIRM:
-        return this.isApplicationValid
+        return this.isCertifyValid
 
       default:
         return false
