@@ -1,12 +1,10 @@
 <template>
-
   <div id="upload-rules">
-
     <section class="mt-10">
       <header>
         <h2>1. Rules of the Association</h2>
         <p>Before submitting your incorporation application you must <b>complete, sign, and date</b> the
-          <v-tooltip top max-width="20rem" color="primary" content-class="top-tooltip">
+          <v-tooltip top max-width="20rem" content-class="top-tooltip">
             <template v-slot:activator="{ on }">
               <span v-on="on" class="tool-tip dotted-underline"> Rules of the Association</span>
             </template>
@@ -26,43 +24,49 @@
       </span>
       <section v-show="helpToggle" class="create-rules-help">
         <header id="create-rules-help-header"><h2>{{getCreateRulesResource.helpSection.header}}</h2></header>
-        <p class="help-section-label-top">
+        <p class="help-section-label mt-4">
           <b>{{getCreateRulesResource.helpSection.helpText.section1.label}}</b>
         </p>
         <ul>
           <li
             v-for="(item, index) in getCreateRulesResource.helpSection.helpText.section1.items"
-            class="help-section"
-            :key="index"
-          >{{ item }}
-          </li>
-        </ul>
-        <p class="help-section-label">
-          <b>{{getCreateRulesResource.helpSection.helpText.section2.label}}</b>
-        </p>
-        <ul>
-          <li
-            v-for="(item, index) in getCreateRulesResource.helpSection.helpText.section2.items"
-            class="help-section"
+            class="help-section mt-1"
             :key="index"
           >
-            <span v-if="item.type == ItemTypes.TEXT" v-html="item.value"></span>
-            <span v-if="item.type == ItemTypes.PARTIAL_ITEMS">
-              <span v-for="(partialItem, index) in item.value" :key="index">
-                <span v-if="partialItem.type == ItemTypes.TEXT" v-html="partialItem.value"></span>
-                <a v-if="partialItem.type == ItemTypes.LINK"
-                   :href="partialItem.value.href"
-                   target="_blank"
-                >{{partialItem.value.linkText}}
-                  <v-icon dense color="primary">mdi-open-in-new</v-icon>
-                </a>
-              </span>
-            </span>
+            <v-icon>mdi-circle-small</v-icon>
+            <span class="chk-list-item-txt">{{ item }}</span>
+          </li>
+        </ul>
+        <p class="help-section-label mt-4">
+          <b>{{getCreateRulesResource.helpSection.helpText.section2.label}}</b>
+        </p>
+        <ul class="mt-6">
+          <li
+            v-for="(item, index) in getCreateRulesResource.helpSection.helpText.section2.items"
+            class="help-section mt-n2"
+            :key="index"
+          >
+            <v-icon v-if="item.type === ItemTypes.TEXT">mdi-circle-small</v-icon>
+            <span v-if="item.type === ItemTypes.TEXT" v-html="item.value" class="chk-list-item-txt"></span>
+            <v-row v-if="item.type === ItemTypes.PARTIAL_ITEMS">
+              <v-col cols="1"><v-icon>mdi-circle-small</v-icon></v-col>
+              <v-col cols="11" class="ml-n12">
+                <span v-for="(partialItem, index) in item.value" :key="index">
+                  <span v-if="partialItem.type === ItemTypes.TEXT" v-html="partialItem.value"></span>
+                  <a v-if="partialItem.type === ItemTypes.LINK"
+                     :href="partialItem.value.href"
+                     target="_blank"
+                  >{{partialItem.value.linkText}}
+                    <v-icon dense color="primary">mdi-open-in-new</v-icon>
+                  </a>
+                </span>
+              </v-col>
+            </v-row>
           </li>
         </ul>
         <p id="help-text-section-3"
           v-for="(item, index) in getCreateRulesResource.helpSection.helpText.section3.items"
-          class="help-section"
+          class="help-section mt-6"
           :key="index"
         >{{ item }}
         </p>
@@ -72,60 +76,96 @@
     </div>
 
     <section id="confirm-rules-section" class="mt-10">
-      <header>
+      <header id="rules-confirm-header">
         <h2>2. Confirm Rules Completion</h2>
       </header>
-      <v-card flat id="confirm-rules-card">
-        <v-checkbox
-          class="chk-rules"
-          id="chk-confirm-rules"
-          :value="getCreateRulesStep.rulesConfirmed"
-          label="I confirm the following items are included as required in the Rules of the Association:"
-          @change="onRulesConfirmedChange($event)"
-        />
-        <ul>
-          <li>The Cooperative name is identified <b>exactly</b> as follows throughout the Memorandum:</li>
-          <p><b>{{getNameRequestDetails.approvedName}}</b></p>
-          <li>Each Subscriber and Witness has signed and dated the Rules of the Association and their name is
-            printed under their signature.</li>
-        </ul>
-      </v-card>
+      <div :class="{ 'invalid-section': getShowErrors && !hasRulesConfirmed }">
+        <v-card flat id="confirm-rules-card" class="mt-4 pt-10 pb-6 pl-6 pr-6">
+          <v-form ref="confirmRulesChk">
+            <v-checkbox
+              class="chk-rules"
+              id="chk-confirm-rules"
+              :v-model="rulesConfirmed"
+              :value="getCreateRulesStep.rulesConfirmed"
+              :rules="confirmCompletionRules"
+              label="I confirm the following items are included as required in the Rules of the Association:"
+              @change="onRulesConfirmedChange($event)"
+            />
+            <ul>
+              <li class="mt-1">
+                <v-icon>mdi-circle-small</v-icon>
+                <span class="chk-list-item-txt">The Cooperative name is identified <b>exactly</b> as follows throughout
+                  the Memorandum:
+                </span>
+                <div id="approved-name" class="ml-9">{{getNameRequestDetails.approvedName}}</div>
+              </li>
+              <li class="mt-1">
+                <v-row>
+                  <v-col cols="1"><v-icon>mdi-circle-small</v-icon></v-col>
+                  <v-col cols="11" class="ml-n11">
+                    <span>Each Subscriber and Witness has signed and dated the Rules of the
+                      Association and their name is printed under their signature.
+                    </span>
+                  </v-col>
+                </v-row>
+              </li>
+            </ul>
+          </v-form>
+        </v-card>
+      </div>
     </section>
 
     <section id="upload-rules-section" class="mt-10">
-      <header>
+      <header id="upload-rules-header">
         <h2>3. Upload Rules</h2>
-        <ul>
-          <li>Must be set to fit onto 8 <sup>1</sup>&frasl;<sub>2</sub>" x 11" letter-size paper</li>
-          <li>Use a white background and a legible font with contrasting font colour</li>
-          <li>PDF file type (maximum 10 MB file size)</li>
+        <ul class="mt-5">
+          <li class="mt-1">
+            <v-icon>mdi-circle-small</v-icon>
+            <span class="chk-list-item-txt">Must be set to fit onto 8 <sup>1</sup>&frasl;<sub>2</sub>" x 11"
+              letter-size paper
+            </span>
+          </li>
+          <li class="mt-1">
+            <v-icon>mdi-circle-small</v-icon>
+            <span class="chk-list-item-txt">Use a white background and a legible font with contrasting font colour
+            </span>
+          </li>
+          <li class="mt-1">
+            <v-icon>mdi-circle-small</v-icon>
+            <span class="chk-list-item-txt">PDF file type (maximum 10 MB file size)</span>
+          </li>
         </ul>
-        <div id="upload-rules-note">
+        <div id="upload-rules-note" class="mt-7 mb-8">
           <b>Note: </b>Do not upload Housing Cooperative occupancy agreements.
         </div>
       </header>
-      <v-card flat id="upload-rules-card">
-        <v-row>
-          <v-col id="upload-rules-card-left-col" cols="2">
-            <v-card-title class="upload-rules-vcard-title">Upload Rules</v-card-title>
-          </v-col>
-          <v-col id="upload-rules-card-right-col" cols="10">
-            <FileUploadPreview
-              :maxSize="MAX_FILE_SIZE"
-              :inputFile="uploadRulesDoc"
-              @fileSelected="fileSelected"
-              @isFileValid="isFileUploadValidFn"
-            ></FileUploadPreview>
-          </v-col>
-        </v-row>
-      </v-card>
+      <div :class="{ 'invalid-section': getShowErrors && !hasValidUploadFile }">
+        <v-card flat id="upload-rules-card" class="pt-10 pb-10 pl-6">
+          <v-row>
+            <v-col id="upload-rules-card-left-col" cols="2" class="pt-6" >
+              <v-card-title class="upload-rules-vcard-title pl-0">Upload Rules</v-card-title>
+            </v-col>
+            <v-col id="upload-rules-card-right-col" cols="10" class="pt-6 pl-6 pr-10">
+              <FileUploadPreview
+                :inputFileLabel="INPUT_FILE_LABEL"
+                :maxSize="MAX_FILE_SIZE"
+                :inputFile="uploadRulesDoc"
+                :showErrors="getShowErrors"
+                :customErrorMessage="fileUploadCustomErrorMsg"
+                @fileSelected="fileSelected"
+                @isFileValid="isFileUploadValidFn"
+              ></FileUploadPreview>
+            </v-col>
+          </v-row>
+        </v-card>
+      </div>
     </section>
   </div>
 </template>
 
 <script lang="ts">
 // Libraries
-import { Component, Mixins, Prop, Vue } from 'vue-property-decorator'
+import { Component, Mixins, Prop, Vue, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 
 // Interfaces
@@ -135,14 +175,14 @@ import {
   CreateRulesResourceIF,
   RulesDocIF,
   DocumentUpload,
-  NameRequestDetailsIF
+  NameRequestDetailsIF, ConfirmDialogType, FormType
 } from '@/interfaces'
 
 // Enums
 import { RouteNames, ItemTypes } from '@/enums'
 
 // Mixins
-import { DocumentMixin } from '@/mixins'
+import { CommonMixin, DocumentMixin } from '@/mixins'
 
 // Components
 import FileUploadPreview from '@/components/common/FileUploadPreview.vue'
@@ -152,12 +192,21 @@ import FileUploadPreview from '@/components/common/FileUploadPreview.vue'
     FileUploadPreview
   }
 })
-export default class UploadRules extends Mixins(DocumentMixin) {
-  private MAX_FILE_SIZE = 10 * 1024 // 10 MB in KB
-  private isFileUploadValid: boolean = false
+export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
+  // Refs
+  $refs!: {
+    confirmRulesChk: FormType
+  }
+
+  private INPUT_FILE_LABEL = 'Rules of Association'
+  private hasValidUploadFile: boolean = false
+  private hasRulesConfirmed: boolean = false
+  private rulesConfirmed = false
+  private fileUploadCustomErrorMsg: string = ''
   private uploadRulesDoc:File = null
   private helpToggle = false
 
+  @Getter getShowErrors!: boolean
   @Getter getNameRequestDetails!: NameRequestDetailsIF
   @Getter getCreateRulesResource!: CreateRulesResourceIF
   @Getter getCreateRulesStep!: CreateRulesIF
@@ -165,10 +214,15 @@ export default class UploadRules extends Mixins(DocumentMixin) {
   @Getter getUserKeycloakGuid!: string
 
   @Action setRules!: ActionBindingIF
+  @Action setRulesStepValidity!: ActionBindingIF
 
   // Enum for template
   readonly RouteNames = RouteNames
   readonly ItemTypes = ItemTypes
+
+  private confirmCompletionRules = [
+    (v) => { return !!v }
+  ]
 
   private setUploadRulesDoc (doc: File) {
     this.uploadRulesDoc = doc
@@ -188,11 +242,14 @@ export default class UploadRules extends Mixins(DocumentMixin) {
   }
 
   private isFileUploadValidFn (val) {
-    this.isFileUploadValid = val
+    this.hasValidUploadFile = val
+    this.setRulesStepValidity(this.hasValidUploadFile && this.hasRulesConfirmed)
   }
 
   private async fileSelected (file) {
-    if (file && this.isFileUploadValid) {
+    // reset state of file uploader to ensure not in manual error mode
+    this.fileUploadCustomErrorMsg = ''
+    if (file && this.hasValidUploadFile) {
       this.setUploadRulesDoc(file)
       await this.uploadPendingDocsToStorage()
     } else {
@@ -207,17 +264,26 @@ export default class UploadRules extends Mixins(DocumentMixin) {
 
   public async uploadPendingDocsToStorage () {
     const isPendingUpload = !this.getCreateRulesStep.docKey
-    if (isPendingUpload && this.isFileUploadValid) {
+    if (isPendingUpload && this.hasValidUploadFile) {
       const doc:DocumentUpload = await this.getPresignedUrl(this.getCreateRulesStep.rulesDoc.name)
-      this.setRules({
-        ...this.getCreateRulesStep,
-        docKey: doc.key
-      })
       const res = await this.uploadToUrl(doc.preSignedUrl, this.uploadRulesDoc, doc.key, this.getUserKeycloakGuid)
+      if (res && res.status === 200) {
+        this.setRules({
+          ...this.getCreateRulesStep,
+          docKey: doc.key
+        })
+      } else {
+        // put file uploader into manual error mode by passing custom error message
+        this.fileUploadCustomErrorMsg = this.UPLOAD_FAILED_MESSAGE
+        this.hasValidUploadFile = false
+        this.setRulesStepValidity(this.hasValidUploadFile && this.hasRulesConfirmed)
+      }
     }
   }
 
   private onRulesConfirmedChange (rulesConfirmed: boolean): void {
+    this.hasRulesConfirmed = rulesConfirmed
+    this.setRulesStepValidity(this.hasRulesConfirmed && this.hasValidUploadFile)
     this.setRules({
       ...this.getCreateRulesStep,
       rulesConfirmed: rulesConfirmed
@@ -227,6 +293,32 @@ export default class UploadRules extends Mixins(DocumentMixin) {
   /** Called when component is created. */
   private created (): void {
     this.uploadRulesDoc = this.getCreateRulesStep.rulesDoc as File
+    this.rulesConfirmed = this.getCreateRulesStep.rulesConfirmed
+  }
+
+  @Watch('getShowErrors')
+  private onShowErrorsChanged (): void {
+    if (this.getShowErrors && this.$refs.confirmRulesChk) {
+      this.$refs.confirmRulesChk.validate()
+    }
+  }
+
+  @Watch('$route')
+  private async scrollToInvalidComponent (): Promise<void> {
+    if (this.getShowErrors && this.$route.name === RouteNames.CREATE_RULES) {
+      // Scroll to invalid components.
+      await Vue.nextTick()
+      await this.validateAndScroll(
+        {
+          hasValidUploadFile: this.hasValidUploadFile,
+          hasRulesConfirmed: this.hasRulesConfirmed
+        },
+        [
+          'upload-rules-header',
+          'rules-confirm-header'
+        ]
+      )
+    }
   }
 }
 </script>
@@ -235,17 +327,17 @@ export default class UploadRules extends Mixins(DocumentMixin) {
 @import '@/assets/styles/theme.scss';
 header {
   p {
-    padding-top:0.5rem
+    padding-top: 0.5rem
   }
 }
 
 ul {
-  margin-left: 25px !important;
-  padding-left: 25px !important;
+  list-style: none;
+  color: $gray7;
 }
 
-li {
-  margin-top: 15px !important;
+.chk-list-item-txt {
+  margin-left: 0.5rem;
 }
 
 .upload-rules-summary-header {
@@ -290,64 +382,38 @@ li {
     direction: rtl;
   }
 
-  .help-section-label-top {
-    margin-top: 4px;
-  }
-
-  .help-section-label {
-    margin-top: 15px;
-  }
-
-  #help-text-section-3 {
-    margin-top: 25px;
-  }
-
   a {
     text-decoration: none;
   }
 }
 
-#confirm-rules-section {
-  #confirm-rules-card {
-    margin-top: 15px;
-    padding-top: 5px;
-    padding-bottom: 20px;
-    padding-left: 25px;
+::v-deep #confirm-rules-section {
+  #approved-name {
+    font-weight: bold;
+  }
+
+  // override default validation styling so checkbox does not turn red on validation error
+  .v-input--selection-controls__input .error--text{
+    color: $app-lt-gray !important;
   }
 }
 
 .chk-rules {
+  margin-top: 0;
+  padding-top: 0;
   height: 2.5rem !important;
 }
 
 #upload-rules-section {
-  li {
-    margin-top: 15px !important;
-  }
-
   #upload-rules-note {
     font-size: 16px;
-    margin-top: 30px;
-    margin-bottom: 30px;
-  }
-
-  #upload-rules-card {
-    #upload-rules-card-left-col {
-      padding-top:25px;
-    }
-
-    #upload-rules-card-right-col {
-      padding-top:25px;
-      padding-left:25px;
-      padding-right:30px;
-    }
   }
 }
 
 .upload-rules-vcard-title {
-  padding-top:1px;
+  padding-top: 1px;
   font-size: 17px;
-  font-weight:bold;
+  font-weight: bold;
 }
 
 .v-icon.mdi-help-circle-outline,
@@ -358,6 +424,6 @@ li {
 }
 
 .v-icon.mdi-open-in-new {
-  padding-bottom:1px;
+  padding-bottom: 1px;
 }
 </style>

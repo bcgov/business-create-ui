@@ -1,6 +1,6 @@
 <template>
   <v-card flat class="rounded-0">
-    <div class="define-company-header">
+    <div class="define-company-header review-header">
       <v-icon color="appDkBlue">mdi-domain</v-icon>
       <label class="define-company-title pl-2"><strong>Your {{ getCompanyDisplayName }}</strong></label>
     </div>

@@ -56,6 +56,7 @@ export default class Stepper extends Vue {
   @Getter isBusySaving!: boolean
   @Getter isDefineCompanyValid!: boolean
   @Getter isAddPeopleAndRolesValid!: boolean
+  @Getter isRulesValid!: boolean
   @Getter isCreateShareStructureValid!: boolean
   @Getter isIncorporationAgreementValid!: boolean
   @Getter isApplicationValid!: boolean
@@ -69,6 +70,9 @@ export default class Stepper extends Vue {
 
       case RouteNames.ADD_PEOPLE_AND_ROLES:
         return this.isAddPeopleAndRolesValid
+
+      case RouteNames.CREATE_RULES:
+        return this.isRulesValid
 
       case RouteNames.CREATE_SHARE_STRUCTURE:
         return this.isCreateShareStructureValid

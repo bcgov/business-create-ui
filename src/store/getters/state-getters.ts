@@ -156,6 +156,11 @@ export const getCreateRulesStep = (state: StateIF): CreateRulesIF => {
   return state.stateModel.createRulesStep
 }
 
+/** Is true when the step is valid. */
+export const isRulesValid = (state: StateIF): boolean => {
+  return getCreateRulesStep(state).valid
+}
+
 /** The Incorporation Agreement object. */
 export const getIncorporationAgreementStep = (state: StateIF): IncorporationAgreementIF => {
   return state.stateModel.incorporationAgreementStep

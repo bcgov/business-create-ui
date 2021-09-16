@@ -56,5 +56,7 @@ $BCgovFontColorInverted: #ffffff;
 // App Colors
 $app-blue: #1669bb; // same as the Vuetify theme primary
 $app-green: #1a9031; // same as the Vuetify theme success
+$app-dk-green: #2e8540; // used for success checkmarks
 $app-red: #d3272c; // same as the Vuetify theme error
 $app-dk-blue: #38598a; // same as the Vuetify theme appDkBlue
+$app-lt-gray: rgba(0, 0, 0, 0.54) // used for overriding Vuetify red validation color for checkboxes

@@ -1,7 +1,7 @@
 <template>
   <v-card flat id="share-structure" class="rounded-0">
     <!-- Summary Header -->
-    <div class="share-summary-header" v-if="isSummary">
+    <div class="share-summary-header review-header" v-if="isSummary">
       <v-icon color="appDkBlue">mdi-sitemap</v-icon>
       <label class="share-summary-header-title pl-2"><strong>Share Structure</strong></label>
     </div>

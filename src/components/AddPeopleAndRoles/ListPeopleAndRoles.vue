@@ -8,7 +8,7 @@
     />
 
     <!-- Summary Header -->
-    <div class="people-roles-summary-header" v-if="isSummary">
+    <div class="people-roles-summary-header review-header" v-if="isSummary">
       <v-icon color="appDkBlue">mdi-account-multiple-plus</v-icon>
       <label class="people-roles-title pl-2"><strong>People and Roles</strong></label>
     </div>

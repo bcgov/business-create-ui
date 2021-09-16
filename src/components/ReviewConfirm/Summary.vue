@@ -22,8 +22,8 @@
 
     <!-- Coops summary components -->
     <template v-else>
-      <UploadRulesSummary class="mt-4" />
-      <UploadMemorandum class="mt-4" :isSummary="true" />
+      <UploadRulesSummary />
+      <UploadMemorandum :isSummary="true" />
     </template>
   </div>
 </template>
@@ -42,7 +42,7 @@ import { UploadMemorandum } from '@/components/CreateMemorandum'
 import { UploadRulesSummary } from '@/components/CreateRules'
 
 // Interfaces
-import { IncorporationAgreementIF, PeopleAndRoleIF, ShareStructureIF } from '@/interfaces'
+import { IncorporationAgreementIF, PeopleAndRoleIF, ShareStructureIF, CreateRulesIF } from '@/interfaces'
 
 @Component({
   components: {
@@ -60,11 +60,21 @@ export default class Summary extends Vue {
   @Getter getAddPeopleAndRoleStep!: PeopleAndRoleIF
   @Getter getCreateShareStructureStep!: ShareStructureIF
   @Getter getIncorporationAgreementStep!: IncorporationAgreementIF
+  @Getter getCreateRulesStep!: CreateRulesIF
 }
 </script>
 
 <style lang="scss" scoped>
 .summary-container {
   margin-top: 1rem;
+
+  ::v-deep .v-card {
+    margin-top: 30px !important;
+    border-radius: 0px !important;
+
+    .review-header {
+      border-radius: 4px 4px 0px 0px !important;
+    }
+  }
 }
 </style>
