@@ -5,11 +5,11 @@
       <label class="upload-memorandum-title pl-2"><strong>Memorandum</strong></label>
     </div>
 
-    <div v-if="!getCreateMemorandumStep.valid" class="invalid-section">
+    <div v-if="!getCreateMemorandumStep.valid" class="invalid-section pl-5">
       <div class="upload-memorandum-error-message">
         <span>
           <v-icon color="error">mdi-information-outline</v-icon>
-          <span class="error-text">This step is unfinished.</span>
+          <span class="error-text mr-1">This step is unfinished.</span>
           <router-link
             :to="{ path: `/${RouteNames.CREATE_MEMORANDUM}` }"
           >Return to this step to finish it</router-link>
@@ -17,7 +17,7 @@
       </div>
     </div>
 
-    <div v-if="getCreateMemorandumStep.valid" class="upload-memorandum-success-message">
+    <div v-if="getCreateMemorandumStep.valid" class="upload-memorandum-success-message pl-5">
       <v-row no-gutters>
         <v-col md="1">
           <v-icon class="upload-success-chk">mdi-check</v-icon>
@@ -64,22 +64,15 @@ export default class UploadMemorandumSummary extends Vue {
 .upload-memorandum-error-message {
   padding-top: 30px;
   padding-bottom: 30px;
-  padding-left: 1.25rem;
   color: $app-blue;
-
-  .error-text {
-    margin-right: 4px;
-  }
 }
 
 .upload-memorandum-success-message {
   padding-top: 30px;
   padding-bottom: 30px;
-  padding-left: 1.25rem;
   color: $gray7;
 
   .upload-success-chk {
-    margin-right: 9px;
     font-size: 1.5rem;
     color: $app-dk-green;
   }
