@@ -98,21 +98,16 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
       case CorpTypeCd.COOP:
         filing.filing.incorporationApplication.cooperative = {
           cooperativeAssociationType: this.getDefineCompanyStep.cooperativeType,
-          rulesFileKey: this.getCreateRulesStep.docKey,
-          rulesFileName: this.getCreateRulesStep.rulesDoc ? this.getCreateRulesStep.rulesDoc.name : null,
-          rulesFileSize: this.getCreateRulesStep.rulesDoc ? this.getCreateRulesStep.rulesDoc.size : null,
-          rulesFileLastModified: this.getCreateRulesStep.rulesDoc
-            ? this.getCreateRulesStep.rulesDoc.lastModified : null,
-          rulesConfirmed: this.getCreateRulesStep.rulesConfirmed ? this.getCreateRulesStep.rulesConfirmed : false,
-          memorandumFileKey: this.getCreateMemorandumStep.docKey,
-          memorandumFileName: this.getCreateMemorandumStep.memorandumDoc
-            ? this.getCreateMemorandumStep.memorandumDoc.name : null,
-          memorandumFileSize: this.getCreateMemorandumStep.memorandumDoc
-            ? this.getCreateMemorandumStep.memorandumDoc.size : null,
-          memorandumFileLastModified: this.getCreateMemorandumStep.memorandumDoc
-            ? this.getCreateMemorandumStep.memorandumDoc.lastModified : null,
-          memorandumConfirmed: this.getCreateMemorandumStep.memorandumConfirmed
-            ? this.getCreateMemorandumStep.memorandumConfirmed : false
+          rulesFileKey: this.getCreateRulesStep.docKey || null,
+          rulesFileName: this.getCreateRulesStep.rulesDoc?.name || null,
+          rulesFileSize: this.getCreateRulesStep.rulesDoc?.size || null,
+          rulesFileLastModified: this.getCreateRulesStep.rulesDoc?.lastModified || null,
+          rulesConfirmed: this.getCreateRulesStep.rulesConfirmed || false,
+          memorandumFileKey: this.getCreateMemorandumStep.docKey || null,
+          memorandumFileName: this.getCreateMemorandumStep?.memorandumDoc?.name || null,
+          memorandumFileSize: this.getCreateMemorandumStep?.memorandumDoc?.size || null,
+          memorandumFileLastModified: this.getCreateMemorandumStep?.memorandumDoc?.lastModified || null,
+          memorandumConfirmed: this.getCreateMemorandumStep.memorandumConfirmed || false
         }
         break
       case CorpTypeCd.BENEFIT_COMPANY:
