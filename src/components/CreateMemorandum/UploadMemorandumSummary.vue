@@ -5,8 +5,8 @@
       <label class="upload-memorandum-title pl-2"><strong>Memorandum</strong></label>
     </div>
 
-    <div :class="{ 'invalid-section': !getCreateMemorandumStep.valid }">
-      <div v-if="!getCreateMemorandumStep.valid" class="upload-memorandum-error-message">
+    <div v-if="!getCreateMemorandumStep.valid" class="invalid-section">
+      <div class="upload-memorandum-error-message">
         <span>
           <v-icon color="error">mdi-information-outline</v-icon>
           <span class="error-text">This step is unfinished.</span>

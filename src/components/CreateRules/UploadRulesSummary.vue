@@ -5,8 +5,8 @@
       <label class="upload-rules-title pl-2"><strong>Rules</strong></label>
     </div>
 
-    <div :class="{ 'invalid-section': !getCreateRulesStep.valid }">
-      <div v-if="!getCreateRulesStep.valid" class="upload-rules-error-message">
+    <div v-if="!getCreateRulesStep.valid" class="invalid-section">
+      <div class="upload-rules-error-message">
         <span>
           <v-icon color="error">mdi-information-outline</v-icon>
           <span class="error-text">This step is unfinished.</span>
