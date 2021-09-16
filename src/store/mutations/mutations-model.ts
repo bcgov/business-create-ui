@@ -12,8 +12,8 @@ import {
   ResourceIF,
   ShareClassIF,
   StateIF,
-  RulesDocIF,
-  CreateRulesIF
+  CreateRulesIF,
+  CreateMemorandumIF
 } from '@/interfaces'
 
 export const mutateTempId = (state: StateIF, tempId: string) => {
@@ -149,9 +149,13 @@ export const mutateRulesStepValidity = (state: StateIF, valid: boolean) => {
   state.stateModel.createRulesStep.valid = valid
 }
 
-export const mutateMemorandum = (state: StateIF, memorandum: any) => {
-  // state.stateModel.memorandum = memorandum // *** FUTURE: implement this
+export const mutateMemorandum = (state: StateIF, memorandum: CreateMemorandumIF) => {
+  state.stateModel.createMemorandumStep = memorandum
   if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
+}
+
+export const mutateMemorandumStepValidity = (state: StateIF, valid: boolean) => {
+  state.stateModel.createMemorandumStep.valid = valid
 }
 
 export const mutateShareClasses = (state: StateIF, shareClasses: ShareClassIF[]) => {

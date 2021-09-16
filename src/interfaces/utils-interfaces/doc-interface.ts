@@ -1,4 +1,4 @@
-export interface RulesDocIF {
+export interface DocIF {
   // name, lastModified and size are populated via the standard File object
   // https://developer.mozilla.org/en-US/docs/Web/API/File
   name: string

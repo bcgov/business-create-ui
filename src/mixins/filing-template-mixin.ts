@@ -6,8 +6,8 @@ import { DateMixin } from '@/mixins'
 // Interfaces
 import {
   ActionBindingIF, BusinessContactIF, CertifyIF, CreateRulesIF, DateTimeIF, DefineCompanyIF,
-  IncorporationAgreementIF, IncorporationFilingIF, NameTranslationIF, PeopleAndRoleIF, RulesDocIF,
-  ShareStructureIF
+  IncorporationAgreementIF, IncorporationFilingIF, NameTranslationIF, PeopleAndRoleIF, DocIF,
+  ShareStructureIF, CreateMemorandumIF
 } from '@/interfaces'
 
 // Constants and enums
@@ -36,6 +36,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Getter getIncorporationAgreementStep!: IncorporationAgreementIF
   @Getter getBusinessContact!: BusinessContactIF
   @Getter getCreateRulesStep!: CreateRulesIF
+  @Getter getCreateMemorandumStep!: CreateMemorandumIF
   @Getter getMemorandum!: any
 
   @Action setEntityType!: ActionBindingIF
@@ -97,10 +98,16 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
       case CorpTypeCd.COOP:
         filing.filing.incorporationApplication.cooperative = {
           cooperativeAssociationType: this.getDefineCompanyStep.cooperativeType,
-          rulesFileKey: this.getCreateRulesStep.docKey,
-          rulesFileName: this.getCreateRulesStep.rulesDoc ? this.getCreateRulesStep.rulesDoc.name : null,
-          rulesFileSize: this.getCreateRulesStep.rulesDoc ? this.getCreateRulesStep.rulesDoc.size : null,
-          rulesFileLastModified: this.getCreateRulesStep.rulesDoc ? this.getCreateRulesStep.rulesDoc.lastModified : null
+          rulesFileKey: this.getCreateRulesStep.docKey || null,
+          rulesFileName: this.getCreateRulesStep.rulesDoc?.name || null,
+          rulesFileSize: this.getCreateRulesStep.rulesDoc?.size || null,
+          rulesFileLastModified: this.getCreateRulesStep.rulesDoc?.lastModified || null,
+          rulesConfirmed: this.getCreateRulesStep.rulesConfirmed || false,
+          memorandumFileKey: this.getCreateMemorandumStep.docKey || null,
+          memorandumFileName: this.getCreateMemorandumStep?.memorandumDoc?.name || null,
+          memorandumFileSize: this.getCreateMemorandumStep?.memorandumDoc?.size || null,
+          memorandumFileLastModified: this.getCreateMemorandumStep?.memorandumDoc?.lastModified || null,
+          memorandumConfirmed: this.getCreateMemorandumStep.memorandumConfirmed || false
         }
         break
       case CorpTypeCd.BENEFIT_COMPANY:
@@ -166,7 +173,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
         // Set Cooperative type
         this.setCooperativeType(draftFiling.incorporationApplication.cooperative?.cooperativeAssociationType)
         // Set Rules
-        let rulesDoc:RulesDocIF = null
+        let rulesDoc:DocIF = null
         if (draftFiling.incorporationApplication.cooperative?.rulesFileKey) {
           rulesDoc = {
             name: draftFiling.incorporationApplication.cooperative?.rulesFileName,
@@ -176,13 +183,27 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
         }
         const createRules:CreateRulesIF = {
           valid: false,
-          rulesConfirmed: false,
+          rulesConfirmed: draftFiling.incorporationApplication.cooperative?.rulesConfirmed,
           rulesDoc: rulesDoc,
           docKey: draftFiling.incorporationApplication.cooperative?.rulesFileKey
         }
         this.setRules(createRules)
         // Set Memorandum
-        this.setMemorandum(draftFiling.incorporationApplication.memorandum)
+        let memorandumDoc:DocIF = null
+        if (draftFiling.incorporationApplication.cooperative?.memorandumFileKey) {
+          memorandumDoc = {
+            name: draftFiling.incorporationApplication.cooperative?.memorandumFileName,
+            lastModified: draftFiling.incorporationApplication.cooperative?.memorandumFileLastModified,
+            size: draftFiling.incorporationApplication.cooperative?.memorandumFileSize
+          }
+        }
+        const createMemorandum:CreateMemorandumIF = {
+          valid: false,
+          memorandumConfirmed: draftFiling.incorporationApplication.cooperative?.memorandumConfirmed,
+          memorandumDoc: memorandumDoc,
+          docKey: draftFiling.incorporationApplication.cooperative?.memorandumFileKey
+        }
+        this.setMemorandum(createMemorandum)
         break
       case CorpTypeCd.BENEFIT_COMPANY:
       case CorpTypeCd.BC_CCC:

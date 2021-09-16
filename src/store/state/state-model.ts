@@ -73,7 +73,10 @@ export const stateModel: StateModelIF = {
     agreementType: null
   },
   createMemorandumStep: {
-    valid: false
+    valid: false,
+    memorandumConfirmed: false,
+    memorandumDoc: null,
+    docKey: null
   },
   validateSteps: false,
   showErrors: false

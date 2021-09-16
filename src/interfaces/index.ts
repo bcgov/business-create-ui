@@ -2,6 +2,7 @@
 export * from './utils-interfaces/form-type'
 export * from './utils-interfaces/confirm-dialog-type'
 export * from './utils-interfaces/document-upload-interface'
+export * from './utils-interfaces/doc-interface'
 
 // Store Interfaces
 export * from './store-interfaces/state-interface'
@@ -30,8 +31,8 @@ export * from './stepper-interfaces/IncorporationAgreement/incorporation-agreeme
 export * from './stepper-interfaces/IncorporationAgreement/help-section-interface'
 export * from './stepper-interfaces/CreateRules/create-rules-resource-interface'
 export * from './stepper-interfaces/CreateRules/create-rules-interface'
-export * from './stepper-interfaces/CreateRules/rules-doc-interface'
 export * from './stepper-interfaces/CreateMemorandum/create-memorandum-interface'
+export * from './stepper-interfaces/CreateMemorandum/create-memorandum-resource-interface'
 
 // Others
 export * from './resource-interfaces/component-resource-interfaces/certifyStatement-interface'

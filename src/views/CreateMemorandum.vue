@@ -18,3 +18,7 @@ import { UploadMemorandum } from '@/components/CreateMemorandum'
 })
 export default class CreateMemorandum extends Vue {}
 </script>
+
+<style lang="scss" scoped>
+@import '@/assets/styles/theme.scss';
+</style>

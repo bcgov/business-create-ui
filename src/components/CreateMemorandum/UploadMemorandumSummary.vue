@@ -1,29 +1,29 @@
 <template>
-  <v-card id="upload-rules-summary-card" flat class="rounded-0">
-    <div class="upload-rules-summary-header review-header">
+  <v-card id="upload-memorandum-summary-card" flat class="rounded-0">
+    <div class="upload-memorandum-summary-header review-header">
       <v-icon color="appDkBlue">mdi-format-list-text</v-icon>
-      <label class="upload-rules-title pl-2"><strong>Rules</strong></label>
+      <label class="upload-memorandum-title pl-2"><strong>Memorandum</strong></label>
     </div>
 
-    <div v-if="!getCreateRulesStep.valid" class="invalid-section">
-      <div class="upload-rules-error-message">
+    <div v-if="!getCreateMemorandumStep.valid" class="invalid-section pl-5">
+      <div class="upload-memorandum-error-message">
         <span>
           <v-icon color="error">mdi-information-outline</v-icon>
-          <span class="error-text">This step is unfinished.</span>
+          <span class="error-text mr-1">This step is unfinished.</span>
           <router-link
-            :to="{ path: `/${RouteNames.CREATE_RULES}` }"
+            :to="{ path: `/${RouteNames.CREATE_MEMORANDUM}` }"
           >Return to this step to finish it</router-link>
         </span>
       </div>
     </div>
 
-    <div v-if="getCreateRulesStep.valid" class="upload-rules-success-message">
+    <div v-if="getCreateMemorandumStep.valid" class="upload-memorandum-success-message pl-5">
       <v-row no-gutters>
         <v-col md="1">
           <v-icon class="upload-success-chk">mdi-check</v-icon>
         </v-col>
         <v-col md="11" id="file-name-col">
-          <span id="file-name" v-if="getCreateRulesStep.rulesDoc" >{{getCreateRulesStep.rulesDoc.name}}</span>
+          <span v-if="getCreateMemorandumStep.memorandumDoc" id="file-name">{{getCreateMemorandumStep.memorandumDoc.name}}</span>
         </v-col>
       </v-row>
     </div>
@@ -37,11 +37,11 @@ import { Getter } from 'vuex-class'
 
 // Enums
 import { RouteNames } from '@/enums'
-import { CreateRulesIF } from '@/interfaces'
+import { CreateMemorandumIF } from '@/interfaces'
 
 @Component({})
-export default class UploadRulesSummary extends Vue {
-  @Getter getCreateRulesStep!: CreateRulesIF
+export default class UploadMemorandumSummary extends Vue {
+  @Getter getCreateMemorandumStep!: CreateMemorandumIF
 
   // Enum for template
   readonly RouteNames = RouteNames
@@ -51,35 +51,28 @@ export default class UploadRulesSummary extends Vue {
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
 
-.upload-rules-summary-header {
+.upload-memorandum-summary-header {
   display: flex;
   background-color: $BCgovBlue5O;
   padding: 1.25rem;
 
-  .upload-rules-title {
+  .upload-memorandum-title {
     color: $gray9;
   }
 }
 
-.upload-rules-error-message {
+.upload-memorandum-error-message {
   padding-top: 30px;
   padding-bottom: 30px;
-  padding-left: 1.25rem;
   color: $app-blue;
-
-  .error-text {
-    margin-right: 4px;
-  }
 }
 
-.upload-rules-success-message {
+.upload-memorandum-success-message {
   padding-top: 30px;
   padding-bottom: 30px;
-  padding-left: 1.25rem;
   color: $gray7;
 
   .upload-success-chk {
-    margin-right: 9px;
     font-size: 1.5rem;
     color: $app-dk-green;
   }

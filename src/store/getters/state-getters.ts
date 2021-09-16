@@ -166,6 +166,11 @@ export const getIncorporationAgreementStep = (state: StateIF): IncorporationAgre
   return state.stateModel.incorporationAgreementStep
 }
 
+/** Is true when the step is valid. */
+export const isMemorandumValid = (state: StateIF): boolean => {
+  return getCreateMemorandumStep(state).valid
+}
+
 /** The Create Memorandum object. */
 export const getCreateMemorandumStep = (state: StateIF): CreateMemorandumIF => {
   return state.stateModel.createMemorandumStep
