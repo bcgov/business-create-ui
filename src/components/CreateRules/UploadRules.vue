@@ -198,9 +198,9 @@ export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
   }
 
   private INPUT_FILE_LABEL = 'Rules of Association'
-  private hasValidUploadFile: boolean = false
-  private hasRulesConfirmed: boolean = false
-  private rulesConfirmed: boolean = false
+  private hasValidUploadFile = false
+  private hasRulesConfirmed = false
+  private rulesConfirmed = false
   private fileUploadCustomErrorMsg: string = ''
   private uploadRulesDoc:File = null
   private uploadRulesDocKey: string = null

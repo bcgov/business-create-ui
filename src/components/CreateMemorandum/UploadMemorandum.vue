@@ -249,9 +249,9 @@ export default class UploadMemorandum extends Mixins(CommonMixin, DocumentMixin)
   }
 
   private INPUT_FILE_LABEL = 'Memorandum of Association'
-  private hasValidUploadFile: boolean = false
-  private hasMemorandumConfirmed: boolean = false
-  private memorandumConfirmed: boolean = false
+  private hasValidUploadFile = false
+  private hasMemorandumConfirmed = false
+  private memorandumConfirmed = false
   private fileUploadCustomErrorMsg: string = ''
   private uploadMemorandumDoc:File = null
   private uploadMemorandumDocKey: string = null
