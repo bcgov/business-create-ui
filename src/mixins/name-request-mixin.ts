@@ -76,12 +76,6 @@ export default class NameRequestMixin extends Mixins(DateMixin) {
       return null
     }
 
-    // If the NR is expired, it is not consumable.
-    const expireDays = this.daysFromToday(nr.expirationDate)
-    if (isNaN(expireDays) || expireDays < 1) {
-      return NameRequestStates.EXPIRED
-    }
-
     // If the NR is awaiting consent, it is not consumable.
     // null = consent not required
     // R = consent received
@@ -92,17 +86,14 @@ export default class NameRequestMixin extends Mixins(DateMixin) {
     }
 
     // If the NR's root state is not APPROVED or CONDITIONAL, it is not consumable.
-    if (nr.state !== NameRequestStates.APPROVED && nr.state !== NameRequestStates.CONDITIONAL) {
+    // EXPIRED or CONSUMED should not return NOT_APPROVED.
+    if (![NameRequestStates.APPROVED, NameRequestStates.CONDITIONAL,
+      NameRequestStates.EXPIRED, NameRequestStates.CONSUMED].includes(nr.state)) {
       return NameRequestStates.NOT_APPROVED
     }
 
-    // If the NR has already been consumed, it is not consumable.
-    if (nr.names.some(name => name.consumptionDate)) {
-      return NameRequestStates.CONSUMED
-    }
-
     // Otherwise, the NR is consumable.
-    return nr.state // APPROVED or CONDITIONAL
+    return nr.state // APPROVED or CONDITIONAL or CONSUMED or EXPIRED
   }
 
   /**
@@ -110,13 +101,10 @@ export default class NameRequestMixin extends Mixins(DateMixin) {
    * @param nr the name request response payload
    */
   private _getApprovedName (nr: any): string {
-    if (nr.state === NameRequestStates.APPROVED) {
-      return nr.names.find(name => name.state === NameRequestStates.APPROVED).name
+    if (nr.names?.length > 0) {
+      return nr.names.find(name => [NameRequestStates.APPROVED, NameRequestStates.CONDITION].includes(name.state)).name
     }
-    if (nr.state === NameRequestStates.CONDITIONAL) {
-      return nr.names.find(name => name.state === NameRequestStates.CONDITION).name
-    }
-    return null // should never happen
+    return '' // should never happen
   }
 
   /**
