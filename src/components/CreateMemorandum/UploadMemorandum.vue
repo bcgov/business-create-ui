@@ -225,7 +225,8 @@ import {
   CreateMemorandumResourceIF,
   DocumentUpload,
   NameRequestDetailsIF,
-  FormType
+  FormType,
+  ValidationDetailIF
 } from '@/interfaces'
 
 // Enums
@@ -287,7 +288,7 @@ export default class UploadMemorandum extends Mixins(CommonMixin, DocumentMixin)
 
   private isFileUploadValidFn (val) {
     this.hasValidUploadFile = val
-    this.setMemorandumStepValidity(this.hasValidUploadFile && this.hasMemorandumConfirmed)
+    this.updateMemorandumStepValidity()
   }
 
   private async fileSelected (file) {
@@ -331,15 +332,27 @@ export default class UploadMemorandum extends Mixins(CommonMixin, DocumentMixin)
         // put file uploader into manual error mode by passing custom error message
         this.fileUploadCustomErrorMsg = this.UPLOAD_FAILED_MESSAGE
         this.hasValidUploadFile = false
-        this.setMemorandumStepValidity(this.hasValidUploadFile && this.hasMemorandumConfirmed)
+        this.updateMemorandumStepValidity()
         this.uploadMemorandumDocKey = null
       }
     }
   }
 
+  private updateMemorandumStepValidity () {
+    const validationDetail:ValidationDetailIF =
+      {
+        valid: this.hasMemorandumConfirmed && this.hasValidUploadFile,
+        validationItemDetails: [
+          { name: 'hasMemorandumConfirmed', valid: this.hasMemorandumConfirmed, elementId: 'memorandum-confirm-header' },
+          { name: 'hasValidUploadFile', valid: this.hasValidUploadFile, elementId: 'upload-memorandum-header' }
+        ]
+      }
+    this.setMemorandumStepValidity(validationDetail)
+  }
+
   private onMemorandumConfirmedChange (memorandumConfirmed: boolean): void {
     this.hasMemorandumConfirmed = memorandumConfirmed
-    this.setMemorandumStepValidity(this.hasMemorandumConfirmed && this.hasValidUploadFile)
+    this.updateMemorandumStepValidity()
     this.setMemorandum({
       ...this.getCreateMemorandumStep,
       memorandumConfirmed: memorandumConfirmed
@@ -353,31 +366,13 @@ export default class UploadMemorandum extends Mixins(CommonMixin, DocumentMixin)
     this.memorandumConfirmed = !!this.getCreateMemorandumStep.memorandumConfirmed
     this.hasValidUploadFile = !!this.uploadMemorandumDocKey
     this.hasMemorandumConfirmed = this.memorandumConfirmed
-    this.setMemorandumStepValidity(this.hasValidUploadFile && this.hasMemorandumConfirmed)
+    this.updateMemorandumStepValidity()
   }
 
   @Watch('getShowErrors')
   private onShowErrorsChanged (): void {
     if (this.getShowErrors && this.$refs.confirmMemorandumChk) {
       this.$refs.confirmMemorandumChk.validate()
-    }
-  }
-
-  @Watch('$route')
-  private async scrollToInvalidComponent (): Promise<void> {
-    if (this.getShowErrors && this.$route.name === RouteNames.CREATE_MEMORANDUM) {
-      // Scroll to invalid components.
-      await Vue.nextTick()
-      await this.validateAndScroll(
-        {
-          hasValidUploadFile: this.hasValidUploadFile,
-          hasMemorandumConfirmed: this.hasMemorandumConfirmed
-        },
-        [
-          'upload-memorandum-header',
-          'memorandum-confirm-header'
-        ]
-      )
     }
   }
 }

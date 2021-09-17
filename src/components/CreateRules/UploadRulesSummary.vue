@@ -5,7 +5,7 @@
       <label class="upload-rules-title pl-2"><strong>Rules</strong></label>
     </div>
 
-    <div v-if="!getCreateRulesStep.valid" class="invalid-section">
+    <div v-if="!getCreateRulesStep.validationDetail.valid" class="invalid-section">
       <div class="upload-rules-error-message">
         <span>
           <v-icon color="error">mdi-information-outline</v-icon>
@@ -17,7 +17,7 @@
       </div>
     </div>
 
-    <div v-if="getCreateRulesStep.valid" class="upload-rules-success-message">
+    <div v-if="getCreateRulesStep.validationDetail.valid" class="upload-rules-success-message">
       <v-row no-gutters>
         <v-col md="1">
           <v-icon class="upload-success-chk">mdi-check</v-icon>

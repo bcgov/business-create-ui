@@ -2,7 +2,7 @@ import { ActionIF } from '@/interfaces/store-interfaces/action-interface'
 import {
   AccountInformationIF, AddressIF, BusinessContactIF, CertifyIF, IncorporationAddressIF,
   IncorporationAgreementIF, NameRequestIF, NameTranslationIF, OrgPersonIF, ResourceIF,
-  ShareClassIF, CreateRulesIF, CreateMemorandumIF
+  ShareClassIF, CreateRulesIF, CreateMemorandumIF, ValidationDetailIF
 } from '@/interfaces'
 import { CoopType, CorpTypeCd } from '@/enums'
 
@@ -130,16 +130,16 @@ export const setRules = ({ commit }, rules: CreateRulesIF) => {
   commit('mutateRules', rules)
 }
 
-export const setRulesStepValidity: ActionIF = ({ commit }, valid: boolean): void => {
-  commit('mutateRulesStepValidity', valid)
+export const setRulesStepValidity: ActionIF = ({ commit }, validationDetail: ValidationDetailIF): void => {
+  commit('mutateRulesStepValidity', validationDetail)
 }
 
 export const setMemorandum = ({ commit }, memorandum: CreateMemorandumIF) => {
   commit('mutateMemorandum', memorandum)
 }
 
-export const setMemorandumStepValidity: ActionIF = ({ commit }, valid: boolean): void => {
-  commit('mutateMemorandumStepValidity', valid)
+export const setMemorandumStepValidity: ActionIF = ({ commit }, validationDetail: ValidationDetailIF): void => {
+  commit('mutateMemorandumStepValidity', validationDetail)
 }
 
 export const setShareClasses = ({ commit }, shareClasses: ShareClassIF[]) => {

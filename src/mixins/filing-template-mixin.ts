@@ -182,7 +182,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
           }
         }
         const createRules:CreateRulesIF = {
-          valid: false,
+          validationDetail: null,
           rulesConfirmed: draftFiling.incorporationApplication.cooperative?.rulesConfirmed,
           rulesDoc: rulesDoc,
           docKey: draftFiling.incorporationApplication.cooperative?.rulesFileKey
@@ -198,7 +198,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
           }
         }
         const createMemorandum:CreateMemorandumIF = {
-          valid: false,
+          validationDetail: null,
           memorandumConfirmed: draftFiling.incorporationApplication.cooperative?.memorandumConfirmed,
           memorandumDoc: memorandumDoc,
           docKey: draftFiling.incorporationApplication.cooperative?.memorandumFileKey

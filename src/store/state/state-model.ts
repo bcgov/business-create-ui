@@ -63,7 +63,10 @@ export const stateModel: StateModelIF = {
     shareClasses: []
   },
   createRulesStep: {
-    valid: false,
+    validationDetail: {
+      valid: false,
+      validationItemDetails: []
+    },
     rulesConfirmed: false,
     rulesDoc: null,
     docKey: null
@@ -73,7 +76,10 @@ export const stateModel: StateModelIF = {
     agreementType: null
   },
   createMemorandumStep: {
-    valid: false,
+    validationDetail: {
+      valid: false,
+      validationItemDetails: []
+    },
     memorandumConfirmed: false,
     memorandumDoc: null,
     docKey: null
