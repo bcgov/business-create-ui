@@ -200,6 +200,7 @@
               <FileUploadPreview
                 :inputFileLabel="INPUT_FILE_LABEL"
                 :maxSize="MAX_FILE_SIZE"
+                :pdfPageSize="PdfPageSize.LETTER_SIZE"
                 :inputFile="uploadMemorandumDoc"
                 :showErrors="getShowErrors"
                 :customErrorMessage="fileUploadCustomErrorMsg"
@@ -231,7 +232,7 @@ import {
 } from '@/interfaces'
 
 // Enums
-import { RouteNames, ItemTypes } from '@/enums'
+import { RouteNames, ItemTypes, PdfPageSize } from '@/enums'
 
 // Mixins
 import { CommonMixin, DocumentMixin } from '@/mixins'
@@ -272,6 +273,7 @@ export default class UploadMemorandum extends Mixins(CommonMixin, DocumentMixin)
   // Enum for template
   readonly RouteNames = RouteNames
   readonly ItemTypes = ItemTypes
+  readonly PdfPageSize = PdfPageSize
 
   private get documentURL ():string {
     return sessionStorage.getItem('BASE_URL') +
@@ -287,7 +289,7 @@ export default class UploadMemorandum extends Mixins(CommonMixin, DocumentMixin)
     this.uploadMemorandumDocKey = null
   }
 
-  private isFileUploadValidFn (val) {
+  private async isFileUploadValidFn (val) {
     this.hasValidUploadFile = val
     this.updateMemorandumStepValidity()
   }
