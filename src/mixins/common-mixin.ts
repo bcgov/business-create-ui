@@ -69,7 +69,7 @@ export default class CommonMixin extends Vue {
    * @param validation items details object
    * @return array of element ids for all validation items
    */
-  buildElementIds (validationItems: ValidationItemDetailIF[]): object {
+  buildElementIds (validationItems: ValidationItemDetailIF[]): string[] {
     return validationItems.map(vi => vi.elementId)
   }
 }
