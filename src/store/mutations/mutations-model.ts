@@ -13,7 +13,8 @@ import {
   ShareClassIF,
   StateIF,
   CreateRulesIF,
-  CreateMemorandumIF
+  CreateMemorandumIF,
+  ValidationDetailIF
 } from '@/interfaces'
 
 export const mutateTempId = (state: StateIF, tempId: string) => {
@@ -145,8 +146,8 @@ export const mutateRules = (state: StateIF, rules: CreateRulesIF) => {
   if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
 }
 
-export const mutateRulesStepValidity = (state: StateIF, valid: boolean) => {
-  state.stateModel.createRulesStep.valid = valid
+export const mutateRulesStepValidity = (state: StateIF, validationDetail: ValidationDetailIF) => {
+  state.stateModel.createRulesStep.validationDetail = validationDetail
 }
 
 export const mutateMemorandum = (state: StateIF, memorandum: CreateMemorandumIF) => {
@@ -154,8 +155,8 @@ export const mutateMemorandum = (state: StateIF, memorandum: CreateMemorandumIF)
   if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
 }
 
-export const mutateMemorandumStepValidity = (state: StateIF, valid: boolean) => {
-  state.stateModel.createMemorandumStep.valid = valid
+export const mutateMemorandumStepValidity = (state: StateIF, validationDetail: ValidationDetailIF) => {
+  state.stateModel.createMemorandumStep.validationDetail = validationDetail
 }
 
 export const mutateShareClasses = (state: StateIF, shareClasses: ShareClassIF[]) => {

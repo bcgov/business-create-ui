@@ -2,7 +2,7 @@
   <div id="upload-memorandum">
     <section class="mt-10">
       <header>
-        <h2>1. Memorandum of the Association</h2>
+        <h2>1. Memorandum of Association</h2>
         <p>Before submitting your incorporation application you must <b>complete, sign, and date</b> the
           <v-tooltip top max-width="20rem" content-class="top-tooltip">
             <template v-slot:activator="{ on }">
@@ -102,7 +102,7 @@
               id="chk-confirm-memorandum"
               v-model="memorandumConfirmed"
               :rules="confirmCompletionMemorandum"
-              label="I confirm the following items are included as required in the Memorandum of the Association:"
+              label="I confirm the following items are included as required in the Memorandum of Association:"
               @change="onMemorandumConfirmedChange($event)"
             />
             <ul>
@@ -122,8 +122,9 @@
                       <span v-on="on" class="tool-tip dotted-underline">Dissolution Provision</span>
                     </template>
                     <span>
-                      Dissolution Provision – all cooperative associations should have provisions for the distribution
-                      of their property after they have been dissolved or wound up.</span>
+                      Dissolution Provision – all Cooperative Associations should have provisions for the distribution
+                      of their property after they have been dissolved or wound up.  See example memorandum for
+                      information relevant to your Cooperative Association type.</span>
                   </v-tooltip>
                    in the Memorandum of Association.
                 </span>
@@ -139,8 +140,8 @@
                           <span v-on="on" class="tool-tip dotted-underline">correct type of shares</span>
                         </template>
                         <span>
-                          Correct type of shares – housing cooperative associations and community service cooperatives
-                          must not issue investment shares.
+                          Housing Cooperative Associations and Community Service Cooperative Associations
+                          MUST NOT issue investment shares.
                         </span>
                       </v-tooltip>
                       are used in the Memorandum of Association based on the type of
@@ -153,7 +154,7 @@
                 <v-row>
                   <v-col cols="1"><v-icon>mdi-circle-small</v-icon></v-col>
                   <v-col cols="11" class="ml-n11">
-                    <span>Each Subscriber and Witness has signed and dated the Memorandum of the
+                    <span>Each Subscriber and Witness has signed and dated the Memorandum of
                       Association and their name is printed under their signature.
                     </span>
                   </v-col>
@@ -225,7 +226,8 @@ import {
   CreateMemorandumResourceIF,
   DocumentUpload,
   NameRequestDetailsIF,
-  FormType
+  FormType,
+  ValidationDetailIF
 } from '@/interfaces'
 
 // Enums
@@ -287,7 +289,7 @@ export default class UploadMemorandum extends Mixins(CommonMixin, DocumentMixin)
 
   private isFileUploadValidFn (val) {
     this.hasValidUploadFile = val
-    this.setMemorandumStepValidity(this.hasValidUploadFile && this.hasMemorandumConfirmed)
+    this.updateMemorandumStepValidity()
   }
 
   private async fileSelected (file) {
@@ -331,15 +333,27 @@ export default class UploadMemorandum extends Mixins(CommonMixin, DocumentMixin)
         // put file uploader into manual error mode by passing custom error message
         this.fileUploadCustomErrorMsg = this.UPLOAD_FAILED_MESSAGE
         this.hasValidUploadFile = false
-        this.setMemorandumStepValidity(this.hasValidUploadFile && this.hasMemorandumConfirmed)
+        this.updateMemorandumStepValidity()
         this.uploadMemorandumDocKey = null
       }
     }
   }
 
+  private updateMemorandumStepValidity () {
+    const validationDetail:ValidationDetailIF =
+      {
+        valid: this.hasMemorandumConfirmed && this.hasValidUploadFile,
+        validationItemDetails: [
+          { name: 'hasMemorandumConfirmed', valid: this.hasMemorandumConfirmed, elementId: 'memorandum-confirm-header' },
+          { name: 'hasValidUploadFile', valid: this.hasValidUploadFile, elementId: 'upload-memorandum-header' }
+        ]
+      }
+    this.setMemorandumStepValidity(validationDetail)
+  }
+
   private onMemorandumConfirmedChange (memorandumConfirmed: boolean): void {
     this.hasMemorandumConfirmed = memorandumConfirmed
-    this.setMemorandumStepValidity(this.hasMemorandumConfirmed && this.hasValidUploadFile)
+    this.updateMemorandumStepValidity()
     this.setMemorandum({
       ...this.getCreateMemorandumStep,
       memorandumConfirmed: memorandumConfirmed
@@ -353,31 +367,13 @@ export default class UploadMemorandum extends Mixins(CommonMixin, DocumentMixin)
     this.memorandumConfirmed = !!this.getCreateMemorandumStep.memorandumConfirmed
     this.hasValidUploadFile = !!this.uploadMemorandumDocKey
     this.hasMemorandumConfirmed = this.memorandumConfirmed
-    this.setMemorandumStepValidity(this.hasValidUploadFile && this.hasMemorandumConfirmed)
+    this.updateMemorandumStepValidity()
   }
 
   @Watch('getShowErrors')
   private onShowErrorsChanged (): void {
     if (this.getShowErrors && this.$refs.confirmMemorandumChk) {
       this.$refs.confirmMemorandumChk.validate()
-    }
-  }
-
-  @Watch('$route')
-  private async scrollToInvalidComponent (): Promise<void> {
-    if (this.getShowErrors && this.$route.name === RouteNames.CREATE_MEMORANDUM) {
-      // Scroll to invalid components.
-      await Vue.nextTick()
-      await this.validateAndScroll(
-        {
-          hasValidUploadFile: this.hasValidUploadFile,
-          hasMemorandumConfirmed: this.hasMemorandumConfirmed
-        },
-        [
-          'upload-memorandum-header',
-          'memorandum-confirm-header'
-        ]
-      )
     }
   }
 }

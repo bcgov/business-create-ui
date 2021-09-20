@@ -158,7 +158,7 @@ export const getCreateRulesStep = (state: StateIF): CreateRulesIF => {
 
 /** Is true when the step is valid. */
 export const isRulesValid = (state: StateIF): boolean => {
-  return getCreateRulesStep(state).valid
+  return getCreateRulesStep(state).validationDetail.valid
 }
 
 /** The Incorporation Agreement object. */
@@ -168,7 +168,7 @@ export const getIncorporationAgreementStep = (state: StateIF): IncorporationAgre
 
 /** Is true when the step is valid. */
 export const isMemorandumValid = (state: StateIF): boolean => {
-  return getCreateMemorandumStep(state).valid
+  return getCreateMemorandumStep(state).validationDetail.valid
 }
 
 /** The Create Memorandum object. */
@@ -291,8 +291,8 @@ export const isApplicationValid = (state: StateIF): boolean => {
   // Coop steps
   const isCoopStepsValid = (
     getCooperativeType(state) &&
-    getCreateRulesStep(state).valid &&
-    getCreateMemorandumStep(state).valid
+    getCreateRulesStep(state).validationDetail.valid &&
+    getCreateMemorandumStep(state).validationDetail.valid
   )
 
   return (

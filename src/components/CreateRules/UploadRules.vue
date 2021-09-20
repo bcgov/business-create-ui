@@ -174,7 +174,8 @@ import {
   CreateRulesResourceIF,
   DocumentUpload,
   NameRequestDetailsIF,
-  FormType
+  FormType,
+  ValidationDetailIF
 } from '@/interfaces'
 
 // Enums
@@ -231,7 +232,7 @@ export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
 
   private isFileUploadValidFn (val) {
     this.hasValidUploadFile = val
-    this.setRulesStepValidity(this.hasValidUploadFile && this.hasRulesConfirmed)
+    this.updateRulesStepValidity()
   }
 
   private async fileSelected (file) {
@@ -275,15 +276,27 @@ export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
         // put file uploader into manual error mode by passing custom error message
         this.fileUploadCustomErrorMsg = this.UPLOAD_FAILED_MESSAGE
         this.hasValidUploadFile = false
-        this.setRulesStepValidity(this.hasValidUploadFile && this.hasRulesConfirmed)
+        this.updateRulesStepValidity()
         this.uploadRulesDocKey = null
       }
     }
   }
 
+  private updateRulesStepValidity () {
+    const validationDetail:ValidationDetailIF =
+      {
+        valid: this.hasRulesConfirmed && this.hasValidUploadFile,
+        validationItemDetails: [
+          { name: 'hasRulesConfirmed', valid: this.hasRulesConfirmed, elementId: 'rules-confirm-header' },
+          { name: 'hasValidUploadFile', valid: this.hasValidUploadFile, elementId: 'upload-rules-header' }
+        ]
+      }
+    this.setRulesStepValidity(validationDetail)
+  }
+
   private onRulesConfirmedChange (rulesConfirmed: boolean): void {
     this.hasRulesConfirmed = rulesConfirmed
-    this.setRulesStepValidity(this.hasRulesConfirmed && this.hasValidUploadFile)
+    this.updateRulesStepValidity()
     this.setRules({
       ...this.getCreateRulesStep,
       rulesConfirmed: rulesConfirmed
@@ -297,31 +310,13 @@ export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
     this.rulesConfirmed = !!this.getCreateRulesStep.rulesConfirmed
     this.hasValidUploadFile = !!this.uploadRulesDocKey
     this.hasRulesConfirmed = this.rulesConfirmed
-    this.setRulesStepValidity(this.hasValidUploadFile && this.hasRulesConfirmed)
+    this.updateRulesStepValidity()
   }
 
   @Watch('getShowErrors')
   private onShowErrorsChanged (): void {
     if (this.getShowErrors && this.$refs.confirmRulesChk) {
       this.$refs.confirmRulesChk.validate()
-    }
-  }
-
-  @Watch('$route')
-  private async scrollToInvalidComponent (): Promise<void> {
-    if (this.getShowErrors && this.$route.name === RouteNames.CREATE_RULES) {
-      // Scroll to invalid components.
-      await Vue.nextTick()
-      await this.validateAndScroll(
-        {
-          hasValidUploadFile: this.hasValidUploadFile,
-          hasRulesConfirmed: this.hasRulesConfirmed
-        },
-        [
-          'upload-rules-header',
-          'rules-confirm-header'
-        ]
-      )
     }
   }
 }

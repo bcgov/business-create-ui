@@ -3,6 +3,8 @@ export * from './utils-interfaces/form-type'
 export * from './utils-interfaces/confirm-dialog-type'
 export * from './utils-interfaces/document-upload-interface'
 export * from './utils-interfaces/doc-interface'
+export * from './utils-interfaces/validation-detail-interface'
+export * from './utils-interfaces/validation-item-detail-interface'
 
 // Store Interfaces
 export * from './store-interfaces/state-interface'

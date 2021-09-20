@@ -5,7 +5,7 @@
       <label class="upload-memorandum-title pl-2"><strong>Memorandum</strong></label>
     </div>
 
-    <div v-if="!getCreateMemorandumStep.valid" class="invalid-section pl-5">
+    <div v-if="!getCreateMemorandumStep.validationDetail.valid" class="invalid-section pl-5">
       <div class="upload-memorandum-error-message">
         <span>
           <v-icon color="error">mdi-information-outline</v-icon>
@@ -17,7 +17,7 @@
       </div>
     </div>
 
-    <div v-if="getCreateMemorandumStep.valid" class="upload-memorandum-success-message pl-5">
+    <div v-if="getCreateMemorandumStep.validationDetail.valid" class="upload-memorandum-success-message pl-5">
       <v-row no-gutters>
         <v-col md="1">
           <v-icon class="upload-success-chk">mdi-check</v-icon>
