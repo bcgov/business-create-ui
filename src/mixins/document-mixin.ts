@@ -10,12 +10,12 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dis
 export default class DocumentMixin extends Vue {
   readonly UPLOAD_FAILED_MESSAGE = 'An error occurred while uploading.  Please try again.'
   readonly MAX_FILE_SIZE = 10 * 1024 // 10 MB in KB
-  readonly pageSizeInfo = {
+  readonly pageSizeDict = {
     'LETTER': {
       'pointsPerInch': 72,
       'width': 8.5,
       'height': 11,
-      'validationErrorMsg': 'Document must be set to fit onto 8 ½” x 11” letter-size paper'
+      'validationErrorMsg': 'Document must be set to fit onto 8.5” x 11” letter-size paper'
     }
   }
 
@@ -56,10 +56,10 @@ export default class DocumentMixin extends Vue {
    * @param pageSize enum value used to represent page size to check for
    * @return Promise<boolean> whether pdf file is expected page size
    */
-  async isPageSize (file, pageSize: PdfPageSize): Promise<boolean> {
-    const pageSizeInfo = this.pageSizeInfo[pageSize]
+  async isPageSize (file: File, pageSize: PdfPageSize): Promise<boolean> {
+    const pageSizeInfo = this.pageSizeDict[pageSize]
     const pdfBufferData = await file.arrayBuffer()
-    const pdfData = new Uint8Array(pdfBufferData) // put it in a Uint8Array
+    const pdfData = new Uint8Array(pdfBufferData) // put it in a Uint8Arrayza
     const pdf = await pdfjsLib.getDocument({ data: pdfData })
     const p1 = await pdf.getPage(1)
     const [x, y, w, h] = p1._pageInfo.view

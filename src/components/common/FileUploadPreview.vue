@@ -94,7 +94,7 @@ export default class FileUploadPreview extends Mixins(DocumentMixin) {
       let pageSizeIsValid = await this.validatePageSize(file)
       if (!pageSizeIsValid) {
         // show page size validation error
-        const pageSizeErrorMsg = this.pageSizeInfo[this.pdfPageSize].validationErrorMsg
+        const pageSizeErrorMsg = this.pageSizeDict[this.pdfPageSize].validationErrorMsg
         this.customErrorMessages = [pageSizeErrorMsg]
       }
       return isValid && pageSizeIsValid
