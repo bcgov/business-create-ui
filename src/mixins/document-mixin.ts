@@ -4,7 +4,7 @@ import { Component, Vue } from 'vue-property-decorator'
 import { DocumentUpload } from '@/interfaces'
 import { PdfPageSize } from '@/enums'
 import pdfjsLib from 'pdfjs-dist/build/pdf'
-pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@2.0.943/build/pdf.worker.min.js'
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'public/js/pdf.worker.min.js'
 
 @Component({})
 export default class DocumentMixin extends Vue {
@@ -59,7 +59,7 @@ export default class DocumentMixin extends Vue {
   async isPageSize (file: File, pageSize: PdfPageSize): Promise<boolean> {
     const pageSizeInfo = this.pageSizeDict[pageSize]
     const pdfBufferData = await file.arrayBuffer()
-    const pdfData = new Uint8Array(pdfBufferData) // put it in a Uint8Arrayza
+    const pdfData = new Uint8Array(pdfBufferData) // put it in a Uint8Array
     const pdf = await pdfjsLib.getDocument({ data: pdfData })
     const p1 = await pdf.getPage(1)
     const [x, y, w, h] = p1._pageInfo.view

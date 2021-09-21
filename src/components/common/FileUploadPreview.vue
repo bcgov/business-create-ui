@@ -48,8 +48,8 @@ export default class FileUploadPreview extends Mixins(DocumentMixin) {
     fileUploadInput: HTMLFormElement
   }
 
-  private fileUpload = null
-  private customErrorMessages = []
+  private fileUpload:File = null
+  private customErrorMessages:string[] = []
 
   private fileUploadRules = [
     (v) => {
@@ -68,12 +68,11 @@ export default class FileUploadPreview extends Mixins(DocumentMixin) {
     }
   ]
 
-  mounted () {
+  async mounted () {
     if (this.inputFile) {
       this.fileUpload = this.inputFile
-      this.$nextTick(() => {
-        this.isFileValid(this.fileUpload)
-      })
+      await this.$nextTick()
+      this.isFileValid(this.fileUpload)
     }
   }
 
