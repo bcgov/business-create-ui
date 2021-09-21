@@ -295,13 +295,16 @@ export const isApplicationValid = (state: StateIF): boolean => {
     getCreateMemorandumStep(state).validationDetail.valid
   )
 
+  // Validate different steps for Base Companies vs Coops
+  const isDocumentValid = isBaseCompany(state) ? isBaseStepsValid : isCoopStepsValid
+
+  const isCertifyValid = getCertifyState(state).valid && !!getCertifyState(state).certifiedBy
+
   return (
     getDefineCompanyStep(state).valid &&
     getAddPeopleAndRoleStep(state).valid &&
-    // Validate different steps for Base Companies vs Coops
-    isBaseCompany(state) ? isBaseStepsValid : isCoopStepsValid &&
-    getCertifyState(state).valid &&
-    !!getCertifyState(state).certifiedBy
+    isDocumentValid &&
+    isCertifyValid
   )
 }
 
