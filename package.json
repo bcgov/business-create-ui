@@ -1,6 +1,6 @@
 {
   "name": "business-create-ui",
-  "version": "2.0.23",
+  "version": "2.1.2",
   "private": true,
   "appName": "Create UI",
   "sbcName": "SBC Common Components",
@@ -24,6 +24,7 @@
     "http-status-codes": "^1.4.0",
     "launchdarkly-js-client-sdk": "^2.18.0",
     "lodash": "^4.17.20",
+    "pdfjs-dist": "2.0.943",
     "regenerator-runtime": "^0.13.7",
     "sbc-common-components": "2.4.19",
     "uuid": "^8.3.1",

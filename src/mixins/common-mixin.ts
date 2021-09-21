@@ -1,5 +1,6 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { omit, isEqual } from 'lodash'
+import { ValidationItemDetailIF } from '@/interfaces'
 
 /**
  * Mixin that provides some useful common utilities.
@@ -50,5 +51,25 @@ export default class CommonMixin extends Vue {
       return false
     }
     return true
+  }
+
+  /**
+   * Extracts validation flags from validation item detail object
+   * @param validation items details object
+   * @return array of validation flags for all validation items
+   */
+  buildValidFlags (validationItems: ValidationItemDetailIF[]): object {
+    let result = {}
+    for (const vi of validationItems) { result[vi.name] = vi.valid }
+    return result
+  }
+
+  /**
+   * Extracts element ids from validation item detail object
+   * @param validation items details object
+   * @return array of element ids for all validation items
+   */
+  buildElementIds (validationItems: ValidationItemDetailIF[]): string[] {
+    return validationItems.map(vi => vi.elementId)
   }
 }
