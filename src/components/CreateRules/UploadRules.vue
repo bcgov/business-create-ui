@@ -120,7 +120,7 @@
         <ul class="mt-5">
           <li class="mt-1">
             <v-icon>mdi-circle-small</v-icon>
-            <span class="chk-list-item-txt">Must be set to fit onto 8 <sup>1</sup>&frasl;<sub>2</sub>" x 11"
+            <span class="chk-list-item-txt">Must be set to fit onto 8.5" x 11"
               letter-size paper
             </span>
           </li>
@@ -148,6 +148,7 @@
               <FileUploadPreview
                 :inputFileLabel="INPUT_FILE_LABEL"
                 :maxSize="MAX_FILE_SIZE"
+                :pdfPageSize="PdfPageSize.LETTER_SIZE"
                 :inputFile="uploadRulesDoc"
                 :showErrors="getShowErrors"
                 :customErrorMessage="fileUploadCustomErrorMsg"
@@ -164,7 +165,7 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Mixins, Prop, Vue, Watch } from 'vue-property-decorator'
+import { Component, Mixins, Watch, Vue } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 
 // Interfaces
@@ -179,7 +180,7 @@ import {
 } from '@/interfaces'
 
 // Enums
-import { RouteNames, ItemTypes } from '@/enums'
+import { RouteNames, ItemTypes, PdfPageSize } from '@/enums'
 
 // Mixins
 import { CommonMixin, DocumentMixin } from '@/mixins'
@@ -220,6 +221,7 @@ export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
   // Enum for template
   readonly RouteNames = RouteNames
   readonly ItemTypes = ItemTypes
+  readonly PdfPageSize = PdfPageSize
 
   private confirmCompletionRules = [
     (v) => { return !!v }

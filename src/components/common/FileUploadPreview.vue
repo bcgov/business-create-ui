@@ -24,26 +24,32 @@
 </template>
 
 <script lang="ts">
-import { Component, Emit, Prop, Watch } from 'vue-property-decorator'
-import Vue from 'vue'
+// Libraries
+import { Component, Emit, Mixins, Prop, Watch } from 'vue-property-decorator'
+
+// Mixins
+import { DocumentMixin } from '@/mixins'
+import { PdfPageSize } from '@/enums'
 
 @Component({
   components: {}
 })
-export default class FileUploadPreview extends Vue {
+export default class FileUploadPreview extends Mixins(DocumentMixin) {
   @Prop() inputFile: File
   @Prop({ default: 'File' }) inputFileLabel: string
   @Prop({ default: true }) isRequired: boolean
   @Prop({ default: 0 }) maxSize: number // in KB
+  @Prop({ default: null }) pdfPageSize: PdfPageSize
   @Prop({ default: false }) showErrors!: boolean
   @Prop({ default: '' }) customErrorMessage: string
 
-  private fileUpload = null
-  private customErrorMessages = []
-
+  // Refs
   $refs: {
     fileUploadInput: HTMLFormElement
   }
+
+  private fileUpload:File = null
+  private customErrorMessages:string[] = []
 
   private fileUploadRules = [
     (v) => {
@@ -62,12 +68,11 @@ export default class FileUploadPreview extends Vue {
     }
   ]
 
-  mounted () {
+  async mounted () {
     if (this.inputFile) {
       this.fileUpload = this.inputFile
-      this.$nextTick(() => {
-        this.isFileValid()
-      })
+      await this.$nextTick()
+      this.isFileValid(this.fileUpload)
     }
   }
 
@@ -75,21 +80,51 @@ export default class FileUploadPreview extends Vue {
     this.emitFileSelected(file)
   }
 
+  // Note: the validation is done this way as opposed to being all defined in the validation rules(fileUploadRules)
+  //  above because Vuetify does not support async validation out of the box.  This was needed to work
+  //  around this limitation.  vuelidate does support this but this would mean introducing a component that
+  //  is using a different validation approach or updating all components to use vuelidate.  Have decided
+  //  to do this for the time being.
+  private async validateFileInput (file) {
+    this.customErrorMessages = []
+    let isValid = this.$refs.fileUploadInput.validate()
+    // only perform page size validation when other validation has passed
+    if (isValid) {
+      let pageSizeIsValid = await this.validatePageSize(file)
+      if (!pageSizeIsValid) {
+        // show page size validation error
+        const pageSizeErrorMsg = this.pageSizeDict[this.pdfPageSize].validationErrorMsg
+        this.customErrorMessages = [pageSizeErrorMsg]
+      }
+      return isValid && pageSizeIsValid
+    }
+    return isValid
+  }
+
+  private async validatePageSize (file): Promise<boolean|string> {
+    if (this.pdfPageSize && typeof file.arrayBuffer !== 'undefined') {
+      const isValidPageSize = await this.isPageSize(file, this.pdfPageSize)
+      return isValidPageSize
+    }
+    return true
+  }
+
   @Emit('fileSelected')
-  emitFileSelected (file) {
-    this.isFileValid()
+  async emitFileSelected (file) {
+    await this.isFileValid(file)
     return file
   }
 
   @Emit('isFileValid')
-  isFileValid () {
-    return this.$refs.fileUploadInput.validate()
+  async isFileValid (file) {
+    const result = await this.validateFileInput(file)
+    return result
   }
 
   @Watch('showErrors')
   private onShowErrorsChanged (): void {
     if (this.showErrors) {
-      this.$refs.fileUploadInput.validate()
+      this.validateFileInput(this.fileUpload)
     }
   }
 
