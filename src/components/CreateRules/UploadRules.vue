@@ -232,7 +232,7 @@ export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
     this.uploadRulesDocKey = null
   }
 
-  private async isFileUploadValidFn (val) {
+  private isFileUploadValidFn (val) {
     this.hasValidUploadFile = val
     this.updateRulesStepValidity()
   }

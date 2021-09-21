@@ -289,7 +289,7 @@ export default class UploadMemorandum extends Mixins(CommonMixin, DocumentMixin)
     this.uploadMemorandumDocKey = null
   }
 
-  private async isFileUploadValidFn (val) {
+  private isFileUploadValidFn (val) {
     this.hasValidUploadFile = val
     this.updateMemorandumStepValidity()
   }
