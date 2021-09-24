@@ -188,7 +188,7 @@ describe('FileUploadPreview component', () => {
     expect(wrapper.find('.error--text .v-messages__message').exists()).toBeFalsy()
 
     wrapper.destroy()
-  })
+  }, 30000)
 
   it('rejects when pdf page size is not accepted size', async () => {
     const fs = require('fs')
@@ -211,7 +211,7 @@ describe('FileUploadPreview component', () => {
     expect(messages.at(0).text()).toBe('Document must be set to fit onto 8.5” x 11” letter-size paper')
 
     wrapper.destroy()
-  })
+  }, 30000)
 
   it('rejects encrypted files', async () => {
     const fs = require('fs')

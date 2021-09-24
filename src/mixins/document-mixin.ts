@@ -3,7 +3,7 @@ import axios from '@/utils/axios-auth'
 import { Component, Vue } from 'vue-property-decorator'
 import { DocumentUpload } from '@/interfaces'
 import { PdfPageSize } from '@/enums'
-const pdfjsLib = require('pdfjs-dist/build/pdf')
+import pdfjsLib from 'pdfjs-dist/build/pdf'
 pdfjsLib.GlobalWorkerOptions.workerSrc = require('pdfjs-dist/build/pdf.worker.entry')
 
 @Component({})
