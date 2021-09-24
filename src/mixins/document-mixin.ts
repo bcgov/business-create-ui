@@ -4,7 +4,9 @@ import { Component, Vue } from 'vue-property-decorator'
 import { DocumentUpload } from '@/interfaces'
 import { PdfPageSize } from '@/enums'
 import pdfjsLib from 'pdfjs-dist/build/pdf'
-pdfjsLib.GlobalWorkerOptions.workerSrc = 'public/js/pdf.worker.min.js'
+import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.entry'
+// Note: needs to be defined this way to work in tests
+pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker
 
 @Component({})
 export default class DocumentMixin extends Vue {
