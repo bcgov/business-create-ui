@@ -69,4 +69,16 @@ export default class DocumentMixin extends Vue {
       (height / pageSizeInfo.pointsPerInch === pageSizeInfo.height)
     return isvalidPageSize
   }
+
+  async isEncrypted (file: File): Promise<boolean> {
+    try {
+      const pdfBufferData = await file.arrayBuffer()
+      const pdfData = new Uint8Array(pdfBufferData) // put it in a Uint8Array
+      const pdf = await pdfjsLib.getDocument({ data: pdfData })
+      return false
+    } catch (e) {
+      if (e.name === 'PasswordException') { return true }
+    }
+    return false
+  }
 }

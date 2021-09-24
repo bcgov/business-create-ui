@@ -204,11 +204,34 @@ describe('FileUploadPreview component', () => {
     inputFilesGet.mockReturnValue([nonLetterSizePdf])
     fileInput.trigger('change')
 
-    await waitForUpdate(3)
+    await waitForUpdate(5)
 
     const messages = wrapper.findAll('.error--text .v-messages__message')
     expect(messages.length).toBe(1)
     expect(messages.at(0).text()).toBe('Document must be set to fit onto 8.5” x 11” letter-size paper')
+
+    wrapper.destroy()
+  })
+
+  it('rejects encrypted files', async () => {
+    const fs = require('fs')
+    const data = fs.readFileSync('./tests/unit/test-data/encrypted.pdf', 'utf8')
+    const encryptedPdf = new File([data], 'encrypted.pdf', { type: 'application/pdf' })
+    const wrapper = mount(FileUploadPreview, {
+      propsData: { pdfPageSize: PdfPageSize.LETTER_SIZE },
+      vuetify
+    })
+    const fileInput = wrapper.find('input[type="file"]')
+    setupFileInput(fileInput)
+    inputValue = encryptedPdf.name
+    inputFilesGet.mockReturnValue([encryptedPdf])
+    fileInput.trigger('change')
+
+    await waitForUpdate(3)
+
+    const messages = wrapper.findAll('.error--text .v-messages__message')
+    expect(messages.length).toBe(1)
+    expect(messages.at(0).text()).toBe('File must be unencrypted')
 
     wrapper.destroy()
   })
@@ -223,9 +246,7 @@ describe('FileUploadPreview component', () => {
     inputValue = oneMBFile.name
     inputFilesGet.mockReturnValue([oneMBFile])
     fileInput.trigger('change')
-    await flushPromises()
-    await Vue.nextTick()
-
+    await waitForUpdate(3)
     expect(wrapper.emitted('fileSelected').pop()[0]).toEqual(oneMBFile)
 
     wrapper.destroy()
@@ -241,8 +262,7 @@ describe('FileUploadPreview component', () => {
     inputValue = oneMBFile.name
     inputFilesGet.mockReturnValue([oneMBFile])
     fileInput.trigger('change')
-    await flushPromises()
-    await Vue.nextTick()
+    await waitForUpdate(3)
 
     expect(wrapper.emitted('isFileValid').pop()[0]).toEqual(true)
 

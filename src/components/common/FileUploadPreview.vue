@@ -90,6 +90,11 @@ export default class FileUploadPreview extends Mixins(DocumentMixin) {
     let isValid = this.$refs.fileUploadInput.validate()
     // only perform page size validation when other validation has passed
     if (isValid) {
+      const isEncrypted = await this.isEncrypted(file)
+      if (isEncrypted) {
+        this.customErrorMessages = ['File must be unencrypted']
+        return false
+      }
       let pageSizeIsValid = await this.validatePageSize(file)
       if (!pageSizeIsValid) {
         // show page size validation error
