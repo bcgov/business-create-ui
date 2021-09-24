@@ -3,10 +3,8 @@ import axios from '@/utils/axios-auth'
 import { Component, Vue } from 'vue-property-decorator'
 import { DocumentUpload } from '@/interfaces'
 import { PdfPageSize } from '@/enums'
-import pdfjsLib from 'pdfjs-dist/build/pdf'
-import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.entry'
-// Note: needs to be defined this way to work in tests
-pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker
+const pdfjsLib = require('pdfjs-dist/build/pdf')
+pdfjsLib.GlobalWorkerOptions.workerSrc = require('pdfjs-dist/build/pdf.worker.entry')
 
 @Component({})
 export default class DocumentMixin extends Vue {
