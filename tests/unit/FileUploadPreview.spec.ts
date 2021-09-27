@@ -236,6 +236,30 @@ describe('FileUploadPreview component', () => {
     wrapper.destroy()
   })
 
+  it('rejects copy, print and edit locked file', async () => {
+    const fs = require('fs')
+    const data = fs.readFileSync('./tests/unit/test-data/copyPrintEditContentLocked.pdf', 'utf8')
+    const encryptedPdf =
+      new File([data], 'copyPrintEditContentLocked.pdf', { type: 'application/pdf' })
+    const wrapper = mount(FileUploadPreview, {
+      propsData: { pdfPageSize: PdfPageSize.LETTER_SIZE },
+      vuetify
+    })
+    const fileInput = wrapper.find('input[type="file"]')
+    setupFileInput(fileInput)
+    inputValue = encryptedPdf.name
+    inputFilesGet.mockReturnValue([encryptedPdf])
+    fileInput.trigger('change')
+
+    await waitForUpdate(3)
+
+    const messages = wrapper.findAll('.error--text .v-messages__message')
+    expect(messages.length).toBe(1)
+    expect(messages.at(0).text()).toBe('File content cannot be locked')
+
+    wrapper.destroy()
+  })
+
   it('fileSelected event emitted when file is selected', async () => {
     const wrapper = mount(FileUploadPreview, {
       propsData: { maxSize: 10 * 1024 },
