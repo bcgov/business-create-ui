@@ -89,8 +89,18 @@ export default class FileUploadPreview extends Mixins(DocumentMixin) {
     this.customErrorMessages = []
     let isValid = this.$refs.fileUploadInput.validate()
     // only perform page size validation when other validation has passed
-    if (isValid) {
-      let pageSizeIsValid = await this.validatePageSize(file)
+    if (isValid && file) {
+      if (typeof file.arrayBuffer === 'undefined') { return true }
+      const fileInfo = await this.retrieveFileInfo(file)
+      if (fileInfo.isEncrypted) {
+        this.customErrorMessages = ['File must be unencrypted']
+        return false
+      }
+      if (fileInfo.isContentLocked) {
+        this.customErrorMessages = ['File content cannot be locked']
+        return false
+      }
+      const pageSizeIsValid = await this.validatePageSize(file)
       if (!pageSizeIsValid) {
         // show page size validation error
         const pageSizeErrorMsg = this.pageSizeDict[this.pdfPageSize].validationErrorMsg
