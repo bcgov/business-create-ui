@@ -1,20 +1,20 @@
-import { ResourceIF } from '@/interfaces'
+import { IncorporationResourceIF } from '@/interfaces'
 import { CorpTypeCd, FilingCodes, NameRequestTypes, Rules } from '@/enums'
 import { BaseStepsTemplate } from './stepTemplates'
 import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 
-export const UnlimitedCompanyResource: ResourceIF = {
-  entityType: CorpTypeCd.BC_ULC_COMPANY,
-  displayName: GetCorpFullDescription(CorpTypeCd.BC_ULC_COMPANY),
-  title: 'Unlimited Liability Company Statement',
-  description: 'The shareholders of this company are jointly and severally liable to satisfy the debts and ' +
-    'liabilities of this company to the extent provided in section 51.3 of the Business Corporations Act.',
+export const BenefitCompanyResource: IncorporationResourceIF = {
+  entityType: CorpTypeCd.BENEFIT_COMPANY,
+  displayName: GetCorpFullDescription(CorpTypeCd.BENEFIT_COMPANY),
+  title: 'Benefit Company Statement',
+  description: 'This company is a benefit company and, as such, has purposes that include conducting its ' +
+    'business in a responsible and sustainable manner and promoting one or more public benefits.',
   statement: null,
-  nameRequestType: NameRequestTypes.UL,
+  nameRequestType: NameRequestTypes.BC,
   steps: BaseStepsTemplate,
   filingData: {
-    entityType: CorpTypeCd.BC_ULC_COMPANY,
-    filingTypeCode: FilingCodes.INCORPORATION_ULC
+    entityType: CorpTypeCd.BENEFIT_COMPANY,
+    filingTypeCode: FilingCodes.INCORPORATION_BEN
   },
   peopleAndRoles: {
     header: '1. Add People or Corporations/Firms to your Application',
@@ -47,30 +47,39 @@ export const UnlimitedCompanyResource: ResourceIF = {
   incorporationAgreement: {
     helpSection: [
       {
-        header: `What is the sample Incorporation Agreement and Table 1 Articles?`,
+        header: `What is the sample Incorporation Agreement and Benefit Company Articles?`,
         helpText: [
-          `The sample Incorporation Agreement and Table 1 Articles is a template that you can use to create an
-            incorporation agreement and articles for your company. It uses all the standard provisions suggested by
-            legislation.`,
-          `If you would like to customize any provisions in the Articles, you cannot use this sample. We recommend
-            seeking professional assistance from a lawyer or accountant to help you prepare your Articles.`
+          `The sample Incorporation Agreement and Benefit Company Articles is a template that you can use
+            to create an incorporation agreement and articles for your company. It uses all the standard
+            provisions suggested by legislation and also includes a place to specify the company's benefit
+            provision.`,
+          `If you would like to customize any other provisions in the Articles, you cannot use this sample. We
+            recommend seeking professional assistance from a lawyer or accountant to help you prepare your Articles.`
         ]
       },
       {
-        header: `Can I use the sample Incorporation Agreement and Table 1 Articles?`
+        header: `What is a Benefit Provision?`,
+        helpText: [
+          `A Benefit Provision is a statement by the company of its public benefits and its commitments to promote
+            those public benefits and to conduct business in a responsible and sustainable manner.`,
+          `A Benefit Company must include a benefit provision in its Articles.`
+        ]
       },
       {
-        header: `You can use the Incorporation Agreement and Table 1 Articles if:`,
+        header: `Can I use the sample Incorporation Agreement and Benefit Company Articles?`
+      },
+      {
+        header: `You can use the sample Articles if:`,
         icon: 'mdi-check',
         iconColor: 'green darken-2',
         statements: [
           `There are no special rights or restrictions attached to any class or series of shares in
-            the corporation's authorized share structure.`,
+            the corporation’s authorized share structure.`,
           `You do not wish to change any of the standard provisions in the sample Articles.`
         ]
       },
       {
-        header: `You cannot use the Incorporation Agreement and Table 1 Articles if:`,
+        header: `You cannot use the sample Articles if:`,
         icon: 'mdi-close',
         iconColor: 'red',
         statements: [
@@ -80,16 +89,16 @@ export const UnlimitedCompanyResource: ResourceIF = {
         ]
       }
     ],
-    article: 'Sample_articles.pdf',
+    article: 'benefit_company__corporation_agreement.pdf',
     documents: [
       {
-        code: 'Table-1',
-        description: 'The <b>sample Incorporation Agreement and Table 1 Articles</b> ' +
+        code: 'sample',
+        description: 'The <b>sample Incorporation Agreement and Articles</b> containing a benefit provision ' +
           'has been completed and a copy has been added to the company\'s record book.'
       },
       {
         code: 'custom',
-        description: 'The <b>custom Incorporation Agreement and custom Articles</b> ' +
+        description: 'The <b>custom Incorporation Agreement and custom Articles</b> containing a benefit provision ' +
           'has been completed and a copy has been added to the company\'s record book.'
       }
     ]
@@ -100,6 +109,10 @@ export const UnlimitedCompanyResource: ResourceIF = {
         Articles and the Incorporation Agreement applicable to the company that is to be
         incorporated by the filing of this Incorporation Application and confirm that:`,
       certifyStatements: [
+        `The Company Articles and the Incorporation Agreement both contain a signature
+          line for each person identified as an incorporator in the Incorporation Application
+          with the name of that person set out legibly under the signature line,`,
+
         `An original signature has been placed on each of those signature lines,`,
 
         `I have no reason to believe that the signature placed on a signature line is not the

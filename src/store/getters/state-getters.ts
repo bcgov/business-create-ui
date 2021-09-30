@@ -1,4 +1,4 @@
-import { AccountTypes, CoopType, CorpTypeCd } from '@/enums'
+import { AccountTypes, CoopType, CorpTypeCd, FilingTypes } from '@/enums'
 import {
   AccountInformationIF,
   AddressIF,
@@ -24,6 +24,20 @@ import { getMaxStep } from './resource-getters'
 //
 // The getters in this file return values from the current state model.
 //
+
+/** Whether the current filing is an Incorporation. */
+export const isIncorporationFiling = (state: StateIF): boolean => {
+  return getFilingType(state) === FilingTypes.INCORPORATION_APPLICATION
+}
+
+/** Whether the current filing is a Dissolution. */
+export const isDissolutionFiling = (state: StateIF): boolean => {
+  return getFilingType(state) === FilingTypes.DISSOLUTION
+}
+
+export const getFilingType = (state: StateIF): FilingTypes => {
+  return state.stateModel.tombstone.filingType
+}
 
 /** Whether the user has "staff" auth role. */
 export const isRoleStaff = (state: StateIF): boolean => {
@@ -98,6 +112,11 @@ export const getFilingId = (state: StateIF): number => {
 /** The Temporary Business Identifier. */
 export const getTempId = (state: StateIF): string => {
   return state.stateModel.tempId
+}
+
+/** The Business Identifier. */
+export const getBusinessId = (state: StateIF): string => {
+  return state.stateModel.tombstone.businessId
 }
 
 /** Whether this IA is for a Named Business. */

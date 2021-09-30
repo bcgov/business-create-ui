@@ -10,7 +10,7 @@ import {
   NameRequestIF,
   NameTranslationIF,
   PeopleAndRoleIF,
-  ResourceIF,
+  IncorporationResourceIF,
   ShareStructureIF,
   TombstoneIF
 } from '@/interfaces'
@@ -45,5 +45,5 @@ export interface StateModelIF {
 
 export interface StateIF {
   stateModel: StateModelIF
-  resourceModel: ResourceIF
+  resourceModel: IncorporationResourceIF
 }

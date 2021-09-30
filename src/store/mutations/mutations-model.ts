@@ -1,4 +1,4 @@
-import { CoopType, CorpTypeCd } from '@/enums'
+import { CoopType, CorpTypeCd, FilingTypes } from '@/enums'
 import {
   AccountInformationIF,
   AddressIF,
@@ -9,7 +9,6 @@ import {
   NameRequestIF,
   NameTranslationIF,
   OrgPersonIF,
-  ResourceIF,
   ShareClassIF,
   StateIF,
   CreateRulesIF,
@@ -17,12 +16,20 @@ import {
   ValidationDetailIF
 } from '@/interfaces'
 
+export const mutateBusinessId = (state: StateIF, businessId: string) => {
+  state.stateModel.tombstone.businessId = businessId
+}
+
+export const mutateFilingType = (state: StateIF, filingType: FilingTypes) => {
+  state.stateModel.tombstone.filingType = filingType
+}
+
 export const mutateTempId = (state: StateIF, tempId: string) => {
   state.stateModel.tempId = tempId
 }
 
-export const mutateCompanyResources = (state: StateIF, companyResources: ResourceIF): void => {
-  state.resourceModel = companyResources
+export const mutateResources = (state: StateIF, resources: any): void => {
+  state.resourceModel = resources
 }
 
 export const mutateAuthRoles = (state: StateIF, authRoles: Array<string>) => {

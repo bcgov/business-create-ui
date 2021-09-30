@@ -5,14 +5,14 @@ import { DateMixin } from '@/mixins'
 
 // Interfaces
 import {
-  ActionBindingIF, BusinessContactIF, CertifyIF, CreateRulesIF, DateTimeIF, DefineCompanyIF,
+  ActionBindingIF, BusinessContactIF, CertifyIF, CreateRulesIF, DateTimeIF, DefineCompanyIF, DissolutionFilingIF,
   IncorporationAgreementIF, IncorporationFilingIF, NameTranslationIF, PeopleAndRoleIF, DocIF,
   ShareStructureIF, CreateMemorandumIF
 } from '@/interfaces'
 
 // Constants and enums
 import { INCORPORATION_APPLICATION } from '@/constants'
-import { CorpTypeCd } from '@/enums'
+import { CorpTypeCd, FilingNames, FilingTypes } from '@/enums'
 
 /**
  * Mixin that provides the integration with the Legal API.
@@ -38,6 +38,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Getter getCreateRulesStep!: CreateRulesIF
   @Getter getCreateMemorandumStep!: CreateMemorandumIF
   @Getter getMemorandum!: any
+  @Getter getBusinessId!: string
 
   @Action setEntityType!: ActionBindingIF
   @Action setBusinessContact!: ActionBindingIF
@@ -60,7 +61,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
    * Constructs a filing body from store data. Used when saving a filing.
    * @returns the filing body to save
    */
-  buildFiling (): IncorporationFilingIF {
+  buildIncorporationFiling (): IncorporationFilingIF {
     // Build filing.
     const filing: IncorporationFilingIF = {
       filing: {
@@ -142,7 +143,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
    * Parses a draft filing into the store. Used when resuming a filing.
    * @param draftFiling the filing body to parse
    */
-  parseDraft (draftFiling: any): void {
+  parseIncorporationsDraft (draftFiling: any): void {
     // FUTURE: set types so each of these validate their parameters
     // ref: https://www.typescriptlang.org/docs/handbook/generics.html
 
@@ -238,5 +239,41 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
 
     // Set Folio Number
     this.setFolioNumber(draftFiling.header.folioNumber)
+  }
+
+  /**
+   * Constructs a filing body from store data. Used when saving a filing.
+   * @returns the filing body to save
+   */
+  buildDissolutionFiling (): any {
+    // Build filing.
+    const filing: DissolutionFilingIF = {
+      filing: {
+        header: {
+          name: FilingTypes.DISSOLUTION,
+          certifiedBy: this.getCertifyState.certifiedBy,
+          date: this.getCurrentDate,
+          isFutureEffective: this.getIncorporationDateTime.isFutureEffective
+        },
+        business: {
+          legalType: this.getEntityType,
+          identifier: this.getBusinessId
+        },
+        dissolution: {}
+      }
+    }
+
+    return filing
+  }
+
+  /**
+   * Parses a draft filing into the store. Used when resuming a filing.
+   * @param draftFiling the filing body to parse
+   */
+  parseDissolutionDraft (draftFiling: any): void {
+    // Set Entity Type
+    this.setEntityType(draftFiling.business.legalType)
+
+    // TODO: Populate filing as components are introduced.
   }
 }

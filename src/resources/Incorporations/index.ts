@@ -1,0 +1,5 @@
+export { BenefitCompanyResource } from '@/resources/Incorporations/benefitCompany'
+export { LimitedCompanyResource } from '@/resources/Incorporations/limitedCompany'
+export { UnlimitedCompanyResource } from '@/resources/Incorporations/unlimitedCompany'
+export { CommunityContributionCompanyResource } from '@/resources/Incorporations/communityContributionCompany'
+export { CooperativeResource } from '@/resources/Incorporations/cooperative'

@@ -346,8 +346,12 @@ export default class UploadMemorandum extends Mixins(CommonMixin, DocumentMixin)
       {
         valid: this.hasMemorandumConfirmed && this.hasValidUploadFile,
         validationItemDetails: [
-          { name: 'hasMemorandumConfirmed', valid: this.hasMemorandumConfirmed, elementId: 'memorandum-confirm-header' },
-          { name: 'hasValidUploadFile', valid: this.hasValidUploadFile, elementId: 'upload-memorandum-header' }
+          {
+            name: 'hasMemorandumConfirmed', valid: this.hasMemorandumConfirmed, elementId: 'memorandum-confirm-header'
+          },
+          {
+            name: 'hasValidUploadFile', valid: this.hasValidUploadFile, elementId: 'upload-memorandum-header'
+          }
         ]
       }
     this.setMemorandumStepValidity(validationDetail)

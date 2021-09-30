@@ -1,9 +1,9 @@
-import { ResourceIF } from '@/interfaces'
+import { IncorporationResourceIF } from '@/interfaces'
 import { CorpTypeCd, FilingCodes, NameRequestTypes, Rules } from '@/enums'
 import { BaseStepsTemplate } from './stepTemplates'
 import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 
-export const CommunityContributionCompanyResource: ResourceIF = {
+export const CommunityContributionCompanyResource: IncorporationResourceIF = {
   entityType: CorpTypeCd.BC_CCC,
   displayName: GetCorpFullDescription(CorpTypeCd.BC_CCC),
   title: 'Community Contribution Company Statement',

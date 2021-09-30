@@ -22,6 +22,12 @@
       @retry="fetchData()"
     />
 
+    <invalid-dissolution-dialog
+      attach="#app"
+      :dialog="invalidDissolutionDialog"
+      @exit="goToDashboard(true)"
+    />
+
     <invalid-incorporation-application-dialog
       attach="#app"
       :dialog="invalidIncorporationApplicationDialog"
@@ -79,7 +85,7 @@
           <v-row>
             <v-col cols="12" lg="9">
               <header>
-                <h1>Incorporation Application</h1>
+                <h1>{{ filingTitle }}</h1>
               </header>
 
               <stepper class="mt-10" />
@@ -125,34 +131,40 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Vue, Watch, Mixins } from 'vue-property-decorator'
+import { Component, Mixins, Vue, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import KeycloakService from 'sbc-common-components/src/services/keycloak.services'
 import { PAYMENT_REQUIRED } from 'http-status-codes'
 import * as Sentry from '@sentry/browser'
-import { updateLdUser } from '@/utils'
+import { updateLdUser, getFeatureFlag } from '@/utils'
 
 // Components
 import PaySystemAlert from 'sbc-common-components/src/components/PaySystemAlert.vue'
 import SbcHeader from 'sbc-common-components/src/components/SbcHeader.vue'
 import SbcFooter from 'sbc-common-components/src/components/SbcFooter.vue'
 import SbcFeeSummary from 'sbc-common-components/src/components/SbcFeeSummary.vue'
-import { EntityInfo, Stepper, Actions } from '@/components/common'
-import Views from '@/views'
+import { Actions, EntityInfo, Stepper } from '@/components/common'
+import * as Views from '@/views'
 
 // Dialogs, mixins, interfaces, etc
 import {
-  AccountAuthorizationDialog, NameRequestInvalidErrorDialog, ConfirmDialog, FetchErrorDialog,
-  InvalidIncorporationApplicationDialog, PaymentErrorDialog, SaveErrorDialog,
-  FileAndPayInvalidNameRequestDialog
+  AccountAuthorizationDialog,
+  ConfirmDialog,
+  FetchErrorDialog,
+  FileAndPayInvalidNameRequestDialog,
+  InvalidDissolutionDialog,
+  InvalidIncorporationApplicationDialog,
+  NameRequestInvalidErrorDialog,
+  PaymentErrorDialog,
+  SaveErrorDialog
 } from '@/components/dialogs'
-import { CommonMixin, DateMixin, FilingTemplateMixin, LegalApiMixin, NameRequestMixin } from '@/mixins'
+import { AuthApiMixin, CommonMixin, DateMixin, FilingTemplateMixin, LegalApiMixin, NameRequestMixin } from '@/mixins'
 import { AccountInformationIF, ActionBindingIF, AddressIF, ConfirmDialogType, FilingDataIF, StepIF } from '@/interfaces'
-import { CompanyResources } from '@/resources'
+import { DissolutionResources, IncorporationResources } from '@/resources'
 import AuthServices from '@/services/auth.services'
 
 // Enums and Constants
-import { FilingStatus, RouteNames, NameRequestStates } from '@/enums'
+import { FilingNames, FilingStatus, FilingTypes, NameRequestStates, RouteNames } from '@/enums'
 import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
 
 @Component({
@@ -167,6 +179,7 @@ import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
     NameRequestInvalidErrorDialog,
     AccountAuthorizationDialog,
     FetchErrorDialog,
+    InvalidDissolutionDialog,
     InvalidIncorporationApplicationDialog,
     PaymentErrorDialog,
     SaveErrorDialog,
@@ -175,20 +188,32 @@ import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
     ...Views
   }
 })
-export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMixin, LegalApiMixin, NameRequestMixin) {
+export default class App extends Mixins(
+  AuthApiMixin,
+  CommonMixin,
+  DateMixin,
+  FilingTemplateMixin,
+  LegalApiMixin,
+  NameRequestMixin
+) {
   // Refs
   $refs!: {
     confirm: ConfirmDialogType
   }
 
+  @Getter getBusinessId!: string
   @Getter getHaveChanges!: boolean
   @Getter getFilingData!: FilingDataIF
+  @Getter getFilingType!: FilingTypes
+  @Getter isDissolutionFiling!: boolean
+  @Getter isIncorporationFiling!: boolean
   @Getter isRoleStaff!: boolean
   @Getter getSteps!: Array<StepIF>
 
+  @Action setBusinessId!: ActionBindingIF
   @Action setCurrentStep!: ActionBindingIF
   @Action setCurrentDate!: ActionBindingIF
-  @Action setCompanyResources!: ActionBindingIF
+  @Action setResources!: ActionBindingIF
   @Action setUserEmail!: ActionBindingIF
   @Action setUserPhone: ActionBindingIF
   @Action setUserFirstName!: ActionBindingIF
@@ -202,10 +227,12 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   @Action setAccountInformation!: ActionBindingIF
   @Action setTempId!: ActionBindingIF
   @Action setShowErrors!: ActionBindingIF
+  @Action setFilingType!: ActionBindingIF
 
   // Local properties
   private accountAuthorizationDialog: boolean = false
   private fetchErrorDialog: boolean = false
+  private invalidDissolutionDialog: boolean = false
   private invalidIncorporationApplicationDialog: boolean = false
   private paymentErrorDialog: boolean = false
   private saveErrorDialog: boolean = false
@@ -252,6 +279,10 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     return process.env.ABOUT_TEXT
   }
 
+  private get filingTitle (): string {
+    return this.isIncorporationFiling ? FilingNames.INCORPORATION_APPLICATION : FilingNames.DISSOLUTION_FILING
+  }
+
   /** Helper to check is the current route matches */
   private isRouteName (routeName: string): boolean {
     return this.$route.name === routeName
@@ -293,6 +324,16 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       console.log('Error while retrieving NR during File and Pay') // eslint-disable-line no-console
       this.nameRequestInvalidErrorDialog = true
     })
+
+    // Set identifier to store
+    const id = this.$route.query?.id as string
+    if (id?.startsWith('CP') || id?.startsWith('BC')) {
+      this.setBusinessId(id)
+      this.setFilingType(FilingTypes.DISSOLUTION)
+    } else {
+      this.setTempId(id)
+      this.setFilingType(FilingTypes.INCORPORATION_APPLICATION)
+    }
   }
 
   /** Called when component is destroyed. */
@@ -380,17 +421,19 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     // reset errors in case this method is invoked more than once (ie, retry)
     this.resetFlags()
 
+    // Feature flag safety check
+    let supportedFilings = await getFeatureFlag('supported-filings')
+    if (!supportedFilings?.includes(this.$route.meta.filingType)) {
+      this.accountAuthorizationDialog = true
+    }
+
+    // Protect the routes not associated with this filing type.
+    if (this.$route.meta.filingType !== this.getFilingType) {
+      this.accountAuthorizationDialog = true
+    }
+
     try {
       this.setCurrentDate(this.dateToUsableString(new Date()))
-
-      const tempId = this.$route.query?.id
-      // ensure we have a Temporary Registration number
-      if (!tempId) {
-        this.nameRequestInvalidType = NameRequestStates.NOT_FOUND
-        this.nameRequestInvalidErrorDialog = true
-        return // go to finally()
-      }
-      this.setTempId(tempId)
 
       // get user info
       const userInfo = await this.getSaveUserInfo().catch(error => {
@@ -419,61 +462,100 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
         console.log('Launch Darkly update error =', error) // eslint-disable-line no-console
       })
 
-      // ensure user is authorized to use this IA
-      await this.checkAuth().catch(error => {
-        console.log('Auth error =', error) // eslint-disable-line no-console
-        this.accountAuthorizationDialog = true
-        throw error // go to catch()
-      })
-
       try {
-        // fetch draft filing
-        let draftFiling = await this.fetchDraft()
-
-        // if there is an existing filing, check if it is in a valid state to be edited
-        if (draftFiling) {
-          this.invalidIncorporationApplicationDialog = this.hasInvalidFilingState(draftFiling)
-          if (this.invalidIncorporationApplicationDialog) return
-        }
-
-        // merge draft properties into empty filing so all properties are initialized
-        const emptyFiling = this.buildFiling()
-        draftFiling = { ...emptyFiling.filing, ...draftFiling }
-
-        // parse draft filing into the store
-        if (draftFiling) {
-          this.parseDraft(draftFiling)
-        }
-
-        // verify nameRequest object
-        const nameRequest = draftFiling?.incorporationApplication?.nameRequest
-        if (!nameRequest) throw new Error('missing Name Request object')
-
-        /** Fetches and validates the NR and sets the data to the store. This method is different
-         * from the validateNameRequest method in Actions.vue. This method sets the data to
-         * the store shows a specific message for different invalid states and redirection is to the
-         * Filings Dashboard */
-        if (nameRequest?.nrNumber) {
-          await this.processNameRequest(draftFiling)
-        }
-
-        // Set the resources
-        // An unknown entity type will need to be handled here
-        const companyResources = CompanyResources.find(x => x.entityType === this.getEntityType)
-        if (companyResources) this.setCompanyResources(companyResources)
-        else throw new Error('invalid Entity Type')
-
-        // set current profile name to store for field pre population
-        // proceed only if we are not staff
-        if (userInfo && !this.isRoleStaff) {
-          // pre-populate Certified By name
-          this.setCertifyState(
-            {
-              valid: this.getCertifyState.valid,
-              certifiedBy: `${userInfo.firstname} ${userInfo.lastname}`
+        let draftFiling, resources
+        // Dissolution filings
+        if (this.isDissolutionFiling) {
+          // ensure user is authorized to use this business
+          await this.fetchAuthorizations(this.getBusinessId).then(response => {
+            if (!response.data.roles || response.data.roles.length === 0) {
+              this.accountAuthorizationDialog = true
+              throw new Error('Auth error: inaccessible entity')
             }
-          )
+          }).catch(error => {
+            this.accountAuthorizationDialog = true
+            throw error // go to catch()
+          })
+
+          // fetch draft filing
+          draftFiling = await this.fetchDraftDissolution()
+
+          // if there is an existing filing, check if it is in a valid state to be edited
+          if (draftFiling) {
+            this.invalidDissolutionDialog = this.hasInvalidFilingState(draftFiling)
+            if (this.invalidDissolutionDialog) return
+          }
+
+          // merge draft properties into empty filing so all properties are initialized
+          const emptyFiling = this.buildDissolutionFiling()
+          draftFiling = { ...emptyFiling.filing, ...draftFiling }
+
+          // parse draft filing into the store
+          if (draftFiling) {
+            this.parseDissolutionDraft(draftFiling)
+          }
+
+          // Set the resources
+          // An unknown entity type will need to be handled here
+          resources = DissolutionResources.find(x => x.entityType === this.getEntityType)
         }
+        // Incorporation filings
+        if (this.isIncorporationFiling) {
+          // ensure user is authorized to use this IA
+          await this.checkAuth().catch(error => {
+            console.log('Auth error =', error) // eslint-disable-line no-console
+            this.accountAuthorizationDialog = true
+            throw error // go to catch()
+          })
+
+          // fetch draft filing
+          draftFiling = await this.fetchDraftIA()
+
+          // if there is an existing filing, check if it is in a valid state to be edited
+          if (draftFiling) {
+            this.invalidIncorporationApplicationDialog = this.hasInvalidFilingState(draftFiling)
+            if (this.invalidIncorporationApplicationDialog) return
+          }
+
+          // merge draft properties into empty filing so all properties are initialized
+          const emptyFiling = this.buildIncorporationFiling()
+          draftFiling = { ...emptyFiling.filing, ...draftFiling }
+
+          // parse draft filing into the store
+          if (draftFiling) {
+            this.parseIncorporationsDraft(draftFiling)
+          }
+
+          // verify nameRequest object
+          const nameRequest = draftFiling?.incorporationApplication?.nameRequest
+          if (!nameRequest) throw new Error('missing Name Request object')
+
+          /** Fetches and validates the NR and sets the data to the store. This method is different
+           * from the validateNameRequest method in Actions.vue. This method sets the data to
+           * the store shows a specific message for different invalid states and redirection is to the
+           * Filings Dashboard */
+          if (nameRequest?.nrNumber) {
+            await this.processNameRequest(draftFiling)
+          }
+
+          // set current profile name to store for field pre population
+          // proceed only if we are not staff
+          if (userInfo && !this.isRoleStaff) {
+            // pre-populate Certified By name
+            this.setCertifyState(
+              {
+                valid: this.getCertifyState.valid,
+                certifiedBy: `${userInfo.firstname} ${userInfo.lastname}`
+              }
+            )
+          }
+          // Set the resources
+          // An unknown entity type will need to be handled here
+          resources = IncorporationResources.find(x => x.entityType === this.getEntityType)
+        }
+
+        if (resources) this.setResources(resources)
+        else throw new Error('invalid Entity Type')
       } catch (error) {
         // logging exception to sentry due to incomplete business data.
         // at this point system doesn't know why its incomplete.

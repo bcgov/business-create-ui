@@ -15,7 +15,7 @@ import { createLocalVue, mount } from '@vue/test-utils'
 import { PeopleAndRoles } from '@/components/AddPeopleAndRoles'
 
 // Resources
-import { BenefitCompanyResource } from '@/resources/benefitCompany'
+import { BenefitCompanyResource } from '@/resources/Incorporations/benefitCompany'
 
 Vue.use(Vuetify)
 Vue.use(Vuelidate)

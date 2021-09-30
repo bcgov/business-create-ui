@@ -1,17 +1,25 @@
 import { ActionIF } from '@/interfaces/store-interfaces/action-interface'
 import {
   AccountInformationIF, AddressIF, BusinessContactIF, CertifyIF, IncorporationAddressIF,
-  IncorporationAgreementIF, NameRequestIF, NameTranslationIF, OrgPersonIF, ResourceIF,
+  IncorporationAgreementIF, NameRequestIF, NameTranslationIF, OrgPersonIF, IncorporationResourceIF,
   ShareClassIF, CreateRulesIF, CreateMemorandumIF, ValidationDetailIF
 } from '@/interfaces'
 import { CoopType, CorpTypeCd } from '@/enums'
+
+export const setBusinessId: ActionIF = ({ commit }, businessId): void => {
+  commit('mutateBusinessId', businessId)
+}
+
+export const setFilingType: ActionIF = ({ commit }, filingType): void => {
+  commit('mutateFilingType', filingType)
+}
 
 export const setEntityType = ({ commit }, entityType: CorpTypeCd): void => {
   commit('mutateEntityType', entityType)
 }
 
-export const setCompanyResources = ({ commit }, companyResources: ResourceIF): void => {
-  commit('mutateCompanyResources', companyResources)
+export const setResources = ({ commit }, companyResources: IncorporationResourceIF): void => {
+  commit('mutateResources', companyResources)
 }
 
 export const setTempId = ({ commit }, tempId: string): void => {
