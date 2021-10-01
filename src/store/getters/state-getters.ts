@@ -46,6 +46,8 @@ export const getFilingName = (state: StateIF): FilingNames => {
       return FilingNames.INCORPORATION_APPLICATION
     case FilingTypes.DISSOLUTION:
       return FilingNames.DISSOLUTION_FILING
+    default:
+      return null // Should never happen
   }
 }
 

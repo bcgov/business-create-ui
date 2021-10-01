@@ -48,26 +48,6 @@ export default class LegalApiMixin extends Vue {
         throw error
       })
   }
-  private mockResponse = [
-    {
-      'filing': {
-        'business': {
-          'identifier': 'CP0870720',
-          'legalType': 'CP'
-        },
-        'header': {
-          'filingId': 112491,
-          'inColinOnly': false,
-          'isCorrected': false,
-          'isCorrectionPending': false,
-          'name': 'dissolution',
-          'status': 'DRAFT',
-          'submitter': 'bcsc/x5levvougen54gnvtvcyh7nrelqcyt4t'
-        },
-        'dissolution': {}
-      }
-    }
-  ]
 
   /**
    * Fetches a draft dissolution filing.
@@ -78,7 +58,6 @@ export default class LegalApiMixin extends Vue {
     const url = `businesses/${this.getBusinessId}/tasks`
     return axios.get(url)
       .then(response => {
-        response.data.tasks = this.mockResponse
         const filing = response?.data?.tasks?.find(task => task.filing.hasOwnProperty(FilingTypes.DISSOLUTION))?.filing
         const filingName = filing?.header?.name
         const filingId = +filing?.header?.filingId || 0
