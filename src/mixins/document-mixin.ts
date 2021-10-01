@@ -4,7 +4,8 @@ import { Component, Vue } from 'vue-property-decorator'
 import { DocumentUpload } from '@/interfaces'
 import { PdfPageSize } from '@/enums'
 import pdfjsLib from 'pdfjs-dist/build/pdf'
-pdfjsLib.GlobalWorkerOptions.workerSrc = 'public/js/pdf.worker.min.js'
+import { PdfInfoIF } from '@/interfaces/utils-interfaces/pdf-info-interface'
+pdfjsLib.GlobalWorkerOptions.workerSrc = require('pdfjs-dist/build/pdf.worker.entry')
 
 @Component({})
 export default class DocumentMixin extends Vue {
@@ -68,5 +69,20 @@ export default class DocumentMixin extends Vue {
     const isvalidPageSize = (width / pageSizeInfo.pointsPerInch === pageSizeInfo.width) &&
       (height / pageSizeInfo.pointsPerInch === pageSizeInfo.height)
     return isvalidPageSize
+  }
+
+  async retrieveFileInfo (file: File): Promise<PdfInfoIF> {
+    try {
+      const pdfBufferData = await file.arrayBuffer()
+      const pdfData = new Uint8Array(pdfBufferData) // put it in a Uint8Array
+      const pdf = await pdfjsLib.getDocument({ data: pdfData })
+      const perms = await pdf.getPermissions()
+      return { isEncrypted: false, isContentLocked: !!perms }
+    } catch (e) {
+      if (e.name === 'PasswordException') {
+        return { isEncrypted: true, isContentLocked: true }
+      }
+    }
+    return { isEncrypted: false, isContentLocked: false }
   }
 }
