@@ -5,6 +5,9 @@ import { EntityInfo } from '@/components/common'
 const mockEntityInfo = [
   {
     entityType: 'CP',
+    tombstone: {
+      filingType: 'incorporationApplication'
+    },
     description: 'BC Cooperative Association',
     numberedDesc: 'Numbered Cooperative Association',
     tempId: 'T1234567',
@@ -17,6 +20,9 @@ const mockEntityInfo = [
   },
   {
     entityType: 'BEN',
+    tombstone: {
+      filingType: 'incorporationApplication'
+    },
     description: 'BC Benefit Company',
     numberedDesc: 'Numbered Benefit Company',
     tempId: 'T1234567',
@@ -29,6 +35,9 @@ const mockEntityInfo = [
   },
   {
     entityType: 'BC',
+    tombstone: {
+      filingType: 'incorporationApplication'
+    },
     description: 'BC Limited Company',
     numberedDesc: 'Numbered Limited Company',
     tempId: 'T1234567',
@@ -41,6 +50,9 @@ const mockEntityInfo = [
   },
   {
     entityType: 'ULC',
+    tombstone: {
+      filingType: 'incorporationApplication'
+    },
     description: 'BC Unlimited Liability Company',
     numberedDesc: 'Numbered Unlimited Liability Company',
     tempId: 'T1234567',
@@ -53,6 +65,9 @@ const mockEntityInfo = [
   },
   {
     entityType: 'CC',
+    tombstone: {
+      filingType: 'incorporationApplication'
+    },
     description: 'BC Community Contribution Company',
     numberedDesc: '',
     tempId: 'T1234567',
@@ -71,6 +86,7 @@ for (const mock of mockEntityInfo) {
 
     beforeEach(() => {
       wrapper = wrapperFactory(EntityInfo, null, {
+        tombstone: mock.tombstone,
         entityType: mock.entityType,
         tempId: mock.tempId,
         nameRequest: mock.nameRequest
@@ -108,6 +124,7 @@ for (const mock of mockEntityInfo) {
 
     beforeEach(() => {
       wrapper = wrapperFactory(EntityInfo, null, {
+        tombstone: mock.tombstone,
         entityType: mock.entityType,
         tempId: mock.tempId,
         nameRequest: {

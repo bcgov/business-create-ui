@@ -1,11 +1,11 @@
 import {
-  CertifyStatementIF, CreateRulesResourceIF,
+  CertifyStatementIF,
+  CreateMemorandumResourceIF,
+  CreateRulesResourceIF,
   FilingDataIF,
-  HelpSectionIF,
   IncorporationAgreementTypeIF,
   StateIF,
-  StepIF,
-  CreateMemorandumResourceIF
+  StepIF
 } from '@/interfaces'
 
 //

@@ -1,5 +1,6 @@
 import { IncorporationAddressIF } from '@/interfaces/stepper-interfaces/DefineCompany/address-interface'
 import { NameTranslationIF, OrgPersonIF, ShareClassIF } from '@/interfaces'
+import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 
 /** Interface for incorporation filing data saved to the Legal API. */
 export interface IncorporationFilingIF {
@@ -73,7 +74,7 @@ export interface DissolutionFilingIF {
       isFutureEffective: boolean
     },
     business: {
-      legalType: string,
+      legalType: CorpTypeCd,
       identifier: string
     },
     dissolution: {}

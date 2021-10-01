@@ -44,3 +44,5 @@ export interface DissolutionResourceIF {
   steps: Array<StepIF>
   filingData: FilingDataIF
 }
+
+export interface ResourceIF extends DissolutionResourceIF, IncorporationResourceIF {}

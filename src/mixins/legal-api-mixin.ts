@@ -20,15 +20,16 @@ export default class LegalApiMixin extends Vue {
   @Action setFilingId!: ActionBindingIF
 
   /**
-   * Fetches a draft filing.
+   * Fetches the draft IA filing.
+   * This is a unique request using the temp reg number.
+   * This assumes a single filing is returned.
    * @returns a promise to return the draft filing, or null if not found
    */
   async fetchDraftIA (): Promise<any> {
-    // get the draft filing from the tasks endpoint
     const url = `businesses/${this.getTempId}/filings`
     return axios.get(url)
       .then(response => {
-        // look at only the first task
+        // look at only the first filing
         const filing = response?.data?.filing
         const filingName = filing?.header?.name
         const filingId = +filing?.header?.filingId || 0
@@ -47,6 +48,26 @@ export default class LegalApiMixin extends Vue {
         throw error
       })
   }
+  private mockResponse = [
+    {
+      'filing': {
+        'business': {
+          'identifier': 'CP0870720',
+          'legalType': 'CP'
+        },
+        'header': {
+          'filingId': 112491,
+          'inColinOnly': false,
+          'isCorrected': false,
+          'isCorrectionPending': false,
+          'name': 'dissolution',
+          'status': 'DRAFT',
+          'submitter': 'bcsc/x5levvougen54gnvtvcyh7nrelqcyt4t'
+        },
+        'dissolution': {}
+      }
+    }
+  ]
 
   /**
    * Fetches a draft dissolution filing.
@@ -57,6 +78,7 @@ export default class LegalApiMixin extends Vue {
     const url = `businesses/${this.getBusinessId}/tasks`
     return axios.get(url)
       .then(response => {
+        response.data.tasks = this.mockResponse
         const filing = response?.data?.tasks?.find(task => task.filing.hasOwnProperty(FilingTypes.DISSOLUTION))?.filing
         const filingName = filing?.header?.name
         const filingId = +filing?.header?.filingId || 0
@@ -68,12 +90,6 @@ export default class LegalApiMixin extends Vue {
         // save Filing ID from the header
         this.setFilingId(filingId)
         return filing
-      })
-      .catch((error) => {
-        if (error?.response?.status === NOT_FOUND) {
-          return null // Dissolution not found
-        }
-        throw error
       })
   }
 

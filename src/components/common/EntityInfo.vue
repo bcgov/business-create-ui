@@ -47,7 +47,7 @@ import { Component, Mixins } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 
 // Interfaces & enums
-import { CorpTypeCd, FilingNames, FilingTypes } from '@/enums'
+import { CorpTypeCd, FilingNames } from '@/enums'
 
 // Modules
 import { EnumMixin } from '@/mixins'
@@ -58,22 +58,14 @@ export default class EntityInfo extends Mixins(EnumMixin) {
   @Getter getUserEmail!: string
   @Getter getUserPhone!: string
   @Getter getEntityType!: CorpTypeCd
+  @Getter getFilingName!: FilingNames
   @Getter getNameRequestNumber!: string
   @Getter getTempId!: string
   @Getter getApprovedName!: string
 
-  private get filingTypeName (): string {
-    switch (this.$route.meta.filingType) {
-      case FilingTypes.INCORPORATION_APPLICATION:
-        return FilingNames.INCORPORATION_APPLICATION
-      case FilingTypes.DISSOLUTION:
-        return FilingNames.DISSOLUTION_FILING
-    }
-  }
-
   /** The entity application title.  */
   private get entityTitle (): string {
-    return `${this.getCorpTypeDescription(this.getEntityType)} ${this.filingTypeName}`
+    return `${this.getCorpTypeDescription(this.getEntityType)} ${this.getFilingName}`
   }
 
   /** The numbered entity name. */
