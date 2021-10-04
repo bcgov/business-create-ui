@@ -247,7 +247,7 @@ describe('Actions component - Filing Functionality', () => {
               firstName: 'Joe',
               lastName: 'Swanson',
               middleName: 'P',
-              orgName: '',
+              organizationName: '',
               partyType: 'person',
               email: 'completing-party@example.com'
             },
@@ -285,8 +285,8 @@ describe('Actions component - Filing Functionality', () => {
               firstName: '',
               lastName: '',
               middleName: '',
-              orgName: 'XyzInc.',
-              partyType: 'org'
+              organizationName: 'XyzInc.',
+              partyType: 'organization'
             },
             mailingAddress: {
               streetAddress: 'mailing_address-addresslineone',

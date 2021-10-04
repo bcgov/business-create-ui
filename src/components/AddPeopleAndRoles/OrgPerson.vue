@@ -91,7 +91,7 @@
                       class="item"
                       label="Full Legal Corporation or Firm Name"
                       id="firm-name"
-                      v-model="orgPerson.officer.orgName"
+                      v-model="orgPerson.officer.organizationName"
                       :rules="orgNameRules"
                     />
                   </div>

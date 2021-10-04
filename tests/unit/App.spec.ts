@@ -90,7 +90,7 @@ const filingData = {
           firstName: 'Joe',
           lastName: 'Swanson',
           middleName: 'P',
-          orgName: '',
+          organizationName: '',
           partyType: 'person',
           email: 'completing-party@example.com'
         },
@@ -128,8 +128,8 @@ const filingData = {
           firstName: '',
           lastName: '',
           middleName: '',
-          orgName: 'XyzInc.',
-          partyType: 'org'
+          organizationName: 'XyzInc.',
+          partyType: 'organization'
         },
         mailingAddress: {
           streetAddress: 'mailing_address-addresslineone',

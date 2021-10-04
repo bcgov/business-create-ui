@@ -36,7 +36,7 @@ const validPersonData = {
     firstName: 'Adam',
     lastName: 'Smith',
     middleName: 'D',
-    orgName: '',
+    organizationName: '',
     partyType: 'person',
     email: 'completing-party@example.com'
   },
@@ -68,7 +68,7 @@ const validIncorporator = {
     firstName: 'Adam',
     lastName: 'Smith',
     middleName: 'D',
-    orgName: '',
+    organizationName: '',
     partyType: 'person'
   },
   roles: [
@@ -98,8 +98,8 @@ const validOrgData = {
     firstName: '',
     lastName: '',
     middleName: '',
-    orgName: 'Test Org',
-    partyType: 'org'
+    organizationName: 'Test Org',
+    partyType: 'organization'
   },
   roles: [
     { roleType: 'Incorporator', appointmentDate: '2020-03-30' }
@@ -183,7 +183,7 @@ describe('Org Person component', () => {
   it('Displays form data for org', async () => {
     const wrapper: Wrapper<OrgPerson> = createComponent(validOrgData, -1, null)
     expect((<HTMLInputElement>wrapper.find(orgNameSelector).element).value)
-      .toEqual(validOrgData['officer']['orgName'])
+      .toEqual(validOrgData['officer']['organizationName'])
     await Vue.nextTick()
     expect(wrapper.find(doneButtonSelector).attributes('disabled')).toBeUndefined()
     expect(wrapper.find(removeButtonSelector).attributes('disabled')).toBeDefined()
@@ -228,12 +228,12 @@ describe('Org Person component', () => {
 
   it('Clicking Done button emits event for add edit person/org', async () => {
     const wrapper: Wrapper<OrgPerson> = createComponent(validOrgData, -1, null)
-    expect((<HTMLInputElement>wrapper.find(orgNameSelector).element).value).toEqual(validOrgData.officer.orgName)
+    expect((<HTMLInputElement>wrapper.find(orgNameSelector).element).value).toEqual(validOrgData.officer.organizationName)
     await Vue.nextTick()
     expect(wrapper.find(doneButtonSelector).attributes('disabled')).toBeUndefined()
     wrapper.find(doneButtonSelector).trigger('click')
     await Vue.nextTick()
-    expect(getLastEvent(wrapper, addEditPersonEvent).officer.orgName).toEqual(validOrgData.officer.orgName)
+    expect(getLastEvent(wrapper, addEditPersonEvent).officer.organizationName).toEqual(validOrgData.officer.organizationName)
     wrapper.destroy()
   })
 
