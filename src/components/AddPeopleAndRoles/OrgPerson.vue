@@ -320,7 +320,7 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
 
   /** Whether current data object is an organization (corporation/firm). */
   private get isOrg (): boolean {
-    return (this.orgPerson.officer?.partyType === IncorporatorTypes.CORPORATION)
+    return (this.orgPerson.officer?.partyType === IncorporatorTypes.ORGANIZATION)
   }
 
   /** Whether the Completing Party role should be shown. */

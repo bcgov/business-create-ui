@@ -98,7 +98,7 @@
         class="btn-outlined-primary ml-2"
         :disabled="showOrgPersonForm"
         v-if="getPeopleAndRolesResource.addOrganization"
-        @click="addOrgPerson(RoleTypes.INCORPORATOR, IncorporatorTypes.CORPORATION)"
+        @click="addOrgPerson(RoleTypes.INCORPORATOR, IncorporatorTypes.ORGANIZATION)"
       >
         <v-icon>mdi-domain-plus</v-icon>
         <span v-if="entityFilter(CorpTypeCd.COOP)">Add Organization</span>
