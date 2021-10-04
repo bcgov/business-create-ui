@@ -1,14 +1,32 @@
-import { ResourceIF } from '@/interfaces'
-import { BenefitCompanyResource } from '@/resources/benefitCompany'
-import { LimitedCompanyResource } from '@/resources/limitedCompany'
-import { UnlimitedCompanyResource } from '@/resources/unlimitedCompany'
-import { CommunityContributionCompanyResource } from '@/resources/communityContributionCompany'
-import { CooperativeResource } from '@/resources/cooperative'
-
-export const CompanyResources: Array<ResourceIF> = [
+import { DissolutionResourceIF, IncorporationResourceIF } from '@/interfaces'
+import {
   BenefitCompanyResource,
-  LimitedCompanyResource,
-  UnlimitedCompanyResource,
   CommunityContributionCompanyResource,
-  CooperativeResource
+  CooperativeResource,
+  LimitedCompanyResource,
+  UnlimitedCompanyResource
+} from './Incorporations'
+
+import {
+  BenefitCompanyDissolutionResource,
+  CommunityContributionCompanyDissolutionResource,
+  CooperativeDissolutionResource,
+  LimitedCompanyDissolutionResource,
+  UnlimitedDissolutionResource
+} from './Dissolutions'
+
+export const IncorporationResources: Array<IncorporationResourceIF> = [
+  BenefitCompanyResource,
+  CommunityContributionCompanyResource,
+  CooperativeResource,
+  LimitedCompanyResource,
+  UnlimitedCompanyResource
+]
+
+export const DissolutionResources: Array<DissolutionResourceIF> = [
+  BenefitCompanyDissolutionResource,
+  CommunityContributionCompanyDissolutionResource,
+  CooperativeDissolutionResource,
+  LimitedCompanyDissolutionResource,
+  UnlimitedDissolutionResource
 ]

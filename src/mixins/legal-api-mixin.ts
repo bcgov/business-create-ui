@@ -6,34 +6,35 @@ import { NOT_FOUND } from 'http-status-codes'
 
 // Interfaces
 import { ActionBindingIF, IncorporationFilingIF } from '@/interfaces'
+import { FilingTypes } from '@/enums'
 
 /**
  * Mixin that provides integration with the Legal API.
  */
 @Component({})
 export default class LegalApiMixin extends Vue {
-  readonly INCORPORATION_APPLICATION = 'incorporationApplication'
-
+  @Getter getBusinessId!: string
   @Getter getFilingId!: number
   @Getter getTempId!: string
 
   @Action setFilingId!: ActionBindingIF
 
   /**
-   * Fetches a draft filing.
+   * Fetches the draft IA filing.
+   * This is a unique request using the temp reg number.
+   * This assumes a single filing is returned.
    * @returns a promise to return the draft filing, or null if not found
    */
-  async fetchDraft (): Promise<any> {
-    // get the draft filing from the tasks endpoint
+  async fetchDraftIA (): Promise<any> {
     const url = `businesses/${this.getTempId}/filings`
     return axios.get(url)
       .then(response => {
-        // look at only the first task
+        // look at only the first filing
         const filing = response?.data?.filing
         const filingName = filing?.header?.name
         const filingId = +filing?.header?.filingId || 0
 
-        if (!filing || filingName !== this.INCORPORATION_APPLICATION || !filingId) {
+        if (!filing || filingName !== FilingTypes.INCORPORATION_APPLICATION || !filingId) {
           throw new Error('Invalid API response')
         }
         // save Filing ID from the header
@@ -49,18 +50,42 @@ export default class LegalApiMixin extends Vue {
   }
 
   /**
+   * Fetches a draft dissolution filing.
+   * @returns a promise to return the draft filing, or null if not found
+   */
+  async fetchDraftDissolution (): Promise<any> {
+    // get the draft filing from the tasks endpoint
+    const url = `businesses/${this.getBusinessId}/tasks`
+    return axios.get(url)
+      .then(response => {
+        const filing = response?.data?.tasks?.find(task => task.filing.hasOwnProperty(FilingTypes.DISSOLUTION))?.filing
+        const filingName = filing?.header?.name
+        const filingId = +filing?.header?.filingId || 0
+
+        if (!filing || filingName !== FilingTypes.DISSOLUTION || !filingId) {
+          throw new Error('Invalid API response')
+        }
+
+        // save Filing ID from the header
+        this.setFilingId(filingId)
+        return filing
+      })
+  }
+
+  /**
    * Updates an existing filing.
+   * @param id The entity identifier or temp registration number
    * @param filing the object body of the request
    * @param isDraft boolean indicating whether to save draft or complete the filing
    * @returns a promise to return the updated filing
    */
-  async updateFiling (filing: IncorporationFilingIF, isDraft: boolean): Promise<any> {
+  async updateFiling (id: string, filing: IncorporationFilingIF, isDraft: boolean): Promise<any> {
     if (!filing) throw new Error('updateFiling(), invalid filing')
     const filingId = this.getFilingId
     if (!filingId) throw new Error('updateFiling(), invalid filing id')
 
     // put updated filing to filings endpoint
-    let url = `businesses/${this.getTempId}/filings/${filingId}`
+    let url = `businesses/${id}/filings/${filingId}`
     if (isDraft) {
       url += '?draft=true'
     }

@@ -23,7 +23,9 @@
           <v-icon class="upload-success-chk">mdi-check</v-icon>
         </v-col>
         <v-col md="11" id="file-name-col">
-          <span v-if="getCreateMemorandumStep.memorandumDoc" id="file-name">{{getCreateMemorandumStep.memorandumDoc.name}}</span>
+          <span v-if="getCreateMemorandumStep.memorandumDoc" id="file-name">
+            {{getCreateMemorandumStep.memorandumDoc.name}}
+          </span>
         </v-col>
       </v-row>
     </div>

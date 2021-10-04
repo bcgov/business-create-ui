@@ -1,6 +1,6 @@
-import { ResourceIF } from '@/interfaces'
+import { DissolutionResourceIF, IncorporationResourceIF } from '@/interfaces'
 
-export const resourceModel: ResourceIF = {
+const incorporationResourceModel: IncorporationResourceIF = {
   entityType: null,
   displayName: '',
   title: '',
@@ -29,4 +29,16 @@ export const resourceModel: ResourceIF = {
       entityDisplay: null
     }
   }
+}
+
+const dissolutionResourceModel: DissolutionResourceIF = {
+  entityType: null,
+  displayName: '',
+  steps: [],
+  filingData: null
+}
+
+export const resourceModel: any = {
+  ...incorporationResourceModel,
+  ...dissolutionResourceModel
 }

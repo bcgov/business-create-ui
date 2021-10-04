@@ -157,7 +157,7 @@ describe('Emits error event if NR validation fails in file and pay', () => {
   })
 
   it('Emits the error event for an expired NR', async () => {
-    const mockBuildFiling = jest.spyOn(wrapper.vm, 'buildFiling')
+    const mockBuildFiling = jest.spyOn(wrapper.vm, 'buildIncorporationFiling')
 
     await wrapper.vm.onClickFilePay()
 
@@ -384,6 +384,7 @@ describe('Actions component - Filing Functionality', () => {
     store.state.stateModel.nameTranslations = []
     store.state.stateModel.tombstone = {
       authRoles: [],
+      filingType: 'incorporationApplication',
       userEmail: 'completing-party@example.com'
     }
     store.state.stateModel.certifyState.certifiedBy = filing.filing.header.certifiedBy
@@ -427,9 +428,9 @@ describe('Actions component - Filing Functionality', () => {
     wrapper.destroy()
   })
 
-  it('Calls the buildFiling method when onClickSave is called', async () => {
+  it('Calls the buildIncorporationFiling method when onClickSave is called', async () => {
     // Mock the function call
-    const mockBuildFiling = jest.spyOn(wrapper.vm, 'buildFiling')
+    const mockBuildFiling = jest.spyOn(wrapper.vm, 'buildIncorporationFiling')
 
     // Work-around to interact with the stubbed vuetify button component in ShallowMount
     await wrapper.vm.onClickSave()
@@ -449,7 +450,7 @@ describe('Actions component - Filing Functionality', () => {
 
     await wrapper.vm.onClickSave()
 
-    expect(mockUpdateFiling).toHaveBeenCalledWith(filing, true)
+    expect(mockUpdateFiling).toHaveBeenCalledWith('T1234567', filing, true)
     expect(mockUpdateFiling).toHaveReturned()
 
     // verify no redirection
@@ -459,8 +460,8 @@ describe('Actions component - Filing Functionality', () => {
     expect(wrapper.vm.$route.name).toBe('define-company')
   })
 
-  it('Calls the buildFiling method when onClickSaveResume is called', async () => {
-    const mockBuildFiling = jest.spyOn(wrapper.vm, 'buildFiling')
+  it('Calls the buildIncorporationFiling method when onClickSaveResume is called', async () => {
+    const mockBuildFiling = jest.spyOn(wrapper.vm, 'buildIncorporationFiling')
 
     await wrapper.vm.onClickSaveResume()
 
@@ -477,7 +478,7 @@ describe('Actions component - Filing Functionality', () => {
 
     await wrapper.vm.onClickSaveResume()
 
-    expect(mockUpdateFiling).toHaveBeenCalledWith(filing, true)
+    expect(mockUpdateFiling).toHaveBeenCalledWith('T1234567', filing, true)
     expect(mockUpdateFiling).toHaveReturned()
 
     // also verify event emission
@@ -496,7 +497,7 @@ describe('Actions component - Filing Functionality', () => {
       ],
       'filing': filing
     }
-    const mockBuildFiling = jest.spyOn(wrapper.vm, 'buildFiling')
+    const mockBuildFiling = jest.spyOn(wrapper.vm, 'buildIncorporationFiling')
     const mockUpdateFiling = jest.spyOn(wrapper.vm, 'updateFiling')
       .mockImplementation(() => {
         return Promise.reject(padErrorFiling)
@@ -508,7 +509,7 @@ describe('Actions component - Filing Functionality', () => {
     expect(mockBuildFiling).toHaveBeenCalled()
     expect(mockBuildFiling).toHaveReturned()
 
-    expect(mockUpdateFiling).toHaveBeenCalledWith(filing, false)
+    expect(mockUpdateFiling).toHaveBeenCalledWith('T1234567', filing, false)
     expect(mockUpdateFiling).toHaveReturned()
 
     const rootWrapper = createWrapper(wrapper.vm.$root)
@@ -520,8 +521,8 @@ describe('Actions component - Filing Functionality', () => {
     expect(window.location.assign).not.toHaveBeenCalled()
   })
 
-  it('Calls the buildFiling and updateFiling methods when onClickFilePay is called', async () => {
-    const mockBuildFiling = jest.spyOn(wrapper.vm, 'buildFiling')
+  it('Calls the buildIncorporationFiling and updateFiling methods when onClickFilePay is called', async () => {
+    const mockBuildFiling = jest.spyOn(wrapper.vm, 'buildIncorporationFiling')
     const mockUpdateFiling = jest.spyOn(wrapper.vm, 'updateFiling')
       .mockImplementation(() => Promise.resolve({
         header: {
@@ -535,7 +536,7 @@ describe('Actions component - Filing Functionality', () => {
     expect(mockBuildFiling).toHaveBeenCalled()
     expect(mockBuildFiling).toHaveReturned()
 
-    expect(mockUpdateFiling).toHaveBeenCalledWith(filing, false)
+    expect(mockUpdateFiling).toHaveBeenCalledWith('T1234567', filing, false)
     expect(mockUpdateFiling).toHaveReturned()
 
     // verify redirection
@@ -545,7 +546,7 @@ describe('Actions component - Filing Functionality', () => {
   })
 
   it('Emits "Go To Dashboard" event when onClickCancel is called', async () => {
-    const mockBuildFiling = jest.spyOn(wrapper.vm, 'buildFiling')
+    const mockBuildFiling = jest.spyOn(wrapper.vm, 'buildIncorporationFiling')
     const mockUpdateFiling = jest.spyOn(wrapper.vm, 'updateFiling')
 
     await wrapper.vm.onClickCancel()

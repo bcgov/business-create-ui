@@ -3,7 +3,7 @@ import { FilingDataIF, HelpSectionIF, IncorporationAgreementTypeIF, PeopleAndRol
 import { CorpTypeCd, NameRequestTypes } from '@/enums'
 
 // Interface to define the resource model
-export interface ResourceIF {
+export interface IncorporationResourceIF {
   entityType: CorpTypeCd
   displayName: string
   title: string
@@ -36,3 +36,13 @@ export interface ResourceIF {
   createRules?: CreateRulesResourceIF
   createMemorandum?: CreateMemorandumResourceIF
 }
+
+// Interface to define the resource model
+export interface DissolutionResourceIF {
+  entityType: CorpTypeCd
+  displayName: string
+  steps: Array<StepIF>
+  filingData: FilingDataIF
+}
+
+export interface ResourceIF extends DissolutionResourceIF, IncorporationResourceIF {}

@@ -3,6 +3,8 @@ import { StateModelIF } from '@/interfaces'
 export const stateModel: StateModelIF = {
   tombstone: {
     authRoles: [],
+    businessId: '',
+    filingType: null,
     userEmail: '',
     userPhone: '',
     userFirstName: '',

@@ -1,4 +1,4 @@
-import { AccountTypes, CoopType, CorpTypeCd } from '@/enums'
+import { AccountTypes, CoopType, CorpTypeCd, FilingNames, FilingTypes } from '@/enums'
 import {
   AccountInformationIF,
   AddressIF,
@@ -8,7 +8,6 @@ import {
   CreateRulesIF,
   DateTimeIF,
   DefineCompanyIF,
-  IncorporationAddressIF,
   IncorporationAgreementIF,
   NameRequestApplicantIF,
   NameRequestDetailsIF,
@@ -24,6 +23,33 @@ import { getMaxStep } from './resource-getters'
 //
 // The getters in this file return values from the current state model.
 //
+
+/** Whether the current filing is an Incorporation. */
+export const isIncorporationFiling = (state: StateIF): boolean => {
+  return getFilingType(state) === FilingTypes.INCORPORATION_APPLICATION
+}
+
+/** Whether the current filing is a Dissolution. */
+export const isDissolutionFiling = (state: StateIF): boolean => {
+  return getFilingType(state) === FilingTypes.DISSOLUTION
+}
+
+/** The current filing type. */
+export const getFilingType = (state: StateIF): FilingTypes => {
+  return state.stateModel.tombstone.filingType
+}
+
+/** The current filing name. */
+export const getFilingName = (state: StateIF): FilingNames => {
+  switch (getFilingType(state)) {
+    case FilingTypes.INCORPORATION_APPLICATION:
+      return FilingNames.INCORPORATION_APPLICATION
+    case FilingTypes.DISSOLUTION:
+      return FilingNames.DISSOLUTION_FILING
+    default:
+      return null // Should never happen
+  }
+}
 
 /** Whether the user has "staff" auth role. */
 export const isRoleStaff = (state: StateIF): boolean => {
@@ -98,6 +124,11 @@ export const getFilingId = (state: StateIF): number => {
 /** The Temporary Business Identifier. */
 export const getTempId = (state: StateIF): string => {
   return state.stateModel.tempId
+}
+
+/** The Business Identifier. */
+export const getBusinessId = (state: StateIF): string => {
+  return state.stateModel.tombstone.businessId
 }
 
 /** Whether this IA is for a Named Business. */

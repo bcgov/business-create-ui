@@ -650,20 +650,6 @@ li {
   }
 }
 
-.message-box {
-  background-color: $BCgovGold0;
-  border-color: $BCgovGold5;
-  border-radius: 0;
-
-  p {
-    margin: 1.25rem;
-    padding: 0;
-    font-size: 0.875rem;
-    letter-spacing: 0.01rem;
-    color: $gray7;
-  }
-}
-
 .gray-card {
   background-color: rgba(0, 0, 0, 0.06);
 }

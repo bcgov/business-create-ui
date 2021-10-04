@@ -250,6 +250,20 @@ ul.list {
   background-color: white !important;
 }
 
+.message-box {
+  background-color: $BCgovGold0 !important;
+  border-color: $BCgovGold5 !important;
+  border-radius: 0;
+
+  p {
+    margin: 1.25rem;
+    padding: 0;
+    font-size: 0.875rem;
+    letter-spacing: 0.01rem;
+    color: $gray7;
+  }
+}
+
 // Hides an element to all devices except screen readers
 .sr-only {
   position: absolute;

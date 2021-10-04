@@ -58,13 +58,14 @@ export default class EntityInfo extends Mixins(EnumMixin) {
   @Getter getUserEmail!: string
   @Getter getUserPhone!: string
   @Getter getEntityType!: CorpTypeCd
+  @Getter getFilingName!: FilingNames
   @Getter getNameRequestNumber!: string
   @Getter getTempId!: string
   @Getter getApprovedName!: string
 
   /** The entity application title.  */
   private get entityTitle (): string {
-    return `${this.getCorpTypeDescription(this.getEntityType)} ${FilingNames.INCORPORATION_APPLICATION}`
+    return `${this.getCorpTypeDescription(this.getEntityType)} ${this.getFilingName}`
   }
 
   /** The numbered entity name. */

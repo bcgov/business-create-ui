@@ -42,7 +42,13 @@ import { UploadRulesSummary } from '@/components/CreateRules'
 import { UploadMemorandumSummary } from '@/components/CreateMemorandum'
 
 // Interfaces
-import { IncorporationAgreementIF, PeopleAndRoleIF, ShareStructureIF, CreateRulesIF, CreateMemorandumIF } from '@/interfaces'
+import {
+  IncorporationAgreementIF,
+  PeopleAndRoleIF,
+  ShareStructureIF,
+  CreateRulesIF,
+  CreateMemorandumIF
+} from '@/interfaces'
 
 @Component({
   components: {

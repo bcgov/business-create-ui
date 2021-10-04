@@ -1,5 +1,5 @@
 import { shallowWrapperFactory } from '../jest-wrapper-factory'
-import DefineCompany from '@/views/DefineCompany.vue'
+import { DefineCompany } from '@/views'
 
 // Test Case Data
 const mockEntityInfo = [

@@ -120,6 +120,9 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
   @Getter isSaving!: boolean
   @Getter isSavingResuming!: boolean
   @Getter isFilingPaying!: boolean
+  @Getter isIncorporationFiling!: boolean
+  @Getter getTempId!: string
+  @Getter getBusinessId!: string
 
   @Action setIsSaving!: ActionBindingIF
   @Action setIsSavingResuming!: ActionBindingIF
@@ -142,6 +145,11 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
     this.emitGoToDashboard()
   }
 
+  /** The entity or temp registration identifier. */
+  private get entityId (): string {
+    return this.isIncorporationFiling ? this.getTempId : this.getBusinessId
+  }
+
   /**
    * Called when Save button is clicked.
    * @returns a promise (ie, this is an async method)
@@ -153,8 +161,11 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
 
     let filingComplete: any
     try {
-      const filing = await this.buildFiling()
-      filingComplete = await this.updateFiling(filing, true)
+      const filing = this.isIncorporationFiling
+        ? await this.buildIncorporationFiling()
+        : await this.buildDissolutionFiling()
+
+      filingComplete = await this.updateFiling(this.entityId, filing, true)
       // clear flag
       this.setHaveChanges(false)
     } catch (error) {
@@ -177,8 +188,11 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
 
     let filingComplete: any
     try {
-      const filing = await this.buildFiling()
-      filingComplete = await this.updateFiling(filing, true)
+      const filing = this.isIncorporationFiling
+        ? await this.buildIncorporationFiling()
+        : await this.buildDissolutionFiling()
+
+      filingComplete = await this.updateFiling(this.entityId, filing, true)
       // clear flag
       this.setHaveChanges(false)
     } catch (error) {
@@ -232,8 +246,11 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
 
       let filingComplete: any
       try {
-        const filing = await this.buildFiling()
-        filingComplete = await this.updateFiling(filing, false)
+        const filing = this.isIncorporationFiling
+          ? await this.buildIncorporationFiling()
+          : await this.buildDissolutionFiling()
+
+        filingComplete = await this.updateFiling(this.entityId, filing, false)
         // clear flag
         this.setHaveChanges(false)
       } catch (error) {

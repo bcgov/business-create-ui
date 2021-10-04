@@ -1,3 +1,4 @@
+import AuthApiMixin from '@/mixins/auth-api-mixin'
 import CommonMixin from './common-mixin'
 import DateMixin from './date-mixin'
 import EnumMixin from '@/mixins/enum-mixin'
@@ -9,6 +10,7 @@ import CurrencyLookupMixin from '@/mixins/currency-lookup-mixin'
 import DocumentMixin from '@/mixins/document-mixin'
 
 export {
+  AuthApiMixin,
   CommonMixin,
   DateMixin,
   EntityFilterMixin,

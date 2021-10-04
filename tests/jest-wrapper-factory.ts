@@ -10,7 +10,7 @@ import { getVuexStore } from '@/store'
 
 // Utils
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
-import { CompanyResources } from '@/resources'
+import { IncorporationResources } from '@/resources'
 
 const vuetify = new Vuetify({})
 const localVue = createLocalVue()
@@ -20,8 +20,9 @@ Vue.use(Vuetify)
 Vue.use(Vuelidate)
 localVue.use(VueRouter)
 
-export const shallowWrapperFactory = (component, propsData = null, stateValues = null) => {
+export const shallowWrapperFactory = (component, propsData = null, stateValues = null, routeName = null) => {
   const store = getVuexStore()
+  if (routeName) router.push({ name: routeName })
 
   if (stateValues) applyStoreValues(store, stateValues)
   return shallowMount(component, {
@@ -35,8 +36,9 @@ export const shallowWrapperFactory = (component, propsData = null, stateValues =
   })
 }
 
-export const wrapperFactory = (component, propsData = null, stateValues = null) => {
+export const wrapperFactory = (component, propsData = null, stateValues = null, routeName = null) => {
   const store = getVuexStore()
+  if (routeName) router.push({ name: routeName })
 
   if (stateValues) applyStoreValues(store, stateValues)
   return mount(component, {
@@ -52,7 +54,7 @@ export const wrapperFactory = (component, propsData = null, stateValues = null) 
 
 const applyStoreValues = (store, stateValues) => {
   // Set Company Resources
-  store.state.resourceModel = CompanyResources.find(x => x.entityType === stateValues.entityType)
+  store.state.resourceModel = IncorporationResources.find(x => x.entityType === stateValues.entityType)
 
   // Set individual state properties
   const stateKeys = Object.keys(stateValues)

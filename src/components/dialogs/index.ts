@@ -2,7 +2,9 @@ import AccountAuthorizationDialog from './AccountAuthorizationDialog.vue'
 import ConfirmDialog from './ConfirmDialog.vue'
 import ConfirmRemoveDialog from './ConfimRemoveDialog.vue'
 import FetchErrorDialog from './FetchErrorDialog.vue'
+import InvalidDissolutionDialog from '@/components/dialogs/InvalidDissolutionDialog.vue'
 import InvalidIncorporationApplicationDialog from './InvalidIncorporationApplicationDialog.vue'
+import InvalidRouteDialog from './InvalidRouteDialog.vue'
 import NameRequestInvalidErrorDialog from './NameRequestInvalidErrorDialog.vue'
 import PaymentErrorDialog from './PaymentErrorDialog.vue'
 import SaveErrorDialog from './SaveErrorDialog.vue'
@@ -13,7 +15,9 @@ export {
   ConfirmDialog,
   ConfirmRemoveDialog,
   FetchErrorDialog,
+  InvalidDissolutionDialog,
   InvalidIncorporationApplicationDialog,
+  InvalidRouteDialog,
   NameRequestInvalidErrorDialog,
   PaymentErrorDialog,
   SaveErrorDialog,

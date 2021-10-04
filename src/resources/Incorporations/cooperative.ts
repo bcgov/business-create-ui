@@ -1,9 +1,9 @@
-import { ResourceIF } from '@/interfaces'
+import { IncorporationResourceIF } from '@/interfaces'
 import { CorpTypeCd, FilingCodes, NameRequestTypes, Rules, ItemTypes } from '@/enums'
 import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
-import { CoopStepsTemplate } from '@/resources/stepTemplates'
+import { CoopStepsTemplate } from '@/resources/Incorporations/stepTemplates'
 
-export const CooperativeResource: ResourceIF = {
+export const CooperativeResource: IncorporationResourceIF = {
   entityType: CorpTypeCd.COOP,
   displayName: GetCorpFullDescription(CorpTypeCd.COOP),
   title: '',

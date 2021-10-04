@@ -1,0 +1,20 @@
+<template>
+  <div>
+    UploadAffidavit Placeholder
+  </div>
+</template>
+
+<script lang="ts">
+// Libraries
+import { Component, Mixins, Vue, Watch } from 'vue-property-decorator'
+import { Getter, Action } from 'vuex-class'
+
+@Component({
+  components: {}
+})
+export default class UploadAffidavit extends Vue {}
+</script>
+
+<style lang="scss" scoped>
+@import '@/assets/styles/theme.scss';
+</style>
