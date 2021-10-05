@@ -46,7 +46,7 @@ function getPersonList (roles = [completingPartyRole]): any {
         firstName: 'Adam',
         lastName: 'Smith',
         middleName: 'D',
-        orgName: '',
+        organizationName: '',
         type: 'Person'
       },
       roles: roles,
