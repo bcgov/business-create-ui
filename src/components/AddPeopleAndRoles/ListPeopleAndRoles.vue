@@ -161,7 +161,7 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin, EntityFilter
 
   /** Returns true if officer is an organization (corporation/firm). */
   private isOrg (orgPerson: any): boolean {
-    return (orgPerson.officer?.partyType === IncorporatorTypes.CORPORATION)
+    return (orgPerson.officer?.partyType === IncorporatorTypes.ORGANIZATION)
   }
 
   /**
@@ -170,7 +170,7 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin, EntityFilter
    * @returns The appropriate Corporation or Person name.
    */
   private formatName (filing: any): string {
-    return filing?.officer?.orgName ? filing?.officer?.orgName
+    return filing?.officer?.organizationName ? filing?.officer?.organizationName
       : `${filing.officer.firstName} ${filing.officer.middleName || ''} ${filing.officer.lastName}`
   }
 
