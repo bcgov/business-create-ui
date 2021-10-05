@@ -24,7 +24,7 @@ export const EmptyOfficer: OfficerIF = {
   firstName: '',
   lastName: '',
   middleName: '',
-  orgName: '',
+  organizationName: '',
   partyType: null
 }
 
