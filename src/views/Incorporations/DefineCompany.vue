@@ -83,8 +83,7 @@
       <header id="registered-office-contact-header">
         <h2>{{isTypeCoop ? 4 : 3 }}. Registered Office Contact Information</h2>
         <p>Enter the contact information for the business. The Corporate Registry will use this to communicate with the
-          business in the future,
-          including sending documents and notifications.
+          business in the future, including sending documents and notifications.
         </p>
       </header>
       <div :class="{ 'invalid-section': getShowErrors && !businessContactFormValid }">
