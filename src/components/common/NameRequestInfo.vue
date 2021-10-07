@@ -63,7 +63,7 @@
       </v-col>
     </v-row>
     <!-- Name Translation Option -->
-    <v-row id="name-translation-info">
+    <v-row  v-if="!isTypeCoop" id="name-translation-info">
       <v-col>
         <label>
           <strong>Name Translation</strong>
@@ -91,7 +91,7 @@
       </v-col>
     </v-row>
     <!-- Name Translation Components -->
-    <v-row v-if="hasNameTranslation" id="name-translation-container">
+    <v-row v-if="!isTypeCoop && hasNameTranslation" id="name-translation-container">
       <!-- Spacer Column -->
       <v-col></v-col>
       <v-col>
@@ -173,6 +173,7 @@ export default class NameRequestInfo extends Mixins(DateMixin, EnumMixin) {
   @Getter getNameRequestDetails!: NameRequestDetailsIF
   @Getter getNameRequestApplicant!: NameRequestApplicantIF
   @Getter getNameTranslations!: NameTranslationIF[]
+  @Getter isTypeCoop: boolean
 
   /** The entity title.  */
   private get getEntityTypeDescription (): string {
