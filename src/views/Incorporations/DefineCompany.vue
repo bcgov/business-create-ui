@@ -82,11 +82,8 @@
     <section class="mt-10" v-show="isEntityType">
       <header id="registered-office-contact-header">
         <h2>{{isTypeCoop ? 4 : 3 }}. Registered Office Contact Information</h2>
-        <p>Enter the contact information for the Registered Office. The Corporate Registry will use this to
-           communicate with the company in the future, including sending the following documents and
-           notifications: a Certificate of Incorporation, a certified copy of the Incorporation Application,
-           a certified copy of the Notice of Articles, payment receipts, and notifications such as
-           Annual Report reminders.
+        <p>Enter the contact information for the business. The Corporate Registry will use this to communicate with the
+          business in the future, including sending documents and notifications.
         </p>
       </header>
       <div :class="{ 'invalid-section': getShowErrors && !businessContactFormValid }">
