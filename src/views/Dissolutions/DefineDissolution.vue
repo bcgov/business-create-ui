@@ -2,9 +2,9 @@
   <div id="define-dissolution">
     <v-card outlined class="message-box mt-10">
       <p>
-        <strong>Important:</strong> You are about to voluntarily dissolve [name of cooperative association]. Once this
-        process is completed and the required documents are filed, the Cooperative Association is struck from the
-        register and dissolved, ceasing to be an incorporated cooperative under the Cooperative Association Act. All
+        <strong>Important:</strong> You are about to voluntarily dissolve <strong>{{ getBusinessLegalName }}</strong>.
+        Once this process is completed and the required documents are filed, the Cooperative Association is struck from
+        the register and dissolved, ceasing to be an incorporated cooperative under the Cooperative Association Act. All
         assets and liabilities must be addressed prior to filing.
       </p>
     </v-card>
@@ -13,7 +13,7 @@
       <header id="association-details">
         <h2>1. Association Details</h2>
       </header>
-      <!-- Component goes here -->
+      <AssociationDetails class="mt-5"/>
     </section>
 
     <section class="mt-10">
@@ -43,12 +43,16 @@
 // Libraries
 import { Component, Mixins, Vue, Watch } from 'vue-property-decorator'
 import { Getter, Action } from 'vuex-class'
+import { AssociationDetails } from '@/components/DefineDissolution'
 
 @Component({
-  components: {}
+  components: {
+    AssociationDetails
+  }
 })
 export default class DefineDissolution extends Vue {
   // @Getter
+  @Getter getBusinessLegalName!: string
 }
 </script>
 

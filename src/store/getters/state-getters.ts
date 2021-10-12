@@ -2,7 +2,7 @@ import { AccountTypes, CoopType, CorpTypeCd, FilingNames, FilingTypes } from '@/
 import {
   AccountInformationIF,
   AddressIF,
-  BusinessContactIF,
+  BusinessContactIF, BusinessIF,
   CertifyIF,
   CreateMemorandumIF,
   CreateRulesIF,
@@ -76,6 +76,11 @@ export const getEntityType = (state: StateIF): CorpTypeCd => {
   return state.stateModel.entityType
 }
 
+/** The account folio number. */
+export const getAccountFolioNumber = (state: StateIF): string => {
+  return state.stateModel.tombstone.folioNumber
+}
+
 /** Whether the entity is a BCOMP. */
 export const isTypeBcomp = (state: StateIF): boolean => {
   return (state.stateModel.entityType === CorpTypeCd.BENEFIT_COMPANY)
@@ -128,7 +133,17 @@ export const getTempId = (state: StateIF): string => {
 
 /** The Business Identifier. */
 export const getBusinessId = (state: StateIF): string => {
-  return state.stateModel.tombstone.businessId
+  return state.stateModel.business.businessId
+}
+
+/** The Business Legal Name. */
+export const getBusinessLegalName = (state: StateIF): string => {
+  return state.stateModel.business.legalName
+}
+
+/** The Business Data. */
+export const getBusiness = (state: StateIF): BusinessIF => {
+  return state.stateModel.business
 }
 
 /** Whether this IA is for a Named Business. */

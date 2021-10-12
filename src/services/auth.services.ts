@@ -1,5 +1,6 @@
 // Libraries
 import axios from '@/utils/axios-auth'
+import { AuthInformationIF } from '@/interfaces'
 import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
 
 /**
@@ -18,6 +19,29 @@ export default class AuthServices {
     return axios.get(url)
       .then(response => {
         if (response?.data?.roles) return response.data.roles
+        throw new Error('Invalid response data ')
+      })
+  }
+
+  /**
+   * Fetches the auth info of the current business.
+   * @returns a promise to return the data
+   */
+  static async fetchAuthInfo (businessId): Promise<AuthInformationIF> {
+    if (!businessId) throw new Error('Invalid business id')
+
+    const url = `entities/${businessId}`
+    const authUrl = sessionStorage.getItem('AUTH_API_URL')
+    const config = { baseURL: authUrl }
+
+    return axios.get(url, config)
+      .then(response => {
+        if (response?.data) {
+          return {
+            contacts: response.data.contacts,
+            folioNumber: response.data.folioNumber
+          }
+        }
         throw new Error('Invalid response data ')
       })
   }

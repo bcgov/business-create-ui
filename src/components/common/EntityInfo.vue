@@ -13,7 +13,7 @@
       <v-row no-gutters class="pt-3 pb-3">
         <v-col cols="12" md="9">
           <div id="nr-header" v-show="isEntityType">
-            <span class="header-title" id="entity-legal-name">{{ getApprovedName || getNumberedEntityName }}</span>
+            <span class="header-title" id="entity-legal-name">{{ legalName || getNumberedEntityName }}</span>
           </div>
           <div id="entity-title" class="business-info">
             <span>{{ entityTitle }}</span>
@@ -47,14 +47,14 @@ import { Component, Mixins } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 
 // Interfaces & enums
-import { CorpTypeCd, FilingNames } from '@/enums'
+import { CorpTypeCd, FilingNames, FilingTypes } from '@/enums'
 
 // Modules
 import { EnumMixin } from '@/mixins'
 
 @Component({})
 export default class EntityInfo extends Mixins(EnumMixin) {
-  @Getter isEntityType!: boolean
+  @Getter getBusinessLegalName!: string
   @Getter getUserEmail!: string
   @Getter getUserPhone!: string
   @Getter getEntityType!: CorpTypeCd
@@ -62,6 +62,8 @@ export default class EntityInfo extends Mixins(EnumMixin) {
   @Getter getNameRequestNumber!: string
   @Getter getTempId!: string
   @Getter getApprovedName!: string
+  @Getter getFilingType!: FilingTypes
+  @Getter isEntityType!: boolean
 
   /** The entity application title.  */
   private get entityTitle (): string {
@@ -73,6 +75,15 @@ export default class EntityInfo extends Mixins(EnumMixin) {
     return `${this.getCorpTypeNumberedDescription(this.getEntityType)}`
   }
 
+  private get legalName (): string {
+    switch (this.getFilingType) {
+      case FilingTypes.DISSOLUTION:
+        return this.getBusinessLegalName
+      case FilingTypes.INCORPORATION_APPLICATION:
+        return this.getApprovedName
+    }
+  }
+
   /** The route breadcrumbs. */
   private get breadcrumbs (): Array<any> {
     return [
@@ -82,7 +93,7 @@ export default class EntityInfo extends Mixins(EnumMixin) {
         href: `${sessionStorage.getItem('AUTH_WEB_URL')}business`
       },
       {
-        text: this.getApprovedName || this.getNumberedEntityName,
+        text: this.legalName || this.getNumberedEntityName,
         disabled: false,
         href: `${sessionStorage.getItem('DASHBOARD_URL')}${this.getTempId}`
       },

@@ -5,7 +5,7 @@ import { Action, Getter } from 'vuex-class'
 import { NOT_FOUND } from 'http-status-codes'
 
 // Interfaces
-import { ActionBindingIF, IncorporationFilingIF } from '@/interfaces'
+import { ActionBindingIF, DissolutionFilingIF, IncorporationFilingIF } from '@/interfaces'
 import { FilingTypes } from '@/enums'
 
 /**
@@ -53,7 +53,7 @@ export default class LegalApiMixin extends Vue {
    * Fetches a draft dissolution filing.
    * @returns a promise to return the draft filing, or null if not found
    */
-  async fetchDraftDissolution (): Promise<any> {
+  async fetchDraftDissolution (): Promise<DissolutionFilingIF> {
     // get the draft filing from the tasks endpoint
     const url = `businesses/${this.getBusinessId}/tasks`
     return axios.get(url)
@@ -79,7 +79,7 @@ export default class LegalApiMixin extends Vue {
    * @param isDraft boolean indicating whether to save draft or complete the filing
    * @returns a promise to return the updated filing
    */
-  async updateFiling (id: string, filing: IncorporationFilingIF, isDraft: boolean): Promise<any> {
+  async updateFiling (id: string, filing: IncorporationFilingIF | DissolutionFilingIF, isDraft: boolean): Promise<any> {
     if (!filing) throw new Error('updateFiling(), invalid filing')
     const filingId = this.getFilingId
     if (!filingId) throw new Error('updateFiling(), invalid filing id')
