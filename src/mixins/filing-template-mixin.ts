@@ -7,7 +7,7 @@ import { DateMixin } from '@/mixins'
 import {
   ActionBindingIF, BusinessContactIF, CertifyIF, CreateRulesIF, DateTimeIF, DefineCompanyIF, DissolutionFilingIF,
   IncorporationAgreementIF, IncorporationFilingIF, NameTranslationIF, PeopleAndRoleIF, DocIF,
-  ShareStructureIF, CreateMemorandumIF
+  ShareStructureIF, CreateMemorandumIF, BusinessIF
 } from '@/interfaces'
 
 // Constants and enums
@@ -24,6 +24,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Getter isNamedBusiness!: boolean
   @Getter getNameRequestNumber!: string
   @Getter getApprovedName!: string
+  @Getter getBusiness!: BusinessIF
   @Getter getTempId!: string
   @Getter getIncorporationDateTime!: DateTimeIF
   @Getter getEntityType!: CorpTypeCd
@@ -41,7 +42,9 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Getter getBusinessId!: string
 
   @Action setEntityType!: ActionBindingIF
+  @Action setBusinessAddress!: ActionBindingIF
   @Action setBusinessContact!: ActionBindingIF
+  @Action setLegalName!: ActionBindingIF
   @Action setCooperativeType!: ActionBindingIF
   @Action setOfficeAddresses!: ActionBindingIF
   @Action setNameTranslationState!: ActionBindingIF
@@ -245,7 +248,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
    * Constructs a filing body from store data. Used when saving a filing.
    * @returns the filing body to save
    */
-  buildDissolutionFiling (): any {
+  buildDissolutionFiling (): DissolutionFilingIF {
     // Build filing.
     const filing: DissolutionFilingIF = {
       filing: {
@@ -259,7 +262,9 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
           legalType: this.getEntityType,
           identifier: this.getBusinessId
         },
-        dissolution: {}
+        dissolution: {
+          custodialOffice: this.getBusiness.officeAddress
+        }
       }
     }
 
@@ -271,8 +276,14 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
    * @param draftFiling the filing body to parse
    */
   parseDissolutionDraft (draftFiling: any): void {
-    // Set Entity Type
+    // Set legal type
     this.setEntityType(draftFiling.business.legalType)
+
+    // Set legal name
+    this.setLegalName(draftFiling.business.legalName)
+
+    // Set business address
+    this.setBusinessAddress(draftFiling.dissolution.custodialOffice)
 
     // TODO: Populate filing as components are introduced.
   }

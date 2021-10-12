@@ -1,6 +1,7 @@
 import { CorpTypeCd } from '@/enums'
 import {
   AccountInformationIF,
+  BusinessIF,
   CertifyIF,
   CreateMemorandumIF,
   CreateRulesIF,
@@ -19,6 +20,7 @@ import {
 export interface StateModelIF {
   tombstone: TombstoneIF
   accountInformation: AccountInformationIF
+  business: BusinessIF
   nameRequest: NameRequestIF
   nameTranslations: NameTranslationIF[]
   currentDate: string

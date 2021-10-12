@@ -2,6 +2,7 @@ import { CoopType, CorpTypeCd, FilingTypes } from '@/enums'
 import {
   AccountInformationIF,
   AddressIF,
+  BaseAddressObjIF,
   BusinessContactIF,
   CertifyIF,
   IncorporationAddressIF,
@@ -17,7 +18,15 @@ import {
 } from '@/interfaces'
 
 export const mutateBusinessId = (state: StateIF, businessId: string) => {
-  state.stateModel.tombstone.businessId = businessId
+  state.stateModel.business.businessId = businessId
+}
+
+export const mutateBusinessAddress = (state: StateIF, address: BaseAddressObjIF) => {
+  state.stateModel.business.officeAddress = address
+}
+
+export const mutateLegalName = (state: StateIF, legalName: string) => {
+  state.stateModel.business.legalName = legalName
 }
 
 export const mutateFilingType = (state: StateIF, filingType: FilingTypes) => {

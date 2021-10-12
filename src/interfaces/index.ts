@@ -9,6 +9,7 @@ export * from './utils-interfaces/validation-item-detail-interface'
 // Store Interfaces
 export * from './store-interfaces/state-interface'
 export * from './store-interfaces/action-interface'
+export * from './store-interfaces/state-interfaces/business-interface'
 export * from './store-interfaces/state-interfaces/tombstone-interface'
 export * from './store-interfaces/state-interfaces/name-request-interface'
 export * from './store-interfaces/state-interfaces/account-information-interface'

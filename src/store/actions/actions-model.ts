@@ -10,6 +10,14 @@ export const setBusinessId: ActionIF = ({ commit }, businessId): void => {
   commit('mutateBusinessId', businessId)
 }
 
+export const setBusinessAddress: ActionIF = ({ commit }, address): void => {
+  commit('mutateBusinessAddress', address)
+}
+
+export const setLegalName: ActionIF = ({ commit }, legalName): void => {
+  commit('mutateLegalName', legalName)
+}
+
 export const setFilingType: ActionIF = ({ commit }, filingType): void => {
   commit('mutateFilingType', filingType)
 }
