@@ -228,6 +228,7 @@ export default class App extends Mixins(
   @Getter isRoleStaff!: boolean
   @Getter getSteps!: Array<StepIF>
 
+  @Action setAccountFolio!: ActionBindingIF
   @Action setBusinessId!: ActionBindingIF
   @Action setCurrentStep!: ActionBindingIF
   @Action setCurrentDate!: ActionBindingIF
@@ -481,8 +482,12 @@ export default class App extends Mixins(
 
       // get account folio
       if (this.isPremiumAccount) {
-        const authInfo = await AuthServices.fetchAuthInfo(this.getBusinessId)
-        this.setFolioNumber(authInfo?.folioNumber)
+        const authInfo = await AuthServices.fetchAuthInfo(this.getBusinessId).catch(error => {
+          console.log('Account info error =', error) // eslint-disable-line no-console
+          this.accountAuthorizationDialog = true
+          throw error // go to catch()
+        })
+        this.setAccountFolio(authInfo?.folioNumber)
       }
 
       // update Launch Darkly

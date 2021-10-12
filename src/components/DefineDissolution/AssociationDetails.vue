@@ -55,7 +55,7 @@
           <label>Folio or Reference Number</label>
         </v-col>
         <v-col md="9">
-          <div id="lbl-folio-number">{{ !!getFolioNumber ? getFolioNumber : 'Not entered' }}</div>
+          <div id="lbl-folio-number">{{ !!getAccountFolioNumber ? getAccountFolioNumber : 'Not entered' }}</div>
         </v-col>
       </v-row>
     </div>
@@ -103,6 +103,7 @@ import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
 export default class AssociationDetails extends Mixins(CommonMixin, EntityFilterMixin, EnumMixin) {
   // Global getters
   @Getter getApprovedName!: string
+  @Getter getAccountFolioNumber!: string
   @Getter getBusinessId!: string
   @Getter getBusiness!: BusinessIF
   @Getter getCompanyDisplayName!: string
@@ -110,14 +111,11 @@ export default class AssociationDetails extends Mixins(CommonMixin, EntityFilter
   @Getter getBusinessLegalName!: string
   @Getter getUserEmail!: string
   @Getter getUserPhone!: string
-  @Getter getFolioNumber!: string
   @Getter isPremiumAccount!: boolean
 
   // Global setters
   @Action setUserEmail!: ActionBindingIF
   @Action setUserPhone: ActionBindingIF
-
-  private folioNumber!: string // WHERE DO WE GET THIS..
 
   /** The entity description  */
   private get entityDescription (): string {

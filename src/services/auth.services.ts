@@ -41,11 +41,8 @@ export default class AuthServices {
             contacts: response.data.contacts,
             folioNumber: response.data.folioNumber
           }
-        } else {
-          // eslint-disable-next-line no-console
-          console.log('fetchAuthInfo() error - invalid response =', response)
-          throw new Error('Invalid API response')
         }
+        throw new Error('Invalid response data ')
       })
   }
 

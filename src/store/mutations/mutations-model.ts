@@ -137,6 +137,10 @@ export const mutateAddPeopleAndRoleStepValidity = (state: StateIF, valid: boolea
   state.stateModel.addPeopleAndRoleStep.valid = valid
 }
 
+export const mutateAccountFolioNumber = (state: StateIF, folioNumber: string) => {
+  state.stateModel.tombstone.folioNumber = folioNumber
+}
+
 export const mutateFolioNumber = (state: StateIF, folioNumber: string) => {
   state.stateModel.defineCompanyStep.folioNumber = folioNumber
 }

@@ -10,7 +10,8 @@ export const stateModel: StateModelIF = {
     userFirstName: '',
     userLastName: '',
     userKeycloakGuid: null,
-    userAddress: null
+    userAddress: null,
+    folioNumber: ''
   },
   business: {
     businessId: '',
