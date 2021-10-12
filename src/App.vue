@@ -224,6 +224,7 @@ export default class App extends Mixins(
   @Getter getFilingName!: FilingNames
   @Getter isDissolutionFiling!: boolean
   @Getter isIncorporationFiling!: boolean
+  @Getter isPremiumAccount!: boolean
   @Getter isRoleStaff!: boolean
   @Getter getSteps!: Array<StepIF>
 
@@ -477,6 +478,12 @@ export default class App extends Mixins(
         this.accountAuthorizationDialog = true
         throw error // go to catch()
       })
+
+      // get account folio
+      if (this.isPremiumAccount) {
+        const authInfo = await AuthServices.fetchAuthInfo(this.getBusinessId)
+        this.setFolioNumber(authInfo?.folioNumber)
+      }
 
       // update Launch Darkly
       await this.updateLaunchDarkly(userInfo).catch(error => {

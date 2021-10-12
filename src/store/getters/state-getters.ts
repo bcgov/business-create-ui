@@ -76,6 +76,11 @@ export const getEntityType = (state: StateIF): CorpTypeCd => {
   return state.stateModel.entityType
 }
 
+/** The account folio number. */
+export const getFolioNumber = (state: StateIF): string => {
+  return state.stateModel.defineCompanyStep.folioNumber
+}
+
 /** Whether the entity is a BCOMP. */
 export const isTypeBcomp = (state: StateIF): boolean => {
   return (state.stateModel.entityType === CorpTypeCd.BENEFIT_COMPANY)
