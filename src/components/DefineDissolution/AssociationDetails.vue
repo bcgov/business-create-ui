@@ -55,7 +55,7 @@
           <label>Folio or Reference Number</label>
         </v-col>
         <v-col md="9">
-          <div id="lbl-folio-number">{{ !!getAccountFolioNumber ? getAccountFolioNumber : 'Not entered' }}</div>
+          <div id="lbl-folio-number">{{ getAccountFolioNumber || 'Not entered' }}</div>
         </v-col>
       </v-row>
     </div>
