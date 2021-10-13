@@ -91,7 +91,7 @@ import { ContactInfo } from '@bcrs-shared-components/contact-info'
 import { CommonMixin, EntityFilterMixin, EnumMixin } from '@/mixins'
 
 // Enums
-import { CoopType, RouteNames } from '@/enums'
+import { CoopType } from '@/enums'
 import { isEmpty } from 'lodash'
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
 
@@ -124,9 +124,6 @@ export default class AssociationDetails extends Mixins(CommonMixin, EntityFilter
   @Action setUserEmail!: ActionBindingIF
   @Action setUserPhone: ActionBindingIF
 
-  // Enum for template
-  readonly RouteNames = RouteNames
-
   /** The entity description.  */
   private get entityDescription (): string {
     return `${this.getCorpTypeDescription(this.getEntityType)}`
@@ -151,7 +148,7 @@ export default class AssociationDetails extends Mixins(CommonMixin, EntityFilter
       this.setUserEmail(response.email)
       this.setUserPhone(response.phone)
     }).catch(error => {
-      this.$root.$emit('save-error-event', 'Contact Information Update', error)
+      this.$root.$emit('save-error-event', error)
     })
   }
 }

@@ -58,7 +58,7 @@
 
     <SaveErrorDialog
       attach="#app"
-      :filingName="saveAction"
+      :filingName="saveErrorDialogName"
       :dialog="saveErrorDialog"
       :errors="saveErrors"
       :warnings="saveWarnings"
@@ -142,7 +142,7 @@ import { Action, Getter } from 'vuex-class'
 import KeycloakService from 'sbc-common-components/src/services/keycloak.services'
 import { PAYMENT_REQUIRED } from 'http-status-codes'
 import * as Sentry from '@sentry/browser'
-import { updateLdUser, getFeatureFlag } from '@/utils'
+import { getFeatureFlag, updateLdUser } from '@/utils'
 
 // Components
 import PaySystemAlert from 'sbc-common-components/src/components/PaySystemAlert.vue'
@@ -172,7 +172,8 @@ import {
   AddressIF,
   ConfirmDialogType,
   DissolutionResourceIF,
-  FilingDataIF, IncorporationResourceIF,
+  FilingDataIF,
+  IncorporationResourceIF,
   StepIF
 } from '@/interfaces'
 import { DissolutionResources, IncorporationResources } from '@/resources'
@@ -259,7 +260,6 @@ export default class App extends Mixins(
   private nameRequestInvalidErrorDialog: boolean = false
   private nameRequestInvalidType: string = ''
   private haveData: boolean = false
-  private saveAction: string = ''
   private saveErrors: Array<object> = []
   private saveWarnings: Array<object> = []
   private fileAndPayInvalidNameRequestDialog: boolean = false
@@ -300,6 +300,16 @@ export default class App extends Mixins(
     return process.env.ABOUT_TEXT
   }
 
+  /** The header name for the Save Error Dialog. */
+  private get saveErrorDialogName (): string {
+    switch (this.getFilingType) {
+      case FilingTypes.INCORPORATION_APPLICATION:
+        return 'Application'
+      case FilingTypes.DISSOLUTION:
+        return 'Filing'
+    }
+  }
+
   /** Helper to check is the current route matches */
   private isRouteName (routeName: string): boolean {
     return this.$route.name === routeName
@@ -317,9 +327,8 @@ export default class App extends Mixins(
     }
 
     // listen for save error event
-    this.$root.$on('save-error-event', async (saveAction, error) => {
+    this.$root.$on('save-error-event', async error => {
       // save errors/warnings
-      this.saveAction = saveAction
       this.saveErrors = error?.response?.data?.errors || []
       this.saveWarnings = error?.response?.data?.warnings || []
 
