@@ -1,4 +1,4 @@
-import { CoopType, CorpTypeCd, FilingTypes } from '@/enums'
+import { CoopType, CorpTypeCd, DissolutionTypes, FilingTypes } from '@/enums'
 import {
   AccountInformationIF,
   AddressIF,
@@ -31,6 +31,10 @@ export const mutateLegalName = (state: StateIF, legalName: string) => {
 
 export const mutateFilingType = (state: StateIF, filingType: FilingTypes) => {
   state.stateModel.tombstone.filingType = filingType
+}
+
+export const mutateDissolutionType = (state: StateIF, dissolutionType: DissolutionTypes) => {
+  state.stateModel.dissolution.dissolutionType = dissolutionType
 }
 
 export const mutateTempId = (state: StateIF, tempId: string) => {

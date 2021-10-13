@@ -700,7 +700,7 @@ export default class App extends Mixins(
     const userInfo = await AuthServices.fetchUserInfo()
 
     if (this.isDissolutionFiling) {
-      let { contacts, folioNumber } = await AuthServices.fetchBusinessInfo(this.getBusinessId)
+      let { contacts, folioNumber } = await AuthServices.fetchAuthInfo(this.getBusinessId)
       userInfo.contacts = contacts
       this.setAccountFolio(folioNumber)
     }

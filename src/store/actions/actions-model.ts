@@ -22,6 +22,10 @@ export const setFilingType: ActionIF = ({ commit }, filingType): void => {
   commit('mutateFilingType', filingType)
 }
 
+export const setDissolutionType: ActionIF = ({ commit }, dissolutionType): void => {
+  commit('mutateDissolutionType', dissolutionType)
+}
+
 export const setEntityType = ({ commit }, entityType: CorpTypeCd): void => {
   commit('mutateEntityType', entityType)
 }

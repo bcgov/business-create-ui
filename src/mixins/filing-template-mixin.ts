@@ -12,7 +12,7 @@ import {
 
 // Constants and enums
 import { INCORPORATION_APPLICATION } from '@/constants'
-import { CorpTypeCd, FilingNames, FilingTypes } from '@/enums'
+import { CorpTypeCd, DissolutionTypes, FilingNames, FilingTypes } from '@/enums'
 
 /**
  * Mixin that provides the integration with the Legal API.
@@ -25,6 +25,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Getter getNameRequestNumber!: string
   @Getter getApprovedName!: string
   @Getter getBusiness!: BusinessIF
+  @Getter getDissolutionType!: DissolutionTypes
   @Getter getTempId!: string
   @Getter getIncorporationDateTime!: DateTimeIF
   @Getter getEntityType!: CorpTypeCd
@@ -44,6 +45,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Action setEntityType!: ActionBindingIF
   @Action setBusinessAddress!: ActionBindingIF
   @Action setBusinessContact!: ActionBindingIF
+  @Action setDissolutionType!: ActionBindingIF
   @Action setLegalName!: ActionBindingIF
   @Action setCooperativeType!: ActionBindingIF
   @Action setOfficeAddresses!: ActionBindingIF
@@ -263,7 +265,8 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
           identifier: this.getBusinessId
         },
         dissolution: {
-          custodialOffice: this.getBusiness.officeAddress
+          custodialOffice: this.getBusiness.officeAddress,
+          dissolutionType: this.getDissolutionType
         }
       }
     }
@@ -276,15 +279,13 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
    * @param draftFiling the filing body to parse
    */
   parseDissolutionDraft (draftFiling: any): void {
-    // Set legal type
+    // Set Business data
     this.setEntityType(draftFiling.business.legalType)
-
-    // Set legal name
     this.setLegalName(draftFiling.business.legalName)
 
-    // Set business address
-    this.setBusinessAddress(draftFiling.dissolution.custodialOffice)
-
     // TODO: Populate filing as components are introduced.
+    // Set Dissolution Data
+    this.setBusinessAddress(draftFiling.dissolution.custodialOffice)
+    this.setDissolutionType(draftFiling.dissolution.dissolutionType)
   }
 }
