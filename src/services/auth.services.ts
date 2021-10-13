@@ -1,6 +1,6 @@
 // Libraries
 import axios from '@/utils/axios-auth'
-import { AuthInformationIF } from '@/interfaces'
+import { AuthInformationIF, BusinessContactIF } from '@/interfaces'
 import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
 
 /**
@@ -27,7 +27,7 @@ export default class AuthServices {
    * Fetches the auth info of the current business.
    * @returns a promise to return the data
    */
-  static async fetchAuthInfo (businessId): Promise<AuthInformationIF> {
+  static async fetchAuthInfo (businessId: string): Promise<AuthInformationIF> {
     if (!businessId) throw new Error('Invalid business id')
 
     const url = `entities/${businessId}`
@@ -73,5 +73,27 @@ export default class AuthServices {
         if (response?.data) return response.data
         throw new Error('Invalid response data')
       })
+  }
+
+  /**
+   * Updates the businesses contact information.
+   * @param businessId The business identifier.
+   * @param contactInfo the contact information object.
+   */
+  static async updateContactInfo (businessId: string, contactInfo: BusinessContactIF): Promise<BusinessContactIF> {
+    if (!businessId) throw new Error('Invalid business id')
+
+    const data = {
+      email: contactInfo.email,
+      phone: contactInfo.phone,
+      phoneExtension: contactInfo.extension
+    }
+    const authUrl = sessionStorage.getItem('AUTH_API_URL')
+    const url = `${authUrl}entities/${businessId}/contacts`
+
+    return axios.put(url, data).then(response => {
+      if (response?.data) return response.data.contacts[0]
+      throw new Error('Invalid response data')
+    })
   }
 }

@@ -58,7 +58,7 @@
 
     <SaveErrorDialog
       attach="#app"
-      filingName="Application"
+      :filingName="saveErrorDialogName"
       :dialog="saveErrorDialog"
       :errors="saveErrors"
       :warnings="saveWarnings"
@@ -142,7 +142,7 @@ import { Action, Getter } from 'vuex-class'
 import KeycloakService from 'sbc-common-components/src/services/keycloak.services'
 import { PAYMENT_REQUIRED } from 'http-status-codes'
 import * as Sentry from '@sentry/browser'
-import { updateLdUser, getFeatureFlag } from '@/utils'
+import { getFeatureFlag, updateLdUser } from '@/utils'
 
 // Components
 import PaySystemAlert from 'sbc-common-components/src/components/PaySystemAlert.vue'
@@ -172,7 +172,8 @@ import {
   AddressIF,
   ConfirmDialogType,
   DissolutionResourceIF,
-  FilingDataIF, IncorporationResourceIF,
+  FilingDataIF,
+  IncorporationResourceIF,
   StepIF
 } from '@/interfaces'
 import { DissolutionResources, IncorporationResources } from '@/resources'
@@ -297,6 +298,16 @@ export default class App extends Mixins(
   /** The About text. */
   private get aboutText (): string {
     return process.env.ABOUT_TEXT
+  }
+
+  /** The header name for the Save Error Dialog. */
+  private get saveErrorDialogName (): string {
+    switch (this.getFilingType) {
+      case FilingTypes.INCORPORATION_APPLICATION:
+        return 'Application'
+      case FilingTypes.DISSOLUTION:
+        return 'Filing'
+    }
   }
 
   /** Helper to check is the current route matches */
@@ -479,16 +490,6 @@ export default class App extends Mixins(
         this.accountAuthorizationDialog = true
         throw error // go to catch()
       })
-
-      // get account folio
-      if (this.isPremiumAccount) {
-        const authInfo = await AuthServices.fetchAuthInfo(this.getBusinessId).catch(error => {
-          console.log('Account info error =', error) // eslint-disable-line no-console
-          this.accountAuthorizationDialog = true
-          throw error // go to catch()
-        })
-        this.setAccountFolio(authInfo?.folioNumber)
-      }
 
       // update Launch Darkly
       await this.updateLaunchDarkly(userInfo).catch(error => {
@@ -697,6 +698,12 @@ export default class App extends Mixins(
   private async getSaveUserInfo (): Promise<any> {
     // NB: will throw if API error
     const userInfo = await AuthServices.fetchUserInfo()
+
+    if (this.isDissolutionFiling) {
+      let { contacts, folioNumber } = await AuthServices.fetchAuthInfo(this.getBusinessId)
+      userInfo.contacts = contacts
+      this.setAccountFolio(folioNumber)
+    }
     if (!userInfo) throw new Error('Invalid user info')
 
     if (userInfo.contacts?.length > 0 && userInfo.contacts[0].email) {

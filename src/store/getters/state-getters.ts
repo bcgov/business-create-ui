@@ -1,4 +1,4 @@
-import { AccountTypes, CoopType, CorpTypeCd, FilingNames, FilingTypes } from '@/enums'
+import { AccountTypes, CoopType, CorpTypeCd, DissolutionTypes, FilingNames, FilingTypes } from '@/enums'
 import {
   AccountInformationIF,
   AddressIF,
@@ -45,10 +45,15 @@ export const getFilingName = (state: StateIF): FilingNames => {
     case FilingTypes.INCORPORATION_APPLICATION:
       return FilingNames.INCORPORATION_APPLICATION
     case FilingTypes.DISSOLUTION:
-      return FilingNames.DISSOLUTION_FILING
+      return FilingNames.VOLUNTARY_DISSOLUTION_FILING
     default:
       return null // Should never happen
   }
+}
+
+/** The dissolution filing type. */
+export const getDissolutionType = (state: StateIF): DissolutionTypes => {
+  return state.stateModel.dissolution.dissolutionType
 }
 
 /** Whether the user has "staff" auth role. */

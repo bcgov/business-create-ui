@@ -10,6 +10,7 @@ import {
   ShareClassIF
 } from '@/interfaces'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
+import { DissolutionTypes } from '@/enums'
 
 /** Interface for incorporation filing data saved to the Legal API. */
 export interface IncorporationFilingIF {
@@ -88,6 +89,7 @@ export interface DissolutionFilingIF {
     },
     dissolution: {
       custodialOffice: BaseAddressObjIF
+      dissolutionType: DissolutionTypes
     }
   }
 }

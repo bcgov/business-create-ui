@@ -15,8 +15,8 @@
         <!-- display generic message (no errors or warnings) -->
         <div class="genErr" v-if="(numErrors + numWarnings) < 1">
           <p>We were unable to save your {{filingName}}. You can continue to try to save this
-            filing or you can exit without saving and re-create this filing at another time.</p>
-          <p>If you exit this {{filingName}}, any changes you've made will not be saved.</p>
+            {{filingName}} or you can exit without saving and re-create this {{filingName}} at another time.</p>
+          <p>If you exit, any changes you've made will not be saved.</p>
         </div>
 
         <!-- display errors -->

@@ -7,6 +7,7 @@ import {
   CreateRulesIF,
   DateTimeIF,
   DefineCompanyIF,
+  DissolutionStateIF,
   IncorporationAgreementIF,
   NameRequestIF,
   NameTranslationIF,
@@ -21,6 +22,7 @@ export interface StateModelIF {
   tombstone: TombstoneIF
   accountInformation: AccountInformationIF
   business: BusinessIF
+  dissolution: DissolutionStateIF
   nameRequest: NameRequestIF
   nameTranslations: NameTranslationIF[]
   currentDate: string
