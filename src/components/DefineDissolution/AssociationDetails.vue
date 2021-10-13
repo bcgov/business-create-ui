@@ -66,6 +66,7 @@
       <ContactInfo
         :businessContact="businessContact"
         :disableActions="isSummary"
+        :customMsg="contactInfoMsg"
         @contactInfoChange="onContactInfoChange($event)"
       />
     </div>
@@ -123,6 +124,9 @@ export default class AssociationDetails extends Mixins(CommonMixin, EntityFilter
   // Global setters
   @Action setUserEmail!: ActionBindingIF
   @Action setUserPhone: ActionBindingIF
+
+  private contactInfoMsg = `Registered Office Contact Information is required for dissolution documents delivery.
+  Any changes made will be applied immediately.`
 
   /** The entity description.  */
   private get entityDescription (): string {
