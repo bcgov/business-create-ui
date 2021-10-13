@@ -1,7 +1,7 @@
-import { ContactPointIF } from '@bcrs-shared-components/interfaces'
+import { BusinessContactIF } from '@/interfaces'
 
 // Auth information interface
 export interface AuthInformationIF {
-  contacts: ContactPointIF[]
+  contacts: BusinessContactIF[]
   folioNumber: string
 }

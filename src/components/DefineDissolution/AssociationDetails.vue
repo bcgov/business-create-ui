@@ -65,6 +65,7 @@
     <div class="section-container">
       <ContactInfo
         :businessContact="businessContact"
+        :disableActions="isSummary"
         @contactInfoChange="onContactInfoChange($event)"
       />
     </div>
@@ -73,8 +74,11 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Mixins } from 'vue-property-decorator'
+import { Component, Mixins, Prop } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
+
+// Services
+import AuthServices from '@/services/auth.services'
 
 // Interfaces
 import { ActionBindingIF, AddressIF, BusinessContactIF, BusinessIF } from '@/interfaces'
@@ -101,6 +105,9 @@ import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
   }
 })
 export default class AssociationDetails extends Mixins(CommonMixin, EntityFilterMixin, EnumMixin) {
+  @Prop({ default: false })
+  private readonly isSummary: boolean
+
   // Global getters
   @Getter getApprovedName!: string
   @Getter getAccountFolioNumber!: string
@@ -117,11 +124,15 @@ export default class AssociationDetails extends Mixins(CommonMixin, EntityFilter
   @Action setUserEmail!: ActionBindingIF
   @Action setUserPhone: ActionBindingIF
 
-  /** The entity description  */
+  // Enum for template
+  readonly RouteNames = RouteNames
+
+  /** The entity description.  */
   private get entityDescription (): string {
     return `${this.getCorpTypeDescription(this.getEntityType)}`
   }
 
+  /** The business contact info. */
   private get businessContact (): BusinessContactIF {
     return {
       email: this.getUserEmail,
@@ -129,17 +140,19 @@ export default class AssociationDetails extends Mixins(CommonMixin, EntityFilter
     }
   }
 
-  // Enum for template
-  readonly RouteNames = RouteNames
-
   /** Whether the address object is empty. */
   private isEmptyAddress (address: AddressIF): boolean {
     return isEmpty(address)
   }
 
-  private onContactInfoChange (event: BusinessContactIF): void {
-    this.setUserEmail(event.email)
-    this.setUserPhone(event.phone)
+  /** Event handler for contact information changes. */
+  private async onContactInfoChange (event: BusinessContactIF): Promise<void> {
+    await AuthServices.updateContactInfo(this.getBusinessId, event).then(response => {
+      this.setUserEmail(response.email)
+      this.setUserPhone(response.phone)
+    }).catch(error => {
+      this.$root.$emit('save-error-event', 'Contact Information Update', error)
+    })
   }
 }
 </script>
@@ -157,5 +170,11 @@ export default class AssociationDetails extends Mixins(CommonMixin, EntityFilter
   font-size: 1.375rem;
   font-weight: bold;
   color:$gray9
+}
+
+::v-deep label {
+  font-size: 1rem;
+  font-weight: bold;
+  color: $gray9;
 }
 </style>

@@ -58,7 +58,7 @@
 
     <SaveErrorDialog
       attach="#app"
-      filingName="Application"
+      :filingName="saveAction"
       :dialog="saveErrorDialog"
       :errors="saveErrors"
       :warnings="saveWarnings"
@@ -259,6 +259,7 @@ export default class App extends Mixins(
   private nameRequestInvalidErrorDialog: boolean = false
   private nameRequestInvalidType: string = ''
   private haveData: boolean = false
+  private saveAction: string = ''
   private saveErrors: Array<object> = []
   private saveWarnings: Array<object> = []
   private fileAndPayInvalidNameRequestDialog: boolean = false
@@ -316,8 +317,9 @@ export default class App extends Mixins(
     }
 
     // listen for save error event
-    this.$root.$on('save-error-event', async error => {
+    this.$root.$on('save-error-event', async (saveAction, error) => {
       // save errors/warnings
+      this.saveAction = saveAction
       this.saveErrors = error?.response?.data?.errors || []
       this.saveWarnings = error?.response?.data?.warnings || []
 
@@ -479,16 +481,6 @@ export default class App extends Mixins(
         this.accountAuthorizationDialog = true
         throw error // go to catch()
       })
-
-      // get account folio
-      if (this.isPremiumAccount) {
-        const authInfo = await AuthServices.fetchAuthInfo(this.getBusinessId).catch(error => {
-          console.log('Account info error =', error) // eslint-disable-line no-console
-          this.accountAuthorizationDialog = true
-          throw error // go to catch()
-        })
-        this.setAccountFolio(authInfo?.folioNumber)
-      }
 
       // update Launch Darkly
       await this.updateLaunchDarkly(userInfo).catch(error => {
@@ -697,6 +689,12 @@ export default class App extends Mixins(
   private async getSaveUserInfo (): Promise<any> {
     // NB: will throw if API error
     const userInfo = await AuthServices.fetchUserInfo()
+
+    if (this.isDissolutionFiling) {
+      let { contacts, folioNumber } = await AuthServices.fetchBusinessInfo(this.getBusinessId)
+      userInfo.contacts = contacts
+      this.setAccountFolio(folioNumber)
+    }
     if (!userInfo) throw new Error('Invalid user info')
 
     if (userInfo.contacts?.length > 0 && userInfo.contacts[0].email) {

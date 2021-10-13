@@ -169,7 +169,7 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
       // clear flag
       this.setHaveChanges(false)
     } catch (error) {
-      this.$root.$emit('save-error-event', error)
+      this.$root.$emit('save-error-event', 'Application', error)
       this.setIsSaving(false)
       return
     }
@@ -196,7 +196,7 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
       // clear flag
       this.setHaveChanges(false)
     } catch (error) {
-      this.$root.$emit('save-error-event', error)
+      this.$root.$emit('save-error-event', 'Application', error)
       this.setIsSavingResuming(false)
       return
     }
@@ -254,7 +254,7 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
         // clear flag
         this.setHaveChanges(false)
       } catch (error) {
-        this.$root.$emit('save-error-event', error)
+        this.$root.$emit('save-error-event', 'Application', error)
         this.setIsFilingPaying(false)
         return
       }
@@ -278,7 +278,7 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
         }
       } else {
         const error = new Error('Missing Payment Token')
-        this.$root.$emit('save-error-event', error)
+        this.$root.$emit('save-error-event', 'Application', error)
         this.setIsFilingPaying(false)
       }
     } else {
