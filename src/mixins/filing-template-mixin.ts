@@ -80,7 +80,6 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
           nameRequest: {
             legalType: this.getEntityType
           },
-          nameTranslations: this.getNameTranslations,
           offices: this.getDefineCompanyStep.officeAddresses,
           contactPoint: {
             email: this.getBusinessContact.email,
@@ -92,6 +91,10 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
           parties: this.getAddPeopleAndRoleStep.orgPeople
         }
       }
+    }
+
+    if (this.getEntityType !== CorpTypeCd.COOP) {
+      filing.filing.incorporationApplication.nameTranslations = this.getNameTranslations
     }
 
     // Conditionally add the entity-specific sections.
