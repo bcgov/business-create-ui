@@ -94,10 +94,6 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
       }
     }
 
-    if (this.isTypeCoop) {
-
-    }
-
     // Conditionally add the entity-specific sections.
     switch (this.getEntityType) {
       case CorpTypeCd.COOP:
