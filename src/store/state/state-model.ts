@@ -1,6 +1,8 @@
-import { StateModelIF } from '@/interfaces'
+import { EmptyFees, StateModelIF } from '@/interfaces'
+import { cloneDeep } from 'lodash'
 
 export const stateModel: StateModelIF = {
+  currentJsDate: null,
   tombstone: {
     authRoles: [],
     filingType: null,
@@ -56,7 +58,7 @@ export const stateModel: StateModelIF = {
   },
   nameTranslations: [],
   currentDate: '',
-  incorporationDateTime: {
+  effectiveDateTime: {
     valid: false,
     isFutureEffective: false,
     effectiveDate: null
@@ -116,5 +118,6 @@ export const stateModel: StateModelIF = {
     docKey: null
   },
   validateSteps: false,
-  showErrors: false
+  showErrors: false,
+  feePrices: cloneDeep(EmptyFees)
 }

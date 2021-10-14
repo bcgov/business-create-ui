@@ -6,8 +6,9 @@ import {
   CertifyIF,
   CreateMemorandumIF,
   CreateRulesIF,
-  DateTimeIF,
   DefineCompanyIF,
+  EffectiveDateTimeIF,
+  FeesIF,
   IncorporationAgreementIF,
   NameRequestApplicantIF,
   NameRequestDetailsIF,
@@ -121,9 +122,14 @@ export const isPremiumAccount = (state: StateIF): boolean => {
   return (getAccountInformation(state).accountType === AccountTypes.PREMIUM)
 }
 
-/** The Current Date. */
+/** The current date, which is refreshed every time the app inits. */
 export const getCurrentDate = (state: StateIF): string => {
   return state.stateModel.currentDate
+}
+
+/** The current JS Date object, which is refreshed every minute. */
+export const getCurrentJsDate = (state: StateIF): Date => {
+  return state.stateModel.currentJsDate
 }
 
 /** The Filing ID. */
@@ -189,7 +195,7 @@ export const getBusinessContact = (state: StateIF): BusinessContactIF => {
 
 /** The Memorandum object. */
 export const getMemorandum = (state: StateIF): any => {
-  return {} // *** FUTURE: implement this
+  return {} // FUTURE: implement this
 }
 
 /** The Add People and Role object. */
@@ -227,9 +233,9 @@ export const getCreateMemorandumStep = (state: StateIF): CreateMemorandumIF => {
   return state.stateModel.createMemorandumStep
 }
 
-/** The Incorporation Date-Time object. */
-export const getIncorporationDateTime = (state: StateIF): DateTimeIF => {
-  return state.stateModel.incorporationDateTime
+/** The Effective Date-Time object. */
+export const getEffectiveDateTime = (state: StateIF): EffectiveDateTimeIF => {
+  return state.stateModel.effectiveDateTime
 }
 
 /** The Name Request object. */
@@ -335,7 +341,7 @@ export const isApplicationValid = (state: StateIF): boolean => {
   // Base company steps
   const isBaseStepsValid = (
     getCreateShareStructureStep(state).valid &&
-    getIncorporationDateTime(state).valid &&
+    getEffectiveDateTime(state).valid &&
     getIncorporationAgreementStep(state).valid
   )
 
@@ -402,4 +408,9 @@ export const getUserKeycloakGuid = (state: StateIF): string => {
 /** The user's address. */
 export const getUserAddress = (state: StateIF): AddressIF => {
   return (state.stateModel.tombstone.userAddress)
+}
+
+/** The fee prices. */
+export const getFeePrices = (state: StateIF): FeesIF => {
+  return state.stateModel.feePrices
 }

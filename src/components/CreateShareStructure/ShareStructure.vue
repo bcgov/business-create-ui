@@ -155,7 +155,7 @@
 import { Component, Prop, Emit, Mixins, Vue } from 'vue-property-decorator'
 
 // Interfaces
-import { ShareClassIF, FormType } from '@/interfaces'
+import { ShareClassIF, FormIF } from '@/interfaces'
 
 // Mixins
 import { CurrencyLookupMixin } from '@/mixins'
@@ -164,7 +164,7 @@ import { CurrencyLookupMixin } from '@/mixins'
 export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
   // Refs
   $refs!: {
-    shareStructureForm: FormType
+    shareStructureForm: FormIF
   }
 
   @Prop() private readonly initialValue!: ShareClassIF

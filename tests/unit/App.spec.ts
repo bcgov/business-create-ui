@@ -19,6 +19,16 @@ import { ConfirmDialog } from '@/components/dialogs'
 // Other
 import mockRouter from './MockRouter'
 
+// mock fetch() as it is not defined in Jest
+// NB: it should be `global.fetch` but that doesn't work and this does
+window.fetch = jest.fn().mockImplementation(() => {
+  return {
+    headers: { get: () => new Date() },
+    ok: true,
+    statusTxt: ''
+  }
+})
+
 Vue.use(Vuetify)
 
 const vuetify = new Vuetify({})

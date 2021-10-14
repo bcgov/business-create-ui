@@ -5,9 +5,10 @@ import {
   CertifyIF,
   CreateMemorandumIF,
   CreateRulesIF,
-  DateTimeIF,
   DefineCompanyIF,
   DissolutionStateIF,
+  EffectiveDateTimeIF,
+  FeesIF,
   IncorporationAgreementIF,
   NameRequestIF,
   NameTranslationIF,
@@ -19,6 +20,7 @@ import {
 
 // State model example
 export interface StateModelIF {
+  currentJsDate: Date
   tombstone: TombstoneIF
   accountInformation: AccountInformationIF
   business: BusinessIF
@@ -26,6 +28,7 @@ export interface StateModelIF {
   nameRequest: NameRequestIF
   nameTranslations: NameTranslationIF[]
   currentDate: string
+  effectiveDateTime: EffectiveDateTimeIF
   certifyState: CertifyIF
   currentStep: number
   tempId: string
@@ -40,11 +43,11 @@ export interface StateModelIF {
   createRulesStep: CreateRulesIF
   incorporationAgreementStep: IncorporationAgreementIF
   createMemorandumStep: CreateMemorandumIF
-  incorporationDateTime: DateTimeIF
   ignoreChanges: boolean
   haveChanges: boolean
   validateSteps: boolean
   showErrors: boolean
+  feePrices: FeesIF
 }
 
 export interface StateIF {

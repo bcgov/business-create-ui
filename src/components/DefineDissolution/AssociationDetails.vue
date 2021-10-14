@@ -79,7 +79,7 @@ import { Component, Mixins, Prop } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 
 // Services
-import AuthServices from '@/services/auth.services'
+import { AuthServices } from '@/services'
 
 // Interfaces
 import { ActionBindingIF, AddressIF, BusinessContactIF, BusinessIF } from '@/interfaces'

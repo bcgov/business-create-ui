@@ -5,14 +5,14 @@ import { DateMixin } from '@/mixins'
 
 // Interfaces
 import {
-  ActionBindingIF, BusinessContactIF, CertifyIF, CreateRulesIF, DateTimeIF, DefineCompanyIF, DissolutionFilingIF,
-  IncorporationAgreementIF, IncorporationFilingIF, NameTranslationIF, PeopleAndRoleIF, DocIF,
-  ShareStructureIF, CreateMemorandumIF, BusinessIF
+  ActionBindingIF, BusinessContactIF, CertifyIF, CreateRulesIF, EffectiveDateTimeIF, DefineCompanyIF,
+  DissolutionFilingIF, IncorporationAgreementIF, IncorporationFilingIF, NameTranslationIF, PeopleAndRoleIF,
+  DocIF, ShareStructureIF, CreateMemorandumIF, BusinessIF
 } from '@/interfaces'
 
 // Constants and enums
 import { INCORPORATION_APPLICATION } from '@/constants'
-import { CorpTypeCd, DissolutionTypes, FilingNames, FilingTypes } from '@/enums'
+import { CorpTypeCd, DissolutionTypes, FilingTypes } from '@/enums'
 
 /**
  * Mixin that provides the integration with the Legal API.
@@ -27,7 +27,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Getter getBusiness!: BusinessIF
   @Getter getDissolutionType!: DissolutionTypes
   @Getter getTempId!: string
-  @Getter getIncorporationDateTime!: DateTimeIF
+  @Getter getEffectiveDateTime!: EffectiveDateTimeIF
   @Getter getEntityType!: CorpTypeCd
   @Getter getCurrentDate!: string
   @Getter getCertifyState!: CertifyIF
@@ -75,7 +75,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
           certifiedBy: this.getCertifyState.certifiedBy,
           date: this.getCurrentDate,
           folioNumber: this.getDefineCompanyStep.folioNumber,
-          isFutureEffective: this.getIncorporationDateTime.isFutureEffective
+          isFutureEffective: this.getEffectiveDateTime.isFutureEffective
         },
         business: {
           legalType: this.getEntityType,
@@ -136,9 +136,9 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     }
 
     // If this is a future effective filing then save the effective date.
-    const effectiveDate = this.getIncorporationDateTime.effectiveDate
-    if (effectiveDate) {
-      filing.filing.header.effectiveDate = this.dateToApi(effectiveDate)
+    if (this.getEffectiveDateTime.effectiveDate) {
+      filing.filing.header.effectiveDate =
+        this.getEffectiveDateTime.effectiveDate && this.dateToApi(this.getEffectiveDateTime.effectiveDate)
     }
 
     return filing
@@ -258,7 +258,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
           name: FilingTypes.DISSOLUTION,
           certifiedBy: this.getCertifyState.certifiedBy,
           date: this.getCurrentDate,
-          isFutureEffective: this.getIncorporationDateTime.isFutureEffective
+          isFutureEffective: this.getEffectiveDateTime.isFutureEffective
         },
         business: {
           legalType: this.getEntityType,
@@ -269,6 +269,12 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
           dissolutionType: this.getDissolutionType
         }
       }
+    }
+
+    // If this is a future effective filing then save the effective date (all except Coop).
+    if (!this.isTypeCoop && this.getEffectiveDateTime.isFutureEffective) {
+      filing.filing.header.effectiveDate =
+        this.getEffectiveDateTime.effectiveDate && this.dateToApi(this.getEffectiveDateTime.effectiveDate)
     }
 
     return filing
@@ -284,8 +290,20 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     this.setLegalName(draftFiling.business.legalName)
 
     // TODO: Populate filing as components are introduced.
+
     // Set Dissolution Data
     this.setBusinessAddress(draftFiling.dissolution.custodialOffice)
     this.setDissolutionType(draftFiling.dissolution.dissolutionType)
+
+    // Check that Effective Date is in the future, to improve UX and
+    // to work around the default effective date set by the back end.
+    // NB: may be undefined/null
+    const draftEffectiveDate = this.apiToDate(draftFiling.header.effectiveDate)
+    // NB: null is not >= "now"
+    const effectiveDate = (draftEffectiveDate >= new Date()) ? draftEffectiveDate : null
+
+    // Set Future Effective Time
+    this.setEffectiveDate(effectiveDate)
+    this.setIsFutureEffective(!!effectiveDate)
   }
 }

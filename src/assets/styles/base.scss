@@ -134,6 +134,11 @@ p {
   text-align: right !important;
 }
 
+.info-text {
+  color: $gray7;
+  font-weight: normal;
+}
+
 // Loading Indicator
 .loading-container {
   display: flex;
