@@ -36,11 +36,11 @@
     <div class="ma-6 pb-6" v-if="!isTypeCoop">
       <v-container
         id="effective-date-time"
-        class="alteration-date-time"
+        class="dissolution-date-time"
         :class="{ 'invalid': getEffectiveDateTime.valid }">
         <v-row no-gutters>
           <v-col cols="3" class="inner-col-1">
-            <label><strong>Alteration Date<br>and Time</strong></label>
+            <label><strong>Dissolution Date<br>and Time</strong></label>
           </v-col>
 
           <v-col cols="9" class="inner-col-2">
@@ -154,7 +154,7 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
   margin-top: -2px;
 }
 
-.alteration-date-time {
+.dissolution-date-time {
   padding: 2rem;
   background-color: $gray1;
 

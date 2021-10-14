@@ -101,7 +101,7 @@
 
 <script lang="ts">
 //
-// FUTURE: combine this with EffectiveDateTime.vue ???
+// FUTURE: combine/replace this with EffectiveDateTime.vue ???
 //
 
 // Libraries

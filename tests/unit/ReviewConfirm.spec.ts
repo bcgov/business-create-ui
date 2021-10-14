@@ -1,5 +1,5 @@
 import { shallowWrapperFactory } from '../jest-wrapper-factory'
-import ReviewConfirm from '@/views/Incorporations/ReviewConfirm.vue'
+import { ReviewConfirm } from '@/views/Incorporations'
 
 // Test Case Data
 const reviewConfirmTestCases = [
@@ -37,6 +37,7 @@ for (const test of reviewConfirmTestCases) {
         expect(wrapper.find('.company-statement p').text()).toContain(test.statement)
       }
     })
+
     // FUTURE: Expand unit testing for validation on step 5. Include routing to appropriate steps from error links.
   })
 }

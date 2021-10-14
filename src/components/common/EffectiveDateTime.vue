@@ -61,10 +61,10 @@
       <v-row v-if="isFutureEffective && dateText && (selectHour.length > 0) && (selectMinute.length > 0)">
         <v-col class="validation-alert">
           <p class="validation-alert-msg" v-if="isUnderTime">
-            The time must be at least {{ dateToTimeString(minDate) }} for the selected date
+            The time must be at least {{ dateToPacificTime(minDate) }} for the selected date
           </p>
           <p class="validation-alert-msg" v-if="isOverTime">
-            The time must be at most {{ dateToTimeString(maxDate) }} for the selected date
+            The time must be at most {{ dateToPacificTime(maxDate) }} for the selected date
           </p>
         </v-col>
       </v-row>
@@ -100,7 +100,7 @@ export default class EffectiveDateTime extends Mixins(DateMixin) {
   // Add element types to refs
   $refs!: {
     form: FormIF,
-    datePickerRef: DatePicker,
+    datePickerRef: any, // should be DatePicker but TS complains
     hourSelector: FormFieldType, // used in unit tests
     minuteSelector: FormFieldType // used in unit tests
   }
