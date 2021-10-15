@@ -68,7 +68,7 @@
         :businessContact="businessContact"
         :disableActions="isSummary"
         :customMsg="contactInfoMsg"
-        :editLabel="'Change'"
+        editLabel="Change"
         @contactInfoChange="onContactInfoChange($event)"
       />
     </div>
