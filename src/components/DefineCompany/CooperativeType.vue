@@ -25,14 +25,14 @@
 import { Component, Emit, Watch, Mixins, Prop } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 import { CoopType } from '@/enums'
-import { FormType } from '@/interfaces'
+import { FormIF } from '@/interfaces'
 import { EnumMixin } from '@/mixins'
 
 @Component({})
 export default class CooperativeType extends Mixins(EnumMixin) {
   // Refs
   $refs!: {
-    cooperativeTypeForm: FormType
+    cooperativeTypeForm: FormIF
   }
 
   @Prop({ default: false })

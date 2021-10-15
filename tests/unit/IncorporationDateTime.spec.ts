@@ -75,7 +75,7 @@ describe('Incorporation Date Time component', () => {
   })
 
   it('confirms no default Date Time Selection', () => {
-    const wrapper = wrapperFactory({ incorporationDateTime: dateTimeDefault })
+    const wrapper = wrapperFactory({ effectiveDateTime: dateTimeDefault })
 
     // Reference the Radios
     const radioInput = wrapper.findAll('input[type="radio"]')
@@ -88,7 +88,7 @@ describe('Incorporation Date Time component', () => {
   })
 
   it('confirms the selector fields are disabled if future effective is NOT selected', async () => {
-    const wrapper = wrapperFactory({ incorporationDateTime: dateTimeDefault })
+    const wrapper = wrapperFactory({ effectiveDateTime: dateTimeDefault })
 
     const radioInput = wrapper.findAll('input[type="radio"]')
     const radioIsImmediate = radioInput.at(0)
@@ -102,7 +102,7 @@ describe('Incorporation Date Time component', () => {
   })
 
   it('confirms the selector fields are NOT disabled if future effective is selected', async () => {
-    const wrapper = wrapperFactory({ incorporationDateTime: dateTimeDefault })
+    const wrapper = wrapperFactory({ effectiveDateTime: dateTimeDefault })
 
     const radioInput = wrapper.findAll('input[type="radio"]')
     const radioIsFutureEffective = radioInput.at(1)
@@ -119,7 +119,7 @@ describe('Incorporation Date Time component', () => {
   })
 
   it('confirms the selector fields are toggled to disabled if Immediate Filing is selected', async () => {
-    const wrapper = wrapperFactory({ incorporationDateTime: dateTimeDefault })
+    const wrapper = wrapperFactory({ effectiveDateTime: dateTimeDefault })
 
     const radioInput = wrapper.findAll('input[type="radio"]')
     const radioIsImmediate = radioInput.at(0)
@@ -144,7 +144,7 @@ describe('Incorporation Date Time component', () => {
   })
 
   it('emits a valid state when the Immediate Filing is selected', async () => {
-    const wrapper = wrapperFactory({ incorporationDateTime: dateTimeDefault })
+    const wrapper = wrapperFactory({ effectiveDateTime: dateTimeDefault })
 
     const radioInput = wrapper.findAll('input[type="radio"]')
     const radioIsImmediate = radioInput.at(0)
@@ -157,7 +157,7 @@ describe('Incorporation Date Time component', () => {
   })
 
   it('emits an invalid state when the Future Effective is selected and no date is selected', async () => {
-    const wrapper = wrapperFactory({ incorporationDateTime: dateTimeDefault })
+    const wrapper = wrapperFactory({ effectiveDateTime: dateTimeDefault })
 
     const radioInput = wrapper.findAll('input[type="radio"]')
     const radioIsFutureEffective = radioInput.at(1)
@@ -168,7 +168,7 @@ describe('Incorporation Date Time component', () => {
   })
 
   it('emits a valid state when the Future Effective is selected and DateTime is valid', async () => {
-    const wrapper = wrapperFactory({ incorporationDateTime: dateTimeValid })
+    const wrapper = wrapperFactory({ effectiveDateTime: dateTimeValid })
 
     const radioInput = wrapper.findAll('input[type="radio"]')
     const radioIsFutureEffective = radioInput.at(1)
@@ -181,7 +181,7 @@ describe('Incorporation Date Time component', () => {
   })
 
   it('emits a invalid state when the Future Effective is selected and DateTime is invalid', async () => {
-    const wrapper = wrapperFactory({ incorporationDateTime: dateTimeInvalid })
+    const wrapper = wrapperFactory({ effectiveDateTime: dateTimeInvalid })
 
     const radioInput = wrapper.findAll('input[type="radio"]')
     const radioIsFutureEffective = radioInput.at(1)
@@ -194,14 +194,14 @@ describe('Incorporation Date Time component', () => {
   })
 
   it('displays an invalid Date Alert when the Date is invalid', async () => {
-    const wrapper = wrapperFactory({ incorporationDateTime: dateTimeInvalid })
+    const wrapper = wrapperFactory({ effectiveDateTime: dateTimeInvalid })
 
     const radioInput = wrapper.findAll('input[type="radio"]')
     const radioIsFutureEffective = radioInput.at(1)
     await radioIsFutureEffective.trigger('click')
 
-    const minDate = wrapper.vm.toReadableDate(wrapper.vm.minDate)
-    const maxDate = wrapper.vm.toReadableDate((wrapper.vm.maxDate))
+    const minDate = wrapper.vm.formatDateString(wrapper.vm.minDate)
+    const maxDate = wrapper.vm.formatDateString((wrapper.vm.maxDate))
 
     await Vue.nextTick()
 
@@ -216,7 +216,7 @@ describe('Incorporation Date Time component', () => {
 
   it('displays an invalid Time Alert when the time selected is not AT LEAST 2 minutes ahead', async () => {
     dateTimeDefault.effectiveDate = new Date()
-    const wrapper = wrapperFactory({ incorporationDateTime: dateTimeDefault })
+    const wrapper = wrapperFactory({ effectiveDateTime: dateTimeDefault })
 
     const radioInput = wrapper.findAll('input[type="radio"]')
     const radioIsFutureEffective = radioInput.at(1)
@@ -237,7 +237,7 @@ describe('Incorporation Date Time component', () => {
 
   it('displays an invalid Time Alert when time selected is past current time on the 10th day', async () => {
     dateTimeDefault.effectiveDate = new Date(today.setDate(today.getDate() + 10))
-    const wrapper = wrapperFactory({ incorporationDateTime: dateTimeDefault })
+    const wrapper = wrapperFactory({ effectiveDateTime: dateTimeDefault })
 
     const radioInput = wrapper.findAll('input[type="radio"]')
     const radioIsFutureEffective = radioInput.at(1)

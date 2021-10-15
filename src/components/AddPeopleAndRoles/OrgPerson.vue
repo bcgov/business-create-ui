@@ -204,7 +204,7 @@ import { Getter } from 'vuex-class'
 import { v4 as uuidv4 } from 'uuid'
 
 // Interfaces
-import { OrgPersonIF, BaseAddressType, FormType, AddressIF, ConfirmDialogType, RolesIF } from '@/interfaces'
+import { OrgPersonIF, BaseAddressType, FormIF, AddressIF, ConfirmDialogType, RolesIF } from '@/interfaces'
 
 // Components
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
@@ -228,7 +228,7 @@ import { PersonAddressSchema } from '@/schemas'
 export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
    // Refs
    $refs!: {
-    addPersonOrgForm: FormType
+    addPersonOrgForm: FormIF
     mailingAddressNew: BaseAddressType
     deliveryAddressNew: BaseAddressType
     reassignCPDialog: ConfirmDialogType

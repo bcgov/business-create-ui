@@ -227,7 +227,7 @@ import {
   CreateMemorandumResourceIF,
   DocumentUpload,
   NameRequestDetailsIF,
-  FormType,
+  FormIF,
   ValidationDetailIF
 } from '@/interfaces'
 
@@ -248,7 +248,7 @@ import FileUploadPreview from '@/components/common/FileUploadPreview.vue'
 export default class UploadMemorandum extends Mixins(CommonMixin, DocumentMixin) {
   // Refs
   $refs!: {
-    confirmMemorandumChk: FormType
+    confirmMemorandumChk: FormIF
   }
 
   private INPUT_FILE_LABEL = 'Memorandum of Association'

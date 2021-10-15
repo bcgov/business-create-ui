@@ -17,7 +17,7 @@
       </v-row>
     </div>
 
-    <v-divider />
+    <v-divider class="mx-8" />
 
     <div class="section-container">
       <v-row no-gutters>
@@ -25,7 +25,7 @@
           <label>Address</label>
         </v-col>
         <v-col md="4">
-          <label class="mailing-address-header"><strong>Mailing Address</strong></label>
+          <label class="mailing-address-header">Mailing Address</label>
           <mailing-address
             v-if="!isEmptyAddress(getBusiness.officeAddress.mailingAddress)"
             :address="getBusiness.officeAddress.mailingAddress"
@@ -34,7 +34,7 @@
           <div v-else>(Not entered)</div>
         </v-col>
         <v-col md="4">
-          <label class="mailing-address-header"><strong>Delivery Address</strong></label>
+          <label class="mailing-address-header">Delivery Address</label>
           <delivery-address
             v-if="!isEmptyAddress(getBusiness.officeAddress.deliveryAddress) &&
              !isSame(getBusiness.officeAddress.mailingAddress, getBusiness.officeAddress.deliveryAddress)"
@@ -47,7 +47,7 @@
       </v-row>
     </div>
 
-    <v-divider />
+    <v-divider class="mx-8" v-if="isPremiumAccount" />
 
     <div v-if="isPremiumAccount" id='folio-number' class="section-container">
       <v-row no-gutters>
@@ -60,7 +60,7 @@
       </v-row>
     </div>
 
-    <v-divider />
+    <v-divider class="mx-8" />
 
     <div class="section-container">
       <ContactInfo
@@ -79,7 +79,7 @@ import { Component, Mixins, Prop } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 
 // Services
-import AuthServices from '@/services/auth.services'
+import { AuthServices } from '@/services'
 
 // Interfaces
 import { ActionBindingIF, AddressIF, BusinessContactIF, BusinessIF } from '@/interfaces'
@@ -163,19 +163,11 @@ export default class AssociationDetails extends Mixins(CommonMixin, EntityFilter
 
 .section-container {
   padding: 1.5rem 2rem;
-  font-size: 1rem;
-  color: $gray7;
 }
 
 .company-name {
   font-size: 1.375rem;
   font-weight: bold;
   color:$gray9
-}
-
-::v-deep label {
-  font-size: 1rem;
-  font-weight: bold;
-  color: $gray9;
 }
 </style>

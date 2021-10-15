@@ -134,6 +134,11 @@ p {
   text-align: right !important;
 }
 
+.info-text {
+  color: $gray7;
+  font-weight: normal;
+}
+
 // Loading Indicator
 .loading-container {
   display: flex;
@@ -279,4 +284,14 @@ ul.list {
 
 .dotted-underline {
   border-bottom: 1px dotted;
+}
+
+.section-container {
+  font-size: 1rem;
+  color: $gray7;
+
+  label {
+    color: $gray9;
+    font-weight: bold;
+  }
 }
