@@ -1,7 +1,7 @@
 // Libraries
-import axios from '@/utils/axios-auth'
 import { Component, Vue } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
+import axios from '@/utils/axios-auth'
 
 /**
  * Mixin that provides integration with the Auth API.

@@ -1,38 +1,30 @@
 <template>
-  <v-card flat class="rounded-4">
-    <div class="mt-4 py-3" v-if="isSummary">
-      <v-row no-gutters>
-        <v-col md="3" class="px-8">
-          <label class="dissolution-statement-title">Dissolution Statement</label>
-        </v-col>
-        <v-col md="9" class="pr-8">
-          <div class="dissolution-summary-description" v-html="dissolutionStatementDescription"></div>
-        </v-col>
-      </v-row>
-    </div>
-
-    <div v-else class="section-container" :class="{ 'invalid-section': showErrorSummary }">
-      <v-row no-gutters>
-        <v-col md="3">
-          <label class="dissolution-statement-title">Dissolution Statement</label>
-        </v-col>
-        <v-col md="9">
-          <v-radio-group v-model="dissolutionStatementType"
-                      @change="changeDissolutionStatementType"
-                      class="dissolution-statement-option-list"
-          >
-            <v-radio v-for="(item, index) in getDissolutionStatements"
-                      :key="index" :value="item.code" :id="`dissolution-statement-${item.code}`"
+  <div>
+    <div v-if="isSummary" class="dissolution-summary-description" v-html="dissolutionStatementDescription"></div>
+    <v-card v-else flat class="rounded-4">
+      <div class="section-container" :class="{ 'invalid-section': showErrorSummary }">
+        <v-row no-gutters>
+          <v-col md="3">
+            <label class="dissolution-statement-title">Dissolution Statement</label>
+          </v-col>
+          <v-col md="9">
+            <v-radio-group v-model="dissolutionStatementType"
+                        @change="changeDissolutionStatementType"
+                        class="dissolution-statement-option-list"
             >
-              <template slot="label">
-                <div v-html="item.description" class="dissolution-statement-option" />
-              </template>
-            </v-radio>
-          </v-radio-group>
-        </v-col>
-      </v-row>
-    </div>
-  </v-card>
+              <v-radio v-for="(item, index) in getDissolutionStatements"
+                        :key="index" :value="item.code" :id="`dissolution-statement-${item.code}`"
+              >
+                <template slot="label">
+                  <div v-html="item.description" class="dissolution-statement-option" />
+                </template>
+              </v-radio>
+            </v-radio-group>
+          </v-col>
+        </v-row>
+      </div>
+    </v-card>
+  </div>
 </template>
 
 <script lang="ts">

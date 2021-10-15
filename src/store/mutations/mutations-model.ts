@@ -15,7 +15,9 @@ import {
   CreateRulesIF,
   CreateMemorandumIF,
   ValidationDetailIF,
-  DissolutionStatementIF
+  DissolutionStatementIF,
+  FeesIF,
+  ResourceIF
 } from '@/interfaces'
 
 export const mutateBusinessId = (state: StateIF, businessId: string) => {
@@ -42,7 +44,7 @@ export const mutateTempId = (state: StateIF, tempId: string) => {
   state.stateModel.tempId = tempId
 }
 
-export const mutateResources = (state: StateIF, resources: any): void => {
+export const mutateResources = (state: StateIF, resources: ResourceIF): void => {
   state.resourceModel = resources
 }
 
@@ -99,18 +101,22 @@ export const mutateCurrentDate = (state: StateIF, currentDate: string) => {
   if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
 }
 
+export const mutateCurrentJsDate = (state: StateIF, date: Date) => {
+  state.stateModel.currentJsDate = date
+}
+
 export const mutateIsFutureEffective = (state: StateIF, isFutureEffective: boolean) => {
-  state.stateModel.incorporationDateTime.isFutureEffective = isFutureEffective
+  state.stateModel.effectiveDateTime.isFutureEffective = isFutureEffective
   if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
 }
 
 export const mutateEffectiveDate = (state: StateIF, effectiveDate: Date) => {
-  state.stateModel.incorporationDateTime.effectiveDate = effectiveDate
+  state.stateModel.effectiveDateTime.effectiveDate = effectiveDate
   if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
 }
 
-export const mutateIsIncorporationDateTimeValid = (state: StateIF, incorporationDateTimeValid: boolean) => {
-  state.stateModel.incorporationDateTime.valid = incorporationDateTimeValid
+export const mutateEffectiveDateTimeValid = (state: StateIF, effectiveDateTimeValid: boolean) => {
+  state.stateModel.effectiveDateTime.valid = effectiveDateTimeValid
   if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
 }
 
@@ -220,4 +226,8 @@ export const mutateShowErrors = (state: StateIF, showErrors: boolean) => {
 
 export const mutateDissolutionStatementStepData = (state: StateIF, stepData: DissolutionStatementIF) => {
   state.stateModel.dissolution.dissolutionStatementStep = stepData
+}
+
+export const mutateFeePrices = (state: StateIF, feePrices: FeesIF) => {
+  state.stateModel.feePrices = feePrices
 }

@@ -1,6 +1,8 @@
+import { CorpTypeCd, FilingCodes } from '@/enums'
+
 export interface FilingDataIF {
-  entityType: string
-  filingTypeCode: string
+  entityType: CorpTypeCd
+  filingTypeCode: FilingCodes
   filingDescription?: string
   waiveFees?: boolean
   futureEffective?: boolean

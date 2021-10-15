@@ -62,7 +62,6 @@ import {
 })
 export default class Summary extends Vue {
   @Getter isBaseCompany!: boolean
-  @Getter isTypeCoop: boolean
   @Getter getAddPeopleAndRoleStep!: PeopleAndRoleIF
   @Getter getCreateShareStructureStep!: ShareStructureIF
   @Getter getIncorporationAgreementStep!: IncorporationAgreementIF

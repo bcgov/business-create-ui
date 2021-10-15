@@ -175,7 +175,7 @@ import {
   CreateRulesResourceIF,
   DocumentUpload,
   NameRequestDetailsIF,
-  FormType,
+  FormIF,
   ValidationDetailIF
 } from '@/interfaces'
 
@@ -196,7 +196,7 @@ import FileUploadPreview from '@/components/common/FileUploadPreview.vue'
 export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
   // Refs
   $refs!: {
-    confirmRulesChk: FormType
+    confirmRulesChk: FormIF
   }
 
   private INPUT_FILE_LABEL = 'Rules of Association'

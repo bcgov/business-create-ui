@@ -54,6 +54,16 @@ export const getIncorporationAgreementResource = (state: StateIF): any => {
   return state.resourceModel.incorporationAgreement
 }
 
+/** The array of steps. */
+export const getSteps = (state: StateIF): Array<StepIF> => {
+  return state.resourceModel.steps
+}
+
+/** The resource filing data. */
+export const getFilingData = (state: StateIF): FilingDataIF => {
+  return state.resourceModel.filingData
+}
+
 /** The incorporation agreement sample article. */
 export const getSampleArticle = (state: StateIF): string => {
   return getIncorporationAgreementResource(state).article
@@ -64,20 +74,10 @@ export const getIncorporationAgreementDocuments = (state: StateIF): Array<Incorp
   return getIncorporationAgreementResource(state).documents
 }
 
-/** The array of steps. */
-export const getSteps = (state: StateIF): Array<StepIF> => {
-  return state.resourceModel.steps
-}
-
 /** The maximum number of steps. */
 export const getMaxStep = (state: StateIF): number => {
   const steps = getSteps(state)
   return (steps ? steps.filter(step => step.step !== -1).length : -1)
-}
-
-/** The resource filing data. */
-export const getFilingData = (state: StateIF): FilingDataIF => {
-  return state.resourceModel.filingData
 }
 
 /** The dissolution statement options. */

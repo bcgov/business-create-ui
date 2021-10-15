@@ -83,7 +83,7 @@ describe('Actions component', () => {
     store.state.stateModel.addPeopleAndRoleStep = { valid: true }
     store.state.stateModel.createShareStructureStep = { valid: true }
     store.state.stateModel.incorporationAgreementStep = { valid: true }
-    store.state.stateModel.incorporationDateTime = { valid: true }
+    store.state.stateModel.effectiveDateTime = { valid: true }
     await Vue.nextTick()
 
     // verify File and Pay button state
@@ -141,7 +141,7 @@ describe('Emits error event if NR validation fails in file and pay', () => {
     store.state.stateModel.addPeopleAndRoleStep = { valid: true }
     store.state.stateModel.createShareStructureStep = { valid: true }
     store.state.stateModel.incorporationAgreementStep = { valid: true }
-    store.state.stateModel.incorporationDateTime = { valid: true }
+    store.state.stateModel.effectiveDateTime = { valid: true }
 
     const localVue = createLocalVue()
     localVue.use(VueRouter)
@@ -393,7 +393,7 @@ describe('Actions component - Filing Functionality', () => {
       phone: filing.filing.incorporationApplication.contactPoint.phone,
       extension: filing.filing.incorporationApplication.contactPoint.extension
     }
-    store.state.stateModel.incorporationDateTime.effectiveDate = effectiveDate
+    store.state.stateModel.effectiveDateTime.effectiveDate = effectiveDate
     store.state.stateModel.defineCompanyStep.businessContact = {
       email: 'registered-office@example.com',
       confirmEmail: 'registered-office@example.com',
@@ -408,7 +408,7 @@ describe('Actions component - Filing Functionality', () => {
     store.state.stateModel.filingId = 1234
     store.state.stateModel.entityType = 'BEN'
     store.state.stateModel.tempId = 'T1234567'
-    store.state.stateModel.incorporationDateTime.isFutureEffective = filing.filing.header.isFutureEffective
+    store.state.stateModel.effectiveDateTime.isFutureEffective = filing.filing.header.isFutureEffective
     store.state.stateModel.incorporationAgreementStep.agreementType =
       filing.filing.incorporationApplication.incorporationAgreement.agreementType
 

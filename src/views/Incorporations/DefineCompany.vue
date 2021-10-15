@@ -153,7 +153,7 @@ export default class DefineCompany extends Mixins(CommonMixin, EntityFilterMixin
   @Getter isEntityType!: boolean
   @Getter isPremiumAccount!: boolean
   @Getter isTypeBcomp!: boolean
-  @Getter isTypeCoop: boolean
+  @Getter isTypeCoop!: boolean
   @Getter getDefineCompanyStep!: DefineCompanyIF
   @Getter getValidateSteps!: boolean
   @Getter getShowErrors!: boolean

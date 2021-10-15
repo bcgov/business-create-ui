@@ -1,8 +1,8 @@
 import { ActionIF } from '@/interfaces/store-interfaces/action-interface'
 import {
   AccountInformationIF, AddressIF, BusinessContactIF, CertifyIF, DissolutionStatementIF, IncorporationAddressIF,
-  IncorporationAgreementIF, NameRequestIF, NameTranslationIF, OrgPersonIF, IncorporationResourceIF,
-  ShareClassIF, CreateRulesIF, CreateMemorandumIF, ValidationDetailIF
+  IncorporationAgreementIF, NameRequestIF, NameTranslationIF, OrgPersonIF, ResourceIF,
+  ShareClassIF, CreateRulesIF, CreateMemorandumIF, ValidationDetailIF, FeesIF
 } from '@/interfaces'
 import { CoopType, CorpTypeCd } from '@/enums'
 
@@ -30,8 +30,8 @@ export const setEntityType = ({ commit }, entityType: CorpTypeCd): void => {
   commit('mutateEntityType', entityType)
 }
 
-export const setResources = ({ commit }, companyResources: IncorporationResourceIF): void => {
-  commit('mutateResources', companyResources)
+export const setResources = ({ commit }, resources: ResourceIF): void => {
+  commit('mutateResources', resources)
 }
 
 export const setTempId = ({ commit }, tempId: string): void => {
@@ -86,6 +86,10 @@ export const setCurrentDate: ActionIF = ({ commit }, currentDate: string): void 
   commit('mutateCurrentDate', currentDate)
 }
 
+export const setCurrentJsDate: ActionIF = ({ commit }, date: Date): void => {
+  commit('mutateCurrentJsDate', date)
+}
+
 export const setIsFutureEffective: ActionIF = ({ commit }, isFutureEffective: boolean): void => {
   commit('mutateIsFutureEffective', isFutureEffective)
 }
@@ -94,8 +98,8 @@ export const setEffectiveDate: ActionIF = ({ commit }, effectiveDate: Date): voi
   commit('mutateEffectiveDate', effectiveDate)
 }
 
-export const setIsIncorporationDateTimeValid: ActionIF = ({ commit }, incorporationDateTimeValid: boolean): void => {
-  commit('mutateIsIncorporationDateTimeValid', incorporationDateTimeValid)
+export const setEffectiveDateTimeValid: ActionIF = ({ commit }, effectiveDateTimeValid: boolean): void => {
+  commit('mutateEffectiveDateTimeValid', effectiveDateTimeValid)
 }
 
 export const setCertifyState: ActionIF = ({ commit }, certifyState: CertifyIF): void => {
@@ -196,4 +200,8 @@ export const setShowErrors: ActionIF = ({ commit }, showErrors: boolean): void =
 
 export const setDissolutionStatementStepData: ActionIF = ({ commit }, stepData: DissolutionStatementIF): void => {
   commit('mutateDissolutionStatementStepData', stepData)
+}
+
+export const setFeePrices: ActionIF = ({ commit }, feePrices: FeesIF): void => {
+  commit('mutateFeePrices', feePrices)
 }
