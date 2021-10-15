@@ -272,9 +272,9 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     }
 
     // If this is a future effective filing then save the effective date (all except Coop).
-    if (!this.isTypeCoop && this.getEffectiveDateTime.isFutureEffective) {
-      filing.filing.header.effectiveDate =
-        this.getEffectiveDateTime.effectiveDate && this.dateToApi(this.getEffectiveDateTime.effectiveDate)
+    if (this.getEffectiveDateTime.isFutureEffective && !this.isTypeCoop) {
+      const effectiveDate = this.getEffectiveDateTime.effectiveDate
+      if (effectiveDate) filing.filing.header.effectiveDate = this.dateToApi(effectiveDate)
     }
 
     return filing
@@ -289,21 +289,17 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     this.setEntityType(draftFiling.business.legalType)
     this.setLegalName(draftFiling.business.legalName)
 
-    // TODO: Populate filing as components are introduced.
-
-    // Set Dissolution Data
+    // Set Dissolution data
     this.setBusinessAddress(draftFiling.dissolution.custodialOffice)
     this.setDissolutionType(draftFiling.dissolution.dissolutionType)
 
-    // Check that Effective Date is in the future, to improve UX and
-    // to work around the default effective date set by the back end.
-    // NB: may be undefined/null
-    const draftEffectiveDate = this.apiToDate(draftFiling.header.effectiveDate)
-    // NB: null is not >= "now"
-    const effectiveDate = (draftEffectiveDate >= new Date()) ? draftEffectiveDate : null
-
-    // Set Future Effective Time
-    this.setEffectiveDate(effectiveDate)
-    this.setIsFutureEffective(!!effectiveDate)
+    // Set Future Effective data
+    if (draftFiling.header.isFutureEffective) {
+      this.setIsFutureEffective(true)
+      const effectiveDate = this.apiToDate(draftFiling.header.effectiveDate)
+      // Check that Effective Date is in the future, to improve UX and
+      // to work around the default effective date set by the back end.
+      if (effectiveDate >= this.getCurrentJsDate) this.setEffectiveDate(effectiveDate)
+    }
   }
 }

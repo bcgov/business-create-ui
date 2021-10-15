@@ -81,19 +81,32 @@ export default class DateMixin extends Mixins(CommonMixin) {
    * @example "2021-01-01 07:00:00 GMT" -> "Dec 31, 2020"
    * @example "2021-01-01 08:00:00 GMT" -> "Jan 1, 2021"
    */
-  dateToPacificDate (date: Date): string {
+  dateToPacificDate (date: Date, long = false): string {
     // safety check
     if (!isDate(date) || isNaN(date.getTime())) return null
 
-    let dateStr = date.toLocaleDateString('en-CA', {
-      timeZone: 'America/Vancouver',
-      month: 'short', // Dec.
-      day: 'numeric', // 31
-      year: 'numeric' // 2020
-    })
+    let dateStr
 
-    // remove period after month
-    dateStr = dateStr.replace('.', '')
+    if (long) {
+      dateStr = date.toLocaleDateString('en-CA', {
+        timeZone: 'America/Vancouver',
+        weekday: 'long', // Thursday
+        month: 'long', // December
+        day: 'numeric', // 31
+        year: 'numeric' // 2020
+      })
+    } else {
+      dateStr = date.toLocaleDateString('en-CA', {
+        timeZone: 'America/Vancouver',
+        month: 'short', // Dec.
+        day: 'numeric', // 31
+        year: 'numeric' // 2020
+      })
+
+      // remove period after month
+      dateStr = dateStr.replace('.', '')
+    }
+
     return dateStr
   }
 
@@ -125,10 +138,10 @@ export default class DateMixin extends Mixins(CommonMixin) {
    * @example "2021-01-01 07:00:00 GMT" -> "Dec 31, 2020 at 11:00 pm Pacific time"
    * @example "2021-01-01 08:00:00 GMT" -> "Jan 1, 2021 at 12:00 pm Pacific time"
    */
-  dateToPacificDateTime (date: Date): string {
+  dateToPacificDateTime (date: Date, long = false): string {
     if (!isDate(date) || isNaN(date.getTime())) return null
 
-    const dateStr = this.dateToPacificDate(date)
+    const dateStr = this.dateToPacificDate(date, long)
     const timeStr = this.dateToPacificTime(date)
 
     return `${dateStr} at ${timeStr} Pacific time`

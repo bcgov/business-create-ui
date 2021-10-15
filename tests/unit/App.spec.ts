@@ -258,6 +258,7 @@ describe('Numbered company setup', () => {
   sessionStorage.setItem('DASHBOARD_URL', 'myhost/business/')
   sessionStorage.setItem('AUTH_API_URL', '')
   sessionStorage.setItem('CURRENT_ACCOUNT', '{ "id": 668 }')
+  sessionStorage.setItem('PAY_API_URL', '')
 
   beforeEach(async () => {
     // mock the window.location.assign function
@@ -331,6 +332,15 @@ describe('Numbered company setup', () => {
         }
       })))
 
+    // GET filing fees
+    get.withArgs('fees/BEN/BCINC?futureEffective=true')
+      .returns(new Promise((resolve) => resolve({
+        data:
+        {
+          filingFees: { futureEffectiveFees: 100 }
+        }
+      })))
+
     // create a Local Vue and install router on it
     const localVue = createLocalVue()
     localVue.use(VueRouter)
@@ -340,6 +350,12 @@ describe('Numbered company setup', () => {
 
     // wait for all queries to complete
     await flushPromises()
+  })
+
+  afterEach(() => {
+    window.location.assign = assign
+    sinon.restore()
+    wrapper.destroy()
   })
 
   it('loads a draft filing into the store', () => {
@@ -389,12 +405,6 @@ describe('Numbered company setup', () => {
     expect(store.state.stateModel.nameRequest.applicant.stateProvinceCode)
       .toBeUndefined()
   })
-
-  afterEach(() => {
-    window.location.assign = assign
-    sinon.restore()
-    wrapper.destroy()
-  })
 })
 
 describe('App component', () => {
@@ -404,6 +414,7 @@ describe('App component', () => {
   sessionStorage.setItem('DASHBOARD_URL', 'myhost/business/')
   sessionStorage.setItem('AUTH_API_URL', '')
   sessionStorage.setItem('CURRENT_ACCOUNT', '{ "id": 668 }')
+  sessionStorage.setItem('PAY_API_URL', '')
 
   beforeEach(async () => {
     // mock the window.location.assign function
@@ -471,6 +482,15 @@ describe('App component', () => {
           filing: {
             ...filingData
           }
+        }
+      })))
+
+    // GET filing fees
+    get.withArgs('fees/BEN/BCINC?futureEffective=true')
+      .returns(new Promise((resolve) => resolve({
+        data:
+        {
+          filingFees: { futureEffectiveFees: 100 }
         }
       })))
 

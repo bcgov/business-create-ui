@@ -135,7 +135,8 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
   }
 
   private get isSummaryStep (): boolean {
-    return this.$route.name === RouteNames.REVIEW_CONFIRM
+    return (this.$route.name === RouteNames.REVIEW_CONFIRM ||
+      this.$route.name === RouteNames.REVIEW_CONFIRM_DISSOLUTION)
   }
 
   /** Called when Cancel button is clicked. */
