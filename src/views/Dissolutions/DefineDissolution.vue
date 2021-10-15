@@ -19,7 +19,7 @@
     <section class="mt-10" v-if="isTypeCoop">
       <header id="dissolution-statement">
         <h2>2. Dissolution Statement</h2>
-        <p class="dissolution-statement-help">Choose a dissolution statement regarding dissolution and
+        <p class="mt-4">Choose a dissolution statement regarding dissolution and
           the Cooperative Association's assets and liabilities:
         </p>
       </header>
@@ -73,8 +73,4 @@ export default class DefineDissolution extends Vue {
 
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
-
-.dissolution-statement-help {
-  margin-top: 1rem;
-}
 </style>

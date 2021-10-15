@@ -305,6 +305,9 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     // Set Dissolution data
     this.setBusinessAddress(draftFiling.dissolution.custodialOffice)
     this.setDissolutionType(draftFiling.dissolution.dissolutionType)
+
+    // dissolution statement only exists for COOPS
+    // for others this will be null/undefined but it isn't used anyway
     this.setDissolutionStatementStepData({
       valid: !!draftFiling.dissolution?.dissolutionStatementType,
       dissolutionStatementType: draftFiling.dissolution?.dissolutionStatementType

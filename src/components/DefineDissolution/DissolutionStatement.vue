@@ -13,10 +13,10 @@
                         class="dissolution-statement-option-list"
             >
               <v-radio v-for="(item, index) in getDissolutionStatements"
-                        :key="index" :value="item.code" :id="`dissolution-statement-${item.code}`"
+                        :key="index" :value="item.key" :id="`dissolution-statement-${item.key}`"
               >
                 <template slot="label">
-                  <div v-html="item.description" class="dissolution-statement-option" />
+                  <div v-html="item.value" class="dissolution-statement-option" />
                 </template>
               </v-radio>
             </v-radio-group>
@@ -49,28 +49,21 @@ export default class DissolutionStatement extends Vue {
   @Getter getDissolutionStatementStep!: DissolutionStatementIF
 
   // Global setters
-  @Action setIgnoreChanges!: ActionBindingIF
   @Action setDissolutionStatementStepData!: ActionBindingIF
 
   private dissolutionStatementType: DissolutionStatementTypes = null
 
   // Lifecycle methods
   private created (): void {
-    // temporarily ignore data changes
-    this.setIgnoreChanges(true)
     if (this.getDissolutionStatementStep) {
       this.dissolutionStatementType = this.getDissolutionStatementStep.dissolutionStatementType
     }
-    // watch data changes once page has loaded (in next tick)
-    Vue.nextTick(() => {
-      this.setIgnoreChanges(false)
-    })
   }
 
   /** The dissolution statement description. */
   private get dissolutionStatementDescription (): string {
     return this.getDissolutionStatements
-      .find(x => x.code === this.getDissolutionStatementStep.dissolutionStatementType)?.description ||
+      .find(x => x.key === this.getDissolutionStatementStep.dissolutionStatementType)?.value ||
       '(Not entered)'
   }
 
@@ -118,6 +111,7 @@ export default class DissolutionStatement extends Vue {
 .dissolution-statement-option {
   color: $gray7;
   line-height: 1.5rem;
+  font-weight: normal;
 }
 
 </style>
