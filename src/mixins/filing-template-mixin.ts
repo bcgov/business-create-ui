@@ -7,7 +7,7 @@ import { DateMixin } from '@/mixins'
 import {
   ActionBindingIF, BusinessContactIF, CertifyIF, CreateRulesIF, DateTimeIF, DefineCompanyIF, DissolutionFilingIF,
   IncorporationAgreementIF, IncorporationFilingIF, NameTranslationIF, PeopleAndRoleIF, DocIF,
-  ShareStructureIF, CreateMemorandumIF, BusinessIF
+  ShareStructureIF, CreateMemorandumIF, BusinessIF, DissolutionStatementIF
 } from '@/interfaces'
 
 // Constants and enums
@@ -42,6 +42,9 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Getter getMemorandum!: any
   @Getter getBusinessId!: string
 
+  // Dissolution
+  @Getter getDissolutionStatementStep!: DissolutionStatementIF
+
   @Action setEntityType!: ActionBindingIF
   @Action setBusinessAddress!: ActionBindingIF
   @Action setBusinessContact!: ActionBindingIF
@@ -61,6 +64,9 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Action setIncorporationAgreementStepData!: ActionBindingIF
   @Action setRules!: ActionBindingIF
   @Action setMemorandum!: ActionBindingIF
+
+  // Dissolution
+  @Action setDissolutionStatementStepData!: ActionBindingIF
 
   /**
    * Constructs a filing body from store data. Used when saving a filing.
@@ -271,6 +277,13 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
       }
     }
 
+    // Conditionally add the entity-specific sections.
+    switch (this.getEntityType) {
+      case CorpTypeCd.COOP:
+        filing.filing.dissolution.dissolutionStatementType = this.getDissolutionStatementStep.dissolutionStatementType
+        break
+    }
+
     return filing
   }
 
@@ -287,5 +300,9 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     // Set Dissolution Data
     this.setBusinessAddress(draftFiling.dissolution.custodialOffice)
     this.setDissolutionType(draftFiling.dissolution.dissolutionType)
+    this.setDissolutionStatementStepData({
+      valid: !!draftFiling.dissolution?.dissolutionStatementType,
+      dissolutionStatementType: draftFiling.dissolution?.dissolutionStatementType
+    })
   }
 }

@@ -39,8 +39,12 @@ export * from './stepper-interfaces/CreateRules/create-rules-interface'
 export * from './stepper-interfaces/CreateMemorandum/create-memorandum-interface'
 export * from './stepper-interfaces/CreateMemorandum/create-memorandum-resource-interface'
 
+// Dissolution
+export * from './stepper-interfaces/Dissolution/DefineDissolution/dissolution-statement-interface'
+
 // Others
 export * from './resource-interfaces/component-resource-interfaces/certifyStatement-interface'
 export * from './resource-interfaces/component-resource-interfaces/agreement-types-interface'
 export * from './resource-interfaces/component-resource-interfaces/step-interface'
+export * from './resource-interfaces/component-resource-interfaces/key-value-interface'
 export * from './resource-interfaces/resource-interface'

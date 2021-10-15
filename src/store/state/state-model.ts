@@ -39,7 +39,11 @@ export const stateModel: StateModelIF = {
     }
   },
   dissolution: {
-    dissolutionType: null
+    dissolutionType: null,
+    dissolutionStatementStep: {
+      valid: false,
+      dissolutionStatementType: null
+    }
   },
   accountInformation: {
     accountType: '',

@@ -14,7 +14,8 @@ import {
   StateIF,
   CreateRulesIF,
   CreateMemorandumIF,
-  ValidationDetailIF
+  ValidationDetailIF,
+  DissolutionStatementIF
 } from '@/interfaces'
 
 export const mutateBusinessId = (state: StateIF, businessId: string) => {
@@ -215,4 +216,8 @@ export const mutateValidateSteps = (state: StateIF, validate: boolean) => {
 
 export const mutateShowErrors = (state: StateIF, showErrors: boolean) => {
   state.stateModel.showErrors = showErrors
+}
+
+export const mutateDissolutionStatementStepData = (state: StateIF, stepData: DissolutionStatementIF) => {
+  state.stateModel.dissolution.dissolutionStatementStep = stepData
 }

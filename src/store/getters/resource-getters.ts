@@ -4,6 +4,7 @@ import {
   CreateRulesResourceIF,
   FilingDataIF,
   IncorporationAgreementTypeIF,
+  KeyValueIF,
   StateIF,
   StepIF
 } from '@/interfaces'
@@ -77,4 +78,9 @@ export const getMaxStep = (state: StateIF): number => {
 /** The resource filing data. */
 export const getFilingData = (state: StateIF): FilingDataIF => {
   return state.resourceModel.filingData
+}
+
+/** The dissolution statement options. */
+export const getDissolutionStatements = (state: StateIF): Array<KeyValueIF> => {
+  return state.resourceModel.dissolutionStatements
 }

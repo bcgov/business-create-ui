@@ -16,8 +16,8 @@
         <label class="pl-2"><strong>Dissolution</strong></label>
       </div>
 
-      <section :class="{ 'invalid-section': !mockIsValid }">
-        <div v-if="!mockIsValid" class="defineDissolutionError">
+      <section :class="{ 'invalid-section': isDefineDissolutionInvalid }">
+        <div v-if="isDefineDissolutionInvalid" class="defineDissolutionError">
           <span>
             <v-icon color="error">mdi-information-outline</v-icon>
             &nbsp;
@@ -29,6 +29,10 @@
           </span>
         </div>
         <AssociationDetails :isSummary="true"/>
+
+        <div class="gray-container px-8 pb-8">
+          <DissolutionStatement :isSummary="true" v-if="isTypeCoop"/>
+        </div>
       </section>
     </v-card>
   </div>
@@ -37,23 +41,34 @@
 <script lang="ts">
 // Libraries
 import { Component, Vue } from 'vue-property-decorator'
+import { Getter } from 'vuex-class'
 
 // Components
-import { AssociationDetails } from '@/components/DefineDissolution'
+import { AssociationDetails, DissolutionStatement } from '@/components/DefineDissolution'
 
 // Enums
 import { RouteNames } from '@/enums'
+import { DissolutionStatementIF } from '@/interfaces'
 
 @Component({
   components: {
-    AssociationDetails
+    AssociationDetails,
+    DissolutionStatement
   }
 })
 export default class ReviewConfirmDissolution extends Vue {
+  // @Getter
+  @Getter isTypeCoop: boolean
+  @Getter getDissolutionStatementStep!: DissolutionStatementIF
+
   // Enum for template
   readonly RouteNames = RouteNames
 
-  private mockIsValid = true // TODO: Build out Validation checks when we have Step 1 Complete
+  // TODO: Build out validation checks with each component
+  /** Is true when the Define Dissolution conditions are not met. */
+  private get isDefineDissolutionInvalid () {
+    return (this.isTypeCoop && !this.getDissolutionStatementStep.valid)
+  }
 }
 </script>
 
@@ -72,6 +87,12 @@ export default class ReviewConfirmDissolution extends Vue {
 
   label {
     color: $gray9;
+  }
+}
+
+.gray-container {
+  .theme--light.v-card {
+    background-color: $gray1;
   }
 }
 

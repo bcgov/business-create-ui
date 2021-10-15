@@ -827,7 +827,8 @@ export default class App extends Mixins(
       await this.fetchData(true)
     }
 
-    if (this.$route.name === RouteNames.REVIEW_CONFIRM) {
+    if (this.$route.name === RouteNames.REVIEW_CONFIRM ||
+        this.$route.name === RouteNames.REVIEW_CONFIRM_DISSOLUTION) {
       this.setShowErrors(true)
     }
   }

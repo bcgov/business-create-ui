@@ -1,5 +1,6 @@
 export * from './accountTypes'
 export * from './coopType'
+export * from './dissolutionStatementTypes'
 export * from './dissolutionTypes'
 export * from './filingCodes'
 export * from './filingStatus'

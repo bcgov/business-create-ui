@@ -1,6 +1,6 @@
 import { ActionIF } from '@/interfaces/store-interfaces/action-interface'
 import {
-  AccountInformationIF, AddressIF, BusinessContactIF, CertifyIF, IncorporationAddressIF,
+  AccountInformationIF, AddressIF, BusinessContactIF, CertifyIF, DissolutionStatementIF, IncorporationAddressIF,
   IncorporationAgreementIF, NameRequestIF, NameTranslationIF, OrgPersonIF, IncorporationResourceIF,
   ShareClassIF, CreateRulesIF, CreateMemorandumIF, ValidationDetailIF
 } from '@/interfaces'
@@ -192,4 +192,8 @@ export const setValidateSteps: ActionIF = ({ commit }, validate: boolean): void 
 
 export const setShowErrors: ActionIF = ({ commit }, showErrors: boolean): void => {
   commit('mutateShowErrors', showErrors)
+}
+
+export const setDissolutionStatementStepData: ActionIF = ({ commit }, stepData: DissolutionStatementIF): void => {
+  commit('mutateDissolutionStatementStepData', stepData)
 }
