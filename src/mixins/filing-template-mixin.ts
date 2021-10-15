@@ -231,16 +231,14 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
       certifiedBy: draftFiling.header.certifiedBy
     })
 
-    // Check that Effective Date is in the future, to improve UX and
-    // to work around the default effective date set by the back end.
-    // NB: may be undefined/null
-    const draftEffectiveDate = this.apiToDate(draftFiling.header.effectiveDate)
-    // NB: null is not >= "now"
-    const effectiveDate = (draftEffectiveDate >= new Date()) ? draftEffectiveDate : null
-
-    // Set Future Effective Time
-    this.setEffectiveDate(effectiveDate)
-    this.setIsFutureEffective(!!effectiveDate)
+    // Set Future Effective data
+    if (draftFiling.header.isFutureEffective) {
+      this.setIsFutureEffective(true)
+      const effectiveDate = this.apiToDate(draftFiling.header.effectiveDate)
+      // Check that Effective Date is in the future, to improve UX and
+      // to work around the default effective date set by the back end.
+      if (effectiveDate >= this.getCurrentJsDate) this.setEffectiveDate(effectiveDate)
+    }
 
     // Set Folio Number
     this.setFolioNumber(draftFiling.header.folioNumber)
