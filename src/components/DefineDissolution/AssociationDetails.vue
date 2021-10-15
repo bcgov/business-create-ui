@@ -3,10 +3,11 @@
     <div class="section-container">
       <v-row no-gutters>
         <v-col md="3" class="pr-6">
-          <label>{{ getCompanyDisplayName }}</label>
+          <label v-if="isTypeCoop">Cooperative Association</label>
+          <label v-else>Company</label>
         </v-col>
         <v-col md="9">
-          <div class="company-name">{{ getBusinessLegalName }}</div>
+          <div class="company-name">{{ entityName }}</div>
           <div class="my-1">
             <span>{{ entityDescription }}</span>
           </div>
@@ -67,6 +68,7 @@
         :businessContact="businessContact"
         :disableActions="isSummary"
         :customMsg="contactInfoMsg"
+        :editLabel="'Change'"
         @contactInfoChange="onContactInfoChange($event)"
       />
     </div>
@@ -120,6 +122,7 @@ export default class AssociationDetails extends Mixins(CommonMixin, EntityFilter
   @Getter getUserEmail!: string
   @Getter getUserPhone!: string
   @Getter isPremiumAccount!: boolean
+  @Getter isTypeCoop!: boolean
 
   // Global setters
   @Action setUserEmail!: ActionBindingIF
@@ -127,6 +130,11 @@ export default class AssociationDetails extends Mixins(CommonMixin, EntityFilter
 
   private contactInfoMsg = `Registered Office Contact Information is required for dissolution documents delivery.
   Any changes made will be applied immediately.`
+
+  /** The entity name. */
+  private get entityName (): string {
+    return this.getBusinessLegalName || `${this.getCorpTypeNumberedDescription(this.getEntityType)}`
+  }
 
   /** The entity description.  */
   private get entityDescription (): string {
@@ -163,6 +171,15 @@ export default class AssociationDetails extends Mixins(CommonMixin, EntityFilter
 
 .section-container {
   padding: 1.5rem 2rem;
+
+  .mailing-address-header {
+    font-size: 0.875rem;
+  }
+
+  ::v-deep .subtitle {
+    font-size: .875rem;
+    font-weight: bold;
+  }
 }
 
 .company-name {
