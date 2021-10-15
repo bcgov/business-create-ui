@@ -87,7 +87,7 @@
       <main v-if="!isErrorDialog">
         <entity-info />
 
-        <v-container class="view-container pt-4">
+        <v-container class="view-container pt-8">
           <v-row>
             <v-col cols="12" lg="9">
               <header>
@@ -111,7 +111,7 @@
               </template>
             </v-col>
 
-            <v-col cols="12" lg="3" style="position: relative">
+            <v-col cols="12" lg="3" style="position: relative" class="mt-2">
               <aside>
                 <affix relative-element-selector=".col-lg-9" :offset="{ top: 86, bottom: 12 }">
                   <sbc-fee-summary
