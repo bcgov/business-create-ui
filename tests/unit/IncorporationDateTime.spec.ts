@@ -200,8 +200,8 @@ describe('Incorporation Date Time component', () => {
     const radioIsFutureEffective = radioInput.at(1)
     await radioIsFutureEffective.trigger('click')
 
-    const minDate = wrapper.vm.formatDateString(wrapper.vm.minDate)
-    const maxDate = wrapper.vm.formatDateString((wrapper.vm.maxDate))
+    const minDate = wrapper.vm.minDate
+    const maxDate = wrapper.vm.maxDate
 
     await Vue.nextTick()
 

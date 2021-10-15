@@ -149,15 +149,12 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
 
   /** The array of validations rules for the effective date Date field. */
   private get dateRules (): Array<Function> {
-    // Define today and 10 days from now
-    const minDate = this.formatDateString(this.minDate)
-    const maxDate = this.formatDateString((this.maxDate))
     const expectedDateFormat = /^(19|20)\d\d[-.](0[1-9]|1[012])[-.](0[1-9]|[12][0-9]|3[01])$/
 
     return [
       v => this.isFutureEffective && ((expectedDateFormat.test(v) &&
         this.isValidDateTime(this.effectiveDateTime.effectiveDate, true)) ||
-        `Date must be between ${minDate} and ${maxDate}`)
+        `Date must be between ${this.minDate} and ${this.maxDate}`)
     ]
   }
 
@@ -251,21 +248,17 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
     }
   }
 
-  /** The minimum date that can be entered. */
+  /** The minimum date that can be entered (today). */
   private get minDate (): string {
-    const minDate = new Date()
-    const localIsoMinDate = new Date(minDate.getTime() - (minDate.getTimezoneOffset() * 60000)).toISOString()
-
-    return localIsoMinDate
+    const date = new Date()
+    return this.dateToYyyyMmDd(date)
   }
 
-  /** The maximum date that can be entered. */
+  /** The maximum date that can be entered (today + 10 days). */
   private get maxDate (): string {
-    const maxDate = new Date()
-    maxDate.setDate(new Date().getDate() + 10)
-    const localIsoMaxDate = new Date(maxDate.getTime() - (maxDate.getTimezoneOffset() * 60000)).toISOString()
-
-    return localIsoMaxDate
+    const date = new Date()
+    date.setDate(date.getDate() + 10)
+    return this.dateToYyyyMmDd(date)
   }
 
   /** The minimum time that can be entered. */
