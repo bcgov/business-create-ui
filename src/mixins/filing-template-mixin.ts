@@ -7,7 +7,7 @@ import { DateMixin } from '@/mixins'
 import {
   ActionBindingIF, BusinessContactIF, CertifyIF, CreateRulesIF, EffectiveDateTimeIF, DefineCompanyIF,
   DissolutionFilingIF, IncorporationAgreementIF, IncorporationFilingIF, NameTranslationIF, PeopleAndRoleIF,
-  DocIF, ShareStructureIF, CreateMemorandumIF, BusinessIF
+  DocIF, ShareStructureIF, CreateMemorandumIF, BusinessIF, DissolutionStatementIF
 } from '@/interfaces'
 
 // Constants and enums
@@ -42,6 +42,9 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Getter getMemorandum!: any
   @Getter getBusinessId!: string
 
+  // Dissolution
+  @Getter getDissolutionStatementStep!: DissolutionStatementIF
+
   @Action setEntityType!: ActionBindingIF
   @Action setBusinessAddress!: ActionBindingIF
   @Action setBusinessContact!: ActionBindingIF
@@ -61,6 +64,9 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Action setIncorporationAgreementStepData!: ActionBindingIF
   @Action setRules!: ActionBindingIF
   @Action setMemorandum!: ActionBindingIF
+
+  // Dissolution
+  @Action setDissolutionStatementStepData!: ActionBindingIF
 
   /**
    * Constructs a filing body from store data. Used when saving a filing.
@@ -269,6 +275,13 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
       }
     }
 
+    // Conditionally add the entity-specific sections.
+    switch (this.getEntityType) {
+      case CorpTypeCd.COOP:
+        filing.filing.dissolution.dissolutionStatementType = this.getDissolutionStatementStep.dissolutionStatementType
+        break
+    }
+
     // If this is a future effective filing then save the effective date (all except Coop).
     if (this.getEffectiveDateTime.isFutureEffective && !this.isTypeCoop) {
       const effectiveDate = this.getEffectiveDateTime.effectiveDate
@@ -290,6 +303,13 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     // Set Dissolution data
     this.setBusinessAddress(draftFiling.dissolution.custodialOffice)
     this.setDissolutionType(draftFiling.dissolution.dissolutionType)
+
+    // dissolution statement only exists for COOPS
+    // for others this will be null/undefined but it isn't used anyway
+    this.setDissolutionStatementStepData({
+      valid: !!draftFiling.dissolution?.dissolutionStatementType,
+      dissolutionStatementType: draftFiling.dissolution?.dissolutionStatementType
+    })
 
     // Set Future Effective data
     if (draftFiling.header.isFutureEffective) {

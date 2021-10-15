@@ -15,6 +15,7 @@ import {
   CreateRulesIF,
   CreateMemorandumIF,
   ValidationDetailIF,
+  DissolutionStatementIF,
   FeesIF,
   ResourceIF
 } from '@/interfaces'
@@ -221,6 +222,10 @@ export const mutateValidateSteps = (state: StateIF, validate: boolean) => {
 
 export const mutateShowErrors = (state: StateIF, showErrors: boolean) => {
   state.stateModel.showErrors = showErrors
+}
+
+export const mutateDissolutionStatementStepData = (state: StateIF, stepData: DissolutionStatementIF) => {
+  state.stateModel.dissolution.dissolutionStatementStep = stepData
 }
 
 export const mutateFeePrices = (state: StateIF, feePrices: FeesIF) => {

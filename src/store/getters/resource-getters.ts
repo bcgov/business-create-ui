@@ -4,6 +4,7 @@ import {
   CreateRulesResourceIF,
   FilingDataIF,
   IncorporationAgreementTypeIF,
+  KeyValueIF,
   StateIF,
   StepIF
 } from '@/interfaces'
@@ -77,4 +78,9 @@ export const getIncorporationAgreementDocuments = (state: StateIF): Array<Incorp
 export const getMaxStep = (state: StateIF): number => {
   const steps = getSteps(state)
   return (steps ? steps.filter(step => step.step !== -1).length : -1)
+}
+
+/** The dissolution statement options. */
+export const getDissolutionStatements = (state: StateIF): Array<KeyValueIF> => {
+  return state.resourceModel.dissolutionStatements
 }

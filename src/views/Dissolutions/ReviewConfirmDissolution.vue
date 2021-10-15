@@ -16,8 +16,8 @@
       </header>
 
       <!-- Association Details -->
-      <section :class="{ 'invalid-section': !mockIsValid }">
-        <div v-if="!mockIsValid" class="defineDissolutionError">
+      <section :class="{ 'invalid-section': isDefineDissolutionInvalid }">
+        <div v-if="isDefineDissolutionInvalid" class="defineDissolutionError">
           <span>
             <v-icon color="error">mdi-information-outline</v-icon>
             &nbsp;
@@ -30,6 +30,28 @@
         </div>
         <AssociationDetails :isSummary="true"/>
       </section>
+
+      <!-- Dissolution Statement -->
+      <section class="mx-6" v-if="isTypeCoop">
+        <v-container id="dissolution-statement">
+          <v-row no-gutters>
+            <v-col cols="3" class="inner-col-1">
+              <label class="font-weight-bold">Dissolution<br>Statement</label>
+            </v-col>
+
+            <v-col cols="9" class="inner-col-2">
+              <DissolutionStatement :isSummary="true" />
+            </v-col>
+          </v-row>
+        </v-container>
+      </section>
+
+      <!-- divider -->
+      <div class="mx-6" v-if="isTypeCoop">
+        <v-container class="py-0">
+          <v-divider  />
+        </v-container>
+      </div>
 
       <!-- Custodian of Records -->
       <section class="mx-6">
@@ -151,11 +173,11 @@
 // Libraries
 import { Component, Mixins } from 'vue-property-decorator'
 import { Getter, Action } from 'vuex-class'
-import { ActionBindingIF, EffectiveDateTimeIF, FeesIF } from '@/interfaces'
+import { ActionBindingIF, EffectiveDateTimeIF, FeesIF, DissolutionStatementIF } from '@/interfaces'
 import { DateMixin } from '@/mixins'
 
 // Components
-import { AssociationDetails } from '@/components/DefineDissolution'
+import { AssociationDetails, DissolutionStatement } from '@/components/DefineDissolution'
 import { EffectiveDateTime } from '@/components/common'
 
 // Enums
@@ -164,6 +186,7 @@ import { RouteNames } from '@/enums'
 @Component({
   components: {
     AssociationDetails,
+    DissolutionStatement,
     EffectiveDateTime
   }
 })
@@ -173,6 +196,7 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
   @Getter isTypeCoop!: boolean
   @Getter getEffectiveDateTime!: EffectiveDateTimeIF
   @Getter getFeePrices!: FeesIF
+  @Getter getDissolutionStatementStep!: DissolutionStatementIF
 
   // Global actions
   @Action setEffectiveDateTimeValid!: ActionBindingIF
@@ -182,7 +206,11 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
   // Enum for template
   readonly RouteNames = RouteNames
 
-  private mockIsValid = true // TODO: Build out Validation checks when we have Step 1 Complete
+  // TODO: Build out validation checks with each component
+  /** Is true when the Define Dissolution conditions are not met. */
+  private get isDefineDissolutionInvalid () {
+    return (this.isTypeCoop && !this.getDissolutionStatementStep.valid)
+  }
 
   get futureEffectiveFeePrice (): string {
     if (this.getFeePrices.futureEffectiveFees) {

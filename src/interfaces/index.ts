@@ -29,6 +29,7 @@ export * from './stepper-interfaces/IncorporationAgreement/help-section-interfac
 export * from './stepper-interfaces/IncorporationAgreement/incorporation-agreement-interface'
 export * from './stepper-interfaces/ReviewConfirm/certify-interface'
 export * from './stepper-interfaces/ReviewConfirm/effectiveDateTime-interface'
+export * from './stepper-interfaces/Dissolution/DefineDissolution/dissolution-statement-interface'
 
 // Store Interfaces
 export * from './store-interfaces/state-interfaces/account-information-interface'
@@ -46,5 +47,6 @@ export * from './utils-interfaces/doc-interface'
 export * from './utils-interfaces/document-upload-interface'
 export * from './utils-interfaces/form-field-type'
 export * from './utils-interfaces/form-type'
+export * from './utils-interfaces/key-value-interface'
 export * from './utils-interfaces/validation-detail-interface'
 export * from './utils-interfaces/validation-item-detail-interface'

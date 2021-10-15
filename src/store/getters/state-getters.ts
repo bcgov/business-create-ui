@@ -7,6 +7,7 @@ import {
   CreateMemorandumIF,
   CreateRulesIF,
   DefineCompanyIF,
+  DissolutionStatementIF,
   EffectiveDateTimeIF,
   FeesIF,
   IncorporationAgreementIF,
@@ -55,6 +56,11 @@ export const getFilingName = (state: StateIF): FilingNames => {
 /** The dissolution filing type. */
 export const getDissolutionType = (state: StateIF): DissolutionTypes => {
   return state.stateModel.dissolution.dissolutionType
+}
+
+/** The dissolution statement step. */
+export const getDissolutionStatementStep = (state: StateIF): DissolutionStatementIF => {
+  return state.stateModel.dissolution.dissolutionStatementStep
 }
 
 /** Whether the user has "staff" auth role. */
