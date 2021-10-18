@@ -5,7 +5,7 @@
       <div class="section-container" :class="{ 'invalid-section': showErrorSummary }">
         <v-row no-gutters>
           <v-col md="3">
-            <label class="dissolution-statement-title">Dissolution Statement</label>
+            <label class="dissolution-statement-title title-label">Dissolution Statement</label>
           </v-col>
           <v-col md="9">
             <v-radio-group v-model="dissolutionStatementType"
@@ -112,11 +112,5 @@ export default class DissolutionStatement extends Vue {
   color: $gray7;
   line-height: 1.5rem;
   font-weight: normal;
-}
-
-.invalid-section {
-  .dissolution-statement-title {
-    color: $app-red;
-  }
 }
 </style>

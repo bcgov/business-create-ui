@@ -244,6 +244,10 @@ ul.list {
 
 .invalid-section {
   border-left: 3px solid $app-red;
+
+  .title-label {
+    color: $app-red;
+  }
 }
 
 .white-background {

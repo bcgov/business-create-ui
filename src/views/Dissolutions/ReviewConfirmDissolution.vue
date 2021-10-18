@@ -16,9 +16,8 @@
       </header>
 
       <div  class="pb-8" :class="{ 'invalid-section': isDefineDissolutionInvalid }">
-        <!-- Association Details -->
-        <section>
-          <div v-if="isDefineDissolutionInvalid" class="defineDissolutionError">
+        <section v-if="isDefineDissolutionInvalid">
+          <div class="defineDissolutionError">
             <span>
               <v-icon color="error">mdi-information-outline</v-icon>
               &nbsp;
@@ -29,6 +28,10 @@
               >Return to this step to finish it</router-link>
             </span>
           </div>
+        </section>
+
+        <!-- Association Details -->
+        <section>
           <AssociationDetails :isSummary="true"/>
         </section>
 
@@ -199,6 +202,7 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
   @Getter getEffectiveDateTime!: EffectiveDateTimeIF
   @Getter getFeePrices!: FeesIF
   @Getter getDissolutionStatementStep!: DissolutionStatementIF
+  @Getter getValidateSteps!: boolean
 
   // Global actions
   @Action setEffectiveDateTimeValid!: ActionBindingIF
@@ -211,7 +215,8 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
   // TODO: Build out validation checks with each component
   /** Is true when the Define Dissolution conditions are not met. */
   private get isDefineDissolutionInvalid () {
-    return (this.isTypeCoop && !this.getDissolutionStatementStep.valid)
+    return this.getValidateSteps &&
+      (this.isTypeCoop && !this.getDissolutionStatementStep.valid)
   }
 
   get futureEffectiveFeePrice (): string {
@@ -239,8 +244,8 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
 }
 
 .defineDissolutionError {
-  padding-top: 1.25rem;
-  padding-left: 1.25rem;
+  padding-top: 1.9rem;
+  padding-left: 1.9rem;
   color: $app-red;
 }
 
