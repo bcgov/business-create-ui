@@ -61,8 +61,8 @@ import { EntityFilterMixin, EnumMixin } from '@/mixins'
 export default class DefineDissolution extends Mixins(EntityFilterMixin, EnumMixin) {
   // @Getter
   @Getter getBusinessLegalName!: string
-  @Getter getShowErrors!: boolean
   @Getter getDissolutionStatementStep!: DissolutionStatementIF
+  @Getter getValidateSteps!: boolean
   @Getter isTypeCoop: boolean
 
   /** The entity name. */
@@ -71,7 +71,7 @@ export default class DefineDissolution extends Mixins(EntityFilterMixin, EnumMix
   }
 
   private get showDissolutionStatementErrors () {
-    return this.getShowErrors &&
+    return this.getValidateSteps &&
       (this.isTypeCoop && this.getDissolutionStatementStep && !this.getDissolutionStatementStep.valid)
   }
 }
