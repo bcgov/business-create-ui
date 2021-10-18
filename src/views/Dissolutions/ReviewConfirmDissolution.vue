@@ -9,114 +9,116 @@
     </header>
 
     <!-- Dissolution -->
-    <v-card flat id="dissolution-summary" class="mt-8 pb-8">
+    <v-card flat id="dissolution-summary" class="mt-8">
       <header class="review-header rounded-t">
         <v-icon class="ml-2" color="appDkBlue">mdi-domain-remove</v-icon>
         <label class="font-weight-bold pl-2">Dissolution</label>
       </header>
 
-      <!-- Association Details -->
-      <section :class="{ 'invalid-section': isDefineDissolutionInvalid }">
-        <div v-if="isDefineDissolutionInvalid" class="defineDissolutionError">
-          <span>
-            <v-icon color="error">mdi-information-outline</v-icon>
-            &nbsp;
-            <span class="error-text">This step is unfinished.</span>
-            &nbsp;
-            <router-link
-              :to="{ path: `/${RouteNames.DEFINE_DISSOLUTION}` }"
-            >Return to this step to finish it</router-link>
-          </span>
+      <div  class="pb-8" :class="{ 'invalid-section': isDefineDissolutionInvalid }">
+        <!-- Association Details -->
+        <section>
+          <div v-if="isDefineDissolutionInvalid" class="defineDissolutionError">
+            <span>
+              <v-icon color="error">mdi-information-outline</v-icon>
+              &nbsp;
+              <span class="error-text">This step is unfinished.</span>
+              &nbsp;
+              <router-link
+                :to="{ path: `/${RouteNames.DEFINE_DISSOLUTION}` }"
+              >Return to this step to finish it</router-link>
+            </span>
+          </div>
+          <AssociationDetails :isSummary="true"/>
+        </section>
+
+        <!-- Dissolution Statement -->
+        <section class="mx-6" v-if="isTypeCoop">
+          <v-container id="dissolution-statement">
+            <v-row no-gutters>
+              <v-col cols="3" class="inner-col-1">
+                <label class="font-weight-bold">Dissolution<br>Statement</label>
+              </v-col>
+
+              <v-col cols="9" class="inner-col-2">
+                <DissolutionStatement :isSummary="true" />
+              </v-col>
+            </v-row>
+          </v-container>
+        </section>
+
+        <!-- divider -->
+        <div class="mx-6" v-if="isTypeCoop">
+          <v-container class="py-0">
+            <v-divider  />
+          </v-container>
         </div>
-        <AssociationDetails :isSummary="true"/>
-      </section>
 
-      <!-- Dissolution Statement -->
-      <section class="mx-6" v-if="isTypeCoop">
-        <v-container id="dissolution-statement">
-          <v-row no-gutters>
-            <v-col cols="3" class="inner-col-1">
-              <label class="font-weight-bold">Dissolution<br>Statement</label>
-            </v-col>
+        <!-- Custodian of Records -->
+        <section class="mx-6">
+          <v-container id="custodian-of-records">
+            <v-row no-gutters>
+              <v-col cols="3" class="inner-col-1">
+                <label class="font-weight-bold">Custodian<br>of Records</label>
+              </v-col>
 
-            <v-col cols="9" class="inner-col-2">
-              <DissolutionStatement :isSummary="true" />
-            </v-col>
-          </v-row>
-        </v-container>
-      </section>
+              <v-col cols="9" class="inner-col-2">
+                FUTURE
+              </v-col>
+            </v-row>
+          </v-container>
+        </section>
 
-      <!-- divider -->
-      <div class="mx-6" v-if="isTypeCoop">
-        <v-container class="py-0">
-          <v-divider  />
-        </v-container>
+        <!-- divider -->
+        <div class="mx-6">
+          <v-container class="py-0">
+            <v-divider  />
+          </v-container>
+        </div>
+
+        <!-- Dissolution Date and Time -->
+        <section class="mx-6" v-if="!isTypeCoop">
+          <v-container
+            id="effective-date-time"
+            :class="{ 'invalid': getEffectiveDateTime.valid }"
+          >
+            <v-row no-gutters>
+              <v-col cols="3" class="inner-col-1">
+                <label class="font-weight-bold">Dissolution<br>Date and Time</label>
+              </v-col>
+
+              <v-col cols="9" class="inner-col-2">
+                <p id="effective-date-time-instructions" class="info-text">
+                  Select the date and time of the dissolution of the Company. You may select a date
+                  up to 10 days in the future (note: there is an <strong>additional fee of
+                  {{futureEffectiveFeePrice}}</strong> to enter a dissolution date in the future).
+                  Unless a business has special requirements, most businesses select an immediate
+                  date and time for dissolution.
+                </p>
+
+                <EffectiveDateTime
+                  :currentJsDate="getCurrentJsDate"
+                  :effectiveDateTime="getEffectiveDateTime"
+                  :isAppValidate="true"
+                  @valid="setEffectiveDateTimeValid($event)"
+                  @effectiveDate="setEffectiveDate($event)"
+                  @isFutureEffective="setIsFutureEffective($event)"
+                />
+
+                <v-card
+                  flat
+                  class="px-16 pb-8 mt-n12"
+                  id="effective-date-text"
+                  v-if="getEffectiveDateTime.isFutureEffective && getEffectiveDateTime.valid"
+                >
+                  The dissolution for this business will be effective as of:<br>
+                  <strong>{{futureEffectiveDate}}</strong>
+                </v-card>
+              </v-col>
+            </v-row>
+          </v-container>
+        </section>
       </div>
-
-      <!-- Custodian of Records -->
-      <section class="mx-6">
-        <v-container id="custodian-of-records">
-          <v-row no-gutters>
-            <v-col cols="3" class="inner-col-1">
-              <label class="font-weight-bold">Custodian<br>of Records</label>
-            </v-col>
-
-            <v-col cols="9" class="inner-col-2">
-              FUTURE
-            </v-col>
-          </v-row>
-        </v-container>
-      </section>
-
-      <!-- divider -->
-      <div class="mx-6">
-        <v-container class="py-0">
-          <v-divider  />
-        </v-container>
-      </div>
-
-      <!-- Dissolution Date and Time -->
-      <section class="mx-6" v-if="!isTypeCoop">
-        <v-container
-          id="effective-date-time"
-          :class="{ 'invalid': getEffectiveDateTime.valid }"
-        >
-          <v-row no-gutters>
-            <v-col cols="3" class="inner-col-1">
-              <label class="font-weight-bold">Dissolution<br>Date and Time</label>
-            </v-col>
-
-            <v-col cols="9" class="inner-col-2">
-              <p id="effective-date-time-instructions" class="info-text">
-                Select the date and time of the dissolution of the Company. You may select a date
-                up to 10 days in the future (note: there is an <strong>additional fee of
-                {{futureEffectiveFeePrice}}</strong> to enter a dissolution date in the future).
-                Unless a business has special requirements, most businesses select an immediate
-                date and time for dissolution.
-              </p>
-
-              <EffectiveDateTime
-                :currentJsDate="getCurrentJsDate"
-                :effectiveDateTime="getEffectiveDateTime"
-                :isAppValidate="true"
-                @valid="setEffectiveDateTimeValid($event)"
-                @effectiveDate="setEffectiveDate($event)"
-                @isFutureEffective="setIsFutureEffective($event)"
-              />
-
-              <v-card
-                flat
-                class="px-16 pb-8 mt-n12"
-                id="effective-date-text"
-                v-if="getEffectiveDateTime.isFutureEffective && getEffectiveDateTime.valid"
-              >
-                The dissolution for this business will be effective as of:<br>
-                <strong>{{futureEffectiveDate}}</strong>
-              </v-card>
-            </v-col>
-          </v-row>
-        </v-container>
-      </section>
     </v-card>
 
     <!-- Resolution -->

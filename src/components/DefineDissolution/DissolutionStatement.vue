@@ -114,4 +114,9 @@ export default class DissolutionStatement extends Vue {
   font-weight: normal;
 }
 
+.invalid-section {
+  .dissolution-statement-title {
+    color: $app-red;
+  }
+}
 </style>
