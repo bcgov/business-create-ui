@@ -16,18 +16,16 @@
       </header>
 
       <div  class="pb-8" :class="{ 'invalid-section': isDefineDissolutionInvalid }">
-        <section v-if="isDefineDissolutionInvalid">
-          <div class="defineDissolutionError">
-            <span>
-              <v-icon color="error">mdi-information-outline</v-icon>
-              &nbsp;
-              <span class="error-text">This step is unfinished.</span>
-              &nbsp;
-              <router-link
-                :to="{ path: `/${RouteNames.DEFINE_DISSOLUTION}` }"
-              >Return to this step to finish it</router-link>
-            </span>
-          </div>
+        <section class="pt-8 pl-7" v-if="isDefineDissolutionInvalid">
+          <span>
+            <v-icon color="error">mdi-information-outline</v-icon>
+            &nbsp;
+            <span class="error-text">This step is unfinished.</span>
+            &nbsp;
+            <router-link
+              :to="{ path: `/${RouteNames.DEFINE_DISSOLUTION}` }"
+            >Return to this step to finish it</router-link>
+          </span>
         </section>
 
         <!-- Association Details -->
@@ -241,12 +239,6 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
 
 .section-container {
   padding: 1.5rem 2rem;
-}
-
-.defineDissolutionError {
-  padding-top: 1.9rem;
-  padding-left: 1.9rem;
-  color: $app-red;
 }
 
 .review-header {
