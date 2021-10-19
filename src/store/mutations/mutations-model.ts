@@ -15,6 +15,7 @@ import {
   CreateRulesIF,
   CreateMemorandumIF,
   ValidationDetailIF,
+  CreateResolutionIF,
   DissolutionStatementIF,
   FeesIF,
   ResourceIF,
@@ -199,6 +200,15 @@ export const mutateAffidavit = (state: StateIF, affidavit: UploadAffidavitIF) =>
 
 export const mutateAffidavitStepValidity = (state: StateIF, validationDetail: ValidationDetailIF) => {
   state.stateModel.uploadAffidavitStep.validationDetail = validationDetail
+}
+
+export const mutateResolution = (state: StateIF, resolution: CreateResolutionIF) => {
+  state.stateModel.createResolutionStep = resolution
+  if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
+}
+
+export const mutateResolutionStepValidity = (state: StateIF, validationDetail: ValidationDetailIF) => {
+  state.stateModel.createResolutionStep.validationDetail = validationDetail
 }
 
 export const mutateShareClasses = (state: StateIF, shareClasses: ShareClassIF[]) => {

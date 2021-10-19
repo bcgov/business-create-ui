@@ -5,6 +5,7 @@ import {
   CreateRulesResourceIF,
   FilingDataIF,
   IncorporationAgreementTypeIF,
+  CreateResolutionResourceIF,
   KeyValueIF,
   StateIF,
   StepIF
@@ -43,6 +44,11 @@ export const getCreateRulesResource = (state: StateIF): CreateRulesResourceIF =>
 /** The Create Memorandum object. */
 export const getCreateMemorandumResource = (state: StateIF): CreateMemorandumResourceIF => {
   return state.resourceModel.createMemorandum
+}
+
+/** The Create Resolution object. */
+export const getCreateResolutionResource = (state: StateIF): CreateResolutionResourceIF => {
+  return state.resourceModel.createResolution
 }
 
 /** The completing party statement resources. */

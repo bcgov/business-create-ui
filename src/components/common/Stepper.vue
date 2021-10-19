@@ -58,6 +58,7 @@ export default class Stepper extends Vue {
   @Getter isAddPeopleAndRolesValid!: boolean
   @Getter isRulesValid!: boolean
   @Getter isMemorandumValid!: boolean
+  @Getter isResolutionValid!: boolean
   @Getter isCreateShareStructureValid!: boolean
   @Getter isIncorporationAgreementValid!: boolean
   @Getter isApplicationValid!: boolean
@@ -83,6 +84,9 @@ export default class Stepper extends Vue {
 
       case RouteNames.CREATE_MEMORANDUM:
         return this.isMemorandumValid
+
+      case RouteNames.CREATE_RESOLUTION:
+        return this.isResolutionValid
 
       case RouteNames.REVIEW_CONFIRM:
         return this.isApplicationValid

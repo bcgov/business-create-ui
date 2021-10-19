@@ -103,9 +103,9 @@ export const routes = [
     }
   },
   {
-    path: '/upload-special-resolution',
-    name: RouteNames.UPLOAD_RESOLUTION,
-    component: Views.UploadSpecialResolution,
+    path: '/create-resolution',
+    name: RouteNames.CREATE_RESOLUTION,
+    component: Views.CreateResolution,
     meta: {
       step: 2,
       requiresAuth: true,

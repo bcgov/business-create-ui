@@ -72,4 +72,15 @@ export default class CommonMixin extends Vue {
   buildElementIds (validationItems: ValidationItemDetailIF[]): string[] {
     return validationItems.map(vi => vi.elementId)
   }
+
+  /**
+   * Convert integer to corresponding character defaulting to lowercase by default
+   * @param intVal number to convert to character
+   * @return string character that maps to intVal
+   */
+  convertIntToChar (intVal: number, toLower: boolean = true): string {
+    const charSet = toLower ? 'abcdefghijklmnopqrstuvwxyz' : 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    const result = charSet.charAt(intVal)
+    return result
+  }
 }

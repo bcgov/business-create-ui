@@ -8,7 +8,7 @@ import {
   ActionBindingIF, BusinessContactIF, CertifyIF, CreateRulesIF, EffectiveDateTimeIF, DefineCompanyIF,
   DissolutionFilingIF, IncorporationAgreementIF, IncorporationFilingIF, NameTranslationIF, PeopleAndRoleIF,
   DocIF, ShareStructureIF, CreateMemorandumIF, BusinessIF, DissolutionStatementIF, UploadAffidavitIF,
-  StaffPaymentStepIF, CourtOrderStepIF
+  StaffPaymentStepIF, CourtOrderStepIF, CreateResolutionIF
 } from '@/interfaces'
 
 // Constants and enums
@@ -43,6 +43,8 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Getter getCreateRulesStep!: CreateRulesIF
   @Getter getCreateMemorandumStep!: CreateMemorandumIF
   @Getter getMemorandum!: any
+  @Getter getCreateResolutionStep!: CreateResolutionIF
+  @Getter getResolution!: any
   @Getter getBusinessId!: string
   @Getter getStaffPaymentStep!: StaffPaymentStepIF
   @Getter getCourtOrderStep!: CourtOrderStepIF
@@ -74,6 +76,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Action setCourtOrderFileNumber!: ActionBindingIF
   @Action setHasPlanOfArrangement!: ActionBindingIF
   @Action setStaffPayment!: ActionBindingIF
+  @Action setResolution!: ActionBindingIF
 
   // Dissolution
   @Action setDissolutionStatementStepData!: ActionBindingIF
@@ -204,7 +207,10 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
           }
         }
         const createRules: CreateRulesIF = {
-          validationDetail: null,
+          validationDetail: {
+            valid: false,
+            validationItemDetails: []
+          },
           rulesConfirmed: draftFiling.incorporationApplication.cooperative?.rulesConfirmed,
           rulesDoc: rulesDoc,
           docKey: draftFiling.incorporationApplication.cooperative?.rulesFileKey
@@ -220,7 +226,10 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
           }
         }
         const createMemorandum: CreateMemorandumIF = {
-          validationDetail: null,
+          validationDetail: {
+            valid: false,
+            validationItemDetails: []
+          },
           memorandumConfirmed: draftFiling.incorporationApplication.cooperative?.memorandumConfirmed,
           memorandumDoc: memorandumDoc,
           docKey: draftFiling.incorporationApplication.cooperative?.memorandumFileKey
@@ -295,7 +304,21 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
           affidavitFileKey: this.getAffidavitStep.docKey || null,
           affidavitFileName: this.getAffidavitStep.affidavitDoc?.name || null,
           affidavitFileSize: this.getAffidavitStep.affidavitDoc?.size || null,
-          affidavitFileLastModified: this.getAffidavitStep.affidavitDoc?.lastModified || null
+          affidavitFileLastModified: this.getAffidavitStep.affidavitDoc?.lastModified || null,
+          specialResolution: {
+            resolutionConfirmed: this.getCreateResolutionStep.resolutionConfirmed || false,
+            resolution: 'voluntary dissolution'
+          }
+        }
+        break
+      case CorpTypeCd.BENEFIT_COMPANY:
+      case CorpTypeCd.BC_CCC:
+      case CorpTypeCd.BC_COMPANY:
+      case CorpTypeCd.BC_ULC_COMPANY:
+        filing.filing.dissolution = { ...filing.filing.dissolution,
+          resolution: {
+            resolutionConfirmed: this.getCreateResolutionStep.resolutionConfirmed || false
+          }
         }
         break
     }
@@ -344,6 +367,17 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
       dissolutionStatementType: draftFiling.dissolution?.dissolutionStatementType
     })
 
+    const createResolution: CreateResolutionIF = {
+      validationDetail: {
+        valid: false,
+        validationItemDetails: []
+      },
+      resolutionConfirmed:
+        draftFiling.dissolution?.specialResolution?.resolutionConfirmed ||
+        draftFiling.dissolution?.resolution?.resolutionConfirmed || false
+    }
+    this.setResolution(createResolution)
+
     // Set Future Effective data
     if (draftFiling.header.isFutureEffective === true) this.setIsFutureEffective(true)
     if (draftFiling.header.isFutureEffective === false) this.setIsFutureEffective(false)
@@ -381,6 +415,17 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     // Set Staff Payment data
     if (this.isRoleStaff) {
       this.storeStaffPayment(draftFiling)
+    }
+
+    // Conditionally parse the entity-specific sections.
+    switch (this.getEntityType) {
+      case CorpTypeCd.COOP:
+        break
+      case CorpTypeCd.BENEFIT_COMPANY:
+      case CorpTypeCd.BC_CCC:
+      case CorpTypeCd.BC_COMPANY:
+      case CorpTypeCd.BC_ULC_COMPANY:
+        break
     }
   }
 

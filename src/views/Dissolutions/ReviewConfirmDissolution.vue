@@ -124,14 +124,36 @@
 
     <!-- Resolution -->
     <v-card flat id="resolution-summary" class="mt-10">
-      <header class="review-header rounded-t">
-        <v-icon class="ml-2" color="appDkBlue">mdi-handshake</v-icon>
-        <label class="font-weight-bold pl-2">Resolution</label>
-      </header>
-
-      <section class="section-container">
-        FUTURE
-      </section>
+        <header class="review-header rounded-t">
+          <v-icon class="ml-2" color="appDkBlue">mdi-handshake</v-icon>
+          <label class="font-weight-bold pl-2">{{getCreateResolutionResource.reviewConfirmHeader}}</label>
+        </header>
+        <section v-if="!getCreateResolutionStep.validationDetail.valid" class="section-container invalid-section">
+          <div class="upload-error-message">
+            <span>
+              <v-icon color="error">mdi-information-outline</v-icon>
+              <span class="error-text ml-1 mr-2">This step is unfinished.</span>
+              <router-link
+                :to="{ path: `/${RouteNames.CREATE_RESOLUTION}` }"
+              >Return to this step to finish it</router-link>
+            </span>
+          </div>
+        </section>
+        <section v-if="getCreateResolutionStep.validationDetail.valid" class="section-container">
+          <div class="upload-success-message pl-1">
+            <v-row no-gutters>
+              <v-col md="1">
+                <v-icon class="success-chk">mdi-check</v-icon>
+              </v-col>
+              <v-col v-if="isTypeCoop" md="11" id="file-name-col">
+                <span>FILE_NAME_PLACEHOLDER</span>
+              </v-col>
+              <v-col v-if="isBaseCompany" md="11" id="file-name-col">
+                <span>The resolution was completed and deposited in the Company's records book.</span>
+              </v-col>
+            </v-row>
+          </div>
+        </section>
     </v-card>
 
     <!-- Affidavit -->
@@ -224,7 +246,14 @@ import { RouteNames } from '@/enums'
 
 // Interfaces
 import {
-  ActionBindingIF, EffectiveDateTimeIF, FeesIF, DissolutionStatementIF, UploadAffidavitIF, CourtOrderStepIF
+  ActionBindingIF,
+  EffectiveDateTimeIF,
+  FeesIF,
+  DissolutionStatementIF,
+  UploadAffidavitIF,
+  CourtOrderStepIF,
+  CreateResolutionIF,
+  CreateResolutionResourceIF
 } from '@/interfaces'
 
 @Component({
@@ -243,11 +272,14 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
   @Getter getDissolutionStatementStep!: DissolutionStatementIF
   @Getter getEffectiveDateTime!: EffectiveDateTimeIF
   @Getter getFeePrices!: FeesIF
+  @Getter getCreateResolutionResource!: CreateResolutionResourceIF
+  @Getter getCreateResolutionStep!: CreateResolutionIF
   @Getter getShowErrors!: boolean
   @Getter getValidateSteps!: boolean
   @Getter isPremiumAccount!: boolean
   @Getter isRoleStaff!: boolean
   @Getter isTypeCoop!: boolean
+  @Getter isBaseCompany!: boolean
 
   // Global actions
   @Action setIgnoreChanges!: ActionBindingIF
@@ -338,7 +370,8 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
 }
 
 .section-container {
-  padding: 1.5rem 2rem;
+  //padding: 1.5rem 2rem;
+  padding: 1.5rem 1.5rem;
 }
 
 .review-header {
@@ -350,6 +383,7 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
 
 .v-icon.mdi-information-outline {
   margin-top: -2px;
+  margin-right: 4px;
 }
 
 // #custodian-of-records,
@@ -399,4 +433,21 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
   }
 }
 
+.upload-error-message {
+  color: $app-blue;
+}
+
+.upload-success-message {
+  color: $gray7;
+
+  .success-chk {
+    font-size: 1.5rem;
+    color: $app-dk-green;
+  }
+
+  #file-name-col {
+    margin-top: 2px;
+    margin-left: -46px;
+  }
+}
 </style>

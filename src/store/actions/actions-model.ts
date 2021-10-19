@@ -2,7 +2,7 @@ import { ActionIF } from '@/interfaces/store-interfaces/action-interface'
 import {
   AccountInformationIF, AddressIF, BusinessContactIF, CertifyIF, DissolutionStatementIF, IncorporationAddressIF,
   IncorporationAgreementIF, NameRequestIF, NameTranslationIF, OrgPersonIF, ResourceIF,
-  ShareClassIF, CreateRulesIF, CreateMemorandumIF, ValidationDetailIF, FeesIF, UploadAffidavitIF
+  ShareClassIF, CreateRulesIF, CreateMemorandumIF, ValidationDetailIF, FeesIF, UploadAffidavitIF, CreateResolutionIF
 } from '@/interfaces'
 import { CoopType, CorpTypeCd } from '@/enums'
 
@@ -176,6 +176,14 @@ export const setAffidavit = ({ commit }, affidavit: UploadAffidavitIF) => {
 
 export const setAffidavitStepValidity: ActionIF = ({ commit }, validationDetail: ValidationDetailIF): void => {
   commit('mutateAffidavitStepValidity', validationDetail)
+}
+
+export const setResolution = ({ commit }, resolution: CreateResolutionIF) => {
+  commit('mutateResolution', resolution)
+}
+
+export const setResolutionStepValidity: ActionIF = ({ commit }, validationDetail: ValidationDetailIF): void => {
+  commit('mutateResolutionStepValidity', validationDetail)
 }
 
 export const setShareClasses = ({ commit }, shareClasses: ShareClassIF[]) => {

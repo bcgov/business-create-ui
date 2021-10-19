@@ -19,6 +19,7 @@ export * from './rules'
 export * from './viewComponentNames'
 export * from './itemTypes'
 export * from './pdfPageSize'
+export * from './bulletListTypes'
 
 // external enums
 export { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
