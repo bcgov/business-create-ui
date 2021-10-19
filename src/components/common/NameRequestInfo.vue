@@ -187,7 +187,9 @@ export default class NameRequestInfo extends Mixins(DateMixin, EnumMixin) {
 
   /** Returns formatted expiration date. */
   private formattedExpirationDate (): string {
-    return this.toReadableDate(this.getNameRequestDetails.expirationDate)
+    const expirationDate = this.getNameRequestDetails.expirationDate
+    const date = this.apiToDate(expirationDate)
+    return this.dateToPacificDate(date)
   }
 
   /** The condition/consent string. */

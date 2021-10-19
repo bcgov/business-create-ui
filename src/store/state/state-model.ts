@@ -1,16 +1,51 @@
-import { StateModelIF } from '@/interfaces'
+import { EmptyFees, StateModelIF } from '@/interfaces'
+import { cloneDeep } from 'lodash'
 
 export const stateModel: StateModelIF = {
+  currentJsDate: null,
   tombstone: {
     authRoles: [],
-    businessId: '',
     filingType: null,
+    legalName: '',
     userEmail: '',
     userPhone: '',
     userFirstName: '',
     userLastName: '',
     userKeycloakGuid: null,
-    userAddress: null
+    userAddress: null,
+    folioNumber: ''
+  },
+  business: {
+    businessId: '',
+    legalName: '',
+    businessContact: {
+      email: '',
+      confirmEmail: '',
+      phone: ''
+    },
+    officeAddress: {
+      mailingAddress: {
+        addressCity: '',
+        addressCountry: '',
+        addressRegion: '',
+        postalCode: '',
+        streetAddress: ''
+      },
+      deliveryAddress: {
+        addressCity: '',
+        addressCountry: '',
+        addressRegion: '',
+        postalCode: '',
+        streetAddress: ''
+      }
+    }
+  },
+  dissolution: {
+    dissolutionType: null,
+    dissolutionStatementStep: {
+      valid: false,
+      dissolutionStatementType: null
+    }
   },
   accountInformation: {
     accountType: '',
@@ -27,7 +62,7 @@ export const stateModel: StateModelIF = {
   },
   nameTranslations: [],
   currentDate: '',
-  incorporationDateTime: {
+  effectiveDateTime: {
     valid: false,
     isFutureEffective: false,
     effectiveDate: null
@@ -87,5 +122,6 @@ export const stateModel: StateModelIF = {
     docKey: null
   },
   validateSteps: false,
-  showErrors: false
+  showErrors: false,
+  feePrices: cloneDeep(EmptyFees)
 }

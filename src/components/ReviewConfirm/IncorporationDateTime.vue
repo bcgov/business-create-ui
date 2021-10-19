@@ -85,7 +85,7 @@
           <v-row>
             <v-col
               class="validation-alert"
-              v-if="isFutureEffective && dateText && !isValidDateTime(incorporationDateTime.effectiveDate)"
+              v-if="isFutureEffective && dateText && !isValidDateTime(effectiveDateTime.effectiveDate)"
             >
               <p class="validation-alert-msg">
                 <span v-if="isUnderTime">The time must be at least {{ minTime() }} for the selected date</span>
@@ -100,9 +100,12 @@
 </template>
 
 <script lang="ts">
+//
+// FUTURE: combine/replace this with EffectiveDateTime.vue ???
+//
+
 // Libraries
 import { Component, Mixins, Watch, Emit, Prop } from 'vue-property-decorator'
-import { Action } from 'vuex-class'
 
 // Mixins
 import { DateMixin } from '@/mixins'
@@ -111,19 +114,17 @@ import { DateMixin } from '@/mixins'
 import { ISIMMEDIATE, ISFUTUREEFFECTIVE } from '@/constants'
 
 // Interfaces
-import { ActionBindingIF, DateTimeIF, FormType } from '@/interfaces'
+import { ActionBindingIF, EffectiveDateTimeIF, FormIF } from '@/interfaces'
 
 @Component({})
 export default class IncorporationDateTime extends Mixins(DateMixin) {
   // Refs
   $refs!: {
-    dateTimeForm: FormType
+    dateTimeForm: FormIF
   }
 
   @Prop()
-  private readonly incorporationDateTime!: DateTimeIF
-
-  @Action setIsFutureEffective!: ActionBindingIF
+  private readonly effectiveDateTime!: EffectiveDateTimeIF
 
   // Local properties
   private isImmediate: boolean = false
@@ -148,15 +149,12 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
 
   /** The array of validations rules for the effective date Date field. */
   private get dateRules (): Array<Function> {
-    // Define today and 10 days from now
-    const minDate = this.toReadableDate(this.minDate)
-    const maxDate = this.toReadableDate((this.maxDate))
     const expectedDateFormat = /^(19|20)\d\d[-.](0[1-9]|1[012])[-.](0[1-9]|[12][0-9]|3[01])$/
 
     return [
       v => this.isFutureEffective && ((expectedDateFormat.test(v) &&
-        this.isValidDateTime(this.incorporationDateTime.effectiveDate, true)) ||
-        `Date must be between ${minDate} and ${maxDate}`)
+        this.isValidDateTime(this.effectiveDateTime.effectiveDate, true)) ||
+        `Date must be between ${this.minDate} and ${this.maxDate}`)
     ]
   }
 
@@ -191,8 +189,8 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
     this.selectPeriod = 'AM'
 
     // Clear Future Effective from store / fee summary
-    this.setIsFutureEffective(false)
-    this.emitDateTime(null)
+    this.emitIsFutureEffective(false)
+    this.emitEffectiveDate(null)
   }
 
   /** Construct the Date Object for storage */
@@ -216,20 +214,20 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
       // Apply selected hours and minutes
       dateToValidate.setHours(hours, minutes)
 
-      // Set DateTime
-      this.emitDateTime(dateToValidate)
+      // Set Effective Date
+      this.emitEffectiveDate(dateToValidate)
     }
-    this.emitIsValidDateTime()
+    this.emitValid()
   }
 
   /** Parse the DateTime from store */
   private deconstructDateTime (): void {
-    if (this.incorporationDateTime) {
+    if (this.effectiveDateTime) {
       // Set the chosen filing time option
-      this.selectDate = this.incorporationDateTime.isFutureEffective ? ISFUTUREEFFECTIVE : ISIMMEDIATE
+      this.selectDate = this.effectiveDateTime.isFutureEffective ? ISFUTUREEFFECTIVE : ISIMMEDIATE
       this.isFutureEffective = (this.selectDate === ISFUTUREEFFECTIVE)
 
-      const effectiveDate = this.incorporationDateTime.effectiveDate
+      const effectiveDate = this.effectiveDateTime.effectiveDate
       if (effectiveDate) {
         // Parse the Time and display DateTime
         let hour = effectiveDate.getHours()
@@ -242,7 +240,7 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
           hour = 12
         }
 
-        this.dateText = this.dateToUsableString(effectiveDate)
+        this.dateText = this.dateToYyyyMmDd(effectiveDate)
         this.selectHour = [hour.toLocaleString()]
         this.selectMinute = [minute.toLocaleString('en-US', { minimumIntegerDigits: 2 })]
         this.selectPeriod = amPm
@@ -250,21 +248,17 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
     }
   }
 
-  /** The minimum date that can be entered. */
+  /** The minimum date that can be entered (today). */
   private get minDate (): string {
-    const minDate = new Date()
-    const localIsoMinDate = new Date(minDate.getTime() - (minDate.getTimezoneOffset() * 60000)).toISOString()
-
-    return localIsoMinDate
+    const date = new Date()
+    return this.dateToYyyyMmDd(date)
   }
 
-  /** The maximum date that can be entered. */
+  /** The maximum date that can be entered (today + 10 days). */
   private get maxDate (): string {
-    const maxDate = new Date()
-    maxDate.setDate(new Date().getDate() + 10)
-    const localIsoMaxDate = new Date(maxDate.getTime() - (maxDate.getTimezoneOffset() * 60000)).toISOString()
-
-    return localIsoMaxDate
+    const date = new Date()
+    date.setDate(date.getDate() + 10)
+    return this.dateToYyyyMmDd(date)
   }
 
   /** The minimum time that can be entered. */
@@ -282,7 +276,7 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
   }
 
   private get isUnderTime (): boolean {
-    const effectiveDate = this.incorporationDateTime.effectiveDate
+    const effectiveDate = this.effectiveDateTime.effectiveDate
     if (effectiveDate) {
       // Calculate time diff (in minutes)
       const diff = Math.floor((effectiveDate.getTime() - Date.now()) / 1000 / 60)
@@ -348,29 +342,30 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
     // Clear DateTimes when immediate is selected
     if (this.isImmediate) {
       this.clearDateTimes()
-    } else {
-      this.isFutureEffective && this.setIsFutureEffective(true)
+    } else if (this.isFutureEffective) {
+      this.emitIsFutureEffective(true)
     }
-    this.emitIsValidDateTime()
+    this.emitValid()
   }
 
   /** Re-validate Date Time. */
-  @Watch('incorporationDateTime.valid')
+  @Watch('effectiveDateTime.valid')
   private reValidateDateTime () {
     this.constructDate()
     this.$refs.dateTimeForm.validate()
   }
 
-  /** Emit DateTime Valid event. */
-  @Emit('valid')
-  private emitIsValidDateTime (): boolean {
-    if (this.isImmediate) return true
-    return (this.isFutureEffective && this.isValidDateTime(this.incorporationDateTime.effectiveDate))
-  }
+  @Emit('isFutureEffective')
+  private emitIsFutureEffective (val: boolean): void {}
 
-  /** Emit DateTime. */
-  @Emit('dateTime')
-  private emitDateTime (val: Date): void {}
+  @Emit('effectiveDate')
+  private emitEffectiveDate (val: Date): void {}
+
+  @Emit('valid')
+  private emitValid (): boolean {
+    if (this.isImmediate) return true
+    return (this.isFutureEffective && this.isValidDateTime(this.effectiveDateTime.effectiveDate))
+  }
 }
 </script>
 

@@ -5,14 +5,14 @@ import { DateMixin } from '@/mixins'
 
 // Interfaces
 import {
-  ActionBindingIF, BusinessContactIF, CertifyIF, CreateRulesIF, DateTimeIF, DefineCompanyIF, DissolutionFilingIF,
-  IncorporationAgreementIF, IncorporationFilingIF, NameTranslationIF, PeopleAndRoleIF, DocIF,
-  ShareStructureIF, CreateMemorandumIF
+  ActionBindingIF, BusinessContactIF, CertifyIF, CreateRulesIF, EffectiveDateTimeIF, DefineCompanyIF,
+  DissolutionFilingIF, IncorporationAgreementIF, IncorporationFilingIF, NameTranslationIF, PeopleAndRoleIF,
+  DocIF, ShareStructureIF, CreateMemorandumIF, BusinessIF, DissolutionStatementIF
 } from '@/interfaces'
 
 // Constants and enums
 import { INCORPORATION_APPLICATION } from '@/constants'
-import { CorpTypeCd, FilingNames, FilingTypes } from '@/enums'
+import { CorpTypeCd, DissolutionTypes, FilingTypes } from '@/enums'
 
 /**
  * Mixin that provides the integration with the Legal API.
@@ -24,8 +24,10 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Getter isNamedBusiness!: boolean
   @Getter getNameRequestNumber!: string
   @Getter getApprovedName!: string
+  @Getter getBusiness!: BusinessIF
+  @Getter getDissolutionType!: DissolutionTypes
   @Getter getTempId!: string
-  @Getter getIncorporationDateTime!: DateTimeIF
+  @Getter getEffectiveDateTime!: EffectiveDateTimeIF
   @Getter getEntityType!: CorpTypeCd
   @Getter getCurrentDate!: string
   @Getter getCertifyState!: CertifyIF
@@ -40,8 +42,14 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Getter getMemorandum!: any
   @Getter getBusinessId!: string
 
+  // Dissolution
+  @Getter getDissolutionStatementStep!: DissolutionStatementIF
+
   @Action setEntityType!: ActionBindingIF
+  @Action setBusinessAddress!: ActionBindingIF
   @Action setBusinessContact!: ActionBindingIF
+  @Action setDissolutionType!: ActionBindingIF
+  @Action setLegalName!: ActionBindingIF
   @Action setCooperativeType!: ActionBindingIF
   @Action setOfficeAddresses!: ActionBindingIF
   @Action setNameTranslationState!: ActionBindingIF
@@ -57,6 +65,9 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Action setRules!: ActionBindingIF
   @Action setMemorandum!: ActionBindingIF
 
+  // Dissolution
+  @Action setDissolutionStatementStepData!: ActionBindingIF
+
   /**
    * Constructs a filing body from store data. Used when saving a filing.
    * @returns the filing body to save
@@ -70,7 +81,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
           certifiedBy: this.getCertifyState.certifiedBy,
           date: this.getCurrentDate,
           folioNumber: this.getDefineCompanyStep.folioNumber,
-          isFutureEffective: this.getIncorporationDateTime.isFutureEffective
+          isFutureEffective: this.getEffectiveDateTime.isFutureEffective
         },
         business: {
           legalType: this.getEntityType,
@@ -131,9 +142,9 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     }
 
     // If this is a future effective filing then save the effective date.
-    const effectiveDate = this.getIncorporationDateTime.effectiveDate
-    if (effectiveDate) {
-      filing.filing.header.effectiveDate = this.dateToApi(effectiveDate)
+    if (this.getEffectiveDateTime.effectiveDate) {
+      filing.filing.header.effectiveDate =
+        this.getEffectiveDateTime.effectiveDate && this.dateToApi(this.getEffectiveDateTime.effectiveDate)
     }
 
     return filing
@@ -226,16 +237,14 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
       certifiedBy: draftFiling.header.certifiedBy
     })
 
-    // Check that Effective Date is in the future, to improve UX and
-    // to work around the default effective date set by the back end.
-    // NB: may be undefined/null
-    const draftEffectiveDate = this.apiToDate(draftFiling.header.effectiveDate)
-    // NB: null is not >= "now"
-    const effectiveDate = (draftEffectiveDate >= new Date()) ? draftEffectiveDate : null
-
-    // Set Future Effective Time
-    this.setEffectiveDate(effectiveDate)
-    this.setIsFutureEffective(!!effectiveDate)
+    // Set Future Effective data
+    if (draftFiling.header.isFutureEffective) {
+      this.setIsFutureEffective(true)
+      const effectiveDate = this.apiToDate(draftFiling.header.effectiveDate)
+      // Check that Effective Date is in the future, to improve UX and
+      // to work around the default effective date set by the back end.
+      if (effectiveDate >= this.getCurrentJsDate) this.setEffectiveDate(effectiveDate)
+    }
 
     // Set Folio Number
     this.setFolioNumber(draftFiling.header.folioNumber)
@@ -245,7 +254,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
    * Constructs a filing body from store data. Used when saving a filing.
    * @returns the filing body to save
    */
-  buildDissolutionFiling (): any {
+  buildDissolutionFiling (): DissolutionFilingIF {
     // Build filing.
     const filing: DissolutionFilingIF = {
       filing: {
@@ -253,14 +262,30 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
           name: FilingTypes.DISSOLUTION,
           certifiedBy: this.getCertifyState.certifiedBy,
           date: this.getCurrentDate,
-          isFutureEffective: this.getIncorporationDateTime.isFutureEffective
+          isFutureEffective: this.getEffectiveDateTime.isFutureEffective
         },
         business: {
           legalType: this.getEntityType,
           identifier: this.getBusinessId
         },
-        dissolution: {}
+        dissolution: {
+          custodialOffice: this.getBusiness.officeAddress,
+          dissolutionType: this.getDissolutionType
+        }
       }
+    }
+
+    // Conditionally add the entity-specific sections.
+    switch (this.getEntityType) {
+      case CorpTypeCd.COOP:
+        filing.filing.dissolution.dissolutionStatementType = this.getDissolutionStatementStep.dissolutionStatementType
+        break
+    }
+
+    // If this is a future effective filing then save the effective date (all except Coop).
+    if (this.getEffectiveDateTime.isFutureEffective && !this.isTypeCoop) {
+      const effectiveDate = this.getEffectiveDateTime.effectiveDate
+      if (effectiveDate) filing.filing.header.effectiveDate = this.dateToApi(effectiveDate)
     }
 
     return filing
@@ -271,9 +296,28 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
    * @param draftFiling the filing body to parse
    */
   parseDissolutionDraft (draftFiling: any): void {
-    // Set Entity Type
+    // Set Business data
     this.setEntityType(draftFiling.business.legalType)
+    this.setLegalName(draftFiling.business.legalName)
 
-    // TODO: Populate filing as components are introduced.
+    // Set Dissolution data
+    this.setBusinessAddress(draftFiling.dissolution.custodialOffice)
+    this.setDissolutionType(draftFiling.dissolution.dissolutionType)
+
+    // dissolution statement only exists for COOPS
+    // for others this will be null/undefined but it isn't used anyway
+    this.setDissolutionStatementStepData({
+      valid: !!draftFiling.dissolution?.dissolutionStatementType,
+      dissolutionStatementType: draftFiling.dissolution?.dissolutionStatementType
+    })
+
+    // Set Future Effective data
+    if (draftFiling.header.isFutureEffective) {
+      this.setIsFutureEffective(true)
+      const effectiveDate = this.apiToDate(draftFiling.header.effectiveDate)
+      // Check that Effective Date is in the future, to improve UX and
+      // to work around the default effective date set by the back end.
+      if (effectiveDate >= this.getCurrentJsDate) this.setEffectiveDate(effectiveDate)
+    }
   }
 }

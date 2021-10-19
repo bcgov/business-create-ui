@@ -36,11 +36,11 @@ export const shallowWrapperFactory = (component, propsData = null, stateValues =
   })
 }
 
-export const wrapperFactory = (component, propsData = null, stateValues = null, routeName = null) => {
+export const wrapperFactory = (component, propsData = null, stateValues = null, routeName = null, resource = null) => {
   const store = getVuexStore()
   if (routeName) router.push({ name: routeName })
 
-  if (stateValues) applyStoreValues(store, stateValues)
+  if (stateValues) applyStoreValues(store, stateValues, resource)
   return mount(component, {
     propsData: {
       ...propsData
@@ -52,9 +52,10 @@ export const wrapperFactory = (component, propsData = null, stateValues = null, 
   })
 }
 
-const applyStoreValues = (store, stateValues) => {
+const applyStoreValues = (store, stateValues, resource = null) => {
+  resource = resource || IncorporationResources
   // Set Company Resources
-  store.state.resourceModel = IncorporationResources.find(x => x.entityType === stateValues.entityType)
+  store.state.resourceModel = resource.find(x => x.entityType === stateValues.entityType)
 
   // Set individual state properties
   const stateKeys = Object.keys(stateValues)

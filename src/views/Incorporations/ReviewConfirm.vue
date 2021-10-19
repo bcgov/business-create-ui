@@ -28,9 +28,10 @@
         </p>
       </header>
       <IncorporationDateTime
-        :incorporationDateTime="getIncorporationDateTime"
-        @valid="onValidDateTime($event)"
-        @dateTime="setDateTime($event)"
+        :effectiveDateTime="getEffectiveDateTime"
+        @valid="setEffectiveDateTimeValid($event)"
+        @effectiveDate="setEffectiveDate($event)"
+        @isFutureEffective="setIsFutureEffective($event)"
       />
     </section>
 
@@ -78,7 +79,7 @@ import { Action, Getter } from 'vuex-class'
 
 // Interfaces
 import {
-  ActionBindingIF, BusinessContactIF, CertifyIF, CertifyStatementIF, DateTimeIF
+  ActionBindingIF, BusinessContactIF, CertifyIF, CertifyStatementIF, EffectiveDateTimeIF
 } from '@/interfaces'
 
 // Components
@@ -104,10 +105,11 @@ export default class ReviewConfirm extends Mixins() {
   @Getter isTypeBcomp!: boolean
   @Getter isRoleStaff!: boolean
   @Getter getCurrentDate!: string
-  @Getter getIncorporationDateTime!: DateTimeIF
+  @Getter getEffectiveDateTime!: EffectiveDateTimeIF
 
-  @Action setIsIncorporationDateTimeValid!: ActionBindingIF
+  @Action setEffectiveDateTimeValid!: ActionBindingIF
   @Action setEffectiveDate!: ActionBindingIF
+  @Action setIsFutureEffective!: ActionBindingIF
   @Action setCertifyState!: ActionBindingIF
   @Action setIgnoreChanges!: ActionBindingIF
 
@@ -153,16 +155,6 @@ export default class ReviewConfirm extends Mixins() {
         certifiedBy: val
       }
     )
-  }
-
-  /** Handler for Valid DateTime change event. */
-  private onValidDateTime (val: boolean): void {
-    this.setIsIncorporationDateTimeValid(val)
-  }
-
-  /** Handler for setting DateTime. */
-  private setDateTime (val: Date): void {
-    this.setEffectiveDate(val)
   }
 }
 </script>

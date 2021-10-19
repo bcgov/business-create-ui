@@ -37,11 +37,11 @@ describe('Name Request Info component', () => {
       'middleName': 'Joe',
       'lastName': 'Doe'
     },
-    'details': {
-      'approvedName': 'MADRONA BREAD BASKET INC.',
-      'consentFlag': null,
-      'expirationDate': 'Wed, 24 Jun 2020 07:00:00 GMT',
-      'status': 'APPROVED'
+    details: {
+      approvedName: 'MADRONA BREAD BASKET INC.',
+      consentFlag: null,
+      expirationDate: '2020-06-24T07:00:00+00:00',
+      status: 'APPROVED'
     }
   }
 
@@ -87,7 +87,7 @@ describe('Name Request Info component', () => {
   })
 
   it('renders the Name Request information with data', async () => {
-    wrapper.vm.$store.state.stateModel.nameRequest = { ...mockNrData }
+    store.state.stateModel.nameRequest = { ...mockNrData }
 
     await Vue.nextTick()
 
@@ -109,7 +109,7 @@ describe('Name Request Info component', () => {
   })
 
   it('renders the Name Request applicant information with data', async () => {
-    wrapper.vm.$store.state.stateModel.nameRequest = { ...mockNrData }
+    store.state.stateModel.nameRequest = { ...mockNrData }
 
     await Vue.nextTick()
 
@@ -144,10 +144,10 @@ describe('Name Request Info component', () => {
   })
 
   it('renders the Name Request applicant information with multi address line data', async () => {
-    wrapper.vm.$store.state.stateModel.nameRequest = { ...mockNrData }
-    wrapper.vm.$store.state.stateModel.nameRequest.applicant.addressLine1 = 'line 1'
-    wrapper.vm.$store.state.stateModel.nameRequest.applicant.addressLine2 = 'line 2'
-    wrapper.vm.$store.state.stateModel.nameRequest.applicant.addressLine3 = 'line 3'
+    store.state.stateModel.nameRequest = { ...mockNrData }
+    store.state.stateModel.nameRequest.applicant.addressLine1 = 'line 1'
+    store.state.stateModel.nameRequest.applicant.addressLine2 = 'line 2'
+    store.state.stateModel.nameRequest.applicant.addressLine3 = 'line 3'
 
     await Vue.nextTick()
 
@@ -166,9 +166,9 @@ describe('Name Request Info component', () => {
   })
 
   it('renders the Name Request information with consent not required', async () => {
-    wrapper.vm.$store.state.stateModel.nameRequest = { ...mockNrData }
-    wrapper.vm.$store.state.stateModel.nameRequest.details.status = 'CONDITIONAL'
-    wrapper.vm.$store.state.stateModel.nameRequest.details.consentFlag = null
+    store.state.stateModel.nameRequest = { ...mockNrData }
+    store.state.stateModel.nameRequest.details.status = 'CONDITIONAL'
+    store.state.stateModel.nameRequest.details.consentFlag = null
 
     await Vue.nextTick()
 
@@ -191,9 +191,9 @@ describe('Name Request Info component', () => {
   })
 
   it('renders the Name Request information with consent received', async () => {
-    wrapper.vm.$store.state.stateModel.nameRequest = { ...mockNrData }
-    wrapper.vm.$store.state.stateModel.nameRequest.details.status = 'CONDITIONAL'
-    wrapper.vm.$store.state.stateModel.nameRequest.details.consentFlag = 'R'
+    store.state.stateModel.nameRequest = { ...mockNrData }
+    store.state.stateModel.nameRequest.details.status = 'CONDITIONAL'
+    store.state.stateModel.nameRequest.details.consentFlag = 'R'
 
     await Vue.nextTick()
 
@@ -216,9 +216,9 @@ describe('Name Request Info component', () => {
   })
 
   it('renders the Name Request information with consent waived', async () => {
-    wrapper.vm.$store.state.stateModel.nameRequest = { ...mockNrData }
-    wrapper.vm.$store.state.stateModel.nameRequest.details.status = 'CONDITIONAL'
-    wrapper.vm.$store.state.stateModel.nameRequest.details.consentFlag = 'N'
+    store.state.stateModel.nameRequest = { ...mockNrData }
+    store.state.stateModel.nameRequest.details.status = 'CONDITIONAL'
+    store.state.stateModel.nameRequest.details.consentFlag = 'N'
 
     await Vue.nextTick()
 
@@ -241,9 +241,9 @@ describe('Name Request Info component', () => {
   })
 
   it('renders the Name Request information with consent required', async () => {
-    wrapper.vm.$store.state.stateModel.nameRequest = { ...mockNrData }
-    wrapper.vm.$store.state.stateModel.nameRequest.details.status = 'CONDITIONAL'
-    wrapper.vm.$store.state.stateModel.nameRequest.details.consentFlag = 'Y'
+    store.state.stateModel.nameRequest = { ...mockNrData }
+    store.state.stateModel.nameRequest.details.status = 'CONDITIONAL'
+    store.state.stateModel.nameRequest.details.consentFlag = 'Y'
 
     await Vue.nextTick()
 
@@ -267,7 +267,7 @@ describe('Name Request Info component', () => {
   })
 
   it('renders the option for name translation', async () => {
-    wrapper.vm.$store.state.stateModel.nameRequest = { ...mockNrData }
+    store.state.stateModel.nameRequest = { ...mockNrData }
 
     expect(wrapper.find('#name-translation-info').exists()).toBeTruthy()
     expect(wrapper.vm.hasNameTranslation).toBe(false)
@@ -276,7 +276,7 @@ describe('Name Request Info component', () => {
   })
 
   it('renders the add name translation component', async () => {
-    wrapper.vm.$store.state.stateModel.nameRequest = { ...mockNrData }
+    store.state.stateModel.nameRequest = { ...mockNrData }
 
     expect(wrapper.find('#name-translation-info').exists()).toBeTruthy()
     expect(wrapper.vm.hasNameTranslation).toBe(false)
@@ -291,8 +291,8 @@ describe('Name Request Info component', () => {
   })
 
   it('renders the list name translation component', async () => {
-    wrapper.vm.$store.state.stateModel.nameTranslations = ['Mock Name Translation', 'Another Mock Name Translation']
-    wrapper.vm.$store.state.stateModel.nameRequest = { ...mockNrData }
+    store.state.stateModel.nameTranslations = ['Mock Name Translation', 'Another Mock Name Translation']
+    store.state.stateModel.nameRequest = { ...mockNrData }
 
     await Vue.nextTick()
 

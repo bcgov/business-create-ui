@@ -21,7 +21,7 @@
       <div class="section-container">
         <v-row no-gutters>
           <v-col md="4">
-            <label class="font-weight-bold ml-n3">Name</label>
+            <label class="ml-n3">Name</label>
           </v-col>
           <v-col md="8">
             <div class="company-name">{{ getApprovedName || '[Incorporation Number] B.C. Ltd.' }}</div>
@@ -32,7 +32,7 @@
         </v-row>
         <v-row no-gutters v-if="getNameTranslations && getNameTranslations.length" class="mt-3">
           <v-col md="4">
-            <label class="font-weight-bold ml-n3">Name Translation</label>
+            <label class="ml-n3">Name Translation</label>
           </v-col>
           <v-col md="8">
             <div v-for="(nameTranslation, index) in getNameTranslations" :key="`name_translation_${index}`">
@@ -45,7 +45,7 @@
       <div v-if="isTypeCoop" class="section-container">
         <v-row no-gutters>
           <v-col md="4">
-            <label class="font-weight-bold ml-n3">Type</label>
+            <label class="ml-n3">Type</label>
           </v-col>
           <v-col md="8">
             <div class="cooperative-type ml-n1">
@@ -132,12 +132,6 @@ export default class SummaryDefineCompany extends Mixins(EntityFilterMixin, Enum
   padding-left: 2rem;
   padding-top: 1.25rem;
   padding-bottom: 1.25rem;
-  font-size: 1rem;
-  color: $gray7;
-
-  label {
-    color: $gray9;
-  }
 }
 
 .define-company-header {

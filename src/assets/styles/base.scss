@@ -55,7 +55,6 @@ h1, h2, h3, h4 {
 }
 
 h1, h2 {
-  letter-spacing: -0.04rem;
   font-weight: 700;
 }
 
@@ -72,10 +71,6 @@ h3 {
   font-size: 0.95rem;
   font-weight: 700;
   line-height: 2.25rem;
-}
-
-label {
-  font-size: 1rem;
 }
 
 p {
@@ -136,6 +131,11 @@ p {
 
 .align-right {
   text-align: right !important;
+}
+
+.info-text {
+  color: $gray7;
+  font-weight: normal;
 }
 
 // Loading Indicator
@@ -244,6 +244,10 @@ ul.list {
 
 .invalid-section {
   border-left: 3px solid $app-red;
+
+  .title-label {
+    color: $app-red;
+  }
 }
 
 .white-background {
@@ -283,4 +287,14 @@ ul.list {
 
 .dotted-underline {
   border-bottom: 1px dotted;
+}
+
+.section-container {
+  font-size: 1rem;
+  color: $gray7;
+
+  label {
+    color: $gray9;
+    font-weight: bold;
+  }
 }

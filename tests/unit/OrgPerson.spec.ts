@@ -228,12 +228,14 @@ describe('Org Person component', () => {
 
   it('Clicking Done button emits event for add edit person/org', async () => {
     const wrapper: Wrapper<OrgPerson> = createComponent(validOrgData, -1, null)
-    expect((<HTMLInputElement>wrapper.find(orgNameSelector).element).value).toEqual(validOrgData.officer.organizationName)
+    expect((<HTMLInputElement>wrapper.find(orgNameSelector).element).value)
+      .toEqual(validOrgData.officer.organizationName)
     await Vue.nextTick()
     expect(wrapper.find(doneButtonSelector).attributes('disabled')).toBeUndefined()
     wrapper.find(doneButtonSelector).trigger('click')
     await Vue.nextTick()
-    expect(getLastEvent(wrapper, addEditPersonEvent).officer.organizationName).toEqual(validOrgData.officer.organizationName)
+    expect(getLastEvent(wrapper, addEditPersonEvent).officer.organizationName)
+      .toEqual(validOrgData.officer.organizationName)
     wrapper.destroy()
   })
 

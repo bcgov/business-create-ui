@@ -58,7 +58,7 @@
 
     <SaveErrorDialog
       attach="#app"
-      filingName="Application"
+      :filingName="saveErrorDialogName"
       :dialog="saveErrorDialog"
       :errors="saveErrors"
       :warnings="saveWarnings"
@@ -87,7 +87,7 @@
       <main v-if="!isErrorDialog">
         <entity-info />
 
-        <v-container class="view-container pt-4">
+        <v-container class="view-container pt-8">
           <v-row>
             <v-col cols="12" lg="9">
               <header>
@@ -111,7 +111,7 @@
               </template>
             </v-col>
 
-            <v-col cols="12" lg="3" style="position: relative">
+            <v-col cols="12" lg="3" style="position: relative" class="mt-2">
               <aside>
                 <affix relative-element-selector=".col-lg-9" :offset="{ top: 86, bottom: 12 }">
                   <sbc-fee-summary
@@ -141,8 +141,9 @@ import { Component, Mixins, Vue, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import KeycloakService from 'sbc-common-components/src/services/keycloak.services'
 import { PAYMENT_REQUIRED } from 'http-status-codes'
+import { cloneDeep } from 'lodash'
 import * as Sentry from '@sentry/browser'
-import { updateLdUser, getFeatureFlag } from '@/utils'
+import { getFeatureFlag, updateLdUser } from '@/utils'
 
 // Components
 import PaySystemAlert from 'sbc-common-components/src/components/PaySystemAlert.vue'
@@ -165,18 +166,27 @@ import {
   PaymentErrorDialog,
   SaveErrorDialog
 } from '@/components/dialogs'
-import { AuthApiMixin, CommonMixin, DateMixin, FilingTemplateMixin, LegalApiMixin, NameRequestMixin } from '@/mixins'
+import {
+  AuthApiMixin,
+  CommonMixin,
+  DateMixin,
+  FilingTemplateMixin,
+  LegalApiMixin,
+  NameRequestMixin
+} from '@/mixins'
 import {
   AccountInformationIF,
   ActionBindingIF,
   AddressIF,
   ConfirmDialogType,
   DissolutionResourceIF,
-  FilingDataIF, IncorporationResourceIF,
+  EmptyFees,
+  FilingDataIF,
+  IncorporationResourceIF,
   StepIF
 } from '@/interfaces'
 import { DissolutionResources, IncorporationResources } from '@/resources'
-import AuthServices from '@/services/auth.services'
+import { AuthServices, PayServices } from '@/services'
 
 // Enums and Constants
 import { FilingNames, FilingStatus, FilingTypes, NameRequestStates, RouteNames } from '@/enums'
@@ -217,22 +227,24 @@ export default class App extends Mixins(
     confirm: ConfirmDialogType
   }
 
-  @Getter getBusinessId!: string
   @Getter getHaveChanges!: boolean
   @Getter getFilingData!: FilingDataIF
   @Getter getFilingType!: FilingTypes
   @Getter getFilingName!: FilingNames
   @Getter isDissolutionFiling!: boolean
   @Getter isIncorporationFiling!: boolean
+  @Getter isPremiumAccount!: boolean
   @Getter isRoleStaff!: boolean
   @Getter getSteps!: Array<StepIF>
 
+  @Action setAccountFolio!: ActionBindingIF
   @Action setBusinessId!: ActionBindingIF
   @Action setCurrentStep!: ActionBindingIF
   @Action setCurrentDate!: ActionBindingIF
+  @Action setCurrentJsDate!: ActionBindingIF
   @Action setResources!: ActionBindingIF
   @Action setUserEmail!: ActionBindingIF
-  @Action setUserPhone: ActionBindingIF
+  @Action setUserPhone!: ActionBindingIF
   @Action setUserFirstName!: ActionBindingIF
   @Action setUserLastName!: ActionBindingIF
   @Action setUserKeycloakGuid!: ActionBindingIF
@@ -245,6 +257,7 @@ export default class App extends Mixins(
   @Action setTempId!: ActionBindingIF
   @Action setShowErrors!: ActionBindingIF
   @Action setFilingType!: ActionBindingIF
+  @Action setFeePrices!: ActionBindingIF
 
   // Local properties
   private accountAuthorizationDialog: boolean = false
@@ -267,10 +280,13 @@ export default class App extends Mixins(
   /** Whether the token refresh service is initialized. */
   private tokenService: boolean = false
 
+  /** The Update Current JS Date timer id. */
+  private updateCurrentJsDateId = 0
+
   /** Data for fee summary component. */
   private get feeFilingData (): Array<FilingDataIF> {
     return this.getFilingData
-      ? [{ ...this.getFilingData, futureEffective: this.getIncorporationDateTime.isFutureEffective }]
+      ? [{ ...this.getFilingData, futureEffective: this.getEffectiveDateTime.isFutureEffective }]
       : []
   }
 
@@ -297,14 +313,28 @@ export default class App extends Mixins(
     return process.env.ABOUT_TEXT
   }
 
+  /** The header name for the Save Error Dialog. */
+  private get saveErrorDialogName (): string {
+    switch (this.getFilingType) {
+      case FilingTypes.INCORPORATION_APPLICATION:
+        return 'Application'
+      case FilingTypes.DISSOLUTION:
+        return 'Filing'
+    }
+  }
+
   /** Helper to check is the current route matches */
   private isRouteName (routeName: string): boolean {
     return this.$route.name === routeName
   }
 
   /** Called when component is created. */
-  private created (): void {
-    // before unloading this page, if there are changes then prompt user
+  private async created (): Promise<void> {
+    // update Current Js Date now and every 1 minute thereafter
+    await this.updateCurrentJsDate()
+    this.updateCurrentJsDateId = setInterval(this.updateCurrentJsDate, 60000)
+
+    // add handler to prompt user if there are changes, before unloading this page
     window.onbeforeunload = (event) => {
       if (this.getHaveChanges) {
         event.preventDefault()
@@ -340,8 +370,17 @@ export default class App extends Mixins(
     })
   }
 
+  /** Fetches and stores the current JS date. */
+  private async updateCurrentJsDate (): Promise<void> {
+    const jsDate = await this.getServerDate()
+    this.setCurrentJsDate(jsDate)
+  }
+
   /** Called when component is destroyed. */
   private destroyed (): void {
+    // stop Update Current Js Date timer
+    clearInterval(this.updateCurrentJsDateId)
+
     // stop listening for save error event
     this.$root.$off('save-error-event')
     this.$root.$off('name-request-invalid-errort')
@@ -455,7 +494,8 @@ export default class App extends Mixins(
     }
 
     try {
-      this.setCurrentDate(this.dateToUsableString(new Date()))
+      // set current date from "real time" date from server
+      this.setCurrentDate(this.dateToYyyyMmDd(this.getCurrentJsDate))
 
       // get user info
       const userInfo = await this.getSaveUserInfo().catch(error => {
@@ -484,39 +524,51 @@ export default class App extends Mixins(
         console.log('Launch Darkly update error =', error) // eslint-disable-line no-console
       })
 
+      // fetch the draft filing
       try {
-        let resources
-        // Dissolution filings
+        // Dissolution filing
         if (this.isDissolutionFiling) {
-          resources = await this.handleDraftDissolution()
+          const resources = await this.handleDraftDissolution()
+          if (!resources) throw new Error(`Invalid dissolution entity type = ${this.getEntityType}`)
+          this.setResources(resources)
         }
-        // Incorporation filings
+
+        // Incorporation filing
         if (this.isIncorporationFiling) {
-          resources = await this.handleDraftIncorporation()
+          const resources = await this.handleDraftIncorporation()
+          if (!resources) throw new Error(`Invalid incorporation entity type = ${this.getEntityType}`)
+          this.setResources(resources)
         }
-
-        // set current profile name to store for field pre population
-        // proceed only if we are not staff
-        if (userInfo && !this.isRoleStaff) {
-          // pre-populate Certified By name
-          this.setCertifyState(
-            {
-              valid: this.getCertifyState.valid,
-              certifiedBy: `${userInfo.firstname} ${userInfo.lastname}`
-            }
-          )
-        }
-
-        if (resources) this.setResources(resources)
-        else throw new Error('invalid Entity Type')
       } catch (error) {
-        // logging exception to sentry due to incomplete business data.
-        // at this point system doesn't know why its incomplete.
-        // since its not an expected behaviour it could be better to track.
+        // Log exception to Sentry due to incomplete business data.
+        // At this point the system doesn't know why it's incomplete.
+        // Since it's not an expected behaviour, it is better to report it.
         Sentry.captureException(error)
         console.log('Fetch error =', error) // eslint-disable-line no-console
         this.fetchErrorDialog = true
         throw error // go to catch()
+      }
+
+      // fetch and set the fee prices to display in the text
+      this.setFeePrices(
+        await PayServices.fetchFilingFees(this.getFilingData.filingTypeCode, this.getFilingData.entityType, true)
+          .catch(error => {
+            console.log('Failed to fetch filing fees, error =', error) // eslint-disable-line no-console
+            // return a valid fees structure
+            return cloneDeep(EmptyFees)
+          })
+      )
+
+      // set current profile name to store for field pre population
+      // do this only if we are not staff
+      if (userInfo && !this.isRoleStaff) {
+        // pre-populate Certified By name
+        this.setCertifyState(
+          {
+            valid: this.getCertifyState.valid,
+            certifiedBy: `${userInfo.firstname} ${userInfo.lastname}`
+          }
+        )
       }
     } catch (error) {
       // errors should be handled above
@@ -560,8 +612,7 @@ export default class App extends Mixins(
       this.parseDissolutionDraft(draftFiling)
     }
 
-    // Set the resources
-    // An unknown entity type will need to be handled here
+    // return the resources
     return DissolutionResources.find(x => x.entityType === this.getEntityType)
   }
 
@@ -596,16 +647,15 @@ export default class App extends Mixins(
     const nameRequest = draftFiling?.incorporationApplication?.nameRequest
     if (!nameRequest) throw new Error('missing Name Request object')
 
-    /** Fetches and validates the NR and sets the data to the store. This method is different
-     * from the validateNameRequest method in Actions.vue. This method sets the data to
-     * the store shows a specific message for different invalid states and redirection is to the
-     * Filings Dashboard */
+    // Fetches and validates the NR and sets the data to the store. This method is different
+    // from the validateNameRequest method in Actions.vue. This method sets the data to
+    // the store shows a specific message for different invalid states and redirection is to the
+    // Filings Dashboard.
     if (nameRequest?.nrNumber) {
       await this.processNameRequest(draftFiling)
     }
 
-    // Set the resources
-    // An unknown entity type will need to be handled here
+    // return the resources
     return IncorporationResources.find(x => x.entityType === this.getEntityType)
   }
 
@@ -685,6 +735,12 @@ export default class App extends Mixins(
   private async getSaveUserInfo (): Promise<any> {
     // NB: will throw if API error
     const userInfo = await AuthServices.fetchUserInfo()
+
+    if (this.isDissolutionFiling) {
+      let { contacts, folioNumber } = await AuthServices.fetchAuthInfo(this.getBusinessId)
+      userInfo.contacts = contacts
+      this.setAccountFolio(folioNumber)
+    }
     if (!userInfo) throw new Error('Invalid user info')
 
     if (userInfo.contacts?.length > 0 && userInfo.contacts[0].email) {
@@ -803,12 +859,14 @@ export default class App extends Mixins(
       await this.startTokenService()
 
       // wait a moment for token to be available in session storage
+      // and JS date to be fetched from server
       await Vue.nextTick()
 
       await this.fetchData(true)
     }
 
-    if (this.$route.name === RouteNames.REVIEW_CONFIRM) {
+    if (this.$route.name === RouteNames.REVIEW_CONFIRM ||
+        this.$route.name === RouteNames.REVIEW_CONFIRM_DISSOLUTION) {
       this.setShowErrors(true)
     }
   }

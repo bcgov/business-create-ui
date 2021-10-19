@@ -1,7 +1,8 @@
-import { CoopType, CorpTypeCd, FilingTypes } from '@/enums'
+import { CoopType, CorpTypeCd, DissolutionTypes, FilingTypes } from '@/enums'
 import {
   AccountInformationIF,
   AddressIF,
+  BaseAddressObjIF,
   BusinessContactIF,
   CertifyIF,
   IncorporationAddressIF,
@@ -13,22 +14,37 @@ import {
   StateIF,
   CreateRulesIF,
   CreateMemorandumIF,
-  ValidationDetailIF
+  ValidationDetailIF,
+  DissolutionStatementIF,
+  FeesIF,
+  ResourceIF
 } from '@/interfaces'
 
 export const mutateBusinessId = (state: StateIF, businessId: string) => {
-  state.stateModel.tombstone.businessId = businessId
+  state.stateModel.business.businessId = businessId
+}
+
+export const mutateBusinessAddress = (state: StateIF, address: BaseAddressObjIF) => {
+  state.stateModel.business.officeAddress = address
+}
+
+export const mutateLegalName = (state: StateIF, legalName: string) => {
+  state.stateModel.business.legalName = legalName
 }
 
 export const mutateFilingType = (state: StateIF, filingType: FilingTypes) => {
   state.stateModel.tombstone.filingType = filingType
 }
 
+export const mutateDissolutionType = (state: StateIF, dissolutionType: DissolutionTypes) => {
+  state.stateModel.dissolution.dissolutionType = dissolutionType
+}
+
 export const mutateTempId = (state: StateIF, tempId: string) => {
   state.stateModel.tempId = tempId
 }
 
-export const mutateResources = (state: StateIF, resources: any): void => {
+export const mutateResources = (state: StateIF, resources: ResourceIF): void => {
   state.resourceModel = resources
 }
 
@@ -85,18 +101,22 @@ export const mutateCurrentDate = (state: StateIF, currentDate: string) => {
   if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
 }
 
+export const mutateCurrentJsDate = (state: StateIF, date: Date) => {
+  state.stateModel.currentJsDate = date
+}
+
 export const mutateIsFutureEffective = (state: StateIF, isFutureEffective: boolean) => {
-  state.stateModel.incorporationDateTime.isFutureEffective = isFutureEffective
+  state.stateModel.effectiveDateTime.isFutureEffective = isFutureEffective
   if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
 }
 
 export const mutateEffectiveDate = (state: StateIF, effectiveDate: Date) => {
-  state.stateModel.incorporationDateTime.effectiveDate = effectiveDate
+  state.stateModel.effectiveDateTime.effectiveDate = effectiveDate
   if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
 }
 
-export const mutateIsIncorporationDateTimeValid = (state: StateIF, incorporationDateTimeValid: boolean) => {
-  state.stateModel.incorporationDateTime.valid = incorporationDateTimeValid
+export const mutateEffectiveDateTimeValid = (state: StateIF, effectiveDateTimeValid: boolean) => {
+  state.stateModel.effectiveDateTime.valid = effectiveDateTimeValid
   if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
 }
 
@@ -126,6 +146,10 @@ export const mutateOrgPersonList = (state: StateIF, orgPeople: OrgPersonIF[]) =>
 
 export const mutateAddPeopleAndRoleStepValidity = (state: StateIF, valid: boolean) => {
   state.stateModel.addPeopleAndRoleStep.valid = valid
+}
+
+export const mutateAccountFolioNumber = (state: StateIF, folioNumber: string) => {
+  state.stateModel.tombstone.folioNumber = folioNumber
 }
 
 export const mutateFolioNumber = (state: StateIF, folioNumber: string) => {
@@ -198,4 +222,12 @@ export const mutateValidateSteps = (state: StateIF, validate: boolean) => {
 
 export const mutateShowErrors = (state: StateIF, showErrors: boolean) => {
   state.stateModel.showErrors = showErrors
+}
+
+export const mutateDissolutionStatementStepData = (state: StateIF, stepData: DissolutionStatementIF) => {
+  state.stateModel.dissolution.dissolutionStatementStep = stepData
+}
+
+export const mutateFeePrices = (state: StateIF, feePrices: FeesIF) => {
+  state.stateModel.feePrices = feePrices
 }

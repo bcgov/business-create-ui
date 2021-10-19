@@ -121,14 +121,12 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
   @Getter isSavingResuming!: boolean
   @Getter isFilingPaying!: boolean
   @Getter isIncorporationFiling!: boolean
-  @Getter getTempId!: string
-  @Getter getBusinessId!: string
 
   @Action setIsSaving!: ActionBindingIF
   @Action setIsSavingResuming!: ActionBindingIF
   @Action setIsFilingPaying!: ActionBindingIF
   @Action setHaveChanges!: ActionBindingIF
-  @Action setIsIncorporationDateTimeValid!: ActionBindingIF
+  @Action setEffectiveDateTimeValid!: ActionBindingIF
   @Action setValidateSteps!: ActionBindingIF
 
   /** Is True if Jest is running the code. */
@@ -137,7 +135,8 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
   }
 
   private get isSummaryStep (): boolean {
-    return this.$route.name === RouteNames.REVIEW_CONFIRM
+    return (this.$route.name === RouteNames.REVIEW_CONFIRM ||
+      this.$route.name === RouteNames.REVIEW_CONFIRM_DISSOLUTION)
   }
 
   /** Called when Cancel button is clicked. */
@@ -219,10 +218,10 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
       this.setIsFilingPaying(true)
 
       if (
-        this.getIncorporationDateTime.effectiveDate &&
-        !this.isValidDateTime(this.getIncorporationDateTime.effectiveDate)
+        this.getEffectiveDateTime.effectiveDate &&
+        !this.isValidDateTime(this.getEffectiveDateTime.effectiveDate)
       ) {
-        this.setIsIncorporationDateTimeValid(false)
+        this.setEffectiveDateTimeValid(false)
         this.setIsFilingPaying(false)
 
         // don't call window.scrollTo during Jest tests because jsdom doesn't implement it
