@@ -80,7 +80,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
           nameRequest: {
             legalType: this.getEntityType
           },
-          nameTranslations: this.getNameTranslations || [],
+          nameTranslations: this.getNameTranslations,
           offices: this.getDefineCompanyStep.officeAddresses,
           contactPoint: {
             email: this.getBusinessContact.email,
