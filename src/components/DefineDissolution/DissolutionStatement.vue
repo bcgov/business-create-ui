@@ -2,7 +2,7 @@
   <div>
     <div v-if="isSummary" class="dissolution-summary-description" v-html="dissolutionStatementDescription"></div>
     <v-card v-else flat class="rounded-4">
-      <div class="section-container" :class="{ 'invalid-section': showErrorSummary }">
+      <div class="section-container pt-11" :class="{ 'invalid-section': showErrorSummary }">
         <v-row no-gutters>
           <v-col md="3">
             <label class="dissolution-statement-title title-label">Dissolution Statement</label>
@@ -108,7 +108,7 @@ export default class DissolutionStatement extends Vue {
   }
 }
 
-.dissolution-statement-option {
+.dissolution-statement-option, .dissolution-summary-description {
   color: $gray7;
   line-height: 1.5rem;
   font-weight: normal;
