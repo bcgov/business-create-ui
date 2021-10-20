@@ -243,10 +243,10 @@ ul.list {
 }
 
 .invalid-section {
-  border-left: 3px solid $app-red;
+  border-left: 3px solid $app-red !important;
 
   .title-label {
-    color: $app-red;
+    color: $app-red !important;
   }
 }
 

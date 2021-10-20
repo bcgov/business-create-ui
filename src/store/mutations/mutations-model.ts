@@ -19,6 +19,7 @@ import {
   FeesIF,
   ResourceIF
 } from '@/interfaces'
+import { StaffPaymentIF } from '@bcrs-shared-components/interfaces'
 
 export const mutateBusinessId = (state: StateIF, businessId: string) => {
   state.stateModel.business.businessId = businessId
@@ -230,4 +231,24 @@ export const mutateDissolutionStatementStepData = (state: StateIF, stepData: Dis
 
 export const mutateFeePrices = (state: StateIF, feePrices: FeesIF) => {
   state.stateModel.feePrices = feePrices
+}
+
+export const mutateStaffPayment = (state: StateIF, staffPayment: StaffPaymentIF) => {
+  state.stateModel.staffPaymentStep.staffPayment = staffPayment
+}
+
+export const mutateStaffPaymentValidity = (state: StateIF, validity: boolean) => {
+  state.stateModel.staffPaymentStep.valid = validity
+}
+
+export const mutateFileNumber = (state: StateIF, fileNumber: string) => {
+  state.stateModel.courtOrderStep.courtOrder.fileNumber = fileNumber
+}
+
+export const mutateHasPlanOfArrangement = (state: StateIF, hasPoa: boolean) => {
+  state.stateModel.courtOrderStep.courtOrder.hasPlanOfArrangement = hasPoa
+}
+
+export const mutateCourtOrderValidity = (state: StateIF, validity: boolean) => {
+  state.stateModel.courtOrderStep.valid = validity
 }

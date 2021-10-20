@@ -504,19 +504,19 @@ export default class App extends Mixins(
         throw error // go to catch()
       })
 
-      // get account info
-      const accountInfo = await this.getSaveAccountInfo().catch(error => {
-        console.log('Account info error =', error) // eslint-disable-line no-console
-        this.accountAuthorizationDialog = true
-        throw error // go to catch()
-      })
+      // // get account info
+      // const accountInfo = await this.getSaveAccountInfo().catch(error => {
+      //   console.log('Account info error =', error) // eslint-disable-line no-console
+      //   this.accountAuthorizationDialog = true
+      //   throw error // go to catch()
+      // })
 
-      // get org info
-      const orgInfo = await this.getSaveOrgInfo(accountInfo?.id).catch(error => {
-        console.log('Org info error =', error) // eslint-disable-line no-console
-        this.accountAuthorizationDialog = true
-        throw error // go to catch()
-      })
+      // // get org info
+      // const orgInfo = await this.getSaveOrgInfo(accountInfo?.id).catch(error => {
+      //   console.log('Org info error =', error) // eslint-disable-line no-console
+      //   this.accountAuthorizationDialog = true
+      //   throw error // go to catch()
+      // })
 
       // update Launch Darkly
       await this.updateLaunchDarkly(userInfo).catch(error => {
@@ -588,6 +588,8 @@ export default class App extends Mixins(
       if (!response.data.roles || response.data.roles.length === 0) {
         this.accountAuthorizationDialog = true
         throw new Error('Auth error: inaccessible entity')
+      } else {
+        this.setAuthRoles(response.data.roles)
       }
     }).catch(error => {
       this.accountAuthorizationDialog = true

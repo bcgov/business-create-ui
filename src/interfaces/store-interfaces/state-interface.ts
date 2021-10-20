@@ -3,6 +3,7 @@ import {
   AccountInformationIF,
   BusinessIF,
   CertifyIF,
+  CourtOrderStepIF,
   CreateMemorandumIF,
   CreateRulesIF,
   DefineCompanyIF,
@@ -15,6 +16,7 @@ import {
   PeopleAndRoleIF,
   ResourceIF,
   ShareStructureIF,
+  StaffPaymentStepIF,
   TombstoneIF
 } from '@/interfaces'
 
@@ -48,6 +50,10 @@ export interface StateModelIF {
   validateSteps: boolean
   showErrors: boolean
   feePrices: FeesIF
+
+  // staffPaymentStep and courtOrder are common and for now it is only used in dissolution
+  staffPaymentStep: StaffPaymentStepIF
+  courtOrderStep: CourtOrderStepIF
 }
 
 export interface StateIF {

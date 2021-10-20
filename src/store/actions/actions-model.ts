@@ -205,3 +205,23 @@ export const setDissolutionStatementStepData: ActionIF = ({ commit }, stepData: 
 export const setFeePrices: ActionIF = ({ commit }, feePrices: FeesIF): void => {
   commit('mutateFeePrices', feePrices)
 }
+
+export const setStaffPayment: ActionIF = ({ commit }, staffPayment): void => {
+  commit('mutateStaffPayment', staffPayment)
+}
+
+export const setStaffPaymentValidity: ActionIF = ({ commit }, validity: boolean): void => {
+  commit('mutateStaffPaymentValidity', validity)
+}
+
+export const setFileNumber: ActionIF = ({ commit }, courtOrderNumber: string): void => {
+  commit('mutateFileNumber', courtOrderNumber)
+}
+
+export const setHasPlanOfArrangement: ActionIF = ({ commit }, hasPoa: boolean): void => {
+  commit('mutateHasPlanOfArrangement', hasPoa)
+}
+
+export const setCourtOrderValidity: ActionIF = ({ commit }, validity: boolean): void => {
+  commit('mutateCourtOrderValidity', validity)
+}

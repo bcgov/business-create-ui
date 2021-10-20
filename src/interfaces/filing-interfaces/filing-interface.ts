@@ -3,6 +3,7 @@ import {
   IncorporationAddressIF
 } from '@/interfaces/stepper-interfaces/DefineCompany/address-interface'
 import {
+  CourtOrderIF,
   DissolutionResourceIF,
   IncorporationResourceIF,
   NameTranslationIF,
@@ -81,7 +82,14 @@ export interface DissolutionFilingIF {
       effectiveDate?: string // Optional and should be set only for future effective filings
       filingId?: number // Optional as this is not required when building a filing - causes an error for new filings
       folioNumber?: string // Optional to the user and only displayed for certain account types
-      isFutureEffective: boolean
+      isFutureEffective: boolean,
+
+      // staff payment properties:
+      routingSlipNumber?: string
+      bcolAccountNumber?: string
+      datNumber?: string
+      waiveFees?: boolean
+      priority?: boolean
     },
     business: {
       legalType: CorpTypeCd,
@@ -90,7 +98,8 @@ export interface DissolutionFilingIF {
     dissolution: {
       custodialOffice: BaseAddressObjIF
       dissolutionType: DissolutionTypes
-      dissolutionStatementType?: DissolutionStatementTypes
+      dissolutionStatementType?: DissolutionStatementTypes,
+      courtOrder?: CourtOrderIF
     }
   }
 }

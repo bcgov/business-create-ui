@@ -123,5 +123,23 @@ export const stateModel: StateModelIF = {
   },
   validateSteps: false,
   showErrors: false,
-  feePrices: cloneDeep(EmptyFees)
+  feePrices: cloneDeep(EmptyFees),
+  staffPaymentStep: {
+    valid: false,
+    staffPayment: {
+      option: NaN,
+      routingSlipNumber: '',
+      bcolAccountNumber: '',
+      datNumber: '',
+      folioNumber: '',
+      isPriority: false
+    }
+  },
+  courtOrderStep: {
+    valid: false,
+    courtOrder: {
+      fileNumber: '',
+      hasPlanOfArrangement: null
+    }
+  }
 }

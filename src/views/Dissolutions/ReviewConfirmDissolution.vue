@@ -34,7 +34,7 @@
         </section>
 
         <!-- Dissolution Statement -->
-        <section class="mx-6" v-if="isTypeCoop">
+        <section class="mx-6 pl-2" v-if="isTypeCoop">
           <v-container id="dissolution-statement">
             <v-row no-gutters>
               <v-col cols="3" class="inner-col-1">
@@ -49,14 +49,14 @@
         </section>
 
         <!-- divider -->
-        <div class="mx-6" v-if="isTypeCoop">
+        <div class="mx-6 pl-2" v-if="isTypeCoop">
           <v-container class="py-0">
             <v-divider  />
           </v-container>
         </div>
 
         <!-- Custodian of Records -->
-        <section class="mx-6">
+        <section class="mx-6 pl-2">
           <v-container id="custodian-of-records">
             <v-row no-gutters>
               <v-col cols="3" class="inner-col-1">
@@ -71,14 +71,14 @@
         </section>
 
         <!-- divider -->
-        <div class="mx-6">
+        <div class="mx-6 pl-2">
           <v-container class="py-0">
             <v-divider  />
           </v-container>
         </div>
 
         <!-- Dissolution Date and Time -->
-        <section class="mx-6" v-if="!isTypeCoop">
+        <section class="mx-6 pl-2" v-if="!isTypeCoop">
           <v-container
             id="effective-date-time"
             :class="{ 'invalid': getEffectiveDateTime.valid }"
@@ -159,15 +159,32 @@
     </section>
 
     <!-- Court Order and Plan of Arrangement -->
-    <section id="poa-plan-arrangement-section" class="mt-10">
+    <section id="poa-plan-arrangement-section" class="mt-10" v-if="isRoleStaff">
       <h2>X. Court Order and Plan of Arrangement</h2>
-      FUTURE
+      <p class="my-3 pb-2">
+        If this filing is pursuant to a court order, enter the court order number. If this
+        filing is pursuant to a plan of arrangement, enter the court order number and select
+        Plan of Arrangement.
+      </p>
+      <CourtOrderPoa
+        class="pl-2"
+        :class="{'invalid-section': isCourtOrderInvalid}"
+        id="court-order"
+        :autoValidation="getValidateSteps"
+        :draftCourtOrderNumber="getCourtOrderStep.courtOrder.fileNumber"
+        :hasDraftPlanOfArrangement="getCourtOrderStep.courtOrder.hasPlanOfArrangement"
+        :courtOrderNumberRequired="true"
+        :invalidSection="isCourtOrderInvalid"
+        @emitCourtNumber="setFileNumber($event)"
+        @emitPoa="setHasPlanOfArrangement($event)"
+        @emitValid="setCourtOrderValidity($event)"
+      />
     </section>
 
     <!-- Staff Payment -->
-    <section id="staff-payment" class="mt-10">
+    <section id="staff-payment" class="mt-10" v-if="isRoleStaff">
       <h2>X. Staff Payment</h2>
-      FUTURE
+      <StaffPayment @haveChanges="onStaffPaymentChanges()" />
     </section>
   </div>
 </template>
@@ -176,12 +193,13 @@
 // Libraries
 import { Component, Mixins } from 'vue-property-decorator'
 import { Getter, Action } from 'vuex-class'
-import { ActionBindingIF, EffectiveDateTimeIF, FeesIF, DissolutionStatementIF } from '@/interfaces'
+import { ActionBindingIF, EffectiveDateTimeIF, FeesIF, DissolutionStatementIF, CourtOrderStepIF } from '@/interfaces'
 import { DateMixin } from '@/mixins'
 
 // Components
 import { AssociationDetails, DissolutionStatement } from '@/components/DefineDissolution'
-import { EffectiveDateTime } from '@/components/common'
+import { EffectiveDateTime, StaffPayment } from '@/components/common'
+import { CourtOrderPoa } from '@bcrs-shared-components/court-order-poa'
 
 // Enums
 import { RouteNames } from '@/enums'
@@ -189,23 +207,30 @@ import { RouteNames } from '@/enums'
 @Component({
   components: {
     AssociationDetails,
+    CourtOrderPoa,
     DissolutionStatement,
-    EffectiveDateTime
+    EffectiveDateTime,
+    StaffPayment
   }
 })
 export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
   // Global getters
   // @Getter getCurrentJsDate!: Date
+  @Getter isRoleStaff!: boolean
   @Getter isTypeCoop!: boolean
   @Getter getEffectiveDateTime!: EffectiveDateTimeIF
   @Getter getFeePrices!: FeesIF
   @Getter getDissolutionStatementStep!: DissolutionStatementIF
+  @Getter getCourtOrderStep!: CourtOrderStepIF
   @Getter getValidateSteps!: boolean
 
   // Global actions
   @Action setEffectiveDateTimeValid!: ActionBindingIF
   @Action setEffectiveDate!: ActionBindingIF
   @Action setIsFutureEffective!: ActionBindingIF
+  @Action setFileNumber!: ActionBindingIF
+  @Action setHasPlanOfArrangement!: ActionBindingIF
+  @Action setCourtOrderValidity!: ActionBindingIF
 
   // Enum for template
   readonly RouteNames = RouteNames
@@ -215,6 +240,11 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
   private get isDefineDissolutionInvalid () {
     return this.getValidateSteps &&
       (this.isTypeCoop && !this.getDissolutionStatementStep.valid)
+  }
+
+  /** Is true when the Court Order conditions are not met. */
+  private get isCourtOrderInvalid (): boolean {
+    return (this.getValidateSteps && !this.getCourtOrderStep.valid)
   }
 
   get futureEffectiveFeePrice (): string {
@@ -283,5 +313,13 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
 
 #effective-date-text {
   color: $gray7;
+}
+
+::v-deep #court-order {
+  .row {
+    .col-9 {
+      padding-left: 1rem !important;
+    }
+  }
 }
 </style>
