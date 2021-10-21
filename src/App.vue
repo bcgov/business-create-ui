@@ -788,10 +788,7 @@ export default class App extends Mixins(
       this.setAccountInformation(accountInfo)
 
       // get org info
-      await this.getSaveOrgInfo(accountInfo?.id).catch(error => {
-        console.log('Org info error =', error) // eslint-disable-line no-console
-        throw error // go to catch()
-      })
+      await this.getSaveOrgInfo(accountInfo?.id)
     }
   }
 
