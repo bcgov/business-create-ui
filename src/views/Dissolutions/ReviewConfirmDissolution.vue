@@ -222,6 +222,7 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
   @Getter getFeePrices!: FeesIF
   @Getter getDissolutionStatementStep!: DissolutionStatementIF
   @Getter getCourtOrderStep!: CourtOrderStepIF
+  @Getter getShowErrors!: boolean
   @Getter getValidateSteps!: boolean
 
   // Global actions
@@ -238,7 +239,7 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
   // TODO: Build out validation checks with each component
   /** Is true when the Define Dissolution conditions are not met. */
   get isDefineDissolutionInvalid () {
-    return this.getValidateSteps &&
+    return this.getShowErrors &&
       (this.isTypeCoop && !this.getDissolutionStatementStep.valid)
   }
 
