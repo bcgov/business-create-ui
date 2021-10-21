@@ -191,6 +191,7 @@ import { AuthServices, PayServices } from '@/services'
 // Enums and Constants
 import { FilingNames, FilingStatus, FilingTypes, NameRequestStates, RouteNames } from '@/enums'
 import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
+import { StaffPaymentOptions } from '@bcrs-shared-components/enums'
 
 @Component({
   components: {
@@ -234,7 +235,6 @@ export default class App extends Mixins(
   @Getter isDissolutionFiling!: boolean
   @Getter isIncorporationFiling!: boolean
   @Getter isPremiumAccount!: boolean
-  @Getter isRoleStaff!: boolean
   @Getter getSteps!: Array<StepIF>
 
   @Action setAccountFolio!: ActionBindingIF
@@ -286,7 +286,10 @@ export default class App extends Mixins(
   /** Data for fee summary component. */
   private get feeFilingData (): Array<FilingDataIF> {
     return this.getFilingData
-      ? [{ ...this.getFilingData, futureEffective: this.getEffectiveDateTime.isFutureEffective }]
+      ? [{ ...this.getFilingData,
+        futureEffective: this.getEffectiveDateTime.isFutureEffective,
+        priority: this.getStaffPaymentStep.staffPayment.isPriority,
+        waiveFees: (this.getStaffPaymentStep.staffPayment.option === StaffPaymentOptions.NO_FEE) }]
       : []
   }
 
@@ -504,19 +507,12 @@ export default class App extends Mixins(
         throw error // go to catch()
       })
 
-      // // get account info
-      // const accountInfo = await this.getSaveAccountInfo().catch(error => {
-      //   console.log('Account info error =', error) // eslint-disable-line no-console
-      //   this.accountAuthorizationDialog = true
-      //   throw error // go to catch()
-      // })
-
-      // // get org info
-      // const orgInfo = await this.getSaveOrgInfo(accountInfo?.id).catch(error => {
-      //   console.log('Org info error =', error) // eslint-disable-line no-console
-      //   this.accountAuthorizationDialog = true
-      //   throw error // go to catch()
-      // })
+      // load account information
+      await this.loadAccountInformation().catch(error => {
+        console.log('Account info error =', error) // eslint-disable-line no-console
+        this.accountAuthorizationDialog = true
+        throw error // go to catch()
+      })
 
       // update Launch Darkly
       await this.updateLaunchDarkly(userInfo).catch(error => {
@@ -776,22 +772,27 @@ export default class App extends Mixins(
   }
 
   /** Gets account info and stores it. */
-  private async getSaveAccountInfo (): Promise<any> {
+  private async loadAccountInformation (): Promise<any> {
     const currentAccount = sessionStorage.getItem(SessionStorageKeys.CurrentAccount)
-    if (!currentAccount) throw new Error('Invalid current account')
+    // Staff won't have currentAccount
+    if (currentAccount) {
+      const currentAccountParsed = JSON.parse(currentAccount)
+      if (!currentAccountParsed) throw new Error('Invalid account info')
 
-    const currentAccountParsed = JSON.parse(currentAccount)
-    if (!currentAccountParsed) throw new Error('Invalid account info')
+      const accountInfo: AccountInformationIF = {
+        accountType: currentAccountParsed.accountType,
+        id: currentAccountParsed.id,
+        label: currentAccountParsed.label,
+        type: currentAccountParsed.type
+      }
+      this.setAccountInformation(accountInfo)
 
-    const accountInfo: AccountInformationIF = {
-      accountType: currentAccountParsed.accountType,
-      id: currentAccountParsed.id,
-      label: currentAccountParsed.label,
-      type: currentAccountParsed.type
+      // get org info
+      await this.getSaveOrgInfo(accountInfo?.id).catch(error => {
+        console.log('Org info error =', error) // eslint-disable-line no-console
+        throw error // go to catch()
+      })
     }
-    this.setAccountInformation(accountInfo)
-
-    return currentAccountParsed
   }
 
   /** Gets org info and stores user's address. */
@@ -814,11 +815,6 @@ export default class App extends Mixins(
       streetAddressAdditional: mailingAddress.streetAdditional
     }
     this.setUserAddress(userAddress)
-
-    if (sessionStorage.getItem(SessionStorageKeys.CurrentAccount)) {
-      const accountInfo = JSON.parse(sessionStorage.getItem(SessionStorageKeys.CurrentAccount))
-      this.setAccountInformation(accountInfo)
-    }
 
     return orgInfo
   }

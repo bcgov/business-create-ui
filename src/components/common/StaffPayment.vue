@@ -3,6 +3,7 @@
     <staff-payment-component
       class="pl-3"
       :staffPaymentData="getStaffPaymentStep.staffPayment"
+      :displayPriorityCheckbox="displayPriorityCheckbox"
       :validate="validateStaffPayment"
       :invalidSection="invalidStaffPayment"
       @update:staffPaymentData="onStaffPaymentDataUpdate($event)"
@@ -29,6 +30,10 @@ import { StaffPaymentOptions } from '@bcrs-shared-components/enums'
   }
 })
 export default class StaffPayment extends Vue {
+  /** Whether to display priority checkbox. */
+  @Prop({ default: true })
+  readonly displayPriorityCheckbox: boolean
+
   // Global getters
   @Getter getStaffPaymentStep!: StaffPaymentStepIF
   @Getter getValidateSteps!: boolean
@@ -37,12 +42,12 @@ export default class StaffPayment extends Vue {
   @Action setStaffPaymentValidity!: ActionBindingIF
 
   /** Check validity state, only when prompted by app. */
-  private get invalidStaffPayment (): boolean {
+  get invalidStaffPayment (): boolean {
     return this.getValidateSteps && !this.getStaffPaymentStep.valid
   }
 
   /** Is true when prompted by the app AND the user has selected an option. */
-  private get validateStaffPayment (): boolean {
+  get validateStaffPayment (): boolean {
     return this.getValidateSteps && !!this.getStaffPaymentStep.staffPayment?.option
   }
 

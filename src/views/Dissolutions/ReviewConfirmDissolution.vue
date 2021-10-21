@@ -184,7 +184,7 @@
     <!-- Staff Payment -->
     <section id="staff-payment" class="mt-10" v-if="isRoleStaff">
       <h2>X. Staff Payment</h2>
-      <StaffPayment @haveChanges="onStaffPaymentChanges()" />
+      <StaffPayment :displayPriorityCheckbox="displayPriorityCheckbox" />
     </section>
   </div>
 </template>
@@ -237,13 +237,18 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
 
   // TODO: Build out validation checks with each component
   /** Is true when the Define Dissolution conditions are not met. */
-  private get isDefineDissolutionInvalid () {
+  get isDefineDissolutionInvalid () {
     return this.getValidateSteps &&
       (this.isTypeCoop && !this.getDissolutionStatementStep.valid)
   }
 
+  get displayPriorityCheckbox () {
+    // Voluntary dissolution Coop does not have priority option
+    return !this.isTypeCoop
+  }
+
   /** Is true when the Court Order conditions are not met. */
-  private get isCourtOrderInvalid (): boolean {
+  get isCourtOrderInvalid (): boolean {
     return (this.getValidateSteps && !this.getCourtOrderStep.valid)
   }
 

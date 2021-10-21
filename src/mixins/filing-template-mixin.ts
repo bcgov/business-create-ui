@@ -44,6 +44,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Getter getBusinessId!: string
   @Getter getStaffPaymentStep!: StaffPaymentStepIF
   @Getter getCourtOrderStep!: CourtOrderStepIF
+  @Getter isRoleStaff!: boolean
 
   // Dissolution
   @Getter getDissolutionStatementStep!: DissolutionStatementIF
@@ -344,7 +345,9 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     this.setHasPlanOfArrangement(draftFiling.dissolution.courtOrder?.hasPlanOfArrangement)
 
     // Set Staff Payment data
-    this.storeStaffPayment(draftFiling)
+    if (this.isRoleStaff) {
+      this.storeStaffPayment(draftFiling)
+    }
   }
 
   /** Build Staff Payment data into the filing.

@@ -127,7 +127,7 @@ export const isBaseCompany = (state: StateIF): boolean => {
 
 /** Whether the current account is a premium account. */
 export const isPremiumAccount = (state: StateIF): boolean => {
-  return (getAccountInformation(state).accountType === AccountTypes.PREMIUM)
+  return (getAccountInformation(state)?.accountType === AccountTypes.PREMIUM)
 }
 
 /** The current date, which is refreshed every time the app inits. */
