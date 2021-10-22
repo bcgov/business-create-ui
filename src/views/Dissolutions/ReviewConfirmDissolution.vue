@@ -184,7 +184,7 @@
     <!-- Staff Payment -->
     <section id="staff-payment" class="mt-10" v-if="isRoleStaff">
       <h2>X. Staff Payment</h2>
-      <StaffPayment :displayPriorityCheckbox="displayPriorityCheckbox" />
+      <StaffPayment />
     </section>
   </div>
 </template>
@@ -241,11 +241,6 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
   get isDefineDissolutionInvalid () {
     return this.getShowErrors &&
       (this.isTypeCoop && !this.getDissolutionStatementStep.valid)
-  }
-
-  get displayPriorityCheckbox () {
-    // Voluntary dissolution Coop does not have priority option
-    return !this.isTypeCoop
   }
 
   /** Is true when the Court Order conditions are not met. */
