@@ -22,3 +22,4 @@ export * from './pdfPageSize'
 
 // external enums
 export { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
+export { StaffPaymentOptions } from '@bcrs-shared-components/enums'

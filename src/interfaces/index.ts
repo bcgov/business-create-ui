@@ -32,8 +32,8 @@ export * from './stepper-interfaces/ReviewConfirm/certify-interface'
 export * from './stepper-interfaces/ReviewConfirm/effectiveDateTime-interface'
 export * from './stepper-interfaces/Dissolution/DefineDissolution/dissolution-statement-interface'
 
-export * from './stepper-interfaces/Common/staff-payment-step-interface'
-export * from './stepper-interfaces/Common/court-order-step-interface'
+export * from './stepper-interfaces/common/staff-payment-step-interface'
+export * from './stepper-interfaces/common/court-order-step-interface'
 
 // Store Interfaces
 export * from './store-interfaces/state-interfaces/account-information-interface'
@@ -54,3 +54,6 @@ export * from './utils-interfaces/form-type'
 export * from './utils-interfaces/key-value-interface'
 export * from './utils-interfaces/validation-detail-interface'
 export * from './utils-interfaces/validation-item-detail-interface'
+
+// external interfaces
+export { StaffPaymentIF } from '@bcrs-shared-components/interfaces'

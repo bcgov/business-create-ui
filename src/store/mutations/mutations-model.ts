@@ -17,9 +17,9 @@ import {
   ValidationDetailIF,
   DissolutionStatementIF,
   FeesIF,
-  ResourceIF
+  ResourceIF,
+  StaffPaymentIF
 } from '@/interfaces'
-import { StaffPaymentIF } from '@bcrs-shared-components/interfaces'
 
 export const mutateBusinessId = (state: StateIF, businessId: string) => {
   state.stateModel.business.businessId = businessId

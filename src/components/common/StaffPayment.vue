@@ -1,10 +1,10 @@
 <template>
   <div class="rounded" :class="{'invalid-section': invalidStaffPayment}">
-    <staff-payment-component
+    <StaffPaymentComponent
       class="pl-3"
       :staffPaymentData="getStaffPaymentStep.staffPayment"
       :displayPriorityCheckbox="displayPriorityCheckbox"
-      :validate="validateStaffPayment"
+      :validate="getValidateSteps"
       :invalidSection="invalidStaffPayment"
       @update:staffPaymentData="onStaffPaymentDataUpdate($event)"
       @valid="setStaffPaymentValidity($event)"
@@ -20,9 +20,8 @@ import { Action, Getter } from 'vuex-class'
 import { StaffPayment as StaffPaymentComponent } from '@bcrs-shared-components/staff-payment'
 
 // Interfaces and Enums
-import { ActionBindingIF, StaffPaymentStepIF } from '@/interfaces'
-import { StaffPaymentIF } from '@bcrs-shared-components/interfaces'
-import { StaffPaymentOptions } from '@bcrs-shared-components/enums'
+import { ActionBindingIF, StaffPaymentIF, StaffPaymentStepIF } from '@/interfaces'
+import { StaffPaymentOptions } from '@/enums'
 
 @Component({
   components: {
@@ -44,11 +43,6 @@ export default class StaffPayment extends Vue {
   /** Check validity state, only when prompted by app. */
   get invalidStaffPayment (): boolean {
     return this.getValidateSteps && !this.getStaffPaymentStep.valid
-  }
-
-  /** Is true when prompted by the app AND the user has selected an option. */
-  get validateStaffPayment (): boolean {
-    return this.getValidateSteps && !!this.getStaffPaymentStep.staffPayment?.option
   }
 
   onStaffPaymentDataUpdate (event: any) {

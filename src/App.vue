@@ -189,9 +189,8 @@ import { DissolutionResources, IncorporationResources } from '@/resources'
 import { AuthServices, PayServices } from '@/services'
 
 // Enums and Constants
-import { FilingNames, FilingStatus, FilingTypes, NameRequestStates, RouteNames } from '@/enums'
+import { FilingNames, FilingStatus, FilingTypes, NameRequestStates, RouteNames, StaffPaymentOptions } from '@/enums'
 import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
-import { StaffPaymentOptions } from '@bcrs-shared-components/enums'
 
 @Component({
   components: {

@@ -12,8 +12,7 @@ import {
 
 // Constants and enums
 import { INCORPORATION_APPLICATION } from '@/constants'
-import { CorpTypeCd, DissolutionTypes, EffectOfOrders, FilingTypes } from '@/enums'
-import { StaffPaymentOptions } from '@bcrs-shared-components/enums'
+import { CorpTypeCd, DissolutionTypes, EffectOfOrders, FilingTypes, StaffPaymentOptions } from '@/enums'
 
 /**
  * Mixin that provides the integration with the Legal API.
