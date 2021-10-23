@@ -162,6 +162,7 @@
                         :editing="true"
                         :schema="PersonAddressSchema"
                         :address="inProgressDeliveryAddress"
+                        :noPoBox="true"
                         @update:address="updateDeliveryAddress"
                         @valid="updateDeliveryAddressValidity"
                       />

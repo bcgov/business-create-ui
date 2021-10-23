@@ -102,6 +102,7 @@
                   :address="deliveryAddress"
                   :editing="true"
                   :schema="OfficeAddressSchema"
+                  :noPoBox="true"
                   @update:address="updateAddress('deliveryAddress', deliveryAddress, $event)"
                   @valid="updateAddressValid('deliveryAddress', $event)"
                 />
@@ -164,6 +165,7 @@
                       :address="recDeliveryAddress"
                       :editing="true"
                       :schema="OfficeAddressSchema"
+                      :noPoBox="true"
                       @update:address="updateAddress('recDeliveryAddress', recDeliveryAddress, $event)"
                       @valid="updateAddressValid('recDeliveryAddress', $event)"
                     />
@@ -198,6 +200,7 @@ import { CorpTypeCd } from '@/enums'
 
 // Mixins
 import { CommonMixin, EntityFilterMixin } from '@/mixins'
+import { isBaseCompany } from '@/store/getters'
 
 @Component({
   components: {
@@ -231,6 +234,7 @@ export default class OfficeAddresses extends Mixins(CommonMixin, EntityFilterMix
   private readonly showErrors!: boolean
 
   @Getter getDefineCompanyStep!: DefineCompanyIF
+  @Getter isTypeCoop!: boolean
 
   // Local properties
   private addresses: IncorporationAddressIF = this.inputAddresses
@@ -287,12 +291,28 @@ export default class OfficeAddresses extends Mixins(CommonMixin, EntityFilterMix
       this.mailingAddress = this.addresses.registeredOffice.mailingAddress
       this.deliveryAddress = this.addresses.registeredOffice.deliveryAddress
 
+      const isNew = this.isEmptyAddress(this.addresses.registeredOffice.mailingAddress) &&
+              this.isEmptyAddress(this.addresses.registeredOffice.deliveryAddress)
+
       if (loadInheritedFlags) {
-        this.inheritMailingAddress = this.isSame(
-          this.addresses.registeredOffice.mailingAddress,
-          this.addresses.registeredOffice.deliveryAddress
-        )
+        if (isBaseCompany || this.isTypeCoop) {
+          this.inheritMailingAddress = !(isNew) &&
+            this.isSame(
+              this.addresses.registeredOffice.mailingAddress,
+              this.addresses.registeredOffice.deliveryAddress
+            )
+          // if it is a newly created IA, the delivery address should not be sychronized with mailing address
+          if (!this.inheritMailingAddress && isNew) {
+            this.deliveryAddress = this.defaultAddress
+          }
+        } else {
+          this.inheritMailingAddress = this.isSame(
+            this.addresses.registeredOffice.mailingAddress,
+            this.addresses.registeredOffice.deliveryAddress
+          )
+        }
       }
+
       if (this.entityFilter(CorpTypeCd.BENEFIT_COMPANY)) {
         this.recMailingAddress = this.addresses.recordsOffice?.mailingAddress
         this.recDeliveryAddress = this.addresses.recordsOffice?.deliveryAddress
@@ -330,9 +350,15 @@ export default class OfficeAddresses extends Mixins(CommonMixin, EntityFilterMix
     return registeredOfficeValid && recordsOfficeValid
   }
 
-  /** Whether the address object is empty. */
+  /** Whether the address object is empty or with only with default input values */
   private isEmptyAddress (address: AddressIF): boolean {
-    return isEmpty(address)
+    return isEmpty(address.addressCity) &&
+           (isEmpty(address.addressCountry) || address.addressCountry === 'CA') &&
+           (isEmpty(address.addressRegion) || address.addressRegion === 'BC') &&
+           isEmpty(address.deliveryInstructions) &&
+           isEmpty(address.postalCode) &&
+           isEmpty(address.streetAddress) &&
+           isEmpty(address.streetAddressAdditional)
   }
 
   // Event Handlers

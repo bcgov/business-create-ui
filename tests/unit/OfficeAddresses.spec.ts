@@ -11,12 +11,78 @@ import { createLocalVue, shallowMount, mount } from '@vue/test-utils'
 
 // Components
 import { OfficeAddresses } from '@/components/DefineCompany'
+import { CorpTypeCd } from '@/enums'
 
 Vue.use(Vuetify)
 Vue.use(Vuelidate)
 
 const vuetify = new Vuetify({})
 const store = getVuexStore()
+
+describe('Office Address delivery address <same as> is unchecked by default', () => {
+  let wrapper: any
+
+  const registeredOffice = {
+    registeredOffice: {
+      deliveryAddress: {
+        addressCity: '',
+        addressCountry: '',
+        addressRegion: '',
+        postalCode: '',
+        streetAddress: ''
+      },
+      mailingAddress: {
+        addressCity: '',
+        addressCountry: '',
+        addressRegion: '',
+        postalCode: '',
+        streetAddress: ''
+      }
+    }
+  }
+
+  // the commented corp types are not available to test currently
+  const corpTypes = [
+    CorpTypeCd.COOP,
+    CorpTypeCd.BENEFIT_COMPANY
+    // CorpTypeCd.BC_CCC,
+    // CorpTypeCd.BC_COMPANY,
+    // CorpTypeCd.BC_ULC_COMPANY
+  ]
+
+  beforeEach(() => {
+    const localVue = createLocalVue()
+    wrapper = mount(OfficeAddresses, {
+      propsData: {
+        inputAddresses: registeredOffice,
+        isEditing: true
+      },
+      localVue,
+      store,
+      vuetify
+    })
+  })
+
+  afterEach(() => {
+    wrapper.destroy()
+  })
+
+  test.each(corpTypes)('display both mailing and delivery addresses when creating for %p', async (corptype) => {
+    store.state.stateModel.entityType = corptype
+    expect(wrapper.find('#address-registered-mailing').exists()).toBeTruthy()
+    expect(wrapper.find('#address-registered-delivery').exists()).toBeTruthy()
+
+    // check the 'same as mailing' checkbox ( Default is unchecked )
+    const checkbox = wrapper.find('#registered-mailing-same-chkbx')
+    checkbox.trigger('click')
+    await Vue.nextTick()
+
+    // after clicking the checkbox, the delivery address should be invisible
+    expect(wrapper.vm.inheritMailingAddress).toBeTruthy()
+    expect(wrapper.find('#address-registered-mailing').exists()).toBeTruthy()
+    expect(wrapper.find('#address-registered-delivery').exists()).toBeFalsy()
+  })
+})
 
 describe('Office Addresses component - COOP', () => {
   let wrapper: any
