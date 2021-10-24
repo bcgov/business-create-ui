@@ -352,13 +352,14 @@ export default class OfficeAddresses extends Mixins(CommonMixin, EntityFilterMix
 
   /** Whether the address object is empty or with only with default input values */
   private isEmptyAddress (address: AddressIF): boolean {
-    return isEmpty(address.addressCity) &&
+    return isEmpty(address) ||
+           (isEmpty(address.addressCity) &&
            (isEmpty(address.addressCountry) || address.addressCountry === 'CA') &&
            (isEmpty(address.addressRegion) || address.addressRegion === 'BC') &&
            isEmpty(address.deliveryInstructions) &&
            isEmpty(address.postalCode) &&
            isEmpty(address.streetAddress) &&
-           isEmpty(address.streetAddressAdditional)
+           isEmpty(address.streetAddressAdditional))
   }
 
   // Event Handlers
