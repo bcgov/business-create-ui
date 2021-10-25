@@ -30,10 +30,9 @@ export const BenefitCompanyDissolutionResource: DissolutionResourceIF = {
       checkboxLabel: `I confirm the following items are included as required in the Business Corporations Act and have
       been deposited in the Company's records book:`,
       confirmText: [
-        `The affidavit references only the BC Cooperative Association Act, section 197.`,
-        `The director identified in the affidavit is a current director of the Cooperative Association and is the
-        director whose signature is on the affidavit.`,
-        `The affidavit contains one of the dissolution statements from Step 1 of this voluntary dissolution filing.`,
+        `The affidavit references the Business Corporations Act, section 316.`,
+        `The director identified in the affidavit is a current director of the Company and is the director whose
+        signature is on the affidavit.`,
         `The affidavit is sealed by a Commissioner for Taking Affidavits for British Columbia.`
       ]
     }

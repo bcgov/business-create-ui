@@ -333,9 +333,9 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     let affidavitDoc: DocIF = null
     if (draftFiling.dissolution?.affidavitFileKey) {
       affidavitDoc = {
-        name: draftFiling.dissolution?.affidavitFileName,
-        lastModified: draftFiling.dissolution?.affidavitFileLastModified,
-        size: draftFiling.dissolution?.affidavitFileSize
+        name: draftFiling.dissolution.affidavitFileName,
+        lastModified: draftFiling.dissolution.affidavitFileLastModified,
+        size: draftFiling.dissolution.affidavitFileSize
       }
     }
     const uploadAffidavit: UploadAffidavitIF = {

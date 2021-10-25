@@ -2,7 +2,7 @@ import { ActionIF } from '@/interfaces/store-interfaces/action-interface'
 import {
   AccountInformationIF, AddressIF, BusinessContactIF, CertifyIF, DissolutionStatementIF, IncorporationAddressIF,
   IncorporationAgreementIF, NameRequestIF, NameTranslationIF, OrgPersonIF, ResourceIF,
-  ShareClassIF, CreateRulesIF, CreateMemorandumIF, ValidationDetailIF, FeesIF
+  ShareClassIF, CreateRulesIF, CreateMemorandumIF, ValidationDetailIF, FeesIF, UploadAffidavitIF
 } from '@/interfaces'
 import { CoopType, CorpTypeCd } from '@/enums'
 
@@ -170,8 +170,8 @@ export const setMemorandumStepValidity: ActionIF = ({ commit }, validationDetail
   commit('mutateMemorandumStepValidity', validationDetail)
 }
 
-export const setAffidavit = ({ commit }, memorandum: CreateMemorandumIF) => {
-  commit('mutateAffidavit', memorandum)
+export const setAffidavit = ({ commit }, affidavit: UploadAffidavitIF) => {
+  commit('mutateAffidavit', affidavit)
 }
 
 export const setAffidavitStepValidity: ActionIF = ({ commit }, validationDetail: ValidationDetailIF): void => {
