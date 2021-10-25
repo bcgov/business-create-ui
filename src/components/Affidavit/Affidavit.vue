@@ -34,7 +34,7 @@
             :key="index"
           >
             <v-icon class="mr-2">mdi-circle-small</v-icon>
-            <span class="chk-list-item-txt">{{item}}</span>
+            <span class="break-spaces">{{item}}</span>
           </li>
         </ul>
         <p class="mt-4"><strong>Note:</strong> {{ getAffidavitResources.helpSection.note }}</p>
@@ -92,7 +92,7 @@
             <ul class="mt-4">
               <li>
                 <v-icon class="mr-2">mdi-circle-small</v-icon>
-                <span class="chk-list-item-txt">The {{ entityTitle }} name is identified <b>exactly</b> as follows
+                <span class="break-spaces">The {{ entityTitle }} name is identified <b>exactly</b> as follows
                   throughout the Affidavit:
                 </span>
                 <div class="ml-9"><strong>{{ entityName }}</strong></div>
@@ -103,7 +103,7 @@
                 :key="index"
               >
                 <v-icon class="mr-2">mdi-circle-small</v-icon>
-                <span class="chk-list-item-txt">{{item}}</span>
+                <span class="break-spaces">{{item}}</span>
               </li>
             </ul>
           </v-form>
@@ -118,18 +118,18 @@
         <ul class="mt-5">
           <li class="mt-1">
             <v-icon>mdi-circle-small</v-icon>
-            <span class="chk-list-item-txt">Must be set to fit onto 8.5" x 11"
+            <span class="break-spaces">Must be set to fit onto 8.5" x 11"
               letter-size paper
             </span>
           </li>
           <li class="mt-1">
             <v-icon>mdi-circle-small</v-icon>
-            <span class="chk-list-item-txt">Use a white background and a legible font with contrasting font colour
+            <span class="break-spaces">Use a white background and a legible font with contrasting font colour
             </span>
           </li>
           <li class="mt-1">
             <v-icon>mdi-circle-small</v-icon>
-            <span class="chk-list-item-txt">PDF file type (maximum 10 MB file size)</span>
+            <span class="break-spaces">PDF file type (maximum 10 MB file size)</span>
           </li>
         </ul>
       </header>
@@ -150,7 +150,7 @@
                 :showErrors="getShowErrors"
                 :customErrorMessage="fileUploadCustomErrorMsg"
                 @fileSelected="fileSelected"
-                @isFileValid="isFileUploadValidFn"
+                @isFileValid="onFileUploadValid"
               ></FileUploadPreview>
             </v-col>
           </v-row>
@@ -243,7 +243,7 @@ export default class Affidavit extends Mixins(CommonMixin, DocumentMixin, Entity
     this.uploadAffidavitDocKey = null
   }
 
-  private isFileUploadValidFn (val) {
+  private onFileUploadValid (val) {
     this.hasValidUploadFile = val
     this.updateAffidavitStepValidity()
   }
@@ -350,10 +350,6 @@ header {
 ul {
   list-style: none;
   color: $gray7;
-}
-
-.chk-list-item-txt {
-  white-space: break-spaces;
 }
 
 .help-btn {

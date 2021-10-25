@@ -152,7 +152,7 @@
 
         <div v-else class="upload-affidavit-success-message">
           <v-icon class="upload-success-chk ml-n1 pr-2" color="successCheckmark">mdi-check</v-icon>
-          <span id="file-name">{{ affidavitSummary }}</span>
+          <span id="file-name" class="break-spaces">{{ affidavitSummary }}</span>
         </div>
       </div>
     </v-card>
@@ -314,9 +314,5 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
 
 #effective-date-text {
   color: $gray7;
-}
-
-#file-name {
-  white-space: break-spaces;
 }
 </style>
