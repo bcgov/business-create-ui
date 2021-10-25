@@ -35,7 +35,8 @@ const dissolutionResourceModel: DissolutionResourceIF = {
   entityType: null,
   displayName: '',
   steps: [],
-  filingData: null
+  filingData: null,
+  affidavit: null
 }
 
 export const resourceModel: any = {

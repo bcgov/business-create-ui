@@ -1,14 +1,41 @@
 import { DissolutionResourceIF } from '@/interfaces'
 import { CorpTypeCd, FilingCodes } from '@/enums'
 import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
-import { BaseDissolutionSteps } from '@/resources/Dissolutions/stepTemplates'
+import { CorpDissolutionSteps } from '@/resources/Dissolutions/stepTemplates'
 
 export const UnlimitedDissolutionResource: DissolutionResourceIF = {
   entityType: CorpTypeCd.BC_ULC_COMPANY,
   displayName: GetCorpFullDescription(CorpTypeCd.BC_ULC_COMPANY),
-  steps: BaseDissolutionSteps,
+  steps: CorpDissolutionSteps,
   filingData: {
     entityType: CorpTypeCd.BC_ULC_COMPANY,
     filingTypeCode: FilingCodes.DISSOLUTION_VOLUNTARY
+  },
+  affidavit: {
+    affidavitActionText: 'deposit the affidavit in the Company\'s records book.',
+    helpSection: {
+      header: `The affidavit must state:`,
+      helpText: [
+        `The company has no assets; and`,
+        `The company has no liabilities or has made provision for the payment of each of the Company's unpaid
+          liabilities and has obtained the written consent to that provision for payment from each creditor.`
+      ],
+      note: `The affidavit is to be sworn before a Commissioner for Taking Oaths for British Columbia with a seal
+        affixed.`
+    },
+    sampleSection: {
+      fileName: `corp-sample-affidavit.pdf`
+    },
+    confirmSection: {
+      checkboxLabel: `I confirm the following items are included as required in the Business Corporations Act and have
+      been deposited in the Company's records book:`,
+      confirmText: [
+        `The affidavit references only the BC Cooperative Association Act, section 197.`,
+        `The director identified in the affidavit is a current director of the Cooperative Association and is the
+        director whose signature is on the affidavit.`,
+        `The affidavit contains one of the dissolution statements from Step 1 of this voluntary dissolution filing.`,
+        `The affidavit is sealed by a Commissioner for Taking Affidavits for British Columbia.`
+      ]
+    }
   }
 }

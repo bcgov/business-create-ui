@@ -170,6 +170,14 @@ export const setMemorandumStepValidity: ActionIF = ({ commit }, validationDetail
   commit('mutateMemorandumStepValidity', validationDetail)
 }
 
+export const setAffidavit = ({ commit }, memorandum: CreateMemorandumIF) => {
+  commit('mutateAffidavit', memorandum)
+}
+
+export const setAffidavitStepValidity: ActionIF = ({ commit }, validationDetail: ValidationDetailIF): void => {
+  commit('mutateAffidavitStepValidity', validationDetail)
+}
+
 export const setShareClasses = ({ commit }, shareClasses: ShareClassIF[]) => {
   commit('mutateShareClasses', shareClasses)
 }

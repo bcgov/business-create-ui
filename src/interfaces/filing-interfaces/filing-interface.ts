@@ -91,6 +91,11 @@ export interface DissolutionFilingIF {
       custodialOffice: BaseAddressObjIF
       dissolutionType: DissolutionTypes
       dissolutionStatementType?: DissolutionStatementTypes
+      affidavitConfirmed: boolean
+      affidavitFileKey?: string
+      affidavitFileName?: string
+      affidavitFileSize?: number
+      affidavitFileLastModified?: number
     }
   }
 }
