@@ -212,7 +212,6 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
   @Getter getDissolutionStatementStep!: DissolutionStatementIF
   @Getter getEffectiveDateTime!: EffectiveDateTimeIF
   @Getter getFeePrices!: FeesIF
-  @Getter getDissolutionStatementStep!: DissolutionStatementIF
   @Getter getShowErrors!: boolean
   @Getter getValidateSteps!: boolean
   @Getter isTypeCoop!: boolean
