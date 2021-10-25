@@ -51,7 +51,7 @@ export const CooperativeDissolutionResource: DissolutionResourceIF = {
         `The director identified in the affidavit is a current director of the Cooperative Association and is the
         director whose signature is on the affidavit.`,
         `The affidavit contains one of the dissolution statements from Step 1 of this voluntary dissolution filing.`,
-        `The affidavit is sealed by a Commissioner for Taking Affidavits for British Columbia.`
+        `The affidavit is sealed by a Commissioner for Taking Affidavits/Oaths for British Columbia.`
       ]
     }
   }
