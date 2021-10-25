@@ -85,7 +85,8 @@ export interface DissolutionFilingIF {
     },
     business: {
       legalType: CorpTypeCd,
-      identifier: string
+      identifier: string,
+      legalName: string
     },
     dissolution: {
       custodialOffice: BaseAddressObjIF

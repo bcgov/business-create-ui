@@ -26,6 +26,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Getter getNameRequestNumber!: string
   @Getter getApprovedName!: string
   @Getter getBusiness!: BusinessIF
+  @Getter getBusinessLegalName!: string
   @Getter getDissolutionType!: DissolutionTypes
   @Getter getTempId!: string
   @Getter getEffectiveDateTime!: EffectiveDateTimeIF
@@ -268,7 +269,8 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
         },
         business: {
           legalType: this.getEntityType,
-          identifier: this.getBusinessId
+          identifier: this.getBusinessId,
+          legalName: this.getBusinessLegalName
         },
         dissolution: {
           custodialOffice: this.getBusiness.officeAddress,

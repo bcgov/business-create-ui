@@ -82,7 +82,7 @@
         <v-card flat id="confirm-affidavit-card" class="pa-8 mt-6">
           <v-form ref="confirmAffidavitChk">
             <v-checkbox
-              id="chk-confirm-memorandum"
+              id="chk-confirm-affidavit"
               class="chk-affidavit"
               v-model="affidavitConfirmed"
               :rules="confirmCompletionAffidavit"
