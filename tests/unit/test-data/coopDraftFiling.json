@@ -1,0 +1,195 @@
+{
+	"commentsCount": 0,
+	"commentsLink": "https://legal-api-dev.apps.silver.devops.gov.bc.ca/api/v2/businesses/TOIRqZZF5q/filings/112950/comments",
+	"documentsLink": "https://legal-api-dev.apps.silver.devops.gov.bc.ca/api/v2/businesses/TOIRqZZF5q/filings/112950/documents",
+	"filing": {
+		"business": {
+			"identifier": "TOIRqZZF5q",
+			"legalType": "CP"
+		},
+		"documents": [
+			{
+				"filename": "TOIRqZZF5q - Incorporation Application (Pending) - 2021-10-26.pdf",
+				"filingId": 112950,
+				"reportType": null,
+				"title": "Incorporation Application - Pending",
+				"type": "REPORT"
+			}
+		],
+		"header": {
+			"affectedFilings": [],
+			"availableOnPaperOnly": false,
+			"certifiedBy": "BCREGTEST Rosette ELEVEN",
+			"colinIds": [],
+			"comments": [],
+			"date": "2021-10-26T20:30:00.230581+00:00",
+			"effectiveDate": "2021-10-26T20:30:00.230609+00:00",
+			"filingId": 112950,
+			"inColinOnly": false,
+			"isCorrected": false,
+			"isCorrectionPending": false,
+			"isFutureEffective": false,
+			"name": "incorporationApplication",
+			"paymentStatusCode": "COMPLETED",
+			"paymentToken": "13408",
+			"status": "PAID",
+			"submitter": "bcsc/iaptaestlb6ita56a3sqwhvvdulxqsl5"
+		},
+		"incorporationApplication": {
+			"contactPoint": {
+				"email": "eve.deng@gov.bc.ca",
+				"phone": "(250) 217-4441"
+			},
+			"cooperative": {
+				"cooperativeAssociationType": "CP",
+				"memorandumConfirmed": true,
+				"memorandumFileKey": "5c8b67a6-0574-45e2-a111-6ec0fd0c5d38.pdf",
+				"memorandumFileLastModified": 1617922359897,
+				"memorandumFileName": "Master Python.pdf",
+				"memorandumFileSize": 97338,
+				"rulesConfirmed": true,
+				"rulesFileKey": "8aff6f89-0eb6-4730-8aca-848f979e1948.pdf",
+				"rulesFileLastModified": 1617922359897,
+				"rulesFileName": "Master Python.pdf",
+				"rulesFileSize": 97338
+			},
+			"nameRequest": {
+				"legalName": "EVE TEST 9271 IN 11 COOP",
+				"legalType": "CP",
+				"nrNumber": "NR 5269136"
+			},
+			"nameTranslations": [],
+			"offices": {
+				"registeredOffice": {
+					"deliveryAddress": {
+						"addressCity": "Victoria",
+						"addressCountry": "CA",
+						"addressRegion": "BC",
+						"deliveryInstructions": "",
+						"postalCode": "V8W 3H2",
+						"streetAddress": "735 Broughton St",
+						"streetAddressAdditional": ""
+					},
+					"mailingAddress": {
+						"addressCity": "Victoria",
+						"addressCountry": "CA",
+						"addressRegion": "BC",
+						"deliveryInstructions": "",
+						"postalCode": "V8W 3H2",
+						"streetAddress": "735 Broughton St",
+						"streetAddressAdditional": ""
+					}
+				}
+			},
+			"parties": [
+				{
+					"deliveryAddress": {
+						"addressCity": "Smithers",
+						"addressCountry": "CA",
+						"addressRegion": "BC",
+						"postalCode": "V0J 2N2",
+						"streetAddress": "5-6421 Airport Rd",
+						"streetAddressAdditional": ""
+					},
+					"mailingAddress": {
+						"addressCity": "Smithers",
+						"addressCountry": "CA",
+						"addressRegion": "BC",
+						"postalCode": "V0J 2N2",
+						"streetAddress": "5-6421 Airport Rd",
+						"streetAddressAdditional": ""
+					},
+					"officer": {
+						"email": "test@test.com",
+						"firstName": "BCREGTEST Rosette",
+						"id": "79825708-ca1d-41f6-86b0-fa7f30f93c5d",
+						"lastName": "ELEVEN",
+						"middleName": "",
+						"organizationName": "",
+						"partyType": "person"
+					},
+					"roles": [
+						{
+							"appointmentDate": "2021-10-26",
+							"roleType": "Completing Party"
+						},
+						{
+							"appointmentDate": "2021-10-26",
+							"roleType": "Director"
+						}
+					]
+				},
+				{
+					"deliveryAddress": {
+						"addressCity": "Victoria",
+						"addressCountry": "CA",
+						"addressRegion": "BC",
+						"deliveryInstructions": "",
+						"postalCode": "V8W 3H2",
+						"streetAddress": "735 Broughton St",
+						"streetAddressAdditional": ""
+					},
+					"mailingAddress": {
+						"addressCity": "Victoria",
+						"addressCountry": "CA",
+						"addressRegion": "BC",
+						"deliveryInstructions": "",
+						"postalCode": "V8W 3H2",
+						"streetAddress": "735 Broughton St",
+						"streetAddressAdditional": ""
+					},
+					"officer": {
+						"firstName": "Eve 1",
+						"id": "7b755f98-c183-4e04-96fd-027715f06c49",
+						"lastName": "Deng",
+						"middleName": "",
+						"organizationName": "",
+						"partyType": "person"
+					},
+					"roles": [
+						{
+							"appointmentDate": "2021-10-26",
+							"roleType": "Director"
+						}
+					]
+				},
+				{
+					"deliveryAddress": {
+						"addressCity": "Victoria",
+						"addressCountry": "CA",
+						"addressRegion": "BC",
+						"deliveryInstructions": "",
+						"postalCode": "V8W 3H2",
+						"streetAddress": "735 Broughton St",
+						"streetAddressAdditional": ""
+					},
+					"mailingAddress": {
+						"addressCity": "Victoria",
+						"addressCountry": "CA",
+						"addressRegion": "BC",
+						"deliveryInstructions": "",
+						"postalCode": "V8W 3H2",
+						"streetAddress": "735 Broughton St",
+						"streetAddressAdditional": ""
+					},
+					"officer": {
+						"firstName": "2324",
+						"id": "1d759481-7395-4826-87bc-666b5518d4d6",
+						"lastName": "Test",
+						"middleName": "",
+						"organizationName": "",
+						"partyType": "person"
+					},
+					"roles": [
+						{
+							"appointmentDate": "2021-10-26",
+							"roleType": "Director"
+						}
+					]
+				}
+			]
+		}
+	},
+	"filingLink": "https://legal-api-dev.apps.silver.devops.gov.bc.ca/api/v2/businesses/TOIRqZZF5q/filings/112950",
+	"isFutureEffective": true
+}
