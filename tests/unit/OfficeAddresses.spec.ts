@@ -23,25 +23,44 @@ describe('Office Address delivery address <same as> is unchecked by default', ()
 
   // The test is on registered office address.
   const REGISTERED_OFFICE = {
-    registeredOffice: {
-      deliveryAddress: {
-        streetAddress: '',
-        streetAddressAdditional: '',
-        addressCity: '',
-        addressRegion: '',
-        postalCode: '',
-        addressCountry: '',
-        deliveryInstructions: ''
-      },
-      mailingAddress: {
-        streetAddress: '',
-        streetAddressAdditional: '',
-        addressCity: '',
-        addressRegion: '',
-        postalCode: '',
-        addressCountry: '',
-        deliveryInstructions: ''
-      }
+    deliveryAddress: {
+      streetAddress: '',
+      streetAddressAdditional: '',
+      addressCity: '',
+      addressRegion: '',
+      postalCode: '',
+      addressCountry: '',
+      deliveryInstructions: ''
+    },
+    mailingAddress: {
+      streetAddress: '',
+      streetAddressAdditional: '',
+      addressCity: '',
+      addressRegion: '',
+      postalCode: '',
+      addressCountry: '',
+      deliveryInstructions: ''
+    }
+  }
+
+  const RECORDS_OFFICE = {
+    deliveryAddress: {
+      streetAddress: '',
+      streetAddressAdditional: '',
+      addressCity: '',
+      addressRegion: '',
+      postalCode: '',
+      addressCountry: '',
+      deliveryInstructions: ''
+    },
+    mailingAddress: {
+      streetAddress: '',
+      streetAddressAdditional: '',
+      addressCity: '',
+      addressRegion: '',
+      postalCode: '',
+      addressCountry: '',
+      deliveryInstructions: ''
     }
   }
 
@@ -54,27 +73,35 @@ describe('Office Address delivery address <same as> is unchecked by default', ()
     // 'ULC'
   ]
 
-  beforeEach(() => {
+  afterEach(() => {
+    wrapper.destroy()
+  })
+
+  test.each(CORP_TYPES)('display both mailing and delivery addresses when creating for %p', async (corptype) => {
     const localVue = createLocalVue()
     // pre-set entity type when mounting.
-    store.state.stateModel.entityType = 'CP'
+    store.state.stateModel.entityType = corptype
+
+    let addresses: any
+    if (corptype === 'CP') {
+      // coop does not have recordsOffice
+      addresses = { registeredOffice: REGISTERED_OFFICE }
+    } else {
+      addresses = {
+        registeredOffice: REGISTERED_OFFICE,
+        recordsOffice: RECORDS_OFFICE
+      }
+    }
+
     wrapper = mount(OfficeAddresses, {
       propsData: {
-        inputAddresses: REGISTERED_OFFICE,
+        inputAddresses: addresses,
         isEditing: true
       },
       localVue,
       store,
       vuetify
     })
-  })
-
-  afterEach(() => {
-    wrapper.destroy()
-  })
-
-  test.each(CORP_TYPES)('display both mailing and delivery addresses when creating for %p', async (corptype) => {
-    store.state.stateModel.entityType = corptype
 
     expect(wrapper.vm.inheritMailingAddress).toBeFalsy()
     expect(wrapper.find('#address-registered-mailing').exists()).toBeTruthy()
