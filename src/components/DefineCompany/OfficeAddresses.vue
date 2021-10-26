@@ -200,7 +200,6 @@ import { CorpTypeCd } from '@/enums'
 
 // Mixins
 import { CommonMixin, EntityFilterMixin } from '@/mixins'
-import { isBaseCompany } from '@/store/getters'
 
 @Component({
   components: {
@@ -234,7 +233,6 @@ export default class OfficeAddresses extends Mixins(CommonMixin, EntityFilterMix
   private readonly showErrors!: boolean
 
   @Getter getDefineCompanyStep!: DefineCompanyIF
-  @Getter isTypeCoop!: boolean
 
   // Local properties
   private addresses: IncorporationAddressIF = this.inputAddresses
@@ -295,7 +293,7 @@ export default class OfficeAddresses extends Mixins(CommonMixin, EntityFilterMix
               this.isEmptyAddress(this.addresses.registeredOffice.deliveryAddress)
 
       if (loadInheritedFlags) {
-        if (isBaseCompany || this.isTypeCoop) {
+        if (this.showDeliveryAddressByDefault) {
           this.inheritMailingAddress = !(isNew) &&
             this.isSame(
               this.addresses.registeredOffice.mailingAddress,
@@ -353,13 +351,24 @@ export default class OfficeAddresses extends Mixins(CommonMixin, EntityFilterMix
   /** Whether the address object is empty or with only with default input values */
   private isEmptyAddress (address: AddressIF): boolean {
     return isEmpty(address) ||
-           (isEmpty(address.addressCity) &&
-           (isEmpty(address.addressCountry) || address.addressCountry === 'CA') &&
-           (isEmpty(address.addressRegion) || address.addressRegion === 'BC') &&
-           isEmpty(address.deliveryInstructions) &&
-           isEmpty(address.postalCode) &&
-           isEmpty(address.streetAddress) &&
-           isEmpty(address.streetAddressAdditional))
+           (!address.addressCity &&
+           (!address.addressCountry || address.addressCountry === 'CA') &&
+           (!address.addressRegion || address.addressRegion === 'BC') &&
+           !address.deliveryInstructions &&
+           !address.postalCode &&
+           !address.streetAddress &&
+           !address.streetAddressAdditional)
+  }
+
+  /* coop and corp display delivery address by default */
+  private get showDeliveryAddressByDefault (): boolean {
+    return [
+      CorpTypeCd.COOP,
+      CorpTypeCd.BENEFIT_COMPANY,
+      CorpTypeCd.BC_CCC,
+      CorpTypeCd.BC_COMPANY,
+      CorpTypeCd.BC_ULC_COMPANY
+    ].includes(this.getEntityType)
   }
 
   // Event Handlers

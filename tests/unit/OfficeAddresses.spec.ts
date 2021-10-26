@@ -11,7 +11,6 @@ import { createLocalVue, shallowMount, mount } from '@vue/test-utils'
 
 // Components
 import { OfficeAddresses } from '@/components/DefineCompany'
-import { CorpTypeCd } from '@/enums'
 
 Vue.use(Vuetify)
 Vue.use(Vuelidate)
@@ -22,39 +21,46 @@ const store = getVuexStore()
 describe('Office Address delivery address <same as> is unchecked by default', () => {
   let wrapper: any
 
-  const registeredOffice = {
+  // The test is on registered office address.
+  const REGISTERED_OFFICE = {
     registeredOffice: {
       deliveryAddress: {
+        streetAddress: '',
+        streetAddressAdditional: '',
         addressCity: '',
-        addressCountry: '',
         addressRegion: '',
         postalCode: '',
-        streetAddress: ''
+        addressCountry: '',
+        deliveryInstructions: ''
       },
       mailingAddress: {
+        streetAddress: '',
+        streetAddressAdditional: '',
         addressCity: '',
-        addressCountry: '',
         addressRegion: '',
         postalCode: '',
-        streetAddress: ''
+        addressCountry: '',
+        deliveryInstructions: ''
       }
     }
   }
 
   // the commented corp types are not available to test currently
-  const corpTypes = [
-    CorpTypeCd.COOP,
-    CorpTypeCd.BENEFIT_COMPANY
-    // CorpTypeCd.BC_CCC,
-    // CorpTypeCd.BC_COMPANY,
-    // CorpTypeCd.BC_ULC_COMPANY
+  const CORP_TYPES = [
+    'CP',
+    'BEN'
+    // 'CC',
+    // 'BC',
+    // 'ULC'
   ]
 
   beforeEach(() => {
     const localVue = createLocalVue()
+    // pre-set entity type when mounting.
+    store.state.stateModel.entityType = 'CP'
     wrapper = mount(OfficeAddresses, {
       propsData: {
-        inputAddresses: registeredOffice,
+        inputAddresses: REGISTERED_OFFICE,
         isEditing: true
       },
       localVue,
@@ -67,8 +73,10 @@ describe('Office Address delivery address <same as> is unchecked by default', ()
     wrapper.destroy()
   })
 
-  test.each(corpTypes)('display both mailing and delivery addresses when creating for %p', async (corptype) => {
+  test.each(CORP_TYPES)('display both mailing and delivery addresses when creating for %p', async (corptype) => {
     store.state.stateModel.entityType = corptype
+
+    expect(wrapper.vm.inheritMailingAddress).toBeFalsy()
     expect(wrapper.find('#address-registered-mailing').exists()).toBeTruthy()
     expect(wrapper.find('#address-registered-delivery').exists()).toBeTruthy()
 
