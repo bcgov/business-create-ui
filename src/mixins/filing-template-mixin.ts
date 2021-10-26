@@ -341,7 +341,10 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
       }
     }
     const uploadAffidavit: UploadAffidavitIF = {
-      validationDetail: null,
+      validationDetail: {
+        valid: false,
+        validationItemDetails: []
+      },
       affidavitConfirmed: draftFiling.dissolution?.affidavitConfirmed,
       affidavitDoc: affidavitDoc,
       docKey: draftFiling.dissolution?.affidavitFileKey
