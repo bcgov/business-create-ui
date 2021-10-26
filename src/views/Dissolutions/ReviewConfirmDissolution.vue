@@ -141,9 +141,20 @@
         <label class="font-weight-bold pl-2">Affidavit</label>
       </header>
 
-      <section class="section-container">
-        FUTURE
-      </section>
+      <div class="section-container" :class="{ 'invalid-section': isAffidavitInvalid }">
+        <section v-if="isAffidavitInvalid">
+          <v-icon color="error">mdi-information-outline</v-icon>
+          <span class="error-text">This step is unfinished.</span>
+          <router-link
+            :to="{ path: `/${RouteNames.UPLOAD_AFFIDAVIT}` }"
+          >Return to this step to finish it</router-link>
+        </section>
+
+        <div v-else class="upload-affidavit-success-message">
+          <v-icon class="upload-success-chk ml-n1 pr-2" color="successCheckmark">mdi-check</v-icon>
+          <span id="file-name" class="break-spaces">{{ affidavitSummary }}</span>
+        </div>
+      </div>
     </v-card>
 
     <!-- Dissolution Documents Delivery -->
@@ -176,7 +187,6 @@
 // Libraries
 import { Component, Mixins } from 'vue-property-decorator'
 import { Getter, Action } from 'vuex-class'
-import { ActionBindingIF, EffectiveDateTimeIF, FeesIF, DissolutionStatementIF } from '@/interfaces'
 import { DateMixin } from '@/mixins'
 
 // Components
@@ -185,6 +195,9 @@ import { EffectiveDateTime } from '@/components/common'
 
 // Enums
 import { RouteNames } from '@/enums'
+
+// Interfaces
+import { ActionBindingIF, EffectiveDateTimeIF, FeesIF, DissolutionStatementIF, UploadAffidavitIF } from '@/interfaces'
 
 @Component({
   components: {
@@ -195,13 +208,13 @@ import { RouteNames } from '@/enums'
 })
 export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
   // Global getters
-  // @Getter getCurrentJsDate!: Date
-  @Getter isTypeCoop!: boolean
+  @Getter getAffidavitStep!: UploadAffidavitIF
+  @Getter getDissolutionStatementStep!: DissolutionStatementIF
   @Getter getEffectiveDateTime!: EffectiveDateTimeIF
   @Getter getFeePrices!: FeesIF
-  @Getter getDissolutionStatementStep!: DissolutionStatementIF
   @Getter getShowErrors!: boolean
   @Getter getValidateSteps!: boolean
+  @Getter isTypeCoop!: boolean
 
   // Global actions
   @Action setEffectiveDateTimeValid!: ActionBindingIF
@@ -213,9 +226,26 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
 
   // TODO: Build out validation checks with each component
   /** Is true when the Define Dissolution conditions are not met. */
-  private get isDefineDissolutionInvalid () {
+  private get isDefineDissolutionInvalid (): boolean {
     return this.getShowErrors &&
       (this.isTypeCoop && !this.getDissolutionStatementStep.valid)
+  }
+
+  /** Is true when the Affidavit conditions are not met. */
+  private get isAffidavitInvalid (): boolean {
+    if (this.isTypeCoop) {
+      return !this.getAffidavitStep.validationDetail.valid
+    } else {
+      // Just validate the confirm checkbox for Corps
+      return !this.getAffidavitStep.validationDetail.validationItemDetails[0]?.valid
+    }
+  }
+
+  private get affidavitSummary (): string {
+    return this.isTypeCoop
+      ? this.getAffidavitStep.affidavitDoc?.name
+      : `The affidavit required by section 316(1)(a) of the Business Corporations Act has been completed and deposited
+      in the company's records book.`
   }
 
   get futureEffectiveFeePrice (): string {
