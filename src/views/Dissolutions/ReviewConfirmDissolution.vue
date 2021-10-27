@@ -258,16 +258,16 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
   // Enum for template
   readonly RouteNames = RouteNames
 
-  readonly userHeaderNumbers = { documentDelivery: 1, certify: 2 }
-  readonly premiumHeaderNumbers = { documentDelivery: 1, folioNumber: 2, certify: 3 }
-  readonly staffHeaderNumbers = { documentDelivery: 1, certify: 2, courtOrder: 3, staffPayment: 4 }
-
   private getHeaderNumber (sectionName): number {
-    let headerNumbers = this.userHeaderNumbers
+    const userHeaderNumbers: any = { documentDelivery: 1, certify: 2 }
+    const premiumHeaderNumbers: any = { documentDelivery: 1, folioNumber: 2, certify: 3 }
+    const staffHeaderNumbers: any = { documentDelivery: 1, certify: 2, courtOrder: 3, staffPayment: 4 }
+
+    let headerNumbers = userHeaderNumbers
     if (this.isPremiumAccount) {
-      headerNumbers = this.premiumHeaderNumbers
+      headerNumbers = premiumHeaderNumbers
     } else if (this.isRoleStaff) {
-      headerNumbers = this.staffHeaderNumbers
+      headerNumbers = staffHeaderNumbers
     }
     return headerNumbers[sectionName]
   }
