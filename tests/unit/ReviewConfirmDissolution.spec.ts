@@ -34,6 +34,12 @@ for (const test of reviewConfirmTestCases) {
       }
     })
 
+    it('displays Affidavit section', () => {
+      wrapper = shallowWrapperFactory(ReviewConfirmDissolution, null, { entityType: test.entityType })
+
+      expect(wrapper.find('#affidavit-summary').exists()).toBe(true)
+    })
+
     // FUTURE: Expand unit testing for validation on step 5. Include routing to appropriate steps from error links.
   })
 }

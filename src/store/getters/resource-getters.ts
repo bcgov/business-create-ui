@@ -1,4 +1,5 @@
 import {
+  AffidavitResourceIF,
   CertifyStatementIF,
   CreateMemorandumResourceIF,
   CreateRulesResourceIF,
@@ -83,4 +84,9 @@ export const getMaxStep = (state: StateIF): number => {
 /** The dissolution statement options. */
 export const getDissolutionStatements = (state: StateIF): Array<KeyValueIF> => {
   return state.resourceModel.dissolutionStatements
+}
+
+/** The dissolution statement options. */
+export const getAffidavitResources = (state: StateIF): AffidavitResourceIF => {
+  return state.resourceModel.affidavit
 }

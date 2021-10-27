@@ -17,7 +17,9 @@ import {
   ValidationDetailIF,
   DissolutionStatementIF,
   FeesIF,
-  ResourceIF
+  ResourceIF,
+  StaffPaymentIF,
+  UploadAffidavitIF
 } from '@/interfaces'
 
 export const mutateBusinessId = (state: StateIF, businessId: string) => {
@@ -190,6 +192,15 @@ export const mutateMemorandumStepValidity = (state: StateIF, validationDetail: V
   state.stateModel.createMemorandumStep.validationDetail = validationDetail
 }
 
+export const mutateAffidavit = (state: StateIF, affidavit: UploadAffidavitIF) => {
+  state.stateModel.uploadAffidavitStep = affidavit
+  if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
+}
+
+export const mutateAffidavitStepValidity = (state: StateIF, validationDetail: ValidationDetailIF) => {
+  state.stateModel.uploadAffidavitStep.validationDetail = validationDetail
+}
+
 export const mutateShareClasses = (state: StateIF, shareClasses: ShareClassIF[]) => {
   state.stateModel.createShareStructureStep.shareClasses = shareClasses
   if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
@@ -230,4 +241,24 @@ export const mutateDissolutionStatementStepData = (state: StateIF, stepData: Dis
 
 export const mutateFeePrices = (state: StateIF, feePrices: FeesIF) => {
   state.stateModel.feePrices = feePrices
+}
+
+export const mutateStaffPayment = (state: StateIF, staffPayment: StaffPaymentIF) => {
+  state.stateModel.staffPaymentStep.staffPayment = staffPayment
+}
+
+export const mutateStaffPaymentValidity = (state: StateIF, validity: boolean) => {
+  state.stateModel.staffPaymentStep.valid = validity
+}
+
+export const mutateCourtOrderFileNumber = (state: StateIF, fileNumber: string) => {
+  state.stateModel.courtOrderStep.courtOrder.fileNumber = fileNumber
+}
+
+export const mutateHasPlanOfArrangement = (state: StateIF, hasPoa: boolean) => {
+  state.stateModel.courtOrderStep.courtOrder.hasPlanOfArrangement = hasPoa
+}
+
+export const mutateCourtOrderValidity = (state: StateIF, validity: boolean) => {
+  state.stateModel.courtOrderStep.valid = validity
 }

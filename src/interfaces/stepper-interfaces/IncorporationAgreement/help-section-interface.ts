@@ -4,4 +4,5 @@ export interface HelpSectionIF {
   iconColor?: string
   helpText?: Array<string>
   statements?: Array<string>
+  note?: string
 }

@@ -4,6 +4,7 @@ import {
   AddressIF,
   BusinessContactIF, BusinessIF,
   CertifyIF,
+  CourtOrderStepIF,
   CreateMemorandumIF,
   CreateRulesIF,
   DefineCompanyIF,
@@ -17,8 +18,9 @@ import {
   NameTranslationIF,
   PeopleAndRoleIF,
   ShareStructureIF,
+  StaffPaymentStepIF,
   StateIF,
-  TombstoneIF
+  TombstoneIF, UploadAffidavitIF
 } from '@/interfaces'
 import { getMaxStep } from './resource-getters'
 
@@ -239,6 +241,16 @@ export const getCreateMemorandumStep = (state: StateIF): CreateMemorandumIF => {
   return state.stateModel.createMemorandumStep
 }
 
+/** Is true when the step is valid. */
+export const isAffidavitValid = (state: StateIF): boolean => {
+  return getAffidavitStep(state).validationDetail.valid
+}
+
+/** The upload Affidavit object. */
+export const getAffidavitStep = (state: StateIF): UploadAffidavitIF => {
+  return state.stateModel.uploadAffidavitStep
+}
+
 /** The Effective Date-Time object. */
 export const getEffectiveDateTime = (state: StateIF): EffectiveDateTimeIF => {
   return state.stateModel.effectiveDateTime
@@ -419,4 +431,14 @@ export const getUserAddress = (state: StateIF): AddressIF => {
 /** The fee prices. */
 export const getFeePrices = (state: StateIF): FeesIF => {
   return state.stateModel.feePrices
+}
+
+/** The staff payment step. */
+export const getStaffPaymentStep = (state: StateIF): StaffPaymentStepIF => {
+  return state.stateModel.staffPaymentStep
+}
+
+/** The court order step state. */
+export const getCourtOrderStep = (state: StateIF): CourtOrderStepIF => {
+  return state.stateModel.courtOrderStep
 }

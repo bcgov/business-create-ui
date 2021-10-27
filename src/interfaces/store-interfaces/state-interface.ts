@@ -3,6 +3,7 @@ import {
   AccountInformationIF,
   BusinessIF,
   CertifyIF,
+  CourtOrderStepIF,
   CreateMemorandumIF,
   CreateRulesIF,
   DefineCompanyIF,
@@ -15,7 +16,9 @@ import {
   PeopleAndRoleIF,
   ResourceIF,
   ShareStructureIF,
-  TombstoneIF
+  StaffPaymentStepIF,
+  TombstoneIF,
+  UploadAffidavitIF
 } from '@/interfaces'
 
 // State model example
@@ -43,11 +46,16 @@ export interface StateModelIF {
   createRulesStep: CreateRulesIF
   incorporationAgreementStep: IncorporationAgreementIF
   createMemorandumStep: CreateMemorandumIF
+  uploadAffidavitStep: UploadAffidavitIF
   ignoreChanges: boolean
   haveChanges: boolean
   validateSteps: boolean
   showErrors: boolean
   feePrices: FeesIF
+
+  // staffPaymentStep and courtOrder are common and for now it is only used in dissolution
+  staffPaymentStep: StaffPaymentStepIF
+  courtOrderStep: CourtOrderStepIF
 }
 
 export interface StateIF {

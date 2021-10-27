@@ -20,11 +20,16 @@ Vue.use(Vuetify)
 Vue.use(Vuelidate)
 localVue.use(VueRouter)
 
-export const shallowWrapperFactory = (component, propsData = null, stateValues = null, routeName = null) => {
+export const shallowWrapperFactory = (
+  component,
+  propsData = null,
+  stateValues = null,
+  routeName = null,
+  resource = null) => {
   const store = getVuexStore()
   if (routeName) router.push({ name: routeName })
 
-  if (stateValues) applyStoreValues(store, stateValues)
+  if (stateValues) applyStoreValues(store, stateValues, resource)
   return shallowMount(component, {
     propsData: {
       ...propsData

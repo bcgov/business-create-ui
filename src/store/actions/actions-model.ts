@@ -2,7 +2,7 @@ import { ActionIF } from '@/interfaces/store-interfaces/action-interface'
 import {
   AccountInformationIF, AddressIF, BusinessContactIF, CertifyIF, DissolutionStatementIF, IncorporationAddressIF,
   IncorporationAgreementIF, NameRequestIF, NameTranslationIF, OrgPersonIF, ResourceIF,
-  ShareClassIF, CreateRulesIF, CreateMemorandumIF, ValidationDetailIF, FeesIF
+  ShareClassIF, CreateRulesIF, CreateMemorandumIF, ValidationDetailIF, FeesIF, UploadAffidavitIF
 } from '@/interfaces'
 import { CoopType, CorpTypeCd } from '@/enums'
 
@@ -170,6 +170,14 @@ export const setMemorandumStepValidity: ActionIF = ({ commit }, validationDetail
   commit('mutateMemorandumStepValidity', validationDetail)
 }
 
+export const setAffidavit = ({ commit }, affidavit: UploadAffidavitIF) => {
+  commit('mutateAffidavit', affidavit)
+}
+
+export const setAffidavitStepValidity: ActionIF = ({ commit }, validationDetail: ValidationDetailIF): void => {
+  commit('mutateAffidavitStepValidity', validationDetail)
+}
+
 export const setShareClasses = ({ commit }, shareClasses: ShareClassIF[]) => {
   commit('mutateShareClasses', shareClasses)
 }
@@ -204,4 +212,24 @@ export const setDissolutionStatementStepData: ActionIF = ({ commit }, stepData: 
 
 export const setFeePrices: ActionIF = ({ commit }, feePrices: FeesIF): void => {
   commit('mutateFeePrices', feePrices)
+}
+
+export const setStaffPayment: ActionIF = ({ commit }, staffPayment): void => {
+  commit('mutateStaffPayment', staffPayment)
+}
+
+export const setStaffPaymentValidity: ActionIF = ({ commit }, validity: boolean): void => {
+  commit('mutateStaffPaymentValidity', validity)
+}
+
+export const setCourtOrderFileNumber: ActionIF = ({ commit }, courtOrderNumber: string): void => {
+  commit('mutateCourtOrderFileNumber', courtOrderNumber)
+}
+
+export const setHasPlanOfArrangement: ActionIF = ({ commit }, hasPoa: boolean): void => {
+  commit('mutateHasPlanOfArrangement', hasPoa)
+}
+
+export const setCourtOrderValidity: ActionIF = ({ commit }, validity: boolean): void => {
+  commit('mutateCourtOrderValidity', validity)
 }
