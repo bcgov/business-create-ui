@@ -4,6 +4,7 @@ import {
   AddressIF,
   BusinessContactIF, BusinessIF,
   CertifyIF,
+  CourtOrderStepIF,
   CreateMemorandumIF,
   CreateRulesIF,
   DefineCompanyIF,
@@ -17,6 +18,7 @@ import {
   NameTranslationIF,
   PeopleAndRoleIF,
   ShareStructureIF,
+  StaffPaymentStepIF,
   StateIF,
   TombstoneIF, UploadAffidavitIF
 } from '@/interfaces'
@@ -429,4 +431,14 @@ export const getUserAddress = (state: StateIF): AddressIF => {
 /** The fee prices. */
 export const getFeePrices = (state: StateIF): FeesIF => {
   return state.stateModel.feePrices
+}
+
+/** The staff payment step. */
+export const getStaffPaymentStep = (state: StateIF): StaffPaymentStepIF => {
+  return state.stateModel.staffPaymentStep
+}
+
+/** The court order step state. */
+export const getCourtOrderStep = (state: StateIF): CourtOrderStepIF => {
+  return state.stateModel.courtOrderStep
 }

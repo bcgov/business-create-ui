@@ -7,12 +7,13 @@ import { DateMixin } from '@/mixins'
 import {
   ActionBindingIF, BusinessContactIF, CertifyIF, CreateRulesIF, EffectiveDateTimeIF, DefineCompanyIF,
   DissolutionFilingIF, IncorporationAgreementIF, IncorporationFilingIF, NameTranslationIF, PeopleAndRoleIF,
-  DocIF, ShareStructureIF, CreateMemorandumIF, BusinessIF, DissolutionStatementIF, UploadAffidavitIF
+  DocIF, ShareStructureIF, CreateMemorandumIF, BusinessIF, DissolutionStatementIF, UploadAffidavitIF,
+  StaffPaymentStepIF, CourtOrderStepIF
 } from '@/interfaces'
 
 // Constants and enums
 import { INCORPORATION_APPLICATION } from '@/constants'
-import { CorpTypeCd, DissolutionTypes, FilingTypes } from '@/enums'
+import { CorpTypeCd, DissolutionTypes, EffectOfOrders, FilingTypes, StaffPaymentOptions } from '@/enums'
 
 /**
  * Mixin that provides the integration with the Legal API.
@@ -43,6 +44,9 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Getter getCreateMemorandumStep!: CreateMemorandumIF
   @Getter getMemorandum!: any
   @Getter getBusinessId!: string
+  @Getter getStaffPaymentStep!: StaffPaymentStepIF
+  @Getter getCourtOrderStep!: CourtOrderStepIF
+  @Getter isRoleStaff!: boolean
 
   // Dissolution
   @Getter getDissolutionStatementStep!: DissolutionStatementIF
@@ -67,6 +71,9 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Action setIncorporationAgreementStepData!: ActionBindingIF
   @Action setRules!: ActionBindingIF
   @Action setMemorandum!: ActionBindingIF
+  @Action setCourtOrderFileNumber!: ActionBindingIF
+  @Action setHasPlanOfArrangement!: ActionBindingIF
+  @Action setStaffPayment!: ActionBindingIF
 
   // Dissolution
   @Action setDissolutionStatementStepData!: ActionBindingIF
@@ -299,6 +306,19 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
       if (effectiveDate) filing.filing.header.effectiveDate = this.dateToApi(effectiveDate)
     }
 
+    // Apply Court Order ONLY when it is required and applied
+    const courtOrder = this.getCourtOrderStep.courtOrder
+    if (courtOrder.hasPlanOfArrangement || courtOrder.fileNumber) {
+      filing.filing.dissolution.courtOrder = {
+        fileNumber: courtOrder.fileNumber,
+        effectOfOrder: courtOrder.hasPlanOfArrangement ? EffectOfOrders.PLAN_OF_ARRANGEMENT : null,
+        hasPlanOfArrangement: courtOrder.hasPlanOfArrangement
+      }
+    }
+
+    // Include Staff Payment into the Dissolution filing
+    this.buildStaffPayment(filing)
+
     return filing
   }
 
@@ -350,5 +370,87 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
       docKey: draftFiling.dissolution?.affidavitFileKey
     }
     this.setAffidavit(uploadAffidavit)
+
+    // Set Court Order data
+    this.setCourtOrderFileNumber(draftFiling.dissolution.courtOrder?.fileNumber)
+    this.setHasPlanOfArrangement(draftFiling.dissolution.courtOrder?.hasPlanOfArrangement)
+
+    // Set Staff Payment data
+    if (this.isRoleStaff) {
+      this.storeStaffPayment(draftFiling)
+    }
+  }
+
+  /** Build Staff Payment data into the filing.
+   * @param filing The dissolution filing.
+   */
+  private buildStaffPayment (filing: DissolutionFilingIF): void {
+    // Populate Staff Payment according to payment option
+    const staffPayment = this.getStaffPaymentStep.staffPayment
+    switch (staffPayment.option) {
+      case StaffPaymentOptions.FAS:
+        filing.filing.header.routingSlipNumber = staffPayment.routingSlipNumber
+        filing.filing.header.priority = staffPayment.isPriority
+        break
+
+      case StaffPaymentOptions.BCOL:
+        filing.filing.header.bcolAccountNumber = staffPayment.bcolAccountNumber
+        filing.filing.header.datNumber = staffPayment.datNumber
+        filing.filing.header.folioNumber = staffPayment.folioNumber // this overrides original folio number
+        filing.filing.header.priority = staffPayment.isPriority
+        break
+
+      case StaffPaymentOptions.NO_FEE:
+        filing.filing.header.waiveFees = true
+        filing.filing.header.priority = false
+        break
+
+      case StaffPaymentOptions.NONE: // should never happen
+        break
+    }
+  }
+
+  /** Parse Staff Payment data into store.
+   * @param filing The dissolution filing to parse.
+   */
+  private storeStaffPayment (filing: DissolutionFilingIF['filing']): void {
+    // Parse staff payment
+    if (filing.header.routingSlipNumber) {
+      this.setStaffPayment({
+        option: StaffPaymentOptions.FAS,
+        routingSlipNumber: filing.header.routingSlipNumber,
+        bcolAccountNumber: '',
+        datNumber: '',
+        folioNumber: '',
+        isPriority: filing.header.priority
+      })
+    } else if (filing.header.bcolAccountNumber) {
+      this.setStaffPayment({
+        option: StaffPaymentOptions.BCOL,
+        routingSlipNumber: '',
+        bcolAccountNumber: filing.header.bcolAccountNumber,
+        datNumber: filing.header.datNumber,
+        folioNumber: filing.header.folioNumber,
+        isPriority: filing.header.priority
+      })
+    } else if (filing.header.waiveFees) {
+      this.setStaffPayment({
+        option: StaffPaymentOptions.NO_FEE,
+        routingSlipNumber: '',
+        bcolAccountNumber: '',
+        datNumber: '',
+        folioNumber: '',
+        isPriority: false
+      })
+    } else {
+      this.setStaffPayment({
+        option: StaffPaymentOptions.NONE,
+        routingSlipNumber: '',
+        bcolAccountNumber: '',
+        datNumber: '',
+        folioNumber: '',
+        isPriority: false
+      })
+    }
   }
 }

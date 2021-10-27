@@ -34,7 +34,7 @@
         </section>
 
         <!-- Dissolution Statement -->
-        <section class="mx-6" v-if="isTypeCoop">
+        <section class="mx-6 pl-2" v-if="isTypeCoop">
           <v-container id="dissolution-statement">
             <v-row no-gutters>
               <v-col cols="3" class="inner-col-1">
@@ -49,14 +49,14 @@
         </section>
 
         <!-- divider -->
-        <div class="mx-6" v-if="isTypeCoop">
+        <div class="mx-6 pl-2" v-if="isTypeCoop">
           <v-container class="py-0">
             <v-divider  />
           </v-container>
         </div>
 
         <!-- Custodian of Records -->
-        <section class="mx-6">
+        <section class="mx-6 pl-2">
           <v-container id="custodian-of-records">
             <v-row no-gutters>
               <v-col cols="3" class="inner-col-1">
@@ -71,14 +71,14 @@
         </section>
 
         <!-- divider -->
-        <div class="mx-6">
+        <div class="mx-6 pl-2">
           <v-container class="py-0">
             <v-divider  />
           </v-container>
         </div>
 
         <!-- Dissolution Date and Time -->
-        <section class="mx-6" v-if="!isTypeCoop">
+        <section class="mx-6 pl-2" v-if="!isTypeCoop">
           <v-container
             id="effective-date-time"
             :class="{ 'invalid': getEffectiveDateTime.valid }"
@@ -159,26 +159,49 @@
 
     <!-- Dissolution Documents Delivery -->
     <section id="document-delivery-section" class="mt-10">
-      <h2>X. Dissolution Documents Delivery</h2>
+      <h2>{{getHeaderNumber('documentDelivery')}}. Dissolution Documents Delivery</h2>
+      FUTURE
+    </section>
+
+    <!-- Folio Number -->
+    <section id="folio-number-section" class="mt-10" v-if="isPremiumAccount">
+      <h2>{{getHeaderNumber('folioNumber')}}. Folio Number</h2>
       FUTURE
     </section>
 
     <!-- Certify -->
     <section id="certify-section" class="mt-10">
-      <h2>X. Certify</h2>
+      <h2>{{getHeaderNumber('certify')}}. Certify</h2>
       FUTURE
     </section>
 
     <!-- Court Order and Plan of Arrangement -->
-    <section id="poa-plan-arrangement-section" class="mt-10">
-      <h2>X. Court Order and Plan of Arrangement</h2>
-      FUTURE
+    <section id="poa-plan-arrangement-section" class="mt-10" v-if="isRoleStaff">
+      <h2>{{getHeaderNumber('courtOrder')}}. Court Order and Plan of Arrangement</h2>
+      <p class="my-3 pb-2">
+        If this filing is pursuant to a court order, enter the court order number. If this
+        filing is pursuant to a plan of arrangement, enter the court order number and select
+        Plan of Arrangement.
+      </p>
+      <CourtOrderPoa
+        class="pl-2"
+        :class="{'invalid-section': isCourtOrderInvalid}"
+        id="court-order"
+        :autoValidation="getValidateSteps"
+        :draftCourtOrderNumber="getCourtOrderStep.courtOrder.fileNumber"
+        :hasDraftPlanOfArrangement="getCourtOrderStep.courtOrder.hasPlanOfArrangement"
+        :courtOrderNumberRequired="true"
+        :invalidSection="isCourtOrderInvalid"
+        @emitCourtNumber="setCourtOrderFileNumber($event)"
+        @emitPoa="setHasPlanOfArrangement($event)"
+        @emitValid="setCourtOrderValidity($event)"
+      />
     </section>
 
     <!-- Staff Payment -->
-    <section id="staff-payment" class="mt-10">
-      <h2>X. Staff Payment</h2>
-      FUTURE
+    <section id="staff-payment" class="mt-10" v-if="isRoleStaff">
+      <h2>{{getHeaderNumber('staffPayment')}}. Staff Payment</h2>
+      <StaffPayment />
     </section>
   </div>
 </template>
@@ -191,44 +214,74 @@ import { DateMixin } from '@/mixins'
 
 // Components
 import { AssociationDetails, DissolutionStatement } from '@/components/DefineDissolution'
-import { EffectiveDateTime } from '@/components/common'
+import { EffectiveDateTime, StaffPayment } from '@/components/common'
+import { CourtOrderPoa } from '@bcrs-shared-components/court-order-poa'
 
 // Enums
 import { RouteNames } from '@/enums'
 
 // Interfaces
-import { ActionBindingIF, EffectiveDateTimeIF, FeesIF, DissolutionStatementIF, UploadAffidavitIF } from '@/interfaces'
+import {
+  ActionBindingIF, EffectiveDateTimeIF, FeesIF, DissolutionStatementIF, UploadAffidavitIF, CourtOrderStepIF
+} from '@/interfaces'
 
 @Component({
   components: {
     AssociationDetails,
+    CourtOrderPoa,
     DissolutionStatement,
-    EffectiveDateTime
+    EffectiveDateTime,
+    StaffPayment
   }
 })
 export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
   // Global getters
   @Getter getAffidavitStep!: UploadAffidavitIF
+  @Getter getCourtOrderStep!: CourtOrderStepIF
   @Getter getDissolutionStatementStep!: DissolutionStatementIF
   @Getter getEffectiveDateTime!: EffectiveDateTimeIF
   @Getter getFeePrices!: FeesIF
   @Getter getShowErrors!: boolean
   @Getter getValidateSteps!: boolean
+  @Getter isPremiumAccount!: boolean
+  @Getter isRoleStaff!: boolean
   @Getter isTypeCoop!: boolean
 
   // Global actions
   @Action setEffectiveDateTimeValid!: ActionBindingIF
   @Action setEffectiveDate!: ActionBindingIF
   @Action setIsFutureEffective!: ActionBindingIF
+  @Action setCourtOrderFileNumber!: ActionBindingIF
+  @Action setHasPlanOfArrangement!: ActionBindingIF
+  @Action setCourtOrderValidity!: ActionBindingIF
 
   // Enum for template
   readonly RouteNames = RouteNames
+
+  private getHeaderNumber (sectionName): number {
+    const userHeaderNumbers: any = { documentDelivery: 1, certify: 2 }
+    const premiumHeaderNumbers: any = { documentDelivery: 1, folioNumber: 2, certify: 3 }
+    const staffHeaderNumbers: any = { documentDelivery: 1, certify: 2, courtOrder: 3, staffPayment: 4 }
+
+    let headerNumbers = userHeaderNumbers
+    if (this.isPremiumAccount) {
+      headerNumbers = premiumHeaderNumbers
+    } else if (this.isRoleStaff) {
+      headerNumbers = staffHeaderNumbers
+    }
+    return headerNumbers[sectionName]
+  }
 
   // TODO: Build out validation checks with each component
   /** Is true when the Define Dissolution conditions are not met. */
   private get isDefineDissolutionInvalid (): boolean {
     return this.getShowErrors &&
       (this.isTypeCoop && !this.getDissolutionStatementStep.valid)
+  }
+
+  /** Is true when the Court Order conditions are not met. */
+  private get isCourtOrderInvalid (): boolean {
+    return (this.getValidateSteps && !this.getCourtOrderStep.valid)
   }
 
   /** Is true when the Affidavit conditions are not met. */
@@ -314,5 +367,13 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
 
 #effective-date-text {
   color: $gray7;
+}
+
+::v-deep #court-order {
+  .row {
+    .col-9 {
+      padding-left: 1rem !important;
+    }
+  }
 }
 </style>
