@@ -129,7 +129,7 @@
                         :label="RoleTypes.DIRECTOR"
                         :disabled="disableDirectorRole"
                         :rules="roleRules"
-                        v-on:change="updateSameAsMailingChkBox()"
+                        @click="updateSameAsMailingChkBox()"
                       />
                     </v-col>
                   </v-row>
