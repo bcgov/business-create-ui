@@ -1,20 +1,27 @@
 import { wrapperFactory } from '../jest-wrapper-factory'
 import MixinTester from './mixin-tester.vue'
 
-// get coop filing data
-
 describe('COOP filing data', () => {
-  const COOP_DRAFT_FILING = require('./test-data/coopDraftFiling.json')
-  let vm: any
+  // load coop filing data
+  const COOP_IA = require('./test-data/incorpAppCoop.json')
+  let wrapper: any
 
   beforeEach(() => {
-    const wrapper = wrapperFactory(MixinTester, null, {})
-    vm = wrapper.vm
+    wrapper = wrapperFactory(MixinTester, null, {})
+  })
+
+  afterEach(() => {
+    wrapper.destroy()
   })
 
   it('no name translations for a coop IA', () => {
-    vm.parseIncorporationsDraft(COOP_DRAFT_FILING.filing)
-    vm.buildIncorporationFiling()
-    expect(vm.getNameTranslations.length).toBe(0)
+    wrapper.vm.parseIncorporationsDraft(COOP_IA.filing)
+
+    // no name translation input
+    expect(wrapper.vm.getNameTranslations.length).toBe(0)
+
+    // after building filing data, the name translations should be empty as well
+    const filing = wrapper.vm.buildIncorporationFiling()
+    expect(filing.filing.incorporationApplication.nameTranslations.length).toBe(0)
   })
 })
