@@ -129,6 +129,7 @@
                         :label="RoleTypes.DIRECTOR"
                         :disabled="disableDirectorRole"
                         :rules="roleRules"
+                        @click="updateSameAsMailingChkBox()"
                       />
                     </v-col>
                   </v-row>
@@ -362,6 +363,17 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
     return (!this.showCompletingPartyRole && !this.showIncorporatorRole && this.showDirectorRole)
   }
 
+  /* coop and corp display delivery address by default */
+  private get showDeliveryAddressByDefault (): boolean {
+    return [
+      CorpTypeCd.COOP,
+      CorpTypeCd.BENEFIT_COMPANY,
+      CorpTypeCd.BC_CCC,
+      CorpTypeCd.BC_COMPANY,
+      CorpTypeCd.BC_ULC_COMPANY
+    ].includes(this.getEntityType)
+  }
+
   /** Called when component is created. */
   private created (): void {
     if (this.initialValue) {
@@ -375,9 +387,38 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
       this.inProgressMailingAddress = { ...this.orgPerson.mailingAddress }
       if (this.isDirector) {
         this.inProgressDeliveryAddress = { ...this.orgPerson.deliveryAddress }
-        this.inheritMailingAddress = this.isSame(this.inProgressMailingAddress, this.inProgressDeliveryAddress)
+        // initialize inheritMailingAddress conditionaly
+        this.updateSameAsMailingChkBox()
       }
     }
+  }
+
+  /** decide if the "Delivery Address same as Mailing Address" check box should be checked */
+  private updateSameAsMailingChkBox (): void {
+    if (!this.isDirector) {
+      return
+    }
+
+    this.inheritMailingAddress = this.isSame(this.inProgressMailingAddress, this.inProgressDeliveryAddress)
+
+    if (this.inheritMailingAddress && this.showDeliveryAddressByDefault) {
+      const isNew = this.isEmptyAddress(this.orgPerson.mailingAddress) &&
+                    this.isEmptyAddress(this.orgPerson.deliveryAddress)
+
+      this.inheritMailingAddress = !isNew
+    }
+  }
+
+  /** Whether the address object is empty or with only with default input values */
+  private isEmptyAddress (address: AddressIF): boolean {
+    return !address ||
+           (!address.addressCity &&
+           (!address.addressCountry || address.addressCountry === 'CA') &&
+           (!address.addressRegion || address.addressRegion === 'BC') &&
+           !address.deliveryInstructions &&
+           !address.postalCode &&
+           !address.streetAddress &&
+           !address.streetAddressAdditional)
   }
 
   // Event Handlers
