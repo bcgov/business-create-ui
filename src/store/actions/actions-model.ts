@@ -214,8 +214,8 @@ export const setStaffPaymentValidity: ActionIF = ({ commit }, validity: boolean)
   commit('mutateStaffPaymentValidity', validity)
 }
 
-export const setFileNumber: ActionIF = ({ commit }, courtOrderNumber: string): void => {
-  commit('mutateFileNumber', courtOrderNumber)
+export const setCourtOrderFileNumber: ActionIF = ({ commit }, courtOrderNumber: string): void => {
+  commit('mutateCourtOrderFileNumber', courtOrderNumber)
 }
 
 export const setHasPlanOfArrangement: ActionIF = ({ commit }, hasPoa: boolean): void => {

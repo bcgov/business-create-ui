@@ -67,7 +67,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Action setIncorporationAgreementStepData!: ActionBindingIF
   @Action setRules!: ActionBindingIF
   @Action setMemorandum!: ActionBindingIF
-  @Action setFileNumber!: ActionBindingIF
+  @Action setCourtOrderFileNumber!: ActionBindingIF
   @Action setHasPlanOfArrangement!: ActionBindingIF
   @Action setStaffPayment!: ActionBindingIF
 
@@ -340,7 +340,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     }
 
     // Set Court Order data
-    this.setFileNumber(draftFiling.dissolution.courtOrder?.fileNumber)
+    this.setCourtOrderFileNumber(draftFiling.dissolution.courtOrder?.fileNumber)
     this.setHasPlanOfArrangement(draftFiling.dissolution.courtOrder?.hasPlanOfArrangement)
 
     // Set Staff Payment data

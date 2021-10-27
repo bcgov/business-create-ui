@@ -175,7 +175,7 @@
         :hasDraftPlanOfArrangement="getCourtOrderStep.courtOrder.hasPlanOfArrangement"
         :courtOrderNumberRequired="true"
         :invalidSection="isCourtOrderInvalid"
-        @emitCourtNumber="setFileNumber($event)"
+        @emitCourtNumber="setCourtOrderFileNumber($event)"
         @emitPoa="setHasPlanOfArrangement($event)"
         @emitValid="setCourtOrderValidity($event)"
       />
@@ -229,7 +229,7 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
   @Action setEffectiveDateTimeValid!: ActionBindingIF
   @Action setEffectiveDate!: ActionBindingIF
   @Action setIsFutureEffective!: ActionBindingIF
-  @Action setFileNumber!: ActionBindingIF
+  @Action setCourtOrderFileNumber!: ActionBindingIF
   @Action setHasPlanOfArrangement!: ActionBindingIF
   @Action setCourtOrderValidity!: ActionBindingIF
 

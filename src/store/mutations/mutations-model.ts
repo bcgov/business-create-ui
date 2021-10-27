@@ -241,7 +241,7 @@ export const mutateStaffPaymentValidity = (state: StateIF, validity: boolean) =>
   state.stateModel.staffPaymentStep.valid = validity
 }
 
-export const mutateFileNumber = (state: StateIF, fileNumber: string) => {
+export const mutateCourtOrderFileNumber = (state: StateIF, fileNumber: string) => {
   state.stateModel.courtOrderStep.courtOrder.fileNumber = fileNumber
 }
 
