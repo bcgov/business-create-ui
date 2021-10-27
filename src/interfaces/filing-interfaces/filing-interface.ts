@@ -93,12 +93,18 @@ export interface DissolutionFilingIF {
     },
     business: {
       legalType: CorpTypeCd,
-      identifier: string
+      identifier: string,
+      legalName: string
     },
     dissolution: {
       custodialOffice: BaseAddressObjIF
       dissolutionType: DissolutionTypes
-      dissolutionStatementType?: DissolutionStatementTypes,
+      dissolutionStatementType?: DissolutionStatementTypes
+      affidavitConfirmed: boolean
+      affidavitFileKey?: string
+      affidavitFileName?: string
+      affidavitFileSize?: number
+      affidavitFileLastModified?: number
       courtOrder?: CourtOrderIF
     }
   }

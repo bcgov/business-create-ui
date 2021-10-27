@@ -20,7 +20,7 @@ import {
   ShareStructureIF,
   StaffPaymentStepIF,
   StateIF,
-  TombstoneIF
+  TombstoneIF, UploadAffidavitIF
 } from '@/interfaces'
 import { getMaxStep } from './resource-getters'
 
@@ -239,6 +239,16 @@ export const isMemorandumValid = (state: StateIF): boolean => {
 /** The Create Memorandum object. */
 export const getCreateMemorandumStep = (state: StateIF): CreateMemorandumIF => {
   return state.stateModel.createMemorandumStep
+}
+
+/** Is true when the step is valid. */
+export const isAffidavitValid = (state: StateIF): boolean => {
+  return getAffidavitStep(state).validationDetail.valid
+}
+
+/** The upload Affidavit object. */
+export const getAffidavitStep = (state: StateIF): UploadAffidavitIF => {
+  return state.stateModel.uploadAffidavitStep
 }
 
 /** The Effective Date-Time object. */

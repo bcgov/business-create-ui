@@ -121,6 +121,15 @@ export const stateModel: StateModelIF = {
     memorandumDoc: null,
     docKey: null
   },
+  uploadAffidavitStep: {
+    validationDetail: {
+      valid: false,
+      validationItemDetails: []
+    },
+    affidavitConfirmed: false,
+    affidavitDoc: null,
+    docKey: null
+  },
   validateSteps: false,
   showErrors: false,
   feePrices: cloneDeep(EmptyFees),

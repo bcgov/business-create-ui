@@ -18,7 +18,8 @@ import {
   DissolutionStatementIF,
   FeesIF,
   ResourceIF,
-  StaffPaymentIF
+  StaffPaymentIF,
+  UploadAffidavitIF
 } from '@/interfaces'
 
 export const mutateBusinessId = (state: StateIF, businessId: string) => {
@@ -189,6 +190,15 @@ export const mutateMemorandum = (state: StateIF, memorandum: CreateMemorandumIF)
 
 export const mutateMemorandumStepValidity = (state: StateIF, validationDetail: ValidationDetailIF) => {
   state.stateModel.createMemorandumStep.validationDetail = validationDetail
+}
+
+export const mutateAffidavit = (state: StateIF, affidavit: UploadAffidavitIF) => {
+  state.stateModel.uploadAffidavitStep = affidavit
+  if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
+}
+
+export const mutateAffidavitStepValidity = (state: StateIF, validationDetail: ValidationDetailIF) => {
+  state.stateModel.uploadAffidavitStep.validationDetail = validationDetail
 }
 
 export const mutateShareClasses = (state: StateIF, shareClasses: ShareClassIF[]) => {

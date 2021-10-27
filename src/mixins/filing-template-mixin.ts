@@ -7,7 +7,8 @@ import { DateMixin } from '@/mixins'
 import {
   ActionBindingIF, BusinessContactIF, CertifyIF, CreateRulesIF, EffectiveDateTimeIF, DefineCompanyIF,
   DissolutionFilingIF, IncorporationAgreementIF, IncorporationFilingIF, NameTranslationIF, PeopleAndRoleIF,
-  DocIF, ShareStructureIF, CreateMemorandumIF, BusinessIF, DissolutionStatementIF, StaffPaymentStepIF, CourtOrderStepIF
+  DocIF, ShareStructureIF, CreateMemorandumIF, BusinessIF, DissolutionStatementIF, UploadAffidavitIF,
+  StaffPaymentStepIF, CourtOrderStepIF
 } from '@/interfaces'
 
 // Constants and enums
@@ -22,9 +23,11 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Getter isTypeBcomp!: boolean
   @Getter isTypeCoop!: boolean
   @Getter isNamedBusiness!: boolean
+  @Getter getAffidavitStep!: UploadAffidavitIF
   @Getter getNameRequestNumber!: string
   @Getter getApprovedName!: string
   @Getter getBusiness!: BusinessIF
+  @Getter getBusinessLegalName!: string
   @Getter getDissolutionType!: DissolutionTypes
   @Getter getTempId!: string
   @Getter getEffectiveDateTime!: EffectiveDateTimeIF
@@ -48,6 +51,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   // Dissolution
   @Getter getDissolutionStatementStep!: DissolutionStatementIF
 
+  @Action setAffidavit!: ActionBindingIF
   @Action setEntityType!: ActionBindingIF
   @Action setBusinessAddress!: ActionBindingIF
   @Action setBusinessContact!: ActionBindingIF
@@ -191,7 +195,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
         // Set Cooperative type
         this.setCooperativeType(draftFiling.incorporationApplication.cooperative?.cooperativeAssociationType)
         // Set Rules
-        let rulesDoc:DocIF = null
+        let rulesDoc: DocIF = null
         if (draftFiling.incorporationApplication.cooperative?.rulesFileKey) {
           rulesDoc = {
             name: draftFiling.incorporationApplication.cooperative?.rulesFileName,
@@ -199,7 +203,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
             size: draftFiling.incorporationApplication.cooperative?.rulesFileSize
           }
         }
-        const createRules:CreateRulesIF = {
+        const createRules: CreateRulesIF = {
           validationDetail: null,
           rulesConfirmed: draftFiling.incorporationApplication.cooperative?.rulesConfirmed,
           rulesDoc: rulesDoc,
@@ -207,7 +211,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
         }
         this.setRules(createRules)
         // Set Memorandum
-        let memorandumDoc:DocIF = null
+        let memorandumDoc: DocIF = null
         if (draftFiling.incorporationApplication.cooperative?.memorandumFileKey) {
           memorandumDoc = {
             name: draftFiling.incorporationApplication.cooperative?.memorandumFileName,
@@ -215,7 +219,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
             size: draftFiling.incorporationApplication.cooperative?.memorandumFileSize
           }
         }
-        const createMemorandum:CreateMemorandumIF = {
+        const createMemorandum: CreateMemorandumIF = {
           validationDetail: null,
           memorandumConfirmed: draftFiling.incorporationApplication.cooperative?.memorandumConfirmed,
           memorandumDoc: memorandumDoc,
@@ -272,11 +276,13 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
         },
         business: {
           legalType: this.getEntityType,
-          identifier: this.getBusinessId
+          identifier: this.getBusinessId,
+          legalName: this.getBusinessLegalName
         },
         dissolution: {
           custodialOffice: this.getBusiness.officeAddress,
-          dissolutionType: this.getDissolutionType
+          dissolutionType: this.getDissolutionType,
+          affidavitConfirmed: this.getAffidavitStep.validationDetail.validationItemDetails[0]?.valid || false
         }
       }
     }
@@ -284,7 +290,13 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     // Conditionally add the entity-specific sections.
     switch (this.getEntityType) {
       case CorpTypeCd.COOP:
-        filing.filing.dissolution.dissolutionStatementType = this.getDissolutionStatementStep.dissolutionStatementType
+        filing.filing.dissolution = { ...filing.filing.dissolution,
+          dissolutionStatementType: this.getDissolutionStatementStep.dissolutionStatementType || null,
+          affidavitFileKey: this.getAffidavitStep.docKey || null,
+          affidavitFileName: this.getAffidavitStep.affidavitDoc?.name || null,
+          affidavitFileSize: this.getAffidavitStep.affidavitDoc?.size || null,
+          affidavitFileLastModified: this.getAffidavitStep.affidavitDoc?.lastModified || null
+        }
         break
     }
 
@@ -338,6 +350,26 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
       // to work around the default effective date set by the back end.
       if (effectiveDate >= this.getCurrentJsDate) this.setEffectiveDate(effectiveDate)
     }
+
+    // Set Affidavit
+    let affidavitDoc: DocIF = null
+    if (draftFiling.dissolution?.affidavitFileKey) {
+      affidavitDoc = {
+        name: draftFiling.dissolution.affidavitFileName,
+        lastModified: draftFiling.dissolution.affidavitFileLastModified,
+        size: draftFiling.dissolution.affidavitFileSize
+      }
+    }
+    const uploadAffidavit: UploadAffidavitIF = {
+      validationDetail: {
+        valid: false,
+        validationItemDetails: []
+      },
+      affidavitConfirmed: draftFiling.dissolution?.affidavitConfirmed,
+      affidavitDoc: affidavitDoc,
+      docKey: draftFiling.dissolution?.affidavitFileKey
+    }
+    this.setAffidavit(uploadAffidavit)
 
     // Set Court Order data
     this.setCourtOrderFileNumber(draftFiling.dissolution.courtOrder?.fileNumber)
