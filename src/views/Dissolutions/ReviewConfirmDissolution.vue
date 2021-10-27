@@ -159,19 +159,25 @@
 
     <!-- Dissolution Documents Delivery -->
     <section id="document-delivery-section" class="mt-10">
-      <h2>X. Dissolution Documents Delivery</h2>
+      <h2>{{getHeaderNumber('documentDelivery')}}. Dissolution Documents Delivery</h2>
+      FUTURE
+    </section>
+
+    <!-- Folio Number -->
+    <section id="folio-number-section" class="mt-10" v-if="isPremiumAccount">
+      <h2>{{getHeaderNumber('folioNumber')}}. Folio Number</h2>
       FUTURE
     </section>
 
     <!-- Certify -->
     <section id="certify-section" class="mt-10">
-      <h2>X. Certify</h2>
+      <h2>{{getHeaderNumber('certify')}}. Certify</h2>
       FUTURE
     </section>
 
     <!-- Court Order and Plan of Arrangement -->
     <section id="poa-plan-arrangement-section" class="mt-10" v-if="isRoleStaff">
-      <h2>X. Court Order and Plan of Arrangement</h2>
+      <h2>{{getHeaderNumber('courtOrder')}}. Court Order and Plan of Arrangement</h2>
       <p class="my-3 pb-2">
         If this filing is pursuant to a court order, enter the court order number. If this
         filing is pursuant to a plan of arrangement, enter the court order number and select
@@ -194,7 +200,7 @@
 
     <!-- Staff Payment -->
     <section id="staff-payment" class="mt-10" v-if="isRoleStaff">
-      <h2>X. Staff Payment</h2>
+      <h2>{{getHeaderNumber('staffPayment')}}. Staff Payment</h2>
       <StaffPayment />
     </section>
   </div>
@@ -237,6 +243,7 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
   @Getter getFeePrices!: FeesIF
   @Getter getShowErrors!: boolean
   @Getter getValidateSteps!: boolean
+  @Getter isPremiumAccount!: boolean
   @Getter isRoleStaff!: boolean
   @Getter isTypeCoop!: boolean
 
@@ -250,6 +257,20 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
 
   // Enum for template
   readonly RouteNames = RouteNames
+
+  readonly userHeaderNumbers = { documentDelivery: 1, certify: 2 }
+  readonly premiumHeaderNumbers = { documentDelivery: 1, folioNumber: 2, certify: 3 }
+  readonly staffHeaderNumbers = { documentDelivery: 1, certify: 2, courtOrder: 3, staffPayment: 4 }
+
+  private getHeaderNumber (sectionName): number {
+    let headerNumbers = this.userHeaderNumbers
+    if (this.isPremiumAccount) {
+      headerNumbers = this.premiumHeaderNumbers
+    } else if (this.isRoleStaff) {
+      headerNumbers = this.staffHeaderNumbers
+    }
+    return headerNumbers[sectionName]
+  }
 
   // TODO: Build out validation checks with each component
   /** Is true when the Define Dissolution conditions are not met. */
