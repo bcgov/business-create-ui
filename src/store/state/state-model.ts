@@ -121,7 +121,34 @@ export const stateModel: StateModelIF = {
     memorandumDoc: null,
     docKey: null
   },
+  uploadAffidavitStep: {
+    validationDetail: {
+      valid: false,
+      validationItemDetails: []
+    },
+    affidavitConfirmed: false,
+    affidavitDoc: null,
+    docKey: null
+  },
   validateSteps: false,
   showErrors: false,
-  feePrices: cloneDeep(EmptyFees)
+  feePrices: cloneDeep(EmptyFees),
+  staffPaymentStep: {
+    valid: false,
+    staffPayment: {
+      option: NaN,
+      routingSlipNumber: '',
+      bcolAccountNumber: '',
+      datNumber: '',
+      folioNumber: '',
+      isPriority: false
+    }
+  },
+  courtOrderStep: {
+    valid: false,
+    courtOrder: {
+      fileNumber: '',
+      hasPlanOfArrangement: null
+    }
+  }
 }

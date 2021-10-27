@@ -5,5 +5,6 @@ export interface FilingDataIF {
   filingTypeCode: FilingCodes
   filingDescription?: string
   waiveFees?: boolean
+  priority?: boolean
   futureEffective?: boolean
 }

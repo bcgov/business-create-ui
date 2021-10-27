@@ -129,6 +129,10 @@ p {
   white-space: pre-line;
 }
 
+.break-spaces {
+  white-space: break-spaces;
+}
+
 .align-right {
   text-align: right !important;
 }
@@ -243,10 +247,10 @@ ul.list {
 }
 
 .invalid-section {
-  border-left: 3px solid $app-red;
+  border-left: 3px solid $app-red !important;
 
   .title-label {
-    color: $app-red;
+    color: $app-red !important;
   }
 }
 

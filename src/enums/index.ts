@@ -3,6 +3,7 @@ export * from './coopType'
 export * from './dissolutionStatementTypes'
 export * from './dissolutionTypes'
 export * from './effectiveDateTypes'
+export * from './effectOfOrders'
 export * from './filingCodes'
 export * from './filingStatus'
 export * from './filingNames'
@@ -21,3 +22,4 @@ export * from './pdfPageSize'
 
 // external enums
 export { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
+export { StaffPaymentOptions } from '@bcrs-shared-components/enums'

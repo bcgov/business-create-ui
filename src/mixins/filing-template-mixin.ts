@@ -7,12 +7,13 @@ import { DateMixin } from '@/mixins'
 import {
   ActionBindingIF, BusinessContactIF, CertifyIF, CreateRulesIF, EffectiveDateTimeIF, DefineCompanyIF,
   DissolutionFilingIF, IncorporationAgreementIF, IncorporationFilingIF, NameTranslationIF, PeopleAndRoleIF,
-  DocIF, ShareStructureIF, CreateMemorandumIF, BusinessIF, DissolutionStatementIF
+  DocIF, ShareStructureIF, CreateMemorandumIF, BusinessIF, DissolutionStatementIF, UploadAffidavitIF,
+  StaffPaymentStepIF, CourtOrderStepIF
 } from '@/interfaces'
 
 // Constants and enums
 import { INCORPORATION_APPLICATION } from '@/constants'
-import { CorpTypeCd, DissolutionTypes, FilingTypes } from '@/enums'
+import { CorpTypeCd, DissolutionTypes, EffectOfOrders, FilingTypes, StaffPaymentOptions } from '@/enums'
 
 /**
  * Mixin that provides the integration with the Legal API.
@@ -22,9 +23,11 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Getter isTypeBcomp!: boolean
   @Getter isTypeCoop!: boolean
   @Getter isNamedBusiness!: boolean
+  @Getter getAffidavitStep!: UploadAffidavitIF
   @Getter getNameRequestNumber!: string
   @Getter getApprovedName!: string
   @Getter getBusiness!: BusinessIF
+  @Getter getBusinessLegalName!: string
   @Getter getDissolutionType!: DissolutionTypes
   @Getter getTempId!: string
   @Getter getEffectiveDateTime!: EffectiveDateTimeIF
@@ -41,10 +44,14 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Getter getCreateMemorandumStep!: CreateMemorandumIF
   @Getter getMemorandum!: any
   @Getter getBusinessId!: string
+  @Getter getStaffPaymentStep!: StaffPaymentStepIF
+  @Getter getCourtOrderStep!: CourtOrderStepIF
+  @Getter isRoleStaff!: boolean
 
   // Dissolution
   @Getter getDissolutionStatementStep!: DissolutionStatementIF
 
+  @Action setAffidavit!: ActionBindingIF
   @Action setEntityType!: ActionBindingIF
   @Action setBusinessAddress!: ActionBindingIF
   @Action setBusinessContact!: ActionBindingIF
@@ -64,6 +71,9 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Action setIncorporationAgreementStepData!: ActionBindingIF
   @Action setRules!: ActionBindingIF
   @Action setMemorandum!: ActionBindingIF
+  @Action setCourtOrderFileNumber!: ActionBindingIF
+  @Action setHasPlanOfArrangement!: ActionBindingIF
+  @Action setStaffPayment!: ActionBindingIF
 
   // Dissolution
   @Action setDissolutionStatementStepData!: ActionBindingIF
@@ -185,7 +195,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
         // Set Cooperative type
         this.setCooperativeType(draftFiling.incorporationApplication.cooperative?.cooperativeAssociationType)
         // Set Rules
-        let rulesDoc:DocIF = null
+        let rulesDoc: DocIF = null
         if (draftFiling.incorporationApplication.cooperative?.rulesFileKey) {
           rulesDoc = {
             name: draftFiling.incorporationApplication.cooperative?.rulesFileName,
@@ -193,7 +203,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
             size: draftFiling.incorporationApplication.cooperative?.rulesFileSize
           }
         }
-        const createRules:CreateRulesIF = {
+        const createRules: CreateRulesIF = {
           validationDetail: null,
           rulesConfirmed: draftFiling.incorporationApplication.cooperative?.rulesConfirmed,
           rulesDoc: rulesDoc,
@@ -201,7 +211,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
         }
         this.setRules(createRules)
         // Set Memorandum
-        let memorandumDoc:DocIF = null
+        let memorandumDoc: DocIF = null
         if (draftFiling.incorporationApplication.cooperative?.memorandumFileKey) {
           memorandumDoc = {
             name: draftFiling.incorporationApplication.cooperative?.memorandumFileName,
@@ -209,7 +219,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
             size: draftFiling.incorporationApplication.cooperative?.memorandumFileSize
           }
         }
-        const createMemorandum:CreateMemorandumIF = {
+        const createMemorandum: CreateMemorandumIF = {
           validationDetail: null,
           memorandumConfirmed: draftFiling.incorporationApplication.cooperative?.memorandumConfirmed,
           memorandumDoc: memorandumDoc,
@@ -266,11 +276,13 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
         },
         business: {
           legalType: this.getEntityType,
-          identifier: this.getBusinessId
+          identifier: this.getBusinessId,
+          legalName: this.getBusinessLegalName
         },
         dissolution: {
           custodialOffice: this.getBusiness.officeAddress,
-          dissolutionType: this.getDissolutionType
+          dissolutionType: this.getDissolutionType,
+          affidavitConfirmed: this.getAffidavitStep.validationDetail.validationItemDetails[0]?.valid || false
         }
       }
     }
@@ -278,7 +290,13 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     // Conditionally add the entity-specific sections.
     switch (this.getEntityType) {
       case CorpTypeCd.COOP:
-        filing.filing.dissolution.dissolutionStatementType = this.getDissolutionStatementStep.dissolutionStatementType
+        filing.filing.dissolution = { ...filing.filing.dissolution,
+          dissolutionStatementType: this.getDissolutionStatementStep.dissolutionStatementType || null,
+          affidavitFileKey: this.getAffidavitStep.docKey || null,
+          affidavitFileName: this.getAffidavitStep.affidavitDoc?.name || null,
+          affidavitFileSize: this.getAffidavitStep.affidavitDoc?.size || null,
+          affidavitFileLastModified: this.getAffidavitStep.affidavitDoc?.lastModified || null
+        }
         break
     }
 
@@ -287,6 +305,19 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
       const effectiveDate = this.getEffectiveDateTime.effectiveDate
       if (effectiveDate) filing.filing.header.effectiveDate = this.dateToApi(effectiveDate)
     }
+
+    // Apply Court Order ONLY when it is required and applied
+    const courtOrder = this.getCourtOrderStep.courtOrder
+    if (courtOrder.hasPlanOfArrangement || courtOrder.fileNumber) {
+      filing.filing.dissolution.courtOrder = {
+        fileNumber: courtOrder.fileNumber,
+        effectOfOrder: courtOrder.hasPlanOfArrangement ? EffectOfOrders.PLAN_OF_ARRANGEMENT : null,
+        hasPlanOfArrangement: courtOrder.hasPlanOfArrangement
+      }
+    }
+
+    // Include Staff Payment into the Dissolution filing
+    this.buildStaffPayment(filing)
 
     return filing
   }
@@ -318,6 +349,108 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
       // Check that Effective Date is in the future, to improve UX and
       // to work around the default effective date set by the back end.
       if (effectiveDate >= this.getCurrentJsDate) this.setEffectiveDate(effectiveDate)
+    }
+
+    // Set Affidavit
+    let affidavitDoc: DocIF = null
+    if (draftFiling.dissolution?.affidavitFileKey) {
+      affidavitDoc = {
+        name: draftFiling.dissolution.affidavitFileName,
+        lastModified: draftFiling.dissolution.affidavitFileLastModified,
+        size: draftFiling.dissolution.affidavitFileSize
+      }
+    }
+    const uploadAffidavit: UploadAffidavitIF = {
+      validationDetail: {
+        valid: false,
+        validationItemDetails: []
+      },
+      affidavitConfirmed: draftFiling.dissolution?.affidavitConfirmed,
+      affidavitDoc: affidavitDoc,
+      docKey: draftFiling.dissolution?.affidavitFileKey
+    }
+    this.setAffidavit(uploadAffidavit)
+
+    // Set Court Order data
+    this.setCourtOrderFileNumber(draftFiling.dissolution.courtOrder?.fileNumber)
+    this.setHasPlanOfArrangement(draftFiling.dissolution.courtOrder?.hasPlanOfArrangement)
+
+    // Set Staff Payment data
+    if (this.isRoleStaff) {
+      this.storeStaffPayment(draftFiling)
+    }
+  }
+
+  /** Build Staff Payment data into the filing.
+   * @param filing The dissolution filing.
+   */
+  private buildStaffPayment (filing: DissolutionFilingIF): void {
+    // Populate Staff Payment according to payment option
+    const staffPayment = this.getStaffPaymentStep.staffPayment
+    switch (staffPayment.option) {
+      case StaffPaymentOptions.FAS:
+        filing.filing.header.routingSlipNumber = staffPayment.routingSlipNumber
+        filing.filing.header.priority = staffPayment.isPriority
+        break
+
+      case StaffPaymentOptions.BCOL:
+        filing.filing.header.bcolAccountNumber = staffPayment.bcolAccountNumber
+        filing.filing.header.datNumber = staffPayment.datNumber
+        filing.filing.header.folioNumber = staffPayment.folioNumber // this overrides original folio number
+        filing.filing.header.priority = staffPayment.isPriority
+        break
+
+      case StaffPaymentOptions.NO_FEE:
+        filing.filing.header.waiveFees = true
+        filing.filing.header.priority = false
+        break
+
+      case StaffPaymentOptions.NONE: // should never happen
+        break
+    }
+  }
+
+  /** Parse Staff Payment data into store.
+   * @param filing The dissolution filing to parse.
+   */
+  private storeStaffPayment (filing: DissolutionFilingIF['filing']): void {
+    // Parse staff payment
+    if (filing.header.routingSlipNumber) {
+      this.setStaffPayment({
+        option: StaffPaymentOptions.FAS,
+        routingSlipNumber: filing.header.routingSlipNumber,
+        bcolAccountNumber: '',
+        datNumber: '',
+        folioNumber: '',
+        isPriority: filing.header.priority
+      })
+    } else if (filing.header.bcolAccountNumber) {
+      this.setStaffPayment({
+        option: StaffPaymentOptions.BCOL,
+        routingSlipNumber: '',
+        bcolAccountNumber: filing.header.bcolAccountNumber,
+        datNumber: filing.header.datNumber,
+        folioNumber: filing.header.folioNumber,
+        isPriority: filing.header.priority
+      })
+    } else if (filing.header.waiveFees) {
+      this.setStaffPayment({
+        option: StaffPaymentOptions.NO_FEE,
+        routingSlipNumber: '',
+        bcolAccountNumber: '',
+        datNumber: '',
+        folioNumber: '',
+        isPriority: false
+      })
+    } else {
+      this.setStaffPayment({
+        option: StaffPaymentOptions.NONE,
+        routingSlipNumber: '',
+        bcolAccountNumber: '',
+        datNumber: '',
+        folioNumber: '',
+        isPriority: false
+      })
     }
   }
 }

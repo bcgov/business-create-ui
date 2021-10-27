@@ -1,5 +1,7 @@
-import { FilingDataIF, HelpSectionIF, IncorporationAgreementTypeIF, KeyValueIF, PeopleAndRolesResourceIF,
-  StepIF, CreateRulesResourceIF, CreateMemorandumResourceIF } from '@/interfaces'
+import {
+  AffidavitResourceIF, FilingDataIF, HelpSectionIF, IncorporationAgreementTypeIF, KeyValueIF, PeopleAndRolesResourceIF,
+  StepIF, CreateRulesResourceIF, CreateMemorandumResourceIF
+} from '@/interfaces'
 import { CorpTypeCd, NameRequestTypes } from '@/enums'
 
 // Interface to define the resource model
@@ -44,6 +46,7 @@ export interface DissolutionResourceIF {
   steps: Array<StepIF>
   filingData: FilingDataIF,
   dissolutionStatements?: Array<KeyValueIF>
+  affidavit: AffidavitResourceIF
 }
 
 export interface ResourceIF extends DissolutionResourceIF, IncorporationResourceIF {}

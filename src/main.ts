@@ -70,6 +70,7 @@ async function start () {
             primary: '#1669bb', // same as $app-blue
             appDkBlue: '#38598a', // same as $app-dk-blue
             success: '#1a9031', // same as $app-green
+            successCheckmark: '#2e8540', // same as $app-dk-green
             error: '#d3272c', // same as $app-red
             gray7: '#495057', // same as $gray7
             gray9: '#212529' // same as $gray9
