@@ -144,7 +144,9 @@
       <div class="section-container" :class="{ 'invalid-section': isAffidavitInvalid }">
         <section v-if="isAffidavitInvalid">
           <v-icon color="error">mdi-information-outline</v-icon>
+          &nbsp;
           <span class="error-text">This step is unfinished.</span>
+          &nbsp;
           <router-link
             :to="{ path: `/${RouteNames.UPLOAD_AFFIDAVIT}` }"
           >Return to this step to finish it</router-link>
@@ -375,5 +377,12 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
       padding-left: 1rem !important;
     }
   }
+
+  #court-order-label, #poa-label {
+    font-size: 1rem;
+    font-weight: bold;
+    color: $gray9;
+  }
 }
+
 </style>

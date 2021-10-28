@@ -13,7 +13,22 @@ const uploadAffidavitTestCases = [
   },
   {
     entityType: 'BEN',
-    helpText: 'The company has no assets; and',
+    helpText: 'The Company has no assets; and',
+    checkboxLabel: `I confirm the following items are included as required in the Business Corporations Act`
+  },
+  {
+    entityType: 'CC',
+    helpText: 'The Company has no assets; and',
+    checkboxLabel: `I confirm the following items are included as required in the Business Corporations Act`
+  },
+  {
+    entityType: 'BC',
+    helpText: 'The Company has no assets; and',
+    checkboxLabel: `I confirm the following items are included as required in the Business Corporations Act`
+  },
+  {
+    entityType: 'ULC',
+    helpText: 'The Company has no assets; and',
     checkboxLabel: `I confirm the following items are included as required in the Business Corporations Act`
   }
 ]
