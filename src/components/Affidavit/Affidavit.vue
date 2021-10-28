@@ -3,8 +3,8 @@
     <section class="mt-10">
       <header>
         <h2>1. Affidavit</h2>
-        <p>Before submitting the voluntary dissolution you must <b>complete, sign, and date</b> an
-          <v-tooltip top max-width="15rem" content-class="top-tooltip">
+        <p>Before submitting the voluntary dissolution you must <b>complete and sign</b> an
+          <v-tooltip top max-width="15rem" content-class="top-tooltip" transition="fade-transition">
             <template v-slot:activator="{ on }">
               <span v-on="on" class="dotted-underline"> affidavit </span>
             </template>
@@ -48,7 +48,7 @@
         <h2>2. Sample Affidavit</h2>
       </header>
       <p class="mt-2">
-        For your convenience, we have provided a sample Affidavit with instructions.
+        For your convenience, we have provided a sample affidavit with instructions.
       </p>
       <v-card flat class="pt-7 pb-5 pl-6">
         <v-row>
@@ -93,7 +93,7 @@
               <li>
                 <v-icon class="mr-2">mdi-circle-small</v-icon>
                 <span class="break-spaces">The {{ entityTitle }} name is identified <b>exactly</b> as follows
-                  throughout the Affidavit:
+                  throughout the affidavit:
                 </span>
                 <div class="ml-9"><strong>{{ entityName }}</strong></div>
               </li>
@@ -115,6 +115,7 @@
     <section v-if="isTypeCoop" id="upload-affidavit-section" class="mt-10">
       <header id="upload-affidavit-header">
         <h2>4. Upload Affidavit</h2>
+        <p>Upload a PDF of the signed and sealed affidavit.</p>
         <ul class="mt-5">
           <li class="mt-1">
             <v-icon>mdi-circle-small</v-icon>
@@ -400,8 +401,13 @@ ul {
   padding-top: 0;
   height: 2.5rem !important;
 
-  ::v-deep .theme--light.v-icon {
-    color: $gray9;
+  ::v-deep {
+    .theme--light.v-icon {
+      color: $gray9;
+    }
+    .v-label {
+      line-height: 1.5rem;
+    }
   }
 }
 
