@@ -375,5 +375,12 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
       padding-left: 1rem !important;
     }
   }
+
+  #court-order-label, #poa-label {
+    font-size: 1rem;
+    font-weight: bold;
+    color: $gray9;
+  }
 }
+
 </style>

@@ -115,10 +115,16 @@ export default class StaffPayment extends Vue {
   color: $gray7;
 }
 
-::v-deep .v-text-field__slot {
+::v-deep .v-text-field__slot, ::v-deep .v-radio {
   .v-label {
     color: $gray7;
   }
+}
+
+::v-deep .side-label {
+  font-size: 1rem;
+  font-weight: bold;
+  color: $gray9;
 }
 
 </style>
