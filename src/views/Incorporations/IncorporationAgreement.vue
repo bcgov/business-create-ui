@@ -8,7 +8,7 @@
       <!-- Benefit Company header-->
       <p v-if="isTypeBcomp">
         Before submitting your incorporation application you <b>must complete, sign, and date</b> an
-        <v-tooltip top max-width="20rem" color="primary">
+        <v-tooltip top max-width="20rem" color="primary" transition="fade-transition">
           <template v-slot:activator="{ on }">
             <span v-on="on" class="tool-tip"> Incorporation Agreement</span>
           </template>
@@ -18,7 +18,7 @@
           </span>
         </v-tooltip>
         , and a set of
-        <v-tooltip top max-width="20rem" color="primary">
+        <v-tooltip top max-width="20rem" color="primary" transition="fade-transition">
           <template v-slot:activator="{ on }">
             <span v-on="on" class="tool-tip"> Benefit Company Articles</span>
           </template>
@@ -29,7 +29,7 @@
           </span>
         </v-tooltip>
         containing a
-        <v-tooltip top max-width="20rem" color="primary">
+        <v-tooltip top max-width="20rem" color="primary" transition="fade-transition">
           <template v-slot:activator="{ on }">
             <span v-on="on" class="tool-tip"> benefit provision</span>
           </template>
@@ -45,7 +45,7 @@
       <!-- All other entities -->
       <p v-else>
         Before submitting your incorporation application you <b>must complete, sign, and date</b> an
-        <v-tooltip top max-width="20rem" color="primary">
+        <v-tooltip top max-width="20rem" color="primary" transition="fade-transition">
           <template v-slot:activator="{ on }">
             <span v-on="on" class="tool-tip"> Incorporation Agreement</span>
           </template>
@@ -55,7 +55,7 @@
           </span>
         </v-tooltip>
         , and a set of
-        <v-tooltip top max-width="20rem" color="primary">
+        <v-tooltip top max-width="20rem" color="primary" transition="fade-transition">
           <template v-slot:activator="{ on }">
             <span v-on="on" class="tool-tip">Articles</span>
           </template>
@@ -66,7 +66,7 @@
         </v-tooltip>
         <template v-if="isTypeCC">
           containing the
-          <v-tooltip top max-width="20rem" color="primary">
+          <v-tooltip top max-width="20rem" color="primary" transition="fade-transition">
             <template v-slot:activator="{ on }">
               <span v-on="on" class="tool-tip">community purposes</span>
             </template>

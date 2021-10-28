@@ -4,7 +4,7 @@
       <header>
         <h2>1. Rules of the Association</h2>
         <p>Before submitting your incorporation application you must <b>complete, sign, and date</b> the
-          <v-tooltip top max-width="20rem" content-class="top-tooltip">
+          <v-tooltip top max-width="20rem" content-class="top-tooltip" transition="fade-transition">
             <template v-slot:activator="{ on }">
               <span v-on="on" class="tool-tip dotted-underline"> Rules of the Association</span>
             </template>

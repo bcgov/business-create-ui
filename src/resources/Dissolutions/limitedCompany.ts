@@ -16,8 +16,8 @@ export const LimitedCompanyDissolutionResource: DissolutionResourceIF = {
     helpSection: {
       header: `The affidavit must state:`,
       helpText: [
-        `The company has no assets; and`,
-        `The company has no liabilities or has made provision for the payment of each of the Company's unpaid
+        `The Company has no assets; and`,
+        `The Company has no liabilities or has made provision for the payment of each of the Company's unpaid
           liabilities and has obtained the written consent to that provision for payment from each creditor.`
       ],
       note: `The affidavit is to be sworn before a Commissioner for Taking Oaths for British Columbia with a seal

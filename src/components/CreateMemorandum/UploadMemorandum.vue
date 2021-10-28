@@ -4,7 +4,7 @@
       <header>
         <h2>1. Memorandum of Association</h2>
         <p>Before submitting your incorporation application you must <b>complete, sign, and date</b> the
-          <v-tooltip top max-width="20rem" content-class="top-tooltip">
+          <v-tooltip top max-width="20rem" content-class="top-tooltip" transition="fade-transition">
             <template v-slot:activator="{ on }">
               <span v-on="on" class="tool-tip dotted-underline"> Memorandum of Association</span>
             </template>
@@ -117,7 +117,7 @@
                 <v-icon>mdi-circle-small</v-icon>
                 <span class="chk-list-item-txt">
                   If required, there is a
-                  <v-tooltip top max-width="20rem" content-class="top-tooltip">
+                  <v-tooltip top max-width="20rem" content-class="top-tooltip" transition="fade-transition">
                     <template v-slot:activator="{ on }">
                       <span v-on="on" class="tool-tip dotted-underline">Dissolution Provision</span>
                     </template>
@@ -135,7 +135,7 @@
                   <v-col cols="11" class="ml-n11">
                     <span>
                       The
-                      <v-tooltip top max-width="20rem" content-class="top-tooltip">
+                      <v-tooltip top max-width="20rem" content-class="top-tooltip" transition="fade-transition">
                         <template v-slot:activator="{ on }">
                           <span v-on="on" class="tool-tip dotted-underline">correct type of shares</span>
                         </template>
