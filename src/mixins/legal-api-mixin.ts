@@ -92,10 +92,12 @@ export default class LegalApiMixin extends Vue {
 
     return axios.put(url, filing).then(response => {
       const filing = response?.data?.filing
-      const filingId = +filing?.header?.filingId
+      const filingId = +filing?.header?.filingId || 0
+
       if (!filing || !filingId) {
         throw new Error('Invalid API response')
       }
+
       return filing
     })
     // NB: for error handling, see "save-error-event"

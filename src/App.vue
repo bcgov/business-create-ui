@@ -81,23 +81,26 @@
       </div>
     </transition>
 
-    <sbc-header />
+    <SbcHeader />
+
     <PaySystemAlert />
+
     <div class="app-body">
       <main v-if="!isErrorDialog">
-        <entity-info />
+        <EntityInfo />
 
-        <v-container class="view-container pt-8">
+        <v-container id="container-main" class="py-8">
           <v-row>
             <v-col cols="12" lg="9">
               <header>
                 <h1>{{ getFilingName }}</h1>
               </header>
 
-              <stepper class="mt-10" />
+              <Stepper class="mt-10" />
+
               <!-- Sign in and sign out components -->
-              <sign-in v-if="isRouteName(RouteNames.SIGN_IN)" />
-              <sign-out v-if="isRouteName(RouteNames.SIGN_OUT)" />
+              <SignIn v-if="isRouteName(RouteNames.SIGN_IN)" />
+              <SignOut v-if="isRouteName(RouteNames.SIGN_OUT)" />
 
               <!-- Only render when data is ready, or validation can't be properly evaluated. -->
               <template v-if="haveData">
@@ -111,10 +114,10 @@
               </template>
             </v-col>
 
-            <v-col cols="12" lg="3" style="position: relative" class="mt-2">
+            <v-col cols="12" lg="3">
               <aside>
-                <affix relative-element-selector=".col-lg-9" :offset="{ top: 86, bottom: 12 }">
-                  <sbc-fee-summary
+                <affix relative-element-selector=".col-lg-9" :offset="{ top: 100, bottom: -100 }">
+                  <SbcFeeSummary
                     :filingData="feeFilingData"
                     :payURL="payApiUrl"
                   />
@@ -124,14 +127,14 @@
           </v-row>
         </v-container>
 
-        <actions
+        <Actions
           :key="$route.path"
           @goToDashboard="goToDashboard()"
         />
       </main>
     </div>
 
-    <sbc-footer :aboutText=aboutText />
+    <SbcFooter :aboutText=aboutText />
   </v-app>
 </template>
 
@@ -868,8 +871,8 @@ export default class App extends Mixins(
 </script>
 
 <style lang="scss" scoped>
-// place app header on top of dialogs (and therefore still usable)
-.app-header {
-  z-index: 1000;
+aside {
+  position: relative;
+  z-index: 10; // on top of stepper
 }
 </style>

@@ -105,6 +105,9 @@ export default class EffectiveDateTime extends Mixins(DateMixin) {
     minuteSelector: FormFieldType // used in unit tests
   }
 
+  /** Whether to parse the initial effective date-time into the controls. */
+  @Prop({ default: false }) readonly parseInitial: boolean
+
   /** Current JS date, expected to be passed in periodically. */
   @Prop() readonly currentJsDate: Date
 
@@ -225,8 +228,7 @@ export default class EffectiveDateTime extends Mixins(DateMixin) {
 
   /** Called when component is mounted. */
   mounted (): void {
-    /** It was decided not doing it for now */
-    // this.parseInitialEffectiveDateTime()
+    if (this.parseInitial) this.parseInitialEffectiveDateTime()
   }
 
   /** Parses initial Effective Date Time and sets state. */

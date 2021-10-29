@@ -5,33 +5,41 @@ import { ReviewConfirmDissolution } from '@/views/Dissolutions'
 const reviewConfirmTestCases = [
   {
     entityType: 'CP',
-    headerTitle: 'Review and Confirm',
-    hasEffectiveDateTime: false
+    isStaff: true
+  },
+  {
+    entityType: 'CP',
+    isStaff: false
   },
   {
     entityType: 'BEN',
-    headerTitle: 'Review and Confirm',
-    hasEffectiveDateTime: true
+    isStaff: true
+  },
+  {
+    entityType: 'BEN',
+    isStaff: false
   }
 ]
 
 for (const test of reviewConfirmTestCases) {
-  describe(`Review Confirm view for a ${test.entityType}`, () => {
+  describe(`Review Confirm view for a ${test.entityType} as a ${test.isStaff ? 'staff' : 'regular'} user`, () => {
     let wrapper: any
 
     it('renders the component properly', () => {
       wrapper = shallowWrapperFactory(ReviewConfirmDissolution, null, { entityType: test.entityType })
 
       // verify page content
-      expect(wrapper.find('h2').text()).toContain(test.headerTitle)
+      expect(wrapper.find('h2').text()).toBe('Review and Confirm')
     })
 
-    it('displays Effective Date Time section', () => {
-      wrapper = shallowWrapperFactory(ReviewConfirmDissolution, null, { entityType: test.entityType })
+    it('displays Effective Date Time section only when corp and staff', () => {
+      wrapper = shallowWrapperFactory(ReviewConfirmDissolution, null, {
+        entityType: test.entityType,
+        tombstone: { authRoles: test.isStaff ? ['staff'] : [] }
+      })
 
-      if (test.hasEffectiveDateTime) {
-        expect(wrapper.find('#effective-date-time').exists()).toBe(true)
-      }
+      const expected = (test.entityType !== 'CP' && test.isStaff)
+      expect(wrapper.find('#effective-date-time').exists()).toBe(expected)
     })
 
     it('displays Affidavit section', () => {

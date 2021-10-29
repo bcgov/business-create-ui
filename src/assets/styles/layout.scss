@@ -9,7 +9,9 @@
   position: sticky;
   top: 0;
   width: 100%;
-  z-index: 2;
+  // place app header on top of dialogs
+  // and therefore still usable when a dialog is displayed
+  z-index: 1000;
 }
 
 .app-body {
@@ -34,22 +36,6 @@
 
 .container {
   max-width: 1360px; // should match auth-web, etc
-}
-
-// Page Layout
-.view-container {
-  display: flex;
-  flex-flow: column nowrap;
-  padding-top: 2.5rem;
-  padding-bottom: 2.5rem;
-
-  article {
-    flex: 1 1 auto;
-
-    section {
-      margin-top: 2.25rem;
-    }
-  }
 }
 
 // Form Layout

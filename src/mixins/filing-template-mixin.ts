@@ -272,7 +272,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
           name: FilingTypes.DISSOLUTION,
           certifiedBy: this.getCertifyState.certifiedBy,
           date: this.getCurrentDate,
-          isFutureEffective: this.getEffectiveDateTime.isFutureEffective
+          isFutureEffective: null
         },
         business: {
           legalType: this.getEntityType,
@@ -301,6 +301,8 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     }
 
     // If this is a future effective filing then save the effective date (all except Coop).
+    if (this.getEffectiveDateTime.isFutureEffective === true) filing.filing.header.isFutureEffective = true
+    if (this.getEffectiveDateTime.isFutureEffective === false) filing.filing.header.isFutureEffective = false
     if (this.getEffectiveDateTime.isFutureEffective && !this.isTypeCoop) {
       const effectiveDate = this.getEffectiveDateTime.effectiveDate
       if (effectiveDate) filing.filing.header.effectiveDate = this.dateToApi(effectiveDate)
@@ -343,8 +345,9 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     })
 
     // Set Future Effective data
-    if (draftFiling.header.isFutureEffective) {
-      this.setIsFutureEffective(true)
+    if (draftFiling.header.isFutureEffective === true) this.setIsFutureEffective(true)
+    if (draftFiling.header.isFutureEffective === false) this.setIsFutureEffective(false)
+    if (draftFiling.header.isFutureEffective && !this.isTypeCoop) {
       const effectiveDate = this.apiToDate(draftFiling.header.effectiveDate)
       // Check that Effective Date is in the future, to improve UX and
       // to work around the default effective date set by the back end.

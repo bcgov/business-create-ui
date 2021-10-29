@@ -71,17 +71,17 @@
         </section>
 
         <!-- divider -->
-        <div class="mx-6 pl-2">
+        <div class="mx-6 pl-2" v-if="!isTypeCoop && isRoleStaff">
           <v-container class="py-0">
             <v-divider  />
           </v-container>
         </div>
 
         <!-- Dissolution Date and Time -->
-        <section class="mx-6 pl-2" v-if="!isTypeCoop">
+        <section class="mx-6 pl-2" v-if="!isTypeCoop && isRoleStaff">
           <v-container
             id="effective-date-time"
-            :class="{ 'invalid': getEffectiveDateTime.valid }"
+            :class="{ 'invalid': isDissolutionDateTimeInvalid }"
           >
             <v-row no-gutters>
               <v-col cols="3" class="inner-col-1">
@@ -98,17 +98,17 @@
                 </p>
 
                 <EffectiveDateTime
+                  :parseInitial="true"
                   :currentJsDate="getCurrentJsDate"
                   :effectiveDateTime="getEffectiveDateTime"
-                  :isAppValidate="true"
+                  :isAppValidate="getValidateSteps"
                   @valid="setEffectiveDateTimeValid($event)"
                   @effectiveDate="setEffectiveDate($event)"
                   @isFutureEffective="setIsFutureEffective($event)"
                 />
 
                 <v-card
-                  flat
-                  class="px-16 pb-8 mt-n12"
+                  flat class="px-16 pb-8 mt-n12"
                   id="effective-date-text"
                   v-if="getEffectiveDateTime.isFutureEffective && getEffectiveDateTime.valid"
                 >
@@ -210,7 +210,7 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Mixins } from 'vue-property-decorator'
+import { Component, Mixins, Vue } from 'vue-property-decorator'
 import { Getter, Action } from 'vuex-class'
 import { DateMixin } from '@/mixins'
 
@@ -250,6 +250,7 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
   @Getter isTypeCoop!: boolean
 
   // Global actions
+  @Action setIgnoreChanges!: ActionBindingIF
   @Action setEffectiveDateTimeValid!: ActionBindingIF
   @Action setEffectiveDate!: ActionBindingIF
   @Action setIsFutureEffective!: ActionBindingIF
@@ -259,6 +260,15 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
 
   // Enum for template
   readonly RouteNames = RouteNames
+
+  /** Called when component is created. */
+  private created (): void {
+    // ignore data changes until page has loaded
+    this.setIgnoreChanges(true)
+    Vue.nextTick(() => {
+      this.setIgnoreChanges(false)
+    })
+  }
 
   private getHeaderNumber (sectionName): number {
     const userHeaderNumbers: any = { documentDelivery: 1, certify: 2 }
@@ -274,11 +284,15 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
     return headerNumbers[sectionName]
   }
 
-  // TODO: Build out validation checks with each component
   /** Is true when the Define Dissolution conditions are not met. */
   private get isDefineDissolutionInvalid (): boolean {
     return this.getShowErrors &&
       (this.isTypeCoop && !this.getDissolutionStatementStep.valid)
+  }
+
+  /** Is true when the Dissolution Date and Time section is invalid. */
+  private get isDissolutionDateTimeInvalid (): boolean {
+    return (this.getValidateSteps && !this.getEffectiveDateTime.valid)
   }
 
   /** Is true when the Court Order conditions are not met. */
