@@ -361,7 +361,6 @@ ul {
 
 ::v-deep #confirm-resolution-section .v-input__slot {
   align-items: unset !important;
-  //height: unset !important;
 
   label div {
     padding-top: 2px;

@@ -370,7 +370,6 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
 }
 
 .section-container {
-  //padding: 1.5rem 2rem;
   padding: 1.5rem 1.5rem;
 }
 
