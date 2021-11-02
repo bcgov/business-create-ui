@@ -46,10 +46,10 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Mixins } from 'vue-property-decorator'
-import { Getter } from 'vuex-class'
+import { Component, Mixins, Vue } from 'vue-property-decorator'
+import { Action, Getter } from 'vuex-class'
 import { AssociationDetails, DissolutionStatement } from '@/components/DefineDissolution'
-import { DissolutionStatementIF } from '@/interfaces'
+import { ActionBindingIF, DissolutionStatementIF } from '@/interfaces'
 import { EntityFilterMixin, EnumMixin } from '@/mixins'
 
 @Component({
@@ -59,11 +59,23 @@ import { EntityFilterMixin, EnumMixin } from '@/mixins'
   }
 })
 export default class DefineDissolution extends Mixins(EntityFilterMixin, EnumMixin) {
-  // @Getter
+  // Global getters
   @Getter getBusinessLegalName!: string
   @Getter getDissolutionStatementStep!: DissolutionStatementIF
   @Getter getShowErrors!: boolean
   @Getter isTypeCoop: boolean
+
+  // Global actions
+  @Action setIgnoreChanges!: ActionBindingIF
+
+  /** Called when component is created. */
+  private created (): void {
+    // ignore data changes until page has loaded
+    this.setIgnoreChanges(true)
+    Vue.nextTick(() => {
+      this.setIgnoreChanges(false)
+    })
+  }
 
   /** The entity name. */
   private get entityName (): string {

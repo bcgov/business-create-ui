@@ -64,7 +64,7 @@ export const stateModel: StateModelIF = {
   currentDate: '',
   effectiveDateTime: {
     valid: false,
-    isFutureEffective: false,
+    isFutureEffective: null,
     effectiveDate: null
   },
   certifyState: {
