@@ -1,6 +1,6 @@
 import {
   AffidavitResourceIF, FilingDataIF, HelpSectionIF, IncorporationAgreementTypeIF, KeyValueIF, PeopleAndRolesResourceIF,
-  StepIF, CreateRulesResourceIF, CreateMemorandumResourceIF
+  StepIF, CreateRulesResourceIF, CreateMemorandumResourceIF, CreateResolutionIF, CreateResolutionResourceIF
 } from '@/interfaces'
 import { CorpTypeCd, NameRequestTypes } from '@/enums'
 
@@ -47,6 +47,9 @@ export interface DissolutionResourceIF {
   filingData: FilingDataIF,
   dissolutionStatements?: Array<KeyValueIF>
   affidavit: AffidavitResourceIF
+
+  // CP only
+  createResolution?: CreateResolutionResourceIF
 }
 
 export interface ResourceIF extends DissolutionResourceIF, IncorporationResourceIF {}

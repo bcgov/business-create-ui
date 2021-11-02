@@ -17,7 +17,7 @@ export enum ViewComponentNames {
 
   // Dissolution View Components
   DEFINE_DISSOLUTION = 'define-dissolution',
-  UPLOAD_SPECIAL_RESOLUTION = 'upload-special-resolution',
+  CREATE_RESOLUTION = 'create-resolution',
   UPLOAD_AFFIDAVIT = 'upload-affidavit',
   REVIEW_CONFIRM_DISSOLUTION = 'review-confirm-dissolution'
 }

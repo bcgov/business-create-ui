@@ -104,6 +104,17 @@ export interface DissolutionFilingIF {
       affidavitFileSize?: number
       affidavitFileLastModified?: number
       courtOrder?: CourtOrderIF
+
+      // only one of resolution and specialResolution will be used.  Resolution is strictly
+      // defined here to support saving of resolutionConfirmed state.  The legal api only
+      // uses the specialResolution property
+      resolution?: {
+        resolutionConfirmed: boolean
+      }
+      specialResolution?: {
+        resolutionConfirmed: boolean
+        resolution: string
+      }
     }
   }
 }

@@ -1,5 +1,5 @@
 import { DissolutionResourceIF } from '@/interfaces'
-import { CorpTypeCd, DissolutionStatementTypes, FilingCodes } from '@/enums'
+import { BulletListTypes, CorpTypeCd, DissolutionStatementTypes, FilingCodes, ItemTypes } from '@/enums'
 import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 import { CoopDissolutionSteps } from '@/resources/Dissolutions/stepTemplates'
 
@@ -52,6 +52,93 @@ export const CooperativeDissolutionResource: DissolutionResourceIF = {
         director whose signature is on the affidavit.`,
         `The affidavit contains one of the dissolution statements from Step 1 of this voluntary dissolution filing.`,
         `The affidavit is sealed by a Commissioner for Taking Affidavits/Oaths for British Columbia.`
+      ]
+    }
+  },
+  createResolution: {
+    reviewConfirmHeader: 'Special Resolution',
+    introSection: {
+      header: '1. Special Resolution',
+      items: [
+        {
+          type: ItemTypes.TEXT,
+          value: 'Before submitting your voluntary dissolution you must <b>complete, sign, and date</b> a '
+        },
+        {
+          type: ItemTypes.TOOLTIP,
+          value: {
+            label: 'special resolution',
+            text: 'Special Resolution - A decision voted on by the voting members of a Cooperative Association.'
+          }
+        },
+        {
+          type: ItemTypes.TEXT,
+          value: 'and upload a copy as part of this voluntary dissolution.'
+        }
+      ]
+    },
+    sampleFormSection: {
+      header: '2. Special Resolution (Form 06 COO)',
+      text: 'For your convenience, we have provided the special resolution form (Form 06 COO):',
+      previewImagePath: 'BCRegistries_CoopSpecialResolution-x2.png',
+      downloadDocLabel: 'Download the Special Resolution Form 06 COO',
+      downloadDocPath: 'files/cooperative_sample_special_resolution_form_06.pdf'
+    },
+    helpSection: {
+      header: `Help with Special Resolution`,
+      helpText: {
+        section1: {
+          items: [
+            {
+              type: ItemTypes.TEXT,
+              value: 'Upload a copy of the special resolution, which must include:'
+            },
+            {
+              type: ItemTypes.BULLET_LIST,
+              bulletListType: BulletListTypes.CIRCLE_SMALL,
+              value: [
+                `The name of the Cooperative Association, the Cooperative Association's incorporation number, the date
+                 the resolution was passed and the text of the resolution which clearly authorizes the Cooperative
+                 Association to make an application for dissolution.`,
+                `The signature of a current director, officer or lawyer of the Cooperative Association and the date of
+                 signature.  The signing party must disclose their relationship to the Cooperative Association.`
+              ]
+            }
+          ]
+        }
+      }
+    },
+    confirmSection: {
+      header: '3. Confirm Special Resolution Form Content',
+      text: [
+        {
+          type: ItemTypes.TEXT,
+          value: 'I confirm the following items are included as required in the Cooperative Association Act:'
+        }
+      ],
+      items: [
+        {
+          type: ItemTypes.PARTIAL_ITEMS,
+          value: [
+            {
+              type: ItemTypes.TEXT,
+              value: `The Cooperative Association name is identified <b>exactly</b> as follows throughout the special
+                      resolution:`
+            },
+            {
+              type: ItemTypes.PLACEHOLDER,
+              value: `legal_name`
+            }
+          ]
+        },
+        {
+          type: ItemTypes.PARTIAL_ITEMS,
+          value: [
+            { type: ItemTypes.TEXT, value: 'The special resolution was passed by ' },
+            { type: ItemTypes.PLACEHOLDER, value: 'legal_name_inline' },
+            { type: ItemTypes.TEXT, value: 'and authorizes the dissolution.' }
+          ]
+        }
       ]
     }
   }

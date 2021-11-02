@@ -18,8 +18,8 @@ export const CoopDissolutionSteps = [
     step: 2,
     icon: 'mdi-handshake',
     text: 'Upload Special \nResolution',
-    to: RouteNames.UPLOAD_RESOLUTION,
-    component: ViewComponentNames.UPLOAD_SPECIAL_RESOLUTION
+    to: RouteNames.CREATE_RESOLUTION,
+    component: ViewComponentNames.CREATE_RESOLUTION
 
   },
   {
@@ -58,8 +58,8 @@ export const CorpDissolutionSteps = [
     step: 2,
     icon: 'mdi-handshake',
     text: 'Complete \nResolution',
-    to: RouteNames.UPLOAD_RESOLUTION,
-    component: ViewComponentNames.UPLOAD_SPECIAL_RESOLUTION
+    to: RouteNames.CREATE_RESOLUTION,
+    component: ViewComponentNames.CREATE_RESOLUTION
 
   },
   {

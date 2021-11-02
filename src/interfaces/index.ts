@@ -20,6 +20,8 @@ export * from './stepper-interfaces/AddPeopleAndRole/people-and-roles-resource-i
 export * from './stepper-interfaces/AddPeopleAndRole/roles-array-interface'
 export * from './stepper-interfaces/CreateMemorandum/create-memorandum-interface'
 export * from './stepper-interfaces/CreateMemorandum/create-memorandum-resource-interface'
+export * from './stepper-interfaces/CreateResolution/create-resolution-interface'
+export * from './stepper-interfaces/CreateResolution/create-resolution-resource-interface'
 export * from './stepper-interfaces/CreateRules/create-rules-interface'
 export * from './stepper-interfaces/CreateRules/create-rules-resource-interface'
 export * from './stepper-interfaces/CreateShareStructure/create-share-structure-interface'
