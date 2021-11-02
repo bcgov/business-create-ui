@@ -129,30 +129,24 @@
           <label class="font-weight-bold pl-2">{{getCreateResolutionResource.reviewConfirmHeader}}</label>
         </header>
         <section v-if="!getCreateResolutionStep.validationDetail.valid" class="section-container invalid-section">
-          <div class="upload-error-message">
-            <span>
-              <v-icon color="error">mdi-information-outline</v-icon>
-              <span class="error-text ml-1 mr-2">This step is unfinished.</span>
-              <router-link
-                :to="{ path: `/${RouteNames.CREATE_RESOLUTION}` }"
-              >Return to this step to finish it</router-link>
-            </span>
-          </div>
+          <v-icon color="error">mdi-information-outline</v-icon>
+          <span class="error-text ml-1 mr-2">This step is unfinished.</span>
+          <router-link
+            :to="{ path: `/${RouteNames.CREATE_RESOLUTION}` }"
+          >Return to this step to finish it</router-link>
         </section>
-        <section v-if="getCreateResolutionStep.validationDetail.valid" class="section-container">
-          <div class="upload-success-message pl-1">
-            <v-row no-gutters>
-              <v-col md="1">
-                <v-icon class="success-chk">mdi-check</v-icon>
-              </v-col>
-              <v-col v-if="isTypeCoop" md="11" id="file-name-col">
-                <span>FILE_NAME_PLACEHOLDER</span>
-              </v-col>
-              <v-col v-if="isBaseCompany" md="11" id="file-name-col">
-                <span>The resolution was completed and deposited in the Company's records book.</span>
-              </v-col>
-            </v-row>
-          </div>
+        <section v-if="getCreateResolutionStep.validationDetail.valid" class="section-container upload-success-message">
+          <v-row no-gutters>
+            <v-col md="1">
+              <v-icon class="success-chk">mdi-check</v-icon>
+            </v-col>
+            <v-col v-if="isTypeCoop" md="11" id="file-name-col">
+              <span>FILE_NAME_PLACEHOLDER</span>
+            </v-col>
+            <v-col v-if="isBaseCompany" md="11" id="file-name-col">
+              <span>The resolution was completed and deposited in the Company's records book.</span>
+            </v-col>
+          </v-row>
         </section>
     </v-card>
 
@@ -430,10 +424,6 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
     font-weight: bold;
     color: $gray9;
   }
-}
-
-.upload-error-message {
-  color: $app-blue;
 }
 
 .upload-success-message {
