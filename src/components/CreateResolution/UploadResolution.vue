@@ -188,10 +188,9 @@ export default class UploadResolution extends Mixins(CommonMixin, EntityFilterMi
   private previewImageSource ():string {
     // Note: the image file path did not resolve correctly when using the require function directly.  In order
     // to get the image path resolving correctly, needed to get the image context first and use that to build
-    // the final image image file path
+    // the final image file path
     const images = require.context('@/assets/images/', false, /\.png$/)
-    const previewImageSrc = images('./' + this.getCreateResolutionResource.sampleFormSection.previewImagePath)
-    return previewImageSrc
+    return images('./' + this.getCreateResolutionResource.sampleFormSection.previewImagePath)
   }
 
   private get confirmLabel ():string {
