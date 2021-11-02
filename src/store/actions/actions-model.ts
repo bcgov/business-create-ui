@@ -182,8 +182,8 @@ export const setResolution = ({ commit }, resolution: CreateResolutionIF) => {
   commit('mutateResolution', resolution)
 }
 
-export const setResolutionStepValidity: ActionIF = ({ commit }, validationDetail: ValidationDetailIF): void => {
-  commit('mutateResolutionStepValidity', validationDetail)
+export const setResolutionStepValidationDetail: ActionIF = ({ commit }, validationDetail: ValidationDetailIF): void => {
+  commit('mutateResolutionStepValidationDetail', validationDetail)
 }
 
 export const setShareClasses = ({ commit }, shareClasses: ShareClassIF[]) => {

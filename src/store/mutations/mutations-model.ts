@@ -207,7 +207,7 @@ export const mutateResolution = (state: StateIF, resolution: CreateResolutionIF)
   if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
 }
 
-export const mutateResolutionStepValidity = (state: StateIF, validationDetail: ValidationDetailIF) => {
+export const mutateResolutionStepValidationDetail = (state: StateIF, validationDetail: ValidationDetailIF) => {
   state.stateModel.createResolutionStep.validationDetail = validationDetail
 }
 

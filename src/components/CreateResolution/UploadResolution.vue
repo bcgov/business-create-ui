@@ -175,7 +175,7 @@ export default class UploadResolution extends Mixins(CommonMixin, EntityFilterMi
   @Getter getBusinessLegalName!: string
 
   @Action setResolution!: ActionBindingIF
-  @Action setResolutionStepValidity!: ActionBindingIF
+  @Action setResolutionStepValidationDetail!: ActionBindingIF
 
   // Enum for template
   readonly RouteNames = RouteNames
@@ -204,7 +204,7 @@ export default class UploadResolution extends Mixins(CommonMixin, EntityFilterMi
     (v) => { return !!v }
   ]
 
-  private updateResolutionStepValidity () {
+  private updateResolutionStepValidationDetail () {
     const validationDetail:ValidationDetailIF =
       {
         valid: this.hasResolutionConfirmed,
@@ -216,12 +216,12 @@ export default class UploadResolution extends Mixins(CommonMixin, EntityFilterMi
           }
         ]
       }
-    this.setResolutionStepValidity(validationDetail)
+    this.setResolutionStepValidationDetail(validationDetail)
   }
 
   private onResolutionConfirmedChange (resolutionConfirmed: boolean): void {
     this.hasResolutionConfirmed = resolutionConfirmed
-    this.updateResolutionStepValidity()
+    this.updateResolutionStepValidationDetail()
     this.setResolution({
       ...this.getCreateResolutionStep,
       resolutionConfirmed: resolutionConfirmed
@@ -232,7 +232,7 @@ export default class UploadResolution extends Mixins(CommonMixin, EntityFilterMi
   private created (): void {
     this.resolutionConfirmed = !!this.getCreateResolutionStep.resolutionConfirmed
     this.hasResolutionConfirmed = this.resolutionConfirmed
-    this.updateResolutionStepValidity()
+    this.updateResolutionStepValidationDetail()
   }
 
   @Watch('getShowErrors')
