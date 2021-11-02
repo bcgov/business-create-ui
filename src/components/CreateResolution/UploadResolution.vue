@@ -69,11 +69,7 @@
           <v-col id="sample-resolution-card-left-col" cols="1" class="pt-6" >
           </v-col>
           <v-col id="sample-resolution-card-center-col" cols="3" class="pl-8 pt-6">
-            <div>
-              <!-- Note: only able to resolve to preview image in assets folder properly when implemented this way. -->
-              <img :src="require(`@/assets/images/${getCreateResolutionResource.sampleFormSection.previewImagePath}`)"
-                   class="preview-image" />
-            </div>
+            <img :src="previewImageSource()" class="preview-image" />
           </v-col>
           <v-col id="sample-resolution-card-right-col" cols="6" class="pt-6 pr-15">
             <div class="download-link-container ml-1 pt-5 pb-5">
@@ -187,6 +183,15 @@ export default class UploadResolution extends Mixins(CommonMixin, EntityFilterMi
     const docUrl = sessionStorage.getItem('BASE_URL') +
       this.getCreateResolutionResource.sampleFormSection.downloadDocPath
     return docUrl
+  }
+
+  private previewImageSource ():string {
+    // Note: the image file path did not resolve correctly when using the require function directly.  In order
+    // to get the image path resolving correctly, needed to get the image context first and use that to build
+    // the final image image file path
+    const images = require.context('@/assets/images/', false, /\.png$/)
+    const previewImageSrc = images('./' + this.getCreateResolutionResource.sampleFormSection.previewImagePath)
+    return previewImageSrc
   }
 
   private get confirmLabel ():string {
