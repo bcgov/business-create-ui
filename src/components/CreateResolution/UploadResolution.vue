@@ -104,9 +104,9 @@
               <li class="mt-1"
                 v-for="(item, index) in getCreateResolutionResource.confirmSection.items"
                 :key="index">
-                <v-row v-if="item.type === ItemTypes.PARTIAL_ITEMS">
-                  <v-col cols="1" class="pt-1"><v-icon>mdi-circle-small</v-icon></v-col>
-                  <v-col cols="11" class="ml-n12 pt-1 pb-1" no-gutters>
+                <v-row v-if="item.type === ItemTypes.PARTIAL_ITEMS" no-gutters>
+                  <v-col cols="auto" class="pt-1 mr-2"><v-icon>mdi-circle-small</v-icon></v-col>
+                  <v-col cols="11" class="pt-1 pb-1" no-gutters>
                     <span v-for="(partialItem, index) in item.value" :key="index">
                       <span v-if="partialItem.type === ItemTypes.TEXT" v-html="partialItem.value"></span>
                       <span v-if="partialItem.type === ItemTypes.PLACEHOLDER
