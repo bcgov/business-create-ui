@@ -44,10 +44,15 @@ for (const test of reviewConfirmTestCases) {
     })
 
     it('displays Effective Date Time section only when corp and staff', () => {
-      wrapper = shallowWrapperFactory(ReviewConfirmDissolution, null, {
-        entityType: test.entityType,
-        tombstone: { authRoles: test.isStaff ? ['staff'] : [] }
-      })
+      wrapper = shallowWrapperFactory(
+        ReviewConfirmDissolution,
+        null,
+        {
+          entityType: test.entityType,
+          tombstone: { authRoles: test.isStaff ? ['staff'] : [] }
+        },
+        null,
+        DissolutionResources)
 
       const expected = (test.entityType !== 'CP' && test.isStaff)
       expect(wrapper.find('#effective-date-time').exists()).toBe(expected)
