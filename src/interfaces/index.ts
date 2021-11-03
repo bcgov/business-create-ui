@@ -32,7 +32,6 @@ export * from './stepper-interfaces/DefineCompany/name-translation-interface'
 export * from './stepper-interfaces/IncorporationAgreement/help-section-interface'
 export * from './stepper-interfaces/IncorporationAgreement/incorporation-agreement-interface'
 export * from './stepper-interfaces/ReviewConfirm/certify-interface'
-export * from './stepper-interfaces/ReviewConfirm/effectiveDateTime-interface'
 export * from './stepper-interfaces/Dissolution/DefineDissolution/dissolution-statement-interface'
 export * from './stepper-interfaces/Affidavit/affidavit-interface'
 
@@ -60,4 +59,4 @@ export * from './utils-interfaces/validation-detail-interface'
 export * from './utils-interfaces/validation-item-detail-interface'
 
 // external interfaces
-export { StaffPaymentIF } from '@bcrs-shared-components/interfaces'
+export { EffectiveDateTimeIF, StaffPaymentIF } from '@bcrs-shared-components/interfaces'

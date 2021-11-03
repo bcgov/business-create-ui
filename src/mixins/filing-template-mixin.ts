@@ -378,15 +378,17 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     }
     this.setResolution(createResolution)
 
-    // Set Future Effective data
-    if (draftFiling.header.isFutureEffective === true) this.setIsFutureEffective(true)
-    if (draftFiling.header.isFutureEffective === false) this.setIsFutureEffective(false)
-    if (draftFiling.header.isFutureEffective && !this.isTypeCoop) {
-      const effectiveDate = this.apiToDate(draftFiling.header.effectiveDate)
-      // Check that Effective Date is in the future, to improve UX and
-      // to work around the default effective date set by the back end.
-      if (effectiveDate >= this.getCurrentJsDate) this.setEffectiveDate(effectiveDate)
-    }
+    // ** do not restore Future Effective data per PO decision
+    // ** leave code in case we need it later
+    // // Set Future Effective data
+    // if (draftFiling.header.isFutureEffective === true) this.setIsFutureEffective(true)
+    // if (draftFiling.header.isFutureEffective === false) this.setIsFutureEffective(false)
+    // if (draftFiling.header.isFutureEffective && !this.isTypeCoop) {
+    //   const effectiveDate = this.apiToDate(draftFiling.header.effectiveDate)
+    //   // Check that Effective Date is in the future, to improve UX and
+    //   // to work around the default effective date set by the back end.
+    //   if (effectiveDate >= this.getCurrentJsDate) this.setEffectiveDate(effectiveDate)
+    // }
 
     // Set Affidavit
     let affidavitDoc: DocIF = null
