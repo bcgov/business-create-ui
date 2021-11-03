@@ -98,7 +98,6 @@
                 </p>
 
                 <EffectiveDateTime
-                  :parseInitial="true"
                   :currentJsDate="getCurrentJsDate"
                   :effectiveDateTime="getEffectiveDateTime"
                   :isAppValidate="getValidateSteps"
@@ -232,8 +231,8 @@ import { DateMixin } from '@/mixins'
 
 // Components
 import { AssociationDetails, DissolutionStatement } from '@/components/DefineDissolution'
-import { EffectiveDateTime, StaffPayment } from '@/components/common'
-import { CourtOrderPoa } from '@bcrs-shared-components/court-order-poa'
+import { CourtOrderPoa, EffectiveDateTime } from '@/components'
+import { StaffPayment } from '@/components/common'
 
 // Enums
 import { RouteNames } from '@/enums'
