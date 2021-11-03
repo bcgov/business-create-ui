@@ -10,8 +10,8 @@ import { Component, Mixins, Vue, Watch } from 'vue-property-decorator'
 import { Affidavit } from '@/components/Affidavit'
 import { RouteNames } from '@/enums'
 import { CommonMixin } from '@/mixins'
-import { Getter } from 'vuex-class'
-import { UploadAffidavitIF } from '@/interfaces'
+import { Action, Getter } from 'vuex-class'
+import { ActionBindingIF, UploadAffidavitIF } from '@/interfaces'
 
 @Component({
   components: {
@@ -22,6 +22,17 @@ export default class UploadAffidavit extends Mixins(CommonMixin) {
   // Global getter
   @Getter getAffidavitStep!: UploadAffidavitIF
   @Getter getShowErrors!: boolean
+
+  @Action setIgnoreChanges!: ActionBindingIF
+
+  /** Called when component is created. */
+  private created (): void {
+    // ignore data changes until page has loaded
+    this.setIgnoreChanges(true)
+    Vue.nextTick(() => {
+      this.setIgnoreChanges(false)
+    })
+  }
 
   @Watch('$route')
   private async scrollToInvalidComponent (): Promise<void> {
