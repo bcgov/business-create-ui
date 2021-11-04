@@ -233,3 +233,11 @@ export const setHasPlanOfArrangement: ActionIF = ({ commit }, hasPoa: boolean): 
 export const setCourtOrderValidity: ActionIF = ({ commit }, validity: boolean): void => {
   commit('mutateCourtOrderValidity', validity)
 }
+
+export const setDocumentOptionalEmail: ActionIF = ({ commit }, documentOptionalEmail: string): void => {
+  commit('mutateDocumentOptionalEmail', documentOptionalEmail)
+}
+
+export const setDocumentOptionalEmailValidity: ActionIF = ({ commit }, validity): void => {
+  commit('mutateDocumentOptionalEmailValidity', validity)
+}

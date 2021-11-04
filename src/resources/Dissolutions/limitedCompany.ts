@@ -36,5 +36,15 @@ export const LimitedCompanyDissolutionResource: DissolutionResourceIF = {
         `The affidavit is sealed by a Commissioner for Taking Affidavits/Oaths for British Columbia.`
       ]
     }
+  },
+  reviewAndConfirm: {
+    completingPartyStatement: {
+      certifyStatementHeader: null,
+      certifyStatements: [],
+      certifyClause: `Note: It is an offence to make a false or misleading statement in respect
+        of a material fact in a record submitted to the Corporate Registry for filing.
+        See section 427 of the Business Corporations Act.`,
+      entityDisplay: GetCorpFullDescription(CorpTypeCd.BC_COMPANY)
+    }
   }
 }

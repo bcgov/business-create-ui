@@ -161,8 +161,19 @@
 
     <!-- Dissolution Documents Delivery -->
     <section id="document-delivery-section" class="mt-10">
-      <h2>{{getHeaderNumber('documentDelivery')}}. Dissolution Documents Delivery</h2>
-      FUTURE
+      <header>
+        <h2>{{getHeaderNumber('documentDelivery')}}. Dissolution Documents Delivery</h2>
+        <p class="mt-1">Copies of the dissolution documents will be sent to the following email addresses listed
+          below.
+        </p>
+      </header>
+      <div :class="{ 'invalid-section': isDocumentDeliveryInvalid }">
+        <DocumentDelivery
+          :editableCompletingParty="isRoleStaff"
+          :showCustodianEmail="true"
+          :invalidSection="isDocumentDeliveryInvalid"
+        />
+      </div>
     </section>
 
     <!-- Folio Number -->
@@ -173,8 +184,27 @@
 
     <!-- Certify -->
     <section id="certify-section" class="mt-10">
-      <h2>{{getHeaderNumber('certify')}}. Certify</h2>
-      FUTURE
+      <header>
+        <h2>{{getHeaderNumber('certify')}}. Certify</h2>
+        <p class="mt-1">Confirm the legal name of the person authorized to complete and submit this application.</p>
+      </header>
+      <div :class="{ 'invalid-section': isCertifyInvalid }">
+        <Certify
+          :currentDate="getCurrentDate"
+          :certifiedBy="getCertifyState.certifiedBy"
+          :entityDisplay="getCompletingPartyStatement.entityDisplay"
+          :isCertified="getCertifyState.valid"
+          :statements="getCompletingPartyStatement.certifyStatements"
+          :message="getCompletingPartyStatement.certifyClause"
+          :isStaff="isRoleStaff"
+          :firstColumn="3"
+          :secondColumn="9"
+          :invalidSection="isCertifyInvalid"
+          :disableEdit="!isRoleStaff"
+          @update:certifiedBy="onCertifiedBy($event)"
+          @update:isCertified="onIsCertified($event)"
+        />
+      </div>
     </section>
 
     <!-- Court Order and Plan of Arrangement -->
@@ -216,22 +246,33 @@ import { DateMixin } from '@/mixins'
 
 // Components
 import { AssociationDetails, DissolutionStatement } from '@/components/DefineDissolution'
-import { EffectiveDateTime, StaffPayment } from '@/components/common'
+import { DocumentDelivery, EffectiveDateTime, StaffPayment } from '@/components/common'
 import { CourtOrderPoa } from '@bcrs-shared-components/court-order-poa'
+import { Certify } from '@bcrs-shared-components/certify'
 
 // Enums
 import { RouteNames } from '@/enums'
 
 // Interfaces
 import {
-  ActionBindingIF, EffectiveDateTimeIF, FeesIF, DissolutionStatementIF, UploadAffidavitIF, CourtOrderStepIF
+  ActionBindingIF,
+  CourtOrderStepIF,
+  CertifyIF,
+  CertifyStatementIF,
+  DissolutionStatementIF,
+  EffectiveDateTimeIF,
+  FeesIF,
+  UploadAffidavitIF,
+  DocumentDeliveryIF
 } from '@/interfaces'
 
 @Component({
   components: {
     AssociationDetails,
+    Certify,
     CourtOrderPoa,
     DissolutionStatement,
+    DocumentDelivery,
     EffectiveDateTime,
     StaffPayment
   }
@@ -239,8 +280,12 @@ import {
 export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
   // Global getters
   @Getter getAffidavitStep!: UploadAffidavitIF
+  @Getter getCertifyState!: CertifyIF
+  @Getter getCompletingPartyStatement!: CertifyStatementIF
   @Getter getCourtOrderStep!: CourtOrderStepIF
+  @Getter getCurrentDate!: string
   @Getter getDissolutionStatementStep!: DissolutionStatementIF
+  @Getter getDocumentDelivery!: DocumentDeliveryIF
   @Getter getEffectiveDateTime!: EffectiveDateTimeIF
   @Getter getFeePrices!: FeesIF
   @Getter getShowErrors!: boolean
@@ -257,6 +302,7 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
   @Action setCourtOrderFileNumber!: ActionBindingIF
   @Action setHasPlanOfArrangement!: ActionBindingIF
   @Action setCourtOrderValidity!: ActionBindingIF
+  @Action setCertifyState!: ActionBindingIF
 
   // Enum for template
   readonly RouteNames = RouteNames
@@ -300,6 +346,11 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
     return (this.getValidateSteps && !this.getCourtOrderStep.valid)
   }
 
+  /** Is true when the Document Delivery conditions are not met. */
+  private get isDocumentDeliveryInvalid (): boolean {
+    return (this.getValidateSteps && !this.getDocumentDelivery.valid)
+  }
+
   /** Is true when the Affidavit conditions are not met. */
   private get isAffidavitInvalid (): boolean {
     if (this.isTypeCoop) {
@@ -326,6 +377,31 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
 
   get futureEffectiveDate (): string {
     return this.dateToPacificDateTime(this.getEffectiveDateTime.effectiveDate, true)
+  }
+
+  /** Is true when the certify conditions are not met. */
+  private get isCertifyInvalid () {
+    return this.getValidateSteps && (!this.getCertifyState.certifiedBy || !this.getCertifyState.valid)
+  }
+
+  /** Handler for Valid change event. */
+  private onIsCertified (val: boolean): void {
+    this.setCertifyState(
+      {
+        valid: val,
+        certifiedBy: this.getCertifyState.certifiedBy
+      }
+    )
+  }
+
+  /** Handler for CertifiedBy change event. */
+  private onCertifiedBy (val: string): void {
+    this.setCertifyState(
+      {
+        valid: this.getCertifyState.valid,
+        certifiedBy: val
+      }
+    )
   }
 }
 </script>

@@ -128,7 +128,7 @@ export const mutateCertifyState = (state: StateIF, certifyState: CertifyIF) => {
 }
 
 export const mutateBusinessContact = (state: StateIF, businessContact: BusinessContactIF) => {
-  state.stateModel.defineCompanyStep.businessContact = businessContact
+  state.stateModel.businessContact = businessContact
   if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
 }
 
@@ -261,4 +261,13 @@ export const mutateHasPlanOfArrangement = (state: StateIF, hasPoa: boolean) => {
 
 export const mutateCourtOrderValidity = (state: StateIF, validity: boolean) => {
   state.stateModel.courtOrderStep.valid = validity
+}
+
+export const mutateDocumentOptionalEmail = (state: StateIF, documentOptionalEmail: string) => {
+  state.stateModel.documentDelivery.documentOptionalEmail = documentOptionalEmail
+  if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
+}
+
+export const mutateDocumentOptionalEmailValidity = (state: StateIF, validity: boolean) => {
+  state.stateModel.documentDelivery.valid = validity
 }

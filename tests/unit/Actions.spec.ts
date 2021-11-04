@@ -388,13 +388,13 @@ describe('Actions component - Filing Functionality', () => {
       userEmail: 'completing-party@example.com'
     }
     store.state.stateModel.certifyState.certifiedBy = filing.filing.header.certifiedBy
-    store.state.stateModel.defineCompanyStep.businessContact = {
+    store.state.stateModel.businessContact = {
       email: filing.filing.incorporationApplication.contactPoint.email,
       phone: filing.filing.incorporationApplication.contactPoint.phone,
       extension: filing.filing.incorporationApplication.contactPoint.extension
     }
     store.state.stateModel.effectiveDateTime.effectiveDate = effectiveDate
-    store.state.stateModel.defineCompanyStep.businessContact = {
+    store.state.stateModel.businessContact = {
       email: 'registered-office@example.com',
       confirmEmail: 'registered-office@example.com',
       phone: '111-222-3333',

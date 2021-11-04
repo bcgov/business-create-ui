@@ -1,5 +1,5 @@
 import { shallowWrapperFactory } from '../jest-wrapper-factory'
-import { DocumentDelivery } from '@/components/ReviewConfirm'
+import { DocumentDelivery } from '@/components/common'
 
 // Test Case Data
 const documentDeliveryCases = [
@@ -8,10 +8,8 @@ const documentDeliveryCases = [
     tombstone: {
       userEmail: 'mockCPCompletingParty@email.com'
     },
-    defineCompanyStep: {
-      businessContact: {
-        email: 'mockCPBusinessContact@email.com'
-      }
+    businessContact: {
+      email: 'mockCPBusinessContact@email.com'
     }
   },
   {
@@ -19,10 +17,8 @@ const documentDeliveryCases = [
     tombstone: {
       userEmail: 'BENCompletingParty@email.com'
     },
-    defineCompanyStep: {
-      businessContact: {
-        email: 'BENBusinessContact@email.com'
-      }
+    businessContact: {
+      email: 'BENBusinessContact@email.com'
     }
   }
 ]
@@ -46,20 +42,20 @@ for (const mock of documentDeliveryCases) {
       wrapper = shallowWrapperFactory(DocumentDelivery, null, {
         entityType: mock.entityType,
         tombstone: mock.tombstone,
-        defineCompanyStep: mock.defineCompanyStep
+        businessContact: mock.businessContact
       })
       expect(wrapper.find('#completing-party-email').text()).toBe(mock.tombstone.userEmail)
-      expect(wrapper.find('#office-email').text()).toBe(mock.defineCompanyStep.businessContact.email)
+      expect(wrapper.find('#office-email').text()).toBe(mock.businessContact.email)
     })
 
     it('displays Not Entered text when computed values are absent', () => {
       mock.tombstone.userEmail = ''
-      mock.defineCompanyStep.businessContact.email = ''
+      mock.businessContact.email = ''
 
       wrapper = shallowWrapperFactory(DocumentDelivery, null, {
         entityType: mock.entityType,
         tombstone: mock.tombstone,
-        defineCompanyStep: mock.defineCompanyStep
+        businessContact: mock.businessContact
       })
       expect(wrapper.find('#completing-party-email').text()).toBe('Not entered')
       expect(wrapper.find('#office-email').text()).toBe('Not entered')

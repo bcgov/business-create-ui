@@ -47,6 +47,14 @@ export interface DissolutionResourceIF {
   filingData: FilingDataIF,
   dissolutionStatements?: Array<KeyValueIF>
   affidavit: AffidavitResourceIF
+  reviewAndConfirm: {
+    completingPartyStatement: {
+      certifyStatementHeader: string
+      certifyStatements: Array<string>
+      certifyClause: string
+      entityDisplay: string
+    }
+  }
 }
 
 export interface ResourceIF extends DissolutionResourceIF, IncorporationResourceIF {}

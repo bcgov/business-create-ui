@@ -8,7 +8,7 @@ import {
   ActionBindingIF, BusinessContactIF, CertifyIF, CreateRulesIF, EffectiveDateTimeIF, DefineCompanyIF,
   DissolutionFilingIF, IncorporationAgreementIF, IncorporationFilingIF, NameTranslationIF, PeopleAndRoleIF,
   DocIF, ShareStructureIF, CreateMemorandumIF, BusinessIF, DissolutionStatementIF, UploadAffidavitIF,
-  StaffPaymentStepIF, CourtOrderStepIF
+  StaffPaymentStepIF, CourtOrderStepIF, DocumentDeliveryIF
 } from '@/interfaces'
 
 // Constants and enums
@@ -44,6 +44,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Getter getCreateMemorandumStep!: CreateMemorandumIF
   @Getter getMemorandum!: any
   @Getter getBusinessId!: string
+  @Getter getDocumentDelivery!: DocumentDeliveryIF
   @Getter getStaffPaymentStep!: StaffPaymentStepIF
   @Getter getCourtOrderStep!: CourtOrderStepIF
   @Getter isRoleStaff!: boolean
@@ -74,6 +75,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Action setCourtOrderFileNumber!: ActionBindingIF
   @Action setHasPlanOfArrangement!: ActionBindingIF
   @Action setStaffPayment!: ActionBindingIF
+  @Action setDocumentOptionalEmail!: ActionBindingIF
 
   // Dissolution
   @Action setDissolutionStatementStepData!: ActionBindingIF
@@ -318,8 +320,14 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
       }
     }
 
-    // Include Staff Payment into the Dissolution filing
-    this.buildStaffPayment(filing)
+    if (this.isRoleStaff) {
+      if (this.getDocumentDelivery.documentOptionalEmail) {
+        filing.filing.header.documentOptionalEmail = this.getDocumentDelivery.documentOptionalEmail
+      }
+
+      // Include Staff Payment into the Dissolution filing
+      this.buildStaffPayment(filing)
+    }
 
     return filing
   }
@@ -378,8 +386,17 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     this.setCourtOrderFileNumber(draftFiling.dissolution.courtOrder?.fileNumber)
     this.setHasPlanOfArrangement(draftFiling.dissolution.courtOrder?.hasPlanOfArrangement)
 
-    // Set Staff Payment data
+    // Set Certify Form
+    this.setCertifyState({
+      valid: false,
+      certifiedBy: draftFiling.header.certifiedBy
+    })
+
     if (this.isRoleStaff) {
+      // Restore document optional email
+      this.setDocumentOptionalEmail(draftFiling.header.documentOptionalEmail)
+
+      // Set Staff Payment data
       this.storeStaffPayment(draftFiling)
     }
   }
