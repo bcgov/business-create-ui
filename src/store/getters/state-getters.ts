@@ -21,7 +21,9 @@ import {
   ShareStructureIF,
   StaffPaymentStepIF,
   StateIF,
-  TombstoneIF, UploadAffidavitIF
+  TombstoneIF,
+  UploadAffidavitIF,
+  CreateResolutionIF
 } from '@/interfaces'
 import { getMaxStep } from './resource-getters'
 
@@ -250,6 +252,16 @@ export const isAffidavitValid = (state: StateIF): boolean => {
 /** The upload Affidavit object. */
 export const getAffidavitStep = (state: StateIF): UploadAffidavitIF => {
   return state.stateModel.uploadAffidavitStep
+}
+
+/** Is true when the step is valid. */
+export const isResolutionValid = (state: StateIF): boolean => {
+  return getCreateResolutionStep(state).validationDetail.valid
+}
+
+/** The Create Special Resolution object. */
+export const getCreateResolutionStep = (state: StateIF): CreateResolutionIF => {
+  return state.stateModel.createResolutionStep
 }
 
 /** The Effective Date-Time object. */

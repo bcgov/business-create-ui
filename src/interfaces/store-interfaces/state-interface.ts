@@ -20,7 +20,8 @@ import {
   ShareStructureIF,
   StaffPaymentStepIF,
   TombstoneIF,
-  UploadAffidavitIF
+  UploadAffidavitIF,
+  CreateResolutionIF
 } from '@/interfaces'
 
 // State model example
@@ -51,6 +52,7 @@ export interface StateModelIF {
   incorporationAgreementStep: IncorporationAgreementIF
   createMemorandumStep: CreateMemorandumIF
   uploadAffidavitStep: UploadAffidavitIF
+  createResolutionStep: CreateResolutionIF
   ignoreChanges: boolean
   haveChanges: boolean
   validateSteps: boolean

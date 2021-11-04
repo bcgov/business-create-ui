@@ -1,27 +1,33 @@
 <template>
-  <div id="upload-affidavit">
-    <Affidavit />
+  <div>
+    <UploadResolution class="mt-4" />
   </div>
 </template>
 
 <script lang="ts">
 // Libraries
 import { Component, Mixins, Vue, Watch } from 'vue-property-decorator'
-import { Affidavit } from '@/components/Affidavit'
-import { RouteNames } from '@/enums'
-import { CommonMixin } from '@/mixins'
 import { Action, Getter } from 'vuex-class'
-import { ActionBindingIF, UploadAffidavitIF } from '@/interfaces'
+
+// Interfaces
+import { ActionBindingIF, CreateResolutionIF } from '@/interfaces'
+
+// Mixins
+import { CommonMixin } from '@/mixins'
+
+// Components
+import { UploadResolution } from '@/components/CreateResolution'
+
+import { RouteNames } from '@/enums'
 
 @Component({
   components: {
-    Affidavit
+    UploadResolution
   }
 })
-export default class UploadAffidavit extends Mixins(CommonMixin) {
-  // Global getter
-  @Getter getAffidavitStep!: UploadAffidavitIF
+export default class CreateResolution extends Mixins(CommonMixin) {
   @Getter getShowErrors!: boolean
+  @Getter getCreateResolutionStep!: CreateResolutionIF
 
   @Action setIgnoreChanges!: ActionBindingIF
 
@@ -36,10 +42,10 @@ export default class UploadAffidavit extends Mixins(CommonMixin) {
 
   @Watch('$route')
   private async scrollToInvalidComponent (): Promise<void> {
-    if (this.getShowErrors && this.$route.name === RouteNames.UPLOAD_AFFIDAVIT) {
+    if (this.getShowErrors && this.$route.name === RouteNames.CREATE_RESOLUTION) {
       // Scroll to invalid components.
       await Vue.nextTick()
-      const vid = this.getAffidavitStep.validationDetail.validationItemDetails
+      const vid = this.getCreateResolutionStep.validationDetail.validationItemDetails
       const validFlags = this.buildValidFlags(vid)
       const componentIds = this.buildElementIds(vid)
       await this.validateAndScroll(

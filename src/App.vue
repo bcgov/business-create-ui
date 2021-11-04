@@ -494,7 +494,7 @@ export default class App extends Mixins(
 
     // Protect the routes not associated with this filing type.
     if (this.$route.meta.filingType !== this.getFilingType) {
-      console.log('ROUTE ERROR')
+      console.log('ROUTE ERROR') // eslint-disable-line no-console
       this.invalidRouteDialog = true
     }
 
@@ -763,7 +763,7 @@ export default class App extends Mixins(
       // this is an IDIR user
       this.setUserPhone(userInfo.phone)
     } else {
-      console.log('Invalid user phone')
+      console.log('Invalid user phone') // eslint-disable-line no-console
     }
 
     if (!userInfo.firstname) throw new Error('Invalid user first name')

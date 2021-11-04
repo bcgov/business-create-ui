@@ -8,7 +8,7 @@ import {
   ActionBindingIF, BusinessContactIF, CertifyIF, CreateRulesIF, EffectiveDateTimeIF, DefineCompanyIF,
   DissolutionFilingIF, IncorporationAgreementIF, IncorporationFilingIF, NameTranslationIF, PeopleAndRoleIF,
   DocIF, ShareStructureIF, CreateMemorandumIF, BusinessIF, DissolutionStatementIF, UploadAffidavitIF,
-  StaffPaymentStepIF, CourtOrderStepIF, DocumentDeliveryIF
+  StaffPaymentStepIF, CourtOrderStepIF, CreateResolutionIF, DocumentDeliveryIF
 } from '@/interfaces'
 
 // Constants and enums
@@ -43,6 +43,8 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Getter getCreateRulesStep!: CreateRulesIF
   @Getter getCreateMemorandumStep!: CreateMemorandumIF
   @Getter getMemorandum!: any
+  @Getter getCreateResolutionStep!: CreateResolutionIF
+  @Getter getResolution!: any
   @Getter getBusinessId!: string
   @Getter getDocumentDelivery!: DocumentDeliveryIF
   @Getter getStaffPaymentStep!: StaffPaymentStepIF
@@ -75,6 +77,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Action setCourtOrderFileNumber!: ActionBindingIF
   @Action setHasPlanOfArrangement!: ActionBindingIF
   @Action setStaffPayment!: ActionBindingIF
+  @Action setResolution!: ActionBindingIF
   @Action setDocumentOptionalEmail!: ActionBindingIF
 
   // Dissolution
@@ -206,7 +209,10 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
           }
         }
         const createRules: CreateRulesIF = {
-          validationDetail: null,
+          validationDetail: {
+            valid: false,
+            validationItemDetails: []
+          },
           rulesConfirmed: draftFiling.incorporationApplication.cooperative?.rulesConfirmed,
           rulesDoc: rulesDoc,
           docKey: draftFiling.incorporationApplication.cooperative?.rulesFileKey
@@ -222,7 +228,10 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
           }
         }
         const createMemorandum: CreateMemorandumIF = {
-          validationDetail: null,
+          validationDetail: {
+            valid: false,
+            validationItemDetails: []
+          },
           memorandumConfirmed: draftFiling.incorporationApplication.cooperative?.memorandumConfirmed,
           memorandumDoc: memorandumDoc,
           docKey: draftFiling.incorporationApplication.cooperative?.memorandumFileKey
@@ -297,7 +306,21 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
           affidavitFileKey: this.getAffidavitStep.docKey || null,
           affidavitFileName: this.getAffidavitStep.affidavitDoc?.name || null,
           affidavitFileSize: this.getAffidavitStep.affidavitDoc?.size || null,
-          affidavitFileLastModified: this.getAffidavitStep.affidavitDoc?.lastModified || null
+          affidavitFileLastModified: this.getAffidavitStep.affidavitDoc?.lastModified || null,
+          specialResolution: {
+            resolutionConfirmed: this.getCreateResolutionStep.resolutionConfirmed || false,
+            resolution: 'voluntary dissolution'
+          }
+        }
+        break
+      case CorpTypeCd.BENEFIT_COMPANY:
+      case CorpTypeCd.BC_CCC:
+      case CorpTypeCd.BC_COMPANY:
+      case CorpTypeCd.BC_ULC_COMPANY:
+        filing.filing.dissolution = { ...filing.filing.dissolution,
+          resolution: {
+            resolutionConfirmed: this.getCreateResolutionStep.resolutionConfirmed || false
+          }
         }
         break
     }
@@ -352,15 +375,28 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
       dissolutionStatementType: draftFiling.dissolution?.dissolutionStatementType
     })
 
-    // Set Future Effective data
-    if (draftFiling.header.isFutureEffective === true) this.setIsFutureEffective(true)
-    if (draftFiling.header.isFutureEffective === false) this.setIsFutureEffective(false)
-    if (draftFiling.header.isFutureEffective && !this.isTypeCoop) {
-      const effectiveDate = this.apiToDate(draftFiling.header.effectiveDate)
-      // Check that Effective Date is in the future, to improve UX and
-      // to work around the default effective date set by the back end.
-      if (effectiveDate >= this.getCurrentJsDate) this.setEffectiveDate(effectiveDate)
+    const createResolution: CreateResolutionIF = {
+      validationDetail: {
+        valid: false,
+        validationItemDetails: []
+      },
+      resolutionConfirmed:
+        draftFiling.dissolution?.specialResolution?.resolutionConfirmed ||
+        draftFiling.dissolution?.resolution?.resolutionConfirmed || false
     }
+    this.setResolution(createResolution)
+
+    // ** do not restore Future Effective data per PO decision
+    // ** leave code in case we need it later
+    // // Set Future Effective data
+    // if (draftFiling.header.isFutureEffective === true) this.setIsFutureEffective(true)
+    // if (draftFiling.header.isFutureEffective === false) this.setIsFutureEffective(false)
+    // if (draftFiling.header.isFutureEffective && !this.isTypeCoop) {
+    //   const effectiveDate = this.apiToDate(draftFiling.header.effectiveDate)
+    //   // Check that Effective Date is in the future, to improve UX and
+    //   // to work around the default effective date set by the back end.
+    //   if (effectiveDate >= this.getCurrentJsDate) this.setEffectiveDate(effectiveDate)
+    // }
 
     // Set Affidavit
     let affidavitDoc: DocIF = null
@@ -398,6 +434,17 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
 
       // Set Staff Payment data
       this.storeStaffPayment(draftFiling)
+    }
+
+    // Conditionally parse the entity-specific sections.
+    switch (this.getEntityType) {
+      case CorpTypeCd.COOP:
+        break
+      case CorpTypeCd.BENEFIT_COMPANY:
+      case CorpTypeCd.BC_CCC:
+      case CorpTypeCd.BC_COMPANY:
+      case CorpTypeCd.BC_ULC_COMPANY:
+        break
     }
   }
 

@@ -17,7 +17,7 @@ export enum RouteNames {
 
     // Dissolution Route Names
     DEFINE_DISSOLUTION = 'define-dissolution',
-    UPLOAD_RESOLUTION = 'upload-special-resolution',
+    CREATE_RESOLUTION = 'create-resolution',
     UPLOAD_AFFIDAVIT = 'upload-affidavit',
     REVIEW_CONFIRM_DISSOLUTION = 'review-confirm-dissolution'
 }

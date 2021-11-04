@@ -134,6 +134,13 @@ export const stateModel: StateModelIF = {
     affidavitDoc: null,
     docKey: null
   },
+  createResolutionStep: {
+    validationDetail: {
+      valid: false,
+      validationItemDetails: []
+    },
+    resolutionConfirmed: false
+  },
   validateSteps: false,
   showErrors: false,
   feePrices: cloneDeep(EmptyFees),
