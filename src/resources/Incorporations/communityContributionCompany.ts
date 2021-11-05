@@ -13,10 +13,10 @@ export const CommunityContributionCompanyResource: IncorporationResourceIF = {
   statement: null,
   nameRequestType: NameRequestTypes.CC,
   steps: BaseStepsTemplate,
-  filingData: {
+  filingData: [{
     entityType: CorpTypeCd.BC_CCC,
     filingTypeCode: FilingCodes.INCORPORATION_CC
-  },
+  }],
   peopleAndRoles: {
     header: '1. Add People or Corporations/Firms to your Application',
     blurb: `Add the people and Corporations/firms who will have a role in your company. People

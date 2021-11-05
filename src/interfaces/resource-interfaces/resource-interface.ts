@@ -13,7 +13,7 @@ export interface IncorporationResourceIF {
   statement: string
   nameRequestType: NameRequestTypes
   steps: Array<StepIF>
-  filingData: FilingDataIF
+  filingData: Array<FilingDataIF>
   peopleAndRoles: PeopleAndRolesResourceIF
   reviewAndConfirm: {
     completingPartyStatement: {
@@ -44,7 +44,7 @@ export interface DissolutionResourceIF {
   entityType: CorpTypeCd
   displayName: string
   steps: Array<StepIF>
-  filingData: FilingDataIF,
+  filingData: Array<FilingDataIF>
   dissolutionStatements?: Array<KeyValueIF>
   affidavit: AffidavitResourceIF
 

@@ -441,7 +441,7 @@ export const getUserAddress = (state: StateIF): AddressIF => {
 }
 
 /** The fee prices. */
-export const getFeePrices = (state: StateIF): FeesIF => {
+export const getFeePrices = (state: StateIF): Array<FeesIF> => {
   return state.stateModel.feePrices
 }
 

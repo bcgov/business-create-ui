@@ -264,9 +264,9 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
   @Getter getCourtOrderStep!: CourtOrderStepIF
   @Getter getDissolutionStatementStep!: DissolutionStatementIF
   @Getter getEffectiveDateTime!: EffectiveDateTimeIF
-  @Getter getFeePrices!: FeesIF
   @Getter getCreateResolutionResource!: CreateResolutionResourceIF
   @Getter getCreateResolutionStep!: CreateResolutionIF
+  @Getter getFeePrices!: Array<FeesIF>
   @Getter getShowErrors!: boolean
   @Getter getValidateSteps!: boolean
   @Getter isPremiumAccount!: boolean
@@ -343,8 +343,8 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
   }
 
   get futureEffectiveFeePrice (): string {
-    if (this.getFeePrices.futureEffectiveFees) {
-      return `$${this.getFeePrices.futureEffectiveFees.toFixed(2)}`
+    if (this.getFeePrices[0]?.futureEffectiveFees) {
+      return `$${this.getFeePrices[0].futureEffectiveFees.toFixed(2)}`
     }
     return 'TBD'
   }

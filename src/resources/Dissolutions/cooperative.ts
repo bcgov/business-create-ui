@@ -7,10 +7,20 @@ export const CooperativeDissolutionResource: DissolutionResourceIF = {
   entityType: CorpTypeCd.COOP,
   displayName: GetCorpFullDescription(CorpTypeCd.COOP),
   steps: CoopDissolutionSteps,
-  filingData: {
-    entityType: CorpTypeCd.COOP,
-    filingTypeCode: FilingCodes.DISSOLUTION_VOLUNTARY
-  },
+  filingData: [
+    {
+      entityType: CorpTypeCd.COOP,
+      filingTypeCode: FilingCodes.DISSOLUTION_VOLUNTARY
+    },
+    {
+      entityType: CorpTypeCd.COOP,
+      filingTypeCode: FilingCodes.AFFIDAVIT
+    },
+    {
+      entityType: CorpTypeCd.COOP,
+      filingTypeCode: FilingCodes.SPECIAL_RESOLUTION
+    }
+  ],
   dissolutionStatements: [
     {
       key: DissolutionStatementTypes.NO_ASSETS_NO_LIABILITIES_197,

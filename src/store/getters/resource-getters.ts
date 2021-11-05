@@ -67,7 +67,7 @@ export const getSteps = (state: StateIF): Array<StepIF> => {
 }
 
 /** The resource filing data. */
-export const getFilingData = (state: StateIF): FilingDataIF => {
+export const getFilingData = (state: StateIF): Array<FilingDataIF> => {
   return state.resourceModel.filingData
 }
 

@@ -11,10 +11,10 @@ export const CooperativeResource: IncorporationResourceIF = {
   statement: '',
   nameRequestType: NameRequestTypes.CP,
   steps: CoopStepsTemplate,
-  filingData: {
+  filingData: [{
     entityType: CorpTypeCd.COOP,
     filingTypeCode: FilingCodes.INCORPORATION_CP
-  },
+  }],
   peopleAndRoles: {
     header: `1. Add People to your Application`,
     blurb: `Add the people who will have a role in your Cooperative Association. A Completing

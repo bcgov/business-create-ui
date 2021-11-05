@@ -53,7 +53,7 @@ export interface StateModelIF {
   haveChanges: boolean
   validateSteps: boolean
   showErrors: boolean
-  feePrices: FeesIF
+  feePrices: Array<FeesIF>
 
   // staffPaymentStep and courtOrder are common and for now it is only used in dissolution
   staffPaymentStep: StaffPaymentStepIF

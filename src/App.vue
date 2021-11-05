@@ -116,7 +116,7 @@
 
             <v-col cols="12" lg="3">
               <aside>
-                <affix relative-element-selector=".col-lg-9" :offset="{ top: 100, bottom: -100 }">
+                <affix relative-element-selector=".col-lg-9" :offset="{ top: 86, bottom: 12 }">
                   <SbcFeeSummary
                     :filingData="feeFilingData"
                     :payURL="payApiUrl"
@@ -192,7 +192,16 @@ import { DissolutionResources, IncorporationResources } from '@/resources'
 import { AuthServices, PayServices } from '@/services'
 
 // Enums and Constants
-import { FilingNames, FilingStatus, FilingTypes, NameRequestStates, RouteNames, StaffPaymentOptions } from '@/enums'
+import {
+  CorpTypeCd,
+  FilingCodes,
+  FilingNames,
+  FilingStatus,
+  FilingTypes,
+  NameRequestStates,
+  RouteNames,
+  StaffPaymentOptions
+} from '@/enums'
 import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
 
 @Component({
@@ -231,7 +240,7 @@ export default class App extends Mixins(
   }
 
   @Getter getHaveChanges!: boolean
-  @Getter getFilingData!: FilingDataIF
+  @Getter getFilingData!: Array<FilingDataIF>
   @Getter getFilingType!: FilingTypes
   @Getter getFilingName!: FilingNames
   @Getter isDissolutionFiling!: boolean
@@ -287,12 +296,27 @@ export default class App extends Mixins(
 
   /** Data for fee summary component. */
   private get feeFilingData (): Array<FilingDataIF> {
-    return this.getFilingData
-      ? [{ ...this.getFilingData,
-        futureEffective: this.getEffectiveDateTime.isFutureEffective,
-        priority: this.getStaffPaymentStep.staffPayment.isPriority,
-        waiveFees: (this.getStaffPaymentStep.staffPayment.option === StaffPaymentOptions.NO_FEE) }]
-      : []
+    let filingData: Array<FilingDataIF> = []
+    if (this.getFilingData) {
+      filingData = cloneDeep(this.getFilingData)
+      if (this.getEntityType === CorpTypeCd.COOP && this.getFilingData.length) {
+        // Only set Future Effective and Priority to Special Resolution Fee
+        const filteredFilingData = filingData.filter(x => x.filingTypeCode === FilingCodes.SPECIAL_RESOLUTION)
+        if (filteredFilingData[0]) {
+          const specialResolutionFilingData = filteredFilingData[0]
+          specialResolutionFilingData.futureEffective = this.getEffectiveDateTime.isFutureEffective
+          specialResolutionFilingData.priority = this.getStaffPaymentStep.staffPayment.isPriority
+        }
+        filingData.forEach(x => {
+          x.waiveFees = (this.getStaffPaymentStep.staffPayment.option === StaffPaymentOptions.NO_FEE)
+        })
+      } else if (this.getFilingData[0]) {
+        filingData[0].futureEffective = this.getEffectiveDateTime.isFutureEffective
+        filingData[0].priority = this.getStaffPaymentStep.staffPayment.isPriority
+        filingData[0].waiveFees = (this.getStaffPaymentStep.staffPayment.option === StaffPaymentOptions.NO_FEE)
+      }
+    }
+    return filingData
   }
 
   /** The URL of the Pay API. */
@@ -548,14 +572,16 @@ export default class App extends Mixins(
       }
 
       // fetch and set the fee prices to display in the text
-      this.setFeePrices(
-        await PayServices.fetchFilingFees(this.getFilingData.filingTypeCode, this.getFilingData.entityType, true)
+      const filingFees = []
+      for (const filingData of this.getFilingData) {
+        await PayServices.fetchFilingFees(filingData.filingTypeCode, filingData.entityType, true)
           .catch(error => {
             console.log('Failed to fetch filing fees, error =', error) // eslint-disable-line no-console
             // return a valid fees structure
-            return cloneDeep(EmptyFees)
+            filingFees.push(cloneDeep(EmptyFees))
           })
-      )
+      }
+      this.setFeePrices(filingFees)
 
       // set current profile name to store for field pre population
       // do this only if we are not staff

@@ -218,7 +218,7 @@ export const setDissolutionStatementStepData: ActionIF = ({ commit }, stepData: 
   commit('mutateDissolutionStatementStepData', stepData)
 }
 
-export const setFeePrices: ActionIF = ({ commit }, feePrices: FeesIF): void => {
+export const setFeePrices: ActionIF = ({ commit }, feePrices: Array<FeesIF>): void => {
   commit('mutateFeePrices', feePrices)
 }
 

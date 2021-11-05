@@ -249,7 +249,7 @@ export const mutateDissolutionStatementStepData = (state: StateIF, stepData: Dis
   state.stateModel.dissolution.dissolutionStatementStep = stepData
 }
 
-export const mutateFeePrices = (state: StateIF, feePrices: FeesIF) => {
+export const mutateFeePrices = (state: StateIF, feePrices: Array<FeesIF>) => {
   state.stateModel.feePrices = feePrices
 }
 
