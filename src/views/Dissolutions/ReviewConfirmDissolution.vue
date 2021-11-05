@@ -509,7 +509,7 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
   }
 }
 
-::v-deep #AR-step-4-container, ::v-deep #document-delivery {
+::v-deep #certify-section, ::v-deep #document-delivery-section {
   .row {
     .col-3 {
       label {
@@ -525,7 +525,7 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
   }
 }
 
-::v-deep #AR-step-4-container {
+::v-deep #certify-section {
   .container {
     padding-right: 4px !important;
   }
