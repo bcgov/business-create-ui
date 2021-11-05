@@ -7,10 +7,10 @@ export const UnlimitedDissolutionResource: DissolutionResourceIF = {
   entityType: CorpTypeCd.BC_ULC_COMPANY,
   displayName: GetCorpFullDescription(CorpTypeCd.BC_ULC_COMPANY),
   steps: CorpDissolutionSteps,
-  filingData: {
+  filingData: [{
     entityType: CorpTypeCd.BC_ULC_COMPANY,
     filingTypeCode: FilingCodes.DISSOLUTION_VOLUNTARY
-  },
+  }],
   affidavit: {
     affidavitActionText: 'deposit the affidavit in the Company\'s records book.',
     helpSection: {

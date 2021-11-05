@@ -12,10 +12,10 @@ export const UnlimitedCompanyResource: IncorporationResourceIF = {
   statement: null,
   nameRequestType: NameRequestTypes.UL,
   steps: BaseStepsTemplate,
-  filingData: {
+  filingData: [{
     entityType: CorpTypeCd.BC_ULC_COMPANY,
     filingTypeCode: FilingCodes.INCORPORATION_ULC
-  },
+  }],
   peopleAndRoles: {
     header: '1. Add People or Corporations/Firms to your Application',
     blurb: `Add the people and Corporations/firms who will have a role in your company. People

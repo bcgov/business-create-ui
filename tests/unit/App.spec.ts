@@ -5,8 +5,9 @@ import VueRouter from 'vue-router'
 import flushPromises from 'flush-promises'
 import sinon from 'sinon'
 import { getVuexStore } from '@/store'
-import { shallowMount, createLocalVue } from '@vue/test-utils'
+import { mount, shallowMount, createLocalVue } from '@vue/test-utils'
 import axios from '@/utils/axios-auth'
+import sbcFeeSummaryAxios from 'axios'
 
 // Components
 import App from '@/App.vue'
@@ -18,6 +19,8 @@ import { ConfirmDialog } from '@/components/dialogs'
 
 // Other
 import mockRouter from './MockRouter'
+import Vuelidate from 'vuelidate'
+import { StaffPaymentOptions } from '@/enums'
 
 // mock fetch() as it is not defined in Jest
 // NB: it should be `global.fetch` but that doesn't work and this does
@@ -616,5 +619,1143 @@ describe('App component', () => {
     // verify redirection
     const baseUrl = 'myhost/business/T1234567'
     expect(window.location.assign).toHaveBeenCalledWith(baseUrl)
+  })
+})
+
+describe('Dissolution BEN - External User', () => {
+  let wrapper: any
+  const { assign } = window.location
+  sessionStorage.setItem('AUTH_WEB_URL', 'myhost/basePath/auth/')
+  sessionStorage.setItem('DASHBOARD_URL', 'myhost/business/')
+  sessionStorage.setItem('AUTH_API_URL', '')
+  sessionStorage.setItem('CURRENT_ACCOUNT', '{ "id": 668 }')
+  sessionStorage.setItem('PAY_API_URL', '')
+
+  beforeEach(async () => {
+    // mock the window.location.assign function
+    delete window.location
+    window.location = { assign: jest.fn() } as any
+
+    store.state.stateModel.effectiveDateTime.isFutureEffective = false
+    store.state.stateModel.staffPaymentStep.staffPayment.isPriority = false
+    await flushPromises()
+
+    const sbcFeeSummaryGet = sinon.stub(sbcFeeSummaryAxios, 'get')
+
+    const feesPromise = new Promise((resolve) => resolve({
+      data:
+      {
+        filingFees: 20.0,
+        filingType: 'Voluntary dissolution',
+        filingTypeCode: 'DIS_VOL',
+        futureEffectiveFees: 0,
+        priorityFees: 0,
+        processingFees: 0,
+        serviceFees: 1.50,
+        tax: {
+          'gst': 0,
+          'pst': 0
+        },
+        total: 21.5
+      }
+    }))
+
+    const feesFutureEffectivePromise = new Promise((resolve) => resolve({
+      data:
+      {
+        filingFees: 20.0,
+        filingType: 'Voluntary dissolution',
+        filingTypeCode: 'DIS_VOL',
+        futureEffectiveFees: 100.0,
+        priorityFees: 0,
+        processingFees: 0,
+        serviceFees: 1.5,
+        tax: {
+          'gst': 0,
+          'pst': 0
+        },
+        total: 121.5
+      }
+    }))
+
+    // GET filing fees from SbcFeeSummary component
+    sbcFeeSummaryGet.withArgs('fees/BEN/DIS_VOL')
+      .returns(feesPromise)
+
+    // GET filing fees from SbcFeeSummary component with future effective flag
+    sbcFeeSummaryGet.withArgs('fees/BEN/DIS_VOL?futureEffective=true')
+      .returns(feesFutureEffectivePromise)
+
+    const get = sinon.stub(axios, 'get')
+
+    // GET filing fees
+    get.withArgs('fees/BEN/DIS_VOL')
+      .returns(feesPromise)
+
+    // GET filing fees with future effective flag
+    get.withArgs('fees/BEN/DIS_VOL?futureEffective=true')
+      .returns(feesFutureEffectivePromise)
+
+    // GET current user's info
+    get.withArgs('users/@me')
+      .returns(new Promise((resolve) => resolve({
+        data:
+        {
+          contacts: [
+            {
+              email: 'completing-party@example.com',
+              phone: '123-456-7890'
+            }
+          ],
+          firstname: 'Completing',
+          lastname: 'Party'
+        }
+      })))
+
+    // GET specified org's info
+    get.withArgs('orgs/668')
+      .returns(new Promise((resolve) => resolve({
+        data:
+        {
+          mailingAddress:
+          {
+            city: 'City',
+            country: 'CA',
+            region: 'BC',
+            postalCode: 'V8V 8V8',
+            street: '1234 Some Street',
+            streetAdditional: 'Suite ABC'
+          }
+        }
+      })))
+
+    // GET authorizations (role)
+    get.withArgs('entities/BC0870803/authorizations')
+      .returns(new Promise((resolve) => resolve({
+        data:
+        {
+          roles: ['edit', 'view']
+        }
+      })))
+
+    // GET business data
+    get.withArgs('entities/BC0870803')
+      .returns(new Promise((resolve) => resolve({
+        data:
+        {
+          affiliations: [5925],
+          businessIdentifier: 'BC0870803',
+          contacts: [{
+            email: 'andre.pestana@aot-technologies.com',
+            phone: '(123) 456-7890',
+            phoneExtension: ''
+          }],
+          corpType: {
+            code: 'BEN',
+            default: false,
+            desc: 'Benefit Company'
+          },
+          created: '2021-10-07T20:37:41+00:00',
+          createdBy: 'None None',
+          modified: '2021-10-07T20:37:41+00:00',
+          modifiedBy: 'None None',
+          name: '0870803 B.C. LTD.',
+          passCodeClaimed: true
+        }
+      })))
+
+    // GET business tasks
+    get.withArgs('businesses/BC0870803/tasks')
+      .returns(new Promise((resolve) => resolve({
+        data:
+        {
+          tasks: [{
+            enabled: true,
+            order: 1,
+            task: {
+              filing: {
+                business: {
+                  identifier: 'BC0870803',
+                  legalName: '0870803 B.C. LTD.',
+                  legalType: 'BEN'
+                },
+                dissolution: {
+                  custodialOffice: {
+                    deliveryAddress: {
+                      addressCity: 'North Saanich',
+                      addressCountry: 'CA',
+                      addressRegion: 'BC',
+                      deliveryInstructions: '',
+                      postalCode: 'V8L 5V4',
+                      streetAddress: '132-1640 Electra Blvd',
+                      streetAddressAdditional: ''
+                    },
+                    mailingAddress: {
+                      addressCity: 'North Saanich',
+                      addressCountry: 'CA',
+                      addressRegion: 'BC',
+                      deliveryInstructions: '',
+                      postalCode: 'V8L 5V4',
+                      streetAddress: '132-1640 Electra Blvd',
+                      streetAddressAdditional: ''
+                    }
+                  },
+                  dissolutionType: 'voluntary'
+                },
+                header: {
+                  affectedFilings: [],
+                  availableOnPaperOnly: false,
+                  colinIds: [],
+                  comments: [],
+                  date: '2021-11-01T22:57:50.017255+00:00',
+                  deletionLocked: false,
+                  effectiveDate: '2021-11-01T22:57:50.017306+00:00',
+                  filingId: 113152,
+                  inColinOnly: false,
+                  isCorrected: false,
+                  isCorrectionPending: false,
+                  name: 'dissolution',
+                  status: 'DRAFT',
+                  submitter: 'apestana@idir'
+                }
+              }
+            }
+          }]
+
+        }
+      })))
+
+    // create a Local Vue and install router on it
+    const localVue = createLocalVue()
+    localVue.use(VueRouter)
+    localVue.use(Vuelidate)
+    const router = mockRouter.mock()
+    router.push({ name: 'define-dissolution', query: { id: 'BC0870803' } })
+    wrapper = mount(App, { localVue, store, router, vuetify })
+
+    // wait for all queries to complete
+    await flushPromises()
+  })
+
+  afterEach(() => {
+    window.location.assign = assign
+    sinon.restore()
+    wrapper.destroy()
+  })
+
+  it('renders the sub-components properly', () => {
+    expect(wrapper.find(SbcHeader).exists()).toBe(true)
+    expect(wrapper.find(SbcFooter).exists()).toBe(true)
+    expect(wrapper.find(SbcFeeSummary).exists()).toBe(true)
+    expect(wrapper.find(EntityInfo).exists()).toBe(true)
+    expect(wrapper.find(Stepper).exists()).toBe(true)
+    expect(wrapper.find(Actions).exists()).toBe(true)
+  })
+
+  it('calculates the correct fees', async () => {
+    expect(wrapper.find(SbcFeeSummary).exists()).toBe(true)
+    const feeText = wrapper.find(SbcFeeSummary).text()
+    expect(feeText).toContain('Voluntary dissolution 20')
+    expect(feeText).toContain('Service Fee 1.5')
+    expect(feeText).toContain('Total Fees CAD 21.5')
+    store.state.stateModel.effectiveDateTime.isFutureEffective = true
+    await flushPromises()
+    const feeTextFutureEffective = wrapper.find(SbcFeeSummary).text()
+    expect(feeTextFutureEffective).toContain('Total Fees CAD 121.5')
+  })
+})
+
+describe('Dissolution BEN - Staff User', () => {
+  let wrapper: any
+  const { assign } = window.location
+  sessionStorage.setItem('AUTH_WEB_URL', 'myhost/basePath/auth/')
+  sessionStorage.setItem('DASHBOARD_URL', 'myhost/business/')
+  sessionStorage.setItem('AUTH_API_URL', '')
+  sessionStorage.setItem('CURRENT_ACCOUNT', '{ "id": 668 }')
+  sessionStorage.setItem('PAY_API_URL', '')
+
+  beforeEach(async () => {
+    // mock the window.location.assign function
+    delete window.location
+    window.location = { assign: jest.fn() } as any
+
+    store.state.stateModel.effectiveDateTime.isFutureEffective = false
+    store.state.stateModel.staffPaymentStep.staffPayment.isPriority = false
+    await flushPromises()
+
+    const sbcFeeSummaryGet = sinon.stub(sbcFeeSummaryAxios, 'get')
+
+    const feesPromise = new Promise((resolve) => resolve({
+      data:
+      {
+        filingFees: 20.0,
+        filingType: 'Voluntary dissolution',
+        filingTypeCode: 'DIS_VOL',
+        futureEffectiveFees: 0,
+        priorityFees: 0,
+        processingFees: 0,
+        serviceFees: 0,
+        tax: {
+          'gst': 0,
+          'pst': 0
+        },
+        total: 20.0
+      }
+    }))
+
+    const feesFutureEffectivePromise = new Promise((resolve) => resolve({
+      data:
+      {
+        filingFees: 20.0,
+        filingType: 'Voluntary dissolution',
+        filingTypeCode: 'DIS_VOL',
+        futureEffectiveFees: 100.0,
+        priorityFees: 0,
+        processingFees: 0,
+        serviceFees: 0,
+        tax: {
+          'gst': 0,
+          'pst': 0
+        },
+        total: 120.0
+      }
+    }))
+
+    // GET filing fees from SbcFeeSummary component
+    sbcFeeSummaryGet.withArgs('fees/BEN/DIS_VOL')
+      .returns(feesPromise)
+
+    // GET filing fees from SbcFeeSummary component with future effective flag
+    sbcFeeSummaryGet.withArgs('fees/BEN/DIS_VOL?futureEffective=true')
+      .returns(feesFutureEffectivePromise)
+
+    const get = sinon.stub(axios, 'get')
+
+    // GET filing fees
+    get.withArgs('fees/BEN/DIS_VOL')
+      .returns(feesPromise)
+
+    // GET filing fees with future effective flag
+    get.withArgs('fees/BEN/DIS_VOL?futureEffective=true')
+      .returns(feesFutureEffectivePromise)
+
+    // GET current user's info
+    get.withArgs('users/@me')
+      .returns(new Promise((resolve) => resolve({
+        data:
+        {
+          contacts: [
+            {
+              email: 'completing-party@example.com',
+              phone: '123-456-7890'
+            }
+          ],
+          firstname: 'Completing',
+          lastname: 'Party'
+        }
+      })))
+
+    // GET specified org's info
+    get.withArgs('orgs/668')
+      .returns(new Promise((resolve) => resolve({
+        data:
+        {
+          mailingAddress:
+          {
+            city: 'City',
+            country: 'CA',
+            region: 'BC',
+            postalCode: 'V8V 8V8',
+            street: '1234 Some Street',
+            streetAdditional: 'Suite ABC'
+          }
+        }
+      })))
+
+    // GET authorizations (role)
+    get.withArgs('entities/BC0870803/authorizations')
+      .returns(new Promise((resolve) => resolve({
+        data:
+        {
+          roles: ['edit', 'view', 'staff']
+        }
+      })))
+
+    // GET business data
+    get.withArgs('entities/BC0870803')
+      .returns(new Promise((resolve) => resolve({
+        data:
+        {
+          affiliations: [5925],
+          businessIdentifier: 'BC0870803',
+          contacts: [{
+            email: 'andre.pestana@aot-technologies.com',
+            phone: '(123) 456-7890',
+            phoneExtension: ''
+          }],
+          corpType: {
+            code: 'BEN',
+            default: false,
+            desc: 'Benefit Company'
+          },
+          created: '2021-10-07T20:37:41+00:00',
+          createdBy: 'None None',
+          modified: '2021-10-07T20:37:41+00:00',
+          modifiedBy: 'None None',
+          name: '0870803 B.C. LTD.',
+          passCodeClaimed: true
+        }
+      })))
+
+    // GET business tasks
+    get.withArgs('businesses/BC0870803/tasks')
+      .returns(new Promise((resolve) => resolve({
+        data:
+        {
+          tasks: [{
+            enabled: true,
+            order: 1,
+            task: {
+              filing: {
+                business: {
+                  identifier: 'BC0870803',
+                  legalName: '0870803 B.C. LTD.',
+                  legalType: 'BEN'
+                },
+                dissolution: {
+                  custodialOffice: {
+                    deliveryAddress: {
+                      addressCity: 'North Saanich',
+                      addressCountry: 'CA',
+                      addressRegion: 'BC',
+                      deliveryInstructions: '',
+                      postalCode: 'V8L 5V4',
+                      streetAddress: '132-1640 Electra Blvd',
+                      streetAddressAdditional: ''
+                    },
+                    mailingAddress: {
+                      addressCity: 'North Saanich',
+                      addressCountry: 'CA',
+                      addressRegion: 'BC',
+                      deliveryInstructions: '',
+                      postalCode: 'V8L 5V4',
+                      streetAddress: '132-1640 Electra Blvd',
+                      streetAddressAdditional: ''
+                    }
+                  },
+                  dissolutionType: 'voluntary'
+                },
+                header: {
+                  affectedFilings: [],
+                  availableOnPaperOnly: false,
+                  colinIds: [],
+                  comments: [],
+                  date: '2021-11-01T22:57:50.017255+00:00',
+                  deletionLocked: false,
+                  effectiveDate: '2021-11-01T22:57:50.017306+00:00',
+                  filingId: 113152,
+                  inColinOnly: false,
+                  isCorrected: false,
+                  isCorrectionPending: false,
+                  name: 'dissolution',
+                  status: 'DRAFT',
+                  submitter: 'apestana@idir'
+                }
+              }
+            }
+          }]
+
+        }
+      })))
+
+    // create a Local Vue and install router on it
+    const localVue = createLocalVue()
+    localVue.use(VueRouter)
+    localVue.use(Vuelidate)
+    const router = mockRouter.mock()
+    router.push({ name: 'define-dissolution', query: { id: 'BC0870803' } })
+    wrapper = mount(App, { localVue, store, router, vuetify })
+
+    // wait for all queries to complete
+    await flushPromises()
+  })
+
+  afterEach(() => {
+    window.location.assign = assign
+    sinon.restore()
+    wrapper.destroy()
+  })
+
+  it('calculates the correct fees', async () => {
+    expect(wrapper.find(SbcFeeSummary).exists()).toBe(true)
+    const feeText = wrapper.find(SbcFeeSummary).text()
+    expect(feeText).toContain('Voluntary dissolution 20')
+    expect(feeText).toContain('Total Fees CAD 20')
+
+    store.state.stateModel.effectiveDateTime.isFutureEffective = true
+    await flushPromises()
+    const feeTextFutureEffective = wrapper.find(SbcFeeSummary).text()
+    expect(feeTextFutureEffective).toContain('Future Effective Fee 100')
+    expect(feeTextFutureEffective).toContain('Total Fees CAD 120')
+  })
+})
+
+describe('Dissolution COOP - External User', () => {
+  let wrapper: any
+  const { assign } = window.location
+  sessionStorage.setItem('AUTH_WEB_URL', 'myhost/basePath/auth/')
+  sessionStorage.setItem('DASHBOARD_URL', 'myhost/business/')
+  sessionStorage.setItem('AUTH_API_URL', '')
+  sessionStorage.setItem('CURRENT_ACCOUNT', '{ "id": 668 }')
+  sessionStorage.setItem('PAY_API_URL', '')
+
+  beforeEach(async () => {
+    // mock the window.location.assign function
+    delete window.location
+    window.location = { assign: jest.fn() } as any
+
+    store.state.stateModel.effectiveDateTime.isFutureEffective = false
+    store.state.stateModel.staffPaymentStep.staffPayment.isPriority = false
+    await flushPromises()
+
+    const sbcFeeSummaryGet = sinon.stub(sbcFeeSummaryAxios, 'get')
+
+    const voluntaryDissolutionFeesPromise = new Promise((resolve) => resolve({
+      data:
+      {
+        filingFees: 20.0,
+        filingType: 'Voluntary dissolution',
+        filingTypeCode: 'DIS_VOL',
+        futureEffectiveFees: 0,
+        priorityFees: 0,
+        processingFees: 0,
+        serviceFees: 0,
+        tax: {
+          'gst': 0,
+          'pst': 0
+        },
+        total: 20.0
+      }
+    }))
+
+    const affidavitFeesPromise = new Promise((resolve) => resolve({
+      data:
+      {
+        filingFees: 20.0,
+        filingType: 'Affidavit',
+        filingTypeCode: 'AFDVT',
+        futureEffectiveFees: 0,
+        priorityFees: 0,
+        processingFees: 0,
+        serviceFees: 0,
+        tax: {
+          gst: 0,
+          pst: 0
+        },
+        total: 20.0
+      }
+    }))
+
+    const specialResolutionFeesPromise = new Promise((resolve) => resolve({
+      data:
+      {
+        filingFees: 70.0,
+        filingType: 'Special resolution',
+        filingTypeCode: 'SPRLN',
+        futureEffectiveFees: 0,
+        priorityFees: 0,
+        processingFees: 0,
+        serviceFees: 0,
+        tax: {
+          gst: 0,
+          pst: 0
+        },
+        total: 70.0
+      }
+    }))
+
+    // GET filing voluntary dissolution fees from SbcFeeSummary component
+    sbcFeeSummaryGet.withArgs('fees/CP/DIS_VOL')
+      .returns(voluntaryDissolutionFeesPromise)
+
+    // GET filing Special resolution fees from SbcFeeSummary component
+    sbcFeeSummaryGet.withArgs('fees/CP/SPRLN')
+      .returns(specialResolutionFeesPromise)
+
+    // GET filing Affidavit fees from SbcFeeSummary component
+    sbcFeeSummaryGet.withArgs('fees/CP/AFDVT')
+      .returns(affidavitFeesPromise)
+
+    const get = sinon.stub(axios, 'get')
+
+    // GET filing voluntary dissolution fees
+    get.withArgs('fees/CP/DIS_VOL')
+      .returns(voluntaryDissolutionFeesPromise)
+
+    // GET filing Special resolution fees
+    get.withArgs('fees/CP/SPRLN')
+      .returns(specialResolutionFeesPromise)
+
+    // GET filing Affidavit fees
+    get.withArgs('fees/CP/AFDVT')
+      .returns(affidavitFeesPromise)
+
+    // GET current user's info
+    get.withArgs('users/@me')
+      .returns(new Promise((resolve) => resolve({
+        data:
+        {
+          contacts: [
+            {
+              email: 'completing-party@example.com',
+              phone: '123-456-7890'
+            }
+          ],
+          firstname: 'Completing',
+          lastname: 'Party'
+        }
+      })))
+
+    // GET specified org's info
+    get.withArgs('orgs/668')
+      .returns(new Promise((resolve) => resolve({
+        data:
+        {
+          mailingAddress:
+          {
+            city: 'City',
+            country: 'CA',
+            region: 'BC',
+            postalCode: 'V8V 8V8',
+            street: '1234 Some Street',
+            streetAdditional: 'Suite ABC'
+          }
+        }
+      })))
+
+    // GET authorizations (role)
+    get.withArgs('entities/CP1002398/authorizations')
+      .returns(new Promise((resolve) => resolve({
+        data:
+        {
+          roles: ['edit', 'view']
+        }
+      })))
+
+    // GET business data
+    get.withArgs('entities/CP1002398')
+      .returns(new Promise((resolve) => resolve({
+        data:
+        {
+          affiliations: [6158],
+          businessIdentifier: 'CP1002398',
+          contacts: [
+            {
+              email: 'andre.pestana@aot-technologies.com',
+              phone: '',
+              phoneExtension: ''
+            }
+          ],
+          corpType: {
+            code: 'CP',
+            default: true,
+            desc: 'Cooperatives'
+          },
+          created: '2021-11-03T20:00:58+00:00',
+          createdBy: 'None None',
+          modified: '2021-11-03T20:00:58+00:00',
+          modifiedBy: 'None None',
+          name: 'HJJHV COOP',
+          passCodeClaimed: true
+        }
+      })))
+
+    // GET business tasks
+    get.withArgs('businesses/CP1002398/tasks')
+      .returns(new Promise((resolve) => resolve({
+        data:
+        {
+          tasks: [
+            {
+              enabled: true,
+              order: 1,
+              task: {
+                filing: {
+                  business: {
+                    identifier: 'CP1002398',
+                    legalName: 'HJJHV COOP',
+                    legalType: 'CP'
+                  },
+                  dissolution: {
+                    custodialOffice: {
+                      deliveryAddress: {
+                        addressCity: 'North Saanich',
+                        addressCountry: 'CA',
+                        addressRegion: 'BC',
+                        deliveryInstructions: '',
+                        postalCode: 'V8L 5V4',
+                        streetAddress: '123-1640 Electra Blvd',
+                        streetAddressAdditional: ''
+                      },
+                      mailingAddress: {
+                        addressCity: 'North Saanich',
+                        addressCountry: 'CA',
+                        addressRegion: 'BC',
+                        deliveryInstructions: '',
+                        postalCode: 'V8L 5V4',
+                        streetAddress: '123-1640 Electra Blvd',
+                        streetAddressAdditional: ''
+                      }
+                    },
+                    dissolutionType: 'voluntary'
+                  },
+                  header: {
+                    affectedFilings: [],
+                    availableOnPaperOnly: false,
+                    colinIds: [],
+                    comments: [],
+                    date: '2021-11-03T20:50:51.553999+00:00',
+                    deletionLocked: false,
+                    effectiveDate: '2021-11-03T20:50:51.554019+00:00',
+                    filingId: 113176,
+                    inColinOnly: false,
+                    isCorrected: false,
+                    isCorrectionPending: false,
+                    name: 'dissolution',
+                    status: 'DRAFT',
+                    submitter: 'bcsc/sdsqcixfw7czxwu5jzddwkty3p72od6a'
+                  }
+                }
+              }
+            }
+          ]
+        }
+      })))
+
+    // create a Local Vue and install router on it
+    const localVue = createLocalVue()
+    localVue.use(VueRouter)
+    localVue.use(Vuelidate)
+    const router = mockRouter.mock()
+    router.push({ name: 'define-dissolution', query: { id: 'CP1002398' } })
+    wrapper = mount(App, { localVue, store, router, vuetify, stubs: { 'UploadResolution': true } })
+
+    // wait for all queries to complete
+    await flushPromises()
+  })
+
+  afterEach(() => {
+    window.location.assign = assign
+    sinon.restore()
+    wrapper.destroy()
+  })
+
+  it('calculates the correct fees', async () => {
+    expect(wrapper.find(SbcFeeSummary).exists()).toBe(true)
+    const feeText = wrapper.find(SbcFeeSummary).text()
+    expect(feeText).toContain('Voluntary dissolution 20')
+    expect(feeText).toContain('Affidavit 20')
+    expect(feeText).toContain('Special resolution 70')
+    expect(feeText).toContain('Total Fees CAD 110')
+  })
+})
+
+describe('Dissolution COOP - Staff User', () => {
+  let wrapper: any
+  const { assign } = window.location
+  sessionStorage.setItem('AUTH_WEB_URL', 'myhost/basePath/auth/')
+  sessionStorage.setItem('DASHBOARD_URL', 'myhost/business/')
+  sessionStorage.setItem('AUTH_API_URL', '')
+  sessionStorage.setItem('CURRENT_ACCOUNT', '{ "id": 668 }')
+  sessionStorage.setItem('PAY_API_URL', '')
+
+  beforeEach(async () => {
+    // mock the window.location.assign function
+    delete window.location
+    window.location = { assign: jest.fn() } as any
+
+    store.state.stateModel.effectiveDateTime.isFutureEffective = false
+    store.state.stateModel.staffPaymentStep.staffPayment.isPriority = false
+    await flushPromises()
+
+    const sbcFeeSummaryGet = sinon.stub(sbcFeeSummaryAxios, 'get')
+
+    const voluntaryDissolutionFeesPromise = new Promise((resolve) => resolve({
+      data:
+      {
+        filingFees: 20.0,
+        filingType: 'Voluntary dissolution',
+        filingTypeCode: 'DIS_VOL',
+        futureEffectiveFees: 0,
+        priorityFees: 0,
+        processingFees: 0,
+        serviceFees: 0,
+        tax: {
+          'gst': 0,
+          'pst': 0
+        },
+        total: 20.0
+      }
+    }))
+
+    const voluntaryDissolutionFeesFutureEffectivePromise = new Promise((resolve) => resolve({
+      data:
+      {
+        filingFees: 20.0,
+        filingType: 'Voluntary dissolution',
+        filingTypeCode: 'DIS_VOL',
+        futureEffectiveFees: 100.0,
+        priorityFees: 0,
+        processingFees: 0,
+        serviceFees: 0,
+        tax: {
+          'gst': 0,
+          'pst': 0
+        },
+        total: 20.0
+      }
+    }))
+
+    const voluntaryDissolutionWaiveFeesPromise = new Promise((resolve) => resolve({
+      data:
+      {
+        filingFees: 0,
+        filingType: 'Voluntary dissolution',
+        filingTypeCode: 'DIS_VOL',
+        futureEffectiveFees: 0,
+        priorityFees: 0,
+        processingFees: 0,
+        serviceFees: 0,
+        tax: {
+          'gst': 0,
+          'pst': 0
+        },
+        total: 0
+      }
+    }))
+
+    const affidavitFeesPromise = new Promise((resolve) => resolve({
+      data:
+      {
+        filingFees: 20.0,
+        filingType: 'Affidavit',
+        filingTypeCode: 'AFDVT',
+        futureEffectiveFees: 0,
+        priorityFees: 0,
+        processingFees: 0,
+        serviceFees: 0,
+        tax: {
+          gst: 0,
+          pst: 0
+        },
+        total: 20.0
+      }
+    }))
+
+    const affidavitWaiveFeesPromise = new Promise((resolve) => resolve({
+      data:
+      {
+        filingFees: 0,
+        filingType: 'Affidavit',
+        filingTypeCode: 'AFDVT',
+        futureEffectiveFees: 0,
+        priorityFees: 0,
+        processingFees: 0,
+        serviceFees: 0,
+        tax: {
+          gst: 0,
+          pst: 0
+        },
+        total: 0
+      }
+    }))
+
+    const specialResolutionFeesPromise = new Promise((resolve) => resolve({
+      data:
+      {
+        filingFees: 70.0,
+        filingType: 'Special resolution',
+        filingTypeCode: 'SPRLN',
+        futureEffectiveFees: 0,
+        priorityFees: 0,
+        processingFees: 0,
+        serviceFees: 0,
+        tax: {
+          gst: 0,
+          pst: 0
+        },
+        total: 70.0
+      }
+    }))
+
+    const specialResolutionWaiveFeesPromise = new Promise((resolve) => resolve({
+      data:
+      {
+        filingFees: 0,
+        filingType: 'Special resolution',
+        filingTypeCode: 'SPRLN',
+        futureEffectiveFees: 0,
+        priorityFees: 0,
+        processingFees: 0,
+        serviceFees: 0,
+        tax: {
+          gst: 0,
+          pst: 0
+        },
+        total: 0
+      }
+    }))
+
+    const specialResolutionWithPriorityFeesPromise = new Promise((resolve) => resolve({
+      data:
+      {
+        filingFees: 70.0,
+        filingType: 'Special resolution',
+        filingTypeCode: 'SPRLN',
+        futureEffectiveFees: 0,
+        priorityFees: 100.0,
+        processingFees: 0,
+        serviceFees: 0,
+        tax: {
+          gst: 0,
+          pst: 0
+        },
+        total: 170.0
+      }
+    }))
+
+    // GET filing voluntary dissolution fees from SbcFeeSummary component
+    sbcFeeSummaryGet.withArgs('fees/CP/DIS_VOL')
+      .returns(voluntaryDissolutionFeesPromise)
+
+    // GET filing voluntary dissolution future effective fees from SbcFeeSummary component
+    sbcFeeSummaryGet.withArgs('voluntaryDissolutionFeesFutureEffectivePromise')
+      .returns(voluntaryDissolutionFeesFutureEffectivePromise)
+
+    // GET filing voluntary dissolution waive fees from SbcFeeSummary component
+    sbcFeeSummaryGet.withArgs('fees/CP/DIS_VOL?waiveFees=true')
+      .returns(voluntaryDissolutionWaiveFeesPromise)
+
+    // GET filing Special resolution fees from SbcFeeSummary component
+    sbcFeeSummaryGet.withArgs('fees/CP/SPRLN')
+      .returns(specialResolutionFeesPromise)
+
+    // GET filing Special resolution waive fees from SbcFeeSummary component
+    sbcFeeSummaryGet.withArgs('fees/CP/SPRLN?waiveFees=true')
+      .returns(specialResolutionWaiveFeesPromise)
+
+    // GET filing Special resolution with priority fees from SbcFeeSummary component
+    sbcFeeSummaryGet.withArgs('fees/CP/SPRLN?priority=true')
+      .returns(specialResolutionWithPriorityFeesPromise)
+
+    // GET filing Affidavit fees from SbcFeeSummary component with future effective flag
+    sbcFeeSummaryGet.withArgs('fees/CP/AFDVT')
+      .returns(affidavitFeesPromise)
+
+    // GET filing Affidavit waive fees from SbcFeeSummary component with future effective flag
+    sbcFeeSummaryGet.withArgs('fees/CP/AFDVT?waiveFees=true')
+      .returns(affidavitWaiveFeesPromise)
+
+    const get = sinon.stub(axios, 'get')
+
+    // GET filing voluntary dissolution fees
+    get.withArgs('fees/CP/DIS_VOL')
+      .returns(voluntaryDissolutionFeesPromise)
+
+    // GET filing voluntary dissolution waive fees
+    get.withArgs('fees/CP/DIS_VOL?waiveFees=true')
+      .returns(voluntaryDissolutionWaiveFeesPromise)
+
+    // GET filing Special resolution fees
+    get.withArgs('fees/CP/SPRLN')
+      .returns(specialResolutionFeesPromise)
+
+    // GET filing Special resolution waive fees
+    get.withArgs('fees/CP/SPRLN?waiveFees=true')
+      .returns(specialResolutionWaiveFeesPromise)
+
+    // GET filing Special resolution with priority fees
+    get.withArgs('fees/CP/SPRLN?priority=true')
+      .returns(specialResolutionWithPriorityFeesPromise)
+
+    // GET filing Affidavit fees
+    get.withArgs('fees/CP/AFDVT')
+      .returns(affidavitFeesPromise)
+
+    // GET filing Affidavit waive fees
+    get.withArgs('fees/CP/AFDVT?waiveFees=true')
+      .returns(affidavitWaiveFeesPromise)
+
+    // GET current user's info
+    get.withArgs('users/@me')
+      .returns(new Promise((resolve) => resolve({
+        data:
+        {
+          contacts: [
+            {
+              email: 'completing-party@example.com',
+              phone: '123-456-7890'
+            }
+          ],
+          firstname: 'Completing',
+          lastname: 'Party'
+        }
+      })))
+
+    // GET specified org's info
+    get.withArgs('orgs/668')
+      .returns(new Promise((resolve) => resolve({
+        data:
+        {
+          mailingAddress:
+          {
+            city: 'City',
+            country: 'CA',
+            region: 'BC',
+            postalCode: 'V8V 8V8',
+            street: '1234 Some Street',
+            streetAdditional: 'Suite ABC'
+          }
+        }
+      })))
+
+    // GET authorizations (role)
+    get.withArgs('entities/CP1002398/authorizations')
+      .returns(new Promise((resolve) => resolve({
+        data:
+        {
+          roles: ['edit', 'view', 'staff']
+        }
+      })))
+
+    // GET business data
+    get.withArgs('entities/CP1002398')
+      .returns(new Promise((resolve) => resolve({
+        data:
+        {
+          affiliations: [6158],
+          businessIdentifier: 'CP1002398',
+          contacts: [
+            {
+              email: 'andre.pestana@aot-technologies.com',
+              phone: '',
+              phoneExtension: ''
+            }
+          ],
+          corpType: {
+            code: 'CP',
+            default: true,
+            desc: 'Cooperatives'
+          },
+          created: '2021-11-03T20:00:58+00:00',
+          createdBy: 'None None',
+          modified: '2021-11-03T20:00:58+00:00',
+          modifiedBy: 'None None',
+          name: 'HJJHV COOP',
+          passCodeClaimed: true
+        }
+      })))
+
+    // GET business tasks
+    get.withArgs('businesses/CP1002398/tasks')
+      .returns(new Promise((resolve) => resolve({
+        data:
+        {
+          tasks: [
+            {
+              enabled: true,
+              order: 1,
+              task: {
+                filing: {
+                  business: {
+                    identifier: 'CP1002398',
+                    legalName: 'HJJHV COOP',
+                    legalType: 'CP'
+                  },
+                  dissolution: {
+                    custodialOffice: {
+                      deliveryAddress: {
+                        addressCity: 'North Saanich',
+                        addressCountry: 'CA',
+                        addressRegion: 'BC',
+                        deliveryInstructions: '',
+                        postalCode: 'V8L 5V4',
+                        streetAddress: '123-1640 Electra Blvd',
+                        streetAddressAdditional: ''
+                      },
+                      mailingAddress: {
+                        addressCity: 'North Saanich',
+                        addressCountry: 'CA',
+                        addressRegion: 'BC',
+                        deliveryInstructions: '',
+                        postalCode: 'V8L 5V4',
+                        streetAddress: '123-1640 Electra Blvd',
+                        streetAddressAdditional: ''
+                      }
+                    },
+                    dissolutionType: 'voluntary'
+                  },
+                  header: {
+                    affectedFilings: [],
+                    availableOnPaperOnly: false,
+                    colinIds: [],
+                    comments: [],
+                    date: '2021-11-03T20:50:51.553999+00:00',
+                    deletionLocked: false,
+                    effectiveDate: '2021-11-03T20:50:51.554019+00:00',
+                    filingId: 113176,
+                    inColinOnly: false,
+                    isCorrected: false,
+                    isCorrectionPending: false,
+                    name: 'dissolution',
+                    status: 'DRAFT',
+                    submitter: 'bcsc/sdsqcixfw7czxwu5jzddwkty3p72od6a'
+                  }
+                }
+              }
+            }
+          ]
+        }
+      })))
+
+    // create a Local Vue and install router on it
+    const localVue = createLocalVue()
+    localVue.use(VueRouter)
+    localVue.use(Vuelidate)
+    const router = mockRouter.mock()
+    router.push({ name: 'define-dissolution', query: { id: 'CP1002398' } })
+    wrapper = mount(App, { localVue, store, router, vuetify, stubs: { 'UploadResolution': true } })
+
+    // wait for all queries to complete
+    await flushPromises()
+  })
+
+  afterEach(() => {
+    window.location.assign = assign
+    sinon.restore()
+    wrapper.destroy()
+  })
+
+  it('calculates the correct fees', async () => {
+    expect(wrapper.find(SbcFeeSummary).exists()).toBe(true)
+    const feeText = wrapper.find(SbcFeeSummary).text()
+    expect(feeText).toContain('Voluntary dissolution 20')
+    expect(feeText).toContain('Affidavit 20')
+    expect(feeText).toContain('Special resolution 70')
+    expect(feeText).toContain('Total Fees CAD 110')
+
+    store.state.stateModel.staffPaymentStep.staffPayment.isPriority = true
+    await flushPromises()
+    const feeTextPriority = wrapper.find(SbcFeeSummary).text()
+    expect(feeTextPriority).toContain('Priority Fee 100')
+    expect(feeTextPriority).toContain('Total Fees CAD 210')
+
+    store.state.stateModel.staffPaymentStep.staffPayment.option = StaffPaymentOptions.NO_FEE
+    await flushPromises()
+    const feeTextWaiveFees = wrapper.find(SbcFeeSummary).text()
+    expect(feeTextWaiveFees).toContain('Voluntary dissolution No Fee')
+    expect(feeTextWaiveFees).toContain('Affidavit No Fee')
+    expect(feeTextWaiveFees).toContain('Special resolution No Fee')
+    expect(feeTextWaiveFees).toContain('Total Fees CAD 0')
   })
 })

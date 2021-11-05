@@ -139,7 +139,7 @@ export const stateModel: StateModelIF = {
   },
   validateSteps: false,
   showErrors: false,
-  feePrices: cloneDeep(EmptyFees),
+  feePrices: [cloneDeep(EmptyFees)],
   staffPaymentStep: {
     valid: false,
     staffPayment: {

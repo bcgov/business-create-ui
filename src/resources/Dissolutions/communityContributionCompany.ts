@@ -7,10 +7,10 @@ export const CommunityContributionCompanyDissolutionResource: DissolutionResourc
   entityType: CorpTypeCd.BC_CCC,
   displayName: GetCorpFullDescription(CorpTypeCd.BC_CCC),
   steps: CorpDissolutionSteps,
-  filingData: {
+  filingData: [{
     entityType: CorpTypeCd.BC_CCC,
     filingTypeCode: FilingCodes.DISSOLUTION_VOLUNTARY
-  },
+  }],
   affidavit: {
     affidavitActionText: 'deposit the affidavit in the Company\'s records book.',
     helpSection: {
