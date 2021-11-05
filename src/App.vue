@@ -116,7 +116,7 @@
 
             <v-col cols="12" lg="3">
               <aside>
-                <affix relative-element-selector=".col-lg-9" :offset="{ top: 86, bottom: 12 }">
+                <affix relative-element-selector=".col-lg-9" :offset="{ top: 100, bottom: -100 }">
                   <SbcFeeSummary
                     :filingData="feeFilingData"
                     :payURL="payApiUrl"
