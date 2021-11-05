@@ -736,7 +736,7 @@ export default class App extends Mixins(
     // NB: will throw if API error
     const userInfo = await AuthServices.fetchUserInfo()
 
-    if (!this.isIncorporationFiling) {
+    if (this.isDissolutionFiling) {
       // At the time of incorporation filing, business contact may no be available
       let { contacts, folioNumber } = await AuthServices.fetchAuthInfo(this.getBusinessId)
       if (contacts?.length > 0) {
