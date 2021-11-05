@@ -81,31 +81,20 @@ export default class DateMixin extends Mixins(CommonMixin) {
    * @example "2021-01-01 07:00:00 GMT" -> "Dec 31, 2020"
    * @example "2021-01-01 08:00:00 GMT" -> "Jan 1, 2021"
    */
-  dateToPacificDate (date: Date, long = false): string {
+  dateToPacificDate (date: Date, longMonth = false, showWeekday = false): string {
     // safety check
     if (!isDate(date) || isNaN(date.getTime())) return null
 
-    let dateStr
+    let dateStr = date.toLocaleDateString('en-CA', {
+      timeZone: 'America/Vancouver',
+      weekday: showWeekday ? 'long' : undefined, // Thursday or nothing
+      month: longMonth ? 'long' : 'short', // December or Dec.
+      day: 'numeric', // 31
+      year: 'numeric' // 2020
+    })
 
-    if (long) {
-      dateStr = date.toLocaleDateString('en-CA', {
-        timeZone: 'America/Vancouver',
-        weekday: 'long', // Thursday
-        month: 'long', // December
-        day: 'numeric', // 31
-        year: 'numeric' // 2020
-      })
-    } else {
-      dateStr = date.toLocaleDateString('en-CA', {
-        timeZone: 'America/Vancouver',
-        month: 'short', // Dec.
-        day: 'numeric', // 31
-        year: 'numeric' // 2020
-      })
-
-      // remove period after month
-      dateStr = dateStr.replace('.', '')
-    }
+    // remove period after month
+    dateStr = dateStr.replace('.', '')
 
     return dateStr
   }
@@ -135,13 +124,13 @@ export default class DateMixin extends Mixins(CommonMixin) {
   /**
    * Converts a Date object to a date and time string (Month Day, Year at HH:MM am/pm
    * Pacific time).
-   * @example "2021-01-01 07:00:00 GMT" -> "Dec 31, 2020 at 11:00 pm Pacific time"
-   * @example "2021-01-01 08:00:00 GMT" -> "Jan 1, 2021 at 12:00 pm Pacific time"
+   * @example "2021-01-01 07:00:00 GMT" -> "December 31, 2020 at 11:00 pm Pacific time"
+   * @example "2021-01-01 08:00:00 GMT" -> "January 1, 2021 at 12:00 pm Pacific time"
    */
-  dateToPacificDateTime (date: Date, long = false): string {
+  dateToPacificDateTime (date: Date, showWeekday = false): string {
     if (!isDate(date) || isNaN(date.getTime())) return null
 
-    const dateStr = this.dateToPacificDate(date, long)
+    const dateStr = this.dateToPacificDate(date, true, showWeekday)
     const timeStr = this.dateToPacificTime(date)
 
     return `${dateStr} at ${timeStr} Pacific time`
