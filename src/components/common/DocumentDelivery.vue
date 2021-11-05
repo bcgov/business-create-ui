@@ -12,7 +12,7 @@
       <v-col :cols="3">
         <label class="font-weight-bold" :class="{ 'error-text': invalidSection }">Completing Party</label>
       </v-col>
-      <v-col cols="9" v-if="editableCompletingParty">
+      <v-col cols="9" class="pr-1" v-if="editableCompletingParty">
         <v-text-field
           v-model="optionalEmail"
           id="optionalEmail"
@@ -34,7 +34,7 @@
         <label class="font-weight-bold">Custodian of Records</label>
       </v-col>
       <v-col :cols="9">
-        <v-card-text id="office-email" class="pa-0">{{getCustodianEmail || 'Not entered'}}</v-card-text>
+        <v-card-text id="custodian-email" class="pa-0">{{getCustodianEmail || 'Not entered'}}</v-card-text>
       </v-col>
     </v-row>
   </v-card>

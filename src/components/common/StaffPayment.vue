@@ -127,4 +127,7 @@ export default class StaffPayment extends Vue {
   color: $gray9;
 }
 
+::v-deep #staff-payment-container {
+  padding-left: 1rem;
+}
 </style>

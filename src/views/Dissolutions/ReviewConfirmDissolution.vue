@@ -246,7 +246,7 @@
     </section>
 
     <!-- Staff Payment -->
-    <section id="staff-payment" class="mt-10" v-if="isRoleStaff">
+    <section id="staff-payment-section" class="mt-10" v-if="isRoleStaff">
       <h2>{{getHeaderNumber('staffPayment')}}. Staff Payment</h2>
       <StaffPayment />
     </section>
@@ -506,6 +506,28 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
   #file-name-col {
     margin-top: 2px;
     margin-left: -46px;
+  }
+}
+
+::v-deep #AR-step-4-container, ::v-deep #document-delivery {
+  .row {
+    .col-3 {
+      label {
+        font-size: 1rem;
+        color: $gray9;
+        padding-left: 0.75rem;
+      }
+    }
+
+    .col-9 {
+      padding-left: 0.5rem !important;
+    }
+  }
+}
+
+::v-deep #AR-step-4-container {
+  .container {
+    padding-right: 4px !important;
   }
 }
 </style>

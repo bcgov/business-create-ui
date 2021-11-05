@@ -10,7 +10,9 @@ const documentDeliveryCases = [
     },
     businessContact: {
       email: 'mockCPBusinessContact@email.com'
-    }
+    },
+    optionalEmail: false,
+    custodianEmail: false
   },
   {
     entityType: 'BEN',
@@ -19,7 +21,20 @@ const documentDeliveryCases = [
     },
     businessContact: {
       email: 'BENBusinessContact@email.com'
-    }
+    },
+    optionalEmail: false,
+    custodianEmail: false
+  },
+  {
+    entityType: 'CP',
+    tombstone: {
+      userEmail: 'mockCPCompletingParty@email.com'
+    },
+    businessContact: {
+      email: 'mockCPBusinessContact@email.com'
+    },
+    optionalEmail: true,
+    custodianEmail: true
   }
 ]
 
@@ -59,6 +74,28 @@ for (const mock of documentDeliveryCases) {
       })
       expect(wrapper.find('#completing-party-email').text()).toBe('Not entered')
       expect(wrapper.find('#office-email').text()).toBe('Not entered')
+    })
+
+    it('displays optionalEmail', () => {
+      wrapper = shallowWrapperFactory(DocumentDelivery, {
+        editableCompletingParty: mock.optionalEmail
+      }, {
+        entityType: mock.entityType,
+        tombstone: mock.tombstone,
+        businessContact: mock.businessContact
+      })
+      expect(wrapper.find('#optionalEmail').exists()).toBe(mock.optionalEmail)
+    })
+
+    it('displays showCustodianEmail', () => {
+      wrapper = shallowWrapperFactory(DocumentDelivery, {
+        showCustodianEmail: mock.custodianEmail
+      }, {
+        entityType: mock.entityType,
+        tombstone: mock.tombstone,
+        businessContact: mock.businessContact
+      })
+      expect(wrapper.find('#custodian-email').exists()).toBe(mock.custodianEmail)
     })
   })
 }
