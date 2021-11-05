@@ -299,11 +299,10 @@ export default class App extends Mixins(
     let filingData: Array<FilingDataIF> = []
     if (this.getFilingData) {
       filingData = cloneDeep(this.getFilingData)
-      if (this.getEntityType === CorpTypeCd.COOP && this.getFilingData.length) {
+      if (this.getEntityType === CorpTypeCd.COOP && this.getFilingData.length > 0) {
         // Only set Future Effective and Priority to Special Resolution Fee
-        const filteredFilingData = filingData.filter(x => x.filingTypeCode === FilingCodes.SPECIAL_RESOLUTION)
-        if (filteredFilingData[0]) {
-          const specialResolutionFilingData = filteredFilingData[0]
+        const specialResolutionFilingData = filingData.find(x => x.filingTypeCode === FilingCodes.SPECIAL_RESOLUTION)
+        if (specialResolutionFilingData) {
           specialResolutionFilingData.futureEffective = this.getEffectiveDateTime.isFutureEffective
           specialResolutionFilingData.priority = this.getStaffPaymentStep.staffPayment.isPriority
         }

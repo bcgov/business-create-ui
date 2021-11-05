@@ -16,7 +16,7 @@ export interface TaxesIF {
   gst: number
 }
 
-export const EmptyFees: Array<FeesIF> = [{
+export const EmptyFees: FeesIF = {
   filingFees: null,
   filingType: null,
   filingTypeCode: null,
@@ -29,4 +29,4 @@ export const EmptyFees: Array<FeesIF> = [{
     gst: null
   },
   total: null
-}]
+}
