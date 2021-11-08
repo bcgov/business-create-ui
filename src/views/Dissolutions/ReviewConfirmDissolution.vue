@@ -191,8 +191,8 @@
           :custodianEmail="getCustodianEmail"
           :userEmail="getUserEmail"
           :documentOptionalEmail="getDocumentDelivery.documentOptionalEmail"
-          @update:optionalEmail="onOptionalEmailChanged($event)"
-          @valid="onDocumentDeliveryValid($event)"
+          @update:optionalEmail="setDocumentOptionalEmail($event)"
+          @valid="setDocumentOptionalEmailValidity($event)"
         />
       </div>
     </section>
@@ -433,14 +433,6 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
         certifiedBy: val
       }
     )
-  }
-
-  private onOptionalEmailChanged (optionalEmail: string): void {
-    this.setDocumentOptionalEmail(optionalEmail)
-  }
-
-  private onDocumentDeliveryValid (valid: boolean): void {
-    this.setDocumentOptionalEmailValidity(valid)
   }
 }
 </script>

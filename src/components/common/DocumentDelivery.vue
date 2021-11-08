@@ -79,22 +79,22 @@ export default class DocumentDelivery extends Vue {
   }
 
   @Watch('optionalEmail')
-  private async onOptionalEmailChanged (val: string): Promise<void> {
+  private onOptionalEmailChanged (val: string): void {
     if (this.validateEmailFormat(val)) {
-      await this.emitOptionalEmail()
-      await this.emitValid(true)
+      this.emitOptionalEmail()
+      this.emitValid(true)
     } else {
-      await this.emitValid(false)
+      this.emitValid(false)
     }
   }
 
   @Emit('update:optionalEmail')
-  private async emitOptionalEmail (): Promise<string> {
+  private emitOptionalEmail (): string {
     return this.optionalEmail
   }
 
   @Emit('valid')
-  private async emitValid (valid: boolean): Promise<boolean> {
+  private emitValid (valid: boolean): boolean {
     return valid
   }
 }
