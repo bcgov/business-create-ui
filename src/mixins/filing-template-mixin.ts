@@ -8,7 +8,11 @@ import {
   ActionBindingIF, BusinessContactIF, CertifyIF, CreateRulesIF, EffectiveDateTimeIF, DefineCompanyIF,
   DissolutionFilingIF, IncorporationAgreementIF, IncorporationFilingIF, NameTranslationIF, PeopleAndRoleIF,
   DocIF, ShareStructureIF, CreateMemorandumIF, BusinessIF, DissolutionStatementIF, UploadAffidavitIF,
+<<<<<<< HEAD
   StaffPaymentStepIF, CourtOrderStepIF, CreateResolutionIF, DocumentDeliveryIF
+=======
+  StaffPaymentStepIF, CourtOrderStepIF, CreateResolutionIF, OrgPersonIF
+>>>>>>> Custodian implementation - Tests/Validations wip
 } from '@/interfaces'
 
 // Constants and enums
@@ -53,6 +57,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
 
   // Dissolution
   @Getter getDissolutionStatementStep!: DissolutionStatementIF
+  @Getter getCustodian!: OrgPersonIF
 
   @Action setAffidavit!: ActionBindingIF
   @Action setEntityType!: ActionBindingIF
@@ -82,6 +87,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
 
   // Dissolution
   @Action setDissolutionStatementStepData!: ActionBindingIF
+  @Action setCustodianOfRecords!: ActionBindingIF
 
   /**
    * Constructs a filing body from store data. Used when saving a filing.
@@ -291,9 +297,10 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
           legalName: this.getBusinessLegalName
         },
         dissolution: {
+          affidavitConfirmed: this.getAffidavitStep.validationDetail.validationItemDetails[0]?.valid || false,
           custodialOffice: this.getBusiness.officeAddress,
           dissolutionType: this.getDissolutionType,
-          affidavitConfirmed: this.getAffidavitStep.validationDetail.validationItemDetails[0]?.valid || false
+          parties: [this.getCustodian]
         }
       }
     }
@@ -360,6 +367,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
    * @param draftFiling the filing body to parse
    */
   parseDissolutionDraft (draftFiling: any): void {
+    console.log(draftFiling)
     // Set Business data
     this.setEntityType(draftFiling.business.legalType)
     this.setLegalName(draftFiling.business.legalName)
@@ -374,6 +382,9 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
       valid: !!draftFiling.dissolution?.dissolutionStatementType,
       dissolutionStatementType: draftFiling.dissolution?.dissolutionStatementType
     })
+
+    // // Take the first custodian, as there is only a singular custodian in a dissolution filing.
+    if (draftFiling.dissolution.parties) this.setCustodianOfRecords({ ...draftFiling.dissolution.parties[0] })
 
     const createResolution: CreateResolutionIF = {
       validationDetail: {

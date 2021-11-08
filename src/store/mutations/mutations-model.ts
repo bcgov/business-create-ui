@@ -281,3 +281,7 @@ export const mutateDocumentOptionalEmail = (state: StateIF, documentOptionalEmai
 export const mutateDocumentOptionalEmailValidity = (state: StateIF, validity: boolean) => {
   state.stateModel.documentDelivery.valid = validity
 }
+
+export const mutateCustodianOfRecords = (state: StateIF, custodian: OrgPersonIF) => {
+  state.stateModel.dissolution.custodianOfRecords.custodian = custodian
+}

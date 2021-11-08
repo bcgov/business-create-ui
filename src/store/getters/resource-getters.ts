@@ -92,6 +92,11 @@ export const getDissolutionStatements = (state: StateIF): Array<KeyValueIF> => {
   return state.resourceModel.dissolutionStatements
 }
 
+/** The dissolution custodial records resources. */
+export const getCustodialRecordsResources = (state: StateIF): any => { // TODO: Update IF for custodial resources
+  return state.resourceModel.custodialRecords
+}
+
 /** The dissolution statement options. */
 export const getAffidavitResources = (state: StateIF): AffidavitResourceIF => {
   return state.resourceModel.affidavit

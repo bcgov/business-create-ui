@@ -58,7 +58,7 @@
                       label="First Name"
                       id="person__first-name"
                       v-model="orgPerson.officer.firstName"
-                      :rules="firstNameRules"
+                      :rules="OfficerRules.firstNameRules"
                       :readonly="isCompletingParty && !isRoleStaff"
                     />
                     <v-text-field
@@ -67,7 +67,7 @@
                       label="Middle Name"
                       id="person__middle-name"
                       v-model="orgPerson.officer.middleName"
-                      :rules="middleNameRules"
+                      :rules="OfficerRules.middleNameRules"
                       :readonly="isCompletingParty && !isRoleStaff"
                     />
                     <v-text-field
@@ -76,7 +76,7 @@
                       label="Last Name"
                       id="person__last-name"
                       v-model="orgPerson.officer.lastName"
-                      :rules="lastNameRules"
+                      :rules="OfficerRules.lastNameRules"
                       :readonly="isCompletingParty && !isRoleStaff"
                     />
                   </div>
@@ -92,7 +92,7 @@
                       label="Full Legal Corporation or Firm Name"
                       id="firm-name"
                       v-model="orgPerson.officer.organizationName"
-                      :rules="orgNameRules"
+                      :rules="OfficerRules.orgNameRules"
                     />
                   </div>
                 </template>
@@ -204,22 +204,13 @@
 import { Component, Prop, Emit, Mixins } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 import { v4 as uuidv4 } from 'uuid'
-
-// Interfaces
 import { OrgPersonIF, BaseAddressType, FormIF, AddressIF, ConfirmDialogType, RolesIF } from '@/interfaces'
-
-// Components
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
 import { ConfirmDialog } from '@/components/dialogs'
-
-// Mixins
 import { EntityFilterMixin, CommonMixin } from '@/mixins'
-
-// Enums
-import { CorpTypeCd, RoleTypes, IncorporatorTypes } from '@/enums'
-
-// Schemas
+import { CorpTypeCd, RoleTypes, PartyTypes } from '@/enums'
 import { PersonAddressSchema } from '@/schemas'
+import { OfficerRules } from '@/rules'
 
 @Component({
   components: {
@@ -265,35 +256,10 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
   // Enums for template
   readonly CorpTypeCd = CorpTypeCd
   readonly RoleTypes = RoleTypes
-  readonly IncorporatorTypes = IncorporatorTypes
+  readonly PartyTypes = PartyTypes
 
   // Rules
-  private readonly firstNameRules: Array<Function> = [
-    v => !!v || 'A first name is required',
-    v => !/^\s/g.test(v) || 'Invalid spaces', // leading spaces
-    v => !/\s$/g.test(v) || 'Invalid spaces', // trailing spaces
-    v => (v?.length <= 30) || 'Cannot exceed 30 characters' // maximum character count
-  ]
-
-  private readonly middleNameRules: Array<Function> = [
-    v => !/^\s/g.test(v) || 'Invalid spaces', // leading spaces
-    v => !/\s$/g.test(v) || 'Invalid spaces', // trailing spaces
-    v => (!v || v.length <= 30) || 'Cannot exceed 30 characters' // maximum character count
-  ]
-
-  private readonly lastNameRules: Array<Function> = [
-    v => !!v || 'A last name is required',
-    v => !/^\s/g.test(v) || 'Invalid spaces', // leading spaces
-    v => !/\s$/g.test(v) || 'Invalid spaces', // trailing spaces
-    v => (v?.length <= 30) || 'Cannot exceed 30 characters' // maximum character count
-  ]
-
-  private readonly orgNameRules: Array<Function> = [
-    v => !!v || 'A firm name is required',
-    v => !/^\s/g.test(v) || 'Invalid spaces', // leading spaces
-    v => !/\s$/g.test(v) || 'Invalid spaces', // trailing spaces
-    v => (v?.length <= 155) || 'Cannot exceed 155 characters' // maximum character count
-  ]
+  readonly OfficerRules = OfficerRules
 
   /** The validation rules for the roles. */
   private get roleRules (): Array<Function> {
@@ -317,12 +283,12 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
 
   /** Whether current data object is a person. */
   private get isPerson (): boolean {
-    return (this.orgPerson.officer?.partyType === IncorporatorTypes.PERSON)
+    return (this.orgPerson.officer?.partyType === PartyTypes.PERSON)
   }
 
   /** Whether current data object is an organization (corporation/firm). */
   private get isOrg (): boolean {
-    return (this.orgPerson.officer?.partyType === IncorporatorTypes.ORGANIZATION)
+    return (this.orgPerson.officer?.partyType === PartyTypes.ORGANIZATION)
   }
 
   /** Whether the Completing Party role should be shown. */

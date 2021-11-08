@@ -1,5 +1,5 @@
 export interface HelpSectionIF {
-  header: string
+  header?: string
   icon?: string
   iconColor?: string
   helpText?: Array<string>

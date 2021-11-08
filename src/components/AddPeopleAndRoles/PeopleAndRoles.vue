@@ -72,7 +72,7 @@
         color="primary"
         class="btn-outlined-primary"
         :disabled="showOrgPersonForm"
-        @click="addOrgPerson(RoleTypes.COMPLETING_PARTY, IncorporatorTypes.PERSON)"
+        @click="addOrgPerson(RoleTypes.COMPLETING_PARTY, PartyTypes.PERSON)"
       >
         <v-icon>mdi-account-plus-outline</v-icon>
         <span>Start by Adding the Completing Party</span>
@@ -86,7 +86,7 @@
         color="primary"
         class="btn-outlined-primary"
         :disabled="showOrgPersonForm"
-        @click="addOrgPerson(null, IncorporatorTypes.PERSON)"
+        @click="addOrgPerson(null, PartyTypes.PERSON)"
       >
         <v-icon>mdi-account-plus</v-icon>
         <span>Add a Person</span>
@@ -98,7 +98,7 @@
         class="btn-outlined-primary ml-2"
         :disabled="showOrgPersonForm"
         v-if="getPeopleAndRolesResource.addOrganization"
-        @click="addOrgPerson(RoleTypes.INCORPORATOR, IncorporatorTypes.ORGANIZATION)"
+        @click="addOrgPerson(RoleTypes.INCORPORATOR, PartyTypes.ORGANIZATION)"
       >
         <v-icon>mdi-domain-plus</v-icon>
         <span v-if="entityFilter(CorpTypeCd.COOP)">Add Organization</span>
@@ -111,7 +111,7 @@
         color="primary"
         class="btn-outlined-primary ml-2"
         :disabled="showOrgPersonForm"
-        @click="addOrgPerson(RoleTypes.COMPLETING_PARTY, IncorporatorTypes.PERSON)"
+        @click="addOrgPerson(RoleTypes.COMPLETING_PARTY, PartyTypes.PERSON)"
       >
         <v-icon>mdi-account-plus-outline</v-icon>
         <span>Add the Completing Party</span>
@@ -157,7 +157,7 @@ import { ActionBindingIF, AddressIF, EmptyAddress, EmptyOrgPerson, OrgPersonIF, 
 import { EntityFilterMixin } from '@/mixins'
 
 // Enums
-import { CorpTypeCd, IncorporatorTypes, NumWord, RoleTypes, Rules } from '@/enums'
+import { CorpTypeCd, PartyTypes, NumWord, RoleTypes, Rules } from '@/enums'
 
 // Components
 import OrgPerson from './OrgPerson.vue'
@@ -189,7 +189,7 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
   // Enums for template
   readonly CorpTypeCd = CorpTypeCd
   readonly RoleTypes = RoleTypes
-  readonly IncorporatorTypes = IncorporatorTypes
+  readonly PartyTypes = PartyTypes
   readonly NumWord = NumWord
   readonly Rules = Rules
 
@@ -279,7 +279,7 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
     this.setAddPeopleAndRoleStepValidity(this.hasValidRoles())
   }
 
-  private addOrgPerson (roleType: RoleTypes, partyType: IncorporatorTypes): void {
+  private addOrgPerson (roleType: RoleTypes, partyType: PartyTypes): void {
     // first assign empty org/person object
     this.currentOrgPerson = cloneDeep(EmptyOrgPerson)
 
@@ -298,7 +298,7 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
     this.currentOrgPerson.officer.partyType = partyType
 
     // pre-populate Completing Party's name and mailing address
-    if (roleType === RoleTypes.COMPLETING_PARTY && partyType === IncorporatorTypes.PERSON) {
+    if (roleType === RoleTypes.COMPLETING_PARTY && partyType === PartyTypes.PERSON) {
       this.currentOrgPerson.officer.firstName = this.getUserFirstName || ''
       this.currentOrgPerson.officer.lastName = this.getUserLastName || ''
       this.currentOrgPerson.mailingAddress = this.getUserAddress || { ...EmptyAddress }

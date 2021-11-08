@@ -128,7 +128,7 @@ import { CommonMixin, EntityFilterMixin } from '@/mixins'
 
 // Interfaces & enums
 import { OrgPersonIF } from '@/interfaces'
-import { IncorporatorTypes, RouteNames } from '@/enums'
+import { PartyTypes, RouteNames } from '@/enums'
 
 @Component({
   components: {
@@ -156,12 +156,12 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin, EntityFilter
 
   /** Returns true officer is a person. */
   private isPerson (orgPerson: any): boolean {
-    return (orgPerson.officer?.partyType === IncorporatorTypes.PERSON)
+    return (orgPerson.officer?.partyType === PartyTypes.PERSON)
   }
 
   /** Returns true if officer is an organization (corporation/firm). */
   private isOrg (orgPerson: any): boolean {
-    return (orgPerson.officer?.partyType === IncorporatorTypes.ORGANIZATION)
+    return (orgPerson.officer?.partyType === PartyTypes.ORGANIZATION)
   }
 
   /**

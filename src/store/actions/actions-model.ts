@@ -249,3 +249,7 @@ export const setDocumentOptionalEmail: ActionIF = ({ commit }, documentOptionalE
 export const setDocumentOptionalEmailValidity: ActionIF = ({ commit }, validity): void => {
   commit('mutateDocumentOptionalEmailValidity', validity)
 }
+
+export const setCustodianOfRecords: ActionIF = ({ commit }, custodian: OrgPersonIF): void => {
+  commit('mutateCustodianOfRecords', custodian)
+}

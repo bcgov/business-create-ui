@@ -23,7 +23,7 @@ import {
   StateIF,
   TombstoneIF,
   UploadAffidavitIF,
-  CreateResolutionIF
+  CreateResolutionIF, OrgPersonIF
 } from '@/interfaces'
 import { getMaxStep } from './resource-getters'
 
@@ -458,9 +458,14 @@ export const getCourtOrderStep = (state: StateIF): CourtOrderStepIF => {
 
 /** The custodian email. */
 export const getCustodianEmail = (state: StateIF): string => {
-  return 'hardcoded.custodian@email.com' // TODO: Change this once custodian details are available in state
+  return getCustodian(state)?.officer.email || '(Not entered)'
 }
 
 export const getDocumentDelivery = (state: StateIF): DocumentDeliveryIF => {
   return state.stateModel.documentDelivery
+}
+
+/** The custodian of records. */
+export const getCustodian = (state: StateIF): OrgPersonIF => {
+  return state.stateModel.dissolution.custodianOfRecords.custodian
 }

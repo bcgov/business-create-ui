@@ -36,6 +36,7 @@ const dissolutionResourceModel: DissolutionResourceIF = {
   displayName: '',
   steps: [],
   filingData: null,
+<<<<<<< HEAD
   affidavit: null,
   reviewAndConfirm: {
     completingPartyStatement: {
@@ -45,6 +46,10 @@ const dissolutionResourceModel: DissolutionResourceIF = {
       entityDisplay: null
     }
   }
+=======
+  custodialRecords: null,
+  affidavit: null
+>>>>>>> Custodian implementation - Tests/Validations wip
 }
 
 export const resourceModel: any = {

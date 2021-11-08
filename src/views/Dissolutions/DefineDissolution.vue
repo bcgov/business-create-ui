@@ -30,9 +30,21 @@
 
     <section class="mt-10">
       <header id="liquidator-or-custodian">
-        <h2>{{isTypeCoop ? 3 : 2 }}. Liquidator or Other Custodian of Records</h2>
+        <h2>{{isTypeCoop ? 3 : 2 }}. {{ getCustodialRecordsResources.custodianTitle }}</h2>
+        <p class="mt-4">{{getCustodialRecordsResources.sectionSubtitle}}</p>
       </header>
-      <!-- Component goes here -->
+
+      <!-- Help Section -->
+      <HelpSection
+        :helpSection="getCustodialRecordsResources.helpSection"
+        :helpTitle="getCustodialRecordsResources.custodianTitle"
+      />
+
+      <CustodianOfRecords
+        class="mt-5"
+        :showErrors="getShowErrors"
+        :inputAddresses="null"
+      />
     </section>
 
     <section class="mt-10">
@@ -48,19 +60,29 @@
 // Libraries
 import { Component, Mixins, Vue } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
-import { AssociationDetails, DissolutionStatement } from '@/components/DefineDissolution'
+import { HelpSection } from '@/components/common'
+import {
+  AssociationDetails,
+  CareAndCustodySelect,
+  DissolutionStatement,
+  CustodianOfRecords
+} from '@/components/DefineDissolution'
 import { ActionBindingIF, DissolutionStatementIF } from '@/interfaces'
 import { EntityFilterMixin, EnumMixin } from '@/mixins'
 
 @Component({
   components: {
     AssociationDetails,
-    DissolutionStatement
+    CareAndCustodySelect,
+    DissolutionStatement,
+    HelpSection,
+    CustodianOfRecords
   }
 })
 export default class DefineDissolution extends Mixins(EntityFilterMixin, EnumMixin) {
   // Global getters
   @Getter getBusinessLegalName!: string
+  @Getter getCustodialRecordsResources!: any // TODO: Update to Custodial Resource IF
   @Getter getDissolutionStatementStep!: DissolutionStatementIF
   @Getter getShowErrors!: boolean
   @Getter isTypeCoop: boolean

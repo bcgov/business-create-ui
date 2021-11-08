@@ -45,6 +45,7 @@ export interface DissolutionResourceIF {
   displayName: string
   steps: Array<StepIF>
   filingData: Array<FilingDataIF>
+  custodialRecords: any, // TODO: Fill out IF when complete
   dissolutionStatements?: Array<KeyValueIF>
   affidavit: AffidavitResourceIF
   reviewAndConfirm: {
