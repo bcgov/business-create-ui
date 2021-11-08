@@ -303,16 +303,23 @@ export default class App extends Mixins(
         // Only set Future Effective and Priority to Special Resolution Fee
         const specialResolutionFilingData = filingData.find(x => x.filingTypeCode === FilingCodes.SPECIAL_RESOLUTION)
         if (specialResolutionFilingData) {
-          specialResolutionFilingData.futureEffective = this.getEffectiveDateTime.isFutureEffective
-          specialResolutionFilingData.priority = this.getStaffPaymentStep.staffPayment.isPriority
+          if (this.getStaffPaymentStep.staffPayment.option === StaffPaymentOptions.NO_FEE) {
+            filingData.forEach(x => {
+              x.waiveFees = true
+            })
+          } else {
+            specialResolutionFilingData.futureEffective = this.getEffectiveDateTime.isFutureEffective
+            specialResolutionFilingData.priority = this.getStaffPaymentStep.staffPayment.isPriority
+          }
         }
-        filingData.forEach(x => {
-          x.waiveFees = (this.getStaffPaymentStep.staffPayment.option === StaffPaymentOptions.NO_FEE)
-        })
       } else if (this.getFilingData[0]) {
-        filingData[0].futureEffective = this.getEffectiveDateTime.isFutureEffective
-        filingData[0].priority = this.getStaffPaymentStep.staffPayment.isPriority
-        filingData[0].waiveFees = (this.getStaffPaymentStep.staffPayment.option === StaffPaymentOptions.NO_FEE)
+        // Avoid waiveFee with priority or futureEffective in the same request
+        if (this.getStaffPaymentStep.staffPayment.option === StaffPaymentOptions.NO_FEE) {
+          filingData[0].waiveFees = true
+        } else {
+          filingData[0].futureEffective = this.getEffectiveDateTime.isFutureEffective
+          filingData[0].priority = this.getStaffPaymentStep.staffPayment.isPriority
+        }
       }
     }
     return filingData
