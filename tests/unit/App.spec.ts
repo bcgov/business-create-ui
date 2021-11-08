@@ -636,6 +636,9 @@ describe('Dissolution BEN - External User', () => {
     delete window.location
     window.location = { assign: jest.fn() } as any
 
+    // Could not solve affix warning, then suppressing
+    jest.spyOn(console, 'error').mockImplementation(() => {})
+
     store.state.stateModel.effectiveDateTime.isFutureEffective = false
     store.state.stateModel.staffPaymentStep.staffPayment.isPriority = false
     await flushPromises()
@@ -678,6 +681,24 @@ describe('Dissolution BEN - External User', () => {
       }
     }))
 
+    const feesBenBcincPromise = new Promise((resolve) => resolve({
+      data:
+      {
+        filingFees: 350.0,
+        filingType: 'Incorporation',
+        filingTypeCode: 'BCINC',
+        futureEffectiveFees: 0,
+        priorityFees: 0,
+        processingFees: 0,
+        serviceFees: 1.5,
+        tax: {
+          'gst': 0,
+          'pst': 0
+        },
+        total: 351.5
+      }
+    }))
+
     // GET filing fees from SbcFeeSummary component
     sbcFeeSummaryGet.withArgs('fees/BEN/DIS_VOL')
       .returns(feesPromise)
@@ -695,6 +716,10 @@ describe('Dissolution BEN - External User', () => {
     // GET filing fees with future effective flag
     get.withArgs('fees/BEN/DIS_VOL?futureEffective=true')
       .returns(feesFutureEffectivePromise)
+
+    // GET filing fees from SbcFeeSummary component
+    sbcFeeSummaryGet.withArgs('fees/BEN/BCINC')
+      .returns(feesBenBcincPromise)
 
     // GET current user's info
     get.withArgs('users/@me')
@@ -829,6 +854,7 @@ describe('Dissolution BEN - External User', () => {
     const localVue = createLocalVue()
     localVue.use(VueRouter)
     localVue.use(Vuelidate)
+    localVue.filter('currency', (x) => x)
     const router = mockRouter.mock()
     router.push({ name: 'define-dissolution', query: { id: 'BC0870803' } })
     wrapper = mount(App, { localVue, store, router, vuetify })
@@ -878,6 +904,9 @@ describe('Dissolution BEN - Staff User', () => {
     // mock the window.location.assign function
     delete window.location
     window.location = { assign: jest.fn() } as any
+
+    // Could not solve affix warning, then suppressing
+    jest.spyOn(console, 'error').mockImplementation(() => {})
 
     store.state.stateModel.effectiveDateTime.isFutureEffective = false
     store.state.stateModel.staffPaymentStep.staffPayment.isPriority = false
@@ -1072,6 +1101,7 @@ describe('Dissolution BEN - Staff User', () => {
     const localVue = createLocalVue()
     localVue.use(VueRouter)
     localVue.use(Vuelidate)
+    localVue.filter('currency', (x) => x)
     const router = mockRouter.mock()
     router.push({ name: 'define-dissolution', query: { id: 'BC0870803' } })
     wrapper = mount(App, { localVue, store, router, vuetify })
@@ -1114,6 +1144,9 @@ describe('Dissolution COOP - External User', () => {
     delete window.location
     window.location = { assign: jest.fn() } as any
 
+    // Could not solve affix warning, then suppressing
+    jest.spyOn(console, 'error').mockImplementation(() => {})
+
     store.state.stateModel.effectiveDateTime.isFutureEffective = false
     store.state.stateModel.staffPaymentStep.staffPayment.isPriority = false
     await flushPromises()
@@ -1138,6 +1171,42 @@ describe('Dissolution COOP - External User', () => {
       }
     }))
 
+    const voluntaryDissolutionFutureEffectiveFeesPromise = new Promise((resolve) => resolve({
+      data:
+      {
+        filingFees: 20.0,
+        filingType: 'Voluntary dissolution',
+        filingTypeCode: 'DIS_VOL',
+        futureEffectiveFees: 100.0,
+        priorityFees: 0,
+        processingFees: 0,
+        serviceFees: 0,
+        tax: {
+          'gst': 0,
+          'pst': 0
+        },
+        total: 120.0
+      }
+    }))
+
+    const voluntaryDissolutionWaiveFeesPromise = new Promise((resolve) => resolve({
+      data:
+      {
+        filingFees: 0,
+        filingType: 'Voluntary dissolution',
+        filingTypeCode: 'DIS_VOL',
+        futureEffectiveFees: 0,
+        priorityFees: 0,
+        processingFees: 0,
+        serviceFees: 0,
+        tax: {
+          'gst': 0,
+          'pst': 0
+        },
+        total: 0
+      }
+    }))
+
     const affidavitFeesPromise = new Promise((resolve) => resolve({
       data:
       {
@@ -1153,6 +1222,42 @@ describe('Dissolution COOP - External User', () => {
           pst: 0
         },
         total: 20.0
+      }
+    }))
+
+    const affidavitFutureEffectiveFeesPromise = new Promise((resolve) => resolve({
+      data:
+      {
+        filingFees: 20.0,
+        filingType: 'Affidavit',
+        filingTypeCode: 'AFDVT',
+        futureEffectiveFees: 100.0,
+        priorityFees: 0,
+        processingFees: 0,
+        serviceFees: 0,
+        tax: {
+          gst: 0,
+          pst: 0
+        },
+        total: 120.0
+      }
+    }))
+
+    const affidavitWaiveFeesPromise = new Promise((resolve) => resolve({
+      data:
+      {
+        filingFees: 0,
+        filingType: 'Affidavit',
+        filingTypeCode: 'AFDVT',
+        futureEffectiveFees: 0,
+        priorityFees: 0,
+        processingFees: 0,
+        serviceFees: 0,
+        tax: {
+          gst: 0,
+          pst: 0
+        },
+        total: 0
       }
     }))
 
@@ -1174,17 +1279,81 @@ describe('Dissolution COOP - External User', () => {
       }
     }))
 
+    const specialResolutionFutureEffectiveFeesPromise = new Promise((resolve) => resolve({
+      data:
+      {
+        filingFees: 70.0,
+        filingType: 'Special resolution',
+        filingTypeCode: 'SPRLN',
+        futureEffectiveFees: 100.0,
+        priorityFees: 0,
+        processingFees: 0,
+        serviceFees: 0,
+        tax: {
+          gst: 0,
+          pst: 0
+        },
+        total: 170.0
+      }
+    }))
+
+    const specialResolutionWaiveFeesPromise = new Promise((resolve) => resolve({
+      data:
+      {
+        filingFees: 0,
+        filingType: 'Special resolution',
+        filingTypeCode: 'SPRLN',
+        futureEffectiveFees: 0,
+        priorityFees: 0,
+        processingFees: 0,
+        serviceFees: 0,
+        tax: {
+          gst: 0,
+          pst: 0
+        },
+        total: 0
+      }
+    }))
+
     // GET filing voluntary dissolution fees from SbcFeeSummary component
     sbcFeeSummaryGet.withArgs('fees/CP/DIS_VOL')
       .returns(voluntaryDissolutionFeesPromise)
+
+    // GET filing voluntary dissolution fees from SbcFeeSummary component
+    sbcFeeSummaryGet.withArgs('fees/BEN/DIS_VOL')
+      .returns(voluntaryDissolutionFeesPromise)
+
+    // GET filing voluntary dissolution futurefees from SbcFeeSummary component
+    sbcFeeSummaryGet.withArgs('fees/CP/DIS_VOL?futureEffective=true')
+      .returns(voluntaryDissolutionFutureEffectiveFeesPromise)
+
+    // GET filing voluntary dissolution waive fees
+    sbcFeeSummaryGet.withArgs('fees/CP/DIS_VOL?waiveFees=true')
+      .returns(voluntaryDissolutionWaiveFeesPromise)
 
     // GET filing Special resolution fees from SbcFeeSummary component
     sbcFeeSummaryGet.withArgs('fees/CP/SPRLN')
       .returns(specialResolutionFeesPromise)
 
+    // GET filing Special resolution future effective fees from SbcFeeSummary component
+    sbcFeeSummaryGet.withArgs('fees/CP/SPRLN?futureEffective=true')
+      .returns(specialResolutionFutureEffectiveFeesPromise)
+
+    // GET filing Special resolution waive fees
+    sbcFeeSummaryGet.withArgs('fees/CP/SPRLN?waiveFees=true')
+      .returns(specialResolutionWaiveFeesPromise)
+
     // GET filing Affidavit fees from SbcFeeSummary component
     sbcFeeSummaryGet.withArgs('fees/CP/AFDVT')
       .returns(affidavitFeesPromise)
+
+    // GET filing Affidavit future effective fees from SbcFeeSummary component
+    sbcFeeSummaryGet.withArgs('fees/CP/AFDVT?futureEffective=true')
+      .returns(affidavitFutureEffectiveFeesPromise)
+
+    // GET filing Affidavit waive fees
+    sbcFeeSummaryGet.withArgs('fees/CP/AFDVT?waiveFees=true')
+      .returns(affidavitWaiveFeesPromise)
 
     const get = sinon.stub(axios, 'get')
 
@@ -1192,13 +1361,41 @@ describe('Dissolution COOP - External User', () => {
     get.withArgs('fees/CP/DIS_VOL')
       .returns(voluntaryDissolutionFeesPromise)
 
+    // GET filing voluntary dissolution fees
+    get.withArgs('fees/BEN/DIS_VOL')
+      .returns(voluntaryDissolutionFeesPromise)
+
+    // GET filing voluntary dissolution fees
+    get.withArgs('fees/CP/DIS_VOL?futureEffective=true')
+      .returns(voluntaryDissolutionFutureEffectiveFeesPromise)
+
+    // GET filing voluntary dissolution waive fees
+    get.withArgs('fees/CP/DIS_VOL?waiveFees=true')
+      .returns(voluntaryDissolutionWaiveFeesPromise)
+
     // GET filing Special resolution fees
     get.withArgs('fees/CP/SPRLN')
       .returns(specialResolutionFeesPromise)
 
+    // GET filing Special resolution fees
+    get.withArgs('fees/CP/SPRLN?futureEffective=true')
+      .returns(specialResolutionFutureEffectiveFeesPromise)
+
+    // GET filing Special resolution waive fees
+    get.withArgs('fees/CP/SPRLN?waiveFees=true')
+      .returns(specialResolutionWaiveFeesPromise)
+
     // GET filing Affidavit fees
     get.withArgs('fees/CP/AFDVT')
       .returns(affidavitFeesPromise)
+
+    // GET filing Affidavit fees
+    get.withArgs('fees/CP/AFDVT?futureEffective=true')
+      .returns(affidavitFutureEffectiveFeesPromise)
+
+    // GET filing Affidavit waive fees
+    get.withArgs('fees/CP/AFDVT?waiveFees=true')
+      .returns(affidavitWaiveFeesPromise)
 
     // GET current user's info
     get.withArgs('users/@me')
@@ -1252,7 +1449,7 @@ describe('Dissolution COOP - External User', () => {
           contacts: [
             {
               email: 'andre.pestana@aot-technologies.com',
-              phone: '',
+              phone: '(123) 1234567',
               phoneExtension: ''
             }
           ],
@@ -1336,6 +1533,7 @@ describe('Dissolution COOP - External User', () => {
     const localVue = createLocalVue()
     localVue.use(VueRouter)
     localVue.use(Vuelidate)
+    localVue.filter('currency', (x) => x)
     const router = mockRouter.mock()
     router.push({ name: 'define-dissolution', query: { id: 'CP1002398' } })
     wrapper = mount(App, { localVue, store, router, vuetify, stubs: { 'UploadResolution': true } })
@@ -1373,6 +1571,9 @@ describe('Dissolution COOP - Staff User', () => {
     // mock the window.location.assign function
     delete window.location
     window.location = { assign: jest.fn() } as any
+
+    // Could not solve affix warning, then suppressing
+    jest.spyOn(console, 'error').mockImplementation(() => {})
 
     store.state.stateModel.effectiveDateTime.isFutureEffective = false
     store.state.stateModel.staffPaymentStep.staffPayment.isPriority = false
@@ -1412,7 +1613,7 @@ describe('Dissolution COOP - Staff User', () => {
           'gst': 0,
           'pst': 0
         },
-        total: 20.0
+        total: 120.0
       }
     }))
 
@@ -1449,6 +1650,24 @@ describe('Dissolution COOP - Staff User', () => {
           pst: 0
         },
         total: 20.0
+      }
+    }))
+
+    const affidavitFutureEffectiveFeesPromise = new Promise((resolve) => resolve({
+      data:
+      {
+        filingFees: 20.0,
+        filingType: 'Affidavit',
+        filingTypeCode: 'AFDVT',
+        futureEffectiveFees: 100.0,
+        priorityFees: 0,
+        processingFees: 0,
+        serviceFees: 0,
+        tax: {
+          gst: 0,
+          pst: 0
+        },
+        total: 120.0
       }
     }))
 
@@ -1524,6 +1743,24 @@ describe('Dissolution COOP - Staff User', () => {
       }
     }))
 
+    const specialResolutionWithFutureFeesPromise = new Promise((resolve) => resolve({
+      data:
+      {
+        filingFees: 70.0,
+        filingType: 'Special resolution',
+        filingTypeCode: 'SPRLN',
+        futureEffectiveFees: 100.0,
+        priorityFees: 0,
+        processingFees: 0,
+        serviceFees: 0,
+        tax: {
+          gst: 0,
+          pst: 0
+        },
+        total: 170.0
+      }
+    }))
+
     // GET filing voluntary dissolution fees from SbcFeeSummary component
     sbcFeeSummaryGet.withArgs('fees/CP/DIS_VOL')
       .returns(voluntaryDissolutionFeesPromise)
@@ -1566,6 +1803,10 @@ describe('Dissolution COOP - Staff User', () => {
     get.withArgs('fees/CP/DIS_VOL?waiveFees=true')
       .returns(voluntaryDissolutionWaiveFeesPromise)
 
+    // GET filing voluntary dissolution future effective fees
+    get.withArgs('fees/CP/DIS_VOL?futureEffective=true')
+      .returns(voluntaryDissolutionFeesFutureEffectivePromise)
+
     // GET filing Special resolution fees
     get.withArgs('fees/CP/SPRLN')
       .returns(specialResolutionFeesPromise)
@@ -1578,6 +1819,10 @@ describe('Dissolution COOP - Staff User', () => {
     get.withArgs('fees/CP/SPRLN?priority=true')
       .returns(specialResolutionWithPriorityFeesPromise)
 
+    // GET filing Special resolution with future effective fees
+    get.withArgs('fees/CP/SPRLN?futureEffective=true')
+      .returns(specialResolutionWithFutureFeesPromise)
+
     // GET filing Affidavit fees
     get.withArgs('fees/CP/AFDVT')
       .returns(affidavitFeesPromise)
@@ -1585,6 +1830,10 @@ describe('Dissolution COOP - Staff User', () => {
     // GET filing Affidavit waive fees
     get.withArgs('fees/CP/AFDVT?waiveFees=true')
       .returns(affidavitWaiveFeesPromise)
+
+    // GET filing Affidavit waive fees
+    get.withArgs('fees/CP/AFDVT?futureEffective=true')
+      .returns(affidavitFutureEffectiveFeesPromise)
 
     // GET current user's info
     get.withArgs('users/@me')
@@ -1638,7 +1887,7 @@ describe('Dissolution COOP - Staff User', () => {
           contacts: [
             {
               email: 'andre.pestana@aot-technologies.com',
-              phone: '',
+              phone: '(123) 1234567',
               phoneExtension: ''
             }
           ],
@@ -1722,6 +1971,7 @@ describe('Dissolution COOP - Staff User', () => {
     const localVue = createLocalVue()
     localVue.use(VueRouter)
     localVue.use(Vuelidate)
+    localVue.filter('currency', (x) => x)
     const router = mockRouter.mock()
     router.push({ name: 'define-dissolution', query: { id: 'CP1002398' } })
     wrapper = mount(App, { localVue, store, router, vuetify, stubs: { 'UploadResolution': true } })
