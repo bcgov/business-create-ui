@@ -65,7 +65,7 @@
 
     <div class="section-container">
       <ContactInfo
-        :businessContact="businessContact"
+        :businessContact="getBusinessContact"
         :disableActions="isSummary"
         :customMsg="contactInfoMsg"
         editLabel="Change"
@@ -116,17 +116,15 @@ export default class AssociationDetails extends Mixins(CommonMixin, EntityFilter
   @Getter getAccountFolioNumber!: string
   @Getter getBusinessId!: string
   @Getter getBusiness!: BusinessIF
+  @Getter getBusinessContact!: BusinessContactIF
   @Getter getCompanyDisplayName!: string
   @Getter getCooperativeType!: CoopType
   @Getter getBusinessLegalName!: string
-  @Getter getUserEmail!: string
-  @Getter getUserPhone!: string
   @Getter isPremiumAccount!: boolean
   @Getter isTypeCoop!: boolean
 
   // Global setters
-  @Action setUserEmail!: ActionBindingIF
-  @Action setUserPhone: ActionBindingIF
+  @Action setBusinessContact!: ActionBindingIF
 
   private contactInfoMsg = `Registered Office Contact Information is required for dissolution documents delivery.
   Any changes made will be applied immediately.`
@@ -141,14 +139,6 @@ export default class AssociationDetails extends Mixins(CommonMixin, EntityFilter
     return `${this.getCorpTypeDescription(this.getEntityType)}`
   }
 
-  /** The business contact info. */
-  private get businessContact (): BusinessContactIF {
-    return {
-      email: this.getUserEmail,
-      phone: this.getUserPhone
-    }
-  }
-
   /** Whether the address object is empty. */
   private isEmptyAddress (address: AddressIF): boolean {
     return isEmpty(address)
@@ -157,8 +147,7 @@ export default class AssociationDetails extends Mixins(CommonMixin, EntityFilter
   /** Event handler for contact information changes. */
   private async onContactInfoChange (event: BusinessContactIF): Promise<void> {
     await AuthServices.updateContactInfo(this.getBusinessId, event).then(response => {
-      this.setUserEmail(response.email)
-      this.setUserPhone(response.phone)
+      this.setBusinessContact(response)
     }).catch(error => {
       this.$root.$emit('save-error-event', error)
     })

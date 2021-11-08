@@ -80,6 +80,56 @@ for (const test of reviewConfirmTestCases) {
       expect(wrapper.find('#resolution-summary').exists()).toBe(true)
     })
 
+    it('displays Documents Delivery section', () => {
+      wrapper = shallowWrapperFactory(
+        ReviewConfirmDissolution,
+        null,
+        { entityType: test.entityType },
+        null,
+        DissolutionResources)
+
+      expect(wrapper.find('#document-delivery-section').exists()).toBe(true)
+    })
+
+    it('displays Certify section', () => {
+      wrapper = shallowWrapperFactory(
+        ReviewConfirmDissolution,
+        null,
+        { entityType: test.entityType },
+        null,
+        DissolutionResources)
+
+      expect(wrapper.find('#certify-section').exists()).toBe(true)
+    })
+
+    it('displays Court Order and Plan of Arrangement section only for staff', () => {
+      wrapper = shallowWrapperFactory(
+        ReviewConfirmDissolution,
+        null,
+        {
+          entityType: test.entityType,
+          tombstone: { authRoles: test.isStaff ? ['staff'] : [] }
+        },
+        null,
+        DissolutionResources)
+
+      expect(wrapper.find('#poa-plan-arrangement-section').exists()).toBe(test.isStaff)
+    })
+
+    it('displays Staff Payment section only for staff', () => {
+      wrapper = shallowWrapperFactory(
+        ReviewConfirmDissolution,
+        null,
+        {
+          entityType: test.entityType,
+          tombstone: { authRoles: test.isStaff ? ['staff'] : [] }
+        },
+        null,
+        DissolutionResources)
+
+      expect(wrapper.find('#staff-payment-section').exists()).toBe(test.isStaff)
+    })
+
     // FUTURE: Expand unit testing for validation on step 5. Include routing to appropriate steps from error links.
   })
 }

@@ -40,6 +40,11 @@ export const stateModel: StateModelIF = {
       }
     }
   },
+  businessContact: {
+    email: '',
+    confirmEmail: '',
+    phone: ''
+  },
   dissolution: {
     dissolutionType: null,
     dissolutionStatementStep: {
@@ -71,6 +76,10 @@ export const stateModel: StateModelIF = {
     valid: false,
     certifiedBy: ''
   },
+  documentDelivery: {
+    documentOptionalEmail: '',
+    valid: true
+  },
   tempId: '',
   entityType: null,
   currentStep: 1,
@@ -83,11 +92,6 @@ export const stateModel: StateModelIF = {
   defineCompanyStep: {
     valid: false,
     cooperativeType: null,
-    businessContact: {
-      email: '',
-      confirmEmail: '',
-      phone: ''
-    },
     officeAddresses: {},
     folioNumber: null
   },

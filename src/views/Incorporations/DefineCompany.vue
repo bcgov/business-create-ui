@@ -88,7 +88,7 @@
       </header>
       <div :class="{ 'invalid-section': getShowErrors && !businessContactFormValid }">
         <BusinessContactInfo
-          :initialValue="getDefineCompanyStep.businessContact"
+          :initialValue="getBusinessContact"
           :isEditing="true"
           :showErrors="getShowErrors"
           @contactInfoChange="onBusinessContactInfoChange($event)"
@@ -157,6 +157,7 @@ export default class DefineCompany extends Mixins(CommonMixin, EntityFilterMixin
   @Getter getDefineCompanyStep!: DefineCompanyIF
   @Getter getValidateSteps!: boolean
   @Getter getShowErrors!: boolean
+  @Getter getBusinessContact!: BusinessContactIF
 
   @Action setEntityType!: ActionBindingIF
   @Action setBusinessContact!: ActionBindingIF

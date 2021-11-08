@@ -9,6 +9,7 @@ import {
   CreateRulesIF,
   DefineCompanyIF,
   DissolutionStatementIF,
+  DocumentDeliveryIF,
   EffectiveDateTimeIF,
   FeesIF,
   IncorporationAgreementIF,
@@ -200,7 +201,7 @@ export const getCooperativeType = (state: StateIF): CoopType => {
 
 /** The Business Contact object. */
 export const getBusinessContact = (state: StateIF): BusinessContactIF => {
-  return getDefineCompanyStep(state).businessContact
+  return state.stateModel.businessContact
 }
 
 /** The Memorandum object. */
@@ -453,4 +454,13 @@ export const getStaffPaymentStep = (state: StateIF): StaffPaymentStepIF => {
 /** The court order step state. */
 export const getCourtOrderStep = (state: StateIF): CourtOrderStepIF => {
   return state.stateModel.courtOrderStep
+}
+
+/** The custodian email. */
+export const getCustodianEmail = (state: StateIF): string => {
+  return 'hardcoded.custodian@email.com' // TODO: Change this once custodian details are available in state
+}
+
+export const getDocumentDelivery = (state: StateIF): DocumentDeliveryIF => {
+  return state.stateModel.documentDelivery
 }

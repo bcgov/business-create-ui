@@ -176,8 +176,25 @@
 
     <!-- Dissolution Documents Delivery -->
     <section id="document-delivery-section" class="mt-10">
-      <h2>{{getHeaderNumber('documentDelivery')}}. Dissolution Documents Delivery</h2>
-      FUTURE
+      <header>
+        <h2>{{getHeaderNumber('documentDelivery')}}. Dissolution Documents Delivery</h2>
+        <p class="mt-1">Copies of the dissolution documents will be sent to the following email addresses listed
+          below.
+        </p>
+      </header>
+      <div :class="{ 'invalid-section': isDocumentDeliveryInvalid }">
+        <DocumentDelivery
+          :editableCompletingParty="isRoleStaff"
+          :showCustodianEmail="true"
+          :invalidSection="isDocumentDeliveryInvalid"
+          :registeredOfficeEmail="getBusinessContact.email"
+          :custodianEmail="getCustodianEmail"
+          :userEmail="getUserEmail"
+          :documentOptionalEmail="getDocumentDelivery.documentOptionalEmail"
+          @update:optionalEmail="setDocumentOptionalEmail($event)"
+          @valid="setDocumentOptionalEmailValidity($event)"
+        />
+      </div>
     </section>
 
     <!-- Folio Number -->
@@ -188,8 +205,27 @@
 
     <!-- Certify -->
     <section id="certify-section" class="mt-10">
-      <h2>{{getHeaderNumber('certify')}}. Certify</h2>
-      FUTURE
+      <header>
+        <h2>{{getHeaderNumber('certify')}}. Certify</h2>
+        <p class="mt-1">Confirm the legal name of the person authorized to complete and submit this application.</p>
+      </header>
+      <div :class="{ 'invalid-section': isCertifyInvalid }">
+        <Certify
+          :currentDate="getCurrentDate"
+          :certifiedBy="getCertifyState.certifiedBy"
+          :entityDisplay="getCompletingPartyStatement.entityDisplay"
+          :isCertified="getCertifyState.valid"
+          :statements="getCompletingPartyStatement.certifyStatements"
+          :message="getCompletingPartyStatement.certifyClause"
+          :isStaff="isRoleStaff"
+          :firstColumn="3"
+          :secondColumn="9"
+          :invalidSection="isCertifyInvalid"
+          :disableEdit="!isRoleStaff"
+          @update:certifiedBy="onCertifiedBy($event)"
+          @update:isCertified="onIsCertified($event)"
+        />
+      </div>
     </section>
 
     <!-- Court Order and Plan of Arrangement -->
@@ -216,7 +252,7 @@
     </section>
 
     <!-- Staff Payment -->
-    <section id="staff-payment" class="mt-10" v-if="isRoleStaff">
+    <section id="staff-payment-section" class="mt-10" v-if="isRoleStaff">
       <h2>{{getHeaderNumber('staffPayment')}}. Staff Payment</h2>
       <StaffPayment />
     </section>
@@ -231,8 +267,8 @@ import { DateMixin } from '@/mixins'
 
 // Components
 import { AssociationDetails, DissolutionStatement } from '@/components/DefineDissolution'
-import { CourtOrderPoa, EffectiveDateTime } from '@/components'
-import { StaffPayment } from '@/components/common'
+import { Certify, CourtOrderPoa, EffectiveDateTime } from '@/components'
+import { DocumentDelivery, StaffPayment } from '@/components/common'
 
 // Enums
 import { RouteNames } from '@/enums'
@@ -240,20 +276,26 @@ import { RouteNames } from '@/enums'
 // Interfaces
 import {
   ActionBindingIF,
-  EffectiveDateTimeIF,
-  FeesIF,
-  DissolutionStatementIF,
-  UploadAffidavitIF,
+  BusinessContactIF,
+  CertifyIF,
+  CertifyStatementIF,
   CourtOrderStepIF,
   CreateResolutionIF,
-  CreateResolutionResourceIF
+  CreateResolutionResourceIF,
+  DissolutionStatementIF,
+  DocumentDeliveryIF,
+  EffectiveDateTimeIF,
+  FeesIF,
+  UploadAffidavitIF
 } from '@/interfaces'
 
 @Component({
   components: {
     AssociationDetails,
+    Certify,
     CourtOrderPoa,
     DissolutionStatement,
+    DocumentDelivery,
     EffectiveDateTime,
     StaffPayment
   }
@@ -261,13 +303,20 @@ import {
 export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
   // Global getters
   @Getter getAffidavitStep!: UploadAffidavitIF
+  @Getter getBusinessContact!: BusinessContactIF
+  @Getter getCertifyState!: CertifyIF
+  @Getter getCompletingPartyStatement!: CertifyStatementIF
   @Getter getCourtOrderStep!: CourtOrderStepIF
+  @Getter getCurrentDate!: string
+  @Getter getCustodianEmail!: string
   @Getter getDissolutionStatementStep!: DissolutionStatementIF
+  @Getter getDocumentDelivery!: DocumentDeliveryIF
   @Getter getEffectiveDateTime!: EffectiveDateTimeIF
   @Getter getCreateResolutionResource!: CreateResolutionResourceIF
   @Getter getCreateResolutionStep!: CreateResolutionIF
   @Getter getFeePrices!: Array<FeesIF>
   @Getter getShowErrors!: boolean
+  @Getter getUserEmail!: string
   @Getter getValidateSteps!: boolean
   @Getter isPremiumAccount!: boolean
   @Getter isRoleStaff!: boolean
@@ -282,6 +331,9 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
   @Action setCourtOrderFileNumber!: ActionBindingIF
   @Action setHasPlanOfArrangement!: ActionBindingIF
   @Action setCourtOrderValidity!: ActionBindingIF
+  @Action setCertifyState!: ActionBindingIF
+  @Action setDocumentOptionalEmail!: ActionBindingIF
+  @Action setDocumentOptionalEmailValidity!: ActionBindingIF
 
   // Enum for template
   readonly RouteNames = RouteNames
@@ -325,6 +377,11 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
     return (this.getValidateSteps && !this.getCourtOrderStep.valid)
   }
 
+  /** Is true when the Document Delivery conditions are not met. */
+  private get isDocumentDeliveryInvalid (): boolean {
+    return (this.getValidateSteps && !this.getDocumentDelivery.valid)
+  }
+
   /** Is true when the Affidavit conditions are not met. */
   private get isAffidavitInvalid (): boolean {
     if (this.isTypeCoop) {
@@ -351,6 +408,31 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
 
   get futureEffectiveDate (): string {
     return this.dateToPacificDateTime(this.getEffectiveDateTime.effectiveDate, true)
+  }
+
+  /** Is true when the certify conditions are not met. */
+  private get isCertifyInvalid () {
+    return this.getValidateSteps && (!this.getCertifyState.certifiedBy || !this.getCertifyState.valid)
+  }
+
+  /** Handler for Valid change event. */
+  private onIsCertified (val: boolean): void {
+    this.setCertifyState(
+      {
+        valid: val,
+        certifiedBy: this.getCertifyState.certifiedBy
+      }
+    )
+  }
+
+  /** Handler for CertifiedBy change event. */
+  private onCertifiedBy (val: string): void {
+    this.setCertifyState(
+      {
+        valid: this.getCertifyState.valid,
+        certifiedBy: val
+      }
+    )
   }
 }
 </script>
@@ -436,6 +518,28 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
   #file-name-col {
     margin-top: 2px;
     margin-left: -46px;
+  }
+}
+
+::v-deep #certify-section, ::v-deep #document-delivery-section {
+  .row {
+    .col-3 {
+      label {
+        font-size: 1rem;
+        color: $gray9;
+        padding-left: 0.75rem;
+      }
+    }
+
+    .col-9 {
+      padding-left: 0.5rem !important;
+    }
+  }
+}
+
+::v-deep #certify-section {
+  .container {
+    padding-right: 4px !important;
   }
 }
 </style>

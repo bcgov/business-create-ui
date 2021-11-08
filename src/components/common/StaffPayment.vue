@@ -126,5 +126,4 @@ export default class StaffPayment extends Vue {
   font-weight: bold;
   color: $gray9;
 }
-
 </style>

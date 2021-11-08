@@ -373,7 +373,7 @@ describe('Numbered company setup', () => {
       .toBeUndefined()
 
     // Validate Contact Info
-    expect(store.state.stateModel.defineCompanyStep.businessContact)
+    expect(store.state.stateModel.businessContact)
       .toBeDefined()
 
     // Validate Share Structure
@@ -543,7 +543,7 @@ describe('App component', () => {
       .toStrictEqual(filingData.incorporationApplication.offices.recordsOffice)
 
     // Validate Contact Info
-    expect(store.state.stateModel.defineCompanyStep.businessContact)
+    expect(store.state.stateModel.businessContact)
       .toStrictEqual(filingData.incorporationApplication.contactPoint)
 
     // Validate People And Roles

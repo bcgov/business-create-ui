@@ -36,7 +36,15 @@ const dissolutionResourceModel: DissolutionResourceIF = {
   displayName: '',
   steps: [],
   filingData: null,
-  affidavit: null
+  affidavit: null,
+  reviewAndConfirm: {
+    completingPartyStatement: {
+      certifyStatementHeader: null,
+      certifyStatements: [],
+      certifyClause: null,
+      entityDisplay: null
+    }
+  }
 }
 
 export const resourceModel: any = {

@@ -1,6 +1,7 @@
 import { CorpTypeCd } from '@/enums'
 import {
   AccountInformationIF,
+  BusinessContactIF,
   BusinessIF,
   CertifyIF,
   CourtOrderStepIF,
@@ -8,6 +9,7 @@ import {
   CreateRulesIF,
   DefineCompanyIF,
   DissolutionStateIF,
+  DocumentDeliveryIF,
   EffectiveDateTimeIF,
   FeesIF,
   IncorporationAgreementIF,
@@ -28,12 +30,14 @@ export interface StateModelIF {
   tombstone: TombstoneIF
   accountInformation: AccountInformationIF
   business: BusinessIF
+  businessContact: BusinessContactIF
   dissolution: DissolutionStateIF
   nameRequest: NameRequestIF
   nameTranslations: NameTranslationIF[]
   currentDate: string
   effectiveDateTime: EffectiveDateTimeIF
   certifyState: CertifyIF
+  documentDelivery: DocumentDeliveryIF
   currentStep: number
   tempId: string
   entityType: CorpTypeCd

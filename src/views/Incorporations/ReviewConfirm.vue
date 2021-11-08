@@ -43,13 +43,15 @@
           below.
         </p>
       </header>
-      <DocumentDelivery />
+      <DocumentDelivery
+          :registeredOfficeEmail="getBusinessContact.email"
+          :userEmail="getUserEmail" />
     </section>
 
     <section class="mt-10">
       <header>
         <h2>Certify</h2>
-        <p class="mt-1">Enter the legal name of the person authorized to complete and submit this application.</p>
+        <p class="mt-1">Confirm the legal name of the person authorized to complete and submit this application.</p>
       </header>
       <div :class="{ 'invalid-section': isCertifyInvalid }">
         <Certify
@@ -83,7 +85,8 @@ import {
 } from '@/interfaces'
 
 // Components
-import { DocumentDelivery, IncorporationDateTime, Summary } from '@/components/ReviewConfirm'
+import { DocumentDelivery } from '@/components/common'
+import { IncorporationDateTime, Summary } from '@/components/ReviewConfirm'
 import { Certify } from '@bcrs-shared-components/certify'
 
 @Component({
@@ -106,6 +109,7 @@ export default class ReviewConfirm extends Mixins() {
   @Getter isRoleStaff!: boolean
   @Getter getCurrentDate!: string
   @Getter getEffectiveDateTime!: EffectiveDateTimeIF
+  @Getter getUserEmail!: string
 
   @Action setEffectiveDateTimeValid!: ActionBindingIF
   @Action setEffectiveDate!: ActionBindingIF

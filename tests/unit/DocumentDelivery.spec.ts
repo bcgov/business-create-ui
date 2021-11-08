@@ -1,5 +1,5 @@
 import { shallowWrapperFactory } from '../jest-wrapper-factory'
-import { DocumentDelivery } from '@/components/ReviewConfirm'
+import { DocumentDelivery } from '@/components/common'
 
 // Test Case Data
 const documentDeliveryCases = [
@@ -8,22 +8,33 @@ const documentDeliveryCases = [
     tombstone: {
       userEmail: 'mockCPCompletingParty@email.com'
     },
-    defineCompanyStep: {
-      businessContact: {
-        email: 'mockCPBusinessContact@email.com'
-      }
-    }
+    businessContact: {
+      email: 'mockCPBusinessContact@email.com'
+    },
+    optionalEmail: false,
+    custodianEmail: false
   },
   {
     entityType: 'BEN',
     tombstone: {
       userEmail: 'BENCompletingParty@email.com'
     },
-    defineCompanyStep: {
-      businessContact: {
-        email: 'BENBusinessContact@email.com'
-      }
-    }
+    businessContact: {
+      email: 'BENBusinessContact@email.com'
+    },
+    optionalEmail: false,
+    custodianEmail: false
+  },
+  {
+    entityType: 'CP',
+    tombstone: {
+      userEmail: 'mockCPCompletingParty@email.com'
+    },
+    businessContact: {
+      email: 'mockCPBusinessContact@email.com'
+    },
+    optionalEmail: true,
+    custodianEmail: true
   }
 ]
 
@@ -32,37 +43,53 @@ for (const mock of documentDeliveryCases) {
     let wrapper: any
 
     it('renders the component properly', () => {
-      wrapper = shallowWrapperFactory(DocumentDelivery, null, { entityType: mock.entityType })
+      wrapper = shallowWrapperFactory(DocumentDelivery)
       expect(wrapper.find('#document-delivery').exists()).toBe(true)
     })
 
     it('displays email labels', () => {
-      wrapper = shallowWrapperFactory(DocumentDelivery, null, { entityType: mock.entityType })
+      wrapper = shallowWrapperFactory(DocumentDelivery)
       expect(wrapper.findAll('label').at(0).text()).toBe('Registered Office')
       expect(wrapper.findAll('label').at(1).text()).toBe('Completing Party')
     })
 
     it('displays email computed values', () => {
-      wrapper = shallowWrapperFactory(DocumentDelivery, null, {
-        entityType: mock.entityType,
-        tombstone: mock.tombstone,
-        defineCompanyStep: mock.defineCompanyStep
+      wrapper = shallowWrapperFactory(DocumentDelivery, {
+        registeredOfficeEmail: mock.businessContact.email,
+        userEmail: mock.tombstone.userEmail
       })
       expect(wrapper.find('#completing-party-email').text()).toBe(mock.tombstone.userEmail)
-      expect(wrapper.find('#office-email').text()).toBe(mock.defineCompanyStep.businessContact.email)
+      expect(wrapper.find('#office-email').text()).toBe(mock.businessContact.email)
     })
 
     it('displays Not Entered text when computed values are absent', () => {
       mock.tombstone.userEmail = ''
-      mock.defineCompanyStep.businessContact.email = ''
+      mock.businessContact.email = ''
 
-      wrapper = shallowWrapperFactory(DocumentDelivery, null, {
-        entityType: mock.entityType,
-        tombstone: mock.tombstone,
-        defineCompanyStep: mock.defineCompanyStep
+      wrapper = shallowWrapperFactory(DocumentDelivery, {
+        registeredOfficeEmail: mock.businessContact.email,
+        userEmail: mock.tombstone.userEmail
       })
       expect(wrapper.find('#completing-party-email').text()).toBe('Not entered')
       expect(wrapper.find('#office-email').text()).toBe('Not entered')
+    })
+
+    it('displays optionalEmail', () => {
+      wrapper = shallowWrapperFactory(DocumentDelivery, {
+        registeredOfficeEmail: mock.businessContact.email,
+        userEmail: mock.tombstone.userEmail,
+        editableCompletingParty: mock.optionalEmail
+      })
+      expect(wrapper.find('#optionalEmail').exists()).toBe(mock.optionalEmail)
+    })
+
+    it('displays showCustodianEmail', () => {
+      wrapper = shallowWrapperFactory(DocumentDelivery, {
+        registeredOfficeEmail: mock.businessContact.email,
+        userEmail: mock.tombstone.userEmail,
+        showCustodianEmail: mock.custodianEmail
+      })
+      expect(wrapper.find('#custodian-email').exists()).toBe(mock.custodianEmail)
     })
   })
 }

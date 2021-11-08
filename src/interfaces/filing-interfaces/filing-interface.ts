@@ -80,7 +80,8 @@ export interface DissolutionFilingIF {
       effectiveDate?: string // Optional and should be set only for future effective filings
       filingId?: number // Optional as this is not required when building a filing - causes an error for new filings
       folioNumber?: string // Optional to the user and only displayed for certain account types
-      isFutureEffective: boolean,
+      isFutureEffective: boolean
+      documentOptionalEmail?: string // Option for staff to provide user email
 
       // staff payment properties:
       routingSlipNumber?: string

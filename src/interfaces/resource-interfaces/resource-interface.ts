@@ -47,6 +47,14 @@ export interface DissolutionResourceIF {
   filingData: Array<FilingDataIF>
   dissolutionStatements?: Array<KeyValueIF>
   affidavit: AffidavitResourceIF
+  reviewAndConfirm: {
+    completingPartyStatement: {
+      certifyStatementHeader: string
+      certifyStatements: Array<string>
+      certifyClause: string
+      entityDisplay: string
+    }
+  }
 
   // CP only
   createResolution?: CreateResolutionResourceIF
