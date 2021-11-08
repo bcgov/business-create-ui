@@ -43,7 +43,9 @@
           below.
         </p>
       </header>
-      <DocumentDelivery />
+      <DocumentDelivery
+          :registeredOfficeEmail="getBusinessContact.email"
+          :userEmail="getUserEmail" />
     </section>
 
     <section class="mt-10">
@@ -107,6 +109,7 @@ export default class ReviewConfirm extends Mixins() {
   @Getter isRoleStaff!: boolean
   @Getter getCurrentDate!: string
   @Getter getEffectiveDateTime!: EffectiveDateTimeIF
+  @Getter getUserEmail!: string
 
   @Action setEffectiveDateTimeValid!: ActionBindingIF
   @Action setEffectiveDate!: ActionBindingIF

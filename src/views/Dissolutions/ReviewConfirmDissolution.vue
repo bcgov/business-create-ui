@@ -187,6 +187,12 @@
           :editableCompletingParty="isRoleStaff"
           :showCustodianEmail="true"
           :invalidSection="isDocumentDeliveryInvalid"
+          :registeredOfficeEmail="getBusinessContact.email"
+          :custodianEmail="getCustodianEmail"
+          :userEmail="getUserEmail"
+          :documentOptionalEmail="getDocumentDelivery.documentOptionalEmail"
+          @update:optionalEmail="onOptionalEmailChanged($event)"
+          @valid="onDocumentDeliveryValid($event)"
         />
       </div>
     </section>
@@ -270,6 +276,7 @@ import { RouteNames } from '@/enums'
 // Interfaces
 import {
   ActionBindingIF,
+  BusinessContactIF,
   CertifyIF,
   CertifyStatementIF,
   CourtOrderStepIF,
@@ -296,10 +303,12 @@ import {
 export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
   // Global getters
   @Getter getAffidavitStep!: UploadAffidavitIF
+  @Getter getBusinessContact!: BusinessContactIF
   @Getter getCertifyState!: CertifyIF
   @Getter getCompletingPartyStatement!: CertifyStatementIF
   @Getter getCourtOrderStep!: CourtOrderStepIF
   @Getter getCurrentDate!: string
+  @Getter getCustodianEmail!: string
   @Getter getDissolutionStatementStep!: DissolutionStatementIF
   @Getter getDocumentDelivery!: DocumentDeliveryIF
   @Getter getEffectiveDateTime!: EffectiveDateTimeIF
@@ -307,6 +316,7 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
   @Getter getCreateResolutionResource!: CreateResolutionResourceIF
   @Getter getCreateResolutionStep!: CreateResolutionIF
   @Getter getShowErrors!: boolean
+  @Getter getUserEmail!: string
   @Getter getValidateSteps!: boolean
   @Getter isPremiumAccount!: boolean
   @Getter isRoleStaff!: boolean
@@ -322,6 +332,8 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
   @Action setHasPlanOfArrangement!: ActionBindingIF
   @Action setCourtOrderValidity!: ActionBindingIF
   @Action setCertifyState!: ActionBindingIF
+  @Action setDocumentOptionalEmail!: ActionBindingIF
+  @Action setDocumentOptionalEmailValidity!: ActionBindingIF
 
   // Enum for template
   readonly RouteNames = RouteNames
@@ -421,6 +433,14 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
         certifiedBy: val
       }
     )
+  }
+
+  private onOptionalEmailChanged (optionalEmail: string): void {
+    this.setDocumentOptionalEmail(optionalEmail)
+  }
+
+  private onDocumentDeliveryValid (valid: boolean): void {
+    this.setDocumentOptionalEmailValidity(valid)
   }
 }
 </script>

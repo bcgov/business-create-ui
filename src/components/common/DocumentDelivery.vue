@@ -5,7 +5,7 @@
         <label class="font-weight-bold">Registered Office</label>
       </v-col>
       <v-col :cols="9">
-        <v-card-text id="office-email" class="pa-0">{{getBusinessContact.email || 'Not entered'}}</v-card-text>
+        <v-card-text id="office-email" class="pa-0">{{registeredOfficeEmail || 'Not entered'}}</v-card-text>
       </v-col>
     </v-row>
     <v-row class="py-3" no-gutters>
@@ -26,7 +26,7 @@
         />
       </v-col>
       <v-col :cols="9" v-else>
-        <v-card-text id="completing-party-email" class="pa-0">{{getUserEmail || 'Not entered'}}</v-card-text>
+        <v-card-text id="completing-party-email" class="pa-0">{{userEmail || 'Not entered'}}</v-card-text>
       </v-col>
     </v-row>
     <v-row class="py-3" no-gutters v-if="showCustodianEmail">
@@ -34,7 +34,7 @@
         <label class="font-weight-bold">Custodian of Records</label>
       </v-col>
       <v-col :cols="9">
-        <v-card-text id="custodian-email" class="pa-0">{{getCustodianEmail || 'Not entered'}}</v-card-text>
+        <v-card-text id="custodian-email" class="pa-0">{{custodianEmail || 'Not entered'}}</v-card-text>
       </v-col>
     </v-row>
   </v-card>
@@ -43,26 +43,16 @@
 <script lang="ts">
 // Libraries
 import { Component, Emit, Prop, Vue, Watch } from 'vue-property-decorator'
-import { Action, Getter } from 'vuex-class'
-
-// Interfaces
-import { ActionBindingIF, BusinessContactIF, DocumentDeliveryIF } from '@/interfaces'
 
 @Component({})
 export default class DocumentDelivery extends Vue {
-  @Getter getBusinessContact!: BusinessContactIF
-  @Getter getCustodianEmail!: string
-  @Getter getDocumentDelivery!: DocumentDeliveryIF
-  @Getter getUserEmail!: string
-
-  // Global actions
-  @Action setDocumentOptionalEmail!: ActionBindingIF
-  @Action setDocumentOptionalEmailValidity!: ActionBindingIF
+  @Prop({ default: null }) readonly registeredOfficeEmail: string
+  @Prop({ default: null }) readonly custodianEmail: string
+  @Prop({ default: null }) readonly userEmail: string
+  @Prop({ default: null }) readonly documentOptionalEmail: string
 
   @Prop({ default: false }) readonly editableCompletingParty: boolean
-
   @Prop({ default: false }) readonly showCustodianEmail: boolean
-
   @Prop({ default: false }) readonly invalidSection: boolean
 
   // Local properties
@@ -75,7 +65,7 @@ export default class DocumentDelivery extends Vue {
   ]
 
   mounted () {
-    this.optionalEmail = this.getDocumentDelivery.documentOptionalEmail
+    this.optionalEmail = this.documentOptionalEmail
   }
 
   private validateEmailFormat (value: string): boolean {
@@ -89,20 +79,23 @@ export default class DocumentDelivery extends Vue {
   }
 
   @Watch('optionalEmail')
-  onOptionalEmailChanged (val: string): void {
+  private async onOptionalEmailChanged (val: string): Promise<void> {
     if (this.validateEmailFormat(val)) {
-      this.setDocumentOptionalEmail(val)
-      this.setDocumentOptionalEmailValidity(true)
+      await this.emitOptionalEmail()
+      await this.emitValid(true)
     } else {
-      this.setDocumentOptionalEmailValidity(false)
+      await this.emitValid(false)
     }
   }
 
+  @Emit('update:optionalEmail')
+  private async emitOptionalEmail (): Promise<string> {
+    return this.optionalEmail
+  }
+
   @Emit('valid')
-  private async emitValid (): Promise<boolean> {
-    // wait for form to update itself before checking validity
-    await Vue.nextTick()
-    return (this.validateEmailFormat(this.optionalEmail))
+  private async emitValid (valid: boolean): Promise<boolean> {
+    return valid
   }
 }
 </script>
