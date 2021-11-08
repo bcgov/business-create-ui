@@ -636,9 +636,6 @@ describe('Dissolution BEN - External User', () => {
     delete window.location
     window.location = { assign: jest.fn() } as any
 
-    // Could not solve affix warning, then suppressing
-    jest.spyOn(console, 'error').mockImplementation(() => {})
-
     store.state.stateModel.effectiveDateTime.isFutureEffective = false
     store.state.stateModel.staffPaymentStep.staffPayment.isPriority = false
     await flushPromises()
@@ -905,9 +902,6 @@ describe('Dissolution BEN - Staff User', () => {
     delete window.location
     window.location = { assign: jest.fn() } as any
 
-    // Could not solve affix warning, then suppressing
-    jest.spyOn(console, 'error').mockImplementation(() => {})
-
     store.state.stateModel.effectiveDateTime.isFutureEffective = false
     store.state.stateModel.staffPaymentStep.staffPayment.isPriority = false
     await flushPromises()
@@ -1143,9 +1137,6 @@ describe('Dissolution COOP - External User', () => {
     // mock the window.location.assign function
     delete window.location
     window.location = { assign: jest.fn() } as any
-
-    // Could not solve affix warning, then suppressing
-    jest.spyOn(console, 'error').mockImplementation(() => {})
 
     store.state.stateModel.effectiveDateTime.isFutureEffective = false
     store.state.stateModel.staffPaymentStep.staffPayment.isPriority = false
@@ -1571,9 +1562,6 @@ describe('Dissolution COOP - Staff User', () => {
     // mock the window.location.assign function
     delete window.location
     window.location = { assign: jest.fn() } as any
-
-    // Could not solve affix warning, then suppressing
-    jest.spyOn(console, 'error').mockImplementation(() => {})
 
     store.state.stateModel.effectiveDateTime.isFutureEffective = false
     store.state.stateModel.staffPaymentStep.staffPayment.isPriority = false
