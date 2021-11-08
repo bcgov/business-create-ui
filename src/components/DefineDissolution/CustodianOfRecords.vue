@@ -254,14 +254,11 @@ export default class CustodianOfRecords extends Mixins(CommonMixin, EntityFilter
   created () {
     // Define local model using values initialized in store.
     this.custodian = this.getCustodian
-    if (this.isSame(this.custodian.mailingAddress, this.custodian.deliveryAddress)) {
-      this.inheritMailingAddress = true
-    }
   }
 
   /** Keep local custodian addresses in sync with base address common component. */
   private syncAddress (addressKey: string, address: AddressIF): void {
-    this.setCustodianOfRecords({ ...this.custodian, [addressKey]: address })
+    this.setCustodianOfRecords({ ...this.getCustodian, [addressKey]: address })
   }
 
   syncCustodianPartyType (partyType: PartyTypes): void {
@@ -308,7 +305,6 @@ export default class CustodianOfRecords extends Mixins(CommonMixin, EntityFilter
   /** Keep local custodian model in sync with store. */
   @Watch('custodian', { deep: true })
   private onCustodianChange (): void {
-    console.log('Watcher Detected')
     this.setCustodianOfRecords(this.custodian)
   }
 

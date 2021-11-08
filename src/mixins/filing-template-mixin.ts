@@ -367,7 +367,6 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
    * @param draftFiling the filing body to parse
    */
   parseDissolutionDraft (draftFiling: any): void {
-    console.log(draftFiling)
     // Set Business data
     this.setEntityType(draftFiling.business.legalType)
     this.setLegalName(draftFiling.business.legalName)

@@ -65,14 +65,14 @@ export const stateModel: StateModelIF = {
         },
         mailingAddress: {
           addressCity: '',
-          addressCountry: '',
+          addressCountry: 'CA',
           addressRegion: '',
           postalCode: '',
           streetAddress: ''
         },
         deliveryAddress: {
           addressCity: '',
-          addressCountry: '',
+          addressCountry: 'CA',
           addressRegion: '',
           postalCode: '',
           streetAddress: ''
