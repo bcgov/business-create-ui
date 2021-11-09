@@ -226,8 +226,8 @@ export default class CustodianOfRecords extends Mixins(CommonMixin, EntityFilter
   // Refs for root form and base address components to access form validation
   $refs!: {
     addCustodianForm: FormIF,
-    mailingAddress: any
-    deliveryAddress: any
+    mailingAddress: FormIF
+    deliveryAddress: FormIF
   }
 
   @Prop({ default: false })

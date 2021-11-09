@@ -266,7 +266,7 @@ import { Getter, Action } from 'vuex-class'
 import { DateMixin } from '@/mixins'
 
 // Components
-import { AssociationDetails, CustodianOfRecords DissolutionStatement } from '@/components/DefineDissolution'
+import { AssociationDetails, CustodianOfRecords, DissolutionStatement } from '@/components/DefineDissolution'
 import { Certify, CourtOrderPoa, EffectiveDateTime } from '@/components'
 import { DocumentDelivery, StaffPayment } from '@/components/common'
 
@@ -365,8 +365,8 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
 
   /** Is true when the Define Dissolution conditions are not met. */
   private get isDefineDissolutionInvalid (): boolean {
-    return this.getShowErrors &&
-      (this.isTypeCoop && !this.getDissolutionStatementStep.valid && !this.isCustodianValid)
+    return !this.isCustodianValid ||
+      (this.isTypeCoop && !this.getDissolutionStatementStep.valid)
   }
 
   /** Is true when the Dissolution Date and Time section is invalid. */

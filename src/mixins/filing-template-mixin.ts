@@ -8,11 +8,7 @@ import {
   ActionBindingIF, BusinessContactIF, CertifyIF, CreateRulesIF, EffectiveDateTimeIF, DefineCompanyIF,
   DissolutionFilingIF, IncorporationAgreementIF, IncorporationFilingIF, NameTranslationIF, PeopleAndRoleIF,
   DocIF, ShareStructureIF, CreateMemorandumIF, BusinessIF, DissolutionStatementIF, UploadAffidavitIF,
-<<<<<<< HEAD
-  StaffPaymentStepIF, CourtOrderStepIF, CreateResolutionIF, DocumentDeliveryIF
-=======
-  StaffPaymentStepIF, CourtOrderStepIF, CreateResolutionIF, OrgPersonIF
->>>>>>> Custodian implementation - Tests/Validations wip
+  StaffPaymentStepIF, CourtOrderStepIF, CreateResolutionIF, DocumentDeliveryIF, OrgPersonIF
 } from '@/interfaces'
 
 // Constants and enums
