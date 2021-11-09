@@ -3,62 +3,22 @@
     <template v-if="!isSummary">
       <!-- Address Form -->
       <v-card flat class="rounded-4">
-        <div class="section-container pt-10" :class="{ 'invalid-section': showErrors }">
-          <v-row no-gutters>
-            <v-col cols="12" md="3" lg="3">
-              <label class="section-label title-label">
-                {{ getCustodialRecordsResources.custodianTitle }}
-              </label>
-            </v-col>
-            <v-col cols="12" md="9" lg="9">
-              <!-- COOP only name input -->
-              <template v-if="isTypeCoop">
-                <label>Person's Name</label>
-                <v-row no-gutters class="pt-4">
-                  <v-col>
-                    <v-text-field
-                      filled
-                      label="First Name"
-                      id="person__first-name"
-                      v-model="custodian.officer.firstName"
-                      :rules="OfficerRules.firstNameRules"
-                    />
-                  </v-col>
-                  <v-col>
-                    <v-text-field
-                      filled
-                      class="px-5"
-                      label="Middle Name (Optional)"
-                      id="person__middle-name"
-                      v-model="custodian.officer.middleName"
-                      :rules="OfficerRules.middleNameRules"
-                    />
-                  </v-col>
-                  <v-col>
-                    <v-text-field
-                      filled
-                      label="Last Name"
-                      id="person__last-name"
-                      v-model="custodian.officer.lastName"
-                      :rules="OfficerRules.lastNameRules"
-                    />
-                  </v-col>
-                </v-row>
-              </template>
-              <!-- Corps name or org input -->
-              <template v-else>
-                <v-radio-group
-                  column
-                  class="person-or-org-options"
-                  v-model="custodian.officer.partyType"
-                  @change="syncCustodianPartyType"
-                >
-                  <!-- Person input -->
-                  <v-radio :value=PartyTypes.PERSON>
-                    <template slot="label">
-                      <span class="person-or-org-option">Person's Name</span>
-                    </template>
-                  </v-radio>
+        <v-form
+          ref="addCustodianForm"
+          class="add-custodian-form"
+          v-model="addCustodianValid"
+        >
+          <div class="section-container pt-10" :class="{ 'invalid-section': showErrors }">
+            <v-row no-gutters>
+              <v-col cols="12" md="3" lg="3">
+                <label class="section-label title-label">
+                  {{ getCustodialRecordsResources.custodianTitle }}
+                </label>
+              </v-col>
+              <v-col cols="12" md="9" lg="9">
+                <!-- COOP only name input -->
+                <template v-if="isTypeCoop">
+                  <label>Person's Name</label>
                   <v-row no-gutters class="pt-4">
                     <v-col>
                       <v-text-field
@@ -66,8 +26,7 @@
                         label="First Name"
                         id="person__first-name"
                         v-model="custodian.officer.firstName"
-                        :rules="isPerson ? OfficerRules.firstNameRules : []"
-                        @input="syncCustodianPartyType(PartyTypes.PERSON)"
+                        :rules="OfficerRules.firstNameRules"
                       />
                     </v-col>
                     <v-col>
@@ -77,8 +36,7 @@
                         label="Middle Name (Optional)"
                         id="person__middle-name"
                         v-model="custodian.officer.middleName"
-                        :rules="isPerson ? OfficerRules.middleNameRules : []"
-                        @input="syncCustodianPartyType(PartyTypes.PERSON)"
+                        :rules="OfficerRules.middleNameRules"
                       />
                     </v-col>
                     <v-col>
@@ -87,82 +45,131 @@
                         label="Last Name"
                         id="person__last-name"
                         v-model="custodian.officer.lastName"
-                        :rules="isPerson ? OfficerRules.lastNameRules : []"
-                        @input="syncCustodianPartyType(PartyTypes.PERSON)"
+                        :rules="OfficerRules.lastNameRules"
                       />
                     </v-col>
                   </v-row>
+                </template>
+                <!-- Corps name or org input -->
+                <template v-else>
+                  <v-radio-group
+                    column
+                    class="person-or-org-options"
+                    v-model="custodian.officer.partyType"
+                    @change="syncCustodianPartyType"
+                  >
+                    <!-- Person input -->
+                    <v-radio :value=PartyTypes.PERSON>
+                      <template slot="label">
+                        <span class="person-or-org-option">Person's Name</span>
+                      </template>
+                    </v-radio>
+                    <v-row no-gutters class="pt-4">
+                      <v-col>
+                        <v-text-field
+                          filled
+                          label="First Name"
+                          id="person__first-name"
+                          v-model="custodian.officer.firstName"
+                          :rules="isPerson ? OfficerRules.firstNameRules : []"
+                          @input="syncCustodianPartyType(PartyTypes.PERSON)"
+                        />
+                      </v-col>
+                      <v-col>
+                        <v-text-field
+                          filled
+                          class="px-5"
+                          label="Middle Name (Optional)"
+                          id="person__middle-name"
+                          v-model="custodian.officer.middleName"
+                          :rules="isPerson ? OfficerRules.middleNameRules : []"
+                          @input="syncCustodianPartyType(PartyTypes.PERSON)"
+                        />
+                      </v-col>
+                      <v-col>
+                        <v-text-field
+                          filled
+                          label="Last Name"
+                          id="person__last-name"
+                          v-model="custodian.officer.lastName"
+                          :rules="isPerson ? OfficerRules.lastNameRules : []"
+                          @input="syncCustodianPartyType(PartyTypes.PERSON)"
+                        />
+                      </v-col>
+                    </v-row>
 
-                  <!-- Org input -->
-                  <v-radio :value=PartyTypes.ORGANIZATION class="pt-2">
-                    <template slot="label">
-                      <span class="person-or-org-option">Corporation or Firm Name</span>
-                    </template>
-                  </v-radio>
-                  <v-row no-gutters class="pt-4">
-                    <v-col>
-                      <v-text-field
-                        filled
-                        label="Corporation or Firm Name"
-                        id="organization__name"
-                        v-model="custodian.officer.organizationName"
-                        :rules="isOrg ? OfficerRules.orgNameRules : []"
-                        @input="syncCustodianPartyType(PartyTypes.ORGANIZATION)"
-                      />
-                    </v-col>
-                  </v-row>
-                </v-radio-group>
+                    <!-- Org input -->
+                    <v-radio :value=PartyTypes.ORGANIZATION class="pt-2">
+                      <template slot="label">
+                        <span class="person-or-org-option">Corporation or Firm Name</span>
+                      </template>
+                    </v-radio>
+                    <v-row no-gutters class="pt-4">
+                      <v-col>
+                        <v-text-field
+                          filled
+                          label="Corporation or Firm Name"
+                          id="organization__name"
+                          v-model="custodian.officer.organizationName"
+                          :rules="isOrg ? OfficerRules.orgNameRules : []"
+                          @input="syncCustodianPartyType(PartyTypes.ORGANIZATION)"
+                        />
+                      </v-col>
+                    </v-row>
+                  </v-radio-group>
 
-                <v-divider class="mt-n3 mb-8" />
-              </template>
+                  <v-divider class="mt-n3 mb-8" />
+                </template>
 
-              <label>Email Address</label>
-              <v-row no-gutters class="pt-4">
-                <v-col>
-                  <v-text-field
-                    filled
-                    label="Email Address"
-                    id="person__email"
-                    v-model="custodian.officer.email"
-                    :rules="OfficerRules.emailRules"
-                  />
-                </v-col>
-              </v-row>
+                <label>Email Address</label>
+                <v-row no-gutters class="pt-4">
+                  <v-col>
+                    <v-text-field
+                      filled
+                      label="Email Address"
+                      id="person__email"
+                      v-model="custodian.officer.email"
+                      :rules="OfficerRules.emailRules"
+                    />
+                  </v-col>
+                </v-row>
 
-              <label>Mailing Address</label>
-              <mailing-address
-                ref="mailingAddress"
-                id="mailing-address"
-                class="pt-4"
-                :editing="true"
-                :address="custodian.mailingAddress"
-                :schema="OfficeAddressSchema"
-                @update:address="syncAddress('mailingAddress', $event)"
-              />
-
-              <v-checkbox
-                id="delivery-mailing-same-chkbx"
-                class="inherit-checkbox mt-1 mb-2"
-                label="Delivery Address same as Mailing Address"
-                v-model="inheritMailingAddress"
-              />
-
-              <template v-if="!inheritMailingAddress">
-                <label>Delivery Address</label>
-                <delivery-address
-                  ref="deliveryAddress"
-                  id="Delivery-address"
+                <label>Mailing Address</label>
+                <mailing-address
+                  ref="mailingAddress"
+                  id="mailing-address"
                   class="pt-4"
                   :editing="true"
-                  :address="custodian.deliveryAddress"
+                  :address="custodian.mailingAddress"
                   :schema="OfficeAddressSchema"
-                  @update:address="syncAddress('deliveryAddress', $event)"
+                  @update:address="syncAddresses(custodian.mailingAddress, $event)"
+                  @valid="updateAddressValid('mailingAddress', $event)"
                 />
-              </template>
-              <!--          @valid="updateAddressValid('mailingAddress', $event)"-->
-            </v-col>
-          </v-row>
-        </div>
+
+                <v-checkbox
+                  id="delivery-mailing-same-chkbx"
+                  class="inherit-checkbox mt-1 mb-2"
+                  label="Delivery Address same as Mailing Address"
+                  v-model="inheritMailingAddress"
+                />
+
+                <template v-if="!inheritMailingAddress">
+                  <label>Delivery Address</label>
+                  <delivery-address
+                    ref="deliveryAddress"
+                    id="Delivery-address"
+                    class="pt-4"
+                    :editing="true"
+                    :address="custodian.deliveryAddress"
+                    :schema="OfficeAddressSchema"
+                    @update:address="syncAddresses(custodian.deliveryAddress, $event)"
+                    @valid="updateAddressValid('deliveryAddress', $event)"
+                  />
+                </template>
+              </v-col>
+            </v-row>
+          </div>
+        </v-form>
       </v-card>
     </template>
 
@@ -199,14 +206,15 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Mixins, Prop, Watch } from 'vue-property-decorator'
+import { Component, Emit, Mixins, Prop, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import { OfficeAddressSchema } from '@/schemas'
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
-import { ActionBindingIF, AddressIF, OrgPersonIF } from '@/interfaces'
-import { PartyTypes, RoleTypes } from '@/enums'
+import { ActionBindingIF, AddressIF, FormIF, OrgPersonIF } from '@/interfaces'
+import { PartyTypes } from '@/enums'
 import { CommonMixin, EntityFilterMixin } from '@/mixins'
 import { OfficerRules } from '@/rules'
+import { cloneDeep } from 'lodash'
 
 @Component({
   components: {
@@ -215,8 +223,9 @@ import { OfficerRules } from '@/rules'
   }
 })
 export default class CustodianOfRecords extends Mixins(CommonMixin, EntityFilterMixin) {
-  // Refs for sbc common base address components so we can access form validation
+  // Refs for root form and base address components to access form validation
   $refs!: {
+    addCustodianForm: FormIF,
     mailingAddress: any
     deliveryAddress: any
   }
@@ -234,6 +243,9 @@ export default class CustodianOfRecords extends Mixins(CommonMixin, EntityFilter
   @Action setCustodianOfRecords: ActionBindingIF
 
   // Local properties
+  private addCustodianValid = true
+  private custodian: OrgPersonIF = null
+  private inheritMailingAddress = false
   private defaultAddress: AddressIF = {
     addressCity: '',
     addressCountry: 'CA',
@@ -243,8 +255,10 @@ export default class CustodianOfRecords extends Mixins(CommonMixin, EntityFilter
     streetAddress: '',
     streetAddressAdditional: ''
   }
-  private custodian: OrgPersonIF = null
-  private inheritMailingAddress = false
+
+  // Validation events from BaseAddress:
+  private mailingAddressValid: boolean = true
+  private deliveryAddressValid: boolean = true
 
   // Global variables defined locally for the template
   readonly OfficeAddressSchema = OfficeAddressSchema
@@ -254,13 +268,20 @@ export default class CustodianOfRecords extends Mixins(CommonMixin, EntityFilter
   created () {
     // Define local model using values initialized in store.
     this.custodian = this.getCustodian
+
+    // Corps are required to choose a party type, where coops are pre-determined to be of person type.
+    if (this.isTypeCoop) this.custodian.officer.partyType = PartyTypes.PERSON
   }
 
   /** Keep local custodian addresses in sync with base address common component. */
-  private syncAddress (addressKey: string, address: AddressIF): void {
-    this.setCustodianOfRecords({ ...this.getCustodian, [addressKey]: address })
+  private syncAddresses (baseAddress: AddressIF, newAddress: AddressIF): void {
+    Object.assign(baseAddress, newAddress)
+    if (this.inheritMailingAddress) {
+      this.custodian.deliveryAddress = { ...newAddress }
+    }
   }
 
+  /** Sync party type selection with store and reset the unselected party type fields. */
   syncCustodianPartyType (partyType: PartyTypes): void {
     this.custodian.officer.partyType = partyType
     switch (partyType) {
@@ -292,6 +313,11 @@ export default class CustodianOfRecords extends Mixins(CommonMixin, EntityFilter
     return this.getCustodian?.officer.email || '(Not entered)'
   }
 
+  /** Whether the add custodian form is valid. */
+  private get isFormValid (): boolean {
+    return this.addCustodianValid && this.mailingAddressValid && this.deliveryAddressValid
+  }
+
   /** Is true when the party type is a person. */
   private get isPerson (): boolean {
     return this.getCustodian?.officer.partyType === PartyTypes.PERSON
@@ -300,6 +326,32 @@ export default class CustodianOfRecords extends Mixins(CommonMixin, EntityFilter
   /** Is true when the party type is an organization. */
   private get isOrg (): boolean {
     return this.getCustodian?.officer.partyType === PartyTypes.ORGANIZATION
+  }
+
+  /**
+   * Keeps track of the validity of the specified address.
+   * @param addressToValidate the address to set the validity of
+   * @param isValid a boolean indicating the validity of the address
+   */
+  private updateAddressValid (addressToValidate: string, isValid: boolean): void {
+    switch (addressToValidate) {
+      case 'mailingAddress':
+        this.mailingAddressValid = isValid
+        break
+      case 'deliveryAddress':
+        this.deliveryAddressValid = isValid
+        break
+      default:
+        console.log(`Error: Address- ${addressToValidate} not found`)
+    }
+    this.emitValid()
+  }
+
+  /** Emits the valid state of the add custodian form. */
+  @Watch('isFormValid')
+  @Emit('valid')
+  private emitValid (): boolean {
+    return this.isFormValid
   }
 
   /** Keep local custodian model in sync with store. */
@@ -312,11 +364,19 @@ export default class CustodianOfRecords extends Mixins(CommonMixin, EntityFilter
   @Watch('inheritMailingAddress')
   private setDeliveryAddressToMailingAddress (): void {
     if (this.inheritMailingAddress) {
-      this.custodian.deliveryAddress = { ...this.custodian.mailingAddress }
+      this.custodian.deliveryAddress = cloneDeep(this.getCustodian.mailingAddress)
     } else {
       // Clear to default
       this.custodian.deliveryAddress = { ...this.defaultAddress }
     }
+  }
+
+  /** Handle validation event from parent. */
+  @Watch('showErrors')
+  private onShowErrorsChanged (): void {
+    this.$refs.addCustodianForm.validate()
+    this.$refs.mailingAddress.$refs.addressForm.validate()
+    this.$refs.deliveryAddress.$refs.addressForm.validate()
   }
 }
 </script>

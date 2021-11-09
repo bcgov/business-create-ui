@@ -319,6 +319,7 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
   @Getter getShowErrors!: boolean
   @Getter getUserEmail!: string
   @Getter getValidateSteps!: boolean
+  @Getter isCustodianValid!: boolean
   @Getter isPremiumAccount!: boolean
   @Getter isRoleStaff!: boolean
   @Getter isTypeCoop!: boolean
@@ -365,7 +366,7 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
   /** Is true when the Define Dissolution conditions are not met. */
   private get isDefineDissolutionInvalid (): boolean {
     return this.getShowErrors &&
-      (this.isTypeCoop && !this.getDissolutionStatementStep.valid)
+      (this.isTypeCoop && !this.getDissolutionStatementStep.valid && !this.isCustodianValid)
   }
 
   /** Is true when the Dissolution Date and Time section is invalid. */

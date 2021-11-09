@@ -29,7 +29,7 @@
     </section>
 
     <section class="mt-10">
-      <header id="liquidator-or-custodian">
+      <header id="custodian-header">
         <h2>{{isTypeCoop ? 3 : 2 }}. {{ getCustodialRecordsResources.custodianTitle }}</h2>
         <p class="mt-4">{{getCustodialRecordsResources.sectionSubtitle}}</p>
       </header>
@@ -42,8 +42,8 @@
 
       <CustodianOfRecords
         class="mt-5"
-        :showErrors="getShowErrors"
-        :inputAddresses="null"
+        :showErrors="getShowErrors && !isCustodianValid"
+        @valid="setCustodianValidity($event)"
       />
     </section>
 
@@ -58,7 +58,7 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Mixins, Vue } from 'vue-property-decorator'
+import { Component, Mixins, Vue, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import { HelpSection } from '@/components/common'
 import {
@@ -68,7 +68,8 @@ import {
   CustodianOfRecords
 } from '@/components/DefineDissolution'
 import { ActionBindingIF, DissolutionStatementIF } from '@/interfaces'
-import { EntityFilterMixin, EnumMixin } from '@/mixins'
+import { CommonMixin, EntityFilterMixin, EnumMixin } from '@/mixins'
+import { RouteNames } from '@/enums'
 
 @Component({
   components: {
@@ -79,15 +80,17 @@ import { EntityFilterMixin, EnumMixin } from '@/mixins'
     CustodianOfRecords
   }
 })
-export default class DefineDissolution extends Mixins(EntityFilterMixin, EnumMixin) {
+export default class DefineDissolution extends Mixins(CommonMixin, EntityFilterMixin, EnumMixin) {
   // Global getters
   @Getter getBusinessLegalName!: string
   @Getter getCustodialRecordsResources!: any // TODO: Update to Custodial Resource IF
   @Getter getDissolutionStatementStep!: DissolutionStatementIF
   @Getter getShowErrors!: boolean
+  @Getter isCustodianValid!: boolean
   @Getter isTypeCoop: boolean
 
   // Global actions
+  @Action setCustodianValidity!: ActionBindingIF
   @Action setIgnoreChanges!: ActionBindingIF
 
   /** Called when component is created. */
@@ -104,9 +107,25 @@ export default class DefineDissolution extends Mixins(EntityFilterMixin, EnumMix
     return this.getBusinessLegalName || `${this.getCorpTypeNumberedDescription(this.getEntityType)}`
   }
 
-  private get showDissolutionStatementErrors () {
+  private get showDissolutionStatementErrors (): boolean {
     return this.getShowErrors &&
       (this.isTypeCoop && this.getDissolutionStatementStep && !this.getDissolutionStatementStep.valid)
+  }
+
+  @Watch('$route')
+  private async scrollToInvalidComponent (): Promise<void> {
+    if (this.getShowErrors && this.$route.name === RouteNames.DEFINE_DISSOLUTION) {
+      // Scroll to invalid components.
+      await Vue.nextTick()
+      await this.validateAndScroll(
+        {
+          isCustodianValid: this.isCustodianValid
+        },
+        [
+          'custodian-header'
+        ]
+      )
+    }
   }
 }
 </script>

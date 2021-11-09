@@ -465,6 +465,11 @@ export const getDocumentDelivery = (state: StateIF): DocumentDeliveryIF => {
   return state.stateModel.documentDelivery
 }
 
+/** Is true when the custodian data is valid. */
+export const isCustodianValid = (state: StateIF): boolean => {
+  return state.stateModel.dissolution.custodianOfRecords.valid
+}
+
 /** The custodian of records. */
 export const getCustodian = (state: StateIF): OrgPersonIF => {
   return state.stateModel.dissolution.custodianOfRecords.custodian
