@@ -119,9 +119,11 @@ export default class DefineDissolution extends Mixins(CommonMixin, EntityFilterM
       await Vue.nextTick()
       await this.validateAndScroll(
         {
+          isStatementValid: this.isTypeCoop ? this.getDissolutionStatementStep.valid : true,
           isCustodianValid: this.isCustodianValid
         },
         [
+          'dissolution-statement',
           'custodian-header'
         ]
       )

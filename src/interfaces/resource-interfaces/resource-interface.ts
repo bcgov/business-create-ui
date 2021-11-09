@@ -1,6 +1,6 @@
 import {
   AffidavitResourceIF, FilingDataIF, HelpSectionIF, IncorporationAgreementTypeIF, KeyValueIF, PeopleAndRolesResourceIF,
-  StepIF, CreateRulesResourceIF, CreateMemorandumResourceIF, CreateResolutionIF, CreateResolutionResourceIF
+  StepIF, CreateRulesResourceIF, CreateMemorandumResourceIF, CreateResolutionResourceIF, CustodianResourceIF
 } from '@/interfaces'
 import { CorpTypeCd, NameRequestTypes } from '@/enums'
 
@@ -45,7 +45,7 @@ export interface DissolutionResourceIF {
   displayName: string
   steps: Array<StepIF>
   filingData: Array<FilingDataIF>
-  custodialRecords: any, // TODO: Fill out IF when complete
+  custodialRecords: CustodianResourceIF,
   dissolutionStatements?: Array<KeyValueIF>
   affidavit: AffidavitResourceIF
   reviewAndConfirm: {

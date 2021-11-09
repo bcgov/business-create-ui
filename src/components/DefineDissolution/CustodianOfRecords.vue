@@ -8,7 +8,7 @@
           class="add-custodian-form"
           v-model="addCustodianValid"
         >
-          <div class="section-container pt-10" :class="{ 'invalid-section': showErrors }">
+          <div class="section-container pt-10" :class="{ 'invalid-section': showErrors && !isFormValid }">
             <v-row no-gutters>
               <v-col cols="12" md="3" lg="3">
                 <label class="section-label title-label">
@@ -61,7 +61,12 @@
                     <!-- Person input -->
                     <v-radio :value=PartyTypes.PERSON>
                       <template slot="label">
-                        <span class="person-or-org-option">Person's Name</span>
+                        <span
+                          class="person-or-org-option"
+                          :class="{ 'title-label': isInError }"
+                        >
+                          Person's Name
+                        </span>
                       </template>
                     </v-radio>
                     <v-row no-gutters class="pt-4">
@@ -101,7 +106,12 @@
                     <!-- Org input -->
                     <v-radio :value=PartyTypes.ORGANIZATION class="pt-2">
                       <template slot="label">
-                        <span class="person-or-org-option">Corporation or Firm Name</span>
+                        <span
+                          class="person-or-org-option"
+                          :class="{ 'title-label': isInError }"
+                        >
+                          Corporation or Firm Name
+                        </span>
                       </template>
                     </v-radio>
                     <v-row no-gutters class="pt-4">
@@ -308,6 +318,17 @@ export default class CustodianOfRecords extends Mixins(CommonMixin, EntityFilter
     return '(Not entered)'
   }
 
+  private get isInError (): boolean {
+    switch (this.custodian.officer.partyType) {
+      case PartyTypes.PERSON:
+        return !(this.custodian.officer.firstName && this.custodian.officer.lastName)
+      case PartyTypes.ORGANIZATION:
+        return !this.custodian.officer.organizationName
+      default:
+        return true
+    }
+  }
+
   /** The custodian person or org name to display. */
   private get getCustodianEmail (): string {
     return this.getCustodian?.officer.email || '(Not entered)'
@@ -315,7 +336,8 @@ export default class CustodianOfRecords extends Mixins(CommonMixin, EntityFilter
 
   /** Whether the add custodian form is valid. */
   private get isFormValid (): boolean {
-    return this.addCustodianValid && this.mailingAddressValid && this.deliveryAddressValid
+    const deliveryValid = this.inheritMailingAddress ? true : this.deliveryAddressValid
+    return this.getCustodian.officer.partyType && this.addCustodianValid && this.mailingAddressValid && deliveryValid
   }
 
   /** Is true when the party type is a person. */
@@ -344,7 +366,6 @@ export default class CustodianOfRecords extends Mixins(CommonMixin, EntityFilter
       default:
         console.log(`Error: Address- ${addressToValidate} not found`)
     }
-    this.emitValid()
   }
 
   /** Emits the valid state of the add custodian form. */
@@ -358,6 +379,7 @@ export default class CustodianOfRecords extends Mixins(CommonMixin, EntityFilter
   @Watch('custodian', { deep: true })
   private onCustodianChange (): void {
     this.setCustodianOfRecords(this.custodian)
+    this.emitValid()
   }
 
   /** Sets the Delivery Address to the Mailing Address. */
@@ -375,8 +397,8 @@ export default class CustodianOfRecords extends Mixins(CommonMixin, EntityFilter
   @Watch('showErrors')
   private onShowErrorsChanged (): void {
     this.$refs.addCustodianForm.validate()
-    this.$refs.mailingAddress.$refs.addressForm.validate()
-    this.$refs.deliveryAddress.$refs.addressForm.validate()
+    this.$refs.mailingAddress && this.$refs.mailingAddress.$refs.addressForm.validate()
+    this.$refs.deliveryAddress && this.$refs.deliveryAddress.$refs.addressForm.validate()
   }
 }
 </script>

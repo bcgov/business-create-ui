@@ -8,7 +8,7 @@ import {
   CreateResolutionResourceIF,
   KeyValueIF,
   StateIF,
-  StepIF
+  StepIF, CustodianResourceIF
 } from '@/interfaces'
 
 //
@@ -93,7 +93,7 @@ export const getDissolutionStatements = (state: StateIF): Array<KeyValueIF> => {
 }
 
 /** The dissolution custodial records resources. */
-export const getCustodialRecordsResources = (state: StateIF): any => { // TODO: Update IF for custodial resources
+export const getCustodialRecordsResources = (state: StateIF): CustodianResourceIF => {
   return state.resourceModel.custodialRecords
 }
 
