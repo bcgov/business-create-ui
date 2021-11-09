@@ -2,7 +2,8 @@ import { AccountTypes, CoopType, CorpTypeCd, DissolutionTypes, FilingNames, Fili
 import {
   AccountInformationIF,
   AddressIF,
-  BusinessContactIF, BusinessIF,
+  BusinessContactIF,
+  BusinessIF,
   CertifyIF,
   CourtOrderStepIF,
   CreateMemorandumIF,
@@ -17,13 +18,14 @@ import {
   NameRequestDetailsIF,
   NameRequestIF,
   NameTranslationIF,
+  OrgPersonIF,
   PeopleAndRoleIF,
   ShareStructureIF,
   StaffPaymentStepIF,
   StateIF,
   TombstoneIF,
   UploadAffidavitIF,
-  CreateResolutionIF, OrgPersonIF
+  CreateResolutionIF
 } from '@/interfaces'
 import { getMaxStep } from './resource-getters'
 

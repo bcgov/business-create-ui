@@ -1,6 +1,7 @@
 import {
   AffidavitResourceIF,
   CertifyStatementIF,
+  CustodianResourceIF,
   CreateMemorandumResourceIF,
   CreateRulesResourceIF,
   FilingDataIF,
@@ -8,7 +9,7 @@ import {
   CreateResolutionResourceIF,
   KeyValueIF,
   StateIF,
-  StepIF, CustodianResourceIF
+  StepIF
 } from '@/interfaces'
 
 //

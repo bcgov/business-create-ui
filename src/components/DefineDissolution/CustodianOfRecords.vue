@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="custodian-of-records">
     <template v-if="!isSummary">
       <!-- Address Form -->
       <v-card flat class="rounded-4">
@@ -318,6 +318,7 @@ export default class CustodianOfRecords extends Mixins(CommonMixin, EntityFilter
     return '(Not entered)'
   }
 
+  /** Is true when the form requirements are not met for party type. */
   private get isInError (): boolean {
     switch (this.custodian.officer.partyType) {
       case PartyTypes.PERSON:
