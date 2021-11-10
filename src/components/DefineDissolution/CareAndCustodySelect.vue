@@ -1,6 +1,6 @@
 <template>
-  <v-card flat class="rounded-4">
-    <div class="section-container pt-11" :class="{ 'invalid-section': showErrorSummary }">
+  <v-card flat class="rounded-4 pt-11">
+    <div class="section-container py-6 px-8 " :class="{ 'invalid-section': showErrorSummary }">
       <v-row no-gutters>
         <v-col cols="12" md="3" lg="3">
           <label class="care-and-custody-title title-label">Care and Custody <br>of Records</label>
@@ -64,7 +64,6 @@ export default class CareAndCustodySelect extends Vue {
 @import '@/assets/styles/theme.scss';
 
 .section-container {
-  padding: 1.5rem 2rem;
   font-size: 1rem;
   color: $gray7;
 }

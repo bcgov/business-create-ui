@@ -58,7 +58,7 @@
                       label="First Name"
                       id="person__first-name"
                       v-model="orgPerson.officer.firstName"
-                      :rules="OfficerRules.firstNameRules"
+                      :rules="NameRules.firstNameRules"
                       :readonly="isCompletingParty && !isRoleStaff"
                     />
                     <v-text-field
@@ -67,7 +67,7 @@
                       label="Middle Name"
                       id="person__middle-name"
                       v-model="orgPerson.officer.middleName"
-                      :rules="OfficerRules.middleNameRules"
+                      :rules="NameRules.middleNameRules"
                       :readonly="isCompletingParty && !isRoleStaff"
                     />
                     <v-text-field
@@ -76,7 +76,7 @@
                       label="Last Name"
                       id="person__last-name"
                       v-model="orgPerson.officer.lastName"
-                      :rules="OfficerRules.lastNameRules"
+                      :rules="NameRules.lastNameRules"
                       :readonly="isCompletingParty && !isRoleStaff"
                     />
                   </div>
@@ -92,7 +92,7 @@
                       label="Full Legal Corporation or Firm Name"
                       id="firm-name"
                       v-model="orgPerson.officer.organizationName"
-                      :rules="OfficerRules.orgNameRules"
+                      :rules="NameRules.orgNameRules"
                     />
                   </div>
                 </template>
@@ -210,7 +210,7 @@ import { ConfirmDialog } from '@/components/dialogs'
 import { EntityFilterMixin, CommonMixin } from '@/mixins'
 import { CorpTypeCd, RoleTypes, PartyTypes } from '@/enums'
 import { PersonAddressSchema } from '@/schemas'
-import { OfficerRules } from '@/rules'
+import { NameRules } from '@/rules'
 
 @Component({
   components: {
@@ -259,7 +259,7 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
   readonly PartyTypes = PartyTypes
 
   // Rules
-  readonly OfficerRules = OfficerRules
+  readonly NameRules = NameRules
 
   /** The validation rules for the roles. */
   private get roleRules (): Array<Function> {

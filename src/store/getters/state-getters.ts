@@ -460,7 +460,7 @@ export const getCourtOrderStep = (state: StateIF): CourtOrderStepIF => {
 
 /** The custodian email. */
 export const getCustodianEmail = (state: StateIF): string => {
-  return getCustodian(state)?.officer.email || '(Not entered)'
+  return getCustodian(state)?.officer.email
 }
 
 export const getDocumentDelivery = (state: StateIF): DocumentDeliveryIF => {

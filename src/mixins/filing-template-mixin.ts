@@ -379,7 +379,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     })
 
     // // Take the first custodian, as there is only a singular custodian in a dissolution filing.
-    if (draftFiling.dissolution.parties) this.setCustodianOfRecords({ ...draftFiling.dissolution.parties[0] })
+    if (draftFiling.dissolution.parties) this.setCustodianOfRecords(draftFiling.dissolution.parties[0])
 
     const createResolution: CreateResolutionIF = {
       validationDetail: {

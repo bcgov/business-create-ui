@@ -26,7 +26,7 @@
                         label="First Name"
                         id="person__first-name"
                         v-model="custodian.officer.firstName"
-                        :rules="OfficerRules.firstNameRules"
+                        :rules="NameRules.firstNameRules"
                       />
                     </v-col>
                     <v-col>
@@ -36,7 +36,7 @@
                         label="Middle Name (Optional)"
                         id="person__middle-name"
                         v-model="custodian.officer.middleName"
-                        :rules="OfficerRules.middleNameRules"
+                        :rules="NameRules.middleNameRules"
                       />
                     </v-col>
                     <v-col>
@@ -45,7 +45,7 @@
                         label="Last Name"
                         id="person__last-name"
                         v-model="custodian.officer.lastName"
-                        :rules="OfficerRules.lastNameRules"
+                        :rules="NameRules.lastNameRules"
                       />
                     </v-col>
                   </v-row>
@@ -76,7 +76,7 @@
                           label="First Name"
                           id="person__first-name"
                           v-model="custodian.officer.firstName"
-                          :rules="isPerson ? OfficerRules.firstNameRules : []"
+                          :rules="isPerson ? NameRules.firstNameRules : []"
                           @input="syncCustodianPartyType(PartyTypes.PERSON)"
                         />
                       </v-col>
@@ -87,7 +87,7 @@
                           label="Middle Name (Optional)"
                           id="person__middle-name"
                           v-model="custodian.officer.middleName"
-                          :rules="isPerson ? OfficerRules.middleNameRules : []"
+                          :rules="isPerson ? NameRules.middleNameRules : []"
                           @input="syncCustodianPartyType(PartyTypes.PERSON)"
                         />
                       </v-col>
@@ -97,7 +97,7 @@
                           label="Last Name"
                           id="person__last-name"
                           v-model="custodian.officer.lastName"
-                          :rules="isPerson ? OfficerRules.lastNameRules : []"
+                          :rules="isPerson ? NameRules.lastNameRules : []"
                           @input="syncCustodianPartyType(PartyTypes.PERSON)"
                         />
                       </v-col>
@@ -121,7 +121,7 @@
                           label="Corporation or Firm Name"
                           id="organization__name"
                           v-model="custodian.officer.organizationName"
-                          :rules="isOrg ? OfficerRules.orgNameRules : []"
+                          :rules="isOrg ? NameRules.orgNameRules : []"
                           @input="syncCustodianPartyType(PartyTypes.ORGANIZATION)"
                         />
                       </v-col>
@@ -139,7 +139,7 @@
                       label="Email Address"
                       id="person__email"
                       v-model="custodian.officer.email"
-                      :rules="OfficerRules.emailRules"
+                      :rules="ContactRules.emailRules"
                     />
                   </v-col>
                 </v-row>
@@ -193,7 +193,7 @@
           </v-col>
           <v-col cols="12" md="6" lg="6">
             <div class="summary-sub-label">Email Address</div>
-            <span class="summary-text">{{ getCustodianEmail }}</span>
+            <span class="summary-text">{{ getCustodianEmail || '(Not entered)' }}</span>
           </v-col>
         </v-row>
         <v-row no-gutters class="mt-4">
@@ -223,7 +223,7 @@ import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
 import { ActionBindingIF, AddressIF, FormIF, OrgPersonIF } from '@/interfaces'
 import { PartyTypes } from '@/enums'
 import { CommonMixin, EntityFilterMixin } from '@/mixins'
-import { OfficerRules } from '@/rules'
+import { NameRules, ContactRules } from '@/rules'
 import { cloneDeep } from 'lodash'
 
 @Component({
@@ -247,6 +247,7 @@ export default class CustodianOfRecords extends Mixins(CommonMixin, EntityFilter
   private readonly showErrors!: boolean
 
   @Getter getCustodian!: OrgPersonIF
+  @Getter getCustodianEmail!: string
   @Getter getCustodialRecordsResources!: any // TODO: Update to Custodial Resource IF
   @Getter isTypeCoop!: boolean
 
@@ -272,7 +273,8 @@ export default class CustodianOfRecords extends Mixins(CommonMixin, EntityFilter
 
   // Global variables defined locally for the template
   readonly OfficeAddressSchema = OfficeAddressSchema
-  readonly OfficerRules = OfficerRules
+  readonly NameRules = NameRules
+  readonly ContactRules = ContactRules
   readonly PartyTypes = PartyTypes
 
   created () {
@@ -328,11 +330,6 @@ export default class CustodianOfRecords extends Mixins(CommonMixin, EntityFilter
       default:
         return true
     }
-  }
-
-  /** The custodian person or org name to display. */
-  private get getCustodianEmail (): string {
-    return this.getCustodian?.officer.email || '(Not entered)'
   }
 
   /** Whether the add custodian form is valid. */

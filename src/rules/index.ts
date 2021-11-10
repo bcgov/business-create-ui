@@ -1,1 +1,2 @@
-export * as OfficerRules from './officer-rules'
+export * as NameRules from './name-rules'
+export * as ContactRules from './contact-rules'
