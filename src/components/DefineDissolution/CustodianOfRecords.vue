@@ -19,7 +19,7 @@
                 <!-- COOP only name input -->
                 <template v-if="isTypeCoop">
                   <label>Person's Name</label>
-                  <v-row no-gutters class="pt-4">
+                  <v-row no-gutters class="pt-4" id="person-input">
                     <v-col>
                       <v-text-field
                         filled
