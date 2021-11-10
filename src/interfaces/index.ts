@@ -11,6 +11,7 @@ export * from './resource-interfaces/component-resource-interfaces/affidavit-res
 export * from './resource-interfaces/component-resource-interfaces/agreement-types-interface'
 export * from './resource-interfaces/component-resource-interfaces/certifyStatement-interface'
 export * from './resource-interfaces/component-resource-interfaces/step-interface'
+export * from './resource-interfaces/component-resource-interfaces/custodian-resource-interface'
 export * from './resource-interfaces/resource-interface'
 
 // Stepper Interfaces

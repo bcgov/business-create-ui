@@ -64,7 +64,7 @@
               </v-col>
 
               <v-col cols="9" class="inner-col-2">
-                FUTURE
+                <CustodianOfRecords :isSummary="true" />
               </v-col>
             </v-row>
           </v-container>
@@ -266,7 +266,7 @@ import { Getter, Action } from 'vuex-class'
 import { DateMixin } from '@/mixins'
 
 // Components
-import { AssociationDetails, DissolutionStatement } from '@/components/DefineDissolution'
+import { AssociationDetails, CustodianOfRecords, DissolutionStatement } from '@/components/DefineDissolution'
 import { Certify, CourtOrderPoa, EffectiveDateTime } from '@/components'
 import { DocumentDelivery, StaffPayment } from '@/components/common'
 
@@ -294,6 +294,7 @@ import {
     AssociationDetails,
     Certify,
     CourtOrderPoa,
+    CustodianOfRecords,
     DissolutionStatement,
     DocumentDelivery,
     EffectiveDateTime,
@@ -318,6 +319,7 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
   @Getter getShowErrors!: boolean
   @Getter getUserEmail!: string
   @Getter getValidateSteps!: boolean
+  @Getter isCustodianValid!: boolean
   @Getter isPremiumAccount!: boolean
   @Getter isRoleStaff!: boolean
   @Getter isTypeCoop!: boolean
@@ -363,7 +365,7 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
 
   /** Is true when the Define Dissolution conditions are not met. */
   private get isDefineDissolutionInvalid (): boolean {
-    return this.getShowErrors &&
+    return !this.isCustodianValid ||
       (this.isTypeCoop && !this.getDissolutionStatementStep.valid)
   }
 

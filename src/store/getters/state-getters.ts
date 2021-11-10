@@ -2,7 +2,8 @@ import { AccountTypes, CoopType, CorpTypeCd, DissolutionTypes, FilingNames, Fili
 import {
   AccountInformationIF,
   AddressIF,
-  BusinessContactIF, BusinessIF,
+  BusinessContactIF,
+  BusinessIF,
   CertifyIF,
   CourtOrderStepIF,
   CreateMemorandumIF,
@@ -17,6 +18,7 @@ import {
   NameRequestDetailsIF,
   NameRequestIF,
   NameTranslationIF,
+  OrgPersonIF,
   PeopleAndRoleIF,
   ShareStructureIF,
   StaffPaymentStepIF,
@@ -458,9 +460,19 @@ export const getCourtOrderStep = (state: StateIF): CourtOrderStepIF => {
 
 /** The custodian email. */
 export const getCustodianEmail = (state: StateIF): string => {
-  return 'hardcoded.custodian@email.com' // TODO: Change this once custodian details are available in state
+  return getCustodian(state)?.officer.email
 }
 
 export const getDocumentDelivery = (state: StateIF): DocumentDeliveryIF => {
   return state.stateModel.documentDelivery
+}
+
+/** Is true when the custodian data is valid. */
+export const isCustodianValid = (state: StateIF): boolean => {
+  return state.stateModel.dissolution.custodianOfRecords.valid
+}
+
+/** The custodian of records. */
+export const getCustodian = (state: StateIF): OrgPersonIF => {
+  return state.stateModel.dissolution.custodianOfRecords.custodian
 }

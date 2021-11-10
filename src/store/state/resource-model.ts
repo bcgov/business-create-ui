@@ -44,7 +44,8 @@ const dissolutionResourceModel: DissolutionResourceIF = {
       certifyClause: null,
       entityDisplay: null
     }
-  }
+  },
+  custodialRecords: null
 }
 
 export const resourceModel: any = {

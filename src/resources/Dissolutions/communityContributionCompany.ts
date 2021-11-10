@@ -11,6 +11,18 @@ export const CommunityContributionCompanyDissolutionResource: DissolutionResourc
     entityType: CorpTypeCd.BC_CCC,
     filingTypeCode: FilingCodes.DISSOLUTION_VOLUNTARY
   }],
+  custodialRecords: {
+    sectionSubtitle: `Enter the name (person or corporation or firm), email address and mailing and delivery addresses
+      of the Custodian of Records who will be responsible for the care and custody of the Company's records. Addresses
+      must be located in BC.`,
+    custodianTitle: `Custodian of Records`,
+    helpSection: {
+      helpText: [
+        `A Company must keep all company records for a period of 2 years. A court order may be required if the Custodian
+        of Records information changes within two years.`
+      ]
+    }
+  },
   affidavit: {
     affidavitActionText: 'deposit the affidavit in the Company\'s records book.',
     helpSection: {
