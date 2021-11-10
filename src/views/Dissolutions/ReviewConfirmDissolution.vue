@@ -541,8 +541,10 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
   .container {
     padding-right: 4px !important;
 
-    .v-input--selection-controls__input {
-      margin-top: -1.25rem;
+    .v-input--checkbox {
+      .v-input__slot {
+        align-items: flex-start;
+      }
     }
   }
 }
