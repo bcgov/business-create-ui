@@ -1,7 +1,6 @@
 <template>
-  <div class="rounded" :class="{'invalid-section': invalidStaffPayment}">
+  <div id="staff-payment-container" :class="{'invalid-section': invalidStaffPayment}">
     <StaffPaymentComponent
-      class="pl-3"
       :staffPaymentData="getStaffPaymentStep.staffPayment"
       :displayPriorityCheckbox="displayPriorityCheckbox"
       :validate="getValidateSteps"
@@ -36,6 +35,7 @@ export default class StaffPayment extends Vue {
   // Global getters
   @Getter getStaffPaymentStep!: StaffPaymentStepIF
   @Getter getValidateSteps!: boolean
+
   // Global actions
   @Action setStaffPayment!: ActionBindingIF
   @Action setStaffPaymentValidity!: ActionBindingIF

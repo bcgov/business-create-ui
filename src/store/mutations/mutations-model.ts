@@ -164,6 +164,11 @@ export const mutateTransactionalFolioNumber = (state: StateIF, folioNumber: stri
   if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
 }
 
+export const mutateTransactionalFolioNumberValidity = (state: StateIF, valid: boolean) => {
+  // *** TODO: add to state and implement this
+  // state.stateModel.tombstone.transactionalFolioNumber = valid
+}
+
 export const mutateAccountInformation = (state: StateIF, accountInfo: AccountInformationIF) => {
   state.stateModel.accountInformation = accountInfo
 }

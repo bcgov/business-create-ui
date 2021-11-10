@@ -118,7 +118,7 @@ for (const test of reviewConfirmTestCases) {
         DissolutionResources
       )
 
-      expect(wrapper.find('#poa-plan-arrangement-section').exists()).toBe(test.isStaff)
+      expect(wrapper.find('#court-order-poa-section').exists()).toBe(test.isStaff)
     })
 
     it('displays Staff Payment section only for staff', () => {

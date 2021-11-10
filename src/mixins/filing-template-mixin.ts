@@ -439,9 +439,11 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     }
 
     // *** TODO: set folio number(s)
+    // *** TODO: check this against staff payment FN
   }
 
-  /** Build Staff Payment data into the filing.
+  /**
+   * Build Staff Payment data into the filing.
    * @param filing The dissolution filing.
    */
   private buildStaffPayment (filing: DissolutionFilingIF): void {
@@ -470,7 +472,8 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     }
   }
 
-  /** Parse Staff Payment data into store.
+  /**
+   * Parse Staff Payment data into store.
    * @param filing The dissolution filing to parse.
    */
   private storeStaffPayment (filing: DissolutionFilingIF['filing']): void {

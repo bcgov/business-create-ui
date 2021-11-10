@@ -15,7 +15,7 @@
         <label class="font-weight-bold pl-2">Dissolution</label>
       </header>
 
-      <div class="pb-8" :class="{ 'invalid-section': isDefineDissolutionInvalid }">
+      <div class="pb-8" :class="{ 'invalid-section rounded-bl-0': isDefineDissolutionInvalid }">
         <section class="pt-8 pl-7" v-if="isDefineDissolutionInvalid">
           <span>
             <v-icon color="error">mdi-information-outline</v-icon>
@@ -128,7 +128,9 @@
         <label class="font-weight-bold pl-2">{{getCreateResolutionResource.reviewConfirmHeader}}</label>
       </header>
 
-      <section v-if="!getCreateResolutionStep.validationDetail.valid" class="section-container invalid-section">
+      <section v-if="!getCreateResolutionStep.validationDetail.valid"
+        class="section-container invalid-section rounded-bl-0"
+      >
         <v-icon color="error">mdi-information-outline</v-icon>
         <span class="error-text ml-1 mr-2">This step is unfinished.</span>
         <router-link
@@ -136,7 +138,9 @@
         >Return to this step to finish it</router-link>
       </section>
 
-      <section v-if="getCreateResolutionStep.validationDetail.valid" class="section-container upload-success-message">
+      <section v-if="getCreateResolutionStep.validationDetail.valid"
+        class="section-container upload-success-message"
+      >
         <v-row no-gutters>
           <v-col md="1">
             <v-icon class="success-chk">mdi-check</v-icon>
@@ -158,7 +162,7 @@
         <label class="font-weight-bold pl-2">Affidavit</label>
       </header>
 
-      <div class="section-container" :class="{ 'invalid-section': isAffidavitInvalid }">
+      <div class="section-container rounded-bl-0" :class="{ 'invalid-section': isAffidavitInvalid }">
         <section v-if="isAffidavitInvalid">
           <v-icon color="error">mdi-information-outline</v-icon>
           &nbsp;
@@ -180,78 +184,79 @@
     <section id="document-delivery-section" class="mt-10">
       <header>
         <h2>{{getHeaderNumber('documentDelivery')}}. Dissolution Documents Delivery</h2>
-        <p class="mt-1">Copies of the dissolution documents will be sent to the following email addresses listed
-          below:
+        <p class="mt-4 mb-6">
+          Copies of the dissolution documents will be sent to the following email addresses listed below:
         </p>
       </header>
-      <div :class="{ 'invalid-section': isDocumentDeliveryInvalid }">
-        <DocumentDelivery
-          :editableCompletingParty="isRoleStaff"
-          :showCustodianEmail="true"
-          :invalidSection="isDocumentDeliveryInvalid"
-          :registeredOfficeEmail="getBusinessContact.email"
-          :custodianEmail="getCustodianEmail"
-          :userEmail="getUserEmail"
-          :documentOptionalEmail="getDocumentDelivery.documentOptionalEmail"
-          @update:optionalEmail="setDocumentOptionalEmail($event)"
-          @valid="setDocumentOptionalEmailValidity($event)"
-        />
-      </div>
+      <DocumentDelivery
+        :class="{ 'invalid-section': isDocumentDeliveryInvalid }"
+        :editableCompletingParty="isRoleStaff"
+        :showCustodianEmail="true"
+        :invalidSection="isDocumentDeliveryInvalid"
+        :registeredOfficeEmail="getBusinessContact.email"
+        :custodianEmail="getCustodianEmail"
+        :userEmail="getUserEmail"
+        :documentOptionalEmail="getDocumentDelivery.documentOptionalEmail"
+        @update:optionalEmail="setDocumentOptionalEmail($event)"
+        @valid="setDocumentOptionalEmailValidity($event)"
+      />
     </section>
 
     <!-- Folio Number -->
-    <section id="folio-number-section" class="mt-10" v-if="isPremiumAccount || isRoleStaff">
-      <h2>{{getHeaderNumber('folioNumber')}}. Folio or Reference Number for this Filing</h2>
-      <p class="my-3 pb-2">
-        Enter the folio or reference number you want to use for this filing for your own tracking
-        purposes. The Business Folio or Reference Number is displayed below (if available).
-        Entering a different value below will not change the Business Folio or Reference Number.
-        Only the number below will appear on the transaction report and receipt for this filing.
-      </p>
-        <TransactionalFolioNumber
-          class="mt-10"
-          :sectionNumber="`${getHeaderNumber('folioNumber')}.`"
-          :validate="getValidateSteps"
-        />
+    <section id="folio-number-section" class="mt-10" v-if="isPremiumAccount">
+      <header>
+        <h2>{{getHeaderNumber('folioNumber')}}. Folio or Reference Number for this Filing</h2>
+        <p class="mt-4 mb-6">
+          Enter the folio or reference number you want to use for this filing for your own tracking
+          purposes. The Business Folio or Reference Number is displayed below (if available).
+          Entering a different value below will not change the Business Folio or Reference Number.
+          Only the number below will appear on the transaction report and receipt for this filing.
+        </p>
+      </header>
+      <TransactionalFolioNumber
+        :validate="getValidateSteps"
+      />
     </section>
 
     <!-- Certify -->
     <section id="certify-section" class="mt-10">
       <header>
         <h2>{{getHeaderNumber('certify')}}. Certify</h2>
-        <p class="mt-1">Confirm the legal name of the person authorized to complete and submit this dissolution.</p>
+        <p class="mt-4 mb-6">
+          Confirm the legal name of the person authorized to complete and submit this dissolution.
+        </p>
       </header>
-      <div :class="{ 'invalid-section': isCertifyInvalid }">
-        <Certify
-          :currentDate="getCurrentDate"
-          :certifiedBy="getCertifyState.certifiedBy"
-          :entityDisplay="getCompletingPartyStatement.entityDisplay"
-          :isCertified="getCertifyState.valid"
-          :statements="getCompletingPartyStatement.certifyStatements"
-          :message="getCompletingPartyStatement.certifyClause"
-          :isStaff="isRoleStaff"
-          :firstColumn="3"
-          :secondColumn="9"
-          :invalidSection="isCertifyInvalid"
-          :disableEdit="!isRoleStaff"
-          @update:certifiedBy="onCertifiedBy($event)"
-          @update:isCertified="onIsCertified($event)"
-        />
-      </div>
+      <Certify
+        :class="{ 'invalid-section': isCertifyInvalid }"
+        :currentDate="getCurrentDate"
+        :certifiedBy="getCertifyState.certifiedBy"
+        :entityDisplay="getCompletingPartyStatement.entityDisplay"
+        :isCertified="getCertifyState.valid"
+        :statements="getCompletingPartyStatement.certifyStatements"
+        :message="getCompletingPartyStatement.certifyClause"
+        :isStaff="isRoleStaff"
+        :firstColumn="3"
+        :secondColumn="9"
+        :invalidSection="isCertifyInvalid"
+        :disableEdit="!isRoleStaff"
+        @update:certifiedBy="onCertifiedBy($event)"
+        @update:isCertified="onIsCertified($event)"
+      />
     </section>
 
     <!-- Court Order and Plan of Arrangement -->
-    <section id="poa-plan-arrangement-section" class="mt-10" v-if="isRoleStaff">
-      <h2>{{getHeaderNumber('courtOrder')}}. Court Order and Plan of Arrangement</h2>
-      <p class="my-3 pb-2">
-        If this filing is pursuant to a court order, enter the court order number. If this
-        filing is pursuant to a plan of arrangement, enter the court order number and select
-        Plan of Arrangement.
-      </p>
+    <section id="court-order-poa-section" class="mt-10" v-if="isRoleStaff">
+      <header>
+        <h2>{{getHeaderNumber('courtOrder')}}. Court Order and Plan of Arrangement</h2>
+        <p class="mt-4 mb-6">
+          If this filing is pursuant to a court order, enter the court order number. If this
+          filing is pursuant to a plan of arrangement, enter the court order number and select
+          Plan of Arrangement.
+        </p>
+      </header>
       <CourtOrderPoa
-        class="pl-2"
-        :class="{'invalid-section': isCourtOrderInvalid}"
         id="court-order"
+        :class="{ 'invalid-section': isCourtOrderInvalid }"
         :autoValidation="getValidateSteps"
         :draftCourtOrderNumber="getCourtOrderStep.courtOrder.fileNumber"
         :hasDraftPlanOfArrangement="getCourtOrderStep.courtOrder.hasPlanOfArrangement"
@@ -265,7 +270,10 @@
 
     <!-- Staff Payment -->
     <section id="staff-payment-section" class="mt-10" v-if="isRoleStaff">
-      <h2>{{getHeaderNumber('staffPayment')}}. Staff Payment</h2>
+      <header>
+        <h2>{{getHeaderNumber('staffPayment')}}. Staff Payment</h2>
+        <p class="mt-4 mb-6"></p>
+      </header>
       <StaffPayment />
     </section>
   </div>
@@ -329,7 +337,6 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
   @Getter getCreateResolutionResource!: CreateResolutionResourceIF
   @Getter getCreateResolutionStep!: CreateResolutionIF
   @Getter getFeePrices!: Array<FeesIF>
-  @Getter getShowErrors!: boolean
   @Getter getUserEmail!: string
   @Getter getValidateSteps!: boolean
   @Getter isCustodianValid!: boolean
@@ -375,15 +382,13 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
     }
     const staffHeaderNumbers: any = {
       documentDelivery: 1,
-      folioNumber: 2,
-      certify: 3,
-      courtOrder: 4,
-      staffPayment: 5
+      certify: 2,
+      courtOrder: 3,
+      staffPayment: 4
     }
 
-    // return "most" to "least"
-    if (this.isRoleStaff) return staffHeaderNumbers[sectionName]
     if (this.isPremiumAccount) return premiumHeaderNumbers[sectionName]
+    if (this.isRoleStaff) return staffHeaderNumbers[sectionName]
     return userHeaderNumbers[sectionName]
   }
 
@@ -404,7 +409,7 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
   }
 
   /** Is true when the Document Delivery conditions are not met. */
-  private get isDocumentDeliveryInvalid (): boolean {
+  get isDocumentDeliveryInvalid (): boolean {
     return (this.getValidateSteps && !this.getDocumentDelivery.valid)
   }
 
@@ -412,10 +417,9 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
   get isAffidavitInvalid (): boolean {
     if (this.isTypeCoop) {
       return !this.getAffidavitStep.validationDetail.valid
-    } else {
-      // Just validate the confirm checkbox for Corps
-      return !this.getAffidavitStep.validationDetail.validationItemDetails[0]?.valid
     }
+    // Just validate the confirm checkbox for Corps
+    return !this.getAffidavitStep.validationDetail.validationItemDetails[0]?.valid
   }
 
   /** The affidavit summary to display, depending on entity type. */
@@ -489,15 +493,13 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
   margin-right: 4px;
 }
 
-// #custodian-of-records,
-// #effective-date-time {
 .container {
   padding: 2rem;
   background-color: $gray1;
 
   &.invalid {
-    border-left: 4px solid $BCgovInputError;
-    padding-left: calc(2rem - 4px);
+    border-left: 3px solid $BCgovInputError;
+    padding-left: calc(2rem - 3px);
 
     label {
       color: $BCgovInputError;
@@ -522,6 +524,7 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
   color: $gray7;
 }
 
+// FUTURE: this should be under court-order-poa-section below
 ::v-deep #court-order {
   .row {
     .col-9 {
@@ -550,30 +553,95 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
   }
 }
 
-::v-deep #certify-section, ::v-deep #document-delivery-section {
+// styles common to the sections
+::v-deep #document-delivery-section,
+::v-deep #folio-number-section,
+::v-deep #certify-section,
+::v-deep #court-order-poa-section,
+::v-deep #staff-payment-section {
+  .v-card {
+    padding: 1.5rem 1.25rem !important;
+  }
+
   .row {
+    padding: 0.75rem 0;
+
     .col-3 {
-      label {
-        font-size: 1rem;
-        color: $gray9;
-        padding-left: 0.75rem;
-      }
+      font-size: 1rem;
+      color: $gray9;
+      padding: 0 0 0 0.75rem !important;
     }
 
     .col-9 {
-      padding-left: 0.5rem !important;
+      padding: 0 0.5rem 0 0 !important;
     }
   }
 }
 
+// styles specific to certify section
 ::v-deep #certify-section {
-  .container {
-    padding-right: 4px !important;
+  .v-card {
+    margin-top: 0 !important;
+  }
 
-    .v-input--checkbox {
-      .v-input__slot {
-        align-items: flex-start;
-      }
+  .v-form {
+    margin-top: 0 !important;
+  }
+
+  .container {
+    padding: 0 !important;
+  }
+
+  .v-input--checkbox .v-input__slot {
+    align-items: flex-start;
+  }
+
+  .row {
+    padding: 0.75rem 0 !important;
+  }
+
+  .v-input--checkbox {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+  }
+
+  .certify-clause:last-of-type {
+    margin-bottom: 0 !important;
+  }
+}
+
+// styles specific to court order poa section
+::v-deep #court-order-poa-section {
+  .v-card {
+    margin-top: 0 !important;
+  }
+
+  .row {
+    margin-top: 0 !important;
+  }
+
+  .v-input--checkbox {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+  }
+}
+
+// styles specific to staff payment section
+::v-deep #staff-payment-section {
+  .v-card {
+    margin-top: 0 !important;
+    border-radius: 4px !important;
+  }
+
+  .v-input__slot {
+    margin-bottom: 0 !important;
+  }
+
+  .v-input--checkbox {
+    margin-top: 0 !important;
+
+    .v-messages {
+      margin-bottom: -14px !important;
     }
   }
 }

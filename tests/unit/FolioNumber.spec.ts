@@ -62,23 +62,6 @@ describe('Folio number component', () => {
     wrapper.destroy()
   })
 
-  it('rejects folio number with invalid character', async () => {
-    const wrapper = mount(FolioNumber, {
-      propsData: { isEditing: true },
-      vuetify
-    })
-    const input = wrapper.find('#folio-number-text-field')
-    input.setValue('_')
-    input.trigger('change')
-    await flushPromises()
-
-    const messages = wrapper.findAll('.v-messages__message')
-    expect(messages.length).toBe(1)
-    expect(messages.at(0).text()).toBe('Invalid character')
-
-    wrapper.destroy()
-  })
-
   it('rejects folio number that is too long', async () => {
     const wrapper = mount(FolioNumber, {
       propsData: { isEditing: true },

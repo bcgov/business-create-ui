@@ -1,31 +1,25 @@
 <template>
-  <div id="transactional-folio-number-section">
-    <div :class="{ 'invalid-section': !sectionValid }">
-      <v-card flat class="pt-4 pr-8">
-        <v-container>
-          <v-row class="pl-4">
-            <v-col cols="3" class="px-0">
-              <label :class="{ 'error-text': !sectionValid }">
-                <strong>Folio or Reference<br>Number</strong>
-              </label>
-            </v-col>
-            <v-col cols="9" class="px-0">
-              <v-text-field
-                filled persistent-hint
-                id="folio-number-input"
-                ref="folioNumberInput"
-                autocomplete="chrome-off"
-                label="Folio or Reference Number (Optional)"
-                v-model="folioNumber"
-                :name="Math.random()"
-                :rules="rules"
-              />
-            </v-col>
-          </v-row>
-        </v-container>
-      </v-card>
-    </div>
-  </div>
+  <v-card flat id="transactional-folio-number-container" :class="{ 'invalid-section': !sectionValid }">
+    <v-row no-gutters>
+      <v-col cols="3">
+        <label :class="{ 'error-text': !sectionValid }">
+          <strong>Folio or Reference<br>Number</strong>
+        </label>
+      </v-col>
+      <v-col cols="9">
+        <v-text-field
+          filled persistent-hint validate-on-blur hide-details
+          id="folio-number-input"
+          ref="folioNumberInput"
+          autocomplete="chrome-off"
+          label="Folio or Reference Number (Optional)"
+          v-model="folioNumber"
+          :name="Math.random()"
+          :rules="rules"
+        />
+      </v-col>
+    </v-row>
+  </v-card>
 </template>
 
 <script lang="ts">
@@ -57,7 +51,7 @@ export default class TransactionalFolioNumber extends Mixins(CommonMixin) {
 
   // Validation rules
   private readonly rules: Array<Function> = [
-    (v: string) => (!v || v.length <= 30) || 'Maximum 30 characters reached'
+    v => (!v || v.length <= 50) || 'Cannot exceed 50 characters' // maximum character count
   ]
 
   /** Called when component is mounted. */
@@ -68,10 +62,12 @@ export default class TransactionalFolioNumber extends Mixins(CommonMixin) {
 
   /** True if this section is valid. */
   get sectionValid (): boolean {
-    // *** TODO: implement
-    return (!this.validate) // || this.getFlagsReviewCertify.isValidTransactionalFolioNumber)
+    // *** TODO: finish implementation
+    return !this.validate
+    // return (!this.validate || this.getFlagsReviewCertify.isValidTransactionalFolioNumber)
   }
 
+  // ** TODO: set validity locally?
   @Watch('folioNumber')
   private async onFolioNumberChanged (val: string): Promise<void> {
     this.setTransactionalFolioNumber(val)
@@ -95,7 +91,7 @@ export default class TransactionalFolioNumber extends Mixins(CommonMixin) {
   }
 }
 
-#transactional-folio-number-section {
+#transactional-folio-number-container {
   &.invalid {
     border-left: 4px solid $BCgovInputError;
     padding-left: calc(2rem - 4px);

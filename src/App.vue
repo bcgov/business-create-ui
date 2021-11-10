@@ -245,7 +245,7 @@ export default class App extends Mixins(
   @Getter isPremiumAccount!: boolean
   @Getter getSteps!: Array<StepIF>
 
-  @Action setAccountFolio!: ActionBindingIF
+  @Action setAccountFolioNumber!: ActionBindingIF
   @Action setBusinessId!: ActionBindingIF
   @Action setCurrentStep!: ActionBindingIF
   @Action setCurrentDate!: ActionBindingIF
@@ -771,7 +771,7 @@ export default class App extends Mixins(
       if (contacts?.length > 0) {
         this.setBusinessContact(contacts[0])
       }
-      this.setAccountFolio(folioNumber)
+      this.setAccountFolioNumber(folioNumber)
     }
     if (!userInfo) throw new Error('Invalid user info')
 
@@ -792,7 +792,7 @@ export default class App extends Mixins(
       // this is an IDIR user
       this.setUserPhone(userInfo.phone)
     } else {
-      console.log('Invalid user phone') // eslint-disable-line no-console
+      console.info('Invalid user phone') // eslint-disable-line no-console
     }
 
     if (!userInfo.firstname) throw new Error('Invalid user first name')

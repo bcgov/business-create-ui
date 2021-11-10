@@ -249,8 +249,10 @@ ul.list {
 .invalid-section {
   border-left: 3px solid $app-red !important;
 
-  .title-label {
-    color: $app-red !important;
+  // make the left red border square (v-cards are otherwise rounded)
+  &.v-card {
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
   }
 }
 

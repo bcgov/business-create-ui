@@ -134,6 +134,10 @@ export const setTransactionalFolioNumber: ActionIF = ({ commit }, folioNumber: s
   commit('mutateTransactionalFolioNumber', folioNumber)
 }
 
+export const setTransactionalFolioNumberValidity: ActionIF = ({ commit }, valid: boolean): void => {
+  commit('mutateTransactionalFolioNumberValidity', valid)
+}
+
 export const setAccountInformation: ActionIF = ({ commit }, accountInfo: AccountInformationIF): void => {
   commit('mutateAccountInformation', accountInfo)
 }
