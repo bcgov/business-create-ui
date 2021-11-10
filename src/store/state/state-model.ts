@@ -1,5 +1,6 @@
 import { EmptyFees, StateModelIF } from '@/interfaces'
 import { cloneDeep } from 'lodash'
+import { RoleTypes } from '@/enums'
 
 export const stateModel: StateModelIF = {
   currentJsDate: null,
@@ -51,7 +52,39 @@ export const stateModel: StateModelIF = {
       valid: false,
       dissolutionStatementType: null
     },
-    hasCertificateDestroyed: false
+    hasCertificateDestroyed: false,
+    custodianOfRecords: {
+      valid: false,
+      custodian: {
+        officer: {
+          firstName: '',
+          lastName: '',
+          middleName: '',
+          email: '',
+          organizationName: '',
+          partyType: null
+        },
+        mailingAddress: {
+          addressCity: '',
+          addressCountry: 'CA',
+          addressRegion: '',
+          postalCode: '',
+          streetAddress: ''
+        },
+        deliveryAddress: {
+          addressCity: '',
+          addressCountry: 'CA',
+          addressRegion: '',
+          postalCode: '',
+          streetAddress: ''
+        },
+        roles: [
+          {
+            roleType: RoleTypes.CUSTODIAN
+          }
+        ]
+      }
+    }
   },
   accountInformation: {
     accountType: '',

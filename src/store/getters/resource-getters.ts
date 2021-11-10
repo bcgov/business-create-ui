@@ -1,6 +1,7 @@
 import {
   AffidavitResourceIF,
   CertifyStatementIF,
+  CustodianResourceIF,
   CreateMemorandumResourceIF,
   CreateRulesResourceIF,
   FilingDataIF,
@@ -90,6 +91,11 @@ export const getMaxStep = (state: StateIF): number => {
 /** The dissolution statement options. */
 export const getDissolutionStatements = (state: StateIF): Array<KeyValueIF> => {
   return state.resourceModel.dissolutionStatements
+}
+
+/** The dissolution custodial records resources. */
+export const getCustodialRecordsResources = (state: StateIF): CustodianResourceIF => {
+  return state.resourceModel.custodialRecords
 }
 
 /** The dissolution statement options. */

@@ -38,6 +38,17 @@ export const CooperativeDissolutionResource: DissolutionResourceIF = {
         'Cooperative Association that exceeds $200.00.'
     }
   ],
+  custodialRecords: {
+    sectionSubtitle: `Enter the full name, email address and mailing address of the Custodian of Records. Addresses must
+     be located in Canada.`,
+    custodianTitle: `Custodian of Records`,
+    helpSection: {
+      helpText: [
+        `A Cooperative Association must appoint a person to have custody and control of its records, including
+        documents, instruments and accounting records, for 2 years.`
+      ]
+    }
+  },
   affidavit: {
     affidavitActionText: 'upload a copy as part of the voluntary dissolution.',
     helpSection: {

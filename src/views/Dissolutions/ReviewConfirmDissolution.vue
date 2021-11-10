@@ -64,7 +64,7 @@
               </v-col>
 
               <v-col cols="9" class="inner-col-2">
-                FUTURE
+                <CustodianOfRecords :isSummary="true" />
               </v-col>
             </v-row>
           </v-container>
@@ -288,7 +288,12 @@ import { Getter, Action } from 'vuex-class'
 import { DateMixin } from '@/mixins'
 
 // Components
-import { AssociationDetails, DestroyCertificate, DissolutionStatement } from '@/components/DefineDissolution'
+import {
+  AssociationDetails,
+  CustodianOfRecords,
+  DestroyCertificate,
+  DissolutionStatement
+} from '@/components/DefineDissolution'
 import { Certify, CourtOrderPoa, EffectiveDateTime } from '@/components'
 import { DocumentDelivery, StaffPayment } from '@/components/common'
 
@@ -317,6 +322,7 @@ import {
     Certify,
     CourtOrderPoa,
     DestroyCertificate,
+    CustodianOfRecords,
     DissolutionStatement,
     DocumentDelivery,
     EffectiveDateTime,

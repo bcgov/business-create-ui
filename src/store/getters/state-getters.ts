@@ -2,7 +2,8 @@ import { AccountTypes, CoopType, CorpTypeCd, DissolutionTypes, FilingNames, Fili
 import {
   AccountInformationIF,
   AddressIF,
-  BusinessContactIF, BusinessIF,
+  BusinessContactIF,
+  BusinessIF,
   CertifyIF,
   CourtOrderStepIF,
   CreateMemorandumIF,
@@ -17,6 +18,7 @@ import {
   NameRequestDetailsIF,
   NameRequestIF,
   NameTranslationIF,
+  OrgPersonIF,
   PeopleAndRoleIF,
   ShareStructureIF,
   StaffPaymentStepIF,
@@ -374,10 +376,12 @@ export const isIncorporationAgreementValid = (state: StateIF): boolean => {
 
 /** Is true when the step is valid. */
 export const isDefineDissolutionValid = (state: StateIF): boolean => {
-  return isTypeCoop(state)
+  const isCoopDefineDissolutionValid = (isTypeCoop(state)
     ? getDissolutionStatementStep(state).valid &&
       getHasCertificateDestroyed(state)
-    : true
+    : true)
+
+  return isCoopDefineDissolutionValid && isCustodianValid(state)
 }
 
 /** Whether all the steps are valid. */
@@ -510,7 +514,7 @@ export const getCourtOrderStep = (state: StateIF): CourtOrderStepIF => {
 
 /** The custodian email. */
 export const getCustodianEmail = (state: StateIF): string => {
-  return 'hardcoded.custodian@email.com' // TODO: Change this once custodian details are available in state
+  return getCustodian(state)?.officer.email
 }
 
 export const getDocumentDelivery = (state: StateIF): DocumentDeliveryIF => {
@@ -519,4 +523,14 @@ export const getDocumentDelivery = (state: StateIF): DocumentDeliveryIF => {
 
 export const getHasCertificateDestroyed = (state: StateIF): boolean => {
   return state.stateModel.dissolution.hasCertificateDestroyed
+}
+
+/** Is true when the custodian data is valid. */
+export const isCustodianValid = (state: StateIF): boolean => {
+  return state.stateModel.dissolution.custodianOfRecords.valid
+}
+
+/** The custodian of records. */
+export const getCustodian = (state: StateIF): OrgPersonIF => {
+  return state.stateModel.dissolution.custodianOfRecords.custodian
 }

@@ -285,3 +285,11 @@ export const mutateDocumentOptionalEmailValidity = (state: StateIF, validity: bo
 export const mutateHasCertificateDestroyed = (state: StateIF, hasCertificateDestroyed: boolean) => {
   state.stateModel.dissolution.hasCertificateDestroyed = hasCertificateDestroyed
 }
+
+export const mutateCustodianValidity = (state: StateIF, validity: boolean) => {
+  state.stateModel.dissolution.custodianOfRecords.valid = validity
+}
+
+export const mutateCustodianOfRecords = (state: StateIF, custodian: OrgPersonIF) => {
+  state.stateModel.dissolution.custodianOfRecords.custodian = custodian
+}

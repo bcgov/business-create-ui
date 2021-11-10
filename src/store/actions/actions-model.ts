@@ -253,3 +253,11 @@ export const setDocumentOptionalEmailValidity: ActionIF = ({ commit }, validity)
 export const setHasCertificateDestroyed: ActionIF = ({ commit }, hasCertificateDestroyed: boolean): void => {
   commit('mutateHasCertificateDestroyed', hasCertificateDestroyed)
 }
+
+export const setCustodianValidity: ActionIF = ({ commit }, validity: boolean): void => {
+  commit('mutateCustodianValidity', validity)
+}
+
+export const setCustodianOfRecords: ActionIF = ({ commit }, custodian: OrgPersonIF): void => {
+  commit('mutateCustodianOfRecords', custodian)
+}

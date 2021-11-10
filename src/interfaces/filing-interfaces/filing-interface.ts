@@ -105,6 +105,7 @@ export interface DissolutionFilingIF {
       affidavitFileSize?: number
       affidavitFileLastModified?: number
       courtOrder?: CourtOrderIF
+      parties: OrgPersonIF[]
 
       // only one of resolution and specialResolution will be used.  Resolution is strictly
       // defined here to support saving of resolutionConfirmed state.  The legal api only
