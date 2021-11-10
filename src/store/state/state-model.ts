@@ -50,7 +50,8 @@ export const stateModel: StateModelIF = {
     dissolutionStatementStep: {
       valid: false,
       dissolutionStatementType: null
-    }
+    },
+    hasCertificateDestroyed: false
   },
   accountInformation: {
     accountType: '',

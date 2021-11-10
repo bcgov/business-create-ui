@@ -71,6 +71,28 @@
         </section>
 
         <!-- divider -->
+        <div class="mx-6 pl-2" v-if="isTypeCoop">
+          <v-container class="py-0">
+            <v-divider  />
+          </v-container>
+        </div>
+
+        <!-- Destroy Certificates -->
+        <section class="mx-6 pl-2" v-if="isTypeCoop">
+          <v-container id="destory-certificate">
+            <v-row no-gutters>
+              <v-col cols="3" class="inner-col-1">
+                <label class="font-weight-bold">Delete and/or<br>Destroy<br>Certificates</label>
+              </v-col>
+
+              <v-col cols="9" class="inner-col-2">
+                <DestroyCertificate :isSummary="true" />
+              </v-col>
+            </v-row>
+          </v-container>
+        </section>
+
+        <!-- divider -->
         <div class="mx-6 pl-2" v-if="!isTypeCoop && isRoleStaff">
           <v-container class="py-0">
             <v-divider  />
@@ -266,7 +288,7 @@ import { Getter, Action } from 'vuex-class'
 import { DateMixin } from '@/mixins'
 
 // Components
-import { AssociationDetails, DissolutionStatement } from '@/components/DefineDissolution'
+import { AssociationDetails, DestroyCertificate, DissolutionStatement } from '@/components/DefineDissolution'
 import { Certify, CourtOrderPoa, EffectiveDateTime } from '@/components'
 import { DocumentDelivery, StaffPayment } from '@/components/common'
 
@@ -294,6 +316,7 @@ import {
     AssociationDetails,
     Certify,
     CourtOrderPoa,
+    DestroyCertificate,
     DissolutionStatement,
     DocumentDelivery,
     EffectiveDateTime,
@@ -315,6 +338,7 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
   @Getter getCreateResolutionResource!: CreateResolutionResourceIF
   @Getter getCreateResolutionStep!: CreateResolutionIF
   @Getter getFeePrices!: Array<FeesIF>
+  @Getter getHasCertificateDestroyed!: boolean
   @Getter getShowErrors!: boolean
   @Getter getUserEmail!: string
   @Getter getValidateSteps!: boolean
@@ -363,8 +387,8 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
 
   /** Is true when the Define Dissolution conditions are not met. */
   private get isDefineDissolutionInvalid (): boolean {
-    return this.getShowErrors &&
-      (this.isTypeCoop && !this.getDissolutionStatementStep.valid)
+    return (this.isTypeCoop && !this.getDissolutionStatementStep.valid) ||
+      (this.isTypeCoop && !this.getHasCertificateDestroyed)
   }
 
   /** Is true when the Dissolution Date and Time section is invalid. */

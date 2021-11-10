@@ -35,11 +35,21 @@
       <!-- Component goes here -->
     </section>
 
-    <section class="mt-10">
+    <section class="mt-10" v-if="isTypeCoop">
       <header id="delete-certificates">
         <h2>{{isTypeCoop ? 4 : 3 }}. Delete and/or Destroy Certificates</h2>
+        <p class="mt-4">After dissolution. all original certificates of incorporation, name change, or amalgamation
+          are not valid and must not be used by the Cooperative Association. Any copies of these documents must
+          be deleted and/or destroyed.
+        </p>
+        <p class="mt-4 delete-certificates-note"><strong>Note:</strong> The Cooperative Association Act requires
+          that the application for a voluntary dissolution be accompanied by the Certificate of Incorporation.
+          The Certificate of Incorporation is on file for this Cooperative Association.
+        </p>
       </header>
-      <!-- Component goes here -->
+      <DestroyCertificate class="mt-5"
+        :showErrorSummary="showDestroyCertificateErrors"
+      />
     </section>
   </div>
 </template>
@@ -48,13 +58,14 @@
 // Libraries
 import { Component, Mixins, Vue } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
-import { AssociationDetails, DissolutionStatement } from '@/components/DefineDissolution'
+import { AssociationDetails, DestroyCertificate, DissolutionStatement } from '@/components/DefineDissolution'
 import { ActionBindingIF, DissolutionStatementIF } from '@/interfaces'
 import { EntityFilterMixin, EnumMixin } from '@/mixins'
 
 @Component({
   components: {
     AssociationDetails,
+    DestroyCertificate,
     DissolutionStatement
   }
 })
@@ -62,6 +73,7 @@ export default class DefineDissolution extends Mixins(EntityFilterMixin, EnumMix
   // Global getters
   @Getter getBusinessLegalName!: string
   @Getter getDissolutionStatementStep!: DissolutionStatementIF
+  @Getter getHasCertificateDestroyed!: boolean
   @Getter getShowErrors!: boolean
   @Getter isTypeCoop: boolean
 
@@ -86,9 +98,17 @@ export default class DefineDissolution extends Mixins(EntityFilterMixin, EnumMix
     return this.getShowErrors &&
       (this.isTypeCoop && this.getDissolutionStatementStep && !this.getDissolutionStatementStep.valid)
   }
+
+  private get showDestroyCertificateErrors () {
+    return this.getShowErrors && (this.isTypeCoop && !this.getHasCertificateDestroyed)
+  }
 }
 </script>
 
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
+
+.delete-certificates-note {
+  font-size: 0.875rem;
+}
 </style>

@@ -281,3 +281,7 @@ export const mutateDocumentOptionalEmail = (state: StateIF, documentOptionalEmai
 export const mutateDocumentOptionalEmailValidity = (state: StateIF, validity: boolean) => {
   state.stateModel.documentDelivery.valid = validity
 }
+
+export const mutateHasCertificateDestroyed = (state: StateIF, hasCertificateDestroyed: boolean) => {
+  state.stateModel.dissolution.hasCertificateDestroyed = hasCertificateDestroyed
+}

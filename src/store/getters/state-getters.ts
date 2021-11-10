@@ -464,3 +464,7 @@ export const getCustodianEmail = (state: StateIF): string => {
 export const getDocumentDelivery = (state: StateIF): DocumentDeliveryIF => {
   return state.stateModel.documentDelivery
 }
+
+export const getHasCertificateDestroyed = (state: StateIF): boolean => {
+  return state.stateModel.dissolution.hasCertificateDestroyed
+}
