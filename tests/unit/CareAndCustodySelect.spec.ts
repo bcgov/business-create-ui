@@ -36,7 +36,7 @@ for (const mock of custodianTestCases) {
     })
 
     it('displays the radio buttons', () => {
-      expect(wrapper.find('.case-and-custody-option-list').exists()).toBe(true)
+      expect(wrapper.find('.care-and-custody-option-list').exists()).toBe(true)
     })
 
     it('changes the role type selection to Liquidator when the radio button is selected', async () => {

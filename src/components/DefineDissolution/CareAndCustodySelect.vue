@@ -7,7 +7,7 @@
         </v-col>
         <v-col cols="12" md="9" lg="9">
           <v-radio-group
-            column class="pt-0 mt-0 case-and-custody-option-list"
+            column class="pt-0 mt-0 care-and-custody-option-list"
             v-model="liquidatorOrCustodian"
             @change="changeCareAndCustodyType"
           >
@@ -67,7 +67,7 @@ export default class CareAndCustodySelect extends Vue {
   color: $gray9;
 }
 
-.case-and-custody-option-list {
+.care-and-custody-option-list {
   padding-top: 0;
   margin-top: 0;
 
