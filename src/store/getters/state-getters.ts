@@ -246,7 +246,12 @@ export const getCreateMemorandumStep = (state: StateIF): CreateMemorandumIF => {
 
 /** Is true when the step is valid. */
 export const isAffidavitValid = (state: StateIF): boolean => {
-  return getAffidavitStep(state).validationDetail.valid
+  if (isTypeCoop(state)) {
+    return getAffidavitStep(state).validationDetail.valid
+  } else {
+    // Just validate the confirm checkbox for Corps
+    return getAffidavitStep(state).validationDetail.validationItemDetails[0]?.valid
+  }
 }
 
 /** The upload Affidavit object. */
@@ -367,8 +372,55 @@ export const isIncorporationAgreementValid = (state: StateIF): boolean => {
   return getIncorporationAgreementStep(state).valid
 }
 
-/** Whether all the incorporation steps are valid. */
+/** Is true when the step is valid. */
+export const isDefineDissolutionValid = (state: StateIF): boolean => {
+  return isTypeCoop(state)
+    ? getDissolutionStatementStep(state).valid &&
+      getHasCertificateDestroyed(state)
+    : true
+}
+
+/** Whether all the steps are valid. */
 export const isApplicationValid = (state: StateIF): boolean => {
+  if (isIncorporationFiling(state)) {
+    return isIncorporationApplicationValid(state)
+  } else if (isDissolutionFiling(state)) {
+    return isDissolutionValid(state)
+  }
+  return false
+}
+
+/** Whether all the dissolution steps are valid. */
+export const isDissolutionValid = (state: StateIF): boolean => {
+  const isStaff = isRoleStaff(state)
+
+  const isDocumentDeliveryValid = getDocumentDelivery(state).valid
+  const isCertifyValid = getCertifyState(state).valid && !!getCertifyState(state).certifiedBy
+
+  // Only for Staff role
+  const isCourtOrderValid = isStaff ? getCourtOrderStep(state).valid : true
+  const isStaffPaymentValid = isStaff ? getStaffPaymentStep(state).valid : true
+
+  const isEffectiveDateTimeValid = (
+    isBaseCompany(state) && isStaff
+      ? getEffectiveDateTime(state).valid
+      : true
+  )
+
+  return (
+    isDefineDissolutionValid(state) &&
+    isAffidavitValid(state) &&
+    isResolutionValid(state) &&
+    isDocumentDeliveryValid &&
+    isCertifyValid &&
+    isEffectiveDateTimeValid &&
+    isCourtOrderValid &&
+    isStaffPaymentValid
+  )
+}
+
+/** Whether all the incorporation steps are valid. */
+export const isIncorporationApplicationValid = (state: StateIF): boolean => {
   // Base company steps
   const isBaseStepsValid = (
     getCreateShareStructureStep(state).valid &&

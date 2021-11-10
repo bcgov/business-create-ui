@@ -15,8 +15,8 @@
         <label class="font-weight-bold pl-2">Dissolution</label>
       </header>
 
-      <div  class="pb-8" :class="{ 'invalid-section': isDefineDissolutionInvalid }">
-        <section class="pt-8 pl-7" v-if="isDefineDissolutionInvalid">
+      <div  class="pb-8" :class="{ 'invalid-section': !isDefineDissolutionValid }">
+        <section class="pt-8 pl-7" v-if="!isDefineDissolutionValid">
           <span>
             <v-icon color="error">mdi-information-outline</v-icon>
             &nbsp;
@@ -178,8 +178,8 @@
         <label class="font-weight-bold pl-2">Affidavit</label>
       </header>
 
-      <div class="section-container" :class="{ 'invalid-section': isAffidavitInvalid }">
-        <section v-if="isAffidavitInvalid">
+      <div class="section-container" :class="{ 'invalid-section': !isAffidavitValid }">
+        <section v-if="!isAffidavitValid">
           <v-icon color="error">mdi-information-outline</v-icon>
           &nbsp;
           <span class="error-text">This step is unfinished.</span>
@@ -342,6 +342,8 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
   @Getter getShowErrors!: boolean
   @Getter getUserEmail!: string
   @Getter getValidateSteps!: boolean
+  @Getter isAffidavitValid!: boolean
+  @Getter isDefineDissolutionValid!: boolean
   @Getter isPremiumAccount!: boolean
   @Getter isRoleStaff!: boolean
   @Getter isTypeCoop!: boolean
@@ -385,12 +387,6 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
     return headerNumbers[sectionName]
   }
 
-  /** Is true when the Define Dissolution conditions are not met. */
-  private get isDefineDissolutionInvalid (): boolean {
-    return (this.isTypeCoop && !this.getDissolutionStatementStep.valid) ||
-      (this.isTypeCoop && !this.getHasCertificateDestroyed)
-  }
-
   /** Is true when the Dissolution Date and Time section is invalid. */
   private get isDissolutionDateTimeInvalid (): boolean {
     return (this.getValidateSteps && !this.getEffectiveDateTime.valid)
@@ -404,16 +400,6 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
   /** Is true when the Document Delivery conditions are not met. */
   private get isDocumentDeliveryInvalid (): boolean {
     return (this.getValidateSteps && !this.getDocumentDelivery.valid)
-  }
-
-  /** Is true when the Affidavit conditions are not met. */
-  private get isAffidavitInvalid (): boolean {
-    if (this.isTypeCoop) {
-      return !this.getAffidavitStep.validationDetail.valid
-    } else {
-      // Just validate the confirm checkbox for Corps
-      return !this.getAffidavitStep.validationDetail.validationItemDetails[0]?.valid
-    }
   }
 
   private get affidavitSummary (): string {
