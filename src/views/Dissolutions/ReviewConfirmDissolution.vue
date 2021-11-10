@@ -179,7 +179,7 @@
       <header>
         <h2>{{getHeaderNumber('documentDelivery')}}. Dissolution Documents Delivery</h2>
         <p class="mt-1">Copies of the dissolution documents will be sent to the following email addresses listed
-          below.
+          below:
         </p>
       </header>
       <div :class="{ 'invalid-section': isDocumentDeliveryInvalid }">
@@ -207,7 +207,7 @@
     <section id="certify-section" class="mt-10">
       <header>
         <h2>{{getHeaderNumber('certify')}}. Certify</h2>
-        <p class="mt-1">Confirm the legal name of the person authorized to complete and submit this application.</p>
+        <p class="mt-1">Confirm the legal name of the person authorized to complete and submit this dissolution.</p>
       </header>
       <div :class="{ 'invalid-section': isCertifyInvalid }">
         <Certify
@@ -540,6 +540,12 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
 ::v-deep #certify-section {
   .container {
     padding-right: 4px !important;
+
+    .v-input--checkbox {
+      .v-input__slot {
+        align-items: flex-start;
+      }
+    }
   }
 }
 </style>
