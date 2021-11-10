@@ -4,8 +4,8 @@ import Vuelidate from 'vuelidate'
 import { mount, Wrapper, createLocalVue } from '@vue/test-utils'
 import flushPromises from 'flush-promises'
 import { getVuexStore } from '@/store'
-import { OrgPerson } from '@/components/AddPeopleAndRoles'
-import { EmptyOrgPerson } from '@/interfaces'
+import OrgPerson from '@/components/AddPeopleAndRoles/OrgPerson.vue'
+import { EmptyOrgPerson } from '@/interfaces/stepper-interfaces/AddPeopleAndRole/org-person-interface'
 
 Vue.use(Vuetify)
 Vue.use(Vuelidate)

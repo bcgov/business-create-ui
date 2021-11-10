@@ -1,5 +1,5 @@
 import { wrapperFactory, shallowWrapperFactory } from '../jest-wrapper-factory'
-import { ListPeopleAndRoles } from '@/components/AddPeopleAndRoles'
+import ListPeopleAndRoles from '@/components/AddPeopleAndRoles/ListPeopleAndRoles.vue'
 
 describe('List People And Roles component', () => {
   let wrapper: any

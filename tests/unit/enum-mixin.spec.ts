@@ -1,11 +1,11 @@
 import { wrapperFactory } from '../jest-wrapper-factory'
-import { EntityInfo } from '@/components/common'
+import MixinTester from './mixin-tester.vue'
 
 describe('Enum Mixin', () => {
   let vm: any
 
   beforeEach(() => {
-    const wrapper = wrapperFactory(EntityInfo, null, {})
+    const wrapper = wrapperFactory(MixinTester, null, {})
     vm = wrapper.vm
   })
 

@@ -8,7 +8,7 @@ import sinon from 'sinon'
 import axios from '@/utils/axios-auth'
 
 // Components
-import { Actions } from '@/components/common'
+import Actions from '@/components/common/Actions.vue'
 
 // Other
 import mockRouter from './MockRouter'

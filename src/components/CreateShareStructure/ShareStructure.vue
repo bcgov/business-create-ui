@@ -152,7 +152,7 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Prop, Emit, Mixins, Vue } from 'vue-property-decorator'
+import { Component, Prop, Emit, Mixins } from 'vue-property-decorator'
 
 // Interfaces
 import { ShareClassIF, FormIF } from '@/interfaces'

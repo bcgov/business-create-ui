@@ -2,8 +2,8 @@ import Vue from 'vue'
 import Vuetify from 'vuetify'
 import { mount, Wrapper } from '@vue/test-utils'
 
-import { BusinessContactInfo } from '@/components/DefineCompany'
-import { BusinessContactIF } from '@/interfaces'
+import BusinessContactInfo from '@/components/DefineCompany/BusinessContactInfo.vue'
+import { BusinessContactIF } from '@/interfaces/stepper-interfaces/common/business-contact-interface'
 
 Vue.use(Vuetify)
 

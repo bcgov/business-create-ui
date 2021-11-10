@@ -6,7 +6,7 @@ import { getVuexStore } from '@/store'
 import { shallowMount } from '@vue/test-utils'
 
 // Components
-import { Stepper } from '@/components/common'
+import Stepper from '@/components/common/Stepper.vue'
 
 Vue.use(Vuetify)
 Vue.use(VueRouter)
