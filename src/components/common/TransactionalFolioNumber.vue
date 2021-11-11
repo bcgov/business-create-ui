@@ -77,27 +77,3 @@ export default class TransactionalFolioNumber extends Mixins(CommonMixin) {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-@import '@/assets/styles/theme.scss';
-
-::v-deep {
-  .container {
-    padding-bottom: 0px;
-    padding-top: 0px;
-  }
-  .v-label {
-    font-weight: normal;
-  }
-}
-
-#transactional-folio-number-container {
-  &.invalid {
-    border-left: 4px solid $BCgovInputError;
-    padding-left: calc(2rem - 4px);
-    h2 {
-      color: $BCgovInputError;
-    }
-  }
-}
-</style>
