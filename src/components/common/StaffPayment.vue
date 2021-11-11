@@ -17,7 +17,7 @@ import { Component, Emit, Prop, Vue } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 
 // Components
-import { StaffPayment as StaffPaymentComponent } from '@bcrs-shared-components/staff-payment'
+import { StaffPaymentComponent } from '@/components'
 
 // Interfaces and Enums
 import { ActionBindingIF, StaffPaymentIF, StaffPaymentStepIF } from '@/interfaces'

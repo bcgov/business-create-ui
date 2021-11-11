@@ -9,7 +9,6 @@ import { createLocalVue, mount, Wrapper } from '@vue/test-utils'
 
 // Components
 import { IncorporationDateTime } from '@/components/ReviewConfirm'
-import get = Reflect.get;
 
 Vue.use(Vuetify)
 Vue.use(Vuelidate)

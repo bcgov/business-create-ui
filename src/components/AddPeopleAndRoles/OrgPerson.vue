@@ -205,7 +205,9 @@ import { Component, Prop, Emit, Mixins } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 import { v4 as uuidv4 } from 'uuid'
 import { OrgPersonIF, BaseAddressType, FormIF, AddressIF, ConfirmDialogType, RolesIF } from '@/interfaces'
-import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
+
+// Components
+import { BaseAddress } from '@/components'
 import { ConfirmDialog } from '@/components/dialogs'
 import { EntityFilterMixin, CommonMixin } from '@/mixins'
 import { CorpTypeCd, RoleTypes, PartyTypes } from '@/enums'

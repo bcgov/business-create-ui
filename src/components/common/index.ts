@@ -5,6 +5,7 @@ import HelpSection from './HelpSection.vue'
 import NameRequestInfo from './NameRequestInfo.vue'
 import StaffPayment from './StaffPayment.vue'
 import Stepper from './Stepper.vue'
+import TransactionalFolioNumber from './TransactionalFolioNumber.vue'
 
 export {
   Actions,
@@ -13,5 +14,6 @@ export {
   HelpSection,
   NameRequestInfo,
   StaffPayment,
-  Stepper
+  Stepper,
+  TransactionalFolioNumber
 }

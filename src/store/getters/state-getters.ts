@@ -97,7 +97,16 @@ export const getEntityType = (state: StateIF): CorpTypeCd => {
 
 /** The account folio number. */
 export const getAccountFolioNumber = (state: StateIF): string => {
-  return state.stateModel.tombstone.folioNumber
+  // *** TODO: remove debugging code
+  // return '111 222 333'
+  return state.stateModel.tombstone.accountFolioNumber
+}
+
+/** The transactional folio number. */
+export const getTransactionalFolioNumber = (state: StateIF): string => {
+  // *** TODO: remove debugging code
+  // return '123 456 789'
+  return state.stateModel.tombstone.transactionalFolioNumber
 }
 
 /** Whether the entity is a BCOMP. */

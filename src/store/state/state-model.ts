@@ -14,7 +14,8 @@ export const stateModel: StateModelIF = {
     userLastName: '',
     userKeycloakGuid: null,
     userAddress: null,
-    folioNumber: ''
+    accountFolioNumber: '',
+    transactionalFolioNumber: ''
   },
   business: {
     businessId: '',

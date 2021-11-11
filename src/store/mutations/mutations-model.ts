@@ -152,11 +152,16 @@ export const mutateAddPeopleAndRoleStepValidity = (state: StateIF, valid: boolea
 }
 
 export const mutateAccountFolioNumber = (state: StateIF, folioNumber: string) => {
-  state.stateModel.tombstone.folioNumber = folioNumber
+  state.stateModel.tombstone.accountFolioNumber = folioNumber
 }
 
-export const mutateFolioNumber = (state: StateIF, folioNumber: string) => {
+export const mutateIncorporationFolioNumber = (state: StateIF, folioNumber: string) => {
   state.stateModel.defineCompanyStep.folioNumber = folioNumber
+}
+
+export const mutateTransactionalFolioNumber = (state: StateIF, folioNumber: string) => {
+  state.stateModel.tombstone.transactionalFolioNumber = folioNumber
+  if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
 }
 
 export const mutateAccountInformation = (state: StateIF, accountInfo: AccountInformationIF) => {

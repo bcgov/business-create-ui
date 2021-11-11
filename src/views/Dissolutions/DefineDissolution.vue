@@ -131,7 +131,3 @@ export default class DefineDissolution extends Mixins(CommonMixin, EntityFilterM
   }
 }
 </script>
-
-<style lang="scss" scoped>
-@import '@/assets/styles/theme.scss';
-</style>

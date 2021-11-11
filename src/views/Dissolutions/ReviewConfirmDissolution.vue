@@ -8,14 +8,14 @@
       </p>
     </header>
 
-    <!-- Dissolution -->
+    <!-- Dissolution summary -->
     <v-card flat id="dissolution-summary" class="mt-8">
       <header class="review-header rounded-t">
         <v-icon class="ml-2" color="appDkBlue">mdi-domain-remove</v-icon>
         <label class="font-weight-bold pl-2">Dissolution</label>
       </header>
 
-      <div  class="pb-8" :class="{ 'invalid-section': isDefineDissolutionInvalid }">
+      <div class="pb-8" :class="{ 'invalid-section': isDefineDissolutionInvalid }">
         <section class="pt-8 pl-7" v-if="isDefineDissolutionInvalid">
           <span>
             <v-icon color="error">mdi-information-outline</v-icon>
@@ -123,30 +123,32 @@
 
     <!-- Resolution -->
     <v-card flat id="resolution-summary" class="mt-10">
-        <header class="review-header rounded-t">
-          <v-icon class="ml-2" color="appDkBlue">mdi-handshake</v-icon>
-          <label class="font-weight-bold pl-2">{{getCreateResolutionResource.reviewConfirmHeader}}</label>
-        </header>
-        <section v-if="!getCreateResolutionStep.validationDetail.valid" class="section-container invalid-section">
-          <v-icon color="error">mdi-information-outline</v-icon>
-          <span class="error-text ml-1 mr-2">This step is unfinished.</span>
-          <router-link
-            :to="{ path: `/${RouteNames.CREATE_RESOLUTION}` }"
-          >Return to this step to finish it</router-link>
-        </section>
-        <section v-if="getCreateResolutionStep.validationDetail.valid" class="section-container upload-success-message">
-          <v-row no-gutters>
-            <v-col md="1">
-              <v-icon class="success-chk">mdi-check</v-icon>
-            </v-col>
-            <v-col v-if="isTypeCoop" md="11" id="file-name-col">
-              <span>FILE_NAME_PLACEHOLDER</span>
-            </v-col>
-            <v-col v-if="isBaseCompany" md="11" id="file-name-col">
-              <span>The resolution was completed and deposited in the Company's records book.</span>
-            </v-col>
-          </v-row>
-        </section>
+      <header class="review-header rounded-t">
+        <v-icon class="ml-2" color="appDkBlue">mdi-handshake</v-icon>
+        <label class="font-weight-bold pl-2">{{getCreateResolutionResource.reviewConfirmHeader}}</label>
+      </header>
+
+      <section v-if="!getCreateResolutionStep.validationDetail.valid" class="section-container invalid-section">
+        <v-icon color="error">mdi-information-outline</v-icon>
+        <span class="error-text ml-1 mr-2">This step is unfinished.</span>
+        <router-link
+          :to="{ path: `/${RouteNames.CREATE_RESOLUTION}` }"
+        >Return to this step to finish it</router-link>
+      </section>
+
+      <section v-if="getCreateResolutionStep.validationDetail.valid" class="section-container upload-success-message">
+        <v-row no-gutters>
+          <v-col md="1">
+            <v-icon class="success-chk">mdi-check</v-icon>
+          </v-col>
+          <v-col v-if="isTypeCoop" md="11" id="file-name-col">
+            <span>FILE_NAME_PLACEHOLDER</span>
+          </v-col>
+          <v-col v-if="isBaseCompany" md="11" id="file-name-col">
+            <span>The resolution was completed and deposited in the Company's records book.</span>
+          </v-col>
+        </v-row>
+      </section>
     </v-card>
 
     <!-- Affidavit -->
@@ -198,9 +200,19 @@
     </section>
 
     <!-- Folio Number -->
-    <section id="folio-number-section" class="mt-10" v-if="isPremiumAccount">
-      <h2>{{getHeaderNumber('folioNumber')}}. Folio Number</h2>
-      FUTURE
+    <section id="folio-number-section" class="mt-10" v-if="isPremiumAccount || isRoleStaff">
+      <h2>{{getHeaderNumber('folioNumber')}}. Folio or Reference Number for this Filing</h2>
+      <p class="my-3 pb-2">
+        Enter the folio or reference number you want to use for this filing for your own tracking
+        purposes. The Business Folio or Reference Number is displayed below (if available).
+        Entering a different value below will not change the Business Folio or Reference Number.
+        Only the number below will appear on the transaction report and receipt for this filing.
+      </p>
+        <TransactionalFolioNumber
+          class="mt-10"
+          :sectionNumber="`${getHeaderNumber('folioNumber')}.`"
+          :validate="getValidateSteps"
+        />
     </section>
 
     <!-- Certify -->
@@ -268,7 +280,7 @@ import { DateMixin } from '@/mixins'
 // Components
 import { AssociationDetails, CustodianOfRecords, DissolutionStatement } from '@/components/DefineDissolution'
 import { Certify, CourtOrderPoa, EffectiveDateTime } from '@/components'
-import { DocumentDelivery, StaffPayment } from '@/components/common'
+import { DocumentDelivery, StaffPayment, TransactionalFolioNumber } from '@/components/common'
 
 // Enums
 import { RouteNames } from '@/enums'
@@ -298,7 +310,8 @@ import {
     DissolutionStatement,
     DocumentDelivery,
     EffectiveDateTime,
-    StaffPayment
+    StaffPayment,
+    TransactionalFolioNumber
   }
 })
 export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
@@ -349,33 +362,44 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
     })
   }
 
-  private getHeaderNumber (sectionName): number {
-    const userHeaderNumbers: any = { documentDelivery: 1, certify: 2 }
-    const premiumHeaderNumbers: any = { documentDelivery: 1, folioNumber: 2, certify: 3 }
-    const staffHeaderNumbers: any = { documentDelivery: 1, certify: 2, courtOrder: 3, staffPayment: 4 }
-
-    let headerNumbers = userHeaderNumbers
-    if (this.isPremiumAccount) {
-      headerNumbers = premiumHeaderNumbers
-    } else if (this.isRoleStaff) {
-      headerNumbers = staffHeaderNumbers
+  /** Returns the header number for the specified section name. */
+  getHeaderNumber (sectionName: string): number {
+    const userHeaderNumbers: any = {
+      documentDelivery: 1,
+      certify: 2
     }
-    return headerNumbers[sectionName]
+    const premiumHeaderNumbers: any = {
+      documentDelivery: 1,
+      folioNumber: 2,
+      certify: 3
+    }
+    const staffHeaderNumbers: any = {
+      documentDelivery: 1,
+      folioNumber: 2,
+      certify: 3,
+      courtOrder: 4,
+      staffPayment: 5
+    }
+
+    // return "most" to "least"
+    if (this.isRoleStaff) return staffHeaderNumbers[sectionName]
+    if (this.isPremiumAccount) return premiumHeaderNumbers[sectionName]
+    return userHeaderNumbers[sectionName]
   }
 
   /** Is true when the Define Dissolution conditions are not met. */
-  private get isDefineDissolutionInvalid (): boolean {
+  get isDefineDissolutionInvalid (): boolean {
     return !this.isCustodianValid ||
       (this.isTypeCoop && !this.getDissolutionStatementStep.valid)
   }
 
   /** Is true when the Dissolution Date and Time section is invalid. */
-  private get isDissolutionDateTimeInvalid (): boolean {
+  get isDissolutionDateTimeInvalid (): boolean {
     return (this.getValidateSteps && !this.getEffectiveDateTime.valid)
   }
 
   /** Is true when the Court Order conditions are not met. */
-  private get isCourtOrderInvalid (): boolean {
+  get isCourtOrderInvalid (): boolean {
     return (this.getValidateSteps && !this.getCourtOrderStep.valid)
   }
 
@@ -385,7 +409,7 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
   }
 
   /** Is true when the Affidavit conditions are not met. */
-  private get isAffidavitInvalid (): boolean {
+  get isAffidavitInvalid (): boolean {
     if (this.isTypeCoop) {
       return !this.getAffidavitStep.validationDetail.valid
     } else {
@@ -394,13 +418,15 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
     }
   }
 
-  private get affidavitSummary (): string {
+  /** The affidavit summary to display, depending on entity type. */
+  get affidavitSummary (): string {
     return this.isTypeCoop
       ? this.getAffidavitStep.affidavitDoc?.name
-      : `The affidavit required by section 316(1)(a) of the Business Corporations Act has been completed and deposited
-      in the company's records book.`
+      : 'The affidavit required by section 316(1)(a) of the Business Corporations Act has ' +
+        'been completed and deposited in the company\'s records book.'
   }
 
+  /** The future effective fee price. */
   get futureEffectiveFeePrice (): string {
     if (this.getFeePrices[0]?.futureEffectiveFees) {
       return `$${this.getFeePrices[0].futureEffectiveFees.toFixed(2)}`
@@ -408,6 +434,7 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
     return 'TBD'
   }
 
+  /** The future effective date, in Pacific date-time format. */
   get futureEffectiveDate (): string {
     return this.dateToPacificDateTime(this.getEffectiveDateTime.effectiveDate, true)
   }
