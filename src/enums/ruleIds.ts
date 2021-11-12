@@ -1,5 +1,5 @@
 /** Unique values to identify rules. */
-export enum Rules {
+export enum RuleIds {
   NUM_COMPLETING_PARTY = 0,
   NUM_DIRECTORS = 1,
   NUM_INCORPORATORS = 2,

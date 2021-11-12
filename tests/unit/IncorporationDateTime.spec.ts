@@ -8,8 +8,7 @@ import { getVuexStore } from '@/store'
 import { createLocalVue, mount, Wrapper } from '@vue/test-utils'
 
 // Components
-import { IncorporationDateTime } from '@/components/ReviewConfirm'
-import get = Reflect.get;
+import IncorporationDateTime from '@/components/ReviewConfirm/IncorporationDateTime.vue'
 
 Vue.use(Vuetify)
 Vue.use(Vuelidate)

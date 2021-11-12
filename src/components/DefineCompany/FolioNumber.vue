@@ -46,7 +46,6 @@ export default class FolioNumber extends Vue {
 
   // Validation rules
   private readonly rules: Array<Function> = [
-    v => /^[0-9A-Za-z]*$/.test(v) || 'Invalid character', // numbers and letters only
     v => (!v || v.length <= 50) || 'Cannot exceed 50 characters' // maximum character count
   ]
 

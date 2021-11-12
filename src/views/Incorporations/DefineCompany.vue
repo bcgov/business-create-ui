@@ -73,7 +73,7 @@
         <OfficeAddresses
           :showErrors="getShowErrors"
           :inputAddresses="addresses"
-          @update:addresses="onAddressChange($event)"
+          @update:addresses="setOfficeAddresses($event)"
           @valid="onAddressFormValidityChange($event)"
         />
       </div>
@@ -91,7 +91,7 @@
           :initialValue="getBusinessContact"
           :isEditing="true"
           :showErrors="getShowErrors"
-          @contactInfoChange="onBusinessContactInfoChange($event)"
+          @contactInfoChange="setBusinessContact($event)"
           @contactInfoFormValidityChange="onBusinessContactFormValidityChange($event)"
         />
       </div>
@@ -107,7 +107,7 @@
         <FolioNumber
           :initialValue="getDefineCompanyStep.folioNumber"
           :isEditing="true"
-          @folioNumberChange="onFolioNumberChange($event)"
+          @folioNumberChange="setIncorporationFolioNumber($event)"
         />
       </v-card>
     </section>
@@ -162,7 +162,7 @@ export default class DefineCompany extends Mixins(CommonMixin, EntityFilterMixin
   @Action setEntityType!: ActionBindingIF
   @Action setBusinessContact!: ActionBindingIF
   @Action setCooperativeType!: ActionBindingIF
-  @Action setFolioNumber!: ActionBindingIF
+  @Action setIncorporationFolioNumber!: ActionBindingIF
   @Action setOfficeAddresses!: ActionBindingIF
   @Action setDefineCompanyStepValidity!: ActionBindingIF
   @Action setIgnoreChanges!: ActionBindingIF
@@ -240,28 +240,16 @@ export default class DefineCompany extends Mixins(CommonMixin, EntityFilterMixin
     this.setCooperativeType(cooperativeType)
   }
 
-  private onBusinessContactInfoChange (businessContact: BusinessContactIF): void {
-    this.setBusinessContact(businessContact)
-  }
-
   private onBusinessContactFormValidityChange (valid: boolean): void {
     this.businessContactFormValid = valid
     this.setDefineCompanyStepValidity(this.businessContactFormValid && this.addressFormValid &&
       this.hasValidNameTranslation)
   }
 
-  private onAddressChange (address: IncorporationAddressIF): void {
-    this.setOfficeAddresses(address)
-  }
-
   private onAddressFormValidityChange (valid: boolean): void {
     this.addressFormValid = valid
     this.setDefineCompanyStepValidity(this.businessContactFormValid && this.addressFormValid &&
       this.hasValidNameTranslation)
-  }
-
-  private onFolioNumberChange (folioNumber: string): void {
-    this.setFolioNumber(folioNumber)
   }
 
   @Watch('$route')

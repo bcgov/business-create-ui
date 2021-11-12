@@ -118,7 +118,7 @@
 import { Component, Prop, Mixins, Emit } from 'vue-property-decorator'
 
 // Components
-import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
+import { BaseAddress } from '@/components'
 
 // Dialogs
 import { ConfirmRemoveDialog } from '@/components/dialogs'

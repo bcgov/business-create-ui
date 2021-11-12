@@ -3,7 +3,7 @@ import Vue from 'vue'
 import Vuetify from 'vuetify'
 import { mount } from '@vue/test-utils'
 import flushPromises from 'flush-promises'
-import { FolioNumber } from '@/components/DefineCompany'
+import FolioNumber from '@/components/DefineCompany/FolioNumber.vue'
 
 Vue.use(Vuetify)
 const vuetify = new Vuetify({})
@@ -59,23 +59,6 @@ describe('Folio number component', () => {
     await flushPromises()
 
     expect(wrapper.findAll('.v-messages__message').length).toBe(0)
-    wrapper.destroy()
-  })
-
-  it('rejects folio number with invalid character', async () => {
-    const wrapper = mount(FolioNumber, {
-      propsData: { isEditing: true },
-      vuetify
-    })
-    const input = wrapper.find('#folio-number-text-field')
-    input.setValue('_')
-    input.trigger('change')
-    await flushPromises()
-
-    const messages = wrapper.findAll('.v-messages__message')
-    expect(messages.length).toBe(1)
-    expect(messages.at(0).text()).toBe('Invalid character')
-
     wrapper.destroy()
   })
 

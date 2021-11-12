@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuetify from 'vuetify'
 import { getVuexStore } from '@/store'
 import { shallowMount, mount } from '@vue/test-utils'
-import { InvalidIncorporationApplicationDialog } from '@/components/dialogs'
+import InvalidIncorporationApplicationDialog from '@/components/dialogs/InvalidIncorporationApplicationDialog.vue'
 
 Vue.use(Vuetify)
 

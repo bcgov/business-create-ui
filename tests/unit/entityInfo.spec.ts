@@ -1,5 +1,5 @@
 import { wrapperFactory } from '../jest-wrapper-factory'
-import { EntityInfo } from '@/components/common'
+import EntityInfo from '@/components/common/EntityInfo.vue'
 
 // Test Case Data
 const mockEntityInfo = [

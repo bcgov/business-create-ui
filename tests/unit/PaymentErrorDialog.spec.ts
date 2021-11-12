@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuetify from 'vuetify'
 import { getVuexStore } from '@/store'
 import { shallowMount, mount } from '@vue/test-utils'
-import { PaymentErrorDialog } from '@/components/dialogs'
+import PaymentErrorDialog from '@/components/dialogs/PaymentErrorDialog.vue'
 import ErrorContact from '@/components/common/ErrorContact.vue'
 
 Vue.use(Vuetify)

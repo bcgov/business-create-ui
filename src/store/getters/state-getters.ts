@@ -97,7 +97,23 @@ export const getEntityType = (state: StateIF): CorpTypeCd => {
 
 /** The account folio number. */
 export const getAccountFolioNumber = (state: StateIF): string => {
-  return state.stateModel.tombstone.folioNumber
+  return state.stateModel.tombstone.accountFolioNumber
+}
+
+// *** TODO: replace this with account folio number?
+/** The incorporation folio number. */
+export const getIncorporationFolioNumber = (state: StateIF): string => {
+  return getDefineCompanyStep(state).folioNumber
+}
+
+/** The transactional folio number. */
+export const getTransactionalFolioNumber = (state: StateIF): string => {
+  return state.stateModel.tombstone.transactionalFolioNumber
+}
+
+/** The staff payment folio number. */
+export const getStaffPaymentFolioNumber = (state: StateIF): string => {
+  return getStaffPaymentStep(state).staffPayment.folioNumber
 }
 
 /** Whether the entity is a BCOMP. */
@@ -398,12 +414,18 @@ export const isApplicationValid = (state: StateIF): boolean => {
   )
 }
 
-/** Is true when the user has tried to submit a filing. */
+/**
+ * Is true when the user has tried to submit a filing,
+ * ie, after clicking File and Pay.
+ */
 export const getValidateSteps = (state: StateIF): boolean => {
   return state.stateModel.validateSteps
 }
 
-/** Is true when the user should see the validation errors. */
+/**
+ * Is true when the user should see the validation errors,
+ * ie, after navigating to review page.
+ */
 export const getShowErrors = (state: StateIF): boolean => {
   return state.stateModel.showErrors
 }

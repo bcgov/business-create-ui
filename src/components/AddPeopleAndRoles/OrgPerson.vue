@@ -58,7 +58,7 @@
                       label="First Name"
                       id="person__first-name"
                       v-model="orgPerson.officer.firstName"
-                      :rules="NameRules.firstNameRules"
+                      :rules="Rules.FirstNameRules"
                       :readonly="isCompletingParty && !isRoleStaff"
                     />
                     <v-text-field
@@ -67,7 +67,7 @@
                       label="Middle Name"
                       id="person__middle-name"
                       v-model="orgPerson.officer.middleName"
-                      :rules="NameRules.middleNameRules"
+                      :rules="Rules.MiddleNameRules"
                       :readonly="isCompletingParty && !isRoleStaff"
                     />
                     <v-text-field
@@ -76,7 +76,7 @@
                       label="Last Name"
                       id="person__last-name"
                       v-model="orgPerson.officer.lastName"
-                      :rules="NameRules.lastNameRules"
+                      :rules="Rules.LastNameRules"
                       :readonly="isCompletingParty && !isRoleStaff"
                     />
                   </div>
@@ -92,7 +92,7 @@
                       label="Full Legal Corporation or Firm Name"
                       id="firm-name"
                       v-model="orgPerson.officer.organizationName"
-                      :rules="NameRules.orgNameRules"
+                      :rules="Rules.OrgNameRules"
                     />
                   </div>
                 </template>
@@ -200,17 +200,16 @@
 </template>
 
 <script lang="ts">
-// Libraries
 import { Component, Prop, Emit, Mixins } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 import { v4 as uuidv4 } from 'uuid'
 import { OrgPersonIF, BaseAddressType, FormIF, AddressIF, ConfirmDialogType, RolesIF } from '@/interfaces'
-import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
+import { BaseAddress } from '@/components'
 import { ConfirmDialog } from '@/components/dialogs'
 import { EntityFilterMixin, CommonMixin } from '@/mixins'
 import { CorpTypeCd, RoleTypes, PartyTypes } from '@/enums'
 import { PersonAddressSchema } from '@/schemas'
-import { NameRules } from '@/rules'
+import { Rules } from '@/rules'
 
 @Component({
   components: {
@@ -253,13 +252,11 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
   // Person Address schema for template
   readonly PersonAddressSchema = PersonAddressSchema
 
-  // Enums for template
+  // Enums and rules for template
   readonly CorpTypeCd = CorpTypeCd
   readonly RoleTypes = RoleTypes
   readonly PartyTypes = PartyTypes
-
-  // Rules
-  readonly NameRules = NameRules
+  readonly Rules = Rules
 
   /** The validation rules for the roles. */
   private get roleRules (): Array<Function> {

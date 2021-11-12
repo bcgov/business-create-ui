@@ -50,8 +50,6 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Getter getStaffPaymentStep!: StaffPaymentStepIF
   @Getter getCourtOrderStep!: CourtOrderStepIF
   @Getter isRoleStaff!: boolean
-
-  // Dissolution
   @Getter getDissolutionStatementStep!: DissolutionStatementIF
   @Getter getCustodian!: OrgPersonIF
 
@@ -71,7 +69,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Action setShareClasses!: ActionBindingIF
   @Action setEffectiveDate!: ActionBindingIF
   @Action setIsFutureEffective!: ActionBindingIF
-  @Action setFolioNumber!: ActionBindingIF
+  @Action setIncorporationFolioNumber!: ActionBindingIF
   @Action setIncorporationAgreementStepData!: ActionBindingIF
   @Action setRules!: ActionBindingIF
   @Action setMemorandum!: ActionBindingIF
@@ -80,8 +78,6 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Action setStaffPayment!: ActionBindingIF
   @Action setResolution!: ActionBindingIF
   @Action setDocumentOptionalEmail!: ActionBindingIF
-
-  // Dissolution
   @Action setDissolutionStatementStepData!: ActionBindingIF
   @Action setCustodianOfRecords!: ActionBindingIF
 
@@ -270,7 +266,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     }
 
     // Set Folio Number
-    this.setFolioNumber(draftFiling.header.folioNumber)
+    this.setIncorporationFolioNumber(draftFiling.header.folioNumber)
   }
 
   /**
@@ -442,19 +438,12 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
       this.storeStaffPayment(draftFiling)
     }
 
-    // Conditionally parse the entity-specific sections.
-    switch (this.getEntityType) {
-      case CorpTypeCd.COOP:
-        break
-      case CorpTypeCd.BENEFIT_COMPANY:
-      case CorpTypeCd.BC_CCC:
-      case CorpTypeCd.BC_COMPANY:
-      case CorpTypeCd.BC_ULC_COMPANY:
-        break
-    }
+    // *** TODO: set folio number(s)
+    // *** TODO: check this against staff payment FN
   }
 
-  /** Build Staff Payment data into the filing.
+  /**
+   * Build Staff Payment data into the filing.
    * @param filing The dissolution filing.
    */
   private buildStaffPayment (filing: DissolutionFilingIF): void {
@@ -483,7 +472,8 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     }
   }
 
-  /** Parse Staff Payment data into store.
+  /**
+   * Parse Staff Payment data into store.
    * @param filing The dissolution filing to parse.
    */
   private storeStaffPayment (filing: DissolutionFilingIF['filing']): void {

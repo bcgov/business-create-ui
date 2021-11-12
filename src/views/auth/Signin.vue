@@ -7,7 +7,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 
 // Components
-import SbcSignin from 'sbc-common-components/src/components/SbcSignin.vue'
+import { SbcSignin } from '@/components'
 
 @Component({
   components: {
