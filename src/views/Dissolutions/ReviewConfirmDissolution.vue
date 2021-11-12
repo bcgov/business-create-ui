@@ -15,8 +15,8 @@
         <label class="font-weight-bold pl-2">Dissolution</label>
       </header>
 
-      <div class="pb-8" :class="{ 'invalid-section rounded-bl-0': isDefineDissolutionInvalid }">
-        <section class="pt-8 pl-7" v-if="isDefineDissolutionInvalid">
+      <div  class="pb-8" :class="{ 'invalid-section rounded-bl-0': !isDefineDissolutionValid }">
+        <section class="pt-8 pl-7" v-if="!isDefineDissolutionValid">
           <span>
             <v-icon color="error">mdi-information-outline</v-icon>
             &nbsp;
@@ -65,6 +65,28 @@
 
               <v-col cols="9" class="inner-col-2">
                 <CustodianOfRecords :isSummary="true" />
+              </v-col>
+            </v-row>
+          </v-container>
+        </section>
+
+        <!-- divider -->
+        <div class="mx-6 pl-2" v-if="isTypeCoop">
+          <v-container class="py-0">
+            <v-divider  />
+          </v-container>
+        </div>
+
+        <!-- Destroy Certificates -->
+        <section class="mx-6 pl-2" v-if="isTypeCoop">
+          <v-container id="destory-certificate">
+            <v-row no-gutters>
+              <v-col cols="3" class="inner-col-1">
+                <label class="font-weight-bold">Delete and/or<br>Destroy<br>Certificates</label>
+              </v-col>
+
+              <v-col cols="9" class="inner-col-2">
+                <DestroyCertificate :isSummary="true" />
               </v-col>
             </v-row>
           </v-container>
@@ -162,8 +184,8 @@
         <label class="font-weight-bold pl-2">Affidavit</label>
       </header>
 
-      <div class="section-container rounded-bl-0" :class="{ 'invalid-section': isAffidavitInvalid }">
-        <section v-if="isAffidavitInvalid">
+      <div class="section-container rounded-bl-0" :class="{ 'invalid-section': !isAffidavitValid }">
+        <section v-if="!isAffidavitValid">
           <v-icon color="error">mdi-information-outline</v-icon>
           &nbsp;
           <span class="error-text">This step is unfinished.</span>
@@ -286,7 +308,12 @@ import { Getter, Action } from 'vuex-class'
 import { DateMixin } from '@/mixins'
 
 // Components
-import { AssociationDetails, CustodianOfRecords, DissolutionStatement } from '@/components/DefineDissolution'
+import {
+  AssociationDetails,
+  CustodianOfRecords,
+  DestroyCertificate,
+  DissolutionStatement
+} from '@/components/DefineDissolution'
 import { Certify, CourtOrderPoa, EffectiveDateTime } from '@/components'
 import { DocumentDelivery, StaffPayment, TransactionalFolioNumber } from '@/components/common'
 
@@ -314,6 +341,7 @@ import {
     AssociationDetails,
     Certify,
     CourtOrderPoa,
+    DestroyCertificate,
     CustodianOfRecords,
     DissolutionStatement,
     DocumentDelivery,
@@ -337,9 +365,12 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
   @Getter getCreateResolutionResource!: CreateResolutionResourceIF
   @Getter getCreateResolutionStep!: CreateResolutionIF
   @Getter getFeePrices!: Array<FeesIF>
+  @Getter getHasCertificateDestroyed!: boolean
+  @Getter getShowErrors!: boolean // *** TODO: delete if not used
   @Getter getUserEmail!: string
   @Getter getValidateSteps!: boolean
-  @Getter isCustodianValid!: boolean
+  @Getter isAffidavitValid!: boolean
+  @Getter isDefineDissolutionValid!: boolean
   @Getter isPremiumAccount!: boolean
   @Getter isRoleStaff!: boolean
   @Getter isTypeCoop!: boolean
@@ -392,12 +423,6 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
     return userHeaderNumbers[sectionName]
   }
 
-  /** Is true when the Define Dissolution conditions are not met. */
-  get isDefineDissolutionInvalid (): boolean {
-    return !this.isCustodianValid ||
-      (this.isTypeCoop && !this.getDissolutionStatementStep.valid)
-  }
-
   /** Is true when the Dissolution Date and Time section is invalid. */
   get isDissolutionDateTimeInvalid (): boolean {
     return (this.getValidateSteps && !this.getEffectiveDateTime.valid)
@@ -411,15 +436,6 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
   /** Is true when the Document Delivery conditions are not met. */
   get isDocumentDeliveryInvalid (): boolean {
     return (this.getValidateSteps && !this.getDocumentDelivery.valid)
-  }
-
-  /** Is true when the Affidavit conditions are not met. */
-  get isAffidavitInvalid (): boolean {
-    if (this.isTypeCoop) {
-      return !this.getAffidavitStep.validationDetail.valid
-    }
-    // Just validate the confirm checkbox for Corps
-    return !this.getAffidavitStep.validationDetail.validationItemDetails[0]?.valid
   }
 
   /** The affidavit summary to display, depending on entity type. */

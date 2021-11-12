@@ -47,11 +47,21 @@
       />
     </section>
 
-    <section class="mt-10">
-      <header id="delete-certificates">
+    <section class="mt-10" v-if="isTypeCoop">
+      <header id="delete-certificates-header">
         <h2>{{isTypeCoop ? 4 : 3 }}. Delete and/or Destroy Certificates</h2>
+        <p class="mt-4">After dissolution, all original certificates of incorporation, name change, or amalgamation
+          are not valid and must not be used by the Cooperative Association. Any copies of these documents must
+          be deleted and/or destroyed.
+        </p>
+        <p class="mt-4 delete-certificates-note"><strong>Note:</strong> The Cooperative Association Act requires
+          that the application for a voluntary dissolution be accompanied by the Certificate of Incorporation.
+          The Certificate of Incorporation is on file for this Cooperative Association.
+        </p>
       </header>
-      <!-- Component goes here -->
+      <DestroyCertificate class="mt-5"
+        :showErrorSummary="showDestroyCertificateErrors"
+      />
     </section>
   </div>
 </template>
@@ -64,8 +74,9 @@ import { HelpSection } from '@/components/common'
 import {
   AssociationDetails,
   CareAndCustodySelect,
-  DissolutionStatement,
-  CustodianOfRecords
+  CustodianOfRecords,
+  DestroyCertificate,
+  DissolutionStatement
 } from '@/components/DefineDissolution'
 import { ActionBindingIF, DissolutionStatementIF } from '@/interfaces'
 import { CommonMixin, EntityFilterMixin, EnumMixin } from '@/mixins'
@@ -75,9 +86,10 @@ import { RouteNames } from '@/enums'
   components: {
     AssociationDetails,
     CareAndCustodySelect,
+    CustodianOfRecords,
+    DestroyCertificate,
     DissolutionStatement,
-    HelpSection,
-    CustodianOfRecords
+    HelpSection
   }
 })
 export default class DefineDissolution extends Mixins(CommonMixin, EntityFilterMixin, EnumMixin) {
@@ -85,6 +97,7 @@ export default class DefineDissolution extends Mixins(CommonMixin, EntityFilterM
   @Getter getBusinessLegalName!: string
   @Getter getCustodialRecordsResources!: any // TODO: Update to Custodial Resource IF
   @Getter getDissolutionStatementStep!: DissolutionStatementIF
+  @Getter getHasCertificateDestroyed!: boolean
   @Getter getShowErrors!: boolean
   @Getter isCustodianValid!: boolean
   @Getter isTypeCoop: boolean
@@ -112,6 +125,10 @@ export default class DefineDissolution extends Mixins(CommonMixin, EntityFilterM
       (this.isTypeCoop && this.getDissolutionStatementStep && !this.getDissolutionStatementStep.valid)
   }
 
+  private get showDestroyCertificateErrors () {
+    return this.getShowErrors && (this.isTypeCoop && !this.getHasCertificateDestroyed)
+  }
+
   @Watch('$route')
   private async scrollToInvalidComponent (): Promise<void> {
     if (this.getShowErrors && this.$route.name === RouteNames.DEFINE_DISSOLUTION) {
@@ -131,3 +148,9 @@ export default class DefineDissolution extends Mixins(CommonMixin, EntityFilterM
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.delete-certificates-note {
+  font-size: 0.875rem;
+}
+</style>

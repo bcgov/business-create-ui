@@ -53,6 +53,7 @@ export const stateModel: StateModelIF = {
       valid: false,
       dissolutionStatementType: null
     },
+    hasCertificateDestroyed: false,
     custodianOfRecords: {
       valid: false,
       custodian: {

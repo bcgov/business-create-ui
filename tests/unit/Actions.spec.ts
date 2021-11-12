@@ -130,6 +130,7 @@ describe('Emits error event if NR validation fails in file and pay', () => {
     }
     store.state.stateModel.tombstone = {
       authRoles: [],
+      filingType: 'incorporationApplication',
       userEmail: 'completing-party@example.com'
     }
     store.state.stateModel.certifyState = {

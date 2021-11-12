@@ -8,4 +8,5 @@ export interface DissolutionStateIF {
     valid: boolean,
     custodian: OrgPersonIF
   }
+  hasCertificateDestroyed: boolean
 }
