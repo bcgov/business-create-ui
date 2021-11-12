@@ -26,35 +26,35 @@
       <strong>Your application must include the following:</strong>
       <ul>
         <template v-for="(rule, index) in getPeopleAndRolesResource.rules">
-          <li v-if="rule.rule === Rules.NUM_COMPLETING_PARTY" :key="index">
+          <li v-if="rule.id === RuleIds.NUM_COMPLETING_PARTY" :key="index">
             <v-icon v-if="validNumCompletingParty" color="green darken-2"
               class="cp-valid">mdi-check</v-icon>
             <v-icon v-else-if="getShowErrors" color="error" class="cp-invalid">mdi-close</v-icon>
             <v-icon v-else>mdi-circle-small</v-icon>
             <span class="chk-list-item-txt">{{rule.text}}</span>
           </li>
-          <li v-if="rule.rule === Rules.NUM_INCORPORATORS" :key="index">
+          <li v-if="rule.id === RuleIds.NUM_INCORPORATORS" :key="index">
             <v-icon v-if="validMinimumIncorporators" color="green darken-2"
               class="incorp-valid">mdi-check</v-icon>
             <v-icon v-else-if="getShowErrors" color="error" class="incorp-invalid">mdi-close</v-icon>
             <v-icon v-else>mdi-circle-small</v-icon>
             <span class="chk-list-item-txt">{{rule.text}}</span>
           </li>
-          <li v-if="rule.rule === Rules.NUM_DIRECTORS" :key="index">
+          <li v-if="rule.id === RuleIds.NUM_DIRECTORS" :key="index">
             <v-icon v-if="validMinimumDirectors" color="green darken-2"
               class="dir-valid">mdi-check</v-icon>
             <v-icon v-else-if="getShowErrors" color="error" class="dir-invalid">mdi-close</v-icon>
             <v-icon v-else>mdi-circle-small</v-icon>
             <span class="chk-list-item-txt">{{rule.text}}</span>
           </li>
-          <li v-if="rule.rule === Rules.DIRECTOR_COUNTRY" :key="index">
+          <li v-if="rule.id === RuleIds.DIRECTOR_COUNTRY" :key="index">
             <v-icon v-if="validDirectorCountry" color="green darken-2"
               class="dir-valid">mdi-check</v-icon>
             <v-icon v-else-if="getShowErrors" color="error" class="dir-invalid">mdi-close</v-icon>
             <v-icon v-else>mdi-circle-small</v-icon>
             <span class="chk-list-item-txt">{{rule.text}}</span>
           </li>
-          <li v-if="rule.rule === Rules.DIRECTOR_PROVINCE" :key="index">
+          <li v-if="rule.id === RuleIds.DIRECTOR_PROVINCE" :key="index">
             <v-icon v-if="validDirectorProvince" color="green darken-2"
               class="dir-valid">mdi-check</v-icon>
             <v-icon v-else-if="getShowErrors" color="error" class="dir-invalid">mdi-close</v-icon>
@@ -157,7 +157,7 @@ import { ActionBindingIF, AddressIF, EmptyAddress, EmptyOrgPerson, OrgPersonIF, 
 import { EntityFilterMixin } from '@/mixins'
 
 // Enums
-import { CorpTypeCd, PartyTypes, NumWord, RoleTypes, Rules } from '@/enums'
+import { CorpTypeCd, PartyTypes, NumWord, RoleTypes, RuleIds } from '@/enums'
 
 // Components
 import OrgPerson from './OrgPerson.vue'
@@ -191,7 +191,7 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
   readonly RoleTypes = RoleTypes
   readonly PartyTypes = PartyTypes
   readonly NumWord = NumWord
-  readonly Rules = Rules
+  readonly RuleIds = RuleIds
 
   /** The list of organizations/persons. */
   private get orgPersonList (): OrgPersonIF[] {
@@ -226,28 +226,28 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
 
   /** Whether the Completing Party rule is valid. Always true if rule doesn't exist. */
   private get validNumCompletingParty (): boolean {
-    const rule = this.getPeopleAndRolesResource.rules.find(r => r.rule === Rules.NUM_COMPLETING_PARTY)
+    const rule = this.getPeopleAndRolesResource.rules.find(r => r.id === RuleIds.NUM_COMPLETING_PARTY)
     if (!rule) return true
     return rule.test(this.completingParties.length)
   }
 
   /** Whether the Minimum Incorporators rule is valid. Always true if rule doesn't exist. */
   private get validMinimumIncorporators (): boolean {
-    const rule = this.getPeopleAndRolesResource.rules.find(r => r.rule === Rules.NUM_INCORPORATORS)
+    const rule = this.getPeopleAndRolesResource.rules.find(r => r.id === RuleIds.NUM_INCORPORATORS)
     if (!rule) return true
     return rule.test(this.incorporators.length)
   }
 
   /** Whether the Minimum Directors rule is valid. Always true if rule doesn't exist. */
   private get validMinimumDirectors (): boolean {
-    const rule = this.getPeopleAndRolesResource.rules.find(r => r.rule === Rules.NUM_DIRECTORS)
+    const rule = this.getPeopleAndRolesResource.rules.find(r => r.id === RuleIds.NUM_DIRECTORS)
     if (!rule) return true
     return rule.test(this.directors.length)
   }
 
   /** Whether the Director Country rule is valid. Always true if rule doesn't exist. */
   private get validDirectorCountry (): boolean {
-    const rule = this.getPeopleAndRolesResource.rules.find(r => r.rule === Rules.DIRECTOR_COUNTRY)
+    const rule = this.getPeopleAndRolesResource.rules.find(r => r.id === RuleIds.DIRECTOR_COUNTRY)
     if (!rule) return true
     const num = this.directors.filter(d => rule.test(d.mailingAddress.addressCountry)).length
     // evaluate this rule only when there are enough minimum directors
@@ -256,7 +256,7 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
 
   /** Whether the Director Province rule is valid. Always true if rule doesn't exist. */
   private get validDirectorProvince (): boolean {
-    const rule = this.getPeopleAndRolesResource.rules.find(r => r.rule === Rules.DIRECTOR_PROVINCE)
+    const rule = this.getPeopleAndRolesResource.rules.find(r => r.id === RuleIds.DIRECTOR_PROVINCE)
     if (!rule) return true
     const num = this.directors.filter(
       d => rule.test(d.mailingAddress.addressCountry, d.mailingAddress.addressRegion)
