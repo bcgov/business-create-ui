@@ -48,9 +48,9 @@
     </section>
 
     <section class="mt-10" v-if="isTypeCoop">
-      <header id="delete-certificates">
+      <header id="delete-certificates-header">
         <h2>{{isTypeCoop ? 4 : 3 }}. Delete and/or Destroy Certificates</h2>
-        <p class="mt-4">After dissolution. all original certificates of incorporation, name change, or amalgamation
+        <p class="mt-4">After dissolution, all original certificates of incorporation, name change, or amalgamation
           are not valid and must not be used by the Cooperative Association. Any copies of these documents must
           be deleted and/or destroyed.
         </p>

@@ -1,13 +1,13 @@
 <template>
-  <div>
-    <div v-if="isSummary" class="destroy-certificate-summary">
+  <div id="destroy-certificate">
+    <div v-if="isSummary" id="destroy-certificate-summary">
       <div v-if="getHasCertificateDestroyed" class="d-flex">
         <span>
           <v-icon class="destroy-certificate-success-chk ml-n1 pr-2" color="successCheckmark">mdi-check</v-icon>
         </span>
-        <span v-html="destroyCertificateDescription" />
+        <span class="destroy-certificate-summary-description">{{ destroyCertificateDescription }}</span>
       </div>
-      <div v-else>(Not entered)</div>
+      <div v-else class="destroy-certificate-summary-description">(Not entered)</div>
     </div>
     <v-card v-else flat class="rounded-4">
       <div class="section-container pt-11" :class="{ 'invalid-section': showErrorSummary }">
@@ -44,6 +44,12 @@ import { ActionBindingIF } from '@/interfaces'
 
 @Component
 export default class DestroyCertificate extends Vue {
+  // Global getters
+  @Getter getHasCertificateDestroyed!: boolean
+
+  // Global setters
+  @Action setHasCertificateDestroyed!: ActionBindingIF
+
   @Prop({ default: false })
   private readonly showErrorSummary: boolean
 
@@ -52,13 +58,8 @@ export default class DestroyCertificate extends Vue {
 
   private hasCertificateDestroyed: boolean = false
 
-  private destroyCertificateDescription: string = `Certificates of incorporation, name change, and amalgamation for
+  readonly destroyCertificateDescription: string = `Certificates of incorporation, name change, and amalgamation for
     the Cooperative Association will be deleted and/or destroyed after dissolution.`
-
-  @Getter getHasCertificateDestroyed!: boolean
-
-  // Global setters
-  @Action setHasCertificateDestroyed!: ActionBindingIF
 }
 </script>
 
@@ -83,7 +84,7 @@ export default class DestroyCertificate extends Vue {
   }
 }
 
-.destroy-certificate-option, .destroy-certificate-summary {
+.destroy-certificate-option, #destroy-certificate-summary {
   color: $gray7;
   line-height: 1.5rem;
   font-weight: normal;
