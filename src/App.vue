@@ -554,14 +554,20 @@ export default class App extends Mixins(
         // Dissolution filing
         if (this.isDissolutionFiling) {
           const resources = await this.handleDraftDissolution()
-          if (!resources) throw new Error(`Invalid dissolution entity type = ${this.getEntityType}`)
+          if (!resources) {
+            // go to catch()
+            throw new Error(`Invalid dissolution resources, entity type = ${this.getEntityType}`)
+          }
           this.setResources(resources)
         }
 
         // Incorporation filing
         if (this.isIncorporationFiling) {
           const resources = await this.handleDraftIncorporation()
-          if (!resources) throw new Error(`Invalid incorporation entity type = ${this.getEntityType}`)
+          if (!resources) {
+            // go to catch()
+            throw new Error(`Invalid incorporation resources entity type = ${this.getEntityType}`)
+          }
           this.setResources(resources)
         }
       } catch (error) {
@@ -624,13 +630,11 @@ export default class App extends Mixins(
     })
 
     // fetch draft filing
-    let draftFiling = await this.fetchDraftDissolution()
+    let draftFiling = await this.fetchDraftDissolution().catch(error => { throw error })
 
-    // if there is an existing filing, check if it is in a valid state to be edited
-    if (draftFiling) {
-      this.invalidDissolutionDialog = this.hasInvalidFilingState(draftFiling)
-      if (this.invalidDissolutionDialog) return
-    }
+    // check if filing is in a valid state to be edited
+    this.invalidDissolutionDialog = !this.hasValidFilingState(draftFiling)
+    if (this.invalidDissolutionDialog) return
 
     // merge draft properties into empty filing so all properties are initialized
     const emptyFiling = this.buildDissolutionFiling()
@@ -655,13 +659,11 @@ export default class App extends Mixins(
     })
 
     // fetch draft filing
-    let draftFiling = await this.fetchDraftIA()
+    let draftFiling = await this.fetchDraftIA().catch(error => { throw error })
 
-    // if there is an existing filing, check if it is in a valid state to be edited
-    if (draftFiling) {
-      this.invalidIncorporationApplicationDialog = this.hasInvalidFilingState(draftFiling)
-      if (this.invalidIncorporationApplicationDialog) return
-    }
+    // check if filing is in a valid state to be edited
+    this.invalidIncorporationApplicationDialog = !this.hasValidFilingState(draftFiling)
+    if (this.invalidIncorporationApplicationDialog) return
 
     // merge draft properties into empty filing so all properties are initialized
     const emptyFiling = this.buildIncorporationFiling()
@@ -689,9 +691,9 @@ export default class App extends Mixins(
   }
 
   /** Used to check if the filing is in a valid state for changes. */
-  private hasInvalidFilingState (filing: any): boolean {
-    const filingStatus = filing.header.status
-    return filingStatus !== FilingStatus.DRAFT
+  private hasValidFilingState (filing: any): boolean {
+    const filingStatus = filing?.header?.status
+    return (filingStatus === FilingStatus.DRAFT)
   }
 
   /** Fetches NR and validates it. */
