@@ -26,7 +26,7 @@
                         label="First Name"
                         id="person__first-name"
                         v-model="custodian.officer.firstName"
-                        :rules="NameRules.firstNameRules"
+                        :rules="Rules.FirstNameRules"
                       />
                     </v-col>
                     <v-col>
@@ -36,7 +36,7 @@
                         label="Middle Name (Optional)"
                         id="person__middle-name"
                         v-model="custodian.officer.middleName"
-                        :rules="NameRules.middleNameRules"
+                        :rules="Rules.MiddleNameRules"
                       />
                     </v-col>
                     <v-col>
@@ -45,7 +45,7 @@
                         label="Last Name"
                         id="person__last-name"
                         v-model="custodian.officer.lastName"
-                        :rules="NameRules.lastNameRules"
+                        :rules="Rules.LastNameRules"
                       />
                     </v-col>
                   </v-row>
@@ -76,7 +76,7 @@
                           label="First Name"
                           id="person__first-name"
                           v-model="custodian.officer.firstName"
-                          :rules="isPerson ? NameRules.firstNameRules : []"
+                          :rules="isPerson ? Rules.FirstNameRules : []"
                           @input="syncCustodianPartyType(PartyTypes.PERSON)"
                         />
                       </v-col>
@@ -87,7 +87,7 @@
                           label="Middle Name (Optional)"
                           id="person__middle-name"
                           v-model="custodian.officer.middleName"
-                          :rules="isPerson ? NameRules.middleNameRules : []"
+                          :rules="isPerson ? Rules.MiddleNameRules : []"
                           @input="syncCustodianPartyType(PartyTypes.PERSON)"
                         />
                       </v-col>
@@ -97,7 +97,7 @@
                           label="Last Name"
                           id="person__last-name"
                           v-model="custodian.officer.lastName"
-                          :rules="isPerson ? NameRules.lastNameRules : []"
+                          :rules="isPerson ? Rules.LastNameRules : []"
                           @input="syncCustodianPartyType(PartyTypes.PERSON)"
                         />
                       </v-col>
@@ -121,7 +121,7 @@
                           label="Corporation or Firm Name"
                           id="organization__name"
                           v-model="custodian.officer.organizationName"
-                          :rules="isOrg ? NameRules.orgNameRules : []"
+                          :rules="isOrg ? Rules.OrgNameRules : []"
                           @input="syncCustodianPartyType(PartyTypes.ORGANIZATION)"
                         />
                       </v-col>
@@ -139,7 +139,7 @@
                       label="Email Address"
                       id="person__email"
                       v-model="custodian.officer.email"
-                      :rules="ContactRules.emailRules"
+                      :rules="Rules.EmailRules"
                     />
                   </v-col>
                 </v-row>
@@ -215,7 +215,6 @@
 </template>
 
 <script lang="ts">
-// Libraries
 import { Component, Emit, Mixins, Prop, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import { OfficeAddressSchema } from '@/schemas'
@@ -223,7 +222,7 @@ import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
 import { ActionBindingIF, AddressIF, FormIF, OrgPersonIF } from '@/interfaces'
 import { PartyTypes } from '@/enums'
 import { CommonMixin, EntityFilterMixin } from '@/mixins'
-import { NameRules, ContactRules } from '@/rules'
+import { Rules } from '@/rules'
 import { cloneDeep } from 'lodash'
 
 @Component({
@@ -271,10 +270,9 @@ export default class CustodianOfRecords extends Mixins(CommonMixin, EntityFilter
   private mailingAddressValid: boolean = true
   private deliveryAddressValid: boolean = true
 
-  // Global variables defined locally for the template
+  // Schema and rules for template
   readonly OfficeAddressSchema = OfficeAddressSchema
-  readonly NameRules = NameRules
-  readonly ContactRules = ContactRules
+  readonly Rules = Rules
   readonly PartyTypes = PartyTypes
 
   created () {

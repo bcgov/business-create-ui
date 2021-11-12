@@ -26,7 +26,7 @@
               label="Email Address"
               req
               persistent-hint
-              :rules="emailRules"
+              :rules="Rules.EmailRules"
               v-model="contact.email"
               id="txt-email">
             </v-text-field>
@@ -55,7 +55,7 @@
               type="tel"
               v-mask="['(###) ###-####']"
               v-model="contact.phone"
-              :rules="phoneRules"
+              :rules="Rules.PhoneRules"
               id="txt-phone">
             </v-text-field>
           </v-col>
@@ -77,15 +77,11 @@
 </template>
 
 <script lang="ts">
-// Libraries
 import { Component, Vue, Prop, Watch, Emit, Mixins } from 'vue-property-decorator'
 import { mask } from 'vue-the-mask'
-
-// Interfaces
 import { BusinessContactIF } from '@/interfaces'
-
-// Mixins
 import { CommonMixin } from '@/mixins'
+import { Rules } from '@/rules'
 
 @Component({
   directives: { mask }
@@ -100,6 +96,9 @@ export default class BusinessContactInfo extends Mixins(CommonMixin) {
   @Prop({ default: false })
   private readonly showErrors!: boolean
 
+  // Rules for template
+  readonly Rules = Rules
+
   private contact: BusinessContactIF = this.initialValue
   private formValid: boolean = false
 
@@ -112,18 +111,6 @@ export default class BusinessContactInfo extends Mixins(CommonMixin) {
   }
 
   // Rules
-  private emailRules = [
-    (v: string) => !!v || 'Email address is required',
-    (v: string) => {
-      const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-      return pattern.test(v) || 'Valid email is required'
-    }
-  ]
-
-  private phoneRules = [
-    (v: any) => !v || (v.length === 0 || v.length === 14) || 'Phone number is invalid'
-  ]
-
   private emailMustMatch (): string {
     return (this.contact.email === this.contact.confirmEmail) ? '' : 'Email addresses must match'
   }
