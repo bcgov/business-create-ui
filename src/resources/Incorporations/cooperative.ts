@@ -1,5 +1,5 @@
 import { IncorporationResourceIF } from '@/interfaces'
-import { CorpTypeCd, FilingCodes, NameRequestTypes, Rules, ItemTypes } from '@/enums'
+import { CorpTypeCd, FilingCodes, NameRequestTypes, RuleIds, ItemTypes } from '@/enums'
 import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 import { CoopStepsTemplate } from '@/resources/Incorporations/stepTemplates'
 
@@ -40,22 +40,22 @@ export const CooperativeResource: IncorporationResourceIF = {
     addOrganization: false,
     rules: [
       {
-        rule: Rules.NUM_COMPLETING_PARTY,
+        id: RuleIds.NUM_COMPLETING_PARTY,
         text: 'The Completing Party',
         test: (num) => { return (num === 1) }
       },
       {
-        rule: Rules.NUM_DIRECTORS,
+        id: RuleIds.NUM_DIRECTORS,
         text: 'At least three First Directors',
         test: (num) => { return (num >= 3) }
       },
       {
-        rule: Rules.DIRECTOR_COUNTRY,
+        id: RuleIds.DIRECTOR_COUNTRY,
         text: 'The majority of First Directors must reside in Canada',
         test: (country) => { return (country === 'CA') }
       },
       {
-        rule: Rules.DIRECTOR_PROVINCE,
+        id: RuleIds.DIRECTOR_PROVINCE,
         text: 'At least one First Director must reside in BC',
         test: (country, province) => { return (country === 'CA' && province === 'BC') }
       }

@@ -1,7 +1,7 @@
-import { Rules } from '@/enums'
+import { RuleIds } from '@/enums'
 
 interface Rule {
-  rule: Rules
+  id: RuleIds
   text: string
   test: (...args) => boolean // rule function
 }

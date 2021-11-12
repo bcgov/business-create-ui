@@ -10,7 +10,7 @@ import { getVuexStore } from '@/store'
 import { createLocalVue, shallowMount, mount } from '@vue/test-utils'
 
 // Components
-import { OfficeAddresses } from '@/components/DefineCompany'
+import OfficeAddresses from '@/components/DefineCompany/OfficeAddresses.vue'
 
 Vue.use(Vuetify)
 Vue.use(Vuelidate)

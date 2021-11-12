@@ -1,8 +1,6 @@
 import { shallowWrapperFactory } from '../jest-wrapper-factory'
-import { ReviewConfirmDissolution } from '@/views/Dissolutions'
-
-// Store
 import { getVuexStore } from '@/store'
+import ReviewConfirmDissolution from '@/views/Dissolutions/ReviewConfirmDissolution.vue'
 import { DissolutionResources } from '@/resources/'
 
 const store = getVuexStore()
@@ -37,7 +35,8 @@ for (const test of reviewConfirmTestCases) {
         null,
         { entityType: test.entityType },
         null,
-        DissolutionResources)
+        DissolutionResources
+      )
 
       // verify page content
       expect(wrapper.find('h2').text()).toBe('Review and Confirm')
@@ -52,7 +51,8 @@ for (const test of reviewConfirmTestCases) {
           tombstone: { authRoles: test.isStaff ? ['staff'] : [] }
         },
         null,
-        DissolutionResources)
+        DissolutionResources
+      )
 
       const expected = (test.entityType !== 'CP' && test.isStaff)
       expect(wrapper.find('#effective-date-time').exists()).toBe(expected)
@@ -64,7 +64,8 @@ for (const test of reviewConfirmTestCases) {
         null,
         { entityType: test.entityType },
         null,
-        DissolutionResources)
+        DissolutionResources
+      )
 
       expect(wrapper.find('#affidavit-summary').exists()).toBe(true)
     })
@@ -75,7 +76,8 @@ for (const test of reviewConfirmTestCases) {
         null,
         { entityType: test.entityType },
         null,
-        DissolutionResources)
+        DissolutionResources
+      )
 
       expect(wrapper.find('#resolution-summary').exists()).toBe(true)
     })
@@ -86,7 +88,8 @@ for (const test of reviewConfirmTestCases) {
         null,
         { entityType: test.entityType },
         null,
-        DissolutionResources)
+        DissolutionResources
+      )
 
       expect(wrapper.find('#document-delivery-section').exists()).toBe(true)
     })
@@ -97,7 +100,8 @@ for (const test of reviewConfirmTestCases) {
         null,
         { entityType: test.entityType },
         null,
-        DissolutionResources)
+        DissolutionResources
+      )
 
       expect(wrapper.find('#certify-section').exists()).toBe(true)
     })
@@ -111,9 +115,10 @@ for (const test of reviewConfirmTestCases) {
           tombstone: { authRoles: test.isStaff ? ['staff'] : [] }
         },
         null,
-        DissolutionResources)
+        DissolutionResources
+      )
 
-      expect(wrapper.find('#poa-plan-arrangement-section').exists()).toBe(test.isStaff)
+      expect(wrapper.find('#court-order-poa-section').exists()).toBe(test.isStaff)
     })
 
     it('displays Staff Payment section only for staff', () => {
@@ -125,7 +130,8 @@ for (const test of reviewConfirmTestCases) {
           tombstone: { authRoles: test.isStaff ? ['staff'] : [] }
         },
         null,
-        DissolutionResources)
+        DissolutionResources
+      )
 
       expect(wrapper.find('#staff-payment-section').exists()).toBe(test.isStaff)
     })

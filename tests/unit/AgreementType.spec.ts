@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import { wrapperFactory } from '../jest-wrapper-factory'
-import { AgreementType } from '@/components/IncorporationAgreement'
+import AgreementType from '@/components/IncorporationAgreement/AgreementType.vue'
 import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 
 // Input field selectors to test changes to the DOM elements.

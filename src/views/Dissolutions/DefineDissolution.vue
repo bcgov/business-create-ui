@@ -150,8 +150,6 @@ export default class DefineDissolution extends Mixins(CommonMixin, EntityFilterM
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/theme.scss';
-
 .delete-certificates-note {
   font-size: 0.875rem;
 }

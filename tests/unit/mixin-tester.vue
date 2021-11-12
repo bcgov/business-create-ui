@@ -7,10 +7,11 @@
 import { Component, Mixins } from 'vue-property-decorator'
 
 // Mixins
-import { FilingTemplateMixin } from '@/mixins'
+import { EnumMixin, FilingTemplateMixin } from '@/mixins'
 
 @Component({})
 export default class MixinTester extends Mixins(
+  EnumMixin,
   FilingTemplateMixin
 ) {}
 </script>

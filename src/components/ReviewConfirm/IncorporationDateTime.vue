@@ -114,7 +114,7 @@ import { DateMixin } from '@/mixins'
 import { ISIMMEDIATE, ISFUTUREEFFECTIVE } from '@/constants'
 
 // Interfaces
-import { ActionBindingIF, EffectiveDateTimeIF, FormIF } from '@/interfaces'
+import { EffectiveDateTimeIF, FormIF } from '@/interfaces'
 
 @Component({})
 export default class IncorporationDateTime extends Mixins(DateMixin) {

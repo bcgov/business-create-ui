@@ -87,7 +87,7 @@ import {
 // Components
 import { DocumentDelivery } from '@/components/common'
 import { IncorporationDateTime, Summary } from '@/components/ReviewConfirm'
-import { Certify } from '@bcrs-shared-components/certify'
+import { Certify } from '@/components'
 
 @Component({
   components: {

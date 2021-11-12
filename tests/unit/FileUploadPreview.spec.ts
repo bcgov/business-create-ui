@@ -4,7 +4,7 @@ import Vuetify from 'vuetify'
 import { mount, Wrapper } from '@vue/test-utils'
 import flushPromises from 'flush-promises'
 import FileUploadPreview from '@/components/common/FileUploadPreview.vue'
-import { PdfPageSize } from '@/enums'
+import { PdfPageSize } from '@/enums/pdfPageSize'
 
 Vue.use(Vuetify)
 const vuetify = new Vuetify({})

@@ -1,5 +1,5 @@
 import { shallowWrapperFactory } from '../jest-wrapper-factory'
-import { DocumentDelivery } from '@/components/common'
+import DocumentDelivery from '@/components/common/DocumentDelivery.vue'
 
 // Test Case Data
 const documentDeliveryCases = [

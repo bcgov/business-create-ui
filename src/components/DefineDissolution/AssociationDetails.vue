@@ -56,7 +56,7 @@
           <label>Folio or Reference Number</label>
         </v-col>
         <v-col md="9">
-          <div id="lbl-folio-number">{{ getAccountFolioNumber || 'Not entered' }}</div>
+          <div id="lbl-folio-number">{{ getAccountFolioNumber || 'None' }}</div>
         </v-col>
       </v-row>
     </div>
@@ -88,7 +88,7 @@ import { ActionBindingIF, AddressIF, BusinessContactIF, BusinessIF } from '@/int
 
 // Components
 import { BusinessContactInfo, OfficeAddresses } from '@/components/DefineCompany'
-import { ContactInfo } from '@bcrs-shared-components/contact-info'
+import { ContactInfo, BaseAddress } from '@/components'
 
 // Mixins
 import { CommonMixin, EntityFilterMixin, EnumMixin } from '@/mixins'
@@ -96,7 +96,6 @@ import { CommonMixin, EntityFilterMixin, EnumMixin } from '@/mixins'
 // Enums
 import { CoopType } from '@/enums'
 import { isEmpty } from 'lodash'
-import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
 
 @Component({
   components: {

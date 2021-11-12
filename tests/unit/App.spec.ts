@@ -14,13 +14,15 @@ import App from '@/App.vue'
 import SbcHeader from 'sbc-common-components/src/components/SbcHeader.vue'
 import SbcFooter from 'sbc-common-components/src/components/SbcFooter.vue'
 import SbcFeeSummary from 'sbc-common-components/src/components/SbcFeeSummary.vue'
-import { EntityInfo, Stepper, Actions } from '@/components/common'
-import { ConfirmDialog } from '@/components/dialogs'
+import EntityInfo from '@/components/common/EntityInfo.vue'
+import Stepper from '@/components/common/Stepper.vue'
+import Actions from '@/components/common/Actions.vue'
+import ConfirmDialog from '@/components/dialogs/ConfirmDialog.vue'
 
 // Other
 import mockRouter from './MockRouter'
 import Vuelidate from 'vuelidate'
-import { StaffPaymentOptions } from '@/enums'
+import { StaffPaymentOptions } from '@bcrs-shared-components/enums'
 
 // mock fetch() as it is not defined in Jest
 // NB: it should be `global.fetch` but that doesn't work and this does

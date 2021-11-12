@@ -1,5 +1,5 @@
 import { IncorporationResourceIF } from '@/interfaces'
-import { CorpTypeCd, FilingCodes, NameRequestTypes, Rules } from '@/enums'
+import { CorpTypeCd, FilingCodes, NameRequestTypes, RuleIds } from '@/enums'
 import { BaseStepsTemplate } from './stepTemplates'
 import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 
@@ -26,17 +26,17 @@ export const CommunityContributionCompanyResource: IncorporationResourceIF = {
     addOrganization: true,
     rules: [
       {
-        rule: Rules.NUM_COMPLETING_PARTY,
+        id: RuleIds.NUM_COMPLETING_PARTY,
         text: 'The Completing Party',
         test: (num) => { return (num === 1) }
       },
       {
-        rule: Rules.NUM_INCORPORATORS,
+        id: RuleIds.NUM_INCORPORATORS,
         text: 'At least one Incorporator',
         test: (num) => { return (num >= 1) }
       },
       {
-        rule: Rules.NUM_DIRECTORS,
+        id: RuleIds.NUM_DIRECTORS,
         text: 'At least three Directors',
         test: (num) => { return (num >= 3) }
       }

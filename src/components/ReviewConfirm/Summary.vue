@@ -37,7 +37,7 @@ import { Getter } from 'vuex-class'
 import { AgreementType } from '@/components/IncorporationAgreement'
 import { ListPeopleAndRoles } from '@/components/AddPeopleAndRoles'
 import { ListShareClass } from '@/components/CreateShareStructure'
-import { SummaryDefineCompany } from '@/components/Summary'
+import { SummaryDefineCompany } from '@/components/SummaryDefineCompany'
 import { UploadRulesSummary } from '@/components/CreateRules'
 import { UploadMemorandumSummary } from '@/components/CreateMemorandum'
 

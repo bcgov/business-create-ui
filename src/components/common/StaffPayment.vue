@@ -1,7 +1,6 @@
 <template>
-  <div class="rounded" :class="{'invalid-section': invalidStaffPayment}">
+  <div id="staff-payment-container" :class="{'invalid-section': invalidStaffPayment}">
     <StaffPaymentComponent
-      class="pl-3"
       :staffPaymentData="getStaffPaymentStep.staffPayment"
       :displayPriorityCheckbox="displayPriorityCheckbox"
       :validate="getValidateSteps"
@@ -17,7 +16,7 @@ import { Component, Emit, Prop, Vue } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 
 // Components
-import { StaffPayment as StaffPaymentComponent } from '@bcrs-shared-components/staff-payment'
+import { StaffPaymentComponent } from '@/components'
 
 // Interfaces and Enums
 import { ActionBindingIF, StaffPaymentIF, StaffPaymentStepIF } from '@/interfaces'
@@ -36,6 +35,7 @@ export default class StaffPayment extends Vue {
   // Global getters
   @Getter getStaffPaymentStep!: StaffPaymentStepIF
   @Getter getValidateSteps!: boolean
+
   // Global actions
   @Action setStaffPayment!: ActionBindingIF
   @Action setStaffPaymentValidity!: ActionBindingIF

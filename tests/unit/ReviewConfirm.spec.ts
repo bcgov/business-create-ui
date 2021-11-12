@@ -1,5 +1,5 @@
 import { shallowWrapperFactory } from '../jest-wrapper-factory'
-import { ReviewConfirm } from '@/views/Incorporations'
+import ReviewConfirm from '@/views/Incorporations/ReviewConfirm.vue'
 
 // Test Case Data
 const reviewConfirmTestCases = [

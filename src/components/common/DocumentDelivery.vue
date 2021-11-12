@@ -1,27 +1,26 @@
 <template>
-  <v-card flat class="px-5 py-6" id="document-delivery">
-    <v-row class="py-3" no-gutters>
-      <v-col :cols="3">
+  <v-card flat id="document-delivery">
+    <v-row no-gutters>
+      <v-col cols="3">
         <label class="font-weight-bold">Registered Office</label>
       </v-col>
-      <v-col :cols="9">
+      <v-col cols="9">
         <v-card-text id="office-email" class="pa-0">{{registeredOfficeEmail || 'Not entered'}}</v-card-text>
       </v-col>
     </v-row>
-    <v-row class="py-3" no-gutters>
-      <v-col :cols="3">
+
+    <v-row no-gutters>
+      <v-col cols="3">
         <label class="font-weight-bold" :class="{ 'error-text': invalidSection }">Completing Party</label>
       </v-col>
-      <v-col cols="9" class="pr-1" v-if="editableCompletingParty">
+      <v-col cols="9" v-if="editableCompletingParty">
         <v-text-field
-          v-model="optionalEmail"
+          filled persistent-hint validate-on-blur
           id="optionalEmail"
           class="text-input-field"
-          filled
           label="Client Email Address (Optional)"
           hint="Example: name@email.com"
-          persistent-hint
-          validate-on-blur
+          v-model="optionalEmail"
           :rules="entityEmailRules"
         />
       </v-col>
@@ -29,11 +28,12 @@
         <v-card-text id="completing-party-email" class="pa-0">{{userEmail || 'Not entered'}}</v-card-text>
       </v-col>
     </v-row>
-    <v-row class="py-3" no-gutters v-if="showCustodianEmail">
-      <v-col :cols="3">
+
+    <v-row no-gutters v-if="showCustodianEmail">
+      <v-col cols="3">
         <label class="font-weight-bold">Custodian of Records</label>
       </v-col>
-      <v-col :cols="9">
+      <v-col cols="9">
         <v-card-text id="custodian-email" class="pa-0">{{custodianEmail || 'Not entered'}}</v-card-text>
       </v-col>
     </v-row>

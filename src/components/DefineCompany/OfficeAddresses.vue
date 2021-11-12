@@ -190,7 +190,7 @@ import { isEmpty } from 'lodash'
 import { OfficeAddressSchema } from '@/schemas'
 
 // Components
-import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
+import { BaseAddress } from '@/components'
 
 // Interfaces
 import { AddressIF, DefineCompanyIF, IncorporationAddressIF } from '@/interfaces'
