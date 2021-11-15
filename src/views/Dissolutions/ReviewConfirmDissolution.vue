@@ -34,7 +34,7 @@
         </section>
 
         <!-- Dissolution Statement -->
-        <section class="mx-6 pl-2" v-if="isTypeCoop">
+        <section class="ml-6 mr-8 pl-2" v-if="isTypeCoop">
           <v-container id="dissolution-statement">
             <v-row no-gutters>
               <v-col cols="3" class="inner-col-1">
@@ -49,14 +49,14 @@
         </section>
 
         <!-- divider -->
-        <div class="mx-6 pl-2" v-if="isTypeCoop">
+        <div class="ml-6 mr-8 pl-2" v-if="isTypeCoop">
           <v-container class="py-0">
             <v-divider  />
           </v-container>
         </div>
 
         <!-- Custodian of Records -->
-        <section class="mx-6 pl-2">
+        <section class="ml-6 mr-8 pl-2">
           <v-container id="custodian-of-records">
             <v-row no-gutters>
               <v-col cols="3" class="inner-col-1">
@@ -71,15 +71,15 @@
         </section>
 
         <!-- divider -->
-        <div class="mx-6 pl-2" v-if="isTypeCoop">
+        <div class="ml-6 mr-8 pl-2" v-if="isTypeCoop">
           <v-container class="py-0">
             <v-divider  />
           </v-container>
         </div>
 
         <!-- Destroy Certificates -->
-        <section class="mx-6 pl-2" v-if="isTypeCoop">
-          <v-container id="destory-certificate">
+        <section class="ml-6 mr-8 pl-2" v-if="isTypeCoop">
+          <v-container id="destroy-certificate">
             <v-row no-gutters>
               <v-col cols="3" class="inner-col-1">
                 <label class="font-weight-bold">Delete and/or<br>Destroy<br>Certificates</label>
@@ -93,14 +93,14 @@
         </section>
 
         <!-- divider -->
-        <div class="mx-6 pl-2" v-if="!isTypeCoop && isRoleStaff">
+        <div class="ml-6 mr-8 pl-2" v-if="!isTypeCoop && isRoleStaff">
           <v-container class="py-0">
             <v-divider  />
           </v-container>
         </div>
 
         <!-- Dissolution Date and Time -->
-        <section class="mx-6 pl-2" v-if="!isTypeCoop && isRoleStaff">
+        <section class="ml-6 mr-8 pl-2" v-if="!isTypeCoop && isRoleStaff">
           <v-container
             id="effective-date-time"
             :class="{ 'invalid': isDissolutionDateTimeInvalid }"

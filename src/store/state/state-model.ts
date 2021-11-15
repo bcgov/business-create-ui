@@ -49,6 +49,7 @@ export const stateModel: StateModelIF = {
   },
   dissolution: {
     dissolutionType: null,
+    dissolutionDate: '',
     dissolutionStatementStep: {
       valid: false,
       dissolutionStatementType: null
@@ -68,22 +69,24 @@ export const stateModel: StateModelIF = {
         mailingAddress: {
           addressCity: '',
           addressCountry: 'CA',
-          addressRegion: '',
+          addressRegion: 'BC',
           postalCode: '',
           streetAddress: ''
         },
         deliveryAddress: {
           addressCity: '',
           addressCountry: 'CA',
-          addressRegion: '',
+          addressRegion: 'BC',
           postalCode: '',
           streetAddress: ''
         },
         roles: [
           {
-            roleType: RoleTypes.CUSTODIAN
+            roleType: null,
+            appointmentDate: ''
           }
-        ]
+        ],
+        inheritMailingAddress: false // draft only property
       }
     }
   },

@@ -25,7 +25,7 @@
                         filled
                         label="First Name"
                         id="person__first-name"
-                        v-model="custodian.officer.firstName"
+                        v-model.trim="custodian.officer.firstName"
                         :rules="Rules.FirstNameRules"
                       />
                     </v-col>
@@ -35,7 +35,7 @@
                         class="px-5"
                         label="Middle Name (Optional)"
                         id="person__middle-name"
-                        v-model="custodian.officer.middleName"
+                        v-model.trim="custodian.officer.middleName"
                         :rules="Rules.MiddleNameRules"
                       />
                     </v-col>
@@ -44,7 +44,7 @@
                         filled
                         label="Last Name"
                         id="person__last-name"
-                        v-model="custodian.officer.lastName"
+                        v-model.trim="custodian.officer.lastName"
                         :rules="Rules.LastNameRules"
                       />
                     </v-col>
@@ -75,7 +75,7 @@
                           filled
                           label="First Name"
                           id="person__first-name"
-                          v-model="custodian.officer.firstName"
+                          v-model.trim="custodian.officer.firstName"
                           :rules="isPerson ? Rules.FirstNameRules : []"
                           @input="syncCustodianPartyType(PartyTypes.PERSON)"
                         />
@@ -86,7 +86,7 @@
                           class="px-5"
                           label="Middle Name (Optional)"
                           id="person__middle-name"
-                          v-model="custodian.officer.middleName"
+                          v-model.trim="custodian.officer.middleName"
                           :rules="isPerson ? Rules.MiddleNameRules : []"
                           @input="syncCustodianPartyType(PartyTypes.PERSON)"
                         />
@@ -96,7 +96,7 @@
                           filled
                           label="Last Name"
                           id="person__last-name"
-                          v-model="custodian.officer.lastName"
+                          v-model.trim="custodian.officer.lastName"
                           :rules="isPerson ? Rules.LastNameRules : []"
                           @input="syncCustodianPartyType(PartyTypes.PERSON)"
                         />
@@ -120,7 +120,7 @@
                           filled
                           label="Corporation or Firm Name"
                           id="organization__name"
-                          v-model="custodian.officer.organizationName"
+                          v-model.trim="custodian.officer.organizationName"
                           :rules="isOrg ? Rules.OrgNameRules : []"
                           @input="syncCustodianPartyType(PartyTypes.ORGANIZATION)"
                         />
@@ -160,7 +160,7 @@
                   id="delivery-mailing-same-chkbx"
                   class="inherit-checkbox mt-1 mb-2"
                   label="Delivery Address same as Mailing Address"
-                  v-model="inheritMailingAddress"
+                  v-model="custodian.inheritMailingAddress"
                 />
 
                 <template v-if="!inheritMailingAddress">
@@ -187,21 +187,21 @@
     <template v-else>
       <div class="summary-section">
         <v-row no-gutters>
-          <v-col cols="12" md="6" lg="6">
+          <v-col cols="12" md="5" lg="5">
             <div class="summary-sub-label">Name</div>
             <span class="summary-text">{{ getCustodianName }}</span>
           </v-col>
-          <v-col cols="12" md="6" lg="6">
+          <v-col cols="12" md="5" lg="5" class="pl-8">
             <div class="summary-sub-label">Email Address</div>
             <span class="summary-text">{{ getCustodianEmail || '(Not entered)' }}</span>
           </v-col>
         </v-row>
         <v-row no-gutters class="mt-4">
-          <v-col cols="12" md="6" lg="6">
+          <v-col cols="12" md="5" lg="5">
             <label class="summary-sub-label">Mailing Address</label>
             <mailing-address :address="getCustodian.mailingAddress" />
           </v-col>
-          <v-col cols="12" md="6" lg="6">
+          <v-col cols="12" md="5" lg="5" class="pl-8">
             <label class="summary-sub-label">Delivery Address</label>
             <div v-if="isSame(getCustodian.mailingAddress, getCustodian.deliveryAddress)">
               Same as Mailing Address
@@ -255,11 +255,10 @@ export default class CustodianOfRecords extends Mixins(CommonMixin, EntityFilter
   // Local properties
   private addCustodianValid = true
   private custodian: OrgPersonIF = null
-  private inheritMailingAddress = false
   private defaultAddress: AddressIF = {
     addressCity: '',
     addressCountry: 'CA',
-    addressRegion: '',
+    addressRegion: 'BC',
     deliveryInstructions: '',
     postalCode: '',
     streetAddress: '',
@@ -333,7 +332,7 @@ export default class CustodianOfRecords extends Mixins(CommonMixin, EntityFilter
   /** Whether the add custodian form is valid. */
   private get isFormValid (): boolean {
     const deliveryValid = this.inheritMailingAddress ? true : this.deliveryAddressValid
-    return this.getCustodian.officer.partyType && this.addCustodianValid && this.mailingAddressValid && deliveryValid
+    return !!this.getCustodian.officer.partyType && this.addCustodianValid && this.mailingAddressValid && deliveryValid
   }
 
   /** Is true when the party type is a person. */
@@ -344,6 +343,11 @@ export default class CustodianOfRecords extends Mixins(CommonMixin, EntityFilter
   /** Is true when the party type is an organization. */
   private get isOrg (): boolean {
     return this.getCustodian?.officer.partyType === PartyTypes.ORGANIZATION
+  }
+
+  /** Is true when the user selects to inherit the mailing address. */
+  private get inheritMailingAddress (): boolean {
+    return this.getCustodian?.inheritMailingAddress
   }
 
   /**
@@ -362,6 +366,12 @@ export default class CustodianOfRecords extends Mixins(CommonMixin, EntityFilter
       default:
         console.log(`Error: Address- ${addressToValidate} not found`)
     }
+  }
+
+  @Watch('$route')
+  private validateAddressForms (): void {
+    this.$refs.mailingAddress && this.$refs.mailingAddress.$refs.addressForm.validate()
+    this.$refs.deliveryAddress && this.$refs.deliveryAddress.$refs.addressForm.validate()
   }
 
   /** Emits the valid state of the add custodian form. */
@@ -393,8 +403,7 @@ export default class CustodianOfRecords extends Mixins(CommonMixin, EntityFilter
   @Watch('showErrors')
   private onShowErrorsChanged (): void {
     this.$refs.addCustodianForm.validate()
-    this.$refs.mailingAddress && this.$refs.mailingAddress.$refs.addressForm.validate()
-    this.$refs.deliveryAddress && this.$refs.deliveryAddress.$refs.addressForm.validate()
+    this.validateAddressForms()
   }
 }
 </script>

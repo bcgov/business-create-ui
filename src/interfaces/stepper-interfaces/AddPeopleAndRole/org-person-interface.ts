@@ -17,6 +17,7 @@ export interface OrgPersonIF {
   roles: RolesIF[]
   mailingAddress: AddressIF
   deliveryAddress?: AddressIF
+  inheritMailingAddress?: boolean
 }
 
 export const EmptyOfficer: OfficerIF = {

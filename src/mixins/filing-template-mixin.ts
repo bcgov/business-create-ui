@@ -13,7 +13,7 @@ import {
 
 // Constants and enums
 import { INCORPORATION_APPLICATION } from '@/constants'
-import { CorpTypeCd, DissolutionTypes, EffectOfOrders, FilingTypes, StaffPaymentOptions } from '@/enums'
+import { CorpTypeCd, DissolutionTypes, EffectOfOrders, FilingTypes, RoleTypes, StaffPaymentOptions } from '@/enums'
 
 /**
  * Mixin that provides the integration with the Legal API.
@@ -289,10 +289,19 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
           legalName: this.getBusinessLegalName
         },
         dissolution: {
+          dissolutionDate: this.getCurrentDate,
           affidavitConfirmed: this.getAffidavitStep.validationDetail.validationItemDetails[0]?.valid || false,
           custodialOffice: this.getBusiness.officeAddress,
           dissolutionType: this.getDissolutionType,
-          parties: [this.getCustodian]
+          parties: [{
+            ...this.getCustodian,
+            roles: [
+              {
+                roleType: RoleTypes.CUSTODIAN,
+                appointmentDate: this.getCurrentDate
+              }
+            ]
+          }]
         }
       }
     }

@@ -96,6 +96,7 @@ export interface DissolutionFilingIF {
       legalName: string
     },
     dissolution: {
+      dissolutionDate: string
       custodialOffice: BaseAddressObjIF
       dissolutionType: DissolutionTypes
       dissolutionStatementType?: DissolutionStatementTypes
