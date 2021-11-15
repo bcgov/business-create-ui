@@ -378,7 +378,7 @@ export default class CustodianOfRecords extends Mixins(CommonMixin, EntityFilter
   @Watch('isFormValid')
   @Emit('valid')
   private emitValid (): boolean {
-    return this.isFormValid || false
+    return this.isFormValid
   }
 
   /** Keep local custodian model in sync with store. */
