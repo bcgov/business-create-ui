@@ -257,11 +257,11 @@ describe('Org Person component', () => {
     const wrapper: Wrapper<OrgPerson> = createComponent(validOrgData, -1, null)
     const inputElement: Wrapper<Vue> = wrapper.find(orgNameSelector)
 
-    inputElement.setValue(' Invalid Org Name ')
+    inputElement.setValue('     ')
     inputElement.trigger('change')
     await flushPromises()
 
-    expect(wrapper.find(formSelector).text()).toContain('Invalid spaces')
+    expect(wrapper.find(formSelector).text()).toContain('Corporation or firm name is required')
     expect(wrapper.vm.$data.addPersonOrgFormValid).toBe(false)
 
     wrapper.destroy()
@@ -303,8 +303,8 @@ describe('Org Person component', () => {
 
     const messages = wrapper.findAll('.v-messages__message')
     expect(messages.length).toBe(2)
-    expect(messages.at(0).text()).toBe('A first name is required')
-    expect(messages.at(1).text()).toBe('A last name is required')
+    expect(messages.at(0).text()).toBe('First name is required')
+    expect(messages.at(1).text()).toBe('Last name is required')
     expect(wrapper.vm.$data.addPersonOrgFormValid).toBe(false)
 
     wrapper.destroy()

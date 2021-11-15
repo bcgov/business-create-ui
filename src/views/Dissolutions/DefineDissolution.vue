@@ -137,11 +137,13 @@ export default class DefineDissolution extends Mixins(CommonMixin, EntityFilterM
       await this.validateAndScroll(
         {
           isStatementValid: this.isTypeCoop ? this.getDissolutionStatementStep.valid : true,
-          isCustodianValid: this.isCustodianValid
+          isCustodianValid: this.isCustodianValid,
+          isDeleteValid: this.isTypeCoop ? this.getHasCertificateDestroyed : true
         },
         [
           'dissolution-statement',
-          'custodian-header'
+          'custodian-header',
+          'delete-certificates-header'
         ]
       )
     }

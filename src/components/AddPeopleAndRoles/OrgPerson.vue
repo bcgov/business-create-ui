@@ -57,7 +57,7 @@
                       class="item"
                       label="First Name"
                       id="person__first-name"
-                      v-model="orgPerson.officer.firstName"
+                      v-model.trim="orgPerson.officer.firstName"
                       :rules="Rules.FirstNameRules"
                       :readonly="isCompletingParty && !isRoleStaff"
                     />
@@ -66,7 +66,7 @@
                       class="item"
                       label="Middle Name"
                       id="person__middle-name"
-                      v-model="orgPerson.officer.middleName"
+                      v-model.trim="orgPerson.officer.middleName"
                       :rules="Rules.MiddleNameRules"
                       :readonly="isCompletingParty && !isRoleStaff"
                     />
@@ -75,7 +75,7 @@
                       class="item"
                       label="Last Name"
                       id="person__last-name"
-                      v-model="orgPerson.officer.lastName"
+                      v-model.trim="orgPerson.officer.lastName"
                       :rules="Rules.LastNameRules"
                       :readonly="isCompletingParty && !isRoleStaff"
                     />
@@ -91,7 +91,7 @@
                       class="item"
                       label="Full Legal Corporation or Firm Name"
                       id="firm-name"
-                      v-model="orgPerson.officer.organizationName"
+                      v-model.trim="orgPerson.officer.organizationName"
                       :rules="Rules.OrgNameRules"
                     />
                   </div>

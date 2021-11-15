@@ -18,7 +18,8 @@ const custodianTestCases = [
       addressRegion: 'BC',
       postalCode: 'v1v 1v1',
       streetAddress: '123 Mock Ave'
-    }
+    },
+    inheritMailingAddress: false
   },
   {
     entityType: 'BEN',
@@ -32,7 +33,8 @@ const custodianTestCases = [
       addressRegion: 'BC',
       postalCode: 'v1v 1v1',
       streetAddress: '123 Mock Ave'
-    }
+    },
+    inheritMailingAddress: false
   },
   {
     entityType: 'BC',
@@ -46,7 +48,8 @@ const custodianTestCases = [
       addressRegion: 'BC',
       postalCode: 'v1v 1v1',
       streetAddress: '123 Mock Ave'
-    }
+    },
+    inheritMailingAddress: false
   }
 ]
 
@@ -66,7 +69,8 @@ for (const mock of custodianTestCases) {
                 officer: {
                   partyType: mock.partyType
                 },
-                mailingAddress: mock.mailingAddress
+                mailingAddress: mock.mailingAddress,
+                inheritMailingAddress: mock.inheritMailingAddress
               }
             }
           }
@@ -105,23 +109,23 @@ for (const mock of custodianTestCases) {
       // Verify Store values
       expect(wrapper.vm.custodian.mailingAddress).toBe(mock.mailingAddress)
       expect(wrapper.vm.custodian.deliveryAddress).toBeUndefined()
-      expect(wrapper.vm.inheritMailingAddress).toBe(false)
+      expect(wrapper.vm.custodian.inheritMailingAddress).toBe(false)
 
       // Set inherit
-      wrapper.vm.inheritMailingAddress = true
+      wrapper.vm.custodian.inheritMailingAddress = true
       await Vue.nextTick()
 
-      expect(wrapper.vm.inheritMailingAddress).toBe(true)
+      expect(wrapper.vm.custodian.inheritMailingAddress).toBe(true)
       expect(wrapper.vm.custodian.deliveryAddress).toEqual(mock.mailingAddress)
 
       // Unset the inherit
-      wrapper.vm.inheritMailingAddress = false
+      wrapper.vm.custodian.inheritMailingAddress = false
       await Vue.nextTick()
 
       // Verify Store values
       expect(wrapper.vm.custodian.mailingAddress).toBe(mock.mailingAddress)
       expect(wrapper.vm.custodian.deliveryAddress).toEqual(wrapper.vm.defaultAddress)
-      expect(wrapper.vm.inheritMailingAddress).toBe(false)
+      expect(wrapper.vm.custodian.inheritMailingAddress).toBe(false)
     })
   })
 }

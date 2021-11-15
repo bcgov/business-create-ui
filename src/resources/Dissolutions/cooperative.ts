@@ -39,8 +39,8 @@ export const CooperativeDissolutionResource: DissolutionResourceIF = {
     }
   ],
   custodialRecords: {
-    sectionSubtitle: `Enter the full name, email address and mailing address of the Custodian of Records. Addresses must
-     be located in Canada.`,
+    sectionSubtitle: `Enter the full name, email address and mailing and delivery address of the Custodian of
+      Records. Addresses must be located in Canada.`,
     custodianTitle: `Custodian of Records`,
     helpSection: {
       helpText: [
