@@ -180,7 +180,7 @@ export default class ReviewConfirm extends Mixins() {
     padding: 0.75rem 0;
 
     .col-3 {
-      font-size: 1rem;
+      font-size: 0.875rem;
       color: $gray9;
       padding: 0 0 0 0.75rem !important;
     }
