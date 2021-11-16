@@ -80,6 +80,13 @@ const mockEntityInfo = [
   }
 ]
 
+//
+// FUTURE: These tests generate a lot of
+// "UnhandledPromiseRejectionWarning:NavigationDuplicated"
+// and
+// "UnhandledPromiseRejectionWarning: Unhandled promise rejection"
+// warnings, which should be cleaned up.
+//
 for (const mock of mockEntityInfo) {
   describe(`Entity Info component with an NR for a ${mock.entityType}`, () => {
     let wrapper: any
@@ -108,7 +115,7 @@ for (const mock of mockEntityInfo) {
       const breadcrumbs = wrapper.findAll('.v-breadcrumbs li')
 
       const crumb1 = breadcrumbs.at(0)
-      const divider = breadcrumbs.at(1)// Divider is present every odd index
+      const divider = breadcrumbs.at(1) // Divider is present every odd index
       const crumb2 = breadcrumbs.at(2)
       const crumb3 = breadcrumbs.at(4)
 
@@ -149,7 +156,7 @@ for (const mock of mockEntityInfo) {
       const breadcrumbs = wrapper.findAll('.v-breadcrumbs li')
 
       const crumb1 = breadcrumbs.at(0)
-      const divider = breadcrumbs.at(1)// Divider is present every odd index
+      const divider = breadcrumbs.at(1) // Divider is present every odd index
       const crumb2 = breadcrumbs.at(2)
       const crumb3 = breadcrumbs.at(4)
 

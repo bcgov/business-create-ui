@@ -52,6 +52,9 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Getter isRoleStaff!: boolean
   @Getter getDissolutionStatementStep!: DissolutionStatementIF
   @Getter getCustodian!: OrgPersonIF
+  @Getter getFolioNumber!: string
+  @Getter getTransactionalFolioNumber!: string
+  @Getter isPremiumAccount!: boolean
 
   @Action setAffidavit!: ActionBindingIF
   @Action setEntityType!: ActionBindingIF
@@ -69,7 +72,8 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Action setShareClasses!: ActionBindingIF
   @Action setEffectiveDate!: ActionBindingIF
   @Action setIsFutureEffective!: ActionBindingIF
-  @Action setIncorporationFolioNumber!: ActionBindingIF
+  @Action setFolioNumber!: ActionBindingIF
+  @Action setTransactionalFolioNumber!: ActionBindingIF
   @Action setIncorporationAgreementStepData!: ActionBindingIF
   @Action setRules!: ActionBindingIF
   @Action setMemorandum!: ActionBindingIF
@@ -82,46 +86,44 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Action setCustodianOfRecords!: ActionBindingIF
 
   /**
-   * Constructs a filing body from store data. Used when saving a filing.
+   * Builds an incorporation filing from store data. Used when saving a filing.
    * @returns the filing body to save
    */
   buildIncorporationFiling (): IncorporationFilingIF {
-    // Build filing.
+    // Build the main filing.
     const filing: IncorporationFilingIF = {
-      filing: {
-        header: {
-          name: INCORPORATION_APPLICATION,
-          certifiedBy: this.getCertifyState.certifiedBy,
-          date: this.getCurrentDate,
-          folioNumber: this.getDefineCompanyStep.folioNumber,
-          isFutureEffective: this.getEffectiveDateTime.isFutureEffective
+      header: {
+        name: INCORPORATION_APPLICATION,
+        certifiedBy: this.getCertifyState.certifiedBy,
+        date: this.getCurrentDate,
+        folioNumber: this.getFolioNumber,
+        isFutureEffective: this.getEffectiveDateTime.isFutureEffective
+      },
+      business: {
+        legalType: this.getEntityType,
+        identifier: this.getTempId
+      },
+      incorporationApplication: {
+        nameRequest: {
+          legalType: this.getEntityType
         },
-        business: {
-          legalType: this.getEntityType,
-          identifier: this.getTempId
+        nameTranslations: this.getNameTranslations,
+        offices: this.getDefineCompanyStep.officeAddresses,
+        contactPoint: {
+          email: this.getBusinessContact.email,
+          phone: this.getBusinessContact.phone,
+          ...this.getBusinessContact.extension
+            ? { extension: +this.getBusinessContact.extension }
+            : {}
         },
-        incorporationApplication: {
-          nameRequest: {
-            legalType: this.getEntityType
-          },
-          nameTranslations: this.getNameTranslations,
-          offices: this.getDefineCompanyStep.officeAddresses,
-          contactPoint: {
-            email: this.getBusinessContact.email,
-            phone: this.getBusinessContact.phone,
-            ...this.getBusinessContact.extension
-              ? { extension: +this.getBusinessContact.extension }
-              : {}
-          },
-          parties: this.getAddPeopleAndRoleStep.orgPeople
-        }
+        parties: this.getAddPeopleAndRoleStep.orgPeople
       }
     }
 
     // Conditionally add the entity-specific sections.
     switch (this.getEntityType) {
       case CorpTypeCd.COOP:
-        filing.filing.incorporationApplication.cooperative = {
+        filing.incorporationApplication.cooperative = {
           cooperativeAssociationType: this.getDefineCompanyStep.cooperativeType,
           rulesFileKey: this.getCreateRulesStep.docKey || null,
           rulesFileName: this.getCreateRulesStep.rulesDoc?.name || null,
@@ -139,10 +141,10 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
       case CorpTypeCd.BC_CCC:
       case CorpTypeCd.BC_COMPANY:
       case CorpTypeCd.BC_ULC_COMPANY:
-        filing.filing.incorporationApplication.shareStructure = {
+        filing.incorporationApplication.shareStructure = {
           shareClasses: this.getCreateShareStructureStep.shareClasses
         }
-        filing.filing.incorporationApplication.incorporationAgreement = {
+        filing.incorporationApplication.incorporationAgreement = {
           agreementType: this.getIncorporationAgreementStep.agreementType
         }
         break
@@ -150,13 +152,13 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
 
     // If this is a named IA then add Name Request Number and Approved Name.
     if (this.isNamedBusiness) {
-      filing.filing.incorporationApplication.nameRequest.nrNumber = this.getNameRequestNumber
-      filing.filing.incorporationApplication.nameRequest.legalName = this.getApprovedName
+      filing.incorporationApplication.nameRequest.nrNumber = this.getNameRequestNumber
+      filing.incorporationApplication.nameRequest.legalName = this.getApprovedName
     }
 
     // If this is a future effective filing then save the effective date.
     if (this.getEffectiveDateTime.effectiveDate) {
-      filing.filing.header.effectiveDate =
+      filing.header.effectiveDate =
         this.getEffectiveDateTime.effectiveDate && this.dateToApi(this.getEffectiveDateTime.effectiveDate)
     }
 
@@ -164,7 +166,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   }
 
   /**
-   * Parses a draft filing into the store. Used when resuming a filing.
+   * Parses a draft incorporation filing into the store. Used when loading a filing.
    * @param draftFiling the filing body to parse
    */
   parseIncorporationsDraft (draftFiling: any): void {
@@ -173,31 +175,32 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
 
     // NB: don't parse Name Request object -- NR is fetched from namex/NRO instead
 
-    // Set Entity Type
+    // restore Entity Type
     this.setEntityType(draftFiling.business.legalType)
 
-    // Set Office Addresses
+    // restore Office Addresses
     this.setOfficeAddresses(draftFiling.incorporationApplication.offices)
 
-    // Set Name Translations
+    // restore Name Translations
     this.setNameTranslationState(draftFiling.incorporationApplication.nameTranslations || [])
 
-    // Set Contact Info
+    // restore Contact Info
     const draftContact = {
       ...draftFiling.incorporationApplication.contactPoint,
       confirmEmail: draftFiling.incorporationApplication.contactPoint.email
     }
     this.setBusinessContact(draftContact)
 
-    // Set Persons and Organizations
+    // restore Persons and Organizations
     this.setOrgPersonList(draftFiling.incorporationApplication.parties)
 
-    // Conditionally parse the entity-specific sections.
+    // conditionally restore the entity-specific sections
     switch (this.getEntityType) {
       case CorpTypeCd.COOP:
-        // Set Cooperative type
+        // restore Cooperative type
         this.setCooperativeType(draftFiling.incorporationApplication.cooperative?.cooperativeAssociationType)
-        // Set Rules
+
+        // restore Rules
         let rulesDoc: DocIF = null
         if (draftFiling.incorporationApplication.cooperative?.rulesFileKey) {
           rulesDoc = {
@@ -216,7 +219,8 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
           docKey: draftFiling.incorporationApplication.cooperative?.rulesFileKey
         }
         this.setRules(createRules)
-        // Set Memorandum
+
+        // restore Memorandum
         let memorandumDoc: DocIF = null
         if (draftFiling.incorporationApplication.cooperative?.memorandumFileKey) {
           memorandumDoc = {
@@ -235,28 +239,31 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
           docKey: draftFiling.incorporationApplication.cooperative?.memorandumFileKey
         }
         this.setMemorandum(createMemorandum)
+
         break
       case CorpTypeCd.BENEFIT_COMPANY:
       case CorpTypeCd.BC_CCC:
       case CorpTypeCd.BC_COMPANY:
       case CorpTypeCd.BC_ULC_COMPANY:
-        // Set Share Structure
+        // restore Share Structure
         this.setShareClasses(draftFiling.incorporationApplication.shareStructure
           ? draftFiling.incorporationApplication.shareStructure.shareClasses : [])
-        // Set Incorporation Agreement
+
+        // restore Incorporation Agreement
         this.setIncorporationAgreementStepData({
           agreementType: draftFiling.incorporationApplication.incorporationAgreement?.agreementType
         })
+
         break
     }
 
-    // Set Certify Form
+    // restore Certify state
     this.setCertifyState({
       valid: false,
       certifiedBy: draftFiling.header.certifiedBy
     })
 
-    // Set Future Effective data
+    // restore Future Effective data
     if (draftFiling.header.isFutureEffective) {
       this.setIsFutureEffective(true)
       const effectiveDate = this.apiToDate(draftFiling.header.effectiveDate)
@@ -265,51 +272,49 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
       if (effectiveDate >= this.getCurrentJsDate) this.setEffectiveDate(effectiveDate)
     }
 
-    // Set Folio Number
-    this.setIncorporationFolioNumber(draftFiling.header.folioNumber)
+    // NB: do not restore/overwrite Folio Number - just use the FN from auth info (see App.vue)
   }
 
   /**
-   * Constructs a filing body from store data. Used when saving a filing.
+   * Builds a dissolution filing from store data. Used when saving a filing.
    * @returns the filing body to save
    */
   buildDissolutionFiling (): DissolutionFilingIF {
-    // Build filing.
+    // Build the main filing.
     const filing: DissolutionFilingIF = {
-      filing: {
-        header: {
-          name: FilingTypes.DISSOLUTION,
-          certifiedBy: this.getCertifyState.certifiedBy,
-          date: this.getCurrentDate,
-          isFutureEffective: null
-        },
-        business: {
-          legalType: this.getEntityType,
-          identifier: this.getBusinessId,
-          legalName: this.getBusinessLegalName
-        },
-        dissolution: {
-          dissolutionDate: this.getCurrentDate,
-          affidavitConfirmed: this.getAffidavitStep.validationDetail.validationItemDetails[0]?.valid || false,
-          custodialOffice: this.getBusiness.officeAddress,
-          dissolutionType: this.getDissolutionType,
-          parties: [{
-            ...this.getCustodian,
-            roles: [
-              {
-                roleType: RoleTypes.CUSTODIAN,
-                appointmentDate: this.getCurrentDate
-              }
-            ]
-          }]
-        }
+      header: {
+        name: FilingTypes.DISSOLUTION,
+        certifiedBy: this.getCertifyState.certifiedBy,
+        date: this.getCurrentDate,
+        folioNumber: this.getFolioNumber, // default FN; may be overwritten by Transactional FN or staff BCOL FN
+        isFutureEffective: null
+      },
+      business: {
+        legalType: this.getEntityType,
+        identifier: this.getBusinessId,
+        legalName: this.getBusinessLegalName
+      },
+      dissolution: {
+        dissolutionDate: this.getCurrentDate,
+        affidavitConfirmed: this.getAffidavitStep.validationDetail.validationItemDetails[0]?.valid || false,
+        custodialOffice: this.getBusiness.officeAddress,
+        dissolutionType: this.getDissolutionType,
+        parties: [{
+          ...this.getCustodian,
+          roles: [
+            {
+              roleType: RoleTypes.CUSTODIAN,
+              appointmentDate: this.getCurrentDate
+            }
+          ]
+        }]
       }
     }
 
     // Conditionally add the entity-specific sections.
     switch (this.getEntityType) {
       case CorpTypeCd.COOP:
-        filing.filing.dissolution = { ...filing.filing.dissolution,
+        filing.dissolution = { ...filing.dissolution,
           dissolutionStatementType: this.getDissolutionStatementStep.dissolutionStatementType || null,
           affidavitFileKey: this.getAffidavitStep.docKey || null,
           affidavitFileName: this.getAffidavitStep.affidavitDoc?.name || null,
@@ -325,7 +330,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
       case CorpTypeCd.BC_CCC:
       case CorpTypeCd.BC_COMPANY:
       case CorpTypeCd.BC_ULC_COMPANY:
-        filing.filing.dissolution = { ...filing.filing.dissolution,
+        filing.dissolution = { ...filing.dissolution,
           resolution: {
             resolutionConfirmed: this.getCreateResolutionStep.resolutionConfirmed || false
           }
@@ -334,45 +339,58 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     }
 
     // If this is a future effective filing then save the effective date (all except Coop).
-    if (this.getEffectiveDateTime.isFutureEffective === true) filing.filing.header.isFutureEffective = true
-    if (this.getEffectiveDateTime.isFutureEffective === false) filing.filing.header.isFutureEffective = false
+    if (this.getEffectiveDateTime.isFutureEffective === true) filing.header.isFutureEffective = true
+    if (this.getEffectiveDateTime.isFutureEffective === false) filing.header.isFutureEffective = false
     if (this.getEffectiveDateTime.isFutureEffective && !this.isTypeCoop) {
       const effectiveDate = this.getEffectiveDateTime.effectiveDate
-      if (effectiveDate) filing.filing.header.effectiveDate = this.dateToApi(effectiveDate)
+      if (effectiveDate) filing.header.effectiveDate = this.dateToApi(effectiveDate)
     }
 
-    // Apply Court Order ONLY when it is required and applied
+    // Add Court Order ONLY when it is required and applied.
     const courtOrder = this.getCourtOrderStep.courtOrder
     if (courtOrder.hasPlanOfArrangement || courtOrder.fileNumber) {
-      filing.filing.dissolution.courtOrder = {
+      filing.dissolution.courtOrder = {
         fileNumber: courtOrder.fileNumber,
         effectOfOrder: courtOrder.hasPlanOfArrangement ? EffectOfOrders.PLAN_OF_ARRANGEMENT : null,
         hasPlanOfArrangement: courtOrder.hasPlanOfArrangement
       }
     }
 
+    // NB: Staff role is mutually exclusive with premium account.
     if (this.isRoleStaff) {
       if (this.getDocumentDelivery.documentOptionalEmail) {
-        filing.filing.header.documentOptionalEmail = this.getDocumentDelivery.documentOptionalEmail
+        filing.header.documentOptionalEmail = this.getDocumentDelivery.documentOptionalEmail
       }
 
-      // Include Staff Payment into the Dissolution filing
+      // Add staff payment data.
       this.buildStaffPayment(filing)
+    }
+
+    // NB: Premium account is mutually exclusive with staff role.
+    if (this.isPremiumAccount) {
+      // override Folio Number if TFN exists and is different than default FN
+      // also save a flag to correctly restore a draft later
+      const fn = this.getFolioNumber
+      const tfn = this.getTransactionalFolioNumber
+      if (tfn && tfn !== fn) {
+        filing.header.folioNumber = tfn
+        filing.header.isTransactionalFolioNumber = true
+      }
     }
 
     return filing
   }
 
   /**
-   * Parses a draft filing into the store. Used when resuming a filing.
+   * Parses a draft dissolution filing into the store. Used when loading a filing.
    * @param draftFiling the filing body to parse
    */
   parseDissolutionDraft (draftFiling: any): void {
-    // Set Business data
+    // restore Business data
     this.setEntityType(draftFiling.business.legalType)
     this.setLegalName(draftFiling.business.legalName)
 
-    // Set Dissolution data
+    // restore Dissolution data
     this.setBusinessAddress(draftFiling.dissolution.custodialOffice)
     this.setDissolutionType(draftFiling.dissolution.dissolutionType)
 
@@ -383,9 +401,12 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
       dissolutionStatementType: draftFiling.dissolution?.dissolutionStatementType
     })
 
-    // // Take the first custodian, as there is only a singular custodian in a dissolution filing.
-    if (draftFiling.dissolution.parties) this.setCustodianOfRecords(draftFiling.dissolution.parties[0])
+    // take the first party, as there is only a single custodian in a dissolution filing
+    if (draftFiling.dissolution.parties) {
+      this.setCustodianOfRecords(draftFiling.dissolution.parties[0])
+    }
 
+    // restore Resolution data
     const createResolution: CreateResolutionIF = {
       validationDetail: {
         valid: false,
@@ -409,7 +430,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     //   if (effectiveDate >= this.getCurrentJsDate) this.setEffectiveDate(effectiveDate)
     // }
 
-    // Set Affidavit
+    // restore Affidavit
     let affidavitDoc: DocIF = null
     if (draftFiling.dissolution?.affidavitFileKey) {
       affidavitDoc = {
@@ -429,51 +450,60 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     }
     this.setAffidavit(uploadAffidavit)
 
-    // Set Court Order data
+    // restore Court Order data
     this.setCourtOrderFileNumber(draftFiling.dissolution.courtOrder?.fileNumber)
     this.setHasPlanOfArrangement(draftFiling.dissolution.courtOrder?.hasPlanOfArrangement)
 
-    // Set Certify Form
+    // restore Certify state
     this.setCertifyState({
       valid: false,
       certifiedBy: draftFiling.header.certifiedBy
     })
 
+    // NB: do not restore/overwrite Folio Number - just use the FN from auth info (see App.vue)
+
+    // NB: Staff role is mutually exclusive with premium account.
     if (this.isRoleStaff) {
-      // Restore document optional email
+      // restore document optional email
       this.setDocumentOptionalEmail(draftFiling.header.documentOptionalEmail)
 
-      // Set Staff Payment data
-      this.storeStaffPayment(draftFiling)
+      // restore Staff Payment data
+      this.parseStaffPayment(draftFiling)
     }
 
-    // *** TODO: set folio number(s)
-    // *** TODO: check this against staff payment FN
+    // NB: Premium account is mutually exclusive with staff role.
+    if (this.isPremiumAccount) {
+      // if Transactional Folio Number exists then restore it
+      if (draftFiling.header.isTransactionalFolioNumber && draftFiling.header.folioNumber) {
+        this.setTransactionalFolioNumber(draftFiling.header.folioNumber)
+      }
+    }
   }
 
   /**
-   * Build Staff Payment data into the filing.
-   * @param filing The dissolution filing.
+   * Builds dissolution staff payment data from store data.
+   * @param filing the filing body to update
    */
   private buildStaffPayment (filing: DissolutionFilingIF): void {
     // Populate Staff Payment according to payment option
     const staffPayment = this.getStaffPaymentStep.staffPayment
     switch (staffPayment.option) {
       case StaffPaymentOptions.FAS:
-        filing.filing.header.routingSlipNumber = staffPayment.routingSlipNumber
-        filing.filing.header.priority = staffPayment.isPriority
+        filing.header.routingSlipNumber = staffPayment.routingSlipNumber
+        filing.header.priority = staffPayment.isPriority
         break
 
       case StaffPaymentOptions.BCOL:
-        filing.filing.header.bcolAccountNumber = staffPayment.bcolAccountNumber
-        filing.filing.header.datNumber = staffPayment.datNumber
-        filing.filing.header.folioNumber = staffPayment.folioNumber // this overrides original folio number
-        filing.filing.header.priority = staffPayment.isPriority
+        filing.header.bcolAccountNumber = staffPayment.bcolAccountNumber
+        filing.header.datNumber = staffPayment.datNumber
+        // override Folio Number if BCOL FN exists
+        if (staffPayment.folioNumber) filing.header.folioNumber = staffPayment.folioNumber
+        filing.header.priority = staffPayment.isPriority
         break
 
       case StaffPaymentOptions.NO_FEE:
-        filing.filing.header.waiveFees = true
-        filing.filing.header.priority = false
+        filing.header.waiveFees = true
+        filing.header.priority = false
         break
 
       case StaffPaymentOptions.NONE: // should never happen
@@ -482,10 +512,10 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   }
 
   /**
-   * Parse Staff Payment data into store.
-   * @param filing The dissolution filing to parse.
+   * Parses dissolution staff payment data into the store.
+   * @param filing the filing body to parse
    */
-  private storeStaffPayment (filing: DissolutionFilingIF['filing']): void {
+  private parseStaffPayment (filing: DissolutionFilingIF): void {
     // Parse staff payment
     if (filing.header.routingSlipNumber) {
       this.setStaffPayment({

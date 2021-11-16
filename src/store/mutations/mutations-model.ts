@@ -151,12 +151,9 @@ export const mutateAddPeopleAndRoleStepValidity = (state: StateIF, valid: boolea
   state.stateModel.addPeopleAndRoleStep.valid = valid
 }
 
-export const mutateAccountFolioNumber = (state: StateIF, folioNumber: string) => {
-  state.stateModel.tombstone.accountFolioNumber = folioNumber
-}
-
-export const mutateIncorporationFolioNumber = (state: StateIF, folioNumber: string) => {
-  state.stateModel.defineCompanyStep.folioNumber = folioNumber
+export const mutateFolioNumber = (state: StateIF, folioNumber: string) => {
+  state.stateModel.tombstone.folioNumber = folioNumber
+  if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
 }
 
 export const mutateTransactionalFolioNumber = (state: StateIF, folioNumber: string) => {
@@ -165,8 +162,7 @@ export const mutateTransactionalFolioNumber = (state: StateIF, folioNumber: stri
 }
 
 export const mutateTransactionalFolioNumberValidity = (state: StateIF, valid: boolean) => {
-  // *** TODO: add to state and implement this
-  // state.stateModel.tombstone.transactionalFolioNumber = valid
+  state.stateModel.tombstone.transactionalFolioNumberValid = valid
 }
 
 export const mutateAccountInformation = (state: StateIF, accountInfo: AccountInformationIF) => {

@@ -50,13 +50,13 @@
 
     <v-divider class="mx-8" v-if="isPremiumAccount" />
 
-    <div v-if="isPremiumAccount" id='folio-number' class="section-container">
+    <div v-if="isPremiumAccount" id="folio-number" class="section-container">
       <v-row no-gutters>
         <v-col md="3" class="pr-6">
           <label>Folio or Reference Number</label>
         </v-col>
         <v-col md="9">
-          <div id="lbl-folio-number">{{ getAccountFolioNumber || 'None' }}</div>
+          <div id="lbl-folio-number">{{ getFolioNumber || 'None' }}</div>
         </v-col>
       </v-row>
     </div>
@@ -112,7 +112,7 @@ export default class AssociationDetails extends Mixins(CommonMixin, EntityFilter
 
   // Global getters
   @Getter getApprovedName!: string
-  @Getter getAccountFolioNumber!: string
+  @Getter getFolioNumber!: string
   @Getter getBusinessId!: string
   @Getter getBusiness!: BusinessIF
   @Getter getBusinessContact!: BusinessContactIF

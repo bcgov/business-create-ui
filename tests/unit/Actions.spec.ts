@@ -182,180 +182,178 @@ describe('Actions component - Filing Functionality', () => {
 
   // the filing body that would get sent to the API
   const filing = {
-    filing: {
-      header: {
-        name: 'incorporationApplication',
-        certifiedBy: 'Certified By',
-        date: '2020/01/29',
-        effectiveDate: formattedEffectiveDate,
-        folioNumber: null,
-        isFutureEffective: false
+    header: {
+      name: 'incorporationApplication',
+      certifiedBy: 'Certified By',
+      date: '2020/01/29',
+      effectiveDate: formattedEffectiveDate,
+      folioNumber: '123456',
+      isFutureEffective: false
+    },
+    business: {
+      identifier: 'T1234567',
+      legalType: 'BEN'
+    },
+    incorporationApplication: {
+      nameRequest: {
+        nrNumber: 'NR 1234567',
+        legalType: 'BEN',
+        legalName: 'My Name Request Inc.'
       },
-      business: {
-        identifier: 'T1234567',
-        legalType: 'BEN'
-      },
-      incorporationApplication: {
-        nameRequest: {
-          nrNumber: 'NR 1234567',
-          legalType: 'BEN',
-          legalName: 'My Name Request Inc.'
-        },
-        nameTranslations: [],
-        offices: {
-          registeredOffice: {
-            deliveryAddress: {
-              addressCity: 'someCity',
-              addressCountry: 'someCountry',
-              addressRegion: 'someRegion',
-              postalCode: 'somePostalCode',
-              streetAddress: 'someStreet'
-            },
-            mailingAddress: {
-              addressCity: 'someCity',
-              addressCountry: 'someCountry',
-              addressRegion: 'someRegion',
-              postalCode: 'somePostalCode',
-              streetAddress: 'someStreet'
-            }
+      nameTranslations: [],
+      offices: {
+        registeredOffice: {
+          deliveryAddress: {
+            addressCity: 'someCity',
+            addressCountry: 'someCountry',
+            addressRegion: 'someRegion',
+            postalCode: 'somePostalCode',
+            streetAddress: 'someStreet'
           },
-          recordsOffice: {
-            deliveryAddress: {
-              addressCity: 'someCity',
-              addressCountry: 'someCountry',
-              addressRegion: 'someRegion',
-              postalCode: 'somePostalCode',
-              streetAddress: 'someStreet'
-            },
-            mailingAddress: {
-              addressCity: 'someCity',
-              addressCountry: 'someCountry',
-              addressRegion: 'someRegion',
-              postalCode: 'somePostalCode',
-              streetAddress: 'someStreet'
-            }
+          mailingAddress: {
+            addressCity: 'someCity',
+            addressCountry: 'someCountry',
+            addressRegion: 'someRegion',
+            postalCode: 'somePostalCode',
+            streetAddress: 'someStreet'
           }
         },
-        contactPoint: {
-          email: 'registered-office@example.com',
-          phone: '111-222-3333',
-          extension: 444
-        },
-        parties: [
-          {
-            officer: {
-              id: 1,
-              firstName: 'Joe',
-              lastName: 'Swanson',
-              middleName: 'P',
-              organizationName: '',
-              partyType: 'person',
-              email: 'completing-party@example.com'
-            },
-            mailingAddress: {
-              streetAddress: 'mailing_address-addresslineone',
-              streetAddressAdditional: '',
-              addressCity: 'mailing_addresscity',
-              addressCountry: 'CA',
-              postalCode: 'H0H0H0',
-              addressRegion: 'BC'
-            },
-            deliveryAddress: {
-              streetAddress: 'delivery_address-addresslineone',
-              streetAddressAdditional: '',
-              addressCity: 'delivery_addresscity',
-              addressCountry: 'CA',
-              postalCode: 'H0H0H0',
-              addressRegion: 'BC'
-            },
-            appointmentDate: '2018-01-01',
-            roles: [
-              {
-                roleType: 'CompletingParty',
-                appointmentDate: '2018-01-01'
-              },
-              {
-                roleType: 'Director',
-                appointmentDate: '2018-01-01'
-              }
-            ]
+        recordsOffice: {
+          deliveryAddress: {
+            addressCity: 'someCity',
+            addressCountry: 'someCountry',
+            addressRegion: 'someRegion',
+            postalCode: 'somePostalCode',
+            streetAddress: 'someStreet'
           },
-          {
-            officer: {
-              id: 2,
-              firstName: '',
-              lastName: '',
-              middleName: '',
-              organizationName: 'XyzInc.',
-              partyType: 'organization'
-            },
-            mailingAddress: {
-              streetAddress: 'mailing_address-addresslineone',
-              streetAddressAdditional: '',
-              addressCity: 'mailing_addresscity',
-              addressCountry: 'CA',
-              postalCode: 'H0H0H0',
-              addressRegion: 'BC'
-            },
-            appointmentDate: '2018-01-01',
-            roles: [
-              {
-                roleType: 'Incorporator',
-                appointmentDate: '2018-01-01'
-              }
-            ]
+          mailingAddress: {
+            addressCity: 'someCity',
+            addressCountry: 'someCountry',
+            addressRegion: 'someRegion',
+            postalCode: 'somePostalCode',
+            streetAddress: 'someStreet'
           }
-        ],
-        shareStructure: {
-          shareClasses: [
+        }
+      },
+      contactPoint: {
+        email: 'registered-office@example.com',
+        phone: '111-222-3333',
+        extension: 444
+      },
+      parties: [
+        {
+          officer: {
+            id: 1,
+            firstName: 'Joe',
+            lastName: 'Swanson',
+            middleName: 'P',
+            organizationName: '',
+            partyType: 'person',
+            email: 'completing-party@example.com'
+          },
+          mailingAddress: {
+            streetAddress: 'mailing_address-addresslineone',
+            streetAddressAdditional: '',
+            addressCity: 'mailing_addresscity',
+            addressCountry: 'CA',
+            postalCode: 'H0H0H0',
+            addressRegion: 'BC'
+          },
+          deliveryAddress: {
+            streetAddress: 'delivery_address-addresslineone',
+            streetAddressAdditional: '',
+            addressCity: 'delivery_addresscity',
+            addressCountry: 'CA',
+            postalCode: 'H0H0H0',
+            addressRegion: 'BC'
+          },
+          appointmentDate: '2018-01-01',
+          roles: [
             {
-              id: 1,
-              name: 'ShareClass1',
-              priority: 1,
-              hasMaximumShares: true,
-              maxNumberOfShares: 100,
-              hasParValue: true,
-              parValue: 10,
-              currency: 'CAD',
-              hasRightsOrRestrictions: false,
-              series: [
-                {
-                  id: 1,
-                  name: 'ShareSeries1',
-                  priority: 1,
-                  hasMaximumShares: true,
-                  maxNumberOfShares: 50,
-                  hasRightsOrRestrictions: false
-                },
-                {
-                  id: 2,
-                  name: 'ShareSeries2',
-                  priority: 2,
-                  hasMaximumShares: true,
-                  maxNumberOfShares: 100,
-                  hasRightsOrRestrictions: false
-                }
-              ]
+              roleType: 'CompletingParty',
+              appointmentDate: '2018-01-01'
             },
             {
-              id: 2,
-              name: 'ShareClass2',
-              priority: 1,
-              hasMaximumShares: false,
-              maxNumberOfShares: null,
-              hasParValue: false,
-              parValue: null,
-              currency: null,
-              hasRightsOrRestrictions: true,
-              series: [
-
-              ]
+              roleType: 'Director',
+              appointmentDate: '2018-01-01'
             }
           ]
         },
-        incorporationAgreement: {
-          agreementType: 'sample'
+        {
+          officer: {
+            id: 2,
+            firstName: '',
+            lastName: '',
+            middleName: '',
+            organizationName: 'XyzInc.',
+            partyType: 'organization'
+          },
+          mailingAddress: {
+            streetAddress: 'mailing_address-addresslineone',
+            streetAddressAdditional: '',
+            addressCity: 'mailing_addresscity',
+            addressCountry: 'CA',
+            postalCode: 'H0H0H0',
+            addressRegion: 'BC'
+          },
+          appointmentDate: '2018-01-01',
+          roles: [
+            {
+              roleType: 'Incorporator',
+              appointmentDate: '2018-01-01'
+            }
+          ]
         }
+      ],
+      shareStructure: {
+        shareClasses: [
+          {
+            id: 1,
+            name: 'ShareClass1',
+            priority: 1,
+            hasMaximumShares: true,
+            maxNumberOfShares: 100,
+            hasParValue: true,
+            parValue: 10,
+            currency: 'CAD',
+            hasRightsOrRestrictions: false,
+            series: [
+              {
+                id: 1,
+                name: 'ShareSeries1',
+                priority: 1,
+                hasMaximumShares: true,
+                maxNumberOfShares: 50,
+                hasRightsOrRestrictions: false
+              },
+              {
+                id: 2,
+                name: 'ShareSeries2',
+                priority: 2,
+                hasMaximumShares: true,
+                maxNumberOfShares: 100,
+                hasRightsOrRestrictions: false
+              }
+            ]
+          },
+          {
+            id: 2,
+            name: 'ShareClass2',
+            priority: 1,
+            hasMaximumShares: false,
+            maxNumberOfShares: null,
+            hasParValue: false,
+            parValue: null,
+            currency: null,
+            hasRightsOrRestrictions: true,
+            series: [
+
+            ]
+          }
+        ]
+      },
+      incorporationAgreement: {
+        agreementType: 'sample'
       }
     }
   }
@@ -386,13 +384,14 @@ describe('Actions component - Filing Functionality', () => {
     store.state.stateModel.tombstone = {
       authRoles: [],
       filingType: 'incorporationApplication',
-      userEmail: 'completing-party@example.com'
+      userEmail: 'completing-party@example.com',
+      folioNumber: '123456'
     }
-    store.state.stateModel.certifyState.certifiedBy = filing.filing.header.certifiedBy
+    store.state.stateModel.certifyState.certifiedBy = filing.header.certifiedBy
     store.state.stateModel.businessContact = {
-      email: filing.filing.incorporationApplication.contactPoint.email,
-      phone: filing.filing.incorporationApplication.contactPoint.phone,
-      extension: filing.filing.incorporationApplication.contactPoint.extension
+      email: filing.incorporationApplication.contactPoint.email,
+      phone: filing.incorporationApplication.contactPoint.phone,
+      extension: filing.incorporationApplication.contactPoint.extension
     }
     store.state.stateModel.effectiveDateTime.effectiveDate = effectiveDate
     store.state.stateModel.businessContact = {
@@ -401,17 +400,17 @@ describe('Actions component - Filing Functionality', () => {
       phone: '111-222-3333',
       extension: 444
     }
-    store.state.stateModel.defineCompanyStep.officeAddresses = filing.filing.incorporationApplication.offices
-    store.state.stateModel.defineCompanyStep.folioNumber = filing.filing.header.folioNumber
-    store.state.stateModel.addPeopleAndRoleStep.orgPeople = filing.filing.incorporationApplication.parties
+    store.state.stateModel.defineCompanyStep.officeAddresses = filing.incorporationApplication.offices
+    store.state.stateModel.defineCompanyStep.folioNumber = filing.header.folioNumber
+    store.state.stateModel.addPeopleAndRoleStep.orgPeople = filing.incorporationApplication.parties
     store.state.stateModel.createShareStructureStep.shareClasses =
-      filing.filing.incorporationApplication.shareStructure.shareClasses
+      filing.incorporationApplication.shareStructure.shareClasses
     store.state.stateModel.filingId = 1234
     store.state.stateModel.entityType = 'BEN'
     store.state.stateModel.tempId = 'T1234567'
-    store.state.stateModel.effectiveDateTime.isFutureEffective = filing.filing.header.isFutureEffective
+    store.state.stateModel.effectiveDateTime.isFutureEffective = filing.header.isFutureEffective
     store.state.stateModel.incorporationAgreementStep.agreementType =
-      filing.filing.incorporationApplication.incorporationAgreement.agreementType
+      filing.incorporationApplication.incorporationAgreement.agreementType
 
     const localVue = createLocalVue()
     localVue.use(VueRouter)

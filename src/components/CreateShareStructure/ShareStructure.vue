@@ -83,7 +83,7 @@
                             :rules="getCurrencyRule()"
                             item-text="`${data.item.name}, ${data.item.code}`"
                             item-value="code"
-                            id='class-currency'
+                            id="class-currency"
                           >
                             <template slot="selection" slot-scope="data">
                                {{ data.item.name }} ({{ data.item.code }})
@@ -119,7 +119,7 @@
                           />
                         </v-col>
                     </v-row>
-                    <v-label id='lbl-no-par' v-else>No par value</v-label>
+                    <v-label id="lbl-no-par" v-else>No par value</v-label>
                 </div>
 
                 <v-divider class="mt-2 mb-4" />

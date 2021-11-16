@@ -96,19 +96,18 @@ export const getEntityType = (state: StateIF): CorpTypeCd => {
 }
 
 /** The account folio number. */
-export const getAccountFolioNumber = (state: StateIF): string => {
-  return state.stateModel.tombstone.accountFolioNumber
-}
-
-// *** TODO: replace this with account folio number?
-/** The incorporation folio number. */
-export const getIncorporationFolioNumber = (state: StateIF): string => {
-  return getDefineCompanyStep(state).folioNumber
+export const getFolioNumber = (state: StateIF): string => {
+  return state.stateModel.tombstone.folioNumber
 }
 
 /** The transactional folio number. */
 export const getTransactionalFolioNumber = (state: StateIF): string => {
   return state.stateModel.tombstone.transactionalFolioNumber
+}
+
+/** Is true when the transactional folio number is valid. */
+export const getTransactionalFolioNumberValid = (state: StateIF): boolean => {
+  return state.stateModel.tombstone.transactionalFolioNumberValid
 }
 
 /** The staff payment folio number. */
@@ -392,21 +391,17 @@ export const isIncorporationAgreementValid = (state: StateIF): boolean => {
 
 /** Is true when the step is valid. */
 export const isDefineDissolutionValid = (state: StateIF): boolean => {
-  const isCoopDefineDissolutionValid = (isTypeCoop(state)
-    ? getDissolutionStatementStep(state).valid &&
-      getHasCertificateDestroyed(state)
-    : true)
+  const isCoopDefineDissolutionValid = isTypeCoop(state)
+    ? (getDissolutionStatementStep(state).valid && getHasCertificateDestroyed(state))
+    : true
 
   return isCoopDefineDissolutionValid && isCustodianValid(state)
 }
 
 /** Whether all the steps are valid. */
 export const isApplicationValid = (state: StateIF): boolean => {
-  if (isIncorporationFiling(state)) {
-    return isIncorporationApplicationValid(state)
-  } else if (isDissolutionFiling(state)) {
-    return isDissolutionValid(state)
-  }
+  if (isIncorporationFiling(state)) return isIncorporationApplicationValid(state)
+  if (isDissolutionFiling(state)) return isDissolutionValid(state)
   return false
 }
 
@@ -417,21 +412,23 @@ export const isDissolutionValid = (state: StateIF): boolean => {
   const isDocumentDeliveryValid = getDocumentDelivery(state).valid
   const isCertifyValid = getCertifyState(state).valid && !!getCertifyState(state).certifiedBy
 
-  // Only for Staff role
+  // only for Premium account
+  const isTransactionalFnValid = !isPremiumAccount(state) || getTransactionalFolioNumberValid(state)
+
+  // only for Staff role
   const isCourtOrderValid = isStaff ? getCourtOrderStep(state).valid : true
   const isStaffPaymentValid = isStaff ? getStaffPaymentStep(state).valid : true
 
-  const isEffectiveDateTimeValid = (
-    isBaseCompany(state) && isStaff
-      ? getEffectiveDateTime(state).valid
-      : true
-  )
+  const isEffectiveDateTimeValid = (isBaseCompany(state) && isStaff)
+    ? getEffectiveDateTime(state).valid
+    : true
 
   return (
     isDefineDissolutionValid(state) &&
     isAffidavitValid(state) &&
     isResolutionValid(state) &&
     isDocumentDeliveryValid &&
+    isTransactionalFnValid &&
     isCertifyValid &&
     isEffectiveDateTimeValid &&
     isCourtOrderValid &&

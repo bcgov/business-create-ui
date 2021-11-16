@@ -105,9 +105,9 @@
       </header>
       <v-card flat class="step-container">
         <FolioNumber
-          :initialValue="getDefineCompanyStep.folioNumber"
+          :initialValue="getFolioNumber"
           :isEditing="true"
-          @folioNumberChange="setIncorporationFolioNumber($event)"
+          @folioNumberChange="setFolioNumber($event)"
         />
       </v-card>
     </section>
@@ -158,11 +158,12 @@ export default class DefineCompany extends Mixins(CommonMixin, EntityFilterMixin
   @Getter getValidateSteps!: boolean
   @Getter getShowErrors!: boolean
   @Getter getBusinessContact!: BusinessContactIF
+  @Getter getFolioNumber!: string
 
   @Action setEntityType!: ActionBindingIF
   @Action setBusinessContact!: ActionBindingIF
   @Action setCooperativeType!: ActionBindingIF
-  @Action setIncorporationFolioNumber!: ActionBindingIF
+  @Action setFolioNumber!: ActionBindingIF
   @Action setOfficeAddresses!: ActionBindingIF
   @Action setDefineCompanyStepValidity!: ActionBindingIF
   @Action setIgnoreChanges!: ActionBindingIF

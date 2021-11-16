@@ -1,21 +1,21 @@
 <template>
-  <v-card flat id="transactional-folio-number-container" :class="{ 'invalid-section': !sectionValid }">
+  <v-card flat id="transactional-folio-number-container" :class="{ 'invalid-section': !isValid }">
     <v-row no-gutters>
       <v-col cols="3">
-        <label :class="{ 'error-text': !sectionValid }">
+        <label :class="{ 'error-text': !isValid }">
           <strong>Folio or Reference<br>Number</strong>
         </label>
       </v-col>
       <v-col cols="9">
         <v-text-field
-          filled persistent-hint validate-on-blur hide-details
+          filled persistent-hint
           id="folio-number-input"
           ref="folioNumberInput"
           autocomplete="chrome-off"
           label="Folio or Reference Number (Optional)"
-          v-model="folioNumber"
+          v-model.trim="localFolioNumber"
           :name="Math.random()"
-          :rules="rules"
+          :rules="doValidate ? Rules.FolioNumberRules: []"
         />
       </v-col>
     </v-row>
@@ -23,57 +23,61 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Prop, Vue, Watch } from 'vue-property-decorator'
-import { Action, Getter } from 'vuex-class'
+import { Component, Emit, Mixins, Prop, Watch } from 'vue-property-decorator'
 import { CommonMixin } from '@/mixins'
-import { ActionBindingIF, FormFieldType } from '@/interfaces'
+import { FormFieldType } from '@/interfaces'
+import { Rules } from '@/rules'
 
 @Component({})
 export default class TransactionalFolioNumber extends Mixins(CommonMixin) {
-  // Add element type to refs
+  // Refs
   $refs!: {
     folioNumberInput: FormFieldType
   }
 
-  // Global getters
-  @Getter getAccountFolioNumber!: string
-  @Getter getTransactionalFolioNumber!: string
+  // Props
+  @Prop({ default: null }) readonly accountFolioNumber: string
+  @Prop({ default: null }) readonly transactionalFolioNumber: string
+  @Prop({ default: false }) readonly doValidate: boolean
 
-  // Global actions
-  @Action setTransactionalFolioNumber!: ActionBindingIF
-  @Action setTransactionalFolioNumberValidity!: ActionBindingIF
-
-  /** Prop to perform validation. */
-  @Prop({ default: false }) readonly validate: boolean
+  // Rules for template
+  readonly Rules = Rules
 
   // Local properties
-  private folioNumber = ''
-
-  // Validation rules
-  private readonly rules: Array<Function> = [
-    v => (!v || v.length <= 50) || 'Cannot exceed 50 characters' // maximum character count
-  ]
+  private localFolioNumber = ''
 
   /** Called when component is mounted. */
   mounted (): void {
-    // assign transactional FN if it exists, otherwise business FN
-    this.folioNumber = this.getTransactionalFolioNumber || this.getAccountFolioNumber
+    // restore transactional FN if it exists, otherwise use account FN
+    this.localFolioNumber = this.transactionalFolioNumber || this.accountFolioNumber
   }
 
-  /** True if this section is valid. */
-  get sectionValid (): boolean {
-    // *** TODO: finish implementation
-    return !this.validate
-    // return (!this.validate || this.getFlagsReviewCertify.isValidTransactionalFolioNumber)
+  /** True if this component is valid. */
+  get isValid (): boolean {
+    return (!this.doValidate || this.$refs.folioNumberInput?.valid)
   }
 
-  // ** TODO: set validity locally?
-  @Watch('folioNumber')
-  private async onFolioNumberChanged (val: string): Promise<void> {
-    this.setTransactionalFolioNumber(val)
-    // wait for form field to update itself before checking validity
-    await Vue.nextTick()
-    this.setTransactionalFolioNumberValidity(this.$refs.folioNumberInput.valid)
+  /** Called when user has changed the Local Folio Number. */
+  @Watch('localFolioNumber')
+  private onLocalFolioNumberChanged (val: string): void {
+    this.emitChange(val)
+    this.emitValid(this.isValid)
   }
+
+  @Emit('change')
+  private emitChange (change: string): void { }
+
+  @Emit('valid')
+  private emitValid (valid: boolean): void { }
 }
 </script>
+
+<style lang="scss" scoped>
+.v-input {
+  margin-bottom: -8px;
+}
+
+.v-input:not(.error--text) {
+  margin-bottom: -30px;
+}
+</style>

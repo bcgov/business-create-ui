@@ -5,5 +5,4 @@ export interface DefineCompanyIF {
     valid: boolean
     cooperativeType: CoopType
     officeAddresses: IncorporationAddressIF | {}
-    folioNumber?: string
 }

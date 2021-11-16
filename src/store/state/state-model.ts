@@ -14,8 +14,9 @@ export const stateModel: StateModelIF = {
     userLastName: '',
     userKeycloakGuid: null,
     userAddress: null,
-    accountFolioNumber: '', // *** TODO: FN1 is here
-    transactionalFolioNumber: '' // *** TODO: FN2 is here
+    folioNumber: '',
+    transactionalFolioNumber: '',
+    transactionalFolioNumberValid: false
   },
   business: {
     businessId: '',
@@ -130,8 +131,7 @@ export const stateModel: StateModelIF = {
   defineCompanyStep: {
     valid: false,
     cooperativeType: null,
-    officeAddresses: {},
-    folioNumber: null // *** TODO: FN3 is here
+    officeAddresses: {}
   },
   addPeopleAndRoleStep: {
     valid: false,
@@ -189,7 +189,7 @@ export const stateModel: StateModelIF = {
       routingSlipNumber: '',
       bcolAccountNumber: '',
       datNumber: '',
-      folioNumber: '', // *** TODO: FN4 is here
+      folioNumber: '',
       isPriority: false
     }
   },
