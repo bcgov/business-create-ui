@@ -165,7 +165,7 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Mixins, Watch, Vue } from 'vue-property-decorator'
+import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 
 // Interfaces
@@ -204,7 +204,7 @@ export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
   private hasRulesConfirmed = false
   private rulesConfirmed = false
   private fileUploadCustomErrorMsg: string = ''
-  private uploadRulesDoc:File = null
+  private uploadRulesDoc: File = null
   private uploadRulesDocKey: string = null
   private helpToggle = false
 
@@ -261,8 +261,12 @@ export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
   public async uploadPendingDocsToStorage () {
     const isPendingUpload = !this.uploadRulesDocKey
     if (isPendingUpload && this.hasValidUploadFile) {
-      const doc:DocumentUpload = await this.getPresignedUrl(this.uploadRulesDoc.name)
+      // NB: will throw if API error
+      const doc: DocumentUpload = await this.getPresignedUrl(this.uploadRulesDoc.name)
+
+      // NB: will return error response if API error
       const res = await this.uploadToUrl(doc.preSignedUrl, this.uploadRulesDoc, doc.key, this.getUserKeycloakGuid)
+
       if (res && res.status === 200) {
         const rulesDoc = {
           name: this.uploadRulesDoc.name,
@@ -309,7 +313,7 @@ export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
   private created (): void {
     this.uploadRulesDoc = this.getCreateRulesStep.rulesDoc as File
     this.uploadRulesDocKey = this.getCreateRulesStep.docKey
-    this.rulesConfirmed = !!this.getCreateRulesStep.rulesConfirmed
+    this.rulesConfirmed = this.getCreateRulesStep.rulesConfirmed
     this.hasValidUploadFile = !!this.uploadRulesDocKey
     this.hasRulesConfirmed = this.rulesConfirmed
     this.updateRulesStepValidity()
@@ -326,9 +330,10 @@ export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
 
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
+
 header {
   p {
-    padding-top: 0.5rem
+    padding-top: 0.5rem;
   }
 }
 

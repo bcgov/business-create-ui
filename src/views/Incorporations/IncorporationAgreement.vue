@@ -240,7 +240,7 @@ export default class IncorporationAgreement extends Mixins(EnumMixin) {
     return `${this.getCorpTypeDescription(this.getEntityType)}`
   }
 
-  private get documentURL ():string {
+  private get documentURL (): string {
     return sessionStorage.getItem('BASE_URL') +
     `files/${this.getSampleArticle}`
   }

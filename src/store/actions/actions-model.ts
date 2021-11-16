@@ -122,12 +122,8 @@ export const setOfficeAddresses: ActionIF = ({ commit }, address: IncorporationA
   commit('mutateOfficeAddresses', address)
 }
 
-export const setAccountFolioNumber: ActionIF = ({ commit }, folioNumber: string): void => {
-  commit('mutateAccountFolioNumber', folioNumber)
-}
-
-export const setIncorporationFolioNumber: ActionIF = ({ commit }, folioNumber: string): void => {
-  commit('mutateIncorporationFolioNumber', folioNumber)
+export const setFolioNumber: ActionIF = ({ commit }, folioNumber: string): void => {
+  commit('mutateFolioNumber', folioNumber)
 }
 
 export const setTransactionalFolioNumber: ActionIF = ({ commit }, folioNumber: string): void => {

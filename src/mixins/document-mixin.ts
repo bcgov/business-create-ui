@@ -30,11 +30,12 @@ export default class DocumentMixin extends Vue {
         }
         return data
       }).catch(error => {
+        console.log('Get presigned url error =', error) // eslint-disable-line no-console
         throw error
       })
   }
 
-  async uploadToUrl (url: string, file:File, key:String, userId: string): Promise<AxiosResponse> {
+  async uploadToUrl (url: string, file: File, key: string, userId: string): Promise<AxiosResponse> {
     const options = {
       headers: {
         'Content-Type': file.type,
@@ -78,8 +79,8 @@ export default class DocumentMixin extends Vue {
       const pdf = await pdfjsLib.getDocument({ data: pdfData })
       const perms = await pdf.getPermissions()
       return { isEncrypted: false, isContentLocked: !!perms }
-    } catch (e) {
-      if (e.name === 'PasswordException') {
+    } catch (error) {
+      if (error['name'] === 'PasswordException') {
         return { isEncrypted: true, isContentLocked: true }
       }
     }

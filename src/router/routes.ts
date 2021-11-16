@@ -2,7 +2,7 @@ import SigninView from '@/views/auth/Signin.vue'
 import SignoutView from '@/views/auth/Signout.vue'
 import { FilingTypes, RouteNames } from '@/enums'
 import * as Views from '@/views'
-const businessId = sessionStorage.getItem('BUSINESS_ID')
+
 export const routes = [
   {
     // router.beforeEach() routes here:

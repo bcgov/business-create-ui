@@ -217,7 +217,7 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Mixins, Prop, Vue, Watch } from 'vue-property-decorator'
+import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 
 // Interfaces
@@ -256,7 +256,7 @@ export default class UploadMemorandum extends Mixins(CommonMixin, DocumentMixin)
   private hasMemorandumConfirmed = false
   private memorandumConfirmed = false
   private fileUploadCustomErrorMsg: string = ''
-  private uploadMemorandumDoc:File = null
+  private uploadMemorandumDoc: File = null
   private uploadMemorandumDocKey: string = null
   private helpToggle = false
 
@@ -275,7 +275,7 @@ export default class UploadMemorandum extends Mixins(CommonMixin, DocumentMixin)
   readonly ItemTypes = ItemTypes
   readonly PdfPageSize = PdfPageSize
 
-  private get documentURL ():string {
+  private get documentURL (): string {
     return sessionStorage.getItem('BASE_URL') +
       `files/cooperative_sample_memorandum.pdf`
   }
@@ -318,8 +318,12 @@ export default class UploadMemorandum extends Mixins(CommonMixin, DocumentMixin)
   public async uploadPendingDocsToStorage () {
     const isPendingUpload = !this.uploadMemorandumDocKey
     if (isPendingUpload && this.hasValidUploadFile) {
-      const doc:DocumentUpload = await this.getPresignedUrl(this.uploadMemorandumDoc.name)
+      // NB: will throw if API error
+      const doc: DocumentUpload = await this.getPresignedUrl(this.uploadMemorandumDoc.name)
+
+      // NB: will return error response if API error
       const res = await this.uploadToUrl(doc.preSignedUrl, this.uploadMemorandumDoc, doc.key, this.getUserKeycloakGuid)
+
       if (res && res.status === 200) {
         const memorandumDoc = {
           name: this.uploadMemorandumDoc.name,
@@ -370,7 +374,7 @@ export default class UploadMemorandum extends Mixins(CommonMixin, DocumentMixin)
   private created (): void {
     this.uploadMemorandumDoc = this.getCreateMemorandumStep.memorandumDoc as File
     this.uploadMemorandumDocKey = this.getCreateMemorandumStep.docKey
-    this.memorandumConfirmed = !!this.getCreateMemorandumStep.memorandumConfirmed
+    this.memorandumConfirmed = this.getCreateMemorandumStep.memorandumConfirmed
     this.hasValidUploadFile = !!this.uploadMemorandumDocKey
     this.hasMemorandumConfirmed = this.memorandumConfirmed
     this.updateMemorandumStepValidity()
@@ -387,9 +391,10 @@ export default class UploadMemorandum extends Mixins(CommonMixin, DocumentMixin)
 
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
+
 header {
   p {
-    padding-top: 0.5rem
+    padding-top: 0.5rem;
   }
 }
 

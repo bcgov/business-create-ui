@@ -12,6 +12,7 @@ export interface TombstoneIF {
   userLastName: string // from auth user info
   userKeycloakGuid: string // from auth user info
   userAddress: AddressIF // from auth org info
-  accountFolioNumber: string // from auth user info
+  folioNumber: string // from auth user info or from user
   transactionalFolioNumber: string
+  transactionalFolioNumberValid: boolean
 }

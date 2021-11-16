@@ -15,7 +15,7 @@
         <label class="font-weight-bold pl-2">Dissolution</label>
       </header>
 
-      <div  class="pb-8" :class="{ 'invalid-section rounded-bl-0': !isDefineDissolutionValid }">
+      <div class="pb-8" :class="{ 'invalid-section rounded-bl-0': !isDefineDissolutionValid }">
         <section class="pt-8 pl-7" v-if="!isDefineDissolutionValid">
           <span>
             <v-icon color="error">mdi-information-outline</v-icon>
@@ -236,7 +236,11 @@
         </p>
       </header>
       <TransactionalFolioNumber
-        :validate="getValidateSteps"
+        :accountFolioNumber="getFolioNumber"
+        :transactionalFolioNumber="getTransactionalFolioNumber"
+        :doValidate="getValidateSteps"
+        @change="setTransactionalFolioNumber($event)"
+        @valid="setTransactionalFolioNumberValidity($event)"
       />
     </section>
 
@@ -366,7 +370,6 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
   @Getter getCreateResolutionStep!: CreateResolutionIF
   @Getter getFeePrices!: Array<FeesIF>
   @Getter getHasCertificateDestroyed!: boolean
-  @Getter getShowErrors!: boolean // *** TODO: delete if not used
   @Getter getUserEmail!: string
   @Getter getValidateSteps!: boolean
   @Getter isAffidavitValid!: boolean
@@ -375,6 +378,8 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
   @Getter isRoleStaff!: boolean
   @Getter isTypeCoop!: boolean
   @Getter isBaseCompany!: boolean
+  @Getter getFolioNumber!: string
+  @Getter getTransactionalFolioNumber!: string
 
   // Global actions
   @Action setIgnoreChanges!: ActionBindingIF
@@ -387,6 +392,8 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
   @Action setCertifyState!: ActionBindingIF
   @Action setDocumentOptionalEmail!: ActionBindingIF
   @Action setDocumentOptionalEmailValidity!: ActionBindingIF
+  @Action setTransactionalFolioNumber!: ActionBindingIF
+  @Action setTransactionalFolioNumberValidity!: ActionBindingIF
 
   // Enum for template
   readonly RouteNames = RouteNames

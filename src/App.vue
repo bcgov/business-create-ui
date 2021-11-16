@@ -242,10 +242,8 @@ export default class App extends Mixins(
   @Getter getFilingName!: FilingNames
   @Getter isDissolutionFiling!: boolean
   @Getter isIncorporationFiling!: boolean
-  @Getter isPremiumAccount!: boolean
   @Getter getSteps!: Array<StepIF>
 
-  @Action setAccountFolioNumber!: ActionBindingIF
   @Action setBusinessId!: ActionBindingIF
   @Action setCurrentStep!: ActionBindingIF
   @Action setCurrentDate!: ActionBindingIF
@@ -356,8 +354,8 @@ export default class App extends Mixins(
   }
 
   /** Helper to check is the current route matches */
-  private isRouteName (routeName: string): boolean {
-    return this.$route.name === routeName
+  private isRouteName (routeName: RouteNames): boolean {
+    return (this.$route.name === routeName)
   }
 
   /** Called when component is created. */
@@ -625,12 +623,14 @@ export default class App extends Mixins(
         this.setAuthRoles(response.data.roles)
       }
     }).catch(error => {
+      console.log('Auth error =', error) // eslint-disable-line no-console
       this.accountAuthorizationDialog = true
       throw error // go to catch()
     })
 
     // fetch draft filing
-    let draftFiling = await this.fetchDraftDissolution().catch(error => { throw error })
+    // NB: will throw if API error
+    let draftFiling = await this.fetchDraftDissolution()
 
     // check if filing is in a valid state to be edited
     this.invalidDissolutionDialog = !this.hasValidFilingState(draftFiling)
@@ -638,7 +638,7 @@ export default class App extends Mixins(
 
     // merge draft properties into empty filing so all properties are initialized
     const emptyFiling = this.buildDissolutionFiling()
-    draftFiling = { ...emptyFiling.filing, ...draftFiling }
+    draftFiling = { ...emptyFiling, ...draftFiling }
 
     // parse draft filing into the store
     if (draftFiling) {
@@ -659,7 +659,8 @@ export default class App extends Mixins(
     })
 
     // fetch draft filing
-    let draftFiling = await this.fetchDraftIA().catch(error => { throw error })
+    // NB: will throw if API error
+    let draftFiling = await this.fetchDraftIA()
 
     // check if filing is in a valid state to be edited
     this.invalidIncorporationApplicationDialog = !this.hasValidFilingState(draftFiling)
@@ -667,7 +668,7 @@ export default class App extends Mixins(
 
     // merge draft properties into empty filing so all properties are initialized
     const emptyFiling = this.buildIncorporationFiling()
-    draftFiling = { ...emptyFiling.filing, ...draftFiling }
+    draftFiling = { ...emptyFiling, ...draftFiling }
 
     // parse draft filing into the store
     if (draftFiling) {
@@ -767,13 +768,16 @@ export default class App extends Mixins(
     // NB: will throw if API error
     const userInfo = await AuthServices.fetchUserInfo()
 
+    // get auth org info for dissolution only
+    // (this data is not available for an IA)
     if (this.isDissolutionFiling) {
-      // At the time of incorporation filing, business contact may no be available
       let { contacts, folioNumber } = await AuthServices.fetchAuthInfo(this.getBusinessId)
       if (contacts?.length > 0) {
         this.setBusinessContact(contacts[0])
       }
-      this.setAccountFolioNumber(folioNumber)
+      // for a dissolution, set folio number from auth info
+      // (for an incorporation, it is set in DefineCompany.vue)
+      this.setFolioNumber(folioNumber)
     }
     if (!userInfo) throw new Error('Invalid user info')
 
@@ -880,13 +884,12 @@ export default class App extends Mixins(
   /** Called when $route property changes. Used to init app. */
   @Watch('$route', { immediate: true })
   private async onRouteChanged (): Promise<void> {
-    const isSigninRoute = (this.$route.name === RouteNames.SIGN_IN)
-    const isSignoutRoute = (this.$route.name === RouteNames.SIGN_OUT)
+    // init only if we are not on signin or signout route
+    if (!this.isRouteName(RouteNames.SIGN_IN) && !this.isRouteName(RouteNames.SIGN_OUT)) {
+      this.assignIdentifier()
 
-    // don't init if we are still on signin or signout route
-    if (!isSigninRoute && !isSignoutRoute) {
-      await this.assignIdentifier()
-      this.setCurrentStep(this.$route.meta?.step)
+      this.setCurrentStep(this.$route.meta?.step || 1)
+
       await this.startTokenService()
 
       // wait a moment for token to be available in session storage
@@ -896,8 +899,8 @@ export default class App extends Mixins(
       await this.fetchData(true)
     }
 
-    if (this.$route.name === RouteNames.REVIEW_CONFIRM ||
-        this.$route.name === RouteNames.REVIEW_CONFIRM_DISSOLUTION) {
+    if (this.isRouteName(RouteNames.REVIEW_CONFIRM) ||
+        this.isRouteName(RouteNames.REVIEW_CONFIRM_DISSOLUTION)) {
       this.setShowErrors(true)
     }
   }

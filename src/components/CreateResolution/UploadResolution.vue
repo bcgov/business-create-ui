@@ -98,7 +98,7 @@
               :rules="confirmCompletionResolution"
               @change="onResolutionConfirmedChange($event)"
             >
-              <div slot='label' v-html="confirmLabel"></div>
+              <div slot="label" v-html="confirmLabel"></div>
             </v-checkbox>
             <ul>
               <li class="mt-1"
@@ -179,13 +179,13 @@ export default class UploadResolution extends Mixins(CommonMixin, EntityFilterMi
   readonly CorpTypeCd = CorpTypeCd
   readonly BulletListTypes = BulletListTypes
 
-  private get documentURL ():string {
+  private get documentURL (): string {
     const docUrl = sessionStorage.getItem('BASE_URL') +
       this.getCreateResolutionResource.sampleFormSection.downloadDocPath
     return docUrl
   }
 
-  private previewImageSource ():string {
+  private previewImageSource (): string {
     // Note: the image file path did not resolve correctly when using the require function directly.  In order
     // to get the image path resolving correctly, needed to get the image context first and use that to build
     // the final image file path
@@ -193,7 +193,7 @@ export default class UploadResolution extends Mixins(CommonMixin, EntityFilterMi
     return images('./' + this.getCreateResolutionResource.sampleFormSection.previewImagePath)
   }
 
-  private get confirmLabel ():string {
+  private get confirmLabel (): string {
     const confirmTextItems = this.getCreateResolutionResource.confirmSection.text
     const result = confirmTextItems.map(item => {
       if (item.type === ItemTypes.PLACEHOLDER && item.value === this.PLACEHOLDER_LEGAL_NAME) {

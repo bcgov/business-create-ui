@@ -1,6 +1,6 @@
 <template>
   <div id="folio-number">
-    <v-layout row v-if="!isEditing" id='folio-number-read-only'>
+    <v-layout row v-if="!isEditing" id="folio-number-read-only">
       <v-flex md4>
         <label><strong>Folio Information</strong></label>
       </v-flex>
@@ -9,7 +9,7 @@
         <div id="lbl-folio-number">{{ !!folioNumber ? folioNumber : 'Not entered' }}</div>
       </v-flex>
     </v-layout>
-    <v-row v-else id='folio-number-editing'>
+    <v-row v-else id="folio-number-editing">
       <v-col>
         <label><strong>Folio Number</strong></label>
       </v-col>

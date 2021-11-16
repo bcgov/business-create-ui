@@ -22,6 +22,6 @@ describe('COOP filing data', () => {
 
     // after building filing data, the name translations should be empty as well
     const filing = wrapper.vm.buildIncorporationFiling()
-    expect(filing.filing.incorporationApplication.nameTranslations.length).toBe(0)
+    expect(filing.incorporationApplication.nameTranslations.length).toBe(0)
   })
 })

@@ -72,7 +72,7 @@
       <v-col>
         <v-checkbox
           v-model="hasNameTranslation"
-          id='name-translation-checkbox'
+          id="name-translation-checkbox"
           @click.native="confirmNameTranslation()">
           <span slot="label" class="translation-checkbox-label">
             This company uses one of more translations of its name outside of Canada.

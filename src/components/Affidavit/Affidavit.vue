@@ -171,7 +171,6 @@ import {
   ActionBindingIF,
   AffidavitResourceIF,
   DocumentUpload,
-  NameRequestDetailsIF,
   FormIF,
   ValidationDetailIF,
   UploadAffidavitIF
@@ -202,7 +201,7 @@ export default class Affidavit extends Mixins(CommonMixin, DocumentMixin, Entity
   private hasAffidavitConfirmed = false
   private affidavitConfirmed = false
   private fileUploadCustomErrorMsg: string = ''
-  private uploadAffidavitDoc:File = null
+  private uploadAffidavitDoc: File = null
   private uploadAffidavitDocKey: string = null
   private helpToggle = false
 
@@ -222,7 +221,7 @@ export default class Affidavit extends Mixins(CommonMixin, DocumentMixin, Entity
   readonly ItemTypes = ItemTypes
   readonly PdfPageSize = PdfPageSize
 
-  private get documentURL ():string {
+  private get documentURL (): string {
     return `${sessionStorage.getItem('BASE_URL')}files/${this.getAffidavitResources.sampleSection.fileName}`
   }
 
@@ -273,8 +272,12 @@ export default class Affidavit extends Mixins(CommonMixin, DocumentMixin, Entity
   public async uploadPendingDocsToStorage () {
     const isPendingUpload = !this.uploadAffidavitDocKey
     if (isPendingUpload && this.hasValidUploadFile) {
-      const doc:DocumentUpload = await this.getPresignedUrl(this.uploadAffidavitDoc.name)
+      // NB: will throw if API error
+      const doc: DocumentUpload = await this.getPresignedUrl(this.uploadAffidavitDoc.name)
+
+      // NB: will return error response if API error
       const res = await this.uploadToUrl(doc.preSignedUrl, this.uploadAffidavitDoc, doc.key, this.getUserKeycloakGuid)
+
       if (res && res.status === 200) {
         const affidavitDoc = {
           name: this.uploadAffidavitDoc.name,
@@ -302,10 +305,14 @@ export default class Affidavit extends Mixins(CommonMixin, DocumentMixin, Entity
         valid: this.hasAffidavitConfirmed && this.hasValidUploadFile,
         validationItemDetails: [
           {
-            name: 'hasAffidavitConfirmed', valid: this.hasAffidavitConfirmed, elementId: 'confirm-affidavit-header'
+            name: 'hasAffidavitConfirmed',
+            valid: this.hasAffidavitConfirmed,
+            elementId: 'confirm-affidavit-header'
           },
           {
-            name: 'hasValidUploadFile', valid: this.hasValidUploadFile, elementId: 'upload-affidavit-header'
+            name: 'hasValidUploadFile',
+            valid: this.hasValidUploadFile,
+            elementId: 'upload-affidavit-header'
           }
         ]
       }
@@ -325,7 +332,7 @@ export default class Affidavit extends Mixins(CommonMixin, DocumentMixin, Entity
   private created (): void {
     this.uploadAffidavitDoc = this.getAffidavitStep.affidavitDoc as File
     this.uploadAffidavitDocKey = this.getAffidavitStep.docKey
-    this.affidavitConfirmed = !!this.getAffidavitStep.affidavitConfirmed
+    this.affidavitConfirmed = this.getAffidavitStep.affidavitConfirmed
     this.hasValidUploadFile = !!this.uploadAffidavitDocKey
     this.hasAffidavitConfirmed = this.affidavitConfirmed
     this.updateAffidavitStepValidity()
@@ -342,9 +349,10 @@ export default class Affidavit extends Mixins(CommonMixin, DocumentMixin, Entity
 
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
+
 header {
   p {
-    padding-top: 0.5rem
+    padding-top: 0.5rem;
   }
 }
 

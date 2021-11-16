@@ -48,8 +48,8 @@ export default class FileUploadPreview extends Mixins(DocumentMixin) {
     fileUploadInput: HTMLFormElement
   }
 
-  private fileUpload:File = null
-  private customErrorMessages:string[] = []
+  private fileUpload: File = null
+  private customErrorMessages: string[] = []
 
   private fileUploadRules = [
     (v) => {

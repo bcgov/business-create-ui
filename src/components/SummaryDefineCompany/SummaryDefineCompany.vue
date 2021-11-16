@@ -67,7 +67,7 @@
         <BusinessContactInfo :initialValue="getBusinessContact" :isEditing="false" />
       </div>
       <div class="section-container" v-if="isPremiumAccount">
-        <FolioNumber :initialValue="getDefineCompanyStep.folioNumber" :isEditing="false" />
+        <FolioNumber :initialValue="getFolioNumber" :isEditing="false" />
       </div>
     </section>
   </v-card>
@@ -109,6 +109,7 @@ export default class SummaryDefineCompany extends Mixins(EntityFilterMixin, Enum
   @Getter getValidateSteps!: boolean
   @Getter getDefineCompanyStep!: DefineCompanyIF
   @Getter getBusinessContact!: BusinessContactIF
+  @Getter getFolioNumber!: string
 
   /** The entity description  */
   private get entityDescription (): string {
