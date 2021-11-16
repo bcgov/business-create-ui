@@ -35,6 +35,10 @@ export const mutateLegalName = (state: StateIF, legalName: string) => {
   state.stateModel.business.legalName = legalName
 }
 
+export const mutateFoundingDate = (state: StateIF, foundingDate: string) => {
+  state.stateModel.business.foundingDate = foundingDate
+}
+
 export const mutateFilingType = (state: StateIF, filingType: FilingTypes) => {
   state.stateModel.tombstone.filingType = filingType
 }

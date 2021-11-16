@@ -109,13 +109,16 @@ export const CooperativeDissolutionResource: DissolutionResourceIF = {
         },
         {
           type: ItemTypes.TEXT,
-          value: 'and upload a copy as part of this voluntary dissolution.'
+          value: 'as part of this voluntary dissolution.'
         }
       ]
     },
     sampleFormSection: {
       header: '2. Special Resolution (Form 06 COO)',
-      text: 'For your convenience, we have provided the special resolution form (Form 06 COO):',
+      text: `For your convenience, we have provided the special resolution form (Form 06 COO).  This form should be
+        completed, signed and a printed copy retained with your other Cooperative Association records.  Do not mail the
+        paper form to BC Registries.  Once you have completed this form, enter the details from the paper form into this
+        filing.`,
       previewImagePath: 'BCRegistries_CoopSpecialResolution-x2.png',
       downloadDocLabel: 'Download the Special Resolution Form 06 COO',
       downloadDocPath: 'files/cooperative_sample_special_resolution_form_06.pdf'
@@ -127,31 +130,68 @@ export const CooperativeDissolutionResource: DissolutionResourceIF = {
           items: [
             {
               type: ItemTypes.TEXT,
-              value: 'Upload a copy of the special resolution, which must include:'
+              value: `A special resolution is a resolution of the members of a Cooperative Association.  It is
+                submitted to vote on the resolution.  It is passed by either being consented to in writing by all
+                members or in a general meeting.`
+            },
+            { type: ItemTypes.PARTIAL_ITEMS,
+              value: [
+                {
+                  type: ItemTypes.TEXT,
+                  value: 'For details on how many members need to vote in a general meeting, refer to the '
+                },
+                {
+                  type: ItemTypes.LINK,
+                  value: {
+                    linkText: 'Cooperative Association Act',
+                    href: 'https://www.bclaws.gov.bc.ca/civix/document/id/complete/statreg/99028_01#section1'
+                  }
+                }
+              ]
+            },
+            {
+              type: ItemTypes.TEXT,
+              value: 'The special resolution must include:'
             },
             {
               type: ItemTypes.BULLET_LIST,
               bulletListType: BulletListTypes.CIRCLE_SMALL,
               value: [
-                `The name of the Cooperative Association, the Cooperative Association's incorporation number, the date
-                 the resolution was passed and the text of the resolution which clearly authorizes the Cooperative
-                 Association to make an application for dissolution.`,
+                `The name of the Cooperative Association, incorporation number, date the resolution was passed, and the
+                 text of the resolution which clearly authorizes the Cooperative Association to make an application for
+                 dissolution.`,
                 `The signature of a current director, officer or lawyer of the Cooperative Association and the date of
-                 signature.  The signing party must disclose their relationship to the Cooperative Association.`
+                 signature.`
               ]
             }
           ]
         }
       }
     },
+    resolutionDateSection: {
+      header: '3. Resolution Date',
+      description: 'Enter the date the special resolution passed.'
+    },
+    resolutionTextSection: {
+      header: '4. Resolution Text',
+      description: 'Enter the special resolution text as it appears on your printed form.',
+      textLabel: 'Resolution Text',
+      textPlaceholder: 'Resolution Text'
+    },
+    resolutionSignatureSection: {
+      header: '5. Resolution Signature',
+      description: 'Enter the full name of the person who signed the special resolution and the date they signed it'
+    },
     confirmSection: {
-      header: '3. Confirm Special Resolution Form Content',
+      header: '6. Confirm Special Resolution Form Content',
       text: [
         {
           type: ItemTypes.TEXT,
-          value: 'I confirm the following items are included as required in the Cooperative Association Act:'
+          value: 'I confirm the following:'
         }
       ],
+      reviewSummaryText: `A printed copy of the signed special resolution (Form 06 COO) has been retained with the
+                           Cooperative Association's records.`,
       items: [
         {
           type: ItemTypes.PARTIAL_ITEMS,
@@ -174,6 +214,11 @@ export const CooperativeDissolutionResource: DissolutionResourceIF = {
             { type: ItemTypes.PLACEHOLDER, value: 'legal_name_inline' },
             { type: ItemTypes.TEXT, value: 'and authorizes the dissolution.' }
           ]
+        },
+        {
+          type: ItemTypes.TEXT,
+          value: `A printed copy of the signed special resolution (Form 06 COO) has been retained with the Cooperative
+            Association's records.`
         }
       ]
     }

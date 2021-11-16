@@ -2,6 +2,7 @@
 export * from './filing-interfaces/filing-interface'
 export * from './filing-interfaces/filingData-interface'
 export * from './filing-interfaces/court-order-interface'
+export * from './filing-interfaces/special-resolution-interface'
 
 // Payment Interfaces
 export * from './payment-interfaces/fees-interface'
@@ -38,6 +39,7 @@ export * from './stepper-interfaces/Affidavit/affidavit-interface'
 export * from './stepper-interfaces/common/staff-payment-step-interface'
 export * from './stepper-interfaces/common/court-order-step-interface'
 export * from './stepper-interfaces/common/business-contact-interface'
+export * from './stepper-interfaces/common/person-interface'
 
 // Store Interfaces
 export * from './store-interfaces/state-interfaces/account-information-interface'

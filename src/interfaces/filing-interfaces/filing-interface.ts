@@ -6,7 +6,8 @@ import {
   CourtOrderIF,
   NameTranslationIF,
   OrgPersonIF,
-  ShareClassIF
+  ShareClassIF,
+  SpecialResolutionIF
 } from '@/interfaces'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import { DissolutionStatementTypes, DissolutionTypes } from '@/enums'
@@ -91,7 +92,8 @@ export interface DissolutionFilingIF {
   business: {
     legalType: CorpTypeCd,
     identifier: string,
-    legalName: string
+    legalName: string,
+    foundingDate: string
   },
   dissolution: {
     dissolutionDate: string
@@ -112,9 +114,6 @@ export interface DissolutionFilingIF {
     resolution?: {
       resolutionConfirmed: boolean
     }
-    specialResolution?: {
-      resolutionConfirmed: boolean
-      resolution: string
-    }
   }
+  specialResolution?: SpecialResolutionIF
 }

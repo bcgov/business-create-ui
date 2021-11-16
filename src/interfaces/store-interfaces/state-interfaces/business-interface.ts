@@ -5,4 +5,5 @@ export interface BusinessIF {
   legalName: string
   businessContact: BusinessContactIF
   officeAddress: BaseAddressObjIF
+  foundingDate: string
 }

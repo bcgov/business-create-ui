@@ -1529,7 +1529,7 @@ describe('Dissolution COOP - External User', () => {
     localVue.filter('currency', (x) => x)
     const router = mockRouter.mock()
     router.push({ name: 'define-dissolution', query: { id: 'CP1002398' } })
-    wrapper = mount(App, { localVue, store, router, vuetify, stubs: { 'UploadResolution': true } })
+    wrapper = mount(App, { localVue, store, router, vuetify, stubs: { 'CompleteResolution': true } })
 
     // wait for all queries to complete
     await flushPromises()
@@ -1964,7 +1964,7 @@ describe('Dissolution COOP - Staff User', () => {
     localVue.filter('currency', (x) => x)
     const router = mockRouter.mock()
     router.push({ name: 'define-dissolution', query: { id: 'CP1002398' } })
-    wrapper = mount(App, { localVue, store, router, vuetify, stubs: { 'UploadResolution': true } })
+    wrapper = mount(App, { localVue, store, router, vuetify, stubs: { 'CompleteResolution': true } })
 
     // wait for all queries to complete
     await flushPromises()

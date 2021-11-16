@@ -1,6 +1,6 @@
 <template>
   <div>
-    <UploadResolution class="mt-4" />
+    <CompleteResolution class="mt-4" />
   </div>
 </template>
 
@@ -16,13 +16,13 @@ import { ActionBindingIF, CreateResolutionIF } from '@/interfaces'
 import { CommonMixin } from '@/mixins'
 
 // Components
-import { UploadResolution } from '@/components/CreateResolution'
+import { CompleteResolution } from '@/components/CreateResolution'
 
 import { RouteNames } from '@/enums'
 
 @Component({
   components: {
-    UploadResolution
+    CompleteResolution
   }
 })
 export default class CreateResolution extends Mixins(CommonMixin) {

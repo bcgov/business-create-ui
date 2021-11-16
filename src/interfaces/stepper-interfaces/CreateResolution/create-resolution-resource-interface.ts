@@ -6,6 +6,9 @@ export interface CreateResolutionResourceIF {
   }
   introSection: any,
   sampleFormSection?: any
+  resolutionDateSection?: any
+  resolutionTextSection?: any
+  resolutionSignatureSection?: any
   confirmSection: any
   uploadSection?: any
 }
