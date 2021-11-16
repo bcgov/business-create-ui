@@ -36,7 +36,7 @@
     </section>
 
     <!-- Document Delivery -->
-    <section class="mt-10">
+    <section id="document-delivery-section" class="mt-10">
       <header>
         <h2>Document Delivery</h2>
         <p class="mt-1">Copies of the incorporation documents will be sent to the following email addresses listed
@@ -164,8 +164,30 @@ export default class ReviewConfirm extends Mixins() {
 </script>
 
 <style lang="scss" scoped>
+@import '@/assets/styles/theme.scss';
+
 .company-statement-label {
   letter-spacing: -0.04rem;
   font-weight: 700;
+}
+
+::v-deep #document-delivery-section {
+  .v-card {
+    padding: 1.5rem 1.25rem !important;
+  }
+
+  .row {
+    padding: 0.75rem 0;
+
+    .col-3 {
+      font-size: 0.875rem;
+      color: $gray9;
+      padding: 0 0 0 0.75rem !important;
+    }
+
+    .col-9 {
+      padding: 0 0.5rem 0 0 !important;
+    }
+  }
 }
 </style>
