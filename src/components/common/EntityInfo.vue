@@ -57,13 +57,12 @@ import { EnumMixin } from '@/mixins'
 export default class EntityInfo extends Mixins(EnumMixin) {
   @Getter getBusinessLegalName!: string
   @Getter getBusinessContact!: BusinessContactIF
-  @Getter getBusinessId!: string
+  @Getter getEntityIdentifier!: string
   @Getter getUserEmail!: string
   @Getter getUserPhone!: string
   @Getter getEntityType!: CorpTypeCd
   @Getter getFilingName!: FilingNames
   @Getter getNameRequestNumber!: string
-  @Getter getTempId!: string
   @Getter getApprovedName!: string
   @Getter getFilingType!: FilingTypes
   @Getter isEntityType!: boolean
@@ -102,15 +101,6 @@ export default class EntityInfo extends Mixins(EnumMixin) {
     }
   }
 
-  private get entityIdentifier (): string {
-    switch (this.getFilingType) {
-      case FilingTypes.DISSOLUTION:
-        return this.getBusinessId
-      case FilingTypes.INCORPORATION_APPLICATION:
-        return this.getTempId
-    }
-  }
-
   /** The route breadcrumbs. */
   private get breadcrumbs (): Array<any> {
     return [
@@ -122,7 +112,7 @@ export default class EntityInfo extends Mixins(EnumMixin) {
       {
         text: this.legalName || this.getNumberedEntityName,
         disabled: false,
-        href: `${sessionStorage.getItem('DASHBOARD_URL')}${this.entityIdentifier}`
+        href: `${sessionStorage.getItem('DASHBOARD_URL')}${this.getEntityIdentifier}`
       },
       {
         text: this.entityTitle,

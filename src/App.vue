@@ -236,6 +236,7 @@ export default class App extends Mixins(
     confirm: ConfirmDialogType
   }
 
+  @Getter getEntityIdentifier!: string
   @Getter getHaveChanges!: boolean
   @Getter getFilingData!: Array<FilingDataIF>
   @Getter getFilingType!: FilingTypes
@@ -445,7 +446,7 @@ export default class App extends Mixins(
     if (!this.getHaveChanges || force) {
       // redirect to dashboard
       const dashboardUrl = sessionStorage.getItem('DASHBOARD_URL')
-      window.location.assign(dashboardUrl + this.getTempId)
+      window.location.assign(dashboardUrl + this.getEntityIdentifier)
       return
     }
 
@@ -469,7 +470,7 @@ export default class App extends Mixins(
       this.setHaveChanges(false)
       // redirect to dashboard
       const dashboardUrl = sessionStorage.getItem('DASHBOARD_URL')
-      window.location.assign(dashboardUrl + this.getTempId)
+      window.location.assign(dashboardUrl + this.getEntityIdentifier)
     })
   }
 
