@@ -203,9 +203,7 @@
           </v-col>
           <v-col cols="12" md="5" lg="5" class="pl-8">
             <label class="summary-sub-label">Delivery Address</label>
-            <div v-if="getCustodian.inheritMailingAddress &&
-              isSame(getCustodian.mailingAddress, getCustodian.deliveryAddress)"
-            >
+            <div v-if="getCustodian.inheritMailingAddress">
               Same as Mailing Address
             </div>
             <delivery-address v-else :address="getCustodian.deliveryAddress" />
