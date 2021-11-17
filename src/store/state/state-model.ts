@@ -1,6 +1,6 @@
 import { EmptyFees, StateModelIF } from '@/interfaces'
 import { cloneDeep } from 'lodash'
-import { RoleTypes } from '@/enums'
+import { getCustodialRecordsResources } from '@/store/getters'
 
 export const stateModel: StateModelIF = {
   currentJsDate: null,
@@ -69,17 +69,19 @@ export const stateModel: StateModelIF = {
         },
         mailingAddress: {
           addressCity: '',
-          addressCountry: 'CA',
-          addressRegion: 'BC',
+          addressCountry: '',
+          addressRegion: '',
           postalCode: '',
-          streetAddress: ''
+          streetAddress: '',
+          deliveryInstructions: ''
         },
         deliveryAddress: {
           addressCity: '',
-          addressCountry: 'CA',
-          addressRegion: 'BC',
+          addressCountry: '',
+          addressRegion: '',
           postalCode: '',
-          streetAddress: ''
+          streetAddress: '',
+          deliveryInstructions: ''
         },
         roles: [
           {

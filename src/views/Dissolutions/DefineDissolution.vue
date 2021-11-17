@@ -11,7 +11,7 @@
 
     <section class="mt-10">
       <header id="association-details">
-        <h2>1. Association Details</h2>
+        <h2>1. {{ getDissolutionDetailsTitle }}</h2>
       </header>
       <AssociationDetails class="mt-5"/>
     </section>
@@ -78,7 +78,7 @@ import {
   DestroyCertificate,
   DissolutionStatement
 } from '@/components/DefineDissolution'
-import { ActionBindingIF, DissolutionStatementIF } from '@/interfaces'
+import { ActionBindingIF, CustodianResourceIF, DissolutionResourceIF, DissolutionStatementIF } from '@/interfaces'
 import { CommonMixin, EntityFilterMixin, EnumMixin } from '@/mixins'
 import { RouteNames } from '@/enums'
 
@@ -95,7 +95,8 @@ import { RouteNames } from '@/enums'
 export default class DefineDissolution extends Mixins(CommonMixin, EntityFilterMixin, EnumMixin) {
   // Global getters
   @Getter getBusinessLegalName!: string
-  @Getter getCustodialRecordsResources!: any // TODO: Update to Custodial Resource IF
+  @Getter getCustodialRecordsResources!: CustodianResourceIF
+  @Getter getDissolutionDetailsTitle!: string
   @Getter getDissolutionStatementStep!: DissolutionStatementIF
   @Getter getHasCertificateDestroyed!: boolean
   @Getter getShowErrors!: boolean

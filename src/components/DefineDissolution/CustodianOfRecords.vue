@@ -151,7 +151,7 @@
                   class="pt-4"
                   :editing="true"
                   :address="custodian.mailingAddress"
-                  :schema="OfficeAddressSchema"
+                  :schema="getAddressSchema"
                   @update:address="syncAddresses(custodian.mailingAddress, $event)"
                   @valid="updateAddressValid('mailingAddress', $event)"
                 />
@@ -171,7 +171,7 @@
                     class="pt-4"
                     :editing="true"
                     :address="custodian.deliveryAddress"
-                    :schema="OfficeAddressSchema"
+                    :schema="getAddressSchema"
                     @update:address="syncAddresses(custodian.deliveryAddress, $event)"
                     @valid="updateAddressValid('deliveryAddress', $event)"
                   />
@@ -203,7 +203,9 @@
           </v-col>
           <v-col cols="12" md="5" lg="5" class="pl-8">
             <label class="summary-sub-label">Delivery Address</label>
-            <div v-if="isSame(getCustodian.mailingAddress, getCustodian.deliveryAddress)">
+            <div v-if="getCustodian.inheritMailingAddress &&
+              isSame(getCustodian.mailingAddress, getCustodian.deliveryAddress)"
+            >
               Same as Mailing Address
             </div>
             <delivery-address v-else :address="getCustodian.deliveryAddress" />
@@ -217,9 +219,9 @@
 <script lang="ts">
 import { Component, Emit, Mixins, Prop, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
-import { OfficeAddressSchema } from '@/schemas'
+import { CoopOfficeAddressSchema, OfficeAddressSchema } from '@/schemas'
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
-import { ActionBindingIF, AddressIF, FormIF, OrgPersonIF } from '@/interfaces'
+import { ActionBindingIF, AddressIF, AddressSchemaIF, CustodianResourceIF, FormIF, OrgPersonIF } from '@/interfaces'
 import { PartyTypes } from '@/enums'
 import { CommonMixin, EntityFilterMixin } from '@/mixins'
 import { Rules } from '@/rules'
@@ -247,7 +249,7 @@ export default class CustodianOfRecords extends Mixins(CommonMixin, EntityFilter
 
   @Getter getCustodian!: OrgPersonIF
   @Getter getCustodianEmail!: string
-  @Getter getCustodialRecordsResources!: any // TODO: Update to Custodial Resource IF
+  @Getter getCustodialRecordsResources!: CustodianResourceIF
   @Getter isTypeCoop!: boolean
 
   @Action setCustodianOfRecords: ActionBindingIF
@@ -255,15 +257,7 @@ export default class CustodianOfRecords extends Mixins(CommonMixin, EntityFilter
   // Local properties
   private addCustodianValid = true
   private custodian: OrgPersonIF = null
-  private defaultAddress: AddressIF = {
-    addressCity: '',
-    addressCountry: 'CA',
-    addressRegion: 'BC',
-    deliveryInstructions: '',
-    postalCode: '',
-    streetAddress: '',
-    streetAddressAdditional: ''
-  }
+  private defaultAddress: AddressIF = null
 
   // Validation events from BaseAddress:
   private mailingAddressValid: boolean = true
@@ -271,6 +265,7 @@ export default class CustodianOfRecords extends Mixins(CommonMixin, EntityFilter
 
   // Schema and rules for template
   readonly OfficeAddressSchema = OfficeAddressSchema
+  readonly CoopOfficeAddressSchema = CoopOfficeAddressSchema
   readonly Rules = Rules
   readonly PartyTypes = PartyTypes
 
@@ -280,28 +275,23 @@ export default class CustodianOfRecords extends Mixins(CommonMixin, EntityFilter
 
     // Corps are required to choose a party type, where coops are pre-determined to be of person type.
     if (this.isTypeCoop) this.custodian.officer.partyType = PartyTypes.PERSON
-  }
 
-  /** Keep local custodian addresses in sync with base address common component. */
-  private syncAddresses (baseAddress: AddressIF, newAddress: AddressIF): void {
-    Object.assign(baseAddress, newAddress)
-    if (this.inheritMailingAddress) {
-      this.custodian.deliveryAddress = { ...newAddress }
+    // Define default address using resource values
+    this.defaultAddress = {
+      addressCity: '',
+      addressCountry: this.getCustodialRecordsResources?.baseAddressValues?.country,
+      addressRegion: this.getCustodialRecordsResources?.baseAddressValues?.region,
+      deliveryInstructions: '',
+      postalCode: '',
+      streetAddress: '',
+      streetAddressAdditional: ''
     }
-  }
 
-  /** Sync party type selection with store and reset the unselected party type fields. */
-  syncCustodianPartyType (partyType: PartyTypes): void {
-    this.custodian.officer.partyType = partyType
-    switch (partyType) {
-      case PartyTypes.PERSON:
-        this.custodian.officer.organizationName = ''
-        break
-      case PartyTypes.ORGANIZATION:
-        this.custodian.officer.firstName = ''
-        this.custodian.officer.middleName = ''
-        this.custodian.officer.lastName = ''
-        break
+    // Assign default address values if none selected
+    // We only need to check this single property once as there will always be a value if a draft is saved
+    if (!this.custodian?.mailingAddress?.addressCountry) {
+      this.custodian.mailingAddress = { ...this.defaultAddress }
+      this.custodian.deliveryAddress = { ...this.defaultAddress }
     }
   }
 
@@ -315,6 +305,11 @@ export default class CustodianOfRecords extends Mixins(CommonMixin, EntityFilter
       return organizationName
     }
     return '(Not entered)'
+  }
+
+  /** The address schema. */
+  private get getAddressSchema (): AddressSchemaIF {
+    return this.isTypeCoop ? CoopOfficeAddressSchema : OfficeAddressSchema
   }
 
   /** Is true when the form requirements are not met for party type. */
@@ -348,6 +343,29 @@ export default class CustodianOfRecords extends Mixins(CommonMixin, EntityFilter
   /** Is true when the user selects to inherit the mailing address. */
   private get inheritMailingAddress (): boolean {
     return this.getCustodian?.inheritMailingAddress
+  }
+
+  /** Keep local custodian addresses in sync with base address common component. */
+  private syncAddresses (baseAddress: AddressIF, newAddress: AddressIF): void {
+    Object.assign(baseAddress, newAddress)
+    if (this.inheritMailingAddress) {
+      this.custodian.deliveryAddress = { ...newAddress }
+    }
+  }
+
+  /** Sync party type selection with store and reset the unselected party type fields. */
+  syncCustodianPartyType (partyType: PartyTypes): void {
+    this.custodian.officer.partyType = partyType
+    switch (partyType) {
+      case PartyTypes.PERSON:
+        this.custodian.officer.organizationName = ''
+        break
+      case PartyTypes.ORGANIZATION:
+        this.custodian.officer.firstName = ''
+        this.custodian.officer.middleName = ''
+        this.custodian.officer.lastName = ''
+        break
+    }
   }
 
   /**
@@ -462,6 +480,7 @@ export default class CustodianOfRecords extends Mixins(CommonMixin, EntityFilter
   }
 }
 
+// Vuetify styling overrides
 ::v-deep .v-text-field .v-label {
   font-weight: normal;
   font-size: 1rem;
@@ -473,5 +492,12 @@ export default class CustodianOfRecords extends Mixins(CommonMixin, EntityFilter
   size: 1rem;
   color: $gray7;
   font-weight: normal;
+}
+
+// Override on  BaseAddress component styling
+::v-deep .address-block__info-row:last-child {
+  padding-top: 10px;
+  font-size: 0.875rem;
+  font-style: italic;
 }
 </style>

@@ -88,6 +88,11 @@ export const getMaxStep = (state: StateIF): number => {
   return (steps ? steps.filter(step => step.step !== -1).length : -1)
 }
 
+/** The dissolution details title. */
+export const getDissolutionDetailsTitle = (state: StateIF): string => {
+  return state.resourceModel.detailsTitle
+}
+
 /** The dissolution statement options. */
 export const getDissolutionStatements = (state: StateIF): Array<KeyValueIF> => {
   return state.resourceModel.dissolutionStatements

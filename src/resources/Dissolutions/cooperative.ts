@@ -21,6 +21,7 @@ export const CooperativeDissolutionResource: DissolutionResourceIF = {
       filingTypeCode: FilingCodes.SPECIAL_RESOLUTION
     }
   ],
+  detailsTitle: 'Association Details',
   dissolutionStatements: [
     {
       key: DissolutionStatementTypes.NO_ASSETS_NO_LIABILITIES_197,
@@ -47,6 +48,10 @@ export const CooperativeDissolutionResource: DissolutionResourceIF = {
         `A Cooperative Association must appoint a person to have custody and control of its records, including
         documents, instruments and accounting records, for 2 years.`
       ]
+    },
+    baseAddressValues: {
+      country: 'CA',
+      region: ''
     }
   },
   affidavit: {
