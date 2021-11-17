@@ -9,24 +9,40 @@ const store = getVuexStore()
 const reviewConfirmTestCases = [
   {
     entityType: 'CP',
+    isPremium: false,
     isStaff: true
   },
   {
     entityType: 'CP',
+    isPremium: true,
+    isStaff: false
+  },
+  {
+    entityType: 'CP',
+    isPremium: false,
     isStaff: false
   },
   {
     entityType: 'BEN',
+    isPremium: false,
     isStaff: true
   },
   {
     entityType: 'BEN',
+    isPremium: true,
+    isStaff: false
+  },
+  {
+    entityType: 'BEN',
+    isPremium: false,
     isStaff: false
   }
 ]
 
 for (const test of reviewConfirmTestCases) {
-  describe(`Review Confirm view for a ${test.entityType} as a ${test.isStaff ? 'staff' : 'regular'} user`, () => {
+  const type = test.isPremium ? 'premium' : test.isStaff ? 'staff' : 'regular'
+
+  describe(`Review Confirm view for a ${test.entityType} as a ${type} user`, () => {
     let wrapper: any
 
     it('renders the component properly', () => {
@@ -42,7 +58,7 @@ for (const test of reviewConfirmTestCases) {
       expect(wrapper.find('h2').text()).toBe('Review and Confirm')
     })
 
-    it('displays Effective Date Time section only when corp and staff', () => {
+    it('displays Effective Date Time section only for corp and staff', () => {
       wrapper = shallowWrapperFactory(
         ReviewConfirmDissolution,
         null,
@@ -92,6 +108,21 @@ for (const test of reviewConfirmTestCases) {
       )
 
       expect(wrapper.find('#document-delivery-section').exists()).toBe(true)
+    })
+
+    it('displays Folio Number section only for premium', () => {
+      wrapper = shallowWrapperFactory(
+        ReviewConfirmDissolution,
+        null,
+        {
+          entityType: test.entityType,
+          accountInformation: { accountType: test.isPremium ? 'PREMIUM' : 'BASIC' }
+        },
+        null,
+        DissolutionResources
+      )
+
+      expect(wrapper.find('#folio-number-section').exists()).toBe(test.isPremium)
     })
 
     it('displays Certify section', () => {

@@ -54,7 +54,7 @@ export default class TransactionalFolioNumber extends Mixins(CommonMixin) {
 
   /** True if this component is valid. */
   get isValid (): boolean {
-    return (!this.doValidate || this.$refs.folioNumberInput?.valid)
+    return (!this.doValidate || !!this.$refs.folioNumberInput?.valid)
   }
 
   /** Called when user has changed the Local Folio Number. */
