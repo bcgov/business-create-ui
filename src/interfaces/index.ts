@@ -51,6 +51,7 @@ export * from './store-interfaces/action-interface'
 export * from './store-interfaces/state-interface'
 
 // Utils Interfaces
+export * from './utils-interfaces/address-schema-interface'
 export * from './utils-interfaces/confirm-dialog-type'
 export * from './utils-interfaces/doc-interface'
 export * from './utils-interfaces/document-upload-interface'

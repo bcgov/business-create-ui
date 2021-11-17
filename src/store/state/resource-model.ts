@@ -36,6 +36,7 @@ const dissolutionResourceModel: DissolutionResourceIF = {
   displayName: '',
   steps: [],
   filingData: null,
+  detailsTitle: '',
   affidavit: null,
   reviewAndConfirm: {
     completingPartyStatement: {

@@ -175,6 +175,15 @@ export const getBusinessId = (state: StateIF): string => {
   return state.stateModel.business.businessId
 }
 
+export const getEntityIdentifier = (state: StateIF): string => {
+  switch (getFilingType(state)) {
+    case FilingTypes.DISSOLUTION:
+      return getBusinessId(state)
+    case FilingTypes.INCORPORATION_APPLICATION:
+      return getTempId(state)
+  }
+}
+
 /** The Business Legal Name. */
 export const getBusinessLegalName = (state: StateIF): string => {
   return state.stateModel.business.legalName
