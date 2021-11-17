@@ -25,7 +25,8 @@ export const shallowWrapperFactory = (
   propsData = null,
   stateValues = null,
   routeName = null,
-  resource = null) => {
+  resource = null
+) => {
   const store = getVuexStore()
   if (routeName) router.push({ name: routeName })
 
@@ -41,7 +42,13 @@ export const shallowWrapperFactory = (
   })
 }
 
-export const wrapperFactory = (component, propsData = null, stateValues = null, routeName = null, resource = null) => {
+export const wrapperFactory = (
+  component,
+  propsData = null,
+  stateValues = null,
+  routeName = null,
+  resource = null
+) => {
   const store = getVuexStore()
   if (routeName) router.push({ name: routeName })
 
