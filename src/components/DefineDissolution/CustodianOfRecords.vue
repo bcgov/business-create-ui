@@ -352,7 +352,7 @@ export default class CustodianOfRecords extends Mixins(CommonMixin, EntityFilter
   }
 
   /** Sync party type selection with store and reset the unselected party type fields. */
-  syncCustodianPartyType (partyType: PartyTypes): void {
+  private syncCustodianPartyType (partyType: PartyTypes): void {
     this.custodian.officer.partyType = partyType
     switch (partyType) {
       case PartyTypes.PERSON:
