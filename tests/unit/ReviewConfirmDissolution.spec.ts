@@ -70,7 +70,7 @@ for (const test of reviewConfirmTestCases) {
         DissolutionResources
       )
 
-      const expected = (test.entityType !== 'CP' && test.isStaff)
+      const expected = (test.entityType !== 'CP')
       expect(wrapper.find('#effective-date-time').exists()).toBe(expected)
     })
 

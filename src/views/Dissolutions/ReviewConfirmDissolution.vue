@@ -93,14 +93,14 @@
         </section>
 
         <!-- divider -->
-        <div class="ml-6 mr-8 pl-2" v-if="!isTypeCoop && isRoleStaff">
+        <div class="ml-6 mr-8 pl-2" v-if="!isTypeCoop">
           <v-container class="py-0">
             <v-divider  />
           </v-container>
         </div>
 
         <!-- Dissolution Date and Time -->
-        <section class="ml-6 mr-8 pl-2" v-if="!isTypeCoop && isRoleStaff">
+        <section class="ml-6 mr-8 pl-2" v-if="!isTypeCoop">
           <v-container
             id="effective-date-time"
             :class="{ 'invalid': isDissolutionDateTimeInvalid }"
