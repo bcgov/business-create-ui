@@ -65,7 +65,7 @@
           :firstColumn="3"
           :secondColumn="9"
           :invalidSection="isCertifyInvalid"
-          :disableEdit="!isRoleStaff"
+          :disableEdit="!isRoleStaff && isTypeCoop"
           @update:certifiedBy="onCertifiedBy($event)"
           @update:isCertified="onIsCertified($event)"
         />
@@ -106,6 +106,7 @@ export default class ReviewConfirm extends Mixins() {
   @Getter getValidateSteps!: boolean
   @Getter isBaseCompany!: boolean
   @Getter isTypeBcomp!: boolean
+  @Getter isTypeCoop!: boolean
   @Getter isRoleStaff!: boolean
   @Getter getCurrentDate!: string
   @Getter getEffectiveDateTime!: EffectiveDateTimeIF
