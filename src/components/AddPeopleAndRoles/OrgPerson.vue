@@ -28,7 +28,7 @@
             </label>
 
             <div class="meta-container__inner">
-              <v-card outlined class="message-box" v-if="isCompletingParty && !isRoleStaff">
+              <v-card outlined class="message-box" v-if="isCompletingParty && !isRoleStaff && isTypeCoop">
                 <p>
                   <strong>Important:</strong> The Completing Party information below is based on your
                   BC Registries account information. Your name cannot be changed here. Name changes must
@@ -43,7 +43,7 @@
               <v-form
                 ref="addPersonOrgForm"
                 class="appoint-form"
-                :class="{ 'mt-8': isCompletingParty && !isRoleStaff }"
+                :class="{ 'mt-8': isCompletingParty && !isRoleStaff && isTypeCoop}"
                 v-model="addPersonOrgFormValid"
                 v-on:submit.prevent
               >
@@ -59,7 +59,7 @@
                       id="person__first-name"
                       v-model="orgPerson.officer.firstName"
                       :rules="firstNameRules"
-                      :readonly="isCompletingParty && !isRoleStaff"
+                      :readonly="isCompletingParty && !isRoleStaff && isTypeCoop"
                     />
                     <v-text-field
                       filled
@@ -68,7 +68,7 @@
                       id="person__middle-name"
                       v-model="orgPerson.officer.middleName"
                       :rules="middleNameRules"
-                      :readonly="isCompletingParty && !isRoleStaff"
+                      :readonly="isCompletingParty && !isRoleStaff && isTypeCoop"
                     />
                     <v-text-field
                       filled
@@ -77,7 +77,7 @@
                       id="person__last-name"
                       v-model="orgPerson.officer.lastName"
                       :rules="lastNameRules"
-                      :readonly="isCompletingParty && !isRoleStaff"
+                      :readonly="isCompletingParty && !isRoleStaff && isTypeCoop"
                     />
                   </div>
                 </template>
@@ -241,6 +241,7 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
 
   @Getter getCurrentDate!: string
   @Getter isRoleStaff!: boolean
+  @Getter isTypeCoop!: boolean
 
   // Local properties
   private orgPerson: OrgPersonIF = null
