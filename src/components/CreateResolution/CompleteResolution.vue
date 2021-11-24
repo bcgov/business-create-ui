@@ -615,8 +615,7 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin, E
         this.$refs.confirmResolutionChkFormRef.validate()
       }
     } else {
-      if (this.getShowErrors && this.$refs.confirmResolutionChkFormRef
-      ) {
+      if (this.getShowErrors && this.$refs.confirmResolutionChkFormRef) {
         this.$refs.confirmResolutionChkFormRef.validate()
       }
     }

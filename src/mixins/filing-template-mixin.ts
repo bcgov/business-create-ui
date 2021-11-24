@@ -444,10 +444,10 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
         draftFiling.dissolution?.resolution?.resolutionConfirmed || false
     }
     if (draftFiling.specialResolution) {
-      createResolution.resolutionDate = draftFiling.specialResolution?.resolutionDate
-      createResolution.resolutionText = draftFiling.specialResolution?.resolution
-      createResolution.signingPerson = draftFiling.specialResolution?.signatory
-      createResolution.signingDate = draftFiling.specialResolution?.signingDate
+      createResolution.resolutionDate = draftFiling.specialResolution.resolutionDate
+      createResolution.resolutionText = draftFiling.specialResolution.resolution
+      createResolution.signingPerson = draftFiling.specialResolution.signatory
+      createResolution.signingDate = draftFiling.specialResolution.signingDate
     }
     this.setResolution(createResolution)
 
