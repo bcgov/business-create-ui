@@ -552,7 +552,7 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
 
   get resolutionDate (): string {
     const result = this.getCreateResolutionStep.resolutionDate
-      ? this.getCreateResolutionStep.resolutionDate
+      ? this.dateStrToPacificDate(this.getCreateResolutionStep.resolutionDate, true)
       : '(Not Entered)'
     return result
   }
@@ -574,7 +574,7 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
 
   get signingDate (): string {
     const result = this.getCreateResolutionStep.signingDate
-      ? this.getCreateResolutionStep.signingDate
+      ? this.dateStrToPacificDate(this.getCreateResolutionStep.signingDate, true)
       : '(Not Entered)'
     return result
   }

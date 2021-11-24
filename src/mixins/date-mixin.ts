@@ -114,6 +114,30 @@ export default class DateMixin extends Mixins(CommonMixin) {
   }
 
   /**
+   * Converts a date string of YYYY-mm-dd format to a date string with more display options in Pacific timezone.
+   * @example "2021-01-01" -> "Dec 31, 2020"
+   */
+  dateStrToPacificDate (dateStr: string, longMonth = false, showWeekday = false): string {
+    // safety checks
+    if (!dateStr) return null
+    const date = this.createUtcDateFromStr(dateStr)
+    if (!date) return null
+
+    let result = date.toLocaleDateString('en-CA', {
+      timeZone: 'America/Vancouver',
+      weekday: showWeekday ? 'long' : undefined, // Thursday or nothing
+      month: longMonth ? 'long' : 'short', // December or Dec.
+      day: 'numeric', // 31
+      year: 'numeric' // 2020
+    })
+
+    // remove period after month
+    result = result.replace('.', '')
+
+    return result
+  }
+
+  /**
    * Converts a Date object to a time string (HH:MM am/pm) in Pacific timezone.
    * @example "2021-01-01 07:00:00 GMT" -> "11:00 pm"
    * @example "2021-01-01 08:00:00 GMT" -> "12:00 am"
