@@ -1,5 +1,5 @@
-import UploadResolution from './UploadResolution.vue'
+import CompleteResolution from './CompleteResolution.vue'
 
 export {
-  UploadResolution
+  CompleteResolution
 }

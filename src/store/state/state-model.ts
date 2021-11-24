@@ -21,6 +21,7 @@ export const stateModel: StateModelIF = {
   business: {
     businessId: '',
     legalName: '',
+    foundingDate: '',
     businessContact: {
       email: '',
       confirmEmail: '',

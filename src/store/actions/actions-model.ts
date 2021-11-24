@@ -18,6 +18,10 @@ export const setLegalName: ActionIF = ({ commit }, legalName): void => {
   commit('mutateLegalName', legalName)
 }
 
+export const setFoundingDate: ActionIF = ({ commit }, foundingDate): void => {
+  commit('mutateFoundingDate', foundingDate)
+}
+
 export const setFilingType: ActionIF = ({ commit }, filingType): void => {
   commit('mutateFilingType', filingType)
 }

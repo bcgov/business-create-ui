@@ -189,6 +189,11 @@ export const getBusinessLegalName = (state: StateIF): string => {
   return state.stateModel.business.legalName
 }
 
+/** The Business Founding Date. */
+export const getBusinessFoundingDate = (state: StateIF): string => {
+  return state.stateModel.business.foundingDate
+}
+
 /** The Business Data. */
 export const getBusiness = (state: StateIF): BusinessIF => {
   return state.stateModel.business

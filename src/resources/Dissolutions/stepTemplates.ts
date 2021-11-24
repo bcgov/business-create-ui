@@ -17,7 +17,7 @@ export const CoopDissolutionSteps = [
     id: 'step-2-btn',
     step: 2,
     icon: 'mdi-handshake',
-    text: 'Upload Special \nResolution',
+    text: 'Complete \n Special Resolution',
     to: RouteNames.CREATE_RESOLUTION,
     component: ViewComponentNames.CREATE_RESOLUTION
 

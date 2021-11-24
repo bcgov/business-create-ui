@@ -58,6 +58,20 @@ export default class DateMixin extends Mixins(CommonMixin) {
   }
 
   /**
+   * Creates and returns a new Date object in UTC, given parameters in Pacific timezone in string format YYYY-mm-dd.
+   */
+  createUtcDateFromStr (dateStr: string): Date {
+    // safety check
+    if (!dateStr) return null
+    const dateParts = dateStr.split('-')
+    const year = parseInt(dateParts[0])
+    const month = parseInt(dateParts[1]) - 1
+    const day = parseInt(dateParts[2])
+    const result = this.createUtcDate(year, month, day)
+    return result
+  }
+
+  /**
    * Converts a Date object to a date string (YYYY-MM-DD) in Pacific timezone.
    * @example "2021-01-01 07:00:00 GMT" -> "2020-12-31"
    * @example "2021-01-01 08:00:00 GMT" -> "2021-01-01"
@@ -97,6 +111,30 @@ export default class DateMixin extends Mixins(CommonMixin) {
     dateStr = dateStr.replace('.', '')
 
     return dateStr
+  }
+
+  /**
+   * Converts a date string of YYYY-mm-dd format to a date string with more display options in Pacific timezone.
+   * @example "2021-01-01" -> "Dec 31, 2020"
+   */
+  dateStrToPacificDate (dateStr: string, longMonth = false, showWeekday = false): string {
+    // safety checks
+    if (!dateStr) return null
+    const date = this.createUtcDateFromStr(dateStr)
+    if (!date) return null
+
+    let result = date.toLocaleDateString('en-CA', {
+      timeZone: 'America/Vancouver',
+      weekday: showWeekday ? 'long' : undefined, // Thursday or nothing
+      month: longMonth ? 'long' : 'short', // December or Dec.
+      day: 'numeric', // 31
+      year: 'numeric' // 2020
+    })
+
+    // remove period after month
+    result = result.replace('.', '')
+
+    return result
   }
 
   /**

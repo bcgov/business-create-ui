@@ -5,10 +5,30 @@ import { DateMixin } from '@/mixins'
 
 // Interfaces
 import {
-  ActionBindingIF, BusinessContactIF, CertifyIF, CreateRulesIF, EffectiveDateTimeIF, DefineCompanyIF,
-  DissolutionFilingIF, IncorporationAgreementIF, IncorporationFilingIF, NameTranslationIF, PeopleAndRoleIF,
-  DocIF, ShareStructureIF, CreateMemorandumIF, BusinessIF, DissolutionStatementIF, UploadAffidavitIF,
-  StaffPaymentStepIF, CourtOrderStepIF, CreateResolutionIF, DocumentDeliveryIF, OrgPersonIF
+  ActionBindingIF,
+  BusinessContactIF,
+  CertifyIF,
+  CreateRulesIF,
+  EffectiveDateTimeIF,
+  DefineCompanyIF,
+  DissolutionFilingIF,
+  IncorporationAgreementIF,
+  IncorporationFilingIF,
+  NameTranslationIF,
+  PeopleAndRoleIF,
+  DocIF,
+  ShareStructureIF,
+  CreateMemorandumIF,
+  BusinessIF,
+  DissolutionStatementIF,
+  UploadAffidavitIF,
+  StaffPaymentStepIF,
+  CourtOrderStepIF,
+  CreateResolutionIF,
+  DocumentDeliveryIF,
+  OrgPersonIF,
+  PersonIF,
+  SpecialResolutionIF
 } from '@/interfaces'
 
 // Constants and enums
@@ -28,6 +48,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Getter getApprovedName!: string
   @Getter getBusiness!: BusinessIF
   @Getter getBusinessLegalName!: string
+  @Getter getBusinessFoundingDate!: string
   @Getter getDissolutionType!: DissolutionTypes
   @Getter getTempId!: string
   @Getter getEffectiveDateTime!: EffectiveDateTimeIF
@@ -62,6 +83,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Action setBusinessContact!: ActionBindingIF
   @Action setDissolutionType!: ActionBindingIF
   @Action setLegalName!: ActionBindingIF
+  @Action setFoundingDate!: ActionBindingIF
   @Action setCooperativeType!: ActionBindingIF
   @Action setOfficeAddresses!: ActionBindingIF
   @Action setNameTranslationState!: ActionBindingIF
@@ -292,7 +314,8 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
       business: {
         legalType: this.getEntityType,
         identifier: this.getBusinessId,
-        legalName: this.getBusinessLegalName
+        legalName: this.getBusinessLegalName,
+        foundingDate: this.getBusinessFoundingDate
       },
       dissolution: {
         dissolutionDate: this.getCurrentDate,
@@ -319,12 +342,15 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
           affidavitFileKey: this.getAffidavitStep.docKey || null,
           affidavitFileName: this.getAffidavitStep.affidavitDoc?.name || null,
           affidavitFileSize: this.getAffidavitStep.affidavitDoc?.size || null,
-          affidavitFileLastModified: this.getAffidavitStep.affidavitDoc?.lastModified || null,
-          specialResolution: {
-            resolutionConfirmed: this.getCreateResolutionStep.resolutionConfirmed || false,
-            resolution: 'voluntary dissolution'
-          }
+          affidavitFileLastModified: this.getAffidavitStep.affidavitDoc?.lastModified || null
         }
+        filing.specialResolution = { ...filing.specialResolution,
+          resolutionConfirmed: this.getCreateResolutionStep.resolutionConfirmed || false,
+          resolutionDate: this.getCreateResolutionStep.resolutionDate,
+          resolution: this.getCreateResolutionStep.resolutionText,
+          signatory: this.getCreateResolutionStep.signingPerson,
+          signingDate: this.getCreateResolutionStep.signingDate
+        } as SpecialResolutionIF
         break
       case CorpTypeCd.BENEFIT_COMPANY:
       case CorpTypeCd.BC_CCC:
@@ -389,6 +415,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     // restore Business data
     this.setEntityType(draftFiling.business.legalType)
     this.setLegalName(draftFiling.business.legalName)
+    this.setFoundingDate(draftFiling.business.foundingDate)
 
     // restore Dissolution data
     this.setBusinessAddress(draftFiling.dissolution.custodialOffice)
@@ -413,8 +440,14 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
         validationItemDetails: []
       },
       resolutionConfirmed:
-        draftFiling.dissolution?.specialResolution?.resolutionConfirmed ||
+        draftFiling?.specialResolution?.resolutionConfirmed ||
         draftFiling.dissolution?.resolution?.resolutionConfirmed || false
+    }
+    if (draftFiling.specialResolution) {
+      createResolution.resolutionDate = draftFiling.specialResolution.resolutionDate
+      createResolution.resolutionText = draftFiling.specialResolution.resolution
+      createResolution.signingPerson = draftFiling.specialResolution.signatory
+      createResolution.signingDate = draftFiling.specialResolution.signingDate
     }
     this.setResolution(createResolution)
 
