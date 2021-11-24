@@ -71,8 +71,7 @@
       <header id="sample-resolution-header">
         <h2>{{getCreateResolutionResource.sampleFormSection.header}}</h2>
       </header>
-      <p class="mt-2" v-html="getCreateResolutionResource.sampleFormSection.text">
-      </p>
+      <p class="mt-2" v-html="getCreateResolutionResource.sampleFormSection.text"></p>
       <v-card flat id="sample-resolution-card" class="pt-7 pb-5 pl-6">
         <v-row>
           <v-col id="sample-resolution-card-left-col" cols="1" class="pt-6" >
