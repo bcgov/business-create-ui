@@ -264,8 +264,8 @@
                   <v-col cols="11" class="pt-1 pb-1" no-gutters>
                     <span v-for="(partialItem, index) in item.value" :key="index">
                       <span v-if="partialItem.type === ItemTypes.TEXT" v-html="partialItem.value"></span>
-                      <span v-if="partialItem.type === ItemTypes.PLACEHOLDER
-                                && partialItem.value === PLACEHOLDER_LEGAL_NAME_INLINE">
+                      <span v-if="partialItem.type === ItemTypes.PLACEHOLDER &&
+                                  partialItem.value === PLACEHOLDER_LEGAL_NAME_INLINE">
                         {{getBusinessLegalName}}
                       </span>
                       <div v-if="partialItem.type === ItemTypes.PLACEHOLDER
