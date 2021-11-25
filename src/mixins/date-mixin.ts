@@ -12,8 +12,6 @@ import { CommonMixin } from '@/mixins'
  */
 @Component({})
 export default class DateMixin extends Mixins(CommonMixin) {
-  readonly MS_IN_A_DAY = (1000 * 60 * 60 * 24)
-
   @Getter getCurrentJsDate!: Date
 
   /**
@@ -58,17 +56,20 @@ export default class DateMixin extends Mixins(CommonMixin) {
   }
 
   /**
-   * Creates and returns a new Date object in UTC, given parameters in Pacific timezone in string format YYYY-mm-dd.
+   * Converts a date string (YYYY-MM-DD) to a Date object at 12:00:00 am Pacific time.
+   * @example 2021-11-22 -> 2021-11-22T08:00:00.00Z
    */
-  createUtcDateFromStr (dateStr: string): Date {
-    // safety check
+  yyyyMmDdToDate (dateStr: string): Date {
+    // safety checks
     if (!dateStr) return null
-    const dateParts = dateStr.split('-')
-    const year = parseInt(dateParts[0])
-    const month = parseInt(dateParts[1]) - 1
-    const day = parseInt(dateParts[2])
-    const result = this.createUtcDate(year, month, day)
-    return result
+    if (dateStr.length !== 10) return null
+
+    const split = dateStr.split('-')
+    const year = +split[0]
+    const month = +split[1]
+    const day = +split[2]
+
+    return this.createUtcDate(year, (month - 1), day)
   }
 
   /**
@@ -92,6 +93,8 @@ export default class DateMixin extends Mixins(CommonMixin) {
 
   /**
    * Converts a Date object to a date string (Month Day, Year) in Pacific timezone.
+   * @param longMonth whether to show long month name (eg, December vs Dec)
+   * @param showWeekday whether to show the weekday name (eg, Thursday)
    * @example "2021-01-01 07:00:00 GMT" -> "Dec 31, 2020"
    * @example "2021-01-01 08:00:00 GMT" -> "Jan 1, 2021"
    */
@@ -114,27 +117,13 @@ export default class DateMixin extends Mixins(CommonMixin) {
   }
 
   /**
-   * Converts a date string of YYYY-mm-dd format to a date string with more display options in Pacific timezone.
-   * @example "2021-01-01" -> "Dec 31, 2020"
+   * Converts a date string (YYYY-MM-DD) to a date string (Month Day, Year) in Pacific timezone.
+   * @param longMonth whether to show long month name (eg, December vs Dec)
+   * @param showWeekday whether to show the weekday name (eg, Thursday)
+   * @example "2021-01-01" -> "Thursday, December 31, 2020"
    */
-  dateStrToPacificDate (dateStr: string, longMonth = false, showWeekday = false): string {
-    // safety checks
-    if (!dateStr) return null
-    const date = this.createUtcDateFromStr(dateStr)
-    if (!date) return null
-
-    let result = date.toLocaleDateString('en-CA', {
-      timeZone: 'America/Vancouver',
-      weekday: showWeekday ? 'long' : undefined, // Thursday or nothing
-      month: longMonth ? 'long' : 'short', // December or Dec.
-      day: 'numeric', // 31
-      year: 'numeric' // 2020
-    })
-
-    // remove period after month
-    result = result.replace('.', '')
-
-    return result
+  yyyyMmDdToPacificDate (dateStr: string, longMonth = false, showWeekday = false): string {
+    return this.dateToPacificDate(this.yyyyMmDdToDate(dateStr), longMonth, showWeekday)
   }
 
   /**
@@ -174,57 +163,6 @@ export default class DateMixin extends Mixins(CommonMixin) {
     return `${dateStr} at ${timeStr} Pacific time`
   }
 
-  /**
-   * Compares simple date strings (YYYY-MM-DD).
-   * @param date1 The first date to compare.
-   * @param date2 The second date to compare.
-   * @param operator The operator to use for comparison.
-   * @returns The result of the comparison (true or false).
-   */
-  compareDates (date1: string, date2: string, operator: string): boolean {
-    if (!date1 || !date2 || !operator) return true
-
-    // convert dates to numbers YYYYMMDD
-    date1 = date1.split('-').join('')
-    date2 = date2.split('-').join('')
-
-    return eval(date1 + operator + date2) // eslint-disable-line no-eval
-  }
-
-  /**
-   * Converts a date string (YYYY-MM-DD) to a formatted date string (Month Day, Year).
-   * @example "2020-01-01" -> "Jan 1, 2020"
-   */
-  formatDateString (dateStr: string): string {
-    // safety checks
-    if (!dateStr) return null
-    if (dateStr.length !== 10) return null
-
-    // create a Date object
-    // then split into its components (in "absolute" time)
-    // eg, "2020-01-01" -> "Wed, 01 Jan 2020 00:00:00 GMT"
-    const date = new Date(dateStr)
-    const [weekday, day, month, year, time, tz] = date.toUTCString().split(' ')
-
-    // convert day to number so that "01" -> "1"
-    return `${month} ${+day}, ${year}`
-  }
-
-  /**
-   * The number of days that 'date' is from today.
-   * @returns -1 for yesterday
-   * @returns 0 for today
-   * @returns +1 for tomorrow
-   * @returns NaN in case of error
-   */
-  daysFromToday (date: string): number {
-    if (!date) return NaN
-    // calculate difference between start of "today" and start of "date" (in local time)
-    const todayLocalMs = new Date().setHours(0, 0, 0, 0)
-    const dateLocalMs = new Date(date).setHours(0, 0, 0, 0)
-    return Math.round((dateLocalMs - todayLocalMs) / this.MS_IN_A_DAY)
-  }
-
   /** Validate the DateTime is within the allowed range */
   isValidDateTime (dateToValidate: Date, ignoreTime: boolean = false): boolean {
     if (dateToValidate) {
@@ -249,7 +187,9 @@ export default class DateMixin extends Mixins(CommonMixin) {
    * @example 2021-08-05T16:56:50Z -> 2021-08-05T16:56:50+00:00
    */
   dateToApi (date: Date): string {
-    if (!date) return null
+    // safety check
+    if (!isDate(date) || isNaN(date.getTime())) return null
+
     // replace "Zulu" timezone abbreviation with UTC offset
     return date.toISOString().replace('Z', '+00:00')
   }
@@ -259,9 +199,11 @@ export default class DateMixin extends Mixins(CommonMixin) {
    * @example 2021-08-05T16:56:50.783101+00:00 -> 2021-08-05T16:56:50Z
    */
   apiToDate (dateTimeString: string): Date {
-    if (!dateTimeString) return null
+    if (!dateTimeString) return null // safety check
+
     // chop off the milliseconds and UTC offset and append "Zulu" timezone abbreviation
     dateTimeString = dateTimeString.slice(0, 19) + 'Z'
+
     return new Date(dateTimeString)
   }
 }

@@ -5,7 +5,8 @@ const instance = axios.create()
 
 instance.interceptors.request.use(
   config => {
-    config.headers.common['Authorization'] = `Bearer ${sessionStorage.getItem(SessionStorageKeys.KeyCloakToken)}`
+    const kcToken = sessionStorage.getItem(SessionStorageKeys.KeyCloakToken)
+    config.headers.common['Authorization'] = `Bearer ${kcToken}`
     return config
   },
   error => Promise.reject(error)
@@ -16,4 +17,4 @@ instance.interceptors.response.use(
   error => Promise.reject(error)
 )
 
-export default instance
+export { instance as axios }

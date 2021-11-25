@@ -6,7 +6,7 @@ import flushPromises from 'flush-promises'
 import sinon from 'sinon'
 import { getVuexStore } from '@/store'
 import { mount, shallowMount, createLocalVue } from '@vue/test-utils'
-import axios from '@/utils/axios-auth'
+import { axios } from '@/utils'
 import sbcFeeSummaryAxios from 'axios'
 
 // Components

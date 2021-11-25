@@ -39,7 +39,7 @@ export default class NameRequestMixin extends Mixins(DateMixin) {
         lastName: nr.applicants.lastName
       },
       details: {
-        approvedName: this._getApprovedName(nr),
+        approvedName: this.getNrApprovedName(nr) || '',
         consentFlag: nr.consentFlag,
         expirationDate: nr.expirationDate,
         status: nr.state
@@ -60,9 +60,8 @@ export default class NameRequestMixin extends Mixins(DateMixin) {
       nr.applicants &&
       nr.state &&
       nr.expirationDate &&
-      nr.names?.length > 0 &&
       this.nrTypeToEntityType(nr) &&
-      this._getApprovedName(nr)
+      !!this.getNrApprovedName(nr)
     )
   }
 
@@ -97,14 +96,15 @@ export default class NameRequestMixin extends Mixins(DateMixin) {
   }
 
   /**
-   * Returns the Name Request's approved name.
+   * Returns the Name Request's approved name (or undefined or null if not found).
    * @param nr the name request response payload
    */
-  private _getApprovedName (nr: any): string {
-    if (nr.names?.length > 0) {
-      return nr.names.find(name => [NameRequestStates.APPROVED, NameRequestStates.CONDITION].includes(name.state)).name
+  getNrApprovedName (nr: any): string {
+    if (nr?.names?.length > 0) {
+      return nr.names
+        .find(name => [NameRequestStates.APPROVED, NameRequestStates.CONDITION].includes(name.state))?.name
     }
-    return '' // should never happen
+    return null // should never happen
   }
 
   /**

@@ -1,5 +1,5 @@
 // Libraries
-import axios from '@/utils/axios-auth'
+import { axios } from '@/utils'
 import { CorpTypeCd, FilingCodes } from '@/enums'
 import { FeesIF } from '@/interfaces'
 

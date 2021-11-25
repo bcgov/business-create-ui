@@ -1,5 +1,5 @@
 import { AxiosResponse } from 'axios'
-import axios from '@/utils/axios-auth'
+import { axios } from '@/utils'
 import { Component, Vue } from 'vue-property-decorator'
 import { DocumentUpload } from '@/interfaces'
 import { PdfPageSize } from '@/enums'

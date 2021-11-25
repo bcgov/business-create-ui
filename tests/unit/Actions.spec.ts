@@ -5,7 +5,7 @@ import VueRouter from 'vue-router'
 import { getVuexStore } from '@/store'
 import { shallowMount, createLocalVue, createWrapper } from '@vue/test-utils'
 import sinon from 'sinon'
-import axios from '@/utils/axios-auth'
+import { axios } from '@/utils'
 
 // Components
 import Actions from '@/components/common/Actions.vue'
