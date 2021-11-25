@@ -8,8 +8,8 @@
              class="section-container upload-success-message"
     >
       <v-row no-gutters>
-        <v-col md="1">
-          <v-icon class="success-chk">mdi-check</v-icon>
+        <v-col md="auto" class="mr-3">
+          <v-icon class="upload-success-chk" color="successCheckmark">mdi-check</v-icon>
         </v-col>
         <v-col md="11" id="file-name-col">
           <span>The resolution was completed and deposited in the Company's records book.</span>
