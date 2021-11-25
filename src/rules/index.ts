@@ -1,3 +1,5 @@
+import { CommonRules } from './common-rules'
+import { DateRules, DateRuleHelpers } from './date-rules'
 import { EmailRules } from './email-rules'
 import { FirstNameRules } from './first-name-rules'
 import { FolioNumberRules } from './folio-number-rules'
@@ -8,10 +10,16 @@ import { PhoneRules } from './phone-rules'
 
 export const Rules = {
   EmailRules,
+  CommonRules,
+  DateRules,
   FirstNameRules,
   FolioNumberRules,
   LastNameRules,
   MiddleNameRules,
   OrgNameRules,
   PhoneRules
+}
+
+export const RuleHelpers = {
+  DateRuleHelpers
 }

@@ -311,7 +311,7 @@ import { BulletListTypes, CorpTypeCd, ItemTypes, RouteNames } from '@/enums'
 import { CommonMixin, DateMixin, EntityFilterMixin } from '@/mixins'
 
 // Validation
-import { Rules } from '@/rules'
+import { Rules, RuleHelpers } from '@/rules'
 
 @Component({
   components: {
@@ -364,7 +364,10 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin, E
   readonly ItemTypes = ItemTypes
   readonly CorpTypeCd = CorpTypeCd
   readonly BulletListTypes = BulletListTypes
+
+  // Validation Rules
   readonly Rules = Rules
+  readonly RuleHelpers = RuleHelpers
 
   private get documentURL (): string {
     const docUrl = sessionStorage.getItem('BASE_URL') +
@@ -393,29 +396,29 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin, E
 
   /** Validations rules for resolution date field. */
   get resolutionDateRules (): Array<Function> {
-    const expectedDateFormat = /^(19|20)\d\d[-.](0[1-9]|1[012])[-.](0[1-9]|[12][0-9]|3[01])$/
     return [
-      (v: string) => !!v || 'Select date',
-      (v: string) => expectedDateFormat.test(v) || 'Date format should be YYYY-MM-DD',
+      Rules.DateRules.REQUIRED,
+      Rules.DateRules.EXPECTED_DATE_FORMAT,
       (v: string) =>
-        this.validateIsBetweenDates(this.resolutionDateMin,
-          this.resolutionDateMax,
-          this.yyyyMmDdToDate(v)) ||
-        `Date should be between ${this.resolutionDateMinStr} (incorporation date) and ${this.resolutionDateMaxStr}`
+        RuleHelpers.DateRuleHelpers
+          .isBetweenDates(this.resolutionDateMin,
+            this.resolutionDateMax,
+            this.yyyyMmDdToDate(v)) ||
+          `Date should be between ${this.resolutionDateMinStr} (incorporation date) and ${this.resolutionDateMaxStr}`
     ]
   }
 
   /** Validations rules for signing date field. */
   get signatureDateRules (): Array<Function> {
-    const expectedDateFormat = /^(19|20)\d\d[-.](0[1-9]|1[012])[-.](0[1-9]|[12][0-9]|3[01])$/
     return [
-      (v: string) => !!v || 'Select date',
-      (v: string) => expectedDateFormat.test(v) || 'Date format should be YYYY-MM-DD',
+      Rules.DateRules.REQUIRED,
+      Rules.DateRules.EXPECTED_DATE_FORMAT,
       (v: string) =>
-        this.validateIsBetweenDates(this.signatureDateMin,
-          this.signatureDateMax,
-          this.yyyyMmDdToDate(v)) ||
-        `Date should be between ${this.signatureDateMinStr} and ${this.signatureDateMaxStr}`
+        RuleHelpers.DateRuleHelpers
+          .isBetweenDates(this.signatureDateMin,
+            this.signatureDateMax,
+            this.yyyyMmDdToDate(v)) ||
+          `Date should be between ${this.signatureDateMinStr} and ${this.signatureDateMaxStr}`
     ]
   }
 
@@ -482,7 +485,7 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin, E
     return [
       v => (v && v.trim().length > 0) || 'Resolution text is required.',
       v => (v && v.length <= this.MAX_RESOLUTION_TEXT_LENGTH) || 'Maximum characters exceeded.',
-      v => /^([\w\s$&+,:;=?@#|'<>.^*()%!-\\"]*)$/g.test(v) || 'Invalid character'
+      Rules.CommonRules.ALPHA_NUMERIC_AND_STANDARD_SPECIAL_CHARS
     ]
   }
 
