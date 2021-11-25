@@ -440,14 +440,13 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
         validationItemDetails: []
       },
       resolutionConfirmed:
-        draftFiling?.specialResolution?.resolutionConfirmed ||
-        draftFiling.dissolution?.resolution?.resolutionConfirmed || false
-    }
-    if (draftFiling.specialResolution) {
-      createResolution.resolutionDate = draftFiling.specialResolution.resolutionDate
-      createResolution.resolutionText = draftFiling.specialResolution.resolution
-      createResolution.signingPerson = draftFiling.specialResolution.signatory
-      createResolution.signingDate = draftFiling.specialResolution.signingDate
+        draftFiling.specialResolution?.resolutionConfirmed ||
+        draftFiling.dissolution?.resolution?.resolutionConfirmed || false,
+      // special resolution specific fields
+      resolutionDate: draftFiling.specialResolution?.resolutionDate,
+      resolutionText: draftFiling.specialResolution?.resolution,
+      signingPerson: draftFiling.specialResolution?.signatory,
+      signingDate: draftFiling.specialResolution?.signingDate
     }
     this.setResolution(createResolution)
 
