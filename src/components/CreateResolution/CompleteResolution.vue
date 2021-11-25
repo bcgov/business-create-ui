@@ -236,7 +236,7 @@
       <header id="resolution-confirm-header">
         <h2>{{getCreateResolutionResource.confirmSection.header}}</h2>
       </header>
-      <div :class="{ 'invalid-section': getShowErrors && !hasResolutionConfirmed }">
+      <div :class="{ 'invalid-section': getShowErrors && !isConfirmResolutionValid }">
         <v-card flat id="confirm-resolution-card" class="mt-4 pt-10 pb-8 pl-6 pr-9">
           <v-form ref="confirmResolutionChkFormRef">
             <v-checkbox
@@ -335,7 +335,6 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin, E
 
   private MAX_RESOLUTION_TEXT_LENGTH: number = 1000
   private resolutionText: string = ''
-  private hasResolutionConfirmed = false
   private resolutionConfirmed = false
   private helpToggle = false
   private PLACEHOLDER_LEGAL_NAME = 'legal_name'
@@ -511,15 +510,19 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin, E
       this.$refs.signingPersonFamilyNameRef.valid
   }
 
+  private get isConfirmResolutionValid (): boolean {
+    return this.$refs.confirmResolutionChkRef.valid
+  }
+
   private isResolutionValid (): boolean {
     if (this.isTypeCoop) {
       return this.$refs.resolutionTextRef.valid &&
         this.$refs.resolutionDatePickerRef.isDateValid() &&
         this.isSigningPersonValid &&
         this.$refs.signatureDatePickerRef.isDateValid() &&
-        this.hasResolutionConfirmed
+        this.$refs.confirmResolutionChkRef.valid
     }
-    return this.hasResolutionConfirmed
+    return this.$refs.confirmResolutionChkRef.valid
   }
 
   private updateResolutionStepValidationDetail () {
@@ -551,8 +554,8 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin, E
               elementId: 'resolution-signatory-info-header'
             },
             {
-              name: 'hasResolutionConfirmed',
-              valid: this.hasResolutionConfirmed,
+              name: 'resolutionConfirmed',
+              valid: this.isConfirmResolutionValid,
               elementId: 'resolution-confirm-header'
             }
           ]
@@ -563,8 +566,8 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin, E
           valid: resolutionIsValid,
           validationItemDetails: [
             {
-              name: 'hasResolutionConfirmed',
-              valid: this.hasResolutionConfirmed,
+              name: 'resolutionConfirmed',
+              valid: this.isConfirmResolutionValid,
               elementId: 'resolution-confirm-header'
             }
           ]
@@ -573,13 +576,13 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin, E
     this.setResolutionStepValidationDetail(validationDetail)
   }
 
-  private onResolutionConfirmedChange (resolutionConfirmed: boolean): void {
-    this.hasResolutionConfirmed = resolutionConfirmed
-    this.updateResolutionStepValidationDetail()
+  private async onResolutionConfirmedChange (resolutionConfirmed: boolean): Promise<void> {
+    await Vue.nextTick()
     this.setResolution({
       ...this.getCreateResolutionStep,
       resolutionConfirmed: resolutionConfirmed
     })
+    this.updateResolutionStepValidationDetail()
   }
 
   /** Called when component is created. */
@@ -588,7 +591,6 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin, E
     foundingDate.setHours(0, 0, 0, 0)
     this.foundingDate = foundingDate
     this.resolutionConfirmed = !!this.getCreateResolutionStep.resolutionConfirmed
-    this.hasResolutionConfirmed = this.resolutionConfirmed
     this.resolutionDateText = this.getCreateResolutionStep.resolutionDate
     this.resolutionText = this.getCreateResolutionStep.resolutionText
     this.signingPerson = this.getCreateResolutionStep.signingPerson || EmptyPerson
