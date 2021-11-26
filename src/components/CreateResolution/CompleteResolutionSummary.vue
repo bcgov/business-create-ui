@@ -114,32 +114,38 @@ export default class CompleteResolutionSummary extends Mixins(DateMixin) {
   readonly RouteNames = RouteNames
 
   get resolutionDate (): string {
-    const result = this.getCreateResolutionStep.resolutionDate
-      ? this.yyyyMmDdToPacificDate(this.getCreateResolutionStep.resolutionDate, true)
-      : '(Not Entered)'
-    return result
+    const resolutionDate = this.getCreateResolutionStep.resolutionDate
+    if (resolutionDate) {
+      return this.yyyyMmDdToPacificDate(resolutionDate, true)
+    }
+    return '(Not Entered)'
   }
 
   get resolutionText (): string {
-    const result = this.getCreateResolutionStep.resolutionText
-      ? this.getCreateResolutionStep.resolutionText
-      : '(Not Entered)'
-    return result
+    const resolutionText = this.getCreateResolutionStep.resolutionText
+    if (resolutionText) {
+      return resolutionText
+    }
+    return '(Not Entered)'
   }
 
   get signingParty (): string {
     const signingParty = this.getCreateResolutionStep.signingPerson
-    const result = signingParty.givenName && signingParty.familyName
-      ? `${signingParty.givenName.trim()} ${signingParty.additionalName.trim()} ${signingParty.familyName.trim()}`
-      : '(Not Entered)'
-    return result
+    if (signingParty.givenName && signingParty.familyName) {
+      const fullName = `${signingParty.givenName.trim()}
+                        ${signingParty.additionalName.trim()}
+                        ${signingParty.familyName.trim()}`
+      return fullName
+    }
+    return '(Not Entered)'
   }
 
   get signingDate (): string {
-    const result = this.getCreateResolutionStep.signingDate
-      ? this.yyyyMmDdToPacificDate(this.getCreateResolutionStep.signingDate, true)
-      : '(Not Entered)'
-    return result
+    const signingDate = this.getCreateResolutionStep.signingDate
+    if (signingDate) {
+      return this.yyyyMmDdToPacificDate(signingDate, true)
+    }
+    return '(Not Entered)'
   }
 
   /** Is true when all validation items are invalid. */
