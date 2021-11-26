@@ -156,14 +156,14 @@ export default class CompleteResolutionSummary extends Mixins(DateMixin) {
 @import '@/assets/styles/theme.scss';
 
 // styles specific to resolution summary section
-::v-deep #resolution-summary-section-3 {
+#resolution-summary-section-3 {
   // removes dotted line bottom border on text area
-  .v-text-field.v-input--is-readonly .v-input__slot:before {
+  ::v-deep .v-text-field.v-input--is-readonly .v-input__slot:before {
     border-style: None !important;
   }
 
   // remove text area padding
-  .v-text-field.v-text-field--enclosed:not(.v-text-field--rounded) > .v-input__control >
+  ::v-deep .v-text-field.v-text-field--enclosed:not(.v-text-field--rounded) > .v-input__control >
   .v-input__slot, .v-text-field.v-text-field--enclosed .v-text-field__details {
     padding: 0px !important;
   }
