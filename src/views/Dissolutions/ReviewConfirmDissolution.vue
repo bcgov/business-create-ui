@@ -144,99 +144,7 @@
     </v-card>
 
     <!-- Resolution -->
-    <v-card flat id="resolution-summary" class="mt-10">
-      <header class="review-header rounded-t">
-        <v-icon class="ml-2" color="appDkBlue">mdi-handshake</v-icon>
-        <label class="font-weight-bold pl-2">{{getCreateResolutionResource.reviewConfirmHeader}}</label>
-      </header>
-
-      <section v-if="isBaseCompany && this.getCreateResolutionStep.validationDetail.valid"
-               class="section-container upload-success-message"
-      >
-        <v-row no-gutters>
-          <v-col md="1">
-            <v-icon class="success-chk">mdi-check</v-icon>
-          </v-col>
-          <v-col md="11" id="file-name-col">
-            <span>The resolution was completed and deposited in the Company's records book.</span>
-          </v-col>
-        </v-row>
-      </section>
-
-      <section v-if="allResolutionValidationItemsInvalid"
-        class="section-container invalid-section rounded-bl-0"
-      >
-        <v-icon color="error">mdi-information-outline</v-icon>
-        <span class="error-text ml-1 mr-2">This step is unfinished.</span>
-        <router-link
-          :to="{ path: `/${RouteNames.CREATE_RESOLUTION}` }"
-        >Return to this step to finish it</router-link>
-      </section>
-
-      <section id="resolution-summary-section-3"
-               v-if="isTypeCoop && !allResolutionValidationItemsInvalid"
-               class="section-container rounded-bl-0"
-               :class="{ 'invalid-section': !getCreateResolutionStep.validationDetail.valid }"
-      >
-        <span v-if="!getCreateResolutionStep.validationDetail.valid">
-          <v-icon color="error">mdi-information-outline</v-icon>
-          <span class="error-text ml-1 mr-2">This step is unfinished.</span>
-          <router-link
-            :to="{ path: `/${RouteNames.CREATE_RESOLUTION}` }"
-          >Return to this step to finish it</router-link>
-        </span>
-        <v-row class="ml-2 mt-6" no-gutters>
-          <v-col md="3">
-            <strong>Resolution Date</strong>
-          </v-col>
-          <v-col md="9" class="ml-n1">
-            {{resolutionDate}}
-          </v-col>
-        </v-row>
-        <v-row class="ml-2 mt-5" no-gutters>
-          <v-col md="3">
-            <strong>Resolution Text</strong>
-          </v-col>
-          <v-col md="9" class="ml-n1">
-            <v-lazy>
-              <v-textarea
-                id="resolution-text"
-                rows="1"
-                auto-grow
-                readonly
-                filled
-                background-color="white"
-                v-model="resolutionText">
-              </v-textarea>
-            </v-lazy>
-          </v-col>
-        </v-row>
-        <v-row class="ml-2 mt-3" no-gutters>
-          <v-col md="3">
-            <strong>Signing Party</strong>
-          </v-col>
-          <v-col md="9" class="ml-n1">
-            {{signingParty}}
-          </v-col>
-        </v-row>
-        <v-row class="ml-2 mt-5" no-gutters>
-          <v-col md="3">
-            <strong>Date Signed</strong>
-          </v-col>
-          <v-col md="9" class="ml-n1">
-            {{signingDate}}
-          </v-col>
-        </v-row>
-        <v-row v-if="getCreateResolutionStep.resolutionConfirmed" class="ml-1 mt-5" no-gutters>
-          <v-col md="auto" class="mr-2">
-            <v-icon class="upload-success-chk" color="successCheckmark">mdi-check</v-icon>
-          </v-col>
-          <v-col md="11" id="file-name-col">
-            <span>{{ getCreateResolutionResource.confirmSection.reviewSummaryText }}</span>
-          </v-col>
-        </v-row>
-      </section>
-    </v-card>
+    <CompleteResolutionSummary />
 
     <!-- Affidavit -->
     <v-card flat id="affidavit-summary" class="mt-10">
@@ -368,7 +276,7 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Mixins, Vue, Watch } from 'vue-property-decorator'
+import { Component, Mixins, Vue } from 'vue-property-decorator'
 import { Getter, Action } from 'vuex-class'
 import { DateMixin } from '@/mixins'
 
@@ -379,6 +287,7 @@ import {
   DestroyCertificate,
   DissolutionStatement
 } from '@/components/DefineDissolution'
+import { CompleteResolutionSummary } from '@/components/CreateResolution'
 import { Certify, CourtOrderPoa, EffectiveDateTime } from '@/components'
 import { DocumentDelivery, StaffPayment, TransactionalFolioNumber } from '@/components/common'
 
@@ -412,7 +321,8 @@ import {
     DocumentDelivery,
     EffectiveDateTime,
     StaffPayment,
-    TransactionalFolioNumber
+    TransactionalFolioNumber,
+    CompleteResolutionSummary
   }
 })
 export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
@@ -438,7 +348,6 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
   @Getter isPremiumAccount!: boolean
   @Getter isRoleStaff!: boolean
   @Getter isTypeCoop!: boolean
-  @Getter isBaseCompany!: boolean
   @Getter getFolioNumber!: string
   @Getter getTransactionalFolioNumber!: string
 
@@ -506,14 +415,6 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
     return (this.getValidateSteps && !this.getDocumentDelivery.valid)
   }
 
-  /** Is true when all validation items are invalid. */
-  get allResolutionValidationItemsInvalid (): boolean {
-    const validationItemsDetails = this.getCreateResolutionStep.validationDetail.validationItemDetails
-    const invalidValidationItems = validationItemsDetails.filter(item => item.valid === false)
-    const result = validationItemsDetails.length === invalidValidationItems.length
-    return result
-  }
-
   /** The affidavit summary to display, depending on entity type. */
   get affidavitSummary (): string {
     return this.isTypeCoop
@@ -550,35 +451,6 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
     )
   }
 
-  get resolutionDate (): string {
-    const result = this.getCreateResolutionStep.resolutionDate
-      ? this.yyyyMmDdToPacificDate(this.getCreateResolutionStep.resolutionDate, true)
-      : '(Not Entered)'
-    return result
-  }
-
-  get resolutionText (): string {
-    const result = this.getCreateResolutionStep.resolutionText
-      ? this.getCreateResolutionStep.resolutionText
-      : '(Not Entered)'
-    return result
-  }
-
-  get signingParty (): string {
-    const signingParty = this.getCreateResolutionStep.signingPerson
-    const result = signingParty.givenName && signingParty.familyName
-      ? `${signingParty.givenName.trim()} ${signingParty.additionalName.trim()} ${signingParty.familyName.trim()}`
-      : '(Not Entered)'
-    return result
-  }
-
-  get signingDate (): string {
-    const result = this.getCreateResolutionStep.signingDate
-      ? this.yyyyMmDdToPacificDate(this.getCreateResolutionStep.signingDate, true)
-      : '(Not Entered)'
-    return result
-  }
-
   /** Handler for CertifiedBy change event. */
   private onCertifiedBy (val: string): void {
     this.setCertifyState(
@@ -598,11 +470,11 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
   background-color: $gray1;
 }
 
-.section-container {
+::v-deep .section-container {
   padding: 1.5rem 1.5rem;
 }
 
-.review-header {
+::v-deep .review-header {
   display: flex; // to align icons
   background-color: $BCgovBlue5O;
   padding: 1.25rem;
@@ -764,24 +636,6 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
     .v-messages {
       margin-bottom: -14px !important;
     }
-  }
-}
-
-// styles specific to resolution summary section
-::v-deep #resolution-summary #resolution-summary-section-3 {
-  // removes dotted line bottom border on text area
-  .v-text-field.v-input--is-readonly .v-input__slot:before {
-    border-style: None !important;
-  }
-
-  // remove text area padding
-  .v-text-field.v-text-field--enclosed:not(.v-text-field--rounded) > .v-input__control >
-  .v-input__slot, .v-text-field.v-text-field--enclosed .v-text-field__details {
-    padding: 0px !important;
-  }
-
-  #resolution-text {
-    margin-top: 0px !important;
   }
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div id="upload-resolution">
+  <div id="complete-resolution">
     <section class="mt-10">
       <header>
         <h2>{{getCreateResolutionResource.introSection.header}}</h2>
@@ -236,7 +236,7 @@
       <header id="resolution-confirm-header">
         <h2>{{getCreateResolutionResource.confirmSection.header}}</h2>
       </header>
-      <div :class="{ 'invalid-section': getShowErrors && !hasResolutionConfirmed }">
+      <div :class="{ 'invalid-section': getShowErrors && !isConfirmResolutionValid }">
         <v-card flat id="confirm-resolution-card" class="mt-4 pt-10 pb-8 pl-6 pr-9">
           <v-form ref="confirmResolutionChkFormRef">
             <v-checkbox
@@ -311,7 +311,7 @@ import { BulletListTypes, CorpTypeCd, ItemTypes, RouteNames } from '@/enums'
 import { CommonMixin, DateMixin, EntityFilterMixin } from '@/mixins'
 
 // Validation
-import { Rules } from '@/rules'
+import { Rules, RuleHelpers } from '@/rules'
 
 @Component({
   components: {
@@ -335,7 +335,6 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin, E
 
   private MAX_RESOLUTION_TEXT_LENGTH: number = 1000
   private resolutionText: string = ''
-  private hasResolutionConfirmed = false
   private resolutionConfirmed = false
   private helpToggle = false
   private PLACEHOLDER_LEGAL_NAME = 'legal_name'
@@ -364,6 +363,8 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin, E
   readonly ItemTypes = ItemTypes
   readonly CorpTypeCd = CorpTypeCd
   readonly BulletListTypes = BulletListTypes
+
+  // Validation Rules
   readonly Rules = Rules
 
   private get documentURL (): string {
@@ -393,29 +394,29 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin, E
 
   /** Validations rules for resolution date field. */
   get resolutionDateRules (): Array<Function> {
-    const expectedDateFormat = /^(19|20)\d\d[-.](0[1-9]|1[012])[-.](0[1-9]|[12][0-9]|3[01])$/
     return [
-      (v: string) => !!v || 'Select date',
-      (v: string) => expectedDateFormat.test(v) || 'Date format should be YYYY-MM-DD',
+      Rules.DateRules.REQUIRED,
+      Rules.DateRules.EXPECTED_DATE_FORMAT,
       (v: string) =>
-        this.validateIsBetweenDates(this.resolutionDateMin,
-          this.resolutionDateMax,
-          this.yyyyMmDdToDate(v)) ||
-        `Date should be between ${this.resolutionDateMinStr} (incorporation date) and ${this.resolutionDateMaxStr}`
+        RuleHelpers.DateRuleHelpers
+          .isBetweenDates(this.resolutionDateMin,
+            this.resolutionDateMax,
+            this.yyyyMmDdToDate(v)) ||
+          `Date should be between ${this.resolutionDateMinStr} (incorporation date) and ${this.resolutionDateMaxStr}`
     ]
   }
 
   /** Validations rules for signing date field. */
   get signatureDateRules (): Array<Function> {
-    const expectedDateFormat = /^(19|20)\d\d[-.](0[1-9]|1[012])[-.](0[1-9]|[12][0-9]|3[01])$/
     return [
-      (v: string) => !!v || 'Select date',
-      (v: string) => expectedDateFormat.test(v) || 'Date format should be YYYY-MM-DD',
+      Rules.DateRules.REQUIRED,
+      Rules.DateRules.EXPECTED_DATE_FORMAT,
       (v: string) =>
-        this.validateIsBetweenDates(this.signatureDateMin,
-          this.signatureDateMax,
-          this.yyyyMmDdToDate(v)) ||
-        `Date should be between ${this.signatureDateMinStr} and ${this.signatureDateMaxStr}`
+        RuleHelpers.DateRuleHelpers
+          .isBetweenDates(this.signatureDateMin,
+            this.signatureDateMax,
+            this.yyyyMmDdToDate(v)) ||
+          `Date should be between ${this.signatureDateMinStr} and ${this.signatureDateMaxStr}`
     ]
   }
 
@@ -480,9 +481,9 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin, E
 
   private get resolutionTextRules (): Array<Function> {
     return [
-      v => (v && v.trim().length > 0) || 'Resolution text is required.',
-      v => (v && v.length <= this.MAX_RESOLUTION_TEXT_LENGTH) || 'Maximum characters exceeded.',
-      v => /^([\w\s$&+,:;=?@#|'<>.^*()%!-\\"]*)$/g.test(v) || 'Invalid character'
+      v => (v && v.trim().length > 0) || 'Resolution text is required',
+      v => (v && v.length <= this.MAX_RESOLUTION_TEXT_LENGTH) || 'Maximum characters exceeded',
+      Rules.CommonRules.ALPHA_NUMERIC_AND_STANDARD_SPECIAL_CHARS
     ]
   }
 
@@ -508,15 +509,19 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin, E
       this.$refs.signingPersonFamilyNameRef.valid
   }
 
+  private get isConfirmResolutionValid (): boolean {
+    return this.$refs.confirmResolutionChkRef.valid
+  }
+
   private isResolutionValid (): boolean {
     if (this.isTypeCoop) {
       return this.$refs.resolutionTextRef.valid &&
         this.$refs.resolutionDatePickerRef.isDateValid() &&
         this.isSigningPersonValid &&
         this.$refs.signatureDatePickerRef.isDateValid() &&
-        this.hasResolutionConfirmed
+        this.$refs.confirmResolutionChkRef.valid
     }
-    return this.hasResolutionConfirmed
+    return this.$refs.confirmResolutionChkRef.valid
   }
 
   private updateResolutionStepValidationDetail () {
@@ -548,8 +553,8 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin, E
               elementId: 'resolution-signatory-info-header'
             },
             {
-              name: 'hasResolutionConfirmed',
-              valid: this.hasResolutionConfirmed,
+              name: 'resolutionConfirmed',
+              valid: this.isConfirmResolutionValid,
               elementId: 'resolution-confirm-header'
             }
           ]
@@ -560,8 +565,8 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin, E
           valid: resolutionIsValid,
           validationItemDetails: [
             {
-              name: 'hasResolutionConfirmed',
-              valid: this.hasResolutionConfirmed,
+              name: 'resolutionConfirmed',
+              valid: this.isConfirmResolutionValid,
               elementId: 'resolution-confirm-header'
             }
           ]
@@ -570,13 +575,16 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin, E
     this.setResolutionStepValidationDetail(validationDetail)
   }
 
-  private onResolutionConfirmedChange (resolutionConfirmed: boolean): void {
-    this.hasResolutionConfirmed = resolutionConfirmed
-    this.updateResolutionStepValidationDetail()
+  private async onResolutionConfirmedChange (resolutionConfirmed: boolean): Promise<void> {
+    // This is required as there are timing issues between this component and the CompleteResolutionSummary
+    // component.  The CompleteResolutionSummary isn't always able to detect that the confirm checkbox
+    // value has changed without using Vue.nextTick()
+    await Vue.nextTick()
     this.setResolution({
       ...this.getCreateResolutionStep,
       resolutionConfirmed: resolutionConfirmed
     })
+    this.updateResolutionStepValidationDetail()
   }
 
   /** Called when component is created. */
@@ -585,7 +593,6 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin, E
     foundingDate.setHours(0, 0, 0, 0)
     this.foundingDate = foundingDate
     this.resolutionConfirmed = !!this.getCreateResolutionStep.resolutionConfirmed
-    this.hasResolutionConfirmed = this.resolutionConfirmed
     this.resolutionDateText = this.getCreateResolutionStep.resolutionDate
     this.resolutionText = this.getCreateResolutionStep.resolutionText
     this.signingPerson = this.getCreateResolutionStep.signingPerson || EmptyPerson
@@ -687,17 +694,17 @@ ul {
   margin-left: 0.5rem;
 }
 
-.upload-resolution-summary-header {
+.complete-resolution-summary-header {
   display: flex;
   background-color: $BCgovBlue5O;
   padding: 1.25rem;
 
-  .upload-resolution-title {
+  .complete-resolution-title {
     color: $gray9;
   }
 }
 
-.upload-resolution-error-message {
+.complete-resolution-error-message {
   padding-top: 1.25rem;
   padding-left: 1.25rem;
   color: $app-blue;
@@ -751,7 +758,7 @@ ul {
   height: 2.5rem !important;
 }
 
-.upload-resolution-vcard-title {
+.complete-resolution-vcard-title {
   padding-top: 1px;
   font-size: 17px;
   font-weight: bold;

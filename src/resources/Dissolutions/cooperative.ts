@@ -180,10 +180,10 @@ export const CooperativeDissolutionResource: DissolutionResourceIF = {
     },
     resolutionSignatureSection: {
       header: '5. Resolution Signature',
-      description: 'Enter the full name of the person who signed the special resolution and the date they signed it'
+      description: 'Enter the full name of the person who signed the special resolution and the date they signed it.'
     },
     confirmSection: {
-      header: '6. Confirm Special Resolution Form Content',
+      header: '6. Confirm Special Resolution Content',
       text: [
         {
           type: ItemTypes.TEXT,

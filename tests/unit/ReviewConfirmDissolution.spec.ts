@@ -1,4 +1,4 @@
-import { shallowWrapperFactory } from '../jest-wrapper-factory'
+import {shallowWrapperFactory, wrapperFactory} from '../jest-wrapper-factory'
 import { getVuexStore } from '@/store'
 import ReviewConfirmDissolution from '@/views/Dissolutions/ReviewConfirmDissolution.vue'
 import { DissolutionResources } from '@/resources/'
@@ -87,14 +87,13 @@ for (const test of reviewConfirmTestCases) {
     })
 
     it('displays Resolution section', () => {
-      wrapper = shallowWrapperFactory(
+      wrapper = wrapperFactory(
         ReviewConfirmDissolution,
         null,
         { entityType: test.entityType },
         null,
         DissolutionResources
       )
-
       expect(wrapper.find('#resolution-summary').exists()).toBe(true)
     })
 
