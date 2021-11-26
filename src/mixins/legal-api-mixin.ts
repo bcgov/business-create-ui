@@ -1,5 +1,5 @@
 // Libraries
-import axios from '@/utils/axios-auth'
+import { axios } from '@/utils'
 import { Component, Vue } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import { NOT_FOUND } from 'http-status-codes'
@@ -128,11 +128,11 @@ export default class LegalApiMixin extends Vue {
   }
 
   /**
-    * Ensure consisent object structure for an incorporation application
+    * Ensure consistent object structure for an incorporation application,
     * whether it contains a Name Request or not, and whether it is an initial
     * draft or it has been previously saved. Object merging does not
-    * work very well otherwise (due to nested properties)
-    * @param filing The filing fetched from legal-api
+    * work very well otherwise due to nested properties.
+    * @param filing the filing fetched from legal-api
     * @returns the filing in safe-empty state if applicable
   */
   formatEmptyFiling (filing: any): IncorporationFilingIF {

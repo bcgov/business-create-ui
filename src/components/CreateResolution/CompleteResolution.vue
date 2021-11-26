@@ -400,7 +400,7 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin, E
       (v: string) =>
         this.validateIsBetweenDates(this.resolutionDateMin,
           this.resolutionDateMax,
-          this.createUtcDateFromStr(v)) ||
+          this.yyyyMmDdToDate(v)) ||
         `Date should be between ${this.resolutionDateMinStr} (incorporation date) and ${this.resolutionDateMaxStr}`
     ]
   }
@@ -414,7 +414,7 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin, E
       (v: string) =>
         this.validateIsBetweenDates(this.signatureDateMin,
           this.signatureDateMax,
-          this.createUtcDateFromStr(v)) ||
+          this.yyyyMmDdToDate(v)) ||
         `Date should be between ${this.signatureDateMinStr} and ${this.signatureDateMaxStr}`
     ]
   }
@@ -457,7 +457,7 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin, E
   /** The minimum date that can be entered (resolution date). */
   private get signatureDateMin (): Date {
     if (this.resolutionDateText) {
-      const resolutionDate = this.createUtcDateFromStr(this.resolutionDateText)
+      const resolutionDate = this.yyyyMmDdToDate(this.resolutionDateText)
       return resolutionDate
     }
     const date = new Date()
