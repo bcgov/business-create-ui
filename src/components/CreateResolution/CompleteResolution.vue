@@ -577,6 +577,9 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin, E
   }
 
   private async onResolutionConfirmedChange (resolutionConfirmed: boolean): Promise<void> {
+    // This is required as there are timing issues between this component and the CompleteResolutionSummary
+    // component.  The CompleteResolutionSummary isn't always able to detect that the confirm checkbox
+    // value has changed without using Vue.nextTick()
     await Vue.nextTick()
     this.setResolution({
       ...this.getCreateResolutionStep,
