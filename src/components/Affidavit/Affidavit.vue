@@ -6,7 +6,7 @@
         <p>Before submitting the voluntary dissolution you must <b>complete and sign</b> an
           <v-tooltip top max-width="15rem" content-class="top-tooltip" transition="fade-transition">
             <template v-slot:activator="{ on }">
-              <span v-on="on" class="dotted-underline"> affidavit </span>
+              <span v-on="on" class="tool-tip dotted-underline"> affidavit </span>
             </template>
             <span>
               Affidavit – A declaration signed by a Commissioner for Taking Oaths.

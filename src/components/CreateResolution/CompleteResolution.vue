@@ -7,8 +7,9 @@
             <span v-for="(partialItem, index) in getCreateResolutionResource.introSection.items" :key="index">
               <span v-if="partialItem.type === ItemTypes.TEXT" v-html="partialItem.value"></span>
               <v-tooltip v-if="partialItem.type === ItemTypes.TOOLTIP"
-                 top max-width="20rem"
-                 content-class="top-tooltip">
+                 top max-width="15rem"
+                 content-class="top-tooltip"
+                 transition="fade-transition">
                   <template v-slot:activator="{ on }">
                     <span v-on="on" class="tool-tip dotted-underline"> {{partialItem.value.label}} </span>
                   </template>
