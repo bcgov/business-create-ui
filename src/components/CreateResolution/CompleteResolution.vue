@@ -366,7 +366,6 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin, E
 
   // Validation Rules
   readonly Rules = Rules
-  readonly RuleHelpers = RuleHelpers
 
   private get documentURL (): string {
     const docUrl = sessionStorage.getItem('BASE_URL') +
