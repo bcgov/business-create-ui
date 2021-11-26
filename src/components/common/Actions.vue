@@ -109,6 +109,7 @@ import { NameRequestStates, RouteNames } from '@/enums'
 
 @Component({})
 export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, LegalApiMixin, NameRequestMixin) {
+  @Getter getEntityIdentifier!: string
   @Getter isApplicationValid!: boolean
   @Getter isEntityType!: boolean
   @Getter isShowBackBtn!: boolean
@@ -144,11 +145,6 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
     this.emitGoToDashboard()
   }
 
-  /** The entity or temp registration identifier. */
-  private get entityId (): string {
-    return this.isIncorporationFiling ? this.getTempId : this.getBusinessId
-  }
-
   /**
    * Called when Save button is clicked.
    * @returns a promise (ie, this is an async method)
@@ -164,7 +160,7 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
         ? await this.buildIncorporationFiling()
         : await this.buildDissolutionFiling()
 
-      filingComplete = await this.updateFiling(this.entityId, filing, true)
+      filingComplete = await this.updateFiling(this.getEntityIdentifier, filing, true)
       // clear flag
       this.setHaveChanges(false)
     } catch (error) {
@@ -191,7 +187,7 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
         ? await this.buildIncorporationFiling()
         : await this.buildDissolutionFiling()
 
-      filingComplete = await this.updateFiling(this.entityId, filing, true)
+      filingComplete = await this.updateFiling(this.getEntityIdentifier, filing, true)
       // clear flag
       this.setHaveChanges(false)
     } catch (error) {
@@ -249,7 +245,7 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
           ? await this.buildIncorporationFiling()
           : await this.buildDissolutionFiling()
 
-        filingComplete = await this.updateFiling(this.entityId, filing, false)
+        filingComplete = await this.updateFiling(this.getEntityIdentifier, filing, false)
         // clear flag
         this.setHaveChanges(false)
       } catch (error) {
@@ -266,14 +262,14 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
         // if payment action is required, redirect to Pay URL
         if (isPaymentActionRequired) {
           const authUrl = sessionStorage.getItem('AUTH_WEB_URL')
-          const returnUrl = encodeURIComponent(dashboardUrl + this.getTempId)
+          const returnUrl = encodeURIComponent(dashboardUrl + this.getEntityIdentifier)
           const payUrl = authUrl + 'makepayment/' + paymentToken + '/' + returnUrl
           // assume Pay URL is always reachable
           // otherwise user will have to retry payment later
           window.location.assign(payUrl)
         } else {
           // redirect to Dashboard URL
-          window.location.assign(dashboardUrl + this.getTempId)
+          window.location.assign(dashboardUrl + this.getEntityIdentifier)
         }
       } else {
         const error = new Error('Missing Payment Token')

@@ -49,7 +49,12 @@
           <v-col class="text-truncate">
             <v-icon color="gray9" v-if="isPerson(orgPerson)">mdi-account</v-icon>
             <v-icon color="gray9" v-if="isOrg(orgPerson)">mdi-domain</v-icon>
-            <v-tooltip top :disabled="formatName(orgPerson).length < 25" color="primary" transition="fade-transition">
+            <v-tooltip
+              top
+              :disabled="formatName(orgPerson).length < 25"
+              content-class="top-tooltip"
+              transition="fade-transition"
+            >
               <template v-slot:activator="{ on }">
                 <span v-on="on" class="people-roles-title ml-2"><strong>{{ formatName(orgPerson) }}</strong></span>
               </template>
