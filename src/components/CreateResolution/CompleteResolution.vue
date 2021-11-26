@@ -481,8 +481,8 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin, E
 
   private get resolutionTextRules (): Array<Function> {
     return [
-      v => (v && v.trim().length > 0) || 'Resolution text is required.',
-      v => (v && v.length <= this.MAX_RESOLUTION_TEXT_LENGTH) || 'Maximum characters exceeded.',
+      v => (v && v.trim().length > 0) || 'Resolution text is required',
+      v => (v && v.length <= this.MAX_RESOLUTION_TEXT_LENGTH) || 'Maximum characters exceeded',
       Rules.CommonRules.ALPHA_NUMERIC_AND_STANDARD_SPECIAL_CHARS
     ]
   }
