@@ -1,5 +1,5 @@
 <template>
-  <div id="upload-resolution">
+  <div id="complete-resolution">
     <section class="mt-10">
       <header>
         <h2>{{getCreateResolutionResource.introSection.header}}</h2>
@@ -692,17 +692,17 @@ ul {
   margin-left: 0.5rem;
 }
 
-.upload-resolution-summary-header {
+.complete-resolution-summary-header {
   display: flex;
   background-color: $BCgovBlue5O;
   padding: 1.25rem;
 
-  .upload-resolution-title {
+  .complete-resolution-title {
     color: $gray9;
   }
 }
 
-.upload-resolution-error-message {
+.complete-resolution-error-message {
   padding-top: 1.25rem;
   padding-left: 1.25rem;
   color: $app-blue;
@@ -756,7 +756,7 @@ ul {
   height: 2.5rem !important;
 }
 
-.upload-resolution-vcard-title {
+.complete-resolution-vcard-title {
   padding-top: 1px;
   font-size: 17px;
   font-weight: bold;
