@@ -144,7 +144,7 @@
     </v-card>
 
     <!-- Resolution -->
-    <CompleteResolutionSummary></CompleteResolutionSummary>
+    <CompleteResolutionSummary />
 
     <!-- Affidavit -->
     <v-card flat id="affidavit-summary" class="mt-10">
