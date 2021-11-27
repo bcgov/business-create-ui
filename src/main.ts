@@ -12,6 +12,7 @@ import Affix from 'vue-affix'
 import Vue2Filters from 'vue2-filters' // needed by SbcFeeSummary
 import * as Sentry from '@sentry/browser'
 import * as Integrations from '@sentry/integrations'
+import VueObserveVisibility from 'vue-observe-visibility' // added to help with rendering of text area heights properly
 
 // Styles
 // NB: order matters - do not change
@@ -34,6 +35,7 @@ Vue.use(Vuetify)
 Vue.use(Affix)
 Vue.use(Vuelidate)
 Vue.use(Vue2Filters)
+Vue.use(VueObserveVisibility)
 
 // main code
 async function start () {

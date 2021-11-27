@@ -153,6 +153,7 @@
                               v-model="resolutionText"
                               :rules="resolutionTextRules"
                               @change="onResolutionTextChanged"
+                              v-observe-visibility="onResolutionVisibilityChanged"
                   />
                 </v-form>
               </v-col>
@@ -647,11 +648,25 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin, E
   }
 
   private onResolutionTextChanged (val: string) {
+    console.log('onResolutionTextChanged')
     this.setResolution({
       ...this.getCreateResolutionStep,
       resolutionText: val
     })
     this.updateResolutionStepValidationDetail()
+  }
+
+  private forceRenderResolutionText (): void {
+    this.$refs.resolutionTextRef.calculateInputHeight()
+  }
+
+  // Previously, the resolution text area would not render to the appropriate height relative to the amount of content
+  // when navigating from another step.  In hooking into the visibility change event on the resolution text area via the
+  // v-observe-visibility property, we are able to force a re-calculation of the text area height when a user navigates
+  // to the complete resolution step from another step for the first time. This results in the text area being rendered
+  // to the appropriate height.
+  private onResolutionVisibilityChanged () {
+    this.forceRenderResolutionText()
   }
 
   @Watch('signingPerson', { deep: true })
