@@ -1,6 +1,13 @@
 // Libraries
+// This polyfill(intersection-observer) was installed as a dev dependency as without it components being tested
+// that use the IntersectionObserver API results in warnings that browser does not support this API.
+// e.g. IntersectionObserver API is not available in your browser.
+//      Please install this polyfill: https://github.com/w3c/IntersectionObserver/tree/master/polyfill
+require('intersection-observer')
 import Vue from 'vue'
 import Vuelidate from 'vuelidate'
+import VueObserveVisibility from 'vue-observe-visibility'
+
 import Vuetify from 'vuetify'
 import VueRouter from 'vue-router'
 import mockRouter from './unit/MockRouter'
@@ -18,6 +25,7 @@ const router = mockRouter.mock()
 
 Vue.use(Vuetify)
 Vue.use(Vuelidate)
+Vue.use(VueObserveVisibility)
 localVue.use(VueRouter)
 
 export const shallowWrapperFactory = (

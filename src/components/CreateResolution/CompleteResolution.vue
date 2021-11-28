@@ -1,9 +1,9 @@
 <template>
   <div id="complete-resolution">
-    <section class="mt-10">
+    <section id="resolution-intro-section" class="mt-10">
       <header>
         <h2>{{getCreateResolutionResource.introSection.header}}</h2>
-        <p>
+        <p class="section-description">
             <span v-for="(partialItem, index) in getCreateResolutionResource.introSection.items" :key="index">
               <span v-if="partialItem.type === ItemTypes.TEXT" v-html="partialItem.value"></span>
               <v-tooltip v-if="partialItem.type === ItemTypes.TOOLTIP"
@@ -72,7 +72,7 @@
       <header id="sample-resolution-header">
         <h2>{{getCreateResolutionResource.sampleFormSection.header}}</h2>
       </header>
-      <p class="mt-2" v-html="getCreateResolutionResource.sampleFormSection.text"></p>
+      <p class="section-description mt-2" v-html="getCreateResolutionResource.sampleFormSection.text"></p>
       <v-card flat id="sample-resolution-card" class="pt-7 pb-5 pl-6">
         <v-row>
           <v-col id="sample-resolution-card-left-col" cols="1" class="pt-6" >
@@ -97,7 +97,7 @@
       <header id="resolution-date-header">
         <h2>{{getCreateResolutionResource.resolutionDateSection.header}}</h2>
       </header>
-      <p class="mt-2">
+      <p class="section-description mt-2">
         {{getCreateResolutionResource.resolutionDateSection.description}}
       </p>
       <div :class="{ 'invalid-section': getShowErrors && !this.isResolutionDateValid }">
@@ -130,7 +130,7 @@
       <header id="resolution-text-header">
         <h2>{{getCreateResolutionResource.resolutionTextSection.header}}</h2>
       </header>
-      <p class="mt-2">
+      <p class="section-description mt-2">
         {{getCreateResolutionResource.resolutionTextSection.description}}
       </p>
       <div :class="{ 'invalid-section': getShowErrors && !this.isResolutionTextValid }">
@@ -167,7 +167,7 @@
       <header id="resolution-signature-info-header">
         <h2>{{getCreateResolutionResource.resolutionSignatureSection.header}}</h2>
       </header>
-      <p class="mt-2">
+      <p class="section-description mt-2">
         {{getCreateResolutionResource.resolutionSignatureSection.description}}
       </p>
       <div :class="{ 'invalid-section': getShowErrors && (!this.isSigningPersonValid || !this.isSigningDateValid) }">
@@ -371,6 +371,11 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin, E
   // Validation Rules
   readonly Rules = Rules
 
+  /** Is True if Jest is running the code. */
+  get isJestRunning (): boolean {
+    return (process.env.JEST_WORKER_ID !== undefined)
+  }
+
   private get documentURL (): string {
     const docUrl = sessionStorage.getItem('BASE_URL') +
       this.getCreateResolutionResource.sampleFormSection.downloadDocPath
@@ -381,6 +386,8 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin, E
     // Note: the image file path did not resolve correctly when using the require function directly.  In order
     // to get the image path resolving correctly, needed to get the image context first and use that to build
     // the final image file path
+
+    if (this.isJestRunning) { return '' }
     const images = require.context('@/assets/images/', false, /\.png$/)
     return images('./' + this.getCreateResolutionResource.sampleFormSection.previewImagePath)
   }

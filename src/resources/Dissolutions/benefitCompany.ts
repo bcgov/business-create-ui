@@ -99,7 +99,7 @@ export const BenefitCompanyDissolutionResource: DissolutionResourceIF = {
               type: ItemTypes.BULLET_LIST,
               bulletListType: BulletListTypes.CIRCLE_SMALL,
               value: [
-                'The Company has no assets.',
+                'The Company has no assets,',
                 `The Company has no liabilities or has made adequate provision for the payment of each of its
                  liabilities, and`,
                 'The Company has not issued any shares.'
