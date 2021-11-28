@@ -171,14 +171,14 @@
         {{getCreateResolutionResource.resolutionSignatureSection.description}}
       </p>
       <div :class="{ 'invalid-section': getShowErrors && (!this.isSigningPersonValid || !this.isSigningDateValid) }">
-        <v-card flat id="-resolution-signature-card" class="pt-7 pb-5 pl-6 pr-6">
+        <v-card flat id="-resolution-signature-card" class="pt-7 pb-5 pl-6 pr-8">
           <v-row no-gutters>
             <v-col id="resolution-signature-card-left-col" cols="2" class="pt-7" >
               <v-card-title class="resolution-signature-vcard-title pl-2 pr-0">
                 Signing Party
               </v-card-title>
             </v-col>
-            <v-col id="resolution-signature-card-right-col" cols="10" class="pt-6 pl-6 pr-5">
+            <v-col id="resolution-signature-card-right-col" cols="10" class="pt-6 pl-6">
               <v-form ref="signingPersonFormRef">
                 <div class="form__row three-column">
                   <v-text-field
@@ -218,7 +218,7 @@
                 Date Signed
               </v-card-title>
             </v-col>
-            <v-col id="resolution-signature-card-right-col" cols="10" class="pt-4 pl-6 pr-5">
+            <v-col id="resolution-signature-card-right-col" cols="10" class="pt-4 pl-6">
               <date-picker
                 ref="signatureDatePickerRef"
                 title="Date Signed"
