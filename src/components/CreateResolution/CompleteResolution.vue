@@ -105,7 +105,7 @@
           <v-row>
             <v-col id="resolution-date-card-left-col" cols="2" class="pt-6" >
               <v-card-title class="resolution-date-vcard-title pl-1 pr-0">
-                <div>Resolution Date</div>
+                Resolution Date
               </v-card-title>
             </v-col>
             <v-col id="resolution-date-card-right-col" cols="10" class="pt-6 pl-6 pr-5">
@@ -139,7 +139,7 @@
             <v-row>
               <v-col id="resolution-text-card-left-col" cols="2" class="pt-6" >
                 <v-card-title class="resolution-text-vcard-title pl-1 pr-0">
-                  <div>{{getCreateResolutionResource.resolutionTextSection.textLabel}}</div>
+                  {{getCreateResolutionResource.resolutionTextSection.textLabel}}
                 </v-card-title>
               </v-col>
               <v-col id="resolution-text-card-right-col" cols="10" class="pt-6 pl-6 pr-5">
@@ -163,15 +163,15 @@
       </div>
     </section>
 
-    <section id="resolution-signatory-info-section" v-if="entityFilter(CorpTypeCd.COOP)" class="mt-10">
-      <header id="resolution-signatory-info-header">
+    <section id="resolution-signature-info-section" v-if="entityFilter(CorpTypeCd.COOP)" class="mt-10">
+      <header id="resolution-signature-info-header">
         <h2>{{getCreateResolutionResource.resolutionSignatureSection.header}}</h2>
       </header>
       <p class="mt-2">
         {{getCreateResolutionResource.resolutionSignatureSection.description}}
       </p>
       <div :class="{ 'invalid-section': getShowErrors && (!this.isSigningPersonValid || !this.isSigningDateValid) }">
-        <v-card flat id="-resolution-signature-card" class="pt-7 pb-5 pl-6 pr-8">
+        <v-card flat id="resolution-signature-card" class="pt-7 pb-5 pl-6 pr-8">
           <v-row no-gutters>
             <v-col id="resolution-signature-card-left-col" cols="2" class="pt-7" >
               <v-card-title class="resolution-signature-vcard-title pl-2 pr-0">
@@ -547,12 +547,12 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin, E
             {
               name: 'signingPersonValid',
               valid: this.isSigningPersonValid,
-              elementId: 'resolution-signatory-info-header'
+              elementId: 'resolution-signature-info-header'
             },
             {
               name: 'signingDateValid',
               valid: this.isSigningDateValid,
-              elementId: 'resolution-signatory-info-header'
+              elementId: 'resolution-signature-info-header'
             },
             {
               name: 'resolutionConfirmed',
@@ -706,6 +706,12 @@ ul {
   color: $gray7;
 }
 
+// Used for title/placeholder text of input fields.  This was required as some input fields require
+// were not using the expected color of $gray7
+::v-deep label,.v-label,theme--light {
+  color: $gray7 !important;
+}
+
 .chk-list-item-txt {
   margin-left: 0.5rem;
 }
@@ -754,6 +760,13 @@ ul {
 
   a {
     text-decoration: none;
+  }
+}
+
+#resolution-text-section {
+  // text area word count counter
+  ::v-deep .v-counter {
+    color: $gray7 !important;
   }
 }
 
@@ -844,6 +857,7 @@ ul {
   padding-top: 1px;
   font-size: 16px;
   font-weight: bold;
+  color: $gray9 !important;
 }
 
 </style>

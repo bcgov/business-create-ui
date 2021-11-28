@@ -452,4 +452,11 @@ ul {
     text-decoration: none;
   }
 }
+
+#upload-affidavit-card {
+    // text area word count counter
+    ::v-deep label,v-label,theme--light {
+      color: $gray7 !important;
+    }
+}
 </style>

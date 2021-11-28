@@ -41,7 +41,7 @@
         </v-container>
       <v-row class="ml-1 mt-3" no-gutters>
         <v-col md="3">
-          <strong>Resolution Date</strong>
+          <label class="font-weight-bold">Resolution Date</label>
         </v-col>
         <v-col md="9" class="ml-n1">
           {{resolutionDate}}
@@ -49,7 +49,7 @@
       </v-row>
       <v-row class="ml-1 mt-5" no-gutters>
         <v-col md="3">
-          <strong>Resolution Text</strong>
+          <label class="font-weight-bold">Resolution Text</label>
         </v-col>
         <v-col md="9" class="ml-n1">
           <v-textarea
@@ -67,7 +67,7 @@
       </v-row>
       <v-row class="ml-1 mt-n1" no-gutters>
         <v-col md="3">
-          <strong>Signing Party</strong>
+          <label class="font-weight-bold">Signing Party</label>
         </v-col>
         <v-col md="9" class="ml-n1">
           {{signingParty}}
@@ -75,7 +75,7 @@
       </v-row>
       <v-row class="ml-1 mt-5" no-gutters>
         <v-col md="3">
-          <strong>Date Signed</strong>
+          <label class="font-weight-bold">Date Signed</label>
         </v-col>
         <v-col md="9" class="ml-n1">
           {{signingDate}}
@@ -225,8 +225,9 @@ export default class CompleteResolutionSummary extends Mixins(DateMixin) {
     padding: 0px !important;
   }
 
-  #resolution-text {
+  ::v-deep #resolution-text {
     margin-top: 0px !important;
+    color: $gray7 !important;
   }
 
   .section-container {
