@@ -707,7 +707,7 @@ ul {
 
 // Used for title/placeholder text of input fields.  This was required as some input fields require
 // were not using the expected color of $gray7
-::v-deep label,.v-label,theme--light {
+::v-deep label.v-label.theme--light {
   color: $gray7 !important;
 }
 

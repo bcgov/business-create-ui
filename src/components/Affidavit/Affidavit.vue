@@ -454,8 +454,8 @@ ul {
 }
 
 #upload-affidavit-card {
-    // text area word count counter
-    ::v-deep label,v-label,theme--light {
+    // file upload input field
+    ::v-deep label.v-label.theme--light {
       color: $gray7 !important;
     }
 }
