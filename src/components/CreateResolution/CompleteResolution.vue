@@ -371,11 +371,6 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin, E
   // Validation Rules
   readonly Rules = Rules
 
-  /** Is True if Jest is running the code. */
-  get isJestRunning (): boolean {
-    return (process.env.JEST_WORKER_ID !== undefined)
-  }
-
   private get documentURL (): string {
     const docUrl = sessionStorage.getItem('BASE_URL') +
       this.getCreateResolutionResource.sampleFormSection.downloadDocPath
