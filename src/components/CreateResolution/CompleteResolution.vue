@@ -657,18 +657,14 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin, E
     this.updateResolutionStepValidationDetail()
   }
 
-  private async reRenderResolutionText (): Promise<void> {
-    this.$refs.resolutionTextRef.calculateInputHeight()
-  }
-
   // Previously, the resolution text area would not render to the appropriate height relative to the amount of content
   // when navigating from another step.  In hooking into the visibility change event on the resolution text area via the
   // v-observe-visibility property, we are able to force a re-calculation of the text area height when a user navigates
   // to the complete resolution step from another step for the first time. This results in the text area being rendered
   // to the appropriate height.
-  private async onResolutionVisibilityChanged (isVisible, entry) {
+  private onResolutionVisibilityChanged (isVisible, entry) {
     if (isVisible) {
-      this.reRenderResolutionText()
+      this.$refs.resolutionTextRef.calculateInputHeight()
     }
   }
 
