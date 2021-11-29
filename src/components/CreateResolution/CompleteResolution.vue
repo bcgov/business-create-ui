@@ -111,7 +111,8 @@
               <date-picker
                 ref="resolutionDatePickerRef"
                 title="Resolution Date"
-                nudge-right="40"
+                :nudgeRight="40"
+                :nudgeTop="85"
                 :initialValue="resolutionDateText"
                 :minDate="resolutionDateMinStr"
                 :maxDate="resolutionDateMaxStr"
@@ -219,7 +220,8 @@
               <date-picker
                 ref="signatureDatePickerRef"
                 title="Date Signed"
-                nudge-right="40"
+                :nudgeRight="40"
+                :nudgeTop="85"
                 :initialValue="signatureDateText"
                 :minDate="signatureDateMinStr"
                 :maxDate="signatureDateMaxStr"
@@ -395,8 +397,7 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin, E
   /** Validations rules for resolution date field. */
   get resolutionDateRules (): Array<Function> {
     return [
-      Rules.DateRules.REQUIRED,
-      Rules.DateRules.EXPECTED_DATE_FORMAT,
+      Rules.DateRules.RESOLUTION_REQUIRED,
       (v: string) =>
         RuleHelpers.DateRuleHelpers
           .isBetweenDates(this.resolutionDateMin,
@@ -409,8 +410,7 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin, E
   /** Validations rules for signing date field. */
   get signatureDateRules (): Array<Function> {
     return [
-      Rules.DateRules.REQUIRED,
-      Rules.DateRules.EXPECTED_DATE_FORMAT,
+      Rules.DateRules.SIGNATURE_REQUIRED,
       (v: string) =>
         RuleHelpers.DateRuleHelpers
           .isBetweenDates(this.signatureDateMin,

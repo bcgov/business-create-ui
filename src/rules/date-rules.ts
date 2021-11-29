@@ -3,6 +3,8 @@
 // and matching what date rules to use.
 export const DateRules = {
   REQUIRED: (v: string) => !!v || 'Select date',
+  RESOLUTION_REQUIRED: (v: string) => !!v || 'Resolution date is required',
+  SIGNATURE_REQUIRED: (v: string) => !!v || 'Signature date is required',
   EXPECTED_DATE_FORMAT: (v: string) => {
     const expectedDateFormat = /^(19|20)\d\d[-.](0[1-9]|1[012])[-.](0[1-9]|[12][0-9]|3[01])$/
     return expectedDateFormat.test(v) || 'Date format should be YYYY-MM-DD'
