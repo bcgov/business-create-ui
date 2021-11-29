@@ -61,8 +61,8 @@
             filled
             background-color="white"
             v-model="resolutionText"
-            v-observe-visibility="onResolutionVisibilityChanged">
-          </v-textarea>
+            v-observe-visibility="{ callback: onResolutionVisibilityChanged, throttle: 500}"
+          />
         </v-col>
       </v-row>
       <v-row class="ml-1 mt-n1" no-gutters>
@@ -95,7 +95,7 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Mixins } from 'vue-property-decorator'
+import { Component, Mixins, Vue } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 import { DateMixin } from '@/mixins'
 
@@ -161,7 +161,8 @@ export default class CompleteResolutionSummary extends Mixins(DateMixin) {
     return result
   }
 
-  private forceRenderResolutionText (): void {
+  private async forceRenderResolutionText (): Promise<void> {
+    await Vue.nextTick()
     this.$refs.resolutionTextRef.calculateInputHeight()
   }
 
@@ -170,8 +171,11 @@ export default class CompleteResolutionSummary extends Mixins(DateMixin) {
   // v-observe-visibility property, we are able to force a re-calculation of the text area height when a user navigates
   // to the complete resolution summary step from another step for the first time. This results in the text area being
   // rendered to the appropriate height.
-  private onResolutionVisibilityChanged () {
-    this.forceRenderResolutionText()
+  private async onResolutionVisibilityChanged (isVisible, entry) {
+    await Vue.nextTick()
+    if (isVisible) {
+      this.forceRenderResolutionText()
+    }
   }
 }
 </script>

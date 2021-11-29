@@ -153,7 +153,7 @@
                               v-model="resolutionText"
                               :rules="resolutionTextRules"
                               @change="onResolutionTextChanged"
-                              v-observe-visibility="onResolutionVisibilityChanged"
+                              v-observe-visibility="{ callback: onResolutionVisibilityChanged, throttle: 500}"
                   />
                 </v-form>
               </v-col>
@@ -655,7 +655,6 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin, E
   }
 
   private onResolutionTextChanged (val: string) {
-    console.log('onResolutionTextChanged')
     this.setResolution({
       ...this.getCreateResolutionStep,
       resolutionText: val
@@ -663,7 +662,8 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin, E
     this.updateResolutionStepValidationDetail()
   }
 
-  private forceRenderResolutionText (): void {
+  private async forceRenderResolutionText (): Promise<void> {
+    await Vue.nextTick()
     this.$refs.resolutionTextRef.calculateInputHeight()
   }
 
@@ -672,8 +672,11 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin, E
   // v-observe-visibility property, we are able to force a re-calculation of the text area height when a user navigates
   // to the complete resolution step from another step for the first time. This results in the text area being rendered
   // to the appropriate height.
-  private onResolutionVisibilityChanged () {
-    this.forceRenderResolutionText()
+  private async onResolutionVisibilityChanged (isVisible, entry) {
+    await Vue.nextTick()
+    if (isVisible) {
+      this.forceRenderResolutionText()
+    }
   }
 
   @Watch('signingPerson', { deep: true })
