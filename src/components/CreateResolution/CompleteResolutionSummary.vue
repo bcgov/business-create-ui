@@ -137,7 +137,7 @@ export default class CompleteResolutionSummary extends Mixins(DateMixin) {
     return '(Not Entered)'
   }
 
-  @Watch('getCreateResolutionStep.resolutionText')
+  @Watch('resolutionText')
   private onResolutionTextChanged (): void {
     this.resolutionTextHeightUpdateRequired = true
   }
