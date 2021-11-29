@@ -153,7 +153,7 @@
                               v-model="resolutionText"
                               :rules="resolutionTextRules"
                               @change="onResolutionTextChanged"
-                              v-observe-visibility="{ callback: onResolutionVisibilityChanged, throttle: 500}"
+                              v-observe-visibility="{ callback: onResolutionVisibilityChanged, once: true }"
                   />
                 </v-form>
               </v-col>
@@ -662,8 +662,7 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin, E
     this.updateResolutionStepValidationDetail()
   }
 
-  private async forceRenderResolutionText (): Promise<void> {
-    await Vue.nextTick()
+  private async reRenderResolutionText (): Promise<void> {
     this.$refs.resolutionTextRef.calculateInputHeight()
   }
 
@@ -673,9 +672,8 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin, E
   // to the complete resolution step from another step for the first time. This results in the text area being rendered
   // to the appropriate height.
   private async onResolutionVisibilityChanged (isVisible, entry) {
-    await Vue.nextTick()
     if (isVisible) {
-      this.forceRenderResolutionText()
+      this.reRenderResolutionText()
     }
   }
 

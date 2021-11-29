@@ -61,7 +61,7 @@
             filled
             background-color="white"
             v-model="resolutionText"
-            v-observe-visibility="{ callback: onResolutionVisibilityChanged, throttle: 500}"
+            v-observe-visibility="{ callback: onResolutionVisibilityChanged}"
           />
         </v-col>
       </v-row>
@@ -95,7 +95,7 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Mixins, Vue } from 'vue-property-decorator'
+import { Component, Mixins, Vue, Watch } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 import { DateMixin } from '@/mixins'
 
@@ -109,6 +109,9 @@ export default class CompleteResolutionSummary extends Mixins(DateMixin) {
   $refs!: {
     resolutionTextRef: FormIF,
   }
+
+  // initialize to true so resolution text height will right height on initial load
+  private resolutionTextHeightUpdateRequired = true
 
   @Getter getCreateResolutionStep!: CreateResolutionIF
   @Getter getCreateResolutionResource!: CreateResolutionResourceIF
@@ -132,6 +135,11 @@ export default class CompleteResolutionSummary extends Mixins(DateMixin) {
       return resolutionText
     }
     return '(Not Entered)'
+  }
+
+  @Watch('getCreateResolutionStep.resolutionText')
+  private onResolutionTextChanged (): void {
+    this.resolutionTextHeightUpdateRequired = true
   }
 
   get signingParty (): string {
@@ -161,8 +169,8 @@ export default class CompleteResolutionSummary extends Mixins(DateMixin) {
     return result
   }
 
-  private async forceRenderResolutionText (): Promise<void> {
-    await Vue.nextTick()
+  private async reRenderResolutionText (): Promise<void> {
+    this.resolutionTextHeightUpdateRequired = false
     this.$refs.resolutionTextRef.calculateInputHeight()
   }
 
@@ -172,9 +180,8 @@ export default class CompleteResolutionSummary extends Mixins(DateMixin) {
   // to the complete resolution summary step from another step for the first time. This results in the text area being
   // rendered to the appropriate height.
   private async onResolutionVisibilityChanged (isVisible, entry) {
-    await Vue.nextTick()
-    if (isVisible) {
-      this.forceRenderResolutionText()
+    if (isVisible && this.resolutionTextHeightUpdateRequired) {
+      this.reRenderResolutionText()
     }
   }
 }
