@@ -17,7 +17,7 @@ import { IncorporationResources } from '@/resources'
 // that use the IntersectionObserver API results in warnings that browser does not support this API.
 // e.g. IntersectionObserver API is not available in your browser.
 //      Please install this polyfill: https://github.com/w3c/IntersectionObserver/tree/master/polyfill
-require('intersection-observer')
+import 'intersection-observer'
 
 const vuetify = new Vuetify({})
 const localVue = createLocalVue()
