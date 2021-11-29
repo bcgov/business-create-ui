@@ -406,8 +406,8 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin, E
         RuleHelpers.DateRuleHelpers
           .isBetweenDates(this.resolutionDateMin,
             this.resolutionDateMax,
-            this.yyyyMmDdToDate(v)) ||
-          `Date should be between ${this.resolutionDateMinStr} (incorporation date) and ${this.resolutionDateMaxStr}`
+            v) ||
+        `Date should be between ${this.resolutionDateMinStr} (incorporation date) and ${this.resolutionDateMaxStr}`
     ]
   }
 
@@ -419,8 +419,8 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin, E
         RuleHelpers.DateRuleHelpers
           .isBetweenDates(this.signatureDateMin,
             this.signatureDateMax,
-            this.yyyyMmDdToDate(v)) ||
-          `Date should be between ${this.signatureDateMinStr} and ${this.signatureDateMaxStr}`
+            v) ||
+        `Date should be between ${this.signatureDateMinStr} and ${this.signatureDateMaxStr}`
     ]
   }
 
