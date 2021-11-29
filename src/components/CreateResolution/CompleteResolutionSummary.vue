@@ -41,7 +41,7 @@
         </v-container>
       <v-row class="ml-1 mt-3" no-gutters>
         <v-col md="3">
-          <strong>Resolution Date</strong>
+          <label class="font-weight-bold">Resolution Date</label>
         </v-col>
         <v-col md="9" class="ml-n1">
           {{resolutionDate}}
@@ -49,25 +49,25 @@
       </v-row>
       <v-row class="ml-1 mt-5" no-gutters>
         <v-col md="3">
-          <strong>Resolution Text</strong>
+          <label class="font-weight-bold">Resolution Text</label>
         </v-col>
         <v-col md="9" class="ml-n1">
-          <v-lazy>
-            <v-textarea
-              id="resolution-text"
-              rows="1"
-              auto-grow
-              readonly
-              filled
-              background-color="white"
-              v-model="resolutionText">
-            </v-textarea>
-          </v-lazy>
+          <v-textarea
+            ref="resolutionTextRef"
+            id="resolution-text"
+            rows="1"
+            auto-grow
+            readonly
+            filled
+            background-color="white"
+            v-model="resolutionText"
+            v-observe-visibility="{ callback: onResolutionVisibilityChanged}"
+          />
         </v-col>
       </v-row>
-      <v-row class="ml-1 mt-3" no-gutters>
+      <v-row class="ml-1 mt-n1" no-gutters>
         <v-col md="3">
-          <strong>Signing Party</strong>
+          <label class="font-weight-bold">Signing Party</label>
         </v-col>
         <v-col md="9" class="ml-n1">
           {{signingParty}}
@@ -75,7 +75,7 @@
       </v-row>
       <v-row class="ml-1 mt-5" no-gutters>
         <v-col md="3">
-          <strong>Date Signed</strong>
+          <label class="font-weight-bold">Date Signed</label>
         </v-col>
         <v-col md="9" class="ml-n1">
           {{signingDate}}
@@ -95,16 +95,24 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Mixins } from 'vue-property-decorator'
+import { Component, Mixins, Vue, Watch } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 import { DateMixin } from '@/mixins'
 
 // Enums
 import { RouteNames } from '@/enums'
-import { CreateResolutionIF, CreateResolutionResourceIF } from '@/interfaces'
+import { CreateResolutionIF, CreateResolutionResourceIF, FormIF } from '@/interfaces'
 
 @Component({})
 export default class CompleteResolutionSummary extends Mixins(DateMixin) {
+  // Refs
+  $refs!: {
+    resolutionTextRef: FormIF,
+  }
+
+  // initialize to true so resolution text height will right height on initial load
+  private resolutionTextHeightUpdateRequired = true
+
   @Getter getCreateResolutionStep!: CreateResolutionIF
   @Getter getCreateResolutionResource!: CreateResolutionResourceIF
   @Getter isBaseCompany!: boolean
@@ -127,6 +135,11 @@ export default class CompleteResolutionSummary extends Mixins(DateMixin) {
       return resolutionText
     }
     return '(Not Entered)'
+  }
+
+  @Watch('resolutionText')
+  private onResolutionTextChanged (): void {
+    this.resolutionTextHeightUpdateRequired = true
   }
 
   get signingParty (): string {
@@ -155,6 +168,18 @@ export default class CompleteResolutionSummary extends Mixins(DateMixin) {
     const result = validationItemsDetails.length === invalidValidationItems.length
     return result
   }
+
+  // Previously, the resolution text area would not render to the appropriate height relative to the amount of content
+  // when navigating from another step.  In hooking into the visibility change event on the resolution text area via the
+  // v-observe-visibility property, we are able to force a re-calculation of the text area height when a user navigates
+  // to the complete resolution summary step from another step for the first time. This results in the text area being
+  // rendered to the appropriate height.
+  private onResolutionVisibilityChanged (isVisible, entry) {
+    if (isVisible && this.resolutionTextHeightUpdateRequired) {
+      this.resolutionTextHeightUpdateRequired = false
+      this.$refs.resolutionTextRef.calculateInputHeight()
+    }
+  }
 }
 </script>
 
@@ -168,14 +193,48 @@ export default class CompleteResolutionSummary extends Mixins(DateMixin) {
     border-style: None !important;
   }
 
+  // remove extra bottom and top margins from text area
+  ::v-deep .v-text-field.v-text-field--enclosed .v-text-field__details {
+    margin-bottom: 0px !important;
+  }
+
+  ::v-deep .v-input__slot {
+    margin-bottom: 0px !important
+  }
+
+  ::v-deep .v-textarea.v-text-field--box .v-text-field__prefix, .v-textarea.v-text-field--box textarea,
+  .v-textarea.v-text-field--enclosed .v-text-field__prefix, .v-textarea.v-text-field--enclosed textarea {
+    margin-top: 0px !important;
+  }
+
+  ::v-deep .v-textarea.v-text-field--enclosed.v-text-field--single-line:not(.v-input--dense) textarea {
+    margin-top: 0px !important;
+  }
+
+  // remove min-height requirements for text area
+  ::v-deep input__slot, .v-text-field--outlined > .v-input__control > .v-input__slot {
+    min-height: 0px !important;
+  }
+
+  ::v-deep .v-text-field--filled > .v-input__control > .v-input__slot, .v-text-field--full-width > .v-input__control >
+  .v-input__slot, .v-text-field--outlined > .v-input__control > .v-input__slot {
+    min-height: 0px !important;
+  }
+
+  // set line-height for text area such that it lines with label text
+  ::v-deep .v-textarea textarea {
+    line-height: 1.45rem !important;
+  }
+
   // remove text area padding
   ::v-deep .v-text-field.v-text-field--enclosed:not(.v-text-field--rounded) > .v-input__control >
   .v-input__slot, .v-text-field.v-text-field--enclosed .v-text-field__details {
     padding: 0px !important;
   }
 
-  #resolution-text {
+  ::v-deep #resolution-text {
     margin-top: 0px !important;
+    color: $gray7 !important;
   }
 
   .section-container {

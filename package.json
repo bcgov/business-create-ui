@@ -1,6 +1,6 @@
 {
   "name": "business-create-ui",
-  "version": "3.0.32",
+  "version": "3.0.33",
   "private": true,
   "appName": "Create UI",
   "sbcName": "SBC Common Components",
@@ -37,6 +37,7 @@
     "uuid": "^8.3.1",
     "vue": "2.6.12",
     "vue-affix": "^0.5.2",
+    "vue-observe-visibility": "^1.0.0",
     "vue-router": "^3.4.3",
     "vue-the-mask": "^0.11.1",
     "vue2-filters": "^0.10.0",
@@ -62,6 +63,7 @@
     "eslint": "^6.8.0",
     "eslint-plugin-vue": "^6.2.2",
     "flush-promises": "^1.0.2",
+    "intersection-observer": "^0.12.0",
     "sass": "^1.26.10",
     "sass-loader": "^8.0.2",
     "sinon": "^9.0.3",

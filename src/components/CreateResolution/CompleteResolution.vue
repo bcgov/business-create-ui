@@ -1,14 +1,15 @@
 <template>
   <div id="complete-resolution">
-    <section class="mt-10">
+    <section id="resolution-intro-section" class="mt-10">
       <header>
         <h2>{{getCreateResolutionResource.introSection.header}}</h2>
-        <p>
+        <p class="section-description">
             <span v-for="(partialItem, index) in getCreateResolutionResource.introSection.items" :key="index">
               <span v-if="partialItem.type === ItemTypes.TEXT" v-html="partialItem.value"></span>
               <v-tooltip v-if="partialItem.type === ItemTypes.TOOLTIP"
-                 top max-width="20rem"
-                 content-class="top-tooltip">
+                 top max-width="15rem"
+                 content-class="top-tooltip"
+                 transition="fade-transition">
                   <template v-slot:activator="{ on }">
                     <span v-on="on" class="tool-tip dotted-underline"> {{partialItem.value.label}} </span>
                   </template>
@@ -71,7 +72,7 @@
       <header id="sample-resolution-header">
         <h2>{{getCreateResolutionResource.sampleFormSection.header}}</h2>
       </header>
-      <p class="mt-2" v-html="getCreateResolutionResource.sampleFormSection.text"></p>
+      <p class="section-description mt-2" v-html="getCreateResolutionResource.sampleFormSection.text"></p>
       <v-card flat id="sample-resolution-card" class="pt-7 pb-5 pl-6">
         <v-row>
           <v-col id="sample-resolution-card-left-col" cols="1" class="pt-6" >
@@ -96,7 +97,7 @@
       <header id="resolution-date-header">
         <h2>{{getCreateResolutionResource.resolutionDateSection.header}}</h2>
       </header>
-      <p class="mt-2">
+      <p class="section-description mt-2">
         {{getCreateResolutionResource.resolutionDateSection.description}}
       </p>
       <div :class="{ 'invalid-section': getShowErrors && !this.isResolutionDateValid }">
@@ -104,7 +105,7 @@
           <v-row>
             <v-col id="resolution-date-card-left-col" cols="2" class="pt-6" >
               <v-card-title class="resolution-date-vcard-title pl-1 pr-0">
-                <div>Resolution Date</div>
+                Resolution Date
               </v-card-title>
             </v-col>
             <v-col id="resolution-date-card-right-col" cols="10" class="pt-6 pl-6 pr-5">
@@ -129,7 +130,7 @@
       <header id="resolution-text-header">
         <h2>{{getCreateResolutionResource.resolutionTextSection.header}}</h2>
       </header>
-      <p class="mt-2">
+      <p class="section-description mt-2">
         {{getCreateResolutionResource.resolutionTextSection.description}}
       </p>
       <div :class="{ 'invalid-section': getShowErrors && !this.isResolutionTextValid }">
@@ -138,7 +139,7 @@
             <v-row>
               <v-col id="resolution-text-card-left-col" cols="2" class="pt-6" >
                 <v-card-title class="resolution-text-vcard-title pl-1 pr-0">
-                  <div>{{getCreateResolutionResource.resolutionTextSection.textLabel}}</div>
+                  {{getCreateResolutionResource.resolutionTextSection.textLabel}}
                 </v-card-title>
               </v-col>
               <v-col id="resolution-text-card-right-col" cols="10" class="pt-6 pl-6 pr-5">
@@ -152,6 +153,7 @@
                               v-model="resolutionText"
                               :rules="resolutionTextRules"
                               @change="onResolutionTextChanged"
+                              v-observe-visibility="{ callback: onResolutionVisibilityChanged, once: true }"
                   />
                 </v-form>
               </v-col>
@@ -161,22 +163,22 @@
       </div>
     </section>
 
-    <section id="resolution-signatory-info-section" v-if="entityFilter(CorpTypeCd.COOP)" class="mt-10">
-      <header id="resolution-signatory-info-header">
+    <section id="resolution-signature-info-section" v-if="entityFilter(CorpTypeCd.COOP)" class="mt-10">
+      <header id="resolution-signature-info-header">
         <h2>{{getCreateResolutionResource.resolutionSignatureSection.header}}</h2>
       </header>
-      <p class="mt-2">
+      <p class="section-description mt-2">
         {{getCreateResolutionResource.resolutionSignatureSection.description}}
       </p>
       <div :class="{ 'invalid-section': getShowErrors && (!this.isSigningPersonValid || !this.isSigningDateValid) }">
-        <v-card flat id="-resolution-signature-card" class="pt-7 pb-5 pl-6 pr-6">
+        <v-card flat id="resolution-signature-card" class="pt-7 pb-5 pl-6 pr-8">
           <v-row no-gutters>
             <v-col id="resolution-signature-card-left-col" cols="2" class="pt-7" >
               <v-card-title class="resolution-signature-vcard-title pl-2 pr-0">
                 Signing Party
               </v-card-title>
             </v-col>
-            <v-col id="resolution-signature-card-right-col" cols="10" class="pt-6 pl-6 pr-5">
+            <v-col id="resolution-signature-card-right-col" cols="10" class="pt-6 pl-6">
               <v-form ref="signingPersonFormRef">
                 <div class="form__row three-column">
                   <v-text-field
@@ -216,7 +218,7 @@
                 Date Signed
               </v-card-title>
             </v-col>
-            <v-col id="resolution-signature-card-right-col" cols="10" class="pt-4 pl-6 pr-5">
+            <v-col id="resolution-signature-card-right-col" cols="10" class="pt-4 pl-6">
               <date-picker
                 ref="signatureDatePickerRef"
                 title="Date Signed"
@@ -379,6 +381,8 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin, E
     // Note: the image file path did not resolve correctly when using the require function directly.  In order
     // to get the image path resolving correctly, needed to get the image context first and use that to build
     // the final image file path
+
+    if (this.isJestRunning) { return '' }
     const images = require.context('@/assets/images/', false, /\.png$/)
     return images('./' + this.getCreateResolutionResource.sampleFormSection.previewImagePath)
   }
@@ -545,12 +549,12 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin, E
             {
               name: 'signingPersonValid',
               valid: this.isSigningPersonValid,
-              elementId: 'resolution-signatory-info-header'
+              elementId: 'resolution-signature-info-header'
             },
             {
               name: 'signingDateValid',
               valid: this.isSigningDateValid,
-              elementId: 'resolution-signatory-info-header'
+              elementId: 'resolution-signature-info-header'
             },
             {
               name: 'resolutionConfirmed',
@@ -653,6 +657,17 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin, E
     this.updateResolutionStepValidationDetail()
   }
 
+  // Previously, the resolution text area would not render to the appropriate height relative to the amount of content
+  // when navigating from another step.  In hooking into the visibility change event on the resolution text area via the
+  // v-observe-visibility property, we are able to force a re-calculation of the text area height when a user navigates
+  // to the complete resolution step from another step for the first time. This results in the text area being rendered
+  // to the appropriate height.
+  private onResolutionVisibilityChanged (isVisible, entry) {
+    if (isVisible) {
+      this.$refs.resolutionTextRef.calculateInputHeight()
+    }
+  }
+
   @Watch('signingPerson', { deep: true })
   private async onSigningPersonChanged (): Promise<void> {
     if (this.isTypeCoop) {
@@ -688,6 +703,12 @@ header {
 ul {
   list-style: none;
   color: $gray7;
+}
+
+// Used for title/placeholder text of input fields.  This was required as some input fields require
+// were not using the expected color of $gray7
+::v-deep label.v-label.theme--light {
+  color: $gray7 !important;
 }
 
 .chk-list-item-txt {
@@ -738,6 +759,13 @@ ul {
 
   a {
     text-decoration: none;
+  }
+}
+
+#resolution-text-section {
+  // text area word count counter
+  ::v-deep .v-counter {
+    color: $gray7 !important;
   }
 }
 
@@ -828,6 +856,7 @@ ul {
   padding-top: 1px;
   font-size: 16px;
   font-weight: bold;
+  color: $gray9 !important;
 }
 
 </style>
