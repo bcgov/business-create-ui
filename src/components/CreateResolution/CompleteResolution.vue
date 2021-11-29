@@ -397,7 +397,7 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin, E
   /** Validations rules for resolution date field. */
   get resolutionDateRules (): Array<Function> {
     return [
-      Rules.DateRules.RESOLUTION_REQUIRED,
+      (v: string) => !!v || 'Resolution date is required',
       (v: string) =>
         RuleHelpers.DateRuleHelpers
           .isBetweenDates(this.resolutionDateMin,
@@ -410,7 +410,7 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin, E
   /** Validations rules for signing date field. */
   get signatureDateRules (): Array<Function> {
     return [
-      Rules.DateRules.SIGNATURE_REQUIRED,
+      (v: string) => !!v || 'Signature date is required',
       (v: string) =>
         RuleHelpers.DateRuleHelpers
           .isBetweenDates(this.signatureDateMin,
