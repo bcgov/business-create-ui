@@ -1,6 +1,6 @@
 {
   "name": "business-create-ui",
-  "version": "3.0.35",
+  "version": "3.1.0",
   "private": true,
   "appName": "Create UI",
   "sbcName": "SBC Common Components",
@@ -18,7 +18,7 @@
     "@bcrs-shared-components/corp-type-module": "1.0.4",
     "@bcrs-shared-components/court-order-poa": "1.0.11",
     "@bcrs-shared-components/date-picker": "1.1.9",
-    "@bcrs-shared-components/effective-date-time": "1.0.0",
+    "@bcrs-shared-components/effective-date-time": "1.0.2",
     "@bcrs-shared-components/enums": "1.0.14",
     "@bcrs-shared-components/interfaces": "1.0.26",
     "@bcrs-shared-components/staff-payment": "1.0.30",
