@@ -58,7 +58,7 @@ for (const test of reviewConfirmTestCases) {
       expect(wrapper.find('h2').text()).toBe('Review and Confirm')
     })
 
-    it('displays Effective Date Time section only for corp and staff', () => {
+    it('displays Effective Date Time section for corp as both staff and non-staff', () => {
       wrapper = shallowWrapperFactory(
         ReviewConfirmDissolution,
         null,
