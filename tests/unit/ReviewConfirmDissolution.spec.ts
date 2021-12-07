@@ -58,13 +58,12 @@ for (const test of reviewConfirmTestCases) {
       expect(wrapper.find('h2').text()).toBe('Review and Confirm')
     })
 
-    it('displays Effective Date Time section only for corp and staff', () => {
+    it('displays Effective Date Time section for corp', () => {
       wrapper = shallowWrapperFactory(
         ReviewConfirmDissolution,
         null,
         {
-          entityType: test.entityType,
-          tombstone: { authRoles: test.isStaff ? ['staff'] : [] }
+          entityType: test.entityType
         },
         null,
         DissolutionResources
