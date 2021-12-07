@@ -58,6 +58,21 @@ for (const test of reviewConfirmTestCases) {
       expect(wrapper.find('h2').text()).toBe('Review and Confirm')
     })
 
+    it('displays Effective Date Time section for corp', () => {
+      wrapper = shallowWrapperFactory(
+        ReviewConfirmDissolution,
+        null,
+        {
+          entityType: test.entityType
+        },
+        null,
+        DissolutionResources
+      )
+
+      const expected = (test.entityType !== 'CP')
+      expect(wrapper.find('#effective-date-time').exists()).toBe(expected)
+    })
+
     it('displays Affidavit section', () => {
       wrapper = shallowWrapperFactory(
         ReviewConfirmDissolution,
