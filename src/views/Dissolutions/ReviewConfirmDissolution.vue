@@ -114,7 +114,7 @@
                 <p id="effective-date-time-instructions" class="info-text">
                   Select the date and time of the dissolution of the Company. You may select a date
                   up to 10 days in the future (note: there is an <strong>additional fee of
-                  $100.00</strong> to enter a dissolution date in the future).
+                  {{ futureEffectiveFeePrice }}</strong> to enter a dissolution date in the future).
                   Unless a business has special requirements, most businesses select an immediate
                   date and time for dissolution.
                 </p>
@@ -421,6 +421,14 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
       ? this.getAffidavitStep.affidavitDoc?.name
       : 'The affidavit required by section 316(1)(a) of the Business Corporations Act has ' +
         'been completed and deposited in the company\'s records book.'
+  }
+
+  /** The future effective fee price. */
+  get futureEffectiveFeePrice (): string {
+    if (this.getFeePrices?.futureEffectiveFees) {
+      return `$${this.getFeePrices?.futureEffectiveFees.toFixed(2)}`
+    }
+    return 'TBD'
   }
 
   /** The future effective date, in Pacific date-time format. */
