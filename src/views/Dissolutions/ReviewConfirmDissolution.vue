@@ -426,7 +426,7 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
   /** The future effective fee price. */
   get futureEffectiveFeePrice (): string {
     if (this.getFeePrices[0]?.futureEffectiveFees) {
-      return `$${this.getFeePrices[0]?.futureEffectiveFees.toFixed(2)}`
+      return `$${this.getFeePrices[0].futureEffectiveFees.toFixed(2)}`
     }
     return 'TBD'
   }
