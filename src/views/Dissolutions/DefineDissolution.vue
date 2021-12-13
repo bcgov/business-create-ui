@@ -3,9 +3,10 @@
     <v-card outlined class="message-box mt-10">
       <p>
         <strong>Important:</strong> You are about to voluntarily dissolve <strong>{{ entityName }}</strong>.
-        Once this process is completed and the required documents are filed, the Cooperative Association is struck from
-        the register and dissolved, ceasing to be an incorporated cooperative under the Cooperative Association Act. All
-        assets and liabilities must be addressed prior to filing.
+        Once this process is completed and the required documents are filed, the
+        {{ getCorpTypeDescription(this.getEntityType) }} is struck from the register and dissolved, ceasing to be
+        an incorporated {{ entityDesignation }} under the {{ entityAct }}. All assets and liabilities must be addressed
+        prior to filing.
       </p>
     </v-card>
 
@@ -119,6 +120,16 @@ export default class DefineDissolution extends Mixins(CommonMixin, EntityFilterM
   /** The entity name. */
   private get entityName (): string {
     return this.getBusinessLegalName || `${this.getCorpTypeNumberedDescription(this.getEntityType)}`
+  }
+
+  /** The entity designation. */
+  private get entityDesignation (): string {
+    return this.isTypeCoop ? 'Cooperative' : 'Company'
+  }
+
+  /** The entity act. */
+  private get entityAct (): string {
+    return this.isTypeCoop ? 'Cooperative Association Act' : 'Business Corporations Act'
   }
 
   private get showDissolutionStatementErrors (): boolean {

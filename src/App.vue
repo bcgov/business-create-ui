@@ -583,6 +583,7 @@ export default class App extends Mixins(
       const filingFees = []
       for (const filingData of this.getFilingData) {
         await PayServices.fetchFilingFees(filingData.filingTypeCode, filingData.entityType, true)
+          .then(res => filingFees.push(res))
           .catch(error => {
             console.log('Failed to fetch filing fees, error =', error) // eslint-disable-line no-console
             // return a valid fees structure

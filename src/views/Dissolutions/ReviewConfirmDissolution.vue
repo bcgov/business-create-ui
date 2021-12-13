@@ -114,7 +114,7 @@
                 <p id="effective-date-time-instructions" class="info-text">
                   Select the date and time of the dissolution of the Company. You may select a date
                   up to 10 days in the future (note: there is an <strong>additional fee of
-                  {{futureEffectiveFeePrice}}</strong> to enter a dissolution date in the future).
+                  {{ futureEffectiveFeePrice }}</strong> to enter a dissolution date in the future).
                   Unless a business has special requirements, most businesses select an immediate
                   date and time for dissolution.
                 </p>
