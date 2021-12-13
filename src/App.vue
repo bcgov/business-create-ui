@@ -582,13 +582,13 @@ export default class App extends Mixins(
       // fetch and set the fee prices to display in the text
       const filingFees = []
       for (const filingData of this.getFilingData) {
-        const fees = await PayServices.fetchFilingFees(filingData.filingTypeCode, filingData.entityType, true)
+        await PayServices.fetchFilingFees(filingData.filingTypeCode, filingData.entityType, true)
+          .then(res => filingFees.push(res))
           .catch(error => {
             console.log('Failed to fetch filing fees, error =', error) // eslint-disable-line no-console
             // return a valid fees structure
             filingFees.push(cloneDeep(EmptyFees))
           })
-        filingFees.push(fees)
       }
       this.setFeePrices(filingFees)
 
