@@ -40,8 +40,10 @@ export const CooperativeDissolutionResource: DissolutionResourceIF = {
     }
   ],
   custodialRecords: {
-    sectionSubtitle: `Enter the full name, email address, and mailing and delivery address of the Custodian of
-      Records. Addresses must be located in Canada.`,
+    sectionSubtitle: `Enter the name and email address of the Custodian of Records, who will be responsible for the care
+    and custody of the Cooperative's records. Enter the physical delivery address where the dissolved Cooperative's
+    records will be maintained, and the mailing address where the custodian can be reached. These addresses must be
+    located in Canada.`,
     custodianTitle: `Custodian of Records`,
     helpSection: {
       helpText: [

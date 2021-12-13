@@ -13,9 +13,10 @@ export const BenefitCompanyDissolutionResource: DissolutionResourceIF = {
   }],
   detailsTitle: 'Company Details',
   custodialRecords: {
-    sectionSubtitle: `Enter the name (person or corporation or firm), email address and mailing and delivery addresses
-      of the Custodian of Records who will be responsible for the care and custody of the Company's records. Addresses
-      must be located in BC.`,
+    sectionSubtitle: `Enter the name (person or corporation or firm) and email address of the Custodian of Records, who
+    will be responsible for the care and custody of the Company's records. Enter the physical delivery address where the
+     dissolved company records will be maintained, and the mailing address where the custodian can be reached. These
+     addresses must be located in B.C.`,
     custodianTitle: `Custodian of Records`,
     helpSection: {
       helpText: [
