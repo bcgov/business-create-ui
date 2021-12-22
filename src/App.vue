@@ -315,6 +315,7 @@ export default class App extends Mixins(
     ]
 
     // Set base crumbs based on user role
+    // Staff don't want the home landing page and they can't access the Manage Business Dashboard
     if (this.isRoleStaff) {
       crumbs.unshift(StaffDashboardBreadcrumb) // If staff, set StaffDashboard as home crumb
     } else {
