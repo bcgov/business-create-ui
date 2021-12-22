@@ -170,7 +170,8 @@ import {
 import {
   AuthApiMixin,
   CommonMixin,
-  DateMixin, EnumMixin,
+  DateMixin,
+  EnumMixin,
   FilingTemplateMixin,
   LegalApiMixin,
   NameRequestMixin
@@ -190,6 +191,7 @@ import {
   DissolutionResources,
   IncorporationResources,
   dashboardBreadcrumb,
+  homeBreadCrumb,
   staffDashboardBreadcrumb
 } from '@/resources'
 import { AuthServices, PayServices } from '@/services'
@@ -301,6 +303,7 @@ export default class App extends Mixins(
   /** The route breadcrumbs. */
   private get breadcrumbs (): Array<any> {
     return [
+      homeBreadCrumb,
       this.isRoleStaff ? staffDashboardBreadcrumb : dashboardBreadcrumb,
       {
         text: this.legalName || this.getNumberedEntityName,
@@ -308,8 +311,7 @@ export default class App extends Mixins(
       },
       {
         text: this.entityTitle,
-        to: { name: this.$route.name },
-        disabled: true
+        to: { name: this.$route.name }
       }
     ]
   }
