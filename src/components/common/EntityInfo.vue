@@ -1,15 +1,6 @@
 <template>
   <div id="entity-info">
     <v-container>
-      <v-breadcrumbs :items="breadcrumbs" divider=">" class="breadcrumb">
-        <v-breadcrumbs-item
-          slot="item"
-          slot-scope="{ item }"
-          exact
-          :href="item.href">
-          {{ item.text }}
-        </v-breadcrumbs-item>
-      </v-breadcrumbs>
       <v-row no-gutters class="pt-3 pb-3">
         <v-col cols="12" md="9">
           <div id="nr-header" v-show="isEntityType">

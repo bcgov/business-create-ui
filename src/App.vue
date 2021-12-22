@@ -87,6 +87,7 @@
 
     <div class="app-body">
       <main v-if="!isErrorDialog">
+        <BreadCrumb :breadcrumbs="breadcrumbs" />
         <EntityInfo />
 
         <v-container id="container-main" class="py-8">
@@ -150,7 +151,7 @@ import { getFeatureFlag, updateLdUser } from '@/utils'
 
 // Components
 import { PaySystemAlert, SbcHeader, SbcFooter, SbcFeeSummary } from '@/components'
-import { Actions, EntityInfo, Stepper } from '@/components/common'
+import { Actions, BreadCrumb, EntityInfo, Stepper } from '@/components/common'
 import * as Views from '@/views'
 
 // Dialogs, mixins, interfaces, etc
@@ -169,7 +170,7 @@ import {
 import {
   AuthApiMixin,
   CommonMixin,
-  DateMixin,
+  DateMixin, EnumMixin,
   FilingTemplateMixin,
   LegalApiMixin,
   NameRequestMixin
@@ -185,7 +186,12 @@ import {
   IncorporationResourceIF,
   StepIF
 } from '@/interfaces'
-import { DissolutionResources, IncorporationResources } from '@/resources'
+import {
+  DissolutionResources,
+  IncorporationResources,
+  dashboardBreadcrumb,
+  staffDashboardBreadcrumb
+} from '@/resources'
 import { AuthServices, PayServices } from '@/services'
 
 // Enums and Constants
@@ -210,6 +216,7 @@ import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
     EntityInfo,
     Stepper,
     Actions,
+    BreadCrumb,
     NameRequestInvalidErrorDialog,
     AccountAuthorizationDialog,
     FetchErrorDialog,
@@ -227,6 +234,7 @@ export default class App extends Mixins(
   AuthApiMixin,
   CommonMixin,
   DateMixin,
+  EnumMixin,
   FilingTemplateMixin,
   LegalApiMixin,
   NameRequestMixin
@@ -289,6 +297,41 @@ export default class App extends Mixins(
 
   /** The Update Current JS Date timer id. */
   private updateCurrentJsDateId = 0
+
+  /** The route breadcrumbs. */
+  private get breadcrumbs (): Array<any> {
+    return [
+      this.isRoleStaff ? staffDashboardBreadcrumb : dashboardBreadcrumb,
+      {
+        text: this.legalName || this.getNumberedEntityName,
+        href: `${sessionStorage.getItem('DASHBOARD_URL')}${this.getEntityIdentifier}`
+      },
+      {
+        text: this.entityTitle,
+        to: { name: this.$route.name },
+        disabled: true
+      }
+    ]
+  }
+
+  /** The entity application title.  */
+  private get entityTitle (): string {
+    return `${this.getCorpTypeDescription(this.getEntityType)} ${this.getFilingName}`
+  }
+
+  /** The numbered entity name. */
+  private get getNumberedEntityName (): string {
+    return `${this.getCorpTypeNumberedDescription(this.getEntityType)}`
+  }
+
+  private get legalName (): string {
+    switch (this.getFilingType) {
+      case FilingTypes.DISSOLUTION:
+        return this.getBusinessLegalName
+      case FilingTypes.INCORPORATION_APPLICATION:
+        return this.getApprovedName
+    }
+  }
 
   /** Data for fee summary component. */
   private get feeFilingData (): Array<FilingDataIF> {

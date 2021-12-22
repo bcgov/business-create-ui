@@ -64,4 +64,4 @@ export * from './utils-interfaces/validation-detail-interface'
 export * from './utils-interfaces/validation-item-detail-interface'
 
 // external interfaces
-export { EffectiveDateTimeIF, StaffPaymentIF } from '@bcrs-shared-components/interfaces'
+export { BreadcrumbIF, EffectiveDateTimeIF, StaffPaymentIF } from '@bcrs-shared-components/interfaces'

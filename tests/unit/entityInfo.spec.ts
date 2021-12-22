@@ -110,20 +110,6 @@ for (const mock of mockEntityInfo) {
       expect(wrapper.vm.$el.querySelector('#entity-nr-number').textContent)
         .toContain('NR 1234567')
     })
-
-    it('displays the breadcrumb correctly as a named benefit company', async () => {
-      const breadcrumbs = wrapper.findAll('.v-breadcrumbs li')
-
-      const crumb1 = breadcrumbs.at(0)
-      const divider = breadcrumbs.at(1) // Divider is present every odd index
-      const crumb2 = breadcrumbs.at(2)
-      const crumb3 = breadcrumbs.at(4)
-
-      expect(crumb1.text()).toStrictEqual('Manage Businesses Dashboard')
-      expect(divider.text()).toStrictEqual('>')
-      expect(crumb2.text()).toStrictEqual('Xyz Ltd.')
-      expect(crumb3.text()).toStrictEqual(`${mock.description} Incorporation Application`)
-    })
   })
 
   describe(`Entity Info component without an NR for a ${mock.entityType}`, () => {
@@ -151,19 +137,5 @@ for (const mock of mockEntityInfo) {
         expect(wrapper.vm.$el.querySelector('#entity-title').textContent)
           .toContain(`${mock.description} Incorporation Application`)
       })
-
-    it('displays the breadcrumb correctly as a numbered benefit company', async () => {
-      const breadcrumbs = wrapper.findAll('.v-breadcrumbs li')
-
-      const crumb1 = breadcrumbs.at(0)
-      const divider = breadcrumbs.at(1) // Divider is present every odd index
-      const crumb2 = breadcrumbs.at(2)
-      const crumb3 = breadcrumbs.at(4)
-
-      expect(crumb1.text()).toStrictEqual('Manage Businesses Dashboard')
-      expect(divider.text()).toStrictEqual('>')
-      expect(crumb2.text()).toStrictEqual(`${mock.numberedDesc}`)
-      expect(crumb3.text()).toStrictEqual(`${mock.description} Incorporation Application`)
-    })
   })
 }
