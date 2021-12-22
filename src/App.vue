@@ -188,11 +188,11 @@ import {
   StepIF
 } from '@/interfaces'
 import {
+  DashboardBreadcrumb,
   DissolutionResources,
   IncorporationResources,
-  dashboardBreadcrumb,
-  homeBreadCrumb,
-  staffDashboardBreadcrumb
+  HomeBreadCrumb,
+  StaffDashboardBreadcrumb
 } from '@/resources'
 import { AuthServices, PayServices } from '@/services'
 
@@ -303,8 +303,8 @@ export default class App extends Mixins(
   /** The route breadcrumbs. */
   private get breadcrumbs (): Array<any> {
     return [
-      homeBreadCrumb,
-      this.isRoleStaff ? staffDashboardBreadcrumb : dashboardBreadcrumb,
+      HomeBreadCrumb,
+      this.isRoleStaff ? StaffDashboardBreadcrumb : DashboardBreadcrumb,
       {
         text: this.legalName || this.getNumberedEntityName,
         href: `${sessionStorage.getItem('DASHBOARD_URL')}${this.getEntityIdentifier}`

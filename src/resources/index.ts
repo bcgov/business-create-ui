@@ -31,4 +31,4 @@ export const DissolutionResources: Array<DissolutionResourceIF> = [
   UnlimitedDissolutionResource
 ]
 
-export * from './breadCrumbResource'
+export * from './BreadCrumbResource'
