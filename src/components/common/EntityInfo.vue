@@ -91,26 +91,6 @@ export default class EntityInfo extends Mixins(EnumMixin) {
         return this.getApprovedName
     }
   }
-
-  /** The route breadcrumbs. */
-  private get breadcrumbs (): Array<any> {
-    return [
-      {
-        text: 'Manage Businesses Dashboard',
-        disabled: false,
-        href: `${sessionStorage.getItem('AUTH_WEB_URL')}business`
-      },
-      {
-        text: this.legalName || this.getNumberedEntityName,
-        disabled: false,
-        href: `${sessionStorage.getItem('DASHBOARD_URL')}${this.getEntityIdentifier}`
-      },
-      {
-        text: this.entityTitle,
-        disabled: false
-      }
-    ]
-  }
 }
 </script>
 
