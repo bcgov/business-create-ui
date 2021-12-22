@@ -314,10 +314,11 @@ export default class App extends Mixins(
       }
     ]
 
+    // Set base crumbs based on user role
     if (this.isRoleStaff) {
-      crumbs.unshift(StaffDashboardBreadcrumb)
+      crumbs.unshift(StaffDashboardBreadcrumb) // If staff, set StaffDashboard as home crumb
     } else {
-      crumbs.unshift(HomeBreadCrumb, DashboardBreadcrumb)
+      crumbs.unshift(HomeBreadCrumb, DashboardBreadcrumb) // For non-staff, set Home and Dashboard crumbs
     }
 
     return crumbs
