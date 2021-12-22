@@ -1,15 +1,6 @@
 <template>
   <div id="entity-info">
     <v-container>
-      <v-breadcrumbs :items="breadcrumbs" divider=">" class="breadcrumb">
-        <v-breadcrumbs-item
-          slot="item"
-          slot-scope="{ item }"
-          exact
-          :href="item.href">
-          {{ item.text }}
-        </v-breadcrumbs-item>
-      </v-breadcrumbs>
       <v-row no-gutters class="pt-3 pb-3">
         <v-col cols="12" md="9">
           <div id="nr-header" v-show="isEntityType">
@@ -99,26 +90,6 @@ export default class EntityInfo extends Mixins(EnumMixin) {
       case FilingTypes.INCORPORATION_APPLICATION:
         return this.getApprovedName
     }
-  }
-
-  /** The route breadcrumbs. */
-  private get breadcrumbs (): Array<any> {
-    return [
-      {
-        text: 'Manage Businesses Dashboard',
-        disabled: false,
-        href: `${sessionStorage.getItem('AUTH_WEB_URL')}business`
-      },
-      {
-        text: this.legalName || this.getNumberedEntityName,
-        disabled: false,
-        href: `${sessionStorage.getItem('DASHBOARD_URL')}${this.getEntityIdentifier}`
-      },
-      {
-        text: this.entityTitle,
-        disabled: false
-      }
-    ]
   }
 }
 </script>

@@ -30,3 +30,5 @@ export const DissolutionResources: Array<DissolutionResourceIF> = [
   LimitedCompanyDissolutionResource,
   UnlimitedDissolutionResource
 ]
+
+export * from './BreadCrumbResource'

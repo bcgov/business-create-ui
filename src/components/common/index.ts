@@ -6,9 +6,11 @@ import NameRequestInfo from './NameRequestInfo.vue'
 import StaffPayment from './StaffPayment.vue'
 import Stepper from './Stepper.vue'
 import TransactionalFolioNumber from './TransactionalFolioNumber.vue'
+import { BreadCrumb } from '@bcrs-shared-components/bread-crumb'
 
 export {
   Actions,
+  BreadCrumb,
   DocumentDelivery,
   EntityInfo,
   HelpSection,
