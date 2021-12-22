@@ -180,6 +180,7 @@ import {
   AccountInformationIF,
   ActionBindingIF,
   AddressIF,
+  BreadcrumbIF,
   ConfirmDialogType,
   DissolutionResourceIF,
   EmptyFees,
@@ -300,11 +301,9 @@ export default class App extends Mixins(
   /** The Update Current JS Date timer id. */
   private updateCurrentJsDateId = 0
 
-  /** The route breadcrumbs. */
-  private get breadcrumbs (): Array<any> {
-    return [
-      HomeBreadCrumb,
-      this.isRoleStaff ? StaffDashboardBreadcrumb : DashboardBreadcrumb,
+  /** The route breadcrumbs list. */
+  private get breadcrumbs (): Array<BreadcrumbIF> {
+    const crumbs: Array<BreadcrumbIF> = [
       {
         text: this.legalName || this.getNumberedEntityName,
         href: `${sessionStorage.getItem('DASHBOARD_URL')}${this.getEntityIdentifier}`
@@ -314,6 +313,14 @@ export default class App extends Mixins(
         to: { name: this.$route.name }
       }
     ]
+
+    if (this.isRoleStaff) {
+      crumbs.unshift(StaffDashboardBreadcrumb)
+    } else {
+      crumbs.unshift(HomeBreadCrumb, DashboardBreadcrumb)
+    }
+
+    return crumbs
   }
 
   /** The entity application title.  */
