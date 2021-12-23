@@ -13,7 +13,7 @@
           show-size
           @change="fileChange"
           color="primary"
-          hint="File must be a PDF.  Maximum 10MB."
+          hint="File must be a PDF.  Maximum 30MB."
           persistent-hint
           :error-messages="customErrorMessages"
         >
