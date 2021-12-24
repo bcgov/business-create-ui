@@ -10,7 +10,7 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = require('pdfjs-dist/build/pdf.worker.en
 @Component({})
 export default class DocumentMixin extends Vue {
   readonly UPLOAD_FAILED_MESSAGE = 'An error occurred while uploading.  Please try again.'
-  readonly MAX_FILE_SIZE = 10 * 1024 // 10 MB in KB
+  readonly MAX_FILE_SIZE = 30 * 1024 // 30 MB in KB
   readonly pageSizeDict = {
     'LETTER': {
       'pointsPerInch': 72,
