@@ -309,7 +309,7 @@ export default class App extends Mixins(
         href: `${sessionStorage.getItem('DASHBOARD_URL')}${this.getEntityIdentifier}`
       },
       {
-        text: this.entityTitle,
+        text: this.getFilingName,
         to: { name: this.$route.name }
       }
     ]
@@ -323,11 +323,6 @@ export default class App extends Mixins(
     }
 
     return crumbs
-  }
-
-  /** The entity application title.  */
-  private get entityTitle (): string {
-    return `${this.getCorpTypeDescription(this.getEntityType)} ${this.getFilingName}`
   }
 
   /** The numbered entity name. */
