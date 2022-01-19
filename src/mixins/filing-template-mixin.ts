@@ -377,7 +377,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     if (courtOrder.hasPlanOfArrangement || courtOrder.fileNumber) {
       filing.dissolution.courtOrder = {
         fileNumber: courtOrder.fileNumber,
-        effectOfOrder: courtOrder.hasPlanOfArrangement ? EffectOfOrders.PLAN_OF_ARRANGEMENT : null,
+        effectOfOrder: courtOrder.hasPlanOfArrangement ? EffectOfOrders.PLAN_OF_ARRANGEMENT : '',
         hasPlanOfArrangement: courtOrder.hasPlanOfArrangement
       }
     }

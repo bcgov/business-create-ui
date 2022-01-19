@@ -3,7 +3,7 @@ import Vuetify from 'vuetify'
 import { getVuexStore } from '@/store'
 import { shallowMount, mount } from '@vue/test-utils'
 import SaveErrorDialog from '@/components/dialogs/SaveErrorDialog.vue'
-import ErrorContact from '@/components/common/ErrorContact.vue'
+import { ContactInfo } from '@/components/common'
 
 Vue.use(Vuetify)
 
@@ -51,7 +51,7 @@ describe('Save Error Dialog', () => {
     expect(wrapper.findAll('p').at(0).text()).toContain('We were unable to save your Application.')
     expect(wrapper.findAll('p').at(1).text()).toContain('If you exit')
     expect(wrapper.findAll('p').at(2).text()).toContain('If this error persists')
-    expect(wrapper.find(ErrorContact).exists()).toBe(true)
+    expect(wrapper.find(ContactInfo).exists()).toBe(true)
     expect(wrapper.find('#dialog-exit-button').exists()).toBe(true)
     expect(wrapper.find('#dialog-okay-button').exists()).toBe(true)
 

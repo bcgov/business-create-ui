@@ -1,6 +1,6 @@
 {
   "name": "business-create-ui",
-  "version": "3.1.4",
+  "version": "3.1.5",
   "private": true,
   "appName": "Create UI",
   "sbcName": "SBC Common Components",
@@ -22,7 +22,7 @@
     "@bcrs-shared-components/effective-date-time": "1.0.2",
     "@bcrs-shared-components/enums": "1.0.14",
     "@bcrs-shared-components/interfaces": "1.0.28",
-    "@bcrs-shared-components/staff-payment": "1.0.30",
+    "@bcrs-shared-components/staff-payment": "1.0.35",
     "@mdi/font": "^5.5.55",
     "@sentry/browser": "^5.21.1",
     "@sentry/integrations": "^5.21.1",

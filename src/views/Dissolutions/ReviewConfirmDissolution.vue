@@ -637,5 +637,9 @@ export default class ReviewConfirmDissolution extends Mixins(DateMixin) {
       margin-bottom: -14px !important;
     }
   }
+
+  .v-messages__message {
+    padding-top: .5rem !important;
+  }
 }
 </style>

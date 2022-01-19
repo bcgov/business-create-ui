@@ -1,18 +1,18 @@
 <template>
-  <ul class="pl-0">
+  <ul class="contact-info pl-0">
     <li class="contact-container">
-      <v-icon small class="contact-icon">mdi-phone</v-icon>
-      <span class="font-weight-bold contact-key">Canada and U.S. Toll Free:</span>
+      <v-icon class="contact-icon" size="18px">mdi-phone</v-icon>
+      <span class="px-2">Canada and U.S. Toll Free:</span>
       <a href="tel:+1-877-526-1526" class="contact-value">1-877-526-1526</a>
     </li>
     <li class="contact-container">
-      <v-icon small class="contact-icon">mdi-phone</v-icon>
-      <span class="font-weight-bold contact-key">Victoria Office:</span>
+      <v-icon class="contact-icon" size="18px">mdi-phone</v-icon>
+      <span class="px-2">Victoria Office:</span>
       <a href="tel:+1-250-952-0568" class="contact-value">250-952-0568</a>
     </li>
     <li class="contact-container">
-      <v-icon small class="contact-icon">mdi-email</v-icon>
-      <span class="font-weight-bold contact-key">BC Registries Email:</span>
+      <v-icon class="contact-icon" size="18px">mdi-email</v-icon>
+      <span class="px-2">Email:</span>
       <a href="mailto:BCRegistries@gov.bc.ca" class="contact-value">BCRegistries@gov.bc.ca</a>
     </li>
   </ul>
@@ -22,24 +22,21 @@
 import { Component, Vue } from 'vue-property-decorator'
 
 @Component({})
-export default class ErrorContact extends Vue { }
+export default class ContactInfo extends Vue { }
 </script>
 
 <style lang="scss" scoped>
-li {
-  font-size: 0.9rem;
-}
+@import '@/assets/styles/theme.scss';
 
 .contact-container {
+  font-size: $px-15;
+  color: $gray7;
   display: flex;
 
   .contact-icon {
     flex: 0 0 1.375rem;
     justify-content: flex-start;
-  }
-
-  .contact-key {
-    width: 12rem;
+    color: $app-dk-blue;
   }
 
   .contact-value {

@@ -3,7 +3,7 @@ import Vuetify from 'vuetify'
 import { getVuexStore } from '@/store'
 import { shallowMount, mount } from '@vue/test-utils'
 import FetchErrorDialog from '@/components/dialogs/FetchErrorDialog.vue'
-import ErrorContact from '@/components/common/ErrorContact.vue'
+import { ContactInfo } from '@/components/common'
 
 Vue.use(Vuetify)
 
@@ -28,7 +28,7 @@ describe('Fetch Error Dialog', () => {
     expect(wrapper.find('#dialog-title').text()).toBe('Unable to Resume Application')
     expect(wrapper.findAll('p').length).toBe(1)
     expect(wrapper.findAll('p').at(0).text()).toContain('We were unable to resume your')
-    expect(wrapper.find(ErrorContact).exists()).toBe(false)
+    expect(wrapper.find(ContactInfo).exists()).toBe(false)
     expect(wrapper.find('#dialog-exit-button').exists()).toBe(true)
     expect(wrapper.find('#dialog-retry-button').exists()).toBe(true)
 
@@ -50,7 +50,7 @@ describe('Fetch Error Dialog', () => {
     expect(wrapper.findAll('p').length).toBe(2)
     expect(wrapper.findAll('p').at(0).text()).toContain('We were unable to resume your')
     expect(wrapper.findAll('p').at(1).text()).toContain('If this error persists')
-    expect(wrapper.find(ErrorContact).exists()).toBe(true)
+    expect(wrapper.find(ContactInfo).exists()).toBe(true)
     expect(wrapper.find('#dialog-exit-button').exists()).toBe(true)
     expect(wrapper.find('#dialog-retry-button').exists()).toBe(true)
 

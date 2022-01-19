@@ -516,7 +516,7 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin, E
   }
 
   private get isConfirmResolutionValid (): boolean {
-    return this.$refs.confirmResolutionChkRef.valid
+    return this.$refs.confirmResolutionChkRef?.valid
   }
 
   private isResolutionValid (): boolean {
@@ -525,9 +525,9 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin, E
         this.$refs.resolutionDatePickerRef.isDateValid() &&
         this.isSigningPersonValid &&
         this.$refs.signatureDatePickerRef.isDateValid() &&
-        this.$refs.confirmResolutionChkRef.valid
+        this.$refs.confirmResolutionChkRef?.valid
     }
-    return this.$refs.confirmResolutionChkRef.valid
+    return this.$refs.confirmResolutionChkRef?.valid
   }
 
   private updateResolutionStepValidationDetail () {

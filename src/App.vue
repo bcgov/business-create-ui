@@ -54,6 +54,7 @@
       :errors="saveErrors"
       :warnings="saveWarnings"
       @exit="goToDashboard(true)"
+      @okay="paymentErrorDialog = false"
     />
 
     <SaveErrorDialog
@@ -205,6 +206,7 @@ import {
   FilingStatus,
   FilingTypes,
   NameRequestStates,
+  RoleTypes,
   RouteNames,
   StaffPaymentOptions
 } from '@/enums'
@@ -838,7 +840,7 @@ export default class App extends Mixins(
     } else if (userInfo.email) {
       // this is an IDIR user
       this.setUserEmail(userInfo.email)
-    } else {
+    } else if (userInfo.type !== RoleTypes.STAFF) {
       throw new Error('Invalid user email')
     }
 
@@ -848,8 +850,8 @@ export default class App extends Mixins(
     } else if (userInfo.phone) {
       // this is an IDIR user
       this.setUserPhone(userInfo.phone)
-    } else {
-      console.info('Invalid user phone') // eslint-disable-line no-console
+    } else if (userInfo.type !== RoleTypes.STAFF) {
+      console.info('Invalid user phone')
     }
 
     if (!userInfo.firstname) throw new Error('Invalid user first name')
