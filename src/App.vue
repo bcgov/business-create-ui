@@ -294,6 +294,9 @@ export default class App extends Mixins(
   private saveWarnings: Array<object> = []
   private fileAndPayInvalidNameRequestDialog: boolean = false
 
+  // Local const
+  private readonly STAFF_ROLE = 'STAFF'
+
   // Enum for template
   readonly RouteNames = RouteNames
 
@@ -840,7 +843,7 @@ export default class App extends Mixins(
     } else if (userInfo.email) {
       // this is an IDIR user
       this.setUserEmail(userInfo.email)
-    } else if (userInfo.type !== RoleTypes.STAFF) {
+    } else if (userInfo.type !== this.STAFF_ROLE) {
       throw new Error('Invalid user email')
     }
 
@@ -850,7 +853,7 @@ export default class App extends Mixins(
     } else if (userInfo.phone) {
       // this is an IDIR user
       this.setUserPhone(userInfo.phone)
-    } else if (userInfo.type !== RoleTypes.STAFF) {
+    } else if (userInfo.type !== this.STAFF_ROLE) {
       console.info('Invalid user phone')
     }
 
