@@ -35,7 +35,8 @@ describe('Payment Error Dialog', () => {
     expect(wrapper.findAll('p').length).toBe(1)
     expect(wrapper.findAll('p').at(0).text()).toContain('We are unable to process your payment')
     expect(wrapper.find(ContactInfo).exists()).toBe(false)
-    expect(wrapper.find('#dialog-exit-button').exists()).toBe(true)
+    expect(wrapper.find('#dialog-exit-button').exists()).toBe(false)
+    expect(wrapper.find('#dialog-okay-button').exists()).toBe(true)
 
     wrapper.destroy()
   })

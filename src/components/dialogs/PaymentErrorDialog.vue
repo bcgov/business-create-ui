@@ -55,8 +55,8 @@
 
       <v-card-actions>
         <v-spacer></v-spacer>
-<!--        <v-btn v-if="isRoleStaff" id="dialog-okay-button" color="primary" text @click="okay()">OK</v-btn>-->
-        <v-btn id="dialog-exit-button" color="primary" text @click="exit()">Back to My Dashboard</v-btn>
+        <v-btn v-if="isRoleStaff" id="dialog-okay-button" color="primary" text @click="okay()">OK</v-btn>
+        <v-btn v-else id="dialog-exit-button" color="primary" text @click="exit()">Back to My Dashboard</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
