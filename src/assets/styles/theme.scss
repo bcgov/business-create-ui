@@ -62,4 +62,12 @@ $app-green: #1a9031; // same as the Vuetify theme success
 $app-dk-green: #2e8540; // used for success checkmarks, same as theme success-checkmark
 $app-red: #d3272c; // same as the Vuetify theme error
 $app-dk-blue: #38598a; // same as the Vuetify theme appDkBlue
-$app-lt-gray: rgba(0, 0, 0, 0.54) // used for overriding Vuetify red validation color for checkboxes
+$app-lt-gray: rgba(0, 0, 0, 0.54); // used for overriding Vuetify red validation color for checkboxes
+
+// Sizes for Fonts
+$px-11: 0.6875rem;
+$px-12: 0.7500rem;
+$px-13: 0.8125rem;
+$px-14: 0.8750rem;
+$px-15: 0.9375rem;
+$px-16: 1.0000rem;

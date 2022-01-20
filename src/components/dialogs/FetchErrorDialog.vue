@@ -9,7 +9,7 @@
 
         <template v-if="!isRoleStaff">
           <p class="genErr">If this error persists, please contact us:</p>
-          <ErrorContact />
+          <ContactInfo />
         </template>
       </v-card-text>
 
@@ -27,10 +27,10 @@
 <script lang="ts">
 import { Component, Vue, Prop, Emit } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
-import ErrorContact from '@/components/common/ErrorContact.vue'
+import { ContactInfo } from '@/components/common'
 
 @Component({
-  components: { ErrorContact }
+  components: { ContactInfo }
 })
 export default class FetchErrorDialog extends Vue {
   @Getter isRoleStaff!: boolean

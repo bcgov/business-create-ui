@@ -19,7 +19,7 @@
           </div>
         </div>
         <p class="genErr">Registries contact information:</p>
-        <ErrorContact />
+        <ContactInfo />
       </v-card-text>
 
       <v-divider class="my-0" />
@@ -36,10 +36,10 @@
 <script lang="ts">
 import { Component, Vue, Prop, Emit } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
-import ErrorContact from '@/components/common/ErrorContact.vue'
+import { ContactInfo } from '@/components/common'
 
 @Component({
-  components: { ErrorContact }
+  components: { ContactInfo }
 })
 export default class FileAndPayInvalidNameRequestDialog extends Vue {
   /** Prop to display the dialog. */
