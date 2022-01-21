@@ -42,6 +42,10 @@ export async function fetchConfig (): Promise<any> {
   sessionStorage.setItem('AUTH_WEB_URL', authWebUrl)
   console.log('Set Auth Web URL to: ' + authWebUrl)
 
+  const bcrosHomeUrl = response.data['BCROS_HOME_URL']
+  sessionStorage.setItem('BCROS_HOME_URL', bcrosHomeUrl)
+  console.info('Set BCROS HOME URL to: ' + bcrosHomeUrl)
+
   const businessesUrl: string = response.data['BUSINESSES_URL']
   sessionStorage.setItem('BUSINESSES_URL', businessesUrl)
   console.log('Set Businesses URL to: ' + businessesUrl)
