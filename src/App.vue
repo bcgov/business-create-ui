@@ -190,10 +190,10 @@ import {
   StepIF
 } from '@/interfaces'
 import {
-  DashboardHomeBreadCrumb,
+  DashboardHomeBreadcrumb,
   DissolutionResources,
   IncorporationResources,
-  RegistryTableBreadCrumb,
+  RegistryTableBreadcrumb,
   StaffDashboardBreadcrumb
 } from '@/resources'
 import { AuthServices, PayServices } from '@/services'
@@ -324,7 +324,7 @@ export default class App extends Mixins(
     if (this.isRoleStaff) {
       crumbs.unshift(StaffDashboardBreadcrumb) // If staff, set StaffDashboard as home crumb
     } else {
-      crumbs.unshift(DashboardHomeBreadCrumb, RegistryTableBreadCrumb) // For non-staff, set Home and Dashboard crumbs
+      crumbs.unshift(DashboardHomeBreadcrumb, RegistryTableBreadcrumb) // For non-staff, set Home and Dashboard crumbs
     }
 
     return crumbs
