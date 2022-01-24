@@ -190,10 +190,10 @@ import {
   StepIF
 } from '@/interfaces'
 import {
-  DashboardBreadcrumb,
   DissolutionResources,
   IncorporationResources,
-  HomeBreadCrumb,
+  MyBusinessRegistryBreadcrumb,
+  RegistryDashboardBreadcrumb,
   StaffDashboardBreadcrumb
 } from '@/resources'
 import { AuthServices, PayServices } from '@/services'
@@ -322,9 +322,11 @@ export default class App extends Mixins(
     // Set base crumbs based on user role
     // Staff don't want the home landing page and they can't access the Manage Business Dashboard
     if (this.isRoleStaff) {
-      crumbs.unshift(StaffDashboardBreadcrumb) // If staff, set StaffDashboard as home crumb
+      // If staff, set StaffDashboard as home crumb
+      crumbs.unshift(StaffDashboardBreadcrumb)
     } else {
-      crumbs.unshift(HomeBreadCrumb, DashboardBreadcrumb) // For non-staff, set Home and Dashboard crumbs
+      // For non-staff, set Home and Dashboard crumbs
+      crumbs.unshift(RegistryDashboardBreadcrumb, MyBusinessRegistryBreadcrumb)
     }
 
     return crumbs
