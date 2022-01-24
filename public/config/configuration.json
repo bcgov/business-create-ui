@@ -3,7 +3,7 @@
   "AUTH_API_URL": "https://auth-api-dev.apps.silver.devops.gov.bc.ca",
   "AUTH_API_VERSION": "/api/v1",
   "AUTH_WEB_URL": "https://dev.bcregistry.ca/business/auth/",
-  "BCROS_HOME_URL": "https://yfthig-dev.web.app/",
+  "REGISTRY_HOME_URL": "https://yfthig-dev.web.app/",
   "BUSINESSES_URL": "https://dev.bcregistry.ca/business/auth/",
   "BUSINESS_CREATE_LD_CLIENT_ID": "5e6142dd29b3030a850285b3",
   "DASHBOARD_URL": "https://dev.bcregistry.ca/business/",
