@@ -32,7 +32,7 @@ import {
 } from '@/interfaces'
 
 // Constants and enums
-import { INCORPORATION_APPLICATION } from '@/constants'
+import { INCORPORATION_APPLICATION, REGISTRATION } from '@/constants'
 import { CorpTypeCd, DissolutionTypes, EffectOfOrders, FilingTypes, RoleTypes, StaffPaymentOptions } from '@/enums'
 
 /**
@@ -276,6 +276,116 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
           agreementType: draftFiling.incorporationApplication.incorporationAgreement?.agreementType
         })
 
+        break
+    }
+
+    // restore Certify state
+    this.setCertifyState({
+      valid: false,
+      certifiedBy: draftFiling.header.certifiedBy
+    })
+
+    // restore Future Effective data
+    if (draftFiling.header.isFutureEffective) {
+      this.setIsFutureEffective(true)
+      const effectiveDate = this.apiToDate(draftFiling.header.effectiveDate)
+      // Check that Effective Date is in the future, to improve UX and
+      // to work around the default effective date set by the back end.
+      if (effectiveDate >= this.getCurrentJsDate) this.setEffectiveDate(effectiveDate)
+    }
+
+    // NB: do not restore/overwrite Folio Number - just use the FN from auth info (see App.vue)
+  }
+
+  /**
+   * Builds a registration filing from store data. Used when saving a filing.
+   * @returns the filing body to save
+   */
+  buildRegistrationFiling (): any {
+    // Build the main filing.
+    const filing: any = {
+      header: {
+        name: REGISTRATION,
+        certifiedBy: this.getCertifyState.certifiedBy,
+        date: this.getCurrentDate,
+        folioNumber: this.getFolioNumber,
+        isFutureEffective: this.getEffectiveDateTime.isFutureEffective
+      },
+      business: {
+        legalType: this.getEntityType,
+        identifier: this.getTempId
+      },
+      registration: {
+        nameRequest: {
+          legalType: this.getEntityType
+        },
+        nameTranslations: this.getNameTranslations,
+        offices: {},
+        contactPoint: {
+          email: this.getBusinessContact.email,
+          phone: this.getBusinessContact.phone,
+          ...this.getBusinessContact.extension
+            ? { extension: +this.getBusinessContact.extension }
+            : {}
+        },
+        parties: {}
+      }
+    }
+
+    // Conditionally add the entity-specific sections.
+    switch (this.getEntityType) {
+      case CorpTypeCd.SOLE_PROP:
+        break
+      case CorpTypeCd.PARTNERSHIP:
+        break
+    }
+
+    // If this is a named IA then add Name Request Number and Approved Name.
+    if (this.isNamedBusiness) {
+      filing.registration.nameRequest.nrNumber = this.getNameRequestNumber
+      filing.registration.nameRequest.legalName = this.getApprovedName
+    }
+
+    // If this is a future effective filing then save the effective date.
+    if (this.getEffectiveDateTime.effectiveDate) {
+      filing.header.effectiveDate =
+        this.getEffectiveDateTime.effectiveDate && this.dateToApi(this.getEffectiveDateTime.effectiveDate)
+    }
+
+    return filing
+  }
+
+  /**
+   * Parses a draft incorporation filing into the store. Used when loading a filing.
+   * @param draftFiling the filing body to parse
+   */
+  parseRegistrationsDraft (draftFiling: any): void {
+    // FUTURE: set types so each of these validate their parameters
+    // ref: https://www.typescriptlang.org/docs/handbook/generics.html
+
+    // NB: don't parse Name Request object -- NR is fetched from namex/NRO instead
+
+    // restore Entity Type
+    this.setEntityType(draftFiling.business.legalType)
+
+    // restore Office Addresses
+    // this.setOfficeAddresses(draftFiling.registration.offices)
+
+    // restore Contact Info
+    const draftContact = {
+      ...draftFiling.registration.contactPoint,
+      confirmEmail: draftFiling.registration.contactPoint.email
+    }
+    this.setBusinessContact(draftContact)
+
+    // restore Persons and Organizations
+    this.setOrgPersonList(draftFiling.registration.parties)
+
+    // conditionally restore the entity-specific sections
+    switch (this.getEntityType) {
+      case CorpTypeCd.SOLE_PROP:
+        break
+      case CorpTypeCd.PARTNERSHIP:
         break
     }
 

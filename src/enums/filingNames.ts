@@ -4,5 +4,6 @@ export enum FilingNames {
   INVOLUNTARY_DISSOLUTION_FILING = 'Involuntary Dissolution',
   ADMINISTRATIVE_DISSOLUTION_FILING = 'Administrative Dissolution',
   VOLUNTARY_LIQUIDATION_FILING = 'Voluntary Liquidation',
-  COURT_ORDERED_LIQUIDATION_FILING = 'Court Ordered Liquidation'
+  COURT_ORDERED_LIQUIDATION_FILING = 'Court Ordered Liquidation',
+  REGISTRATION = 'Registration'
 }

@@ -89,6 +89,8 @@ export default class EntityInfo extends Mixins(EnumMixin) {
         return this.getBusinessLegalName
       case FilingTypes.INCORPORATION_APPLICATION:
         return this.getApprovedName
+      case FilingTypes.REGISTRATION:
+        return this.getApprovedName
     }
   }
 }
