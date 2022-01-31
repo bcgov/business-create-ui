@@ -91,7 +91,7 @@ export interface RegistrationIF {
       nrNumber?: string // only set when there is an NR
       legalName?: string // only set when there is an NR
     },
-    offices: BaseAddressObjIF | {},
+    offices: BaseAddressObjIF,
     contactPoint: {
       email: string
       phone: string

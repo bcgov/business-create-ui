@@ -725,7 +725,8 @@ export default class App extends Mixins(
     if (!this.hasValidFilingState(draftFiling)) return
 
     // merge draft properties into empty filing so all properties are initialized
-    let resources, parseFiling: Function
+    let resources: any
+    let parseFiling: Function
     switch (this.getFilingType) {
       case FilingTypes.INCORPORATION_APPLICATION:
         draftFiling = { ...this.buildIncorporationFiling(), ...draftFiling }

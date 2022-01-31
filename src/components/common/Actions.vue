@@ -156,18 +156,8 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
     this.setIsSaving(true)
 
     try {
-      let filing
-      switch (this.getFilingType) {
-        case FilingTypes.INCORPORATION_APPLICATION:
-          filing = await this.buildIncorporationFiling()
-          break
-        case FilingTypes.REGISTRATION:
-          filing = await this.buildRegistrationFiling()
-          break
-        case FilingTypes.DISSOLUTION:
-          filing = await this.buildDissolutionFiling()
-          break
-      }
+      const filing = await this.prepareFiling()
+
       // Save draft filing
       await this.updateFiling(this.getEntityIdentifier, filing, true)
 
@@ -192,18 +182,7 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
     this.setIsSavingResuming(true)
 
     try {
-      let filing
-      switch (this.getFilingType) {
-        case FilingTypes.INCORPORATION_APPLICATION:
-          filing = await this.buildIncorporationFiling()
-          break
-        case FilingTypes.REGISTRATION:
-          filing = await this.buildRegistrationFiling()
-          break
-        case FilingTypes.DISSOLUTION:
-          filing = await this.buildDissolutionFiling()
-          break
-      }
+      const filing = await this.prepareFiling()
 
       // Save draft filing
       await this.updateFiling(this.getEntityIdentifier, filing, true)
@@ -261,18 +240,7 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
 
       let filingComplete: any
       try {
-        let filing
-        switch (this.getFilingType) {
-          case FilingTypes.INCORPORATION_APPLICATION:
-            filing = await this.buildIncorporationFiling()
-            break
-          case FilingTypes.REGISTRATION:
-            filing = await this.buildRegistrationFiling()
-            break
-          case FilingTypes.DISSOLUTION:
-            filing = await this.buildDissolutionFiling()
-            break
-        }
+        const filing = await this.prepareFiling()
 
         // Save filing
         filingComplete = await this.updateFiling(this.getEntityIdentifier, filing, false)
@@ -310,6 +278,18 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
     } else {
       // don't call window.scrollTo during Jest tests because jsdom doesn't implement it
       if (!this.isJestRunning) window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+  }
+
+  /** Prepare filing for saving/filing. */
+  private prepareFiling (): any {
+    switch (this.getFilingType) {
+      case FilingTypes.INCORPORATION_APPLICATION:
+        return this.buildIncorporationFiling()
+      case FilingTypes.REGISTRATION:
+        return this.buildRegistrationFiling()
+      case FilingTypes.DISSOLUTION:
+        return this.buildDissolutionFiling()
     }
   }
 

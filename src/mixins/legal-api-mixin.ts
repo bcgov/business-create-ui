@@ -51,7 +51,7 @@ export default class LegalApiMixin extends Vue {
       })
       .catch((error) => {
         if (error?.response?.status === NOT_FOUND) {
-          return null // IA not found
+          return null // Draft not found
         }
         throw error
       })
