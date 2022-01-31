@@ -356,7 +356,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   }
 
   /**
-   * Parses a draft incorporation filing into the store. Used when loading a filing.
+   * Parses a draft registration filing into the store. Used when loading a filing.
    * @param draftFiling the filing body to parse
    */
   parseRegistrationsDraft (draftFiling: any): void {
@@ -369,7 +369,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     this.setEntityType(draftFiling.business.legalType)
 
     // restore Office Addresses
-    // this.setOfficeAddresses(draftFiling.registration.offices)
+    this.setOfficeAddresses(draftFiling.registration.offices)
 
     // restore Contact Info
     const draftContact = {

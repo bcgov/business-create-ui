@@ -21,7 +21,7 @@ export default class LegalApiMixin extends Vue {
   @Action setFilingType!: ActionBindingIF
 
   /**
-   * Fetches the draft IA filing.
+   * Fetches the draft filing.
    * This is a unique request using the temp reg number.
    * This assumes a single filing is returned.
    * @returns a promise to return the draft filing, or null if not found
@@ -166,7 +166,7 @@ export default class LegalApiMixin extends Vue {
   }
 
   /**
-   * Ensure consistent object structure for an incorporation application,
+   * Ensure consistent object structure for a registration application,
    * whether it contains a Name Request or not, and whether it is an initial
    * draft or it has been previously saved. Object merging does not
    * work very well otherwise due to nested properties.

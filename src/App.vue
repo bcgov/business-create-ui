@@ -186,7 +186,7 @@ import {
   DissolutionResourceIF,
   EmptyFees,
   FilingDataIF,
-  IncorporationResourceIF, RegistrationResourceIF, ResourceIF,
+  ResourceIF,
   StepIF
 } from '@/interfaces'
 import {
@@ -569,7 +569,7 @@ export default class App extends Mixins(
     this.resetFlags()
 
     // Feature flag safety check
-    let supportedFilings = await getFeatureFlag('supported-filings')
+    const supportedFilings = await getFeatureFlag('supported-filings')
 
     if (!supportedFilings?.includes(this.$route.meta.filingType)) {
       window.alert('Dissolution are not available at the moment. Please check again later.')
