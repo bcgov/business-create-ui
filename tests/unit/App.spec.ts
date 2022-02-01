@@ -1976,20 +1976,24 @@ describe('Dissolution COOP - Staff User', () => {
     wrapper.destroy()
   })
 
-  it('calculates the correct fees', async () => {
+  it('displays the correct information', async () => {
     expect(wrapper.find(SbcFeeSummary).exists()).toBe(true)
     const feeText = wrapper.find(SbcFeeSummary).text()
     expect(feeText).toContain('Voluntary dissolution 20')
     expect(feeText).toContain('Affidavit 20')
     expect(feeText).toContain('Special resolution 70')
     expect(feeText).toContain('Total Fees CAD 110')
+  })
 
+  it('calculates the correct fees when priority', async () => {
     store.state.stateModel.staffPaymentStep.staffPayment.isPriority = true
     await flushPromises()
     const feeTextPriority = wrapper.find(SbcFeeSummary).text()
     expect(feeTextPriority).toContain('Priority Fee 100')
     expect(feeTextPriority).toContain('Total Fees CAD 210')
+  })
 
+  it('calculates 0 fees for no fee option', async () => {
     store.state.stateModel.staffPaymentStep.staffPayment.option = StaffPaymentOptions.NO_FEE
     await flushPromises()
     const feeTextWaiveFees = wrapper.find(SbcFeeSummary).text()

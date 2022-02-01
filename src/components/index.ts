@@ -1,7 +1,6 @@
 // external common components
 export { default as BaseAddress } from 'sbc-common-components/src/components/BaseAddress.vue'
 export { default as PaySystemAlert } from 'sbc-common-components/src/components/PaySystemAlert.vue'
-export { default as SbcHeader } from 'sbc-common-components/src/components/SbcHeader.vue'
 export { default as SbcFeeSummary } from 'sbc-common-components/src/components/SbcFeeSummary.vue'
 export { default as SbcFooter } from 'sbc-common-components/src/components/SbcFooter.vue'
 export { default as SbcSignin } from 'sbc-common-components/src/components/SbcSignin.vue'
