@@ -118,6 +118,8 @@ export default class NameRequestMixin extends Mixins(DateMixin) {
       case NameRequestTypes.UL: return CorpTypeCd.BC_UNLIMITED
       case NameRequestTypes.CC: return CorpTypeCd.BC_CCC
       case NameRequestTypes.CP: return CorpTypeCd.COOP
+      case NameRequestTypes.FR: return CorpTypeCd.SOLE_PROP
+      case NameRequestTypes.GP: return CorpTypeCd.PARTNERSHIP
     }
     return null // unknown entity type code
   }

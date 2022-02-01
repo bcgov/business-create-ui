@@ -39,6 +39,14 @@ export interface IncorporationResourceIF {
   createMemorandum?: CreateMemorandumResourceIF
 }
 
+export interface RegistrationResourceIF {
+  entityType: CorpTypeCd
+  displayName: string
+  nameRequestType: NameRequestTypes
+  steps: Array<StepIF>
+  filingData: Array<FilingDataIF>
+}
+
 // Interface to define the resource model
 export interface DissolutionResourceIF {
   entityType: CorpTypeCd
@@ -62,4 +70,4 @@ export interface DissolutionResourceIF {
   createResolution?: CreateResolutionResourceIF
 }
 
-export interface ResourceIF extends DissolutionResourceIF, IncorporationResourceIF {}
+export interface ResourceIF extends DissolutionResourceIF, IncorporationResourceIF, RegistrationResourceIF {}

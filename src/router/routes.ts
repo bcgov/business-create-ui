@@ -133,6 +133,36 @@ export const routes = [
     }
   },
   {
+    path: `/define-registration`,
+    name: RouteNames.DEFINE_REGISTRATION,
+    component: Views.DefineRegistration,
+    meta: {
+      step: 1,
+      requiresAuth: true,
+      filingType: FilingTypes.REGISTRATION
+    }
+  },
+  {
+    path: `/register-people-and-roles`,
+    name: RouteNames.REGISTER_PEOPLE_AND_ROLES,
+    component: Views.RegisterPeopleAndRoles,
+    meta: {
+      step: 2,
+      requiresAuth: true,
+      filingType: FilingTypes.REGISTRATION
+    }
+  },
+  {
+    path: `/register-review-confirm`,
+    name: RouteNames.REGISTER_REVIEW_CONFIRM,
+    component: Views.RegisterReviewConfirm,
+    meta: {
+      step: 3,
+      requiresAuth: true,
+      filingType: FilingTypes.REGISTRATION
+    }
+  },
+  {
     // default/fallback route
     // must be last
     path: '*',

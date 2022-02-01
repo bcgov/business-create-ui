@@ -151,7 +151,7 @@ import * as Sentry from '@sentry/browser'
 import { getFeatureFlag, updateLdUser } from '@/utils'
 
 // Components
-import { PaySystemAlert, SbcHeader, SbcFooter, SbcFeeSummary } from '@/components'
+import { PaySystemAlert, SbcFeeSummary, SbcFooter, SbcHeader } from '@/components'
 import { Actions, BreadCrumb, EntityInfo, Stepper } from '@/components/common'
 import * as Views from '@/views'
 
@@ -186,13 +186,14 @@ import {
   DissolutionResourceIF,
   EmptyFees,
   FilingDataIF,
-  IncorporationResourceIF,
+  ResourceIF,
   StepIF
 } from '@/interfaces'
 import {
   DissolutionResources,
   IncorporationResources,
   MyBusinessRegistryBreadcrumb,
+  RegistrationResources,
   RegistryDashboardBreadcrumb,
   StaffDashboardBreadcrumb
 } from '@/resources'
@@ -206,7 +207,6 @@ import {
   FilingStatus,
   FilingTypes,
   NameRequestStates,
-  RoleTypes,
   RouteNames,
   StaffPaymentOptions
 } from '@/enums'
@@ -255,7 +255,6 @@ export default class App extends Mixins(
   @Getter getFilingType!: FilingTypes
   @Getter getFilingName!: FilingNames
   @Getter isDissolutionFiling!: boolean
-  @Getter isIncorporationFiling!: boolean
   @Getter getSteps!: Array<StepIF>
 
   @Action setBusinessId!: ActionBindingIF
@@ -343,6 +342,8 @@ export default class App extends Mixins(
         return this.getBusinessLegalName
       case FilingTypes.INCORPORATION_APPLICATION:
         return this.getApprovedName
+      case FilingTypes.REGISTRATION:
+        return this.getApprovedName
     }
   }
 
@@ -404,6 +405,8 @@ export default class App extends Mixins(
   private get saveErrorDialogName (): string {
     switch (this.getFilingType) {
       case FilingTypes.INCORPORATION_APPLICATION:
+        return 'Application'
+      case FilingTypes.REGISTRATION:
         return 'Application'
       case FilingTypes.DISSOLUTION:
         return 'Filing'
@@ -483,9 +486,8 @@ export default class App extends Mixins(
       this.setBusinessId(id)
       this.setFilingType(FilingTypes.DISSOLUTION)
     } else {
-      // Assign temp reg number and init incorporation
+      // Assign temp reg number
       this.setTempId(id)
-      this.setFilingType(FilingTypes.INCORPORATION_APPLICATION)
     }
   }
 
@@ -568,16 +570,11 @@ export default class App extends Mixins(
 
     // Feature flag safety check
     const supportedFilings = await getFeatureFlag('supported-filings')
+
     if (!supportedFilings?.includes(this.$route.meta.filingType)) {
       window.alert('Dissolution are not available at the moment. Please check again later.')
       this.goToDashboard(true)
       return
-    }
-
-    // Protect the routes not associated with this filing type.
-    if (this.$route.meta.filingType !== this.getFilingType) {
-      console.log('ROUTE ERROR') // eslint-disable-line no-console
-      this.invalidRouteDialog = true
     }
 
     try {
@@ -614,14 +611,12 @@ export default class App extends Mixins(
             throw new Error(`Invalid dissolution resources, entity type = ${this.getEntityType}`)
           }
           this.setResources(resources)
-        }
-
-        // Incorporation filing
-        if (this.isIncorporationFiling) {
-          const resources = await this.handleDraftIncorporation()
+        } else {
+          // Incorporation or Registration filing
+          const resources = await this.handleDraftApplication()
           if (!resources) {
             // go to catch()
-            throw new Error(`Invalid incorporation resources entity type = ${this.getEntityType}`)
+            throw new Error(`Invalid ${this.getFilingType} resources entity type = ${this.getEntityType}`)
           }
           this.setResources(resources)
         }
@@ -707,8 +702,8 @@ export default class App extends Mixins(
     return DissolutionResources.find(x => x.entityType === this.getEntityType)
   }
 
-  /** Handle draft incorporation and return the resources for assignment. */
-  private async handleDraftIncorporation (): Promise<IncorporationResourceIF> {
+  /** Handle draft incorporation or registration and return the resources for assignment. */
+  private async handleDraftApplication (): Promise<ResourceIF> {
     // ensure user is authorized to use this IA
     await this.checkAuth().catch(error => {
       console.log('Auth error =', error) // eslint-disable-line no-console
@@ -718,23 +713,38 @@ export default class App extends Mixins(
 
     // fetch draft filing
     // NB: will throw if API error
-    let draftFiling = await this.fetchDraftIA()
+    let draftFiling = await this.fetchDraftApplication()
 
-    // check if filing is in a valid state to be edited
-    this.invalidIncorporationApplicationDialog = !this.hasValidFilingState(draftFiling)
-    if (this.invalidIncorporationApplicationDialog) return
-
-    // merge draft properties into empty filing so all properties are initialized
-    const emptyFiling = this.buildIncorporationFiling()
-    draftFiling = { ...emptyFiling, ...draftFiling }
-
-    // parse draft filing into the store
-    if (draftFiling) {
-      this.parseIncorporationsDraft(draftFiling)
+    // Protect the routes not associated with this filing type.
+    if (this.$route.meta.filingType !== this.getFilingType) {
+      console.log('ROUTE ERROR') // eslint-disable-line no-console
+      this.invalidRouteDialog = true
     }
 
+    // check if filing is in a valid state to be edited
+    if (!this.hasValidFilingState(draftFiling)) return
+
+    // merge draft properties into empty filing so all properties are initialized
+    let resources: any
+    let parseFiling: Function
+    switch (this.getFilingType) {
+      case FilingTypes.INCORPORATION_APPLICATION:
+        draftFiling = { ...this.buildIncorporationFiling(), ...draftFiling }
+        resources = IncorporationResources
+        parseFiling = this.parseIncorporationsDraft
+        break
+      case FilingTypes.REGISTRATION:
+        draftFiling = { ...this.buildRegistrationFiling(), ...draftFiling }
+        resources = RegistrationResources
+        parseFiling = this.parseRegistrationsDraft
+        break
+    }
+
+    // Parse draft filing to store
+    if (draftFiling) parseFiling(draftFiling)
+
     // verify nameRequest object
-    const nameRequest = draftFiling?.incorporationApplication?.nameRequest
+    const nameRequest = draftFiling[draftFiling.header?.name]?.nameRequest
     if (!nameRequest) throw new Error('missing Name Request object')
 
     // Fetches and validates the NR and sets the data to the store. This method is different
@@ -746,7 +756,7 @@ export default class App extends Mixins(
     }
 
     // return the resources
-    return IncorporationResources.find(x => x.entityType === this.getEntityType)
+    return resources.find(x => x.entityType === this.getEntityType)
   }
 
   /** Used to check if the filing is in a valid state for changes. */
@@ -758,7 +768,7 @@ export default class App extends Mixins(
   /** Fetches NR and validates it. */
   private async processNameRequest (filing: any): Promise<void> {
     try {
-      const nrNumber = filing.incorporationApplication.nameRequest.nrNumber
+      const nrNumber = filing[filing.header?.name].nameRequest.nrNumber
 
       // fetch NR data
       const nrResponse = await this.fetchNameRequest(nrNumber).catch(error => {

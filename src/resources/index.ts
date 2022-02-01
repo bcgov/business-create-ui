@@ -1,4 +1,4 @@
-import { DissolutionResourceIF, IncorporationResourceIF } from '@/interfaces'
+import { DissolutionResourceIF, IncorporationResourceIF, RegistrationResourceIF } from '@/interfaces'
 import {
   BenefitCompanyResource,
   CommunityContributionCompanyResource,
@@ -6,6 +6,11 @@ import {
   LimitedCompanyResource,
   UnlimitedCompanyResource
 } from './Incorporations'
+
+import {
+  SoleProprietorshipResource,
+  GeneralPartnershipResource
+} from './Registrations'
 
 import {
   BenefitCompanyDissolutionResource,
@@ -21,6 +26,11 @@ export const IncorporationResources: Array<IncorporationResourceIF> = [
   CooperativeResource,
   LimitedCompanyResource,
   UnlimitedCompanyResource
+]
+
+export const RegistrationResources: Array<RegistrationResourceIF> = [
+  SoleProprietorshipResource,
+  GeneralPartnershipResource
 ]
 
 export const DissolutionResources: Array<DissolutionResourceIF> = [

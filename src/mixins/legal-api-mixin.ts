@@ -5,7 +5,7 @@ import { Action, Getter } from 'vuex-class'
 import { NOT_FOUND } from 'http-status-codes'
 
 // Interfaces
-import { ActionBindingIF, DissolutionFilingIF, IncorporationFilingIF } from '@/interfaces'
+import { ActionBindingIF, DissolutionFilingIF, IncorporationFilingIF, RegistrationIF } from '@/interfaces'
 import { FilingTypes } from '@/enums'
 
 /**
@@ -18,14 +18,15 @@ export default class LegalApiMixin extends Vue {
   @Getter getTempId!: string
 
   @Action setFilingId!: ActionBindingIF
+  @Action setFilingType!: ActionBindingIF
 
   /**
-   * Fetches the draft IA filing.
+   * Fetches the draft filing.
    * This is a unique request using the temp reg number.
    * This assumes a single filing is returned.
    * @returns a promise to return the draft filing, or null if not found
    */
-  async fetchDraftIA (): Promise<any> {
+  async fetchDraftApplication (): Promise<any> {
     const url = `businesses/${this.getTempId}/filings`
     return axios.get(url)
       .then(response => {
@@ -34,16 +35,23 @@ export default class LegalApiMixin extends Vue {
         const filingName = filing?.header?.name
         const filingId = +filing?.header?.filingId || 0
 
-        if (!filing || filingName !== FilingTypes.INCORPORATION_APPLICATION || !filingId) {
+        if (!filing || !filingName || !filingId) {
           throw new Error('Invalid API response')
         }
         // save Filing ID from the header
         this.setFilingId(filingId)
-        return this.formatEmptyFiling(filing)
+        this.setFilingType(filingName)
+
+        switch (filingName) {
+          case FilingTypes.INCORPORATION_APPLICATION:
+            return this.formatEmptyIaFiling(filing)
+          case FilingTypes.REGISTRATION:
+            return this.formatEmptyRegFiling(filing)
+        }
       })
       .catch((error) => {
         if (error?.response?.status === NOT_FOUND) {
-          return null // IA not found
+          return null // Draft not found
         }
         throw error
       })
@@ -135,7 +143,7 @@ export default class LegalApiMixin extends Vue {
     * @param filing the filing fetched from legal-api
     * @returns the filing in safe-empty state if applicable
   */
-  formatEmptyFiling (filing: any): IncorporationFilingIF {
+  formatEmptyIaFiling (filing: any): IncorporationFilingIF {
     let toReturn = filing
     if (toReturn.incorporationApplication) {
       if (!toReturn.incorporationApplication?.offices) {
@@ -152,6 +160,33 @@ export default class LegalApiMixin extends Vue {
       }
       if (!toReturn.incorporationApplication?.shareClasses) {
         toReturn.incorporationApplication.shareClasses = []
+      }
+    }
+    return toReturn
+  }
+
+  /**
+   * Ensure consistent object structure for a registration application,
+   * whether it contains a Name Request or not, and whether it is an initial
+   * draft or it has been previously saved. Object merging does not
+   * work very well otherwise due to nested properties.
+   * @param filing the filing fetched from legal-api
+   * @returns the filing in safe-empty state if applicable
+   */
+  formatEmptyRegFiling (filing: any): RegistrationIF {
+    let toReturn = filing
+    if (toReturn.registration) {
+      if (!toReturn.registration?.offices) {
+        toReturn.registration.offices = []
+      }
+      if (!toReturn.registration?.contactPoint) {
+        toReturn.registration.contactPoint = {
+          email: '',
+          phone: ''
+        }
+      }
+      if (!toReturn.registration?.parties) {
+        toReturn.registration.parties = []
       }
     }
     return toReturn

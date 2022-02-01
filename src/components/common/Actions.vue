@@ -105,11 +105,12 @@ import { ActionBindingIF } from '@/interfaces'
 import { DateMixin, FilingTemplateMixin, LegalApiMixin, NameRequestMixin } from '@/mixins'
 
 // Enums
-import { NameRequestStates, RouteNames } from '@/enums'
+import { FilingTypes, NameRequestStates, RouteNames } from '@/enums'
 
 @Component({})
 export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, LegalApiMixin, NameRequestMixin) {
   @Getter getEntityIdentifier!: string
+  @Getter getFilingType!: string
   @Getter isApplicationValid!: boolean
   @Getter isEntityType!: boolean
   @Getter isShowBackBtn!: boolean
@@ -154,13 +155,12 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
     if (this.isBusySaving) return
     this.setIsSaving(true)
 
-    let filingComplete: any
     try {
-      const filing = this.isIncorporationFiling
-        ? await this.buildIncorporationFiling()
-        : await this.buildDissolutionFiling()
+      const filing = await this.prepareFiling()
 
-      filingComplete = await this.updateFiling(this.getEntityIdentifier, filing, true)
+      // Save draft filing
+      await this.updateFiling(this.getEntityIdentifier, filing, true)
+
       // clear flag
       this.setHaveChanges(false)
     } catch (error) {
@@ -181,13 +181,12 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
     if (this.isBusySaving) return
     this.setIsSavingResuming(true)
 
-    let filingComplete: any
     try {
-      const filing = this.isIncorporationFiling
-        ? await this.buildIncorporationFiling()
-        : await this.buildDissolutionFiling()
+      const filing = await this.prepareFiling()
 
-      filingComplete = await this.updateFiling(this.getEntityIdentifier, filing, true)
+      // Save draft filing
+      await this.updateFiling(this.getEntityIdentifier, filing, true)
+
       // clear flag
       this.setHaveChanges(false)
     } catch (error) {
@@ -241,11 +240,11 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
 
       let filingComplete: any
       try {
-        const filing = this.isIncorporationFiling
-          ? await this.buildIncorporationFiling()
-          : await this.buildDissolutionFiling()
+        const filing = await this.prepareFiling()
 
+        // Save filing
         filingComplete = await this.updateFiling(this.getEntityIdentifier, filing, false)
+
         // clear flag
         this.setHaveChanges(false)
       } catch (error) {
@@ -279,6 +278,18 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
     } else {
       // don't call window.scrollTo during Jest tests because jsdom doesn't implement it
       if (!this.isJestRunning) window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+  }
+
+  /** Prepare filing for saving/filing. */
+  private prepareFiling (): any {
+    switch (this.getFilingType) {
+      case FilingTypes.INCORPORATION_APPLICATION:
+        return this.buildIncorporationFiling()
+      case FilingTypes.REGISTRATION:
+        return this.buildRegistrationFiling()
+      case FilingTypes.DISSOLUTION:
+        return this.buildDissolutionFiling()
     }
   }
 
