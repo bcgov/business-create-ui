@@ -1,32 +1,19 @@
 <template>
-  <sbc-signin @sync-user-profile-ready="onSessionReady()" />
+  <div />
 </template>
 
 <script lang="ts">
-// Libraries
 import { Component, Vue } from 'vue-property-decorator'
 
-// Components
-import { SbcSignin } from '@/components'
-
-@Component({
-  components: {
-    SbcSignin
-  }
-})
+@Component({})
 export default class SigninView extends Vue {
-  /** Called when Keycloak session is ready (ie, the user is authenticated). */
-  private async onSessionReady () {
-    if (this.$route.query.redirect) {
-      // navigate to the route we originally came from
-      this.$router.push(this.$route.query.redirect as string)
-    } else {
-      console.error('Signin page missing redirect param') // eslint-disable-line no-console
-      // redirect to Business Registry home page
-      const businessesUrl = sessionStorage.getItem('BUSINESSES_URL')
-      // assume Businesses URL is always reachable
-      window.location.assign(businessesUrl)
-    }
+  created () {
+    // redirect to BC Registry login page then return to this app
+    const loginUrl = sessionStorage.getItem('REGISTRY_HOME_URL') + 'login'
+    const baseUrl = sessionStorage.getItem('BASE_URL').replace(/\/$/, '') // remove trailing /
+    const redirect = this.$route.query.redirect
+    const returnUrl = encodeURIComponent(baseUrl + redirect)
+    window.location.assign(`${loginUrl}?return=${returnUrl}`)
   }
 }
 </script>

@@ -61,6 +61,13 @@ async function start () {
   console.info('Starting Keycloak service...') // eslint-disable-line no-console
   await KeycloakService.setKeycloakConfigUrl(sessionStorage.getItem('KEYCLOAK_CONFIG_PATH'))
 
+  // initialize token service which will do a check-sso to initiate session
+  // don't start during Jest tests as it messes up the test JWT
+  if (process.env.JEST_WORKER_ID === undefined) {
+    console.info('Starting token refresh service...') // eslint-disable-line no-console
+    await KeycloakService.initializeToken()
+  }
+
   // start Vue application
   console.info('Starting app...') // eslint-disable-line no-console
   new Vue({
