@@ -151,7 +151,8 @@ import * as Sentry from '@sentry/browser'
 import { getFeatureFlag, updateLdUser } from '@/utils'
 
 // Components
-import { PaySystemAlert, SbcFeeSummary, SbcFooter, SbcHeader } from '@/components'
+import SbcHeader from 'sbc-common-components/src/components/SbcHeader.vue'
+import { PaySystemAlert, SbcFeeSummary, SbcFooter } from '@/components'
 import { Actions, BreadCrumb, EntityInfo, Stepper } from '@/components/common'
 import * as Views from '@/views'
 
