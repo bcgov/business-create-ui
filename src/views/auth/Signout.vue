@@ -1,12 +1,9 @@
 <template>
-  <sbc-signout :redirect-url="businessesUrl" />
+  <SbcSignout :redirect-url="redirectUrl" />
 </template>
 
 <script lang="ts">
-// Libraries
 import { Component, Vue } from 'vue-property-decorator'
-
-// Components
 import { SbcSignout } from '@/components'
 
 @Component({
@@ -15,9 +12,9 @@ import { SbcSignout } from '@/components'
   }
 })
 export default class SignoutView extends Vue {
-  /** The URL of the Business Registry home page. */
-  private get businessesUrl (): string {
-    return sessionStorage.getItem('BUSINESSES_URL')
+  get redirectUrl (): string {
+    // after signout, redirect to BC Registries login page
+    return sessionStorage.getItem('REGISTRY_HOME_URL') + 'login'
   }
 }
 </script>

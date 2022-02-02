@@ -144,7 +144,6 @@
 // Libraries
 import { Component, Mixins, Vue, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
-import KeycloakService from 'sbc-common-components/src/services/keycloak.services'
 import { PAYMENT_REQUIRED } from 'http-status-codes'
 import { cloneDeep } from 'lodash'
 import * as Sentry from '@sentry/browser'
@@ -299,9 +298,6 @@ export default class App extends Mixins(
 
   // Enum for template
   readonly RouteNames = RouteNames
-
-  /** Whether the token refresh service is initialized. */
-  private tokenService: boolean = false
 
   /** The Update Current JS Date timer id. */
   private updateCurrentJsDateId = 0
@@ -531,34 +527,6 @@ export default class App extends Mixins(
       const dashboardUrl = sessionStorage.getItem('DASHBOARD_URL')
       window.location.assign(dashboardUrl + this.getEntityIdentifier)
     })
-  }
-
-  /** Starts token service to refresh KC token periodically. */
-  private async startTokenService (): Promise<void> {
-    // only initialize once
-    // don't start during Jest tests as it messes up the test JWT
-    if (this.tokenService || this.isJestRunning) return
-    try {
-      console.info('Starting token refresh service...') // eslint-disable-line no-console
-      await KeycloakService.initializeToken()
-      this.tokenService = true
-    } catch (error) {
-      // Happens when the refresh token has expired in session storage
-      // reload to get new tokens
-
-      // eslint-disable-next-line no-console
-      console.log('Could not initialize token refresher: ', error)
-      this.clearKeycloakSession()
-      location.reload()
-    }
-  }
-
-  /** Clears Keycloak token information from session storage. */
-  private clearKeycloakSession (): void {
-    sessionStorage.removeItem(SessionStorageKeys.KeyCloakToken)
-    sessionStorage.removeItem(SessionStorageKeys.KeyCloakRefreshToken)
-    sessionStorage.removeItem(SessionStorageKeys.KeyCloakIdToken)
-    sessionStorage.removeItem(SessionStorageKeys.CurrentAccount)
   }
 
   /** Fetches NR data and fetches draft filing. */
@@ -958,8 +926,6 @@ export default class App extends Mixins(
       this.assignIdentifier()
 
       this.setCurrentStep(this.$route.meta?.step || 1)
-
-      await this.startTokenService()
 
       // wait a moment for token to be available in session storage
       // and JS date to be fetched from server
