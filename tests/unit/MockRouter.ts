@@ -4,7 +4,7 @@
  * ref: https://medium.com/@sarngru/vue-router-unit-testing-navigation-6cc0b0f86811
  */
 
-import { routes } from '@/router/routes'
+import { routes } from '@/router'
 import VueRouter from 'vue-router'
 import { mockRouterComponents } from 'vue-test-utils-helpers'
 
