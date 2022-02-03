@@ -106,7 +106,7 @@ export const CooperativeDissolutionResource: DissolutionResourceIF = {
           type: ItemTypes.TOOLTIP,
           value: {
             label: 'special resolution',
-            text: 'Special Resolution - A decision voted on by the voting members of a Cooperative Association.'
+            text: 'Special Resolution - A decision passed by two thirds of a Cooperative Association.'
           }
         },
         {
