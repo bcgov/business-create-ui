@@ -27,7 +27,8 @@ import {
   CreateResolutionIF,
   DocumentDeliveryIF,
   OrgPersonIF,
-  SpecialResolutionIF
+  SpecialResolutionIF,
+  RegistrationStateIF
 } from '@/interfaces'
 
 // Constants and enums
@@ -75,6 +76,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Getter getFolioNumber!: string
   @Getter getTransactionalFolioNumber!: string
   @Getter isPremiumAccount!: boolean
+  @Getter getRegistration!: RegistrationStateIF
 
   @Action setAffidavit!: ActionBindingIF
   @Action setEntityType!: ActionBindingIF
@@ -105,6 +107,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Action setDocumentOptionalEmail!: ActionBindingIF
   @Action setDissolutionStatementStepData!: ActionBindingIF
   @Action setCustodianOfRecords!: ActionBindingIF
+  @Action setRegistrationStartDate!: ActionBindingIF
 
   /**
    * Builds an incorporation filing from store data. Used when saving a filing.
@@ -315,6 +318,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
         identifier: this.getTempId
       },
       registration: {
+        startDate: this.getRegistration.startDate,
         nameRequest: {
           legalType: this.getEntityType
         },
@@ -376,6 +380,9 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
       confirmEmail: draftFiling.registration.contactPoint.email
     }
     this.setBusinessContact(draftContact)
+
+    // restore start date
+    this.setRegistrationStartDate(draftFiling.registration.startDate)
 
     // restore Persons and Organizations
     this.setOrgPersonList(draftFiling.registration.parties)

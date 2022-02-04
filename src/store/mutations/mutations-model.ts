@@ -303,3 +303,7 @@ export const mutateCustodianValidity = (state: StateIF, validity: boolean) => {
 export const mutateCustodianOfRecords = (state: StateIF, custodian: OrgPersonIF) => {
   state.stateModel.dissolution.custodianOfRecords.custodian = custodian
 }
+
+export const mutateRegistrationStartDate = (state: StateIF, startDate: string) => {
+  state.stateModel.registration.startDate = startDate
+}

@@ -31,6 +31,23 @@ const incorporationResourceModel: IncorporationResourceIF = {
   }
 }
 
+const registrationResourceModel: any = {
+  entityType: null,
+  displayName: '',
+  statement: '',
+  nameRequestType: null,
+  steps: [],
+  filingData: null,
+  reviewAndConfirm: {
+    completingPartyStatement: {
+      certifyStatementHeader: null,
+      certifyStatements: [],
+      certifyClause: null,
+      entityDisplay: null
+    }
+  }
+}
+
 const dissolutionResourceModel: DissolutionResourceIF = {
   entityType: null,
   displayName: '',
@@ -51,5 +68,6 @@ const dissolutionResourceModel: DissolutionResourceIF = {
 
 export const resourceModel: any = {
   ...incorporationResourceModel,
-  ...dissolutionResourceModel
+  ...dissolutionResourceModel,
+  ...registrationResourceModel
 }

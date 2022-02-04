@@ -135,8 +135,8 @@ import { CommonMixin, EntityFilterMixin } from '@/mixins'
 import { CoopType, CorpTypeCd, RouteNames } from '@/enums'
 
 // Components
-import { BusinessContactInfo, CooperativeType, FolioNumber, OfficeAddresses } from '@/components/DefineCompany'
-import { NameRequestInfo } from '@/components/common'
+import { CooperativeType, FolioNumber, OfficeAddresses } from '@/components/DefineCompany'
+import { BusinessContactInfo, NameRequestInfo } from '@/components/common'
 
 @Component({
   components: {
@@ -279,12 +279,6 @@ export default class DefineCompany extends Mixins(CommonMixin, EntityFilterMixin
 
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
-
-.step-container {
-  margin-top: 1rem;
-  padding: 1.25rem;
-}
-
 .value.name-request {
   width: 100%;
   min-width: 24rem;

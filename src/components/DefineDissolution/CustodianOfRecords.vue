@@ -11,7 +11,7 @@
           <div class="section-container pt-10" :class="{ 'invalid-section': showErrors && !isFormValid }">
             <v-row no-gutters>
               <v-col cols="12" md="3" lg="3">
-                <label class="section-label title-label">
+                <label class="title-label">
                   {{ getCustodialRecordsResources.custodianTitle }}
                 </label>
               </v-col>
@@ -426,17 +426,10 @@ export default class CustodianOfRecords extends Mixins(CommonMixin, EntityFilter
 
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
-
 .section-container {
   padding: 1.5rem 2rem;
   font-size: 1rem;
   color: $gray7;
-}
-
-.section-label {
-  font-size: 1rem;
-  font-weight: bold;
-  color: $gray9;
 }
 
 .person-or-org-options {

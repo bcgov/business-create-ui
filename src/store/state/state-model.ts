@@ -1,6 +1,5 @@
 import { EmptyFees, StateModelIF } from '@/interfaces'
 import { cloneDeep } from 'lodash'
-import { getCustodialRecordsResources } from '@/store/getters'
 
 export const stateModel: StateModelIF = {
   currentJsDate: null,
@@ -202,5 +201,9 @@ export const stateModel: StateModelIF = {
       fileNumber: '',
       hasPlanOfArrangement: null
     }
+  },
+  registration: {
+    valid: false,
+    startDate: ''
   }
 }

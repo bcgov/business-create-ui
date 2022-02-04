@@ -64,11 +64,6 @@ export default class AddPeopleAndRoles extends Mixins(CommonMixin, EntityFilterM
 </script>
 
 <style lang="scss" scoped>
-.step-container {
-  margin-top: 1rem;
-  padding: 1.25rem;
-}
-
 .meta-container {
   display: flex;
   flex-flow: column nowrap;
