@@ -9,13 +9,15 @@ import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
 export default class AuthServices {
   /**
    * Fetches authorizations.
-   * @param iaNumber the temporary registration id for this IA (eg, T1234567)
+   * @param id the temp or business identifier (eg, T1234567 or BC1219948)
    * @returns a promise to return the roles object
    */
-  static async fetchNrAuthorizations (iaNumber: string): Promise<any> {
-    if (!iaNumber) throw new Error('Invalid parameter \'iaNumber\'')
+  static async fetchAuthorizations (id: string): Promise<any> {
+    if (!id) throw new Error('Invalid parameter \'id\'')
+
     const authApiUrl = sessionStorage.getItem(SessionStorageKeys.AuthApiUrl)
-    const url = `${authApiUrl}entities/${iaNumber}/authorizations`
+    const url = `${authApiUrl}entities/${id}/authorizations`
+
     return axios.get(url)
       .then(response => {
         if (response?.data?.roles) return response.data.roles

@@ -25,7 +25,7 @@ import '@/assets/styles/overrides.scss'
 import App from './App.vue'
 
 // Helpers
-import { fetchConfig, initLdClient } from '@/utils'
+import { fetchConfig, initLdClient, navigate } from '@/utils'
 import KeycloakService from 'sbc-common-components/src/services/keycloak.services'
 
 // get rid of "You are running Vue in development mode" console message
@@ -102,10 +102,6 @@ start().catch(error => {
   console.error(error) // eslint-disable-line no-console
   alert('There was an error starting this page. (See console for details.)\n' +
     'Please try again later.')
-  // try to redirect to Business Registry home page
-  const businessesUrl = sessionStorage.getItem('BUSINESSES_URL')
-  if (businessesUrl) {
-    // assume Businesses URL is always reachable
-    window.location.assign(businessesUrl)
-  }
+  // try to navigate to Business Registry home page
+  navigate(sessionStorage.getItem('BUSINESSES_URL'))
 })

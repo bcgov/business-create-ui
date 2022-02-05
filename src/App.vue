@@ -147,7 +147,7 @@ import { Action, Getter } from 'vuex-class'
 import { PAYMENT_REQUIRED } from 'http-status-codes'
 import { cloneDeep } from 'lodash'
 import * as Sentry from '@sentry/browser'
-import { getFeatureFlag, updateLdUser } from '@/utils'
+import { getFeatureFlag, updateLdUser, navigate } from '@/utils'
 
 // Components
 import SbcHeader from 'sbc-common-components/src/components/SbcHeader.vue'
@@ -169,7 +169,6 @@ import {
   SaveErrorDialog
 } from '@/components/dialogs'
 import {
-  AuthApiMixin,
   CommonMixin,
   DateMixin,
   EnumMixin,
@@ -192,10 +191,10 @@ import {
 import {
   DissolutionResources,
   IncorporationResources,
-  MyBusinessRegistryBreadcrumb,
+  getMyBusinessRegistryBreadcrumb,
   RegistrationResources,
-  RegistryDashboardBreadcrumb,
-  StaffDashboardBreadcrumb
+  getRegistryDashboardBreadcrumb,
+  getStaffDashboardBreadcrumb
 } from '@/resources'
 import { AuthServices, PayServices } from '@/services'
 
@@ -236,7 +235,6 @@ import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
   }
 })
 export default class App extends Mixins(
-  AuthApiMixin,
   CommonMixin,
   DateMixin,
   EnumMixin,
@@ -302,12 +300,18 @@ export default class App extends Mixins(
   /** The Update Current JS Date timer id. */
   private updateCurrentJsDateId = 0
 
+  /** Returns URL param string with Account ID if present, else empty string. */
+  private getParams (): string {
+    const accountId = sessionStorage.getItem('ACCOUNT_ID')
+    return accountId ? `?accountid=${accountId}` : ''
+  }
+
   /** The route breadcrumbs list. */
   private get breadcrumbs (): Array<BreadcrumbIF> {
     const crumbs: Array<BreadcrumbIF> = [
       {
         text: this.legalName || this.getNumberedEntityName,
-        href: `${sessionStorage.getItem('DASHBOARD_URL')}${this.getEntityIdentifier}`
+        href: `${sessionStorage.getItem('DASHBOARD_URL')}${this.getEntityIdentifier}/${this.getParams()}`
       },
       {
         text: this.getFilingName,
@@ -319,10 +323,10 @@ export default class App extends Mixins(
     // Staff don't want the home landing page and they can't access the Manage Business Dashboard
     if (this.isRoleStaff) {
       // If staff, set StaffDashboard as home crumb
-      crumbs.unshift(StaffDashboardBreadcrumb)
+      crumbs.unshift(getStaffDashboardBreadcrumb())
     } else {
       // For non-staff, set Home and Dashboard crumbs
-      crumbs.unshift(RegistryDashboardBreadcrumb, MyBusinessRegistryBreadcrumb)
+      crumbs.unshift(getRegistryDashboardBreadcrumb(), getMyBusinessRegistryBreadcrumb())
     }
 
     return crumbs
@@ -492,16 +496,16 @@ export default class App extends Mixins(
     this.fileAndPayInvalidNameRequestDialog = false
     const manageBusinessUrl = `${sessionStorage.getItem('AUTH_WEB_URL')}business`
     this.setHaveChanges(false)
-    window.location.assign(manageBusinessUrl)
+    navigate(manageBusinessUrl)
   }
 
-  /** Called to redirect to dashboard. */
+  /** Called to navigate to dashboard. */
   private goToDashboard (force: boolean = false): void {
     // check if there are no data changes
     if (!this.getHaveChanges || force) {
-      // redirect to dashboard
+      // navigate to dashboard
       const dashboardUrl = sessionStorage.getItem('DASHBOARD_URL')
-      window.location.assign(dashboardUrl + this.getEntityIdentifier)
+      navigate(dashboardUrl + this.getEntityIdentifier)
       return
     }
 
@@ -523,9 +527,9 @@ export default class App extends Mixins(
       // if we get here, Cancel was clicked
       // ignore changes
       this.setHaveChanges(false)
-      // redirect to dashboard
+      // navigate to dashboard
       const dashboardUrl = sessionStorage.getItem('DASHBOARD_URL')
-      window.location.assign(dashboardUrl + this.getEntityIdentifier)
+      navigate(dashboardUrl + this.getEntityIdentifier)
     })
   }
 
@@ -637,18 +641,20 @@ export default class App extends Mixins(
   /** Handle draft dissolution and return the resources for assignment. */
   private async handleDraftDissolution (): Promise<DissolutionResourceIF> {
     // ensure user is authorized to use this business
-    await this.fetchAuthorizations(this.getBusinessId).then(response => {
-      if (!response.data.roles || response.data.roles.length === 0) {
-        this.accountAuthorizationDialog = true
-        throw new Error('Auth error: inaccessible entity')
+    try {
+      // NB: will throw if API error
+      const authRoles = await AuthServices.fetchAuthorizations(this.getBusinessId)
+      // NB: roles array may contain 'view', 'edit', 'staff' or nothing
+      if (authRoles && authRoles.length > 0) {
+        this.setAuthRoles(authRoles)
       } else {
-        this.setAuthRoles(response.data.roles)
+        throw new Error('Auth error: inaccessible entity')
       }
-    }).catch(error => {
+    } catch (error) {
       console.log('Auth error =', error) // eslint-disable-line no-console
       this.accountAuthorizationDialog = true
       throw error // go to catch()
-    })
+    }
 
     // fetch draft filing
     // NB: will throw if API error
@@ -909,7 +915,7 @@ export default class App extends Mixins(
   /** Gets authorizations from Auth API, verifies roles, and stores them. */
   private async checkAuth (): Promise<any> {
     // NB: will throw if API error
-    const authRoles = await AuthServices.fetchNrAuthorizations(this.getTempId)
+    const authRoles = await AuthServices.fetchAuthorizations(this.getTempId)
     // NB: roles array may contain 'view', 'edit', 'staff' or nothing
     if (authRoles && authRoles.length > 0) {
       this.setAuthRoles(authRoles)

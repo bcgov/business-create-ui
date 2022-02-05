@@ -27,7 +27,6 @@ import {
   CreateResolutionIF,
   DocumentDeliveryIF,
   OrgPersonIF,
-  PersonIF,
   SpecialResolutionIF
 } from '@/interfaces'
 
