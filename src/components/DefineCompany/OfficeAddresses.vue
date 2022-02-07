@@ -4,7 +4,7 @@
     <template v-if="!isEditing">
       <v-row no-gutters id="summary-registered-address">
         <v-col md="3" class="mr-n1"><label><strong>Registered Office</strong></label></v-col>
-        <v-vol md="4">
+        <v-col md="4">
           <label class="mailing-address-header"><strong>Mailing Address</strong></label>
           <mailing-address
             v-if="!isEmptyAddress(mailingAddress)"
@@ -12,7 +12,7 @@
             :editing="false"
           />
           <div v-else>(Not entered)</div>
-        </v-vol>
+        </v-col>
 
         <v-col md="4">
           <label class="delivery-address-header"><strong>Delivery Address</strong></label>
