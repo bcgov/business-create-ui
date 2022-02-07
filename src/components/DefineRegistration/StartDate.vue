@@ -7,11 +7,12 @@
         </v-col>
         <v-col cols="12" md="10" lg="10" id="start-date-selector" class="pl-8">
           <date-picker
+            id="date-picker"
             ref="startDateRef"
             title="Start Date"
             :nudgeRight="40"
             :nudgeTop="85"
-            :initialValue="null"
+            :initialValue="initialValue"
             :minDate="startDateMinStr"
             :maxDate="startDateMaxStr"
             :inputRules="startDateRules"
@@ -25,7 +26,7 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Mixins } from 'vue-property-decorator'
+import { Component, Mixins, Prop } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import { ActionBindingIF } from '@/interfaces'
 
@@ -40,6 +41,10 @@ import { DateMixin } from '@/mixins'
   }
 })
 export default class StartDate extends Mixins(DateMixin) {
+  /** Initial date string value. */
+  @Prop({ default: '' })
+  readonly initialValue: string
+
   // Global actions
   @Action setRegistrationStartDate!: ActionBindingIF
 

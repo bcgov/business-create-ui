@@ -49,7 +49,7 @@
           and 90 days in the future. Make certain that this is the correct date as it cannot be easily corrected
           afterwards.
         </p>
-        <StartDate />
+        <StartDate :initialValue="getRegistration.startDate"/>
       </header>
     </section>
 
@@ -71,7 +71,8 @@ import { Action, Getter } from 'vuex-class'
 
 import { BusinessContactInfo, NameRequestInfo } from '@/components/common'
 import { StartDate } from '@/components/DefineRegistration'
-import { ActionBindingIF, BusinessContactIF } from '@/interfaces'
+import { ActionBindingIF, BusinessContactIF, RegistrationStateIF } from '@/interfaces'
+import { getRegistration } from '@/store/getters'
 
 @Component({
   components: {
@@ -82,6 +83,7 @@ import { ActionBindingIF, BusinessContactIF } from '@/interfaces'
 })
 export default class DefineRegistration extends Vue {
   @Getter getBusinessContact!: BusinessContactIF
+  @Getter getRegistration!: RegistrationStateIF
   @Getter isPremiumAccount!: boolean
 
   @Action setBusinessContact!: ActionBindingIF
