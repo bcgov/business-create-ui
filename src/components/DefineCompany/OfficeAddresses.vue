@@ -28,7 +28,7 @@
 
       <v-row no-gutters id="summary-records-address" v-if="!entityFilter(CorpTypeCd.COOP)" class="mt-4">
         <v-col md="3" class="mr-n1"><label><strong>Records Office</strong></label></v-col>
-        <v-vol md="4">
+        <v-col md="4">
           <label class="mailing-address-header"><strong>Mailing Address</strong></label>
           <mailing-address
             v-if="!inheritRegisteredAddress && !isEmptyAddress(recMailingAddress)"
@@ -37,9 +37,9 @@
           />
           <div v-else-if="isEmptyAddress(recMailingAddress)">(Not entered)</div>
           <div v-else>Same as Registered Office</div>
-        </v-vol>
+        </v-col>
 
-        <v-vol md="4">
+        <v-col md="4">
           <label class="delivery-address-header"><strong>Delivery Address</strong></label>
           <delivery-address
             v-if="!inheritRecMailingAddress && !inheritRegisteredAddress && !isEmptyAddress(recDeliveryAddress)"
@@ -49,7 +49,7 @@
           <div v-else-if="isEmptyAddress(recDeliveryAddress)">(Not entered)</div>
           <div v-else-if="inheritRegisteredAddress">Same as Registered Office</div>
           <div v-else>Same as Mailing Address</div>
-        </v-vol>
+        </v-col>
       </v-row>
     </template>
 
