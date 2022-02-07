@@ -190,11 +190,12 @@ import {
 } from '@/interfaces'
 import {
   DissolutionResources,
-  IncorporationResources,
+  getEntityDashboardBreadcrumb,
   getMyBusinessRegistryBreadcrumb,
-  RegistrationResources,
   getRegistryDashboardBreadcrumb,
-  getStaffDashboardBreadcrumb
+  getStaffDashboardBreadcrumb,
+  IncorporationResources,
+  RegistrationResources
 } from '@/resources'
 import { AuthServices, PayServices } from '@/services'
 
@@ -300,19 +301,10 @@ export default class App extends Mixins(
   /** The Update Current JS Date timer id. */
   private updateCurrentJsDateId = 0
 
-  /** Returns URL param string with Account ID if present, else empty string. */
-  private getParams (): string {
-    const accountId = sessionStorage.getItem('ACCOUNT_ID')
-    return accountId ? `?accountid=${accountId}` : ''
-  }
-
   /** The route breadcrumbs list. */
   private get breadcrumbs (): Array<BreadcrumbIF> {
     const crumbs: Array<BreadcrumbIF> = [
-      {
-        text: this.legalName || this.getNumberedEntityName,
-        href: `${sessionStorage.getItem('DASHBOARD_URL')}${this.getEntityIdentifier}/${this.getParams()}`
-      },
+      getEntityDashboardBreadcrumb(),
       {
         text: this.getFilingName,
         to: { name: this.$route.name }
@@ -330,22 +322,6 @@ export default class App extends Mixins(
     }
 
     return crumbs
-  }
-
-  /** The numbered entity name. */
-  private get getNumberedEntityName (): string {
-    return `${this.getCorpTypeNumberedDescription(this.getEntityType)}`
-  }
-
-  private get legalName (): string {
-    switch (this.getFilingType) {
-      case FilingTypes.DISSOLUTION:
-        return this.getBusinessLegalName
-      case FilingTypes.INCORPORATION_APPLICATION:
-        return this.getApprovedName
-      case FilingTypes.REGISTRATION:
-        return this.getApprovedName
-    }
   }
 
   /** Data for fee summary component. */
