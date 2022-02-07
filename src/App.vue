@@ -435,6 +435,9 @@ export default class App extends Mixins(
       console.log('Error while retrieving NR during File and Pay') // eslint-disable-line no-console
       this.nameRequestInvalidErrorDialog = true
     })
+
+    // init app
+    this.onRouteChanged()
   }
 
   /** Fetches and stores the current JS date. */
@@ -900,19 +903,13 @@ export default class App extends Mixins(
     }
   }
 
-  /** Called when $route property changes. Used to init app. */
-  @Watch('$route', { immediate: true })
+  /** Called when $route property changes. */
+  @Watch('$route', { immediate: false })
   private async onRouteChanged (): Promise<void> {
     // init only if we are not on signin or signout route
     if (!this.isRouteName(RouteNames.SIGN_IN) && !this.isRouteName(RouteNames.SIGN_OUT)) {
       this.assignIdentifier()
-
       this.setCurrentStep(this.$route.meta?.step || 1)
-
-      // wait a moment for token to be available in session storage
-      // and JS date to be fetched from server
-      await Vue.nextTick()
-
       await this.fetchData(true)
     }
 
