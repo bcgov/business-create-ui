@@ -1,11 +1,13 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify'
 import { mount, Wrapper } from '@vue/test-utils'
+import { getVuexStore } from '@/store'
 
 import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
 import { BusinessContactIF } from '@/interfaces/stepper-interfaces/common/business-contact-interface'
 
 Vue.use(Vuetify)
+const store = getVuexStore()
 
 let vuetify = new Vuetify({})
 
@@ -68,6 +70,7 @@ function createComponent (
       : {}
   }
   return mount(BusinessContactInfo, {
+    store,
     propsData: { initialValue: businessContact, isEditing: isEditing },
     vuetify
   })
