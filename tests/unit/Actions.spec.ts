@@ -18,6 +18,10 @@ Vue.use(Vuetify)
 const vuetify = new Vuetify({})
 const store = getVuexStore()
 
+// Populate session variables
+sessionStorage.setItem('AUTH_WEB_URL', 'https://auth.web.url/')
+sessionStorage.setItem('DASHBOARD_URL', 'https://dashboard.url/')
+
 // Mock NR data
 const nrData = {
   applicants: {
@@ -101,9 +105,6 @@ describe('Emits error event if NR validation fails in file and pay', () => {
   const effectiveDate = new Date(new Date().setDate(new Date().getDate() + 5))
   const formattedEffectiveDate = effectiveDate.toISOString().replace('Z', '+00:00')
 
-  sessionStorage.setItem('AUTH_WEB_URL', `myhost/basePath/auth/`)
-  sessionStorage.setItem('DASHBOARD_URL', `myhost/business/`)
-
   beforeEach(async () => {
     // mock the window.location.assign function
     delete window.location
@@ -176,9 +177,6 @@ describe('Actions component - Filing Functionality', () => {
   const { assign } = window.location
   const effectiveDate = new Date(new Date().setDate(new Date().getDate() + 5))
   const formattedEffectiveDate = effectiveDate.toISOString().replace('Z', '+00:00')
-
-  sessionStorage.setItem('AUTH_WEB_URL', `myhost/basePath/auth/`)
-  sessionStorage.setItem('DASHBOARD_URL', `myhost/business/`)
 
   // the filing body that would get sent to the API
   const filing = {
@@ -540,8 +538,7 @@ describe('Actions component - Filing Functionality', () => {
     expect(mockUpdateFiling).toHaveReturned()
 
     // verify redirection
-    const baseUrl = 'myhost/basePath/auth/makepayment/789/myhost%2Fbusiness%2FT1234567'
-
+    const baseUrl = 'https://auth.web.url/makepayment/789/https%3A%2F%2Fdashboard.url%2FT1234567'
     expect(window.location.assign).toHaveBeenCalledWith(baseUrl)
   })
 

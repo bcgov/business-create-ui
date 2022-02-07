@@ -44,7 +44,7 @@ export async function initLdClient (): Promise<void> {
 
     try {
       await ldClient.waitForInitialization()
-    } catch (e) {
+    } catch {
       // shut down client -- `variation()` will return undefined values
       await ldClient.close()
       // NB: LD logs its own errors
@@ -67,7 +67,7 @@ export async function updateLdUser (
     const user: LDUser = { key, email, firstName, lastName, custom }
     try {
       await ldClient.identify(user)
-    } catch (e) {
+    } catch {
       // NB: LD logs its own errors
     }
   }
