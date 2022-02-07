@@ -1,8 +1,6 @@
-import Vue from 'vue'
 import { wrapperFactory } from '../jest-wrapper-factory'
 import { RegistrationResources } from '@/resources'
 import { StartDate } from '@/components/DefineRegistration'
-import flushPromises from 'flush-promises'
 
 // Test Case Data
 const mockEntity = [
@@ -15,21 +13,6 @@ const mockEntity = [
     initialValue: '2022-02-08'
   }
 ]
-
-// /**
-//  * Returns the last event for a given name, to be used for testing event propagation in response to component changes.
-//  *
-//  * @param wrapper the wrapper for the component that is being tested.
-//  * @param name the name of the event that is to be returned.
-//  *
-//  * @returns the value of the last named event for the wrapper.
-//  */
-// function getLastEvent (wrapper: Wrapper<StartDate>, name: string): any {
-//   const eventsList: Array<any> = wrapper.emitted(name)
-//   const events: Array<any> = eventsList[eventsList.length - 1]
-//
-//   return events[0]
-// }
 
 for (const mock of mockEntity) {
   describe(`Start Date component for a ${mock.entityType}`, () => {
