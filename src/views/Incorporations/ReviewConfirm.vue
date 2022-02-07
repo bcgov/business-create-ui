@@ -76,7 +76,7 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Mixins, Vue } from 'vue-property-decorator'
+import { Component, Vue } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 
 // Interfaces
@@ -88,6 +88,7 @@ import {
 import { DocumentDelivery } from '@/components/common'
 import { IncorporationDateTime, Summary } from '@/components/ReviewConfirm'
 import { Certify } from '@/components'
+import { DateMixin } from '@/mixins'
 
 @Component({
   components: {
@@ -97,7 +98,7 @@ import { Certify } from '@/components'
     Summary
   }
 })
-export default class ReviewConfirm extends Mixins() {
+export default class ReviewConfirm extends Vue {
   @Getter getBusinessContact!: BusinessContactIF
   @Getter getCertifyState!: CertifyIF
   @Getter getCompanyTitle!: string

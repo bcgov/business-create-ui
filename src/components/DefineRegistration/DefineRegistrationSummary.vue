@@ -1,19 +1,19 @@
 <template>
   <v-card flat class="rounded-0">
-    <div class="define-company-header review-header">
+    <div class="define-registration-header review-header">
       <v-icon color="appDkBlue">mdi-domain</v-icon>
-      <label class="define-company-title pl-2"><strong>Your {{ getCompanyDisplayName }}</strong></label>
+      <label class="define-registration-title pl-2"><strong>Your Business</strong></label>
     </div>
 
-    <section :class="{ 'invalid-section': !isDefineCompanyValid }">
-      <div v-if="!isDefineCompanyValid" class="defineCompanyStepErrorMessage">
+    <section :class="{ 'invalid-section': !isDefineRegistrationValid }">
+      <div v-if="!isDefineRegistrationValid" class="defineRegistrationStepErrorMessage">
         <span>
           <v-icon color="error">mdi-information-outline</v-icon>
           &nbsp;
           <span class="error-text">This step is unfinished.</span>
           &nbsp;
           <router-link
-            :to="{ path: `/${RouteNames.DEFINE_COMPANY}` }"
+            :to="{ path: `/${RouteNames.DEFINE_REGISTRATION}` }"
           >Return to this step to finish it</router-link>
         </span>
       </div>
@@ -24,41 +24,12 @@
             <label>Name</label>
           </v-col>
           <v-col md="9">
-            <div class="company-name">{{ getApprovedName || '[Incorporation Number] B.C. Ltd.' }}</div>
+            <div class="company-name">{{ getApprovedName || 'Unavailable' }}</div>
             <div class="company-type">
               <span>{{ entityDescription }}</span>
             </div>
           </v-col>
         </v-row>
-        <v-row no-gutters v-if="getNameTranslations && getNameTranslations.length" class="mt-3">
-          <v-col md="3" class="mr-n1">
-            <label>Name Translation</label>
-          </v-col>
-          <v-col md="9">
-            <div v-for="(nameTranslation, index) in getNameTranslations" :key="`name_translation_${index}`">
-              {{ nameTranslation.name }}
-            </div>
-          </v-col>
-        </v-row>
-      </div>
-      <v-divider/>
-      <div v-if="isTypeCoop" class="section-container">
-        <v-row no-gutters>
-          <v-col md="3" class="mr-n1">
-            <label>Type</label>
-          </v-col>
-          <v-col md="9">
-            <div class="cooperative-type ml-n1">
-              <span>{{ getCooperativeType ? coopTypeToDescription(getCooperativeType) : '(Not Entered)' }}</span>
-            </div>
-          </v-col>
-        </v-row>
-      </div>
-
-      <v-divider />
-
-      <div class="section-container">
-        <OfficeAddresses :inputAddresses="getDefineCompanyStep.officeAddresses" :isEditing="false" />
       </div>
 
       <v-divider />
@@ -66,6 +37,22 @@
       <div class="section-container">
         <BusinessContactInfo :initialValue="getBusinessContact" :isEditing="false" />
       </div>
+
+      <v-divider />
+
+      <div class="section-container">
+        <v-row no-gutters>
+          <v-col md="3" class="mr-n1">
+            <label>Business Start Date</label>
+          </v-col>
+          <v-col md="9">
+            <div>{{ yyyyMmDdToPacificDate(getRegistration.startDate, true) || '(Not entered)' }}</div>
+          </v-col>
+        </v-row>
+      </div>
+
+      <v-divider v-if="isPremiumAccount" />
+
       <div class="section-container" v-if="isPremiumAccount">
         <FolioNumber :initialValue="getFolioNumber" :isEditing="false" />
       </div>
@@ -79,17 +66,18 @@ import { Component, Mixins } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 
 // Interfaces
-import { BusinessContactIF, DefineCompanyIF, NameTranslationIF } from '@/interfaces'
+import { BusinessContactIF, RegistrationStateIF } from '@/interfaces'
 
 // Components
 import { FolioNumber, OfficeAddresses } from '@/components/DefineCompany'
 import { BusinessContactInfo } from '@/components/common'
 
 // Mixins
-import { EntityFilterMixin, EnumMixin } from '@/mixins'
+import { DateMixin, EntityFilterMixin, EnumMixin } from '@/mixins'
 
 // Enums
-import { CoopType, RouteNames } from '@/enums'
+import { RouteNames } from '@/enums'
+import { getRegistration, isDefineRegistrationValid } from '@/store/getters'
 
 @Component({
   components: {
@@ -98,19 +86,15 @@ import { CoopType, RouteNames } from '@/enums'
     FolioNumber
   }
 })
-export default class SummaryDefineCompany extends Mixins(EntityFilterMixin, EnumMixin) {
+export default class DefineRegistrationSummary extends Mixins(DateMixin, EntityFilterMixin, EnumMixin) {
   // Getters
   @Getter getApprovedName!: string
-  @Getter getCompanyDisplayName!: string
-  @Getter getCooperativeType!: CoopType
-  @Getter isDefineCompanyValid!: boolean
+  @Getter isDefineRegistrationValid!: boolean
   @Getter isPremiumAccount!: boolean
-  @Getter isTypeCoop!: boolean
-  @Getter getNameTranslations!: NameTranslationIF[]
   @Getter getValidateSteps!: boolean
-  @Getter getDefineCompanyStep!: DefineCompanyIF
   @Getter getBusinessContact!: BusinessContactIF
   @Getter getFolioNumber!: string
+  @Getter getRegistration!: RegistrationStateIF
 
   /** The entity description  */
   private get entityDescription (): string {
@@ -125,22 +109,22 @@ export default class SummaryDefineCompany extends Mixins(EntityFilterMixin, Enum
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
 
-.defineCompanyStepErrorMessage {
+.defineRegistrationStepErrorMessage {
   padding-top: 1.25rem;
   padding-left: 1.25rem;
   color: $app-red;
 }
 
 .section-container {
-  padding: 1.5rem
+ padding: 1.5rem
 }
 
-.define-company-header {
+.define-registration-header {
   display: flex;
   background-color: $BCgovBlue5O;
   padding: 1.25rem;
 
-  .define-company-title {
+  .define-registration-title {
     color: $gray9;
   }
 }

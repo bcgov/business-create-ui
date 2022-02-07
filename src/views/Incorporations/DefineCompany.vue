@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="define-company">
     <div class="mt-10 company-statement">
       <p v-if="getCompanyTitle">
         <span class="company-statement-label">{{ getCompanyTitle }}:</span>
@@ -9,7 +9,7 @@
 
     <section class="mt-10">
       <header id="name-request-info-header">
-        <h2>1. Name</h2>
+        <h2>Name</h2>
       </header>
       <div :class="{ 'invalid-section': getShowErrors && !hasValidNameTranslation }">
         <v-card flat class="step-container">
@@ -20,7 +20,7 @@
 
     <section class="mt-10" v-show="isTypeCoop">
       <header id="association-type-header">
-        <h2>2. Cooperative Association Type</h2>
+        <h2>Cooperative Association Type</h2>
         <!-- Help Section -->
         <div class="mt-4">
           <span class="help-btn" @click="coopHelpToggle = !coopHelpToggle">
@@ -63,7 +63,7 @@
 
     <section class="mt-10" v-show="isEntityType">
       <header id="office-address-header">
-        <h2>{{isTypeCoop ? 3 : 2 }}. Registered <span v-if="!isTypeCoop">and Records</span> Office
+        <h2>Registered <span v-if="!isTypeCoop">and Records</span> Office
           Addresses</h2>
         <p>Enter the Registered Office <span v-if="!isTypeCoop">and Records Office
           </span> Mailing and Delivery Addresses. All addresses must be located in BC.
@@ -81,7 +81,7 @@
 
     <section class="mt-10" v-show="isEntityType">
       <header id="registered-office-contact-header">
-        <h2>{{isTypeCoop ? 4 : 3 }}. Registered Office Contact Information</h2>
+        <h2>Registered Office Contact Information</h2>
         <p>Enter the contact information for the business. The Corporate Registry will use this to communicate with the
           business in the future, including sending documents and notifications.
         </p>
@@ -98,7 +98,7 @@
     </section>
     <section class="mt-10" v-if="isEntityType && isPremiumAccount">
       <header id="folio-number-header">
-        <h2>{{isTypeCoop ? 5 : 4 }}. Folio / Reference Number (optional)</h2>
+        <h2>Folio / Reference Number (optional)</h2>
         <p>Add an optional Folio or Reference Number about this business for your own tracking purposes.
            This information is not used by the BC Business Registry.
         </p>
@@ -135,8 +135,8 @@ import { CommonMixin, EntityFilterMixin } from '@/mixins'
 import { CoopType, CorpTypeCd, RouteNames } from '@/enums'
 
 // Components
-import { BusinessContactInfo, CooperativeType, FolioNumber, OfficeAddresses } from '@/components/DefineCompany'
-import { NameRequestInfo } from '@/components/common'
+import { CooperativeType, FolioNumber, OfficeAddresses } from '@/components/DefineCompany'
+import { BusinessContactInfo, NameRequestInfo } from '@/components/common'
 
 @Component({
   components: {
@@ -279,10 +279,15 @@ export default class DefineCompany extends Mixins(CommonMixin, EntityFilterMixin
 
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
+#define-company {
+  /* Set "header-counter" to 0 */
+  counter-reset: header-counter;
+}
 
-.step-container {
-  margin-top: 1rem;
-  padding: 1.25rem;
+h2::before {
+  /* Increment "header-counter" by 1 */
+  counter-increment: header-counter;
+  content: counter(header-counter) '. ';
 }
 
 .value.name-request {

@@ -45,6 +45,14 @@ export interface RegistrationResourceIF {
   nameRequestType: NameRequestTypes
   steps: Array<StepIF>
   filingData: Array<FilingDataIF>
+  reviewAndConfirm: {
+    completingPartyStatement: {
+      certifyStatementHeader: string
+      certifyStatements: Array<string>
+      certifyClause: string
+      entityDisplay: string
+    }
+  }
 }
 
 // Interface to define the resource model

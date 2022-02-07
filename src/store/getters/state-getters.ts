@@ -25,7 +25,7 @@ import {
   StateIF,
   TombstoneIF,
   UploadAffidavitIF,
-  CreateResolutionIF
+  CreateResolutionIF, RegistrationStateIF
 } from '@/interfaces'
 import { getMaxStep } from './resource-getters'
 
@@ -575,4 +575,15 @@ export const isCustodianValid = (state: StateIF): boolean => {
 /** The custodian of records. */
 export const getCustodian = (state: StateIF): OrgPersonIF => {
   return state.stateModel.dissolution.custodianOfRecords.custodian
+}
+
+// Registration Getters
+/** Define Registration Step object. */
+export const getRegistration = (state: StateIF): RegistrationStateIF => {
+  return state.stateModel.registration
+}
+
+/** Is true when the step is valid. */
+export const isDefineRegistrationValid = (state: StateIF): boolean => {
+  return getRegistration(state).valid
 }

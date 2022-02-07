@@ -2,9 +2,9 @@
   <div id="office-addresses">
     <!-- Address Review -->
     <template v-if="!isEditing">
-      <v-layout row id="summary-registered-address">
-        <v-flex md4><label><strong>Registered Office</strong></label></v-flex>
-        <v-flex md4>
+      <v-row no-gutters id="summary-registered-address">
+        <v-col md="3" class="mr-n1"><label><strong>Registered Office</strong></label></v-col>
+        <v-col md="4">
           <label class="mailing-address-header"><strong>Mailing Address</strong></label>
           <mailing-address
             v-if="!isEmptyAddress(mailingAddress)"
@@ -12,9 +12,9 @@
             :editing="false"
           />
           <div v-else>(Not entered)</div>
-        </v-flex>
+        </v-col>
 
-        <v-flex md4>
+        <v-col md="4">
           <label class="delivery-address-header"><strong>Delivery Address</strong></label>
           <delivery-address
             v-if="!isEmptyAddress(deliveryAddress) && !inheritMailingAddress"
@@ -23,12 +23,12 @@
           />
           <div v-else-if="isEmptyAddress(deliveryAddress)">(Not entered)</div>
           <div v-else>Same as Mailing Address</div>
-        </v-flex>
-      </v-layout>
+        </v-col>
+      </v-row>
 
-      <v-layout row id="summary-records-address" v-if="!entityFilter(CorpTypeCd.COOP)" class="mt-4">
-        <v-flex md4><label><strong>Records Office</strong></label></v-flex>
-        <v-flex md4>
+      <v-row no-gutters id="summary-records-address" v-if="!entityFilter(CorpTypeCd.COOP)" class="mt-4">
+        <v-col md="3" class="mr-n1"><label><strong>Records Office</strong></label></v-col>
+        <v-col md="4">
           <label class="mailing-address-header"><strong>Mailing Address</strong></label>
           <mailing-address
             v-if="!inheritRegisteredAddress && !isEmptyAddress(recMailingAddress)"
@@ -37,9 +37,9 @@
           />
           <div v-else-if="isEmptyAddress(recMailingAddress)">(Not entered)</div>
           <div v-else>Same as Registered Office</div>
-        </v-flex>
+        </v-col>
 
-        <v-flex md4>
+        <v-col md="4">
           <label class="delivery-address-header"><strong>Delivery Address</strong></label>
           <delivery-address
             v-if="!inheritRecMailingAddress && !inheritRegisteredAddress && !isEmptyAddress(recDeliveryAddress)"
@@ -49,8 +49,8 @@
           <div v-else-if="isEmptyAddress(recDeliveryAddress)">(Not entered)</div>
           <div v-else-if="inheritRegisteredAddress">Same as Registered Office</div>
           <div v-else>Same as Mailing Address</div>
-        </v-flex>
-      </v-layout>
+        </v-col>
+      </v-row>
     </template>
 
     <!-- Address Form -->

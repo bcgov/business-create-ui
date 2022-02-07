@@ -87,8 +87,9 @@ import { AuthServices } from '@/services'
 import { ActionBindingIF, AddressIF, BusinessContactIF, BusinessIF } from '@/interfaces'
 
 // Components
-import { BusinessContactInfo, OfficeAddresses } from '@/components/DefineCompany'
+import { OfficeAddresses } from '@/components/DefineCompany'
 import { ContactInfo, BaseAddress } from '@/components'
+import { BusinessContactInfo } from '@/components/common'
 
 // Mixins
 import { CommonMixin, EntityFilterMixin, EnumMixin } from '@/mixins'

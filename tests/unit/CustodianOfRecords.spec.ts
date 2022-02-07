@@ -85,7 +85,7 @@ for (const mock of custodianTestCases) {
     })
 
     it('displays custodian title and section subtitle', () => {
-      expect(wrapper.find('.section-label').text()).toBe(mock.custodianTitle)
+      expect(wrapper.find('label').text()).toBe(mock.custodianTitle)
     })
 
     it('displays or hides the person input fields', () => {

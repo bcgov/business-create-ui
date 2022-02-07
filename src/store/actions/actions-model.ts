@@ -269,3 +269,7 @@ export const setCustodianValidity: ActionIF = ({ commit }, validity: boolean): v
 export const setCustodianOfRecords: ActionIF = ({ commit }, custodian: OrgPersonIF): void => {
   commit('mutateCustodianOfRecords', custodian)
 }
+
+export const setRegistrationStartDate: ActionIF = ({ commit }, startDate: string): void => {
+  commit('mutateRegistrationStartDate', startDate)
+}

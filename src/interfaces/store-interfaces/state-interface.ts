@@ -16,6 +16,7 @@ import {
   NameRequestIF,
   NameTranslationIF,
   PeopleAndRoleIF,
+  RegistrationStateIF,
   ResourceIF,
   ShareStructureIF,
   StaffPaymentStepIF,
@@ -58,6 +59,7 @@ export interface StateModelIF {
   validateSteps: boolean
   showErrors: boolean
   feePrices: Array<FeesIF>
+  registration: RegistrationStateIF
 
   // staffPaymentStep and courtOrder are common and for now it is only used in dissolution
   staffPaymentStep: StaffPaymentStepIF

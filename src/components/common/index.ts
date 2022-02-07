@@ -1,4 +1,5 @@
 import Actions from './Actions.vue'
+import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
 import ContactInfo from '@/components/common/ContactInfo.vue'
 import DocumentDelivery from './DocumentDelivery.vue'
 import EntityInfo from './EntityInfo.vue'
@@ -12,6 +13,7 @@ import { BreadCrumb } from '@bcrs-shared-components/bread-crumb'
 export {
   Actions,
   BreadCrumb,
+  BusinessContactInfo,
   ContactInfo,
   DocumentDelivery,
   EntityInfo,
