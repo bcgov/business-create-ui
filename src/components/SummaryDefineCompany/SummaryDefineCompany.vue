@@ -20,10 +20,10 @@
 
       <div class="section-container">
         <v-row no-gutters>
-          <v-col md="4">
-            <label class="ml-n3">Name</label>
+          <v-col md="3" class="mr-n1">
+            <label>Name</label>
           </v-col>
-          <v-col md="8">
+          <v-col md="9">
             <div class="company-name">{{ getApprovedName || '[Incorporation Number] B.C. Ltd.' }}</div>
             <div class="company-type">
               <span>{{ entityDescription }}</span>
@@ -31,10 +31,10 @@
           </v-col>
         </v-row>
         <v-row no-gutters v-if="getNameTranslations && getNameTranslations.length" class="mt-3">
-          <v-col md="4">
-            <label class="ml-n3">Name Translation</label>
+          <v-col md="3" class="mr-n1">
+            <label>Name Translation</label>
           </v-col>
-          <v-col md="8">
+          <v-col md="9">
             <div v-for="(nameTranslation, index) in getNameTranslations" :key="`name_translation_${index}`">
               {{ nameTranslation.name }}
             </div>
@@ -44,10 +44,10 @@
       <v-divider/>
       <div v-if="isTypeCoop" class="section-container">
         <v-row no-gutters>
-          <v-col md="4">
-            <label class="ml-n3">Type</label>
+          <v-col md="3" class="mr-n1">
+            <label>Type</label>
           </v-col>
-          <v-col md="8">
+          <v-col md="9">
             <div class="cooperative-type ml-n1">
               <span>{{ getCooperativeType ? coopTypeToDescription(getCooperativeType) : '(Not Entered)' }}</span>
             </div>
@@ -132,9 +132,7 @@ export default class SummaryDefineCompany extends Mixins(EntityFilterMixin, Enum
 }
 
 .section-container {
-  padding-left: 2rem;
-  padding-top: 1.25rem;
-  padding-bottom: 1.25rem;
+  padding: 1.5rem
 }
 
 .define-company-header {

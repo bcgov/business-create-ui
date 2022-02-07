@@ -43,32 +43,31 @@ export default class StartDate extends Mixins(DateMixin) {
   // Global actions
   @Action setRegistrationStartDate!: ActionBindingIF
 
+  // Global getters
+  @Getter getCurrentJsDate!: Date
+
   /** The minimum start date that can be entered (Up to 2 years ago today). */
   private get startDateMin (): Date {
-    const startDateMin = new Date()
+    const startDateMin = new Date(this.getCurrentJsDate)
     startDateMin.setFullYear(startDateMin.getFullYear() - 2)
     return startDateMin
   }
 
   /** The minimum start date string. */
   private get startDateMinStr (): string {
-    const startDateMin = new Date()
-    startDateMin.setFullYear(startDateMin.getFullYear() - 2)
-    return this.dateToYyyyMmDd(startDateMin)
+    return this.dateToYyyyMmDd(this.startDateMin)
   }
 
   /** The maximum start date that can be entered (Up to 90 days from today). */
   private get startDateMax (): Date {
-    const startDateMax = new Date()
+    const startDateMax = new Date(this.getCurrentJsDate)
     startDateMax.setDate(startDateMax.getDay() + 90)
     return startDateMax
   }
 
   /** The maximum start date string. */
   private get startDateMaxStr (): string {
-    const startDateMax = new Date()
-    startDateMax.setDate(startDateMax.getDay() + 90)
-    return this.dateToYyyyMmDd(startDateMax)
+    return this.dateToYyyyMmDd(this.startDateMax)
   }
 
   /** Validations rules for start date field. */

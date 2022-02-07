@@ -1,21 +1,22 @@
 <template>
   <div id="business-contact-info">
-     <v-layout row v-if="!isEditing">
-        <v-flex md4>
-          <label><strong>Business Contact<br>Information</strong></label>
-        </v-flex>
-        <v-flex md4>
-          <div><label><strong>Email Address</strong></label></div>
-          <div id="lbl-email">{{ !!contact.email ? contact.email : '(Not entered)' }}</div>
-        </v-flex>
-        <v-flex md4>
-          <div><label><strong>Phone Number</strong></label></div>
-          <div id="lbl-phone" v-if="!!contact.phone">{{ contact.phone }}
-            <span v-if="!!contact.extension">Ext: {{ contact.extension }}</span>
-          </div>
-          <div id="lbl-phone" v-else>(Not entered)</div>
-        </v-flex>
-    </v-layout>
+     <v-row no-gutters v-if="!isEditing">
+       <v-col cols="3" class="mr-n1">
+         <label v-if="isIncorporationFiling"><strong>Registered Office <br>Contact Information</strong></label>
+         <label v-else><strong>Business Contact<br>Information</strong></label>
+       </v-col>
+       <v-col md="4">
+         <div><label><strong>Email Address</strong></label></div>
+         <div id="lbl-email">{{ !!contact.email ? contact.email : '(Not entered)' }}</div>
+       </v-col>
+       <v-col md="4">
+         <div><label><strong>Phone Number</strong></label></div>
+         <div id="lbl-phone" v-if="!!contact.phone">{{ contact.phone }}
+           <span v-if="!!contact.extension">Ext: {{ contact.extension }}</span>
+         </div>
+         <div id="lbl-phone" v-else>(Not entered)</div>
+       </v-col>
+     </v-row>
 
     <v-card flat class="step-container section-container" v-else>
       <v-form v-model="formValid" ref="form" name="business-contact-form">
@@ -87,6 +88,7 @@
 
 <script lang="ts">
 import { Component, Vue, Prop, Watch, Emit, Mixins } from 'vue-property-decorator'
+import { Getter } from 'vuex-class'
 import { mask } from 'vue-the-mask'
 import { BusinessContactIF } from '@/interfaces'
 import { CommonMixin } from '@/mixins'
@@ -104,6 +106,8 @@ export default class BusinessContactInfo extends Mixins(CommonMixin) {
 
   @Prop({ default: false })
   private readonly showErrors!: boolean
+
+  @Getter isIncorporationFiling!: boolean
 
   // Rules for template
   readonly Rules = Rules

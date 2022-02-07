@@ -30,6 +30,25 @@ export default class LegalApiMixin extends Vue {
     const url = `businesses/${this.getTempId}/filings`
     return axios.get(url)
       .then(response => {
+        response.data.filing = {
+          'header': {
+            'name': 'registration',
+            'filingId': 2938,
+            'status': 'DRAFT'
+          },
+          'business': {
+            'legalType': 'SP',
+            'natureOfBusiness': 'Testing a nature of Business for SP'
+          },
+          'registration': {
+            'nameRequest': {
+              'legalType': 'SP',
+              'nrNumber': 'NR 8433086'
+            },
+            'businessType': 'SP'
+          }
+        }
+
         // look at only the first filing
         const filing = response?.data?.filing
         const filingName = filing?.header?.name

@@ -55,7 +55,7 @@
       </header>
       <div :class="{ 'invalid-section': isCertifyInvalid }">
         <Certify
-          :currentDate="getCurrentDate"
+          :currentDate="dateToYyyyMmDd(getCurrentJsDate)"
           :certifiedBy="getCertifyState.certifiedBy"
           :entityDisplay="getCompletingPartyStatement.entityDisplay"
           :isCertified="getCertifyState.valid"
@@ -88,6 +88,7 @@ import {
 import { DocumentDelivery } from '@/components/common'
 import { IncorporationDateTime, Summary } from '@/components/ReviewConfirm'
 import { Certify } from '@/components'
+import { DateMixin } from '@/mixins'
 
 @Component({
   components: {
@@ -97,7 +98,7 @@ import { Certify } from '@/components'
     Summary
   }
 })
-export default class ReviewConfirm extends Mixins() {
+export default class ReviewConfirm extends Mixins(DateMixin) {
   @Getter getBusinessContact!: BusinessContactIF
   @Getter getCertifyState!: CertifyIF
   @Getter getCompanyTitle!: string
@@ -108,7 +109,7 @@ export default class ReviewConfirm extends Mixins() {
   @Getter isTypeBcomp!: boolean
   @Getter isTypeCoop!: boolean
   @Getter isRoleStaff!: boolean
-  @Getter getCurrentDate!: string
+  @Getter getCurrentJsDate!: Date
   @Getter getEffectiveDateTime!: EffectiveDateTimeIF
   @Getter getUserEmail!: string
 

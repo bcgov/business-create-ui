@@ -16,8 +16,8 @@ export const GeneralPartnershipResource: RegistrationResourceIF = {
     completingPartyStatement: {
       certifyStatementHeader: null,
       certifyStatements: [],
-      certifyClause: `Note: It is an offence to make or assist in making a false or misleading statement in a record
-      filed under the Partnership Act. A person who commits this offence is subject to a maximum fine of $5,000.`,
+      certifyClause: 'Note: It is an offence to make or assist in making a false or misleading statement in a record' +
+        'filed under the Partnership Act. A person who commits this offence is subject to a maximum fine of $5,000.',
       entityDisplay: null
     }
   }

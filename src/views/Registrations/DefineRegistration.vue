@@ -2,7 +2,7 @@
   <div id="define-registration">
     <section class="mt-10">
       <header id="name-info">
-        <h2>1. Name</h2>
+        <h2>Name</h2>
       </header>
       <v-card flat class="step-container">
         <NameRequestInfo />
@@ -11,7 +11,7 @@
 
     <section class="mt-10">
       <header id="business-addresses">
-        <h2>2. Business Addresses</h2>
+        <h2>Business Addresses</h2>
         <p class="mt-4">Enter the business mailing and delivery addresses. The Delivery Address must be located in
           British Columbia.
         </p>
@@ -20,7 +20,7 @@
 
     <section class="mt-10">
       <header id="business-contact">
-        <h2>3. Business Contact Information</h2>
+        <h2>Business Contact Information</h2>
         <p class="mt-4">Enter the contact information for the business. The Corporate Registry will use this to
           communicate with the business in the future, including sending registration documents and notifications.
         </p>
@@ -36,11 +36,11 @@
 
     <section class="mt-10">
       <header id="business-start-date">
-        <h2>4. Business Start Date</h2>
+        <h2>Business Start Date</h2>
         <p class="mt-4">Enter the start date of the business. The start date can be
           <v-tooltip top max-width="20rem" content-class="top-tooltip" transition="fade-transition">
             <template v-slot:activator="{ on }">
-              <span v-on="on" class="tool-tip dotted-underline"> no more than 2 years in the past</span>
+              <span v-on="on" class="tool-tip dotted-underline">no more than 2 years in the past</span>
             </template>
             <span>
               Choose the oldest date possible even if the actual start date is older than 2 years in the past.
@@ -55,8 +55,8 @@
 
     <section class="mt-10" v-if="isPremiumAccount">
       <header id="folio-number">
-        <h2>5. Folio or Reference Number</h2>
-        <p class="mt-4">Add an optional Folio or Reference Number this business for your own tracking purposes. This
+        <h2>Folio or Reference Number</h2>
+        <p class="mt-4">Add an optional Folio or Reference Number to this business for your own tracking purposes. This
           information is not used by the BC Business Registry.
         </p>
       </header>
@@ -97,4 +97,15 @@ export default class DefineRegistration extends Vue {
 
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
+
+#define-registration {
+  /* Set "header-counter" to 0 */
+  counter-reset: header-counter;
+}
+
+h2::before {
+  /* Increment "header-counter" by 1 */
+  counter-increment: header-counter;
+  content: counter(header-counter) '. ';
+}
 </style>

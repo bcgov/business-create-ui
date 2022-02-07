@@ -20,10 +20,10 @@
 
       <div class="section-container">
         <v-row no-gutters>
-          <v-col md="4">
-            <label class="ml-n3">Name</label>
+          <v-col md="3" class="mr-n1">
+            <label>Name</label>
           </v-col>
-          <v-col md="8">
+          <v-col md="9">
             <div class="company-name">{{ getApprovedName || 'Unavailable' }}</div>
             <div class="company-type">
               <span>{{ entityDescription }}</span>
@@ -42,10 +42,10 @@
 
       <div class="section-container">
         <v-row no-gutters>
-          <v-col md="4">
-            <label class="ml-n3">Business Start Date</label>
+          <v-col md="3" class="mr-n1">
+            <label>Business Start Date</label>
           </v-col>
-          <v-col md="8">
+          <v-col md="9">
             <div>{{ yyyyMmDdToPacificDate(getRegistration.startDate, true) || '(Not entered)' }}</div>
           </v-col>
         </v-row>
@@ -116,9 +116,7 @@ export default class DefineRegistrationSummary extends Mixins(DateMixin, EntityF
 }
 
 .section-container {
-  padding-left: 2rem;
-  padding-top: 1.25rem;
-  padding-bottom: 1.25rem;
+ padding: 1.5rem
 }
 
 .define-registration-header {

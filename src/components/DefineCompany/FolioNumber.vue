@@ -1,19 +1,19 @@
 <template>
   <div id="folio-number">
-    <v-layout row v-if="!isEditing" id="folio-number-read-only">
-      <v-flex md4>
+    <v-row no-gutters v-if="!isEditing" id="folio-number-read-only">
+      <v-col md="3" class="mr-n1">
         <label><strong>Folio Information</strong></label>
-      </v-flex>
-      <v-flex md8>
+      </v-col>
+      <v-col md="9">
         <label><strong>Folio Number</strong></label>
         <div id="lbl-folio-number">{{ !!folioNumber ? folioNumber : 'Not entered' }}</div>
-      </v-flex>
-    </v-layout>
-    <v-row v-else id="folio-number-editing">
-      <v-col>
+      </v-col>
+    </v-row>
+    <v-row no-gutters v-else id="folio-number-editing">
+      <v-col md="2">
         <label><strong>Folio Number</strong></label>
       </v-col>
-      <v-col cols="12" sm="8" md="10">
+      <v-col md="10" class="pl-8">
         <v-form>
           <v-text-field
             id="folio-number-text-field"
@@ -81,7 +81,6 @@ export default class FolioNumber extends Vue {
 
 .row .col:first-child {
   width: 12rem;
-  max-width: 12rem;
 }
 
 label {
