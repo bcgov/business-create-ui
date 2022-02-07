@@ -30,7 +30,7 @@
       </header>
       <div :class="{ 'invalid-section': false }">
         <Certify
-          :currentDate="dateToYyyyMmDd(getCurrentJsDate)"
+          :currentDate="getCurrentDate"
           :statements="[]"
           :message="getCompletingPartyStatement.certifyClause"
         />
@@ -40,7 +40,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins } from 'vue-property-decorator'
+import { Component, Vue } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 import { BusinessContactIF, CertifyStatementIF } from '@/interfaces'
 import { Certify } from '@/components'
@@ -55,12 +55,12 @@ import { DateMixin } from '@/mixins'
     DocumentDelivery
   }
 })
-export default class RegisterReviewConfirm extends Mixins(DateMixin) {
+export default class RegisterReviewConfirm extends Vue {
   @Getter getBusinessContact!: BusinessContactIF
   @Getter getCompanyTitle!: string
   @Getter getCompanyDescription!: string
   @Getter getCompletingPartyStatement!: CertifyStatementIF
-  @Getter getCurrentJsDate!: Date
+  @Getter getCurrentDate!: string
   @Getter getUserEmail!: string
 }
 </script>

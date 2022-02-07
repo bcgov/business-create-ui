@@ -55,7 +55,7 @@
       </header>
       <div :class="{ 'invalid-section': isCertifyInvalid }">
         <Certify
-          :currentDate="dateToYyyyMmDd(getCurrentJsDate)"
+          :currentDate="getCurrentDate"
           :certifiedBy="getCertifyState.certifiedBy"
           :entityDisplay="getCompletingPartyStatement.entityDisplay"
           :isCertified="getCertifyState.valid"
@@ -76,7 +76,7 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Mixins, Vue } from 'vue-property-decorator'
+import { Component, Vue } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 
 // Interfaces
@@ -98,7 +98,7 @@ import { DateMixin } from '@/mixins'
     Summary
   }
 })
-export default class ReviewConfirm extends Mixins(DateMixin) {
+export default class ReviewConfirm extends Vue {
   @Getter getBusinessContact!: BusinessContactIF
   @Getter getCertifyState!: CertifyIF
   @Getter getCompanyTitle!: string
@@ -109,7 +109,7 @@ export default class ReviewConfirm extends Mixins(DateMixin) {
   @Getter isTypeBcomp!: boolean
   @Getter isTypeCoop!: boolean
   @Getter isRoleStaff!: boolean
-  @Getter getCurrentJsDate!: Date
+  @Getter getCurrentDate!: string
   @Getter getEffectiveDateTime!: EffectiveDateTimeIF
   @Getter getUserEmail!: string
 
