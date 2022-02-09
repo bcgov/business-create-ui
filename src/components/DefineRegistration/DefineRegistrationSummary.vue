@@ -77,7 +77,6 @@ import { DateMixin, EntityFilterMixin, EnumMixin } from '@/mixins'
 
 // Enums
 import { RouteNames } from '@/enums'
-import { getRegistration, isDefineRegistrationValid } from '@/store/getters'
 
 @Component({
   components: {

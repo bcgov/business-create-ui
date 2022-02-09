@@ -1,5 +1,5 @@
 <template>
-  <v-card flat class="rounded-4 py-1" :class="{ 'invalid-section': getValidateSteps && !dateText }">
+  <v-card flat class="rounded-4 py-1" :class="{ 'invalid-section': getShowErrors && !dateText }">
     <div class="section-container step-container">
       <v-row no-gutters>
         <v-col cols="12" md="2" lg="2">
@@ -56,7 +56,6 @@ export default class StartDate extends Mixins(DateMixin) {
   // Global getters
   @Getter getCurrentJsDate!: Date
   @Getter getShowErrors!: boolean
-  @Getter getValidateSteps!: boolean
 
   private dateText = ''
 
@@ -89,7 +88,7 @@ export default class StartDate extends Mixins(DateMixin) {
   /** Validations rules for start date field. */
   get startDateRules (): Array<Function> {
     // apply rules when app validations are triggered
-    if (this.getValidateSteps) {
+    if (this.getShowErrors) {
       return [
         (v: string) => !!v || 'Business start date is required',
         (v: string) =>
@@ -108,7 +107,7 @@ export default class StartDate extends Mixins(DateMixin) {
     this.setRegistrationStartDate(dateString)
   }
 
-  @Watch('getValidateSteps')
+  @Watch('getShowErrors')
   validateForm (): void {
     this.$refs.startDateRef.validateForm()
   }
