@@ -64,7 +64,7 @@ export default class StartDate extends Mixins(DateMixin) {
   private get startDateMin (): Date {
     const startDateMin = new Date(this.getCurrentJsDate)
     startDateMin.setFullYear(startDateMin.getFullYear() - 2)
-    startDateMin.setHours(0, 0, 0) // Set hours, minutes and seconds
+    startDateMin.setHours(0, 0, 0) // Set time to 0 for accurate Date Rules comparison
 
     return startDateMin
   }
@@ -88,7 +88,7 @@ export default class StartDate extends Mixins(DateMixin) {
 
   /** Validations rules for start date field. */
   get startDateRules (): Array<Function> {
-    // only apply rules when Future Effective is selected
+    // apply rules when app validations are triggered
     if (this.getValidateSteps) {
       return [
         (v: string) => !!v || 'Business start date is required',
