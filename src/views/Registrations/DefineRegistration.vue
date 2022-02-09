@@ -66,13 +66,15 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Mixins, Vue, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 
 import { BusinessContactInfo, NameRequestInfo } from '@/components/common'
 import { StartDate } from '@/components/DefineRegistration'
 import { ActionBindingIF, BusinessContactIF, RegistrationStateIF } from '@/interfaces'
 import { getRegistration } from '@/store/getters'
+import { RouteNames } from '@/enums'
+import { CommonMixin, EntityFilterMixin, EnumMixin } from '@/mixins'
 
 @Component({
   components: {
@@ -81,9 +83,10 @@ import { getRegistration } from '@/store/getters'
     StartDate
   }
 })
-export default class DefineRegistration extends Vue {
+export default class DefineRegistration extends Mixins(CommonMixin) {
   @Getter getBusinessContact!: BusinessContactIF
   @Getter getRegistration!: RegistrationStateIF
+  @Getter getShowErrors!: boolean
   @Getter isPremiumAccount!: boolean
 
   @Action setBusinessContact!: ActionBindingIF
@@ -93,6 +96,22 @@ export default class DefineRegistration extends Vue {
   private onBusinessContactFormValidityChange (valid: boolean): void {
     this.businessContactFormValid = valid
     // todo: handle state validity
+  }
+
+  @Watch('$route')
+  private async scrollToInvalidComponent (): Promise<void> {
+    if (this.getShowErrors && this.$route.name === RouteNames.DEFINE_REGISTRATION) {
+      // Scroll to invalid components.
+      await Vue.nextTick()
+      await this.validateAndScroll(
+        {
+          isStartDateValid: !!this.getRegistration.startDate
+        },
+        [
+          'business-start-date'
+        ]
+      )
+    }
   }
 }
 </script>

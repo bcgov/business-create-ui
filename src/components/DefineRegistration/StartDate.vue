@@ -1,5 +1,5 @@
 <template>
-  <v-card flat class="rounded-4 py-1">
+  <v-card flat class="rounded-4 py-1" :class="{ 'invalid-section': getValidateSteps && !dateText }">
     <div class="section-container step-container">
       <v-row no-gutters>
         <v-col cols="12" md="2" lg="2">
@@ -16,7 +16,7 @@
             :minDate="startDateMinStr"
             :maxDate="startDateMaxStr"
             :inputRules="startDateRules"
-            @emitDateSync="setRegistrationStartDate($event)"
+            @emitDateSync="startDateHandler($event)"
           />
         </v-col>
       </v-row>
@@ -26,7 +26,7 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Mixins, Prop } from 'vue-property-decorator'
+import { Component, Mixins, Prop, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import { ActionBindingIF } from '@/interfaces'
 
@@ -41,6 +41,11 @@ import { DateMixin } from '@/mixins'
   }
 })
 export default class StartDate extends Mixins(DateMixin) {
+  // Refs
+  $refs!: {
+    startDateRef: DatePicker
+  }
+
   /** Initial date string value. */
   @Prop({ default: '' })
   readonly initialValue: string
@@ -50,11 +55,17 @@ export default class StartDate extends Mixins(DateMixin) {
 
   // Global getters
   @Getter getCurrentJsDate!: Date
+  @Getter getShowErrors!: boolean
+  @Getter getValidateSteps!: boolean
+
+  private dateText = ''
 
   /** The minimum start date that can be entered (Up to 2 years ago today). */
   private get startDateMin (): Date {
     const startDateMin = new Date(this.getCurrentJsDate)
     startDateMin.setFullYear(startDateMin.getFullYear() - 2)
+    startDateMin.setHours(0, 0, 0) // Set hours, minutes and seconds
+
     return startDateMin
   }
 
@@ -77,16 +88,29 @@ export default class StartDate extends Mixins(DateMixin) {
 
   /** Validations rules for start date field. */
   get startDateRules (): Array<Function> {
-    return [
-      (v: string) => !!v || 'Start Date is required',
-      (v: string) =>
-        RuleHelpers.DateRuleHelpers
-          .isBetweenDates(this.startDateMin,
-            this.startDateMax,
-            v) ||
-        `Date should be between ${this.dateToPacificDate(this.startDateMin, true)} and
+    // only apply rules when Future Effective is selected
+    if (this.getValidateSteps) {
+      return [
+        (v: string) => !!v || 'Business start date is required',
+        (v: string) =>
+          RuleHelpers.DateRuleHelpers
+            .isBetweenDates(this.startDateMin,
+              this.startDateMax,
+              v) ||
+          `Date should be between ${this.dateToPacificDate(this.startDateMin, true)} and
          ${this.dateToPacificDate(this.startDateMax, true)}`
-    ]
+      ]
+    }
+  }
+
+  private startDateHandler (dateString: string): void {
+    this.dateText = dateString
+    this.setRegistrationStartDate(dateString)
+  }
+
+  @Watch('getValidateSteps')
+  validateForm (): void {
+    this.$refs.startDateRef.validateForm()
   }
 }
 </script>
