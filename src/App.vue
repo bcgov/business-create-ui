@@ -914,7 +914,8 @@ export default class App extends Mixins(
     }
 
     if (this.isRouteName(RouteNames.REVIEW_CONFIRM) ||
-        this.isRouteName(RouteNames.REVIEW_CONFIRM_DISSOLUTION)) {
+        this.isRouteName(RouteNames.REVIEW_CONFIRM_DISSOLUTION) ||
+        this.isRouteName(RouteNames.REGISTER_REVIEW_CONFIRM)) {
       this.setShowErrors(true)
     }
   }
