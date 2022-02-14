@@ -80,10 +80,6 @@ export interface RegistrationIF {
     folioNumber?: string // Optional to the user and only displayed for certain account types
     isFutureEffective: boolean
   },
-  business: {
-    legalType: string,
-    identifier: string
-  },
   registration: {
     // NB: nameRequest must match schema
     nameRequest: {
@@ -91,7 +87,7 @@ export interface RegistrationIF {
       nrNumber?: string // only set when there is an NR
       legalName?: string // only set when there is an NR
     },
-    offices: BaseAddressObjIF,
+    businessAddress: BaseAddressObjIF,
     contactPoint: {
       email: string
       phone: string

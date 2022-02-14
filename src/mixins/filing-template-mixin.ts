@@ -200,7 +200,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     // NB: don't parse Name Request object -- NR is fetched from namex/NRO instead
 
     // restore Entity Type
-    this.setEntityType(draftFiling.business.legalType)
+    this.setEntityType(draftFiling.incorporationApplication.nameRequest.legalType)
 
     // restore Office Addresses
     this.setOfficeAddresses(draftFiling.incorporationApplication.offices)
@@ -313,17 +313,12 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
         folioNumber: this.getFolioNumber,
         isFutureEffective: this.getEffectiveDateTime.isFutureEffective
       },
-      business: {
-        legalType: this.getEntityType,
-        identifier: this.getTempId
-      },
       registration: {
         startDate: this.getRegistration.startDate,
         nameRequest: {
           legalType: this.getEntityType
         },
-        nameTranslations: this.getNameTranslations,
-        offices: {},
+        businessAddress: {},
         contactPoint: {
           email: this.getBusinessContact.email,
           phone: this.getBusinessContact.phone,
@@ -331,7 +326,10 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
             ? { extension: +this.getBusinessContact.extension }
             : {}
         },
-        parties: {}
+        parties: {},
+        business: {
+          identifier: this.getTempId
+        }
       }
     }
 
@@ -369,7 +367,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     // NB: don't parse Name Request object -- NR is fetched from namex/NRO instead
 
     // restore Entity Type
-    this.setEntityType(draftFiling.business.legalType)
+    this.setEntityType(draftFiling.registration.nameRequest.legalType)
 
     // restore Office Addresses
     this.setOfficeAddresses(draftFiling.registration.offices)
