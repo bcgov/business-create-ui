@@ -24,16 +24,11 @@
 </template>
 
 <script lang="ts">
-// Libraries
 import { Component, Emit, Mixins, Prop, Watch } from 'vue-property-decorator'
-
-// Mixins
 import { DocumentMixin } from '@/mixins'
 import { PdfPageSize } from '@/enums'
 
-@Component({
-  components: {}
-})
+@Component({})
 export default class FileUploadPreview extends Mixins(DocumentMixin) {
   @Prop() inputFile: File
   @Prop({ default: 'File' }) inputFileLabel: string

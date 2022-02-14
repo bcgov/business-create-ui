@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import { wrapperFactory } from '../jest-wrapper-factory'
-import { DestroyCertificate } from '@/components/DefineDissolution'
+import DestroyCertificate from '@/components/Dissolution/DestroyCertificate.vue'
 
 // Input field selectors to test changes to the DOM elements.
 const selector: string = '.destroy-certificate-option'

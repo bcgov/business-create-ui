@@ -9,17 +9,17 @@ export const RegistrationSteps = [
     id: 'step-1-btn',
     step: 1,
     icon: 'mdi-domain',
-    text: 'Define Your \nCompany',
-    to: RouteNames.DEFINE_REGISTRATION,
-    component: ViewComponentNames.DEFINE_REGISTRATION
+    text: 'Define Your \nBusiness',
+    to: RouteNames.REGISTRATION_DEFINE_BUSINESS,
+    component: ViewComponentNames.REGISTRATION_DEFINE_BUSINESS
   },
   {
     id: 'step-2-btn',
     step: 2,
     icon: 'mdi-handshake',
     text: 'Add People \nand Roles',
-    to: RouteNames.REGISTER_PEOPLE_AND_ROLES,
-    component: ViewComponentNames.REGISTER_PEOPLE_AND_ROLES
+    to: RouteNames.REGISTRATION_PEOPLE_ROLES,
+    component: ViewComponentNames.REGISTRATION_PEOPLE_ROLES
 
   },
   {
@@ -27,7 +27,7 @@ export const RegistrationSteps = [
     step: 3,
     icon: 'mdi-text-box-check-outline',
     text: 'Review\nand Confirm',
-    to: RouteNames.REGISTER_REVIEW_CONFIRM,
-    component: ViewComponentNames.REGISTER_REVIEW_CONFIRM
+    to: RouteNames.REGISTRATION_REVIEW_CONFIRM,
+    component: ViewComponentNames.REGISTRATION_REVIEW_CONFIRM
   }
 ]

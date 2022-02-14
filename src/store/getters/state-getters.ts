@@ -40,7 +40,7 @@ export const isIncorporationFiling = (state: StateIF): boolean => {
 
 /** Whether the current filing is a Dissolution. */
 export const isDissolutionFiling = (state: StateIF): boolean => {
-  return getFilingType(state) === FilingTypes.DISSOLUTION
+  return getFilingType(state) === FilingTypes.VOLUNTARY_DISSOLUTION
 }
 
 /** Whether the current filing is a Registration. */
@@ -56,14 +56,10 @@ export const getFilingType = (state: StateIF): FilingTypes => {
 /** The current filing name. */
 export const getFilingName = (state: StateIF): FilingNames => {
   switch (getFilingType(state)) {
-    case FilingTypes.INCORPORATION_APPLICATION:
-      return FilingNames.INCORPORATION_APPLICATION
-    case FilingTypes.REGISTRATION:
-      return FilingNames.REGISTRATION
-    case FilingTypes.DISSOLUTION:
-      return FilingNames.VOLUNTARY_DISSOLUTION_FILING
-    default:
-      return null // Should never happen
+    case FilingTypes.INCORPORATION_APPLICATION: return FilingNames.INCORPORATION_APPLICATION
+    case FilingTypes.REGISTRATION: return FilingNames.REGISTRATION
+    case FilingTypes.VOLUNTARY_DISSOLUTION: return FilingNames.VOLUNTARY_DISSOLUTION
+    default: return null // should never happen
   }
 }
 
@@ -184,12 +180,9 @@ export const getBusinessId = (state: StateIF): string => {
 
 export const getEntityIdentifier = (state: StateIF): string => {
   switch (getFilingType(state)) {
-    case FilingTypes.DISSOLUTION:
-      return getBusinessId(state)
-    case FilingTypes.INCORPORATION_APPLICATION:
-      return getTempId(state)
-    case FilingTypes.REGISTRATION:
-      return getTempId(state)
+    case FilingTypes.VOLUNTARY_DISSOLUTION: return getBusinessId(state)
+    case FilingTypes.INCORPORATION_APPLICATION: return getTempId(state)
+    case FilingTypes.REGISTRATION: return getTempId(state)
   }
 }
 

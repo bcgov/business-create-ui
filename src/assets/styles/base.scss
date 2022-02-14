@@ -200,13 +200,7 @@ p {
   }
 }
 
-// Common
-ul.list {
-  margin: 0;
-  padding: 0;
-  list-style-type: none;
-}
-
+// List Item
 .list-item {
   display: flex;
   flex-direction: row;
@@ -315,5 +309,5 @@ ul.list {
 
 .step-container {
   margin-top: 1rem;
-  padding: 1.25rem;
+  padding: 1.5rem;
 }

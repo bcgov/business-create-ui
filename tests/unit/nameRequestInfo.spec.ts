@@ -1,15 +1,10 @@
-// Libraries
 import Vue from 'vue'
 import Vuetify from 'vuetify'
 import { mount } from '@vue/test-utils'
-
-// Store
 import { getVuexStore } from '@/store'
-
-// Components
 import NameRequestInfo from '@/components/common/NameRequestInfo.vue'
-import AddNameTranslation from '@/components/DefineCompany/AddNameTranslation.vue'
-import ListNameTranslations from '@/components/DefineCompany/ListNameTranslations.vue'
+import AddNameTranslation from '@/components/common/AddNameTranslation.vue'
+import ListNameTranslations from '@/components/common/ListNameTranslations.vue'
 
 Vue.use(Vuetify)
 

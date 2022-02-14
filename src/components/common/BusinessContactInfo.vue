@@ -98,7 +98,7 @@ import { Rules } from '@/rules'
   directives: { mask }
 })
 export default class BusinessContactInfo extends Mixins(CommonMixin) {
-  @Prop()
+  @Prop({ default: () => {} })
   private readonly initialValue!: BusinessContactIF
 
   @Prop({ default: false })

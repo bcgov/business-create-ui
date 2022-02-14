@@ -419,7 +419,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     // Build the main filing.
     const filing: DissolutionFilingIF = {
       header: {
-        name: FilingTypes.DISSOLUTION,
+        name: FilingTypes.VOLUNTARY_DISSOLUTION,
         certifiedBy: this.getCertifyState.certifiedBy,
         date: this.getCurrentDate,
         folioNumber: this.getFolioNumber, // default FN; may be overwritten by Transactional FN or staff BCOL FN

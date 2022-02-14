@@ -24,13 +24,13 @@ export interface IncorporationFilingIF {
     isFutureEffective: boolean
   },
   business: {
-    legalType: string,
+    legalType: CorpTypeCd,
     identifier: string
   },
   incorporationApplication: {
     // NB: nameRequest must match schema
     nameRequest: {
-      legalType: string
+      legalType: CorpTypeCd
       nrNumber?: string // only set when there is an NR
       legalName?: string // only set when there is an NR
     },
@@ -83,7 +83,7 @@ export interface RegistrationIF {
   registration: {
     // NB: nameRequest must match schema
     nameRequest: {
-      legalType: string
+      legalType: CorpTypeCd
       nrNumber?: string // only set when there is an NR
       legalName?: string // only set when there is an NR
     },

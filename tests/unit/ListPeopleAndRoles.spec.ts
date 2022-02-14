@@ -1,5 +1,5 @@
 import { wrapperFactory, shallowWrapperFactory } from '../jest-wrapper-factory'
-import ListPeopleAndRoles from '@/components/AddPeopleAndRoles/ListPeopleAndRoles.vue'
+import ListPeopleAndRoles from '@/components/Incorporation/ListPeopleAndRoles.vue'
 
 describe('List People And Roles component', () => {
   let wrapper: any
@@ -204,6 +204,6 @@ describe('List People And Roles component', () => {
     const errorLink = wrapper.find('#router-link')
     errorLink.trigger('click')
 
-    expect(wrapper.vm.$route.name).toBe('add-people-and-roles')
+    expect(wrapper.vm.$route.name).toBe('incorporation-people-roles')
   })
 })

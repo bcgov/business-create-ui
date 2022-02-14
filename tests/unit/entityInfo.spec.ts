@@ -97,7 +97,7 @@ for (const mock of mockEntityInfo) {
         entityType: mock.entityType,
         tempId: mock.tempId,
         nameRequest: mock.nameRequest
-      }, 'define-company')
+      }, 'incorporation-define-company')
     })
 
     it(`renders the Name Request header when the EntityType(${mock.entityType}) is present`, async () => {
@@ -126,7 +126,7 @@ for (const mock of mockEntityInfo) {
             approvedName: null
           }
         }
-      }, 'define-company')
+      }, 'incorporation-define-company')
     })
 
     it(`renders the Numbered Company header when the EntityType(${mock.entityType}) is present with no NR`,

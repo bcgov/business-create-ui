@@ -1,5 +1,3 @@
-import SigninView from '@/views/auth/Signin.vue'
-import SignoutView from '@/views/auth/Signout.vue'
 import { FilingTypes, RouteNames } from '@/enums'
 import * as Views from '@/views'
 
@@ -8,7 +6,7 @@ export const routes = [
     // router.beforeEach() routes here:
     path: '/signin',
     name: RouteNames.SIGN_IN,
-    component: SigninView,
+    component: Views.Signin,
     meta: {
       requiresAuth: false
     }
@@ -17,15 +15,15 @@ export const routes = [
     // SbcHeader.logout() redirects here:
     path: '/signout',
     name: RouteNames.SIGN_OUT,
-    component: SignoutView,
+    component: Views.Signout,
     meta: {
       requiresAuth: false
     }
   },
   {
-    path: '/define-company',
-    name: RouteNames.DEFINE_COMPANY,
-    component: Views.DefineCompany,
+    path: '/incorporation-define-company',
+    name: RouteNames.INCORPORATION_DEFINE_COMPANY,
+    component: Views.IncorporationDefineCompany,
     meta: {
       step: 1,
       requiresAuth: true,
@@ -33,9 +31,9 @@ export const routes = [
     }
   },
   {
-    path: '/add-people-and-roles',
-    name: RouteNames.ADD_PEOPLE_AND_ROLES,
-    component: Views.AddPeopleAndRoles,
+    path: '/incorporation-people-roles',
+    name: RouteNames.INCORPORATION_PEOPLE_ROLES,
+    component: Views.IncorporationPeopleRoles,
     meta: {
       step: 2,
       requiresAuth: true,
@@ -43,9 +41,9 @@ export const routes = [
     }
   },
   {
-    path: '/create-share-structure',
-    name: RouteNames.CREATE_SHARE_STRUCTURE,
-    component: Views.CreateShareStructure,
+    path: '/incorporation-share-structure',
+    name: RouteNames.INCORPORATION_SHARE_STRUCTURE,
+    component: Views.IncorporationShareStructure,
     meta: {
       step: 3,
       requiresAuth: true,
@@ -53,9 +51,9 @@ export const routes = [
     }
   },
   {
-    path: '/create-rules',
-    name: RouteNames.CREATE_RULES,
-    component: Views.CreateRules,
+    path: '/incorporation-rules',
+    name: RouteNames.INCORPORATION_RULES,
+    component: Views.IncorporationRules,
     meta: {
       step: 3,
       requiresAuth: true,
@@ -73,9 +71,9 @@ export const routes = [
     }
   },
   {
-    path: '/create-memorandum',
-    name: RouteNames.CREATE_MEMORANDUM,
-    component: Views.CreateMemorandum,
+    path: '/incorporation-memorandum',
+    name: RouteNames.INCORPORATION_MEMORANDUM,
+    component: Views.IncorporationMemorandum,
     meta: {
       step: 4,
       requiresAuth: true,
@@ -83,9 +81,9 @@ export const routes = [
     }
   },
   {
-    path: '/review-confirm',
-    name: RouteNames.REVIEW_CONFIRM,
-    component: Views.ReviewConfirm,
+    path: '/incorporation-review-confirm',
+    name: RouteNames.INCORPORATION_REVIEW_CONFIRM,
+    component: Views.IncorporationReviewConfirm,
     meta: {
       step: 5,
       requiresAuth: true,
@@ -93,49 +91,49 @@ export const routes = [
     }
   },
   {
-    path: `/define-dissolution`,
-    name: RouteNames.DEFINE_DISSOLUTION,
-    component: Views.DefineDissolution,
+    path: '/dissolution-define-dissolution',
+    name: RouteNames.DISSOLUTION_DEFINE_DISSOLUTION,
+    component: Views.DissolutionDefineDissolution,
     meta: {
       step: 1,
       requiresAuth: true,
-      filingType: FilingTypes.DISSOLUTION
+      filingType: FilingTypes.VOLUNTARY_DISSOLUTION
     }
   },
   {
-    path: '/create-resolution',
-    name: RouteNames.CREATE_RESOLUTION,
-    component: Views.CreateResolution,
+    path: '/dissolution-resolution',
+    name: RouteNames.DISSOLUTION_RESOLUTION,
+    component: Views.DissolutionResolution,
     meta: {
       step: 2,
       requiresAuth: true,
-      filingType: FilingTypes.DISSOLUTION
+      filingType: FilingTypes.VOLUNTARY_DISSOLUTION
     }
   },
   {
-    path: '/upload-affidavit',
-    name: RouteNames.UPLOAD_AFFIDAVIT,
-    component: Views.UploadAffidavit,
+    path: '/dissolution-affidavit',
+    name: RouteNames.DISSOLUTION_AFFIDAVIT,
+    component: Views.DissolutionAffidavit,
     meta: {
       step: 3,
       requiresAuth: true,
-      filingType: FilingTypes.DISSOLUTION
+      filingType: FilingTypes.VOLUNTARY_DISSOLUTION
     }
   },
   {
-    path: '/review-confirm-dissolution',
-    name: RouteNames.REVIEW_CONFIRM_DISSOLUTION,
-    component: Views.ReviewConfirmDissolution,
+    path: '/dissolution-review-confirm',
+    name: RouteNames.DISSOLUTION_REVIEW_CONFIRM,
+    component: Views.DissolutionReviewConfirm,
     meta: {
       step: 4,
       requiresAuth: true,
-      filingType: FilingTypes.DISSOLUTION
+      filingType: FilingTypes.VOLUNTARY_DISSOLUTION
     }
   },
   {
-    path: `/define-registration`,
-    name: RouteNames.DEFINE_REGISTRATION,
-    component: Views.DefineRegistration,
+    path: '/registration-define-business',
+    name: RouteNames.REGISTRATION_DEFINE_BUSINESS,
+    component: Views.RegistrationDefineBusiness,
     meta: {
       step: 1,
       requiresAuth: true,
@@ -143,9 +141,9 @@ export const routes = [
     }
   },
   {
-    path: `/register-people-and-roles`,
-    name: RouteNames.REGISTER_PEOPLE_AND_ROLES,
-    component: Views.RegisterPeopleAndRoles,
+    path: '/registration-people-roles',
+    name: RouteNames.REGISTRATION_PEOPLE_ROLES,
+    component: Views.RegistrationPeopleRoles,
     meta: {
       step: 2,
       requiresAuth: true,
@@ -153,9 +151,9 @@ export const routes = [
     }
   },
   {
-    path: `/register-review-confirm`,
-    name: RouteNames.REGISTER_REVIEW_CONFIRM,
-    component: Views.RegisterReviewConfirm,
+    path: '/registration-review-confirm',
+    name: RouteNames.REGISTRATION_REVIEW_CONFIRM,
+    component: Views.RegistrationReviewConfirm,
     meta: {
       step: 3,
       requiresAuth: true,
@@ -165,7 +163,9 @@ export const routes = [
   {
     // default/fallback route
     // must be last
+    // NB: this route is IA-specific but App::fetchData() will reroute
+    // if user is on a route not valid for the current filing type
     path: '*',
-    redirect: '/define-company'
+    redirect: '/incorporation-define-company'
   }
 ]

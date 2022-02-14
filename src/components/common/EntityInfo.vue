@@ -85,7 +85,7 @@ export default class EntityInfo extends Mixins(EnumMixin) {
 
   private get legalName (): string {
     switch (this.getFilingType) {
-      case FilingTypes.DISSOLUTION:
+      case FilingTypes.VOLUNTARY_DISSOLUTION:
         return this.getBusinessLegalName
       case FilingTypes.INCORPORATION_APPLICATION:
         return this.getApprovedName

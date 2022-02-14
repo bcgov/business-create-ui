@@ -20,8 +20,7 @@ describe('Date Mixin', () => {
     await Vue.nextTick()
   })
 
-  // FUTURE: fix so this works in GH CI action
-  xit('returns correct values for dateToYyyyMmDd()', () => {
+  it('returns correct values for dateToYyyyMmDd()', () => {
     expect(vm.dateToYyyyMmDd(null)).toBeNull()
     expect(vm.dateToYyyyMmDd(new Date('not a date'))).toBeNull()
     // verify that GMT/UTC is correctly converted to Pacific

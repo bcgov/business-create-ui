@@ -1,6 +1,7 @@
 <template>
   <div id="name-request-summary">
     <confirm-dialog ref="confirmTranslationRemovalDialog" attach="#name-request-summary" />
+
     <template v-if="getNameRequestNumber">
       <v-row id="name-request-info">
         <v-col>
@@ -23,6 +24,7 @@
           </ul>
         </v-col>
       </v-row>
+
       <v-row id="name-request-applicant-info">
         <v-col>
           <label>
@@ -39,6 +41,7 @@
         </v-col>
       </v-row>
     </template>
+
     <v-row v-else id="numbered-company-info">
       <v-col>
         <label>
@@ -62,8 +65,9 @@
         </ul>
       </v-col>
     </v-row>
+
     <!-- Name Translation Option -->
-    <v-row  v-if="!isTypeCoop" id="name-translation-info">
+    <v-row v-if="!isTypeCoop" id="name-translation-info">
       <v-col>
         <label>
           <strong>Name Translation</strong>
@@ -90,19 +94,20 @@
         </template>
       </v-col>
     </v-row>
+
     <!-- Name Translation Components -->
     <v-row v-if="!isTypeCoop && hasNameTranslation" id="name-translation-container">
       <!-- Spacer Column -->
       <v-col></v-col>
       <v-col>
-        <add-name-translation
+        <AddNameTranslation
           v-if="isAddingNameTranslation"
           :edit-name-translation="editingNameTranslation"
           @addTranslation="addName($event)"
           @cancelTranslation="cancelNameTranslation()"
           @removeTranslation="removeNameTranslation(editIndex)"
         />
-        <list-name-translations
+        <ListNameTranslations
           v-if="getNameTranslations && getNameTranslations.length > 0"
           :isAddingNameTranslation="isAddingNameTranslation"
           :translationsList="getNameTranslations"
@@ -115,19 +120,13 @@
 </template>
 
 <script lang="ts">
-// Libraries
 import { Component, Emit, Mixins, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import { getName } from 'country-list'
-
-// Components
-import { ConfirmDialog } from '@/components/dialogs'
-import { ListNameTranslations, AddNameTranslation } from '@/components/DefineCompany'
-
-// Enums
+import AddNameTranslation from '@/components/common/AddNameTranslation.vue'
+import ConfirmDialog from '@/dialogs/ConfirmDialog.vue'
+import ListNameTranslations from '@/components/common/ListNameTranslations.vue'
 import { CorpTypeCd, NameRequestStates } from '@/enums'
-
-// Interfaces
 import {
   NameRequestDetailsIF,
   NameRequestApplicantIF,
@@ -135,15 +134,13 @@ import {
   ActionBindingIF,
   NameTranslationIF
 } from '@/interfaces'
-
-// Mixins
 import { DateMixin, EnumMixin } from '@/mixins'
 
 @Component({
   components: {
-    ListNameTranslations,
     AddNameTranslation,
-    ConfirmDialog
+    ConfirmDialog,
+    ListNameTranslations
   }
 })
 export default class NameRequestInfo extends Mixins(DateMixin, EnumMixin) {

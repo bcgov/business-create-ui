@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import { wrapperFactory } from '../jest-wrapper-factory'
-import { CareAndCustodySelect } from '@/components/DefineDissolution'
+import CareAndCustodySelect from '@/components/Dissolution/CareAndCustodySelect.vue'
 import { DissolutionResources } from '@/resources'
 import { RoleTypes } from '@/enums'
 

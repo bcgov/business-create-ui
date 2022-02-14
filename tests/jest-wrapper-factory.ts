@@ -36,7 +36,7 @@ export const shallowWrapperFactory = (
   resource = null
 ) => {
   const store = getVuexStore()
-  if (routeName) router.push({ name: routeName })
+  if (routeName) router.push({ name: routeName }).catch(() => {})
 
   if (stateValues) applyStoreValues(store, stateValues, resource)
   return shallowMount(component, {
@@ -58,7 +58,7 @@ export const wrapperFactory = (
   resource = null
 ) => {
   const store = getVuexStore()
-  if (routeName) router.push({ name: routeName })
+  if (routeName) router.push({ name: routeName }).catch(() => {})
 
   if (stateValues) applyStoreValues(store, stateValues, resource)
   return mount(component, {

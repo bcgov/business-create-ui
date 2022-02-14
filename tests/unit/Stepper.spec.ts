@@ -1,11 +1,8 @@
-// Libraries
 import Vue from 'vue'
 import Vuetify from 'vuetify'
 import VueRouter from 'vue-router'
 import { getVuexStore } from '@/store'
 import { shallowMount } from '@vue/test-utils'
-
-// Components
 import Stepper from '@/components/common/Stepper.vue'
 
 Vue.use(Vuetify)

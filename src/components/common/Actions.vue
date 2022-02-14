@@ -138,8 +138,11 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
   }
 
   private get isSummaryStep (): boolean {
-    return (this.$route.name === RouteNames.REVIEW_CONFIRM ||
-      this.$route.name === RouteNames.REVIEW_CONFIRM_DISSOLUTION)
+    return (
+      this.$route.name === RouteNames.DISSOLUTION_REVIEW_CONFIRM ||
+      this.$route.name === RouteNames.INCORPORATION_REVIEW_CONFIRM ||
+      this.$route.name === RouteNames.REGISTRATION_REVIEW_CONFIRM
+    )
   }
 
   /** Called when Cancel button is clicked. */
@@ -289,7 +292,7 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
         return this.buildIncorporationFiling()
       case FilingTypes.REGISTRATION:
         return this.buildRegistrationFiling()
-      case FilingTypes.DISSOLUTION:
+      case FilingTypes.VOLUNTARY_DISSOLUTION:
         return this.buildDissolutionFiling()
     }
   }

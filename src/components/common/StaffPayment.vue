@@ -14,11 +14,7 @@
 <script lang="ts">
 import { Component, Emit, Prop, Vue } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
-
-// Components
-import { StaffPaymentComponent } from '@/components'
-
-// Interfaces and Enums
+import { StaffPayment as StaffPaymentComponent } from '@bcrs-shared-components/staff-payment'
 import { ActionBindingIF, StaffPaymentIF, StaffPaymentStepIF } from '@/interfaces'
 import { StaffPaymentOptions } from '@/enums'
 
