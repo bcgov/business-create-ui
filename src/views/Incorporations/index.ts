@@ -1,7 +1,0 @@
-export { default as AddPeopleAndRoles } from './AddPeopleAndRoles.vue'
-export { default as CreateMemorandum } from './CreateMemorandum.vue'
-export { default as CreateRules } from './CreateRules.vue'
-export { default as CreateShareStructure } from './CreateShareStructure.vue'
-export { default as DefineCompany } from './DefineCompany.vue'
-export { default as IncorporationAgreement } from './IncorporationAgreement.vue'
-export { default as ReviewConfirm } from './ReviewConfirm.vue'

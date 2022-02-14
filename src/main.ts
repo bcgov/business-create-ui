@@ -22,7 +22,7 @@ import '@/assets/styles/layout.scss'
 import '@/assets/styles/overrides.scss'
 
 // Base App
-import App from './App.vue'
+import App from '@/App.vue'
 
 // Helpers
 import { fetchConfig, initLdClient, navigate } from '@/utils'

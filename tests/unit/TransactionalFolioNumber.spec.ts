@@ -2,7 +2,7 @@
 import { Wrapper } from '@vue/test-utils'
 import flushPromises from 'flush-promises'
 import { wrapperFactory } from '../jest-wrapper-factory'
-import TransactionalFolionNumber from '@/components/common/TransactionalFolioNumber.vue'
+import TransactionalFolioNumber from '@/components/common/TransactionalFolioNumber.vue'
 
 const tests = [
   {
@@ -70,7 +70,7 @@ for (const [i, test] of tests.entries()) {
     let wrapper: Wrapper<any>
 
     beforeEach(() => {
-      wrapper = wrapperFactory(TransactionalFolionNumber, test.props)
+      wrapper = wrapperFactory(TransactionalFolioNumber, test.props)
     })
 
     afterEach(() => {
@@ -78,7 +78,7 @@ for (const [i, test] of tests.entries()) {
     })
 
     it('displays the component', () => {
-      expect(wrapper.find(TransactionalFolionNumber).exists()).toBe(true)
+      expect(wrapper.find(TransactionalFolioNumber).exists()).toBe(true)
     })
 
     itIf(!test.props.transactionalFolioNumber && !!test.props.accountFolioNumber)('displays the default account folio number', () => {

@@ -1,16 +1,9 @@
-// Libraries
 import Vue from 'vue'
 import Vuelidate from 'vuelidate'
 import Vuetify from 'vuetify'
-
-// Store
 import { getVuexStore } from '@/store'
-
-// Utils
 import { createLocalVue, shallowMount, mount } from '@vue/test-utils'
-
-// Components
-import OfficeAddresses from '@/components/DefineCompany/OfficeAddresses.vue'
+import OfficeAddresses from '@/components/common/OfficeAddresses.vue'
 
 Vue.use(Vuetify)
 Vue.use(Vuelidate)
@@ -458,6 +451,7 @@ describe('same as checkboxes reset addresses to default when unchecked - BCOMP',
 describe('should properly emit valid - BCOMP', () => {
   let wrapper: any
   const localVue = createLocalVue()
+
   const invalidDeliveryAddress = {
     addressCity: 'someCity',
     addressCountry: 'someCountry',

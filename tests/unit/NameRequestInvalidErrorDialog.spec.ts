@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify'
 import { shallowMount } from '@vue/test-utils'
-import NameRequestInvalidErrorDialog from '@/components/dialogs/NameRequestInvalidErrorDialog.vue'
+import NameRequestInvalidErrorDialog from '@/dialogs/NameRequestInvalidErrorDialog.vue'
 
 Vue.use(Vuetify)
 

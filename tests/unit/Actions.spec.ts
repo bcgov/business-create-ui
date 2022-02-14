@@ -1,4 +1,3 @@
-// Libraries
 import Vue from 'vue'
 import Vuetify from 'vuetify'
 import VueRouter from 'vue-router'
@@ -6,11 +5,7 @@ import { getVuexStore } from '@/store'
 import { shallowMount, createLocalVue, createWrapper } from '@vue/test-utils'
 import sinon from 'sinon'
 import { axios } from '@/utils'
-
-// Components
 import Actions from '@/components/common/Actions.vue'
-
-// Other
 import mockRouter from './MockRouter'
 
 Vue.use(Vuetify)
@@ -148,7 +143,7 @@ describe('Emits error event if NR validation fails in file and pay', () => {
     const localVue = createLocalVue()
     localVue.use(VueRouter)
     const router = mockRouter.mock()
-    router.push({ name: 'review-confirm', query: { id: 'T1234567' } })
+    router.push({ name: 'incorporation-review-confirm', query: { id: 'T1234567' } })
     wrapper = shallowMount(Actions, { localVue, store, router, vuetify })
   })
 
@@ -168,7 +163,7 @@ describe('Emits error event if NR validation fails in file and pay', () => {
     expect(rootWrapper.emitted('name-request-invalid-error')).toEqual([['EXPIRED']])
     expect(mockBuildFiling).not.toHaveBeenCalled()
     expect(window.location.assign).not.toHaveBeenCalled()
-    expect(wrapper.vm.$route.name).toBe('review-confirm')
+    expect(wrapper.vm.$route.name).toBe('incorporation-review-confirm')
   })
 })
 
@@ -413,7 +408,7 @@ describe('Actions component - Filing Functionality', () => {
     const localVue = createLocalVue()
     localVue.use(VueRouter)
     const router = mockRouter.mock()
-    router.push({ name: 'define-company', query: { id: 'T1234567' } })
+    router.push({ name: 'incorporation-define-company', query: { id: 'T1234567' } })
     wrapper = shallowMount(Actions, { localVue, store, router, vuetify })
 
     // Mock the function calls that may used by updateFiling below
@@ -440,7 +435,7 @@ describe('Actions component - Filing Functionality', () => {
     expect(window.location.assign).not.toHaveBeenCalled()
 
     // verify no routing
-    expect(wrapper.vm.$route.name).toBe('define-company')
+    expect(wrapper.vm.$route.name).toBe('incorporation-define-company')
   })
 
   it('Calls the updateFiling method with the correct filing structure when onClickSave is called', async () => {
@@ -455,7 +450,7 @@ describe('Actions component - Filing Functionality', () => {
     expect(window.location.assign).not.toHaveBeenCalled()
 
     // verify no routing
-    expect(wrapper.vm.$route.name).toBe('define-company')
+    expect(wrapper.vm.$route.name).toBe('incorporation-define-company')
   })
 
   it('Calls the buildIncorporationFiling method when onClickSaveResume is called', async () => {

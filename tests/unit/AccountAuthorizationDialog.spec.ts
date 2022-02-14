@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuetify from 'vuetify'
 import { getVuexStore } from '@/store'
 import { shallowMount, mount } from '@vue/test-utils'
-import AccountAuthorizationDialog from '@/components/dialogs/AccountAuthorizationDialog.vue'
+import AccountAuthorizationDialog from '@/dialogs/AccountAuthorizationDialog.vue'
 
 Vue.use(Vuetify)
 

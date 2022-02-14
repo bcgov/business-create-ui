@@ -12,7 +12,7 @@ import { getVuexStore } from '@/store'
 import { createLocalVue, mount } from '@vue/test-utils'
 
 // Components
-import PeopleAndRoles from '@/components/AddPeopleAndRoles/PeopleAndRoles.vue'
+import PeopleAndRoles from '@/components/Incorporation/PeopleAndRoles.vue'
 
 // Resources
 import { BenefitCompanyResource } from '@/resources/Incorporations/benefitCompany'

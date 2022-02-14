@@ -101,8 +101,8 @@
               <Stepper class="mt-10" />
 
               <!-- Sign in and sign out components -->
-              <SignIn v-if="isRouteName(RouteNames.SIGN_IN)" />
-              <SignOut v-if="isRouteName(RouteNames.SIGN_OUT)" />
+              <Signin v-if="isRouteName(RouteNames.SIGN_IN)" />
+              <Signout v-if="isRouteName(RouteNames.SIGN_OUT)" />
 
               <!-- Only render when data is ready, or validation can't be properly evaluated. -->
               <template v-if="haveData">
@@ -149,25 +149,19 @@ import { cloneDeep } from 'lodash'
 import * as Sentry from '@sentry/browser'
 import { getFeatureFlag, updateLdUser, navigate } from '@/utils'
 
-// Components
+// Components, dialogs and views
+import Actions from '@/components/common/Actions.vue'
+import { BreadCrumb } from '@bcrs-shared-components/bread-crumb'
+import EntityInfo from '@/components/common/EntityInfo.vue'
+import PaySystemAlert from 'sbc-common-components/src/components/PaySystemAlert.vue'
+import SbcFeeSummary from 'sbc-common-components/src/components/SbcFeeSummary.vue'
+import SbcFooter from 'sbc-common-components/src/components/SbcFooter.vue'
 import SbcHeader from 'sbc-common-components/src/components/SbcHeader.vue'
-import { PaySystemAlert, SbcFeeSummary, SbcFooter } from '@/components'
-import { Actions, BreadCrumb, EntityInfo, Stepper } from '@/components/common'
+import Stepper from '@/components/common/Stepper.vue'
+import * as Dialogs from '@/dialogs'
 import * as Views from '@/views'
 
-// Dialogs, mixins, interfaces, etc
-import {
-  AccountAuthorizationDialog,
-  ConfirmDialog,
-  FetchErrorDialog,
-  FileAndPayInvalidNameRequestDialog,
-  InvalidDissolutionDialog,
-  InvalidIncorporationApplicationDialog,
-  InvalidRouteDialog,
-  NameRequestInvalidErrorDialog,
-  PaymentErrorDialog,
-  SaveErrorDialog
-} from '@/components/dialogs'
+// Mixins, interfaces, etc
 import {
   CommonMixin,
   DateMixin,
@@ -214,24 +208,15 @@ import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
 
 @Component({
   components: {
-    PaySystemAlert,
-    SbcHeader,
-    SbcFooter,
-    SbcFeeSummary,
-    EntityInfo,
-    Stepper,
     Actions,
     BreadCrumb,
-    NameRequestInvalidErrorDialog,
-    AccountAuthorizationDialog,
-    FetchErrorDialog,
-    InvalidDissolutionDialog,
-    InvalidIncorporationApplicationDialog,
-    InvalidRouteDialog,
-    PaymentErrorDialog,
-    SaveErrorDialog,
-    ConfirmDialog,
-    FileAndPayInvalidNameRequestDialog,
+    EntityInfo,
+    PaySystemAlert,
+    SbcFeeSummary,
+    SbcFooter,
+    SbcHeader,
+    Stepper,
+    ...Dialogs,
     ...Views
   }
 })
@@ -274,7 +259,6 @@ export default class App extends Mixins(
   @Action setAccountInformation!: ActionBindingIF
   @Action setTempId!: ActionBindingIF
   @Action setShowErrors!: ActionBindingIF
-  @Action setFilingType!: ActionBindingIF
   @Action setFeePrices!: ActionBindingIF
 
   // Local properties
@@ -381,12 +365,9 @@ export default class App extends Mixins(
   /** The header name for the Save Error Dialog. */
   private get saveErrorDialogName (): string {
     switch (this.getFilingType) {
-      case FilingTypes.INCORPORATION_APPLICATION:
-        return 'Application'
-      case FilingTypes.REGISTRATION:
-        return 'Application'
-      case FilingTypes.DISSOLUTION:
-        return 'Filing'
+      case FilingTypes.INCORPORATION_APPLICATION: return 'Application'
+      case FilingTypes.REGISTRATION: return 'Application'
+      case FilingTypes.VOLUNTARY_DISSOLUTION: return 'Filing'
     }
   }
 
@@ -464,7 +445,7 @@ export default class App extends Mixins(
     // Assign any valid business identifiers and init dissolution
     if (id?.startsWith('CP') || id?.startsWith('BC')) {
       this.setBusinessId(id)
-      this.setFilingType(FilingTypes.DISSOLUTION)
+      this.setFilingType(FilingTypes.VOLUNTARY_DISSOLUTION)
     } else {
       // Assign temp reg number
       this.setTempId(id)
@@ -520,11 +501,10 @@ export default class App extends Mixins(
     // reset errors in case this method is invoked more than once (ie, retry)
     this.resetFlags()
 
-    // Feature flag safety check
+    // check that current route matches a supported filing type
     const supportedFilings = await getFeatureFlag('supported-filings')
-
     if (!supportedFilings?.includes(this.$route.meta.filingType)) {
-      window.alert('Dissolution are not available at the moment. Please check again later.')
+      window.alert('This filing type is not available at the moment. Please check again later.')
       this.goToDashboard(true)
       return
     }
@@ -553,10 +533,11 @@ export default class App extends Mixins(
         console.log('Launch Darkly update error =', error) // eslint-disable-line no-console
       })
 
-      // fetch the draft filing
+      // fetch the draft filing and resources
       try {
-        // Dissolution filing
-        if (this.isDissolutionFiling) {
+        if (this.getBusinessId) {
+          // this is a Dissolution filing
+          // (only dissolutionss have a business id)
           const resources = await this.handleDraftDissolution()
           if (!resources) {
             // go to catch()
@@ -564,7 +545,8 @@ export default class App extends Mixins(
           }
           this.setResources(resources)
         } else {
-          // Incorporation or Registration filing
+          // this is an Incorporation or Registration filing
+          // (only incorporations and registrations have a temp id)
           const resources = await this.handleDraftApplication()
           if (!resources) {
             // go to catch()
@@ -580,6 +562,25 @@ export default class App extends Mixins(
         console.log('Fetch error =', error) // eslint-disable-line no-console
         this.fetchErrorDialog = true
         throw error // go to catch()
+      }
+
+      // if user is on a route not valid for the current filing type
+      // then try to re-route them
+      if (this.$route.meta.filingType !== this.getFilingType) {
+        switch (this.getFilingType) {
+          case FilingTypes.VOLUNTARY_DISSOLUTION:
+            this.$router.push(RouteNames.DISSOLUTION_DEFINE_DISSOLUTION).catch(() => {})
+            return
+          case FilingTypes.INCORPORATION_APPLICATION:
+            this.$router.push(RouteNames.INCORPORATION_DEFINE_COMPANY).catch(() => {})
+            return
+          case FilingTypes.REGISTRATION:
+            this.$router.push(RouteNames.REGISTRATION_DEFINE_BUSINESS).catch(() => {})
+            return
+          default:
+            this.invalidRouteDialog = true
+            return
+        }
       }
 
       // fetch and set the fee prices to display in the text
@@ -617,23 +618,14 @@ export default class App extends Mixins(
     }
   }
 
-  /** Handle draft dissolution and return the resources for assignment. */
+  /** Fetches draft dissolution and returns the resources. */
   private async handleDraftDissolution (): Promise<DissolutionResourceIF> {
     // ensure user is authorized to use this business
-    try {
-      // NB: will throw if API error
-      const authRoles = await AuthServices.fetchAuthorizations(this.getBusinessId)
-      // NB: roles array may contain 'view', 'edit', 'staff' or nothing
-      if (authRoles && authRoles.length > 0) {
-        this.setAuthRoles(authRoles)
-      } else {
-        throw new Error('Auth error: inaccessible entity')
-      }
-    } catch (error) {
+    await this.checkAuth(this.getBusinessId).catch(error => {
       console.log('Auth error =', error) // eslint-disable-line no-console
       this.accountAuthorizationDialog = true
       throw error // go to catch()
-    }
+    })
 
     // fetch draft filing
     // NB: will throw if API error
@@ -641,7 +633,7 @@ export default class App extends Mixins(
 
     // check if filing is in a valid state to be edited
     this.invalidDissolutionDialog = !this.hasValidFilingState(draftFiling)
-    if (this.invalidDissolutionDialog) return
+    if (this.invalidDissolutionDialog) return null
 
     // merge draft properties into empty filing so all properties are initialized
     const emptyFiling = this.buildDissolutionFiling()
@@ -656,10 +648,10 @@ export default class App extends Mixins(
     return DissolutionResources.find(x => x.entityType === this.getEntityType)
   }
 
-  /** Handle draft incorporation or registration and return the resources for assignment. */
+  /** Fetches draft incorporation or registration and returns the resources. */
   private async handleDraftApplication (): Promise<ResourceIF> {
     // ensure user is authorized to use this IA
-    await this.checkAuth().catch(error => {
+    await this.checkAuth(this.getTempId).catch(error => {
       console.log('Auth error =', error) // eslint-disable-line no-console
       this.accountAuthorizationDialog = true
       throw error // go to catch()
@@ -669,14 +661,8 @@ export default class App extends Mixins(
     // NB: will throw if API error
     let draftFiling = await this.fetchDraftApplication()
 
-    // Protect the routes not associated with this filing type.
-    if (this.$route.meta.filingType !== this.getFilingType) {
-      console.log('ROUTE ERROR') // eslint-disable-line no-console
-      this.invalidRouteDialog = true
-    }
-
     // check if filing is in a valid state to be edited
-    if (!this.hasValidFilingState(draftFiling)) return
+    if (!this.hasValidFilingState(draftFiling)) return null
 
     // merge draft properties into empty filing so all properties are initialized
     let resources: any
@@ -892,9 +878,9 @@ export default class App extends Mixins(
   }
 
   /** Gets authorizations from Auth API, verifies roles, and stores them. */
-  private async checkAuth (): Promise<any> {
+  private async checkAuth (id: string): Promise<any> {
     // NB: will throw if API error
-    const authRoles = await AuthServices.fetchAuthorizations(this.getTempId)
+    const authRoles = await AuthServices.fetchAuthorizations(id)
     // NB: roles array may contain 'view', 'edit', 'staff' or nothing
     if (authRoles && authRoles.length > 0) {
       this.setAuthRoles(authRoles)
@@ -913,9 +899,11 @@ export default class App extends Mixins(
       await this.fetchData(true)
     }
 
-    if (this.isRouteName(RouteNames.REVIEW_CONFIRM) ||
-        this.isRouteName(RouteNames.REVIEW_CONFIRM_DISSOLUTION) ||
-        this.isRouteName(RouteNames.REGISTER_REVIEW_CONFIRM)) {
+    if (
+      this.isRouteName(RouteNames.DISSOLUTION_REVIEW_CONFIRM) ||
+      this.isRouteName(RouteNames.INCORPORATION_REVIEW_CONFIRM) ||
+      this.isRouteName(RouteNames.REGISTRATION_REVIEW_CONFIRM)
+    ) {
       this.setShowErrors(true)
     }
   }

@@ -1,6 +1,6 @@
 import { wrapperFactory } from '../jest-wrapper-factory'
 import { RegistrationResources } from '@/resources'
-import { StartDate } from '@/components/DefineRegistration'
+import StartDate from '@/components/Registration/StartDate.vue'
 
 // Test Case Data
 const mockEntity = [

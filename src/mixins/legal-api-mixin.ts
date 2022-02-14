@@ -66,11 +66,12 @@ export default class LegalApiMixin extends Vue {
     const url = `businesses/${this.getBusinessId}/tasks`
     return axios.get(url)
       .then(response => {
-        const { filing } = response?.data?.tasks?.find(x => x.task.filing.hasOwnProperty(FilingTypes.DISSOLUTION))?.task
+        const filing = response?.data?.tasks?.
+          find(x => x.task.filing.hasOwnProperty(FilingTypes.VOLUNTARY_DISSOLUTION))?.task.filing
         const filingName = filing?.header?.name
         const filingId = +filing?.header?.filingId || 0
 
-        if (!filing || filingName !== FilingTypes.DISSOLUTION || !filingId) {
+        if (!filing || filingName !== FilingTypes.VOLUNTARY_DISSOLUTION || !filingId) {
           throw new Error('Invalid API response')
         }
 

@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import { shallowWrapperFactory, wrapperFactory } from '../jest-wrapper-factory'
-import CooperativeType from '@/components/DefineCompany/CooperativeType.vue'
+import CooperativeType from '@/components/Dissolution/CooperativeType.vue'
 
 // Test Case Data
 const cooperativeTypeCases = [

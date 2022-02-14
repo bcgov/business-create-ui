@@ -13,12 +13,9 @@ function getLegalName (): string {
   const getApprovedName = store.getters.getApprovedName as string
 
   switch (getFilingType) {
-    case FilingTypes.DISSOLUTION:
-      return getBusinessLegalName
-    case FilingTypes.INCORPORATION_APPLICATION:
-      return getApprovedName
-    case FilingTypes.REGISTRATION:
-      return getApprovedName
+    case FilingTypes.VOLUNTARY_DISSOLUTION: return getBusinessLegalName
+    case FilingTypes.INCORPORATION_APPLICATION: return getApprovedName
+    case FilingTypes.REGISTRATION: return getApprovedName
   }
 }
 

@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import { wrapperFactory } from '../jest-wrapper-factory'
-import DissolutionStatement from '@/components/DefineDissolution/DissolutionStatement.vue'
+import DissolutionStatement from '@/components/Dissolution/DissolutionStatement.vue'
 import { DissolutionStatementTypes } from '@/enums/dissolutionStatementTypes'
 import { DissolutionResources } from '@/resources'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'

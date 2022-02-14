@@ -2,8 +2,8 @@ import Vue from 'vue'
 import Vuetify from 'vuetify'
 import { getVuexStore } from '@/store'
 import { shallowMount, mount } from '@vue/test-utils'
-import PaymentErrorDialog from '@/components/dialogs/PaymentErrorDialog.vue'
-import { ContactInfo } from '@/components/common'
+import PaymentErrorDialog from '@/dialogs/PaymentErrorDialog.vue'
+import RegistriesContactInfo from '@/components/common/RegistriesContactInfo.vue'
 
 Vue.use(Vuetify)
 
@@ -34,7 +34,7 @@ describe('Payment Error Dialog', () => {
     expect(wrapper.find('#dialog-title').text()).toBe('Unable to Process Payment')
     expect(wrapper.findAll('p').length).toBe(1)
     expect(wrapper.findAll('p').at(0).text()).toContain('We are unable to process your payment')
-    expect(wrapper.find(ContactInfo).exists()).toBe(false)
+    expect(wrapper.find(RegistriesContactInfo).exists()).toBe(false)
     expect(wrapper.find('#dialog-exit-button').exists()).toBe(false)
     expect(wrapper.find('#dialog-okay-button').exists()).toBe(true)
 
@@ -61,7 +61,7 @@ describe('Payment Error Dialog', () => {
     expect(wrapper.findAll('li').at(0).text()).toContain('Monday to Friday')
     expect(wrapper.findAll('li').at(1).text()).toContain('Saturday')
     expect(wrapper.findAll('li').at(2).text()).toContain('Sunday')
-    expect(wrapper.find(ContactInfo).exists()).toBe(true)
+    expect(wrapper.find(RegistriesContactInfo).exists()).toBe(true)
     expect(wrapper.find('#dialog-exit-button').exists()).toBe(true)
 
     wrapper.destroy()
@@ -109,7 +109,7 @@ describe('Payment Error Dialog', () => {
     expect(wrapper.findAll('li').length).toBe(1)
     expect(wrapper.findAll('li').at(0).text()).toContain(padError[0].message)
 
-    expect(wrapper.find(ContactInfo).exists()).toBe(true)
+    expect(wrapper.find(RegistriesContactInfo).exists()).toBe(true)
     expect(wrapper.find('#dialog-exit-button').exists()).toBe(true)
 
     wrapper.destroy()

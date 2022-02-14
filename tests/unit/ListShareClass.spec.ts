@@ -1,14 +1,9 @@
-// Libraries
 import Vue from 'vue'
 import Vuelidate from 'vuelidate'
 import Vuetify from 'vuetify'
 import { getVuexStore } from '@/store'
-
-// Utils
 import { createLocalVue, mount } from '@vue/test-utils'
-
-// Components
-import ListShareClass from '@/components/CreateShareStructure/ListShareClass.vue'
+import ListShareClass from '@/components/Incorporation/ListShareClass.vue'
 
 Vue.use(Vuetify)
 Vue.use(Vuelidate)

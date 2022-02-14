@@ -71,44 +71,28 @@ export default class Stepper extends Vue {
   /** Returns true if the step route is valid. */
   private isValid (route: RouteNames): boolean {
     switch (route) {
-      case RouteNames.DEFINE_COMPANY:
-        return this.isDefineCompanyValid
+      case RouteNames.INCORPORATION_AGREEMENT: return this.isIncorporationAgreementValid
+      case RouteNames.INCORPORATION_DEFINE_COMPANY: return this.isDefineCompanyValid
+      case RouteNames.INCORPORATION_MEMORANDUM: return this.isMemorandumValid
+      case RouteNames.INCORPORATION_PEOPLE_ROLES: return this.isAddPeopleAndRolesValid
+      case RouteNames.INCORPORATION_REVIEW_CONFIRM: return this.isApplicationValid
+      case RouteNames.INCORPORATION_RULES: return this.isRulesValid
+      case RouteNames.INCORPORATION_SHARE_STRUCTURE: return this.isCreateShareStructureValid
 
-      case RouteNames.ADD_PEOPLE_AND_ROLES:
-        return this.isAddPeopleAndRolesValid
+      case RouteNames.DISSOLUTION_AFFIDAVIT: return this.isAffidavitValid
+      case RouteNames.DISSOLUTION_DEFINE_DISSOLUTION: return this.isDefineDissolutionValid
+      case RouteNames.DISSOLUTION_RESOLUTION: return this.isResolutionValid
+      case RouteNames.DISSOLUTION_REVIEW_CONFIRM: return this.isApplicationValid
 
-      case RouteNames.CREATE_RULES:
-        return this.isRulesValid
-
-      case RouteNames.CREATE_SHARE_STRUCTURE:
-        return this.isCreateShareStructureValid
-
-      case RouteNames.INCORPORATION_AGREEMENT:
-        return this.isIncorporationAgreementValid
-
-      case RouteNames.CREATE_MEMORANDUM:
-        return this.isMemorandumValid
-
-      case RouteNames.DEFINE_DISSOLUTION:
-        return this.isDefineDissolutionValid
-
-      case RouteNames.CREATE_RESOLUTION:
-        return this.isResolutionValid
-
-      case RouteNames.UPLOAD_AFFIDAVIT:
-        return this.isAffidavitValid
-
-      case RouteNames.REVIEW_CONFIRM:
-      case RouteNames.REVIEW_CONFIRM_DISSOLUTION:
-        return this.isApplicationValid
-
-      default:
-        return false
+      case RouteNames.REGISTRATION_DEFINE_BUSINESS: return false // TODO: implement
+      case RouteNames.REGISTRATION_PEOPLE_ROLES: return false // TODO: implement
+      case RouteNames.REGISTRATION_REVIEW_CONFIRM: return false // TODO: implement
     }
+    return false
   }
 
   private goTo (step) {
-    this.$router.push(step.to).catch(error => error)
+    this.$router.push(step.to).catch(() => {})
   }
 
   private isCurrentStep (step): boolean {

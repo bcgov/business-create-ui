@@ -10,16 +10,16 @@ export const CoopDissolutionSteps = [
     step: 1,
     icon: 'mdi-domain-remove',
     text: 'Define \nDissolution',
-    to: RouteNames.DEFINE_DISSOLUTION,
-    component: ViewComponentNames.DEFINE_DISSOLUTION
+    to: RouteNames.DISSOLUTION_DEFINE_DISSOLUTION,
+    component: ViewComponentNames.DISSOLUTION_DEFINE_DISSOLUTION
   },
   {
     id: 'step-2-btn',
     step: 2,
     icon: 'mdi-handshake',
     text: 'Complete \n Special Resolution',
-    to: RouteNames.CREATE_RESOLUTION,
-    component: ViewComponentNames.CREATE_RESOLUTION
+    to: RouteNames.DISSOLUTION_RESOLUTION,
+    component: ViewComponentNames.DISSOLUTION_RESOLUTION
 
   },
   {
@@ -27,16 +27,16 @@ export const CoopDissolutionSteps = [
     step: 3,
     icon: 'mdi-book-variant-multiple',
     text: 'Upload \nAffidavit',
-    to: RouteNames.UPLOAD_AFFIDAVIT,
-    component: ViewComponentNames.UPLOAD_AFFIDAVIT
+    to: RouteNames.DISSOLUTION_AFFIDAVIT,
+    component: ViewComponentNames.DISSOLUTION_AFFIDAVIT
   },
   {
     id: 'step-4-btn',
     step: 4,
     icon: 'mdi-text-box-check-outline',
     text: 'Review \nand Confirm',
-    to: RouteNames.REVIEW_CONFIRM_DISSOLUTION,
-    component: ViewComponentNames.REVIEW_CONFIRM_DISSOLUTION
+    to: RouteNames.DISSOLUTION_REVIEW_CONFIRM,
+    component: ViewComponentNames.DISSOLUTION_REVIEW_CONFIRM
   }
 ]
 
@@ -50,16 +50,16 @@ export const CorpDissolutionSteps = [
     step: 1,
     icon: 'mdi-domain-remove',
     text: 'Define \nDissolution',
-    to: RouteNames.DEFINE_DISSOLUTION,
-    component: ViewComponentNames.DEFINE_DISSOLUTION
+    to: RouteNames.DISSOLUTION_DEFINE_DISSOLUTION,
+    component: ViewComponentNames.DISSOLUTION_DEFINE_DISSOLUTION
   },
   {
     id: 'step-2-btn',
     step: 2,
     icon: 'mdi-handshake',
     text: 'Complete \nResolution',
-    to: RouteNames.CREATE_RESOLUTION,
-    component: ViewComponentNames.CREATE_RESOLUTION
+    to: RouteNames.DISSOLUTION_RESOLUTION,
+    component: ViewComponentNames.DISSOLUTION_RESOLUTION
 
   },
   {
@@ -67,15 +67,15 @@ export const CorpDissolutionSteps = [
     step: 3,
     icon: 'mdi-book-variant-multiple',
     text: 'Complete \nAffidavit',
-    to: RouteNames.UPLOAD_AFFIDAVIT,
-    component: ViewComponentNames.UPLOAD_AFFIDAVIT
+    to: RouteNames.DISSOLUTION_AFFIDAVIT,
+    component: ViewComponentNames.DISSOLUTION_AFFIDAVIT
   },
   {
     id: 'step-4-btn',
     step: 4,
     icon: 'mdi-text-box-check-outline',
     text: 'Review \nand Confirm',
-    to: RouteNames.REVIEW_CONFIRM_DISSOLUTION,
-    component: ViewComponentNames.REVIEW_CONFIRM_DISSOLUTION
+    to: RouteNames.DISSOLUTION_REVIEW_CONFIRM,
+    component: ViewComponentNames.DISSOLUTION_REVIEW_CONFIRM
   }
 ]

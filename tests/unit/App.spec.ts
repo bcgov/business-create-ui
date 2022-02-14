@@ -1,4 +1,3 @@
-// Libraries
 import Vue from 'vue'
 import Vuetify from 'vuetify'
 import VueRouter from 'vue-router'
@@ -8,18 +7,14 @@ import { getVuexStore } from '@/store'
 import { mount, shallowMount, createLocalVue } from '@vue/test-utils'
 import { axios } from '@/utils'
 import sbcFeeSummaryAxios from 'axios'
-
-// Components
 import App from '@/App.vue'
 import SbcHeader from 'sbc-common-components/src/components/SbcHeader.vue'
 import SbcFooter from 'sbc-common-components/src/components/SbcFooter.vue'
 import SbcFeeSummary from 'sbc-common-components/src/components/SbcFeeSummary.vue'
+import Actions from '@/components/common/Actions.vue'
 import EntityInfo from '@/components/common/EntityInfo.vue'
 import Stepper from '@/components/common/Stepper.vue'
-import Actions from '@/components/common/Actions.vue'
-import ConfirmDialog from '@/components/dialogs/ConfirmDialog.vue'
-
-// Other
+import ConfirmDialog from '@/dialogs/ConfirmDialog.vue'
 import mockRouter from './MockRouter'
 import Vuelidate from 'vuelidate'
 import { StaffPaymentOptions } from '@bcrs-shared-components/enums'
@@ -49,7 +44,7 @@ sessionStorage.setItem('AUTH_API_URL', 'https://auth.api.url/')
 sessionStorage.setItem('CURRENT_ACCOUNT', '{ "id": 668 }')
 sessionStorage.setItem('PAY_API_URL', 'https://pay.api.url/')
 
-// Mock filing data
+// sample filing data
 const filingData = {
   header: {
     name: 'incorporationApplication',
@@ -223,7 +218,7 @@ const filingData = {
   }
 }
 
-// Mock NR data
+// sample NR data
 const nrData = {
   applicants: {
     addrLine1: 'address line 1',
@@ -353,8 +348,14 @@ describe('Numbered company setup', () => {
     const localVue = createLocalVue()
     localVue.use(VueRouter)
     const router = mockRouter.mock()
-    router.push({ name: 'define-company', query: { id: 'T7654321' } })
-    wrapper = shallowMount(App, { localVue, store, router, vuetify, stubs: { Affix: true, ConfirmDialog } })
+    router.push({ name: 'incorporation-define-company', query: { id: 'T7654321' } })
+    wrapper = shallowMount(App, {
+      localVue,
+      store,
+      router,
+      vuetify,
+      stubs: { Affix: true, SbcHeader: true }
+    })
 
     // wait for all queries to complete
     await flushPromises()
@@ -501,8 +502,14 @@ describe('App component', () => {
     const localVue = createLocalVue()
     localVue.use(VueRouter)
     const router = mockRouter.mock()
-    router.push({ name: 'define-company', query: { id: 'T1234567' } })
-    wrapper = shallowMount(App, { localVue, store, router, vuetify, stubs: { Affix: true, ConfirmDialog } })
+    router.push({ name: 'incorporation-define-company', query: { id: 'T1234567' } })
+    wrapper = shallowMount(App, {
+      localVue,
+      store,
+      router,
+      vuetify,
+      stubs: { Affix: true, SbcHeader: true, ConfirmDialog }
+    })
 
     // wait for all queries to complete
     await flushPromises()
@@ -848,8 +855,14 @@ describe('Dissolution BEN - External User', () => {
     localVue.use(Vuelidate)
     localVue.filter('currency', (x) => x)
     const router = mockRouter.mock()
-    router.push({ name: 'define-dissolution', query: { id: 'BC0870803' } })
-    wrapper = mount(App, { localVue, store, router, vuetify })
+    router.push({ name: 'dissolution-define-dissolution', query: { id: 'BC0870803' } })
+    wrapper = mount(App, {
+      localVue,
+      store,
+      router,
+      vuetify,
+      stubs: { Affix: true, SbcHeader: true }
+    })
 
     // wait for all queries to complete
     await flushPromises()
@@ -1087,8 +1100,14 @@ describe('Dissolution BEN - Staff User', () => {
     localVue.use(Vuelidate)
     localVue.filter('currency', (x) => x)
     const router = mockRouter.mock()
-    router.push({ name: 'define-dissolution', query: { id: 'BC0870803' } })
-    wrapper = mount(App, { localVue, store, router, vuetify })
+    router.push({ name: 'dissolution-define-dissolution', query: { id: 'BC0870803' } })
+    wrapper = mount(App, {
+      localVue,
+      store,
+      router,
+      vuetify,
+      stubs: { Affix: true, SbcHeader: true }
+    })
 
     // wait for all queries to complete
     await flushPromises()
@@ -1511,8 +1530,14 @@ describe('Dissolution COOP - External User', () => {
     localVue.use(Vuelidate)
     localVue.filter('currency', (x) => x)
     const router = mockRouter.mock()
-    router.push({ name: 'define-dissolution', query: { id: 'CP1002398' } })
-    wrapper = mount(App, { localVue, store, router, vuetify, stubs: { 'CompleteResolution': true } })
+    router.push({ name: 'dissolution-define-dissolution', query: { id: 'CP1002398' } })
+    wrapper = mount(App, {
+      localVue,
+      store,
+      router,
+      vuetify,
+      stubs: { Affix: true, SbcHeader: true, CompleteResolution: true }
+    })
 
     // wait for all queries to complete
     await flushPromises()
@@ -1941,8 +1966,14 @@ describe('Dissolution COOP - Staff User', () => {
     localVue.use(Vuelidate)
     localVue.filter('currency', (x) => x)
     const router = mockRouter.mock()
-    router.push({ name: 'define-dissolution', query: { id: 'CP1002398' } })
-    wrapper = mount(App, { localVue, store, router, vuetify, stubs: { 'CompleteResolution': true } })
+    router.push({ name: 'dissolution-define-dissolution', query: { id: 'CP1002398' } })
+    wrapper = mount(App, {
+      localVue,
+      store,
+      router,
+      vuetify,
+      stubs: { Affix: true, SbcHeader: true, CompleteResolution: true }
+    })
 
     // wait for all queries to complete
     await flushPromises()

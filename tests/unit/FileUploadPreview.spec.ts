@@ -1,4 +1,3 @@
-// Libraries
 import Vue from 'vue'
 import Vuetify from 'vuetify'
 import { mount, Wrapper } from '@vue/test-utils'
@@ -20,6 +19,9 @@ const elevenMBFile = new File([new ArrayBuffer(1048576 * 11)], 'elevenMBFile.pdf
 File.prototype.arrayBuffer = File.prototype.arrayBuffer || myArrayBuffer
 // @ts-ignore
 Blob.prototype.arrayBuffer = Blob.prototype.arrayBuffer || myArrayBuffer
+
+// mock the console.log function to hide PDF library warnings
+console.log = jest.fn()
 
 function myArrayBuffer () {
   // this: File or Blob

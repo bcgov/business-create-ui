@@ -33,7 +33,7 @@ export * from './stepper-interfaces/DefineCompany/name-translation-interface'
 export * from './stepper-interfaces/IncorporationAgreement/help-section-interface'
 export * from './stepper-interfaces/IncorporationAgreement/incorporation-agreement-interface'
 export * from './stepper-interfaces/ReviewConfirm/certify-interface'
-export * from './stepper-interfaces/Dissolution/DefineDissolution/dissolution-statement-interface'
+export * from './stepper-interfaces/Dissolution/dissolution-statement-interface'
 export * from './stepper-interfaces/Affidavit/affidavit-interface'
 
 export * from './stepper-interfaces/common/staff-payment-step-interface'

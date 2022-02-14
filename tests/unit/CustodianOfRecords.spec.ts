@@ -1,8 +1,8 @@
+import Vue from 'vue'
 import { shallowWrapperFactory } from '../jest-wrapper-factory'
-import { CustodianOfRecords } from '@/components/DefineDissolution'
+import CustodianOfRecords from '@/components/Dissolution/CustodianOfRecords.vue'
 import { DissolutionResources } from '@/resources'
 import { PartyTypes } from '@/enums'
-import Vue from 'vue'
 
 // Test Case Data
 const custodianTestCases = [

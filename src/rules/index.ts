@@ -9,9 +9,9 @@ import { OrgNameRules } from './org-name-rules'
 import { PhoneRules } from './phone-rules'
 
 export const Rules = {
-  EmailRules,
   CommonRules,
   DateRules,
+  EmailRules,
   FirstNameRules,
   FolioNumberRules,
   LastNameRules,
