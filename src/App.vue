@@ -570,16 +570,16 @@ export default class App extends Mixins(
         switch (this.getFilingType) {
           case FilingTypes.VOLUNTARY_DISSOLUTION:
             this.$router.push(RouteNames.DISSOLUTION_DEFINE_DISSOLUTION).catch(() => {})
-            return
+            break
           case FilingTypes.INCORPORATION_APPLICATION:
             this.$router.push(RouteNames.INCORPORATION_DEFINE_COMPANY).catch(() => {})
-            return
+            break
           case FilingTypes.REGISTRATION:
             this.$router.push(RouteNames.REGISTRATION_DEFINE_BUSINESS).catch(() => {})
-            return
+            break
           default:
             this.invalidRouteDialog = true
-            return
+            break
         }
       }
 
