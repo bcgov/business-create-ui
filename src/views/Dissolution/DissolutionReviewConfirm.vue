@@ -375,16 +375,6 @@ export default class DissolutionReviewConfirm extends Mixins(DateMixin) {
     })
   }
 
-  /** Called when component is mounted. */
-  mounted (): void {
-    this.setCertifyState(
-      {
-        valid: this.getCertifyState.valid,
-        certifiedBy: this.getCertifyState.certifiedBy
-      }
-    )
-  }
-
   /** Is true when the Dissolution Date and Time section is invalid. */
   get isDissolutionDateTimeInvalid (): boolean {
     return (this.getValidateSteps && !this.getEffectiveDateTime.valid)
