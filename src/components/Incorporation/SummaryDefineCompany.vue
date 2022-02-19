@@ -99,7 +99,6 @@ export default class SummaryDefineCompany extends Mixins(EntityFilterMixin, Enum
   @Getter isPremiumAccount!: boolean
   @Getter isTypeCoop!: boolean
   @Getter getNameTranslations!: NameTranslationIF[]
-  @Getter getValidateSteps!: boolean
   @Getter getDefineCompanyStep!: DefineCompanyIF
   @Getter getBusinessContact!: BusinessContactIF
   @Getter getFolioNumber!: string
@@ -138,7 +137,7 @@ export default class SummaryDefineCompany extends Mixins(EntityFilterMixin, Enum
 }
 
 .company-name {
-  font-size: 1.375rem;
+  font-size: $px-22;
   font-weight: bold
 }
 

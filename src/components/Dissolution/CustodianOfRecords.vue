@@ -193,20 +193,20 @@
           </v-col>
           <v-col cols="12" md="5" lg="5" class="pl-8">
             <div class="summary-sub-label">Email Address</div>
-            <span class="summary-text">{{ getCustodianEmail || '(Not entered)' }}</span>
+            <span class="summary-text">{{ getDissolutionCustodianEmail || '(Not entered)' }}</span>
           </v-col>
         </v-row>
         <v-row no-gutters class="mt-4">
           <v-col cols="12" md="5" lg="5">
             <label class="summary-sub-label">Mailing Address</label>
-            <mailing-address :address="getCustodian.mailingAddress" />
+            <MailingAddress :address="getDissolutionCustodian.mailingAddress" />
           </v-col>
           <v-col cols="12" md="5" lg="5" class="pl-8">
             <label class="summary-sub-label">Delivery Address</label>
-            <div v-if="getCustodian.inheritMailingAddress">
+            <div v-if="getDissolutionCustodian.inheritMailingAddress">
               Same as Mailing Address
             </div>
-            <delivery-address v-else :address="getCustodian.deliveryAddress" />
+            <DeliveryAddress v-else :address="getDissolutionCustodian.deliveryAddress" />
           </v-col>
         </v-row>
       </div>
@@ -227,8 +227,8 @@ import { cloneDeep } from 'lodash'
 
 @Component({
   components: {
-    'delivery-address': BaseAddress,
-    'mailing-address': BaseAddress
+    DeliveryAddress: BaseAddress,
+    MailingAddress: BaseAddress
   }
 })
 export default class CustodianOfRecords extends Mixins(CommonMixin, EntityFilterMixin) {
@@ -240,13 +240,13 @@ export default class CustodianOfRecords extends Mixins(CommonMixin, EntityFilter
   }
 
   @Prop({ default: false })
-  private readonly isSummary!: boolean
+  readonly isSummary!: boolean
 
   @Prop({ default: false })
-  private readonly showErrors!: boolean
+  readonly showErrors!: boolean
 
-  @Getter getCustodian!: OrgPersonIF
-  @Getter getCustodianEmail!: string
+  @Getter getDissolutionCustodian!: OrgPersonIF
+  @Getter getDissolutionCustodianEmail!: string
   @Getter getCustodialRecordsResources!: CustodianResourceIF
   @Getter isTypeCoop!: boolean
 
@@ -267,9 +267,9 @@ export default class CustodianOfRecords extends Mixins(CommonMixin, EntityFilter
   readonly Rules = Rules
   readonly PartyTypes = PartyTypes
 
-  created () {
+  created (): void {
     // Define local model using values initialized in store.
-    this.custodian = this.getCustodian
+    this.custodian = this.getDissolutionCustodian
 
     // Corps are required to choose a party type, where coops are pre-determined to be of person type.
     if (this.isTypeCoop) this.custodian.officer.partyType = PartyTypes.PERSON
@@ -295,7 +295,7 @@ export default class CustodianOfRecords extends Mixins(CommonMixin, EntityFilter
 
   /** The custodian person or org name to display. */
   private get getCustodianName (): string {
-    const { firstName, middleName, lastName, organizationName } = this.getCustodian?.officer
+    const { firstName, middleName, lastName, organizationName } = this.getDissolutionCustodian?.officer
     if (this.isPerson && firstName && lastName) {
       return `${firstName} ${middleName} ${lastName}`
     }
@@ -325,22 +325,27 @@ export default class CustodianOfRecords extends Mixins(CommonMixin, EntityFilter
   /** Whether the add custodian form is valid. */
   private get isFormValid (): boolean {
     const deliveryValid = this.inheritMailingAddress ? true : this.deliveryAddressValid
-    return !!this.getCustodian.officer.partyType && this.addCustodianValid && this.mailingAddressValid && deliveryValid
+    return (
+      !!this.getDissolutionCustodian.officer.partyType &&
+      this.addCustodianValid &&
+      this.mailingAddressValid &&
+      deliveryValid
+    )
   }
 
   /** Is true when the party type is a person. */
   private get isPerson (): boolean {
-    return this.getCustodian?.officer.partyType === PartyTypes.PERSON
+    return (this.getDissolutionCustodian?.officer.partyType === PartyTypes.PERSON)
   }
 
   /** Is true when the party type is an organization. */
   private get isOrg (): boolean {
-    return this.getCustodian?.officer.partyType === PartyTypes.ORGANIZATION
+    return (this.getDissolutionCustodian?.officer.partyType === PartyTypes.ORGANIZATION)
   }
 
   /** Is true when the user selects to inherit the mailing address. */
   private get inheritMailingAddress (): boolean {
-    return this.getCustodian?.inheritMailingAddress
+    return this.getDissolutionCustodian?.inheritMailingAddress
   }
 
   /** Keep local custodian addresses in sync with base address common component. */
@@ -408,7 +413,7 @@ export default class CustodianOfRecords extends Mixins(CommonMixin, EntityFilter
   @Watch('inheritMailingAddress')
   private setDeliveryAddressToMailingAddress (): void {
     if (this.inheritMailingAddress) {
-      this.custodian.deliveryAddress = cloneDeep(this.getCustodian.mailingAddress)
+      this.custodian.deliveryAddress = cloneDeep(this.getDissolutionCustodian.mailingAddress)
     } else {
       // Clear to default
       this.custodian.deliveryAddress = { ...this.defaultAddress }
@@ -426,9 +431,10 @@ export default class CustodianOfRecords extends Mixins(CommonMixin, EntityFilter
 
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
+
 .section-container {
   padding: 1.5rem 2rem;
-  font-size: 1rem;
+  font-size: $px-16;
   color: $gray7;
 }
 
@@ -437,7 +443,7 @@ export default class CustodianOfRecords extends Mixins(CommonMixin, EntityFilter
   margin-top: 0;
 
   .person-or-org-option {
-    font-size: 1rem;
+    font-size: $px-16;
     font-weight: bold;
     color: $gray9;
   }
@@ -456,17 +462,17 @@ export default class CustodianOfRecords extends Mixins(CommonMixin, EntityFilter
 }
 
 .summary-section {
-  font-size: 1rem;
+  font-size: $px-16;
   color: $gray7;
 
   .summary-sub-label {
-    font-size: 0.875rem;
+    font-size: $px-14;
     font-weight: bold;
     color: $gray9;
   }
 
   .summary-text {
-    font-size: 1rem;
+    font-size: $px-16;
     color: $gray7;
   }
 }
@@ -474,13 +480,13 @@ export default class CustodianOfRecords extends Mixins(CommonMixin, EntityFilter
 // Vuetify styling overrides
 ::v-deep .v-text-field .v-label {
   font-weight: normal;
-  font-size: 1rem;
+  font-size: $px-16;
   color: $gray7;
   letter-spacing: -0.2px;
 }
 
 ::v-deep .v-input--selection-controls .v-input__slot > .v-label {
-  size: 1rem;
+  font-size: $px-16;
   color: $gray7;
   font-weight: normal;
 }
@@ -488,7 +494,7 @@ export default class CustodianOfRecords extends Mixins(CommonMixin, EntityFilter
 // Override on  BaseAddress component styling
 ::v-deep .address-block__info-row:last-child {
   padding-top: 10px;
-  font-size: 0.875rem;
+  font-size: $px-14;
   font-style: italic;
 }
 </style>

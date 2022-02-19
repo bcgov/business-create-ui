@@ -1,6 +1,6 @@
 <template>
   <div id="office-addresses">
-    <!-- Address Review -->
+    <!-- Address Summary -->
     <template v-if="!isEditing">
       <v-row no-gutters id="summary-registered-address">
         <v-col md="3" class="mr-n1"><label><strong>Registered Office</strong></label></v-col>
@@ -66,16 +66,14 @@
           <div class="meta-container">
             <label>Mailing Address</label>
             <div class="meta-container__inner">
-              <div class="address-wrapper">
-                <MailingAddress ref="regMailingAddress"
-                  id="address-registered-mailing"
-                  :address="mailingAddress"
-                  :editing="true"
-                  :schema="OfficeAddressSchema"
-                  @update:address="updateAddress('mailingAddress', mailingAddress, $event)"
-                  @valid="updateAddressValid('mailingAddress', $event)"
-                />
-              </div>
+              <MailingAddress ref="regMailingAddress"
+                id="address-registered-mailing"
+                :address="mailingAddress"
+                :editing="true"
+                :schema="OfficeAddressSchema"
+                @update:address="updateAddress('mailingAddress', mailingAddress, $event)"
+                @valid="updateAddressValid('mailingAddress', $event)"
+              />
             </div>
           </div>
         </li>
@@ -94,8 +92,9 @@
                   v-on:change="setDeliveryAddressToMailingAddress()"
                 />
               </div>
-              <div class="address-wrapper"
-                   v-if="!isSame(mailingAddress, deliveryAddress, ['actions']) || !inheritMailingAddress">
+              <template
+                v-if="!isSame(mailingAddress, deliveryAddress, ['actions']) || !inheritMailingAddress"
+              >
                 <DeliveryAddress ref="regDeliveryAddress"
                   id="address-registered-delivery"
                   v-if="!inheritMailingAddress"
@@ -106,7 +105,7 @@
                   @update:address="updateAddress('deliveryAddress', deliveryAddress, $event)"
                   @valid="updateAddressValid('deliveryAddress', $event)"
                 />
-              </div>
+              </template>
             </div>
           </div>
         </li>
@@ -130,16 +129,14 @@
               <div class="meta-container">
                 <label>Mailing Address</label>
                 <div class="meta-container__inner">
-                  <div class="address-wrapper">
-                    <MailingAddress ref="recMailingAddress"
-                      id="address-records-mailing"
-                      :address="recMailingAddress"
-                      :editing="true"
-                      :schema="OfficeAddressSchema"
-                      @update:address="updateAddress('recMailingAddress', recMailingAddress, $event)"
-                      @valid="updateAddressValid('recMailingAddress', $event)"
-                    />
-                  </div>
+                  <MailingAddress ref="recMailingAddress"
+                    id="address-records-mailing"
+                    :address="recMailingAddress"
+                    :editing="true"
+                    :schema="OfficeAddressSchema"
+                    @update:address="updateAddress('recMailingAddress', recMailingAddress, $event)"
+                    @valid="updateAddressValid('recMailingAddress', $event)"
+                  />
                 </div>
               </div>
             </li>
@@ -157,9 +154,9 @@
                       v-on:change="setRecordDeliveryAddressToMailingAddress()"
                     />
                   </div>
-                  <div
-                    class="address-wrapper"
-                    v-if="!isSame(recMailingAddress, recDeliveryAddress, ['actions']) || !inheritRecMailingAddress">
+                  <template
+                    v-if="!isSame(recMailingAddress, recDeliveryAddress, ['actions']) || !inheritRecMailingAddress"
+                  >
                     <DeliveryAddress ref="recDeliveryAddress"
                       id="address-records-delivery"
                       :address="recDeliveryAddress"
@@ -169,7 +166,7 @@
                       @update:address="updateAddress('recDeliveryAddress', recDeliveryAddress, $event)"
                       @valid="updateAddressValid('recDeliveryAddress', $event)"
                     />
-                  </div>
+                  </template>
                 </div>
               </div>
             </li>
@@ -212,14 +209,14 @@ export default class OfficeAddresses extends Mixins(CommonMixin, EntityFilterMix
    * This will be emitted back to the parent page when the addresses are updated.
    */
   @Prop({ default: null })
-  private readonly inputAddresses!: IncorporationAddressIF
+  readonly inputAddresses!: IncorporationAddressIF
 
   // Whether to show the editable forms for the addresses (true) or just the static display addresses (false).
   @Prop({ default: true })
-  private readonly isEditing!: boolean
+  readonly isEditing!: boolean
 
   @Prop({ default: false })
-  private readonly showErrors!: boolean
+  readonly showErrors!: boolean
 
   @Getter getDefineCompanyStep!: DefineCompanyIF
 
@@ -263,7 +260,7 @@ export default class OfficeAddresses extends Mixins(CommonMixin, EntityFilterMix
   readonly CorpTypeCd = CorpTypeCd
 
   /** Called when component is created. */
-  private created (): void {
+  created (): void {
     // on first load, determine inherited flags based on address values and update parent
     this.setAddresses(true)
     this.emitValid()
@@ -403,9 +400,15 @@ export default class OfficeAddresses extends Mixins(CommonMixin, EntityFilterMix
     this.emitAddresses()
   }
 
-  private updateAddress (addressChangedEntity: string, baseAddress: AddressIF, newAddress: AddressIF): void {
+  /**
+   * Updates the specified address' data.
+   * @param addressToUpdate the address type to set the data of
+   * @param baseAddress the address object to update
+   * @param newAddress the new address data
+   */
+  private updateAddress (addressToUpdate: string, baseAddress: AddressIF, newAddress: AddressIF): void {
     Object.assign(baseAddress, newAddress)
-    switch (addressChangedEntity) {
+    switch (addressToUpdate) {
       case 'mailingAddress':
         if (this.inheritMailingAddress) {
           this.deliveryAddress = { ...newAddress }
@@ -430,33 +433,33 @@ export default class OfficeAddresses extends Mixins(CommonMixin, EntityFilterMix
         break
       default:
         // eslint-disable-next-line no-console
-        console.log(`Error: Address- ${addressChangedEntity} not found`)
+        console.log(`Error: cannot update ${addressToUpdate}`)
     }
     this.emitAddresses()
   }
 
   /**
-   * Keeps track of the validity of the specified address.
-   * @param addressToValidate the address to set the validity of
-   * @param isValid a boolean indicating the validity of the address
+   * Updates the specified address' validity.
+   * @param addressToValidate the address type to set the validity of
+   * @param valid whether the address is valid
    */
-  private updateAddressValid (addressToValidate: string, isValid: boolean): void {
+  private updateAddressValid (addressToValidate: string, valid: boolean): void {
     switch (addressToValidate) {
       case 'deliveryAddress':
-        this.deliveryAddressValid = isValid
+        this.deliveryAddressValid = valid
         break
       case 'mailingAddress':
-        this.mailingAddressValid = isValid
+        this.mailingAddressValid = valid
         break
       case 'recDeliveryAddress':
-        this.recDeliveryAddressValid = isValid
+        this.recDeliveryAddressValid = valid
         break
       case 'recMailingAddress':
-        this.recMailingAddressValid = isValid
+        this.recMailingAddressValid = valid
         break
       default:
         // eslint-disable-next-line no-console
-        console.log(`Error: Address- ${addressToValidate} not found`)
+        console.log(`Error: cannot validate ${addressToValidate}`)
     }
     this.emitValid()
   }
@@ -576,11 +579,6 @@ label:first-child {
   }
 }
 
-// Address Block Layout
-.address-wrapper {
-  margin-top: 0.5rem;
-}
-
 // Form Row Elements
 .form__row + .form__row {
   margin-top: 0.25rem;
@@ -595,13 +593,13 @@ label:first-child {
 }
 
 .inherit-checkbox {
-  margin-top: -3px;
+  margin-top: 0;
   margin-left: -3px;
   padding: 0;
 }
 
 .records-inherit-checkbox {
-  margin-top: 0rem;
+  margin-top: 0;
   margin-left: 4.5rem;
   margin-bottom: -1.5rem;
   padding: 0;
@@ -631,7 +629,7 @@ ul {
   padding: 1.25rem;
 
   address-edit-title {
-    font-size: 1rem;
+    font-size: $px-16;
     font-weight: bold;
     line-height: 1.375rem;
   }
@@ -643,6 +641,6 @@ label {
 
 .mailing-address-header,
 .delivery-address-header {
-  font-size: 0.875rem;
+  font-size: $px-14;
 }
 </style>

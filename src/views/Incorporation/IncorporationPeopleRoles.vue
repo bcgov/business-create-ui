@@ -11,11 +11,11 @@
 
 <script lang="ts">
 import { Component, Mixins, Vue, Watch } from 'vue-property-decorator'
-import { Action, Getter } from 'vuex-class'
-import { ActionBindingIF, PeopleAndRoleIF, PeopleAndRolesResourceIF } from '@/interfaces'
+import { Getter } from 'vuex-class'
+import { PeopleAndRoleIF, PeopleAndRolesResourceIF } from '@/interfaces'
 import { CommonMixin, EntityFilterMixin } from '@/mixins'
 import { RouteNames } from '@/enums'
-import PeopleAndRoles from '@/components/Incorporation/PeopleAndRoles.vue'
+import PeopleAndRoles from '@/components/common/PeopleAndRoles.vue'
 
 @Component({
   components: {
@@ -27,27 +27,18 @@ export default class IncorporationPeopleRoles extends Mixins(CommonMixin, Entity
   @Getter getAddPeopleAndRoleStep!: PeopleAndRoleIF
   @Getter getPeopleAndRolesResource!: PeopleAndRolesResourceIF
 
-  @Action setIgnoreChanges!: ActionBindingIF
-
-  /** Called when component is created. */
-  private created (): void {
-    // ignore data changes until page has loaded
-    this.setIgnoreChanges(true)
-    Vue.nextTick(() => {
-      this.setIgnoreChanges(false)
-    })
-  }
-
   @Watch('$route')
   private async scrollToInvalidComponent (): Promise<void> {
     if (this.getShowErrors && this.$route.name === RouteNames.INCORPORATION_PEOPLE_ROLES) {
-      // Scroll to invalid components.
+      // scroll to invalid components
       await Vue.nextTick()
       await this.validateAndScroll(
         {
           peopleAndRoles: this.getAddPeopleAndRoleStep.valid
         },
-        ['people-and-roles']
+        [
+          'people-and-roles'
+        ]
       )
     }
   }

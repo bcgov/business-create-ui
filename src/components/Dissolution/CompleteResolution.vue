@@ -355,7 +355,6 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin, E
   @Getter getNameRequestDetails!: NameRequestDetailsIF
   @Getter getCreateResolutionResource!: CreateResolutionResourceIF
   @Getter getCreateResolutionStep!: CreateResolutionIF
-  @Getter getValidateSteps!: boolean
   @Getter getBusinessLegalName!: string
   @Getter getBusinessFoundingDate!: string
 
@@ -594,7 +593,7 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin, E
   }
 
   /** Called when component is created. */
-  private created (): void {
+  created (): void {
     const foundingDate = new Date(this.getBusinessFoundingDate)
     foundingDate.setHours(0, 0, 0, 0)
     this.foundingDate = foundingDate
@@ -605,7 +604,7 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin, E
     this.signatureDateText = this.getCreateResolutionStep.signingDate
   }
 
-  private async mounted (): Promise<void> {
+  async mounted (): Promise<void> {
     await Vue.nextTick()
     this.updateResolutionStepValidationDetail()
   }
@@ -696,9 +695,10 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin, E
 
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
+
 header {
   p {
-    padding-top: 0.5rem
+    padding-top: 0.5rem;
   }
 }
 
@@ -790,7 +790,7 @@ ul {
 
 .complete-resolution-vcard-title {
   padding-top: 1px;
-  font-size: 17px;
+  font-size: $px-17;
   font-weight: bold;
 }
 
@@ -849,16 +849,15 @@ ul {
 #resolution-date-card {
   padding: 1.25rem;
   line-height: 1.2rem;
-  font-size: 0.875rem;
+  font-size: $px-14;
 }
 
 .resolution-date-vcard-title,
 .resolution-text-vcard-title,
 .resolution-signature-vcard-title {
   padding-top: 1px;
-  font-size: 16px;
+  font-size: $px-16;
   font-weight: bold;
   color: $gray9 !important;
 }
-
 </style>

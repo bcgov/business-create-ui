@@ -3,7 +3,7 @@ import Vuetify from 'vuetify'
 import { mount, Wrapper } from '@vue/test-utils'
 import { getVuexStore } from '@/store'
 import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
-import { BusinessContactIF } from '@/interfaces/stepper-interfaces/common/business-contact-interface'
+import { BusinessContactIF } from '@/interfaces'
 
 Vue.use(Vuetify)
 const store = getVuexStore()
@@ -11,8 +11,8 @@ const store = getVuexStore()
 let vuetify = new Vuetify({})
 
 // Events
-const formValidEvent = 'contactInfoFormValidityChange'
-const formDataChangeEvent = 'contactInfoChange'
+const formValidEvent = 'valid'
+const formDataChangeEvent = 'update'
 
 // Input field selectors to test changes to the DOM elements.
 const emailSelector: string = '#txt-email'

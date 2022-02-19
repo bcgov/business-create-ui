@@ -1,14 +1,14 @@
-/** Interface for Fees from Payment API. */
+/** Interfaces for Fees from Payment API. */
 export interface FeesIF {
-    filingFees: number
-    filingType: string
-    filingTypeCode: string
-    futureEffectiveFees?: number
-    priorityFees?: number
-    processingFees?: number
-    serviceFees?: number
-    tax?: TaxesIF
-    total?: number
+  filingFees: number
+  filingType: string
+  filingTypeCode: string
+  futureEffectiveFees?: number
+  priorityFees?: number
+  processingFees?: number
+  serviceFees?: number
+  tax?: TaxesIF
+  total?: number
 }
 
 export interface TaxesIF {
@@ -16,6 +16,7 @@ export interface TaxesIF {
   gst: number
 }
 
+// NB: use cloneDeep when assigning EmptyOrgPerson
 export const EmptyFees: FeesIF = {
   filingFees: null,
   filingType: null,

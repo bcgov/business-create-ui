@@ -1,5 +1,5 @@
 <template>
-  <v-card flat class="rounded-4 py-1" :class="{ 'invalid-section': getShowErrors && !dateText }">
+  <v-card flat class="rounded-4" :class="{ 'invalid-section': getShowErrors && !dateText }">
     <div class="section-container step-container">
       <v-row no-gutters>
         <v-col cols="12" md="2" lg="2">
@@ -12,7 +12,7 @@
             title="Start Date"
             :nudgeRight="40"
             :nudgeTop="85"
-            :initialValue="initialValue"
+            :initialValue="getRegistration.startDate"
             :minDate="startDateMinStr"
             :maxDate="startDateMaxStr"
             :inputRules="startDateRules"
@@ -25,9 +25,9 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Prop, Watch } from 'vue-property-decorator'
+import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
-import { ActionBindingIF } from '@/interfaces'
+import { ActionBindingIF, RegistrationStateIF } from '@/interfaces'
 import { DatePicker } from '@bcrs-shared-components/date-picker'
 import { RuleHelpers } from '@/rules'
 import { DateMixin } from '@/mixins'
@@ -43,15 +43,11 @@ export default class StartDate extends Mixins(DateMixin) {
     startDateRef: DatePicker
   }
 
-  /** Initial date string value. */
-  @Prop({ default: '' })
-  readonly initialValue: string
-
   // Global actions
   @Action setRegistrationStartDate!: ActionBindingIF
 
   // Global getters
-  @Getter getCurrentJsDate!: Date
+  @Getter getRegistration!: RegistrationStateIF
   @Getter getShowErrors!: boolean
 
   private dateText = ''
@@ -106,12 +102,11 @@ export default class StartDate extends Mixins(DateMixin) {
 
   @Watch('getShowErrors')
   validateForm (): void {
-    this.$refs.startDateRef.validateForm()
+    (this.$refs.startDateRef as any).validateForm()
   }
 }
 </script>
 
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
-
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div id="business-contact-info">
      <v-row no-gutters v-if="!isEditing">
-       <v-col cols="3" class="mr-n1">
+       <v-col md="3" class="mr-n1">
          <label v-if="isIncorporationFiling"><strong>Registered Office <br>Contact Information</strong></label>
          <label v-else><strong>Business Contact<br>Information</strong></label>
        </v-col>
@@ -99,13 +99,13 @@ import { Rules } from '@/rules'
 })
 export default class BusinessContactInfo extends Mixins(CommonMixin) {
   @Prop({ default: () => {} })
-  private readonly initialValue!: BusinessContactIF
+  readonly initialValue!: BusinessContactIF
 
   @Prop({ default: false })
-  private readonly isEditing!: boolean
+  readonly isEditing!: boolean
 
   @Prop({ default: false })
-  private readonly showErrors!: boolean
+  readonly showErrors!: boolean
 
   @Getter isIncorporationFiling!: boolean
 
@@ -150,15 +150,15 @@ export default class BusinessContactInfo extends Mixins(CommonMixin) {
 
   @Watch('formValid')
   private onFormValidityChange (val: boolean): void {
-    this.emitContactFormState(val)
+    this.emitValid(val)
   }
 
   // Events
-  @Emit('contactInfoChange')
-  private emitContactInfo (contactInfo: BusinessContactIF): void { }
+  @Emit('update')
+  private emitContactInfo (contactInfo: BusinessContactIF): void {}
 
-  @Emit('contactInfoFormValidityChange')
-  private emitContactFormState (valid: boolean): void { }
+  @Emit('valid')
+  private emitValid (valid: boolean): void {}
 }
 </script>
 

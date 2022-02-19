@@ -67,7 +67,7 @@
     </v-row>
 
     <!-- Name Translation Option -->
-    <v-row v-if="!isTypeCoop" id="name-translation-info">
+    <v-row v-if="showNameTranslation" id="name-translation-info">
       <v-col>
         <label>
           <strong>Name Translation</strong>
@@ -75,17 +75,20 @@
       </v-col>
       <v-col>
         <v-checkbox
+          hide-details="true"
+          class="pt-0 mt-0"
           v-model="hasNameTranslation"
           id="name-translation-checkbox"
-          @click.native="confirmNameTranslation()">
+          @click.native="confirmNameTranslation()"
+        >
           <span slot="label" class="translation-checkbox-label">
             This company uses one of more translations of its name outside of Canada.
           </span>
         </v-checkbox>
         <template v-if="hasNameTranslation">
-          <p><b>Note:</b> Name translations must use the Latin
-            Alphabet (English, French, etc.). Names that use other writing systems must spell the name phonetically
-            in English or French.
+          <p class="my-4">
+            <b>Note:</b> Name translations must use the Latin Alphabet (English, French, etc.). Names
+            that use other writing systems must spell the name phonetically in English or French.
           </p>
           <v-btn outlined color="primary" @click="isAddingNameTranslation = true" :disabled="isAddingNameTranslation">
             <v-icon>mdi-plus</v-icon>
@@ -96,7 +99,7 @@
     </v-row>
 
     <!-- Name Translation Components -->
-    <v-row v-if="!isTypeCoop && hasNameTranslation" id="name-translation-container">
+    <v-row v-if="showNameTranslation && hasNameTranslation" id="name-translation-container">
       <!-- Spacer Column -->
       <v-col></v-col>
       <v-col>
@@ -171,6 +174,8 @@ export default class NameRequestInfo extends Mixins(DateMixin, EnumMixin) {
   @Getter getNameRequestApplicant!: NameRequestApplicantIF
   @Getter getNameTranslations!: NameTranslationIF[]
   @Getter isTypeCoop: boolean
+  @Getter isTypeSoleProp: boolean
+  @Getter isTypePartnership: boolean
 
   /** The entity title.  */
   private get getEntityTypeDescription (): string {
@@ -180,6 +185,11 @@ export default class NameRequestInfo extends Mixins(DateMixin, EnumMixin) {
   /** The request type. */
   private get requestType (): string {
     return 'New Business'
+  }
+
+  private get showNameTranslation (): boolean {
+    if (this.isTypeCoop || this.isTypeSoleProp || this.isTypePartnership) return false
+    return true
   }
 
   /** Returns formatted expiration date. */
@@ -345,7 +355,7 @@ export default class NameRequestInfo extends Mixins(DateMixin, EnumMixin) {
 @import '@/assets/styles/theme.scss';
 
 p {
-  font-size: 0.875rem;
+  font-size: $px-14;
 }
 
 .row .col:first-child {
@@ -354,14 +364,14 @@ p {
 }
 
 ul {
-  font-size: .875rem;
+  font-size: $px-14;
   margin: 0;
   padding: 0;
   list-style-type: none;
 }
 
 li.name-request-title, li.numbered-company-title {
-  font-size: 1.25rem;
+  font-size: $px-20;
 }
 
 ul.numbered-company-list-items {
@@ -374,11 +384,8 @@ ul.numbered-company-list-items {
 }
 
 #name-translation-info {
-  display: flex;
-  align-items: baseline;
-
   .translation-checkbox-label {
-    font-size: 0.875rem;
+    font-size: $px-14;
     color: $gray9;
   }
 }

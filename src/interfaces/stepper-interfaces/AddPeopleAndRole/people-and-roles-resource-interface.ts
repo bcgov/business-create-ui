@@ -15,5 +15,6 @@ export interface PeopleAndRolesResourceIF {
   }
   addIncorporator: boolean
   addOrganization: boolean
+  addProprietor: boolean
   rules: Array<Rule>
 }

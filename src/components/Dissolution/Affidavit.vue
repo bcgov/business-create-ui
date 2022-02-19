@@ -329,7 +329,7 @@ export default class Affidavit extends Mixins(CommonMixin, DocumentMixin, Entity
   }
 
   /** Called when component is created. */
-  private created (): void {
+  created (): void {
     this.uploadAffidavitDoc = this.getAffidavitStep.affidavitDoc as File
     this.uploadAffidavitDocKey = this.getAffidavitStep.docKey
     this.affidavitConfirmed = this.getAffidavitStep.affidavitConfirmed
@@ -421,7 +421,7 @@ ul {
 
 .upload-affidavit-v-card-title {
   padding-top: 1px;
-  font-size: 1rem;
+  font-size: $px-16;
   font-weight: bold;
 }
 

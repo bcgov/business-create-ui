@@ -43,7 +43,7 @@
 
       <CustodianOfRecords
         class="mt-5"
-        :showErrors="getShowErrors && !isCustodianValid"
+        :showErrors="getShowErrors && !isDissolutionCustodianValid"
         @valid="setCustodianValidity($event)"
       />
     </section>
@@ -96,23 +96,13 @@ export default class DissolutionDefineDissolution extends Mixins(CommonMixin, En
   @Getter getCustodialRecordsResources!: CustodianResourceIF
   @Getter getDissolutionDetailsTitle!: string
   @Getter getDissolutionStatementStep!: DissolutionStatementIF
-  @Getter getHasCertificateDestroyed!: boolean
+  @Getter getDissolutionHasCertificateDestroyed!: boolean
   @Getter getShowErrors!: boolean
-  @Getter isCustodianValid!: boolean
+  @Getter isDissolutionCustodianValid!: boolean
   @Getter isTypeCoop: boolean
 
   // Global actions
   @Action setCustodianValidity!: ActionBindingIF
-  @Action setIgnoreChanges!: ActionBindingIF
-
-  /** Called when component is created. */
-  private created (): void {
-    // ignore data changes until page has loaded
-    this.setIgnoreChanges(true)
-    Vue.nextTick(() => {
-      this.setIgnoreChanges(false)
-    })
-  }
 
   /** The entity name. */
   private get entityName (): string {
@@ -135,19 +125,19 @@ export default class DissolutionDefineDissolution extends Mixins(CommonMixin, En
   }
 
   private get showDestroyCertificateErrors () {
-    return this.getShowErrors && (this.isTypeCoop && !this.getHasCertificateDestroyed)
+    return this.getShowErrors && (this.isTypeCoop && !this.getDissolutionHasCertificateDestroyed)
   }
 
   @Watch('$route')
   private async scrollToInvalidComponent (): Promise<void> {
     if (this.getShowErrors && this.$route.name === RouteNames.DISSOLUTION_DEFINE_DISSOLUTION) {
-      // Scroll to invalid components.
+      // scroll to invalid components
       await Vue.nextTick()
       await this.validateAndScroll(
         {
           isStatementValid: this.isTypeCoop ? this.getDissolutionStatementStep.valid : true,
-          isCustodianValid: this.isCustodianValid,
-          isDeleteValid: this.isTypeCoop ? this.getHasCertificateDestroyed : true
+          isCustodianValid: this.isDissolutionCustodianValid,
+          isDeleteValid: this.isTypeCoop ? this.getDissolutionHasCertificateDestroyed : true
         },
         [
           'dissolution-statement',
@@ -161,7 +151,9 @@ export default class DissolutionDefineDissolution extends Mixins(CommonMixin, En
 </script>
 
 <style lang="scss" scoped>
+@import '@/assets/styles/theme.scss';
+
 .delete-certificates-note {
-  font-size: 0.875rem;
+  font-size: $px-14;
 }
 </style>

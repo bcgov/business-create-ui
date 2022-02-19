@@ -38,6 +38,7 @@ export const CooperativeResource: IncorporationResourceIF = {
     },
     addIncorporator: false,
     addOrganization: false,
+    addProprietor: false,
     rules: [
       {
         id: RuleIds.NUM_COMPLETING_PARTY,

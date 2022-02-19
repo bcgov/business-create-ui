@@ -1,9 +1,8 @@
 import {
-  BaseAddressObjIF,
-  IncorporationAddressIF
-} from '@/interfaces/stepper-interfaces/DefineCompany/address-interface'
-import {
+  OfficeAddressIF,
+  BusinessAddressIF,
   CourtOrderIF,
+  IncorporationAddressIF,
   NameTranslationIF,
   OrgPersonIF,
   ShareClassIF,
@@ -70,30 +69,41 @@ export interface IncorporationFilingIF {
 }
 
 /** Interface for incorporation filing data saved to the Legal API. */
-export interface RegistrationIF {
+export interface RegistrationFilingIF {
   header: {
     name: string
     certifiedBy: string
     date: string
-    effectiveDate?: string // Optional and should be set only for future effective filings
-    filingId?: number // Optional as this is not required when building a filing - causes an error for new filings
-    folioNumber?: string // Optional to the user and only displayed for certain account types
+    effectiveDate?: string // not saved by UI but may be provided by API
+    filingId?: number // not saved by UI but may be provided by API
+    folioNumber?: string // optional and only displayed for certain account types
     isFutureEffective: boolean
+
+    // staff payment properties:
+    routingSlipNumber?: string
+    bcolAccountNumber?: string
+    datNumber?: string
+    waiveFees?: boolean
+    priority?: boolean
   },
   registration: {
+    startDate: string
     // NB: nameRequest must match schema
     nameRequest: {
       legalType: CorpTypeCd
       nrNumber?: string // only set when there is an NR
       legalName?: string // only set when there is an NR
     },
-    businessAddress: BaseAddressObjIF,
+    businessAddress: BusinessAddressIF,
     contactPoint: {
       email: string
       phone: string
       extension?: number
     },
-    parties: OrgPersonIF[]
+    parties: OrgPersonIF[],
+    business: {
+      identifier: string
+    }
   }
 }
 
@@ -125,7 +135,7 @@ export interface DissolutionFilingIF {
   },
   dissolution: {
     dissolutionDate: string
-    custodialOffice: BaseAddressObjIF
+    custodialOffice: OfficeAddressIF
     dissolutionType: DissolutionTypes
     dissolutionStatementType?: DissolutionStatementTypes
     affidavitConfirmed: boolean

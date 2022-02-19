@@ -1,13 +1,4 @@
-// Name Request State interface
-export interface NameRequestIF {
-  nrNumber: string
-  entityType: string
-  details: NameRequestDetailsIF | {}
-  applicant: NameRequestApplicantIF | {}
-  filingId: number
-}
-
-// Name request response details interface
+/** Name request response details interface. */
 export interface NameRequestDetailsIF {
   approvedName: string
   status: string
@@ -15,7 +6,7 @@ export interface NameRequestDetailsIF {
   expirationDate: string
 }
 
-// Name request applicant details interface
+/** Name request applicant details interface. */
 export interface NameRequestApplicantIF {
   firstName: string
   middleName: string
@@ -29,4 +20,22 @@ export interface NameRequestApplicantIF {
   countryTypeCode: string
   postalCode: string
   stateProvinceCode: string
+}
+
+/** Name Request state interface. */
+export interface NameRequestIF {
+  nrNumber: string
+  entityType: string
+  details: NameRequestDetailsIF | {}
+  applicant: NameRequestApplicantIF | {}
+  filingId: number
+}
+
+// NB: use cloneDeep when assigning EmptyOrgPerson
+export const EmptyNameRequest: NameRequestIF = {
+  nrNumber: '',
+  entityType: '',
+  details: {},
+  applicant: {},
+  filingId: null
 }

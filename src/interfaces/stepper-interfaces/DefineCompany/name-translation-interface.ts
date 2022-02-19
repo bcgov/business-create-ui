@@ -1,3 +1,3 @@
 export interface NameTranslationIF {
-    name: string
+  name: string
 }

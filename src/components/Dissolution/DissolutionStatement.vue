@@ -39,10 +39,10 @@ import { DissolutionStatementTypes } from '@/enums'
 @Component
 export default class DissolutionStatement extends Vue {
   @Prop({ default: false })
-  private readonly showErrorSummary: boolean
+  readonly showErrorSummary: boolean
 
   @Prop({ default: false })
-  private readonly isSummary: boolean
+  readonly isSummary: boolean
 
   // Global getters
   @Getter getDissolutionStatements!: Array<KeyValueIF>
@@ -54,7 +54,7 @@ export default class DissolutionStatement extends Vue {
   private dissolutionStatementType: DissolutionStatementTypes = null
 
   // Lifecycle methods
-  private created (): void {
+  created (): void {
     if (this.getDissolutionStatementStep) {
       this.dissolutionStatementType = this.getDissolutionStatementStep.dissolutionStatementType
     }
@@ -81,12 +81,12 @@ export default class DissolutionStatement extends Vue {
 
 .section-container {
   padding: 1.5rem 2rem;
-  font-size: 1rem;
+  font-size: $px-16;
   color: $gray7;
 }
 
 .dissolution-statement-title {
-  font-size: 1rem;
+  font-size: $px-16;
   font-weight: bold;
   color: $gray9;
 }

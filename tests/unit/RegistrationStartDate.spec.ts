@@ -22,35 +22,32 @@ for (const mock of mockEntity) {
     beforeEach(() => {
       wrapper = wrapperFactory(
         StartDate,
-        {
-          initialValue: mock.initialValue
-        },
+        null,
         {
           entityType: mock.entityType,
           currentJsDate: today
-        }, null, RegistrationResources)
+        },
+        null,
+        RegistrationResources
+      )
     })
 
     afterEach(() => {
       wrapper.destroy()
     })
 
-    it(`renders the component properly`, () => {
+    it('renders the component properly', () => {
       // verify component
       expect(wrapper.find('.section-container').text()).toContain('Start Date')
       expect(wrapper.find('#start-date-selector').exists()).toBe(true)
       expect(wrapper.find('#date-picker').exists()).toBe(true)
     })
 
-    it(`renders the correct initial text`, async () => {
+    it('renders the correct initial text', async () => {
       expect(wrapper.find('#date-picker').text()).toContain('Start Date')
     })
 
-    it(`passes the initial prop value`, async () => {
-      expect(wrapper.vm.initialValue).toBe('2022-02-08')
-    })
-
-    it(`verifies min start date to be today 2 years in the past`, async () => {
+    it('verifies min start date to be today 2 years in the past', async () => {
       const mockDate = new Date(today)
       mockDate.setFullYear(mockDate.getFullYear() - 2)
       mockDate.setHours(0, 0, 0)
@@ -58,7 +55,7 @@ for (const mock of mockEntity) {
       expect(wrapper.vm.startDateMin).toStrictEqual(mockDate)
     })
 
-    it(`verifies max start date to be today + 90 days in the future`, async () => {
+    it('verifies max start date to be today + 90 days in the future', async () => {
       const mockDate = new Date(today)
       mockDate.setDate(mockDate.getDay() + 90)
 

@@ -1,8 +1,8 @@
-import { ActionIF } from '@/interfaces/store-interfaces/action-interface'
 import {
-  AccountInformationIF, AddressIF, BusinessContactIF, CertifyIF, DissolutionStatementIF, IncorporationAddressIF,
-  IncorporationAgreementIF, NameRequestIF, NameTranslationIF, OrgPersonIF, ResourceIF,
-  ShareClassIF, CreateRulesIF, CreateMemorandumIF, ValidationDetailIF, FeesIF, UploadAffidavitIF, CreateResolutionIF
+  AccountInformationIF, ActionIF, AddressIF, BusinessContactIF, CertifyIF, DissolutionStatementIF,
+  IncorporationAddressIF, IncorporationAgreementIF, NameRequestIF, NameTranslationIF, OrgPersonIF,
+  ResourceIF, ShareClassIF, CreateRulesIF, CreateMemorandumIF, ValidationDetailIF, FeesIF,
+  UploadAffidavitIF, CreateResolutionIF
 } from '@/interfaces'
 import { CoopType, CorpTypeCd } from '@/enums'
 
@@ -270,6 +270,22 @@ export const setCustodianOfRecords: ActionIF = ({ commit }, custodian: OrgPerson
   commit('mutateCustodianOfRecords', custodian)
 }
 
-export const setRegistrationStartDate: ActionIF = ({ commit }, startDate: string): void => {
-  commit('mutateRegistrationStartDate', startDate)
+//
+// Registration actions
+//
+
+export const setRegistrationDefineBusinessValid: ActionIF = ({ commit }, val: boolean): void => {
+  commit('mutateRegistrationDefineBusinessValid', val)
+}
+
+export const setRegistrationStartDate: ActionIF = ({ commit }, val: string): void => {
+  commit('mutateRegistrationStartDate', val)
+}
+
+export const setRegistrationBusinessAddress: ActionIF = ({ commit }, val: IncorporationAddressIF): void => {
+  commit('mutateRegistrationBusinessAddress', val)
+}
+
+export const setRegistrationFeeAcknowledgement: ActionIF = ({ commit }, val: boolean): void => {
+  commit('mutateRegistrationFeeAcknowledgement', val)
 }

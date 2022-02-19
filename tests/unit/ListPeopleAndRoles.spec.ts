@@ -1,5 +1,5 @@
 import { wrapperFactory, shallowWrapperFactory } from '../jest-wrapper-factory'
-import ListPeopleAndRoles from '@/components/Incorporation/ListPeopleAndRoles.vue'
+import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
 
 describe('List People And Roles component', () => {
   let wrapper: any
@@ -58,6 +58,10 @@ describe('List People And Roles component', () => {
       }
     }
   ]
+
+  afterEach(() => {
+    wrapper.destroy()
+  })
 
   it('does not show the peoples / roles list if there is no data to display', () => {
     wrapper = shallowWrapperFactory(ListPeopleAndRoles)
@@ -182,7 +186,11 @@ describe('List People And Roles component', () => {
         personList: mockPersonList,
         showErrorSummary: true,
         isSummary: true
-      })
+      },
+      {
+        tombstone: { filingType: 'incorporationApplication' }
+      }
+    )
 
     expect(wrapper.vm.$el.querySelector('.people-roles-invalid-message').textContent)
       .toContain('This step is unfinished.')
@@ -197,7 +205,11 @@ describe('List People And Roles component', () => {
         personList: mockPersonList,
         showErrorSummary: true,
         isSummary: true
-      })
+      },
+      {
+        tombstone: { filingType: 'incorporationApplication' }
+      }
+    )
 
     expect(wrapper.vm.$route.name).toBeNull()
 

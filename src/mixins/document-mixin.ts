@@ -1,10 +1,9 @@
 import { AxiosResponse } from 'axios'
 import { axios } from '@/utils'
 import { Component, Vue } from 'vue-property-decorator'
-import { DocumentUpload } from '@/interfaces'
+import { DocumentUpload, PdfInfoIF } from '@/interfaces'
 import { PdfPageSize } from '@/enums'
 import pdfjsLib from 'pdfjs-dist/build/pdf'
-import { PdfInfoIF } from '@/interfaces/utils-interfaces/pdf-info-interface'
 pdfjsLib.GlobalWorkerOptions.workerSrc = require('pdfjs-dist/build/pdf.worker.entry')
 
 @Component({})

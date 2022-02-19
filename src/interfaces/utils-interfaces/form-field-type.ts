@@ -1,4 +1,4 @@
-import { FormIF } from './form-type'
+import { FormIF } from '@/interfaces'
 
 export interface FormFieldType extends FormIF {
   valid: boolean

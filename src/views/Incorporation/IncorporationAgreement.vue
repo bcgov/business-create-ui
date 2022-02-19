@@ -64,7 +64,7 @@
             meetings, issuing and transferring shares, and duties of directors and officers.
           </span>
         </v-tooltip>
-        <template v-if="isTypeCC">
+        <template v-if="isTypeCCC">
           containing the
           <v-tooltip top max-width="20rem" content-class="top-tooltip" transition="fade-transition">
             <template v-slot:activator="{ on }">
@@ -111,7 +111,7 @@
             <li>{{text}}</li>
           </ul>
         </div>
-        <template v-if="!isTypeCC">
+        <template v-if="!isTypeCCC">
           <div class="help-section">
             <div class="articles-statements-footer">
               In this case, you need to create a unique Incorporation Agreement and set of Articles for the company and
@@ -134,7 +134,7 @@
       </section>
     </section>
 
-    <template v-if="isTypeCC">
+    <template v-if="isTypeCCC">
       <section class="mt-10">
         <header id="confirm-agreement">
           <h2>2. Confirm Incorporation Agreement and Article Completion</h2>
@@ -221,7 +221,7 @@ import { CommonMixin, EnumMixin } from '@/mixins'
 })
 export default class IncorporationAgreement extends Mixins(CommonMixin, EnumMixin) {
   @Getter isTypeBcomp!: boolean
-  @Getter isTypeCC!: boolean
+  @Getter isTypeCCC!: boolean
   @Getter getEntityType!: CorpTypeCd
   @Getter getIncorporationAgreementStep!: IncorporationAgreementIF
   @Getter getIncorporationAgreementResource!: any
@@ -246,7 +246,7 @@ export default class IncorporationAgreement extends Mixins(CommonMixin, EnumMixi
   @Watch('$route')
   private async scrollToInvalidComponent (): Promise<void> {
     if (this.getShowErrors && this.$route.name === RouteNames.INCORPORATION_AGREEMENT) {
-      // Scroll to invalid components.
+      // scroll to invalid components
       await Vue.nextTick()
       await this.validateAndScroll(
         {
@@ -348,12 +348,12 @@ a {
 }
 
 .share-structure-check-text {
-  font-size: 0.875rem;
-  padding-left: 0.2rem;
+  font-size: $px-14;
+  padding-left: 4px;
 }
 
 .share-structure-check-header {
-  font-size: 0.875rem;
+  font-size: $px-14;
   font-weight: bold;
   padding-bottom: 0.5rem;
 }

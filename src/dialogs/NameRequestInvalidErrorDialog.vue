@@ -45,13 +45,13 @@ export default class NameRequestInvalidErrorDialog extends Vue {
   readonly NameRequestStates = NameRequestStates
 
   /** Prop to display the dialog. */
-  @Prop() private readonly dialog: boolean
+  @Prop() readonly dialog: boolean
 
   /** Prop to provide message type. */
-  @Prop({ default: null }) private readonly type: NameRequestStates
+  @Prop({ default: null }) readonly type: NameRequestStates
 
   /** Prop to provide attachment selector. */
-  @Prop() private readonly attach: string
+  @Prop() readonly attach: string
 
   /** True if user has Okay option. Otherwise user gets Redirect option. */
   private get showOkay (): boolean {
@@ -63,7 +63,7 @@ export default class NameRequestInvalidErrorDialog extends Vue {
   }
 
   // Pass click events to parent.
-  @Emit() private okay () { }
-  @Emit() private redirect () { }
+  @Emit() private okay () {}
+  @Emit() private redirect () {}
 }
 </script>

@@ -56,7 +56,7 @@
     word-break: break-word;
   }
   .v-card__text {
-    font-size: 1rem;
+    font-size: $px-16;
     color: $gray7;
   }
 }
@@ -70,7 +70,7 @@
       padding: 1.25rem 1.5rem;
       color: $BCgovFontColorInverted;
       background: $BCgovBlue5;
-      font-size: 1.5em;
+      font-size: $px-24;
       font-weight: 400;
     }
 
@@ -123,7 +123,7 @@
   background-color: RGB(73,80,87) !important;
   color: white !important;
   border-radius: 4px;
-  font-size: 0.75rem !important;
+  font-size: $px-12 !important;
   line-height: 18px !important;
   padding: 20px !important;
   letter-spacing: 0;

@@ -203,7 +203,6 @@ export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
   @Getter getNameRequestDetails!: NameRequestDetailsIF
   @Getter getCreateRulesResource!: CreateRulesResourceIF
   @Getter getCreateRulesStep!: CreateRulesIF
-  @Getter getValidateSteps!: boolean
   @Getter getUserKeycloakGuid!: string
 
   @Action setRules!: ActionBindingIF
@@ -301,7 +300,7 @@ export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
   }
 
   /** Called when component is created. */
-  private created (): void {
+  created (): void {
     this.uploadRulesDoc = this.getCreateRulesStep.rulesDoc as File
     this.uploadRulesDocKey = this.getCreateRulesStep.docKey
     this.rulesConfirmed = this.getCreateRulesStep.rulesConfirmed
@@ -403,13 +402,13 @@ ul {
 
 #upload-rules-section {
   #upload-rules-note {
-    font-size: 16px;
+    font-size: $px-16;
   }
 }
 
 .upload-rules-vcard-title {
   padding-top: 1px;
-  font-size: 17px;
+  font-size: $px-17;
   font-weight: bold;
 }
 

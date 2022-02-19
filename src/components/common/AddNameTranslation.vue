@@ -43,7 +43,7 @@ import { Component, Emit, Prop, Vue } from 'vue-property-decorator'
 @Component({})
 export default class AddNameTranslation extends Vue {
   @Prop({ default: '' })
-  private readonly editNameTranslation: string
+  readonly editNameTranslation: string
 
   // Local properties
   private nameTranslationForm: boolean = false
@@ -56,7 +56,7 @@ export default class AddNameTranslation extends Vue {
     v => (!v || v.length <= 150) || 'Cannot exceed 150 characters' // maximum character count
   ]
 
-  mounted () {
+  mounted (): void {
     // Editing an existing name translation
     if (this.editNameTranslation) this.nameTranslation = this.editNameTranslation
   }

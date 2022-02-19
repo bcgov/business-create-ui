@@ -32,7 +32,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 import AgreementType from '@/components/common/AgreementType.vue'
-import ListPeopleAndRoles from '@/components/Incorporation/ListPeopleAndRoles.vue'
+import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
 import ListShareClass from '@/components/Incorporation/ListShareClass.vue'
 import SummaryDefineCompany from '@/components/Incorporation/SummaryDefineCompany.vue'
 import UploadMemorandumSummary from '@/components/Incorporation/UploadMemorandumSummary.vue'

@@ -4,7 +4,7 @@
     <section class="mt-10">
       <header>
         <h2>Review and Confirm</h2>
-        <p id="intro-text" class="mt-2">
+        <p class="mt-4 mb-6">
           Review the information in your filing. If you need to change or complete anything, return
           to the step to make the necessary change.
         </p>
@@ -17,8 +17,8 @@
           <label class="font-weight-bold pl-2">Dissolution</label>
         </header>
 
-        <div class="pb-8" :class="{ 'invalid-section rounded-bl-0': !isDefineDissolutionValid }">
-          <section class="pt-8 pl-7" v-if="!isDefineDissolutionValid">
+        <div class="pb-8" :class="{ 'invalid-section rounded-bl-0': !isDissolutionDefineDissolutionValid }">
+          <section class="pt-8 pl-7" v-if="!isDissolutionDefineDissolutionValid">
             <span>
               <v-icon color="error">mdi-information-outline</v-icon>
               &nbsp;
@@ -179,7 +179,7 @@
       <header>
         <h2>Dissolution Documents Delivery</h2>
         <p class="mt-4 mb-6">
-          Copies of the dissolution documents will be sent to the following email addresses listed below:
+          Copies of the dissolution documents will be sent to the email addresses listed below.
         </p>
       </header>
       <DocumentDelivery
@@ -188,8 +188,8 @@
         :showCustodianEmail="true"
         :invalidSection="isDocumentDeliveryInvalid"
         :registeredOfficeEmail="getBusinessContact.email"
-        :custodianEmail="getCustodianEmail"
-        :userEmail="getUserEmail"
+        :custodianEmail="getDissolutionCustodianEmail"
+        :completingPartyEmail="getUserEmail"
         :documentOptionalEmail="getDocumentDelivery.documentOptionalEmail"
         @update:optionalEmail="setDocumentOptionalEmail($event)"
         @valid="setDocumentOptionalEmailValidity($event)"
@@ -301,7 +301,6 @@ import {
   CourtOrderStepIF,
   CreateResolutionIF,
   CreateResolutionResourceIF,
-  DissolutionStatementIF,
   DocumentDeliveryIF,
   EffectiveDateTimeIF,
   FeesIF,
@@ -331,18 +330,17 @@ export default class DissolutionReviewConfirm extends Mixins(DateMixin) {
   @Getter getCompletingPartyStatement!: CertifyStatementIF
   @Getter getCourtOrderStep!: CourtOrderStepIF
   @Getter getCurrentDate!: string
-  @Getter getCustodianEmail!: string
-  @Getter getDissolutionStatementStep!: DissolutionStatementIF
+  @Getter getDissolutionCustodianEmail!: string
   @Getter getDocumentDelivery!: DocumentDeliveryIF
   @Getter getEffectiveDateTime!: EffectiveDateTimeIF
   @Getter getCreateResolutionResource!: CreateResolutionResourceIF
   @Getter getCreateResolutionStep!: CreateResolutionIF
   @Getter getFeePrices!: Array<FeesIF>
-  @Getter getHasCertificateDestroyed!: boolean
+  @Getter getDissolutionHasCertificateDestroyed!: boolean
   @Getter getUserEmail!: string
   @Getter getValidateSteps!: boolean
   @Getter isAffidavitValid!: boolean
-  @Getter isDefineDissolutionValid!: boolean
+  @Getter isDissolutionDefineDissolutionValid!: boolean
   @Getter isPremiumAccount!: boolean
   @Getter isRoleStaff!: boolean
   @Getter isTypeCoop!: boolean
@@ -350,7 +348,6 @@ export default class DissolutionReviewConfirm extends Mixins(DateMixin) {
   @Getter getTransactionalFolioNumber!: string
 
   // Global actions
-  @Action setIgnoreChanges!: ActionBindingIF
   @Action setEffectiveDateTimeValid!: ActionBindingIF
   @Action setEffectiveDate!: ActionBindingIF
   @Action setIsFutureEffective!: ActionBindingIF
@@ -365,15 +362,6 @@ export default class DissolutionReviewConfirm extends Mixins(DateMixin) {
 
   // Enum for template
   readonly RouteNames = RouteNames
-
-  /** Called when component is created. */
-  private created (): void {
-    // ignore data changes until page has loaded
-    this.setIgnoreChanges(true)
-    Vue.nextTick(() => {
-      this.setIgnoreChanges(false)
-    })
-  }
 
   /** Is true when the Dissolution Date and Time section is invalid. */
   get isDissolutionDateTimeInvalid (): boolean {
@@ -512,7 +500,7 @@ h2::before {
   }
 
   #court-order-label, #poa-label {
-    font-size: 1rem;
+    font-size: $px-16;
     font-weight: bold;
     color: $gray9;
   }
@@ -522,7 +510,7 @@ h2::before {
   color: $gray7;
 
   .success-chk {
-    font-size: 1.5rem;
+    font-size: $px-24;
     color: $app-dk-green;
   }
 
@@ -546,7 +534,7 @@ h2::before {
     padding: 0.75rem 0;
 
     .col-3 {
-      font-size: 1rem;
+      font-size: $px-16;
       color: $gray9;
       padding: 0 0 0 0.75rem !important;
     }
@@ -577,6 +565,11 @@ h2::before {
 
   .row {
     padding: 0.75rem 0 !important;
+  }
+
+  // bring the main label down a bit to line up with text-field
+  .row:first-of-type .col:first-of-type {
+    padding-top: 8px !important;
   }
 
   .v-input--checkbox {

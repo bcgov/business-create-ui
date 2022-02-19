@@ -22,6 +22,7 @@ export const LimitedCompanyResource: IncorporationResourceIF = {
     helpSection: null,
     addIncorporator: true,
     addOrganization: true,
+    addProprietor: false,
     rules: [
       {
         id: RuleIds.NUM_COMPLETING_PARTY,

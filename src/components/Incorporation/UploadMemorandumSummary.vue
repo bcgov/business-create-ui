@@ -75,7 +75,7 @@ export default class UploadMemorandumSummary extends Vue {
   color: $gray7;
 
   .upload-success-chk {
-    font-size: 1.5rem;
+    font-size: $px-24;
     color: $app-dk-green;
   }
 

@@ -42,7 +42,7 @@ import { RoleTypes } from '@/enums'
 @Component
 export default class CareAndCustodySelect extends Vue {
   @Prop({ default: false })
-  private readonly showErrorSummary: boolean
+  readonly showErrorSummary: boolean
 
   private readonly RoleTypes = RoleTypes
   private liquidatorOrCustodian: RoleTypes = null
@@ -57,12 +57,12 @@ export default class CareAndCustodySelect extends Vue {
 @import '@/assets/styles/theme.scss';
 
 .section-container {
-  font-size: 1rem;
+  font-size: $px-16;
   color: $gray7;
 }
 
 .care-and-custody-title {
-  font-size: 1rem;
+  font-size: $px-16;
   font-weight: bold;
   color: $gray9;
 }

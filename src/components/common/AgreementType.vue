@@ -33,7 +33,7 @@
       </div>
     </div>
 
-    <div v-else-if="isTypeCC">
+    <div v-else-if="isTypeCCC">
       <v-checkbox
         v-for="(item, index) in getIncorporationAgreementDocuments"
         :id="`agreement-type-${item.code}`"
@@ -73,14 +73,14 @@ import { EnumMixin } from '@/mixins'
 @Component
 export default class AgreementType extends Mixins(EnumMixin) {
   @Prop({ default: false })
-  private readonly showErrorSummary: boolean
+  readonly showErrorSummary: boolean
 
   @Prop({ default: false })
-  private readonly isSummary: boolean
+  readonly isSummary: boolean
 
   @Getter getIncorporationAgreementDocuments!: Array<IncorporationAgreementTypeIF>
   @Getter getEntityType!: CorpTypeCd
-  @Getter isTypeCC!: boolean
+  @Getter isTypeCCC!: boolean
   @Getter getIncorporationAgreementStep!: IncorporationAgreementIF
 
   @Action setIncorporationAgreementStepData!: ActionBindingIF
@@ -103,7 +103,7 @@ export default class AgreementType extends Mixins(EnumMixin) {
   }
 
   // Lifecycle methods
-  private created (): void {
+  created (): void {
     // temporarily ignore data changes
     this.setIgnoreChanges(true)
     this.agreementType = this.getIncorporationAgreementStep.agreementType
@@ -149,7 +149,7 @@ export default class AgreementType extends Mixins(EnumMixin) {
 
 .summary-desc {
   padding: 1rem;
-  font-size: 0.875rem;
+  font-size: $px-14;
   display: flex;
   justify-content: center;
 }

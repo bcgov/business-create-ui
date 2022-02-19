@@ -5,7 +5,9 @@ import { Action, Getter } from 'vuex-class'
 import { NOT_FOUND } from 'http-status-codes'
 
 // Interfaces
-import { ActionBindingIF, DissolutionFilingIF, IncorporationFilingIF, RegistrationIF } from '@/interfaces'
+import {
+  ActionBindingIF, DissolutionFilingIF, IncorporationFilingIF, RegistrationFilingIF
+} from '@/interfaces'
 import { FilingTypes } from '@/enums'
 
 /**
@@ -174,7 +176,7 @@ export default class LegalApiMixin extends Vue {
    * @param filing the filing fetched from legal-api
    * @returns the filing in safe-empty state if applicable
    */
-  formatEmptyRegFiling (filing: any): RegistrationIF {
+  formatEmptyRegFiling (filing: any): RegistrationFilingIF {
     let toReturn = filing
     if (toReturn.registration) {
       if (!toReturn.registration?.offices) {

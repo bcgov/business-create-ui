@@ -9,6 +9,7 @@ import {
   BusinessContactIF,
   CertifyIF,
   CreateRulesIF,
+  DissolutionStatementIF,
   EffectiveDateTimeIF,
   DefineCompanyIF,
   DissolutionFilingIF,
@@ -20,7 +21,6 @@ import {
   ShareStructureIF,
   CreateMemorandumIF,
   BusinessIF,
-  DissolutionStatementIF,
   UploadAffidavitIF,
   StaffPaymentStepIF,
   CourtOrderStepIF,
@@ -28,12 +28,20 @@ import {
   DocumentDeliveryIF,
   OrgPersonIF,
   SpecialResolutionIF,
-  RegistrationStateIF
+  RegistrationStateIF,
+  RegistrationFilingIF
 } from '@/interfaces'
 
 // Constants and enums
 import { INCORPORATION_APPLICATION, REGISTRATION } from '@/constants'
-import { CorpTypeCd, DissolutionTypes, EffectOfOrders, FilingTypes, RoleTypes, StaffPaymentOptions } from '@/enums'
+import {
+  CorpTypeCd,
+  DissolutionTypes,
+  EffectOfOrders,
+  FilingTypes,
+  RoleTypes,
+  StaffPaymentOptions
+} from '@/enums'
 
 /**
  * Mixin that provides the integration with the Legal API.
@@ -72,7 +80,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Getter getCourtOrderStep!: CourtOrderStepIF
   @Getter isRoleStaff!: boolean
   @Getter getDissolutionStatementStep!: DissolutionStatementIF
-  @Getter getCustodian!: OrgPersonIF
+  @Getter getDissolutionCustodian!: OrgPersonIF
   @Getter getFolioNumber!: string
   @Getter getTransactionalFolioNumber!: string
   @Getter isPremiumAccount!: boolean
@@ -108,6 +116,8 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Action setDissolutionStatementStepData!: ActionBindingIF
   @Action setCustodianOfRecords!: ActionBindingIF
   @Action setRegistrationStartDate!: ActionBindingIF
+  @Action setRegistrationBusinessAddress!: ActionBindingIF
+  @Action setRegistrationFeeAcknowledgement!: ActionBindingIF
 
   /**
    * Builds an incorporation filing from store data. Used when saving a filing.
@@ -181,9 +191,8 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     }
 
     // If this is a future effective filing then save the effective date.
-    if (this.getEffectiveDateTime.effectiveDate) {
-      filing.header.effectiveDate =
-        this.getEffectiveDateTime.effectiveDate && this.dateToApi(this.getEffectiveDateTime.effectiveDate)
+    if (this.getEffectiveDateTime.isFutureEffective) {
+      filing.header.effectiveDate = this.dateToApi(this.getEffectiveDateTime.effectiveDate)
     }
 
     return filing
@@ -193,7 +202,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
    * Parses a draft incorporation filing into the store. Used when loading a filing.
    * @param draftFiling the filing body to parse
    */
-  parseIncorporationsDraft (draftFiling: any): void {
+  parseIncorporationDraft (draftFiling: any): void {
     // FUTURE: set types so each of these validate their parameters
     // ref: https://www.typescriptlang.org/docs/handbook/generics.html
 
@@ -296,7 +305,12 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
       if (effectiveDate >= this.getCurrentJsDate) this.setEffectiveDate(effectiveDate)
     }
 
-    // NB: do not restore/overwrite Folio Number - just use the FN from auth info (see App.vue)
+    // if this is a premium account and Folio Number exists then restore it
+    if (this.isPremiumAccount) {
+      if (draftFiling.header.folioNumber) {
+        this.setFolioNumber(draftFiling.header.folioNumber)
+      }
+    }
   }
 
   /**
@@ -305,20 +319,20 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
    */
   buildRegistrationFiling (): any {
     // Build the main filing.
-    const filing: any = {
+    const filing: RegistrationFilingIF = {
       header: {
         name: REGISTRATION,
         certifiedBy: this.getCertifyState.certifiedBy,
         date: this.getCurrentDate,
-        folioNumber: this.getFolioNumber,
-        isFutureEffective: this.getEffectiveDateTime.isFutureEffective
+        folioNumber: this.getFolioNumber, // default FN; may be overwritten by staff BCOL FN
+        isFutureEffective: false
       },
       registration: {
         startDate: this.getRegistration.startDate,
         nameRequest: {
           legalType: this.getEntityType
         },
-        businessAddress: {},
+        businessAddress: this.getRegistration.businessAddress,
         contactPoint: {
           email: this.getBusinessContact.email,
           phone: this.getBusinessContact.phone,
@@ -326,7 +340,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
             ? { extension: +this.getBusinessContact.extension }
             : {}
         },
-        parties: {},
+        parties: this.getAddPeopleAndRoleStep.orgPeople,
         business: {
           identifier: this.getTempId
         }
@@ -347,10 +361,9 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
       filing.registration.nameRequest.legalName = this.getApprovedName
     }
 
-    // If this is a future effective filing then save the effective date.
-    if (this.getEffectiveDateTime.effectiveDate) {
-      filing.header.effectiveDate =
-        this.getEffectiveDateTime.effectiveDate && this.dateToApi(this.getEffectiveDateTime.effectiveDate)
+    if (this.isRoleStaff) {
+      // Add staff payment data.
+      this.buildStaffPayment(filing)
     }
 
     return filing
@@ -360,17 +373,14 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
    * Parses a draft registration filing into the store. Used when loading a filing.
    * @param draftFiling the filing body to parse
    */
-  parseRegistrationsDraft (draftFiling: any): void {
-    // FUTURE: set types so each of these validate their parameters
-    // ref: https://www.typescriptlang.org/docs/handbook/generics.html
-
+  parseRegistrationDraft (draftFiling: any): void {
     // NB: don't parse Name Request object -- NR is fetched from namex/NRO instead
 
     // restore Entity Type
     this.setEntityType(draftFiling.registration.nameRequest.legalType)
 
-    // restore Office Addresses
-    this.setOfficeAddresses(draftFiling.registration.offices)
+    // restore Business Address
+    this.setRegistrationBusinessAddress(draftFiling.registration.businessAddress)
 
     // restore Contact Info
     const draftContact = {
@@ -385,13 +395,14 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     // restore Persons and Organizations
     this.setOrgPersonList(draftFiling.registration.parties)
 
-    // conditionally restore the entity-specific sections
-    switch (this.getEntityType) {
-      case CorpTypeCd.SOLE_PROP:
-        break
-      case CorpTypeCd.PARTNERSHIP:
-        break
-    }
+    // FUTURE
+    // // conditionally restore the entity-specific sections
+    // switch (this.getEntityType) {
+    //   case CorpTypeCd.SOLE_PROP:
+    //     break
+    //   case CorpTypeCd.PARTNERSHIP:
+    //     break
+    // }
 
     // restore Certify state
     this.setCertifyState({
@@ -399,16 +410,22 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
       certifiedBy: draftFiling.header.certifiedBy
     })
 
-    // restore Future Effective data
-    if (draftFiling.header.isFutureEffective) {
-      this.setIsFutureEffective(true)
-      const effectiveDate = this.apiToDate(draftFiling.header.effectiveDate)
-      // Check that Effective Date is in the future, to improve UX and
-      // to work around the default effective date set by the back end.
-      if (effectiveDate >= this.getCurrentJsDate) this.setEffectiveDate(effectiveDate)
+    // do not restore Fee Acknowledgement
+    this.setRegistrationFeeAcknowledgement(false)
+
+    // NB: Staff role is mutually exclusive with premium account.
+    if (this.isRoleStaff) {
+      // restore Staff Payment data
+      this.parseStaffPayment(draftFiling)
     }
 
-    // NB: do not restore/overwrite Folio Number - just use the FN from auth info (see App.vue)
+    // if this is a premium account and Folio Number exists then restore it
+    // NB: Premium account is mutually exclusive with staff role.
+    if (this.isPremiumAccount) {
+      if (draftFiling.header.folioNumber) {
+        this.setFolioNumber(draftFiling.header.folioNumber)
+      }
+    }
   }
 
   /**
@@ -423,7 +440,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
         certifiedBy: this.getCertifyState.certifiedBy,
         date: this.getCurrentDate,
         folioNumber: this.getFolioNumber, // default FN; may be overwritten by Transactional FN or staff BCOL FN
-        isFutureEffective: null
+        isFutureEffective: false
       },
       business: {
         legalType: this.getEntityType,
@@ -437,7 +454,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
         custodialOffice: this.getBusiness.officeAddress,
         dissolutionType: this.getDissolutionType,
         parties: [{
-          ...this.getCustodian,
+          ...this.getDissolutionCustodian,
           roles: [
             {
               roleType: RoleTypes.CUSTODIAN,
@@ -482,8 +499,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     if (this.getEffectiveDateTime.isFutureEffective === true) filing.header.isFutureEffective = true
     if (this.getEffectiveDateTime.isFutureEffective === false) filing.header.isFutureEffective = false
     if (this.getEffectiveDateTime.isFutureEffective && !this.isTypeCoop) {
-      const effectiveDate = this.getEffectiveDateTime.effectiveDate
-      if (effectiveDate) filing.header.effectiveDate = this.dateToApi(effectiveDate)
+      filing.header.effectiveDate = this.dateToApi(this.getEffectiveDateTime.effectiveDate)
     }
 
     // Add Court Order ONLY when it is required and applied.
@@ -624,7 +640,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
    * Builds dissolution staff payment data from store data.
    * @param filing the filing body to update
    */
-  private buildStaffPayment (filing: DissolutionFilingIF): void {
+  private buildStaffPayment (filing: DissolutionFilingIF | RegistrationFilingIF): void {
     // Populate Staff Payment according to payment option
     const staffPayment = this.getStaffPaymentStep.staffPayment
     switch (staffPayment.option) {

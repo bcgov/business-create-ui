@@ -95,7 +95,9 @@
 import { Component, Mixins, Vue, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import { v4 as uuidv4 } from 'uuid'
-import { ActionBindingIF, ShareClassIF, ShareStructureIF } from '@/interfaces'
+import {
+  ActionBindingIF, NewShareClass, NewShareSeries, ShareClassIF, ShareStructureIF
+} from '@/interfaces'
 import { CommonMixin } from '@/mixins'
 import { RouteNames } from '@/enums'
 import ListShareClass from '@/components/Incorporation/ListShareClass.vue'
@@ -113,47 +115,19 @@ export default class IncorporationShareStructure extends Mixins(CommonMixin) {
 
   @Action setShareClasses!: ActionBindingIF
   @Action setCreateShareStructureStepValidity!: ActionBindingIF
-  @Action setIgnoreChanges!: ActionBindingIF
 
-  private newShareClass: ShareClassIF = {
-    id: null,
-    priority: null,
+  readonly sharesHelpSample: ShareClassIF[] = [{
+    id: '1',
+    priority: 0,
     type: 'Class',
-    name: '',
+    name: 'Common Shares',
     hasMaximumShares: true,
-    maxNumberOfShares: null,
-    hasParValue: true,
-    parValue: null,
-    currency: 'CAD',
-    hasRightsOrRestrictions: false,
-    series: []
-  }
-
-  private newShareSeries: ShareClassIF = {
-    id: null,
-    priority: null,
-    type: 'Series',
-    name: '',
-    hasMaximumShares: true,
-    maxNumberOfShares: null,
-    hasParValue: true,
+    maxNumberOfShares: 10000,
+    hasParValue: false,
     parValue: null,
     currency: null,
-    hasRightsOrRestrictions: false
-  }
-
-  private sharesHelpSample: ShareClassIF[] = [{
-    'id': '1',
-    'priority': 0,
-    'type': 'Class',
-    'name': 'Common Shares',
-    'hasMaximumShares': true,
-    'maxNumberOfShares': 10000,
-    'hasParValue': false,
-    'parValue': null,
-    'currency': null,
-    'hasRightsOrRestrictions': false,
-    'series': []
+    hasRightsOrRestrictions: false,
+    series: []
   }]
 
   private showShareStructureForm: boolean = false
@@ -168,21 +142,12 @@ export default class IncorporationShareStructure extends Mixins(CommonMixin) {
     return this.getCreateShareStructureStep.shareClasses
   }
 
-  /** Called when component is created. */
-  private created (): void {
-    // ignore data changes until page has loaded
-    this.setIgnoreChanges(true)
-    Vue.nextTick(() => {
-      this.setIgnoreChanges(false)
-    })
-  }
-
   mounted (): void {
     this.setCreateShareStructureStepValidity(this.shareClasses.length > 0)
   }
 
   private initNewShareClass (): void {
-    this.currentShareStructure = { ...this.newShareClass }
+    this.currentShareStructure = { ...NewShareClass }
     this.currentShareStructure.priority =
     this.shareClasses.length === 0 ? 1 : this.shareClasses[this.shareClasses.length - 1].priority + 1
     this.activeIndex = -1
@@ -206,7 +171,7 @@ export default class IncorporationShareStructure extends Mixins(CommonMixin) {
     let newList: ShareClassIF[] = [...this.shareClasses]
     const parentShareClass = newList[shareClassIndex]
     const shareSeries = parentShareClass.series
-    this.currentShareStructure = { ...this.newShareSeries }
+    this.currentShareStructure = { ...NewShareSeries }
     this.currentShareStructure.hasParValue = parentShareClass.hasParValue
     this.currentShareStructure.parValue = parentShareClass.parValue
     this.currentShareStructure.currency = parentShareClass.currency
@@ -290,7 +255,7 @@ export default class IncorporationShareStructure extends Mixins(CommonMixin) {
   @Watch('$route')
   private async scrollToInvalidComponent (): Promise<void> {
     if (this.getShowErrors && this.$route.name === RouteNames.INCORPORATION_SHARE_STRUCTURE) {
-      // Scroll to invalid components.
+      // scroll to invalid components
       await Vue.nextTick()
       await this.validateAndScroll(
         {

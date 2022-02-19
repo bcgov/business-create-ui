@@ -1,4 +1,8 @@
+import { BusinessAddressIF } from '@/interfaces'
+
 export interface RegistrationStateIF {
-  valid: boolean
+  defineBusinessValid: boolean
   startDate: string
+  businessAddress: BusinessAddressIF
+  feeAcknowledgement: boolean
 }

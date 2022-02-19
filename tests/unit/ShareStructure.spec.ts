@@ -4,7 +4,7 @@ import { mount, Wrapper, createLocalVue } from '@vue/test-utils'
 import flushPromises from 'flush-promises'
 import { getVuexStore } from '@/store'
 import ShareStructure from '@/components/Incorporation/ShareStructure.vue'
-import { ShareClassIF } from '@/interfaces/stepper-interfaces/CreateShareStructure/create-share-structure-interface'
+import { ShareClassIF } from '@/interfaces'
 
 Vue.use(Vuetify)
 
@@ -44,7 +44,7 @@ async function waitForUpdate (wrapper: Wrapper<Vue>) {
 /**
  * Creates and mounts a component, so that it can be tested.
  *
- * @returns a Wrapper<OrgPerson> object with the given parameters.
+ * @returns a Wrapper<ShareStructure> object with the given parameters.
  */
 function createComponent (
   shareClass: ShareClassIF,
