@@ -170,11 +170,11 @@ export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
     shareStructureForm: FormIF
   }
 
-  @Prop() private readonly initialValue!: ShareClassIF
-  @Prop() private readonly activeIndex: number
-  @Prop() private readonly parentIndex: number
-  @Prop() private readonly shareId: string
-  @Prop() private readonly shareClasses: ShareClassIF[]
+  @Prop() readonly initialValue!: ShareClassIF
+  @Prop() readonly activeIndex: number
+  @Prop() readonly parentIndex: number
+  @Prop() readonly shareId: string
+  @Prop() readonly shareClasses: ShareClassIF[]
 
   // Local properties
   private shareStructure: ShareClassIF = null
@@ -265,7 +265,7 @@ export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
   }
 
   /** Called when component is created. */
-  private created (): void {
+  created (): void {
     if (this.initialValue) {
       this.shareStructure = { ...this.initialValue }
       this.hasNoMaximumShares = !this.shareStructure.hasMaximumShares
@@ -366,6 +366,8 @@ export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
 </script>
 
 <style lang="scss" scoped>
+@import '@/assets/styles/theme.scss';
+
 ul {
   margin: 0;
   padding: 0;
@@ -401,7 +403,7 @@ li {
 }
 
 .share-structure-header {
-  font-size: 1rem;
+  font-size: $px-16;
   font-weight: bold;
   line-height: 1.5rem;
 }
@@ -419,6 +421,6 @@ li {
 }
 
 .radio-group {
-  padding-top:0.875rem
+  padding-top: 0.875rem;
 }
 </style>

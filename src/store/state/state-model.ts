@@ -1,4 +1,12 @@
-import { EmptyFees, StateModelIF } from '@/interfaces'
+import {
+  EmptyAccountInformation,
+  EmptyAddress,
+  EmptyBusinessContact,
+  EmptyFees,
+  EmptyNameRequest,
+  EmptyOfficer,
+  StateModelIF
+} from '@/interfaces'
 import { cloneDeep } from 'lodash'
 
 export const stateModel: StateModelIF = {
@@ -21,26 +29,10 @@ export const stateModel: StateModelIF = {
     businessId: '',
     legalName: '',
     foundingDate: '',
-    businessContact: {
-      email: '',
-      confirmEmail: '',
-      phone: ''
-    },
+    businessContact: { ...EmptyBusinessContact },
     officeAddress: {
-      mailingAddress: {
-        addressCity: '',
-        addressCountry: '',
-        addressRegion: '',
-        postalCode: '',
-        streetAddress: ''
-      },
-      deliveryAddress: {
-        addressCity: '',
-        addressCountry: '',
-        addressRegion: '',
-        postalCode: '',
-        streetAddress: ''
-      }
+      mailingAddress: { ...EmptyAddress },
+      deliveryAddress: { ...EmptyAddress }
     }
   },
   businessContact: {
@@ -59,30 +51,9 @@ export const stateModel: StateModelIF = {
     custodianOfRecords: {
       valid: false,
       custodian: {
-        officer: {
-          firstName: '',
-          lastName: '',
-          middleName: '',
-          email: '',
-          organizationName: '',
-          partyType: null
-        },
-        mailingAddress: {
-          addressCity: '',
-          addressCountry: '',
-          addressRegion: '',
-          postalCode: '',
-          streetAddress: '',
-          deliveryInstructions: ''
-        },
-        deliveryAddress: {
-          addressCity: '',
-          addressCountry: '',
-          addressRegion: '',
-          postalCode: '',
-          streetAddress: '',
-          deliveryInstructions: ''
-        },
+        officer: { ...EmptyOfficer },
+        mailingAddress: { ...EmptyAddress },
+        deliveryAddress: { ...EmptyAddress },
         roles: [
           {
             roleType: null,
@@ -93,24 +64,13 @@ export const stateModel: StateModelIF = {
       }
     }
   },
-  accountInformation: {
-    accountType: '',
-    id: null,
-    label: '',
-    type: ''
-  },
-  nameRequest: {
-    nrNumber: '',
-    entityType: '',
-    details: {},
-    applicant: {},
-    filingId: null
-  },
+  accountInformation: { ...EmptyAccountInformation },
+  nameRequest: cloneDeep(EmptyNameRequest),
   nameTranslations: [],
   currentDate: '',
   effectiveDateTime: {
     valid: false,
-    isFutureEffective: null,
+    isFutureEffective: false,
     effectiveDate: null
   },
   certifyState: {
@@ -203,7 +163,9 @@ export const stateModel: StateModelIF = {
     }
   },
   registration: {
-    valid: false,
-    startDate: ''
+    defineBusinessValid: false,
+    startDate: '',
+    businessAddress: null,
+    feeAcknowledgement: false
   }
 }

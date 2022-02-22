@@ -1,7 +1,7 @@
 <template>
   <div id="destroy-certificate">
     <div v-if="isSummary" id="destroy-certificate-summary">
-      <div v-if="getHasCertificateDestroyed" class="d-flex">
+      <div v-if="getDissolutionHasCertificateDestroyed" class="d-flex">
         <span>
           <v-icon class="destroy-certificate-success-chk ml-n1 pr-2" color="successCheckmark">mdi-check</v-icon>
         </span>
@@ -45,16 +45,16 @@ import { ActionBindingIF } from '@/interfaces'
 @Component
 export default class DestroyCertificate extends Vue {
   // Global getters
-  @Getter getHasCertificateDestroyed!: boolean
+  @Getter getDissolutionHasCertificateDestroyed!: boolean
 
   // Global setters
   @Action setHasCertificateDestroyed!: ActionBindingIF
 
   @Prop({ default: false })
-  private readonly showErrorSummary: boolean
+  readonly showErrorSummary: boolean
 
   @Prop({ default: false })
-  private readonly isSummary: boolean
+  readonly isSummary: boolean
 
   private hasCertificateDestroyed: boolean = false
 
@@ -68,12 +68,12 @@ export default class DestroyCertificate extends Vue {
 
 .section-container {
   padding: 1.5rem 2rem;
-  font-size: 1rem;
+  font-size: $px-16;
   color: $gray7;
 }
 
 .destroy-certificate-title {
-  font-size: 1rem;
+  font-size: $px-16;
   font-weight: bold;
   color: $gray9;
 }

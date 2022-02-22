@@ -61,6 +61,13 @@
             <v-icon v-else>mdi-circle-small</v-icon>
             <span class="chk-list-item-txt">{{rule.text}}</span>
           </li>
+          <li v-if="rule.id === RuleIds.NUM_PROPRIETOR" :key="index">
+            <v-icon v-if="validNumProprietor" color="green darken-2"
+              class="dir-valid">mdi-check</v-icon>
+            <v-icon v-else-if="getShowErrors" color="error" class="prop-invalid">mdi-close</v-icon>
+            <v-icon v-else>mdi-circle-small</v-icon>
+            <span class="chk-list-item-txt">{{rule.text}}</span>
+          </li>
         </template>
       </ul>
     </section>
@@ -151,8 +158,8 @@ import { ActionBindingIF, AddressIF, EmptyAddress, EmptyOrgPerson, OrgPersonIF, 
   PeopleAndRolesResourceIF, TombstoneIF } from '@/interfaces'
 import { EntityFilterMixin } from '@/mixins'
 import { CorpTypeCd, PartyTypes, NumWord, RoleTypes, RuleIds } from '@/enums'
-import OrgPerson from '@/components/Incorporation/OrgPerson.vue'
-import ListPeopleAndRoles from '@/components/Incorporation/ListPeopleAndRoles.vue'
+import OrgPerson from '@/components/common/OrgPerson.vue'
+import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
 
 @Component({
   components: {
@@ -255,6 +262,14 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
     return (num > 0) // at least one
   }
 
+  // FUTURE: implement this correctly
+  /** Whether the Completing Party rule is valid. Always true if rule doesn't exist. */
+  private get validNumProprietor (): boolean {
+    const rule = this.getPeopleAndRolesResource.rules.find(r => r.id === RuleIds.NUM_PROPRIETOR)
+    if (!rule) return true
+    return rule.test(this.completingParties.length)
+  }
+
   /** Whether there are any people without roles. Used as a safety check. */
   private get validPeopleWithNoRoles (): boolean {
     return (this.peopleWithNoRoles.length > 0)
@@ -266,7 +281,7 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
   }
 
   /** Sets this step's validity when component is mounted. */
-  private mounted (): void {
+  mounted (): void {
     this.setAddPeopleAndRoleStepValidity(this.hasValidRoles())
   }
 
@@ -372,6 +387,7 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
       this.validMinimumDirectors &&
       this.validDirectorCountry &&
       this.validDirectorProvince &&
+      this.validNumProprietor &&
       !this.validPeopleWithNoRoles
     )
   }

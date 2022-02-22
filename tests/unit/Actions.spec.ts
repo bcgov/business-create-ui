@@ -89,8 +89,8 @@ describe('Actions component', () => {
     expect(wrapper.find('#file-pay-btn').attributes('disabled')).toBeUndefined()
   })
 
-  it('renders the component properly', () => {
-    // FUTURE
+  it('Renders the component properly', () => {
+    expect(wrapper.find('#action-buttons-container').exists()).toBe(true)
   })
 })
 
@@ -98,7 +98,6 @@ describe('Emits error event if NR validation fails in file and pay', () => {
   let wrapper: any
   const { assign } = window.location
   const effectiveDate = new Date(new Date().setDate(new Date().getDate() + 5))
-  const formattedEffectiveDate = effectiveDate.toISOString().replace('Z', '+00:00')
 
   beforeEach(async () => {
     // mock the window.location.assign function
@@ -181,7 +180,7 @@ describe('Actions component - Filing Functionality', () => {
       date: '2020/01/29',
       effectiveDate: formattedEffectiveDate,
       folioNumber: '123456',
-      isFutureEffective: false
+      isFutureEffective: true
     },
     business: {
       identifier: 'T1234567',

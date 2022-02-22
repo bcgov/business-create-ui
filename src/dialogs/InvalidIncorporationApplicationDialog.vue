@@ -25,12 +25,12 @@ import { Component, Vue, Prop, Emit } from 'vue-property-decorator'
 @Component({})
 export default class InvalidIncorporationDialogDialog extends Vue {
   // Prop to display the dialog.
-  @Prop() private readonly dialog: boolean
+  @Prop() readonly dialog: boolean
 
   // Prop to provide attachment selector.
-  @Prop() private readonly attach: string
+  @Prop() readonly attach: string
 
   // Pass click events to parent.
-  @Emit() private exit () { }
+  @Emit() private exit () {}
 }
 </script>

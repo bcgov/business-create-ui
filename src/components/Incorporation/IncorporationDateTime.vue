@@ -57,7 +57,7 @@
                 filled
               ></v-combobox>
             </v-col>
-            <span :class="{ 'disabled': !isFutureEffective, 'time-colon': true }">:</span>
+            <span class="time-colon" :class="{ 'disabled': !isFutureEffective }">:</span>
             <v-col cols="12" sm="6" md="3">
               <v-combobox
                 id="minute-selector"
@@ -124,7 +124,7 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
   }
 
   @Prop()
-  private readonly effectiveDateTime!: EffectiveDateTimeIF
+  readonly effectiveDateTime!: EffectiveDateTimeIF
 
   // Local properties
   private isImmediate: boolean = false
@@ -375,7 +375,7 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
 #incorporation-date-time {
   padding: 1.25rem;
   line-height: 1.2rem;
-  font-size: 0.875rem;
+  font-size: $px-14;
 }
 
 label {
@@ -397,9 +397,9 @@ label {
 
 .time-colon {
   padding-top: 2rem;
-  font-size: 25px;
+  font-size: $px-24;
 }
-@media (max-width: 768px) {
+@media (max-width: 959px) {
   .time-colon {
     display: none;
   }
@@ -426,7 +426,7 @@ label {
     position: absolute;
     top: -2rem;
     padding: 0 12px;
-    font-size: 12px;
+    font-size: $px-12;
     font-weight: 500;
     color: $app-red !important;
   }

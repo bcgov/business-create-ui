@@ -68,10 +68,10 @@ import { NameTranslationIF } from '@/interfaces'
 @Component({})
 export default class ListNameTranslations extends Vue {
   @Prop({ default: () => [] })
-  private readonly translationsList: NameTranslationIF[]
+  readonly translationsList: NameTranslationIF[]
 
   @Prop({ default: false })
-  private readonly isAddingNameTranslation: boolean
+  readonly isAddingNameTranslation: boolean
 
   /**
    * Emit an index and event to the parent to handle editing.
@@ -97,14 +97,14 @@ export default class ListNameTranslations extends Vue {
       display: flex;
       background-color: $BCgovBlue5O;
       padding: .5rem 1.25rem .5rem 1.25rem;
-      font-size: 0.875rem;
+      font-size: $px-14;
       margin-top: 1rem;
     }
 
     .names-translation-content {
       padding: .5rem 1.25rem .5rem 1.25rem;
       border-top: 1px solid $gray1;
-      font-size: 0.875rem;
+      font-size: $px-14;
 
       .name-title {
         color: $gray7;

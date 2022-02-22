@@ -5,8 +5,8 @@
       <label class="define-registration-title pl-2"><strong>Your Business</strong></label>
     </div>
 
-    <section :class="{ 'invalid-section': !isDefineRegistrationValid }">
-      <div v-if="!isDefineRegistrationValid" class="define-registration-step-error-message">
+    <section :class="{ 'invalid-section': !getRegistration.defineBusinessValid }">
+      <div v-if="!getRegistration.defineBusinessValid" class="define-registration-step-error-message">
         <span>
           <v-icon color="error">mdi-information-outline</v-icon>
           &nbsp;
@@ -35,13 +35,19 @@
       <v-divider />
 
       <div class="section-container">
-        *** BUSINESS ADDRESSES PLACEHOLDER ***
+        <BusinessAddresses
+          :isEditing="false"
+          :showErrors="false"
+        />
       </div>
 
       <v-divider />
 
       <div class="section-container">
-        <BusinessContactInfo :initialValue="getBusinessContact" :isEditing="false" />
+        <BusinessContactInfo
+          :initialValue="getBusinessContact"
+          :isEditing="false"
+        />
       </div>
 
       <v-divider />
@@ -60,7 +66,10 @@
       <v-divider v-if="isPremiumAccount" />
 
       <div class="section-container" v-if="isPremiumAccount">
-        <FolioNumber :initialValue="getFolioNumber" :isEditing="false" />
+        <FolioNumber
+          :initialValue="getFolioNumber"
+          :isEditing="false"
+        />
       </div>
     </section>
   </v-card>
@@ -72,30 +81,27 @@ import { Getter } from 'vuex-class'
 import { BusinessContactIF, RegistrationStateIF } from '@/interfaces'
 import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
 import FolioNumber from '@/components/common/FolioNumber.vue'
-import OfficeAddresses from '@/components/common/OfficeAddresses.vue'
+import BusinessAddresses from '@/components/Registration/BusinessAddresses.vue'
 import { DateMixin, EntityFilterMixin, EnumMixin } from '@/mixins'
 import { RouteNames } from '@/enums'
-import { getRegistration, isDefineRegistrationValid } from '@/store/getters'
 
 @Component({
   components: {
+    BusinessAddresses,
     BusinessContactInfo,
-    FolioNumber,
-    OfficeAddresses
+    FolioNumber
   }
 })
 export default class DefineRegistrationSummary extends Mixins(DateMixin, EntityFilterMixin, EnumMixin) {
   // Getters
   @Getter getApprovedName!: string
-  @Getter isDefineRegistrationValid!: boolean
   @Getter isPremiumAccount!: boolean
-  @Getter getValidateSteps!: boolean
   @Getter getBusinessContact!: BusinessContactIF
   @Getter getFolioNumber!: string
   @Getter getRegistration!: RegistrationStateIF
 
   /** The entity description  */
-  private get entityDescription (): string {
+  get entityDescription (): string {
     return `${this.getCorpTypeDescription(this.getEntityType)}`
   }
 
@@ -128,7 +134,7 @@ export default class DefineRegistrationSummary extends Mixins(DateMixin, EntityF
 }
 
 .company-name {
-  font-size: 1.375rem;
+  font-size: $px-22;
   font-weight: bold
 }
 

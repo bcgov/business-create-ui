@@ -2,32 +2,33 @@ import { CoopType, CorpTypeCd, DissolutionTypes, FilingTypes } from '@/enums'
 import {
   AccountInformationIF,
   AddressIF,
-  BaseAddressObjIF,
+  BusinessAddressIF,
   BusinessContactIF,
   CertifyIF,
+  CreateMemorandumIF,
+  CreateResolutionIF,
+  CreateRulesIF,
+  DissolutionStatementIF,
+  FeesIF,
   IncorporationAddressIF,
   IncorporationAgreementIF,
   NameRequestIF,
   NameTranslationIF,
+  OfficeAddressIF,
   OrgPersonIF,
-  ShareClassIF,
-  StateIF,
-  CreateRulesIF,
-  CreateMemorandumIF,
-  ValidationDetailIF,
-  CreateResolutionIF,
-  DissolutionStatementIF,
-  FeesIF,
   ResourceIF,
+  ShareClassIF,
   StaffPaymentIF,
-  UploadAffidavitIF
+  StateIF,
+  UploadAffidavitIF,
+  ValidationDetailIF
 } from '@/interfaces'
 
 export const mutateBusinessId = (state: StateIF, businessId: string) => {
   state.stateModel.business.businessId = businessId
 }
 
-export const mutateBusinessAddress = (state: StateIF, address: BaseAddressObjIF) => {
+export const mutateBusinessAddress = (state: StateIF, address: OfficeAddressIF) => {
   state.stateModel.business.officeAddress = address
 }
 
@@ -265,6 +266,7 @@ export const mutateFeePrices = (state: StateIF, feePrices: Array<FeesIF>) => {
 
 export const mutateStaffPayment = (state: StateIF, staffPayment: StaffPaymentIF) => {
   state.stateModel.staffPaymentStep.staffPayment = staffPayment
+  if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
 }
 
 export const mutateStaffPaymentValidity = (state: StateIF, validity: boolean) => {
@@ -304,6 +306,25 @@ export const mutateCustodianOfRecords = (state: StateIF, custodian: OrgPersonIF)
   state.stateModel.dissolution.custodianOfRecords.custodian = custodian
 }
 
-export const mutateRegistrationStartDate = (state: StateIF, startDate: string) => {
-  state.stateModel.registration.startDate = startDate
+//
+// Registration mutations
+//
+
+export const mutateRegistrationDefineBusinessValid = (state: StateIF, val: boolean) => {
+  state.stateModel.registration.defineBusinessValid = val
+}
+
+export const mutateRegistrationStartDate = (state: StateIF, val: string) => {
+  state.stateModel.registration.startDate = val
+  if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
+}
+
+export const mutateRegistrationBusinessAddress = (state: StateIF, val: BusinessAddressIF) => {
+  state.stateModel.registration.businessAddress = val
+  if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
+}
+
+export const mutateRegistrationFeeAcknowledgement = (state: StateIF, val: boolean) => {
+  state.stateModel.registration.feeAcknowledgement = val
+  if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
 }

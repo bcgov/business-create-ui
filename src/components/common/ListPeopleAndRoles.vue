@@ -21,9 +21,13 @@
           &nbsp;
           <span class="error-text">This step is unfinished.</span>
           &nbsp;
-          <router-link
+          <router-link v-if="isIncorporationFiling"
             id="router-link"
             :to="{ path: `/${RouteNames.INCORPORATION_PEOPLE_ROLES}` }"
+          >Return to this step to finish it</router-link>
+          <router-link v-if="isRegistrationFiling"
+            id="router-link"
+            :to="{ path: `/${RouteNames.REGISTRATION_PEOPLE_ROLES}` }"
           >Return to this step to finish it</router-link>
         </span>
       </div>
@@ -120,6 +124,7 @@
 
 <script lang="ts">
 import { Component, Prop, Mixins, Emit } from 'vue-property-decorator'
+import { Getter } from 'vuex-class'
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
 import ConfirmRemoveDialog from '@/dialogs/ConfirmRemoveDialog.vue'
 import { CommonMixin, EntityFilterMixin } from '@/mixins'
@@ -136,13 +141,16 @@ import { PartyTypes, RouteNames } from '@/enums'
 })
 export default class ListPeopleAndRoles extends Mixins(CommonMixin, EntityFilterMixin) {
   @Prop({ default: () => [] })
-  private readonly personList: Array<OrgPersonIF>
+  readonly personList: Array<OrgPersonIF>
 
   @Prop({ default: false })
-  private readonly showErrorSummary: boolean
+  readonly showErrorSummary: boolean
 
   @Prop({ default: false })
-  private readonly isSummary: boolean
+  readonly isSummary: boolean
+
+  @Getter isIncorporationFiling!: boolean
+  @Getter isRegistrationFiling!: boolean
 
   // Enum for template
   readonly RouteNames = RouteNames
@@ -219,7 +227,7 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin, EntityFilter
 
 .people-roles-header {
   padding: 1.5rem 1.25rem 0.5rem 1.25rem;
-  font-size: 0.875rem;
+  font-size: $px-14;
   color: $gray9;
   font-weight: bold;
 }
@@ -232,7 +240,7 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin, EntityFilter
   margin-top: 0.5rem;
   padding: 0.5rem 1.25rem 0.5rem 1.25rem;
   border-top: 1px solid $gray1;
-  font-size: 0.875rem;
+  font-size: $px-14;
   color: $gray7;
 
   .actions {

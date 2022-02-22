@@ -11,7 +11,7 @@ import SbcSignout from 'sbc-common-components/src/components/SbcSignout.vue'
     SbcSignout
   }
 })
-export default class SignoutView extends Vue {
+export default class Signout extends Vue {
   get redirectUrl (): string {
     // after signout, redirect to BC Registries login page
     return sessionStorage.getItem('REGISTRY_HOME_URL') + 'login'

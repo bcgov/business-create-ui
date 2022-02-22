@@ -1,20 +1,22 @@
 <template>
   <div id="folio-number">
+    <!-- Summary mode -->
     <v-row no-gutters v-if="!isEditing" id="folio-number-read-only">
       <v-col md="3" class="mr-n1">
-        <label><strong>Folio Information</strong></label>
+        <label><strong>Folio or Reference<br>Number</strong></label>
       </v-col>
       <v-col md="9">
-        <label><strong>Folio Number</strong></label>
         <div id="lbl-folio-number">{{ !!folioNumber ? folioNumber : 'Not entered' }}</div>
       </v-col>
     </v-row>
+
+    <!-- Edit mode -->
     <v-row no-gutters v-else id="folio-number-editing">
       <v-col md="2">
         <label><strong>Folio Number</strong></label>
       </v-col>
       <v-col md="10" class="pl-8">
-        <v-form>
+        <v-form v-model="formValid" ref="form">
           <v-text-field
             id="folio-number-text-field"
             label="Folio or Reference Number"
@@ -35,13 +37,17 @@ import { Component, Emit, Prop, Vue, Watch } from 'vue-property-decorator'
 @Component({})
 export default class FolioNumber extends Vue {
   @Prop()
-  private readonly initialValue: string
+  readonly initialValue: string
 
   @Prop({ default: false })
-  private readonly isEditing: boolean
+  readonly isEditing: boolean
 
-  // Local property
+  @Prop({ default: false })
+  readonly showErrors!: boolean
+
+  // Local properties
   private folioNumber: string = null
+  private formValid: boolean = false
 
   // Validation rules
   private readonly rules: Array<Function> = [
@@ -49,7 +55,7 @@ export default class FolioNumber extends Vue {
   ]
 
   /** Called when component is created. */
-  private created (): void {
+  created (): void {
     if (this.initialValue) {
       this.folioNumber = this.initialValue
     }
@@ -69,9 +75,24 @@ export default class FolioNumber extends Vue {
     this.emitFolioNumber(val)
   }
 
+  @Watch('formValid')
+  private onFormValidityChange (val: boolean): void {
+    this.emitValid(val)
+  }
+
+  @Watch('showErrors')
+  private onShowErrorsChanged (): void {
+    if (this.showErrors) {
+      (this.$refs.form as any).validate()
+    }
+  }
+
   // Events
-  @Emit('folioNumberChange')
-  private emitFolioNumber (folioNumber: string): void { }
+  @Emit('update')
+  private emitFolioNumber (folioNumber: string): void {}
+
+  @Emit('valid')
+  private emitValid (valid: boolean): void {}
 }
 </script>
 

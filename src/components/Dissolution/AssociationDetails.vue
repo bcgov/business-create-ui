@@ -69,7 +69,7 @@
         :disableActions="isSummary"
         :customMsg="contactInfoMsg"
         editLabel="Change"
-        @contactInfoChange="onContactInfoChange($event)"
+        @update="onContactInfoChange($event)"
       />
     </div>
   </v-card>
@@ -97,7 +97,7 @@ import { isEmpty } from 'lodash'
 })
 export default class AssociationDetails extends Mixins(CommonMixin, EntityFilterMixin, EnumMixin) {
   @Prop({ default: false })
-  private readonly isSummary: boolean
+  readonly isSummary: boolean
 
   // Global getters
   @Getter getApprovedName!: string
@@ -150,17 +150,17 @@ export default class AssociationDetails extends Mixins(CommonMixin, EntityFilter
   padding: 1.5rem 2rem;
 
   .mailing-address-header {
-    font-size: 0.875rem;
+    font-size: $px-14;
   }
 
   ::v-deep .subtitle {
-    font-size: .875rem;
+    font-size: $px-14;
     font-weight: bold;
   }
 }
 
 .company-name {
-  font-size: 1.375rem;
+  font-size: $px-22;
   font-weight: bold;
   color:$gray9
 }

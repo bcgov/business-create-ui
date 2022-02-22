@@ -1,4 +1,11 @@
-import { AccountTypes, CoopType, CorpTypeCd, DissolutionTypes, FilingNames, FilingTypes } from '@/enums'
+import {
+  AccountTypes,
+  CoopType,
+  CorpTypeCd,
+  DissolutionTypes,
+  FilingNames,
+  FilingTypes
+} from '@/enums'
 import {
   AccountInformationIF,
   AddressIF,
@@ -7,9 +14,11 @@ import {
   CertifyIF,
   CourtOrderStepIF,
   CreateMemorandumIF,
+  CreateResolutionIF,
   CreateRulesIF,
   DefineCompanyIF,
   DissolutionStatementIF,
+  DissolutionStateIF,
   DocumentDeliveryIF,
   EffectiveDateTimeIF,
   FeesIF,
@@ -20,18 +29,14 @@ import {
   NameTranslationIF,
   OrgPersonIF,
   PeopleAndRoleIF,
+  RegistrationStateIF,
   ShareStructureIF,
   StaffPaymentStepIF,
   StateIF,
   TombstoneIF,
-  UploadAffidavitIF,
-  CreateResolutionIF, RegistrationStateIF
+  UploadAffidavitIF
 } from '@/interfaces'
 import { getMaxStep } from './resource-getters'
-
-//
-// The getters in this file return values from the current state model.
-//
 
 /** Whether the current filing is an Incorporation. */
 export const isIncorporationFiling = (state: StateIF): boolean => {
@@ -61,16 +66,6 @@ export const getFilingName = (state: StateIF): FilingNames => {
     case FilingTypes.VOLUNTARY_DISSOLUTION: return FilingNames.VOLUNTARY_DISSOLUTION
     default: return null // should never happen
   }
-}
-
-/** The dissolution filing type. */
-export const getDissolutionType = (state: StateIF): DissolutionTypes => {
-  return state.stateModel.dissolution.dissolutionType
-}
-
-/** The dissolution statement step. */
-export const getDissolutionStatementStep = (state: StateIF): DissolutionStatementIF => {
-  return state.stateModel.dissolution.dissolutionStatementStep
 }
 
 /** Whether the user has "staff" auth role. */
@@ -118,19 +113,29 @@ export const getStaffPaymentFolioNumber = (state: StateIF): string => {
   return getStaffPaymentStep(state).staffPayment.folioNumber
 }
 
-/** Whether the entity is a BCOMP. */
+/** Whether the entity is a Benefit Company. */
 export const isTypeBcomp = (state: StateIF): boolean => {
   return (state.stateModel.entityType === CorpTypeCd.BENEFIT_COMPANY)
 }
 
-/** Whether the entity is a COOP. */
+/** Whether the entity is a Cooperative Assocation. */
 export const isTypeCoop = (state: StateIF): boolean => {
   return (state.stateModel.entityType === CorpTypeCd.COOP)
 }
 
-/** Whether the entity is Community Contribution Company. */
-export const isTypeCC = (state: StateIF): boolean => {
+/** Whether the entity is a Community Contribution Company. */
+export const isTypeCCC = (state: StateIF): boolean => {
   return (state.stateModel.entityType === CorpTypeCd.BC_CCC)
+}
+
+/** Whether the entity is a Sole Proprietorship. */
+export const isTypeSoleProp = (state: StateIF): boolean => {
+  return (state.stateModel.entityType === CorpTypeCd.SOLE_PROP)
+}
+
+/** Whether the entity is a General Partnership. */
+export const isTypePartnership = (state: StateIF): boolean => {
+  return (state.stateModel.entityType === CorpTypeCd.PARTNERSHIP)
 }
 
 /** The Account Information object. */
@@ -153,7 +158,7 @@ export const isPremiumAccount = (state: StateIF): boolean => {
   return (getAccountInformation(state).accountType === AccountTypes.PREMIUM)
 }
 
-/** The current date, which is refreshed every time the app inits. */
+/** The current date, which is refreshed every time the app inits (YYYY-MM-DD). */
 export const getCurrentDate = (state: StateIF): string => {
   return state.stateModel.currentDate
 }
@@ -405,26 +410,16 @@ export const isIncorporationAgreementValid = (state: StateIF): boolean => {
   return getIncorporationAgreementStep(state).valid
 }
 
-/** Is true when the step is valid. */
-export const isDefineDissolutionValid = (state: StateIF): boolean => {
-  const isCoopDefineDissolutionValid = isTypeCoop(state)
-    ? (getDissolutionStatementStep(state).valid && getHasCertificateDestroyed(state))
-    : true
-
-  return isCoopDefineDissolutionValid && isCustodianValid(state)
-}
-
 /** Whether all the steps are valid. */
 export const isApplicationValid = (state: StateIF): boolean => {
   if (isIncorporationFiling(state)) return isIncorporationApplicationValid(state)
   if (isDissolutionFiling(state)) return isDissolutionValid(state)
+  if (isRegistrationFiling(state)) return isRegistrationValid(state)
   return false
 }
 
 /** Whether all the dissolution steps are valid. */
 export const isDissolutionValid = (state: StateIF): boolean => {
-  const isStaff = isRoleStaff(state)
-
   const isDocumentDeliveryValid = getDocumentDelivery(state).valid
   const isCertifyValid = getCertifyState(state).valid && !!getCertifyState(state).certifiedBy
 
@@ -432,15 +427,13 @@ export const isDissolutionValid = (state: StateIF): boolean => {
   const isTransactionalFnValid = !isPremiumAccount(state) || getTransactionalFolioNumberValid(state)
 
   // only for Staff role
-  const isCourtOrderValid = isStaff ? getCourtOrderStep(state).valid : true
-  const isStaffPaymentValid = isStaff ? getStaffPaymentStep(state).valid : true
+  const isCourtOrderValid = isRoleStaff(state) ? getCourtOrderStep(state).valid : true
+  const isStaffPaymentValid = isRoleStaff(state) ? getStaffPaymentStep(state).valid : true
 
-  const isEffectiveDateTimeValid = isBaseCompany(state)
-    ? getEffectiveDateTime(state).valid
-    : true
+  const isEffectiveDateTimeValid = isBaseCompany(state) ? getEffectiveDateTime(state).valid : true
 
   return (
-    isDefineDissolutionValid(state) &&
+    isDissolutionDefineDissolutionValid(state) &&
     isAffidavitValid(state) &&
     isResolutionValid(state) &&
     isDocumentDeliveryValid &&
@@ -475,9 +468,24 @@ export const isIncorporationApplicationValid = (state: StateIF): boolean => {
 
   return (
     getDefineCompanyStep(state).valid &&
-    getAddPeopleAndRoleStep(state).valid &&
+    isAddPeopleAndRolesValid(state) &&
     isDocumentValid &&
     isCertifyValid
+  )
+}
+
+/** Whether all the registration steps are valid. */
+export const isRegistrationValid = (state: StateIF): boolean => {
+  const isCertifyValid = getCertifyState(state).valid && !!getCertifyState(state).certifiedBy
+  const isFeeAcknowledgementValid = getRegistration(state).feeAcknowledgement
+  const isStaffPaymentValid = isRoleStaff(state) ? getStaffPaymentStep(state).valid : true
+
+  return (
+    getRegistration(state).defineBusinessValid &&
+    isAddPeopleAndRolesValid(state) &&
+    isCertifyValid &&
+    isFeeAcknowledgementValid &&
+    isStaffPaymentValid
   )
 }
 
@@ -547,36 +555,62 @@ export const getCourtOrderStep = (state: StateIF): CourtOrderStepIF => {
   return state.stateModel.courtOrderStep
 }
 
-/** The custodian email. */
-export const getCustodianEmail = (state: StateIF): string => {
-  return getCustodian(state)?.officer.email
-}
-
 export const getDocumentDelivery = (state: StateIF): DocumentDeliveryIF => {
   return state.stateModel.documentDelivery
 }
 
-export const getHasCertificateDestroyed = (state: StateIF): boolean => {
-  return state.stateModel.dissolution.hasCertificateDestroyed
+//
+// Dissolution getters
+//
+
+/** The dissolution object. */
+export const getDissolution = (state: StateIF): DissolutionStateIF => {
+  return state.stateModel.dissolution
+}
+
+/** The dissolution statement step. */
+export const getDissolutionStatementStep = (state: StateIF): DissolutionStatementIF => {
+  return getDissolution(state).dissolutionStatementStep
+}
+
+/** The dissolution type. */
+export const getDissolutionType = (state: StateIF): DissolutionTypes => {
+  return getDissolution(state).dissolutionType
+}
+
+export const getDissolutionHasCertificateDestroyed = (state: StateIF): boolean => {
+  return getDissolution(state).hasCertificateDestroyed
 }
 
 /** Is true when the custodian data is valid. */
-export const isCustodianValid = (state: StateIF): boolean => {
-  return state.stateModel.dissolution.custodianOfRecords.valid
+export const isDissolutionCustodianValid = (state: StateIF): boolean => {
+  return getDissolution(state).custodianOfRecords.valid
 }
 
-/** The custodian of records. */
-export const getCustodian = (state: StateIF): OrgPersonIF => {
-  return state.stateModel.dissolution.custodianOfRecords.custodian
+/** The dissolution custodian of records. */
+export const getDissolutionCustodian = (state: StateIF): OrgPersonIF => {
+  return getDissolution(state).custodianOfRecords.custodian
 }
 
-// Registration Getters
-/** Define Registration Step object. */
+/** The custodian email. */
+export const getDissolutionCustodianEmail = (state: StateIF): string => {
+  return getDissolutionCustodian(state)?.officer.email
+}
+
+/** Is true when the Define Dissolution page is valid. */
+export const isDissolutionDefineDissolutionValid = (state: StateIF): boolean => {
+  const isCoopDefineDissolutionValid = isTypeCoop(state)
+    ? (getDissolutionStatementStep(state).valid && getDissolutionHasCertificateDestroyed(state))
+    : true
+
+  return isCoopDefineDissolutionValid && isDissolutionCustodianValid(state)
+}
+
+//
+// Registration getters
+//
+
+/** The registration object. */
 export const getRegistration = (state: StateIF): RegistrationStateIF => {
   return state.stateModel.registration
-}
-
-/** Is true when the step is valid. */
-export const isDefineRegistrationValid = (state: StateIF): boolean => {
-  return getRegistration(state).valid
 }

@@ -264,7 +264,6 @@ export default class UploadMemorandum extends Mixins(CommonMixin, DocumentMixin)
   @Getter getNameRequestDetails!: NameRequestDetailsIF
   @Getter getCreateMemorandumResource!: CreateMemorandumResourceIF
   @Getter getCreateMemorandumStep!: CreateMemorandumIF
-  @Getter getValidateSteps!: boolean
   @Getter getUserKeycloakGuid!: string
 
   @Action setMemorandum!: ActionBindingIF
@@ -371,7 +370,7 @@ export default class UploadMemorandum extends Mixins(CommonMixin, DocumentMixin)
   }
 
   /** Called when component is created. */
-  private created (): void {
+  created (): void {
     this.uploadMemorandumDoc = this.getCreateMemorandumStep.memorandumDoc as File
     this.uploadMemorandumDocKey = this.getCreateMemorandumStep.docKey
     this.memorandumConfirmed = this.getCreateMemorandumStep.memorandumConfirmed
@@ -473,7 +472,7 @@ ul {
 
 .upload-memorandum-vcard-title {
   padding-top: 1px;
-  font-size: 17px;
+  font-size: $px-17;
   font-weight: bold;
 }
 

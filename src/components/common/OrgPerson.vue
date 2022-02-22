@@ -137,16 +137,15 @@
 
                 <!-- Mailing Address -->
                 <div class="font-weight-bold mt-8">Mailing Address</div>
-                <div class="address-wrapper">
-                  <base-address
-                    ref="mailingAddressNew"
-                    :editing="true"
-                    :schema="PersonAddressSchema"
-                    :address="inProgressMailingAddress"
-                    @update:address="updateMailingAddress"
-                    @valid="updateMailingAddressValidity"
-                  />
-                </div>
+                <BaseAddress
+                  ref="mailingAddressNew"
+                  class="mt-6"
+                  :editing="true"
+                  :schema="PersonAddressSchema"
+                  :address="inProgressMailingAddress"
+                  @update:address="updateMailingAddress"
+                  @valid="updateMailingAddressValidity"
+                />
 
                 <!-- Delivery Address (for directors only) -->
                 <div class="form__row" v-if="isDirector">
@@ -155,20 +154,19 @@
                     label="Delivery Address same as Mailing Address"
                     v-model="inheritMailingAddress"
                   />
-                  <div v-if="!inheritMailingAddress">
+                  <template v-if="!inheritMailingAddress">
                     <div class="font-weight-bold mt-4">Delivery Address</div>
-                    <div class="address-wrapper">
-                      <base-address
-                        ref="deliveryAddressNew"
-                        :editing="true"
-                        :schema="PersonAddressSchema"
-                        :address="inProgressDeliveryAddress"
-                        :noPoBox="true"
-                        @update:address="updateDeliveryAddress"
-                        @valid="updateDeliveryAddressValidity"
-                      />
-                    </div>
-                  </div>
+                    <BaseAddress
+                      ref="deliveryAddressNew"
+                      class="mt-6"
+                      :editing="true"
+                      :schema="PersonAddressSchema"
+                      :address="inProgressDeliveryAddress"
+                      :noPoBox="true"
+                      @update:address="updateDeliveryAddress"
+                      @valid="updateDeliveryAddressValidity"
+                    />
+                  </template>
                 </div>
 
                 <!-- Action Buttons -->
@@ -203,13 +201,16 @@
 import { Component, Prop, Emit, Mixins } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 import { v4 as uuidv4 } from 'uuid'
-import { OrgPersonIF, BaseAddressType, FormIF, AddressIF, ConfirmDialogType, RolesIF } from '@/interfaces'
+import {
+  OrgPersonIF, EmptyAddress, FormIF, AddressIF, ConfirmDialogType, RolesIF
+} from '@/interfaces'
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
 import ConfirmDialog from '@/dialogs/ConfirmDialog.vue'
 import { EntityFilterMixin, CommonMixin } from '@/mixins'
 import { CorpTypeCd, RoleTypes, PartyTypes } from '@/enums'
 import { PersonAddressSchema } from '@/schemas'
 import { Rules } from '@/rules'
+import { cloneDeep } from 'lodash'
 
 @Component({
   components: {
@@ -221,15 +222,15 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
    // Refs
    $refs!: {
     addPersonOrgForm: FormIF
-    mailingAddressNew: BaseAddressType
-    deliveryAddressNew: BaseAddressType
+    mailingAddressNew: any
+    deliveryAddressNew: any
     reassignCPDialog: ConfirmDialogType
   }
 
-  @Prop() private readonly initialValue!: OrgPersonIF
-  @Prop() private readonly activeIndex: number
-  @Prop() private readonly existingCompletingParty: OrgPersonIF
-  @Prop() private readonly addIncorporator: boolean
+  @Prop() readonly initialValue!: OrgPersonIF
+  @Prop() readonly activeIndex: number
+  @Prop() readonly existingCompletingParty: OrgPersonIF
+  @Prop() readonly addIncorporator: boolean
 
   @Getter getCurrentDate!: string
   @Getter isRoleStaff!: boolean
@@ -339,7 +340,7 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
   }
 
   /** Called when component is created. */
-  private created (): void {
+  created (): void {
     if (this.initialValue) {
       this.orgPerson = { ...this.initialValue }
       this.orgPerson.officer = { ...this.initialValue.officer }
@@ -351,7 +352,7 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
       this.inProgressMailingAddress = { ...this.orgPerson.mailingAddress }
       if (this.isDirector) {
         this.inProgressDeliveryAddress = { ...this.orgPerson.deliveryAddress }
-        // initialize inheritMailingAddress conditionaly
+        // initialize inheritMailingAddress checkbox conditionally
         this.updateSameAsMailingChkBox()
       }
     }
@@ -362,6 +363,9 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
     if (!this.isDirector) {
       return
     }
+
+    // if not already assigned, initialize delivery address to prevent template errors
+    if (!this.inProgressDeliveryAddress) this.inProgressDeliveryAddress = cloneDeep(EmptyAddress)
 
     this.inheritMailingAddress = this.isSame(this.inProgressMailingAddress, this.inProgressDeliveryAddress)
 
@@ -628,20 +632,16 @@ li {
 }
 
 .add-org-header {
-  font-size: 1rem;
+  font-size: $px-16;
   font-weight: bold;
   line-height: 1.5rem;
 }
 
 .name-header {
-  font-size: 1rem;
+  font-size: $px-16;
   font-weight: bold;
   line-height: 1.5rem;
   padding-bottom: 0.5rem;
-}
-
-.address-wrapper {
-  margin-top: 1.5rem;
 }
 
 @media (min-width: 768px) {

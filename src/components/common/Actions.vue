@@ -123,7 +123,6 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
   @Getter isSaving!: boolean
   @Getter isSavingResuming!: boolean
   @Getter isFilingPaying!: boolean
-  @Getter isIncorporationFiling!: boolean
 
   @Action setIsSaving!: ActionBindingIF
   @Action setIsSavingResuming!: ActionBindingIF
@@ -355,7 +354,7 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
 
   /** Emits Go To Dashboard event. */
   @Emit('goToDashboard')
-  private emitGoToDashboard (): void { }
+  private emitGoToDashboard (): void {}
 }
 </script>
 

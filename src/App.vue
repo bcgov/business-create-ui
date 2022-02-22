@@ -377,7 +377,7 @@ export default class App extends Mixins(
   }
 
   /** Called when component is created. */
-  private async created (): Promise<void> {
+  async created (): Promise<void> {
     // update Current Js Date now and every 1 minute thereafter
     await this.updateCurrentJsDate()
     this.updateCurrentJsDateId = setInterval(this.updateCurrentJsDate, 60000)
@@ -671,17 +671,19 @@ export default class App extends Mixins(
       case FilingTypes.INCORPORATION_APPLICATION:
         draftFiling = { ...this.buildIncorporationFiling(), ...draftFiling }
         resources = IncorporationResources
-        parseFiling = this.parseIncorporationsDraft
+        parseFiling = this.parseIncorporationDraft
         break
       case FilingTypes.REGISTRATION:
         draftFiling = { ...this.buildRegistrationFiling(), ...draftFiling }
         resources = RegistrationResources
-        parseFiling = this.parseRegistrationsDraft
+        parseFiling = this.parseRegistrationDraft
         break
     }
 
-    // Parse draft filing to store
-    if (draftFiling) parseFiling(draftFiling)
+    // parse draft filing into the store
+    if (draftFiling) {
+      parseFiling(draftFiling)
+    }
 
     // verify nameRequest object
     const nameRequest = draftFiling[draftFiling.header?.name]?.nameRequest
@@ -784,7 +786,8 @@ export default class App extends Mixins(
         this.setBusinessContact(contacts[0])
       }
       // for a dissolution, set folio number from auth info
-      // (for an incorporation, it is set in DefineCompany.vue)
+      // (for an incorporation, it is set in IncorporationDefineCompany.vue)
+      // (for a registration, it is set in RegistrationDefineBusiness.vue)
       this.setFolioNumber(folioNumber)
     }
     if (!userInfo) throw new Error('Invalid user info')

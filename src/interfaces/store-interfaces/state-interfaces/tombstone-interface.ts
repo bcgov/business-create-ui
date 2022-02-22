@@ -1,4 +1,4 @@
-import { AddressIF } from '@/interfaces/stepper-interfaces/DefineCompany/address-interface'
+import { AddressIF } from '@/interfaces'
 import { FilingTypes } from '@/enums'
 
 // Tombstone State model

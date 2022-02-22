@@ -5,3 +5,10 @@ export interface AccountInformationIF {
   label: string
   type: string
 }
+
+export const EmptyAccountInformation: AccountInformationIF = {
+  accountType: '',
+  id: null,
+  label: '',
+  type: ''
+}

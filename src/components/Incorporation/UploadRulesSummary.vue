@@ -80,7 +80,7 @@ export default class UploadRulesSummary extends Vue {
 
   .upload-success-chk {
     margin-right: 9px;
-    font-size: 1.5rem;
+    font-size: $px-24;
     color: $app-dk-green;
   }
 

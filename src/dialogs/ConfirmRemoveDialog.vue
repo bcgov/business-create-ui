@@ -26,15 +26,15 @@ import { Component, Vue, Prop, Emit } from 'vue-property-decorator'
 @Component({})
 export default class ConfirmRemoveDialog extends Vue {
   // Prop to display the dialog.
-  @Prop() private readonly dialog: boolean
+  @Prop() readonly dialog: boolean
 
   // Prop to provide attachment selector.
-  @Prop() private readonly attach: string
+  @Prop() readonly attach: string
 
   // Pass click event to parent.
-  @Emit() private confirm () { }
+  @Emit() private confirm () {}
 
   // Pass click event to parent.
-  @Emit() private exit () { }
+  @Emit() private exit () {}
 }
 </script>

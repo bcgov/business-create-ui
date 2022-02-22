@@ -1,6 +1,5 @@
-import { AddressIF, RolesIF } from '@/interfaces'
+import { AddressIF, EmptyAddress, RolesIF } from '@/interfaces'
 import { PartyTypes } from '@/enums'
-import { EmptyAddress } from '../DefineCompany/address-interface'
 
 export interface OfficerIF {
   id?: string

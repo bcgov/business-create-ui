@@ -107,7 +107,7 @@ export default class EntityInfo extends Mixins(EnumMixin) {
   }
 
   .v-breadcrumbs li {
-    font-size: .75rem;
+    font-size: $px-12;
   }
 
   ::v-deep {
@@ -135,14 +135,14 @@ export default class EntityInfo extends Mixins(EnumMixin) {
 }
 
 .header-title {
-  font-size: 1.25rem;
+  font-size: $px-20;
   font-weight: bold;
   color: $gray9;
 }
 
 .business-info {
   color: $gray7;
-  font-size: .875rem;
+  font-size: $px-14;
 
   .business-info-label {
     color: $gray9;

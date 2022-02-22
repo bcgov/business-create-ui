@@ -5,13 +5,17 @@
         <label class="font-weight-bold">Registered Office</label>
       </v-col>
       <v-col cols="9">
-        <v-card-text id="office-email" class="pa-0">{{registeredOfficeEmail || 'Not entered'}}</v-card-text>
+        <v-card-text id="office-email" class="pa-0">
+          {{registeredOfficeEmail || 'Not entered'}}
+        </v-card-text>
       </v-col>
     </v-row>
 
     <v-row no-gutters>
       <v-col cols="3">
-        <label class="font-weight-bold" :class="{ 'error-text': invalidSection }">Completing Party</label>
+        <label class="font-weight-bold" :class="{ 'error-text': invalidSection }">
+          Completing Party
+        </label>
       </v-col>
       <v-col cols="9" v-if="editableCompletingParty">
         <v-text-field
@@ -25,7 +29,9 @@
         />
       </v-col>
       <v-col :cols="9" v-else>
-        <v-card-text id="completing-party-email" class="pa-0">{{userEmail || 'Not entered'}}</v-card-text>
+        <v-card-text id="completing-party-email" class="pa-0">
+          {{completingPartyEmail || 'Not entered'}}
+        </v-card-text>
       </v-col>
     </v-row>
 
@@ -34,7 +40,9 @@
         <label class="font-weight-bold">Custodian of Records</label>
       </v-col>
       <v-col cols="9">
-        <v-card-text id="custodian-email" class="pa-0">{{custodianEmail || 'Not entered'}}</v-card-text>
+        <v-card-text id="custodian-email" class="pa-0">
+          {{custodianEmail || 'Not entered'}}
+        </v-card-text>
       </v-col>
     </v-row>
   </v-card>
@@ -48,7 +56,7 @@ import { Component, Emit, Prop, Vue, Watch } from 'vue-property-decorator'
 export default class DocumentDelivery extends Vue {
   @Prop({ default: null }) readonly registeredOfficeEmail: string
   @Prop({ default: null }) readonly custodianEmail: string
-  @Prop({ default: null }) readonly userEmail: string
+  @Prop({ default: null }) readonly completingPartyEmail: string
   @Prop({ default: null }) readonly documentOptionalEmail: string
 
   @Prop({ default: false }) readonly editableCompletingParty: boolean
@@ -64,7 +72,7 @@ export default class DocumentDelivery extends Vue {
     (v: string) => this.validateEmailFormat(v) || 'Enter valid email address'
   ]
 
-  mounted () {
+  mounted (): void {
     this.optionalEmail = this.documentOptionalEmail
   }
 

@@ -31,10 +31,10 @@ import { HelpSectionIF } from '@/interfaces'
 @Component({})
 export default class HelpSection extends Vue {
   @Prop({ default: {} })
-  private readonly helpSection: HelpSectionIF
+  readonly helpSection: HelpSectionIF
 
   @Prop({ default: 'Not Available' })
-  private readonly helpTitle: string
+  readonly helpTitle: string
 
   private helpToggle = false
 }
@@ -42,6 +42,7 @@ export default class HelpSection extends Vue {
 
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
+
 ul {
   list-style: none;
   color: $gray7;

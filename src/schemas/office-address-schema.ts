@@ -1,5 +1,6 @@
 import { required, maxLength } from 'vuelidate/lib/validators'
 import { AddressSchemaIF } from '@/interfaces'
+
 // The Address schema containing Vuelidate rules.
 // NB: This should match the subject JSON schema.
 export const OfficeAddressSchema: AddressSchemaIF = {
@@ -88,3 +89,6 @@ export const PersonAddressSchema: AddressSchemaIF = {
     maxLength: maxLength(80)
   }
 }
+
+export const RegistrationDeliveryAddressSchema = OfficeAddressSchema
+export const RegistrationMailingAddressSchema = PersonAddressSchema

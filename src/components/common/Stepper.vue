@@ -49,6 +49,7 @@ import { Getter } from 'vuex-class'
 
 // Enums
 import { RouteNames } from '@/enums'
+import { RegistrationStateIF } from '@/interfaces'
 
 @Component({})
 export default class Stepper extends Vue {
@@ -61,12 +62,14 @@ export default class Stepper extends Vue {
   @Getter isCreateShareStructureValid!: boolean
   @Getter isIncorporationAgreementValid!: boolean
 
-  @Getter isDefineDissolutionValid!: boolean
+  @Getter isDissolutionDefineDissolutionValid!: boolean
   @Getter isResolutionValid!: boolean
   @Getter isAffidavitValid!: boolean
 
   @Getter isApplicationValid!: boolean
   @Getter getValidateSteps!: boolean
+
+  @Getter getRegistration!: RegistrationStateIF
 
   /** Returns true if the step route is valid. */
   private isValid (route: RouteNames): boolean {
@@ -80,13 +83,13 @@ export default class Stepper extends Vue {
       case RouteNames.INCORPORATION_SHARE_STRUCTURE: return this.isCreateShareStructureValid
 
       case RouteNames.DISSOLUTION_AFFIDAVIT: return this.isAffidavitValid
-      case RouteNames.DISSOLUTION_DEFINE_DISSOLUTION: return this.isDefineDissolutionValid
+      case RouteNames.DISSOLUTION_DEFINE_DISSOLUTION: return this.isDissolutionDefineDissolutionValid
       case RouteNames.DISSOLUTION_RESOLUTION: return this.isResolutionValid
       case RouteNames.DISSOLUTION_REVIEW_CONFIRM: return this.isApplicationValid
 
-      case RouteNames.REGISTRATION_DEFINE_BUSINESS: return false // TODO: implement
-      case RouteNames.REGISTRATION_PEOPLE_ROLES: return false // TODO: implement
-      case RouteNames.REGISTRATION_REVIEW_CONFIRM: return false // TODO: implement
+      case RouteNames.REGISTRATION_DEFINE_BUSINESS: return this.getRegistration.defineBusinessValid
+      case RouteNames.REGISTRATION_PEOPLE_ROLES: return this.isAddPeopleAndRolesValid
+      case RouteNames.REGISTRATION_REVIEW_CONFIRM: return this.isApplicationValid
     }
     return false
   }

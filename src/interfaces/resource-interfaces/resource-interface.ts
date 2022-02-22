@@ -45,6 +45,7 @@ export interface RegistrationResourceIF {
   nameRequestType: NameRequestTypes
   steps: Array<StepIF>
   filingData: Array<FilingDataIF>
+  peopleAndRoles: PeopleAndRolesResourceIF
   reviewAndConfirm: {
     completingPartyStatement: {
       certifyStatementHeader: string

@@ -1,13 +1,13 @@
-// Filing Interfaces
+// Filing interfaces
 export * from './filing-interfaces/filing-interface'
-export * from './filing-interfaces/filingData-interface'
+export * from './filing-interfaces/filing-data-interface'
 export * from './filing-interfaces/court-order-interface'
 export * from './filing-interfaces/special-resolution-interface'
 
-// Payment Interfaces
+// Payment interfaces
 export * from './payment-interfaces/fees-interface'
 
-// Resource Interfaces
+// Resource interfaces
 export * from './resource-interfaces/component-resource-interfaces/affidavit-resource-interface'
 export * from './resource-interfaces/component-resource-interfaces/agreement-types-interface'
 export * from './resource-interfaces/component-resource-interfaces/certifyStatement-interface'
@@ -15,7 +15,7 @@ export * from './resource-interfaces/component-resource-interfaces/step-interfac
 export * from './resource-interfaces/component-resource-interfaces/custodian-resource-interface'
 export * from './resource-interfaces/resource-interface'
 
-// Stepper Interfaces
+// Stepper interfaces
 export * from './stepper-interfaces/AddPeopleAndRole/add-people-role-interface'
 export * from './stepper-interfaces/AddPeopleAndRole/org-person-interface'
 export * from './stepper-interfaces/AddPeopleAndRole/people-and-roles-resource-interface'
@@ -27,7 +27,7 @@ export * from './stepper-interfaces/CreateResolution/create-resolution-resource-
 export * from './stepper-interfaces/CreateRules/create-rules-interface'
 export * from './stepper-interfaces/CreateRules/create-rules-resource-interface'
 export * from './stepper-interfaces/CreateShareStructure/create-share-structure-interface'
-export * from './stepper-interfaces/DefineCompany/address-interface'
+export * from './stepper-interfaces/DefineCompany/address-interfaces'
 export * from './stepper-interfaces/DefineCompany/define-company-interface'
 export * from './stepper-interfaces/DefineCompany/name-translation-interface'
 export * from './stepper-interfaces/IncorporationAgreement/help-section-interface'
@@ -41,7 +41,7 @@ export * from './stepper-interfaces/common/court-order-step-interface'
 export * from './stepper-interfaces/common/business-contact-interface'
 export * from './stepper-interfaces/common/person-interface'
 
-// Store Interfaces
+// Store interfaces
 export * from './store-interfaces/state-interfaces/account-information-interface'
 export * from './store-interfaces/state-interfaces/auth-information-interface'
 export * from './store-interfaces/state-interfaces/business-interface'
@@ -53,7 +53,7 @@ export * from './store-interfaces/state-interfaces/tombstone-interface'
 export * from './store-interfaces/action-interface'
 export * from './store-interfaces/state-interface'
 
-// Utils Interfaces
+// Utils interfaces
 export * from './utils-interfaces/address-schema-interface'
 export * from './utils-interfaces/confirm-dialog-type'
 export * from './utils-interfaces/doc-interface'
@@ -61,8 +61,15 @@ export * from './utils-interfaces/document-upload-interface'
 export * from './utils-interfaces/form-field-type'
 export * from './utils-interfaces/form-type'
 export * from './utils-interfaces/key-value-interface'
+export * from './utils-interfaces/pdf-info-interface'
 export * from './utils-interfaces/validation-detail-interface'
 export * from './utils-interfaces/validation-item-detail-interface'
 
-// external interfaces
+// common interfaces
+export * from './common/address-interface'
+
+// Registration interfaces
+export * from './Registration/business-address-interface'
+
+// External interfaces
 export { BreadcrumbIF, EffectiveDateTimeIF, StaffPaymentIF } from '@bcrs-shared-components/interfaces'

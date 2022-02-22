@@ -96,8 +96,8 @@
           :initialValue="getBusinessContact"
           :isEditing="true"
           :showErrors="getShowErrors"
-          @contactInfoChange="setBusinessContact($event)"
-          @contactInfoFormValidityChange="onBusinessContactFormValidityChange($event)"
+          @update="setBusinessContact($event)"
+          @valid="onBusinessContactFormValidityChange($event)"
         />
       </div>
     </section>
@@ -114,7 +114,7 @@
         <FolioNumber
           :initialValue="getFolioNumber"
           :isEditing="true"
-          @folioNumberChange="setFolioNumber($event)"
+          @update="setFolioNumber($event)"
         />
       </v-card>
     </section>
@@ -156,7 +156,6 @@ export default class IncorporationDefineCompany extends Mixins(CommonMixin, Enti
   @Getter isTypeBcomp!: boolean
   @Getter isTypeCoop!: boolean
   @Getter getDefineCompanyStep!: DefineCompanyIF
-  @Getter getValidateSteps!: boolean
   @Getter getShowErrors!: boolean
   @Getter getBusinessContact!: BusinessContactIF
   @Getter getFolioNumber!: string
@@ -183,7 +182,7 @@ export default class IncorporationDefineCompany extends Mixins(CommonMixin, Enti
   }
 
   /** Called when component is created. */
-  private created (): void {
+  created (): void {
     // temporarily ignore data changes
     this.setIgnoreChanges(true)
 
@@ -233,8 +232,11 @@ export default class IncorporationDefineCompany extends Mixins(CommonMixin, Enti
 
   private onNameTranslation (valid: boolean): void {
     this.hasValidNameTranslation = valid
-    this.setDefineCompanyStepValidity(this.businessContactFormValid && this.addressFormValid &&
-      this.hasValidNameTranslation)
+    this.setDefineCompanyStepValidity(
+      this.businessContactFormValid &&
+      this.addressFormValid &&
+      this.hasValidNameTranslation
+    )
   }
 
   private onCooperativeType (cooperativeType: CoopType): void {
@@ -244,20 +246,26 @@ export default class IncorporationDefineCompany extends Mixins(CommonMixin, Enti
 
   private onBusinessContactFormValidityChange (valid: boolean): void {
     this.businessContactFormValid = valid
-    this.setDefineCompanyStepValidity(this.businessContactFormValid && this.addressFormValid &&
-      this.hasValidNameTranslation)
+    this.setDefineCompanyStepValidity(
+      this.businessContactFormValid &&
+      this.addressFormValid &&
+      this.hasValidNameTranslation
+    )
   }
 
   private onAddressFormValidityChange (valid: boolean): void {
     this.addressFormValid = valid
-    this.setDefineCompanyStepValidity(this.businessContactFormValid && this.addressFormValid &&
-      this.hasValidNameTranslation)
+    this.setDefineCompanyStepValidity(
+      this.businessContactFormValid &&
+      this.addressFormValid &&
+      this.hasValidNameTranslation
+    )
   }
 
   @Watch('$route')
   private async scrollToInvalidComponent (): Promise<void> {
     if (this.getShowErrors && this.$route.name === RouteNames.INCORPORATION_DEFINE_COMPANY) {
-      // Scroll to invalid components.
+      // scroll to invalid components
       await Vue.nextTick()
       await this.validateAndScroll(
         {
@@ -280,6 +288,7 @@ export default class IncorporationDefineCompany extends Mixins(CommonMixin, Enti
 
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
+
 #incorporation-define-company {
   /* Set "header-counter" to 0 */
   counter-reset: header-counter;

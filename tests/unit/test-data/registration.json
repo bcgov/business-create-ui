@@ -1,0 +1,48 @@
+{
+	"filing": {
+		"header": {
+			"name": "registration",
+			"certifiedBy": "John Doe",
+			"date": "2021-10-26",
+			"folioNumber": "ABC-123",
+			"isFutureEffective": true
+		},
+		"registration": {
+      "startDate": "2001-02-03",
+			"nameRequest": {
+				"legalType": "SP",
+        "nrNumber": "NR1234567",
+        "legalName": "My Approved Name"
+			},
+      "businessAddress": {
+        "deliveryAddress": {
+          "addressCity": "Alpha",
+          "addressCountry": "CA",
+          "addressRegion": "BC",
+          "deliveryInstructions": "Delivery address",
+          "postalCode": "V1V 1V1",
+          "streetAddress": "111 First St",
+          "streetAddressAdditional": "Suite 1"
+        },
+        "mailingAddress": {
+          "addressCity": "Bravo",
+          "addressCountry": "CA",
+          "addressRegion": "BC",
+          "deliveryInstructions": "Mailing address",
+          "postalCode": "V2V 2V2",
+          "streetAddress": "222 Second St",
+          "streetAddressAdditional": "Suite 2"
+        }
+      },
+			"contactPoint": {
+				"email": "eleven@email.com",
+				"phone": "(111) 222-3333",
+        "extension": "444"
+			},
+      "parties": [],
+      "business": {
+        "identifier": "T123456789"
+			}
+		}
+	}
+}

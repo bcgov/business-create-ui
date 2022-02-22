@@ -1,9 +1,9 @@
-import { BaseAddressObjIF, BusinessContactIF } from '@/interfaces'
+import { BusinessContactIF, OfficeAddressIF } from '@/interfaces'
 
 export interface BusinessIF {
   businessId: string
   legalName: string
   businessContact: BusinessContactIF
-  officeAddress: BaseAddressObjIF
+  officeAddress: OfficeAddressIF
   foundingDate: string
 }

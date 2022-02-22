@@ -56,7 +56,7 @@ for (const mock of documentDeliveryCases) {
     it('displays email computed values', () => {
       wrapper = shallowWrapperFactory(DocumentDelivery, {
         registeredOfficeEmail: mock.businessContact.email,
-        userEmail: mock.tombstone.userEmail
+        completingPartyEmail: mock.tombstone.userEmail
       })
       expect(wrapper.find('#completing-party-email').text()).toBe(mock.tombstone.userEmail)
       expect(wrapper.find('#office-email').text()).toBe(mock.businessContact.email)
@@ -68,7 +68,7 @@ for (const mock of documentDeliveryCases) {
 
       wrapper = shallowWrapperFactory(DocumentDelivery, {
         registeredOfficeEmail: mock.businessContact.email,
-        userEmail: mock.tombstone.userEmail
+        completingPartyEmail: mock.tombstone.userEmail
       })
       expect(wrapper.find('#completing-party-email').text()).toBe('Not entered')
       expect(wrapper.find('#office-email').text()).toBe('Not entered')
@@ -77,7 +77,7 @@ for (const mock of documentDeliveryCases) {
     it('displays optionalEmail', () => {
       wrapper = shallowWrapperFactory(DocumentDelivery, {
         registeredOfficeEmail: mock.businessContact.email,
-        userEmail: mock.tombstone.userEmail,
+        completingPartyEmail: mock.tombstone.userEmail,
         editableCompletingParty: mock.optionalEmail
       })
       expect(wrapper.find('#optionalEmail').exists()).toBe(mock.optionalEmail)
@@ -86,7 +86,7 @@ for (const mock of documentDeliveryCases) {
     it('displays showCustodianEmail', () => {
       wrapper = shallowWrapperFactory(DocumentDelivery, {
         registeredOfficeEmail: mock.businessContact.email,
-        userEmail: mock.tombstone.userEmail,
+        completingPartyEmail: mock.tombstone.userEmail,
         showCustodianEmail: mock.custodianEmail
       })
       expect(wrapper.find('#custodian-email').exists()).toBe(mock.custodianEmail)

@@ -36,7 +36,7 @@ export default class CooperativeType extends Mixins(EnumMixin) {
   }
 
   @Prop({ default: false })
-  private readonly showErrors: boolean
+  readonly showErrors: boolean
 
   // Global getter
   @Getter getCooperativeType!: CoopType

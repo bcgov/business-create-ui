@@ -24,6 +24,6 @@ describe('Stepper component', () => {
   })
 
   it('renders the component properly', () => {
-    // FUTURE
+    expect(wrapper.find('#step-buttons-container').exists()).toBe(true)
   })
 })

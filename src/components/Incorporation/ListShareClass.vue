@@ -175,7 +175,6 @@
 <script lang="ts">
 // Libraries
 import { Component, Prop, Vue, Emit } from 'vue-property-decorator'
-import { Getter } from 'vuex-class'
 import 'array.prototype.move'
 
 // Enums
@@ -184,18 +183,16 @@ import { RouteNames } from '@/enums'
 @Component({})
 export default class ListShareClass extends Vue {
   @Prop({ default: () => [] })
-  private readonly shareClasses: any
+  readonly shareClasses: any
 
   @Prop()
-  private readonly componentDisabled: boolean
+  readonly componentDisabled: boolean
 
   @Prop()
-  private readonly isSummary: boolean
+  readonly isSummary: boolean
 
   @Prop({ default: false })
-  private readonly showErrorSummary: boolean
-
-  @Getter getValidateSteps!: boolean
+  readonly showErrorSummary: boolean
 
   // Enum for template
   readonly RouteNames = RouteNames

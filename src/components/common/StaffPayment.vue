@@ -118,7 +118,7 @@ export default class StaffPayment extends Vue {
 }
 
 ::v-deep .side-label {
-  font-size: 1rem;
+  font-size: $px-16;
   font-weight: bold;
   color: $gray9;
 }

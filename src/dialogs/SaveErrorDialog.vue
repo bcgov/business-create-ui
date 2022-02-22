@@ -73,23 +73,23 @@ export default class SaveErrorDialog extends Vue {
   @Getter isRoleStaff!: boolean
 
   /** Prop containing filing name. */
-  @Prop({ default: 'Application' }) private readonly filingName: string
+  @Prop({ default: 'Application' }) readonly filingName: string
 
   /** Prop to display the dialog. */
-  @Prop() private readonly dialog: boolean
+  @Prop() readonly dialog: boolean
 
   /** Prop to provide attachment selector. */
-  @Prop() private readonly attach: string
+  @Prop() readonly attach: string
 
   /** Prop containing error messages. */
-  @Prop({ default: () => [] }) private readonly errors: any[]
+  @Prop({ default: () => [] }) readonly errors: any[]
 
   /** Prop containing warning messages. */
-  @Prop({ default: () => [] }) private readonly warnings: any[]
+  @Prop({ default: () => [] }) readonly warnings: any[]
 
   // Pass click events to parent.
-  @Emit() private exit () { }
-  @Emit() private okay () { }
+  @Emit() private exit () {}
+  @Emit() private okay () {}
 
   /** The number of errors in the passed-in array. */
   private get numErrors (): number {

@@ -65,10 +65,10 @@ export default class TransactionalFolioNumber extends Mixins(CommonMixin) {
   }
 
   @Emit('change')
-  private emitChange (change: string): void { }
+  private emitChange (change: string): void {}
 
   @Emit('valid')
-  private emitValid (valid: boolean): void { }
+  private emitValid (valid: boolean): void {}
 }
 </script>
 

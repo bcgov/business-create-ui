@@ -25,7 +25,7 @@ import {
   CreateResolutionIF
 } from '@/interfaces'
 
-// State model example
+// State model interface
 export interface StateModelIF {
   currentJsDate: Date
   tombstone: TombstoneIF
@@ -61,7 +61,7 @@ export interface StateModelIF {
   feePrices: Array<FeesIF>
   registration: RegistrationStateIF
 
-  // staffPaymentStep and courtOrder are common and for now it is only used in dissolution
+  // staffPaymentStep and courtOrder are common and for now are only used in dissolution
   staffPaymentStep: StaffPaymentStepIF
   courtOrderStep: CourtOrderStepIF
 }
