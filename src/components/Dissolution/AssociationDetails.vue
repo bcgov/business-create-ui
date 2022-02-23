@@ -69,7 +69,7 @@
         :disableActions="isSummary"
         :customMsg="contactInfoMsg"
         editLabel="Change"
-        @update="onContactInfoChange($event)"
+        @contactInfoChange="onContactInfoChange($event)"
       />
     </div>
   </v-card>
