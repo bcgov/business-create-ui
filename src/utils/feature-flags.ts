@@ -11,7 +11,8 @@ declare const window: any
 const defaultFlagSet: LDFlagSet = {
   'supported-filings': [
     FilingTypes.INCORPORATION_APPLICATION,
-    FilingTypes.VOLUNTARY_DISSOLUTION
+    FilingTypes.VOLUNTARY_DISSOLUTION,
+    FilingTypes.REGISTRATION
   ]
 }
 
