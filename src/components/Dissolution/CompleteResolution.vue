@@ -497,19 +497,19 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin, E
   ]
 
   private get isResolutionDateValid (): boolean {
-    return this.$refs.resolutionDatePickerRef.isDateValid()
+    return this.$refs.resolutionDatePickerRef?.isDateValid()
   }
 
   private get isResolutionTextValid (): boolean {
-    return this.$refs.resolutionTextRef.valid
+    return this.$refs.resolutionTextRef?.valid
   }
 
   private get isSigningDateValid (): boolean {
-    return this.$refs.signatureDatePickerRef.isDateValid()
+    return this.$refs.signatureDatePickerRef?.isDateValid()
   }
 
   private get isSigningPersonValid (): boolean {
-    return this.$refs.signingPersonGivenNameRef.valid &&
+    return this.$refs.signingPersonGivenNameRef?.valid &&
       this.$refs.signingPersonMiddleNameRef.valid &&
       this.$refs.signingPersonFamilyNameRef.valid
   }
@@ -520,10 +520,10 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin, E
 
   private isResolutionValid (): boolean {
     if (this.isTypeCoop) {
-      return this.$refs.resolutionTextRef.valid &&
-        this.$refs.resolutionDatePickerRef.isDateValid() &&
+      return this.$refs.resolutionTextRef?.valid &&
+        this.$refs.resolutionDatePickerRef?.isDateValid() &&
         this.isSigningPersonValid &&
-        this.$refs.signatureDatePickerRef.isDateValid() &&
+        this.$refs.signatureDatePickerRef?.isDateValid() &&
         this.$refs.confirmResolutionChkRef?.valid
     }
     return this.$refs.confirmResolutionChkRef?.valid
