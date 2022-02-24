@@ -387,7 +387,7 @@ export default class App extends Mixins(
       if (this.getHaveChanges) {
         event.preventDefault()
         // NB: custom text is not supported in all browsers
-        event.returnValue = 'You have unsaved changes. Are you sure you want to leave?'
+        event.returnValue = 'You have unsaved changes. Do you want to exit?'
       }
     }
 
@@ -472,7 +472,7 @@ export default class App extends Mixins(
     // open confirmation dialog and wait for response
     this.$refs.confirm.open(
       'Unsaved Changes',
-      'You have unsaved changes in your Incorporation Application. Do you want to exit?',
+      'You have unsaved changes. Do you want to exit?',
       {
         width: '45rem',
         persistent: true,

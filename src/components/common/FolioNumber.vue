@@ -19,7 +19,7 @@
         <v-form v-model="formValid" ref="form">
           <v-text-field
             id="folio-number-text-field"
-            label="Folio or Reference Number"
+            label="Folio or Reference Number (Optional)"
             persistent-hint
             v-model="folioNumber"
             filled

@@ -17,15 +17,17 @@
             {{ getNameRequestNumber }}
           </div>
 
-          <div id="entity-business-email">
-            <span class="font-weight-bold business-info-label">Email:</span>
-            {{ getEmail || 'Not Available' }}
-          </div>
+          <template v-if="!isRegistrationFiling">
+            <div id="entity-business-email">
+              <span class="font-weight-bold business-info-label">Email:</span>
+              {{ getEmail || 'Not Available' }}
+            </div>
 
-          <div id="entity-business-phone">
-            <span class="font-weight-bold business-info-label">Phone:</span>
-            {{ getPhone || 'Not Available' }}
-          </div>
+            <div id="entity-business-phone">
+              <span class="font-weight-bold business-info-label">Phone:</span>
+              {{ getPhone || 'Not Available' }}
+            </div>
+          </template>
         </v-col>
       </v-row>
     </v-container>
@@ -58,32 +60,33 @@ export default class EntityInfo extends Mixins(EnumMixin) {
   @Getter getFilingType!: FilingTypes
   @Getter isEntityType!: boolean
   @Getter isIncorporationFiling!: boolean
+  @Getter isRegistrationFiling!: boolean
 
   /** The entity application title.  */
-  private get entityTitle (): string {
+  get entityTitle (): string {
     return `${this.getCorpTypeDescription(this.getEntityType)} ${this.getFilingName}`
   }
 
   /** The numbered entity name. */
-  private get getNumberedEntityName (): string {
+  get getNumberedEntityName (): string {
     return `${this.getCorpTypeNumberedDescription(this.getEntityType)}`
   }
 
-  private get getEmail (): string {
+  get getEmail (): string {
     if (this.isIncorporationFiling) {
       return this.getUserEmail
     }
     return this.getBusinessContact.email
   }
 
-  private get getPhone (): string {
+  get getPhone (): string {
     if (this.isIncorporationFiling) {
       return this.getUserPhone
     }
     return this.getBusinessContact.phone
   }
 
-  private get legalName (): string {
+  get legalName (): string {
     switch (this.getFilingType) {
       case FilingTypes.VOLUNTARY_DISSOLUTION:
         return this.getBusinessLegalName

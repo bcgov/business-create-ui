@@ -58,13 +58,14 @@
     </section>
 
     <!-- Fee Acknowledgement-->
-    <section id="fee-acknowledgement-section" class="mt-10">
+    <!-- COMMENTED OUT FOR NOW, PER LINDA -->
+    <!-- <section id="fee-acknowledgement-section" class="mt-10">
       <header>
         <h2>Fee Acknowledgement</h2>
         <p class="mt-4 mb-6"></p>
       </header>
       <FeeAcknowledgement />
-    </section>
+    </section> -->
 
     <!-- Staff Payment -->
     <section id="staff-payment-section" class="mt-10" v-if="isRoleStaff">

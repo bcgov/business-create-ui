@@ -606,7 +606,7 @@ describe('App component', () => {
     const dialog = wrapper.find('.confirm-dialog')
     expect(dialog.classes('v-dialog--active')).toBe(true)
     expect(dialog.isVisible()).toBe(true)
-    expect(dialog.text()).toContain('You have unsaved changes')
+    expect(dialog.text()).toContain('You have unsaved changes.')
 
     // verify no redirection
     expect(window.location.assign).not.toHaveBeenCalled()

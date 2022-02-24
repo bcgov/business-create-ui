@@ -577,7 +577,9 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin, E
           ]
         }
     }
-    this.setResolutionStepValidationDetail(validationDetail)
+    if (validationDetail) {
+      this.setResolutionStepValidationDetail(validationDetail)
+    }
   }
 
   private async onResolutionConfirmedChange (resolutionConfirmed: boolean): Promise<void> {
@@ -605,6 +607,7 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin, E
   }
 
   async mounted (): Promise<void> {
+    // wait for components to load/stabilize then update validation state in store
     await Vue.nextTick()
     this.updateResolutionStepValidationDetail()
   }

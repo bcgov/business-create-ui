@@ -37,7 +37,7 @@
       <header id="business-contact-header">
         <h2>Business Contact Information</h2>
         <p class="mt-4">
-          Enter the contact information for the business. The Corporate Registry will use this to communicate
+          Enter the contact information for the business. The BC Business Registry will use this to communicate
           with the business in the future, including sending registration documents and notifications.
         </p>
       </header>
