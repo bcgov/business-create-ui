@@ -94,22 +94,16 @@
 </template>
 
 <script lang="ts">
-// Libraries
 import { Component, Mixins, Emit } from 'vue-property-decorator'
 import { Getter, Action } from 'vuex-class'
 import { navigate } from '@/utils'
-
-// Interfaces
 import { ActionBindingIF } from '@/interfaces'
-
-// Mixins
-import { DateMixin, FilingTemplateMixin, LegalApiMixin, NameRequestMixin } from '@/mixins'
-
-// Enums
+import { DateMixin, FilingTemplateMixin, NameRequestMixin } from '@/mixins'
+import { LegalServices } from '@/services'
 import { FilingTypes, NameRequestStates, RouteNames } from '@/enums'
 
 @Component({})
-export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, LegalApiMixin, NameRequestMixin) {
+export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, NameRequestMixin) {
   @Getter getEntityIdentifier!: string
   @Getter getFilingType!: string
   @Getter isApplicationValid!: boolean
@@ -162,7 +156,7 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
       const filing = await this.prepareFiling()
 
       // Save draft filing
-      await this.updateFiling(this.getEntityIdentifier, filing, true)
+      await LegalServices.updateFiling(this.getEntityIdentifier, filing, true)
 
       // clear flag
       this.setHaveChanges(false)
@@ -188,7 +182,7 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
       const filing = await this.prepareFiling()
 
       // Save draft filing
-      await this.updateFiling(this.getEntityIdentifier, filing, true)
+      await LegalServices.updateFiling(this.getEntityIdentifier, filing, true)
 
       // clear flag
       this.setHaveChanges(false)
@@ -246,7 +240,7 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
         const filing = await this.prepareFiling()
 
         // Save filing
-        filingComplete = await this.updateFiling(this.getEntityIdentifier, filing, false)
+        filingComplete = await LegalServices.updateFiling(this.getEntityIdentifier, filing, false)
 
         // clear flag
         this.setHaveChanges(false)
@@ -298,7 +292,7 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Lega
 
   /** Fetches NR and validates it. */
   private async validateNameRequest (nrNumber: string): Promise<void> {
-    let nrResponse = await this.fetchNameRequest(nrNumber).catch(error => {
+    let nrResponse = await LegalServices.fetchNameRequest(nrNumber).catch(error => {
       this.$root.$emit('name-request-retrieve-error')
       throw new Error(error)
     })

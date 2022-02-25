@@ -85,8 +85,10 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Getter getTransactionalFolioNumber!: string
   @Getter isPremiumAccount!: boolean
   @Getter getRegistration!: RegistrationStateIF
+  @Getter getFilingId!: number
 
   @Action setAffidavit!: ActionBindingIF
+  @Action setFilingId!: ActionBindingIF
   @Action setEntityType!: ActionBindingIF
   @Action setBusinessAddress!: ActionBindingIF
   @Action setBusinessContact!: ActionBindingIF
@@ -130,6 +132,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
         name: INCORPORATION_APPLICATION,
         certifiedBy: this.getCertifyState.certifiedBy,
         date: this.getCurrentDate,
+        filingId: this.getFilingId,
         folioNumber: this.getFolioNumber,
         isFutureEffective: this.getEffectiveDateTime.isFutureEffective
       },
@@ -207,6 +210,9 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     // ref: https://www.typescriptlang.org/docs/handbook/generics.html
 
     // NB: don't parse Name Request object -- NR is fetched from namex/NRO instead
+
+    // save filing id
+    this.setFilingId(+draftFiling.header.filingId)
 
     // restore Entity Type
     this.setEntityType(draftFiling.incorporationApplication.nameRequest.legalType)
@@ -324,6 +330,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
         name: REGISTRATION,
         certifiedBy: this.getCertifyState.certifiedBy,
         date: this.getCurrentDate,
+        filingId: this.getFilingId,
         folioNumber: this.getFolioNumber, // default FN; may be overwritten by staff BCOL FN
         isFutureEffective: false
       },
@@ -375,6 +382,9 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
    */
   parseRegistrationDraft (draftFiling: any): void {
     // NB: don't parse Name Request object -- NR is fetched from namex/NRO instead
+
+    // save filing id
+    this.setFilingId(+draftFiling.header.filingId)
 
     // restore Entity Type
     this.setEntityType(draftFiling.registration.nameRequest.legalType)
@@ -439,6 +449,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
         name: FilingTypes.VOLUNTARY_DISSOLUTION,
         certifiedBy: this.getCertifyState.certifiedBy,
         date: this.getCurrentDate,
+        filingId: this.getFilingId,
         folioNumber: this.getFolioNumber, // default FN; may be overwritten by Transactional FN or staff BCOL FN
         isFutureEffective: false
       },
@@ -542,6 +553,9 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
    * @param draftFiling the filing body to parse
    */
   parseDissolutionDraft (draftFiling: any): void {
+    // save filing id
+    this.setFilingId(+draftFiling.header.filingId)
+
     // restore Business data
     this.setEntityType(draftFiling.business.legalType)
     this.setLegalName(draftFiling.business.legalName)

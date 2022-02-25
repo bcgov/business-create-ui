@@ -1,35 +1,22 @@
 // Libraries
 import { axios } from '@/utils'
-import { Component, Vue } from 'vue-property-decorator'
-import { Action, Getter } from 'vuex-class'
 import { NOT_FOUND } from 'http-status-codes'
-
-// Interfaces
-import {
-  ActionBindingIF, DissolutionFilingIF, IncorporationFilingIF, RegistrationFilingIF
-} from '@/interfaces'
+import { DissolutionFilingIF, IncorporationFilingIF, RegistrationFilingIF } from '@/interfaces'
 import { FilingTypes } from '@/enums'
 
 /**
- * Mixin that provides integration with the Legal API.
+ * Class that provides integration with the Legal API.
  */
-@Component({})
-export default class LegalApiMixin extends Vue {
-  @Getter getBusinessId!: string
-  @Getter getFilingId!: number
-  @Getter getTempId!: string
-
-  @Action setFilingId!: ActionBindingIF
-  @Action setFilingType!: ActionBindingIF
-
+export default class LegalServices {
   /**
    * Fetches the draft filing.
    * This is a unique request using the temp reg number.
    * This assumes a single filing is returned.
+   * @param id the temp reg number
    * @returns a promise to return the draft filing, or null if not found
    */
-  async fetchDraftApplication (): Promise<any> {
-    const url = `businesses/${this.getTempId}/filings`
+  static async fetchDraftApplication (id: string): Promise<IncorporationFilingIF | RegistrationFilingIF> {
+    const url = `businesses/${id}/filings`
     return axios.get(url)
       .then(response => {
         // look at only the first filing
@@ -40,32 +27,26 @@ export default class LegalApiMixin extends Vue {
         if (!filing || !filingName || !filingId) {
           throw new Error('Invalid API response')
         }
-        // save Filing ID from the header
-        this.setFilingId(filingId)
-        this.setFilingType(filingName)
 
         switch (filingName) {
           case FilingTypes.INCORPORATION_APPLICATION:
             return this.formatEmptyIaFiling(filing)
           case FilingTypes.REGISTRATION:
             return this.formatEmptyRegFiling(filing)
+          default:
+            throw new Error('Invalid filing name')
         }
-      })
-      .catch((error) => {
-        if (error?.response?.status === NOT_FOUND) {
-          return null // Draft not found
-        }
-        throw error
       })
   }
 
   /**
    * Fetches a draft dissolution filing.
+   * @param id the business id
    * @returns a promise to return the draft filing, or null if not found
    */
-  async fetchDraftDissolution (): Promise<DissolutionFilingIF> {
+  static async fetchDraftDissolution (id: string): Promise<DissolutionFilingIF> {
     // get the draft filing from the tasks endpoint
-    const url = `businesses/${this.getBusinessId}/tasks`
+    const url = `businesses/${id}/tasks`
     return axios.get(url)
       .then(response => {
         const filing = response?.data?.tasks?.
@@ -77,8 +58,6 @@ export default class LegalApiMixin extends Vue {
           throw new Error('Invalid API response')
         }
 
-        // save Filing ID from the header
-        this.setFilingId(filingId)
         return filing
       })
   }
@@ -90,9 +69,13 @@ export default class LegalApiMixin extends Vue {
    * @param isDraft boolean indicating whether to save draft or complete the filing
    * @returns a promise to return the updated filing
    */
-  async updateFiling (id: string, filing: IncorporationFilingIF | DissolutionFilingIF, isDraft: boolean): Promise<any> {
+  static async updateFiling (
+    id: string,
+    filing: IncorporationFilingIF | DissolutionFilingIF,
+    isDraft: boolean
+  ): Promise<any> {
     if (!filing) throw new Error('updateFiling(), invalid filing')
-    const filingId = this.getFilingId
+    const filingId = +filing.header?.filingId || 0
     if (!filingId) throw new Error('updateFiling(), invalid filing id')
 
     // put updated filing to filings endpoint
@@ -119,7 +102,7 @@ export default class LegalApiMixin extends Vue {
    * @param nrNumber the name request number (eg, NR 1234567)
    * @returns a promise to return the NR data, or null if not found
    */
-  fetchNameRequest (nrNumber: string): Promise<any> {
+  static async fetchNameRequest (nrNumber: string): Promise<any> {
     if (!nrNumber) throw new Error('Invalid parameter \'nrNumber\'')
 
     const url = `nameRequests/${nrNumber}`
@@ -146,21 +129,25 @@ export default class LegalApiMixin extends Vue {
     * @param filing the filing fetched from legal-api
     * @returns the filing in safe-empty state if applicable
   */
-  formatEmptyIaFiling (filing: any): IncorporationFilingIF {
+  private static formatEmptyIaFiling (filing: any): IncorporationFilingIF {
     let toReturn = filing
     if (toReturn.incorporationApplication) {
+      // set offices
       if (!toReturn.incorporationApplication?.offices) {
         toReturn.incorporationApplication.offices = []
       }
+      // set contact point
       if (!toReturn.incorporationApplication?.contactPoint) {
         toReturn.incorporationApplication.contactPoint = {
           email: '',
           phone: ''
         }
       }
+      // set parties
       if (!toReturn.incorporationApplication?.parties) {
         toReturn.incorporationApplication.parties = []
       }
+      // set share classes
       if (!toReturn.incorporationApplication?.shareClasses) {
         toReturn.incorporationApplication.shareClasses = []
       }
@@ -176,18 +163,21 @@ export default class LegalApiMixin extends Vue {
    * @param filing the filing fetched from legal-api
    * @returns the filing in safe-empty state if applicable
    */
-  formatEmptyRegFiling (filing: any): RegistrationFilingIF {
+  private static formatEmptyRegFiling (filing: any): RegistrationFilingIF {
     let toReturn = filing
     if (toReturn.registration) {
+      // set offices
       if (!toReturn.registration?.offices) {
         toReturn.registration.offices = []
       }
+      // set contact point
       if (!toReturn.registration?.contactPoint) {
         toReturn.registration.contactPoint = {
           email: '',
           phone: ''
         }
       }
+      // set parties
       if (!toReturn.registration?.parties) {
         toReturn.registration.parties = []
       }

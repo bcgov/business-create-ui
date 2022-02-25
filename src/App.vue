@@ -167,7 +167,6 @@ import {
   DateMixin,
   EnumMixin,
   FilingTemplateMixin,
-  LegalApiMixin,
   NameRequestMixin
 } from '@/mixins'
 import {
@@ -191,7 +190,7 @@ import {
   IncorporationResources,
   RegistrationResources
 } from '@/resources'
-import { AuthServices, PayServices } from '@/services'
+import { AuthServices, LegalServices, PayServices } from '@/services'
 
 // Enums and Constants
 import {
@@ -225,7 +224,6 @@ export default class App extends Mixins(
   DateMixin,
   EnumMixin,
   FilingTemplateMixin,
-  LegalApiMixin,
   NameRequestMixin
 ) {
   // Refs
@@ -260,6 +258,7 @@ export default class App extends Mixins(
   @Action setTempId!: ActionBindingIF
   @Action setShowErrors!: ActionBindingIF
   @Action setFeePrices!: ActionBindingIF
+  @Action setFilingType!: ActionBindingIF
 
   // Local properties
   private accountAuthorizationDialog: boolean = false
@@ -629,7 +628,7 @@ export default class App extends Mixins(
 
     // fetch draft filing
     // NB: will throw if API error
-    let draftFiling = await this.fetchDraftDissolution()
+    let draftFiling = await LegalServices.fetchDraftDissolution(this.getBusinessId)
 
     // check if filing is in a valid state to be edited
     this.invalidDissolutionDialog = !this.hasValidFilingState(draftFiling)
@@ -659,7 +658,9 @@ export default class App extends Mixins(
 
     // fetch draft filing
     // NB: will throw if API error
-    let draftFiling = await this.fetchDraftApplication()
+    let draftFiling = await LegalServices.fetchDraftApplication(this.getTempId)
+
+    this.setFilingType(draftFiling.header.name) // either IA or reg
 
     // check if filing is in a valid state to be edited
     if (!this.hasValidFilingState(draftFiling)) return null
@@ -713,7 +714,7 @@ export default class App extends Mixins(
       const nrNumber = filing[filing.header?.name].nameRequest.nrNumber
 
       // fetch NR data
-      const nrResponse = await this.fetchNameRequest(nrNumber).catch(error => {
+      const nrResponse = await LegalServices.fetchNameRequest(nrNumber).catch(error => {
         console.log('NR error =', error) // eslint-disable-line no-console
         this.nameRequestInvalidErrorDialog = true
       })
