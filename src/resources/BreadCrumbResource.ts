@@ -53,6 +53,13 @@ export function getMyBusinessRegistryBreadcrumb (): BreadcrumbIF {
   }
 }
 
+export function getSbcStaffDashboardBreadcrumb (): BreadcrumbIF {
+  return {
+    text: 'Staff Dashboard',
+    href: `${sessionStorage.getItem('REGISTRY_HOME_URL')}dashboard/${getParams()}`
+  }
+}
+
 export function getStaffDashboardBreadcrumb (): BreadcrumbIF {
   return {
     text: 'Staff Dashboard',

@@ -753,6 +753,16 @@ describe('Dissolution BEN - External User', () => {
         }
       })))
 
+    // GET auth info
+    get.withArgs('https://auth.api.url/entities/BC0870803')
+      .returns(new Promise((resolve) => resolve({
+        data:
+        {
+          contacts: [],
+          folioNumber: null
+        }
+      })))
+
     // GET authorizations (role)
     get.withArgs('https://auth.api.url/entities/BC0870803/authorizations')
       .returns(new Promise((resolve) => resolve({
@@ -995,6 +1005,16 @@ describe('Dissolution BEN - Staff User', () => {
             street: '1234 Some Street',
             streetAdditional: 'Suite ABC'
           }
+        }
+      })))
+
+    // GET auth info
+    get.withArgs('https://auth.api.url/entities/BC0870803')
+      .returns(new Promise((resolve) => resolve({
+        data:
+        {
+          contacts: [],
+          folioNumber: null
         }
       })))
 
@@ -1422,6 +1442,16 @@ describe('Dissolution COOP - External User', () => {
             street: '1234 Some Street',
             streetAdditional: 'Suite ABC'
           }
+        }
+      })))
+
+    // GET auth info
+    get.withArgs('https://auth.api.url/entities/CP1002398')
+      .returns(new Promise((resolve) => resolve({
+        data:
+        {
+          contacts: [],
+          folioNumber: null
         }
       })))
 
@@ -1858,6 +1888,16 @@ describe('Dissolution COOP - Staff User', () => {
             street: '1234 Some Street',
             streetAdditional: 'Suite ABC'
           }
+        }
+      })))
+
+    // GET auth info
+    get.withArgs('https://auth.api.url/entities/CP1002398')
+      .returns(new Promise((resolve) => resolve({
+        data:
+        {
+          contacts: [],
+          folioNumber: null
         }
       })))
 

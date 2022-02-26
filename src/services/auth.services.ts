@@ -8,68 +8,69 @@ import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
  */
 export default class AuthServices {
   /**
-   * Fetches authorizations.
+   * Fetches authorizations of the specified entity.
    * @param id the temp or business identifier (eg, T1234567 or BC1219948)
    * @returns a promise to return the roles object
    */
   static async fetchAuthorizations (id: string): Promise<any> {
-    if (!id) throw new Error('Invalid parameter \'id\'')
+    if (!id) throw new Error('Invalid id')
 
     const authApiUrl = sessionStorage.getItem(SessionStorageKeys.AuthApiUrl)
     const url = `${authApiUrl}entities/${id}/authorizations`
 
-    return axios.get(url)
-      .then(response => {
-        if (response?.data?.roles) return response.data.roles
-        throw new Error('Invalid response data ')
-      })
+    return axios.get(url).then(response => {
+      if (response?.data?.roles) return response.data.roles
+      throw new Error('Invalid response data ')
+    })
   }
 
   /**
-   * Fetches the auth info of the current business.
+   * Fetches auth info of the specified business.
+   * @param businessId the business id
    * @returns a promise to return the data
    */
   static async fetchAuthInfo (businessId: string): Promise<AuthInformationIF> {
     if (!businessId) throw new Error('Invalid business id')
 
-    const url = `entities/${businessId}`
-    const authUrl = sessionStorage.getItem('AUTH_API_URL')
-    const config = { baseURL: authUrl }
+    const authApiUrl = sessionStorage.getItem(SessionStorageKeys.AuthApiUrl)
+    const url = `${authApiUrl}entities/${businessId}`
 
-    return axios.get(url, config)
-      .then(response => {
-        if (response?.data) {
-          return {
-            contacts: response.data.contacts,
-            folioNumber: response.data.folioNumber
-          }
+    return axios.get(url).then(response => {
+      if (response?.data) {
+        return {
+          contacts: response.data.contacts,
+          folioNumber: response.data.folioNumber
         }
-        throw new Error('Invalid response data ')
-      })
+      }
+      throw new Error('Invalid response data ')
+    })
   }
 
   /**
-   * Fetches current user's info.
+   * Fetches user info of the current user.
    * @returns a promise to return the user info object
    */
   static async fetchUserInfo (): Promise<any> {
     const authApiUrl = sessionStorage.getItem(SessionStorageKeys.AuthApiUrl)
     const url = `${authApiUrl}users/@me`
-    return axios.get(url)
-      .then(response => {
-        if (response?.data) return response.data
-        throw new Error('Invalid response data ')
-      })
+
+    return axios.get(url).then(response => {
+      if (response?.data) return response.data
+      throw new Error('Invalid response data ')
+    })
   }
 
   /**
-   * Fetches specified org's info.
-   * @param orgId the id of the current Org
+   * Fetches org info of specified organization.
+   * @param orgId the org id (aka account id)
    * @returns a promise to return the org info object
    */
   static async fetchOrgInfo (orgId: number): Promise<any> {
+    if (!orgId) throw new Error('Invalid org id')
+
     const authApiUrl = sessionStorage.getItem(SessionStorageKeys.AuthApiUrl)
     const url = `${authApiUrl}orgs/${orgId}`
+
     return axios.get(url)
       .then(response => {
         if (response?.data) return response.data
@@ -78,12 +79,14 @@ export default class AuthServices {
   }
 
   /**
-   * Updates the businesses contact information.
-   * @param businessId The business identifier.
-   * @param contactInfo the contact information object.
+   * Updates contact info of the specified business.
+   * @param businessId the business id
+   * @param contactInfo the contact info object
+   * @returns a promise to return the business contact info object
    */
   static async updateContactInfo (businessId: string, contactInfo: BusinessContactIF): Promise<BusinessContactIF> {
     if (!businessId) throw new Error('Invalid business id')
+    if (!contactInfo) throw new Error('Invalid contact info')
 
     const data = {
       email: contactInfo.email,
