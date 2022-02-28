@@ -17,7 +17,8 @@
             {{ getNameRequestNumber }}
           </div>
 
-          <template v-if="!isRegistrationFiling">
+          <div v-if="isRegistrationFiling" class="mt-10" />
+          <template v-else>
             <div id="entity-business-email">
               <span class="font-weight-bold business-info-label">Email:</span>
               {{ getEmail || 'Not Available' }}

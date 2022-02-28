@@ -699,10 +699,8 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin, E
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
 
-header {
-  p {
-    padding-top: 0.5rem;
-  }
+header p {
+  padding-top: 0.5rem;
 }
 
 ul {

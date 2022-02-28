@@ -36,14 +36,14 @@
       <header>
         <h2>Certify</h2>
         <p class="mt-4 mb-6">
-          Confirm the legal name of the person authorized to complete and submit this application.
+          Confirm the legal name of the person authorized to complete and submit this registration.
         </p>
       </header>
       <Certify
         :class="{ 'invalid-section': isCertifyInvalid }"
         :currentDate="getCurrentDate"
         :certifiedBy="getCertifyState.certifiedBy"
-        :entityDisplay="getCompletingPartyStatement.entityDisplay"
+        :entityDisplay="getCompletingPartyStatement.entityDisplay + ' applicant'"
         :isCertified="getCertifyState.valid"
         :statements="getCompletingPartyStatement.certifyStatements"
         :message="getCompletingPartyStatement.certifyClause"

@@ -120,7 +120,7 @@ export default class DefineRegistrationSummary extends Mixins(DateMixin, EntityF
 }
 
 .section-container {
- padding: 1.5rem
+ padding: 1.5rem;
 }
 
 .define-registration-header {
@@ -135,11 +135,12 @@ export default class DefineRegistrationSummary extends Mixins(DateMixin, EntityF
 
 .company-name {
   font-size: $px-22;
-  font-weight: bold
+  font-weight: bold;
+  color: $gray9;
 }
 
 .company-type{
-  padding-top: 0.5rem
+  padding-top: 0.5rem;
 }
 
 .v-icon.mdi-information-outline {

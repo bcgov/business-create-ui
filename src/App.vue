@@ -937,8 +937,17 @@ export default class App extends Mixins(
 </script>
 
 <style lang="scss" scoped>
+// display drop-down menu on top of stepper and fee summary
+::v-deep .app-header {
+  z-index: 3;
+}
+
 aside {
   position: relative;
-  z-index: 10; // on top of stepper
+  z-index: 2; // on top of stepper
+}
+
+.vue-affix {
+  width: 282px;
 }
 </style>

@@ -4,51 +4,35 @@
     <template v-if="!isEditing">
       <v-row no-gutters id="summary-registered-address">
         <v-col md="3" class="mr-n1"><label><strong>Registered Office</strong></label></v-col>
-        <v-col md="4">
+        <v-col md="4" class="pr-4">
           <label class="mailing-address-header"><strong>Mailing Address</strong></label>
-          <mailing-address
-            v-if="!isEmptyAddress(mailingAddress)"
-            :address="mailingAddress"
-            :editing="false"
-          />
-          <div v-else>(Not entered)</div>
+          <div v-if="isEmptyAddress(mailingAddress)">(Not entered)</div>
+          <MailingAddress v-else :address="mailingAddress" :editing="false" />
         </v-col>
 
-        <v-col md="4">
+        <v-col md="4" class="pr-4">
           <label class="delivery-address-header"><strong>Delivery Address</strong></label>
-          <delivery-address
-            v-if="!isEmptyAddress(deliveryAddress) && !inheritMailingAddress"
-            :address="deliveryAddress"
-            :editing="false"
-          />
-          <div v-else-if="isEmptyAddress(deliveryAddress)">(Not entered)</div>
-          <div v-else>Same as Mailing Address</div>
+          <div v-if="isEmptyAddress(deliveryAddress)">(Not entered)</div>
+          <div v-else-if="isSame(mailingAddress, deliveryAddress)">Same as Mailing Address</div>
+          <DeliveryAddress v-else :address="deliveryAddress" :editing="false" />
         </v-col>
       </v-row>
 
       <v-row no-gutters id="summary-records-address" v-if="!entityFilter(CorpTypeCd.COOP)" class="mt-4">
         <v-col md="3" class="mr-n1"><label><strong>Records Office</strong></label></v-col>
-        <v-col md="4">
+        <v-col md="4" class="pr-4">
           <label class="mailing-address-header"><strong>Mailing Address</strong></label>
-          <mailing-address
-            v-if="!inheritRegisteredAddress && !isEmptyAddress(recMailingAddress)"
-            :address="recMailingAddress"
-            :editing="false"
-          />
-          <div v-else-if="isEmptyAddress(recMailingAddress)">(Not entered)</div>
-          <div v-else>Same as Registered Office</div>
+          <div v-if="isEmptyAddress(recMailingAddress)">(Not entered)</div>
+          <div v-else-if="isSame(mailingAddress, recMailingAddress)">Same as Registered Office</div>
+          <MailingAddress v-else :address="recMailingAddress" :editing="false" />
         </v-col>
 
-        <v-col md="4">
+        <v-col md="4" class="pr-4">
           <label class="delivery-address-header"><strong>Delivery Address</strong></label>
-          <delivery-address
-            v-if="!inheritRecMailingAddress && !inheritRegisteredAddress && !isEmptyAddress(recDeliveryAddress)"
-            :address="recDeliveryAddress"
-            :editing="false"
-          />
-          <div v-else-if="isEmptyAddress(recDeliveryAddress)">(Not entered)</div>
-          <div v-else-if="inheritRegisteredAddress">Same as Registered Office</div>
-          <div v-else>Same as Mailing Address</div>
+          <div v-if="isEmptyAddress(recDeliveryAddress)">(Not entered)</div>
+          <div v-else-if="isSame(deliveryAddress, recDeliveryAddress)">Same as Registered Office</div>
+          <div v-else-if="isSame(recMailingAddress, recDeliveryAddress)">Same as Mailing Address</div>
+          <DeliveryAddress v-else :address="recDeliveryAddress" :editing="false" />
         </v-col>
       </v-row>
     </template>
@@ -642,5 +626,10 @@ label {
 .mailing-address-header,
 .delivery-address-header {
   font-size: $px-14;
+}
+
+// italicize delivery instructions
+::v-deep .base-address .address-block .delivery-instructions {
+  font-style: italic;
 }
 </style>
