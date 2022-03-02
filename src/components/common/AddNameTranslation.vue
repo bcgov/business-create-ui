@@ -74,6 +74,3 @@ export default class AddNameTranslation extends Vue {
   private removeTranslation (): void {}
 }
 </script>
-
-<style lang="scss" scoped>
-</style>

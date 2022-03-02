@@ -36,14 +36,14 @@
       <header>
         <h2>Certify</h2>
         <p class="mt-4 mb-6">
-          Confirm the legal name of the person authorized to complete and submit this application.
+          Confirm the legal name of the person authorized to complete and submit this registration.
         </p>
       </header>
       <Certify
         :class="{ 'invalid-section': isCertifyInvalid }"
         :currentDate="getCurrentDate"
         :certifiedBy="getCertifyState.certifiedBy"
-        :entityDisplay="getCompletingPartyStatement.entityDisplay"
+        :entityDisplay="getCompletingPartyStatement.entityDisplay + ' applicant'"
         :isCertified="getCertifyState.valid"
         :statements="getCompletingPartyStatement.certifyStatements"
         :message="getCompletingPartyStatement.certifyClause"
@@ -58,13 +58,14 @@
     </section>
 
     <!-- Fee Acknowledgement-->
-    <section id="fee-acknowledgement-section" class="mt-10">
+    <!-- COMMENTED OUT FOR NOW, PER LINDA -->
+    <!-- <section id="fee-acknowledgement-section" class="mt-10">
       <header>
         <h2>Fee Acknowledgement</h2>
         <p class="mt-4 mb-6"></p>
       </header>
       <FeeAcknowledgement />
-    </section>
+    </section> -->
 
     <!-- Staff Payment -->
     <section id="staff-payment-section" class="mt-10" v-if="isRoleStaff">

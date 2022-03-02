@@ -65,6 +65,7 @@ export const stateModel: StateModelIF = {
     }
   },
   accountInformation: { ...EmptyAccountInformation },
+  orgInformation: null,
   nameRequest: cloneDeep(EmptyNameRequest),
   nameTranslations: [],
   currentDate: '',

@@ -147,7 +147,7 @@ import { Action, Getter } from 'vuex-class'
 import { PAYMENT_REQUIRED } from 'http-status-codes'
 import { cloneDeep } from 'lodash'
 import * as Sentry from '@sentry/browser'
-import { getFeatureFlag, updateLdUser, navigate } from '@/utils'
+import { getFeatureFlag, updateLdUser, navigate, sleep } from '@/utils'
 
 // Components, dialogs and views
 import Actions from '@/components/common/Actions.vue'
@@ -167,7 +167,6 @@ import {
   DateMixin,
   EnumMixin,
   FilingTemplateMixin,
-  LegalApiMixin,
   NameRequestMixin
 } from '@/mixins'
 import {
@@ -179,6 +178,7 @@ import {
   DissolutionResourceIF,
   EmptyFees,
   FilingDataIF,
+  OrgInformationIF,
   ResourceIF,
   StepIF
 } from '@/interfaces'
@@ -187,11 +187,12 @@ import {
   getEntityDashboardBreadcrumb,
   getMyBusinessRegistryBreadcrumb,
   getRegistryDashboardBreadcrumb,
+  getSbcStaffDashboardBreadcrumb,
   getStaffDashboardBreadcrumb,
   IncorporationResources,
   RegistrationResources
 } from '@/resources'
-import { AuthServices, PayServices } from '@/services'
+import { AuthServices, LegalServices, PayServices } from '@/services'
 
 // Enums and Constants
 import {
@@ -225,7 +226,6 @@ export default class App extends Mixins(
   DateMixin,
   EnumMixin,
   FilingTemplateMixin,
-  LegalApiMixin,
   NameRequestMixin
 ) {
   // Refs
@@ -240,6 +240,9 @@ export default class App extends Mixins(
   @Getter getFilingName!: FilingNames
   @Getter isDissolutionFiling!: boolean
   @Getter getSteps!: Array<StepIF>
+  @Getter getAccountInformation!: AccountInformationIF
+  @Getter getOrgInformation!: OrgInformationIF
+  @Getter isSbcStaff!: boolean
 
   @Action setBusinessId!: ActionBindingIF
   @Action setCurrentStep!: ActionBindingIF
@@ -257,9 +260,11 @@ export default class App extends Mixins(
   @Action setCreateShareStructureStepValidity!: ActionBindingIF
   @Action setHaveChanges!: ActionBindingIF
   @Action setAccountInformation!: ActionBindingIF
+  @Action setOrgInformation!: ActionBindingIF
   @Action setTempId!: ActionBindingIF
   @Action setShowErrors!: ActionBindingIF
   @Action setFeePrices!: ActionBindingIF
+  @Action setFilingType!: ActionBindingIF
 
   // Local properties
   private accountAuthorizationDialog: boolean = false
@@ -295,13 +300,15 @@ export default class App extends Mixins(
       }
     ]
 
-    // Set base crumbs based on user role
-    // Staff don't want the home landing page and they can't access the Manage Business Dashboard
-    if (this.isRoleStaff) {
-      // If staff, set StaffDashboard as home crumb
+    // set base crumbs based on user type
+    if (this.isSbcStaff) {
+      // set SbcStaffDashboard as Home crumb
+      crumbs.unshift(getSbcStaffDashboardBreadcrumb())
+    } else if (this.isRoleStaff) {
+      // set StaffDashboard as Home crumb
       crumbs.unshift(getStaffDashboardBreadcrumb())
     } else {
-      // For non-staff, set Home and Dashboard crumbs
+      // set Home and Dashboard crumbs
       crumbs.unshift(getRegistryDashboardBreadcrumb(), getMyBusinessRegistryBreadcrumb())
     }
 
@@ -387,7 +394,7 @@ export default class App extends Mixins(
       if (this.getHaveChanges) {
         event.preventDefault()
         // NB: custom text is not supported in all browsers
-        event.returnValue = 'You have unsaved changes. Are you sure you want to leave?'
+        event.returnValue = 'You have unsaved changes. Do you want to exit?'
       }
     }
 
@@ -472,7 +479,7 @@ export default class App extends Mixins(
     // open confirmation dialog and wait for response
     this.$refs.confirm.open(
       'Unsaved Changes',
-      'You have unsaved changes in your Incorporation Application. Do you want to exit?',
+      'You have unsaved changes. Do you want to exit?',
       {
         width: '45rem',
         persistent: true,
@@ -629,7 +636,7 @@ export default class App extends Mixins(
 
     // fetch draft filing
     // NB: will throw if API error
-    let draftFiling = await this.fetchDraftDissolution()
+    let draftFiling = await LegalServices.fetchDraftDissolution(this.getBusinessId)
 
     // check if filing is in a valid state to be edited
     this.invalidDissolutionDialog = !this.hasValidFilingState(draftFiling)
@@ -659,7 +666,9 @@ export default class App extends Mixins(
 
     // fetch draft filing
     // NB: will throw if API error
-    let draftFiling = await this.fetchDraftApplication()
+    let draftFiling = await LegalServices.fetchDraftApplication(this.getTempId)
+
+    this.setFilingType(draftFiling.header.name) // either IA or reg
 
     // check if filing is in a valid state to be edited
     if (!this.hasValidFilingState(draftFiling)) return null
@@ -713,7 +722,7 @@ export default class App extends Mixins(
       const nrNumber = filing[filing.header?.name].nameRequest.nrNumber
 
       // fetch NR data
-      const nrResponse = await this.fetchNameRequest(nrNumber).catch(error => {
+      const nrResponse = await LegalServices.fetchNameRequest(nrNumber).catch(error => {
         console.log('NR error =', error) // eslint-disable-line no-console
         this.nameRequestInvalidErrorDialog = true
       })
@@ -822,34 +831,50 @@ export default class App extends Mixins(
     return userInfo
   }
 
+  /**
+   * Gets current account from object in session storage.
+   * Wait up to 10 sec for current account to be synced (typically by SbcHeader).
+   */
+  private async getCurrentAccount (): Promise<any> {
+    let account: any
+    for (let i = 0; i < 100; i++) {
+      const currentAccount = sessionStorage.getItem(SessionStorageKeys.CurrentAccount)
+      account = JSON.parse(currentAccount)
+      if (account) break
+      await sleep(100)
+    }
+    return account
+  }
+
   /** Gets account info and stores it. */
   private async loadAccountInformation (): Promise<any> {
-    const currentAccount = sessionStorage.getItem(SessionStorageKeys.CurrentAccount)
-    // Staff won't have currentAccount
-    if (currentAccount) {
-      const currentAccountParsed = JSON.parse(currentAccount)
-      if (!currentAccountParsed) throw new Error('Invalid account info')
+    // NB: staff don't have current account
+    if (!this.isRoleStaff) {
+      const currentAccount = await this.getCurrentAccount()
+      if (currentAccount) {
+        const accountInfo: AccountInformationIF = {
+          accountType: currentAccount.accountType,
+          id: currentAccount.id,
+          label: currentAccount.label,
+          type: currentAccount.type
+        }
+        this.setAccountInformation(accountInfo)
 
-      const accountInfo: AccountInformationIF = {
-        accountType: currentAccountParsed.accountType,
-        id: currentAccountParsed.id,
-        label: currentAccountParsed.label,
-        type: currentAccountParsed.type
+        // get org info
+        await this.getSaveOrgInfo(accountInfo?.id)
       }
-      this.setAccountInformation(accountInfo)
-
-      // get org info
-      await this.getSaveOrgInfo(accountInfo?.id)
     }
   }
 
-  /** Gets org info and stores user's address. */
-  private async getSaveOrgInfo (orgId: number): Promise<any> {
+  /** Gets and stores org info and user's address. */
+  private async getSaveOrgInfo (orgId: number): Promise<void> {
     if (!orgId) throw new Error('Invalid org id')
 
     // NB: will throw if API error
     const orgInfo = await AuthServices.fetchOrgInfo(orgId)
     if (!orgInfo) throw new Error('Invalid org info')
+
+    this.setOrgInformation(orgInfo)
 
     const mailingAddress = orgInfo.mailingAddress
     if (!mailingAddress) throw new Error('Invalid mailing address')
@@ -863,8 +888,6 @@ export default class App extends Mixins(
       streetAddressAdditional: mailingAddress.streetAdditional
     }
     this.setUserAddress(userAddress)
-
-    return orgInfo
   }
 
   /** Updates Launch Darkly with current user info. */
@@ -914,8 +937,17 @@ export default class App extends Mixins(
 </script>
 
 <style lang="scss" scoped>
+// display drop-down menu on top of stepper and fee summary
+::v-deep .app-header {
+  z-index: 3;
+}
+
 aside {
   position: relative;
-  z-index: 10; // on top of stepper
+  z-index: 2; // on top of stepper
+}
+
+.vue-affix {
+  width: 282px;
 }
 </style>

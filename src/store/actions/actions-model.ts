@@ -2,7 +2,7 @@ import {
   AccountInformationIF, ActionIF, AddressIF, BusinessContactIF, CertifyIF, DissolutionStatementIF,
   IncorporationAddressIF, IncorporationAgreementIF, NameRequestIF, NameTranslationIF, OrgPersonIF,
   ResourceIF, ShareClassIF, CreateRulesIF, CreateMemorandumIF, ValidationDetailIF, FeesIF,
-  UploadAffidavitIF, CreateResolutionIF
+  UploadAffidavitIF, CreateResolutionIF, OrgInformationIF
 } from '@/interfaces'
 import { CoopType, CorpTypeCd } from '@/enums'
 
@@ -140,6 +140,10 @@ export const setTransactionalFolioNumberValidity: ActionIF = ({ commit }, valid:
 
 export const setAccountInformation: ActionIF = ({ commit }, accountInfo: AccountInformationIF): void => {
   commit('mutateAccountInformation', accountInfo)
+}
+
+export const setOrgInformation: ActionIF = ({ commit }, orgInfo: OrgInformationIF): void => {
+  commit('mutateOrgInformation', orgInfo)
 }
 
 export const setNameRequestState: ActionIF = ({ commit }, nameRequestState: NameRequestIF): void => {

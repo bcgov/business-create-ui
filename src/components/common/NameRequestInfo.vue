@@ -11,13 +11,13 @@
         </v-col>
         <v-col>
           <ul class="name-request-list-items">
-            <li class="name-request-title">
+            <li id="name-request-title">
               <strong>{{ getNameRequestNumber }}</strong> - {{ getNameRequestDetails.approvedName }}
             </li>
             <li class="mt-4"><strong>Entity Type:</strong> {{ getEntityTypeDescription }}</li>
             <li><strong>Request Type:</strong> {{ requestType }}</li>
-            <li class="mt-4"><strong>Expiry Date:</strong> {{ formattedExpirationDate() }}</li>
-            <li><strong>Status:</strong> {{ getNameRequestDetails.status }}</li>
+            <li><strong>Expiry Date:</strong> {{ formattedExpirationDate() }}</li>
+            <li><strong>Status:</strong> {{ nameRequestStatus }}</li>
             <li id="condition-consent" v-if="getNameRequestDetails.status === NameRequestStates.CONDITIONAL">
               <strong>Condition/Consent:</strong> {{ conditionConsent }}
             </li>
@@ -32,7 +32,7 @@
           </label>
         </v-col>
         <v-col>
-          <ul>
+          <ul class="applicant-list-items">
             <li><strong>Name:</strong> {{ applicantName() }}</li>
             <li><strong>Address:</strong> {{ applicantAddress() }}</li>
             <li><strong>Email:</strong> {{ getNameRequestApplicant.emailAddress }}</li>
@@ -50,11 +50,11 @@
       </v-col>
       <v-col>
         <ul class="numbered-company-list-items">
-          <li class="numbered-company-title">
+          <li id="numbered-company-title">
             <strong>[Incorporation Number]</strong> B.C. Ltd.
           </li>
           <li class="mt-4"><strong>Entity Type:</strong> {{ getEntityTypeDescription }}</li>
-          <li><strong>Request Type:</strong> {{ requestType }}</li>
+          <li class="mt-2"><strong>Request Type:</strong> {{ requestType }}</li>
           <li class="bullet-point mt-4 ml-5">You will be filing this Incorporation Application for a company created by
             adding "B.C. Ltd." after the Incorporation Number.
           </li>
@@ -196,6 +196,14 @@ export default class NameRequestInfo extends Mixins(DateMixin, EnumMixin) {
   private formattedExpirationDate (): string {
     const date = this.apiToDate(this.getNameRequestDetails.expirationDate)
     return this.dateToPacificDate(date)
+  }
+
+  /** The name request status string. */
+  private get nameRequestStatus (): string {
+    if (this.getNameRequestDetails.status === NameRequestStates.APPROVED) {
+      return 'Approved'
+    }
+    return this.getNameRequestDetails.status?.toString() || null
   }
 
   /** The condition/consent string. */
@@ -364,17 +372,18 @@ p {
 }
 
 ul {
-  font-size: $px-14;
+  font-size: $px-15;
   margin: 0;
   padding: 0;
   list-style-type: none;
 }
 
-li.name-request-title, li.numbered-company-title {
+#name-request-title,
+#numbered-company-title {
   font-size: $px-20;
 }
 
-ul.numbered-company-list-items {
+.numbered-company-list-items {
   .bullet-point::before {
     content: "\2022";
     display: inline-block;
@@ -387,6 +396,13 @@ ul.numbered-company-list-items {
   .translation-checkbox-label {
     font-size: $px-14;
     color: $gray9;
+  }
+}
+
+.name-request-list-items,
+.applicant-list-items {
+  li:not(:first-child) {
+    margin-top: 8px;
   }
 }
 </style>

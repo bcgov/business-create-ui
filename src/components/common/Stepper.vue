@@ -18,7 +18,8 @@
             tabindex="-1"
             :disabled=isBusySaving
             :ripple="false"
-            :class="{ 'selected-btn': isCurrentStep(step) }">
+            :class="{ 'selected-btn': isCurrentStep(step) }"
+          >
             <v-icon class="step__icon" :class="{ 'selected-icon': isCurrentStep(step) }">{{ step.icon }}</v-icon>
           </v-btn>
           <v-icon class="step__btn2" size="30" color="success darken-1" v-show=isValid(step.to)>
@@ -185,7 +186,8 @@ export default class Stepper extends Vue {
 .step__btn {
   position: relative;
   background-color: $BCgovInputBG;
-  z-index: 2;
+  z-index: 1; // on top of step line
+
   .step__icon {
     color: $app-blue;
     background-color: inherit;
@@ -198,7 +200,7 @@ export default class Stepper extends Vue {
   margin-left: -16px;
   background: $BCgovInputBG;
   border-radius: 50%;
-  z-index: 3;
+  z-index: 1; // on top of step line and step btn
 }
 
 .step__label {

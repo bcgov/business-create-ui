@@ -101,7 +101,7 @@ describe('Name Request Info component', () => {
     expect(entityType.textContent).toContain('Entity Type: BC Benefit Company')
     expect(requestType.textContent).toContain('Request Type: New Business')
     expect(expiryDate.textContent).toContain('Expiry Date: Jun 24, 2020')
-    expect(status.textContent).toContain('Status: APPROVED')
+    expect(status.textContent).toContain('Status: Approved')
   })
 
   it('renders the Name Request applicant information with data', async () => {

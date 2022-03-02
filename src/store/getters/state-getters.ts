@@ -34,7 +34,8 @@ import {
   StaffPaymentStepIF,
   StateIF,
   TombstoneIF,
-  UploadAffidavitIF
+  UploadAffidavitIF,
+  OrgInformationIF
 } from '@/interfaces'
 import { getMaxStep } from './resource-getters'
 
@@ -81,6 +82,20 @@ export const isAuthEdit = (state: StateIF): boolean => {
 /** Whether the user is authorized to view. */
 export const isAuthView = (state: StateIF): boolean => {
   return getTombstone(state).authRoles.includes('view')
+}
+
+/** Whether the user has "gov account user" auth role. */
+export const isGovAccountUser = (state: StateIF): boolean => {
+  return getTombstone(state).authRoles.includes('gov_account_user')
+}
+
+/** Whether the user is SBC Staff (which is not the same as Staff). */
+export const isSbcStaff = (state: StateIF): boolean => {
+  if (isGovAccountUser(state)) {
+    const orgInfo = getOrgInformation(state)
+    return (orgInfo?.branchName?.includes('Service BC') || false)
+  }
+  return false
 }
 
 /** Whether the entity type has been identified. */
@@ -141,6 +156,11 @@ export const isTypePartnership = (state: StateIF): boolean => {
 /** The Account Information object. */
 export const getAccountInformation = (state: StateIF): AccountInformationIF => {
   return state.stateModel.accountInformation
+}
+
+/** The Org Information object. */
+export const getOrgInformation = (state: StateIF): OrgInformationIF => {
+  return state.stateModel.orgInformation
 }
 
 /** Whether the entity is a base company (BEN, CC, BC, ULC). */

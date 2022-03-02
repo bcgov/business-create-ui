@@ -350,10 +350,8 @@ export default class Affidavit extends Mixins(CommonMixin, DocumentMixin, Entity
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
 
-header {
-  p {
-    padding-top: 0.5rem;
-  }
+header p {
+  padding-top: 0.5rem;
 }
 
 ul {
@@ -454,9 +452,9 @@ ul {
 }
 
 #upload-affidavit-card {
-    // file upload input field
-    ::v-deep label.v-label.theme--light {
-      color: $gray7 !important;
-    }
+  // file upload input field
+  ::v-deep label.v-label.theme--light {
+    color: $gray7 !important;
+  }
 }
 </style>

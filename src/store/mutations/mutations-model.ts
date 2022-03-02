@@ -15,6 +15,7 @@ import {
   NameRequestIF,
   NameTranslationIF,
   OfficeAddressIF,
+  OrgInformationIF,
   OrgPersonIF,
   ResourceIF,
   ShareClassIF,
@@ -172,6 +173,10 @@ export const mutateTransactionalFolioNumberValidity = (state: StateIF, valid: bo
 
 export const mutateAccountInformation = (state: StateIF, accountInfo: AccountInformationIF) => {
   state.stateModel.accountInformation = accountInfo
+}
+
+export const mutateOrgInformation = (state: StateIF, orgInfo: OrgInformationIF) => {
+  state.stateModel.orgInformation = orgInfo
 }
 
 export const mutateNameRequestState = (state: StateIF, nameRequestState: NameRequestIF) => {
