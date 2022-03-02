@@ -77,8 +77,8 @@ import DestroyCertificate from '@/components/Dissolution/DestroyCertificate.vue'
 import DissolutionStatement from '@/components/Dissolution/DissolutionStatement.vue'
 import HelpSection from '@/components/common/HelpSection.vue'
 import { ActionBindingIF, CustodianResourceIF, DissolutionStatementIF } from '@/interfaces'
-import { CommonMixin, EntityFilterMixin, EnumMixin } from '@/mixins'
-import { RouteNames } from '@/enums'
+import { CommonMixin, EnumMixin } from '@/mixins'
+import { CorpTypeCd, RouteNames } from '@/enums'
 
 @Component({
   components: {
@@ -90,7 +90,7 @@ import { RouteNames } from '@/enums'
     HelpSection
   }
 })
-export default class DissolutionDefineDissolution extends Mixins(CommonMixin, EntityFilterMixin, EnumMixin) {
+export default class DissolutionDefineDissolution extends Mixins(CommonMixin, EnumMixin) {
   // Global getters
   @Getter getBusinessLegalName!: string
   @Getter getCustodialRecordsResources!: CustodianResourceIF
@@ -100,6 +100,7 @@ export default class DissolutionDefineDissolution extends Mixins(CommonMixin, En
   @Getter getShowErrors!: boolean
   @Getter isDissolutionCustodianValid!: boolean
   @Getter isTypeCoop: boolean
+  @Getter getEntityType!: CorpTypeCd
 
   // Global actions
   @Action setCustodianValidity!: ActionBindingIF

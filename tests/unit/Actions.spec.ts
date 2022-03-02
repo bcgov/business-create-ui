@@ -39,7 +39,7 @@ const nrData = {
   },
   consentFlag: 'R',
   corpNum: null,
-  entity_type_cd: 'BC',
+  legalType: 'BEN',
   expirationDate: 'Thu, 31 Dec 2099 23:59:59 GMT',
   names: [
     {

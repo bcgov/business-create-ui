@@ -82,8 +82,8 @@ import { BusinessContactIF, RegistrationStateIF } from '@/interfaces'
 import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
 import FolioNumber from '@/components/common/FolioNumber.vue'
 import BusinessAddresses from '@/components/Registration/BusinessAddresses.vue'
-import { DateMixin, EntityFilterMixin, EnumMixin } from '@/mixins'
-import { RouteNames } from '@/enums'
+import { DateMixin, EnumMixin } from '@/mixins'
+import { CorpTypeCd, RouteNames } from '@/enums'
 
 @Component({
   components: {
@@ -92,13 +92,14 @@ import { RouteNames } from '@/enums'
     FolioNumber
   }
 })
-export default class DefineRegistrationSummary extends Mixins(DateMixin, EntityFilterMixin, EnumMixin) {
+export default class DefineRegistrationSummary extends Mixins(DateMixin, EnumMixin) {
   // Getters
   @Getter getApprovedName!: string
   @Getter isPremiumAccount!: boolean
   @Getter getBusinessContact!: BusinessContactIF
   @Getter getFolioNumber!: string
   @Getter getRegistration!: RegistrationStateIF
+  @Getter getEntityType!: CorpTypeCd
 
   /** The entity description  */
   get entityDescription (): string {

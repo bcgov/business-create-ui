@@ -1,5 +1,5 @@
 import { IncorporationResourceIF } from '@/interfaces'
-import { CorpTypeCd, FilingCodes, NameRequestTypes, RuleIds } from '@/enums'
+import { CorpTypeCd, FilingCodes, RuleIds } from '@/enums'
 import { BaseStepsTemplate } from './stepTemplates'
 import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 
@@ -10,7 +10,6 @@ export const UnlimitedCompanyResource: IncorporationResourceIF = {
   description: 'The shareholders of this company are jointly and severally liable to satisfy the debts and ' +
     'liabilities of this company to the extent provided in section 51.3 of the Business Corporations Act.',
   statement: null,
-  nameRequestType: NameRequestTypes.UL,
   steps: BaseStepsTemplate,
   filingData: [{
     entityType: CorpTypeCd.BC_ULC_COMPANY,

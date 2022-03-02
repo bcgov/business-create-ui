@@ -177,10 +177,10 @@ import {
 } from '@/interfaces'
 
 // Enums
-import { RouteNames, ItemTypes, PdfPageSize } from '@/enums'
+import { RouteNames, ItemTypes, PdfPageSize, CorpTypeCd } from '@/enums'
 
 // Mixins
-import { CommonMixin, DocumentMixin, EntityFilterMixin, EnumMixin } from '@/mixins'
+import { CommonMixin, DocumentMixin, EnumMixin } from '@/mixins'
 
 // Components
 import FileUploadPreview from '@/components/common/FileUploadPreview.vue'
@@ -190,7 +190,7 @@ import FileUploadPreview from '@/components/common/FileUploadPreview.vue'
     FileUploadPreview
   }
 })
-export default class Affidavit extends Mixins(CommonMixin, DocumentMixin, EntityFilterMixin, EnumMixin) {
+export default class Affidavit extends Mixins(CommonMixin, DocumentMixin, EnumMixin) {
   // Refs
   $refs!: {
     confirmAffidavitChk: FormIF
@@ -212,6 +212,7 @@ export default class Affidavit extends Mixins(CommonMixin, DocumentMixin, Entity
   @Getter getShowErrors!: boolean
   @Getter getAffidavitStep!: UploadAffidavitIF
   @Getter getUserKeycloakGuid!: string
+  @Getter getEntityType!: CorpTypeCd
 
   @Action setAffidavit!: ActionBindingIF
   @Action setAffidavitStepValidity!: ActionBindingIF

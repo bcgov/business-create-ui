@@ -13,7 +13,7 @@
 import { Component, Mixins, Vue, Watch } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 import { PeopleAndRoleIF, PeopleAndRolesResourceIF } from '@/interfaces'
-import { CommonMixin, EntityFilterMixin } from '@/mixins'
+import { CommonMixin } from '@/mixins'
 import { RouteNames } from '@/enums'
 import PeopleAndRoles from '@/components/common/PeopleAndRoles.vue'
 
@@ -22,7 +22,7 @@ import PeopleAndRoles from '@/components/common/PeopleAndRoles.vue'
     PeopleAndRoles
   }
 })
-export default class IncorporationPeopleRoles extends Mixins(CommonMixin, EntityFilterMixin) {
+export default class IncorporationPeopleRoles extends Mixins(CommonMixin) {
   @Getter getShowErrors!: boolean
   @Getter getAddPeopleAndRoleStep!: PeopleAndRoleIF
   @Getter getPeopleAndRolesResource!: PeopleAndRolesResourceIF

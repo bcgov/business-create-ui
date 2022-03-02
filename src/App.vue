@@ -743,8 +743,8 @@ export default class App extends Mixins(
       }
 
       // ensure types match
-      if (this.nrTypeToEntityType(nrResponse) !== this.getEntityType) {
-        console.log('NR type doesn\'t match entity type') // eslint-disable-line no-console
+      if (nrResponse.legalType !== this.getEntityType) {
+        console.log('NR legal type doesn\'t match entity type') // eslint-disable-line no-console
         this.nameRequestInvalidType = NameRequestStates.INVALID
         this.nameRequestInvalidErrorDialog = true
         return

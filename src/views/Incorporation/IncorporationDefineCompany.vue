@@ -131,7 +131,7 @@ import {
   DefineCompanyIF,
   IncorporationAddressIF
 } from '@/interfaces'
-import { CommonMixin, EntityFilterMixin } from '@/mixins'
+import { CommonMixin } from '@/mixins'
 import { CoopType, CorpTypeCd, RouteNames } from '@/enums'
 import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
 import CooperativeType from '@/components/Dissolution/CooperativeType.vue'
@@ -148,7 +148,7 @@ import OfficeAddresses from '@/components/common/OfficeAddresses.vue'
     OfficeAddresses
   }
 })
-export default class IncorporationDefineCompany extends Mixins(CommonMixin, EntityFilterMixin) {
+export default class IncorporationDefineCompany extends Mixins(CommonMixin) {
   @Getter getCompanyTitle!: string
   @Getter getCompanyDescription!: string
   @Getter isEntityType!: boolean
@@ -209,7 +209,7 @@ export default class IncorporationDefineCompany extends Mixins(CommonMixin, Enti
       streetAddressAdditional: ''
     }
 
-    if (this.entityFilter(CorpTypeCd.BENEFIT_COMPANY)) {
+    if (this.isTypeBcomp) {
       this.setOfficeAddresses({
         registeredOffice: {
           mailingAddress: defaultAddress,

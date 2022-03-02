@@ -6,7 +6,6 @@ const incorporationResourceModel: IncorporationResourceIF = {
   title: '',
   description: '',
   statement: '',
-  nameRequestType: null,
   steps: [],
   filingData: null,
   peopleAndRoles: {
@@ -36,7 +35,6 @@ const registrationResourceModel: any = {
   entityType: null,
   displayName: '',
   statement: '',
-  nameRequestType: null,
   steps: [],
   filingData: null,
   reviewAndConfirm: {

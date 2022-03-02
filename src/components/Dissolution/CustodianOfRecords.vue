@@ -221,7 +221,7 @@ import { CoopOfficeAddressSchema, OfficeAddressSchema } from '@/schemas'
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
 import { ActionBindingIF, AddressIF, AddressSchemaIF, CustodianResourceIF, FormIF, OrgPersonIF } from '@/interfaces'
 import { PartyTypes } from '@/enums'
-import { CommonMixin, EntityFilterMixin } from '@/mixins'
+import { CommonMixin } from '@/mixins'
 import { Rules } from '@/rules'
 import { cloneDeep } from 'lodash'
 
@@ -231,7 +231,7 @@ import { cloneDeep } from 'lodash'
     MailingAddress: BaseAddress
   }
 })
-export default class CustodianOfRecords extends Mixins(CommonMixin, EntityFilterMixin) {
+export default class CustodianOfRecords extends Mixins(CommonMixin) {
   // Refs for root form and base address components to access form validation
   $refs!: {
     addCustodianForm: FormIF,

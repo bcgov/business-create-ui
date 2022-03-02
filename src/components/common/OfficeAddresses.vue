@@ -18,7 +18,7 @@
         </v-col>
       </v-row>
 
-      <v-row no-gutters id="summary-records-address" v-if="!entityFilter(CorpTypeCd.COOP)" class="mt-4">
+      <v-row no-gutters id="summary-records-address" v-if="!isTypeCoop" class="mt-4">
         <v-col md="3" class="mr-n1"><label><strong>Records Office</strong></label></v-col>
         <v-col md="4" class="pr-4">
           <label class="mailing-address-header"><strong>Mailing Address</strong></label>
@@ -95,7 +95,7 @@
         </li>
 
         <!--Records Office Address -->
-        <template v-if="!entityFilter(CorpTypeCd.COOP)">
+        <template v-if="!isTypeCoop">
           <div class="address-edit-header">
             <label class="address-edit-title">Records Office</label>
             <v-checkbox
@@ -169,7 +169,7 @@ import { OfficeAddressSchema } from '@/schemas'
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
 import { AddressIF, DefineCompanyIF, IncorporationAddressIF } from '@/interfaces'
 import { CorpTypeCd } from '@/enums'
-import { CommonMixin, EntityFilterMixin } from '@/mixins'
+import { CommonMixin } from '@/mixins'
 
 @Component({
   components: {
@@ -177,7 +177,7 @@ import { CommonMixin, EntityFilterMixin } from '@/mixins'
     MailingAddress: BaseAddress
   }
 })
-export default class OfficeAddresses extends Mixins(CommonMixin, EntityFilterMixin) {
+export default class OfficeAddresses extends Mixins(CommonMixin) {
   // Refs for sbc common base address components so we can access form validation
   $refs!: {
     regMailingAddress: any
@@ -203,6 +203,9 @@ export default class OfficeAddresses extends Mixins(CommonMixin, EntityFilterMix
   readonly showErrors!: boolean
 
   @Getter getDefineCompanyStep!: DefineCompanyIF
+  @Getter isTypeBcomp!: boolean
+  @Getter isTypeCoop!: boolean
+  @Getter getEntityType!: CorpTypeCd
 
   // Local properties
   private addresses: IncorporationAddressIF = this.inputAddresses
@@ -281,7 +284,7 @@ export default class OfficeAddresses extends Mixins(CommonMixin, EntityFilterMix
         }
       }
 
-      if (this.entityFilter(CorpTypeCd.BENEFIT_COMPANY)) {
+      if (this.isTypeBcomp) {
         this.recMailingAddress = this.addresses.recordsOffice?.mailingAddress
         this.recDeliveryAddress = this.addresses.recordsOffice?.deliveryAddress
 
@@ -473,7 +476,7 @@ export default class OfficeAddresses extends Mixins(CommonMixin, EntityFilterMix
         this.$refs.regDeliveryAddress.$refs.addressForm.validate()
       }
 
-      if (!this.entityFilter(CorpTypeCd.COOP) && !this.inheritRegisteredAddress) {
+      if (!this.isTypeCoop && !this.inheritRegisteredAddress) {
         // Records Mailing Address
         this.$refs.recMailingAddress.$refs.addressForm.validate()
         if (!this.inheritRecMailingAddress) {
@@ -494,7 +497,7 @@ export default class OfficeAddresses extends Mixins(CommonMixin, EntityFilterMix
   /** Emits updated addresses object to the parent page. */
   @Emit('update:addresses')
   private emitAddresses (): any {
-    if (!this.entityFilter(CorpTypeCd.COOP)) {
+    if (!this.isTypeCoop) {
       return {
         registeredOffice: {
           deliveryAddress: this.deliveryAddress,

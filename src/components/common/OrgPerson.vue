@@ -12,12 +12,12 @@
           <div class="meta-container">
 
             <!-- FUTURE: move header text to resource file so this component is generic -->
-            <label class="add-org-header" v-if="isOrg && entityFilter(CorpTypeCd.BENEFIT_COMPANY)">
+            <label class="add-org-header" v-if="isOrg && isTypeBcomp">
               <span v-if="activeIndex === -1">Add Corporation or Firm</span>
               <span v-else>Edit Corporation or Firm</span>
             </label>
 
-            <label class="add-org-header" v-if="isOrg && entityFilter(CorpTypeCd.COOP)">
+            <label class="add-org-header" v-if="isOrg && isTypeCoop">
               <span v-if="activeIndex === -1">Add Organization</span>
               <span v-else>Edit Organization</span>
             </label>
@@ -206,7 +206,7 @@ import {
 } from '@/interfaces'
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
 import ConfirmDialog from '@/dialogs/ConfirmDialog.vue'
-import { EntityFilterMixin, CommonMixin } from '@/mixins'
+import { CommonMixin } from '@/mixins'
 import { CorpTypeCd, RoleTypes, PartyTypes } from '@/enums'
 import { PersonAddressSchema } from '@/schemas'
 import { Rules } from '@/rules'
@@ -218,7 +218,7 @@ import { cloneDeep } from 'lodash'
     ConfirmDialog
   }
 })
-export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
+export default class OrgPerson extends Mixins(CommonMixin) {
    // Refs
    $refs!: {
     addPersonOrgForm: FormIF
@@ -234,7 +234,9 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
 
   @Getter getCurrentDate!: string
   @Getter isRoleStaff!: boolean
+  @Getter isTypeBcomp!: boolean
   @Getter isTypeCoop!: boolean
+  @Getter getEntityType!: CorpTypeCd
 
   // Local properties
   private orgPerson: OrgPersonIF = null

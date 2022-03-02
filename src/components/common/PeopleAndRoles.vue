@@ -108,7 +108,7 @@
         @click="addOrgPerson(RoleTypes.INCORPORATOR, PartyTypes.ORGANIZATION)"
       >
         <v-icon>mdi-domain-plus</v-icon>
-        <span v-if="entityFilter(CorpTypeCd.COOP)">Add Organization</span>
+        <span v-if="isTypeCoop">Add Organization</span>
         <span v-else>Add a Corporation or Firm</span>
       </v-btn>
       <v-btn
@@ -151,12 +151,11 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins } from 'vue-property-decorator'
+import { Component, Vue } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import { cloneDeep } from 'lodash'
 import { ActionBindingIF, AddressIF, EmptyAddress, EmptyOrgPerson, OrgPersonIF, PeopleAndRoleIF,
   PeopleAndRolesResourceIF, TombstoneIF } from '@/interfaces'
-import { EntityFilterMixin } from '@/mixins'
 import { CorpTypeCd, PartyTypes, NumWord, RoleTypes, RuleIds } from '@/enums'
 import OrgPerson from '@/components/common/OrgPerson.vue'
 import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
@@ -167,7 +166,7 @@ import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
     ListPeopleAndRoles
   }
 })
-export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
+export default class PeopleAndRoles extends Vue {
   @Getter getTombstone!: TombstoneIF
   @Getter getAddPeopleAndRoleStep!: PeopleAndRoleIF
   @Getter getShowErrors!: boolean
@@ -175,6 +174,7 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
   @Getter getUserFirstName!: string
   @Getter getUserLastName!: string
   @Getter getUserAddress!: AddressIF
+  @Getter isTypeCoop!: boolean
 
   @Action setOrgPersonList!: ActionBindingIF
   @Action setAddPeopleAndRoleStepValidity!: ActionBindingIF

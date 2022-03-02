@@ -85,7 +85,7 @@ import { Action, Getter } from 'vuex-class'
 import { isEmpty, isEqual } from 'lodash'
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
 import { RegistrationMailingAddressSchema, RegistrationDeliveryAddressSchema } from '@/schemas'
-import { CommonMixin, EntityFilterMixin } from '@/mixins'
+import { CommonMixin } from '@/mixins'
 import { ActionBindingIF, AddressIF, BusinessAddressIF, EmptyAddress, RegistrationStateIF } from '@/interfaces'
 
 const REGION_BC = 'BC'
@@ -108,7 +108,7 @@ const DefaultAddress: AddressIF = {
     MailingAddress: BaseAddress
   }
 })
-export default class BusinessAddresses extends Mixins(CommonMixin, EntityFilterMixin) {
+export default class BusinessAddresses extends Mixins(CommonMixin) {
   // Refs for BaseAddress components so we can access form validation
   $refs!: {
     mailingAddress: any
