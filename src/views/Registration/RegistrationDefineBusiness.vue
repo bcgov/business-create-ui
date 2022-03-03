@@ -94,7 +94,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Vue, Watch } from 'vue-property-decorator'
+import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import BusinessAddresses from '@/components/Registration/BusinessAddresses.vue'
 import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
@@ -179,7 +179,7 @@ export default class RegistrationDefineBusiness extends Mixins(CommonMixin) {
   async scrollToInvalidComponent (): Promise<void> {
     if (this.getShowErrors && this.$route.name === RouteNames.REGISTRATION_DEFINE_BUSINESS) {
       // scroll to invalid components
-      await Vue.nextTick()
+      await this.$nextTick()
       await this.validateAndScroll(this.validFlags, this.validComponents)
     }
   }

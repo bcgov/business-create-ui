@@ -142,7 +142,7 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Mixins, Vue, Watch } from 'vue-property-decorator'
+import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import { PAYMENT_REQUIRED } from 'http-status-codes'
 import { cloneDeep } from 'lodash'
@@ -373,7 +373,7 @@ export default class App extends Mixins(
   private get saveErrorDialogName (): string {
     switch (this.getFilingType) {
       case FilingTypes.INCORPORATION_APPLICATION: return 'Application'
-      case FilingTypes.REGISTRATION: return 'Application'
+      case FilingTypes.REGISTRATION: return 'Registration'
       case FilingTypes.VOLUNTARY_DISSOLUTION: return 'Filing'
     }
   }
@@ -614,14 +614,16 @@ export default class App extends Mixins(
           }
         )
       }
+
+      console.log('*** got data')
+      this.haveData = true
     } catch (error) {
       // errors should be handled above
       console.error('Unhandled error in fetchData() =', error) // eslint-disable-line no-console
       // just fall through to finally()
     } finally {
-      this.haveData = true
       // wait for things to stabilize, then reset flag
-      Vue.nextTick(() => this.setHaveChanges(false))
+      this.$nextTick(() => this.setHaveChanges(false))
     }
   }
 

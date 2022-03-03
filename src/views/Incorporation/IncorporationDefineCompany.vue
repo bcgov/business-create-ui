@@ -122,7 +122,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Vue, Watch } from 'vue-property-decorator'
+import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { Getter, Action } from 'vuex-class'
 import {
   ActionBindingIF,
@@ -192,7 +192,7 @@ export default class IncorporationDefineCompany extends Mixins(CommonMixin) {
     }
 
     // watch data changes once page has loaded (in next tick)
-    Vue.nextTick(() => {
+    this.$nextTick(() => {
       this.setIgnoreChanges(false)
     })
   }
@@ -266,7 +266,7 @@ export default class IncorporationDefineCompany extends Mixins(CommonMixin) {
   private async scrollToInvalidComponent (): Promise<void> {
     if (this.getShowErrors && this.$route.name === RouteNames.INCORPORATION_DEFINE_COMPANY) {
       // scroll to invalid components
-      await Vue.nextTick()
+      await this.$nextTick()
       await this.validateAndScroll(
         {
           hasValidNameTranslation: this.hasValidNameTranslation,

@@ -92,7 +92,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Vue, Watch } from 'vue-property-decorator'
+import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import { v4 as uuidv4 } from 'uuid'
 import {
@@ -256,7 +256,7 @@ export default class IncorporationShareStructure extends Mixins(CommonMixin) {
   private async scrollToInvalidComponent (): Promise<void> {
     if (this.getShowErrors && this.$route.name === RouteNames.INCORPORATION_SHARE_STRUCTURE) {
       // scroll to invalid components
-      await Vue.nextTick()
+      await this.$nextTick()
       await this.validateAndScroll(
         {
           shareStructure: this.getCreateShareStructureStep.valid

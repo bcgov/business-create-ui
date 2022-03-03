@@ -290,7 +290,7 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Mixins, Watch, Vue } from 'vue-property-decorator'
+import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 
 // Shared Components
@@ -530,6 +530,7 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin) {
   }
 
   private updateResolutionStepValidationDetail () {
+    console.log('*** setting resolution step validity')
     let validationDetail: ValidationDetailIF = null
     const resolutionIsValid = this.isResolutionValid()
     if (this.isTypeCoop) {
@@ -585,8 +586,8 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin) {
   private async onResolutionConfirmedChange (resolutionConfirmed: boolean): Promise<void> {
     // This is required as there are timing issues between this component and the CompleteResolutionSummary
     // component.  The CompleteResolutionSummary isn't always able to detect that the confirm checkbox
-    // value has changed without using Vue.nextTick()
-    await Vue.nextTick()
+    // value has changed without using nextTick()
+    await this.$nextTick()
     this.setResolution({
       ...this.getCreateResolutionStep,
       resolutionConfirmed: resolutionConfirmed
@@ -599,16 +600,16 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin) {
     const foundingDate = new Date(this.getBusinessFoundingDate)
     foundingDate.setHours(0, 0, 0, 0)
     this.foundingDate = foundingDate
-    this.resolutionConfirmed = !!this.getCreateResolutionStep.resolutionConfirmed
+    this.resolutionConfirmed = this.getCreateResolutionStep.resolutionConfirmed
     this.resolutionDateText = this.getCreateResolutionStep.resolutionDate
     this.resolutionText = this.getCreateResolutionStep.resolutionText
-    this.signingPerson = this.getCreateResolutionStep.signingPerson || EmptyPerson
+    this.signingPerson = this.getCreateResolutionStep.signingPerson || { ...EmptyPerson }
     this.signatureDateText = this.getCreateResolutionStep.signingDate
   }
 
   async mounted (): Promise<void> {
     // wait for components to load/stabilize then update validation state in store
-    await Vue.nextTick()
+    await this.$nextTick()
     this.updateResolutionStepValidationDetail()
   }
 
@@ -637,7 +638,7 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin) {
   }
 
   async onResolutionDateSync (val: string): Promise<void> {
-    await Vue.nextTick()
+    await this.$nextTick()
     this.resolutionDateText = val
     this.setResolution({
       ...this.getCreateResolutionStep,
@@ -646,7 +647,7 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin) {
     if (this.$refs.signatureDatePickerRef && this.signatureDateText) {
       // Need this await as the updated resolutionDateText value is not updated in time when
       // signatureDateMinDate is evaluated
-      await Vue.nextTick()
+      await this.$nextTick()
       // triggering signature date validation as signature date is dependent on resolution date
       this.$refs.signatureDatePickerRef.validateForm()
     }
@@ -675,7 +676,7 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin) {
   @Watch('signingPerson', { deep: true })
   private async onSigningPersonChanged (): Promise<void> {
     if (this.isTypeCoop) {
-      await Vue.nextTick()
+      await this.$nextTick()
       this.setResolution({
         ...this.getCreateResolutionStep,
         signingPerson: this.signingPerson
@@ -685,7 +686,7 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin) {
   }
 
   async onSigningDateSync (val: string): Promise<void> {
-    await Vue.nextTick()
+    await this.$nextTick()
     this.signatureDateText = val
     this.setResolution({
       ...this.getCreateResolutionStep,

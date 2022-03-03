@@ -376,6 +376,11 @@ export default class UploadMemorandum extends Mixins(CommonMixin, DocumentMixin)
     this.memorandumConfirmed = this.getCreateMemorandumStep.memorandumConfirmed
     this.hasValidUploadFile = !!this.uploadMemorandumDocKey
     this.hasMemorandumConfirmed = this.memorandumConfirmed
+  }
+
+  async mounted (): Promise<void> {
+    // wait for components to load/stabilize then update validation state in store
+    await this.$nextTick()
     this.updateMemorandumStepValidity()
   }
 
