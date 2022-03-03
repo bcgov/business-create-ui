@@ -557,7 +557,7 @@ export default class App extends Mixins(
           const resources = await this.handleDraftApplication()
           if (!resources) {
             // go to catch()
-            throw new Error(`Invalid ${this.getFilingType} resources entity type = ${this.getEntityType}`)
+            throw new Error(`Invalid ${this.getFilingType} resources, entity type = ${this.getEntityType}`)
           }
           this.setResources(resources)
         }
@@ -577,16 +577,16 @@ export default class App extends Mixins(
         switch (this.getFilingType) {
           case FilingTypes.VOLUNTARY_DISSOLUTION:
             this.$router.push(RouteNames.DISSOLUTION_DEFINE_DISSOLUTION).catch(() => {})
-            break
+            return
           case FilingTypes.INCORPORATION_APPLICATION:
             this.$router.push(RouteNames.INCORPORATION_DEFINE_COMPANY).catch(() => {})
-            break
+            return
           case FilingTypes.REGISTRATION:
             this.$router.push(RouteNames.REGISTRATION_DEFINE_BUSINESS).catch(() => {})
-            break
+            return
           default:
             this.invalidRouteDialog = true
-            break
+            throw new Error(`Invalid filing type = ${this.getFilingType}`) // go to catch()
         }
       }
 
@@ -698,7 +698,7 @@ export default class App extends Mixins(
 
     // verify nameRequest object
     const nameRequest = draftFiling[draftFiling.header?.name]?.nameRequest
-    if (!nameRequest) throw new Error('missing Name Request object')
+    if (!nameRequest) throw new Error('Missing Name Request object')
 
     // Fetches and validates the NR and sets the data to the store. This method is different
     // from the validateNameRequest method in Actions.vue. This method sets the data to
