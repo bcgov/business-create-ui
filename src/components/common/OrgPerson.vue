@@ -1,7 +1,6 @@
 <template>
   <div id="add-edit-org-person">
-
-    <confirm-dialog
+    <ConfirmDialog
       ref="reassignCPDialog"
       attach="add-edit-org-person"
     />

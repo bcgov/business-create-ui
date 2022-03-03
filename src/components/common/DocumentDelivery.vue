@@ -6,7 +6,7 @@
       </v-col>
       <v-col cols="9">
         <v-card-text id="office-email" class="pa-0">
-          {{registeredOfficeEmail || 'Not entered'}}
+          {{registeredOfficeEmail || '(Not entered)'}}
         </v-card-text>
       </v-col>
     </v-row>
@@ -30,7 +30,7 @@
       </v-col>
       <v-col :cols="9" v-else>
         <v-card-text id="completing-party-email" class="pa-0">
-          {{completingPartyEmail || 'Not entered'}}
+          {{completingPartyEmail || '(Not entered)'}}
         </v-card-text>
       </v-col>
     </v-row>
@@ -41,7 +41,7 @@
       </v-col>
       <v-col cols="9">
         <v-card-text id="custodian-email" class="pa-0">
-          {{custodianEmail || 'Not entered'}}
+          {{custodianEmail || '(Not entered)'}}
         </v-card-text>
       </v-col>
     </v-row>
