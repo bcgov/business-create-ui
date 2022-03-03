@@ -1,6 +1,6 @@
 // Libraries
 import { Component, Mixins } from 'vue-property-decorator'
-import { CorpTypeCd, NameRequestStates, NameRequestTypes } from '@/enums'
+import { NameRequestStates } from '@/enums'
 import { NameRequestIF } from '@/interfaces'
 import { DateMixin } from '@/mixins'
 
@@ -17,7 +17,7 @@ export default class NameRequestMixin extends Mixins(DateMixin) {
   generateNameRequestState (nr: any, filingId: number): NameRequestIF {
     return {
       nrNumber: nr.nrNum,
-      entityType: this.nrTypeToEntityType(nr),
+      entityType: nr.legalType,
       filingId: filingId,
       applicant: {
         // Address Information
@@ -60,7 +60,7 @@ export default class NameRequestMixin extends Mixins(DateMixin) {
       nr.applicants &&
       nr.state &&
       nr.expirationDate &&
-      this.nrTypeToEntityType(nr) &&
+      nr.legalType &&
       !!this.getNrApprovedName(nr)
     )
   }
@@ -105,22 +105,5 @@ export default class NameRequestMixin extends Mixins(DateMixin) {
         .find(name => [NameRequestStates.APPROVED, NameRequestStates.CONDITION].includes(name.state))?.name
     }
     return null // should never happen
-  }
-
-  /**
-   * Returns the entity (corp) type that corresponds to the NR type.
-   * @param nr the name request response payload
-   */
-  nrTypeToEntityType (nr: any): CorpTypeCd {
-    switch (nr.entity_type_cd) {
-      case NameRequestTypes.BC: return CorpTypeCd.BENEFIT_COMPANY
-      case NameRequestTypes.CR: return CorpTypeCd.BC_CORPORATION
-      case NameRequestTypes.UL: return CorpTypeCd.BC_UNLIMITED
-      case NameRequestTypes.CC: return CorpTypeCd.BC_CCC
-      case NameRequestTypes.CP: return CorpTypeCd.COOP
-      case NameRequestTypes.FR: return CorpTypeCd.SOLE_PROP
-      case NameRequestTypes.GP: return CorpTypeCd.PARTNERSHIP
-    }
-    return null // unknown entity type code
   }
 }

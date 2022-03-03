@@ -68,7 +68,7 @@
       </section>
     </div>
 
-    <section id="sample-resolution-section" v-if="entityFilter(CorpTypeCd.COOP)" class="mt-10">
+    <section id="sample-resolution-section" v-if="isTypeCoop" class="mt-10">
       <header id="sample-resolution-header">
         <h2>{{getCreateResolutionResource.sampleFormSection.header}}</h2>
       </header>
@@ -93,7 +93,7 @@
       </v-card>
     </section>
 
-    <section id="resolution-date-section" v-if="entityFilter(CorpTypeCd.COOP)" class="mt-10">
+    <section id="resolution-date-section" v-if="isTypeCoop" class="mt-10">
       <header id="resolution-date-header">
         <h2>{{getCreateResolutionResource.resolutionDateSection.header}}</h2>
       </header>
@@ -126,7 +126,7 @@
       </div>
     </section>
 
-    <section id="resolution-text-section" v-if="entityFilter(CorpTypeCd.COOP)" class="mt-10">
+    <section id="resolution-text-section" v-if="isTypeCoop" class="mt-10">
       <header id="resolution-text-header">
         <h2>{{getCreateResolutionResource.resolutionTextSection.header}}</h2>
       </header>
@@ -163,7 +163,7 @@
       </div>
     </section>
 
-    <section id="resolution-signature-info-section" v-if="entityFilter(CorpTypeCd.COOP)" class="mt-10">
+    <section id="resolution-signature-info-section" v-if="isTypeCoop" class="mt-10">
       <header id="resolution-signature-info-header">
         <h2>{{getCreateResolutionResource.resolutionSignatureSection.header}}</h2>
       </header>
@@ -312,7 +312,7 @@ import {
 import { BulletListTypes, CorpTypeCd, ItemTypes, RouteNames } from '@/enums'
 
 // Mixins
-import { CommonMixin, DateMixin, EntityFilterMixin } from '@/mixins'
+import { CommonMixin, DateMixin } from '@/mixins'
 
 // Validation
 import { Rules, RuleHelpers } from '@/rules'
@@ -322,7 +322,7 @@ import { Rules, RuleHelpers } from '@/rules'
     DatePicker
   }
 })
-export default class CompleteResolution extends Mixins(CommonMixin, DateMixin, EntityFilterMixin) {
+export default class CompleteResolution extends Mixins(CommonMixin, DateMixin) {
   // Refs
   $refs!: {
     resolutionDatePickerRef: DatePicker,

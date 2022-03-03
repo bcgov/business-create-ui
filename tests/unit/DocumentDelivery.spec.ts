@@ -70,8 +70,8 @@ for (const mock of documentDeliveryCases) {
         registeredOfficeEmail: mock.businessContact.email,
         completingPartyEmail: mock.tombstone.userEmail
       })
-      expect(wrapper.find('#completing-party-email').text()).toBe('Not entered')
-      expect(wrapper.find('#office-email').text()).toBe('Not entered')
+      expect(wrapper.find('#completing-party-email').text()).toBe('(Not entered)')
+      expect(wrapper.find('#office-email').text()).toBe('(Not entered)')
     })
 
     it('displays optionalEmail', () => {

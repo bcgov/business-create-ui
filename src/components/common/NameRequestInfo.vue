@@ -1,6 +1,9 @@
 <template>
   <div id="name-request-summary">
-    <confirm-dialog ref="confirmTranslationRemovalDialog" attach="#name-request-summary" />
+    <ConfirmDialog
+      ref="confirmTranslationRemovalDialog"
+      attach="#name-request-summary"
+    />
 
     <template v-if="getNameRequestNumber">
       <v-row id="name-request-info">

@@ -2,23 +2,25 @@
   <div id="entity-info">
     <v-container>
       <v-row no-gutters class="pt-3 pb-3">
-        <v-col cols="12" md="9">
+        <v-col cols="12" md="9" class="pr-5">
           <div id="nr-header" v-show="isEntityType">
             <span class="header-title" id="entity-legal-name">{{ legalName || getNumberedEntityName }}</span>
           </div>
+
           <div id="entity-title" class="business-info">
             <span>{{ entityTitle }}</span>
           </div>
+
+          <div class="mt-5" />
         </v-col>
 
-        <v-col cols="12" md="3" class="business-info pl-5 pt-7">
+        <v-col cols="12" md="3" class="business-info">
           <div v-if="getNameRequestNumber" id="entity-nr-number">
             <span class="font-weight-bold business-info-label">Name Request:</span>
             {{ getNameRequestNumber }}
           </div>
 
-          <div v-if="isRegistrationFiling" class="mt-10" />
-          <template v-else>
+          <template v-if="!isRegistrationFiling">
             <div id="entity-business-email">
               <span class="font-weight-bold business-info-label">Email:</span>
               {{ getEmail || 'Not Available' }}

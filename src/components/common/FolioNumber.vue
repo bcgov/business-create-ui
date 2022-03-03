@@ -6,7 +6,7 @@
         <label><strong>Folio or Reference<br>Number</strong></label>
       </v-col>
       <v-col md="9">
-        <div id="lbl-folio-number">{{ !!folioNumber ? folioNumber : 'Not entered' }}</div>
+        <div id="lbl-folio-number">{{ folioNumber || '(Not entered)' }}</div>
       </v-col>
     </v-row>
 

@@ -83,8 +83,8 @@ import { ActionBindingIF, AddressIF, BusinessContactIF, BusinessIF } from '@/int
 import { ContactInfo } from '@bcrs-shared-components/contact-info'
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
 import OfficeAddresses from '@/components/common/OfficeAddresses.vue'
-import { CommonMixin, EntityFilterMixin, EnumMixin } from '@/mixins'
-import { CoopType } from '@/enums'
+import { CommonMixin, EnumMixin } from '@/mixins'
+import { CoopType, CorpTypeCd } from '@/enums'
 import { isEmpty } from 'lodash'
 
 @Component({
@@ -95,7 +95,7 @@ import { isEmpty } from 'lodash'
     MailingAddress: BaseAddress
   }
 })
-export default class AssociationDetails extends Mixins(CommonMixin, EntityFilterMixin, EnumMixin) {
+export default class AssociationDetails extends Mixins(CommonMixin, EnumMixin) {
   @Prop({ default: false })
   readonly isSummary: boolean
 
@@ -110,6 +110,7 @@ export default class AssociationDetails extends Mixins(CommonMixin, EntityFilter
   @Getter getBusinessLegalName!: string
   @Getter isPremiumAccount!: boolean
   @Getter isTypeCoop!: boolean
+  @Getter getEntityType!: CorpTypeCd
 
   // Global setters
   @Action setBusinessContact!: ActionBindingIF

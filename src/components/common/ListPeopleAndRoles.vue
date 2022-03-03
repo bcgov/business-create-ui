@@ -127,7 +127,7 @@ import { Component, Prop, Mixins, Emit } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
 import ConfirmRemoveDialog from '@/dialogs/ConfirmRemoveDialog.vue'
-import { CommonMixin, EntityFilterMixin } from '@/mixins'
+import { CommonMixin } from '@/mixins'
 
 // Interfaces & enums
 import { OrgPersonIF } from '@/interfaces'
@@ -139,7 +139,7 @@ import { PartyTypes, RouteNames } from '@/enums'
     ConfirmRemoveDialog
   }
 })
-export default class ListPeopleAndRoles extends Mixins(CommonMixin, EntityFilterMixin) {
+export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
   @Prop({ default: () => [] })
   readonly personList: Array<OrgPersonIF>
 

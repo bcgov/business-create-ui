@@ -1,5 +1,5 @@
 import { IncorporationResourceIF } from '@/interfaces'
-import { CorpTypeCd, FilingCodes, NameRequestTypes, RuleIds } from '@/enums'
+import { CorpTypeCd, FilingCodes, RuleIds } from '@/enums'
 import { BaseStepsTemplate } from './stepTemplates'
 import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 
@@ -10,7 +10,6 @@ export const BenefitCompanyResource: IncorporationResourceIF = {
   description: 'This company is a benefit company and, as such, has purposes that include conducting its ' +
     'business in a responsible and sustainable manner and promoting one or more public benefits.',
   statement: null,
-  nameRequestType: NameRequestTypes.BC,
   steps: BaseStepsTemplate,
   filingData: [{
     entityType: CorpTypeCd.BENEFIT_COMPANY,

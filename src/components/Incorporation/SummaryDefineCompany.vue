@@ -80,8 +80,8 @@ import { BusinessContactIF, DefineCompanyIF, NameTranslationIF } from '@/interfa
 import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
 import FolioNumber from '@/components/common/FolioNumber.vue'
 import OfficeAddresses from '@/components/common/OfficeAddresses.vue'
-import { EntityFilterMixin, EnumMixin } from '@/mixins'
-import { CoopType, RouteNames } from '@/enums'
+import { EnumMixin } from '@/mixins'
+import { CoopType, CorpTypeCd, RouteNames } from '@/enums'
 
 @Component({
   components: {
@@ -90,7 +90,7 @@ import { CoopType, RouteNames } from '@/enums'
     OfficeAddresses
   }
 })
-export default class SummaryDefineCompany extends Mixins(EntityFilterMixin, EnumMixin) {
+export default class SummaryDefineCompany extends Mixins(EnumMixin) {
   // Getters
   @Getter getApprovedName!: string
   @Getter getCompanyDisplayName!: string
@@ -102,6 +102,7 @@ export default class SummaryDefineCompany extends Mixins(EntityFilterMixin, Enum
   @Getter getDefineCompanyStep!: DefineCompanyIF
   @Getter getBusinessContact!: BusinessContactIF
   @Getter getFolioNumber!: string
+  @Getter getEntityType!: CorpTypeCd
 
   /** The entity description  */
   private get entityDescription (): string {
