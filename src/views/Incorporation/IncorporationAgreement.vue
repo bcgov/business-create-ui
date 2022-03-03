@@ -207,7 +207,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Watch, Vue } from 'vue-property-decorator'
+import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 import AgreementType from '@/components/common/AgreementType.vue'
 import { IncorporationAgreementIF } from '@/interfaces'
@@ -247,7 +247,7 @@ export default class IncorporationAgreement extends Mixins(CommonMixin, EnumMixi
   private async scrollToInvalidComponent (): Promise<void> {
     if (this.getShowErrors && this.$route.name === RouteNames.INCORPORATION_AGREEMENT) {
       // scroll to invalid components
-      await Vue.nextTick()
+      await this.$nextTick()
       await this.validateAndScroll(
         {
           isAgreementValid: this.getIncorporationAgreementStep.valid

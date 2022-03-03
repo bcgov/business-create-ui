@@ -306,6 +306,11 @@ export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
     this.rulesConfirmed = this.getCreateRulesStep.rulesConfirmed
     this.hasValidUploadFile = !!this.uploadRulesDocKey
     this.hasRulesConfirmed = this.rulesConfirmed
+  }
+
+  async mounted (): Promise<void> {
+    // wait for components to load/stabilize then update validation state in store
+    await this.$nextTick()
     this.updateRulesStepValidity()
   }
 

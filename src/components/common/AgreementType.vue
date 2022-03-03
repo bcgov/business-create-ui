@@ -84,7 +84,6 @@ export default class AgreementType extends Mixins(EnumMixin) {
   @Getter getIncorporationAgreementStep!: IncorporationAgreementIF
 
   @Action setIncorporationAgreementStepData!: ActionBindingIF
-  @Action setIgnoreChanges!: ActionBindingIF
 
   private agreementType: string = null
 
@@ -102,15 +101,9 @@ export default class AgreementType extends Mixins(EnumMixin) {
       .find(x => x.code === this.getIncorporationAgreementStep.agreementType)?.description
   }
 
-  // Lifecycle methods
+  /** Called when component is created. */
   created (): void {
-    // temporarily ignore data changes
-    this.setIgnoreChanges(true)
     this.agreementType = this.getIncorporationAgreementStep.agreementType
-    // watch data changes once page has loaded (in next tick)
-    Vue.nextTick(() => {
-      this.setIgnoreChanges(false)
-    })
   }
 
   mounted (): void {

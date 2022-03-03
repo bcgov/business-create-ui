@@ -53,7 +53,7 @@ export default class DissolutionStatement extends Vue {
 
   private dissolutionStatementType: DissolutionStatementTypes = null
 
-  // Lifecycle methods
+  /** Called when component is created. */
   created (): void {
     if (this.getDissolutionStatementStep) {
       this.dissolutionStatementType = this.getDissolutionStatementStep.dissolutionStatementType

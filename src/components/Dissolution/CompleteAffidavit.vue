@@ -1,5 +1,5 @@
 <template>
-  <div id="dissolution-affidavit">
+  <div id="complete-affidavit">
     <section class="mt-10">
       <header>
         <h2>1. Affidavit</h2>
@@ -190,7 +190,7 @@ import FileUploadPreview from '@/components/common/FileUploadPreview.vue'
     FileUploadPreview
   }
 })
-export default class Affidavit extends Mixins(CommonMixin, DocumentMixin, EnumMixin) {
+export default class CompleteAffidavit extends Mixins(CommonMixin, DocumentMixin, EnumMixin) {
   // Refs
   $refs!: {
     confirmAffidavitChk: FormIF
@@ -301,7 +301,8 @@ export default class Affidavit extends Mixins(CommonMixin, DocumentMixin, EnumMi
   }
 
   private updateAffidavitStepValidity () {
-    const validationDetail:ValidationDetailIF =
+    console.log('*** setting affidavit step validity')
+    const validationDetail: ValidationDetailIF =
       {
         valid: this.hasAffidavitConfirmed && this.hasValidUploadFile,
         validationItemDetails: [
@@ -336,6 +337,11 @@ export default class Affidavit extends Mixins(CommonMixin, DocumentMixin, EnumMi
     this.affidavitConfirmed = this.getAffidavitStep.affidavitConfirmed
     this.hasValidUploadFile = !!this.uploadAffidavitDocKey
     this.hasAffidavitConfirmed = this.affidavitConfirmed
+  }
+
+  async mounted (): Promise<void> {
+    // wait for components to load/stabilize then update validation state in store
+    await this.$nextTick()
     this.updateAffidavitStepValidity()
   }
 

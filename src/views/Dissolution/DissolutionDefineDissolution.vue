@@ -68,7 +68,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Vue, Watch } from 'vue-property-decorator'
+import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import AssociationDetails from '@/components/Dissolution/AssociationDetails.vue'
 import CareAndCustodySelect from '@/components/Dissolution/CareAndCustodySelect.vue'
@@ -133,7 +133,7 @@ export default class DissolutionDefineDissolution extends Mixins(CommonMixin, En
   private async scrollToInvalidComponent (): Promise<void> {
     if (this.getShowErrors && this.$route.name === RouteNames.DISSOLUTION_DEFINE_DISSOLUTION) {
       // scroll to invalid components
-      await Vue.nextTick()
+      await this.$nextTick()
       await this.validateAndScroll(
         {
           isStatementValid: this.isTypeCoop ? this.getDissolutionStatementStep.valid : true,

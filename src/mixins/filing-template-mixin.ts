@@ -340,6 +340,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
           legalType: this.getEntityType
         },
         businessAddress: this.getRegistration.businessAddress,
+        // *** FUTURE: save businessType here
         contactPoint: {
           email: this.getBusinessContact.email,
           phone: this.getBusinessContact.phone,
@@ -391,6 +392,8 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
 
     // restore Business Address
     this.setRegistrationBusinessAddress(draftFiling.registration.businessAddress)
+
+    // *** FUTURE: restore businessType here
 
     // restore Contact Info
     const draftContact = {

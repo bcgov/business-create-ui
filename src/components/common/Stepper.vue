@@ -22,7 +22,7 @@
           >
             <v-icon class="step__icon" :class="{ 'selected-icon': isCurrentStep(step) }">{{ step.icon }}</v-icon>
           </v-btn>
-          <v-icon class="step__btn2" size="30" color="success darken-1" v-show=isValid(step.to)>
+          <v-icon class="step__btn2" size="30" color="success darken-1" v-show="isValid(step.to)">
             mdi-check-circle
           </v-icon>
           <v-icon class="step__btn2" size="30" color="error darken-1" v-show="!isValid(step.to) && getValidateSteps">
