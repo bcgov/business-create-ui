@@ -3,3 +3,5 @@ export { CommunityContributionCompanyDissolutionResource } from '@/resources/Dis
 export { CooperativeDissolutionResource } from '@/resources/Dissolutions/cooperative'
 export { LimitedCompanyDissolutionResource } from '@/resources/Dissolutions/limitedCompany'
 export { UnlimitedDissolutionResource } from '@/resources/Dissolutions/unlimitedCompany'
+
+export { soloPropCompanyDissolutionResource } from '@/resources/Dissolutions/soloPropCompany'

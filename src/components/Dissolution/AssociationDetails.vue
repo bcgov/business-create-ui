@@ -23,7 +23,7 @@
     <div class="section-container">
       <v-row no-gutters>
         <v-col md="3">
-          <label>Address</label>
+          <label>{{addressLabel}}</label>
         </v-col>
         <v-col md="4">
           <label class="mailing-address-header">Mailing Address</label>
@@ -98,6 +98,9 @@ import { isEmpty } from 'lodash'
 export default class AssociationDetails extends Mixins(CommonMixin, EntityFilterMixin, EnumMixin) {
   @Prop({ default: false })
   readonly isSummary: boolean
+
+   @Prop({ default: 'Address' })
+  readonly addressLabel: ''
 
   // Global getters
   @Getter getApprovedName!: string

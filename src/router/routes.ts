@@ -161,6 +161,18 @@ export const routes = [
     }
   },
   {
+    path: '/dissolution-entity',
+    name: RouteNames.DISSOLUTION_ENTITY,
+    component: Views.DissolutionEntity,
+    meta: {
+      step: 1,
+      requiresAuth: true,
+      filingType: FilingTypes.VOLUNTARY_DISSOLUTION,
+      noStepper: true // to hide stepper for this view
+    }
+  },
+
+  {
     // default/fallback route
     // must be last
     // NB: this route is IA-specific but App::fetchData() will reroute

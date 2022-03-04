@@ -98,7 +98,7 @@
                 <h1>{{ getFilingName }}</h1>
               </header>
 
-              <Stepper class="mt-10" />
+              <Stepper class="mt-10" v-if="isStepperView" />
 
               <!-- Sign in and sign out components -->
               <Signin v-if="isRouteName(RouteNames.SIGN_IN)" />
@@ -370,6 +370,10 @@ export default class App extends Mixins(
       case FilingTypes.VOLUNTARY_DISSOLUTION: return 'Filing'
     }
   }
+  // check to use stepper view or not
+  get isStepperView () {
+    return !this.$route.meta.noStepper
+  }
 
   /** Helper to check is the current route matches */
   private isRouteName (routeName: RouteNames): boolean {
@@ -539,6 +543,7 @@ export default class App extends Mixins(
           // this is a Dissolution filing
           // (only dissolutionss have a business id)
           const resources = await this.handleDraftDissolution()
+          // console.log('this.getBusinessId resources', resources)
           if (!resources) {
             // go to catch()
             throw new Error(`Invalid dissolution resources, entity type = ${this.getEntityType}`)
@@ -629,7 +634,12 @@ export default class App extends Mixins(
 
     // fetch draft filing
     // NB: will throw if API error
-    let draftFiling = await this.fetchDraftDissolution()
+    let draftFiling:any = await this.fetchDraftDissolution()
+    // SB TODO remove once filing is available
+    draftFiling.business = { ...draftFiling.business,
+      ...{
+        legalType: 'SP'
+      } }
 
     // check if filing is in a valid state to be edited
     this.invalidDissolutionDialog = !this.hasValidFilingState(draftFiling)
