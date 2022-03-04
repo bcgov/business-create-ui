@@ -26,8 +26,12 @@
         </p>
       </header>
       <DocumentDelivery
+        :class="{ 'invalid-section': isDocumentDeliveryInvalid }"
+        :editableCompletingParty="isRoleStaff || isSbcStaff"
         :registeredOfficeEmail="getBusinessContact.email"
         :completingPartyEmail="getUserEmail"
+        :invalidSection="isDocumentDeliveryInvalid"
+        @valid="setDocumentOptionalEmailValidity($event)"
       />
     </section>
 
@@ -47,11 +51,11 @@
         :isCertified="getCertifyState.valid"
         :statements="getCompletingPartyStatement.certifyStatements"
         :message="getCompletingPartyStatement.certifyClause"
-        :isStaff="isRoleStaff"
+        :isStaff="isRoleStaff || isSbcStaff"
         :firstColumn="3"
         :secondColumn="9"
         :invalidSection="isCertifyInvalid"
-        :disableEdit="!isRoleStaff"
+        :disableEdit="!isRoleStaff && !isSbcStaff"
         @update:certifiedBy="onCertifiedBy($event)"
         @update:isCertified="onIsCertified($event)"
       />
@@ -82,7 +86,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import {
-  ActionBindingIF, BusinessContactIF, CertifyIF, CertifyStatementIF, PeopleAndRoleIF, RegistrationStateIF
+  ActionBindingIF, BusinessContactIF, CertifyIF, CertifyStatementIF, DocumentDeliveryIF, PeopleAndRoleIF
 } from '@/interfaces'
 import { Certify } from '@bcrs-shared-components/certify'
 import DefineRegistrationSummary from '@/components/Registration/DefineRegistrationSummary.vue'
@@ -110,8 +114,16 @@ export default class RegistrationReviewConfirm extends Vue {
   @Getter isRoleStaff!: boolean
   @Getter getValidateSteps!: boolean
   @Getter getAddPeopleAndRoleStep!: PeopleAndRoleIF
+  @Getter getDocumentDelivery!: DocumentDeliveryIF
+  @Getter isSbcStaff!: boolean
 
   @Action setCertifyState!: ActionBindingIF
+  @Action setDocumentOptionalEmailValidity!: ActionBindingIF
+
+  /** Is true when the Document Delivery conditions are not met. */
+  get isDocumentDeliveryInvalid (): boolean {
+    return (this.getValidateSteps && !this.getDocumentDelivery.valid)
+  }
 
   /** Is true when the certify conditions are not met. */
   get isCertifyInvalid () {

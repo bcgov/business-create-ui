@@ -301,7 +301,6 @@ export default class CompleteAffidavit extends Mixins(CommonMixin, DocumentMixin
   }
 
   private updateAffidavitStepValidity () {
-    console.log('*** setting affidavit step validity')
     const validationDetail: ValidationDetailIF =
       {
         valid: this.hasAffidavitConfirmed && this.hasValidUploadFile,

@@ -74,7 +74,7 @@
 
     <!-- Initial Page Load Transition -->
     <transition name="fade">
-      <div class="loading-container" v-show="!haveData">
+      <div class="loading-container" v-show="!haveData && !isErrorDialog">
         <div class="loading__content">
           <v-progress-circular color="primary" size="50" indeterminate />
           <div class="loading-msg">Loading</div>
@@ -87,6 +87,7 @@
     <PaySystemAlert />
 
     <div class="app-body">
+      <!-- Don't show page if an error dialog is displayed. -->
       <main v-if="!isErrorDialog">
         <BreadCrumb :breadcrumbs="breadcrumbs" />
         <EntityInfo />
@@ -104,9 +105,9 @@
               <Signin v-if="isRouteName(RouteNames.SIGN_IN)" />
               <Signout v-if="isRouteName(RouteNames.SIGN_OUT)" />
 
-              <!-- Only render when data is ready, or validation can't be properly evaluated. -->
+              <!-- Render components only after data is loaded. -->
               <template v-if="haveData">
-                <!-- Using v-show to pre-create/mount components so validation on stepper is shown -->
+                <!-- Use v-show so all pages (steps) are initialized/rendered. -->
                 <component
                   v-for="step in getSteps"
                   v-show="isRouteName(step.to)"
@@ -283,6 +284,7 @@ export default class App extends Mixins(
 
   // Local const
   private readonly STAFF_ROLE = 'STAFF'
+  private readonly GOV_ACCOUNT_USER = 'GOV_ACCOUNT_USER'
 
   // Enum for template
   readonly RouteNames = RouteNames
@@ -567,7 +569,8 @@ export default class App extends Mixins(
         // Since it's not an expected behaviour, it is better to report it.
         Sentry.captureException(error)
         console.log('Fetch error =', error) // eslint-disable-line no-console
-        this.fetchErrorDialog = true
+        // show fetch error dialog if there isn't another dialog showing
+        this.fetchErrorDialog = !this.isErrorDialog
         throw error // go to catch()
       }
 
@@ -605,7 +608,7 @@ export default class App extends Mixins(
 
       // set current profile name to store for field pre population
       // do this only if we are not staff
-      if (userInfo && !this.isRoleStaff) {
+      if (userInfo && !this.isRoleStaff && !this.isSbcStaff) {
         // pre-populate Certified By name
         this.setCertifyState(
           {
@@ -615,11 +618,10 @@ export default class App extends Mixins(
         )
       }
 
-      console.log('*** got data')
+      // good to go - hide spinner and render components
       this.haveData = true
     } catch (error) {
       // errors should be handled above
-      console.error('Unhandled error in fetchData() =', error) // eslint-disable-line no-console
       // just fall through to finally()
     } finally {
       // wait for things to stabilize, then reset flag
@@ -633,7 +635,7 @@ export default class App extends Mixins(
     await this.checkAuth(this.getBusinessId).catch(error => {
       console.log('Auth error =', error) // eslint-disable-line no-console
       this.accountAuthorizationDialog = true
-      throw error // go to catch()
+      throw error
     })
 
     // fetch draft filing
@@ -663,7 +665,7 @@ export default class App extends Mixins(
     await this.checkAuth(this.getTempId).catch(error => {
       console.log('Auth error =', error) // eslint-disable-line no-console
       this.accountAuthorizationDialog = true
-      throw error // go to catch()
+      throw error
     })
 
     // fetch draft filing
@@ -689,6 +691,8 @@ export default class App extends Mixins(
         resources = RegistrationResources
         parseFiling = this.parseRegistrationDraft
         break
+      default:
+        throw new Error(`Invalid filing type = ${this.getFilingType}`)
     }
 
     // parse draft filing into the store
@@ -809,7 +813,7 @@ export default class App extends Mixins(
     } else if (userInfo.email) {
       // this is an IDIR user
       this.setUserEmail(userInfo.email)
-    } else if (userInfo.type !== this.STAFF_ROLE) {
+    } else if (userInfo.type !== this.STAFF_ROLE && userInfo.type !== this.GOV_ACCOUNT_USER) {
       throw new Error('Invalid user email')
     }
 
@@ -819,7 +823,7 @@ export default class App extends Mixins(
     } else if (userInfo.phone) {
       // this is an IDIR user
       this.setUserPhone(userInfo.phone)
-    } else if (userInfo.type !== this.STAFF_ROLE) {
+    } else if (userInfo.type !== this.STAFF_ROLE && userInfo.type !== this.GOV_ACCOUNT_USER) {
       console.info('Invalid user phone')
     }
 
@@ -850,7 +854,7 @@ export default class App extends Mixins(
 
   /** Gets account info and stores it. */
   private async loadAccountInformation (): Promise<any> {
-    // NB: staff don't have current account
+    // NB: staff don't have current account (but SBC Staff do)
     if (!this.isRoleStaff) {
       const currentAccount = await this.getCurrentAccount()
       if (currentAccount) {

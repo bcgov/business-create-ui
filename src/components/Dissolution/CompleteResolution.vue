@@ -530,7 +530,6 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin) {
   }
 
   private updateResolutionStepValidationDetail () {
-    console.log('*** setting resolution step validity')
     let validationDetail: ValidationDetailIF = null
     const resolutionIsValid = this.isResolutionValid()
     if (this.isTypeCoop) {
