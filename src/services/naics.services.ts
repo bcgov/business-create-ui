@@ -10,7 +10,7 @@ export default class NaicsServices {
    * @returns a promise to return the search results
    */
   static async search (searchTerm: string): Promise<any> {
-    const naics = sessionStorage.getItem('NAICS_URL')
+    const naics = sessionStorage.getItem('NAICS_URL') + 'naics'
     const url = `${naics}?search_term=${encodeURIComponent(searchTerm)}`
 
     return axios.get(url)
