@@ -187,21 +187,21 @@
     <template v-else>
       <div class="summary-section">
         <v-row no-gutters>
-          <v-col cols="12" md="5" lg="5">
+          <v-col cols="12" md="5" lg="5" class="pr-8">
             <div class="summary-sub-label">Name</div>
             <span class="summary-text">{{ getCustodianName }}</span>
           </v-col>
-          <v-col cols="12" md="5" lg="5" class="pl-8">
+          <v-col cols="12" md="5" lg="5">
             <div class="summary-sub-label">Email Address</div>
             <span class="summary-text">{{ getDissolutionCustodianEmail || '(Not entered)' }}</span>
           </v-col>
         </v-row>
         <v-row no-gutters class="mt-4">
-          <v-col cols="12" md="5" lg="5">
+          <v-col cols="12" md="5" lg="5" class="pr-8">
             <label class="summary-sub-label">Mailing Address</label>
             <MailingAddress :address="getDissolutionCustodian.mailingAddress" />
           </v-col>
-          <v-col cols="12" md="5" lg="5" class="pl-8">
+          <v-col cols="12" md="5" lg="5">
             <label class="summary-sub-label">Delivery Address</label>
             <div v-if="getDissolutionCustodian.inheritMailingAddress">
               Same as Mailing Address

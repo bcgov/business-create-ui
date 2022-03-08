@@ -262,7 +262,7 @@ export default class OrgPerson extends Mixins(CommonMixin) {
   readonly Rules = Rules
 
   /** The validation rules for the roles. */
-  private get roleRules (): Array<Function> {
+  get roleRules (): Array<Function> {
     return [ () => this.selectedRoles.length > 0 || 'A role is required' ]
   }
 

@@ -71,7 +71,7 @@
 import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import AssociationDetails from '@/components/Dissolution/AssociationDetails.vue'
-import CareAndCustodySelect from '@/components/Dissolution/CareAndCustodySelect.vue'
+// import CareAndCustodySelect from '@/components/Dissolution/CareAndCustodySelect.vue'
 import CustodianOfRecords from '@/components/Dissolution/CustodianOfRecords.vue'
 import DestroyCertificate from '@/components/Dissolution/DestroyCertificate.vue'
 import DissolutionStatement from '@/components/Dissolution/DissolutionStatement.vue'
@@ -83,7 +83,7 @@ import { CorpTypeCd, RouteNames } from '@/enums'
 @Component({
   components: {
     AssociationDetails,
-    CareAndCustodySelect,
+    // CareAndCustodySelect,
     CustodianOfRecords,
     DestroyCertificate,
     DissolutionStatement,

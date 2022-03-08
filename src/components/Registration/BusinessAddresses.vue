@@ -3,15 +3,18 @@
     <!-- Address Summary -->
     <template v-if="!isEditing">
       <v-row no-gutters id="address-summary">
-        <v-col md="3" class="mr-n1"><label><strong>Business Addresses</strong></label></v-col>
-        <v-col md="4" class="pr-4">
-          <label class="mailing-address-header"><strong>Mailing Address</strong></label>
+        <v-col cols="12" sm="3" class="pr-4">
+          <label><strong>Business Addresses</strong></label>
+        </v-col>
+
+        <v-col cols="12" sm="4" class="pr-4">
+          <label class="mailing-address-header">Mailing Address</label>
           <div v-if="isEmptyAddress(mailingAddress)">(Not entered)</div>
           <MailingAddress v-else :address="mailingAddress" :editing="false" />
         </v-col>
 
-        <v-col md="4" class="pr-4">
-          <label class="delivery-address-header"><strong>Delivery Address</strong></label>
+        <v-col cols="12" sm="4" class="pr-4">
+          <label class="delivery-address-header">Delivery Address</label>
           <div v-if="isEmptyAddress(deliveryAddress)">(Not entered)</div>
           <div v-else-if="isSame(mailingAddress, deliveryAddress)">Same as Mailing Address</div>
           <DeliveryAddress v-else :address="deliveryAddress" :editing="false" />
@@ -20,61 +23,60 @@
     </template>
 
     <!-- Address Form -->
-    <v-card flat v-else>
-      <ul class="address-list address-form">
-        <!-- Mailing Address -->
-        <li class="address-list-container pa-5">
-          <div class="meta-container">
-            <label>Mailing Address</label>
-            <div class="meta-container__inner">
-              <MailingAddress
-                id="address-mailing"
-                ref="mailingAddress"
-                :address="mailingAddress"
-                :editing="true"
-                :schema="RegistrationMailingAddressSchema"
-                @update:address="updateAddress(MAILING_ADDRESS, $event)"
-                @valid="updateAddressValid(MAILING_ADDRESS, $event)"
+    <v-card flat v-else class="address-form">
+      <!-- Mailing Address -->
+      <div class="pt-8 px-6">
+        <div class="meta-container">
+          <label>Mailing Address</label>
+          <div class="meta-container__inner">
+            <MailingAddress
+              id="address-mailing"
+              ref="mailingAddress"
+              :address="mailingAddress"
+              :editing="true"
+              :schema="RegistrationMailingAddressSchema"
+              @update:address="updateAddress(MAILING_ADDRESS, $event)"
+              @valid="updateAddressValid(MAILING_ADDRESS, $event)"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- Delivery Address -->
+      <div class="pt-2 pb-8 px-6">
+        <div class="meta-container">
+          <label>Delivery Address</label>
+          <div class="meta-container__inner">
+            <div class="form__row">
+              <v-checkbox
+                id="same-as-mailing-checkbox"
+                class="inherit-checkbox"
+                label="Same as Mailing Address"
+                v-model="inheritMailingAddress"
+                v-on:change="onCheckboxChanged()"
+                :disabled="checkboxDisabled"
+                noPoBox="true"
               />
             </div>
+            <template
+              v-if="!isSame(mailingAddress, deliveryAddress, ['actions']) || !inheritMailingAddress"
+            >
+              <DeliveryAddress
+                id="address-delivery"
+                ref="deliveryAddress"
+                class="pt-2"
+                v-if="!inheritMailingAddress"
+                :address="deliveryAddress"
+                :editing="true"
+                :schema="RegistrationDeliveryAddressSchema"
+                :noPoBox="true"
+                @update:address="updateAddress(DELIVERY_ADDRESS, $event)"
+                @valid="updateAddressValid(DELIVERY_ADDRESS, $event)"
+              />
+            </template>
           </div>
-        </li>
-
-        <!-- Delivery Address -->
-        <li class="address-list-container pa-5">
-          <div class="meta-container">
-            <label>Delivery Address</label>
-            <div class="meta-container__inner">
-              <div class="form__row">
-                <v-checkbox
-                  id="same-as-mailing-checkbox"
-                  class="inherit-checkbox"
-                  label="Same as Mailing Address"
-                  v-model="inheritMailingAddress"
-                  v-on:change="onCheckboxChanged()"
-                  :disabled="checkboxDisabled"
-                  noPoBox="true"
-                />
-              </div>
-              <template
-                v-if="!isSame(mailingAddress, deliveryAddress, ['actions']) || !inheritMailingAddress"
-              >
-                <DeliveryAddress
-                  id="address-delivery"
-                  ref="deliveryAddress"
-                  v-if="!inheritMailingAddress"
-                  :address="deliveryAddress"
-                  :editing="true"
-                  :schema="RegistrationDeliveryAddressSchema"
-                  :noPoBox="true"
-                  @update:address="updateAddress(DELIVERY_ADDRESS, $event)"
-                  @valid="updateAddressValid(DELIVERY_ADDRESS, $event)"
-                />
-              </template>
-            </div>
-          </div>
-        </li>
-      </ul>
+        </div>
+      </div>
     </v-card>
   </div>
 </template>
@@ -324,16 +326,6 @@ label:first-child {
   }
 }
 
-.address-list .form {
-  margin-top: 1rem;
-}
-
-@media (min-width: 768px) {
-  .address-list .form {
-    margin-top: 0rem;
-  }
-}
-
 // Form Row Elements
 .form__row + .form__row {
   margin-top: 0.25rem;
@@ -351,18 +343,6 @@ label:first-child {
   margin-top: 0;
   margin-left: -3px;
   padding: 0;
-}
-
-.address-form {
-  li:first-child {
-    padding-bottom: 0;
-  }
-}
-
-ul {
-  margin: 0;
-  padding: 0;
-  list-style-type: none;
 }
 
 .address-edit-header {
@@ -384,16 +364,8 @@ label {
 .mailing-address-header,
 .delivery-address-header {
   font-size: $px-14;
+  font-weight: bold;
 }
-
-// make delivery address Province and Country unclickable
-// NB: doesn't prevent keyboard input
-// ::v-deep #address-delivery {
-//   .v-input.address-region,
-//   .v-input.address-country {
-//     pointer-events: none;
-//   }
-// }
 
 // italicize delivery instructions
 ::v-deep .base-address .address-block .delivery-instructions {

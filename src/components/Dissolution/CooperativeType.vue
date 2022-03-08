@@ -60,7 +60,7 @@ export default class CooperativeType extends Mixins(EnumMixin) {
   private cooperativeType: CoopType = null
 
   // Validation rules
-  private readonly cooperativeTypeRules: Array<Function> = [
+  readonly cooperativeTypeRules: Array<Function> = [
     v => !!v || 'This field is required' // is not empty
   ]
 

@@ -2,11 +2,12 @@
   <v-card flat class="rounded-4 py-2">
     <div class="section-container">
       <v-row no-gutters>
-        <v-col md="3" class="pr-6">
+        <v-col cols="12" sm="3" class="pr-4">
           <label v-if="isTypeCoop">Cooperative Association</label>
           <label v-else>Company</label>
         </v-col>
-        <v-col md="9">
+
+        <v-col cols="12" sm="9" class="pr-4">
           <div class="company-name">{{ entityName }}</div>
           <div class="my-1">
             <span>{{ entityDescription }}</span>
@@ -22,10 +23,11 @@
 
     <div class="section-container">
       <v-row no-gutters>
-        <v-col md="3">
+        <v-col cols="12" sm="3" class="pr-4">
           <label>Address</label>
         </v-col>
-        <v-col md="4">
+
+        <v-col cols="12" sm="4" class="pr-4">
           <label class="mailing-address-header">Mailing Address</label>
           <MailingAddress
             v-if="!isEmptyAddress(getBusiness.officeAddress.mailingAddress)"
@@ -34,7 +36,8 @@
           />
           <div v-else>(Not entered)</div>
         </v-col>
-        <v-col md="4">
+
+        <v-col cols="12" sm="4" class="pr-4">
           <label class="mailing-address-header">Delivery Address</label>
           <DeliveryAddress
             v-if="!isEmptyAddress(getBusiness.officeAddress.deliveryAddress) &&
@@ -52,11 +55,12 @@
 
     <div v-if="isPremiumAccount" id="folio-number" class="section-container">
       <v-row no-gutters>
-        <v-col md="3" class="pr-6">
+        <v-col cols="12" sm="3" class="pr-4">
           <label>Folio or Reference Number</label>
         </v-col>
-        <v-col md="9">
-          <div id="lbl-folio-number">{{ getFolioNumber || 'None' }}</div>
+
+        <v-col cols="12" sm="9" class="pr-4">
+          <div id="lbl-folio-number">{{ getFolioNumber || '(Not entered)' }}</div>
         </v-col>
       </v-row>
     </div>
@@ -148,7 +152,7 @@ export default class AssociationDetails extends Mixins(CommonMixin, EnumMixin) {
 @import '@/assets/styles/theme.scss';
 
 .section-container {
-  padding: 1.5rem 2rem;
+  padding: 2rem 1.5rem;
 
   .mailing-address-header {
     font-size: $px-14;

@@ -67,6 +67,10 @@ export async function fetchConfig (): Promise<any> {
   axios.defaults.baseURL = legalApiUrl
   console.log('Set Legal API URL to: ' + legalApiUrl)
 
+  const naicsUrl: string = response.data['NAICS_URL']
+  sessionStorage.setItem('NAICS_URL', naicsUrl)
+  console.log('Set NAICS URL to: ' + naicsUrl)
+
   const authApiUrl: string = response.data['AUTH_API_URL'] + response.data['AUTH_API_VERSION'] + '/'
   sessionStorage.setItem('AUTH_API_URL', authApiUrl)
   console.log('Set Auth API URL to: ' + authApiUrl)

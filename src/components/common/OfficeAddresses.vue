@@ -3,15 +3,15 @@
     <!-- Address Summary -->
     <template v-if="!isEditing">
       <v-row no-gutters id="summary-registered-address">
-        <v-col md="3" class="mr-n1"><label><strong>Registered Office</strong></label></v-col>
-        <v-col md="4" class="pr-4">
-          <label class="mailing-address-header"><strong>Mailing Address</strong></label>
+        <v-col cols="12" sm="3" class="pr-4"><label>Registered Office</label></v-col>
+        <v-col cols="12" sm="4" class="pr-4">
+          <label class="mailing-address-header">Mailing Address</label>
           <div v-if="isEmptyAddress(mailingAddress)">(Not entered)</div>
           <MailingAddress v-else :address="mailingAddress" :editing="false" />
         </v-col>
 
-        <v-col md="4" class="pr-4">
-          <label class="delivery-address-header"><strong>Delivery Address</strong></label>
+        <v-col cols="12" sm="4" class="pr-4">
+          <label class="delivery-address-header">Delivery Address</label>
           <div v-if="isEmptyAddress(deliveryAddress)">(Not entered)</div>
           <div v-else-if="isSame(mailingAddress, deliveryAddress)">Same as Mailing Address</div>
           <DeliveryAddress v-else :address="deliveryAddress" :editing="false" />
@@ -19,16 +19,16 @@
       </v-row>
 
       <v-row no-gutters id="summary-records-address" v-if="!isTypeCoop" class="mt-4">
-        <v-col md="3" class="mr-n1"><label><strong>Records Office</strong></label></v-col>
-        <v-col md="4" class="pr-4">
-          <label class="mailing-address-header"><strong>Mailing Address</strong></label>
+        <v-col cols="12" sm="3" class="pr-4"><label>Records Office</label></v-col>
+        <v-col cols="12" sm="4" class="pr-4">
+          <label class="mailing-address-header">Mailing Address</label>
           <div v-if="isEmptyAddress(recMailingAddress)">(Not entered)</div>
           <div v-else-if="isSame(mailingAddress, recMailingAddress)">Same as Registered Office</div>
           <MailingAddress v-else :address="recMailingAddress" :editing="false" />
         </v-col>
 
-        <v-col md="4" class="pr-4">
-          <label class="delivery-address-header"><strong>Delivery Address</strong></label>
+        <v-col cols="12" sm="4" class="pr-4">
+          <label class="delivery-address-header">Delivery Address</label>
           <div v-if="isEmptyAddress(recDeliveryAddress)">(Not entered)</div>
           <div v-else-if="isSame(deliveryAddress, recDeliveryAddress)">Same as Registered Office</div>
           <div v-else-if="isSame(recMailingAddress, recDeliveryAddress)">Same as Mailing Address</div>
@@ -39,18 +39,19 @@
 
     <!-- Address Form -->
     <v-card flat v-else>
-      <ul class="address-list address-form">
+      <ul class="address-form">
         <!-- Registered Office -->
         <div class="address-edit-header">
           <label class="address-edit-title">Registered Office</label>
         </div>
 
         <!-- Registered Mailing Address -->
-        <li class="address-list-container pa-5">
+        <li class="pt-8 px-6">
           <div class="meta-container">
             <label>Mailing Address</label>
             <div class="meta-container__inner">
-              <MailingAddress ref="regMailingAddress"
+              <MailingAddress
+                ref="regMailingAddress"
                 id="address-registered-mailing"
                 :address="mailingAddress"
                 :editing="true"
@@ -63,7 +64,7 @@
         </li>
 
         <!-- Registered Delivery Address -->
-        <li class="address-list-container pa-5">
+        <li class="pt-2 pb-8 px-6">
           <div class="meta-container">
             <label>Delivery Address</label>
             <div class="meta-container__inner">
@@ -79,8 +80,10 @@
               <template
                 v-if="!isSame(mailingAddress, deliveryAddress, ['actions']) || !inheritMailingAddress"
               >
-                <DeliveryAddress ref="regDeliveryAddress"
+                <DeliveryAddress
+                  ref="regDeliveryAddress"
                   id="address-registered-delivery"
+                  class="pt-2"
                   v-if="!inheritMailingAddress"
                   :address="deliveryAddress"
                   :editing="true"
@@ -109,11 +112,12 @@
 
           <template v-if="!inheritRegisteredAddress">
             <!-- Records Mailing Address -->
-            <li class="address-list-container pa-5">
+            <li class="pt-8 px-6">
               <div class="meta-container">
                 <label>Mailing Address</label>
                 <div class="meta-container__inner">
-                  <MailingAddress ref="recMailingAddress"
+                  <MailingAddress
+                  ref="recMailingAddress"
                     id="address-records-mailing"
                     :address="recMailingAddress"
                     :editing="true"
@@ -126,7 +130,7 @@
             </li>
 
             <!-- Records Delivery Address -->
-            <li class="address-list-container pa-5">
+            <li class="pt-2 pb-8 px-6">
               <div class="meta-container">
                 <label>Delivery Address</label>
                 <div class="meta-container__inner">
@@ -141,8 +145,10 @@
                   <template
                     v-if="!isSame(recMailingAddress, recDeliveryAddress, ['actions']) || !inheritRecMailingAddress"
                   >
-                    <DeliveryAddress ref="recDeliveryAddress"
+                    <DeliveryAddress
+                      ref="recDeliveryAddress"
                       id="address-records-delivery"
+                      class="pt-2"
                       :address="recDeliveryAddress"
                       :editing="true"
                       :schema="OfficeAddressSchema"
@@ -556,16 +562,6 @@ label:first-child {
   }
 }
 
-.address-list .form {
-  margin-top: 1rem;
-}
-
-@media (min-width: 768px) {
-  .address-list .form {
-    margin-top: 0rem;
-  }
-}
-
 // Form Row Elements
 .form__row + .form__row {
   margin-top: 0.25rem;
@@ -629,6 +625,7 @@ label {
 .mailing-address-header,
 .delivery-address-header {
   font-size: $px-14;
+  font-weight: bold;
 }
 
 // italicize delivery instructions

@@ -49,7 +49,6 @@ describe('Registration Filing', () => {
     // entity type
     // folio number
     // is future effective
-    // name request data
     // parties
     // staff filing data
     // start date
@@ -74,6 +73,17 @@ describe('Registration Filing', () => {
         streetAddress: '222 Second St',
         streetAddressAdditional: 'Suite 2'
       }
+    }
+
+    store.state.stateModel.registration.naics = {
+      naicsCode: '12345',
+      naicsDescription: 'Some NAICS Description'
+    }
+
+    store.state.stateModel.registration.nameRequest = {
+      legalName: 'My Approved Name',
+      legalType: 'SP',
+      nrNumber: 'NR 1234567'
     }
 
     const filing = wrapper.vm.buildRegistrationFiling()
@@ -102,6 +112,15 @@ describe('Registration Filing', () => {
               streetAddress: '222 Second St',
               streetAddressAdditional: 'Suite 2'
             }
+          },
+          naics: {
+            naicsCode: '12345',
+            naicsDescription: 'Some NAICS Description'
+          },
+          nameRequest: {
+            legalName: 'My Approved Name',
+            legalType: 'SP',
+            nrNumber: 'NR 1234567'
           }
         })
       })
@@ -119,12 +138,11 @@ describe('Registration Filing', () => {
     // certify state
     // entity type
     // folio number
-    // name request data
     // parties
     // staff filing data
     expect(store.state.stateModel.registration).toEqual({
       defineBusinessValid: false,
-      startDate: '2001-02-03',
+      startDate: '2021-02-03',
       businessAddress: {
         deliveryAddress: {
           addressCity: 'Alpha',
@@ -145,7 +163,16 @@ describe('Registration Filing', () => {
           streetAddressAdditional: 'Suite 2'
         }
       },
-      feeAcknowledgement: false
+      feeAcknowledgement: false,
+      naics: {
+        naicsCode: '12345',
+        naicsDescription: 'Some NAICS Description'
+      },
+      nameRequest: {
+        legalName: 'My Approved Name',
+        legalType: 'SP',
+        nrNumber: 'NR 1234567'
+      }
     })
   })
 })

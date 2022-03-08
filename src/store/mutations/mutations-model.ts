@@ -12,6 +12,8 @@ import {
   FeesIF,
   IncorporationAddressIF,
   IncorporationAgreementIF,
+  RegistrationNaicsIF,
+  RegistrationNameRequestIF,
   NameRequestIF,
   NameTranslationIF,
   OfficeAddressIF,
@@ -331,5 +333,15 @@ export const mutateRegistrationBusinessAddress = (state: StateIF, val: BusinessA
 
 export const mutateRegistrationFeeAcknowledgement = (state: StateIF, val: boolean) => {
   state.stateModel.registration.feeAcknowledgement = val
+  if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
+}
+
+export const mutateRegistrationNaics = (state: StateIF, val: RegistrationNaicsIF) => {
+  state.stateModel.registration.naics = val
+  if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
+}
+
+export const mutateRegistrationNameRequest = (state: StateIF, val: RegistrationNameRequestIF) => {
+  state.stateModel.registration.nameRequest = val
   if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
 }

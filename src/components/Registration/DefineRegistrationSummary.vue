@@ -5,8 +5,8 @@
       <label class="define-registration-title pl-2"><strong>Your Business</strong></label>
     </div>
 
-    <section :class="{ 'invalid-section': !getRegistration.defineBusinessValid }">
-      <div v-if="!getRegistration.defineBusinessValid" class="define-registration-step-error-message">
+    <section :class="{ 'invalid-section': !defineBusinessValid }">
+      <div v-if="!defineBusinessValid" class="define-registration-step-error-message">
         <span>
           <v-icon color="error">mdi-information-outline</v-icon>
           &nbsp;
@@ -20,10 +20,10 @@
 
       <div class="section-container">
         <v-row no-gutters>
-          <v-col md="3" class="mr-n1">
+          <v-col cols="12" sm="3" class="pr-4">
             <label>Name</label>
           </v-col>
-          <v-col md="9">
+          <v-col cols="12" sm="8" class="pr-4">
             <div class="company-name">{{ getApprovedName || 'Unavailable' }}</div>
             <div class="company-type">
               <span>{{ entityDescription }}</span>
@@ -32,7 +32,20 @@
         </v-row>
       </div>
 
-      <v-divider />
+      <v-divider class="mx-6" />
+
+      <div class="section-container">
+        <v-row no-gutters>
+          <v-col cols="12" sm="3" class="pr-4">
+            <label>Nature of Business</label>
+          </v-col>
+          <v-col cols="12" sm="9" class="pr-4">
+            <span>{{ natureOfBusiness || '(Not entered)' }}</span>
+          </v-col>
+        </v-row>
+      </div>
+
+      <v-divider class="mx-6" />
 
       <div class="section-container">
         <BusinessAddresses
@@ -41,7 +54,7 @@
         />
       </div>
 
-      <v-divider />
+      <v-divider class="mx-6" />
 
       <div class="section-container">
         <BusinessContactInfo
@@ -50,20 +63,20 @@
         />
       </div>
 
-      <v-divider />
+      <v-divider class="mx-6" />
 
       <div class="section-container">
         <v-row no-gutters>
-          <v-col md="3" class="mr-n1">
+          <v-col cols="12" sm="3" class="pr-4">
             <label>Business Start Date</label>
           </v-col>
-          <v-col md="9">
-            <div>{{ yyyyMmDdToPacificDate(getRegistration.startDate, true) || '(Not entered)' }}</div>
+          <v-col cols="12" sm="9" class="pr-4">
+            <div>{{ businessStartDate || '(Not entered)' }}</div>
           </v-col>
         </v-row>
       </div>
 
-      <v-divider v-if="isPremiumAccount" />
+      <v-divider class="mx-6" v-if="isPremiumAccount" />
 
       <div class="section-container" v-if="isPremiumAccount">
         <FolioNumber
@@ -101,9 +114,24 @@ export default class DefineRegistrationSummary extends Mixins(DateMixin, EnumMix
   @Getter getRegistration!: RegistrationStateIF
   @Getter getEntityType!: CorpTypeCd
 
-  /** The entity description  */
+  /** The entity description. */
   get entityDescription (): string {
     return `${this.getCorpTypeDescription(this.getEntityType)}`
+  }
+
+  /** The business valid flag. */
+  get defineBusinessValid (): boolean {
+    return this.getRegistration.defineBusinessValid
+  }
+
+  /** The nature of business. */
+  get natureOfBusiness (): string {
+    return this.getRegistration.naics.naicsDescription
+  }
+
+  /** The business start date. */
+  get businessStartDate (): string {
+    return this.yyyyMmDdToPacificDate(this.getRegistration.startDate, true)
   }
 
   // Enum for template

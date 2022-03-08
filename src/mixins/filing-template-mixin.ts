@@ -29,7 +29,8 @@ import {
   OrgPersonIF,
   SpecialResolutionIF,
   RegistrationStateIF,
-  RegistrationFilingIF
+  RegistrationFilingIF,
+  EmptyRegistrationNaics
 } from '@/interfaces'
 
 // Constants and enums
@@ -99,7 +100,6 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Action setOfficeAddresses!: ActionBindingIF
   @Action setNameTranslationState!: ActionBindingIF
   @Action setDefineCompanyStepValidity!: ActionBindingIF
-  @Action setNameRequestState!: ActionBindingIF
   @Action setOrgPersonList!: ActionBindingIF
   @Action setCertifyState!: ActionBindingIF
   @Action setShareClasses!: ActionBindingIF
@@ -120,6 +120,8 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Action setRegistrationStartDate!: ActionBindingIF
   @Action setRegistrationBusinessAddress!: ActionBindingIF
   @Action setRegistrationFeeAcknowledgement!: ActionBindingIF
+  @Action setRegistrationNaics!: ActionBindingIF
+  @Action setRegistrationNameRequest!: ActionBindingIF
 
   /**
    * Builds an incorporation filing from store data. Used when saving a filing.
@@ -335,12 +337,10 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
         isFutureEffective: false
       },
       registration: {
-        startDate: this.getRegistration.startDate,
-        nameRequest: {
-          legalType: this.getEntityType
+        business: {
+          identifier: this.getTempId
         },
         businessAddress: this.getRegistration.businessAddress,
-        // *** FUTURE: save businessType here
         contactPoint: {
           email: this.getBusinessContact.email,
           phone: this.getBusinessContact.phone,
@@ -348,10 +348,10 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
             ? { extension: +this.getBusinessContact.extension }
             : {}
         },
+        naics: this.getRegistration.naics,
+        nameRequest: this.getRegistration.nameRequest,
         parties: this.getAddPeopleAndRoleStep.orgPeople,
-        business: {
-          identifier: this.getTempId
-        }
+        startDate: this.getRegistration.startDate
       }
     }
 
@@ -387,20 +387,23 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     // save filing id
     this.setFilingId(+draftFiling.header.filingId)
 
-    // restore Entity Type
-    this.setEntityType(draftFiling.registration.nameRequest.legalType)
-
     // restore Business Address
     this.setRegistrationBusinessAddress(draftFiling.registration.businessAddress)
 
-    // *** FUTURE: restore businessType here
-
     // restore Contact Info
-    const draftContact = {
+    this.setBusinessContact({
       ...draftFiling.registration.contactPoint,
       confirmEmail: draftFiling.registration.contactPoint.email
-    }
-    this.setBusinessContact(draftContact)
+    })
+
+    // restore NAICS
+    this.setRegistrationNaics(draftFiling.registration.naics || EmptyRegistrationNaics)
+
+    // restore Name Request data
+    this.setRegistrationNameRequest(draftFiling.registration.nameRequest)
+
+    // restore Entity Type
+    this.setEntityType(draftFiling.registration.nameRequest.legalType)
 
     // restore start date
     this.setRegistrationStartDate(draftFiling.registration.startDate)
