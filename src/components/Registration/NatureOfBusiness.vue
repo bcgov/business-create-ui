@@ -178,8 +178,8 @@ export default class NatureOfBusiness extends Mixins(CommonMixin) {
   }
 
   onChangeClicked (): void {
-    // clear store value
-    this.setRegistrationNaics(EmptyRegistrationNaics)
+    // set search to current NOB
+    this.searchField = this.natureOfBusiness.toLowerCase()
 
     this.state = States.INITIAL
   }
