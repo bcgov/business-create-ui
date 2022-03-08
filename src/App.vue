@@ -97,6 +97,9 @@
               <header>
                 <h1>{{ getFilingName }}</h1>
               </header>
+              <p class="mt-4 mb-6" v-if="getFilingSubtitle">
+                {{ getFilingSubtitle }}
+              </p>
 
               <Stepper class="mt-10" v-if="isStepperView" />
 
@@ -374,7 +377,13 @@ export default class App extends Mixins(
   get isStepperView () {
     return !this.$route.meta.noStepper
   }
-
+  // SB TODO : Move to store if its good
+  private get getFilingSubtitle () {
+    if (this.getEntityType === CorpTypeCd.SOLE_PROP) {
+      return 'Confirm the following information, select the dissolution date and certify your dissolution before filing.'
+    }
+    return false
+  }
   /** Helper to check is the current route matches */
   private isRouteName (routeName: RouteNames): boolean {
     return (this.$route.name === routeName)

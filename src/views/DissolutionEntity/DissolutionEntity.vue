@@ -2,13 +2,13 @@
   <div id="dissolution-review-confirm">
     <!-- Review and Confirm -->
     <section class="mt-10">
-      <header>
+      <!-- <header>
         <h2>Review and Confirm</h2>
         <p class="mt-4 mb-6">
           Review the information in your filing. If you need to change or complete anything, return
           to the step to make the necessary change.
         </p>
-      </header>
+      </header> -->
 
       <!-- Dissolution summary -->
       <v-card flat id="dissolution-summary" class="mt-6">
@@ -160,6 +160,21 @@
         @valid="setTransactionalFolioNumberValidity($event)"
       />
     </section>
+  <!-- Completing Party -->
+  <!-- show only if exist -->
+    <section  id="completing-party-section" class="mt-10" v-if="getAddPeopleAndRoleStep.orgPeople && getAddPeopleAndRoleStep.orgPeople.length > 0"  >
+      <header>
+        <h2>Completing Party</h2>
+        <p class="mt-4 mb-6">
+          Confirm the legal name of the person authorized to complete and submit this dissolution.
+        </p>
+      </header>
+        <ListPeopleAndRoles
+        :personList="getAddPeopleAndRoleStep.orgPeople"
+        :isSummary="true"
+        :showErrorSummary="!getAddPeopleAndRoleStep.valid"
+      />
+    </section>
 
     <!-- Certify -->
     <section id="certify-section" class="mt-10">
@@ -235,6 +250,8 @@ import DestroyCertificate from '@/components/Dissolution/DestroyCertificate.vue'
 import DissolutionStatement from '@/components/Dissolution/DissolutionStatement.vue'
 import DocumentDelivery from '@/components/common/DocumentDelivery.vue'
 import { EffectiveDateTime } from '@bcrs-shared-components/effective-date-time'
+import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
+
 import StaffPayment from '@/components/common/StaffPayment.vue'
 import TransactionalFolioNumber from '@/components/common/TransactionalFolioNumber.vue'
 import { RouteNames } from '@/enums'
@@ -249,6 +266,7 @@ import {
   DocumentDeliveryIF,
   EffectiveDateTimeIF,
   FeesIF,
+  PeopleAndRoleIF,
   UploadAffidavitIF
 } from '@/interfaces'
 
@@ -264,7 +282,8 @@ import {
     DocumentDelivery,
     EffectiveDateTime,
     StaffPayment,
-    TransactionalFolioNumber
+    TransactionalFolioNumber,
+    ListPeopleAndRoles
   }
 })
 export default class DissolutionReviewConfirm extends Mixins(DateMixin) {
@@ -291,6 +310,7 @@ export default class DissolutionReviewConfirm extends Mixins(DateMixin) {
   @Getter isTypeCoop!: boolean
   @Getter getFolioNumber!: string
   @Getter getTransactionalFolioNumber!: string
+  @Getter getAddPeopleAndRoleStep!: PeopleAndRoleIF
 
   // Global actions
   @Action setEffectiveDateTimeValid!: ActionBindingIF
