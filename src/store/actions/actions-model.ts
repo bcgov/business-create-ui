@@ -2,7 +2,7 @@ import {
   AccountInformationIF, ActionIF, AddressIF, BusinessContactIF, CertifyIF, DissolutionStatementIF,
   IncorporationAddressIF, IncorporationAgreementIF, NameRequestIF, NameTranslationIF, OrgPersonIF,
   ResourceIF, ShareClassIF, CreateRulesIF, CreateMemorandumIF, ValidationDetailIF, FeesIF,
-  UploadAffidavitIF, CreateResolutionIF, OrgInformationIF
+  UploadAffidavitIF, CreateResolutionIF, OrgInformationIF, RegistrationNaicsIF, RegistrationNameRequestIF
 } from '@/interfaces'
 import { CoopType, CorpTypeCd } from '@/enums'
 
@@ -292,4 +292,12 @@ export const setRegistrationBusinessAddress: ActionIF = ({ commit }, val: Incorp
 
 export const setRegistrationFeeAcknowledgement: ActionIF = ({ commit }, val: boolean): void => {
   commit('mutateRegistrationFeeAcknowledgement', val)
+}
+
+export const setRegistrationNaics: ActionIF = ({ commit }, val: RegistrationNaicsIF): void => {
+  commit('mutateRegistrationNaics', val)
+}
+
+export const setRegistrationNameRequest: ActionIF = ({ commit }, val: RegistrationNameRequestIF): void => {
+  commit('mutateRegistrationNameRequest', val)
 }

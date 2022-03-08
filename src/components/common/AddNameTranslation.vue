@@ -10,8 +10,8 @@
             id="name-translation-input"
             label="Enter Name Translation"
             v-model="nameTranslation"
-            :rules="nameTranslationRules">
-          </v-text-field>
+            :rules="nameTranslationRules"
+          />
         </v-col>
       </v-row>
       <v-row>
@@ -50,7 +50,7 @@ export default class AddNameTranslation extends Vue {
   private nameTranslation: string = ''
 
   // Validation rules
-  private readonly nameTranslationRules: Array<Function> = [
+  readonly nameTranslationRules: Array<Function> = [
     v => !!v || 'A name translation is required', // is not empty
     v => /^[A-Za-zÀ-ÿ_@./#’&+-]+(?: [A-Za-zÀ-ÿ_@./#’&+-]+)*$/.test(v) || 'Invalid character', // English, French and single spaces
     v => (!v || v.length <= 150) || 'Cannot exceed 150 characters' // maximum character count

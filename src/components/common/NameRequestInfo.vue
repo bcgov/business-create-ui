@@ -6,13 +6,13 @@
     />
 
     <template v-if="getNameRequestNumber">
-      <v-row id="name-request-info">
-        <v-col>
+      <v-row id="name-request-info" class="mt-n3">
+        <v-col cols="12" sm="2">
           <label>
             <strong>Name Request</strong>
           </label>
         </v-col>
-        <v-col>
+        <v-col cols="12" sm="10">
           <ul class="name-request-list-items">
             <li id="name-request-title">
               <strong>{{ getNameRequestNumber }}</strong> - {{ getNameRequestDetails.approvedName }}
@@ -29,12 +29,12 @@
       </v-row>
 
       <v-row id="name-request-applicant-info">
-        <v-col>
+        <v-col cols="12" sm="2">
           <label>
             <strong>Name Request Applicant</strong>
           </label>
         </v-col>
-        <v-col>
+        <v-col cols="12" sm="10">
           <ul class="applicant-list-items">
             <li><strong>Name:</strong> {{ applicantName() }}</li>
             <li><strong>Address:</strong> {{ applicantAddress() }}</li>
@@ -45,13 +45,13 @@
       </v-row>
     </template>
 
-    <v-row v-else id="numbered-company-info">
-      <v-col>
+    <v-row v-else id="numbered-company-info" class="mt-n3">
+      <v-col cols="12" sm="2">
         <label>
           <strong>Name</strong>
         </label>
       </v-col>
-      <v-col>
+      <v-col cols="12" sm="10">
         <ul class="numbered-company-list-items">
           <li id="numbered-company-title">
             <strong>[Incorporation Number]</strong> B.C. Ltd.
@@ -71,12 +71,12 @@
 
     <!-- Name Translation Option -->
     <v-row v-if="showNameTranslation" id="name-translation-info">
-      <v-col>
+      <v-col cols="12" sm="2">
         <label>
           <strong>Name Translation</strong>
         </label>
       </v-col>
-      <v-col>
+      <v-col cols="12" sm="10">
         <v-checkbox
           hide-details="true"
           class="pt-0 mt-0"
@@ -104,8 +104,8 @@
     <!-- Name Translation Components -->
     <v-row v-if="showNameTranslation && hasNameTranslation" id="name-translation-container">
       <!-- Spacer Column -->
-      <v-col></v-col>
-      <v-col>
+      <v-col cols="12" sm="2"></v-col>
+      <v-col cols="12" sm="10">
         <AddNameTranslation
           v-if="isAddingNameTranslation"
           :edit-name-translation="editingNameTranslation"
@@ -367,11 +367,6 @@ export default class NameRequestInfo extends Mixins(DateMixin, EnumMixin) {
 
 p {
   font-size: $px-14;
-}
-
-.row .col:first-child {
-  width: 12rem;
-  max-width: 12rem;
 }
 
 ul {

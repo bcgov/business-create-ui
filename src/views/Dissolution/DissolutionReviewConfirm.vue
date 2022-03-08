@@ -39,8 +39,8 @@
           <section class="ml-5 mr-8 pl-2" v-if="isTypeCoop">
             <v-container id="dissolution-statement">
               <v-row no-gutters>
-                <v-col cols="3" class="inner-col-1">
-                  <label class="font-weight-bold">Dissolution<br>Statement</label>
+                <v-col cols="3" class="inner-col-1 pr-4">
+                  <label class="font-weight-bold">Dissolution Statement</label>
                 </v-col>
 
                 <v-col cols="9" class="inner-col-2">
@@ -53,7 +53,7 @@
           <!-- divider -->
           <div class="ml-5 mr-8 pl-2" v-if="isTypeCoop">
             <v-container class="py-0">
-              <v-divider  />
+              <v-divider />
             </v-container>
           </div>
 
@@ -61,8 +61,8 @@
           <section class="ml-5 mr-8 pl-2">
             <v-container id="custodian-of-records">
               <v-row no-gutters>
-                <v-col cols="3" class="inner-col-1">
-                  <label class="font-weight-bold">Custodian<br>of Records</label>
+                <v-col cols="3" class="inner-col-1 pr-4">
+                  <label class="font-weight-bold">Custodian of Records</label>
                 </v-col>
 
                 <v-col cols="9" class="inner-col-2">
@@ -75,7 +75,7 @@
           <!-- divider -->
           <div class="ml-5 mr-8 pl-2" v-if="isTypeCoop">
             <v-container class="py-0">
-              <v-divider  />
+              <v-divider />
             </v-container>
           </div>
 
@@ -83,8 +83,8 @@
           <section class="ml-5 mr-8 pl-2" v-if="isTypeCoop">
             <v-container id="destroy-certificate">
               <v-row no-gutters>
-                <v-col cols="3" class="inner-col-1">
-                  <label class="font-weight-bold">Delete and/or<br>Destroy<br>Certificates</label>
+                <v-col cols="3" class="inner-col-1 pr-4">
+                  <label class="font-weight-bold">Delete and/or Destroy Certificates</label>
                 </v-col>
 
                 <v-col cols="9" class="inner-col-2">
@@ -97,7 +97,7 @@
           <!-- divider -->
           <div class="ml-6 mr-8 pl-2" v-if="!isTypeCoop">
             <v-container class="py-0">
-              <v-divider  />
+              <v-divider />
             </v-container>
           </div>
 
@@ -108,8 +108,8 @@
               :class="{ 'invalid': isDissolutionDateTimeInvalid }"
             >
               <v-row no-gutters>
-                <v-col cols="3" class="inner-col-1">
-                  <label class="font-weight-bold">Dissolution<br>Date and Time</label>
+                <v-col cols="3" class="inner-col-1 pr-4">
+                  <label class="font-weight-bold">Dissolution Date and Time</label>
                 </v-col>
 
                 <v-col cols="9" class="inner-col-2">

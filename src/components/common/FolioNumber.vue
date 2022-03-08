@@ -2,20 +2,20 @@
   <div id="folio-number">
     <!-- Summary mode -->
     <v-row no-gutters v-if="!isEditing" id="folio-number-read-only">
-      <v-col md="3" class="mr-n1">
-        <label><strong>Folio or Reference<br>Number</strong></label>
+      <v-col md="3" class="pr-4">
+        <label><strong>Folio or Reference Number</strong></label>
       </v-col>
-      <v-col md="9">
+      <v-col md="9" class="pr-4">
         <div id="lbl-folio-number">{{ folioNumber || '(Not entered)' }}</div>
       </v-col>
     </v-row>
 
     <!-- Edit mode -->
     <v-row no-gutters v-else id="folio-number-editing">
-      <v-col md="2">
+      <v-col cols="12" md="2" lg="2">
         <label><strong>Folio Number</strong></label>
       </v-col>
-      <v-col md="10" class="pl-8">
+      <v-col cols="12" md="10" lg="10" class="pl-8">
         <v-form v-model="formValid" ref="form">
           <v-text-field
             id="folio-number-text-field"
@@ -50,7 +50,7 @@ export default class FolioNumber extends Vue {
   private formValid: boolean = false
 
   // Validation rules
-  private readonly rules: Array<Function> = [
+  readonly rules: Array<Function> = [
     v => (!v || v.length <= 50) || 'Cannot exceed 50 characters' // maximum character count
   ]
 

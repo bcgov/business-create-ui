@@ -1,25 +1,27 @@
 <template>
   <div id="business-contact-info">
-     <v-row no-gutters v-if="!isEditing">
-       <v-col md="3" class="mr-n1">
-         <label v-if="isIncorporationFiling"><strong>Registered Office <br>Contact Information</strong></label>
-         <label v-else><strong>Business Contact<br>Information</strong></label>
-       </v-col>
-       <v-col md="4">
-         <div><label><strong>Email Address</strong></label></div>
-         <div id="lbl-email">{{ !!contact.email ? contact.email : '(Not entered)' }}</div>
-       </v-col>
-       <v-col md="4">
-         <div><label><strong>Phone Number</strong></label></div>
-         <div id="lbl-phone" v-if="!!contact.phone">{{ contact.phone }}
-           <span v-if="!!contact.extension">Ext: {{ contact.extension }}</span>
-         </div>
-         <div id="lbl-phone" v-else>(Not entered)</div>
-       </v-col>
-     </v-row>
+    <v-row no-gutters v-if="!isEditing">
+      <v-col cols="12" sm="3" class="pr-4">
+        <label v-if="isIncorporationFiling">Registered Office Contact Information</label>
+        <label v-else>Business Contact Information</label>
+      </v-col>
+
+      <v-col cols="12" sm="4" class="pr-4">
+        <label class="email-header">Email Address</label>
+        <div id="lbl-email">{{ !!contact.email ? contact.email : '(Not entered)' }}</div>
+      </v-col>
+
+      <v-col cols="12" sm="4" class="pr-4">
+        <label class="phone-header">Phone Number</label>
+        <div id="lbl-phone" v-if="!!contact.phone">{{ contact.phone }}
+          <span v-if="!!contact.extension">Ext: {{ contact.extension }}</span>
+        </div>
+        <div id="lbl-phone" v-else>(Not entered)</div>
+      </v-col>
+    </v-row>
 
     <v-card flat class="step-container section-container" v-else>
-      <v-form v-model="formValid" ref="form" name="business-contact-form">
+      <v-form v-model="formValid" ref="form" id="business-contact-form">
         <v-row no-gutters>
           <v-col cols="2">
             <label>Email Address</label>
@@ -32,8 +34,8 @@
               persistent-hint
               :rules="Rules.EmailRules"
               v-model="contact.email"
-              id="txt-email">
-            </v-text-field>
+              id="txt-email"
+            />
           </v-col>
         </v-row>
         <v-row no-gutters>
@@ -48,8 +50,8 @@
               persistent-hint
               :error-messages="emailMustMatch()"
               v-model="contact.confirmEmail"
-              id="txt-confirm-email">
-            </v-text-field>
+              id="txt-confirm-email"
+            />
           </v-col>
         </v-row>
         <v-row no-gutters>
@@ -66,8 +68,8 @@
               v-mask="['(###) ###-####']"
               v-model="contact.phone"
               :rules="Rules.PhoneRules"
-              id="txt-phone">
-            </v-text-field>
+              id="txt-phone"
+            />
           </v-col>
           <v-col cols="5" class="pl-5">
             <v-text-field
@@ -77,8 +79,8 @@
               v-mask="'#####'"
               v-model="contact.extension"
               :disabled="!contact.phone"
-              id="txt-phone-extension">
-            </v-text-field>
+              id="txt-phone-extension"
+            />
           </v-col>
         </v-row>
       </v-form>
@@ -165,6 +167,13 @@ export default class BusinessContactInfo extends Mixins(CommonMixin) {
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
 
+.email-header,
+.phone-header {
+  font-size: $px-14;
+  font-weight: bold;
+}
+
+// un-bold v-text-field labels
 ::v-deep .v-label {
   font-weight: normal;
   color: $gray7;

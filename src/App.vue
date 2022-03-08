@@ -266,6 +266,7 @@ export default class App extends Mixins(
   @Action setShowErrors!: ActionBindingIF
   @Action setFeePrices!: ActionBindingIF
   @Action setFilingType!: ActionBindingIF
+  @Action setNameRequestState!: ActionBindingIF
 
   // Local properties
   private accountAuthorizationDialog: boolean = false

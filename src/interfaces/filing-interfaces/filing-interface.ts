@@ -5,11 +5,12 @@ import {
   IncorporationAddressIF,
   NameTranslationIF,
   OrgPersonIF,
+  RegistrationNaicsIF,
   ShareClassIF,
   SpecialResolutionIF
 } from '@/interfaces'
-import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
-import { DissolutionStatementTypes, DissolutionTypes } from '@/enums'
+import { CorpTypeCd, DissolutionStatementTypes, DissolutionTypes } from '@/enums'
+import { RegistrationNameRequestIF } from '../store-interfaces/state-interfaces/registration-state-interface'
 
 /** Interface for incorporation filing data saved to the Legal API. */
 export interface IncorporationFilingIF {
@@ -87,23 +88,19 @@ export interface RegistrationFilingIF {
     priority?: boolean
   },
   registration: {
-    startDate: string
-    // NB: nameRequest must match schema
-    nameRequest: {
-      legalType: CorpTypeCd
-      nrNumber?: string // only set when there is an NR
-      legalName?: string // only set when there is an NR
-    },
-    businessAddress: BusinessAddressIF,
-    contactPoint: {
-      email: string
-      phone: string
-      extension?: number
-    },
-    parties: OrgPersonIF[],
     business: {
       identifier: string
+      naics?: RegistrationNaicsIF
     }
+    businessAddress: BusinessAddressIF
+    contactPoint: {
+      email: string
+      extension?: number
+      phone: string
+    }
+    nameRequest: RegistrationNameRequestIF
+    parties: OrgPersonIF[]
+    startDate: string
   }
 }
 

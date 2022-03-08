@@ -19,7 +19,7 @@ const emailSelector: string = '#txt-email'
 const confirmEmailSelector: string = '#txt-confirm-email'
 const phoneSelector: string = '#txt-phone'
 const extensionSelector: string = '#txt-phone-extension'
-const formSelector: string = '[name="business-contact-form"]'
+const formSelector: string = '#business-contact-form'
 const readOnlyEmailSelector: string = '#lbl-email'
 const readOnlyPhoneSelector: string = '#lbl-phone'
 

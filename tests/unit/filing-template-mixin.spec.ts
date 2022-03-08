@@ -49,11 +49,11 @@ describe('Registration Filing', () => {
     // entity type
     // folio number
     // is future effective
-    // name request data
     // parties
     // staff filing data
     // start date
-    // temp id
+
+    store.state.stateModel.tempId = 'T1234567'
 
     store.state.stateModel.registration.businessAddress = {
       deliveryAddress: {
@@ -76,13 +76,32 @@ describe('Registration Filing', () => {
       }
     }
 
+    store.state.stateModel.registration.naics = {
+      naicsCode: '12345',
+      naicsDescription: 'Some NAICS Description'
+    }
+
+    store.state.stateModel.registration.nameRequest = {
+      legalName: 'My Approved Name',
+      legalType: 'SP',
+      nrNumber: 'NR 1234567'
+    }
+
     const filing = wrapper.vm.buildRegistrationFiling()
 
     // FUTURE: check filing data...
     // FUTURE: compare to "registration.json" (see below)
+
     expect(filing).toEqual(
       expect.objectContaining({
         registration: expect.objectContaining({
+          business: {
+            identifier: 'T1234567',
+            naics: {
+              naicsCode: '12345',
+              naicsDescription: 'Some NAICS Description'
+            }
+          },
           businessAddress: {
             deliveryAddress: {
               addressCity: 'Alpha',
@@ -102,6 +121,11 @@ describe('Registration Filing', () => {
               streetAddress: '222 Second St',
               streetAddressAdditional: 'Suite 2'
             }
+          },
+          nameRequest: {
+            legalName: 'My Approved Name',
+            legalType: 'SP',
+            nrNumber: 'NR 1234567'
           }
         })
       })
@@ -119,12 +143,12 @@ describe('Registration Filing', () => {
     // certify state
     // entity type
     // folio number
-    // name request data
     // parties
     // staff filing data
+
     expect(store.state.stateModel.registration).toEqual({
       defineBusinessValid: false,
-      startDate: '2001-02-03',
+      startDate: '2021-02-03',
       businessAddress: {
         deliveryAddress: {
           addressCity: 'Alpha',
@@ -145,7 +169,16 @@ describe('Registration Filing', () => {
           streetAddressAdditional: 'Suite 2'
         }
       },
-      feeAcknowledgement: false
+      feeAcknowledgement: false,
+      naics: {
+        naicsCode: '12345',
+        naicsDescription: 'Some NAICS Description'
+      },
+      nameRequest: {
+        legalName: 'My Approved Name',
+        legalType: 'SP',
+        nrNumber: 'NR 1234567'
+      }
     })
   })
 })
