@@ -378,7 +378,7 @@ export default class App extends Mixins(
     return !this.$route.meta.noStepper
   }
   // SB TODO : Move to store if its good
-  private get getFilingSubtitle () {
+  get getFilingSubtitle () {
     if (this.getEntityType === CorpTypeCd.SOLE_PROP) {
       return 'Confirm the following information, select the dissolution date and certify your dissolution before filing.'
     }
