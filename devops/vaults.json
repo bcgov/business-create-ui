@@ -31,7 +31,8 @@
             "auth-api",
             "pay-api",
             "legal-api",
-            "status-api"
+            "status-api",
+            "naics-api"
         ]
     },
     {
