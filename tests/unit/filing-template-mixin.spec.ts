@@ -52,7 +52,8 @@ describe('Registration Filing', () => {
     // parties
     // staff filing data
     // start date
-    // temp id
+
+    store.state.stateModel.tempId = 'T1234567'
 
     store.state.stateModel.registration.businessAddress = {
       deliveryAddress: {
@@ -90,9 +91,17 @@ describe('Registration Filing', () => {
 
     // FUTURE: check filing data...
     // FUTURE: compare to "registration.json" (see below)
+
     expect(filing).toEqual(
       expect.objectContaining({
         registration: expect.objectContaining({
+          business: {
+            identifier: 'T1234567',
+            naics: {
+              naicsCode: '12345',
+              naicsDescription: 'Some NAICS Description'
+            }
+          },
           businessAddress: {
             deliveryAddress: {
               addressCity: 'Alpha',
@@ -112,10 +121,6 @@ describe('Registration Filing', () => {
               streetAddress: '222 Second St',
               streetAddressAdditional: 'Suite 2'
             }
-          },
-          naics: {
-            naicsCode: '12345',
-            naicsDescription: 'Some NAICS Description'
           },
           nameRequest: {
             legalName: 'My Approved Name',
@@ -140,6 +145,7 @@ describe('Registration Filing', () => {
     // folio number
     // parties
     // staff filing data
+
     expect(store.state.stateModel.registration).toEqual({
       defineBusinessValid: false,
       startDate: '2021-02-03',

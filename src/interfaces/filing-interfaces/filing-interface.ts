@@ -90,6 +90,7 @@ export interface RegistrationFilingIF {
   registration: {
     business: {
       identifier: string
+      naics?: RegistrationNaicsIF
     }
     businessAddress: BusinessAddressIF
     contactPoint: {
@@ -97,7 +98,6 @@ export interface RegistrationFilingIF {
       extension?: number
       phone: string
     }
-    naics?: RegistrationNaicsIF
     nameRequest: RegistrationNameRequestIF
     parties: OrgPersonIF[]
     startDate: string

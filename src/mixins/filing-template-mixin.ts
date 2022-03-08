@@ -338,7 +338,8 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
       },
       registration: {
         business: {
-          identifier: this.getTempId
+          identifier: this.getTempId,
+          naics: this.getRegistration.naics
         },
         businessAddress: this.getRegistration.businessAddress,
         contactPoint: {
@@ -348,7 +349,6 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
             ? { extension: +this.getBusinessContact.extension }
             : {}
         },
-        naics: this.getRegistration.naics,
         nameRequest: this.getRegistration.nameRequest,
         parties: this.getAddPeopleAndRoleStep.orgPeople,
         startDate: this.getRegistration.startDate
@@ -397,7 +397,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     })
 
     // restore NAICS
-    this.setRegistrationNaics(draftFiling.registration.naics || EmptyRegistrationNaics)
+    this.setRegistrationNaics(draftFiling.registration.business.naics || EmptyRegistrationNaics)
 
     // restore Name Request data
     this.setRegistrationNameRequest(draftFiling.registration.nameRequest)

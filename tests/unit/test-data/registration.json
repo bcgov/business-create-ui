@@ -9,7 +9,11 @@
 		},
 		"registration": {
       "business": {
-        "identifier": "T123456789"
+        "identifier": "T1234567",
+        "naics": {
+          "naicsCode": "12345",
+          "naicsDescription": "Some NAICS Description"
+        }
 			},
       "businessAddress": {
         "deliveryAddress": {
@@ -36,10 +40,6 @@
 				"phone": "(111) 222-3333",
         "extension": "444"
 			},
-      "naics": {
-        "naicsCode": "12345",
-        "naicsDescription": "Some NAICS Description"
-      },
 			"nameRequest": {
         "legalName": "My Approved Name",
 				"legalType": "SP",
