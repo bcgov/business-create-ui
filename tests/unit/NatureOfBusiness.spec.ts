@@ -26,4 +26,6 @@ describe('Nature Of Business component', () => {
   it('renders the component properly', () => {
     expect(wrapper.find('#nature-of-business').exists()).toBe(true)
   })
+
+  // *** TODO: add more tests here
 })
