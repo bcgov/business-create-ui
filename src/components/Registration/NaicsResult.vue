@@ -1,11 +1,14 @@
 <template>
-  <v-row no-gutters class="naics-result" v-if="!!result" @click="emitClick(result)">
+  <v-row no-gutters class="naics-result" v-if="!!result" @click="emitClick()">
     <v-col cols="2">
       <div class="result-code">{{result.code}}</div>
     </v-col>
 
     <v-col cols="10">
-      <label class="result-class-title">{{result.classTitle}}</label>
+      <div class="d-flex justify-space-between align-top">
+        <label class="result-class-title">{{result.classTitle}}</label>
+        <v-btn large depressed color="primary" class="mt-n2">Select</v-btn>
+      </div>
 
       <div class="result-class-definition">{{result.classDefinition}}</div>
 
@@ -37,7 +40,7 @@ export default class NaicsResult extends Vue {
   readonly result!: NaicsResultIF
 
   @Emit('click')
-  private emitClick (result: NaicsResultIF): void {}
+  private emitClick (): void {}
 
   // local variables
   showMore = true // FUTURE: change to 'false' to enable this feature
