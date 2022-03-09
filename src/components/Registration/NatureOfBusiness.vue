@@ -6,9 +6,7 @@
   >
     <v-row>
       <v-col cols="12" sm="2">
-        <label>
-          <strong>Nature of Business</strong>
-        </label>
+        <label>Nature of Business</label>
       </v-col>
 
       <v-col cols="12" sm="10">
@@ -51,7 +49,7 @@
           </v-text-field>
         </template>
 
-        <div v-if="state === States.SHOW_RESULTS" class="mt-6">
+        <div v-if="state === States.SHOW_RESULTS" class="mt-5">
           <p>
             Select an option below that best describes the nature of your business:
           </p>
@@ -62,11 +60,16 @@
               :result="result"
               @click="onResultClicked(result)"
             />
-            <div id="naics-help-panel" class="pa-8">
-              <NaicsHelpText  />
+            <!-- NB: NAICS help panel needs same formatting as NaicsResult -->
+            <div>
+              <v-row no-gutters class="pa-6">
+                <v-col cols="2" />
+                <v-col cols="10">
+                  <NaicsHelpText  />
+                </v-col>
+              </v-row>
             </div>
           </div>
-          <!-- *** TODO: implement this as per comps -->
           <v-btn large outlined color="primary" class="float-right mt-8" @click="onCancelClicked()">Cancel</v-btn>
         </div>
 
@@ -78,7 +81,13 @@
 
         <div v-if="state === States.SUMMARY" class="d-flex justify-space-between align-center">
           <span>{{ natureOfBusiness }}</span>
-          <v-btn large outlined color="primary" @click="onChangeClicked()">Change</v-btn>
+          <v-btn
+              text color="primary"
+              @click="onChangeClicked()"
+            >
+              <v-icon small>mdi-pencil</v-icon>
+              <span>Change</span>
+          </v-btn>
         </div>
       </v-col>
     </v-row>
@@ -91,7 +100,7 @@ import { Action, Getter } from 'vuex-class'
 import NaicsHelpText from './NaicsHelpText.vue'
 import NaicsResult from './NaicsResult.vue'
 import { CommonMixin } from '@/mixins'
-import { ActionBindingIF, EmptyRegistrationNaics, RegistrationStateIF } from '@/interfaces'
+import { ActionBindingIF, EmptyRegistrationNaics, NaicsResultIF, RegistrationStateIF } from '@/interfaces'
 import { NaicsServices } from '@/services'
 
 enum States {
@@ -121,7 +130,7 @@ export default class NatureOfBusiness extends Mixins(CommonMixin) {
   // local variables
   private state = States.INITIAL
   private searchField = ''
-  private searchResults = []
+  private searchResults: Array<NaicsResultIF> = []
 
   // validation rules
   readonly natureOfBusinessRules: Array<Function> = [
@@ -181,6 +190,9 @@ export default class NatureOfBusiness extends Mixins(CommonMixin) {
     // set search to current NOB
     this.searchField = this.natureOfBusiness.toLowerCase()
 
+    // clearstore value
+    this.setRegistrationNaics(EmptyRegistrationNaics)
+
     this.state = States.INITIAL
   }
 
@@ -197,6 +209,16 @@ export default class NatureOfBusiness extends Mixins(CommonMixin) {
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
 
+#nature-of-business {
+  .col-sm-2 {
+    font-weight: bold;
+  }
+
+  .col-sm-10 {
+    color: $gray7;
+  }
+}
+
 .v-icon.mdi-open-in-new {
   margin-top: -2px;
   padding-left: 2px;
@@ -209,16 +231,9 @@ export default class NatureOfBusiness extends Mixins(CommonMixin) {
 }
 
 #result-list {
+  background-color: $gray1;
   max-height: 650px;
-  overflow-y: scroll;
-
-  #naics-help-panel {
-    background-color: $gray1;
-
-    #naics-help-text {
-      margin-left: 10rem;
-    }
-  }
+  overflow-y: auto;
 }
 
 </style>

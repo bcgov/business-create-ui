@@ -1,3 +1,4 @@
+import { NaicsResultIF } from '@/interfaces'
 import { axios } from '@/utils'
 
 /**
@@ -9,13 +10,13 @@ export default class NaicsServices {
    * @param searchTerm the code or words to search
    * @returns a promise to return the search results
    */
-  static async search (searchTerm: string): Promise<any> {
+  static async search (searchTerm: string): Promise<NaicsResultIF[]> {
     const naics = sessionStorage.getItem('NAICS_URL') + 'naics'
     const url = `${naics}?search_term=${encodeURIComponent(searchTerm)}`
 
     return axios.get(url)
       .then(response => {
-        const results = response?.data?.results
+        const results: Array<NaicsResultIF> = response?.data?.results
         if (!results) {
           throw new Error('Invalid API response')
         }

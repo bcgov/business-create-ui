@@ -1,0 +1,806 @@
+{
+  "results": [
+    {
+      "classDefinition": "This Canadian industry comprises establishments, not classified to any other Canadian industry, primarily engaged in wholesaling specialized lines of food, including canned foods and packaged frozen foods.",
+      "classTitle": "Other specialty-line food merchant wholesalers",
+      "code": "413190",
+      "naicsElements": [
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "bakery products merchant wholesalers",
+          "elementType": "ILLUSTRATIVE_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "bread merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "breakfast cereals merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "cakes and pastries merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "candy merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "canned baby and junior foods merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "canned desserts merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "canned dietary foods merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "canned fish products merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "canned food ingredients and preparations merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "canned foods merchant wholesalers",
+          "elementType": "ILLUSTRATIVE_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "canned meat merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "canned or dried dairy products merchant wholesalers",
+          "elementType": "ILLUSTRATIVE_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "canned or dried milk merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "canned or preserved dried fruit merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "canned specialties merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "canned vegetables merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "cheese confections (e.g., curls, puffs, cheesies) merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "chewing gum merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "chocolate merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "coffee distribution",
+          "elementType": "ILLUSTRATIVE_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "coffee merchant wholesalers",
+          "elementType": "ILLUSTRATIVE_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "confectionery distribution",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "confectionery merchant wholesalers",
+          "elementType": "ILLUSTRATIVE_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "cookies distribution",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "cookies merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "cooking and salad oils merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "cooking oils merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "corn chips and related corn snacks merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "crackers merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "dessert powders merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "dessert puddings merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "dried vegetables merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "dry or prepared cereal products merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "edible gelatin merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "evaporated salt merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "flavoring extracts merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "flavouring extract (except for fountain use) merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "flour merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "fountain fruits and syrups merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "frozen dinners merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "frozen fruit pies merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "frozen fruits merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "frozen meat pies merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "frozen poultry pies merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "frozen soup merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "frozen vegetables merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "fruit juices and concentrates (except frozen) merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "fruit juices merchant wholesalers",
+          "elementType": "ILLUSTRATIVE_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "fruit peel merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "fruit preparations merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "health food merchant wholesalers",
+          "elementType": "ILLUSTRATIVE_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "hop extract merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "ice cream cones merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "jams, jellies and marmalades merchant wholesalers",
+          "elementType": "ILLUSTRATIVE_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "macaroni merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "malt merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "maple sugar and syrup merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "margarine merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "merchant wholesalers of cleaned dry foods and spices",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "merchant wholesalers of frozen perogies",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "molasses merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "nuts or seeds (e.g., canned, roasted, salted) merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "packaged and frozen freshwater fish merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "packaged frozen bread merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "packaged frozen cakes merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "packaged frozen fish merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "packaged frozen foods merchant wholesalers",
+          "elementType": "ILLUSTRATIVE_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "packaged frozen meats merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "packaged frozen poultry merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "packaged frozen seafood merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "packaged quick-frozen foods merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "packaged quick-frozen juices merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "packaged quick-frozen pastry merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "packaged quick-frozen pre-cooked foods merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "pickles, preserves and sauces merchant wholesalers",
+          "elementType": "ILLUSTRATIVE_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "polished rice merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "popcorn merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "potato chips and related snacks merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "pretzels (except frozen) merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "processed honey merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "refined sugar merchant wholesalers",
+          "elementType": "ILLUSTRATIVE_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "salad dressing merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "sandwiches merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "sauces merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "soups merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "spaghetti merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "specialty food merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "spices merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "starches merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "sugar and chocolate preparation (confectionery) merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "sugar candy merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "syrups (except for fountain use) merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "tea merchant wholesalers",
+          "elementType": "ILLUSTRATIVE_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "vegetable cooking oil merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "vegetable juices merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "vegetable shortening merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "wet corn milling products merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        },
+        {
+          "classTitle": "Other specialty-line food merchant wholesalers",
+          "code": "413190",
+          "elementDescription": "yeast merchant wholesalers",
+          "elementType": "ALL_EXAMPLES",
+          "version": 3,
+          "year": 2017
+        }
+      ],
+      "naicsKey": "41021912-894b-46dd-ae20-0395f722abdd",
+      "version": 3,
+      "year": 2017
+    }
+  ]
+}

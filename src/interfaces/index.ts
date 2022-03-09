@@ -71,6 +71,7 @@ export * from './common/address-interface'
 
 // Registration interfaces
 export * from './Registration/business-address-interface'
+export * from './Registration/naics-interfaces'
 
 // External interfaces
 export { BreadcrumbIF, EffectiveDateTimeIF, StaffPaymentIF } from '@bcrs-shared-components/interfaces'
