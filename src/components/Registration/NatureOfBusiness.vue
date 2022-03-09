@@ -5,13 +5,13 @@
     :class="{ 'invalid-section': showErrors && !isFormValid }"
   >
     <v-row>
-      <v-col cols="12" sm="2">
+      <v-col cols="12" sm="3">
         <label>Nature of Business</label>
       </v-col>
 
-      <v-col cols="12" sm="10">
+      <v-col cols="12" sm="9">
         <template v-if="state !== States.SUMMARY">
-          <p>
+          <p class="ma-0">
             Enter one or more keywords that describe the primary nature of your business or enter
             the six-digit NAICS code. Learn more by visiting the
             <a
@@ -27,9 +27,10 @@
           <v-text-field
             filled
             persistent-hint
+            class="mt-5"
             autocomplete="chrome-off"
             label="Keywords or Six-Digit NAICS"
-            hint="Example: landscaping, grocery, care repair, etc."
+            hint="Example: landscaping, grocery, automotive repair, etc."
             v-model="searchField"
             :name="Math.random()"
             :rules="showErrors ? natureOfBusinessRules: []"
@@ -50,10 +51,10 @@
         </template>
 
         <div v-if="state === States.SHOW_RESULTS" class="mt-5">
-          <p>
+          <p class="ma-0">
             Select an option below that best describes the nature of your business:
           </p>
-          <div id="result-list">
+          <div id="result-list" class="mt-5">
             <NaicsResult
               v-for="(result, index) in searchResults"
               :key="index"
@@ -61,14 +62,12 @@
               @click="onResultClicked(result)"
             />
             <!-- NB: NAICS help panel needs same formatting as NaicsResult -->
-            <div>
-              <v-row no-gutters class="pa-6">
-                <v-col cols="2" />
-                <v-col cols="10">
-                  <NaicsHelpText  />
-                </v-col>
-              </v-row>
-            </div>
+            <v-row no-gutters class="pa-6">
+              <v-col cols="2" />
+              <v-col cols="10">
+                <NaicsHelpText  />
+              </v-col>
+            </v-row>
           </div>
           <v-btn large outlined color="primary" class="float-right mt-8" @click="onCancelClicked()">Cancel</v-btn>
         </div>
@@ -81,12 +80,9 @@
 
         <div v-if="state === States.SUMMARY" class="d-flex justify-space-between align-center">
           <span>{{ natureOfBusiness }}</span>
-          <v-btn
-              text color="primary"
-              @click="onChangeClicked()"
-            >
-              <v-icon small>mdi-pencil</v-icon>
-              <span>Change</span>
+          <v-btn text color="primary" @click="onChangeClicked()">
+            <v-icon small>mdi-pencil</v-icon>
+            <span>Change</span>
           </v-btn>
         </div>
       </v-col>
@@ -210,11 +206,11 @@ export default class NatureOfBusiness extends Mixins(CommonMixin) {
 @import '@/assets/styles/theme.scss';
 
 #nature-of-business {
-  .col-sm-2 {
+  .col-sm-3 {
     font-weight: bold;
   }
 
-  .col-sm-10 {
+  .col-sm-9 {
     color: $gray7;
   }
 }

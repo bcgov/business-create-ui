@@ -7,12 +7,12 @@
 
     <template v-if="getNameRequestNumber">
       <v-row id="name-request-info" class="mt-n3">
-        <v-col cols="12" sm="2">
+        <v-col cols="12" sm="3">
           <label>
             <strong>Name Request</strong>
           </label>
         </v-col>
-        <v-col cols="12" sm="10">
+        <v-col cols="12" sm="9">
           <ul class="name-request-list-items">
             <li id="name-request-title">
               <strong>{{ getNameRequestNumber }}</strong> - {{ getNameRequestDetails.approvedName }}
@@ -29,12 +29,12 @@
       </v-row>
 
       <v-row id="name-request-applicant-info">
-        <v-col cols="12" sm="2">
+        <v-col cols="12" sm="3">
           <label>
             <strong>Name Request Applicant</strong>
           </label>
         </v-col>
-        <v-col cols="12" sm="10">
+        <v-col cols="12" sm="9">
           <ul class="applicant-list-items">
             <li><strong>Name:</strong> {{ applicantName() }}</li>
             <li><strong>Address:</strong> {{ applicantAddress() }}</li>
@@ -46,12 +46,12 @@
     </template>
 
     <v-row v-else id="numbered-company-info" class="mt-n3">
-      <v-col cols="12" sm="2">
+      <v-col cols="12" sm="3">
         <label>
           <strong>Name</strong>
         </label>
       </v-col>
-      <v-col cols="12" sm="10">
+      <v-col cols="12" sm="9">
         <ul class="numbered-company-list-items">
           <li id="numbered-company-title">
             <strong>[Incorporation Number]</strong> B.C. Ltd.
@@ -71,12 +71,12 @@
 
     <!-- Name Translation Option -->
     <v-row v-if="showNameTranslation" id="name-translation-info">
-      <v-col cols="12" sm="2">
+      <v-col cols="12" sm="3">
         <label>
           <strong>Name Translation</strong>
         </label>
       </v-col>
-      <v-col cols="12" sm="10">
+      <v-col cols="12" sm="9">
         <v-checkbox
           hide-details="true"
           class="pt-0 mt-0"
@@ -104,8 +104,8 @@
     <!-- Name Translation Components -->
     <v-row v-if="showNameTranslation && hasNameTranslation" id="name-translation-container">
       <!-- Spacer Column -->
-      <v-col cols="12" sm="2"></v-col>
-      <v-col cols="12" sm="10">
+      <v-col cols="12" sm="3" />
+      <v-col cols="12" sm="9">
         <AddNameTranslation
           v-if="isAddingNameTranslation"
           :edit-name-translation="editingNameTranslation"
