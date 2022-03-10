@@ -40,7 +40,7 @@
             <span>{{ title }}</span>
           </v-col>
           <!-- Spacer Column For Actions -->
-          <v-col sm="1" v-if="!isSummary"></v-col>
+          <v-col sm="1" v-if="!isSummary" />
         </v-row>
 
         <!-- List Content -->

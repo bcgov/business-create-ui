@@ -1,10 +1,10 @@
 <template>
   <v-card flat id="document-delivery">
     <v-row no-gutters>
-      <v-col cols="3">
+      <v-col cols="12" sm="3" class="pr-4">
         <label class="font-weight-bold">Registered Office</label>
       </v-col>
-      <v-col cols="9">
+      <v-col cols="12" sm="9">
         <v-card-text id="office-email" class="pa-0">
           {{registeredOfficeEmail || '(Not entered)'}}
         </v-card-text>
@@ -12,12 +12,12 @@
     </v-row>
 
     <v-row no-gutters>
-      <v-col cols="3">
+      <v-col cols="12" sm="3" class="pr-4">
         <label class="font-weight-bold" :class="{ 'error-text': invalidSection }">
           Completing Party
         </label>
       </v-col>
-      <v-col cols="9" v-if="editableCompletingParty">
+      <v-col v-if="editableCompletingParty" cols="12" sm="9">
         <v-text-field
           filled persistent-hint validate-on-blur
           id="optionalEmail"
@@ -28,7 +28,7 @@
           :rules="entityEmailRules"
         />
       </v-col>
-      <v-col :cols="9" v-else>
+      <v-col v-else cols="12" sm="9">
         <v-card-text id="completing-party-email" class="pa-0">
           {{completingPartyEmail || '(Not entered)'}}
         </v-card-text>
@@ -36,10 +36,10 @@
     </v-row>
 
     <v-row no-gutters v-if="showCustodianEmail">
-      <v-col cols="3">
+      <v-col cols="12" sm="3" class="pr-4">
         <label class="font-weight-bold">Custodian of Records</label>
       </v-col>
-      <v-col cols="9">
+      <v-col cols="12" sm="9">
         <v-card-text id="custodian-email" class="pa-0">
           {{custodianEmail || '(Not entered)'}}
         </v-card-text>

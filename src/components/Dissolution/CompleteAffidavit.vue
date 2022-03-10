@@ -1,5 +1,6 @@
 <template>
   <div id="complete-affidavit">
+    <!-- Intro Section -->
     <section class="mt-10">
       <header>
         <h2>1. Affidavit</h2>
@@ -134,15 +135,14 @@
           </li>
         </ul>
       </header>
+
       <div :class="{ 'invalid-section': getShowErrors && !hasValidUploadFile }" class="mt-7">
-        <v-card flat id="upload-affidavit-card" class="py-10 pl-6">
-          <v-row>
-            <v-col cols="2">
-              <v-card-title class="upload-affidavit-v-card-title pl-1 pr-0">
-                <div>Upload Affidavit</div>
-              </v-card-title>
+        <v-card flat id="upload-affidavit-card" class="py-8 px-6">
+          <v-row no-gutters>
+            <v-col cols="12" sm="3" class="pr-4 pb-4">
+              <label class="upload-affidavit-title">Upload Affidavit</label>
             </v-col>
-            <v-col cols="10" class="pl-6 pr-10">
+            <v-col cols="12" sm="9">
               <FileUploadPreview
                 :inputFileLabel="INPUT_FILE_LABEL"
                 :maxSize="MAX_FILE_SIZE"
@@ -152,7 +152,7 @@
                 :customErrorMessage="fileUploadCustomErrorMsg"
                 @fileSelected="fileSelected"
                 @isFileValid="onFileUploadValid"
-              ></FileUploadPreview>
+              />
             </v-col>
           </v-row>
         </v-card>
@@ -423,8 +423,7 @@ ul {
   }
 }
 
-.upload-affidavit-v-card-title {
-  padding-top: 1px;
+.upload-affidavit-title {
   font-size: $px-16;
   font-weight: bold;
 }

@@ -88,7 +88,7 @@
               </a>
             </div>
           </v-col>
-          <v-col cols="2" class="pt-6"></v-col>
+          <v-col cols="2" class="pt-6" />
         </v-row>
       </v-card>
     </section>

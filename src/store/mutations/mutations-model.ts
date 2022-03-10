@@ -12,7 +12,7 @@ import {
   FeesIF,
   IncorporationAddressIF,
   IncorporationAgreementIF,
-  RegistrationNaicsIF,
+  NaicsIF,
   RegistrationNameRequestIF,
   NameRequestIF,
   NameTranslationIF,
@@ -336,7 +336,7 @@ export const mutateRegistrationFeeAcknowledgement = (state: StateIF, val: boolea
   if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
 }
 
-export const mutateRegistrationNaics = (state: StateIF, val: RegistrationNaicsIF) => {
+export const mutateRegistrationNaics = (state: StateIF, val: NaicsIF) => {
   state.stateModel.registration.naics = val
   if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
 }

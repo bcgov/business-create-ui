@@ -1,27 +1,26 @@
 <template>
-  <v-card flat class="rounded-4" :class="{ 'invalid-section': getShowErrors && !dateText }">
-    <div class="section-container step-container">
-      <v-row no-gutters>
-        <v-col cols="12" md="2" lg="2">
-          <label>Start Date</label>
-        </v-col>
-        <v-col cols="12" md="10" lg="10" id="start-date-selector" class="pl-8">
-          <date-picker
-            id="date-picker"
-            ref="startDateRef"
-            title="Start Date"
-            :nudgeRight="40"
-            :nudgeTop="85"
-            :initialValue="getRegistration.startDate"
-            :minDate="startDateMinStr"
-            :maxDate="startDateMaxStr"
-            :inputRules="startDateRules"
-            @emitDateSync="startDateHandler($event)"
-          />
-        </v-col>
-      </v-row>
-    </div>
-  </v-card>
+  <div id="start-date">
+    <!-- EDIT SECTION -->
+    <v-row no-gutters>
+      <v-col cols="12" sm="3" class="pr-4 pb-4">
+        <label class="start-date-title title-label">Start Date</label>
+      </v-col>
+      <v-col cols="12" sm="9" id="start-date-selector">
+        <date-picker
+          id="date-picker"
+          ref="startDateRef"
+          title="Start Date"
+          :nudgeRight="40"
+          :nudgeTop="85"
+          :initialValue="getRegistration.startDate"
+          :minDate="startDateMinStr"
+          :maxDate="startDateMaxStr"
+          :inputRules="startDateRules"
+          @emitDateSync="startDateHandler($event)"
+        />
+      </v-col>
+    </v-row>
+  </div>
 </template>
 
 <script lang="ts">
@@ -109,4 +108,14 @@ export default class StartDate extends Mixins(DateMixin) {
 
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
+
+.start-date-title {
+  font-weight: bold;
+  color: $gray9;
+}
+
+// remove extra space taken by error message
+::v-deep .v-text-field__details {
+  margin-bottom: -8px !important;
+}
 </style>

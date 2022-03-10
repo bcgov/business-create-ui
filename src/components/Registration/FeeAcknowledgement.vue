@@ -6,10 +6,10 @@
       </v-col>
       <v-col cols="9">
         <v-checkbox
-          hide-details
           id="fee-acknowledgement-checkbox"
           :input-value="getRegistration.feeAcknowledgement"
           @change="setRegistrationFeeAcknowledgement($event)"
+          hide-details
         >
           <template slot="label">
             <div class="acknowledge-stmt" :class="{'error-text': invalidSection}">

@@ -93,7 +93,7 @@ for (const mock of custodianTestCases) {
     })
 
     it('displays or hides the org or person radio buttons and input fields', () => {
-      expect(wrapper.find('.person-or-org-options').exists()).toBe(mock.hasPersonOrOrg)
+      expect(wrapper.find('.person-or-org-radio-group').exists()).toBe(mock.hasPersonOrOrg)
     })
 
     it('hides the summary section by default', () => {

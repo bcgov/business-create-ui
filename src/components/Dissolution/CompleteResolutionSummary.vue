@@ -1,9 +1,5 @@
 <template>
-  <v-card flat id="resolution-summary" class="mt-10">
-    <header class="review-header rounded-t">
-      <v-icon class="ml-2" color="appDkBlue">mdi-handshake</v-icon>
-      <label class="font-weight-bold pl-2">{{getCreateResolutionResource.reviewConfirmHeader}}</label>
-    </header>
+  <div>
     <section v-if="isBaseCompany && this.getCreateResolutionStep.validationDetail.valid"
              class="section-container upload-success-message"
     >
@@ -90,12 +86,12 @@
         </v-col>
       </v-row>
     </section>
-  </v-card>
+  </div>
 </template>
 
 <script lang="ts">
 // Libraries
-import { Component, Mixins, Vue, Watch } from 'vue-property-decorator'
+import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 import { DateMixin } from '@/mixins'
 

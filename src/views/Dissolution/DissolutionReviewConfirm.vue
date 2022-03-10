@@ -35,119 +35,101 @@
             <AssociationDetails :isSummary="true"/>
           </section>
 
-          <!-- Dissolution Statement -->
-          <section class="ml-5 mr-8 pl-2" v-if="isTypeCoop">
-            <v-container id="dissolution-statement">
-              <v-row no-gutters>
-                <v-col cols="3" class="inner-col-1 pr-4">
-                  <label class="font-weight-bold">Dissolution Statement</label>
-                </v-col>
+          <template v-if="isTypeCoop">
+            <!-- Dissolution Statement -->
+            <section class="mx-6">
+              <DissolutionStatement :isSummary="true" />
+            </section>
 
-                <v-col cols="9" class="inner-col-2">
-                  <DissolutionStatement :isSummary="true" />
-                </v-col>
-              </v-row>
-            </v-container>
-          </section>
-
-          <!-- divider -->
-          <div class="ml-5 mr-8 pl-2" v-if="isTypeCoop">
-            <v-container class="py-0">
-              <v-divider />
-            </v-container>
-          </div>
+            <!-- divider -->
+            <div class="mx-6">
+              <v-container class="py-0">
+                <v-divider />
+              </v-container>
+            </div>
+          </template>
 
           <!-- Custodian of Records -->
-          <section class="ml-5 mr-8 pl-2">
-            <v-container id="custodian-of-records">
-              <v-row no-gutters>
-                <v-col cols="3" class="inner-col-1 pr-4">
-                  <label class="font-weight-bold">Custodian of Records</label>
-                </v-col>
-
-                <v-col cols="9" class="inner-col-2">
-                  <CustodianOfRecords :isSummary="true" />
-                </v-col>
-              </v-row>
-            </v-container>
+          <section class="mx-6">
+            <CustodianOfRecords :isSummary="true" />
           </section>
 
-          <!-- divider -->
-          <div class="ml-5 mr-8 pl-2" v-if="isTypeCoop">
-            <v-container class="py-0">
-              <v-divider />
-            </v-container>
-          </div>
+          <template v-if="isTypeCoop">
+            <!-- divider -->
+            <div class="mx-6">
+              <v-container class="py-0">
+                <v-divider />
+              </v-container>
+            </div>
 
-          <!-- Destroy Certificates -->
-          <section class="ml-5 mr-8 pl-2" v-if="isTypeCoop">
-            <v-container id="destroy-certificate">
-              <v-row no-gutters>
-                <v-col cols="3" class="inner-col-1 pr-4">
-                  <label class="font-weight-bold">Delete and/or Destroy Certificates</label>
-                </v-col>
+            <!-- Destroy Certificates -->
+            <section class="mx-6">
+              <DestroyCertificate :isSummary="true" />
+            </section>
+          </template>
 
-                <v-col cols="9" class="inner-col-2">
-                  <DestroyCertificate :isSummary="true" />
-                </v-col>
-              </v-row>
-            </v-container>
-          </section>
+          <template v-if="!isTypeCoop">
+            <!-- divider -->
+            <div class="mx-6">
+              <v-container class="py-0">
+                <v-divider />
+              </v-container>
+            </div>
 
-          <!-- divider -->
-          <div class="ml-6 mr-8 pl-2" v-if="!isTypeCoop">
-            <v-container class="py-0">
-              <v-divider />
-            </v-container>
-          </div>
+            <!-- Dissolution Date and Time -->
+            <section class="mx-6">
+              <v-container
+                id="effective-date-time"
+                :class="{ 'invalid': isDissolutionDateTimeInvalid }"
+              >
+                <v-row no-gutters>
+                  <v-col cols="3" class="inner-col-1 pr-4">
+                    <label class="font-weight-bold">Dissolution Date and Time</label>
+                  </v-col>
 
-          <!-- Dissolution Date and Time -->
-          <section class="ml-5 mr-8 pl-2" v-if="!isTypeCoop">
-            <v-container
-              id="effective-date-time"
-              :class="{ 'invalid': isDissolutionDateTimeInvalid }"
-            >
-              <v-row no-gutters>
-                <v-col cols="3" class="inner-col-1 pr-4">
-                  <label class="font-weight-bold">Dissolution Date and Time</label>
-                </v-col>
+                  <v-col cols="9" class="inner-col-2">
+                    <p id="effective-date-time-instructions" class="info-text">
+                      Select the date and time of the dissolution of the Company. You may select a date
+                      up to 10 days in the future (note: there is an <strong>additional fee of
+                      {{ futureEffectiveFeePrice }}</strong> to enter a dissolution date in the future).
+                      Unless a business has special requirements, most businesses select an immediate
+                      date and time for dissolution.
+                    </p>
 
-                <v-col cols="9" class="inner-col-2">
-                  <p id="effective-date-time-instructions" class="info-text">
-                    Select the date and time of the dissolution of the Company. You may select a date
-                    up to 10 days in the future (note: there is an <strong>additional fee of
-                    {{ futureEffectiveFeePrice }}</strong> to enter a dissolution date in the future).
-                    Unless a business has special requirements, most businesses select an immediate
-                    date and time for dissolution.
-                  </p>
+                    <EffectiveDateTime
+                      :currentJsDate="getCurrentJsDate"
+                      :effectiveDateTime="getEffectiveDateTime"
+                      :isAppValidate="getValidateSteps"
+                      @valid="setEffectiveDateTimeValid($event)"
+                      @effectiveDate="setEffectiveDate($event)"
+                      @isFutureEffective="setIsFutureEffective($event)"
+                    />
 
-                  <EffectiveDateTime
-                    :currentJsDate="getCurrentJsDate"
-                    :effectiveDateTime="getEffectiveDateTime"
-                    :isAppValidate="getValidateSteps"
-                    @valid="setEffectiveDateTimeValid($event)"
-                    @effectiveDate="setEffectiveDate($event)"
-                    @isFutureEffective="setIsFutureEffective($event)"
-                  />
-
-                  <v-card
-                    flat class="px-16 pb-8 mt-n12"
-                    id="effective-date-text"
-                    v-if="getEffectiveDateTime.isFutureEffective && getEffectiveDateTime.valid"
-                  >
-                    The dissolution for this business will be effective as of:<br>
-                    <strong>{{futureEffectiveDate}}</strong>
-                  </v-card>
-                </v-col>
-              </v-row>
-            </v-container>
-          </section>
+                    <v-card
+                      flat class="px-16 pb-8 mt-n12"
+                      id="effective-date-text"
+                      v-if="getEffectiveDateTime.isFutureEffective && getEffectiveDateTime.valid"
+                    >
+                      The dissolution for this business will be effective as of:<br>
+                      <strong>{{futureEffectiveDate}}</strong>
+                    </v-card>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </section>
+          </template>
         </div>
       </v-card>
     </section>
 
     <!-- Resolution -->
-    <CompleteResolutionSummary />
+    <v-card flat id="resolution-summary" class="mt-10">
+      <header class="review-header rounded-t">
+        <v-icon class="ml-2" color="appDkBlue">mdi-handshake</v-icon>
+        <label class="font-weight-bold pl-2">{{getCreateResolutionResource.reviewConfirmHeader}}</label>
+      </header>
+      <CompleteResolutionSummary />
+    </v-card>
 
     <!-- Affidavit -->
     <v-card flat id="affidavit-summary" class="mt-10">
@@ -196,7 +178,7 @@
       />
     </section>
 
-    <!-- Folio or Reference Number -->
+    <!-- Transactional Folio Number -->
     <section id="folio-number-section" class="mt-10" v-if="isPremiumAccount">
       <header>
         <h2>Folio or Reference Number for this Filing</h2>
@@ -278,7 +260,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Vue } from 'vue-property-decorator'
+import { Component, Mixins } from 'vue-property-decorator'
 import { Getter, Action } from 'vuex-class'
 import { DateMixin } from '@/mixins'
 import AssociationDetails from '@/components/Dissolution/AssociationDetails.vue'
@@ -440,15 +422,11 @@ h2::before {
   content: counter(header-counter) '. ';
 }
 
-#dissolution-summary .v-divider {
-  background-color: $gray1;
-}
-
 ::v-deep .section-container {
-  padding: 1.5rem 1.5rem;
+  padding: 2rem 1.5rem;
 }
 
-::v-deep .review-header {
+.review-header {
   display: flex; // to align icons
   background-color: $BCgovBlue5O;
   padding: 1.25rem;
@@ -499,7 +477,8 @@ h2::before {
     }
   }
 
-  #court-order-label, #poa-label {
+  #court-order-label,
+  #poa-label {
     font-size: $px-16;
     font-weight: bold;
     color: $gray9;

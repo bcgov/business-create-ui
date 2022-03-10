@@ -18,12 +18,13 @@
         </span>
       </div>
 
+      <!-- Name -->
       <div class="section-container">
         <v-row no-gutters>
           <v-col cols="12" sm="3" class="pr-4">
             <label>Name</label>
           </v-col>
-          <v-col cols="12" sm="8" class="pr-4">
+          <v-col cols="12" sm="9">
             <div class="company-name">{{ getApprovedName || 'Unavailable' }}</div>
             <div class="company-type">
               <span>{{ entityDescription }}</span>
@@ -34,12 +35,13 @@
 
       <v-divider class="mx-6" />
 
+      <!-- Nature of Business -->
       <div class="section-container">
         <v-row no-gutters>
           <v-col cols="12" sm="3" class="pr-4">
             <label>Nature of Business</label>
           </v-col>
-          <v-col cols="12" sm="9" class="pr-4">
+          <v-col cols="12" sm="9">
             <span>{{ natureOfBusiness || '(Not entered)' }}</span>
           </v-col>
         </v-row>
@@ -47,6 +49,7 @@
 
       <v-divider class="mx-6" />
 
+      <!-- Business Addresses -->
       <div class="section-container">
         <BusinessAddresses
           :isEditing="false"
@@ -56,6 +59,7 @@
 
       <v-divider class="mx-6" />
 
+      <!-- Business Contact Info -->
       <div class="section-container">
         <BusinessContactInfo
           :initialValue="getBusinessContact"
@@ -65,25 +69,29 @@
 
       <v-divider class="mx-6" />
 
+      <!-- Business Start Date -->
       <div class="section-container">
         <v-row no-gutters>
           <v-col cols="12" sm="3" class="pr-4">
             <label>Business Start Date</label>
           </v-col>
-          <v-col cols="12" sm="9" class="pr-4">
+          <v-col cols="12" sm="9">
             <div>{{ businessStartDate || '(Not entered)' }}</div>
           </v-col>
         </v-row>
       </div>
 
-      <v-divider class="mx-6" v-if="isPremiumAccount" />
+      <!-- Folio Number -->
+      <template v-if="isPremiumAccount">
+        <v-divider class="mx-6" />
 
-      <div class="section-container" v-if="isPremiumAccount">
-        <FolioNumber
-          :initialValue="getFolioNumber"
-          :isEditing="false"
-        />
-      </div>
+        <div class="section-container">
+          <FolioNumber
+            :initialValue="getFolioNumber"
+            :isEditing="false"
+          />
+        </div>
+      </template>
     </section>
   </v-card>
 </template>
@@ -124,9 +132,14 @@ export default class DefineRegistrationSummary extends Mixins(DateMixin, EnumMix
     return this.getRegistration.defineBusinessValid
   }
 
-  /** The nature of business. */
+  /** The nature of business (code + desc). */
   get natureOfBusiness (): string {
-    return this.getRegistration.naics.naicsDescription
+    const naicsCode = this.getRegistration.naics.naicsCode
+    const naicsDescription = this.getRegistration.naics.naicsDescription
+    if (naicsCode && naicsDescription) {
+      return `${naicsCode} - ${naicsDescription}`
+    }
+    return null
   }
 
   /** The business start date. */
@@ -146,10 +159,6 @@ export default class DefineRegistrationSummary extends Mixins(DateMixin, EnumMix
   padding-top: 1.25rem;
   padding-left: 1.25rem;
   color: $app-red;
-}
-
-.section-container {
- padding: 1.5rem;
 }
 
 .define-registration-header {

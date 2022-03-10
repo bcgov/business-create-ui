@@ -38,7 +38,7 @@ for (const mock of mockEntity) {
 
     it('renders the component properly', () => {
       // verify component
-      expect(wrapper.find('.section-container').text()).toContain('Start Date')
+      expect(wrapper.find('.start-date-title').text()).toBe('Start Date')
       expect(wrapper.find('#start-date-selector').exists()).toBe(true)
       expect(wrapper.find('#date-picker').exists()).toBe(true)
     })

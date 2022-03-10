@@ -1,33 +1,37 @@
 <template>
   <div id="folio-number">
-    <!-- Summary mode -->
-    <v-row no-gutters v-if="!isEditing" id="folio-number-read-only">
-      <v-col md="3" class="pr-4">
-        <label><strong>Folio or Reference Number</strong></label>
-      </v-col>
-      <v-col md="9" class="pr-4">
-        <div id="lbl-folio-number">{{ folioNumber || '(Not entered)' }}</div>
-      </v-col>
-    </v-row>
+    <!-- EDIT SECTION -->
+    <template v-if="isEditing">
+      <v-row no-gutters id="folio-number-editing">
+        <v-col cols="12" sm="3" class="pr-4 pb-4">
+          <label class="folio-number-title title-label">Folio Number</label>
+        </v-col>
+        <v-col cols="12" sm="9">
+          <v-form v-model="formValid" ref="form">
+            <v-text-field
+              id="folio-number-text-field"
+              label="Folio or Reference Number (Optional)"
+              persistent-hint
+              v-model="folioNumber"
+              filled
+              :rules="rules"
+            />
+          </v-form>
+        </v-col>
+      </v-row>
+    </template>
 
-    <!-- Edit mode -->
-    <v-row no-gutters v-else id="folio-number-editing">
-      <v-col cols="12" md="2" lg="2">
-        <label><strong>Folio Number</strong></label>
-      </v-col>
-      <v-col cols="12" md="10" lg="10" class="pl-8">
-        <v-form v-model="formValid" ref="form">
-          <v-text-field
-            id="folio-number-text-field"
-            label="Folio or Reference Number (Optional)"
-            persistent-hint
-            v-model="folioNumber"
-            filled
-            :rules="rules"
-          />
-        </v-form>
-      </v-col>
-    </v-row>
+    <!-- SUMMARY SECTION -->
+    <template v-else>
+      <v-row no-gutters id="folio-number-read-only">
+        <v-col cols="12" sm="3" class="pr-4">
+          <label class="folio-number-title">Folio or Reference Number</label>
+        </v-col>
+        <v-col cols="12" sm="9">
+          <div id="lbl-folio-number">{{ folioNumber || '(Not entered)' }}</div>
+        </v-col>
+      </v-row>
+    </template>
   </div>
 </template>
 
@@ -99,11 +103,13 @@ export default class FolioNumber extends Vue {
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
 
-.row .col:first-child {
-  width: 12rem;
+.folio-number-title {
+  font-weight: bold;
+  color: $gray9;
 }
 
-label {
-  color: $gray9;
+// remove extra space taken by error message
+::v-deep .v-text-field__details {
+  margin-bottom: -8px !important;
 }
 </style>

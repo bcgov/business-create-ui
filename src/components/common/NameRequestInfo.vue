@@ -6,12 +6,14 @@
     />
 
     <template v-if="getNameRequestNumber">
-      <v-row id="name-request-info" class="mt-n3">
-        <v-col cols="12" sm="3">
+      <!-- Name Request -->
+      <v-row no-gutters id="name-request-info">
+        <v-col cols="12" sm="3" class="pr-4">
           <label>
             <strong>Name Request</strong>
           </label>
         </v-col>
+
         <v-col cols="12" sm="9">
           <ul class="name-request-list-items">
             <li id="name-request-title">
@@ -28,12 +30,14 @@
         </v-col>
       </v-row>
 
-      <v-row id="name-request-applicant-info">
-        <v-col cols="12" sm="3">
+      <!-- Name Request Applicant -->
+      <v-row no-gutters id="name-request-applicant-info" class="mt-6">
+        <v-col cols="12" sm="3" class="pr-4">
           <label>
             <strong>Name Request Applicant</strong>
           </label>
         </v-col>
+
         <v-col cols="12" sm="9">
           <ul class="applicant-list-items">
             <li><strong>Name:</strong> {{ applicantName() }}</li>
@@ -45,12 +49,18 @@
       </v-row>
     </template>
 
-    <v-row v-else id="numbered-company-info" class="mt-n3">
-      <v-col cols="12" sm="3">
+    <!-- Name -->
+    <v-row
+      v-else
+      no-gutters
+      id="numbered-company-info"
+    >
+      <v-col cols="12" sm="3" class="pr-4">
         <label>
           <strong>Name</strong>
         </label>
       </v-col>
+
       <v-col cols="12" sm="9">
         <ul class="numbered-company-list-items">
           <li id="numbered-company-title">
@@ -58,70 +68,82 @@
           </li>
           <li class="mt-4"><strong>Entity Type:</strong> {{ getEntityTypeDescription }}</li>
           <li class="mt-2"><strong>Request Type:</strong> {{ requestType }}</li>
-          <li class="bullet-point mt-4 ml-5">You will be filing this Incorporation Application for a company created by
+          <li class="bullet-point mt-4 ml-6">You will be filing this Incorporation Application for a company created by
             adding "B.C. Ltd." after the Incorporation Number.
           </li>
-          <li class="bullet-point ml-5">Your Incorporation Number will be generated at the end of the filing
+          <li class="bullet-point ml-6">Your Incorporation Number will be generated at the end of the filing
             transaction.
           </li>
-          <li class="bullet-point ml-5">It is not possible to request a specific Incorporation Number.</li>
+          <li class="bullet-point ml-6">It is not possible to request a specific Incorporation Number.</li>
         </ul>
       </v-col>
     </v-row>
 
-    <!-- Name Translation Option -->
-    <v-row v-if="showNameTranslation" id="name-translation-info">
-      <v-col cols="12" sm="3">
-        <label>
-          <strong>Name Translation</strong>
-        </label>
-      </v-col>
-      <v-col cols="12" sm="9">
-        <v-checkbox
-          hide-details="true"
-          class="pt-0 mt-0"
-          v-model="hasNameTranslation"
-          id="name-translation-checkbox"
-          @click.native="confirmNameTranslation()"
-        >
-          <span slot="label" class="translation-checkbox-label">
-            This company uses one of more translations of its name outside of Canada.
-          </span>
-        </v-checkbox>
-        <template v-if="hasNameTranslation">
-          <p class="my-4">
-            <b>Note:</b> Name translations must use the Latin Alphabet (English, French, etc.). Names
-            that use other writing systems must spell the name phonetically in English or French.
-          </p>
-          <v-btn outlined color="primary" @click="isAddingNameTranslation = true" :disabled="isAddingNameTranslation">
-            <v-icon>mdi-plus</v-icon>
-            <span>Add a Name Translation</span>
-          </v-btn>
-        </template>
-      </v-col>
-    </v-row>
+    <!-- Name Translation -->
+    <template v-if="showNameTranslation">
+      <v-row
+        no-gutters
+        id="name-translation-info"
+        class="mt-6"
+      >
+        <v-col cols="12" sm="3" class="pr-4">
+          <label>
+            <strong>Name Translation</strong>
+          </label>
+        </v-col>
 
-    <!-- Name Translation Components -->
-    <v-row v-if="showNameTranslation && hasNameTranslation" id="name-translation-container">
-      <!-- Spacer Column -->
-      <v-col cols="12" sm="3" />
-      <v-col cols="12" sm="9">
-        <AddNameTranslation
-          v-if="isAddingNameTranslation"
-          :edit-name-translation="editingNameTranslation"
-          @addTranslation="addName($event)"
-          @cancelTranslation="cancelNameTranslation()"
-          @removeTranslation="removeNameTranslation(editIndex)"
-        />
-        <ListNameTranslations
-          v-if="getNameTranslations && getNameTranslations.length > 0"
-          :isAddingNameTranslation="isAddingNameTranslation"
-          :translationsList="getNameTranslations"
-          @editNameTranslation="editNameTranslation($event)"
-          @removeNameTranslation="removeNameTranslation($event)"
-        />
-      </v-col>
-    </v-row>
+        <v-col cols="12" sm="9">
+          <v-checkbox
+            class="pt-0 mt-0"
+            v-model="hasNameTranslation"
+            id="name-translation-checkbox"
+            @click.native="confirmNameTranslation()"
+            hide-details
+          >
+            <span slot="label" class="translation-checkbox-label">
+              This company uses one of more translations of its name outside of Canada.
+            </span>
+          </v-checkbox>
+          <template v-if="hasNameTranslation">
+            <p class="my-4">
+              <b>Note:</b> Name translations must use the Latin Alphabet (English, French, etc.). Names
+              that use other writing systems must spell the name phonetically in English or French.
+            </p>
+            <v-btn outlined color="primary" @click="isAddingNameTranslation = true" :disabled="isAddingNameTranslation">
+              <v-icon>mdi-plus</v-icon>
+              <span>Add a Name Translation</span>
+            </v-btn>
+          </template>
+        </v-col>
+      </v-row>
+
+      <!-- Name Translation Components -->
+      <v-row
+        v-if="hasNameTranslation"
+        no-gutters
+        id="name-translation-container"
+        class="mt-4"
+      >
+        <v-col cols="12" sm="3" class="pr-4" />
+
+        <v-col cols="12" sm="9">
+          <AddNameTranslation
+            v-if="isAddingNameTranslation"
+            :edit-name-translation="editingNameTranslation"
+            @addTranslation="addName($event)"
+            @cancelTranslation="cancelNameTranslation()"
+            @removeTranslation="removeNameTranslation(editIndex)"
+          />
+          <ListNameTranslations
+            v-if="getNameTranslations && getNameTranslations.length > 0"
+            :isAddingNameTranslation="isAddingNameTranslation"
+            :translationsList="getNameTranslations"
+            @editNameTranslation="editNameTranslation($event)"
+            @removeNameTranslation="removeNameTranslation($event)"
+          />
+        </v-col>
+      </v-row>
+    </template>
   </div>
 </template>
 

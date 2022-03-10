@@ -1,215 +1,210 @@
 <template>
   <div id="custodian-of-records">
+    <!-- EDIT SECTION -->
     <template v-if="!isSummary">
-      <!-- Address Form -->
-      <v-card flat class="rounded-4">
-        <v-form
-          ref="addCustodianForm"
-          class="add-custodian-form"
-          v-model="addCustodianValid"
-        >
-          <div class="section-container pt-10" :class="{ 'invalid-section': showErrors && !isFormValid }">
-            <v-row no-gutters>
-              <v-col cols="12" md="3" lg="3">
-                <label class="title-label">
-                  {{ getCustodialRecordsResources.custodianTitle }}
-                </label>
-              </v-col>
-              <v-col cols="12" md="9" lg="9">
-                <!-- COOP only name input -->
-                <template v-if="isTypeCoop">
-                  <label>Person's Name</label>
-                  <v-row no-gutters class="pt-4" id="person-input">
-                    <v-col>
-                      <v-text-field
-                        filled
-                        label="First Name"
-                        id="person__first-name"
-                        v-model.trim="custodian.officer.firstName"
-                        :rules="Rules.FirstNameRules"
-                      />
-                    </v-col>
-                    <v-col>
-                      <v-text-field
-                        filled
-                        class="px-5"
-                        label="Middle Name (Optional)"
-                        id="person__middle-name"
-                        v-model.trim="custodian.officer.middleName"
-                        :rules="Rules.MiddleNameRules"
-                      />
-                    </v-col>
-                    <v-col>
-                      <v-text-field
-                        filled
-                        label="Last Name"
-                        id="person__last-name"
-                        v-model.trim="custodian.officer.lastName"
-                        :rules="Rules.LastNameRules"
-                      />
-                    </v-col>
-                  </v-row>
-                </template>
-                <!-- Corps name or org input -->
-                <template v-else>
-                  <v-radio-group
-                    column
-                    class="person-or-org-options"
-                    v-model="custodian.officer.partyType"
-                    @change="syncCustodianPartyType"
-                  >
-                    <!-- Person input -->
-                    <v-radio :value=PartyTypes.PERSON>
-                      <template slot="label">
-                        <span
-                          class="person-or-org-option"
-                          :class="{ 'title-label': isInError }"
-                        >
-                          Person's Name
-                        </span>
-                      </template>
-                    </v-radio>
-                    <v-row no-gutters class="pt-4">
-                      <v-col>
-                        <v-text-field
-                          filled
-                          label="First Name"
-                          id="person__first-name"
-                          v-model.trim="custodian.officer.firstName"
-                          :rules="isPerson ? Rules.FirstNameRules : []"
-                          @input="syncCustodianPartyType(PartyTypes.PERSON)"
-                        />
-                      </v-col>
-                      <v-col>
-                        <v-text-field
-                          filled
-                          class="px-5"
-                          label="Middle Name (Optional)"
-                          id="person__middle-name"
-                          v-model.trim="custodian.officer.middleName"
-                          :rules="isPerson ? Rules.MiddleNameRules : []"
-                          @input="syncCustodianPartyType(PartyTypes.PERSON)"
-                        />
-                      </v-col>
-                      <v-col>
-                        <v-text-field
-                          filled
-                          label="Last Name"
-                          id="person__last-name"
-                          v-model.trim="custodian.officer.lastName"
-                          :rules="isPerson ? Rules.LastNameRules : []"
-                          @input="syncCustodianPartyType(PartyTypes.PERSON)"
-                        />
-                      </v-col>
-                    </v-row>
+      <v-form ref="addCustodianForm" v-model="addCustodianValid">
+        <v-row no-gutters class="edit-section">
+          <v-col cols="12" sm="3" class="pr-4 pb-4">
+            <label class="title-label">
+              {{ getCustodialRecordsResources.custodianTitle }}
+            </label>
+          </v-col>
 
-                    <!-- Org input -->
-                    <v-radio :value=PartyTypes.ORGANIZATION class="pt-2">
-                      <template slot="label">
-                        <span
-                          class="person-or-org-option"
-                          :class="{ 'title-label': isInError }"
-                        >
-                          Corporation or Firm Name
-                        </span>
-                      </template>
-                    </v-radio>
-                    <v-row no-gutters class="pt-4">
-                      <v-col>
-                        <v-text-field
-                          filled
-                          label="Corporation or Firm Name"
-                          id="organization__name"
-                          v-model.trim="custodian.officer.organizationName"
-                          :rules="isOrg ? Rules.OrgNameRules : []"
-                          @input="syncCustodianPartyType(PartyTypes.ORGANIZATION)"
-                        />
-                      </v-col>
-                    </v-row>
-                  </v-radio-group>
+          <v-col cols="12" sm="9">
+            <!-- COOP only name input -->
+            <template v-if="isTypeCoop">
+              <label class="item-label">Person's Name</label>
+              <v-row no-gutters class="pt-4" id="person-input">
+                <v-col>
+                  <v-text-field
+                    filled
+                    label="First Name"
+                    id="person__first-name"
+                    v-model.trim="custodian.officer.firstName"
+                    :rules="Rules.FirstNameRules"
+                  />
+                </v-col>
+                <v-col>
+                  <v-text-field
+                    filled
+                    class="px-5"
+                    label="Middle Name (Optional)"
+                    id="person__middle-name"
+                    v-model.trim="custodian.officer.middleName"
+                    :rules="Rules.MiddleNameRules"
+                  />
+                </v-col>
+                <v-col>
+                  <v-text-field
+                    filled
+                    label="Last Name"
+                    id="person__last-name"
+                    v-model.trim="custodian.officer.lastName"
+                    :rules="Rules.LastNameRules"
+                  />
+                </v-col>
+              </v-row>
+            </template>
 
-                  <v-divider class="mt-n3 mb-8" />
-                </template>
-
-                <label>Email Address</label>
+            <!-- Corps name or org input -->
+            <template v-else>
+              <v-radio-group
+                column
+                class="person-or-org-radio-group"
+                v-model="custodian.officer.partyType"
+                @change="syncCustodianPartyType"
+              >
+                <!-- Person input -->
+                <v-radio :value=PartyTypes.PERSON>
+                  <template slot="label">
+                    <span class="item-label" :class="{ 'title-label': isInError }">
+                      Person's Name
+                    </span>
+                  </template>
+                </v-radio>
                 <v-row no-gutters class="pt-4">
                   <v-col>
                     <v-text-field
                       filled
-                      label="Email Address"
-                      id="person__email"
-                      v-model="custodian.officer.email"
-                      :rules="Rules.EmailRules"
+                      label="First Name"
+                      id="person__first-name"
+                      v-model.trim="custodian.officer.firstName"
+                      :rules="isPerson ? Rules.FirstNameRules : []"
+                      @input="syncCustodianPartyType(PartyTypes.PERSON)"
+                    />
+                  </v-col>
+                  <v-col>
+                    <v-text-field
+                      filled
+                      class="px-5"
+                      label="Middle Name (Optional)"
+                      id="person__middle-name"
+                      v-model.trim="custodian.officer.middleName"
+                      :rules="isPerson ? Rules.MiddleNameRules : []"
+                      @input="syncCustodianPartyType(PartyTypes.PERSON)"
+                    />
+                  </v-col>
+                  <v-col>
+                    <v-text-field
+                      filled
+                      label="Last Name"
+                      id="person__last-name"
+                      v-model.trim="custodian.officer.lastName"
+                      :rules="isPerson ? Rules.LastNameRules : []"
+                      @input="syncCustodianPartyType(PartyTypes.PERSON)"
                     />
                   </v-col>
                 </v-row>
 
-                <label>Mailing Address</label>
-                <mailing-address
-                  ref="mailingAddress"
-                  id="mailing-address"
-                  class="pt-4"
-                  :editing="true"
-                  :address="custodian.mailingAddress"
-                  :schema="getAddressSchema"
-                  @update:address="syncAddresses(custodian.mailingAddress, $event)"
-                  @valid="updateAddressValid('mailingAddress', $event)"
-                />
+                <!-- Org input -->
+                <v-radio :value=PartyTypes.ORGANIZATION class="pt-2">
+                  <template slot="label">
+                    <span class="item-label" :class="{ 'title-label': isInError }">
+                      Corporation or Firm Name
+                    </span>
+                  </template>
+                </v-radio>
+                <v-row no-gutters class="pt-4">
+                  <v-col>
+                    <v-text-field
+                      filled
+                      label="Corporation or Firm Name"
+                      id="organization__name"
+                      v-model.trim="custodian.officer.organizationName"
+                      :rules="isOrg ? Rules.OrgNameRules : []"
+                      @input="syncCustodianPartyType(PartyTypes.ORGANIZATION)"
+                    />
+                  </v-col>
+                </v-row>
+              </v-radio-group>
 
-                <v-checkbox
-                  id="delivery-mailing-same-chkbx"
-                  class="inherit-checkbox mt-1 mb-2"
-                  label="Delivery Address same as Mailing Address"
-                  v-model="custodian.inheritMailingAddress"
-                />
+              <v-divider class="mt-n3 mb-8" />
+            </template>
 
-                <template v-if="!inheritMailingAddress">
-                  <label>Delivery Address</label>
-                  <delivery-address
-                    ref="deliveryAddress"
-                    id="Delivery-address"
-                    class="pt-4"
-                    :editing="true"
-                    :address="custodian.deliveryAddress"
-                    :schema="getAddressSchema"
-                    @update:address="syncAddresses(custodian.deliveryAddress, $event)"
-                    @valid="updateAddressValid('deliveryAddress', $event)"
-                  />
-                </template>
+            <label class="item-label">Email Address</label>
+            <v-row no-gutters class="pt-4">
+              <v-col>
+                <v-text-field
+                  filled
+                  label="Email Address"
+                  id="person__email"
+                  v-model="custodian.officer.email"
+                  :rules="Rules.EmailRules"
+                />
               </v-col>
             </v-row>
-          </div>
-        </v-form>
-      </v-card>
+
+            <label class="item-label">Mailing Address</label>
+            <MailingAddress
+              ref="mailingAddress"
+              id="mailing-address"
+              class="pt-4"
+              :editing="true"
+              :address="custodian.mailingAddress"
+              :schema="getAddressSchema"
+              @update:address="syncAddresses(custodian.mailingAddress, $event)"
+              @valid="updateAddressValid('mailingAddress', $event)"
+            />
+
+            <v-checkbox
+              id="delivery-mailing-same-chkbx"
+              class="inherit-checkbox mt-0 pt-0"
+              label="Delivery Address same as Mailing Address"
+              v-model="custodian.inheritMailingAddress"
+            />
+
+            <div v-if="!inheritMailingAddress" class="pt-4">
+              <label class="item-label">Delivery Address</label>
+              <DeliveryAddress
+                ref="deliveryAddress"
+                id="Delivery-address"
+                class="pt-4"
+                :editing="true"
+                :address="custodian.deliveryAddress"
+                :schema="getAddressSchema"
+                @update:address="syncAddresses(custodian.deliveryAddress, $event)"
+                @valid="updateAddressValid('deliveryAddress', $event)"
+              />
+            </div>
+          </v-col>
+        </v-row>
+      </v-form>
     </template>
 
-    <!-- Summary template -->
+    <!-- SUMMARY SECTION -->
     <template v-else>
-      <div class="summary-section">
-        <v-row no-gutters>
-          <v-col cols="12" md="5" lg="5" class="pr-8">
-            <div class="summary-sub-label">Name</div>
-            <span class="summary-text">{{ getCustodianName }}</span>
-          </v-col>
-          <v-col cols="12" md="5" lg="5">
-            <div class="summary-sub-label">Email Address</div>
-            <span class="summary-text">{{ getDissolutionCustodianEmail || '(Not entered)' }}</span>
-          </v-col>
-        </v-row>
-        <v-row no-gutters class="mt-4">
-          <v-col cols="12" md="5" lg="5" class="pr-8">
-            <label class="summary-sub-label">Mailing Address</label>
-            <MailingAddress :address="getDissolutionCustodian.mailingAddress" />
-          </v-col>
-          <v-col cols="12" md="5" lg="5">
-            <label class="summary-sub-label">Delivery Address</label>
-            <div v-if="getDissolutionCustodian.inheritMailingAddress">
-              Same as Mailing Address
-            </div>
-            <DeliveryAddress v-else :address="getDissolutionCustodian.deliveryAddress" />
-          </v-col>
-        </v-row>
-      </div>
+      <v-row no-gutters class="summary-section">
+        <v-col cols="12" sm="3" class="inner-col-1 pr-4 pb-4">
+          <label class="summary-section-title">Custodian of Records</label>
+        </v-col>
+
+        <v-col cols="12" sm="9" class="inner-col-2 mt-n4">
+          <v-row no-gutters>
+            <v-col cols="12" sm="5" class="pt-4 pr-4">
+              <label class="summary-sub-label">Name</label>
+              <div class="summary-text">{{ getCustodianName }}</div>
+            </v-col>
+
+            <v-col cols="12" sm="5" class="pt-4 pr-4">
+              <label class="summary-sub-label">Email Address</label>
+              <div class="summary-text">{{ getDissolutionCustodianEmail || '(Not entered)' }}</div>
+            </v-col>
+
+            <v-col cols="12" sm="5" class="pt-4 pr-4">
+              <label class="summary-sub-label">Mailing Address</label>
+              <MailingAddress :address="getDissolutionCustodian.mailingAddress" />
+            </v-col>
+
+            <v-col cols="12" sm="5" class="pt-4 pr-4">
+              <label class="summary-sub-label">Delivery Address</label>
+              <div v-if="getDissolutionCustodian.inheritMailingAddress">
+                Same as Mailing Address
+              </div>
+              <DeliveryAddress v-else :address="getDissolutionCustodian.deliveryAddress" />
+            </v-col>
+          </v-row>
+        </v-col>
+      </v-row>
     </template>
   </div>
 </template>
@@ -432,25 +427,21 @@ export default class CustodianOfRecords extends Mixins(CommonMixin) {
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
 
-.section-container {
-  padding: 1.5rem 2rem;
+.edit-section {
   font-size: $px-16;
   color: $gray7;
 }
 
-.person-or-org-options {
+.title-label,
+.item-label,
+.summary-section-title {
+  font-weight: bold;
+  color: $gray9;
+}
+
+.person-or-org-radio-group {
   padding-top: 0;
   margin-top: 0;
-
-  .person-or-org-option {
-    font-size: $px-16;
-    font-weight: bold;
-    color: $gray9;
-  }
-
-  ::v-deep .v-input--selection-controls__input {
-    margin-right: 1rem;
-  }
 
   .v-radio {
     align-items: start;
@@ -459,22 +450,46 @@ export default class CustodianOfRecords extends Mixins(CommonMixin) {
   .v-radio:not(:first-child) {
     padding-top: 1.5rem;
   }
+
+  ::v-deep .v-input--selection-controls__input {
+    margin-right: 1rem;
+  }
+}
+
+.inherit-checkbox {
+  ::v-deep .v-messages {
+    display: none !important;
+  }
 }
 
 .summary-section {
   font-size: $px-16;
+  padding: 2rem;
+  background-color: $gray1;
+}
+
+.inner-col-1 {
+  // adjustment to make this inner container column the same width as the outer columns
+  // ie, decrease width by 1/2 container margin + padding
+  flex: 0 0 calc(25% - 1rem);
+}
+
+.inner-col-2 {
+  // adjustment to make this inner container column the same width as the outer columns
+  // ie, increase width by 1/2 container margin + padding
+  flex: 0 0 calc(75% + 1rem);
+  max-width: calc(75% + 1rem);
+}
+
+.summary-sub-label {
+  font-size: $px-14;
+  font-weight: bold;
+  color: $gray9;
+}
+
+.summary-text,
+.base-address {
   color: $gray7;
-
-  .summary-sub-label {
-    font-size: $px-14;
-    font-weight: bold;
-    color: $gray9;
-  }
-
-  .summary-text {
-    font-size: $px-16;
-    color: $gray7;
-  }
 }
 
 // Vuetify styling overrides
@@ -491,10 +506,8 @@ export default class CustodianOfRecords extends Mixins(CommonMixin) {
   font-weight: normal;
 }
 
-// Override on  BaseAddress component styling
-::v-deep .address-block__info-row:last-child {
-  padding-top: 10px;
-  font-size: $px-14;
+// italicize delivery instructions
+::v-deep .base-address .address-block .delivery-instructions {
   font-style: italic;
 }
 </style>

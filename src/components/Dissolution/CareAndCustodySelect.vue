@@ -1,11 +1,12 @@
 <template>
+  <!-- FUTURE: update layout to match other components -->
   <v-card flat id="care-and-custody-select" class="rounded-4 pt-11">
     <div class="section-container py-6 px-8 " :class="{ 'invalid-section': showErrorSummary }">
       <v-row no-gutters>
-        <v-col cols="12" md="3" lg="3">
+        <v-col cols="12" sm="3">
           <label class="care-and-custody-title title-label">Care and Custody<br>of Records</label>
         </v-col>
-        <v-col cols="12" md="9" lg="9">
+        <v-col cols="12" sm="9">
           <v-radio-group
             column class="pt-0 mt-0 care-and-custody-option-list"
             v-model="liquidatorOrCustodian"
@@ -44,7 +45,8 @@ export default class CareAndCustodySelect extends Vue {
   @Prop({ default: false })
   readonly showErrorSummary: boolean
 
-  private readonly RoleTypes = RoleTypes
+  readonly RoleTypes = RoleTypes
+
   private liquidatorOrCustodian: RoleTypes = null
 
   private changeCareAndCustodyType (): void {
@@ -55,11 +57,6 @@ export default class CareAndCustodySelect extends Vue {
 
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
-
-.section-container {
-  font-size: $px-16;
-  color: $gray7;
-}
 
 .care-and-custody-title {
   font-size: $px-16;

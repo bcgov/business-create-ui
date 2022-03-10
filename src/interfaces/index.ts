@@ -71,7 +71,8 @@ export * from './common/address-interface'
 
 // Registration interfaces
 export * from './Registration/business-address-interface'
-export * from './Registration/naics-interfaces'
 
 // External interfaces
+// NB: importing EmptyAddress doesn't work in local components
 export { BreadcrumbIF, EffectiveDateTimeIF, StaffPaymentIF } from '@bcrs-shared-components/interfaces'
+export { EmptyNaics, NaicsIF, NaicsResultIF } from '@bcrs-shared-components/interfaces'

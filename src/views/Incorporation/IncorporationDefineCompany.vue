@@ -91,7 +91,9 @@
           business in the future, including sending documents and notifications.
         </p>
       </header>
-      <div :class="{ 'invalid-section': getShowErrors && !businessContactFormValid }">
+      <v-card class="py-8 px-6"
+        :class="{ 'invalid-section': getShowErrors && !businessContactFormValid }"
+      >
         <BusinessContactInfo
           :initialValue="getBusinessContact"
           :isEditing="true"
@@ -99,7 +101,7 @@
           @update="setBusinessContact($event)"
           @valid="onBusinessContactFormValidityChange($event)"
         />
-      </div>
+      </v-card>
     </section>
 
     <!-- Folio / Reference Number -->

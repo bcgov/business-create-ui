@@ -5,21 +5,28 @@
       <header id="name-header">
         <h2>Name</h2>
       </header>
+
       <v-card flat class="step-container">
         <NameRequestInfo />
+      </v-card>
 
-        <!-- FUTURE -->
-        <!-- <v-divider class="my-6" /> -->
-        <!-- <BusinessType /> -->
+      <!-- FUTURE: Business Type goes here -->
 
-        <v-divider class="my-6" />
+      <div class="white-background">
+        <v-divider class="mx-6" />
+      </div>
 
-        <header id="nature-of-business-header" />
+      <!-- Nature Of Business -->
+      <header id="nature-of-business-header" />
+      <div
+        class="py-8 px-6 white-background"
+        :class="{ 'invalid-section': getShowErrors && !natureOfBusinessValid }"
+      >
         <NatureOfBusiness
           :showErrors="getShowErrors"
           @valid="onNatureOfBusinessValidEvent($event)"
         />
-      </v-card>
+      </div>
     </section>
 
     <!-- Business Addresses -->
@@ -31,13 +38,15 @@
           British Columbia.
         </p>
       </header>
-      <div :class="{ 'invalid-section': getShowErrors && !businessAddressesValid }">
+      <v-card flat class="py-8 px-6"
+        :class="{ 'invalid-section': getShowErrors && !businessAddressesValid }"
+      >
         <BusinessAddresses
           :isEditing="true"
           :showErrors="getShowErrors"
           @valid="onBusinessAddressValidEvent($event)"
         />
-      </div>
+      </v-card>
     </section>
 
     <!-- Business Contact Information -->
@@ -49,7 +58,9 @@
           with the business in the future, including sending registration documents and notifications.
         </p>
       </header>
-      <div :class="{ 'invalid-section': getShowErrors && !businessContactValid }">
+      <v-card class="py-8 px-6"
+        :class="{ 'invalid-section': getShowErrors && !businessContactValid }"
+      >
         <BusinessContactInfo
           :initialValue="getBusinessContact"
           :isEditing="true"
@@ -57,7 +68,7 @@
           @update="setBusinessContact($event)"
           @valid="onBusinessContactInfoValidEvent($event)"
         />
-      </div>
+      </v-card>
     </section>
 
     <!-- Business Start Date -->
@@ -76,8 +87,10 @@
           and 90 days in the future. Make certain that this is the correct date as it cannot be easily
           corrected afterwards.
         </p>
-        <StartDate />
       </header>
+      <v-card flat class="step-container" :class="{ 'invalid-section': getShowErrors && !businessStartDateValid }">
+        <StartDate />
+      </v-card>
     </section>
 
     <!-- Folio or Reference Number -->

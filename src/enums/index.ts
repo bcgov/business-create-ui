@@ -3,7 +3,6 @@ export * from './dissolutionStatementTypes'
 export * from './dissolutionTypes'
 export * from './effectOfOrders'
 export * from './entitySubtypes'
-export * from './filingCodes'
 export * from './filingStatus'
 export * from './filingNames'
 export * from './filingTypes'
@@ -21,4 +20,8 @@ export * from './bulletListTypes'
 
 // external enums
 export { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
-export { EffectiveDateTypes, StaffPaymentOptions } from '@bcrs-shared-components/enums'
+export {
+  EffectiveDateTypes,
+  FilingCodes,
+  StaffPaymentOptions
+} from '@bcrs-shared-components/enums'

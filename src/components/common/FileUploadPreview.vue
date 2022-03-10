@@ -1,6 +1,6 @@
 <template>
   <v-row>
-    <v-col class="py-0" sm="12" md="12">
+    <v-col class="py-0" cols="12">
       <v-form ref="fileUploadInput" lazy-validation>
         <v-file-input
           label="Select a file to upload"
@@ -13,7 +13,7 @@
           show-size
           @change="fileChange"
           color="primary"
-          hint="File must be a PDF.  Maximum 30MB."
+          hint="File must be a PDF. Maximum 30MB."
           persistent-hint
           :error-messages="customErrorMessages"
         >

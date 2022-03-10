@@ -23,18 +23,19 @@
           <v-col cols="12" sm="3" class="pr-4">
             <label>Name</label>
           </v-col>
-          <v-col cols="12" sm="9" class="pr-4">
+          <v-col cols="12" sm="9">
             <div class="company-name">{{ getApprovedName || '[Incorporation Number] B.C. Ltd.' }}</div>
             <div class="company-type">
               <span>{{ entityDescription }}</span>
             </div>
           </v-col>
         </v-row>
+
         <v-row no-gutters v-if="getNameTranslations && getNameTranslations.length" class="mt-3">
           <v-col cols="12" sm="3" class="pr-4">
             <label>Name Translation</label>
           </v-col>
-          <v-col cols="12" sm="9" class="pr-4">
+          <v-col cols="12" sm="9">
             <div v-for="(nameTranslation, index) in getNameTranslations" :key="`name_translation_${index}`">
               {{ nameTranslation.name }}
             </div>
@@ -42,28 +43,30 @@
         </v-row>
       </div>
 
-      <v-divider/>
+      <template v-if="isTypeCoop">
+        <v-divider class="mx-6" />
 
-      <div v-if="isTypeCoop" class="section-container">
-        <v-row no-gutters>
-          <v-col cols="12" sm="3" class="pr-4">
-            <label>Type</label>
-          </v-col>
-          <v-col cols="12" sm="9" class="pr-4">
-            <div class="cooperative-type ml-n1">
-              <span>{{ getCooperativeType ? coopTypeToDescription(getCooperativeType) : '(Not Entered)' }}</span>
-            </div>
-          </v-col>
-        </v-row>
-      </div>
+        <div class="section-container">
+          <v-row no-gutters>
+            <v-col cols="12" sm="3" class="pr-4">
+              <label>Type</label>
+            </v-col>
+            <v-col cols="12" sm="9">
+              <div class="cooperative-type ml-n1">
+                <span>{{ getCooperativeType ? coopTypeToDescription(getCooperativeType) : '(Not Entered)' }}</span>
+              </div>
+            </v-col>
+          </v-row>
+        </div>
+      </template>
 
-      <v-divider />
+      <v-divider class="mx-6" />
 
       <div class="section-container">
         <OfficeAddresses :inputAddresses="getDefineCompanyStep.officeAddresses" :isEditing="false" />
       </div>
 
-      <v-divider />
+      <v-divider class="mx-6" />
 
       <div class="section-container">
         <BusinessContactInfo :initialValue="getBusinessContact" :isEditing="false" />
@@ -123,10 +126,6 @@ export default class SummaryDefineCompany extends Mixins(EnumMixin) {
   padding-top: 1.25rem;
   padding-left: 1.25rem;
   color: $app-red;
-}
-
-.section-container {
-  padding: 1.5rem
 }
 
 .define-company-header {

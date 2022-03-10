@@ -38,18 +38,20 @@
                 >
                   <v-radio :value="false">
                     <template v-slot:label>
-                      <v-row><v-col cols="6">
-                      <v-text-field
-                        filled
-                        label="Maximum Number of Shares"
-                        id="txt-max-shares"
-                        v-model.number="shareStructure.maxNumberOfShares"
-                        persistent-hint
-                        :hint="'Enter the maximum number of shares in the ' + shareStructure.type"
-                        :rules="getMaximumShareRule()"
-                        :disabled="hasNoMaximumShares"
-                      />
-                    </v-col></v-row>
+                      <v-row>
+                        <v-col cols="6">
+                          <v-text-field
+                            filled
+                            label="Maximum Number of Shares"
+                            id="txt-max-shares"
+                            v-model.number="shareStructure.maxNumberOfShares"
+                            persistent-hint
+                            :hint="'Enter the maximum number of shares in the ' + shareStructure.type"
+                            :rules="getMaximumShareRule()"
+                            :disabled="hasNoMaximumShares"
+                          />
+                        </v-col>
+                      </v-row>
                     </template>
                   </v-radio>
                   <v-radio :value="true" label="No maximum" id="lbl-no-maximum" v-if="isNoMaxSharesVisible" />
