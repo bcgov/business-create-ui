@@ -12,7 +12,7 @@
     <section class="mt-10">
       <header>
         <h2>Review and Confirm</h2>
-        <p class="mt-4 mb-6">
+        <p class="mt-4">
           Review the information in your application. If you need to change or complete anything, return
           to the step to make the necessary change.
           </p>
@@ -24,7 +24,7 @@
     <section v-if="isBaseCompany" class="mt-10">
       <header>
         <h2>Incorporation Date and Time</h2>
-        <p class="mt-4 mb-6">
+        <p class="mt-4">
           Select the Date and Time of incorporation for your business. You may select
           a date up to 10 days in the future (note: there is an <strong>additional fee of $100</strong> to enter an
           incorporation date in the future). Unless a business has special requirements, most businesses select an
@@ -32,6 +32,8 @@
         </p>
       </header>
       <IncorporationDateTime
+        class="mt-6"
+        :class="{ 'invalid-section': isEffectiveDateTimeInvalid }"
         :effectiveDateTime="getEffectiveDateTime"
         @valid="setEffectiveDateTimeValid($event)"
         @effectiveDate="setEffectiveDate($event)"
@@ -43,11 +45,12 @@
     <section id="document-delivery-section" class="mt-10">
       <header>
         <h2>Document Delivery</h2>
-        <p class="mt-4 mb-6">
+        <p class="mt-4">
           Copies of the incorporation documents will be sent to the email addresses listed below.
         </p>
       </header>
       <DocumentDelivery
+        class="mt-6"
         :registeredOfficeEmail="getBusinessContact.email"
         :completingPartyEmail="getUserEmail"
       />
@@ -57,11 +60,12 @@
     <section class="mt-10">
       <header>
         <h2>Certify</h2>
-        <p class="mt-4 mb-6">
+        <p class="mt-4">
           Confirm the legal name of the person authorized to complete and submit this application.
         </p>
       </header>
       <Certify
+        class="mt-6"
         :class="{ 'invalid-section': isCertifyInvalid }"
         :currentDate="getCurrentDate"
         :certifiedBy="getCertifyState.certifiedBy"
@@ -120,6 +124,11 @@ export default class IncorporationReviewConfirm extends Vue {
   @Action setIsFutureEffective!: ActionBindingIF
   @Action setCertifyState!: ActionBindingIF
 
+  /** Is true when the effective date-time conditions are not met. */
+  get isEffectiveDateTimeInvalid () {
+    return this.getValidateSteps && !this.getEffectiveDateTime.valid
+  }
+
   /** Is true when the certify conditions are not met. */
   get isCertifyInvalid () {
     return this.getValidateSteps && (!this.getCertifyState.certifiedBy || !this.getCertifyState.valid)
@@ -164,25 +173,5 @@ h2::before {
 .company-statement-label {
   letter-spacing: -0.04rem;
   font-weight: 700;
-}
-
-::v-deep #document-delivery-section {
-  .v-card {
-    padding: 1.5rem 1.25rem !important;
-  }
-
-  .row {
-    padding: 0.75rem 0;
-
-    .col-3 {
-      font-size: $px-14;
-      color: $gray9;
-      padding: 0 0 0 0.75rem !important;
-    }
-
-    .col-9 {
-      padding: 0 0.5rem 0 0 !important;
-    }
-  }
 }
 </style>

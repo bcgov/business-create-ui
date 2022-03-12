@@ -1,7 +1,9 @@
 <template>
   <div class="summary-container">
     <SummaryDefineCompany />
+
     <ListPeopleAndRoles
+      class="mt-10"
       :personList="getAddPeopleAndRoleStep.orgPeople"
       :isSummary="true"
       :showErrorSummary="!getAddPeopleAndRoleStep.valid"
@@ -10,11 +12,14 @@
     <!-- Company summary components -->
     <template v-if="isBaseCompany">
       <ListShareClass
+        class="mt-10"
         :shareClasses="getCreateShareStructureStep.shareClasses"
         :isSummary="true"
         :showErrorSummary="!getCreateShareStructureStep.valid"
       />
+
       <AgreementType
+        class="mt-10"
         :isSummary="true"
         :showErrorSummary="!getIncorporationAgreementStep.valid"
       />
@@ -22,8 +27,13 @@
 
     <!-- Coops summary components -->
     <template v-else>
-      <UploadRulesSummary />
-      <UploadMemorandumSummary />
+      <UploadRulesSummary
+        class="mt-10"
+      />
+
+      <UploadMemorandumSummary
+        class="mt-10"
+      />
     </template>
   </div>
 </template>
@@ -65,18 +75,3 @@ export default class Summary extends Vue {
   @Getter getCreateMemorandumStep!: CreateMemorandumIF
 }
 </script>
-
-<style lang="scss" scoped>
-.summary-container {
-  margin-top: 1rem;
-
-  ::v-deep .v-card {
-    margin-top: 30px !important;
-    border-radius: 0px !important;
-
-    .review-header {
-      border-radius: 4px 4px 0px 0px !important;
-    }
-  }
-}
-</style>

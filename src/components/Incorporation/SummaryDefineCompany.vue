@@ -1,11 +1,11 @@
 <template>
-  <v-card flat class="rounded-0">
-    <div class="define-company-header review-header">
+  <v-card flat id="summary-define-company">
+    <div class="define-company-header">
       <v-icon color="appDkBlue">mdi-domain</v-icon>
       <label class="define-company-title pl-2"><strong>Your {{ getCompanyDisplayName }}</strong></label>
     </div>
 
-    <section :class="{ 'invalid-section': !isDefineCompanyValid }">
+    <section :class="{ 'invalid-section rounded-bl-0': !isDefineCompanyValid }">
       <div v-if="!isDefineCompanyValid" class="defineCompanyStepErrorMessage">
         <span>
           <v-icon color="error">mdi-information-outline</v-icon>
@@ -132,6 +132,7 @@ export default class SummaryDefineCompany extends Mixins(EnumMixin) {
   display: flex;
   background-color: $BCgovBlue5O;
   padding: 1.25rem;
+  border-radius: 4px 4px 0px 0px !important;
 
   .define-company-title {
     color: $gray9;

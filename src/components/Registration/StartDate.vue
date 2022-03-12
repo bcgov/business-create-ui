@@ -15,7 +15,7 @@
           :initialValue="getRegistration.startDate"
           :minDate="startDateMinStr"
           :maxDate="startDateMaxStr"
-          :inputRules="startDateRules"
+          :inputRules="getShowErrors ? startDateRules : []"
           @emitDateSync="startDateHandler($event)"
         />
       </v-col>
@@ -24,7 +24,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Watch } from 'vue-property-decorator'
+import { Component, Emit, Mixins, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import { ActionBindingIF, RegistrationStateIF } from '@/interfaces'
 import { DatePicker } from '@bcrs-shared-components/date-picker'
@@ -79,29 +79,32 @@ export default class StartDate extends Mixins(DateMixin) {
 
   /** Validations rules for start date field. */
   get startDateRules (): Array<Function> {
-    // apply rules when app validations are triggered
-    if (this.getShowErrors) {
-      return [
-        (v: string) => !!v || 'Business start date is required',
-        (v: string) =>
-          RuleHelpers.DateRuleHelpers
-            .isBetweenDates(this.startDateMin,
-              this.startDateMax,
-              v) ||
-          `Date should be between ${this.dateToPacificDate(this.startDateMin, true)} and
-         ${this.dateToPacificDate(this.startDateMax, true)}`
-      ]
-    }
+    return [
+      (v: string) => !!v || 'Business start date is required',
+      (v: string) =>
+        RuleHelpers.DateRuleHelpers
+          .isBetweenDates(this.startDateMin,
+            this.startDateMax,
+            v) ||
+        `Date should be between ${this.dateToPacificDate(this.startDateMin, true)} and
+        ${this.dateToPacificDate(this.startDateMax, true)}`
+    ]
   }
 
   private startDateHandler (dateString: string): void {
     this.dateText = dateString
     this.setRegistrationStartDate(dateString)
+    this.emitValid()
   }
 
   @Watch('getShowErrors')
   validateForm (): void {
     (this.$refs.startDateRef as any).validateForm()
+  }
+
+  @Emit('valid')
+  private emitValid (): boolean {
+    return !!this.dateText
   }
 }
 </script>

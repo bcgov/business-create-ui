@@ -1,19 +1,17 @@
 <template>
-  <v-card flat id="document-delivery">
+  <v-card flat id="document-delivery" class="py-8 px-6">
     <v-row no-gutters>
       <v-col cols="12" sm="3" class="pr-4">
-        <label class="font-weight-bold">Registered Office</label>
+        <label class="title-label">Registered Office</label>
       </v-col>
       <v-col cols="12" sm="9">
-        <v-card-text id="office-email" class="pa-0">
-          {{registeredOfficeEmail || '(Not entered)'}}
-        </v-card-text>
+        <span id="office-email">{{registeredOfficeEmail || '(Not entered)'}}</span>
       </v-col>
     </v-row>
 
-    <v-row no-gutters>
+    <v-row no-gutters class="pt-3">
       <v-col cols="12" sm="3" class="pr-4">
-        <label class="font-weight-bold" :class="{ 'error-text': invalidSection }">
+        <label class="title-label" :class="{ 'error-text': invalidSection }">
           Completing Party
         </label>
       </v-col>
@@ -29,20 +27,16 @@
         />
       </v-col>
       <v-col v-else cols="12" sm="9">
-        <v-card-text id="completing-party-email" class="pa-0">
-          {{completingPartyEmail || '(Not entered)'}}
-        </v-card-text>
+        <span id="completing-party-email">{{completingPartyEmail || '(Not entered)'}}</span>
       </v-col>
     </v-row>
 
-    <v-row no-gutters v-if="showCustodianEmail">
+    <v-row no-gutters v-if="showCustodianEmail" class="pt-3">
       <v-col cols="12" sm="3" class="pr-4">
-        <label class="font-weight-bold">Custodian of Records</label>
+        <label class="title-label">Custodian of Records</label>
       </v-col>
       <v-col cols="12" sm="9">
-        <v-card-text id="custodian-email" class="pa-0">
-          {{custodianEmail || '(Not entered)'}}
-        </v-card-text>
+        <span id="custodian-email">{{custodianEmail || '(Not entered)'}}</span>
       </v-col>
     </v-row>
   </v-card>
@@ -107,3 +101,17 @@ export default class DocumentDelivery extends Vue {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+@import '@/assets/styles/theme.scss';
+
+#document-delivery {
+  font-size: $px-16;
+  color: $gray7;
+}
+
+.title-label {
+  color: $gray9;
+  font-weight: bold;
+}
+</style>

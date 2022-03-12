@@ -1,13 +1,12 @@
 <template>
   <v-form ref="cooperativeTypeForm" id="cooperative-type">
-    <v-row class="py-3" no-gutters>
-      <v-col>
+    <v-row no-gutters>
+      <v-col cols="12" sm="3" class="pr-4 pb-4">
         <label><strong>Select Type</strong></label>
       </v-col>
-      <v-col class="ml-n1">
+      <v-col cols="12" sm="9">
         <v-select
           filled
-          persistent-hint
           id="cooperative-type-input"
           label="Cooperative Association Type"
           :items="items"
@@ -86,9 +85,9 @@ export default class CooperativeType extends Mixins(EnumMixin) {
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
 
-.row .col:first-child {
-  width: 12rem;
-  max-width: 12rem;
+// remove extra space taken by error message
+::v-deep .v-text-field__details {
+  margin-bottom: -8px !important;
 }
 
 // Vuetify Overrides

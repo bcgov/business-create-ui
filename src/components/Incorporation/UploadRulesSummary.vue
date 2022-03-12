@@ -1,8 +1,9 @@
 <template>
-  <v-card id="upload-rules-summary-card" flat class="rounded-0">
-    <div class="upload-rules-summary-header review-header">
+  <v-card flat id="upload-rules-summary" class="border-0">
+    <!-- Summary Header -->
+    <div class="upload-rules-summary-header">
       <v-icon color="appDkBlue">mdi-format-list-text</v-icon>
-      <label class="upload-rules-title pl-2"><strong>Rules</strong></label>
+      <label class="upload-rules-title pl-2">Rules</label>
     </div>
 
     <div v-if="!getCreateRulesStep.validationDetail.valid" class="invalid-section">
@@ -55,8 +56,10 @@ export default class UploadRulesSummary extends Vue {
   display: flex;
   background-color: $BCgovBlue5O;
   padding: 1.25rem;
+  border-radius: 4px 4px 0px 0px !important;
 
   .upload-rules-title {
+    font-weight: bold;
     color: $gray9;
   }
 }

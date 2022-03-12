@@ -1,11 +1,11 @@
 <template>
-  <v-card flat id="agreement-summary review-header" class="rounded-0">
-    <div class="mt-4" v-if="isSummary">
+  <v-card flat id="agreement-summary" class="border-0">
+    <template v-if="isSummary">
       <!-- Summary Header -->
       <div class="agreement-summary-header">
         <v-icon color="appDkBlue">mdi-handshake</v-icon>
-        <label class="agreement-summary-title">
-          <strong>Incorporation Agreement and {{getEntityDescription}} Articles</strong>
+        <label class="agreement-summary-title pl-2">
+          Incorporation Agreement and {{getEntityDescription}} Articles
         </label>
       </div>
 
@@ -31,9 +31,9 @@
         <div><v-icon color="green darken-2" class="agreement-valid-icon">mdi-check</v-icon></div>
           <div v-html="agreementTypeDescription"></div>
       </div>
-    </div>
+    </template>
 
-    <div v-else-if="isTypeCCC">
+    <template v-else-if="isTypeCCC">
       <v-checkbox
         v-for="(item, index) in getIncorporationAgreementDocuments"
         :id="`agreement-type-${item.code}`"
@@ -47,7 +47,7 @@
           <div v-html="item.description" class="agreement-option" />
         </template>
       </v-checkbox>
-    </div>
+    </template>
 
     <div v-else :class="{ 'invalid-section': showErrorSummary }">
       <v-radio-group v-model="agreementType" @change="changeAgreementType" class="agreement-option-list">
@@ -64,7 +64,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop, Mixins } from 'vue-property-decorator'
+import { Component, Prop, Mixins } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import { ActionBindingIF, IncorporationAgreementIF, IncorporationAgreementTypeIF } from '@/interfaces'
 import { CorpTypeCd, RouteNames } from '@/enums'
@@ -129,8 +129,10 @@ export default class AgreementType extends Mixins(EnumMixin) {
   display: flex;
   background-color: $BCgovBlue5O;
   padding: 1.25rem;
+  border-radius: 4px 4px 0px 0px !important;
 
   .agreement-summary-title {
+    font-weight: bold;
     padding-left: .5rem;
   }
 }

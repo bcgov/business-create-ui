@@ -1,8 +1,9 @@
 <template>
-  <v-card id="upload-memorandum-summary-card" flat class="rounded-0">
-    <div class="upload-memorandum-summary-header review-header">
+  <v-card flat id="upload-memorandum-summary" class="border-0">
+    <!-- Summary Header -->
+    <div class="upload-memorandum-summary-header">
       <v-icon color="appDkBlue">mdi-format-list-text</v-icon>
-      <label class="upload-memorandum-title pl-2"><strong>Memorandum</strong></label>
+      <label class="upload-memorandum-title pl-2">Memorandum</label>
     </div>
 
     <div v-if="!getCreateMemorandumStep.validationDetail.valid" class="invalid-section pl-5">
@@ -57,8 +58,10 @@ export default class UploadMemorandumSummary extends Vue {
   display: flex;
   background-color: $BCgovBlue5O;
   padding: 1.25rem;
+  border-radius: 4px 4px 0px 0px !important;
 
   .upload-memorandum-title {
+    font-weight: bold;
     color: $gray9;
   }
 }

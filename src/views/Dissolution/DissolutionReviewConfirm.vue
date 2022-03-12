@@ -4,7 +4,7 @@
     <section class="mt-10">
       <header>
         <h2>Review and Confirm</h2>
-        <p class="mt-4 mb-6">
+        <p class="mt-4">
           Review the information in your filing. If you need to change or complete anything, return
           to the step to make the necessary change.
         </p>
@@ -35,8 +35,8 @@
             <AssociationDetails :isSummary="true"/>
           </section>
 
+          <!-- Dissolution Statement -->
           <template v-if="isTypeCoop">
-            <!-- Dissolution Statement -->
             <section class="mx-6">
               <DissolutionStatement :isSummary="true" />
             </section>
@@ -54,6 +54,7 @@
             <CustodianOfRecords :isSummary="true" />
           </section>
 
+          <!-- Destroy Certificates -->
           <template v-if="isTypeCoop">
             <!-- divider -->
             <div class="mx-6">
@@ -62,12 +63,12 @@
               </v-container>
             </div>
 
-            <!-- Destroy Certificates -->
             <section class="mx-6">
               <DestroyCertificate :isSummary="true" />
             </section>
           </template>
 
+          <!-- Dissolution Date and Time -->
           <template v-if="!isTypeCoop">
             <!-- divider -->
             <div class="mx-6">
@@ -76,7 +77,6 @@
               </v-container>
             </div>
 
-            <!-- Dissolution Date and Time -->
             <section class="mx-6">
               <v-container
                 id="effective-date-time"
@@ -105,8 +105,7 @@
                       @isFutureEffective="setIsFutureEffective($event)"
                     />
 
-                    <v-card
-                      flat class="px-16 pb-8 mt-n12"
+                    <v-card flat class="px-16 pb-8 mt-n12"
                       id="effective-date-text"
                       v-if="getEffectiveDateTime.isFutureEffective && getEffectiveDateTime.valid"
                     >
@@ -138,33 +137,32 @@
         <label class="font-weight-bold pl-2">Affidavit</label>
       </header>
 
-      <div class="section-container rounded-bl-0" :class="{ 'invalid-section': !isAffidavitValid }">
-        <section v-if="!isAffidavitValid">
-          <v-icon color="error">mdi-information-outline</v-icon>
-          &nbsp;
-          <span class="error-text">This step is unfinished.</span>
-          &nbsp;
-          <router-link
-            :to="{ path: `/${RouteNames.DISSOLUTION_AFFIDAVIT}` }"
-          >Return to this step to finish it</router-link>
-        </section>
+      <section v-if="!isAffidavitValid" class="section-container invalid-section rounded-bl-0">
+        <v-icon color="error">mdi-information-outline</v-icon>
+        &nbsp;
+        <span class="error-text">This step is unfinished.</span>
+        &nbsp;
+        <router-link
+          :to="{ path: `/${RouteNames.DISSOLUTION_AFFIDAVIT}` }"
+        >Return to this step to finish it</router-link>
+      </section>
 
-        <div v-else class="upload-affidavit-success-message">
-          <v-icon class="upload-success-chk ml-1 pr-2" color="successCheckmark">mdi-check</v-icon>
-          <span id="file-name" class="break-spaces">{{ affidavitSummary }}</span>
-        </div>
-      </div>
+      <section v-else class="section-container rounded-bl-0">
+        <v-icon class="ml-1 pr-2" color="successCheckmark">mdi-check</v-icon>
+        <span id="file-name" class="break-spaces">{{ affidavitSummary }}</span>
+      </section>
     </v-card>
 
     <!-- Dissolution Documents Delivery -->
     <section id="document-delivery-section" class="mt-10">
       <header>
         <h2>Dissolution Documents Delivery</h2>
-        <p class="mt-4 mb-6">
+        <p class="mt-4">
           Copies of the dissolution documents will be sent to the email addresses listed below.
         </p>
       </header>
       <DocumentDelivery
+        class="mt-6"
         :class="{ 'invalid-section': isDocumentDeliveryInvalid }"
         :editableCompletingParty="isRoleStaff"
         :showCustodianEmail="true"
@@ -182,7 +180,7 @@
     <section id="folio-number-section" class="mt-10" v-if="isPremiumAccount">
       <header>
         <h2>Folio or Reference Number for this Filing</h2>
-        <p class="mt-4 mb-6">
+        <p class="mt-4">
           Enter the folio or reference number you want to use for this filing for your own tracking
           purposes. The Business Folio or Reference Number is displayed below (if available).
           Entering a different value below will not change the Business Folio or Reference Number.
@@ -190,6 +188,7 @@
         </p>
       </header>
       <TransactionalFolioNumber
+        class="mt-6"
         :accountFolioNumber="getFolioNumber"
         :transactionalFolioNumber="getTransactionalFolioNumber"
         :doValidate="getValidateSteps"
@@ -202,11 +201,12 @@
     <section id="certify-section" class="mt-10">
       <header>
         <h2>Certify</h2>
-        <p class="mt-4 mb-6">
+        <p class="mt-4">
           Confirm the legal name of the person authorized to complete and submit this dissolution.
         </p>
       </header>
       <Certify
+        class="mt-6"
         :class="{ 'invalid-section': isCertifyInvalid }"
         :currentDate="getCurrentDate"
         :certifiedBy="getCertifyState.certifiedBy"
@@ -228,7 +228,7 @@
     <section id="court-order-poa-section" class="mt-10" v-if="isRoleStaff">
       <header>
         <h2>Court Order and Plan of Arrangement</h2>
-        <p class="mt-4 mb-6">
+        <p class="mt-4">
           If this filing is pursuant to a court order, enter the court order number. If this
           filing is pursuant to a plan of arrangement, enter the court order number and select
           Plan of Arrangement.
@@ -236,6 +236,7 @@
       </header>
       <CourtOrderPoa
         id="court-order"
+        class="mt-6"
         :class="{ 'invalid-section': isCourtOrderInvalid }"
         :autoValidation="getValidateSteps"
         :draftCourtOrderNumber="getCourtOrderStep.courtOrder.fileNumber"
@@ -252,9 +253,11 @@
     <section id="staff-payment-section" class="mt-10" v-if="isRoleStaff">
       <header>
         <h2>Staff Payment</h2>
-        <p class="mt-4 mb-6"></p>
+        <p class="mt-4"></p>
       </header>
-      <StaffPayment />
+      <StaffPayment
+        class="mt-6"
+      />
     </section>
   </div>
 </template>
@@ -433,9 +436,9 @@ h2::before {
   color: $gray9;
 }
 
+.v-icon.mdi-check,
 .v-icon.mdi-information-outline {
   margin-top: -2px;
-  margin-right: 4px;
 }
 
 .container {
@@ -500,11 +503,7 @@ h2::before {
 }
 
 // styles common to the sections
-::v-deep #document-delivery-section,
-::v-deep #folio-number-section,
-::v-deep #certify-section,
-::v-deep #court-order-poa-section,
-::v-deep #staff-payment-section {
+::v-deep #court-order-poa-section {
   .v-card {
     padding: 1.5rem 1.25rem !important;
   }
@@ -524,43 +523,6 @@ h2::before {
   }
 }
 
-// styles specific to certify section
-::v-deep #certify-section {
-  .v-card {
-    margin-top: 0 !important;
-  }
-
-  .v-form {
-    margin-top: 0 !important;
-  }
-
-  .container {
-    padding: 0 !important;
-  }
-
-  .v-input--checkbox .v-input__slot {
-    align-items: flex-start;
-  }
-
-  .row {
-    padding: 0.75rem 0 !important;
-  }
-
-  // bring the main label down a bit to line up with text-field
-  .row:first-of-type .col:first-of-type {
-    padding-top: 8px !important;
-  }
-
-  .v-input--checkbox {
-    margin-top: 0 !important;
-    padding-top: 0 !important;
-  }
-
-  .certify-clause:last-of-type {
-    margin-bottom: 0 !important;
-  }
-}
-
 // styles specific to court order poa section
 ::v-deep #court-order-poa-section {
   .v-card {
@@ -574,30 +536,6 @@ h2::before {
   .v-input--checkbox {
     margin-top: 0 !important;
     padding-top: 0 !important;
-  }
-}
-
-// styles specific to staff payment section
-::v-deep #staff-payment-section {
-  .v-card {
-    margin-top: 0 !important;
-    border-radius: 4px !important;
-  }
-
-  .v-input__slot {
-    margin-bottom: 0 !important;
-  }
-
-  .v-input--checkbox {
-    margin-top: 0 !important;
-
-    .v-messages {
-      margin-bottom: -14px !important;
-    }
-  }
-
-  .v-messages__message {
-    padding-top: .5rem !important;
   }
 }
 </style>

@@ -1,19 +1,19 @@
 <template>
-  <v-card flat id="people-roles" class="rounded-0">
+  <v-card flat id="list-people-roles" class="border-0">
     <ConfirmRemoveDialog
       :dialog="dialog"
-      attach="#people-roles"
+      attach="#list-people-roles"
       @confirm="emitRemovePerson(activeIndex)"
       @exit="dialog = false"
     />
 
     <!-- Summary Header -->
-    <div class="people-roles-summary-header review-header" v-if="isSummary">
+    <div v-if="isSummary" class="people-roles-summary-header">
       <v-icon color="appDkBlue">mdi-account-multiple-plus</v-icon>
-      <label class="people-roles-title pl-2"><strong>People and Roles</strong></label>
+      <label class="people-roles-title pl-2">People and Roles</label>
     </div>
 
-    <div :class="{ 'invalid-section': showErrorSummary }">
+    <section :class="{ 'invalid-section rounded-bl-0': showErrorSummary }">
       <!-- Summary Warning -->
       <div v-if="isSummary && showErrorSummary" class="people-roles-invalid-message">
         <span>
@@ -60,7 +60,7 @@
               transition="fade-transition"
             >
               <template v-slot:activator="{ on }">
-                <span v-on="on" class="people-roles-title ml-2"><strong>{{ formatName(orgPerson) }}</strong></span>
+                <span v-on="on" class="people-roles-title ml-2">{{ formatName(orgPerson) }}</span>
               </template>
               <span>{{ formatName(orgPerson) }}</span>
             </v-tooltip>
@@ -118,7 +118,7 @@
           </v-col>
         </v-row>
       </div>
-    </div>
+    </section>
   </v-card>
 </template>
 
@@ -210,14 +210,11 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
 
-#people-roles {
-  margin-top: 1rem;
-}
-
 .people-roles-summary-header {
   display: flex;
   background-color: $BCgovBlue5O;
   padding: 1.25rem;
+  border-radius: 4px 4px 0px 0px !important;
 }
 
 .people-roles-invalid-message {
@@ -233,6 +230,7 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
 }
 
 .people-roles-title {
+  font-weight: bold;
   color: $gray9;
 }
 

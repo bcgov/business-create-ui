@@ -6,7 +6,7 @@
         <h2>Name</h2>
       </header>
 
-      <v-card flat class="step-container">
+      <v-card flat class="step-container rounded-b-0">
         <NameRequestInfo />
       </v-card>
 
@@ -58,7 +58,7 @@
           with the business in the future, including sending registration documents and notifications.
         </p>
       </header>
-      <v-card class="py-8 px-6"
+      <v-card flat class="py-8 px-6"
         :class="{ 'invalid-section': getShowErrors && !businessContactValid }"
       >
         <BusinessContactInfo
@@ -88,8 +88,10 @@
           corrected afterwards.
         </p>
       </header>
-      <v-card flat class="step-container" :class="{ 'invalid-section': getShowErrors && !businessStartDateValid }">
-        <StartDate />
+      <v-card flat class="step-container" :class="{ 'invalid-section': getShowErrors && !startDateValid }">
+        <StartDate
+          @valid="onStartDateValidEvent($event)"
+        />
       </v-card>
     </section>
 
@@ -152,12 +154,8 @@ export default class RegistrationDefineBusiness extends Mixins(CommonMixin) {
   natureOfBusinessValid = false
   businessAddressesValid = false
   businessContactValid = false
+  startDateValid = false
   folioNumberValid = false
-
-  /** True if Business Start Date is valid. */
-  get businessStartDateValid (): boolean {
-    return !!this.getRegistration.startDate
-  }
 
   /** Object of valid flags. Must match validComponents. */
   get validFlags (): object {
@@ -165,7 +163,7 @@ export default class RegistrationDefineBusiness extends Mixins(CommonMixin) {
       natureOfBusinessValid: this.natureOfBusinessValid,
       businessAddressesValid: this.businessAddressesValid,
       businessContactValid: this.businessContactValid,
-      businessStartDateValid: this.businessStartDateValid,
+      businessStartDateValid: this.startDateValid,
       folioNumberValid: !this.isPremiumAccount || this.folioNumberValid
     }
   }
@@ -198,6 +196,11 @@ export default class RegistrationDefineBusiness extends Mixins(CommonMixin) {
 
   onBusinessContactInfoValidEvent (valid: boolean): void {
     this.businessContactValid = valid
+    this.setRegistrationDefineBusinessValid(this.allFlagsValid)
+  }
+
+  onStartDateValidEvent (valid: boolean): void {
+    this.startDateValid = valid
     this.setRegistrationDefineBusinessValid(this.allFlagsValid)
   }
 

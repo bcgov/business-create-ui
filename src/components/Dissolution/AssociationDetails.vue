@@ -162,12 +162,6 @@ export default class AssociationDetails extends Mixins(CommonMixin, EnumMixin) {
   font-size: $px-14;
 }
 
-// for ContactInfo subtitles
-::v-deep .subtitle {
-  font-size: $px-14;
-  font-weight: bold;
-}
-
 .company-name {
   font-size: $px-22;
 }

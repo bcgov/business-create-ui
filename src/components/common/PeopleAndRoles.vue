@@ -125,7 +125,7 @@
       </v-btn>
     </div>
 
-    <v-card v-if="showOrgPersonForm" flat class="people-roles-container">
+    <v-card flat v-if="showOrgPersonForm" class="people-roles-container">
       <OrgPerson
         :initialValue="currentOrgPerson"
         :activeIndex="activeIndex"
@@ -138,7 +138,7 @@
       />
     </v-card>
 
-    <v-card v-if="orgPersonList.length > 0" flat :disabled="showOrgPersonForm" >
+    <v-card flat v-if="orgPersonList.length > 0" :disabled="showOrgPersonForm" >
       <ListPeopleAndRoles
         :personList="orgPersonList"
         :isSummary="false"

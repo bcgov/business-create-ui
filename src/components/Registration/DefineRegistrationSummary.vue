@@ -1,11 +1,11 @@
 <template>
-  <v-card flat class="rounded-0">
-    <div class="define-registration-header review-header">
+  <v-card flat id="define-registration-summary">
+    <div class="define-registration-header">
       <v-icon color="appDkBlue">mdi-domain</v-icon>
       <label class="define-registration-title pl-2"><strong>Your Business</strong></label>
     </div>
 
-    <section :class="{ 'invalid-section': !defineBusinessValid }">
+    <section :class="{ 'invalid-section rounded-bl-0': !defineBusinessValid }">
       <div v-if="!defineBusinessValid" class="define-registration-step-error-message">
         <span>
           <v-icon color="error">mdi-information-outline</v-icon>
@@ -165,6 +165,7 @@ export default class DefineRegistrationSummary extends Mixins(DateMixin, EnumMix
   display: flex;
   background-color: $BCgovBlue5O;
   padding: 1.25rem;
+  border-radius: 4px 4px 0px 0px !important;
 
   .define-registration-title {
     color: $gray9;

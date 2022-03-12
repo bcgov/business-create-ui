@@ -91,7 +91,7 @@
           business in the future, including sending documents and notifications.
         </p>
       </header>
-      <v-card class="py-8 px-6"
+      <v-card flat class="py-8 px-6"
         :class="{ 'invalid-section': getShowErrors && !businessContactFormValid }"
       >
         <BusinessContactInfo

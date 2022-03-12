@@ -1,12 +1,15 @@
 <template>
-  <v-card flat id="transactional-folio-number-container" :class="{ 'invalid-section': !isValid }">
+  <v-card flat id="transactional-folio-number" class="py-8 px-6"
+    :class="{ 'invalid-section': !isValid }"
+  >
     <v-row no-gutters>
-      <v-col cols="3">
-        <label :class="{ 'error-text': !isValid }">
-          <strong>Folio or Reference<br>Number</strong>
+      <v-col cols="12" sm="3" class="pr-4 pb-4">
+        <label class="title-label" :class="{ 'error-text': !isValid }">
+          <strong>Folio or Reference Number</strong>
         </label>
       </v-col>
-      <v-col cols="9">
+
+      <v-col cols="12" sm="9">
         <v-text-field
           filled persistent-hint
           id="folio-number-input"
@@ -73,6 +76,18 @@ export default class TransactionalFolioNumber extends Mixins(CommonMixin) {
 </script>
 
 <style lang="scss" scoped>
+@import '@/assets/styles/theme.scss';
+
+#transactional-folio-number {
+  font-size: $px-16;
+  color: $gray7;
+}
+
+.title-label {
+  font-weight: bold;
+  color: $gray9;
+}
+
 .v-input {
   margin-bottom: -8px;
 }
