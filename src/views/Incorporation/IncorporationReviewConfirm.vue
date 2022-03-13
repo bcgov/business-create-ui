@@ -49,11 +49,13 @@
           Copies of the incorporation documents will be sent to the email addresses listed below.
         </p>
       </header>
-      <DocumentDelivery
-        class="mt-6"
-        :registeredOfficeEmail="getBusinessContact.email"
-        :completingPartyEmail="getUserEmail"
-      />
+      <v-card flat class="mt-6">
+        <DocumentDelivery
+          class="py-8 px-6"
+          :registeredOfficeEmail="getBusinessContact.email"
+          :completingPartyEmail="getUserEmail"
+        />
+      </v-card>
     </section>
 
     <!-- Certify -->
@@ -64,23 +66,15 @@
           Confirm the legal name of the person authorized to complete and submit this application.
         </p>
       </header>
-      <Certify
-        class="mt-6"
-        :class="{ 'invalid-section': isCertifyInvalid }"
-        :currentDate="getCurrentDate"
-        :certifiedBy="getCertifyState.certifiedBy"
-        :entityDisplay="getCompletingPartyStatement.entityDisplay"
-        :isCertified="getCertifyState.valid"
-        :statements="getCompletingPartyStatement.certifyStatements"
-        :message="getCompletingPartyStatement.certifyClause"
-        :isStaff="isRoleStaff"
-        :firstColumn="3"
-        :secondColumn="9"
-        :invalidSection="isCertifyInvalid"
-        :disableEdit="!isRoleStaff && isTypeCoop"
-        @update:certifiedBy="onCertifiedBy($event)"
-        @update:isCertified="onIsCertified($event)"
-      />
+      <v-card flat class="mt-6">
+        <Certify
+          class="py-8 px-6"
+          :class="{ 'invalid-section': isCertifyInvalid }"
+          :disableEdit="!isRoleStaff && isTypeCoop"
+          :invalidSection="isCertifyInvalid"
+          :isStaff="isRoleStaff"
+        />
+      </v-card>
     </section>
   </div>
 </template>
@@ -88,10 +82,8 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
-import {
-  ActionBindingIF, BusinessContactIF, CertifyIF, CertifyStatementIF, EffectiveDateTimeIF
-} from '@/interfaces'
-import { Certify } from '@bcrs-shared-components/certify'
+import { ActionBindingIF, BusinessContactIF, CertifyIF, EffectiveDateTimeIF } from '@/interfaces'
+import Certify from '@/components/common/Certify.vue'
 import DocumentDelivery from '@/components/common/DocumentDelivery.vue'
 import IncorporationDateTime from '@/components/Incorporation/IncorporationDateTime.vue'
 import Summary from '@/components/Incorporation/Summary.vue'
@@ -109,13 +101,11 @@ export default class IncorporationReviewConfirm extends Vue {
   @Getter getCertifyState!: CertifyIF
   @Getter getCompanyTitle!: string
   @Getter getCompanyDescription!: string
-  @Getter getCompletingPartyStatement!: CertifyStatementIF
   @Getter getValidateSteps!: boolean
   @Getter isBaseCompany!: boolean
   @Getter isTypeBcomp!: boolean
   @Getter isTypeCoop!: boolean
   @Getter isRoleStaff!: boolean
-  @Getter getCurrentDate!: string
   @Getter getEffectiveDateTime!: EffectiveDateTimeIF
   @Getter getUserEmail!: string
 
@@ -125,33 +115,13 @@ export default class IncorporationReviewConfirm extends Vue {
   @Action setCertifyState!: ActionBindingIF
 
   /** Is true when the effective date-time conditions are not met. */
-  get isEffectiveDateTimeInvalid () {
+  get isEffectiveDateTimeInvalid (): boolean {
     return this.getValidateSteps && !this.getEffectiveDateTime.valid
   }
 
   /** Is true when the certify conditions are not met. */
-  get isCertifyInvalid () {
-    return this.getValidateSteps && (!this.getCertifyState.certifiedBy || !this.getCertifyState.valid)
-  }
-
-  /** Handler for Valid change event. */
-  private onIsCertified (val: boolean): void {
-    this.setCertifyState(
-      {
-        valid: val,
-        certifiedBy: this.getCertifyState.certifiedBy
-      }
-    )
-  }
-
-  /** Handler for CertifiedBy change event. */
-  private onCertifiedBy (val: string): void {
-    this.setCertifyState(
-      {
-        valid: this.getCertifyState.valid,
-        certifiedBy: val
-      }
-    )
+  get isCertifyInvalid (): boolean {
+    return this.getValidateSteps && !(this.getCertifyState.certifiedBy && this.getCertifyState.valid)
   }
 }
 </script>

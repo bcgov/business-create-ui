@@ -1,17 +1,10 @@
 <template>
-  <v-card flat id="define-registration-summary">
-    <div class="define-registration-header">
-      <v-icon color="appDkBlue">mdi-domain</v-icon>
-      <label class="define-registration-title pl-2"><strong>Your Business</strong></label>
-    </div>
-
-    <section :class="{ 'invalid-section rounded-bl-0': !defineBusinessValid }">
+  <div id="define-registration-summary">
+    <section :class="{ 'invalid-section': !defineBusinessValid }">
       <div v-if="!defineBusinessValid" class="define-registration-step-error-message">
         <span>
           <v-icon color="error">mdi-information-outline</v-icon>
-          &nbsp;
-          <span class="error-text">This step is unfinished.</span>
-          &nbsp;
+          <span class="error-text mx-1">This step is unfinished.</span>
           <router-link
             :to="{ path: `/${RouteNames.REGISTRATION_DEFINE_BUSINESS}` }"
           >Return to this step to finish it</router-link>
@@ -19,7 +12,7 @@
       </div>
 
       <!-- Name -->
-      <div class="section-container">
+      <article class="section-container">
         <v-row no-gutters>
           <v-col cols="12" sm="3" class="pr-4">
             <label>Name</label>
@@ -31,12 +24,12 @@
             </div>
           </v-col>
         </v-row>
-      </div>
+      </article>
 
       <v-divider class="mx-6" />
 
       <!-- Nature of Business -->
-      <div class="section-container">
+      <article class="section-container">
         <v-row no-gutters>
           <v-col cols="12" sm="3" class="pr-4">
             <label>Nature of Business</label>
@@ -45,32 +38,32 @@
             <span>{{ natureOfBusiness || '(Not entered)' }}</span>
           </v-col>
         </v-row>
-      </div>
+      </article>
 
       <v-divider class="mx-6" />
 
       <!-- Business Addresses -->
-      <div class="section-container">
+      <article class="section-container">
         <BusinessAddresses
           :isEditing="false"
           :showErrors="false"
         />
-      </div>
+      </article>
 
       <v-divider class="mx-6" />
 
-      <!-- Business Contact Info -->
-      <div class="section-container">
+      <!-- Business Contact Information -->
+      <article class="section-container">
         <BusinessContactInfo
           :initialValue="getBusinessContact"
           :isEditing="false"
         />
-      </div>
+      </article>
 
       <v-divider class="mx-6" />
 
       <!-- Business Start Date -->
-      <div class="section-container">
+      <article class="section-container">
         <v-row no-gutters>
           <v-col cols="12" sm="3" class="pr-4">
             <label>Business Start Date</label>
@@ -79,21 +72,21 @@
             <div>{{ businessStartDate || '(Not entered)' }}</div>
           </v-col>
         </v-row>
-      </div>
+      </article>
 
-      <!-- Folio Number -->
+      <!-- Folio or Reference Number -->
       <template v-if="isPremiumAccount">
         <v-divider class="mx-6" />
 
-        <div class="section-container">
+        <article class="section-container">
           <FolioNumber
             :initialValue="getFolioNumber"
             :isEditing="false"
           />
-        </div>
+        </article>
       </template>
     </section>
-  </v-card>
+  </div>
 </template>
 
 <script lang="ts">
@@ -159,17 +152,6 @@ export default class DefineRegistrationSummary extends Mixins(DateMixin, EnumMix
   padding-top: 1.25rem;
   padding-left: 1.25rem;
   color: $app-red;
-}
-
-.define-registration-header {
-  display: flex;
-  background-color: $BCgovBlue5O;
-  padding: 1.25rem;
-  border-radius: 4px 4px 0px 0px !important;
-
-  .define-registration-title {
-    color: $gray9;
-  }
 }
 
 .company-name {

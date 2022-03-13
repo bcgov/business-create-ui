@@ -9,13 +9,24 @@
           to the step to make the necessary change.
         </p>
       </header>
-      <DefineRegistrationSummary class="mt-6" />
-      <ListPeopleAndRoles
-        class="mt-10"
-        :personList="getAddPeopleAndRoleStep.orgPeople"
-        :isSummary="true"
-        :showErrorSummary="!getAddPeopleAndRoleStep.valid"
-      />
+
+      <!-- Your Business -->
+      <v-card flat class="mt-6">
+        <header class="v-card-header rounded-t">
+          <v-icon color="appDkBlue">mdi-domain</v-icon>
+          <label class="v-card-label pl-2"><strong>Your Business</strong></label>
+        </header>
+        <DefineRegistrationSummary />
+      </v-card>
+
+      <!-- People and Roles -->
+      <v-card flat class="mt-10">
+        <header class="v-card-header rounded-t">
+          <v-icon color="appDkBlue">mdi-account-multiple-plus</v-icon>
+          <label class="v-card-label pl-2">People and Roles</label>
+        </header>
+        <ListPeopleAndRoles :isSummary="true" />
+      </v-card>
     </section>
 
     <!-- Document Delivery -->
@@ -26,15 +37,17 @@
           Copies of the registration documents will be sent to the email addresses listed below.
         </p>
       </header>
-      <DocumentDelivery
-        class="mt-6"
-        :class="{ 'invalid-section': isDocumentDeliveryInvalid }"
-        :editableCompletingParty="isRoleStaff || isSbcStaff"
-        :registeredOfficeEmail="getBusinessContact.email"
-        :completingPartyEmail="getUserEmail"
-        :invalidSection="isDocumentDeliveryInvalid"
-        @valid="setDocumentOptionalEmailValidity($event)"
-      />
+      <v-card flat class="mt-6">
+        <DocumentDelivery
+          class="py-8 px-6"
+          :class="{ 'invalid-section': isDocumentDeliveryInvalid }"
+          :editableCompletingParty="isRoleStaff || isSbcStaff"
+          :registeredOfficeEmail="getBusinessContact.email"
+          :completingPartyEmail="getUserEmail"
+          :invalidSection="isDocumentDeliveryInvalid"
+          @valid="setDocumentOptionalEmailValidity($event)"
+        />
+      </v-card>
     </section>
 
     <!-- Certify -->
@@ -45,23 +58,15 @@
           Confirm the legal name of the person authorized to complete and submit this registration.
         </p>
       </header>
-      <Certify
-        class="mt-6"
-        :class="{ 'invalid-section': isCertifyInvalid }"
-        :currentDate="getCurrentDate"
-        :certifiedBy="getCertifyState.certifiedBy"
-        :entityDisplay="getCompletingPartyStatement.entityDisplay"
-        :isCertified="getCertifyState.valid"
-        :statements="getCompletingPartyStatement.certifyStatements"
-        :message="getCompletingPartyStatement.certifyClause"
-        :isStaff="isRoleStaff || isSbcStaff"
-        :firstColumn="3"
-        :secondColumn="9"
-        :invalidSection="isCertifyInvalid"
-        :disableEdit="!isRoleStaff && !isSbcStaff"
-        @update:certifiedBy="onCertifiedBy($event)"
-        @update:isCertified="onIsCertified($event)"
-      />
+      <v-card flat class="mt-6">
+        <Certify
+          class="py-8 px-6"
+          :class="{ 'invalid-section': isCertifyInvalid }"
+          :disableEdit="!isRoleStaff && !isSbcStaff"
+          :invalidSection="isCertifyInvalid"
+          :isStaff="isRoleStaff || isSbcStaff"
+        />
+      </v-card>
     </section>
 
     <!-- Fee Acknowledgement-->
@@ -71,7 +76,12 @@
         <h2>Fee Acknowledgement</h2>
         <p class="mt-4"></p>
       </header>
-      <FeeAcknowledgement class="mt-6" />
+      <v-card flat class="mt-6">
+        <FeeAcknowledgement
+          class="py-8 px-6"
+          :class="{ 'invalid-section': isDocumentDeliveryInvalid }"
+        />
+      </v-card>
     </section> -->
 
     <!-- Staff Payment -->
@@ -80,7 +90,11 @@
         <h2>Staff Payment</h2>
         <p class="mt-4"></p>
       </header>
-      <StaffPayment class="mt-6" />
+      <v-card flat class="mt-6">
+        <StaffPayment
+          class="py-8 px-6"
+        />
+      </v-card>
     </section>
   </div>
 </template>
@@ -88,10 +102,8 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
-import {
-  ActionBindingIF, BusinessContactIF, CertifyIF, CertifyStatementIF, DocumentDeliveryIF, PeopleAndRoleIF
-} from '@/interfaces'
-import { Certify } from '@bcrs-shared-components/certify'
+import { ActionBindingIF, BusinessContactIF, CertifyIF, DocumentDeliveryIF } from '@/interfaces'
+import Certify from '@/components/common/Certify.vue'
 import DefineRegistrationSummary from '@/components/Registration/DefineRegistrationSummary.vue'
 import DocumentDelivery from '@/components/common/DocumentDelivery.vue'
 import StaffPayment from '@/components/common/StaffPayment.vue'
@@ -110,17 +122,13 @@ import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
 })
 export default class RegistrationReviewConfirm extends Vue {
   @Getter getBusinessContact!: BusinessContactIF
-  @Getter getCompletingPartyStatement!: CertifyStatementIF
-  @Getter getCurrentDate!: string
   @Getter getUserEmail!: string
   @Getter getCertifyState!: CertifyIF
   @Getter isRoleStaff!: boolean
   @Getter getValidateSteps!: boolean
-  @Getter getAddPeopleAndRoleStep!: PeopleAndRoleIF
   @Getter getDocumentDelivery!: DocumentDeliveryIF
   @Getter isSbcStaff!: boolean
 
-  @Action setCertifyState!: ActionBindingIF
   @Action setDocumentOptionalEmailValidity!: ActionBindingIF
 
   /** Is true when the Document Delivery conditions are not met. */
@@ -129,28 +137,8 @@ export default class RegistrationReviewConfirm extends Vue {
   }
 
   /** Is true when the certify conditions are not met. */
-  get isCertifyInvalid () {
-    return this.getValidateSteps && (!this.getCertifyState.certifiedBy || !this.getCertifyState.valid)
-  }
-
-  /** Handler for CertifiedBy change event. */
-  onCertifiedBy (val: string): void {
-    this.setCertifyState(
-      {
-        valid: this.getCertifyState.valid,
-        certifiedBy: val
-      }
-    )
-  }
-
-  /** Handler for Valid change event. */
-  onIsCertified (val: boolean): void {
-    this.setCertifyState(
-      {
-        valid: val,
-        certifiedBy: this.getCertifyState.certifiedBy
-      }
-    )
+  get isCertifyInvalid (): boolean {
+    return this.getValidateSteps && !(this.getCertifyState.certifiedBy && this.getCertifyState.valid)
   }
 }
 </script>
@@ -167,5 +155,16 @@ h2::before {
   /* Increment "header-counter" by 1 */
   counter-increment: header-counter;
   content: counter(header-counter) '. ';
+}
+
+.v-card-header {
+  display: flex;
+  background-color: $BCgovBlue5O;
+  padding: 1.25rem;
+
+  .v-card-label {
+    font-weight: bold;
+    color: $gray9;
+  }
 }
 </style>

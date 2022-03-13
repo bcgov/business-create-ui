@@ -247,7 +247,7 @@ describe('Incorporation Date Time component', () => {
     await Vue.nextTick()
 
     expect(wrapper.vm.$el.querySelector('.date-time-selectors').textContent)
-      .toContain(`Time The time can't be greater than ${maxTime} for the selected date`)
+      .toContain(`The time must be at most ${maxTime} for the selected date`)
 
     const invalidEvent = getLastEvent(wrapper, 'valid')
 

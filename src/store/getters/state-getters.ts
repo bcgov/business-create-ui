@@ -138,9 +138,19 @@ export const isTypeCoop = (state: StateIF): boolean => {
   return (state.stateModel.entityType === CorpTypeCd.COOP)
 }
 
-/** Whether the entity is a Community Contribution Company. */
-export const isTypeCCC = (state: StateIF): boolean => {
+/** Whether the entity is a BC Community Contribution Company. */
+export const isTypeBcCcc = (state: StateIF): boolean => {
   return (state.stateModel.entityType === CorpTypeCd.BC_CCC)
+}
+
+/** Whether the entity is a BC Company. */
+export const isTypeBcCompany = (state: StateIF): boolean => {
+  return (state.stateModel.entityType === CorpTypeCd.BC_COMPANY)
+}
+
+/** Whether the entity is a BC ULC Company. */
+export const isTypeBcUlcCompany = (state: StateIF): boolean => {
+  return (state.stateModel.entityType === CorpTypeCd.BC_ULC_COMPANY)
 }
 
 /** Whether the entity is a Sole Proprietorship. */
@@ -165,12 +175,12 @@ export const getOrgInformation = (state: StateIF): OrgInformationIF => {
 
 /** Whether the entity is a base company (BEN, CC, BC, ULC). */
 export const isBaseCompany = (state: StateIF): boolean => {
-  return [
-    CorpTypeCd.BENEFIT_COMPANY,
-    CorpTypeCd.BC_CCC,
-    CorpTypeCd.BC_COMPANY,
-    CorpTypeCd.BC_ULC_COMPANY
-  ].includes(getEntityType(state))
+  return (
+    isTypeBcomp(state) ||
+    isTypeBcCcc(state) ||
+    isTypeBcCompany(state) ||
+    isTypeBcUlcCompany(state)
+  )
 }
 
 /** Whether the current account is a premium account. */

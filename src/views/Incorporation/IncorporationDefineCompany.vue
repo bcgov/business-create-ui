@@ -10,14 +10,14 @@
 
     <!-- Name -->
     <section class="mt-10">
-      <header id="name-request-info-header">
+      <header id="name-header">
         <h2>Name</h2>
       </header>
-      <div :class="{ 'invalid-section': getShowErrors && !hasValidNameTranslation }">
-        <v-card flat class="step-container">
-          <NameRequestInfo @hasNameTranslation="onNameTranslation($event)" />
-        </v-card>
-      </div>
+      <v-card flat class="mt-5">
+        <NameRequestInfo
+          @hasNameTranslation="onNameTranslation($event)"
+        />
+      </v-card>
     </section>
 
     <!-- Cooperative Association Type -->
@@ -277,7 +277,7 @@ export default class IncorporationDefineCompany extends Mixins(CommonMixin) {
           businessContactFormValid: this.businessContactFormValid
         },
         [
-          'name-request-info-header',
+          'name-header',
           'association-type-header',
           'office-address-header',
           'registered-office-contact-header'

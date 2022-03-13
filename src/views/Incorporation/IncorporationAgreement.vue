@@ -64,7 +64,7 @@
             meetings, issuing and transferring shares, and duties of directors and officers.
           </span>
         </v-tooltip>
-        <template v-if="isTypeCCC">
+        <template v-if="isTypeBcCcc">
           containing the
           <v-tooltip top max-width="20rem" content-class="top-tooltip" transition="fade-transition">
             <template v-slot:activator="{ on }">
@@ -111,7 +111,8 @@
             <li>{{text}}</li>
           </ul>
         </div>
-        <template v-if="!isTypeCCC">
+
+        <template v-if="!isTypeBcCcc">
           <div class="help-section">
             <div class="articles-statements-footer">
               In this case, you need to create a unique Incorporation Agreement and set of Articles for the company and
@@ -134,12 +135,14 @@
       </section>
     </section>
 
-    <template v-if="isTypeCCC">
+    <template v-if="isTypeBcCcc">
       <section class="mt-10">
         <header id="confirm-agreement">
           <h2>2. Confirm Incorporation Agreement and Article Completion</h2>
         </header>
-        <AgreementType :showErrorSummary="!getIncorporationAgreementStep.valid" />
+        <v-card flat>
+          <AgreementType :showErrorSummary="!getIncorporationAgreementStep.valid" />
+        </v-card>
       </section>
     </template>
 
@@ -152,55 +155,57 @@
           For your convenience, we have provided a sample Incorporation Agreement and a set of sample
           {{ entityDescription }} Articles.
         </p>
-        <div>
-          <v-card flat class="share-structure-check-panel">
-            <div class="share-structure-check-header">
-              <v-icon color="black">mdi-information-outline</v-icon>
-              <span> Share Structure Check:</span>
-            </div>
-            <div class="share-structure-check-text">
-              The sample articles CAN ONLY be used if the company's share structure DOES NOT contain a class or series
-              with special rights or restrictions.
-              <span class="read-more-btn" @click="readMoreFlag = true">
+        <v-card flat class="share-structure-check-panel">
+          <div class="share-structure-check-header">
+            <v-icon color="black">mdi-information-outline</v-icon>
+            <span> Share Structure Check:</span>
+          </div>
+
+          <div class="share-structure-check-text">
+            The sample articles CAN ONLY be used if the company's share structure DOES NOT contain a class or series
+            with special rights or restrictions.
+            <span class="read-more-btn" @click="readMoreFlag = true">
               <span v-if="!readMoreFlag">Read more...</span>
             </span>
-              <div v-if="readMoreFlag">
-                <div class="read-more-line">
-                  If the corporation's share structure contains a class or series with special rights or restrictions,
-                  you need to create a unique set of Articles for the company and outline these special rights or
-                  restrictions in the Articles.
-                </div>
-                <div class="read-more-line">
-                  We recommend seeking professional assistance from a lawyer or accountant to help you prepare your
-                  Incorporation Agreement and Articles.
-                  <span class="read-more-btn" @click="readMoreFlag = false">
-                  <span>Read less...</span>
-                </span>
-                </div>
+            <div v-if="readMoreFlag">
+              <div class="read-more-line">
+                If the corporation's share structure contains a class or series with special rights or restrictions,
+                you need to create a unique set of Articles for the company and outline these special rights or
+                restrictions in the Articles.
               </div>
-            </div>
-            <div class="preview-download-container">
-              <div>
-                <img src="@/assets/images/BCRegistries_Sample_IncoporationAgreement_x2.png" class="preview-image" />
-              </div>
-              <div class="download-link-container">
-              <span>
-                <v-icon color="blue">mdi-file-pdf-outline</v-icon>
-                <a :href="documentURL" download>
-                  Download the sample Incorporation Agreement and Company Articles
-                </a>
+              <div class="read-more-line">
+                We recommend seeking professional assistance from a lawyer or accountant to help you prepare your
+                Incorporation Agreement and Articles.
+                <span class="read-more-btn" @click="readMoreFlag = false">
+                <span>Read less...</span>
               </span>
               </div>
             </div>
-          </v-card>
-        </div>
+          </div>
+
+          <div class="preview-download-container">
+            <div>
+              <img src="@/assets/images/BCRegistries_Sample_IncoporationAgreement_x2.png" class="preview-image" />
+            </div>
+            <div class="download-link-container">
+            <span>
+              <v-icon color="blue">mdi-file-pdf-outline</v-icon>
+              <a :href="documentURL" download>
+                Download the sample Incorporation Agreement and Company Articles
+              </a>
+            </span>
+            </div>
+          </div>
+        </v-card>
       </section>
 
       <section class="mt-10">
         <header id="confirm-agreement">
           <h2>3. Confirm Incorporation Agreement and Article Completion</h2>
         </header>
-        <AgreementType :showErrorSummary="!getIncorporationAgreementStep.valid" />
+        <v-card flat>
+          <AgreementType :showErrorSummary="!getIncorporationAgreementStep.valid" />
+        </v-card>
       </section>
     </template>
   </div>
@@ -221,7 +226,7 @@ import { CommonMixin, EnumMixin } from '@/mixins'
 })
 export default class IncorporationAgreement extends Mixins(CommonMixin, EnumMixin) {
   @Getter isTypeBcomp!: boolean
-  @Getter isTypeCCC!: boolean
+  @Getter isTypeBcCcc!: boolean
   @Getter getEntityType!: CorpTypeCd
   @Getter getIncorporationAgreementStep!: IncorporationAgreementIF
   @Getter getIncorporationAgreementResource!: any

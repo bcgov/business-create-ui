@@ -1,5 +1,5 @@
 <template>
-  <v-card flat id="document-delivery" class="py-8 px-6">
+  <div id="document-delivery">
     <v-row no-gutters>
       <v-col cols="12" sm="3" class="pr-4">
         <label class="title-label">Registered Office</label>
@@ -39,7 +39,7 @@
         <span id="custodian-email">{{custodianEmail || '(Not entered)'}}</span>
       </v-col>
     </v-row>
-  </v-card>
+  </div>
 </template>
 
 <script lang="ts">

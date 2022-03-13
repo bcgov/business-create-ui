@@ -1,30 +1,18 @@
 <template>
-  <v-card flat id="agreement-summary" class="border-0">
+  <div id="agreement-summary">
+    <!-- SUMMARY SECTION -->
     <template v-if="isSummary">
-      <!-- Summary Header -->
-      <div class="agreement-summary-header">
-        <v-icon color="appDkBlue">mdi-handshake</v-icon>
-        <label class="agreement-summary-title pl-2">
-          Incorporation Agreement and {{getEntityDescription}} Articles
-        </label>
-      </div>
-
       <!-- Summary Warning -->
-      <div
-        v-if="showErrorSummary"
-        class="agreement-invalid-message invalid-section"
-      >
+      <section v-if="showErrorSummary" class="agreement-invalid-message invalid-section">
         <span>
           <v-icon color="error">mdi-information-outline</v-icon>
-          &nbsp;
-          <span class="error-text">This step is unfinished.</span>
-          &nbsp;
+          <span class="error-text mx-1">This step is unfinished.</span>
           <router-link
             id="router-link"
             :to="{ path: `/${RouteNames.INCORPORATION_AGREEMENT}` }"
           >Return to this step to finish it</router-link>
         </span>
-      </div>
+      </section>
 
       <!-- Summary Content -->
       <div v-else class="summary-desc">
@@ -33,7 +21,8 @@
       </div>
     </template>
 
-    <template v-else-if="isTypeCCC">
+    <!-- EDIT SECTION -->
+    <template v-else-if="isTypeBcCcc">
       <v-checkbox
         v-for="(item, index) in getIncorporationAgreementDocuments"
         :id="`agreement-type-${item.code}`"
@@ -49,6 +38,7 @@
       </v-checkbox>
     </template>
 
+    <!-- EDIT SECTION -->
     <div v-else :class="{ 'invalid-section': showErrorSummary }">
       <v-radio-group v-model="agreementType" @change="changeAgreementType" class="agreement-option-list">
         <v-radio v-for="(item, index) in getIncorporationAgreementDocuments"
@@ -60,18 +50,17 @@
         </v-radio>
       </v-radio-group>
     </div>
-  </v-card>
+  </div>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Mixins } from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import { ActionBindingIF, IncorporationAgreementIF, IncorporationAgreementTypeIF } from '@/interfaces'
-import { CorpTypeCd, RouteNames } from '@/enums'
-import { EnumMixin } from '@/mixins'
+import { RouteNames } from '@/enums'
 
 @Component
-export default class AgreementType extends Mixins(EnumMixin) {
+export default class AgreementType extends Vue {
   @Prop({ default: false })
   readonly showErrorSummary: boolean
 
@@ -79,8 +68,7 @@ export default class AgreementType extends Mixins(EnumMixin) {
   readonly isSummary: boolean
 
   @Getter getIncorporationAgreementDocuments!: Array<IncorporationAgreementTypeIF>
-  @Getter getEntityType!: CorpTypeCd
-  @Getter isTypeCCC!: boolean
+  @Getter isTypeBcCcc!: boolean
   @Getter getIncorporationAgreementStep!: IncorporationAgreementIF
 
   @Action setIncorporationAgreementStepData!: ActionBindingIF
@@ -89,11 +77,6 @@ export default class AgreementType extends Mixins(EnumMixin) {
 
   // Enum for template
   readonly RouteNames = RouteNames
-
-  /** The entity description,  */
-  private get getEntityDescription (): string {
-    return `${this.getCorpTypeDescription(this.getEntityType)}`
-  }
 
   /** The agreement type description. */
   private get agreementTypeDescription (): string {
@@ -124,18 +107,6 @@ export default class AgreementType extends Mixins(EnumMixin) {
 
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
-
-.agreement-summary-header {
-  display: flex;
-  background-color: $BCgovBlue5O;
-  padding: 1.25rem;
-  border-radius: 4px 4px 0px 0px !important;
-
-  .agreement-summary-title {
-    font-weight: bold;
-    padding-left: .5rem;
-  }
-}
 
 .agreement-invalid-message {
   padding: 1.25rem;

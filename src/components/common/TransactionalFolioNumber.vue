@@ -1,5 +1,5 @@
 <template>
-  <v-card flat id="transactional-folio-number" class="py-8 px-6"
+  <div id="transactional-folio-number"
     :class="{ 'invalid-section': !isValid }"
   >
     <v-row no-gutters>
@@ -22,7 +22,7 @@
         />
       </v-col>
     </v-row>
-  </v-card>
+  </div>
 </template>
 
 <script lang="ts">

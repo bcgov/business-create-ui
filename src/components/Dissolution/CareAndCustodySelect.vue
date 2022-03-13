@@ -1,7 +1,7 @@
 <template>
   <!-- FUTURE: update layout to match other components -->
-  <v-card flat id="care-and-custody-select" class="rounded-4 pt-11">
-    <div class="section-container py-6 px-8 " :class="{ 'invalid-section': showErrorSummary }">
+  <div id="care-and-custody-select">
+    <div class="section-container" :class="{ 'invalid-section': showErrorSummary }">
       <v-row no-gutters>
         <v-col cols="12" sm="3">
           <label class="care-and-custody-title title-label">Care and Custody<br>of Records</label>
@@ -32,7 +32,7 @@
         </v-col>
       </v-row>
     </div>
-  </v-card>
+  </div>
 </template>
 
 <script lang="ts">

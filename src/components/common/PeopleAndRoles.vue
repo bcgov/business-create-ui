@@ -138,11 +138,9 @@
       />
     </v-card>
 
-    <v-card flat v-if="orgPersonList.length > 0" :disabled="showOrgPersonForm" >
+    <v-card flat v-if="orgPersonList.length > 0" :disabled="showOrgPersonForm">
       <ListPeopleAndRoles
-        :personList="orgPersonList"
         :isSummary="false"
-        :showErrorSummary="!getAddPeopleAndRoleStep.valid"
         @editPerson="onEditPerson($event)"
         @removePerson="onRemovePerson($event)"
       />

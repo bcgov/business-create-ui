@@ -1,9 +1,7 @@
 <template>
-  <v-card flat id="fee-acknowledgement" class="py-8 px-6"
-    :class="{ 'invalid-section': invalidSection }"
-  >
+  <div id="fee-acknowledgement">
     <v-row no-gutters>
-      <v-col cols="12" sm="3" class="pr-4">
+      <v-col cols="12" sm="3" class="pr-4 pb-4">
         <label :class="{'error-text': invalidSection}">Acknowledgement</label>
       </v-col>
       <v-col cols="12" sm="9">
@@ -22,7 +20,7 @@
         </v-checkbox>
       </v-col>
     </v-row>
-  </v-card>
+  </div>
 </template>
 
 <script lang="ts">

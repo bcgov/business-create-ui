@@ -1,16 +1,10 @@
 <template>
-  <v-card flat id="upload-rules-summary" class="border-0">
-    <!-- Summary Header -->
-    <div class="upload-rules-summary-header">
-      <v-icon color="appDkBlue">mdi-format-list-text</v-icon>
-      <label class="upload-rules-title pl-2">Rules</label>
-    </div>
-
+  <div id="upload-rules-summary">
     <div v-if="!getCreateRulesStep.validationDetail.valid" class="invalid-section">
       <div class="upload-rules-error-message">
         <span>
           <v-icon color="error">mdi-information-outline</v-icon>
-          <span class="error-text">This step is unfinished.</span>
+          <span class="error-text mx-1">This step is unfinished.</span>
           <router-link
             :to="{ path: `/${RouteNames.INCORPORATION_RULES}` }"
           >Return to this step to finish it</router-link>
@@ -28,7 +22,7 @@
         </v-col>
       </v-row>
     </div>
-  </v-card>
+  </div>
 </template>
 
 <script lang="ts">
@@ -51,18 +45,6 @@ export default class UploadRulesSummary extends Vue {
 
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
-
-.upload-rules-summary-header {
-  display: flex;
-  background-color: $BCgovBlue5O;
-  padding: 1.25rem;
-  border-radius: 4px 4px 0px 0px !important;
-
-  .upload-rules-title {
-    font-weight: bold;
-    color: $gray9;
-  }
-}
 
 .upload-rules-error-message {
   padding-top: 30px;

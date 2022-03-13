@@ -14,12 +14,10 @@
     </section>
 
     <section v-if="allResolutionValidationItemsInvalid"
-      class="section-container invalid-section rounded-bl-0"
+      class="section-container invalid-section"
     >
       <v-icon color="error">mdi-information-outline</v-icon>
-      &nbsp;
-      <span class="error-text">This step is unfinished.</span>
-      &nbsp;
+      <span class="error-text mx-1">This step is unfinished.</span>
       <router-link
         :to="{ path: `/${RouteNames.DISSOLUTION_RESOLUTION}` }"
       >Return to this step to finish it</router-link>
@@ -27,14 +25,12 @@
 
     <section v-if="isTypeCoop && !allResolutionValidationItemsInvalid"
       id="resolution-summary-section-3"
-      class="section-container rounded-bl-0"
+      class="section-container"
       :class="{ 'invalid-section': !getCreateResolutionStep.validationDetail.valid }"
     >
       <div v-if="!getCreateResolutionStep.validationDetail.valid" class="pb-6">
         <v-icon color="error">mdi-information-outline</v-icon>
-        &nbsp;
-        <span class="error-text">This step is unfinished.</span>
-        &nbsp;
+        <span class="error-text mx-1">This step is unfinished.</span>
         <router-link
           :to="{ path: `/${RouteNames.DISSOLUTION_RESOLUTION}` }"
         >Return to this step to finish it</router-link>
@@ -196,7 +192,7 @@ export default class CompleteResolutionSummary extends Mixins(DateMixin) {
 #resolution-summary-section-3 {
   // removes dotted line bottom border on text area
   ::v-deep .v-text-field.v-input--is-readonly .v-input__slot:before {
-    border-style: None !important;
+    border-style: none !important;
   }
 
   // remove extra bottom and top margins from text area
@@ -241,10 +237,6 @@ export default class CompleteResolutionSummary extends Mixins(DateMixin) {
   ::v-deep #resolution-text {
     margin-top: 0px !important;
     color: $gray7 !important;
-  }
-
-  .section-container {
-    padding-bottom: 2rem !important;
   }
 }
 

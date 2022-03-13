@@ -148,10 +148,10 @@ export default class FileUploadPreview extends Mixins(DocumentMixin) {
     .v-input__append-outer {
       margin-top: 10px !important
     }
-    .v-input__slot{
+    .v-input__slot {
       background-color: $gray1 !important;
     }
-    .v-file-input__text{
+    .v-file-input__text {
      color: $app-blue !important;
     }
     .v-input__icon--prepend button {
@@ -159,5 +159,4 @@ export default class FileUploadPreview extends Mixins(DocumentMixin) {
     }
   }
 }
-
 </style>

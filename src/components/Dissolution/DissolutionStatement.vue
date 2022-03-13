@@ -134,8 +134,6 @@ export default class DissolutionStatement extends Vue {
 
 .summary-section {
   font-size: $px-16;
-  padding: 2rem;
-  background-color: $gray1;
 }
 
 .inner-col-1 {

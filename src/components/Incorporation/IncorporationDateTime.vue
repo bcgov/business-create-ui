@@ -6,18 +6,9 @@
       </v-col>
 
       <v-col cols="12" sm="9">
-        <v-radio-group
-          column
-          class="radio-group"
-          v-model="selectDate">
-          <v-radio
-            label="Immediate (Upon Filing)"
-            value="isImmediate">
-          </v-radio>
-          <v-radio
-            label="A date / time in the future"
-            value="isFutureEffective">
-          </v-radio>
+        <v-radio-group column class="radio-group" v-model="selectDate">
+          <v-radio label="Immediate (Upon Filing)" value="isImmediate" />
+          <v-radio label="A date / time in the future" value="isFutureEffective" />
         </v-radio-group>
 
         <v-form ref="dateTimeForm" class="date-time-selectors">
@@ -86,14 +77,13 @@
             </v-col>
           </v-row>
 
-          <v-row>
-            <v-col
-              class="validation-alert"
-              v-if="isFutureEffective && dateText && !isValidDateTime(effectiveDateTime.effectiveDate)"
-            >
-              <p class="validation-alert-msg">
-                <span v-if="isUnderTime">The time must be at least {{ minTime() }} for the selected date</span>
-                <span v-else>The time can't be greater than {{ maxTime() }} for the selected date</span>
+          <v-row v-if="isFutureEffective && dateText && !isValidDateTime(effectiveDateTime.effectiveDate)">
+            <v-col class="validation-alert">
+              <p class="validation-alert-msg" v-if="isUnderTime">
+                The time must be at least {{ minTime() }} for the selected date
+              </p>
+              <p class="validation-alert-msg" v-else>
+                The time must be at most {{ maxTime() }} for the selected date
               </p>
             </v-col>
           </v-row>
@@ -105,7 +95,7 @@
 
 <script lang="ts">
 //
-// FUTURE: combine/replace this with EffectiveDateTime.vue ???
+// FUTURE: replace this with EffectiveDateTime.vue
 //
 
 // Libraries
@@ -403,6 +393,7 @@ label {
   padding-top: 2rem;
   font-size: $px-24;
 }
+
 @media (max-width: 959px) {
   .time-colon {
     display: none;

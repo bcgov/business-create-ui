@@ -212,6 +212,7 @@
               </v-form>
             </v-col>
           </v-row>
+
           <v-row no-gutters class="mt-0">
             <v-col id="resolution-signature-card-left-col" cols="2" class="pt-6" >
               <v-card-title class="resolution-signature-vcard-title pl-2 pr-0">

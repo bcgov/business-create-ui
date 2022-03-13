@@ -6,27 +6,23 @@
         <h2>Name</h2>
       </header>
 
-      <v-card flat class="step-container rounded-b-0">
+      <v-card flat class="mt-5">
         <NameRequestInfo />
-      </v-card>
 
-      <!-- FUTURE: Business Type goes here -->
+        <!-- FUTURE: Business Type goes here -->
 
-      <div class="white-background">
         <v-divider class="mx-6" />
-      </div>
 
-      <!-- Nature Of Business -->
-      <header id="nature-of-business-header" />
-      <div
-        class="py-8 px-6 white-background"
-        :class="{ 'invalid-section': getShowErrors && !natureOfBusinessValid }"
-      >
+        <!-- Nature Of Business -->
+        <header id="nature-of-business-header" />
         <NatureOfBusiness
+          class="py-8 px-6"
+          :class="{ 'invalid-section': getShowErrors && !natureOfBusinessValid }"
           :showErrors="getShowErrors"
           @valid="onNatureOfBusinessValidEvent($event)"
         />
-      </div>
+      </v-card>
+
     </section>
 
     <!-- Business Addresses -->

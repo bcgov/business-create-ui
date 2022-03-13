@@ -1,19 +1,11 @@
 <template>
-  <v-card flat id="list-share-class" class="border-0">
-    <!-- Summary Header -->
-    <div v-if="isSummary" class="share-summary-header">
-      <v-icon color="appDkBlue">mdi-sitemap</v-icon>
-      <label class="share-summary-header-title pl-2">Share Structure</label>
-    </div>
-
-    <section class="rounded-0" :class="{ 'invalid-section': showErrorSummary }">
+  <div id="list-share-class">
+    <section :class="{ 'invalid-section': showErrorSummary }">
       <!-- Summary Warning -->
       <div v-if="isSummary && showErrorSummary" class="share-summary-invalid-message">
         <span>
           <v-icon color="error">mdi-information-outline</v-icon>
-          &nbsp;
-          <span class="error-text">This step is unfinished.</span>
-          &nbsp;
+          <span class="error-text mx-1">This step is unfinished.</span>
           <router-link
             id="router-link"
             :to="{ path: `/${RouteNames.INCORPORATION_SHARE_STRUCTURE}` }"
@@ -58,7 +50,7 @@
                     <template v-slot:activator="{ on }">
                       <v-btn text small
                         color="primary"
-                        class="actions__more-actions__btn"
+                        class="more-actions-btn"
                         v-on="on">
                         <v-icon>mdi-menu-down</v-icon>
                       </v-btn>
@@ -131,7 +123,7 @@
                     <v-menu offset-y>
                       <template v-slot:activator="{ on }">
                         <v-btn text small color="primary"
-                          class="actions__more-actions__btn" v-on="on"
+                          class="more-actions-btn" v-on="on"
                         >
                           <v-icon>mdi-menu-down</v-icon>
                         </v-btn>
@@ -169,7 +161,7 @@
         </template>
       </v-data-table>
     </section>
-  </v-card>
+  </div>
 </template>
 
 <script lang="ts">
@@ -185,10 +177,10 @@ export default class ListShareClass extends Vue {
   @Prop({ default: () => [] })
   readonly shareClasses: any
 
-  @Prop()
+  @Prop({ default: false })
   readonly componentDisabled: boolean
 
-  @Prop()
+  @Prop({ default: false })
   readonly isSummary: boolean
 
   @Prop({ default: false })
@@ -300,17 +292,6 @@ export default class ListShareClass extends Vue {
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
 
-.share-summary-header {
-  display: flex;
-  background-color: $BCgovBlue5O;
-  padding: 1.25rem;
-
-  .share-summary-header-title {
-    font-weight: bold;
-    color: $gray9;
-  }
-}
-
 .share-summary-invalid-message {
   padding: 1.25rem;
   color: $app-red;
@@ -327,7 +308,7 @@ tbody {
 }
 
 .class-row-has-series td {
-  border-bottom: none!important;
+  border-bottom: none !important;
 }
 
 .series-row {
@@ -336,7 +317,7 @@ tbody {
   }
 
   td {
-    border-bottom: none!important;
+    border-bottom: none !important;
   }
 
   td:not(:first-child){
@@ -345,7 +326,7 @@ tbody {
 }
 
 .series-row-last td {
-  border-bottom: thin solid rgba(0, 0, 0, 0.12)!important;
+  border-bottom: thin solid rgba(0, 0, 0, 0.12) !important;
 }
 
 .actions {
@@ -361,6 +342,10 @@ tbody {
 
   .v-btn + .v-btn {
     margin-left: 0.5rem;
+  }
+
+  .more-actions-btn {
+    width: 28px;
   }
 }
 

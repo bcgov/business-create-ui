@@ -1,6 +1,6 @@
 <template>
   <div id="staff-payment-container" :class="{'invalid-section': invalidStaffPayment}">
-    <StaffPaymentComponent
+    <StaffPaymentShared
       :staffPaymentData="getStaffPaymentStep.staffPayment"
       :displayPriorityCheckbox="displayPriorityCheckbox"
       :validate="getValidateSteps"
@@ -14,14 +14,13 @@
 <script lang="ts">
 import { Component, Emit, Prop, Vue } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
-import { StaffPayment as StaffPaymentComponent } from '@bcrs-shared-components/staff-payment'
+import { StaffPayment as StaffPaymentShared } from '@bcrs-shared-components/staff-payment'
 import { ActionBindingIF, StaffPaymentIF, StaffPaymentStepIF } from '@/interfaces'
 import { StaffPaymentOptions } from '@/enums'
 
+/** This is a shim between the view and the atomic component. */
 @Component({
-  components: {
-    StaffPaymentComponent
-  }
+  components: { StaffPaymentShared }
 })
 export default class StaffPayment extends Vue {
   /** Whether to display priority checkbox. */
