@@ -1,6 +1,6 @@
 <template>
   <div id="complete-affidavit">
-    <!-- Intro Section -->
+    <!-- Intro section -->
     <section class="mt-10">
       <header>
         <h2>1. Affidavit</h2>
@@ -18,15 +18,19 @@
       </header>
     </section>
 
-    <!-- Help Section -->
-    <div v-if="getAffidavitResources.helpSection" class="mt-5">
-        <span class="help-btn" @click="helpToggle = !helpToggle">
-          <v-icon color="primary" class="pr-1">mdi-help-circle-outline</v-icon>
-          <span v-if="!helpToggle">Help with Affidavit</span>
-          <span v-else>Hide Help</span>
-        </span>
+    <!-- Help section -->
+    <div class="mt-5" v-if="getAffidavitResources.helpSection">
+      <span class="help-btn" @click="helpToggle = !helpToggle">
+        <v-icon color="primary" class="pr-1">mdi-help-circle-outline</v-icon>
+        <span v-if="!helpToggle">Help with Affidavit</span>
+        <span v-else>Hide Help</span>
+      </span>
+
       <section v-show="helpToggle" class="affidavit-help">
-        <header id="affidavit-help-header"><h2>Help with Affidavit</h2></header>
+        <header id="affidavit-help-header">
+          <h2>Help with Affidavit</h2>
+        </header>
+
         <p>{{getAffidavitResources.helpSection.header}}</p>
         <ul class="mt-6">
           <li
@@ -43,68 +47,64 @@
       </section>
     </div>
 
-    <!-- Sample Section -->
+    <!-- Sample Affidavit -->
     <section id="sample-affidavit-section" class="mt-10">
       <header id="sample-affidavit-header">
         <h2>2. Sample Affidavit</h2>
       </header>
-      <p class="mt-2">
-        For your convenience, we have provided a sample affidavit with instructions.
-      </p>
-      <v-card flat class="pt-7 pb-5 pl-6">
-        <v-row>
-          <v-col cols="1" class="pt-6" >
-          </v-col>
-          <v-col cols="3" class="pl-8 pt-6">
-            <div>
-              <img v-if="isTypeCoop" src="@/assets/images/BCRegistries_CoopAffidavit-x2.png" class="preview-image"/>
-              <img v-else src="@/assets/images/BCRegistries_CorporationAffidavit-x2.png" class="preview-image"/>
-            </div>
-          </v-col>
-          <v-col cols="6" class="pt-6 pr-15">
-            <div class="download-link-container ml-1 pt-5 pb-5">
-              <v-icon color="primary" class="mt-n1">mdi-file-pdf-outline</v-icon>
-              <a :href="documentURL" download class="mt-2">
-                Download the Sample Affidavit
-              </a>
-            </div>
-          </v-col>
-          <v-col cols="2" class="pt-6"></v-col>
-        </v-row>
+
+      <p class="mt-2">For your convenience, we have provided a sample affidavit with instructions.</p>
+
+      <v-card flat class="py-8 px-6">
+        <div class="d-flex flex-column flex-sm-row justify-center align-center">
+          <img v-if="isTypeCoop" src="@/assets/images/BCRegistries_CoopAffidavit-x2.png" class="preview-image"/>
+          <img v-else src="@/assets/images/BCRegistries_CorporationAffidavit-x2.png" class="preview-image"/>
+          <div class="px-8" />
+          <div class="download-link-container py-5">
+            <v-icon color="primary" class="mt-n1">mdi-file-pdf-outline</v-icon>
+            <a :href="documentURL" download class="ml-1">Download the Sample Affidavit</a>
+          </div>
+        </div>
       </v-card>
     </section>
 
-    <!-- Confirm Section -->
+    <!-- Confirm Affidavit Completion -->
     <section id="confirm-affidavit-section" class="mt-10">
       <header id="confirm-affidavit-header">
         <h2>3. Confirm Affidavit Completion</h2>
       </header>
-      <div :class="{ 'invalid-section': getShowErrors && !hasAffidavitConfirmed }">
-        <v-card flat id="confirm-affidavit-card" class="pa-8 mt-6">
+
+      <div class="mt-4" :class="{ 'invalid-section': getShowErrors && !hasAffidavitConfirmed }">
+        <v-card flat id="confirm-affidavit-card" class="py-8 px-6">
           <v-form ref="confirmAffidavitChk">
             <v-checkbox
               id="chk-confirm-affidavit"
-              class="chk-affidavit"
+              class="chk-affidavit mt-0 pt-0"
               v-model="affidavitConfirmed"
+              hide-details
               :rules="confirmCompletionAffidavit"
               :label="getAffidavitResources.confirmSection.checkboxLabel"
               @change="onAffidavitConfirmedChange($event)"
             />
-            <ul class="mt-4">
-              <li>
-                <v-icon class="mr-2">mdi-circle-small</v-icon>
-                <span class="break-spaces">The {{ entityTitle }} name is identified <b>exactly</b> as follows
-                  throughout the affidavit:
-                </span>
-                <div class="ml-9"><strong>{{ entityName }}</strong></div>
+            <ul>
+              <li class="mt-4">
+                <v-row no-gutters>
+                  <v-col cols="1"><v-icon>mdi-circle-small</v-icon></v-col>
+                  <v-col cols="11">
+                    The {{ entityTitle }} name is identified <b>exactly</b> as follows throughout the affidavit:
+                    <p class="font-weight-bold mb-0">{{ entityName }}</p>
+                  </v-col>
+                </v-row>
               </li>
               <li
-                v-for="(item, index) in getAffidavitResources.confirmSection.confirmText"
                 class="mt-4"
+                v-for="(item, index) in getAffidavitResources.confirmSection.confirmText"
                 :key="index"
               >
-                <v-icon class="mr-2">mdi-circle-small</v-icon>
-                <span class="break-spaces">{{item}}</span>
+                <v-row no-gutters>
+                  <v-col cols="1"><v-icon>mdi-circle-small</v-icon></v-col>
+                  <v-col cols="11">{{item}}</v-col>
+                </v-row>
               </li>
             </ul>
           </v-form>
@@ -112,7 +112,7 @@
       </div>
     </section>
 
-    <!-- Upload Section -->
+    <!-- Upload Affidavit -->
     <section v-if="isTypeCoop" id="upload-affidavit-section" class="mt-10">
       <header id="upload-affidavit-header">
         <h2>4. Upload Affidavit</h2>
@@ -120,23 +120,22 @@
         <ul class="mt-5">
           <li class="mt-1">
             <v-icon>mdi-circle-small</v-icon>
-            <span class="break-spaces">Must be set to fit onto 8.5" x 11"
-              letter-size paper
+            <span class="ml-2">Must be set to fit onto 8.5" x 11" letter-size paper
             </span>
           </li>
           <li class="mt-1">
             <v-icon>mdi-circle-small</v-icon>
-            <span class="break-spaces">Use a white background and a legible font with contrasting font colour
-            </span>
+            <span class="ml-2">Use a white background and a legible font with contrasting
+              font colour</span>
           </li>
           <li class="mt-1">
             <v-icon>mdi-circle-small</v-icon>
-            <span class="break-spaces">PDF file type (maximum 10 MB file size)</span>
+            <span class="ml-2">PDF file type (maximum 30 MB file size)</span>
           </li>
         </ul>
       </header>
 
-      <div :class="{ 'invalid-section': getShowErrors && !hasValidUploadFile }" class="mt-7">
+      <div class="mt-4" :class="{ 'invalid-section': getShowErrors && !hasValidUploadFile }">
         <v-card flat id="upload-affidavit-card" class="py-8 px-6">
           <v-row no-gutters>
             <v-col cols="12" sm="3" class="pr-4 pb-4">
@@ -409,9 +408,6 @@ ul {
 
 .chk-affidavit {
   color: $gray9;
-  margin-top: 0;
-  padding-top: 0;
-  height: 2.5rem !important;
 
   ::v-deep {
     .theme--light.v-icon {
@@ -445,7 +441,6 @@ ul {
 }
 
 .download-link-container {
-  margin-top: 85px;
   border-top: solid 1px $gray3;
   border-bottom: solid 1px $gray3;
 }
@@ -460,6 +455,11 @@ ul {
   // file upload input field
   ::v-deep label.v-label.theme--light {
     color: $gray7 !important;
+  }
+
+  // remove extra space taken by error message
+  ::v-deep .v-text-field__details {
+    margin-bottom: -8px !important;
   }
 }
 </style>

@@ -12,19 +12,13 @@
 
       <!-- Your Business -->
       <v-card flat class="mt-6">
-        <header class="v-card-header rounded-t">
-          <v-icon color="appDkBlue">mdi-domain</v-icon>
-          <label class="v-card-label pl-2"><strong>Your Business</strong></label>
-        </header>
+        <CardHeader icon="mdi-domain" label="Your Business" />
         <DefineRegistrationSummary />
       </v-card>
 
       <!-- People and Roles -->
       <v-card flat class="mt-10">
-        <header class="v-card-header rounded-t">
-          <v-icon color="appDkBlue">mdi-account-multiple-plus</v-icon>
-          <label class="v-card-label pl-2">People and Roles</label>
-        </header>
+        <CardHeader icon="mdi-account-multiple-plus" label="People and Roles" />
         <ListPeopleAndRoles :isSummary="true" />
       </v-card>
     </section>
@@ -37,6 +31,7 @@
           Copies of the registration documents will be sent to the email addresses listed below.
         </p>
       </header>
+
       <v-card flat class="mt-6">
         <DocumentDelivery
           class="py-8 px-6"
@@ -58,6 +53,7 @@
           Confirm the legal name of the person authorized to complete and submit this registration.
         </p>
       </header>
+
       <v-card flat class="mt-6">
         <Certify
           class="py-8 px-6"
@@ -76,6 +72,7 @@
         <h2>Fee Acknowledgement</h2>
         <p class="mt-4"></p>
       </header>
+
       <v-card flat class="mt-6">
         <FeeAcknowledgement
           class="py-8 px-6"
@@ -90,10 +87,9 @@
         <h2>Staff Payment</h2>
         <p class="mt-4"></p>
       </header>
+
       <v-card flat class="mt-6">
-        <StaffPayment
-          class="py-8 px-6"
-        />
+        <StaffPayment class="py-8 px-6" />
       </v-card>
     </section>
   </div>
@@ -103,15 +99,17 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import { ActionBindingIF, BusinessContactIF, CertifyIF, DocumentDeliveryIF } from '@/interfaces'
+import CardHeader from '@/components/common/CardHeader.vue'
 import Certify from '@/components/common/Certify.vue'
-import DefineRegistrationSummary from '@/components/Registration/DefineRegistrationSummary.vue'
 import DocumentDelivery from '@/components/common/DocumentDelivery.vue'
 import StaffPayment from '@/components/common/StaffPayment.vue'
+import DefineRegistrationSummary from '@/components/Registration/DefineRegistrationSummary.vue'
 import FeeAcknowledgement from '@/components/Registration/FeeAcknowledgement.vue'
 import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
 
 @Component({
   components: {
+    CardHeader,
     Certify,
     DefineRegistrationSummary,
     DocumentDelivery,
@@ -155,16 +153,5 @@ h2::before {
   /* Increment "header-counter" by 1 */
   counter-increment: header-counter;
   content: counter(header-counter) '. ';
-}
-
-.v-card-header {
-  display: flex;
-  background-color: $BCgovBlue5O;
-  padding: 1.25rem;
-
-  .v-card-label {
-    font-weight: bold;
-    color: $gray9;
-  }
 }
 </style>

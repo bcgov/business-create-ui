@@ -148,7 +148,8 @@
 
             <v-checkbox
               id="delivery-mailing-same-chkbx"
-              class="inherit-checkbox mt-0 pt-0"
+              class="inherit-checkbox"
+              hide-details
               label="Delivery Address same as Mailing Address"
               v-model="custodian.inheritMailingAddress"
             />
@@ -456,12 +457,6 @@ export default class CustodianOfRecords extends Mixins(CommonMixin) {
   }
 }
 
-.inherit-checkbox {
-  ::v-deep .v-messages {
-    display: none !important;
-  }
-}
-
 .summary-section {
   font-size: $px-16;
 }
@@ -507,5 +502,11 @@ export default class CustodianOfRecords extends Mixins(CommonMixin) {
 // italicize delivery instructions
 ::v-deep .base-address .address-block .delivery-instructions {
   font-style: italic;
+}
+
+.inherit-checkbox {
+  margin-top: 0;
+  padding-top: 0;
+  margin-left: -3px;
 }
 </style>

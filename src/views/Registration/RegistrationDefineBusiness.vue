@@ -34,6 +34,7 @@
           British Columbia.
         </p>
       </header>
+
       <v-card flat class="py-8 px-6"
         :class="{ 'invalid-section': getShowErrors && !businessAddressesValid }"
       >
@@ -54,6 +55,7 @@
           with the business in the future, including sending registration documents and notifications.
         </p>
       </header>
+
       <v-card flat class="py-8 px-6"
         :class="{ 'invalid-section': getShowErrors && !businessContactValid }"
       >
@@ -84,6 +86,7 @@
           corrected afterwards.
         </p>
       </header>
+
       <v-card flat class="step-container" :class="{ 'invalid-section': getShowErrors && !startDateValid }">
         <StartDate
           @valid="onStartDateValidEvent($event)"
@@ -100,6 +103,7 @@
           information is not used by the BC Business Registry.
         </p>
       </header>
+
       <v-card flat class="step-container" :class="{ 'invalid-section': getShowErrors && !folioNumberValid }">
         <FolioNumber
           :initialValue="getFolioNumber"

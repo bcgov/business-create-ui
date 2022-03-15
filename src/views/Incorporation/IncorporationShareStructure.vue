@@ -23,6 +23,7 @@
       <header id="share-structure-help-header">
         <h2>Share Structure Help</h2>
       </header>
+
       <p>
         An incorporated business must issue shares. These shares represent ownership interest in the company and give
         the shareholder a say in how the company is being run. For most small companies starting out, a simple share
@@ -38,6 +39,7 @@
           <v-icon color="appDkBlue">mdi-sitemap</v-icon>
           <label class="share-summary-header-title pl-2">Share Structure</label>
         </header>
+
         <ListShareClass :shareClasses="sharesHelpSample" :isSummary="true" />
       </v-card>
 
@@ -59,7 +61,7 @@
         <v-icon v-if="shareClasses.length > 0" color="green darken-2" class="cp-valid">mdi-check</v-icon>
         <v-icon v-else-if="getShowErrors" color="error" class="cp-invalid">mdi-close</v-icon>
         <v-icon v-else>mdi-circle-small</v-icon>
-        <span class="chk-list-item-txt">At least one Class of Shares</span>
+        <span class="ml-2">At least one Class of Shares</span>
       </li>
     </ul>
 
@@ -341,9 +343,5 @@ p{
     font-weight: bold;
     color: $gray9;
   }
-}
-
-.chk-list-item-txt {
-  margin-left: 0.5rem;
 }
 </style>

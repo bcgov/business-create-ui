@@ -1,5 +1,6 @@
 <template>
   <div id="document-delivery">
+    <!-- Registered Office -->
     <v-row no-gutters>
       <v-col cols="12" sm="3" class="pr-4">
         <label class="title-label">Registered Office</label>
@@ -9,6 +10,7 @@
       </v-col>
     </v-row>
 
+    <!-- Completing Party -->
     <v-row no-gutters class="pt-3">
       <v-col cols="12" sm="3" class="pr-4">
         <label class="title-label" :class="{ 'error-text': invalidSection }">
@@ -113,5 +115,10 @@ export default class DocumentDelivery extends Vue {
 .title-label {
   color: $gray9;
   font-weight: bold;
+}
+
+// remove extra space taken by error message
+::v-deep .v-text-field__details {
+  margin-bottom: -8px !important;
 }
 </style>

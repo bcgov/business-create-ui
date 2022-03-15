@@ -16,8 +16,8 @@
 
       <!-- Summary Content -->
       <div v-else class="summary-desc">
-        <div><v-icon color="green darken-2" class="agreement-valid-icon">mdi-check</v-icon></div>
-          <div v-html="agreementTypeDescription"></div>
+        <v-icon color="green darken-2" class="agreement-valid-icon">mdi-check</v-icon>
+        <div v-html="agreementTypeDescription"></div>
       </div>
     </template>
 
@@ -39,13 +39,21 @@
     </template>
 
     <!-- EDIT SECTION -->
-    <div v-else :class="{ 'invalid-section': showErrorSummary }">
-      <v-radio-group v-model="agreementType" @change="changeAgreementType" class="agreement-option-list">
-        <v-radio v-for="(item, index) in getIncorporationAgreementDocuments"
-                  :key="index" :value="item.code" :id="`agreement-type-${item.code}`"
+    <div class="py-8 px-6" v-else :class="{ 'invalid-section': showErrorSummary }">
+      <v-radio-group
+        class="mt-0 pt-0"
+        hide-details
+        v-model="agreementType"
+        @change="changeAgreementType"
+      >
+        <v-radio
+          v-for="(item, index) in getIncorporationAgreementDocuments"
+          :key="index"
+          :value="item.code"
+          :id="`agreement-type-${item.code}`"
         >
           <template slot="label">
-            <div v-html="item.description" class="agreement-option" />
+            <div v-html="item.description" class="agreement-option ml-6" />
           </template>
         </v-radio>
       </v-radio-group>
@@ -124,13 +132,12 @@ export default class AgreementType extends Vue {
   padding-right: 0.5rem;
 }
 
-.agreement-option-list {
-  padding: 1.5rem;
+.agreement-option {
+  color: $gray7;
 }
 
-.agreement-option {
-  padding-top: 1rem;
-  color: $gray7;
+.v-radio:not(:first-of-type) {
+  margin-top: 1rem;
 }
 
 .v-icon.mdi-information-outline {

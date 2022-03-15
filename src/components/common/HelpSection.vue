@@ -1,14 +1,16 @@
 <template>
-  <div v-if="helpSection" class="mt-5">
+  <div v-if="helpSection">
     <span class="help-btn" @click="helpToggle = !helpToggle">
       <v-icon color="primary" class="pr-1">mdi-help-circle-outline</v-icon>
       <span v-if="!helpToggle">Help with {{ helpTitle }}</span>
       <span v-else>Hide Help</span>
     </span>
+
     <section v-show="helpToggle" class="help-section">
       <header class="help-header">
         <h2>Help with {{ helpTitle }}</h2>
       </header>
+
       <ul class="px-0">
         <li
           v-for="(item, index) in helpSection.helpText"
@@ -55,9 +57,9 @@ ul {
 }
 
 .help-section {
-  margin: 1.5rem 0;
   border-top: 1px dashed $gray6;
   border-bottom: 1px dashed $gray6;
+  margin: 1.5rem 0;
   padding: 1rem 0;
 
   .help-header {

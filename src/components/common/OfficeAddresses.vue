@@ -40,6 +40,7 @@
             <v-checkbox
               id="registered-mailing-same-chkbx"
               class="inherit-checkbox"
+              hide-details
               label="Same as Mailing Address"
               v-model="inheritMailingAddress"
               v-on:change="setDeliveryAddressToMailingAddress()"
@@ -76,6 +77,7 @@
             <v-checkbox
               id="records-mailing-same-chkbx"
               class="inherit-checkbox"
+              hide-details
               label="Same as Registered Office"
               v-model="inheritRegisteredAddress"
               v-on:change="setRecordOfficeToRegisteredOffice()"
@@ -113,6 +115,7 @@
               <v-col cols="12" sm="9">
                 <v-checkbox
                   class="inherit-checkbox"
+                  hide-details
                   label="Same as Mailing Address"
                   v-model="inheritRecMailingAddress"
                   v-on:change="setRecordDeliveryAddressToMailingAddress()"
@@ -568,14 +571,6 @@ export default class OfficeAddresses extends Mixins(CommonMixin) {
   margin-top: 0;
   padding-top: 0;
   margin-left: -3px;
-
-  ::v-deep .v-input__slot {
-    margin-bottom: 0;
-  }
-
-  ::v-deep .v-messages {
-    display: none !important;
-  }
 }
 
 .summary-section-header {

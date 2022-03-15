@@ -14,6 +14,7 @@
       <header id="association-details">
         <h2>1. {{ getDissolutionDetailsTitle }}</h2>
       </header>
+
       <v-card flat class="mt-5">
         <AssociationDetails />
       </v-card>
@@ -27,6 +28,7 @@
           the Cooperative Association's assets and liabilities:
         </p>
       </header>
+
       <v-card flat class="mt-5 py-8 px-6"
         :class="{ 'invalid-section': showDissolutionStatementErrors }"
       >
@@ -43,6 +45,7 @@
 
       <!-- Help Section -->
       <HelpSection
+        class="mt-5"
         :helpSection="getCustodialRecordsResources.helpSection"
         :helpTitle="getCustodialRecordsResources.custodianTitle"
       />

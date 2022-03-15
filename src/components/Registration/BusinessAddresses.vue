@@ -31,6 +31,7 @@
           <v-checkbox
             id="same-as-mailing-checkbox"
             class="inherit-checkbox"
+            hide-details
             label="Same as Mailing Address"
             v-model="inheritMailingAddress"
             v-on:change="onCheckboxChanged()"
@@ -309,14 +310,6 @@ export default class BusinessAddresses extends Mixins(CommonMixin) {
   margin-top: 0;
   padding-top: 0;
   margin-left: -3px;
-
-  ::v-deep .v-input__slot {
-    margin-bottom: 0;
-  }
-
-  ::v-deep .v-messages {
-    display: none !important;
-  }
 }
 
 .summary-section-header {

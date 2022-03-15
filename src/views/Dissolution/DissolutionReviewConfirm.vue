@@ -17,8 +17,8 @@
           <label class="font-weight-bold pl-2">Dissolution</label>
         </header>
 
-        <div class="py-8" :class="{ 'invalid-section': !isDissolutionDefineDissolutionValid }">
-          <section class="mx-6" v-if="!isDissolutionDefineDissolutionValid">
+        <div class="pb-8" :class="{ 'invalid-section': !isDissolutionDefineDissolutionValid }">
+          <section class="mx-6 pt-8" v-if="!isDissolutionDefineDissolutionValid">
             <span>
               <v-icon color="error">mdi-information-outline</v-icon>
               <span class="error-text mx-1">This step is unfinished.</span>
@@ -35,7 +35,7 @@
 
           <!-- Dissolution Statement -->
           <template v-if="isTypeCoop">
-            <section class="mx-6">
+            <section class="px-6">
               <DissolutionStatement
                 class="pa-8 gray-background"
                 :isSummary="true"
@@ -43,7 +43,7 @@
             </section>
 
             <!-- divider -->
-            <div class="mx-6">
+            <div class="px-6">
               <v-container class="py-0">
                 <v-divider />
               </v-container>
@@ -51,7 +51,7 @@
           </template>
 
           <!-- Custodian of Records -->
-          <section class="mx-6">
+          <section class="px-6">
             <CustodianOfRecords
               class="pa-8 gray-background"
               :isSummary="true"
@@ -61,13 +61,13 @@
           <!-- Destroy Certificates -->
           <template v-if="isTypeCoop">
             <!-- divider -->
-            <div class="mx-6">
+            <div class="px-6">
               <v-container class="py-0">
                 <v-divider />
               </v-container>
             </div>
 
-            <section class="mx-6">
+            <section class="px-6">
               <DestroyCertificate
                 class="pa-8 gray-background"
                 :isSummary="true"
@@ -78,13 +78,13 @@
           <!-- Dissolution Date and Time -->
           <template v-if="!isTypeCoop">
             <!-- divider -->
-            <div class="mx-6">
+            <div class="px-6">
               <v-container class="py-0">
                 <v-divider />
               </v-container>
             </div>
 
-            <section class="mx-6">
+            <section class="px-6">
               <v-container
                 id="effective-date-time"
                 :class="{ 'invalid': isDissolutionDateTimeInvalid }"
@@ -133,6 +133,7 @@
           <v-icon class="ml-2" color="appDkBlue">mdi-handshake</v-icon>
           <label class="font-weight-bold pl-2">{{getCreateResolutionResource.reviewConfirmHeader}}</label>
         </header>
+
         <CompleteResolutionSummary />
       </v-card>
 
@@ -166,6 +167,7 @@
           Copies of the dissolution documents will be sent to the email addresses listed below.
         </p>
       </header>
+
       <v-card flat class="mt-6">
         <DocumentDelivery
           class="py-8 px-6"
@@ -194,6 +196,7 @@
           Only the number below will appear on the transaction report and receipt for this filing.
         </p>
       </header>
+
       <v-card flat class="mt-6">
         <TransactionalFolioNumber
           class="py-8 px-6"
@@ -214,6 +217,7 @@
           Confirm the legal name of the person authorized to complete and submit this dissolution.
         </p>
       </header>
+
       <v-card flat class="mt-6">
         <Certify
           class="py-8 px-6"
@@ -235,6 +239,7 @@
           Plan of Arrangement.
         </p>
       </header>
+
       <v-card flat class="mt-6">
         <CourtOrderPoa
           class="py-8 px-6"
@@ -257,10 +262,9 @@
         <h2>Staff Payment</h2>
         <p class="mt-4"></p>
       </header>
+
       <v-card flat class="mt-6">
-        <StaffPayment
-          class="py-8 px-6"
-        />
+        <StaffPayment class="py-8 px-6" />
       </v-card>
     </section>
   </div>

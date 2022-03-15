@@ -17,6 +17,7 @@
           to the step to make the necessary change.
           </p>
       </header>
+
       <Summary class="mt-6" />
     </section>
 
@@ -31,6 +32,7 @@
           immediate Date and Time of Incorporation.
         </p>
       </header>
+
       <IncorporationDateTime
         class="mt-6"
         :class="{ 'invalid-section': isEffectiveDateTimeInvalid }"
@@ -49,6 +51,7 @@
           Copies of the incorporation documents will be sent to the email addresses listed below.
         </p>
       </header>
+
       <v-card flat class="mt-6">
         <DocumentDelivery
           class="py-8 px-6"
@@ -66,6 +69,7 @@
           Confirm the legal name of the person authorized to complete and submit this application.
         </p>
       </header>
+
       <v-card flat class="mt-6">
         <Certify
           class="py-8 px-6"

@@ -1,29 +1,20 @@
 <template>
   <div id="incorporation-summary">
     <v-card flat>
-      <header class="v-card-header rounded-t">
-        <v-icon color="appDkBlue">mdi-domain</v-icon>
-        <label class="v-card-label pl-2"><strong>Your {{ getCompanyDisplayName }}</strong></label>
-      </header>
+      <CardHeader icon="mdi-domain" :label="getCompanyDisplayName" />
       <SummaryDefineCompany />
     </v-card>
 
     <!-- People and Roles -->
     <v-card flat class="mt-10">
-      <header class="v-card-header rounded-t">
-        <v-icon color="appDkBlue">mdi-account-multiple-plus</v-icon>
-        <label class="v-card-label pl-2">People and Roles</label>
-      </header>
+      <CardHeader icon="mdi-account-multiple-plus" label="People and Roles" />
       <ListPeopleAndRoles :isSummary="true" />
     </v-card>
 
     <!-- Share Structure -->
     <template v-if="isBaseCompany">
       <v-card flat class="mt-10">
-        <header class="v-card-header rounded-t">
-          <v-icon color="appDkBlue">mdi-sitemap</v-icon>
-          <label class="v-card-label pl-2">Share Structure</label>
-        </header>
+        <CardHeader icon="mdi-sitemap" label="Share Structure" />
         <ListShareClass
           :isSummary="true"
           :shareClasses="getCreateShareStructureStep.shareClasses"
@@ -35,12 +26,7 @@
     <!-- Agreement Type -->
     <template v-if="isBaseCompany">
       <v-card flat class="mt-10">
-        <header class="v-card-header rounded-t">
-          <v-icon color="appDkBlue">mdi-handshake</v-icon>
-          <label class="v-card-label pl-2">
-            Incorporation Agreement and {{getEntityDescription}} Articles
-          </label>
-        </header>
+        <CardHeader icon="mdi-handshake" :label="`Incorporation Agreement and ${getEntityDescription} Articles`" />
         <AgreementType
           :isSummary="true"
           :showErrorSummary="!getIncorporationAgreementStep.valid"
@@ -51,10 +37,7 @@
     <!-- Rules -->
     <template v-if="isTypeCoop">
       <v-card flat class="mt-10">
-        <header class="v-card-header rounded-t">
-          <v-icon color="appDkBlue">mdi-format-list-text</v-icon>
-          <label class="v-card-label pl-2">Rules</label>
-        </header>
+        <CardHeader icon="mdi-format-list-text" label="Rules" />
         <UploadRulesSummary />
       </v-card>
     </template>
@@ -62,10 +45,7 @@
     <!-- Memorandum -->
     <template v-if="isTypeCoop">
       <v-card flat class="mt-10">
-        <header class="v-card-header rounded-t">
-          <v-icon color="appDkBlue">mdi-format-list-text</v-icon>
-          <label class="v-card-label pl-2">Memorandum</label>
-        </header>
+        <CardHeader icon="mdi-text-box-multiple" label="Memorandum" />
         <UploadMemorandumSummary />
       </v-card>
     </template>
@@ -77,6 +57,7 @@ import { Component, Mixins } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 import AgreementType from '@/components/common/AgreementType.vue'
 import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
+import CardHeader from '@/components/common/CardHeader.vue'
 import ListShareClass from '@/components/Incorporation/ListShareClass.vue'
 import SummaryDefineCompany from '@/components/Incorporation/SummaryDefineCompany.vue'
 import UploadMemorandumSummary from '@/components/Incorporation/UploadMemorandumSummary.vue'
@@ -88,6 +69,7 @@ import { CorpTypeCd } from '@/enums'
 @Component({
   components: {
     AgreementType,
+    CardHeader,
     ListPeopleAndRoles,
     ListShareClass,
     SummaryDefineCompany,
@@ -109,18 +91,3 @@ export default class Summary extends Mixins(EnumMixin) {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-@import '@/assets/styles/theme.scss';
-
-.v-card-header {
-  display: flex;
-  background-color: $BCgovBlue5O;
-  padding: 1.25rem;
-
-  .v-card-label {
-    font-weight: bold;
-    color: $gray9;
-  }
-}
-</style>

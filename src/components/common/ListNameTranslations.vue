@@ -20,7 +20,7 @@
 
       <!-- Actions Column -->
       <v-col>
-        <div class="actions float-right">
+        <div class="actions mt-n1 float-right">
           <span class="edit-action">
             <v-btn
               small
@@ -116,8 +116,6 @@ export default class ListNameTranslations extends Vue {
   }
 
   .actions {
-    margin-top: -4px;
-
     .edit-action {
       border-right: 1px solid $gray2;
     }

@@ -1,9 +1,10 @@
 <template>
   <div id="complete-resolution">
+    <!-- Intro section -->
     <section id="resolution-intro-section" class="mt-10">
       <header>
         <h2>{{getCreateResolutionResource.introSection.header}}</h2>
-        <p class="section-description">
+        <p class="section-description mt-2">
             <span v-for="(partialItem, index) in getCreateResolutionResource.introSection.items" :key="index">
               <span v-if="partialItem.type === ItemTypes.TEXT" v-html="partialItem.value"></span>
               <v-tooltip v-if="partialItem.type === ItemTypes.TOOLTIP"
@@ -22,17 +23,19 @@
       </header>
     </section>
 
-    <!-- Help Section -->
+    <!-- Help section -->
     <div v-if="getCreateResolutionResource.helpSection" class="mt-5">
       <span class="help-btn" @click="helpToggle = !helpToggle">
         <v-icon color="primary" style="padding-right: 5px">mdi-help-circle-outline</v-icon>
         <span v-if="!helpToggle">{{ getCreateResolutionResource.helpSection.header }}</span>
         <span v-else>Hide Help</span>
       </span>
+
       <section v-show="helpToggle" class="create-resolution-help">
         <header class="create-resolution-help-header">
           <h2>{{getCreateResolutionResource.helpSection.header}}</h2>
         </header>
+
         <span v-for="(item, index) in getCreateResolutionResource.helpSection.helpText.section1.items" :key="index">
           <p v-if="item.type === ItemTypes.TEXT" v-html="item.value" class="mt-3"></p>
           <v-row v-if="item.type === ItemTypes.PARTIAL_ITEMS">
@@ -68,47 +71,47 @@
       </section>
     </div>
 
+    <!-- Special Resolution Form -->
     <section id="sample-resolution-section" v-if="isTypeCoop" class="mt-10">
       <header id="sample-resolution-header">
         <h2>{{getCreateResolutionResource.sampleFormSection.header}}</h2>
       </header>
+
       <p class="section-description mt-2" v-html="getCreateResolutionResource.sampleFormSection.text"></p>
-      <v-card flat id="sample-resolution-card" class="pt-7 pb-5 pl-6">
-        <v-row>
-          <v-col id="sample-resolution-card-left-col" cols="1" class="pt-6" >
-          </v-col>
-          <v-col id="sample-resolution-card-center-col" cols="3" class="pl-8 pt-6">
+
+      <div class="mt-4">
+        <v-card flat class="py-8 px-6">
+          <div class="d-flex flex-column flex-sm-row justify-center align-center">
             <img :src="previewImageSource()" class="preview-image" />
-          </v-col>
-          <v-col id="sample-resolution-card-right-col" cols="6" class="pt-6 pr-15">
-            <div class="download-link-container ml-1 pt-5 pb-5">
+            <div class="px-8" />
+            <div class="download-link-container py-5">
               <v-icon color="primary" class="mt-n1">mdi-file-pdf-outline</v-icon>
-              <a :href="documentURL" download class="mt-2">
+              <a :href="documentURL" download class="ml-1">
                 {{getCreateResolutionResource.sampleFormSection.downloadDocLabel}}
               </a>
             </div>
-          </v-col>
-          <v-col cols="2" class="pt-6" />
-        </v-row>
-      </v-card>
+          </div>
+        </v-card>
+      </div>
     </section>
 
+    <!-- Resolution Date -->
     <section id="resolution-date-section" v-if="isTypeCoop" class="mt-10">
       <header id="resolution-date-header">
         <h2>{{getCreateResolutionResource.resolutionDateSection.header}}</h2>
       </header>
-      <p class="section-description mt-2">
-        {{getCreateResolutionResource.resolutionDateSection.description}}
-      </p>
-      <div :class="{ 'invalid-section': getShowErrors && !this.isResolutionDateValid }">
-        <v-card flat id="resolution-date-card" class="pt-7 pb-5 pl-6 pr-6">
-          <v-row>
-            <v-col id="resolution-date-card-left-col" cols="2" class="pt-6" >
-              <v-card-title class="resolution-date-vcard-title pl-1 pr-0">
+
+      <p class="section-description mt-2">{{getCreateResolutionResource.resolutionDateSection.description}}</p>
+
+      <div class="mt-4" :class="{ 'invalid-section': getShowErrors && !this.isResolutionDateValid }">
+        <v-card flat id="resolution-date-card" class="py-8 px-6">
+          <v-row no-gutters>
+            <v-col cols="12" sm="3" class="pr-4 pb-4">
+              <label class="resolution-date-vcard-title mt-4">
                 Resolution Date
-              </v-card-title>
+              </label>
             </v-col>
-            <v-col id="resolution-date-card-right-col" cols="10" class="pt-6 pl-6 pr-5">
+            <v-col cols="12" sm="9">
               <date-picker
                 ref="resolutionDatePickerRef"
                 title="Resolution Date"
@@ -126,59 +129,59 @@
       </div>
     </section>
 
+    <!-- Resolution Text -->
     <section id="resolution-text-section" v-if="isTypeCoop" class="mt-10">
       <header id="resolution-text-header">
         <h2>{{getCreateResolutionResource.resolutionTextSection.header}}</h2>
       </header>
-      <p class="section-description mt-2">
-        {{getCreateResolutionResource.resolutionTextSection.description}}
-      </p>
-      <div :class="{ 'invalid-section': getShowErrors && !this.isResolutionTextValid }">
-        <div>
-          <v-card flat id="resolution-text-card" class="pt-7 pb-5 pl-6 pr-6">
-            <v-row>
-              <v-col id="resolution-text-card-left-col" cols="2" class="pt-6" >
-                <v-card-title class="resolution-text-vcard-title pl-1 pr-0">
-                  {{getCreateResolutionResource.resolutionTextSection.textLabel}}
-                </v-card-title>
-              </v-col>
-              <v-col id="resolution-text-card-right-col" cols="10" class="pt-6 pl-6 pr-5">
-                <v-form ref="resolutionTextFormRef">
-                  <v-textarea ref="resolutionTextRef"
-                              auto-grow
-                              filled
-                              :label="getCreateResolutionResource.resolutionTextSection.textPlaceholder"
-                              rows="6"
-                              :counter="MAX_RESOLUTION_TEXT_LENGTH"
-                              v-model="resolutionText"
-                              :rules="resolutionTextRules"
-                              @change="onResolutionTextChanged"
-                              v-observe-visibility="{ callback: onResolutionVisibilityChanged, once: true }"
-                  />
-                </v-form>
-              </v-col>
-            </v-row>
-          </v-card>
-        </div>
+
+      <p class="section-description mt-2">{{getCreateResolutionResource.resolutionTextSection.description}}</p>
+
+      <div class="mt-4" :class="{ 'invalid-section': getShowErrors && !this.isResolutionTextValid }">
+        <v-card flat id="resolution-text-card" class="py-8 px-6">
+          <v-row no-gutters>
+            <v-col cols="12" sm="3" class="pr-4 pb-4">
+              <label class="resolution-text-vcard-title mt-4">
+                {{getCreateResolutionResource.resolutionTextSection.textLabel}}
+              </label>
+            </v-col>
+            <v-col cols="12" sm="9">
+              <v-form ref="resolutionTextFormRef">
+                <v-textarea ref="resolutionTextRef"
+                            auto-grow
+                            filled
+                            :label="getCreateResolutionResource.resolutionTextSection.textPlaceholder"
+                            rows="6"
+                            :counter="MAX_RESOLUTION_TEXT_LENGTH"
+                            v-model="resolutionText"
+                            :rules="resolutionTextRules"
+                            @change="onResolutionTextChanged"
+                            v-observe-visibility="{ callback: onResolutionVisibilityChanged, once: true }"
+                />
+              </v-form>
+            </v-col>
+          </v-row>
+        </v-card>
       </div>
     </section>
 
+    <!-- Resolution Signature -->
     <section id="resolution-signature-info-section" v-if="isTypeCoop" class="mt-10">
       <header id="resolution-signature-info-header">
         <h2>{{getCreateResolutionResource.resolutionSignatureSection.header}}</h2>
       </header>
-      <p class="section-description mt-2">
-        {{getCreateResolutionResource.resolutionSignatureSection.description}}
-      </p>
-      <div :class="{ 'invalid-section': getShowErrors && (!this.isSigningPersonValid || !this.isSigningDateValid) }">
-        <v-card flat id="resolution-signature-card" class="pt-7 pb-5 pl-6 pr-8">
+
+      <p class="section-description mt-2">{{getCreateResolutionResource.resolutionSignatureSection.description}}</p>
+
+      <div class="mt-4"
+        :class="{ 'invalid-section': getShowErrors && (!this.isSigningPersonValid || !this.isSigningDateValid) }"
+      >
+        <v-card flat id="resolution-signature-card" class="py-8 px-6">
           <v-row no-gutters>
-            <v-col id="resolution-signature-card-left-col" cols="2" class="pt-7" >
-              <v-card-title class="resolution-signature-vcard-title pl-2 pr-0">
-                Signing Party
-              </v-card-title>
+            <v-col cols="12" sm="3" class="pr-4 pb-4">
+              <label class="resolution-signature-vcard-title">Signing Party</label>
             </v-col>
-            <v-col id="resolution-signature-card-right-col" cols="10" class="pt-6 pl-6">
+            <v-col cols="12" sm="9">
               <v-form ref="signingPersonFormRef">
                 <div class="form__row three-column">
                   <v-text-field
@@ -213,13 +216,11 @@
             </v-col>
           </v-row>
 
-          <v-row no-gutters class="mt-0">
-            <v-col id="resolution-signature-card-left-col" cols="2" class="pt-6" >
-              <v-card-title class="resolution-signature-vcard-title pl-2 pr-0">
-                Date Signed
-              </v-card-title>
+          <v-row no-gutters>
+            <v-col cols="12" sm="3" class="pr-4 pb-4">
+              <label class="resolution-signature-vcard-title">Date Signed</label>
             </v-col>
-            <v-col id="resolution-signature-card-right-col" cols="10" class="pt-4 pl-6">
+            <v-col cols="12" sm="9">
               <date-picker
                 ref="signatureDatePickerRef"
                 title="Date Signed"
@@ -237,46 +238,44 @@
       </div>
     </section>
 
+    <!-- Confirm Resolution -->
     <section id="confirm-resolution-section" class="mt-10">
       <header id="resolution-confirm-header">
         <h2>{{getCreateResolutionResource.confirmSection.header}}</h2>
       </header>
-      <div :class="{ 'invalid-section': getShowErrors && !isConfirmResolutionValid }">
-        <v-card flat id="confirm-resolution-card" class="mt-4 pt-10 pb-8 pl-6 pr-9">
+
+      <div class="mt-4" :class="{ 'invalid-section': getShowErrors && !isConfirmResolutionValid }">
+        <v-card flat id="confirm-resolution-card" class="py-8 px-6">
           <v-form ref="confirmResolutionChkFormRef">
             <v-checkbox
               ref="confirmResolutionChkRef"
-              class="chk-resolution ml-1"
               id="chk-confirm-resolution"
+              class="chk-resolution mt-0 pt-0"
               v-model="resolutionConfirmed"
+              hide-details
               :rules="confirmCompletionResolution"
               @change="onResolutionConfirmedChange($event)"
             >
               <div slot="label" v-html="confirmLabel"></div>
             </v-checkbox>
             <ul>
-              <li class="mt-1"
+              <li class="mt-4"
                 v-for="(item, index) in getCreateResolutionResource.confirmSection.items"
-                :key="index">
+                :key="index"
+              >
                 <v-row v-if="item.type === ItemTypes.TEXT" no-gutters>
-                  <v-col cols="auto" class="pt-1 mr-2"><v-icon>mdi-circle-small</v-icon></v-col>
-                  <v-col cols="11" class="pt-1 pb-1" no-gutters>
-                    {{item.value}}
-                  </v-col>
+                  <v-col cols="1"><v-icon>mdi-circle-small</v-icon></v-col>
+                  <v-col cols="11">{{item.value}}</v-col>
                 </v-row>
                 <v-row v-if="item.type === ItemTypes.PARTIAL_ITEMS" no-gutters>
-                  <v-col cols="auto" class="pt-1 mr-2"><v-icon>mdi-circle-small</v-icon></v-col>
-                  <v-col cols="11" class="pt-1 pb-1" no-gutters>
+                  <v-col cols="1"><v-icon>mdi-circle-small</v-icon></v-col>
+                  <v-col cols="11">
                     <span v-for="(partialItem, index) in item.value" :key="index">
-                      <span v-if="partialItem.type === ItemTypes.TEXT" v-html="partialItem.value"></span>
+                      <span v-if="partialItem.type === ItemTypes.TEXT" v-html="partialItem.value" />
                       <span v-if="partialItem.type === ItemTypes.PLACEHOLDER &&
-                                  partialItem.value === PLACEHOLDER_LEGAL_NAME_INLINE">
-                        {{getBusinessLegalName}}
-                      </span>
-                      <div v-if="partialItem.type === ItemTypes.PLACEHOLDER
-                                && partialItem.value === PLACEHOLDER_LEGAL_NAME">
-                        <strong>{{getBusinessLegalName}}</strong>
-                      </div>
+                        partialItem.value === PLACEHOLDER_LEGAL_NAME_INLINE">{{getBusinessLegalName}}</span>
+                      <p class="font-weight-bold mb-0" v-if="partialItem.type === ItemTypes.PLACEHOLDER &&
+                        partialItem.value === PLACEHOLDER_LEGAL_NAME">{{getBusinessLegalName}}</p>
                     </span>
                   </v-col>
                 </v-row>
@@ -715,10 +714,6 @@ ul {
   color: $gray7 !important;
 }
 
-.chk-list-item-txt {
-  margin-left: 0.5rem;
-}
-
 .complete-resolution-summary-header {
   display: flex;
   background-color: $BCgovBlue5O;
@@ -774,10 +769,6 @@ ul {
 }
 
 ::v-deep #confirm-resolution-section {
-  #approved-name {
-    font-weight: bold;
-  }
-
   // override default validation styling so checkbox does not turn red on validation error
   .v-input--selection-controls__input .error--text {
     color: $app-lt-gray !important;
@@ -785,9 +776,16 @@ ul {
 }
 
 .chk-resolution {
-  margin-top: 0;
-  padding-top: 0;
-  height: 2.5rem !important;
+  color: $gray9;
+
+  ::v-deep {
+    .theme--light.v-icon {
+      color: $gray9;
+    }
+    .v-label {
+      line-height: 1.5rem;
+    }
+  }
 }
 
 .complete-resolution-vcard-title {
@@ -813,7 +811,6 @@ ul {
 }
 
 .download-link-container {
-  margin-top: 85px;
   border-top: solid 1px $gray3;
   border-bottom: solid 1px $gray3;
 }
@@ -849,15 +846,32 @@ ul {
 }
 
 #resolution-date-card {
-  padding: 1.25rem;
   line-height: 1.2rem;
   font-size: $px-14;
+
+  // remove extra space taken by error message
+  ::v-deep .v-text-field__details {
+    margin-bottom: -8px !important;
+  }
+}
+
+#resolution-text-card {
+  // remove extra space taken by error message
+  ::v-deep .v-text-field__details {
+    margin-bottom: -8px !important;
+  }
+}
+
+#resolution-signature-card {
+  // remove extra space taken by error message
+  ::v-deep .date-picker-form .v-text-field__details {
+    margin-bottom: -8px !important;
+  }
 }
 
 .resolution-date-vcard-title,
 .resolution-text-vcard-title,
 .resolution-signature-vcard-title {
-  padding-top: 1px;
   font-size: $px-16;
   font-weight: bold;
   color: $gray9 !important;

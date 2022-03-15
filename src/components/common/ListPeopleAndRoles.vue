@@ -234,10 +234,6 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
       border-right: 1px solid $gray1;
     }
 
-    // .v-btn {
-    //   min-width: 0.5rem;
-    // }
-
     .v-btn + .v-btn {
       margin-left: 0.5rem;
     }

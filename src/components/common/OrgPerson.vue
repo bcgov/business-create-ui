@@ -150,6 +150,7 @@
                 <div class="form__row" v-if="isDirector">
                   <v-checkbox
                     class="inherit-checkbox"
+                    hide-details
                     label="Delivery Address same as Mailing Address"
                     v-model="inheritMailingAddress"
                   />
@@ -653,5 +654,11 @@ li {
 
 .gray-card {
   background-color: rgba(0, 0, 0, 0.06);
+}
+
+.inherit-checkbox {
+  margin-top: 0;
+  padding-top: 0;
+  margin-left: -3px;
 }
 </style>

@@ -1,5 +1,6 @@
 <template>
   <div id="upload-memorandum">
+    <!-- Intro section -->
     <section class="mt-10">
       <header>
         <h2>1. Memorandum of Association</h2>
@@ -17,146 +18,153 @@
       </header>
     </section>
 
-    <!-- Help Section -->
+    <!-- Help section -->
     <div v-if="getCreateMemorandumResource.helpSection" class="mt-5">
-        <span class="help-btn" @click="helpToggle = !helpToggle">
-          <v-icon color="primary" style="padding-right: 5px">mdi-help-circle-outline</v-icon>
-          <span v-if="!helpToggle">{{ getCreateMemorandumResource.helpSection.header }}</span>
-          <span v-else>Hide Help</span>
-        </span>
+      <span class="help-btn" @click="helpToggle = !helpToggle">
+        <v-icon color="primary" style="padding-right: 5px">mdi-help-circle-outline</v-icon>
+        <span v-if="!helpToggle">{{ getCreateMemorandumResource.helpSection.header }}</span>
+        <span v-else>Hide Help</span>
+      </span>
+
       <section v-show="helpToggle" class="create-memorandum-help">
-        <header id="create-memorandum-help-header"><h2>{{getCreateMemorandumResource.helpSection.header}}</h2></header>
+        <header id="create-memorandum-help-header">
+          <h2>{{getCreateMemorandumResource.helpSection.header}}</h2>
+        </header>
+
         <p id="help-text-section-1"
            v-for="(item, index) in getCreateMemorandumResource.helpSection.helpText.section1.items"
-           class="help-section mt-6"
+           class="mt-6"
            :key="index"
         >{{ item }}
         </p>
-        <p class="help-section-label mt-4">
-          <b>{{getCreateMemorandumResource.helpSection.helpText.section2.label}}</b>
+
+        <p class="help-section-title font-weight-bold mt-4">
+          {{getCreateMemorandumResource.helpSection.helpText.section2.label}}
         </p>
         <ul class="mt-6">
           <li
             v-for="(item, index) in getCreateMemorandumResource.helpSection.helpText.section2.items"
-            class="help-section mt-2"
+            class="mt-2"
             :key="index"
           >
             <v-icon>mdi-circle-small</v-icon>
-            <span class="chk-list-item-txt">{{item}}</span>
+            <span class="ml-2">{{item}}</span>
           </li>
         </ul>
-        <p class="help-section-label mt-4">
-          <b>{{getCreateMemorandumResource.helpSection.helpText.section3.label}}</b>
+
+        <p class="help-section-title font-weight-bold mt-4">
+          {{getCreateMemorandumResource.helpSection.helpText.section3.label}}
         </p>
         <ul class="mt-6">
           <li
             v-for="(item, index) in getCreateMemorandumResource.helpSection.helpText.section3.items"
-            class="help-section mt-2"
+            class="mt-2"
             :key="index"
           >
             <v-icon>mdi-circle-small</v-icon>
-            <span class="chk-list-item-txt">{{item}}</span>
+            <span class="ml-2">{{item}}</span>
           </li>
         </ul>
         <u class="help-btn" @click="helpToggle = !helpToggle"><small>Hide Help</small></u>
       </section>
     </div>
 
+    <!-- Sample Memorandum -->
     <section id="sample-memorandum-section" class="mt-10">
       <header id="sample-memorandum-header">
         <h2>2. Sample Memorandum</h2>
       </header>
+
       <p class="mt-2">
         For your convenience, we have provided a sample Memorandum of Association with instructions.
       </p>
-      <v-card flat id="sample-memorandum-card" class="pt-7 pb-5 pl-6">
-        <v-row>
-          <v-col id="sample-memorandum-card-left-col" cols="1" class="pt-6" >
-          </v-col>
-          <v-col id="sample-memorandum-card-center-col" cols="3" class="pl-8 pt-6">
-            <div>
-              <img src="@/assets/images/BCRegistries_Sample_CoopMemorandum_x2.png" class="preview-image" />
+
+      <div class="mt-4">
+        <v-card flat class="py-8 px-6">
+          <div class="d-flex flex-column flex-sm-row justify-center align-center">
+            <img src="@/assets/images/BCRegistries_Sample_CoopMemorandum_x2.png" class="preview-image" />
+            <div class="px-8" />
+            <div class="download-link-container py-5">
+              <v-icon color="primary" class="mt-n1">mdi-file-pdf-outline</v-icon>
+              <a :href="documentURL" download class="ml-1">
+                Download the Sample Memorandum of Association
+              </a>
             </div>
-          </v-col>
-          <v-col id="sample-memorandum-card-right-col" cols="6" class="pt-6 pr-15">
-            <div class="download-link-container ml-1 pt-5 pb-5">
-                <v-icon color="primary" class="mt-n1">mdi-file-pdf-outline</v-icon>
-                <a :href="documentURL" download class="mt-2">
-                  Download the Sample Memorandum of Association
-                </a>
-            </div>
-          </v-col>
-          <v-col cols="2" class="pt-6" />
-        </v-row>
-      </v-card>
+          </div>
+        </v-card>
+      </div>
     </section>
+
+    <!-- Confirm Memorandum Completion -->
     <section id="confirm-memorandum-section" class="mt-10">
       <header id="memorandum-confirm-header">
         <h2>3. Confirm Memorandum Completion</h2>
       </header>
-      <div :class="{ 'invalid-section': getShowErrors && !hasMemorandumConfirmed }">
-        <v-card flat id="confirm-memorandum-card" class="mt-4 pt-10 pb-6 pl-6 pr-9">
+
+      <div class="mt-4" :class="{ 'invalid-section': getShowErrors && !hasMemorandumConfirmed }">
+        <v-card flat id="confirm-memorandum-card" class="py-8 px-6">
           <v-form ref="confirmMemorandumChk">
             <v-checkbox
-              class="chk-memorandum"
               id="chk-confirm-memorandum"
+              class="chk-memorandum mt-0 pt-0"
               v-model="memorandumConfirmed"
+              hide-details=""
               :rules="confirmCompletionMemorandum"
               label="I confirm the following items are included as required in the Memorandum of Association:"
               @change="onMemorandumConfirmedChange($event)"
             />
             <ul>
-              <li class="mt-1">
-                <v-icon>mdi-circle-small</v-icon>
-                <span class="chk-list-item-txt">The Cooperative name is identified <b>exactly</b> as follows throughout
-                  the Memorandum:
-                </span>
-                <div id="approved-name" class="ml-9">{{getNameRequestDetails.approvedName}}</div>
-              </li>
               <li class="mt-4">
-                <v-icon>mdi-circle-small</v-icon>
-                <span class="chk-list-item-txt">
-                  If required, there is a
-                  <v-tooltip top max-width="20rem" content-class="top-tooltip" transition="fade-transition">
-                    <template v-slot:activator="{ on }">
-                      <span v-on="on" class="tool-tip dotted-underline">Dissolution Provision</span>
-                    </template>
-                    <span>
-                      Dissolution Provision – all Cooperative Associations should have provisions for the distribution
-                      of their property after they have been dissolved or wound up.  See example memorandum for
-                      information relevant to your Cooperative Association type.</span>
-                  </v-tooltip>
-                   in the Memorandum of Association.
-                </span>
-              </li>
-              <li class="mt-2">
-                <v-row>
+                <v-row no-gutters>
                   <v-col cols="1"><v-icon>mdi-circle-small</v-icon></v-col>
-                  <v-col cols="11" class="ml-n11">
-                    <span>
-                      The
-                      <v-tooltip top max-width="20rem" content-class="top-tooltip" transition="fade-transition">
-                        <template v-slot:activator="{ on }">
-                          <span v-on="on" class="tool-tip dotted-underline">correct type of shares</span>
-                        </template>
-                        <span>
-                          Housing Cooperative Associations and Community Service Cooperative Associations
-                          MUST NOT issue investment shares.
-                        </span>
-                      </v-tooltip>
-                      are used in the Memorandum of Association based on the type of
-                      Cooperative Association.
-                    </span>
+                  <v-col cols="11">
+                    The Cooperative name is identified <b>exactly</b> as follows throughout the Memorandum:
+                    <p class="font-weight-bold mb-0">{{getNameRequestDetails.approvedName}}</p>
                   </v-col>
                 </v-row>
               </li>
-              <li class="mt-n2">
-                <v-row>
+
+              <li class="mt-4">
+                <v-row no-gutters>
                   <v-col cols="1"><v-icon>mdi-circle-small</v-icon></v-col>
-                  <v-col cols="11" class="ml-n11">
-                    <span>Each Subscriber and Witness has signed and dated the Memorandum of
-                      Association and their name is printed under their signature.
-                    </span>
+                  <v-col cols="11">
+                    If required, there is a
+                    <v-tooltip top max-width="20rem" content-class="top-tooltip" transition="fade-transition">
+                      <template v-slot:activator="{ on }">
+                        <span v-on="on" class="tool-tip dotted-underline">Dissolution Provision</span>
+                      </template>
+                      Dissolution Provision &dash; all Cooperative Associations should have provisions for the
+                      distribution of their property after they have been dissolved or wound up.  See example
+                      memorandum for information relevant to your Cooperative Association type.
+                    </v-tooltip>
+                    in the Memorandum of Association.
+                  </v-col>
+                </v-row>
+              </li>
+
+              <li class="mt-4">
+                <v-row no-gutters>
+                  <v-col cols="1"><v-icon>mdi-circle-small</v-icon></v-col>
+                  <v-col cols="11">
+                    The
+                    <v-tooltip top max-width="20rem" content-class="top-tooltip" transition="fade-transition">
+                      <template v-slot:activator="{ on }">
+                        <span v-on="on" class="tool-tip dotted-underline">correct type of shares</span>
+                      </template>
+                      Housing Cooperative Associations and Community Service Cooperative Associations
+                      MUST NOT issue investment shares.
+                    </v-tooltip>
+                    are used in the Memorandum of Association based on the type of Cooperative Association.
+                  </v-col>
+                </v-row>
+              </li>
+
+              <li class="mt-4">
+                <v-row no-gutters>
+                  <v-col cols="1"><v-icon>mdi-circle-small</v-icon></v-col>
+                  <v-col cols="11">
+                    Each Subscriber and Witness has signed and dated the Memorandum of
+                    Association and their name is printed under their signature.
                   </v-col>
                 </v-row>
               </li>
@@ -166,37 +174,34 @@
       </div>
     </section>
 
+    <!-- Upload Memorandum -->
     <section id="upload-memorandum-section" class="mt-10">
       <header id="upload-memorandum-header">
         <h2>4. Upload Memorandum</h2>
-        <ul class="mt-5">
+        <ul class="mt-4">
           <li class="mt-1">
             <v-icon>mdi-circle-small</v-icon>
-            <span class="chk-list-item-txt">Must be set to fit onto 8.5" x 11"
-              letter-size paper
-            </span>
+            <span class="ml-2">Must be set to fit onto 8.5" x 11" letter-size paper</span>
           </li>
           <li class="mt-1">
             <v-icon>mdi-circle-small</v-icon>
-            <span class="chk-list-item-txt">Use a white background and a legible font with contrasting font colour
-            </span>
+            <span class="ml-2">Use a white background and a legible font with contrasting
+              font colour</span>
           </li>
           <li class="mt-1">
             <v-icon>mdi-circle-small</v-icon>
-            <span class="chk-list-item-txt">PDF file type (maximum 10 MB file size)</span>
+            <span class="ml-2">PDF file type (maximum 30 MB file size)</span>
           </li>
         </ul>
       </header>
-      <div :class="{ 'invalid-section': getShowErrors && !hasValidUploadFile }" class="mt-7">
-        <v-card flat id="upload-memorandum-card" class="pt-10 pb-10 pl-6">
-          <v-row>
-            <v-col id="upload-memorandum-card-left-col" cols="2" class="pt-6" >
-              <v-card-title class="upload-memorandum-vcard-title pl-1 pr-0">
-                <div>Upload</div>
-                <div class="mt-n1">Memorandum</div>
-              </v-card-title>
+
+      <div class="mt-4" :class="{ 'invalid-section': getShowErrors && !hasValidUploadFile }">
+        <v-card flat id="upload-memorandum-card" class="py-8 px-6">
+          <v-row no-gutters>
+            <v-col cols="12" sm="2" class="pr-4 pb-4">
+              <label class="upload-memorandum-vcard-title">Upload Memorandum</label>
             </v-col>
-            <v-col id="upload-memorandum-card-right-col" cols="10" class="pt-6 pl-6 pr-10">
+            <v-col cols="12" sm="10">
               <FileUploadPreview
                 :inputFileLabel="INPUT_FILE_LABEL"
                 :maxSize="MAX_FILE_SIZE"
@@ -206,7 +211,7 @@
                 :customErrorMessage="fileUploadCustomErrorMsg"
                 @fileSelected="fileSelected"
                 @isFileValid="isFileUploadValidFn"
-              ></FileUploadPreview>
+              />
             </v-col>
           </v-row>
         </v-card>
@@ -407,10 +412,6 @@ ul {
   color: $gray7;
 }
 
-.chk-list-item-txt {
-  margin-left: 0.5rem;
-}
-
 .upload-memorandum-summary-header {
   display: flex;
   background-color: $BCgovBlue5O;
@@ -459,10 +460,6 @@ ul {
 }
 
 ::v-deep #confirm-memorandum-section {
-  #approved-name {
-    font-weight: bold;
-  }
-
   // override default validation styling so checkbox does not turn red on validation error
   .v-input--selection-controls__input .error--text {
     color: $app-lt-gray !important;
@@ -470,13 +467,19 @@ ul {
 }
 
 .chk-memorandum {
-  margin-top: 0;
-  padding-top: 0;
-  height: 2.5rem !important;
+  color: $gray9;
+
+  ::v-deep {
+    .theme--light.v-icon {
+      color: $gray9;
+    }
+    .v-label {
+      line-height: 1.5rem;
+    }
+  }
 }
 
 .upload-memorandum-vcard-title {
-  padding-top: 1px;
   font-size: $px-17;
   font-weight: bold;
 }
@@ -498,7 +501,6 @@ ul {
 }
 
 .download-link-container {
-  margin-top: 85px;
   border-top: solid 1px $gray3;
   border-bottom: solid 1px $gray3;
 }
