@@ -25,7 +25,7 @@
     <!-- Address -->
     <div class="section-container">
       <v-row no-gutters>
-        <v-col cols="12" sm="3" class="pr-4">
+        <v-col cols="12" sm="3" class="pr-4 pb-4">
           <label>Address</label>
         </v-col>
 
@@ -164,5 +164,10 @@ export default class AssociationDetails extends Mixins(CommonMixin, EnumMixin) {
 
 .company-name {
   font-size: $px-22;
+}
+
+// add missing whitespace between title and addresses
+::v-deep #contact-info .col-sm-3 {
+  padding-bottom: 16px;
 }
 </style>

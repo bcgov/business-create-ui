@@ -135,6 +135,7 @@
             </v-row>
 
             <label class="item-label">Mailing Address</label>
+
             <MailingAddress
               ref="mailingAddress"
               id="mailing-address"
@@ -156,6 +157,7 @@
 
             <div v-if="!inheritMailingAddress" class="pt-4">
               <label class="item-label">Delivery Address</label>
+
               <DeliveryAddress
                 ref="deliveryAddress"
                 id="Delivery-address"
@@ -499,9 +501,10 @@ export default class CustodianOfRecords extends Mixins(CommonMixin) {
   font-weight: normal;
 }
 
-// italicize delivery instructions
+// italicize delivery instructions and remove top margin
 ::v-deep .base-address .address-block .delivery-instructions {
   font-style: italic;
+  margin-top: 0 !important;
 }
 
 .inherit-checkbox {

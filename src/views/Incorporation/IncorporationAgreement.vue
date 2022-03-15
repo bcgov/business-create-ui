@@ -143,7 +143,7 @@
           <h2>2. Confirm Incorporation Agreement and Article Completion</h2>
         </header>
 
-        <v-card flat>
+        <v-card flat class="mt-6">
           <AgreementType :showErrorSummary="!getIncorporationAgreementStep.valid" />
         </v-card>
       </section>
@@ -206,7 +206,7 @@
           <h2>3. Confirm Incorporation Agreement and Article Completion</h2>
         </header>
 
-        <v-card flat>
+        <v-card flat class="mt-6">
           <AgreementType :showErrorSummary="!getIncorporationAgreementStep.valid" />
         </v-card>
       </section>
