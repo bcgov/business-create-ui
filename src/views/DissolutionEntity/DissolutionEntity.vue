@@ -1,15 +1,6 @@
 <template>
-  <div id="dissolution-review-confirm">
-    <!-- Review and Confirm -->
+  <div id="dissolution-entity-form">
     <section class="mt-10">
-      <!-- <header>
-        <h2>Review and Confirm</h2>
-        <p class="mt-4 mb-6">
-          Review the information in your filing. If you need to change or complete anything, return
-          to the step to make the necessary change.
-        </p>
-      </header> -->
-
       <!-- Dissolution summary -->
       <v-card flat id="dissolution-summary" class="mt-6">
         <header class="review-header rounded-t">
@@ -17,107 +8,15 @@
           <label class="font-weight-bold pl-2">Dissolution</label>
         </header>
 
-        <div class="pb-8" :class="{ ' rounded-bl-0': !isDissolutionDefineDissolutionValid }">
+        <div class="pb-8" >
 
           <!-- Association Details -->
           <section>
             <AssociationDetails :isSummary="true"/>
           </section>
-
-          <!-- Destroy Certificates -->
-          <section class="ml-5 mr-8 pl-2" v-if="isTypeCoop">
-            <v-container id="destroy-certificate">
-              <v-row no-gutters>
-                <v-col cols="3" class="inner-col-1">
-                  <label class="font-weight-bold">Delete and/or<br>Destroy<br>Certificates</label>
-                </v-col>
-
-                <v-col cols="9" class="inner-col-2">
-                  <DestroyCertificate :isSummary="true" />
-                </v-col>
-              </v-row>
-            </v-container>
-          </section>
-
-          <!-- divider -->
-          <!-- <div class="ml-6 mr-8 pl-2" v-if="!isTypeCoop">
-            <v-container class="py-0">
-              <v-divider  />
-            </v-container>
-          </div> -->
-
-          <!-- Dissolution Date and Time -->
-          <!-- <section class="ml-5 mr-8 pl-2" v-if="!isTypeCoop">
-            <v-container
-              id="effective-date-time"
-              :class="{ 'invalid': isDissolutionDateTimeInvalid }"
-            >
-              <v-row no-gutters>
-                <v-col cols="3" class="inner-col-1">
-                  <label class="font-weight-bold">Dissolution<br>Date and Time</label>
-                </v-col>
-
-                <v-col cols="9" class="inner-col-2">
-                  <p id="effective-date-time-instructions" class="info-text">
-                    Select the date and time of the dissolution of the Company. You may select a date
-                    up to 10 days in the future (note: there is an <strong>additional fee of
-                    {{ futureEffectiveFeePrice }}</strong> to enter a dissolution date in the future).
-                    Unless a business has special requirements, most businesses select an immediate
-                    date and time for dissolution.
-                  </p>
-
-                  <EffectiveDateTime
-                    :currentJsDate="getCurrentJsDate"
-                    :effectiveDateTime="getEffectiveDateTime"
-                    :isAppValidate="getValidateSteps"
-                    @valid="setEffectiveDateTimeValid($event)"
-                    @effectiveDate="setEffectiveDate($event)"
-                    @isFutureEffective="setIsFutureEffective($event)"
-                  />
-
-                  <v-card
-                    flat class="px-16 pb-8 mt-n12"
-                    id="effective-date-text"
-                    v-if="getEffectiveDateTime.isFutureEffective && getEffectiveDateTime.valid"
-                  >
-                    The dissolution for this business will be effective as of:<br>
-                    <strong>{{futureEffectiveDate}}</strong>
-                  </v-card>
-                </v-col>
-              </v-row>
-            </v-container>
-          </section> -->
         </div>
       </v-card>
     </section>
-
-    <!-- Resolution -->
-    <!-- <CompleteResolutionSummary /> -->
-
-    <!-- Affidavit -->
-    <!-- <v-card flat id="affidavit-summary" class="mt-10">
-      <header class="review-header rounded-t">
-        <v-icon class="ml-2" color="appDkBlue">mdi-book-variant-multiple</v-icon>
-        <label class="font-weight-bold pl-2">Affidavit</label>
-      </header>
-
-      <div class="section-container rounded-bl-0" :class="{ 'invalid-section': !isAffidavitValid }">
-        <section v-if="!isAffidavitValid">
-          <v-icon color="error">mdi-information-outline</v-icon>
-          &nbsp;
-          <span class="error-text">This step is unfinished.</span>
-          &nbsp;
-          <router-link
-            :to="{ path: `/${RouteNames.DISSOLUTION_AFFIDAVIT}` }"
-          >Return to this step to finish it</router-link>
-        </section>
-
-        <div v-else class="upload-affidavit-success-message">
-          <v-icon class="upload-success-chk ml-1 pr-2" color="successCheckmark">mdi-check</v-icon>
-          <span id="file-name" class="break-spaces">{{ affidavitSummary }}</span>
-        </div>
-      </div>
-    </v-card> -->
 
     <!-- Dissolution Documents Delivery -->
     <section id="document-delivery-section" class="mt-10">
@@ -165,9 +64,7 @@
     <section  id="completing-party-section" class="mt-10" v-if="getAddPeopleAndRoleStep.orgPeople && getAddPeopleAndRoleStep.orgPeople.length > 0"  >
       <header>
         <h2>Completing Party</h2>
-        <p class="mt-4 mb-6">
-          Confirm the legal name of the person authorized to complete and submit this dissolution.
-        </p>
+
       </header>
         <ListPeopleAndRoles
         :personList="getAddPeopleAndRoleStep.orgPeople"
@@ -243,13 +140,9 @@ import { Getter, Action } from 'vuex-class'
 import { DateMixin } from '@/mixins'
 import AssociationDetails from '@/components/Dissolution/AssociationDetails.vue'
 import { Certify } from '@bcrs-shared-components/certify'
-import CompleteResolutionSummary from '@/components/Dissolution/CompleteResolutionSummary.vue'
+
 import { CourtOrderPoa } from '@bcrs-shared-components/court-order-poa'
-import CustodianOfRecords from '@/components/Dissolution/CustodianOfRecords.vue'
-import DestroyCertificate from '@/components/Dissolution/DestroyCertificate.vue'
-import DissolutionStatement from '@/components/Dissolution/DissolutionStatement.vue'
 import DocumentDelivery from '@/components/common/DocumentDelivery.vue'
-import { EffectiveDateTime } from '@bcrs-shared-components/effective-date-time'
 import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
 
 import StaffPayment from '@/components/common/StaffPayment.vue'
@@ -261,26 +154,16 @@ import {
   CertifyIF,
   CertifyStatementIF,
   CourtOrderStepIF,
-  CreateResolutionIF,
-  CreateResolutionResourceIF,
   DocumentDeliveryIF,
-  EffectiveDateTimeIF,
-  FeesIF,
-  PeopleAndRoleIF,
-  UploadAffidavitIF
+  PeopleAndRoleIF
 } from '@/interfaces'
 
 @Component({
   components: {
     AssociationDetails,
     Certify,
-    CompleteResolutionSummary,
     CourtOrderPoa,
-    CustodianOfRecords,
-    DestroyCertificate,
-    DissolutionStatement,
     DocumentDelivery,
-    EffectiveDateTime,
     StaffPayment,
     TransactionalFolioNumber,
     ListPeopleAndRoles
@@ -288,7 +171,6 @@ import {
 })
 export default class DissolutionReviewConfirm extends Mixins(DateMixin) {
   // Global getters
-  @Getter getAffidavitStep!: UploadAffidavitIF
   @Getter getBusinessContact!: BusinessContactIF
   @Getter getCertifyState!: CertifyIF
   @Getter getCompletingPartyStatement!: CertifyStatementIF
@@ -296,26 +178,15 @@ export default class DissolutionReviewConfirm extends Mixins(DateMixin) {
   @Getter getCurrentDate!: string
   @Getter getDissolutionCustodianEmail!: string
   @Getter getDocumentDelivery!: DocumentDeliveryIF
-  @Getter getEffectiveDateTime!: EffectiveDateTimeIF
-  @Getter getCreateResolutionResource!: CreateResolutionResourceIF
-  @Getter getCreateResolutionStep!: CreateResolutionIF
-  @Getter getFeePrices!: Array<FeesIF>
-  @Getter getDissolutionHasCertificateDestroyed!: boolean
   @Getter getUserEmail!: string
   @Getter getValidateSteps!: boolean
-  @Getter isAffidavitValid!: boolean
-  @Getter isDissolutionDefineDissolutionValid!: boolean
   @Getter isPremiumAccount!: boolean
   @Getter isRoleStaff!: boolean
-  @Getter isTypeCoop!: boolean
   @Getter getFolioNumber!: string
   @Getter getTransactionalFolioNumber!: string
   @Getter getAddPeopleAndRoleStep!: PeopleAndRoleIF
 
   // Global actions
-  @Action setEffectiveDateTimeValid!: ActionBindingIF
-  @Action setEffectiveDate!: ActionBindingIF
-  @Action setIsFutureEffective!: ActionBindingIF
   @Action setCourtOrderFileNumber!: ActionBindingIF
   @Action setHasPlanOfArrangement!: ActionBindingIF
   @Action setCourtOrderValidity!: ActionBindingIF
@@ -328,11 +199,6 @@ export default class DissolutionReviewConfirm extends Mixins(DateMixin) {
   // Enum for template
   readonly RouteNames = RouteNames
 
-  /** Is true when the Dissolution Date and Time section is invalid. */
-  get isDissolutionDateTimeInvalid (): boolean {
-    return (this.getValidateSteps && !this.getEffectiveDateTime.valid)
-  }
-
   /** Is true when the Court Order conditions are not met. */
   get isCourtOrderInvalid (): boolean {
     return (this.getValidateSteps && !this.getCourtOrderStep.valid)
@@ -341,27 +207,6 @@ export default class DissolutionReviewConfirm extends Mixins(DateMixin) {
   /** Is true when the Document Delivery conditions are not met. */
   get isDocumentDeliveryInvalid (): boolean {
     return (this.getValidateSteps && !this.getDocumentDelivery.valid)
-  }
-
-  /** The affidavit summary to display, depending on entity type. */
-  get affidavitSummary (): string {
-    return this.isTypeCoop
-      ? this.getAffidavitStep.affidavitDoc?.name
-      : 'The affidavit required by section 316(1)(a) of the Business Corporations Act has ' +
-        'been completed and deposited in the company\'s records book.'
-  }
-
-  /** The future effective fee price. */
-  get futureEffectiveFeePrice (): string {
-    if (this.getFeePrices[0]?.futureEffectiveFees) {
-      return `$${this.getFeePrices[0].futureEffectiveFees.toFixed(2)}`
-    }
-    return 'TBD'
-  }
-
-  /** The future effective date, in Pacific date-time format. */
-  get futureEffectiveDate (): string {
-    return this.dateToPacificDateTime(this.getEffectiveDateTime.effectiveDate, true)
   }
 
   /** Is true when the certify conditions are not met. */
