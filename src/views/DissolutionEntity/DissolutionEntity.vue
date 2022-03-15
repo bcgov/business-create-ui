@@ -26,6 +26,7 @@
           Copies of the dissolution documents will be sent to the email addresses listed below.
         </p>
       </header>
+      <v-card flat class="mt-6">
       <DocumentDelivery
         :class="{ 'invalid-section': isDocumentDeliveryInvalid }"
         :editableCompletingParty="isRoleStaff"
@@ -38,6 +39,7 @@
         @update:optionalEmail="setDocumentOptionalEmail($event)"
         @valid="setDocumentOptionalEmailValidity($event)"
       />
+      </v-card>
     </section>
 
     <!-- Folio or Reference Number -->
@@ -51,13 +53,15 @@
           Only the number below will appear on the transaction report and receipt for this filing.
         </p>
       </header>
-      <TransactionalFolioNumber
-        :accountFolioNumber="getFolioNumber"
-        :transactionalFolioNumber="getTransactionalFolioNumber"
-        :doValidate="getValidateSteps"
-        @change="setTransactionalFolioNumber($event)"
-        @valid="setTransactionalFolioNumberValidity($event)"
-      />
+       <v-card flat class="mt-6">
+        <TransactionalFolioNumber
+          :accountFolioNumber="getFolioNumber"
+          :transactionalFolioNumber="getTransactionalFolioNumber"
+          :doValidate="getValidateSteps"
+          @change="setTransactionalFolioNumber($event)"
+          @valid="setTransactionalFolioNumberValidity($event)"
+        />
+       </v-card>
     </section>
   <!-- Completing Party -->
   <!-- show only if exist -->
@@ -66,11 +70,13 @@
         <h2>Completing Party</h2>
 
       </header>
+      <v-card flat class="mt-6">
         <ListPeopleAndRoles
         :personList="getAddPeopleAndRoleStep.orgPeople"
         :isSummary="true"
         :showErrorSummary="!getAddPeopleAndRoleStep.valid"
       />
+      </v-card>
     </section>
 
     <!-- Certify -->
@@ -81,6 +87,7 @@
           Confirm the legal name of the person authorized to complete and submit this dissolution.
         </p>
       </header>
+      <v-card flat class="mt-6">
       <Certify
         :class="{ 'invalid-section': isCertifyInvalid }"
         :currentDate="getCurrentDate"
@@ -97,6 +104,7 @@
         @update:certifiedBy="onCertifiedBy($event)"
         @update:isCertified="onIsCertified($event)"
       />
+      </v-card>
     </section>
 
     <!-- Court Order and Plan of Arrangement -->
@@ -109,6 +117,7 @@
           Plan of Arrangement.
         </p>
       </header>
+      <v-card flat class="mt-6">
       <CourtOrderPoa
         id="court-order"
         :class="{ 'invalid-section': isCourtOrderInvalid }"
@@ -121,6 +130,7 @@
         @emitPoa="setHasPlanOfArrangement($event)"
         @emitValid="setCourtOrderValidity($event)"
       />
+      </v-card>
     </section>
 
     <!-- Staff Payment -->
@@ -129,7 +139,9 @@
         <h2>Staff Payment</h2>
         <p class="mt-4 mb-6"></p>
       </header>
+      <v-card flat class="mt-6">
       <StaffPayment />
+      </v-card>
     </section>
   </div>
 </template>
