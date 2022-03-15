@@ -58,13 +58,13 @@
             </v-tooltip>
           </v-col>
           <v-col>
-            <base-address class="peoples-roles-mailing-address" :address="orgPerson.mailingAddress" />
+            <MailingAddress class="peoples-roles-mailing-address" :address="orgPerson.mailingAddress" />
           </v-col>
           <v-col>
             <p v-if="isSame(orgPerson.mailingAddress, orgPerson.deliveryAddress)"
               class="peoples-roles-delivery-address">Same as Mailing Address
             </p>
-            <base-address v-else class="peoples-roles-delivery-address" :address="orgPerson.deliveryAddress" />
+            <DeliveryAddress v-else class="peoples-roles-delivery-address" :address="orgPerson.deliveryAddress" />
           </v-col>
           <v-col>
             <div v-if="orgPerson.roles.length > 0">
@@ -127,7 +127,8 @@ import { PartyTypes, RouteNames } from '@/enums'
 
 @Component({
   components: {
-    BaseAddress,
+    DeliveryAddress: BaseAddress,
+    MailingAddress: BaseAddress,
     ConfirmRemoveDialog
   }
 })

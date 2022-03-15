@@ -90,7 +90,7 @@
                 :class="{ 'invalid': isDissolutionDateTimeInvalid }"
               >
                 <v-row no-gutters>
-                  <v-col cols="3" class="inner-col-1 pr-4">
+                  <v-col cols="3" class="inner-col-1 pr-4 pb-4">
                     <label class="font-weight-bold">Dissolution Date and Time</label>
                   </v-col>
 

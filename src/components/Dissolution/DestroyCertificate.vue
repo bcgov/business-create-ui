@@ -3,7 +3,7 @@
     <!-- EDIT SECTION -->
     <template v-if="!isSummary">
       <v-row no-gutters class="edit-section">
-        <v-col cols="12" sm="3" class="pr-4">
+        <v-col cols="12" sm="3" class="pr-4 d-none d-sm-block">
           <label class="destroy-certificate-title title-label">
             Delete and/or Destroy Certificates
           </label>

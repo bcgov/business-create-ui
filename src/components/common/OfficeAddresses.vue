@@ -145,7 +145,7 @@
     <!-- SUMMARY SECTION -->
     <template v-else>
       <v-row no-gutters id="summary-registered-address">
-        <v-col cols="12" sm="3" class="pr-4">
+        <v-col cols="12" sm="3" class="pr-4 pb-4">
           <label>Registered Office</label>
         </v-col>
 
@@ -164,7 +164,7 @@
       </v-row>
 
       <v-row no-gutters id="summary-records-address" v-if="!isTypeCoop" class="mt-4">
-        <v-col cols="12" sm="3" class="pr-4">
+        <v-col cols="12" sm="3" class="pr-4 pb-4">
           <label>Records Office</label>
         </v-col>
 
@@ -578,8 +578,9 @@ export default class OfficeAddresses extends Mixins(CommonMixin) {
   font-weight: bold;
 }
 
-// italicize delivery instructions
+// italicize delivery instructions and remove top margin
 ::v-deep .base-address .address-block .delivery-instructions {
   font-style: italic;
+  margin-top: 0 !important;
 }
 </style>

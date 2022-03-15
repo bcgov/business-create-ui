@@ -71,7 +71,7 @@
     <!-- SUMMARY SECTION -->
     <template v-else>
       <v-row no-gutters class="summary-section">
-        <v-col cols="12" sm="3" class="pr-4">
+        <v-col cols="12" sm="3" class="pr-4 pb-4">
           <label v-if="isIncorporationFiling">Registered Office Contact Information</label>
           <label v-else>Business Contact Information</label>
         </v-col>

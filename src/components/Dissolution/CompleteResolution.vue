@@ -106,7 +106,7 @@
       <div class="mt-4" :class="{ 'invalid-section': getShowErrors && !this.isResolutionDateValid }">
         <v-card flat id="resolution-date-card" class="py-8 px-6">
           <v-row no-gutters>
-            <v-col cols="12" sm="3" class="pr-4 pb-4">
+            <v-col cols="12" sm="3" class="pr-4 d-none d-sm-block">
               <label class="resolution-date-vcard-title mt-4">
                 Resolution Date
               </label>
@@ -140,7 +140,7 @@
       <div class="mt-4" :class="{ 'invalid-section': getShowErrors && !this.isResolutionTextValid }">
         <v-card flat id="resolution-text-card" class="py-8 px-6">
           <v-row no-gutters>
-            <v-col cols="12" sm="3" class="pr-4 pb-4">
+            <v-col cols="12" sm="3" class="pr-4 d-none d-sm-block">
               <label class="resolution-text-vcard-title mt-4">
                 {{getCreateResolutionResource.resolutionTextSection.textLabel}}
               </label>

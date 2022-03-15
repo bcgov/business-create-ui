@@ -9,7 +9,7 @@
       <div class="section-container">
         <!-- Name Request -->
         <v-row no-gutters id="name-request-info">
-          <v-col cols="12" sm="3" class="pr-4">
+          <v-col cols="12" sm="3" class="pr-4 pb-4">
             <label>
               <strong>Name Request</strong>
             </label>
@@ -35,7 +35,7 @@
       <!-- Name Request Applicant -->
       <div class="section-container">
         <v-row no-gutters id="name-request-applicant-info">
-          <v-col cols="12" sm="3" class="pr-4">
+          <v-col cols="12" sm="3" class="pr-4 pb-4">
             <label>
               <strong>Name Request Applicant</strong>
             </label>
@@ -93,7 +93,7 @@
         :class="{ 'invalid-section': getShowErrors && !isValidNameTranslation }"
       >
         <v-row no-gutters id="name-translation-info">
-          <v-col cols="12" sm="3" class="pr-4">
+          <v-col cols="12" sm="3" class="pr-4 pb-4">
             <label>
               <strong>Name Translation</strong>
             </label>
