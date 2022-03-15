@@ -13,23 +13,7 @@ export const soloPropCompanyDissolutionResource: DissolutionResourceIF = {
     filingTypeCode: FilingCodes.DISSOLUTION_VOLUNTARY
   }],
   detailsTitle: 'Company Details',
-  custodialRecords: {
-    sectionSubtitle: `Enter the name (person or corporation or firm) and email address of the Custodian of Records, who
-    will be responsible for the care and custody of the Company's records. Enter the physical delivery address where the
-     dissolved company records will be maintained, and the mailing address where the custodian can be reached. These
-     addresses must be located in B.C.`,
-    custodianTitle: `Custodian of Records`,
-    helpSection: {
-      helpText: [
-        `A Company must keep all company records for a period of 2 years. A court order may be required if the Custodian
-        of Records information changes within 2 years.`
-      ]
-    },
-    baseAddressValues: {
-      country: 'CA',
-      region: 'BC'
-    }
-  },
+
   affidavit: {
     affidavitActionText: 'deposit the affidavit in the Company\'s records book.',
     helpSection: {

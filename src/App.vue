@@ -552,7 +552,6 @@ export default class App extends Mixins(
           // this is a Dissolution filing
           // (only dissolutionss have a business id)
           const resources = await this.handleDraftDissolution()
-          // console.log('this.getBusinessId resources', resources)
           if (!resources) {
             // go to catch()
             throw new Error(`Invalid dissolution resources, entity type = ${this.getEntityType}`)

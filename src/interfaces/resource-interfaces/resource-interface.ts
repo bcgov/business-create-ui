@@ -63,7 +63,7 @@ export interface DissolutionResourceIF {
   steps: Array<StepIF>
   filingData: Array<FilingDataIF>
   detailsTitle: string
-  custodialRecords: CustodianResourceIF
+  custodialRecords?: CustodianResourceIF
   dissolutionStatements?: Array<KeyValueIF>
   affidavit: AffidavitResourceIF
   reviewAndConfirm: {
