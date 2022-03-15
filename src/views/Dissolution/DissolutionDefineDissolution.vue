@@ -14,21 +14,29 @@
       <header id="association-details">
         <h2>1. {{ getDissolutionDetailsTitle }}</h2>
       </header>
-      <AssociationDetails class="mt-5"/>
+
+      <v-card flat class="mt-5">
+        <AssociationDetails />
+      </v-card>
     </section>
 
+    <!-- Dissolution Statement -->
     <section class="mt-10" v-if="isTypeCoop">
-      <header id="dissolution-statement">
+      <header id="dissolution-statement-header">
         <h2>2. Dissolution Statement</h2>
         <p class="mt-4">Choose a dissolution statement regarding dissolution and
           the Cooperative Association's assets and liabilities:
         </p>
       </header>
-      <DissolutionStatement class="mt-5"
-        :showErrorSummary="showDissolutionStatementErrors"
-      />
+
+      <v-card flat class="mt-5 py-8 px-6"
+        :class="{ 'invalid-section': showDissolutionStatementErrors }"
+      >
+        <DissolutionStatement />
+      </v-card>
     </section>
 
+    <!-- Custodian of Records -->
     <section class="mt-10">
       <header id="custodian-header">
         <h2>{{isTypeCoop ? 3 : 2 }}. {{ getCustodialRecordsResources.custodianTitle }}</h2>
@@ -37,17 +45,22 @@
 
       <!-- Help Section -->
       <HelpSection
+        class="mt-5"
         :helpSection="getCustodialRecordsResources.helpSection"
         :helpTitle="getCustodialRecordsResources.custodianTitle"
       />
 
-      <CustodianOfRecords
-        class="mt-5"
-        :showErrors="getShowErrors && !isDissolutionCustodianValid"
-        @valid="setCustodianValidity($event)"
-      />
+      <v-card flat class="mt-5 py-8 px-6"
+        :class="{ 'invalid-section': getShowErrors && !isDissolutionCustodianValid }"
+      >
+        <CustodianOfRecords
+          :showErrors="getShowErrors"
+          @valid="setCustodianValidity($event)"
+        />
+      </v-card>
     </section>
 
+    <!-- Delete and/or Destroy Certificates -->
     <section class="mt-10" v-if="isTypeCoop">
       <header id="delete-certificates-header">
         <h2>{{isTypeCoop ? 4 : 3 }}. Delete and/or Destroy Certificates</h2>
@@ -60,9 +73,14 @@
           The Certificate of Incorporation is on file for this Cooperative Association.
         </p>
       </header>
-      <DestroyCertificate class="mt-5"
-        :showErrorSummary="showDestroyCertificateErrors"
-      />
+
+      <v-card flat class="mt-5 py-8 px-6"
+        :class="{ 'invalid-section': showDestroyCertificateErrors }"
+      >
+        <DestroyCertificate
+          :showErrorSummary="showDestroyCertificateErrors"
+        />
+      </v-card>
     </section>
   </div>
 </template>
@@ -141,7 +159,7 @@ export default class DissolutionDefineDissolution extends Mixins(CommonMixin, En
           isDeleteValid: this.isTypeCoop ? this.getDissolutionHasCertificateDestroyed : true
         },
         [
-          'dissolution-statement',
+          'dissolution-statement-header',
           'custodian-header',
           'delete-certificates-header'
         ]

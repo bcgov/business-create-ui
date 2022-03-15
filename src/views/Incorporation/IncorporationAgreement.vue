@@ -1,5 +1,6 @@
 <template>
   <div id="incorporation-agreement">
+    <!-- Intro section -->
     <section class="mt-10">
       <header>
         <h2>1. Incorporation Agreement and Articles</h2>
@@ -64,7 +65,7 @@
             meetings, issuing and transferring shares, and duties of directors and officers.
           </span>
         </v-tooltip>
-        <template v-if="isTypeCCC">
+        <template v-if="isTypeBcCcc">
           containing the
           <v-tooltip top max-width="20rem" content-class="top-tooltip" transition="fade-transition">
             <template v-slot:activator="{ on }">
@@ -91,7 +92,7 @@
         <div
           v-for="(item, index) in getIncorporationAgreementResource.helpSection"
           :id="`agreement-help-${index}`"
-          class="help-section"
+          class="help-div"
           :key="index"
         >
           <h3>
@@ -100,7 +101,7 @@
           </h3>
           <ul v-for="(text, index) in item.helpText"
               :id="`agreement-help-text-${index}`"
-              class="help-section"
+              class="help-div"
               :key="index">
             <li>{{text}}</li>
           </ul>
@@ -111,15 +112,16 @@
             <li>{{text}}</li>
           </ul>
         </div>
-        <template v-if="!isTypeCCC">
-          <div class="help-section">
+
+        <template v-if="!isTypeBcCcc">
+          <div class="help-div">
             <div class="articles-statements-footer">
               In this case, you need to create a unique Incorporation Agreement and set of Articles for the company and
               outline these special rights or restrictions in the Articles. We recommend seeking professional assistance
               from a lawyer or accountant to help you prepare your Incorporation Agreement and Articles.
             </div>
           </div>
-          <div class="help-section">
+          <div class="help-div">
             <h3>Retain the signed Incorporation Agreement and {{ entityDescription }} Articles</h3>
             <ul>
               <li>
@@ -134,73 +136,79 @@
       </section>
     </section>
 
-    <template v-if="isTypeCCC">
+    <!-- Agreement Type -->
+    <template v-if="isTypeBcCcc">
       <section class="mt-10">
         <header id="confirm-agreement">
           <h2>2. Confirm Incorporation Agreement and Article Completion</h2>
         </header>
-        <AgreementType :showErrorSummary="!getIncorporationAgreementStep.valid" />
+
+        <v-card flat>
+          <AgreementType :showErrorSummary="!getIncorporationAgreementStep.valid" />
+        </v-card>
       </section>
     </template>
 
+    <!-- Sample Templates -->
     <template v-else>
       <section class="mt-10">
         <header>
           <h2>2. Sample Templates</h2>
         </header>
+
         <p>
           For your convenience, we have provided a sample Incorporation Agreement and a set of sample
           {{ entityDescription }} Articles.
         </p>
-        <div>
-          <v-card flat class="share-structure-check-panel">
-            <div class="share-structure-check-header">
-              <v-icon color="black">mdi-information-outline</v-icon>
-              <span> Share Structure Check:</span>
-            </div>
-            <div class="share-structure-check-text">
-              The sample articles CAN ONLY be used if the company's share structure DOES NOT contain a class or series
-              with special rights or restrictions.
-              <span class="read-more-btn" @click="readMoreFlag = true">
+        <v-card flat class="share-structure-check-panel py-8 px-6">
+          <div class="share-structure-check-header">
+            <v-icon color="black">mdi-information-outline</v-icon>
+            <span> Share Structure Check:</span>
+          </div>
+
+          <div class="share-structure-check-text">
+            The sample articles CAN ONLY be used if the company's share structure DOES NOT contain a class or series
+            with special rights or restrictions.
+            <span class="read-more-btn" @click="readMoreFlag = true">
               <span v-if="!readMoreFlag">Read more...</span>
             </span>
-              <div v-if="readMoreFlag">
-                <div class="read-more-line">
-                  If the corporation's share structure contains a class or series with special rights or restrictions,
-                  you need to create a unique set of Articles for the company and outline these special rights or
-                  restrictions in the Articles.
-                </div>
-                <div class="read-more-line">
-                  We recommend seeking professional assistance from a lawyer or accountant to help you prepare your
-                  Incorporation Agreement and Articles.
-                  <span class="read-more-btn" @click="readMoreFlag = false">
-                  <span>Read less...</span>
-                </span>
-                </div>
+            <div v-if="readMoreFlag">
+              <div class="read-more-line">
+                If the corporation's share structure contains a class or series with special rights or restrictions,
+                you need to create a unique set of Articles for the company and outline these special rights or
+                restrictions in the Articles.
               </div>
-            </div>
-            <div class="preview-download-container">
-              <div>
-                <img src="@/assets/images/BCRegistries_Sample_IncoporationAgreement_x2.png" class="preview-image" />
-              </div>
-              <div class="download-link-container">
-              <span>
-                <v-icon color="blue">mdi-file-pdf-outline</v-icon>
-                <a :href="documentURL" download>
-                  Download the sample Incorporation Agreement and Company Articles
-                </a>
+              <div class="read-more-line">
+                We recommend seeking professional assistance from a lawyer or accountant to help you prepare your
+                Incorporation Agreement and Articles.
+                <span class="read-more-btn" @click="readMoreFlag = false">
+                <span>Read less...</span>
               </span>
               </div>
             </div>
-          </v-card>
-        </div>
+          </div>
+
+          <div class="d-flex flex-column flex-sm-row justify-center align-center mt-6">
+            <img src="@/assets/images/BCRegistries_Sample_IncoporationAgreement_x2.png" class="preview-image" />
+            <div class="px-8" />
+            <div class="download-link-container py-5">
+              <v-icon color="primary" class="mt-n1">mdi-file-pdf-outline</v-icon>
+              <a :href="documentURL" download class="ml-1">
+                Download the sample Incorporation Agreement and Company Articles
+              </a>
+            </div>
+          </div>
+        </v-card>
       </section>
 
       <section class="mt-10">
         <header id="confirm-agreement">
           <h2>3. Confirm Incorporation Agreement and Article Completion</h2>
         </header>
-        <AgreementType :showErrorSummary="!getIncorporationAgreementStep.valid" />
+
+        <v-card flat>
+          <AgreementType :showErrorSummary="!getIncorporationAgreementStep.valid" />
+        </v-card>
       </section>
     </template>
   </div>
@@ -221,7 +229,7 @@ import { CommonMixin, EnumMixin } from '@/mixins'
 })
 export default class IncorporationAgreement extends Mixins(CommonMixin, EnumMixin) {
   @Getter isTypeBcomp!: boolean
-  @Getter isTypeCCC!: boolean
+  @Getter isTypeBcCcc!: boolean
   @Getter getEntityType!: CorpTypeCd
   @Getter getIncorporationAgreementStep!: IncorporationAgreementIF
   @Getter getIncorporationAgreementResource!: any
@@ -327,23 +335,12 @@ a {
   margin-top: 0.5rem;
 }
 
-.preview-download-container {
-  display: flex;
-  justify-content: center;
-  margin-top: 1.5rem;
-  align-items: center;
-}
-
 .download-link-container {
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-  margin-left: 1rem;
   border-top: solid 1px $gray3;
   border-bottom: solid 1px $gray3;
 }
 
 .share-structure-check-panel {
-  padding: 2rem;
   vertical-align: middle;
 }
 
@@ -372,7 +369,7 @@ a {
   padding-top: 0.5rem;
 }
 
-.help-section{
+.help-div {
   padding-top: 1rem;
 }
 </style>

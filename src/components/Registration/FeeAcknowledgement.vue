@@ -1,15 +1,15 @@
 <template>
-  <v-card flat id="fee-acknowledgement" :class="{ 'invalid-section': invalidSection }">
+  <div id="fee-acknowledgement">
     <v-row no-gutters>
-      <v-col cols="3">
+      <v-col cols="12" sm="3" class="pr-4 pb-4">
         <label :class="{'error-text': invalidSection}">Acknowledgement</label>
       </v-col>
-      <v-col cols="9">
+      <v-col cols="12" sm="9">
         <v-checkbox
-          hide-details
           id="fee-acknowledgement-checkbox"
           :input-value="getRegistration.feeAcknowledgement"
           @change="setRegistrationFeeAcknowledgement($event)"
+          hide-details
         >
           <template slot="label">
             <div class="acknowledge-stmt" :class="{'error-text': invalidSection}">
@@ -20,7 +20,7 @@
         </v-checkbox>
       </v-col>
     </v-row>
-  </v-card>
+  </div>
 </template>
 
 <script lang="ts">
@@ -62,7 +62,7 @@ label {
   padding-top: 0 !important;
 }
 
-// Vuetify overrides
+// align checkbox with top of its label
 ::v-deep .v-input--checkbox .v-input__slot {
   align-items: flex-start;
 }

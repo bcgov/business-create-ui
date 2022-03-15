@@ -30,7 +30,7 @@ import {
   SpecialResolutionIF,
   RegistrationStateIF,
   RegistrationFilingIF,
-  EmptyRegistrationNaics
+  EmptyNaics
 } from '@/interfaces'
 
 // Constants and enums
@@ -397,7 +397,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     })
 
     // restore NAICS
-    this.setRegistrationNaics(draftFiling.registration.business.naics || EmptyRegistrationNaics)
+    this.setRegistrationNaics(draftFiling.registration.business.naics || EmptyNaics)
 
     // restore Name Request data
     this.setRegistrationNameRequest(draftFiling.registration.nameRequest)

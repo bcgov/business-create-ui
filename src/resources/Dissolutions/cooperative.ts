@@ -201,7 +201,7 @@ export const CooperativeDissolutionResource: DissolutionResourceIF = {
             {
               type: ItemTypes.TEXT,
               value: `The Cooperative Association name is identified <b>exactly</b> as follows throughout the special
-                      resolution:`
+                      resolution: `
             },
             {
               type: ItemTypes.PLACEHOLDER,

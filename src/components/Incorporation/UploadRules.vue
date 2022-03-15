@@ -1,5 +1,6 @@
 <template>
   <div id="upload-rules">
+    <!-- Intro section -->
     <section class="mt-10">
       <header>
         <h2>1. Rules of the Association</h2>
@@ -15,7 +16,7 @@
       </header>
     </section>
 
-    <!-- Help Section -->
+    <!-- Help section -->
     <div v-if="getCreateRulesResource.helpSection" class="mt-5">
       <span class="help-btn" @click="helpToggle = !helpToggle">
         <v-icon color="primary" style="padding-right: 5px">mdi-help-circle-outline</v-icon>
@@ -23,40 +24,44 @@
         <span v-else>Hide Help</span>
       </span>
       <section v-show="helpToggle" class="create-rules-help">
-        <header id="create-rules-help-header"><h2>{{getCreateRulesResource.helpSection.header}}</h2></header>
-        <p class="help-section-label mt-4">
-          <b>{{getCreateRulesResource.helpSection.helpText.section1.label}}</b>
+        <header id="create-rules-help-header">
+          <h2>{{getCreateRulesResource.helpSection.header}}</h2>
+        </header>
+
+        <p class="help-section-title font-weight-bold mt-4">
+          {{getCreateRulesResource.helpSection.helpText.section1.label}}
         </p>
         <ul>
           <li
             v-for="(item, index) in getCreateRulesResource.helpSection.helpText.section1.items"
-            class="help-section mt-1"
+            class="mt-1"
             :key="index"
           >
             <v-icon>mdi-circle-small</v-icon>
-            <span class="chk-list-item-txt">{{ item }}</span>
+            <span class="ml-2">{{ item }}</span>
           </li>
         </ul>
-        <p class="help-section-label mt-4">
-          <b>{{getCreateRulesResource.helpSection.helpText.section2.label}}</b>
+
+        <p class="help-section-title font-weight-bold mt-4">
+          {{getCreateRulesResource.helpSection.helpText.section2.label}}
         </p>
         <ul class="mt-6">
           <li
             v-for="(item, index) in getCreateRulesResource.helpSection.helpText.section2.items"
-            class="help-section mt-n2"
             :key="index"
           >
-            <v-icon v-if="item.type === ItemTypes.TEXT">mdi-circle-small</v-icon>
-            <span v-if="item.type === ItemTypes.TEXT" v-html="item.value" class="chk-list-item-txt"></span>
-            <v-row v-if="item.type === ItemTypes.PARTIAL_ITEMS">
-              <v-col cols="1"><v-icon>mdi-circle-small</v-icon></v-col>
-              <v-col cols="11" class="ml-n12">
+            xxx<v-icon v-if="item.type === ItemTypes.TEXT">mdi-circle-small</v-icon>
+            <span v-if="item.type === ItemTypes.TEXT" v-html="item.value" class="ml-2" />
+            <v-row no-gutters v-if="item.type === ItemTypes.PARTIAL_ITEMS">
+              <v-col cols="1">yyy<v-icon>mdi-circle-small</v-icon></v-col>
+              <v-col cols="11">
                 <span v-for="(partialItem, index) in item.value" :key="index">
                   <span v-if="partialItem.type === ItemTypes.TEXT" v-html="partialItem.value"></span>
                   <a v-if="partialItem.type === ItemTypes.LINK"
                      :href="partialItem.value.href"
                      target="_blank"
-                  >{{partialItem.value.linkText}}
+                  >
+                    {{partialItem.value.linkText}}
                     <v-icon dense color="primary">mdi-open-in-new</v-icon>
                   </a>
                 </span>
@@ -64,9 +69,10 @@
             </v-row>
           </li>
         </ul>
+
         <p id="help-text-section-3"
           v-for="(item, index) in getCreateRulesResource.helpSection.helpText.section3.items"
-          class="help-section mt-6"
+          class="mt-6"
           :key="index"
         >{{ item }}
         </p>
@@ -75,36 +81,44 @@
       </section>
     </div>
 
+    <!-- Confirm Rules Completion -->
     <section id="confirm-rules-section" class="mt-10">
       <header id="rules-confirm-header">
         <h2>2. Confirm Rules Completion</h2>
       </header>
-      <div :class="{ 'invalid-section': getShowErrors && !hasRulesConfirmed }">
-        <v-card flat id="confirm-rules-card" class="mt-4 pt-10 pb-6 pl-6 pr-6">
+
+      <div class="mt-4" :class="{ 'invalid-section': getShowErrors && !hasRulesConfirmed }">
+        <v-card flat id="confirm-rules-card" class="py-8 px-6">
           <v-form ref="confirmRulesChk">
             <v-checkbox
-              class="chk-rules"
               id="chk-confirm-rules"
+              class="chk-rules mt-0 pt-0"
               v-model="rulesConfirmed"
+              hide-details
               :rules="confirmCompletionRules"
               label="I confirm the following items are included as required in the Rules of the Association:"
               @change="onRulesConfirmedChange($event)"
             />
             <ul>
-              <li class="mt-1">
-                <v-icon>mdi-circle-small</v-icon>
-                <span class="chk-list-item-txt">The Cooperative name is identified <b>exactly</b> as follows throughout
-                  the Memorandum:
-                </span>
-                <div id="approved-name" class="ml-9">{{getNameRequestDetails.approvedName}}</div>
-              </li>
-              <li class="mt-1">
-                <v-row>
+              <li class="mt-4">
+                <v-row no-gutters>
                   <v-col cols="1"><v-icon>mdi-circle-small</v-icon></v-col>
-                  <v-col cols="11" class="ml-n11">
-                    <span>Each Subscriber and Witness has signed and dated the Rules of the
+                  <v-col cols="11">
+                    <p class="mb-0">
+                      The Cooperative name is identified <b>exactly</b> as follows throughout the Memorandum:
+                    </p>
+                    <div class="mt-2 mb-0 font-weight-bold">{{getNameRequestDetails.approvedName}}</div>
+                  </v-col>
+                </v-row>
+              </li>
+              <li class="mt-4">
+                <v-row no-gutters>
+                  <v-col cols="1"><v-icon>mdi-circle-small</v-icon></v-col>
+                  <v-col cols="11">
+                    <p class="mb-0">
+                      Each Subscriber and Witness has signed and dated the Rules of the
                       Association and their name is printed under their signature.
-                    </span>
+                    </p>
                   </v-col>
                 </v-row>
               </li>
@@ -114,37 +128,37 @@
       </div>
     </section>
 
+    <!-- Upload Rules -->
     <section id="upload-rules-section" class="mt-10">
       <header id="upload-rules-header">
         <h2>3. Upload Rules</h2>
         <ul class="mt-5">
           <li class="mt-1">
             <v-icon>mdi-circle-small</v-icon>
-            <span class="chk-list-item-txt">Must be set to fit onto 8.5" x 11"
-              letter-size paper
-            </span>
+            <span class="ml-2">Must be set to fit onto 8.5" x 11" letter-size paper</span>
           </li>
           <li class="mt-1">
             <v-icon>mdi-circle-small</v-icon>
-            <span class="chk-list-item-txt">Use a white background and a legible font with contrasting font colour
-            </span>
+            <span class="ml-2">Use a white background and a legible font with contrasting
+              font colour</span>
           </li>
           <li class="mt-1">
             <v-icon>mdi-circle-small</v-icon>
-            <span class="chk-list-item-txt">PDF file type (maximum 10 MB file size)</span>
+            <span class="ml-2">PDF file type (maximum 30 MB file size)</span>
           </li>
         </ul>
-        <div id="upload-rules-note" class="mt-7 mb-8">
+        <div id="upload-rules-note" class="mt-6">
           <b>Note: </b>Do not upload Housing Cooperative occupancy agreements.
         </div>
       </header>
-      <div :class="{ 'invalid-section': getShowErrors && !hasValidUploadFile }">
-        <v-card flat id="upload-rules-card" class="py-8 pl-6">
-          <v-row>
-            <v-col id="upload-rules-card-left-col" cols="2" class="pt-6" >
-              <v-card-title class="upload-rules-vcard-title pl-0">Upload Rules</v-card-title>
+
+      <div class="mt-4" :class="{ 'invalid-section': getShowErrors && !hasValidUploadFile }">
+        <v-card flat id="upload-rules-card" class="py-8 px-6">
+          <v-row no-gutters>
+            <v-col cols="12" sm="3" class="pr-4 pb-4">
+              <label class="upload-rules-vcard-title">Upload Rules</label>
             </v-col>
-            <v-col id="upload-rules-card-right-col" cols="10" class="pt-6 pl-6 pr-10">
+            <v-col cols="12" sm="9">
               <FileUploadPreview
                 :inputFileLabel="INPUT_FILE_LABEL"
                 :maxSize="MAX_FILE_SIZE"
@@ -154,7 +168,7 @@
                 :customErrorMessage="fileUploadCustomErrorMsg"
                 @fileSelected="fileSelected"
                 @isFileValid="isFileUploadValidFn"
-              ></FileUploadPreview>
+              />
             </v-col>
           </v-row>
         </v-card>
@@ -337,10 +351,6 @@ ul {
   color: $gray7;
 }
 
-.chk-list-item-txt {
-  margin-left: 0.5rem;
-}
-
 .upload-rules-summary-header {
   display: flex;
   background-color: $BCgovBlue5O;
@@ -389,10 +399,6 @@ ul {
 }
 
 ::v-deep #confirm-rules-section {
-  #approved-name {
-    font-weight: bold;
-  }
-
   // override default validation styling so checkbox does not turn red on validation error
   .v-input--selection-controls__input .error--text{
     color: $app-lt-gray !important;
@@ -400,9 +406,16 @@ ul {
 }
 
 .chk-rules {
-  margin-top: 0;
-  padding-top: 0;
-  height: 2.5rem !important;
+  color: $gray9;
+
+  ::v-deep {
+    .theme--light.v-icon {
+      color: $gray9;
+    }
+    .v-label {
+      line-height: 1.5rem;
+    }
+  }
 }
 
 #upload-rules-section {
@@ -412,7 +425,6 @@ ul {
 }
 
 .upload-rules-vcard-title {
-  padding-top: 1px;
   font-size: $px-17;
   font-weight: bold;
 }

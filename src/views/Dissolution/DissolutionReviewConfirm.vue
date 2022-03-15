@@ -4,7 +4,7 @@
     <section class="mt-10">
       <header>
         <h2>Review and Confirm</h2>
-        <p class="mt-4 mb-6">
+        <p class="mt-4">
           Review the information in your filing. If you need to change or complete anything, return
           to the step to make the necessary change.
         </p>
@@ -12,18 +12,16 @@
 
       <!-- Dissolution summary -->
       <v-card flat id="dissolution-summary" class="mt-6">
-        <header class="review-header rounded-t">
+        <header class="review-header">
           <v-icon class="ml-2" color="appDkBlue">mdi-domain-remove</v-icon>
           <label class="font-weight-bold pl-2">Dissolution</label>
         </header>
 
-        <div class="pb-8" :class="{ 'invalid-section rounded-bl-0': !isDissolutionDefineDissolutionValid }">
-          <section class="pt-8 pl-7" v-if="!isDissolutionDefineDissolutionValid">
+        <div class="pb-8" :class="{ 'invalid-section': !isDissolutionDefineDissolutionValid }">
+          <section class="mx-6 pt-8" v-if="!isDissolutionDefineDissolutionValid">
             <span>
               <v-icon color="error">mdi-information-outline</v-icon>
-              &nbsp;
-              <span class="error-text">This step is unfinished.</span>
-              &nbsp;
+              <span class="error-text mx-1">This step is unfinished.</span>
               <router-link
                 :to="{ path: `/${RouteNames.DISSOLUTION_DEFINE_DISSOLUTION}` }"
               >Return to this step to finish it</router-link>
@@ -36,253 +34,248 @@
           </section>
 
           <!-- Dissolution Statement -->
-          <section class="ml-5 mr-8 pl-2" v-if="isTypeCoop">
-            <v-container id="dissolution-statement">
-              <v-row no-gutters>
-                <v-col cols="3" class="inner-col-1 pr-4">
-                  <label class="font-weight-bold">Dissolution Statement</label>
-                </v-col>
+          <template v-if="isTypeCoop">
+            <section class="px-6">
+              <DissolutionStatement
+                class="pa-8 gray-background"
+                :isSummary="true"
+              />
+            </section>
 
-                <v-col cols="9" class="inner-col-2">
-                  <DissolutionStatement :isSummary="true" />
-                </v-col>
-              </v-row>
-            </v-container>
-          </section>
-
-          <!-- divider -->
-          <div class="ml-5 mr-8 pl-2" v-if="isTypeCoop">
-            <v-container class="py-0">
-              <v-divider />
-            </v-container>
-          </div>
+            <!-- divider -->
+            <div class="px-6">
+              <v-container class="py-0">
+                <v-divider />
+              </v-container>
+            </div>
+          </template>
 
           <!-- Custodian of Records -->
-          <section class="ml-5 mr-8 pl-2">
-            <v-container id="custodian-of-records">
-              <v-row no-gutters>
-                <v-col cols="3" class="inner-col-1 pr-4">
-                  <label class="font-weight-bold">Custodian of Records</label>
-                </v-col>
-
-                <v-col cols="9" class="inner-col-2">
-                  <CustodianOfRecords :isSummary="true" />
-                </v-col>
-              </v-row>
-            </v-container>
+          <section class="px-6">
+            <CustodianOfRecords
+              class="pa-8 gray-background"
+              :isSummary="true"
+            />
           </section>
-
-          <!-- divider -->
-          <div class="ml-5 mr-8 pl-2" v-if="isTypeCoop">
-            <v-container class="py-0">
-              <v-divider />
-            </v-container>
-          </div>
 
           <!-- Destroy Certificates -->
-          <section class="ml-5 mr-8 pl-2" v-if="isTypeCoop">
-            <v-container id="destroy-certificate">
-              <v-row no-gutters>
-                <v-col cols="3" class="inner-col-1 pr-4">
-                  <label class="font-weight-bold">Delete and/or Destroy Certificates</label>
-                </v-col>
+          <template v-if="isTypeCoop">
+            <!-- divider -->
+            <div class="px-6">
+              <v-container class="py-0">
+                <v-divider />
+              </v-container>
+            </div>
 
-                <v-col cols="9" class="inner-col-2">
-                  <DestroyCertificate :isSummary="true" />
-                </v-col>
-              </v-row>
-            </v-container>
-          </section>
-
-          <!-- divider -->
-          <div class="ml-6 mr-8 pl-2" v-if="!isTypeCoop">
-            <v-container class="py-0">
-              <v-divider />
-            </v-container>
-          </div>
+            <section class="px-6">
+              <DestroyCertificate
+                class="pa-8 gray-background"
+                :isSummary="true"
+              />
+            </section>
+          </template>
 
           <!-- Dissolution Date and Time -->
-          <section class="ml-5 mr-8 pl-2" v-if="!isTypeCoop">
-            <v-container
-              id="effective-date-time"
-              :class="{ 'invalid': isDissolutionDateTimeInvalid }"
-            >
-              <v-row no-gutters>
-                <v-col cols="3" class="inner-col-1 pr-4">
-                  <label class="font-weight-bold">Dissolution Date and Time</label>
-                </v-col>
+          <template v-if="!isTypeCoop">
+            <!-- divider -->
+            <div class="px-6">
+              <v-container class="py-0">
+                <v-divider />
+              </v-container>
+            </div>
 
-                <v-col cols="9" class="inner-col-2">
-                  <p id="effective-date-time-instructions" class="info-text">
-                    Select the date and time of the dissolution of the Company. You may select a date
-                    up to 10 days in the future (note: there is an <strong>additional fee of
-                    {{ futureEffectiveFeePrice }}</strong> to enter a dissolution date in the future).
-                    Unless a business has special requirements, most businesses select an immediate
-                    date and time for dissolution.
-                  </p>
+            <section class="px-6">
+              <v-container
+                id="effective-date-time"
+                :class="{ 'invalid': isDissolutionDateTimeInvalid }"
+              >
+                <v-row no-gutters>
+                  <v-col cols="3" class="inner-col-1 pr-4">
+                    <label class="font-weight-bold">Dissolution Date and Time</label>
+                  </v-col>
 
-                  <EffectiveDateTime
-                    :currentJsDate="getCurrentJsDate"
-                    :effectiveDateTime="getEffectiveDateTime"
-                    :isAppValidate="getValidateSteps"
-                    @valid="setEffectiveDateTimeValid($event)"
-                    @effectiveDate="setEffectiveDate($event)"
-                    @isFutureEffective="setIsFutureEffective($event)"
-                  />
+                  <v-col cols="9" class="inner-col-2">
+                    <p id="effective-date-time-instructions" class="info-text">
+                      Select the date and time of the dissolution of the Company. You may select a date
+                      up to 10 days in the future (note: there is an <strong>additional fee of
+                      {{ futureEffectiveFeePrice }}</strong> to enter a dissolution date in the future).
+                      Unless a business has special requirements, most businesses select an immediate
+                      date and time for dissolution.
+                    </p>
 
-                  <v-card
-                    flat class="px-16 pb-8 mt-n12"
-                    id="effective-date-text"
-                    v-if="getEffectiveDateTime.isFutureEffective && getEffectiveDateTime.valid"
-                  >
-                    The dissolution for this business will be effective as of:<br>
-                    <strong>{{futureEffectiveDate}}</strong>
-                  </v-card>
-                </v-col>
-              </v-row>
-            </v-container>
-          </section>
+                    <EffectiveDateTime
+                      :currentJsDate="getCurrentJsDate"
+                      :effectiveDateTime="getEffectiveDateTime"
+                      :isAppValidate="getValidateSteps"
+                      @valid="setEffectiveDateTimeValid($event)"
+                      @effectiveDate="setEffectiveDate($event)"
+                      @isFutureEffective="setIsFutureEffective($event)"
+                    />
+
+                    <v-card flat class="px-16 pb-8 mt-n12"
+                      id="effective-date-text"
+                      v-if="getEffectiveDateTime.isFutureEffective && getEffectiveDateTime.valid"
+                    >
+                      The dissolution for this business will be effective as of:<br>
+                      <strong>{{futureEffectiveDate}}</strong>
+                    </v-card>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </section>
+          </template>
         </div>
       </v-card>
-    </section>
 
-    <!-- Resolution -->
-    <CompleteResolutionSummary />
+      <!-- Resolution -->
+      <v-card flat id="resolution-summary" class="mt-10">
+        <header class="review-header">
+          <v-icon class="ml-2" color="appDkBlue">mdi-handshake</v-icon>
+          <label class="font-weight-bold pl-2">{{getCreateResolutionResource.reviewConfirmHeader}}</label>
+        </header>
 
-    <!-- Affidavit -->
-    <v-card flat id="affidavit-summary" class="mt-10">
-      <header class="review-header rounded-t">
-        <v-icon class="ml-2" color="appDkBlue">mdi-book-variant-multiple</v-icon>
-        <label class="font-weight-bold pl-2">Affidavit</label>
-      </header>
+        <CompleteResolutionSummary />
+      </v-card>
 
-      <div class="section-container rounded-bl-0" :class="{ 'invalid-section': !isAffidavitValid }">
-        <section v-if="!isAffidavitValid">
+      <!-- Affidavit -->
+      <v-card flat id="affidavit-summary" class="mt-10">
+        <header class="review-header">
+          <v-icon class="ml-2" color="appDkBlue">mdi-book-variant-multiple</v-icon>
+          <label class="font-weight-bold pl-2">Affidavit</label>
+        </header>
+
+        <section v-if="!isAffidavitValid" class="section-container invalid-section">
           <v-icon color="error">mdi-information-outline</v-icon>
-          &nbsp;
-          <span class="error-text">This step is unfinished.</span>
-          &nbsp;
+          <span class="error-text mx-1">This step is unfinished.</span>
           <router-link
             :to="{ path: `/${RouteNames.DISSOLUTION_AFFIDAVIT}` }"
           >Return to this step to finish it</router-link>
         </section>
 
-        <div v-else class="upload-affidavit-success-message">
-          <v-icon class="upload-success-chk ml-1 pr-2" color="successCheckmark">mdi-check</v-icon>
+        <section v-else class="section-container">
+          <v-icon class="ml-1 pr-2" color="successCheckmark">mdi-check</v-icon>
           <span id="file-name" class="break-spaces">{{ affidavitSummary }}</span>
-        </div>
-      </div>
-    </v-card>
+        </section>
+      </v-card>
+    </section>
 
     <!-- Dissolution Documents Delivery -->
     <section id="document-delivery-section" class="mt-10">
       <header>
         <h2>Dissolution Documents Delivery</h2>
-        <p class="mt-4 mb-6">
+        <p class="mt-4">
           Copies of the dissolution documents will be sent to the email addresses listed below.
         </p>
       </header>
-      <DocumentDelivery
-        :class="{ 'invalid-section': isDocumentDeliveryInvalid }"
-        :editableCompletingParty="isRoleStaff"
-        :showCustodianEmail="true"
-        :invalidSection="isDocumentDeliveryInvalid"
-        :registeredOfficeEmail="getBusinessContact.email"
-        :custodianEmail="getDissolutionCustodianEmail"
-        :completingPartyEmail="getUserEmail"
-        :documentOptionalEmail="getDocumentDelivery.documentOptionalEmail"
-        @update:optionalEmail="setDocumentOptionalEmail($event)"
-        @valid="setDocumentOptionalEmailValidity($event)"
-      />
+
+      <v-card flat class="mt-6">
+        <DocumentDelivery
+          class="py-8 px-6"
+          :class="{ 'invalid-section': isDocumentDeliveryInvalid }"
+          :editableCompletingParty="isRoleStaff"
+          :showCustodianEmail="true"
+          :invalidSection="isDocumentDeliveryInvalid"
+          :registeredOfficeEmail="getBusinessContact.email"
+          :custodianEmail="getDissolutionCustodianEmail"
+          :completingPartyEmail="getUserEmail"
+          :documentOptionalEmail="getDocumentDelivery.documentOptionalEmail"
+          @update:optionalEmail="setDocumentOptionalEmail($event)"
+          @valid="setDocumentOptionalEmailValidity($event)"
+        />
+      </v-card>
     </section>
 
-    <!-- Folio or Reference Number -->
+    <!-- Transactional Folio Number -->
     <section id="folio-number-section" class="mt-10" v-if="isPremiumAccount">
       <header>
         <h2>Folio or Reference Number for this Filing</h2>
-        <p class="mt-4 mb-6">
+        <p class="mt-4">
           Enter the folio or reference number you want to use for this filing for your own tracking
           purposes. The Business Folio or Reference Number is displayed below (if available).
           Entering a different value below will not change the Business Folio or Reference Number.
           Only the number below will appear on the transaction report and receipt for this filing.
         </p>
       </header>
-      <TransactionalFolioNumber
-        :accountFolioNumber="getFolioNumber"
-        :transactionalFolioNumber="getTransactionalFolioNumber"
-        :doValidate="getValidateSteps"
-        @change="setTransactionalFolioNumber($event)"
-        @valid="setTransactionalFolioNumberValidity($event)"
-      />
+
+      <v-card flat class="mt-6">
+        <TransactionalFolioNumber
+          class="py-8 px-6"
+          :accountFolioNumber="getFolioNumber"
+          :transactionalFolioNumber="getTransactionalFolioNumber"
+          :doValidate="getValidateSteps"
+          @change="setTransactionalFolioNumber($event)"
+          @valid="setTransactionalFolioNumberValidity($event)"
+        />
+      </v-card>
     </section>
 
     <!-- Certify -->
     <section id="certify-section" class="mt-10">
       <header>
         <h2>Certify</h2>
-        <p class="mt-4 mb-6">
+        <p class="mt-4">
           Confirm the legal name of the person authorized to complete and submit this dissolution.
         </p>
       </header>
-      <Certify
-        :class="{ 'invalid-section': isCertifyInvalid }"
-        :currentDate="getCurrentDate"
-        :certifiedBy="getCertifyState.certifiedBy"
-        :entityDisplay="getCompletingPartyStatement.entityDisplay"
-        :isCertified="getCertifyState.valid"
-        :statements="getCompletingPartyStatement.certifyStatements"
-        :message="getCompletingPartyStatement.certifyClause"
-        :isStaff="isRoleStaff"
-        :firstColumn="3"
-        :secondColumn="9"
-        :invalidSection="isCertifyInvalid"
-        :disableEdit="!isRoleStaff"
-        @update:certifiedBy="onCertifiedBy($event)"
-        @update:isCertified="onIsCertified($event)"
-      />
+
+      <v-card flat class="mt-6">
+        <Certify
+          class="py-8 px-6"
+          :class="{ 'invalid-section': isCertifyInvalid }"
+          :disableEdit="!isRoleStaff"
+          :invalidSection="isCertifyInvalid"
+          :isStaff="isRoleStaff"
+        />
+      </v-card>
     </section>
 
     <!-- Court Order and Plan of Arrangement -->
     <section id="court-order-poa-section" class="mt-10" v-if="isRoleStaff">
       <header>
         <h2>Court Order and Plan of Arrangement</h2>
-        <p class="mt-4 mb-6">
+        <p class="mt-4">
           If this filing is pursuant to a court order, enter the court order number. If this
           filing is pursuant to a plan of arrangement, enter the court order number and select
           Plan of Arrangement.
         </p>
       </header>
-      <CourtOrderPoa
-        id="court-order"
-        :class="{ 'invalid-section': isCourtOrderInvalid }"
-        :autoValidation="getValidateSteps"
-        :draftCourtOrderNumber="getCourtOrderStep.courtOrder.fileNumber"
-        :hasDraftPlanOfArrangement="getCourtOrderStep.courtOrder.hasPlanOfArrangement"
-        :courtOrderNumberRequired="true"
-        :invalidSection="isCourtOrderInvalid"
-        @emitCourtNumber="setCourtOrderFileNumber($event)"
-        @emitPoa="setHasPlanOfArrangement($event)"
-        @emitValid="setCourtOrderValidity($event)"
-      />
+
+      <v-card flat class="mt-6">
+        <CourtOrderPoa
+          class="py-8 px-6"
+          :class="{ 'invalid-section': isCourtOrderInvalid }"
+          :autoValidation="getValidateSteps"
+          :draftCourtOrderNumber="getCourtOrderStep.courtOrder.fileNumber"
+          :hasDraftPlanOfArrangement="getCourtOrderStep.courtOrder.hasPlanOfArrangement"
+          :courtOrderNumberRequired="true"
+          :invalidSection="isCourtOrderInvalid"
+          @emitCourtNumber="setCourtOrderFileNumber($event)"
+          @emitPoa="setHasPlanOfArrangement($event)"
+          @emitValid="setCourtOrderValidity($event)"
+        />
+      </v-card>
     </section>
 
     <!-- Staff Payment -->
     <section id="staff-payment-section" class="mt-10" v-if="isRoleStaff">
       <header>
         <h2>Staff Payment</h2>
-        <p class="mt-4 mb-6"></p>
+        <p class="mt-4"></p>
       </header>
-      <StaffPayment />
+
+      <v-card flat class="mt-6">
+        <StaffPayment class="py-8 px-6" />
+      </v-card>
     </section>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Vue } from 'vue-property-decorator'
+import { Component, Mixins } from 'vue-property-decorator'
 import { Getter, Action } from 'vuex-class'
 import { DateMixin } from '@/mixins'
 import AssociationDetails from '@/components/Dissolution/AssociationDetails.vue'
-import { Certify } from '@bcrs-shared-components/certify'
+import Certify from '@/components/common/Certify.vue'
 import CompleteResolutionSummary from '@/components/Dissolution/CompleteResolutionSummary.vue'
 import { CourtOrderPoa } from '@bcrs-shared-components/court-order-poa'
 import CustodianOfRecords from '@/components/Dissolution/CustodianOfRecords.vue'
@@ -297,7 +290,6 @@ import {
   ActionBindingIF,
   BusinessContactIF,
   CertifyIF,
-  CertifyStatementIF,
   CourtOrderStepIF,
   CreateResolutionIF,
   CreateResolutionResourceIF,
@@ -327,9 +319,7 @@ export default class DissolutionReviewConfirm extends Mixins(DateMixin) {
   @Getter getAffidavitStep!: UploadAffidavitIF
   @Getter getBusinessContact!: BusinessContactIF
   @Getter getCertifyState!: CertifyIF
-  @Getter getCompletingPartyStatement!: CertifyStatementIF
   @Getter getCourtOrderStep!: CourtOrderStepIF
-  @Getter getCurrentDate!: string
   @Getter getDissolutionCustodianEmail!: string
   @Getter getDocumentDelivery!: DocumentDeliveryIF
   @Getter getEffectiveDateTime!: EffectiveDateTimeIF
@@ -346,6 +336,7 @@ export default class DissolutionReviewConfirm extends Mixins(DateMixin) {
   @Getter isTypeCoop!: boolean
   @Getter getFolioNumber!: string
   @Getter getTransactionalFolioNumber!: string
+  @Getter getShowErrors!: boolean
 
   // Global actions
   @Action setEffectiveDateTimeValid!: ActionBindingIF
@@ -362,6 +353,9 @@ export default class DissolutionReviewConfirm extends Mixins(DateMixin) {
 
   // Enum for template
   readonly RouteNames = RouteNames
+
+  // local variables
+  isDissolutionCustodianValid = false
 
   /** Is true when the Dissolution Date and Time section is invalid. */
   get isDissolutionDateTimeInvalid (): boolean {
@@ -400,28 +394,8 @@ export default class DissolutionReviewConfirm extends Mixins(DateMixin) {
   }
 
   /** Is true when the certify conditions are not met. */
-  private get isCertifyInvalid () {
-    return this.getValidateSteps && (!this.getCertifyState.certifiedBy || !this.getCertifyState.valid)
-  }
-
-  /** Handler for Valid change event. */
-  private onIsCertified (val: boolean): void {
-    this.setCertifyState(
-      {
-        valid: val,
-        certifiedBy: this.getCertifyState.certifiedBy
-      }
-    )
-  }
-
-  /** Handler for CertifiedBy change event. */
-  private onCertifiedBy (val: string): void {
-    this.setCertifyState(
-      {
-        valid: this.getCertifyState.valid,
-        certifiedBy: val
-      }
-    )
+  get isCertifyInvalid (): boolean {
+    return this.getValidateSteps && !(this.getCertifyState.certifiedBy && this.getCertifyState.valid)
   }
 }
 </script>
@@ -440,29 +414,22 @@ h2::before {
   content: counter(header-counter) '. ';
 }
 
-#dissolution-summary .v-divider {
-  background-color: $gray1;
-}
-
-::v-deep .section-container {
-  padding: 1.5rem 1.5rem;
-}
-
-::v-deep .review-header {
+.review-header {
   display: flex; // to align icons
   background-color: $BCgovBlue5O;
   padding: 1.25rem;
   color: $gray9;
 }
 
+.v-icon.mdi-check,
 .v-icon.mdi-information-outline {
   margin-top: -2px;
-  margin-right: 4px;
 }
 
 .container {
   padding: 2rem;
   background-color: $gray1;
+  color: $gray9;
 
   &.invalid {
     border-left: 3px solid $BCgovInputError;
@@ -491,21 +458,6 @@ h2::before {
   color: $gray7;
 }
 
-// FUTURE: this should be under court-order-poa-section below
-::v-deep #court-order {
-  .row {
-    .col-9 {
-      padding-left: 1rem !important;
-    }
-  }
-
-  #court-order-label, #poa-label {
-    font-size: $px-16;
-    font-weight: bold;
-    color: $gray9;
-  }
-}
-
 .upload-success-message {
   color: $gray7;
 
@@ -517,108 +469,6 @@ h2::before {
   #file-name-col {
     margin-top: 2px;
     margin-left: -46px;
-  }
-}
-
-// styles common to the sections
-::v-deep #document-delivery-section,
-::v-deep #folio-number-section,
-::v-deep #certify-section,
-::v-deep #court-order-poa-section,
-::v-deep #staff-payment-section {
-  .v-card {
-    padding: 1.5rem 1.25rem !important;
-  }
-
-  .row {
-    padding: 0.75rem 0;
-
-    .col-3 {
-      font-size: $px-16;
-      color: $gray9;
-      padding: 0 0 0 0.75rem !important;
-    }
-
-    .col-9 {
-      padding: 0 0.5rem 0 0 !important;
-    }
-  }
-}
-
-// styles specific to certify section
-::v-deep #certify-section {
-  .v-card {
-    margin-top: 0 !important;
-  }
-
-  .v-form {
-    margin-top: 0 !important;
-  }
-
-  .container {
-    padding: 0 !important;
-  }
-
-  .v-input--checkbox .v-input__slot {
-    align-items: flex-start;
-  }
-
-  .row {
-    padding: 0.75rem 0 !important;
-  }
-
-  // bring the main label down a bit to line up with text-field
-  .row:first-of-type .col:first-of-type {
-    padding-top: 8px !important;
-  }
-
-  .v-input--checkbox {
-    margin-top: 0 !important;
-    padding-top: 0 !important;
-  }
-
-  .certify-clause:last-of-type {
-    margin-bottom: 0 !important;
-  }
-}
-
-// styles specific to court order poa section
-::v-deep #court-order-poa-section {
-  .v-card {
-    margin-top: 0 !important;
-  }
-
-  .row {
-    margin-top: 0 !important;
-  }
-
-  .v-input--checkbox {
-    margin-top: 0 !important;
-    padding-top: 0 !important;
-  }
-}
-
-// styles specific to staff payment section
-::v-deep #staff-payment-section {
-  .v-card {
-    margin-top: 0 !important;
-    border-radius: 4px !important;
-  }
-
-  .v-input__slot {
-    margin-bottom: 0 !important;
-  }
-
-  .v-input--checkbox {
-    margin-top: 0 !important;
-
-    .v-messages {
-      margin-bottom: -14px !important;
-    }
-  }
-
-  .v-messages__message {
-    padding-top: .5rem !important;
   }
 }
 </style>

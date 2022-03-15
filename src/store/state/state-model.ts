@@ -5,7 +5,7 @@ import {
   EmptyFees,
   EmptyNameRequest,
   EmptyOfficer,
-  EmptyRegistrationNaics,
+  EmptyNaics,
   EmptyRegistrationNameRequest,
   StateModelIF
 } from '@/interfaces'
@@ -170,7 +170,7 @@ export const stateModel: StateModelIF = {
     startDate: '',
     businessAddress: null,
     feeAcknowledgement: false,
-    naics: { ...EmptyRegistrationNaics },
+    naics: { ...EmptyNaics },
     nameRequest: { ...EmptyRegistrationNameRequest }
   }
 }

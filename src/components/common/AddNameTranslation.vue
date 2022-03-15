@@ -18,17 +18,20 @@
         <v-col class="form__btns pt-0">
           <v-btn large color="error" id="btn-remove"
             :disabled="!editNameTranslation"
-            @click="removeTranslation">
-              Remove
+            @click="removeTranslation()"
+          >
+            Remove
           </v-btn>
           <v-btn large color="primary" id="btn-done" class="form-primary-btn"
             :disabled="!nameTranslationForm"
-            @click="addTranslation">
-              Done
+            @click="addTranslation()"
+          >
+            Done
           </v-btn>
-          <v-btn large class="form-cancel-btn" id="btn-cancel"
-            @click="cancelTranslation">
-              Cancel
+          <v-btn large id="btn-cancel" class="form-cancel-btn"
+            @click="cancelTranslation()"
+          >
+            Cancel
           </v-btn>
         </v-col>
       </v-row>

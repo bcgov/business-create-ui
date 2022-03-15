@@ -68,22 +68,6 @@ describe(`Dissolution Statement component for a Cooperative Association`, () => 
     expect(wrapper.find('.dissolution-summary-description').text()).toBeDefined()
   })
 
-  it('Displays the error line in view if no dissolution statement type is selected', () => {
-    wrapper = wrapperFactory(
-      DissolutionStatement,
-      {
-        showErrorSummary: true
-      },
-      {
-        entityType: CorpTypeCd.COOP
-      },
-      null,
-      DissolutionResources
-    )
-
-    expect(wrapper.find(summaryErrorSelector)).toBeDefined()
-  })
-
   it('Updates the store correctly if a dissolution statement type is selected', async () => {
     wrapper = wrapperFactory(
       DissolutionStatement,

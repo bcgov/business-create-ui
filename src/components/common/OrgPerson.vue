@@ -150,9 +150,11 @@
                 <div class="form__row" v-if="isDirector">
                   <v-checkbox
                     class="inherit-checkbox"
+                    hide-details
                     label="Delivery Address same as Mailing Address"
                     v-model="inheritMailingAddress"
                   />
+
                   <template v-if="!inheritMailingAddress">
                     <div class="font-weight-bold mt-4">Delivery Address</div>
                     <BaseAddress
@@ -565,7 +567,7 @@ p {
 }
 
 li {
-  list-style: None;
+  list-style: none;
   padding-top: 0.25rem;
 }
 
@@ -638,13 +640,6 @@ li {
   line-height: 1.5rem;
 }
 
-.name-header {
-  font-size: $px-16;
-  font-weight: bold;
-  line-height: 1.5rem;
-  padding-bottom: 0.5rem;
-}
-
 @media (min-width: 768px) {
   .meta-container {
     flex-flow: row nowrap;
@@ -659,5 +654,11 @@ li {
 
 .gray-card {
   background-color: rgba(0, 0, 0, 0.06);
+}
+
+.inherit-checkbox {
+  margin-top: 0;
+  padding-top: 0;
+  margin-left: -3px;
 }
 </style>

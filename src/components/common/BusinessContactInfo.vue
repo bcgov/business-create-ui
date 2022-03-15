@@ -1,32 +1,14 @@
 <template>
   <div id="business-contact-info">
-    <v-row no-gutters v-if="!isEditing">
-      <v-col cols="12" sm="3" class="pr-4">
-        <label v-if="isIncorporationFiling">Registered Office Contact Information</label>
-        <label v-else>Business Contact Information</label>
-      </v-col>
-
-      <v-col cols="12" sm="4" class="pr-4">
-        <label class="email-header">Email Address</label>
-        <div id="lbl-email">{{ !!contact.email ? contact.email : '(Not entered)' }}</div>
-      </v-col>
-
-      <v-col cols="12" sm="4" class="pr-4">
-        <label class="phone-header">Phone Number</label>
-        <div id="lbl-phone" v-if="!!contact.phone">{{ contact.phone }}
-          <span v-if="!!contact.extension">Ext: {{ contact.extension }}</span>
-        </div>
-        <div id="lbl-phone" v-else>(Not entered)</div>
-      </v-col>
-    </v-row>
-
-    <v-card flat class="step-container section-container" v-else>
-      <v-form v-model="formValid" ref="form" id="business-contact-form">
-        <v-row no-gutters>
-          <v-col cols="2">
-            <label>Email Address</label>
+    <!-- EDIT SECTION -->
+    <template v-if="isEditing">
+      <v-form v-model="formValid" ref="form">
+        <v-row no-gutters class="edit-section">
+          <!-- Email Address -->
+          <v-col cols="12" sm="3" class="pr-4 pb-4">
+            <label class="title-label">Email Address</label>
           </v-col>
-          <v-col cols="10" class="pl-8">
+          <v-col cols="12" sm="9">
             <v-text-field
               filled
               label="Email Address"
@@ -37,12 +19,12 @@
               id="txt-email"
             />
           </v-col>
-        </v-row>
-        <v-row no-gutters>
-          <v-col cols="2">
-            <label>Confirm Email</label>
+
+          <!-- Confirm Email -->
+          <v-col cols="12" sm="3" class="pr-4 pb-4">
+            <label class="title-label">Confirm Email</label>
           </v-col>
-          <v-col cols="10" class="pl-8">
+          <v-col cols="12" sm="9">
             <v-text-field
               filled
               label="Confirm Email Address"
@@ -53,12 +35,12 @@
               id="txt-confirm-email"
             />
           </v-col>
-        </v-row>
-        <v-row no-gutters>
-          <v-col cols="2">
-            <label>Phone Number</label>
+
+          <!-- Phone Number -->
+          <v-col cols="12" sm="3" class="pr-4 pb-4">
+            <label class="title-label">Phone Number</label>
           </v-col>
-          <v-col cols="5" class="pl-8">
+          <v-col cols="6" sm="4" class="pr-2">
             <v-text-field
               filled
               label="Phone Number"
@@ -71,7 +53,7 @@
               id="txt-phone"
             />
           </v-col>
-          <v-col cols="5" class="pl-5">
+          <v-col cols="6" sm="4" class="pl-2">
             <v-text-field
               filled
               label="Extension (Optional)"
@@ -84,7 +66,30 @@
           </v-col>
         </v-row>
       </v-form>
-    </v-card>
+    </template>
+
+    <!-- SUMMARY SECTION -->
+    <template v-else>
+      <v-row no-gutters class="summary-section">
+        <v-col cols="12" sm="3" class="pr-4">
+          <label v-if="isIncorporationFiling">Registered Office Contact Information</label>
+          <label v-else>Business Contact Information</label>
+        </v-col>
+
+        <v-col cols="12" sm="4" class="pr-4">
+          <label class="email-header">Email Address</label>
+          <div id="lbl-email">{{ !!contact.email ? contact.email : '(Not entered)' }}</div>
+        </v-col>
+
+        <v-col cols="12" sm="4" class="pr-4">
+          <label class="phone-header">Phone Number</label>
+          <div id="lbl-phone" v-if="!!contact.phone">{{ contact.phone }}
+            <span v-if="!!contact.extension">Ext: {{ contact.extension }}</span>
+          </div>
+          <div id="lbl-phone" v-else>(Not entered)</div>
+        </v-col>
+      </v-row>
+    </template>
   </div>
 </template>
 
@@ -166,6 +171,18 @@ export default class BusinessContactInfo extends Mixins(CommonMixin) {
 
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
+
+.edit-section {
+  font-size: $px-16;
+  color: $gray7;
+}
+
+.title-label,
+.item-label,
+.summary-section-title {
+  font-weight: bold;
+  color: $gray9;
+}
 
 .email-header,
 .phone-header {

@@ -82,7 +82,7 @@ describe('FileUploadPreview component', () => {
     expect(wrapper.find('.file-upload-preview').exists()).toBe(true)
     expect(wrapper.find('.file-upload-preview input[type="file"]').exists()).toBe(true)
     expect(wrapper.find('.file-upload-preview button').exists()).toBe(true)
-    expect(wrapper.find('.v-messages__message').text()).toEqual('File must be a PDF.  Maximum 30MB.')
+    expect(wrapper.find('.v-messages__message').text()).toEqual('File must be a PDF. Maximum 30MB.')
     wrapper.destroy()
   })
 

@@ -163,7 +163,7 @@ describe('List Shares and Series component', () => {
     expect(wrapper.vm.$props.shareClasses[0].series[1].name).toBe('Share Series 2')
 
     // Identify and click the dropdown menu
-    const dropDownMenu = wrapper.find('.actions__more-actions__btn')
+    const dropDownMenu = wrapper.find('.more-actions-btn')
     await dropDownMenu.trigger('click')
 
     expect(wrapper.find('.move-up-selector').exists()).toBe(true)

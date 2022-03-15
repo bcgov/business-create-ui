@@ -1,14 +1,15 @@
 <template>
-  <v-card flat class="rounded-4 py-2">
+  <div id="association-details">
     <div class="section-container">
+      <!-- Entity Name, etc -->
       <v-row no-gutters>
         <v-col cols="12" sm="3" class="pr-4">
           <label v-if="isTypeCoop">Cooperative Association</label>
           <label v-else>Company</label>
         </v-col>
 
-        <v-col cols="12" sm="9" class="pr-4">
-          <div class="company-name">{{ entityName }}</div>
+        <v-col cols="12" sm="9" class="mt-n1">
+          <label class="company-name">{{ entityName }}</label>
           <div class="my-1">
             <span>{{ entityDescription }}</span>
           </div>
@@ -19,8 +20,9 @@
       </v-row>
     </div>
 
-    <v-divider class="mx-8" />
+    <v-divider class="mx-6" />
 
+    <!-- Address -->
     <div class="section-container">
       <v-row no-gutters>
         <v-col cols="12" sm="3" class="pr-4">
@@ -38,7 +40,7 @@
         </v-col>
 
         <v-col cols="12" sm="4" class="pr-4">
-          <label class="mailing-address-header">Delivery Address</label>
+          <label class="delivery-address-header">Delivery Address</label>
           <DeliveryAddress
             v-if="!isEmptyAddress(getBusiness.officeAddress.deliveryAddress) &&
              !isSame(getBusiness.officeAddress.mailingAddress, getBusiness.officeAddress.deliveryAddress)"
@@ -51,22 +53,26 @@
       </v-row>
     </div>
 
-    <v-divider class="mx-8" v-if="isPremiumAccount" />
+    <!-- Folio Number -->
+    <template v-if="isPremiumAccount">
+      <v-divider class="mx-6" />
 
-    <div v-if="isPremiumAccount" id="folio-number" class="section-container">
-      <v-row no-gutters>
-        <v-col cols="12" sm="3" class="pr-4">
-          <label>Folio or Reference Number</label>
-        </v-col>
+      <div class="section-container">
+        <v-row no-gutters>
+          <v-col cols="12" sm="3" class="pr-4">
+            <label>Folio or Reference Number</label>
+          </v-col>
 
-        <v-col cols="12" sm="9" class="pr-4">
-          <div id="lbl-folio-number">{{ getFolioNumber || '(Not entered)' }}</div>
-        </v-col>
-      </v-row>
-    </div>
+          <v-col cols="12" sm="9">
+            <div id="lbl-folio-number">{{ getFolioNumber || '(Not entered)' }}</div>
+          </v-col>
+        </v-row>
+      </div>
+    </template>
 
-    <v-divider class="mx-8" />
+    <v-divider class="mx-6" />
 
+    <!-- Contact Info -->
     <div class="section-container">
       <ContactInfo
         :businessContact="getBusinessContact"
@@ -76,7 +82,7 @@
         @contactInfoChange="onContactInfoChange($event)"
       />
     </div>
-  </v-card>
+  </div>
 </template>
 
 <script lang="ts">
@@ -151,22 +157,12 @@ export default class AssociationDetails extends Mixins(CommonMixin, EnumMixin) {
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
 
-.section-container {
-  padding: 2rem 1.5rem;
-
-  .mailing-address-header {
-    font-size: $px-14;
-  }
-
-  ::v-deep .subtitle {
-    font-size: $px-14;
-    font-weight: bold;
-  }
+.mailing-address-header,
+.delivery-address-header {
+  font-size: $px-14;
 }
 
 .company-name {
   font-size: $px-22;
-  font-weight: bold;
-  color:$gray9
 }
 </style>

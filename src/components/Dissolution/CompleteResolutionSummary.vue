@@ -1,57 +1,55 @@
 <template>
-  <v-card flat id="resolution-summary" class="mt-10">
-    <header class="review-header rounded-t">
-      <v-icon class="ml-2" color="appDkBlue">mdi-handshake</v-icon>
-      <label class="font-weight-bold pl-2">{{getCreateResolutionResource.reviewConfirmHeader}}</label>
-    </header>
+  <div>
     <section v-if="isBaseCompany && this.getCreateResolutionStep.validationDetail.valid"
-             class="section-container upload-success-message"
+      class="section-container upload-success-message"
     >
       <v-row no-gutters>
-        <v-col md="auto" class="mr-3">
-          <v-icon class="upload-success-chk" color="successCheckmark">mdi-check</v-icon>
+        <v-col cols="1">
+          <v-icon color="successCheckmark">mdi-check</v-icon>
         </v-col>
-        <v-col md="11" id="file-name-col">
+        <v-col cols="11" id="file-name-col">
           <span>The resolution was completed and deposited in the Company's records book.</span>
         </v-col>
       </v-row>
     </section>
 
     <section v-if="allResolutionValidationItemsInvalid"
-             class="section-container invalid-section rounded-bl-0"
+      class="section-container invalid-section"
     >
+      <v-icon color="error">mdi-information-outline</v-icon>
+      <span class="error-text mx-1">This step is unfinished.</span>
+      <router-link
+        :to="{ path: `/${RouteNames.DISSOLUTION_RESOLUTION}` }"
+      >Return to this step to finish it</router-link>
+    </section>
+
+    <section v-if="isTypeCoop && !allResolutionValidationItemsInvalid"
+      id="resolution-summary-section-3"
+      class="section-container"
+      :class="{ 'invalid-section': !getCreateResolutionStep.validationDetail.valid }"
+    >
+      <div v-if="!getCreateResolutionStep.validationDetail.valid" class="pb-6">
         <v-icon color="error">mdi-information-outline</v-icon>
-        <span class="error-text ml-1 mr-2">This step is unfinished.</span>
+        <span class="error-text mx-1">This step is unfinished.</span>
         <router-link
           :to="{ path: `/${RouteNames.DISSOLUTION_RESOLUTION}` }"
         >Return to this step to finish it</router-link>
-    </section>
+      </div>
 
-    <section id="resolution-summary-section-3"
-             v-if="isTypeCoop && !allResolutionValidationItemsInvalid"
-             class="section-container rounded-bl-0"
-             :class="{ 'invalid-section': !getCreateResolutionStep.validationDetail.valid }"
-    >
-        <v-container v-if="!getCreateResolutionStep.validationDetail.valid" class="pl-0 pb-5">
-          <v-icon color="error">mdi-information-outline</v-icon>
-          <span class="error-text ml-1 mr-2">This step is unfinished.</span>
-          <router-link
-            :to="{ path: `/${RouteNames.DISSOLUTION_RESOLUTION}` }"
-          >Return to this step to finish it</router-link>
-        </v-container>
-      <v-row class="ml-1 mt-3" no-gutters>
-        <v-col md="3">
+      <v-row no-gutters>
+        <v-col cols="12" sm="3" class="pr-4">
           <label class="font-weight-bold">Resolution Date</label>
         </v-col>
-        <v-col md="9" class="ml-n1">
+        <v-col cols="12" sm="9">
           {{resolutionDate}}
         </v-col>
       </v-row>
-      <v-row class="ml-1 mt-5" no-gutters>
-        <v-col md="3">
+
+      <v-row class="mt-5" no-gutters>
+        <v-col cols="12" sm="3" class="pr-4">
           <label class="font-weight-bold">Resolution Text</label>
         </v-col>
-        <v-col md="9" class="ml-n1">
+        <v-col cols="12" sm="9">
           <v-textarea
             ref="resolutionTextRef"
             id="resolution-text"
@@ -59,43 +57,47 @@
             auto-grow
             readonly
             filled
+            hide-details
             background-color="white"
             v-model="resolutionText"
             v-observe-visibility="{ callback: onResolutionVisibilityChanged}"
           />
         </v-col>
       </v-row>
-      <v-row class="ml-1 mt-n1" no-gutters>
-        <v-col md="3">
+
+      <v-row class="mt-3" no-gutters>
+        <v-col cols="12" sm="3" class="pr-4">
           <label class="font-weight-bold">Signing Party</label>
         </v-col>
-        <v-col md="9" class="ml-n1">
+        <v-col cols="12" sm="9">
           {{signingParty}}
         </v-col>
       </v-row>
-      <v-row class="ml-1 mt-5" no-gutters>
-        <v-col md="3">
+
+      <v-row class="mt-5" no-gutters>
+        <v-col cols="12" sm="3" class="pr-4">
           <label class="font-weight-bold">Date Signed</label>
         </v-col>
-        <v-col md="9" class="ml-n1">
+        <v-col cols="12" sm="9">
           {{signingDate}}
         </v-col>
       </v-row>
-      <v-row v-if="getCreateResolutionStep.resolutionConfirmed" class="ml-1 mt-5" no-gutters>
-        <v-col md="auto" class="mr-2">
-          <v-icon class="upload-success-chk" color="successCheckmark">mdi-check</v-icon>
+
+      <v-row v-if="getCreateResolutionStep.resolutionConfirmed" class="mt-5" no-gutters>
+        <v-col cols="1">
+          <v-icon color="successCheckmark">mdi-check</v-icon>
         </v-col>
-        <v-col md="11" id="file-name-col">
+        <v-col cols="11" id="file-name-col">
           <span>{{ getCreateResolutionResource.confirmSection.reviewSummaryText }}</span>
         </v-col>
       </v-row>
     </section>
-  </v-card>
+  </div>
 </template>
 
 <script lang="ts">
 // Libraries
-import { Component, Mixins, Vue, Watch } from 'vue-property-decorator'
+import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 import { DateMixin } from '@/mixins'
 
@@ -190,7 +192,7 @@ export default class CompleteResolutionSummary extends Mixins(DateMixin) {
 #resolution-summary-section-3 {
   // removes dotted line bottom border on text area
   ::v-deep .v-text-field.v-input--is-readonly .v-input__slot:before {
-    border-style: None !important;
+    border-style: none !important;
   }
 
   // remove extra bottom and top margins from text area
@@ -236,10 +238,10 @@ export default class CompleteResolutionSummary extends Mixins(DateMixin) {
     margin-top: 0px !important;
     color: $gray7 !important;
   }
-
-  .section-container {
-    padding-bottom: 2rem !important;
-  }
 }
 
+.v-icon.mdi-information-outline,
+.v-icon.mdi-check {
+  margin-top: -2px;
+}
 </style>

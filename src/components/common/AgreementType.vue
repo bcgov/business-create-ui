@@ -1,39 +1,28 @@
 <template>
-  <v-card flat id="agreement-summary review-header" class="rounded-0">
-    <div class="mt-4" v-if="isSummary">
-      <!-- Summary Header -->
-      <div class="agreement-summary-header">
-        <v-icon color="appDkBlue">mdi-handshake</v-icon>
-        <label class="agreement-summary-title">
-          <strong>Incorporation Agreement and {{getEntityDescription}} Articles</strong>
-        </label>
-      </div>
-
+  <div id="agreement-summary">
+    <!-- SUMMARY SECTION -->
+    <template v-if="isSummary">
       <!-- Summary Warning -->
-      <div
-        v-if="showErrorSummary"
-        class="agreement-invalid-message invalid-section"
-      >
+      <section v-if="showErrorSummary" class="agreement-invalid-message invalid-section">
         <span>
           <v-icon color="error">mdi-information-outline</v-icon>
-          &nbsp;
-          <span class="error-text">This step is unfinished.</span>
-          &nbsp;
+          <span class="error-text mx-1">This step is unfinished.</span>
           <router-link
             id="router-link"
             :to="{ path: `/${RouteNames.INCORPORATION_AGREEMENT}` }"
           >Return to this step to finish it</router-link>
         </span>
-      </div>
+      </section>
 
       <!-- Summary Content -->
       <div v-else class="summary-desc">
-        <div><v-icon color="green darken-2" class="agreement-valid-icon">mdi-check</v-icon></div>
-          <div v-html="agreementTypeDescription"></div>
+        <v-icon color="green darken-2" class="agreement-valid-icon">mdi-check</v-icon>
+        <div v-html="agreementTypeDescription"></div>
       </div>
-    </div>
+    </template>
 
-    <div v-else-if="isTypeCCC">
+    <!-- EDIT SECTION -->
+    <template v-else-if="isTypeBcCcc">
       <v-checkbox
         v-for="(item, index) in getIncorporationAgreementDocuments"
         :id="`agreement-type-${item.code}`"
@@ -47,31 +36,39 @@
           <div v-html="item.description" class="agreement-option" />
         </template>
       </v-checkbox>
-    </div>
+    </template>
 
-    <div v-else :class="{ 'invalid-section': showErrorSummary }">
-      <v-radio-group v-model="agreementType" @change="changeAgreementType" class="agreement-option-list">
-        <v-radio v-for="(item, index) in getIncorporationAgreementDocuments"
-                  :key="index" :value="item.code" :id="`agreement-type-${item.code}`"
+    <!-- EDIT SECTION -->
+    <div class="py-8 px-6" v-else :class="{ 'invalid-section': showErrorSummary }">
+      <v-radio-group
+        class="mt-0 pt-0"
+        hide-details
+        v-model="agreementType"
+        @change="changeAgreementType"
+      >
+        <v-radio
+          v-for="(item, index) in getIncorporationAgreementDocuments"
+          :key="index"
+          :value="item.code"
+          :id="`agreement-type-${item.code}`"
         >
           <template slot="label">
-            <div v-html="item.description" class="agreement-option" />
+            <div v-html="item.description" class="agreement-option ml-6" />
           </template>
         </v-radio>
       </v-radio-group>
     </div>
-  </v-card>
+  </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop, Mixins } from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import { ActionBindingIF, IncorporationAgreementIF, IncorporationAgreementTypeIF } from '@/interfaces'
-import { CorpTypeCd, RouteNames } from '@/enums'
-import { EnumMixin } from '@/mixins'
+import { RouteNames } from '@/enums'
 
 @Component
-export default class AgreementType extends Mixins(EnumMixin) {
+export default class AgreementType extends Vue {
   @Prop({ default: false })
   readonly showErrorSummary: boolean
 
@@ -79,8 +76,7 @@ export default class AgreementType extends Mixins(EnumMixin) {
   readonly isSummary: boolean
 
   @Getter getIncorporationAgreementDocuments!: Array<IncorporationAgreementTypeIF>
-  @Getter getEntityType!: CorpTypeCd
-  @Getter isTypeCCC!: boolean
+  @Getter isTypeBcCcc!: boolean
   @Getter getIncorporationAgreementStep!: IncorporationAgreementIF
 
   @Action setIncorporationAgreementStepData!: ActionBindingIF
@@ -89,11 +85,6 @@ export default class AgreementType extends Mixins(EnumMixin) {
 
   // Enum for template
   readonly RouteNames = RouteNames
-
-  /** The entity description,  */
-  private get getEntityDescription (): string {
-    return `${this.getCorpTypeDescription(this.getEntityType)}`
-  }
 
   /** The agreement type description. */
   private get agreementTypeDescription (): string {
@@ -125,16 +116,6 @@ export default class AgreementType extends Mixins(EnumMixin) {
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
 
-.agreement-summary-header {
-  display: flex;
-  background-color: $BCgovBlue5O;
-  padding: 1.25rem;
-
-  .agreement-summary-title {
-    padding-left: .5rem;
-  }
-}
-
 .agreement-invalid-message {
   padding: 1.25rem;
   color: $app-red;
@@ -151,13 +132,12 @@ export default class AgreementType extends Mixins(EnumMixin) {
   padding-right: 0.5rem;
 }
 
-.agreement-option-list {
-  padding: 1.5rem;
+.agreement-option {
+  color: $gray7;
 }
 
-.agreement-option {
-  padding-top: 1rem;
-  color: $gray7;
+.v-radio:not(:first-of-type) {
+  margin-top: 1rem;
 }
 
 .v-icon.mdi-information-outline {

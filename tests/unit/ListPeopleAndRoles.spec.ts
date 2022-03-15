@@ -72,7 +72,11 @@ describe('List People And Roles component', () => {
   })
 
   it('displays the correct amount of peoples / roles list when data is present', () => {
-    wrapper = shallowWrapperFactory(ListPeopleAndRoles, { personList: mockPersonList })
+    wrapper = shallowWrapperFactory(ListPeopleAndRoles,
+      null,
+      { addPeopleAndRoleStep: { orgPeople: mockPersonList } }
+    )
+
     const displayListCount = wrapper.vm.$el.querySelectorAll('.people-roles-content').length
 
     expect(displayListCount).toEqual(2)
@@ -80,7 +84,10 @@ describe('List People And Roles component', () => {
   })
 
   it('displays the correct name data in the peoples / roles list', () => {
-    wrapper = wrapperFactory(ListPeopleAndRoles, { personList: mockPersonList })
+    wrapper = wrapperFactory(ListPeopleAndRoles,
+      null,
+      { addPeopleAndRoleStep: { orgPeople: mockPersonList } }
+    )
 
     const peoplesListItem1 = wrapper.vm.$el.querySelectorAll('.people-roles-content')[0]
     const peoplesListItem2 = wrapper.vm.$el.querySelectorAll('.people-roles-content')[1]
@@ -94,7 +101,10 @@ describe('List People And Roles component', () => {
 
   it('displays the correct address data in the peoples / roles list', () => {
     // Mounting the Wrapper to allow for the test to reach into the baseAddress component to validate data
-    wrapper = wrapperFactory(ListPeopleAndRoles, { personList: mockPersonList })
+    wrapper = wrapperFactory(ListPeopleAndRoles,
+      null,
+      { addPeopleAndRoleStep: { orgPeople: mockPersonList } }
+    )
 
     const peoplesListItem1 = wrapper.vm.$el.querySelectorAll('.people-roles-content')[0]
     const peoplesListItem2 = wrapper.vm.$el.querySelectorAll('.people-roles-content')[1]
@@ -108,7 +118,10 @@ describe('List People And Roles component', () => {
 
   it('displays the `same as Mailing Address` text when mailing and delivery match', () => {
     // Mounting the Wrapper to allow for the test to reach into the baseAddress component to validate data
-    wrapper = wrapperFactory(ListPeopleAndRoles, { personList: mockPersonList })
+    wrapper = wrapperFactory(ListPeopleAndRoles,
+      null,
+      { addPeopleAndRoleStep: { orgPeople: mockPersonList } }
+    )
 
     const peoplesListItem = wrapper.vm.$el.querySelectorAll('.people-roles-content')[0]
 
@@ -122,7 +135,10 @@ describe('List People And Roles component', () => {
   it('displays the correct addresses text when mailing and delivery do NOT match', () => {
     mockPersonList[0].deliveryAddress.streetAddress = '123 Different rd'
     // Mounting the Wrapper to allow for the test to reach into the baseAddress component to validate data
-    wrapper = wrapperFactory(ListPeopleAndRoles, { personList: mockPersonList })
+    wrapper = wrapperFactory(ListPeopleAndRoles,
+      null,
+      { addPeopleAndRoleStep: { orgPeople: mockPersonList } }
+    )
 
     const peoplesListItem = wrapper.vm.$el.querySelectorAll('.people-roles-content')[0]
 
@@ -137,7 +153,11 @@ describe('List People And Roles component', () => {
   })
 
   it('displays the correct roles', () => {
-    wrapper = shallowWrapperFactory(ListPeopleAndRoles, { personList: mockPersonList })
+    wrapper = shallowWrapperFactory(ListPeopleAndRoles,
+      null,
+      { addPeopleAndRoleStep: { orgPeople: mockPersonList } }
+    )
+
     const peoplesListItem1 = wrapper.vm.$el.querySelectorAll('.people-roles-content')[0]
     const peoplesListItem2 = wrapper.vm.$el.querySelectorAll('.people-roles-content')[1]
 
@@ -150,7 +170,11 @@ describe('List People And Roles component', () => {
   })
 
   it('displays the actions menu when viewed not in summary view', () => {
-    wrapper = shallowWrapperFactory(ListPeopleAndRoles, { personList: mockPersonList })
+    wrapper = shallowWrapperFactory(ListPeopleAndRoles,
+      null,
+      { addPeopleAndRoleStep: { orgPeople: mockPersonList } }
+    )
+
     const peoplesListItem1 = wrapper.vm.$el.querySelectorAll('.people-roles-content')[0]
     const peoplesListItem2 = wrapper.vm.$el.querySelectorAll('.people-roles-content')[1]
 
@@ -159,7 +183,10 @@ describe('List People And Roles component', () => {
   })
 
   it('does NOT display the actions menu when viewed in summary view', () => {
-    wrapper = wrapperFactory(ListPeopleAndRoles, { personList: mockPersonList, isSummary: true })
+    wrapper = wrapperFactory(ListPeopleAndRoles,
+      { isSummary: true },
+      { addPeopleAndRoleStep: { orgPeople: mockPersonList } }
+    )
     const peoplesListItem1 = wrapper.vm.$el.querySelectorAll('.people-roles-content')[0]
     const peoplesListItem2 = wrapper.vm.$el.querySelectorAll('.people-roles-content')[1]
 
@@ -167,28 +194,14 @@ describe('List People And Roles component', () => {
     expect(peoplesListItem2.querySelector('.actions')).toBeNull()
   })
 
-  it('displays the Summary header when in summary view', () => {
-    wrapper = shallowWrapperFactory(ListPeopleAndRoles, { personList: mockPersonList, isSummary: true })
-
-    expect(wrapper.vm.$el.querySelector('.people-roles-summary-header').textContent)
-      .toContain('People and Roles')
-  })
-
-  it('does NOT display the Summary header when NOT in summary view', () => {
-    wrapper = shallowWrapperFactory(ListPeopleAndRoles, { personList: mockPersonList })
-
-    expect(wrapper.vm.$el.querySelector('.people-roles-summary-header')).toBeNull()
-  })
-
   it('displays invalid warning message when in summary view and step 2 data is invalid', () => {
     wrapper = shallowWrapperFactory(ListPeopleAndRoles,
       {
-        personList: mockPersonList,
-        showErrorSummary: true,
         isSummary: true
       },
       {
-        tombstone: { filingType: 'incorporationApplication' }
+        tombstone: { filingType: 'incorporationApplication' },
+        addPeopleAndRoleStep: { orgPeople: mockPersonList }
       }
     )
 
@@ -202,12 +215,11 @@ describe('List People And Roles component', () => {
   it('sends you to step 2 when the error message link is clicked', () => {
     wrapper = wrapperFactory(ListPeopleAndRoles,
       {
-        personList: mockPersonList,
-        showErrorSummary: true,
         isSummary: true
       },
       {
-        tombstone: { filingType: 'incorporationApplication' }
+        tombstone: { filingType: 'incorporationApplication' },
+        addPeopleAndRoleStep: { orgPeople: mockPersonList }
       }
     )
 

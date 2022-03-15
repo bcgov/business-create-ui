@@ -5,7 +5,7 @@ import {
   IncorporationAddressIF,
   NameTranslationIF,
   OrgPersonIF,
-  RegistrationNaicsIF,
+  NaicsIF,
   ShareClassIF,
   SpecialResolutionIF
 } from '@/interfaces'
@@ -90,7 +90,7 @@ export interface RegistrationFilingIF {
   registration: {
     business: {
       identifier: string
-      naics?: RegistrationNaicsIF
+      naics?: NaicsIF
     }
     businessAddress: BusinessAddressIF
     contactPoint: {

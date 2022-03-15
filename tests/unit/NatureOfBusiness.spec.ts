@@ -15,7 +15,13 @@ describe('Nature Of Business component', () => {
   beforeEach(() => {
     wrapper = shallowMount(
       NatureOfBusiness,
-      { store, vuetify, propsData: { showErrors: false } }
+      {
+        store,
+        vuetify,
+        propsData: {
+          showErrors: false
+        }
+      }
     )
   })
 
@@ -24,8 +30,14 @@ describe('Nature Of Business component', () => {
   })
 
   it('renders the component properly', () => {
-    expect(wrapper.find('#nature-of-business').exists()).toBe(true)
+    expect(wrapper.find('natureofbusinessshared-stub').exists()).toBe(true)
   })
 
-  // *** TODO: add more tests here
+  it('has valid local properties', () => {
+    const vm = wrapper.vm as any
+
+    expect(vm.showErrors).toBe(false)
+    expect(vm.getRegistration).toHaveProperty('naics')
+    expect(vm.NaicsServices).toBeInstanceOf(Function)
+  })
 })

@@ -72,13 +72,12 @@ describe('List Name Translation component', () => {
     expect(wrapper.find('.edit-action .v-btn').attributes('disabled')).toBeUndefined()
 
     // Verify more actions drop down
-    expect(wrapper.find('.actions__more-actions__btn').exists()).toBeTruthy()
-    wrapper.find('.actions__more-actions__btn').trigger('click')
-
+    expect(wrapper.find('.more-actions-btn').exists()).toBeTruthy()
+    wrapper.find('.more-actions-btn').trigger('click')
     await Vue.nextTick()
 
     // Verify 'Remove' btn
-    expect(wrapper.find('.actions__more-actions').exists()).toBeTruthy()
+    expect(wrapper.find('.more-actions-btn').exists()).toBeTruthy()
 
     wrapper.destroy()
   })
@@ -92,14 +91,14 @@ describe('List Name Translation component', () => {
     expect(wrapper.find('.edit-action .v-btn').attributes('disabled')).toBeTruthy()
 
     // Verify more actions drop down
-    expect(wrapper.find('.actions__more-actions__btn').exists()).toBeTruthy()
-    expect(wrapper.find('.actions__more-actions__btn').attributes('disabled')).toBeTruthy()
-    wrapper.find('.actions__more-actions__btn').trigger('click')
+    expect(wrapper.find('.more-actions-btn').exists()).toBeTruthy()
+    expect(wrapper.find('.more-actions-btn').attributes('disabled')).toBeTruthy()
 
+    wrapper.find('.more-actions-btn').trigger('click')
     await Vue.nextTick()
 
     // Verify 'Remove' btn
-    expect(wrapper.find('.actions__more-actions').exists()).toBeFalsy()
+    expect(wrapper.find('.more-actions-list').exists()).toBeFalsy()
 
     wrapper.destroy()
   })
@@ -138,13 +137,12 @@ describe('List Name Translation component', () => {
     expect(namesList[3].textContent).toContain(nameTranslationsList[3].name)
 
     // Open the first list item dropdown
-    const actionsDropdown = wrapper.findAll('.actions__more-actions__btn')
+    const actionsDropdown = wrapper.findAll('.more-actions-btn')
     actionsDropdown.at(0).trigger('click')
-
     await Vue.nextTick()
 
     // Select the first item for removal
-    const removeBtns = wrapper.findAll('.actions__more-actions .v-list-item')
+    const removeBtns = wrapper.findAll('.more-actions-list .v-list-item')
     expect(removeBtns.at(0).exists()).toBeTruthy()
     expect(removeBtns.at(0).attributes('disabled')).toBeUndefined()
     removeBtns.at(0).trigger('click')

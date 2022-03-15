@@ -1,31 +1,30 @@
 <template>
-  <v-card flat class="rounded-4" :class="{ 'invalid-section': getShowErrors && !dateText }">
-    <div class="section-container step-container">
-      <v-row no-gutters>
-        <v-col cols="12" md="2" lg="2">
-          <label>Start Date</label>
-        </v-col>
-        <v-col cols="12" md="10" lg="10" id="start-date-selector" class="pl-8">
-          <date-picker
-            id="date-picker"
-            ref="startDateRef"
-            title="Start Date"
-            :nudgeRight="40"
-            :nudgeTop="85"
-            :initialValue="getRegistration.startDate"
-            :minDate="startDateMinStr"
-            :maxDate="startDateMaxStr"
-            :inputRules="startDateRules"
-            @emitDateSync="startDateHandler($event)"
-          />
-        </v-col>
-      </v-row>
-    </div>
-  </v-card>
+  <div id="start-date">
+    <!-- EDIT SECTION -->
+    <v-row no-gutters>
+      <v-col cols="12" sm="3" class="pr-4 pb-4">
+        <label class="start-date-title title-label">Start Date</label>
+      </v-col>
+      <v-col cols="12" sm="9" id="start-date-selector">
+        <date-picker
+          id="date-picker"
+          ref="startDateRef"
+          title="Start Date"
+          :nudgeRight="40"
+          :nudgeTop="85"
+          :initialValue="getRegistration.startDate"
+          :minDate="startDateMinStr"
+          :maxDate="startDateMaxStr"
+          :inputRules="getShowErrors ? startDateRules : []"
+          @emitDateSync="startDateHandler($event)"
+        />
+      </v-col>
+    </v-row>
+  </div>
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Watch } from 'vue-property-decorator'
+import { Component, Emit, Mixins, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import { ActionBindingIF, RegistrationStateIF } from '@/interfaces'
 import { DatePicker } from '@bcrs-shared-components/date-picker'
@@ -80,33 +79,46 @@ export default class StartDate extends Mixins(DateMixin) {
 
   /** Validations rules for start date field. */
   get startDateRules (): Array<Function> {
-    // apply rules when app validations are triggered
-    if (this.getShowErrors) {
-      return [
-        (v: string) => !!v || 'Business start date is required',
-        (v: string) =>
-          RuleHelpers.DateRuleHelpers
-            .isBetweenDates(this.startDateMin,
-              this.startDateMax,
-              v) ||
-          `Date should be between ${this.dateToPacificDate(this.startDateMin, true)} and
-         ${this.dateToPacificDate(this.startDateMax, true)}`
-      ]
-    }
+    return [
+      (v: string) => !!v || 'Business start date is required',
+      (v: string) =>
+        RuleHelpers.DateRuleHelpers
+          .isBetweenDates(this.startDateMin,
+            this.startDateMax,
+            v) ||
+        `Date should be between ${this.dateToPacificDate(this.startDateMin, true)} and
+        ${this.dateToPacificDate(this.startDateMax, true)}`
+    ]
   }
 
   private startDateHandler (dateString: string): void {
     this.dateText = dateString
     this.setRegistrationStartDate(dateString)
+    this.emitValid()
   }
 
   @Watch('getShowErrors')
   validateForm (): void {
     (this.$refs.startDateRef as any).validateForm()
   }
+
+  @Emit('valid')
+  private emitValid (): boolean {
+    return !!this.dateText
+  }
 }
 </script>
 
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
+
+.start-date-title {
+  font-weight: bold;
+  color: $gray9;
+}
+
+// remove extra space taken by error message
+::v-deep .v-text-field__details {
+  margin-bottom: -8px !important;
+}
 </style>

@@ -1,17 +1,162 @@
 <template>
   <div id="office-addresses">
-    <!-- Address Summary -->
-    <template v-if="!isEditing">
+    <!-- EDIT SECTION -->
+    <template v-if="isEditing">
+      <!-- Registered Office -->
+      <v-row no-gutters class="address-edit-header">
+        <v-col cols="12" sm="3">
+          <label class="section-title">Registered Office</label>
+        </v-col>
+        <v-col cols="12" sm="9" />
+      </v-row>
+
+      <v-card flat class="py-8 px-6">
+        <!-- Registered Mailing Address -->
+        <v-row no-gutters class="edit-section">
+          <v-col cols="12" sm="3" class="pr-4 pb-4">
+            <label class="title-label">Mailing Address</label>
+          </v-col>
+
+          <v-col cols="12" sm="9">
+            <MailingAddress
+              ref="regMailingAddress"
+              id="address-registered-mailing"
+              :address="mailingAddress"
+              :editing="true"
+              :schema="OfficeAddressSchema"
+              @update:address="updateAddress('mailingAddress', mailingAddress, $event)"
+              @valid="updateAddressValid('mailingAddress', $event)"
+            />
+          </v-col>
+        </v-row>
+
+        <!-- Registered Delivery Address -->
+        <v-row no-gutters class="edit-section">
+          <v-col cols="12" sm="3" class="pr-4 pb-4">
+            <label class="title-label">Delivery Address</label>
+          </v-col>
+
+          <v-col cols="12" sm="9">
+            <v-checkbox
+              id="registered-mailing-same-chkbx"
+              class="inherit-checkbox"
+              hide-details
+              label="Same as Mailing Address"
+              v-model="inheritMailingAddress"
+              v-on:change="setDeliveryAddressToMailingAddress()"
+            />
+            <template
+              v-if="!isSame(mailingAddress, deliveryAddress, ['actions']) || !inheritMailingAddress"
+            >
+              <DeliveryAddress
+                ref="regDeliveryAddress"
+                id="address-registered-delivery"
+                class="pt-6"
+                v-if="!inheritMailingAddress"
+                :address="deliveryAddress"
+                :editing="true"
+                :schema="OfficeAddressSchema"
+                :noPoBox="true"
+                @update:address="updateAddress('deliveryAddress', deliveryAddress, $event)"
+                @valid="updateAddressValid('deliveryAddress', $event)"
+              />
+            </template>
+          </v-col>
+        </v-row>
+      </v-card>
+
+      <!--Records Office Address -->
+      <template v-if="!isTypeCoop">
+        <!-- Records Office -->
+        <v-row no-gutters class="address-edit-header">
+          <v-col cols="12" sm="3">
+            <label class="section-title">Records Office</label>
+          </v-col>
+
+          <v-col cols="12" sm="9">
+            <v-checkbox
+              id="records-mailing-same-chkbx"
+              class="inherit-checkbox"
+              hide-details
+              label="Same as Registered Office"
+              v-model="inheritRegisteredAddress"
+              v-on:change="setRecordOfficeToRegisteredOffice()"
+            />
+          </v-col>
+        </v-row>
+
+        <template v-if="!inheritRegisteredAddress">
+          <v-card flat class="py-8 px-6">
+            <!-- Records Mailing Address -->
+            <v-row no-gutters class="edit-section">
+              <v-col cols="12" sm="3" class="pr-4 pb-4">
+                <label class="title-label">Mailing Address</label>
+              </v-col>
+
+              <v-col cols="12" sm="9">
+                <MailingAddress
+                  ref="recMailingAddress"
+                  id="address-records-mailing"
+                  :address="recMailingAddress"
+                  :editing="true"
+                  :schema="OfficeAddressSchema"
+                  @update:address="updateAddress('recMailingAddress', recMailingAddress, $event)"
+                  @valid="updateAddressValid('recMailingAddress', $event)"
+                />
+              </v-col>
+            </v-row>
+
+            <!-- Registered Delivery Address -->
+            <v-row no-gutters class="edit-section">
+              <v-col cols="12" sm="3" class="pr-4 pb-4">
+                <label class="title-label">Delivery Address</label>
+              </v-col>
+
+              <v-col cols="12" sm="9">
+                <v-checkbox
+                  class="inherit-checkbox"
+                  hide-details
+                  label="Same as Mailing Address"
+                  v-model="inheritRecMailingAddress"
+                  v-on:change="setRecordDeliveryAddressToMailingAddress()"
+                />
+                <template
+                  v-if="!isSame(recMailingAddress, recDeliveryAddress, ['actions']) || !inheritRecMailingAddress"
+                >
+                  <DeliveryAddress
+                    ref="recDeliveryAddress"
+                    id="address-records-delivery"
+                    class="pt-6"
+                    :address="recDeliveryAddress"
+                    :editing="true"
+                    :schema="OfficeAddressSchema"
+                    :noPoBox="true"
+                    @update:address="updateAddress('recDeliveryAddress', recDeliveryAddress, $event)"
+                    @valid="updateAddressValid('recDeliveryAddress', $event)"
+                  />
+                </template>
+              </v-col>
+            </v-row>
+          </v-card>
+        </template>
+      </template>
+    </template>
+
+    <!-- SUMMARY SECTION -->
+    <template v-else>
       <v-row no-gutters id="summary-registered-address">
-        <v-col cols="12" sm="3" class="pr-4"><label>Registered Office</label></v-col>
+        <v-col cols="12" sm="3" class="pr-4">
+          <label>Registered Office</label>
+        </v-col>
+
         <v-col cols="12" sm="4" class="pr-4">
-          <label class="mailing-address-header">Mailing Address</label>
+          <label class="summary-section-header">Mailing Address</label>
           <div v-if="isEmptyAddress(mailingAddress)">(Not entered)</div>
           <MailingAddress v-else :address="mailingAddress" :editing="false" />
         </v-col>
 
         <v-col cols="12" sm="4" class="pr-4">
-          <label class="delivery-address-header">Delivery Address</label>
+          <label class="summary-section-header">Delivery Address</label>
           <div v-if="isEmptyAddress(deliveryAddress)">(Not entered)</div>
           <div v-else-if="isSame(mailingAddress, deliveryAddress)">Same as Mailing Address</div>
           <DeliveryAddress v-else :address="deliveryAddress" :editing="false" />
@@ -19,16 +164,19 @@
       </v-row>
 
       <v-row no-gutters id="summary-records-address" v-if="!isTypeCoop" class="mt-4">
-        <v-col cols="12" sm="3" class="pr-4"><label>Records Office</label></v-col>
+        <v-col cols="12" sm="3" class="pr-4">
+          <label>Records Office</label>
+        </v-col>
+
         <v-col cols="12" sm="4" class="pr-4">
-          <label class="mailing-address-header">Mailing Address</label>
+          <label class="summary-section-header">Mailing Address</label>
           <div v-if="isEmptyAddress(recMailingAddress)">(Not entered)</div>
           <div v-else-if="isSame(mailingAddress, recMailingAddress)">Same as Registered Office</div>
           <MailingAddress v-else :address="recMailingAddress" :editing="false" />
         </v-col>
 
         <v-col cols="12" sm="4" class="pr-4">
-          <label class="delivery-address-header">Delivery Address</label>
+          <label class="summary-section-header">Delivery Address</label>
           <div v-if="isEmptyAddress(recDeliveryAddress)">(Not entered)</div>
           <div v-else-if="isSame(deliveryAddress, recDeliveryAddress)">Same as Registered Office</div>
           <div v-else-if="isSame(recMailingAddress, recDeliveryAddress)">Same as Mailing Address</div>
@@ -36,134 +184,6 @@
         </v-col>
       </v-row>
     </template>
-
-    <!-- Address Form -->
-    <v-card flat v-else>
-      <ul class="address-form">
-        <!-- Registered Office -->
-        <div class="address-edit-header">
-          <label class="address-edit-title">Registered Office</label>
-        </div>
-
-        <!-- Registered Mailing Address -->
-        <li class="pt-8 px-6">
-          <div class="meta-container">
-            <label>Mailing Address</label>
-            <div class="meta-container__inner">
-              <MailingAddress
-                ref="regMailingAddress"
-                id="address-registered-mailing"
-                :address="mailingAddress"
-                :editing="true"
-                :schema="OfficeAddressSchema"
-                @update:address="updateAddress('mailingAddress', mailingAddress, $event)"
-                @valid="updateAddressValid('mailingAddress', $event)"
-              />
-            </div>
-          </div>
-        </li>
-
-        <!-- Registered Delivery Address -->
-        <li class="pt-2 pb-8 px-6">
-          <div class="meta-container">
-            <label>Delivery Address</label>
-            <div class="meta-container__inner">
-              <div class="form__row">
-                <v-checkbox
-                  id="registered-mailing-same-chkbx"
-                  class="inherit-checkbox"
-                  label="Same as Mailing Address"
-                  v-model="inheritMailingAddress"
-                  v-on:change="setDeliveryAddressToMailingAddress()"
-                />
-              </div>
-              <template
-                v-if="!isSame(mailingAddress, deliveryAddress, ['actions']) || !inheritMailingAddress"
-              >
-                <DeliveryAddress
-                  ref="regDeliveryAddress"
-                  id="address-registered-delivery"
-                  class="pt-2"
-                  v-if="!inheritMailingAddress"
-                  :address="deliveryAddress"
-                  :editing="true"
-                  :schema="OfficeAddressSchema"
-                  :noPoBox="true"
-                  @update:address="updateAddress('deliveryAddress', deliveryAddress, $event)"
-                  @valid="updateAddressValid('deliveryAddress', $event)"
-                />
-              </template>
-            </div>
-          </div>
-        </li>
-
-        <!--Records Office Address -->
-        <template v-if="!isTypeCoop">
-          <div class="address-edit-header">
-            <label class="address-edit-title">Records Office</label>
-            <v-checkbox
-              id="records-mailing-same-chkbx"
-              class="records-inherit-checkbox"
-              label="Same as Registered Office"
-              v-model="inheritRegisteredAddress"
-              v-on:change="setRecordOfficeToRegisteredOffice()"
-            />
-          </div>
-
-          <template v-if="!inheritRegisteredAddress">
-            <!-- Records Mailing Address -->
-            <li class="pt-8 px-6">
-              <div class="meta-container">
-                <label>Mailing Address</label>
-                <div class="meta-container__inner">
-                  <MailingAddress
-                  ref="recMailingAddress"
-                    id="address-records-mailing"
-                    :address="recMailingAddress"
-                    :editing="true"
-                    :schema="OfficeAddressSchema"
-                    @update:address="updateAddress('recMailingAddress', recMailingAddress, $event)"
-                    @valid="updateAddressValid('recMailingAddress', $event)"
-                  />
-                </div>
-              </div>
-            </li>
-
-            <!-- Records Delivery Address -->
-            <li class="pt-2 pb-8 px-6">
-              <div class="meta-container">
-                <label>Delivery Address</label>
-                <div class="meta-container__inner">
-                  <div class="form__row">
-                    <v-checkbox
-                      class="inherit-checkbox"
-                      label="Same as Mailing Address"
-                      v-model="inheritRecMailingAddress"
-                      v-on:change="setRecordDeliveryAddressToMailingAddress()"
-                    />
-                  </div>
-                  <template
-                    v-if="!isSame(recMailingAddress, recDeliveryAddress, ['actions']) || !inheritRecMailingAddress"
-                  >
-                    <DeliveryAddress
-                      ref="recDeliveryAddress"
-                      id="address-records-delivery"
-                      class="pt-2"
-                      :address="recDeliveryAddress"
-                      :editing="true"
-                      :schema="OfficeAddressSchema"
-                      :noPoBox="true"
-                      @update:address="updateAddress('recDeliveryAddress', recDeliveryAddress, $event)"
-                      @valid="updateAddressValid('recDeliveryAddress', $event)"
-                    />
-                  </template>
-                </div>
-              </div>
-            </li>
-          </template>
-        </template>
-      </ul>
-    </v-card>
   </div>
 </template>
 
@@ -529,101 +549,31 @@ export default class OfficeAddresses extends Mixins(CommonMixin) {
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
 
-.meta-container {
-  display: flex;
-  flex-flow: column nowrap;
-  position: relative;
+.address-edit-header {
+  background-color: rgba(1, 51, 102, 0.15);
+  padding: 1.25rem;
 }
 
-label:first-child {
-  font-weight: 700;
-  &__inner {
-    flex: 1 1 auto;
-  }
+.edit-section {
+  font-size: $px-16;
+  color: $gray7;
 }
 
-.meta-container__inner {
-  margin-top: 1rem;
-}
-
-@media (min-width: 768px) {
-  .meta-container {
-    flex-flow: row nowrap;
-
-    label:first-child {
-      flex: 0 0 auto;
-      width: 12rem;
-    }
-  }
-
-  .meta-container__inner {
-    flex: 1 1 auto;
-    margin-top: 0;
-  }
-}
-
-// Form Row Elements
-.form__row + .form__row {
-  margin-top: 0.25rem;
-}
-
-.form__row.three-column {
-  display: flex;
-  flex-flow: row nowrap;
-  align-items: stretch;
-  margin-right: -0.5rem;
-  margin-left: -0.5rem;
+.section-title,
+.title-label,
+.item-label,
+.summary-section-title {
+  font-weight: bold;
+  color: $gray9;
 }
 
 .inherit-checkbox {
   margin-top: 0;
+  padding-top: 0;
   margin-left: -3px;
-  padding: 0;
 }
 
-.records-inherit-checkbox {
-  margin-top: 0;
-  margin-left: 4.5rem;
-  margin-bottom: -1.5rem;
-  padding: 0;
-
-  .v-messages {
-    display: none !important;
-  }
-}
-
-// Registered Office Address Form Behavior
-.address-form {
-  li:first-child {
-    padding-bottom: 0;
-  }
-}
-
-ul {
-  margin: 0;
-  padding: 0;
-  list-style-type: none;
-}
-
-// Editing Address Form
-.address-edit-header {
-  display: flex;
-  background-color: rgba(1, 51, 102, 0.15);
-  padding: 1.25rem;
-
-  address-edit-title {
-    font-size: $px-16;
-    font-weight: bold;
-    line-height: 1.375rem;
-  }
-}
-
-label {
-  color: $gray9;
-}
-
-.mailing-address-header,
-.delivery-address-header {
+.summary-section-header {
   font-size: $px-14;
   font-weight: bold;
 }
