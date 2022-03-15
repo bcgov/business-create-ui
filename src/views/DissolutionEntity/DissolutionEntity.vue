@@ -65,7 +65,8 @@
     </section>
   <!-- Completing Party -->
   <!-- show only if exist -->
-    <section  id="completing-party-section" class="mt-10" v-if="getAddPeopleAndRoleStep.orgPeople && getAddPeopleAndRoleStep.orgPeople.length > 0"  >
+    <section  id="completing-party-section" class="mt-10"
+    v-if="getAddPeopleAndRoleStep.orgPeople && getAddPeopleAndRoleStep.orgPeople.length > 0">
       <header>
         <h2>Completing Party</h2>
 

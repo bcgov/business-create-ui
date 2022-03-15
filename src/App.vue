@@ -390,7 +390,8 @@ export default class App extends Mixins(
   // SB TODO : Move to store if its good
   get getFilingSubtitle () {
     if (this.getEntityType === CorpTypeCd.SOLE_PROP) {
-      return 'Confirm the following information, select the dissolution date and certify your dissolution before filing.'
+      return `Confirm the following information, 
+      select the dissolution date and certify your dissolution before filing.`
     }
     return false
   }
