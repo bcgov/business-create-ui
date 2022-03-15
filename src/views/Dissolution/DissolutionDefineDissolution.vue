@@ -14,21 +14,29 @@
       <header id="association-details">
         <h2>1. {{ getDissolutionDetailsTitle }}</h2>
       </header>
-      <AssociationDetails class="mt-5"/>
+
+      <v-card flat class="mt-5">
+        <AssociationDetails />
+      </v-card>
     </section>
 
+    <!-- Dissolution Statement -->
     <section class="mt-10" v-if="isTypeCoop">
-      <header id="dissolution-statement">
+      <header id="dissolution-statement-header">
         <h2>2. Dissolution Statement</h2>
         <p class="mt-4">Choose a dissolution statement regarding dissolution and
           the Cooperative Association's assets and liabilities:
         </p>
       </header>
-      <DissolutionStatement class="mt-5"
-        :showErrorSummary="showDissolutionStatementErrors"
-      />
+
+      <v-card flat class="mt-5 py-8 px-6"
+        :class="{ 'invalid-section': showDissolutionStatementErrors }"
+      >
+        <DissolutionStatement />
+      </v-card>
     </section>
 
+    <!-- Custodian of Records -->
     <section class="mt-10">
       <header id="custodian-header">
         <h2>{{isTypeCoop ? 3 : 2 }}. {{ getCustodialRecordsResources.custodianTitle }}</h2>
@@ -37,17 +45,22 @@
 
       <!-- Help Section -->
       <HelpSection
+        class="mt-5"
         :helpSection="getCustodialRecordsResources.helpSection"
         :helpTitle="getCustodialRecordsResources.custodianTitle"
       />
 
-      <CustodianOfRecords
-        class="mt-5"
-        :showErrors="getShowErrors && !isDissolutionCustodianValid"
-        @valid="setCustodianValidity($event)"
-      />
+      <v-card flat class="mt-5 py-8 px-6"
+        :class="{ 'invalid-section': getShowErrors && !isDissolutionCustodianValid }"
+      >
+        <CustodianOfRecords
+          :showErrors="getShowErrors"
+          @valid="setCustodianValidity($event)"
+        />
+      </v-card>
     </section>
 
+    <!-- Delete and/or Destroy Certificates -->
     <section class="mt-10" v-if="isTypeCoop">
       <header id="delete-certificates-header">
         <h2>{{isTypeCoop ? 4 : 3 }}. Delete and/or Destroy Certificates</h2>
@@ -60,37 +73,42 @@
           The Certificate of Incorporation is on file for this Cooperative Association.
         </p>
       </header>
-      <DestroyCertificate class="mt-5"
-        :showErrorSummary="showDestroyCertificateErrors"
-      />
+
+      <v-card flat class="mt-5 py-8 px-6"
+        :class="{ 'invalid-section': showDestroyCertificateErrors }"
+      >
+        <DestroyCertificate
+          :showErrorSummary="showDestroyCertificateErrors"
+        />
+      </v-card>
     </section>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Vue, Watch } from 'vue-property-decorator'
+import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import AssociationDetails from '@/components/Dissolution/AssociationDetails.vue'
-import CareAndCustodySelect from '@/components/Dissolution/CareAndCustodySelect.vue'
+// import CareAndCustodySelect from '@/components/Dissolution/CareAndCustodySelect.vue'
 import CustodianOfRecords from '@/components/Dissolution/CustodianOfRecords.vue'
 import DestroyCertificate from '@/components/Dissolution/DestroyCertificate.vue'
 import DissolutionStatement from '@/components/Dissolution/DissolutionStatement.vue'
 import HelpSection from '@/components/common/HelpSection.vue'
 import { ActionBindingIF, CustodianResourceIF, DissolutionStatementIF } from '@/interfaces'
-import { CommonMixin, EntityFilterMixin, EnumMixin } from '@/mixins'
-import { RouteNames } from '@/enums'
+import { CommonMixin, EnumMixin } from '@/mixins'
+import { CorpTypeCd, RouteNames } from '@/enums'
 
 @Component({
   components: {
     AssociationDetails,
-    CareAndCustodySelect,
+    // CareAndCustodySelect,
     CustodianOfRecords,
     DestroyCertificate,
     DissolutionStatement,
     HelpSection
   }
 })
-export default class DissolutionDefineDissolution extends Mixins(CommonMixin, EntityFilterMixin, EnumMixin) {
+export default class DissolutionDefineDissolution extends Mixins(CommonMixin, EnumMixin) {
   // Global getters
   @Getter getBusinessLegalName!: string
   @Getter getCustodialRecordsResources!: CustodianResourceIF
@@ -100,6 +118,7 @@ export default class DissolutionDefineDissolution extends Mixins(CommonMixin, En
   @Getter getShowErrors!: boolean
   @Getter isDissolutionCustodianValid!: boolean
   @Getter isTypeCoop: boolean
+  @Getter getEntityType!: CorpTypeCd
 
   // Global actions
   @Action setCustodianValidity!: ActionBindingIF
@@ -132,7 +151,7 @@ export default class DissolutionDefineDissolution extends Mixins(CommonMixin, En
   private async scrollToInvalidComponent (): Promise<void> {
     if (this.getShowErrors && this.$route.name === RouteNames.DISSOLUTION_DEFINE_DISSOLUTION) {
       // scroll to invalid components
-      await Vue.nextTick()
+      await this.$nextTick()
       await this.validateAndScroll(
         {
           isStatementValid: this.isTypeCoop ? this.getDissolutionStatementStep.valid : true,
@@ -140,7 +159,7 @@ export default class DissolutionDefineDissolution extends Mixins(CommonMixin, En
           isDeleteValid: this.isTypeCoop ? this.getDissolutionHasCertificateDestroyed : true
         },
         [
-          'dissolution-statement',
+          'dissolution-statement-header',
           'custodian-header',
           'delete-certificates-header'
         ]

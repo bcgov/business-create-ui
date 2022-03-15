@@ -7,11 +7,15 @@ import sinon from 'sinon'
 import { axios } from '@/utils'
 import Actions from '@/components/common/Actions.vue'
 import mockRouter from './MockRouter'
+import LegalServices from '@/services/legal.services'
 
 Vue.use(Vuetify)
 
 const vuetify = new Vuetify({})
 const store = getVuexStore()
+
+// mock services function
+const mockUpdateFiling = jest.spyOn((LegalServices as any), 'updateFiling').mockImplementation()
 
 // Populate session variables
 sessionStorage.setItem('AUTH_WEB_URL', 'https://auth.web.url/')
@@ -35,7 +39,7 @@ const nrData = {
   },
   consentFlag: 'R',
   corpNum: null,
-  entity_type_cd: 'BC',
+  legalType: 'BEN',
   expirationDate: 'Thu, 31 Dec 2099 23:59:59 GMT',
   names: [
     {
@@ -179,6 +183,7 @@ describe('Actions component - Filing Functionality', () => {
       certifiedBy: 'Certified By',
       date: '2020/01/29',
       effectiveDate: formattedEffectiveDate,
+      filingId: 1234,
       folioNumber: '123456',
       isFutureEffective: true
     },
@@ -409,9 +414,6 @@ describe('Actions component - Filing Functionality', () => {
     const router = mockRouter.mock()
     router.push({ name: 'incorporation-define-company', query: { id: 'T1234567' } })
     wrapper = shallowMount(Actions, { localVue, store, router, vuetify })
-
-    // Mock the function calls that may used by updateFiling below
-    jest.spyOn(wrapper.vm, 'updateFiling').mockImplementation()
   })
 
   afterEach(() => {
@@ -438,8 +440,6 @@ describe('Actions component - Filing Functionality', () => {
   })
 
   it('Calls the updateFiling method with the correct filing structure when onClickSave is called', async () => {
-    const mockUpdateFiling = jest.spyOn(wrapper.vm, 'updateFiling')
-
     await wrapper.vm.onClickSave()
 
     expect(mockUpdateFiling).toHaveBeenCalledWith('T1234567', filing, true)
@@ -466,8 +466,6 @@ describe('Actions component - Filing Functionality', () => {
   })
 
   it('Calls the updateFiling method with the correct filing structure when onClickSaveResume is called', async () => {
-    const mockUpdateFiling = jest.spyOn(wrapper.vm, 'updateFiling')
-
     await wrapper.vm.onClickSaveResume()
 
     expect(mockUpdateFiling).toHaveBeenCalledWith('T1234567', filing, true)
@@ -490,7 +488,7 @@ describe('Actions component - Filing Functionality', () => {
       'filing': filing
     }
     const mockBuildFiling = jest.spyOn(wrapper.vm, 'buildIncorporationFiling')
-    const mockUpdateFiling = jest.spyOn(wrapper.vm, 'updateFiling')
+    mockUpdateFiling.mockReset()
       .mockImplementation(() => {
         return Promise.reject(padErrorFiling)
       })
@@ -515,7 +513,7 @@ describe('Actions component - Filing Functionality', () => {
 
   it('Calls the buildIncorporationFiling and updateFiling methods when onClickFilePay is called', async () => {
     const mockBuildFiling = jest.spyOn(wrapper.vm, 'buildIncorporationFiling')
-    const mockUpdateFiling = jest.spyOn(wrapper.vm, 'updateFiling')
+    mockUpdateFiling.mockReset()
       .mockImplementation(() => Promise.resolve({
         header: {
           paymentToken: 789,
@@ -538,7 +536,7 @@ describe('Actions component - Filing Functionality', () => {
 
   it('Emits "Go To Dashboard" event when onClickCancel is called', async () => {
     const mockBuildFiling = jest.spyOn(wrapper.vm, 'buildIncorporationFiling')
-    const mockUpdateFiling = jest.spyOn(wrapper.vm, 'updateFiling')
+    mockUpdateFiling.mockReset().mockImplementation()
 
     await wrapper.vm.onClickCancel()
 

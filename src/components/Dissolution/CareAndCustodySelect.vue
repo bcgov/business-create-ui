@@ -1,17 +1,18 @@
 <template>
-  <v-card flat id="care-and-custody-select" class="rounded-4 pt-11">
-    <div class="section-container py-6 px-8 " :class="{ 'invalid-section': showErrorSummary }">
+  <!-- FUTURE: update layout to match other components -->
+  <div id="care-and-custody-select">
+    <div class="section-container" :class="{ 'invalid-section': showErrorSummary }">
       <v-row no-gutters>
-        <v-col cols="12" md="3" lg="3">
-          <label class="care-and-custody-title title-label">Care and Custody <br>of Records</label>
+        <v-col cols="12" sm="3">
+          <label class="care-and-custody-title title-label">Care and Custody<br>of Records</label>
         </v-col>
-        <v-col cols="12" md="9" lg="9">
+        <v-col cols="12" sm="9">
           <v-radio-group
             column class="pt-0 mt-0 care-and-custody-option-list"
             v-model="liquidatorOrCustodian"
             @change="changeCareAndCustodyType"
           >
-            <v-radio id="liquidator-radio-btn" :value=RoleTypes.LIQUIDATOR>
+            <v-radio id="liquidator-radio-btn" :value="RoleTypes.LIQUIDATOR">
               <template slot="label">
                 <span class="care-and-custody-option">
                   A <strong>Liquidator</strong> has been appointed for the care and custody of the
@@ -19,7 +20,7 @@
                 </span>
               </template>
             </v-radio>
-            <v-radio id="custodian-radio-btn" :value=RoleTypes.CUSTODIAN>
+            <v-radio id="custodian-radio-btn" :value="RoleTypes.CUSTODIAN">
               <template slot="label">
                 <span class="care-and-custody-option">
                   A <strong>Custodian of Records</strong> has been appointed for the care and custody of the Cooperative
@@ -31,7 +32,7 @@
         </v-col>
       </v-row>
     </div>
-  </v-card>
+  </div>
 </template>
 
 <script lang="ts">
@@ -44,7 +45,8 @@ export default class CareAndCustodySelect extends Vue {
   @Prop({ default: false })
   readonly showErrorSummary: boolean
 
-  private readonly RoleTypes = RoleTypes
+  readonly RoleTypes = RoleTypes
+
   private liquidatorOrCustodian: RoleTypes = null
 
   private changeCareAndCustodyType (): void {
@@ -55,11 +57,6 @@ export default class CareAndCustodySelect extends Vue {
 
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
-
-.section-container {
-  font-size: $px-16;
-  color: $gray7;
-}
 
 .care-and-custody-title {
   font-size: $px-16;

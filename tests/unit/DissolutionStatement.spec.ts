@@ -1,9 +1,8 @@
 import Vue from 'vue'
 import { wrapperFactory } from '../jest-wrapper-factory'
 import DissolutionStatement from '@/components/Dissolution/DissolutionStatement.vue'
-import { DissolutionStatementTypes } from '@/enums/dissolutionStatementTypes'
+import { CorpTypeCd, DissolutionStatementTypes } from '@/enums'
 import { DissolutionResources } from '@/resources'
-import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 
 // Input field selectors to test changes to the DOM elements.
 const typeSelector: string = '#dissolution-statement-'
@@ -67,22 +66,6 @@ describe(`Dissolution Statement component for a Cooperative Association`, () => 
       DissolutionResources
     )
     expect(wrapper.find('.dissolution-summary-description').text()).toBeDefined()
-  })
-
-  it('Displays the error line in view if no dissolution statement type is selected', () => {
-    wrapper = wrapperFactory(
-      DissolutionStatement,
-      {
-        showErrorSummary: true
-      },
-      {
-        entityType: CorpTypeCd.COOP
-      },
-      null,
-      DissolutionResources
-    )
-
-    expect(wrapper.find(summaryErrorSelector)).toBeDefined()
   })
 
   it('Updates the store correctly if a dissolution statement type is selected', async () => {

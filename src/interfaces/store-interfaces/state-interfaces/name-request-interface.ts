@@ -1,7 +1,9 @@
+import { CorpTypeCd, NameRequestStates } from '@/enums'
+
 /** Name request response details interface. */
 export interface NameRequestDetailsIF {
   approvedName: string
-  status: string
+  status: NameRequestStates
   consentFlag: string
   expirationDate: string
 }
@@ -25,7 +27,7 @@ export interface NameRequestApplicantIF {
 /** Name Request state interface. */
 export interface NameRequestIF {
   nrNumber: string
-  entityType: string
+  entityType: CorpTypeCd
   details: NameRequestDetailsIF | {}
   applicant: NameRequestApplicantIF | {}
   filingId: number
@@ -34,7 +36,7 @@ export interface NameRequestIF {
 // NB: use cloneDeep when assigning EmptyOrgPerson
 export const EmptyNameRequest: NameRequestIF = {
   nrNumber: '',
-  entityType: '',
+  entityType: null,
   details: {},
   applicant: {},
   filingId: null

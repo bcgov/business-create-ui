@@ -5,6 +5,8 @@ import {
   EmptyFees,
   EmptyNameRequest,
   EmptyOfficer,
+  EmptyNaics,
+  EmptyRegistrationNameRequest,
   StateModelIF
 } from '@/interfaces'
 import { cloneDeep } from 'lodash'
@@ -65,6 +67,7 @@ export const stateModel: StateModelIF = {
     }
   },
   accountInformation: { ...EmptyAccountInformation },
+  orgInformation: null,
   nameRequest: cloneDeep(EmptyNameRequest),
   nameTranslations: [],
   currentDate: '',
@@ -166,6 +169,8 @@ export const stateModel: StateModelIF = {
     defineBusinessValid: false,
     startDate: '',
     businessAddress: null,
-    feeAcknowledgement: false
+    feeAcknowledgement: false,
+    naics: { ...EmptyNaics },
+    nameRequest: { ...EmptyRegistrationNameRequest }
   }
 }

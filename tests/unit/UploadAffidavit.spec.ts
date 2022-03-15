@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import { shallowWrapperFactory, wrapperFactory } from '../jest-wrapper-factory'
-import Affidavit from '@/components/Dissolution/Affidavit.vue'
+import Affidavit from '@/components/Dissolution/CompleteAffidavit.vue'
 import { DissolutionResources } from '@/resources'
-import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
+import { CorpTypeCd } from '@/enums'
 
 // Test Case Data
 const uploadAffidavitTestCases = [

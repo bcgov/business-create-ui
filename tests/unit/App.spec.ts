@@ -236,7 +236,7 @@ const nrData = {
   },
   consentFlag: 'R',
   corpNum: null,
-  entity_type_cd: 'BC',
+  legalType: 'BEN',
   expirationDate: 'Thu, 31 Dec 2099 23:59:59 GMT',
   names: [
     {
@@ -606,7 +606,7 @@ describe('App component', () => {
     const dialog = wrapper.find('.confirm-dialog')
     expect(dialog.classes('v-dialog--active')).toBe(true)
     expect(dialog.isVisible()).toBe(true)
-    expect(dialog.text()).toContain('You have unsaved changes')
+    expect(dialog.text()).toContain('You have unsaved changes.')
 
     // verify no redirection
     expect(window.location.assign).not.toHaveBeenCalled()
@@ -750,6 +750,16 @@ describe('Dissolution BEN - External User', () => {
             street: '1234 Some Street',
             streetAdditional: 'Suite ABC'
           }
+        }
+      })))
+
+    // GET auth info
+    get.withArgs('https://auth.api.url/entities/BC0870803')
+      .returns(new Promise((resolve) => resolve({
+        data:
+        {
+          contacts: [],
+          folioNumber: null
         }
       })))
 
@@ -995,6 +1005,16 @@ describe('Dissolution BEN - Staff User', () => {
             street: '1234 Some Street',
             streetAdditional: 'Suite ABC'
           }
+        }
+      })))
+
+    // GET auth info
+    get.withArgs('https://auth.api.url/entities/BC0870803')
+      .returns(new Promise((resolve) => resolve({
+        data:
+        {
+          contacts: [],
+          folioNumber: null
         }
       })))
 
@@ -1422,6 +1442,16 @@ describe('Dissolution COOP - External User', () => {
             street: '1234 Some Street',
             streetAdditional: 'Suite ABC'
           }
+        }
+      })))
+
+    // GET auth info
+    get.withArgs('https://auth.api.url/entities/CP1002398')
+      .returns(new Promise((resolve) => resolve({
+        data:
+        {
+          contacts: [],
+          folioNumber: null
         }
       })))
 
@@ -1858,6 +1888,16 @@ describe('Dissolution COOP - Staff User', () => {
             street: '1234 Some Street',
             streetAdditional: 'Suite ABC'
           }
+        }
+      })))
+
+    // GET auth info
+    get.withArgs('https://auth.api.url/entities/CP1002398')
+      .returns(new Promise((resolve) => resolve({
+        data:
+        {
+          contacts: [],
+          folioNumber: null
         }
       })))
 

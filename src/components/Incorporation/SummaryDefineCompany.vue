@@ -1,76 +1,94 @@
 <template>
-  <v-card flat class="rounded-0">
-    <div class="define-company-header review-header">
-      <v-icon color="appDkBlue">mdi-domain</v-icon>
-      <label class="define-company-title pl-2"><strong>Your {{ getCompanyDisplayName }}</strong></label>
-    </div>
-
+  <div id="summary-define-company">
     <section :class="{ 'invalid-section': !isDefineCompanyValid }">
       <div v-if="!isDefineCompanyValid" class="defineCompanyStepErrorMessage">
         <span>
           <v-icon color="error">mdi-information-outline</v-icon>
-          &nbsp;
-          <span class="error-text">This step is unfinished.</span>
-          &nbsp;
+          <span class="error-text mx-1">This step is unfinished.</span>
           <router-link
             :to="{ path: `/${RouteNames.INCORPORATION_DEFINE_COMPANY}` }"
           >Return to this step to finish it</router-link>
         </span>
       </div>
 
-      <div class="section-container">
+      <!-- Name -->
+      <article class="section-container">
         <v-row no-gutters>
-          <v-col md="3" class="mr-n1">
+          <v-col cols="12" sm="3" class="pr-4">
             <label>Name</label>
           </v-col>
-          <v-col md="9">
+          <v-col cols="12" sm="9">
             <div class="company-name">{{ getApprovedName || '[Incorporation Number] B.C. Ltd.' }}</div>
             <div class="company-type">
               <span>{{ entityDescription }}</span>
             </div>
           </v-col>
         </v-row>
+
+        <!-- Name Translation -->
         <v-row no-gutters v-if="getNameTranslations && getNameTranslations.length" class="mt-3">
-          <v-col md="3" class="mr-n1">
+          <v-col cols="12" sm="3" class="pr-4">
             <label>Name Translation</label>
           </v-col>
-          <v-col md="9">
+          <v-col cols="12" sm="9">
             <div v-for="(nameTranslation, index) in getNameTranslations" :key="`name_translation_${index}`">
               {{ nameTranslation.name }}
             </div>
           </v-col>
         </v-row>
-      </div>
-      <v-divider/>
-      <div v-if="isTypeCoop" class="section-container">
-        <v-row no-gutters>
-          <v-col md="3" class="mr-n1">
-            <label>Type</label>
-          </v-col>
-          <v-col md="9">
-            <div class="cooperative-type ml-n1">
-              <span>{{ getCooperativeType ? coopTypeToDescription(getCooperativeType) : '(Not Entered)' }}</span>
-            </div>
-          </v-col>
-        </v-row>
-      </div>
+      </article>
 
-      <v-divider />
+      <!-- Type -->
+      <template v-if="isTypeCoop">
+        <v-divider class="mx-6" />
 
-      <div class="section-container">
-        <OfficeAddresses :inputAddresses="getDefineCompanyStep.officeAddresses" :isEditing="false" />
-      </div>
+        <article class="section-container">
+          <v-row no-gutters>
+            <v-col cols="12" sm="3" class="pr-4">
+              <label>Type</label>
+            </v-col>
+            <v-col cols="12" sm="9">
+              <div class="cooperative-type ml-n1">
+                <span>{{ getCooperativeType ? coopTypeToDescription(getCooperativeType) : '(Not Entered)' }}</span>
+              </div>
+            </v-col>
+          </v-row>
+        </article>
+      </template>
 
-      <v-divider />
+      <v-divider class="mx-6" />
 
-      <div class="section-container">
-        <BusinessContactInfo :initialValue="getBusinessContact" :isEditing="false" />
-      </div>
-      <div class="section-container" v-if="isPremiumAccount">
-        <FolioNumber :initialValue="getFolioNumber" :isEditing="false" />
-      </div>
+      <!-- Registered Office / Records Office -->
+      <article class="section-container">
+        <OfficeAddresses
+          :inputAddresses="getDefineCompanyStep.officeAddresses"
+          :isEditing="false"
+        />
+      </article>
+
+      <v-divider class="mx-6" />
+
+      <!-- Registered Office Contact Information -->
+      <article class="section-container">
+        <BusinessContactInfo
+          :initialValue="getBusinessContact"
+          :isEditing="false"
+        />
+      </article>
+
+      <!-- Folio or Reference Number -->
+      <template v-if="isPremiumAccount">
+        <v-divider class="mx-6" />
+
+        <article class="section-container">
+          <FolioNumber
+            :initialValue="getFolioNumber"
+            :isEditing="false"
+          />
+        </article>
+      </template>
     </section>
-  </v-card>
+  </div>
 </template>
 
 <script lang="ts">
@@ -80,8 +98,8 @@ import { BusinessContactIF, DefineCompanyIF, NameTranslationIF } from '@/interfa
 import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
 import FolioNumber from '@/components/common/FolioNumber.vue'
 import OfficeAddresses from '@/components/common/OfficeAddresses.vue'
-import { EntityFilterMixin, EnumMixin } from '@/mixins'
-import { CoopType, RouteNames } from '@/enums'
+import { EnumMixin } from '@/mixins'
+import { CoopType, CorpTypeCd, RouteNames } from '@/enums'
 
 @Component({
   components: {
@@ -90,10 +108,9 @@ import { CoopType, RouteNames } from '@/enums'
     OfficeAddresses
   }
 })
-export default class SummaryDefineCompany extends Mixins(EntityFilterMixin, EnumMixin) {
+export default class SummaryDefineCompany extends Mixins(EnumMixin) {
   // Getters
   @Getter getApprovedName!: string
-  @Getter getCompanyDisplayName!: string
   @Getter getCooperativeType!: CoopType
   @Getter isDefineCompanyValid!: boolean
   @Getter isPremiumAccount!: boolean
@@ -102,6 +119,7 @@ export default class SummaryDefineCompany extends Mixins(EntityFilterMixin, Enum
   @Getter getDefineCompanyStep!: DefineCompanyIF
   @Getter getBusinessContact!: BusinessContactIF
   @Getter getFolioNumber!: string
+  @Getter getEntityType!: CorpTypeCd
 
   /** The entity description  */
   private get entityDescription (): string {
@@ -120,20 +138,6 @@ export default class SummaryDefineCompany extends Mixins(EntityFilterMixin, Enum
   padding-top: 1.25rem;
   padding-left: 1.25rem;
   color: $app-red;
-}
-
-.section-container {
-  padding: 1.5rem
-}
-
-.define-company-header {
-  display: flex;
-  background-color: $BCgovBlue5O;
-  padding: 1.25rem;
-
-  .define-company-title {
-    color: $gray9;
-  }
 }
 
 .company-name {

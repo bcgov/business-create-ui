@@ -10,25 +10,28 @@
             id="name-translation-input"
             label="Enter Name Translation"
             v-model="nameTranslation"
-            :rules="nameTranslationRules">
-          </v-text-field>
+            :rules="nameTranslationRules"
+          />
         </v-col>
       </v-row>
       <v-row>
         <v-col class="form__btns pt-0">
           <v-btn large color="error" id="btn-remove"
             :disabled="!editNameTranslation"
-            @click="removeTranslation">
-              Remove
+            @click="removeTranslation()"
+          >
+            Remove
           </v-btn>
           <v-btn large color="primary" id="btn-done" class="form-primary-btn"
             :disabled="!nameTranslationForm"
-            @click="addTranslation">
-              Done
+            @click="addTranslation()"
+          >
+            Done
           </v-btn>
-          <v-btn large class="form-cancel-btn" id="btn-cancel"
-            @click="cancelTranslation">
-              Cancel
+          <v-btn large id="btn-cancel" class="form-cancel-btn"
+            @click="cancelTranslation()"
+          >
+            Cancel
           </v-btn>
         </v-col>
       </v-row>
@@ -50,7 +53,7 @@ export default class AddNameTranslation extends Vue {
   private nameTranslation: string = ''
 
   // Validation rules
-  private readonly nameTranslationRules: Array<Function> = [
+  readonly nameTranslationRules: Array<Function> = [
     v => !!v || 'A name translation is required', // is not empty
     v => /^[A-Za-zÀ-ÿ_@./#’&+-]+(?: [A-Za-zÀ-ÿ_@./#’&+-]+)*$/.test(v) || 'Invalid character', // English, French and single spaces
     v => (!v || v.length <= 150) || 'Cannot exceed 150 characters' // maximum character count
@@ -74,6 +77,3 @@ export default class AddNameTranslation extends Vue {
   private removeTranslation (): void {}
 }
 </script>
-
-<style lang="scss" scoped>
-</style>

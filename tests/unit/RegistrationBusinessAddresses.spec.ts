@@ -120,7 +120,7 @@ xdescribe('Business Addresses', () => {
   })
 
   it('does not show the summary when editing', () => {
-    expect(wrapper.vm.$el.querySelector('#address-summary')).toBeNull()
+    expect(wrapper.vm.$el.querySelector('.summary-section')).toBeNull()
   })
 
   it('displays the ui for registered mailing and NOT delivery address when new filing', () => {
@@ -462,6 +462,6 @@ xdescribe('Business Addresses - Summary', () => {
   })
 
   it('displays the summary ui when in summary mode', () => {
-    expect(wrapper.vm.$el.querySelector('#address-summary')).toBeDefined()
+    expect(wrapper.vm.$el.querySelector('.summary-section')).toBeDefined()
   })
 })

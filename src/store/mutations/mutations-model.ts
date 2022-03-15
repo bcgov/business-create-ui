@@ -12,9 +12,12 @@ import {
   FeesIF,
   IncorporationAddressIF,
   IncorporationAgreementIF,
+  NaicsIF,
+  RegistrationNameRequestIF,
   NameRequestIF,
   NameTranslationIF,
   OfficeAddressIF,
+  OrgInformationIF,
   OrgPersonIF,
   ResourceIF,
   ShareClassIF,
@@ -174,6 +177,10 @@ export const mutateAccountInformation = (state: StateIF, accountInfo: AccountInf
   state.stateModel.accountInformation = accountInfo
 }
 
+export const mutateOrgInformation = (state: StateIF, orgInfo: OrgInformationIF) => {
+  state.stateModel.orgInformation = orgInfo
+}
+
 export const mutateNameRequestState = (state: StateIF, nameRequestState: NameRequestIF) => {
   state.stateModel.nameRequest = nameRequestState
 }
@@ -326,5 +333,15 @@ export const mutateRegistrationBusinessAddress = (state: StateIF, val: BusinessA
 
 export const mutateRegistrationFeeAcknowledgement = (state: StateIF, val: boolean) => {
   state.stateModel.registration.feeAcknowledgement = val
+  if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
+}
+
+export const mutateRegistrationNaics = (state: StateIF, val: NaicsIF) => {
+  state.stateModel.registration.naics = val
+  if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
+}
+
+export const mutateRegistrationNameRequest = (state: StateIF, val: RegistrationNameRequestIF) => {
+  state.stateModel.registration.nameRequest = val
   if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
 }

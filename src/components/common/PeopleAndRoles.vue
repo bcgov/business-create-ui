@@ -12,12 +12,13 @@
         <span v-else>Hide Help</span>
       </span>
       <section v-show="helpToggle" class="people-and-roles-help">
-        <header id="people-and-roles-help-header"><h2>{{getPeopleAndRolesResource.helpSection.header}}</h2></header>
-        <p
-          v-for="(item, index) in getPeopleAndRolesResource.helpSection.helpText"
-          class="help-section"
-          :key="index"
-        >{{ item }}</p>
+        <header id="people-and-roles-help-header">
+          <h2>{{getPeopleAndRolesResource.helpSection.header}}</h2>
+        </header>
+
+        <p v-for="(item, index) in getPeopleAndRolesResource.helpSection.helpText" :key="index">
+          {{ item }}
+        </p>
         <u class="help-btn" @click="helpToggle = !helpToggle"><small>Hide Help</small></u>
       </section>
     </div>
@@ -31,42 +32,42 @@
               class="cp-valid">mdi-check</v-icon>
             <v-icon v-else-if="getShowErrors" color="error" class="cp-invalid">mdi-close</v-icon>
             <v-icon v-else>mdi-circle-small</v-icon>
-            <span class="chk-list-item-txt">{{rule.text}}</span>
+            <span class="rule-item-txt">{{rule.text}}</span>
           </li>
           <li v-if="rule.id === RuleIds.NUM_INCORPORATORS" :key="index">
             <v-icon v-if="validMinimumIncorporators" color="green darken-2"
               class="incorp-valid">mdi-check</v-icon>
             <v-icon v-else-if="getShowErrors" color="error" class="incorp-invalid">mdi-close</v-icon>
             <v-icon v-else>mdi-circle-small</v-icon>
-            <span class="chk-list-item-txt">{{rule.text}}</span>
+            <span class="rule-item-txt">{{rule.text}}</span>
           </li>
           <li v-if="rule.id === RuleIds.NUM_DIRECTORS" :key="index">
             <v-icon v-if="validMinimumDirectors" color="green darken-2"
               class="dir-valid">mdi-check</v-icon>
             <v-icon v-else-if="getShowErrors" color="error" class="dir-invalid">mdi-close</v-icon>
             <v-icon v-else>mdi-circle-small</v-icon>
-            <span class="chk-list-item-txt">{{rule.text}}</span>
+            <span class="rule-item-txt">{{rule.text}}</span>
           </li>
           <li v-if="rule.id === RuleIds.DIRECTOR_COUNTRY" :key="index">
             <v-icon v-if="validDirectorCountry" color="green darken-2"
               class="dir-valid">mdi-check</v-icon>
             <v-icon v-else-if="getShowErrors" color="error" class="dir-invalid">mdi-close</v-icon>
             <v-icon v-else>mdi-circle-small</v-icon>
-            <span class="chk-list-item-txt">{{rule.text}}</span>
+            <span class="rule-item-txt">{{rule.text}}</span>
           </li>
           <li v-if="rule.id === RuleIds.DIRECTOR_PROVINCE" :key="index">
             <v-icon v-if="validDirectorProvince" color="green darken-2"
               class="dir-valid">mdi-check</v-icon>
             <v-icon v-else-if="getShowErrors" color="error" class="dir-invalid">mdi-close</v-icon>
             <v-icon v-else>mdi-circle-small</v-icon>
-            <span class="chk-list-item-txt">{{rule.text}}</span>
+            <span class="rule-item-txt">{{rule.text}}</span>
           </li>
           <li v-if="rule.id === RuleIds.NUM_PROPRIETOR" :key="index">
             <v-icon v-if="validNumProprietor" color="green darken-2"
               class="dir-valid">mdi-check</v-icon>
             <v-icon v-else-if="getShowErrors" color="error" class="prop-invalid">mdi-close</v-icon>
             <v-icon v-else>mdi-circle-small</v-icon>
-            <span class="chk-list-item-txt">{{rule.text}}</span>
+            <span class="rule-item-txt">{{rule.text}}</span>
           </li>
         </template>
       </ul>
@@ -108,7 +109,7 @@
         @click="addOrgPerson(RoleTypes.INCORPORATOR, PartyTypes.ORGANIZATION)"
       >
         <v-icon>mdi-domain-plus</v-icon>
-        <span v-if="entityFilter(CorpTypeCd.COOP)">Add Organization</span>
+        <span v-if="isTypeCoop">Add Organization</span>
         <span v-else>Add a Corporation or Firm</span>
       </v-btn>
       <v-btn
@@ -125,7 +126,7 @@
       </v-btn>
     </div>
 
-    <v-card v-if="showOrgPersonForm" flat class="people-roles-container">
+    <v-card flat v-if="showOrgPersonForm" class="people-roles-container">
       <OrgPerson
         :initialValue="currentOrgPerson"
         :activeIndex="activeIndex"
@@ -138,11 +139,9 @@
       />
     </v-card>
 
-    <v-card v-if="orgPersonList.length > 0" flat :disabled="showOrgPersonForm" >
+    <v-card flat v-if="orgPersonList.length > 0" :disabled="showOrgPersonForm">
       <ListPeopleAndRoles
-        :personList="orgPersonList"
         :isSummary="false"
-        :showErrorSummary="!getAddPeopleAndRoleStep.valid"
         @editPerson="onEditPerson($event)"
         @removePerson="onRemovePerson($event)"
       />
@@ -151,12 +150,11 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins } from 'vue-property-decorator'
+import { Component, Vue } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import { cloneDeep } from 'lodash'
 import { ActionBindingIF, AddressIF, EmptyAddress, EmptyOrgPerson, OrgPersonIF, PeopleAndRoleIF,
   PeopleAndRolesResourceIF, TombstoneIF } from '@/interfaces'
-import { EntityFilterMixin } from '@/mixins'
 import { CorpTypeCd, PartyTypes, NumWord, RoleTypes, RuleIds } from '@/enums'
 import OrgPerson from '@/components/common/OrgPerson.vue'
 import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
@@ -167,7 +165,7 @@ import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
     ListPeopleAndRoles
   }
 })
-export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
+export default class PeopleAndRoles extends Vue {
   @Getter getTombstone!: TombstoneIF
   @Getter getAddPeopleAndRoleStep!: PeopleAndRoleIF
   @Getter getShowErrors!: boolean
@@ -175,6 +173,7 @@ export default class PeopleAndRoles extends Mixins(EntityFilterMixin) {
   @Getter getUserFirstName!: string
   @Getter getUserLastName!: string
   @Getter getUserAddress!: AddressIF
+  @Getter isTypeCoop!: boolean
 
   @Action setOrgPersonList!: ActionBindingIF
   @Action setAddPeopleAndRoleStepValidity!: ActionBindingIF
@@ -452,7 +451,7 @@ p {
   padding: 2rem 0 2rem 0;
 }
 
-.chk-list-item-txt {
+.rule-item-txt {
   margin-left: 0.5rem;
 }
 </style>

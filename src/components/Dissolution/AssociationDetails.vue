@@ -1,13 +1,15 @@
 <template>
-  <v-card flat class="rounded-4 py-2">
+  <div id="association-details">
     <div class="section-container">
+      <!-- Entity Name, etc -->
       <v-row no-gutters>
-        <v-col md="3" class="pr-6">
+        <v-col cols="12" sm="3" class="pr-4">
           <label v-if="isTypeCoop">Cooperative Association</label>
           <label v-else>Company</label>
         </v-col>
-        <v-col md="9">
-          <div class="company-name">{{ entityName }}</div>
+
+        <v-col cols="12" sm="9" class="mt-n1">
+          <label class="company-name">{{ entityName }}</label>
           <div class="my-1">
             <span>{{ entityDescription }}</span>
           </div>
@@ -18,14 +20,16 @@
       </v-row>
     </div>
 
-    <v-divider class="mx-8" />
+    <v-divider class="mx-6" />
 
+    <!-- Address -->
     <div class="section-container">
       <v-row no-gutters>
-        <v-col md="3">
-          <label>{{addressLabel}}</label>
+        <v-col cols="12" sm="3" class="pr-4 pb-4">
+          <label>Address</label>
         </v-col>
-        <v-col md="4">
+
+        <v-col cols="12" sm="4" class="pr-4">
           <label class="mailing-address-header">Mailing Address</label>
           <MailingAddress
             v-if="!isEmptyAddress(getBusiness.officeAddress.mailingAddress)"
@@ -34,8 +38,9 @@
           />
           <div v-else>(Not entered)</div>
         </v-col>
-        <v-col md="4">
-          <label class="mailing-address-header">Delivery Address</label>
+
+        <v-col cols="12" sm="4" class="pr-4">
+          <label class="delivery-address-header">Delivery Address</label>
           <DeliveryAddress
             v-if="!isEmptyAddress(getBusiness.officeAddress.deliveryAddress) &&
              !isSame(getBusiness.officeAddress.mailingAddress, getBusiness.officeAddress.deliveryAddress)"
@@ -48,31 +53,36 @@
       </v-row>
     </div>
 
-    <v-divider class="mx-8" v-if="isPremiumAccount" />
+    <!-- Folio Number -->
+    <template v-if="isPremiumAccount">
+      <v-divider class="mx-6" />
 
-    <div v-if="isPremiumAccount" id="folio-number" class="section-container">
-      <v-row no-gutters>
-        <v-col md="3" class="pr-6">
-          <label>Folio or Reference Number</label>
-        </v-col>
-        <v-col md="9">
-          <div id="lbl-folio-number">{{ getFolioNumber || 'None' }}</div>
-        </v-col>
-      </v-row>
-    </div>
+      <div class="section-container">
+        <v-row no-gutters>
+          <v-col cols="12" sm="3" class="pr-4">
+            <label>Folio or Reference Number</label>
+          </v-col>
 
-    <v-divider class="mx-8" />
+          <v-col cols="12" sm="9">
+            <div id="lbl-folio-number">{{ getFolioNumber || '(Not entered)' }}</div>
+          </v-col>
+        </v-row>
+      </div>
+    </template>
 
+    <v-divider class="mx-6" />
+
+    <!-- Contact Info -->
     <div class="section-container">
       <ContactInfo
         :businessContact="getBusinessContact"
         :disableActions="isSummary"
         :customMsg="contactInfoMsg"
         editLabel="Change"
-        @update="onContactInfoChange($event)"
+        @contactInfoChange="onContactInfoChange($event)"
       />
     </div>
-  </v-card>
+  </div>
 </template>
 
 <script lang="ts">
@@ -83,8 +93,8 @@ import { ActionBindingIF, AddressIF, BusinessContactIF, BusinessIF } from '@/int
 import { ContactInfo } from '@bcrs-shared-components/contact-info'
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
 import OfficeAddresses from '@/components/common/OfficeAddresses.vue'
-import { CommonMixin, EntityFilterMixin, EnumMixin } from '@/mixins'
-import { CoopType } from '@/enums'
+import { CommonMixin, EnumMixin } from '@/mixins'
+import { CoopType, CorpTypeCd } from '@/enums'
 import { isEmpty } from 'lodash'
 
 @Component({
@@ -95,12 +105,9 @@ import { isEmpty } from 'lodash'
     MailingAddress: BaseAddress
   }
 })
-export default class AssociationDetails extends Mixins(CommonMixin, EntityFilterMixin, EnumMixin) {
+export default class AssociationDetails extends Mixins(CommonMixin, EnumMixin) {
   @Prop({ default: false })
   readonly isSummary: boolean
-
-   @Prop({ default: 'Address' })
-  readonly addressLabel: ''
 
   // Global getters
   @Getter getApprovedName!: string
@@ -113,6 +120,7 @@ export default class AssociationDetails extends Mixins(CommonMixin, EntityFilter
   @Getter getBusinessLegalName!: string
   @Getter isPremiumAccount!: boolean
   @Getter isTypeCoop!: boolean
+  @Getter getEntityType!: CorpTypeCd
 
   // Global setters
   @Action setBusinessContact!: ActionBindingIF
@@ -149,22 +157,17 @@ export default class AssociationDetails extends Mixins(CommonMixin, EntityFilter
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
 
-.section-container {
-  padding: 1.5rem 2rem;
-
-  .mailing-address-header {
-    font-size: $px-14;
-  }
-
-  ::v-deep .subtitle {
-    font-size: $px-14;
-    font-weight: bold;
-  }
+.mailing-address-header,
+.delivery-address-header {
+  font-size: $px-14;
 }
 
 .company-name {
   font-size: $px-22;
-  font-weight: bold;
-  color:$gray9
+}
+
+// add missing whitespace between title and addresses
+::v-deep #contact-info .col-sm-3 {
+  padding-bottom: 16px;
 }
 </style>

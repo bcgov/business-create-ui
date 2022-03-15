@@ -1,26 +1,22 @@
 <template>
-  <v-row>
-    <v-col class="py-0" sm="12" md="12">
-      <v-form ref="fileUploadInput" lazy-validation>
-        <v-file-input
-          label="Select a file to upload"
-          filled
-          dense
-          v-model="fileUpload"
-          accept=".pdf"
-          class="file-upload-preview"
-          :rules="fileUploadRules"
-          show-size
-          @change="fileChange"
-          color="primary"
-          hint="File must be a PDF.  Maximum 30MB."
-          persistent-hint
-          :error-messages="customErrorMessages"
-        >
-        </v-file-input>
-      </v-form>
-    </v-col>
-  </v-row>
+  <v-form ref="fileUploadInput" lazy-validation>
+    <v-file-input
+      label="Select a file to upload"
+      filled
+      dense
+      v-model="fileUpload"
+      accept=".pdf"
+      class="file-upload-preview"
+      :rules="fileUploadRules"
+      show-size
+      @change="fileChange"
+      color="primary"
+      hint="File must be a PDF. Maximum 30MB."
+      persistent-hint
+      :error-messages="customErrorMessages"
+    >
+    </v-file-input>
+  </v-form>
 </template>
 
 <script lang="ts">
@@ -148,10 +144,10 @@ export default class FileUploadPreview extends Mixins(DocumentMixin) {
     .v-input__append-outer {
       margin-top: 10px !important
     }
-    .v-input__slot{
+    .v-input__slot {
       background-color: $gray1 !important;
     }
-    .v-file-input__text{
+    .v-file-input__text {
      color: $app-blue !important;
     }
     .v-input__icon--prepend button {
@@ -159,5 +155,4 @@ export default class FileUploadPreview extends Mixins(DocumentMixin) {
     }
   }
 }
-
 </style>

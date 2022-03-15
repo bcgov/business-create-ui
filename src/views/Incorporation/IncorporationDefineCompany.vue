@@ -10,14 +10,15 @@
 
     <!-- Name -->
     <section class="mt-10">
-      <header id="name-request-info-header">
+      <header id="name-header">
         <h2>Name</h2>
       </header>
-      <div :class="{ 'invalid-section': getShowErrors && !hasValidNameTranslation }">
-        <v-card flat class="step-container">
-          <NameRequestInfo @hasNameTranslation="onNameTranslation($event)" />
-        </v-card>
-      </div>
+
+      <v-card flat class="mt-5">
+        <NameRequestInfo
+          @hasNameTranslation="onNameTranslation($event)"
+        />
+      </v-card>
     </section>
 
     <!-- Cooperative Association Type -->
@@ -32,28 +33,34 @@
             <span v-else>Hide Help</span>
           </span>
           <section v-show="coopHelpToggle" class="coop-type-help">
-            <header id="coop-type-help-header"><h2>Help with Cooperative Association Types</h2></header>
-            <p class="help-section"><strong>Community Service Cooperatives</strong> are a particular kind of cooperative
-              recognized under the Cooperative Association Act. Community Service Cooperatives have a similar status to
-              that of non-profit societies. This type of cooperative also requires the inclusion of non-alterable
-              clauses in their rules to ensure they operate on a non-profit basis, and their purpose is charitable, or
-              to provide health, social, educational, or other community services. Community Service Cooperatives cannot
-              be Housing Cooperatives and cannot issue investment shares.
+            <header id="coop-type-help-header">
+              <h2>Help with Cooperative Association Types</h2>
+            </header>
+
+            <p><strong>Community Service Cooperatives</strong> are a particular kind of cooperative
+              recognized under the Cooperative Association Act. Community Service Cooperatives have a
+              similar status to that of non-profit societies. This type of cooperative also requires the
+              inclusion of non-alterable clauses in their rules to ensure they operate on a non-profit
+              basis, and their purpose is charitable, or to provide health, social, educational, or other
+              community services. Community Service Cooperatives cannot be Housing Cooperatives and cannot
+              issue investment shares.
             </p>
-            <p class="help-section"><strong>Housing Cooperatives</strong> are a specific type of cooperative
-              incorporated under the Cooperative Association Act that provides housing to its members. Members may
-              purchase shares to join the Housing Cooperative and elect directors who will govern the cooperative.
-              Housing Cooperatives cannot issue investment shares. The Cooperative Association Act details special
-              provisions for Housing Cooperatives that need to be considered when deciding to incorporate.
+            <p><strong>Housing Cooperatives</strong> are a specific type of cooperative incorporated under
+              the Cooperative Association Act that provides housing to its members. Members may purchase
+              shares to join the Housing Cooperative and elect directors who will govern the cooperative.
+              Housing Cooperatives cannot issue investment shares. The Cooperative Association Act details
+              special provisions for Housing Cooperatives that need to be considered when deciding to
+              incorporate.
             </p>
-            <p class="help-section">An <strong>Ordinary Cooperative</strong> is a cooperative that may have a wide
-              range of purposes and is neither a Housing nor a Community Service Cooperative. The cooperative may
+            <p>An <strong>Ordinary Cooperative</strong> is a cooperative that may have a wide range of
+              purposes and is neither a Housing nor a Community Service Cooperative. The cooperative may
               operate as a for-profit association and may issue investment shares.
             </p>
             <u class="help-btn" @click="coopHelpToggle = !coopHelpToggle"><small>Hide Help</small></u>
           </section>
         </div>
       </header>
+
       <div :class="{ 'invalid-section': getShowErrors && !hasValidCooperativeType }">
         <v-card flat class="step-container">
           <CooperativeType
@@ -73,6 +80,7 @@
           </span> Mailing and Delivery Addresses. All addresses must be located in BC.
         </p>
       </header>
+
       <div :class="{ 'invalid-section': getShowErrors && !addressFormValid }">
         <OfficeAddresses
           :showErrors="getShowErrors"
@@ -91,7 +99,10 @@
           business in the future, including sending documents and notifications.
         </p>
       </header>
-      <div :class="{ 'invalid-section': getShowErrors && !businessContactFormValid }">
+
+      <v-card flat class="py-8 px-6"
+        :class="{ 'invalid-section': getShowErrors && !businessContactFormValid }"
+      >
         <BusinessContactInfo
           :initialValue="getBusinessContact"
           :isEditing="true"
@@ -99,7 +110,7 @@
           @update="setBusinessContact($event)"
           @valid="onBusinessContactFormValidityChange($event)"
         />
-      </div>
+      </v-card>
     </section>
 
     <!-- Folio / Reference Number -->
@@ -110,6 +121,7 @@
            This information is not used by the BC Business Registry.
         </p>
       </header>
+
       <v-card flat class="step-container">
         <FolioNumber
           :initialValue="getFolioNumber"
@@ -122,7 +134,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Vue, Watch } from 'vue-property-decorator'
+import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { Getter, Action } from 'vuex-class'
 import {
   ActionBindingIF,
@@ -131,7 +143,7 @@ import {
   DefineCompanyIF,
   IncorporationAddressIF
 } from '@/interfaces'
-import { CommonMixin, EntityFilterMixin } from '@/mixins'
+import { CommonMixin } from '@/mixins'
 import { CoopType, CorpTypeCd, RouteNames } from '@/enums'
 import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
 import CooperativeType from '@/components/Dissolution/CooperativeType.vue'
@@ -148,7 +160,7 @@ import OfficeAddresses from '@/components/common/OfficeAddresses.vue'
     OfficeAddresses
   }
 })
-export default class IncorporationDefineCompany extends Mixins(CommonMixin, EntityFilterMixin) {
+export default class IncorporationDefineCompany extends Mixins(CommonMixin) {
   @Getter getCompanyTitle!: string
   @Getter getCompanyDescription!: string
   @Getter isEntityType!: boolean
@@ -192,7 +204,7 @@ export default class IncorporationDefineCompany extends Mixins(CommonMixin, Enti
     }
 
     // watch data changes once page has loaded (in next tick)
-    Vue.nextTick(() => {
+    this.$nextTick(() => {
       this.setIgnoreChanges(false)
     })
   }
@@ -209,7 +221,7 @@ export default class IncorporationDefineCompany extends Mixins(CommonMixin, Enti
       streetAddressAdditional: ''
     }
 
-    if (this.entityFilter(CorpTypeCd.BENEFIT_COMPANY)) {
+    if (this.isTypeBcomp) {
       this.setOfficeAddresses({
         registeredOffice: {
           mailingAddress: defaultAddress,
@@ -266,7 +278,7 @@ export default class IncorporationDefineCompany extends Mixins(CommonMixin, Enti
   private async scrollToInvalidComponent (): Promise<void> {
     if (this.getShowErrors && this.$route.name === RouteNames.INCORPORATION_DEFINE_COMPANY) {
       // scroll to invalid components
-      await Vue.nextTick()
+      await this.$nextTick()
       await this.validateAndScroll(
         {
           hasValidNameTranslation: this.hasValidNameTranslation,
@@ -275,7 +287,7 @@ export default class IncorporationDefineCompany extends Mixins(CommonMixin, Enti
           businessContactFormValid: this.businessContactFormValid
         },
         [
-          'name-request-info-header',
+          'name-header',
           'association-type-header',
           'office-address-header',
           'registered-office-contact-header'

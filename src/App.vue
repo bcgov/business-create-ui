@@ -74,7 +74,7 @@
 
     <!-- Initial Page Load Transition -->
     <transition name="fade">
-      <div class="loading-container" v-show="!haveData">
+      <div class="loading-container" v-show="!haveData && !isErrorDialog">
         <div class="loading__content">
           <v-progress-circular color="primary" size="50" indeterminate />
           <div class="loading-msg">Loading</div>
@@ -87,6 +87,7 @@
     <PaySystemAlert />
 
     <div class="app-body">
+      <!-- Don't show page if an error dialog is displayed. -->
       <main v-if="!isErrorDialog">
         <BreadCrumb :breadcrumbs="breadcrumbs" />
         <EntityInfo />
@@ -107,9 +108,9 @@
               <Signin v-if="isRouteName(RouteNames.SIGN_IN)" />
               <Signout v-if="isRouteName(RouteNames.SIGN_OUT)" />
 
-              <!-- Only render when data is ready, or validation can't be properly evaluated. -->
+              <!-- Render components only after data is loaded. -->
               <template v-if="haveData">
-                <!-- Using v-show to pre-create/mount components so validation on stepper is shown -->
+                <!-- Use v-show so all pages (steps) are initialized/rendered. -->
                 <component
                   v-for="step in getSteps"
                   v-show="isRouteName(step.to)"
@@ -145,12 +146,12 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Mixins, Vue, Watch } from 'vue-property-decorator'
+import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import { PAYMENT_REQUIRED } from 'http-status-codes'
 import { cloneDeep } from 'lodash'
 import * as Sentry from '@sentry/browser'
-import { getFeatureFlag, updateLdUser, navigate } from '@/utils'
+import { getFeatureFlag, updateLdUser, navigate, sleep } from '@/utils'
 
 // Components, dialogs and views
 import Actions from '@/components/common/Actions.vue'
@@ -170,7 +171,6 @@ import {
   DateMixin,
   EnumMixin,
   FilingTemplateMixin,
-  LegalApiMixin,
   NameRequestMixin
 } from '@/mixins'
 import {
@@ -182,6 +182,7 @@ import {
   DissolutionResourceIF,
   EmptyFees,
   FilingDataIF,
+  OrgInformationIF,
   ResourceIF,
   StepIF
 } from '@/interfaces'
@@ -190,11 +191,12 @@ import {
   getEntityDashboardBreadcrumb,
   getMyBusinessRegistryBreadcrumb,
   getRegistryDashboardBreadcrumb,
+  getSbcStaffDashboardBreadcrumb,
   getStaffDashboardBreadcrumb,
   IncorporationResources,
   RegistrationResources
 } from '@/resources'
-import { AuthServices, PayServices } from '@/services'
+import { AuthServices, LegalServices, PayServices } from '@/services'
 
 // Enums and Constants
 import {
@@ -228,7 +230,6 @@ export default class App extends Mixins(
   DateMixin,
   EnumMixin,
   FilingTemplateMixin,
-  LegalApiMixin,
   NameRequestMixin
 ) {
   // Refs
@@ -243,6 +244,9 @@ export default class App extends Mixins(
   @Getter getFilingName!: FilingNames
   @Getter isDissolutionFiling!: boolean
   @Getter getSteps!: Array<StepIF>
+  @Getter getAccountInformation!: AccountInformationIF
+  @Getter getOrgInformation!: OrgInformationIF
+  @Getter isSbcStaff!: boolean
 
   @Action setBusinessId!: ActionBindingIF
   @Action setCurrentStep!: ActionBindingIF
@@ -260,9 +264,12 @@ export default class App extends Mixins(
   @Action setCreateShareStructureStepValidity!: ActionBindingIF
   @Action setHaveChanges!: ActionBindingIF
   @Action setAccountInformation!: ActionBindingIF
+  @Action setOrgInformation!: ActionBindingIF
   @Action setTempId!: ActionBindingIF
   @Action setShowErrors!: ActionBindingIF
   @Action setFeePrices!: ActionBindingIF
+  @Action setFilingType!: ActionBindingIF
+  @Action setNameRequestState!: ActionBindingIF
 
   // Local properties
   private accountAuthorizationDialog: boolean = false
@@ -281,6 +288,7 @@ export default class App extends Mixins(
 
   // Local const
   private readonly STAFF_ROLE = 'STAFF'
+  private readonly GOV_ACCOUNT_USER = 'GOV_ACCOUNT_USER'
 
   // Enum for template
   readonly RouteNames = RouteNames
@@ -298,13 +306,15 @@ export default class App extends Mixins(
       }
     ]
 
-    // Set base crumbs based on user role
-    // Staff don't want the home landing page and they can't access the Manage Business Dashboard
-    if (this.isRoleStaff) {
-      // If staff, set StaffDashboard as home crumb
+    // set base crumbs based on user type
+    if (this.isSbcStaff) {
+      // set SbcStaffDashboard as Home crumb
+      crumbs.unshift(getSbcStaffDashboardBreadcrumb())
+    } else if (this.isRoleStaff) {
+      // set StaffDashboard as Home crumb
       crumbs.unshift(getStaffDashboardBreadcrumb())
     } else {
-      // For non-staff, set Home and Dashboard crumbs
+      // set Home and Dashboard crumbs
       crumbs.unshift(getRegistryDashboardBreadcrumb(), getMyBusinessRegistryBreadcrumb())
     }
 
@@ -369,7 +379,7 @@ export default class App extends Mixins(
   private get saveErrorDialogName (): string {
     switch (this.getFilingType) {
       case FilingTypes.INCORPORATION_APPLICATION: return 'Application'
-      case FilingTypes.REGISTRATION: return 'Application'
+      case FilingTypes.REGISTRATION: return 'Registration'
       case FilingTypes.VOLUNTARY_DISSOLUTION: return 'Filing'
     }
   }
@@ -400,7 +410,7 @@ export default class App extends Mixins(
       if (this.getHaveChanges) {
         event.preventDefault()
         // NB: custom text is not supported in all browsers
-        event.returnValue = 'You have unsaved changes. Are you sure you want to leave?'
+        event.returnValue = 'You have unsaved changes. Do you want to exit?'
       }
     }
 
@@ -485,7 +495,7 @@ export default class App extends Mixins(
     // open confirmation dialog and wait for response
     this.$refs.confirm.open(
       'Unsaved Changes',
-      'You have unsaved changes in your Incorporation Application. Do you want to exit?',
+      'You have unsaved changes. Do you want to exit?',
       {
         width: '45rem',
         persistent: true,
@@ -563,7 +573,7 @@ export default class App extends Mixins(
           const resources = await this.handleDraftApplication()
           if (!resources) {
             // go to catch()
-            throw new Error(`Invalid ${this.getFilingType} resources entity type = ${this.getEntityType}`)
+            throw new Error(`Invalid ${this.getFilingType} resources, entity type = ${this.getEntityType}`)
           }
           this.setResources(resources)
         }
@@ -573,7 +583,8 @@ export default class App extends Mixins(
         // Since it's not an expected behaviour, it is better to report it.
         Sentry.captureException(error)
         console.log('Fetch error =', error) // eslint-disable-line no-console
-        this.fetchErrorDialog = true
+        // show fetch error dialog if there isn't another dialog showing
+        this.fetchErrorDialog = !this.isErrorDialog
         throw error // go to catch()
       }
 
@@ -583,16 +594,16 @@ export default class App extends Mixins(
         switch (this.getFilingType) {
           case FilingTypes.VOLUNTARY_DISSOLUTION:
             this.$router.push(RouteNames.DISSOLUTION_DEFINE_DISSOLUTION).catch(() => {})
-            break
+            return
           case FilingTypes.INCORPORATION_APPLICATION:
             this.$router.push(RouteNames.INCORPORATION_DEFINE_COMPANY).catch(() => {})
-            break
+            return
           case FilingTypes.REGISTRATION:
             this.$router.push(RouteNames.REGISTRATION_DEFINE_BUSINESS).catch(() => {})
-            break
+            return
           default:
             this.invalidRouteDialog = true
-            break
+            throw new Error(`Invalid filing type = ${this.getFilingType}`) // go to catch()
         }
       }
 
@@ -611,7 +622,7 @@ export default class App extends Mixins(
 
       // set current profile name to store for field pre population
       // do this only if we are not staff
-      if (userInfo && !this.isRoleStaff) {
+      if (userInfo && !this.isRoleStaff && !this.isSbcStaff) {
         // pre-populate Certified By name
         this.setCertifyState(
           {
@@ -620,14 +631,15 @@ export default class App extends Mixins(
           }
         )
       }
+
+      // good to go - hide spinner and render components
+      this.haveData = true
     } catch (error) {
       // errors should be handled above
-      console.error('Unhandled error in fetchData() =', error) // eslint-disable-line no-console
       // just fall through to finally()
     } finally {
-      this.haveData = true
       // wait for things to stabilize, then reset flag
-      Vue.nextTick(() => this.setHaveChanges(false))
+      this.$nextTick(() => this.setHaveChanges(false))
     }
   }
 
@@ -637,18 +649,18 @@ export default class App extends Mixins(
     await this.checkAuth(this.getBusinessId).catch(error => {
       console.log('Auth error =', error) // eslint-disable-line no-console
       this.accountAuthorizationDialog = true
-      throw error // go to catch()
+      throw error
     })
 
     // fetch draft filing
     // NB: will throw if API error
-    let draftFiling:any = await this.fetchDraftDissolution()
+    let draftFiling = await LegalServices.fetchDraftDissolution(this.getBusinessId)
+
     // SB TODO remove once filing is available
     draftFiling.business = { ...draftFiling.business,
       ...{
-        legalType: 'SP'
+        legalType: CorpTypeCd.SOLE_PROP
       } }
-
     // check if filing is in a valid state to be edited
     this.invalidDissolutionDialog = !this.hasValidFilingState(draftFiling)
     if (this.invalidDissolutionDialog) return null
@@ -672,12 +684,14 @@ export default class App extends Mixins(
     await this.checkAuth(this.getTempId).catch(error => {
       console.log('Auth error =', error) // eslint-disable-line no-console
       this.accountAuthorizationDialog = true
-      throw error // go to catch()
+      throw error
     })
 
     // fetch draft filing
     // NB: will throw if API error
-    let draftFiling = await this.fetchDraftApplication()
+    let draftFiling = await LegalServices.fetchDraftApplication(this.getTempId)
+
+    this.setFilingType(draftFiling.header.name) // either IA or reg
 
     // check if filing is in a valid state to be edited
     if (!this.hasValidFilingState(draftFiling)) return null
@@ -696,6 +710,8 @@ export default class App extends Mixins(
         resources = RegistrationResources
         parseFiling = this.parseRegistrationDraft
         break
+      default:
+        throw new Error(`Invalid filing type = ${this.getFilingType}`)
     }
 
     // parse draft filing into the store
@@ -705,7 +721,7 @@ export default class App extends Mixins(
 
     // verify nameRequest object
     const nameRequest = draftFiling[draftFiling.header?.name]?.nameRequest
-    if (!nameRequest) throw new Error('missing Name Request object')
+    if (!nameRequest) throw new Error('Missing Name Request object')
 
     // Fetches and validates the NR and sets the data to the store. This method is different
     // from the validateNameRequest method in Actions.vue. This method sets the data to
@@ -731,7 +747,7 @@ export default class App extends Mixins(
       const nrNumber = filing[filing.header?.name].nameRequest.nrNumber
 
       // fetch NR data
-      const nrResponse = await this.fetchNameRequest(nrNumber).catch(error => {
+      const nrResponse = await LegalServices.fetchNameRequest(nrNumber).catch(error => {
         console.log('NR error =', error) // eslint-disable-line no-console
         this.nameRequestInvalidErrorDialog = true
       })
@@ -752,8 +768,8 @@ export default class App extends Mixins(
       }
 
       // ensure types match
-      if (this.nrTypeToEntityType(nrResponse) !== this.getEntityType) {
-        console.log('NR type doesn\'t match entity type') // eslint-disable-line no-console
+      if (nrResponse.legalType !== this.getEntityType) {
+        console.log('NR legal type doesn\'t match entity type') // eslint-disable-line no-console
         this.nameRequestInvalidType = NameRequestStates.INVALID
         this.nameRequestInvalidErrorDialog = true
         return
@@ -816,7 +832,7 @@ export default class App extends Mixins(
     } else if (userInfo.email) {
       // this is an IDIR user
       this.setUserEmail(userInfo.email)
-    } else if (userInfo.type !== this.STAFF_ROLE) {
+    } else if (userInfo.type !== this.STAFF_ROLE && userInfo.type !== this.GOV_ACCOUNT_USER) {
       throw new Error('Invalid user email')
     }
 
@@ -826,7 +842,7 @@ export default class App extends Mixins(
     } else if (userInfo.phone) {
       // this is an IDIR user
       this.setUserPhone(userInfo.phone)
-    } else if (userInfo.type !== this.STAFF_ROLE) {
+    } else if (userInfo.type !== this.STAFF_ROLE && userInfo.type !== this.GOV_ACCOUNT_USER) {
       console.info('Invalid user phone')
     }
 
@@ -840,34 +856,50 @@ export default class App extends Mixins(
     return userInfo
   }
 
+  /**
+   * Gets current account from object in session storage.
+   * Wait up to 10 sec for current account to be synced (typically by SbcHeader).
+   */
+  private async getCurrentAccount (): Promise<any> {
+    let account: any
+    for (let i = 0; i < 100; i++) {
+      const currentAccount = sessionStorage.getItem(SessionStorageKeys.CurrentAccount)
+      account = JSON.parse(currentAccount)
+      if (account) break
+      await sleep(100)
+    }
+    return account
+  }
+
   /** Gets account info and stores it. */
   private async loadAccountInformation (): Promise<any> {
-    const currentAccount = sessionStorage.getItem(SessionStorageKeys.CurrentAccount)
-    // Staff won't have currentAccount
-    if (currentAccount) {
-      const currentAccountParsed = JSON.parse(currentAccount)
-      if (!currentAccountParsed) throw new Error('Invalid account info')
+    // NB: staff don't have current account (but SBC Staff do)
+    if (!this.isRoleStaff) {
+      const currentAccount = await this.getCurrentAccount()
+      if (currentAccount) {
+        const accountInfo: AccountInformationIF = {
+          accountType: currentAccount.accountType,
+          id: currentAccount.id,
+          label: currentAccount.label,
+          type: currentAccount.type
+        }
+        this.setAccountInformation(accountInfo)
 
-      const accountInfo: AccountInformationIF = {
-        accountType: currentAccountParsed.accountType,
-        id: currentAccountParsed.id,
-        label: currentAccountParsed.label,
-        type: currentAccountParsed.type
+        // get org info
+        await this.getSaveOrgInfo(accountInfo?.id)
       }
-      this.setAccountInformation(accountInfo)
-
-      // get org info
-      await this.getSaveOrgInfo(accountInfo?.id)
     }
   }
 
-  /** Gets org info and stores user's address. */
-  private async getSaveOrgInfo (orgId: number): Promise<any> {
+  /** Gets and stores org info and user's address. */
+  private async getSaveOrgInfo (orgId: number): Promise<void> {
     if (!orgId) throw new Error('Invalid org id')
 
     // NB: will throw if API error
     const orgInfo = await AuthServices.fetchOrgInfo(orgId)
     if (!orgInfo) throw new Error('Invalid org info')
+
+    this.setOrgInformation(orgInfo)
 
     const mailingAddress = orgInfo.mailingAddress
     if (!mailingAddress) throw new Error('Invalid mailing address')
@@ -881,8 +913,6 @@ export default class App extends Mixins(
       streetAddressAdditional: mailingAddress.streetAdditional
     }
     this.setUserAddress(userAddress)
-
-    return orgInfo
   }
 
   /** Updates Launch Darkly with current user info. */
@@ -932,8 +962,17 @@ export default class App extends Mixins(
 </script>
 
 <style lang="scss" scoped>
+// display drop-down menu on top of stepper and fee summary
+::v-deep .app-header {
+  z-index: 3;
+}
+
 aside {
   position: relative;
-  z-index: 10; // on top of stepper
+  z-index: 2; // on top of stepper
+}
+
+.vue-affix {
+  width: 282px;
 }
 </style>

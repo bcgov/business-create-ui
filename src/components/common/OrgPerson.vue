@@ -1,7 +1,6 @@
 <template>
   <div id="add-edit-org-person">
-
-    <confirm-dialog
+    <ConfirmDialog
       ref="reassignCPDialog"
       attach="add-edit-org-person"
     />
@@ -12,12 +11,12 @@
           <div class="meta-container">
 
             <!-- FUTURE: move header text to resource file so this component is generic -->
-            <label class="add-org-header" v-if="isOrg && entityFilter(CorpTypeCd.BENEFIT_COMPANY)">
+            <label class="add-org-header" v-if="isOrg && isTypeBcomp">
               <span v-if="activeIndex === -1">Add Corporation or Firm</span>
               <span v-else>Edit Corporation or Firm</span>
             </label>
 
-            <label class="add-org-header" v-if="isOrg && entityFilter(CorpTypeCd.COOP)">
+            <label class="add-org-header" v-if="isOrg && isTypeCoop">
               <span v-if="activeIndex === -1">Add Organization</span>
               <span v-else>Edit Organization</span>
             </label>
@@ -151,9 +150,11 @@
                 <div class="form__row" v-if="isDirector">
                   <v-checkbox
                     class="inherit-checkbox"
+                    hide-details
                     label="Delivery Address same as Mailing Address"
                     v-model="inheritMailingAddress"
                   />
+
                   <template v-if="!inheritMailingAddress">
                     <div class="font-weight-bold mt-4">Delivery Address</div>
                     <BaseAddress
@@ -206,7 +207,7 @@ import {
 } from '@/interfaces'
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
 import ConfirmDialog from '@/dialogs/ConfirmDialog.vue'
-import { EntityFilterMixin, CommonMixin } from '@/mixins'
+import { CommonMixin } from '@/mixins'
 import { CorpTypeCd, RoleTypes, PartyTypes } from '@/enums'
 import { PersonAddressSchema } from '@/schemas'
 import { Rules } from '@/rules'
@@ -218,7 +219,7 @@ import { cloneDeep } from 'lodash'
     ConfirmDialog
   }
 })
-export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
+export default class OrgPerson extends Mixins(CommonMixin) {
    // Refs
    $refs!: {
     addPersonOrgForm: FormIF
@@ -234,7 +235,9 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
 
   @Getter getCurrentDate!: string
   @Getter isRoleStaff!: boolean
+  @Getter isTypeBcomp!: boolean
   @Getter isTypeCoop!: boolean
+  @Getter getEntityType!: CorpTypeCd
 
   // Local properties
   private orgPerson: OrgPersonIF = null
@@ -261,7 +264,7 @@ export default class OrgPerson extends Mixins(EntityFilterMixin, CommonMixin) {
   readonly Rules = Rules
 
   /** The validation rules for the roles. */
-  private get roleRules (): Array<Function> {
+  get roleRules (): Array<Function> {
     return [ () => this.selectedRoles.length > 0 || 'A role is required' ]
   }
 
@@ -564,7 +567,7 @@ p {
 }
 
 li {
-  list-style: None;
+  list-style: none;
   padding-top: 0.25rem;
 }
 
@@ -637,13 +640,6 @@ li {
   line-height: 1.5rem;
 }
 
-.name-header {
-  font-size: $px-16;
-  font-weight: bold;
-  line-height: 1.5rem;
-  padding-bottom: 0.5rem;
-}
-
 @media (min-width: 768px) {
   .meta-container {
     flex-flow: row nowrap;
@@ -658,5 +654,11 @@ li {
 
 .gray-card {
   background-color: rgba(0, 0, 0, 0.06);
+}
+
+.inherit-checkbox {
+  margin-top: 0;
+  padding-top: 0;
+  margin-left: -3px;
 }
 </style>

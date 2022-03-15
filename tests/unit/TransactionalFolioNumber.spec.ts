@@ -91,7 +91,7 @@ for (const [i, test] of tests.entries()) {
 
     itIf(!test.props.doValidate)('is valid when validation is disabled', () => {
       expect(wrapper.vm.isValid).toBe(true)
-      expect(wrapper.find('#transactional-folio-number-container').classes('invalid-section')).toBe(false)
+      expect(wrapper.find('#transactional-folio-number').classes('invalid-section')).toBe(false)
       expect(wrapper.find('label').classes('error-text')).toBe(false)
     })
 
@@ -102,7 +102,7 @@ for (const [i, test] of tests.entries()) {
 
       // expect(wrapper.vm.isValid).toBe(true)
       // expect(wrapper.find('label').classes('error-text')).toBe(false)
-      // expect(wrapper.find('#transactional-folio-number-container').classes('invalid-section')).toBe(false)
+      // expect(wrapper.find('#transactional-folio-number').classes('invalid-section')).toBe(false)
     })
 
     // FUTURE: fix this; for some reason, the component under test can't read `this.$refs.folioNumberInput`
@@ -111,7 +111,7 @@ for (const [i, test] of tests.entries()) {
       // await flushPromises()
 
       // expect(wrapper.vm.isValid).toBe(false)
-      // expect(wrapper.find('#transactional-folio-number-container').classes('invalid-section')).toBe(true)
+      // expect(wrapper.find('#transactional-folio-number').classes('invalid-section')).toBe(true)
       // expect(wrapper.find('label').classes('error-text')).toBe(true)
     })
 

@@ -104,18 +104,25 @@
 }
 
 .v-divider {
-  color: $gray3;
+  border-color: $gray3 !important;
 }
 
 // Checkboxes
-.v-input--checkbox label {
-  color: $gray7 !important;
+.v-input--checkbox .v-input__control .v-input__slot {
+  label {
+    color: $gray7;
+  }
 }
 
 // Disabled Checkboxes
-.theme--light.v-input--selection-controls.v-input--is-disabled:not(.v-input--indeterminate) .v-icon {
-  color: $app-blue !important;
-  opacity: 0.4;
+.v-input--checkbox.v-input--is-disabled .v-input__control .v-input__slot {
+  label {
+    opacity: 0.4;
+  }
+  .v-input--selection-controls__input i {
+    color: $gray7 !important;
+    opacity: 0.4;
+  }
 }
 
 // Tooltips

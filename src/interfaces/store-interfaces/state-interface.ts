@@ -22,7 +22,8 @@ import {
   StaffPaymentStepIF,
   TombstoneIF,
   UploadAffidavitIF,
-  CreateResolutionIF
+  CreateResolutionIF,
+  OrgInformationIF
 } from '@/interfaces'
 
 // State model interface
@@ -30,6 +31,7 @@ export interface StateModelIF {
   currentJsDate: Date
   tombstone: TombstoneIF
   accountInformation: AccountInformationIF
+  orgInformation: OrgInformationIF
   business: BusinessIF
   businessContact: BusinessContactIF
   dissolution: DissolutionStateIF

@@ -8,11 +8,12 @@
 			"isFutureEffective": true
 		},
 		"registration": {
-      "startDate": "2001-02-03",
-			"nameRequest": {
-				"legalType": "SP",
-        "nrNumber": "NR1234567",
-        "legalName": "My Approved Name"
+      "business": {
+        "identifier": "T1234567",
+        "naics": {
+          "naicsCode": "12345",
+          "naicsDescription": "Some NAICS Description"
+        }
 			},
       "businessAddress": {
         "deliveryAddress": {
@@ -39,10 +40,13 @@
 				"phone": "(111) 222-3333",
         "extension": "444"
 			},
+			"nameRequest": {
+        "legalName": "My Approved Name",
+				"legalType": "SP",
+        "nrNumber": "NR 1234567"
+			},
       "parties": [],
-      "business": {
-        "identifier": "T123456789"
-			}
-		}
+      "startDate": "2021-02-03"
+    }
 	}
 }

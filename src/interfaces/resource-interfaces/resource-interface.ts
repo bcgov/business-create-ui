@@ -2,7 +2,7 @@ import {
   AffidavitResourceIF, FilingDataIF, HelpSectionIF, IncorporationAgreementTypeIF, KeyValueIF, PeopleAndRolesResourceIF,
   StepIF, CreateRulesResourceIF, CreateMemorandumResourceIF, CreateResolutionResourceIF, CustodianResourceIF
 } from '@/interfaces'
-import { CorpTypeCd, NameRequestTypes } from '@/enums'
+import { CorpTypeCd } from '@/enums'
 
 // Interface to define the resource model
 export interface IncorporationResourceIF {
@@ -11,7 +11,6 @@ export interface IncorporationResourceIF {
   title: string
   description: string
   statement: string
-  nameRequestType: NameRequestTypes
   steps: Array<StepIF>
   filingData: Array<FilingDataIF>
   peopleAndRoles: PeopleAndRolesResourceIF
@@ -42,7 +41,6 @@ export interface IncorporationResourceIF {
 export interface RegistrationResourceIF {
   entityType: CorpTypeCd
   displayName: string
-  nameRequestType: NameRequestTypes
   steps: Array<StepIF>
   filingData: Array<FilingDataIF>
   peopleAndRoles: PeopleAndRolesResourceIF

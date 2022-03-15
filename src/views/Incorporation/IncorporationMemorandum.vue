@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Vue, Watch } from 'vue-property-decorator'
+import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 import { CreateMemorandumIF } from '@/interfaces'
 import { CommonMixin } from '@/mixins'
@@ -25,7 +25,7 @@ export default class IncorporationMemorandum extends Mixins(CommonMixin) {
   private async scrollToInvalidComponent (): Promise<void> {
     if (this.getShowErrors && this.$route.name === RouteNames.INCORPORATION_MEMORANDUM) {
       // scroll to invalid components
-      await Vue.nextTick()
+      await this.$nextTick()
       const vid = this.getCreateMemorandumStep.validationDetail.validationItemDetails
       const validFlags = this.buildValidFlags(vid)
       const componentIds = this.buildElementIds(vid)
@@ -37,7 +37,3 @@ export default class IncorporationMemorandum extends Mixins(CommonMixin) {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-@import '@/assets/styles/theme.scss';
-</style>

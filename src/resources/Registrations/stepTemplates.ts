@@ -16,7 +16,7 @@ export const RegistrationSteps = [
   {
     id: 'step-2-btn',
     step: 2,
-    icon: 'mdi-handshake',
+    icon: 'mdi-account-multiple-plus',
     text: 'Add People \nand Roles',
     to: RouteNames.REGISTRATION_PEOPLE_ROLES,
     component: ViewComponentNames.REGISTRATION_PEOPLE_ROLES

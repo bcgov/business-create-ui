@@ -1,7 +1,7 @@
-import { FilingTypes } from '@/enums'
+import { CorpTypeCd, FilingTypes } from '@/enums'
 import { BreadcrumbIF } from '@/interfaces'
 import { getVuexStore } from '@/store'
-import { CorpTypeCd, GetCorpNumberedDescription } from '@bcrs-shared-components/corp-type-module'
+import { GetCorpNumberedDescription } from '@bcrs-shared-components/corp-type-module'
 
 const getCorpTypeNumberedDescription = GetCorpNumberedDescription
 const store = getVuexStore()
@@ -50,6 +50,13 @@ export function getMyBusinessRegistryBreadcrumb (): BreadcrumbIF {
   return {
     text: 'My Business Registry',
     href: `${sessionStorage.getItem('BUSINESSES_URL')}business/${getParams()}`
+  }
+}
+
+export function getSbcStaffDashboardBreadcrumb (): BreadcrumbIF {
+  return {
+    text: 'Staff Dashboard',
+    href: `${sessionStorage.getItem('REGISTRY_HOME_URL')}dashboard/${getParams()}`
   }
 }
 

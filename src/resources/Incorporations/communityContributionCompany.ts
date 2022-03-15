@@ -1,5 +1,5 @@
 import { IncorporationResourceIF } from '@/interfaces'
-import { CorpTypeCd, FilingCodes, NameRequestTypes, RuleIds } from '@/enums'
+import { CorpTypeCd, FilingCodes, RuleIds } from '@/enums'
 import { BaseStepsTemplate } from './stepTemplates'
 import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 
@@ -11,7 +11,6 @@ export const CommunityContributionCompanyResource: IncorporationResourceIF = {
     'society. This company is restricted, in accordance with Part 2.2 of the BCA, in its ability to pay ' +
     'dividends and to distribute its assets on dissolution or otherwise.',
   statement: null,
-  nameRequestType: NameRequestTypes.CC,
   steps: BaseStepsTemplate,
   filingData: [{
     entityType: CorpTypeCd.BC_CCC,

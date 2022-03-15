@@ -48,6 +48,7 @@ export * from './store-interfaces/state-interfaces/business-interface'
 export * from './store-interfaces/state-interfaces/dissolution-state-interface'
 export * from './store-interfaces/state-interfaces/document-delivery-interface'
 export * from './store-interfaces/state-interfaces/name-request-interface'
+export * from './store-interfaces/state-interfaces/org-information-interface'
 export * from './store-interfaces/state-interfaces/registration-state-interface'
 export * from './store-interfaces/state-interfaces/tombstone-interface'
 export * from './store-interfaces/action-interface'
@@ -72,4 +73,6 @@ export * from './common/address-interface'
 export * from './Registration/business-address-interface'
 
 // External interfaces
+// NB: importing EmptyAddress doesn't work in local components
 export { BreadcrumbIF, EffectiveDateTimeIF, StaffPaymentIF } from '@bcrs-shared-components/interfaces'
+export { EmptyNaics, NaicsIF, NaicsResultIF } from '@bcrs-shared-components/interfaces'

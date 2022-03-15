@@ -1,26 +1,18 @@
 <template>
-  <v-card flat id="people-roles" class="rounded-0">
+  <div id="list-people-roles">
     <ConfirmRemoveDialog
       :dialog="dialog"
-      attach="#people-roles"
+      attach="#list-people-roles"
       @confirm="emitRemovePerson(activeIndex)"
       @exit="dialog = false"
     />
 
-    <!-- Summary Header -->
-    <div class="people-roles-summary-header review-header" v-if="isSummary">
-      <v-icon color="appDkBlue">mdi-account-multiple-plus</v-icon>
-      <label class="people-roles-title pl-2"><strong>People and Roles</strong></label>
-    </div>
-
-    <div :class="{ 'invalid-section': showErrorSummary }">
+    <section :class="{ 'invalid-section': showErrorSummary }">
       <!-- Summary Warning -->
       <div v-if="isSummary && showErrorSummary" class="people-roles-invalid-message">
         <span>
           <v-icon color="error">mdi-information-outline</v-icon>
-          &nbsp;
-          <span class="error-text">This step is unfinished.</span>
-          &nbsp;
+          <span class="error-text mx-1">This step is unfinished.</span>
           <router-link v-if="isIncorporationFiling"
             id="router-link"
             :to="{ path: `/${RouteNames.INCORPORATION_PEOPLE_ROLES}` }"
@@ -40,7 +32,7 @@
             <span>{{ title }}</span>
           </v-col>
           <!-- Spacer Column For Actions -->
-          <v-col sm="1" v-if="!isSummary"></v-col>
+          <v-col v-if="!isSummary" />
         </v-row>
 
         <!-- List Content -->
@@ -60,19 +52,19 @@
               transition="fade-transition"
             >
               <template v-slot:activator="{ on }">
-                <span v-on="on" class="people-roles-title ml-2"><strong>{{ formatName(orgPerson) }}</strong></span>
+                <span v-on="on" class="people-roles-title ml-2">{{ formatName(orgPerson) }}</span>
               </template>
               <span>{{ formatName(orgPerson) }}</span>
             </v-tooltip>
           </v-col>
           <v-col>
-            <base-address class="peoples-roles-mailing-address" :address="orgPerson.mailingAddress" />
+            <MailingAddress class="peoples-roles-mailing-address" :address="orgPerson.mailingAddress" />
           </v-col>
           <v-col>
             <p v-if="isSame(orgPerson.mailingAddress, orgPerson.deliveryAddress)"
               class="peoples-roles-delivery-address">Same as Mailing Address
             </p>
-            <base-address v-else class="peoples-roles-delivery-address" :address="orgPerson.deliveryAddress" />
+            <DeliveryAddress v-else class="peoples-roles-delivery-address" :address="orgPerson.deliveryAddress" />
           </v-col>
           <v-col>
             <div v-if="orgPerson.roles.length > 0">
@@ -87,8 +79,8 @@
           </v-col>
 
           <!-- Actions Column -->
-          <v-col sm="1" v-if="!isSummary">
-            <div class="actions">
+          <v-col v-if="!isSummary">
+            <div class="actions float-right">
               <span class="edit-action">
                 <v-btn small text color="primary"
                   :id="`officer-${index}-change-btn`"
@@ -103,11 +95,11 @@
               <span>
                 <v-menu offset-y>
                   <template v-slot:activator="{ on }">
-                    <v-btn text small color="primary" class="actions__more-actions__btn" v-on="on">
+                    <v-btn text small color="primary" class="more-actions-btn" v-on="on">
                       <v-icon>mdi-menu-down</v-icon>
                     </v-btn>
                   </template>
-                  <v-list class="actions__more-actions">
+                  <v-list class="more-actions-btn">
                     <v-list-item @click="confirmRemove(index)">
                       <v-list-item-title><v-icon>mdi-delete</v-icon>Remove</v-list-item-title>
                     </v-list-item>
@@ -118,8 +110,8 @@
           </v-col>
         </v-row>
       </div>
-    </div>
-  </v-card>
+    </section>
+  </div>
 </template>
 
 <script lang="ts">
@@ -127,30 +119,26 @@ import { Component, Prop, Mixins, Emit } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
 import ConfirmRemoveDialog from '@/dialogs/ConfirmRemoveDialog.vue'
-import { CommonMixin, EntityFilterMixin } from '@/mixins'
+import { CommonMixin } from '@/mixins'
 
 // Interfaces & enums
-import { OrgPersonIF } from '@/interfaces'
+import { OrgPersonIF, PeopleAndRoleIF } from '@/interfaces'
 import { PartyTypes, RouteNames } from '@/enums'
 
 @Component({
   components: {
-    BaseAddress,
+    DeliveryAddress: BaseAddress,
+    MailingAddress: BaseAddress,
     ConfirmRemoveDialog
   }
 })
-export default class ListPeopleAndRoles extends Mixins(CommonMixin, EntityFilterMixin) {
-  @Prop({ default: () => [] })
-  readonly personList: Array<OrgPersonIF>
-
-  @Prop({ default: false })
-  readonly showErrorSummary: boolean
-
+export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
   @Prop({ default: false })
   readonly isSummary: boolean
 
   @Getter isIncorporationFiling!: boolean
   @Getter isRegistrationFiling!: boolean
+  @Getter getAddPeopleAndRoleStep!: PeopleAndRoleIF
 
   // Enum for template
   readonly RouteNames = RouteNames
@@ -159,6 +147,14 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin, EntityFilter
   private readonly tableHeaders: Array<string> = ['Name', 'Mailing Address', 'Delivery Address', 'Roles']
   private dialog: boolean = false
   private activeIndex: number
+
+  get personList (): Array<OrgPersonIF> {
+    return this.getAddPeopleAndRoleStep.orgPeople
+  }
+
+  get showErrorSummary (): boolean {
+    return !this.getAddPeopleAndRoleStep.valid
+  }
 
   /** Returns true officer is a person. */
   private isPerson (orgPerson: any): boolean {
@@ -210,16 +206,6 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin, EntityFilter
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
 
-#people-roles {
-  margin-top: 1rem;
-}
-
-.people-roles-summary-header {
-  display: flex;
-  background-color: $BCgovBlue5O;
-  padding: 1.25rem;
-}
-
 .people-roles-invalid-message {
   padding: 1.25rem;
   color: $app-red;
@@ -233,30 +219,29 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin, EntityFilter
 }
 
 .people-roles-title {
+  font-weight: bold;
   color: $gray9;
 }
 
 .people-roles-content {
   margin-top: 0.5rem;
-  padding: 0.5rem 1.25rem 0.5rem 1.25rem;
+  padding: 0.5rem 0.5rem 0.5rem 1.25rem;
   border-top: 1px solid $gray1;
   font-size: $px-14;
   color: $gray7;
 
   .actions {
-    position: absolute;
-    right: 0;
-
     .edit-action {
       border-right: 1px solid $gray1;
     }
 
-    .v-btn {
-      min-width: 0.5rem;
-    }
-
     .v-btn + .v-btn {
       margin-left: 0.5rem;
+    }
+
+    .more-actions-btn {
+      padding: 0;
+      min-width: 28px;
     }
   }
 }

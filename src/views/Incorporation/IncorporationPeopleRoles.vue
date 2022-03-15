@@ -4,16 +4,17 @@
       <header id="people-role-header">
         <h2>{{ getPeopleAndRolesResource.header }}</h2>
       </header>
+
       <PeopleAndRoles />
     </section>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Vue, Watch } from 'vue-property-decorator'
+import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 import { PeopleAndRoleIF, PeopleAndRolesResourceIF } from '@/interfaces'
-import { CommonMixin, EntityFilterMixin } from '@/mixins'
+import { CommonMixin } from '@/mixins'
 import { RouteNames } from '@/enums'
 import PeopleAndRoles from '@/components/common/PeopleAndRoles.vue'
 
@@ -22,7 +23,7 @@ import PeopleAndRoles from '@/components/common/PeopleAndRoles.vue'
     PeopleAndRoles
   }
 })
-export default class IncorporationPeopleRoles extends Mixins(CommonMixin, EntityFilterMixin) {
+export default class IncorporationPeopleRoles extends Mixins(CommonMixin) {
   @Getter getShowErrors!: boolean
   @Getter getAddPeopleAndRoleStep!: PeopleAndRoleIF
   @Getter getPeopleAndRolesResource!: PeopleAndRolesResourceIF
@@ -31,7 +32,7 @@ export default class IncorporationPeopleRoles extends Mixins(CommonMixin, Entity
   private async scrollToInvalidComponent (): Promise<void> {
     if (this.getShowErrors && this.$route.name === RouteNames.INCORPORATION_PEOPLE_ROLES) {
       // scroll to invalid components
-      await Vue.nextTick()
+      await this.$nextTick()
       await this.validateAndScroll(
         {
           peopleAndRoles: this.getAddPeopleAndRoleStep.valid

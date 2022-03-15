@@ -4,6 +4,7 @@
       <header>
         <h2>1. Create Your Authorized Share Structure</h2>
       </header>
+
       <p id="incorporation-share-structure">
         Add at least one class of shares. A share class consists of the name of the class, the maximum
         number of shares in the class (including any associated Series), a par value for the class, and
@@ -17,10 +18,12 @@
       <span v-if="!helpToggle">Help with Share Structure</span>
       <span v-else>Hide Help</span>
     </span>
+
     <section v-show="helpToggle" class="share-structure-help">
       <header id="share-structure-help-header">
         <h2>Share Structure Help</h2>
       </header>
+
       <p>
         An incorporated business must issue shares. These shares represent ownership interest in the company and give
         the shareholder a say in how the company is being run. For most small companies starting out, a simple share
@@ -30,9 +33,16 @@
         The sample below is for a typical share structure with just one class of shares. If there is more than one class
         of shares, each class must be assigned an identifying name such as Class A, Class B, etc.
       </p>
-      <div id="share-structure-sample">
+
+      <v-card flat>
+        <header class="share-summary-header">
+          <v-icon color="appDkBlue">mdi-sitemap</v-icon>
+          <label class="share-summary-header-title pl-2">Share Structure</label>
+        </header>
+
         <ListShareClass :shareClasses="sharesHelpSample" :isSummary="true" />
-      </div>
+      </v-card>
+
       <p><small>Sample Share Structure</small></p>
       <h3>Important Information About the Company's Share Structure</h3>
       <p>
@@ -51,9 +61,10 @@
         <v-icon v-if="shareClasses.length > 0" color="green darken-2" class="cp-valid">mdi-check</v-icon>
         <v-icon v-else-if="getShowErrors" color="error" class="cp-invalid">mdi-close</v-icon>
         <v-icon v-else>mdi-circle-small</v-icon>
-        <span class="chk-list-item-txt">At least one Class of Shares</span>
+        <span class="ml-2">At least one Class of Shares</span>
       </li>
     </ul>
+
     <div class="btn-panel">
       <v-btn outlined color="primary"  id="btn-start-add-cp"
       :disabled="showShareStructureForm"
@@ -65,7 +76,6 @@
 
     <v-card flat class="my-4" v-if="showShareStructureForm">
       <ShareStructure
-        v-show="showShareStructureForm"
         :initialValue="currentShareStructure"
         :activeIndex="activeIndex"
         :shareId="shareId"
@@ -79,20 +89,22 @@
       />
     </v-card>
 
-    <ListShareClass v-if="this.shareClasses.length > 0"
-      :shareClasses="shareClasses"
-      :componentDisabled="showShareStructureForm"
-      @editClass="initShareClassForEdit($event)"
-      @removeClass="removeShareClass($event)"
-      @addSeries="initNewShareSeries($event)"
-      @editSeries="editSeries"
-      @removeSeries="removeSeries"
-    />
+    <v-card flat v-if="this.shareClasses.length > 0">
+      <ListShareClass
+        :shareClasses="shareClasses"
+        :componentDisabled="showShareStructureForm"
+        @editClass="initShareClassForEdit($event)"
+        @removeClass="removeShareClass($event)"
+        @addSeries="initNewShareSeries($event)"
+        @editSeries="editSeries"
+        @removeSeries="removeSeries"
+      />
+    </v-card>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Vue, Watch } from 'vue-property-decorator'
+import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import { v4 as uuidv4 } from 'uuid'
 import {
@@ -256,7 +268,7 @@ export default class IncorporationShareStructure extends Mixins(CommonMixin) {
   private async scrollToInvalidComponent (): Promise<void> {
     if (this.getShowErrors && this.$route.name === RouteNames.INCORPORATION_SHARE_STRUCTURE) {
       // scroll to invalid components
-      await Vue.nextTick()
+      await this.$nextTick()
       await this.validateAndScroll(
         {
           shareStructure: this.getCreateShareStructureStep.valid
@@ -312,10 +324,6 @@ p{
     justify-content: center;
   }
 
-  #share-structure-sample {
-    padding: 1rem 0;
-  }
-
   h2, h4 {
     padding: 1rem 0;
   }
@@ -326,7 +334,14 @@ p{
   }
 }
 
-.chk-list-item-txt {
-  margin-left: 0.5rem;
+.share-summary-header {
+  display: flex;
+  background-color: $BCgovBlue5O;
+  padding: 1.25rem;
+
+  .share-summary-header-title {
+    font-weight: bold;
+    color: $gray9;
+  }
 }
 </style>
