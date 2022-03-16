@@ -161,9 +161,9 @@ export const routes = [
     }
   },
   {
-    path: '/dissolution-entity',
-    name: RouteNames.DISSOLUTION_ENTITY,
-    component: Views.DissolutionEntity,
+    path: '/dissolution-firm',
+    name: RouteNames.DISSOLUTION_FIRM,
+    component: Views.DissolutionFirm,
     meta: {
       step: 1,
       requiresAuth: true,

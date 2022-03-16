@@ -4,4 +4,4 @@ export { CooperativeDissolutionResource } from '@/resources/Dissolutions/coopera
 export { LimitedCompanyDissolutionResource } from '@/resources/Dissolutions/limitedCompany'
 export { UnlimitedDissolutionResource } from '@/resources/Dissolutions/unlimitedCompany'
 
-export { soloPropCompanyDissolutionResource } from '@/resources/Dissolutions/soloPropCompany'
+export { SolePropCompanyDissolutionResource } from '@/resources/Dissolutions/solePropCompany'

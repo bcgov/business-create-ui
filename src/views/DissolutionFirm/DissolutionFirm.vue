@@ -370,17 +370,6 @@ h2::before {
 
 // styles specific to certify section
 ::v-deep #certify-section {
-  .v-card {
-    margin-top: 0 !important;
-  }
-
-  .v-form {
-    margin-top: 0 !important;
-  }
-
-  .container {
-    padding: 0 !important;
-  }
 
   .v-input--checkbox .v-input__slot {
     align-items: flex-start;

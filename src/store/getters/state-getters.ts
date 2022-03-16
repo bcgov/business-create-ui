@@ -4,7 +4,8 @@ import {
   CorpTypeCd,
   DissolutionTypes,
   FilingNames,
-  FilingTypes
+  FilingTypes,
+  FilingTypesSubTitle
 } from '@/enums'
 import {
   AccountInformationIF,
@@ -65,8 +66,8 @@ export const getFilingName = (state: StateIF): FilingNames => {
     case FilingTypes.INCORPORATION_APPLICATION: return FilingNames.INCORPORATION_APPLICATION
     case FilingTypes.REGISTRATION: return FilingNames.REGISTRATION
     case FilingTypes.VOLUNTARY_DISSOLUTION:
-      if (getEntityType(state) === CorpTypeCd.SOLE_PROP) {
-        return FilingNames.ENTITY_DISSOLUTION
+      if (isTypeSoleProp(state)) {
+        return FilingNames.DISSOLUTION_FIRM
       }
       return FilingNames.VOLUNTARY_DISSOLUTION
 
@@ -648,4 +649,12 @@ export const isDissolutionDefineDissolutionValid = (state: StateIF): boolean => 
 /** The registration object. */
 export const getRegistration = (state: StateIF): RegistrationStateIF => {
   return state.stateModel.registration
+}
+
+// current filing subtitle
+export const getFilingSubtitle = (state: StateIF): string => {
+  if (getEntityType(state) === CorpTypeCd.SOLE_PROP) {
+    return FilingTypesSubTitle.SOLE_PROP_SUB_TITLE
+  }
+  return null
 }

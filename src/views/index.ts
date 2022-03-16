@@ -23,4 +23,4 @@ export { default as RegistrationDefineBusiness } from './Registration/Registrati
 export { default as RegistrationPeopleRoles } from './Registration/RegistrationPeopleRoles.vue'
 export { default as RegistrationReviewConfirm } from './Registration/RegistrationReviewConfirm.vue'
 
-export { default as DissolutionEntity } from './DissolutionEntity/DissolutionEntity.vue'
+export { default as DissolutionFirm } from './DissolutionFirm/DissolutionFirm.vue'

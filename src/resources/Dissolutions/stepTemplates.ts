@@ -93,7 +93,7 @@ export const CorpEntityDissolutionSteps = [
     step: 1,
     icon: 'mdi-domain-remove',
     text: 'Define \nDissolution',
-    to: RouteNames.DISSOLUTION_ENTITY,
-    component: ViewComponentNames.DISSOLUTION_ENTITY
+    to: RouteNames.DISSOLUTION_FIRM,
+    component: ViewComponentNames.DISSOLUTION_FIRM
   }
 ]

@@ -27,6 +27,6 @@ export enum ViewComponentNames {
   REGISTRATION_REVIEW_CONFIRM = 'registration-review-confirm',
 
 // Entity dissolution
-  DISSOLUTION_ENTITY = 'dissolution-entity',
+  DISSOLUTION_FIRM = 'dissolution-firm',
 
 }

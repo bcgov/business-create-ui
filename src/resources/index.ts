@@ -19,7 +19,7 @@ import {
   CooperativeDissolutionResource,
   LimitedCompanyDissolutionResource,
   UnlimitedDissolutionResource,
-  soloPropCompanyDissolutionResource
+  SolePropCompanyDissolutionResource
 } from './Dissolutions'
 
 export const IncorporationResources: Array<IncorporationResourceIF> = [
@@ -41,7 +41,7 @@ export const DissolutionResources: Array<DissolutionResourceIF> = [
   CooperativeDissolutionResource,
   LimitedCompanyDissolutionResource,
   UnlimitedDissolutionResource,
-  soloPropCompanyDissolutionResource
+  SolePropCompanyDissolutionResource
 ]
 
 export * from './BreadCrumbResource'

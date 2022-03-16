@@ -98,7 +98,7 @@
               <header>
                 <h1>{{ getFilingName }}</h1>
               </header>
-              <p class="mt-4 mb-6" v-if="getFilingSubtitle">
+              <p class="mt-4" v-if="getFilingSubtitle">
                 {{ getFilingSubtitle }}
               </p>
 
@@ -247,6 +247,7 @@ export default class App extends Mixins(
   @Getter getAccountInformation!: AccountInformationIF
   @Getter getOrgInformation!: OrgInformationIF
   @Getter isSbcStaff!: boolean
+  @Getter getFilingSubtitle!: string
 
   @Action setBusinessId!: ActionBindingIF
   @Action setCurrentStep!: ActionBindingIF
@@ -387,14 +388,7 @@ export default class App extends Mixins(
   get isStepperView () {
     return !this.$route.meta.noStepper
   }
-  // SB TODO : Move to store if its good
-  get getFilingSubtitle () {
-    if (this.getEntityType === CorpTypeCd.SOLE_PROP) {
-      return `Confirm the following information, 
-      select the dissolution date and certify your dissolution before filing.`
-    }
-    return false
-  }
+
   /** Helper to check is the current route matches */
   private isRouteName (routeName: RouteNames): boolean {
     return (this.$route.name === routeName)
