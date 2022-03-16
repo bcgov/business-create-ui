@@ -1,5 +1,5 @@
 <template>
-  <div id="dissolution-entity-form">
+  <div id="dissolution-firm-form">
     <section class="mt-10">
       <!-- Dissolution summary -->
       <v-card flat id="dissolution-summary" class="mt-6">
@@ -21,7 +21,7 @@
     <!-- Dissolution Documents Delivery -->
     <section id="document-delivery-section" class="mt-10">
       <header>
-        <h2>Dissolution Documents Delivery</h2>
+        <h2> Documents Delivery</h2>
         <p class="mt-4 mb-6">
           Copies of the dissolution documents will be sent to the email addresses listed below.
         </p>
@@ -182,7 +182,7 @@ import {
     ListPeopleAndRoles
   }
 })
-export default class DissolutionReviewConfirm extends Mixins(DateMixin) {
+export default class DissolutionFirm extends Mixins(DateMixin) {
   // Global getters
   @Getter getBusinessContact!: BusinessContactIF
   @Getter getCertifyState!: CertifyIF
@@ -252,7 +252,7 @@ export default class DissolutionReviewConfirm extends Mixins(DateMixin) {
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
 
-#dissolution-review-confirm {
+#dissolution-firm-form {
   /* Set "header-counter" to 0 */
   counter-reset: header-counter;
 }

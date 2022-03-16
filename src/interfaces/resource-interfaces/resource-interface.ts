@@ -63,7 +63,7 @@ export interface DissolutionResourceIF {
   detailsTitle: string
   custodialRecords?: CustodianResourceIF
   dissolutionStatements?: Array<KeyValueIF>
-  affidavit: AffidavitResourceIF
+  affidavit?: AffidavitResourceIF
   reviewAndConfirm: {
     completingPartyStatement: {
       certifyStatementHeader: string
