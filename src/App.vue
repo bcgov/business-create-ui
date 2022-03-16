@@ -555,7 +555,7 @@ export default class App extends Mixins(
       try {
         if (this.getBusinessId) {
           // this is a Dissolution filing
-          // (only dissolutionss have a business id)
+          // (only dissolutions have a business id)
           const resources = await this.handleDraftDissolution()
           if (!resources) {
             // go to catch()

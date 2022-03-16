@@ -50,9 +50,9 @@
               </template>
               <v-list class="more-actions-list">
                 <v-list-item @click="emitRemoveName(index)">
-                  <v-list-item-title color="primary">
-                    <v-icon>mdi-delete</v-icon>
-                    Remove
+                  <v-list-item-title>
+                    <v-icon small color="primary">mdi-delete</v-icon>
+                    <span class="ml-2">Remove</span>
                   </v-list-item-title>
                 </v-list-item>
               </v-list>
@@ -129,5 +129,21 @@ export default class ListNameTranslations extends Vue {
       min-width: 28px;
     }
   }
+}
+
+// style the more actions buttons
+.v-list-item {
+  min-height: 0;
+  padding: 0.5rem 1rem;
+
+  .v-list-item__title {
+    font-size: $px-14;
+    color: $app-blue;
+  }
+}
+
+// move icon up a bit to line up with text
+.v-icon.mdi-delete {
+  margin-top: -2px;
 }
 </style>

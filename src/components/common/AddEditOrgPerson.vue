@@ -213,15 +213,16 @@ import { PersonAddressSchema } from '@/schemas'
 import { Rules } from '@/rules'
 import { cloneDeep } from 'lodash'
 
+/** This is a sub-component of PeopleAndRoles. */
 @Component({
   components: {
     BaseAddress,
     ConfirmDialog
   }
 })
-export default class OrgPerson extends Mixins(CommonMixin) {
-   // Refs
-   $refs!: {
+export default class AddEditOrgPerson extends Mixins(CommonMixin) {
+  // Refs
+  $refs!: {
     addPersonOrgForm: FormIF
     mailingAddressNew: any
     deliveryAddressNew: any
@@ -420,7 +421,6 @@ export default class OrgPerson extends Mixins(CommonMixin) {
     }
   }
 
-  // Methods
   private validateAddPersonOrgForm (): void {
     // validate the main form and address form(s)
     this.$refs.addPersonOrgForm.validate()

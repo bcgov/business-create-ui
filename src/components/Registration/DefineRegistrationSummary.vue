@@ -14,14 +14,12 @@
       <!-- Name -->
       <article class="section-container">
         <v-row no-gutters>
-          <v-col cols="12" sm="3" class="pr-4">
+          <v-col cols="12" sm="3" class="pr-4 pb-4">
             <label>Name</label>
           </v-col>
           <v-col cols="12" sm="9">
             <div class="company-name">{{ getApprovedName || 'Unavailable' }}</div>
-            <div class="company-type">
-              <span>{{ entityDescription }}</span>
-            </div>
+            <div class="company-type pt-2">{{ entityDescription }}</div>
           </v-col>
         </v-row>
       </article>
@@ -158,10 +156,6 @@ export default class DefineRegistrationSummary extends Mixins(DateMixin, EnumMix
   font-size: $px-22;
   font-weight: bold;
   color: $gray9;
-}
-
-.company-type{
-  padding-top: 0.5rem;
 }
 
 .v-icon.mdi-information-outline {

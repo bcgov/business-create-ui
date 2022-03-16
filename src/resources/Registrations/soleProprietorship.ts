@@ -12,9 +12,16 @@ export const SoleProprietorshipResource: RegistrationResourceIF = {
     filingTypeCode: FilingCodes.REGISTRATION_SP
   }],
   peopleAndRoles: {
-    header: '1. Add People to your Application',
-    blurb: 'Add the people or entity who will have a role in your business registration. ' +
-      'A person can be both the Completing Party and the Proprietor.',
+    header: '1. Add People to your Registration',
+    blurb: [
+      'Add the people or entity who will have a role in your business registration. A person ' +
+        'can be both the Completing Party and the Proprietor.',
+
+      'A Sole Proprietorship can have an individual as the proprietor or a business or a ' +
+        'corporation as the proprietor. When a business or a corporation is the proprietor, ' +
+        'it is commonly known as <b>Doing Business As</b> since an existing businss is being ' +
+        'registered under another name and it is still a Sole Proprietorship registration.'
+    ],
     helpSection: null,
     addIncorporator: false,
     addOrganization: true,
@@ -36,9 +43,9 @@ export const SoleProprietorshipResource: RegistrationResourceIF = {
     completingPartyStatement: {
       certifyStatementHeader: null,
       certifyStatements: [],
-      certifyClause: 'Note: It is an offence to make or assist in making a false or ' +
-        'misleading statement in a record filed under the Partnership Act. A person who ' +
-        'commits this offence is subject to a maximum fine of $5,000.',
+      certifyClause: 'Note: It is an offence to make or assist in making a false or misleading ' +
+        'statement in a record filed under the Partnership Act. A person who commits this ' +
+        'offence is subject to a maximum fine of $5,000.',
       entityDisplay: GetCorpFullDescription(CorpTypeCd.SOLE_PROP)
     }
   }

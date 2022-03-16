@@ -1,10 +1,19 @@
 <template>
   <div id="people-and-roles">
-    <p v-if="getPeopleAndRolesResource.blurb" class="mb-0">
-      {{ getPeopleAndRolesResource.blurb }}
-    </p>
+    <ConfirmDialog
+      ref="confirmDialog"
+      attach="#people-and-roles"
+    />
 
-    <!-- Help Section -->
+    <!-- Blurb(s) -->
+    <template v-if="blurb">
+      <p class="mb-0" v-html="blurb" />
+    </template>
+    <template v-if="blurbs">
+      <p v-for="(blurb, index) in blurbs" :key="index" class="mb-0" v-html="blurb" />
+    </template>
+
+    <!-- Help section -->
     <div v-if="getPeopleAndRolesResource.helpSection" class="mt-5">
       <span class="help-btn" @click="helpToggle = !helpToggle">
         <v-icon color="primary" style="padding-right: 5px">mdi-help-circle-outline</v-icon>
@@ -23,6 +32,7 @@
       </section>
     </div>
 
+    <!-- Checklist section -->
     <section class="mt-5">
       <strong>Your application must include the following:</strong>
       <ul>
@@ -69,10 +79,18 @@
             <v-icon v-else>mdi-circle-small</v-icon>
             <span class="rule-item-txt">{{rule.text}}</span>
           </li>
+          <li v-if="rule.id === RuleIds.NUM_PARTNERS" :key="index">
+            <v-icon v-if="validNumPartner" color="green darken-2"
+              class="dir-valid">mdi-check</v-icon>
+            <v-icon v-else-if="getShowErrors" color="error" class="prop-invalid">mdi-close</v-icon>
+            <v-icon v-else>mdi-circle-small</v-icon>
+            <span class="rule-item-txt">{{rule.text}}</span>
+          </li>
         </template>
       </ul>
     </section>
 
+    <!-- Start by Adding the Completing Party -->
     <div class="btn-panel" v-if="orgPersonList.length === 0">
       <v-btn
         id="btn-start-add-cp"
@@ -87,6 +105,7 @@
       </v-btn>
     </div>
 
+    <!-- Add a Person / Add a Corporation or Firm / Add the Completing Party -->
     <div class="btn-panel" v-if="orgPersonList.length > 0">
       <v-btn
         id="btn-add-person"
@@ -99,8 +118,9 @@
         <v-icon>mdi-account-plus</v-icon>
         <span>Add a Person</span>
       </v-btn>
+
       <v-btn
-        id="btn-add-corp"
+        id="btn-add-org"
         outlined
         color="primary"
         class="btn-outlined-primary ml-2"
@@ -112,6 +132,18 @@
         <span v-if="isTypeCoop">Add Organization</span>
         <span v-else>Add a Corporation or Firm</span>
       </v-btn>
+
+      <v-btn
+        id="btn-add-bus"
+        outlined
+        color="primary"
+        class="btn-outlined-primary ml-2"
+        v-if="false"
+      >
+        <v-icon>mdi-domain-plus</v-icon>
+        <span>Add a Business or a Corporation</span>
+      </v-btn>
+
       <v-btn
         v-if="!validNumCompletingParty"
         id="btn-add-cp"
@@ -126,8 +158,9 @@
       </v-btn>
     </div>
 
+    <!-- Add/Edit Person/Org -->
     <v-card flat v-if="showOrgPersonForm" class="people-roles-container">
-      <OrgPerson
+      <AddEditOrgPerson
         :initialValue="currentOrgPerson"
         :activeIndex="activeIndex"
         :existingCompletingParty="completingParty"
@@ -135,10 +168,25 @@
         @addEditPerson="onAddEditPerson($event)"
         @removePerson="onRemovePerson($event)"
         @resetEvent="resetData()"
-        @removeCompletingPartyRole="removeCompletingPartyAssignment()"
+        @removeCompletingPartyRole="onRemoveCompletingPartyRole()"
       />
     </v-card>
 
+    <!-- Add/Edit Bus/Corp -->
+    <v-card flat v-if="false" class="people-roles-container">
+      <AddEditBusCorp
+        :initialValue="currentOrgPerson"
+        :activeIndex="activeIndex"
+        :existingCompletingParty="completingParty"
+        :addIncorporator="getPeopleAndRolesResource.addIncorporator"
+        @addEditPerson="onAddEditPerson($event)"
+        @removePerson="onRemovePerson($event)"
+        @resetEvent="resetData()"
+        @removeCompletingPartyRole="onRemoveCompletingPartyRole()"
+      />
+    </v-card>
+
+    <!-- List of People and Roles -->
     <v-card flat v-if="orgPersonList.length > 0" :disabled="showOrgPersonForm">
       <ListPeopleAndRoles
         :isSummary="false"
@@ -150,26 +198,30 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Mixins } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import { cloneDeep } from 'lodash'
-import { ActionBindingIF, AddressIF, EmptyAddress, EmptyOrgPerson, OrgPersonIF, PeopleAndRoleIF,
-  PeopleAndRolesResourceIF, TombstoneIF } from '@/interfaces'
+import {
+  ActionBindingIF, AddressIF, EmptyAddress, EmptyOrgPerson, OrgPersonIF, TombstoneIF
+} from '@/interfaces'
 import { CorpTypeCd, PartyTypes, NumWord, RoleTypes, RuleIds } from '@/enums'
-import OrgPerson from '@/components/common/OrgPerson.vue'
+import { PeopleRolesMixin } from '@/mixins'
+import AddEditOrgPerson from '@/components/common/AddEditOrgPerson.vue'
+import AddEditBusCorp from '@/components/common/AddEditBusCorp.vue'
 import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
+import ConfirmDialog from '@/dialogs/ConfirmDialog.vue'
 
 @Component({
   components: {
-    OrgPerson,
+    ConfirmDialog,
+    AddEditOrgPerson,
+    AddEditBusCorp,
     ListPeopleAndRoles
   }
 })
-export default class PeopleAndRoles extends Vue {
+export default class PeopleAndRoles extends Mixins(PeopleRolesMixin) {
   @Getter getTombstone!: TombstoneIF
-  @Getter getAddPeopleAndRoleStep!: PeopleAndRoleIF
   @Getter getShowErrors!: boolean
-  @Getter getPeopleAndRolesResource!: PeopleAndRolesResourceIF
   @Getter getUserFirstName!: string
   @Getter getUserLastName!: string
   @Getter getUserAddress!: AddressIF
@@ -178,6 +230,7 @@ export default class PeopleAndRoles extends Vue {
   @Action setOrgPersonList!: ActionBindingIF
   @Action setAddPeopleAndRoleStepValidity!: ActionBindingIF
 
+  // Local variables
   private helpToggle = false
   private showOrgPersonForm = false
   private activeIndex = -1
@@ -190,98 +243,15 @@ export default class PeopleAndRoles extends Vue {
   readonly NumWord = NumWord
   readonly RuleIds = RuleIds
 
-  /** The list of organizations/persons. */
-  private get orgPersonList (): OrgPersonIF[] {
-    return this.getAddPeopleAndRoleStep.orgPeople
-  }
-
-  /** The list of completing parties. */
-  private get completingParties (): OrgPersonIF[] {
-    return this.orgPersonList.filter(
-      people => people.roles.some(party => party.roleType === RoleTypes.COMPLETING_PARTY)
-    )
-  }
-
-  /** The list of incorporators. */
-  private get incorporators (): OrgPersonIF[] {
-    return this.orgPersonList.filter(
-      people => people.roles.some(party => party.roleType === RoleTypes.INCORPORATOR)
-    )
-  }
-
-  /** The list of directors. */
-  private get directors (): OrgPersonIF[] {
-    return this.orgPersonList.filter(
-      people => people.roles.some(party => party.roleType === RoleTypes.DIRECTOR)
-    )
-  }
-
-  /** The list of people without roles. */
-  private get peopleWithNoRoles (): OrgPersonIF[] {
-    return this.orgPersonList.filter(people => people.roles.length === 0)
-  }
-
-  /** Whether the Completing Party rule is valid. Always true if rule doesn't exist. */
-  private get validNumCompletingParty (): boolean {
-    const rule = this.getPeopleAndRolesResource.rules.find(r => r.id === RuleIds.NUM_COMPLETING_PARTY)
-    if (!rule) return true
-    return rule.test(this.completingParties.length)
-  }
-
-  /** Whether the Minimum Incorporators rule is valid. Always true if rule doesn't exist. */
-  private get validMinimumIncorporators (): boolean {
-    const rule = this.getPeopleAndRolesResource.rules.find(r => r.id === RuleIds.NUM_INCORPORATORS)
-    if (!rule) return true
-    return rule.test(this.incorporators.length)
-  }
-
-  /** Whether the Minimum Directors rule is valid. Always true if rule doesn't exist. */
-  private get validMinimumDirectors (): boolean {
-    const rule = this.getPeopleAndRolesResource.rules.find(r => r.id === RuleIds.NUM_DIRECTORS)
-    if (!rule) return true
-    return rule.test(this.directors.length)
-  }
-
-  /** Whether the Director Country rule is valid. Always true if rule doesn't exist. */
-  private get validDirectorCountry (): boolean {
-    const rule = this.getPeopleAndRolesResource.rules.find(r => r.id === RuleIds.DIRECTOR_COUNTRY)
-    if (!rule) return true
-    const num = this.directors.filter(d => rule.test(d.mailingAddress.addressCountry)).length
-    // evaluate this rule only when there are enough minimum directors
-    return (this.validMinimumDirectors && num > this.directors.length / 2) // more than half
-  }
-
-  /** Whether the Director Province rule is valid. Always true if rule doesn't exist. */
-  private get validDirectorProvince (): boolean {
-    const rule = this.getPeopleAndRolesResource.rules.find(r => r.id === RuleIds.DIRECTOR_PROVINCE)
-    if (!rule) return true
-    const num = this.directors.filter(
-      d => rule.test(d.mailingAddress.addressCountry, d.mailingAddress.addressRegion)
-    ).length
-    return (num > 0) // at least one
-  }
-
-  // FUTURE: implement this correctly
-  /** Whether the Completing Party rule is valid. Always true if rule doesn't exist. */
-  private get validNumProprietor (): boolean {
-    const rule = this.getPeopleAndRolesResource.rules.find(r => r.id === RuleIds.NUM_PROPRIETOR)
-    if (!rule) return true
-    return rule.test(this.completingParties.length)
-  }
-
-  /** Whether there are any people without roles. Used as a safety check. */
-  private get validPeopleWithNoRoles (): boolean {
-    return (this.peopleWithNoRoles.length > 0)
-  }
-
-  /** The completing party (or undefined if not found). */
-  private get completingParty () : OrgPersonIF {
-    return this.orgPersonList.find(people => people.roles.some(party => party.roleType === RoleTypes.COMPLETING_PARTY))
-  }
-
   /** Sets this step's validity when component is mounted. */
-  mounted (): void {
+  async mounted (): Promise<void> {
     this.setAddPeopleAndRoleStepValidity(this.hasValidRoles())
+
+    // *** FOR DEBUGGING
+    // await this.addPersonConfirm()
+    // await this.addBusinessCorporationConfirm()
+    // await this.removePersonConfirm()
+    // await this.removePersonBusinessConfirm()
   }
 
   private addOrgPerson (roleType: RoleTypes, partyType: PartyTypes): void {
@@ -316,11 +286,6 @@ export default class PeopleAndRoles extends Vue {
 
     this.activeIndex = -1
     this.showOrgPersonForm = true
-  }
-
-  /** Returns true if subject org/person is a director. */
-  private isDirector (orgPerson: OrgPersonIF): boolean {
-    return orgPerson.roles.some(role => role.roleType === RoleTypes.DIRECTOR)
   }
 
   private onEditPerson (index: number): void {
@@ -359,7 +324,7 @@ export default class PeopleAndRoles extends Vue {
     this.resetData()
   }
 
-  private removeCompletingPartyAssignment () {
+  private onRemoveCompletingPartyRole () {
     const newList: OrgPersonIF[] = Object.assign([], this.orgPersonList)
     const completingParty =
       newList.find(people => people.roles.some(role => role.roleType === RoleTypes.COMPLETING_PARTY))
@@ -387,6 +352,7 @@ export default class PeopleAndRoles extends Vue {
       this.validDirectorCountry &&
       this.validDirectorProvince &&
       this.validNumProprietor &&
+      this.validNumPartners &&
       !this.validPeopleWithNoRoles
     )
   }
