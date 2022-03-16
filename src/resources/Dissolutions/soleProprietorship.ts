@@ -4,7 +4,7 @@ import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module
 import { CorpEntityDissolutionSteps } from '@/resources/Dissolutions/stepTemplates'
 
 // SB TODO : cleanup this code
-export const SolePropCompanyDissolutionResource: DissolutionResourceIF = {
+export const SoleProprietorshipDissolutionResource: DissolutionResourceIF = {
   entityType: CorpTypeCd.SOLE_PROP,
   displayName: GetCorpFullDescription(CorpTypeCd.BENEFIT_COMPANY),
   steps: CorpEntityDissolutionSteps,
