@@ -650,6 +650,7 @@ export default class App extends Mixins(
     // fetch draft filing
     // NB: will throw if API error
     let draftFiling = await LegalServices.fetchDraftDissolution(this.getBusinessId)
+
     // check if filing is in a valid state to be edited
     this.invalidDissolutionDialog = !this.hasValidFilingState(draftFiling)
     if (this.invalidDissolutionDialog) return null
