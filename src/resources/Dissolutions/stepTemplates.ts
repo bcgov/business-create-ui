@@ -86,7 +86,6 @@ export const CorpDissolutionSteps = [
  */
 // Stepper is not needed for SP and GP ,
 // Need to fix in root to show without stepper later
-//  now we put one step
 export const CorpEntityDissolutionSteps = [
   {
     id: 'step-1-btn',
