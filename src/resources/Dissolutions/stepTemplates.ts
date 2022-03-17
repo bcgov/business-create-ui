@@ -81,7 +81,6 @@ export const CorpDissolutionSteps = [
 ]
 
 /**
- * The Corp step template.
  * The stepper template is not needed for SP and GP filing types
  * Hiding of stepper is done by passign meta from route,
  * Still we need one minimum step to render component
