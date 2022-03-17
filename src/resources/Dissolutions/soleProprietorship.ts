@@ -1,15 +1,15 @@
 import { DissolutionResourceIF } from '@/interfaces'
-import { BulletListTypes, CorpTypeCd, FilingCodes, ItemTypes, RouteNames, ViewComponentNames } from '@/enums'
+import { CorpTypeCd, FilingCodes, ItemTypes } from '@/enums'
 import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
-import { CorpEntityDissolutionSteps } from '@/resources/Dissolutions/stepTemplates'
+import { CorpFirmDissolutionSteps } from '@/resources/Dissolutions/stepTemplates'
 
 // SB TODO : cleanup this code
 export const SoleProprietorshipDissolutionResource: DissolutionResourceIF = {
   entityType: CorpTypeCd.SOLE_PROP,
-  displayName: GetCorpFullDescription(CorpTypeCd.BENEFIT_COMPANY),
-  steps: CorpEntityDissolutionSteps,
+  displayName: GetCorpFullDescription(CorpTypeCd.SOLE_PROP),
+  steps: CorpFirmDissolutionSteps,
   filingData: [{
-    entityType: CorpTypeCd.BENEFIT_COMPANY,
+    entityType: CorpTypeCd.SOLE_PROP,
     filingTypeCode: FilingCodes.DISSOLUTION_VOLUNTARY
   }],
   detailsTitle: 'Company Details',
@@ -18,10 +18,10 @@ export const SoleProprietorshipDissolutionResource: DissolutionResourceIF = {
     completingPartyStatement: {
       certifyStatementHeader: null,
       certifyStatements: [],
-      certifyClause: `Note: It is an offence to make a false or misleading statement in respect
-        of a material fact in a record submitted to the Corporate Registry for filing.
-        See section 427 of the Business Corporations Act.`,
-      entityDisplay: GetCorpFullDescription(CorpTypeCd.BENEFIT_COMPANY)
+      certifyClause: `Note: It is an offence to make or assist in making a false or misleading statement
+      in a record filed under the Partnership Act. 
+      A person who commits this offence is subject to a maximum fine of $5,000.`,
+      entityDisplay: GetCorpFullDescription(CorpTypeCd.SOLE_PROP)
     }
   },
   createResolution: {
@@ -56,7 +56,7 @@ export const SoleProprietorshipDissolutionResource: DissolutionResourceIF = {
         },
         {
           type: ItemTypes.PLACEHOLDER,
-          value: `legal_name`
+          value: 'legal_name'
         },
         {
           type: ItemTypes.TEXT,

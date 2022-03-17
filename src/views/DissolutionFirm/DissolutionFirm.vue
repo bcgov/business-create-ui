@@ -63,6 +63,7 @@
         />
        </v-card>
     </section>
+
   <!-- Completing Party -->
   <!-- show only if exist -->
     <section  id="completing-party-section" class="mt-10"
@@ -267,11 +268,7 @@ h2::before {
   background-color: $gray1;
 }
 
-::v-deep .section-container {
-  padding: 1.5rem 1.5rem;
-}
-
-::v-deep .review-header {
+.review-header {
   display: flex; // to align icons
   background-color: $BCgovBlue5O;
   padding: 1.25rem;
@@ -297,25 +294,12 @@ h2::before {
   }
 }
 
-.inner-col-1 {
-  // adjustment to make this inner container column the same width as the outer columns
-  // ie, decrease width by 1/2 container margin + padding
-  flex: 0 0 calc(25% - 1rem);
-}
-
-.inner-col-2 {
-  // adjustment to make this inner container column the same width as the outer columns
-  // ie, increase width by 1/2 container margin + padding
-  flex: 0 0 calc(75% + 1rem);
-  max-width: calc(75% + 1rem);
-}
-
 #effective-date-text {
   color: $gray7;
 }
 
 // FUTURE: this should be under court-order-poa-section below
-::v-deep #court-order {
+ #court-order {
   .row {
     .col-9 {
       padding-left: 1rem !important;
@@ -344,11 +328,11 @@ h2::before {
 }
 
 // styles common to the sections
-::v-deep #document-delivery-section,
-::v-deep #folio-number-section,
-::v-deep #certify-section,
-::v-deep #court-order-poa-section,
-::v-deep #staff-payment-section {
+#document-delivery-section,
+#folio-number-section,
+#certify-section,
+#court-order-poa-section,
+#staff-payment-section {
   .v-card {
     padding: 1.5rem 1.25rem !important;
   }
@@ -369,14 +353,10 @@ h2::before {
 }
 
 // styles specific to certify section
-::v-deep #certify-section {
+#certify-section {
 
   .v-input--checkbox .v-input__slot {
     align-items: flex-start;
-  }
-
-  .row {
-    padding: 0.75rem 0 !important;
   }
 
   // bring the main label down a bit to line up with text-field
@@ -395,7 +375,7 @@ h2::before {
 }
 
 // styles specific to court order poa section
-::v-deep #court-order-poa-section {
+#court-order-poa-section {
   .v-card {
     margin-top: 0 !important;
   }
@@ -411,7 +391,7 @@ h2::before {
 }
 
 // styles specific to staff payment section
-::v-deep #staff-payment-section {
+#staff-payment-section {
   .v-card {
     margin-top: 0 !important;
     border-radius: 4px !important;

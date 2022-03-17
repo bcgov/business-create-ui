@@ -653,7 +653,7 @@ export const getRegistration = (state: StateIF): RegistrationStateIF => {
 
 // current filing subtitle
 export const getFilingSubtitle = (state: StateIF): string => {
-  if (getEntityType(state) === CorpTypeCd.SOLE_PROP) {
+  if (getFilingType(state) === FilingTypes.VOLUNTARY_DISSOLUTION && isTypeSoleProp(state)) {
     return FilingTypesSubTitle.SOLE_PROP_SUB_TITLE
   }
   return null

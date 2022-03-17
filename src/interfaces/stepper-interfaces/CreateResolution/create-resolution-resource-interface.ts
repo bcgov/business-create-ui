@@ -1,6 +1,6 @@
 export interface CreateResolutionResourceIF {
   reviewConfirmHeader: string
-  helpSection: {
+  helpSection?: {
     header: string
     helpText: any
   }

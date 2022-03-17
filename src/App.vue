@@ -385,7 +385,7 @@ export default class App extends Mixins(
     }
   }
   // check to use stepper view or not
-  get isStepperView () {
+  get isStepperView (): boolean {
     return !this.$route.meta.noStepper
   }
 

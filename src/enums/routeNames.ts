@@ -26,7 +26,7 @@ export enum RouteNames {
   REGISTRATION_PEOPLE_ROLES = 'registration-people-roles',
   REGISTRATION_REVIEW_CONFIRM = 'registration-review-confirm',
 
-  // Entity Dissolution
-  DISSOLUTION_FIRM= 'dissolution-firm',
+  // firm Dissolution (SP and GP)
+  DISSOLUTION_FIRM = 'dissolution-firm',
 
 }
