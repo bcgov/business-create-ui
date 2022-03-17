@@ -6,5 +6,6 @@ export enum FilingNames {
 }
 
 export enum FilingTypesSubTitle {
-  SOLE_PROP_SUB_TITLE = 'Confirm the following information, select the dissolution date and certify your dissolution before filing.',
+  SOLE_PROP_SUB_TITLE = 'Confirm the following information,' +
+  ' select the dissolution date and certify your dissolution before filing.',
 }
