@@ -90,7 +90,7 @@
       <!-- Don't show page if an error dialog is displayed. -->
       <main v-if="!isErrorDialog">
         <BreadCrumb :breadcrumbs="breadcrumbs" />
-        <EntityInfo />
+        <EntityInfo class="py-5 px-3" />
 
         <v-container id="container-main" class="py-8">
           <v-row>

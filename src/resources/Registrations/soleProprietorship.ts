@@ -27,7 +27,7 @@ export const SoleProprietorshipResource: RegistrationResourceIF = {
       '<b>Add a person</b> as the proprietor if your business is owned and operated by one ' +
         'person who is responsible for all debts and liabilities.',
       '<b>Add a business or a corporation</b> as the proprietor if an existing B.C. entity ' +
-        'would like to be known as another name. Often referred to as <b>Doing Business As, ' +
+        'would like to be known by another name. Often referred to as <b>Doing Business As, ' +
         'DBA, Operating As</b>, or trade name.'
     ],
     addBusiness: true,
@@ -38,7 +38,7 @@ export const SoleProprietorshipResource: RegistrationResourceIF = {
         test: (num) => { return (num === 1) }
       },
       {
-        id: RuleIds.NUM_PROPRIETOR,
+        id: RuleIds.NUM_PROPRIETORS,
         text: 'The Proprietor (an individual or a business)',
         test: (num) => { return (num === 1) }
       }

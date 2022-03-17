@@ -95,7 +95,7 @@ import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
 import FolioNumber from '@/components/common/FolioNumber.vue'
 import BusinessAddresses from '@/components/Registration/BusinessAddresses.vue'
 import { DateMixin, EnumMixin } from '@/mixins'
-import { CorpTypeCd, RouteNames } from '@/enums'
+import { BusinessTypes, CorpTypeCd, RouteNames } from '@/enums'
 
 @Component({
   components: {
@@ -115,7 +115,10 @@ export default class DefineRegistrationSummary extends Mixins(DateMixin, EnumMix
 
   /** The entity description. */
   get entityDescription (): string {
-    return `${this.getCorpTypeDescription(this.getEntityType)}`
+    let corpTypeDescription = this.getCorpTypeDescription(this.getEntityType)
+    const isSpDba = (this.getRegistration.businessType === BusinessTypes.DBA)
+    if (isSpDba) corpTypeDescription += ' / Doing Business As (DBA)'
+    return corpTypeDescription
   }
 
   /** The business valid flag. */

@@ -1,8 +1,8 @@
 <template>
-  <div id="people-and-roles">
+  <div id="reg-people-and-roles">
     <ConfirmDialog
       ref="confirmDialog"
-      attach="#people-and-roles"
+      attach="#reg-people-and-roles"
     />
 
     <!-- Blurb(s) -->
@@ -32,31 +32,10 @@
             <v-icon v-else>mdi-circle-small</v-icon>
             <span class="rule-item-txt">{{rule.text}}</span>
           </li>
-          <li v-if="rule.id === RuleIds.NUM_INCORPORATORS" :key="index">
-            <v-icon v-if="validMinimumIncorporators" color="green darken-2"
-              class="incorp-valid">mdi-check</v-icon>
-            <v-icon v-else-if="getShowErrors" color="error" class="incorp-invalid">mdi-close</v-icon>
-            <v-icon v-else>mdi-circle-small</v-icon>
-            <span class="rule-item-txt">{{rule.text}}</span>
-          </li>
-          <li v-if="rule.id === RuleIds.NUM_DIRECTORS" :key="index">
-            <v-icon v-if="validMinimumDirectors" color="green darken-2"
+          <li v-if="rule.id === RuleIds.NUM_PROPRIETORS" :key="index">
+            <v-icon v-if="validNumPartner" color="green darken-2"
               class="dir-valid">mdi-check</v-icon>
-            <v-icon v-else-if="getShowErrors" color="error" class="dir-invalid">mdi-close</v-icon>
-            <v-icon v-else>mdi-circle-small</v-icon>
-            <span class="rule-item-txt">{{rule.text}}</span>
-          </li>
-          <li v-if="rule.id === RuleIds.DIRECTOR_COUNTRY" :key="index">
-            <v-icon v-if="validDirectorCountry" color="green darken-2"
-              class="dir-valid">mdi-check</v-icon>
-            <v-icon v-else-if="getShowErrors" color="error" class="dir-invalid">mdi-close</v-icon>
-            <v-icon v-else>mdi-circle-small</v-icon>
-            <span class="rule-item-txt">{{rule.text}}</span>
-          </li>
-          <li v-if="rule.id === RuleIds.DIRECTOR_PROVINCE" :key="index">
-            <v-icon v-if="validDirectorProvince" color="green darken-2"
-              class="dir-valid">mdi-check</v-icon>
-            <v-icon v-else-if="getShowErrors" color="error" class="dir-invalid">mdi-close</v-icon>
+            <v-icon v-else-if="getShowErrors" color="error" class="prop-invalid">mdi-close</v-icon>
             <v-icon v-else>mdi-circle-small</v-icon>
             <span class="rule-item-txt">{{rule.text}}</span>
           </li>
@@ -87,7 +66,7 @@
       </v-btn>
     </div>
 
-    <!-- Add a Person or Organization -->
+    <!-- Add a Person or Business -->
     <div class="btn-panel" v-if="orgPersonList.length > 0">
       <v-btn
         v-if="!validNumCompletingParty"
@@ -102,6 +81,7 @@
         <span>Add the Completing Party</span>
       </v-btn>
 
+      <!-- *** TODO: should this add a PARTNER? -->
       <v-btn
         id="btn-add-person"
         outlined
@@ -114,23 +94,23 @@
         <span>Add a Person</span>
       </v-btn>
 
+      <!-- *** TODO: should this add a PARTNER? -->
       <v-btn
-        id="btn-add-organization"
+        id="btn-add-business"
         outlined
         color="primary"
         class="btn-outlined-primary ml-2"
-        :disabled="showOrgPersonForm"
-        v-if="getPeopleAndRolesResource.addOrganization"
-        @click="addOrgPerson(RoleTypes.INCORPORATOR, PartyTypes.ORGANIZATION)"
+        v-if="getPeopleAndRolesResource.addBusiness"
+        @click="addOrgPerson(RoleTypes.INCORPORATOR, PartyTypes.BUSINESS)"
       >
         <v-icon>mdi-domain-plus</v-icon>
-        <span>{{getPeopleAndRolesResource.addOrganization}}</span>
+        <span>Add a Business or a Corporation</span>
       </v-btn>
     </div>
 
-    <!-- Add/Edit Person/Org -->
+    <!-- Add/Edit Bus/Corp -->
     <v-card flat v-if="showOrgPersonForm" class="people-roles-container">
-      <AddEditOrgPerson
+      <AddEditBusCorp
         :initialValue="currentOrgPerson"
         :activeIndex="activeIndex"
         :existingCompletingParty="completingParty"
@@ -160,20 +140,24 @@ import { cloneDeep } from 'lodash'
 import { AddressIF, EmptyAddress, EmptyOrgPerson } from '@/interfaces'
 import { PartyTypes, RoleTypes } from '@/enums'
 import { PeopleRolesMixin } from '@/mixins'
-import AddEditOrgPerson from '@/components/common/AddEditOrgPerson.vue'
+import AddEditBusCorp from '@/components/common/AddEditBusCorp.vue'
 import ConfirmDialog from '@/dialogs/ConfirmDialog.vue'
 import HelpSection from '@/components/common/HelpSection.vue'
 import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
 
+/**
+ * This is similar to the common PeopleAndRoles component but this
+ * component has a lot of logic specific to SP/GP Registrations.
+ */
 @Component({
   components: {
-    AddEditOrgPerson,
+    AddEditBusCorp,
     ConfirmDialog,
     HelpSection,
     ListPeopleAndRoles
   }
 })
-export default class PeopleAndRoles extends Mixins(PeopleRolesMixin) {
+export default class RegPeopleAndRoles extends Mixins(PeopleRolesMixin) {
   @Getter getShowErrors!: boolean
   @Getter getUserFirstName!: string
   @Getter getUserLastName!: string

@@ -1,10 +1,11 @@
 import { Component, Vue } from 'vue-property-decorator'
-import { Getter } from 'vuex-class'
-import { RoleTypes, RuleIds } from '@/enums'
-import { ConfirmDialogType, OrgPersonIF, PeopleAndRoleIF, PeopleAndRolesResourceIF } from '@/interfaces'
+import { Action, Getter } from 'vuex-class'
+import { CorpTypeCd, NumWord, PartyTypes, RoleTypes, RuleIds } from '@/enums'
+import { ActionBindingIF, ConfirmDialogType, OrgPersonIF, PeopleAndRoleIF, PeopleAndRolesResourceIF,
+  TombstoneIF } from '@/interfaces'
 
 /**
- * Mixin that provides people and roles methods.
+ * Mixin that provides common people and roles methods.
  */
 @Component({})
 export default class PeopleRolesMixin extends Vue {
@@ -15,12 +16,40 @@ export default class PeopleRolesMixin extends Vue {
 
   @Getter getPeopleAndRolesResource!: PeopleAndRolesResourceIF
   @Getter getAddPeopleAndRoleStep!: PeopleAndRoleIF
+  @Getter getTombstone!: TombstoneIF
+
+  @Action setOrgPersonList!: ActionBindingIF
+  @Action setAddPeopleAndRoleStepValidity!: ActionBindingIF
+
+  // Enums for template
+  readonly CorpTypeCd = CorpTypeCd
+  readonly RoleTypes = RoleTypes
+  readonly PartyTypes = PartyTypes
+  readonly NumWord = NumWord
+  readonly RuleIds = RuleIds
+
+  protected currentOrgPerson: OrgPersonIF = null
+  protected showOrgPersonForm = false
+  protected activeIndex = -1
+
+  /** Sets this step's validity when component is mounted. */
+  protected async mounted (): Promise<void> {
+    this.setAddPeopleAndRoleStepValidity(this.hasValidRoles())
+
+    // *** FOR DEBUGGING
+    // await this.addPersonConfirm()
+    // await this.addBusinessCorporationConfirm()
+    // await this.removePersonConfirm()
+    // await this.removePersonBusinessConfirm()
+  }
 
   /** Single string if blurb is a string. */
   get blurb (): string {
     return (!Array.isArray(this.getPeopleAndRolesResource.blurb) &&
       this.getPeopleAndRolesResource.blurb)
   }
+
+  /** Single string if blurbs is a string. */
   get blurb2 (): string {
     return (!Array.isArray(this.getPeopleAndRolesResource.blurb2) &&
       this.getPeopleAndRolesResource.blurb2)
@@ -31,6 +60,8 @@ export default class PeopleRolesMixin extends Vue {
     return (Array.isArray(this.getPeopleAndRolesResource.blurb) &&
       this.getPeopleAndRolesResource.blurb)
   }
+
+  /** List of strings if blurb2 is an array. */
   get blurbs2 (): string[] {
     return (Array.isArray(this.getPeopleAndRolesResource.blurb2) &&
       this.getPeopleAndRolesResource.blurb2)
@@ -68,8 +99,6 @@ export default class PeopleRolesMixin extends Vue {
       people => people.roles.some(party => party.roleType === RoleTypes.PROPRIETOR)
     )
   }
-
-  // *** TODO: add the list of partners
 
   /** The list of partners. */
   get partners (): OrgPersonIF[] {
@@ -130,16 +159,9 @@ export default class PeopleRolesMixin extends Vue {
     return (num > 0) // at least one
   }
 
-  /** Whether the Number of Proprietor rule is valid. Always true if rule doesn't exist. */
-  get validNumProprietor (): boolean {
-    const rule = this.getPeopleAndRolesResource.rules.find(r => r.id === RuleIds.NUM_PROPRIETOR)
-    if (!rule) return true
-    return rule.test(this.proprietors.length)
-  }
-
-  /** Whether the Number of Partners rule is valid. Always true if rule doesn't exist. */
-  get validNumPartners (): boolean {
-    const rule = this.getPeopleAndRolesResource.rules.find(r => r.id === RuleIds.NUM_PARTNERS)
+  /** Whether the Number of Proprietors rule is valid. Always true if rule doesn't exist. */
+  get validNumProprietors (): boolean {
+    const rule = this.getPeopleAndRolesResource.rules.find(r => r.id === RuleIds.NUM_PROPRIETORS)
     if (!rule) return true
     return rule.test(this.partners.length)
   }
@@ -150,8 +172,76 @@ export default class PeopleRolesMixin extends Vue {
   }
 
   /** Returns true if specified org/person is a director. */
-  isDirector (orgPerson: OrgPersonIF): boolean {
+  public isDirector (orgPerson: OrgPersonIF): boolean {
     return orgPerson.roles.some(role => role.roleType === RoleTypes.DIRECTOR)
+  }
+
+  protected onEditPerson (index: number): void {
+    this.currentOrgPerson = { ...this.orgPersonList[index] }
+    this.activeIndex = index
+    this.showOrgPersonForm = true
+  }
+
+  protected onAddEditPerson (person: OrgPersonIF): void {
+    // if this is the completing party, assign email address from user profile
+    if (person.roles.find(role => role.roleType === RoleTypes.COMPLETING_PARTY) &&
+        // email cannot be null or empty
+        this.getTombstone.userEmail) {
+      person.officer.email = this.getTombstone.userEmail
+    }
+
+    const newList: OrgPersonIF[] = Object.assign([], this.orgPersonList)
+    if (this.activeIndex === -1) {
+      // Add Person.
+      newList.push(person)
+    } else {
+      // Edit Person.
+      newList.splice(this.activeIndex, 1, person)
+    }
+    // set updated list
+    this.setOrgPersonList(newList)
+    this.setAddPeopleAndRoleStepValidity(this.hasValidRoles())
+    this.resetData()
+  }
+
+  protected onRemovePerson (index: number): void {
+    const newList: OrgPersonIF[] = Object.assign([], this.orgPersonList)
+    newList.splice(index, 1)
+    this.setOrgPersonList(newList)
+    this.setAddPeopleAndRoleStepValidity(this.hasValidRoles())
+    this.resetData()
+  }
+
+  protected onRemoveCompletingPartyRole () {
+    const newList: OrgPersonIF[] = Object.assign([], this.orgPersonList)
+    const completingParty =
+      newList.find(people => people.roles.some(role => role.roleType === RoleTypes.COMPLETING_PARTY))
+    if (completingParty) {
+      // remove the Completing Party role
+      completingParty.roles = completingParty.roles.filter(role => role.roleType !== RoleTypes.COMPLETING_PARTY)
+      // remove email address that we got from user profile
+      delete completingParty.officer.email // schema doesn't accept null or empty string
+      // set updated list
+      this.setOrgPersonList(newList)
+    }
+  }
+
+  protected resetData (): void {
+    this.currentOrgPerson = null
+    this.activeIndex = -1
+    this.showOrgPersonForm = false
+  }
+
+  protected hasValidRoles (): boolean {
+    return (
+      this.validNumCompletingParty &&
+      this.validMinimumIncorporators &&
+      this.validMinimumDirectors &&
+      this.validDirectorCountry &&
+      this.validDirectorProvince &&
+      this.validNumProprietors &&
+      !this.validPeopleWithNoRoles
+    )
   }
 
   /** Helper to show the confirm dialog. */
@@ -167,7 +257,7 @@ export default class PeopleRolesMixin extends Vue {
     return confirm
   }
 
-  async addPersonConfirm (): Promise<boolean> {
+  protected async addPersonConfirm (): Promise<boolean> {
     return this.showConfirmDialog(
       'Add a Person',
       'By adding an individual as the proprietor, you will be registering a ' +
@@ -177,7 +267,7 @@ export default class PeopleRolesMixin extends Vue {
     )
   }
 
-  async addBusinessCorporationConfirm (): Promise<boolean> {
+  protected async addBusinessCorporationConfirm (): Promise<boolean> {
     return this.showConfirmDialog(
       'Add a Business or a Corporation',
       'By adding an existing business or a corporation as the proprietor, you will ' +
@@ -187,7 +277,7 @@ export default class PeopleRolesMixin extends Vue {
     )
   }
 
-  async removePersonConfirm (): Promise<boolean> {
+  protected async removePersonConfirm (): Promise<boolean> {
     return this.showConfirmDialog(
       'Remove Person',
       'Remove this person from your business?',
@@ -195,7 +285,7 @@ export default class PeopleRolesMixin extends Vue {
     )
   }
 
-  async removePersonBusinessConfirm (): Promise<boolean> {
+  protected async removePersonBusinessConfirm (): Promise<boolean> {
     return this.showConfirmDialog(
       'Remove Person or Business / Corporation',
       'Remove this person or business / corporation from your business?',
