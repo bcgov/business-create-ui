@@ -7,30 +7,18 @@
 
     <!-- Blurb(s) -->
     <template v-if="blurb">
-      <p class="mb-0" v-html="blurb" />
+      <p class="blurb-para" v-html="blurb" />
     </template>
     <template v-if="blurbs">
-      <p v-for="(blurb, index) in blurbs" :key="index" class="mb-0" v-html="blurb" />
+      <p v-for="(blurb, index) in blurbs" :key="index" class="blurb-para" v-html="blurb" />
     </template>
 
     <!-- Help section -->
-    <div v-if="getPeopleAndRolesResource.helpSection" class="mt-5">
-      <span class="help-btn" @click="helpToggle = !helpToggle">
-        <v-icon color="primary" style="padding-right: 5px">mdi-help-circle-outline</v-icon>
-        <span v-if="!helpToggle">{{ getPeopleAndRolesResource.helpSection.header }}</span>
-        <span v-else>Hide Help</span>
-      </span>
-      <section v-show="helpToggle" class="people-and-roles-help">
-        <header id="people-and-roles-help-header">
-          <h2>{{getPeopleAndRolesResource.helpSection.header}}</h2>
-        </header>
-
-        <p v-for="(item, index) in getPeopleAndRolesResource.helpSection.helpText" :key="index">
-          {{ item }}
-        </p>
-        <u class="help-btn" @click="helpToggle = !helpToggle"><small>Hide Help</small></u>
-      </section>
-    </div>
+    <HelpSection
+      class="mt-5"
+      v-if="getPeopleAndRolesResource.helpSection"
+      :helpSection="getPeopleAndRolesResource.helpSection"
+    />
 
     <!-- Checklist section -->
     <section class="mt-5">
@@ -90,6 +78,14 @@
       </ul>
     </section>
 
+    <!-- More blurb(s) -->
+    <template v-if="blurb2">
+      <p class="blurb-para" v-html="blurb2" />
+    </template>
+    <template v-if="blurbs2">
+      <p v-for="(blurb, index) in blurbs2" :key="`blurb2-${index}`" class="blurb-para" v-html="blurb" />
+    </template>
+
     <!-- Start by Adding the Completing Party -->
     <div class="btn-panel" v-if="orgPersonList.length === 0">
       <v-btn
@@ -105,7 +101,7 @@
       </v-btn>
     </div>
 
-    <!-- Add a Person / Add a Corporation or Firm / Add the Completing Party -->
+    <!-- Add a Person / Organization / Business -->
     <div class="btn-panel" v-if="orgPersonList.length > 0">
       <v-btn
         id="btn-add-person"
@@ -120,7 +116,7 @@
       </v-btn>
 
       <v-btn
-        id="btn-add-org"
+        id="btn-add-organization"
         outlined
         color="primary"
         class="btn-outlined-primary ml-2"
@@ -129,16 +125,16 @@
         @click="addOrgPerson(RoleTypes.INCORPORATOR, PartyTypes.ORGANIZATION)"
       >
         <v-icon>mdi-domain-plus</v-icon>
-        <span v-if="isTypeCoop">Add Organization</span>
-        <span v-else>Add a Corporation or Firm</span>
+        <span>{{getPeopleAndRolesResource.addOrganization}}</span>
       </v-btn>
 
       <v-btn
-        id="btn-add-bus"
+        id="btn-add-business"
         outlined
         color="primary"
         class="btn-outlined-primary ml-2"
-        v-if="false"
+        v-if="getPeopleAndRolesResource.addBusiness"
+        @click="addOrgPerson(RoleTypes.INCORPORATOR, PartyTypes.BUSINESS)"
       >
         <v-icon>mdi-domain-plus</v-icon>
         <span>Add a Business or a Corporation</span>
@@ -206,16 +202,18 @@ import {
 } from '@/interfaces'
 import { CorpTypeCd, PartyTypes, NumWord, RoleTypes, RuleIds } from '@/enums'
 import { PeopleRolesMixin } from '@/mixins'
-import AddEditOrgPerson from '@/components/common/AddEditOrgPerson.vue'
 import AddEditBusCorp from '@/components/common/AddEditBusCorp.vue'
-import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
+import AddEditOrgPerson from '@/components/common/AddEditOrgPerson.vue'
 import ConfirmDialog from '@/dialogs/ConfirmDialog.vue'
+import HelpSection from '@/components/common/HelpSection.vue'
+import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
 
 @Component({
   components: {
-    ConfirmDialog,
-    AddEditOrgPerson,
     AddEditBusCorp,
+    AddEditOrgPerson,
+    ConfirmDialog,
+    HelpSection,
     ListPeopleAndRoles
   }
 })
@@ -225,13 +223,11 @@ export default class PeopleAndRoles extends Mixins(PeopleRolesMixin) {
   @Getter getUserFirstName!: string
   @Getter getUserLastName!: string
   @Getter getUserAddress!: AddressIF
-  @Getter isTypeCoop!: boolean
 
   @Action setOrgPersonList!: ActionBindingIF
   @Action setAddPeopleAndRoleStepValidity!: ActionBindingIF
 
   // Local variables
-  private helpToggle = false
   private showOrgPersonForm = false
   private activeIndex = -1
   private currentOrgPerson: OrgPersonIF = null
@@ -362,34 +358,14 @@ export default class PeopleAndRoles extends Mixins(PeopleRolesMixin) {
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
 
-.help-btn {
-  cursor: pointer;
-  color: $app-blue;
-  vertical-align: middle;
-}
+.blurb-para {
+  margin-bottom: 0;
 
-.people-and-roles-help {
-  margin: 2rem 0;
-  border-top: 1px dashed $gray6;
-  border-bottom: 1px dashed $gray6;
-  padding: 1rem 0;
-
-  #people-and-roles-help-header {
-    display: flex;
-    justify-content: center;
-  }
-
-  h2, h4 {
-    padding: 1rem 0;
-  }
-
-  u {
-    display: flex;
-    direction: rtl;
+  &:not(:first-of-type) {
+    padding-top: 1rem;
   }
 }
 
-.v-icon.mdi-help-circle-outline,
 .v-icon.mdi-circle-small {
   margin-top: -2px;
 }
@@ -406,7 +382,7 @@ ul {
 }
 
 li {
-  padding-top:0.25rem;
+  padding-top: 0.5rem;
 }
 
 p {
@@ -414,7 +390,7 @@ p {
 }
 
 .btn-panel {
-  padding: 2rem 0 2rem 0;
+  padding: 2rem 0;
 }
 
 .rule-item-txt {

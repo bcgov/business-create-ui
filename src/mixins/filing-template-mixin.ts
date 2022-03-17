@@ -36,6 +36,7 @@ import {
 // Constants and enums
 import { INCORPORATION_APPLICATION, REGISTRATION } from '@/constants'
 import {
+  BusinessTypes,
   CorpTypeCd,
   DissolutionTypes,
   EffectOfOrders,
@@ -122,6 +123,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Action setRegistrationFeeAcknowledgement!: ActionBindingIF
   @Action setRegistrationNaics!: ActionBindingIF
   @Action setRegistrationNameRequest!: ActionBindingIF
+  @Action setRegistrationBusinessType!: ActionBindingIF
 
   /**
    * Builds an incorporation filing from store data. Used when saving a filing.
@@ -342,6 +344,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
           naics: this.getRegistration.naics
         },
         businessAddress: this.getRegistration.businessAddress,
+        businessType: this.getRegistration.businessType,
         contactPoint: {
           email: this.getBusinessContact.email,
           phone: this.getBusinessContact.phone,
@@ -355,18 +358,13 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
       }
     }
 
+    // FUTURE: delete if not needed
     // Conditionally add the entity-specific sections.
     switch (this.getEntityType) {
       case CorpTypeCd.SOLE_PROP:
         break
       case CorpTypeCd.PARTNERSHIP:
         break
-    }
-
-    // If this is a named IA then add Name Request Number and Approved Name.
-    if (this.isNamedBusiness) {
-      filing.registration.nameRequest.nrNumber = this.getNameRequestNumber
-      filing.registration.nameRequest.legalName = this.getApprovedName
     }
 
     if (this.isRoleStaff) {
@@ -389,6 +387,9 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
 
     // restore Business Address
     this.setRegistrationBusinessAddress(draftFiling.registration.businessAddress)
+
+    // restore Business Type
+    this.setRegistrationBusinessType(draftFiling.registration.businessType || BusinessTypes.SP)
 
     // restore Contact Info
     this.setBusinessContact({

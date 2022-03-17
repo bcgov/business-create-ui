@@ -12,9 +12,10 @@ const incorporationResourceModel: IncorporationResourceIF = {
     header: null,
     blurb: null,
     helpSection: null,
+    blurb2: null,
     addIncorporator: null,
     addOrganization: null,
-    addProprietor: null,
+    addBusiness: null,
     rules: []
   },
   shareClasses: {

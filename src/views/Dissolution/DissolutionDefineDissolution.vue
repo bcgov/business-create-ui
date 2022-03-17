@@ -46,8 +46,8 @@
       <!-- Help Section -->
       <HelpSection
         class="mt-5"
+        v-if="getCustodialRecordsResources.helpSection"
         :helpSection="getCustodialRecordsResources.helpSection"
-        :helpTitle="getCustodialRecordsResources.custodianTitle"
       />
 
       <v-card flat class="mt-5 py-8 px-6"

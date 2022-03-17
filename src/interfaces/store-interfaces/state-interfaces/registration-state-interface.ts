@@ -1,5 +1,5 @@
 import { BusinessAddressIF, NaicsIF } from '@/interfaces'
-import { CorpTypeCd } from '@/enums'
+import { BusinessTypes, CorpTypeCd } from '@/enums'
 
 export interface RegistrationNameRequestIF {
   legalName: string
@@ -20,4 +20,5 @@ export interface RegistrationStateIF {
   feeAcknowledgement: boolean
   naics: NaicsIF
   nameRequest: RegistrationNameRequestIF
+  businessType: BusinessTypes
 }

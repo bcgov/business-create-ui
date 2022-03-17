@@ -41,18 +41,19 @@ describe('Registration Filing', () => {
   })
 
   it('correctly builds a registration filing', () => {
-    // FUTURE: populate store...
-    // business contact
-    // business identifier
-    // certify state
-    // current date
-    // entity type
-    // folio number
-    // is future effective
-    // parties
-    // staff filing data
-    // start date
+    // FUTURE:
+    //   business contact
+    //   business identifier
+    //   certify state
+    //   current date
+    //   entity type
+    //   folio number
+    //   is future effective
+    //   parties
+    //   staff filing data
+    //   start date
 
+    // populate store
     store.state.stateModel.tempId = 'T1234567'
 
     store.state.stateModel.registration.businessAddress = {
@@ -87,11 +88,11 @@ describe('Registration Filing', () => {
       nrNumber: 'NR 1234567'
     }
 
+    store.state.stateModel.registration.businessType = 'SP'
+
     const filing = wrapper.vm.buildRegistrationFiling()
 
-    // FUTURE: check filing data...
-    // FUTURE: compare to "registration.json" (see below)
-
+    // verify filing data
     expect(filing).toEqual(
       expect.objectContaining({
         registration: expect.objectContaining({
@@ -122,6 +123,7 @@ describe('Registration Filing', () => {
               streetAddressAdditional: 'Suite 2'
             }
           },
+          businessType: 'SP',
           nameRequest: {
             legalName: 'My Approved Name',
             legalType: 'SP',
@@ -137,15 +139,16 @@ describe('Registration Filing', () => {
 
     wrapper.vm.parseRegistrationDraft(REGISTRATION.filing)
 
-    // FUTURE: check the store...
-    // business contact
-    // business identifier
-    // certify state
-    // entity type
-    // folio number
-    // parties
-    // staff filing data
+    // FUTURE:
+    //   business contact
+    //   business identifier
+    //   certify state
+    //   entity type
+    //   folio number
+    //   parties
+    //   staff filing data
 
+    // verify the store
     expect(store.state.stateModel.registration).toEqual({
       defineBusinessValid: false,
       startDate: '2021-02-03',
@@ -169,6 +172,7 @@ describe('Registration Filing', () => {
           streetAddressAdditional: 'Suite 2'
         }
       },
+      businessType: 'SP',
       feeAcknowledgement: false,
       naics: {
         naicsCode: '12345',

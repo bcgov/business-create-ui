@@ -26,25 +26,27 @@
         <span v-else>Hide Help</span>
       </span>
 
-      <section v-show="helpToggle" class="affidavit-help">
-        <header id="affidavit-help-header">
-          <h2>Help with Affidavit</h2>
-        </header>
+      <v-expand-transition>
+        <section v-show="helpToggle" class="affidavit-help">
+          <header id="affidavit-help-header">
+            <h2>Help with Affidavit</h2>
+          </header>
 
-        <p>{{getAffidavitResources.helpSection.header}}</p>
-        <ul class="mt-6">
-          <li
-            v-for="(item, index) in getAffidavitResources.helpSection.helpText"
-            class="mt-2"
-            :key="index"
-          >
-            <v-icon class="mr-2">mdi-circle-small</v-icon>
-            <span class="break-spaces">{{item}}</span>
-          </li>
-        </ul>
-        <p class="mt-4"><strong>Note:</strong> {{ getAffidavitResources.helpSection.note }}</p>
-        <u class="help-btn" @click="helpToggle = !helpToggle"><small>Hide Help</small></u>
-      </section>
+          <p>{{getAffidavitResources.helpSection.header}}</p>
+          <ul class="mt-6">
+            <li
+              v-for="(item, index) in getAffidavitResources.helpSection.helpText"
+              class="mt-2"
+              :key="index"
+            >
+              <v-icon class="mr-2">mdi-circle-small</v-icon>
+              <span class="break-spaces">{{item}}</span>
+            </li>
+          </ul>
+          <p class="mt-4"><strong>Note:</strong> {{ getAffidavitResources.helpSection.note }}</p>
+          <u class="help-btn" @click="helpToggle = !helpToggle"><small>Hide Help</small></u>
+        </section>
+      </v-expand-transition>
     </div>
 
     <!-- Sample Affidavit -->

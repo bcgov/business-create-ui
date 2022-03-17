@@ -55,7 +55,7 @@
                 @change="syncCustodianPartyType"
               >
                 <!-- Person input -->
-                <v-radio :value=PartyTypes.PERSON>
+                <v-radio :value="PartyTypes.PERSON">
                   <template slot="label">
                     <span class="item-label" :class="{ 'title-label': isInError }">
                       Person's Name
@@ -97,7 +97,7 @@
                 </v-row>
 
                 <!-- Org input -->
-                <v-radio :value=PartyTypes.ORGANIZATION class="pt-2">
+                <v-radio :value="PartyTypes.ORGANIZATION" class="pt-2">
                   <template slot="label">
                     <span class="item-label" :class="{ 'title-label': isInError }">
                       Corporation or Firm Name

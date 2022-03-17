@@ -1,6 +1,6 @@
 import {
   AccountTypes,
-  CoopType,
+  CoopTypes,
   CorpTypeCd,
   DissolutionTypes,
   FilingNames,
@@ -174,11 +174,6 @@ export const getAccountInformation = (state: StateIF): AccountInformationIF => {
   return state.stateModel.accountInformation
 }
 
-/** The Org Information object. */
-export const getOrgInformation = (state: StateIF): OrgInformationIF => {
-  return state.stateModel.orgInformation
-}
-
 /** Whether the entity is a base company (BEN, CC, BC, ULC). */
 export const isBaseCompany = (state: StateIF): boolean => {
   return (
@@ -192,6 +187,11 @@ export const isBaseCompany = (state: StateIF): boolean => {
 /** Whether the current account is a premium account. */
 export const isPremiumAccount = (state: StateIF): boolean => {
   return (getAccountInformation(state).accountType === AccountTypes.PREMIUM)
+}
+
+/** The Org Information object. */
+export const getOrgInformation = (state: StateIF): OrgInformationIF => {
+  return state.stateModel.orgInformation
 }
 
 /** The current date, which is refreshed every time the app inits (YYYY-MM-DD). */
@@ -269,7 +269,7 @@ export const getDefineCompanyStep = (state: StateIF): DefineCompanyIF => {
 }
 
 /** The Cooperative association type. */
-export const getCooperativeType = (state: StateIF): CoopType => {
+export const getCooperativeType = (state: StateIF): CoopTypes => {
   return getDefineCompanyStep(state).cooperativeType
 }
 

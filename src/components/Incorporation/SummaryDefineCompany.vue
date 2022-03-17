@@ -19,7 +19,7 @@
           </v-col>
           <v-col cols="12" sm="9">
             <div class="company-name">{{ getApprovedName || '[Incorporation Number] B.C. Ltd.' }}</div>
-            <div class="company-type pt-2">{{ entityDescription }}</div>
+            <div class="company-type">{{ entityDescription }}</div>
           </v-col>
         </v-row>
 
@@ -97,7 +97,7 @@ import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
 import FolioNumber from '@/components/common/FolioNumber.vue'
 import OfficeAddresses from '@/components/common/OfficeAddresses.vue'
 import { EnumMixin } from '@/mixins'
-import { CoopType, CorpTypeCd, RouteNames } from '@/enums'
+import { CoopTypes, CorpTypeCd, RouteNames } from '@/enums'
 
 @Component({
   components: {
@@ -109,7 +109,7 @@ import { CoopType, CorpTypeCd, RouteNames } from '@/enums'
 export default class SummaryDefineCompany extends Mixins(EnumMixin) {
   // Getters
   @Getter getApprovedName!: string
-  @Getter getCooperativeType!: CoopType
+  @Getter getCooperativeType!: CoopTypes
   @Getter isDefineCompanyValid!: boolean
   @Getter isPremiumAccount!: boolean
   @Getter isTypeCoop!: boolean

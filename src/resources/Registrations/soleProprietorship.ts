@@ -23,9 +23,14 @@ export const SoleProprietorshipResource: RegistrationResourceIF = {
         'registered under another name and it is still a Sole Proprietorship registration.'
     ],
     helpSection: null,
-    addIncorporator: false,
-    addOrganization: true,
-    addProprietor: true,
+    blurb2: [
+      '<b>Add a person</b> as the proprietor if your business is owned and operated by one ' +
+        'person who is responsible for all debts and liabilities.',
+      '<b>Add a business or a corporation</b> as the proprietor if an existing B.C. entity ' +
+        'would like to be known as another name. Often referred to as <b>Doing Business As, ' +
+        'DBA, Operating As</b>, or trade name.'
+    ],
+    addBusiness: true,
     rules: [
       {
         id: RuleIds.NUM_COMPLETING_PARTY,

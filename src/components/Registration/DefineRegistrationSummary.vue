@@ -19,7 +19,7 @@
           </v-col>
           <v-col cols="12" sm="9">
             <div class="company-name">{{ getApprovedName || 'Unavailable' }}</div>
-            <div class="company-type pt-2">{{ entityDescription }}</div>
+            <div class="company-type">{{ entityDescription }}</div>
           </v-col>
         </v-row>
       </article>

@@ -21,11 +21,19 @@ export default class PeopleRolesMixin extends Vue {
     return (!Array.isArray(this.getPeopleAndRolesResource.blurb) &&
       this.getPeopleAndRolesResource.blurb)
   }
+  get blurb2 (): string {
+    return (!Array.isArray(this.getPeopleAndRolesResource.blurb2) &&
+      this.getPeopleAndRolesResource.blurb2)
+  }
 
   /** List of strings if blurb is an array. */
   get blurbs (): string[] {
     return (Array.isArray(this.getPeopleAndRolesResource.blurb) &&
       this.getPeopleAndRolesResource.blurb)
+  }
+  get blurbs2 (): string[] {
+    return (Array.isArray(this.getPeopleAndRolesResource.blurb2) &&
+      this.getPeopleAndRolesResource.blurb2)
   }
 
   /** The complete list of organizations/persons. */
@@ -60,6 +68,8 @@ export default class PeopleRolesMixin extends Vue {
       people => people.roles.some(party => party.roleType === RoleTypes.PROPRIETOR)
     )
   }
+
+  // *** TODO: add the list of partners
 
   /** The list of partners. */
   get partners (): OrgPersonIF[] {

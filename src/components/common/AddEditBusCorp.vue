@@ -15,6 +15,11 @@
               <span v-else>Edit Business or Corporation</span>
             </label>
 
+            <!--
+              *** TODO: implement according to designs
+                  ref: https://projects.invisionapp.com/share/3511UPXPMT2P#/screens/460861991
+            -->
+
             <div class="meta-container__inner">
               <v-card outlined class="message-box" v-if="isCompletingParty && !isRoleStaff && isTypeCoop">
                 <p>
@@ -281,6 +286,11 @@ export default class AddEditBusCorp extends Mixins(CommonMixin) {
   /** Whether current data object is an organization (corporation/firm). */
   private get isOrg (): boolean {
     return (this.orgPerson.officer?.partyType === PartyTypes.ORGANIZATION)
+  }
+
+  /** Whether current data object is a business or corporation. */
+  private get isBusiness (): boolean {
+    return (this.orgPerson.officer?.partyType === PartyTypes.BUSINESS)
   }
 
   /** Whether the Completing Party role should be shown. */

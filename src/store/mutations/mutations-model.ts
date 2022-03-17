@@ -1,4 +1,4 @@
-import { CoopType, CorpTypeCd, DissolutionTypes, FilingTypes } from '@/enums'
+import { BusinessTypes, CoopTypes, CorpTypeCd, DissolutionTypes, FilingTypes } from '@/enums'
 import {
   AccountInformationIF,
   AddressIF,
@@ -63,7 +63,7 @@ export const mutateAuthRoles = (state: StateIF, authRoles: Array<string>) => {
   state.stateModel.tombstone.authRoles = authRoles
 }
 
-export const mutateCooperativeType = (state: StateIF, cooperativeType: CoopType) => {
+export const mutateCooperativeType = (state: StateIF, cooperativeType: CoopTypes) => {
   state.stateModel.defineCompanyStep.cooperativeType = cooperativeType
 }
 
@@ -343,5 +343,10 @@ export const mutateRegistrationNaics = (state: StateIF, val: NaicsIF) => {
 
 export const mutateRegistrationNameRequest = (state: StateIF, val: RegistrationNameRequestIF) => {
   state.stateModel.registration.nameRequest = val
+  if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
+}
+
+export const mutateRegistrationBusinessType = (state: StateIF, businessType: BusinessTypes) => {
+  state.stateModel.registration.businessType = businessType
   if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
 }

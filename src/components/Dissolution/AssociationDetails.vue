@@ -94,7 +94,7 @@ import { ContactInfo } from '@bcrs-shared-components/contact-info'
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
 import OfficeAddresses from '@/components/common/OfficeAddresses.vue'
 import { CommonMixin, EnumMixin } from '@/mixins'
-import { CoopType, CorpTypeCd } from '@/enums'
+import { CoopTypes, CorpTypeCd } from '@/enums'
 import { isEmpty } from 'lodash'
 
 @Component({
@@ -116,7 +116,7 @@ export default class AssociationDetails extends Mixins(CommonMixin, EnumMixin) {
   @Getter getBusiness!: BusinessIF
   @Getter getBusinessContact!: BusinessContactIF
   @Getter getCompanyDisplayName!: string
-  @Getter getCooperativeType!: CoopType
+  @Getter getCooperativeType!: CoopTypes
   @Getter getBusinessLegalName!: string
   @Getter isPremiumAccount!: boolean
   @Getter isTypeCoop!: boolean

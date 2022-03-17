@@ -27,7 +27,7 @@ const store = getVuexStore()
 const btnStartAddCompletingParty: string = '#btn-start-add-cp'
 const btnAddPerson: string = '#btn-add-person'
 const btnAddCompletingParty: string = '#btn-add-cp'
-const btnAddOrg: string = '#btn-add-org'
+const btnAddOrganization: string = '#btn-add-organization'
 const appointForm: string = '.appoint-form'
 const checkCompletingParty: string = '.cp-valid'
 const checkDirector: string = '.dir-valid'
@@ -106,7 +106,7 @@ describe('People And Roles component', () => {
     const wrapper = wrapperFactory()
     expect(wrapper.find(btnAddPerson).exists()).toBeFalsy()
     expect(wrapper.find(btnAddCompletingParty).exists()).toBeFalsy()
-    expect(wrapper.find(btnAddOrg).exists()).toBeFalsy()
+    expect(wrapper.find(btnAddOrganization).exists()).toBeFalsy()
     wrapper.destroy()
   })
 
@@ -121,7 +121,7 @@ describe('People And Roles component', () => {
   it('shows Add Person and Add Corporation Button when people list is not empty', () => {
     store.state.stateModel.addPeopleAndRoleStep.orgPeople = getPersonList()
     const wrapper = wrapperFactory()
-    expect(wrapper.find(btnAddOrg).exists()).toBeTruthy()
+    expect(wrapper.find(btnAddOrganization).exists()).toBeTruthy()
     expect(wrapper.find(btnAddPerson).exists()).toBeTruthy()
     wrapper.destroy()
     resetStore()

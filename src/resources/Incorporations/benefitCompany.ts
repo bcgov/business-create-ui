@@ -21,8 +21,7 @@ export const BenefitCompanyResource: IncorporationResourceIF = {
       can have multiple roles; Corporations/firms can only be Incorporators.`,
     helpSection: null,
     addIncorporator: true,
-    addOrganization: true,
-    addProprietor: false,
+    addOrganization: 'Add a Corporation or Firm',
     rules: [
       {
         id: RuleIds.NUM_COMPLETING_PARTY,

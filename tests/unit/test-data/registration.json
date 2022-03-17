@@ -35,6 +35,7 @@
           "streetAddressAdditional": "Suite 2"
         }
       },
+      "businessType": "SP",
 			"contactPoint": {
 				"email": "eleven@email.com",
 				"phone": "(111) 222-3333",

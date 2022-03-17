@@ -19,6 +19,7 @@ export const BenefitCompanyDissolutionResource: DissolutionResourceIF = {
      addresses must be located in B.C.`,
     custodianTitle: `Custodian of Records`,
     helpSection: {
+      header: 'Help with Custodian of Records',
       helpText: [
         `A Company must keep all company records for a period of 2 years. A court order may be required if the Custodian
         of Records information changes within 2 years.`

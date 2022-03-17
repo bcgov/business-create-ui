@@ -144,7 +144,7 @@ import {
   IncorporationAddressIF
 } from '@/interfaces'
 import { CommonMixin } from '@/mixins'
-import { CoopType, CorpTypeCd, RouteNames } from '@/enums'
+import { CoopTypes, CorpTypeCd, RouteNames } from '@/enums'
 import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
 import CooperativeType from '@/components/Dissolution/CooperativeType.vue'
 import FolioNumber from '@/components/common/FolioNumber.vue'
@@ -251,7 +251,7 @@ export default class IncorporationDefineCompany extends Mixins(CommonMixin) {
     )
   }
 
-  private onCooperativeType (cooperativeType: CoopType): void {
+  private onCooperativeType (cooperativeType: CoopTypes): void {
     this.hasValidCooperativeType = !!cooperativeType
     this.setCooperativeType(cooperativeType)
   }

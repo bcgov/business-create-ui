@@ -588,7 +588,13 @@ export default class App extends Mixins(
       if (this.$route.meta.filingType !== this.getFilingType) {
         switch (this.getFilingType) {
           case FilingTypes.VOLUNTARY_DISSOLUTION:
-            this.$router.push(RouteNames.DISSOLUTION_DEFINE_DISSOLUTION).catch(() => {})
+            if (this.getEntityType === CorpTypeCd.SOLE_PROP) {
+              // *** FUTURE: for Faiz to do
+              // this.$router.push(RouteNames.DISSOLUTION_FIRM).catch(() => {})
+              throw new Error('Dissolution filings for firms is not yet supported.') // go to catch()
+            } else {
+              this.$router.push(RouteNames.DISSOLUTION_DEFINE_DISSOLUTION).catch(() => {})
+            }
             return
           case FilingTypes.INCORPORATION_APPLICATION:
             this.$router.push(RouteNames.INCORPORATION_DEFINE_COMPANY).catch(() => {})

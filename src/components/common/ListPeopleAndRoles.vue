@@ -169,24 +169,26 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
     return !this.getAddPeopleAndRoleStep.valid
   }
 
-  /** Returns true officer is a person. */
-  private isPerson (orgPerson: any): boolean {
+  /** Returns true if org-person is a person. */
+  private isPerson (orgPerson: OrgPersonIF): boolean {
     return (orgPerson.officer?.partyType === PartyTypes.PERSON)
   }
 
-  /** Returns true if officer is an organization (corporation/firm). */
-  private isOrg (orgPerson: any): boolean {
+  /** Returns true if org-person is an organization (corporation/firm). */
+  private isOrg (orgPerson: OrgPersonIF): boolean {
     return (orgPerson.officer?.partyType === PartyTypes.ORGANIZATION)
   }
 
-  /**
-   * Determine if Corporation/Firm or Person.
-   * @param filing The filing body which contains the name/title.
-   * @returns The appropriate Corporation or Person name.
-   */
-  private formatName (filing: any): string {
-    return filing?.officer?.organizationName ? filing?.officer?.organizationName
-      : `${filing.officer.firstName} ${filing.officer.middleName || ''} ${filing.officer.lastName}`
+  /** Returns true if org-person is a business or corporation. */
+  private isBusiness (orgPerson: OrgPersonIF): boolean {
+    return (orgPerson.officer?.partyType === PartyTypes.BUSINESS)
+  }
+
+  /** Formats the org-person's name. */
+  private formatName (orgPerson: OrgPersonIF): string {
+    return orgPerson?.officer?.organizationName
+      ? orgPerson?.officer?.organizationName
+      : `${orgPerson.officer.firstName} ${orgPerson.officer.middleName || ''} ${orgPerson.officer.lastName}`
   }
 
   /**

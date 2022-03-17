@@ -1,32 +1,26 @@
 <template>
-  <div v-if="helpSection">
-    <span class="help-btn" @click="helpToggle = !helpToggle">
-      <v-icon color="primary" class="pr-1">mdi-help-circle-outline</v-icon>
-      <span v-if="!helpToggle">Help with {{ helpTitle }}</span>
-      <span v-else>Hide Help</span>
-    </span>
+  <div class="help-section-component">
+    <div class="help-btn" @click="helpToggle = !helpToggle">
+      <v-icon color="primary">mdi-help-circle-outline</v-icon>
+      <span v-if="!helpToggle" class="pl-2">{{ header }}</span>
+      <span v-else class="pl-2">Hide Help</span>
+    </div>
 
-    <section v-show="helpToggle" class="help-section">
-      <header class="help-header">
-        <h2>Help with {{ helpTitle }}</h2>
-      </header>
+    <v-expand-transition>
+      <section v-if="helpToggle" class="help-section">
+        <header class="help-header">
+          <h2 class="py-4 px-0">{{ header }}</h2>
+        </header>
 
-      <ul class="px-0">
-        <li
-          v-for="(item, index) in helpSection.helpText"
-          class="py-3"
-          :key="index"
-        >
-          {{item}}
-        </li>
-      </ul>
-      <u class="help-btn" @click="helpToggle = !helpToggle"><small>Hide Help</small></u>
-    </section>
+        <p v-for="(item, index) in items" :key="index" class="my-4" v-html="item" />
+
+        <div class="help-btn bottom" @click="helpToggle = !helpToggle">Hide Help</div>
+      </section>
+    </v-expand-transition>
   </div>
 </template>
 
 <script lang="ts">
-// Libraries
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import { HelpSectionIF } from '@/interfaces'
 
@@ -35,20 +29,20 @@ export default class HelpSection extends Vue {
   @Prop({ default: {} })
   readonly helpSection: HelpSectionIF
 
-  @Prop({ default: 'Not Available' })
-  readonly helpTitle: string
+  helpToggle = false
 
-  private helpToggle = false
+  get header (): string {
+    return this.helpSection?.header || 'this section'
+  }
+
+  get items (): string[] {
+    return this.helpSection?.helpText || []
+  }
 }
 </script>
 
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
-
-ul {
-  list-style: none;
-  color: $gray7;
-}
 
 .help-btn {
   cursor: pointer;
@@ -56,28 +50,26 @@ ul {
   vertical-align: middle;
 }
 
+.v-icon {
+  margin-top: -3px;
+}
+
 .help-section {
   border-top: 1px dashed $gray6;
   border-bottom: 1px dashed $gray6;
   margin: 1.5rem 0;
   padding: 1rem 0;
+}
 
-  .help-header {
-    display: flex;
-    justify-content: center;
-  }
+.help-header {
+  display: flex;
+  justify-content: center;
+}
 
-  h2, h4 {
-    padding: 1rem 0;
-  }
-
-  u {
-    display: flex;
-    direction: rtl;
-  }
-
-  a {
-    text-decoration: none;
-  }
+.help-btn.bottom {
+  font-size: $px-13;
+  text-decoration: underline;
+  display: flex;
+  direction: rtl;
 }
 </style>

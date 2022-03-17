@@ -1,8 +1,8 @@
 import { IncorporationAddressIF } from '@/interfaces'
-import { CoopType } from '@/enums'
+import { CoopTypes } from '@/enums'
 
 export interface DefineCompanyIF {
   valid: boolean
-  cooperativeType: CoopType
+  cooperativeType: CoopTypes
   officeAddresses: IncorporationAddressIF | {}
 }

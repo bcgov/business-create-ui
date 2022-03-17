@@ -43,8 +43,8 @@ import { Component, Mixins } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 
 // Interfaces & enums
-import { CorpTypeCd, FilingNames, FilingTypes } from '@/enums'
-import { BusinessContactIF } from '@/interfaces'
+import { BusinessTypes, CorpTypeCd, FilingNames, FilingTypes } from '@/enums'
+import { BusinessContactIF, RegistrationStateIF } from '@/interfaces'
 
 // Modules
 import { EnumMixin } from '@/mixins'
@@ -61,13 +61,17 @@ export default class EntityInfo extends Mixins(EnumMixin) {
   @Getter getNameRequestNumber!: string
   @Getter getApprovedName!: string
   @Getter getFilingType!: FilingTypes
+  @Getter getRegistration!: RegistrationStateIF
   @Getter isEntityType!: boolean
   @Getter isIncorporationFiling!: boolean
   @Getter isRegistrationFiling!: boolean
 
   /** The entity application title.  */
   get entityTitle (): string {
-    return `${this.getCorpTypeDescription(this.getEntityType)} ${this.getFilingName}`
+    let corpTypeDescription = this.getCorpTypeDescription(this.getEntityType)
+    const isSpDba = (this.getRegistration.businessType === BusinessTypes.DBA)
+    if (isSpDba) corpTypeDescription += ' / Doing Business As (DBA)'
+    return `${corpTypeDescription} ${this.getFilingName}`
   }
 
   /** The numbered entity name. */
