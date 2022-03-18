@@ -503,6 +503,7 @@ export default class CustodianOfRecords extends Mixins(CommonMixin) {
 
 // italicize delivery instructions and remove top margin
 ::v-deep .base-address .address-block .delivery-instructions {
+  font-size: $px-14;
   font-style: italic;
   margin-top: 0 !important;
 }

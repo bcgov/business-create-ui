@@ -5,8 +5,8 @@
       <header>
         <h2>Review and Confirm</h2>
         <p class="mt-4">
-          Review the information in your filing. If you need to change or complete anything, return
-          to the step to make the necessary change.
+          Review the information in your filing. If you need to change or complete anything,
+          return to the step to make the necessary change.
         </p>
       </header>
 
@@ -128,7 +128,7 @@
       </v-card>
 
       <!-- Resolution -->
-      <v-card flat id="resolution-summary" class="mt-10">
+      <v-card flat id="resolution-summary" class="mt-6">
         <header class="review-header">
           <v-icon class="ml-2" color="appDkBlue">mdi-handshake</v-icon>
           <label class="font-weight-bold pl-2">{{getCreateResolutionResource.reviewConfirmHeader}}</label>
@@ -138,7 +138,7 @@
       </v-card>
 
       <!-- Affidavit -->
-      <v-card flat id="affidavit-summary" class="mt-10">
+      <v-card flat id="affidavit-summary" class="mt-6">
         <header class="review-header">
           <v-icon class="ml-2" color="appDkBlue">mdi-book-variant-multiple</v-icon>
           <label class="font-weight-bold pl-2">Affidavit</label>

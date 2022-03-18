@@ -1,47 +1,99 @@
 <template>
   <div id="incorporation-review-confirm">
-    <!-- Company Statement -->
-    <section class="mt-10 company-statement" v-if="isTypeBcomp">
-      <p v-if="getCompanyTitle">
-        <span class="company-statement-label">{{ getCompanyTitle }}:</span>
-        {{ getCompanyDescription }}
-      </p>
-    </section>
+    <template v-if="isTypeBcomp">
+      <!-- Company Statement -->
+      <section id="company-statement-section" class="mt-10">
+        <p v-if="getCompanyTitle">
+          <span id="company-statement-label">{{ getCompanyTitle }}:</span>
+          {{ getCompanyDescription }}
+        </p>
+      </section>
+    </template>
 
     <!-- Review and Confirm -->
     <section class="mt-10">
       <header>
         <h2>Review and Confirm</h2>
         <p class="mt-4">
-          Review the information in your application. If you need to change or complete anything, return
-          to the step to make the necessary change.
+          Review the information in your application. If you need to change or complete anything,
+          return to the step to make the necessary change.
           </p>
       </header>
 
-      <Summary class="mt-6" />
+      <v-card id="company-summary-vcard" flat class="mt-6">
+        <CardHeader icon="mdi-domain" :label="getCompanyDisplayName" />
+        <SummaryDefineCompany />
+      </v-card>
+
+      <!-- People and Roles -->
+      <v-card id="people-and-roles-vcard" flat class="mt-6">
+        <CardHeader icon="mdi-account-multiple-plus" label="People and Roles" />
+        <ListPeopleAndRoles :isSummary="true" />
+      </v-card>
+
+      <!-- Share Structure -->
+      <template v-if="isBaseCompany">
+        <v-card id="share-structure-vcard" flat class="mt-6">
+          <CardHeader icon="mdi-sitemap" label="Share Structure" />
+          <ListShareClass
+            :isSummary="true"
+            :shareClasses="getCreateShareStructureStep.shareClasses"
+            :showErrorSummary="!getCreateShareStructureStep.valid"
+          />
+        </v-card>
+      </template>
+
+      <!-- Agreement Type -->
+      <template v-if="isBaseCompany">
+        <v-card id="agreement-type-vcard" flat class="mt-6">
+          <CardHeader icon="mdi-handshake" :label="`Incorporation Agreement and ${getEntityDescription} Articles`" />
+          <AgreementType
+            :isSummary="true"
+            :showErrorSummary="!getIncorporationAgreementStep.valid"
+          />
+        </v-card>
+      </template>
+
+      <!-- Rules -->
+      <template v-if="isTypeCoop">
+        <v-card id="rules-vcard" flat class="mt-6">
+          <CardHeader icon="mdi-format-list-text" label="Rules" />
+          <UploadRulesSummary />
+        </v-card>
+      </template>
+
+      <!-- Memorandum -->
+      <template v-if="isTypeCoop">
+        <v-card id="memorandum-vcard" flat class="mt-6">
+          <CardHeader icon="mdi-text-box-multiple" label="Memorandum" />
+          <UploadMemorandumSummary />
+        </v-card>
+      </template>
     </section>
 
-    <!-- Incorporation Date and Time -->
-    <section v-if="isBaseCompany" class="mt-10">
-      <header>
-        <h2>Incorporation Date and Time</h2>
-        <p class="mt-4">
-          Select the Date and Time of incorporation for your business. You may select
-          a date up to 10 days in the future (note: there is an <strong>additional fee of $100</strong> to enter an
-          incorporation date in the future). Unless a business has special requirements, most businesses select an
-          immediate Date and Time of Incorporation.
-        </p>
-      </header>
+    <template  v-if="isBaseCompany">
+      <!-- Incorporation Date and Time -->
+      <section id="incorporation-date-time-section" class="mt-10">
+        <header>
+          <h2>Incorporation Date and Time</h2>
+          <p class="mt-4">
+            Select the Date and Time of incorporation for your business. You may select a date up
+            to 10 days in the future (note: there is an <strong>additional fee of $100</strong> to
+            enter an incorporation date in the future). Unless a business has special requirements,
+            most businesses select an immediate Date and Time of Incorporation.
+          </p>
+        </header>
 
-      <IncorporationDateTime
-        class="mt-6"
-        :class="{ 'invalid-section': isEffectiveDateTimeInvalid }"
-        :effectiveDateTime="getEffectiveDateTime"
-        @valid="setEffectiveDateTimeValid($event)"
-        @effectiveDate="setEffectiveDate($event)"
-        @isFutureEffective="setIsFutureEffective($event)"
-      />
-    </section>
+        <IncorporationDateTime
+          class="mt-6"
+          :class="{ 'invalid-section': isEffectiveDateTimeInvalid }"
+          :effectiveDateTime="getEffectiveDateTime"
+          @valid="setEffectiveDateTimeValid($event)"
+          @effectiveDate="setEffectiveDate($event)"
+          @isFutureEffective="setIsFutureEffective($event)"
+        />
+      </section>
+    </template>
 
     <!-- Document Delivery -->
     <section id="document-delivery-section" class="mt-10">
@@ -63,7 +115,7 @@
     </section>
 
     <!-- Certify -->
-    <section class="mt-10">
+    <section id="certify-section" class="mt-10">
       <header>
         <h2>Certify</h2>
         <p class="mt-4">
@@ -85,23 +137,38 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Mixins } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
-import { ActionBindingIF, BusinessContactIF, CertifyIF, EffectiveDateTimeIF } from '@/interfaces'
+import { ActionBindingIF, BusinessContactIF, CertifyIF, EffectiveDateTimeIF, IncorporationAgreementIF,
+  ShareStructureIF } from '@/interfaces'
+import { CorpTypeCd } from '@/enums'
+import { EnumMixin } from '@/mixins'
+import AgreementType from '@/components/common/AgreementType.vue'
+import CardHeader from '@/components/common/CardHeader.vue'
 import Certify from '@/components/common/Certify.vue'
 import DocumentDelivery from '@/components/common/DocumentDelivery.vue'
 import IncorporationDateTime from '@/components/Incorporation/IncorporationDateTime.vue'
-import Summary from '@/components/Incorporation/Summary.vue'
+import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
+import ListShareClass from '@/components/Incorporation/ListShareClass.vue'
+import SummaryDefineCompany from '@/components/Incorporation/SummaryDefineCompany.vue'
+import UploadMemorandumSummary from '@/components/Incorporation/UploadMemorandumSummary.vue'
+import UploadRulesSummary from '@/components/Incorporation/UploadRulesSummary.vue'
 
 @Component({
   components: {
+    AgreementType,
+    CardHeader,
     Certify,
     DocumentDelivery,
     IncorporationDateTime,
-    Summary
+    ListPeopleAndRoles,
+    ListShareClass,
+    SummaryDefineCompany,
+    UploadMemorandumSummary,
+    UploadRulesSummary
   }
 })
-export default class IncorporationReviewConfirm extends Vue {
+export default class IncorporationReviewConfirm extends Mixins(EnumMixin) {
   @Getter getBusinessContact!: BusinessContactIF
   @Getter getCertifyState!: CertifyIF
   @Getter getCompanyTitle!: string
@@ -113,11 +180,20 @@ export default class IncorporationReviewConfirm extends Vue {
   @Getter isRoleStaff!: boolean
   @Getter getEffectiveDateTime!: EffectiveDateTimeIF
   @Getter getUserEmail!: string
+  @Getter getCreateShareStructureStep!: ShareStructureIF
+  @Getter getIncorporationAgreementStep!: IncorporationAgreementIF
+  @Getter getCompanyDisplayName!: string
+  @Getter getEntityType!: CorpTypeCd
 
   @Action setEffectiveDateTimeValid!: ActionBindingIF
   @Action setEffectiveDate!: ActionBindingIF
   @Action setIsFutureEffective!: ActionBindingIF
   @Action setCertifyState!: ActionBindingIF
+
+  /** The entity description,  */
+  get getEntityDescription (): string {
+    return `${this.getCorpTypeDescription(this.getEntityType)}`
+  }
 
   /** Is true when the effective date-time conditions are not met. */
   get isEffectiveDateTimeInvalid (): boolean {
@@ -145,8 +221,9 @@ h2::before {
   content: counter(header-counter) '. ';
 }
 
-.company-statement-label {
+#company-statement-label {
   letter-spacing: -0.04rem;
-  font-weight: 700;
+  font-weight: bold;
+  color: $gray9;
 }
 </style>

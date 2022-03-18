@@ -35,7 +35,6 @@ export const CooperativeResource: IncorporationResourceIF = {
           person to locate the Director.`
       ]
     },
-    addOrganization: 'Add Organization',
     rules: [
       {
         id: RuleIds.NUM_COMPLETING_PARTY,
@@ -123,7 +122,7 @@ export const CooperativeResource: IncorporationResourceIF = {
             `A memorandum should accurately reflect the intention and values of the Cooperative Association. Be detailed
               and specific, but not too restrictive. This will avoid having to make changes later.`,
             `To form a Cooperative Association, at least three subscribers who are responsible for the Cooperative
-              Association’s operation are required. They may be individuals or organizations such as a government,
+              Association's operation are required. They may be individuals or organizations such as a government,
               First Nation, corporation, business, society or another Cooperative Association.`
           ]
         },

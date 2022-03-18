@@ -113,12 +113,14 @@
             </v-checkbox>
 
             <template v-if="hasNameTranslation">
-              <p class="my-4">
-                <b>Note:</b> Name translations must use the Latin Alphabet (English, French, etc.). Names
-                that use other writing systems must spell the name phonetically in English or French.
+              <p class="mt-4 mb-0">
+                <b>Note:</b> Name translations must use the Latin Alphabet (English, French, etc.).
+                Names that use other writing systems must spell the name phonetically in English or
+                French.
               </p>
               <v-btn
                 outlined color="primary"
+                class="mt-6"
                 @click="isAddingNameTranslation = true"
                 :disabled="isAddingNameTranslation"
               >
@@ -131,8 +133,8 @@
 
         <!-- Name Translation Components -->
         <template v-if="hasNameTranslation">
-          <v-row no-gutters id="name-translation-container" class="mt-4">
-            <v-col cols="12" sm="3" class="pr-4" />
+          <v-row no-gutters id="name-translation-container" class="mt-6">
+            <v-col cols="12" sm="3" />
 
             <v-col cols="12" sm="9">
               <AddNameTranslation

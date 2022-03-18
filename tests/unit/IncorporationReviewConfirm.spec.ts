@@ -31,10 +31,10 @@ for (const test of reviewConfirmTestCases) {
     it('displays benefit company statement', () => {
       wrapper = shallowWrapperFactory(IncorporationReviewConfirm, null, { entityType: test.entityType })
 
-      expect(wrapper.find('.company-statement').exists()).toBe(test.hasStatement)
+      expect(wrapper.find('#company-statement-section').exists()).toBe(test.hasStatement)
 
       if (test.hasStatement) {
-        expect(wrapper.find('.company-statement p').text()).toContain(test.statement)
+        expect(wrapper.find('#company-statement-section p').text()).toContain(test.statement)
       }
     })
 

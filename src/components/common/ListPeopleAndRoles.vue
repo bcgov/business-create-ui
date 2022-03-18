@@ -179,11 +179,6 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
     return (orgPerson.officer?.partyType === PartyTypes.ORGANIZATION)
   }
 
-  /** Returns true if org-person is a business or corporation. */
-  private isBusiness (orgPerson: OrgPersonIF): boolean {
-    return (orgPerson.officer?.partyType === PartyTypes.BUSINESS)
-  }
-
   /** Formats the org-person's name. */
   private formatName (orgPerson: OrgPersonIF): string {
     return orgPerson?.officer?.organizationName
@@ -295,5 +290,12 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
   &.mdi-delete {
     margin-top: -2px;
   }
+}
+
+// italicize delivery instructions and remove top margin
+::v-deep .base-address .address-block .delivery-instructions {
+  font-size: $px-14;
+  font-style: italic;
+  margin-top: 0 !important;
 }
 </style>

@@ -73,7 +73,7 @@ export const UnlimitedCompanyResource: IncorporationResourceIF = {
         icon: 'mdi-close',
         iconColor: 'red',
         statements: [
-          `There are special rights or restrictions attached to any class or series of shares in the corporation’s
+          `There are special rights or restrictions attached to any class or series of shares in the corporation's
             authorized share structure.`,
           `You wish to change any of the standard provisions in the sample Articles.`
         ]

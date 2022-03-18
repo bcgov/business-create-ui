@@ -5,7 +5,7 @@ import VueRouter from 'vue-router'
 import mockRouter from './MockRouter'
 import { getVuexStore } from '@/store'
 import { createLocalVue, mount } from '@vue/test-utils'
-import RegPeopleAndRoles from '@/components/Registration/RegPeopleAndRoles.vue'
+import PeopleAndRoles from '@/components/common/PeopleAndRoles.vue'
 import { BenefitCompanyResource } from '@/resources/Incorporations/benefitCompany'
 
 Vue.use(Vuetify)
@@ -64,7 +64,7 @@ function getPersonList (roles = [completingPartyRole]): any {
   return mockPersonList
 }
 
-describe('Registration People And Roles component', () => {
+describe('People And Roles component', () => {
   let wrapperFactory: any
 
   beforeEach(() => {
@@ -72,10 +72,10 @@ describe('Registration People And Roles component', () => {
     localVue.use(VueRouter)
     const router = mockRouter.mock()
 
-    store.state.resourceModel = BenefitCompanyResource // *** TODO: update
+    store.state.resourceModel = BenefitCompanyResource
 
     wrapperFactory = () => {
-      return mount(RegPeopleAndRoles, {
+      return mount(PeopleAndRoles, {
         localVue,
         router,
         store,
@@ -109,7 +109,7 @@ describe('Registration People And Roles component', () => {
     resetStore()
   })
 
-  xit('shows Add Person and Add Corporation Button when people list is not empty', () => {
+  it('shows Add Person and Add Corporation Button when people list is not empty', () => {
     store.state.stateModel.addPeopleAndRoleStep.orgPeople = getPersonList()
     const wrapper = wrapperFactory()
     expect(wrapper.find(btnAddOrganization).exists()).toBeTruthy()
@@ -156,7 +156,7 @@ describe('Registration People And Roles component', () => {
     resetStore()
   })
 
-  xit('Shows check mark next to roles added', () => {
+  it('Shows check mark next to roles added', () => {
     store.state.stateModel.addPeopleAndRoleStep.orgPeople = getPersonList([
       { 'roleType': 'Director', 'appointmentDate': '2020-03-30' },
       { 'roleType': 'Incorporator', 'appointmentDate': '2020-03-30' }

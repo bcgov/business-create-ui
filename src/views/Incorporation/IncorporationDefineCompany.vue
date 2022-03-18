@@ -1,12 +1,14 @@
 <template>
   <div id="incorporation-define-company">
-    <!-- Company Statement -->
-    <section class="mt-10 company-statement" v-if="isTypeBcomp">
-      <p v-if="getCompanyTitle">
-        <span class="company-statement-label">{{ getCompanyTitle }}:</span>
-        {{ getCompanyDescription }}
-      </p>
-    </section>
+    <template v-if="isTypeBcomp">
+      <!-- Company Statement -->
+      <section id="company-statement-section" class="mt-10">
+        <p v-if="getCompanyTitle">
+          <span id="company-statement-label">{{ getCompanyTitle }}:</span>
+          {{ getCompanyDescription }}
+        </p>
+      </section>
+    </template>
 
     <!-- Name -->
     <section class="mt-10">
@@ -323,7 +325,7 @@ h2::before {
   position: relative;
 
   > label:first-child {
-    font-weight: 700;
+    font-weight: bold;
   }
 }
 
@@ -351,9 +353,10 @@ header {
   }
 }
 
-.company-statement-label {
+#company-statement-label {
   letter-spacing: -0.04rem;
-  font-weight: 700;
+  color: $gray9;
+  font-weight: bold;
 }
 
 // Coop Type Help section

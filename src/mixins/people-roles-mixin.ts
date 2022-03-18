@@ -100,13 +100,6 @@ export default class PeopleRolesMixin extends Vue {
     )
   }
 
-  /** The list of partners. */
-  get partners (): OrgPersonIF[] {
-    return this.orgPersonList.filter(
-      people => people.roles.some(party => party.roleType === RoleTypes.PARTNER)
-    )
-  }
-
   /** The list of people without roles. */
   get peopleWithNoRoles (): OrgPersonIF[] {
     return this.orgPersonList.filter(people => people.roles.length === 0)
@@ -163,7 +156,7 @@ export default class PeopleRolesMixin extends Vue {
   get validNumProprietors (): boolean {
     const rule = this.getPeopleAndRolesResource.rules.find(r => r.id === RuleIds.NUM_PROPRIETORS)
     if (!rule) return true
-    return rule.test(this.partners.length)
+    return rule.test(this.proprietors.length)
   }
 
   /** Whether there are any people without roles. Used as a safety check. */

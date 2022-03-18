@@ -16,7 +16,7 @@ export const GeneralPartnershipResource: RegistrationResourceIF = {
     blurb: 'Add the people, business(es), and/or corporation(s) who will have a role in your ' +
       'business. A person can be both the Completing Party and a Partner; a business and a ' +
       'corporation can only be a Partner.',
-    helpSection: null, // *** TODO
+    helpSection: null,
     addBusiness: true,
     rules: [
       {

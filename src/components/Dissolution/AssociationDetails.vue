@@ -9,13 +9,9 @@
         </v-col>
 
         <v-col cols="12" sm="9" class="mt-n1">
-          <label class="company-name">{{ entityName }}</label>
-          <div class="my-1">
-            <span>{{ entityDescription }}</span>
-          </div>
-          <div>
-            <span>{{ getBusinessId }}</span>
-          </div>
+          <label id="company-name">{{ entityName }}</label>
+          <div class="my-1">{{ entityDescription }}</div>
+          <div>{{ getBusinessId }}</div>
         </v-col>
       </v-row>
     </div>
@@ -162,8 +158,9 @@ export default class AssociationDetails extends Mixins(CommonMixin, EnumMixin) {
   font-size: $px-14;
 }
 
-.company-name {
+#company-name {
   font-size: $px-22;
+  color: $gray9;
 }
 
 // add missing whitespace between title and addresses

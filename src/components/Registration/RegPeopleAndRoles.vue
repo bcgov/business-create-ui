@@ -13,13 +13,6 @@
       <p v-for="(blurb, index) in blurbs" :key="index" class="blurb-para" v-html="blurb" />
     </template>
 
-    <!-- Help section -->
-    <HelpSection
-      class="mt-5"
-      v-if="getPeopleAndRolesResource.helpSection"
-      :helpSection="getPeopleAndRolesResource.helpSection"
-    />
-
     <!-- Checklist section -->
     <section class="mt-5">
       <strong>Your application must include the following:</strong>
@@ -33,7 +26,7 @@
             <span class="rule-item-txt">{{rule.text}}</span>
           </li>
           <li v-if="rule.id === RuleIds.NUM_PROPRIETORS" :key="index">
-            <v-icon v-if="validNumPartner" color="green darken-2"
+            <v-icon v-if="validNumProprietors" color="green darken-2"
               class="dir-valid">mdi-check</v-icon>
             <v-icon v-else-if="getShowErrors" color="error" class="prop-invalid">mdi-close</v-icon>
             <v-icon v-else>mdi-circle-small</v-icon>
@@ -66,7 +59,7 @@
       </v-btn>
     </div>
 
-    <!-- Add a Person or Business -->
+    <!-- Add a Person or Organization -->
     <div class="btn-panel" v-if="orgPersonList.length > 0">
       <v-btn
         v-if="!validNumCompletingParty"
@@ -81,27 +74,26 @@
         <span>Add the Completing Party</span>
       </v-btn>
 
-      <!-- *** TODO: should this add a PARTNER? -->
       <v-btn
         id="btn-add-person"
         outlined
         color="primary"
         class="btn-outlined-primary"
         :disabled="showOrgPersonForm"
-        @click="addOrgPerson(null, PartyTypes.PERSON)"
+        @click="addOrgPerson(RoleTypes.PROPRIETOR, PartyTypes.PERSON)"
       >
         <v-icon>mdi-account-plus</v-icon>
         <span>Add a Person</span>
       </v-btn>
 
-      <!-- *** TODO: should this add a PARTNER? -->
       <v-btn
-        id="btn-add-business"
+        id="btn-add-organization"
         outlined
         color="primary"
         class="btn-outlined-primary ml-2"
         v-if="getPeopleAndRolesResource.addBusiness"
-        @click="addOrgPerson(RoleTypes.INCORPORATOR, PartyTypes.BUSINESS)"
+        :disabled="showOrgPersonForm"
+        @click="addOrgPerson(RoleTypes.PROPRIETOR, PartyTypes.ORGANIZATION)"
       >
         <v-icon>mdi-domain-plus</v-icon>
         <span>Add a Business or a Corporation</span>
@@ -110,7 +102,7 @@
 
     <!-- Add/Edit Bus/Corp -->
     <v-card flat v-if="showOrgPersonForm" class="people-roles-container">
-      <AddEditBusCorp
+      <RegAddEditOrgPerson
         :initialValue="currentOrgPerson"
         :activeIndex="activeIndex"
         :existingCompletingParty="completingParty"
@@ -140,10 +132,10 @@ import { cloneDeep } from 'lodash'
 import { AddressIF, EmptyAddress, EmptyOrgPerson } from '@/interfaces'
 import { PartyTypes, RoleTypes } from '@/enums'
 import { PeopleRolesMixin } from '@/mixins'
-import AddEditBusCorp from '@/components/common/AddEditBusCorp.vue'
 import ConfirmDialog from '@/dialogs/ConfirmDialog.vue'
 import HelpSection from '@/components/common/HelpSection.vue'
 import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
+import RegAddEditOrgPerson from '@/components/Registration/RegAddEditOrgPerson.vue'
 
 /**
  * This is similar to the common PeopleAndRoles component but this
@@ -151,10 +143,10 @@ import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
  */
 @Component({
   components: {
-    AddEditBusCorp,
     ConfirmDialog,
     HelpSection,
-    ListPeopleAndRoles
+    ListPeopleAndRoles,
+    RegAddEditOrgPerson
   }
 })
 export default class RegPeopleAndRoles extends Mixins(PeopleRolesMixin) {

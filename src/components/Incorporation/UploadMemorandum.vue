@@ -26,47 +26,49 @@
         <span v-else>Hide Help</span>
       </span>
 
-      <section v-show="helpToggle" class="create-memorandum-help">
-        <header id="create-memorandum-help-header">
-          <h2>{{getCreateMemorandumResource.helpSection.header}}</h2>
-        </header>
+      <v-expand-transition>
+        <section v-show="helpToggle" class="create-memorandum-help">
+          <header id="create-memorandum-help-header">
+            <h2>{{getCreateMemorandumResource.helpSection.header}}</h2>
+          </header>
 
-        <p id="help-text-section-1"
-           v-for="(item, index) in getCreateMemorandumResource.helpSection.helpText.section1.items"
-           class="mt-6"
-           :key="index"
-        >{{ item }}
-        </p>
-
-        <p class="help-section-title font-weight-bold mt-4">
-          {{getCreateMemorandumResource.helpSection.helpText.section2.label}}
-        </p>
-        <ul class="mt-6">
-          <li
-            v-for="(item, index) in getCreateMemorandumResource.helpSection.helpText.section2.items"
-            class="mt-2"
+          <p id="help-text-section-1"
+            v-for="(item, index) in getCreateMemorandumResource.helpSection.helpText.section1.items"
+            class="mt-6"
             :key="index"
-          >
-            <v-icon>mdi-circle-small</v-icon>
-            <span class="ml-2">{{item}}</span>
-          </li>
-        </ul>
+          >{{ item }}
+          </p>
 
-        <p class="help-section-title font-weight-bold mt-4">
-          {{getCreateMemorandumResource.helpSection.helpText.section3.label}}
-        </p>
-        <ul class="mt-6">
-          <li
-            v-for="(item, index) in getCreateMemorandumResource.helpSection.helpText.section3.items"
-            class="mt-2"
-            :key="index"
-          >
-            <v-icon>mdi-circle-small</v-icon>
-            <span class="ml-2">{{item}}</span>
-          </li>
-        </ul>
-        <u class="help-btn" @click="helpToggle = !helpToggle"><small>Hide Help</small></u>
-      </section>
+          <p class="help-section-title font-weight-bold mt-4">
+            {{getCreateMemorandumResource.helpSection.helpText.section2.label}}
+          </p>
+          <ul class="mt-6">
+            <li
+              v-for="(item, index) in getCreateMemorandumResource.helpSection.helpText.section2.items"
+              class="mt-2"
+              :key="index"
+            >
+              <v-icon>mdi-circle-small</v-icon>
+              <span class="ml-2">{{item}}</span>
+            </li>
+          </ul>
+
+          <p class="help-section-title font-weight-bold mt-4">
+            {{getCreateMemorandumResource.helpSection.helpText.section3.label}}
+          </p>
+          <ul class="mt-6">
+            <li
+              v-for="(item, index) in getCreateMemorandumResource.helpSection.helpText.section3.items"
+              class="mt-2"
+              :key="index"
+            >
+              <v-icon>mdi-circle-small</v-icon>
+              <span class="ml-2">{{item}}</span>
+            </li>
+          </ul>
+          <u class="help-btn" @click="helpToggle = !helpToggle"><small>Hide Help</small></u>
+        </section>
+      </v-expand-transition>
     </div>
 
     <!-- Sample Memorandum -->

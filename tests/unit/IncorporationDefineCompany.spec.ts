@@ -70,8 +70,8 @@ for (const mock of mockEntityInfo) {
     })
 
     itIf(mock.entityType === 'BEN')('displays company statement', () => {
-      expect(wrapper.find('.company-statement').exists()).toBe(true)
-      expect(wrapper.find('.company-statement p').text()).toContain(mock.description)
+      expect(wrapper.find('#company-statement-section').exists()).toBe(true)
+      expect(wrapper.find('#company-statement-section p').text()).toContain(mock.description)
     })
   })
 

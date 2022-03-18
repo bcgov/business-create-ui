@@ -14,8 +14,8 @@ const vuetify = new Vuetify({})
 const store = getVuexStore()
 
 // Events
-const addEditPersonEvent: string = 'AddEditOrgPerson'
-const removePerson: string = 'removePerson'
+const addEditPersonEvent: string = 'addEditPerson'
+const removePersonEvent: string = 'removePerson'
 const reassignCompletingPartyEvent: string = 'removeCompletingPartyRole'
 const formResetEvent: string = 'resetEvent'
 
@@ -163,7 +163,7 @@ store.state.stateModel.currentDate = '2020-03-30'
 describe('Add/Edit Org/Person component', () => {
   it('Loads the component and sets data for person', async () => {
     const wrapper: Wrapper<AddEditOrgPerson> = createComponent(validPersonData, -1, null)
-    expect(wrapper.vm.$data.AddEditOrgPerson).toStrictEqual(validPersonData)
+    expect(wrapper.vm.$data.orgPerson).toStrictEqual(validPersonData)
     expect((wrapper.vm as any).isIncorporator).toBe(false)
     expect((wrapper.vm as any).isDirector).toBe(true)
     expect((wrapper.vm as any).isCompletingParty).toBe(true)
@@ -172,7 +172,7 @@ describe('Add/Edit Org/Person component', () => {
 
   it('Loads the component and sets data for org', async () => {
     const wrapper: Wrapper<AddEditOrgPerson> = createComponent(validOrgData, -1, null)
-    expect(wrapper.vm.$data.AddEditOrgPerson).toStrictEqual(validOrgData)
+    expect(wrapper.vm.$data.orgPerson).toStrictEqual(validOrgData)
     expect((wrapper.vm as any).isIncorporator).toBe(true)
     expect((wrapper.vm as any).isDirector).toBe(false)
     expect((wrapper.vm as any).isCompletingParty).toBe(false)
@@ -222,7 +222,7 @@ describe('Add/Edit Org/Person component', () => {
     const wrapper: Wrapper<AddEditOrgPerson> = createComponent(validOrgData, 0, null)
     wrapper.find(removeButtonSelector).trigger('click')
     await Vue.nextTick()
-    expect(getLastEvent(wrapper, removePerson)).toBe(0)
+    expect(getLastEvent(wrapper, removePersonEvent)).toBe(0)
     wrapper.destroy()
   })
 
@@ -368,7 +368,7 @@ describe('Add/Edit Org/Person component', () => {
     expect(wrapper.emitted().removeCompletingPartyRole).toBeTruthy()
     expect(wrapper.emitted(reassignCompletingPartyEvent).length).toBe(1)
 
-    expect(wrapper.emitted().AddEditOrgPerson).toBeTruthy()
+    expect(wrapper.emitted().addEditPerson).toBeTruthy()
     expect(wrapper.emitted(addEditPersonEvent).length).toBe(1)
     let incorporatorWithAddedRole = { ...validIncorporator }
     incorporatorWithAddedRole.roles = [

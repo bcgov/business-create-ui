@@ -6,9 +6,9 @@
       </header>
 
       <p id="incorporation-share-structure">
-        Add at least one class of shares. A share class consists of the name of the class, the maximum
-        number of shares in the class (including any associated Series), a par value for the class, and
-        the currency the shares are valued in.
+        Add at least one class of shares. A share class consists of the name of the class, the
+        maximum number of shares in the class (including any associated Series), a par value for
+        the class, and the currency the shares are valued in.
       </p>
     </section>
 
@@ -19,41 +19,48 @@
       <span v-else>Hide Help</span>
     </span>
 
-    <section v-show="helpToggle" class="share-structure-help">
-      <header id="share-structure-help-header">
-        <h2>Share Structure Help</h2>
-      </header>
-
-      <p>
-        An incorporated business must issue shares. These shares represent ownership interest in the company and give
-        the shareholder a say in how the company is being run. For most small companies starting out, a simple share
-        structure with just one class of shares (and no series) is typical.
-      </p>
-      <p>
-        The sample below is for a typical share structure with just one class of shares. If there is more than one class
-        of shares, each class must be assigned an identifying name such as Class A, Class B, etc.
-      </p>
-
-      <v-card flat>
-        <header class="share-summary-header">
-          <v-icon color="appDkBlue">mdi-sitemap</v-icon>
-          <label class="share-summary-header-title pl-2">Share Structure</label>
+    <v-expand-transition>
+      <section v-show="helpToggle" class="share-structure-help">
+        <header id="share-structure-help-header">
+          <h2>Share Structure Help</h2>
         </header>
 
-        <ListShareClass :shareClasses="sharesHelpSample" :isSummary="true" />
-      </v-card>
+        <p>
+          An incorporated business must issue shares. These shares represent ownership interest in
+          the company and give the shareholder a say in how the company is being run. For most
+          small companies starting out, a simple share structure with just one class of shares (and
+          no series) is typical.
+        </p>
+        <p>
+          The sample below is for a typical share structure with just one class of shares. If there
+          is more than one class of shares, each class must be assigned an identifying name such as
+          Class A, Class B, etc.
+        </p>
 
-      <p><small>Sample Share Structure</small></p>
-      <h3>Important Information About the Company's Share Structure</h3>
-      <p>
-        The staff at the Corporate Registry cannot provide advice on how to set up your company's share structure. If
-        you do not understand what an authorized share structure is or what its purpose is or believe you need a more
-        complex share structure, you should seek professional advice or purchase an incorporation guide for detailed
-        information and infrastructure on establishing an authorized share structure.
-      </p>
-      <p>Refer to this <a :href="helpLink">link</a> to obtain more information on incorporating a company.</p>
-      <u class="help-btn" @click="helpToggle = !helpToggle"><small>Hide Help</small></u>
-    </section>
+        <v-card flat>
+          <header class="share-summary-header">
+            <v-icon color="appDkBlue">mdi-sitemap</v-icon>
+            <label class="share-summary-header-title pl-2">Share Structure</label>
+          </header>
+
+          <ListShareClass :shareClasses="sharesHelpSample" :isSummary="true" />
+        </v-card>
+
+        <p><small>Sample Share Structure</small></p>
+        <h3>Important Information About the Company's Share Structure</h3>
+        <p>
+          The staff at the Corporate Registry cannot provide advice on how to set up your company's
+          share structure. If you do not understand what an authorized share structure is or what
+          its purpose is or believe you need a more complex share structure, you should seek
+          professional advice or purchase an incorporation guide for detailed information and
+          infrastructure on establishing an authorized share structure.
+        </p>
+        <p>
+          Refer to this <a :href="helpLink">link</a> to obtain more information on incorporating a company.
+        </p>
+        <u class="help-btn" @click="helpToggle = !helpToggle"><small>Hide Help</small></u>
+      </section>
+    </v-expand-transition>
 
     <p>Your application must include the following:</p>
     <ul>
@@ -65,7 +72,7 @@
       </li>
     </ul>
 
-    <div class="btn-panel">
+    <div class="py-8">
       <v-btn outlined color="primary"  id="btn-start-add-cp"
       :disabled="showShareStructureForm"
       @click="initNewShareClass()" >
@@ -301,10 +308,6 @@ li {
 
 p{
   padding-top: 0.5rem;
-}
-
-.btn-panel {
-  padding: 2rem 0;
 }
 
 .help-btn {

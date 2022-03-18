@@ -18,8 +18,8 @@
             <label>Name</label>
           </v-col>
           <v-col cols="12" sm="9">
-            <div class="company-name">{{ getApprovedName || 'Unavailable' }}</div>
-            <div class="company-type">{{ entityDescription }}</div>
+            <div id="company-name">{{ getApprovedName || 'Unavailable' }}</div>
+            <div id="company-description">{{ entityDescription }}</div>
           </v-col>
         </v-row>
       </article>
@@ -155,7 +155,7 @@ export default class DefineRegistrationSummary extends Mixins(DateMixin, EnumMix
   color: $app-red;
 }
 
-.company-name {
+#company-name {
   font-size: $px-22;
   font-weight: bold;
   color: $gray9;

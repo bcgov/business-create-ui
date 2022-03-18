@@ -1,8 +1,8 @@
 <template>
-  <div id="add-edit-org-person">
+  <div id="reg-add-edit-org-person">
     <ConfirmDialog
       ref="reassignCPDialog"
-      attach="add-edit-org-person"
+      attach="reg-add-edit-org-person"
     />
 
     <v-expand-transition>
@@ -10,15 +10,16 @@
         <li class="add-person-container px-6 py-10">
           <div class="meta-container">
 
-            <label class="add-org-header">
+            <!-- FUTURE: move header text to resource file so this component is generic -->
+            <label class="add-org-header" v-if="isOrg">
               <span v-if="activeIndex === -1">Add Business or Corporation</span>
               <span v-else>Edit Business or Corporation</span>
             </label>
 
-            <!--
-              *** TODO: implement according to designs
-                  ref: https://projects.invisionapp.com/share/3511UPXPMT2P#/screens/460861991
-            -->
+            <label class="add-org-header" v-if="isPerson">
+              <span v-if="activeIndex === -1">Add Person</span>
+              <span v-else>Edit Person</span>
+            </label>
 
             <div class="meta-container__inner">
               <v-card outlined class="message-box" v-if="isCompletingParty && !isRoleStaff && isTypeCoop">
@@ -214,7 +215,7 @@ import { cloneDeep } from 'lodash'
     ConfirmDialog
   }
 })
-export default class AddEditBusCorp extends Mixins(CommonMixin) {
+export default class RegAddEditOrgPerson extends Mixins(CommonMixin) {
   // Refs
   $refs!: {
     addPersonOrgForm: FormIF
@@ -286,11 +287,6 @@ export default class AddEditBusCorp extends Mixins(CommonMixin) {
   /** Whether current data object is an organization (corporation/firm). */
   private get isOrg (): boolean {
     return (this.orgPerson.officer?.partyType === PartyTypes.ORGANIZATION)
-  }
-
-  /** Whether current data object is a business or corporation. */
-  private get isBusiness (): boolean {
-    return (this.orgPerson.officer?.partyType === PartyTypes.BUSINESS)
   }
 
   /** Whether the Completing Party role should be shown. */
@@ -570,10 +566,6 @@ li {
   padding-top: 0.25rem;
 }
 
-.btn-panel {
-  padding-top: 0.5rem;
-}
-
 .form__row.three-column {
   display: flex;
   flex-flow: row nowrap;
@@ -611,7 +603,7 @@ li {
   position: relative;
 
   > label:first-child {
-    font-weight: 700;
+    font-weight: bold;
   }
 
   &__inner {

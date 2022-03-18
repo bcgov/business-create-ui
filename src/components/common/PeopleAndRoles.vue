@@ -64,14 +64,6 @@
       </ul>
     </section>
 
-    <!-- More blurb(s) -->
-    <template v-if="blurb2">
-      <p class="blurb-para" v-html="blurb2" />
-    </template>
-    <template v-if="blurbs2">
-      <p v-for="(blurb, index) in blurbs2" :key="`blurb2-${index}`" class="blurb-para" v-html="blurb" />
-    </template>
-
     <!-- Start by Adding the Completing Party -->
     <div class="btn-panel" v-if="orgPersonList.length === 0">
       <v-btn
@@ -119,8 +111,8 @@
         outlined
         color="primary"
         class="btn-outlined-primary ml-2"
-        :disabled="showOrgPersonForm"
         v-if="getPeopleAndRolesResource.addOrganization"
+        :disabled="showOrgPersonForm"
         @click="addOrgPerson(RoleTypes.INCORPORATOR, PartyTypes.ORGANIZATION)"
       >
         <v-icon>mdi-domain-plus</v-icon>

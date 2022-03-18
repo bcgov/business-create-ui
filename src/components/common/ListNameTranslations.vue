@@ -103,7 +103,6 @@ export default class ListNameTranslations extends Vue {
   background-color: $BCgovBlue5O;
   padding: 0.5rem 1.25rem;
   font-size: $px-14;
-  margin-top: 1rem;
 }
 
 .names-translation-content {

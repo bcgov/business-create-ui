@@ -571,10 +571,6 @@ li {
   padding-top: 0.25rem;
 }
 
-.btn-panel {
-  padding-top: 0.5rem;
-}
-
 .form__row.three-column {
   display: flex;
   flex-flow: row nowrap;
@@ -612,7 +608,7 @@ li {
   position: relative;
 
   > label:first-child {
-    font-weight: 700;
+    font-weight: bold;
   }
 
   &__inner {

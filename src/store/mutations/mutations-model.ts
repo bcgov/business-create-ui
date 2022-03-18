@@ -187,6 +187,7 @@ export const mutateNameRequestState = (state: StateIF, nameRequestState: NameReq
 
 export const mutateNameTranslation = (state: StateIF, nameTranslationState: NameTranslationIF[]) => {
   state.stateModel.nameTranslations = nameTranslationState
+  if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
 }
 
 export const mutateFilingId = (state: StateIF, filingId: number) => {
