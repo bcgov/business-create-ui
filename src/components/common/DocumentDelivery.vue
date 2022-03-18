@@ -42,7 +42,7 @@
       </v-col>
     </v-row>
 
-     <v-row no-gutters v-if="additionalLabel && additionalEmail" class="pt-3">
+     <v-row no-gutters v-if="additionalLabel" class="pt-3">
       <v-col cols="12" sm="3" class="pr-4">
         <label class="title-label">{{additionalLabel}}</label>
       </v-col>
