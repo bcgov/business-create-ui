@@ -30,7 +30,6 @@ export const SoleProprietorshipResource: RegistrationResourceIF = {
         'would like to be known by another name. Often referred to as <b>Doing Business As, ' +
         'DBA, Operating As</b>, or trade name.'
     ],
-    addBusiness: true,
     rules: [
       {
         id: RuleIds.NUM_COMPLETING_PARTY,

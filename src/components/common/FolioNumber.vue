@@ -3,10 +3,10 @@
     <!-- EDIT SECTION -->
     <template v-if="isEditing">
       <v-row no-gutters id="folio-number-editing">
-        <v-col cols="12" sm="3" class="pr-4 pb-4">
+        <v-col cols="12" sm="3" class="pr-4">
           <label class="folio-number-title title-label">Folio Number</label>
         </v-col>
-        <v-col cols="12" sm="9">
+        <v-col cols="12" sm="9" class="pt-4 pt-sm-0">
           <v-form v-model="formValid" ref="form">
             <v-text-field
               id="folio-number-text-field"

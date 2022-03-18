@@ -1,12 +1,12 @@
 <template>
   <div id="document-delivery">
-    <!-- Registered Office -->
+    <!-- Contact -->
     <v-row no-gutters>
       <v-col cols="12" sm="3" class="pr-4">
         <label class="title-label">{{contactLabel}}</label>
       </v-col>
       <v-col cols="12" sm="9">
-        <span id="office-email">{{contactValue || '(Not entered)'}}</span>
+        <span id="contact-value">{{contactValue || '(Not entered)'}}</span>
       </v-col>
     </v-row>
 
@@ -33,6 +33,7 @@
       </v-col>
     </v-row>
 
+    <!-- Custodian of Records -->
     <v-row no-gutters v-if="showCustodianEmail" class="pt-3">
       <v-col cols="12" sm="3" class="pr-4">
         <label class="title-label">Custodian of Records</label>
@@ -42,38 +43,45 @@
       </v-col>
     </v-row>
 
-     <v-row no-gutters v-if="additionalLabel" class="pt-3">
+    <!-- Additional -->
+    <v-row no-gutters v-if="additionalLabel" class="pt-3">
       <v-col cols="12" sm="3" class="pr-4">
         <label class="title-label">{{additionalLabel}}</label>
       </v-col>
       <v-col cols="12" sm="9">
-        <span id="additonal-email">{{additionalValue || '(Not entered)'}}</span>
+        <span id="additional-value">{{additionalValue || '(Not entered)'}}</span>
       </v-col>
     </v-row>
   </div>
 </template>
 
 <script lang="ts">
-// Libraries
 import { Component, Emit, Prop, Vue, Watch } from 'vue-property-decorator'
 
 @Component({})
 export default class DocumentDelivery extends Vue {
+  // Contact props
   @Prop({ required: true }) readonly contactLabel: string
   @Prop({ default: null }) readonly contactValue: string
-  @Prop({ default: null }) readonly custodianEmail: string
+
+  // Completing Party props
+  @Prop({ default: false }) readonly editableCompletingParty: boolean
   @Prop({ default: null }) readonly completingPartyEmail: string
   @Prop({ default: null }) readonly documentOptionalEmail: string
 
-  @Prop({ default: false }) readonly editableCompletingParty: boolean
+  // Custodian of Records props
   @Prop({ default: false }) readonly showCustodianEmail: boolean
-  @Prop({ default: false }) readonly invalidSection: boolean
+  @Prop({ default: null }) readonly custodianEmail: string
 
-  @Prop({ default: null }) readonly additionalLabel: string // for additon fields.
+  // Additional props
+  @Prop({ default: null }) readonly additionalLabel: string
   @Prop({ default: null }) readonly additionalValue: string
 
+  /** Whether to display invalid section styling. */
+  @Prop({ default: false }) readonly invalidSection: boolean
+
   // Local properties
-  private optionalEmail: string = ''
+  private optionalEmail = ''
 
   private entityEmailRules = [
     (v: string) => !/^\s/g.test(v) || 'Invalid spaces', // leading spaces

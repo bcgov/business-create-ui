@@ -14,10 +14,10 @@
       <!-- Name -->
       <article class="section-container">
         <v-row no-gutters>
-          <v-col cols="12" sm="3" class="pr-4 pb-4">
-            <label>Name</label>
+          <v-col cols="12" sm="3" class="pr-4">
+            <label id="company-label">Name</label>
           </v-col>
-          <v-col cols="12" sm="9">
+          <v-col cols="12" sm="9" class="pt-4 pt-sm-0">
             <div id="company-name">{{ getApprovedName || '[Incorporation Number] B.C. Ltd.' }}</div>
             <div id="company-description">{{ entityDescription }}</div>
           </v-col>

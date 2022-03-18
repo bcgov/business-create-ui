@@ -4,11 +4,11 @@
     <template v-if="isEditing">
       <!-- Mailing Address -->
       <v-row no-gutters class="edit-section">
-        <v-col cols="12" sm="3" class="pr-4 pb-4">
+        <v-col cols="12" sm="3" class="pr-4">
           <label class="title-label">Mailing Address</label>
         </v-col>
 
-        <v-col cols="12" sm="9">
+        <v-col cols="12" sm="9" class="pt-4 pt-sm-0">
           <MailingAddress
             id="address-mailing"
             ref="mailingAddress"
@@ -23,11 +23,11 @@
 
       <!-- Delivery Address -->
       <v-row no-gutters class="edit-section">
-        <v-col cols="12" sm="3" class="pr-4 pb-4">
+        <v-col cols="12" sm="3" class="pr-4">
           <label class="title-label">Delivery Address</label>
         </v-col>
 
-        <v-col cols="12" sm="9">
+        <v-col cols="12" sm="9" class="pt-4 pt-sm-0">
           <v-checkbox
             id="same-as-mailing-checkbox"
             class="inherit-checkbox"
@@ -61,17 +61,17 @@
     <!-- SUMMARY SECTION -->
     <template v-else>
       <v-row no-gutters class="summary-section">
-        <v-col cols="12" sm="3" class="pr-4 pb-4">
+        <v-col cols="12" sm="3" class="pr-4">
           <label class="summary-section-title">Business Addresses</label>
         </v-col>
 
-        <v-col cols="12" sm="4" class="pr-4">
+        <v-col cols="12" sm="4" class="pr-4 pt-4 pt-sm-0">
           <label class="summary-section-header">Mailing Address</label>
           <div v-if="isEmptyAddress(mailingAddress)">(Not entered)</div>
           <MailingAddress v-else :address="mailingAddress" :editing="false" />
         </v-col>
 
-        <v-col cols="12" sm="4" class="pr-4">
+        <v-col cols="12" sm="4" class="pr-4 pt-4 pt-sm-0">
           <label class="summary-section-header">Delivery Address</label>
           <div v-if="isEmptyAddress(deliveryAddress)">(Not entered)</div>
           <div v-else-if="isSame(mailingAddress, deliveryAddress)">Same as Mailing Address</div>
@@ -321,6 +321,6 @@ export default class BusinessAddresses extends Mixins(CommonMixin) {
 ::v-deep .base-address .address-block .delivery-instructions {
   font-size: $px-14;
   font-style: italic;
-  margin-top: 0 !important;
+  margin-top: 0.5rem !important;
 }
 </style>

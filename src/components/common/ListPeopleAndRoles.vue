@@ -296,6 +296,6 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
 ::v-deep .base-address .address-block .delivery-instructions {
   font-size: $px-14;
   font-style: italic;
-  margin-top: 0 !important;
+  margin-top: 0.5rem !important;
 }
 </style>

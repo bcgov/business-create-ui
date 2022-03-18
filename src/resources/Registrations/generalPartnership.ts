@@ -17,7 +17,6 @@ export const GeneralPartnershipResource: RegistrationResourceIF = {
       'business. A person can be both the Completing Party and a Partner; a business and a ' +
       'corporation can only be a Partner.',
     helpSection: null,
-    addBusiness: true,
     rules: [
       {
         id: RuleIds.NUM_COMPLETING_PARTY,

@@ -46,7 +46,7 @@
                 v-model="addPersonOrgFormValid"
                 v-on:submit.prevent
               >
-                <!-- Person Name -->
+                <!-- Person's Name -->
                 <template v-if="isPerson">
                   <div class="font-weight-bold">Person's Name</div>
                   <div class="form__row three-column mt-4">
@@ -113,6 +113,7 @@
 
                     <v-col cols="4" v-if="showIncorporatorRole">
                       <v-checkbox
+                        id="incorporator-checkbox"
                         v-model="selectedRoles"
                         :value="RoleTypes.INCORPORATOR"
                         :label="RoleTypes.INCORPORATOR"
@@ -123,6 +124,7 @@
 
                     <v-col cols="4" v-if="showDirectorRole">
                       <v-checkbox
+                        id="director-checkbox"
                         v-model="selectedRoles"
                         :value="RoleTypes.DIRECTOR"
                         :label="RoleTypes.DIRECTOR"
@@ -136,7 +138,7 @@
 
                 <!-- Mailing Address -->
                 <div class="font-weight-bold mt-8">Mailing Address</div>
-                <BaseAddress
+                <MailingAddress
                   ref="mailingAddressNew"
                   class="mt-6"
                   :editing="true"
@@ -157,7 +159,7 @@
 
                   <template v-if="!inheritMailingAddress">
                     <div class="font-weight-bold mt-4">Delivery Address</div>
-                    <BaseAddress
+                    <DeliveryAddress
                       ref="deliveryAddressNew"
                       class="mt-6"
                       :editing="true"
@@ -216,8 +218,9 @@ import { cloneDeep } from 'lodash'
 /** This is a sub-component of PeopleAndRoles. */
 @Component({
   components: {
-    BaseAddress,
-    ConfirmDialog
+    ConfirmDialog,
+    DeliveryAddress: BaseAddress,
+    MailingAddress: BaseAddress
   }
 })
 export default class AddEditOrgPerson extends Mixins(CommonMixin) {

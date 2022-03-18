@@ -86,7 +86,7 @@
         id="btn-add-cp"
         outlined
         color="primary"
-        class="btn-outlined-primary ml-2"
+        class="btn-outlined-primary"
         :disabled="showOrgPersonForm"
         @click="addOrgPerson(RoleTypes.COMPLETING_PARTY, PartyTypes.PERSON)"
       >
@@ -110,7 +110,7 @@
         id="btn-add-organization"
         outlined
         color="primary"
-        class="btn-outlined-primary ml-2"
+        class="btn-outlined-primary"
         v-if="getPeopleAndRolesResource.addOrganization"
         :disabled="showOrgPersonForm"
         @click="addOrgPerson(RoleTypes.INCORPORATOR, PartyTypes.ORGANIZATION)"
@@ -245,11 +245,15 @@ p {
   padding-top: 0.5rem;
 }
 
+.rule-item-txt {
+  margin-left: 0.5rem;
+}
+
 .btn-panel {
   padding: 2rem 0;
 }
 
-.rule-item-txt {
+.btn-outlined-primary:not(:first-of-type) {
   margin-left: 0.5rem;
 }
 </style>

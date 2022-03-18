@@ -41,7 +41,7 @@
           :completingPartyEmail="getUserEmail"
           :invalidSection="isDocumentDeliveryInvalid"
           @valid="setDocumentOptionalEmailValidity($event)"
-          contactLabel="Registered Office"
+          contactLabel="Business Office"
         />
       </v-card>
     </section>

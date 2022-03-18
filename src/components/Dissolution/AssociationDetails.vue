@@ -21,11 +21,11 @@
     <!-- Address -->
     <div class="section-container">
       <v-row no-gutters>
-        <v-col cols="12" sm="3" class="pr-4 pb-4">
+        <v-col cols="12" sm="3" class="pr-4">
           <label>Address</label>
         </v-col>
 
-        <v-col cols="12" sm="4" class="pr-4">
+        <v-col cols="12" sm="4" class="pr-4 pt-4 pt-sm-0">
           <label class="mailing-address-header">Mailing Address</label>
           <MailingAddress
             v-if="!isEmptyAddress(getBusiness.officeAddress.mailingAddress)"
@@ -35,7 +35,7 @@
           <div v-else>(Not entered)</div>
         </v-col>
 
-        <v-col cols="12" sm="4" class="pr-4">
+        <v-col cols="12" sm="4" class="pr-4 pt-4 pt-sm-0">
           <label class="delivery-address-header">Delivery Address</label>
           <DeliveryAddress
             v-if="!isEmptyAddress(getBusiness.officeAddress.deliveryAddress) &&

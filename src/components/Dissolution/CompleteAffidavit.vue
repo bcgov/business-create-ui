@@ -140,10 +140,10 @@
       <div class="mt-4" :class="{ 'invalid-section': getShowErrors && !hasValidUploadFile }">
         <v-card flat id="upload-affidavit-card" class="py-8 px-6">
           <v-row no-gutters>
-            <v-col cols="12" sm="3" class="pr-4 pb-4">
+            <v-col cols="12" sm="3" class="pr-4">
               <label class="upload-affidavit-title">Upload Affidavit</label>
             </v-col>
-            <v-col cols="12" sm="9">
+            <v-col cols="12" sm="9" class="pt-4 pt-sm-0">
               <FileUploadPreview
                 :inputFileLabel="INPUT_FILE_LABEL"
                 :maxSize="MAX_FILE_SIZE"

@@ -200,10 +200,10 @@
       <div class="mt-4" :class="{ 'invalid-section': getShowErrors && !hasValidUploadFile }">
         <v-card flat id="upload-memorandum-card" class="py-8 px-6">
           <v-row no-gutters>
-            <v-col cols="12" sm="2" class="pr-4 pb-4">
+            <v-col cols="12" sm="2" class="pr-4">
               <label class="upload-memorandum-vcard-title">Upload Memorandum</label>
             </v-col>
-            <v-col cols="12" sm="10">
+            <v-col cols="12" sm="10" class="pt-4 pt-sm-0">
               <FileUploadPreview
                 :inputFileLabel="INPUT_FILE_LABEL"
                 :maxSize="MAX_FILE_SIZE"

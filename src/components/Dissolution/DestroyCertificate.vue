@@ -29,11 +29,11 @@
     <!-- SUMMARY SECTION-->
     <template v-else>
       <v-row no-gutters class="summary-section">
-        <v-col cols="12" sm="3" class="inner-col-1 pr-4 pb-4">
+        <v-col cols="12" sm="3" class="inner-col-1 pr-4">
           <label class="summary-section-title">Delete and/or Destroy Certificates</label>
         </v-col>
 
-        <v-col cols="12" sm="9" class="inner-col-2">
+        <v-col cols="12" sm="9" class="inner-col-2 pt-4 pt-sm-0">
           <div v-if="getDissolutionHasCertificateDestroyed" class="d-flex">
             <span>
               <v-icon class="ml-n1 pr-2" color="successCheckmark">mdi-check</v-icon>

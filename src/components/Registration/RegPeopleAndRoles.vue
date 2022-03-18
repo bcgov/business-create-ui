@@ -36,6 +36,7 @@
       </ul>
     </section>
 
+    <!-- *** TODO: only show this blurb when user needs to select the Proprietor -->
     <!-- More blurb(s) -->
     <template v-if="blurb2">
       <p class="blurb-para" v-html="blurb2" />
@@ -66,7 +67,7 @@
         id="btn-add-cp"
         outlined
         color="primary"
-        class="btn-outlined-primary ml-2"
+        class="btn-outlined-primary"
         :disabled="showOrgPersonForm"
         @click="addOrgPerson(RoleTypes.COMPLETING_PARTY, PartyTypes.PERSON)"
       >
@@ -90,8 +91,7 @@
         id="btn-add-organization"
         outlined
         color="primary"
-        class="btn-outlined-primary ml-2"
-        v-if="getPeopleAndRolesResource.addBusiness"
+        class="btn-outlined-primary"
         :disabled="showOrgPersonForm"
         @click="addOrgPerson(RoleTypes.PROPRIETOR, PartyTypes.ORGANIZATION)"
       >
@@ -106,7 +106,6 @@
         :initialValue="currentOrgPerson"
         :activeIndex="activeIndex"
         :existingCompletingParty="completingParty"
-        :addIncorporator="getPeopleAndRolesResource.addIncorporator"
         @addEditPerson="onAddEditPerson($event)"
         @removePerson="onRemovePerson($event)"
         @resetEvent="resetData()"
@@ -166,9 +165,9 @@ export default class RegPeopleAndRoles extends Mixins(PeopleRolesMixin) {
     if (roleType) {
       // a role was provided - pre-select it
       this.currentOrgPerson.roles = [{ roleType }]
-    } else if (this.validNumCompletingParty && !this.getPeopleAndRolesResource.addIncorporator) {
-      // only Director role is possible - pre-select it
-      this.currentOrgPerson.roles = [{ roleType: RoleTypes.DIRECTOR }]
+    } else if (this.validNumCompletingParty) {
+      // only Proprietor role is possible - pre-select it
+      this.currentOrgPerson.roles = [{ roleType: RoleTypes.PROPRIETOR }]
     } else {
       // no roles pre-selected
       this.currentOrgPerson.roles = []
@@ -229,11 +228,15 @@ p {
   padding-top: 0.5rem;
 }
 
+.rule-item-txt {
+  margin-left: 0.5rem;
+}
+
 .btn-panel {
   padding: 2rem 0;
 }
 
-.rule-item-txt {
+.btn-outlined-primary:not(:first-of-type) {
   margin-left: 0.5rem;
 }
 </style>

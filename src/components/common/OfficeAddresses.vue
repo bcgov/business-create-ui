@@ -13,11 +13,11 @@
       <v-card flat class="py-8 px-6">
         <!-- Registered Mailing Address -->
         <v-row no-gutters class="edit-section">
-          <v-col cols="12" sm="3" class="pr-4 pb-4">
+          <v-col cols="12" sm="3" class="pr-4">
             <label class="title-label">Mailing Address</label>
           </v-col>
 
-          <v-col cols="12" sm="9">
+          <v-col cols="12" sm="9" class="pt-4 pt-sm-0">
             <MailingAddress
               ref="regMailingAddress"
               id="address-registered-mailing"
@@ -32,11 +32,11 @@
 
         <!-- Registered Delivery Address -->
         <v-row no-gutters class="edit-section">
-          <v-col cols="12" sm="3" class="pr-4 pb-4">
+          <v-col cols="12" sm="3" class="pr-4">
             <label class="title-label">Delivery Address</label>
           </v-col>
 
-          <v-col cols="12" sm="9">
+          <v-col cols="12" sm="9" class="pt-4 pt-sm-0">
             <v-checkbox
               id="registered-mailing-same-chkbx"
               class="inherit-checkbox"
@@ -89,11 +89,11 @@
           <v-card flat class="py-8 px-6">
             <!-- Records Mailing Address -->
             <v-row no-gutters class="edit-section">
-              <v-col cols="12" sm="3" class="pr-4 pb-4">
+              <v-col cols="12" sm="3" class="pr-4">
                 <label class="title-label">Mailing Address</label>
               </v-col>
 
-              <v-col cols="12" sm="9">
+              <v-col cols="12" sm="9" class="pt-4 pt-sm-0">
                 <MailingAddress
                   ref="recMailingAddress"
                   id="address-records-mailing"
@@ -108,11 +108,11 @@
 
             <!-- Registered Delivery Address -->
             <v-row no-gutters class="edit-section">
-              <v-col cols="12" sm="3" class="pr-4 pb-4">
+              <v-col cols="12" sm="3" class="pr-4">
                 <label class="title-label">Delivery Address</label>
               </v-col>
 
-              <v-col cols="12" sm="9">
+              <v-col cols="12" sm="9" class="pt-4 pt-sm-0">
                 <v-checkbox
                   class="inherit-checkbox"
                   hide-details
@@ -145,17 +145,17 @@
     <!-- SUMMARY SECTION -->
     <template v-else>
       <v-row no-gutters id="summary-registered-address">
-        <v-col cols="12" sm="3" class="pr-4 pb-4">
+        <v-col cols="12" sm="3" class="pr-4">
           <label>Registered Office</label>
         </v-col>
 
-        <v-col cols="12" sm="4" class="pr-4">
+        <v-col cols="12" sm="4" class="pr-8 pt-4 pt-sm-0">
           <label class="summary-section-header">Mailing Address</label>
           <div v-if="isEmptyAddress(mailingAddress)">(Not entered)</div>
           <MailingAddress v-else :address="mailingAddress" :editing="false" />
         </v-col>
 
-        <v-col cols="12" sm="4" class="pr-4">
+        <v-col cols="12" sm="4" class="pr-8 pt-4 pt-sm-0">
           <label class="summary-section-header">Delivery Address</label>
           <div v-if="isEmptyAddress(deliveryAddress)">(Not entered)</div>
           <div v-else-if="isSame(mailingAddress, deliveryAddress)">Same as Mailing Address</div>
@@ -163,19 +163,19 @@
         </v-col>
       </v-row>
 
-      <v-row no-gutters id="summary-records-address" v-if="!isTypeCoop" class="mt-4">
-        <v-col cols="12" sm="3" class="pr-4 pb-4">
+      <v-row no-gutters id="summary-records-address" v-if="!isTypeCoop" class="mt-6">
+        <v-col cols="12" sm="3" class="pr-4">
           <label>Records Office</label>
         </v-col>
 
-        <v-col cols="12" sm="4" class="pr-4">
+        <v-col cols="12" sm="4" class="pr-8 pt-4 pt-sm-0">
           <label class="summary-section-header">Mailing Address</label>
           <div v-if="isEmptyAddress(recMailingAddress)">(Not entered)</div>
           <div v-else-if="isSame(mailingAddress, recMailingAddress)">Same as Registered Office</div>
           <MailingAddress v-else :address="recMailingAddress" :editing="false" />
         </v-col>
 
-        <v-col cols="12" sm="4" class="pr-4">
+        <v-col cols="12" sm="4" class="pr-8 pt-4 pt-sm-0">
           <label class="summary-section-header">Delivery Address</label>
           <div v-if="isEmptyAddress(recDeliveryAddress)">(Not entered)</div>
           <div v-else-if="isSame(deliveryAddress, recDeliveryAddress)">Same as Registered Office</div>
@@ -582,6 +582,6 @@ export default class OfficeAddresses extends Mixins(CommonMixin) {
 ::v-deep .base-address .address-block .delivery-instructions {
   font-size: $px-14;
   font-style: italic;
-  margin-top: 0 !important;
+  margin-top: 0.5rem !important;
 }
 </style>

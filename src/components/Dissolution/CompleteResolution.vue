@@ -191,10 +191,10 @@
       >
         <v-card flat id="resolution-signature-card" class="py-8 px-6">
           <v-row no-gutters>
-            <v-col cols="12" sm="3" class="pr-4 pb-4">
+            <v-col cols="12" sm="3" class="pr-4">
               <label class="resolution-signature-vcard-title">Signing Party</label>
             </v-col>
-            <v-col cols="12" sm="9">
+            <v-col cols="12" sm="9" class="pt-4 pt-sm-0">
               <v-form ref="signingPersonFormRef">
                 <div class="form__row three-column">
                   <v-text-field
@@ -230,10 +230,10 @@
           </v-row>
 
           <v-row no-gutters>
-            <v-col cols="12" sm="3" class="pr-4 pb-4">
+            <v-col cols="12" sm="3" class="pr-4">
               <label class="resolution-signature-vcard-title">Date Signed</label>
             </v-col>
-            <v-col cols="12" sm="9">
+            <v-col cols="12" sm="9" class="pt-4 pt-sm-0">
               <date-picker
                 ref="signatureDatePickerRef"
                 title="Date Signed"
