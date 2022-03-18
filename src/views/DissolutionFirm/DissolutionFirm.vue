@@ -27,19 +27,20 @@
         </p>
       </header>
       <v-card flat class="mt-6">
+
       <DocumentDelivery
         :class="{ 'invalid-section': isDocumentDeliveryInvalid }"
         :editableCompletingParty="isRoleStaff"
         :showCustodianEmail="false"
         :invalidSection="isDocumentDeliveryInvalid"
-        :registeredOfficeEmail="getBusinessContact.email"
+        :contactValue="getBusinessContact.email"
         :custodianEmail="getDissolutionCustodianEmail"
         :completingPartyEmail="getUserEmail"
         :documentOptionalEmail="getDocumentDelivery.documentOptionalEmail"
         @update:optionalEmail="setDocumentOptionalEmail($event)"
         @valid="setDocumentOptionalEmailValidity($event)"
-        additionalEmail="test@test2.com"
         additionalLabel="partners"
+        contactLabel="Business Contact"
       />
       <!-- TODO change: additionalEmail & additionalLabel are sample data-->
       </v-card>

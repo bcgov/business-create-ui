@@ -55,8 +55,9 @@
       <v-card flat class="mt-6">
         <DocumentDelivery
           class="py-8 px-6"
-          :registeredOfficeEmail="getBusinessContact.email"
+          :contactValue="getBusinessContact.email"
           :completingPartyEmail="getUserEmail"
+          contactLabel="Registered Office"
         />
       </v-card>
     </section>

@@ -3,10 +3,10 @@
     <!-- Registered Office -->
     <v-row no-gutters>
       <v-col cols="12" sm="3" class="pr-4">
-        <label class="title-label">Registered Office</label>
+        <label class="title-label">{{contactLabel}}</label>
       </v-col>
       <v-col cols="12" sm="9">
-        <span id="office-email">{{registeredOfficeEmail || '(Not entered)'}}</span>
+        <span id="office-email">{{contactValue || '(Not entered)'}}</span>
       </v-col>
     </v-row>
 
@@ -47,7 +47,7 @@
         <label class="title-label">{{additionalLabel}}</label>
       </v-col>
       <v-col cols="12" sm="9">
-        <span id="additonal-email">{{additionalEmail || '(Not entered)'}}</span>
+        <span id="additonal-email">{{additionalValue || '(Not entered)'}}</span>
       </v-col>
     </v-row>
   </div>
@@ -59,7 +59,8 @@ import { Component, Emit, Prop, Vue, Watch } from 'vue-property-decorator'
 
 @Component({})
 export default class DocumentDelivery extends Vue {
-  @Prop({ default: null }) readonly registeredOfficeEmail: string
+  @Prop({ required: true }) readonly contactLabel: string
+  @Prop({ default: null }) readonly contactValue: string
   @Prop({ default: null }) readonly custodianEmail: string
   @Prop({ default: null }) readonly completingPartyEmail: string
   @Prop({ default: null }) readonly documentOptionalEmail: string
@@ -67,13 +68,9 @@ export default class DocumentDelivery extends Vue {
   @Prop({ default: false }) readonly editableCompletingParty: boolean
   @Prop({ default: false }) readonly showCustodianEmail: boolean
   @Prop({ default: false }) readonly invalidSection: boolean
-  // additionaLabel can be used for additon fields.
-  //  For SP can be used for proprietor
-  // FOr GP label can be Partners
-  @Prop({ default: null }) readonly additionalLabel: string
-  // additionalEmail  For SP can be used for single email
-  // For GP additionalEmail can be multipel with comma separated
-  @Prop({ default: null }) readonly additionalEmail: string
+
+  @Prop({ default: null }) readonly additionalLabel: string // for additon fields.
+  @Prop({ default: null }) readonly additionalValue: string
 
   // Local properties
   private optionalEmail: string = ''
