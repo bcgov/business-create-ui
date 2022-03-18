@@ -175,12 +175,13 @@
           :editableCompletingParty="isRoleStaff"
           :showCustodianEmail="true"
           :invalidSection="isDocumentDeliveryInvalid"
-          :registeredOfficeEmail="getBusinessContact.email"
+          :contactValue="getBusinessContact.email"
           :custodianEmail="getDissolutionCustodianEmail"
           :completingPartyEmail="getUserEmail"
           :documentOptionalEmail="getDocumentDelivery.documentOptionalEmail"
           @update:optionalEmail="setDocumentOptionalEmail($event)"
           @valid="setDocumentOptionalEmailValidity($event)"
+          contactLabel="Registered Office"
         />
       </v-card>
     </section>

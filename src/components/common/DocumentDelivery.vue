@@ -3,10 +3,10 @@
     <!-- Registered Office -->
     <v-row no-gutters>
       <v-col cols="12" sm="3" class="pr-4">
-        <label class="title-label">Registered Office</label>
+        <label class="title-label">{{contactLabel}}</label>
       </v-col>
       <v-col cols="12" sm="9">
-        <span id="office-email">{{registeredOfficeEmail || '(Not entered)'}}</span>
+        <span id="office-email">{{contactValue || '(Not entered)'}}</span>
       </v-col>
     </v-row>
 
@@ -41,6 +41,15 @@
         <span id="custodian-email">{{custodianEmail || '(Not entered)'}}</span>
       </v-col>
     </v-row>
+
+     <v-row no-gutters v-if="additionalLabel" class="pt-3">
+      <v-col cols="12" sm="3" class="pr-4">
+        <label class="title-label">{{additionalLabel}}</label>
+      </v-col>
+      <v-col cols="12" sm="9">
+        <span id="additonal-email">{{additionalValue || '(Not entered)'}}</span>
+      </v-col>
+    </v-row>
   </div>
 </template>
 
@@ -50,7 +59,8 @@ import { Component, Emit, Prop, Vue, Watch } from 'vue-property-decorator'
 
 @Component({})
 export default class DocumentDelivery extends Vue {
-  @Prop({ default: null }) readonly registeredOfficeEmail: string
+  @Prop({ required: true }) readonly contactLabel: string
+  @Prop({ default: null }) readonly contactValue: string
   @Prop({ default: null }) readonly custodianEmail: string
   @Prop({ default: null }) readonly completingPartyEmail: string
   @Prop({ default: null }) readonly documentOptionalEmail: string
@@ -58,6 +68,9 @@ export default class DocumentDelivery extends Vue {
   @Prop({ default: false }) readonly editableCompletingParty: boolean
   @Prop({ default: false }) readonly showCustodianEmail: boolean
   @Prop({ default: false }) readonly invalidSection: boolean
+
+  @Prop({ default: null }) readonly additionalLabel: string // for additon fields.
+  @Prop({ default: null }) readonly additionalValue: string
 
   // Local properties
   private optionalEmail: string = ''

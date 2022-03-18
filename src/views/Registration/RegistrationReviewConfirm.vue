@@ -37,10 +37,11 @@
           class="py-8 px-6"
           :class="{ 'invalid-section': isDocumentDeliveryInvalid }"
           :editableCompletingParty="isRoleStaff || isSbcStaff"
-          :registeredOfficeEmail="getBusinessContact.email"
+          :contactValue="getBusinessContact.email"
           :completingPartyEmail="getUserEmail"
           :invalidSection="isDocumentDeliveryInvalid"
           @valid="setDocumentOptionalEmailValidity($event)"
+          contactLabel="Registered Office"
         />
       </v-card>
     </section>
