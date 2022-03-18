@@ -22,3 +22,5 @@ export { default as IncorporationShareStructure } from './Incorporation/Incorpor
 export { default as RegistrationDefineBusiness } from './Registration/RegistrationDefineBusiness.vue'
 export { default as RegistrationPeopleRoles } from './Registration/RegistrationPeopleRoles.vue'
 export { default as RegistrationReviewConfirm } from './Registration/RegistrationReviewConfirm.vue'
+
+export { default as DissolutionFirm } from './DissolutionFirm/DissolutionFirm.vue'

@@ -79,3 +79,22 @@ export const CorpDissolutionSteps = [
     component: ViewComponentNames.DISSOLUTION_REVIEW_CONFIRM
   }
 ]
+
+/**
+ * The stepper template is not needed for SP and GP filing types
+ * Hiding of stepper is done by passign meta from route,
+ * Still we need one minimum step to render component
+ * Currently used for SP, GP.
+ * Later we can fix, if we didnt pass stepper, UI should render without stepper
+ */
+
+export const CorpFirmDissolutionSteps = [
+  {
+    id: 'step-1-btn',
+    step: 1,
+    icon: 'mdi-domain-remove',
+    text: 'Dissolution',
+    to: RouteNames.DISSOLUTION_FIRM,
+    component: ViewComponentNames.DISSOLUTION_FIRM
+  }
+]

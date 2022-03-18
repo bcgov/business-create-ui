@@ -25,4 +25,8 @@ export enum ViewComponentNames {
   REGISTRATION_DEFINE_BUSINESS = 'registration-define-business',
   REGISTRATION_PEOPLE_ROLES = 'registration-people-roles',
   REGISTRATION_REVIEW_CONFIRM = 'registration-review-confirm',
+
+// Entity dissolution
+  DISSOLUTION_FIRM = 'dissolution-firm',
+
 }

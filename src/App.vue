@@ -98,8 +98,11 @@
               <header>
                 <h1>{{ getFilingName }}</h1>
               </header>
+              <p class="mt-4" v-if="getFilingSubtitle">
+                {{ getFilingSubtitle }}
+              </p>
 
-              <Stepper class="mt-10" />
+              <Stepper class="mt-10" v-if="isStepperView" />
 
               <!-- Sign in and sign out components -->
               <Signin v-if="isRouteName(RouteNames.SIGN_IN)" />
@@ -244,6 +247,7 @@ export default class App extends Mixins(
   @Getter getAccountInformation!: AccountInformationIF
   @Getter getOrgInformation!: OrgInformationIF
   @Getter isSbcStaff!: boolean
+  @Getter getFilingSubtitle!: string
 
   @Action setBusinessId!: ActionBindingIF
   @Action setCurrentStep!: ActionBindingIF
@@ -379,6 +383,10 @@ export default class App extends Mixins(
       case FilingTypes.REGISTRATION: return 'Registration'
       case FilingTypes.VOLUNTARY_DISSOLUTION: return 'Filing'
     }
+  }
+  // check to use stepper view or not
+  get isStepperView (): boolean {
+    return !this.$route.meta.noStepper
   }
 
   /** Helper to check is the current route matches */
