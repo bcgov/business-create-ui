@@ -41,6 +41,15 @@
         <span id="custodian-email">{{custodianEmail || '(Not entered)'}}</span>
       </v-col>
     </v-row>
+
+     <v-row no-gutters v-if="additionalLabel && additionalEmail" class="pt-3">
+      <v-col cols="12" sm="3" class="pr-4">
+        <label class="title-label">{{additionalLabel}}</label>
+      </v-col>
+      <v-col cols="12" sm="9">
+        <span id="additonal-email">{{additionalEmail || '(Not entered)'}}</span>
+      </v-col>
+    </v-row>
   </div>
 </template>
 
@@ -58,6 +67,13 @@ export default class DocumentDelivery extends Vue {
   @Prop({ default: false }) readonly editableCompletingParty: boolean
   @Prop({ default: false }) readonly showCustodianEmail: boolean
   @Prop({ default: false }) readonly invalidSection: boolean
+  // additionaLabel can be used for additon fields.
+  //  For SP can be used for proprietor
+  // FOr GP label can be Partners
+  @Prop({ default: null }) readonly additionalLabel: string
+  // additionalEmail  For SP can be used for single email
+  // For GP additionalEmail can be multipel with comma separated
+  @Prop({ default: null }) readonly additionalEmail: string
 
   // Local properties
   private optionalEmail: string = ''
