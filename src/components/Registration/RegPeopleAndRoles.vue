@@ -1,8 +1,8 @@
 <template>
-  <div id="people-and-roles">
+  <div id="reg-people-and-roles">
     <ConfirmDialog
       ref="confirmDialog"
-      attach="#people-and-roles"
+      attach="#reg-people-and-roles"
     />
 
     <!-- Blurb(s) -->
@@ -12,13 +12,6 @@
     <template v-if="blurbs">
       <p v-for="(blurb, index) in blurbs" :key="index" class="blurb-para" v-html="blurb" />
     </template>
-
-    <!-- Help section -->
-    <HelpSection
-      class="mt-5"
-      v-if="getPeopleAndRolesResource.helpSection"
-      :helpSection="getPeopleAndRolesResource.helpSection"
-    />
 
     <!-- Checklist section -->
     <section class="mt-5">
@@ -32,37 +25,25 @@
             <v-icon v-else>mdi-circle-small</v-icon>
             <span class="rule-item-txt">{{rule.text}}</span>
           </li>
-          <li v-if="rule.id === RuleIds.NUM_INCORPORATORS" :key="index">
-            <v-icon v-if="validMinimumIncorporators" color="green darken-2"
-              class="incorp-valid">mdi-check</v-icon>
-            <v-icon v-else-if="getShowErrors" color="error" class="incorp-invalid">mdi-close</v-icon>
-            <v-icon v-else>mdi-circle-small</v-icon>
-            <span class="rule-item-txt">{{rule.text}}</span>
-          </li>
-          <li v-if="rule.id === RuleIds.NUM_DIRECTORS" :key="index">
-            <v-icon v-if="validMinimumDirectors" color="green darken-2"
+          <li v-if="rule.id === RuleIds.NUM_PROPRIETORS" :key="index">
+            <v-icon v-if="validNumProprietors" color="green darken-2"
               class="dir-valid">mdi-check</v-icon>
-            <v-icon v-else-if="getShowErrors" color="error" class="dir-invalid">mdi-close</v-icon>
-            <v-icon v-else>mdi-circle-small</v-icon>
-            <span class="rule-item-txt">{{rule.text}}</span>
-          </li>
-          <li v-if="rule.id === RuleIds.DIRECTOR_COUNTRY" :key="index">
-            <v-icon v-if="validDirectorCountry" color="green darken-2"
-              class="dir-valid">mdi-check</v-icon>
-            <v-icon v-else-if="getShowErrors" color="error" class="dir-invalid">mdi-close</v-icon>
-            <v-icon v-else>mdi-circle-small</v-icon>
-            <span class="rule-item-txt">{{rule.text}}</span>
-          </li>
-          <li v-if="rule.id === RuleIds.DIRECTOR_PROVINCE" :key="index">
-            <v-icon v-if="validDirectorProvince" color="green darken-2"
-              class="dir-valid">mdi-check</v-icon>
-            <v-icon v-else-if="getShowErrors" color="error" class="dir-invalid">mdi-close</v-icon>
+            <v-icon v-else-if="getShowErrors" color="error" class="prop-invalid">mdi-close</v-icon>
             <v-icon v-else>mdi-circle-small</v-icon>
             <span class="rule-item-txt">{{rule.text}}</span>
           </li>
         </template>
       </ul>
     </section>
+
+    <!-- *** TODO: only show this blurb when user needs to select the Proprietor -->
+    <!-- More blurb(s) -->
+    <template v-if="blurb2">
+      <p class="blurb-para" v-html="blurb2" />
+    </template>
+    <template v-if="blurbs2">
+      <p v-for="(blurb, index) in blurbs2" :key="`blurb2-${index}`" class="blurb-para" v-html="blurb" />
+    </template>
 
     <!-- Start by Adding the Completing Party -->
     <div class="btn-panel" v-if="orgPersonList.length === 0">
@@ -100,7 +81,7 @@
         color="primary"
         class="btn-outlined-primary"
         :disabled="showOrgPersonForm"
-        @click="addOrgPerson(null, PartyTypes.PERSON)"
+        @click="addOrgPerson(RoleTypes.PROPRIETOR, PartyTypes.PERSON)"
       >
         <v-icon>mdi-account-plus</v-icon>
         <span>Add a Person</span>
@@ -111,22 +92,20 @@
         outlined
         color="primary"
         class="btn-outlined-primary"
-        v-if="getPeopleAndRolesResource.addOrganization"
         :disabled="showOrgPersonForm"
-        @click="addOrgPerson(RoleTypes.INCORPORATOR, PartyTypes.ORGANIZATION)"
+        @click="addOrgPerson(RoleTypes.PROPRIETOR, PartyTypes.ORGANIZATION)"
       >
         <v-icon>mdi-domain-plus</v-icon>
-        <span>{{getPeopleAndRolesResource.addOrganization}}</span>
+        <span>Add a Business or a Corporation</span>
       </v-btn>
     </div>
 
-    <!-- Add/Edit Person/Org -->
+    <!-- Add/Edit Bus/Corp -->
     <v-card flat v-if="showOrgPersonForm" class="people-roles-container">
-      <AddEditOrgPerson
+      <RegAddEditOrgPerson
         :initialValue="currentOrgPerson"
         :activeIndex="activeIndex"
         :existingCompletingParty="completingParty"
-        :addIncorporator="getPeopleAndRolesResource.addIncorporator"
         @addEditPerson="onAddEditPerson($event)"
         @removePerson="onRemovePerson($event)"
         @resetEvent="resetData()"
@@ -152,20 +131,24 @@ import { cloneDeep } from 'lodash'
 import { AddressIF, EmptyAddress, EmptyOrgPerson } from '@/interfaces'
 import { PartyTypes, RoleTypes } from '@/enums'
 import { PeopleRolesMixin } from '@/mixins'
-import AddEditOrgPerson from '@/components/common/AddEditOrgPerson.vue'
 import ConfirmDialog from '@/dialogs/ConfirmDialog.vue'
 import HelpSection from '@/components/common/HelpSection.vue'
 import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
+import RegAddEditOrgPerson from '@/components/Registration/RegAddEditOrgPerson.vue'
 
+/**
+ * This is similar to the common PeopleAndRoles component but this
+ * component has a lot of logic specific to SP/GP Registrations.
+ */
 @Component({
   components: {
-    AddEditOrgPerson,
     ConfirmDialog,
     HelpSection,
-    ListPeopleAndRoles
+    ListPeopleAndRoles,
+    RegAddEditOrgPerson
   }
 })
-export default class PeopleAndRoles extends Mixins(PeopleRolesMixin) {
+export default class RegPeopleAndRoles extends Mixins(PeopleRolesMixin) {
   @Getter getShowErrors!: boolean
   @Getter getUserFirstName!: string
   @Getter getUserLastName!: string
@@ -182,9 +165,9 @@ export default class PeopleAndRoles extends Mixins(PeopleRolesMixin) {
     if (roleType) {
       // a role was provided - pre-select it
       this.currentOrgPerson.roles = [{ roleType }]
-    } else if (this.validNumCompletingParty && !this.getPeopleAndRolesResource.addIncorporator) {
-      // only Director role is possible - pre-select it
-      this.currentOrgPerson.roles = [{ roleType: RoleTypes.DIRECTOR }]
+    } else if (this.validNumCompletingParty) {
+      // only Proprietor role is possible - pre-select it
+      this.currentOrgPerson.roles = [{ roleType: RoleTypes.PROPRIETOR }]
     } else {
       // no roles pre-selected
       this.currentOrgPerson.roles = []

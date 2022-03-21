@@ -88,52 +88,56 @@
         <span v-else>Hide Help</span>
       </span>
 
-      <section v-show="helpToggle" class="incorporation-agreement-help">
-        <div
-          v-for="(item, index) in getIncorporationAgreementResource.helpSection"
-          :id="`agreement-help-${index}`"
-          class="help-div"
-          :key="index"
-        >
-          <h3>
-            <v-icon v-if="item.icon" :color="item.iconColor" class="article-stmt-icon">{{item.icon}}</v-icon>
-            {{item.header}}
-          </h3>
-          <ul v-for="(text, index) in item.helpText"
-              :id="`agreement-help-text-${index}`"
-              class="help-div"
-              :key="index">
-            <li>{{text}}</li>
-          </ul>
-          <ul v-for="(text, index) in item.statements"
-              :id="`agreement-statements-${index}`"
-              class="articles-statements"
-              :key="index">
-            <li>{{text}}</li>
-          </ul>
-        </div>
-
-        <template v-if="!isTypeBcCcc">
-          <div class="help-div">
-            <div class="articles-statements-footer">
-              In this case, you need to create a unique Incorporation Agreement and set of Articles for the company and
-              outline these special rights or restrictions in the Articles. We recommend seeking professional assistance
-              from a lawyer or accountant to help you prepare your Incorporation Agreement and Articles.
-            </div>
-          </div>
-          <div class="help-div">
-            <h3>Retain the signed Incorporation Agreement and {{ entityDescription }} Articles</h3>
-            <ul>
-              <li>
-                The company is required to keep signed copies of the Incorporation Agreement and Articles in the
-                company’s record book. For a complete list of records a company is required to keep please see
-                <a :href="section42Url" target="_blank">section 42</a> of the Business Corporations Act.
-              </li>
+      <v-expand-transition>
+        <section v-show="helpToggle" class="incorporation-agreement-help">
+          <div
+            v-for="(item, index) in getIncorporationAgreementResource.helpSection"
+            :id="`agreement-help-${index}`"
+            class="help-div"
+            :key="index"
+          >
+            <h3>
+              <v-icon v-if="item.icon" :color="item.iconColor" class="article-stmt-icon">{{item.icon}}</v-icon>
+              {{item.header}}
+            </h3>
+            <ul v-for="(text, index) in item.helpText"
+                :id="`agreement-help-text-${index}`"
+                class="help-div"
+                :key="index">
+              <li>{{text}}</li>
+            </ul>
+            <ul v-for="(text, index) in item.statements"
+                :id="`agreement-statements-${index}`"
+                class="articles-statements"
+                :key="index">
+              <li>{{text}}</li>
             </ul>
           </div>
-        </template>
-        <u class="help-btn" @click="helpToggle = !helpToggle"><small>Hide Help</small></u>
-      </section>
+
+          <template v-if="!isTypeBcCcc">
+            <div class="help-div">
+              <div class="articles-statements-footer">
+                In this case, you need to create a unique Incorporation Agreement and set of
+                Articles for the company and outline these special rights or restrictions in the
+                Articles. We recommend seeking professional assistance from a lawyer or accountant
+                to help you prepare your Incorporation Agreement and Articles.
+              </div>
+            </div>
+            <div class="help-div">
+              <h3>Retain the signed Incorporation Agreement and {{ entityDescription }} Articles</h3>
+              <ul>
+                <li>
+                  The company is required to keep signed copies of the Incorporation Agreement and
+                  Articles in the company’s record book. For a complete list of records a company
+                  is required to keep please see <a :href="section42Url" target="_blank">section 42</a>
+                  of the Business Corporations Act.
+                </li>
+              </ul>
+            </div>
+          </template>
+          <u class="help-btn" @click="helpToggle = !helpToggle"><small>Hide Help</small></u>
+        </section>
+      </v-expand-transition>
     </section>
 
     <!-- Agreement Type -->

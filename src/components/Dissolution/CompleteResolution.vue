@@ -31,44 +31,57 @@
         <span v-else>Hide Help</span>
       </span>
 
-      <section v-show="helpToggle" class="create-resolution-help">
-        <header class="create-resolution-help-header">
-          <h2>{{getCreateResolutionResource.helpSection.header}}</h2>
-        </header>
+      <v-expand-transition>
+        <section v-show="helpToggle" class="create-resolution-help">
+          <header class="create-resolution-help-header">
+            <h2>{{getCreateResolutionResource.helpSection.header}}</h2>
+          </header>
 
-        <span v-for="(item, index) in getCreateResolutionResource.helpSection.helpText.section1.items" :key="index">
-          <p v-if="item.type === ItemTypes.TEXT" v-html="item.value" class="mt-3"></p>
-          <v-row v-if="item.type === ItemTypes.PARTIAL_ITEMS">
-            <v-col cols="11">
-              <span v-for="(partialItem, index) in item.value" :key="index">
-                <span v-if="partialItem.type === ItemTypes.TEXT" v-html="partialItem.value"></span>
-                <a v-if="partialItem.type === ItemTypes.LINK"
-                   :href="partialItem.value.href"
-                   target="_blank"
-                >{{partialItem.value.linkText}}
-                  <v-icon dense color="primary">mdi-open-in-new</v-icon>
-                </a>
-              </span>
-            </v-col>
-          </v-row>
-          <ul v-if="item.type === ItemTypes.BULLET_LIST" class="mt-1">
-            <li v-for="(bulletItem, index) in item.value" :key="index">
-              <v-row class="mt-1">
-                <v-col v-if="item.bulletListType === BulletListTypes.CIRCLE_SMALL" cols="1" class="pt-1 pb-1">
-                  <v-icon>mdi-circle-small</v-icon>
-                </v-col>
-                <v-col v-if="item.bulletListType === BulletListTypes.ALPHABETICAL_LOWER" cols="1" class="pt-1 pb-1">
-                  ({{convertIntToChar(index)}})
-                </v-col>
-                <v-col cols="11" class="ml-n11 pt-1 pb-1">
-                  <span>{{bulletItem}}</span>
-                </v-col>
-              </v-row>
-            </li>
-          </ul>
-        </span>
-        <u class="help-btn" @click="helpToggle = !helpToggle"><small>Hide Help</small></u>
-      </section>
+          <span
+            v-for="(item, index) in getCreateResolutionResource.helpSection.helpText.section1.items"
+            :key="index"
+          >
+            <p v-if="item.type === ItemTypes.TEXT" v-html="item.value" class="mt-3"></p>
+            <v-row v-if="item.type === ItemTypes.PARTIAL_ITEMS">
+              <v-col cols="11">
+                <span v-for="(partialItem, index) in item.value" :key="index">
+                  <span v-if="partialItem.type === ItemTypes.TEXT" v-html="partialItem.value" />
+                  <a v-if="partialItem.type === ItemTypes.LINK"
+                    :href="partialItem.value.href"
+                    target="_blank"
+                  >{{partialItem.value.linkText}}
+                    <v-icon dense color="primary">mdi-open-in-new</v-icon>
+                  </a>
+                </span>
+              </v-col>
+            </v-row>
+            <ul v-if="item.type === ItemTypes.BULLET_LIST" class="mt-1">
+              <li v-for="(bulletItem, index) in item.value" :key="index">
+                <v-row class="mt-1">
+                  <v-col
+                    v-if="item.bulletListType === BulletListTypes.CIRCLE_SMALL"
+                    cols="1"
+                    class="pt-1 pb-1"
+                  >
+                    <v-icon>mdi-circle-small</v-icon>
+                  </v-col>
+                  <v-col
+                    v-if="item.bulletListType === BulletListTypes.ALPHABETICAL_LOWER"
+                    cols="1"
+                    class="pt-1 pb-1"
+                  >
+                    ({{convertIntToChar(index)}})
+                  </v-col>
+                  <v-col cols="11" class="ml-n11 pt-1 pb-1">
+                    <span>{{bulletItem}}</span>
+                  </v-col>
+                </v-row>
+              </li>
+            </ul>
+          </span>
+          <u class="help-btn" @click="helpToggle = !helpToggle"><small>Hide Help</small></u>
+        </section>
+      </v-expand-transition>
     </div>
 
     <!-- Special Resolution Form -->
@@ -178,10 +191,10 @@
       >
         <v-card flat id="resolution-signature-card" class="py-8 px-6">
           <v-row no-gutters>
-            <v-col cols="12" sm="3" class="pr-4 pb-4">
+            <v-col cols="12" sm="3" class="pr-4">
               <label class="resolution-signature-vcard-title">Signing Party</label>
             </v-col>
-            <v-col cols="12" sm="9">
+            <v-col cols="12" sm="9" class="pt-4 pt-sm-0">
               <v-form ref="signingPersonFormRef">
                 <div class="form__row three-column">
                   <v-text-field
@@ -217,10 +230,10 @@
           </v-row>
 
           <v-row no-gutters>
-            <v-col cols="12" sm="3" class="pr-4 pb-4">
+            <v-col cols="12" sm="3" class="pr-4">
               <label class="resolution-signature-vcard-title">Date Signed</label>
             </v-col>
-            <v-col cols="12" sm="9">
+            <v-col cols="12" sm="9" class="pt-4 pt-sm-0">
               <date-picker
                 ref="signatureDatePickerRef"
                 title="Date Signed"

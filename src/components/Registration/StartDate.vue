@@ -2,10 +2,10 @@
   <div id="start-date">
     <!-- EDIT SECTION -->
     <v-row no-gutters>
-      <v-col cols="12" sm="3" class="pr-4 pb-4">
+      <v-col cols="12" sm="3" class="pr-4">
         <label class="start-date-title title-label">Start Date</label>
       </v-col>
-      <v-col cols="12" sm="9" id="start-date-selector">
+      <v-col cols="12" sm="9" class="pt-4 pt-sm-0" id="start-date-selector">
         <date-picker
           id="date-picker"
           ref="startDateRef"

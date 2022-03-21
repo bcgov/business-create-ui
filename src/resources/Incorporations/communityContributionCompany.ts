@@ -22,8 +22,7 @@ export const CommunityContributionCompanyResource: IncorporationResourceIF = {
       can have multiple roles; Corporations/firms can only be Incorporators.`,
     helpSection: null,
     addIncorporator: true,
-    addOrganization: true,
-    addProprietor: false,
+    addOrganization: 'Add a Corporation or Firm',
     rules: [
       {
         id: RuleIds.NUM_COMPLETING_PARTY,
@@ -63,7 +62,7 @@ export const CommunityContributionCompanyResource: IncorporationResourceIF = {
       {
         header: `Retain the signed Incorporation Agreement and Articles`,
         helpText: [
-          `The company is required to keep signed copies of the Incorporation Agreement and Articles in the company’s
+          `The company is required to keep signed copies of the Incorporation Agreement and Articles in the company's
             record book. For a complete list of records a company is required to keep please see section 42 of the
             Business Corporations Act.`
         ]

@@ -4,7 +4,7 @@ import {
   ResourceIF, ShareClassIF, CreateRulesIF, CreateMemorandumIF, ValidationDetailIF, FeesIF,
   UploadAffidavitIF, CreateResolutionIF, OrgInformationIF, NaicsIF, RegistrationNameRequestIF
 } from '@/interfaces'
-import { CoopType, CorpTypeCd } from '@/enums'
+import { BusinessTypes, CoopTypes, CorpTypeCd } from '@/enums'
 
 export const setBusinessId: ActionIF = ({ commit }, businessId): void => {
   commit('mutateBusinessId', businessId)
@@ -114,7 +114,7 @@ export const setBusinessContact: ActionIF = ({ commit }, businessContact: Busine
   commit('mutateBusinessContact', businessContact)
 }
 
-export const setCooperativeType: ActionIF = ({ commit }, cooperativeType: CoopType): void => {
+export const setCooperativeType: ActionIF = ({ commit }, cooperativeType: CoopTypes): void => {
   commit('mutateCooperativeType', cooperativeType)
 }
 
@@ -300,4 +300,8 @@ export const setRegistrationNaics: ActionIF = ({ commit }, val: NaicsIF): void =
 
 export const setRegistrationNameRequest: ActionIF = ({ commit }, val: RegistrationNameRequestIF): void => {
   commit('mutateRegistrationNameRequest', val)
+}
+
+export const setRegistrationBusinessType: ActionIF = ({ commit }, businessType: BusinessTypes): void => {
+  commit('mutateRegistrationBusinessType', businessType)
 }

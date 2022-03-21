@@ -1,8 +1,9 @@
 export enum RoleTypes {
-  COMPLETING_PARTY = 'Completing Party',
-  INCORPORATOR = 'Incorporator',
   DIRECTOR = 'Director',
-  SUBSCRIBER = 'Subscriber',
+  COMPLETING_PARTY = 'Completing Party',
+  CUSTODIAN = 'Custodian',
+  INCORPORATOR = 'Incorporator',
   LIQUIDATOR = 'Liquidator',
-  CUSTODIAN = 'Custodian'
+  PROPRIETOR = 'Proprietor',
+  SUBSCRIBER = 'Subscriber',
 }

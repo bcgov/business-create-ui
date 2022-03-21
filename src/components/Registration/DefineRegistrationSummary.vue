@@ -15,13 +15,11 @@
       <article class="section-container">
         <v-row no-gutters>
           <v-col cols="12" sm="3" class="pr-4">
-            <label>Name</label>
+            <label id="company-label">Name</label>
           </v-col>
-          <v-col cols="12" sm="9">
-            <div class="company-name">{{ getApprovedName || 'Unavailable' }}</div>
-            <div class="company-type">
-              <span>{{ entityDescription }}</span>
-            </div>
+          <v-col cols="12" sm="9" class="pt-4 pt-sm-0">
+            <div id="company-name">{{ getApprovedName || 'Unavailable' }}</div>
+            <div id="company-description">{{ entityDescription }}</div>
           </v-col>
         </v-row>
       </article>
@@ -97,7 +95,7 @@ import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
 import FolioNumber from '@/components/common/FolioNumber.vue'
 import BusinessAddresses from '@/components/Registration/BusinessAddresses.vue'
 import { DateMixin, EnumMixin } from '@/mixins'
-import { CorpTypeCd, RouteNames } from '@/enums'
+import { BusinessTypes, CorpTypeCd, RouteNames } from '@/enums'
 
 @Component({
   components: {
@@ -117,7 +115,10 @@ export default class DefineRegistrationSummary extends Mixins(DateMixin, EnumMix
 
   /** The entity description. */
   get entityDescription (): string {
-    return `${this.getCorpTypeDescription(this.getEntityType)}`
+    let corpTypeDescription = this.getCorpTypeDescription(this.getEntityType)
+    const isSpDba = (this.getRegistration.businessType === BusinessTypes.DBA)
+    if (isSpDba) corpTypeDescription += ' / Doing Business As (DBA)'
+    return corpTypeDescription
   }
 
   /** The business valid flag. */
@@ -154,14 +155,10 @@ export default class DefineRegistrationSummary extends Mixins(DateMixin, EnumMix
   color: $app-red;
 }
 
-.company-name {
+#company-name {
   font-size: $px-22;
   font-weight: bold;
   color: $gray9;
-}
-
-.company-type{
-  padding-top: 0.5rem;
 }
 
 .v-icon.mdi-information-outline {

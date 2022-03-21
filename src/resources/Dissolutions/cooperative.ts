@@ -46,6 +46,7 @@ export const CooperativeDissolutionResource: DissolutionResourceIF = {
     located in Canada.`,
     custodianTitle: `Custodian of Records`,
     helpSection: {
+      header: 'Help with Custodian of Records',
       helpText: [
         `A Cooperative Association must appoint a person to have custody and control of its records, including
         documents, instruments and accounting records, for 2 years.`

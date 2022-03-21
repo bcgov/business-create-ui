@@ -4,7 +4,7 @@ import Vuelidate from 'vuelidate'
 import { mount, Wrapper, createLocalVue } from '@vue/test-utils'
 import flushPromises from 'flush-promises'
 import { getVuexStore } from '@/store'
-import OrgPerson from '@/components/common/OrgPerson.vue'
+import AddEditOrgPerson from '@/components/common/AddEditOrgPerson.vue'
 import { EmptyOrgPerson } from '@/interfaces'
 
 Vue.use(Vuetify)
@@ -15,7 +15,7 @@ const store = getVuexStore()
 
 // Events
 const addEditPersonEvent: string = 'addEditPerson'
-const removePerson: string = 'removePerson'
+const removePersonEvent: string = 'removePerson'
 const reassignCompletingPartyEvent: string = 'removeCompletingPartyRole'
 const formResetEvent: string = 'resetEvent'
 
@@ -124,7 +124,7 @@ const emptyPerson = { ...EmptyOrgPerson }
  *
  * @returns the value of the last named event for the wrapper.
  */
-function getLastEvent (wrapper: Wrapper<OrgPerson>, name: string): any {
+function getLastEvent (wrapper: Wrapper<AddEditOrgPerson>, name: string): any {
   const eventsList: Array<any> = wrapper.emitted(name)
   const events: Array<any> = eventsList[eventsList.length - 1]
   return events[0]
@@ -133,18 +133,18 @@ function getLastEvent (wrapper: Wrapper<OrgPerson>, name: string): any {
 /**
  * Creates and mounts a component, so that it can be tested.
  *
- * @returns a Wrapper<OrgPerson> object with the given parameters.
+ * @returns a Wrapper<AddEditOrgPerson> object with the given parameters.
  */
 function createComponent (
   initialValue: any, // person
   activeIndex: number,
   existingCompletingParty: any,
   addIncorporator: boolean = true
-): Wrapper<OrgPerson> {
+): Wrapper<AddEditOrgPerson> {
   const localVue = createLocalVue()
   localVue.use(Vuetify)
   document.body.setAttribute('data-app', 'true')
-  return mount(OrgPerson, {
+  return mount(AddEditOrgPerson, {
     localVue,
     propsData: {
       initialValue,
@@ -160,9 +160,9 @@ function createComponent (
 store.state.stateModel.nameRequest.entityType = 'BEN'
 store.state.stateModel.currentDate = '2020-03-30'
 
-describe('Org Person component', () => {
+describe('Add/Edit Org/Person component', () => {
   it('Loads the component and sets data for person', async () => {
-    const wrapper: Wrapper<OrgPerson> = createComponent(validPersonData, -1, null)
+    const wrapper: Wrapper<AddEditOrgPerson> = createComponent(validPersonData, -1, null)
     expect(wrapper.vm.$data.orgPerson).toStrictEqual(validPersonData)
     expect((wrapper.vm as any).isIncorporator).toBe(false)
     expect((wrapper.vm as any).isDirector).toBe(true)
@@ -171,7 +171,7 @@ describe('Org Person component', () => {
   })
 
   it('Loads the component and sets data for org', async () => {
-    const wrapper: Wrapper<OrgPerson> = createComponent(validOrgData, -1, null)
+    const wrapper: Wrapper<AddEditOrgPerson> = createComponent(validOrgData, -1, null)
     expect(wrapper.vm.$data.orgPerson).toStrictEqual(validOrgData)
     expect((wrapper.vm as any).isIncorporator).toBe(true)
     expect((wrapper.vm as any).isDirector).toBe(false)
@@ -181,7 +181,7 @@ describe('Org Person component', () => {
   })
 
   it('Displays form data for org', async () => {
-    const wrapper: Wrapper<OrgPerson> = createComponent(validOrgData, -1, null)
+    const wrapper: Wrapper<AddEditOrgPerson> = createComponent(validOrgData, -1, null)
     expect((<HTMLInputElement>wrapper.find(orgNameSelector).element).value)
       .toEqual(validOrgData['officer']['organizationName'])
     await Vue.nextTick()
@@ -192,7 +192,7 @@ describe('Org Person component', () => {
   })
 
   it('Displays form data for person', async () => {
-    const wrapper: Wrapper<OrgPerson> = createComponent(validPersonData, 0, null)
+    const wrapper: Wrapper<AddEditOrgPerson> = createComponent(validPersonData, 0, null)
     expect((<HTMLInputElement>wrapper.find(firstNameSelector).element).value)
       .toEqual(validPersonData['officer']['firstName'])
     expect((<HTMLInputElement>wrapper.find(middleNameSelector).element).value)
@@ -207,27 +207,27 @@ describe('Org Person component', () => {
   })
 
   it('Remove button is enabled in edit mode', async () => {
-    const wrapper: Wrapper<OrgPerson> = createComponent(validOrgData, 0, null)
+    const wrapper: Wrapper<AddEditOrgPerson> = createComponent(validOrgData, 0, null)
     expect(wrapper.find(removeButtonSelector).attributes('disabled')).toBeUndefined()
     wrapper.destroy()
   })
 
   it('Remove button is disabled in create mode', async () => {
-    const wrapper: Wrapper<OrgPerson> = createComponent(validOrgData, -1, null)
+    const wrapper: Wrapper<AddEditOrgPerson> = createComponent(validOrgData, -1, null)
     expect(wrapper.find(removeButtonSelector).attributes('disabled')).toBeDefined()
     wrapper.destroy()
   })
 
   it('Clicking remove button emits event', async () => {
-    const wrapper: Wrapper<OrgPerson> = createComponent(validOrgData, 0, null)
+    const wrapper: Wrapper<AddEditOrgPerson> = createComponent(validOrgData, 0, null)
     wrapper.find(removeButtonSelector).trigger('click')
     await Vue.nextTick()
-    expect(getLastEvent(wrapper, removePerson)).toBe(0)
+    expect(getLastEvent(wrapper, removePersonEvent)).toBe(0)
     wrapper.destroy()
   })
 
   it('Clicking Done button emits event for add edit person/org', async () => {
-    const wrapper: Wrapper<OrgPerson> = createComponent(validOrgData, -1, null)
+    const wrapper: Wrapper<AddEditOrgPerson> = createComponent(validOrgData, -1, null)
     expect((<HTMLInputElement>wrapper.find(orgNameSelector).element).value)
       .toEqual(validOrgData.officer.organizationName)
     await Vue.nextTick()
@@ -240,7 +240,7 @@ describe('Org Person component', () => {
   })
 
   it('Does not display error message when user enters valid org name', async () => {
-    const wrapper: Wrapper<OrgPerson> = createComponent(validOrgData, -1, null)
+    const wrapper: Wrapper<AddEditOrgPerson> = createComponent(validOrgData, -1, null)
     const inputElement: Wrapper<Vue> = wrapper.find(orgNameSelector)
 
     inputElement.setValue('Valid Org Name')
@@ -254,7 +254,7 @@ describe('Org Person component', () => {
   })
 
   it('Displays error message when user enters invalid org name', async () => {
-    const wrapper: Wrapper<OrgPerson> = createComponent(validOrgData, -1, null)
+    const wrapper: Wrapper<AddEditOrgPerson> = createComponent(validOrgData, -1, null)
     const inputElement: Wrapper<Vue> = wrapper.find(orgNameSelector)
 
     inputElement.setValue('     ')
@@ -268,7 +268,7 @@ describe('Org Person component', () => {
   })
 
   it('Does not display error message when user enters valid person names', async () => {
-    const wrapper: Wrapper<OrgPerson> = createComponent(validPersonData, -1, null)
+    const wrapper: Wrapper<AddEditOrgPerson> = createComponent(validPersonData, -1, null)
     const inputElement1: Wrapper<Vue> = wrapper.find(firstNameSelector)
     const inputElement2: Wrapper<Vue> = wrapper.find(middleNameSelector)
     const inputElement3: Wrapper<Vue> = wrapper.find(lastNameSelector)
@@ -288,7 +288,7 @@ describe('Org Person component', () => {
   })
 
   it('Displays error message when user does not enter person names', async () => {
-    const wrapper: Wrapper<OrgPerson> = createComponent(validPersonData, -1, null)
+    const wrapper: Wrapper<AddEditOrgPerson> = createComponent(validPersonData, -1, null)
     const inputElement1: Wrapper<Vue> = wrapper.find(firstNameSelector)
     const inputElement2: Wrapper<Vue> = wrapper.find(middleNameSelector)
     const inputElement3: Wrapper<Vue> = wrapper.find(lastNameSelector)
@@ -311,7 +311,7 @@ describe('Org Person component', () => {
   })
 
   it('Displays error message when user enters person names that are too long', async () => {
-    const wrapper: Wrapper<OrgPerson> = createComponent(validPersonData, -1, null)
+    const wrapper: Wrapper<AddEditOrgPerson> = createComponent(validPersonData, -1, null)
     const inputElement1: Wrapper<Vue> = wrapper.find(firstNameSelector)
     const inputElement2: Wrapper<Vue> = wrapper.find(middleNameSelector)
     const inputElement3: Wrapper<Vue> = wrapper.find(lastNameSelector)
@@ -338,7 +338,7 @@ describe('Org Person component', () => {
 
   it('Shows popup if there is already a completing party', async () => {
     store.state.stateModel.tombstone.authRoles = ['staff']
-    const wrapper: Wrapper<OrgPerson> = createComponent(validIncorporator, -1, validPersonData)
+    const wrapper: Wrapper<AddEditOrgPerson> = createComponent(validIncorporator, -1, validPersonData)
 
     const cpCheckBox: Wrapper<Vue> = wrapper.find(completingPartyChkBoxSelector)
     cpCheckBox.setChecked(true)
@@ -352,7 +352,7 @@ describe('Org Person component', () => {
 
   it('Emits events correctly on confirming reassign completing party', async () => {
     store.state.stateModel.tombstone.authRoles = ['staff']
-    const wrapper: Wrapper<OrgPerson> = createComponent(validIncorporator, -1, validPersonData)
+    const wrapper: Wrapper<AddEditOrgPerson> = createComponent(validIncorporator, -1, validPersonData)
 
     const cpCheckBox: Wrapper<Vue> = wrapper.find(completingPartyChkBoxSelector)
     cpCheckBox.setChecked(true)
@@ -388,7 +388,7 @@ describe('Org Person component', () => {
   })
 
   it('Emits cancel event', async () => {
-    const wrapper: Wrapper<OrgPerson> = createComponent(validPersonData, -1, null)
+    const wrapper: Wrapper<AddEditOrgPerson> = createComponent(validPersonData, -1, null)
     wrapper.find(cancelButtonSelector).trigger('click')
     await Vue.nextTick()
     expect(wrapper.emitted().resetEvent).toBeTruthy()

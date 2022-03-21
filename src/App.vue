@@ -90,7 +90,7 @@
       <!-- Don't show page if an error dialog is displayed. -->
       <main v-if="!isErrorDialog">
         <BreadCrumb :breadcrumbs="breadcrumbs" />
-        <EntityInfo />
+        <EntityInfo class="py-5 px-3" />
 
         <v-container id="container-main" class="py-8">
           <v-row>
@@ -555,7 +555,7 @@ export default class App extends Mixins(
       try {
         if (this.getBusinessId) {
           // this is a Dissolution filing
-          // (only dissolutionss have a business id)
+          // (only dissolutions have a business id)
           const resources = await this.handleDraftDissolution()
           if (!resources) {
             // go to catch()
@@ -588,7 +588,13 @@ export default class App extends Mixins(
       if (this.$route.meta.filingType !== this.getFilingType) {
         switch (this.getFilingType) {
           case FilingTypes.VOLUNTARY_DISSOLUTION:
-            this.$router.push(RouteNames.DISSOLUTION_DEFINE_DISSOLUTION).catch(() => {})
+            if (this.getEntityType === CorpTypeCd.SOLE_PROP) {
+              // *** FUTURE: for Faiz to do
+              // this.$router.push(RouteNames.DISSOLUTION_FIRM).catch(() => {})
+              throw new Error('Dissolution filings for firms is not yet supported.') // go to catch()
+            } else {
+              this.$router.push(RouteNames.DISSOLUTION_DEFINE_DISSOLUTION).catch(() => {})
+            }
             return
           case FilingTypes.INCORPORATION_APPLICATION:
             this.$router.push(RouteNames.INCORPORATION_DEFINE_COMPANY).catch(() => {})

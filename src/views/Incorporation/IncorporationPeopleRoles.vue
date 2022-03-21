@@ -53,7 +53,7 @@ export default class IncorporationPeopleRoles extends Mixins(CommonMixin) {
   position: relative;
 
   > label:first-child {
-    font-weight: 700;
+    font-weight: bold;
   }
 }
 

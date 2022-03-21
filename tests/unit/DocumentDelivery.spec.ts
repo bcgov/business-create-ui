@@ -64,7 +64,7 @@ for (const mock of documentDeliveryCases) {
         contactLabel: 'Registered Office'
       })
       expect(wrapper.find('#completing-party-email').text()).toBe(mock.tombstone.userEmail)
-      expect(wrapper.find('#office-email').text()).toBe(mock.businessContact.email)
+      expect(wrapper.find('#contact-value').text()).toBe(mock.businessContact.email)
     })
 
     it('displays Not Entered text when computed values are absent', () => {
@@ -77,7 +77,7 @@ for (const mock of documentDeliveryCases) {
         contactLabel: 'Registered Office'
       })
       expect(wrapper.find('#completing-party-email').text()).toBe('(Not entered)')
-      expect(wrapper.find('#office-email').text()).toBe('(Not entered)')
+      expect(wrapper.find('#contact-value').text()).toBe('(Not entered)')
     })
 
     it('displays optionalEmail', () => {

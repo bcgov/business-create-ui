@@ -104,7 +104,7 @@ for (const mock of mockEntityInfo) {
       expect(wrapper.vm.$el.querySelector('#entity-legal-name').textContent)
         .toContain('Xyz Ltd.')
 
-      expect(wrapper.vm.$el.querySelector('#entity-title').textContent)
+      expect(wrapper.vm.$el.querySelector('#entity-description').textContent)
         .toContain(`${mock.description} Incorporation Application`)
 
       expect(wrapper.vm.$el.querySelector('#entity-nr-number').textContent)
@@ -134,7 +134,7 @@ for (const mock of mockEntityInfo) {
         expect(wrapper.vm.$el.querySelector('#entity-legal-name').textContent)
           .toContain(`${mock.numberedDesc}`)
 
-        expect(wrapper.vm.$el.querySelector('#entity-title').textContent)
+        expect(wrapper.vm.$el.querySelector('#entity-description').textContent)
           .toContain(`${mock.description} Incorporation Application`)
       })
   })

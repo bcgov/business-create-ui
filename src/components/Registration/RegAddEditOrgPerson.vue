@@ -1,8 +1,8 @@
 <template>
-  <div id="add-edit-org-person">
+  <div id="reg-add-edit-org-person">
     <ConfirmDialog
       ref="reassignCPDialog"
-      attach="add-edit-org-person"
+      attach="reg-add-edit-org-person"
     />
 
     <v-expand-transition>
@@ -11,14 +11,9 @@
           <div class="meta-container">
 
             <!-- FUTURE: move header text to resource file so this component is generic -->
-            <label class="add-org-header" v-if="isOrg && isTypeBcomp">
-              <span v-if="activeIndex === -1">Add Corporation or Firm</span>
-              <span v-else>Edit Corporation or Firm</span>
-            </label>
-
-            <label class="add-org-header" v-if="isOrg && isTypeCoop">
-              <span v-if="activeIndex === -1">Add Organization</span>
-              <span v-else>Edit Organization</span>
+            <label class="add-org-header" v-if="isOrg">
+              <span v-if="activeIndex === -1">Add Business or Corporation</span>
+              <span v-else>Edit Business or Corporation</span>
             </label>
 
             <label class="add-org-header" v-if="isPerson">
@@ -27,11 +22,11 @@
             </label>
 
             <div class="meta-container__inner">
-              <v-card outlined class="message-box" v-if="isCompletingParty && !isRoleStaff && isTypeCoop">
+              <v-card outlined class="message-box" v-if="isCompletingParty && !isRoleStaff">
                 <p>
                   <strong>Important:</strong> The Completing Party information below is based on your
-                  BC Registries account information. Your name cannot be changed here. Name changes must
-                  be made through your account settings.
+                  BC Registries account information. Your name and email cannot be changed here. Name
+                  and email changes must be made through your account settings.
                 </p>
                 <p>
                   If you make changes to your address below, please update your address in the account
@@ -42,11 +37,11 @@
               <v-form
                 ref="addPersonOrgForm"
                 class="appoint-form"
-                :class="{ 'mt-8': isCompletingParty && !isRoleStaff && isTypeCoop}"
+                :class="{ 'mt-8': isCompletingParty && !isRoleStaff}"
                 v-model="addPersonOrgFormValid"
                 v-on:submit.prevent
               >
-                <!-- Person Name -->
+                <!-- Person's Name -->
                 <template v-if="isPerson">
                   <div class="font-weight-bold">Person's Name</div>
                   <div class="form__row three-column mt-4">
@@ -58,7 +53,7 @@
                       id="person__first-name"
                       v-model.trim="orgPerson.officer.firstName"
                       :rules="Rules.FirstNameRules"
-                      :readonly="isCompletingParty && !isRoleStaff && isTypeCoop"
+                      :readonly="isCompletingParty && !isRoleStaff"
                     />
                     <v-text-field
                       filled
@@ -67,7 +62,7 @@
                       id="person__middle-name"
                       v-model.trim="orgPerson.officer.middleName"
                       :rules="Rules.MiddleNameRules"
-                      :readonly="isCompletingParty && !isRoleStaff && isTypeCoop"
+                      :readonly="isCompletingParty && !isRoleStaff"
                     />
                     <v-text-field
                       filled
@@ -76,7 +71,7 @@
                       id="person__last-name"
                       v-model.trim="orgPerson.officer.lastName"
                       :rules="Rules.LastNameRules"
-                      :readonly="isCompletingParty && !isRoleStaff && isTypeCoop"
+                      :readonly="isCompletingParty && !isRoleStaff"
                     />
                   </div>
                 </template>
@@ -106,27 +101,17 @@
                         v-model="selectedRoles"
                         :value="RoleTypes.COMPLETING_PARTY"
                         :label="RoleTypes.COMPLETING_PARTY"
-                        :disabled="disableCompletingPartyRole"
+                        :disabled="true"
                         @change="assignCompletingPartyRole()"
                       />
                     </v-col>
 
-                    <v-col cols="4" v-if="showIncorporatorRole">
+                    <v-col cols="4" v-if="showProprietoryRole">
                       <v-checkbox
                         v-model="selectedRoles"
-                        :value="RoleTypes.INCORPORATOR"
-                        :label="RoleTypes.INCORPORATOR"
-                        :disabled="disableIncorporatorRole"
-                        :rules="roleRules"
-                      />
-                    </v-col>
-
-                    <v-col cols="4" v-if="showDirectorRole">
-                      <v-checkbox
-                        v-model="selectedRoles"
-                        :value="RoleTypes.DIRECTOR"
-                        :label="RoleTypes.DIRECTOR"
-                        :disabled="disableDirectorRole"
+                        :value="RoleTypes.PROPRIETOR"
+                        :label="RoleTypes.PROPRIETOR"
+                        :disabled="true"
                         :rules="roleRules"
                         @click="updateSameAsMailingChkBox()"
                       />
@@ -136,7 +121,7 @@
 
                 <!-- Mailing Address -->
                 <div class="font-weight-bold mt-8">Mailing Address</div>
-                <BaseAddress
+                <MailingAddress
                   ref="mailingAddressNew"
                   class="mt-6"
                   :editing="true"
@@ -146,8 +131,8 @@
                   @valid="updateMailingAddressValidity"
                 />
 
-                <!-- Delivery Address (for directors only) -->
-                <div class="form__row" v-if="isDirector">
+                <!-- Delivery Address -->
+                <div class="form__row">
                   <v-checkbox
                     class="inherit-checkbox"
                     hide-details
@@ -157,7 +142,7 @@
 
                   <template v-if="!inheritMailingAddress">
                     <div class="font-weight-bold mt-4">Delivery Address</div>
-                    <BaseAddress
+                    <DeliveryAddress
                       ref="deliveryAddressNew"
                       class="mt-6"
                       :editing="true"
@@ -213,15 +198,17 @@ import { PersonAddressSchema } from '@/schemas'
 import { Rules } from '@/rules'
 import { cloneDeep } from 'lodash'
 
+/** This is a sub-component of PeopleAndRoles. */
 @Component({
   components: {
-    BaseAddress,
-    ConfirmDialog
+    ConfirmDialog,
+    DeliveryAddress: BaseAddress,
+    MailingAddress: BaseAddress
   }
 })
-export default class OrgPerson extends Mixins(CommonMixin) {
-   // Refs
-   $refs!: {
+export default class RegAddEditOrgPerson extends Mixins(CommonMixin) {
+  // Refs
+  $refs!: {
     addPersonOrgForm: FormIF
     mailingAddressNew: any
     deliveryAddressNew: any
@@ -231,12 +218,10 @@ export default class OrgPerson extends Mixins(CommonMixin) {
   @Prop() readonly initialValue!: OrgPersonIF
   @Prop() readonly activeIndex: number
   @Prop() readonly existingCompletingParty: OrgPersonIF
-  @Prop() readonly addIncorporator: boolean
 
   @Getter getCurrentDate!: string
   @Getter isRoleStaff!: boolean
   @Getter isTypeBcomp!: boolean
-  @Getter isTypeCoop!: boolean
   @Getter getEntityType!: CorpTypeCd
 
   // Local properties
@@ -279,8 +264,8 @@ export default class OrgPerson extends Mixins(CommonMixin) {
   }
 
   /** Whether Director is checked. */
-  private get isDirector (): boolean {
-    return this.selectedRoles.includes(RoleTypes.DIRECTOR)
+  private get isProprietor (): boolean {
+    return this.selectedRoles.includes(RoleTypes.PROPRIETOR)
   }
 
   /** Whether current data object is a person. */
@@ -301,45 +286,11 @@ export default class OrgPerson extends Mixins(CommonMixin) {
     return (isRoleCompletingParty || (this.isRoleStaff && this.isPerson))
   }
 
-  /** Whether the Incorporator role should be shown. */
-  private get showIncorporatorRole (): boolean {
-    // show this role according to prop from parent parent component (ie, per resource file)
-    return this.addIncorporator
-  }
-
-  /** Whether the Director role should be shown. */
-  private get showDirectorRole (): boolean {
-    // only a person can be a director
-    return this.isPerson
-  }
-
-  /** Whether the Completing Party role should be disabled. */
-  private get disableCompletingPartyRole (): boolean {
+  /** Whether the Proprietor role should be shown. */
+  private get showProprietoryRole (): boolean {
+    const isRoleProprietor = !!this.orgPerson.roles.find(role => role.roleType === RoleTypes.PROPRIETOR)
     // only staff can edit Completing Party role
-    return !this.isRoleStaff
-  }
-
-  /** Whether the Incorporator role should be disabled. */
-  private get disableIncorporatorRole (): boolean {
-    // disable this role if it's the only role displayed
-    return (!this.showCompletingPartyRole && !this.showDirectorRole && this.showIncorporatorRole)
-  }
-
-  /** Whether the Director role should be disabled. */
-  private get disableDirectorRole (): boolean {
-    // disable this role if it's the only role displayed
-    return (!this.showCompletingPartyRole && !this.showIncorporatorRole && this.showDirectorRole)
-  }
-
-  /* coop and corp display delivery address by default */
-  private get showDeliveryAddressByDefault (): boolean {
-    return [
-      CorpTypeCd.COOP,
-      CorpTypeCd.BENEFIT_COMPANY,
-      CorpTypeCd.BC_CCC,
-      CorpTypeCd.BC_COMPANY,
-      CorpTypeCd.BC_ULC_COMPANY
-    ].includes(this.getEntityType)
+    return isRoleProprietor
   }
 
   /** Called when component is created. */
@@ -353,26 +304,21 @@ export default class OrgPerson extends Mixins(CommonMixin) {
 
       // set address properties
       this.inProgressMailingAddress = { ...this.orgPerson.mailingAddress }
-      if (this.isDirector) {
-        this.inProgressDeliveryAddress = { ...this.orgPerson.deliveryAddress }
-        // initialize inheritMailingAddress checkbox conditionally
-        this.updateSameAsMailingChkBox()
-      }
+      this.inProgressDeliveryAddress = { ...this.orgPerson.deliveryAddress }
+
+      // initialize inheritMailingAddress checkbox conditionally
+      this.updateSameAsMailingChkBox()
     }
   }
 
   /** decide if the "Delivery Address same as Mailing Address" check box should be checked */
   private updateSameAsMailingChkBox (): void {
-    if (!this.isDirector) {
-      return
-    }
-
     // if not already assigned, initialize delivery address to prevent template errors
     if (!this.inProgressDeliveryAddress) this.inProgressDeliveryAddress = cloneDeep(EmptyAddress)
 
     this.inheritMailingAddress = this.isSame(this.inProgressMailingAddress, this.inProgressDeliveryAddress)
 
-    if (this.inheritMailingAddress && this.showDeliveryAddressByDefault) {
+    if (this.inheritMailingAddress) {
       const isNew = this.isEmptyAddress(this.orgPerson.mailingAddress) &&
                     this.isEmptyAddress(this.orgPerson.deliveryAddress)
 
@@ -420,7 +366,6 @@ export default class OrgPerson extends Mixins(CommonMixin) {
     }
   }
 
-  // Methods
   private validateAddPersonOrgForm (): void {
     // validate the main form and address form(s)
     this.$refs.addPersonOrgForm.validate()
@@ -471,9 +416,7 @@ export default class OrgPerson extends Mixins(CommonMixin) {
       person.officer.id = uuidv4()
     }
     person.mailingAddress = { ...this.inProgressMailingAddress }
-    if (this.isDirector) {
-      person.deliveryAddress = this.setPersonDeliveryAddress()
-    }
+    person.deliveryAddress = this.setPersonDeliveryAddress()
     person.roles = this.setPersonRoles()
     return person
   }
@@ -490,11 +433,8 @@ export default class OrgPerson extends Mixins(CommonMixin) {
     if (this.isCompletingParty) {
       roles.push({ roleType: RoleTypes.COMPLETING_PARTY, appointmentDate: this.getCurrentDate })
     }
-    if (this.isIncorporator) {
-      roles.push({ roleType: RoleTypes.INCORPORATOR, appointmentDate: this.getCurrentDate })
-    }
-    if (this.isDirector) {
-      roles.push({ roleType: RoleTypes.DIRECTOR, appointmentDate: this.getCurrentDate })
+    if (this.isProprietor) {
+      roles.push({ roleType: RoleTypes.PROPRIETOR, appointmentDate: this.getCurrentDate })
     }
     return roles
   }
@@ -528,7 +468,7 @@ export default class OrgPerson extends Mixins(CommonMixin) {
   /** True if the form is valid. */
   private get isFormValid (): boolean {
     let isFormValid = (this.addPersonOrgFormValid && this.mailingAddressValid)
-    if (this.isDirector && !this.inheritMailingAddress) {
+    if (!this.inheritMailingAddress) {
       isFormValid = (isFormValid && this.deliveryAddressValid)
     }
     return isFormValid
@@ -571,10 +511,6 @@ li {
   padding-top: 0.25rem;
 }
 
-.btn-panel {
-  padding-top: 0.5rem;
-}
-
 .form__row.three-column {
   display: flex;
   flex-flow: row nowrap;
@@ -612,7 +548,7 @@ li {
   position: relative;
 
   > label:first-child {
-    font-weight: 700;
+    font-weight: bold;
   }
 
   &__inner {

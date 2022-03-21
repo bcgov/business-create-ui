@@ -5,10 +5,10 @@
       <v-form v-model="formValid" ref="form">
         <v-row no-gutters class="edit-section">
           <!-- Email Address -->
-          <v-col cols="12" sm="3" class="pr-4 pb-4">
+          <v-col cols="12" sm="3" class="pr-4">
             <label class="title-label">Email Address</label>
           </v-col>
-          <v-col cols="12" sm="9">
+          <v-col cols="12" sm="9" class="pt-4 pt-sm-0">
             <v-text-field
               filled
               label="Email Address"
@@ -21,10 +21,10 @@
           </v-col>
 
           <!-- Confirm Email -->
-          <v-col cols="12" sm="3" class="pr-4 pb-4">
+          <v-col cols="12" sm="3" class="pr-4">
             <label class="title-label">Confirm Email</label>
           </v-col>
-          <v-col cols="12" sm="9">
+          <v-col cols="12" sm="9" class="pt-4 pt-sm-0">
             <v-text-field
               filled
               label="Confirm Email Address"
@@ -37,10 +37,10 @@
           </v-col>
 
           <!-- Phone Number -->
-          <v-col cols="12" sm="3" class="pr-4 pb-4">
+          <v-col cols="12" sm="3" class="pr-4">
             <label class="title-label">Phone Number</label>
           </v-col>
-          <v-col cols="6" sm="4" class="pr-2">
+          <v-col cols="6" sm="4" class="pr-2 pt-4 pt-sm-0">
             <v-text-field
               filled
               label="Phone Number"
@@ -53,7 +53,7 @@
               id="txt-phone"
             />
           </v-col>
-          <v-col cols="6" sm="4" class="pl-2">
+          <v-col cols="6" sm="4" class="pl-2 pt-4 pt-sm-0">
             <v-text-field
               filled
               label="Extension (Optional)"
@@ -71,17 +71,17 @@
     <!-- SUMMARY SECTION -->
     <template v-else>
       <v-row no-gutters class="summary-section">
-        <v-col cols="12" sm="3" class="pr-4 pb-4">
+        <v-col cols="12" sm="3" class="pr-4">
           <label v-if="isIncorporationFiling">Registered Office Contact Information</label>
           <label v-else>Business Contact Information</label>
         </v-col>
 
-        <v-col cols="12" sm="4" class="pr-4">
+        <v-col cols="12" sm="4" class="pr-4 pt-4 pt-sm-0">
           <label class="email-header">Email Address</label>
           <div id="lbl-email">{{ !!contact.email ? contact.email : '(Not entered)' }}</div>
         </v-col>
 
-        <v-col cols="12" sm="4" class="pr-4">
+        <v-col cols="12" sm="4" class="pr-4 pt-4 pt-sm-0">
           <label class="phone-header">Phone Number</label>
           <div id="lbl-phone" v-if="!!contact.phone">{{ contact.phone }}
             <span v-if="!!contact.extension">Ext: {{ contact.extension }}</span>

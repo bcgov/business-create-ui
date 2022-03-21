@@ -55,7 +55,7 @@ h1, h2, h3, h4 {
 }
 
 h1, h2 {
-  font-weight: 700;
+  font-weight: bold;
 }
 
 h1 {
@@ -69,7 +69,7 @@ h2 {
 
 h3 {
   font-size: $px-15;
-  font-weight: 700;
+  font-weight: bold;
   line-height: 2.25rem;
 }
 
@@ -218,7 +218,7 @@ p {
 }
 
 .list-item__title {
-  font-weight: 700;
+  font-weight: bold;
 }
 
 .list-item__subtitle {

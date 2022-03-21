@@ -373,7 +373,7 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
 }
 
 label {
-  font-weight: 700;
+  font-weight: bold;
 }
 
 .radio-group {

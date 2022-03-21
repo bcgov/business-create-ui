@@ -9,13 +9,13 @@
       <div class="section-container">
         <!-- Name Request -->
         <v-row no-gutters id="name-request-info">
-          <v-col cols="12" sm="3" class="pr-4 pb-4">
+          <v-col cols="12" sm="3" class="pr-4">
             <label>
               <strong>Name Request</strong>
             </label>
           </v-col>
 
-          <v-col cols="12" sm="9">
+          <v-col cols="12" sm="9" class="pt-4 pt-sm-0">
             <ul class="name-request-list-items">
               <li id="name-request-title">
                 <strong>{{ getNameRequestNumber }}</strong> - {{ getNameRequestDetails.approvedName }}
@@ -35,13 +35,13 @@
       <!-- Name Request Applicant -->
       <div class="section-container">
         <v-row no-gutters id="name-request-applicant-info">
-          <v-col cols="12" sm="3" class="pr-4 pb-4">
+          <v-col cols="12" sm="3" class="pr-4">
             <label>
               <strong>Name Request Applicant</strong>
             </label>
           </v-col>
 
-          <v-col cols="12" sm="9">
+          <v-col cols="12" sm="9" class="pt-4 pt-sm-0">
             <ul class="applicant-list-items">
               <li><strong>Name:</strong> {{ applicantName() }}</li>
               <li><strong>Address:</strong> {{ applicantAddress() }}</li>
@@ -93,13 +93,13 @@
         :class="{ 'invalid-section': getShowErrors && !isValidNameTranslation }"
       >
         <v-row no-gutters id="name-translation-info">
-          <v-col cols="12" sm="3" class="pr-4 pb-4">
+          <v-col cols="12" sm="3" class="pr-4">
             <label>
               <strong>Name Translation</strong>
             </label>
           </v-col>
 
-          <v-col cols="12" sm="9">
+          <v-col cols="12" sm="9" class="pt-4 pt-sm-0">
             <v-checkbox
               class="pt-0 mt-0"
               v-model="hasNameTranslation"
@@ -113,12 +113,14 @@
             </v-checkbox>
 
             <template v-if="hasNameTranslation">
-              <p class="my-4">
-                <b>Note:</b> Name translations must use the Latin Alphabet (English, French, etc.). Names
-                that use other writing systems must spell the name phonetically in English or French.
+              <p class="mt-4 mb-0">
+                <b>Note:</b> Name translations must use the Latin Alphabet (English, French, etc.).
+                Names that use other writing systems must spell the name phonetically in English or
+                French.
               </p>
               <v-btn
                 outlined color="primary"
+                class="mt-6"
                 @click="isAddingNameTranslation = true"
                 :disabled="isAddingNameTranslation"
               >
@@ -131,8 +133,8 @@
 
         <!-- Name Translation Components -->
         <template v-if="hasNameTranslation">
-          <v-row no-gutters id="name-translation-container" class="mt-4">
-            <v-col cols="12" sm="3" class="pr-4" />
+          <v-row no-gutters id="name-translation-container" class="mt-6">
+            <v-col cols="12" sm="3" />
 
             <v-col cols="12" sm="9">
               <AddNameTranslation
@@ -164,13 +166,14 @@ import { getName } from 'country-list'
 import AddNameTranslation from '@/components/common/AddNameTranslation.vue'
 import ConfirmDialog from '@/dialogs/ConfirmDialog.vue'
 import ListNameTranslations from '@/components/common/ListNameTranslations.vue'
-import { CorpTypeCd, NameRequestStates } from '@/enums'
+import { BusinessTypes, CorpTypeCd, NameRequestStates } from '@/enums'
 import {
   NameRequestDetailsIF,
   NameRequestApplicantIF,
   ConfirmDialogType,
   ActionBindingIF,
-  NameTranslationIF
+  NameTranslationIF,
+  RegistrationStateIF
 } from '@/interfaces'
 import { DateMixin, EnumMixin } from '@/mixins'
 
@@ -208,6 +211,7 @@ export default class NameRequestInfo extends Mixins(DateMixin, EnumMixin) {
   @Getter getNameRequestDetails!: NameRequestDetailsIF
   @Getter getNameRequestApplicant!: NameRequestApplicantIF
   @Getter getNameTranslations!: NameTranslationIF[]
+  @Getter getRegistration!: RegistrationStateIF
   @Getter isTypeCoop: boolean
   @Getter isTypeSoleProp: boolean
   @Getter isTypePartnership: boolean
@@ -215,7 +219,10 @@ export default class NameRequestInfo extends Mixins(DateMixin, EnumMixin) {
 
   /** The entity title.  */
   private get getEntityTypeDescription (): string {
-    return `${this.getCorpTypeDescription(this.getEntityType)}`
+    let corpTypeDescription = this.getCorpTypeDescription(this.getEntityType)
+    const isSpDba = (this.getRegistration.businessType === BusinessTypes.DBA)
+    if (isSpDba) corpTypeDescription += ' or Doing Business As (DBA)'
+    return corpTypeDescription
   }
 
   /** The request type. */

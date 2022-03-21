@@ -20,8 +20,7 @@ export const LimitedCompanyResource: IncorporationResourceIF = {
       can have multiple roles; Corporations/firms can only be Incorporators.`,
     helpSection: null,
     addIncorporator: true,
-    addOrganization: true,
-    addProprietor: false,
+    addOrganization: 'Add a Corporation or Firm',
     rules: [
       {
         id: RuleIds.NUM_COMPLETING_PARTY,
@@ -73,7 +72,7 @@ export const LimitedCompanyResource: IncorporationResourceIF = {
         icon: 'mdi-close',
         iconColor: 'red',
         statements: [
-          `There are special rights or restrictions attached to any class or series of shares in the corporation’s
+          `There are special rights or restrictions attached to any class or series of shares in the corporation's
             authorized share structure.`,
           `You wish to change any of the standard provisions in the sample Articles.`
         ]

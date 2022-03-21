@@ -5,19 +5,19 @@
       <header>
         <h2>Review and Confirm</h2>
         <p class="mt-4">
-          Review the information in your registration. If you need to change or complete anything, return
-          to the step to make the necessary change.
+          Review the information in your registration. If you need to change or complete anything,
+          return to the step to make the necessary change.
         </p>
       </header>
 
       <!-- Your Business -->
-      <v-card flat class="mt-6">
+      <v-card id="your-business-vcard" flat class="mt-6">
         <CardHeader icon="mdi-domain" label="Your Business" />
         <DefineRegistrationSummary />
       </v-card>
 
       <!-- People and Roles -->
-      <v-card flat class="mt-10">
+      <v-card id="people-and-roles-vcard" flat class="mt-6">
         <CardHeader icon="mdi-account-multiple-plus" label="People and Roles" />
         <ListPeopleAndRoles :isSummary="true" />
       </v-card>
@@ -41,7 +41,7 @@
           :completingPartyEmail="getUserEmail"
           :invalidSection="isDocumentDeliveryInvalid"
           @valid="setDocumentOptionalEmailValidity($event)"
-          contactLabel="Registered Office"
+          contactLabel="Business Office"
         />
       </v-card>
     </section>
@@ -82,17 +82,19 @@
       </v-card>
     </section> -->
 
-    <!-- Staff Payment -->
-    <section id="staff-payment-section" class="mt-10" v-if="isRoleStaff">
-      <header>
-        <h2>Staff Payment</h2>
-        <p class="mt-4"></p>
-      </header>
+    <template v-if="isRoleStaff">
+      <!-- Staff Payment -->
+      <section id="staff-payment-section" class="mt-10">
+        <header>
+          <h2>Staff Payment</h2>
+          <p class="mt-4"></p>
+        </header>
 
-      <v-card flat class="mt-6">
-        <StaffPayment class="py-8 px-6" />
-      </v-card>
-    </section>
+        <v-card flat class="mt-6">
+          <StaffPayment class="py-8 px-6" />
+        </v-card>
+      </section>
+    </template>
   </div>
 </template>
 

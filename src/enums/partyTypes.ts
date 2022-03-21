@@ -1,4 +1,4 @@
 export enum PartyTypes {
-    PERSON = 'person',
-    ORGANIZATION = 'organization'
-  }
+  PERSON = 'person',
+  ORGANIZATION = 'organization'
+}

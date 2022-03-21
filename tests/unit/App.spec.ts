@@ -1591,16 +1591,10 @@ describe('Dissolution COOP - External User', () => {
 
 describe('Dissolution COOP - Staff User', () => {
   let wrapper: any
-  const { assign } = window.location
 
   beforeEach(async () => {
-    // mock the window.location.assign function
-    delete window.location
-    window.location = { assign: jest.fn() } as any
-
     store.state.stateModel.effectiveDateTime.isFutureEffective = false
     store.state.stateModel.staffPaymentStep.staffPayment.isPriority = false
-    await flushPromises()
 
     const sbcFeeSummaryGet = sinon.stub(sbcFeeSummaryAxios, 'get')
 
@@ -2020,7 +2014,6 @@ describe('Dissolution COOP - Staff User', () => {
   })
 
   afterEach(() => {
-    window.location.assign = assign
     sinon.restore()
     wrapper.destroy()
   })

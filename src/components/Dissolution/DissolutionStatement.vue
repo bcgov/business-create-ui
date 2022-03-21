@@ -34,11 +34,11 @@
     <!-- SUMMARY SECTION -->
     <template v-else>
       <v-row no-gutters class="summary-section">
-        <v-col cols="12" sm="3" class="inner-col-1 pr-4 pb-4">
+        <v-col cols="12" sm="3" class="inner-col-1 pr-4">
           <label class="summary-section-title">Dissolution Statement</label>
         </v-col>
 
-        <v-col cols="12" sm="9" class="inner-col-2">
+        <v-col cols="12" sm="9" class="inner-col-2 pt-4 pt-sm-0">
           <div
             class="dissolution-summary-description"
             v-html="dissolutionStatementDescription"
@@ -81,9 +81,11 @@ export default class DissolutionStatement extends Vue {
 
   /** The dissolution statement description. */
   private get dissolutionStatementDescription (): string {
-    return this.getDissolutionStatements
-      .find(x => x.key === this.getDissolutionStatementStep.dissolutionStatementType)?.value ||
-      '(Not entered)'
+    const value = this.getDissolutionStatements?.find(
+      x => x.key === this.getDissolutionStatementStep.dissolutionStatementType
+    )?.value
+
+    return value || '(Not entered)'
   }
 
   private changeDissolutionStatementType (): void {

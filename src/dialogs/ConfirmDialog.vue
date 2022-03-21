@@ -9,15 +9,15 @@
 
     <v-card>
       <v-card-title>{{ title }}</v-card-title>
-      <v-card-text class="black--text pre-wrap" v-show="!!message">{{ message }}</v-card-text>
+      <v-card-text class="pre-wrap" v-show="!!message">{{ message }}</v-card-text>
       <v-divider class="my-0" v-show="!!options.yes || !!options.no || !!options.cancel" />
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn id="dialog-yes-button" color="primary" text v-show="!!options.yes"
+        <v-btn text color="primary" class="dialog-yes-btn" v-if="!!options.yes"
           @click.native="onClickYes()">{{ options.yes }}</v-btn>
-        <v-btn id="dialog-no-button" color="primary" text v-show="!!options.no"
+        <v-btn text color="primary" class="dialog-no-btn" v-if="!!options.no"
           @click.native="onClickNo()">{{ options.no }}</v-btn>
-        <v-btn id="dialog-cancel-button" color="secondary" text v-show="!!options.cancel"
+        <v-btn text color="primary" class="dialog-cancel-btn" v-if="!!options.cancel"
           @click.native="onClickCancel()">{{ options.cancel }}</v-btn>
       </v-card-actions>
     </v-card>
@@ -131,3 +131,16 @@ export default class ConfirmDialog extends Vue {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+@import '@/assets/styles/theme.scss';
+
+.v-card__text {
+  color: $gray7 !important;
+}
+
+// bold the primary action button
+.dialog-yes-btn {
+  font-weight: bold;
+}
+</style>

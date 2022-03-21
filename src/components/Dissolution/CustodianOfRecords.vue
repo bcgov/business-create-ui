@@ -4,13 +4,13 @@
     <template v-if="!isSummary">
       <v-form ref="addCustodianForm" v-model="addCustodianValid">
         <v-row no-gutters class="edit-section">
-          <v-col cols="12" sm="3" class="pr-4 pb-4">
+          <v-col cols="12" sm="3" class="pr-4">
             <label class="title-label">
               {{ getCustodialRecordsResources.custodianTitle }}
             </label>
           </v-col>
 
-          <v-col cols="12" sm="9">
+          <v-col cols="12" sm="9" class="pt-4 pt-sm-0">
             <!-- COOP only name input -->
             <template v-if="isTypeCoop">
               <label class="item-label">Person's Name</label>
@@ -55,7 +55,7 @@
                 @change="syncCustodianPartyType"
               >
                 <!-- Person input -->
-                <v-radio :value=PartyTypes.PERSON>
+                <v-radio :value="PartyTypes.PERSON">
                   <template slot="label">
                     <span class="item-label" :class="{ 'title-label': isInError }">
                       Person's Name
@@ -97,7 +97,7 @@
                 </v-row>
 
                 <!-- Org input -->
-                <v-radio :value=PartyTypes.ORGANIZATION class="pt-2">
+                <v-radio :value="PartyTypes.ORGANIZATION" class="pt-2">
                   <template slot="label">
                     <span class="item-label" :class="{ 'title-label': isInError }">
                       Corporation or Firm Name
@@ -177,13 +177,13 @@
     <!-- SUMMARY SECTION -->
     <template v-else>
       <v-row no-gutters class="summary-section">
-        <v-col cols="12" sm="3" class="inner-col-1 pr-4 pb-4">
+        <v-col cols="12" sm="3" class="inner-col-1 pr-4">
           <label class="summary-section-title">Custodian of Records</label>
         </v-col>
 
         <v-col cols="12" sm="9" class="inner-col-2 mt-n4">
           <v-row no-gutters>
-            <v-col cols="12" sm="5" class="pt-4 pr-4">
+            <v-col cols="12" sm="5" class="pt-8 pt-sm-4 pr-4">
               <label class="summary-sub-label">Name</label>
               <div class="summary-text">{{ getCustodianName }}</div>
             </v-col>
@@ -503,8 +503,9 @@ export default class CustodianOfRecords extends Mixins(CommonMixin) {
 
 // italicize delivery instructions and remove top margin
 ::v-deep .base-address .address-block .delivery-instructions {
+  font-size: $px-14;
   font-style: italic;
-  margin-top: 0 !important;
+  margin-top: 0.5rem !important;
 }
 
 .inherit-checkbox {

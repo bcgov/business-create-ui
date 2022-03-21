@@ -1,10 +1,10 @@
 <template>
   <v-form ref="cooperativeTypeForm" id="cooperative-type">
     <v-row no-gutters>
-      <v-col cols="12" sm="3" class="pr-4 pb-4">
+      <v-col cols="12" sm="3" class="pr-4">
         <label><strong>Select Type</strong></label>
       </v-col>
-      <v-col cols="12" sm="9">
+      <v-col cols="12" sm="9" class="pt-4 pt-sm-0">
         <v-select
           filled
           id="cooperative-type-input"
@@ -23,7 +23,7 @@
 // Libraries
 import { Component, Emit, Watch, Mixins, Prop } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
-import { CoopType } from '@/enums'
+import { CoopTypes } from '@/enums'
 import { FormIF } from '@/interfaces'
 import { EnumMixin } from '@/mixins'
 
@@ -38,25 +38,25 @@ export default class CooperativeType extends Mixins(EnumMixin) {
   readonly showErrors: boolean
 
   // Global getter
-  @Getter getCooperativeType!: CoopType
+  @Getter getCooperativeType!: CoopTypes
 
   // Local properties
   private readonly items: Array<any> = [
     {
-      value: CoopType.COMMUNITY_SERVICE_COOPERATIVE,
-      text: this.coopTypeToDescription(CoopType.COMMUNITY_SERVICE_COOPERATIVE)
+      value: CoopTypes.COMMUNITY_SERVICE_COOPERATIVE,
+      text: this.coopTypeToDescription(CoopTypes.COMMUNITY_SERVICE_COOPERATIVE)
     },
     {
-      value: CoopType.ORDINARY_COOPERATIVE,
-      text: this.coopTypeToDescription(CoopType.ORDINARY_COOPERATIVE)
+      value: CoopTypes.ORDINARY_COOPERATIVE,
+      text: this.coopTypeToDescription(CoopTypes.ORDINARY_COOPERATIVE)
     },
     {
-      value: CoopType.HOUSING_COOPERATIVE,
-      text: this.coopTypeToDescription(CoopType.HOUSING_COOPERATIVE)
+      value: CoopTypes.HOUSING_COOPERATIVE,
+      text: this.coopTypeToDescription(CoopTypes.HOUSING_COOPERATIVE)
     }
   ]
 
-  private cooperativeType: CoopType = null
+  private cooperativeType: CoopTypes = null
 
   // Validation rules
   readonly cooperativeTypeRules: Array<Function> = [
@@ -76,7 +76,7 @@ export default class CooperativeType extends Mixins(EnumMixin) {
   // Events
   @Watch('cooperativeType')
   @Emit('hasCooperativeType')
-  private addCooperativeType (): CoopType {
+  private addCooperativeType (): CoopTypes {
     return this.cooperativeType
   }
 }

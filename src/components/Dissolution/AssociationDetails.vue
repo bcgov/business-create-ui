@@ -9,13 +9,9 @@
         </v-col>
 
         <v-col cols="12" sm="9" class="mt-n1">
-          <label class="company-name">{{ entityName }}</label>
-          <div class="my-1">
-            <span>{{ entityDescription }}</span>
-          </div>
-          <div>
-            <span>{{ getBusinessId }}</span>
-          </div>
+          <label id="company-name">{{ entityName }}</label>
+          <div class="my-1">{{ entityDescription }}</div>
+          <div>{{ getBusinessId }}</div>
         </v-col>
       </v-row>
     </div>
@@ -25,11 +21,11 @@
     <!-- Address -->
     <div class="section-container">
       <v-row no-gutters>
-        <v-col cols="12" sm="3" class="pr-4 pb-4">
+        <v-col cols="12" sm="3" class="pr-4">
           <label>Address</label>
         </v-col>
 
-        <v-col cols="12" sm="4" class="pr-4">
+        <v-col cols="12" sm="4" class="pr-4 pt-4 pt-sm-0">
           <label class="mailing-address-header">Mailing Address</label>
           <MailingAddress
             v-if="!isEmptyAddress(getBusiness.officeAddress.mailingAddress)"
@@ -39,7 +35,7 @@
           <div v-else>(Not entered)</div>
         </v-col>
 
-        <v-col cols="12" sm="4" class="pr-4">
+        <v-col cols="12" sm="4" class="pr-4 pt-4 pt-sm-0">
           <label class="delivery-address-header">Delivery Address</label>
           <DeliveryAddress
             v-if="!isEmptyAddress(getBusiness.officeAddress.deliveryAddress) &&
@@ -94,7 +90,7 @@ import { ContactInfo } from '@bcrs-shared-components/contact-info'
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
 import OfficeAddresses from '@/components/common/OfficeAddresses.vue'
 import { CommonMixin, EnumMixin } from '@/mixins'
-import { CoopType, CorpTypeCd } from '@/enums'
+import { CoopTypes, CorpTypeCd } from '@/enums'
 import { isEmpty } from 'lodash'
 
 @Component({
@@ -116,7 +112,7 @@ export default class AssociationDetails extends Mixins(CommonMixin, EnumMixin) {
   @Getter getBusiness!: BusinessIF
   @Getter getBusinessContact!: BusinessContactIF
   @Getter getCompanyDisplayName!: string
-  @Getter getCooperativeType!: CoopType
+  @Getter getCooperativeType!: CoopTypes
   @Getter getBusinessLegalName!: string
   @Getter isPremiumAccount!: boolean
   @Getter isTypeCoop!: boolean
@@ -162,8 +158,9 @@ export default class AssociationDetails extends Mixins(CommonMixin, EnumMixin) {
   font-size: $px-14;
 }
 
-.company-name {
+#company-name {
   font-size: $px-22;
+  color: $gray9;
 }
 
 // add missing whitespace between title and addresses

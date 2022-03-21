@@ -12,13 +12,11 @@ export const GeneralPartnershipResource: RegistrationResourceIF = {
     filingTypeCode: FilingCodes.REGISTRATION_GP
   }],
   peopleAndRoles: {
-    header: '1. Add People or Corporations/Firms to your Application',
-    blurb: `Add the people and Corporations/firms who will have a role in your company. People
-      can have multiple roles; Corporations/firms can only be Incorporators.`,
+    header: '1. Add People, Business(es), and/or Corporation(s) to your Registration',
+    blurb: 'Add the people, business(es), and/or corporation(s) who will have a role in your ' +
+      'business. A person can be both the Completing Party and a Partner; a business and a ' +
+      'corporation can only be a Partner.',
     helpSection: null,
-    addIncorporator: false,
-    addOrganization: true,
-    addProprietor: true,
     rules: [
       {
         id: RuleIds.NUM_COMPLETING_PARTY,
@@ -26,9 +24,9 @@ export const GeneralPartnershipResource: RegistrationResourceIF = {
         test: (num) => { return (num === 1) }
       },
       {
-        id: RuleIds.NUM_PROPRIETOR,
-        text: 'The Proprietor (an individual or a business)',
-        test: (num) => { return (num === 1) }
+        id: RuleIds.NUM_PROPRIETORS,
+        text: 'At least two Partners',
+        test: (num) => { return (num >= 2) }
       }
     ]
   },
@@ -36,9 +34,9 @@ export const GeneralPartnershipResource: RegistrationResourceIF = {
     completingPartyStatement: {
       certifyStatementHeader: null,
       certifyStatements: [],
-      certifyClause: 'Note: It is an offence to make or assist in making a false or ' +
-        'misleading statement in a record filed under the Partnership Act. A person who ' +
-        'commits this offence is subject to a maximum fine of $5,000.',
+      certifyClause: 'Note: It is an offence to make or assist in making a false or misleading ' +
+        'statement in a record filed under the Partnership Act. A person who commits this ' +
+        'offence is subject to a maximum fine of $5,000.',
       entityDisplay: GetCorpFullDescription(CorpTypeCd.PARTNERSHIP)
     }
   }

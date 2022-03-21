@@ -26,25 +26,27 @@
         <span v-else>Hide Help</span>
       </span>
 
-      <section v-show="helpToggle" class="affidavit-help">
-        <header id="affidavit-help-header">
-          <h2>Help with Affidavit</h2>
-        </header>
+      <v-expand-transition>
+        <section v-show="helpToggle" class="affidavit-help">
+          <header id="affidavit-help-header">
+            <h2>Help with Affidavit</h2>
+          </header>
 
-        <p>{{getAffidavitResources.helpSection.header}}</p>
-        <ul class="mt-6">
-          <li
-            v-for="(item, index) in getAffidavitResources.helpSection.helpText"
-            class="mt-2"
-            :key="index"
-          >
-            <v-icon class="mr-2">mdi-circle-small</v-icon>
-            <span class="break-spaces">{{item}}</span>
-          </li>
-        </ul>
-        <p class="mt-4"><strong>Note:</strong> {{ getAffidavitResources.helpSection.note }}</p>
-        <u class="help-btn" @click="helpToggle = !helpToggle"><small>Hide Help</small></u>
-      </section>
+          <p>{{getAffidavitResources.helpSection.header}}</p>
+          <ul class="mt-6">
+            <li
+              v-for="(item, index) in getAffidavitResources.helpSection.helpText"
+              class="mt-2"
+              :key="index"
+            >
+              <v-icon class="mr-2">mdi-circle-small</v-icon>
+              <span class="break-spaces">{{item}}</span>
+            </li>
+          </ul>
+          <p class="mt-4"><strong>Note:</strong> {{ getAffidavitResources.helpSection.note }}</p>
+          <u class="help-btn" @click="helpToggle = !helpToggle"><small>Hide Help</small></u>
+        </section>
+      </v-expand-transition>
     </div>
 
     <!-- Sample Affidavit -->
@@ -138,10 +140,10 @@
       <div class="mt-4" :class="{ 'invalid-section': getShowErrors && !hasValidUploadFile }">
         <v-card flat id="upload-affidavit-card" class="py-8 px-6">
           <v-row no-gutters>
-            <v-col cols="12" sm="3" class="pr-4 pb-4">
+            <v-col cols="12" sm="3" class="pr-4">
               <label class="upload-affidavit-title">Upload Affidavit</label>
             </v-col>
-            <v-col cols="12" sm="9">
+            <v-col cols="12" sm="9" class="pt-4 pt-sm-0">
               <FileUploadPreview
                 :inputFileLabel="INPUT_FILE_LABEL"
                 :maxSize="MAX_FILE_SIZE"

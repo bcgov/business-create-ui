@@ -5,8 +5,8 @@
       <header>
         <h2>Review and Confirm</h2>
         <p class="mt-4">
-          Review the information in your filing. If you need to change or complete anything, return
-          to the step to make the necessary change.
+          Review the information in your filing. If you need to change or complete anything,
+          return to the step to make the necessary change.
         </p>
       </header>
 
@@ -90,11 +90,11 @@
                 :class="{ 'invalid': isDissolutionDateTimeInvalid }"
               >
                 <v-row no-gutters>
-                  <v-col cols="3" class="inner-col-1 pr-4 pb-4">
+                  <v-col cols="3" class="inner-col-1 pr-4">
                     <label class="font-weight-bold">Dissolution Date and Time</label>
                   </v-col>
 
-                  <v-col cols="9" class="inner-col-2">
+                  <v-col cols="9" class="inner-col-2 pt-4 pt-sm-0">
                     <p id="effective-date-time-instructions" class="info-text">
                       Select the date and time of the dissolution of the Company. You may select a date
                       up to 10 days in the future (note: there is an <strong>additional fee of
@@ -128,7 +128,7 @@
       </v-card>
 
       <!-- Resolution -->
-      <v-card flat id="resolution-summary" class="mt-10">
+      <v-card flat id="resolution-summary" class="mt-6">
         <header class="review-header">
           <v-icon class="ml-2" color="appDkBlue">mdi-handshake</v-icon>
           <label class="font-weight-bold pl-2">{{getCreateResolutionResource.reviewConfirmHeader}}</label>
@@ -138,7 +138,7 @@
       </v-card>
 
       <!-- Affidavit -->
-      <v-card flat id="affidavit-summary" class="mt-10">
+      <v-card flat id="affidavit-summary" class="mt-6">
         <header class="review-header">
           <v-icon class="ml-2" color="appDkBlue">mdi-book-variant-multiple</v-icon>
           <label class="font-weight-bold pl-2">Affidavit</label>
@@ -153,8 +153,14 @@
         </section>
 
         <section v-else class="section-container">
-          <v-icon class="ml-1 pr-2" color="successCheckmark">mdi-check</v-icon>
-          <span id="file-name" class="break-spaces">{{ affidavitSummary }}</span>
+          <v-row no-gutters>
+            <v-col cols="1">
+              <v-icon color="successCheckmark">mdi-check</v-icon>
+            </v-col>
+            <v-col cols="11">
+              <span class="break-spaces">{{ affidavitSummary }}</span>
+            </v-col>
+          </v-row>
         </section>
       </v-card>
     </section>
@@ -459,6 +465,7 @@ h2::before {
   color: $gray7;
 }
 
+// FUTURE: should this be in CompleteResolutionSummary component?
 .upload-success-message {
   color: $gray7;
 

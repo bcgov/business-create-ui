@@ -95,13 +95,22 @@
               <span>
                 <v-menu offset-y>
                   <template v-slot:activator="{ on }">
-                    <v-btn text small color="primary" class="more-actions-btn" v-on="on">
+                    <v-btn
+                      text
+                      small
+                      v-on="on"
+                      color="primary"
+                      class="more-actions-btn"
+                    >
                       <v-icon>mdi-menu-down</v-icon>
                     </v-btn>
                   </template>
-                  <v-list class="more-actions-btn">
+                  <v-list class="more-actions-list">
                     <v-list-item @click="confirmRemove(index)">
-                      <v-list-item-title><v-icon>mdi-delete</v-icon>Remove</v-list-item-title>
+                      <v-list-item-title>
+                        <v-icon small color="primary">mdi-delete</v-icon>
+                        <span class="ml-2">Remove</span>
+                      </v-list-item-title>
                     </v-list-item>
                   </v-list>
                 </v-menu>
@@ -125,6 +134,10 @@ import { CommonMixin } from '@/mixins'
 import { OrgPersonIF, PeopleAndRoleIF } from '@/interfaces'
 import { PartyTypes, RouteNames } from '@/enums'
 
+/**
+ * This is a sub-component of PeopleAndRoles and
+ * also used for Incorporation and Registration summaries.
+ */
 @Component({
   components: {
     DeliveryAddress: BaseAddress,
@@ -156,24 +169,21 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
     return !this.getAddPeopleAndRoleStep.valid
   }
 
-  /** Returns true officer is a person. */
-  private isPerson (orgPerson: any): boolean {
+  /** Returns true if org-person is a person. */
+  private isPerson (orgPerson: OrgPersonIF): boolean {
     return (orgPerson.officer?.partyType === PartyTypes.PERSON)
   }
 
-  /** Returns true if officer is an organization (corporation/firm). */
-  private isOrg (orgPerson: any): boolean {
+  /** Returns true if org-person is an organization (corporation/firm). */
+  private isOrg (orgPerson: OrgPersonIF): boolean {
     return (orgPerson.officer?.partyType === PartyTypes.ORGANIZATION)
   }
 
-  /**
-   * Determine if Corporation/Firm or Person.
-   * @param filing The filing body which contains the name/title.
-   * @returns The appropriate Corporation or Person name.
-   */
-  private formatName (filing: any): string {
-    return filing?.officer?.organizationName ? filing?.officer?.organizationName
-      : `${filing.officer.firstName} ${filing.officer.middleName || ''} ${filing.officer.lastName}`
+  /** Formats the org-person's name. */
+  private formatName (orgPerson: OrgPersonIF): string {
+    return orgPerson?.officer?.organizationName
+      ? orgPerson?.officer?.organizationName
+      : `${orgPerson.officer.firstName} ${orgPerson.officer.middleName || ''} ${orgPerson.officer.lastName}`
   }
 
   /**
@@ -246,9 +256,15 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
   }
 }
 
+// style the more actions buttons
 .v-list-item {
   min-height: 0;
-  padding: 0 1rem 0 0.5rem;
+  padding: 0.5rem 1rem;
+
+  .v-list-item__title {
+    font-size: $px-14;
+    color: $app-blue;
+  }
 }
 
 .col {
@@ -266,11 +282,20 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
   color: $BCgovGold9;
 }
 
+// move icons up a bit to line up with text
 .v-icon {
   &.mdi-information-outline,
   &.mdi-account,
-  &.mdi-domain {
+  &.mdi-domain,
+  &.mdi-delete {
     margin-top: -2px;
   }
+}
+
+// italicize delivery instructions and remove top margin
+::v-deep .base-address .address-block .delivery-instructions {
+  font-size: $px-14;
+  font-style: italic;
+  margin-top: 0.5rem !important;
 }
 </style>

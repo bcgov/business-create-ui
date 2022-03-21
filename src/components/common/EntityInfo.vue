@@ -1,40 +1,38 @@
 <template>
-  <div id="entity-info">
-    <v-container>
-      <v-row no-gutters class="pt-3 pb-3">
-        <v-col cols="12" md="9" class="pr-5">
-          <div id="nr-header" v-show="isEntityType">
-            <span class="header-title" id="entity-legal-name">{{ legalName || getNumberedEntityName }}</span>
+  <v-container id="entity-info">
+    <v-row no-gutters>
+      <v-col cols="12" md="9">
+        <div v-show="isEntityType" id="entity-legal-name">
+          {{ legalName || getNumberedEntityName }}
           </div>
 
-          <div id="entity-title" class="business-info">
-            <span>{{ entityTitle }}</span>
+        <div id="entity-description">
+          {{ entityDescription }}
+        </div>
+
+        <div class="mt-5" />
+      </v-col>
+
+      <v-col cols="12" md="3">
+        <div v-if="getNameRequestNumber" id="entity-nr-number">
+          <span class="business-info-label">Name Request:</span>
+          {{ getNameRequestNumber }}
+        </div>
+
+        <template v-if="!isRegistrationFiling">
+          <div id="entity-business-email">
+            <span class="business-info-label">Email:</span>
+            {{ getEmail || 'Not Available' }}
           </div>
 
-          <div class="mt-5" />
-        </v-col>
-
-        <v-col cols="12" md="3" class="business-info">
-          <div v-if="getNameRequestNumber" id="entity-nr-number">
-            <span class="font-weight-bold business-info-label">Name Request:</span>
-            {{ getNameRequestNumber }}
+          <div id="entity-business-phone">
+            <span class="business-info-label">Phone:</span>
+            {{ getPhone || 'Not Available' }}
           </div>
-
-          <template v-if="!isRegistrationFiling">
-            <div id="entity-business-email">
-              <span class="font-weight-bold business-info-label">Email:</span>
-              {{ getEmail || 'Not Available' }}
-            </div>
-
-            <div id="entity-business-phone">
-              <span class="font-weight-bold business-info-label">Phone:</span>
-              {{ getPhone || 'Not Available' }}
-            </div>
-          </template>
-        </v-col>
-      </v-row>
-    </v-container>
-  </div>
+        </template>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script lang="ts">
@@ -43,8 +41,8 @@ import { Component, Mixins } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 
 // Interfaces & enums
-import { CorpTypeCd, FilingNames, FilingTypes } from '@/enums'
-import { BusinessContactIF } from '@/interfaces'
+import { BusinessTypes, CorpTypeCd, FilingNames, FilingTypes } from '@/enums'
+import { BusinessContactIF, RegistrationStateIF } from '@/interfaces'
 
 // Modules
 import { EnumMixin } from '@/mixins'
@@ -61,13 +59,17 @@ export default class EntityInfo extends Mixins(EnumMixin) {
   @Getter getNameRequestNumber!: string
   @Getter getApprovedName!: string
   @Getter getFilingType!: FilingTypes
+  @Getter getRegistration!: RegistrationStateIF
   @Getter isEntityType!: boolean
   @Getter isIncorporationFiling!: boolean
   @Getter isRegistrationFiling!: boolean
 
-  /** The entity application title.  */
-  get entityTitle (): string {
-    return `${this.getCorpTypeDescription(this.getEntityType)} ${this.getFilingName}`
+  /** The entity description.  */
+  get entityDescription (): string {
+    let corpTypeDescription = this.getCorpTypeDescription(this.getEntityType)
+    const isSpDba = (this.getRegistration.businessType === BusinessTypes.DBA)
+    if (isSpDba) corpTypeDescription += ' / Doing Business As (DBA)'
+    return `${corpTypeDescription} ${this.getFilingName}`
   }
 
   /** The numbered entity name. */
@@ -106,52 +108,19 @@ export default class EntityInfo extends Mixins(EnumMixin) {
 @import '@/assets/styles/theme.scss';
 
 #entity-info {
-  background: $BCgovInputBG;
-
-  .breadcrumb {
-    padding: 0;
-  }
-
-  .v-breadcrumbs li {
-    font-size: $px-12;
-  }
-
-  ::v-deep {
-    .v-breadcrumbs a {
-      color: $gray8;
-    }
-
-    .v-breadcrumbs a:hover {
-      color: $app-blue;
-    }
-  }
-}
-
-#entity-info-header {
-  padding: 0!important;
-}
-
-#entity-title {
   color: $gray7;
+  background: $BCgovInputBG;
+  font-size: $px-14;
 }
 
-.container {
-  padding-top: .5rem;
-  padding-bottom: .5rem;
-}
-
-.header-title {
+#entity-legal-name {
+  color: $gray9;
   font-size: $px-20;
   font-weight: bold;
-  color: $gray9;
 }
 
-.business-info {
-  color: $gray7;
-  font-size: $px-14;
-
-  .business-info-label {
-    color: $gray9;
-  }
+.business-info-label {
+  color: $gray9;
+  font-weight: bold;
 }
 </style>

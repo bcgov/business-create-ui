@@ -9,7 +9,7 @@ import {
   ShareClassIF,
   SpecialResolutionIF
 } from '@/interfaces'
-import { CorpTypeCd, DissolutionStatementTypes, DissolutionTypes } from '@/enums'
+import { BusinessTypes, CorpTypeCd, DissolutionStatementTypes, DissolutionTypes } from '@/enums'
 import { RegistrationNameRequestIF } from '../store-interfaces/state-interfaces/registration-state-interface'
 
 /** Interface for incorporation filing data saved to the Legal API. */
@@ -93,6 +93,7 @@ export interface RegistrationFilingIF {
       naics?: NaicsIF
     }
     businessAddress: BusinessAddressIF
+    businessType: BusinessTypes
     contactPoint: {
       email: string
       extension?: number

@@ -8,13 +8,14 @@ interface Rule {
 
 export interface PeopleAndRolesResourceIF {
   header: string
-  blurb: string
+  blurb: string | Array<string>
   helpSection: {
     header: string
     helpText: Array<string>
   }
-  addIncorporator: boolean
-  addOrganization: boolean
-  addProprietor: boolean
+  blurb2?: string | Array<string>
+  addIncorporator?: boolean
+  addOrganization?: string
+  addBusiness?: boolean
   rules: Array<Rule>
 }

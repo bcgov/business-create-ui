@@ -171,6 +171,7 @@ export const stateModel: StateModelIF = {
     businessAddress: null,
     feeAcknowledgement: false,
     naics: { ...EmptyNaics },
-    nameRequest: { ...EmptyRegistrationNameRequest }
+    nameRequest: { ...EmptyRegistrationNameRequest },
+    businessType: null
   }
 }
