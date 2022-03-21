@@ -90,7 +90,12 @@
       <!-- Don't show page if an error dialog is displayed. -->
       <main v-if="!isErrorDialog">
         <BreadCrumb :breadcrumbs="breadcrumbs" />
-        <EntityInfo class="py-5 px-3" />
+
+        <div id="entity-info-wrapper">
+          <v-container class="py-5">
+            <EntityInfo />
+          </v-container>
+        </div>
 
         <v-container id="container-main" class="py-8">
           <v-row>
@@ -133,10 +138,14 @@
           </v-row>
         </v-container>
 
-        <Actions
-          :key="$route.path"
-          @goToDashboard="goToDashboard()"
-        />
+        <div id="actions-wrapper">
+          <v-container class="py-8 px-4">
+            <Actions
+              :key="$route.path"
+              @goToDashboard="goToDashboard()"
+            />
+          </v-container>
+        </div>
       </main>
     </div>
 
@@ -958,9 +967,16 @@ export default class App extends Mixins(
 </script>
 
 <style lang="scss" scoped>
+@import '@/assets/styles/theme.scss';
+
 // display drop-down menu on top of stepper and fee summary
 ::v-deep .app-header {
   z-index: 3;
+}
+
+#entity-info-wrapper,
+#actions-wrapper {
+  background-color: $BCgovInputBG;
 }
 
 aside {

@@ -1,5 +1,5 @@
 <template>
-  <v-container id="entity-info">
+  <div id="entity-info">
     <v-row no-gutters>
       <v-col cols="12" md="9">
         <div v-show="isEntityType" id="entity-legal-name">
@@ -32,7 +32,7 @@
         </template>
       </v-col>
     </v-row>
-  </v-container>
+  </div>
 </template>
 
 <script lang="ts">
@@ -109,7 +109,7 @@ export default class EntityInfo extends Mixins(EnumMixin) {
 
 #entity-info {
   color: $gray7;
-  background: $BCgovInputBG;
+  background-color: $BCgovInputBG;
   font-size: $px-14;
 }
 
