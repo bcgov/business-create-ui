@@ -16,7 +16,9 @@
       </header>
 
       <v-card flat class="mt-5">
-        <AssociationDetails />
+        <AssociationDetails
+        :entityLabel= "isTypeCoop ? 'Cooperative Association' : 'Company'"
+        />
       </v-card>
     </section>
 

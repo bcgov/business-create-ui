@@ -30,7 +30,10 @@
 
           <!-- Association Details -->
           <section>
-            <AssociationDetails :isSummary="true"/>
+            <AssociationDetails
+              :entityLabel= "isTypeCoop ? 'Cooperative Association' : 'Company'"
+              :isSummary="true"
+              />
           </section>
 
           <!-- Dissolution Statement -->
