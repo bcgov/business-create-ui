@@ -76,6 +76,7 @@
       </v-btn>
 
       <v-btn
+        v-if="!validNumProprietors"
         id="btn-add-person"
         outlined
         color="primary"
@@ -88,6 +89,7 @@
       </v-btn>
 
       <v-btn
+        v-if="!validNumProprietors"
         id="btn-add-organization"
         outlined
         color="primary"
@@ -131,7 +133,7 @@ import { cloneDeep } from 'lodash'
 import { AddressIF, EmptyAddress, EmptyOrgPerson } from '@/interfaces'
 import { PartyTypes, RoleTypes } from '@/enums'
 import { PeopleRolesMixin } from '@/mixins'
-import ConfirmDialog from '@/dialogs/ConfirmDialog.vue'
+import { ConfirmDialog } from '@bcrs-shared-components/confirm-dialog'
 import HelpSection from '@/components/common/HelpSection.vue'
 import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
 import RegAddEditOrgPerson from '@/components/Registration/RegAddEditOrgPerson.vue'
@@ -158,7 +160,19 @@ export default class RegPeopleAndRoles extends Mixins(PeopleRolesMixin) {
   // NB: see mixin for common methods, getters, etc.
   //
 
-  private addOrgPerson (roleType: RoleTypes, partyType: PartyTypes): void {
+  protected async addOrgPerson (roleType: RoleTypes, partyType: PartyTypes): Promise<void> {
+    const isProprietor = (roleType === RoleTypes.PROPRIETOR)
+    const isPerson = (partyType === PartyTypes.PERSON)
+    const isOrganization = (partyType === PartyTypes.ORGANIZATION)
+
+    if (isProprietor && isPerson) {
+      if (!await this.confirmAddProprietorPerson()) return
+    }
+
+    if (isProprietor && isOrganization) {
+      if (!await this.confirmAddProprietorOrganization()) return
+    }
+
     // first assign empty org/person object
     this.currentOrgPerson = cloneDeep(EmptyOrgPerson)
 

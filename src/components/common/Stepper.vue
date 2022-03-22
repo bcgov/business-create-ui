@@ -54,23 +54,22 @@ import { RegistrationStateIF } from '@/interfaces'
 
 @Component({})
 export default class Stepper extends Vue {
-  @Getter getSteps!: Array<any>
-  @Getter isBusySaving!: boolean
-  @Getter isDefineCompanyValid!: boolean
-  @Getter isAddPeopleAndRolesValid!: boolean
-  @Getter isRulesValid!: boolean
-  @Getter isMemorandumValid!: boolean
-  @Getter isCreateShareStructureValid!: boolean
-  @Getter isIncorporationAgreementValid!: boolean
-
-  @Getter isDissolutionDefineDissolutionValid!: boolean
-  @Getter isResolutionValid!: boolean
-  @Getter isAffidavitValid!: boolean
-
-  @Getter isApplicationValid!: boolean
-  @Getter getValidateSteps!: boolean
-
   @Getter getRegistration!: RegistrationStateIF
+  @Getter getSteps!: Array<any>
+  @Getter getValidateSteps!: boolean
+  @Getter isAddPeopleAndRolesValid!: boolean
+  @Getter isAffidavitValid!: boolean
+  @Getter isBusySaving!: boolean
+  @Getter isCreateShareStructureValid!: boolean
+  @Getter isDefineCompanyValid!: boolean
+  @Getter isDissolutionDefineDissolutionValid!: boolean
+  @Getter isDissolutionValid!: boolean
+  @Getter isIncorporationAgreementValid!: boolean
+  @Getter isIncorporationApplicationValid!: boolean
+  @Getter isMemorandumValid!: boolean
+  @Getter isRegistrationValid!: boolean
+  @Getter isResolutionValid!: boolean
+  @Getter isRulesValid!: boolean
 
   /** Returns true if the step route is valid. */
   private isValid (route: RouteNames): boolean {
@@ -79,18 +78,18 @@ export default class Stepper extends Vue {
       case RouteNames.INCORPORATION_DEFINE_COMPANY: return this.isDefineCompanyValid
       case RouteNames.INCORPORATION_MEMORANDUM: return this.isMemorandumValid
       case RouteNames.INCORPORATION_PEOPLE_ROLES: return this.isAddPeopleAndRolesValid
-      case RouteNames.INCORPORATION_REVIEW_CONFIRM: return this.isApplicationValid
+      case RouteNames.INCORPORATION_REVIEW_CONFIRM: return this.isIncorporationApplicationValid
       case RouteNames.INCORPORATION_RULES: return this.isRulesValid
       case RouteNames.INCORPORATION_SHARE_STRUCTURE: return this.isCreateShareStructureValid
 
       case RouteNames.DISSOLUTION_AFFIDAVIT: return this.isAffidavitValid
       case RouteNames.DISSOLUTION_DEFINE_DISSOLUTION: return this.isDissolutionDefineDissolutionValid
       case RouteNames.DISSOLUTION_RESOLUTION: return this.isResolutionValid
-      case RouteNames.DISSOLUTION_REVIEW_CONFIRM: return this.isApplicationValid
+      case RouteNames.DISSOLUTION_REVIEW_CONFIRM: return this.isDissolutionValid
 
       case RouteNames.REGISTRATION_DEFINE_BUSINESS: return this.getRegistration.defineBusinessValid
       case RouteNames.REGISTRATION_PEOPLE_ROLES: return this.isAddPeopleAndRolesValid
-      case RouteNames.REGISTRATION_REVIEW_CONFIRM: return this.isApplicationValid
+      case RouteNames.REGISTRATION_REVIEW_CONFIRM: return this.isRegistrationValid
     }
     return false
   }
@@ -113,7 +112,7 @@ export default class Stepper extends Vue {
   justify-content: space-evenly;
   margin: 0;
   padding: 0;
-  background: $BCgovInputBG;
+  background-color: $BCgovInputBG;
 }
 
 .v-btn:before {
@@ -151,7 +150,7 @@ export default class Stepper extends Vue {
 
   .step__icon {
     color: $BCgovInputBG;
-    background: inherit;
+    background-color: inherit;
   }
 }
 
@@ -198,7 +197,7 @@ export default class Stepper extends Vue {
   position: absolute;
   margin-top: -5px;
   margin-left: -16px;
-  background: $BCgovInputBG;
+  background-color: $BCgovInputBG;
   border-radius: 50%;
   z-index: 1; // on top of step line and step btn
 }

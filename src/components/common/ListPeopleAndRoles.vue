@@ -1,12 +1,5 @@
 <template>
   <div id="list-people-roles">
-    <ConfirmRemoveDialog
-      :dialog="dialog"
-      attach="#list-people-roles"
-      @confirm="emitRemovePerson(activeIndex)"
-      @exit="dialog = false"
-    />
-
     <section :class="{ 'invalid-section': showErrorSummary }">
       <!-- Summary Warning -->
       <div v-if="isSummary && showErrorSummary" class="people-roles-invalid-message">
@@ -106,7 +99,7 @@
                     </v-btn>
                   </template>
                   <v-list class="more-actions-list">
-                    <v-list-item @click="confirmRemove(index)">
+                    <v-list-item @click="emitRemovePerson(index)">
                       <v-list-item-title>
                         <v-icon small color="primary">mdi-delete</v-icon>
                         <span class="ml-2">Remove</span>
@@ -127,10 +120,7 @@
 import { Component, Prop, Mixins, Emit } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
-import ConfirmRemoveDialog from '@/dialogs/ConfirmRemoveDialog.vue'
 import { CommonMixin } from '@/mixins'
-
-// Interfaces & enums
 import { OrgPersonIF, PeopleAndRoleIF } from '@/interfaces'
 import { PartyTypes, RouteNames } from '@/enums'
 
@@ -141,8 +131,7 @@ import { PartyTypes, RouteNames } from '@/enums'
 @Component({
   components: {
     DeliveryAddress: BaseAddress,
-    MailingAddress: BaseAddress,
-    ConfirmRemoveDialog
+    MailingAddress: BaseAddress
   }
 })
 export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
@@ -158,7 +147,6 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
 
   // Local properties
   private readonly tableHeaders: Array<string> = ['Name', 'Mailing Address', 'Delivery Address', 'Roles']
-  private dialog: boolean = false
   private activeIndex: number
 
   get personList (): Array<OrgPersonIF> {
@@ -187,22 +175,11 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
   }
 
   /**
-   * Identify and confirm the removal of a person/org through dialog.
-   * @param index The active index which is subject to removal.
-   */
-  confirmRemove (index: number): void {
-    this.activeIndex = index
-    this.dialog = true
-  }
-
-  /**
    * Emit an index and event to the parent to handle removal.
    * @param index The active index which is subject to removal.
    */
   @Emit('removePerson')
-  private emitRemovePerson (activeIndex: number): void {
-    this.dialog = false
-  }
+  private emitRemovePerson (index: number): void {}
 
   /**
    * Emit an index and event to the parent to handle editing.

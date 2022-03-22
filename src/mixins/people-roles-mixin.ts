@@ -35,12 +35,6 @@ export default class PeopleRolesMixin extends Vue {
   /** Sets this step's validity when component is mounted. */
   protected async mounted (): Promise<void> {
     this.setAddPeopleAndRoleStepValidity(this.hasValidRoles())
-
-    // *** FOR DEBUGGING
-    // await this.addPersonConfirm()
-    // await this.addBusinessCorporationConfirm()
-    // await this.removePersonConfirm()
-    // await this.removePersonBusinessConfirm()
   }
 
   /** Single string if blurb is a string. */
@@ -74,30 +68,22 @@ export default class PeopleRolesMixin extends Vue {
 
   /** The list of completing parties. */
   get completingParties (): OrgPersonIF[] {
-    return this.orgPersonList.filter(
-      people => people.roles.some(party => party.roleType === RoleTypes.COMPLETING_PARTY)
-    )
+    return this.orgPersonList.filter(person => this.isCompletingParty(person))
   }
 
   /** The list of incorporators. */
   get incorporators (): OrgPersonIF[] {
-    return this.orgPersonList.filter(
-      people => people.roles.some(party => party.roleType === RoleTypes.INCORPORATOR)
-    )
+    return this.orgPersonList.filter(person => this.isIncorporator(person))
   }
 
   /** The list of directors. */
   get directors (): OrgPersonIF[] {
-    return this.orgPersonList.filter(
-      people => people.roles.some(party => party.roleType === RoleTypes.DIRECTOR)
-    )
+    return this.orgPersonList.filter(person => this.isDirector(person))
   }
 
   /** The list of proprietors. */
   get proprietors (): OrgPersonIF[] {
-    return this.orgPersonList.filter(
-      people => people.roles.some(party => party.roleType === RoleTypes.PROPRIETOR)
-    )
+    return this.orgPersonList.filter(person => this.isProprietor(person))
   }
 
   /** The list of people without roles. */
@@ -107,9 +93,7 @@ export default class PeopleRolesMixin extends Vue {
 
   /** The completing party (or undefined if not found). */
   get completingParty () : OrgPersonIF {
-    return this.orgPersonList.find(
-      people => people.roles.some(party => party.roleType === RoleTypes.COMPLETING_PARTY)
-    )
+    return this.orgPersonList.find(person => this.isCompletingParty(person))
   }
 
   /** Whether the Number of Completing Party rule is valid. Always true if rule doesn't exist. */
@@ -164,9 +148,34 @@ export default class PeopleRolesMixin extends Vue {
     return (this.peopleWithNoRoles.length > 0)
   }
 
+  /** Returns true if specified org/person is a person. */
+  public isPerson (orgPerson: OrgPersonIF): boolean {
+    return (orgPerson?.officer.partyType === PartyTypes.PERSON)
+  }
+
+  /** Returns true if specified org/person is an organization. */
+  public isOrganization (orgPerson: OrgPersonIF): boolean {
+    return (orgPerson?.officer.partyType === PartyTypes.ORGANIZATION)
+  }
+
   /** Returns true if specified org/person is a director. */
   public isDirector (orgPerson: OrgPersonIF): boolean {
-    return orgPerson.roles.some(role => role.roleType === RoleTypes.DIRECTOR)
+    return orgPerson?.roles.some(role => role.roleType === RoleTypes.DIRECTOR)
+  }
+
+  /** Returns true if specified org/person is an incorporator. */
+  public isIncorporator (orgPerson: OrgPersonIF): boolean {
+    return orgPerson?.roles.some(role => role.roleType === RoleTypes.INCORPORATOR)
+  }
+
+  /** Returns true if specified org/person is a completing party. */
+  public isCompletingParty (orgPerson: OrgPersonIF): boolean {
+    return orgPerson?.roles.some(role => role.roleType === RoleTypes.COMPLETING_PARTY)
+  }
+
+  /** Returns true if specified org/person is a proprietor. */
+  public isProprietor (orgPerson: OrgPersonIF): boolean {
+    return orgPerson?.roles.some(role => role.roleType === RoleTypes.PROPRIETOR)
   }
 
   protected onEditPerson (index: number): void {
@@ -177,9 +186,8 @@ export default class PeopleRolesMixin extends Vue {
 
   protected onAddEditPerson (person: OrgPersonIF): void {
     // if this is the completing party, assign email address from user profile
-    if (person.roles.find(role => role.roleType === RoleTypes.COMPLETING_PARTY) &&
-        // email cannot be null or empty
-        this.getTombstone.userEmail) {
+    // NB: email cannot be null or empty
+    if (this.isCompletingParty(person) && !!this.getTombstone.userEmail) {
       person.officer.email = this.getTombstone.userEmail
     }
 
@@ -197,7 +205,18 @@ export default class PeopleRolesMixin extends Vue {
     this.resetData()
   }
 
-  protected onRemovePerson (index: number): void {
+  protected async onRemovePerson (index: number): Promise<void> {
+    const orgPerson = this.orgPersonList[index]
+    const isProprietor = this.isProprietor(orgPerson)
+
+    if (isProprietor && this.isPerson(orgPerson)) {
+      if (!await this.confirmRemoveProprietorPerson()) return
+    } else if (isProprietor && this.isOrganization(orgPerson)) {
+      if (!await this.confirmRemoveProprietorOrganization()) return
+    } else {
+      if (!await this.confirmRemove()) return
+    }
+
     const newList: OrgPersonIF[] = Object.assign([], this.orgPersonList)
     newList.splice(index, 1)
     this.setOrgPersonList(newList)
@@ -237,7 +256,51 @@ export default class PeopleRolesMixin extends Vue {
     )
   }
 
-  /** Helper to show the confirm dialog. */
+  protected async confirmAddProprietorPerson (): Promise<boolean> {
+    return this.showConfirmDialog(
+      'Add a Person',
+      'By adding an individual as the proprietor, you will be registering a ' +
+        'business with that proprietor as the owner who performs all business ' +
+        'operations and assumes all liabilities. Do you wish to continue?',
+      'Continue'
+    )
+  }
+
+  protected async confirmAddProprietorOrganization (): Promise<boolean> {
+    return this.showConfirmDialog(
+      'Add a Business or a Corporation',
+      'By adding an existing business or a corporation as the proprietor, you will ' +
+        'be registering an existing company under another name (e.g., a numbered ' +
+        'company that does business under a DBA name). Do you with to continue?',
+      'Continue'
+    )
+  }
+
+  protected async confirmRemoveProprietorPerson (): Promise<boolean> {
+    return this.showConfirmDialog(
+      'Remove Person',
+      'Remove this person from your business?',
+      'Remove'
+    )
+  }
+
+  protected async confirmRemoveProprietorOrganization (): Promise<boolean> {
+    return this.showConfirmDialog(
+      'Remove Person or Business / Corporation',
+      'Remove this person or business / corporation from your business?',
+      'Remove'
+    )
+  }
+
+  protected async confirmRemove (): Promise<boolean> {
+    return this.showConfirmDialog(
+      'Remove Person or Corporation / Firm',
+      'Remove this Person or Corporation or Firm from your Company?',
+      'Remove'
+    )
+  }
+
+  /** Helper to show the confirm dialogs. */
   private async showConfirmDialog (title: string, message: string, action: string): Promise<boolean> {
     const confirm = await this.$refs.confirmDialog.open(title, message, {
       width: '40rem',
@@ -248,41 +311,5 @@ export default class PeopleRolesMixin extends Vue {
     }).catch(() => false)
 
     return confirm
-  }
-
-  protected async addPersonConfirm (): Promise<boolean> {
-    return this.showConfirmDialog(
-      'Add a Person',
-      'By adding an individual as the proprietor, you will be registering a ' +
-        'business with that proprietor as the owner who performs all business ' +
-        'operations and assumes all liabilities. Do you wish to continue?',
-      'Continue'
-    )
-  }
-
-  protected async addBusinessCorporationConfirm (): Promise<boolean> {
-    return this.showConfirmDialog(
-      'Add a Business or a Corporation',
-      'By adding an existing business or a corporation as the proprietor, you will ' +
-        'be registering an existing company under another name (e.g., a numbered ' +
-        'company that does business under a DBA name). Do you with to continue?',
-      'Continue'
-    )
-  }
-
-  protected async removePersonConfirm (): Promise<boolean> {
-    return this.showConfirmDialog(
-      'Remove Person',
-      'Remove this person from your business?',
-      'Remove'
-    )
-  }
-
-  protected async removePersonBusinessConfirm (): Promise<boolean> {
-    return this.showConfirmDialog(
-      'Remove Person or Business / Corporation',
-      'Remove this person or business / corporation from your business?',
-      'Remove'
-    )
   }
 }

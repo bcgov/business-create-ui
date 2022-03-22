@@ -7,6 +7,9 @@ import { getVuexStore } from '@/store'
 import AddEditOrgPerson from '@/components/common/AddEditOrgPerson.vue'
 import { EmptyOrgPerson } from '@/interfaces'
 
+// mock the console.warn function to hide "[Vuetify] Unable to locate target XXX"
+console.warn = jest.fn()
+
 Vue.use(Vuetify)
 Vue.use(Vuelidate)
 

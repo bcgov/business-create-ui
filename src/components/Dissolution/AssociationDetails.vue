@@ -85,7 +85,7 @@
 import { Component, Mixins, Prop } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import { AuthServices } from '@/services'
-import { ActionBindingIF, AddressIF, BusinessContactIF, BusinessIF } from '@/interfaces'
+import { ActionBindingIF, AddressIF, ContactPointIF, BusinessIF } from '@/interfaces'
 import { ContactInfo } from '@bcrs-shared-components/contact-info'
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
 import OfficeAddresses from '@/components/common/OfficeAddresses.vue'
@@ -110,7 +110,7 @@ export default class AssociationDetails extends Mixins(CommonMixin, EnumMixin) {
   @Getter getFolioNumber!: string
   @Getter getBusinessId!: string
   @Getter getBusiness!: BusinessIF
-  @Getter getBusinessContact!: BusinessContactIF
+  @Getter getBusinessContact!: ContactPointIF
   @Getter getCompanyDisplayName!: string
   @Getter getCooperativeType!: CoopTypes
   @Getter getBusinessLegalName!: string
@@ -120,6 +120,7 @@ export default class AssociationDetails extends Mixins(CommonMixin, EnumMixin) {
 
   // Global setters
   @Action setBusinessContact!: ActionBindingIF
+  @Action setIgnoreChanges!: ActionBindingIF
 
   private contactInfoMsg = `Registered Office Contact Information is required for dissolution documents delivery.
   Any changes made will be applied immediately.`
@@ -140,12 +141,18 @@ export default class AssociationDetails extends Mixins(CommonMixin, EnumMixin) {
   }
 
   /** Event handler for contact information changes. */
-  private async onContactInfoChange (event: BusinessContactIF): Promise<void> {
+  private async onContactInfoChange (event: ContactPointIF): Promise<void> {
+    // temporarily ignore data changes
+    this.setIgnoreChanges(true)
+
     await AuthServices.updateContactInfo(this.getBusinessId, event).then(response => {
       this.setBusinessContact(response)
     }).catch(error => {
       this.$root.$emit('save-error-event', error)
     })
+
+    // watch further changes
+    this.setIgnoreChanges(false)
   }
 }
 </script>

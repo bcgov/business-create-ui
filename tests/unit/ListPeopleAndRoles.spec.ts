@@ -116,7 +116,7 @@ describe('List People And Roles component', () => {
       .toContain('12-1044 Boul 21De Normandie')
   })
 
-  it('displays the `same as Mailing Address` text when mailing and delivery match', () => {
+  it('displays the "same as Mailing Address" text when mailing and delivery match', () => {
     // Mounting the Wrapper to allow for the test to reach into the baseAddress component to validate data
     wrapper = wrapperFactory(ListPeopleAndRoles,
       null,
@@ -194,7 +194,7 @@ describe('List People And Roles component', () => {
     expect(peoplesListItem2.querySelector('.actions')).toBeNull()
   })
 
-  it('displays invalid warning message when in summary view and step 2 data is invalid', () => {
+  it('displays warning message when in summary view and step 2 data is invalid', () => {
     wrapper = shallowWrapperFactory(ListPeopleAndRoles,
       {
         isSummary: true

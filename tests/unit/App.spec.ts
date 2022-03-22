@@ -14,7 +14,7 @@ import SbcFeeSummary from 'sbc-common-components/src/components/SbcFeeSummary.vu
 import Actions from '@/components/common/Actions.vue'
 import EntityInfo from '@/components/common/EntityInfo.vue'
 import Stepper from '@/components/common/Stepper.vue'
-import ConfirmDialog from '@/dialogs/ConfirmDialog.vue'
+import { ConfirmDialog } from '@bcrs-shared-components/confirm-dialog'
 import mockRouter from './MockRouter'
 import Vuelidate from 'vuelidate'
 import { StaffPaymentOptions } from '@bcrs-shared-components/enums'
@@ -28,6 +28,9 @@ window.fetch = jest.fn().mockImplementation(() => {
     statusTxt: ''
   }
 })
+
+// mock the console.warn function to hide "[Vuetify] Unable to locate target XXX"
+console.warn = jest.fn()
 
 Vue.use(Vuetify)
 
