@@ -598,7 +598,7 @@ export default class App extends Mixins(
         switch (this.getFilingType) {
           case FilingTypes.VOLUNTARY_DISSOLUTION:
             if (this.getEntityType === CorpTypeCd.SOLE_PROP) {
-              // *** FUTURE: for Faiz to do
+              // FUTURE: for Faiz to do
               // this.$router.push(RouteNames.DISSOLUTION_FIRM).catch(() => {})
               throw new Error('Dissolution filings for firms is not yet supported.') // go to catch()
             } else {

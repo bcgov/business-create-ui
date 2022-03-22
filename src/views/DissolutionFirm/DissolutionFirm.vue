@@ -168,7 +168,7 @@ import TransactionalFolioNumber from '@/components/common/TransactionalFolioNumb
 import { RouteNames } from '@/enums'
 import {
   ActionBindingIF,
-  BusinessContactIF,
+  ContactPointIF,
   CertifyIF,
   CertifyStatementIF,
   CourtOrderStepIF,
@@ -189,7 +189,7 @@ import {
 })
 export default class DissolutionFirm extends Mixins(DateMixin) {
   // Global getters
-  @Getter getBusinessContact!: BusinessContactIF
+  @Getter getBusinessContact!: ContactPointIF
   @Getter getCertifyState!: CertifyIF
   @Getter getCompletingPartyStatement!: CertifyStatementIF
   @Getter getCourtOrderStep!: CourtOrderStepIF

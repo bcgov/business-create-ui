@@ -3,7 +3,6 @@ import Vuetify from 'vuetify'
 import { mount, Wrapper } from '@vue/test-utils'
 import { getVuexStore } from '@/store'
 import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
-import { BusinessContactIF } from '@/interfaces'
 
 Vue.use(Vuetify)
 const store = getVuexStore()
@@ -15,19 +14,19 @@ const formValidEvent = 'valid'
 const formDataChangeEvent = 'update'
 
 // Input field selectors to test changes to the DOM elements.
-const emailSelector: string = '#txt-email'
-const confirmEmailSelector: string = '#txt-confirm-email'
-const phoneSelector: string = '#txt-phone'
-const extensionSelector: string = '#txt-phone-extension'
-const formSelector: string = 'form'
-const readOnlyEmailSelector: string = '#lbl-email'
-const readOnlyPhoneSelector: string = '#lbl-phone'
+const emailSelector = '#txt-email'
+const confirmEmailSelector = '#txt-confirm-email'
+const phoneSelector = '#txt-phone'
+const extensionSelector = '#txt-phone-extension'
+const formSelector = 'form'
+const readOnlyEmailSelector = '#lbl-email'
+const readOnlyPhoneSelector = '#lbl-phone'
 
-const email: string = 'test@abc.com'
-const invalidEmail: string = 'test@'
-const phoneNumber: string = '5555555555'
-const invalidPhoneNumber: string = '11'
-const extension: number = 4444
+const email = 'test@abc.com'
+const invalidEmail = 'test@'
+const phoneNumber = '5555555555'
+const invalidPhoneNumber = '11'
+const extension = 4444
 
 /**
  * Returns the last event for a given name, to be used for testing event propagation in response to component changes.
@@ -54,19 +53,17 @@ function getLastEvent (wrapper: Wrapper<BusinessContactInfo>, name: string): any
  * @returns a Wrapper<BusinessContactInfo> object with the given parameters.
  */
 function createComponent (
-  email: string = '',
-  confirmEmail: string = '',
-  phone: string = '',
-  extension?: number,
-  isEditing: boolean = true
+  email = '',
+  confirmEmail = '',
+  phone = '',
+  extension: number = null,
+  isEditing = true
 ): Wrapper<BusinessContactInfo> {
-  const businessContact: BusinessContactIF = {
+  const businessContact = {
     email,
     confirmEmail,
     phone,
-    ...extension
-      ? { extension }
-      : {}
+    ...extension ? { extension } : {}
   }
   return mount(BusinessContactInfo, {
     store,

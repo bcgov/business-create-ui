@@ -2,7 +2,7 @@
   <div id="reg-add-edit-org-person">
     <ConfirmDialog
       ref="reassignCPDialog"
-      attach="reg-add-edit-org-person"
+      attach="#reg-add-edit-org-person"
     />
 
     <v-expand-transition>
@@ -191,7 +191,7 @@ import {
   OrgPersonIF, EmptyAddress, FormIF, AddressIF, ConfirmDialogType, RolesIF
 } from '@/interfaces'
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
-import ConfirmDialog from '@/dialogs/ConfirmDialog.vue'
+import { ConfirmDialog } from '@bcrs-shared-components/confirm-dialog'
 import { CommonMixin } from '@/mixins'
 import { CorpTypeCd, RoleTypes, PartyTypes } from '@/enums'
 import { PersonAddressSchema } from '@/schemas'

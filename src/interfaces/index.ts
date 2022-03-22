@@ -38,7 +38,6 @@ export * from './stepper-interfaces/Affidavit/affidavit-interface'
 
 export * from './stepper-interfaces/common/staff-payment-step-interface'
 export * from './stepper-interfaces/common/court-order-step-interface'
-export * from './stepper-interfaces/common/business-contact-interface'
 export * from './stepper-interfaces/common/person-interface'
 
 // Store interfaces
@@ -74,5 +73,13 @@ export * from './Registration/business-address-interface'
 
 // External interfaces
 // NB: importing EmptyAddress doesn't work in local components
-export { BreadcrumbIF, EffectiveDateTimeIF, StaffPaymentIF } from '@bcrs-shared-components/interfaces'
-export { EmptyNaics, NaicsIF, NaicsResultIF } from '@bcrs-shared-components/interfaces'
+export {
+  BreadcrumbIF,
+  ContactPointIF,
+  EffectiveDateTimeIF,
+  EmptyContactPoint,
+  EmptyNaics,
+  NaicsIF,
+  NaicsResultIF,
+  StaffPaymentIF
+} from '@bcrs-shared-components/interfaces'

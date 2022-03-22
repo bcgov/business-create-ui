@@ -125,7 +125,7 @@ import FolioNumber from '@/components/common/FolioNumber.vue'
 import NameRequestInfo from '@/components/common/NameRequestInfo.vue'
 import NatureOfBusiness from '@/components/Registration/NatureOfBusiness.vue'
 import StartDate from '@/components/Registration/StartDate.vue'
-import { ActionBindingIF, BusinessContactIF, RegistrationStateIF } from '@/interfaces'
+import { ActionBindingIF, ContactPointIF, RegistrationStateIF } from '@/interfaces'
 import { RouteNames } from '@/enums'
 import { CommonMixin } from '@/mixins'
 
@@ -140,7 +140,7 @@ import { CommonMixin } from '@/mixins'
   }
 })
 export default class RegistrationDefineBusiness extends Mixins(CommonMixin) {
-  @Getter getBusinessContact!: BusinessContactIF
+  @Getter getBusinessContact!: ContactPointIF
   @Getter getRegistration!: RegistrationStateIF
   @Getter getShowErrors!: boolean
   @Getter isPremiumAccount!: boolean

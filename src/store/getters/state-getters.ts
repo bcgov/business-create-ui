@@ -10,7 +10,7 @@ import {
 import {
   AccountInformationIF,
   AddressIF,
-  BusinessContactIF,
+  ContactPointIF,
   BusinessIF,
   CertifyIF,
   CourtOrderStepIF,
@@ -274,7 +274,7 @@ export const getCooperativeType = (state: StateIF): CoopTypes => {
 }
 
 /** The Business Contact object. */
-export const getBusinessContact = (state: StateIF): BusinessContactIF => {
+export const getBusinessContact = (state: StateIF): ContactPointIF => {
   return state.stateModel.businessContact
 }
 

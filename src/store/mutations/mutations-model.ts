@@ -3,7 +3,7 @@ import {
   AccountInformationIF,
   AddressIF,
   BusinessAddressIF,
-  BusinessContactIF,
+  ContactPointIF,
   CertifyIF,
   CreateMemorandumIF,
   CreateResolutionIF,
@@ -128,7 +128,6 @@ export const mutateEffectiveDate = (state: StateIF, effectiveDate: Date) => {
 
 export const mutateEffectiveDateTimeValid = (state: StateIF, effectiveDateTimeValid: boolean) => {
   state.stateModel.effectiveDateTime.valid = effectiveDateTimeValid
-  if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
 }
 
 export const mutateCertifyState = (state: StateIF, certifyState: CertifyIF) => {
@@ -136,7 +135,7 @@ export const mutateCertifyState = (state: StateIF, certifyState: CertifyIF) => {
   if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
 }
 
-export const mutateBusinessContact = (state: StateIF, businessContact: BusinessContactIF) => {
+export const mutateBusinessContact = (state: StateIF, businessContact: ContactPointIF) => {
   state.stateModel.businessContact = businessContact
   if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
 }

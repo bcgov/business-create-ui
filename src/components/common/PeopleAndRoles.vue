@@ -153,7 +153,7 @@ import { AddressIF, EmptyAddress, EmptyOrgPerson } from '@/interfaces'
 import { PartyTypes, RoleTypes } from '@/enums'
 import { PeopleRolesMixin } from '@/mixins'
 import AddEditOrgPerson from '@/components/common/AddEditOrgPerson.vue'
-import ConfirmDialog from '@/dialogs/ConfirmDialog.vue'
+import { ConfirmDialog } from '@bcrs-shared-components/confirm-dialog'
 import HelpSection from '@/components/common/HelpSection.vue'
 import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
 

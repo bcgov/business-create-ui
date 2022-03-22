@@ -1,7 +1,7 @@
 import {
   EmptyAccountInformation,
   EmptyAddress,
-  EmptyBusinessContact,
+  EmptyContactPoint,
   EmptyFees,
   EmptyNameRequest,
   EmptyOfficer,
@@ -31,17 +31,13 @@ export const stateModel: StateModelIF = {
     businessId: '',
     legalName: '',
     foundingDate: '',
-    businessContact: { ...EmptyBusinessContact },
+    businessContact: { ...EmptyContactPoint },
     officeAddress: {
       mailingAddress: { ...EmptyAddress },
       deliveryAddress: { ...EmptyAddress }
     }
   },
-  businessContact: {
-    email: '',
-    confirmEmail: '',
-    phone: ''
-  },
+  businessContact: { ...EmptyContactPoint },
   dissolution: {
     dissolutionType: null,
     dissolutionDate: '',

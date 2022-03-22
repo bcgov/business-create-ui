@@ -42,7 +42,7 @@ import { Getter } from 'vuex-class'
 
 // Interfaces & enums
 import { BusinessTypes, CorpTypeCd, FilingNames, FilingTypes } from '@/enums'
-import { BusinessContactIF, RegistrationStateIF } from '@/interfaces'
+import { ContactPointIF, RegistrationStateIF } from '@/interfaces'
 
 // Modules
 import { EnumMixin } from '@/mixins'
@@ -50,7 +50,7 @@ import { EnumMixin } from '@/mixins'
 @Component({})
 export default class EntityInfo extends Mixins(EnumMixin) {
   @Getter getBusinessLegalName!: string
-  @Getter getBusinessContact!: BusinessContactIF
+  @Getter getBusinessContact!: ContactPointIF
   @Getter getEntityIdentifier!: string
   @Getter getUserEmail!: string
   @Getter getUserPhone!: string
@@ -88,7 +88,9 @@ export default class EntityInfo extends Mixins(EnumMixin) {
     if (this.isIncorporationFiling) {
       return this.getUserPhone
     }
-    return this.getBusinessContact.phone
+    const phone = this.getBusinessContact.phone
+    const ext = this.getBusinessContact.extension
+    return `${phone}${ext ? (' x' + ext) : ''}`
   }
 
   get legalName (): string {

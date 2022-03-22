@@ -141,7 +141,7 @@ import { Getter, Action } from 'vuex-class'
 import {
   ActionBindingIF,
   AddressIF,
-  BusinessContactIF,
+  ContactPointIF,
   DefineCompanyIF,
   IncorporationAddressIF
 } from '@/interfaces'
@@ -171,7 +171,7 @@ export default class IncorporationDefineCompany extends Mixins(CommonMixin) {
   @Getter isTypeCoop!: boolean
   @Getter getDefineCompanyStep!: DefineCompanyIF
   @Getter getShowErrors!: boolean
-  @Getter getBusinessContact!: BusinessContactIF
+  @Getter getBusinessContact!: ContactPointIF
   @Getter getFolioNumber!: string
 
   @Action setEntityType!: ActionBindingIF

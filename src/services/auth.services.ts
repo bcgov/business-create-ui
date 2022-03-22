@@ -1,6 +1,6 @@
 // Libraries
 import { axios } from '@/utils'
-import { AuthInformationIF, BusinessContactIF } from '@/interfaces'
+import { AuthInformationIF, ContactPointIF } from '@/interfaces'
 import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
 
 /**
@@ -38,7 +38,13 @@ export default class AuthServices {
     return axios.get(url).then(response => {
       if (response?.data) {
         return {
-          contacts: response.data.contacts,
+          contacts: response.data.contacts
+            // map phoneExtension -> extension in every element
+            .map(contact => ({
+              email: contact.email,
+              phone: contact.phone,
+              extension: contact.phoneExtension
+            })),
           folioNumber: response.data.folioNumber
         }
       }
@@ -81,13 +87,14 @@ export default class AuthServices {
   /**
    * Updates contact info of the specified business.
    * @param businessId the business id
-   * @param contactInfo the contact info object
-   * @returns a promise to return the business contact info object
+   * @param contactInfo the contact point object
+   * @returns a promise to return the updated contact point object
    */
-  static async updateContactInfo (businessId: string, contactInfo: BusinessContactIF): Promise<BusinessContactIF> {
+  static async updateContactInfo (businessId: string, contactInfo: ContactPointIF): Promise<ContactPointIF> {
     if (!businessId) throw new Error('Invalid business id')
     if (!contactInfo) throw new Error('Invalid contact info')
 
+    // map extension -> phoneExtension
     const data = {
       email: contactInfo.email,
       phone: contactInfo.phone,
@@ -97,8 +104,14 @@ export default class AuthServices {
     const url = `${authUrl}entities/${businessId}/contacts`
 
     return axios.put(url, data).then(response => {
-      if (response?.data) return response.data.contacts[0]
-      throw new Error('Invalid response data')
+      const contacts = response?.data?.contacts[0]
+      if (!contacts) throw new Error('Invalid response data')
+      // map phoneExtension -> extension
+      return {
+        email: contacts.email,
+        phone: contacts.phone,
+        extension: contacts.phoneExtension
+      }
     })
   }
 }

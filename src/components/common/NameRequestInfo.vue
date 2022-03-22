@@ -164,7 +164,7 @@ import { Component, Emit, Mixins, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import { getName } from 'country-list'
 import AddNameTranslation from '@/components/common/AddNameTranslation.vue'
-import ConfirmDialog from '@/dialogs/ConfirmDialog.vue'
+import { ConfirmDialog } from '@bcrs-shared-components/confirm-dialog'
 import ListNameTranslations from '@/components/common/ListNameTranslations.vue'
 import { BusinessTypes, CorpTypeCd, NameRequestStates } from '@/enums'
 import {
