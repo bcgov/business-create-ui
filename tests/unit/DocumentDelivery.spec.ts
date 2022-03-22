@@ -67,6 +67,23 @@ for (const mock of documentDeliveryCases) {
       expect(wrapper.find('#contact-value').text()).toBe(mock.businessContact.email)
     })
 
+    it('displays additionalLabel labels', () => {
+      wrapper = shallowWrapperFactory(DocumentDelivery, {
+        additionalLabel: 'partners',
+        contactLabel: 'Registered Office'
+      })
+
+      expect(wrapper.findAll('label').at(2).text()).toBe('partners')
+    })
+    it('displays additionalValue', () => {
+      wrapper = shallowWrapperFactory(DocumentDelivery, {
+        additionalValue: mock.tombstone.userEmail,
+        additionalLabel: 'partners',
+        contactLabel: 'Registered Office'
+      })
+      expect(wrapper.find('#additional-value').text()).toBe(mock.tombstone.userEmail)
+    })
+
     it('displays Not Entered text when computed values are absent', () => {
       mock.tombstone.userEmail = ''
       mock.businessContact.email = ''
