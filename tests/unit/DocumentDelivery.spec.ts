@@ -50,16 +50,16 @@ for (const mock of documentDeliveryCases) {
 
     it('renders the component properly', () => {
       wrapper = shallowWrapperFactory(DocumentDelivery, {
-        contactLabel: 'Registered Office'
+        contactLabel: mock.tombstone.contactLabel
       })
       expect(wrapper.find('#document-delivery').exists()).toBe(true)
     })
 
     it('displays email labels', () => {
       wrapper = shallowWrapperFactory(DocumentDelivery, {
-        contactLabel: 'Registered Office'
+        contactLabel: mock.tombstone.contactLabel
       })
-      expect(wrapper.findAll('label').at(0).text()).toBe('Registered Office')
+      expect(wrapper.findAll('label').at(0).text()).toBe(mock.tombstone.contactLabel)
       expect(wrapper.findAll('label').at(1).text()).toBe('Completing Party')
     })
 
@@ -67,7 +67,7 @@ for (const mock of documentDeliveryCases) {
       wrapper = shallowWrapperFactory(DocumentDelivery, {
         contactValue: mock.businessContact.email,
         completingPartyEmail: mock.tombstone.userEmail,
-        contactLabel: 'Registered Office'
+        contactLabel: mock.tombstone.contactLabel
       })
       expect(wrapper.find('#completing-party-email').text()).toBe(mock.tombstone.userEmail)
       expect(wrapper.find('#contact-value').text()).toBe(mock.businessContact.email)
@@ -91,7 +91,7 @@ for (const mock of documentDeliveryCases) {
       wrapper = shallowWrapperFactory(DocumentDelivery, {
         contactValue: mock.businessContact.email,
         completingPartyEmail: mock.tombstone.userEmail,
-        contactLabel: 'Registered Office'
+        contactLabel: mock.tombstone.contactLabel
       })
       expect(wrapper.find('#completing-party-email').text()).toBe('(Not entered)')
       expect(wrapper.find('#contact-value').text()).toBe('(Not entered)')
@@ -102,7 +102,7 @@ for (const mock of documentDeliveryCases) {
         contactValue: mock.businessContact.email,
         completingPartyEmail: mock.tombstone.userEmail,
         editableCompletingParty: mock.optionalEmail,
-        contactLabel: 'Registered Office'
+        contactLabel: mock.tombstone.contactLabel
       })
       expect(wrapper.find('#optionalEmail').exists()).toBe(mock.optionalEmail)
     })
@@ -112,7 +112,7 @@ for (const mock of documentDeliveryCases) {
         contactValue: mock.businessContact.email,
         completingPartyEmail: mock.tombstone.userEmail,
         showCustodianEmail: mock.custodianEmail,
-        contactLabel: 'Registered Office'
+        contactLabel: mock.tombstone.contactLabel
       })
       expect(wrapper.find('#custodian-email').exists()).toBe(mock.custodianEmail)
     })
