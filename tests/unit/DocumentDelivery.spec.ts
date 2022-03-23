@@ -6,7 +6,9 @@ const documentDeliveryCases = [
   {
     entityType: 'CP',
     tombstone: {
-      userEmail: 'mockCPCompletingParty@email.com'
+      userEmail: 'mockCPCompletingParty@email.com',
+      contactLabel: 'Registered Office',
+      additionalLabel: 'partners'
     },
     businessContact: {
       email: 'mockCPBusinessContact@email.com'
@@ -17,7 +19,9 @@ const documentDeliveryCases = [
   {
     entityType: 'BEN',
     tombstone: {
-      userEmail: 'BENCompletingParty@email.com'
+      userEmail: 'BENCompletingParty@email.com',
+      contactLabel: 'Registered Office',
+      additionalLabel: 'partners'
     },
     businessContact: {
       email: 'BENBusinessContact@email.com'
@@ -28,7 +32,9 @@ const documentDeliveryCases = [
   {
     entityType: 'CP',
     tombstone: {
-      userEmail: 'mockCPCompletingParty@email.com'
+      userEmail: 'mockCPCompletingParty@email.com',
+      contactLabel: 'Registered Office',
+      additionalLabel: 'partners'
     },
     businessContact: {
       email: 'mockCPBusinessContact@email.com'
@@ -67,20 +73,14 @@ for (const mock of documentDeliveryCases) {
       expect(wrapper.find('#contact-value').text()).toBe(mock.businessContact.email)
     })
 
-    it('displays additionalLabel labels', () => {
-      wrapper = shallowWrapperFactory(DocumentDelivery, {
-        additionalLabel: 'partners',
-        contactLabel: 'Registered Office'
-      })
-
-      expect(wrapper.findAll('label').at(2).text()).toBe('partners')
-    })
-    it('displays additionalValue', () => {
+    it('displays additionalLabel and additionalValue ', () => {
       wrapper = shallowWrapperFactory(DocumentDelivery, {
         additionalValue: mock.tombstone.userEmail,
-        additionalLabel: 'partners',
-        contactLabel: 'Registered Office'
+        additionalLabel: mock.tombstone.additionalLabel,
+        contactLabel: mock.tombstone.contactLabel
       })
+
+      expect(wrapper.findAll('label').at(2).text()).toBe(mock.tombstone.additionalLabel)
       expect(wrapper.find('#additional-value').text()).toBe(mock.tombstone.userEmail)
     })
 

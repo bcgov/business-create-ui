@@ -49,18 +49,18 @@
     </article>
 
     <template v-if="showBusinessDate">
-          <v-divider class="mx-6" />
+      <v-divider class="mx-6" />
         <!-- Business Start Date -->
-        <article class="section-container">
-          <v-row no-gutters>
-            <v-col cols="12" sm="3" class="pr-4">
-              <label>Business Start Date</label>
-            </v-col>
-            <v-col cols="12" sm="9">
-              <div>{{ businessStartDate || '(Not entered)' }}</div>
-            </v-col>
-          </v-row>
-        </article>
+      <article class="section-container">
+        <v-row no-gutters>
+          <v-col cols="12" sm="3" class="pr-4">
+            <label>Business Start Date</label>
+          </v-col>
+          <v-col cols="12" sm="9">
+            <div>{{ businessStartDate || '(Not entered)' }}</div>
+          </v-col>
+        </v-row>
+      </article>
     </template>
 
     <!-- Folio Number -->
