@@ -108,7 +108,7 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Name
   @Getter getFilingType!: string
   @Getter isApplicationValid!: boolean
   @Getter isEntityType!: boolean
-  @Getter isShowBackBtn!: boolean
+  @Getter getCurrentStep!: number
   @Getter isShowReviewConfirmBtn!: boolean
   @Getter isShowFilePayBtn!: boolean
   @Getter isBusySaving!: boolean
@@ -128,6 +128,11 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Name
   /** Is True if Jest is running the code. */
   get isJestRunning (): boolean {
     return (process.env.JEST_WORKER_ID !== undefined)
+  }
+
+  /** Is True if the Back button should be displayed. */
+  get isShowBackBtn (): boolean {
+    return (this.getCurrentStep > 1)
   }
 
   private get isSummaryStep (): boolean {

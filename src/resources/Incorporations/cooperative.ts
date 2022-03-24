@@ -77,11 +77,18 @@ export const CooperativeResource: IncorporationResourceIF = {
         section2: {
           label: 'The Rules need to:',
           items: [
-            { type: ItemTypes.TEXT, value: `Balance the rights of individual members with the interests of the
-              Cooperative Association as a whole` },
-            { type: ItemTypes.PARTIAL_ITEMS,
+            {
+              type: ItemTypes.TEXT,
+              value: `Balance the rights of individual members with the interests of the
+              Cooperative Association as a whole`
+            },
+            {
+              type: ItemTypes.PARTIAL_ITEMS,
               value: [
-                { type: ItemTypes.TEXT, value: 'Address the requirements of ' },
+                {
+                  type: ItemTypes.TEXT,
+                  value: 'Address the requirements of '
+                },
                 {
                   type: ItemTypes.LINK,
                   value: {
@@ -89,7 +96,10 @@ export const CooperativeResource: IncorporationResourceIF = {
                     href: 'https://www.bclaws.gov.bc.ca/civix/document/id/complete/statreg/99028_01#section13'
                   }
                 },
-                { type: ItemTypes.TEXT, value: ' and ' },
+                {
+                  type: ItemTypes.TEXT,
+                  value: ' and '
+                },
                 {
                   type: ItemTypes.LINK,
                   value: {
@@ -99,8 +109,10 @@ export const CooperativeResource: IncorporationResourceIF = {
                 }
               ]
             },
-            { type: ItemTypes.TEXT,
-              value: 'Be flexible enough to allow the Cooperative Association to respond to changing conditions' }
+            {
+              type: ItemTypes.TEXT,
+              value: 'Be flexible enough to allow the Cooperative Association to respond to changing conditions'
+            }
           ]
         },
         section3: {

@@ -57,7 +57,7 @@ export const isRegistrationFiling = (state: StateIF): boolean => {
 
 /** The current filing type. */
 export const getFilingType = (state: StateIF): FilingTypes => {
-  return state.stateModel.tombstone.filingType
+  return getTombstone(state).filingType
 }
 
 /** The current filing name. */
@@ -116,17 +116,17 @@ export const getEntityType = (state: StateIF): CorpTypeCd => {
 
 /** The account folio number. */
 export const getFolioNumber = (state: StateIF): string => {
-  return state.stateModel.tombstone.folioNumber
+  return getTombstone(state).folioNumber
 }
 
 /** The transactional folio number. */
 export const getTransactionalFolioNumber = (state: StateIF): string => {
-  return state.stateModel.tombstone.transactionalFolioNumber
+  return getTombstone(state).transactionalFolioNumber
 }
 
 /** Is true when the transactional folio number is valid. */
 export const getTransactionalFolioNumberValid = (state: StateIF): boolean => {
-  return state.stateModel.tombstone.transactionalFolioNumberValid
+  return getTombstone(state).transactionalFolioNumberValid
 }
 
 /** The staff payment folio number. */
@@ -136,37 +136,37 @@ export const getStaffPaymentFolioNumber = (state: StateIF): string => {
 
 /** Whether the entity is a Benefit Company. */
 export const isTypeBcomp = (state: StateIF): boolean => {
-  return (state.stateModel.entityType === CorpTypeCd.BENEFIT_COMPANY)
+  return (getEntityType(state) === CorpTypeCd.BENEFIT_COMPANY)
 }
 
 /** Whether the entity is a Cooperative Assocation. */
 export const isTypeCoop = (state: StateIF): boolean => {
-  return (state.stateModel.entityType === CorpTypeCd.COOP)
+  return (getEntityType(state) === CorpTypeCd.COOP)
 }
 
 /** Whether the entity is a BC Community Contribution Company. */
 export const isTypeBcCcc = (state: StateIF): boolean => {
-  return (state.stateModel.entityType === CorpTypeCd.BC_CCC)
+  return (getEntityType(state) === CorpTypeCd.BC_CCC)
 }
 
 /** Whether the entity is a BC Company. */
 export const isTypeBcCompany = (state: StateIF): boolean => {
-  return (state.stateModel.entityType === CorpTypeCd.BC_COMPANY)
+  return (getEntityType(state) === CorpTypeCd.BC_COMPANY)
 }
 
 /** Whether the entity is a BC ULC Company. */
 export const isTypeBcUlcCompany = (state: StateIF): boolean => {
-  return (state.stateModel.entityType === CorpTypeCd.BC_ULC_COMPANY)
+  return (getEntityType(state) === CorpTypeCd.BC_ULC_COMPANY)
 }
 
 /** Whether the entity is a Sole Proprietorship. */
 export const isTypeSoleProp = (state: StateIF): boolean => {
-  return (state.stateModel.entityType === CorpTypeCd.SOLE_PROP)
+  return (getEntityType(state) === CorpTypeCd.SOLE_PROP)
 }
 
 /** Whether the entity is a General Partnership. */
 export const isTypePartnership = (state: StateIF): boolean => {
-  return (state.stateModel.entityType === CorpTypeCd.PARTNERSHIP)
+  return (getEntityType(state) === CorpTypeCd.PARTNERSHIP)
 }
 
 /** The Account Information object. */
@@ -403,11 +403,6 @@ export const isFilingPaying = (state: StateIF): boolean => {
   return state.stateModel.isFilingPaying
 }
 
-/** Whether the Back button should be displayed. */
-export const isShowBackBtn = (state: StateIF): boolean => {
-  return (getCurrentStep(state) > 1)
-}
-
 /** Whether the Review and Confirm button should be displayed. */
 export const isShowReviewConfirmBtn = (state: StateIF): boolean => {
   return (!!getEntityType(state) && getCurrentStep(state) < getMaxStep(state))
@@ -549,32 +544,32 @@ export const getCertifyState = (state: StateIF): CertifyIF => {
 
 /** The users's email address. */
 export const getUserEmail = (state: StateIF): string => {
-  return (state.stateModel.tombstone.userEmail)
+  return (getTombstone(state).userEmail)
 }
 
 /** The users's phone number. */
 export const getUserPhone = (state: StateIF): string => {
-  return state.stateModel.tombstone.userPhone
+  return getTombstone(state).userPhone
 }
 
 /** The user's first name. */
 export const getUserFirstName = (state: StateIF): string => {
-  return (state.stateModel.tombstone.userFirstName)
+  return (getTombstone(state).userFirstName)
 }
 
 /** The user's last name. */
 export const getUserLastName = (state: StateIF): string => {
-  return (state.stateModel.tombstone.userLastName)
+  return (getTombstone(state).userLastName)
 }
 
 /** The user's keycloak guid. */
 export const getUserKeycloakGuid = (state: StateIF): string => {
-  return (state.stateModel.tombstone.userKeycloakGuid)
+  return (getTombstone(state).userKeycloakGuid)
 }
 
 /** The user's address. */
 export const getUserAddress = (state: StateIF): AddressIF => {
-  return (state.stateModel.tombstone.userAddress)
+  return (getTombstone(state).userAddress)
 }
 
 /** The fee prices. */

@@ -52,6 +52,7 @@ import {
 export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Getter isTypeBcomp!: boolean
   @Getter isTypeCoop!: boolean
+  @Getter isTypeSoleProp!: boolean
   @Getter isNamedBusiness!: boolean
   @Getter getAffidavitStep!: UploadAffidavitIF
   @Getter getNameRequestNumber!: string

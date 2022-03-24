@@ -30,54 +30,57 @@
             <h2>{{getCreateRulesResource.helpSection.header}}</h2>
           </header>
 
+          <!-- help section 1 -->
           <p class="help-section-title font-weight-bold mt-4">
             {{getCreateRulesResource.helpSection.helpText.section1.label}}
           </p>
-          <ul>
+          <ul class="bulleted-list mt-4">
             <li
               v-for="(item, index) in getCreateRulesResource.helpSection.helpText.section1.items"
               class="mt-1"
               :key="index"
-            >
-              <v-icon>mdi-circle-small</v-icon>
-              <span class="ml-2">{{ item }}</span>
-            </li>
+              v-html="item"
+            />
           </ul>
 
+          <!-- help section 2 -->
           <p class="help-section-title font-weight-bold mt-4">
             {{getCreateRulesResource.helpSection.helpText.section2.label}}
           </p>
-          <ul class="mt-6">
+          <ul class="bulleted-list mt-4">
             <li
               v-for="(item, index) in getCreateRulesResource.helpSection.helpText.section2.items"
               :key="index"
             >
-              xxx<v-icon v-if="item.type === ItemTypes.TEXT">mdi-circle-small</v-icon>
-              <span v-if="item.type === ItemTypes.TEXT" v-html="item.value" class="ml-2" />
-              <v-row no-gutters v-if="item.type === ItemTypes.PARTIAL_ITEMS">
-                <v-col cols="1">yyy<v-icon>mdi-circle-small</v-icon></v-col>
-                <v-col cols="11">
-                  <span v-for="(partialItem, index) in item.value" :key="index">
-                    <span v-if="partialItem.type === ItemTypes.TEXT" v-html="partialItem.value"></span>
-                    <a v-if="partialItem.type === ItemTypes.LINK"
-                      :href="partialItem.value.href"
-                      target="_blank"
-                    >
-                      {{partialItem.value.linkText}}
-                      <v-icon dense color="primary">mdi-open-in-new</v-icon>
-                    </a>
-                  </span>
-                </v-col>
-              </v-row>
+              <span v-if="item.type === ItemTypes.TEXT" v-html="item.value"/>
+              <template v-if="item.type === ItemTypes.PARTIAL_ITEMS">
+                <template v-for="(partialItem, index) in item.value">
+                  <span
+                    v-if="partialItem.type === ItemTypes.TEXT"
+                    :key="index"
+                    v-html="partialItem.value"
+                  />
+                  <a
+                    v-if="partialItem.type === ItemTypes.LINK"
+                    :key="index"
+                    :href="partialItem.value.href"
+                    target="_blank"
+                  >
+                    {{partialItem.value.linkText}}
+                    <v-icon dense color="primary">mdi-open-in-new</v-icon>
+                  </a>
+                </template>
+              </template>
             </li>
           </ul>
 
+          <!-- help section 3 -->
           <p id="help-text-section-3"
             v-for="(item, index) in getCreateRulesResource.helpSection.helpText.section3.items"
-            class="mt-6"
+            class="mt-4"
             :key="index"
-          >{{ item }}
-          </p>
+            v-html="item"
+          />
 
           <u class="help-btn" @click="helpToggle = !helpToggle"><small>Hide Help</small></u>
         </section>

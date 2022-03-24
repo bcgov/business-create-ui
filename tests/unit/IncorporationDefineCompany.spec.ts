@@ -66,7 +66,7 @@ for (const mock of mockEntityInfo) {
 
     it('displays folio number when it is a premium account', () => {
       expect(wrapper.find('#folio-number-header').exists()).toBe(true)
-      expect(wrapper.find('#folio-number-header').text()).toContain('Folio / Reference Number (optional)')
+      expect(wrapper.find('#folio-number-header').text()).toContain('Folio / Reference Number (Optional)')
     })
 
     itIf(mock.entityType === 'BEN')('displays company statement', () => {

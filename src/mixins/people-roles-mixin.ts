@@ -262,7 +262,8 @@ export default class PeopleRolesMixin extends Vue {
       'By adding an individual as the proprietor, you will be registering a ' +
         'business with that proprietor as the owner who performs all business ' +
         'operations and assumes all liabilities. Do you wish to continue?',
-      'Continue'
+      'Continue',
+      'Cancel'
     )
   }
 
@@ -272,7 +273,8 @@ export default class PeopleRolesMixin extends Vue {
       'By adding an existing business or a corporation as the proprietor, you will ' +
         'be registering an existing company under another name (e.g., a numbered ' +
         'company that does business under a DBA name). Do you with to continue?',
-      'Continue'
+      'Continue',
+      'Cancel'
     )
   }
 
@@ -280,7 +282,8 @@ export default class PeopleRolesMixin extends Vue {
     return this.showConfirmDialog(
       'Remove Person',
       'Remove this person from your business?',
-      'Remove'
+      'Remove',
+      'Cancel'
     )
   }
 
@@ -288,7 +291,8 @@ export default class PeopleRolesMixin extends Vue {
     return this.showConfirmDialog(
       'Remove Person or Business / Corporation',
       'Remove this person or business / corporation from your business?',
-      'Remove'
+      'Remove',
+      'Cancel'
     )
   }
 
@@ -296,20 +300,17 @@ export default class PeopleRolesMixin extends Vue {
     return this.showConfirmDialog(
       'Remove Person or Corporation / Firm',
       'Remove this Person or Corporation or Firm from your Company?',
-      'Remove'
+      'Remove',
+      'Cancel'
     )
   }
 
   /** Helper to show the confirm dialogs. */
-  private async showConfirmDialog (title: string, message: string, action: string): Promise<boolean> {
-    const confirm = await this.$refs.confirmDialog.open(title, message, {
-      width: '40rem',
-      persistent: true,
-      yes: action,
-      no: null,
-      cancel: 'Cancel'
+  private async showConfirmDialog (title: string, message: string, yes: string, no: string,
+    cancel: string = null
+  ): Promise<boolean> {
+    return this.$refs.confirmDialog.open(title, message, {
+      width: '40rem', persistent: true, yes, no, cancel
     }).catch(() => false)
-
-    return confirm
   }
 }

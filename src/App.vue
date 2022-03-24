@@ -336,7 +336,7 @@ export default class App extends Mixins(
     let filingData: Array<FilingDataIF> = []
     if (this.getFilingData) {
       filingData = cloneDeep(this.getFilingData)
-      if (this.getEntityType === CorpTypeCd.COOP && this.getFilingData.length > 0) {
+      if (this.isTypeCoop && this.getFilingData.length > 0) {
         // Only set Future Effective and Priority to Special Resolution Fee
         const specialResolutionFilingData = filingData.find(x => x.filingTypeCode === FilingCodes.SPECIAL_RESOLUTION)
         if (specialResolutionFilingData) {
@@ -597,7 +597,7 @@ export default class App extends Mixins(
       if (this.$route.meta.filingType !== this.getFilingType) {
         switch (this.getFilingType) {
           case FilingTypes.VOLUNTARY_DISSOLUTION:
-            if (this.getEntityType === CorpTypeCd.SOLE_PROP) {
+            if (this.isTypeSoleProp) {
               // FUTURE: for Faiz to do
               // this.$router.push(RouteNames.DISSOLUTION_FIRM).catch(() => {})
               throw new Error('Dissolution filings for firms is not yet supported.') // go to catch()

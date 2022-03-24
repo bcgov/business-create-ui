@@ -149,6 +149,9 @@ export default class IncorporationShareStructure extends Mixins(CommonMixin) {
     series: []
   }]
 
+  readonly helpLink = 'https://www2.gov.bc.ca/gov/content/employment-business/business/' +
+    'managing-a-business/permits-licences/businesses-incorporated-companies'
+
   private showShareStructureForm: boolean = false
   private currentShareStructure: ShareClassIF = null
 
@@ -264,11 +267,6 @@ export default class IncorporationShareStructure extends Mixins(CommonMixin) {
     this.showShareStructureForm = false
     this.parentIndex = -1
     this.shareId = ''
-  }
-
-  private get helpLink (): string {
-    return 'https://www2.gov.bc.ca/gov/content/employment-business/business/' +
-    'managing-a-business/permits-licences/businesses-incorporated-companies'
   }
 
   @Watch('$route')

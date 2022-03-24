@@ -75,6 +75,7 @@
         <span>Add the Completing Party</span>
       </v-btn>
 
+      <!-- *** TODO: fix v-if to work for multiple proprietors for GPs -->
       <v-btn
         v-if="!validNumProprietors"
         id="btn-add-person"
@@ -88,6 +89,7 @@
         <span>Add a Person</span>
       </v-btn>
 
+      <!-- *** TODO: fix v-if to work for multiple proprietors for GPs -->
       <v-btn
         v-if="!validNumProprietors"
         id="btn-add-organization"
@@ -103,7 +105,7 @@
     </div>
 
     <!-- Add/Edit Bus/Corp -->
-    <v-card flat v-if="showOrgPersonForm" class="people-roles-container">
+    <v-card flat v-if="showOrgPersonForm" class="mt-4">
       <RegAddEditOrgPerson
         :initialValue="currentOrgPerson"
         :activeIndex="activeIndex"
@@ -116,7 +118,7 @@
     </v-card>
 
     <!-- List of People and Roles -->
-    <v-card flat v-if="orgPersonList.length > 0" :disabled="showOrgPersonForm">
+    <v-card flat v-if="orgPersonList.length > 0" :disabled="showOrgPersonForm" class="mt-4">
       <ListPeopleAndRoles
         :isSummary="false"
         @editPerson="onEditPerson($event)"
@@ -221,10 +223,6 @@ export default class RegPeopleAndRoles extends Mixins(PeopleRolesMixin) {
 
 .v-icon.mdi-circle-small {
   margin-top: -2px;
-}
-
-.people-roles-container {
-  margin-top: 1rem;
 }
 
 ul {

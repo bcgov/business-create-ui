@@ -121,7 +121,7 @@
     </div>
 
     <!-- Add/Edit Person/Org -->
-    <v-card flat v-if="showOrgPersonForm" class="people-roles-container">
+    <v-card flat v-if="showOrgPersonForm" class="mt-4">
       <AddEditOrgPerson
         :initialValue="currentOrgPerson"
         :activeIndex="activeIndex"
@@ -135,7 +135,7 @@
     </v-card>
 
     <!-- List of People and Roles -->
-    <v-card flat v-if="orgPersonList.length > 0" :disabled="showOrgPersonForm">
+    <v-card flat v-if="orgPersonList.length > 0" class="mt-4" :disabled="showOrgPersonForm">
       <ListPeopleAndRoles
         :isSummary="false"
         @editPerson="onEditPerson($event)"
@@ -224,10 +224,6 @@ export default class PeopleAndRoles extends Mixins(PeopleRolesMixin) {
 
 .v-icon.mdi-circle-small {
   margin-top: -2px;
-}
-
-.people-roles-container {
-  margin-top: 1rem;
 }
 
 ul {

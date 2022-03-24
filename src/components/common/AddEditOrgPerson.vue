@@ -99,10 +99,11 @@
                 <!-- Roles -->
                 <div class="font-weight-bold mt-2">Roles</div>
                 <v-card flat rounded="sm" class="gray-card mt-4 px-4">
-                  <v-row>
+                  <v-row class="align-center">
                     <v-col cols="4" v-if="showCompletingPartyRole">
                       <v-checkbox
                         id="cp-checkbox"
+                        class="mt-5"
                         v-model="selectedRoles"
                         :value="RoleTypes.COMPLETING_PARTY"
                         :label="RoleTypes.COMPLETING_PARTY"
@@ -114,6 +115,7 @@
                     <v-col cols="4" v-if="showIncorporatorRole">
                       <v-checkbox
                         id="incorporator-checkbox"
+                        class="mt-5"
                         v-model="selectedRoles"
                         :value="RoleTypes.INCORPORATOR"
                         :label="RoleTypes.INCORPORATOR"
@@ -125,6 +127,7 @@
                     <v-col cols="4" v-if="showDirectorRole">
                       <v-checkbox
                         id="director-checkbox"
+                        class="mt-5"
                         v-model="selectedRoles"
                         :value="RoleTypes.DIRECTOR"
                         :label="RoleTypes.DIRECTOR"
@@ -560,15 +563,6 @@ export default class AddEditOrgPerson extends Mixins(CommonMixin) {
   padding-bottom: 0;
 }
 
-.people-roles-container {
-  margin-top: 1rem;
-  padding: 1.25rem;
-}
-
-p {
-  padding-top: 0.5rem;
-}
-
 li {
   list-style: none;
   padding-top: 0.25rem;
@@ -609,10 +603,6 @@ li {
   display: flex;
   flex-flow: column nowrap;
   position: relative;
-
-  > label:first-child {
-    font-weight: bold;
-  }
 
   &__inner {
     flex: 1 1 auto;
