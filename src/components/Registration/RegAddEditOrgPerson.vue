@@ -42,9 +42,9 @@
                 v-on:submit.prevent
               >
                 <!-- Person's Name -->
-                <template v-if="isPerson">
+                <article v-if="isPerson">
                   <label>Person's Name</label>
-                  <div class="three-column mt-4 mb-1">
+                  <div class="three-column mt-4 mb-n6">
                     <!-- NB: only staff can change Completing Party names -->
                     <v-text-field
                       filled
@@ -74,12 +74,12 @@
                       :readonly="isCompletingParty && !isRoleStaff"
                     />
                   </div>
-                </template>
+                </article>
 
                 <!-- Org's Name -->
-                <template v-if="isOrg">
+                <article v-if="isOrg">
                   <label>Corporation or Firm Name</label>
-                  <div class="org-name-container mt-4 mb-1">
+                  <div class="org-name-container mt-4 mb-n6">
                     <v-text-field
                       filled
                       class="item"
@@ -89,51 +89,53 @@
                       :rules="Rules.OrgNameRules"
                     />
                   </div>
-                </template>
+                </article>
 
                 <!-- Roles -->
-                <label class="mt-8">Roles</label>
-                <v-card flat rounded="sm" class="gray-card mt-4 px-4">
-                  <v-row class="align-center">
-                    <v-col cols="4" v-if="showCompletingPartyRole">
-                      <v-checkbox
-                        id="cp-checkbox"
-                        class="mt-5"
-                        v-model="selectedRoles"
-                        :value="RoleTypes.COMPLETING_PARTY"
-                        :label="RoleTypes.COMPLETING_PARTY"
-                        :disabled="true"
-                      />
-                    </v-col>
+                <article class="mt-8">
+                  <label>Roles</label>
+                  <v-card flat rounded="sm" class="gray-card mt-4 px-4">
+                    <v-row class="align-center">
+                      <v-col cols="4" v-if="showCompletingPartyRole">
+                        <v-checkbox
+                          id="cp-checkbox"
+                          class="mt-5"
+                          v-model="selectedRoles"
+                          :value="RoleTypes.COMPLETING_PARTY"
+                          :label="RoleTypes.COMPLETING_PARTY"
+                          :disabled="true"
+                        />
+                      </v-col>
 
-                    <v-col cols="4" v-if="showProprietoryRole">
-                      <v-checkbox
-                        id="proprietor-checkbox"
-                        class="mt-5"
-                        v-model="selectedRoles"
-                        :value="RoleTypes.PROPRIETOR"
-                        :label="RoleTypes.PROPRIETOR"
-                        :disabled="true"
-                      />
-                    </v-col>
+                      <v-col cols="4" v-if="showProprietoryRole">
+                        <v-checkbox
+                          id="proprietor-checkbox"
+                          class="mt-5"
+                          v-model="selectedRoles"
+                          :value="RoleTypes.PROPRIETOR"
+                          :label="RoleTypes.PROPRIETOR"
+                          :disabled="true"
+                        />
+                      </v-col>
 
-                    <!-- FUTURE (for GP) -->
-                    <v-col cols="4" v-if="showProprietoryRole && false">
-                      <v-checkbox
-                        id="partner-checkbox"
-                        class="mt-5"
-                        v-model="selectedRoles"
-                        :value="RoleTypes.PARTNER"
-                        :label="RoleTypes.PARTNER"
-                        :disabled="true"
-                      />
-                    </v-col>
-                  </v-row>
-                </v-card>
+                      <!-- FUTURE (for GP) -->
+                      <v-col cols="4" v-if="showPartnerRole">
+                        <v-checkbox
+                          id="partner-checkbox"
+                          class="mt-5"
+                          v-model="selectedRoles"
+                          :value="RoleTypes.PARTNER"
+                          :label="RoleTypes.PARTNER"
+                          :disabled="true"
+                        />
+                      </v-col>
+                    </v-row>
+                  </v-card>
+                </article>
 
-                <!-- Business Numbers -->
-                <template v-if="isPerson && isProprietor">
-                  <label class="mt-8">Business Number</label>
+                <!-- Business Number -->
+                <article v-if="isPerson && isProprietor" class="mt-8">
+                  <label>Business Number</label>
                   <p class="mt-4 mb-0">
                     If you have an existing business number, enter it below and we will contact
                     Canada Revenue Agency and ask them to link it to this registration.
@@ -146,15 +148,14 @@
                     label="Business Number (Optional)"
                     id="person__business-number"
                     hint="First 9 digits of the CRA Business Number"
+                    v-model.trim="orgPerson.officer.businessNumber"
+                    :rules="businessNumberRules"
                   />
-                    <!-- v-model.trim="orgPerson.officer.firstName"
-                    :rules="Rules.FirstNameRules"
-                    :readonly="isCompletingParty && !isRoleStaff" -->
-                </template>
+                </article>
 
                 <!-- Email Address -->
-                <template v-if="isPerson && isProprietor">
-                  <label class="mt-8">Email Address</label>
+                <article v-if="isPerson" class="mt-8">
+                  <label>Email Address</label>
                   <p class="mt-4 mb-0">
                     Copies of the registration documents will be sent to this email address.
                   </p>
@@ -163,23 +164,25 @@
                     class="item mt-4 mb-n6"
                     label="Email Address"
                     id="person__email-address"
+                    v-model.trim="orgPerson.officer.email"
+                    :rules="Rules.EmailRules"
+                    :readonly="isCompletingParty && !isRoleStaff"
                   />
-                    <!-- v-model.trim="orgPerson.officer.firstName"
-                    :rules="Rules.FirstNameRules"
-                    :readonly="isCompletingParty && !isRoleStaff" -->
-                </template>
+                </article>
 
                 <!-- Mailing Address -->
-                <div class="font-weight-bold mt-8">Mailing Address</div>
-                <MailingAddress
-                  ref="mailingAddressNew"
-                  class="mt-4 mb-n6"
-                  :editing="true"
-                  :schema="PersonAddressSchema"
-                  :address="inProgressMailingAddress"
-                  @update:address="updateMailingAddress"
-                  @valid="updateMailingAddressValidity"
-                />
+                <article class="mt-8">
+                  <label>Mailing Address</label>
+                  <MailingAddress
+                    ref="mailingAddressNew"
+                    class="mt-4 mb-n6"
+                    :editing="true"
+                    :schema="PersonAddressSchema"
+                    :address="inProgressMailingAddress"
+                    @update:address="updateMailingAddress"
+                    @valid="updateMailingAddressValidity"
+                  />
+                </article>
 
                 <!-- Delivery Address -->
                 <v-checkbox
@@ -189,8 +192,8 @@
                   v-model="inheritMailingAddress"
                 />
 
-                <template v-if="!inheritMailingAddress">
-                  <div class="font-weight-bold mt-8">Delivery Address</div>
+                <article v-if="!inheritMailingAddress" class="mt-8">
+                  <label>Delivery Address</label>
                   <DeliveryAddress
                     ref="deliveryAddressNew"
                     class="mt-4 mb-n6"
@@ -201,7 +204,7 @@
                     @update:address="updateDeliveryAddress"
                     @valid="updateDeliveryAddressValidity"
                   />
-                </template>
+                </article>
 
                 <!-- Action Buttons -->
                 <div class="form__btns mt-10">
@@ -298,49 +301,56 @@ export default class RegAddEditOrgPerson extends Mixins(CommonMixin) {
   readonly PartyTypes = PartyTypes
   readonly Rules = Rules
 
-  // /** The validation rules for the roles. */
-  // get roleRules (): Array<Function> {
-  //   return [ () => this.selectedRoles.length > 0 || 'A role is required' ]
-  // }
+  readonly businessNumberRules: Array<Function> = [
+    (v: string) => {
+      const pattern = /^[0-9]{5}[ ]?[0-9]{4}$/
+      return (!v || pattern.test(v)) || 'Invalid business number'
+    }
+  ]
 
   /** Whether Completing Party is checked. */
-  private get isCompletingParty (): boolean {
+  protected get isCompletingParty (): boolean {
     return this.selectedRoles.includes(RoleTypes.COMPLETING_PARTY)
   }
 
-  /** Whether Incorporator is checked. */
-  private get isIncorporator (): boolean {
-    return this.selectedRoles.includes(RoleTypes.INCORPORATOR)
-  }
-
-  /** Whether Director is checked. */
-  private get isProprietor (): boolean {
+  /** Whether Proprietor is checked. */
+  protected get isProprietor (): boolean {
     return this.selectedRoles.includes(RoleTypes.PROPRIETOR)
   }
 
+  /** Whether Partner is checked. */
+  protected get isPartner (): boolean {
+    return this.selectedRoles.includes(RoleTypes.PARTNER)
+  }
+
   /** Whether current data object is a person. */
-  private get isPerson (): boolean {
+  protected get isPerson (): boolean {
     return (this.orgPerson.officer?.partyType === PartyTypes.PERSON)
   }
 
   /** Whether current data object is an organization (corporation/firm). */
-  private get isOrg (): boolean {
+  protected get isOrg (): boolean {
     return (this.orgPerson.officer?.partyType === PartyTypes.ORGANIZATION)
   }
 
   /** Whether the Completing Party role should be shown. */
-  private get showCompletingPartyRole (): boolean {
-    const isRoleCompletingParty = !!this.orgPerson.roles.find(role => role.roleType === RoleTypes.COMPLETING_PARTY)
+  protected get showCompletingPartyRole (): boolean {
+    const isRoleCompletingParty = this.orgPerson.roles.some(role => role.roleType === RoleTypes.COMPLETING_PARTY)
     // either this is the completing party,
     // or this is staff adding/editing a person
     return (isRoleCompletingParty || (this.isRoleStaff && this.isPerson))
   }
 
   /** Whether the Proprietor role should be shown. */
-  private get showProprietoryRole (): boolean {
-    const isRoleProprietor = !!this.orgPerson.roles.find(role => role.roleType === RoleTypes.PROPRIETOR)
-    // only staff can edit Completing Party role
+  protected get showProprietoryRole (): boolean {
+    const isRoleProprietor = this.orgPerson.roles.some(role => role.roleType === RoleTypes.PROPRIETOR)
     return isRoleProprietor
+  }
+
+  /** Whether the Partner role should be shown. */
+  protected get showPartnerRole (): boolean {
+    const isRolePartner = this.orgPerson.roles.some(role => role.roleType === RoleTypes.PARTNER)
+    return isRolePartner
   }
 
   /** Called when component is created. */
