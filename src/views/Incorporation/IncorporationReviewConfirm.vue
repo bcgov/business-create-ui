@@ -139,7 +139,7 @@
 <script lang="ts">
 import { Component, Mixins } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
-import { ActionBindingIF, BusinessContactIF, CertifyIF, EffectiveDateTimeIF, IncorporationAgreementIF,
+import { ActionBindingIF, ContactPointIF, CertifyIF, EffectiveDateTimeIF, IncorporationAgreementIF,
   ShareStructureIF } from '@/interfaces'
 import { CorpTypeCd } from '@/enums'
 import { EnumMixin } from '@/mixins'
@@ -169,7 +169,7 @@ import UploadRulesSummary from '@/components/Incorporation/UploadRulesSummary.vu
   }
 })
 export default class IncorporationReviewConfirm extends Mixins(EnumMixin) {
-  @Getter getBusinessContact!: BusinessContactIF
+  @Getter getBusinessContact!: ContactPointIF
   @Getter getCertifyState!: CertifyIF
   @Getter getCompanyTitle!: string
   @Getter getCompanyDescription!: string

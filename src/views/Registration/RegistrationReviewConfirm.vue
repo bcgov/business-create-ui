@@ -101,7 +101,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
-import { ActionBindingIF, BusinessContactIF, CertifyIF, DocumentDeliveryIF } from '@/interfaces'
+import { ActionBindingIF, ContactPointIF, CertifyIF, DocumentDeliveryIF } from '@/interfaces'
 import CardHeader from '@/components/common/CardHeader.vue'
 import Certify from '@/components/common/Certify.vue'
 import DocumentDelivery from '@/components/common/DocumentDelivery.vue'
@@ -122,7 +122,7 @@ import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
   }
 })
 export default class RegistrationReviewConfirm extends Vue {
-  @Getter getBusinessContact!: BusinessContactIF
+  @Getter getBusinessContact!: ContactPointIF
   @Getter getUserEmail!: string
   @Getter getCertifyState!: CertifyIF
   @Getter isRoleStaff!: boolean

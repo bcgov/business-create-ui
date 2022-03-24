@@ -1,5 +1,5 @@
 <template>
-  <v-container id="action-buttons-container" class="list-item">
+  <div id="action-buttons-container" class="list-item pa-0">
 
     <div class="buttons-left">
       <v-btn
@@ -90,7 +90,7 @@
       </v-btn>
     </div>
 
-  </v-container>
+  </div>
 </template>
 
 <script lang="ts">
@@ -356,9 +356,7 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Name
 @import '@/assets/styles/theme.scss';
 
 #action-buttons-container {
-  background-color: white;
-  padding-top: 2rem;
-  padding-bottom: 2rem;
+  background-color: $BCgovInputBG;
 
   .buttons-left {
     width: 50%;

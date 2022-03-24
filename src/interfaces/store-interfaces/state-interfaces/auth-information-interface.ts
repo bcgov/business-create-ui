@@ -1,7 +1,7 @@
-import { BusinessContactIF } from '@/interfaces'
+import { ContactPointIF } from '@/interfaces'
 
 // Auth information interface
 export interface AuthInformationIF {
-  contacts: BusinessContactIF[]
+  contacts: ContactPointIF[]
   folioNumber: string
 }

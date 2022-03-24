@@ -9,18 +9,19 @@ import { FilingTypes } from '@/enums'
  */
 export default class LegalServices {
   /**
-   * Fetches the draft filing.
-   * This is a unique request using the temp reg number.
-   * This assumes a single filing is returned.
+   * Fetches a draft filing using the temp reg number.
    * @param id the temp reg number
-   * @returns a promise to return the draft filing, or null if not found
+   * @returns a promise to return the formatted draft filing, else exception
    */
   static async fetchDraftApplication (id: string): Promise<IncorporationFilingIF | RegistrationFilingIF> {
     const url = `businesses/${id}/filings`
     return axios.get(url)
       .then(response => {
-        // look at only the first filing
-        const filing = response?.data?.filing
+        let filing
+        // if response is a list then look at only the first filing
+        if (Array.isArray(response?.data?.filings)) filing = response.data.filings[0].filing
+        // otherwise expect response to be a single filing
+        if (response?.data?.filing) filing = response.data.filing
         const filingName = filing?.header?.name
         const filingId = +filing?.header?.filingId || 0
 
@@ -42,13 +43,14 @@ export default class LegalServices {
   /**
    * Fetches a draft dissolution filing.
    * @param id the business id
-   * @returns a promise to return the draft filing, or null if not found
+   * @returns a promise to return the draft dissolution filing, else exception
    */
   static async fetchDraftDissolution (id: string): Promise<DissolutionFilingIF> {
     // get the draft filing from the tasks endpoint
     const url = `businesses/${id}/tasks`
     return axios.get(url)
       .then(response => {
+        // look for dissolution task
         const filing = response?.data?.tasks?.
           find(x => x.task.filing.hasOwnProperty(FilingTypes.VOLUNTARY_DISSOLUTION))?.task.filing
         const filingName = filing?.header?.name

@@ -298,7 +298,7 @@ import TransactionalFolioNumber from '@/components/common/TransactionalFolioNumb
 import { RouteNames } from '@/enums'
 import {
   ActionBindingIF,
-  BusinessContactIF,
+  ContactPointIF,
   CertifyIF,
   CourtOrderStepIF,
   CreateResolutionIF,
@@ -327,7 +327,7 @@ import {
 export default class DissolutionReviewConfirm extends Mixins(DateMixin) {
   // Global getters
   @Getter getAffidavitStep!: UploadAffidavitIF
-  @Getter getBusinessContact!: BusinessContactIF
+  @Getter getBusinessContact!: ContactPointIF
   @Getter getCertifyState!: CertifyIF
   @Getter getCourtOrderStep!: CourtOrderStepIF
   @Getter getDissolutionCustodianEmail!: string

@@ -1,5 +1,5 @@
 import {
-  AccountInformationIF, ActionIF, AddressIF, BusinessContactIF, CertifyIF, DissolutionStatementIF,
+  AccountInformationIF, ActionIF, AddressIF, ContactPointIF, CertifyIF, DissolutionStatementIF,
   IncorporationAddressIF, IncorporationAgreementIF, NameRequestIF, NameTranslationIF, OrgPersonIF,
   ResourceIF, ShareClassIF, CreateRulesIF, CreateMemorandumIF, ValidationDetailIF, FeesIF,
   UploadAffidavitIF, CreateResolutionIF, OrgInformationIF, NaicsIF, RegistrationNameRequestIF
@@ -110,7 +110,7 @@ export const setCertifyState: ActionIF = ({ commit }, certifyState: CertifyIF): 
   commit('mutateCertifyState', certifyState)
 }
 
-export const setBusinessContact: ActionIF = ({ commit }, businessContact: BusinessContactIF): void => {
+export const setBusinessContact: ActionIF = ({ commit }, businessContact: ContactPointIF): void => {
   commit('mutateBusinessContact', businessContact)
 }
 

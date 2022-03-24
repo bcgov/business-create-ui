@@ -10,7 +10,7 @@ import {
 import {
   AccountInformationIF,
   AddressIF,
-  BusinessContactIF,
+  ContactPointIF,
   BusinessIF,
   CertifyIF,
   CourtOrderStepIF,
@@ -274,7 +274,7 @@ export const getCooperativeType = (state: StateIF): CoopTypes => {
 }
 
 /** The Business Contact object. */
-export const getBusinessContact = (state: StateIF): BusinessContactIF => {
+export const getBusinessContact = (state: StateIF): ContactPointIF => {
   return state.stateModel.businessContact
 }
 
@@ -513,7 +513,8 @@ export const isIncorporationApplicationValid = (state: StateIF): boolean => {
 /** Whether all the registration steps are valid. */
 export const isRegistrationValid = (state: StateIF): boolean => {
   const isCertifyValid = getCertifyState(state).valid && !!getCertifyState(state).certifiedBy
-  const isFeeAcknowledgementValid = getRegistration(state).feeAcknowledgement
+  // const isFeeAcknowledgementValid = getRegistration(state).feeAcknowledgement
+  const isFeeAcknowledgementValid = true // FUTURE: use line above instead
   const isStaffPaymentValid = isRoleStaff(state) ? getStaffPaymentStep(state).valid : true
 
   return (

@@ -6,7 +6,7 @@ import { DateMixin } from '@/mixins'
 // Interfaces
 import {
   ActionBindingIF,
-  BusinessContactIF,
+  ContactPointIF,
   CertifyIF,
   CreateRulesIF,
   DissolutionStatementIF,
@@ -70,7 +70,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Getter getAddPeopleAndRoleStep!: PeopleAndRoleIF
   @Getter getCreateShareStructureStep!: ShareStructureIF
   @Getter getIncorporationAgreementStep!: IncorporationAgreementIF
-  @Getter getBusinessContact!: BusinessContactIF
+  @Getter getBusinessContact!: ContactPointIF
   @Getter getCreateRulesStep!: CreateRulesIF
   @Getter getCreateMemorandumStep!: CreateMemorandumIF
   @Getter getMemorandum!: any
@@ -153,6 +153,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
         contactPoint: {
           email: this.getBusinessContact.email,
           phone: this.getBusinessContact.phone,
+          // don't save extension if it's empty
           ...this.getBusinessContact.extension
             ? { extension: +this.getBusinessContact.extension }
             : {}
@@ -228,11 +229,10 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     this.setNameTranslationState(draftFiling.incorporationApplication.nameTranslations || [])
 
     // restore Contact Info
-    const draftContact = {
+    this.setBusinessContact({
       ...draftFiling.incorporationApplication.contactPoint,
       confirmEmail: draftFiling.incorporationApplication.contactPoint.email
-    }
-    this.setBusinessContact(draftContact)
+    })
 
     // restore Persons and Organizations
     this.setOrgPersonList(draftFiling.incorporationApplication.parties)
@@ -348,6 +348,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
         contactPoint: {
           email: this.getBusinessContact.email,
           phone: this.getBusinessContact.phone,
+          // don't save extension if it's empty
           ...this.getBusinessContact.extension
             ? { extension: +this.getBusinessContact.extension }
             : {}

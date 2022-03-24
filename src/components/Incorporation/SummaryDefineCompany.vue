@@ -92,7 +92,7 @@
 <script lang="ts">
 import { Component, Mixins } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
-import { BusinessContactIF, DefineCompanyIF, NameTranslationIF } from '@/interfaces'
+import { ContactPointIF, DefineCompanyIF, NameTranslationIF } from '@/interfaces'
 import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
 import FolioNumber from '@/components/common/FolioNumber.vue'
 import OfficeAddresses from '@/components/common/OfficeAddresses.vue'
@@ -115,7 +115,7 @@ export default class SummaryDefineCompany extends Mixins(EnumMixin) {
   @Getter isTypeCoop!: boolean
   @Getter getNameTranslations!: NameTranslationIF[]
   @Getter getDefineCompanyStep!: DefineCompanyIF
-  @Getter getBusinessContact!: BusinessContactIF
+  @Getter getBusinessContact!: ContactPointIF
   @Getter getFolioNumber!: string
   @Getter getEntityType!: CorpTypeCd
 

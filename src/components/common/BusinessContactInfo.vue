@@ -97,7 +97,7 @@
 import { Component, Vue, Prop, Watch, Emit, Mixins } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 import { mask } from 'vue-the-mask'
-import { BusinessContactIF } from '@/interfaces'
+import { ContactPointIF, EmptyContactPoint } from '@/interfaces'
 import { CommonMixin } from '@/mixins'
 import { Rules } from '@/rules'
 
@@ -106,7 +106,7 @@ import { Rules } from '@/rules'
 })
 export default class BusinessContactInfo extends Mixins(CommonMixin) {
   @Prop({ default: () => {} })
-  readonly initialValue!: BusinessContactIF
+  readonly initialValue!: ContactPointIF
 
   @Prop({ default: false })
   readonly isEditing!: boolean
@@ -119,16 +119,8 @@ export default class BusinessContactInfo extends Mixins(CommonMixin) {
   // Rules for template
   readonly Rules = Rules
 
-  private contact: BusinessContactIF = this.initialValue
+  private contact: ContactPointIF = this.initialValue
   private formValid: boolean = false
-
-  // Used as an initial comparison to re-validate the form.
-  // This is so we don't flag errors for a new application right away.
-  private defaultBusinessContact: BusinessContactIF = {
-    email: '',
-    confirmEmail: '',
-    phone: ''
-  }
 
   // Rules
   private emailMustMatch (): string {
@@ -140,7 +132,7 @@ export default class BusinessContactInfo extends Mixins(CommonMixin) {
   private onShowErrorsChanged (): void {
     if (this.showErrors) {
       (this.$refs.form as Vue & { validate: () => boolean }).validate()
-    } else if (this.$refs.form && !this.isSame(this.initialValue, this.defaultBusinessContact)) {
+    } else if (this.$refs.form && !this.isSame(this.initialValue, EmptyContactPoint)) {
       (this.$refs.form as any).validate()
     }
   }
@@ -151,8 +143,8 @@ export default class BusinessContactInfo extends Mixins(CommonMixin) {
   }
 
   @Watch('contact', { deep: true, immediate: true })
-  private onContactInfoChanged (contactInfo : BusinessContactIF): void {
-    this.emitContactInfo(contactInfo)
+  private onContactChanged (contact: ContactPointIF): void {
+    this.emitContactInfo(contact)
   }
 
   @Watch('formValid')
@@ -162,7 +154,7 @@ export default class BusinessContactInfo extends Mixins(CommonMixin) {
 
   // Events
   @Emit('update')
-  private emitContactInfo (contactInfo: BusinessContactIF): void {}
+  private emitContactInfo (contactInfo: ContactPointIF): void {}
 
   @Emit('valid')
   private emitValid (valid: boolean): void {}

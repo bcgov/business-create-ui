@@ -90,7 +90,7 @@
 <script lang="ts">
 import { Component, Mixins } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
-import { BusinessContactIF, RegistrationStateIF } from '@/interfaces'
+import { ContactPointIF, RegistrationStateIF } from '@/interfaces'
 import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
 import FolioNumber from '@/components/common/FolioNumber.vue'
 import BusinessAddresses from '@/components/Registration/BusinessAddresses.vue'
@@ -108,7 +108,7 @@ export default class DefineRegistrationSummary extends Mixins(DateMixin, EnumMix
   // Getters
   @Getter getApprovedName!: string
   @Getter isPremiumAccount!: boolean
-  @Getter getBusinessContact!: BusinessContactIF
+  @Getter getBusinessContact!: ContactPointIF
   @Getter getFolioNumber!: string
   @Getter getRegistration!: RegistrationStateIF
   @Getter getEntityType!: CorpTypeCd

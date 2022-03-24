@@ -1,7 +1,7 @@
 import { CorpTypeCd } from '@/enums'
 import {
   AccountInformationIF,
-  BusinessContactIF,
+  ContactPointIF,
   BusinessIF,
   CertifyIF,
   CourtOrderStepIF,
@@ -33,7 +33,7 @@ export interface StateModelIF {
   accountInformation: AccountInformationIF
   orgInformation: OrgInformationIF
   business: BusinessIF
-  businessContact: BusinessContactIF
+  businessContact: ContactPointIF
   dissolution: DissolutionStateIF
   nameRequest: NameRequestIF
   nameTranslations: NameTranslationIF[]
