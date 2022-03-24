@@ -1,3 +1,4 @@
+import { BusinessNumberRules } from './business-number-rules'
 import { CommonRules } from './common-rules'
 import { DateRules, DateRuleHelpers } from './date-rules'
 import { EmailRules } from './email-rules'
@@ -9,6 +10,7 @@ import { OrgNameRules } from './org-name-rules'
 import { PhoneRules } from './phone-rules'
 
 export const Rules = {
+  BusinessNumberRules,
   CommonRules,
   DateRules,
   EmailRules,

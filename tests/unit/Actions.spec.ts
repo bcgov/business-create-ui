@@ -58,6 +58,7 @@ const nrData = {
     }
   ],
   nrNum: 'NR 1234567',
+  request_action_cd: 'NEW',
   state: 'APPROVED'
 }
 

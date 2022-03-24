@@ -271,75 +271,75 @@ export default class AddEditOrgPerson extends Mixins(CommonMixin) {
   readonly Rules = Rules
 
   /** The validation rules for the roles. */
-  get roleRules (): Array<Function> {
+  protected get roleRules (): Array<Function> {
     return [ () => this.selectedRoles.length > 0 || 'A role is required' ]
   }
 
   /** Whether Completing Party is checked. */
-  private get isCompletingParty (): boolean {
+  protected get isCompletingParty (): boolean {
     return this.selectedRoles.includes(RoleTypes.COMPLETING_PARTY)
   }
 
   /** Whether Incorporator is checked. */
-  private get isIncorporator (): boolean {
+  protected get isIncorporator (): boolean {
     return this.selectedRoles.includes(RoleTypes.INCORPORATOR)
   }
 
   /** Whether Director is checked. */
-  private get isDirector (): boolean {
+  protected get isDirector (): boolean {
     return this.selectedRoles.includes(RoleTypes.DIRECTOR)
   }
 
   /** Whether current data object is a person. */
-  private get isPerson (): boolean {
+  protected get isPerson (): boolean {
     return (this.orgPerson.officer?.partyType === PartyTypes.PERSON)
   }
 
   /** Whether current data object is an organization (corporation/firm). */
-  private get isOrg (): boolean {
+  protected get isOrg (): boolean {
     return (this.orgPerson.officer?.partyType === PartyTypes.ORGANIZATION)
   }
 
   /** Whether the Completing Party role should be shown. */
-  private get showCompletingPartyRole (): boolean {
-    const isRoleCompletingParty = !!this.orgPerson.roles.find(role => role.roleType === RoleTypes.COMPLETING_PARTY)
+  protected get showCompletingPartyRole (): boolean {
+    const isRoleCompletingParty = this.orgPerson.roles.some(role => role.roleType === RoleTypes.COMPLETING_PARTY)
     // either this is the completing party,
     // or this is staff adding/editing a person
     return (isRoleCompletingParty || (this.isRoleStaff && this.isPerson))
   }
 
   /** Whether the Incorporator role should be shown. */
-  private get showIncorporatorRole (): boolean {
+  protected get showIncorporatorRole (): boolean {
     // show this role according to prop from parent parent component (ie, per resource file)
     return this.addIncorporator
   }
 
   /** Whether the Director role should be shown. */
-  private get showDirectorRole (): boolean {
+  protected get showDirectorRole (): boolean {
     // only a person can be a director
     return this.isPerson
   }
 
   /** Whether the Completing Party role should be disabled. */
-  private get disableCompletingPartyRole (): boolean {
+  protected get disableCompletingPartyRole (): boolean {
     // only staff can edit Completing Party role
     return !this.isRoleStaff
   }
 
   /** Whether the Incorporator role should be disabled. */
-  private get disableIncorporatorRole (): boolean {
+  protected get disableIncorporatorRole (): boolean {
     // disable this role if it's the only role displayed
     return (!this.showCompletingPartyRole && !this.showDirectorRole && this.showIncorporatorRole)
   }
 
   /** Whether the Director role should be disabled. */
-  private get disableDirectorRole (): boolean {
+  protected get disableDirectorRole (): boolean {
     // disable this role if it's the only role displayed
     return (!this.showCompletingPartyRole && !this.showIncorporatorRole && this.showDirectorRole)
   }
 
   /* coop and corp display delivery address by default */
-  private get showDeliveryAddressByDefault (): boolean {
+  protected get showDeliveryAddressByDefault (): boolean {
     return [
       CorpTypeCd.COOP,
       CorpTypeCd.BENEFIT_COMPANY,
