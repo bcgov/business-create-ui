@@ -1,11 +1,10 @@
 <template>
   <div id="association-details">
-    <div class="section-container">
+    <article class="section-container">
       <!-- Entity Name, etc -->
       <v-row no-gutters>
         <v-col cols="12" sm="3" class="pr-4">
-          <label v-if="isTypeCoop">Cooperative Association</label>
-          <label v-else>Company</label>
+          <label >{{entityLabel}}</label>
         </v-col>
 
         <v-col cols="12" sm="9" class="mt-n1">
@@ -14,15 +13,15 @@
           <div>{{ getBusinessId }}</div>
         </v-col>
       </v-row>
-    </div>
+    </article>
 
     <v-divider class="mx-6" />
 
     <!-- Address -->
-    <div class="section-container">
+    <article class="section-container">
       <v-row no-gutters>
         <v-col cols="12" sm="3" class="pr-4">
-          <label>Address</label>
+          <label>{{addressLabel}}</label>
         </v-col>
 
         <v-col cols="12" sm="4" class="pr-4 pt-4 pt-sm-0">
@@ -47,13 +46,28 @@
           <div v-else>Same as Mailing Address</div>
         </v-col>
       </v-row>
-    </div>
+    </article>
+
+    <template v-if="showBusinessDate">
+      <v-divider class="mx-6" />
+        <!-- Business Start Date -->
+      <article class="section-container">
+        <v-row no-gutters>
+          <v-col cols="12" sm="3" class="pr-4">
+            <label>Business Start Date</label>
+          </v-col>
+          <v-col cols="12" sm="9">
+            <div>{{ businessStartDate || '(Not entered)' }}</div>
+          </v-col>
+        </v-row>
+      </article>
+    </template>
 
     <!-- Folio Number -->
     <template v-if="isPremiumAccount">
       <v-divider class="mx-6" />
 
-      <div class="section-container">
+      <article class="section-container">
         <v-row no-gutters>
           <v-col cols="12" sm="3" class="pr-4">
             <label>Folio or Reference Number</label>
@@ -63,21 +77,23 @@
             <div id="lbl-folio-number">{{ getFolioNumber || '(Not entered)' }}</div>
           </v-col>
         </v-row>
-      </div>
+      </article>
     </template>
 
-    <v-divider class="mx-6" />
+    <template v-if="showContactInfo">
+        <v-divider class="mx-6" />
 
-    <!-- Contact Info -->
-    <div class="section-container">
-      <ContactInfo
-        :businessContact="getBusinessContact"
-        :disableActions="isSummary"
-        :customMsg="contactInfoMsg"
-        editLabel="Change"
-        @contactInfoChange="onContactInfoChange($event)"
-      />
-    </div>
+        <!-- Contact Info -->
+        <article class="section-container">
+          <ContactInfo
+            :businessContact="getBusinessContact"
+            :disableActions="isSummary"
+            :customMsg="contactInfoMsg"
+            editLabel="Change"
+            @contactInfoChange="onContactInfoChange($event)"
+          />
+        </article>
+    </template>
   </div>
 </template>
 
@@ -89,7 +105,7 @@ import { ActionBindingIF, AddressIF, ContactPointIF, BusinessIF } from '@/interf
 import { ContactInfo } from '@bcrs-shared-components/contact-info'
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
 import OfficeAddresses from '@/components/common/OfficeAddresses.vue'
-import { CommonMixin, EnumMixin } from '@/mixins'
+import { CommonMixin, EnumMixin, DateMixin } from '@/mixins'
 import { CoopTypes, CorpTypeCd } from '@/enums'
 import { isEmpty } from 'lodash'
 
@@ -101,9 +117,21 @@ import { isEmpty } from 'lodash'
     MailingAddress: BaseAddress
   }
 })
-export default class AssociationDetails extends Mixins(CommonMixin, EnumMixin) {
+export default class AssociationDetails extends Mixins(CommonMixin, EnumMixin, DateMixin) {
   @Prop({ default: false })
   readonly isSummary: boolean
+
+  @Prop({ default: 'Address' })
+  readonly addressLabel: string
+
+  @Prop({ default: 'Company' })
+  readonly entityLabel: string
+
+  @Prop({ default: false })
+  readonly showBusinessDate: boolean
+
+  @Prop({ default: true })
+  readonly showContactInfo: boolean
 
   // Global getters
   @Getter getApprovedName!: string
@@ -133,6 +161,13 @@ export default class AssociationDetails extends Mixins(CommonMixin, EnumMixin) {
   /** The entity description.  */
   private get entityDescription (): string {
     return `${this.getCorpTypeDescription(this.getEntityType)}`
+  }
+
+  /** The business start date. */
+  get businessStartDate (): string {
+    // SB TODO: get data from object and pass here
+    // mostly it will be same as foundingDate
+    return this.yyyyMmDdToPacificDate(new Date().toString(), true)
   }
 
   /** Whether the address object is empty. */

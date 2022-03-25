@@ -12,7 +12,13 @@
 
           <!-- Association Details -->
           <section>
-            <AssociationDetails :isSummary="true"/>
+            <AssociationDetails
+              entityLabel= "Business"
+              addressLabel= "Business Address"
+              :showContactInfo="false"
+              :showBusinessDate="true"
+              :isSummary="true"
+            />
           </section>
         </div>
       </v-card>
