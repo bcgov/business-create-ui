@@ -18,14 +18,13 @@
       </div>
 
       <!-- List Display Section -->
-      <div id="people-roles-list">
+      <div id="people-roles-list" v-if="personList.length > 0">
         <!-- List Headers -->
         <v-row class="people-roles-header" no-gutters>
           <v-col v-for="(title, index) in tableHeaders" :key="index">
             <span>{{ title }}</span>
           </v-col>
-          <!-- Spacer Column For Actions -->
-          <v-col v-if="!isSummary" />
+          <v-col v-if="!isSummary" class="actions-width" />
         </v-row>
 
         <!-- List Content -->
@@ -35,9 +34,9 @@
           :key="index"
           no-gutters
         >
-          <v-col class="text-truncate">
-            <v-icon color="gray9" v-if="isPerson(orgPerson)">mdi-account</v-icon>
-            <v-icon color="gray9" v-if="isOrg(orgPerson)">mdi-domain</v-icon>
+          <v-col class="name-column text-truncate">
+            <v-icon v-if="isPerson(orgPerson)">mdi-account</v-icon>
+            <v-icon v-if="isOrg(orgPerson)">mdi-domain</v-icon>
             <v-tooltip
               top
               :disabled="formatName(orgPerson).length < 25"
@@ -45,35 +44,45 @@
               transition="fade-transition"
             >
               <template v-slot:activator="{ on }">
-                <span v-on="on" class="people-roles-title ml-2">{{ formatName(orgPerson) }}</span>
+                <span v-on="on" class="name ml-2">{{ formatName(orgPerson) }}</span>
               </template>
               <span>{{ formatName(orgPerson) }}</span>
             </v-tooltip>
-          </v-col>
-          <v-col>
-            <MailingAddress class="peoples-roles-mailing-address" :address="orgPerson.mailingAddress" />
-          </v-col>
-          <v-col>
-            <p v-if="isSame(orgPerson.mailingAddress, orgPerson.deliveryAddress)"
-              class="peoples-roles-delivery-address">Same as Mailing Address
-            </p>
-            <DeliveryAddress v-else class="peoples-roles-delivery-address" :address="orgPerson.deliveryAddress" />
-          </v-col>
-          <v-col>
-            <div v-if="orgPerson.roles.length > 0">
-              <v-col v-for="(role, index) in orgPerson.roles" :key="index" class="col-roles">
-                <span>{{ role.roleType }}</span>
-              </v-col>
+
+            <div v-if="officerEmail(orgPerson)" class="text-wrap">
+              <p class="ml-8">{{ officerEmail(orgPerson) }}</p>
             </div>
-            <div v-else>
-              <v-icon color="$BCgovGold9" small>mdi-alert</v-icon>
-              <span class="warning-text">Add Role</span>
+
+            <div v-if="officerIncorpNumber(orgPerson)" class="text-wrap mt-2">
+              <p class="ml-8">Incorporation Number:</p>
+              <p class="ml-8">{{ officerIncorpNumber(orgPerson) }}</p>
+            </div>
+
+            <div v-if="officerBusinessNumber(orgPerson)" class="text-wrap mt-2">
+              <p class="ml-8">Business Number:</p>
+              <p class="ml-8">{{ officerBusinessNumber(orgPerson) }}</p>
             </div>
           </v-col>
 
-          <!-- Actions Column -->
-          <v-col v-if="!isSummary">
-            <div class="actions float-right">
+          <v-col class="mailing-address-column">
+            <MailingAddress :address="orgPerson.mailingAddress" />
+          </v-col>
+
+          <v-col class="delivery-address-column">
+            <p v-if="isSame(orgPerson.mailingAddress, orgPerson.deliveryAddress)">
+              Same as Mailing Address
+            </p>
+            <DeliveryAddress v-else :address="orgPerson.deliveryAddress" />
+          </v-col>
+
+          <v-col class="roles-column">
+            <p v-for="(role, index) in orgPerson.roles" :key="index">
+              {{ role.roleType }}
+            </p>
+          </v-col>
+
+          <v-col v-if="!isSummary" class="actions-column">
+            <div class="float-right">
               <span class="edit-action">
                 <v-btn small text color="primary"
                   :id="`officer-${index}-change-btn`"
@@ -84,7 +93,7 @@
                 </v-btn>
               </span>
 
-              <!-- more actions menu -->
+              <!-- More Actions menu -->
               <span>
                 <v-menu offset-y>
                   <template v-slot:activator="{ on }">
@@ -158,20 +167,32 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
   }
 
   /** Returns true if org-person is a person. */
-  private isPerson (orgPerson: OrgPersonIF): boolean {
+  protected isPerson (orgPerson: OrgPersonIF): boolean {
     return (orgPerson.officer?.partyType === PartyTypes.PERSON)
   }
 
   /** Returns true if org-person is an organization (corporation/firm). */
-  private isOrg (orgPerson: OrgPersonIF): boolean {
+  protected isOrg (orgPerson: OrgPersonIF): boolean {
     return (orgPerson.officer?.partyType === PartyTypes.ORGANIZATION)
   }
 
   /** Formats the org-person's name. */
-  private formatName (orgPerson: OrgPersonIF): string {
+  protected formatName (orgPerson: OrgPersonIF): string {
     return orgPerson?.officer?.organizationName
       ? orgPerson?.officer?.organizationName
       : `${orgPerson.officer.firstName} ${orgPerson.officer.middleName || ''} ${orgPerson.officer.lastName}`
+  }
+
+  protected officerEmail (orgPerson: OrgPersonIF): string {
+    return orgPerson.officer?.email
+  }
+
+  protected officerIncorpNumber (orgPerson: OrgPersonIF): string {
+    return orgPerson.officer?.incorpNumber
+  }
+
+  protected officerBusinessNumber (orgPerson: OrgPersonIF): string {
+    return orgPerson.officer?.businessNumber
   }
 
   /**
@@ -179,45 +200,63 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
    * @param index The active index which is subject to removal.
    */
   @Emit('removePerson')
-  private emitRemovePerson (index: number): void {}
+  protected emitRemovePerson (index: number): void {}
 
   /**
    * Emit an index and event to the parent to handle editing.
    * @param index The active index which is subject to change.
    */
   @Emit('editPerson')
-  private emitPersonInfo (index: number): void {}
+  protected emitPersonInfo (index: number): void {}
 }
 </script>
 
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
 
+// gutter so content doesn't run into next column
+.col:not(:last-of-type) {
+  padding-right: 0.5rem;
+}
+
 .people-roles-invalid-message {
   padding: 1.25rem;
   color: $app-red;
 }
 
-.people-roles-header {
-  padding: 1.5rem 1.25rem 0.5rem 1.25rem;
+#people-roles-list {
+  padding: 1rem;
   font-size: $px-14;
-  color: $gray9;
-  font-weight: bold;
+  color: $gray7;
 }
 
-.people-roles-title {
-  font-weight: bold;
-  color: $gray9;
+.people-roles-header {
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+
+  span {
+    color: $gray9;
+    font-weight: bold;
+  }
 }
 
 .people-roles-content {
-  margin-top: 0.5rem;
-  padding: 0.5rem 0.5rem 0.5rem 1.25rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
   border-top: 1px solid $gray1;
-  font-size: $px-14;
-  color: $gray7;
 
-  .actions {
+  p {
+    margin-bottom: 0;
+  }
+
+  .name-column .name {
+    color: $gray9;
+    font-weight: bold;
+  }
+
+  .actions-column {
+    @extend .actions-width;
+
     .edit-action {
       border-right: 1px solid $gray1;
     }
@@ -233,6 +272,12 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
   }
 }
 
+// fixed width for actions column
+.actions-width {
+  min-width: 100px;
+  max-width: 100px;
+}
+
 // style the more actions buttons
 .v-list-item {
   min-height: 0;
@@ -242,21 +287,6 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
     font-size: $px-14;
     color: $app-blue;
   }
-}
-
-.col {
-  padding: 0.25rem;
-
-  .col-roles {
-    padding: 0 !important;
-  }
-}
-
-.warning-text {
-  position: relative;
-  top: 2px;
-  left: 2px;
-  color: $BCgovGold9;
 }
 
 // move icons up a bit to line up with text

@@ -178,19 +178,15 @@ export default class PeopleRolesMixin extends Vue {
     return orgPerson?.roles.some(role => role.roleType === RoleTypes.PROPRIETOR)
   }
 
+  /** Called by ListPeopleAndRoles component event. */
   protected onEditPerson (index: number): void {
     this.currentOrgPerson = { ...this.orgPersonList[index] }
     this.activeIndex = index
     this.showOrgPersonForm = true
   }
 
+  /** Called by (Reg)AddEditOrgPerson component event. */
   protected onAddEditPerson (person: OrgPersonIF): void {
-    // if this is the completing party, assign email address from user profile
-    // NB: email cannot be null or empty
-    if (this.isCompletingParty(person) && !!this.getTombstone.userEmail) {
-      person.officer.email = this.getTombstone.userEmail
-    }
-
     const newList: OrgPersonIF[] = Object.assign([], this.orgPersonList)
     if (this.activeIndex === -1) {
       // Add Person.
@@ -205,6 +201,7 @@ export default class PeopleRolesMixin extends Vue {
     this.resetData()
   }
 
+  /** Called by ListPeopleAndRoles component event. */
   protected async onRemovePerson (index: number): Promise<void> {
     const orgPerson = this.orgPersonList[index]
     const isProprietor = this.isProprietor(orgPerson)

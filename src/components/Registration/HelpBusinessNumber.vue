@@ -31,6 +31,11 @@
         </ul>
 
         <p class="my-4">
+          You can find your business number on the correspondence sent to you for the
+          accounts listed above.
+        </p>
+
+        <p class="my-4">
           You may also have a business number that you can use for this registration if the
           following applies:
         </p>
@@ -100,6 +105,10 @@ export default class HelpBusinessNumber extends Vue {
 .help-header {
   display: flex;
   justify-content: center;
+}
+
+a {
+  text-decoration: none;
 }
 
 .help-btn.bottom {
