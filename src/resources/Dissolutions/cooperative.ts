@@ -137,7 +137,8 @@ export const CooperativeDissolutionResource: DissolutionResourceIF = {
                 submitted to vote on the resolution.  It is passed by either being consented to in writing by all
                 members or in a general meeting.`
             },
-            { type: ItemTypes.PARTIAL_ITEMS,
+            {
+              type: ItemTypes.PARTIAL_ITEMS,
               value: [
                 {
                   type: ItemTypes.TEXT,
@@ -149,6 +150,10 @@ export const CooperativeDissolutionResource: DissolutionResourceIF = {
                     linkText: 'Cooperative Association Act',
                     href: 'https://www.bclaws.gov.bc.ca/civix/document/id/complete/statreg/99028_01#section1'
                   }
+                },
+                {
+                  type: ItemTypes.TEXT,
+                  value: '.'
                 }
               ]
             },

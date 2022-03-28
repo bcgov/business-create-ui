@@ -1,6 +1,6 @@
 // Libraries
 import { Component, Mixins } from 'vue-property-decorator'
-import { NameRequestStates } from '@/enums'
+import { NameRequestStates, NameRequestTypes } from '@/enums'
 import { NameRequestIF } from '@/interfaces'
 import { DateMixin } from '@/mixins'
 
@@ -61,6 +61,7 @@ export default class NameRequestMixin extends Mixins(DateMixin) {
       nr.state &&
       nr.expirationDate &&
       nr.legalType &&
+      (nr.request_action_cd === NameRequestTypes.NEW) &&
       !!this.getNrApprovedName(nr)
     )
   }

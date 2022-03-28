@@ -9,6 +9,8 @@ export interface OfficerIF {
   lastName: string
   organizationName: string
   email?: string
+  incorpNumber?: string // business proprietors and partners only
+  businessNumber?: string // proprietors and partners only
 }
 
 export interface OrgPersonIF {

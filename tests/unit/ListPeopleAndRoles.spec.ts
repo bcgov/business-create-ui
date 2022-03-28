@@ -92,11 +92,11 @@ describe('List People And Roles component', () => {
     const peoplesListItem1 = wrapper.vm.$el.querySelectorAll('.people-roles-content')[0]
     const peoplesListItem2 = wrapper.vm.$el.querySelectorAll('.people-roles-content')[1]
 
-    expect(peoplesListItem1.querySelector('.people-roles-title').textContent)
-      .toContain('Cameron D Bowler')
+    expect(peoplesListItem1.querySelector('.name-column .name').textContent)
+      .toBe('Cameron D Bowler')
 
-    expect(peoplesListItem2.querySelector('.people-roles-title').textContent)
-      .toContain('Sysco Foods Company')
+    expect(peoplesListItem2.querySelector('.name-column .name').textContent)
+      .toBe('Sysco Foods Company')
   })
 
   it('displays the correct address data in the peoples / roles list', () => {
@@ -109,10 +109,10 @@ describe('List People And Roles component', () => {
     const peoplesListItem1 = wrapper.vm.$el.querySelectorAll('.people-roles-content')[0]
     const peoplesListItem2 = wrapper.vm.$el.querySelectorAll('.people-roles-content')[1]
 
-    expect(peoplesListItem1.querySelector('.peoples-roles-mailing-address').textContent)
+    expect(peoplesListItem1.querySelector('.mailing-address-column').textContent)
       .toContain('122-12210 Boul De Pierrefonds')
 
-    expect(peoplesListItem2.querySelector('.peoples-roles-mailing-address').textContent)
+    expect(peoplesListItem2.querySelector('.mailing-address-column').textContent)
       .toContain('12-1044 Boul 21De Normandie')
   })
 
@@ -125,10 +125,10 @@ describe('List People And Roles component', () => {
 
     const peoplesListItem = wrapper.vm.$el.querySelectorAll('.people-roles-content')[0]
 
-    expect(peoplesListItem.querySelector('.peoples-roles-mailing-address').textContent)
+    expect(peoplesListItem.querySelector('.mailing-address-column').textContent)
       .toContain('122-12210 Boul De Pierrefonds')
 
-    expect(peoplesListItem.querySelector('.peoples-roles-delivery-address').textContent)
+    expect(peoplesListItem.querySelector('.delivery-address-column').textContent)
       .toContain('Same as Mailing Address')
   })
 
@@ -142,13 +142,13 @@ describe('List People And Roles component', () => {
 
     const peoplesListItem = wrapper.vm.$el.querySelectorAll('.people-roles-content')[0]
 
-    expect(peoplesListItem.querySelector('.peoples-roles-mailing-address').textContent)
+    expect(peoplesListItem.querySelector('.mailing-address-column').textContent)
       .toContain('122-12210 Boul De Pierrefonds')
 
-    expect(peoplesListItem.querySelector('.peoples-roles-delivery-address').textContent).not
+    expect(peoplesListItem.querySelector('.delivery-address-column').textContent).not
       .toContain('Same as Mailing Address')
 
-    expect(peoplesListItem.querySelector('.peoples-roles-delivery-address').textContent)
+    expect(peoplesListItem.querySelector('.delivery-address-column').textContent)
       .toContain('123 Different rd')
   })
 
@@ -161,12 +161,12 @@ describe('List People And Roles component', () => {
     const peoplesListItem1 = wrapper.vm.$el.querySelectorAll('.people-roles-content')[0]
     const peoplesListItem2 = wrapper.vm.$el.querySelectorAll('.people-roles-content')[1]
 
-    expect(peoplesListItem1.querySelectorAll('.col-roles')[0].textContent)
+    expect(peoplesListItem1.querySelectorAll('.roles-column p')[0].textContent)
       .toContain('Completing Party')
-    expect(peoplesListItem1.querySelectorAll('.col-roles')[1].textContent)
+    expect(peoplesListItem1.querySelectorAll('.roles-column p')[1].textContent)
       .toContain('Director')
 
-    expect(peoplesListItem2.querySelector('.col-roles').textContent).toContain('Incorporator')
+    expect(peoplesListItem2.querySelector('.roles-column').textContent).toContain('Incorporator')
   })
 
   it('displays the actions menu when viewed not in summary view', () => {
@@ -178,8 +178,8 @@ describe('List People And Roles component', () => {
     const peoplesListItem1 = wrapper.vm.$el.querySelectorAll('.people-roles-content')[0]
     const peoplesListItem2 = wrapper.vm.$el.querySelectorAll('.people-roles-content')[1]
 
-    expect(peoplesListItem1.querySelector('.actions')).not.toBeNull()
-    expect(peoplesListItem2.querySelector('.actions')).not.toBeNull()
+    expect(peoplesListItem1.querySelector('.actions-column')).not.toBeNull()
+    expect(peoplesListItem2.querySelector('.actions-column')).not.toBeNull()
   })
 
   it('does NOT display the actions menu when viewed in summary view', () => {

@@ -243,7 +243,9 @@ export default class IncorporationAgreement extends Mixins(CommonMixin, EnumMixi
   // Local properties
   private helpToggle: boolean = false
   private readMoreFlag: boolean = false
-  readonly section42Url = `https://www.bclaws.gov.bc.ca/civix/document/id/complete/statreg/02057_02#section42`
+
+  readonly section42Url = 'https://www.bclaws.gov.bc.ca/civix/document/id/complete/statreg/' +
+    '02057_02#section42'
 
   /** The entity description. */
   private get entityDescription (): string {

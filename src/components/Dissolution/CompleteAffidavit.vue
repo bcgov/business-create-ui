@@ -33,15 +33,13 @@
           </header>
 
           <p>{{getAffidavitResources.helpSection.header}}</p>
-          <ul class="mt-6">
+          <ul class="bulleted-list mt-6">
             <li
               v-for="(item, index) in getAffidavitResources.helpSection.helpText"
               class="mt-2"
               :key="index"
-            >
-              <v-icon class="mr-2">mdi-circle-small</v-icon>
-              <span class="break-spaces">{{item}}</span>
-            </li>
+              v-html="item"
+            />
           </ul>
           <p class="mt-4"><strong>Note:</strong> {{ getAffidavitResources.helpSection.note }}</p>
           <u class="help-btn" @click="helpToggle = !helpToggle"><small>Hide Help</small></u>

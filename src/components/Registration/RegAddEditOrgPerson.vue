@@ -11,16 +11,19 @@
           <div class="meta-container">
 
             <!-- FUTURE: move header text to resource file so this component is generic -->
+            <!-- Title for org -->
             <label class="add-org-header" v-if="isOrg">
               <span v-if="activeIndex === -1">Add Business or Corporation</span>
               <span v-else>Edit Business or Corporation</span>
             </label>
 
+            <!-- Title for person -->
             <label class="add-org-header" v-if="isPerson">
               <span v-if="activeIndex === -1">Add Person</span>
               <span v-else>Edit Person</span>
             </label>
 
+            <!-- The form -->
             <div class="meta-container__inner">
               <v-card outlined class="message-box" v-if="isCompletingParty && !isRoleStaff">
                 <p>
@@ -42,9 +45,9 @@
                 v-on:submit.prevent
               >
                 <!-- Person's Name -->
-                <template v-if="isPerson">
-                  <div class="font-weight-bold">Person's Name</div>
-                  <div class="form__row three-column mt-4">
+                <article v-if="isPerson">
+                  <label>Person's Name</label>
+                  <div class="three-column mt-4 mb-n6">
                     <!-- NB: only staff can change Completing Party names -->
                     <v-text-field
                       filled
@@ -74,12 +77,12 @@
                       :readonly="isCompletingParty && !isRoleStaff"
                     />
                   </div>
-                </template>
+                </article>
 
                 <!-- Org's Name -->
-                <template v-if="isOrg">
-                  <div class="font-weight-bold">Corporation or Firm Name</div>
-                  <div class="org-name-container mt-4">
+                <article v-if="isOrg">
+                  <label>Corporation or Firm Name</label>
+                  <div class="org-name-container mt-4 mb-n6">
                     <v-text-field
                       filled
                       class="item"
@@ -89,74 +92,125 @@
                       :rules="Rules.OrgNameRules"
                     />
                   </div>
-                </template>
+                </article>
 
                 <!-- Roles -->
-                <div class="font-weight-bold mt-2">Roles</div>
-                <v-card flat rounded="sm" class="gray-card mt-4 px-4">
-                  <v-row>
-                    <v-col cols="4" v-if="showCompletingPartyRole">
-                      <v-checkbox
-                        id="cp-checkbox"
-                        v-model="selectedRoles"
-                        :value="RoleTypes.COMPLETING_PARTY"
-                        :label="RoleTypes.COMPLETING_PARTY"
-                        :disabled="true"
-                        @change="assignCompletingPartyRole()"
-                      />
-                    </v-col>
+                <article class="mt-8">
+                  <label>Roles</label>
+                  <v-card flat rounded="sm" class="gray-card mt-4 px-4">
+                    <v-row class="align-center">
+                      <v-col cols="4" v-if="showCompletingPartyRole">
+                        <v-checkbox
+                          id="cp-checkbox"
+                          class="mt-5"
+                          v-model="selectedRoles"
+                          :value="RoleTypes.COMPLETING_PARTY"
+                          :label="RoleTypes.COMPLETING_PARTY"
+                          :disabled="true"
+                        />
+                      </v-col>
 
-                    <v-col cols="4" v-if="showProprietoryRole">
-                      <v-checkbox
-                        v-model="selectedRoles"
-                        :value="RoleTypes.PROPRIETOR"
-                        :label="RoleTypes.PROPRIETOR"
-                        :disabled="true"
-                        :rules="roleRules"
-                        @click="updateSameAsMailingChkBox()"
-                      />
-                    </v-col>
-                  </v-row>
-                </v-card>
+                      <v-col cols="4" v-if="showProprietorRole">
+                        <v-checkbox
+                          id="proprietor-checkbox"
+                          class="mt-5"
+                          v-model="selectedRoles"
+                          :value="RoleTypes.PROPRIETOR"
+                          :label="RoleTypes.PROPRIETOR"
+                          :disabled="true"
+                        />
+                      </v-col>
+
+                      <!-- FUTURE (for GP) -->
+                      <v-col cols="4" v-if="showPartnerRole">
+                        <v-checkbox
+                          id="partner-checkbox"
+                          class="mt-5"
+                          v-model="selectedRoles"
+                          :value="RoleTypes.PARTNER"
+                          :label="RoleTypes.PARTNER"
+                          :disabled="true"
+                        />
+                      </v-col>
+                    </v-row>
+                  </v-card>
+                </article>
+
+                <!-- Business Number (for proprietors only) -->
+                <article v-if="isProprietor" class="mt-8">
+                  <label>Business Number</label>
+                  <p class="mt-4 mb-0">
+                    If you have an existing business number, enter it below and we will contact
+                    Canada Revenue Agency and ask them to link it to this registration.
+                  </p>
+                  <HelpBusinessNumber class="mt-4" />
+                  <v-text-field
+                    filled
+                    persistent-hint
+                    class="item mt-4 mb-n2"
+                    label="Business Number (Optional)"
+                    id="person__business-number"
+                    hint="First 9 digits of the CRA Business Number"
+                    v-model.trim="orgPerson.officer.businessNumber"
+                    :rules="businessNumberRules"
+                  />
+                </article>
+
+                <!-- Email Address -->
+                <article class="mt-8">
+                  <label>Email Address</label>
+                  <p class="mt-4 mb-0">
+                    Copies of the registration documents will be sent to this email address.
+                  </p>
+                  <v-text-field
+                    filled
+                    class="item mt-4 mb-n6"
+                    label="Email Address"
+                    id="person__email-address"
+                    v-model.trim="orgPerson.officer.email"
+                    :rules="Rules.EmailRules"
+                    :readonly="isCompletingParty && !isRoleStaff"
+                  />
+                </article>
 
                 <!-- Mailing Address -->
-                <div class="font-weight-bold mt-8">Mailing Address</div>
-                <MailingAddress
-                  ref="mailingAddressNew"
-                  class="mt-6"
-                  :editing="true"
-                  :schema="PersonAddressSchema"
-                  :address="inProgressMailingAddress"
-                  @update:address="updateMailingAddress"
-                  @valid="updateMailingAddressValidity"
+                <article class="mt-8">
+                  <label>Mailing Address</label>
+                  <MailingAddress
+                    ref="mailingAddressNew"
+                    class="mt-4 mb-n6"
+                    :editing="true"
+                    :schema="PersonAddressSchema"
+                    :address="inProgressMailingAddress"
+                    @update:address="updateMailingAddress"
+                    @valid="updateMailingAddressValidity"
+                  />
+                </article>
+
+                <!-- Delivery Address (for all roles) -->
+                <v-checkbox
+                  class="inherit-checkbox mt-8"
+                  hide-details
+                  label="Delivery Address same as Mailing Address"
+                  v-model="inheritMailingAddress"
                 />
 
-                <!-- Delivery Address -->
-                <div class="form__row">
-                  <v-checkbox
-                    class="inherit-checkbox"
-                    hide-details
-                    label="Delivery Address same as Mailing Address"
-                    v-model="inheritMailingAddress"
+                <article v-if="!inheritMailingAddress" class="mt-8">
+                  <label>Delivery Address</label>
+                  <DeliveryAddress
+                    ref="deliveryAddressNew"
+                    class="mt-4 mb-n6"
+                    :editing="true"
+                    :schema="PersonAddressSchema"
+                    :address="inProgressDeliveryAddress"
+                    :noPoBox="true"
+                    @update:address="updateDeliveryAddress"
+                    @valid="updateDeliveryAddressValidity"
                   />
-
-                  <template v-if="!inheritMailingAddress">
-                    <div class="font-weight-bold mt-4">Delivery Address</div>
-                    <DeliveryAddress
-                      ref="deliveryAddressNew"
-                      class="mt-6"
-                      :editing="true"
-                      :schema="PersonAddressSchema"
-                      :address="inProgressDeliveryAddress"
-                      :noPoBox="true"
-                      @update:address="updateDeliveryAddress"
-                      @valid="updateDeliveryAddressValidity"
-                    />
-                  </template>
-                </div>
+                </article>
 
                 <!-- Action Buttons -->
-                <div class="form__row form__btns mt-6">
+                <div class="form__btns mt-10">
                   <v-btn
                     id="btn-remove"
                     large outlined color="error"
@@ -176,7 +230,6 @@
               </v-form>
             </div>
           </div>
-
         </li>
       </ul>
     </v-expand-transition>
@@ -184,326 +237,39 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Emit, Mixins } from 'vue-property-decorator'
-import { Getter } from 'vuex-class'
-import { v4 as uuidv4 } from 'uuid'
-import {
-  OrgPersonIF, EmptyAddress, FormIF, AddressIF, ConfirmDialogType, RolesIF
-} from '@/interfaces'
+import { Component, Mixins } from 'vue-property-decorator'
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
 import { ConfirmDialog } from '@bcrs-shared-components/confirm-dialog'
-import { CommonMixin } from '@/mixins'
-import { CorpTypeCd, RoleTypes, PartyTypes } from '@/enums'
-import { PersonAddressSchema } from '@/schemas'
-import { Rules } from '@/rules'
-import { cloneDeep } from 'lodash'
+import HelpBusinessNumber from '@/components/Registration/HelpBusinessNumber.vue'
+import { AddEditOrgPersonMixin } from '@/mixins'
 
 /** This is a sub-component of PeopleAndRoles. */
 @Component({
   components: {
     ConfirmDialog,
     DeliveryAddress: BaseAddress,
-    MailingAddress: BaseAddress
+    MailingAddress: BaseAddress,
+    HelpBusinessNumber
   }
 })
-export default class RegAddEditOrgPerson extends Mixins(CommonMixin) {
-  // Refs
-  $refs!: {
-    addPersonOrgForm: FormIF
-    mailingAddressNew: any
-    deliveryAddressNew: any
-    reassignCPDialog: ConfirmDialogType
-  }
-
-  @Prop() readonly initialValue!: OrgPersonIF
-  @Prop() readonly activeIndex: number
-  @Prop() readonly existingCompletingParty: OrgPersonIF
-
-  @Getter getCurrentDate!: string
-  @Getter isRoleStaff!: boolean
-  @Getter isTypeBcomp!: boolean
-  @Getter getEntityType!: CorpTypeCd
-
-  // Local properties
-  private orgPerson: OrgPersonIF = null
-  private addPersonOrgFormValid = true
-
-  // Address related properties
-  private inProgressMailingAddress: AddressIF
-  private inProgressDeliveryAddress: AddressIF
-  private inheritMailingAddress = true
-  private mailingAddressValid = false
-  private deliveryAddressValid = false
-  private reassignCompletingParty = false
-
-  /** Model value for roles checboxes. */
-  private selectedRoles: Array<RoleTypes> = []
-
-  // Person Address schema for template
-  readonly PersonAddressSchema = PersonAddressSchema
-
-  // Enums and rules for template
-  readonly CorpTypeCd = CorpTypeCd
-  readonly RoleTypes = RoleTypes
-  readonly PartyTypes = PartyTypes
-  readonly Rules = Rules
-
-  /** The validation rules for the roles. */
-  get roleRules (): Array<Function> {
-    return [ () => this.selectedRoles.length > 0 || 'A role is required' ]
-  }
-
-  /** Whether Completing Party is checked. */
-  private get isCompletingParty (): boolean {
-    return this.selectedRoles.includes(RoleTypes.COMPLETING_PARTY)
-  }
-
-  /** Whether Incorporator is checked. */
-  private get isIncorporator (): boolean {
-    return this.selectedRoles.includes(RoleTypes.INCORPORATOR)
-  }
-
-  /** Whether Director is checked. */
-  private get isProprietor (): boolean {
-    return this.selectedRoles.includes(RoleTypes.PROPRIETOR)
-  }
-
-  /** Whether current data object is a person. */
-  private get isPerson (): boolean {
-    return (this.orgPerson.officer?.partyType === PartyTypes.PERSON)
-  }
-
-  /** Whether current data object is an organization (corporation/firm). */
-  private get isOrg (): boolean {
-    return (this.orgPerson.officer?.partyType === PartyTypes.ORGANIZATION)
-  }
-
-  /** Whether the Completing Party role should be shown. */
-  private get showCompletingPartyRole (): boolean {
-    const isRoleCompletingParty = !!this.orgPerson.roles.find(role => role.roleType === RoleTypes.COMPLETING_PARTY)
-    // either this is the completing party,
-    // or this is staff adding/editing a person
-    return (isRoleCompletingParty || (this.isRoleStaff && this.isPerson))
-  }
-
-  /** Whether the Proprietor role should be shown. */
-  private get showProprietoryRole (): boolean {
-    const isRoleProprietor = !!this.orgPerson.roles.find(role => role.roleType === RoleTypes.PROPRIETOR)
-    // only staff can edit Completing Party role
-    return isRoleProprietor
-  }
-
-  /** Called when component is created. */
-  created (): void {
-    if (this.initialValue) {
-      this.orgPerson = { ...this.initialValue }
-      this.orgPerson.officer = { ...this.initialValue.officer }
-
-      // set checkbox array
-      this.selectedRoles = this.orgPerson.roles.map(r => r.roleType)
-
-      // set address properties
-      this.inProgressMailingAddress = { ...this.orgPerson.mailingAddress }
-      this.inProgressDeliveryAddress = { ...this.orgPerson.deliveryAddress }
-
-      // initialize inheritMailingAddress checkbox conditionally
-      this.updateSameAsMailingChkBox()
-    }
-  }
-
-  /** decide if the "Delivery Address same as Mailing Address" check box should be checked */
-  private updateSameAsMailingChkBox (): void {
-    // if not already assigned, initialize delivery address to prevent template errors
-    if (!this.inProgressDeliveryAddress) this.inProgressDeliveryAddress = cloneDeep(EmptyAddress)
-
-    this.inheritMailingAddress = this.isSame(this.inProgressMailingAddress, this.inProgressDeliveryAddress)
-
-    if (this.inheritMailingAddress) {
-      const isNew = this.isEmptyAddress(this.orgPerson.mailingAddress) &&
-                    this.isEmptyAddress(this.orgPerson.deliveryAddress)
-
-      this.inheritMailingAddress = !isNew
-    }
-  }
-
-  /** Whether the address object is empty or with only with default input values */
-  private isEmptyAddress (address: AddressIF): boolean {
-    return !address ||
-           (!address.addressCity &&
-           (!address.addressCountry || address.addressCountry === 'CA') &&
-           (!address.addressRegion || address.addressRegion === 'BC') &&
-           !address.deliveryInstructions &&
-           !address.postalCode &&
-           !address.streetAddress &&
-           !address.streetAddressAdditional)
-  }
-
-  // Event Handlers
-  private updateMailingAddress (val): void {
-    this.inProgressMailingAddress = val
-  }
-
-  private updateDeliveryAddress (val): void {
-    this.inProgressDeliveryAddress = val
-  }
-
-  private updateMailingAddressValidity (val: boolean): void {
-    this.mailingAddressValid = val
-  }
-
-  private updateDeliveryAddressValidity (val: boolean): void {
-    this.deliveryAddressValid = val
-  }
-
-  private assignCompletingPartyRole (): void {
-    if (
-      this.orgPerson &&
-      this.isCompletingParty &&
-      this.existingCompletingParty &&
-      this.orgPerson.officer.id !== this.existingCompletingParty.officer.id
-    ) {
-      this.confirmReassignPerson()
-    }
-  }
-
-  private validateAddPersonOrgForm (): void {
-    // validate the main form and address form(s)
-    this.$refs.addPersonOrgForm.validate()
-    this.$refs.mailingAddressNew.$refs.addressForm.validate()
-    if (this.$refs.deliveryAddressNew) {
-      this.$refs.deliveryAddressNew.$refs.addressForm.validate()
-    }
-
-    // only proceed if form is valid
-    if (this.isFormValid) {
-      if (this.reassignCompletingParty) {
-        this.emitReassignCompletingPartyEvent()
-      }
-      const person = this.setPerson()
-      this.emitPersonInfo(person)
-      this.resetAddPersonData(false) // don't emit event
-    }
-  }
-
-  private confirmReassignPerson () {
-    // open confirmation dialog and wait for response
-    this.$refs.reassignCPDialog.open(
-      'Change Completing Party?',
-      this.reassignPersonErrorMessage(),
-      {
-        width: '45rem',
-        persistent: true,
-        yes: 'Change Completing Party',
-        no: null,
-        cancel: 'Cancel'
-      }
-    ).then(async (confirm) => {
-      if (confirm) {
-        this.reassignCompletingParty = true
-      }
-    }).catch(() => {
-      // remove the role
-      this.selectedRoles = this.selectedRoles.filter(r => r !== RoleTypes.COMPLETING_PARTY)
-    })
-  }
-
-  /** Helper to set the current director data. */
-  private setPerson (): OrgPersonIF {
-    let person: OrgPersonIF = { ...this.orgPerson }
-    person.officer = { ...this.orgPerson.officer }
-    if (this.activeIndex === -1) {
-      // assign a new (random) ID
-      person.officer.id = uuidv4()
-    }
-    person.mailingAddress = { ...this.inProgressMailingAddress }
-    person.deliveryAddress = this.setPersonDeliveryAddress()
-    person.roles = this.setPersonRoles()
-    return person
-  }
-
-  private setPersonDeliveryAddress (): AddressIF {
-    if (this.inheritMailingAddress) {
-      this.inProgressDeliveryAddress = this.inProgressMailingAddress
-    }
-    return { ...this.inProgressDeliveryAddress }
-  }
-
-  private setPersonRoles (): RolesIF[] {
-    let roles: RolesIF[] = []
-    if (this.isCompletingParty) {
-      roles.push({ roleType: RoleTypes.COMPLETING_PARTY, appointmentDate: this.getCurrentDate })
-    }
-    if (this.isProprietor) {
-      roles.push({ roleType: RoleTypes.PROPRIETOR, appointmentDate: this.getCurrentDate })
-    }
-    return roles
-  }
-
-  private resetAddPersonData (emitEvent: boolean): void {
-    this.$refs.addPersonOrgForm.reset()
-    this.$refs.mailingAddressNew.$refs.addressForm.reset()
-    if (this.$refs.deliveryAddressNew) {
-      this.$refs.deliveryAddressNew.$refs.addressForm.reset()
-    }
-    if (emitEvent) {
-      this.emitResetEvent()
-    }
-  }
-
-  private reassignPersonErrorMessage (): string {
-    return `The Completing Party role is already assigned to ${this.existingCompletingPartyName}.\n` +
-      'Selecting "Completing Party" here will change the Completing Party.'
-  }
-
-  /** The formatted, existing completing party name. */
-  private get existingCompletingPartyName (): string {
-    let name = this.existingCompletingParty.officer.firstName
-    if (this.existingCompletingParty.officer.middleName) {
-      name += ` ${this.existingCompletingParty.officer.middleName}`
-    }
-    name += ` ${this.existingCompletingParty.officer.lastName}`
-    return name
-  }
-
-  /** True if the form is valid. */
-  private get isFormValid (): boolean {
-    let isFormValid = (this.addPersonOrgFormValid && this.mailingAddressValid)
-    if (!this.inheritMailingAddress) {
-      isFormValid = (isFormValid && this.deliveryAddressValid)
-    }
-    return isFormValid
-  }
-
-  // Event emitters
-  @Emit('addEditPerson')
-  private emitPersonInfo (personInfo: OrgPersonIF): void {}
-
-  @Emit('resetEvent')
-  private emitResetEvent (): void {}
-
-  @Emit('removePerson')
-  private emitRemovePerson (activeIndex: number): void {}
-
-  @Emit('removeCompletingPartyRole')
-  private emitReassignCompletingPartyEvent (): void {}
+export default class RegAddEditOrgPerson extends Mixins(AddEditOrgPersonMixin) {
+  //
+  // NB: see mixin for common methods, getters, etc.
+  //
 }
 </script>
 
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
 
-[class^="col"] {
+.row > .col {
   padding-top: 0;
   padding-bottom: 0;
 }
 
-.people-roles-container {
-  margin-top: 1rem;
-  padding: 1.25rem;
-}
-
-p {
-  padding-top: 0.5rem;
+label {
+  font-weight: bold;
+  color: $gray9;
 }
 
 li {
@@ -511,7 +277,7 @@ li {
   padding-top: 0.25rem;
 }
 
-.form__row.three-column {
+div.three-column {
   display: flex;
   flex-flow: row nowrap;
   align-items: stretch;
@@ -547,10 +313,6 @@ li {
   flex-flow: column nowrap;
   position: relative;
 
-  > label:first-child {
-    font-weight: bold;
-  }
-
   &__inner {
     flex: 1 1 auto;
   }
@@ -572,7 +334,6 @@ li {
 
 .add-org-header {
   font-size: $px-16;
-  font-weight: bold;
   line-height: 1.5rem;
 }
 

@@ -36,12 +36,12 @@
       </ul>
     </section>
 
-    <!-- *** TODO: only show this blurb when user needs to select the Proprietor -->
     <!-- More blurb(s) -->
-    <template v-if="blurb2">
+    <!-- NB: only shown when user needs to select the Proproietor -->
+    <template v-if="blurb2 && orgPersonList.length > 0 && !validNumProprietors">
       <p class="blurb-para" v-html="blurb2" />
     </template>
-    <template v-if="blurbs2">
+    <template v-if="blurbs2 && orgPersonList.length > 0 && !validNumProprietors">
       <p v-for="(blurb, index) in blurbs2" :key="`blurb2-${index}`" class="blurb-para" v-html="blurb" />
     </template>
 
@@ -75,6 +75,7 @@
         <span>Add the Completing Party</span>
       </v-btn>
 
+      <!-- *** FUTURE: fix v-if to work for multiple proprietors for GPs -->
       <v-btn
         v-if="!validNumProprietors"
         id="btn-add-person"
@@ -88,6 +89,7 @@
         <span>Add a Person</span>
       </v-btn>
 
+      <!-- *** FUTURE: fix v-if to work for multiple proprietors for GPs -->
       <v-btn
         v-if="!validNumProprietors"
         id="btn-add-organization"
@@ -103,7 +105,7 @@
     </div>
 
     <!-- Add/Edit Bus/Corp -->
-    <v-card flat v-if="showOrgPersonForm" class="people-roles-container">
+    <v-card flat v-if="showOrgPersonForm" class="mt-4">
       <RegAddEditOrgPerson
         :initialValue="currentOrgPerson"
         :activeIndex="activeIndex"
@@ -116,7 +118,7 @@
     </v-card>
 
     <!-- List of People and Roles -->
-    <v-card flat v-if="orgPersonList.length > 0" :disabled="showOrgPersonForm">
+    <v-card flat v-if="orgPersonList.length > 0" :disabled="showOrgPersonForm" class="mt-4">
       <ListPeopleAndRoles
         :isSummary="false"
         @editPerson="onEditPerson($event)"
@@ -128,10 +130,10 @@
 
 <script lang="ts">
 import { Component, Mixins } from 'vue-property-decorator'
-import { Getter } from 'vuex-class'
+import { Action, Getter } from 'vuex-class'
 import { cloneDeep } from 'lodash'
-import { AddressIF, EmptyAddress, EmptyOrgPerson } from '@/interfaces'
-import { PartyTypes, RoleTypes } from '@/enums'
+import { ActionBindingIF, AddressIF, EmptyAddress, EmptyOrgPerson } from '@/interfaces'
+import { BusinessTypes, PartyTypes, RoleTypes } from '@/enums'
 import { PeopleRolesMixin } from '@/mixins'
 import { ConfirmDialog } from '@bcrs-shared-components/confirm-dialog'
 import HelpSection from '@/components/common/HelpSection.vue'
@@ -156,6 +158,8 @@ export default class RegPeopleAndRoles extends Mixins(PeopleRolesMixin) {
   @Getter getUserLastName!: string
   @Getter getUserAddress!: AddressIF
 
+  @Action setRegistrationBusinessType!: ActionBindingIF
+
   //
   // NB: see mixin for common methods, getters, etc.
   //
@@ -167,10 +171,12 @@ export default class RegPeopleAndRoles extends Mixins(PeopleRolesMixin) {
 
     if (isProprietor && isPerson) {
       if (!await this.confirmAddProprietorPerson()) return
+      this.setRegistrationBusinessType(BusinessTypes.SP)
     }
 
     if (isProprietor && isOrganization) {
       if (!await this.confirmAddProprietorOrganization()) return
+      this.setRegistrationBusinessType(BusinessTypes.DBA)
     }
 
     // first assign empty org/person object
@@ -190,15 +196,16 @@ export default class RegPeopleAndRoles extends Mixins(PeopleRolesMixin) {
     // assign party type (org or person)
     this.currentOrgPerson.officer.partyType = partyType
 
-    // pre-populate Completing Party's name and mailing address
+    // pre-populate Completing Party's name, email address and mailing address
     if (roleType === RoleTypes.COMPLETING_PARTY && partyType === PartyTypes.PERSON) {
       this.currentOrgPerson.officer.firstName = this.getUserFirstName || ''
       this.currentOrgPerson.officer.lastName = this.getUserLastName || ''
+      this.currentOrgPerson.officer.email = this.getTombstone.userEmail
       this.currentOrgPerson.mailingAddress = this.getUserAddress || { ...EmptyAddress }
     }
 
-    // make a director's initial delivery address "same as" their mailing address
-    if (this.isDirector(this.currentOrgPerson)) {
+    // make a proprietor's initial delivery address "same as" their mailing address
+    if (isProprietor && isPerson) {
       this.currentOrgPerson.deliveryAddress = cloneDeep(this.currentOrgPerson.mailingAddress)
     }
 
@@ -221,10 +228,6 @@ export default class RegPeopleAndRoles extends Mixins(PeopleRolesMixin) {
 
 .v-icon.mdi-circle-small {
   margin-top: -2px;
-}
-
-.people-roles-container {
-  margin-top: 1rem;
 }
 
 ul {

@@ -32,39 +32,38 @@
             <h2>{{getCreateMemorandumResource.helpSection.header}}</h2>
           </header>
 
+          <!-- help section 1 -->
           <p id="help-text-section-1"
             v-for="(item, index) in getCreateMemorandumResource.helpSection.helpText.section1.items"
-            class="mt-6"
+            class="mt-4"
             :key="index"
-          >{{ item }}
-          </p>
+            v-html="item"
+          />
 
+          <!-- help section 2 -->
           <p class="help-section-title font-weight-bold mt-4">
             {{getCreateMemorandumResource.helpSection.helpText.section2.label}}
           </p>
-          <ul class="mt-6">
+          <ul class="bulleted-list mt-4">
             <li
               v-for="(item, index) in getCreateMemorandumResource.helpSection.helpText.section2.items"
               class="mt-2"
               :key="index"
-            >
-              <v-icon>mdi-circle-small</v-icon>
-              <span class="ml-2">{{item}}</span>
-            </li>
+              v-html="item"
+            />
           </ul>
 
+          <!-- help section 3 -->
           <p class="help-section-title font-weight-bold mt-4">
             {{getCreateMemorandumResource.helpSection.helpText.section3.label}}
           </p>
-          <ul class="mt-6">
+          <ul class="bulleted-list mt-4">
             <li
               v-for="(item, index) in getCreateMemorandumResource.helpSection.helpText.section3.items"
               class="mt-2"
               :key="index"
-            >
-              <v-icon>mdi-circle-small</v-icon>
-              <span class="ml-2">{{item}}</span>
-            </li>
+              v-html="item"
+            />
           </ul>
           <u class="help-btn" @click="helpToggle = !helpToggle"><small>Hide Help</small></u>
         </section>

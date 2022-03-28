@@ -118,7 +118,7 @@
     <!-- Folio / Reference Number -->
     <section class="mt-10" v-if="isEntityType && isPremiumAccount">
       <header id="folio-number-header">
-        <h2>Folio / Reference Number (optional)</h2>
+        <h2>Folio / Reference Number (Optional)</h2>
         <p>Add an optional Folio or Reference Number about this business for your own tracking purposes.
            This information is not used by the BC Business Registry.
         </p>

@@ -1,3 +1,4 @@
+export { default as AddEditOrgPersonMixin } from './add-edit-org-person-mixin'
 export { default as CommonMixin } from './common-mixin'
 export { default as CurrencyLookupMixin } from '@/mixins/currency-lookup-mixin'
 export { default as DateMixin } from './date-mixin'

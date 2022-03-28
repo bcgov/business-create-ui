@@ -313,3 +313,16 @@ p {
   margin-top: 1.5rem;
   padding: 2rem 1.5rem;
 }
+
+// Unordered list with bullet markers
+ul.bulleted-list {
+  list-style-type: none;
+  margin-left: 2rem;
+  padding-left: 1rem;
+
+  li::before {
+    content: '•';
+    margin-left: -2rem;
+    margin-right: 1.675rem;
+  }
+}
