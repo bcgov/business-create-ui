@@ -11,21 +11,25 @@
           <div class="meta-container">
 
             <!-- FUTURE: move header text to resource file so this component is generic -->
+            <!-- Title for org -->
             <label class="add-org-header" v-if="isOrg && isTypeBcomp">
               <span v-if="activeIndex === -1">Add Corporation or Firm</span>
               <span v-else>Edit Corporation or Firm</span>
             </label>
 
+            <!-- Title for org -->
             <label class="add-org-header" v-if="isOrg && isTypeCoop">
               <span v-if="activeIndex === -1">Add Organization</span>
               <span v-else>Edit Organization</span>
             </label>
 
+            <!-- Title for person -->
             <label class="add-org-header" v-if="isPerson">
               <span v-if="activeIndex === -1">Add Person</span>
               <span v-else>Edit Person</span>
             </label>
 
+            <!-- The form -->
             <div class="meta-container__inner">
               <v-card outlined class="message-box" v-if="isCompletingParty && !isRoleStaff && isTypeCoop">
                 <p>

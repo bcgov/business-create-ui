@@ -34,33 +34,27 @@
           :key="index"
           no-gutters
         >
-          <v-col class="name-column text-truncate">
-            <v-icon v-if="isPerson(orgPerson)">mdi-account</v-icon>
-            <v-icon v-if="isOrg(orgPerson)">mdi-domain</v-icon>
-            <v-tooltip
-              top
-              :disabled="formatName(orgPerson).length < 25"
-              content-class="top-tooltip"
-              transition="fade-transition"
-            >
-              <template v-slot:activator="{ on }">
-                <span v-on="on" class="name ml-2">{{ formatName(orgPerson) }}</span>
-              </template>
-              <span>{{ formatName(orgPerson) }}</span>
-            </v-tooltip>
-
-            <div v-if="officerEmail(orgPerson)" class="text-wrap">
-              <p class="ml-8">{{ officerEmail(orgPerson) }}</p>
+          <v-col class="name-column d-flex">
+            <div class="pr-2">
+              <v-icon v-if="isPerson(orgPerson)">mdi-account</v-icon>
+              <v-icon v-if="isOrg(orgPerson)">mdi-domain</v-icon>
             </div>
+            <div>
+              <span class="name">{{ formatName(orgPerson) }}</span>
 
-            <div v-if="officerIncorpNumber(orgPerson)" class="text-wrap mt-2">
-              <p class="ml-8">Incorporation Number:</p>
-              <p class="ml-8">{{ officerIncorpNumber(orgPerson) }}</p>
-            </div>
+              <div v-if="officerEmail(orgPerson)" class="text-wrap">
+                <p>{{ officerEmail(orgPerson) }}</p>
+              </div>
 
-            <div v-if="officerBusinessNumber(orgPerson)" class="text-wrap mt-2">
-              <p class="ml-8">Business Number:</p>
-              <p class="ml-8">{{ officerBusinessNumber(orgPerson) }}</p>
+              <div v-if="officerIncorpNumber(orgPerson)" class="text-wrap mt-2">
+                <p>Incorporation Number:</p>
+                <p>{{ officerIncorpNumber(orgPerson) }}</p>
+              </div>
+
+              <div v-if="officerBusinessNumber(orgPerson)" class="text-wrap mt-2">
+                <p>Business Number:</p>
+                <p>{{ officerBusinessNumber(orgPerson) }}</p>
+              </div>
             </div>
           </v-col>
 
