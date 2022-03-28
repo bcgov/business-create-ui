@@ -65,7 +65,7 @@
     </section>
 
     <!-- Start by Adding the Completing Party -->
-    <div class="btn-panel" v-if="orgPersonList.length === 0">
+    <div class="mt-8" v-if="orgPersonList.length === 0">
       <v-btn
         id="btn-start-add-cp"
         outlined
@@ -80,7 +80,7 @@
     </div>
 
     <!-- Add a Person or Organization -->
-    <div class="btn-panel" v-if="orgPersonList.length > 0">
+    <div class="mt-8" v-if="orgPersonList.length > 0">
       <v-btn
         v-if="!validNumCompletingParty"
         id="btn-add-cp"
@@ -121,7 +121,7 @@
     </div>
 
     <!-- Add/Edit Person/Org -->
-    <v-card flat v-if="showOrgPersonForm" class="mt-4">
+    <v-card flat v-if="showOrgPersonForm" class="mt-10">
       <AddEditOrgPerson
         :initialValue="currentOrgPerson"
         :activeIndex="activeIndex"
@@ -135,7 +135,7 @@
     </v-card>
 
     <!-- List of People and Roles -->
-    <v-card flat v-if="orgPersonList.length > 0" class="mt-4" :disabled="showOrgPersonForm">
+    <v-card flat v-if="orgPersonList.length > 0" class="mt-10" :disabled="showOrgPersonForm">
       <ListPeopleAndRoles
         :isSummary="false"
         @editPerson="onEditPerson($event)"
@@ -245,10 +245,6 @@ p {
 
 .rule-item-txt {
   margin-left: 0.5rem;
-}
-
-.btn-panel {
-  padding: 2rem 0;
 }
 
 .btn-outlined-primary:not(:first-of-type) {

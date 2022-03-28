@@ -128,9 +128,9 @@ const emptyPerson = { ...EmptyOrgPerson }
  * @returns the value of the last named event for the wrapper.
  */
 function getLastEvent (wrapper: Wrapper<AddEditOrgPerson>, name: string): any {
-  const eventsList: Array<any> = wrapper.emitted(name)
-  const events: Array<any> = eventsList[eventsList.length - 1]
-  return events[0]
+  const eventsList = wrapper.emitted(name)
+  const events = eventsList && eventsList[eventsList.length - 1]
+  return events && events[0]
 }
 
 /**

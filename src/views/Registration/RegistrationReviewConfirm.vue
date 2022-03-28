@@ -36,12 +36,14 @@
         <DocumentDelivery
           class="py-8 px-6"
           :class="{ 'invalid-section': isDocumentDeliveryInvalid }"
-          :editableCompletingParty="isRoleStaff || isSbcStaff"
+          :contactLabel="'Business Office'"
           :contactValue="getBusinessContact.email"
+          :editableCompletingParty="isRoleStaff || isSbcStaff"
           :completingPartyEmail="getUserEmail"
+          :additionalLabel="documentDeliveryAdditionalLabel"
+          :additionalValue="documentDeliveryAdditionalValue"
           :invalidSection="isDocumentDeliveryInvalid"
           @valid="setDocumentOptionalEmailValidity($event)"
-          contactLabel="Business Office"
         />
       </v-card>
     </section>
@@ -101,7 +103,8 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
-import { ActionBindingIF, ContactPointIF, CertifyIF, DocumentDeliveryIF } from '@/interfaces'
+import { ActionBindingIF, ContactPointIF, CertifyIF, DocumentDeliveryIF, PeopleAndRoleIF } from '@/interfaces'
+import { RoleTypes } from '@/enums'
 import CardHeader from '@/components/common/CardHeader.vue'
 import Certify from '@/components/common/Certify.vue'
 import DocumentDelivery from '@/components/common/DocumentDelivery.vue'
@@ -129,8 +132,41 @@ export default class RegistrationReviewConfirm extends Vue {
   @Getter getValidateSteps!: boolean
   @Getter getDocumentDelivery!: DocumentDeliveryIF
   @Getter isSbcStaff!: boolean
+  @Getter isTypeSoleProp!: boolean
+  @Getter isTypePartnership!: boolean
+  @Getter getAddPeopleAndRoleStep!: PeopleAndRoleIF
 
   @Action setDocumentOptionalEmailValidity!: ActionBindingIF
+
+  /** The Document Delivery additional email label. */
+  get documentDeliveryAdditionalLabel (): string {
+    if (this.isTypeSoleProp) return 'Proprietor'
+    if (this.isTypePartnership) return 'Partners'
+    return null
+  }
+
+  /** The Document Delivery additional email value. */
+  get documentDeliveryAdditionalValue (): string {
+    const orgPersonList = this.getAddPeopleAndRoleStep.orgPeople
+
+    if (this.isTypeSoleProp) {
+      const emails = orgPersonList
+        .filter(op => op.roles.some(role => role.roleType === RoleTypes.PROPRIETOR))
+        .map(op => op.officer?.email)
+        .filter(e => !!e)
+      return emails.join(',')
+    }
+
+    if (this.isTypePartnership) {
+      const emails = orgPersonList
+        .filter(op => op.roles.some(role => role.roleType === RoleTypes.PARTNER))
+        .map(op => op.officer?.email)
+        .filter(e => !!e)
+      return emails.join(',')
+    }
+
+    return null
+  }
 
   /** Is true when the Document Delivery conditions are not met. */
   get isDocumentDeliveryInvalid (): boolean {

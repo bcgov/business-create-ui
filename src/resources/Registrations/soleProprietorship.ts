@@ -19,7 +19,7 @@ export const SoleProprietorshipResource: RegistrationResourceIF = {
 
       'A Sole Proprietorship can have an individual as the proprietor or a business or a ' +
         'corporation as the proprietor. When a business or a corporation is the proprietor, ' +
-        'it is commonly known as <b>Doing Business As</b> since an existing businss is being ' +
+        'it is commonly known as <b>Doing Business As</b> since an existing business is being ' +
         'registered under another name and it is still a Sole Proprietorship registration.'
     ],
     helpSection: null,
