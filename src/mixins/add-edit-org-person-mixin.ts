@@ -30,6 +30,8 @@ export default class AddEditOrgPersonMixin extends Vue {
   @Getter isRoleStaff!: boolean
   @Getter isTypeBcomp!: boolean
   @Getter isTypeCoop!: boolean
+  @Getter isTypeSoleProp!: boolean
+  @Getter isTypePartnership!: boolean
   @Getter getEntityType!: CorpTypeCd
   @Getter getPeopleAndRolesResource!: PeopleAndRolesResourceIF
 
@@ -60,7 +62,7 @@ export default class AddEditOrgPersonMixin extends Vue {
   /** The validation rules for the Business Number. */
   readonly businessNumberRules: Array<Function> = [
     (v: string) => {
-      const pattern = /^[0-9]{5}[ ]?[0-9]{4}$/
+      const pattern = /^[0-9]{9}$/
       return (!v || pattern.test(v)) || 'Invalid business number'
     }
   ]
@@ -155,15 +157,25 @@ export default class AddEditOrgPersonMixin extends Vue {
     return (!this.showCompletingPartyRole && !this.showIncorporatorRole && this.showDirectorRole)
   }
 
-  /* coop and corp display delivery address by default */
-  protected get showDeliveryAddressByDefault (): boolean {
+  /**
+   * Whether to show the delivery address by default.
+   * Applies to some entity types only.
+   */
+  private get showDeliveryAddressByDefault (): boolean {
     return [
       CorpTypeCd.COOP,
       CorpTypeCd.BENEFIT_COMPANY,
       CorpTypeCd.BC_CCC,
       CorpTypeCd.BC_COMPANY,
-      CorpTypeCd.BC_ULC_COMPANY
+      CorpTypeCd.BC_ULC_COMPANY,
+      CorpTypeCd.SOLE_PROP,
+      CorpTypeCd.PARTNERSHIP
     ].includes(this.getEntityType)
+  }
+
+  /** Whether the current data object has a delivery address. */
+  private get hasDeliveryAddress (): boolean {
+    return (this.isDirector || this.isProprietor || (this.isTypeSoleProp || this.isCompletingParty))
   }
 
   /** Called when component is created. */
@@ -177,7 +189,7 @@ export default class AddEditOrgPersonMixin extends Vue {
 
       // set address properties
       this.inProgressMailingAddress = { ...this.orgPerson.mailingAddress }
-      if (this.isDirector || this.isProprietor) {
+      if (this.hasDeliveryAddress) {
         this.inProgressDeliveryAddress = { ...this.orgPerson.deliveryAddress }
         // initialize inheritMailingAddress checkbox conditionally
         this.updateSameAsMailingChkBox()
@@ -188,7 +200,7 @@ export default class AddEditOrgPersonMixin extends Vue {
   /** decide if the "Delivery Address same as Mailing Address" check box should be checked */
   protected updateSameAsMailingChkBox (): void {
     // safety check
-    if (!this.isDirector && !this.isProprietor) {
+    if (!this.hasDeliveryAddress) {
       return
     }
 
@@ -234,14 +246,32 @@ export default class AddEditOrgPersonMixin extends Vue {
     this.deliveryAddressValid = val
   }
 
-  private assignCompletingPartyRole (): void {
+  private async assignCompletingPartyRole (): Promise<void> {
     if (
       this.orgPerson &&
       this.isCompletingParty &&
       this.existingCompletingParty &&
       this.orgPerson.officer.id !== this.existingCompletingParty.officer.id
     ) {
-      this.confirmReassignPerson()
+      // open confirmation dialog and wait for response
+      const response = await this.$refs.reassignCPDialog.open(
+        'Change Completing Party?',
+        this.reassignPersonErrorMessage(),
+        {
+          width: '45rem',
+          persistent: true,
+          yes: 'Change Completing Party',
+          no: null,
+          cancel: 'Cancel'
+        }
+      ).catch(() => false)
+
+      if (response) {
+        this.reassignCompletingParty = true
+      } else {
+        // remove the role
+        this.selectedRoles = this.selectedRoles.filter(r => r !== RoleTypes.COMPLETING_PARTY)
+      }
     }
   }
 
@@ -264,28 +294,6 @@ export default class AddEditOrgPersonMixin extends Vue {
     }
   }
 
-  private confirmReassignPerson () {
-    // open confirmation dialog and wait for response
-    this.$refs.reassignCPDialog.open(
-      'Change Completing Party?',
-      this.reassignPersonErrorMessage(),
-      {
-        width: '45rem',
-        persistent: true,
-        yes: 'Change Completing Party',
-        no: null,
-        cancel: 'Cancel'
-      }
-    ).then(async (confirm) => {
-      if (confirm) {
-        this.reassignCompletingParty = true
-      }
-    }).catch(() => {
-      // remove the role
-      this.selectedRoles = this.selectedRoles.filter(r => r !== RoleTypes.COMPLETING_PARTY)
-    })
-  }
-
   /** Helper to set the current director data. */
   private setPerson (): OrgPersonIF {
     let person: OrgPersonIF = { ...this.orgPerson }
@@ -295,7 +303,7 @@ export default class AddEditOrgPersonMixin extends Vue {
       person.officer.id = uuidv4()
     }
     person.mailingAddress = { ...this.inProgressMailingAddress }
-    if (this.isDirector || this.isProprietor) {
+    if (this.hasDeliveryAddress) {
       person.deliveryAddress = this.setPersonDeliveryAddress()
     }
     person.roles = this.setPersonRoles()
@@ -357,7 +365,7 @@ export default class AddEditOrgPersonMixin extends Vue {
   /** True if the form is valid. */
   private get isFormValid (): boolean {
     let isFormValid = (this.addPersonOrgFormValid && this.mailingAddressValid)
-    if (this.isDirector && !this.inheritMailingAddress) {
+    if (this.hasDeliveryAddress && !this.inheritMailingAddress) {
       isFormValid = (isFormValid && this.deliveryAddressValid)
     }
     return isFormValid
