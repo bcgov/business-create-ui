@@ -1,8 +1,7 @@
-import { shallowWrapperFactory, wrapperFactory } from '../jest-wrapper-factory'
+import { shallowWrapperFactory } from '../jest-wrapper-factory'
 import { getVuexStore } from '@/store'
 import DissolutionFirm from '@/views/DissolutionFirm/DissolutionFirm.vue'
-// import { SoleProprietorshipDissolutionResource } from '@/resources/Dissolutions/soleProprietorship'
-// export { SoleProprietorshipDissolutionResource } from '@/resources/Dissolutions/'
+
 import { DissolutionResources } from '@/resources/'
 
 const store = getVuexStore()
@@ -14,12 +13,6 @@ const dissolutionFirmTestCases = [
     isPremium: false,
     isStaff: false
   }
-  // {
-  //   entityType: 'GP',
-  //   isPremium: true,
-  //   isStaff: false
-  // }
-
 ]
 
 for (const test of dissolutionFirmTestCases) {
