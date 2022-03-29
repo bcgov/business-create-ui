@@ -7,12 +7,19 @@ import { DissolutionResources } from '@/resources/'
 const store = getVuexStore()
 
 // Test Case Data
+// GP will come soon
 const dissolutionFirmTestCases = [
   {
     entityType: 'SP',
     isPremium: false,
     isStaff: false
   }
+  // {
+  //   entityType: 'GP',
+  //   isPremium: true,
+  //   isStaff: false
+  // }
+
 ]
 
 for (const test of dissolutionFirmTestCases) {
