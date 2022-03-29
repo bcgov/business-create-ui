@@ -25,7 +25,7 @@
 
             <!-- The form -->
             <div class="meta-container__inner">
-              <v-card outlined class="message-box" v-if="isCompletingParty && !isRoleStaff">
+              <v-card outlined class="message-box rounded-0" v-if="isCompletingParty && !isRoleStaff">
                 <p>
                   <strong>Important:</strong> The Completing Party information below is based on your
                   BC Registries account information. Your name and email cannot be changed here. Name
@@ -80,18 +80,54 @@
                 </article>
 
                 <!-- Org's Name -->
-                <article v-if="isOrg">
-                  <label>Corporation or Firm Name</label>
-                  <div class="org-name-container mt-4 mb-n6">
-                    <v-text-field
-                      filled
-                      class="item"
-                      label="Full Legal Corporation or Firm Name"
-                      id="firm-name"
-                      v-model.trim="orgPerson.officer.organizationName"
-                      :rules="Rules.OrgNameRules"
-                    />
-                  </div>
+                <article v-if="isOrg && isManualAdd">
+                  <label>Add Business or Corporation Manually</label>
+                  <a class="lookup-toggle float-right">Business or Corporation Look Up</a>
+
+                  <p class="mt-6 mb-0">
+                    Use this manual entry form to add a company that is not legally required to register
+                    in B.C. such as a bank or railway as a partner. All other types of businesses not
+                    registered in B.C. cannot be a proprietor or partner.
+                  </p>
+
+                  <HelpContactUs class="mt-6" />
+
+                  <!-- Confirm checkbox -->
+                  <v-checkbox
+                    class="confirm-checkbox mt-8"
+                    hide-details
+                    v-model="confirmCheckbox"
+                    :rules="[(v) => !!v]"
+                  >
+                    <template slot="label">
+                      I confirm that the business proprietor being added is not legally required to
+                      register in B.C.
+                    </template>
+                  </v-checkbox>
+
+                  <!-- Organization Name -->
+                  <v-text-field
+                    filled
+                    class="mt-8 mb-n6"
+                    label="Business or Corporation Name"
+                    id="firm-name"
+                    v-model.trim="orgPerson.officer.organizationName"
+                    :rules="OrgNameRules"
+                  />
+
+                  <!-- Business Number -->
+                  <v-text-field
+                    filled
+                    persistent-hint
+                    class="item mt-8 mb-n2"
+                    label="Business Number (Optional)"
+                    id="person__business-number"
+                    hint="First 9 digits of the CRA Business Number"
+                    v-model.trim="orgPerson.officer.businessNumber"
+                    :rules="BusinessNumberRules"
+                  />
+
+                  <v-divider class="mt-8" />
                 </article>
 
                 <!-- Roles -->
@@ -137,7 +173,7 @@
                 </article>
 
                 <!-- Business Number (for proprietors only) -->
-                <article v-if="isProprietor" class="mt-8">
+                <article v-if="isPerson && isProprietor" class="mt-8">
                   <label>Business Number</label>
                   <p class="mt-4 mb-0">
                     If you have an existing business number, enter it below and we will contact
@@ -152,7 +188,7 @@
                     id="person__business-number"
                     hint="First 9 digits of the CRA Business Number"
                     v-model.trim="orgPerson.officer.businessNumber"
-                    :rules="businessNumberRules"
+                    :rules="BusinessNumberRules"
                   />
                 </article>
 
@@ -241,6 +277,7 @@ import { Component, Mixins } from 'vue-property-decorator'
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
 import { ConfirmDialog } from '@bcrs-shared-components/confirm-dialog'
 import HelpBusinessNumber from '@/components/Registration/HelpBusinessNumber.vue'
+import HelpContactUs from '@/components/Registration/HelpContactUs.vue'
 import { AddEditOrgPersonMixin } from '@/mixins'
 
 /** This is a sub-component of PeopleAndRoles. */
@@ -249,18 +286,44 @@ import { AddEditOrgPersonMixin } from '@/mixins'
     ConfirmDialog,
     DeliveryAddress: BaseAddress,
     MailingAddress: BaseAddress,
-    HelpBusinessNumber
+    HelpBusinessNumber,
+    HelpContactUs
   }
 })
 export default class RegAddEditOrgPerson extends Mixins(AddEditOrgPersonMixin) {
   //
   // NB: see mixin for common methods, getters, etc.
   //
+
+  // local properties
+  protected isManualAdd = true
+  protected confirmCheckbox = false
+
+  /** The validation rules for the Organization Name. */
+  readonly OrgNameRules: Array<Function> = [
+    v => !!v?.trim() || 'Business or corporation name is required',
+    v => (v?.length <= 155) || 'Cannot exceed 155 characters' // maximum character count
+  ]
+
+  /** The validation rules for the Business Number. */
+  readonly BusinessNumberRules: Array<Function> = [
+    (v: string) => {
+      const pattern = /^[0-9]{9}$/
+      return (!v || pattern.test(v)) || 'Invalid business number'
+    }
+  ]
 }
 </script>
 
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
+
+.lookup-toggle {
+  font-size: $px-14;
+  text-decoration: underline;
+  pointer-events: none;
+  opacity: 0.4;
+}
 
 .row > .col {
   padding-top: 0;
@@ -275,6 +338,10 @@ label {
 li {
   list-style: none;
   padding-top: 0.25rem;
+}
+
+p {
+  color: $gray7;
 }
 
 div.three-column {
@@ -353,9 +420,20 @@ div.three-column {
   background-color: rgba(0, 0, 0, 0.06);
 }
 
+.confirm-checkbox,
 .inherit-checkbox {
   margin-top: 0;
   padding-top: 0;
   margin-left: -3px;
+  color: $gray7;
+}
+
+// align checkbox with top of its label
+::v-deep .v-input--checkbox .v-input__slot {
+  align-items: flex-start;
+
+  .v-input--selection-controls__input {
+    margin-top: -2px;
+  }
 }
 </style>

@@ -22,7 +22,7 @@
 
     <!-- Checklist section -->
     <section class="mt-5">
-      <strong>Your application must include the following:</strong>
+      <div class="subhead">Your application must include the following:</div>
       <ul>
         <template v-for="(rule, index) in getPeopleAndRolesResource.rules">
           <li v-if="rule.id === RuleIds.NUM_COMPLETING_PARTY" :key="index">
@@ -65,12 +65,12 @@
     </section>
 
     <!-- Start by Adding the Completing Party -->
-    <div class="mt-8" v-if="orgPersonList.length === 0">
+    <div v-if="orgPersonList.length === 0">
       <v-btn
         id="btn-start-add-cp"
         outlined
         color="primary"
-        class="btn-outlined-primary"
+        class="btn-outlined-primary mt-6"
         :disabled="showOrgPersonForm"
         @click="addOrgPerson(RoleTypes.COMPLETING_PARTY, PartyTypes.PERSON)"
       >
@@ -80,13 +80,13 @@
     </div>
 
     <!-- Add a Person or Organization -->
-    <div class="mt-8" v-if="orgPersonList.length > 0">
+    <div v-if="orgPersonList.length > 0">
       <v-btn
         v-if="!validNumCompletingParty"
         id="btn-add-cp"
         outlined
         color="primary"
-        class="btn-outlined-primary"
+        class="btn-outlined-primary mt-6"
         :disabled="showOrgPersonForm"
         @click="addOrgPerson(RoleTypes.COMPLETING_PARTY, PartyTypes.PERSON)"
       >
@@ -98,7 +98,7 @@
         id="btn-add-person"
         outlined
         color="primary"
-        class="btn-outlined-primary"
+        class="btn-outlined-primary mt-6"
         :disabled="showOrgPersonForm"
         @click="addOrgPerson(null, PartyTypes.PERSON)"
       >
@@ -110,7 +110,7 @@
         id="btn-add-organization"
         outlined
         color="primary"
-        class="btn-outlined-primary"
+        class="btn-outlined-primary mt-6"
         v-if="getPeopleAndRolesResource.addOrganization"
         :disabled="showOrgPersonForm"
         @click="addOrgPerson(RoleTypes.INCORPORATOR, PartyTypes.ORGANIZATION)"
@@ -121,7 +121,12 @@
     </div>
 
     <!-- Add/Edit Person/Org -->
-    <v-card flat v-if="showOrgPersonForm" class="mt-10">
+    <v-card
+      flat
+      v-if="showOrgPersonForm"
+      class="mt-8"
+      :class="{'invalid-section': getShowErrors && !isFormValid}"
+    >
       <AddEditOrgPerson
         :initialValue="currentOrgPerson"
         :activeIndex="activeIndex"
@@ -135,9 +140,10 @@
     </v-card>
 
     <!-- List of People and Roles -->
-    <v-card flat v-if="orgPersonList.length > 0" class="mt-10" :disabled="showOrgPersonForm">
+    <v-card flat v-if="orgPersonList.length > 0" class="mt-8">
       <ListPeopleAndRoles
         :isSummary="false"
+        :disabled="showOrgPersonForm"
         @editPerson="onEditPerson($event)"
         @removePerson="onRemovePerson($event)"
       />
@@ -224,6 +230,11 @@ export default class PeopleAndRoles extends Mixins(PeopleRolesMixin) {
   }
 }
 
+.subhead {
+  font-weight: bold;
+  color: $gray9;
+}
+
 .v-icon.mdi-circle-small {
   margin-top: -2px;
 }
@@ -245,6 +256,10 @@ p {
 
 .rule-item-txt {
   margin-left: 0.5rem;
+}
+
+.v-btn:not(.v-btn--round).v-size--default {
+  height: 44px;
 }
 
 .btn-outlined-primary:not(:first-of-type) {
