@@ -42,16 +42,16 @@
             <div>
               <span class="name">{{ formatName(orgPerson) }}</span>
 
-              <div v-if="officerEmail(orgPerson)" class="text-wrap">
+              <div v-if="officerEmail(orgPerson)">
                 <p>{{ officerEmail(orgPerson) }}</p>
               </div>
 
-              <div v-if="officerIncorpNumber(orgPerson)" class="text-wrap mt-2">
+              <div v-if="officerIncorpNumber(orgPerson)" class="mt-2">
                 <p>Incorporation Number:</p>
                 <p>{{ officerIncorpNumber(orgPerson) }}</p>
               </div>
 
-              <div v-if="officerBusinessNumber(orgPerson)" class="text-wrap mt-2">
+              <div v-if="officerBusinessNumber(orgPerson)" class="mt-2">
                 <p>Business Number:</p>
                 <p>{{ officerBusinessNumber(orgPerson) }}</p>
               </div>

@@ -105,7 +105,12 @@
     </div>
 
     <!-- Add/Edit Bus/Corp -->
-    <v-card flat v-if="showOrgPersonForm" class="mt-10">
+    <v-card
+      flat
+      v-if="showOrgPersonForm"
+      class="mt-10"
+      :class="{'invalid-section': getShowErrors && !isFormValid}"
+    >
       <RegAddEditOrgPerson
         :initialValue="currentOrgPerson"
         :activeIndex="activeIndex"

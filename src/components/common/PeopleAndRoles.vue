@@ -121,7 +121,12 @@
     </div>
 
     <!-- Add/Edit Person/Org -->
-    <v-card flat v-if="showOrgPersonForm" class="mt-10">
+    <v-card
+      flat
+      v-if="showOrgPersonForm"
+      class="mt-10"
+      :class="{'invalid-section': getShowErrors && !isFormValid}"
+    >
       <AddEditOrgPerson
         :initialValue="currentOrgPerson"
         :activeIndex="activeIndex"
