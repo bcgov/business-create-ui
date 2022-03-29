@@ -31,7 +31,10 @@
 
             <!-- The form -->
             <div class="meta-container__inner">
-              <v-card outlined class="message-box" v-if="isCompletingParty && !isRoleStaff && isTypeCoop">
+              <v-card
+                outlined class="message-box rounded-0"
+                v-if="isCompletingParty && !isRoleStaff && isTypeCoop"
+              >
                 <p>
                   <strong>Important:</strong> The Completing Party information below is based on your
                   BC Registries account information. Your name cannot be changed here. Name changes must

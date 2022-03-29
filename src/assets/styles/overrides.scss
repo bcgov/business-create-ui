@@ -116,9 +116,7 @@
 
 // Disabled Checkboxes
 .v-input--checkbox.v-input--is-disabled .v-input__control .v-input__slot {
-  label {
-    opacity: 0.4;
-  }
+  // NB: do not change label opacity or color
   .v-input--selection-controls__input i {
     color: $app-blue !important;
     opacity: 0.4;

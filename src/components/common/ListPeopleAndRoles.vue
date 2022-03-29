@@ -34,13 +34,14 @@
           :key="index"
           no-gutters
         >
-          <v-col class="name-column d-flex">
+          <v-col class="name-column d-flex text-break">
             <div class="pr-2">
-              <v-icon v-if="isPerson(orgPerson)">mdi-account</v-icon>
-              <v-icon v-if="isOrg(orgPerson)">mdi-domain</v-icon>
+              <v-icon color="primary" v-if="isPerson(orgPerson)">mdi-account</v-icon>
+              <v-icon color="primary" v-if="isOrg(orgPerson)">mdi-domain</v-icon>
             </div>
             <div>
-              <span class="name">{{ formatName(orgPerson) }}</span>
+              <span class="name" :class="{'text-uppercase':isOrg(orgPerson)}"
+                >{{ formatName(orgPerson) }}</span>
 
               <div v-if="officerEmail(orgPerson)">
                 <p>{{ officerEmail(orgPerson) }}</p>
@@ -75,12 +76,13 @@
             </p>
           </v-col>
 
-          <v-col v-if="!isSummary" class="actions-column">
+          <v-col v-if="!isSummary" class="actions-column" :class="{'disabled':disabled}">
             <div class="float-right">
               <span class="edit-action">
-                <v-btn small text color="primary"
+                <v-btn text color="primary"
                   :id="`officer-${index}-change-btn`"
-                  @click="emitPersonInfo(index)"
+                  :tabindex="disabled ? -1 : 0"
+                  @click="disabled ? null : emitPersonInfo(index)"
                 >
                   <v-icon small>mdi-pencil</v-icon>
                   <span>Edit</span>
@@ -89,7 +91,7 @@
 
               <!-- More Actions menu -->
               <span>
-                <v-menu offset-y>
+                <v-menu offset-y left :disabled="disabled">
                   <template v-slot:activator="{ on }">
                     <v-btn
                       text
@@ -97,6 +99,7 @@
                       v-on="on"
                       color="primary"
                       class="more-actions-btn"
+                      :tabindex="disabled ? -1 : 0"
                     >
                       <v-icon>mdi-menu-down</v-icon>
                     </v-btn>
@@ -140,6 +143,9 @@ import { PartyTypes, RouteNames } from '@/enums'
 export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
   @Prop({ default: false })
   readonly isSummary: boolean
+
+  @Prop({ default: false })
+  readonly disabled: boolean
 
   @Getter isIncorporationFiling!: boolean
   @Getter isRegistrationFiling!: boolean
@@ -250,6 +256,7 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
 
   .actions-column {
     @extend .actions-width;
+    margin-top: -8px;
 
     .edit-action {
       border-right: 1px solid $gray1;
@@ -264,12 +271,19 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
       min-width: 28px;
     }
   }
+
+  // make action buttons look disabled without using disabled property
+  // so that we keep their orirginal colours
+  .actions-column.disabled {
+    opacity: 0.4;
+    pointer-events: none;
+  }
 }
 
 // fixed width for actions column
 .actions-width {
-  min-width: 100px;
-  max-width: 100px;
+  min-width: 110px;
+  max-width: 110px;
 }
 
 // style the more actions buttons

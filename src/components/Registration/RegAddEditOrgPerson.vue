@@ -25,7 +25,7 @@
 
             <!-- The form -->
             <div class="meta-container__inner">
-              <v-card outlined class="message-box" v-if="isCompletingParty && !isRoleStaff">
+              <v-card outlined class="message-box rounded-0" v-if="isCompletingParty && !isRoleStaff">
                 <p>
                   <strong>Important:</strong> The Completing Party information below is based on your
                   BC Registries account information. Your name and email cannot be changed here. Name
