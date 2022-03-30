@@ -9,7 +9,6 @@
         </header>
 
         <div class="pb-8" >
-
           <!-- Association Details -->
           <section>
             <AssociationDetails
@@ -21,6 +20,39 @@
             />
           </section>
         </div>
+      </v-card>
+    </section>
+
+    <!-- Dissolution Dissolution Date -->
+    <section id="document-delivery-section" class="mt-10">
+      <header>
+        <h2>Business Dissolution Date</h2>
+        <p class="mt-4 ">
+          Enter the dissolution date of the business.
+          The dissolution date must be after the business start date and registration date.
+          The dissolution date cannot be in the future.
+        </p>
+      </header>
+      <v-card flat class="mt-6">
+
+       <!-- EDIT SECTION -->
+        <v-row no-gutters class="pb-0">
+          <v-col cols="12" sm="3" class="pr-4">
+            <label class="start-date-title title-label">Dissolution Date</label>
+          </v-col>
+          <v-col cols="12" sm="9" class="pt-4 pt-sm-0" id="start-date-selector">
+            <date-picker
+              id="date-picker"
+              title="Dissolution Date"
+              :nudgeRight="40"
+              :nudgeTop="85"
+              :minDate="startDateMinStr"
+              :maxDate="startDateMaxStr"
+              :inputRules="getShowErrors ? startDateRules : []"
+              @emitDateSync="startDateHandler($event)"
+            />
+          </v-col>
+        </v-row>
       </v-card>
     </section>
 
@@ -169,6 +201,9 @@ import { CourtOrderPoa } from '@bcrs-shared-components/court-order-poa'
 import DocumentDelivery from '@/components/common/DocumentDelivery.vue'
 import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
 
+import { DatePicker } from '@bcrs-shared-components/date-picker'
+import { RuleHelpers } from '@/rules'
+
 import StaffPayment from '@/components/common/StaffPayment.vue'
 import TransactionalFolioNumber from '@/components/common/TransactionalFolioNumber.vue'
 import { RouteNames } from '@/enums'
@@ -190,7 +225,8 @@ import {
     DocumentDelivery,
     StaffPayment,
     TransactionalFolioNumber,
-    ListPeopleAndRoles
+    ListPeopleAndRoles,
+    DatePicker
   }
 })
 export default class DissolutionFirm extends Mixins(DateMixin) {
@@ -209,6 +245,7 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
   @Getter getFolioNumber!: string
   @Getter getTransactionalFolioNumber!: string
   @Getter getAddPeopleAndRoleStep!: PeopleAndRoleIF
+  @Getter getBusinessFoundingDate!: string
 
   // Global actions
   @Action setCourtOrderFileNumber!: ActionBindingIF
@@ -256,6 +293,40 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
         certifiedBy: val
       }
     )
+  }
+
+  /** The minimum start date that can be entered (greater than registration date). */
+  private get startDateMin (): Date {
+    return new Date(this.getBusinessFoundingDate)
+  }
+
+  /** The minimum start date string. */
+  private get startDateMinStr (): string {
+    return this.dateToYyyyMmDd(this.startDateMin)
+  }
+
+  /** The maximum start date that can be entered (today). */
+  private get startDateMax (): Date {
+    return new Date(this.getCurrentJsDate)
+  }
+
+  /** The maximum start date string. */
+  private get startDateMaxStr (): string {
+    return this.dateToYyyyMmDd(this.startDateMax)
+  }
+
+  /** Validations rules for start date field. */
+  get startDateRules (): Array<Function> {
+    return [
+      (v: string) => !!v || 'Dissolution date is required',
+      (v: string) =>
+        RuleHelpers.DateRuleHelpers
+          .isBetweenDates(this.startDateMin,
+            this.startDateMax,
+            v) ||
+        `Date should be between ${this.dateToPacificDate(this.startDateMin, true)} and
+        ${this.dateToPacificDate(this.startDateMax, true)}`
+    ]
   }
 }
 </script>
