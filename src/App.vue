@@ -139,7 +139,7 @@
         </v-container>
 
         <div id="actions-wrapper">
-          <v-container class="py-8 px-4">
+          <v-container class="py-8">
             <Actions
               :key="$route.path"
               @goToDashboard="goToDashboard()"

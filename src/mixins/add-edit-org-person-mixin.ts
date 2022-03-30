@@ -59,14 +59,6 @@ export default class AddEditOrgPersonMixin extends Vue {
   readonly PartyTypes = PartyTypes
   readonly Rules = Rules
 
-  /** The validation rules for the Business Number. */
-  readonly businessNumberRules: Array<Function> = [
-    (v: string) => {
-      const pattern = /^[0-9]{9}$/
-      return (!v || pattern.test(v)) || 'Invalid business number'
-    }
-  ]
-
   /** The validation rules for the Roles. */
   protected get roleRules (): Array<Function> {
     return [ () => this.selectedRoles.length > 0 || 'A role is required' ]
