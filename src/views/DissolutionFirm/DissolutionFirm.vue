@@ -27,21 +27,22 @@
     <section id="document-delivery-section" class="mt-10">
       <header>
         <h2>Business Dissolution Date</h2>
-        <p class="mt-4 mb-6">
-          Enter the dissolution date of the business. The dissolution date must be after the business start date and registration date. The dissolution date cannot be in the future.
+        <p class="mt-4 ">
+          Enter the dissolution date of the business.
+          The dissolution date must be after the business start date and registration date.
+          The dissolution date cannot be in the future.
         </p>
       </header>
       <v-card flat class="mt-6">
 
        <!-- EDIT SECTION -->
-        <v-row no-gutters>
+        <v-row no-gutters class="pb-0">
           <v-col cols="12" sm="3" class="pr-4">
             <label class="start-date-title title-label">Dissolution Date</label>
           </v-col>
           <v-col cols="12" sm="9" class="pt-4 pt-sm-0" id="start-date-selector">
             <date-picker
               id="date-picker"
-              ref="startDateRef"
               title="Dissolution Date"
               :nudgeRight="40"
               :nudgeTop="85"
@@ -293,8 +294,6 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
       }
     )
   }
-
-  private dateText = ''
 
   /** The minimum start date that can be entered (greater than registration date). */
   private get startDateMin (): Date {
