@@ -77,10 +77,10 @@
         :documentOptionalEmail="getDocumentDelivery.documentOptionalEmail"
         @update:optionalEmail="setDocumentOptionalEmail($event)"
         @valid="setDocumentOptionalEmailValidity($event)"
-        additionalLabel="partners"
+        additionalLabel="Partners"
         contactLabel="Business Contact"
       />
-      <!-- TODO change: additionalEmail & additionalLabel are sample data-->
+      <!-- SB TODO: update additionalLabel & additionalLabel (sample data)-->
       </v-card>
     </section>
 

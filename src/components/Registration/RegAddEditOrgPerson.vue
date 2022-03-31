@@ -5,11 +5,6 @@
       attach="#reg-add-edit-org-person"
     />
 
-    <!-- TODO: remove this after debugging -->
-    <pre>form={{addPersonOrgFormValid}}</pre>
-    <pre>mailing={{mailingAddressValid}}</pre>
-    <pre>delivery={{inheritMailingAddress || deliveryAddressValid}}</pre>
-
     <section class="px-6 py-10" :class="{ 'invalid-section': !addPersonOrgFormValid }">
       <v-row no-gutters>
         <v-col cols="12" sm="3" class="pr-4 d-none d-sm-block">
@@ -95,8 +90,10 @@
 
             <!-- Add org manually -->
             <article v-if="isOrg && isManualAdd">
-              <label>Add Business or Corporation Manually</label>
-              <a class="lookup-toggle float-right">Business or Corporation Look Up</a>
+              <label v-if="activeIndex === -1">Add Business or Corporation Manually</label>
+              <label v-else>Edit Business or Corporation Manually</label>
+              <!-- FUTURE -->
+              <!-- <a class="lookup-toggle float-right">Business or Corporation Look Up</a> -->
 
               <p class="mt-6 mb-0">
                 Use this manual entry form to add a company that is not legally required to register
@@ -313,7 +310,7 @@ export default class RegAddEditOrgPerson extends Mixins(AddEditOrgPersonMixin) {
   // NB: see mixin for common properties, methods, etc.
   //
 
-  // local properties
+  // local property
   protected isManualAdd = true
 
   /** The validation rules for the Organization Name. */

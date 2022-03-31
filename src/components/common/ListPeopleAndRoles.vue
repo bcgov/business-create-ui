@@ -156,14 +156,15 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
   readonly RouteNames = RouteNames
 
   // Local properties
-  private readonly tableHeaders: Array<string> = ['Name', 'Mailing Address', 'Delivery Address', 'Roles']
-  private activeIndex: number
+  protected readonly tableHeaders: Array<string> = ['Name', 'Mailing Address', 'Delivery Address', 'Roles']
+  protected activeIndex: number
 
+  /** The person list. */
   get personList (): Array<OrgPersonIF> {
     return this.getAddPeopleAndRoleStep.orgPeople
   }
 
-  // *** TODO: make step invalid if add-edit form is open
+  /** True if error summary should be shown. */
   get showErrorSummary (): boolean {
     return (this.getShowErrors && !this.getAddPeopleAndRoleStep.valid)
   }

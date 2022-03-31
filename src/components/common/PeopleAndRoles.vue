@@ -172,7 +172,7 @@ export default class PeopleAndRoles extends Mixins(PeopleRolesMixin) {
   // NB: see mixin for common properties, methods, etc.
   //
 
-  private addOrgPerson (roleType: RoleTypes, partyType: PartyTypes): void {
+  protected addOrgPerson (roleType: RoleTypes, partyType: PartyTypes): void {
     // first assign empty org/person object
     this.currentOrgPerson = cloneDeep(EmptyOrgPerson)
 

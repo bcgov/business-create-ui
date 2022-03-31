@@ -1,10 +1,10 @@
 import { Component, Emit, Prop, Vue } from 'vue-property-decorator'
-import { Getter } from 'vuex-class'
-import { cloneDeep, isEqual, times } from 'lodash'
+import { Action, Getter } from 'vuex-class'
+import { cloneDeep, isEqual } from 'lodash'
 import { v4 as uuidv4 } from 'uuid'
 import { CorpTypeCd, PartyTypes, RoleTypes } from '@/enums'
-import { AddressIF, ConfirmDialogType, EmptyAddress, FormIF, OrgPersonIF, PeopleAndRolesResourceIF,
-  RolesIF } from '@/interfaces'
+import { ActionBindingIF, AddressIF, ConfirmDialogType, EmptyAddress, FormIF, OrgPersonIF,
+  PeopleAndRolesResourceIF, RolesIF } from '@/interfaces'
 import { Rules } from '@/rules'
 import { PersonAddressSchema } from '@/schemas'
 
@@ -34,6 +34,8 @@ export default class AddEditOrgPersonMixin extends Vue {
   @Getter isTypePartnership!: boolean
   @Getter getEntityType!: CorpTypeCd
   @Getter getPeopleAndRolesResource!: PeopleAndRolesResourceIF
+
+  @Action setAddPeopleAndRoleStepValidity!: ActionBindingIF
 
   // Local properties
   private orgPerson: OrgPersonIF = null
@@ -172,6 +174,9 @@ export default class AddEditOrgPersonMixin extends Vue {
 
   /** Called when component is created. */
   created (): void {
+    // mark this step as invalid when adding or editing
+    this.setAddPeopleAndRoleStepValidity(false)
+
     if (this.initialValue) {
       this.orgPerson = { ...this.initialValue }
       this.orgPerson.officer = { ...this.initialValue.officer }
@@ -192,9 +197,7 @@ export default class AddEditOrgPersonMixin extends Vue {
   /** decide if the "Delivery Address same as Mailing Address" check box should be checked */
   protected updateSameAsMailingChkBox (): void {
     // safety check
-    if (!this.supportsDeliveryAddress) {
-      return
-    }
+    if (!this.supportsDeliveryAddress) return
 
     // if not already assigned, initialize delivery address to prevent template errors
     if (!this.inProgressDeliveryAddress) this.inProgressDeliveryAddress = cloneDeep(EmptyAddress)
@@ -222,12 +225,20 @@ export default class AddEditOrgPersonMixin extends Vue {
   }
 
   // Event Handlers
-  protected updateMailingAddress (address): void {
-    this.inProgressMailingAddress = address
+  protected updateMailingAddress (address: AddressIF): void {
+    // only update if equal
+    // (workaround for BaseAddress always telling us there's a new address)
+    if (!isEqual(this.inProgressMailingAddress, address)) {
+      this.inProgressMailingAddress = address
+    }
   }
 
-  protected updateDeliveryAddress (address): void {
-    this.inProgressDeliveryAddress = address
+  protected updateDeliveryAddress (address: AddressIF): void {
+    // only update if equal
+    // (workaround for BaseAddress always telling us there's a new address)
+    if (!isEqual(this.inProgressDeliveryAddress, address)) {
+      this.inProgressDeliveryAddress = address
+    }
   }
 
   protected updateMailingAddressValidity (valid: boolean): void {
@@ -271,19 +282,18 @@ export default class AddEditOrgPersonMixin extends Vue {
     }
   }
 
-  protected async validateAddPersonOrgForm (): Promise<void> {
-    // validate the main form and address form(s)
-    this.$refs.addPersonOrgForm.validate()
+  protected validateAddPersonOrgForm (): void {
+    // first validate the address form(s)
     this.$refs.mailingAddressNew.$refs.addressForm.validate()
     if (this.$refs.deliveryAddressNew) {
       this.$refs.deliveryAddressNew.$refs.addressForm.validate()
     }
 
-    // wait for things to stabilize
-    await Vue.nextTick()
+    // then validate the main form (which depends on the above)
+    const isFormValid = this.$refs.addPersonOrgForm.validate()
 
-    // only proceed if form is valid
-    if (this.isFormValid) {
+    // only proceed if main form is valid
+    if (isFormValid) {
       if (this.reassignCompletingParty) {
         this.emitReassignCompletingPartyEvent()
       }
@@ -339,11 +349,15 @@ export default class AddEditOrgPersonMixin extends Vue {
   }
 
   protected resetAddPersonData (emitEvent: boolean): void {
-    this.$refs.addPersonOrgForm.reset()
+    // first reset the address form(s)
     this.$refs.mailingAddressNew.$refs.addressForm.reset()
     if (this.$refs.deliveryAddressNew) {
       this.$refs.deliveryAddressNew.$refs.addressForm.reset()
     }
+
+    // then reset the main form (which depends on the above)
+    this.$refs.addPersonOrgForm.reset()
+
     if (emitEvent) {
       this.emitResetEvent()
     }
@@ -358,16 +372,6 @@ export default class AddEditOrgPersonMixin extends Vue {
 
     return `The Completing Party role is already assigned to ${name}.\n` +
       'Selecting "Completing Party" here will change the Completing Party.'
-  }
-
-  // *** TODO: can probably get rid of this:
-  /** True if the form is valid. */
-  protected get isFormValid (): boolean {
-    let isFormValid = (this.addPersonOrgFormValid && this.mailingAddressValid)
-    if (this.supportsDeliveryAddress && !this.inheritMailingAddress) {
-      isFormValid = (isFormValid && this.deliveryAddressValid)
-    }
-    return isFormValid
   }
 
   // Event emitters
