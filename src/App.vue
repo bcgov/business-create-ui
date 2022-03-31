@@ -470,7 +470,7 @@ export default class App extends Mixins(
     // Capture identifier from query param
     const id = this.$route.query?.id as string
     // Assign any valid business identifiers and init dissolution
-    if (id?.startsWith('CP') || id?.startsWith('BC')) {
+    if (id?.startsWith('CP') || id?.startsWith('BC') || id?.startsWith('FM')) {
       this.setBusinessId(id)
       this.setFilingType(FilingTypes.VOLUNTARY_DISSOLUTION)
     } else {
