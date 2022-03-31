@@ -343,6 +343,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
         business: {
           identifier: this.getTempId,
           naics: this.getRegistration.naics
+          // FUTURE: save tax id (business number) here
         },
         businessAddress: this.getRegistration.businessAddress,
         businessType: this.getRegistration.businessType,
@@ -401,6 +402,8 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
 
     // restore NAICS
     this.setRegistrationNaics(draftFiling.registration.business.naics || EmptyNaics)
+
+    // FUTURE: restore tax id (business number) here
 
     // restore Name Request data
     this.setRegistrationNameRequest(draftFiling.registration.nameRequest)

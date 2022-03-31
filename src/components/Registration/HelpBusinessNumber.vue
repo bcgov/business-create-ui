@@ -35,16 +35,18 @@
           accounts listed above.
         </p>
 
-        <p class="my-4">
-          You may also have a business number that you can use for this registration if the
-          following applies:
-        </p>
+        <template v-if="isTypeSoleProp">
+          <p class="my-4">
+            You may also have a business number that you can use for this registration if the
+            following applies:
+          </p>
 
-        <ul class="bulleted-list">
-          <li>You are an individual registering a sole proprietorship: you may already have
-            a business number if you have previously registered a sole proprietorship (in
-            any province) as an individual.</li>
-        </ul>
+          <ul class="bulleted-list">
+            <li>You are an individual registering a sole proprietorship: you may already have
+              a business number if you have previously registered a sole proprietorship (in
+              any province) as an individual.</li>
+          </ul>
+        </template>
 
         <p class="my-4">
           Please contact the Canada Revenue Agency (CRA) at 1-800-959-5525 if you have
@@ -67,15 +69,19 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
+import { Getter } from 'vuex-class'
 
 @Component({})
 export default class HelpBusinessNumber extends Vue {
+  @Getter isTypeSoleProp!: boolean
+
   readonly header = 'Help with Business Number'
   readonly ProgramAccountUrl = 'https://www.canada.ca/en/revenue-agency/services/tax/businesses/' +
     'topics/registering-your-business/you-need-a-business-number-a-program-account.html'
   readonly BusNumInfoUrl = 'https://www2.gov.bc.ca/gov/content/employment-business/business/' +
     'managing-a-business/permits-licences/businesses-incorporated-companies/business-number'
 
+  // local variable
   helpToggle = false
 }
 </script>

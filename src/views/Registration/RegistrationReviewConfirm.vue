@@ -107,7 +107,7 @@ import { ActionBindingIF, ContactPointIF, CertifyIF, DocumentDeliveryIF, PeopleA
 import { RoleTypes } from '@/enums'
 import CardHeader from '@/components/common/CardHeader.vue'
 import Certify from '@/components/common/Certify.vue'
-import DocumentDelivery from '@/components/common/DocumentDelivery.vue'
+import { DocumentDelivery } from '@bcrs-shared-components/document-delivery'
 import StaffPayment from '@/components/common/StaffPayment.vue'
 import DefineRegistrationSummary from '@/components/Registration/DefineRegistrationSummary.vue'
 import FeeAcknowledgement from '@/components/Registration/FeeAcknowledgement.vue'

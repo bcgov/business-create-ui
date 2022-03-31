@@ -198,7 +198,7 @@ import AssociationDetails from '@/components/Dissolution/AssociationDetails.vue'
 import { Certify } from '@bcrs-shared-components/certify'
 
 import { CourtOrderPoa } from '@bcrs-shared-components/court-order-poa'
-import DocumentDelivery from '@/components/common/DocumentDelivery.vue'
+import { DocumentDelivery } from '@bcrs-shared-components/document-delivery'
 import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
 
 import { DatePicker } from '@bcrs-shared-components/date-picker'
