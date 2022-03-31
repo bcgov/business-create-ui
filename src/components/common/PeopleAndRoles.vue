@@ -121,23 +121,20 @@
     </div>
 
     <!-- Add/Edit Person/Org -->
-    <v-card
-      flat
-      v-if="showOrgPersonForm"
-      class="mt-8"
-      :class="{'invalid-section': getShowErrors && !isFormValid}"
-    >
-      <AddEditOrgPerson
-        :initialValue="currentOrgPerson"
-        :activeIndex="activeIndex"
-        :existingCompletingParty="completingParty"
-        :addIncorporator="getPeopleAndRolesResource.addIncorporator"
-        @addEditPerson="onAddEditPerson($event)"
-        @removePerson="onRemovePerson($event)"
-        @resetEvent="resetData()"
-        @removeCompletingPartyRole="onRemoveCompletingPartyRole()"
-      />
-    </v-card>
+    <v-expand-transition>
+      <v-card flat v-if="showOrgPersonForm" class="mt-8">
+        <AddEditOrgPerson
+          :initialValue="currentOrgPerson"
+          :activeIndex="activeIndex"
+          :existingCompletingParty="completingParty"
+          :addIncorporator="getPeopleAndRolesResource.addIncorporator"
+          @addEditPerson="onAddEditPerson($event)"
+          @removePerson="onRemovePerson($event)"
+          @resetEvent="resetData()"
+          @removeCompletingPartyRole="onRemoveCompletingPartyRole()"
+        />
+      </v-card>
+    </v-expand-transition>
 
     <!-- List of People and Roles -->
     <v-card flat v-if="orgPersonList.length > 0" class="mt-8">

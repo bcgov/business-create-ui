@@ -105,22 +105,19 @@
     </div>
 
     <!-- Add/Edit Bus/Corp -->
-    <v-card
-      flat
-      v-if="showOrgPersonForm"
-      class="mt-8"
-      :class="{'invalid-section': getShowErrors && !isFormValid}"
-    >
-      <RegAddEditOrgPerson
-        :initialValue="currentOrgPerson"
-        :activeIndex="activeIndex"
-        :existingCompletingParty="completingParty"
-        @addEditPerson="onAddEditPerson($event)"
-        @removePerson="onRemovePerson($event)"
-        @resetEvent="resetData()"
-        @removeCompletingPartyRole="onRemoveCompletingPartyRole()"
-      />
-    </v-card>
+    <v-expand-transition>
+      <v-card flat v-if="showOrgPersonForm" class="mt-8">
+        <RegAddEditOrgPerson
+          :initialValue="currentOrgPerson"
+          :activeIndex="activeIndex"
+          :existingCompletingParty="completingParty"
+          @addEditPerson="onAddEditPerson($event)"
+          @removePerson="onRemovePerson($event)"
+          @resetEvent="resetData()"
+          @removeCompletingPartyRole="onRemoveCompletingPartyRole()"
+        />
+      </v-card>
+    </v-expand-transition>
 
     <!-- List of People and Roles -->
     <v-card flat v-if="orgPersonList.length > 0" class="mt-8">

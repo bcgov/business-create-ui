@@ -270,8 +270,6 @@ export default class App extends Mixins(
   @Action setUserKeycloakGuid!: ActionBindingIF
   @Action setUserAddress!: ActionBindingIF
   @Action setAuthRoles!: ActionBindingIF
-  @Action setAddPeopleAndRoleStepValidity!: ActionBindingIF
-  @Action setCreateShareStructureStepValidity!: ActionBindingIF
   @Action setHaveChanges!: ActionBindingIF
   @Action setAccountInformation!: ActionBindingIF
   @Action setOrgInformation!: ActionBindingIF
