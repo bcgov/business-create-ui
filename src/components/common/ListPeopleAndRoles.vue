@@ -150,20 +150,23 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
   @Getter isIncorporationFiling!: boolean
   @Getter isRegistrationFiling!: boolean
   @Getter getAddPeopleAndRoleStep!: PeopleAndRoleIF
+  @Getter getShowErrors!: boolean
 
   // Enum for template
   readonly RouteNames = RouteNames
 
   // Local properties
-  private readonly tableHeaders: Array<string> = ['Name', 'Mailing Address', 'Delivery Address', 'Roles']
-  private activeIndex: number
+  protected readonly tableHeaders: Array<string> = ['Name', 'Mailing Address', 'Delivery Address', 'Roles']
+  protected activeIndex: number
 
+  /** The person list. */
   get personList (): Array<OrgPersonIF> {
     return this.getAddPeopleAndRoleStep.orgPeople
   }
 
+  /** True if error summary should be shown. */
   get showErrorSummary (): boolean {
-    return !this.getAddPeopleAndRoleStep.valid
+    return (this.getShowErrors && !this.getAddPeopleAndRoleStep.valid)
   }
 
   /** Returns true if org-person is a person. */

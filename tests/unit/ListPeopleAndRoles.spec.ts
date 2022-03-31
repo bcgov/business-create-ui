@@ -201,7 +201,8 @@ describe('List People And Roles component', () => {
       },
       {
         tombstone: { filingType: 'incorporationApplication' },
-        addPeopleAndRoleStep: { orgPeople: mockPersonList }
+        addPeopleAndRoleStep: { orgPeople: mockPersonList },
+        showErrors: true
       }
     )
 
@@ -219,7 +220,8 @@ describe('List People And Roles component', () => {
       },
       {
         tombstone: { filingType: 'incorporationApplication' },
-        addPeopleAndRoleStep: { orgPeople: mockPersonList }
+        addPeopleAndRoleStep: { orgPeople: mockPersonList },
+        showErrors: true
       }
     )
 

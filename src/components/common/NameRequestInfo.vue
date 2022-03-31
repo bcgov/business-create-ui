@@ -194,10 +194,10 @@ export default class NameRequestInfo extends Mixins(DateMixin, EnumMixin) {
   readonly NameRequestStates = NameRequestStates
 
   // Local properties
-  private hasNameTranslation = false
-  private isAddingNameTranslation = true
-  private editingNameTranslation = ''
-  private editIndex = -1
+  protected hasNameTranslation = false
+  protected isAddingNameTranslation = true
+  protected editingNameTranslation = ''
+  protected editIndex = -1
 
   readonly RECEIVED_STATE = 'Received'
   readonly NOT_RECEIVED_STATE = 'Not Received'
@@ -218,7 +218,7 @@ export default class NameRequestInfo extends Mixins(DateMixin, EnumMixin) {
   @Getter getShowErrors!: boolean
 
   /** The entity title.  */
-  private get getEntityTypeDescription (): string {
+  protected get getEntityTypeDescription (): string {
     let corpTypeDescription = this.getCorpTypeDescription(this.getEntityType)
     const isSpDba = (this.getRegistration.businessType === BusinessTypes.DBA)
     if (isSpDba) corpTypeDescription += ' or Doing Business As (DBA)'
@@ -226,23 +226,23 @@ export default class NameRequestInfo extends Mixins(DateMixin, EnumMixin) {
   }
 
   /** The request type. */
-  private get requestType (): string {
+  protected get requestType (): string {
     return 'New Business'
   }
 
-  private get showNameTranslation (): boolean {
+  protected get showNameTranslation (): boolean {
     if (this.isTypeCoop || this.isTypeSoleProp || this.isTypePartnership) return false
     return true
   }
 
   /** Returns formatted expiration date. */
-  private formattedExpirationDate (): string {
+  protected formattedExpirationDate (): string {
     const date = this.apiToDate(this.getNameRequestDetails.expirationDate)
     return this.dateToPacificDate(date)
   }
 
   /** The name request status string. */
-  private get nameRequestStatus (): string {
+  protected get nameRequestStatus (): string {
     if (this.getNameRequestDetails.status === NameRequestStates.APPROVED) {
       return 'Approved'
     }
@@ -250,7 +250,7 @@ export default class NameRequestInfo extends Mixins(DateMixin, EnumMixin) {
   }
 
   /** The condition/consent string. */
-  private get conditionConsent (): string {
+  protected get conditionConsent (): string {
     if (this.getNameRequestDetails.status === NameRequestStates.APPROVED) {
       return this.NOT_REQUIRED_STATE
     }
@@ -267,7 +267,7 @@ export default class NameRequestInfo extends Mixins(DateMixin, EnumMixin) {
   }
 
   /** Returns formatted applicant name. */
-  private applicantName (): string {
+  protected applicantName (): string {
     let name = this.getNameRequestApplicant.firstName
     if (this.getNameRequestApplicant.middleName) {
       name = `${name} ${this.getNameRequestApplicant.middleName} ${this.getNameRequestApplicant.lastName}`
@@ -278,7 +278,7 @@ export default class NameRequestInfo extends Mixins(DateMixin, EnumMixin) {
   }
 
   /** Returns formatted address string. */
-  private applicantAddress (): string {
+  protected applicantAddress (): string {
     // Get Address info
     const city = this.getNameRequestApplicant.city
     const stateProvince = this.getNameRequestApplicant.stateProvinceCode
@@ -302,7 +302,7 @@ export default class NameRequestInfo extends Mixins(DateMixin, EnumMixin) {
    * Adds or updates a name translation.
    * @param name The name to add
    */
-  private addName (name: string): void {
+  protected addName (name: string): void {
     const nameTranslations = Object.assign([], this.getNameTranslations)
 
     // Handle name translation adds or updates
@@ -322,7 +322,7 @@ export default class NameRequestInfo extends Mixins(DateMixin, EnumMixin) {
    * Sets specified name translation to be edited.
    * @param index Index number of the name translation to edit
    */
-  private editNameTranslation (index: number): void {
+  protected editNameTranslation (index: number): void {
     const nameTranslations = Object.assign([], this.getNameTranslations)
     this.editingNameTranslation = nameTranslations[index].name
     this.editIndex = index
@@ -333,7 +333,7 @@ export default class NameRequestInfo extends Mixins(DateMixin, EnumMixin) {
    * Removes a name translation.
    * @param index Index number of the name translation to remove
    */
-  private removeNameTranslation (index: number): void {
+  protected removeNameTranslation (index: number): void {
     const nameTranslations = Object.assign([], this.getNameTranslations)
     nameTranslations.splice(index, 1)
 
@@ -346,14 +346,14 @@ export default class NameRequestInfo extends Mixins(DateMixin, EnumMixin) {
   }
 
   /** Cancels adding or editing of name translation. */
-  private cancelNameTranslation (): void {
+  protected cancelNameTranslation (): void {
     this.isAddingNameTranslation = false
     this.editingNameTranslation = ''
     this.editIndex = -1
   }
 
   /** Handles name translation checkbox logic. */
-  private confirmNameTranslation (val: boolean) {
+  protected confirmNameTranslation (val: boolean) {
     // if user is unchecking the box and there are name translations
     // then prompt whether to delete them all
     if (!this.hasNameTranslation && this.getNameTranslations?.length > 0) {
@@ -385,13 +385,13 @@ export default class NameRequestInfo extends Mixins(DateMixin, EnumMixin) {
   }
 
   /** Whether name translation is valid. */
-  private get isValidNameTranslation (): boolean {
+  protected get isValidNameTranslation (): boolean {
     return this.hasNameTranslation ? this.getNameTranslations?.length > 0 : true
   }
 
   // Events
   @Emit('hasNameTranslation')
-  private emitHasNameTranslation (): boolean {
+  protected emitHasNameTranslation (): boolean {
     return this.isValidNameTranslation
   }
 

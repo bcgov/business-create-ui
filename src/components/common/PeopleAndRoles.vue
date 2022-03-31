@@ -121,23 +121,20 @@
     </div>
 
     <!-- Add/Edit Person/Org -->
-    <v-card
-      flat
-      v-if="showOrgPersonForm"
-      class="mt-8"
-      :class="{'invalid-section': getShowErrors && !isFormValid}"
-    >
-      <AddEditOrgPerson
-        :initialValue="currentOrgPerson"
-        :activeIndex="activeIndex"
-        :existingCompletingParty="completingParty"
-        :addIncorporator="getPeopleAndRolesResource.addIncorporator"
-        @addEditPerson="onAddEditPerson($event)"
-        @removePerson="onRemovePerson($event)"
-        @resetEvent="resetData()"
-        @removeCompletingPartyRole="onRemoveCompletingPartyRole()"
-      />
-    </v-card>
+    <v-expand-transition>
+      <v-card flat v-if="showOrgPersonForm" class="mt-8">
+        <AddEditOrgPerson
+          :initialValue="currentOrgPerson"
+          :activeIndex="activeIndex"
+          :existingCompletingParty="completingParty"
+          :addIncorporator="getPeopleAndRolesResource.addIncorporator"
+          @addEditPerson="onAddEditPerson($event)"
+          @removePerson="onRemovePerson($event)"
+          @resetEvent="resetData()"
+          @removeCompletingPartyRole="onRemoveCompletingPartyRole()"
+        />
+      </v-card>
+    </v-expand-transition>
 
     <!-- List of People and Roles -->
     <v-card flat v-if="orgPersonList.length > 0" class="mt-8">
@@ -153,9 +150,8 @@
 
 <script lang="ts">
 import { Component, Mixins } from 'vue-property-decorator'
-import { Getter } from 'vuex-class'
 import { cloneDeep } from 'lodash'
-import { AddressIF, EmptyAddress, EmptyOrgPerson } from '@/interfaces'
+import { EmptyAddress, EmptyOrgPerson } from '@/interfaces'
 import { PartyTypes, RoleTypes } from '@/enums'
 import { PeopleRolesMixin } from '@/mixins'
 import AddEditOrgPerson from '@/components/common/AddEditOrgPerson.vue'
@@ -172,16 +168,11 @@ import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
   }
 })
 export default class PeopleAndRoles extends Mixins(PeopleRolesMixin) {
-  @Getter getShowErrors!: boolean
-  @Getter getUserFirstName!: string
-  @Getter getUserLastName!: string
-  @Getter getUserAddress!: AddressIF
-
   //
-  // NB: see mixin for common methods, getters, etc.
+  // NB: see mixin for common properties, methods, etc.
   //
 
-  private addOrgPerson (roleType: RoleTypes, partyType: PartyTypes): void {
+  protected addOrgPerson (roleType: RoleTypes, partyType: PartyTypes): void {
     // first assign empty org/person object
     this.currentOrgPerson = cloneDeep(EmptyOrgPerson)
 

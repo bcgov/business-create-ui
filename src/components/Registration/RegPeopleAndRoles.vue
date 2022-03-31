@@ -105,22 +105,19 @@
     </div>
 
     <!-- Add/Edit Bus/Corp -->
-    <v-card
-      flat
-      v-if="showOrgPersonForm"
-      class="mt-8"
-      :class="{'invalid-section': getShowErrors && !isFormValid}"
-    >
-      <RegAddEditOrgPerson
-        :initialValue="currentOrgPerson"
-        :activeIndex="activeIndex"
-        :existingCompletingParty="completingParty"
-        @addEditPerson="onAddEditPerson($event)"
-        @removePerson="onRemovePerson($event)"
-        @resetEvent="resetData()"
-        @removeCompletingPartyRole="onRemoveCompletingPartyRole()"
-      />
-    </v-card>
+    <v-expand-transition>
+      <v-card flat v-if="showOrgPersonForm" class="mt-8">
+        <RegAddEditOrgPerson
+          :initialValue="currentOrgPerson"
+          :activeIndex="activeIndex"
+          :existingCompletingParty="completingParty"
+          @addEditPerson="onAddEditPerson($event)"
+          @removePerson="onRemovePerson($event)"
+          @resetEvent="resetData()"
+          @removeCompletingPartyRole="onRemoveCompletingPartyRole()"
+        />
+      </v-card>
+    </v-expand-transition>
 
     <!-- List of People and Roles -->
     <v-card flat v-if="orgPersonList.length > 0" class="mt-8">
@@ -136,9 +133,9 @@
 
 <script lang="ts">
 import { Component, Mixins } from 'vue-property-decorator'
-import { Action, Getter } from 'vuex-class'
+import { Action } from 'vuex-class'
 import { cloneDeep } from 'lodash'
-import { ActionBindingIF, AddressIF, EmptyAddress, EmptyOrgPerson } from '@/interfaces'
+import { ActionBindingIF, EmptyAddress, EmptyOrgPerson } from '@/interfaces'
 import { BusinessTypes, PartyTypes, RoleTypes } from '@/enums'
 import { PeopleRolesMixin } from '@/mixins'
 import { ConfirmDialog } from '@bcrs-shared-components/confirm-dialog'
@@ -159,15 +156,10 @@ import RegAddEditOrgPerson from '@/components/Registration/RegAddEditOrgPerson.v
   }
 })
 export default class RegPeopleAndRoles extends Mixins(PeopleRolesMixin) {
-  @Getter getShowErrors!: boolean
-  @Getter getUserFirstName!: string
-  @Getter getUserLastName!: string
-  @Getter getUserAddress!: AddressIF
-
   @Action setRegistrationBusinessType!: ActionBindingIF
 
   //
-  // NB: see mixin for common methods, getters, etc.
+  // NB: see mixin for common properties, methods, etc.
   //
 
   protected async addOrgPerson (roleType: RoleTypes, partyType: PartyTypes): Promise<void> {

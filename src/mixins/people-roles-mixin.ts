@@ -1,8 +1,8 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import { CorpTypeCd, NumWord, PartyTypes, RoleTypes, RuleIds } from '@/enums'
-import { ActionBindingIF, ConfirmDialogType, OrgPersonIF, PeopleAndRoleIF, PeopleAndRolesResourceIF,
-  TombstoneIF } from '@/interfaces'
+import { ActionBindingIF, AddressIF, ConfirmDialogType, OrgPersonIF, PeopleAndRoleIF,
+  PeopleAndRolesResourceIF, TombstoneIF } from '@/interfaces'
 
 /**
  * Mixin that provides common people and roles methods.
@@ -14,9 +14,13 @@ export default class PeopleRolesMixin extends Vue {
     confirmDialog: ConfirmDialogType
   }
 
+  @Getter getShowErrors!: boolean
   @Getter getPeopleAndRolesResource!: PeopleAndRolesResourceIF
   @Getter getAddPeopleAndRoleStep!: PeopleAndRoleIF
   @Getter getTombstone!: TombstoneIF
+  @Getter getUserFirstName!: string
+  @Getter getUserLastName!: string
+  @Getter getUserAddress!: AddressIF
 
   @Action setOrgPersonList!: ActionBindingIF
   @Action setAddPeopleAndRoleStepValidity!: ActionBindingIF
@@ -32,8 +36,8 @@ export default class PeopleRolesMixin extends Vue {
   protected showOrgPersonForm = false
   protected activeIndex = -1
 
-  /** Sets this step's validity when component is mounted. */
   protected async mounted (): Promise<void> {
+    // set initial validity
     this.setAddPeopleAndRoleStepValidity(this.hasValidRoles())
   }
 
@@ -199,15 +203,14 @@ export default class PeopleRolesMixin extends Vue {
   protected onAddEditPerson (person: OrgPersonIF): void {
     const newList: OrgPersonIF[] = Object.assign([], this.orgPersonList)
     if (this.activeIndex === -1) {
-      // Add Person.
+      // add person
       newList.push(person)
     } else {
-      // Edit Person.
+      // update person
       newList.splice(this.activeIndex, 1, person)
     }
     // set updated list
     this.setOrgPersonList(newList)
-    this.setAddPeopleAndRoleStepValidity(this.hasValidRoles())
     this.resetData()
   }
 
@@ -216,9 +219,9 @@ export default class PeopleRolesMixin extends Vue {
     const orgPerson = this.orgPersonList[index]
     const isProprietor = this.isProprietor(orgPerson)
 
-    if (isProprietor && this.isPerson(orgPerson)) {
+    if (this.isPerson(orgPerson)) {
       if (!await this.confirmRemoveProprietorPerson()) return
-    } else if (isProprietor && this.isOrganization(orgPerson)) {
+    } else if (this.isOrganization(orgPerson) && isProprietor) {
       if (!await this.confirmRemoveProprietorOrganization()) return
     } else {
       if (!await this.confirmRemove()) return
@@ -226,11 +229,13 @@ export default class PeopleRolesMixin extends Vue {
 
     const newList: OrgPersonIF[] = Object.assign([], this.orgPersonList)
     newList.splice(index, 1)
+
+    // set updated list
     this.setOrgPersonList(newList)
-    this.setAddPeopleAndRoleStepValidity(this.hasValidRoles())
     this.resetData()
   }
 
+  /** Called by AddEditOrgPerson component event when reassigning the CP. */
   protected onRemoveCompletingPartyRole () {
     const newList: OrgPersonIF[] = Object.assign([], this.orgPersonList)
     const completingParty =
@@ -245,10 +250,13 @@ export default class PeopleRolesMixin extends Vue {
     }
   }
 
+  /** Called to clean up after adding/editing/remove a person or cancelling the AddEdit component. */
   protected resetData (): void {
     this.currentOrgPerson = null
     this.activeIndex = -1
     this.showOrgPersonForm = false
+    // set validity according to current state
+    this.setAddPeopleAndRoleStepValidity(this.hasValidRoles())
   }
 
   protected hasValidRoles (): boolean {
