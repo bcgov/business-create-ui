@@ -5,9 +5,11 @@
       attach="#reg-add-edit-org-person"
     />
 
+    <!-- TODO: remove this after debugging -->
     <pre>form={{addPersonOrgFormValid}}</pre>
     <pre>mailing={{mailingAddressValid}}</pre>
-    <pre>delivery={{deliveryAddressValid}}</pre>
+    <pre>delivery={{inheritMailingAddress || deliveryAddressValid}}</pre>
+
     <section class="px-6 py-10" :class="{ 'invalid-section': !addPersonOrgFormValid }">
       <v-row no-gutters>
         <v-col cols="12" sm="3" class="pr-4 d-none d-sm-block">
@@ -233,6 +235,8 @@
                 @update:address="updateMailingAddress($event)"
                 @valid="updateMailingAddressValidity($event)"
               />
+              <!-- dummy component to make form invalid if mailing address is invalid -->
+              <v-input class="d-none" :rules="[() => mailingAddressValid]" />
             </article>
 
             <!-- Delivery Address (for all roles) -->
@@ -256,6 +260,8 @@
                   @update:address="updateDeliveryAddress($event)"
                   @valid="updateDeliveryAddressValidity($event)"
                 />
+                <!-- dummy component to make form invalid if delivery address is invalid -->
+                <v-input class="d-none" :rules="[() => inheritMailingAddress || deliveryAddressValid]" />
               </article>
             </div>
 

@@ -220,9 +220,9 @@ export default class PeopleRolesMixin extends Vue {
     const orgPerson = this.orgPersonList[index]
     const isProprietor = this.isProprietor(orgPerson)
 
-    if (isProprietor && this.isPerson(orgPerson)) {
+    if (this.isPerson(orgPerson)) {
       if (!await this.confirmRemoveProprietorPerson()) return
-    } else if (isProprietor && this.isOrganization(orgPerson)) {
+    } else if (this.isOrganization(orgPerson) && isProprietor) {
       if (!await this.confirmRemoveProprietorOrganization()) return
     } else {
       if (!await this.confirmRemove()) return

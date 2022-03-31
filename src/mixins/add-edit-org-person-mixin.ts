@@ -167,7 +167,7 @@ export default class AddEditOrgPersonMixin extends Vue {
 
   /** Whether the current data object supports a delivery address. */
   private get supportsDeliveryAddress (): boolean {
-    return (this.isDirector || this.isProprietor || (this.isTypeSoleProp || this.isCompletingParty))
+    return (this.isDirector || this.isProprietor || (this.isTypeSoleProp && this.isCompletingParty))
   }
 
   /** Called when component is created. */
@@ -232,10 +232,14 @@ export default class AddEditOrgPersonMixin extends Vue {
 
   protected updateMailingAddressValidity (valid: boolean): void {
     this.mailingAddressValid = valid
+    // validate the form to update dummy component rules
+    this.$refs.addPersonOrgForm && this.$refs.addPersonOrgForm.validate()
   }
 
   protected updateDeliveryAddressValidity (valid: boolean): void {
     this.deliveryAddressValid = valid
+    // validate the form to update dummy component rules
+    this.$refs.addPersonOrgForm && this.$refs.addPersonOrgForm.validate()
   }
 
   protected async assignCompletingPartyRole (): Promise<void> {
@@ -266,8 +270,6 @@ export default class AddEditOrgPersonMixin extends Vue {
       }
     }
   }
-
-  // *** TODO: save confirm flag in orgPerson object
 
   protected async validateAddPersonOrgForm (): Promise<void> {
     // validate the main form and address form(s)
@@ -358,6 +360,7 @@ export default class AddEditOrgPersonMixin extends Vue {
       'Selecting "Completing Party" here will change the Completing Party.'
   }
 
+  // *** TODO: can probably get rid of this:
   /** True if the form is valid. */
   protected get isFormValid (): boolean {
     let isFormValid = (this.addPersonOrgFormValid && this.mailingAddressValid)
