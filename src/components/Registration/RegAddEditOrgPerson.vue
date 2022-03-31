@@ -5,6 +5,9 @@
       attach="#reg-add-edit-org-person"
     />
 
+    <pre>form={{addPersonOrgFormValid}}</pre>
+    <pre>mailing={{mailingAddressValid}}</pre>
+    <pre>delivery={{deliveryAddressValid}}</pre>
     <section class="px-6 py-10" :class="{ 'invalid-section': !addPersonOrgFormValid }">
       <v-row no-gutters>
         <v-col cols="12" sm="3" class="pr-4 d-none d-sm-block">
@@ -105,7 +108,7 @@
               <v-checkbox
                 class="confirm-checkbox mt-8"
                 hide-details
-                v-model="confirmCheckbox"
+                v-model="orgPerson.confirmBusiness"
                 :rules="[(v) => !!v]"
               >
                 <template slot="label">
@@ -227,8 +230,8 @@
                 :editing="true"
                 :schema="PersonAddressSchema"
                 :address="inProgressMailingAddress"
-                @update:address="updateMailingAddress"
-                @valid="updateMailingAddressValidity"
+                @update:address="updateMailingAddress($event)"
+                @valid="updateMailingAddressValidity($event)"
               />
             </article>
 
@@ -250,8 +253,8 @@
                   :schema="PersonAddressSchema"
                   :address="inProgressDeliveryAddress"
                   :noPoBox="true"
-                  @update:address="updateDeliveryAddress"
-                  @valid="updateDeliveryAddressValidity"
+                  @update:address="updateDeliveryAddress($event)"
+                  @valid="updateDeliveryAddressValidity($event)"
                 />
               </article>
             </div>
@@ -301,12 +304,11 @@ import { AddEditOrgPersonMixin } from '@/mixins'
 })
 export default class RegAddEditOrgPerson extends Mixins(AddEditOrgPersonMixin) {
   //
-  // NB: see mixin for common methods, getters, etc.
+  // NB: see mixin for common properties, methods, etc.
   //
 
   // local properties
   protected isManualAdd = true
-  protected confirmCheckbox = false
 
   /** The validation rules for the Organization Name. */
   readonly OrgNameRules: Array<Function> = [

@@ -107,9 +107,9 @@
   border-color: $gray3 !important;
 }
 
-// Checkboxes
+// Checkbox Labels
 .v-input--checkbox .v-input__control .v-input__slot {
-  label {
+  .v-label {
     color: $gray7;
   }
 }
@@ -121,6 +121,13 @@
     color: $app-blue !important;
     opacity: 0.4;
   }
+}
+
+// Error Checkboxes
+.v-input--checkbox.error--text .v-icon {
+  // revert icon to theme-light colour
+  color: rgba(0, 0, 0, 0.54) !important;
+  caret-color: rgba(0, 0, 0, 0.54) !important;
 }
 
 // Tooltips

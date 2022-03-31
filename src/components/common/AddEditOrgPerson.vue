@@ -5,14 +5,17 @@
       attach="#add-edit-org-person"
     />
 
-    <section class="px-6 py-10" :class="{ 'invalid-section': !addPersonOrgFormValid }">
+    <pre>form={{addPersonOrgFormValid}}</pre>
+    <pre>mailing={{mailingAddressValid}}</pre>
+    <pre>delivery={{deliveryAddressValid}}</pre>
+    <section class="px-6 py-10" :class="{ 'invalid-section': !isFormValid }">
       <v-row no-gutters>
         <v-col cols="12" sm="3" class="pr-4 d-none d-sm-block">
           <!-- Title for org -->
           <label
             v-if="isOrg && isTypeBcomp"
             class="add-org-header"
-            :class="{'error-text': !addPersonOrgFormValid}"
+            :class="{'error-text': !isFormValid}"
           >
             <span v-if="activeIndex === -1">Add Corporation or Firm</span>
             <span v-else>Edit Corporation or Firm</span>
@@ -22,7 +25,7 @@
           <label
             v-if="isOrg && isTypeCoop"
             class="add-org-header"
-            :class="{'error-text': !addPersonOrgFormValid}"
+            :class="{'error-text': !isFormValid}"
           >
             <span v-if="activeIndex === -1">Add Organization</span>
             <span v-else>Edit Organization</span>
@@ -32,7 +35,7 @@
           <label
             v-if="isPerson"
             class="add-org-header"
-            :class="{'error-text': !addPersonOrgFormValid}"
+            :class="{'error-text': !isFormValid}"
           >
             <span v-if="activeIndex === -1">Add Person</span>
             <span v-else>Edit Person</span>
@@ -167,8 +170,8 @@
                 :editing="true"
                 :schema="PersonAddressSchema"
                 :address="inProgressMailingAddress"
-                @update:address="updateMailingAddress"
-                @valid="updateMailingAddressValidity"
+                @update:address="updateMailingAddress($event)"
+                @valid="updateMailingAddressValidity($event)"
               />
             </article>
 
@@ -190,8 +193,8 @@
                   :schema="PersonAddressSchema"
                   :address="inProgressDeliveryAddress"
                   :noPoBox="true"
-                  @update:address="updateDeliveryAddress"
-                  @valid="updateDeliveryAddressValidity"
+                  @update:address="updateDeliveryAddress($event)"
+                  @valid="updateDeliveryAddressValidity($event)"
                 />
               </article>
             </div>
@@ -237,7 +240,7 @@ import { AddEditOrgPersonMixin } from '@/mixins'
 })
 export default class AddEditOrgPerson extends Mixins(AddEditOrgPersonMixin) {
   //
-  // NB: see mixin for common methods, getters, etc.
+  // NB: see mixin for common properties, methods, etc.
   //
 }
 </script>

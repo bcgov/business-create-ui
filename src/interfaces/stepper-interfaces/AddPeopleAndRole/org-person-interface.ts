@@ -19,6 +19,7 @@ export interface OrgPersonIF {
   mailingAddress: AddressIF
   deliveryAddress?: AddressIF
   inheritMailingAddress?: boolean
+  confirmBusiness?: boolean // proprietors and partners only // for UI use only
 }
 
 export const EmptyOfficer: OfficerIF = {

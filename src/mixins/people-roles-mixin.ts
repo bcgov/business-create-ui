@@ -1,8 +1,8 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import { CorpTypeCd, NumWord, PartyTypes, RoleTypes, RuleIds } from '@/enums'
-import { ActionBindingIF, ConfirmDialogType, OrgPersonIF, PeopleAndRoleIF, PeopleAndRolesResourceIF,
-  TombstoneIF } from '@/interfaces'
+import { ActionBindingIF, AddressIF, ConfirmDialogType, OrgPersonIF, PeopleAndRoleIF,
+  PeopleAndRolesResourceIF, TombstoneIF } from '@/interfaces'
 
 /**
  * Mixin that provides common people and roles methods.
@@ -14,9 +14,13 @@ export default class PeopleRolesMixin extends Vue {
     confirmDialog: ConfirmDialogType
   }
 
+  @Getter getShowErrors!: boolean
   @Getter getPeopleAndRolesResource!: PeopleAndRolesResourceIF
   @Getter getAddPeopleAndRoleStep!: PeopleAndRoleIF
   @Getter getTombstone!: TombstoneIF
+  @Getter getUserFirstName!: string
+  @Getter getUserLastName!: string
+  @Getter getUserAddress!: AddressIF
 
   @Action setOrgPersonList!: ActionBindingIF
   @Action setAddPeopleAndRoleStepValidity!: ActionBindingIF

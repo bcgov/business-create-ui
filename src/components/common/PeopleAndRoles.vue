@@ -150,9 +150,8 @@
 
 <script lang="ts">
 import { Component, Mixins } from 'vue-property-decorator'
-import { Getter } from 'vuex-class'
 import { cloneDeep } from 'lodash'
-import { AddressIF, EmptyAddress, EmptyOrgPerson } from '@/interfaces'
+import { EmptyAddress, EmptyOrgPerson } from '@/interfaces'
 import { PartyTypes, RoleTypes } from '@/enums'
 import { PeopleRolesMixin } from '@/mixins'
 import AddEditOrgPerson from '@/components/common/AddEditOrgPerson.vue'
@@ -169,13 +168,8 @@ import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
   }
 })
 export default class PeopleAndRoles extends Mixins(PeopleRolesMixin) {
-  @Getter getShowErrors!: boolean
-  @Getter getUserFirstName!: string
-  @Getter getUserLastName!: string
-  @Getter getUserAddress!: AddressIF
-
   //
-  // NB: see mixin for common methods, getters, etc.
+  // NB: see mixin for common properties, methods, etc.
   //
 
   private addOrgPerson (roleType: RoleTypes, partyType: PartyTypes): void {

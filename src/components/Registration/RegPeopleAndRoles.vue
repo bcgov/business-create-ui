@@ -133,9 +133,9 @@
 
 <script lang="ts">
 import { Component, Mixins } from 'vue-property-decorator'
-import { Action, Getter } from 'vuex-class'
+import { Action } from 'vuex-class'
 import { cloneDeep } from 'lodash'
-import { ActionBindingIF, AddressIF, EmptyAddress, EmptyOrgPerson } from '@/interfaces'
+import { ActionBindingIF, EmptyAddress, EmptyOrgPerson } from '@/interfaces'
 import { BusinessTypes, PartyTypes, RoleTypes } from '@/enums'
 import { PeopleRolesMixin } from '@/mixins'
 import { ConfirmDialog } from '@bcrs-shared-components/confirm-dialog'
@@ -156,15 +156,10 @@ import RegAddEditOrgPerson from '@/components/Registration/RegAddEditOrgPerson.v
   }
 })
 export default class RegPeopleAndRoles extends Mixins(PeopleRolesMixin) {
-  @Getter getShowErrors!: boolean
-  @Getter getUserFirstName!: string
-  @Getter getUserLastName!: string
-  @Getter getUserAddress!: AddressIF
-
   @Action setRegistrationBusinessType!: ActionBindingIF
 
   //
-  // NB: see mixin for common methods, getters, etc.
+  // NB: see mixin for common properties, methods, etc.
   //
 
   protected async addOrgPerson (roleType: RoleTypes, partyType: PartyTypes): Promise<void> {

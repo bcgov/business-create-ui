@@ -150,6 +150,7 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
   @Getter isIncorporationFiling!: boolean
   @Getter isRegistrationFiling!: boolean
   @Getter getAddPeopleAndRoleStep!: PeopleAndRoleIF
+  @Getter getShowErrors!: boolean
 
   // Enum for template
   readonly RouteNames = RouteNames
@@ -162,8 +163,9 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
     return this.getAddPeopleAndRoleStep.orgPeople
   }
 
+  // *** TODO: make step invalid if add-edit form is open
   get showErrorSummary (): boolean {
-    return !this.getAddPeopleAndRoleStep.valid
+    return (this.getShowErrors && !this.getAddPeopleAndRoleStep.valid)
   }
 
   /** Returns true if org-person is a person. */
