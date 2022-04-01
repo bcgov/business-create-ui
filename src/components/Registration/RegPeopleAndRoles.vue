@@ -107,6 +107,7 @@
     <!-- Add/Edit Bus/Corp -->
     <v-expand-transition>
       <v-card flat v-if="showOrgPersonForm" class="mt-8">
+        <!-- FUTURE: move this component into a slot in ListPeopleAndRoles ??? -->
         <RegAddEditOrgPerson
           :initialValue="currentOrgPerson"
           :activeIndex="activeIndex"

@@ -40,6 +40,7 @@ export default class AddEditOrgPersonMixin extends Vue {
   // Local properties
   private orgPerson: OrgPersonIF = null
   private addPersonOrgFormValid = true
+  private enableRules = false
 
   // Address related properties
   private inProgressMailingAddress: AddressIF
@@ -282,7 +283,11 @@ export default class AddEditOrgPersonMixin extends Vue {
     }
   }
 
-  protected validateAddPersonOrgForm (): void {
+  protected async validateAddPersonOrgForm (): Promise<void> {
+    // enable component rules and wait to let them update
+    this.enableRules = true
+    await Vue.nextTick()
+
     // first validate the address form(s)
     this.$refs.mailingAddressNew.$refs.addressForm.validate()
     if (this.$refs.deliveryAddressNew) {
