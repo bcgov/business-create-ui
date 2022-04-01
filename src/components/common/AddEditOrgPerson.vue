@@ -74,7 +74,7 @@
                   label="First Name"
                   id="person__first-name"
                   v-model.trim="orgPerson.officer.firstName"
-                  :rules="Rules.FirstNameRules"
+                  :rules="enableRules ? Rules.FirstNameRules : []"
                   :readonly="isCompletingParty && !isRoleStaff && isTypeCoop"
                 />
                 <v-text-field
@@ -83,7 +83,7 @@
                   label="Middle Name"
                   id="person__middle-name"
                   v-model.trim="orgPerson.officer.middleName"
-                  :rules="Rules.MiddleNameRules"
+                  :rules="enableRules ? Rules.MiddleNameRules: []"
                   :readonly="isCompletingParty && !isRoleStaff && isTypeCoop"
                 />
                 <v-text-field
@@ -92,7 +92,7 @@
                   label="Last Name"
                   id="person__last-name"
                   v-model.trim="orgPerson.officer.lastName"
-                  :rules="Rules.LastNameRules"
+                  :rules="enableRules ? Rules.LastNameRules : []"
                   :readonly="isCompletingParty && !isRoleStaff && isTypeCoop"
                 />
               </div>
@@ -108,7 +108,7 @@
                   label="Full Legal Corporation or Firm Name"
                   id="firm-name"
                   v-model.trim="orgPerson.officer.organizationName"
-                  :rules="Rules.OrgNameRules"
+                  :rules="enableRules ? Rules.OrgNameRules : []"
                 />
               </div>
             </article>
@@ -138,7 +138,7 @@
                       :value="RoleTypes.INCORPORATOR"
                       :label="RoleTypes.INCORPORATOR"
                       :disabled="disableIncorporatorRole"
-                      :rules="roleRules"
+                      :rules="enableRules ? roleRules: []"
                     />
                   </v-col>
 
@@ -150,7 +150,7 @@
                       :value="RoleTypes.DIRECTOR"
                       :label="RoleTypes.DIRECTOR"
                       :disabled="disableDirectorRole"
-                      :rules="roleRules"
+                      :rules="enableRules ? roleRules : []"
                       @click="updateSameAsMailingChkBox()"
                     />
                   </v-col>
@@ -165,13 +165,16 @@
                 ref="mailingAddressNew"
                 class="mt-6"
                 :editing="true"
-                :schema="PersonAddressSchema"
+                :schema="enableRules ? PersonAddressSchema : {}"
                 :address="inProgressMailingAddress"
                 @update:address="updateMailingAddress($event)"
                 @valid="updateMailingAddressValidity($event)"
               />
               <!-- dummy component to make form invalid if mailing address is invalid -->
-              <v-input class="d-none" :rules="[() => mailingAddressValid]" />
+              <v-input
+                class="d-none"
+                :rules="enableRules ? [() => mailingAddressValid] : []"
+              />
             </article>
 
             <!-- Delivery Address (for directors only) -->
@@ -189,14 +192,17 @@
                   ref="deliveryAddressNew"
                   class="mt-6"
                   :editing="true"
-                  :schema="PersonAddressSchema"
+                  :schema="enableRules ? PersonAddressSchema : {}"
                   :address="inProgressDeliveryAddress"
                   :noPoBox="true"
                   @update:address="updateDeliveryAddress($event)"
                   @valid="updateDeliveryAddressValidity($event)"
                 />
                 <!-- dummy component to make form invalid if delivery address is invalid -->
-                <v-input class="d-none" :rules="[() => inheritMailingAddress || deliveryAddressValid]" />
+                <v-input
+                  class="d-none"
+                  :rules="enableRules ? [() => inheritMailingAddress || deliveryAddressValid] : []"
+                />
               </article>
             </div>
 

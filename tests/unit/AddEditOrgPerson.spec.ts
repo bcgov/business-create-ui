@@ -149,6 +149,7 @@ function createComponent (
   document.body.setAttribute('data-app', 'true')
   return mount(AddEditOrgPerson, {
     localVue,
+    data() { return { enableRules: true }},
     propsData: {
       initialValue,
       activeIndex,

@@ -64,7 +64,7 @@
                   label="First Name"
                   id="person__first-name"
                   v-model.trim="orgPerson.officer.firstName"
-                  :rules="Rules.FirstNameRules"
+                  :rules="enableRules ? Rules.FirstNameRules : []"
                   :readonly="isCompletingParty && !isRoleStaff"
                 />
                 <v-text-field
@@ -73,7 +73,7 @@
                   label="Middle Name"
                   id="person__middle-name"
                   v-model.trim="orgPerson.officer.middleName"
-                  :rules="Rules.MiddleNameRules"
+                  :rules="enableRules ? Rules.MiddleNameRules : []"
                   :readonly="isCompletingParty && !isRoleStaff"
                 />
                 <v-text-field
@@ -82,7 +82,7 @@
                   label="Last Name"
                   id="person__last-name"
                   v-model.trim="orgPerson.officer.lastName"
-                  :rules="Rules.LastNameRules"
+                  :rules="enableRules ? Rules.LastNameRules : []"
                   :readonly="isCompletingParty && !isRoleStaff"
                 />
               </div>
@@ -108,7 +108,7 @@
                 class="confirm-checkbox mt-8"
                 hide-details
                 v-model="orgPerson.confirmBusiness"
-                :rules="[(v) => !!v]"
+                :rules="enableRules ? [(v) => !!v] : []"
               >
                 <template slot="label">
                   I confirm that the business proprietor being added is not legally required to
@@ -123,7 +123,7 @@
                 label="Business or Corporation Name"
                 id="firm-name"
                 v-model.trim="orgPerson.officer.organizationName"
-                :rules="OrgNameRules"
+                :rules="enableRules ? OrgNameRules : []"
               />
 
               <!-- Business Number -->
@@ -135,7 +135,7 @@
                 id="person__business-number"
                 hint="First 9 digits of the CRA Business Number"
                 v-model.trim="orgPerson.officer.businessNumber"
-                :rules="BusinessNumberRules"
+                :rules="enableRules ? BusinessNumberRules : []"
               />
 
               <v-divider class="mt-8" />
@@ -199,7 +199,7 @@
                 id="person__business-number"
                 hint="First 9 digits of the CRA Business Number"
                 v-model.trim="orgPerson.officer.businessNumber"
-                :rules="BusinessNumberRules"
+                :rules="enableRules ? BusinessNumberRules : []"
               />
             </article>
 
@@ -215,7 +215,7 @@
                 label="Email Address"
                 id="person__email-address"
                 v-model.trim="orgPerson.officer.email"
-                :rules="Rules.EmailRules"
+                :rules="enableRules ? Rules.EmailRules : []"
                 :readonly="isCompletingParty && !isRoleStaff"
               />
             </article>
@@ -227,13 +227,16 @@
                 ref="mailingAddressNew"
                 class="mt-4 mb-n6"
                 :editing="true"
-                :schema="PersonAddressSchema"
+                :schema="enableRules ? PersonAddressSchema : {}"
                 :address="inProgressMailingAddress"
                 @update:address="updateMailingAddress($event)"
                 @valid="updateMailingAddressValidity($event)"
               />
               <!-- dummy component to make form invalid if mailing address is invalid -->
-              <v-input class="d-none" :rules="[() => mailingAddressValid]" />
+              <v-input
+                class="d-none"
+                :rules="enableRules ? [() => mailingAddressValid] : []"
+              />
             </article>
 
             <!-- Delivery Address (for all roles) -->
@@ -251,14 +254,17 @@
                   ref="deliveryAddressNew"
                   class="mt-4 mb-n6"
                   :editing="true"
-                  :schema="PersonAddressSchema"
+                  :schema="enableRules ? PersonAddressSchema : {}"
                   :address="inProgressDeliveryAddress"
                   :noPoBox="true"
                   @update:address="updateDeliveryAddress($event)"
                   @valid="updateDeliveryAddressValidity($event)"
                 />
                 <!-- dummy component to make form invalid if delivery address is invalid -->
-                <v-input class="d-none" :rules="[() => inheritMailingAddress || deliveryAddressValid]" />
+                <v-input
+                  class="d-none"
+                  :rules="enableRules ? [() => inheritMailingAddress || deliveryAddressValid] : []"
+                />
               </article>
             </div>
 

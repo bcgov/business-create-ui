@@ -36,26 +36,28 @@
         >
           <v-col class="name-column d-flex text-break">
             <div class="pr-2">
-              <v-icon color="primary" v-if="isPerson(orgPerson)">mdi-account</v-icon>
-              <v-icon color="primary" v-if="isOrg(orgPerson)">mdi-domain</v-icon>
+              <v-icon color="gray9" v-if="isPerson(orgPerson)">mdi-account</v-icon>
+              <v-icon color="gray9" v-if="isOrg(orgPerson)">mdi-domain</v-icon>
             </div>
             <div>
               <span class="name" :class="{'text-uppercase':isOrg(orgPerson)}"
                 >{{ formatName(orgPerson) }}</span>
 
-              <div v-if="officerEmail(orgPerson)">
-                <p>{{ officerEmail(orgPerson) }}</p>
-              </div>
+              <template v-if="isRegistrationFiling">
+                <div v-if="officerEmail(orgPerson)">
+                  <p>{{ officerEmail(orgPerson) }}</p>
+                </div>
 
-              <div v-if="officerIncorpNumber(orgPerson)" class="mt-2">
-                <p>Incorporation Number:</p>
-                <p>{{ officerIncorpNumber(orgPerson) }}</p>
-              </div>
+                <div v-if="officerIncorpNumber(orgPerson)" class="mt-2">
+                  <p>Incorporation Number:</p>
+                  <p>{{ officerIncorpNumber(orgPerson) }}</p>
+                </div>
 
-              <div v-if="officerBusinessNumber(orgPerson)" class="mt-2">
-                <p>Business Number:</p>
-                <p>{{ officerBusinessNumber(orgPerson) }}</p>
-              </div>
+                <div v-if="officerBusinessNumber(orgPerson)" class="mt-2">
+                  <p>Business Number:</p>
+                  <p>{{ officerBusinessNumber(orgPerson) }}</p>
+                </div>
+              </template>
             </div>
           </v-col>
 

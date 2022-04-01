@@ -123,6 +123,7 @@
     <!-- Add/Edit Person/Org -->
     <v-expand-transition>
       <v-card flat v-if="showOrgPersonForm" class="mt-8">
+        <!-- FUTURE: move this component into a slot in ListPeopleAndRoles ??? -->
         <AddEditOrgPerson
           :initialValue="currentOrgPerson"
           :activeIndex="activeIndex"
