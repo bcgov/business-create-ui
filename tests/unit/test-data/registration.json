@@ -1,53 +1,55 @@
 {
-	"filing": {
-		"header": {
-			"name": "registration",
-			"certifiedBy": "John Doe",
-			"date": "2021-10-26",
-			"folioNumber": "ABC-123",
-			"isFutureEffective": true
-		},
-		"registration": {
+  "filing": {
+    "header": {
+      "name": "registration",
+      "certifiedBy": "John Doe",
+      "date": "2021-10-26",
+      "folioNumber": "ABC-123",
+      "isFutureEffective": true
+    },
+    "registration": {
       "business": {
         "identifier": "T1234567",
         "naics": {
           "naicsCode": "12345",
           "naicsDescription": "Some NAICS Description"
         }
-			},
-      "businessAddress": {
-        "deliveryAddress": {
-          "addressCity": "Alpha",
-          "addressCountry": "CA",
-          "addressRegion": "BC",
-          "deliveryInstructions": "Delivery address",
-          "postalCode": "V1V 1V1",
-          "streetAddress": "111 First St",
-          "streetAddressAdditional": "Suite 1"
-        },
-        "mailingAddress": {
-          "addressCity": "Bravo",
-          "addressCountry": "CA",
-          "addressRegion": "BC",
-          "deliveryInstructions": "Mailing address",
-          "postalCode": "V2V 2V2",
-          "streetAddress": "222 Second St",
-          "streetAddressAdditional": "Suite 2"
+      },
+      "offices": {
+        "businessOffice": {
+          "deliveryAddress": {
+            "addressCity": "Alpha",
+            "addressCountry": "CA",
+            "addressRegion": "BC",
+            "deliveryInstructions": "Delivery address",
+            "postalCode": "V1V 1V1",
+            "streetAddress": "111 First St",
+            "streetAddressAdditional": "Suite 1"
+          },
+          "mailingAddress": {
+            "addressCity": "Bravo",
+            "addressCountry": "CA",
+            "addressRegion": "BC",
+            "deliveryInstructions": "Mailing address",
+            "postalCode": "V2V 2V2",
+            "streetAddress": "222 Second St",
+            "streetAddressAdditional": "Suite 2"
+          }
         }
       },
       "businessType": "SP",
-			"contactPoint": {
-				"email": "eleven@email.com",
-				"phone": "(111) 222-3333",
+      "contactPoint": {
+        "email": "eleven@email.com",
+        "phone": "(111) 222-3333",
         "extension": "444"
-			},
-			"nameRequest": {
+      },
+      "nameRequest": {
         "legalName": "My Approved Name",
-				"legalType": "SP",
+        "legalType": "SP",
         "nrNumber": "NR 1234567"
-			},
+      },
       "parties": [],
       "startDate": "2021-02-03"
     }
-	}
+  }
 }
