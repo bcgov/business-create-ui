@@ -60,27 +60,24 @@
                 <!-- NB: only staff can change Completing Party names -->
                 <v-text-field
                   filled
-                  class="item"
+                  class="item first-name"
                   label="First Name"
-                  id="person__first-name"
                   v-model.trim="orgPerson.officer.firstName"
                   :rules="enableRules ? Rules.FirstNameRules : []"
                   :readonly="isCompletingParty && !isRoleStaff"
                 />
                 <v-text-field
                   filled
-                  class="item"
+                  class="item middle-name"
                   label="Middle Name"
-                  id="person__middle-name"
                   v-model.trim="orgPerson.officer.middleName"
                   :rules="enableRules ? Rules.MiddleNameRules : []"
                   :readonly="isCompletingParty && !isRoleStaff"
                 />
                 <v-text-field
                   filled
-                  class="item"
+                  class="item last-name"
                   label="Last Name"
-                  id="person__last-name"
                   v-model.trim="orgPerson.officer.lastName"
                   :rules="enableRules ? Rules.LastNameRules : []"
                   :readonly="isCompletingParty && !isRoleStaff"
@@ -119,9 +116,8 @@
               <!-- Organization Name -->
               <v-text-field
                 filled
-                class="mt-8 mb-n6"
+                class="mt-8 mb-n6 org-name"
                 label="Business or Corporation Name"
-                id="firm-name"
                 v-model.trim="orgPerson.officer.organizationName"
                 :rules="enableRules ? OrgNameRules : []"
               />
@@ -164,18 +160,6 @@
                       v-model="selectedRoles"
                       :value="RoleTypes.PROPRIETOR"
                       :label="RoleTypes.PROPRIETOR"
-                      :disabled="true"
-                    />
-                  </v-col>
-
-                  <!-- FUTURE (for GP) -->
-                  <v-col cols="4" v-if="showPartnerRole" class="py-0">
-                    <v-checkbox
-                      id="partner-checkbox"
-                      class="mt-5"
-                      v-model="selectedRoles"
-                      :value="RoleTypes.PARTNER"
-                      :label="RoleTypes.PARTNER"
                       :disabled="true"
                     />
                   </v-col>
@@ -271,19 +255,17 @@
             <!-- Action Buttons -->
             <div class="form__btns mt-10">
               <v-btn
-                id="btn-remove"
                 large outlined color="error"
-                class="btn-outlined-error"
+                class="btn-outlined-error btn-remove"
                 :disabled="activeIndex === -1"
                 @click="emitRemovePerson(activeIndex)">Remove</v-btn>
               <v-btn
-                id="btn-done"
                 large color="primary"
-                class="ml-auto"
+                class="ml-auto btn-done"
                 @click="validateAddPersonOrgForm()">Done</v-btn>
               <v-btn
-                id="btn-cancel"
                 large outlined color="primary"
+                class="btn-cancel"
                 @click="resetAddPersonData(true)">Cancel</v-btn>
             </div>
           </v-form>

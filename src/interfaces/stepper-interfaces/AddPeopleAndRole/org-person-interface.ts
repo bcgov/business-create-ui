@@ -9,8 +9,8 @@ export interface OfficerIF {
   lastName: string
   organizationName: string
   email?: string
-  incorpNumber?: string // business proprietors and partners only
-  businessNumber?: string // proprietors and partners only
+  incorpNumber?: string // GP partners only
+  businessNumber?: string // SP proprietors and GP partners only
 }
 
 export interface OrgPersonIF {
@@ -19,7 +19,7 @@ export interface OrgPersonIF {
   mailingAddress: AddressIF
   deliveryAddress?: AddressIF
   inheritMailingAddress?: boolean
-  confirmBusiness?: boolean // proprietors and partners only // for UI use only
+  confirmBusiness?: boolean // SP proprietors and GP partners only // for UI use only
 }
 
 export const EmptyOfficer: OfficerIF = {

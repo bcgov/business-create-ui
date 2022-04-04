@@ -106,7 +106,7 @@
                   filled
                   class="item"
                   label="Full Legal Corporation or Firm Name"
-                  id="firm-name"
+                  id="org-name"
                   v-model.trim="orgPerson.officer.organizationName"
                   :rules="enableRules ? Rules.OrgNameRules : []"
                 />

@@ -45,15 +45,15 @@
 
               <template v-if="isRegistrationFiling">
                 <div v-if="officerEmail(orgPerson)">
-                  <p>{{ officerEmail(orgPerson) }}</p>
+                  <p class="email">{{ officerEmail(orgPerson) }}</p>
                 </div>
 
-                <div v-if="officerIncorpNumber(orgPerson)" class="mt-2">
+                <div v-if="officerIncorpNumber(orgPerson)" class="mt-2 incorporation-number">
                   <p>Incorporation Number:</p>
                   <p>{{ officerIncorpNumber(orgPerson) }}</p>
                 </div>
 
-                <div v-if="officerBusinessNumber(orgPerson)" class="mt-2">
+                <div v-if="officerBusinessNumber(orgPerson)" class="mt-2 business-number">
                   <p>Business Number:</p>
                   <p>{{ officerBusinessNumber(orgPerson) }}</p>
                 </div>

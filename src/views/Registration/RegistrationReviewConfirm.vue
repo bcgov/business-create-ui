@@ -149,23 +149,11 @@ export default class RegistrationReviewConfirm extends Vue {
   get documentDeliveryAdditionalValue (): string {
     const orgPersonList = this.getAddPeopleAndRoleStep.orgPeople
 
-    if (this.isTypeSoleProp) {
-      const emails = orgPersonList
-        .filter(op => op.roles.some(role => role.roleType === RoleTypes.PROPRIETOR))
-        .map(op => op.officer?.email)
-        .filter(e => !!e)
-      return emails.join(',')
-    }
-
-    if (this.isTypePartnership) {
-      const emails = orgPersonList
-        .filter(op => op.roles.some(role => role.roleType === RoleTypes.PARTNER))
-        .map(op => op.officer?.email)
-        .filter(e => !!e)
-      return emails.join(',')
-    }
-
-    return null
+    const emails = orgPersonList
+      .filter(op => op.roles.some(role => role.roleType === RoleTypes.PROPRIETOR))
+      .map(op => op.officer?.email)
+      .filter(e => !!e)
+    return emails.join(',')
   }
 
   /** Is true when the Document Delivery conditions are not met. */
