@@ -1,12 +1,16 @@
 import Vue from 'vue'
 import Vuelidate from 'vuelidate'
 import Vuetify from 'vuetify'
-import VueRouter from 'vue-router'
-import mockRouter from './MockRouter'
+import flushPromises from 'flush-promises'
 import { getVuexStore } from '@/store'
-import { createLocalVue, mount } from '@vue/test-utils'
-import PeopleAndRoles from '@/components/common/PeopleAndRoles.vue'
-import { BenefitCompanyResource } from '@/resources/Incorporations/benefitCompany'
+import { mount } from '@vue/test-utils'
+import RegPeopleAndRoles from '@/components/Registration/RegPeopleAndRoles.vue'
+import { SoleProprietorshipResource } from '@/resources/Registrations/soleProprietorship'
+import RegAddEditOrgPerson from '@/components/Registration/RegAddEditOrgPerson.vue'
+import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
+
+// mock the console.warn function to hide "[Vuetify] Unable to locate target XXX"
+console.warn = jest.fn()
 
 Vue.use(Vuetify)
 Vue.use(Vuelidate)
@@ -14,23 +18,21 @@ Vue.use(Vuelidate)
 const vuetify = new Vuetify({})
 const store = getVuexStore()
 
-// Input field selectors to test changes to the DOM elements.
-const btnStartAddCompletingParty: string = '#btn-start-add-cp'
-const btnAddPerson: string = '#btn-add-person'
-const btnAddCompletingParty: string = '#btn-add-cp'
-const btnAddOrganization: string = '#btn-add-organization'
-const appointForm: string = '.appoint-form'
-const checkCompletingParty: string = '.cp-valid'
-const checkDirector: string = '.dir-valid'
-const checkIncorporator: string = '.incorp-valid'
-const completingPartyRole = { roleType: 'Completing Party', appointmentDate: '2020-03-30' }
+// selectors to test changes to the DOM elements
+const btnStartAddCompletingParty = '.btn-start-add-cp'
+const btnAddPerson = '.btn-add-person'
+const btnAddCompletingParty = '.btn-add-cp'
+const btnAddOrganization = '.btn-add-organization'
+const checkCompletingParty = '.cp-valid'
+const checkProprietor = '.prop-valid'
 
-function resetStore (): void {
-  store.state.stateModel.addPeopleAndRoleStep.orgPeople = []
-}
+function getPersonList (roles = null): any {
+  const completingPartyRole = {
+    roleType: 'Completing Party',
+    appointmentDate: '2020-03-30'
+  }
 
-function getPersonList (roles = [completingPartyRole]): any {
-  const mockPersonList = [
+  return [
     {
       officer: {
         id: 0,
@@ -40,7 +42,7 @@ function getPersonList (roles = [completingPartyRole]): any {
         organizationName: '',
         type: 'Person'
       },
-      roles: roles,
+      roles: roles || [completingPartyRole],
       address: {
         mailingAddress: {
           streetAddress: '123 Fake Street',
@@ -61,38 +63,34 @@ function getPersonList (roles = [completingPartyRole]): any {
       }
     }
   ]
-  return mockPersonList
 }
 
-describe('People And Roles component', () => {
+describe('Registration People And Roles component', () => {
   let wrapperFactory: any
 
   beforeEach(() => {
-    const localVue = createLocalVue()
-    localVue.use(VueRouter)
-    const router = mockRouter.mock()
-
-    store.state.resourceModel = BenefitCompanyResource
-
-    wrapperFactory = () => {
-      return mount(PeopleAndRoles, {
-        localVue,
-        router,
-        store,
-        vuetify
-      })
-    }
+    store.state.resourceModel = SoleProprietorshipResource
+    wrapperFactory = () => mount(RegPeopleAndRoles, {
+      store,
+      vuetify,
+      stubs: {
+        RegAddEditOrgPerson: true,
+        ListPeopleAndRoles: true
+      }
+    })
   })
 
-  it('shows Start by Adding Completing Party Button when people list is empty', () => {
+  it('shows Start Add Completing Party button when people list is empty', () => {
     store.state.stateModel.addPeopleAndRoleStep.orgPeople = []
     const wrapper = wrapperFactory()
     expect(wrapper.find(btnStartAddCompletingParty).exists()).toBeTruthy()
     expect(wrapper.find(btnStartAddCompletingParty).text()).toContain('Start by Adding the Completing Party')
+    // also verify list people component
+    expect(wrapper.find(ListPeopleAndRoles).exists()).toBeFalsy()
     wrapper.destroy()
   })
 
-  it('Does not show other add buttons when people list is empty', () => {
+  it('does not show the other buttons when people list is empty', () => {
     store.state.stateModel.addPeopleAndRoleStep.orgPeople = []
     const wrapper = wrapperFactory()
     expect(wrapper.find(btnAddPerson).exists()).toBeFalsy()
@@ -101,71 +99,108 @@ describe('People And Roles component', () => {
     wrapper.destroy()
   })
 
-  it('does not Start by Adding Completing Party Button when people list is not empty', () => {
+  it('does not show Start Add Completing Party button when people list is not empty', () => {
     store.state.stateModel.addPeopleAndRoleStep.orgPeople = getPersonList()
     const wrapper = wrapperFactory()
     expect(wrapper.find(btnStartAddCompletingParty).exists()).toBeFalsy()
+    // also verify list people component
+    expect(wrapper.find(ListPeopleAndRoles).exists()).toBeTruthy()
     wrapper.destroy()
-    resetStore()
   })
 
-  it('shows Add Person and Add Corporation Button when people list is not empty', () => {
+  it('shows Add Person and Add Organization buttons when people list is not empty', async () => {
     store.state.stateModel.addPeopleAndRoleStep.orgPeople = getPersonList()
     const wrapper = wrapperFactory()
-    expect(wrapper.find(btnAddOrganization).exists()).toBeTruthy()
     expect(wrapper.find(btnAddPerson).exists()).toBeTruthy()
+    expect(wrapper.find(btnAddOrganization).exists()).toBeTruthy()
     wrapper.destroy()
-    resetStore()
   })
 
-  it('shows Add Completing Party Button when people list is not empty and has no Completing Party', () => {
+  it('shows Add Completing Party button when people list is not empty and has no completing party', () => {
     store.state.stateModel.addPeopleAndRoleStep.orgPeople = getPersonList([
-      { 'roleType': 'Director', 'appointmentDate': '2020-03-30' }
+      { roleType: 'Proprietor', appointmentDate: '2020-03-30' }
     ])
     const wrapper = wrapperFactory()
     expect(wrapper.find(btnAddCompletingParty).exists()).toBeTruthy()
     wrapper.destroy()
-    resetStore()
   })
 
-  it('Does not show Add Completing Party Button when people list is not empty and has Completing Party', () => {
+  it('does not show Add Completing Party Button when people list is not empty and has completing party', () => {
     store.state.stateModel.addPeopleAndRoleStep.orgPeople = getPersonList()
     const wrapper = wrapperFactory()
     expect(wrapper.find(btnAddCompletingParty).exists()).toBeFalsy()
     wrapper.destroy()
-    resetStore()
   })
 
-  it('Sets the data attributes as expected when add button is clicked', async () => {
+  it('renders the add-edit component when add button is clicked', async () => {
     store.state.stateModel.addPeopleAndRoleStep.orgPeople = getPersonList()
     const wrapper = wrapperFactory()
-    wrapper.find(btnAddPerson).trigger('click')
-    await Vue.nextTick()
-    expect(wrapper.vm.$data.showOrgPersonForm).toBe(true)
+
+    // verify before click
+    expect(wrapper.find(RegAddEditOrgPerson).exists()).toBe(false)
+
+    // click the Add Person button
+    await wrapper.vm.$el.querySelector(btnAddPerson).click()
+
+    // click the Continue button in the dialog
+    await wrapper.vm.$el.querySelector('.dialog-yes-btn').click()
+
+    // wait for everything to update
+    await flushPromises()
+
+    // verify after click
+    expect(wrapper.find(RegAddEditOrgPerson).exists()).toBe(true)
+
     wrapper.destroy()
-    resetStore()
   })
 
-  it('Shows the add person form when add person button is clicked', async () => {
+  it('shows check mark next to roles added', () => {
+    store.state.stateModel.addPeopleAndRoleStep.orgPeople = [
+      { roles: [{ roleType: 'Completing Party' }] },
+      { roles: [{ roleType: 'Proprietor' }] }
+    ]
+    const wrapper = wrapperFactory()
+    expect(wrapper.find(checkCompletingParty).exists()).toBeTruthy()
+    expect(wrapper.find(checkProprietor).exists()).toBeTruthy()
+    wrapper.destroy()
+  })
+
+  it('it does not show people list component when people list is empty', () => {
+    store.state.stateModel.addPeopleAndRoleStep.orgPeople = []
+    const wrapper = wrapperFactory()
+    expect(wrapper.find(ListPeopleAndRoles).exists()).toBeFalsy()
+    wrapper.destroy()
+  })
+
+  it('shows the people list component when people list is not empty', () => {
     store.state.stateModel.addPeopleAndRoleStep.orgPeople = getPersonList()
     const wrapper = wrapperFactory()
-    wrapper.find(btnAddPerson).trigger('click')
-    await Vue.nextTick()
-    expect(wrapper.find(appointForm).exists()).toBeTruthy()
+    expect(wrapper.find(ListPeopleAndRoles).exists()).toBeTruthy()
     wrapper.destroy()
-    resetStore()
   })
 
-  it('Shows check mark next to roles added', () => {
-    store.state.stateModel.addPeopleAndRoleStep.orgPeople = getPersonList([
-      { 'roleType': 'Director', 'appointmentDate': '2020-03-30' },
-      { 'roleType': 'Incorporator', 'appointmentDate': '2020-03-30' }
-    ])
+  it('destroys the people list component when the last org-person is removed', async () => {
+    store.state.stateModel.addPeopleAndRoleStep.orgPeople = getPersonList()
     const wrapper = wrapperFactory()
-    expect(wrapper.find(checkIncorporator).exists()).toBeTruthy()
-    expect(wrapper.find(checkDirector).exists()).toBeTruthy()
-    expect(wrapper.find(checkCompletingParty).exists()).toBeFalsy()
+
+    // verify before click
+    expect(wrapper.find(ListPeopleAndRoles).exists()).toBe(true)
+
+    // call the On Remove Person event handler
+    wrapper.vm.onRemovePerson(0)
+
+    // wait for dialog to display
+    await Vue.nextTick()
+
+    // click the Remove button
+    await wrapper.vm.$el.querySelector('.dialog-yes-btn').click()
+
+    // wait for everything to update
+    await flushPromises()
+
+    // verify after click
+    expect(wrapper.find(ListPeopleAndRoles).exists()).toBe(false)
+
     wrapper.destroy()
-    resetStore()
   })
 })

@@ -27,7 +27,7 @@
           </li>
           <li v-if="rule.id === RuleIds.NUM_PROPRIETORS" :key="index">
             <v-icon v-if="validNumProprietors" color="green darken-2"
-              class="dir-valid">mdi-check</v-icon>
+              class="prop-valid">mdi-check</v-icon>
             <v-icon v-else-if="getShowErrors" color="error" class="prop-invalid">mdi-close</v-icon>
             <v-icon v-else>mdi-circle-small</v-icon>
             <span class="rule-item-txt">{{rule.text}}</span>
@@ -48,10 +48,9 @@
     <!-- Start by Adding the Completing Party -->
     <div v-if="orgPersonList.length === 0">
       <v-btn
-        id="btn-start-add-cp"
         outlined
         color="primary"
-        class="btn-outlined-primary mt-6"
+        class="btn-outlined-primary mt-6 btn-start-add-cp"
         :disabled="showOrgPersonForm"
         @click="addOrgPerson(RoleTypes.COMPLETING_PARTY, PartyTypes.PERSON)"
       >
@@ -64,10 +63,9 @@
     <div v-if="orgPersonList.length > 0">
       <v-btn
         v-if="!validNumCompletingParty"
-        id="btn-add-cp"
         outlined
         color="primary"
-        class="btn-outlined-primary mt-6"
+        class="btn-outlined-primary mt-6 btn-add-cp"
         :disabled="showOrgPersonForm"
         @click="addOrgPerson(RoleTypes.COMPLETING_PARTY, PartyTypes.PERSON)"
       >
@@ -78,10 +76,9 @@
       <!-- *** FUTURE: fix v-if to work for multiple proprietors for GPs -->
       <v-btn
         v-if="!validNumProprietors"
-        id="btn-add-person"
         outlined
         color="primary"
-        class="btn-outlined-primary mt-6"
+        class="btn-outlined-primary mt-6 btn-add-person"
         :disabled="showOrgPersonForm"
         @click="addOrgPerson(RoleTypes.PROPRIETOR, PartyTypes.PERSON)"
       >
@@ -92,10 +89,9 @@
       <!-- *** FUTURE: fix v-if to work for multiple proprietors for GPs -->
       <v-btn
         v-if="!validNumProprietors"
-        id="btn-add-organization"
         outlined
         color="primary"
-        class="btn-outlined-primary mt-6"
+        class="btn-outlined-primary mt-6 btn-add-organization"
         :disabled="showOrgPersonForm"
         @click="addOrgPerson(RoleTypes.PROPRIETOR, PartyTypes.ORGANIZATION)"
       >

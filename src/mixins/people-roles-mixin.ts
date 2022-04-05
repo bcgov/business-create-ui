@@ -90,11 +90,6 @@ export default class PeopleRolesMixin extends Vue {
     return this.orgPersonList.filter(person => this.isProprietor(person))
   }
 
-  /** The list of partners. */
-  get partners (): OrgPersonIF[] {
-    return this.orgPersonList.filter(person => this.isPartner(person))
-  }
-
   /** The list of people without roles. */
   get peopleWithNoRoles (): OrgPersonIF[] {
     return this.orgPersonList.filter(people => people.roles.length === 0)
@@ -185,11 +180,6 @@ export default class PeopleRolesMixin extends Vue {
   /** Returns true if specified org/person is a proprietor. */
   public isProprietor (orgPerson: OrgPersonIF): boolean {
     return orgPerson?.roles.some(role => role.roleType === RoleTypes.PROPRIETOR)
-  }
-
-  /** Returns true if specified org is a partner. */
-  public isPartner (orgPerson: OrgPersonIF): boolean {
-    return orgPerson?.roles.some(role => role.roleType === RoleTypes.PARTNER)
   }
 
   /** Called by ListPeopleAndRoles component event. */
