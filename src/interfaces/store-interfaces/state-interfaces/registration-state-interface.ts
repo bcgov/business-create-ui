@@ -21,4 +21,5 @@ export interface RegistrationStateIF {
   naics: NaicsIF
   nameRequest: RegistrationNameRequestIF
   businessType: BusinessTypes
+  businessNumber?: string // GPs only
 }

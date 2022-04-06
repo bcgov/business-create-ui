@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify'
 import { mount, Wrapper } from '@vue/test-utils'
+import { getLastEvent } from '../get-last-event'
 import { getVuexStore } from '@/store'
 import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
 
@@ -27,20 +28,6 @@ const invalidEmail = 'test@'
 const phoneNumber = '5555555555'
 const invalidPhoneNumber = '11'
 const extension = 4444
-
-/**
- * Returns the last event for a given name, to be used for testing event propagation in response to component changes.
- *
- * @param wrapper the wrapper for the component that is being tested.
- * @param name the name of the event that is to be returned.
- *
- * @returns the value of the last named event for the wrapper.
- */
-function getLastEvent (wrapper: Wrapper<BusinessContactInfo>, name: string): any {
-  const eventsList: Array<any> = wrapper.emitted(name)
-  const events: Array<any> = eventsList[eventsList.length - 1]
-  return events[0]
-}
 
 /**
  * Creates and mounts a component, so that it can be tested.

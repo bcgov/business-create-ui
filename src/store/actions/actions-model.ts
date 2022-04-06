@@ -298,6 +298,10 @@ export const setRegistrationNaics: ActionIF = ({ commit }, val: NaicsIF): void =
   commit('mutateRegistrationNaics', val)
 }
 
+export const setRegistrationBusinessNumber: ActionIF = ({ commit }, val: string): void => {
+  commit('mutateRegistrationBusinessNumber', val)
+}
+
 export const setRegistrationNameRequest: ActionIF = ({ commit }, val: RegistrationNameRequestIF): void => {
   commit('mutateRegistrationNameRequest', val)
 }

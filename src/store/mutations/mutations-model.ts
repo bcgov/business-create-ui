@@ -341,6 +341,11 @@ export const mutateRegistrationNaics = (state: StateIF, val: NaicsIF) => {
   if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
 }
 
+export const mutateRegistrationBusinessNumber = (state: StateIF, val: string) => {
+  state.stateModel.registration.businessNumber = val
+  if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
+}
+
 export const mutateRegistrationNameRequest = (state: StateIF, val: RegistrationNameRequestIF) => {
   state.stateModel.registration.nameRequest = val
   if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)

@@ -83,6 +83,22 @@
           />
         </article>
       </template>
+
+      <!-- Business Number -->
+      <template v-if="isTypePartnership">
+        <v-divider class="mx-6" />
+
+        <article class="section-container">
+          <v-row no-gutters>
+            <v-col cols="12" sm="3" class="pr-4">
+              <label>Business Number</label>
+            </v-col>
+            <v-col cols="12" sm="9">
+              <span>{{ businessNumber || '(Not entered)' }}</span>
+            </v-col>
+          </v-row>
+        </article>
+      </template>
     </section>
   </div>
 </template>
@@ -95,7 +111,7 @@ import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
 import FolioNumber from '@/components/common/FolioNumber.vue'
 import BusinessAddresses from '@/components/Registration/BusinessAddresses.vue'
 import { DateMixin, EnumMixin } from '@/mixins'
-import { BusinessTypes, CorpTypeCd, RouteNames } from '@/enums'
+import { CorpTypeCd, RouteNames } from '@/enums'
 
 @Component({
   components: {
@@ -112,13 +128,11 @@ export default class DefineRegistrationSummary extends Mixins(DateMixin, EnumMix
   @Getter getFolioNumber!: string
   @Getter getRegistration!: RegistrationStateIF
   @Getter getEntityType!: CorpTypeCd
+  @Getter isTypePartnership: boolean
 
   /** The entity description. */
   get entityDescription (): string {
-    let corpTypeDescription = this.getCorpTypeDescription(this.getEntityType)
-    const isSpDba = (this.getRegistration.businessType === BusinessTypes.DBA)
-    if (isSpDba) corpTypeDescription += ' / Doing Business As (DBA)'
-    return corpTypeDescription
+    return this.getCorpTypeDescription(this.getEntityType)
   }
 
   /** The business valid flag. */
@@ -134,6 +148,11 @@ export default class DefineRegistrationSummary extends Mixins(DateMixin, EnumMix
       return `${naicsCode} - ${naicsDescription}`
     }
     return null
+  }
+
+  /** The business number. */
+  get businessNumber (): string {
+    return this.getRegistration.businessNumber
   }
 
   /** The business start date. */

@@ -41,7 +41,7 @@ import { Component, Mixins } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 
 // Interfaces & enums
-import { BusinessTypes, CorpTypeCd, FilingNames, FilingTypes } from '@/enums'
+import { CorpTypeCd, FilingNames, FilingTypes } from '@/enums'
 import { ContactPointIF, RegistrationStateIF } from '@/interfaces'
 
 // Modules
@@ -63,12 +63,14 @@ export default class EntityInfo extends Mixins(EnumMixin) {
   @Getter isEntityType!: boolean
   @Getter isIncorporationFiling!: boolean
   @Getter isRegistrationFiling!: boolean
+  @Getter isTypeSoleProp!: boolean
 
   /** The entity description.  */
   get entityDescription (): string {
-    let corpTypeDescription = this.getCorpTypeDescription(this.getEntityType)
-    const isSpDba = (this.getRegistration.businessType === BusinessTypes.DBA)
-    if (isSpDba) corpTypeDescription += ' / Doing Business As (DBA)'
+    const corpTypeDescription = this.getCorpTypeDescription(this.getEntityType)
+    if (this.isTypeSoleProp) {
+      return `${corpTypeDescription} / Doing Business As (DBA) ${this.getFilingName}`
+    }
     return `${corpTypeDescription} ${this.getFilingName}`
   }
 

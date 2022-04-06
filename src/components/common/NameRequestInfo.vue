@@ -166,7 +166,7 @@ import { getName } from 'country-list'
 import AddNameTranslation from '@/components/common/AddNameTranslation.vue'
 import { ConfirmDialog } from '@bcrs-shared-components/confirm-dialog'
 import ListNameTranslations from '@/components/common/ListNameTranslations.vue'
-import { BusinessTypes, CorpTypeCd, NameRequestStates } from '@/enums'
+import { CorpTypeCd, NameRequestStates } from '@/enums'
 import {
   NameRequestDetailsIF,
   NameRequestApplicantIF,
@@ -219,9 +219,10 @@ export default class NameRequestInfo extends Mixins(DateMixin, EnumMixin) {
 
   /** The entity title.  */
   protected get getEntityTypeDescription (): string {
-    let corpTypeDescription = this.getCorpTypeDescription(this.getEntityType)
-    const isSpDba = (this.getRegistration.businessType === BusinessTypes.DBA)
-    if (isSpDba) corpTypeDescription += ' or Doing Business As (DBA)'
+    const corpTypeDescription = this.getCorpTypeDescription(this.getEntityType)
+    if (this.isTypeSoleProp) {
+      return `${corpTypeDescription} or Doing Business As (DBA)`
+    }
     return corpTypeDescription
   }
 

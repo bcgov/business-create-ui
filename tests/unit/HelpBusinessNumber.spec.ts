@@ -48,22 +48,24 @@ describe('HelpBusinessNumber', () => {
     const paras = wrapper.findAll('p')
     expect(paras.length).toBe(5)
     expect(paras.at(0).text()).toContain('The supplied business number will')
+    expect(paras.at(0).text()).toContain('if the sole proprietorship you are')
     expect(paras.at(1).text()).toContain('You can find your business number')
     expect(paras.at(2).text()).toContain('You may also have a business number')
     expect(paras.at(3).text()).toContain('Please contact the Canada Revenue')
     expect(paras.at(4).text()).toContain('To learn more,')
 
-    // there should be 2 anchors/hyperlinks
+    // there should be 3 anchors/hyperlinks
     const links = wrapper.findAll('a')
-    expect(links.length).toBe(2)
+    expect(links.length).toBe(3)
     expect(links.at(0).text()).toContain('a program account by Canada Revenue')
-    expect(links.at(1).text()).toContain('visit the Business Number information')
+    expect(links.at(1).text()).toContain('1-800-959-5525')
+    expect(links.at(2).text()).toContain('visit the Business Number information')
 
     wrapper.destroy()
   })
 
-  it('displays expected content for other entity types', async () => {
-    store.state.stateModel.entityType = 'CP'
+  it('displays expected content for GP entity types', async () => {
+    store.state.stateModel.entityType = 'GP'
     const wrapper = mount(HelpBusinessNumber, { vuetify, store })
     const vm = wrapper.vm as any
 
@@ -96,15 +98,17 @@ describe('HelpBusinessNumber', () => {
     const paras = wrapper.findAll('p')
     expect(paras.length).toBe(4)
     expect(paras.at(0).text()).toContain('The supplied business number will')
+    expect(paras.at(0).text()).toContain('if the firm you are registering')
     expect(paras.at(1).text()).toContain('You can find your business number')
     expect(paras.at(2).text()).toContain('Please contact the Canada Revenue')
     expect(paras.at(3).text()).toContain('To learn more,')
 
-    // there should be 2 anchors/hyperlinks
+    // there should be 3 anchors/hyperlinks
     const links = wrapper.findAll('a')
-    expect(links.length).toBe(2)
+    expect(links.length).toBe(3)
     expect(links.at(0).text()).toContain('a program account by Canada Revenue')
-    expect(links.at(1).text()).toContain('visit the Business Number information')
+    expect(links.at(1).text()).toContain('1-800-959-5525')
+    expect(links.at(2).text()).toContain('visit the Business Number information')
 
     wrapper.destroy()
   })

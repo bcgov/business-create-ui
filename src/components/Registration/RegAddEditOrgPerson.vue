@@ -128,10 +128,9 @@
                 persistent-hint
                 class="item mt-8 mb-n2"
                 label="Business Number (Optional)"
-                id="person__business-number"
                 hint="First 9 digits of the CRA Business Number"
                 v-model.trim="orgPerson.officer.businessNumber"
-                :rules="enableRules ? BusinessNumberRules : []"
+                :rules="enableRules ? Rules.BusinessNumberRules : []"
               />
 
               <v-divider class="mt-8" />
@@ -144,7 +143,6 @@
                 <v-row class="align-center">
                   <v-col cols="4" v-if="showCompletingPartyRole" class="py-0">
                     <v-checkbox
-                      id="cp-checkbox"
                       class="mt-5"
                       v-model="selectedRoles"
                       :value="RoleTypes.COMPLETING_PARTY"
@@ -155,7 +153,6 @@
 
                   <v-col cols="4" v-if="showProprietorRole" class="py-0">
                     <v-checkbox
-                      id="proprietor-checkbox"
                       class="mt-5"
                       v-model="selectedRoles"
                       :value="RoleTypes.PROPRIETOR"
@@ -167,7 +164,7 @@
               </v-card>
             </article>
 
-            <!-- Business Number (for proprietors only) -->
+            <!-- Business Number (for person proprietors only) -->
             <article v-if="isPerson && isProprietor" class="mt-8">
               <label>Business Number</label>
               <p class="mt-4 mb-0">
@@ -180,10 +177,9 @@
                 persistent-hint
                 class="item mt-4 mb-n2"
                 label="Business Number (Optional)"
-                id="person__business-number"
                 hint="First 9 digits of the CRA Business Number"
                 v-model.trim="orgPerson.officer.businessNumber"
-                :rules="enableRules ? BusinessNumberRules : []"
+                :rules="enableRules ? Rules.BusinessNumberRules : []"
               />
             </article>
 
@@ -197,7 +193,6 @@
                 filled
                 class="item mt-4 mb-n6"
                 label="Email Address"
-                id="person__email-address"
                 v-model.trim="orgPerson.officer.email"
                 :rules="enableRules ? Rules.EmailRules : []"
                 :readonly="isCompletingParty && !isRoleStaff"
@@ -223,8 +218,8 @@
               />
             </article>
 
-            <!-- Delivery Address (for all roles) -->
-            <div class="mt-8">
+            <!-- Delivery Address (for proprietors only) -->
+            <div v-if="isProprietor" class="mt-8">
               <v-checkbox
                 class="inherit-checkbox"
                 hide-details
@@ -282,6 +277,7 @@ import { ConfirmDialog } from '@bcrs-shared-components/confirm-dialog'
 import HelpBusinessNumber from '@/components/Registration/HelpBusinessNumber.vue'
 import HelpContactUs from '@/components/Registration/HelpContactUs.vue'
 import { AddEditOrgPersonMixin } from '@/mixins'
+import { Rules } from '@/rules'
 
 /** This is a sub-component of PeopleAndRoles. */
 @Component({
@@ -307,13 +303,8 @@ export default class RegAddEditOrgPerson extends Mixins(AddEditOrgPersonMixin) {
     v => (v?.length <= 150) || 'Cannot exceed 150 characters' // maximum character count
   ]
 
-  /** The validation rules for the Business Number. */
-  readonly BusinessNumberRules: Array<Function> = [
-    (v: string) => {
-      const pattern = /^[0-9]{9}$/
-      return (!v || pattern.test(v)) || 'Invalid business number'
-    }
-  ]
+  // Rules for template
+  readonly Rules = Rules
 }
 </script>
 

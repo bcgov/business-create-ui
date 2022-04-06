@@ -3,6 +3,7 @@ import Vuetify from 'vuetify'
 import Vuelidate from 'vuelidate'
 import { mount, Wrapper, createLocalVue } from '@vue/test-utils'
 import flushPromises from 'flush-promises'
+import { getLastEvent } from '../get-last-event'
 import { getVuexStore } from '@/store'
 import AddEditOrgPerson from '@/components/common/AddEditOrgPerson.vue'
 import { EmptyOrgPerson } from '@/interfaces'
@@ -118,20 +119,6 @@ const validOrgData = {
 }
 
 const emptyPerson = { ...EmptyOrgPerson }
-
-/**
- * Returns the last event for a given name, to be used for testing event propagation in response to component changes.
- *
- * @param wrapper the wrapper for the component that is being tested.
- * @param name the name of the event that is to be returned.
- *
- * @returns the value of the last named event for the wrapper.
- */
-function getLastEvent (wrapper: Wrapper<AddEditOrgPerson>, name: string): any {
-  const eventsList = wrapper.emitted(name)
-  const events = eventsList && eventsList[eventsList.length - 1]
-  return events && events[0]
-}
 
 /**
  * Creates and mounts a component, so that it can be tested.
