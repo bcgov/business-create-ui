@@ -40,6 +40,7 @@ export default class AddEditOrgPersonMixin extends Vue {
   // Local properties
   private orgPerson: OrgPersonIF = null
   private addPersonOrgFormValid = true
+  private enableRules = false
 
   // Address related properties
   private inProgressMailingAddress: AddressIF
@@ -86,11 +87,6 @@ export default class AddEditOrgPersonMixin extends Vue {
     return this.selectedRoles.includes(RoleTypes.PROPRIETOR)
   }
 
-  /** Whether Partner is checked. */
-  protected get isPartner (): boolean {
-    return this.selectedRoles.includes(RoleTypes.PARTNER)
-  }
-
   /** Whether current data object is a person. */
   protected get isPerson (): boolean {
     return (this.orgPerson.officer?.partyType === PartyTypes.PERSON)
@@ -125,12 +121,6 @@ export default class AddEditOrgPersonMixin extends Vue {
   protected get showProprietorRole (): boolean {
     const isRoleProprietor = this.orgPerson.roles.some(role => role.roleType === RoleTypes.PROPRIETOR)
     return isRoleProprietor
-  }
-
-  /** Whether the Partner role should be shown. */
-  protected get showPartnerRole (): boolean {
-    const isRolePartner = this.orgPerson.roles.some(role => role.roleType === RoleTypes.PARTNER)
-    return isRolePartner
   }
 
   /** Whether the Completing Party role should be disabled. */
@@ -282,7 +272,11 @@ export default class AddEditOrgPersonMixin extends Vue {
     }
   }
 
-  protected validateAddPersonOrgForm (): void {
+  protected async validateAddPersonOrgForm (): Promise<void> {
+    // enable component rules and wait to let them update
+    this.enableRules = true
+    await Vue.nextTick()
+
     // first validate the address form(s)
     this.$refs.mailingAddressNew.$refs.addressForm.validate()
     if (this.$refs.deliveryAddressNew) {
@@ -340,9 +334,6 @@ export default class AddEditOrgPersonMixin extends Vue {
     }
     if (this.isProprietor) {
       roles.push({ roleType: RoleTypes.PROPRIETOR, appointmentDate: this.getCurrentDate })
-    }
-    if (this.isPartner) {
-      roles.push({ roleType: RoleTypes.PARTNER, appointmentDate: this.getCurrentDate })
     }
 
     return roles

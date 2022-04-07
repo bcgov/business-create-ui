@@ -26,7 +26,7 @@ const formResetEvent: string = 'resetEvent'
 const firstNameSelector: string = '#person__first-name'
 const middleNameSelector: string = '#person__middle-name'
 const lastNameSelector: string = '#person__last-name'
-const orgNameSelector: string = '#firm-name'
+const orgNameSelector: string = '#org-name'
 const completingPartyChkBoxSelector: string = '#cp-checkbox'
 const doneButtonSelector: string = '#btn-done'
 const removeButtonSelector: string = '#btn-remove'
@@ -149,6 +149,7 @@ function createComponent (
   document.body.setAttribute('data-app', 'true')
   return mount(AddEditOrgPerson, {
     localVue,
+    data () { return { enableRules: true } },
     propsData: {
       initialValue,
       activeIndex,

@@ -32,8 +32,6 @@ import RegistriesContactInfo from '@/components/common/RegistriesContactInfo.vue
   components: { RegistriesContactInfo }
 })
 export default class HelpContactUs extends Vue {
-  readonly header = 'Contact BC Registries'
-
   helpToggle = false
 }
 </script>
