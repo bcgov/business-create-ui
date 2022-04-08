@@ -92,7 +92,9 @@ export interface RegistrationFilingIF {
       identifier: string
       naics?: NaicsIF
     }
-    businessAddress: BusinessAddressIF
+    offices: {
+      businessOffice: BusinessAddressIF
+    }
     businessType: BusinessTypes
     contactPoint: {
       email: string

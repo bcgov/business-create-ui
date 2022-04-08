@@ -345,7 +345,9 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
           naics: this.getRegistration.naics
           // FUTURE: save tax id (business number) here
         },
-        businessAddress: this.getRegistration.businessAddress,
+        offices: {
+          businessOffice: this.getRegistration.businessAddress
+        },
         businessType: this.getRegistration.businessType,
         contactPoint: {
           email: this.getBusinessContact.email,
@@ -389,7 +391,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     this.setFilingId(+draftFiling.header.filingId)
 
     // restore Business Address
-    this.setRegistrationBusinessAddress(draftFiling.registration.businessAddress)
+    this.setRegistrationBusinessAddress(draftFiling.registration.offices?.businessOffice)
 
     // restore Business Type
     this.setRegistrationBusinessType(draftFiling.registration.businessType || BusinessTypes.SP)

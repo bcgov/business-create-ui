@@ -170,7 +170,7 @@ export default class LegalServices {
     if (toReturn.registration) {
       // set offices
       if (!toReturn.registration?.offices) {
-        toReturn.registration.offices = []
+        toReturn.registration.offices = {}
       }
       // set contact point
       if (!toReturn.registration?.contactPoint) {
