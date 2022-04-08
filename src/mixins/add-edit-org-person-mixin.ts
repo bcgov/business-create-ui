@@ -87,6 +87,11 @@ export default class AddEditOrgPersonMixin extends Vue {
     return this.selectedRoles.includes(RoleTypes.PROPRIETOR)
   }
 
+  /** Whether Partner is checked. */
+  protected get isPartner (): boolean {
+    return this.selectedRoles.includes(RoleTypes.PARTNER)
+  }
+
   /** Whether current data object is a person. */
   protected get isPerson (): boolean {
     return (this.orgPerson.officer?.partyType === PartyTypes.PERSON)
@@ -119,8 +124,12 @@ export default class AddEditOrgPersonMixin extends Vue {
 
   /** Whether the Proprietor role should be shown. */
   protected get showProprietorRole (): boolean {
-    const isRoleProprietor = this.orgPerson.roles.some(role => role.roleType === RoleTypes.PROPRIETOR)
-    return isRoleProprietor
+    return this.orgPerson.roles.some(role => role.roleType === RoleTypes.PROPRIETOR)
+  }
+
+  /** Whether the Partner role should be shown. */
+  protected get showPartnerRole (): boolean {
+    return this.orgPerson.roles.some(role => role.roleType === RoleTypes.PARTNER)
   }
 
   /** Whether the Completing Party role should be disabled. */
@@ -171,7 +180,7 @@ export default class AddEditOrgPersonMixin extends Vue {
 
       // set address properties
       this.inProgressMailingAddress = { ...this.orgPerson.mailingAddress }
-      if (this.isDirector || this.isProprietor) {
+      if (this.isDirector || this.isProprietor || this.isPartner) {
         this.inProgressDeliveryAddress = { ...this.orgPerson.deliveryAddress }
         // initialize inheritMailingAddress checkbox conditionally
         this.updateSameAsMailingChkBox()
@@ -182,7 +191,7 @@ export default class AddEditOrgPersonMixin extends Vue {
   /** decide if the "Delivery Address same as Mailing Address" check box should be checked */
   protected updateSameAsMailingChkBox (): void {
     // safety check
-    if (!this.isDirector && !this.isProprietor) return
+    if (!this.isDirector && !this.isProprietor && !this.isPartner) return
 
     // if not already assigned, initialize delivery address to prevent template errors
     if (!this.inProgressDeliveryAddress) this.inProgressDeliveryAddress = cloneDeep(EmptyAddress)
@@ -308,7 +317,7 @@ export default class AddEditOrgPersonMixin extends Vue {
       person.officer.id = uuidv4()
     }
     person.mailingAddress = { ...this.inProgressMailingAddress }
-    if (this.isDirector || this.isProprietor) {
+    if (this.isDirector || this.isProprietor || this.isPartner) {
       person.deliveryAddress = this.setPersonDeliveryAddress()
     }
     person.roles = this.setPersonRoles()
@@ -336,6 +345,9 @@ export default class AddEditOrgPersonMixin extends Vue {
     }
     if (this.isProprietor) {
       roles.push({ roleType: RoleTypes.PROPRIETOR, appointmentDate: this.getCurrentDate })
+    }
+    if (this.isPartner) {
+      roles.push({ roleType: RoleTypes.PARTNER, appointmentDate: this.getCurrentDate })
     }
 
     return roles

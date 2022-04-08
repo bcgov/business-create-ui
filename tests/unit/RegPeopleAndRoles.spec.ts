@@ -65,10 +65,11 @@ function getPersonList (roles = null): any {
   ]
 }
 
-describe('Registration People And Roles component', () => {
+describe('Registration People And Roles component - SP', () => {
   let wrapperFactory: any
 
   beforeEach(() => {
+    store.state.stateModel.entityType = 'SP'
     store.state.resourceModel = SoleProprietorshipResource
     wrapperFactory = () => mount(RegPeopleAndRoles, {
       store,
