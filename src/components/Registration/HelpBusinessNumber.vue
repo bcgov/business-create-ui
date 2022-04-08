@@ -18,8 +18,14 @@
             a program account by Canada Revenue Agency
             <v-icon dense color="primary">mdi-open-in-new</v-icon>
           </a>.
-          You will have a business number if the sole proprietorship you are
-          registering already has one of the following accounts:
+          <span v-if="isTypeSoleProp">
+            You will have a business number if the sole proprietorship you are
+            registering already has one of the following accounts:
+          </span>
+          <span v-if="isTypePartnership">
+            You will have a business number if the firm you are registering already
+            has one of the following accounts:
+          </span>
         </p>
 
         <ul class="bulleted-list">
@@ -49,8 +55,9 @@
         </template>
 
         <p class="my-4">
-          Please contact the Canada Revenue Agency (CRA) at 1-800-959-5525 if you have
-          forgotten or can't find your business number.
+          Please contact the Canada Revenue Agency (CRA) at
+          <a href="tel:+1-800-959-5525">1-800-959-5525</a>
+          if you have forgotten or can't find your business number.
         </p>
 
         <p class="my-4">
@@ -74,6 +81,7 @@ import { Getter } from 'vuex-class'
 @Component({})
 export default class HelpBusinessNumber extends Vue {
   @Getter isTypeSoleProp!: boolean
+  @Getter isTypePartnership!: boolean
 
   readonly header = 'Help with Business Number'
   readonly ProgramAccountUrl = 'https://www.canada.ca/en/revenue-agency/services/tax/businesses/' +

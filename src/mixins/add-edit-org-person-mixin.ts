@@ -157,11 +157,6 @@ export default class AddEditOrgPersonMixin extends Vue {
     ].includes(this.getEntityType)
   }
 
-  /** Whether the current data object supports a delivery address. */
-  private get supportsDeliveryAddress (): boolean {
-    return (this.isDirector || this.isProprietor || (this.isTypeSoleProp && this.isCompletingParty))
-  }
-
   /** Called when component is created. */
   created (): void {
     // mark this step as invalid when adding or editing
@@ -176,7 +171,7 @@ export default class AddEditOrgPersonMixin extends Vue {
 
       // set address properties
       this.inProgressMailingAddress = { ...this.orgPerson.mailingAddress }
-      if (this.supportsDeliveryAddress) {
+      if (this.isDirector || this.isProprietor) {
         this.inProgressDeliveryAddress = { ...this.orgPerson.deliveryAddress }
         // initialize inheritMailingAddress checkbox conditionally
         this.updateSameAsMailingChkBox()
@@ -187,7 +182,7 @@ export default class AddEditOrgPersonMixin extends Vue {
   /** decide if the "Delivery Address same as Mailing Address" check box should be checked */
   protected updateSameAsMailingChkBox (): void {
     // safety check
-    if (!this.supportsDeliveryAddress) return
+    if (!this.isDirector && !this.isProprietor) return
 
     // if not already assigned, initialize delivery address to prevent template errors
     if (!this.inProgressDeliveryAddress) this.inProgressDeliveryAddress = cloneDeep(EmptyAddress)
@@ -277,24 +272,31 @@ export default class AddEditOrgPersonMixin extends Vue {
     this.enableRules = true
     await Vue.nextTick()
 
-    // first validate the address form(s)
-    this.$refs.mailingAddressNew.$refs.addressForm.validate()
-    if (this.$refs.deliveryAddressNew) {
+    // validate all the forms
+    const mailingAddressValid = this.$refs.mailingAddressNew.$refs.addressForm.validate()
+    const deliveryAddressValid = !this.$refs.deliveryAddressNew ||
       this.$refs.deliveryAddressNew.$refs.addressForm.validate()
-    }
+    const mainFormValid = this.$refs.addPersonOrgForm.validate()
 
-    // then validate the main form (which depends on the above)
-    const isFormValid = this.$refs.addPersonOrgForm.validate()
-
-    // only proceed if main form is valid
-    if (isFormValid) {
+    // only proceed if all forms are valid
+    if (mailingAddressValid && deliveryAddressValid && mainFormValid) {
       if (this.reassignCompletingParty) {
         this.emitReassignCompletingPartyEvent()
       }
       const person = this.setPerson()
       this.emitPersonInfo(person)
       this.resetAddPersonData(false) // don't emit event
+    } else {
+      // scroll to top of form to present validations
+      await this.scrollToTop(document.getElementsByClassName('appoint-form')[0])
     }
+  }
+
+  /** Copy of function in Common mixin (since this mixin cannot extend another mixin). */
+  private async scrollToTop (element: any): Promise<void> {
+    const isJestRunning = (process.env.JEST_WORKER_ID !== undefined)
+    // don't call window.scrollTo during Jest tests because jsdom doesn't implement it
+    if (element && !isJestRunning) await element.scrollIntoView({ behavior: 'smooth' })
   }
 
   /** Helper to set the current director data. */
@@ -306,7 +308,7 @@ export default class AddEditOrgPersonMixin extends Vue {
       person.officer.id = uuidv4()
     }
     person.mailingAddress = { ...this.inProgressMailingAddress }
-    if (this.supportsDeliveryAddress) {
+    if (this.isDirector || this.isProprietor) {
       person.deliveryAddress = this.setPersonDeliveryAddress()
     }
     person.roles = this.setPersonRoles()

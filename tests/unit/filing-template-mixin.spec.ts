@@ -90,6 +90,8 @@ describe('Registration Filing', () => {
 
     store.state.stateModel.registration.businessType = 'SP'
 
+    store.state.stateModel.registration.businessNumber = '111222333'
+
     const filing = wrapper.vm.buildRegistrationFiling()
 
     // verify filing data
@@ -101,7 +103,8 @@ describe('Registration Filing', () => {
             naics: {
               naicsCode: '12345',
               naicsDescription: 'Some NAICS Description'
-            }
+            },
+            taxId: '111222333'
           },
           offices: {
             businessOffice: {
@@ -175,6 +178,7 @@ describe('Registration Filing', () => {
         }
       },
       businessType: 'SP',
+      businessNumber: '111222333',
       feeAcknowledgement: false,
       naics: {
         naicsCode: '12345',

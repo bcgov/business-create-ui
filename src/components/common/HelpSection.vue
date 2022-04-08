@@ -26,7 +26,7 @@ import { HelpSectionIF } from '@/interfaces'
 
 @Component({})
 export default class HelpSection extends Vue {
-  @Prop({ default: {} })
+  @Prop({ default: () => {} })
   readonly helpSection: HelpSectionIF
 
   helpToggle = false

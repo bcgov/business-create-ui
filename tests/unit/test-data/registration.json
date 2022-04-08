@@ -13,7 +13,8 @@
         "naics": {
           "naicsCode": "12345",
           "naicsDescription": "Some NAICS Description"
-        }
+        },
+        "taxId": "111222333"
       },
       "offices": {
         "businessOffice": {

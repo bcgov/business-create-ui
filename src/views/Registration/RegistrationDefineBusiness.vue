@@ -21,6 +21,20 @@
           :showErrors="getShowErrors"
           @valid="onNatureOfBusinessValidEvent($event)"
         />
+
+        <template v-if="isTypePartnership">
+          <v-divider class="mx-6" />
+
+          <!-- Business Number -->
+          <header id="business-number-header" />
+          <BusinessNumber
+            class="py-8 px-6"
+            :class="{ 'invalid-section': getShowErrors && !businessNumberValid }"
+            :businessNumber="getRegistration.businessNumber"
+            @update:businessNumber="setRegistrationBusinessNumber($event)"
+            @valid="onBusinessNumberValidEvent($event)"
+          />
+        </template>
       </v-card>
 
     </section>
@@ -121,6 +135,7 @@ import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import BusinessAddresses from '@/components/Registration/BusinessAddresses.vue'
 import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
+import BusinessNumber from '@/components/Registration/BusinessNumber.vue'
 import FolioNumber from '@/components/common/FolioNumber.vue'
 import NameRequestInfo from '@/components/common/NameRequestInfo.vue'
 import NatureOfBusiness from '@/components/Registration/NatureOfBusiness.vue'
@@ -133,6 +148,7 @@ import { CommonMixin } from '@/mixins'
   components: {
     BusinessAddresses,
     BusinessContactInfo,
+    BusinessNumber,
     FolioNumber,
     NameRequestInfo,
     NatureOfBusiness,
@@ -145,13 +161,16 @@ export default class RegistrationDefineBusiness extends Mixins(CommonMixin) {
   @Getter getShowErrors!: boolean
   @Getter isPremiumAccount!: boolean
   @Getter getFolioNumber!: string
+  @Getter isTypePartnership!: boolean
 
   @Action setBusinessContact!: ActionBindingIF
   @Action setRegistrationDefineBusinessValid!: ActionBindingIF
   @Action setFolioNumber!: ActionBindingIF
+  @Action setRegistrationBusinessNumber!: ActionBindingIF
 
   // local variables
   natureOfBusinessValid = false
+  businessNumberValid = false
   businessAddressesValid = false
   businessContactValid = false
   startDateValid = false
@@ -161,6 +180,7 @@ export default class RegistrationDefineBusiness extends Mixins(CommonMixin) {
   get validFlags (): object {
     return {
       natureOfBusinessValid: this.natureOfBusinessValid,
+      businessNumberValid: this.isTypePartnership ? this.businessNumberValid : true,
       businessAddressesValid: this.businessAddressesValid,
       businessContactValid: this.businessContactValid,
       businessStartDateValid: this.startDateValid,
@@ -171,6 +191,7 @@ export default class RegistrationDefineBusiness extends Mixins(CommonMixin) {
   /** Array of valid components. Must match validFlags. */
   readonly validComponents = [
     'nature-of-business-header',
+    'business-number-header',
     'business-addresses-header',
     'business-contact-header',
     'business-start-date-header',
@@ -186,6 +207,11 @@ export default class RegistrationDefineBusiness extends Mixins(CommonMixin) {
 
   onNatureOfBusinessValidEvent (valid: boolean): void {
     this.natureOfBusinessValid = valid
+    this.setRegistrationDefineBusinessValid(this.allFlagsValid)
+  }
+
+  onBusinessNumberValidEvent (valid: boolean): void {
+    this.businessNumberValid = valid
     this.setRegistrationDefineBusinessValid(this.allFlagsValid)
   }
 

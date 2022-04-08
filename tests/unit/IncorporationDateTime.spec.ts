@@ -2,6 +2,7 @@
 import Vue from 'vue'
 import Vuelidate from 'vuelidate'
 import Vuetify from 'vuetify'
+import { getLastEvent } from '../get-last-event'
 import { getVuexStore } from '@/store'
 
 // Utils
@@ -17,21 +18,6 @@ const vuetify = new Vuetify({})
 // Store
 const store = getVuexStore()
 document.body.setAttribute('data-app', 'true')
-
-/**
- * Returns the last event for a given name, to be used for testing event propagation in response to component changes.
- *
- * @param wrapper the wrapper for the component that is being tested.
- * @param name the name of the event that is to be returned.
- *
- * @returns the value of the last named event for the wrapper.
- */
-function getLastEvent (wrapper: Wrapper<IncorporationDateTime>, name: string): any {
-  const eventsList: Array<any> = wrapper.emitted(name)
-  const events: Array<any> = eventsList[eventsList.length - 1]
-
-  return events[0]
-}
 
 describe('Incorporation Date Time component', () => {
   let wrapperFactory: any

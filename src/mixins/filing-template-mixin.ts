@@ -123,6 +123,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Action setRegistrationBusinessAddress!: ActionBindingIF
   @Action setRegistrationFeeAcknowledgement!: ActionBindingIF
   @Action setRegistrationNaics!: ActionBindingIF
+  @Action setRegistrationBusinessNumber!: ActionBindingIF
   @Action setRegistrationNameRequest!: ActionBindingIF
   @Action setRegistrationBusinessType!: ActionBindingIF
 
@@ -342,8 +343,8 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
       registration: {
         business: {
           identifier: this.getTempId,
-          naics: this.getRegistration.naics
-          // FUTURE: save tax id (business number) here
+          naics: this.getRegistration.naics,
+          taxId: this.getRegistration.businessNumber
         },
         offices: {
           businessOffice: this.getRegistration.businessAddress
@@ -405,7 +406,8 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     // restore NAICS
     this.setRegistrationNaics(draftFiling.registration.business.naics || EmptyNaics)
 
-    // FUTURE: restore tax id (business number) here
+    // restore Business Number
+    this.setRegistrationBusinessNumber(draftFiling.registration.business.taxId || null)
 
     // restore Name Request data
     this.setRegistrationNameRequest(draftFiling.registration.nameRequest)

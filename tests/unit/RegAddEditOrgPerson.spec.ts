@@ -3,6 +3,7 @@ import Vuetify from 'vuetify'
 import Vuelidate from 'vuelidate'
 import { mount, Wrapper } from '@vue/test-utils'
 import flushPromises from 'flush-promises'
+import { getLastEvent } from '../get-last-event'
 import { getVuexStore } from '@/store'
 import RegAddEditOrgPerson from '@/components/Registration/RegAddEditOrgPerson.vue'
 import { EmptyOrgPerson } from '@/interfaces'
@@ -114,19 +115,6 @@ const validProprietorOrg = {
     postalCode: 'V8Z 5C6',
     addressCountry: 'CA'
   }
-}
-
-/**
- * Returns the last event for a given name, to be used for testing event propagation
- * in response to component changes.
- * @param wrapper the wrapper for the component that is being tested.
- * @param name the name of the event that is to be returned.
- * @returns the value of the last named event for the wrapper.
- */
-function getLastEvent (wrapper: Wrapper<RegAddEditOrgPerson>, name: string): any {
-  const eventsList = wrapper.emitted(name)
-  const events = eventsList && eventsList[eventsList.length - 1]
-  return events && events[0]
 }
 
 /**

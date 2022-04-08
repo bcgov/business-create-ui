@@ -66,10 +66,12 @@
           </v-col>
 
           <v-col class="delivery-address-column">
-            <p v-if="isSame(orgPerson.mailingAddress, orgPerson.deliveryAddress)">
-              Same as Mailing Address
-            </p>
-            <DeliveryAddress v-else :address="orgPerson.deliveryAddress" />
+            <template v-if="isDirector(orgPerson) || isProprietor(orgPerson)">
+              <p v-if="isSame(orgPerson.mailingAddress, orgPerson.deliveryAddress)">
+                Same as Mailing Address
+              </p>
+              <DeliveryAddress v-else :address="orgPerson.deliveryAddress" />
+            </template>
           </v-col>
 
           <v-col class="roles-column">
@@ -130,7 +132,7 @@ import { Getter } from 'vuex-class'
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
 import { CommonMixin } from '@/mixins'
 import { OrgPersonIF, PeopleAndRoleIF } from '@/interfaces'
-import { PartyTypes, RouteNames } from '@/enums'
+import { PartyTypes, RoleTypes, RouteNames } from '@/enums'
 
 /**
  * This is a sub-component of PeopleAndRoles and
@@ -158,7 +160,7 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
   readonly RouteNames = RouteNames
 
   // Local properties
-  protected readonly tableHeaders: Array<string> = ['Name', 'Mailing Address', 'Delivery Address', 'Roles']
+  readonly tableHeaders: Array<string> = ['Name', 'Mailing Address', 'Delivery Address', 'Roles']
   protected activeIndex: number
 
   /** The person list. */
@@ -179,6 +181,16 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
   /** Returns true if org-person is an organization (corporation/firm). */
   protected isOrg (orgPerson: OrgPersonIF): boolean {
     return (orgPerson.officer?.partyType === PartyTypes.ORGANIZATION)
+  }
+
+  /** Returns true if specified org/person is a director. */
+  protected isDirector (orgPerson: OrgPersonIF): boolean {
+    return orgPerson?.roles.some(role => role.roleType === RoleTypes.DIRECTOR)
+  }
+
+  /** Returns true if specified org/person is a proprietor. */
+  public isProprietor (orgPerson: OrgPersonIF): boolean {
+    return orgPerson?.roles.some(role => role.roleType === RoleTypes.PROPRIETOR)
   }
 
   /** Formats the org-person's name. */

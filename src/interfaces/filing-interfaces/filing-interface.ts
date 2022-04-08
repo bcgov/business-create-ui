@@ -22,36 +22,36 @@ export interface IncorporationFilingIF {
     filingId?: number // Optional as this is not required when building a filing - causes an error for new filings
     folioNumber?: string // Optional to the user and only displayed for certain account types
     isFutureEffective: boolean
-  },
+  }
   business: {
-    legalType: CorpTypeCd,
+    legalType: CorpTypeCd
     identifier: string
-  },
+  }
   incorporationApplication: {
     // NB: nameRequest must match schema
     nameRequest: {
       legalType: CorpTypeCd
       nrNumber?: string // only set when there is an NR
       legalName?: string // only set when there is an NR
-    },
-    nameTranslations: NameTranslationIF[],
-    offices: IncorporationAddressIF | {},
+    }
+    nameTranslations: NameTranslationIF[]
+    offices: IncorporationAddressIF | {}
     contactPoint: {
       email: string
       phone: string
       extension?: number
-    },
-    parties: OrgPersonIF[],
+    }
+    parties: OrgPersonIF[]
 
     // BEN / CC / BC / ULC only:
     shareStructure?: {
       shareClasses: ShareClassIF[]
-    },
+    }
     incorporationAgreement?: {
       agreementType: string
-    },
+    }
     // CP only:
-    rules?: any,
+    rules?: any
     memorandum?: any
     cooperative?: {
       cooperativeAssociationType: string
@@ -86,11 +86,12 @@ export interface RegistrationFilingIF {
     datNumber?: string
     waiveFees?: boolean
     priority?: boolean
-  },
+  }
   registration: {
     business: {
       identifier: string
       naics?: NaicsIF
+      taxId?: string // aka Business Number
     }
     offices: {
       businessOffice: BusinessAddressIF
@@ -126,13 +127,13 @@ export interface DissolutionFilingIF {
     datNumber?: string
     waiveFees?: boolean
     priority?: boolean
-  },
+  }
   business: {
-    legalType: CorpTypeCd,
-    identifier: string,
-    legalName: string,
+    legalType: CorpTypeCd
+    identifier: string
+    legalName: string
     foundingDate: string
-  },
+  }
   dissolution: {
     dissolutionDate: string
     custodialOffice: OfficeAddressIF
