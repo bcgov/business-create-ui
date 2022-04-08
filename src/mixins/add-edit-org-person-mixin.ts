@@ -272,17 +272,14 @@ export default class AddEditOrgPersonMixin extends Vue {
     this.enableRules = true
     await Vue.nextTick()
 
-    // first validate the address form(s)
-    this.$refs.mailingAddressNew.$refs.addressForm.validate()
-    if (this.$refs.deliveryAddressNew) {
+    // validate all the forms
+    const mailingAddressValid = this.$refs.mailingAddressNew.$refs.addressForm.validate()
+    const deliveryAddressValid = !this.$refs.deliveryAddressNew ||
       this.$refs.deliveryAddressNew.$refs.addressForm.validate()
-    }
+    const mainFormValid = this.$refs.addPersonOrgForm.validate()
 
-    // then validate the main form (which depends on the above)
-    const isFormValid = this.$refs.addPersonOrgForm.validate()
-
-    // only proceed if main form is valid
-    if (isFormValid) {
+    // only proceed if all forms are valid
+    if (mailingAddressValid && deliveryAddressValid && mainFormValid) {
       if (this.reassignCompletingParty) {
         this.emitReassignCompletingPartyEvent()
       }
