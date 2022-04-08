@@ -34,7 +34,7 @@
     "core-js": "^3.6.5",
     "http-status-codes": "^1.4.0",
     "launchdarkly-js-client-sdk": "^2.18.0",
-    "lodash": "^4.17.20",
+    "lodash": "^4.17.21",
     "pdfjs-dist": "2.0.943",
     "regenerator-runtime": "^0.13.7",
     "sbc-common-components": "2.4.42",
