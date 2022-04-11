@@ -168,7 +168,7 @@ export default class AddEditOrgPersonMixin extends Vue {
 
   /** Called when component is created. */
   created (): void {
-    // mark this step as invalid when adding or editing
+    // mark this step as invalid while adding or editing
     this.setAddPeopleAndRoleStepValidity(false)
 
     if (this.initialValue) {
@@ -182,7 +182,7 @@ export default class AddEditOrgPersonMixin extends Vue {
       this.inProgressMailingAddress = { ...this.orgPerson.mailingAddress }
       if (this.isDirector || this.isProprietor || this.isPartner) {
         this.inProgressDeliveryAddress = { ...this.orgPerson.deliveryAddress }
-        // initialize inheritMailingAddress checkbox conditionally
+        // initialize inheritMailingAddress checkbox
         this.updateSameAsMailingChkBox()
       }
     }
@@ -313,7 +313,7 @@ export default class AddEditOrgPersonMixin extends Vue {
     let person: OrgPersonIF = { ...this.orgPerson }
     person.officer = { ...this.orgPerson.officer }
     if (this.activeIndex === -1) {
-      // assign a new (random) ID
+      // assign a new (random but unique) ID
       person.officer.id = uuidv4()
     }
     person.mailingAddress = { ...this.inProgressMailingAddress }
@@ -328,6 +328,7 @@ export default class AddEditOrgPersonMixin extends Vue {
     if (this.inheritMailingAddress) {
       this.inProgressDeliveryAddress = this.inProgressMailingAddress
     }
+    // return a new object (not a copy)
     return { ...this.inProgressDeliveryAddress }
   }
 

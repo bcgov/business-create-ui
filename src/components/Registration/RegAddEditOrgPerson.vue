@@ -89,6 +89,7 @@
             <article v-if="isOrg && isManualAdd">
               <label v-if="activeIndex === -1">Add Business or Corporation Unregistered in B.C.</label>
               <label v-else>Edit Business or Corporation Unregistered in B.C.</label>
+
               <!-- FUTURE -->
               <!-- <a class="lookup-toggle float-right">Business or Corporation Look Up</a> -->
 
@@ -100,7 +101,7 @@
 
               <HelpContactUs class="mt-6" />
 
-              <!-- Confirm checkbox -->
+              <!-- Confirm checkbox (org only) -->
               <v-checkbox
                 class="confirm-checkbox mt-8"
                 hide-details
@@ -117,7 +118,7 @@
                 </template>
               </v-checkbox>
 
-              <!-- Organization Name -->
+              <!-- Organization Name (org only) -->
               <v-text-field
                 filled
                 class="mt-8 mb-n6 org-name"
@@ -131,7 +132,7 @@
                 v-if="isProprietor"
                 filled
                 persistent-hint
-                class="item mt-8 mb-n2"
+                class="item business-number mt-8 mb-n2"
                 label="Business Number (Optional)"
                 hint="First 9 digits of the CRA Business Number"
                 v-model.trim="orgPerson.officer.businessNumber"
@@ -190,7 +191,7 @@
               <v-text-field
                 filled
                 persistent-hint
-                class="item mt-4 mb-n2"
+                class="item business-number mt-4 mb-n2"
                 label="Business Number (Optional)"
                 hint="First 9 digits of the CRA Business Number"
                 v-model.trim="orgPerson.officer.businessNumber"
@@ -206,7 +207,7 @@
               </p>
               <v-text-field
                 filled
-                class="item mt-4 mb-n6"
+                class="item email-address mt-4 mb-n6"
                 label="Email Address"
                 v-model.trim="orgPerson.officer.email"
                 :rules="enableRules ? Rules.EmailRules : []"
