@@ -66,7 +66,7 @@
           </v-col>
 
           <v-col class="delivery-address-column">
-            <template v-if="isDirector(orgPerson) || isProprietor(orgPerson)">
+            <template v-if="isDirector(orgPerson) || isProprietor(orgPerson) || isPartner(orgPerson)">
               <p v-if="isSame(orgPerson.mailingAddress, orgPerson.deliveryAddress)">
                 Same as Mailing Address
               </p>
@@ -191,6 +191,11 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
   /** Returns true if specified org/person is a proprietor. */
   public isProprietor (orgPerson: OrgPersonIF): boolean {
     return orgPerson?.roles.some(role => role.roleType === RoleTypes.PROPRIETOR)
+  }
+
+  /** Returns true if specified org/person is a partner. */
+  public isPartner (orgPerson: OrgPersonIF): boolean {
+    return orgPerson?.roles.some(role => role.roleType === RoleTypes.PARTNER)
   }
 
   /** Formats the org-person's name. */

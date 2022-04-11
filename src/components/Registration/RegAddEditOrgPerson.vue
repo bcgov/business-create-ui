@@ -87,33 +87,38 @@
 
             <!-- Add org manually -->
             <article v-if="isOrg && isManualAdd">
-              <label v-if="activeIndex === -1">Add Business or Corporation Manually</label>
-              <label v-else>Edit Business or Corporation Manually</label>
+              <label v-if="activeIndex === -1">Add Business or Corporation Unregistered in B.C.</label>
+              <label v-else>Edit Business or Corporation Unregistered in B.C.</label>
+
               <!-- FUTURE -->
               <!-- <a class="lookup-toggle float-right">Business or Corporation Look Up</a> -->
 
               <p class="mt-6 mb-0">
-                Use this manual entry form to add a company that is not legally required to register
-                in B.C. such as a bank or railway as a partner. All other types of businesses not
-                registered in B.C. cannot be a proprietor or partner.
+                Use this form to add a company that is not legally required to register in B.C. such as a
+                bank or railway as a partner. All other types of businesses not registered in B.C.
+                cannot be a proprietor or partner.
               </p>
 
               <HelpContactUs class="mt-6" />
 
-              <!-- Confirm checkbox -->
+              <!-- Confirm checkbox (org only) -->
               <v-checkbox
                 class="confirm-checkbox mt-8"
                 hide-details
                 v-model="orgPerson.confirmBusiness"
                 :rules="enableRules ? [(v) => !!v] : []"
               >
-                <template slot="label">
+                <template v-if="isProprietor" slot="label">
                   I confirm that the business proprietor being added is not legally required to
+                  register in B.C.
+                </template>
+                <template v-if="isPartner" slot="label">
+                  I confirm that the business partner being added is not legally required to
                   register in B.C.
                 </template>
               </v-checkbox>
 
-              <!-- Organization Name -->
+              <!-- Organization Name (org only) -->
               <v-text-field
                 filled
                 class="mt-8 mb-n6 org-name"
@@ -122,11 +127,12 @@
                 :rules="enableRules ? OrgNameRules : []"
               />
 
-              <!-- Business Number -->
+              <!-- Business Number (org proprietors only) -->
               <v-text-field
+                v-if="isProprietor"
                 filled
                 persistent-hint
-                class="item mt-8 mb-n2"
+                class="item business-number mt-8 mb-n2"
                 label="Business Number (Optional)"
                 hint="First 9 digits of the CRA Business Number"
                 v-model.trim="orgPerson.officer.businessNumber"
@@ -160,6 +166,16 @@
                       :disabled="true"
                     />
                   </v-col>
+
+                  <v-col cols="4" v-if="showPartnerRole" class="py-0">
+                    <v-checkbox
+                      class="mt-5"
+                      v-model="selectedRoles"
+                      :value="RoleTypes.PARTNER"
+                      :label="RoleTypes.PARTNER"
+                      :disabled="true"
+                    />
+                  </v-col>
                 </v-row>
               </v-card>
             </article>
@@ -175,7 +191,7 @@
               <v-text-field
                 filled
                 persistent-hint
-                class="item mt-4 mb-n2"
+                class="item business-number mt-4 mb-n2"
                 label="Business Number (Optional)"
                 hint="First 9 digits of the CRA Business Number"
                 v-model.trim="orgPerson.officer.businessNumber"
@@ -191,7 +207,7 @@
               </p>
               <v-text-field
                 filled
-                class="item mt-4 mb-n6"
+                class="item email-address mt-4 mb-n6"
                 label="Email Address"
                 v-model.trim="orgPerson.officer.email"
                 :rules="enableRules ? Rules.EmailRules : []"
@@ -218,8 +234,8 @@
               />
             </article>
 
-            <!-- Delivery Address (for proprietors only) -->
-            <div v-if="isProprietor" class="mt-8">
+            <!-- Delivery Address (for proprietors and partners only) -->
+            <div v-if="isProprietor || isPartner" class="mt-8">
               <v-checkbox
                 class="inherit-checkbox"
                 hide-details

@@ -24,7 +24,7 @@ export const GeneralPartnershipResource: RegistrationResourceIF = {
         test: (num) => { return (num === 1) }
       },
       {
-        id: RuleIds.NUM_PROPRIETORS,
+        id: RuleIds.NUM_PARTNERS,
         text: 'At least two Partners',
         test: (num) => { return (num >= 2) }
       }

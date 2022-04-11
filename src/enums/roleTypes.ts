@@ -4,6 +4,7 @@ export enum RoleTypes {
   CUSTODIAN = 'Custodian',
   INCORPORATOR = 'Incorporator',
   LIQUIDATOR = 'Liquidator',
+  PARTNER = 'Partner',
   PROPRIETOR = 'Proprietor',
   SUBSCRIBER = 'Subscriber',
 }

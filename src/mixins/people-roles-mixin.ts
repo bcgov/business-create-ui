@@ -21,6 +21,8 @@ export default class PeopleRolesMixin extends Vue {
   @Getter getUserFirstName!: string
   @Getter getUserLastName!: string
   @Getter getUserAddress!: AddressIF
+  @Getter isTypeSoleProp!: boolean
+  @Getter isTypePartnership!: boolean
 
   @Action setOrgPersonList!: ActionBindingIF
   @Action setAddPeopleAndRoleStepValidity!: ActionBindingIF
@@ -90,6 +92,11 @@ export default class PeopleRolesMixin extends Vue {
     return this.orgPersonList.filter(person => this.isProprietor(person))
   }
 
+  /** The list of partners. */
+  get partners (): OrgPersonIF[] {
+    return this.orgPersonList.filter(person => this.isPartner(person))
+  }
+
   /** The list of people without roles. */
   get peopleWithNoRoles (): OrgPersonIF[] {
     return this.orgPersonList.filter(people => people.roles.length === 0)
@@ -147,6 +154,13 @@ export default class PeopleRolesMixin extends Vue {
     return rule.test(this.proprietors.length)
   }
 
+  /** Whether the Number of Partners rule is valid. Always true if rule doesn't exist. */
+  get validNumPartners (): boolean {
+    const rule = this.getPeopleAndRolesResource.rules.find(r => r.id === RuleIds.NUM_PARTNERS)
+    if (!rule) return true
+    return rule.test(this.partners.length)
+  }
+
   /** Whether there are any people without roles. Used as a safety check. */
   get validPeopleWithNoRoles (): boolean {
     return (this.peopleWithNoRoles.length > 0)
@@ -182,6 +196,11 @@ export default class PeopleRolesMixin extends Vue {
     return orgPerson?.roles.some(role => role.roleType === RoleTypes.PROPRIETOR)
   }
 
+  /** Returns true if specified org/person is a partner. */
+  public isPartner (orgPerson: OrgPersonIF): boolean {
+    return orgPerson?.roles.some(role => role.roleType === RoleTypes.PARTNER)
+  }
+
   /** Called by ListPeopleAndRoles component event. */
   protected onEditPerson (index: number): void {
     this.currentOrgPerson = { ...this.orgPersonList[index] }
@@ -208,10 +227,11 @@ export default class PeopleRolesMixin extends Vue {
   protected async onRemovePerson (index: number): Promise<void> {
     const orgPerson = this.orgPersonList[index]
     const isProprietor = this.isProprietor(orgPerson)
+    const isPartner = this.isPartner(orgPerson)
 
     if (this.isPerson(orgPerson)) {
       if (!await this.confirmRemoveProprietorPerson()) return
-    } else if (this.isOrganization(orgPerson) && isProprietor) {
+    } else if (this.isOrganization(orgPerson) && (isProprietor || isPartner)) {
       if (!await this.confirmRemoveProprietorOrganization()) return
     } else {
       if (!await this.confirmRemove()) return
@@ -257,6 +277,7 @@ export default class PeopleRolesMixin extends Vue {
       this.validDirectorCountry &&
       this.validDirectorProvince &&
       this.validNumProprietors &&
+      this.validNumPartners &&
       !this.validPeopleWithNoRoles
     )
   }
