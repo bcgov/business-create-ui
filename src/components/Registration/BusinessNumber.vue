@@ -28,6 +28,7 @@
           label="Business Number (Optional)"
           hint="First 9 digits of the CRA Business Number"
           v-model="value"
+          v-mask="['#########']"
           :error="!valid"
           :error-messages="errorMessages"
           @blur="onBlur()"
@@ -39,6 +40,7 @@
 
 <script lang="ts">
 import { Component, Emit, Prop, Vue, Watch } from 'vue-property-decorator'
+import { mask } from 'vue-the-mask'
 import { FormIF } from '@/interfaces'
 import { Rules } from '@/rules'
 import HelpBusinessNumber from '@/components/Registration/HelpBusinessNumber.vue'
@@ -51,7 +53,8 @@ import HelpBusinessNumber from '@/components/Registration/HelpBusinessNumber.vue
  * - disables validation after leaving text field if the value is falsy
  */
 @Component({
-  components: { HelpBusinessNumber }
+  components: { HelpBusinessNumber },
+  directives: { mask }
 })
 export default class BusinessNumber extends Vue {
   $refs!: {

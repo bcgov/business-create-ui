@@ -250,6 +250,10 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
   padding: 1rem;
   font-size: $px-14;
   color: $gray7;
+
+  p {
+    font-size: $px-14;
+  }
 }
 
 .people-roles-header {
