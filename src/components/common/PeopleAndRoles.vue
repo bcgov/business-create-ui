@@ -26,36 +26,31 @@
       <ul>
         <template v-for="(rule, index) in getPeopleAndRolesResource.rules">
           <li v-if="rule.id === RuleIds.NUM_COMPLETING_PARTY" :key="index">
-            <v-icon v-if="validNumCompletingParty" color="green darken-2"
-              class="cp-valid">mdi-check</v-icon>
+            <v-icon v-if="validNumCompletingParty" color="green darken-2" class="cp-valid">mdi-check</v-icon>
             <v-icon v-else-if="getShowErrors" color="error" class="cp-invalid">mdi-close</v-icon>
             <v-icon v-else>mdi-circle-small</v-icon>
             <span class="rule-item-txt">{{rule.text}}</span>
           </li>
           <li v-if="rule.id === RuleIds.NUM_INCORPORATORS" :key="index">
-            <v-icon v-if="validMinimumIncorporators" color="green darken-2"
-              class="incorp-valid">mdi-check</v-icon>
+            <v-icon v-if="validMinimumIncorporators" color="green darken-2" class="incorp-valid">mdi-check</v-icon>
             <v-icon v-else-if="getShowErrors" color="error" class="incorp-invalid">mdi-close</v-icon>
             <v-icon v-else>mdi-circle-small</v-icon>
             <span class="rule-item-txt">{{rule.text}}</span>
           </li>
           <li v-if="rule.id === RuleIds.NUM_DIRECTORS" :key="index">
-            <v-icon v-if="validMinimumDirectors" color="green darken-2"
-              class="dir-valid">mdi-check</v-icon>
+            <v-icon v-if="validMinimumDirectors" color="green darken-2" class="dir-valid">mdi-check</v-icon>
             <v-icon v-else-if="getShowErrors" color="error" class="dir-invalid">mdi-close</v-icon>
             <v-icon v-else>mdi-circle-small</v-icon>
             <span class="rule-item-txt">{{rule.text}}</span>
           </li>
           <li v-if="rule.id === RuleIds.DIRECTOR_COUNTRY" :key="index">
-            <v-icon v-if="validDirectorCountry" color="green darken-2"
-              class="dir-valid">mdi-check</v-icon>
+            <v-icon v-if="validDirectorCountry" color="green darken-2" class="dir-valid">mdi-check</v-icon>
             <v-icon v-else-if="getShowErrors" color="error" class="dir-invalid">mdi-close</v-icon>
             <v-icon v-else>mdi-circle-small</v-icon>
             <span class="rule-item-txt">{{rule.text}}</span>
           </li>
           <li v-if="rule.id === RuleIds.DIRECTOR_PROVINCE" :key="index">
-            <v-icon v-if="validDirectorProvince" color="green darken-2"
-              class="dir-valid">mdi-check</v-icon>
+            <v-icon v-if="validDirectorProvince" color="green darken-2" class="dir-valid">mdi-check</v-icon>
             <v-icon v-else-if="getShowErrors" color="error" class="dir-invalid">mdi-close</v-icon>
             <v-icon v-else>mdi-circle-small</v-icon>
             <span class="rule-item-txt">{{rule.text}}</span>

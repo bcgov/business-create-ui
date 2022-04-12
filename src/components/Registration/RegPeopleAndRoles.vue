@@ -19,26 +19,20 @@
       <ul>
         <template v-for="(rule, index) in getPeopleAndRolesResource.rules">
           <li v-if="rule.id === RuleIds.NUM_COMPLETING_PARTY" :key="index">
-            <v-icon v-if="validNumCompletingParty" color="green darken-2"
-              class="cp-valid">mdi-check</v-icon>
-            <v-icon v-else-if="getShowErrors" color="error"
-              class="cp-invalid">mdi-close</v-icon>
+            <v-icon v-if="validNumCompletingParty" color="green darken-2" class="cp-valid">mdi-check</v-icon>
+            <v-icon v-else-if="getShowErrors" color="error" class="cp-invalid">mdi-close</v-icon>
             <v-icon v-else>mdi-circle-small</v-icon>
             <span class="rule-item-txt">{{rule.text}}</span>
           </li>
           <li v-if="rule.id === RuleIds.NUM_PROPRIETORS" :key="index">
-            <v-icon v-if="validNumProprietors" color="green darken-2"
-              class="proprietor-valid">mdi-check</v-icon>
-            <v-icon v-else-if="getShowErrors" color="error"
-              class="proprietor-invalid">mdi-close</v-icon>
+            <v-icon v-if="validNumProprietors" color="green darken-2" class="proprietor-valid">mdi-check</v-icon>
+            <v-icon v-else-if="getShowErrors" color="error" class="proprietor-invalid">mdi-close</v-icon>
             <v-icon v-else>mdi-circle-small</v-icon>
             <span class="rule-item-txt">{{rule.text}}</span>
           </li>
           <li v-if="rule.id === RuleIds.NUM_PARTNERS" :key="index">
-            <v-icon v-if="validNumPartners" color="green darken-2"
-              class="partner-valid">mdi-check</v-icon>
-            <v-icon v-else-if="getShowErrors" color="error"
-              class="partner-invalid">mdi-close</v-icon>
+            <v-icon v-if="validNumPartners" color="green darken-2" class="partner-valid">mdi-check</v-icon>
+            <v-icon v-else-if="getShowErrors" color="error" class="partner-invalid">mdi-close</v-icon>
             <v-icon v-else>mdi-circle-small</v-icon>
             <span class="rule-item-txt">{{rule.text}}</span>
           </li>
@@ -111,7 +105,6 @@
 
       <template v-if="isTypePartnership">
         <v-btn
-          v-if="!validNumPartners"
           outlined
           color="primary"
           class="btn-outlined-primary mt-6 btn-add-person"
@@ -123,7 +116,6 @@
         </v-btn>
 
         <v-btn
-          v-if="!validNumPartners"
           outlined
           color="primary"
           class="btn-outlined-primary mt-6 btn-add-organization"

@@ -22,7 +22,7 @@ export default class AddEditOrgPersonMixin extends Vue {
   }
 
   @Prop() readonly initialValue!: OrgPersonIF
-  @Prop() readonly activeIndex: number
+  @Prop() readonly activeIndex: number // is -1 for new org/person
   @Prop() readonly existingCompletingParty: OrgPersonIF
   @Prop() readonly addIncorporator: boolean
 
@@ -186,6 +186,9 @@ export default class AddEditOrgPersonMixin extends Vue {
         this.updateSameAsMailingChkBox()
       }
     }
+
+    // if editing, enable validation from the start
+    if (this.activeIndex !== -1) this.enableRules = true
   }
 
   /** decide if the "Delivery Address same as Mailing Address" check box should be checked */
@@ -218,7 +221,7 @@ export default class AddEditOrgPersonMixin extends Vue {
            !address.streetAddressAdditional)
   }
 
-  // Event Handlers
+  /** Address component event handler - called when mailing address has changed. */
   protected updateMailingAddress (address: AddressIF): void {
     // only update if equal
     // (workaround for BaseAddress always telling us there's a new address)
@@ -227,6 +230,7 @@ export default class AddEditOrgPersonMixin extends Vue {
     }
   }
 
+  /** Address component event handler - called when delivery address has changed. */
   protected updateDeliveryAddress (address: AddressIF): void {
     // only update if equal
     // (workaround for BaseAddress always telling us there's a new address)
@@ -235,15 +239,23 @@ export default class AddEditOrgPersonMixin extends Vue {
     }
   }
 
+  /**
+   * Address component event handler - called when it is rendered and when
+   * the user has changed a mailing address field.
+   */
   protected updateMailingAddressValidity (valid: boolean): void {
     this.mailingAddressValid = valid
-    // validate the form to update dummy component rules
+    // validate the main form to update dummy component rules
     this.$refs.addPersonOrgForm && this.$refs.addPersonOrgForm.validate()
   }
 
+  /**
+   * Address component event handler - called when it is rendered and when
+   * the user has changed a delivery address field.
+   */
   protected updateDeliveryAddressValidity (valid: boolean): void {
     this.deliveryAddressValid = valid
-    // validate the form to update dummy component rules
+    // validate the main form to update dummy component rules
     this.$refs.addPersonOrgForm && this.$refs.addPersonOrgForm.validate()
   }
 
@@ -276,19 +288,20 @@ export default class AddEditOrgPersonMixin extends Vue {
     }
   }
 
+  /** Called when the user clicks the Done button. */
   protected async validateAddPersonOrgForm (): Promise<void> {
-    // enable component rules and wait to let them update
     this.enableRules = true
     await Vue.nextTick()
 
     // validate all the forms
-    const mailingAddressValid = this.$refs.mailingAddressNew.$refs.addressForm.validate()
-    const deliveryAddressValid = !this.$refs.deliveryAddressNew ||
+    // NB: main form depends on address forms
+    this.mailingAddressValid = this.$refs.mailingAddressNew.$refs.addressForm.validate()
+    this.deliveryAddressValid = !this.$refs.deliveryAddressNew ||
       this.$refs.deliveryAddressNew.$refs.addressForm.validate()
-    const mainFormValid = this.$refs.addPersonOrgForm.validate()
+    this.addPersonOrgFormValid = this.$refs.addPersonOrgForm.validate()
 
-    // only proceed if all forms are valid
-    if (mailingAddressValid && deliveryAddressValid && mainFormValid) {
+    // only proceed if main form is valid
+    if (this.addPersonOrgFormValid) {
       if (this.reassignCompletingParty) {
         this.emitReassignCompletingPartyEvent()
       }

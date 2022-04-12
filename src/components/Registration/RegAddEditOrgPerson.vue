@@ -136,6 +136,7 @@
                 label="Business Number (Optional)"
                 hint="First 9 digits of the CRA Business Number"
                 v-model.trim="orgPerson.officer.businessNumber"
+                v-mask="['#########']"
                 :rules="enableRules ? Rules.BusinessNumberRules : []"
               />
 
@@ -195,6 +196,7 @@
                 label="Business Number (Optional)"
                 hint="First 9 digits of the CRA Business Number"
                 v-model.trim="orgPerson.officer.businessNumber"
+                v-mask="['#########']"
                 :rules="enableRules ? Rules.BusinessNumberRules : []"
               />
             </article>
@@ -288,6 +290,7 @@
 
 <script lang="ts">
 import { Component, Mixins } from 'vue-property-decorator'
+import { mask } from 'vue-the-mask'
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
 import { ConfirmDialog } from '@bcrs-shared-components/confirm-dialog'
 import HelpBusinessNumber from '@/components/Registration/HelpBusinessNumber.vue'
@@ -303,7 +306,8 @@ import { Rules } from '@/rules'
     MailingAddress: BaseAddress,
     HelpBusinessNumber,
     HelpContactUs
-  }
+  },
+  directives: { mask }
 })
 export default class RegAddEditOrgPerson extends Mixins(AddEditOrgPersonMixin) {
   //
