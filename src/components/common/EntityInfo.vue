@@ -32,12 +32,12 @@
         <template v-if="!isRegistrationFiling">
           <div id="entity-business-email">
             <span class="business-info-label">Email:</span>
-            {{ getEmail || "Not Available" }}
+            {{ getEmail || 'Not Available' }}
           </div>
 
           <div id="entity-business-phone">
             <span class="business-info-label">Phone:</span>
-            {{ getPhone || "Not Available" }}
+            {{ getPhone || 'Not Available' }}
           </div>
         </template>
       </v-col>
@@ -80,7 +80,7 @@ export default class EntityInfo extends Mixins(EnumMixin) {
   @Getter getBusinessId!: string
   @Getter isRoleStaff!: boolean
 
-  // enums for template
+  // axios for template
   readonly axios = axios
 
   /** The entity description.  */
