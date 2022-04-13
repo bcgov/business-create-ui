@@ -48,8 +48,8 @@
               :nudgeTop="85"
               :minDate="startDateMinStr"
               :maxDate="startDateMaxStr"
-              :inputRules="startDateRules || []"
-              @emitDateSync="startDateHandler($event)"
+              :inputRules="startDateRules"
+              @emitDateSync="dissolutionDate = $event"
               :initialValue="dissolutionDate"
             />
           </v-col>
@@ -329,10 +329,6 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
         `Date should be between ${this.dateToPacificDate(this.startDateMin, true)} and
         ${this.dateToPacificDate(this.startDateMax, true)}`
     ]
-  }
-
-  private startDateHandler (event: string): void{
-    this.dissolutionDate = event
   }
 }
 </script>

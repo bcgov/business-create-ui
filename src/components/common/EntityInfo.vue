@@ -12,12 +12,12 @@
 
         <menu class="mt-5">
           <!-- Staff Comments -->
-          <div class="staff-comments" v-if="businessId && isRoleStaff">
+          <div class=" ml-n3" v-if="getBusinessId && isRoleStaff">
             <StaffComments
               :axios="axios"
-              :businessId="businessId"
+              :businessId="getBusinessId"
               maxLength="2000"
-              :key="businessId"
+              :key="getBusinessId"
             />
           </div>
         </menu>
@@ -123,10 +123,6 @@ export default class EntityInfo extends Mixins(EnumMixin) {
         return this.getApprovedName
     }
   }
-  /** The Business ID string. */
-  private get businessId (): string {
-    return this.getBusinessId
-  }
 }
 </script>
 
@@ -149,7 +145,5 @@ export default class EntityInfo extends Mixins(EnumMixin) {
   color: $gray9;
   font-weight: bold;
 }
-.staff-comments{
-  margin-left: -12px;
-}
+
 </style>
