@@ -19,16 +19,20 @@
       <ul>
         <template v-for="(rule, index) in getPeopleAndRolesResource.rules">
           <li v-if="rule.id === RuleIds.NUM_COMPLETING_PARTY" :key="index">
-            <v-icon v-if="validNumCompletingParty" color="green darken-2"
-              class="cp-valid">mdi-check</v-icon>
+            <v-icon v-if="validNumCompletingParty" color="green darken-2" class="cp-valid">mdi-check</v-icon>
             <v-icon v-else-if="getShowErrors" color="error" class="cp-invalid">mdi-close</v-icon>
             <v-icon v-else>mdi-circle-small</v-icon>
             <span class="rule-item-txt">{{rule.text}}</span>
           </li>
           <li v-if="rule.id === RuleIds.NUM_PROPRIETORS" :key="index">
-            <v-icon v-if="validNumProprietors" color="green darken-2"
-              class="prop-valid">mdi-check</v-icon>
-            <v-icon v-else-if="getShowErrors" color="error" class="prop-invalid">mdi-close</v-icon>
+            <v-icon v-if="validNumProprietors" color="green darken-2" class="proprietor-valid">mdi-check</v-icon>
+            <v-icon v-else-if="getShowErrors" color="error" class="proprietor-invalid">mdi-close</v-icon>
+            <v-icon v-else>mdi-circle-small</v-icon>
+            <span class="rule-item-txt">{{rule.text}}</span>
+          </li>
+          <li v-if="rule.id === RuleIds.NUM_PARTNERS" :key="index">
+            <v-icon v-if="validNumPartners" color="green darken-2" class="partner-valid">mdi-check</v-icon>
+            <v-icon v-else-if="getShowErrors" color="error" class="partner-invalid">mdi-close</v-icon>
             <v-icon v-else>mdi-circle-small</v-icon>
             <span class="rule-item-txt">{{rule.text}}</span>
           </li>
@@ -73,37 +77,60 @@
         <span>Add the Completing Party</span>
       </v-btn>
 
-      <!-- *** FUTURE: fix v-if to work for multiple proprietors for GPs -->
-      <v-btn
-        v-if="!validNumProprietors"
-        outlined
-        color="primary"
-        class="btn-outlined-primary mt-6 btn-add-person"
-        :disabled="showOrgPersonForm"
-        @click="addOrgPerson(RoleTypes.PROPRIETOR, PartyTypes.PERSON)"
-      >
-        <v-icon>mdi-account-plus</v-icon>
-        <span>Add a Person</span>
-      </v-btn>
+      <template v-if="isTypeSoleProp">
+        <v-btn
+          v-if="!validNumProprietors"
+          outlined
+          color="primary"
+          class="btn-outlined-primary mt-6 btn-add-person"
+          :disabled="showOrgPersonForm"
+          @click="addOrgPerson(RoleTypes.PROPRIETOR, PartyTypes.PERSON)"
+        >
+          <v-icon>mdi-account-plus</v-icon>
+          <span>Add a Person</span>
+        </v-btn>
 
-      <!-- *** FUTURE: fix v-if to work for multiple proprietors for GPs -->
-      <v-btn
-        v-if="!validNumProprietors"
-        outlined
-        color="primary"
-        class="btn-outlined-primary mt-6 btn-add-organization"
-        :disabled="showOrgPersonForm"
-        @click="addOrgPerson(RoleTypes.PROPRIETOR, PartyTypes.ORGANIZATION)"
-      >
-        <v-icon>mdi-domain-plus</v-icon>
-        <span>Add a Business or a Corporation</span>
-      </v-btn>
+        <v-btn
+          v-if="!validNumProprietors"
+          outlined
+          color="primary"
+          class="btn-outlined-primary mt-6 btn-add-organization"
+          :disabled="showOrgPersonForm"
+          @click="addOrgPerson(RoleTypes.PROPRIETOR, PartyTypes.ORGANIZATION)"
+        >
+          <v-icon>mdi-domain-plus</v-icon>
+          <span>Add a Business or a Corporation</span>
+        </v-btn>
+      </template>
+
+      <template v-if="isTypePartnership">
+        <v-btn
+          outlined
+          color="primary"
+          class="btn-outlined-primary mt-6 btn-add-person"
+          :disabled="showOrgPersonForm"
+          @click="addOrgPerson(RoleTypes.PARTNER, PartyTypes.PERSON)"
+        >
+          <v-icon>mdi-account-plus</v-icon>
+          <span>Add a Person</span>
+        </v-btn>
+
+        <v-btn
+          outlined
+          color="primary"
+          class="btn-outlined-primary mt-6 btn-add-organization"
+          :disabled="showOrgPersonForm"
+          @click="addOrgPerson(RoleTypes.PARTNER, PartyTypes.ORGANIZATION)"
+        >
+          <v-icon>mdi-domain-plus</v-icon>
+          <span>Add a Business or a Corporation</span>
+        </v-btn>
+      </template>
     </div>
 
     <!-- Add/Edit Bus/Corp -->
     <v-expand-transition>
       <v-card flat v-if="showOrgPersonForm" class="mt-8">
-        <!-- FUTURE: move this component into a slot in ListPeopleAndRoles ??? -->
         <RegAddEditOrgPerson
           :initialValue="currentOrgPerson"
           :activeIndex="activeIndex"
@@ -164,11 +191,13 @@ export default class RegPeopleAndRoles extends Mixins(PeopleRolesMixin) {
     const isPerson = (partyType === PartyTypes.PERSON)
     const isOrganization = (partyType === PartyTypes.ORGANIZATION)
 
+    // if the proprietor is a person then this is a SP
     if (isProprietor && isPerson) {
       if (!await this.confirmAddProprietorPerson()) return
       this.setRegistrationBusinessType(BusinessTypes.SP)
     }
 
+    // if the proprietor is an org then this is a DBA
     if (isProprietor && isOrganization) {
       if (!await this.confirmAddProprietorOrganization()) return
       this.setRegistrationBusinessType(BusinessTypes.DBA)
@@ -180,9 +209,12 @@ export default class RegPeopleAndRoles extends Mixins(PeopleRolesMixin) {
     if (roleType) {
       // a role was provided - pre-select it
       this.currentOrgPerson.roles = [{ roleType }]
-    } else if (this.validNumCompletingParty) {
+    } else if (this.validNumCompletingParty && this.isTypeSoleProp) {
       // only Proprietor role is possible - pre-select it
       this.currentOrgPerson.roles = [{ roleType: RoleTypes.PROPRIETOR }]
+    } else if (this.validNumCompletingParty && this.isTypePartnership) {
+      // only Partner role is possible - pre-select it
+      this.currentOrgPerson.roles = [{ roleType: RoleTypes.PARTNER }]
     } else {
       // no roles pre-selected
       this.currentOrgPerson.roles = []

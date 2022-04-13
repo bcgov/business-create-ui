@@ -27,7 +27,10 @@ const resetEvent = 'resetEvent'
 const firstNameSelector = '.first-name'
 const middleNameSelector = '.middle-name'
 const lastNameSelector = '.last-name'
+const confirmCheckboxSelector = '.confirm-checkbox'
 const orgNameSelector = '.org-name'
+const businessNumberSelector = '.business-number'
+const emailAddressSelector = '.email-address'
 const buttonRemoveSelector = '.btn-remove'
 const buttonDoneSelector = '.btn-done'
 const buttonCancelSelector = '.btn-cancel'
@@ -38,9 +41,10 @@ const validCompletingParty = {
     firstName: 'Adam',
     lastName: 'Smith',
     middleName: 'D',
-    organizationName: '',
+    // no org name
     partyType: 'person',
     email: 'completing-party@example.com'
+    // no business number
   },
   roles: [
     { roleType: 'Completing Party', appointmentDate: '2020-03-30' }
@@ -52,15 +56,8 @@ const validCompletingParty = {
     addressRegion: 'BC',
     postalCode: 'V8Z 5C6',
     addressCountry: 'CA'
-  },
-  deliveryAddress: {
-    streetAddress: '123 Fake Street',
-    streetAddressAdditional: '',
-    addressCity: 'Victoria',
-    addressRegion: 'BC',
-    postalCode: 'V8Z 5C6',
-    addressCountry: 'CA'
   }
+  // no delivery address
 }
 
 const validProprietorPerson = {
@@ -69,9 +66,10 @@ const validProprietorPerson = {
     firstName: 'Bill',
     lastName: 'Jones',
     middleName: 'M',
-    organizationName: '',
+    // no org name
     partyType: 'person',
-    email: 'proprietor-person@example.com'
+    email: 'proprietor-person@example.com',
+    businessNumber: '123456789'
   },
   roles: [
     { roleType: 'Proprietor', appointmentDate: '2020-03-30' }
@@ -97,12 +95,13 @@ const validProprietorPerson = {
 const validProprietorOrg = {
   officer: {
     id: '0',
-    firstName: '',
-    lastName: '',
-    middleName: '',
-    organizationName: 'Test Org',
+    // no first name
+    // no last name
+    // no middle name
+    organizationName: 'Proprietor Org Inc',
     partyType: 'organization',
-    email: 'proprietor-org@example.com'
+    email: 'proprietor-org@example.com',
+    businessNumber: '123456789'
   },
   roles: [
     { roleType: 'Proprietor', appointmentDate: '2020-03-30' }
@@ -114,7 +113,81 @@ const validProprietorOrg = {
     addressRegion: 'BC',
     postalCode: 'V8Z 5C6',
     addressCountry: 'CA'
+  },
+  deliveryAddress: {
+    streetAddress: '3942 Fake Street',
+    streetAddressAdditional: '',
+    addressCity: 'Victoria',
+    addressRegion: 'BC',
+    postalCode: 'V8Z 5C6',
+    addressCountry: 'CA'
+  },
+  confirmBusiness: true
+}
+
+const validPartnerPerson = {
+  officer: {
+    id: '1',
+    firstName: 'Bill',
+    lastName: 'Jones',
+    middleName: 'M',
+    // no org name
+    partyType: 'person',
+    email: 'partner-person@example.com'
+    // no business number
+  },
+  roles: [
+    { roleType: 'Partner', appointmentDate: '2020-03-30' }
+  ],
+  mailingAddress: {
+    streetAddress: '123 Fake Street',
+    streetAddressAdditional: '',
+    addressCity: 'Victoria',
+    addressRegion: 'BC',
+    postalCode: 'V8Z 5C6',
+    addressCountry: 'CA'
+  },
+  deliveryAddress: {
+    streetAddress: '123 Fake Street',
+    streetAddressAdditional: '',
+    addressCity: 'Victoria',
+    addressRegion: 'BC',
+    postalCode: 'V8Z 5C6',
+    addressCountry: 'CA'
   }
+}
+
+const validPartnerOrg = {
+  officer: {
+    id: '0',
+    // no first name
+    // no last name
+    // no middle name
+    organizationName: 'Partner Org Inc',
+    partyType: 'organization',
+    email: 'partner-org@example.com'
+    // no business number
+  },
+  roles: [
+    { roleType: 'Partner', appointmentDate: '2020-03-30' }
+  ],
+  mailingAddress: {
+    streetAddress: '3942 Fake Street',
+    streetAddressAdditional: '',
+    addressCity: 'Victoria',
+    addressRegion: 'BC',
+    postalCode: 'V8Z 5C6',
+    addressCountry: 'CA'
+  },
+  deliveryAddress: {
+    streetAddress: '3942 Fake Street',
+    streetAddressAdditional: '',
+    addressCity: 'Victoria',
+    addressRegion: 'BC',
+    postalCode: 'V8Z 5C6',
+    addressCountry: 'CA'
+  },
+  confirmBusiness: true
 }
 
 /**
@@ -153,11 +226,12 @@ describe('Registration Add/Edit Org/Person component', () => {
     expect(vm.isIncorporator).toBe(false)
     expect(vm.isDirector).toBe(false)
     expect(vm.isProprietor).toBe(false)
+    expect(vm.isPartner).toBe(false)
 
     wrapper.destroy()
   })
 
-  it('loads the component and sets the data for proprietor-person', () => {
+  it('loads the component and sets the data for proprietor-person (SP)', () => {
     const wrapper = createComponent(validProprietorPerson, -1, null)
     const vm = wrapper.vm as any
 
@@ -166,11 +240,26 @@ describe('Registration Add/Edit Org/Person component', () => {
     expect(vm.isIncorporator).toBe(false)
     expect(vm.isDirector).toBe(false)
     expect(vm.isProprietor).toBe(true)
+    expect(vm.isPartner).toBe(false)
 
     wrapper.destroy()
   })
 
-  it('loads the component and sets the data for proprietor-org', () => {
+  it('loads the component and sets the data for partner-person (GP)', () => {
+    const wrapper = createComponent(validPartnerPerson, -1, null)
+    const vm = wrapper.vm as any
+
+    expect(vm.$data.orgPerson).toStrictEqual(validPartnerPerson)
+    expect(vm.isCompletingParty).toBe(false)
+    expect(vm.isIncorporator).toBe(false)
+    expect(vm.isDirector).toBe(false)
+    expect(vm.isProprietor).toBe(false)
+    expect(vm.isPartner).toBe(true)
+
+    wrapper.destroy()
+  })
+
+  it('loads the component and sets the data for proprietor-org (SP)', () => {
     const wrapper = createComponent(validProprietorOrg, -1, null)
     const vm = wrapper.vm as any
 
@@ -179,6 +268,21 @@ describe('Registration Add/Edit Org/Person component', () => {
     expect(vm.isIncorporator).toBe(false)
     expect(vm.isDirector).toBe(false)
     expect(vm.isProprietor).toBe(true)
+    expect(vm.isPartner).toBe(false)
+
+    wrapper.destroy()
+  })
+
+  it('loads the component and sets the data for partner-org (GP)', () => {
+    const wrapper = createComponent(validPartnerOrg, -1, null)
+    const vm = wrapper.vm as any
+
+    expect(vm.$data.orgPerson).toStrictEqual(validPartnerOrg)
+    expect(vm.isCompletingParty).toBe(false)
+    expect(vm.isIncorporator).toBe(false)
+    expect(vm.isDirector).toBe(false)
+    expect(vm.isProprietor).toBe(false)
+    expect(vm.isPartner).toBe(true)
 
     wrapper.destroy()
   })
@@ -190,12 +294,16 @@ describe('Registration Add/Edit Org/Person component', () => {
     const firstNameInput = wrapper.find(`${firstNameSelector} input`)
     const middleNameInput = wrapper.find(`${middleNameSelector} input`)
     const lastNameInput = wrapper.find(`${lastNameSelector} input`)
+    const emailInput = wrapper.find(`${emailAddressSelector} input`)
+    // FUTURE: verify mailing address
     expect((firstNameInput.element as HTMLInputElement).value)
       .toEqual(validCompletingParty['officer']['firstName'])
     expect((middleNameInput.element as HTMLInputElement).value)
       .toEqual(validCompletingParty['officer']['middleName'])
     expect((lastNameInput.element as HTMLInputElement).value)
       .toEqual(validCompletingParty['officer']['lastName'])
+    expect((emailInput.element as HTMLInputElement).value)
+      .toEqual(validCompletingParty['officer']['email'])
 
     // verify buttons
     expect(wrapper.find(buttonDoneSelector).attributes('disabled')).toBeUndefined()
@@ -205,19 +313,26 @@ describe('Registration Add/Edit Org/Person component', () => {
     wrapper.destroy()
   })
 
-  it('displays form data for proprietor-person', () => {
+  it('displays form data for proprietor-person (SP)', () => {
     const wrapper = createComponent(validProprietorPerson, 0, null)
 
     // verify input values
     const firstNameInput = wrapper.find(`${firstNameSelector} input`)
     const middleNameInput = wrapper.find(`${middleNameSelector} input`)
     const lastNameInput = wrapper.find(`${lastNameSelector} input`)
+    const businessNumberInput = wrapper.find(`${businessNumberSelector} input`)
+    const emailInput = wrapper.find(`${emailAddressSelector} input`)
+    // FUTURE: verify mailing address and delivery address
     expect((firstNameInput.element as HTMLInputElement).value)
       .toEqual(validProprietorPerson['officer']['firstName'])
     expect((middleNameInput.element as HTMLInputElement).value)
       .toEqual(validProprietorPerson['officer']['middleName'])
     expect((lastNameInput.element as HTMLInputElement).value)
       .toEqual(validProprietorPerson['officer']['lastName'])
+    expect((businessNumberInput.element as HTMLInputElement).value)
+      .toEqual(validProprietorPerson['officer']['businessNumber'])
+    expect((emailInput.element as HTMLInputElement).value)
+      .toEqual(validProprietorPerson['officer']['email'])
 
     // verify buttons
     expect(wrapper.find(buttonDoneSelector).attributes('disabled')).toBeUndefined()
@@ -227,13 +342,72 @@ describe('Registration Add/Edit Org/Person component', () => {
     wrapper.destroy()
   })
 
-  it('displays form data for proprietor-org', () => {
+  it('displays form data for partner-person (GP)', () => {
+    const wrapper = createComponent(validPartnerPerson, 0, null)
+
+    // verify input values
+    const firstNameInput = wrapper.find(`${firstNameSelector} input`)
+    const middleNameInput = wrapper.find(`${middleNameSelector} input`)
+    const lastNameInput = wrapper.find(`${lastNameSelector} input`)
+    const emailInput = wrapper.find(`${emailAddressSelector} input`)
+    // FUTURE: verify mailing address and delivery address
+    expect((firstNameInput.element as HTMLInputElement).value)
+      .toEqual(validPartnerPerson['officer']['firstName'])
+    expect((middleNameInput.element as HTMLInputElement).value)
+      .toEqual(validPartnerPerson['officer']['middleName'])
+    expect((lastNameInput.element as HTMLInputElement).value)
+      .toEqual(validPartnerPerson['officer']['lastName'])
+    expect((emailInput.element as HTMLInputElement).value)
+      .toEqual(validPartnerPerson['officer']['email'])
+
+    // verify buttons
+    expect(wrapper.find(buttonDoneSelector).attributes('disabled')).toBeUndefined()
+    expect(wrapper.find(buttonRemoveSelector).attributes('disabled')).toBeUndefined()
+    expect(wrapper.find(buttonCancelSelector).attributes('disabled')).toBeUndefined()
+
+    wrapper.destroy()
+  })
+
+  it('displays form data for proprietor-org (SP)', () => {
     const wrapper = createComponent(validProprietorOrg, 0, null)
 
     // verify input values
+    const confirmCheckboxInput = wrapper.find(`${confirmCheckboxSelector} input`)
     const orgNameInput = wrapper.find(`${orgNameSelector} input`)
+    const businessNumberInput = wrapper.find(`${businessNumberSelector} input`)
+    const emailInput = wrapper.find(`${emailAddressSelector} input`)
+    // FUTURE: verify mailing address and delivery address
+    expect((confirmCheckboxInput.element as HTMLInputElement).checked)
+      .toEqual(validProprietorOrg['confirmBusiness'])
     expect((orgNameInput.element as HTMLInputElement).value)
       .toEqual(validProprietorOrg['officer']['organizationName'])
+    expect((businessNumberInput.element as HTMLInputElement).value)
+      .toEqual(validProprietorOrg['officer']['businessNumber'])
+    expect((emailInput.element as HTMLInputElement).value)
+      .toEqual(validProprietorOrg['officer']['email'])
+
+    // verify buttons
+    expect(wrapper.find(buttonDoneSelector).attributes('disabled')).toBeUndefined()
+    expect(wrapper.find(buttonRemoveSelector).attributes('disabled')).toBeUndefined()
+    expect(wrapper.find(buttonCancelSelector).attributes('disabled')).toBeUndefined()
+
+    wrapper.destroy()
+  })
+
+  it('displays form data for partner-org (GP)', () => {
+    const wrapper = createComponent(validPartnerOrg, 0, null)
+
+    // verify input values
+    const confirmCheckboxInput = wrapper.find(`${confirmCheckboxSelector} input`)
+    const orgNameInput = wrapper.find(`${orgNameSelector} input`)
+    const emailInput = wrapper.find(`${emailAddressSelector} input`)
+    // FUTURE: verify mailing address and delivery address
+    expect((confirmCheckboxInput.element as HTMLInputElement).checked)
+      .toEqual(validPartnerOrg['confirmBusiness'])
+    expect((orgNameInput.element as HTMLInputElement).value)
+      .toEqual(validPartnerOrg['officer']['organizationName'])
+    expect((emailInput.element as HTMLInputElement).value)
+      .toEqual(validPartnerOrg['officer']['email'])
 
     // verify buttons
     expect(wrapper.find(buttonDoneSelector).attributes('disabled')).toBeUndefined()

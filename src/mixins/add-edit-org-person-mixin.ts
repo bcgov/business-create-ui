@@ -22,7 +22,7 @@ export default class AddEditOrgPersonMixin extends Vue {
   }
 
   @Prop() readonly initialValue!: OrgPersonIF
-  @Prop() readonly activeIndex: number
+  @Prop() readonly activeIndex: number // is -1 for new org/person
   @Prop() readonly existingCompletingParty: OrgPersonIF
   @Prop() readonly addIncorporator: boolean
 
@@ -87,6 +87,11 @@ export default class AddEditOrgPersonMixin extends Vue {
     return this.selectedRoles.includes(RoleTypes.PROPRIETOR)
   }
 
+  /** Whether Partner is checked. */
+  protected get isPartner (): boolean {
+    return this.selectedRoles.includes(RoleTypes.PARTNER)
+  }
+
   /** Whether current data object is a person. */
   protected get isPerson (): boolean {
     return (this.orgPerson.officer?.partyType === PartyTypes.PERSON)
@@ -119,8 +124,12 @@ export default class AddEditOrgPersonMixin extends Vue {
 
   /** Whether the Proprietor role should be shown. */
   protected get showProprietorRole (): boolean {
-    const isRoleProprietor = this.orgPerson.roles.some(role => role.roleType === RoleTypes.PROPRIETOR)
-    return isRoleProprietor
+    return this.orgPerson.roles.some(role => role.roleType === RoleTypes.PROPRIETOR)
+  }
+
+  /** Whether the Partner role should be shown. */
+  protected get showPartnerRole (): boolean {
+    return this.orgPerson.roles.some(role => role.roleType === RoleTypes.PARTNER)
   }
 
   /** Whether the Completing Party role should be disabled. */
@@ -159,7 +168,7 @@ export default class AddEditOrgPersonMixin extends Vue {
 
   /** Called when component is created. */
   created (): void {
-    // mark this step as invalid when adding or editing
+    // mark this step as invalid while adding or editing
     this.setAddPeopleAndRoleStepValidity(false)
 
     if (this.initialValue) {
@@ -171,18 +180,21 @@ export default class AddEditOrgPersonMixin extends Vue {
 
       // set address properties
       this.inProgressMailingAddress = { ...this.orgPerson.mailingAddress }
-      if (this.isDirector || this.isProprietor) {
+      if (this.isDirector || this.isProprietor || this.isPartner) {
         this.inProgressDeliveryAddress = { ...this.orgPerson.deliveryAddress }
-        // initialize inheritMailingAddress checkbox conditionally
+        // initialize inheritMailingAddress checkbox
         this.updateSameAsMailingChkBox()
       }
     }
+
+    // if editing, enable validation from the start
+    if (this.activeIndex !== -1) this.enableRules = true
   }
 
   /** decide if the "Delivery Address same as Mailing Address" check box should be checked */
   protected updateSameAsMailingChkBox (): void {
     // safety check
-    if (!this.isDirector && !this.isProprietor) return
+    if (!this.isDirector && !this.isProprietor && !this.isPartner) return
 
     // if not already assigned, initialize delivery address to prevent template errors
     if (!this.inProgressDeliveryAddress) this.inProgressDeliveryAddress = cloneDeep(EmptyAddress)
@@ -209,7 +221,7 @@ export default class AddEditOrgPersonMixin extends Vue {
            !address.streetAddressAdditional)
   }
 
-  // Event Handlers
+  /** Address component event handler - called when mailing address has changed. */
   protected updateMailingAddress (address: AddressIF): void {
     // only update if equal
     // (workaround for BaseAddress always telling us there's a new address)
@@ -218,6 +230,7 @@ export default class AddEditOrgPersonMixin extends Vue {
     }
   }
 
+  /** Address component event handler - called when delivery address has changed. */
   protected updateDeliveryAddress (address: AddressIF): void {
     // only update if equal
     // (workaround for BaseAddress always telling us there's a new address)
@@ -226,15 +239,23 @@ export default class AddEditOrgPersonMixin extends Vue {
     }
   }
 
+  /**
+   * Address component event handler - called when it is rendered and when
+   * the user has changed a mailing address field.
+   */
   protected updateMailingAddressValidity (valid: boolean): void {
     this.mailingAddressValid = valid
-    // validate the form to update dummy component rules
+    // validate the main form to update dummy component rules
     this.$refs.addPersonOrgForm && this.$refs.addPersonOrgForm.validate()
   }
 
+  /**
+   * Address component event handler - called when it is rendered and when
+   * the user has changed a delivery address field.
+   */
   protected updateDeliveryAddressValidity (valid: boolean): void {
     this.deliveryAddressValid = valid
-    // validate the form to update dummy component rules
+    // validate the main form to update dummy component rules
     this.$refs.addPersonOrgForm && this.$refs.addPersonOrgForm.validate()
   }
 
@@ -267,19 +288,20 @@ export default class AddEditOrgPersonMixin extends Vue {
     }
   }
 
+  /** Called when the user clicks the Done button. */
   protected async validateAddPersonOrgForm (): Promise<void> {
-    // enable component rules and wait to let them update
     this.enableRules = true
     await Vue.nextTick()
 
     // validate all the forms
-    const mailingAddressValid = this.$refs.mailingAddressNew.$refs.addressForm.validate()
-    const deliveryAddressValid = !this.$refs.deliveryAddressNew ||
+    // NB: main form depends on address forms
+    this.mailingAddressValid = this.$refs.mailingAddressNew.$refs.addressForm.validate()
+    this.deliveryAddressValid = !this.$refs.deliveryAddressNew ||
       this.$refs.deliveryAddressNew.$refs.addressForm.validate()
-    const mainFormValid = this.$refs.addPersonOrgForm.validate()
+    this.addPersonOrgFormValid = this.$refs.addPersonOrgForm.validate()
 
-    // only proceed if all forms are valid
-    if (mailingAddressValid && deliveryAddressValid && mainFormValid) {
+    // only proceed if main form is valid
+    if (this.addPersonOrgFormValid) {
       if (this.reassignCompletingParty) {
         this.emitReassignCompletingPartyEvent()
       }
@@ -304,11 +326,11 @@ export default class AddEditOrgPersonMixin extends Vue {
     let person: OrgPersonIF = { ...this.orgPerson }
     person.officer = { ...this.orgPerson.officer }
     if (this.activeIndex === -1) {
-      // assign a new (random) ID
+      // assign a new (random but unique) ID
       person.officer.id = uuidv4()
     }
     person.mailingAddress = { ...this.inProgressMailingAddress }
-    if (this.isDirector || this.isProprietor) {
+    if (this.isDirector || this.isProprietor || this.isPartner) {
       person.deliveryAddress = this.setPersonDeliveryAddress()
     }
     person.roles = this.setPersonRoles()
@@ -319,6 +341,7 @@ export default class AddEditOrgPersonMixin extends Vue {
     if (this.inheritMailingAddress) {
       this.inProgressDeliveryAddress = this.inProgressMailingAddress
     }
+    // return a new object (not a copy)
     return { ...this.inProgressDeliveryAddress }
   }
 
@@ -336,6 +359,9 @@ export default class AddEditOrgPersonMixin extends Vue {
     }
     if (this.isProprietor) {
       roles.push({ roleType: RoleTypes.PROPRIETOR, appointmentDate: this.getCurrentDate })
+    }
+    if (this.isPartner) {
+      roles.push({ roleType: RoleTypes.PARTNER, appointmentDate: this.getCurrentDate })
     }
 
     return roles
