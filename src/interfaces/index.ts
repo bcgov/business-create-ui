@@ -81,5 +81,6 @@ export {
   EmptyNaics,
   NaicsIF,
   NaicsResultIF,
-  StaffPaymentIF
+  StaffPaymentIF,
+  CommentIF
 } from '@bcrs-shared-components/interfaces'

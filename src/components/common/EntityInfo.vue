@@ -4,13 +4,23 @@
       <v-col cols="12" md="9">
         <div v-show="isEntityType" id="entity-legal-name">
           {{ legalName || getNumberedEntityName }}
-          </div>
+        </div>
 
         <div id="entity-description">
           {{ entityDescription }}
         </div>
 
-        <div class="mt-5" />
+        <menu class="mt-5">
+          <!-- Staff Comments -->
+          <div class="staff-comments" v-if="businessId && isRoleStaff">
+            <StaffComments
+              :axios="axios"
+              :businessId="businessId"
+              maxLength="2000"
+              :key="businessId"
+            />
+          </div>
+        </menu>
       </v-col>
 
       <v-col cols="12" md="3">
@@ -22,12 +32,12 @@
         <template v-if="!isRegistrationFiling">
           <div id="entity-business-email">
             <span class="business-info-label">Email:</span>
-            {{ getEmail || 'Not Available' }}
+            {{ getEmail || "Not Available" }}
           </div>
 
           <div id="entity-business-phone">
             <span class="business-info-label">Phone:</span>
-            {{ getPhone || 'Not Available' }}
+            {{ getPhone || "Not Available" }}
           </div>
         </template>
       </v-col>
@@ -47,7 +57,10 @@ import { ContactPointIF, RegistrationStateIF } from '@/interfaces'
 // Modules
 import { EnumMixin } from '@/mixins'
 
-@Component({})
+import { StaffComments } from '@bcrs-shared-components/staff-comments'
+import { axios } from '@/utils'
+
+@Component({ components: { StaffComments } })
 export default class EntityInfo extends Mixins(EnumMixin) {
   @Getter getBusinessLegalName!: string
   @Getter getBusinessContact!: ContactPointIF
@@ -64,6 +77,11 @@ export default class EntityInfo extends Mixins(EnumMixin) {
   @Getter isIncorporationFiling!: boolean
   @Getter isRegistrationFiling!: boolean
   @Getter isTypeSoleProp!: boolean
+  @Getter getBusinessId!: string
+  @Getter isRoleStaff!: boolean
+
+  // enums for template
+  readonly axios = axios
 
   /** The entity description.  */
   get entityDescription (): string {
@@ -105,11 +123,15 @@ export default class EntityInfo extends Mixins(EnumMixin) {
         return this.getApprovedName
     }
   }
+  /** The Business ID string. */
+  private get businessId (): string {
+    return this.getBusinessId
+  }
 }
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/theme.scss';
+@import "@/assets/styles/theme.scss";
 
 #entity-info {
   color: $gray7;
@@ -126,5 +148,8 @@ export default class EntityInfo extends Mixins(EnumMixin) {
 .business-info-label {
   color: $gray9;
   font-weight: bold;
+}
+.staff-comments{
+  margin-left: -12px;
 }
 </style>

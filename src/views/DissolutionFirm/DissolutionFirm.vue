@@ -48,8 +48,9 @@
               :nudgeTop="85"
               :minDate="startDateMinStr"
               :maxDate="startDateMaxStr"
-              :inputRules="getShowErrors ? startDateRules : []"
+              :inputRules="startDateRules || []"
               @emitDateSync="startDateHandler($event)"
+              :initialValue="dissolutionDate"
             />
           </v-col>
         </v-row>
@@ -259,6 +260,7 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
 
   // Enum for template
   readonly RouteNames = RouteNames
+  private dissolutionDate = ''
 
   /** Is true when the Court Order conditions are not met. */
   get isCourtOrderInvalid (): boolean {
@@ -327,6 +329,10 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
         `Date should be between ${this.dateToPacificDate(this.startDateMin, true)} and
         ${this.dateToPacificDate(this.startDateMax, true)}`
     ]
+  }
+
+  private startDateHandler (event: string): void{
+    this.dissolutionDate = event
   }
 }
 </script>
