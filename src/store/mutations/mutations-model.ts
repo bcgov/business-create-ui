@@ -349,3 +349,8 @@ export const mutateRegistrationBusinessType = (state: StateIF, businessType: Bus
   state.stateModel.registration.businessType = businessType
   if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
 }
+
+export const mutateRegistrationBusinessTypeConfirm = (state: StateIF, BusinessTypeConfirm: boolean) => {
+  state.stateModel.registration.BusinessTypeConfirm = BusinessTypeConfirm
+  if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
+}

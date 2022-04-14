@@ -127,6 +127,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Action setRegistrationNaics!: ActionBindingIF
   @Action setRegistrationBusinessNumber!: ActionBindingIF
   @Action setRegistrationBusinessType!: ActionBindingIF
+  @Action setRegistrationBusinessTypeConfirm!: ActionBindingIF
 
   /**
    * Builds an incorporation filing from store data. Used when saving a filing.
@@ -413,6 +414,9 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
 
     // restore Business Number
     this.setRegistrationBusinessNumber(draftFiling.registration.business.taxId || null)
+
+    // restore Business Type GP
+    this.setRegistrationBusinessTypeConfirm(draftFiling.registration.BusinessTypeConfirm || null)
 
     // NB: no need to restore Name Request data
     // it will be reloaded from NR endpoint in App.vue

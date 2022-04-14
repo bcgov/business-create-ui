@@ -305,3 +305,7 @@ export const setRegistrationBusinessNumber: ActionIF = ({ commit }, val: string)
 export const setRegistrationBusinessType: ActionIF = ({ commit }, businessType: BusinessTypes): void => {
   commit('mutateRegistrationBusinessType', businessType)
 }
+
+export const setRegistrationBusinessTypeConfirm: ActionIF = ({ commit }, BusinessTypeConfirm: boolean): void => {
+  commit('mutateRegistrationBusinessTypeConfirm', BusinessTypeConfirm)
+}
