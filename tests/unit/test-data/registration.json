@@ -40,7 +40,7 @@
       },
       "businessType": "SP",
       "contactPoint": {
-        "email": "eleven@email.com",
+        "email": "eleven@example.com",
         "phone": "(111) 222-3333",
         "extension": "444"
       },

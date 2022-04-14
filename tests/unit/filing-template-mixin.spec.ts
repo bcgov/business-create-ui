@@ -42,11 +42,9 @@ describe('Registration Filing', () => {
 
   it('correctly builds a registration filing', () => {
     // FUTURE:
-    //   business contact
     //   business identifier
     //   certify state
     //   current date
-    //   entity type
     //   folio number
     //   is future effective
     //   parties
@@ -82,13 +80,20 @@ describe('Registration Filing', () => {
       naicsDescription: 'Some NAICS Description'
     }
 
-    store.state.stateModel.registration.nameRequest = {
-      legalName: 'My Approved Name',
-      legalType: 'SP',
-      nrNumber: 'NR 1234567'
+    store.state.stateModel.nameRequest = {
+      entityType: 'SP',
+      nrNumber: 'NR 1234567',
+      details: { approvedName: 'My Approved Name' }
     }
 
-    store.state.stateModel.registration.businessType = 'SP'
+    store.state.stateModel.businessContact = {
+      email: 'eleven@example.com',
+      phone: '(111) 222-3333',
+      extension: '444'
+    }
+
+    store.state.stateModel.entityType = 'SP' // sole prop
+    store.state.stateModel.registration.businessType = 'SP' // not DBA
 
     store.state.stateModel.registration.businessNumber = '111222333'
 
@@ -129,6 +134,11 @@ describe('Registration Filing', () => {
             }
           },
           businessType: 'SP',
+          contactPoint: {
+            email: 'eleven@example.com',
+            phone: '(111) 222-3333',
+            extension: 444
+          },
           nameRequest: {
             legalName: 'My Approved Name',
             legalType: 'SP',
@@ -145,10 +155,8 @@ describe('Registration Filing', () => {
     wrapper.vm.parseRegistrationDraft(REGISTRATION.filing)
 
     // FUTURE:
-    //   business contact
     //   business identifier
     //   certify state
-    //   entity type
     //   folio number
     //   parties
     //   staff filing data
@@ -183,12 +191,14 @@ describe('Registration Filing', () => {
       naics: {
         naicsCode: '12345',
         naicsDescription: 'Some NAICS Description'
-      },
-      nameRequest: {
-        legalName: 'My Approved Name',
-        legalType: 'SP',
-        nrNumber: 'NR 1234567'
       }
+    })
+    // NB: name request object is not restored from filing
+    expect(store.state.stateModel.businessContact).toEqual({
+      email: 'eleven@example.com',
+      confirmEmail: 'eleven@example.com',
+      phone: '(111) 222-3333',
+      extension: '444'
     })
   })
 })

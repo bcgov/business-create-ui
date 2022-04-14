@@ -30,7 +30,8 @@ import {
   SpecialResolutionIF,
   RegistrationStateIF,
   RegistrationFilingIF,
-  EmptyNaics
+  EmptyNaics,
+  NameRequestIF
 } from '@/interfaces'
 
 // Constants and enums
@@ -89,6 +90,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Getter isPremiumAccount!: boolean
   @Getter getRegistration!: RegistrationStateIF
   @Getter getFilingId!: number
+  @Getter getNameRequest!: NameRequestIF
 
   @Action setAffidavit!: ActionBindingIF
   @Action setFilingId!: ActionBindingIF
@@ -124,7 +126,6 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Action setRegistrationFeeAcknowledgement!: ActionBindingIF
   @Action setRegistrationNaics!: ActionBindingIF
   @Action setRegistrationBusinessNumber!: ActionBindingIF
-  @Action setRegistrationNameRequest!: ActionBindingIF
   @Action setRegistrationBusinessType!: ActionBindingIF
 
   /**
@@ -344,7 +345,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
         business: {
           identifier: this.getTempId,
           naics: this.getRegistration.naics,
-          taxId: this.getRegistration.businessNumber
+          taxId: this.getRegistration.businessNumber || undefined // can't be null
         },
         offices: {
           businessOffice: this.getRegistration.businessAddress
@@ -358,7 +359,11 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
             ? { extension: +this.getBusinessContact.extension }
             : {}
         },
-        nameRequest: this.getRegistration.nameRequest,
+        nameRequest: {
+          legalName: this.getNameRequest.details['approvedName'],
+          legalType: this.getEntityType,
+          nrNumber: this.getNameRequest.nrNumber
+        },
         parties: this.getAddPeopleAndRoleStep.orgPeople,
         startDate: this.getRegistration.startDate
       }
@@ -366,12 +371,12 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
 
     // FUTURE: delete if not needed
     // Conditionally add the entity-specific sections.
-    switch (this.getEntityType) {
-      case CorpTypeCd.SOLE_PROP:
-        break
-      case CorpTypeCd.PARTNERSHIP:
-        break
-    }
+    // switch (this.getEntityType) {
+    //   case CorpTypeCd.SOLE_PROP:
+    //     break
+    //   case CorpTypeCd.PARTNERSHIP:
+    //     break
+    // }
 
     if (this.isRoleStaff) {
       // Add staff payment data.
@@ -409,8 +414,8 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     // restore Business Number
     this.setRegistrationBusinessNumber(draftFiling.registration.business.taxId || null)
 
-    // restore Name Request data
-    this.setRegistrationNameRequest(draftFiling.registration.nameRequest)
+    // NB: no need to restore Name Request data
+    // it will be reloaded from NR endpoint in App.vue
 
     // restore Entity Type
     this.setEntityType(draftFiling.registration.nameRequest.legalType)
@@ -421,8 +426,8 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     // restore Persons and Organizations
     this.setOrgPersonList(draftFiling.registration.parties)
 
-    // FUTURE
-    // // conditionally restore the entity-specific sections
+    // FUTURE: delete if not needed
+    // conditionally restore the entity-specific sections
     // switch (this.getEntityType) {
     //   case CorpTypeCd.SOLE_PROP:
     //     break
