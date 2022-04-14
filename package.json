@@ -24,7 +24,7 @@
     "@bcrs-shared-components/effective-date-time": "1.0.2",
     "@bcrs-shared-components/enums": "1.0.17",
     "@bcrs-shared-components/interfaces": "1.0.32",
-    "@bcrs-shared-components/mixins": "^1.0.5",
+    "@bcrs-shared-components/mixins": "1.0.6",
     "@bcrs-shared-components/nature-of-business": "1.0.3",
     "@bcrs-shared-components/staff-comments": "^1.2.0",
     "@bcrs-shared-components/staff-payment": "2.0.1",
