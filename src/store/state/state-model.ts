@@ -6,7 +6,6 @@ import {
   EmptyNameRequest,
   EmptyOfficer,
   EmptyNaics,
-  EmptyRegistrationNameRequest,
   StateModelIF
 } from '@/interfaces'
 import { cloneDeep } from 'lodash'
@@ -167,7 +166,6 @@ export const stateModel: StateModelIF = {
     businessAddress: null,
     feeAcknowledgement: false,
     naics: { ...EmptyNaics },
-    nameRequest: { ...EmptyRegistrationNameRequest },
     businessType: null,
     businessNumber: null
   }

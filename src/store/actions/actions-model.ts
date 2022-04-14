@@ -2,7 +2,7 @@ import {
   AccountInformationIF, ActionIF, AddressIF, ContactPointIF, CertifyIF, DissolutionStatementIF,
   IncorporationAddressIF, IncorporationAgreementIF, NameRequestIF, NameTranslationIF, OrgPersonIF,
   ResourceIF, ShareClassIF, CreateRulesIF, CreateMemorandumIF, ValidationDetailIF, FeesIF,
-  UploadAffidavitIF, CreateResolutionIF, OrgInformationIF, NaicsIF, RegistrationNameRequestIF
+  UploadAffidavitIF, CreateResolutionIF, OrgInformationIF, NaicsIF
 } from '@/interfaces'
 import { BusinessTypes, CoopTypes, CorpTypeCd } from '@/enums'
 
@@ -300,10 +300,6 @@ export const setRegistrationNaics: ActionIF = ({ commit }, val: NaicsIF): void =
 
 export const setRegistrationBusinessNumber: ActionIF = ({ commit }, val: string): void => {
   commit('mutateRegistrationBusinessNumber', val)
-}
-
-export const setRegistrationNameRequest: ActionIF = ({ commit }, val: RegistrationNameRequestIF): void => {
-  commit('mutateRegistrationNameRequest', val)
 }
 
 export const setRegistrationBusinessType: ActionIF = ({ commit }, businessType: BusinessTypes): void => {
