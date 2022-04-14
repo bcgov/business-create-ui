@@ -48,9 +48,8 @@
               :nudgeTop="85"
               :minDate="startDateMinStr"
               :maxDate="startDateMaxStr"
-              :inputRules="startDateRules"
-              @emitDateSync="dissolutionDate = $event"
-              :initialValue="dissolutionDate"
+              :inputRules="getShowErrors ? startDateRules : []"
+              @emitDateSync="startDateHandler($event)"
             />
           </v-col>
         </v-row>
@@ -260,7 +259,6 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
 
   // Enum for template
   readonly RouteNames = RouteNames
-  private dissolutionDate = ''
 
   /** Is true when the Court Order conditions are not met. */
   get isCourtOrderInvalid (): boolean {
