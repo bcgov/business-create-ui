@@ -55,7 +55,7 @@ export default class BusinessTypeConfirm extends Vue {
   }
 
   /** Emits updated business type event. */
-  @Emit('update:BusinessTypeConfirm')
+  @Emit('update:businessTypeConfirm')
   private emitBusinessType (): boolean {
     return this.checked
   }

@@ -168,6 +168,6 @@ export const stateModel: StateModelIF = {
     naics: { ...EmptyNaics },
     businessType: null,
     businessNumber: null,
-    BusinessTypeConfirm: null
+    businessTypeConfirm: null
   }
 }

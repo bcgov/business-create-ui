@@ -401,7 +401,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     this.setRegistrationBusinessAddress(draftFiling.registration.offices?.businessOffice)
 
     // restore Business Type
-    this.setRegistrationBusinessType(draftFiling.registration.businessType || BusinessTypes.SP)
+    this.setRegistrationBusinessType(draftFiling.registration.businessType)
 
     // restore Contact Info
     this.setBusinessContact({
@@ -416,7 +416,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     this.setRegistrationBusinessNumber(draftFiling.registration.business.taxId || null)
 
     // restore Business Type GP
-    this.setRegistrationBusinessTypeConfirm(draftFiling.registration.BusinessTypeConfirm || null)
+    this.setRegistrationBusinessTypeConfirm(draftFiling.registration.businessTypeConfirm || null)
 
     // NB: no need to restore Name Request data
     // it will be reloaded from NR endpoint in App.vue

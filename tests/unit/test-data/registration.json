@@ -50,7 +50,8 @@
         "nrNumber": "NR 1234567"
       },
       "parties": [],
-      "startDate": "2021-02-03"
+      "startDate": "2021-02-03",
+      "businessTypeConfirm": null
     }
   }
 }
