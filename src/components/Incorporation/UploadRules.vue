@@ -110,9 +110,7 @@
                 <v-row no-gutters>
                   <v-col cols="1"><v-icon>mdi-circle-small</v-icon></v-col>
                   <v-col cols="11">
-                    <p class="mb-0">
-                      The Cooperative name is identified <b>exactly</b> as follows throughout the Memorandum:
-                    </p>
+                    <p class="mb-0" v-html="ruleMessage"></p>
                     <div class="mt-2 mb-0 font-weight-bold">{{getNameRequestDetails.approvedName}}</div>
                   </v-col>
                 </v-row>
@@ -218,6 +216,8 @@ export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
   private uploadRulesDoc: File = null
   private uploadRulesDocKey: string = null
   private helpToggle = false
+  // eslint-disable-next-line max-len
+  private ruleMessage = 'The Cooperative name is identified <b>exactly</b> as follows throughout the Rules of the Association:'
 
   @Getter getShowErrors!: boolean
   @Getter getNameRequestDetails!: NameRequestDetailsIF
