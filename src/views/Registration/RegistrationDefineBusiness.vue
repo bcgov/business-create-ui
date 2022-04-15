@@ -17,6 +17,7 @@
           <BusinessTypeConfirm
             class="py-8 px-6"
             :class="{ 'invalid-section': getShowErrors && !businessTypeConfirmValid }"
+            :businessTypeConfirm="getRegistration.businessTypeConfirm"
             @update:businessTypeConfirm="setRegistrationBusinessTypeConfirm($event)"
             @valid="onBusinessTypeConfirmValidEvent($event)"
           />

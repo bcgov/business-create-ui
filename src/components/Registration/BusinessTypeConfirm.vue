@@ -39,12 +39,23 @@ import { Component, Emit, Prop, Vue, Watch } from 'vue-property-decorator'
 
 @Component
 export default class BusinessTypeConfirm extends Vue {
+  /** The registration business number. */
+  @Prop({ required: true })
+  readonly businessTypeConfirm!: boolean
+
   /** Whether to display Change features. */
   @Prop({ default: false })
   readonly hasBusinessTypeChecked!: boolean;
 
   // Local variables
   protected checked = false;
+
+  /** Called when component is mounted. */
+  protected mounted (): void {
+    // init model variable + validate
+    this.checked = this.businessTypeConfirm
+    this.emitValid()
+  }
 
   /** Watches for changes to the checkbox value. */
   @Watch('checked')
