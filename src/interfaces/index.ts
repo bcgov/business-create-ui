@@ -75,6 +75,7 @@ export * from './Registration/business-address-interface'
 // NB: importing EmptyAddress doesn't work in local components
 export {
   BreadcrumbIF,
+  CommentIF,
   ContactPointIF,
   EffectiveDateTimeIF,
   EmptyContactPoint,

@@ -48,8 +48,9 @@
               :nudgeTop="85"
               :minDate="startDateMinStr"
               :maxDate="startDateMaxStr"
-              :inputRules="getShowErrors ? startDateRules : []"
-              @emitDateSync="startDateHandler($event)"
+              :inputRules="startDateRules"
+              @emitDateSync="dissolutionDate = $event"
+              :initialValue="dissolutionDate"
             />
           </v-col>
         </v-row>
@@ -191,7 +192,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Vue } from 'vue-property-decorator'
+import { Component, Mixins } from 'vue-property-decorator'
 import { Getter, Action } from 'vuex-class'
 import { DateMixin } from '@/mixins'
 import AssociationDetails from '@/components/Dissolution/AssociationDetails.vue'
@@ -259,6 +260,9 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
 
   // Enum for template
   readonly RouteNames = RouteNames
+
+  // local variable
+  private dissolutionDate = ''
 
   /** Is true when the Court Order conditions are not met. */
   get isCourtOrderInvalid (): boolean {

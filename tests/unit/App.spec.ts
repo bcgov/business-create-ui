@@ -863,6 +863,12 @@ describe('Dissolution BEN - External User', () => {
         }
       })))
 
+    // for staff comments
+    get.withArgs('businesses/BC0870803/comments')
+      .returns(new Promise((resolve) => resolve({
+        data: []
+      })))
+
     // create a Local Vue and install router on it
     const localVue = createLocalVue()
     localVue.use(VueRouter)
@@ -1116,6 +1122,12 @@ describe('Dissolution BEN - Staff User', () => {
           }]
 
         }
+      })))
+
+    // for staff comments
+    get.withArgs('businesses/BC0870803/comments')
+      .returns(new Promise((resolve) => resolve({
+        data: []
       })))
 
     // create a Local Vue and install router on it
@@ -1558,6 +1570,12 @@ describe('Dissolution COOP - External User', () => {
         }
       })))
 
+    // for staff comments
+    get.withArgs('businesses/CP1002398/comments')
+      .returns(new Promise((resolve) => resolve({
+        data: []
+      })))
+
     // create a Local Vue and install router on it
     const localVue = createLocalVue()
     localVue.use(VueRouter)
@@ -1996,6 +2014,12 @@ describe('Dissolution COOP - Staff User', () => {
             }
           ]
         }
+      })))
+
+    // for staff comments
+    get.withArgs('businesses/CP1002398/comments')
+      .returns(new Promise((resolve) => resolve({
+        data: []
       })))
 
     // create a Local Vue and install router on it
