@@ -112,7 +112,7 @@
                   <v-col cols="11">
                     <p class="mb-0">
                       The Cooperative name is identified <b>exactly</b> as follows throughout
-                      <span> the</span> Rules of the Association:
+                      the Rules of the Association:
                     </p>
                     <div class="mt-2 mb-0 font-weight-bold">{{getNameRequestDetails.approvedName}}</div>
                   </v-col>
