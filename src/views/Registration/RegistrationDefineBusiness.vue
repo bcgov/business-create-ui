@@ -13,10 +13,11 @@
           <v-divider class="mx-6" />
 
           <!-- Business Type -->
-          <header id="business-type-header" />
+          <header id="business-type-confirm-header" />
           <BusinessTypeConfirm
             class="py-8 px-6"
             :class="{ 'invalid-section': getShowErrors && !businessTypeConfirmValid }"
+            :showErrors="getShowErrors"
             :businessTypeConfirm="getRegistration.businessTypeConfirm"
             @update:businessTypeConfirm="setRegistrationBusinessTypeConfirm($event)"
             @valid="onBusinessTypeConfirmValidEvent($event)"
@@ -207,6 +208,7 @@ export default class RegistrationDefineBusiness extends Mixins(CommonMixin) {
 
   /** Array of valid components. Must match validFlags. */
   readonly validComponents = [
+    'business-type-confirm-header',
     'nature-of-business-header',
     'business-number-header',
     'business-addresses-header',

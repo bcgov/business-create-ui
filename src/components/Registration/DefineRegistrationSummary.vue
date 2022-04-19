@@ -24,6 +24,22 @@
         </v-row>
       </article>
 
+      <!-- Business Type Confirm -->
+      <template v-if="isTypePartnership">
+        <v-divider class="mx-6" />
+
+        <article class="section-container">
+          <v-row no-gutters>
+            <v-col cols="12" sm="3" class="pr-4">
+              <label>Business Type</label>
+            </v-col>
+            <v-col cols="12" sm="9">
+              <span>{{ businessTypeConfirm || false}}</span>
+            </v-col>
+          </v-row>
+        </article>
+      </template>
+
       <v-divider class="mx-6" />
 
       <!-- Nature of Business -->
@@ -153,6 +169,11 @@ export default class DefineRegistrationSummary extends Mixins(DateMixin, EnumMix
   /** The business number. */
   get businessNumber (): string {
     return this.getRegistration.businessNumber
+  }
+
+  /** The business type confirm. */
+  get businessTypeConfirm (): boolean {
+    return this.getRegistration.businessTypeConfirm
   }
 
   /** The business start date. */
