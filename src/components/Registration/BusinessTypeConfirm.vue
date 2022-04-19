@@ -53,7 +53,7 @@ export default class BusinessTypeConfirm extends Vue {
   /** Called when component is mounted. */
   protected mounted (): void {
     // init model variable + validate
-    this.checked = this.businessTypeConfirm
+    this.checked = this.businessTypeConfirm || false
     this.emitValid()
   }
 

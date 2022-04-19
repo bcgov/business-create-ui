@@ -96,7 +96,7 @@ describe('Registration Filing', () => {
     store.state.stateModel.registration.businessType = 'SP' // not DBA
 
     store.state.stateModel.registration.businessNumber = '111222333'
-    store.state.stateModel.registration.businessTypeConfirm = false
+    store.state.stateModel.registration.businessTypeConfirm = null
 
     const filing = wrapper.vm.buildRegistrationFiling()
 
@@ -193,7 +193,7 @@ describe('Registration Filing', () => {
         naicsCode: '12345',
         naicsDescription: 'Some NAICS Description'
       },
-      businessTypeConfirm: false,
+      businessTypeConfirm: null,
     })
     // NB: name request object is not restored from filing
     expect(store.state.stateModel.businessContact).toEqual({
