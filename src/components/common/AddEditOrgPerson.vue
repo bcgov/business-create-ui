@@ -80,7 +80,7 @@
                 <v-text-field
                   filled
                   class="item"
-                  label="Middle Name"
+                  label="Middle Name (Optional)"
                   id="person__middle-name"
                   v-model.trim="orgPerson.officer.middleName"
                   :rules="enableRules ? Rules.MiddleNameRules: []"
