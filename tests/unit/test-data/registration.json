@@ -51,7 +51,7 @@
       },
       "parties": [],
       "startDate": "2021-02-03",
-      "businessTypeConfirm": null
+      "businessTypeConfirm": false
     }
   }
 }
