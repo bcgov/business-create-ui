@@ -69,7 +69,7 @@
                 <v-text-field
                   filled
                   class="item middle-name"
-                  label="Middle Name"
+                  label="Middle Name (Optional)"
                   v-model.trim="orgPerson.officer.middleName"
                   :rules="enableRules ? Rules.MiddleNameRules : []"
                   :readonly="isCompletingParty && !isRoleStaff"
