@@ -368,7 +368,29 @@ describe('Registration Add/Edit Org/Person component', () => {
     wrapper.destroy()
   })
 
-  it('displays form data for proprietor-org (SP)', () => {
+  it('displays form data for proprietor-org (SP) - manual add', () => {
+    const wrapper = createComponent(validProprietorOrg, -1, null)
+
+    expect(wrapper.find('.manual-add-article label').text())
+      .toContain('Edit Business or Corporation Unregistered in B.C.')
+    expect(wrapper.find('.manual-add-article p').text()).toContain('the Proprietor')
+
+    wrapper.destroy()
+  })
+
+  it('displays form data for proprietor-org (SP) - business lookup', async () => {
+    const wrapper = createComponent(validProprietorOrg, -1, null)
+
+    wrapper.find('.lookup-toggle').trigger('click')
+    await Vue.nextTick()
+
+    expect(wrapper.find('.business-lookup-article label').text()).toContain('Business or Corporation Look up')
+    expect(wrapper.findAll('.business-lookup-article p').at(0).text()).toContain('the Proprietor')
+
+    wrapper.destroy()
+  })
+
+  it('displays form data for proprietor-org (SP) - edit', () => {
     const wrapper = createComponent(validProprietorOrg, 0, null)
 
     // verify input values
@@ -394,8 +416,35 @@ describe('Registration Add/Edit Org/Person component', () => {
     wrapper.destroy()
   })
 
-  it('displays form data for partner-org (GP)', () => {
+  it('displays form data for partner-org (GP) - manual add', () => {
+    const wrapper = createComponent(validPartnerOrg, -1, null)
+
+    expect(wrapper.find('.manual-add-article label').text())
+      .toContain('Edit Business or Corporation Unregistered in B.C.')
+    expect(wrapper.find('.manual-add-article p').text()).toContain('a partner')
+
+    wrapper.destroy()
+  })
+
+  it('displays form data for partner-org (GP) - business lookup', async () => {
+    const wrapper = createComponent(validPartnerOrg, -1, null)
+
+    wrapper.find('.lookup-toggle').trigger('click')
+    await Vue.nextTick()
+
+    expect(wrapper.find('.business-lookup-article label').text()).toContain('Business or Corporation Look up')
+    expect(wrapper.findAll('.business-lookup-article p').at(0).text()).toContain('a partner')
+
+    wrapper.destroy()
+  })
+
+  it('displays form data for partner-org (GP) - edit', () => {
     const wrapper = createComponent(validPartnerOrg, 0, null)
+
+    expect(wrapper.find('.manual-add-article label').text())
+      .toContain('Edit Business or Corporation Unregistered in B.C.')
+
+    expect(wrapper.find('.manual-add-article p').text()).toContain('as a partner')
 
     // verify input values
     const confirmCheckboxInput = wrapper.find(`${confirmCheckboxSelector} input`)

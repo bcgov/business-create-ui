@@ -87,9 +87,8 @@
 
             <!-- Business or Corporation -->
             <template v-if="isOrg">
-
               <!-- Business or Corporation Unregistered in B.C. -->
-              <article v-if="isManualAdd">
+              <article v-if="isManualAdd" class="manual-add-article">
                 <label>
                   {{ isNaN(activeIndex) ? 'Add' : ' Edit' }} Business or Corporation Unregistered in B.C.
                 </label>
@@ -148,7 +147,7 @@
               </article>
 
               <!-- Business or Corporation Look up -->
-              <article v-else>
+              <article v-else class="business-lookup-article">
                 <label>Business or Corporation Look up</label>
                 <a class="lookup-toggle float-right" @click="isManualAdd = true">
                   Business or Corporation is Unregistered in B.C.
