@@ -1,5 +1,5 @@
 <template>
-  <div id="business-type">
+  <div id="business-type-confirm">
     <v-row no-gutters>
       <v-col cols="12" sm="3" class="pr-4">
         <label class="d-block title-label">Business Type</label>
@@ -16,18 +16,17 @@
 
       <v-col cols="12" sm="9">
         <p class="mb-0">General Partnership</p>
-        <div id="business-type-div">
+        <div id="business-check-div">
           <v-checkbox
-            class="business-type-check mt-0"
-            hide-details
+            class="mt-0"
             v-model="checked"
-          />
-          <p class="mb-0" id="business-type-text">
-            I acknowledge that a General Partnership cannot be changed into a
+            hide-details
+            label="I acknowledge that a General Partnership cannot be changed into a
             Sole Proprietorship (including DBA). If this is necessary, a new
             Name Request Number and Statement of Registration (along with
-            associated fees) will be required.
-          </p>
+            associated fees) will be required."
+          >
+          </v-checkbox>
         </div>
       </v-col>
     </v-row>
@@ -82,7 +81,7 @@ export default class BusinessTypeConfirm extends Vue {
 <style lang="scss" scoped>
 @import "@/assets/styles/theme.scss";
 
-#business-type {
+#business-type-confirm {
   .col-sm-3 {
     color: $gray9;
     font-weight: bold;
@@ -93,18 +92,18 @@ export default class BusinessTypeConfirm extends Vue {
   }
 }
 
-#business-type-div {
+#business-check-div {
   display: flex;
   margin-top: 20px;
 }
 
-#business-type-div .business-type-check {
+#business-check-div .mt-0 {
   margin-left: -3px;
   padding-top: 1px;
 }
 
-#business-type-text {
-  font-size: 15px;
+::v-deep .v-input--checkbox .v-input__slot {
+  align-items: flex-start;
 }
 
 .v-icon.mdi-open-in-new {
