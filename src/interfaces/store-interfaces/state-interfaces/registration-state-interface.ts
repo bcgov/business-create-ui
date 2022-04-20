@@ -15,5 +15,5 @@ export interface RegistrationStateIF {
   naics: NaicsIF
   businessType: BusinessTypes
   businessNumber?: string // GPs only
-  businessTypeConfirm?: boolean
+  businessTypeConfirm: boolean
 }
