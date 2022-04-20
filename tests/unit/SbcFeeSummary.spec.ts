@@ -71,7 +71,7 @@ describe('SBC Fee Summary - BEN voluntary dissolution', () => {
         }
       })))
 
-    wrapper = mount(SbcFeeSummary, { vuetify, propsData: { filingData, payURL }})
+    wrapper = mount(SbcFeeSummary, { vuetify, propsData: { filingData, payURL } })
   })
 
   afterEach(() => {
@@ -93,7 +93,7 @@ describe('SBC Fee Summary - BEN voluntary dissolution', () => {
   it('calculates the correct fees when future effective', async () => {
     wrapper.setProps({ filingData: [
       { ...filingData[0], futureEffective: true }
-    ]})
+    ] })
     // wait for all queries to complete
     await flushPromises()
 
@@ -315,7 +315,7 @@ describe('SBC Fee Summary - COOP voluntary dissolution', () => {
         }
       })))
 
-      wrapper = mount(SbcFeeSummary, { vuetify, propsData: { filingData, payURL }})
+    wrapper = mount(SbcFeeSummary, { vuetify, propsData: { filingData, payURL } })
   })
 
   afterEach(() => {
@@ -340,7 +340,7 @@ describe('SBC Fee Summary - COOP voluntary dissolution', () => {
       { ...filingData[0], futureEffective: true },
       filingData[1],
       filingData[2]
-    ]})
+    ] })
     // wait for all queries to complete
     await flushPromises()
 
@@ -358,7 +358,7 @@ describe('SBC Fee Summary - COOP voluntary dissolution', () => {
       { ...filingData[0], waiveFees: true },
       { ...filingData[1], waiveFees: true },
       { ...filingData[2], waiveFees: true }
-    ]})
+    ] })
     // wait for all queries to complete
     await flushPromises()
 

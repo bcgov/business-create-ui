@@ -161,7 +161,7 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
 
   // Local properties
   readonly tableHeaders: Array<string> = ['Name', 'Mailing Address', 'Delivery Address', 'Roles']
-  protected activeIndex: number
+  protected activeIndex: number // is NaN for new org/person
 
   /** The person list. */
   get personList (): Array<OrgPersonIF> {

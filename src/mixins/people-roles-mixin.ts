@@ -36,7 +36,7 @@ export default class PeopleRolesMixin extends Vue {
 
   protected currentOrgPerson: OrgPersonIF = null
   protected showOrgPersonForm = false
-  protected activeIndex = -1
+  protected activeIndex = NaN // new org/person
 
   protected async mounted (): Promise<void> {
     // set initial validity
@@ -211,7 +211,7 @@ export default class PeopleRolesMixin extends Vue {
   /** Called by (Reg)AddEditOrgPerson component event. */
   protected onAddEditPerson (person: OrgPersonIF): void {
     const newList: OrgPersonIF[] = Object.assign([], this.orgPersonList)
-    if (this.activeIndex === -1) {
+    if (isNaN(this.activeIndex)) {
       // add person
       newList.push(person)
     } else {
@@ -263,7 +263,7 @@ export default class PeopleRolesMixin extends Vue {
   /** Called to clean up after adding/editing/remove a person or cancelling the AddEdit component. */
   protected resetData (): void {
     this.currentOrgPerson = null
-    this.activeIndex = -1
+    this.activeIndex = NaN // new org/person
     this.showOrgPersonForm = false
     // set validity according to current state
     this.setAddPeopleAndRoleStepValidity(this.hasValidRoles())
