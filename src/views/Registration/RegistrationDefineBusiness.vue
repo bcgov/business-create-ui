@@ -9,7 +9,7 @@
       <v-card flat class="mt-5">
         <NameRequestInfo />
 
-        <template v-if="isTypePartnership">
+        <template>
           <v-divider class="mx-6" />
 
           <!-- Business Type -->
@@ -18,6 +18,7 @@
             class="py-8 px-6"
             :class="{ 'invalid-section': getShowErrors && !businessTypeConfirmValid }"
             :businessTypeConfirm="getRegistration.businessTypeConfirm"
+            :isTypePartnership="isTypePartnership"
             @update:businessTypeConfirm="setRegistrationBusinessTypeConfirm($event)"
             @valid="onBusinessTypeConfirmValidEvent($event)"
           />

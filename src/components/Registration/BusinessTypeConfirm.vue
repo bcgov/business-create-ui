@@ -15,16 +15,13 @@
       </v-col>
 
       <v-col cols="12" sm="9">
-        <p class="mb-0 checkbox-gp-text">General Partnership</p>
+        <p class="mb-0 checkbox-gp-text">{{ label }}</p>
         <div id="business-check-div">
           <v-checkbox
             class="mt-0"
             v-model="checked"
             hide-details
-            label="I acknowledge that a General Partnership cannot be changed into a
-            Sole Proprietorship (including DBA). If this is necessary, a new
-            Name Request Number and Statement of Registration (along with
-            associated fees) will be required."
+            :label="text"
           >
           </v-checkbox>
         </div>
@@ -46,13 +43,29 @@ export default class BusinessTypeConfirm extends Vue {
   @Prop({ default: false })
   readonly hasBusinessTypeChecked!: boolean;
 
+  /** Whether the business typ is SP or GP */
+  @Prop({ default: false })
+  readonly isTypePartnership!: boolean;
+
   // Local variables
-  protected checked = false;
+  protected checked = false
+  protected label = 'General Partnership'
+  protected labelSP = 'BC Sole Proprietorship / Doing Business As (DBA) Registration'
+  protected text = `I acknowledge that a General Partnership cannot be \
+    changed into a Sole Proprietorship (including DBA). If this is \
+    necessary, a new Name Request Number and Statement of Registration \
+    (along with associated fees) will be required.`
+  protected textSP = `I acknowledge that a Sole Proprietorship (including DBA) \
+    cannot be changed into a General Partnership. If this is necessary, a new \
+    Name Request Number and Statement of Registration (along with associated fees) \
+    will be required.`
 
   /** Called when component is mounted. */
   protected mounted (): void {
     // init model variable + validate
     this.checked = this.businessTypeConfirm
+    this.label = this.isTypePartnership ? this.label : this.labelSP
+    this.text = this.isTypePartnership ? this.text : this.textSP
     this.emitValid()
   }
 
