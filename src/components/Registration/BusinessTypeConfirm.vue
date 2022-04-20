@@ -2,7 +2,7 @@
   <div id="business-type-confirm">
     <v-row no-gutters>
       <v-col cols="12" sm="3" class="pr-4">
-        <label class="d-block title-label">Business Type</label>
+        <label class="d-block">Business Type</label>
         <v-chip
           v-if="hasBusinessTypeChecked"
           id="checked-chip"
@@ -15,7 +15,7 @@
       </v-col>
 
       <v-col cols="12" sm="9">
-        <p class="mb-0">General Partnership</p>
+        <p class="mb-0 checkbox-gp-text">General Partnership</p>
         <div id="business-check-div">
           <v-checkbox
             class="mt-0"
@@ -104,6 +104,10 @@ export default class BusinessTypeConfirm extends Vue {
 
 ::v-deep .v-input--checkbox .v-input__slot {
   align-items: flex-start;
+}
+
+.invalid-section ::v-deep .v-input--checkbox .v-input__slot .v-label {
+  color: #d3272c !important;
 }
 
 .v-icon.mdi-open-in-new {
