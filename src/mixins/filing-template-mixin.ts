@@ -416,7 +416,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     this.setRegistrationBusinessNumber(draftFiling.registration.business.taxId || null)
 
     // restore Business Type Confirm
-    this.setRegistrationBusinessTypeConfirm(draftFiling.registration.businessTypeConfirm || null)
+    this.setRegistrationBusinessTypeConfirm(draftFiling.registration.businessTypeConfirm)
 
     // NB: no need to restore Name Request data
     // it will be reloaded from NR endpoint in App.vue

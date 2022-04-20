@@ -194,7 +194,7 @@ export default class RegistrationDefineBusiness extends Mixins(CommonMixin) {
   /** Object of valid flags. Must match validComponents. */
   get validFlags (): object {
     return {
-      businessTypeConfirmValid: this.isTypePartnership ? this.businessTypeConfirmValid : true,
+      businessTypeConfirmValid: this.businessTypeConfirmValid,
       natureOfBusinessValid: this.natureOfBusinessValid,
       businessNumberValid: this.isTypePartnership ? this.businessNumberValid : true,
       businessAddressesValid: this.businessAddressesValid,
