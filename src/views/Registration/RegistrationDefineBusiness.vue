@@ -9,20 +9,18 @@
       <v-card flat class="mt-5">
         <NameRequestInfo />
 
-        <template>
-          <v-divider class="mx-6" />
+        <v-divider class="mx-6" />
 
-          <!-- Business Type -->
-          <header id="business-type-confirm-header" />
-          <BusinessTypeConfirm
-            class="py-8 px-6"
-            :class="{ 'invalid-section': getShowErrors && !businessTypeConfirmValid }"
-            :businessTypeConfirm="getRegistration.businessTypeConfirm"
-            :isTypePartnership="isTypePartnership"
-            @update:businessTypeConfirm="setRegistrationBusinessTypeConfirm($event)"
-            @valid="onBusinessTypeConfirmValidEvent($event)"
-          />
-        </template>
+        <!-- Business Type -->
+        <header id="business-type-confirm-header" />
+        <BusinessTypeConfirm
+          class="py-8 px-6"
+          :class="{ 'invalid-section': getShowErrors && !businessTypeConfirmValid }"
+          :businessTypeConfirm="getRegistration.businessTypeConfirm"
+          :isTypePartnership="isTypePartnership"
+          @update:businessTypeConfirm="setRegistrationBusinessTypeConfirm($event)"
+          @valid="onBusinessTypeConfirmValidEvent($event)"
+        />
 
         <v-divider class="mx-6" />
 
