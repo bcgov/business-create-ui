@@ -120,7 +120,7 @@ export default class BusinessTypeConfirm extends Vue {
 }
 
 .invalid-section ::v-deep .v-input--checkbox .v-input__slot .v-label {
-  color: #d3272c !important;
+  color: $app-red !important;
 }
 
 .v-icon.mdi-open-in-new {
