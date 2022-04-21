@@ -122,10 +122,12 @@ export default class BusinessTypeConfirm extends Vue {
   font-weight: normal;
 }
 
+// Align the checkbox slot to the top left
 ::v-deep .v-input--checkbox .v-input__slot {
   align-items: flex-start;
 }
 
+// Align the checkbox icon with the left of the text (GP or SP)
 ::v-deep .v-input--checkbox .v-input__slot .v-input--selection-controls__input {
   margin-left: -3px;
 }
