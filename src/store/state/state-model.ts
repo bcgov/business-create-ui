@@ -167,6 +167,7 @@ export const stateModel: StateModelIF = {
     feeAcknowledgement: false,
     naics: { ...EmptyNaics },
     businessType: null,
-    businessNumber: null
+    businessNumber: null,
+    businessTypeConfirm: false
   }
 }
