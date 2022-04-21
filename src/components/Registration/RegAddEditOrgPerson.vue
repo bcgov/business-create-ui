@@ -97,9 +97,9 @@
                 </a>
 
                 <p class="mt-6 mb-0">
-                  Use this form to add a company that is not legally required to register in B.C. such as
-                  a bank or railway as {{ isProprietor ? 'the Proprietor' : 'a partner' }}. All other types
-                  of businesses not registered in B.C. cannot be a proprietor or partner.
+                  Use this form to add a company that is not legally required to register in B.C. such as a bank
+                  or railway as {{ isProprietor ? 'the Proprietor' : 'a partner' }}. All other types of
+                  businesses not registered in B.C. cannot be {{ isProprietor ? 'the Proprietor' : 'a partner' }}.
                 </p>
 
                 <HelpContactUs class="mt-6" />
@@ -160,9 +160,9 @@
                 </p>
 
                 <p class="mt-6 mb-0">
-                  If you are adding a company that is not legally required to register in B.C. such
-                  as a bank or a railway, use the manual entry form. All other types of business
-                  cannot be a proprietor or partner.
+                  If you are adding a company that is not legally required to register in B.C. such as
+                  a bank or a railway, use the manual entry form. All other types of business cannot
+                  be {{ isProprietor ? 'the Proprietor' : 'a partner' }}.
                 </p>
               </article>
             </template>
