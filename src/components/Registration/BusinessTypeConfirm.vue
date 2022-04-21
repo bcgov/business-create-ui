@@ -1,32 +1,34 @@
 <template>
   <div id="business-type-confirm">
-    <v-row no-gutters>
-      <v-col cols="12" sm="3" class="pr-4">
-        <label class="d-block">Business Type</label>
-        <v-chip
-          v-if="hasBusinessTypeChecked"
-          id="checked-chip"
-          x-small label
-          color="primary"
-          text-color="white"
-        >
-          Checked
-        </v-chip>
-      </v-col>
-
-      <v-col cols="12" sm="9">
-        <p class="mb-0 checkbox-gp-text">{{ label }}</p>
-        <div id="business-check-div">
-          <v-checkbox
-            class="mt-0"
-            v-model="checked"
-            hide-details
-            :label="text"
+      <v-row no-gutters>
+        <v-col cols="12" sm="3" class="pr-4">
+          <label class="d-block">Business Type</label>
+          <v-chip
+            v-if="hasBusinessTypeChecked"
+            id="checked-chip"
+            x-small label
+            color="primary"
+            text-color="white"
           >
-          </v-checkbox>
-        </div>
-      </v-col>
-    </v-row>
+            Checked
+          </v-chip>
+        </v-col>
+
+        <v-col cols="12" sm="9">
+          <p class="mb-0">{{ label }}</p>
+          <div id="business-checkbox-div">
+            <v-checkbox
+              hide-details
+              v-model="checked"
+              class="mt-0 pt-0"
+            >
+              <template slot="label">
+                <div class="certify-stmt" :class="{'error--text': showErrors}">{{ text }}</div>
+              </template>
+            </v-checkbox>
+          </div>
+        </v-col>
+      </v-row>
   </div>
 </template>
 
@@ -46,6 +48,10 @@ export default class BusinessTypeConfirm extends Vue {
   /** Whether the business typ is SP or GP */
   @Prop({ default: false })
   readonly isTypePartnership!: boolean;
+
+  /** Show error to trigger error-text class */
+  @Prop({ required: true })
+  readonly showErrors!: boolean
 
   // Local variables
   protected checked = false
@@ -73,13 +79,13 @@ export default class BusinessTypeConfirm extends Vue {
   @Watch('checked')
   private onValueChanged (): void {
     // update business type + validate
-    this.emitBusinessType()
+    this.emitBusinessTypeConfirm()
     this.emitValid()
   }
 
   /** Emits updated business type event. */
   @Emit('update:businessTypeConfirm')
-  private emitBusinessType (): boolean {
+  private emitBusinessTypeConfirm (): boolean {
     return this.checked
   }
 
@@ -105,21 +111,28 @@ export default class BusinessTypeConfirm extends Vue {
   }
 }
 
-#business-check-div {
-  display: flex;
+#business-checkbox-div {
   margin-top: 20px;
 }
 
-#business-check-div .mt-0 {
-  margin-left: -3px;
-  padding-top: 1px;
+.certify-stmt {
+  display: inline;
+  font-size: 0.875rem;
+  color: $gray7;
+  font-weight: normal;
 }
 
+// Align the checkbox slot to the top left
 ::v-deep .v-input--checkbox .v-input__slot {
   align-items: flex-start;
 }
 
-.invalid-section ::v-deep .v-input--checkbox .v-input__slot .v-label {
+// Align the checkbox icon with the left of the text (GP or SP)
+::v-deep .v-input--checkbox .v-input__slot .v-input--selection-controls__input {
+  margin-left: -3px;
+}
+
+.invalid-section .certify-stmt {
   color: $app-red !important;
 }
 
