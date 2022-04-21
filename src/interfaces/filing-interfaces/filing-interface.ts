@@ -105,6 +105,7 @@ export interface RegistrationFilingIF {
     nameRequest: RegistrationNameRequestIF
     parties: OrgPersonIF[]
     startDate: string
+    businessTypeConfirm: boolean
   }
 }
 

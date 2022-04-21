@@ -366,7 +366,8 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
           nrNumber: this.getNameRequest.nrNumber
         },
         parties: this.getAddPeopleAndRoleStep.orgPeople,
-        startDate: this.getRegistration.startDate
+        startDate: this.getRegistration.startDate,
+        businessTypeConfirm: this.getRegistration.businessTypeConfirm
       }
     }
 
