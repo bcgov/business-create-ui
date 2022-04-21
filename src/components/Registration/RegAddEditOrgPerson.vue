@@ -161,8 +161,8 @@
 
                 <p class="mt-6 mb-0">
                   If you are adding a company that is not legally required to register in B.C. such
-                  as a bank or a railway, use the manual lookup. All other types of business cannot
-                  be a proprietor or partner.
+                  as a bank or a railway, use the manual entry form. All other types of business
+                  cannot be a proprietor or partner.
                 </p>
               </article>
             </template>
