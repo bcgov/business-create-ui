@@ -125,6 +125,11 @@
           </li>
           <li class="mt-1">
             <v-icon>mdi-circle-small</v-icon>
+            <span class="ml-2">Allow a minimum 1.5" margin at the top of the first page
+              (for BC Registries certified stamp)</span>
+          </li>
+          <li class="mt-1">
+            <v-icon>mdi-circle-small</v-icon>
             <span class="ml-2">Use a white background and a legible font with contrasting
               font colour</span>
           </li>
