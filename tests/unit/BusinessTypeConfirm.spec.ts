@@ -6,9 +6,6 @@ import { wrapperFactory } from '../jest-wrapper-factory'
 import BusinessTypeConfirm from '@/components/Registration/BusinessTypeConfirm.vue'
 
 const validEvent = 'valid'
-/**
- * @param BusinessTypeConfirm the value to pass to the component for the checkbox. The default value is "undefined". *
- */
 
 describe('Business Type Confirm component', () => {
   let wrapper: any

@@ -1,6 +1,5 @@
 <template>
   <div id="business-type-confirm">
-    <div class="section-container">
       <v-row no-gutters>
         <v-col cols="12" sm="3" class="pr-4">
           <label class="d-block">Business Type</label>
@@ -30,7 +29,6 @@
           </div>
         </v-col>
       </v-row>
-    </div>
   </div>
 </template>
 
