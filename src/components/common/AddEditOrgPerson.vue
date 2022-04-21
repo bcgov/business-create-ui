@@ -14,7 +14,7 @@
             class="add-org-header"
             :class="{'error-text': !addPersonOrgFormValid}"
           >
-            <span v-if="activeIndex === -1">Add Corporation or Firm</span>
+            <span v-if="isNaN(activeIndex)">Add Corporation or Firm</span>
             <span v-else>Edit Corporation or Firm</span>
           </label>
 
@@ -24,7 +24,7 @@
             class="add-org-header"
             :class="{'error-text': !addPersonOrgFormValid}"
           >
-            <span v-if="activeIndex === -1">Add Organization</span>
+            <span v-if="isNaN(activeIndex)">Add Organization</span>
             <span v-else>Edit Organization</span>
           </label>
 
@@ -34,7 +34,7 @@
             class="add-org-header"
             :class="{'error-text': !addPersonOrgFormValid}"
           >
-            <span v-if="activeIndex === -1">Add Person</span>
+            <span v-if="isNaN(activeIndex)">Add Person</span>
             <span v-else>Edit Person</span>
           </label>
         </v-col>
@@ -212,7 +212,7 @@
                 id="btn-remove"
                 large outlined color="error"
                 class="btn-outlined-error"
-                :disabled="activeIndex === -1"
+                :disabled="isNaN(activeIndex)"
                 @click="emitRemovePerson(activeIndex)">Remove</v-btn>
               <v-btn
                 id="btn-done"

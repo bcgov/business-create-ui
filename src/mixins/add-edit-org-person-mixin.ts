@@ -22,7 +22,7 @@ export default class AddEditOrgPersonMixin extends Vue {
   }
 
   @Prop() readonly initialValue!: OrgPersonIF
-  @Prop() readonly activeIndex: number // is -1 for new org/person
+  @Prop() readonly activeIndex: number // is NaN for new org/person
   @Prop() readonly existingCompletingParty: OrgPersonIF
   @Prop() readonly addIncorporator: boolean
 
@@ -188,7 +188,7 @@ export default class AddEditOrgPersonMixin extends Vue {
     }
 
     // if editing, enable validation from the start
-    if (this.activeIndex !== -1) this.enableRules = true
+    if (!isNaN(this.activeIndex)) this.enableRules = true
   }
 
   /** decide if the "Delivery Address same as Mailing Address" check box should be checked */
@@ -325,7 +325,7 @@ export default class AddEditOrgPersonMixin extends Vue {
   private setPerson (): OrgPersonIF {
     let person: OrgPersonIF = { ...this.orgPerson }
     person.officer = { ...this.orgPerson.officer }
-    if (this.activeIndex === -1) {
+    if (isNaN(this.activeIndex)) {
       // assign a new (random but unique) ID
       person.officer.id = uuidv4()
     }

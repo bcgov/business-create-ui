@@ -14,7 +14,7 @@
             class="add-org-header"
             :class="{'error-text': !addPersonOrgFormValid}"
           >
-            <span v-if="activeIndex === -1">Add Business or Corporation</span>
+            <span v-if="isNaN(activeIndex)">Add Business or Corporation</span>
             <span v-else>Edit Business or Corporation</span>
           </label>
 
@@ -24,7 +24,7 @@
             class="add-org-header"
             :class="{'error-text': !addPersonOrgFormValid}"
           >
-            <span v-if="activeIndex === -1">Add Person</span>
+            <span v-if="isNaN(activeIndex)">Add Person</span>
             <span v-else>Edit Person</span>
           </label>
         </v-col>
@@ -85,63 +85,87 @@
               </div>
             </article>
 
-            <!-- Add org manually -->
-            <article v-if="isOrg && isManualAdd">
-              <label v-if="activeIndex === -1">Add Business or Corporation Unregistered in B.C.</label>
-              <label v-else>Edit Business or Corporation Unregistered in B.C.</label>
+            <!-- Business or Corporation -->
+            <template v-if="isOrg">
+              <!-- Business or Corporation Unregistered in B.C. -->
+              <article v-if="isManualAdd" class="manual-add-article">
+                <label>
+                  {{ isNaN(activeIndex) ? 'Add' : ' Edit' }} Business or Corporation Unregistered in B.C.
+                </label>
+                <a class="lookup-toggle float-right" @click="isManualAdd = false">
+                  Business or Corporation Look Up
+                </a>
 
-              <!-- FUTURE -->
-              <!-- <a class="lookup-toggle float-right">Business or Corporation Look Up</a> -->
+                <p class="mt-6 mb-0">
+                  Use this form to add a company that is not legally required to register in B.C. such as
+                  a bank or railway as {{ isProprietor ? 'the Proprietor' : 'a partner' }}. All other types
+                  of businesses not registered in B.C. cannot be a proprietor or partner.
+                </p>
 
-              <p class="mt-6 mb-0">
-                Use this form to add a company that is not legally required to register in B.C. such as a
-                bank or railway as a partner. All other types of businesses not registered in B.C.
-                cannot be a proprietor or partner.
-              </p>
+                <HelpContactUs class="mt-6" />
 
-              <HelpContactUs class="mt-6" />
+                <!-- Confirm checkbox (org only) -->
+                <v-checkbox
+                  class="confirm-checkbox mt-8"
+                  hide-details
+                  v-model="orgPerson.confirmBusiness"
+                  :rules="enableRules ? [(v) => !!v] : []"
+                >
+                  <template v-if="isProprietor" slot="label">
+                    I confirm that the business proprietor being added is not legally required to
+                    register in B.C.
+                  </template>
+                  <template v-if="isPartner" slot="label">
+                    I confirm that the business partner being added is not legally required to
+                    register in B.C.
+                  </template>
+                </v-checkbox>
 
-              <!-- Confirm checkbox (org only) -->
-              <v-checkbox
-                class="confirm-checkbox mt-8"
-                hide-details
-                v-model="orgPerson.confirmBusiness"
-                :rules="enableRules ? [(v) => !!v] : []"
-              >
-                <template v-if="isProprietor" slot="label">
-                  I confirm that the business proprietor being added is not legally required to
-                  register in B.C.
-                </template>
-                <template v-if="isPartner" slot="label">
-                  I confirm that the business partner being added is not legally required to
-                  register in B.C.
-                </template>
-              </v-checkbox>
+                <!-- Organization Name (org only) -->
+                <v-text-field
+                  filled
+                  class="mt-8 mb-n6 org-name"
+                  label="Business or Corporation Name"
+                  v-model.trim="orgPerson.officer.organizationName"
+                  :rules="enableRules ? OrgNameRules : []"
+                />
 
-              <!-- Organization Name (org only) -->
-              <v-text-field
-                filled
-                class="mt-8 mb-n6 org-name"
-                label="Business or Corporation Name"
-                v-model.trim="orgPerson.officer.organizationName"
-                :rules="enableRules ? OrgNameRules : []"
-              />
+                <!-- Business Number (org proprietors only) -->
+                <v-text-field
+                  v-if="isProprietor"
+                  filled
+                  persistent-hint
+                  class="item business-number mt-8 mb-n2"
+                  label="Business Number (Optional)"
+                  hint="First 9 digits of the CRA Business Number"
+                  v-model.trim="orgPerson.officer.businessNumber"
+                  v-mask="['#########']"
+                  :rules="enableRules ? Rules.BusinessNumberRules : []"
+                />
 
-              <!-- Business Number (org proprietors only) -->
-              <v-text-field
-                v-if="isProprietor"
-                filled
-                persistent-hint
-                class="item business-number mt-8 mb-n2"
-                label="Business Number (Optional)"
-                hint="First 9 digits of the CRA Business Number"
-                v-model.trim="orgPerson.officer.businessNumber"
-                v-mask="['#########']"
-                :rules="enableRules ? Rules.BusinessNumberRules : []"
-              />
+                <v-divider class="mt-8" />
+              </article>
 
-              <v-divider class="mt-8" />
-            </article>
+              <!-- Business or Corporation Look up -->
+              <article v-else class="business-lookup-article">
+                <label>Business or Corporation Look up</label>
+                <a class="lookup-toggle float-right" @click="isManualAdd = true">
+                  Business or Corporation is Unregistered in B.C.
+                </a>
+
+                <p class="mt-6 mb-0">
+                  To add a registered B.C. business or corporation as
+                  {{ isProprietor ? 'the Proprietor' : 'a partner' }}, enter the name or
+                  incorporation number.
+                </p>
+
+                <p class="mt-6 mb-0">
+                  If you are a company that is not legally required to register in B.C. such as a
+                  bank or a railway, use the manual lookup. All other types of business cannot be a
+                  proprietor or partner.
+                </p>
+              </article>
+            </template>
 
             <!-- Roles -->
             <article class="mt-8">
@@ -270,7 +294,7 @@
               <v-btn
                 large outlined color="error"
                 class="btn-outlined-error btn-remove"
-                :disabled="activeIndex === -1"
+                :disabled="isNaN(activeIndex)"
                 @click="emitRemovePerson(activeIndex)">Remove</v-btn>
               <v-btn
                 large color="primary"
@@ -334,8 +358,8 @@ export default class RegAddEditOrgPerson extends Mixins(AddEditOrgPersonMixin) {
 .lookup-toggle {
   font-size: $px-14;
   text-decoration: underline;
-  pointer-events: none;
-  opacity: 0.4;
+  // pointer-events: none;
+  // opacity: 0.4;
 }
 
 label {

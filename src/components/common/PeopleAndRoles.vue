@@ -200,7 +200,7 @@ export default class PeopleAndRoles extends Mixins(PeopleRolesMixin) {
       this.currentOrgPerson.deliveryAddress = cloneDeep(this.currentOrgPerson.mailingAddress)
     }
 
-    this.activeIndex = -1
+    this.activeIndex = NaN // new org/person
     this.showOrgPersonForm = true
   }
 }

@@ -218,7 +218,7 @@ store.state.stateModel.currentDate = '2021-04-01'
 
 describe('Registration Add/Edit Org/Person component', () => {
   it('loads the component and sets the data for completing party', () => {
-    const wrapper = createComponent(validCompletingParty, -1, null)
+    const wrapper = createComponent(validCompletingParty, NaN, null)
     const vm = wrapper.vm as any
 
     expect(vm.$data.orgPerson).toStrictEqual(validCompletingParty)
@@ -232,7 +232,7 @@ describe('Registration Add/Edit Org/Person component', () => {
   })
 
   it('loads the component and sets the data for proprietor-person (SP)', () => {
-    const wrapper = createComponent(validProprietorPerson, -1, null)
+    const wrapper = createComponent(validProprietorPerson, NaN, null)
     const vm = wrapper.vm as any
 
     expect(vm.$data.orgPerson).toStrictEqual(validProprietorPerson)
@@ -246,7 +246,7 @@ describe('Registration Add/Edit Org/Person component', () => {
   })
 
   it('loads the component and sets the data for partner-person (GP)', () => {
-    const wrapper = createComponent(validPartnerPerson, -1, null)
+    const wrapper = createComponent(validPartnerPerson, NaN, null)
     const vm = wrapper.vm as any
 
     expect(vm.$data.orgPerson).toStrictEqual(validPartnerPerson)
@@ -260,7 +260,7 @@ describe('Registration Add/Edit Org/Person component', () => {
   })
 
   it('loads the component and sets the data for proprietor-org (SP)', () => {
-    const wrapper = createComponent(validProprietorOrg, -1, null)
+    const wrapper = createComponent(validProprietorOrg, NaN, null)
     const vm = wrapper.vm as any
 
     expect(vm.$data.orgPerson).toStrictEqual(validProprietorOrg)
@@ -274,7 +274,7 @@ describe('Registration Add/Edit Org/Person component', () => {
   })
 
   it('loads the component and sets the data for partner-org (GP)', () => {
-    const wrapper = createComponent(validPartnerOrg, -1, null)
+    const wrapper = createComponent(validPartnerOrg, NaN, null)
     const vm = wrapper.vm as any
 
     expect(vm.$data.orgPerson).toStrictEqual(validPartnerOrg)
@@ -368,7 +368,29 @@ describe('Registration Add/Edit Org/Person component', () => {
     wrapper.destroy()
   })
 
-  it('displays form data for proprietor-org (SP)', () => {
+  it('displays form data for proprietor-org (SP) - manual add', () => {
+    const wrapper = createComponent(validProprietorOrg, -1, null)
+
+    expect(wrapper.find('.manual-add-article label').text())
+      .toContain('Edit Business or Corporation Unregistered in B.C.')
+    expect(wrapper.find('.manual-add-article p').text()).toContain('the Proprietor')
+
+    wrapper.destroy()
+  })
+
+  it('displays form data for proprietor-org (SP) - business lookup', async () => {
+    const wrapper = createComponent(validProprietorOrg, -1, null)
+
+    wrapper.find('.lookup-toggle').trigger('click')
+    await Vue.nextTick()
+
+    expect(wrapper.find('.business-lookup-article label').text()).toContain('Business or Corporation Look up')
+    expect(wrapper.findAll('.business-lookup-article p').at(0).text()).toContain('the Proprietor')
+
+    wrapper.destroy()
+  })
+
+  it('displays form data for proprietor-org (SP) - edit', () => {
     const wrapper = createComponent(validProprietorOrg, 0, null)
 
     // verify input values
@@ -394,8 +416,35 @@ describe('Registration Add/Edit Org/Person component', () => {
     wrapper.destroy()
   })
 
-  it('displays form data for partner-org (GP)', () => {
+  it('displays form data for partner-org (GP) - manual add', () => {
+    const wrapper = createComponent(validPartnerOrg, -1, null)
+
+    expect(wrapper.find('.manual-add-article label').text())
+      .toContain('Edit Business or Corporation Unregistered in B.C.')
+    expect(wrapper.find('.manual-add-article p').text()).toContain('a partner')
+
+    wrapper.destroy()
+  })
+
+  it('displays form data for partner-org (GP) - business lookup', async () => {
+    const wrapper = createComponent(validPartnerOrg, -1, null)
+
+    wrapper.find('.lookup-toggle').trigger('click')
+    await Vue.nextTick()
+
+    expect(wrapper.find('.business-lookup-article label').text()).toContain('Business or Corporation Look up')
+    expect(wrapper.findAll('.business-lookup-article p').at(0).text()).toContain('a partner')
+
+    wrapper.destroy()
+  })
+
+  it('displays form data for partner-org (GP) - edit', () => {
     const wrapper = createComponent(validPartnerOrg, 0, null)
+
+    expect(wrapper.find('.manual-add-article label').text())
+      .toContain('Edit Business or Corporation Unregistered in B.C.')
+
+    expect(wrapper.find('.manual-add-article p').text()).toContain('as a partner')
 
     // verify input values
     const confirmCheckboxInput = wrapper.find(`${confirmCheckboxSelector} input`)
@@ -424,7 +473,7 @@ describe('Registration Add/Edit Org/Person component', () => {
   })
 
   it('disables Remove button in add mode', () => {
-    const wrapper = createComponent(validCompletingParty, -1, null)
+    const wrapper = createComponent(validCompletingParty, NaN, null)
     expect(wrapper.find(buttonRemoveSelector).attributes('disabled')).toBeDefined()
     wrapper.destroy()
   })
@@ -440,7 +489,7 @@ describe('Registration Add/Edit Org/Person component', () => {
   })
 
   it('emits event when Done button is clicked', async () => {
-    const wrapper = createComponent(validCompletingParty, -1, null)
+    const wrapper = createComponent(validCompletingParty, NaN, null)
 
     wrapper.find(buttonDoneSelector).trigger('click')
     await Vue.nextTick()
@@ -453,7 +502,7 @@ describe('Registration Add/Edit Org/Person component', () => {
   })
 
   it('emits event when Cancel button is clicked', async () => {
-    const wrapper = createComponent(validCompletingParty, -1, null)
+    const wrapper = createComponent(validCompletingParty, NaN, null)
 
     wrapper.find(buttonCancelSelector).trigger('click')
     await Vue.nextTick()
@@ -464,7 +513,7 @@ describe('Registration Add/Edit Org/Person component', () => {
   })
 
   it('does not display error message when user enters valid org name', async () => {
-    const wrapper = createComponent(validProprietorOrg, -1, null)
+    const wrapper = createComponent(validProprietorOrg, NaN, null)
 
     const inputElement = wrapper.find(`${orgNameSelector} input`)
     inputElement.setValue('Valid Org Name')
@@ -480,7 +529,7 @@ describe('Registration Add/Edit Org/Person component', () => {
   })
 
   it('displays error message when user enters invalid org name', async () => {
-    const wrapper = createComponent(validProprietorOrg, -1, null)
+    const wrapper = createComponent(validProprietorOrg, NaN, null)
 
     const inputElement = wrapper.find(`${orgNameSelector} input`)
     inputElement.setValue('     ')
@@ -497,7 +546,7 @@ describe('Registration Add/Edit Org/Person component', () => {
   })
 
   it('does not display error message when user enters valid person names', async () => {
-    const wrapper = createComponent(validCompletingParty, -1, null)
+    const wrapper = createComponent(validCompletingParty, NaN, null)
 
     const firstNameInput = wrapper.find(`${firstNameSelector} input`)
     const middleNameInput = wrapper.find(`${middleNameSelector} input`)
@@ -520,7 +569,7 @@ describe('Registration Add/Edit Org/Person component', () => {
   })
 
   it('displays error message when user does not enter person names', async () => {
-    const wrapper = createComponent(validCompletingParty, -1, null)
+    const wrapper = createComponent(validCompletingParty, NaN, null)
 
     const firstNameInput = wrapper.find(`${firstNameSelector} input`)
     const middleNameInput = wrapper.find(`${middleNameSelector} input`)
@@ -545,7 +594,7 @@ describe('Registration Add/Edit Org/Person component', () => {
   })
 
   it('displays errors and does not submit form when clicking Done button and form is invalid', async () => {
-    const wrapper = createComponent({ ...EmptyOrgPerson }, -1, null)
+    const wrapper = createComponent({ ...EmptyOrgPerson }, NaN, null)
 
     // verify that Done button is not disabled, then click it
     const button = wrapper.find(buttonDoneSelector)
