@@ -29,8 +29,8 @@
         <div class="font-15 mb-4" v-if="numErrors > 0">
           <p>We were unable to process your payment due to the following errors:</p>
           <ul>
-            <li v-for="(error, index) in errors[0].message.split('<br/>')" :key="index">
-              {{ error }}
+            <li v-for="(error, index) in formatedError" :key="index">
+              <span v-html="error" id="formated-error-msg"></span>
             </li>
           </ul>
         </div>
@@ -63,7 +63,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop, Emit } from 'vue-property-decorator'
+import { Component, Vue, Prop, Emit, Watch } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 import RegistriesContactInfo from '@/components/common/RegistriesContactInfo.vue'
 
@@ -103,5 +103,21 @@ export default class PaymentErrorDialog extends Vue {
   get numWarnings (): number {
     return this.warnings?.length || 0
   }
+
+  /** The formated error message */
+  protected formatedError = []
+  protected mounted (): void {
+    this.formatedError = this.errors.map((item:any) => (
+      item.message.split('<br/>').map((item2:string, index2:number) => {
+        return index2 === 0 ? item2 + '<br/>' : '<span>' + item2 + '</span><br/>'
+      }).join('')
+    ))
+  }
 }
 </script>
+
+<style scoped>
+  #formated-error-msg >>> span {
+    margin-left: 22px
+  }
+</style>
