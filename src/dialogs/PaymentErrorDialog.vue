@@ -28,11 +28,10 @@
         <!-- display errors -->
         <div class="font-15 mb-4" v-if="numErrors > 0">
           <p>We were unable to process your payment due to the following errors:</p>
-          <ul>
-            <li v-for="(error, index) in formatedError" :key="index">
-              <span v-html="error" id="formated-error-msg"></span>
-            </li>
-          </ul>
+          <div v-for="(error, index) in errors" :key="index" class="d-flex">
+            <span class="flex-shrink-0 bullet"><v-icon>mdi-circle-medium</v-icon></span>
+            <span class="flex-grow-1" v-html="error.message" />
+          </div>
         </div>
 
         <!-- display warnings-->
@@ -40,7 +39,7 @@
           <p>Please note the following warnings:</p>
           <ul>
             <li v-for="(warning, index) in warnings" :key="index">
-              {{warning.message}}
+              {{ warning.warning }}
             </li>
           </ul>
         </div>
@@ -103,21 +102,16 @@ export default class PaymentErrorDialog extends Vue {
   get numWarnings (): number {
     return this.warnings?.length || 0
   }
-
-  /** The formated error message */
-  protected formatedError = []
-  protected mounted (): void {
-    this.formatedError = this.errors.map((item:any) => (
-      item.message.split('<br/>').map((item2:string, index2:number) => {
-        return index2 === 0 ? item2 + '<br/>' : '<span>' + item2 + '</span><br/>'
-      }).join('')
-    ))
-  }
 }
 </script>
 
 <style scoped>
-  #formated-error-msg >>> span {
-    margin-left: 22px
+  .flex-shrink-0.bullet {
+    padding-left: 1.4px;
+    padding-right: 5px;
+  }
+
+  ::v-deep .v-icon {
+    font-size: 18px;
   }
 </style>

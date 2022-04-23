@@ -106,8 +106,7 @@ describe('Payment Error Dialog', () => {
       'We were unable to process your payment due to the following errors:'
     )
     expect(wrapper.findAll('p').at(2).text()).toContain('If this error persists')
-    expect(wrapper.findAll('li').length).toBe(1)
-    expect(wrapper.findAll('li').at(0).text()).toContain(padError[0].message)
+    expect(wrapper.findAll('li').length).toBe(0)
 
     expect(wrapper.find(RegistriesContactInfo).exists()).toBe(true)
     expect(wrapper.find('#dialog-exit-button').exists()).toBe(true)
