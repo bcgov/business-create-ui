@@ -120,8 +120,12 @@
         <ul class="mt-5">
           <li class="mt-1">
             <v-icon>mdi-circle-small</v-icon>
-            <span class="ml-2">Must be set to fit onto 8.5" x 11" letter-size paper
-            </span>
+            <span class="ml-2">Must be set to fit onto 8.5" x 11" letter-size paper</span>
+          </li>
+          <li class="mt-1">
+            <v-icon>mdi-circle-small</v-icon>
+            <span class="ml-2">Allow a minimum 1.5" margin at the top of the first page
+              (for BC Registries certified stamp)</span>
           </li>
           <li class="mt-1">
             <v-icon>mdi-circle-small</v-icon>
