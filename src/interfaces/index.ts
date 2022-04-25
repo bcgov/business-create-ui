@@ -1,8 +1,9 @@
 // Filing interfaces
-export * from './filing-interfaces/filing-interface'
+export * from './filing-interfaces/filing-interfaces'
 export * from './filing-interfaces/filing-data-interface'
 export * from './filing-interfaces/court-order-interface'
 export * from './filing-interfaces/special-resolution-interface'
+export * from './filing-interfaces/party-interface'
 
 // Payment interfaces
 export * from './payment-interfaces/fees-interface'

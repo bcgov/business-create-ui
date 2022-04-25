@@ -13,16 +13,16 @@ describe('Business Type Confirm component', () => {
   it('works as expected when there initial business type confirm is false', async () => {
     wrapper = wrapperFactory(
       BusinessTypeConfirm,
-      { 
+      {
         businessTypeConfirm: false,
-        showErrors: false,
+        showErrors: false
       }
     )
 
     await Vue.nextTick()
 
     // verify no error message
-    // verify events to be false 
+    // verify events to be false
     expect(wrapper.find('.certify-stmt.error--text').exists()).toBe(false)
     expect(getLastEvent(wrapper, validEvent)).toBe(false)
 
@@ -32,20 +32,20 @@ describe('Business Type Confirm component', () => {
   it('works as expected when the business type checkbox is checked', async () => {
     wrapper = wrapperFactory(
       BusinessTypeConfirm,
-      { 
+      {
         businessTypeConfirm: true,
-        showErrors: false,
+        showErrors: false
       }
     )
     await Vue.nextTick()
 
     // verify no error message
-    // verify events to be true 
+    // verify events to be true
     expect(wrapper.find('.certify-stmt.error--text').exists()).toBe(false)
     expect(getLastEvent(wrapper, validEvent)).toBe(true)
 
     // check the business type checkbox
-    // verify no error message 
+    // verify no error message
     // verify events
     const checkboxElement: Wrapper<Vue> = wrapper.find('input[type=checkbox]')
     checkboxElement.setChecked()
@@ -59,20 +59,20 @@ describe('Business Type Confirm component', () => {
   it('works as expected when the business type checkbox is not checked', async () => {
     wrapper = wrapperFactory(
       BusinessTypeConfirm,
-      { 
+      {
         businessTypeConfirm: false,
-        showErrors: true,
+        showErrors: true
       }
     )
     await Vue.nextTick()
 
     // verify error message
-    // verify events to be false 
+    // verify events to be false
     expect(wrapper.find('.certify-stmt.error--text').exists()).toBe(true)
     expect(getLastEvent(wrapper, validEvent)).toBe(false)
 
     // the business type checkbox is not checked
-    // verify no error message 
+    // verify no error message
     // verify events
     const checkboxElement: Wrapper<Vue> = wrapper.find('input[type=checkbox]')
     checkboxElement.setChecked(false)

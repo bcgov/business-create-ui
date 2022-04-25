@@ -4,8 +4,8 @@ import {
   CourtOrderIF,
   IncorporationAddressIF,
   NameTranslationIF,
-  OrgPersonIF,
   NaicsIF,
+  PartyIF,
   ShareClassIF,
   SpecialResolutionIF
 } from '@/interfaces'
@@ -41,7 +41,7 @@ export interface IncorporationFilingIF {
       phone: string
       extension?: number
     }
-    parties: OrgPersonIF[]
+    parties: PartyIF[]
 
     // BEN / CC / BC / ULC only:
     shareStructure?: {
@@ -103,7 +103,7 @@ export interface RegistrationFilingIF {
       phone: string
     }
     nameRequest: RegistrationNameRequestIF
-    parties: OrgPersonIF[]
+    parties: PartyIF[]
     startDate: string
     businessTypeConfirm: boolean
   }
@@ -146,7 +146,7 @@ export interface DissolutionFilingIF {
     affidavitFileSize?: number
     affidavitFileLastModified?: number
     courtOrder?: CourtOrderIF
-    parties: OrgPersonIF[]
+    parties: PartyIF[]
 
     // Only one of resolution and specialResolution will be used.  Resolution is strictly
     // defined here to support saving of resolutionConfirmed state.  The Legal API only
