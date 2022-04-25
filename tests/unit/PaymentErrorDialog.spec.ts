@@ -123,8 +123,8 @@ describe('Payment Error Dialog', () => {
         vuetify,
         store,
         propsData: { dialog: true, warnings: [
-          { warning: 'Test Warning 1' },
-          { warning: 'Test Warning 2' }
+          { message: 'Test Warning 1' },
+          { message: 'Test Warning 2' }
         ]}
       })
 
