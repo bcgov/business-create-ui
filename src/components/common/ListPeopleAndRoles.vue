@@ -48,11 +48,6 @@
                   <p class="email">{{ officerEmail(orgPerson) }}</p>
                 </div>
 
-                <div v-if="officerIncorpNumber(orgPerson)" class="mt-2 incorporation-number">
-                  <p>Incorporation Number:</p>
-                  <p>{{ officerIncorpNumber(orgPerson) }}</p>
-                </div>
-
                 <div v-if="officerBusinessNumber(orgPerson)" class="mt-2 business-number">
                   <p>Business Number:</p>
                   <p>{{ officerBusinessNumber(orgPerson) }}</p>
@@ -207,10 +202,6 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
 
   protected officerEmail (orgPerson: OrgPersonIF): string {
     return orgPerson.officer?.email
-  }
-
-  protected officerIncorpNumber (orgPerson: OrgPersonIF): string {
-    return orgPerson.officer?.incorpNumber
   }
 
   protected officerBusinessNumber (orgPerson: OrgPersonIF): string {
