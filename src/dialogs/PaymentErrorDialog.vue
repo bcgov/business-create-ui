@@ -7,7 +7,7 @@
         <!-- display common message -->
         <div class="font-15" v-if="!isRoleStaff">
           <p>We are unable to process your payment at this time. This {{filingName}} has been saved
-            as a DRAFT and you can retry your payment from the Business Dashboard at a later time.</p>
+            as a DRAFT, you can retry your payment from your Business Registry dashboard at a later time.</p>
         </div>
 
         <!-- display generic message (no errors or warnings) -->
