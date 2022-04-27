@@ -31,13 +31,13 @@ import {
   RegistrationStateIF,
   RegistrationFilingIF,
   EmptyNaics,
-  NameRequestIF
+  NameRequestIF,
+  PartyIF
 } from '@/interfaces'
 
 // Constants and enums
 import { INCORPORATION_APPLICATION, REGISTRATION } from '@/constants'
 import {
-  BusinessTypes,
   CorpTypeCd,
   DissolutionTypes,
   EffectOfOrders,
@@ -365,20 +365,11 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
           legalType: this.getEntityType,
           nrNumber: this.getNameRequest.nrNumber
         },
-        parties: this.getAddPeopleAndRoleStep.orgPeople,
+        parties: this.orgPersonsToParties(this.getAddPeopleAndRoleStep.orgPeople),
         startDate: this.getRegistration.startDate,
         businessTypeConfirm: this.getRegistration.businessTypeConfirm
       }
     }
-
-    // FUTURE: delete if not needed
-    // Conditionally add the entity-specific sections.
-    // switch (this.getEntityType) {
-    //   case CorpTypeCd.SOLE_PROP:
-    //     break
-    //   case CorpTypeCd.PARTNERSHIP:
-    //     break
-    // }
 
     if (this.isRoleStaff) {
       // Add staff payment data.
@@ -386,6 +377,21 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     }
 
     return filing
+  }
+
+  private orgPersonsToParties (orgPersons: OrgPersonIF[]): PartyIF[] {
+    return orgPersons.map(orgPerson => {
+      // convert businessNumber -> taxId
+      const party = {
+        ...orgPerson,
+        officer: {
+          ...orgPerson.officer,
+          taxId: orgPerson.officer.businessNumber
+        }
+      }
+      delete party.officer.businessNumber
+      return party as PartyIF
+    })
   }
 
   /**
@@ -429,16 +435,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     this.setRegistrationStartDate(draftFiling.registration.startDate)
 
     // restore Persons and Organizations
-    this.setOrgPersonList(draftFiling.registration.parties)
-
-    // FUTURE: delete if not needed
-    // conditionally restore the entity-specific sections
-    // switch (this.getEntityType) {
-    //   case CorpTypeCd.SOLE_PROP:
-    //     break
-    //   case CorpTypeCd.PARTNERSHIP:
-    //     break
-    // }
+    this.setOrgPersonList(this.partiesToOrgPersons(draftFiling.registration.parties))
 
     // restore Certify state
     this.setCertifyState({
@@ -462,6 +459,21 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
         this.setFolioNumber(draftFiling.header.folioNumber)
       }
     }
+  }
+
+  private partiesToOrgPersons (parties: PartyIF[]): OrgPersonIF[] {
+    return parties.map(party => {
+      // convert taxId -> businessNumber
+      const orgPerson = {
+        ...party,
+        officer: {
+          ...party.officer,
+          businessNumber: party.officer.taxId
+        }
+      }
+      delete orgPerson.officer.taxId
+      return orgPerson as OrgPersonIF
+    })
   }
 
   /**
