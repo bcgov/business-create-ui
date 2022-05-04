@@ -152,7 +152,6 @@ export default class DefineRegistrationSummary extends Mixins(DateMixin, EnumMix
 
   /** The business number. */
   get businessNumber (): string {
-    console.info('this.getRegistration: ', this.getRegistration)
     return this.getRegistration.businessNumber
   }
 
