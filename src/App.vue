@@ -202,7 +202,7 @@ import {
   getRegistryDashboardBreadcrumb,
   getSbcStaffDashboardBreadcrumb,
   getStaffDashboardBreadcrumb,
-  getStaffRegistryBreadcrumb,
+  getStaffMyRegistryBreadcrumb,
   IncorporationResources,
   RegistrationResources
 } from '@/resources'
@@ -321,7 +321,7 @@ export default class App extends Mixins(
       crumbs.unshift(getSbcStaffDashboardBreadcrumb())
     } else if (this.isRoleStaff) {
       // set StaffDashboard as Home crumb
-      crumbs.unshift(getStaffDashboardBreadcrumb(), getStaffRegistryBreadcrumb())
+      crumbs.unshift(getStaffDashboardBreadcrumb(), getStaffMyRegistryBreadcrumb())
     } else {
       // set Home and Dashboard crumbs
       crumbs.unshift(getRegistryDashboardBreadcrumb(), getMyBusinessRegistryBreadcrumb())

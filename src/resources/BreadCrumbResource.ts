@@ -67,7 +67,7 @@ export function getStaffDashboardBreadcrumb (): BreadcrumbIF {
   }
 }
 
-export function getStaffRegistryBreadcrumb (): BreadcrumbIF {
+export function getStaffMyRegistryBreadcrumb (): BreadcrumbIF {
   const accountId = sessionStorage.getItem('ACCOUNT_ID')
   return {
     text: 'My Business Registry',
