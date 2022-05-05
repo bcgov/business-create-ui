@@ -107,22 +107,18 @@
        </v-card>
     </section>
 
-  <!-- Completing Party -->
-  <!-- show only if exist -->
-    <section  id="completing-party-section" class="mt-10"
-    v-if="getAddPeopleAndRoleStep.orgPeople && getAddPeopleAndRoleStep.orgPeople.length > 0">
-      <header>
-        <h2>Completing Party</h2>
-
-      </header>
-      <v-card flat class="mt-6">
-        <ListPeopleAndRoles
-        :personList="getAddPeopleAndRoleStep.orgPeople"
-        :isSummary="true"
-        :showErrorSummary="!getAddPeopleAndRoleStep.valid"
-      />
-      </v-card>
-    </section>
+    <section id="completing-party-section" class="mt-10">
+          <h2>Completing Party</h2>
+          <v-card flat>
+            <CompletingParty
+              class="mt-6 pb-0"
+              :currentCompletingParty="completingPartyDetails"
+              :enableAddEdit="isRoleStaff"
+              :addressSchema="PersonAddressSchema"
+              @addEditCompletingParty="addEditCompletingParty($event)"
+            />
+          </v-card>
+        </section>
 
     <!-- Certify -->
     <section id="certify-section" class="mt-10">
@@ -194,7 +190,7 @@
 <script lang="ts">
 import { Component, Mixins } from 'vue-property-decorator'
 import { Getter, Action } from 'vuex-class'
-import { DateMixin } from '@/mixins'
+import { DateMixin, PeopleRolesMixin } from '@/mixins'
 import AssociationDetails from '@/components/Dissolution/AssociationDetails.vue'
 import { Certify } from '@bcrs-shared-components/certify'
 
@@ -204,10 +200,11 @@ import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
 
 import { DatePicker } from '@bcrs-shared-components/date-picker'
 import { RuleHelpers } from '@/rules'
-
+import { CompletingParty } from '@bcrs-shared-components/completing-party'
 import StaffPayment from '@/components/common/StaffPayment.vue'
 import TransactionalFolioNumber from '@/components/common/TransactionalFolioNumber.vue'
 import { RouteNames } from '@/enums'
+
 import {
   ActionBindingIF,
   ContactPointIF,
@@ -217,6 +214,7 @@ import {
   DocumentDeliveryIF,
   PeopleAndRoleIF
 } from '@/interfaces'
+import { PersonAddressSchema } from '@/schemas/'
 
 @Component({
   components: {
@@ -227,10 +225,11 @@ import {
     StaffPayment,
     TransactionalFolioNumber,
     ListPeopleAndRoles,
-    DatePicker
+    DatePicker,
+    CompletingParty
   }
 })
-export default class DissolutionFirm extends Mixins(DateMixin) {
+export default class DissolutionFirm extends Mixins(DateMixin, PeopleRolesMixin) {
   // Global getters
   @Getter getBusinessContact!: ContactPointIF
   @Getter getCertifyState!: CertifyIF
@@ -245,7 +244,6 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
   @Getter isRoleStaff!: boolean
   @Getter getFolioNumber!: string
   @Getter getTransactionalFolioNumber!: string
-  @Getter getAddPeopleAndRoleStep!: PeopleAndRoleIF
   @Getter getBusinessFoundingDate!: string
 
   // Global actions
@@ -263,6 +261,8 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
 
   // local variable
   private dissolutionDate = ''
+  // declaration for template
+  readonly PersonAddressSchema = PersonAddressSchema
 
   /** Is true when the Court Order conditions are not met. */
   get isCourtOrderInvalid (): boolean {
@@ -331,6 +331,15 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
         `Date should be between ${this.dateToPacificDate(this.startDateMin, true)} and
         ${this.dateToPacificDate(this.startDateMax, true)}`
     ]
+  }
+
+  get completingPartyDetails () {
+    return {
+      ...this.completingParties[0].officer,
+      mailingAddress: {
+        ...this.completingParties[0].mailingAddress
+      }
+    }
   }
 }
 </script>

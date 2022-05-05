@@ -602,6 +602,9 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     // restore Dissolution data
     this.setBusinessAddress(draftFiling.dissolution.custodialOffice)
     this.setDissolutionType(draftFiling.dissolution.dissolutionType)
+    // setting party
+    // my be only for SP GP : Need to discuss
+    this.setOrgPersonList(draftFiling.dissolution.parties)
 
     // dissolution statement only exists for COOPS
     // for others this will be null/undefined but it isn't used anyway
