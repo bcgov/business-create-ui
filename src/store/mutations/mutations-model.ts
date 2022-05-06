@@ -360,3 +360,7 @@ export const mutateCompletingParty = (state: StateIF, cp: CompletingPartyIF) => 
   state.stateModel.completingParty = cp
   if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
 }
+
+export const mutateCompletingPartyValidity = (state: StateIF, valid: boolean) => {
+  state.stateModel.completingParty.valid = valid
+}

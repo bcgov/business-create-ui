@@ -32,7 +32,9 @@ import {
   RegistrationFilingIF,
   EmptyNaics,
   NameRequestIF,
-  PartyIF
+  PartyIF,
+  OrgInformationIF,
+  CompletingPartyIF
 } from '@/interfaces'
 
 // Constants and enums
@@ -91,6 +93,11 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Getter getRegistration!: RegistrationStateIF
   @Getter getFilingId!: number
   @Getter getNameRequest!: NameRequestIF
+  @Getter getUserFirstName!: string
+  @Getter getUserLastName!: string
+  @Getter getUserPhone!: string
+  @Getter getUserEmail!: string
+  @Getter getOrgInformation!: OrgInformationIF
 
   @Action setAffidavit!: ActionBindingIF
   @Action setFilingId!: ActionBindingIF
@@ -588,17 +595,30 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   }
 
   /** The list of completing parties. */
-  // OrgPersonIF[]
-  completingParties (orgPersonList): OrgPersonIF[] {
-    const completingPartiesList = orgPersonList.filter(party =>
-      (party?.roles.some(role => role.roleType === RoleTypes.COMPLETING_PARTY)))
+
+  completingParties (): CompletingPartyIF {
     let completingParty = null
-    if (completingPartiesList.length > 0) {
+    if (!this.isRoleStaff) { // if staff role set as null
       completingParty = {
-        ...completingPartiesList[0].officer,
+        firstName: this.getUserFirstName,
+        middleName: '',
+        lastName: this.getUserLastName,
         mailingAddress: {
-          ...completingPartiesList[0].mailingAddress
-        }
+          addressCity: this.getOrgInformation?.mailingAddress.city,
+          addressCountry: this.getOrgInformation?.mailingAddress.country,
+          addressRegion: this.getOrgInformation?.mailingAddress.region,
+          postalCode: this.getOrgInformation?.mailingAddress.postalCode,
+          streetAddress: this.getOrgInformation?.mailingAddress.street,
+          streetAddressAdditional: this.getOrgInformation?.mailingAddress.streetAdditional
+        },
+        email: this.getUserEmail,
+        phone: this.getUserPhone
+      }
+    } else {
+      // setting blank firstname an lastname for staff role
+      completingParty = {
+        firstName: '',
+        lastName: ''
       }
     }
 
@@ -622,7 +642,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     this.setBusinessAddress(draftFiling.dissolution.custodialOffice)
     this.setDissolutionType(draftFiling.dissolution.dissolutionType)
     // setting completing party
-    this.setCompletingParty(this.completingParties(draftFiling.dissolution.parties))
+    this.setCompletingParty(this.completingParties())
 
     // dissolution statement only exists for COOPS
     // for others this will be null/undefined but it isn't used anyway

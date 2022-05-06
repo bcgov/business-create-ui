@@ -254,7 +254,6 @@ export default class App extends Mixins(
   @Getter isDissolutionFiling!: boolean
   @Getter getSteps!: Array<StepIF>
   @Getter getAccountInformation!: AccountInformationIF
-  @Getter getOrgInformation!: OrgInformationIF
   @Getter isSbcStaff!: boolean
   @Getter getFilingSubtitle!: string
 

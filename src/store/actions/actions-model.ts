@@ -314,3 +314,7 @@ export const setRegistrationBusinessTypeConfirm: ActionIF = ({ commit }, busines
 export const setCompletingParty: ActionIF = ({ commit }, cp: CompletingPartyIF): void => {
   commit('mutateCompletingParty', cp)
 }
+
+export const setCompletingPartyValidity: ActionIF = ({ commit }, validity: boolean): void => {
+  commit('mutateCompletingPartyValidity', validity)
+}

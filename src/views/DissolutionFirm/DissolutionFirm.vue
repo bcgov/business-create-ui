@@ -117,6 +117,9 @@
               :addressSchema="PersonAddressSchema"
               @update="onUpdate($event)"
             />
+            <!-- to do when staff typing
+              @valid="onValid($event)"
+              @update="onUpdate($event)" -->
           </v-card>
         </section>
 
@@ -257,6 +260,8 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
   @Action setDocumentOptionalEmailValidity!: ActionBindingIF
   @Action setTransactionalFolioNumber!: ActionBindingIF
   @Action setTransactionalFolioNumberValidity!: ActionBindingIF
+  @Action setCompletingParty!: ActionBindingIF
+  @Action setCompletingPartyValidity!: ActionBindingIF
 
   // Enum for template
   readonly RouteNames = RouteNames
@@ -333,6 +338,14 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
         `Date should be between ${this.dateToPacificDate(this.startDateMin, true)} and
         ${this.dateToPacificDate(this.startDateMax, true)}`
     ]
+  }
+
+  protected onUpdate (cp: CompletingPartyIF): void {
+    this.setCompletingParty(cp)
+  }
+  protected onValid (valid: boolean): void {
+    this.completingPartyValid = valid
+    this.setCompletingPartyValidity(valid)
   }
 }
 </script>
