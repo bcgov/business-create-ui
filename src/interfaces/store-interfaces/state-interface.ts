@@ -23,7 +23,8 @@ import {
   TombstoneIF,
   UploadAffidavitIF,
   CreateResolutionIF,
-  OrgInformationIF
+  OrgInformationIF,
+  CompletingPartyIF
 } from '@/interfaces'
 
 // State model interface
@@ -62,10 +63,12 @@ export interface StateModelIF {
   showErrors: boolean
   feePrices: Array<FeesIF>
   registration: RegistrationStateIF
+  completingParty?: CompletingPartyIF
 
   // staffPaymentStep and courtOrder are common and for now are only used in dissolution
   staffPaymentStep: StaffPaymentStepIF
   courtOrderStep: CourtOrderStepIF
+
 }
 
 export interface StateIF {

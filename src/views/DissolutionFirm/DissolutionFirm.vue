@@ -107,22 +107,21 @@
        </v-card>
     </section>
 
-  <!-- Completing Party -->
-  <!-- show only if exist -->
-    <section  id="completing-party-section" class="mt-10"
-    v-if="getAddPeopleAndRoleStep.orgPeople && getAddPeopleAndRoleStep.orgPeople.length > 0">
-      <header>
-        <h2>Completing Party</h2>
+    <section id="completing-party-section" class="mt-10">
+          <h2 class="mb-6">Completing Party</h2>
+          <v-card flat>
+            <CompletingParty
+              class="section-container py-6"
+              :completingParty="getCompletingParty"
+              :enableAddEdit="isRoleStaff"
+              :addressSchema="PersonAddressSchema"
+              :validate="isRoleStaff"
+              @update="onUpdate($event)"
+              @valid="onValid($event)"
+            />
 
-      </header>
-      <v-card flat class="mt-6">
-        <ListPeopleAndRoles
-        :personList="getAddPeopleAndRoleStep.orgPeople"
-        :isSummary="true"
-        :showErrorSummary="!getAddPeopleAndRoleStep.valid"
-      />
-      </v-card>
-    </section>
+          </v-card>
+        </section>
 
     <!-- Certify -->
     <section id="certify-section" class="mt-10">
@@ -204,10 +203,11 @@ import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
 
 import { DatePicker } from '@bcrs-shared-components/date-picker'
 import { RuleHelpers } from '@/rules'
-
+import { CompletingParty } from '@bcrs-shared-components/completing-party'
 import StaffPayment from '@/components/common/StaffPayment.vue'
 import TransactionalFolioNumber from '@/components/common/TransactionalFolioNumber.vue'
 import { RouteNames } from '@/enums'
+
 import {
   ActionBindingIF,
   ContactPointIF,
@@ -215,8 +215,10 @@ import {
   CertifyStatementIF,
   CourtOrderStepIF,
   DocumentDeliveryIF,
-  PeopleAndRoleIF
+  PeopleAndRoleIF,
+  CompletingPartyIF
 } from '@/interfaces'
+import { PersonAddressSchema } from '@/schemas/'
 
 @Component({
   components: {
@@ -227,7 +229,8 @@ import {
     StaffPayment,
     TransactionalFolioNumber,
     ListPeopleAndRoles,
-    DatePicker
+    DatePicker,
+    CompletingParty
   }
 })
 export default class DissolutionFirm extends Mixins(DateMixin) {
@@ -245,8 +248,8 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
   @Getter isRoleStaff!: boolean
   @Getter getFolioNumber!: string
   @Getter getTransactionalFolioNumber!: string
-  @Getter getAddPeopleAndRoleStep!: PeopleAndRoleIF
   @Getter getBusinessFoundingDate!: string
+  @Getter getCompletingParty!: CompletingPartyIF
 
   // Global actions
   @Action setCourtOrderFileNumber!: ActionBindingIF
@@ -257,12 +260,20 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
   @Action setDocumentOptionalEmailValidity!: ActionBindingIF
   @Action setTransactionalFolioNumber!: ActionBindingIF
   @Action setTransactionalFolioNumberValidity!: ActionBindingIF
+  @Action setCompletingParty!: ActionBindingIF
+  @Action setCompletingPartyValidity!: ActionBindingIF
 
   // Enum for template
   readonly RouteNames = RouteNames
 
   // local variable
   private dissolutionDate = ''
+
+  // declaration for template
+  readonly PersonAddressSchema = PersonAddressSchema
+
+  // local variable
+  private completingPartyValid = true
 
   /** Is true when the Court Order conditions are not met. */
   get isCourtOrderInvalid (): boolean {
@@ -331,6 +342,14 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
         `Date should be between ${this.dateToPacificDate(this.startDateMin, true)} and
         ${this.dateToPacificDate(this.startDateMax, true)}`
     ]
+  }
+
+  protected onUpdate (cp: CompletingPartyIF): void {
+    this.setCompletingParty(cp)
+  }
+  protected onValid (valid: boolean): void {
+    this.completingPartyValid = valid
+    this.setCompletingPartyValidity(valid)
   }
 }
 </script>

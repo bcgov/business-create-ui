@@ -187,6 +187,7 @@ import {
   ActionBindingIF,
   AddressIF,
   BreadcrumbIF,
+  CompletingPartyIF,
   ConfirmDialogType,
   DissolutionResourceIF,
   EmptyFees,
@@ -254,9 +255,13 @@ export default class App extends Mixins(
   @Getter isDissolutionFiling!: boolean
   @Getter getSteps!: Array<StepIF>
   @Getter getAccountInformation!: AccountInformationIF
-  @Getter getOrgInformation!: OrgInformationIF
   @Getter isSbcStaff!: boolean
   @Getter getFilingSubtitle!: string
+  @Getter getUserFirstName!: string
+  @Getter getUserLastName!: string
+  @Getter getUserPhone!: string
+  @Getter getUserEmail!: string
+  @Getter getOrgInformation!: OrgInformationIF
 
   @Action setBusinessId!: ActionBindingIF
   @Action setCurrentStep!: ActionBindingIF
@@ -278,6 +283,7 @@ export default class App extends Mixins(
   @Action setFeePrices!: ActionBindingIF
   @Action setFilingType!: ActionBindingIF
   @Action setNameRequestState!: ActionBindingIF
+  @Action setCompletingParty!: ActionBindingIF
 
   // Local properties
   private accountAuthorizationDialog: boolean = false
@@ -518,6 +524,36 @@ export default class App extends Mixins(
     })
   }
 
+  /** The list of completing parties. */
+  completingParties (): CompletingPartyIF {
+    let completingParty = null
+    if (!this.isRoleStaff) { // if staff role set as null
+      completingParty = {
+        firstName: this.getUserFirstName,
+        middleName: '',
+        lastName: this.getUserLastName,
+        mailingAddress: {
+          addressCity: this.getOrgInformation?.mailingAddress.city,
+          addressCountry: this.getOrgInformation?.mailingAddress.country,
+          addressRegion: this.getOrgInformation?.mailingAddress.region,
+          postalCode: this.getOrgInformation?.mailingAddress.postalCode,
+          streetAddress: this.getOrgInformation?.mailingAddress.street,
+          streetAddressAdditional: this.getOrgInformation?.mailingAddress.streetAdditional
+        },
+        email: this.getUserEmail,
+        phone: this.getUserPhone
+      }
+    } else {
+      // setting blank firstname an lastname for staff role
+      completingParty = {
+        firstName: '',
+        lastName: ''
+      }
+    }
+
+    return completingParty
+  }
+
   /** Fetches NR data and fetches draft filing. */
   private async fetchData (routeChanged: boolean = false): Promise<void> {
     // only fetch data on first route change
@@ -637,6 +673,8 @@ export default class App extends Mixins(
           }
         )
       }
+
+      this.setCompletingParty(this.completingParties())
 
       // good to go - hide spinner and render components
       this.haveData = true

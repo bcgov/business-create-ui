@@ -169,5 +169,6 @@ export const stateModel: StateModelIF = {
     businessType: null,
     businessNumber: null,
     businessTypeConfirm: false
-  }
+  },
+  completingParty: null
 }

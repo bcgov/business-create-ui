@@ -36,7 +36,8 @@ import {
   StateIF,
   TombstoneIF,
   UploadAffidavitIF,
-  OrgInformationIF
+  OrgInformationIF,
+  CompletingPartyIF
 } from '@/interfaces'
 import { getMaxStep } from './resource-getters'
 
@@ -653,4 +654,9 @@ export const getFilingSubtitle = (state: StateIF): string => {
     return FilingTypesSubTitle.SOLE_PROP_SUB_TITLE
   }
   return null
+}
+
+/** The completing party data. */
+export const getCompletingParty = (state: StateIF): CompletingPartyIF => {
+  return state.stateModel.completingParty
 }

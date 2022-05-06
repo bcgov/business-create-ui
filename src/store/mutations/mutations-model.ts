@@ -23,7 +23,8 @@ import {
   StaffPaymentIF,
   StateIF,
   UploadAffidavitIF,
-  ValidationDetailIF
+  ValidationDetailIF,
+  CompletingPartyIF
 } from '@/interfaces'
 
 export const mutateBusinessId = (state: StateIF, businessId: string) => {
@@ -353,4 +354,13 @@ export const mutateRegistrationBusinessType = (state: StateIF, businessType: Bus
 export const mutateRegistrationBusinessTypeConfirm = (state: StateIF, businessTypeConfirm: boolean) => {
   state.stateModel.registration.businessTypeConfirm = businessTypeConfirm
   if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
+}
+
+export const mutateCompletingParty = (state: StateIF, cp: CompletingPartyIF) => {
+  state.stateModel.completingParty = cp
+  if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
+}
+
+export const mutateCompletingPartyValidity = (state: StateIF, valid: boolean) => {
+  state.stateModel.completingParty.valid = valid
 }
