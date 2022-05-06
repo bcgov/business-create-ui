@@ -32,9 +32,7 @@ import {
   RegistrationFilingIF,
   EmptyNaics,
   NameRequestIF,
-  PartyIF,
-  OrgInformationIF,
-  CompletingPartyIF
+  PartyIF
 } from '@/interfaces'
 
 // Constants and enums
@@ -130,7 +128,6 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Action setRegistrationBusinessNumber!: ActionBindingIF
   @Action setRegistrationBusinessType!: ActionBindingIF
   @Action setRegistrationBusinessTypeConfirm!: ActionBindingIF
-  @Action setCompletingParty!: ActionBindingIF
 
   /**
    * Builds an incorporation filing from store data. Used when saving a filing.
@@ -589,7 +586,6 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     return filing
   }
 
-  /** The list of completing parties. */
   /**
    * Parses a draft dissolution filing into the store. Used when loading a filing.
    * @param draftFiling the filing body to parse
