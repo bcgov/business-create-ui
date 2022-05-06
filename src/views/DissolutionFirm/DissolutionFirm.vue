@@ -271,6 +271,8 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
   // declaration for template
   readonly PersonAddressSchema = PersonAddressSchema
 
+  // local variable
+  private completingPartyValid = true
   /** Is true when the Court Order conditions are not met. */
   get isCourtOrderInvalid (): boolean {
     return (this.getValidateSteps && !this.getCourtOrderStep.valid)
