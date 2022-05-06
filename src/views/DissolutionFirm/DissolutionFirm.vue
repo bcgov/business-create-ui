@@ -116,10 +116,9 @@
               :enableAddEdit="isRoleStaff"
               :addressSchema="PersonAddressSchema"
               @update="onUpdate($event)"
-            />
-            <!-- to do when staff typing
               @valid="onValid($event)"
-              @update="onUpdate($event)" -->
+            />
+
           </v-card>
         </section>
 
