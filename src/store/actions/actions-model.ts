@@ -2,7 +2,8 @@ import {
   AccountInformationIF, ActionIF, AddressIF, ContactPointIF, CertifyIF, DissolutionStatementIF,
   IncorporationAddressIF, IncorporationAgreementIF, NameRequestIF, NameTranslationIF, OrgPersonIF,
   ResourceIF, ShareClassIF, CreateRulesIF, CreateMemorandumIF, ValidationDetailIF, FeesIF,
-  UploadAffidavitIF, CreateResolutionIF, OrgInformationIF, NaicsIF
+  UploadAffidavitIF, CreateResolutionIF, OrgInformationIF, NaicsIF,
+  CompletingPartyIF
 } from '@/interfaces'
 import { BusinessTypes, CoopTypes, CorpTypeCd } from '@/enums'
 
@@ -308,4 +309,8 @@ export const setRegistrationBusinessType: ActionIF = ({ commit }, businessType: 
 
 export const setRegistrationBusinessTypeConfirm: ActionIF = ({ commit }, businessTypeConfirm: boolean): void => {
   commit('mutateRegistrationBusinessTypeConfirm', businessTypeConfirm)
+}
+
+export const setCompletingParty: ActionIF = ({ commit }, cp: CompletingPartyIF): void => {
+  commit('mutateCompletingParty', cp)
 }

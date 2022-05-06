@@ -128,6 +128,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Action setRegistrationBusinessNumber!: ActionBindingIF
   @Action setRegistrationBusinessType!: ActionBindingIF
   @Action setRegistrationBusinessTypeConfirm!: ActionBindingIF
+  @Action setCompletingParty!: ActionBindingIF
 
   /**
    * Builds an incorporation filing from store data. Used when saving a filing.
@@ -586,6 +587,24 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     return filing
   }
 
+  /** The list of completing parties. */
+  // OrgPersonIF[]
+  completingParties (orgPersonList): OrgPersonIF[] {
+    const completingPartiesList = orgPersonList.filter(party =>
+      (party?.roles.some(role => role.roleType === RoleTypes.COMPLETING_PARTY)))
+    let completingParty = null
+    if (completingPartiesList.length > 0) {
+      completingParty = {
+        ...completingPartiesList[0].officer,
+        mailingAddress: {
+          ...completingPartiesList[0].mailingAddress
+        }
+      }
+    }
+
+    return completingParty
+  }
+
   /**
    * Parses a draft dissolution filing into the store. Used when loading a filing.
    * @param draftFiling the filing body to parse
@@ -602,9 +621,8 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     // restore Dissolution data
     this.setBusinessAddress(draftFiling.dissolution.custodialOffice)
     this.setDissolutionType(draftFiling.dissolution.dissolutionType)
-    // setting party
-    // my be only for SP GP : Need to discuss
-    this.setOrgPersonList(draftFiling.dissolution.parties)
+    // setting completing party
+    this.setCompletingParty(this.completingParties(draftFiling.dissolution.parties))
 
     // dissolution statement only exists for COOPS
     // for others this will be null/undefined but it isn't used anyway

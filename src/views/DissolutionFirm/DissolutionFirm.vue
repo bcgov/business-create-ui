@@ -108,14 +108,14 @@
     </section>
 
     <section id="completing-party-section" class="mt-10">
-          <h2>Completing Party</h2>
+          <h2 class="mb-6">Completing Party</h2>
           <v-card flat>
             <CompletingParty
-              class="mt-6 pb-0"
-              :currentCompletingParty="completingPartyDetails"
+              class="section-container py-6"
+              :completingParty="getCompletingParty"
               :enableAddEdit="isRoleStaff"
               :addressSchema="PersonAddressSchema"
-              @addEditCompletingParty="addEditCompletingParty($event)"
+              @update="onUpdate($event)"
             />
           </v-card>
         </section>
@@ -190,7 +190,7 @@
 <script lang="ts">
 import { Component, Mixins } from 'vue-property-decorator'
 import { Getter, Action } from 'vuex-class'
-import { DateMixin, PeopleRolesMixin } from '@/mixins'
+import { DateMixin } from '@/mixins'
 import AssociationDetails from '@/components/Dissolution/AssociationDetails.vue'
 import { Certify } from '@bcrs-shared-components/certify'
 
@@ -212,7 +212,8 @@ import {
   CertifyStatementIF,
   CourtOrderStepIF,
   DocumentDeliveryIF,
-  PeopleAndRoleIF
+  PeopleAndRoleIF,
+  CompletingPartyIF
 } from '@/interfaces'
 import { PersonAddressSchema } from '@/schemas/'
 
@@ -229,7 +230,7 @@ import { PersonAddressSchema } from '@/schemas/'
     CompletingParty
   }
 })
-export default class DissolutionFirm extends Mixins(DateMixin, PeopleRolesMixin) {
+export default class DissolutionFirm extends Mixins(DateMixin) {
   // Global getters
   @Getter getBusinessContact!: ContactPointIF
   @Getter getCertifyState!: CertifyIF
@@ -245,6 +246,7 @@ export default class DissolutionFirm extends Mixins(DateMixin, PeopleRolesMixin)
   @Getter getFolioNumber!: string
   @Getter getTransactionalFolioNumber!: string
   @Getter getBusinessFoundingDate!: string
+  @Getter getCompletingParty!: CompletingPartyIF
 
   // Global actions
   @Action setCourtOrderFileNumber!: ActionBindingIF
@@ -331,15 +333,6 @@ export default class DissolutionFirm extends Mixins(DateMixin, PeopleRolesMixin)
         `Date should be between ${this.dateToPacificDate(this.startDateMin, true)} and
         ${this.dateToPacificDate(this.startDateMax, true)}`
     ]
-  }
-
-  get completingPartyDetails () {
-    return {
-      ...this.completingParties[0].officer,
-      mailingAddress: {
-        ...this.completingParties[0].mailingAddress
-      }
-    }
   }
 }
 </script>
