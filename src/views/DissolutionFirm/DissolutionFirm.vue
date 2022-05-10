@@ -41,7 +41,7 @@
             <label class="start-date-title title-label">Dissolution Date</label>
           </v-col>
           <v-col cols="12" sm="9" class="pt-4 pt-sm-0" id="start-date-selector">
-            <date-picker
+            <DatePickerShared
               id="date-picker"
               title="Dissolution Date"
               :nudgeRight="40"
@@ -201,7 +201,7 @@ import { CourtOrderPoa } from '@bcrs-shared-components/court-order-poa'
 import { DocumentDelivery } from '@bcrs-shared-components/document-delivery'
 import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
 
-import { DatePicker } from '@bcrs-shared-components/date-picker'
+import { DatePicker as DatePickerShared } from '@bcrs-shared-components/date-picker'
 import { RuleHelpers } from '@/rules'
 import { CompletingParty } from '@bcrs-shared-components/completing-party'
 import StaffPayment from '@/components/common/StaffPayment.vue'
@@ -215,7 +215,6 @@ import {
   CertifyStatementIF,
   CourtOrderStepIF,
   DocumentDeliveryIF,
-  PeopleAndRoleIF,
   CompletingPartyIF
 } from '@/interfaces'
 import { PersonAddressSchema } from '@/schemas/'
@@ -229,7 +228,7 @@ import { PersonAddressSchema } from '@/schemas/'
     StaffPayment,
     TransactionalFolioNumber,
     ListPeopleAndRoles,
-    DatePicker,
+    DatePickerShared,
     CompletingParty
   }
 })

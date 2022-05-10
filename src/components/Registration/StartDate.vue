@@ -6,7 +6,7 @@
         <label class="start-date-title title-label">Start Date</label>
       </v-col>
       <v-col cols="12" sm="9" class="pt-4 pt-sm-0" id="start-date-selector">
-        <date-picker
+        <DatePickerShared
           id="date-picker"
           ref="startDateRef"
           title="Start Date"
@@ -27,19 +27,19 @@
 import { Component, Emit, Mixins, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import { ActionBindingIF, RegistrationStateIF } from '@/interfaces'
-import { DatePicker } from '@bcrs-shared-components/date-picker'
+import { DatePicker as DatePickerShared } from '@bcrs-shared-components/date-picker'
 import { RuleHelpers } from '@/rules'
 import { DateMixin } from '@/mixins'
 
 @Component({
   components: {
-    DatePicker
+    DatePickerShared
   }
 })
 export default class StartDate extends Mixins(DateMixin) {
   // Refs
   $refs!: {
-    startDateRef: DatePicker
+    startDateRef: DatePickerShared
   }
 
   // Global actions

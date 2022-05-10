@@ -125,7 +125,7 @@
               </label>
             </v-col>
             <v-col cols="12" sm="9">
-              <date-picker
+              <DatePickerShared
                 ref="resolutionDatePickerRef"
                 title="Resolution Date"
                 :nudgeRight="40"
@@ -234,7 +234,7 @@
               <label class="resolution-signature-vcard-title">Date Signed</label>
             </v-col>
             <v-col cols="12" sm="9" class="pt-4 pt-sm-0">
-              <date-picker
+              <DatePickerShared
                 ref="signatureDatePickerRef"
                 title="Date Signed"
                 :nudgeRight="40"
@@ -307,7 +307,7 @@ import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 
 // Shared Components
-import { DatePicker } from '@bcrs-shared-components/date-picker'
+import { DatePicker as DatePickerShared } from '@bcrs-shared-components/date-picker'
 
 // Interfaces
 import {
@@ -332,16 +332,16 @@ import { Rules, RuleHelpers } from '@/rules'
 
 @Component({
   components: {
-    DatePicker
+    DatePickerShared
   }
 })
 export default class CompleteResolution extends Mixins(CommonMixin, DateMixin) {
   // Refs
   $refs!: {
-    resolutionDatePickerRef: DatePicker,
+    resolutionDatePickerRef: DatePickerShared,
     resolutionTextFormRef: FormIF,
     resolutionTextRef: FormIF,
-    signatureDatePickerRef: DatePicker,
+    signatureDatePickerRef: DatePickerShared,
     signingPersonFormRef: FormIF,
     signingPersonGivenNameRef: FormIF,
     signingPersonMiddleNameRef: FormIF,
