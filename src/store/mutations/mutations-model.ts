@@ -364,3 +364,8 @@ export const mutateCompletingParty = (state: StateIF, cp: CompletingPartyIF) => 
 export const mutateCompletingPartyValidity = (state: StateIF, valid: boolean) => {
   state.stateModel.completingParty.valid = valid
 }
+
+export const mutateDissolutionDate = (state: StateIF, val: string) => {
+  state.stateModel.dissolution.dissolutionDate = val
+  if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
+}

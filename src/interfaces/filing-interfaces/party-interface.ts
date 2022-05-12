@@ -14,7 +14,7 @@ export interface ApiPersonIF {
   firstName: string
   middleName?: string
   lastName: string
-  organizationName: string
+  organizationName?: string
   email?: string
   taxId?: string // aka Business Number
 }

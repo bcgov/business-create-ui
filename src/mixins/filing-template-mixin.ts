@@ -32,7 +32,8 @@ import {
   RegistrationFilingIF,
   EmptyNaics,
   NameRequestIF,
-  PartyIF
+  PartyIF,
+  CompletingPartyIF
 } from '@/interfaces'
 
 // Constants and enums
@@ -42,6 +43,7 @@ import {
   DissolutionTypes,
   EffectOfOrders,
   FilingTypes,
+  PartyTypes,
   RoleTypes,
   StaffPaymentOptions
 } from '@/enums'
@@ -91,6 +93,9 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Getter getRegistration!: RegistrationStateIF
   @Getter getFilingId!: number
   @Getter getNameRequest!: NameRequestIF
+  @Getter getCompletingParty!: CompletingPartyIF
+  @Getter getDissolutionDate!: string
+  @Getter isTypeSPorGP!: boolean
 
   @Action setAffidavit!: ActionBindingIF
   @Action setFilingId!: ActionBindingIF
@@ -128,6 +133,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Action setRegistrationBusinessNumber!: ActionBindingIF
   @Action setRegistrationBusinessType!: ActionBindingIF
   @Action setRegistrationBusinessTypeConfirm!: ActionBindingIF
+  @Action setDissolutionDate!: ActionBindingIF
 
   /**
    * Builds an incorporation filing from store data. Used when saving a filing.
@@ -542,6 +548,25 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
           }
         }
         break
+      case CorpTypeCd.SOLE_PROP:
+        filing.dissolution = { ...filing.dissolution,
+          dissolutionDate: this.getDissolutionDate,
+          parties: [{
+            officer: {
+              partyType: PartyTypes.PERSON,
+              firstName: this.getCompletingParty.firstName,
+              middleName: this.getCompletingParty.middleName,
+              lastName: this.getCompletingParty.lastName
+            },
+            mailingAddress: this.getCompletingParty.mailingAddress,
+            roles: [
+              {
+                roleType: RoleTypes.COMPLETING_PARTY,
+                appointmentDate: this.getCurrentDate
+              }
+            ]
+          }]
+        }
     }
 
     // If this is a future effective filing then save the effective date (all except Coop).
@@ -685,6 +710,11 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
       if (draftFiling.header.isTransactionalFolioNumber && draftFiling.header.folioNumber) {
         this.setTransactionalFolioNumber(draftFiling.header.folioNumber)
       }
+    }
+
+    // set dissolution date dor SP and GP if saved as draft
+    if (this.isTypeSPorGP) {
+      this.setDissolutionDate(draftFiling.dissolution.dissolutionDate)
     }
   }
 

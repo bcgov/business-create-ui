@@ -49,7 +49,7 @@
               :minDate="startDateMinStr"
               :maxDate="startDateMaxStr"
               :inputRules="startDateRules"
-              @emitDateSync="dissolutionDate = $event"
+              @emitDateSync="updateDissolutiinDate($event)"
               :initialValue="dissolutionDate"
             />
           </v-col>
@@ -249,6 +249,7 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
   @Getter getTransactionalFolioNumber!: string
   @Getter getBusinessFoundingDate!: string
   @Getter getCompletingParty!: CompletingPartyIF
+  @Getter getDissolutionDate!: string
 
   // Global actions
   @Action setCourtOrderFileNumber!: ActionBindingIF
@@ -261,12 +262,10 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
   @Action setTransactionalFolioNumberValidity!: ActionBindingIF
   @Action setCompletingParty!: ActionBindingIF
   @Action setCompletingPartyValidity!: ActionBindingIF
+  @Action setDissolutionDate!: ActionBindingIF
 
   // Enum for template
   readonly RouteNames = RouteNames
-
-  // local variable
-  private dissolutionDate = ''
 
   // declaration for template
   readonly PersonAddressSchema = PersonAddressSchema
@@ -287,6 +286,11 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
   /** Is true when the certify conditions are not met. */
   private get isCertifyInvalid () {
     return this.getValidateSteps && (!this.getCertifyState.certifiedBy || !this.getCertifyState.valid)
+  }
+
+  private get dissolutionDate (): string {
+    console.log('this.getDissolutionDate', this.getDissolutionDate)
+    return this.getDissolutionDate
   }
 
   /** Handler for Valid change event. */
@@ -349,6 +353,10 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
   protected onValid (valid: boolean): void {
     this.completingPartyValid = valid
     this.setCompletingPartyValidity(valid)
+  }
+
+  updateDissolutiinDate (event: string): void {
+    this.setDissolutionDate(event)
   }
 }
 </script>
