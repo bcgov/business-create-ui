@@ -289,7 +289,6 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
   }
 
   private get dissolutionDate (): string {
-    console.log('this.getDissolutionDate', this.getDissolutionDate)
     return this.getDissolutionDate
   }
 
