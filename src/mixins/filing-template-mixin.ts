@@ -555,11 +555,11 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
           parties: [{
             officer: {
               partyType: PartyTypes.PERSON,
-              firstName: this.getCompletingParty.firstName,
-              middleName: this.getCompletingParty.middleName,
-              lastName: this.getCompletingParty.lastName
+              firstName: this.getCompletingParty?.firstName,
+              middleName: this.getCompletingParty?.middleName,
+              lastName: this.getCompletingParty?.lastName
             },
-            mailingAddress: this.getCompletingParty.mailingAddress,
+            mailingAddress: this.getCompletingParty?.mailingAddress,
             roles: [
               {
                 roleType: RoleTypes.COMPLETING_PARTY,
