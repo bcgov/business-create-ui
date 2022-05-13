@@ -594,6 +594,9 @@ export default class App extends Mixins(
         console.log('Launch Darkly update error =', error) // eslint-disable-line no-console
       })
 
+      // set completing party before draft filing dissolution create
+      this.setCompletingParty(this.completingParties())
+
       // fetch the draft filing and resources
       try {
         if (this.getBusinessId) {
@@ -673,8 +676,6 @@ export default class App extends Mixins(
           }
         )
       }
-
-      this.setCompletingParty(this.completingParties())
 
       // good to go - hide spinner and render components
       this.haveData = true
