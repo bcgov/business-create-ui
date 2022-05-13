@@ -631,7 +631,7 @@ export default class App extends Mixins(
       if (this.$route.meta.filingType !== this.getFilingType) {
         switch (this.getFilingType) {
           case FilingTypes.VOLUNTARY_DISSOLUTION:
-            if (this.isTypeSoleProp) {
+            if (this.isTypeFirm) {
               this.$router.push(RouteNames.DISSOLUTION_FIRM).catch(() => {})
             } else {
               this.$router.push(RouteNames.DISSOLUTION_DEFINE_DISSOLUTION).catch(() => {})
