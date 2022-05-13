@@ -50,7 +50,7 @@
               :maxDate="startDateMaxStr"
               :inputRules="startDateRules"
               @emitDateSync="updateDissolutionDate($event)"
-              :initialValue="dissolutionDate"
+              :initialValue="getDissolutionDate"
             />
           </v-col>
         </v-row>
@@ -286,10 +286,6 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
   /** Is true when the certify conditions are not met. */
   private get isCertifyInvalid () {
     return this.getValidateSteps && (!this.getCertifyState.certifiedBy || !this.getCertifyState.valid)
-  }
-
-  private get dissolutionDate (): string {
-    return this.getDissolutionDate
   }
 
   /** Handler for Valid change event. */

@@ -166,7 +166,7 @@ export default class AssociationDetails extends Mixins(CommonMixin, EnumMixin, D
   /** The business start date. */
   get businessStartDate (): string {
     // it will be same as foundingDate
-    return this.dateToPacificDate(new Date(this.getBusinessFoundingDate), true)
+    return this.dateToPacificDate(this.apiToDate(this.getBusinessFoundingDate), true)
   }
 
   /** Whether the address object is empty. */

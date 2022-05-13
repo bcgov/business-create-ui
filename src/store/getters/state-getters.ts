@@ -67,7 +67,7 @@ export const getFilingName = (state: StateIF): FilingNames => {
     case FilingTypes.INCORPORATION_APPLICATION: return FilingNames.INCORPORATION_APPLICATION
     case FilingTypes.REGISTRATION: return FilingNames.REGISTRATION
     case FilingTypes.VOLUNTARY_DISSOLUTION:
-      if (isTypeSPorGP(state)) {
+      if (isTypeFirm(state)) {
         return FilingNames.DISSOLUTION_FIRM
       }
       return FilingNames.VOLUNTARY_DISSOLUTION
@@ -171,7 +171,7 @@ export const isTypePartnership = (state: StateIF): boolean => {
 }
 
 /** Is True if entity is a Sole Proprietorship or General Partnership. */
-export const isTypeSPorGP = (state: StateIF): boolean => {
+export const isTypeFirm = (state: StateIF): boolean => {
   return (isTypeSoleProp(state) || isTypePartnership(state))
 }
 
@@ -469,7 +469,7 @@ export const isDissolutionValid = (state: StateIF): boolean => {
 
   const isEffectiveDateTimeValid = isBaseCompany(state) ? getEffectiveDateTime(state).valid : true
 
-  if (isTypeSPorGP(state)) {
+  if (isTypeFirm(state)) {
     return (
       isDocumentDeliveryValid &&
       isTransactionalFnValid &&
@@ -665,7 +665,7 @@ export const getRegistration = (state: StateIF): RegistrationStateIF => {
 
 // current filing subtitle
 export const getFilingSubtitle = (state: StateIF): string => {
-  if (isDissolutionFiling(state) && isTypeSPorGP(state)) {
+  if (isDissolutionFiling(state) && isTypeFirm(state)) {
     return FilingTypesSubTitle.SOLE_PROP_SUB_TITLE
   }
   return null

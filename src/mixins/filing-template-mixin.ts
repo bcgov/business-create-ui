@@ -95,7 +95,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Getter getNameRequest!: NameRequestIF
   @Getter getCompletingParty!: CompletingPartyIF
   @Getter getDissolutionDate!: string
-  @Getter isTypeSPorGP!: boolean
+  @Getter isTypeFirm!: boolean
 
   @Action setAffidavit!: ActionBindingIF
   @Action setFilingId!: ActionBindingIF
@@ -549,6 +549,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
         }
         break
       case CorpTypeCd.SOLE_PROP:
+      case CorpTypeCd.PARTNERSHIP:
         filing.dissolution = { ...filing.dissolution,
           dissolutionDate: this.getDissolutionDate,
           parties: [{
@@ -712,8 +713,8 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
       }
     }
 
-    // set dissolution date dor SP and GP if saved as draft
-    if (this.isTypeSPorGP) {
+    // set dissolution date for SP and GP if saved as draft
+    if (this.isTypeFirm) {
       this.setDissolutionDate(draftFiling.dissolution.dissolutionDate)
     }
   }
