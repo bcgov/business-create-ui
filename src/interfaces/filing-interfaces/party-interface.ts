@@ -11,10 +11,10 @@ import { CompletingPartyIF as CompletingPartyIFCommon
 export interface ApiPersonIF {
   id?: string // used by UI only
   partyType: PartyTypes
-  firstName: string
+  firstName?: string // option when its org
   middleName?: string
-  lastName: string
-  organizationName?: string
+  lastName?: string // option when its org
+  organizationName?: string // option when its person
   email?: string
   taxId?: string // aka Business Number
 }
