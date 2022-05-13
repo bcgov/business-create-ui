@@ -145,7 +145,7 @@ export default class AssociationDetails extends Mixins(CommonMixin, EnumMixin, D
   @Getter isPremiumAccount!: boolean
   @Getter isTypeCoop!: boolean
   @Getter getEntityType!: CorpTypeCd
-
+  @Getter getBusinessFoundingDate!: string
   // Global setters
   @Action setBusinessContact!: ActionBindingIF
   @Action setIgnoreChanges!: ActionBindingIF
@@ -165,9 +165,8 @@ export default class AssociationDetails extends Mixins(CommonMixin, EnumMixin, D
 
   /** The business start date. */
   get businessStartDate (): string {
-    // SB TODO: get data from object and pass here
-    // mostly it will be same as foundingDate
-    return this.yyyyMmDdToPacificDate(new Date().toString(), true)
+    // it will be same as foundingDate
+    return this.dateToPacificDate(this.apiToDate(this.getBusinessFoundingDate), true)
   }
 
   /** Whether the address object is empty. */

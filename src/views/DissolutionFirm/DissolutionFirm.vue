@@ -49,8 +49,8 @@
               :minDate="startDateMinStr"
               :maxDate="startDateMaxStr"
               :inputRules="startDateRules"
-              @emitDateSync="dissolutionDate = $event"
-              :initialValue="dissolutionDate"
+              @emitDateSync="setDissolutionDate($event)"
+              :initialValue="getDissolutionDate"
             />
           </v-col>
         </v-row>
@@ -249,6 +249,7 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
   @Getter getTransactionalFolioNumber!: string
   @Getter getBusinessFoundingDate!: string
   @Getter getCompletingParty!: CompletingPartyIF
+  @Getter getDissolutionDate!: string
 
   // Global actions
   @Action setCourtOrderFileNumber!: ActionBindingIF
@@ -261,12 +262,10 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
   @Action setTransactionalFolioNumberValidity!: ActionBindingIF
   @Action setCompletingParty!: ActionBindingIF
   @Action setCompletingPartyValidity!: ActionBindingIF
+  @Action setDissolutionDate!: ActionBindingIF
 
   // Enum for template
   readonly RouteNames = RouteNames
-
-  // local variable
-  private dissolutionDate = ''
 
   // declaration for template
   readonly PersonAddressSchema = PersonAddressSchema
