@@ -49,7 +49,7 @@
               :minDate="startDateMinStr"
               :maxDate="startDateMaxStr"
               :inputRules="startDateRules"
-              @emitDateSync="updateDissolutionDate($event)"
+              @emitDateSync="setDissolutionDate($event)"
               :initialValue="getDissolutionDate"
             />
           </v-col>
@@ -348,10 +348,6 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
   protected onValid (valid: boolean): void {
     this.completingPartyValid = valid
     this.setCompletingPartyValidity(valid)
-  }
-
-  updateDissolutionDate (event: string): void {
-    this.setDissolutionDate(event)
   }
 }
 </script>
