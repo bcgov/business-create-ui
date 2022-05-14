@@ -3,7 +3,6 @@ import { CorpTypeCd, FilingCodes, ItemTypes } from '@/enums'
 import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 import { CorpFirmDissolutionSteps } from '@/resources/Dissolutions/stepTemplates'
 
-// SB TODO : cleanup this code
 export const GeneralPartnershipDissolutionResource: DissolutionResourceIF = {
   entityType: CorpTypeCd.PARTNERSHIP,
   displayName: GetCorpFullDescription(CorpTypeCd.PARTNERSHIP),
