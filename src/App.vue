@@ -594,6 +594,9 @@ export default class App extends Mixins(
         console.log('Launch Darkly update error =', error) // eslint-disable-line no-console
       })
 
+      // set completing party before draft filing dissolution create
+      this.setCompletingParty(this.completingParties())
+
       // fetch the draft filing and resources
       try {
         if (this.getBusinessId) {
@@ -631,7 +634,7 @@ export default class App extends Mixins(
       if (this.$route.meta.filingType !== this.getFilingType) {
         switch (this.getFilingType) {
           case FilingTypes.VOLUNTARY_DISSOLUTION:
-            if (this.isTypeSoleProp) {
+            if (this.isTypeFirm) {
               this.$router.push(RouteNames.DISSOLUTION_FIRM).catch(() => {})
             } else {
               this.$router.push(RouteNames.DISSOLUTION_DEFINE_DISSOLUTION).catch(() => {})
@@ -673,8 +676,6 @@ export default class App extends Mixins(
           }
         )
       }
-
-      this.setCompletingParty(this.completingParties())
 
       // good to go - hide spinner and render components
       this.haveData = true

@@ -5,3 +5,4 @@ export { LimitedCompanyDissolutionResource } from '@/resources/Dissolutions/limi
 export { UnlimitedDissolutionResource } from '@/resources/Dissolutions/unlimitedCompany'
 
 export { SoleProprietorshipDissolutionResource } from '@/resources/Dissolutions/soleProprietorship'
+export { GeneralPartnershipDissolutionResource } from '@/resources/Dissolutions/generalPartnership'
