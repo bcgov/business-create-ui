@@ -396,6 +396,10 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
         }
       }
       delete party.officer.businessNumber
+
+      // if tax id is empty (which doesn't match the schema pattern), delete it
+      if (!party.officer.taxId) delete party.officer.taxId
+
       return party as PartyIF
     })
   }
