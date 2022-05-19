@@ -65,7 +65,7 @@ export interface StateModelIF {
   feePrices: Array<FeesIF>
   registration: RegistrationStateIF
   completingParty?: CompletingPartyIF
-  parties?:Array<PartyIF>
+  parties?: Array<PartyIF>
 
   // staffPaymentStep and courtOrder are common and for now are only used in dissolution
   staffPaymentStep: StaffPaymentStepIF

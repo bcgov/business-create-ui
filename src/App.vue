@@ -989,7 +989,7 @@ export default class App extends Mixins(
     // NB: will throw if API error
     let parties = await LegalServices.fetchParties(this.getBusinessId)
 
-    if (parties && parties.parties.length > 0) {
+    if (parties?.parties?.length > 0) {
       this.setParties(parties.parties)
     } else {
       throw new Error('Invalid parties')

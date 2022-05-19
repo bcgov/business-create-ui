@@ -682,7 +682,7 @@ export const getDissolutionDate = (state: StateIF): string => {
   return getDissolution(state).dissolutionDate
 }
 
-// parties List
+/** parties List */
 export const getParties = (state: StateIF): Array<PartyIF> => {
   return state.stateModel.parties
 }
