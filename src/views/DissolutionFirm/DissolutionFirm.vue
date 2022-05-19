@@ -310,10 +310,9 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
     let emailList
     if (this.isTypeFirm) { // if Sp/GP
       const roleType = this.isTypeSoleProp ? RoleTypes.PROPRIETOR : RoleTypes.PARTNER
-      const partnerDetails =
-      this.getParties?.filter(people => people.roles.some(role => role.roleType === roleType))
+      const partnerDetails = this.getParties?.filter(people => people.roles.some(role => role.roleType === roleType))
 
-      if (partnerDetails && partnerDetails?.length > 0) {
+      if (partnerDetails?.length > 0) {
         emailList = partnerDetails.map(people => people.officer.email).join(', ')
       }
     }
