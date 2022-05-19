@@ -598,9 +598,6 @@ export default class App extends Mixins(
       // set completing party before draft filing dissolution create
       this.setCompletingParty(this.completingParties())
 
-      // load parties only for SP/GP
-      this.isTypeFirm && this.loadPartiesInformation()
-
       // fetch the draft filing and resources
       try {
         if (this.getBusinessId) {
@@ -632,6 +629,9 @@ export default class App extends Mixins(
         this.fetchErrorDialog = !this.isErrorDialog
         throw error // go to catch()
       }
+
+      // load parties only for SP/GP
+      this.isTypeFirm && this.loadPartiesInformation()
 
       // if user is on a route not valid for the current filing type
       // then try to re-route them

@@ -66,6 +66,7 @@
         </p>
       </header>
       <v-card flat class="mt-6">
+
       <DocumentDelivery
         :class="{ 'invalid-section': isDocumentDeliveryInvalid }"
         :editableCompletingParty="isRoleStaff"
@@ -81,7 +82,7 @@
         :additionalValue="additionalValue"
         contactLabel="Business Contact"
       />
-      <!-- SB TODO: update additionalLabel & additionalLabel (sample data)-->
+
       </v-card>
     </section>
 
@@ -292,7 +293,7 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
     return this.getValidateSteps && (!this.getCertifyState.certifiedBy || !this.getCertifyState.valid)
   }
   // addition label if its SP/GPs
-  private get additionalLabel () {
+  get additionalLabel () {
     let label
     if (this.isTypeFirm) { // if Sp/GP
       label = this.isTypeSoleProp ? 'Proprietor' : 'Partners'
@@ -305,14 +306,14 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
   if SP return proprietor email id
   if GP return partner email ids (comma separated)
   **/
-  private get additionalValue () {
+  get additionalValue () {
     let emailList
     if (this.isTypeFirm) { // if Sp/GP
       const roleType = this.isTypeSoleProp ? RoleTypes.PROPRIETOR : RoleTypes.PARTNER
       const partnerDetails =
       this.getParties?.filter(people => people.roles.some(role => role.roleType === roleType))
 
-      if (partnerDetails && partnerDetails.length > 0) {
+      if (partnerDetails && partnerDetails?.length > 0) {
         emailList = partnerDetails.map(people => people.officer.email).join(', ')
       }
     }
