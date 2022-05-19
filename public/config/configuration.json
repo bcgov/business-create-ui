@@ -10,7 +10,7 @@
   "KEYCLOAK_CONFIG_PATH": "/local-keycloak-config-url/keycloak.json",
   "LEGAL_API_URL": "https://legal-api-dev.apps.silver.devops.gov.bc.ca",
   "LEGAL_API_VERSION": "/api/v1",
-  "LEGAL_API_VERSION_V2": "/api/v2",
+  "LEGAL_API_VERSION_2": "/api/v2",
   "NAICS_API_URL": "https://legal-api-dev.apps.silver.devops.gov.bc.ca",
   "NAICS_API_VERSION": "/api/v2",
   "PAY_API_URL": "https://pay-api-dev.apps.silver.devops.gov.bc.ca",
