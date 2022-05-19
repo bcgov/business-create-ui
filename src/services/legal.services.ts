@@ -186,4 +186,28 @@ export default class LegalServices {
     }
     return toReturn
   }
+
+  /**
+   * Fetches parties list.
+   * @param businessId the business identifier (aka entity inc no)
+   * @returns a promise to return the parties from the response
+   */
+  static fetchParties (businessId: string): Promise<any> {
+    // need to get the parties from the legal endpoint v2
+    const legalApiV2 = sessionStorage.getItem('LEGAL_API_URL_V2')
+    let url = `${legalApiV2}businesses/${businessId}/parties`
+
+    return axios.get(url).then(response => {
+      const data = response?.data
+      if (!data) {
+        throw new Error('Invalid API response')
+      }
+      return data
+    }).catch(error => {
+      if (error?.response?.status === NOT_FOUND) {
+        return null // parties not found
+      }
+      throw error
+    })
+  }
 }

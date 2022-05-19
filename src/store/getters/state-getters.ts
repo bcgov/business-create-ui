@@ -37,7 +37,8 @@ import {
   TombstoneIF,
   UploadAffidavitIF,
   OrgInformationIF,
-  CompletingPartyIF
+  CompletingPartyIF,
+  PartyIF
 } from '@/interfaces'
 import { getMaxStep } from './resource-getters'
 
@@ -679,4 +680,9 @@ export const getCompletingParty = (state: StateIF): CompletingPartyIF => {
 /** The dissolution date */
 export const getDissolutionDate = (state: StateIF): string => {
   return getDissolution(state).dissolutionDate
+}
+
+// parties List
+export const getParties = (state: StateIF): Array<PartyIF> => {
+  return state.stateModel.parties
 }

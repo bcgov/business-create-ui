@@ -24,7 +24,8 @@ import {
   UploadAffidavitIF,
   CreateResolutionIF,
   OrgInformationIF,
-  CompletingPartyIF
+  CompletingPartyIF,
+  PartyIF
 } from '@/interfaces'
 
 // State model interface
@@ -64,6 +65,7 @@ export interface StateModelIF {
   feePrices: Array<FeesIF>
   registration: RegistrationStateIF
   completingParty?: CompletingPartyIF
+  parties?:Array<PartyIF>
 
   // staffPaymentStep and courtOrder are common and for now are only used in dissolution
   staffPaymentStep: StaffPaymentStepIF

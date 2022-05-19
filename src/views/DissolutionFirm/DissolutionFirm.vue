@@ -66,7 +66,6 @@
         </p>
       </header>
       <v-card flat class="mt-6">
-
       <DocumentDelivery
         :class="{ 'invalid-section': isDocumentDeliveryInvalid }"
         :editableCompletingParty="isRoleStaff"
@@ -78,7 +77,8 @@
         :documentOptionalEmail="getDocumentDelivery.documentOptionalEmail"
         @update:optionalEmail="setDocumentOptionalEmail($event)"
         @valid="setDocumentOptionalEmailValidity($event)"
-        additionalLabel="Partners"
+        :additionalLabel="additionalLabel"
+        :additionalValue="additionalValue"
         contactLabel="Business Contact"
       />
       <!-- SB TODO: update additionalLabel & additionalLabel (sample data)-->
@@ -206,7 +206,7 @@ import { RuleHelpers } from '@/rules'
 import { CompletingParty } from '@bcrs-shared-components/completing-party'
 import StaffPayment from '@/components/common/StaffPayment.vue'
 import TransactionalFolioNumber from '@/components/common/TransactionalFolioNumber.vue'
-import { RouteNames } from '@/enums'
+import { RoleTypes, RouteNames } from '@/enums'
 
 import {
   ActionBindingIF,
@@ -215,7 +215,8 @@ import {
   CertifyStatementIF,
   CourtOrderStepIF,
   DocumentDeliveryIF,
-  CompletingPartyIF
+  CompletingPartyIF,
+  PartyIF
 } from '@/interfaces'
 import { PersonAddressSchema } from '@/schemas/'
 
@@ -250,6 +251,9 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
   @Getter getBusinessFoundingDate!: string
   @Getter getCompletingParty!: CompletingPartyIF
   @Getter getDissolutionDate!: string
+  @Getter getParties!: Array<PartyIF>
+  @Getter isTypeSoleProp: boolean
+  @Getter isTypeFirm: boolean
 
   // Global actions
   @Action setCourtOrderFileNumber!: ActionBindingIF
@@ -286,6 +290,33 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
   /** Is true when the certify conditions are not met. */
   private get isCertifyInvalid () {
     return this.getValidateSteps && (!this.getCertifyState.certifiedBy || !this.getCertifyState.valid)
+  }
+  // addition label if its SP/GPs
+  private get additionalLabel () {
+    let label
+    if (this.isTypeFirm) { // if Sp/GP
+      label = this.isTypeSoleProp ? 'Proprietor' : 'Partners'
+    }
+    return label
+  }
+
+  /**
+  Get additional value
+  if SP return proprietor email id
+  if GP return partner email ids (comma separated)
+  **/
+  private get additionalValue () {
+    let emailList
+    if (this.isTypeFirm) { // if Sp/GP
+      const roleType = this.isTypeSoleProp ? RoleTypes.PROPRIETOR : RoleTypes.PARTNER
+      const partnerDetails =
+      this.getParties?.filter(people => people.roles.some(role => role.roleType === roleType))
+
+      if (partnerDetails && partnerDetails.length > 0) {
+        emailList = partnerDetails.map(people => people.officer.email).join(', ')
+      }
+    }
+    return emailList
   }
 
   /** Handler for Valid change event. */
