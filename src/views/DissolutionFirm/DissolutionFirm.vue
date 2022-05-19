@@ -66,23 +66,21 @@
         </p>
       </header>
       <v-card flat class="mt-6">
-
-      <DocumentDelivery
-        :class="{ 'invalid-section': isDocumentDeliveryInvalid }"
-        :editableCompletingParty="isRoleStaff"
-        :showCustodianEmail="false"
-        :invalidSection="isDocumentDeliveryInvalid"
-        :contactValue="getBusinessContact.email"
-        :custodianEmail="getDissolutionCustodianEmail"
-        :completingPartyEmail="getUserEmail"
-        :documentOptionalEmail="getDocumentDelivery.documentOptionalEmail"
-        @update:optionalEmail="setDocumentOptionalEmail($event)"
-        @valid="setDocumentOptionalEmailValidity($event)"
-        :additionalLabel="additionalLabel"
-        :additionalValue="additionalValue"
-        contactLabel="Business Contact"
-      />
-
+        <DocumentDelivery
+          :class="{ 'invalid-section': isDocumentDeliveryInvalid }"
+          :editableCompletingParty="isRoleStaff"
+          :showCustodianEmail="false"
+          :invalidSection="isDocumentDeliveryInvalid"
+          :contactValue="getBusinessContact.email"
+          :custodianEmail="getDissolutionCustodianEmail"
+          :completingPartyEmail="getUserEmail"
+          :documentOptionalEmail="getDocumentDelivery.documentOptionalEmail"
+          @update:optionalEmail="setDocumentOptionalEmail($event)"
+          @valid="setDocumentOptionalEmailValidity($event)"
+          :additionalLabel="additionalLabel"
+          :additionalValue="additionalValue"
+          contactLabel="Business Contact"
+        />
       </v-card>
     </section>
 
