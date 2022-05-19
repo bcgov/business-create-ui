@@ -284,6 +284,7 @@ export default class App extends Mixins(
   @Action setFilingType!: ActionBindingIF
   @Action setNameRequestState!: ActionBindingIF
   @Action setCompletingParty!: ActionBindingIF
+  @Action setParties!: ActionBindingIF
 
   // Local properties
   private accountAuthorizationDialog: boolean = false
@@ -628,6 +629,9 @@ export default class App extends Mixins(
         this.fetchErrorDialog = !this.isErrorDialog
         throw error // go to catch()
       }
+
+      // load parties only for SP/GP
+      this.isTypeFirm && this.loadPartiesInformation()
 
       // if user is on a route not valid for the current filing type
       // then try to re-route them
@@ -977,6 +981,18 @@ export default class App extends Mixins(
       this.setAuthRoles(authRoles)
     } else {
       throw new Error('Invalid auth roles')
+    }
+  }
+
+  /** Gets and stores parties info . */
+  private async loadPartiesInformation (): Promise<any> {
+    // NB: will throw if API error
+    let parties = await LegalServices.fetchParties(this.getBusinessId)
+
+    if (parties?.parties?.length > 0) {
+      this.setParties(parties.parties)
+    } else {
+      throw new Error('Invalid parties')
     }
   }
 
