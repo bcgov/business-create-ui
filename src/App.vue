@@ -630,8 +630,8 @@ export default class App extends Mixins(
         throw error // go to catch()
       }
 
-      // load parties only for SP/GP
-      this.isTypeFirm && this.loadPartiesInformation()
+      // load parties only for SP/GP businesses
+      if (this.isTypeFirm && this.getBusinessId) this.loadPartiesInformation()
 
       // if user is on a route not valid for the current filing type
       // then try to re-route them
