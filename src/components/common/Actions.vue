@@ -118,6 +118,7 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Name
   @Getter isSavingResuming!: boolean
   @Getter isFilingPaying!: boolean
   @Getter getDissolutionDate!: string
+  @Getter isTypeFirm!: boolean
 
   @Action setIsSaving!: ActionBindingIF
   @Action setIsSavingResuming!: ActionBindingIF
@@ -210,8 +211,10 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Name
   private async onClickFilePay (): Promise<void> {
     // Prompt Step validations
     this.setValidateSteps(true)
-    const date = this.getDissolutionDate
-    if (!date) this.setDissolutionDateError('Dissolution date is required')
+    if (this.isTypeFirm) {
+      const date = this.getDissolutionDate
+      if (!date) this.setDissolutionDateError('Dissolution date is required')
+    }
 
     if (this.isApplicationValid) {
       // prevent double saving
