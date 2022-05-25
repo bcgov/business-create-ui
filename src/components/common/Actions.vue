@@ -117,6 +117,7 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Name
   @Getter isSaving!: boolean
   @Getter isSavingResuming!: boolean
   @Getter isFilingPaying!: boolean
+  @Getter getDissolutionDate!: string
 
   @Action setIsSaving!: ActionBindingIF
   @Action setIsSavingResuming!: ActionBindingIF
@@ -124,6 +125,7 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Name
   @Action setHaveChanges!: ActionBindingIF
   @Action setEffectiveDateTimeValid!: ActionBindingIF
   @Action setValidateSteps!: ActionBindingIF
+  @Action setDissolutionDateError!: ActionBindingIF
 
   /** Is True if Jest is running the code. */
   get isJestRunning (): boolean {
@@ -208,6 +210,8 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Name
   private async onClickFilePay (): Promise<void> {
     // Prompt Step validations
     this.setValidateSteps(true)
+    const date = this.getDissolutionDate
+    if (!date) this.setDissolutionDateError('Dissolution date is required')
 
     if (this.isApplicationValid) {
       // prevent double saving

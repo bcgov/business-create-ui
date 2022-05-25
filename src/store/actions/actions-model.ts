@@ -108,6 +108,10 @@ export const setEffectiveDateTimeValid: ActionIF = ({ commit }, effectiveDateTim
   commit('mutateEffectiveDateTimeValid', effectiveDateTimeValid)
 }
 
+export const setDissolutionDateError: ActionIF = ({ commit }, dissolutionDateError: string): void => {
+  commit('mutateDissolutionDateError', dissolutionDateError)
+}
+
 export const setCertifyState: ActionIF = ({ commit }, certifyState: CertifyIF): void => {
   commit('mutateCertifyState', certifyState)
 }

@@ -131,6 +131,10 @@ export const mutateEffectiveDateTimeValid = (state: StateIF, effectiveDateTimeVa
   state.stateModel.effectiveDateTime.valid = effectiveDateTimeValid
 }
 
+export const mutateDissolutionDateError = (state: StateIF, dissolutionDateError: string) => {
+  state.stateModel.dissolution.dissolutionDateFieldError = dissolutionDateError
+}
+
 export const mutateCertifyState = (state: StateIF, certifyState: CertifyIF) => {
   state.stateModel.certifyState = certifyState
   if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
@@ -368,6 +372,7 @@ export const mutateCompletingPartyValidity = (state: StateIF, valid: boolean) =>
 
 export const mutateDissolutionDate = (state: StateIF, val: string) => {
   state.stateModel.dissolution.dissolutionDate = val
+  state.stateModel.dissolution.dissolutionDateFieldError = ''
   if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
 }
 

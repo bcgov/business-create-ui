@@ -49,6 +49,7 @@
               :minDate="startDateMinStr"
               :maxDate="startDateMaxStr"
               :inputRules="startDateRules"
+              :errorMsg="dissolutionError()"
               @emitDateSync="setDissolutionDate($event)"
               :initialValue="getDissolutionDate"
             />
@@ -215,7 +216,8 @@ import {
   CourtOrderStepIF,
   DocumentDeliveryIF,
   CompletingPartyIF,
-  PartyIF
+  PartyIF,
+  DissolutionStatementIF
 } from '@/interfaces'
 import { PersonAddressSchema } from '@/schemas/'
 
@@ -240,6 +242,7 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
   @Getter getCourtOrderStep!: CourtOrderStepIF
   @Getter getCurrentDate!: string
   @Getter getDissolutionCustodianEmail!: string
+  @Getter getDissolutionDateError!: string
   @Getter getDocumentDelivery!: DocumentDeliveryIF
   @Getter getUserEmail!: string
   @Getter getValidateSteps!: boolean
@@ -340,6 +343,11 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
   /** The minimum start date that can be entered (greater than registration date). */
   private get startDateMin (): Date {
     return new Date(this.getBusinessFoundingDate)
+  }
+
+  /** Dissolution Error */
+  private dissolutionError (): String {
+    return this.getDissolutionDateError
   }
 
   /** The minimum start date string. */
