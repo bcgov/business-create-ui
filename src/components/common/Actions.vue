@@ -213,7 +213,7 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Name
     this.setValidateSteps(true)
     if (this.isTypeFirm) {
       const date = this.getDissolutionDate
-      if (!date) this.setDissolutionDateError('Dissolution date is required')
+      if (!date) this.setDissolutionDateError('Business Dissolution date is required')
     }
 
     if (this.isApplicationValid) {
