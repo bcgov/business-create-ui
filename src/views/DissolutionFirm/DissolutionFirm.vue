@@ -368,7 +368,7 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
   /** Validations rules for start date field. */
   get startDateRules (): Array<Function> {
     return [
-      (v: string) => !!v || 'Dissolution date is required',
+      (v: string) => !!v || 'Business Dissolution date is required',
       (v: string) =>
         RuleHelpers.DateRuleHelpers
           .isBetweenDates(this.startDateMin,
