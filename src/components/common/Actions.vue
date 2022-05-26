@@ -126,7 +126,6 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Name
   @Action setHaveChanges!: ActionBindingIF
   @Action setEffectiveDateTimeValid!: ActionBindingIF
   @Action setValidateSteps!: ActionBindingIF
-  @Action setDissolutionDateError!: ActionBindingIF
 
   /** Is True if Jest is running the code. */
   get isJestRunning (): boolean {

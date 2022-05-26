@@ -243,7 +243,6 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
   @Getter getCourtOrderStep!: CourtOrderStepIF
   @Getter getCurrentDate!: string
   @Getter getDissolutionCustodianEmail!: string
-  @Getter getDissolutionDateError!: string
   @Getter getDocumentDelivery!: DocumentDeliveryIF
   @Getter getUserEmail!: string
   @Getter getValidateSteps!: boolean
