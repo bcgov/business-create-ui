@@ -117,8 +117,6 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Name
   @Getter isSaving!: boolean
   @Getter isSavingResuming!: boolean
   @Getter isFilingPaying!: boolean
-  @Getter getDissolutionDate!: string
-  @Getter isTypeFirm!: boolean
 
   @Action setIsSaving!: ActionBindingIF
   @Action setIsSavingResuming!: ActionBindingIF
