@@ -49,7 +49,6 @@
               :minDate="startDateMinStr"
               :maxDate="startDateMaxStr"
               :inputRules="startDateRules"
-              :validateForm="dissolutionError()"
               :errorMsg="dissolutionError()"
               @emitDateSync="setDissolutionDate($event)"
               :initialValue="getDissolutionDate"
@@ -217,8 +216,7 @@ import {
   CourtOrderStepIF,
   DocumentDeliveryIF,
   CompletingPartyIF,
-  PartyIF,
-  DissolutionStatementIF
+  PartyIF
 } from '@/interfaces'
 import { PersonAddressSchema } from '@/schemas/'
 
@@ -369,7 +367,7 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
   /** Validations rules for start date field. */
   get startDateRules (): Array<Function> {
     return [
-      (v: string) => !!v || 'Business Dissolution date is required',
+      (v: string) => !!v || 'Dissolution date is required',
       (v: string) =>
         RuleHelpers.DateRuleHelpers
           .isBetweenDates(this.startDateMin,
