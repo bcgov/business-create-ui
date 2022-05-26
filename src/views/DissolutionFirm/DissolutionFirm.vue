@@ -345,8 +345,10 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
 
   /** Dissolution Error */
   private dissolutionError (): string {
-    return this.isTypeFirm && this.getValidateSteps &&
-    !this.getDissolutionDate && 'Dissolution date is required' || ''
+    if (this.isTypeFirm && this.getValidateSteps && !this.getDissolutionDate) {
+      return 'Dissolution date is required'
+    }
+    return ''
   }
 
   /** The minimum start date string. */
