@@ -49,6 +49,7 @@
               :minDate="startDateMinStr"
               :maxDate="startDateMaxStr"
               :inputRules="startDateRules"
+              :errorMsg="dissolutionError()"
               @emitDateSync="setDissolutionDate($event)"
               :initialValue="getDissolutionDate"
             />
@@ -340,6 +341,14 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
   /** The minimum start date that can be entered (greater than registration date). */
   private get startDateMin (): Date {
     return new Date(this.getBusinessFoundingDate)
+  }
+
+  /** Dissolution Error */
+  private dissolutionError (): string {
+    if (this.isTypeFirm && this.getValidateSteps && !this.getDissolutionDate) {
+      return 'Dissolution date is required'
+    }
+    return ''
   }
 
   /** The minimum start date string. */
