@@ -40,7 +40,6 @@ export const stateModel: StateModelIF = {
   dissolution: {
     dissolutionType: null,
     dissolutionDate: '',
-    dissolutionDateFieldError: '',
     dissolutionStatementStep: {
       valid: false,
       dissolutionStatementType: null

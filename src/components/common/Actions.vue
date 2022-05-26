@@ -211,10 +211,6 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Name
   private async onClickFilePay (): Promise<void> {
     // Prompt Step validations
     this.setValidateSteps(true)
-    if (this.isTypeFirm) {
-      const date = this.getDissolutionDate
-      if (!date) this.setDissolutionDateError('Business Dissolution date is required')
-    }
 
     if (this.isApplicationValid) {
       // prevent double saving

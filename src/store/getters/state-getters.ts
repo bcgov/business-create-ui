@@ -355,11 +355,6 @@ export const getEffectiveDateTime = (state: StateIF): EffectiveDateTimeIF => {
   return state.stateModel.effectiveDateTime
 }
 
-/** The Dissolution Date error. */
-export const getDissolutionDateError = (state: StateIF): string => {
-  return state.stateModel.dissolution.dissolutionDateFieldError
-}
-
 /** The Name Request object. */
 export const getNameRequest = (state: StateIF): NameRequestIF => {
   return state.stateModel.nameRequest
