@@ -107,21 +107,6 @@
                 {{ getFilingSubtitle }}
               </p>
 
-              <v-card
-                outlined class="message-box rounded-0"
-              >
-                <p>
-                  <strong>Important:</strong> You are about to dissolve
-                  <b class="capitalize">{{ this.getBusinessLegalName }}</b>.
-                  Once this process is completed and the required documents are
-                  filed, the {{ this.getDisplayLabel }} will
-                  be struck from the register and dissolved, ceasing to be a registered
-                  business under the Partnership Act.
-                  If you make changes to your address below, please update your address in the account
-                  settings after you have completed this filing to ensure your information is up to date.
-                </p>
-              </v-card>
-
               <Stepper class="mt-10" v-if="isStepperView" />
 
               <!-- Sign in and sign out components -->
@@ -262,7 +247,6 @@ export default class App extends Mixins(
     confirm: ConfirmDialogType
   }
 
-  @Getter getBusinessLegalName!: string
   @Getter getEntityIdentifier!: string
   @Getter getHaveChanges!: boolean
   @Getter getFilingData!: Array<FilingDataIF>
@@ -279,7 +263,6 @@ export default class App extends Mixins(
   @Getter getUserEmail!: string
   @Getter getOrgInformation!: OrgInformationIF
   @Getter isTypeSoleProp!: boolean
-  @Getter isTypePartnership!: boolean
 
   @Action setBusinessId!: ActionBindingIF
   @Action setCurrentStep!: ActionBindingIF
@@ -328,10 +311,6 @@ export default class App extends Mixins(
 
   /** The Update Current JS Date timer id. */
   private updateCurrentJsDateId = 0
-
-  private get getDisplayLabel (): string {
-    return this.isTypeSoleProp ? 'Sole Proprietorship' : this.isTypePartnership ? 'General Partnership' : ''
-  }
 
   /** The route breadcrumbs list. */
   private get breadcrumbs (): Array<BreadcrumbIF> {
@@ -1059,10 +1038,6 @@ aside {
 
 .vue-affix {
   width: 282px;
-}
-
-.capitalize {
-  text-transform: uppercase;
 }
 
 </style>

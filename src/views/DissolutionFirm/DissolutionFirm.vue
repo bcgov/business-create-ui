@@ -1,6 +1,20 @@
 <template>
   <div id="dissolution-firm-form">
-    <section class="mt-10">
+    <v-card
+      outlined class="message-box rounded-0"
+    >
+      <p>
+        <strong>Important:</strong> You are about to dissolve
+        <b class="capitalize">{{ this.getBusinessLegalName }}</b>.
+        Once this process is completed and the required documents are
+        filed, the {{ this.corpTypeDescription() }} will
+        be struck from the register and dissolved, ceasing to be a registered
+        business under the Partnership Act.
+        If you make changes to your address below, please update your address in the account
+        settings after you have completed this filing to ensure your information is up to date.
+      </p>
+    </v-card>
+   <section class="mt-10">
       <!-- Dissolution summary -->
       <v-card flat id="dissolution-summary" class="mt-6">
         <header class="review-header rounded-t">
@@ -192,7 +206,7 @@
 <script lang="ts">
 import { Component, Mixins } from 'vue-property-decorator'
 import { Getter, Action } from 'vuex-class'
-import { DateMixin } from '@/mixins'
+import { DateMixin, EnumMixin } from '@/mixins'
 import AssociationDetails from '@/components/Dissolution/AssociationDetails.vue'
 import { Certify } from '@bcrs-shared-components/certify'
 
@@ -205,7 +219,7 @@ import { RuleHelpers } from '@/rules'
 import { CompletingParty } from '@bcrs-shared-components/completing-party'
 import StaffPayment from '@/components/common/StaffPayment.vue'
 import TransactionalFolioNumber from '@/components/common/TransactionalFolioNumber.vue'
-import { RoleTypes, RouteNames } from '@/enums'
+import { CorpTypeCd, RoleTypes, RouteNames } from '@/enums'
 
 import {
   ActionBindingIF,
@@ -232,8 +246,10 @@ import { PersonAddressSchema } from '@/schemas/'
     CompletingParty
   }
 })
-export default class DissolutionFirm extends Mixins(DateMixin) {
+export default class DissolutionFirm extends Mixins(DateMixin, EnumMixin) {
   // Global getters
+  @Getter getEntityType!: CorpTypeCd
+  @Getter getBusinessLegalName!: string
   @Getter getBusinessContact!: ContactPointIF
   @Getter getCertifyState!: CertifyIF
   @Getter getCompletingPartyStatement!: CertifyStatementIF
@@ -371,6 +387,11 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
     ]
   }
 
+  /** The display label for entity */
+  protected corpTypeDescription (): string {
+    return this.getCorpTypeDescription(this.getEntityType)
+  }
+
   protected onUpdate (cp: CompletingPartyIF): void {
     this.setCompletingParty(cp)
   }
@@ -423,6 +444,10 @@ h2::before {
       color: $BCgovInputError;
     }
   }
+}
+
+.capitalize {
+  text-transform: uppercase;
 }
 
 #effective-date-text {
