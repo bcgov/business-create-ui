@@ -14,7 +14,7 @@
         settings after you have completed this filing to ensure your information is up to date.
       </p>
     </v-card>
-   <section class="mt-10">
+    <section class="mt-10">
       <!-- Dissolution summary -->
       <v-card flat id="dissolution-summary" class="mt-6">
         <header class="review-header rounded-t">
