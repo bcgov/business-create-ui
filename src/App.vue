@@ -262,7 +262,6 @@ export default class App extends Mixins(
   @Getter getUserPhone!: string
   @Getter getUserEmail!: string
   @Getter getOrgInformation!: OrgInformationIF
-  @Getter isTypeSoleProp!: boolean
 
   @Action setBusinessId!: ActionBindingIF
   @Action setCurrentStep!: ActionBindingIF
@@ -1039,5 +1038,4 @@ aside {
 .vue-affix {
   width: 282px;
 }
-
 </style>

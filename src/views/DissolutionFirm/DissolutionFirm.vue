@@ -387,7 +387,7 @@ export default class DissolutionFirm extends Mixins(DateMixin, EnumMixin) {
     ]
   }
 
-  /** The display label for entity */
+  /** The entity description.  */
   protected corpTypeDescription (): string {
     return this.getCorpTypeDescription(this.getEntityType)
   }
