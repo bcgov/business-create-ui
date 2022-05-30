@@ -5,13 +5,13 @@
     >
       <p>
         <strong>Important:</strong> You are about to dissolve
-        <b class="capitalize">{{ this.getBusinessLegalName }}</b>.
+        <strong class="text-capitalize">{{ getBusinessLegalName }}</strong>.
         Once this process is completed and the required documents are
-        filed, the {{ this.corpTypeDescription() }} will
+        filed, the {{ corpTypeDescription() }} will
         be struck from the register and dissolved, ceasing to be a registered
-        business under the Partnership Act.
-        If you make changes to your address below, please update your address in the account
-        settings after you have completed this filing to ensure your information is up to date.
+        business under the Partnership Act. If you make changes to your address below,
+        please update your address in the account settings after you have completed this
+        filing to ensure your information is up to date.
       </p>
     </v-card>
     <section class="mt-10">
@@ -453,10 +453,6 @@ h2::before {
       color: $BCgovInputError;
     }
   }
-}
-
-.capitalize {
-  text-transform: uppercase;
 }
 
 #effective-date-text {
