@@ -29,6 +29,27 @@
           {{ getNameRequestNumber }}
         </div>
 
+        <template v-if="isTypeFirm">
+          <div id="entity-business-registration-date">
+            <span class="business-info-label">Registration Date:</span>
+            {{ businessStartDate || "Not Available" }}
+          </div>
+        </template>
+
+        <template v-if="isTypeFirm">
+          <div id="entity-business-registration-date">
+            <span class="business-info-label">Registration Number:</span>
+            {{ this.getEntityIdentifier || "Not Available" }}
+          </div>
+        </template>
+
+         <template v-if="isTypeFirm">
+          <div id="entity-business-registration-date">
+            <span class="business-info-label">Business Number:</span>
+            {{ this.getBusinessId || "Not Available" }}
+          </div>
+        </template>
+
         <template v-if="!isRegistrationFiling">
           <div id="entity-business-email">
             <span class="business-info-label">Email:</span>
@@ -50,12 +71,12 @@ import { Component, Mixins } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 import { CorpTypeCd, FilingNames, FilingTypes } from '@/enums'
 import { ContactPointIF, RegistrationStateIF } from '@/interfaces'
-import { EnumMixin } from '@/mixins'
+import { EnumMixin, DateMixin } from '@/mixins'
 import { StaffComments } from '@bcrs-shared-components/staff-comments'
 import { axios } from '@/utils'
 
 @Component({ components: { StaffComments } })
-export default class EntityInfo extends Mixins(EnumMixin) {
+export default class EntityInfo extends Mixins(EnumMixin, DateMixin) {
   @Getter getBusinessLegalName!: string
   @Getter getBusinessContact!: ContactPointIF
   @Getter getEntityIdentifier!: string
@@ -73,9 +94,17 @@ export default class EntityInfo extends Mixins(EnumMixin) {
   @Getter isTypeSoleProp!: boolean
   @Getter getBusinessId!: string
   @Getter isRoleStaff!: boolean
+  @Getter isTypeFirm!: boolean
+  @Getter getBusinessFoundingDate!: string
 
   // axios for template
   readonly axios = axios
+
+  /** The business start date. */
+  get businessStartDate (): string {
+    // it will be same as foundingDate
+    return this.dateToPacificDate(this.apiToDate(this.getBusinessFoundingDate), true)
+  }
 
   /** The entity description.  */
   get entityDescription (): string {
