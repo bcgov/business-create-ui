@@ -9,9 +9,7 @@
         Once this process is completed and the required documents are
         filed, the {{ corpTypeDescription() }} will
         be struck from the register and dissolved, ceasing to be a registered
-        business under the Partnership Act. If you make changes to your address below,
-        please update your address in the account settings after you have completed this
-        filing to ensure your information is up to date.
+        business under the Partnership Act.
       </p>
     </v-card>
     <section class="mt-10">
