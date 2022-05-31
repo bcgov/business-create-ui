@@ -1,5 +1,17 @@
 <template>
   <div id="dissolution-firm-form">
+    <v-card
+      outlined class="message-box rounded-0"
+    >
+      <p>
+        <strong>Important:</strong> You are about to dissolve
+        <strong class="text-capitalize">{{ getBusinessLegalName }}</strong>.
+        Once this process is completed and the required documents are
+        filed, the {{ corpTypeDescription() }} will
+        be struck from the register and dissolved, ceasing to be a registered
+        business under the Partnership Act.
+      </p>
+    </v-card>
     <section class="mt-10">
       <!-- Dissolution summary -->
       <v-card flat id="dissolution-summary" class="mt-6">
@@ -193,7 +205,7 @@
 <script lang="ts">
 import { Component, Mixins } from 'vue-property-decorator'
 import { Getter, Action } from 'vuex-class'
-import { DateMixin } from '@/mixins'
+import { DateMixin, EnumMixin } from '@/mixins'
 import AssociationDetails from '@/components/Dissolution/AssociationDetails.vue'
 import { Certify } from '@bcrs-shared-components/certify'
 
@@ -206,7 +218,7 @@ import { RuleHelpers } from '@/rules'
 import { CompletingParty } from '@bcrs-shared-components/completing-party'
 import StaffPayment from '@/components/common/StaffPayment.vue'
 import TransactionalFolioNumber from '@/components/common/TransactionalFolioNumber.vue'
-import { RoleTypes, RouteNames } from '@/enums'
+import { CorpTypeCd, RoleTypes, RouteNames } from '@/enums'
 
 import {
   ActionBindingIF,
@@ -233,8 +245,10 @@ import { PersonAddressSchema } from '@/schemas/'
     CompletingParty
   }
 })
-export default class DissolutionFirm extends Mixins(DateMixin) {
+export default class DissolutionFirm extends Mixins(DateMixin, EnumMixin) {
   // Global getters
+  @Getter getEntityType!: CorpTypeCd
+  @Getter getBusinessLegalName!: string
   @Getter getBusinessContact!: ContactPointIF
   @Getter getCertifyState!: CertifyIF
   @Getter getCompletingPartyStatement!: CertifyStatementIF
@@ -378,6 +392,11 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
         `Date should be between ${this.dateToPacificDate(this.startDateMin, true)} and
         ${this.dateToPacificDate(this.startDateMax, true)}`
     ]
+  }
+
+  /** The entity description.  */
+  protected corpTypeDescription (): string {
+    return this.getCorpTypeDescription(this.getEntityType)
   }
 
   protected onUpdate (cp: CompletingPartyIF): void {
