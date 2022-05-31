@@ -50,7 +50,6 @@ export default class DateMixin extends Mixins(CommonMixin) {
 
     // update all date and time fields
     date.setFullYear(year, month, day)
-    date.setHours(hours, minutes, 0, 0) // zero out seconds and milliseconds
 
     return date
   }
