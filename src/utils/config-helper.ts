@@ -10,7 +10,6 @@ export async function fetchConfig (): Promise<any> {
   const origin: string = window.location.origin
   const processEnvVueAppPath: string = process.env.VUE_APP_PATH
   const processEnvBaseUrl = process.env.BASE_URL
-  const windowLocationSearch = window.location.search // eg, ?accountid=2288
 
   if (!origin || !processEnvVueAppPath || !processEnvBaseUrl) {
     return Promise.reject(new Error('Missing environment variables'))
