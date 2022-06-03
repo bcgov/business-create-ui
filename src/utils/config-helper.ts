@@ -17,7 +17,7 @@ export async function fetchConfig (): Promise<any> {
   }
 
   // get and store account id, if present
-  const accountId = new URLSearchParams(windowLocationSearch).get('accountid')
+  const accountId = JSON.parse(sessionStorage.getItem('CURRENT_ACCOUNT'))?.id
   if (accountId) {
     sessionStorage.setItem('ACCOUNT_ID', accountId)
     console.log('Set Account ID to: ' + accountId)
