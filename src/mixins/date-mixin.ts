@@ -1,5 +1,4 @@
 import { Component, Mixins } from 'vue-property-decorator'
-import { Getter } from 'vuex-class'
 import { isDate } from 'lodash'
 import { CommonMixin } from '@/mixins'
 
@@ -12,7 +11,6 @@ import { CommonMixin } from '@/mixins'
  */
 @Component({})
 export default class DateMixin extends Mixins(CommonMixin) {
-  @Getter getCurrentJsDate!: Date
 
   /**
    * Fetches and returns the web server's current date (in UTC).
@@ -44,8 +42,10 @@ export default class DateMixin extends Mixins(CommonMixin) {
    * @example "2021, 6, 1, 0, 0" -> "2021-07-01T07:00:00.000Z"
    */
   createUtcDate (year: number, month: number, day: number, hours: number = 0, minutes: number = 0): Date {
-    // use date from server to create a new date in Pacific timezone
-    // (this sets the correct tz offset in the new date)
+    /* We essentially add the difference in offset of UTC and Vancouver timezone
+       to the UTC date created from parameters.
+       SO: https://stackoverflow.com/questions/15141762/
+    */
 
     let date = new Date(Date.UTC(year, month, day, hours, minutes))
     let utcDate = new Date(date.toLocaleString('en-US', { timeZone: 'UTC' }))
@@ -53,8 +53,6 @@ export default class DateMixin extends Mixins(CommonMixin) {
     let offset = utcDate.getTime() - tzDate.getTime()
     date.setTime(date.getTime() + offset)
 
-    console.log(date.toISOString());
-    console.log(new Date(2021, 0, 1));
     return date
   }
 
