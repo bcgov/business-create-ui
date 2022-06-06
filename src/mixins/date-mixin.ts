@@ -46,10 +46,12 @@ export default class DateMixin extends Mixins(CommonMixin) {
   createUtcDate (year: number, month: number, day: number, hours: number = 0, minutes: number = 0): Date {
     // use date from server to create a new date in Pacific timezone
     // (this sets the correct tz offset in the new date)
-    const date = new Date(this.getCurrentJsDate.toLocaleString('en-US', { timeZone: 'America/Vancouver' }))
 
-    // update all date and time fields
-    date.setFullYear(year, month, day)
+    let date = new Date(Date.UTC(year, month, day, hours, minutes))
+    let utcDate = new Date(date.toLocaleString('en-US', { timeZone: 'UTC' }))
+    let tzDate = new Date(date.toLocaleString('en-US', { timeZone: 'America/vancouver' }))
+    let offset = utcDate.getTime() - tzDate.getTime()
+    date.setTime(date.getTime() + offset)
 
     return date
   }
