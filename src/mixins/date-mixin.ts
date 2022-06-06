@@ -1,4 +1,5 @@
 import { Component, Mixins } from 'vue-property-decorator'
+import { Getter } from 'vuex-class'
 import { isDate } from 'lodash'
 import { CommonMixin } from '@/mixins'
 
@@ -11,6 +12,7 @@ import { CommonMixin } from '@/mixins'
  */
 @Component({})
 export default class DateMixin extends Mixins(CommonMixin) {
+  @Getter getCurrentJsDate!: Date
 
   /**
    * Fetches and returns the web server's current date (in UTC).
