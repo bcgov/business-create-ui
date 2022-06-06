@@ -53,6 +53,8 @@ export default class DateMixin extends Mixins(CommonMixin) {
     let offset = utcDate.getTime() - tzDate.getTime()
     date.setTime(date.getTime() + offset)
 
+    console.log(date.toISOString());
+    console.log(new Date(2021, 0, 1));
     return date
   }
 
