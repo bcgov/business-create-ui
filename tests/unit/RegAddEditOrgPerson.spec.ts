@@ -371,8 +371,7 @@ describe('Registration Add/Edit Org/Person component', () => {
   it('displays form data for proprietor-org (SP) - manual add', async () => {
     const wrapper = createComponent(validProprietorOrg, -1, null)
 
-    wrapper.find('.lookup-toggle').trigger('click')
-    await Vue.nextTick()
+    await wrapper.find('.lookup-toggle').trigger('click')
 
     expect(wrapper.find('.manual-add-article label').text())
       .toContain('Edit Business or Corporation Unregistered in B.C.')
@@ -393,8 +392,7 @@ describe('Registration Add/Edit Org/Person component', () => {
   it('displays form data for proprietor-org (SP) - edit', async () => {
     const wrapper = createComponent(validProprietorOrg, 0, null)
 
-    wrapper.find('.lookup-toggle').trigger('click')
-    await Vue.nextTick()
+    await wrapper.find('.lookup-toggle').trigger('click')
 
     // verify input values
     const confirmCheckboxInput = wrapper.find(`${confirmCheckboxSelector} input`)
@@ -422,8 +420,7 @@ describe('Registration Add/Edit Org/Person component', () => {
   it('displays form data for partner-org (GP) - manual add', async () => {
     const wrapper = createComponent(validPartnerOrg, -1, null)
 
-    wrapper.find('.lookup-toggle').trigger('click')
-    await Vue.nextTick()
+    await wrapper.find('.lookup-toggle').trigger('click')
 
     expect(wrapper.find('.manual-add-article label').text())
       .toContain('Edit Business or Corporation Unregistered in B.C.')
@@ -444,8 +441,7 @@ describe('Registration Add/Edit Org/Person component', () => {
   it('displays form data for partner-org (GP) - edit', async () => {
     const wrapper = createComponent(validPartnerOrg, 0, null)
 
-    wrapper.find('.lookup-toggle').trigger('click')
-    await Vue.nextTick()
+    await wrapper.find('.lookup-toggle').trigger('click')
 
     expect(wrapper.find('.manual-add-article label').text())
       .toContain('Edit Business or Corporation Unregistered in B.C.')
@@ -521,8 +517,7 @@ describe('Registration Add/Edit Org/Person component', () => {
   it('does not display error message when user enters valid org name', async () => {
     const wrapper = createComponent(validProprietorOrg, NaN, null)
 
-    wrapper.find('.lookup-toggle').trigger('click')
-    await Vue.nextTick()
+    await wrapper.find('.lookup-toggle').trigger('click')
 
     const inputElement = wrapper.find(`${orgNameSelector} input`)
     inputElement.setValue('Valid Org Name')
@@ -540,8 +535,7 @@ describe('Registration Add/Edit Org/Person component', () => {
   it('displays error message when user enters invalid org name', async () => {
     const wrapper = createComponent(validProprietorOrg, NaN, null)
 
-    wrapper.find('.lookup-toggle').trigger('click')
-    await Vue.nextTick()
+    await wrapper.find('.lookup-toggle').trigger('click')
 
     const inputElement = wrapper.find(`${orgNameSelector} input`)
     inputElement.setValue('     ')

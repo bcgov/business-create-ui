@@ -18,6 +18,7 @@
         return-object
         v-model="selectedBusiness"
       >
+        <!-- Empty selection slot will stop re-triggering of searchField @Watch -->
         <template v-slot:selection=""></template>
         <template v-slot:no-data>
           <v-list-item>
@@ -99,6 +100,7 @@
 import { Component, Emit, Prop, Vue, Watch } from 'vue-property-decorator'
 import { Debounce } from 'vue-debounce-decorator'
 import { BusinessLookupIF, BusinessLookupResultIF } from '@/interfaces'
+
 enum States {
   INITIAL = 'initial',
   SEARCHING = 'searching',
@@ -106,20 +108,25 @@ enum States {
   NO_RESULTS = 'no results',
   SUMMARY = 'summary'
 }
+
 @Component({})
 export default class BusinessLookup extends Vue {
   /** Whether to show errors. */
   @Prop({ required: true })
-  readonly showErrors!: boolean
+  readonly showErrors: boolean
+
   /** The BusinessLookup object. */
   @Prop({ required: true })
-  readonly businessLookup!: BusinessLookupIF
+  readonly businessLookup: BusinessLookupIF
   /** Class for BusinessLookup services. */
+
   @Prop({ required: true })
-  readonly BusinessLookupServices!: any
+  readonly BusinessLookupServices: any
   /** Whether to display Change features. */
+
   @Prop({ default: false })
-  readonly hasBusinessLookupChanges!: boolean
+  readonly hasBusinessLookupChanges: boolean
+
   // enum for template
   readonly States = States
   // local variables
@@ -127,7 +134,7 @@ export default class BusinessLookup extends Vue {
 
   private searchField = ''
   private searchResults: Array<BusinessLookupResultIF> = []
-  private selectedBusiness = null
+  private selectedBusiness: BusinessLookupResultIF = null
 
   /** V-model for dropdown menu. */
   private dropdown: boolean = null
@@ -172,7 +179,7 @@ export default class BusinessLookup extends Vue {
   }
   /** Called when selectedBusiness property has changed. */
   @Watch('selectedBusiness')
-  protected onSelectedBusiness (result: any): void {
+  protected onSelectedBusiness (result: BusinessLookupResultIF): void {
     // safety check
     if (result) {
       // set store value

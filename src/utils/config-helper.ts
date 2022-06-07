@@ -42,7 +42,7 @@ export async function fetchConfig (): Promise<any> {
     'Cache-Control': 'no-cache'
   }
 
-  const response = await axios.get<any>(url, { headers }).catch(() => {
+  const response = await axios.get(url, { headers }).catch(() => {
     return Promise.reject(new Error('Could not fetch configuration.json'))
   })
 

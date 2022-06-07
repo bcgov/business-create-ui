@@ -1,3 +1,5 @@
+import { CorpTypeCd, EntityState } from '@/enums'
+
 export interface BusinessLookupIF {
   identifier: string
   name: string
@@ -6,14 +8,13 @@ export interface BusinessLookupIF {
 
 export const EmptyBusinessLookup: BusinessLookupIF = {
   identifier: null,
-  name: null,
-  bn: null
+  name: null
 }
 
 export interface BusinessLookupResultIF {
   identifier: string
-  legalType: string
+  legalType: CorpTypeCd
   bn: string
-  status: string
+  status: EntityState
   name: string
 }
