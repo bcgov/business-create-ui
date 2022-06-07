@@ -14,7 +14,7 @@ export default class BusinessLookupServices {
     const businessApiKey = sessionStorage.getItem('BUSINESS_API_KEY')
     const accountId = sessionStorage.getItem('ACCOUNT_ID')
     const legalType = 'BC' // Will be updating to a list once search api support it.
-    let url = sessionStorage.getItem('BUSINESS_SEARCH_API_URL')
+    let url = sessionStorage.getItem('REGISTRIES_SEARCH_API_URL')
     url = `${url}businesses/search/facets?num_of_rows=20&status=active&legalType=${legalType}`
     url = `${url}&query=${encodeURIComponent(query)}`
 

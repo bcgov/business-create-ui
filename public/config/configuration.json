@@ -19,7 +19,7 @@
   "SENTRY_DSN": "",
   "STATUS_API_URL": "https://status-api-dev.apps.silver.devops.gov.bc.ca",
   "STATUS_API_VERSION": "/api/v1",
-  "BUSINESS_SEARCH_API_URL": "https://bcregistry-dev.apigee.net/registry-search",
-  "BUSINESS_SEARCH_API_VERSION": "/api/v1",
+  "REGISTRIES_SEARCH_API_URL": "https://bcregistry-dev.apigee.net/registry-search",
+  "REGISTRIES_SEARCH_API_VERSION": "/api/v1",
   "BUSINESS_API_KEY": "KHGuiTxG52ejzFZi7wu4QyD8GdVGEMAz"
 }
