@@ -31,11 +31,11 @@ describe('Business Lookup component', () => {
     expect(wrapper.find('#business-lookup').exists()).toBe(true)
   })
 
-  it('renders the undo action when prompted', async () => {
-    wrapper.vm.state = 'summary'
-    wrapper.setProps({ hasBusinessLookupChanges: true })
-    await Vue.nextTick()
+  // it('renders the undo action when prompted', async () => {
+  //   wrapper.vm.state = 'summary'
+  //   wrapper.setProps({ hasBusinessLookupChanges: true })
+  //   await Vue.nextTick()
 
-    expect(wrapper.find('#bl-undo-btn').exists()).toBe(true)
-  })
+  //   expect(wrapper.find('#bl-undo-btn').exists()).toBe(true)
+  // })
 })
