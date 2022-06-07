@@ -42,7 +42,7 @@ export async function fetchConfig (): Promise<any> {
     'Cache-Control': 'no-cache'
   }
 
-  const response = await axios.get(url, { headers }).catch(() => {
+  const response = await axios.get<any>(url, { headers }).catch(() => {
     return Promise.reject(new Error('Could not fetch configuration.json'))
   })
 
@@ -74,6 +74,15 @@ export async function fetchConfig (): Promise<any> {
   const naicsUrl: string = response.data['NAICS_API_URL'] + response.data['NAICS_API_VERSION'] + '/'
   sessionStorage.setItem('NAICS_URL', naicsUrl)
   console.log('Set NAICS URL to: ' + naicsUrl)
+
+  const businessSearchUrl: string = response.data['BUSINESS_SEARCH_API_URL'] +
+                                    response.data['BUSINESS_SEARCH_API_VERSION'] + '/'
+  sessionStorage.setItem('BUSINESS_SEARCH_API_URL', businessSearchUrl)
+  console.log('Set BUSINESS SEARCH API URL to: ' + businessSearchUrl)
+
+  const businessSearchApiKey: string = response.data['BUSINESS_SEARCH_API_KEY']
+  sessionStorage.setItem('BUSINESS_SEARCH_API_KEY', businessSearchApiKey)
+  console.log('Set BUSINESS SEARCH API KEY to: ' + businessSearchApiKey)
 
   const authApiUrl: string = response.data['AUTH_API_URL'] + response.data['AUTH_API_VERSION'] + '/'
   sessionStorage.setItem('AUTH_API_URL', authApiUrl)
