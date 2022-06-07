@@ -164,6 +164,15 @@
                   a bank or a railway, use the manual entry form. All other types of business cannot
                   be {{ isProprietor ? 'the Proprietor' : 'a partner' }}.
                 </p>
+
+                <HelpContactUs class="mt-6" />
+
+                <BusinessLookup
+                  :showErrors="false"
+                  :businessLookup="EmptyBusinessLookup"
+                  :BusinessLookupServices="BusinessLookupServices"
+                  :hasBusinessLookupChanges="true"
+                />
               </article>
             </template>
 
@@ -317,14 +326,18 @@ import { Component, Mixins } from 'vue-property-decorator'
 import { mask } from 'vue-the-mask'
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
 import { ConfirmDialog } from '@bcrs-shared-components/confirm-dialog'
+import BusinessLookup from '@/components/Registration/BusinessLookup.vue'
 import HelpBusinessNumber from '@/components/Registration/HelpBusinessNumber.vue'
 import HelpContactUs from '@/components/Registration/HelpContactUs.vue'
 import { AddEditOrgPersonMixin } from '@/mixins'
 import { Rules } from '@/rules'
+import { EmptyBusinessLookup } from '@/interfaces'
+import { BusinessLookupServices } from '@/services'
 
 /** This is a sub-component of PeopleAndRoles. */
 @Component({
   components: {
+    BusinessLookup,
     ConfirmDialog,
     DeliveryAddress: BaseAddress,
     MailingAddress: BaseAddress,
@@ -339,7 +352,7 @@ export default class RegAddEditOrgPerson extends Mixins(AddEditOrgPersonMixin) {
   //
 
   // local property
-  protected isManualAdd = true
+  protected isManualAdd = false
 
   /** The validation rules for the Organization Name. */
   readonly OrgNameRules: Array<Function> = [
@@ -349,6 +362,8 @@ export default class RegAddEditOrgPerson extends Mixins(AddEditOrgPersonMixin) {
 
   // Rules for template
   readonly Rules = Rules
+  readonly BusinessLookupServices = BusinessLookupServices
+  readonly EmptyBusinessLookup = EmptyBusinessLookup
 }
 </script>
 

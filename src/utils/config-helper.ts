@@ -75,6 +75,15 @@ export async function fetchConfig (): Promise<any> {
   sessionStorage.setItem('NAICS_URL', naicsUrl)
   console.log('Set NAICS URL to: ' + naicsUrl)
 
+  const registriesSearchUrl: string = response.data['REGISTRIES_SEARCH_API_URL'] +
+                                    response.data['REGISTRIES_SEARCH_API_VERSION'] + '/'
+  sessionStorage.setItem('REGISTRIES_SEARCH_API_URL', registriesSearchUrl)
+  console.log('Set REGISTRIES SEARCH API URL to: ' + registriesSearchUrl)
+
+  const businessApiKey: string = response.data['BUSINESS_API_KEY']
+  sessionStorage.setItem('BUSINESS_API_KEY', businessApiKey)
+  console.log('Set BUSINESS API KEY to: ' + businessApiKey)
+
   const authApiUrl: string = response.data['AUTH_API_URL'] + response.data['AUTH_API_VERSION'] + '/'
   sessionStorage.setItem('AUTH_API_URL', authApiUrl)
   console.log('Set Auth API URL to: ' + authApiUrl)
