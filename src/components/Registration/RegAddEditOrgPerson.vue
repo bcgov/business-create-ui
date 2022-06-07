@@ -165,7 +165,7 @@
                   be {{ isProprietor ? 'the Proprietor' : 'a partner' }}.
                 </p>
 
-                <HelpContactUs class="mt-6" v-if="!isRoleStaff" />
+                <HelpContactUs class="mt-6" />
 
                 <BusinessLookup
                   :showErrors="false"
