@@ -80,9 +80,9 @@ export async function fetchConfig (): Promise<any> {
   sessionStorage.setItem('BUSINESS_SEARCH_API_URL', businessSearchUrl)
   console.log('Set BUSINESS SEARCH API URL to: ' + businessSearchUrl)
 
-  const businessSearchApiKey: string = response.data['BUSINESS_SEARCH_API_KEY']
-  sessionStorage.setItem('BUSINESS_SEARCH_API_KEY', businessSearchApiKey)
-  console.log('Set BUSINESS SEARCH API KEY to: ' + businessSearchApiKey)
+  const businessApiKey: string = response.data['BUSINESS_API_KEY']
+  sessionStorage.setItem('BUSINESS_API_KEY', businessApiKey)
+  console.log('Set BUSINESS API KEY to: ' + businessApiKey)
 
   const authApiUrl: string = response.data['AUTH_API_URL'] + response.data['AUTH_API_VERSION'] + '/'
   sessionStorage.setItem('AUTH_API_URL', authApiUrl)

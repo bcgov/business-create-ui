@@ -11,7 +11,7 @@ export default class BusinessLookupServices {
    * @returns a promise to return the search results
    */
   static async search (query: string): Promise<BusinessLookupResultIF[]> {
-    const businessSearchApiKey = sessionStorage.getItem('BUSINESS_SEARCH_API_KEY')
+    const businessApiKey = sessionStorage.getItem('BUSINESS_API_KEY')
     const accountId = sessionStorage.getItem('ACCOUNT_ID')
     const legalType = 'BC' // Will be updating to a list once search api support it.
     let url = sessionStorage.getItem('BUSINESS_SEARCH_API_URL')
@@ -20,7 +20,7 @@ export default class BusinessLookupServices {
 
     return axios.get(url, {
       headers: {
-        'x-apikey': businessSearchApiKey,
+        'x-apikey': businessApiKey,
         'Account-Id': accountId
       }
     }).then(response => {

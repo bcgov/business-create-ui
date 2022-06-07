@@ -21,5 +21,5 @@
   "STATUS_API_VERSION": "/api/v1",
   "BUSINESS_SEARCH_API_URL": "https://bcregistry-dev.apigee.net/registry-search",
   "BUSINESS_SEARCH_API_VERSION": "/api/v1",
-  "BUSINESS_SEARCH_API_KEY": "KHGuiTxG52ejzFZi7wu4QyD8GdVGEMAz"
+  "BUSINESS_API_KEY": "KHGuiTxG52ejzFZi7wu4QyD8GdVGEMAz"
 }
