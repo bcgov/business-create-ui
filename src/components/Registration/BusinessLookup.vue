@@ -7,6 +7,7 @@
         autocomplete="chrome-off"
         class="mt-5"
         append-icon=""
+        :menu-props="{ maxHeight: 380 }"
         :name="Math.random()"
         :rules="showErrors ? businessLookupRules: []"
         :items="searchResults"
@@ -26,7 +27,7 @@
           </v-list-item>
         </template>
         <template v-slot:item="{ item }">
-          <v-row class="business-lookup-result">
+          <v-row class="business-lookup-result pt-1">
             <v-col cols="2">
               <div class="result-identifier">{{item.identifier}}</div>
             </v-col>
@@ -39,56 +40,34 @@
       </v-autocomplete>
     </div>
 
-    <div v-if="state === States.SUMMARY && haveBusiness"
-      class="summary-block d-flex justify-space-between align-center">
+    <div v-if="state === States.SUMMARY && haveBusiness" class="summary-block mt-5">
       <v-row no-gutters>
         <v-col cols="9">
           <v-row no-gutters>
-            <v-col cols="12" sm="3">
-              <label>Name</label>
-            </v-col>
-            <v-col cols="12" sm="9">
+            <v-col cols="12">
+              <label>Name: </label>
               <span>{{businessName}}</span>
             </v-col>
           </v-row>
-          <v-row no-gutters>
-            <v-col cols="12" sm="3">
-              <label>Incorporation Number</label>
-            </v-col>
-            <v-col cols="12" sm="9">
+          <v-row no-gutters class="mt-1">
+            <v-col cols="12">
+              <label>Incorporation Number: </label>
               <span>{{identifier}}</span>
             </v-col>
           </v-row>
-          <v-row no-gutters>
-            <v-col cols="12" sm="3">
-              <label>Business Number</label>
-            </v-col>
-            <v-col cols="12" sm="9">
+          <v-row no-gutters class="mt-1">
+            <v-col cols="12">
+              <label>Business Number: </label>
               <span>{{businessNumber}}</span>
             </v-col>
           </v-row>
         </v-col>
         <v-col cols="3">
-          <v-btn v-if="!hasBusinessLookupChanges" text color="primary" id="bl-change-btn" @click="onChangeClicked()">
-            <v-icon small>mdi-pencil</v-icon>
-            <span>Change</span>
-          </v-btn>
-
-          <div v-else id="bl-more-actions">
+          <div id="bl-more-actions">
             <v-btn text color="primary" id="bl-undo-btn" @click="emitUndo()">
               <v-icon small>mdi-undo</v-icon>
               <span>Undo</span>
             </v-btn>
-            <v-menu offset-y left nudge-bottom="4" v-model="dropdown">
-              <template v-slot:activator="{ on }">
-                <v-btn text small color="primary" id="bl-menu-btn" v-on="on">
-                  <v-icon>{{dropdown ? 'mdi-menu-up' : 'mdi-menu-down'}}</v-icon>
-                </v-btn>
-              </template>
-              <v-btn text color="primary" id="bl-more-changes-btn" class="py-5"
-                @click="onChangeClicked(); dropdown = false">
-                <v-icon small color="primary">mdi-pencil</v-icon>Change</v-btn>
-            </v-menu>
           </div>
         </v-col>
       </v-row>
@@ -129,6 +108,7 @@ export default class BusinessLookup extends Vue {
 
   // enum for template
   readonly States = States
+
   // local variables
   private state = States.INITIAL
 
@@ -136,8 +116,6 @@ export default class BusinessLookup extends Vue {
   private searchResults: Array<BusinessLookupResultIF> = []
   private selectedBusiness: BusinessLookupResultIF = null
 
-  /** V-model for dropdown menu. */
-  private dropdown: boolean = null
   /** The text field validation rules. */
   readonly businessLookupRules: Array<Function> = [
     v => !!v || 'Business is required'
@@ -162,6 +140,7 @@ export default class BusinessLookup extends Vue {
   get isFormValid (): boolean {
     return (this.haveBusiness && this.state === States.SUMMARY)
   }
+
   /** Called when searchField property has changed. */
   @Watch('searchField')
   @Debounce(600)
@@ -188,20 +167,10 @@ export default class BusinessLookup extends Vue {
         name: result.name,
         bn: result.bn
       })
+      this.selectedBusiness = null
     }
   }
-  /** Called when user has clicked the Cancel button. */
-  protected onCancelClicked (): void {
-    // if we have stored business data then display summary
-    // otherwise go back to INITIAL state
-    this.state = this.haveBusiness ? States.SUMMARY : States.INITIAL
-  }
-  /** Called when user has clicked the Change button. */
-  protected onChangeClicked (): void {
-    // set search to current identifier
-    this.searchField = this.identifier
-    this.state = States.INITIAL
-  }
+
   /** Called when haveBusiness property (which is based on this component's props) has changed. */
   @Watch('haveBusiness', { immediate: true })
   private onHaveBusinessChanged (val: boolean): void {
@@ -243,24 +212,19 @@ export default class BusinessLookup extends Vue {
   cursor: pointer;
   font-size: $px-16;
 }
-#bl-change-btn {
-  margin-right: -14px;
-}
 #bl-more-actions {
   margin-right: -14px;
   white-space: nowrap;
   #bl-undo-btn {
     min-width: unset;
-    border-right: 1px solid $gray1;
+    float: right;
   }
 }
-#result-list {
-  background-color: $gray1;
-  max-height: 650px;
-  overflow-y: auto;
-}
 .summary-block {
-  margin-top: -6px; // compensate for Change button pushing this col down
+  label {
+    font-weight: bold;
+    color: #212529;
+  }
 }
 // Veutify overrides
 ::v-deep {

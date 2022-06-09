@@ -88,11 +88,11 @@
             <!-- Business or Corporation -->
             <template v-if="isOrg">
               <!-- Business or Corporation Unregistered in B.C. -->
-              <article v-if="isManualAdd" class="manual-add-article">
+              <article v-if="!orgPerson.isLookupBusiness" class="manual-add-article">
                 <label>
                   {{ isNaN(activeIndex) ? 'Add' : ' Edit' }} Business or Corporation Unregistered in B.C.
                 </label>
-                <a class="lookup-toggle float-right" @click="isManualAdd = false">
+                <a class="lookup-toggle float-right" @click="swapIsLookupBusiness()">
                   Business or Corporation Look Up
                 </a>
 
@@ -149,30 +149,59 @@
               <!-- Business or Corporation Look up -->
               <article v-else class="business-lookup-article">
                 <label>Business or Corporation Look up</label>
-                <a class="lookup-toggle float-right" @click="isManualAdd = true">
+                <a class="lookup-toggle float-right" @click="swapIsLookupBusiness()">
                   Business or Corporation is Unregistered in B.C.
                 </a>
-
-                <p class="mt-6 mb-0">
-                  To add a registered B.C. business or corporation as
-                  {{ isProprietor ? 'the Proprietor' : 'a partner' }}, enter the name or
-                  incorporation number.
-                </p>
-
-                <p class="mt-6 mb-0">
-                  If you are adding a company that is not legally required to register in B.C. such as
-                  a bank or a railway, use the manual entry form. All other types of business cannot
-                  be {{ isProprietor ? 'the Proprietor' : 'a partner' }}.
-                </p>
-
-                <HelpContactUs class="mt-6" />
+                <div class="mt-6" v-if="hasBusinessSelectedFromLookup">
+                  <v-card
+                    outlined class="message-box rounded-0"
+                  >
+                    <p>
+                      <strong>Important:</strong> If the addresses shown below are out of date, you
+                      may update them here. The updates are applicable only to this registration.
+                    </p>
+                  </v-card>
+                </div>
+                <div v-else>
+                  <p class="mt-6 mb-0">
+                    To add a registered B.C. business or corporation as
+                    {{ isProprietor ? 'the Proprietor' : 'a partner' }}, enter the name or
+                    incorporation number.
+                  </p>
+                  <p class="mt-6 mb-0">
+                    If you are adding a company that is not legally required to register in B.C. such as
+                    a bank or a railway, use the manual entry form. All other types of business cannot
+                    be {{ isProprietor ? 'the Proprietor' : 'a partner' }}.
+                  </p>
+                  <HelpContactUs class="mt-6" />
+                </div>
 
                 <BusinessLookup
-                  :showErrors="false"
-                  :businessLookup="EmptyBusinessLookup"
+                  :showErrors="enableRules"
+                  :businessLookup="inProgressBusinessLookup"
                   :BusinessLookupServices="BusinessLookupServices"
-                  :hasBusinessLookupChanges="true"
+                  @setBusiness="updateBusinessDetails($event)"
+                  @undoBusiness="resetBusinessDetails($event)"
                 />
+                <div v-if="isProprietor && orgPerson.showOptionalBN">
+                  <p class="mt-4 mb-0">
+                    If you have an existing business number for this business or corporation is available,
+                    enter it below and we will contact Canada Revenue Agency and ask them to link it to
+                    this registration.
+                  </p>
+                  <HelpBusinessNumber class="mt-4" />
+                  <!-- Business Number (org proprietors only) -->
+                  <v-text-field
+                    filled
+                    persistent-hint
+                    class="item business-number mt-8 mb-n2"
+                    label="Business Number (Optional)"
+                    hint="First 9 digits of the CRA Business Number"
+                    v-model.trim="orgPerson.officer.businessNumber"
+                    v-mask="['#########']"
+                    :rules="enableRules ? Rules.BusinessNumberRules : []"
+                  />
+                </div>
               </article>
             </template>
 
@@ -331,7 +360,6 @@ import HelpBusinessNumber from '@/components/Registration/HelpBusinessNumber.vue
 import HelpContactUs from '@/components/Registration/HelpContactUs.vue'
 import { AddEditOrgPersonMixin } from '@/mixins'
 import { Rules } from '@/rules'
-import { EmptyBusinessLookup } from '@/interfaces'
 import { BusinessLookupServices } from '@/services'
 
 /** This is a sub-component of PeopleAndRoles. */
@@ -351,9 +379,6 @@ export default class RegAddEditOrgPerson extends Mixins(AddEditOrgPersonMixin) {
   // NB: see mixin for common properties, methods, etc.
   //
 
-  // local property
-  protected isManualAdd = false
-
   /** The validation rules for the Organization Name. */
   readonly OrgNameRules: Array<Function> = [
     v => !!v?.trim() || 'Business or corporation name is required',
@@ -362,8 +387,8 @@ export default class RegAddEditOrgPerson extends Mixins(AddEditOrgPersonMixin) {
 
   // Rules for template
   readonly Rules = Rules
+
   readonly BusinessLookupServices = BusinessLookupServices
-  readonly EmptyBusinessLookup = EmptyBusinessLookup
 }
 </script>
 

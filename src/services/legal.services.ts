@@ -140,6 +140,27 @@ export default class LegalServices {
   }
 
   /**
+   * Fetches addresses.
+   * @param businessId the business identifier (aka entity inc no)
+   * @returns a promise to return the addresses from the response
+   */
+  static fetchAddresses (businessId: string): Promise<any> {
+    const url = `businesses/${businessId}/addresses`
+    return axios.get(url).then(response => {
+      const data = response?.data
+      if (!data) {
+        throw new Error('Invalid API response')
+      }
+      return data
+    }).catch(error => {
+      if (error?.response?.status === NOT_FOUND) {
+        return null // Business or Address not found
+      }
+      throw error
+    })
+  }
+
+  /**
     * Ensure consistent object structure for an incorporation application,
     * whether it contains a Name Request or not, and whether it is an initial
     * draft or it has been previously saved. Object merging does not

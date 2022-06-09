@@ -3,10 +3,20 @@ import { Action, Getter } from 'vuex-class'
 import { cloneDeep, isEqual } from 'lodash'
 import { v4 as uuidv4 } from 'uuid'
 import { CorpTypeCd, PartyTypes, RoleTypes } from '@/enums'
-import { ActionBindingIF, AddressIF, ConfirmDialogType, EmptyAddress, FormIF, OrgPersonIF,
-  PeopleAndRolesResourceIF, RolesIF } from '@/interfaces'
+import {
+  ActionBindingIF,
+  AddressIF,
+  BusinessLookupIF,
+  ConfirmDialogType,
+  EmptyAddress,
+  EmptyBusinessLookup,
+  FormIF,
+  OrgPersonIF,
+  PeopleAndRolesResourceIF,
+  RolesIF } from '@/interfaces'
 import { Rules } from '@/rules'
 import { PersonAddressSchema } from '@/schemas'
+import { LegalServices } from '@/services'
 
 /**
  * Mixin that provides common add/edit org/person methods.
@@ -42,9 +52,11 @@ export default class AddEditOrgPersonMixin extends Vue {
   private addPersonOrgFormValid = true
   private enableRules = false
 
+  private inProgressBusinessLookup: BusinessLookupIF = EmptyBusinessLookup
+
   // Address related properties
-  private inProgressMailingAddress: AddressIF
-  private inProgressDeliveryAddress: AddressIF
+  private inProgressMailingAddress = {} as AddressIF
+  private inProgressDeliveryAddress = {} as AddressIF
   private inheritMailingAddress = true
   private mailingAddressValid = false
   private deliveryAddressValid = false
@@ -100,6 +112,11 @@ export default class AddEditOrgPersonMixin extends Vue {
   /** Whether current data object is an organization (corporation/firm). */
   protected get isOrg (): boolean {
     return (this.orgPerson.officer?.partyType === PartyTypes.ORGANIZATION)
+  }
+
+  /** Whether current business object is selected using lookup. */
+  protected get hasBusinessSelectedFromLookup (): boolean {
+    return this.orgPerson?.isLookupBusiness && !!this.inProgressBusinessLookup.identifier
   }
 
   /** Whether the Completing Party role should be shown. */
@@ -185,6 +202,14 @@ export default class AddEditOrgPersonMixin extends Vue {
         // initialize inheritMailingAddress checkbox
         this.updateSameAsMailingChkBox()
       }
+
+      if (this.initialValue.isLookupBusiness) {
+        this.inProgressBusinessLookup = {
+          name: this.initialValue.officer.organizationName,
+          identifier: this.initialValue.officer.identifier,
+          bn: this.initialValue.officer.businessNumber
+        }
+      }
     }
 
     // if editing, enable validation from the start
@@ -257,6 +282,42 @@ export default class AddEditOrgPersonMixin extends Vue {
     this.deliveryAddressValid = valid
     // validate the main form to update dummy component rules
     this.$refs.addPersonOrgForm && this.$refs.addPersonOrgForm.validate()
+  }
+
+  protected swapIsLookupBusiness (): void {
+    this.orgPerson.isLookupBusiness = !this.orgPerson?.isLookupBusiness
+  }
+
+  /**
+   * BusinessLookup component event handler - called when it is rendered and when
+   * the user undo selected business.
+   */
+  protected resetBusinessDetails (): void {
+    this.updateBusinessDetails(EmptyBusinessLookup)
+  }
+
+  /**
+   * BusinessLookup component event handler - called when it is rendered and when
+   * the user has selected a business.
+   */
+  protected async updateBusinessDetails (businessLookup: BusinessLookupIF): Promise<void> {
+    this.orgPerson.officer.organizationName = businessLookup.name
+    this.orgPerson.officer.identifier = businessLookup.identifier
+    businessLookup.bn = businessLookup.bn?.length > 9
+      ? businessLookup.bn.slice(0, 9)
+      : businessLookup.bn
+    this.orgPerson.officer.businessNumber = businessLookup.bn
+    this.orgPerson.showOptionalBN = !businessLookup.bn
+
+    this.inProgressBusinessLookup = { ...businessLookup }
+    if (businessLookup.identifier) {
+      const addresses = await LegalServices.fetchAddresses(businessLookup.identifier)
+      const registeredOffice = addresses?.registeredOffice
+      if (registeredOffice) {
+        this.inProgressMailingAddress = { ...registeredOffice.mailingAddress }
+        this.inProgressDeliveryAddress = { ...registeredOffice.deliveryAddress }
+      }
+    }
   }
 
   protected async assignCompletingPartyRole (): Promise<void> {
