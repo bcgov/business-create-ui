@@ -7,7 +7,7 @@
         autocomplete="chrome-off"
         class="mt-5"
         append-icon=""
-        :menu-props="{ maxHeight: 380 }"
+        menu-props="{ maxHeight: 380 }"
         :name="Math.random()"
         :rules="showErrors ? businessLookupRules: []"
         :items="searchResults"
@@ -223,7 +223,7 @@ export default class BusinessLookup extends Vue {
 .summary-block {
   label {
     font-weight: bold;
-    color: #212529;
+    color: $gray9;
   }
 }
 // Veutify overrides

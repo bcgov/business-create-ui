@@ -185,8 +185,8 @@
                 />
                 <div v-if="isProprietor && orgPerson.showOptionalBN">
                   <p class="mt-4 mb-0">
-                    If you have an existing business number for this business or corporation is available,
-                    enter it below and we will contact Canada Revenue Agency and ask them to link it to
+                    If an existing business number for this business or corporation is available,
+                    enter it below. We will contact the Canada Revenue Agency and ask them to link it to
                     this registration.
                   </p>
                   <HelpBusinessNumber class="mt-4" />
@@ -197,7 +197,7 @@
                     class="item business-number mt-8 mb-n2"
                     label="Business Number (Optional)"
                     hint="First 9 digits of the CRA Business Number"
-                    v-model.trim="orgPerson.officer.businessNumber"
+                    v-model="orgPerson.officer.businessNumber"
                     v-mask="['#########']"
                     :rules="enableRules ? Rules.BusinessNumberRules : []"
                   />
