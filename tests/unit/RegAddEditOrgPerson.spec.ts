@@ -122,7 +122,8 @@ const validProprietorOrg = {
     postalCode: 'V8Z 5C6',
     addressCountry: 'CA'
   },
-  confirmBusiness: true
+  confirmBusiness: true,
+  isLookupBusiness: true
 }
 
 const validPartnerPerson = {
@@ -187,7 +188,8 @@ const validPartnerOrg = {
     postalCode: 'V8Z 5C6',
     addressCountry: 'CA'
   },
-  confirmBusiness: true
+  confirmBusiness: true,
+  isLookupBusiness: true
 }
 
 /**

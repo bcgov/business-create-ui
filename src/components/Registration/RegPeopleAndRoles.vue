@@ -236,6 +236,11 @@ export default class RegPeopleAndRoles extends Mixins(PeopleRolesMixin) {
       this.currentOrgPerson.deliveryAddress = cloneDeep(this.currentOrgPerson.mailingAddress)
     }
 
+    if (isOrganization) {
+      this.currentOrgPerson.isLookupBusiness = true
+      this.currentOrgPerson.showOptionalBN = false
+    }
+
     this.activeIndex = NaN // new org/person
     this.showOrgPersonForm = true
   }
