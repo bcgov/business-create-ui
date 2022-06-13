@@ -787,9 +787,14 @@ ul {
   }
 }
 
-::v-deep #confirm-resolution-section {
+::v-deep {
   // override default validation styling so checkbox does not turn red on validation error
-  .v-input--selection-controls__input .error--text {
+  .v-input--selection-controls__input .error--text,
+  .v-messages__message,
+  .v-input__slot {
+    color: $app-lt-gray;
+  }
+  .v-input__icon .error--text {
     color: $app-lt-gray !important;
   }
 }
@@ -798,6 +803,14 @@ ul {
   .v-input--checkbox .v-input__control .v-input__slot .v-label {
     color: $BCgovInputError !important;
     animation: none !important;
+  }
+  .v-messages__message,
+  .v-input__slot,
+  .v-input__icon  {
+    color: $BCgovInputError;
+  }
+  .v-input__icon .error--text {
+    color: $BCgovInputError !important;
   }
 }
 

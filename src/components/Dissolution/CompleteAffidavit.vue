@@ -405,8 +405,10 @@ ul {
 
 ::v-deep {
   // override default validation styling so checkbox does not turn red on validation error
-  .v-label .theme--light .error--text {
-    color: $app-lt-gray !important;
+  .v-label .theme--light .error--text,
+  .v-messages__message,
+  .v-input__slot {
+    color: $app-lt-gray;
   }
 
   .v-input--selection-controls__input {
@@ -415,7 +417,9 @@ ul {
 }
 
 .invalid-section ::v-deep {
-  .v-input--checkbox .v-input__control .v-input__slot .v-label {
+  .v-input--checkbox .v-input__control .v-input__slot .v-label,
+  .v-messages__message,
+  .v-input__slot {
     color: $BCgovInputError;
   }
 }
