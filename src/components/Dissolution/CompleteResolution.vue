@@ -788,7 +788,8 @@ ul {
 }
 
 ::v-deep {
-  // override default validation styling so checkbox does not turn red on validation error
+  /** Override default validation styling so invalid sections do
+  not turn red on validation error */
   .v-input--selection-controls__input .error--text,
   .v-messages__message,
   .v-input__slot {
@@ -800,6 +801,8 @@ ul {
 }
 
 .invalid-section ::v-deep {
+  /** Inserts red validation styling on invalid sections after the review
+  and confirm page has been visted.  */
   .v-input--checkbox .v-input__control .v-input__slot .v-label {
     color: $BCgovInputError !important;
     animation: none !important;

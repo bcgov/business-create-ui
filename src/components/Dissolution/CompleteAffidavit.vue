@@ -404,7 +404,8 @@ ul {
 }
 
 ::v-deep {
-  // override default validation styling so checkbox does not turn red on validation error
+  /** override default validation styling preventing inputs from turning
+  red on validation error before the review and confirm step has been visted. */
   .v-label .theme--light .error--text,
   .v-messages__message,
   .v-input__slot {
@@ -417,6 +418,7 @@ ul {
 }
 
 .invalid-section ::v-deep {
+  /** Resets default validation styling after the review and confirm step has been visited. */
   .v-input--checkbox .v-input__control .v-input__slot .v-label,
   .v-messages__message,
   .v-input__slot {
