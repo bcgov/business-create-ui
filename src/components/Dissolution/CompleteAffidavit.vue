@@ -74,7 +74,7 @@
         <h2>3. Confirm Affidavit Completion</h2>
       </header>
 
-      <div class="mt-4" :class="{ 'invalid-section': getShowErrors && !hasAffidavitConfirmed }">
+      <div class="mt-4" :class="{ 'invalid-section': isInvalid }">
         <v-card flat id="confirm-affidavit-card" class="py-8 px-6">
           <v-form ref="confirmAffidavitChk">
             <v-checkbox
@@ -82,7 +82,6 @@
               class="chk-affidavit mt-0 pt-0"
               v-model="affidavitConfirmed"
               hide-details
-              :rules="confirmCompletionAffidavit"
               :label="getAffidavitResources.confirmSection.checkboxLabel"
               @change="onAffidavitConfirmedChange($event)"
             />
@@ -225,16 +224,21 @@ export default class CompleteAffidavit extends Mixins(CommonMixin, DocumentMixin
   readonly ItemTypes = ItemTypes
   readonly PdfPageSize = PdfPageSize
 
-  private get documentURL (): string {
+  get documentURL (): string {
     return `${sessionStorage.getItem('BASE_URL')}files/${this.getAffidavitResources.sampleSection.fileName}`
   }
 
+  /** Is true if the section is invalid after the review and confirm page has been visited */
+  get isInvalid (): boolean {
+    return this.getShowErrors && !this.hasAffidavitConfirmed
+  }
+
   /** The entity name. */
-  private get entityName (): string {
+  get entityName (): string {
     return this.getBusinessLegalName || `${this.getCorpTypeNumberedDescription(this.getEntityType)}`
   }
 
-  private get entityTitle (): string {
+  get entityTitle (): string {
     return this.isTypeCoop ? 'Cooperative Association' : 'Company'
   }
 
@@ -401,12 +405,18 @@ ul {
 
 ::v-deep {
   // override default validation styling so checkbox does not turn red on validation error
-  .v-input--selection-controls__input .error--text {
+  .v-label .theme--light .error--text {
     color: $app-lt-gray !important;
   }
 
   .v-input--selection-controls__input {
     align-self: baseline;
+  }
+}
+
+.invalid-section ::v-deep {
+  .v-input--checkbox .v-input__control .v-input__slot .v-label {
+    color: $BCgovInputError;
   }
 }
 
