@@ -131,6 +131,7 @@
                   <SbcFeeSummary
                     :filingData="feeFilingData"
                     :payURL="payApiUrl"
+                    :filingLabel="filingLabelText"
                   />
                 </affix>
               </aside>
@@ -262,6 +263,7 @@ export default class App extends Mixins(
   @Getter getUserPhone!: string
   @Getter getUserEmail!: string
   @Getter getOrgInformation!: OrgInformationIF
+  @Getter isTypeFirm!: boolean
 
   @Action setBusinessId!: ActionBindingIF
   @Action setCurrentStep!: ActionBindingIF
@@ -284,6 +286,7 @@ export default class App extends Mixins(
   @Action setFilingType!: ActionBindingIF
   @Action setNameRequestState!: ActionBindingIF
   @Action setCompletingParty!: ActionBindingIF
+  @Action setParties!: ActionBindingIF
 
   // Local properties
   private accountAuthorizationDialog: boolean = false
@@ -382,6 +385,10 @@ export default class App extends Mixins(
       this.saveErrorDialog ||
       this.fileAndPayInvalidNameRequestDialog
     )
+  }
+  /** The Fee Summary filing text for firm businesses. */
+  get filingLabelText (): string {
+    return this.isTypeFirm ? 'Dissolution' : ''
   }
 
   /** The About text. */
@@ -594,6 +601,9 @@ export default class App extends Mixins(
         console.log('Launch Darkly update error =', error) // eslint-disable-line no-console
       })
 
+      // set completing party before draft filing dissolution create
+      this.setCompletingParty(this.completingParties())
+
       // fetch the draft filing and resources
       try {
         if (this.getBusinessId) {
@@ -626,12 +636,15 @@ export default class App extends Mixins(
         throw error // go to catch()
       }
 
+      // load parties only for SP/GP businesses
+      if (this.isTypeFirm && this.getBusinessId) this.loadPartiesInformation()
+
       // if user is on a route not valid for the current filing type
       // then try to re-route them
       if (this.$route.meta.filingType !== this.getFilingType) {
         switch (this.getFilingType) {
           case FilingTypes.VOLUNTARY_DISSOLUTION:
-            if (this.isTypeSoleProp) {
+            if (this.isTypeFirm) {
               this.$router.push(RouteNames.DISSOLUTION_FIRM).catch(() => {})
             } else {
               this.$router.push(RouteNames.DISSOLUTION_DEFINE_DISSOLUTION).catch(() => {})
@@ -673,8 +686,6 @@ export default class App extends Mixins(
           }
         )
       }
-
-      this.setCompletingParty(this.completingParties())
 
       // good to go - hide spinner and render components
       this.haveData = true
@@ -976,6 +987,18 @@ export default class App extends Mixins(
       this.setAuthRoles(authRoles)
     } else {
       throw new Error('Invalid auth roles')
+    }
+  }
+
+  /** Gets and stores parties info . */
+  private async loadPartiesInformation (): Promise<any> {
+    // NB: will throw if API error
+    let parties = await LegalServices.fetchParties(this.getBusinessId)
+
+    if (parties?.parties?.length > 0) {
+      this.setParties(parties.parties)
+    } else {
+      throw new Error('Invalid parties')
     }
   }
 

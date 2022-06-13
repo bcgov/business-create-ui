@@ -24,7 +24,8 @@ import {
   StateIF,
   UploadAffidavitIF,
   ValidationDetailIF,
-  CompletingPartyIF
+  CompletingPartyIF,
+  PartyIF
 } from '@/interfaces'
 
 export const mutateBusinessId = (state: StateIF, businessId: string) => {
@@ -363,4 +364,13 @@ export const mutateCompletingParty = (state: StateIF, cp: CompletingPartyIF) => 
 
 export const mutateCompletingPartyValidity = (state: StateIF, valid: boolean) => {
   state.stateModel.completingParty.valid = valid
+}
+
+export const mutateDissolutionDate = (state: StateIF, val: string) => {
+  state.stateModel.dissolution.dissolutionDate = val
+  if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
+}
+
+export const mutateParties = (state: StateIF, parties: Array<PartyIF>) => {
+  state.stateModel.parties = parties
 }

@@ -32,7 +32,8 @@
             "pay-api",
             "legal-api",
             "status-api",
-            "naics-api"
+            "naics-api",
+            "registries-search-api"
         ]
     },
     {

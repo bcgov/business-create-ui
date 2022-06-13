@@ -44,13 +44,16 @@ export default class DateMixin extends Mixins(CommonMixin) {
    * @example "2021, 6, 1, 0, 0" -> "2021-07-01T07:00:00.000Z"
    */
   createUtcDate (year: number, month: number, day: number, hours: number = 0, minutes: number = 0): Date {
-    // use date from server to create a new date in Pacific timezone
-    // (this sets the correct tz offset in the new date)
-    const date = new Date(this.getCurrentJsDate.toLocaleString('en-US', { timeZone: 'America/Vancouver' }))
+    /* We essentially add the difference in offset of UTC and Vancouver timezone
+       to the UTC date created from parameters.
+       SO: https://stackoverflow.com/questions/15141762/
+    */
 
-    // update all date and time fields
-    date.setFullYear(year, month, day)
-    date.setHours(hours, minutes, 0, 0) // zero out seconds and milliseconds
+    let date = new Date(Date.UTC(year, month, day, hours, minutes))
+    let utcDate = new Date(date.toLocaleString('en-US', { timeZone: 'UTC' }))
+    let tzDate = new Date(date.toLocaleString('en-US', { timeZone: 'America/vancouver' }))
+    let offset = utcDate.getTime() - tzDate.getTime()
+    date.setTime(date.getTime() + offset)
 
     return date
   }

@@ -1,6 +1,6 @@
 {
   "name": "business-create-ui",
-  "version": "4.0.4",
+  "version": "4.0.16",
   "private": true,
   "appName": "Create UI",
   "sbcName": "SBC Common Components",
@@ -40,7 +40,7 @@
     "lodash": "^4.17.20",
     "pdfjs-dist": "2.0.943",
     "regenerator-runtime": "^0.13.7",
-    "sbc-common-components": "2.4.46",
+    "sbc-common-components": "2.4.47",
     "uuid": "^8.3.1",
     "vue": "2.6.12",
     "vue-affix": "^0.5.2",
@@ -50,7 +50,8 @@
     "vue2-filters": "^0.10.0",
     "vuelidate": "^0.7.5",
     "vuetify": "^2.3.9",
-    "vuex": "^3.5.1"
+    "vuex": "^3.5.1",
+    "vue-debounce-decorator": "^1.0.1"
   },
   "devDependencies": {
     "@types/jest": "^25.2.3",

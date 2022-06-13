@@ -13,12 +13,12 @@ const dissolutionFirmTestCases = [
     entityType: 'SP',
     isPremium: false,
     isStaff: false
+  },
+  {
+    entityType: 'GP',
+    isPremium: true,
+    isStaff: false
   }
-  // {
-  //   entityType: 'GP',
-  //   isPremium: true,
-  //   isStaff: false
-  // }
 
 ]
 

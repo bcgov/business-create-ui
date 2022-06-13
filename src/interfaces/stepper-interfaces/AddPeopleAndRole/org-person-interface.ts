@@ -10,6 +10,7 @@ export interface OfficerIF {
   organizationName: string
   email?: string
   businessNumber?: string // SP proprietors and GP partners only
+  identifier?: string // SP proprietors and GP partners only
 }
 
 export interface OrgPersonIF {
@@ -19,6 +20,8 @@ export interface OrgPersonIF {
   deliveryAddress?: AddressIF
   inheritMailingAddress?: boolean // for UI use only
   confirmBusiness?: boolean // SP proprietors and GP partners only // for UI use only
+  isLookupBusiness?: boolean // SP proprietors and GP partners only // for UI use only
+  showOptionalBN?: boolean // SP proprietors and GP partners only // for UI use only
 }
 
 export const EmptyOfficer: OfficerIF = {

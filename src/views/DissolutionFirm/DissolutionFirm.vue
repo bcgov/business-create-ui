@@ -1,5 +1,17 @@
 <template>
   <div id="dissolution-firm-form">
+    <v-card
+      outlined class="message-box rounded-0"
+    >
+      <p>
+        <strong>Important:</strong> You are about to dissolve
+        <strong class="text-capitalize">{{ getBusinessLegalName }}</strong>.
+        Once this process is completed and the required documents are
+        filed, the {{ corpTypeDescription() }} will
+        be struck from the register and dissolved, ceasing to be a registered
+        business under the Partnership Act.
+      </p>
+    </v-card>
     <section class="mt-10">
       <!-- Dissolution summary -->
       <v-card flat id="dissolution-summary" class="mt-6">
@@ -49,8 +61,9 @@
               :minDate="startDateMinStr"
               :maxDate="startDateMaxStr"
               :inputRules="startDateRules"
-              @emitDateSync="dissolutionDate = $event"
-              :initialValue="dissolutionDate"
+              :errorMsg="dissolutionError()"
+              @emitDateSync="setDissolutionDate($event)"
+              :initialValue="getDissolutionDate"
             />
           </v-col>
         </v-row>
@@ -66,22 +79,21 @@
         </p>
       </header>
       <v-card flat class="mt-6">
-
-      <DocumentDelivery
-        :class="{ 'invalid-section': isDocumentDeliveryInvalid }"
-        :editableCompletingParty="isRoleStaff"
-        :showCustodianEmail="false"
-        :invalidSection="isDocumentDeliveryInvalid"
-        :contactValue="getBusinessContact.email"
-        :custodianEmail="getDissolutionCustodianEmail"
-        :completingPartyEmail="getUserEmail"
-        :documentOptionalEmail="getDocumentDelivery.documentOptionalEmail"
-        @update:optionalEmail="setDocumentOptionalEmail($event)"
-        @valid="setDocumentOptionalEmailValidity($event)"
-        additionalLabel="Partners"
-        contactLabel="Business Contact"
-      />
-      <!-- SB TODO: update additionalLabel & additionalLabel (sample data)-->
+        <DocumentDelivery
+          :class="{ 'invalid-section': isDocumentDeliveryInvalid }"
+          :editableCompletingParty="isRoleStaff"
+          :showCustodianEmail="false"
+          :invalidSection="isDocumentDeliveryInvalid"
+          :contactValue="getBusinessContact.email"
+          :custodianEmail="getDissolutionCustodianEmail"
+          :completingPartyEmail="getUserEmail"
+          :documentOptionalEmail="getDocumentDelivery.documentOptionalEmail"
+          @update:optionalEmail="setDocumentOptionalEmail($event)"
+          @valid="setDocumentOptionalEmailValidity($event)"
+          :additionalLabel="additionalLabel"
+          :additionalValue="additionalValue"
+          contactLabel="Business Contact"
+        />
       </v-card>
     </section>
 
@@ -193,7 +205,7 @@
 <script lang="ts">
 import { Component, Mixins } from 'vue-property-decorator'
 import { Getter, Action } from 'vuex-class'
-import { DateMixin } from '@/mixins'
+import { DateMixin, EnumMixin } from '@/mixins'
 import AssociationDetails from '@/components/Dissolution/AssociationDetails.vue'
 import { Certify } from '@bcrs-shared-components/certify'
 
@@ -206,7 +218,7 @@ import { RuleHelpers } from '@/rules'
 import { CompletingParty } from '@bcrs-shared-components/completing-party'
 import StaffPayment from '@/components/common/StaffPayment.vue'
 import TransactionalFolioNumber from '@/components/common/TransactionalFolioNumber.vue'
-import { RouteNames } from '@/enums'
+import { CorpTypeCd, RoleTypes, RouteNames } from '@/enums'
 
 import {
   ActionBindingIF,
@@ -215,7 +227,8 @@ import {
   CertifyStatementIF,
   CourtOrderStepIF,
   DocumentDeliveryIF,
-  CompletingPartyIF
+  CompletingPartyIF,
+  PartyIF
 } from '@/interfaces'
 import { PersonAddressSchema } from '@/schemas/'
 
@@ -232,8 +245,10 @@ import { PersonAddressSchema } from '@/schemas/'
     CompletingParty
   }
 })
-export default class DissolutionFirm extends Mixins(DateMixin) {
+export default class DissolutionFirm extends Mixins(DateMixin, EnumMixin) {
   // Global getters
+  @Getter getEntityType!: CorpTypeCd
+  @Getter getBusinessLegalName!: string
   @Getter getBusinessContact!: ContactPointIF
   @Getter getCertifyState!: CertifyIF
   @Getter getCompletingPartyStatement!: CertifyStatementIF
@@ -249,6 +264,10 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
   @Getter getTransactionalFolioNumber!: string
   @Getter getBusinessFoundingDate!: string
   @Getter getCompletingParty!: CompletingPartyIF
+  @Getter getDissolutionDate!: string
+  @Getter getParties!: Array<PartyIF>
+  @Getter isTypeSoleProp: boolean
+  @Getter isTypeFirm: boolean
 
   // Global actions
   @Action setCourtOrderFileNumber!: ActionBindingIF
@@ -261,12 +280,10 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
   @Action setTransactionalFolioNumberValidity!: ActionBindingIF
   @Action setCompletingParty!: ActionBindingIF
   @Action setCompletingPartyValidity!: ActionBindingIF
+  @Action setDissolutionDate!: ActionBindingIF
 
   // Enum for template
   readonly RouteNames = RouteNames
-
-  // local variable
-  private dissolutionDate = ''
 
   // declaration for template
   readonly PersonAddressSchema = PersonAddressSchema
@@ -287,6 +304,32 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
   /** Is true when the certify conditions are not met. */
   private get isCertifyInvalid () {
     return this.getValidateSteps && (!this.getCertifyState.certifiedBy || !this.getCertifyState.valid)
+  }
+  // addition label if its SP/GPs
+  get additionalLabel () {
+    let label
+    if (this.isTypeFirm) { // if Sp/GP
+      label = this.isTypeSoleProp ? 'Proprietor' : 'Partners'
+    }
+    return label
+  }
+
+  /**
+  Get additional value
+  if SP return proprietor email id
+  if GP return partner email ids (comma separated)
+  **/
+  get additionalValue () {
+    let emailList
+    if (this.isTypeFirm) { // if Sp/GP
+      const roleType = this.isTypeSoleProp ? RoleTypes.PROPRIETOR : RoleTypes.PARTNER
+      const partnerDetails = this.getParties?.filter(people => people.roles.some(role => role.roleType === roleType))
+
+      if (partnerDetails?.length > 0) {
+        emailList = partnerDetails.map(people => people.officer.email).join(', ')
+      }
+    }
+    return emailList
   }
 
   /** Handler for Valid change event. */
@@ -312,6 +355,14 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
   /** The minimum start date that can be entered (greater than registration date). */
   private get startDateMin (): Date {
     return new Date(this.getBusinessFoundingDate)
+  }
+
+  /** Dissolution Error */
+  private dissolutionError (): string {
+    if (this.isTypeFirm && this.getValidateSteps && !this.getDissolutionDate) {
+      return 'Dissolution date is required'
+    }
+    return ''
   }
 
   /** The minimum start date string. */
@@ -341,6 +392,11 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
         `Date should be between ${this.dateToPacificDate(this.startDateMin, true)} and
         ${this.dateToPacificDate(this.startDateMax, true)}`
     ]
+  }
+
+  /** The entity description.  */
+  protected corpTypeDescription (): string {
+    return this.getCorpTypeDescription(this.getEntityType)
   }
 
   protected onUpdate (cp: CompletingPartyIF): void {

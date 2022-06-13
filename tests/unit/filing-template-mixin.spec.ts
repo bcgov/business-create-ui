@@ -47,7 +47,6 @@ describe('Registration Filing', () => {
     //   current date
     //   folio number
     //   is future effective
-    //   parties
     //   staff filing data
     //   start date
 
@@ -98,6 +97,69 @@ describe('Registration Filing', () => {
     store.state.stateModel.registration.businessNumber = '111222333'
     store.state.stateModel.registration.businessTypeConfirm = false
 
+    store.state.stateModel.addPeopleAndRoleStep.orgPeople = [
+      {
+        officer: {
+          id: '1234',
+          email: 'lucille@bcregtest.gov.bc.ca',
+          lastName: 'TWENTY',
+          firstName: 'BCREGTEST Lucille',
+          partyType: 'person',
+          middleName: '',
+          organizationName: '',
+          businessNumber: ''
+        },
+        mailingAddress: {
+          postalCode: 'V8V 8V8',
+          addressCity: 'Victoria',
+          addressRegion: 'BC',
+          streetAddress: '1234 Main Street',
+          addressCountry: 'CA',
+          streetAddressAdditional: ''
+        },
+        roles: [
+          {
+            roleType: 'Completing Party',
+            appointmentDate: '2022-05-17'
+          }
+        ]
+      },
+      {
+        officer: {
+          id: '4321',
+          email: 'kitty@example.com',
+          lastName: '',
+          firstName: '',
+          partyType: 'organization',
+          middleName: '',
+          organizationName: 'Crazy Cat Consulting Company',
+          businessNumber: '123456789'
+        },
+        mailingAddress: {
+          postalCode: 'V8V 8V8',
+          addressCity: 'Victoria',
+          addressRegion: 'BC',
+          streetAddress: '1234 Main Street',
+          addressCountry: 'CA',
+          streetAddressAdditional: ''
+        },
+        deliveryAddress: {
+          postalCode: 'V8V 8V8',
+          addressCity: 'Victoria',
+          addressRegion: 'BC',
+          streetAddress: '1234 Main Street',
+          addressCountry: 'CA',
+          streetAddressAdditional: ''
+        },
+        roles: [
+          {
+            roleType: 'Proprietor',
+            appointmentDate: '2022-05-17'
+          }
+        ]
+      }
+    ]
+
     const filing = wrapper.vm.buildRegistrationFiling()
 
     // verify filing data
@@ -144,7 +206,68 @@ describe('Registration Filing', () => {
             legalName: 'My Approved Name',
             legalType: 'SP',
             nrNumber: 'NR 1234567'
-          }
+          },
+          parties: [
+            {
+              officer: {
+                id: '1234',
+                email: 'lucille@bcregtest.gov.bc.ca',
+                lastName: 'TWENTY',
+                firstName: 'BCREGTEST Lucille',
+                partyType: 'person',
+                middleName: '',
+                organizationName: ''
+              },
+              mailingAddress: {
+                postalCode: 'V8V 8V8',
+                addressCity: 'Victoria',
+                addressRegion: 'BC',
+                streetAddress: '1234 Main Street',
+                addressCountry: 'CA',
+                streetAddressAdditional: ''
+              },
+              roles: [
+                {
+                  roleType: 'Completing Party',
+                  appointmentDate: '2022-05-17'
+                }
+              ]
+            },
+            {
+              officer: {
+                id: '4321',
+                email: 'kitty@example.com',
+                lastName: '',
+                firstName: '',
+                partyType: 'organization',
+                middleName: '',
+                organizationName: 'Crazy Cat Consulting Company',
+                taxId: '123456789'
+              },
+              mailingAddress: {
+                postalCode: 'V8V 8V8',
+                addressCity: 'Victoria',
+                addressRegion: 'BC',
+                streetAddress: '1234 Main Street',
+                addressCountry: 'CA',
+                streetAddressAdditional: ''
+              },
+              deliveryAddress: {
+                postalCode: 'V8V 8V8',
+                addressCity: 'Victoria',
+                addressRegion: 'BC',
+                streetAddress: '1234 Main Street',
+                addressCountry: 'CA',
+                streetAddressAdditional: ''
+              },
+              roles: [
+                {
+                  roleType: 'Proprietor',
+                  appointmentDate: '2022-05-17'
+                }
+              ]
+            }
+          ]
         })
       })
     )

@@ -37,7 +37,8 @@ import {
   TombstoneIF,
   UploadAffidavitIF,
   OrgInformationIF,
-  CompletingPartyIF
+  CompletingPartyIF,
+  PartyIF
 } from '@/interfaces'
 import { getMaxStep } from './resource-getters'
 
@@ -67,7 +68,7 @@ export const getFilingName = (state: StateIF): FilingNames => {
     case FilingTypes.INCORPORATION_APPLICATION: return FilingNames.INCORPORATION_APPLICATION
     case FilingTypes.REGISTRATION: return FilingNames.REGISTRATION
     case FilingTypes.VOLUNTARY_DISSOLUTION:
-      if (isTypeSoleProp(state)) {
+      if (isTypeFirm(state)) {
         return FilingNames.DISSOLUTION_FIRM
       }
       return FilingNames.VOLUNTARY_DISSOLUTION
@@ -168,6 +169,11 @@ export const isTypeSoleProp = (state: StateIF): boolean => {
 /** Whether the entity is a General Partnership. */
 export const isTypePartnership = (state: StateIF): boolean => {
   return (getEntityType(state) === CorpTypeCd.PARTNERSHIP)
+}
+
+/** Is True if entity is a Sole Proprietorship or General Partnership. */
+export const isTypeFirm = (state: StateIF): boolean => {
+  return (isTypeSoleProp(state) || isTypePartnership(state))
 }
 
 /** The Account Information object. */
@@ -464,6 +470,16 @@ export const isDissolutionValid = (state: StateIF): boolean => {
 
   const isEffectiveDateTimeValid = isBaseCompany(state) ? getEffectiveDateTime(state).valid : true
 
+  if (isTypeFirm(state)) {
+    return (
+      isDocumentDeliveryValid &&
+      isTransactionalFnValid &&
+      isCertifyValid &&
+      isEffectiveDateTimeValid &&
+      isCourtOrderValid &&
+      isStaffPaymentValid
+    )
+  }
   return (
     isDissolutionDefineDissolutionValid(state) &&
     isAffidavitValid(state) &&
@@ -650,7 +666,7 @@ export const getRegistration = (state: StateIF): RegistrationStateIF => {
 
 // current filing subtitle
 export const getFilingSubtitle = (state: StateIF): string => {
-  if (isDissolutionFiling(state) && isTypeSoleProp(state)) {
+  if (isDissolutionFiling(state) && isTypeFirm(state)) {
     return FilingTypesSubTitle.SOLE_PROP_SUB_TITLE
   }
   return null
@@ -659,4 +675,14 @@ export const getFilingSubtitle = (state: StateIF): string => {
 /** The completing party data. */
 export const getCompletingParty = (state: StateIF): CompletingPartyIF => {
   return state.stateModel.completingParty
+}
+
+/** The dissolution date */
+export const getDissolutionDate = (state: StateIF): string => {
+  return getDissolution(state).dissolutionDate
+}
+
+/** parties List */
+export const getParties = (state: StateIF): Array<PartyIF> => {
+  return state.stateModel.parties
 }

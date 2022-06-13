@@ -3,7 +3,8 @@ import {
   IncorporationAddressIF, IncorporationAgreementIF, NameRequestIF, NameTranslationIF, OrgPersonIF,
   ResourceIF, ShareClassIF, CreateRulesIF, CreateMemorandumIF, ValidationDetailIF, FeesIF,
   UploadAffidavitIF, CreateResolutionIF, OrgInformationIF, NaicsIF,
-  CompletingPartyIF
+  CompletingPartyIF,
+  PartyIF
 } from '@/interfaces'
 import { BusinessTypes, CoopTypes, CorpTypeCd } from '@/enums'
 
@@ -317,4 +318,12 @@ export const setCompletingParty: ActionIF = ({ commit }, cp: CompletingPartyIF):
 
 export const setCompletingPartyValidity: ActionIF = ({ commit }, validity: boolean): void => {
   commit('mutateCompletingPartyValidity', validity)
+}
+
+export const setDissolutionDate: ActionIF = ({ commit }, val: string): void => {
+  commit('mutateDissolutionDate', val)
+}
+
+export const setParties: ActionIF = ({ commit }, val: Array<PartyIF>): void => {
+  commit('mutateParties', val)
 }

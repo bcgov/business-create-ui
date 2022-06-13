@@ -124,6 +124,43 @@ export default class LegalServices {
   }
 
   /**
+   * Fetches parties list.
+   * @param businessId the business identifier (aka entity inc no)
+   * @returns a promise to return the parties from the response
+   */
+  static fetchParties (businessId: string): Promise<any> {
+    // need to get the parties from the legal endpoint v2
+    const legalApiV2 = sessionStorage.getItem('LEGAL_API_URL_V2')
+    let url = `${legalApiV2}businesses/${businessId}/parties`
+
+    return axios.get(url).then(response => {
+      if (response?.data) return response.data
+      throw new Error('Invalid response data')
+    })
+  }
+
+  /**
+   * Fetches addresses.
+   * @param businessId the business identifier (aka entity inc no)
+   * @returns a promise to return the addresses from the response
+   */
+  static fetchAddresses (businessId: string): Promise<any> {
+    const url = `businesses/${businessId}/addresses`
+    return axios.get(url).then(response => {
+      const data = response?.data
+      if (!data) {
+        throw new Error('Invalid API response')
+      }
+      return data
+    }).catch(error => {
+      if (error?.response?.status === NOT_FOUND) {
+        return null // Business or Address not found
+      }
+      throw error
+    })
+  }
+
+  /**
     * Ensure consistent object structure for an incorporation application,
     * whether it contains a Name Request or not, and whether it is an initial
     * draft or it has been previously saved. Object merging does not
