@@ -730,7 +730,6 @@ ul {
 // were not using the expected color of $gray7
 ::v-deep label.v-label.theme--light {
   color: $gray7 !important;
-  animation: none !important;
 }
 
 .complete-resolution-summary-header {
@@ -770,11 +769,6 @@ ul {
     padding: 1rem 0;
   }
 
-  u {
-    display: flex;
-    direction: rtl;
-  }
-
   a {
     text-decoration: none;
   }
@@ -805,7 +799,6 @@ ul {
   and confirm page has been visted.  */
   .v-input--checkbox .v-input__control .v-input__slot .v-label {
     color: $BCgovInputError !important;
-    animation: none !important;
   }
   .v-messages__message,
   .v-input__slot,

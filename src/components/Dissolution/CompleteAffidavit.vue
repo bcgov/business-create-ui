@@ -82,6 +82,7 @@
               class="chk-affidavit mt-0 pt-0"
               v-model="affidavitConfirmed"
               hide-details
+              :rules="confirmCompletionAffidavit"
               :label="getAffidavitResources.confirmSection.checkboxLabel"
               @change="onAffidavitConfirmedChange($event)"
             />
@@ -411,7 +412,9 @@ ul {
   .v-input__slot {
     color: $app-lt-gray;
   }
-
+  .v-input--checkbox .v-input__slot .v-label.error--text {
+    color: $app-lt-gray !important;
+  }
   .v-input--selection-controls__input {
     align-self: baseline;
   }
@@ -423,6 +426,9 @@ ul {
   .v-messages__message,
   .v-input__slot {
     color: $BCgovInputError;
+  }
+  .v-input--checkbox .v-input__slot .v-label.error--text {
+    color: $BCgovInputError !important;
   }
 }
 
