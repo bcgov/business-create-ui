@@ -257,7 +257,7 @@
         <h2>{{getCreateResolutionResource.confirmSection.header}}</h2>
       </header>
 
-      <div class="mt-4" :class="{ 'invalid-section': getShowErrors && !isConfirmResolutionValid }">
+      <div class="mt-4" :class="{ 'invalid-section': isInvalid }">
         <v-card flat id="confirm-resolution-card" class="py-8 px-6">
           <v-form ref="confirmResolutionChkFormRef">
             <v-checkbox
@@ -383,10 +383,15 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin) {
   // Validation Rules
   readonly Rules = Rules
 
-  private get documentURL (): string {
+  get documentURL (): string {
     const docUrl = sessionStorage.getItem('BASE_URL') +
       this.getCreateResolutionResource.sampleFormSection.downloadDocPath
     return docUrl
+  }
+
+  /** Returns true if the section is invalid after the review and confirm page has been visited */
+  get isInvalid (): boolean {
+    return this.getShowErrors && !this.isConfirmResolutionValid
   }
 
   private previewImageSource (): string {
@@ -764,11 +769,6 @@ ul {
     padding: 1rem 0;
   }
 
-  u {
-    display: flex;
-    direction: rtl;
-  }
-
   a {
     text-decoration: none;
   }
@@ -781,10 +781,32 @@ ul {
   }
 }
 
-::v-deep #confirm-resolution-section {
-  // override default validation styling so checkbox does not turn red on validation error
-  .v-input--selection-controls__input .error--text {
+::v-deep {
+  /** Override default validation styling so invalid sections do
+  not turn red on validation error */
+  .v-input--selection-controls__input .error--text,
+  .v-messages__message,
+  .v-input__slot {
+    color: $app-lt-gray;
+  }
+  .v-input__icon .error--text {
     color: $app-lt-gray !important;
+  }
+}
+
+.invalid-section ::v-deep {
+  /** Inserts red validation styling on invalid sections after the review
+  and confirm page has been visted.  */
+  .v-input--checkbox .v-input__control .v-input__slot .v-label {
+    color: $BCgovInputError !important;
+  }
+  .v-messages__message,
+  .v-input__slot,
+  .v-input__icon  {
+    color: $BCgovInputError;
+  }
+  .v-input__icon .error--text {
+    color: $BCgovInputError !important;
   }
 }
 
