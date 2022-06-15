@@ -48,6 +48,30 @@
       </v-card>
     </section>
 
+    <!-- Transactional Folio Number -->
+    <section id="folio-section" class="mt-10" v-if="isPremiumAccount">
+      <header>
+        <h2>Folio or Reference Number for this Filing</h2>
+        <p class="mt-4">
+          Enter the folio or reference number you want to use for this filing for your own tracking purposes.
+          The Business Folio or Reference Number is displayed below (if available).
+          Entering a different value below will not change the Business Folio or Reference Number.
+          Only the number below will appear on the transaction report and receipt for this filing.
+        </p>
+      </header>
+
+      <v-card flat class="mt-6">
+        <TransactionalFolioNumber
+          class="py-8 px-6"
+          :accountFolioNumber="getFolioNumber"
+          :transactionalFolioNumber="getTransactionalFolioNumber"
+          :doValidate="getValidateSteps"
+          @change="setTransactionalFolioNumber($event)"
+          @valid="setTransactionalFolioNumberValidity($event)"
+        />
+      </v-card>
+    </section>
+
     <!-- Certify -->
     <section id="certify-section" class="mt-10">
       <header>
@@ -112,6 +136,7 @@ import StaffPayment from '@/components/common/StaffPayment.vue'
 import DefineRegistrationSummary from '@/components/Registration/DefineRegistrationSummary.vue'
 import FeeAcknowledgement from '@/components/Registration/FeeAcknowledgement.vue'
 import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
+import TransactionalFolioNumber from '@/components/common/TransactionalFolioNumber.vue'
 
 @Component({
   components: {
@@ -121,12 +146,16 @@ import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
     DocumentDelivery,
     FeeAcknowledgement,
     ListPeopleAndRoles,
-    StaffPayment
+    StaffPayment,
+    TransactionalFolioNumber
   }
 })
 export default class RegistrationReviewConfirm extends Vue {
   @Getter getBusinessContact!: ContactPointIF
   @Getter getUserEmail!: string
+  @Getter getFolioNumber!: string
+  @Getter getTransactionalFolioNumber!: string
+  @Getter isPremiumAccount!: boolean
   @Getter getCertifyState!: CertifyIF
   @Getter isRoleStaff!: boolean
   @Getter getValidateSteps!: boolean
@@ -137,6 +166,8 @@ export default class RegistrationReviewConfirm extends Vue {
   @Getter getAddPeopleAndRoleStep!: PeopleAndRoleIF
 
   @Action setDocumentOptionalEmailValidity!: ActionBindingIF
+  @Action setTransactionalFolioNumber!: ActionBindingIF
+  @Action setTransactionalFolioNumberValidity!: ActionBindingIF
 
   /** The Document Delivery additional email label. */
   get documentDeliveryAdditionalLabel (): string {
