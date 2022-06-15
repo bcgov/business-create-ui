@@ -628,7 +628,7 @@ describe('Incorporation - Define Company page for a BEN (named)', () => {
     expect(dialog.exists()).toBe(false)
 
     // verify redirection
-    const baseUrl = 'https://dashboard.url/T1234567'
+    const baseUrl = 'https://dashboard.url/T1234567?accountid=668'
     expect(window.location.assign).toHaveBeenCalledWith(baseUrl)
   })
 })

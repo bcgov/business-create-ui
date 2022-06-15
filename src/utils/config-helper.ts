@@ -10,17 +10,9 @@ export async function fetchConfig (): Promise<any> {
   const origin: string = window.location.origin
   const processEnvVueAppPath: string = process.env.VUE_APP_PATH
   const processEnvBaseUrl = process.env.BASE_URL
-  const windowLocationSearch = window.location.search // eg, ?accountid=2288
 
   if (!origin || !processEnvVueAppPath || !processEnvBaseUrl) {
     return Promise.reject(new Error('Missing environment variables'))
-  }
-
-  // get and store account id, if present
-  const accountId = new URLSearchParams(windowLocationSearch).get('accountid')
-  if (accountId) {
-    sessionStorage.setItem('ACCOUNT_ID', accountId)
-    console.log('Set Account ID to: ' + accountId)
   }
 
   // set Base URL for returning from redirects
