@@ -15,13 +15,6 @@ export async function fetchConfig (): Promise<any> {
     return Promise.reject(new Error('Missing environment variables'))
   }
 
-  // get and store account id, if present
-  const accountId = JSON.parse(sessionStorage.getItem('CURRENT_ACCOUNT'))?.id
-  if (accountId) {
-    sessionStorage.setItem('ACCOUNT_ID', accountId)
-    console.log('Set Account ID to: ' + accountId)
-  }
-
   // set Base URL for returning from redirects
   const baseUrl = `${origin}/${processEnvVueAppPath}/`
   sessionStorage.setItem('BASE_URL', baseUrl)
