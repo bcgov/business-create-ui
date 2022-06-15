@@ -12,7 +12,7 @@ export default class BusinessLookupServices {
    */
   static async search (query: string): Promise<BusinessLookupResultIF[]> {
     const businessApiKey = sessionStorage.getItem('BUSINESS_API_KEY')
-    const accountId = sessionStorage.getItem('ACCOUNT_ID')
+    const accountId = JSON.parse(sessionStorage.getItem('CURRENT_ACCOUNT'))?.id || null
     const legalType = 'BC' // Will be updating to a list once search api support it.
     let url = sessionStorage.getItem('REGISTRIES_SEARCH_API_URL')
     url = `${url}businesses/search/facets?num_of_rows=20&status=active&legalType=${legalType}`
