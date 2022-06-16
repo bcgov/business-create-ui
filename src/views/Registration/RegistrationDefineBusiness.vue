@@ -119,26 +119,6 @@
         />
       </v-card>
     </section>
-
-    <!-- Folio or Reference Number -->
-    <section class="mt-10" v-if="isPremiumAccount">
-      <header id="folio-number-header">
-        <h2>Folio or Reference Number</h2>
-        <p class="mt-4">
-          Add an optional Folio or Reference Number to this business for your own tracking purposes. This
-          information is not used by the BC Business Registry.
-        </p>
-      </header>
-
-      <v-card flat class="step-container" :class="{ 'invalid-section': getShowErrors && !folioNumberValid }">
-        <FolioNumber
-          :initialValue="getFolioNumber"
-          :isEditing="true"
-          @update="setFolioNumber($event)"
-          @valid="onFolioNumberValidEvent($event)"
-        />
-      </v-card>
-    </section>
   </div>
 </template>
 
@@ -149,7 +129,6 @@ import BusinessAddresses from '@/components/Registration/BusinessAddresses.vue'
 import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
 import BusinessNumber from '@/components/Registration/BusinessNumber.vue'
 import BusinessTypeConfirm from '@/components/Registration/BusinessTypeConfirm.vue'
-import FolioNumber from '@/components/common/FolioNumber.vue'
 import NameRequestInfo from '@/components/common/NameRequestInfo.vue'
 import NatureOfBusiness from '@/components/Registration/NatureOfBusiness.vue'
 import StartDate from '@/components/Registration/StartDate.vue'
@@ -163,7 +142,6 @@ import { CommonMixin } from '@/mixins'
     BusinessContactInfo,
     BusinessNumber,
     BusinessTypeConfirm,
-    FolioNumber,
     NameRequestInfo,
     NatureOfBusiness,
     StartDate
@@ -173,13 +151,10 @@ export default class RegistrationDefineBusiness extends Mixins(CommonMixin) {
   @Getter getBusinessContact!: ContactPointIF
   @Getter getRegistration!: RegistrationStateIF
   @Getter getShowErrors!: boolean
-  @Getter isPremiumAccount!: boolean
-  @Getter getFolioNumber!: string
   @Getter isTypePartnership!: boolean
 
   @Action setBusinessContact!: ActionBindingIF
   @Action setRegistrationDefineBusinessValid!: ActionBindingIF
-  @Action setFolioNumber!: ActionBindingIF
   @Action setRegistrationBusinessNumber!: ActionBindingIF
   @Action setRegistrationBusinessTypeConfirm!: ActionBindingIF
 
@@ -190,7 +165,6 @@ export default class RegistrationDefineBusiness extends Mixins(CommonMixin) {
   businessAddressesValid = false
   businessContactValid = false
   startDateValid = false
-  folioNumberValid = false
 
   /** Object of valid flags. Must match validComponents. */
   get validFlags (): object {
@@ -200,8 +174,7 @@ export default class RegistrationDefineBusiness extends Mixins(CommonMixin) {
       businessNumberValid: this.isTypePartnership ? this.businessNumberValid : true,
       businessAddressesValid: this.businessAddressesValid,
       businessContactValid: this.businessContactValid,
-      businessStartDateValid: this.startDateValid,
-      folioNumberValid: !this.isPremiumAccount || this.folioNumberValid
+      businessStartDateValid: this.startDateValid
     }
   }
 
@@ -212,8 +185,7 @@ export default class RegistrationDefineBusiness extends Mixins(CommonMixin) {
     'business-number-header',
     'business-addresses-header',
     'business-contact-header',
-    'business-start-date-header',
-    'folio-number-header'
+    'business-start-date-header'
   ]
 
   /** True if all flags are valid. */
@@ -250,11 +222,6 @@ export default class RegistrationDefineBusiness extends Mixins(CommonMixin) {
 
   onStartDateValidEvent (valid: boolean): void {
     this.startDateValid = valid
-    this.setRegistrationDefineBusinessValid(this.allFlagsValid)
-  }
-
-  onFolioNumberValidEvent (valid: boolean): void {
-    this.folioNumberValid = valid
     this.setRegistrationDefineBusinessValid(this.allFlagsValid)
   }
 
