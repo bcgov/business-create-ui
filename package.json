@@ -1,6 +1,6 @@
 {
   "name": "business-create-ui",
-  "version": "4.0.18",
+  "version": "4.0.19",
   "private": true,
   "appName": "Create UI",
   "sbcName": "SBC Common Components",
@@ -14,7 +14,7 @@
   "dependencies": {
     "@babel/compat-data": "^7.11.0",
     "@bcrs-shared-components/bread-crumb": "1.0.2",
-    "@bcrs-shared-components/business-lookup": "1.0.1",
+    "@bcrs-shared-components/business-lookup": "1.0.2",
     "@bcrs-shared-components/certify": "2.0.0",
     "@bcrs-shared-components/completing-party": "2.0.0",
     "@bcrs-shared-components/confirm-dialog": "1.1.0",
