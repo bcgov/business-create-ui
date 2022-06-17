@@ -250,7 +250,11 @@
                 If you have an existing business number, enter it below and we will contact
                 Canada Revenue Agency and ask them to link it to this registration.
               </p>
-              <HelpBusinessNumber class="mt-4" />
+              <HelpBusinessNumber
+                class="mt-4"
+                :isTypeSoleProp="isTypeSoleProp"
+                :isTypePartnership="isTypePartnership"
+              />
               <v-text-field
                 filled
                 persistent-hint
@@ -355,8 +359,8 @@ import { Component, Mixins } from 'vue-property-decorator'
 import { mask } from 'vue-the-mask'
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
 import { ConfirmDialog } from '@bcrs-shared-components/confirm-dialog'
-import BusinessLookup from '@/components/Registration/BusinessLookup.vue'
-import HelpBusinessNumber from '@/components/Registration/HelpBusinessNumber.vue'
+import { BusinessLookup } from '@bcrs-shared-components/business-lookup'
+import { HelpBusinessNumber } from '@bcrs-shared-components/help-business-number'
 import HelpContactUs from '@/components/Registration/HelpContactUs.vue'
 import { AddEditOrgPersonMixin } from '@/mixins'
 import { Rules } from '@/rules'

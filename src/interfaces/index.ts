@@ -21,6 +21,10 @@ export * from './stepper-interfaces/AddPeopleAndRole/add-people-role-interface'
 export * from './stepper-interfaces/AddPeopleAndRole/org-person-interface'
 export * from './stepper-interfaces/AddPeopleAndRole/people-and-roles-resource-interface'
 export * from './stepper-interfaces/AddPeopleAndRole/roles-array-interface'
+export * from './stepper-interfaces/Affidavit/affidavit-interface'
+export * from './stepper-interfaces/common/staff-payment-step-interface'
+export * from './stepper-interfaces/common/court-order-step-interface'
+export * from './stepper-interfaces/common/person-interface'
 export * from './stepper-interfaces/CreateMemorandum/create-memorandum-interface'
 export * from './stepper-interfaces/CreateMemorandum/create-memorandum-resource-interface'
 export * from './stepper-interfaces/CreateResolution/create-resolution-interface'
@@ -31,15 +35,10 @@ export * from './stepper-interfaces/CreateShareStructure/create-share-structure-
 export * from './stepper-interfaces/DefineCompany/address-interfaces'
 export * from './stepper-interfaces/DefineCompany/define-company-interface'
 export * from './stepper-interfaces/DefineCompany/name-translation-interface'
+export * from './stepper-interfaces/Dissolution/dissolution-statement-interface'
 export * from './stepper-interfaces/IncorporationAgreement/help-section-interface'
 export * from './stepper-interfaces/IncorporationAgreement/incorporation-agreement-interface'
 export * from './stepper-interfaces/ReviewConfirm/certify-interface'
-export * from './stepper-interfaces/Dissolution/dissolution-statement-interface'
-export * from './stepper-interfaces/Affidavit/affidavit-interface'
-
-export * from './stepper-interfaces/common/staff-payment-step-interface'
-export * from './stepper-interfaces/common/court-order-step-interface'
-export * from './stepper-interfaces/common/person-interface'
 
 // Store interfaces
 export * from './store-interfaces/state-interfaces/account-information-interface'
@@ -66,20 +65,22 @@ export * from './utils-interfaces/pdf-info-interface'
 export * from './utils-interfaces/validation-detail-interface'
 export * from './utils-interfaces/validation-item-detail-interface'
 
-// common interfaces
+// Common interfaces
 export * from './common/address-interface'
 
 // Registration interfaces
 export * from './Registration/business-address-interface'
-export * from './Registration/business-lookup-interface'
 
 // External interfaces
 // NB: importing EmptyAddress doesn't work in local components
 export {
   BreadcrumbIF,
+  BusinessLookupIF,
+  BusinessLookupResultIF,
   CommentIF,
   ContactPointIF,
   EffectiveDateTimeIF,
+  EmptyBusinessLookup,
   EmptyContactPoint,
   EmptyNaics,
   NaicsIF,
