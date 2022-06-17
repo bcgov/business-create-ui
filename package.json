@@ -52,8 +52,7 @@
     "vue2-filters": "^0.10.0",
     "vuelidate": "^0.7.5",
     "vuetify": "^2.3.9",
-    "vuex": "^3.5.1",
-    "vue-debounce-decorator": "^1.0.1"
+    "vuex": "^3.5.1"
   },
   "devDependencies": {
     "@types/jest": "^25.2.3",
