@@ -19,7 +19,8 @@
           If you have an existing business number, enter it below and we will contact
           Canada Revenue Agency and ask them to link it to this registration.
         </p>
-        <HelpBusinessNumber class="mt-4" />
+        <!-- NB: this component is only used for GPs -->
+        <HelpBusinessNumber class="mt-4" isTypePartnership=true />
         <v-text-field
           filled
           persistent-hint
@@ -43,7 +44,7 @@ import { Component, Emit, Prop, Vue, Watch } from 'vue-property-decorator'
 import { mask } from 'vue-the-mask'
 import { FormIF } from '@/interfaces'
 import { Rules } from '@/rules'
-import HelpBusinessNumber from '@/components/Registration/HelpBusinessNumber.vue'
+import { HelpBusinessNumber } from '@bcrs-shared-components/help-business-number'
 
 /**
  * Implements custom validation logic as follows:
