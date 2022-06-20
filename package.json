@@ -1,6 +1,6 @@
 {
   "name": "business-create-ui",
-  "version": "4.0.18",
+  "version": "4.0.20",
   "private": true,
   "appName": "Create UI",
   "sbcName": "SBC Common Components",
@@ -14,6 +14,7 @@
   "dependencies": {
     "@babel/compat-data": "^7.11.0",
     "@bcrs-shared-components/bread-crumb": "1.0.2",
+    "@bcrs-shared-components/business-lookup": "1.0.2",
     "@bcrs-shared-components/certify": "2.0.0",
     "@bcrs-shared-components/completing-party": "2.0.0",
     "@bcrs-shared-components/confirm-dialog": "1.1.0",
@@ -23,8 +24,9 @@
     "@bcrs-shared-components/date-picker": "1.1.15",
     "@bcrs-shared-components/document-delivery": "1.0.0",
     "@bcrs-shared-components/effective-date-time": "1.0.2",
-    "@bcrs-shared-components/enums": "1.0.17",
-    "@bcrs-shared-components/interfaces": "1.0.36",
+    "@bcrs-shared-components/enums": "1.0.19",
+    "@bcrs-shared-components/help-business-number": "1.0.0",
+    "@bcrs-shared-components/interfaces": "1.0.39",
     "@bcrs-shared-components/mixins": "1.0.6",
     "@bcrs-shared-components/nature-of-business": "1.0.3",
     "@bcrs-shared-components/staff-comments": "1.2.0",
@@ -50,8 +52,7 @@
     "vue2-filters": "^0.10.0",
     "vuelidate": "^0.7.5",
     "vuetify": "^2.3.9",
-    "vuex": "^3.5.1",
-    "vue-debounce-decorator": "^1.0.1"
+    "vuex": "^3.5.1"
   },
   "devDependencies": {
     "@types/jest": "^25.2.3",

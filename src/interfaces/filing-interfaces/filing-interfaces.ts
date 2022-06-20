@@ -78,6 +78,7 @@ export interface RegistrationFilingIF {
     effectiveDate?: string // not saved by UI but may be provided by API
     filingId?: number // not saved by UI but may be provided by API
     folioNumber?: string // optional and only displayed for certain account types
+    isTransactionalFolioNumber?: boolean // Optional - applies to registration Premium accounts only
     isFutureEffective: boolean
 
     // staff payment properties:
