@@ -467,11 +467,12 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
       this.parseStaffPayment(draftFiling)
     }
 
-    // if this is a premium account and Folio Number exists then restore it
+    // if this is a premium account and Transactional Folio Number exists then restore it
     // NB: Premium account is mutually exclusive with staff role.
     if (this.isPremiumAccount) {
-      if (draftFiling.header.folioNumber) {
-        this.setFolioNumber(draftFiling.header.folioNumber)
+      // if Transactional Folio Number exists then restore it
+      if (draftFiling.header.isTransactionalFolioNumber && draftFiling.header.folioNumber) {
+        this.setTransactionalFolioNumber(draftFiling.header.folioNumber)
       }
     }
   }
