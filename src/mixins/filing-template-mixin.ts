@@ -382,6 +382,11 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
       this.buildStaffPayment(filing)
     }
 
+    // NB: Premium account is mutually exclusive with staff role.
+    if (this.isPremiumAccount) {
+      this.buildFolioNumber(filing)
+    }
+
     return filing
   }
 
@@ -462,11 +467,12 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
       this.parseStaffPayment(draftFiling)
     }
 
-    // if this is a premium account and Folio Number exists then restore it
+    // if this is a premium account and Transactional Folio Number exists then restore it
     // NB: Premium account is mutually exclusive with staff role.
     if (this.isPremiumAccount) {
-      if (draftFiling.header.folioNumber) {
-        this.setFolioNumber(draftFiling.header.folioNumber)
+      // if Transactional Folio Number exists then restore it
+      if (draftFiling.header.isTransactionalFolioNumber && draftFiling.header.folioNumber) {
+        this.setTransactionalFolioNumber(draftFiling.header.folioNumber)
       }
     }
   }
@@ -603,14 +609,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
 
     // NB: Premium account is mutually exclusive with staff role.
     if (this.isPremiumAccount) {
-      // override Folio Number if TFN exists and is different than default FN
-      // also save a flag to correctly restore a draft later
-      const fn = this.getFolioNumber
-      const tfn = this.getTransactionalFolioNumber
-      if (tfn && tfn !== fn) {
-        filing.header.folioNumber = tfn
-        filing.header.isTransactionalFolioNumber = true
-      }
+      this.buildFolioNumber(filing)
     }
 
     return filing
@@ -751,6 +750,20 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
 
       case StaffPaymentOptions.NONE: // should never happen
         break
+    }
+  }
+
+  /** If a Transactional Folio number was entered then override the Folio number
+   *  @param filing The dissolution or registration filing.
+   */
+  private buildFolioNumber (filing: DissolutionFilingIF | RegistrationFilingIF): void {
+    // override Folio Number if TFN exists and is different than default FN
+    // also save a flag to correctly restore a draft later
+    const fn = this.getFolioNumber
+    const tfn = this.getTransactionalFolioNumber
+    if (tfn && tfn !== fn) {
+      filing.header.folioNumber = tfn
+      filing.header.isTransactionalFolioNumber = true
     }
   }
 
