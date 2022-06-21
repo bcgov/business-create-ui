@@ -78,7 +78,7 @@ export interface RegistrationFilingIF {
     effectiveDate?: string // not saved by UI but may be provided by API
     filingId?: number // not saved by UI but may be provided by API
     folioNumber?: string // optional and only displayed for certain account types
-    isTransactionalFolioNumber?: boolean // Optional - applies to registration Premium accounts only
+    isTransactionalFolioNumber?: boolean // Optional - applies dissolution and registration. Premium accounts only
     isFutureEffective: boolean
 
     // staff payment properties:
@@ -119,7 +119,7 @@ export interface DissolutionFilingIF {
     effectiveDate?: string // Optional and should be set only for future effective filings
     filingId?: number // Optional as this is not required when building a filing - causes an error for new filings
     folioNumber?: string // Optional - applies to diss Premium accounts or diss BCOL staff payments (not both)
-    isTransactionalFolioNumber?: boolean // Optional - applies to dissolution Premium accounts only
+    isTransactionalFolioNumber?: boolean // Optional - applies dissolution and registration. Premium accounts only
     isFutureEffective: boolean
     documentOptionalEmail?: string // Optional for staff to provide user email
 
