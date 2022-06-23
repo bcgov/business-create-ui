@@ -25,7 +25,7 @@
           <v-icon class="step__btn2" size="30" color="success darken-1" v-show="isValid(step.to)">
             mdi-check-circle
           </v-icon>
-          <v-icon class="step__btn2" size="30" color="error darken-1" v-show="!isValid(step.to) && getValidateSteps">
+          <v-icon class="step__btn2" size="30" color="error darken-1" v-show="!isValid(step.to) && getShowErrors">
             mdi-close-circle
           </v-icon>
         </div>
@@ -55,8 +55,8 @@ import { RegistrationStateIF } from '@/interfaces'
 @Component({})
 export default class Stepper extends Vue {
   @Getter getRegistration!: RegistrationStateIF
+  @Getter getShowErrors!: boolean
   @Getter getSteps!: Array<any>
-  @Getter getValidateSteps!: boolean
   @Getter isAddPeopleAndRolesValid!: boolean
   @Getter isAffidavitValid!: boolean
   @Getter isBusySaving!: boolean
