@@ -1,5 +1,5 @@
 <template>
-  <div id="dissolution-firm-form">
+  <div class="mt-10" id="dissolution-firm-form">
     <v-card
       outlined class="message-box rounded-0"
     >

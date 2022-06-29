@@ -91,7 +91,6 @@ export default class EntityInfo extends Mixins(EnumMixin, DateMixin) {
   @Getter isEntityType!: boolean
   @Getter isIncorporationFiling!: boolean
   @Getter isRegistrationFiling!: boolean
-  @Getter isTypeSoleProp!: boolean
   @Getter getBusinessId!: string
   @Getter isRoleStaff!: boolean
   @Getter isTypeFirm!: boolean
@@ -109,8 +108,8 @@ export default class EntityInfo extends Mixins(EnumMixin, DateMixin) {
   /** The entity description.  */
   get entityDescription (): string {
     const corpTypeDescription = this.getCorpTypeDescription(this.getEntityType)
-    if (this.isTypeSoleProp) {
-      return `${corpTypeDescription} / Doing Business As (DBA) ${this.getFilingName}`
+    if (this.isTypeFirm) {
+      return `${corpTypeDescription}`
     }
     return `${corpTypeDescription} ${this.getFilingName}`
   }
