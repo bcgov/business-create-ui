@@ -48,7 +48,12 @@ export default class BusinessLookupServices {
       if (!results) {
         throw new Error('Invalid API response')
       }
-      return results
+
+      // filter out results without a valid identifier
+      return results.filter(result => {
+        const pattern = /^[A-Z]{1,3}[0-9]{7}$/
+        return pattern.test(result.identifier)
+      })
     })
   }
 }
