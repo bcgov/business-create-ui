@@ -312,11 +312,10 @@ export default class AddEditOrgPersonMixin extends Vue {
   protected async updateBusinessDetails (businessLookup: BusinessLookupIF): Promise<void> {
     this.orgPerson.officer.organizationName = businessLookup.name
     this.orgPerson.officer.identifier = businessLookup.identifier
-    businessLookup.bn = businessLookup.bn?.length > 9
-      ? businessLookup.bn.slice(0, 9)
-      : businessLookup.bn
-    this.orgPerson.officer.businessNumber = businessLookup.bn
-    this.orgPerson.showOptionalBN = !businessLookup.bn
+    // sanitize Business Number
+    this.orgPerson.officer.businessNumber = (businessLookup.bn?.length === 9) ? businessLookup.bn
+      : (businessLookup.bn?.length > 9) ? businessLookup.bn.slice(0, 9) : null
+    this.orgPerson.showOptionalBN = !this.orgPerson.officer.businessNumber
 
     this.inProgressBusinessLookup = { ...businessLookup }
     if (businessLookup.identifier) {
