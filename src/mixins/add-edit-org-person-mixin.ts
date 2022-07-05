@@ -320,6 +320,7 @@ export default class AddEditOrgPersonMixin extends Vue {
     this.inProgressBusinessLookup = { ...businessLookup }
     if (businessLookup.identifier) {
       const addresses = await LegalServices.fetchAddresses(businessLookup.identifier)
+        .catch(() => ({ registeredOffice: undefined }))
       const registeredOffice = addresses?.registeredOffice
       if (registeredOffice) {
         this.inProgressMailingAddress = { ...registeredOffice.mailingAddress }
