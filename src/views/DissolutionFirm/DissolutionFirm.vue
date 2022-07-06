@@ -124,6 +124,8 @@
           <v-card flat>
             <CompletingParty
               class="section-container py-6"
+              :class="{ 'invalid-section': isCompletingPartyInvalid }"
+              :invalidSection="isCompletingPartyInvalid"
               :completingParty="getCompletingParty"
               :enableAddEdit="isRoleStaff"
               :addressSchema="PersonAddressSchema"
@@ -143,9 +145,8 @@
           Confirm the legal name of the person authorized to complete and submit this dissolution.
         </p>
       </header>
-      <v-card flat class="mt-6">
+      <v-card flat class="mt-6" :class="{ 'invalid-section': isCertifyInvalid }">
       <Certify
-        :class="{ 'invalid-section': isCertifyInvalid }"
         :currentDate="getCurrentDate"
         :certifiedBy="getCertifyState.certifiedBy"
         :entityDisplay="getCompletingPartyStatement.entityDisplay"
@@ -173,10 +174,9 @@
           Plan of Arrangement.
         </p>
       </header>
-      <v-card flat class="mt-6">
+      <v-card flat class="mt-6" :class="{ 'invalid-section': isCourtOrderInvalid }">
       <CourtOrderPoa
         id="court-order"
-        :class="{ 'invalid-section': isCourtOrderInvalid }"
         :autoValidation="getValidateSteps"
         :draftCourtOrderNumber="getCourtOrderStep.courtOrder.fileNumber"
         :hasDraftPlanOfArrangement="getCourtOrderStep.courtOrder.hasPlanOfArrangement"
@@ -292,18 +292,23 @@ export default class DissolutionFirm extends Mixins(DateMixin, EnumMixin) {
   private completingPartyValid = true
 
   /** Is true when the Court Order conditions are not met. */
-  get isCourtOrderInvalid (): boolean {
+  private get isCourtOrderInvalid () {
     return (this.getValidateSteps && !this.getCourtOrderStep.valid)
   }
 
   /** Is true when the Document Delivery conditions are not met. */
-  get isDocumentDeliveryInvalid (): boolean {
+  private get isDocumentDeliveryInvalid () {
     return (this.getValidateSteps && !this.getDocumentDelivery.valid)
   }
 
   /** Is true when the certify conditions are not met. */
   private get isCertifyInvalid () {
     return this.getValidateSteps && (!this.getCertifyState.certifiedBy || !this.getCertifyState.valid)
+  }
+
+  /** Is true when the completing party conditions are not met. */
+  private get isCompletingPartyInvalid () {
+    return this.getValidateSteps && (!this.getCompletingParty.valid)
   }
   // addition label if its SP/GPs
   get additionalLabel () {
