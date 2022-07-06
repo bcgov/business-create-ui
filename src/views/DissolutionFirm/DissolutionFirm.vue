@@ -360,7 +360,7 @@ export default class DissolutionFirm extends Mixins(DateMixin, EnumMixin) {
   /** Dissolution Error */
   private dissolutionError (): string {
     if (this.isTypeFirm && this.getValidateSteps && !this.getDissolutionDate) {
-      return 'Dissolution date is required'
+      return 'Business dissolution date is required'
     }
     return ''
   }
@@ -389,7 +389,7 @@ export default class DissolutionFirm extends Mixins(DateMixin, EnumMixin) {
           .isBetweenDates(this.startDateMin,
             this.startDateMax,
             v) ||
-        `Date should be between ${this.dateToPacificDate(this.startDateMin, true)} and
+        `Dissolution Date must be after ${this.dateToPacificDate(this.startDateMin, true)} and up to
         ${this.dateToPacificDate(this.startDateMax, true)}`
     ]
   }
