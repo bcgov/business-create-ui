@@ -41,7 +41,8 @@
         "application": [
             "business",
             "auth-web",
-            "registry"
+            "registry",
+            "siteminder"
         ]
     },
     {
