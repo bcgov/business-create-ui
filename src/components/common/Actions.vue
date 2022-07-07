@@ -229,8 +229,7 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Name
 
       if (
         !this.getEffectiveDateTime.effectiveDate ||
-        (this.getEffectiveDateTime.effectiveDate &&
-        !this.isValidDateTime(this.getEffectiveDateTime.effectiveDate))
+        !this.isValidDateTime(this.getEffectiveDateTime.effectiveDate)
       ) {
         this.setEffectiveDateTimeValid(false)
         this.setIsFilingPaying(false)
