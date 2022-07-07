@@ -78,9 +78,8 @@
           Copies of the dissolution documents will be sent to the email addresses listed below.
         </p>
       </header>
-      <v-card flat class="mt-6">
+      <v-card flat class="mt-6" :class="{ 'invalid-section': isDocumentDeliveryInvalid }">
         <DocumentDelivery
-          :class="{ 'invalid-section': isDocumentDeliveryInvalid }"
           :editableCompletingParty="isRoleStaff"
           :showCustodianEmail="false"
           :invalidSection="isDocumentDeliveryInvalid"
@@ -121,10 +120,9 @@
 
     <section id="completing-party-section" class="mt-10">
           <h2 class="mb-6">Completing Party</h2>
-          <v-card flat>
+          <v-card flat :class="{ 'invalid-section': isCompletingPartyInvalid }">
             <CompletingParty
               class="section-container py-6"
-              :class="{ 'invalid-section': isCompletingPartyInvalid }"
               :invalidSection="isCompletingPartyInvalid"
               :completingParty="getCompletingParty"
               :enableAddEdit="isRoleStaff"
@@ -292,22 +290,22 @@ export default class DissolutionFirm extends Mixins(DateMixin, EnumMixin) {
   private completingPartyValid = true
 
   /** Is true when the Court Order conditions are not met. */
-  private get isCourtOrderInvalid () {
+  get isCourtOrderInvalid (): boolean {
     return (this.getValidateSteps && !this.getCourtOrderStep.valid)
   }
 
   /** Is true when the Document Delivery conditions are not met. */
-  private get isDocumentDeliveryInvalid () {
+  get isDocumentDeliveryInvalid (): boolean {
     return (this.getValidateSteps && !this.getDocumentDelivery.valid)
   }
 
   /** Is true when the certify conditions are not met. */
-  private get isCertifyInvalid () {
+  get isCertifyInvalid (): boolean {
     return this.getValidateSteps && (!this.getCertifyState.certifiedBy || !this.getCertifyState.valid)
   }
 
   /** Is true when the completing party conditions are not met. */
-  private get isCompletingPartyInvalid () {
+  get isCompletingPartyInvalid ():boolean {
     return this.getValidateSteps && (!this.getCompletingParty.valid)
   }
   // addition label if its SP/GPs
