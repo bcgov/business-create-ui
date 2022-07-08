@@ -45,7 +45,7 @@
           The dissolution date cannot be in the future.
         </p>
       </header>
-      <v-card flat class="py-8 px-6 mt-6">
+      <v-card flat class="py-8 px-6 mt-6" :class="{ 'red-bar-error': isDissolutionDateInvalid }">
 
        <!-- EDIT SECTION -->
         <v-row no-gutters class="pb-0">
@@ -81,6 +81,7 @@
       <v-card flat class="mt-6">
         <DocumentDelivery
           class="py-8 px-6"
+          :class="{ 'red-bar-error': isDocumentDeliveryInvalid }"
           :editableCompletingParty="isRoleStaff"
           :showCustodianEmail="false"
           :invalidSection="isDocumentDeliveryInvalid"
@@ -122,14 +123,14 @@
 
     <section id="completing-party-section" class="mt-10">
           <h2 class="mb-6">Completing Party</h2>
-          <v-card flat :class="{ 'invalid-section': isCompletingPartyInvalid }">
+          <v-card flat class="mt-6" :class="{ 'invalid-section': isCompletingPartyInvalid }">
             <CompletingParty
               class="py-8 px-6 section-container py-6"
               :invalidSection="isCompletingPartyInvalid"
               :completingParty="getCompletingParty"
               :enableAddEdit="isRoleStaff"
               :addressSchema="PersonAddressSchema"
-              :validate="completingPartyValid"
+              :validate="isCompletingPartyInvalid"
               @update="onUpdate($event)"
               @valid="onValid($event)"
             />
@@ -315,6 +316,11 @@ export default class DissolutionFirm extends Mixins(DateMixin, EnumMixin) {
     return this.getValidateSteps && (!this.getCompletingParty.valid)
   }
 
+  /** Is true when the dissolution date conditions are not met. */
+  get isDissolutionDateInvalid ():boolean {
+    return this.getValidateSteps && (!this.getDissolutionDate.valid)
+  }
+
   /** Check validity state, only when prompted by app. */
   get invalidStaffPayment (): boolean {
     return this.getValidateSteps && !this.getStaffPaymentStep.valid
@@ -439,6 +445,18 @@ h2::before {
 
 #dissolution-summary .v-divider {
   background-color: $gray1;
+}
+
+.red-bar-error {
+  border-left: 3px solid $app-red !important;
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+
+  // make the left red border square (v-cards are otherwise rounded)
+  &.v-card {
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+  }
 }
 
 .review-header {
