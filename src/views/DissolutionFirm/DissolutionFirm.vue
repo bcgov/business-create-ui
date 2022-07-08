@@ -127,7 +127,7 @@
               :completingParty="getCompletingParty"
               :enableAddEdit="isRoleStaff"
               :addressSchema="PersonAddressSchema"
-              :validate="isRoleStaff"
+              :validate="completingPartyValid"
               @update="onUpdate($event)"
               @valid="onValid($event)"
             />
@@ -193,9 +193,9 @@
         <h2>Staff Payment</h2>
         <p class="mt-4 mb-6"></p>
       </header>
-      <v-card flat class="mt-6">
-      <StaffPayment />
-      </v-card>
+      <div flat class="mt-6" :class="{'invalid-section': true}">
+      <StaffPayment class="py-8 px-6"/>
+      </div>
     </section>
   </div>
 </template>
