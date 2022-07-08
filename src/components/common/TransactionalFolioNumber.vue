@@ -47,7 +47,7 @@ export default class TransactionalFolioNumber extends Mixins(CommonMixin) {
   readonly Rules = Rules
 
   // Local properties
-  private localFolioNumber = ''
+  protected localFolioNumber = ''
 
   /** Called when component is mounted. */
   mounted (): void {
@@ -57,7 +57,7 @@ export default class TransactionalFolioNumber extends Mixins(CommonMixin) {
 
   /** True if this component is valid. */
   get isValid (): boolean {
-    return (!this.doValidate || !!this.$refs.folioNumberInput?.valid)
+    return (!this.doValidate || !this.$refs.folioNumberInput || this.$refs.folioNumberInput.valid)
   }
 
   /** Called when user has changed the Local Folio Number. */
