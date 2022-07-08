@@ -469,8 +469,12 @@ export const isDissolutionValid = (state: StateIF): boolean => {
   const isStaffPaymentValid = isRoleStaff(state) ? getStaffPaymentStep(state).valid : true
 
   const isEffectiveDateTimeValid = (isBaseCompany(state) || isTypeFirm(state))
+<<<<<<< HEAD
     ? getEffectiveDateTime(state).valid
     : true
+=======
+    ? getEffectiveDateTime(state).valid : true
+>>>>>>> main
 
   if (isTypeFirm(state)) {
     return (
