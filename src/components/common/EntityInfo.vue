@@ -39,7 +39,7 @@
         <template v-if="isTypeFirm">
           <div id="entity-business-registration-date">
             <span class="business-info-label">Registration Number:</span>
-            {{ this.getEntityIdentifier || "Not Available" }}
+            {{ (!this.getEntityIdentifier || this.getEntityIdentifier.startsWith('T')) ? "Not Available" : this.getEntityIdentifier }}
           </div>
         </template>
 
