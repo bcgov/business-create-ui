@@ -45,12 +45,12 @@
           The dissolution date cannot be in the future.
         </p>
       </header>
-      <v-card flat class="mt-6">
+      <v-card flat class="py-8 px-6 mt-6">
 
        <!-- EDIT SECTION -->
         <v-row no-gutters class="pb-0">
           <v-col cols="12" sm="3" class="pr-4">
-            <label class="start-date-title title-label">Dissolution Date</label>
+            <label class="start-date-title title-label font-weight-bold">Dissolution Date</label>
           </v-col>
           <v-col cols="12" sm="9" class="pt-4 pt-sm-0" id="start-date-selector">
             <DatePickerShared
@@ -78,8 +78,9 @@
           Copies of the dissolution documents will be sent to the email addresses listed below.
         </p>
       </header>
-      <v-card flat class="mt-6" :class="{ 'invalid-section': isDocumentDeliveryInvalid }">
+      <v-card flat class="mt-6">
         <DocumentDelivery
+          class="py-8 px-6"
           :editableCompletingParty="isRoleStaff"
           :showCustodianEmail="false"
           :invalidSection="isDocumentDeliveryInvalid"
@@ -109,6 +110,7 @@
       </header>
        <v-card flat class="mt-6">
         <TransactionalFolioNumber
+          class="py-8 px-6"
           :accountFolioNumber="getFolioNumber"
           :transactionalFolioNumber="getTransactionalFolioNumber"
           :doValidate="getValidateSteps"
@@ -122,7 +124,7 @@
           <h2 class="mb-6">Completing Party</h2>
           <v-card flat :class="{ 'invalid-section': isCompletingPartyInvalid }">
             <CompletingParty
-              class="section-container py-6"
+              class="py-8 px-6 section-container py-6"
               :invalidSection="isCompletingPartyInvalid"
               :completingParty="getCompletingParty"
               :enableAddEdit="isRoleStaff"
@@ -145,6 +147,7 @@
       </header>
       <v-card flat class="mt-6" :class="{ 'invalid-section': isCertifyInvalid }">
       <Certify
+        class="py-8 px-6"
         :currentDate="getCurrentDate"
         :certifiedBy="getCertifyState.certifiedBy"
         :entityDisplay="getCompletingPartyStatement.entityDisplay"
@@ -174,6 +177,7 @@
       </header>
       <v-card flat class="mt-6" :class="{ 'invalid-section': isCourtOrderInvalid }">
       <CourtOrderPoa
+        class="py-8 px-6"
         id="court-order"
         :autoValidation="getValidateSteps"
         :draftCourtOrderNumber="getCourtOrderStep.courtOrder.fileNumber"
@@ -191,11 +195,11 @@
     <section id="staff-payment-section" class="mt-10" v-if="isRoleStaff">
       <header>
         <h2>Staff Payment</h2>
-        <p class="mt-4 mb-6"></p>
+        <p class="mt-4"></p>
       </header>
-      <div flat class="mt-6" :class="{'invalid-section': invalidStaffPayment}">
-      <StaffPayment class="py-8 px-6"/>
-      </div>
+      <v-card flat class="mt-6">
+        <StaffPayment class="py-8 px-6"/>
+      </v-card>
     </section>
   </div>
 </template>
@@ -502,9 +506,6 @@ h2::before {
 #certify-section,
 #court-order-poa-section,
 #staff-payment-section {
-  .v-card {
-    padding: 1.5rem 1.25rem !important;
-  }
 
   .row {
     padding: 0.75rem 0;
