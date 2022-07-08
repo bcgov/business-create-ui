@@ -193,7 +193,7 @@
         <h2>Staff Payment</h2>
         <p class="mt-4 mb-6"></p>
       </header>
-      <div flat class="mt-6" :class="{'invalid-section': true}">
+      <div flat class="mt-6" :class="{'invalid-section': invalidStaffPayment}">
       <StaffPayment class="py-8 px-6"/>
       </div>
     </section>
@@ -226,7 +226,8 @@ import {
   CourtOrderStepIF,
   DocumentDeliveryIF,
   CompletingPartyIF,
-  PartyIF
+  PartyIF,
+  StaffPaymentStepIF
 } from '@/interfaces'
 import { PersonAddressSchema } from '@/schemas/'
 
@@ -266,6 +267,7 @@ export default class DissolutionFirm extends Mixins(DateMixin, EnumMixin) {
   @Getter getParties!: Array<PartyIF>
   @Getter isTypeSoleProp: boolean
   @Getter isTypeFirm: boolean
+  @Getter getStaffPaymentStep!: StaffPaymentStepIF
 
   // Global actions
   @Action setCourtOrderFileNumber!: ActionBindingIF
@@ -307,6 +309,11 @@ export default class DissolutionFirm extends Mixins(DateMixin, EnumMixin) {
   /** Is true when the completing party conditions are not met. */
   get isCompletingPartyInvalid ():boolean {
     return this.getValidateSteps && (!this.getCompletingParty.valid)
+  }
+
+  /** Check validity state, only when prompted by app. */
+  get invalidStaffPayment (): boolean {
+    return this.getValidateSteps && !this.getStaffPaymentStep.valid
   }
   // addition label if its SP/GPs
   get additionalLabel () {
