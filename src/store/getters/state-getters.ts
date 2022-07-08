@@ -468,8 +468,8 @@ export const isDissolutionValid = (state: StateIF): boolean => {
   const isCourtOrderValid = isRoleStaff(state) ? getCourtOrderStep(state).valid : true
   const isStaffPaymentValid = isRoleStaff(state) ? getStaffPaymentStep(state).valid : true
 
-  // eslint-disable-next-line
-  const isEffectiveDateTimeValid = (isBaseCompany(state) || isTypeFirm(state)) ? getEffectiveDateTime(state).valid : true
+  const isEffectiveDateTimeValid = (isBaseCompany(state) || isTypeFirm(state))
+    ? getEffectiveDateTime(state).valid : true
 
   if (isTypeFirm(state)) {
     return (
