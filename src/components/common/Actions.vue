@@ -214,6 +214,19 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Name
       if (this.isBusySaving) return
       this.setIsFilingPaying(true)
 
+      if (
+        this.getEffectiveDateTime.effectiveDate &&
+        !this.isValidDateTime(this.getEffectiveDateTime.effectiveDate)
+      ) {
+        this.setEffectiveDateTimeValid(false)
+        this.setIsFilingPaying(false)
+
+        // don't call window.scrollTo during Jest tests because jsdom doesn't implement it
+        if (!this.isJestRunning) window.scrollTo({ top: 1250, behavior: 'smooth' })
+        this.setIsFilingPaying(false)
+        return
+      }
+
       // If this is a named company IA, validate NR before filing submission. This method is different
       // from the processNameRequest method in App.vue. This method shows a generic message if
       // the Name Request is not valid and clicking ok in the pop up redirects to the Manage Businesses
@@ -225,19 +238,6 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Name
           this.setIsFilingPaying(false)
           return
         }
-      }
-
-      if (
-        !this.getEffectiveDateTime.effectiveDate ||
-        !this.isValidDateTime(this.getEffectiveDateTime.effectiveDate)
-      ) {
-        this.setEffectiveDateTimeValid(false)
-        this.setIsFilingPaying(false)
-
-        // don't call window.scrollTo during Jest tests because jsdom doesn't implement it
-        if (!this.isJestRunning) window.scrollTo({ top: 1250, behavior: 'smooth' })
-        this.setIsFilingPaying(false)
-        return
       }
 
       let filingComplete: any
