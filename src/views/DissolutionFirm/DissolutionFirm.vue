@@ -50,7 +50,7 @@
        <!-- EDIT SECTION -->
         <v-row no-gutters class="pb-0">
           <v-col cols="12" sm="3" class="pr-4">
-            <label class="start-date-title title-label font-weight-bold">Dissolution Date</label>
+            <label class="start-date-title font-weight-bold">Dissolution Date</label>
           </v-col>
           <v-col cols="12" sm="9" class="pt-4 pt-sm-0" id="start-date-selector">
             <DatePickerShared
