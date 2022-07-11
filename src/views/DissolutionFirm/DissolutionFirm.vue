@@ -318,7 +318,7 @@ export default class DissolutionFirm extends Mixins(DateMixin, EnumMixin) {
 
   /** Is true when the dissolution date conditions are not met. */
   get isDissolutionDateInvalid ():boolean {
-    return this.getValidateSteps
+    return this.getValidateSteps && !this.getDissolutionDate
   }
 
   /** Check validity state, only when prompted by app. */
