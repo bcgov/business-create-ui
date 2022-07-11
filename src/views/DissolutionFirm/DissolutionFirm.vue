@@ -36,7 +36,7 @@
     </section>
 
     <!-- Dissolution Dissolution Date -->
-    <section id="document-delivery-section" class="mt-10">
+    <section id="dissolution-date-section" class="mt-10">
       <header>
         <h2>Business Dissolution Date</h2>
         <p class="mt-4 ">
@@ -45,7 +45,7 @@
           The dissolution date cannot be in the future.
         </p>
       </header>
-      <v-card flat class="py-8 px-6 mt-6" :class="{ 'red-bar-error': isDissolutionDateInvalid }">
+      <v-card flat class="py-8 px-6 mt-6" :class="{ 'invalid-section': isDissolutionDateInvalid }">
 
        <!-- EDIT SECTION -->
         <v-row no-gutters class="pb-0">
@@ -81,7 +81,7 @@
       <v-card flat class="mt-6">
         <DocumentDelivery
           class="py-8 px-6"
-          :class="{ 'red-bar-error': isDocumentDeliveryInvalid }"
+          :class="{ 'invalid-section': isDocumentDeliveryInvalid }"
           :editableCompletingParty="isRoleStaff"
           :showCustodianEmail="false"
           :invalidSection="isDocumentDeliveryInvalid"
@@ -447,18 +447,6 @@ h2::before {
   background-color: $gray1;
 }
 
-.red-bar-error {
-  border-left: 3px solid $app-red !important;
-  border-top-left-radius: 0 !important;
-  border-bottom-left-radius: 0 !important;
-
-  // make the left red border square (v-cards are otherwise rounded)
-  &.v-card {
-    border-top-left-radius: 0 !important;
-    border-bottom-left-radius: 0 !important;
-  }
-}
-
 .review-header {
   display: flex; // to align icons
   background-color: $BCgovBlue5O;
@@ -519,6 +507,7 @@ h2::before {
 }
 
 // styles common to the sections
+#dissolution-date-section,
 #document-delivery-section,
 #folio-number-section,
 #certify-section,
@@ -537,6 +526,12 @@ h2::before {
     .col-9 {
       padding: 0 0.5rem 0 0 !important;
     }
+  }
+}
+
+::v-deep #document-delivery.invalid-section {
+  .title-label:not(.error-text) {
+    color: $gray9 !important;
   }
 }
 
