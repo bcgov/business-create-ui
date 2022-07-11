@@ -99,7 +99,7 @@ import { Getter, Action } from 'vuex-class'
 import { navigate } from '@/utils'
 import { ActionBindingIF } from '@/interfaces'
 import { DateMixin, FilingTemplateMixin, NameRequestMixin } from '@/mixins'
-import { LegalServices } from '@/services'
+import { LegalServices } from '@/services/'
 import { FilingTypes, NameRequestStates, RouteNames } from '@/enums'
 
 @Component({})

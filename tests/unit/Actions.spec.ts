@@ -7,7 +7,7 @@ import sinon from 'sinon'
 import { axios } from '@/utils'
 import Actions from '@/components/common/Actions.vue'
 import mockRouter from './MockRouter'
-import LegalServices from '@/services/legal.services'
+import LegalServices from '@/services/legal-services'
 
 Vue.use(Vuetify)
 

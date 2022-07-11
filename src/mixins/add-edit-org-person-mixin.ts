@@ -16,7 +16,7 @@ import {
   RolesIF } from '@/interfaces'
 import { Rules } from '@/rules'
 import { PersonAddressSchema } from '@/schemas'
-import { LegalServices } from '@/services'
+import { LegalServices } from '@/services/'
 
 /**
  * Mixin that provides common add/edit org/person methods.
