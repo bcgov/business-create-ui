@@ -1,6 +1,6 @@
 import sinon from 'sinon'
 import { axios } from '@/utils'
-import LegalServices from '@/services/legal.services'
+import LegalServices from '@/services/legal-services'
 
 // draft registration filing
 const draftRegistration = {
