@@ -529,6 +529,7 @@ h2::before {
   }
 }
 
+// override error red on title labels (except error-text one)
 ::v-deep #document-delivery.invalid-section {
   .title-label:not(.error-text) {
     color: $gray9 !important;
