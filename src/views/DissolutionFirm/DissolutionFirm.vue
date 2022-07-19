@@ -374,7 +374,7 @@ export default class DissolutionFirm extends Mixins(DateMixin, EnumMixin) {
 
   /** The minimum start date that can be entered (greater than registration date). */
   private get startDateMin (): Date {
-    const date = new Date(this.getBusinessFoundingDate)
+    const date = this.apiToDate(this.getBusinessFoundingDate)
     date.setDate(date.getDate() + 1)
     return date
   }
@@ -408,7 +408,7 @@ export default class DissolutionFirm extends Mixins(DateMixin, EnumMixin) {
       (v: string) => !!v || 'Dissolution date is required',
       (v: string) =>
         RuleHelpers.DateRuleHelpers
-          .isBetweenDates(new Date(this.getBusinessFoundingDate),
+          .isBetweenDates(this.apiToDate(this.getBusinessFoundingDate),
             this.startDateMax,
             v) ||
         `Dissolution Date must be after ${this.dateToPacificDate(this.startDateMin, true)} and up to
