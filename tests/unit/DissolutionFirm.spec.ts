@@ -5,6 +5,7 @@ import DissolutionFirm from '@/views/DissolutionFirm/DissolutionFirm.vue'
 import { DissolutionResources } from '@/resources/'
 
 const store = getVuexStore()
+store.state.stateModel.business.foundingDate = '2022-06-07T00:00:00.000+00:00'
 
 // Test Case Data
 // GP will come soon
@@ -35,7 +36,6 @@ for (const test of dissolutionFirmTestCases) {
         { entityType: test.entityType },
         null,
         DissolutionResources
-
       )
 
       // verify page content
