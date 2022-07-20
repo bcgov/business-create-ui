@@ -32,21 +32,21 @@
         <template v-if="isTypeFirm && getBusinessId">
           <div id="entity-business-registration-date">
             <span class="business-info-label">Registration Date:</span>
-            {{ businessStartDate || "Not Available" }}
+            {{ businessStartDate }}
           </div>
         </template>
 
         <template v-if="isTypeFirm && getBusinessId">
           <div id="entity-business-registration-date">
             <span class="business-info-label">Registration Number:</span>
-            {{ this.getEntityIdentifier || "Not Available" }}
+            {{ this.getEntityIdentifier }}
           </div>
         </template>
 
          <template v-if="isTypeFirm && getBusinessId">
           <div id="entity-business-registration-date">
             <span class="business-info-label">Business Number:</span>
-            {{ this.getBusinessId || "Not Available" }}
+            {{ this.getBusinessId }}
           </div>
         </template>
 
