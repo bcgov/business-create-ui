@@ -130,8 +130,7 @@ export default class LegalServices {
    */
   static fetchParties (businessId: string): Promise<any> {
     // need to get the parties from the legal endpoint v2
-    const legalApiV2 = sessionStorage.getItem('LEGAL_API_URL_V2')
-    let url = `${legalApiV2}businesses/${businessId}/parties`
+    let url = `businesses/${businessId}/parties`
 
     return axios.get(url).then(response => {
       if (response?.data) return response.data

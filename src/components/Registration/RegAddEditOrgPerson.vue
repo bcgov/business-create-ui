@@ -364,7 +364,7 @@ import { HelpBusinessNumber } from '@bcrs-shared-components/help-business-number
 import HelpContactUs from '@/components/Registration/HelpContactUs.vue'
 import { AddEditOrgPersonMixin } from '@/mixins'
 import { Rules } from '@/rules'
-import { BusinessLookupServices } from '@/services'
+import { BusinessLookupServices } from '@/services/'
 
 /** This is a sub-component of PeopleAndRoles. */
 @Component({

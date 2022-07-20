@@ -207,7 +207,7 @@ import {
   IncorporationResources,
   RegistrationResources
 } from '@/resources'
-import { AuthServices, LegalServices, PayServices } from '@/services'
+import { AuthServices, LegalServices, PayServices } from '@/services/'
 
 // Enums and Constants
 import {
@@ -263,7 +263,6 @@ export default class App extends Mixins(
   @Getter getUserPhone!: string
   @Getter getUserEmail!: string
   @Getter getOrgInformation!: OrgInformationIF
-  @Getter isTypeFirm!: boolean
 
   @Action setBusinessId!: ActionBindingIF
   @Action setCurrentStep!: ActionBindingIF

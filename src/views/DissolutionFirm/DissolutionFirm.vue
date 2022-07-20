@@ -1,5 +1,5 @@
 <template>
-  <div id="dissolution-firm-form">
+  <div class="mt-10" id="dissolution-firm-form">
     <v-card
       outlined class="message-box rounded-0"
     >
@@ -36,7 +36,7 @@
     </section>
 
     <!-- Dissolution Dissolution Date -->
-    <section id="document-delivery-section" class="mt-10">
+    <section id="dissolution-date-section" class="mt-10">
       <header>
         <h2>Business Dissolution Date</h2>
         <p class="mt-4 ">
@@ -45,12 +45,12 @@
           The dissolution date cannot be in the future.
         </p>
       </header>
-      <v-card flat class="mt-6">
+      <v-card flat class="py-8 px-6 mt-6" :class="{ 'invalid-section': isDissolutionDateInvalid }">
 
        <!-- EDIT SECTION -->
         <v-row no-gutters class="pb-0">
           <v-col cols="12" sm="3" class="pr-4">
-            <label class="start-date-title title-label">Dissolution Date</label>
+            <label class="start-date-title font-weight-bold">Dissolution Date</label>
           </v-col>
           <v-col cols="12" sm="9" class="pt-4 pt-sm-0" id="start-date-selector">
             <DatePickerShared
@@ -80,6 +80,7 @@
       </header>
       <v-card flat class="mt-6">
         <DocumentDelivery
+          class="py-8 px-6"
           :class="{ 'invalid-section': isDocumentDeliveryInvalid }"
           :editableCompletingParty="isRoleStaff"
           :showCustodianEmail="false"
@@ -110,6 +111,7 @@
       </header>
        <v-card flat class="mt-6">
         <TransactionalFolioNumber
+          class="py-8 px-6"
           :accountFolioNumber="getFolioNumber"
           :transactionalFolioNumber="getTransactionalFolioNumber"
           :doValidate="getValidateSteps"
@@ -121,13 +123,14 @@
 
     <section id="completing-party-section" class="mt-10">
           <h2 class="mb-6">Completing Party</h2>
-          <v-card flat>
+          <v-card flat class="mt-6" :class="{ 'invalid-section': isCompletingPartyInvalid }">
             <CompletingParty
-              class="section-container py-6"
+              class="py-8 px-6 section-container py-6"
+              :invalidSection="isCompletingPartyInvalid"
               :completingParty="getCompletingParty"
               :enableAddEdit="isRoleStaff"
               :addressSchema="PersonAddressSchema"
-              :validate="isRoleStaff"
+              :validate="isCompletingPartyInvalid"
               @update="onUpdate($event)"
               @valid="onValid($event)"
             />
@@ -143,9 +146,9 @@
           Confirm the legal name of the person authorized to complete and submit this dissolution.
         </p>
       </header>
-      <v-card flat class="mt-6">
+      <v-card flat class="mt-6" :class="{ 'invalid-section': isCertifyInvalid }">
       <Certify
-        :class="{ 'invalid-section': isCertifyInvalid }"
+        class="py-8 px-6"
         :currentDate="getCurrentDate"
         :certifiedBy="getCertifyState.certifiedBy"
         :entityDisplay="getCompletingPartyStatement.entityDisplay"
@@ -173,10 +176,10 @@
           Plan of Arrangement.
         </p>
       </header>
-      <v-card flat class="mt-6">
+      <v-card flat class="mt-6" :class="{ 'invalid-section': isCourtOrderInvalid }">
       <CourtOrderPoa
+        class="py-8 px-6"
         id="court-order"
-        :class="{ 'invalid-section': isCourtOrderInvalid }"
         :autoValidation="getValidateSteps"
         :draftCourtOrderNumber="getCourtOrderStep.courtOrder.fileNumber"
         :hasDraftPlanOfArrangement="getCourtOrderStep.courtOrder.hasPlanOfArrangement"
@@ -193,10 +196,10 @@
     <section id="staff-payment-section" class="mt-10" v-if="isRoleStaff">
       <header>
         <h2>Staff Payment</h2>
-        <p class="mt-4 mb-6"></p>
+        <p class="mt-4"></p>
       </header>
       <v-card flat class="mt-6">
-      <StaffPayment />
+        <StaffPayment class="py-8 px-6"/>
       </v-card>
     </section>
   </div>
@@ -228,7 +231,8 @@ import {
   CourtOrderStepIF,
   DocumentDeliveryIF,
   CompletingPartyIF,
-  PartyIF
+  PartyIF,
+  StaffPaymentStepIF
 } from '@/interfaces'
 import { PersonAddressSchema } from '@/schemas/'
 
@@ -268,6 +272,7 @@ export default class DissolutionFirm extends Mixins(DateMixin, EnumMixin) {
   @Getter getParties!: Array<PartyIF>
   @Getter isTypeSoleProp: boolean
   @Getter isTypeFirm: boolean
+  @Getter getStaffPaymentStep!: StaffPaymentStepIF
 
   // Global actions
   @Action setCourtOrderFileNumber!: ActionBindingIF
@@ -302,8 +307,23 @@ export default class DissolutionFirm extends Mixins(DateMixin, EnumMixin) {
   }
 
   /** Is true when the certify conditions are not met. */
-  private get isCertifyInvalid () {
+  get isCertifyInvalid (): boolean {
     return this.getValidateSteps && (!this.getCertifyState.certifiedBy || !this.getCertifyState.valid)
+  }
+
+  /** Is true when the completing party conditions are not met. */
+  get isCompletingPartyInvalid ():boolean {
+    return this.getValidateSteps && (!this.getCompletingParty.valid)
+  }
+
+  /** Is true when the dissolution date conditions are not met. */
+  get isDissolutionDateInvalid ():boolean {
+    return this.getValidateSteps && !this.getDissolutionDate
+  }
+
+  /** Check validity state, only when prompted by app. */
+  get invalidStaffPayment (): boolean {
+    return this.getValidateSteps && !this.getStaffPaymentStep.valid
   }
   // addition label if its SP/GPs
   get additionalLabel () {
@@ -360,7 +380,7 @@ export default class DissolutionFirm extends Mixins(DateMixin, EnumMixin) {
   /** Dissolution Error */
   private dissolutionError (): string {
     if (this.isTypeFirm && this.getValidateSteps && !this.getDissolutionDate) {
-      return 'Dissolution date is required'
+      return 'Business dissolution date is required'
     }
     return ''
   }
@@ -389,7 +409,7 @@ export default class DissolutionFirm extends Mixins(DateMixin, EnumMixin) {
           .isBetweenDates(this.startDateMin,
             this.startDateMax,
             v) ||
-        `Date should be between ${this.dateToPacificDate(this.startDateMin, true)} and
+        `Dissolution Date must be after ${this.dateToPacificDate(this.startDateMin, true)} and up to
         ${this.dateToPacificDate(this.startDateMax, true)}`
     ]
   }
@@ -487,14 +507,12 @@ h2::before {
 }
 
 // styles common to the sections
+#dissolution-date-section,
 #document-delivery-section,
 #folio-number-section,
 #certify-section,
 #court-order-poa-section,
 #staff-payment-section {
-  .v-card {
-    padding: 1.5rem 1.25rem !important;
-  }
 
   .row {
     padding: 0.75rem 0;
@@ -508,6 +526,13 @@ h2::before {
     .col-9 {
       padding: 0 0.5rem 0 0 !important;
     }
+  }
+}
+
+// override error red on title labels (except error-text one)
+::v-deep #document-delivery.invalid-section {
+  .title-label:not(.error-text) {
+    color: $gray9 !important;
   }
 }
 

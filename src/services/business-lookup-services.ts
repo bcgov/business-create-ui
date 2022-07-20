@@ -28,14 +28,14 @@ export default class BusinessLookupServices {
   }
 
   /**
-   * Searches for code or words.
-   * @param query words to search
+   * Searches for business by code or words.
+   * @param query code or words to search
    * @returns a promise to return the search results
    */
   static async search (query: string): Promise<BusinessLookupResultIF[]> {
-    const legalType = 'BC' // Will be updating to a list once search api support it.
+    const legalType = 'BC,A,ULC,C,S,XP,GP,LP,CUL,XS,LLC,LL,BEN,CP,SP,CC,XL,FI,XCP,PA'
     const url = this.businessApiUrl +
-      `businesses/search/facets?num_of_rows=20&status=active&legalType=${legalType}` +
+      `businesses/search/facets?start=0&rows=20&categories=legalType:${legalType}::status:ACTIVE` +
       `&query=${encodeURIComponent(query)}`
 
     return axios.get(url, {
@@ -44,7 +44,7 @@ export default class BusinessLookupServices {
         'Account-Id': this.accountId
       }
     }).then(response => {
-      const results: Array<BusinessLookupResultIF> = response?.data?.results
+      const results: Array<BusinessLookupResultIF> = response?.data?.searchResults?.results
       if (!results) {
         throw new Error('Invalid API response')
       }

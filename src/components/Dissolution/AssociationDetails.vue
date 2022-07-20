@@ -100,7 +100,7 @@
 <script lang="ts">
 import { Component, Mixins, Prop } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
-import { AuthServices } from '@/services'
+import { AuthServices } from '@/services/'
 import { ActionBindingIF, AddressIF, ContactPointIF, BusinessIF } from '@/interfaces'
 import { ContactInfo } from '@bcrs-shared-components/contact-info'
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
