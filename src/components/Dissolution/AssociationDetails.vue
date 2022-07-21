@@ -38,7 +38,7 @@
           <label class="delivery-address-header">Delivery Address</label>
           <DeliveryAddress
             v-if="!isEmptyAddress(getBusiness.officeAddress.deliveryAddress) &&
-             !isSame(getBusiness.officeAddress.mailingAddress, getBusiness.officeAddress.deliveryAddress)"
+             !isSame(getBusiness.officeAddress.mailingAddress, getBusiness.officeAddress.deliveryAddress, ['id'])"
             :address="getBusiness.officeAddress.deliveryAddress"
             :editing="false"
           />

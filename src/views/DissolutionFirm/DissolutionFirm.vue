@@ -50,7 +50,7 @@
        <!-- EDIT SECTION -->
         <v-row no-gutters class="pb-0">
           <v-col cols="12" sm="3" class="pr-4">
-            <label class="start-date-title font-weight-bold">Dissolution Date</label>
+            <label class="start-date-title font-weight-bold title-label">Dissolution Date</label>
           </v-col>
           <v-col cols="12" sm="9" class="pt-4 pt-sm-0" id="start-date-selector">
             <DatePickerShared
@@ -374,7 +374,9 @@ export default class DissolutionFirm extends Mixins(DateMixin, EnumMixin) {
 
   /** The minimum start date that can be entered (greater than registration date). */
   private get startDateMin (): Date {
-    return new Date(this.getBusinessFoundingDate)
+    const date = this.apiToDate(this.getBusinessFoundingDate)
+    date.setDate(date.getDate() + 1)
+    return date
   }
 
   /** Dissolution Error */
@@ -406,7 +408,7 @@ export default class DissolutionFirm extends Mixins(DateMixin, EnumMixin) {
       (v: string) => !!v || 'Dissolution date is required',
       (v: string) =>
         RuleHelpers.DateRuleHelpers
-          .isBetweenDates(this.startDateMin,
+          .isBetweenDates(this.apiToDate(this.getBusinessFoundingDate),
             this.startDateMax,
             v) ||
         `Dissolution Date must be after ${this.dateToPacificDate(this.startDateMin, true)} and up to
