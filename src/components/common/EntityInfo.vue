@@ -29,24 +29,24 @@
           {{ getNameRequestNumber }}
         </div>
 
-        <template v-if="isTypeFirm">
+        <template v-if="isTypeFirm && getBusinessId">
           <div id="entity-business-registration-date">
             <span class="business-info-label">Registration Date:</span>
             {{ businessStartDate || "Not Available" }}
           </div>
         </template>
 
-        <template v-if="isTypeFirm">
+        <template v-if="isTypeFirm && getBusinessId">
           <div id="entity-business-registration-date">
             <span class="business-info-label">Registration Number:</span>
             {{ this.getEntityIdentifier || "Not Available" }}
           </div>
         </template>
 
-         <template v-if="isTypeFirm">
+         <template v-if="isTypeFirm && getBusinessId">
           <div id="entity-business-registration-date">
             <span class="business-info-label">Business Number:</span>
-            {{ this.getBusinessId || "Not Available" }}
+            {{ this.getBusinessId }}
           </div>
         </template>
 
