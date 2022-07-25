@@ -467,8 +467,9 @@ export const isDissolutionValid = (state: StateIF): boolean => {
   // only for Staff role
   const isCourtOrderValid = isRoleStaff(state) ? getCourtOrderStep(state).valid : true
   const isStaffPaymentValid = isRoleStaff(state) ? getStaffPaymentStep(state).valid : true
+  const isDissolutionDateValid = !!getDissolutionDate(state)
 
-  const isEffectiveDateTimeValid = (isBaseCompany(state) || isTypeFirm(state))
+  const isEffectiveDateTimeValid = (isBaseCompany(state))
     ? getEffectiveDateTime(state).valid
     : true
 
@@ -477,9 +478,9 @@ export const isDissolutionValid = (state: StateIF): boolean => {
       isDocumentDeliveryValid &&
       isTransactionalFnValid &&
       isCertifyValid &&
-      isEffectiveDateTimeValid &&
       isCourtOrderValid &&
-      isStaffPaymentValid
+      isStaffPaymentValid &&
+      isDissolutionDateValid
     )
   }
   return (
