@@ -42,7 +42,7 @@
     "lodash": "^4.17.20",
     "pdfjs-dist": "2.0.943",
     "regenerator-runtime": "^0.13.7",
-    "sbc-common-components": "2.4.54",
+    "sbc-common-components": "3.0.1",
     "uuid": "^8.3.1",
     "vue": "2.6.12",
     "vue-affix": "^0.5.2",
