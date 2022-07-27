@@ -385,8 +385,9 @@ export default class App extends Mixins(
       this.fileAndPayInvalidNameRequestDialog
     )
   }
-  /** The Fee Summary filing text for firm dissolutions. */
+  /** The Fee Summary filing text for businesses. */
   get filingLabelText (): string {
+  // text ovveride for firm dissolutions
     return (this.isTypeFirm && this.isDissolutionFiling) ? 'Dissolution' : null
   }
 
