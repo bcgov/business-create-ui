@@ -37,14 +37,14 @@
         </template>
 
         <template v-if="isTypeFirm && getBusinessId">
-          <div id="entity-business-registration-date">
+          <div id="entity-business-registration-number">
             <span class="business-info-label">Registration Number:</span>
             {{ this.getEntityIdentifier || "Not Available" }}
           </div>
         </template>
 
          <template v-if="isTypeFirm && getBusinessId">
-          <div id="entity-business-registration-date">
+          <div id="entity-business-business-number">
             <span class="business-info-label">Business Number:</span>
             {{ this.getBusinessId }}
           </div>

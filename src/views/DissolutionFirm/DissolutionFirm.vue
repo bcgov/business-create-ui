@@ -313,7 +313,7 @@ export default class DissolutionFirm extends Mixins(DateMixin, EnumMixin) {
 
   /** Is true when the completing party conditions are not met. */
   get isCompletingPartyInvalid ():boolean {
-    return this.getValidateSteps && (!this.getCompletingParty.valid)
+    return (this.getValidateSteps && !this.completingPartyValid && this.isRoleStaff)
   }
 
   /** Is true when the dissolution date conditions are not met. */
