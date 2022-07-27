@@ -387,7 +387,7 @@ export default class App extends Mixins(
   }
   /** The Fee Summary filing text for businesses. */
   get filingLabelText (): string {
-    return this.isDissolutionFiling ? 'Dissolution' : ''
+    return (this.isTypeFirm && this.isDissolutionFiling) ? 'Dissolution' : null
   }
 
   /** The About text. */
