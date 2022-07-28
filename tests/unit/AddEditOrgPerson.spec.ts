@@ -319,7 +319,7 @@ describe('Add/Edit Org/Person component', () => {
 
     const messages = wrapper.findAll('.v-messages__message')
     expect(messages.length).toBe(3)
-    expect(messages.at(0).text()).toBe('Cannot exceed 30 characters')
+    expect(messages.at(0).text()).toBe('Cannot exceed 20 characters')
     expect(messages.at(1).text()).toBe('Cannot exceed 30 characters')
     expect(messages.at(2).text()).toBe('Cannot exceed 30 characters')
     expect(wrapper.vm.$data.addPersonOrgFormValid).toBe(false)
