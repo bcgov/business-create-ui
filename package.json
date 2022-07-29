@@ -16,7 +16,7 @@
     "@bcrs-shared-components/bread-crumb": "1.0.2",
     "@bcrs-shared-components/business-lookup": "1.0.2",
     "@bcrs-shared-components/certify": "2.0.0",
-    "@bcrs-shared-components/completing-party": "2.0.5",
+    "@bcrs-shared-components/completing-party": "2.0.6",
     "@bcrs-shared-components/confirm-dialog": "1.1.0",
     "@bcrs-shared-components/contact-info": "1.1.2",
     "@bcrs-shared-components/corp-type-module": "1.0.6",
