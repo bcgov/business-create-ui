@@ -241,12 +241,12 @@ export default class PeopleRolesMixin extends Vue {
     }
 
     const newList: OrgPersonIF[] = Object.assign([], this.orgPersonList)
-    const removedOrgs = newList.splice(index, 1)
+    newList.splice(index, 1)
 
     // Remove auto populated business number for Proprietor (Org)
     if (isProprietor && this.isOrganization(orgPerson) && this.getRegistration.isAutoPopulatedBusinessNumber) {
       // We don't empty business number if user changed it after auto population
-      if (removedOrgs[0].officer.businessNumber === this.getRegistration.businessNumber) {
+      if (orgPerson.officer.businessNumber === this.getRegistration.businessNumber) {
         this.setRegistrationBusinessNumber(undefined)
       }
       this.setIsAutoPopulatedBusinessNumber(false)
