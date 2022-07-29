@@ -322,7 +322,6 @@ describe('Registration Add/Edit Org/Person component', () => {
     const firstNameInput = wrapper.find(`${firstNameSelector} input`)
     const middleNameInput = wrapper.find(`${middleNameSelector} input`)
     const lastNameInput = wrapper.find(`${lastNameSelector} input`)
-    const businessNumberInput = wrapper.find(`${businessNumberSelector} input`)
     const emailInput = wrapper.find(`${emailAddressSelector} input`)
     // FUTURE: verify mailing address and delivery address
     expect((firstNameInput.element as HTMLInputElement).value)
@@ -331,8 +330,6 @@ describe('Registration Add/Edit Org/Person component', () => {
       .toEqual(validProprietorPerson['officer']['middleName'])
     expect((lastNameInput.element as HTMLInputElement).value)
       .toEqual(validProprietorPerson['officer']['lastName'])
-    expect((businessNumberInput.element as HTMLInputElement).value)
-      .toEqual(validProprietorPerson['officer']['businessNumber'])
     expect((emailInput.element as HTMLInputElement).value)
       .toEqual(validProprietorPerson['officer']['email'])
 
@@ -399,15 +396,12 @@ describe('Registration Add/Edit Org/Person component', () => {
     // verify input values
     const confirmCheckboxInput = wrapper.find(`${confirmCheckboxSelector} input`)
     const orgNameInput = wrapper.find(`${orgNameSelector} input`)
-    const businessNumberInput = wrapper.find(`${businessNumberSelector} input`)
     const emailInput = wrapper.find(`${emailAddressSelector} input`)
     // FUTURE: verify mailing address and delivery address
     expect((confirmCheckboxInput.element as HTMLInputElement).checked)
       .toEqual(validProprietorOrg['confirmBusiness'])
     expect((orgNameInput.element as HTMLInputElement).value)
       .toEqual(validProprietorOrg['officer']['organizationName'])
-    expect((businessNumberInput.element as HTMLInputElement).value)
-      .toEqual(validProprietorOrg['officer']['businessNumber'])
     expect((emailInput.element as HTMLInputElement).value)
       .toEqual(validProprietorOrg['officer']['email'])
 

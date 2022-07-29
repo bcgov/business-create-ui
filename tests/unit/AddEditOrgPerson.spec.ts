@@ -335,7 +335,7 @@ describe('Add/Edit Org/Person component', () => {
     cpCheckBox.setChecked(true)
     await Vue.nextTick()
 
-    expect(wrapper.vm.$refs.reassignCPDialog).toBeTruthy()
+    expect(wrapper.vm.$refs.confirmDialog).toBeTruthy()
 
     wrapper.destroy()
     store.state.stateModel.tombstone.authRoles = []
@@ -348,7 +348,7 @@ describe('Add/Edit Org/Person component', () => {
     const cpCheckBox: Wrapper<Vue> = wrapper.find(completingPartyChkBoxSelector)
     cpCheckBox.setChecked(true)
     await Vue.nextTick()
-    const reassignDialog: any = wrapper.vm.$refs.reassignCPDialog
+    const reassignDialog: any = wrapper.vm.$refs.confirmDialog
     expect(reassignDialog).toBeTruthy()
     await reassignDialog.onClickYes()
     await flushPromises()

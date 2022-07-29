@@ -34,19 +34,17 @@
           @valid="onNatureOfBusinessValidEvent($event)"
         />
 
-        <template v-if="isTypePartnership">
-          <v-divider class="mx-6" />
+        <v-divider class="mx-6" />
 
-          <!-- Business Number -->
-          <header id="business-number-header" />
-          <BusinessNumber
-            class="py-8 px-6"
-            :class="{ 'invalid-section': getShowErrors && !businessNumberValid }"
-            :businessNumber="getRegistration.businessNumber"
-            @update:businessNumber="setRegistrationBusinessNumber($event)"
-            @valid="onBusinessNumberValidEvent($event)"
-          />
-        </template>
+        <!-- Business Number -->
+        <header id="business-number-header" />
+        <BusinessNumber
+          class="py-8 px-6"
+          :class="{ 'invalid-section': getShowErrors && !businessNumberValid }"
+          :businessNumber="getRegistration.businessNumber"
+          @update:businessNumber="setRegistrationBusinessNumber($event)"
+          @valid="onBusinessNumberValidEvent($event)"
+        />
       </v-card>
 
     </section>
@@ -171,7 +169,7 @@ export default class RegistrationDefineBusiness extends Mixins(CommonMixin) {
     return {
       businessTypeConfirmValid: this.businessTypeConfirmValid,
       natureOfBusinessValid: this.natureOfBusinessValid,
-      businessNumberValid: this.isTypePartnership ? this.businessNumberValid : true,
+      businessNumberValid: this.businessNumberValid,
       businessAddressesValid: this.businessAddressesValid,
       businessContactValid: this.businessContactValid,
       businessStartDateValid: this.startDateValid

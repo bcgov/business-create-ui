@@ -1,7 +1,7 @@
 <template>
   <div id="reg-add-edit-org-person">
     <ConfirmDialog
-      ref="reassignCPDialog"
+      ref="confirmDialog"
       attach="#reg-add-edit-org-person"
     />
 
@@ -130,18 +130,10 @@
                   :rules="enableRules ? OrgNameRules : []"
                 />
 
-                <!-- Business Number (org proprietors only) -->
-                <v-text-field
-                  v-if="isProprietor"
-                  filled
-                  persistent-hint
-                  class="item business-number mt-8 mb-n2"
-                  label="Business Number (Optional)"
-                  hint="First 9 digits of the CRA Business Number"
-                  v-model.trim="orgPerson.officer.businessNumber"
-                  v-mask="['#########']"
-                  :rules="enableRules ? Rules.BusinessNumberRules : []"
-                />
+                <!-- Business Number (readonly) -->
+                <article class="mt-8" v-if="isProprietor">
+                  <label>Business Number:</label> {{getRegistration.businessNumber || '(Not entered)'}}
+                </article>
 
                 <v-divider class="mt-8" />
               </article>
@@ -183,25 +175,6 @@
                   @setBusiness="updateBusinessDetails($event)"
                   @undoBusiness="resetBusinessDetails($event)"
                 />
-                <div v-if="isProprietor && orgPerson.showOptionalBN">
-                  <p class="mt-4 mb-0">
-                    If an existing business number for this business or corporation is available,
-                    enter it below. We will contact the Canada Revenue Agency and ask them to link it to
-                    this registration.
-                  </p>
-                  <HelpBusinessNumber class="mt-4" />
-                  <!-- Business Number (org proprietors only) -->
-                  <v-text-field
-                    filled
-                    persistent-hint
-                    class="item business-number mt-8 mb-n2"
-                    label="Business Number (Optional)"
-                    hint="First 9 digits of the CRA Business Number"
-                    v-model="orgPerson.officer.businessNumber"
-                    v-mask="['#########']"
-                    :rules="enableRules ? Rules.BusinessNumberRules : []"
-                  />
-                </div>
               </article>
             </template>
 
@@ -241,30 +214,6 @@
                   </v-col>
                 </v-row>
               </v-card>
-            </article>
-
-            <!-- Business Number (for person proprietors only) -->
-            <article v-if="isPerson && isProprietor" class="mt-8">
-              <label>Business Number</label>
-              <p class="mt-4 mb-0">
-                If you have an existing business number, enter it below and we will contact
-                Canada Revenue Agency and ask them to link it to this registration.
-              </p>
-              <HelpBusinessNumber
-                class="mt-4"
-                :isTypeSoleProp="isTypeSoleProp"
-                :isTypePartnership="isTypePartnership"
-              />
-              <v-text-field
-                filled
-                persistent-hint
-                class="item business-number mt-4 mb-n2"
-                label="Business Number (Optional)"
-                hint="First 9 digits of the CRA Business Number"
-                v-model.trim="orgPerson.officer.businessNumber"
-                v-mask="['#########']"
-                :rules="enableRules ? Rules.BusinessNumberRules : []"
-              />
             </article>
 
             <!-- Email Address -->
@@ -360,7 +309,6 @@ import { mask } from 'vue-the-mask'
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
 import { ConfirmDialog } from '@bcrs-shared-components/confirm-dialog'
 import { BusinessLookup } from '@bcrs-shared-components/business-lookup'
-import { HelpBusinessNumber } from '@bcrs-shared-components/help-business-number'
 import HelpContactUs from '@/components/Registration/HelpContactUs.vue'
 import { AddEditOrgPersonMixin } from '@/mixins'
 import { Rules } from '@/rules'
@@ -373,7 +321,6 @@ import { BusinessLookupServices } from '@/services/'
     ConfirmDialog,
     DeliveryAddress: BaseAddress,
     MailingAddress: BaseAddress,
-    HelpBusinessNumber,
     HelpContactUs
   },
   directives: { mask }

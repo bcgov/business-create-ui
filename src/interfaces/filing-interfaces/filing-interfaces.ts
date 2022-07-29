@@ -107,6 +107,9 @@ export interface RegistrationFilingIF {
     parties: PartyIF[]
     startDate: string
     businessTypeConfirm: boolean
+
+    // For UI purpose only
+    isAutoPopulatedBusinessNumber: boolean // Will be true if BN is auto populated from business lookup
   }
 }
 

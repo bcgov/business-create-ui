@@ -316,7 +316,8 @@ describe('Registration Filing', () => {
         naicsCode: '12345',
         naicsDescription: 'Some NAICS Description'
       },
-      businessTypeConfirm: false
+      businessTypeConfirm: false,
+      isAutoPopulatedBusinessNumber: false
     })
     // NB: name request object is not restored from filing
     expect(store.state.stateModel.businessContact).toEqual({

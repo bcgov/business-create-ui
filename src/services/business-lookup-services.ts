@@ -36,7 +36,7 @@ export default class BusinessLookupServices {
     const legalType = 'BC,A,ULC,C,S,XP,GP,LP,CUL,XS,LLC,LL,BEN,CP,SP,CC,XL,FI,XCP,PA'
     const url = this.businessApiUrl +
       `businesses/search/facets?start=0&rows=20&categories=legalType:${legalType}::status:ACTIVE` +
-      `&query=${encodeURIComponent(query)}`
+      `&query=value:${encodeURIComponent(query)}`
 
     return axios.get(url, {
       headers: {

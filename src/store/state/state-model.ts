@@ -168,7 +168,8 @@ export const stateModel: StateModelIF = {
     naics: { ...EmptyNaics },
     businessType: null,
     businessNumber: null,
-    businessTypeConfirm: false
+    businessTypeConfirm: false,
+    isAutoPopulatedBusinessNumber: false
   },
   completingParty: null,
   parties: null

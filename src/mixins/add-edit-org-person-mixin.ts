@@ -13,6 +13,7 @@ import {
   FormIF,
   OrgPersonIF,
   PeopleAndRolesResourceIF,
+  RegistrationStateIF,
   RolesIF } from '@/interfaces'
 import { Rules } from '@/rules'
 import { PersonAddressSchema } from '@/schemas'
@@ -28,7 +29,7 @@ export default class AddEditOrgPersonMixin extends Vue {
     addPersonOrgForm: FormIF
     mailingAddressNew: any
     deliveryAddressNew: any
-    reassignCPDialog: ConfirmDialogType
+    confirmDialog: ConfirmDialogType
   }
 
   @Prop() readonly initialValue!: OrgPersonIF
@@ -44,8 +45,11 @@ export default class AddEditOrgPersonMixin extends Vue {
   @Getter isTypePartnership!: boolean
   @Getter getEntityType!: CorpTypeCd
   @Getter getPeopleAndRolesResource!: PeopleAndRolesResourceIF
+  @Getter getRegistration!: RegistrationStateIF
 
   @Action setAddPeopleAndRoleStepValidity!: ActionBindingIF
+  @Action setRegistrationBusinessNumber!: ActionBindingIF
+  @Action setIsAutoPopulatedBusinessNumber!: ActionBindingIF
 
   // Local properties
   private orgPerson: OrgPersonIF = null
@@ -315,16 +319,19 @@ export default class AddEditOrgPersonMixin extends Vue {
     // sanitize Business Number
     this.orgPerson.officer.businessNumber = (businessLookup.bn?.length === 9) ? businessLookup.bn
       : (businessLookup.bn?.length > 9) ? businessLookup.bn.slice(0, 9) : null
-    this.orgPerson.showOptionalBN = !this.orgPerson.officer.businessNumber
 
     this.inProgressBusinessLookup = { ...businessLookup }
     if (businessLookup.identifier) {
       const addresses = await LegalServices.fetchAddresses(businessLookup.identifier)
-        .catch(() => ({ registeredOffice: undefined }))
-      const registeredOffice = addresses?.registeredOffice
-      if (registeredOffice) {
-        this.inProgressMailingAddress = { ...registeredOffice.mailingAddress }
-        this.inProgressDeliveryAddress = { ...registeredOffice.deliveryAddress }
+        .then((data) => {
+          // SP and GP have businessOffice instead of registeredOffice
+          return data?.registeredOffice || data?.businessOffice
+        }).catch(() => {
+          return undefined
+        })
+      if (addresses) {
+        this.inProgressMailingAddress = { ...addresses.mailingAddress }
+        this.inProgressDeliveryAddress = { ...addresses.deliveryAddress }
       }
     }
   }
@@ -337,7 +344,7 @@ export default class AddEditOrgPersonMixin extends Vue {
       this.orgPerson.officer.id !== this.existingCompletingParty.officer.id
     ) {
       // open confirmation dialog and wait for response
-      const response = await this.$refs.reassignCPDialog.open(
+      const response = await this.$refs.confirmDialog.open(
         'Change Completing Party?',
         this.reassignPersonErrorMessage(),
         {
@@ -376,12 +383,40 @@ export default class AddEditOrgPersonMixin extends Vue {
         this.emitReassignCompletingPartyEvent()
       }
       const person = this.setPerson()
+      if (this.isProprietor && person.officer.partyType === PartyTypes.ORGANIZATION && person.officer.businessNumber) {
+        // Show an acknowledgement message if business number is different from what was entered in step 1
+        if (this.getRegistration.businessNumber &&
+            person.officer.businessNumber !== this.getRegistration.businessNumber) {
+          await this.showBNWarning(person.officer.organizationName, person.officer.businessNumber)
+        }
+
+        // Auto populate business number for Proprietor (Org)
+        // 1. If not entered in step 1
+        // 2. If different from what was entered in step 1
+        if (person.officer.businessNumber !== this.getRegistration.businessNumber) {
+          this.setRegistrationBusinessNumber(person.officer.businessNumber)
+          this.setIsAutoPopulatedBusinessNumber(true)
+        }
+      }
+
       this.emitPersonInfo(person)
       this.resetAddPersonData(false) // don't emit event
     } else {
       // scroll to top of form to present validations
       await this.scrollToTop(document.getElementsByClassName('appoint-form')[0])
     }
+  }
+
+  private async showBNWarning (businessName: string, businessNumber: string): Promise<boolean> {
+    return this.$refs.confirmDialog.open(
+      'Business number',
+      `The business number retrieved from our system for ${businessName} is different from ` +
+      `what was entered in step 1. The business number ${businessNumber} will be used to ` +
+      `inform CRA for this registration.`,
+      {
+        width: '40rem', persistent: true, yes: 'Ok', no: null, cancel: null
+      }
+    ).catch(() => false)
   }
 
   /** Copy of function in Common mixin (since this mixin cannot extend another mixin). */

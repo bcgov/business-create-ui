@@ -2,7 +2,7 @@ import { Component, Vue } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import { CorpTypeCd, NumWord, PartyTypes, RoleTypes, RuleIds } from '@/enums'
 import { ActionBindingIF, AddressIF, ConfirmDialogType, OrgPersonIF, PeopleAndRoleIF,
-  PeopleAndRolesResourceIF, TombstoneIF } from '@/interfaces'
+  PeopleAndRolesResourceIF, RegistrationStateIF, TombstoneIF } from '@/interfaces'
 
 /**
  * Mixin that provides common people and roles methods.
@@ -21,11 +21,14 @@ export default class PeopleRolesMixin extends Vue {
   @Getter getUserFirstName!: string
   @Getter getUserLastName!: string
   @Getter getUserAddress!: AddressIF
+  @Getter getRegistration!: RegistrationStateIF
   @Getter isTypeSoleProp!: boolean
   @Getter isTypePartnership!: boolean
 
   @Action setOrgPersonList!: ActionBindingIF
   @Action setAddPeopleAndRoleStepValidity!: ActionBindingIF
+  @Action setRegistrationBusinessNumber!: ActionBindingIF
+  @Action setIsAutoPopulatedBusinessNumber!: ActionBindingIF
 
   // Enums for template
   readonly CorpTypeCd = CorpTypeCd
@@ -238,7 +241,16 @@ export default class PeopleRolesMixin extends Vue {
     }
 
     const newList: OrgPersonIF[] = Object.assign([], this.orgPersonList)
-    newList.splice(index, 1)
+    const removedOrgs = newList.splice(index, 1)
+
+    // Remove auto populated business number for Proprietor (Org)
+    if (isProprietor && this.isOrganization(orgPerson) && this.getRegistration.isAutoPopulatedBusinessNumber) {
+      // We don't empty business number if user changed it after auto population
+      if (removedOrgs[0].officer.businessNumber === this.getRegistration.businessNumber) {
+        this.setRegistrationBusinessNumber(undefined)
+      }
+      this.setIsAutoPopulatedBusinessNumber(false)
+    }
 
     // set updated list
     this.setOrgPersonList(newList)

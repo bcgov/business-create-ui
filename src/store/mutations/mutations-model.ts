@@ -347,6 +347,10 @@ export const mutateRegistrationBusinessNumber = (state: StateIF, val: string) =>
   if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
 }
 
+export const mutateIsAutoPopulatedBusinessNumber = (state: StateIF, val: boolean) => {
+  state.stateModel.registration.isAutoPopulatedBusinessNumber = val
+}
+
 export const mutateRegistrationBusinessType = (state: StateIF, businessType: BusinessTypes) => {
   state.stateModel.registration.businessType = businessType
   if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)

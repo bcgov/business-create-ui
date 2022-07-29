@@ -20,7 +20,7 @@ describe('Business Lookup Services', () => {
     // mock successsful search
     sinon.stub(axios, 'get')
       .withArgs('https://search.api.url/businesses/search/facets?start=0&rows=20&categories=legalType:' +
-        'BC,A,ULC,C,S,XP,GP,LP,CUL,XS,LLC,LL,BEN,CP,SP,CC,XL,FI,XCP,PA::status:ACTIVE&query=FM1000002')
+        'BC,A,ULC,C,S,XP,GP,LP,CUL,XS,LLC,LL,BEN,CP,SP,CC,XL,FI,XCP,PA::status:ACTIVE&query=value:FM1000002')
       .returns(new Promise(resolve => resolve({ data: { searchResults: { results: [result] } } })))
 
     // search and look at results
@@ -35,7 +35,7 @@ describe('Business Lookup Services', () => {
     // mock unsuccesssful search
     sinon.stub(axios, 'get')
       .withArgs('https://search.api.url/businesses/search/facets?start=0&rows=20&categories=legalType' +
-        ':BC,A,ULC,C,S,XP,GP,LP,CUL,XS,LLC,LL,BEN,CP,SP,CC,XL,FI,XCP,PA::status:ACTIVE&query=FM1000003')
+        ':BC,A,ULC,C,S,XP,GP,LP,CUL,XS,LLC,LL,BEN,CP,SP,CC,XL,FI,XCP,PA::status:ACTIVE&query=value:FM1000003')
       .returns(new Promise(resolve => resolve({ data: { searchResults: { results: [] } } })))
 
     // search and look at results
