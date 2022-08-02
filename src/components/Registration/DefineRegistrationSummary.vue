@@ -85,20 +85,18 @@
       </template>
 
       <!-- Business Number -->
-      <template v-if="isTypePartnership">
-        <v-divider class="mx-6" />
+      <v-divider class="mx-6" />
 
-        <article class="section-container">
-          <v-row no-gutters>
-            <v-col cols="12" sm="3" class="pr-4">
-              <label>Business Number</label>
-            </v-col>
-            <v-col cols="12" sm="9">
-              <span>{{ businessNumber || '(Not entered)' }}</span>
-            </v-col>
-          </v-row>
-        </article>
-      </template>
+      <article class="section-container">
+        <v-row no-gutters>
+          <v-col cols="12" sm="3" class="pr-4">
+            <label>Business Number</label>
+          </v-col>
+          <v-col cols="12" sm="9">
+            <span>{{ businessNumber || '(Not entered)' }}</span>
+          </v-col>
+        </v-row>
+      </article>
     </section>
   </div>
 </template>

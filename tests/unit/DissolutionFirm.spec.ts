@@ -1,11 +1,20 @@
+import Vuetify from 'vuetify'
 import { shallowWrapperFactory } from '../jest-wrapper-factory'
+import { mount, shallowMount } from '@vue/test-utils'
 import { getVuexStore } from '@/store'
 import DissolutionFirm from '@/views/DissolutionFirm/DissolutionFirm.vue'
-
 import { DissolutionResources } from '@/resources/'
 
+const vuetify = new Vuetify({})
 const store = getVuexStore()
 store.state.stateModel.business.foundingDate = '2022-06-07T00:00:00.000+00:00'
+store.state.stateModel.tombstone.authRoles = ['staff']
+store.state.stateModel.completingParty = {
+  firstName: 'Wira',
+  middleName: 'Rosmunda',
+  lastName: 'Conrad',
+  mailingAddress: null
+}
 
 // Test Case Data
 // GP will come soon
@@ -20,7 +29,6 @@ const dissolutionFirmTestCases = [
     isPremium: true,
     isStaff: false
   }
-
 ]
 
 for (const test of dissolutionFirmTestCases) {
@@ -93,6 +101,40 @@ for (const test of dissolutionFirmTestCases) {
       )
 
       expect(wrapper.find('#certify-section').exists()).toBe(true)
+    })
+
+    it('displays Completing Party section', async () => {
+      wrapper = mount(
+        DissolutionFirm,
+        { store, vuetify }
+      )
+      expect(wrapper.find('#completing-party-section').exists()).toBe(true)
+      expect(wrapper.find('#completing-party').exists()).toBe(true)
+      const input1 = wrapper.find('#person__first-name')
+      const input2 = wrapper.find('#person__middle-name')
+      const input3 = wrapper.find('#person__last-name')
+      expect(input1.exists()).toBe(true)
+      expect(input2.exists()).toBe(true)
+      expect(input3.exists()).toBe(true)
+
+      // verify name lengths are valid
+      await input1.setValue('Name length is okay')
+      await input2.setValue('Name length is okay')
+      await input3.setValue('Name length is okay')
+      expect(input1.element.value).toBe('Name length is okay')
+      expect(input2.element.value).toBe('Name length is okay')
+      expect(input3.element.value).toBe('Name length is okay')
+      const validMessages = wrapper.findAll('#completing-party .v-messages__message')
+      expect(validMessages.length).toBe(0)
+
+      // verify name lengths are invalid
+      await input1.setValue('Name length is over 20')
+      await input2.setValue('Name length is over 20')
+      await input3.setValue('Name length is over 30 with many characters')
+      const errorMessages = wrapper.findAll('#completing-party .v-messages__message')
+      expect(errorMessages.length).toBe(2) // length should be 3 theoretically
+      expect(errorMessages.at(0).text()).toBe('Cannot exceed 20 characters')
+      expect(errorMessages.at(1).text()).toBe('Cannot exceed 20 characters')
     })
   })
 }

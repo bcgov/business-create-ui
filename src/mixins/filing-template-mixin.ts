@@ -131,6 +131,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Action setRegistrationFeeAcknowledgement!: ActionBindingIF
   @Action setRegistrationNaics!: ActionBindingIF
   @Action setRegistrationBusinessNumber!: ActionBindingIF
+  @Action setIsAutoPopulatedBusinessNumber!: ActionBindingIF
   @Action setRegistrationBusinessType!: ActionBindingIF
   @Action setRegistrationBusinessTypeConfirm!: ActionBindingIF
   @Action setDissolutionDate!: ActionBindingIF
@@ -373,7 +374,9 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
         },
         parties: this.orgPersonsToParties(this.getAddPeopleAndRoleStep.orgPeople),
         startDate: this.getRegistration.startDate,
-        businessTypeConfirm: this.getRegistration.businessTypeConfirm
+        businessTypeConfirm: this.getRegistration.businessTypeConfirm,
+
+        isAutoPopulatedBusinessNumber: this.getRegistration.isAutoPopulatedBusinessNumber
       }
     }
 
@@ -436,6 +439,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
 
     // restore Business Number
     this.setRegistrationBusinessNumber(draftFiling.registration.business.taxId || null)
+    this.setIsAutoPopulatedBusinessNumber(draftFiling.registration.isAutoPopulatedBusinessNumber || false)
 
     // restore Business Type Confirm
     this.setRegistrationBusinessTypeConfirm(draftFiling.registration.businessTypeConfirm || false)

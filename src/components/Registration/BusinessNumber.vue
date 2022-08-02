@@ -19,8 +19,10 @@
           If you have an existing business number, enter it below and we will contact
           Canada Revenue Agency and ask them to link it to this registration.
         </p>
-        <!-- NB: this component is only used for GPs -->
-        <HelpBusinessNumber class="mt-4" isTypePartnership=true />
+        <HelpBusinessNumber class="mt-4"
+          :isTypePartnership="isTypePartnership"
+          :isTypeSoleProp="isTypeSoleProp"
+        />
         <v-text-field
           filled
           persistent-hint
@@ -69,6 +71,14 @@ export default class BusinessNumber extends Vue {
   /** Whether to display Change features. */
   @Prop({ default: false })
   readonly hasBusinessNumberChanged!: boolean
+
+  /** Whether this is a General Partnership entity. */
+  @Prop({ default: false })
+  readonly isTypePartnership!: boolean
+
+  /** Whether this is a Sole Proprietor entity. */
+  @Prop({ default: false })
+  readonly isTypeSoleProp!: boolean
 
   // Local variables
   protected enableRules = false

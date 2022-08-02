@@ -238,7 +238,6 @@ export default class RegPeopleAndRoles extends Mixins(PeopleRolesMixin) {
 
     if (isOrganization) {
       this.currentOrgPerson.isLookupBusiness = true
-      this.currentOrgPerson.showOptionalBN = false
     }
 
     this.activeIndex = NaN // new org/person

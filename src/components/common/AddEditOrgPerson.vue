@@ -1,10 +1,9 @@
 <template>
   <div id="add-edit-org-person">
     <ConfirmDialog
-      ref="reassignCPDialog"
+      ref="confirmDialog"
       attach="#add-edit-org-person"
     />
-
     <section class="px-6 py-10" :class="{ 'invalid-section': !addPersonOrgFormValid }">
       <v-row no-gutters>
         <v-col cols="12" sm="3" class="pr-4 d-none d-sm-block">
