@@ -42,6 +42,8 @@
           class="py-8 px-6"
           :class="{ 'invalid-section': getShowErrors && !businessNumberValid }"
           :businessNumber="getRegistration.businessNumber"
+          :isTypePartnership="isTypePartnership"
+          :isTypeSoleProp="isTypeSoleProp"
           @update:businessNumber="setRegistrationBusinessNumber($event)"
           @valid="onBusinessNumberValidEvent($event)"
         />
@@ -150,6 +152,7 @@ export default class RegistrationDefineBusiness extends Mixins(CommonMixin) {
   @Getter getRegistration!: RegistrationStateIF
   @Getter getShowErrors!: boolean
   @Getter isTypePartnership!: boolean
+  @Getter isTypeSoleProp!: boolean
 
   @Action setBusinessContact!: ActionBindingIF
   @Action setRegistrationDefineBusinessValid!: ActionBindingIF

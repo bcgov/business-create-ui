@@ -21,7 +21,7 @@
         </p>
         <HelpBusinessNumber class="mt-4"
           :isTypePartnership="isTypePartnership"
-          :isTypeSoleProp="!isTypePartnership"
+          :isTypeSoleProp="isTypeSoleProp"
         />
         <v-text-field
           filled
@@ -75,6 +75,10 @@ export default class BusinessNumber extends Vue {
   /** Whether this is a General Partnership entity. */
   @Prop({ default: false })
   readonly isTypePartnership!: boolean
+
+  /** Whether this is a Sole Proprietor entity. */
+  @Prop({ default: false })
+  readonly isTypeSoleProp!: boolean
 
   // Local variables
   protected enableRules = false
