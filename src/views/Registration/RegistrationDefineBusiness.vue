@@ -1,6 +1,6 @@
 <template>
   <div id="registration-define-business">
-    <!-- Name -->
+    <!-- Name, etc -->
     <section class="mt-10">
       <header id="name-header">
         <h2>Name</h2>
