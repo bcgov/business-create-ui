@@ -73,7 +73,8 @@
       </article>
 
       <!-- Folio or Reference Number -->
-      <template v-if="isPremiumAccount">
+      <!-- DISABLED PER TICKET # 12306 -->
+      <!-- <template v-if="isPremiumAccount">
         <v-divider class="mx-6" />
 
         <article class="section-container">
@@ -82,11 +83,11 @@
             :isEditing="false"
           />
         </article>
-      </template>
+      </template> -->
 
-      <!-- Business Number -->
       <v-divider class="mx-6" />
 
+      <!-- Business Number -->
       <article class="section-container">
         <v-row no-gutters>
           <v-col cols="12" sm="3" class="pr-4">
@@ -121,7 +122,7 @@ import { CorpTypeCd, RouteNames } from '@/enums'
 export default class DefineRegistrationSummary extends Mixins(DateMixin, EnumMixin) {
   // Getters
   @Getter getApprovedName!: string
-  @Getter isPremiumAccount!: boolean
+  // @Getter isPremiumAccount!: boolean // DISABLED PER TICKET # 12306
   @Getter getBusinessContact!: ContactPointIF
   @Getter getFolioNumber!: string
   @Getter getRegistration!: RegistrationStateIF
