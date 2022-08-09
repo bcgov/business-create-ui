@@ -46,7 +46,7 @@
          <template v-if="isTypeFirm && getBusinessId">
           <div id="entity-business-business-number">
             <span class="business-info-label">Business Number:</span>
-            {{ this.getBusinessId }}
+            {{ this.getBusinessNumber }}
           </div>
         </template>
 
@@ -92,6 +92,7 @@ export default class EntityInfo extends Mixins(EnumMixin, DateMixin) {
   @Getter isIncorporationFiling!: boolean
   @Getter isRegistrationFiling!: boolean
   @Getter getBusinessId!: string
+  @Getter getBusinessNumber!: string
   @Getter isRoleStaff!: boolean
   @Getter isTypeFirm!: boolean
   @Getter getBusinessFoundingDate!: string

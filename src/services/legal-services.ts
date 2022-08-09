@@ -222,4 +222,14 @@ export default class LegalServices {
     }
     return toReturn
   }
+
+  /**
+   * Fetches business info.
+   * @param businessId the business identifier (aka entity inc no)
+   * @returns a promise to return the info from the response
+   */
+  static async fetchBusinessInfo (businessId: string): Promise<any> {
+    const url = `businesses/${businessId}`
+    return axios.get(url)
+  }
 }
