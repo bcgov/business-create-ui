@@ -46,7 +46,7 @@
          <template v-if="isTypeFirm && getBusinessId">
           <div id="entity-business-business-number">
             <span class="business-info-label">Business Number:</span>
-            {{ this.getBusinessNumber }}
+            {{ this.getBusinessNumber || "Not Available" }}
           </div>
         </template>
 
