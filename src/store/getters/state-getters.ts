@@ -228,7 +228,7 @@ export const getBusinessId = (state: StateIF): string => {
 
 /** The Business Identifier. */
 export const getBusinessNumber = (state: StateIF): string => {
-  return state.stateModel.businessId.taxId
+  return state.stateModel.business.taxId
 }
 
 export const getEntityIdentifier = (state: StateIF): string => {

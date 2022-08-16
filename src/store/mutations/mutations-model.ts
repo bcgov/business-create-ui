@@ -381,41 +381,41 @@ export const mutateParties = (state: StateIF, parties: Array<PartyIF>) => {
 }
 
 export const mutateAdminFreeze = (state: StateIF, adminFreeze: boolean) => {
-  state.stateModel.businessId.adminFreeze = adminFreeze
+  state.stateModel.business.adminFreeze = adminFreeze
 }
 
 export const mutateEntityName = (state: StateIF, legalName: string) => {
-  state.stateModel.businessId.legalName = legalName
+  state.stateModel.business.legalName = legalName
 }
 
 export const mutateEntityState = (state: StateIF, entityState: EntityState) => {
-  state.stateModel.businessId.state = entityState
+  state.stateModel.business.state = entityState
 }
 
 export const mutateBusinessNumber = (state: StateIF, taxId: string) => {
-  state.stateModel.businessId.taxId = taxId
+  state.stateModel.business.taxId = taxId
 }
 
 export const mutateIdentifier = (state: StateIF, identifier: string) => {
-  state.stateModel.businessId.identifier = identifier
+  state.stateModel.business.identifier = identifier
 }
 
 export const mutateLastAnnualReportDate = (state: StateIF, date: string) => {
-  state.stateModel.businessId.lastAnnualReportDate = date
+  state.stateModel.business.lastAnnualReportDate = date
 }
 
 export const mutateLastAddressChangeDate = (state: StateIF, date: string) => {
-  state.stateModel.businessId.lastAddressChangeDate = date
+  state.stateModel.business.lastAddressChangeDate = date
 }
 
 export const mutateLastDirectorChangeDate = (state: StateIF, date: string) => {
-  state.stateModel.businessId.lastDirectorChangeDate = date
+  state.stateModel.business.lastDirectorChangeDate = date
 }
 
 export const mutateBusinessWarnings = (state: StateIF, businessWarnings: Array<BusinessWarningIF>) => {
-  state.stateModel.businessId.warnings = businessWarnings
+  state.stateModel.business.warnings = businessWarnings
 }
 
 export const mutateGoodStanding = (state: StateIF, goodStanding: boolean) => {
-  state.stateModel.businessId.goodStanding = goodStanding
+  state.stateModel.business.goodStanding = goodStanding
 }

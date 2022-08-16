@@ -188,7 +188,7 @@ import {
   ActionBindingIF,
   AddressIF,
   BreadcrumbIF,
-  BusinessIdIF,
+  BusinessIF,
   CompletingPartyIF,
   ConfirmDialogType,
   DissolutionResourceIF,
@@ -723,7 +723,7 @@ export default class App extends Mixins(
   async fetchBusinessData (): Promise<void> {
     const data = await LegalServices.fetchBusinessInfo(this.getBusinessId)
 
-    await this.storeBusinessInfo(data)
+    this.storeBusinessInfo(data)
   }
 
   /** Fetches draft dissolution and returns the resources. */
@@ -1007,12 +1007,12 @@ export default class App extends Mixins(
   }
 
   /** Stores business info from Legal API. */
-  async storeBusinessInfo (response: any): Promise<void> {
-    const business = response?.data?.business as BusinessIdIF
+  storeBusinessInfo (response: any): void {
+    const business = response?.data?.business as BusinessIF
 
-    // if (!business) {
-    //   throw new Error('Invalid business info')
-    // }
+    if (!business) {
+      throw new Error('Invalid business info')
+    }
 
     // if (this.getBusinessId !== business.identifier) {
     //   throw new Error('Business identifier mismatch')

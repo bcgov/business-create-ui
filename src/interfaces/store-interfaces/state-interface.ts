@@ -3,7 +3,6 @@ import {
   AccountInformationIF,
   ContactPointIF,
   BusinessIF,
-  BusinessIdIF,
   CertifyIF,
   CourtOrderStepIF,
   CreateMemorandumIF,
@@ -37,7 +36,6 @@ export interface StateModelIF {
   orgInformation: OrgInformationIF
   business: BusinessIF
   businessContact: ContactPointIF
-  businessId: BusinessIdIF
   dissolution: DissolutionStateIF
   nameRequest: NameRequestIF
   nameTranslations: NameTranslationIF[]
