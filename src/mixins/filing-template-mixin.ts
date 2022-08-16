@@ -435,10 +435,10 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     })
 
     // restore NAICS
-    this.setRegistrationNaics(draftFiling.registration.business.naics || EmptyNaics)
+    this.setRegistrationNaics(draftFiling.registration.business?.naics || EmptyNaics)
 
     // restore Business Number
-    this.setRegistrationBusinessNumber(draftFiling.registration.business.taxId || null)
+    this.setRegistrationBusinessNumber(draftFiling.registration.business?.taxId || null)
     this.setIsAutoPopulatedBusinessNumber(draftFiling.registration.isAutoPopulatedBusinessNumber || false)
 
     // restore Business Type Confirm
