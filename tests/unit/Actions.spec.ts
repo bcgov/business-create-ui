@@ -531,7 +531,7 @@ describe('Actions component - Filing Functionality', () => {
     expect(mockUpdateFiling).toHaveReturned()
 
     // verify redirection
-    const baseUrl = 'https://auth.web.url/makepayment/789/https%3A%2F%2Fdashboard.url%2FT1234567'
+    const baseUrl = 'https://auth.web.url/makepayment/789/https%3A%2F%2Fdashboard.url%2FT1234567%3Ffiling_id%3D1234'
     expect(window.location.assign).toHaveBeenCalledWith(baseUrl)
   })
 
