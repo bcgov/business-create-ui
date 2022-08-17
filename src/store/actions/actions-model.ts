@@ -1,12 +1,12 @@
 import {
-  AccountInformationIF, ActionIF, AddressIF, ContactPointIF, CertifyIF, DissolutionStatementIF,
+  AccountInformationIF, ActionIF, AddressIF, BusinessWarningIF, ContactPointIF, CertifyIF, DissolutionStatementIF,
   IncorporationAddressIF, IncorporationAgreementIF, NameRequestIF, NameTranslationIF, OrgPersonIF,
   ResourceIF, ShareClassIF, CreateRulesIF, CreateMemorandumIF, ValidationDetailIF, FeesIF,
   UploadAffidavitIF, CreateResolutionIF, OrgInformationIF, NaicsIF,
   CompletingPartyIF,
   PartyIF
 } from '@/interfaces'
-import { BusinessTypes, CoopTypes, CorpTypeCd } from '@/enums'
+import { BusinessTypes, CoopTypes, CorpTypeCd, EntityState } from '@/enums'
 
 export const setBusinessId: ActionIF = ({ commit }, businessId): void => {
   commit('mutateBusinessId', businessId)
@@ -330,4 +330,48 @@ export const setDissolutionDate: ActionIF = ({ commit }, val: string): void => {
 
 export const setParties: ActionIF = ({ commit }, val: Array<PartyIF>): void => {
   commit('mutateParties', val)
+}
+
+//
+// BusinessId
+//
+
+export const setAdminFreeze: ActionIF = ({ commit }, adminFreeze: boolean): void => {
+  commit('mutateAdminFreeze', adminFreeze)
+}
+
+export const setEntityName: ActionIF = ({ commit }, legalName: string): void => {
+  commit('mutateEntityName', legalName)
+}
+
+export const setEntityState: ActionIF = ({ commit }, entityState: EntityState): void => {
+  commit('mutateEntityState', entityState)
+}
+
+export const setBusinessNumber: ActionIF = ({ commit }, taxId: string): void => {
+  commit('mutateBusinessNumber', taxId)
+}
+
+export const setGoodStanding : ActionIF = ({ commit }, goodStanding: boolean): void => {
+  commit('mutateGoodStanding', goodStanding)
+}
+
+export const setIdentifier: ActionIF = ({ commit }, identifier: string): void => {
+  commit('mutateIdentifier', identifier)
+}
+
+export const setLastAnnualReportDate: ActionIF = ({ commit }, date: string): void => {
+  commit('mutateLastAnnualReportDate', date)
+}
+
+export const setLastAddressChangeDate: ActionIF = ({ commit }, date: string): void => {
+  commit('mutateLastAddressChangeDate', date)
+}
+
+export const setLastDirectorChangeDate: ActionIF = ({ commit }, date: string): void => {
+  commit('mutateLastDirectorChangeDate', date)
+}
+
+export const setWarnings : ActionIF = ({ commit }, businessWarnings: Array<BusinessWarningIF>): void => {
+  commit('mutateBusinessWarnings', businessWarnings)
 }

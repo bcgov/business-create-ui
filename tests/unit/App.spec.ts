@@ -769,6 +769,23 @@ describe('Dissolution - Define Dissolution page for a BEN', () => {
         }
       })))
 
+    // GET business info from Legal API
+    get.withArgs('businesses/BC0870803')
+      .returns(new Promise((resolve) => resolve({
+        data:
+        {
+        // Legal API Business data
+          business: {
+            legalName: '0870803 B.C. LTD.',
+            goodStanding: true,
+            taxId: '123456789',
+            identifier: 'BC0870803',
+            foundingDate: '2021-10-07T20:37:41+00:00',
+            legalType: 'BEN'
+          }
+        }
+      })))
+
     // GET business tasks
     get.withArgs('businesses/BC0870803/tasks')
       .returns(new Promise((resolve) => resolve({

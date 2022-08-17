@@ -226,6 +226,11 @@ export const getBusinessId = (state: StateIF): string => {
   return state.stateModel.business.businessId
 }
 
+/** The Business Identifier. */
+export const getBusinessNumber = (state: StateIF): string => {
+  return state.stateModel.business.taxId
+}
+
 export const getEntityIdentifier = (state: StateIF): string => {
   switch (getFilingType(state)) {
     case FilingTypes.VOLUNTARY_DISSOLUTION: return getBusinessId(state)

@@ -1,4 +1,4 @@
-import { BusinessTypes, CoopTypes, CorpTypeCd, DissolutionTypes, FilingTypes } from '@/enums'
+import { BusinessTypes, CoopTypes, CorpTypeCd, DissolutionTypes, EntityState, FilingTypes } from '@/enums'
 import {
   AccountInformationIF,
   AddressIF,
@@ -25,7 +25,8 @@ import {
   UploadAffidavitIF,
   ValidationDetailIF,
   CompletingPartyIF,
-  PartyIF
+  PartyIF,
+  BusinessWarningIF
 } from '@/interfaces'
 
 export const mutateBusinessId = (state: StateIF, businessId: string) => {
@@ -377,4 +378,44 @@ export const mutateDissolutionDate = (state: StateIF, val: string) => {
 
 export const mutateParties = (state: StateIF, parties: Array<PartyIF>) => {
   state.stateModel.parties = parties
+}
+
+export const mutateAdminFreeze = (state: StateIF, adminFreeze: boolean) => {
+  state.stateModel.business.adminFreeze = adminFreeze
+}
+
+export const mutateEntityName = (state: StateIF, legalName: string) => {
+  state.stateModel.business.legalName = legalName
+}
+
+export const mutateEntityState = (state: StateIF, entityState: EntityState) => {
+  state.stateModel.business.state = entityState
+}
+
+export const mutateBusinessNumber = (state: StateIF, taxId: string) => {
+  state.stateModel.business.taxId = taxId
+}
+
+export const mutateIdentifier = (state: StateIF, identifier: string) => {
+  state.stateModel.business.identifier = identifier
+}
+
+export const mutateLastAnnualReportDate = (state: StateIF, date: string) => {
+  state.stateModel.business.lastAnnualReportDate = date
+}
+
+export const mutateLastAddressChangeDate = (state: StateIF, date: string) => {
+  state.stateModel.business.lastAddressChangeDate = date
+}
+
+export const mutateLastDirectorChangeDate = (state: StateIF, date: string) => {
+  state.stateModel.business.lastDirectorChangeDate = date
+}
+
+export const mutateBusinessWarnings = (state: StateIF, businessWarnings: Array<BusinessWarningIF>) => {
+  state.stateModel.business.warnings = businessWarnings
+}
+
+export const mutateGoodStanding = (state: StateIF, goodStanding: boolean) => {
+  state.stateModel.business.goodStanding = goodStanding
 }

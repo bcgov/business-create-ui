@@ -34,7 +34,28 @@ export const stateModel: StateModelIF = {
     officeAddress: {
       mailingAddress: { ...EmptyAddress },
       deliveryAddress: { ...EmptyAddress }
-    }
+    },
+    adminFreeze: false,
+    arMaxDate: '',
+    arMinDate: '',
+    dissolutionDate: '',
+    warnings: [],
+    fiscalYearEndDate: '',
+    goodStanding: false,
+    hasRestrictions: false,
+    identifier: '',
+    lastAddressChangeDate: '',
+    lastAnnualGeneralMeetingDate: '',
+    lastAnnualReportDate: '',
+    lastDirectorChangeDate: '',
+    lastLedgerTimestamp: '',
+    lastModified: '',
+    legalType: null,
+    nextAnnualReport: '',
+    taxId: '',
+    state: null,
+    stateFiling: '',
+    submitter: ''
   },
   businessContact: { ...EmptyContactPoint },
   dissolution: {

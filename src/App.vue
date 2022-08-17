@@ -188,6 +188,7 @@ import {
   ActionBindingIF,
   AddressIF,
   BreadcrumbIF,
+  BusinessIF,
   CompletingPartyIF,
   ConfirmDialogType,
   DissolutionResourceIF,
@@ -286,6 +287,17 @@ export default class App extends Mixins(
   @Action setNameRequestState!: ActionBindingIF
   @Action setCompletingParty!: ActionBindingIF
   @Action setParties!: ActionBindingIF
+  @Action setAdminFreeze!: ActionBindingIF
+  @Action setBusinessNumber: ActionBindingIF
+  @Action setIdentifier: ActionBindingIF
+  @Action setEntityName: ActionBindingIF
+  @Action setEntityState: ActionBindingIF
+  @Action setEntityFoundingDate: ActionBindingIF
+  @Action setLastAnnualReportDate: ActionBindingIF
+  @Action setLastAddressChangeDate: ActionBindingIF
+  @Action setLastDirectorChangeDate: ActionBindingIF
+  @Action setWarnings: ActionBindingIF
+  @Action setGoodStanding: ActionBindingIF
 
   // Local properties
   private accountAuthorizationDialog: boolean = false
@@ -607,6 +619,7 @@ export default class App extends Mixins(
       // fetch the draft filing and resources
       try {
         if (this.getBusinessId) {
+          await this.fetchBusinessData() // throws on error
           // this is a Dissolution filing
           // (only dissolutions have a business id)
           const resources = await this.handleDraftDissolution()
@@ -696,6 +709,13 @@ export default class App extends Mixins(
       // wait for things to stabilize, then reset flag
       this.$nextTick(() => this.setHaveChanges(false))
     }
+  }
+
+  /** Fetches and stores the business data. */
+  async fetchBusinessData (): Promise<void> {
+    const data = await LegalServices.fetchBusinessInfo(this.getBusinessId)
+
+    this.storeBusinessInfo(data)
   }
 
   /** Fetches draft dissolution and returns the resources. */
@@ -976,6 +996,31 @@ export default class App extends Mixins(
     const custom: any = { roles: userInfo.roles?.slice(1, -1).split(',') }
 
     await updateLdUser(key, email, firstName, lastName, custom)
+  }
+
+  /** Stores business info from Legal API. */
+  storeBusinessInfo (response: any): void {
+    const business = response?.data?.business as BusinessIF
+
+    if (!business) {
+      throw new Error('Invalid business info')
+    }
+
+    // if (this.getBusinessId !== business.identifier) {
+    //   throw new Error('Business identifier mismatch')
+    // }
+
+    // FUTURE: change this to a single setter/object?
+    this.setAdminFreeze(business.adminFreeze)
+    this.setEntityName(business.legalName)
+    this.setEntityState(business.state)
+    this.setBusinessNumber(business.taxId || null) // may be empty
+    this.setIdentifier(business.identifier)
+    this.setLastAnnualReportDate(business.lastAnnualReportDate) // may be empty
+    this.setLastAddressChangeDate(business.lastAddressChangeDate) // may be empty
+    this.setLastDirectorChangeDate(business.lastDirectorChangeDate) // may be empty
+    this.setWarnings(Array.isArray(business.warnings) ? business.warnings : [])
+    this.setGoodStanding(business.goodStanding)
   }
 
   /** Gets authorizations from Auth API, verifies roles, and stores them. */
