@@ -619,15 +619,7 @@ export default class App extends Mixins(
       // fetch the draft filing and resources
       try {
         if (this.getBusinessId) {
-          try {
-            await this.fetchBusinessData() // throws on error
-          } catch (error) {
-            console.log(error) // eslint-disable-line no-console
-            // Log exception to Sentry due to incomplete business data.
-            // At this point the system doesn't know why it's incomplete.
-            // Since this is not an expected behaviour, report this.
-            Sentry.captureException(error)
-          }
+          await this.fetchBusinessData() // throws on error
           // this is a Dissolution filing
           // (only dissolutions have a business id)
           const resources = await this.handleDraftDissolution()

@@ -16,7 +16,6 @@ import Stepper from '@/components/common/Stepper.vue'
 import { ConfirmDialog } from '@bcrs-shared-components/confirm-dialog'
 import mockRouter from './MockRouter'
 import Vuelidate from 'vuelidate'
-import { Getter } from 'vuex-class'
 
 // mock fetch() as it is not defined in Jest
 // NB: it should be `global.fetch` but that doesn't work and this does
@@ -767,6 +766,23 @@ describe('Dissolution - Define Dissolution page for a BEN', () => {
           modifiedBy: 'None None',
           name: '0870803 B.C. LTD.',
           passCodeClaimed: true
+        }
+      })))
+
+    // GET business info from Legal API
+    get.withArgs('businesses/BC0870803')
+      .returns(new Promise((resolve) => resolve({
+        data:
+        {
+        // Legal API Business data
+          business: {
+            legalName: '0870803 B.C. LTD.',
+            goodStanding: true,
+            taxId: '123456789',
+            identifier: 'BC0870803',
+            foundingDate: '2021-10-07T20:37:41+00:00',
+            legalType: 'BEN'
+          }
         }
       })))
 
