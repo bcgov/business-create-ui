@@ -258,19 +258,19 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Name
       const paymentToken = filingComplete?.header?.paymentToken
       if (paymentToken) {
         const isPaymentActionRequired: boolean = filingComplete.header?.isPaymentActionRequired
-        const dashboardUrl = sessionStorage.getItem('DASHBOARD_URL')
+        const returnUrl = sessionStorage.getItem('DASHBOARD_URL') + this.getEntityIdentifier +
+          `?filing_id=${this.getFilingId}`
 
         // if payment action is required, navigate to Pay URL
         if (isPaymentActionRequired) {
           const authUrl = sessionStorage.getItem('AUTH_WEB_URL')
-          const returnUrl = encodeURIComponent(dashboardUrl + this.getEntityIdentifier)
-          const payUrl = authUrl + 'makepayment/' + paymentToken + '/' + returnUrl
+          const payUrl = authUrl + 'makepayment/' + paymentToken + '/' + encodeURIComponent(returnUrl)
           // assume Pay URL is always reachable
           // otherwise user will have to retry payment later
           navigate(payUrl)
         } else {
           // navigate to Dashboard URL
-          navigate(dashboardUrl + this.getEntityIdentifier)
+          navigate(returnUrl)
         }
       } else {
         const error = new Error('Missing Payment Token')
