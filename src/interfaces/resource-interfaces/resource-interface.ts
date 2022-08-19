@@ -51,7 +51,8 @@ export interface RegistrationResourceIF {
       certifyClause: string
       entityDisplay: string
     }
-  }
+  },
+  clickFileAndPay: boolean
 }
 
 // Interface to define the resource model

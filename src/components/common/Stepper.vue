@@ -69,7 +69,10 @@ export default class Stepper extends Vue {
   @Getter isIncorporationAgreementValid!: boolean
   @Getter isIncorporationApplicationValid!: boolean
   @Getter isMemorandumValid!: boolean
-  @Getter isRegistrationValid!: boolean
+  @Getter isPartialRegistrationValid!: boolean
+  @Getter isFinalRegistrationValid!: boolean
+  @Getter getClickFileAndPay!: boolean
+  @Getter isTypeFirm!: boolean
   @Getter isResolutionValid!: boolean
   @Getter isRulesValid!: boolean
 
@@ -91,9 +94,18 @@ export default class Stepper extends Vue {
 
       case RouteNames.REGISTRATION_DEFINE_BUSINESS: return this.getRegistration.defineBusinessValid
       case RouteNames.REGISTRATION_PEOPLE_ROLES: return this.isAddPeopleAndRolesValid
-      case RouteNames.REGISTRATION_REVIEW_CONFIRM: return this.isRegistrationValid
+      case RouteNames.REGISTRATION_REVIEW_CONFIRM: return this.isRegistrationValid()
     }
     return false
+  }
+
+  private isRegistrationValid (): boolean {
+    if (this.isTypeFirm) {
+      if (!this.isPartialRegistrationValid) return false
+      if (!this.getClickFileAndPay) return this.isPartialRegistrationValid
+      return this.isFinalRegistrationValid
+    }
+    return this.isFinalRegistrationValid
   }
 
   /** show error styling for reveiw-confirm step after file and pay is selected */

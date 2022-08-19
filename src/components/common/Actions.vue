@@ -117,6 +117,7 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Name
   @Getter isSaving!: boolean
   @Getter isSavingResuming!: boolean
   @Getter isFilingPaying!: boolean
+  @Getter isFinalRegistrationValid!: boolean
 
   @Action setIsSaving!: ActionBindingIF
   @Action setIsSavingResuming!: ActionBindingIF
@@ -124,6 +125,7 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Name
   @Action setHaveChanges!: ActionBindingIF
   @Action setEffectiveDateTimeValid!: ActionBindingIF
   @Action setValidateSteps!: ActionBindingIF
+  @Action setClickFileAndPay!: ActionBindingIF
 
   /** Is True if Jest is running the code. */
   get isJestRunning (): boolean {
@@ -206,6 +208,12 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Name
    * @returns a promise (ie, this is an async method)
    */
   private async onClickFilePay (): Promise<void> {
+    // Set the status of clickFileAndPay for registration
+    if (this.isTypeFirm) {
+      this.setClickFileAndPay(true)
+      if (!this.isFinalRegistrationValid) return
+    }
+
     // Prompt Step validations
     this.setValidateSteps(true)
 

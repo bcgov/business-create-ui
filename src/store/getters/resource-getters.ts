@@ -107,3 +107,8 @@ export const getCustodialRecordsResources = (state: StateIF): CustodianResourceI
 export const getAffidavitResources = (state: StateIF): AffidavitResourceIF => {
   return state.resourceModel.affidavit
 }
+
+/** The state of the File and Pay button is clicked */
+export const getClickFileAndPay = (state: StateIF): boolean => {
+  return state.resourceModel.clickFileAndPay
+}

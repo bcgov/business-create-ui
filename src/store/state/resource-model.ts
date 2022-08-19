@@ -45,7 +45,8 @@ const registrationResourceModel: any = {
       certifyClause: null,
       entityDisplay: null
     }
-  }
+  },
+  clickFileAndPay: false
 }
 
 const dissolutionResourceModel: DissolutionResourceIF = {

@@ -40,6 +40,7 @@ import {
   CompletingPartyIF,
   PartyIF
 } from '@/interfaces'
+import { stateModel } from '../state'
 import { getMaxStep } from './resource-getters'
 
 /** Whether the current filing is an Incorporation. */
@@ -457,7 +458,7 @@ export const isIncorporationAgreementValid = (state: StateIF): boolean => {
 export const isApplicationValid = (state: StateIF): boolean => {
   if (isIncorporationFiling(state)) return isIncorporationApplicationValid(state)
   if (isDissolutionFiling(state)) return isDissolutionValid(state)
-  if (isRegistrationFiling(state)) return isRegistrationValid(state)
+  if (isRegistrationFiling(state)) return isPartialRegistrationValid(state)
   return false
 }
 
@@ -533,8 +534,16 @@ export const isIncorporationApplicationValid = (state: StateIF): boolean => {
   )
 }
 
+/** Whether the partial registration steps are valid. */
+export const isPartialRegistrationValid = (state: StateIF): boolean => {
+  return (
+    getRegistration(state).defineBusinessValid &&
+    isAddPeopleAndRolesValid(state)
+  )
+}
+
 /** Whether all the registration steps are valid. */
-export const isRegistrationValid = (state: StateIF): boolean => {
+export const isFinalRegistrationValid = (state: StateIF): boolean => {
   const isCertifyValid = getCertifyState(state).valid && !!getCertifyState(state).certifiedBy
   // const isFeeAcknowledgementValid = getRegistration(state).feeAcknowledgement
   const isFeeAcknowledgementValid = true // FUTURE: use line above instead

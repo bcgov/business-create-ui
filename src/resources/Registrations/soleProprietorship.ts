@@ -52,5 +52,6 @@ export const SoleProprietorshipResource: RegistrationResourceIF = {
         'offence is subject to a maximum fine of $5,000.',
       entityDisplay: GetCorpFullDescription(CorpTypeCd.SOLE_PROP)
     }
-  }
+  },
+  clickFileAndPay: false
 }

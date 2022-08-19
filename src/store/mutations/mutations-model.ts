@@ -419,3 +419,7 @@ export const mutateBusinessWarnings = (state: StateIF, businessWarnings: Array<B
 export const mutateGoodStanding = (state: StateIF, goodStanding: boolean) => {
   state.stateModel.business.goodStanding = goodStanding
 }
+
+export const mutateClickFileAndPay = (state: StateIF, clickFileAndPay: boolean): void => {
+  state.resourceModel.clickFileAndPay = clickFileAndPay
+}
