@@ -22,7 +22,8 @@
           >
             <v-icon class="step__icon" :class="{ 'selected-icon': isCurrentStep(step) }">{{ step.icon }}</v-icon>
           </v-btn>
-          <v-icon class="step__btn2" size="30" color="success darken-1" v-show="isValid(step.to)">
+          <v-icon class="step__btn2" size="30" color="success darken-1" v-show="isValid(step.to)
+            && isFirmReviewValid(step.to)">
             mdi-check-circle
           </v-icon>
           <v-icon class="step__btn2" size="30" color="error darken-1"
@@ -99,6 +100,8 @@ export default class Stepper extends Vue {
     return false
   }
 
+  /** Check for define and people components are valid first
+  * Check for review component when the FileAndPay button is clicked */
   private isRegistrationValid (): boolean {
     if (this.isTypeFirm) {
       if (!this.isPartialRegistrationValid) return false
@@ -106,6 +109,12 @@ export default class Stepper extends Vue {
       return this.isFinalRegistrationValid
     }
     return this.isFinalRegistrationValid
+  }
+
+  /** show error styling for registration review-confirm step after file and pay is selected */
+  private isFirmReviewValid (route: RouteNames): boolean {
+    const thisRoute = route === RouteNames.REGISTRATION_REVIEW_CONFIRM
+    return thisRoute ? this.getClickFileAndPay : !thisRoute
   }
 
   /** show error styling for reveiw-confirm step after file and pay is selected */

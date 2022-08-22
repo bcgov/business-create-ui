@@ -458,7 +458,7 @@ export const isIncorporationAgreementValid = (state: StateIF): boolean => {
 export const isApplicationValid = (state: StateIF): boolean => {
   if (isIncorporationFiling(state)) return isIncorporationApplicationValid(state)
   if (isDissolutionFiling(state)) return isDissolutionValid(state)
-  if (isRegistrationFiling(state)) return isPartialRegistrationValid(state)
+  if (isRegistrationFiling(state)) return isFinalRegistrationValid(state)
   return false
 }
 

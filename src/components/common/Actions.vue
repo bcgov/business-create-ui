@@ -209,10 +209,7 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Name
    */
   private async onClickFilePay (): Promise<void> {
     // Set the status of clickFileAndPay for registration
-    if (this.isTypeFirm) {
-      this.setClickFileAndPay(true)
-      if (!this.isFinalRegistrationValid) return
-    }
+    if (this.isTypeFirm) this.setClickFileAndPay(true)
 
     // Prompt Step validations
     this.setValidateSteps(true)
