@@ -53,15 +53,13 @@
               id="txt-phone"
             />
           </v-col>
-          <v-col cols="6" sm="4" class="pl-2 pt-4 pt-sm-0 phone-ext"
-            :class="{'phone-ext-filled': contact.extension}">
+          <v-col cols="6" sm="4" class="pl-2 pt-4 pt-sm-0">
             <v-text-field
               filled
               label="Extension (Optional)"
               persistent-hint
               v-mask="'#####'"
               v-model="contact.extension"
-              :disabled="!contact.phone"
               id="txt-phone-extension"
             />
           </v-col>
@@ -187,19 +185,5 @@ export default class BusinessContactInfo extends Mixins(CommonMixin) {
 ::v-deep .v-label {
   font-weight: normal;
   color: $gray7;
-}
-
-// display the dotted line until extension is entered
-::v-deep .phone-ext .v-text-field > .v-input__control > .v-input__slot::before {
-  border-image: repeating-linear-gradient(
-    to right,
-    rgba(0, 0, 0, 0.38) 0px,
-    rgba(0, 0, 0, 0.38) 2px,
-    transparent 2px,
-    transparent 4px
-  ) 1 repeat;
-}
-::v-deep .phone-ext.phone-ext-filled .v-text-field > .v-input__control > .v-input__slot::before {
-  border-image: none;
 }
 </style>
