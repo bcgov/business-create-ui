@@ -26,7 +26,7 @@
             mdi-check-circle
           </v-icon>
           <v-icon class="step__btn2" size="30" color="error darken-1"
-            v-show="!isValid(step.to) && getShowErrors && isReviewStepValid(step.to)">
+            v-show="!isValid(step.to) && getShowErrors && getValidateSteps">
             mdi-close-circle
           </v-icon>
         </div>
@@ -94,14 +94,6 @@ export default class Stepper extends Vue {
       case RouteNames.REGISTRATION_REVIEW_CONFIRM: return this.isRegistrationValid
     }
     return false
-  }
-
-  /** show error styling for reveiw-confirm step after file and pay is selected */
-  protected isReviewStepValid (route: RouteNames): boolean {
-    return (
-      route !== RouteNames.DISSOLUTION_REVIEW_CONFIRM ||
-      this.getValidateSteps
-    )
   }
 
   private goTo (step) {
