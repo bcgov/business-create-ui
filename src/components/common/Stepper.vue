@@ -26,7 +26,7 @@
             mdi-check-circle
           </v-icon>
           <v-icon class="step__btn2" size="30" color="error darken-1"
-            v-show="!isValid(step.to) && getShowErrors && isReviewStepValid(step.to)">
+            v-show="!isValid(step.to) && getShowErrors && isReviewStepValid(step.to) && getValidateSteps">
             mdi-close-circle
           </v-icon>
         </div>
