@@ -43,7 +43,7 @@
           <v-col cols="6" sm="4" class="pr-2 pt-4 pt-sm-0">
             <v-text-field
               filled
-              label="Phone Number"
+              label="Phone Number (Optional)"
               persistent-hint
               hint="Example: (555) 555-5555"
               type="tel"
