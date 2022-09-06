@@ -9,10 +9,11 @@ export const DateRules = {
   }
 }
 
-// validation helper methods
+// validation helper method(s)
 export const DateRuleHelpers = {
   isBetweenDates (minDate: Date, maxDate: Date, dateStrToValidate: string): boolean {
     if (!dateStrToValidate) { return true }
-    return (new Date(dateStrToValidate) >= minDate) && (new Date(dateStrToValidate) <= maxDate)
+    const date = new Date(dateStrToValidate) // eg, September 5, 2022
+    return (date >= minDate) && (date <= maxDate)
   }
 }

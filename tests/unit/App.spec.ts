@@ -799,7 +799,8 @@ describe('Dissolution - Define Dissolution page for a BEN', () => {
                 business: {
                   identifier: 'BC0870803',
                   legalName: '0870803 B.C. LTD.',
-                  legalType: 'BEN'
+                  legalType: 'BEN',
+                  foundingDate: '2021-10-07T20:37:41+00:00'
                 },
                 dissolution: {
                   custodialOffice: {
@@ -843,11 +844,10 @@ describe('Dissolution - Define Dissolution page for a BEN', () => {
               }
             }
           }]
-
         }
       })))
 
-    // for staff comments
+    // GET staff comments
     get.withArgs('businesses/BC0870803/comments')
       .returns(new Promise((resolve) => resolve({
         data: []

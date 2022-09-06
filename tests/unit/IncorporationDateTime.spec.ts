@@ -22,6 +22,7 @@ document.body.setAttribute('data-app', 'true')
 describe('Incorporation Date Time component', () => {
   let wrapperFactory: any
   const today = new Date()
+  store.state.stateModel.currentJsDate = today
 
   const dateTimeDefault = {
     valid: false,

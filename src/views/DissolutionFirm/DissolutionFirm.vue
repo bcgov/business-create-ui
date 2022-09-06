@@ -353,7 +353,7 @@ export default class DissolutionFirm extends Mixins(DateMixin, EnumMixin) {
   }
 
   /** Handler for Valid change event. */
-  private onIsCertified (val: boolean): void {
+  protected onIsCertified (val: boolean): void {
     this.setCertifyState(
       {
         valid: val,
@@ -363,7 +363,7 @@ export default class DissolutionFirm extends Mixins(DateMixin, EnumMixin) {
   }
 
   /** Handler for CertifiedBy change event. */
-  private onCertifiedBy (val: string): void {
+  protected onCertifiedBy (val: string): void {
     this.setCertifyState(
       {
         valid: this.getCertifyState.valid,
@@ -372,33 +372,33 @@ export default class DissolutionFirm extends Mixins(DateMixin, EnumMixin) {
     )
   }
 
-  /** The minimum start date that can be entered (greater than registration date). */
-  private get startDateMin (): Date {
-    const date = this.apiToDate(this.getBusinessFoundingDate)
-    date.setDate(date.getDate() + 1)
-    return date
-  }
-
   /** Dissolution Error */
-  private dissolutionError (): string {
+  protected dissolutionError (): string {
     if (this.isTypeFirm && this.getValidateSteps && !this.getDissolutionDate) {
       return 'Business dissolution date is required'
     }
     return ''
   }
 
+  /** The minimum start date that can be entered (greater than registration date). */
+  get startDateMin (): Date {
+    const date = this.apiToDate(this.getBusinessFoundingDate)
+    date.setDate(date.getDate() + 1)
+    return date
+  }
+
   /** The minimum start date string. */
-  private get startDateMinStr (): string {
+  get startDateMinStr (): string {
     return this.dateToYyyyMmDd(this.startDateMin)
   }
 
   /** The maximum start date that can be entered (today). */
-  private get startDateMax (): Date {
-    return new Date(this.getCurrentJsDate)
+  get startDateMax (): Date {
+    return this.getCurrentJsDate
   }
 
   /** The maximum start date string. */
-  private get startDateMaxStr (): string {
+  get startDateMaxStr (): string {
     return this.dateToYyyyMmDd(this.startDateMax)
   }
 
