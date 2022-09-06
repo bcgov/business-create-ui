@@ -5,20 +5,19 @@
       <header>
         <h2>{{getCreateResolutionResource.introSection.header}}</h2>
         <p class="section-description mt-2">
-            <span v-for="(partialItem, index) in getCreateResolutionResource.introSection.items" :key="index">
-              <span v-if="partialItem.type === ItemTypes.TEXT" v-html="partialItem.value"></span>
-              <v-tooltip v-if="partialItem.type === ItemTypes.TOOLTIP"
-                 top max-width="15rem"
-                 content-class="top-tooltip"
-                 transition="fade-transition">
-                  <template v-slot:activator="{ on }">
-                    <span v-on="on" class="tool-tip dotted-underline"> {{partialItem.value.label}} </span>
-                  </template>
-                  <span>
-                    {{partialItem.value.text}}
-                  </span>
-              </v-tooltip>
-            </span>
+          <span v-for="(partialItem, index) in getCreateResolutionResource.introSection.items" :key="index">
+            <span v-if="partialItem.type === ItemTypes.TEXT" v-html="partialItem.value"></span>
+            <v-tooltip v-if="partialItem.type === ItemTypes.TOOLTIP"
+              top max-width="15rem"
+              content-class="top-tooltip"
+              transition="fade-transition"
+            >
+              <template v-slot:activator="{ on }">
+                <span v-on="on" class="tool-tip dotted-underline"> {{partialItem.value.label}} </span>
+              </template>
+              <span>{{partialItem.value.text}}</span>
+            </v-tooltip>
+          </span>
         </p>
       </header>
     </section>
@@ -134,7 +133,7 @@
                 :minDate="resolutionDateMinStr"
                 :maxDate="resolutionDateMaxStr"
                 :inputRules="resolutionDateRules"
-                @emitDateSync="onResolutionDateSync"
+                @emitDateSync="onResolutionDateSync($event)"
               />
             </v-col>
           </v-row>
@@ -168,7 +167,7 @@
                             :counter="MAX_RESOLUTION_TEXT_LENGTH"
                             v-model="resolutionText"
                             :rules="resolutionTextRules"
-                            @change="onResolutionTextChanged"
+                            @change="onResolutionTextChanged($event)"
                             v-observe-visibility="{ callback: onResolutionVisibilityChanged, once: true }"
                 />
               </v-form>
@@ -243,7 +242,7 @@
                 :minDate="signatureDateMinStr"
                 :maxDate="signatureDateMaxStr"
                 :inputRules="signatureDateRules"
-                @emitDateSync="onSigningDateSync"
+                @emitDateSync="onSigningDateSync($event)"
               />
             </v-col>
           </v-row>
@@ -350,18 +349,18 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin) {
     confirmResolutionChkRef: FormIF
   }
 
-  private MAX_RESOLUTION_TEXT_LENGTH: number = 1000
-  private resolutionText: string = ''
+  readonly MAX_RESOLUTION_TEXT_LENGTH = 1000
+  private resolutionText = ''
   private resolutionConfirmed = false
   private helpToggle = false
-  private PLACEHOLDER_LEGAL_NAME = 'legal_name'
-  private PLACEHOLDER_LEGAL_NAME_INLINE = 'legal_name_inline'
-  private signingPerson: PersonIF = null
+  readonly PLACEHOLDER_LEGAL_NAME = 'legal_name'
+  readonly PLACEHOLDER_LEGAL_NAME_INLINE = 'legal_name_inline'
+  private signingPerson = { ...EmptyPerson } as PersonIF
 
   // Date properties
-  private resolutionDateText: string = ''
-  private signatureDateText: string = ''
-  private foundingDate: Date = null
+  private resolutionDateText = ''
+  private signatureDateText = ''
+  private foundingDate = null as Date
 
   @Getter getShowErrors!: boolean
   @Getter isTypeCoop!: boolean
@@ -374,7 +373,7 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin) {
   @Action setResolution!: ActionBindingIF
   @Action setResolutionStepValidationDetail!: ActionBindingIF
 
-  // Enum for template
+  // Enums for template
   readonly RouteNames = RouteNames
   readonly ItemTypes = ItemTypes
   readonly CorpTypeCd = CorpTypeCd
@@ -394,7 +393,7 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin) {
     return this.getShowErrors && !this.isConfirmResolutionValid
   }
 
-  private previewImageSource (): string {
+  protected previewImageSource (): string {
     // Note: the image file path did not resolve correctly when using the require function directly.  In order
     // to get the image path resolving correctly, needed to get the image context first and use that to build
     // the final image file path
@@ -404,7 +403,7 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin) {
     return images('./' + this.getCreateResolutionResource.sampleFormSection.previewImagePath)
   }
 
-  private get confirmLabel (): string {
+  get confirmLabel (): string {
     const confirmTextItems = this.getCreateResolutionResource.confirmSection.text
     const result = confirmTextItems.map(item => {
       if (item.type === ItemTypes.PLACEHOLDER && item.value === this.PLACEHOLDER_LEGAL_NAME) {
@@ -443,66 +442,57 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin) {
     ]
   }
 
-  private validateIsBetweenDates (minDate: Date, maxDate: Date, dateToValidate: Date): boolean {
-    if (!dateToValidate) { return true }
-    if (dateToValidate >= minDate && dateToValidate <= maxDate) { return true }
-    return false
-  }
-
   /** The minimum date that can be entered (can't be earlier than incorporation date ). */
-  private get resolutionDateMinStr (): string {
+  get resolutionDateMinStr (): string {
     return this.dateToYyyyMmDd(this.foundingDate)
   }
 
   /** The minimum date that can be entered (can't be earlier than incorporation date ). */
-  private get resolutionDateMin (): Date {
+  get resolutionDateMin (): Date {
     return this.foundingDate
   }
 
   /** The maximum date that can be entered (today). */
-  private get resolutionDateMaxStr (): string {
-    const date = new Date()
-    return this.dateToYyyyMmDd(date)
+  get resolutionDateMaxStr (): string {
+    return this.dateToYyyyMmDd(this.getCurrentJsDate)
   }
 
   /** The maximum date that can be entered (today). */
-  private get resolutionDateMax (): Date {
-    const date = new Date()
-    return date
+  get resolutionDateMax (): Date {
+    return this.getCurrentJsDate
   }
 
   /** The minimum date that can be entered (resolution date). */
-  private get signatureDateMinStr (): string {
+  get signatureDateMinStr (): string {
     const date = this.signatureDateMin
     const result = this.dateToYyyyMmDd(date)
     return result
   }
 
   /** The minimum date that can be entered (resolution date). */
-  private get signatureDateMin (): Date {
+  get signatureDateMin (): Date {
     if (this.resolutionDateText) {
       const resolutionDate = this.yyyyMmDdToDate(this.resolutionDateText)
       return resolutionDate
     }
-    const date = new Date()
+    const date = new Date(this.getCurrentJsDate) // make a copy
     date.setHours(0, 0, 0, 0)
     return date
   }
 
   /** The maximum date that can be entered (today). */
-  private get signatureDateMaxStr (): string {
+  get signatureDateMaxStr (): string {
     const date = this.signatureDateMax
     const dateStr = this.dateToYyyyMmDd(date)
     return dateStr
   }
 
   /** The maximum date that can be entered (today). */
-  private get signatureDateMax (): Date {
-    const date = new Date()
-    return date
+  get signatureDateMax (): Date {
+    return this.getCurrentJsDate
   }
 
-  private get resolutionTextRules (): Array<Function> {
+  get resolutionTextRules (): Array<Function> {
     return [
       v => (v && v.trim().length > 0) || 'Resolution text is required',
       v => (v && v.length <= this.MAX_RESOLUTION_TEXT_LENGTH) || 'Maximum characters exceeded',
@@ -510,29 +500,29 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin) {
     ]
   }
 
-  private confirmCompletionResolution = [
+  protected confirmCompletionResolution = [
     (v) => { return !!v }
   ]
 
-  private get isResolutionDateValid (): boolean {
+  get isResolutionDateValid (): boolean {
     return this.$refs.resolutionDatePickerRef?.isDateValid()
   }
 
-  private get isResolutionTextValid (): boolean {
+  get isResolutionTextValid (): boolean {
     return this.$refs.resolutionTextRef?.valid
   }
 
-  private get isSigningDateValid (): boolean {
+  get isSigningDateValid (): boolean {
     return this.$refs.signatureDatePickerRef?.isDateValid()
   }
 
-  private get isSigningPersonValid (): boolean {
+  get isSigningPersonValid (): boolean {
     return this.$refs.signingPersonGivenNameRef?.valid &&
       this.$refs.signingPersonMiddleNameRef.valid &&
       this.$refs.signingPersonFamilyNameRef.valid
   }
 
-  private get isConfirmResolutionValid (): boolean {
+  get isConfirmResolutionValid (): boolean {
     return this.$refs.confirmResolutionChkRef?.valid
   }
 
@@ -600,7 +590,7 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin) {
     }
   }
 
-  private async onResolutionConfirmedChange (resolutionConfirmed: boolean): Promise<void> {
+  protected async onResolutionConfirmedChange (resolutionConfirmed: boolean): Promise<void> {
     // This is required as there are timing issues between this component and the CompleteResolutionSummary
     // component.  The CompleteResolutionSummary isn't always able to detect that the confirm checkbox
     // value has changed without using nextTick()
@@ -614,7 +604,7 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin) {
 
   /** Called when component is created. */
   created (): void {
-    const foundingDate = new Date(this.getBusinessFoundingDate)
+    const foundingDate = this.apiToDate(this.getBusinessFoundingDate)
     foundingDate.setHours(0, 0, 0, 0)
     this.foundingDate = foundingDate
     this.resolutionConfirmed = this.getCreateResolutionStep.resolutionConfirmed
@@ -654,7 +644,7 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin) {
     }
   }
 
-  async onResolutionDateSync (val: string): Promise<void> {
+  protected async onResolutionDateSync (val: string): Promise<void> {
     await this.$nextTick()
     this.resolutionDateText = val
     this.setResolution({
@@ -671,7 +661,7 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin) {
     this.updateResolutionStepValidationDetail()
   }
 
-  private onResolutionTextChanged (val: string) {
+  protected onResolutionTextChanged (val: string) {
     this.setResolution({
       ...this.getCreateResolutionStep,
       resolutionText: val
@@ -684,7 +674,7 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin) {
   // v-observe-visibility property, we are able to force a re-calculation of the text area height when a user navigates
   // to the complete resolution step from another step for the first time. This results in the text area being rendered
   // to the appropriate height.
-  private onResolutionVisibilityChanged (isVisible, entry) {
+  protected onResolutionVisibilityChanged (isVisible, entry) {
     if (isVisible) {
       this.$refs.resolutionTextRef.calculateInputHeight()
     }
@@ -702,7 +692,7 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin) {
     }
   }
 
-  async onSigningDateSync (val: string): Promise<void> {
+  protected async onSigningDateSync (val: string): Promise<void> {
     await this.$nextTick()
     this.signatureDateText = val
     this.setResolution({

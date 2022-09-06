@@ -63,57 +63,42 @@ for (const test of completeResolutionTestCases) {
   describe(`Complete Resolution view for a ${test.entityType}`, () => {
     let wrapper: any
 
-    it('renders the complete resolution component', async () => {
+    beforeAll(() => {
       wrapper = wrapperFactory(
         CompleteResolution,
         null,
-        { entityType: test.entityType },
+        {
+          entityType: test.entityType,
+          business: { foundingDate: '2021-10-07T20:37:41+00:00' },
+          createResolutionStep: {
+            givenName: 'Given',
+            additionalName: 'Additional',
+            familyName: 'Family'
+          }
+        },
         null,
         DissolutionResources
       )
+    })
 
+    it('renders the complete resolution component', () => {
       expect(wrapper.find('#complete-resolution').exists()).toBe(true)
     })
 
-    it('renders intro section', async () => {
-      wrapper = wrapperFactory(
-        CompleteResolution,
-        null,
-        { entityType: test.entityType },
-        null,
-        DissolutionResources
-      )
-
+    it('renders intro section', () => {
       expect(wrapper.find('#resolution-intro-section').exists()).toBe(true)
     })
 
-    it('displays correct intro text', async () => {
-      wrapper = wrapperFactory(
-        CompleteResolution,
-        null,
-        { entityType: test.entityType },
-        null,
-        DissolutionResources
-      )
-
+    it('displays correct intro text', () => {
       const introText = wrapper.findAll('#resolution-intro-section header span span')
 
       expect(introText.exists()).toBe(true)
       expect(introText.at(0).text()).toContain(test.introTextItem1)
-      expect(introText.at(1).text()).toContain(test.introTextItem2)
+      expect(introText.at(2).text()).toContain(test.introTextItem2)
     })
 
     it('displays the correct help text', async () => {
-      wrapper = wrapperFactory(
-        CompleteResolution,
-        null,
-        { entityType: test.entityType },
-        null,
-        DissolutionResources
-      )
-
-      wrapper.find('.help-btn').trigger('click')
-      await Vue.nextTick()
+      await wrapper.find('.help-btn').trigger('click')
 
       const helpHeader = wrapper.findAll('.create-resolution-help-header h2')
       const helpList = wrapper.findAll('.create-resolution-help li')
@@ -131,15 +116,7 @@ for (const test of completeResolutionTestCases) {
       }
     })
 
-    it('renders or hides the sample resolution section', async () => {
-      wrapper = wrapperFactory(
-        CompleteResolution,
-        null,
-        { entityType: test.entityType },
-        null,
-        DissolutionResources
-      )
-
+    it('renders or hides the sample resolution section', () => {
       if (test.entityType === CorpTypeCd.COOP) {
         expect(wrapper.find('#sample-resolution-section').exists()).toBe(true)
       } else {
@@ -147,15 +124,7 @@ for (const test of completeResolutionTestCases) {
       }
     })
 
-    it('renders the correct sample resolution text', async () => {
-      wrapper = wrapperFactory(
-        CompleteResolution,
-        null,
-        { entityType: test.entityType },
-        null,
-        DissolutionResources
-      )
-
+    it('renders the correct sample resolution text', () => {
       const descText = wrapper.find('#sample-resolution-section .section-description')
       if (test.entityType === CorpTypeCd.COOP) {
         expect(descText.exists()).toBe(true)
@@ -165,15 +134,7 @@ for (const test of completeResolutionTestCases) {
       }
     })
 
-    it('renders or hides the resolution date section', async () => {
-      wrapper = wrapperFactory(
-        CompleteResolution,
-        null,
-        { entityType: test.entityType },
-        null,
-        DissolutionResources
-      )
-
+    it('renders or hides the resolution date section', () => {
       if (test.entityType === CorpTypeCd.COOP) {
         expect(wrapper.find('#resolution-date-section').exists()).toBe(true)
       } else {
@@ -181,15 +142,7 @@ for (const test of completeResolutionTestCases) {
       }
     })
 
-    it('renders the correct resolution date text', async () => {
-      wrapper = wrapperFactory(
-        CompleteResolution,
-        null,
-        { entityType: test.entityType },
-        null,
-        DissolutionResources
-      )
-
+    it('renders the correct resolution date text', () => {
       const descText = wrapper.find('#resolution-date-section .section-description')
       if (test.entityType === CorpTypeCd.COOP) {
         expect(descText.exists()).toBe(true)
@@ -199,15 +152,7 @@ for (const test of completeResolutionTestCases) {
       }
     })
 
-    it('renders or hides the resolution text section', async () => {
-      wrapper = wrapperFactory(
-        CompleteResolution,
-        null,
-        { entityType: test.entityType },
-        null,
-        DissolutionResources
-      )
-
+    it('renders or hides the resolution text section', () => {
       if (test.entityType === CorpTypeCd.COOP) {
         expect(wrapper.find('#resolution-text-section').exists()).toBe(true)
       } else {
@@ -215,15 +160,7 @@ for (const test of completeResolutionTestCases) {
       }
     })
 
-    it('renders the correct resolution text', async () => {
-      wrapper = wrapperFactory(
-        CompleteResolution,
-        null,
-        { entityType: test.entityType },
-        null,
-        DissolutionResources
-      )
-
+    it('renders the correct resolution text', () => {
       const descText = wrapper.find('#resolution-text-section .section-description')
       if (test.entityType === CorpTypeCd.COOP) {
         expect(descText.exists()).toBe(true)
@@ -233,15 +170,7 @@ for (const test of completeResolutionTestCases) {
       }
     })
 
-    it('renders or hides the resolution signature info section', async () => {
-      wrapper = wrapperFactory(
-        CompleteResolution,
-        null,
-        { entityType: test.entityType },
-        null,
-        DissolutionResources
-      )
-
+    it('renders or hides the resolution signature info section', () => {
       if (test.entityType === CorpTypeCd.COOP) {
         expect(wrapper.find('#resolution-signature-info-section').exists()).toBe(true)
       } else {
@@ -249,15 +178,7 @@ for (const test of completeResolutionTestCases) {
       }
     })
 
-    it('renders the correct resolution signature info text', async () => {
-      wrapper = wrapperFactory(
-        CompleteResolution,
-        null,
-        { entityType: test.entityType },
-        null,
-        DissolutionResources
-      )
-
+    it('renders the correct resolution signature info text', () => {
       const descText = wrapper.find('#resolution-signature-info-section .section-description')
       if (test.entityType === CorpTypeCd.COOP) {
         expect(descText.exists()).toBe(true)
@@ -267,27 +188,11 @@ for (const test of completeResolutionTestCases) {
       }
     })
 
-    it('renders the confirm resolution section', async () => {
-      wrapper = wrapperFactory(
-        CompleteResolution,
-        null,
-        { entityType: test.entityType },
-        null,
-        DissolutionResources
-      )
-
+    it('renders the confirm resolution section', () => {
       expect(wrapper.find('#confirm-resolution-section').exists()).toBe(true)
     })
 
-    it('renders the correct confirm text in confirm section', async () => {
-      wrapper = wrapperFactory(
-        CompleteResolution,
-        null,
-        { entityType: test.entityType },
-        null,
-        DissolutionResources
-      )
-
+    it('renders the correct confirm text in confirm section', () => {
       const confirmChkText = wrapper.find('#confirm-resolution-section label[for="chk-confirm-resolution"]')
       expect(confirmChkText.exists()).toBe(true)
       expect(confirmChkText.text()).toContain(test.confirmText)

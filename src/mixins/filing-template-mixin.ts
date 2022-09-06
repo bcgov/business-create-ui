@@ -667,7 +667,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
 
     // ** do not restore Future Effective data per PO decision
     // ** leave code in case we need it later
-    // // Set Future Effective data
+    // // restore Future Effective data
     // if (draftFiling.header.isFutureEffective === true) this.setIsFutureEffective(true)
     // if (draftFiling.header.isFutureEffective === false) this.setIsFutureEffective(false)
     // if (draftFiling.header.isFutureEffective && !this.isTypeCoop) {

@@ -191,8 +191,7 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
   private constructDate (): void {
     if (this.isFutureEffective) {
       // Format the selected date string and create Date
-      const dateString = this.dateText.replace(/-/g, ', ')
-      const dateToValidate = new Date(dateString)
+      const dateToValidate = this.yyyyMmDdToDate(this.dateText)
 
       // Create references & Apply time period
       let hours = this.selectHour && +this.selectHour
@@ -244,28 +243,28 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
 
   /** The minimum date that can be entered (today). */
   private get minDate (): string {
-    const date = new Date()
-    return this.dateToYyyyMmDd(date)
+    return this.dateToYyyyMmDd(this.getCurrentJsDate)
   }
 
   /** The maximum date that can be entered (today + 10 days). */
   private get maxDate (): string {
-    const date = new Date()
+    const date = new Date(this.getCurrentJsDate) // make a copy
     date.setDate(date.getDate() + 10)
     return this.dateToYyyyMmDd(date)
   }
 
-  /** The minimum time that can be entered. */
+  /** The minimum time that can be entered (now + 3 minutes). */
   private minTime (): string {
-    return new Date(Date.now() + 180000)
+    const date = this.getCurrentJsDate
+    return new Date(date.getTime() + 180000)
       .toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })
   }
 
-  /** The maximum time that can be entered. */
+  /** The maximum time that can be entered (now + 10 days at current time). */
   private maxTime (): string {
-    const maxDate = new Date()
-    maxDate.setDate(maxDate.getDate() + 10)
-    return new Date(maxDate.getTime())
+    const date = new Date(this.getCurrentJsDate) // make a copy
+    date.setDate(date.getDate() + 10)
+    return new Date(date.getTime())
       .toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })
   }
 

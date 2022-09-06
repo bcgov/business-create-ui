@@ -53,7 +53,7 @@ export default class StartDate extends Mixins(DateMixin) {
 
   /** The minimum start date that can be entered (Up to 2 years ago today). */
   private get startDateMin (): Date {
-    const startDateMin = new Date(this.getCurrentJsDate)
+    const startDateMin = new Date(this.getCurrentJsDate) // make a copy
     startDateMin.setFullYear(startDateMin.getFullYear() - 2)
     startDateMin.setHours(0, 0, 0) // Set time to 0 for accurate Date Rules comparison
 
@@ -67,7 +67,7 @@ export default class StartDate extends Mixins(DateMixin) {
 
   /** The maximum start date that can be entered (Up to 90 days from today). */
   private get startDateMax (): Date {
-    const startDateMax = new Date(this.getCurrentJsDate)
+    const startDateMax = new Date(this.getCurrentJsDate) // make a copy
     startDateMax.setDate(startDateMax.getDay() + 90)
     return startDateMax
   }
