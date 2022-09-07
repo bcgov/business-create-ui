@@ -1,5 +1,5 @@
 // Libraries
-import { axios } from '@/utils'
+import { axiosInstance as axios } from '@/utils'
 import { AuthInformationIF, ContactPointIF } from '@/interfaces'
 import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
 

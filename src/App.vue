@@ -73,7 +73,14 @@
     />
 
     <!-- Display WebChat for SP/GP registrations only -->
-    <ChatPopup v-if="getFilingType === FilingTypes.REGISTRATION" />
+    <WebChat
+      v-if="getFilingType === FilingTypes.REGISTRATION"
+      :axios="axios"
+      :isMobile="isMobile"
+      :webChatReason="window['webChatReason']"
+      :webChatStatusUrl="window['webChatStatusUrl']"
+      :webChatUrl="window['webChatUrl']"
+    />
 
     <!-- Initial Page Load Transition -->
     <transition name="fade">
@@ -159,6 +166,7 @@
 
 <script lang="ts">
 // Libraries
+import axios from 'axios'
 import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import { PAYMENT_REQUIRED } from 'http-status-codes'
@@ -168,8 +176,8 @@ import { getFeatureFlag, updateLdUser, navigate, sleep } from '@/utils'
 
 // Components, dialogs and views
 import Actions from '@/components/common/Actions.vue'
-import ChatPopup from '@/components/common/ChatPopup.vue'
 import { BreadCrumb } from '@bcrs-shared-components/bread-crumb'
+import { WebChat } from '@bcrs-shared-components/web-chat'
 import EntityInfo from '@/components/common/EntityInfo.vue'
 import PaySystemAlert from 'sbc-common-components/src/components/PaySystemAlert.vue'
 import SbcFeeSummary from 'sbc-common-components/src/components/SbcFeeSummary.vue'
@@ -230,13 +238,13 @@ import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
   components: {
     Actions,
     BreadCrumb,
-    ChatPopup,
     EntityInfo,
     PaySystemAlert,
     SbcFeeSummary,
     SbcFooter,
     SbcHeader,
     Stepper,
+    WebChat,
     ...Dialogs,
     ...Views
   }
@@ -268,6 +276,7 @@ export default class App extends Mixins(
   @Getter getUserPhone!: string
   @Getter getUserEmail!: string
   @Getter getOrgInformation!: OrgInformationIF
+  @Getter isMobile!: boolean
 
   @Action setBusinessId!: ActionBindingIF
   @Action setCurrentStep!: ActionBindingIF
@@ -305,27 +314,29 @@ export default class App extends Mixins(
   @Action setWindowWidth!: ActionBindingIF
 
   // Local properties
-  private accountAuthorizationDialog: boolean = false
-  private fetchErrorDialog: boolean = false
-  private invalidDissolutionDialog: boolean = false
-  private invalidIncorporationApplicationDialog: boolean = false
-  private invalidRouteDialog: boolean = false
-  private paymentErrorDialog: boolean = false
-  private saveErrorDialog: boolean = false
-  private nameRequestInvalidErrorDialog: boolean = false
-  private nameRequestInvalidType: string = ''
-  private haveData: boolean = false
-  private saveErrors: Array<object> = []
-  private saveWarnings: Array<object> = []
-  private fileAndPayInvalidNameRequestDialog: boolean = false
+  protected accountAuthorizationDialog = false
+  protected fetchErrorDialog = false
+  protected invalidDissolutionDialog = false
+  protected invalidIncorporationApplicationDialog = false
+  protected invalidRouteDialog = false
+  protected paymentErrorDialog = false
+  protected saveErrorDialog = false
+  protected nameRequestInvalidErrorDialog = false
+  protected nameRequestInvalidType = ''
+  protected haveData = false
+  protected saveErrors = []
+  protected saveWarnings = []
+  protected fileAndPayInvalidNameRequestDialog = false
 
-  // Local const
-  private readonly STAFF_ROLE = 'STAFF'
-  private readonly GOV_ACCOUNT_USER = 'GOV_ACCOUNT_USER'
+  // Local constants
+  readonly STAFF_ROLE = 'STAFF'
+  readonly GOV_ACCOUNT_USER = 'GOV_ACCOUNT_USER'
 
-  // Enums for template
+  // declarations for template
   readonly RouteNames = RouteNames
   readonly FilingTypes = FilingTypes
+  readonly axios = axios
+  readonly window = window
 
   /** The Update Current JS Date timer id. */
   private updateCurrentJsDateId = 0

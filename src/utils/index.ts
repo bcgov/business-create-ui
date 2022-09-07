@@ -1,4 +1,4 @@
-export * from './axios-auth'
+export * from './axios-instance'
 export * from './config-helper'
 export * from './feature-flags'
 export * from './navigate'
