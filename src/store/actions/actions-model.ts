@@ -375,3 +375,7 @@ export const setLastDirectorChangeDate: ActionIF = ({ commit }, date: string): v
 export const setWarnings : ActionIF = ({ commit }, businessWarnings: Array<BusinessWarningIF>): void => {
   commit('mutateBusinessWarnings', businessWarnings)
 }
+
+export const setWindowWidth: ActionIF = ({ commit }, width: number): void => {
+  commit('mutateWindowWidth', width)
+}

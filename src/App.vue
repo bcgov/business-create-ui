@@ -72,6 +72,8 @@
       attach="#app"
     />
 
+    <ChatPopup />
+
     <!-- Initial Page Load Transition -->
     <transition name="fade">
       <div class="loading-container" v-show="!haveData && !isErrorDialog">
@@ -165,6 +167,7 @@ import { getFeatureFlag, updateLdUser, navigate, sleep } from '@/utils'
 
 // Components, dialogs and views
 import Actions from '@/components/common/Actions.vue'
+import ChatPopup from '@/components/common/ChatPopup.vue'
 import { BreadCrumb } from '@bcrs-shared-components/bread-crumb'
 import EntityInfo from '@/components/common/EntityInfo.vue'
 import PaySystemAlert from 'sbc-common-components/src/components/PaySystemAlert.vue'
@@ -212,7 +215,6 @@ import { AuthServices, LegalServices, PayServices } from '@/services/'
 
 // Enums and Constants
 import {
-  CorpTypeCd,
   FilingCodes,
   FilingNames,
   FilingStatus,
@@ -227,6 +229,7 @@ import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
   components: {
     Actions,
     BreadCrumb,
+    ChatPopup,
     EntityInfo,
     PaySystemAlert,
     SbcFeeSummary,
@@ -298,6 +301,7 @@ export default class App extends Mixins(
   @Action setLastDirectorChangeDate: ActionBindingIF
   @Action setWarnings: ActionBindingIF
   @Action setGoodStanding: ActionBindingIF
+  @Action setWindowWidth!: ActionBindingIF
 
   // Local properties
   private accountAuthorizationDialog: boolean = false
@@ -325,7 +329,7 @@ export default class App extends Mixins(
   private updateCurrentJsDateId = 0
 
   /** The route breadcrumbs list. */
-  private get breadcrumbs (): Array<BreadcrumbIF> {
+  get breadcrumbs (): Array<BreadcrumbIF> {
     const crumbs: Array<BreadcrumbIF> = [
       getEntityDashboardBreadcrumb(),
       {
@@ -350,7 +354,7 @@ export default class App extends Mixins(
   }
 
   /** Data for fee summary component. */
-  private get feeFilingData (): Array<FilingDataIF> {
+  get feeFilingData (): Array<FilingDataIF> {
     let filingData: Array<FilingDataIF> = []
     if (this.getFilingData) {
       filingData = cloneDeep(this.getFilingData)
@@ -381,12 +385,12 @@ export default class App extends Mixins(
   }
 
   /** The URL of the Pay API. */
-  private get payApiUrl (): string {
+  get payApiUrl (): string {
     return sessionStorage.getItem('PAY_API_URL')
   }
 
   /** True if an error dialog is displayed. */
-  private get isErrorDialog (): boolean {
+  get isErrorDialog (): boolean {
     return (
       this.accountAuthorizationDialog ||
       this.nameRequestInvalidErrorDialog ||
@@ -404,12 +408,12 @@ export default class App extends Mixins(
   }
 
   /** The About text. */
-  private get aboutText (): string {
+  get aboutText (): string {
     return process.env.ABOUT_TEXT
   }
 
   /** The header name for the Save Error Dialog. */
-  private get saveErrorDialogName (): string {
+  get saveErrorDialogName (): string {
     switch (this.getFilingType) {
       case FilingTypes.INCORPORATION_APPLICATION: return 'Application'
       case FilingTypes.REGISTRATION: return 'Registration'
@@ -440,6 +444,9 @@ export default class App extends Mixins(
         event.returnValue = 'You have unsaved changes. Do you want to exit?'
       }
     }
+
+    // listen for changes to the window size to create responsive reactivity
+    window.addEventListener('resize', () => this.setWindowWidth(window.innerWidth))
 
     // listen for save error event
     this.$root.$on('save-error-event', async error => {

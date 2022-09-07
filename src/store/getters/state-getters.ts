@@ -1,3 +1,4 @@
+import Vuetify from 'vuetify'
 import {
   AccountTypes,
   CoopTypes,
@@ -675,7 +676,7 @@ export const getRegistration = (state: StateIF): RegistrationStateIF => {
   return state.stateModel.registration
 }
 
-// current filing subtitle
+/** The current filing subtitle. */
 export const getFilingSubtitle = (state: StateIF): string => {
   if (isDissolutionFiling(state) && isTypeFirm(state)) {
     return FilingTypesSubTitle.SOLE_PROP_SUB_TITLE
@@ -688,12 +689,19 @@ export const getCompletingParty = (state: StateIF): CompletingPartyIF => {
   return state.stateModel.completingParty
 }
 
-/** The dissolution date */
+/** The dissolution date. */
 export const getDissolutionDate = (state: StateIF): string => {
   return getDissolution(state).dissolutionDate
 }
 
-/** parties List */
+/** The parties list. */
 export const getParties = (state: StateIF): Array<PartyIF> => {
   return state.stateModel.parties
+}
+
+/** True if current screen width is mobile. */
+export const isMobile = (state: StateIF): boolean => {
+  // fall back to base window width if no window size changes have occurred
+  const width = state.stateModel.windowWidth || window.innerWidth
+  return (width < new Vuetify().framework.breakpoint.thresholds.sm)
 }

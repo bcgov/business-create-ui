@@ -419,3 +419,7 @@ export const mutateBusinessWarnings = (state: StateIF, businessWarnings: Array<B
 export const mutateGoodStanding = (state: StateIF, goodStanding: boolean) => {
   state.stateModel.business.goodStanding = goodStanding
 }
+
+export const mutateWindowWidth = (state: StateIF, width: number) => {
+  state.stateModel.windowWidth = width
+}
