@@ -68,8 +68,8 @@ describe('ChatPopup component', () => {
     await wrapper.find('#chat-button-wrapper').trigger('mouseenter')
     requestAnimationFrame(() => {
       expect(wrapper.find('#closed-tooltip-message').text().replace(/\s+/g, ' '))
-        .toBe('We are closed. The Service BC Contact Centre is open Monday through Friday 7:30am – 5:00pm Pacific Time ' +
-          'excluding BC statutory holidays.'.replace(/\s+/g, ' '))
+        .toBe('We are closed. The Service BC Contact Centre is open Monday through Friday 7:30am – ' +
+          '5:00pm Pacific Time excluding BC statutory holidays.'.replace(/\s+/g, ' '))
       done()
     })
   })

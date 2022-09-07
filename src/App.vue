@@ -72,7 +72,8 @@
       attach="#app"
     />
 
-    <ChatPopup />
+    <!-- Display WebChat for SP/GP registrations only -->
+    <ChatPopup v-if="getFilingType === FilingTypes.REGISTRATION" />
 
     <!-- Initial Page Load Transition -->
     <transition name="fade">
@@ -322,8 +323,9 @@ export default class App extends Mixins(
   private readonly STAFF_ROLE = 'STAFF'
   private readonly GOV_ACCOUNT_USER = 'GOV_ACCOUNT_USER'
 
-  // Enum for template
+  // Enums for template
   readonly RouteNames = RouteNames
+  readonly FilingTypes = FilingTypes
 
   /** The Update Current JS Date timer id. */
   private updateCurrentJsDateId = 0
