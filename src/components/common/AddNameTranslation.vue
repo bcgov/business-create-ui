@@ -45,8 +45,7 @@ import { Component, Emit, Prop, Vue } from 'vue-property-decorator'
 
 @Component({})
 export default class AddNameTranslation extends Vue {
-  @Prop({ default: '' })
-  readonly editNameTranslation: string
+  @Prop({ default: '' }) readonly editNameTranslation!: string
 
   // Local properties
   private nameTranslationForm: boolean = false

@@ -27,14 +27,9 @@ import { Certify as CertifyShared } from '@bcrs-shared-components/certify'
   components: { CertifyShared }
 })
 export default class Certify extends Vue {
-  @Prop({ required: true })
-  readonly disableEdit!: boolean
-
-  @Prop({ required: true })
-  readonly invalidSection!: boolean
-
-  @Prop({ required: true })
-  readonly isStaff!: boolean
+  @Prop({ required: true }) readonly disableEdit!: boolean
+  @Prop({ required: true }) readonly invalidSection!: boolean
+  @Prop({ required: true }) readonly isStaff!: boolean
 
   @Getter getCertifyState!: CertifyIF
   @Getter getCompletingPartyStatement!: CertifyStatementIF

@@ -10,11 +10,8 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 
 @Component({})
 export default class CardHeader extends Vue {
-  @Prop({ required: true })
-  readonly icon!: string
-
-  @Prop({ required: true })
-  readonly label!: string
+  @Prop({ required: true }) readonly icon!: string
+  @Prop({ required: true }) readonly label!: string
 }
 </script>
 

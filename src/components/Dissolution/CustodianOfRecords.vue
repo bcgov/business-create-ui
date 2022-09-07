@@ -237,11 +237,8 @@ export default class CustodianOfRecords extends Mixins(CommonMixin) {
     deliveryAddress: FormIF
   }
 
-  @Prop({ default: false })
-  readonly isSummary!: boolean
-
-  @Prop({ default: false })
-  readonly showErrors!: boolean
+  @Prop({ default: false }) readonly isSummary!: boolean
+  @Prop({ default: false }) readonly showErrors!: boolean
 
   @Getter getDissolutionCustodian!: OrgPersonIF
   @Getter getDissolutionCustodianEmail!: string

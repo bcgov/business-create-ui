@@ -117,8 +117,7 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
     dateTimeForm: FormIF
   }
 
-  @Prop()
-  readonly effectiveDateTime!: EffectiveDateTimeIF
+  @Prop({ required: true }) readonly effectiveDateTime!: EffectiveDateTimeIF
 
   // Local properties
   private isImmediate: boolean = false

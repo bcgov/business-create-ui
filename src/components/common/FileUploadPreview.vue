@@ -26,13 +26,13 @@ import { PdfPageSize } from '@/enums'
 
 @Component({})
 export default class FileUploadPreview extends Mixins(DocumentMixin) {
-  @Prop() readonly inputFile: File
-  @Prop({ default: 'File' }) readonly inputFileLabel: string
-  @Prop({ default: true }) readonly isRequired: boolean
-  @Prop({ default: 0 }) readonly maxSize: number // in KB
-  @Prop({ default: null }) readonly pdfPageSize: PdfPageSize
+  @Prop({ required: true }) readonly inputFile!: File
+  @Prop({ default: 'File' }) readonly inputFileLabel!: string
+  @Prop({ default: true }) readonly isRequired!: boolean
+  @Prop({ default: 0 }) readonly maxSize!: number // in KB
+  @Prop({ default: null }) readonly pdfPageSize!: PdfPageSize
   @Prop({ default: false }) readonly showErrors!: boolean
-  @Prop({ default: '' }) readonly customErrorMessage: string
+  @Prop({ default: '' }) readonly customErrorMessage!: string
 
   // Refs
   $refs: {

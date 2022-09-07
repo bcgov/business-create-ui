@@ -122,12 +122,10 @@ export default class BusinessAddresses extends Mixins(CommonMixin) {
    * Whether to show the editable forms for the addresses (true)
    * or just the static display addresses (false).
    */
-  @Prop({ required: true })
-  readonly isEditing!: boolean
+  @Prop({ required: true }) readonly isEditing!: boolean
 
   /** Whether to show errors (editing mode only). */
-  @Prop({ required: true })
-  readonly showErrors!: boolean
+  @Prop({ required: true }) readonly showErrors!: boolean
 
   @Getter getRegistration!: RegistrationStateIF
 

@@ -172,11 +172,11 @@ export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
     shareStructureForm: FormIF
   }
 
-  @Prop() readonly initialValue!: ShareClassIF
-  @Prop() readonly activeIndex: number
-  @Prop() readonly parentIndex: number
-  @Prop() readonly shareId: string
-  @Prop() readonly shareClasses: ShareClassIF[]
+  @Prop({ required: true }) readonly initialValue!: ShareClassIF
+  @Prop({ required: true }) readonly activeIndex!: number
+  @Prop({ required: true }) readonly parentIndex!: number
+  @Prop({ required: true }) readonly shareId!: string
+  @Prop({ required: true }) readonly shareClasses!: ShareClassIF[]
 
   // Local properties
   private shareStructure: ShareClassIF = null

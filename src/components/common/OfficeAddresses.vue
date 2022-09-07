@@ -218,15 +218,12 @@ export default class OfficeAddresses extends Mixins(CommonMixin) {
    * from other step.
    * This will be emitted back to the parent page when the addresses are updated.
    */
-  @Prop({ default: null })
-  readonly inputAddresses!: IncorporationAddressIF
+  @Prop({ default: null }) readonly inputAddresses!: IncorporationAddressIF
 
-  // Whether to show the editable forms for the addresses (true) or just the static display addresses (false).
-  @Prop({ default: true })
-  readonly isEditing!: boolean
+  /** Whether to show the editable forms for the addresses (true) or just the static display addresses (false). */
+  @Prop({ default: true }) readonly isEditing!: boolean
 
-  @Prop({ default: false })
-  readonly showErrors!: boolean
+  @Prop({ default: false }) readonly showErrors!: boolean
 
   @Getter getDefineCompanyStep!: DefineCompanyIF
   @Getter isTypeBcomp!: boolean

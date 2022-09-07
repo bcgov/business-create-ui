@@ -60,8 +60,7 @@ import { DissolutionStatementTypes } from '@/enums'
 
 @Component
 export default class DissolutionStatement extends Vue {
-  @Prop({ default: false })
-  readonly isSummary: boolean
+  @Prop({ default: false }) readonly isSummary!: boolean
 
   // Global getters
   @Getter getDissolutionStatements!: Array<KeyValueIF>

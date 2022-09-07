@@ -39,9 +39,9 @@ export default class TransactionalFolioNumber extends Mixins(CommonMixin) {
   }
 
   // Props
-  @Prop({ default: null }) readonly accountFolioNumber: string
-  @Prop({ default: null }) readonly transactionalFolioNumber: string
-  @Prop({ default: false }) readonly doValidate: boolean
+  @Prop({ default: null }) readonly accountFolioNumber!: string
+  @Prop({ default: null }) readonly transactionalFolioNumber!: string
+  @Prop({ default: false }) readonly doValidate!: boolean
 
   // Rules for template
   readonly Rules = Rules

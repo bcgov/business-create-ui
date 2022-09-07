@@ -45,10 +45,10 @@ import RegistriesContactInfo from '@/components/common/RegistriesContactInfo.vue
 })
 export default class FileAndPayInvalidNameRequestDialog extends Vue {
   /** Prop to display the dialog. */
-  @Prop() readonly dialog: boolean
+  @Prop({ default: false }) readonly dialog!: boolean
 
   /** Prop to provide attachment selector. */
-  @Prop() readonly attach: string
+  @Prop({ default: null }) readonly attach!: string
 
   @Getter getNameRequestNumber!: string
   @Getter getApprovedName!: string

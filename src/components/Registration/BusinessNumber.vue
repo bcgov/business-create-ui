@@ -65,20 +65,16 @@ export default class BusinessNumber extends Vue {
   }
 
   /** The registration business number. */
-  @Prop({ required: true })
-  readonly businessNumber!: string
+  @Prop({ required: true }) readonly businessNumber!: string
 
   /** Whether to display Change features. */
-  @Prop({ default: false })
-  readonly hasBusinessNumberChanged!: boolean
+  @Prop({ default: false }) readonly hasBusinessNumberChanged!: boolean
 
   /** Whether this is a General Partnership entity. */
-  @Prop({ default: false })
-  readonly isTypePartnership!: boolean
+  @Prop({ default: false }) readonly isTypePartnership!: boolean
 
   /** Whether this is a Sole Proprietor entity. */
-  @Prop({ default: false })
-  readonly isTypeSoleProp!: boolean
+  @Prop({ default: false }) readonly isTypeSoleProp!: boolean
 
   // Local variables
   protected enableRules = false

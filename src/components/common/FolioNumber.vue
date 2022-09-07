@@ -40,14 +40,9 @@ import { Component, Emit, Prop, Vue, Watch } from 'vue-property-decorator'
 
 @Component({})
 export default class FolioNumber extends Vue {
-  @Prop()
-  readonly initialValue: string
-
-  @Prop({ default: false })
-  readonly isEditing: boolean
-
-  @Prop({ default: false })
-  readonly showErrors!: boolean
+  @Prop({ required: true }) readonly initialValue!: string
+  @Prop({ default: false }) readonly isEditing!: boolean
+  @Prop({ default: false }) readonly showErrors!: boolean
 
   // Local properties
   private folioNumber: string = null

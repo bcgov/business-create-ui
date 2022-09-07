@@ -140,11 +140,8 @@ import { PartyTypes, RoleTypes, RouteNames } from '@/enums'
   }
 })
 export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
-  @Prop({ default: false })
-  readonly isSummary: boolean
-
-  @Prop({ default: false })
-  readonly disabled: boolean
+  @Prop({ default: false }) readonly isSummary!: boolean
+  @Prop({ default: false }) readonly disabled!: boolean
 
   @Getter isIncorporationFiling!: boolean
   @Getter isRegistrationFiling!: boolean
