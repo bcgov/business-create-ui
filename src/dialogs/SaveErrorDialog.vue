@@ -79,7 +79,7 @@ export default class SaveErrorDialog extends Vue {
   @Prop({ default: false }) readonly dialog!: boolean
 
   /** Prop to provide attachment selector. */
-  @Prop({ default: null }) readonly attach!: string
+  @Prop({ default: '' }) readonly attach!: string
 
   /** Prop containing error messages. */
   @Prop({ default: () => [] }) readonly errors!: any[]

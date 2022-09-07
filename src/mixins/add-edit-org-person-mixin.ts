@@ -35,7 +35,7 @@ export default class AddEditOrgPersonMixin extends Vue {
   @Prop({ required: true }) readonly initialValue!: OrgPersonIF
   @Prop({ required: true }) readonly activeIndex!: number // is NaN for new org/person
   @Prop({ required: true }) readonly existingCompletingParty!: OrgPersonIF
-  @Prop({ required: true }) readonly addIncorporator!: boolean
+  @Prop({ default: false }) readonly addIncorporator!: boolean
 
   @Getter getCurrentDate!: string
   @Getter isRoleStaff!: boolean
