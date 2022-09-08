@@ -20,8 +20,7 @@ import { NatureOfBusiness as NatureOfBusinessShared } from '@bcrs-shared-compone
   components: { NatureOfBusinessShared }
 })
 export default class NatureOfBusiness extends Vue {
-  @Prop({ required: true })
-  readonly showErrors!: boolean
+  @Prop({ required: true }) readonly showErrors!: boolean
 
   @Getter getRegistration!: RegistrationStateIF
 

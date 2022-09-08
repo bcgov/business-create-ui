@@ -17,4 +17,4 @@ instance.interceptors.response.use(
   error => Promise.reject(error)
 )
 
-export { instance as axios }
+export { instance as axiosInstance }

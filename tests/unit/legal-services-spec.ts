@@ -1,5 +1,5 @@
 import sinon from 'sinon'
-import { axios } from '@/utils'
+import { axiosInstance as axios } from '@/utils'
 import LegalServices from '@/services/legal-services'
 
 // draft registration filing

@@ -24,8 +24,7 @@ import { StaffPaymentOptions } from '@/enums'
 })
 export default class StaffPayment extends Vue {
   /** Whether to display priority checkbox. */
-  @Prop({ default: true })
-  readonly displayPriorityCheckbox: boolean
+  @Prop({ default: true }) readonly displayPriorityCheckbox!: boolean
 
   // Global getters
   @Getter getStaffPaymentStep!: StaffPaymentStepIF

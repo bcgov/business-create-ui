@@ -34,8 +34,7 @@ export default class CooperativeType extends Mixins(EnumMixin) {
     cooperativeTypeForm: FormIF
   }
 
-  @Prop({ default: false })
-  readonly showErrors: boolean
+  @Prop({ default: false }) readonly showErrors!: boolean
 
   // Global getter
   @Getter getCooperativeType!: CoopTypes

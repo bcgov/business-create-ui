@@ -73,11 +73,8 @@ import { NameTranslationIF } from '@/interfaces'
 
 @Component({})
 export default class ListNameTranslations extends Vue {
-  @Prop({ default: () => [] })
-  readonly translationsList: NameTranslationIF[]
-
-  @Prop({ default: false })
-  readonly isAddingNameTranslation: boolean
+  @Prop({ default: () => [] }) readonly translationsList!: NameTranslationIF[]
+  @Prop({ default: false }) readonly isAddingNameTranslation!: boolean
 
   /**
    * Emit an index and event to the parent to handle editing.

@@ -174,17 +174,10 @@ import { RouteNames } from '@/enums'
 
 @Component({})
 export default class ListShareClass extends Vue {
-  @Prop({ default: () => [] })
-  readonly shareClasses: any
-
-  @Prop({ default: false })
-  readonly componentDisabled: boolean
-
-  @Prop({ default: false })
-  readonly isSummary: boolean
-
-  @Prop({ default: false })
-  readonly showErrorSummary: boolean
+  @Prop({ default: () => [] }) readonly shareClasses!: any
+  @Prop({ default: false }) readonly componentDisabled!: boolean
+  @Prop({ default: false }) readonly isSummary!: boolean
+  @Prop({ default: false }) readonly showErrorSummary!: boolean
 
   // Enum for template
   readonly RouteNames = RouteNames

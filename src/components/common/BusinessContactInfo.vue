@@ -104,14 +104,9 @@ import { Rules } from '@/rules'
   directives: { mask }
 })
 export default class BusinessContactInfo extends Mixins(CommonMixin) {
-  @Prop({ default: () => {} })
-  readonly initialValue!: ContactPointIF
-
-  @Prop({ default: false })
-  readonly isEditing!: boolean
-
-  @Prop({ default: false })
-  readonly showErrors!: boolean
+  @Prop({ default: () => {} }) readonly initialValue!: ContactPointIF
+  @Prop({ default: false }) readonly isEditing!: boolean
+  @Prop({ default: false }) readonly showErrors!: boolean
 
   @Getter isIncorporationFiling!: boolean
 

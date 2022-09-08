@@ -1,5 +1,5 @@
 import { BusinessLookupResultIF } from '@/interfaces'
-import { axios } from '@/utils'
+import { axiosInstance as axios } from '@/utils'
 
 /**
  * Class that provides integration with the BusinessLookup API.

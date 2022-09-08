@@ -193,5 +193,6 @@ export const stateModel: StateModelIF = {
     isAutoPopulatedBusinessNumber: false
   },
   completingParty: null,
-  parties: null
+  parties: null,
+  windowWidth: 0
 }

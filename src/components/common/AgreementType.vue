@@ -69,11 +69,8 @@ import { RouteNames } from '@/enums'
 
 @Component
 export default class AgreementType extends Vue {
-  @Prop({ default: false })
-  readonly showErrorSummary: boolean
-
-  @Prop({ default: false })
-  readonly isSummary: boolean
+  @Prop({ default: false }) readonly showErrorSummary!: boolean
+  @Prop({ default: false }) readonly isSummary!: boolean
 
   @Getter getIncorporationAgreementDocuments!: Array<IncorporationAgreementTypeIF>
   @Getter isTypeBcCcc!: boolean

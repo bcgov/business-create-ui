@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { axios } from '@/utils'
+import { axiosInstance as axios } from '@/utils'
 
 /**
  * Fetches config from environment and API.
@@ -63,14 +63,13 @@ export async function fetchConfig (): Promise<any> {
   sessionStorage.setItem('NAICS_URL', naicsUrl)
   console.log('Set NAICS URL to: ' + naicsUrl)
 
-  const registriesSearchUrl: string = response.data['REGISTRIES_SEARCH_API_URL'] +
-                                    response.data['REGISTRIES_SEARCH_API_VERSION'] + '/'
-  sessionStorage.setItem('REGISTRIES_SEARCH_API_URL', registriesSearchUrl)
-  console.log('Set REGISTRIES SEARCH API URL to: ' + registriesSearchUrl)
+  const registriesSearchApiUrl: string = response.data['REGISTRIES_SEARCH_API_URL'] +
+                                         response.data['REGISTRIES_SEARCH_API_VERSION'] + '/'
+  sessionStorage.setItem('REGISTRIES_SEARCH_API_URL', registriesSearchApiUrl)
+  console.log('Set Registries Search API URL to: ' + registriesSearchApiUrl)
 
   const businessApiKey: string = response.data['BUSINESS_API_KEY']
   sessionStorage.setItem('BUSINESS_API_KEY', businessApiKey)
-  console.log('Set BUSINESS API KEY to: ' + businessApiKey)
 
   const authApiUrl: string = response.data['AUTH_API_URL'] + response.data['AUTH_API_VERSION'] + '/'
   sessionStorage.setItem('AUTH_API_URL', authApiUrl)
@@ -92,21 +91,29 @@ export async function fetchConfig (): Promise<any> {
   const siteminderLogoutUrl: string = response.data['SITEMINDER_LOGOUT_URL']
   if (siteminderLogoutUrl) {
     sessionStorage.setItem('SITEMINDER_LOGOUT_URL', siteminderLogoutUrl)
-    console.info('Set Siteminder Logout Url to: ' + siteminderLogoutUrl)
+    console.info('Set Siteminder Logout URL to: ' + siteminderLogoutUrl)
   }
 
   const addressCompleteKey: string = response.data['ADDRESS_COMPLETE_KEY'];
   (<any>window).addressCompleteKey = addressCompleteKey
-  console.info('Set Address Complete Key.')
 
   const ldClientId: string = response.data['BUSINESS_CREATE_LD_CLIENT_ID'];
   (<any>window).ldClientId = ldClientId
-  console.info('Set Launch Darkly Client ID.')
 
   const sentryEnable = response.data['SENTRY_ENABLE'];
   (<any>window).sentryEnable = sentryEnable
 
   const sentryDsn = response.data['SENTRY_DSN'];
   (<any>window).sentryDsn = sentryDsn
-  console.log('Set Sentry DSN.')
+
+  const webChatReason: string = response.data['WEBCHAT_REASON'];
+  (<any>window).webChatReason = webChatReason
+
+  const webChatStatusUrl: string = response.data['WEBCHAT_STATUS_URL'];
+  (<any>window).webChatStatusUrl = webChatStatusUrl
+  if (webChatStatusUrl) console.info('Set WebChat Status URL to: ' + webChatStatusUrl)
+
+  const webChatUrl: string = response.data['WEBCHAT_URL'];
+  (<any>window).webChatUrl = webChatUrl
+  if (webChatUrl) console.info('Set WebChat URL to: ' + webChatUrl)
 }

@@ -72,6 +72,16 @@
       attach="#app"
     />
 
+    <!-- Display WebChat for SP/GP registrations only -->
+    <WebChat
+      v-if="getFilingType === FilingTypes.REGISTRATION"
+      :axios="axios"
+      :isMobile="isMobile"
+      :webChatReason="window['webChatReason']"
+      :webChatStatusUrl="window['webChatStatusUrl']"
+      :webChatUrl="window['webChatUrl']"
+    />
+
     <!-- Initial Page Load Transition -->
     <transition name="fade">
       <div class="loading-container" v-show="!haveData && !isErrorDialog">
@@ -156,6 +166,7 @@
 
 <script lang="ts">
 // Libraries
+import axios from 'axios'
 import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import { PAYMENT_REQUIRED } from 'http-status-codes'
@@ -166,6 +177,7 @@ import { getFeatureFlag, updateLdUser, navigate, sleep } from '@/utils'
 // Components, dialogs and views
 import Actions from '@/components/common/Actions.vue'
 import { BreadCrumb } from '@bcrs-shared-components/bread-crumb'
+import { WebChat } from '@bcrs-shared-components/web-chat'
 import EntityInfo from '@/components/common/EntityInfo.vue'
 import PaySystemAlert from 'sbc-common-components/src/components/PaySystemAlert.vue'
 import SbcFeeSummary from 'sbc-common-components/src/components/SbcFeeSummary.vue'
@@ -212,7 +224,6 @@ import { AuthServices, LegalServices, PayServices } from '@/services/'
 
 // Enums and Constants
 import {
-  CorpTypeCd,
   FilingCodes,
   FilingNames,
   FilingStatus,
@@ -233,6 +244,7 @@ import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
     SbcFooter,
     SbcHeader,
     Stepper,
+    WebChat,
     ...Dialogs,
     ...Views
   }
@@ -264,6 +276,7 @@ export default class App extends Mixins(
   @Getter getUserPhone!: string
   @Getter getUserEmail!: string
   @Getter getOrgInformation!: OrgInformationIF
+  @Getter isMobile!: boolean
 
   @Action setBusinessId!: ActionBindingIF
   @Action setCurrentStep!: ActionBindingIF
@@ -298,34 +311,38 @@ export default class App extends Mixins(
   @Action setLastDirectorChangeDate: ActionBindingIF
   @Action setWarnings: ActionBindingIF
   @Action setGoodStanding: ActionBindingIF
+  @Action setWindowWidth!: ActionBindingIF
 
   // Local properties
-  private accountAuthorizationDialog: boolean = false
-  private fetchErrorDialog: boolean = false
-  private invalidDissolutionDialog: boolean = false
-  private invalidIncorporationApplicationDialog: boolean = false
-  private invalidRouteDialog: boolean = false
-  private paymentErrorDialog: boolean = false
-  private saveErrorDialog: boolean = false
-  private nameRequestInvalidErrorDialog: boolean = false
-  private nameRequestInvalidType: string = ''
-  private haveData: boolean = false
-  private saveErrors: Array<object> = []
-  private saveWarnings: Array<object> = []
-  private fileAndPayInvalidNameRequestDialog: boolean = false
+  protected accountAuthorizationDialog = false
+  protected fetchErrorDialog = false
+  protected invalidDissolutionDialog = false
+  protected invalidIncorporationApplicationDialog = false
+  protected invalidRouteDialog = false
+  protected paymentErrorDialog = false
+  protected saveErrorDialog = false
+  protected nameRequestInvalidErrorDialog = false
+  protected nameRequestInvalidType = ''
+  protected haveData = false
+  protected saveErrors = []
+  protected saveWarnings = []
+  protected fileAndPayInvalidNameRequestDialog = false
 
-  // Local const
-  private readonly STAFF_ROLE = 'STAFF'
-  private readonly GOV_ACCOUNT_USER = 'GOV_ACCOUNT_USER'
+  // Local constants
+  readonly STAFF_ROLE = 'STAFF'
+  readonly GOV_ACCOUNT_USER = 'GOV_ACCOUNT_USER'
 
-  // Enum for template
+  // declarations for template
   readonly RouteNames = RouteNames
+  readonly FilingTypes = FilingTypes
+  readonly axios = axios
+  readonly window = window
 
   /** The Update Current JS Date timer id. */
   private updateCurrentJsDateId = 0
 
   /** The route breadcrumbs list. */
-  private get breadcrumbs (): Array<BreadcrumbIF> {
+  get breadcrumbs (): Array<BreadcrumbIF> {
     const crumbs: Array<BreadcrumbIF> = [
       getEntityDashboardBreadcrumb(),
       {
@@ -350,7 +367,7 @@ export default class App extends Mixins(
   }
 
   /** Data for fee summary component. */
-  private get feeFilingData (): Array<FilingDataIF> {
+  get feeFilingData (): Array<FilingDataIF> {
     let filingData: Array<FilingDataIF> = []
     if (this.getFilingData) {
       filingData = cloneDeep(this.getFilingData)
@@ -381,12 +398,12 @@ export default class App extends Mixins(
   }
 
   /** The URL of the Pay API. */
-  private get payApiUrl (): string {
+  get payApiUrl (): string {
     return sessionStorage.getItem('PAY_API_URL')
   }
 
   /** True if an error dialog is displayed. */
-  private get isErrorDialog (): boolean {
+  get isErrorDialog (): boolean {
     return (
       this.accountAuthorizationDialog ||
       this.nameRequestInvalidErrorDialog ||
@@ -404,12 +421,12 @@ export default class App extends Mixins(
   }
 
   /** The About text. */
-  private get aboutText (): string {
+  get aboutText (): string {
     return process.env.ABOUT_TEXT
   }
 
   /** The header name for the Save Error Dialog. */
-  private get saveErrorDialogName (): string {
+  get saveErrorDialogName (): string {
     switch (this.getFilingType) {
       case FilingTypes.INCORPORATION_APPLICATION: return 'Application'
       case FilingTypes.REGISTRATION: return 'Registration'
@@ -440,6 +457,9 @@ export default class App extends Mixins(
         event.returnValue = 'You have unsaved changes. Do you want to exit?'
       }
     }
+
+    // listen for changes to the window size to create responsive reactivity
+    window.addEventListener('resize', () => this.setWindowWidth(window.innerWidth))
 
     // listen for save error event
     this.$root.$on('save-error-event', async error => {

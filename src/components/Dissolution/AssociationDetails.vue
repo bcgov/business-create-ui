@@ -118,20 +118,11 @@ import { isEmpty } from 'lodash'
   }
 })
 export default class AssociationDetails extends Mixins(CommonMixin, EnumMixin, DateMixin) {
-  @Prop({ default: false })
-  readonly isSummary: boolean
-
-  @Prop({ default: 'Address' })
-  readonly addressLabel: string
-
-  @Prop({ default: 'Company' })
-  readonly entityLabel: string
-
-  @Prop({ default: false })
-  readonly showBusinessDate: boolean
-
-  @Prop({ default: true })
-  readonly showContactInfo: boolean
+  @Prop({ default: false }) readonly isSummary!: boolean
+  @Prop({ default: 'Address' }) readonly addressLabel1: string
+  @Prop({ default: 'Company' }) readonly entityLabel!: string
+  @Prop({ default: false }) readonly showBusinessDate!: boolean
+  @Prop({ default: true }) readonly showContactInfo!: boolean
 
   // Global getters
   @Getter getApprovedName!: string

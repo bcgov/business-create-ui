@@ -63,13 +63,10 @@ export default class DestroyCertificate extends Vue {
   // Global setters
   @Action setHasCertificateDestroyed!: ActionBindingIF
 
-  @Prop({ default: false })
-  readonly showErrorSummary: boolean
+  @Prop({ default: false }) readonly showErrorSummary!: boolean
+  @Prop({ default: false }) readonly isSummary!: boolean
 
-  @Prop({ default: false })
-  readonly isSummary: boolean
-
-  private hasCertificateDestroyed: boolean = false
+  protected hasCertificateDestroyed = false
 
   readonly destroyCertificateDescription: string = `Certificates of incorporation, name change, and amalgamation for
     the Cooperative Association will be deleted and/or destroyed after dissolution.`

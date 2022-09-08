@@ -71,6 +71,7 @@ export interface StateModelIF {
   staffPaymentStep: StaffPaymentStepIF
   courtOrderStep: CourtOrderStepIF
 
+  windowWidth: number
 }
 
 export interface StateIF {

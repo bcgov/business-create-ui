@@ -73,7 +73,7 @@ import { CorpTypeCd, FilingNames, FilingTypes } from '@/enums'
 import { ContactPointIF, RegistrationStateIF } from '@/interfaces'
 import { EnumMixin, DateMixin } from '@/mixins'
 import { StaffComments } from '@bcrs-shared-components/staff-comments'
-import { axios } from '@/utils'
+import { axiosInstance as axios } from '@/utils'
 
 @Component({ components: { StaffComments } })
 export default class EntityInfo extends Mixins(EnumMixin, DateMixin) {
@@ -99,7 +99,7 @@ export default class EntityInfo extends Mixins(EnumMixin, DateMixin) {
   @Getter getTempId!: string
   @Getter isTypeSoleProp!: boolean
 
-  // axios for template
+  // declaration for template
   readonly axios = axios
 
   /** The business start date. */

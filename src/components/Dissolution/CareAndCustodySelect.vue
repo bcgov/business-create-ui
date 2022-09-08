@@ -10,7 +10,7 @@
           <v-radio-group
             column class="pt-0 mt-0 care-and-custody-option-list"
             v-model="liquidatorOrCustodian"
-            @change="changeCareAndCustodyType"
+            @change="changeCareAndCustodyType()"
           >
             <v-radio id="liquidator-radio-btn" :value="RoleTypes.LIQUIDATOR">
               <template slot="label">
@@ -42,14 +42,13 @@ import { RoleTypes } from '@/enums'
 
 @Component
 export default class CareAndCustodySelect extends Vue {
-  @Prop({ default: false })
-  readonly showErrorSummary: boolean
+  @Prop({ default: false }) readonly showErrorSummary!: boolean
 
   readonly RoleTypes = RoleTypes
 
-  private liquidatorOrCustodian: RoleTypes = null
+  protected liquidatorOrCustodian: RoleTypes = null
 
-  private changeCareAndCustodyType (): void {
+  protected changeCareAndCustodyType (): void {
     // Todo: Apply option to store when required
   }
 }

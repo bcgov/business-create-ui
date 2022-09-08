@@ -37,21 +37,17 @@ import { Component, Emit, Prop, Vue, Watch } from 'vue-property-decorator'
 
 @Component
 export default class BusinessTypeConfirm extends Vue {
-  /** The registration business number. */
-  @Prop({ required: true })
-  readonly businessTypeConfirm!: boolean
+  /** Initial business type confirm flag. */
+  @Prop({ required: true }) readonly businessTypeConfirm!: boolean
 
   /** Whether to display Change features. */
-  @Prop({ default: false })
-  readonly hasBusinessTypeChecked!: boolean;
+  @Prop({ default: false }) readonly hasBusinessTypeChecked!: boolean;
 
-  /** Whether the business typ is SP or GP */
-  @Prop({ default: false })
-  readonly isTypePartnership!: boolean;
+  /** Whether the business type is SP or GP. */
+  @Prop({ default: false }) readonly isTypePartnership!: boolean;
 
-  /** Show error to trigger error-text class */
-  @Prop({ required: true })
-  readonly showErrors!: boolean
+  /** Whether to show errors. */
+  @Prop({ required: true }) readonly showErrors!: boolean
 
   // Local variables
   protected checked = false

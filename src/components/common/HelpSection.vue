@@ -26,10 +26,9 @@ import { HelpSectionIF } from '@/interfaces'
 
 @Component({})
 export default class HelpSection extends Vue {
-  @Prop({ default: () => {} })
-  readonly helpSection: HelpSectionIF
+  @Prop({ default: () => {} }) readonly helpSection!: HelpSectionIF
 
-  helpToggle = false
+  protected helpToggle = false
 
   get header (): string {
     return this.helpSection?.header || 'this section'

@@ -32,10 +32,10 @@ export default class AddEditOrgPersonMixin extends Vue {
     confirmDialog: ConfirmDialogType
   }
 
-  @Prop() readonly initialValue!: OrgPersonIF
-  @Prop() readonly activeIndex: number // is NaN for new org/person
-  @Prop() readonly existingCompletingParty: OrgPersonIF
-  @Prop() readonly addIncorporator: boolean
+  @Prop({ required: true }) readonly initialValue!: OrgPersonIF
+  @Prop({ required: true }) readonly activeIndex!: number // is NaN for new org/person
+  @Prop({ required: true }) readonly existingCompletingParty!: OrgPersonIF
+  @Prop({ default: false }) readonly addIncorporator!: boolean
 
   @Getter getCurrentDate!: string
   @Getter isRoleStaff!: boolean
