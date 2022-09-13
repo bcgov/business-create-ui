@@ -5,10 +5,9 @@ import { CorpTypeCd, DissolutionStatementTypes } from '@/enums'
 import { DissolutionResources } from '@/resources'
 
 // Input field selectors to test changes to the DOM elements.
-const typeSelector: string = '#dissolution-statement-'
-const summaryErrorSelector: string = '.invalid-section'
+const typeSelector = '#dissolution-statement-'
 
-describe(`Dissolution Statement component for a Cooperative Association`, () => {
+describe('Dissolution Statement component for a Cooperative Association', () => {
   let wrapper: any
 
   it('Loads the component in edit mode and both dissolution statement types are not selected', () => {

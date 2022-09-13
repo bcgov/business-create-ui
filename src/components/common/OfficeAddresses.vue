@@ -231,8 +231,8 @@ export default class OfficeAddresses extends Mixins(CommonMixin) {
   @Getter getEntityType!: CorpTypeCd
 
   // Local properties
-  private addresses: IncorporationAddressIF = this.inputAddresses
-  private defaultAddress: AddressIF = {
+  protected addresses: IncorporationAddressIF = this.inputAddresses
+  readonly defaultAddress: AddressIF = {
     addressCity: '',
     addressCountry: 'CA',
     addressRegion: 'BC',
@@ -243,34 +243,35 @@ export default class OfficeAddresses extends Mixins(CommonMixin) {
   }
 
   // The 4 addresses that are the current state of the BaseAddress components:
-  private mailingAddress = {} as AddressIF
-  private deliveryAddress = {} as AddressIF
-  private recMailingAddress = {} as AddressIF
-  private recDeliveryAddress = {} as AddressIF
+  protected mailingAddress = {} as AddressIF
+  protected deliveryAddress = {} as AddressIF
+  protected recMailingAddress = {} as AddressIF
+  protected recDeliveryAddress = {} as AddressIF
 
   // Validation events from BaseAddress:
-  private mailingAddressValid: boolean = true
-  private deliveryAddressValid: boolean = true
-  private recMailingAddressValid: boolean = true
-  private recDeliveryAddressValid: boolean = true
+  protected mailingAddressValid = true
+  protected deliveryAddressValid = true
+  protected recMailingAddressValid = true
+  protected recDeliveryAddressValid = true
 
-  private inheritMailingAddress: boolean = true
+  /** State of the checkbox for determining whether the Delivery address is the same as the Mailing address. */
+  protected inheritMailingAddress = true
 
-  // State of the checkbox for determining whether or not the mailing address is the same as the delivery address
-  // For Records Office
-  private inheritRecMailingAddress: boolean = true
+  /**
+   * State of the checkbox for determining whether or not the mailing address is the same as the delivery address.
+   * For Records Office.
+   */
+  protected inheritRecMailingAddress = true
 
-  // State of the checkbox for determining whether the Record address is the same as the Registered address
-  private inheritRegisteredAddress: boolean = true
+  /** State of the checkbox for determining whether the Record address is the same as the Registered address. */
+  protected inheritRegisteredAddress = true
 
-  // Office Address schema for template
+  // Imports for template
   readonly OfficeAddressSchema = OfficeAddressSchema
-
-  // Enum for template
   readonly CorpTypeCd = CorpTypeCd
 
   /** Called when component is created. */
-  created (): void {
+  protected created (): void {
     // on first load, determine inherited flags based on address values and update parent
     this.setAddresses(true)
     this.emitValid()
@@ -334,7 +335,7 @@ export default class OfficeAddresses extends Mixins(CommonMixin) {
 
   // Getters (Computed Values)
   /** Whether the address form is valid. */
-  private get formValid (): boolean {
+  get formValid (): boolean {
     const registeredOfficeValid = this.mailingAddressValid &&
       (this.deliveryAddressValid || this.inheritMailingAddress)
 
@@ -345,7 +346,7 @@ export default class OfficeAddresses extends Mixins(CommonMixin) {
   }
 
   /** Whether the address object is empty or with only with default input values */
-  private isEmptyAddress (address: AddressIF): boolean {
+  protected isEmptyAddress (address: AddressIF): boolean {
     return isEmpty(address) ||
            (!address.addressCity &&
            (!address.addressCountry || address.addressCountry === 'CA') &&
@@ -357,7 +358,7 @@ export default class OfficeAddresses extends Mixins(CommonMixin) {
   }
 
   /* coop and corp display delivery address by default */
-  private get showDeliveryAddressByDefault (): boolean {
+  get showDeliveryAddressByDefault (): boolean {
     return [
       CorpTypeCd.COOP,
       CorpTypeCd.BENEFIT_COMPANY,
@@ -367,9 +368,12 @@ export default class OfficeAddresses extends Mixins(CommonMixin) {
     ].includes(this.getEntityType)
   }
 
+  //
   // Event Handlers
+  //
+
   /** Sets the Registered Delivery Address to the Registered Mailing Address. */
-  private setDeliveryAddressToMailingAddress (): void {
+  protected setDeliveryAddressToMailingAddress (): void {
     if (this.inheritMailingAddress) {
       this.deliveryAddress = { ...this.mailingAddress }
     } else {
@@ -386,7 +390,7 @@ export default class OfficeAddresses extends Mixins(CommonMixin) {
   }
 
   /** Sets the Records office addresses to the Registered office addresses. */
-  private setRecordOfficeToRegisteredOffice (): void {
+  protected setRecordOfficeToRegisteredOffice (): void {
     if (this.inheritRegisteredAddress) {
       this.recDeliveryAddress = { ...this.deliveryAddress }
       this.recMailingAddress = { ...this.mailingAddress }
@@ -400,7 +404,7 @@ export default class OfficeAddresses extends Mixins(CommonMixin) {
   }
 
   /** Sets the Records Delivery Address to Records Mailing Address. */
-  private setRecordDeliveryAddressToMailingAddress (): void {
+  protected setRecordDeliveryAddressToMailingAddress (): void {
     if (this.inheritRecMailingAddress) {
       this.recDeliveryAddress = { ...this.recMailingAddress }
     } else {
@@ -416,7 +420,7 @@ export default class OfficeAddresses extends Mixins(CommonMixin) {
    * @param baseAddress the address object to update
    * @param newAddress the new address data
    */
-  private updateAddress (addressToUpdate: string, baseAddress: AddressIF, newAddress: AddressIF): void {
+  protected updateAddress (addressToUpdate: string, baseAddress: AddressIF, newAddress: AddressIF): void {
     Object.assign(baseAddress, newAddress)
     switch (addressToUpdate) {
       case 'mailingAddress':
@@ -453,7 +457,7 @@ export default class OfficeAddresses extends Mixins(CommonMixin) {
    * @param addressToValidate the address type to set the validity of
    * @param valid whether the address is valid
    */
-  private updateAddressValid (addressToValidate: string, valid: boolean): void {
+  protected updateAddressValid (addressToValidate: string, valid: boolean): void {
     switch (addressToValidate) {
       case 'deliveryAddress':
         this.deliveryAddressValid = valid

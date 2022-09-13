@@ -104,7 +104,7 @@
               class="pt-0 mt-0"
               v-model="hasNameTranslation"
               id="name-translation-checkbox"
-              @click.native="confirmNameTranslation()"
+              @click="confirmNameTranslation()"
               hide-details
             >
               <span slot="label" class="translation-checkbox-label">
@@ -218,7 +218,7 @@ export default class NameRequestInfo extends Mixins(DateMixin, EnumMixin) {
   @Getter getShowErrors!: boolean
 
   /** The entity title.  */
-  protected get getEntityTypeDescription (): string {
+  get getEntityTypeDescription (): string {
     const corpTypeDescription = this.getCorpTypeDescription(this.getEntityType)
     if (this.isTypeSoleProp) {
       return `${corpTypeDescription} or Doing Business As (DBA)`
@@ -227,11 +227,11 @@ export default class NameRequestInfo extends Mixins(DateMixin, EnumMixin) {
   }
 
   /** The request type. */
-  protected get requestType (): string {
+  get requestType (): string {
     return 'New Business'
   }
 
-  protected get showNameTranslation (): boolean {
+  get showNameTranslation (): boolean {
     if (this.isTypeCoop || this.isTypeSoleProp || this.isTypePartnership) return false
     return true
   }
@@ -243,7 +243,7 @@ export default class NameRequestInfo extends Mixins(DateMixin, EnumMixin) {
   }
 
   /** The name request status string. */
-  protected get nameRequestStatus (): string {
+  get nameRequestStatus (): string {
     if (this.getNameRequestDetails.status === NameRequestStates.APPROVED) {
       return 'Approved'
     }
@@ -251,7 +251,7 @@ export default class NameRequestInfo extends Mixins(DateMixin, EnumMixin) {
   }
 
   /** The condition/consent string. */
-  protected get conditionConsent (): string {
+  get conditionConsent (): string {
     if (this.getNameRequestDetails.status === NameRequestStates.APPROVED) {
       return this.NOT_REQUIRED_STATE
     }
@@ -285,7 +285,8 @@ export default class NameRequestInfo extends Mixins(DateMixin, EnumMixin) {
     const stateProvince = this.getNameRequestApplicant.stateProvinceCode
     const postal = this.getNameRequestApplicant.postalCode
     const country = this.getNameRequestApplicant.countryTypeCode
-      ? getName(this.getNameRequestApplicant.countryTypeCode) : ''
+      ? getName(this.getNameRequestApplicant.countryTypeCode)
+      : ''
 
     // Build address lines
     let address = this.getNameRequestApplicant.addressLine1
@@ -309,7 +310,7 @@ export default class NameRequestInfo extends Mixins(DateMixin, EnumMixin) {
     // Handle name translation adds or updates
     this.editIndex > -1
       ? nameTranslations[this.editIndex].name = name
-      : nameTranslations.push({ name: name })
+      : nameTranslations.push({ name })
 
     this.setNameTranslationState(nameTranslations)
 
@@ -386,7 +387,7 @@ export default class NameRequestInfo extends Mixins(DateMixin, EnumMixin) {
   }
 
   /** Whether name translation is valid. */
-  protected get isValidNameTranslation (): boolean {
+  get isValidNameTranslation (): boolean {
     return this.hasNameTranslation ? this.getNameTranslations?.length > 0 : true
   }
 

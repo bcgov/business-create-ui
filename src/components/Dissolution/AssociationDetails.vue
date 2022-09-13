@@ -145,12 +145,12 @@ export default class AssociationDetails extends Mixins(CommonMixin, EnumMixin, D
   Any changes made will be applied immediately.`
 
   /** The entity name. */
-  private get entityName (): string {
+  get entityName (): string {
     return this.getBusinessLegalName || `${this.getCorpTypeNumberedDescription(this.getEntityType)}`
   }
 
   /** The entity description.  */
-  private get entityDescription (): string {
+  get entityDescription (): string {
     return `${this.getCorpTypeDescription(this.getEntityType)}`
   }
 
@@ -161,12 +161,12 @@ export default class AssociationDetails extends Mixins(CommonMixin, EnumMixin, D
   }
 
   /** Whether the address object is empty. */
-  private isEmptyAddress (address: AddressIF): boolean {
+  protected isEmptyAddress (address: AddressIF): boolean {
     return isEmpty(address)
   }
 
   /** Event handler for contact information changes. */
-  private async onContactInfoChange (event: ContactPointIF): Promise<void> {
+  protected async onContactInfoChange (event: ContactPointIF): Promise<void> {
     // temporarily ignore data changes
     this.setIgnoreChanges(true)
 

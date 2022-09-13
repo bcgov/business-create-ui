@@ -255,7 +255,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
         this.setCooperativeType(draftFiling.incorporationApplication.cooperative?.cooperativeAssociationType)
 
         // restore Rules
-        let rulesDoc: DocIF = null
+        let rulesDoc = null as DocIF
         if (draftFiling.incorporationApplication.cooperative?.rulesFileKey) {
           rulesDoc = {
             name: draftFiling.incorporationApplication.cooperative?.rulesFileName,
@@ -269,13 +269,13 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
             validationItemDetails: []
           },
           rulesConfirmed: draftFiling.incorporationApplication.cooperative?.rulesConfirmed,
-          rulesDoc: rulesDoc,
+          rulesDoc,
           docKey: draftFiling.incorporationApplication.cooperative?.rulesFileKey
         }
         this.setRules(createRules)
 
         // restore Memorandum
-        let memorandumDoc: DocIF = null
+        let memorandumDoc = null as DocIF
         if (draftFiling.incorporationApplication.cooperative?.memorandumFileKey) {
           memorandumDoc = {
             name: draftFiling.incorporationApplication.cooperative?.memorandumFileName,
@@ -289,7 +289,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
             validationItemDetails: []
           },
           memorandumConfirmed: draftFiling.incorporationApplication.cooperative?.memorandumConfirmed,
-          memorandumDoc: memorandumDoc,
+          memorandumDoc,
           docKey: draftFiling.incorporationApplication.cooperative?.memorandumFileKey
         }
         this.setMemorandum(createMemorandum)
@@ -301,7 +301,8 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
       case CorpTypeCd.BC_ULC_COMPANY:
         // restore Share Structure
         this.setShareClasses(draftFiling.incorporationApplication.shareStructure
-          ? draftFiling.incorporationApplication.shareStructure.shareClasses : [])
+          ? draftFiling.incorporationApplication.shareStructure.shareClasses
+          : [])
 
         // restore Incorporation Agreement
         this.setIncorporationAgreementStepData({
@@ -368,7 +369,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
             : {}
         },
         nameRequest: {
-          legalName: this.getNameRequest.details['approvedName'],
+          legalName: this.getNameRequest.details.approvedName,
           legalType: this.getEntityType,
           nrNumber: this.getNameRequest.nrNumber
         },
@@ -537,14 +538,16 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     // Conditionally add the entity-specific sections.
     switch (this.getEntityType) {
       case CorpTypeCd.COOP:
-        filing.dissolution = { ...filing.dissolution,
+        filing.dissolution = {
+          ...filing.dissolution,
           dissolutionStatementType: this.getDissolutionStatementStep.dissolutionStatementType || null,
           affidavitFileKey: this.getAffidavitStep.docKey || null,
           affidavitFileName: this.getAffidavitStep.affidavitDoc?.name || null,
           affidavitFileSize: this.getAffidavitStep.affidavitDoc?.size || null,
           affidavitFileLastModified: this.getAffidavitStep.affidavitDoc?.lastModified || null
         }
-        filing.specialResolution = { ...filing.specialResolution,
+        filing.specialResolution = {
+          ...filing.specialResolution,
           resolutionConfirmed: this.getCreateResolutionStep.resolutionConfirmed || false,
           resolutionDate: this.getCreateResolutionStep.resolutionDate,
           resolution: this.getCreateResolutionStep.resolutionText,
@@ -556,7 +559,8 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
       case CorpTypeCd.BC_CCC:
       case CorpTypeCd.BC_COMPANY:
       case CorpTypeCd.BC_ULC_COMPANY:
-        filing.dissolution = { ...filing.dissolution,
+        filing.dissolution = {
+          ...filing.dissolution,
           resolution: {
             resolutionConfirmed: this.getCreateResolutionStep.resolutionConfirmed || false
           }
@@ -564,7 +568,8 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
         break
       case CorpTypeCd.SOLE_PROP:
       case CorpTypeCd.PARTNERSHIP:
-        filing.dissolution = { ...filing.dissolution,
+        filing.dissolution = {
+          ...filing.dissolution,
           dissolutionDate: this.getDissolutionDate,
           parties: [{
             officer: {
@@ -678,7 +683,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     // }
 
     // restore Affidavit
-    let affidavitDoc: DocIF = null
+    let affidavitDoc = null as DocIF
     if (draftFiling.dissolution?.affidavitFileKey) {
       affidavitDoc = {
         name: draftFiling.dissolution.affidavitFileName,
@@ -692,7 +697,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
         validationItemDetails: []
       },
       affidavitConfirmed: draftFiling.dissolution?.affidavitConfirmed,
-      affidavitDoc: affidavitDoc,
+      affidavitDoc,
       docKey: draftFiling.dissolution?.affidavitFileKey
     }
     this.setAffidavit(uploadAffidavit)

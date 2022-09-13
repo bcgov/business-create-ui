@@ -111,9 +111,9 @@ describe('Emits error event if NR validation fails in file and pay', () => {
 
     const get = sinon.stub(axios, 'get')
 
-    let expiredNR = { ...nrData }
-    expiredNR['expirationDate'] = 'Thu, 31 Dec 2019 23:59:59 GMT'
-    expiredNR['state'] = 'EXPIRED'
+    const expiredNR = { ...nrData }
+    expiredNR.expirationDate = 'Thu, 31 Dec 2019 23:59:59 GMT'
+    expiredNR.state = 'EXPIRED'
 
     // GET NR data
     get.withArgs('nameRequests/NR 1234567')
@@ -479,14 +479,14 @@ describe('Actions component - Filing Functionality', () => {
 
   it('Emits the error event for a PAD error', async () => {
     const padErrorFiling = {
-      'errors': [
+      errors: [
         {
-          'message': 'Your account is in the 3 day PAD confirmation period. You will be able to do transactions only ' +
+          message: 'Your account is in the 3 day PAD confirmation period. You will be able to do transactions only ' +
             'after the period is over.',
-          'payment_error_type': 'ACCOUNT_IN_PAD_CONFIRMATION_PERIOD'
+          payment_error_type: 'ACCOUNT_IN_PAD_CONFIRMATION_PERIOD'
         }
       ],
-      'filing': filing
+      filing
     }
     const mockBuildFiling = jest.spyOn(wrapper.vm, 'buildIncorporationFiling')
     mockUpdateFiling.mockReset()

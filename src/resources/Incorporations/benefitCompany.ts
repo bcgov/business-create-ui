@@ -46,7 +46,7 @@ export const BenefitCompanyResource: IncorporationResourceIF = {
   incorporationAgreement: {
     helpSection: [
       {
-        header: `What is the sample Incorporation Agreement and Benefit Company Articles?`,
+        header: 'What is the sample Incorporation Agreement and Benefit Company Articles?',
         helpText: [
           `The sample Incorporation Agreement and Benefit Company Articles is a template that you can use
             to create an incorporation agreement and articles for your company. It uses all the standard
@@ -57,34 +57,34 @@ export const BenefitCompanyResource: IncorporationResourceIF = {
         ]
       },
       {
-        header: `What is a Benefit Provision?`,
+        header: 'What is a Benefit Provision?',
         helpText: [
           `A Benefit Provision is a statement by the company of its public benefits and its commitments to promote
             those public benefits and to conduct business in a responsible and sustainable manner.`,
-          `A Benefit Company must include a benefit provision in its Articles.`
+          'A Benefit Company must include a benefit provision in its Articles.'
         ]
       },
       {
-        header: `Can I use the sample Incorporation Agreement and Benefit Company Articles?`
+        header: 'Can I use the sample Incorporation Agreement and Benefit Company Articles?'
       },
       {
-        header: `You can use the sample Articles if:`,
+        header: 'You can use the sample Articles if:',
         icon: 'mdi-check',
         iconColor: 'green darken-2',
         statements: [
           `There are no special rights or restrictions attached to any class or series of shares in
             the corporation’s authorized share structure.`,
-          `You do not wish to change any of the standard provisions in the sample Articles.`
+          'You do not wish to change any of the standard provisions in the sample Articles.'
         ]
       },
       {
-        header: `You cannot use the sample Articles if:`,
+        header: 'You cannot use the sample Articles if:',
         icon: 'mdi-close',
         iconColor: 'red',
         statements: [
           `There are special rights or restrictions attached to any class or series of shares in the corporation's
             authorized share structure.`,
-          `You wish to change any of the standard provisions in the sample Articles.`
+          'You wish to change any of the standard provisions in the sample Articles.'
         ]
       }
     ],
@@ -112,12 +112,12 @@ export const BenefitCompanyResource: IncorporationResourceIF = {
           line for each person identified as an incorporator in the Incorporation Application
           with the name of that person set out legibly under the signature line,`,
 
-        `An original signature has been placed on each of those signature lines,`,
+        'An original signature has been placed on each of those signature lines,',
 
         `I have no reason to believe that the signature placed on a signature line is not the
           signature of the person whose name is set out under that signature line, and`,
 
-        `I have relevant knowledge of the company and that I am authorized to make this filing.`
+        'I have relevant knowledge of the company and that I am authorized to make this filing.'
       ],
       certifyClause: `Note: It is an offence to make a false or misleading statement in respect
         of a material fact in a record submitted to the Corporate Registry for filing.

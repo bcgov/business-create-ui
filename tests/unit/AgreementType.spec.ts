@@ -5,9 +5,9 @@ import { CorpTypeCd } from '@/enums'
 import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 
 // Input field selectors to test changes to the DOM elements.
-const typeSelector: string = '#agreement-type-'
-const summaryErrorMessageSelector: string = '.agreement-invalid-message'
-const summaryTextSelector: string = '.summary-desc'
+const typeSelector = '#agreement-type-'
+const summaryErrorMessageSelector = '.agreement-invalid-message'
+const summaryTextSelector = '.summary-desc'
 
 // NB: Agreement Type does not apply to COOPERATIVE
 const agreementTypeTestCases = [
@@ -190,7 +190,7 @@ for (const test of agreementTypeTestCases) {
   })
 }
 
-describe(`Incorporation agreement component for a Community Contribution Company`, () => {
+describe('Incorporation agreement component for a Community Contribution Company', () => {
   let wrapper: any
 
   it('Loads the component in edit mode and both agreement types are not selected', () => {

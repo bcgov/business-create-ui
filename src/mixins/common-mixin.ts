@@ -19,7 +19,7 @@ export default class CommonMixin extends Vue {
    * @param props an optional array of properties to omit during the comparison
    * @return a boolean indicating a match of objects
    */
-  isSame (objA: {}, objB: {}, props: string[] = []): boolean {
+  isSame (objA: {}, objB: {}, props = [] as string[]): boolean {
     return isEqual({ ...omit(objA, props) }, { ...omit(objB, props) })
   }
 
@@ -61,7 +61,7 @@ export default class CommonMixin extends Vue {
    * @return array of validation flags for all validation items
    */
   buildValidFlags (validationItems: ValidationItemDetailIF[]): object {
-    let result = {}
+    const result = {}
     for (const vi of validationItems) { result[vi.name] = vi.valid }
     return result
   }
@@ -80,7 +80,7 @@ export default class CommonMixin extends Vue {
    * @param intVal number to convert to character
    * @return string character that maps to intVal
    */
-  convertIntToChar (intVal: number, toLower: boolean = true): string {
+  convertIntToChar (intVal: number, toLower = true): string {
     const charSet = toLower ? 'abcdefghijklmnopqrstuvwxyz' : 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
     const result = charSet.charAt(intVal)
     return result

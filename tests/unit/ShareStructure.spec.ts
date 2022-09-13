@@ -1,45 +1,36 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify'
 import { mount, Wrapper, createLocalVue } from '@vue/test-utils'
-import flushPromises from 'flush-promises'
 import { getVuexStore } from '@/store'
 import ShareStructure from '@/components/Incorporation/ShareStructure.vue'
 import { ShareClassIF } from '@/interfaces'
+import { waitForUpdate } from '../wait-for-update'
 
 Vue.use(Vuetify)
 
-let vuetify = new Vuetify({})
+const vuetify = new Vuetify({})
 const store = getVuexStore()
 
 // Events
-const addEditShareClassEvent: string = 'addEditClass'
-const addEditShareSeriesEvent: string = 'addEditSeries'
-const removeClassEvent: string = 'removeClass'
-const removeSeriesEvent: string = 'removeSeries'
-const formResetEvent: string = 'resetEvent'
+const addEditShareClassEvent = 'addEditClass'
+const addEditShareSeriesEvent = 'addEditSeries'
+const removeClassEvent = 'removeClass'
+const removeSeriesEvent = 'removeSeries'
+const formResetEvent = 'resetEvent'
 
 // Input field selectors to test changes to the DOM elements.
-const nameSelector: string = '#txt-name'
-const txtMaxShares: string = '#txt-max-shares'
-const classParValue: string = '#class-par-value'
-const seriesParValue: string = '#series-par-value'
-const seriesCurrency: string = '#series-currency'
-const noParValueSelector: string = '#radio-no-par'
-const parValueSelector: string = '#radio-par-value'
-const specialRightsChkBoxSelector: string = '#special-rights-check-box'
-const doneButtonSelector: string = '#btn-done'
-const removeButtonSelector: string = '#btn-remove'
-const cancelButtonSelector: string = '#btn-cancel'
-const formSelector: string = '.share-structure-form'
-
-/**
- * Utility method to get around with the timing issues
- */
-async function waitForUpdate (wrapper: Wrapper<Vue>) {
-  await Vue.nextTick()
-  await flushPromises()
-  await Vue.nextTick()
-}
+const nameSelector = '#txt-name'
+const txtMaxShares = '#txt-max-shares'
+const classParValue = '#class-par-value'
+const seriesParValue = '#series-par-value'
+const seriesCurrency = '#series-currency'
+const noParValueSelector = '#radio-no-par'
+const parValueSelector = '#radio-par-value'
+const specialRightsChkBoxSelector = '#special-rights-check-box'
+const doneButtonSelector = '#btn-done'
+const removeButtonSelector = '#btn-remove'
+const cancelButtonSelector = '#btn-cancel'
+const formSelector = '.share-structure-form'
 
 /**
  * Creates and mounts a component, so that it can be tested.
@@ -48,10 +39,10 @@ async function waitForUpdate (wrapper: Wrapper<Vue>) {
  */
 function createComponent (
   shareClass: ShareClassIF,
-  activeIndex: number = -1,
-  shareId: string = '',
-  parentIndex: number = -1,
-  shareClasses: ShareClassIF[] = []
+  activeIndex = -1,
+  shareId = '',
+  parentIndex = -1,
+  shareClasses = [] as ShareClassIF[]
 ): Wrapper<ShareStructure> {
   const localVue = createLocalVue()
   localVue.use(Vuetify)
@@ -60,10 +51,10 @@ function createComponent (
     localVue,
     propsData: {
       initialValue: shareClass,
-      activeIndex: activeIndex,
-      shareId: shareId,
-      parentIndex: parentIndex,
-      shareClasses: shareClasses
+      activeIndex,
+      shareId,
+      parentIndex,
+      shareClasses
     },
     store,
     vuetify
@@ -95,7 +86,7 @@ function createShareStructure (
     hasRightsOrRestrictions
   }
   if (type === 'Class') {
-    shareStructure['series'] = []
+    shareStructure.series = []
   }
   return shareStructure
 }
@@ -119,11 +110,11 @@ describe('Share Structure component', () => {
     const wrapper: Wrapper<ShareStructure> = createComponent(shareClass, -1, '1', null, [])
     await Vue.nextTick()
     expect((<HTMLInputElement>wrapper.find(nameSelector).element).value)
-      .toEqual(shareClass['name'])
+      .toEqual(shareClass.name)
     expect((<HTMLInputElement>wrapper.find(txtMaxShares).element).value)
-      .toEqual(shareClass['maxNumberOfShares'].toString())
+      .toEqual(shareClass.maxNumberOfShares.toString())
     expect((<HTMLInputElement>wrapper.find(classParValue).element).value)
-      .toEqual(shareClass['parValue'].toString())
+      .toEqual(shareClass.parValue.toString())
     expect(wrapper.find(parValueSelector).attributes('aria-checked')).toBe('true')
     expect(wrapper.find(noParValueSelector).attributes('aria-checked')).toBe('false')
     expect(wrapper.find(specialRightsChkBoxSelector).attributes('aria-checked')).toBe('true')
@@ -138,7 +129,7 @@ describe('Share Structure component', () => {
     const wrapper: Wrapper<ShareStructure> = createComponent(shareClass, -1, '1', null, [])
     await Vue.nextTick()
     expect((<HTMLInputElement>wrapper.find(nameSelector).element).value)
-      .toEqual(shareClass['name'])
+      .toEqual(shareClass.name)
     expect(wrapper.find(parValueSelector).attributes('aria-checked')).toBe('false')
     expect(wrapper.find(noParValueSelector).attributes('aria-checked')).toBe('true')
     expect(wrapper.find(doneButtonSelector).attributes('disabled')).toBeUndefined()
@@ -204,7 +195,7 @@ describe('Share Structure component', () => {
     const inputElement: Wrapper<Vue> = wrapper.find(nameSelector)
     inputElement.setValue('Class A')
     inputElement.trigger('change')
-    await waitForUpdate(wrapper)
+    await waitForUpdate()
     expect(wrapper.find(formSelector).text()).toContain('Class name must be unique')
     expect(wrapper.vm.$data.formValid).toBe(false)
     wrapper.destroy()
@@ -219,7 +210,7 @@ describe('Share Structure component', () => {
     const inputElement: Wrapper<Vue> = wrapper.find(nameSelector)
     inputElement.setValue('Series A')
     inputElement.trigger('change')
-    await waitForUpdate(wrapper)
+    await waitForUpdate()
     expect(wrapper.find(formSelector).text()).toContain('Series name must be unique')
     expect(wrapper.vm.$data.formValid).toBe(false)
     wrapper.destroy()
@@ -232,7 +223,7 @@ describe('Share Structure component', () => {
     const inputElement: Wrapper<Vue> = wrapper.find(nameSelector)
     inputElement.setValue('Class A value')
     inputElement.trigger('change')
-    await waitForUpdate(wrapper)
+    await waitForUpdate()
     expect(wrapper.find(formSelector).text())
       .toContain('Class name should not contain any of the words share, shares or value')
     expect(wrapper.vm.$data.formValid).toBe(false)
@@ -246,7 +237,7 @@ describe('Share Structure component', () => {
     const inputElement: Wrapper<Vue> = wrapper.find(nameSelector)
     inputElement.setValue('Series A share')
     inputElement.trigger('change')
-    await waitForUpdate(wrapper)
+    await waitForUpdate()
     expect(wrapper.find(formSelector).text())
       .toContain('Series name should not contain any of the words share or shares')
     expect(wrapper.vm.$data.formValid).toBe(false)
@@ -260,7 +251,7 @@ describe('Share Structure component', () => {
     const inputElement: Wrapper<Vue> = wrapper.find(classParValue)
     inputElement.setValue(-2)
     inputElement.trigger('change')
-    await waitForUpdate(wrapper)
+    await waitForUpdate()
     expect(wrapper.find(formSelector).text())
       .toContain('Amount must be greater than 0')
     expect(wrapper.vm.$data.formValid).toBe(false)
@@ -274,7 +265,7 @@ describe('Share Structure component', () => {
     const inputElement: Wrapper<Vue> = wrapper.find(classParValue)
     inputElement.setValue(0.1111)
     inputElement.trigger('change')
-    await waitForUpdate(wrapper)
+    await waitForUpdate()
     expect(wrapper.find(formSelector).text())
       .toContain('Amounts less than 1 can be entered with up to 3 decimal place')
     expect(wrapper.vm.$data.formValid).toBe(false)
@@ -288,7 +279,7 @@ describe('Share Structure component', () => {
     const inputElement: Wrapper<Vue> = wrapper.find(classParValue)
     inputElement.setValue(1.234)
     inputElement.trigger('change')
-    await waitForUpdate(wrapper)
+    await waitForUpdate()
     expect(wrapper.find(formSelector).text())
       .toContain('Amounts greater than 1 can be entered with up to 2 decimal place')
     expect(wrapper.vm.$data.formValid).toBe(false)
@@ -304,7 +295,7 @@ describe('Share Structure component', () => {
     // before entering anything
     inputElement.setValue(null)
     inputElement.trigger('change')
-    await waitForUpdate(wrapper)
+    await waitForUpdate()
 
     expect(wrapper.find(formSelector).text()).toContain('Number of shares is required')
     expect(wrapper.vm.$data.formValid).toBe(false)
@@ -312,7 +303,7 @@ describe('Share Structure component', () => {
     // after entering and deleting value
     inputElement.setValue('')
     inputElement.trigger('change')
-    await waitForUpdate(wrapper)
+    await waitForUpdate()
 
     expect(wrapper.find(formSelector).text()).toContain('Number of shares is required')
     expect(wrapper.vm.$data.formValid).toBe(false)
@@ -329,7 +320,7 @@ describe('Share Structure component', () => {
     // try decimal number
     inputElement.setValue(0.5)
     inputElement.trigger('change')
-    await waitForUpdate(wrapper)
+    await waitForUpdate()
 
     expect(wrapper.find(formSelector).text()).toContain('Must be a whole number')
     expect(wrapper.vm.$data.formValid).toBe(false)
@@ -346,7 +337,7 @@ describe('Share Structure component', () => {
     // try 0
     inputElement.setValue(0)
     inputElement.trigger('change')
-    await waitForUpdate(wrapper)
+    await waitForUpdate()
 
     expect(wrapper.find(formSelector).text()).toContain('Number must be greater than 0')
     expect(wrapper.vm.$data.formValid).toBe(false)
@@ -354,7 +345,7 @@ describe('Share Structure component', () => {
     // try negative number
     inputElement.setValue(-1)
     inputElement.trigger('change')
-    await waitForUpdate(wrapper)
+    await waitForUpdate()
 
     expect(wrapper.find(formSelector).text()).toContain('Number must be greater than 0')
     expect(wrapper.vm.$data.formValid).toBe(false)
@@ -371,7 +362,7 @@ describe('Share Structure component', () => {
     // try 16 digits
     inputElement.setValue(1234567890123456)
     inputElement.trigger('change')
-    await waitForUpdate(wrapper)
+    await waitForUpdate()
 
     expect(wrapper.find(formSelector).text()).toContain('Number must be less than 16 digits')
     expect(wrapper.vm.$data.formValid).toBe(false)
@@ -387,7 +378,7 @@ describe('Share Structure component', () => {
     const inputElement: Wrapper<Vue> = wrapper.find(txtMaxShares)
     inputElement.setValue(200)
     inputElement.trigger('change')
-    await waitForUpdate(wrapper)
+    await waitForUpdate()
     expect(wrapper.find(formSelector).text())
       .toContain('The number for the series (or all series combined, if there are multiple under ' +
         'a class) cannot exceed the number for the class')
@@ -404,7 +395,7 @@ describe('Share Structure component', () => {
     const inputElement: Wrapper<Vue> = wrapper.find(txtMaxShares)
     inputElement.setValue(150)
     inputElement.trigger('change')
-    await waitForUpdate(wrapper)
+    await waitForUpdate()
     expect(wrapper.find(formSelector).text())
       .toContain('The number for the series (or all series combined, if there are multiple under ' +
         'a class) cannot exceed the number for the class')
@@ -418,7 +409,7 @@ describe('Share Structure component', () => {
     shareClass.series.push(shareSeries)
     const wrapper: Wrapper<ShareStructure> = createComponent(shareSeries, 0, '', 0, [shareClass])
     expect((<HTMLInputElement>wrapper.find(seriesParValue).element).value)
-      .toEqual(shareSeries['parValue'].toString())
+      .toEqual(shareSeries.parValue.toString())
     expect(wrapper.find(seriesParValue).attributes('disabled')).toBe('disabled')
     expect((<HTMLInputElement>wrapper.find(seriesCurrency).element).value)
       .toEqual('Canadian dollar (CAD)')
@@ -444,7 +435,7 @@ describe('Share Structure component', () => {
     expect(wrapper.find('.v-select').text()).toContain('Canadian dollar (CAD)')
     shareClass.currency = 'USD'
     wrapper.setData({ shareStructure: shareClass })
-    await waitForUpdate(wrapper)
+    await waitForUpdate()
     expect(wrapper.find('.v-select').text()).toContain('United States dollar (USD)')
   })
 
@@ -458,7 +449,7 @@ describe('Share Structure component', () => {
     const inputElement: Wrapper<Vue> = wrapper.find(txtMaxShares)
     inputElement.setValue(50)
     inputElement.trigger('change')
-    await waitForUpdate(wrapper)
+    await waitForUpdate()
     expect(wrapper.find(formSelector).text())
       .toContain('The number for the series (or all series combined, if there are multiple under ' +
         'a class) cannot exceed the number for the class')
@@ -474,7 +465,7 @@ describe('Share Structure component', () => {
     const inputElement: Wrapper<Vue> = wrapper.find(txtMaxShares)
     inputElement.setValue(20)
     inputElement.trigger('change')
-    await waitForUpdate(wrapper)
+    await waitForUpdate(3)
     expect(wrapper.find(formSelector).text())
       .not.toContain('The number for the series (or all series combined, if there are multiple under ' +
         'a class) cannot exceed the number for the class')
@@ -488,7 +479,7 @@ describe('Share Structure component', () => {
     const inputElement: Wrapper<Vue> = wrapper.find(nameSelector)
     inputElement.setValue('Class A')
     inputElement.trigger('change')
-    await waitForUpdate(wrapper)
+    await waitForUpdate()
     expect(wrapper.find(formSelector).text()).toContain('Class name must be unique')
     expect(wrapper.vm.$data.formValid).toBe(false)
     wrapper.destroy()
@@ -504,7 +495,7 @@ describe('Share Structure component', () => {
     const inputElement: Wrapper<Vue> = wrapper.find(nameSelector)
     inputElement.setValue('Series A')
     inputElement.trigger('change')
-    await waitForUpdate(wrapper)
+    await waitForUpdate()
     expect(wrapper.find(formSelector).text()).toContain('Series name must be unique')
     expect(wrapper.vm.$data.formValid).toBe(false)
     wrapper.destroy()
@@ -516,7 +507,7 @@ describe('Share Structure component', () => {
     const inputElement: Wrapper<Vue> = wrapper.find(classParValue)
     inputElement.setValue(.01) // eslint-disable-line no-floating-decimal
     inputElement.trigger('change')
-    await waitForUpdate(wrapper)
+    await waitForUpdate()
     expect(wrapper.find(formSelector).text())
       .not.toContain('Amounts less than 1 can be entered with up to 3 decimal place')
     expect(wrapper.vm.$data.formValid).toBe(true)

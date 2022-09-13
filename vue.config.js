@@ -14,9 +14,12 @@ module.exports = {
       new webpack.DefinePlugin({
         'process.env': {
           ABOUT_TEXT:
-            (aboutText1 && aboutText2) ? `"${aboutText1}<br>${aboutText2}"`
-              : aboutText1 ? `"${aboutText1}"`
-                : aboutText2 ? `"${aboutText2}"`
+            (aboutText1 && aboutText2)
+              ? `"${aboutText1}<br>${aboutText2}"`
+              : aboutText1
+                ? `"${aboutText1}"`
+                : aboutText2
+                  ? `"${aboutText2}"`
                   : ''
         }
       })

@@ -53,6 +53,6 @@ export default class FileAndPayInvalidNameRequestDialog extends Vue {
   @Getter getNameRequestNumber!: string
   @Getter getApprovedName!: string
 
-  @Emit() private okay () {}
+  @Emit() protected okay () {}
 }
 </script>

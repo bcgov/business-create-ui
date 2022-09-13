@@ -18,21 +18,21 @@ const vuetify = new Vuetify({})
 const store = getVuexStore()
 
 // Events
-const addEditPersonEvent: string = 'addEditPerson'
-const removePersonEvent: string = 'removePerson'
-const reassignCompletingPartyEvent: string = 'removeCompletingPartyRole'
-const formResetEvent: string = 'resetEvent'
+const addEditPersonEvent = 'addEditPerson'
+const removePersonEvent = 'removePerson'
+const reassignCompletingPartyEvent = 'removeCompletingPartyRole'
+const formResetEvent = 'resetEvent'
 
 // Input field selectors to test changes to the DOM elements.
-const firstNameSelector: string = '#person__first-name'
-const middleNameSelector: string = '#person__middle-name'
-const lastNameSelector: string = '#person__last-name'
-const orgNameSelector: string = '#org-name'
-const completingPartyChkBoxSelector: string = '#cp-checkbox'
-const doneButtonSelector: string = '#btn-done'
-const removeButtonSelector: string = '#btn-remove'
-const cancelButtonSelector: string = '#btn-cancel'
-const formSelector: string = '.appoint-form'
+const firstNameSelector = '#person__first-name'
+const middleNameSelector = '#person__middle-name'
+const lastNameSelector = '#person__last-name'
+const orgNameSelector = '#org-name'
+const completingPartyChkBoxSelector = '#cp-checkbox'
+const doneButtonSelector = '#btn-done'
+const removeButtonSelector = '#btn-remove'
+const cancelButtonSelector = '#btn-cancel'
+const formSelector = '.appoint-form'
 
 const validPersonData = {
   officer: {
@@ -129,7 +129,7 @@ function createComponent (
   initialValue: any, // person
   activeIndex: number,
   existingCompletingParty: any,
-  addIncorporator: boolean = true
+  addIncorporator = true
 ): Wrapper<AddEditOrgPerson> {
   const localVue = createLocalVue()
   localVue.use(Vuetify)
@@ -174,7 +174,7 @@ describe('Add/Edit Org/Person component', () => {
   it('Displays form data for org', async () => {
     const wrapper: Wrapper<AddEditOrgPerson> = createComponent(validOrgData, NaN, null)
     expect((<HTMLInputElement>wrapper.find(orgNameSelector).element).value)
-      .toEqual(validOrgData['officer']['organizationName'])
+      .toEqual(validOrgData.officer.organizationName)
     await Vue.nextTick()
     expect(wrapper.find(doneButtonSelector).attributes('disabled')).toBeUndefined()
     expect(wrapper.find(removeButtonSelector).attributes('disabled')).toBeDefined()
@@ -185,11 +185,11 @@ describe('Add/Edit Org/Person component', () => {
   it('Displays form data for person', async () => {
     const wrapper: Wrapper<AddEditOrgPerson> = createComponent(validPersonData, 0, null)
     expect((<HTMLInputElement>wrapper.find(firstNameSelector).element).value)
-      .toEqual(validPersonData['officer']['firstName'])
+      .toEqual(validPersonData.officer.firstName)
     expect((<HTMLInputElement>wrapper.find(middleNameSelector).element).value)
-      .toEqual(validPersonData['officer']['middleName'])
+      .toEqual(validPersonData.officer.middleName)
     expect((<HTMLInputElement>wrapper.find(lastNameSelector).element).value)
-      .toEqual(validPersonData['officer']['lastName'])
+      .toEqual(validPersonData.officer.lastName)
     await Vue.nextTick()
     expect(wrapper.find(doneButtonSelector).attributes('disabled')).toBeUndefined()
     expect(wrapper.find(removeButtonSelector).attributes('disabled')).toBeUndefined()
@@ -361,7 +361,7 @@ describe('Add/Edit Org/Person component', () => {
 
     expect(wrapper.emitted().addEditPerson).toBeTruthy()
     expect(wrapper.emitted(addEditPersonEvent).length).toBe(1)
-    let incorporatorWithAddedRole = { ...validIncorporator }
+    const incorporatorWithAddedRole = { ...validIncorporator }
     incorporatorWithAddedRole.roles = [
       { roleType: 'Completing Party', appointmentDate: '2020-03-30' },
       { roleType: 'Incorporator', appointmentDate: '2020-03-30' }
@@ -398,7 +398,7 @@ describe('Add/Edit Org/Person component', () => {
 
     // get a list of error messages
     const wrappers = wrapper.findAll('.v-messages__message')
-    const messages: Array<string> = []
+    const messages = [] as Array<string>
     for (let i = 0; i < wrappers.length; i++) {
       messages.push(wrappers.at(i).text())
     }

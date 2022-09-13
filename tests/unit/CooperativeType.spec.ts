@@ -19,7 +19,7 @@ for (const mock of cooperativeTypeCases) {
   describe(`Cooperative Type component for a ${mock.entityType}`, () => {
     let wrapper: any
 
-    itIf(['BEN', 'ULC', 'CCC'].includes(mock.entityType))(`does not render the component`,
+    itIf(['BEN', 'ULC', 'CCC'].includes(mock.entityType))('does not render the component',
       () => {
         wrapper = shallowWrapperFactory(CooperativeType, null, { entityType: mock.entityType })
         expect(wrapper.find('#cooperative-type').exists()).toBe(true)

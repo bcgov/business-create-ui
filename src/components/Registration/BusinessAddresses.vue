@@ -134,14 +134,14 @@ export default class BusinessAddresses extends Mixins(CommonMixin) {
   // BaseAddress state variables
   // (Note that if the initial value is undefined, the class property will not be
   // reactive, which means the changes for the properties will not be detected.)
-  private mailingAddress: AddressIF = null
-  private deliveryAddress: AddressIF = null
-  private mailingAddressValid = false
-  private deliveryAddressValid = false
+  protected mailingAddress = null as AddressIF
+  protected deliveryAddress = null as AddressIF
+  protected mailingAddressValid = false
+  protected deliveryAddressValid = false
 
   // State of checkbox
-  private inheritMailingAddress = false
-  private checkboxDisabled = false
+  protected inheritMailingAddress = false
+  protected checkboxDisabled = false
 
   // Misc for template
   readonly RegistrationMailingAddressSchema = RegistrationMailingAddressSchema
@@ -155,7 +155,7 @@ export default class BusinessAddresses extends Mixins(CommonMixin) {
   }
 
   /** Returns true if the address object is empty or with only with default values. */
-  isEmptyAddress (address: AddressIF): boolean {
+  protected isEmptyAddress (address: AddressIF): boolean {
     return (
       isEmpty(address) ||
       this.isSame(address, EmptyAddress) ||
@@ -164,7 +164,7 @@ export default class BusinessAddresses extends Mixins(CommonMixin) {
   }
 
   /** Called when component is created. */
-  created (): void {
+  protected created (): void {
     // don't allow "same as" if mailing address is not in BC/Canada
     this.checkboxDisabled = (this.mailingAddress.addressRegion !== REGION_BC ||
       this.mailingAddress.addressCountry !== COUNTRY_CA)
@@ -174,7 +174,7 @@ export default class BusinessAddresses extends Mixins(CommonMixin) {
   }
 
   /** Called when the "same as" checkbox value has changed. */
-  onCheckboxChanged (): void {
+  protected onCheckboxChanged (): void {
     if (this.inheritMailingAddress) {
       // clone mailing address into delivery address
       this.deliveryAddress = { ...this.mailingAddress }
@@ -194,7 +194,7 @@ export default class BusinessAddresses extends Mixins(CommonMixin) {
    * @param addressToUpdate the address type to set the data of
    * @param address the new address data
    */
-  updateAddress (addressToUpdate: string, address: AddressIF): void {
+  protected updateAddress (addressToUpdate: string, address: AddressIF): void {
     switch (addressToUpdate) {
       case this.MAILING_ADDRESS:
         // avoid reactive looping
@@ -236,7 +236,7 @@ export default class BusinessAddresses extends Mixins(CommonMixin) {
    * @param addressToValidate the address type to set the validity of
    * @param valid whether the address is valid
    */
-  updateAddressValid (addressToValidate: string, valid: boolean): void {
+  protected updateAddressValid (addressToValidate: string, valid: boolean): void {
     switch (addressToValidate) {
       case this.MAILING_ADDRESS:
         this.mailingAddressValid = valid

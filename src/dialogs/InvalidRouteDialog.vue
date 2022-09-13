@@ -30,6 +30,6 @@ export default class InvalidRouteDialog extends Vue {
   @Prop({ default: '' }) readonly attach!: string
 
   // Pass click events to parent.
-  @Emit() private exit () {}
+  @Emit() protected exit () {}
 }
 </script>

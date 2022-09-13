@@ -139,8 +139,10 @@
 <script lang="ts">
 import { Component, Mixins } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
-import { ActionBindingIF, ContactPointIF, CertifyIF, EffectiveDateTimeIF, IncorporationAgreementIF,
-  ShareStructureIF } from '@/interfaces'
+import {
+  ActionBindingIF, ContactPointIF, CertifyIF, EffectiveDateTimeIF, IncorporationAgreementIF,
+  ShareStructureIF
+} from '@/interfaces'
 import { CorpTypeCd } from '@/enums'
 import { EnumMixin } from '@/mixins'
 import AgreementType from '@/components/common/AgreementType.vue'

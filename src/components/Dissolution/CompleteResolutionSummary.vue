@@ -109,7 +109,7 @@ import { CreateResolutionIF, CreateResolutionResourceIF, FormIF } from '@/interf
 export default class CompleteResolutionSummary extends Mixins(DateMixin) {
   // Refs
   $refs!: {
-    resolutionTextRef: FormIF,
+    resolutionTextRef: FormIF
   }
 
   // initialize to true so resolution text height will right height on initial load

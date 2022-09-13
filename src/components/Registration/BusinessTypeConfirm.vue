@@ -41,10 +41,10 @@ export default class BusinessTypeConfirm extends Vue {
   @Prop({ required: true }) readonly businessTypeConfirm!: boolean
 
   /** Whether to display Change features. */
-  @Prop({ default: false }) readonly hasBusinessTypeChecked!: boolean;
+  @Prop({ default: false }) readonly hasBusinessTypeChecked!: boolean
 
   /** Whether the business type is SP or GP. */
-  @Prop({ default: false }) readonly isTypePartnership!: boolean;
+  @Prop({ default: false }) readonly isTypePartnership!: boolean
 
   /** Whether to show errors. */
   @Prop({ required: true }) readonly showErrors!: boolean
@@ -53,14 +53,15 @@ export default class BusinessTypeConfirm extends Vue {
   protected checked = false
   protected label = 'General Partnership'
   protected labelSP = 'BC Sole Proprietorship / Doing Business As (DBA) Registration'
-  protected text = `I acknowledge that a General Partnership cannot be \
-    changed into a Sole Proprietorship (including DBA). If this is \
-    necessary, a new Name Request Number and Statement of Registration \
-    (along with associated fees) will be required.`
-  protected textSP = `I acknowledge that a Sole Proprietorship (including DBA) \
-    cannot be changed into a General Partnership. If this is necessary, a new \
-    Name Request Number and Statement of Registration (along with associated fees) \
-    will be required.`
+  protected text = 'I acknowledge that a General Partnership cannot be ' +
+    'changed into a Sole Proprietorship (including DBA). If this is ' +
+    'necessary, a new Name Request Number and Statement of Registration ' +
+    '(along with associated fees) will be required.'
+
+  protected textSP = 'I acknowledge that a Sole Proprietorship (including DBA) ' +
+    'cannot be changed into a General Partnership. If this is necessary, a new ' +
+    'Name Request Number and Statement of Registration (along with associated fees) ' +
+    'will be required.'
 
   /** Called when component is mounted. */
   protected mounted (): void {

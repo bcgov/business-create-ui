@@ -45,8 +45,8 @@ export default class FolioNumber extends Vue {
   @Prop({ default: false }) readonly showErrors!: boolean
 
   // Local properties
-  private folioNumber: string = null
-  private formValid: boolean = false
+  protected folioNumber = null as string
+  protected formValid = false
 
   // Validation rules
   readonly rules: Array<Function> = [
@@ -54,7 +54,7 @@ export default class FolioNumber extends Vue {
   ]
 
   /** Called when component is created. */
-  created (): void {
+  protected created (): void {
     if (this.initialValue) {
       this.folioNumber = this.initialValue
     }

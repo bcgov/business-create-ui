@@ -54,7 +54,7 @@ export default class NameRequestInvalidErrorDialog extends Vue {
   @Prop({ default: null }) readonly type!: NameRequestStates
 
   /** True if user has Okay option. Otherwise user gets Redirect option. */
-  private get showOkay (): boolean {
+  get showOkay (): boolean {
     return (
       this.type === NameRequestStates.EXPIRED ||
       this.type === NameRequestStates.NOT_APPROVED ||
@@ -63,7 +63,7 @@ export default class NameRequestInvalidErrorDialog extends Vue {
   }
 
   // Pass click events to parent.
-  @Emit() private okay () {}
-  @Emit() private redirect () {}
+  @Emit() protected okay () {}
+  @Emit() protected redirect () {}
 }
 </script>

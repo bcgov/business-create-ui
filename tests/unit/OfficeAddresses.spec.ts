@@ -180,18 +180,18 @@ describe('Office Addresses component - COOP', () => {
 
   it('loads the current office addresses properly from a draft filing', () => {
     const deliveryAddress = wrapper.vm.addresses.registeredOffice.deliveryAddress
-    expect(deliveryAddress['streetAddress']).toEqual('someStreet')
-    expect(deliveryAddress['addressCity']).toEqual('someCity')
-    expect(deliveryAddress['addressRegion']).toEqual('someRegion')
-    expect(deliveryAddress['postalCode']).toEqual('somePostalCode')
-    expect(deliveryAddress['addressCountry']).toEqual('someCountry')
+    expect(deliveryAddress.streetAddress).toEqual('someStreet')
+    expect(deliveryAddress.addressCity).toEqual('someCity')
+    expect(deliveryAddress.addressRegion).toEqual('someRegion')
+    expect(deliveryAddress.postalCode).toEqual('somePostalCode')
+    expect(deliveryAddress.addressCountry).toEqual('someCountry')
 
     const mailingAddress = wrapper.vm.addresses.registeredOffice.mailingAddress
-    expect(mailingAddress['streetAddress']).toEqual('someStreet')
-    expect(mailingAddress['addressCity']).toEqual('someCity')
-    expect(mailingAddress['addressRegion']).toEqual('someRegion')
-    expect(mailingAddress['postalCode']).toEqual('somePostalCode')
-    expect(mailingAddress['addressCountry']).toEqual('someCountry')
+    expect(mailingAddress.streetAddress).toEqual('someStreet')
+    expect(mailingAddress.addressCity).toEqual('someCity')
+    expect(mailingAddress.addressRegion).toEqual('someRegion')
+    expect(mailingAddress.postalCode).toEqual('somePostalCode')
+    expect(mailingAddress.addressCountry).toEqual('someCountry')
   })
 })
 
@@ -288,32 +288,32 @@ describe('Office Addresses component - BCOMP', () => {
 
   it('loads the current office addresses properly from a draft filing', () => {
     const deliveryAddress = wrapper.vm.addresses.registeredOffice.deliveryAddress
-    expect(deliveryAddress['streetAddress']).toEqual('someStreet')
-    expect(deliveryAddress['addressCity']).toEqual('someCity')
-    expect(deliveryAddress['addressRegion']).toEqual('someRegion')
-    expect(deliveryAddress['postalCode']).toEqual('somePostalCode')
-    expect(deliveryAddress['addressCountry']).toEqual('someCountry')
+    expect(deliveryAddress.streetAddress).toEqual('someStreet')
+    expect(deliveryAddress.addressCity).toEqual('someCity')
+    expect(deliveryAddress.addressRegion).toEqual('someRegion')
+    expect(deliveryAddress.postalCode).toEqual('somePostalCode')
+    expect(deliveryAddress.addressCountry).toEqual('someCountry')
 
     const mailingAddress = wrapper.vm.addresses.registeredOffice.mailingAddress
-    expect(mailingAddress['streetAddress']).toEqual('someStreet')
-    expect(mailingAddress['addressCity']).toEqual('someCity')
-    expect(mailingAddress['addressRegion']).toEqual('someRegion')
-    expect(mailingAddress['postalCode']).toEqual('somePostalCode')
-    expect(mailingAddress['addressCountry']).toEqual('someCountry')
+    expect(mailingAddress.streetAddress).toEqual('someStreet')
+    expect(mailingAddress.addressCity).toEqual('someCity')
+    expect(mailingAddress.addressRegion).toEqual('someRegion')
+    expect(mailingAddress.postalCode).toEqual('somePostalCode')
+    expect(mailingAddress.addressCountry).toEqual('someCountry')
 
     const recDeliveryAddress = wrapper.vm.addresses.recordsOffice.deliveryAddress
-    expect(recDeliveryAddress['streetAddress']).toEqual('someRecStreet')
-    expect(recDeliveryAddress['addressCity']).toEqual('someRecCity')
-    expect(recDeliveryAddress['addressRegion']).toEqual('someRecRegion')
-    expect(recDeliveryAddress['postalCode']).toEqual('someRecPostalCode')
-    expect(recDeliveryAddress['addressCountry']).toEqual('someRecCountry')
+    expect(recDeliveryAddress.streetAddress).toEqual('someRecStreet')
+    expect(recDeliveryAddress.addressCity).toEqual('someRecCity')
+    expect(recDeliveryAddress.addressRegion).toEqual('someRecRegion')
+    expect(recDeliveryAddress.postalCode).toEqual('someRecPostalCode')
+    expect(recDeliveryAddress.addressCountry).toEqual('someRecCountry')
 
     const recMailingAddress = wrapper.vm.addresses.recordsOffice.mailingAddress
-    expect(recMailingAddress['streetAddress']).toEqual('someRecStreet')
-    expect(recMailingAddress['addressCity']).toEqual('someRecCity')
-    expect(recMailingAddress['addressRegion']).toEqual('someRecRegion')
-    expect(recMailingAddress['postalCode']).toEqual('someRecPostalCode')
-    expect(recMailingAddress['addressCountry']).toEqual('someRecCountry')
+    expect(recMailingAddress.streetAddress).toEqual('someRecStreet')
+    expect(recMailingAddress.addressCity).toEqual('someRecCity')
+    expect(recMailingAddress.addressRegion).toEqual('someRecRegion')
+    expect(recMailingAddress.postalCode).toEqual('someRecPostalCode')
+    expect(recMailingAddress.addressCountry).toEqual('someRecCountry')
   })
 })
 
@@ -375,32 +375,32 @@ describe('same as checkboxes reset addresses to default when unchecked - BCOMP',
     expect(wrapper.vm.$el.querySelector('#address-records-delivery')).toBeNull()
 
     const deliveryAddress = wrapper.vm.$data.deliveryAddress
-    expect(deliveryAddress['streetAddress']).toEqual('')
-    expect(deliveryAddress['addressCity']).toEqual('')
-    expect(deliveryAddress['addressRegion']).toEqual('BC')
-    expect(deliveryAddress['postalCode']).toEqual('')
-    expect(deliveryAddress['addressCountry']).toEqual('CA')
+    expect(deliveryAddress.streetAddress).toEqual('')
+    expect(deliveryAddress.addressCity).toEqual('')
+    expect(deliveryAddress.addressRegion).toEqual('BC')
+    expect(deliveryAddress.postalCode).toEqual('')
+    expect(deliveryAddress.addressCountry).toEqual('CA')
 
     const mailingAddress = wrapper.vm.$data.mailingAddress
-    expect(mailingAddress['streetAddress']).toEqual('someStreet')
-    expect(mailingAddress['addressCity']).toEqual('someCity')
-    expect(mailingAddress['addressRegion']).toEqual('someRegion')
-    expect(mailingAddress['postalCode']).toEqual('somePostalCode')
-    expect(mailingAddress['addressCountry']).toEqual('someCountry')
+    expect(mailingAddress.streetAddress).toEqual('someStreet')
+    expect(mailingAddress.addressCity).toEqual('someCity')
+    expect(mailingAddress.addressRegion).toEqual('someRegion')
+    expect(mailingAddress.postalCode).toEqual('somePostalCode')
+    expect(mailingAddress.addressCountry).toEqual('someCountry')
 
     const recMailingAddress = wrapper.vm.$data.recMailingAddress
-    expect(recMailingAddress['streetAddress']).toEqual('someStreet')
-    expect(recMailingAddress['addressCity']).toEqual('someCity')
-    expect(recMailingAddress['addressRegion']).toEqual('someRegion')
-    expect(recMailingAddress['postalCode']).toEqual('somePostalCode')
-    expect(recMailingAddress['addressCountry']).toEqual('someCountry')
+    expect(recMailingAddress.streetAddress).toEqual('someStreet')
+    expect(recMailingAddress.addressCity).toEqual('someCity')
+    expect(recMailingAddress.addressRegion).toEqual('someRegion')
+    expect(recMailingAddress.postalCode).toEqual('somePostalCode')
+    expect(recMailingAddress.addressCountry).toEqual('someCountry')
 
     const recDeliveryAddress = wrapper.vm.$data.recDeliveryAddress
-    expect(recDeliveryAddress['streetAddress']).toEqual('')
-    expect(recDeliveryAddress['addressCity']).toEqual('')
-    expect(recDeliveryAddress['addressRegion']).toEqual('BC')
-    expect(recDeliveryAddress['postalCode']).toEqual('')
-    expect(recDeliveryAddress['addressCountry']).toEqual('CA')
+    expect(recDeliveryAddress.streetAddress).toEqual('')
+    expect(recDeliveryAddress.addressCity).toEqual('')
+    expect(recDeliveryAddress.addressRegion).toEqual('BC')
+    expect(recDeliveryAddress.postalCode).toEqual('')
+    expect(recDeliveryAddress.addressCountry).toEqual('CA')
   })
 
   it('should reset records delivery and mailing addresses', async () => {
@@ -419,32 +419,32 @@ describe('same as checkboxes reset addresses to default when unchecked - BCOMP',
     expect(wrapper.vm.$el.querySelector('#address-records-delivery')).toBeNull()
 
     const deliveryAddress = wrapper.vm.$data.deliveryAddress
-    expect(deliveryAddress['streetAddress']).toEqual('someStreet')
-    expect(deliveryAddress['addressCity']).toEqual('someCity')
-    expect(deliveryAddress['addressRegion']).toEqual('someRegion')
-    expect(deliveryAddress['postalCode']).toEqual('somePostalCode')
-    expect(deliveryAddress['addressCountry']).toEqual('someCountry')
+    expect(deliveryAddress.streetAddress).toEqual('someStreet')
+    expect(deliveryAddress.addressCity).toEqual('someCity')
+    expect(deliveryAddress.addressRegion).toEqual('someRegion')
+    expect(deliveryAddress.postalCode).toEqual('somePostalCode')
+    expect(deliveryAddress.addressCountry).toEqual('someCountry')
 
     const mailingAddress = wrapper.vm.$data.mailingAddress
-    expect(mailingAddress['streetAddress']).toEqual('someStreet')
-    expect(mailingAddress['addressCity']).toEqual('someCity')
-    expect(mailingAddress['addressRegion']).toEqual('someRegion')
-    expect(mailingAddress['postalCode']).toEqual('somePostalCode')
-    expect(mailingAddress['addressCountry']).toEqual('someCountry')
+    expect(mailingAddress.streetAddress).toEqual('someStreet')
+    expect(mailingAddress.addressCity).toEqual('someCity')
+    expect(mailingAddress.addressRegion).toEqual('someRegion')
+    expect(mailingAddress.postalCode).toEqual('somePostalCode')
+    expect(mailingAddress.addressCountry).toEqual('someCountry')
 
     const recMailingAddress = wrapper.vm.$data.recMailingAddress
-    expect(recMailingAddress['streetAddress']).toEqual('')
-    expect(recMailingAddress['addressCity']).toEqual('')
-    expect(recMailingAddress['addressRegion']).toEqual('BC')
-    expect(recMailingAddress['postalCode']).toEqual('')
-    expect(recMailingAddress['addressCountry']).toEqual('CA')
+    expect(recMailingAddress.streetAddress).toEqual('')
+    expect(recMailingAddress.addressCity).toEqual('')
+    expect(recMailingAddress.addressRegion).toEqual('BC')
+    expect(recMailingAddress.postalCode).toEqual('')
+    expect(recMailingAddress.addressCountry).toEqual('CA')
 
     const recDeliveryAddress = wrapper.vm.$data.recDeliveryAddress
-    expect(recDeliveryAddress['streetAddress']).toEqual('')
-    expect(recDeliveryAddress['addressCity']).toEqual('')
-    expect(recDeliveryAddress['addressRegion']).toEqual('BC')
-    expect(recDeliveryAddress['postalCode']).toEqual('')
-    expect(recDeliveryAddress['addressCountry']).toEqual('CA')
+    expect(recDeliveryAddress.streetAddress).toEqual('')
+    expect(recDeliveryAddress.addressCity).toEqual('')
+    expect(recDeliveryAddress.addressRegion).toEqual('BC')
+    expect(recDeliveryAddress.postalCode).toEqual('')
+    expect(recDeliveryAddress.addressCountry).toEqual('CA')
   })
 })
 

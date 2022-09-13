@@ -120,7 +120,7 @@ export default class SummaryDefineCompany extends Mixins(EnumMixin) {
   @Getter getEntityType!: CorpTypeCd
 
   /** The entity description  */
-  private get entityDescription (): string {
+  get entityDescription (): string {
     return `${this.getCorpTypeDescription(this.getEntityType)}`
   }
 

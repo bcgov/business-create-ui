@@ -120,28 +120,30 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
   @Prop({ default: null }) readonly effectiveDateTime!: EffectiveDateTimeIF
 
   // Local properties
-  private isImmediate: boolean = false
-  private isFutureEffective: boolean = false
+  protected isImmediate = false
+  protected isFutureEffective = false
 
   // Date properties
-  private selectDate: string = ''
-  private dateText: string = ''
-  private datePicker: string = ''
+  protected selectDate = ''
+  protected dateText = ''
+  protected datePicker = ''
 
   // Time properties
-  private selectHour: string[] = []
-  private selectMinute: string[] = []
-  private selectPeriod: string = 'AM'
+  protected selectHour = [] as string[]
+  protected selectMinute = [] as string[]
+  protected selectPeriod = 'AM'
 
   // Date Time Selectors
-  private hours: Array<string> = [...Array(12).keys()]
+  readonly hours: Array<string> = [...Array(12).keys()]
     .map(num => (++num).toLocaleString('en-US'))
-  private minutes: Array<string> = [...Array(60).keys()]
+
+  readonly minutes: Array<string> = [...Array(60).keys()]
     .map(num => num.toLocaleString('en-US', { minimumIntegerDigits: 2 }))
-  private timePeriod: Array<string> = ['AM', 'PM']
+
+  readonly timePeriod: Array<string> = ['AM', 'PM']
 
   /** The array of validations rules for the effective date Date field. */
-  private get dateRules (): Array<Function> {
+  get dateRules (): Array<Function> {
     const expectedDateFormat = /^(19|20)\d\d[-.](0[1-9]|1[012])[-.](0[1-9]|[12][0-9]|3[01])$/
 
     return [
@@ -152,21 +154,21 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
   }
 
   /** The array of validations rules for effective date hours field. */
-  private get hourRules (): Array<Function> {
+  get hourRules (): Array<Function> {
     return [
       v => this.dateText !== '' && (/^([1-9]|1[012])$/.test(v) || '')
     ]
   }
 
   /** The array of validations rules for the effective date minutes field. */
-  private get minuteRules (): Array<Function> {
+  get minuteRules (): Array<Function> {
     return [
       v => this.dateText !== '' && (/^([0-5]?[0-9])$/.test(v) || '')
     ]
   }
 
   /** Lifecycle Hook to run when component mounts */
-  mounted (): void {
+  protected mounted (): void {
     this.deconstructDateTime()
   }
 
@@ -241,33 +243,33 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
   }
 
   /** The minimum date that can be entered (today). */
-  private get minDate (): string {
+  get minDate (): string {
     return this.dateToYyyyMmDd(this.getCurrentJsDate)
   }
 
   /** The maximum date that can be entered (today + 10 days). */
-  private get maxDate (): string {
+  get maxDate (): string {
     const date = new Date(this.getCurrentJsDate) // make a copy
     date.setDate(date.getDate() + 10)
     return this.dateToYyyyMmDd(date)
   }
 
   /** The minimum time that can be entered (now + 3 minutes). */
-  private minTime (): string {
+  protected minTime (): string {
     const date = this.getCurrentJsDate
     return new Date(date.getTime() + 180000)
       .toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })
   }
 
   /** The maximum time that can be entered (now + 10 days at current time). */
-  private maxTime (): string {
+  protected maxTime (): string {
     const date = new Date(this.getCurrentJsDate) // make a copy
     date.setDate(date.getDate() + 10)
     return new Date(date.getTime())
       .toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })
   }
 
-  private get isUnderTime (): boolean {
+  get isUnderTime (): boolean {
     const effectiveDate = this.effectiveDateTime.effectiveDate
     if (effectiveDate) {
       // Calculate time diff (in minutes)

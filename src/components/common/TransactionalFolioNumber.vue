@@ -50,7 +50,7 @@ export default class TransactionalFolioNumber extends Mixins(CommonMixin) {
   protected localFolioNumber = ''
 
   /** Called when component is mounted. */
-  mounted (): void {
+  protected mounted (): void {
     // restore transactional FN if it exists, otherwise use account FN
     this.localFolioNumber = this.transactionalFolioNumber || this.accountFolioNumber
   }

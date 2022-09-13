@@ -75,7 +75,8 @@
     <div class="py-8">
       <v-btn outlined color="primary"  id="btn-start-add-cp"
       :disabled="showShareStructureForm"
-      @click="initNewShareClass()" >
+      @click="initNewShareClass()"
+    >
         <v-icon>mdi-plus</v-icon>
         <span>Add Share Class</span>
       </v-btn>
@@ -152,23 +153,27 @@ export default class IncorporationShareStructure extends Mixins(CommonMixin) {
   readonly helpLink = 'https://www2.gov.bc.ca/gov/content/employment-business/business/' +
     'managing-a-business/permits-licences/businesses-incorporated-companies'
 
-  private showShareStructureForm: boolean = false
-  private currentShareStructure: ShareClassIF = null
+  protected showShareStructureForm = false
+  protected currentShareStructure = null as ShareClassIF
 
-  private activeIndex: number = -1
-  private parentIndex: number = -1
-  private shareId: string = ''
-  private helpToggle: boolean = false
+  protected activeIndex = -1
+  protected parentIndex = -1
+  protected shareId = ''
+  protected helpToggle = false
 
-  private get shareClasses (): ShareClassIF[] {
+  get shareClasses (): ShareClassIF[] {
     return this.getCreateShareStructureStep.shareClasses
   }
 
-  mounted (): void {
+  protected mounted (): void {
     this.setCreateShareStructureStepValidity(this.shareClasses.length > 0)
   }
 
-  private initNewShareClass (): void {
+  //
+  // Event Handlers
+  //
+
+  protected initNewShareClass (): void {
     this.currentShareStructure = { ...NewShareClass }
     this.currentShareStructure.priority =
     this.shareClasses.length === 0 ? 1 : this.shareClasses[this.shareClasses.length - 1].priority + 1
@@ -178,19 +183,18 @@ export default class IncorporationShareStructure extends Mixins(CommonMixin) {
     this.showShareStructureForm = true
   }
 
-  // Event Handlers
-  private initShareClassForEdit (index: number): void {
+  protected initShareClassForEdit (index: number): void {
     this.currentShareStructure = { ...this.shareClasses[index] }
     this.activeIndex = index
     this.parentIndex = -1
     this.showShareStructureForm = true
   }
 
-  private initNewShareSeries (shareClassIndex: number): void {
+  protected initNewShareSeries (shareClassIndex: number): void {
     this.activeIndex = -1
     this.parentIndex = shareClassIndex
 
-    let newList: ShareClassIF[] = [...this.shareClasses]
+    const newList: ShareClassIF[] = [...this.shareClasses]
     const parentShareClass = newList[shareClassIndex]
     const shareSeries = parentShareClass.series
     this.currentShareStructure = { ...NewShareSeries }
@@ -203,8 +207,8 @@ export default class IncorporationShareStructure extends Mixins(CommonMixin) {
     this.showShareStructureForm = true
   }
 
-  private addEditShareClass (shareStructure: ShareClassIF): void {
-    let newList: ShareClassIF[] = [...this.shareClasses]
+  protected addEditShareClass (shareStructure: ShareClassIF): void {
+    const newList: ShareClassIF[] = [...this.shareClasses]
     // New Share Structue.
     if (this.activeIndex === -1) {
       newList.push(shareStructure)
@@ -217,30 +221,30 @@ export default class IncorporationShareStructure extends Mixins(CommonMixin) {
     this.resetData()
   }
 
-  private editSeries (index: number, seriesIndex: number): void {
+  protected editSeries (index: number, seriesIndex: number): void {
     this.activeIndex = seriesIndex
     this.parentIndex = index
-    let newList: ShareClassIF[] = [...this.shareClasses]
+    const newList: ShareClassIF[] = [...this.shareClasses]
     this.currentShareStructure = { ...newList[this.parentIndex].series[this.activeIndex] }
     this.showShareStructureForm = true
   }
 
-  private removeSeries (index: number, seriesIndex: number): void {
+  protected removeSeries (index: number, seriesIndex: number): void {
     this.activeIndex = seriesIndex
     this.parentIndex = index
-    let newList: ShareClassIF[] = [...this.shareClasses]
+    const newList: ShareClassIF[] = [...this.shareClasses]
     const parentShareClass = newList[this.parentIndex]
-    let series = [...parentShareClass.series]
+    const series = [...parentShareClass.series]
     series.splice(this.activeIndex, 1)
     parentShareClass.series = series
     this.setShareClasses(newList)
     this.resetData()
   }
 
-  private addEditShareSeries (shareSeries: ShareClassIF): void {
-    let newList: ShareClassIF[] = [...this.shareClasses]
+  protected addEditShareSeries (shareSeries: ShareClassIF): void {
+    const newList: ShareClassIF[] = [...this.shareClasses]
     const parentShareClass = newList[this.parentIndex]
-    let series = [...parentShareClass.series]
+    const series = [...parentShareClass.series]
     // New Share Structue.
     if (this.activeIndex === -1) {
       series.push(shareSeries)
@@ -253,15 +257,15 @@ export default class IncorporationShareStructure extends Mixins(CommonMixin) {
     this.resetData()
   }
 
-  private removeShareClass (index: number): void {
-    let newList: ShareClassIF[] = [...this.shareClasses]
+  protected removeShareClass (index: number): void {
+    const newList: ShareClassIF[] = [...this.shareClasses]
     newList.splice(index, 1)
     this.setShareClasses(newList)
     this.setCreateShareStructureStepValidity(this.shareClasses.length > 0)
     this.resetData()
   }
 
-  private resetData (): void {
+  protected resetData (): void {
     this.currentShareStructure = null
     this.activeIndex = -1
     this.showShareStructureForm = false

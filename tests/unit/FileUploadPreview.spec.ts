@@ -1,9 +1,9 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify'
 import { mount, Wrapper } from '@vue/test-utils'
-import flushPromises from 'flush-promises'
 import FileUploadPreview from '@/components/common/FileUploadPreview.vue'
 import { PdfPageSize } from '@/enums/pdfPageSize'
+import { waitForUpdate } from '../wait-for-update'
 
 Vue.use(Vuetify)
 const vuetify = new Vuetify({})
@@ -26,24 +26,13 @@ console.log = jest.fn()
 function myArrayBuffer () {
   // this: File or Blob
   return new Promise((resolve) => {
-    let fr = new FileReader()
+    const fr = new FileReader()
     fr.onload = () => {
       resolve(fr.result)
     }
     // @ts-ignore
     fr.readAsArrayBuffer(this)
   })
-}
-
-/**
- * Utility method to get around with the timing issues
- */
-async function waitForUpdate (numTimesToFlushPromises) {
-  await Vue.nextTick()
-  for (let i = 0; i < numTimesToFlushPromises; i++) {
-    await flushPromises()
-  }
-  await Vue.nextTick()
 }
 
 describe('FileUploadPreview component', () => {
@@ -162,8 +151,7 @@ describe('FileUploadPreview component', () => {
     inputValue = oneMBFile.name
     inputFilesGet.mockReturnValue([oneMBFile])
     wrapper.setProps({ customErrorMessage: 'test custom error message' })
-    await flushPromises()
-    await Vue.nextTick()
+    await waitForUpdate(1)
 
     const messages = wrapper.findAll('.error--text .v-messages__message')
     expect(messages.length).toBe(1)

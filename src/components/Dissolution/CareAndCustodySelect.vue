@@ -46,7 +46,7 @@ export default class CareAndCustodySelect extends Vue {
 
   readonly RoleTypes = RoleTypes
 
-  protected liquidatorOrCustodian: RoleTypes = null
+  protected liquidatorOrCustodian = null as RoleTypes
 
   protected changeCareAndCustodyType (): void {
     // Todo: Apply option to store when required
