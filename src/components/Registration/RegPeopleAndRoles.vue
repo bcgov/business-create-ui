@@ -223,8 +223,8 @@ export default class RegPeopleAndRoles extends Mixins(PeopleRolesMixin) {
     // assign party type (org or person)
     this.currentOrgPerson.officer.partyType = partyType
 
-    // pre-populate Completing Party's name, email address and mailing address
-    if (roleType === RoleTypes.COMPLETING_PARTY && partyType === PartyTypes.PERSON) {
+    // pre-populate Completing Party's name, email address and mailing address only is the logged in user is not staff
+    if (roleType === RoleTypes.COMPLETING_PARTY && partyType === PartyTypes.PERSON && !this.isRoleStaff) {
       this.currentOrgPerson.officer.firstName = this.getUserFirstName || ''
       this.currentOrgPerson.officer.lastName = this.getUserLastName || ''
       this.currentOrgPerson.officer.email = this.getTombstone.userEmail
