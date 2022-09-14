@@ -15,10 +15,6 @@ const vuetify = new Vuetify({})
 const store = getVuexStore()
 document.body.setAttribute('data-app', 'true')
 
-function resetStore (): void {
-  store.state.stateModel.nameTranslations = []
-}
-
 // Local references
 const nameTranslationsUi = '#name-translations-list'
 const nameTranslationsList = [

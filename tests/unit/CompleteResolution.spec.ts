@@ -1,4 +1,3 @@
-import Vue from 'vue'
 import { wrapperFactory } from '../jest-wrapper-factory'
 import CompleteResolution from '@/components/Dissolution/CompleteResolution.vue'
 import { DissolutionResources } from '@/resources'

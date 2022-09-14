@@ -52,6 +52,7 @@ export default class LegalServices {
       .then(response => {
         // look for dissolution task
         const filing = response?.data?.tasks
+          // eslint-disable-next-line no-prototype-builtins
           ?.find(x => x.task.filing.hasOwnProperty(FilingTypes.VOLUNTARY_DISSOLUTION))?.task.filing
         const filingName = filing?.header?.name
         const filingId = +filing?.header?.filingId || 0

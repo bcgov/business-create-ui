@@ -1,8 +1,3 @@
-export interface ShareStructureIF {
-  valid: boolean
-  shareClasses: ShareClassIF[]
-}
-
 export interface ShareClassIF {
   id: string
   type?: string // 'Class' or 'Series'
@@ -15,6 +10,11 @@ export interface ShareClassIF {
   currency?: string
   hasRightsOrRestrictions: boolean
   series?: ShareClassIF[]
+}
+
+export interface ShareStructureIF {
+  valid: boolean
+  shareClasses: ShareClassIF[]
 }
 
 export const NewShareClass: ShareClassIF = {

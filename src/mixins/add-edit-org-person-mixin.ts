@@ -502,13 +502,17 @@ export default class AddEditOrgPersonMixin extends Vue {
 
   // Event emitters
   @Emit('addEditPerson')
-  private emitPersonInfo (personInfo: OrgPersonIF): void {}
+  private emitPersonInfo (personInfo: OrgPersonIF): OrgPersonIF {
+    return personInfo
+  }
 
   @Emit('resetEvent')
   private emitResetEvent (): void {}
 
   @Emit('removePerson')
-  protected emitRemovePerson (activeIndex: number): void {}
+  protected emitRemovePerson (activeIndex: number): number {
+    return activeIndex
+  }
 
   @Emit('removeCompletingPartyRole')
   private emitReassignCompletingPartyEvent (): void {}

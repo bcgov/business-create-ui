@@ -1,9 +1,6 @@
-import { shallowWrapperFactory, wrapperFactory } from '../jest-wrapper-factory'
-import { getVuexStore } from '@/store'
+import { shallowWrapperFactory } from '../jest-wrapper-factory'
 import { RegistrationReviewConfirm } from '@/views'
 import { RegistrationResources } from '@/resources'
-
-const store = getVuexStore()
 
 // Test Case Data
 const reviewConfirmTestCases = [

@@ -1,5 +1,4 @@
 import Vue from 'vue'
-import flushPromises from 'flush-promises'
 import { Wrapper } from '@vue/test-utils'
 import { getLastEvent } from '../get-last-event'
 import { wrapperFactory } from '../jest-wrapper-factory'

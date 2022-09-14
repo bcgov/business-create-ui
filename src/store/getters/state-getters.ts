@@ -292,6 +292,7 @@ export const getBusinessContact = (state: StateIF): ContactPointIF => {
 }
 
 /** The Memorandum object. */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const getMemorandum = (state: StateIF): any => {
   return {} // FUTURE: implement this
 }
