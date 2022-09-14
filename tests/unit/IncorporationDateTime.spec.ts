@@ -6,7 +6,7 @@ import { getLastEvent } from '../get-last-event'
 import { getVuexStore } from '@/store'
 
 // Utils
-import { createLocalVue, mount, Wrapper } from '@vue/test-utils'
+import { createLocalVue, mount } from '@vue/test-utils'
 
 // Components
 import IncorporationDateTime from '@/components/Incorporation/IncorporationDateTime.vue'

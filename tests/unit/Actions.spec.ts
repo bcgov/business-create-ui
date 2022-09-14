@@ -102,7 +102,6 @@ describe('Actions component', () => {
 describe('Emits error event if NR validation fails in file and pay', () => {
   let wrapper: any
   const { assign } = window.location
-  const effectiveDate = new Date(new Date().setDate(new Date().getDate() + 5))
 
   beforeEach(async () => {
     // mock the window.location.assign function

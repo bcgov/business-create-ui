@@ -250,7 +250,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
 
     // conditionally restore the entity-specific sections
     switch (this.getEntityType) {
-      case CorpTypeCd.COOP:
+      case CorpTypeCd.COOP: {
         // restore Cooperative type
         this.setCooperativeType(draftFiling.incorporationApplication.cooperative?.cooperativeAssociationType)
 
@@ -295,6 +295,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
         this.setMemorandum(createMemorandum)
 
         break
+      }
       case CorpTypeCd.BENEFIT_COMPANY:
       case CorpTypeCd.BC_CCC:
       case CorpTypeCd.BC_COMPANY:

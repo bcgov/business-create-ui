@@ -1,4 +1,10 @@
 /** Interfaces for Fees from Payment API. */
+
+export interface TaxesIF {
+  pst: number
+  gst: number
+}
+
 export interface FeesIF {
   filingFees: number
   filingType: string
@@ -9,11 +15,6 @@ export interface FeesIF {
   serviceFees?: number
   tax?: TaxesIF
   total?: number
-}
-
-export interface TaxesIF {
-  pst: number
-  gst: number
 }
 
 // NB: use cloneDeep when assigning EmptyOrgPerson
