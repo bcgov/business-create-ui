@@ -5,8 +5,10 @@ module.exports = {
   },
   extends: [
     'plugin:vue/essential',
+    // 'plugin:vue/recommended',
     '@vue/standard',
     '@vue/typescript'
+    // '@vue/typescript/recommended'
   ],
   rules: {
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
@@ -15,7 +17,8 @@ module.exports = {
   },
   parserOptions: {
     parser: '@typescript-eslint/parser',
-    plugins: ['@typescript-eslint']
+    plugins: ['@typescript-eslint'],
+    ecmaVersion: 2020
   },
   overrides: [
     {

@@ -9,6 +9,25 @@ const aboutText1 = (appName && appVersion) ? `${appName} v${appVersion}` : ''
 const aboutText2 = (sbcName && sbcVersion) ? `${sbcName} v${sbcVersion}` : ''
 
 module.exports = {
+  chainWebpack: (config) => {
+    // alias vue to @vue/compat
+    config.resolve.alias.set('vue', '@vue/compat')
+    // enable compat mode via Vue compiler options
+    config.module
+      .rule('vue')
+      .use('vue-loader')
+      .tap((options) => {
+        return {
+          ...options,
+          compilerOptions: {
+            compatConfig: {
+              MODE: 2
+            }
+          }
+        }
+      })
+  },
+
   configureWebpack: {
     plugins: [
       new webpack.DefinePlugin({
@@ -26,10 +45,13 @@ module.exports = {
     ],
     devtool: 'source-map'
   },
+
   transpileDependencies: [
     'vuetify'
   ],
+
   publicPath: `/${process.env.VUE_APP_PATH}`,
+
   devServer: {
     proxy: {
       // this is needed to prevent a CORS error when running locally
