@@ -200,7 +200,7 @@ function createComponent (
   initialValue: any, // org-person
   activeIndex: number,
   existingCompletingParty: any,
-  addIncorporator: boolean = true
+  addIncorporator = true
 ): Wrapper<RegAddEditOrgPerson> {
   return mount(RegAddEditOrgPerson, {
     data () { return { enableRules: true } },
@@ -299,13 +299,13 @@ describe('Registration Add/Edit Org/Person component', () => {
     const emailInput = wrapper.find(`${emailAddressSelector} input`)
     // FUTURE: verify mailing address
     expect((firstNameInput.element as HTMLInputElement).value)
-      .toEqual(validCompletingParty['officer']['firstName'])
+      .toEqual(validCompletingParty.officer.firstName)
     expect((middleNameInput.element as HTMLInputElement).value)
-      .toEqual(validCompletingParty['officer']['middleName'])
+      .toEqual(validCompletingParty.officer.middleName)
     expect((lastNameInput.element as HTMLInputElement).value)
-      .toEqual(validCompletingParty['officer']['lastName'])
+      .toEqual(validCompletingParty.officer.lastName)
     expect((emailInput.element as HTMLInputElement).value)
-      .toEqual(validCompletingParty['officer']['email'])
+      .toEqual(validCompletingParty.officer.email)
 
     // verify buttons
     expect(wrapper.find(buttonDoneSelector).attributes('disabled')).toBeUndefined()
@@ -325,13 +325,13 @@ describe('Registration Add/Edit Org/Person component', () => {
     const emailInput = wrapper.find(`${emailAddressSelector} input`)
     // FUTURE: verify mailing address and delivery address
     expect((firstNameInput.element as HTMLInputElement).value)
-      .toEqual(validProprietorPerson['officer']['firstName'])
+      .toEqual(validProprietorPerson.officer.firstName)
     expect((middleNameInput.element as HTMLInputElement).value)
-      .toEqual(validProprietorPerson['officer']['middleName'])
+      .toEqual(validProprietorPerson.officer.middleName)
     expect((lastNameInput.element as HTMLInputElement).value)
-      .toEqual(validProprietorPerson['officer']['lastName'])
+      .toEqual(validProprietorPerson.officer.lastName)
     expect((emailInput.element as HTMLInputElement).value)
-      .toEqual(validProprietorPerson['officer']['email'])
+      .toEqual(validProprietorPerson.officer.email)
 
     // verify buttons
     expect(wrapper.find(buttonDoneSelector).attributes('disabled')).toBeUndefined()
@@ -351,13 +351,13 @@ describe('Registration Add/Edit Org/Person component', () => {
     const emailInput = wrapper.find(`${emailAddressSelector} input`)
     // FUTURE: verify mailing address and delivery address
     expect((firstNameInput.element as HTMLInputElement).value)
-      .toEqual(validPartnerPerson['officer']['firstName'])
+      .toEqual(validPartnerPerson.officer.firstName)
     expect((middleNameInput.element as HTMLInputElement).value)
-      .toEqual(validPartnerPerson['officer']['middleName'])
+      .toEqual(validPartnerPerson.officer.middleName)
     expect((lastNameInput.element as HTMLInputElement).value)
-      .toEqual(validPartnerPerson['officer']['lastName'])
+      .toEqual(validPartnerPerson.officer.lastName)
     expect((emailInput.element as HTMLInputElement).value)
-      .toEqual(validPartnerPerson['officer']['email'])
+      .toEqual(validPartnerPerson.officer.email)
 
     // verify buttons
     expect(wrapper.find(buttonDoneSelector).attributes('disabled')).toBeUndefined()
@@ -399,11 +399,11 @@ describe('Registration Add/Edit Org/Person component', () => {
     const emailInput = wrapper.find(`${emailAddressSelector} input`)
     // FUTURE: verify mailing address and delivery address
     expect((confirmCheckboxInput.element as HTMLInputElement).checked)
-      .toEqual(validProprietorOrg['confirmBusiness'])
+      .toEqual(validProprietorOrg.confirmBusiness)
     expect((orgNameInput.element as HTMLInputElement).value)
-      .toEqual(validProprietorOrg['officer']['organizationName'])
+      .toEqual(validProprietorOrg.officer.organizationName)
     expect((emailInput.element as HTMLInputElement).value)
-      .toEqual(validProprietorOrg['officer']['email'])
+      .toEqual(validProprietorOrg.officer.email)
 
     // verify buttons
     expect(wrapper.find(buttonDoneSelector).attributes('disabled')).toBeUndefined()
@@ -450,11 +450,11 @@ describe('Registration Add/Edit Org/Person component', () => {
     const emailInput = wrapper.find(`${emailAddressSelector} input`)
     // FUTURE: verify mailing address and delivery address
     expect((confirmCheckboxInput.element as HTMLInputElement).checked)
-      .toEqual(validPartnerOrg['confirmBusiness'])
+      .toEqual(validPartnerOrg.confirmBusiness)
     expect((orgNameInput.element as HTMLInputElement).value)
-      .toEqual(validPartnerOrg['officer']['organizationName'])
+      .toEqual(validPartnerOrg.officer.organizationName)
     expect((emailInput.element as HTMLInputElement).value)
-      .toEqual(validPartnerOrg['officer']['email'])
+      .toEqual(validPartnerOrg.officer.email)
 
     // verify buttons
     expect(wrapper.find(buttonDoneSelector).attributes('disabled')).toBeUndefined()

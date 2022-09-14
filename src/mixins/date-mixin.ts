@@ -43,16 +43,16 @@ export default class DateMixin extends Mixins(CommonMixin) {
    * @example "2021, 0, 1, 0, 0" -> "2021-01-01T08:00:00.000Z"
    * @example "2021, 6, 1, 0, 0" -> "2021-07-01T07:00:00.000Z"
    */
-  createUtcDate (year: number, month: number, day: number, hours: number = 0, minutes: number = 0): Date {
+  createUtcDate (year: number, month: number, day: number, hours = 0, minutes = 0, ms = 0): Date {
     /* We essentially add the difference in offset of UTC and Vancouver timezone
        to the UTC date created from parameters.
        SO: https://stackoverflow.com/questions/15141762/
     */
 
-    let date = new Date(Date.UTC(year, month, day, hours, minutes))
-    let utcDate = new Date(date.toLocaleString('en-US', { timeZone: 'UTC' }))
-    let tzDate = new Date(date.toLocaleString('en-US', { timeZone: 'America/vancouver' }))
-    let offset = utcDate.getTime() - tzDate.getTime()
+    const date = new Date(Date.UTC(year, month, day, hours, minutes, ms))
+    const utcDate = new Date(date.toLocaleString('en-US', { timeZone: 'UTC' }))
+    const tzDate = new Date(date.toLocaleString('en-US', { timeZone: 'America/vancouver' }))
+    const offset = utcDate.getTime() - tzDate.getTime()
     date.setTime(date.getTime() + offset)
 
     return date
@@ -95,7 +95,7 @@ export default class DateMixin extends Mixins(CommonMixin) {
 
     // convert mm/dd/yyyy to yyyy-mm-dd
     // and make sure month and day are 2 digits (eg, 03)
-    const [ mm, dd, yyyy ] = dateStr.split('/')
+    const [mm, dd, yyyy] = dateStr.split('/')
     return `${yyyy}-${mm.padStart(2, '0')}-${dd.padStart(2, '0')}`
   }
 
@@ -176,7 +176,7 @@ export default class DateMixin extends Mixins(CommonMixin) {
   }
 
   /** Validate the DateTime is within the allowed range */
-  isValidDateTime (dateToValidate: Date, ignoreTime: boolean = false): boolean {
+  isValidDateTime (dateToValidate: Date, ignoreTime = false): boolean {
     if (dateToValidate) {
       const startDate = new Date()
 

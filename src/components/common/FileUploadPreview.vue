@@ -9,7 +9,7 @@
       class="file-upload-preview"
       :rules="fileUploadRules"
       show-size
-      @change="fileChange"
+      @change="fileChange($event)"
       color="primary"
       hint="File must be a PDF. Maximum 30MB."
       persistent-hint
@@ -39,10 +39,10 @@ export default class FileUploadPreview extends Mixins(DocumentMixin) {
     fileUploadInput: HTMLFormElement
   }
 
-  private fileUpload: File = null
-  private customErrorMessages: string[] = []
+  private fileUpload = null as File
+  private customErrorMessages = [] as string[]
 
-  private fileUploadRules = [
+  protected fileUploadRules = [
     (v) => {
       if (this.isRequired) {
         return !!v || this.inputFileLabel + ' is required'
@@ -59,7 +59,7 @@ export default class FileUploadPreview extends Mixins(DocumentMixin) {
     }
   ]
 
-  async mounted (): Promise<void> {
+  protected async mounted (): Promise<void> {
     if (this.inputFile) {
       this.fileUpload = this.inputFile
       await this.$nextTick()
@@ -67,7 +67,7 @@ export default class FileUploadPreview extends Mixins(DocumentMixin) {
     }
   }
 
-  private fileChange (file) {
+  protected fileChange (file) {
     this.emitFileSelected(file)
   }
 
@@ -78,7 +78,7 @@ export default class FileUploadPreview extends Mixins(DocumentMixin) {
   //  to do this for the time being.
   private async validateFileInput (file) {
     this.customErrorMessages = []
-    let isValid = this.$refs.fileUploadInput.validate()
+    const isValid = this.$refs.fileUploadInput.validate()
     // only perform page size validation when other validation has passed
     if (isValid && file) {
       if (typeof file.arrayBuffer === 'undefined') { return true }

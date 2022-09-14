@@ -8,7 +8,7 @@ import { navigate } from '@/utils'
 
 @Component({})
 export default class Signin extends Vue {
-  created (): void {
+  protected created (): void {
     // navigate to BC Registry login page then return to this app
     const loginUrl = sessionStorage.getItem('REGISTRY_HOME_URL') + 'login'
     const baseUrl = sessionStorage.getItem('BASE_URL').replace(/\/$/, '') // remove trailing /

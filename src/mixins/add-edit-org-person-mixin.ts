@@ -14,7 +14,8 @@ import {
   OrgPersonIF,
   PeopleAndRolesResourceIF,
   RegistrationStateIF,
-  RolesIF } from '@/interfaces'
+  RolesIF
+} from '@/interfaces'
 import { Rules } from '@/rules'
 import { PersonAddressSchema } from '@/schemas'
 import { LegalServices } from '@/services/'
@@ -52,22 +53,22 @@ export default class AddEditOrgPersonMixin extends Vue {
   @Action setIsAutoPopulatedBusinessNumber!: ActionBindingIF
 
   // Local properties
-  private orgPerson: OrgPersonIF = null
-  private addPersonOrgFormValid = true
-  private enableRules = false
+  protected orgPerson = null as OrgPersonIF
+  protected addPersonOrgFormValid = true
+  protected enableRules = false
 
-  private inProgressBusinessLookup: BusinessLookupIF = EmptyBusinessLookup
+  protected inProgressBusinessLookup = EmptyBusinessLookup
 
   // Address related properties
-  private inProgressMailingAddress = {} as AddressIF
-  private inProgressDeliveryAddress = {} as AddressIF
-  private inheritMailingAddress = true
-  private mailingAddressValid = false
-  private deliveryAddressValid = false
-  private reassignCompletingParty = false
+  protected inProgressMailingAddress = {} as AddressIF
+  protected inProgressDeliveryAddress = {} as AddressIF
+  protected inheritMailingAddress = true
+  protected mailingAddressValid = false
+  protected deliveryAddressValid = false
+  protected reassignCompletingParty = false
 
   /** Model value for roles checboxes. */
-  private selectedRoles: Array<RoleTypes> = []
+  protected selectedRoles = [] as Array<RoleTypes>
 
   // Person Address schema for template
   readonly PersonAddressSchema = PersonAddressSchema
@@ -79,52 +80,52 @@ export default class AddEditOrgPersonMixin extends Vue {
   readonly Rules = Rules
 
   /** The validation rules for the Roles. */
-  protected get roleRules (): Array<Function> {
-    return [ () => this.selectedRoles.length > 0 || 'A role is required' ]
+  get roleRules (): Array<Function> {
+    return [() => this.selectedRoles.length > 0 || 'A role is required']
   }
 
   /** Whether Completing Party is checked. */
-  protected get isCompletingParty (): boolean {
+  get isCompletingParty (): boolean {
     return this.selectedRoles.includes(RoleTypes.COMPLETING_PARTY)
   }
 
   /** Whether Incorporator is checked. */
-  protected get isIncorporator (): boolean {
+  get isIncorporator (): boolean {
     return this.selectedRoles.includes(RoleTypes.INCORPORATOR)
   }
 
   /** Whether Director is checked. */
-  protected get isDirector (): boolean {
+  get isDirector (): boolean {
     return this.selectedRoles.includes(RoleTypes.DIRECTOR)
   }
 
   /** Whether Proprietor is checked. */
-  protected get isProprietor (): boolean {
+  get isProprietor (): boolean {
     return this.selectedRoles.includes(RoleTypes.PROPRIETOR)
   }
 
   /** Whether Partner is checked. */
-  protected get isPartner (): boolean {
+  get isPartner (): boolean {
     return this.selectedRoles.includes(RoleTypes.PARTNER)
   }
 
   /** Whether current data object is a person. */
-  protected get isPerson (): boolean {
+  get isPerson (): boolean {
     return (this.orgPerson.officer?.partyType === PartyTypes.PERSON)
   }
 
   /** Whether current data object is an organization (corporation/firm). */
-  protected get isOrg (): boolean {
+  get isOrg (): boolean {
     return (this.orgPerson.officer?.partyType === PartyTypes.ORGANIZATION)
   }
 
   /** Whether current business object is selected using lookup. */
-  protected get hasBusinessSelectedFromLookup (): boolean {
+  get hasBusinessSelectedFromLookup (): boolean {
     return this.orgPerson?.isLookupBusiness && !!this.inProgressBusinessLookup.identifier
   }
 
   /** Whether the Completing Party role should be shown. */
-  protected get showCompletingPartyRole (): boolean {
+  get showCompletingPartyRole (): boolean {
     const isRoleCompletingParty = this.orgPerson.roles.some(role => role.roleType === RoleTypes.COMPLETING_PARTY)
     // either this is the completing party,
     // or this is staff adding/editing a person
@@ -132,41 +133,41 @@ export default class AddEditOrgPersonMixin extends Vue {
   }
 
   /** Whether the Incorporator role should be shown. */
-  protected get showIncorporatorRole (): boolean {
+  get showIncorporatorRole (): boolean {
     // show this role according to prop from parent parent component (ie, per resource file)
     return this.addIncorporator
   }
 
   /** Whether the Director role should be shown. */
-  protected get showDirectorRole (): boolean {
+  get showDirectorRole (): boolean {
     // only a person can be a director
     return this.isPerson
   }
 
   /** Whether the Proprietor role should be shown. */
-  protected get showProprietorRole (): boolean {
+  get showProprietorRole (): boolean {
     return this.orgPerson.roles.some(role => role.roleType === RoleTypes.PROPRIETOR)
   }
 
   /** Whether the Partner role should be shown. */
-  protected get showPartnerRole (): boolean {
+  get showPartnerRole (): boolean {
     return this.orgPerson.roles.some(role => role.roleType === RoleTypes.PARTNER)
   }
 
   /** Whether the Completing Party role should be disabled. */
-  protected get disableCompletingPartyRole (): boolean {
+  get disableCompletingPartyRole (): boolean {
     // only staff can edit Completing Party role
     return !this.isRoleStaff
   }
 
   /** Whether the Incorporator role should be disabled. */
-  protected get disableIncorporatorRole (): boolean {
+  get disableIncorporatorRole (): boolean {
     // disable this role if it's the only role displayed
     return (!this.showCompletingPartyRole && !this.showDirectorRole && this.showIncorporatorRole)
   }
 
   /** Whether the Director role should be disabled. */
-  protected get disableDirectorRole (): boolean {
+  get disableDirectorRole (): boolean {
     // disable this role if it's the only role displayed
     return (!this.showCompletingPartyRole && !this.showIncorporatorRole && this.showDirectorRole)
   }
@@ -175,7 +176,7 @@ export default class AddEditOrgPersonMixin extends Vue {
    * Whether to show the delivery address by default.
    * Applies to some entity types only.
    */
-  protected get showDeliveryAddressByDefault (): boolean {
+  get showDeliveryAddressByDefault (): boolean {
     return [
       CorpTypeCd.COOP,
       CorpTypeCd.BENEFIT_COMPANY,
@@ -188,7 +189,7 @@ export default class AddEditOrgPersonMixin extends Vue {
   }
 
   /** Called when component is created. */
-  created (): void {
+  protected created (): void {
     // mark this step as invalid while adding or editing
     this.setAddPeopleAndRoleStepValidity(false)
 
@@ -317,7 +318,8 @@ export default class AddEditOrgPersonMixin extends Vue {
     this.orgPerson.officer.organizationName = businessLookup.name
     this.orgPerson.officer.identifier = businessLookup.identifier
     // sanitize Business Number
-    this.orgPerson.officer.businessNumber = (businessLookup.bn?.length === 9) ? businessLookup.bn
+    this.orgPerson.officer.businessNumber = (businessLookup.bn?.length === 9)
+      ? businessLookup.bn
       : (businessLookup.bn?.length > 9) ? businessLookup.bn.slice(0, 9) : null
 
     this.inProgressBusinessLookup = { ...businessLookup }
@@ -412,7 +414,7 @@ export default class AddEditOrgPersonMixin extends Vue {
       'Business number',
       `The business number retrieved from our system for ${businessName} is different from ` +
       `what was entered in step 1. The business number ${businessNumber} will be used to ` +
-      `inform CRA for this registration.`,
+      'inform CRA for this registration.',
       {
         width: '40rem', persistent: true, yes: 'Ok', no: null, cancel: null
       }
@@ -428,7 +430,7 @@ export default class AddEditOrgPersonMixin extends Vue {
 
   /** Helper to set the current director data. */
   private setPerson (): OrgPersonIF {
-    let person: OrgPersonIF = { ...this.orgPerson }
+    const person: OrgPersonIF = { ...this.orgPerson }
     person.officer = { ...this.orgPerson.officer }
     if (isNaN(this.activeIndex)) {
       // assign a new (random but unique) ID
@@ -451,7 +453,7 @@ export default class AddEditOrgPersonMixin extends Vue {
   }
 
   private setPersonRoles (): RolesIF[] {
-    let roles: RolesIF[] = []
+    const roles: RolesIF[] = []
 
     if (this.isCompletingParty) {
       roles.push({ roleType: RoleTypes.COMPLETING_PARTY, appointmentDate: this.getCurrentDate })
@@ -506,7 +508,7 @@ export default class AddEditOrgPersonMixin extends Vue {
   private emitResetEvent (): void {}
 
   @Emit('removePerson')
-  private emitRemovePerson (activeIndex: number): void {}
+  protected emitRemovePerson (activeIndex: number): void {}
 
   @Emit('removeCompletingPartyRole')
   private emitReassignCompletingPartyEvent (): void {}

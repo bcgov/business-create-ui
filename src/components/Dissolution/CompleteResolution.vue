@@ -337,15 +337,15 @@ import { Rules, RuleHelpers } from '@/rules'
 export default class CompleteResolution extends Mixins(CommonMixin, DateMixin) {
   // Refs
   $refs!: {
-    resolutionDatePickerRef: DatePickerShared,
-    resolutionTextFormRef: FormIF,
-    resolutionTextRef: FormIF,
-    signatureDatePickerRef: DatePickerShared,
-    signingPersonFormRef: FormIF,
-    signingPersonGivenNameRef: FormIF,
-    signingPersonMiddleNameRef: FormIF,
-    signingPersonFamilyNameRef: FormIF,
-    confirmResolutionChkFormRef: FormIF,
+    resolutionDatePickerRef: DatePickerShared
+    resolutionTextFormRef: FormIF
+    resolutionTextRef: FormIF
+    signatureDatePickerRef: DatePickerShared
+    signingPersonFormRef: FormIF
+    signingPersonGivenNameRef: FormIF
+    signingPersonMiddleNameRef: FormIF
+    signingPersonFamilyNameRef: FormIF
+    confirmResolutionChkFormRef: FormIF
     confirmResolutionChkRef: FormIF
   }
 
@@ -538,7 +538,7 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin) {
   }
 
   private updateResolutionStepValidationDetail () {
-    let validationDetail: ValidationDetailIF = null
+    let validationDetail = null as ValidationDetailIF
     const resolutionIsValid = this.isResolutionValid()
     if (this.isTypeCoop) {
       validationDetail =
@@ -597,13 +597,13 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin) {
     await this.$nextTick()
     this.setResolution({
       ...this.getCreateResolutionStep,
-      resolutionConfirmed: resolutionConfirmed
+      resolutionConfirmed
     })
     this.updateResolutionStepValidationDetail()
   }
 
   /** Called when component is created. */
-  created (): void {
+  protected created (): void {
     const foundingDate = this.apiToDate(this.getBusinessFoundingDate)
     foundingDate.setHours(0, 0, 0, 0)
     this.foundingDate = foundingDate
@@ -614,7 +614,7 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin) {
     this.signatureDateText = this.getCreateResolutionStep.signingDate
   }
 
-  async mounted (): Promise<void> {
+  protected async mounted (): Promise<void> {
     // wait for components to load/stabilize then update validation state in store
     await this.$nextTick()
     this.updateResolutionStepValidationDetail()

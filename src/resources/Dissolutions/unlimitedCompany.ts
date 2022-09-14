@@ -16,7 +16,7 @@ export const UnlimitedDissolutionResource: DissolutionResourceIF = {
     sectionSubtitle: `Enter the name (person or corporation or firm), email address and mailing and delivery addresses
       of the Custodian of Records who will be responsible for the care and custody of the Company's records. Addresses
       must be located in BC.`,
-    custodianTitle: `Custodian of Records`,
+    custodianTitle: 'Custodian of Records',
     helpSection: {
       header: 'Help with Custodian of Records',
       helpText: [
@@ -32,9 +32,9 @@ export const UnlimitedDissolutionResource: DissolutionResourceIF = {
   affidavit: {
     affidavitActionText: 'deposit the affidavit in the Company\'s records book.',
     helpSection: {
-      header: `The affidavit must state:`,
+      header: 'The affidavit must state:',
       helpText: [
-        `The Company has no assets; and`,
+        'The Company has no assets; and',
         `The Company has no liabilities or has made provision for the payment of each of the Company's unpaid
           liabilities and has obtained the written consent to that provision for payment from each creditor.`
       ],
@@ -42,16 +42,16 @@ export const UnlimitedDissolutionResource: DissolutionResourceIF = {
         affixed.`
     },
     sampleSection: {
-      fileName: `corp-sample-affidavit.pdf`
+      fileName: 'corp-sample-affidavit.pdf'
     },
     confirmSection: {
       checkboxLabel: `I confirm the following items are included as required in the Business Corporations Act and have
       been deposited in the Company's records book:`,
       confirmText: [
-        `The affidavit references the Business Corporations Act, section 316.`,
+        'The affidavit references the Business Corporations Act, section 316.',
         `The director identified in the affidavit is a current director of the Company and is the director whose
         signature is on the affidavit.`,
-        `The affidavit is sealed by a Commissioner for Taking Affidavits/Oaths for British Columbia.`
+        'The affidavit is sealed by a Commissioner for Taking Affidavits/Oaths for British Columbia.'
       ]
     }
   },
@@ -88,7 +88,7 @@ export const UnlimitedDissolutionResource: DissolutionResourceIF = {
       ]
     },
     helpSection: {
-      header: `Help with Resolution`,
+      header: 'Help with Resolution',
       helpText: {
         section1: {
           items: [
@@ -143,7 +143,7 @@ export const UnlimitedDissolutionResource: DissolutionResourceIF = {
         },
         {
           type: ItemTypes.PLACEHOLDER,
-          value: `legal_name`
+          value: 'legal_name'
         },
         {
           type: ItemTypes.TEXT,

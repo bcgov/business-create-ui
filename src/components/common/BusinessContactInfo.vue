@@ -113,8 +113,8 @@ export default class BusinessContactInfo extends Mixins(CommonMixin) {
   // Rules for template
   readonly Rules = Rules
 
-  private contact: ContactPointIF = this.initialValue
-  private formValid: boolean = false
+  protected contact = this.initialValue
+  protected formValid = false
 
   // Rules
   private emailMustMatch (): string {

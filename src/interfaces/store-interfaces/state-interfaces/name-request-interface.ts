@@ -28,8 +28,8 @@ export interface NameRequestApplicantIF {
 export interface NameRequestIF {
   nrNumber: string
   entityType: CorpTypeCd
-  details: NameRequestDetailsIF | {}
-  applicant: NameRequestApplicantIF | {}
+  details: NameRequestDetailsIF
+  applicant: NameRequestApplicantIF
   filingId: number
 }
 
@@ -37,7 +37,7 @@ export interface NameRequestIF {
 export const EmptyNameRequest: NameRequestIF = {
   nrNumber: '',
   entityType: null,
-  details: {},
-  applicant: {},
+  details: {} as NameRequestDetailsIF,
+  applicant: {} as NameRequestApplicantIF,
   filingId: null
 }

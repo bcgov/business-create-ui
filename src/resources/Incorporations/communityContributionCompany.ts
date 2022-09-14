@@ -47,20 +47,20 @@ export const CommunityContributionCompanyResource: IncorporationResourceIF = {
   incorporationAgreement: {
     helpSection: [
       {
-        header: `How do I create an Incorporation Agreement and Articles?`,
+        header: 'How do I create an Incorporation Agreement and Articles?',
         helpText: [
-          `We recommend seeking legal assistance in creating your Incorporation Agreement and Articles.`
+          'We recommend seeking legal assistance in creating your Incorporation Agreement and Articles.'
         ]
       },
       {
-        header: `What are the community purposes?`,
+        header: 'What are the community purposes?',
         helpText: [
           `One or more of the primary purposes of a community contribution company must be community purposes. These
             purposes must be set out in the company's articles.`
         ]
       },
       {
-        header: `Retain the signed Incorporation Agreement and Articles`,
+        header: 'Retain the signed Incorporation Agreement and Articles',
         helpText: [
           `The company is required to keep signed copies of the Incorporation Agreement and Articles in the company's
             record book. For a complete list of records a company is required to keep please see section 42 of the
@@ -83,12 +83,12 @@ export const CommunityContributionCompanyResource: IncorporationResourceIF = {
         Articles and the Incorporation Agreement applicable to the company that is to be
         incorporated by the filing of this Incorporation Application and confirm that:`,
       certifyStatements: [
-        `An original signature has been placed on each of those signature lines,`,
+        'An original signature has been placed on each of those signature lines,',
 
         `I have no reason to believe that the signature placed on a signature line is not the
           signature of the person whose name is set out under that signature line, and`,
 
-        `I have relevant knowledge of the company and that I am authorized to make this filing.`
+        'I have relevant knowledge of the company and that I am authorized to make this filing.'
       ],
       certifyClause: `Note: It is an offence to make a false or misleading statement in respect
         of a material fact in a record submitted to the Corporate Registry for filing.

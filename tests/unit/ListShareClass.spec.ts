@@ -91,9 +91,7 @@ describe('List Shares and Series component', () => {
       localVue,
       vuetify,
       store,
-      propsData: {
-        shareClasses: shareClasses
-      }
+      propsData: { shareClasses }
     })
   })
 

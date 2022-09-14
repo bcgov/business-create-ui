@@ -44,7 +44,7 @@ export default class FetchErrorDialog extends Vue {
   @Prop({ default: '' }) readonly attach!: string
 
   // Pass click events to parent.
-  @Emit() private exit () {}
-  @Emit() private retry () {}
+  @Emit() protected exit () {}
+  @Emit() protected retry () {}
 }
 </script>

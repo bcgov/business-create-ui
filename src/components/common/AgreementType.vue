@@ -30,7 +30,7 @@
         :key="index"
         v-model="agreementType"
         :value="item.code"
-        @change="changeAgreementType"
+        @change="changeAgreementType()"
       >
         <template slot="label">
           <div v-html="item.description" class="agreement-option" />
@@ -44,7 +44,7 @@
         class="mt-0 pt-0"
         hide-details
         v-model="agreementType"
-        @change="changeAgreementType"
+        @change="changeAgreementType()"
       >
         <v-radio
           v-for="(item, index) in getIncorporationAgreementDocuments"
@@ -78,30 +78,30 @@ export default class AgreementType extends Vue {
 
   @Action setIncorporationAgreementStepData!: ActionBindingIF
 
-  private agreementType: string = null
+  protected agreementType = null as string
 
   // Enum for template
   readonly RouteNames = RouteNames
 
   /** The agreement type description. */
-  private get agreementTypeDescription (): string {
+  get agreementTypeDescription (): string {
     return this.getIncorporationAgreementDocuments
       .find(x => x.code === this.getIncorporationAgreementStep.agreementType)?.description
   }
 
   /** Called when component is created. */
-  created (): void {
+  protected created (): void {
     this.agreementType = this.getIncorporationAgreementStep.agreementType
   }
 
-  mounted (): void {
+  protected mounted (): void {
     this.setIncorporationAgreementStepData({
       valid: !!this.agreementType,
       agreementType: this.agreementType
     })
   }
 
-  private changeAgreementType (): void {
+  protected changeAgreementType (): void {
     this.setIncorporationAgreementStepData({
       valid: !!this.agreementType,
       agreementType: this.agreementType

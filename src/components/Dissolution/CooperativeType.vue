@@ -34,13 +34,14 @@ export default class CooperativeType extends Mixins(EnumMixin) {
     cooperativeTypeForm: FormIF
   }
 
+  // Prop
   @Prop({ default: false }) readonly showErrors!: boolean
 
   // Global getter
   @Getter getCooperativeType!: CoopTypes
 
   // Local properties
-  private readonly items: Array<any> = [
+  readonly items: Array<any> = [
     {
       value: CoopTypes.COMMUNITY_SERVICE_COOPERATIVE,
       text: this.coopTypeToDescription(CoopTypes.COMMUNITY_SERVICE_COOPERATIVE)
@@ -55,14 +56,14 @@ export default class CooperativeType extends Mixins(EnumMixin) {
     }
   ]
 
-  private cooperativeType: CoopTypes = null
+  protected cooperativeType = null as CoopTypes
 
   // Validation rules
   readonly cooperativeTypeRules: Array<Function> = [
     v => !!v || 'This field is required' // is not empty
   ]
 
-  mounted (): void {
+  protected mounted (): void {
     // Set local model when resuming draft
     if (this.getCooperativeType) this.cooperativeType = this.getCooperativeType
   }

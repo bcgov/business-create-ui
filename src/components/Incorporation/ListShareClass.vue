@@ -182,7 +182,7 @@ export default class ListShareClass extends Vue {
   // Enum for template
   readonly RouteNames = RouteNames
 
-  private headers: Array<any> = [
+  readonly headers: Array<any> = [
     {
       text: 'Name of Share Class or Series',
       align: 'start',
@@ -202,7 +202,7 @@ export default class ListShareClass extends Vue {
    * @param direction The direction of the move
    * @param seriesIndex The index of the series
    */
-  private moveIndex (indexFrom: number, direction: string, seriesIndex: number = -1): void {
+  protected moveIndex (indexFrom: number, direction: string, seriesIndex = -1): void {
     let indexTo
     if (seriesIndex >= 0) {
       indexTo = direction === 'up' ? seriesIndex - 1 : seriesIndex + 1
@@ -224,7 +224,7 @@ export default class ListShareClass extends Vue {
    * @param seriesIndex index of the series item
    * @returns A boolean indicating if a move is enabled
    */
-  private isMoveDisabled (index: number, direction: string, seriesIndex: number = -1): boolean {
+  protected isMoveDisabled (index: number, direction: string, seriesIndex = -1): boolean {
     const seriesCheck = seriesIndex >= 0
     const arrBoundry = seriesCheck ? this.shareClasses[index].series.length - 1 : this.shareClasses.length - 1
     switch (direction) {
@@ -250,35 +250,35 @@ export default class ListShareClass extends Vue {
    * @param index The active index which is subject to removal.
    */
   @Emit('removeClass')
-  private emitRemoveClass (index: number): void {}
+  protected emitRemoveClass (index: number): void {}
 
   /**
    * Emit an index and event to the parent to handle removal.
    * @param index The active index which is subject to removal.
    */
   @Emit('removeSeries')
-  private emitRemoveSeries (index: number, seriesIndex: number): void {}
+  protected emitRemoveSeries (index: number, seriesIndex: number): void {}
 
   /**
    * Emit an class and event to the parent to handle editing.
    * @param addSeries The series item to be edited.
    */
   @Emit('addSeries')
-  private emitAddSeries (index: number): void {}
+  protected emitAddSeries (index: number): void {}
 
   /**
    * Emit an class and event to the parent to handle editing.
    * @param classItem The series item to be edited.
    */
   @Emit('editClass')
-  private emitShareClass (index: number): void {}
+  protected emitShareClass (index: number): void {}
 
   /**
    * Emit an  series item and event to the parent to handle editing.
    * @param seriesItem The series item to be edited.
    */
   @Emit('editSeries')
-  private emitShareSeries (index: number, seriesIndex: number): void {}
+  protected emitShareSeries (index: number, seriesIndex: number): void {}
 }
 </script>
 

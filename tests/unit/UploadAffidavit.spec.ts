@@ -9,27 +9,27 @@ const uploadAffidavitTestCases = [
   {
     entityType: 'CP',
     helpText: 'The Cooperative Association has no assets; and',
-    checkboxLabel: `I confirm the following items are included as required in the Cooperative Associations Act`
+    checkboxLabel: 'I confirm the following items are included as required in the Cooperative Associations Act'
   },
   {
     entityType: 'BEN',
     helpText: 'The Company has no assets; and',
-    checkboxLabel: `I confirm the following items are included as required in the Business Corporations Act`
+    checkboxLabel: 'I confirm the following items are included as required in the Business Corporations Act'
   },
   {
     entityType: 'CC',
     helpText: 'The Company has no assets; and',
-    checkboxLabel: `I confirm the following items are included as required in the Business Corporations Act`
+    checkboxLabel: 'I confirm the following items are included as required in the Business Corporations Act'
   },
   {
     entityType: 'BC',
     helpText: 'The Company has no assets; and',
-    checkboxLabel: `I confirm the following items are included as required in the Business Corporations Act`
+    checkboxLabel: 'I confirm the following items are included as required in the Business Corporations Act'
   },
   {
     entityType: 'ULC',
     helpText: 'The Company has no assets; and',
-    checkboxLabel: `I confirm the following items are included as required in the Business Corporations Act`
+    checkboxLabel: 'I confirm the following items are included as required in the Business Corporations Act'
   }
 ]
 

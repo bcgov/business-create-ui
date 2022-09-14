@@ -52,7 +52,7 @@
                 column
                 class="person-or-org-radio-group"
                 v-model="custodian.officer.partyType"
-                @change="syncCustodianPartyType"
+                @change="syncCustodianPartyType($event)"
               >
                 <!-- Person input -->
                 <v-radio :value="PartyTypes.PERSON">
@@ -232,7 +232,7 @@ import { cloneDeep } from 'lodash'
 export default class CustodianOfRecords extends Mixins(CommonMixin) {
   // Refs for root form and base address components to access form validation
   $refs!: {
-    addCustodianForm: FormIF,
+    addCustodianForm: FormIF
     mailingAddress: FormIF
     deliveryAddress: FormIF
   }
@@ -248,13 +248,13 @@ export default class CustodianOfRecords extends Mixins(CommonMixin) {
   @Action setCustodianOfRecords: ActionBindingIF
 
   // Local properties
-  private addCustodianValid = true
-  private custodian: OrgPersonIF = null
-  private defaultAddress: AddressIF = null
+  protected addCustodianValid = true
+  protected custodian = null as OrgPersonIF
+  protected defaultAddress = null as AddressIF
 
   // Validation events from BaseAddress:
-  private mailingAddressValid: boolean = true
-  private deliveryAddressValid: boolean = true
+  protected mailingAddressValid = true
+  protected deliveryAddressValid = true
 
   // Schema and rules for template
   readonly OfficeAddressSchema = OfficeAddressSchema
@@ -262,7 +262,7 @@ export default class CustodianOfRecords extends Mixins(CommonMixin) {
   readonly Rules = Rules
   readonly PartyTypes = PartyTypes
 
-  created (): void {
+  protected created (): void {
     // Define local model using values initialized in store.
     this.custodian = this.getDissolutionCustodian
 
@@ -289,7 +289,7 @@ export default class CustodianOfRecords extends Mixins(CommonMixin) {
   }
 
   /** The custodian person or org name to display. */
-  private get getCustodianName (): string {
+  get getCustodianName (): string {
     const { firstName, middleName, lastName, organizationName } = this.getDissolutionCustodian?.officer
     if (this.isPerson && firstName && lastName) {
       return `${firstName} ${middleName} ${lastName}`
@@ -301,12 +301,12 @@ export default class CustodianOfRecords extends Mixins(CommonMixin) {
   }
 
   /** The address schema. */
-  private get getAddressSchema (): AddressSchemaIF {
+  get getAddressSchema (): AddressSchemaIF {
     return this.isTypeCoop ? CoopOfficeAddressSchema : OfficeAddressSchema
   }
 
   /** Is true when the form requirements are not met for party type. */
-  private get isInError (): boolean {
+  get isInError (): boolean {
     switch (this.custodian.officer.partyType) {
       case PartyTypes.PERSON:
         return !(this.custodian.officer.firstName && this.custodian.officer.lastName)
@@ -318,7 +318,7 @@ export default class CustodianOfRecords extends Mixins(CommonMixin) {
   }
 
   /** Whether the add custodian form is valid. */
-  private get isFormValid (): boolean {
+  get isFormValid (): boolean {
     const deliveryValid = this.inheritMailingAddress ? true : this.deliveryAddressValid
     return (
       !!this.getDissolutionCustodian.officer.partyType &&
@@ -329,22 +329,22 @@ export default class CustodianOfRecords extends Mixins(CommonMixin) {
   }
 
   /** Is true when the party type is a person. */
-  private get isPerson (): boolean {
+  get isPerson (): boolean {
     return (this.getDissolutionCustodian?.officer.partyType === PartyTypes.PERSON)
   }
 
   /** Is true when the party type is an organization. */
-  private get isOrg (): boolean {
+  get isOrg (): boolean {
     return (this.getDissolutionCustodian?.officer.partyType === PartyTypes.ORGANIZATION)
   }
 
   /** Is true when the user selects to inherit the mailing address. */
-  private get inheritMailingAddress (): boolean {
+  get inheritMailingAddress (): boolean {
     return this.getDissolutionCustodian?.inheritMailingAddress
   }
 
   /** Keep local custodian addresses in sync with base address common component. */
-  private syncAddresses (baseAddress: AddressIF, newAddress: AddressIF): void {
+  protected syncAddresses (baseAddress: AddressIF, newAddress: AddressIF): void {
     Object.assign(baseAddress, newAddress)
     if (this.inheritMailingAddress) {
       this.custodian.deliveryAddress = { ...newAddress }
@@ -352,7 +352,7 @@ export default class CustodianOfRecords extends Mixins(CommonMixin) {
   }
 
   /** Sync party type selection with store and reset the unselected party type fields. */
-  private syncCustodianPartyType (partyType: PartyTypes): void {
+  protected syncCustodianPartyType (partyType: PartyTypes): void {
     this.custodian.officer.partyType = partyType
     switch (partyType) {
       case PartyTypes.PERSON:
@@ -371,7 +371,7 @@ export default class CustodianOfRecords extends Mixins(CommonMixin) {
    * @param addressToValidate the address to set the validity of
    * @param isValid a boolean indicating the validity of the address
    */
-  private updateAddressValid (addressToValidate: string, isValid: boolean): void {
+  protected updateAddressValid (addressToValidate: string, isValid: boolean): void {
     switch (addressToValidate) {
       case 'mailingAddress':
         this.mailingAddressValid = isValid
