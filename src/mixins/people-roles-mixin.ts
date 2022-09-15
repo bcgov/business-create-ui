@@ -312,7 +312,7 @@ export default class PeopleRolesMixin extends Vue {
   protected async confirmAddProprietorOrganization (): Promise<boolean> {
     return this.showConfirmDialog(
       'Add a Business or a Corporation',
-      'By adding an existing business or a corporation as the proprietor, you will ' +
+      'By adding an existing business, society or a corporation as the proprietor, you will ' +
         'be registering an existing company under another name (e.g., a numbered ' +
         'company that does business under a DBA name). Do you wish to continue?',
       'Continue',

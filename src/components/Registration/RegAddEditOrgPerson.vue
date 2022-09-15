@@ -90,14 +90,14 @@
               <!-- Business or Corporation Unregistered in B.C. -->
               <article v-if="!orgPerson.isLookupBusiness" class="manual-add-article">
                 <label>
-                  {{ isNaN(activeIndex) ? 'Add' : ' Edit' }} Business or Corporation Unregistered in B.C.
+                  {{ isNaN(activeIndex) ? 'Add' : ' Edit' }} Business or Corporation Not Registered in B.C.
                 </label>
                 <a class="lookup-toggle float-right" @click="swapIsLookupBusiness()">
-                  Business or Corporation Look Up
+                  Business or Corporation Registered in B.C.
                 </a>
 
                 <p class="mt-6 mb-0">
-                  Use this form to add a company that is not legally required to register in B.C. such as a bank
+                  You may add a company that is not legally required to register in B.C. such as a bank
                   or railway as {{ isProprietor ? 'the Proprietor' : 'a partner' }}. All other types of
                   businesses not registered in B.C. cannot be {{ isProprietor ? 'the Proprietor' : 'a partner' }}.
                 </p>
@@ -140,9 +140,9 @@
 
               <!-- Business or Corporation Look up -->
               <article v-else class="business-lookup-article">
-                <label>Business or Corporation Look up</label>
+                <label>Business or Corporation Registered in B.C.</label>
                 <a class="lookup-toggle float-right" @click="swapIsLookupBusiness()">
-                  Business or Corporation is Unregistered in B.C.
+                  Business or Corporation Not Registered in B.C.
                 </a>
                 <div class="mt-6" v-if="hasBusinessSelectedFromLookup">
                   <v-card

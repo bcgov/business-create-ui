@@ -372,7 +372,7 @@ describe('Registration Add/Edit Org/Person component', () => {
     await wrapper.find('.lookup-toggle').trigger('click')
 
     expect(wrapper.find('.manual-add-article label').text())
-      .toContain('Edit Business or Corporation Unregistered in B.C.')
+      .toContain('Edit Business or Corporation Not Registered in B.C.')
     expect(wrapper.find('.manual-add-article p').text()).toContain('the Proprietor')
 
     wrapper.destroy()
@@ -381,7 +381,7 @@ describe('Registration Add/Edit Org/Person component', () => {
   it('displays form data for proprietor-org (SP) - business lookup', () => {
     const wrapper = createComponent(validProprietorOrg, -1, null)
 
-    expect(wrapper.find('.business-lookup-article label').text()).toContain('Business or Corporation Look up')
+    expect(wrapper.find('.business-lookup-article label').text()).toContain('Business or Corporation Registered in B.C')
     expect(wrapper.findAll('.business-lookup-article p').at(0).text()).toContain('the Proprietor')
 
     wrapper.destroy()
@@ -418,7 +418,7 @@ describe('Registration Add/Edit Org/Person component', () => {
     await wrapper.find('.lookup-toggle').trigger('click')
 
     expect(wrapper.find('.manual-add-article label').text())
-      .toContain('Edit Business or Corporation Unregistered in B.C.')
+      .toContain('Edit Business or Corporation Not Registered in B.C.')
     expect(wrapper.find('.manual-add-article p').text()).toContain('a partner')
 
     wrapper.destroy()
@@ -427,7 +427,7 @@ describe('Registration Add/Edit Org/Person component', () => {
   it('displays form data for partner-org (GP) - business lookup', () => {
     const wrapper = createComponent(validPartnerOrg, -1, null)
 
-    expect(wrapper.find('.business-lookup-article label').text()).toContain('Business or Corporation Look up')
+    expect(wrapper.find('.business-lookup-article label').text()).toContain('Business or Corporation Registered in B.C')
     expect(wrapper.findAll('.business-lookup-article p').at(0).text()).toContain('a partner')
 
     wrapper.destroy()
@@ -439,7 +439,7 @@ describe('Registration Add/Edit Org/Person component', () => {
     await wrapper.find('.lookup-toggle').trigger('click')
 
     expect(wrapper.find('.manual-add-article label').text())
-      .toContain('Edit Business or Corporation Unregistered in B.C.')
+      .toContain('Edit Business or Corporation Not Registered in B.C.')
 
     expect(wrapper.find('.manual-add-article p').text()).toContain('as a partner')
 
