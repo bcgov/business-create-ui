@@ -313,7 +313,6 @@ import HelpContactUs from '@/components/Registration/HelpContactUs.vue'
 import { AddEditOrgPersonMixin } from '@/mixins'
 import { Rules } from '@/rules'
 import { BusinessLookupServices } from '@/services/'
-import { isSbcStaff } from '@/store/getters'
 
 /** This is a sub-component of PeopleAndRoles. */
 @Component({
