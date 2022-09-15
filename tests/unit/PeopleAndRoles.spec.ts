@@ -15,14 +15,14 @@ const vuetify = new Vuetify({})
 const store = getVuexStore()
 
 // Input field selectors to test changes to the DOM elements.
-const btnStartAddCompletingParty: string = '#btn-start-add-cp'
-const btnAddPerson: string = '#btn-add-person'
-const btnAddCompletingParty: string = '#btn-add-cp'
-const btnAddOrganization: string = '#btn-add-organization'
-const appointForm: string = '.appoint-form'
-const checkCompletingParty: string = '.cp-valid'
-const checkDirector: string = '.dir-valid'
-const checkIncorporator: string = '.incorp-valid'
+const btnStartAddCompletingParty = '#btn-start-add-cp'
+const btnAddPerson = '#btn-add-person'
+const btnAddCompletingParty = '#btn-add-cp'
+const btnAddOrganization = '#btn-add-organization'
+const appointForm = '.appoint-form'
+const checkCompletingParty = '.cp-valid'
+const checkDirector = '.dir-valid'
+const checkIncorporator = '.incorp-valid'
 const completingPartyRole = { roleType: 'Completing Party', appointmentDate: '2020-03-30' }
 
 function resetStore (): void {
@@ -40,7 +40,7 @@ function getPersonList (roles = [completingPartyRole]): any {
         organizationName: '',
         type: 'Person'
       },
-      roles: roles,
+      roles,
       address: {
         mailingAddress: {
           streetAddress: '123 Fake Street',
@@ -120,7 +120,7 @@ describe('People And Roles component', () => {
 
   it('shows Add Completing Party Button when people list is not empty and has no Completing Party', () => {
     store.state.stateModel.addPeopleAndRoleStep.orgPeople = getPersonList([
-      { 'roleType': 'Director', 'appointmentDate': '2020-03-30' }
+      { roleType: 'Director', appointmentDate: '2020-03-30' }
     ])
     const wrapper = wrapperFactory()
     expect(wrapper.find(btnAddCompletingParty).exists()).toBeTruthy()
@@ -158,8 +158,8 @@ describe('People And Roles component', () => {
 
   it('Shows check mark next to roles added', () => {
     store.state.stateModel.addPeopleAndRoleStep.orgPeople = getPersonList([
-      { 'roleType': 'Director', 'appointmentDate': '2020-03-30' },
-      { 'roleType': 'Incorporator', 'appointmentDate': '2020-03-30' }
+      { roleType: 'Director', appointmentDate: '2020-03-30' },
+      { roleType: 'Incorporator', appointmentDate: '2020-03-30' }
     ])
     const wrapper = wrapperFactory()
     expect(wrapper.find(checkIncorporator).exists()).toBeTruthy()

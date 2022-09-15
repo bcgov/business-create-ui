@@ -182,21 +182,21 @@ export default class IncorporationDefineCompany extends Mixins(CommonMixin) {
   @Action setDefineCompanyStepValidity!: ActionBindingIF
   @Action setIgnoreChanges!: ActionBindingIF
 
-  private businessContactFormValid: boolean = false
-  private addressFormValid: boolean = false
-  private hasValidNameTranslation: boolean = true
-  private hasValidCooperativeType: boolean = false
-  private coopHelpToggle: boolean = false
+  protected businessContactFormValid = false
+  protected addressFormValid = false
+  protected hasValidNameTranslation = true
+  protected hasValidCooperativeType = false
+  protected coopHelpToggle = false
 
   // Enum for template
   readonly CorpTypeCd = CorpTypeCd
 
-  private get addresses (): IncorporationAddressIF {
+  get addresses (): IncorporationAddressIF {
     return this.getDefineCompanyStep.officeAddresses as IncorporationAddressIF
   }
 
   /** Called when component is created. */
-  created (): void {
+  protected created (): void {
     // temporarily ignore data changes
     this.setIgnoreChanges(true)
 

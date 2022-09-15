@@ -135,7 +135,7 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Name
     return (this.getCurrentStep > 1)
   }
 
-  private get isSummaryStep (): boolean {
+  get isSummaryStep (): boolean {
     return (
       this.$route.name === RouteNames.DISSOLUTION_REVIEW_CONFIRM ||
       this.$route.name === RouteNames.INCORPORATION_REVIEW_CONFIRM ||
@@ -144,7 +144,7 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Name
   }
 
   /** Called when Cancel button is clicked. */
-  private onClickCancel (): void {
+  protected onClickCancel (): void {
     this.emitGoToDashboard()
   }
 
@@ -152,7 +152,7 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Name
    * Called when Save button is clicked.
    * @returns a promise (ie, this is an async method)
    */
-  private async onClickSave (): Promise<void> {
+  protected async onClickSave (): Promise<void> {
     // prevent double saving
     if (this.isBusySaving) return
     this.setIsSaving(true)
@@ -178,7 +178,7 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Name
    * Called when Save and Resume Later button is clicked.
    * @returns a promise (ie, this is an async method)
    */
-  private async onClickSaveResume (): Promise<void> {
+  protected async onClickSaveResume (): Promise<void> {
     // prevent double saving
     if (this.isBusySaving) return
     this.setIsSavingResuming(true)
@@ -205,7 +205,7 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Name
    * Called when File and Pay button is clicked.
    * @returns a promise (ie, this is an async method)
    */
-  private async onClickFilePay (): Promise<void> {
+  protected async onClickFilePay (): Promise<void> {
     // Prompt Step validations
     this.setValidateSteps(true)
 
@@ -297,7 +297,7 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Name
 
   /** Fetches NR and validates it. */
   private async validateNameRequest (nrNumber: string): Promise<void> {
-    let nrResponse = await LegalServices.fetchNameRequest(nrNumber).catch(error => {
+    const nrResponse = await LegalServices.fetchNameRequest(nrNumber).catch(error => {
       this.$root.$emit('name-request-retrieve-error')
       throw new Error(error)
     })
@@ -316,13 +316,13 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Name
   }
 
   /** The route to the next step. */
-  private get nextRoute (): string | undefined {
+  get nextRoute (): string | undefined {
     const nextStep = this.next()
     return nextStep?.to || null
   }
 
   /** Label for the Next button. */
-  private get nextButtonLabel (): string {
+  get nextButtonLabel (): string {
     const nextStep = this.next()
     return nextStep ? nextStep.text.replace('\n', ' ') : ''
   }
@@ -337,7 +337,7 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Name
   }
 
   /** The route to the previous step. */
-  private get previousRoute (): string | undefined {
+  get previousRoute (): string | undefined {
     const prevStep = this.prev()
     return prevStep?.to || null
   }

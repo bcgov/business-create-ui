@@ -15,13 +15,13 @@ export const CooperativeResource: IncorporationResourceIF = {
     filingTypeCode: FilingCodes.INCORPORATION_CP
   }],
   peopleAndRoles: {
-    header: `1. Add People to your Application`,
+    header: '1. Add People to your Application',
     blurb: `Add the people who will have a role in your Cooperative Association. A Completing
       Party can also be a First Director.`,
     helpSection: {
       header: 'Help with Adding First Directors',
       helpText: [
-        `To be in compliance with the Cooperative Association Act (Section 72);`,
+        'To be in compliance with the Cooperative Association Act (Section 72);',
 
         `A minimum of three Directors is required. The First Directors of the Cooperative Association
           must be appointed in writing by a majority of the subscribers. The majority of Directors
@@ -60,7 +60,7 @@ export const CooperativeResource: IncorporationResourceIF = {
   },
   createRules: {
     helpSection: {
-      header: `Help with Rules of the Association`,
+      header: 'Help with Rules of the Association',
       helpText: {
         section1: {
           label: 'Each Cooperative Association must set its own rules to cover:',
@@ -127,7 +127,7 @@ export const CooperativeResource: IncorporationResourceIF = {
   },
   createMemorandum: {
     helpSection: {
-      header: `Help with Memorandum of Association`,
+      header: 'Help with Memorandum of Association',
       helpText: {
         section1: {
           items: [

@@ -18,7 +18,7 @@ export default class NameRequestMixin extends Mixins(DateMixin) {
     return {
       nrNumber: nr.nrNum,
       entityType: nr.legalType,
-      filingId: filingId,
+      filingId,
       applicant: {
         // Address Information
         addressLine1: nr.applicants.addrLine1,

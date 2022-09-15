@@ -44,8 +44,8 @@ describe('SBC Fee Summary - BEN voluntary dissolution', () => {
           processingFees: 0,
           serviceFees: 1.50,
           tax: {
-            'gst': 0,
-            'pst': 0
+            gst: 0,
+            pst: 0
           },
           total: 21.5
         }
@@ -64,8 +64,8 @@ describe('SBC Fee Summary - BEN voluntary dissolution', () => {
           processingFees: 0,
           serviceFees: 1.5,
           tax: {
-            'gst': 0,
-            'pst': 0
+            gst: 0,
+            pst: 0
           },
           total: 121.5
         }
@@ -91,9 +91,11 @@ describe('SBC Fee Summary - BEN voluntary dissolution', () => {
   })
 
   it('calculates the correct fees when future effective', async () => {
-    wrapper.setProps({ filingData: [
-      { ...filingData[0], futureEffective: true }
-    ] })
+    wrapper.setProps({
+      filingData: [
+        { ...filingData[0], futureEffective: true }
+      ]
+    })
     // wait for all queries to complete
     await flushPromises()
 
@@ -148,8 +150,8 @@ describe('SBC Fee Summary - COOP voluntary dissolution', () => {
           processingFees: 0,
           serviceFees: 0,
           tax: {
-            'gst': 0,
-            'pst': 0
+            gst: 0,
+            pst: 0
           },
           total: 20.0
         }
@@ -168,8 +170,8 @@ describe('SBC Fee Summary - COOP voluntary dissolution', () => {
           processingFees: 0,
           serviceFees: 0,
           tax: {
-            'gst': 0,
-            'pst': 0
+            gst: 0,
+            pst: 0
           },
           total: 120.0
         }
@@ -188,8 +190,8 @@ describe('SBC Fee Summary - COOP voluntary dissolution', () => {
           processingFees: 0,
           serviceFees: 0,
           tax: {
-            'gst': 0,
-            'pst': 0
+            gst: 0,
+            pst: 0
           },
           total: 0
         }
@@ -336,11 +338,13 @@ describe('SBC Fee Summary - COOP voluntary dissolution', () => {
   })
 
   it('calculates the correct fees when future effective', async () => {
-    wrapper.setProps({ filingData: [
-      { ...filingData[0], futureEffective: true },
-      filingData[1],
-      filingData[2]
-    ] })
+    wrapper.setProps({
+      filingData: [
+        { ...filingData[0], futureEffective: true },
+        filingData[1],
+        filingData[2]
+      ]
+    })
     // wait for all queries to complete
     await flushPromises()
 
@@ -354,11 +358,13 @@ describe('SBC Fee Summary - COOP voluntary dissolution', () => {
   })
 
   it('calculates 0 fees for no fee option', async () => {
-    wrapper.setProps({ filingData: [
-      { ...filingData[0], waiveFees: true },
-      { ...filingData[1], waiveFees: true },
-      { ...filingData[2], waiveFees: true }
-    ] })
+    wrapper.setProps({
+      filingData: [
+        { ...filingData[0], waiveFees: true },
+        { ...filingData[1], waiveFees: true },
+        { ...filingData[2], waiveFees: true }
+      ]
+    })
     // wait for all queries to complete
     await flushPromises()
 

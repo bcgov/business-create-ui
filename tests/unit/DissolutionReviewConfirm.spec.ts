@@ -1,9 +1,6 @@
 import { shallowWrapperFactory, wrapperFactory } from '../jest-wrapper-factory'
-import { getVuexStore } from '@/store'
 import DissolutionReviewConfirm from '@/views/Dissolution/DissolutionReviewConfirm.vue'
 import { DissolutionResources } from '@/resources/'
-
-const store = getVuexStore()
 
 // Test Case Data
 const reviewConfirmTestCases = [

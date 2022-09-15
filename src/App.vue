@@ -169,7 +169,7 @@
 import axios from 'axios'
 import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
-import { PAYMENT_REQUIRED } from 'http-status-codes'
+import { StatusCodes } from 'http-status-codes'
 import { cloneDeep } from 'lodash'
 import * as Sentry from '@sentry/browser'
 import { getFeatureFlag, updateLdUser, navigate, sleep } from '@/utils'
@@ -368,7 +368,7 @@ export default class App extends Mixins(
 
   /** Data for fee summary component. */
   get feeFilingData (): Array<FilingDataIF> {
-    let filingData: Array<FilingDataIF> = []
+    let filingData = [] as Array<FilingDataIF>
     if (this.getFilingData) {
       filingData = cloneDeep(this.getFilingData)
       if (this.isTypeCoop && this.getFilingData.length > 0) {
@@ -414,6 +414,7 @@ export default class App extends Mixins(
       this.fileAndPayInvalidNameRequestDialog
     )
   }
+
   /** The Fee Summary filing text for businesses. */
   get filingLabelText (): string {
   // text ovveride for firm dissolutions
@@ -433,6 +434,7 @@ export default class App extends Mixins(
       case FilingTypes.VOLUNTARY_DISSOLUTION: return 'Filing'
     }
   }
+
   // check to use stepper view or not
   get isStepperView (): boolean {
     return !this.$route.meta.noStepper
@@ -444,7 +446,7 @@ export default class App extends Mixins(
   }
 
   /** Called when component is created. */
-  async created (): Promise<void> {
+  protected async created (): Promise<void> {
     // update Current Js Date now and every 1 minute thereafter
     await this.updateCurrentJsDate()
     this.updateCurrentJsDateId = setInterval(this.updateCurrentJsDate, 60000)
@@ -467,7 +469,7 @@ export default class App extends Mixins(
       this.saveErrors = error?.response?.data?.errors || []
       this.saveWarnings = error?.response?.data?.warnings || []
 
-      if (error?.response?.status === PAYMENT_REQUIRED) {
+      if (error?.response?.status === StatusCodes.PAYMENT_REQUIRED) {
         // changes were saved if a 402 is received, so clear flag
         this.setHaveChanges(false)
         this.paymentErrorDialog = true
@@ -498,7 +500,7 @@ export default class App extends Mixins(
   }
 
   /** Called when component is destroyed. */
-  private destroyed (): void {
+  protected beforeDestroy (): void {
     // stop Update Current Js Date timer
     clearInterval(this.updateCurrentJsDateId)
 
@@ -530,7 +532,7 @@ export default class App extends Mixins(
   }
 
   /** Called to navigate to dashboard. */
-  private goToDashboard (force: boolean = false): void {
+  private goToDashboard (force = false): void {
     // check if there are no data changes
     if (!this.getHaveChanges || force) {
       // navigate to dashboard
@@ -564,8 +566,8 @@ export default class App extends Mixins(
   }
 
   /** The list of completing parties. */
-  completingParties (): CompletingPartyIF {
-    let completingParty = null
+  private getCompletingParties (): CompletingPartyIF {
+    let completingParty = null as CompletingPartyIF
     if (!this.isRoleStaff) { // if staff role set as null
       completingParty = {
         firstName: this.getUserFirstName,
@@ -583,10 +585,11 @@ export default class App extends Mixins(
         phone: this.getUserPhone
       }
     } else {
-      // setting blank firstname an lastname for staff role
+      // set blank firstname and lastname for staff role
       completingParty = {
         firstName: '',
-        lastName: ''
+        lastName: '',
+        mailingAddress: null
       }
     }
 
@@ -594,7 +597,7 @@ export default class App extends Mixins(
   }
 
   /** Fetches NR data and fetches draft filing. */
-  private async fetchData (routeChanged: boolean = false): Promise<void> {
+  private async fetchData (routeChanged = false): Promise<void> {
     // only fetch data on first route change
     if (routeChanged && this.haveData) return
 
@@ -634,7 +637,7 @@ export default class App extends Mixins(
       })
 
       // set completing party before draft filing dissolution create
-      this.setCompletingParty(this.completingParties())
+      this.setCompletingParty(this.getCompletingParties())
 
       // fetch the draft filing and resources
       try {
@@ -905,7 +908,7 @@ export default class App extends Mixins(
     // get auth org info for dissolution only
     // (this data is not available for an IA)
     if (this.isDissolutionFiling) {
-      let { contacts, folioNumber } = await AuthServices.fetchAuthInfo(this.getBusinessId)
+      const { contacts, folioNumber } = await AuthServices.fetchAuthInfo(this.getBusinessId)
       if (contacts?.length > 0) {
         this.setBusinessContact(contacts[0])
       }
@@ -1058,7 +1061,7 @@ export default class App extends Mixins(
   /** Gets and stores parties info . */
   private async loadPartiesInformation (): Promise<any> {
     // NB: will throw if API error
-    let parties = await LegalServices.fetchParties(this.getBusinessId)
+    const parties = await LegalServices.fetchParties(this.getBusinessId)
 
     if (parties?.parties?.length > 0) {
       this.setParties(parties.parties)

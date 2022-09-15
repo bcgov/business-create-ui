@@ -11,11 +11,11 @@ export default class DocumentMixin extends Vue {
   readonly UPLOAD_FAILED_MESSAGE = 'An error occurred while uploading.  Please try again.'
   readonly MAX_FILE_SIZE = 30 * 1024 // 30 MB in KB
   readonly pageSizeDict = {
-    'LETTER': {
-      'pointsPerInch': 72,
-      'width': 8.5,
-      'height': 11,
-      'validationErrorMsg': 'Document must be set to fit onto 8.5” x 11” letter-size paper'
+    LETTER: {
+      pointsPerInch: 72,
+      width: 8.5,
+      height: 11,
+      validationErrorMsg: 'Document must be set to fit onto 8.5” x 11” letter-size paper'
     }
   }
 
@@ -79,7 +79,7 @@ export default class DocumentMixin extends Vue {
       const perms = await pdf.getPermissions()
       return { isEncrypted: false, isContentLocked: !!perms }
     } catch (error) {
-      if (error['name'] === 'PasswordException') {
+      if ((error as any).name === 'PasswordException') {
         return { isEncrypted: true, isContentLocked: true }
       }
     }

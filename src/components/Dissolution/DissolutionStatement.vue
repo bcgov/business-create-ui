@@ -12,7 +12,7 @@
         <v-col cols="12" sm="9">
           <v-radio-group
             v-model="dissolutionStatementType"
-            @change="changeDissolutionStatementType"
+            @change="changeDissolutionStatementType()"
             class="dissolution-statement-option-list"
             hide-details
           >
@@ -69,17 +69,17 @@ export default class DissolutionStatement extends Vue {
   // Global setters
   @Action setDissolutionStatementStepData!: ActionBindingIF
 
-  private dissolutionStatementType: DissolutionStatementTypes = null
+  protected dissolutionStatementType = null as DissolutionStatementTypes
 
   /** Called when component is created. */
-  created (): void {
+  protected created (): void {
     if (this.getDissolutionStatementStep) {
       this.dissolutionStatementType = this.getDissolutionStatementStep.dissolutionStatementType
     }
   }
 
   /** The dissolution statement description. */
-  private get dissolutionStatementDescription (): string {
+  get dissolutionStatementDescription (): string {
     const value = this.getDissolutionStatements?.find(
       x => x.key === this.getDissolutionStatementStep.dissolutionStatementType
     )?.value
@@ -87,7 +87,7 @@ export default class DissolutionStatement extends Vue {
     return value || '(Not entered)'
   }
 
-  private changeDissolutionStatementType (): void {
+  protected changeDissolutionStatementType (): void {
     this.setDissolutionStatementStepData({
       valid: !!this.dissolutionStatementType,
       dissolutionStatementType: this.dissolutionStatementType

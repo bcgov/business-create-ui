@@ -178,8 +178,8 @@
                 :inputFile="uploadRulesDoc"
                 :showErrors="getShowErrors"
                 :customErrorMessage="fileUploadCustomErrorMsg"
-                @fileSelected="fileSelected"
-                @isFileValid="isFileUploadValidFn"
+                @fileSelected="fileSelected($event)"
+                @isFileValid="isFileUploadValidFn($event)"
               />
             </v-col>
           </v-row>
@@ -216,14 +216,14 @@ export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
     confirmRulesChk: FormIF
   }
 
-  private INPUT_FILE_LABEL = 'Rules of Association'
-  private hasValidUploadFile = false
-  private hasRulesConfirmed = false
-  private rulesConfirmed = false
-  private fileUploadCustomErrorMsg: string = ''
-  private uploadRulesDoc: File = null
-  private uploadRulesDocKey: string = null
-  private helpToggle = false
+  readonly INPUT_FILE_LABEL = 'Rules of Association'
+  protected hasValidUploadFile = false
+  protected hasRulesConfirmed = false
+  protected rulesConfirmed = false
+  protected fileUploadCustomErrorMsg = ''
+  protected uploadRulesDoc = null as File
+  protected uploadRulesDocKey = null as string
+  protected helpToggle = false
 
   @Getter getShowErrors!: boolean
   @Getter getNameRequestDetails!: NameRequestDetailsIF
@@ -239,7 +239,7 @@ export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
   readonly ItemTypes = ItemTypes
   readonly PdfPageSize = PdfPageSize
 
-  private confirmCompletionRules = [
+  readonly confirmCompletionRules = [
     (v) => { return !!v }
   ]
 
@@ -248,12 +248,12 @@ export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
     this.uploadRulesDocKey = null
   }
 
-  private isFileUploadValidFn (val) {
+  protected isFileUploadValidFn (val) {
     this.hasValidUploadFile = val
     this.updateRulesStepValidity()
   }
 
-  private async fileSelected (file) {
+  protected async fileSelected (file) {
     // reset state of file uploader to ensure not in manual error mode
     this.fileUploadCustomErrorMsg = ''
     if (file) {
@@ -291,7 +291,7 @@ export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
         }
         this.setRules({
           ...this.getCreateRulesStep,
-          rulesDoc: rulesDoc,
+          rulesDoc,
           docKey: doc.key
         })
       } else {
@@ -316,17 +316,17 @@ export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
     this.setRulesStepValidity(validationDetail)
   }
 
-  private onRulesConfirmedChange (rulesConfirmed: boolean): void {
+  protected onRulesConfirmedChange (rulesConfirmed: boolean): void {
     this.hasRulesConfirmed = rulesConfirmed
     this.updateRulesStepValidity()
     this.setRules({
       ...this.getCreateRulesStep,
-      rulesConfirmed: rulesConfirmed
+      rulesConfirmed
     })
   }
 
   /** Called when component is created. */
-  created (): void {
+  protected created (): void {
     this.uploadRulesDoc = this.getCreateRulesStep.rulesDoc as File
     this.uploadRulesDocKey = this.getCreateRulesStep.docKey
     this.rulesConfirmed = this.getCreateRulesStep.rulesConfirmed
@@ -334,7 +334,7 @@ export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
     this.hasRulesConfirmed = this.rulesConfirmed
   }
 
-  async mounted (): Promise<void> {
+  protected async mounted (): Promise<void> {
     // wait for components to load/stabilize then update validation state in store
     await this.$nextTick()
     this.updateRulesStepValidity()

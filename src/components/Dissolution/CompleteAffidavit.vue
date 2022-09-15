@@ -153,8 +153,8 @@
                 :inputFile="uploadAffidavitDoc"
                 :showErrors="getShowErrors"
                 :customErrorMessage="fileUploadCustomErrorMsg"
-                @fileSelected="fileSelected"
-                @isFileValid="onFileUploadValid"
+                @fileSelected="fileSelected($event)"
+                @isFileValid="onFileUploadValid($event)"
               />
             </v-col>
           </v-row>
@@ -199,14 +199,14 @@ export default class CompleteAffidavit extends Mixins(CommonMixin, DocumentMixin
     confirmAffidavitChk: FormIF
   }
 
-  private INPUT_FILE_LABEL = 'Affidavit'
-  private hasValidUploadFile = false
-  private hasAffidavitConfirmed = false
-  private affidavitConfirmed = false
-  private fileUploadCustomErrorMsg: string = ''
-  private uploadAffidavitDoc: File = null
-  private uploadAffidavitDocKey: string = null
-  private helpToggle = false
+  readonly INPUT_FILE_LABEL = 'Affidavit'
+  protected hasValidUploadFile = false
+  protected hasAffidavitConfirmed = false
+  protected affidavitConfirmed = false
+  protected fileUploadCustomErrorMsg = ''
+  protected uploadAffidavitDoc = null as File
+  protected uploadAffidavitDocKey = null as string
+  protected helpToggle = false
 
   // Global getters
   @Getter getAffidavitResources!: AffidavitResourceIF
@@ -243,7 +243,7 @@ export default class CompleteAffidavit extends Mixins(CommonMixin, DocumentMixin
     return this.isTypeCoop ? 'Cooperative Association' : 'Company'
   }
 
-  private confirmCompletionAffidavit = [
+  readonly confirmCompletionAffidavit = [
     (v) => { return !!v }
   ]
 
@@ -252,12 +252,12 @@ export default class CompleteAffidavit extends Mixins(CommonMixin, DocumentMixin
     this.uploadAffidavitDocKey = null
   }
 
-  private onFileUploadValid (val) {
+  protected onFileUploadValid (val) {
     this.hasValidUploadFile = val
     this.updateAffidavitStepValidity()
   }
 
-  private async fileSelected (file) {
+  protected async fileSelected (file) {
     // reset state of file uploader to ensure not in manual error mode
     this.fileUploadCustomErrorMsg = ''
     if (file) {
@@ -295,7 +295,7 @@ export default class CompleteAffidavit extends Mixins(CommonMixin, DocumentMixin
         }
         this.setAffidavit({
           ...this.getAffidavitStep,
-          affidavitDoc: affidavitDoc,
+          affidavitDoc,
           docKey: doc.key
         })
       } else {
@@ -333,12 +333,12 @@ export default class CompleteAffidavit extends Mixins(CommonMixin, DocumentMixin
     this.updateAffidavitStepValidity()
     this.setAffidavit({
       ...this.getAffidavitStep,
-      affidavitConfirmed: affidavitConfirmed
+      affidavitConfirmed
     })
   }
 
   /** Called when component is created. */
-  created (): void {
+  protected created (): void {
     this.uploadAffidavitDoc = this.getAffidavitStep.affidavitDoc as File
     this.uploadAffidavitDocKey = this.getAffidavitStep.docKey
     this.affidavitConfirmed = this.getAffidavitStep.affidavitConfirmed
@@ -346,7 +346,7 @@ export default class CompleteAffidavit extends Mixins(CommonMixin, DocumentMixin
     this.hasAffidavitConfirmed = this.affidavitConfirmed
   }
 
-  async mounted (): Promise<void> {
+  protected async mounted (): Promise<void> {
     // wait for components to load/stabilize then update validation state in store
     await this.$nextTick()
     this.updateAffidavitStepValidity()

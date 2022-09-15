@@ -88,16 +88,16 @@ export default class SaveErrorDialog extends Vue {
   @Prop({ default: () => [] }) readonly warnings!: any[]
 
   // Pass click events to parent.
-  @Emit() private exit () {}
-  @Emit() private okay () {}
+  @Emit() protected exit () {}
+  @Emit() protected okay () {}
 
   /** The number of errors in the passed-in array. */
-  private get numErrors (): number {
+  get numErrors (): number {
     return this.errors?.length || 0
   }
 
   /** The number of warnings in the passed-in array. */
-  private get numWarnings (): number {
+  get numWarnings (): number {
     return this.warnings?.length || 0
   }
 }

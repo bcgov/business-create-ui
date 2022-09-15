@@ -325,6 +325,7 @@ export default class DissolutionFirm extends Mixins(DateMixin, EnumMixin) {
   get invalidStaffPayment (): boolean {
     return this.getValidateSteps && !this.getStaffPaymentStep.valid
   }
+
   // addition label if its SP/GPs
   get additionalLabel () {
     let label
@@ -424,6 +425,7 @@ export default class DissolutionFirm extends Mixins(DateMixin, EnumMixin) {
   protected onUpdate (cp: CompletingPartyIF): void {
     this.setCompletingParty(cp)
   }
+
   protected onValid (valid: boolean): void {
     this.completingPartyValid = valid
     this.setCompletingPartyValidity(valid)

@@ -215,8 +215,8 @@
                 :inputFile="uploadMemorandumDoc"
                 :showErrors="getShowErrors"
                 :customErrorMessage="fileUploadCustomErrorMsg"
-                @fileSelected="fileSelected"
-                @isFileValid="isFileUploadValidFn"
+                @fileSelected="fileSelected($event)"
+                @isFileValid="isFileUploadValidFn($event)"
               />
             </v-col>
           </v-row>
@@ -262,14 +262,14 @@ export default class UploadMemorandum extends Mixins(CommonMixin, DocumentMixin)
     confirmMemorandumChk: FormIF
   }
 
-  private INPUT_FILE_LABEL = 'Memorandum of Association'
-  private hasValidUploadFile = false
-  private hasMemorandumConfirmed = false
-  private memorandumConfirmed = false
-  private fileUploadCustomErrorMsg: string = ''
-  private uploadMemorandumDoc: File = null
-  private uploadMemorandumDocKey: string = null
-  private helpToggle = false
+  readonly INPUT_FILE_LABEL = 'Memorandum of Association'
+  protected hasValidUploadFile = false
+  protected hasMemorandumConfirmed = false
+  protected memorandumConfirmed = false
+  protected fileUploadCustomErrorMsg = ''
+  protected uploadMemorandumDoc = null as File
+  protected uploadMemorandumDocKey = null as string
+  protected helpToggle = false
 
   @Getter getShowErrors!: boolean
   @Getter getNameRequestDetails!: NameRequestDetailsIF
@@ -285,12 +285,11 @@ export default class UploadMemorandum extends Mixins(CommonMixin, DocumentMixin)
   readonly ItemTypes = ItemTypes
   readonly PdfPageSize = PdfPageSize
 
-  private get documentURL (): string {
-    return sessionStorage.getItem('BASE_URL') +
-      `files/cooperative_sample_memorandum.pdf`
+  get documentURL (): string {
+    return sessionStorage.getItem('BASE_URL') + 'files/cooperative_sample_memorandum.pdf'
   }
 
-  private confirmCompletionMemorandum = [
+  readonly confirmCompletionMemorandum = [
     (v) => { return !!v }
   ]
 
@@ -299,12 +298,12 @@ export default class UploadMemorandum extends Mixins(CommonMixin, DocumentMixin)
     this.uploadMemorandumDocKey = null
   }
 
-  private isFileUploadValidFn (val) {
+  protected isFileUploadValidFn (val) {
     this.hasValidUploadFile = val
     this.updateMemorandumStepValidity()
   }
 
-  private async fileSelected (file) {
+  protected async fileSelected (file) {
     // reset state of file uploader to ensure not in manual error mode
     this.fileUploadCustomErrorMsg = ''
     if (file) {
@@ -342,7 +341,7 @@ export default class UploadMemorandum extends Mixins(CommonMixin, DocumentMixin)
         }
         this.setMemorandum({
           ...this.getCreateMemorandumStep,
-          memorandumDoc: memorandumDoc,
+          memorandumDoc,
           docKey: doc.key
         })
       } else {
@@ -371,17 +370,17 @@ export default class UploadMemorandum extends Mixins(CommonMixin, DocumentMixin)
     this.setMemorandumStepValidity(validationDetail)
   }
 
-  private onMemorandumConfirmedChange (memorandumConfirmed: boolean): void {
+  protected onMemorandumConfirmedChange (memorandumConfirmed: boolean): void {
     this.hasMemorandumConfirmed = memorandumConfirmed
     this.updateMemorandumStepValidity()
     this.setMemorandum({
       ...this.getCreateMemorandumStep,
-      memorandumConfirmed: memorandumConfirmed
+      memorandumConfirmed
     })
   }
 
   /** Called when component is created. */
-  created (): void {
+  protected created (): void {
     this.uploadMemorandumDoc = this.getCreateMemorandumStep.memorandumDoc as File
     this.uploadMemorandumDocKey = this.getCreateMemorandumStep.docKey
     this.memorandumConfirmed = this.getCreateMemorandumStep.memorandumConfirmed
@@ -389,7 +388,7 @@ export default class UploadMemorandum extends Mixins(CommonMixin, DocumentMixin)
     this.hasMemorandumConfirmed = this.memorandumConfirmed
   }
 
-  async mounted (): Promise<void> {
+  protected async mounted (): Promise<void> {
     // wait for components to load/stabilize then update validation state in store
     await this.$nextTick()
     this.updateMemorandumStepValidity()

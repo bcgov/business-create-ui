@@ -14,10 +14,6 @@ Vue.use(Vuelidate)
 const vuetify = new Vuetify({})
 const store = getVuexStore()
 
-function resetStore (): void {
-  store.state.stateModel.nameTranslations = []
-}
-
 // Local references
 const addTranslationInput = '#name-translation-input'
 const doneBtn = '#btn-done'

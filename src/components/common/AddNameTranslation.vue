@@ -48,8 +48,8 @@ export default class AddNameTranslation extends Vue {
   @Prop({ default: '' }) readonly editNameTranslation!: string
 
   // Local properties
-  private nameTranslationForm: boolean = false
-  private nameTranslation: string = ''
+  protected nameTranslationForm = false
+  protected nameTranslation = ''
 
   // Validation rules
   readonly nameTranslationRules: Array<Function> = [
@@ -58,21 +58,21 @@ export default class AddNameTranslation extends Vue {
     v => (!v || v.length <= 150) || 'Cannot exceed 150 characters' // maximum character count
   ]
 
-  mounted (): void {
+  protected mounted (): void {
     // Editing an existing name translation
     if (this.editNameTranslation) this.nameTranslation = this.editNameTranslation
   }
 
   // Events
   @Emit('addTranslation')
-  private addTranslation (): string {
+  protected addTranslation (): string {
     return this.nameTranslation
   }
 
   @Emit('cancelTranslation')
-  private cancelTranslation (): void {}
+  protected cancelTranslation (): void {}
 
   @Emit('removeTranslation')
-  private removeTranslation (): void {}
+  protected removeTranslation (): void {}
 }
 </script>

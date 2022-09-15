@@ -9,55 +9,55 @@ describe('List People And Roles component', () => {
 
   const mockPersonList = [
     {
-      'officer': {
-        'id': 0,
-        'firstName': 'Cameron',
-        'lastName': 'Bowler',
-        'middleName': 'D',
-        'organizationName': '',
-        'partyType': 'person',
-        'email': 'completing-party@example.com'
+      officer: {
+        id: 0,
+        firstName: 'Cameron',
+        lastName: 'Bowler',
+        middleName: 'D',
+        organizationName: '',
+        partyType: 'person',
+        email: 'completing-party@example.com'
       },
-      'roles': [
-        { 'roleType': 'Completing Party', 'appointmentDate': '2020-03-30' },
-        { 'roleType': 'Director', 'appointmentDate': '2020-03-30' }
+      roles: [
+        { roleType: 'Completing Party', appointmentDate: '2020-03-30' },
+        { roleType: 'Director', appointmentDate: '2020-03-30' }
       ],
-      'mailingAddress': {
-        'streetAddress': '122-12210 Boul De Pierrefonds',
-        'streetAddressAdditional': '',
-        'addressCity': 'Pierrefonds',
-        'addressRegion': 'QC',
-        'postalCode': 'H9A 2X6',
-        'addressCountry': 'CA'
+      mailingAddress: {
+        streetAddress: '122-12210 Boul De Pierrefonds',
+        streetAddressAdditional: '',
+        addressCity: 'Pierrefonds',
+        addressRegion: 'QC',
+        postalCode: 'H9A 2X6',
+        addressCountry: 'CA'
       },
-      'deliveryAddress': {
-        'streetAddress': '122-12210 Boul De Pierrefonds',
-        'streetAddressAdditional': '',
-        'addressCity': 'Pierrefonds',
-        'addressRegion': 'QC',
-        'postalCode': 'H9A 2X6',
-        'addressCountry': 'CA'
+      deliveryAddress: {
+        streetAddress: '122-12210 Boul De Pierrefonds',
+        streetAddressAdditional: '',
+        addressCity: 'Pierrefonds',
+        addressRegion: 'QC',
+        postalCode: 'H9A 2X6',
+        addressCountry: 'CA'
       }
     },
     {
-      'officer': {
-        'id': 1,
-        'firstName': '',
-        'lastName': '',
-        'middleName': '',
-        'organizationName': 'Sysco Foods Company',
-        'partyType': 'organization'
+      officer: {
+        id: 1,
+        firstName: '',
+        lastName: '',
+        middleName: '',
+        organizationName: 'Sysco Foods Company',
+        partyType: 'organization'
       },
-      'roles': [
-        { 'roleType': 'Incorporator', 'appointmentDate': '2020-03-30' }
+      roles: [
+        { roleType: 'Incorporator', appointmentDate: '2020-03-30' }
       ],
-      'mailingAddress': {
-        'streetAddress': '12-1044 Boul 21De Normandie',
-        'streetAddressAdditional': '',
-        'addressCity': 'Saint-Jean-Sur-Richelieu',
-        'addressRegion': 'QC',
-        'postalCode': 'J3A 1H7',
-        'addressCountry': 'CA'
+      mailingAddress: {
+        streetAddress: '12-1044 Boul 21De Normandie',
+        streetAddressAdditional: '',
+        addressCity: 'Saint-Jean-Sur-Richelieu',
+        addressRegion: 'QC',
+        postalCode: 'J3A 1H7',
+        addressCountry: 'CA'
       }
     }
   ]
@@ -248,72 +248,72 @@ describe('List People And Roles component - SP/GP', () => {
 
   const mockPersonList = [
     {
-      'confirmBusiness': true,
-      'deliveryAddress': {
-        'addressCity': 'Vic',
-        'addressCountry': 'CA',
-        'addressRegion': 'BC',
-        'deliveryInstructions': 'no cats at this address',
-        'postalCode': 'V8V 8V8',
-        'streetAddress': '123 Main St',
-        'streetAddressAdditional': 'Suite A'
+      confirmBusiness: true,
+      deliveryAddress: {
+        addressCity: 'Vic',
+        addressCountry: 'CA',
+        addressRegion: 'BC',
+        deliveryInstructions: 'no cats at this address',
+        postalCode: 'V8V 8V8',
+        streetAddress: '123 Main St',
+        streetAddressAdditional: 'Suite A'
       },
-      'mailingAddress': {
-        'addressCity': 'Vic',
-        'addressCountry': 'CA',
-        'addressRegion': 'BC',
-        'deliveryInstructions': 'beware of cat',
-        'postalCode': 'V9V 9V9',
-        'streetAddress': '456 Other Ave',
-        'streetAddressAdditional': 'Suite D (Dungeon)'
+      mailingAddress: {
+        addressCity: 'Vic',
+        addressCountry: 'CA',
+        addressRegion: 'BC',
+        deliveryInstructions: 'beware of cat',
+        postalCode: 'V9V 9V9',
+        streetAddress: '456 Other Ave',
+        streetAddressAdditional: 'Suite D (Dungeon)'
       },
-      'officer': {
-        'businessNumber': '123456789',
-        'email': 'proprietor@example.com',
-        'firstName': '',
-        'id': '4d083e7a-4681-4c2a-a57f-3ed17a3579e9',
-        'lastName': '',
-        'middleName': '',
-        'organizationName': 'Crazy Cat Consulting Company',
-        'partyType': 'organization'
+      officer: {
+        businessNumber: '123456789',
+        email: 'proprietor@example.com',
+        firstName: '',
+        id: '4d083e7a-4681-4c2a-a57f-3ed17a3579e9',
+        lastName: '',
+        middleName: '',
+        organizationName: 'Crazy Cat Consulting Company',
+        partyType: 'organization'
       },
-      'roles': [
+      roles: [
         {
-          'appointmentDate': '2022-04-02',
-          'roleType': 'Proprietor'
+          appointmentDate: '2022-04-02',
+          roleType: 'Proprietor'
         }
       ]
     },
     {
-      'deliveryAddress': {
-        'addressCity': 'Victoria',
-        'addressCountry': 'CA',
-        'addressRegion': 'BC',
-        'postalCode': 'V8W 2C3',
-        'streetAddress': '1012 Douglas St',
-        'streetAddressAdditional': ''
+      deliveryAddress: {
+        addressCity: 'Victoria',
+        addressCountry: 'CA',
+        addressRegion: 'BC',
+        postalCode: 'V8W 2C3',
+        streetAddress: '1012 Douglas St',
+        streetAddressAdditional: ''
       },
-      'mailingAddress': {
-        'addressCity': 'Victoria',
-        'addressCountry': 'CA',
-        'addressRegion': 'BC',
-        'postalCode': 'V8W 2C3',
-        'streetAddress': '1012 Douglas St',
-        'streetAddressAdditional': ''
+      mailingAddress: {
+        addressCity: 'Victoria',
+        addressCountry: 'CA',
+        addressRegion: 'BC',
+        postalCode: 'V8W 2C3',
+        streetAddress: '1012 Douglas St',
+        streetAddressAdditional: ''
       },
-      'officer': {
-        'email': 'lucille@example.com',
-        'firstName': 'Lucille',
-        'id': '4f80eaa4-96e4-45fa-a088-ec4649c05d90',
-        'lastName': 'TWENTY',
-        'middleName': 'BCREGTEST',
-        'organizationName': '',
-        'partyType': 'person'
+      officer: {
+        email: 'lucille@example.com',
+        firstName: 'Lucille',
+        id: '4f80eaa4-96e4-45fa-a088-ec4649c05d90',
+        lastName: 'TWENTY',
+        middleName: 'BCREGTEST',
+        organizationName: '',
+        partyType: 'person'
       },
-      'roles': [
+      roles: [
         {
-          'appointmentDate': '2022-04-02',
-          'roleType': 'Completing Party'
+          appointmentDate: '2022-04-02',
+          roleType: 'Completing Party'
         }
       ]
     }

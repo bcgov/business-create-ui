@@ -14,7 +14,7 @@
                 ref="shareStructureForm"
                 class="share-structure-form"
                 v-model="formValid"
-                v-on:submit.prevent="addShareStructure"
+                v-on:submit.prevent="addShareStructure()"
               >
                 <v-text-field
                   filled
@@ -179,17 +179,17 @@ export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
   @Prop({ required: true }) readonly shareClasses!: ShareClassIF[]
 
   // Local properties
-  private shareStructure: ShareClassIF = null
-  private formValid: boolean = true
-  private hasNoMaximumShares: boolean = false
-  private hasNoParValue: boolean = false
+  protected shareStructure = null as ShareClassIF
+  protected formValid = true
+  protected hasNoMaximumShares = false
+  protected hasNoParValue = false
 
-  private readonly excludedWordsListForClass: string [] = ['share', 'shares', 'value']
-  private readonly excludedWordsListForSeries: string [] = ['share', 'shares']
+  readonly excludedWordsListForClass: string [] = ['share', 'shares', 'value']
+  readonly excludedWordsListForSeries: string [] = ['share', 'shares']
 
   // Rules
-  private getNameRule (): Array<Function> {
-    let rules: Array<Function> = [
+  protected getNameRule (): Array<Function> {
+    const rules: Array<Function> = [
       v => !!v || 'A name is required',
       v => !/^\s/g.test(v) || 'Invalid spaces', // leading spaces
       v => !/\s$/g.test(v) || 'Invalid spaces' // trailing spaces
@@ -215,8 +215,8 @@ export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
     return rules
   }
 
-  private getMaximumShareRule (): Array<Function> {
-    let rules: Array<Function> = []
+  protected getMaximumShareRule (): Array<Function> {
+    let rules = [] as Array<Function>
     if (!this.hasNoMaximumShares) {
       rules = [
         (v: string) => (v !== '' && v !== null && v !== undefined) || 'Number of shares is required',
@@ -248,18 +248,19 @@ export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
     return rules
   }
 
-  private getParValueRule (): Array<Function> {
+  protected getParValueRule (): Array<Function> {
     if (!this.hasNoParValue) {
       return [
         v => (v !== '' && v !== null && v !== undefined) || 'Par value is required',
         v => v > 0 || 'Amount must be greater than 0',
-        v => (v < 1) ? (/^(\d+(\.\d{0,3})?|\.\d{0,3})$/.test(v) || 'Amounts less than 1 can be entered with up to 3 decimal place')
+        v => (v < 1)
+          ? (/^(\d+(\.\d{0,3})?|\.\d{0,3})$/.test(v) || 'Amounts less than 1 can be entered with up to 3 decimal place')
           : (/^\d+(\.\d{1,2})?$/.test(v) || 'Amounts greater than 1 can be entered with up to 2 decimal place')]
     }
     return []
   }
 
-  private getCurrencyRule (): Array<Function> {
+  protected getCurrencyRule (): Array<Function> {
     if (!this.hasNoParValue) {
       return [v => !!v || 'Currency is required']
     }
@@ -267,7 +268,7 @@ export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
   }
 
   /** Called when component is created. */
-  created (): void {
+  protected created (): void {
     if (this.initialValue) {
       this.shareStructure = { ...this.initialValue }
       this.hasNoMaximumShares = !this.shareStructure.hasMaximumShares
@@ -281,7 +282,7 @@ export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
   }
 
   // Methods
-  private validateForm (): void {
+  protected validateForm (): void {
     if (this.formValid) {
       const shareStructure: ShareClassIF = this.addShareStructure()
       this.emitAddShareStructureEvent(shareStructure)
@@ -297,8 +298,8 @@ export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
     }
   }
 
-  private addShareStructure (): ShareClassIF {
-    let shareStructureToAdd: ShareClassIF = { ...this.shareStructure }
+  protected addShareStructure (): ShareClassIF {
+    const shareStructureToAdd: ShareClassIF = { ...this.shareStructure }
     if (this.activeIndex === -1) {
       shareStructureToAdd.id = this.shareId
     }
@@ -308,7 +309,7 @@ export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
     return shareStructureToAdd
   }
 
-  private removeShareStructure (): void {
+  protected removeShareStructure (): void {
     if (this.isClass) {
       this.emitRemoveShareClassEvent(this.activeIndex)
     } else if (this.isSeries) {
@@ -316,20 +317,20 @@ export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
     }
   }
 
-  private resetFormAndData (emitEvent: boolean): void {
+  protected resetFormAndData (emitEvent: boolean): void {
     this.$refs.shareStructureForm.reset()
     if (emitEvent) {
       this.emitResetEvent()
     }
   }
 
-  private changeMaximumShareFlag (): void {
+  protected changeMaximumShareFlag (): void {
     if (this.hasNoMaximumShares) {
       this.shareStructure.maxNumberOfShares = null
     }
   }
 
-  private changeParValueFlag (): void {
+  protected changeParValueFlag (): void {
     if (this.hasNoParValue) {
       this.shareStructure.currency = null
       this.shareStructure.parValue = null

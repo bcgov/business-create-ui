@@ -1,6 +1,6 @@
 // Libraries
 import { axiosInstance as axios } from '@/utils'
-import { NOT_FOUND } from 'http-status-codes'
+import { StatusCodes } from 'http-status-codes'
 import { DissolutionFilingIF, IncorporationFilingIF, RegistrationFilingIF } from '@/interfaces'
 import { FilingTypes } from '@/enums'
 
@@ -51,8 +51,9 @@ export default class LegalServices {
     return axios.get(url)
       .then(response => {
         // look for dissolution task
-        const filing = response?.data?.tasks?.
-          find(x => x.task.filing.hasOwnProperty(FilingTypes.VOLUNTARY_DISSOLUTION))?.task.filing
+        const filing = response?.data?.tasks
+          // eslint-disable-next-line no-prototype-builtins
+          ?.find(x => x.task.filing.hasOwnProperty(FilingTypes.VOLUNTARY_DISSOLUTION))?.task.filing
         const filingName = filing?.header?.name
         const filingId = +filing?.header?.filingId || 0
 
@@ -116,7 +117,7 @@ export default class LegalServices {
         }
         return data
       }).catch(error => {
-        if (error?.response?.status === NOT_FOUND) {
+        if (error?.response?.status === StatusCodes.NOT_FOUND) {
           return null // NR not found
         }
         throw error
@@ -130,7 +131,7 @@ export default class LegalServices {
    */
   static fetchParties (businessId: string): Promise<any> {
     // need to get the parties from the legal endpoint v2
-    let url = `businesses/${businessId}/parties`
+    const url = `businesses/${businessId}/parties`
 
     return axios.get(url).then(response => {
       if (response?.data) return response.data
@@ -152,7 +153,7 @@ export default class LegalServices {
       }
       return data
     }).catch(error => {
-      if (error?.response?.status === NOT_FOUND) {
+      if (error?.response?.status === StatusCodes.NOT_FOUND) {
         return null // Business or Address not found
       }
       throw error
@@ -168,7 +169,7 @@ export default class LegalServices {
     * @returns the filing in safe-empty state if applicable
   */
   private static formatEmptyIaFiling (filing: any): IncorporationFilingIF {
-    let toReturn = filing
+    const toReturn = filing
     if (toReturn.incorporationApplication) {
       // set offices
       if (!toReturn.incorporationApplication?.offices) {
@@ -202,7 +203,7 @@ export default class LegalServices {
    * @returns the filing in safe-empty state if applicable
    */
   private static formatEmptyRegFiling (filing: any): RegistrationFilingIF {
-    let toReturn = filing
+    const toReturn = filing
     if (toReturn.registration) {
       // set offices
       if (!toReturn.registration?.offices) {

@@ -19,13 +19,13 @@ const defaultFlagSet: LDFlagSet = {
 /**
  * The Launch Darkly client instance.
  */
-let ldClient: LDClient = null
+let ldClient = null as LDClient
 
 /**
  * An async method that initializes the Launch Darkly client.
  */
 export async function initLdClient (): Promise<void> {
-  const envKey: string = window['ldClientId']
+  const envKey = window.ldClientId as string
 
   if (envKey) {
     const user: LDUser = {
@@ -62,7 +62,7 @@ export async function initLdClient (): Promise<void> {
  * @param custom optional object of additional attributes associated with the user
  */
 export async function updateLdUser (
-  key: string, email: string, firstName: string, lastName: string, custom: any = null
+  key: string, email: string, firstName: string, lastName: string, custom = null
 ): Promise<void> {
   if (ldClient) {
     const user: LDUser = { key, email, firstName, lastName, custom }

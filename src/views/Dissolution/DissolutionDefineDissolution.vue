@@ -126,26 +126,26 @@ export default class DissolutionDefineDissolution extends Mixins(CommonMixin, En
   @Action setCustodianValidity!: ActionBindingIF
 
   /** The entity name. */
-  private get entityName (): string {
+  get entityName (): string {
     return this.getBusinessLegalName || `${this.getCorpTypeNumberedDescription(this.getEntityType)}`
   }
 
   /** The entity designation. */
-  private get entityDesignation (): string {
+  get entityDesignation (): string {
     return this.isTypeCoop ? 'Cooperative' : 'Company'
   }
 
   /** The entity act. */
-  private get entityAct (): string {
+  get entityAct (): string {
     return this.isTypeCoop ? 'Cooperative Association Act' : 'Business Corporations Act'
   }
 
-  private get showDissolutionStatementErrors (): boolean {
+  get showDissolutionStatementErrors (): boolean {
     return this.getShowErrors &&
       (this.isTypeCoop && this.getDissolutionStatementStep && !this.getDissolutionStatementStep.valid)
   }
 
-  private get showDestroyCertificateErrors () {
+  get showDestroyCertificateErrors () {
     return this.getShowErrors && (this.isTypeCoop && !this.getDissolutionHasCertificateDestroyed)
   }
 

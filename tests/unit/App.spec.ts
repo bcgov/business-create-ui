@@ -656,8 +656,8 @@ describe('Dissolution - Define Dissolution page for a BEN', () => {
         processingFees: 0,
         serviceFees: 1.50,
         tax: {
-          'gst': 0,
-          'pst': 0
+          gst: 0,
+          pst: 0
         },
         total: 21.5
       }
@@ -674,8 +674,8 @@ describe('Dissolution - Define Dissolution page for a BEN', () => {
         processingFees: 0,
         serviceFees: 1.5,
         tax: {
-          'gst': 0,
-          'pst': 0
+          gst: 0,
+          pst: 0
         },
         total: 121.5
       }

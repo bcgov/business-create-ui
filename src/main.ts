@@ -43,17 +43,17 @@ async function start () {
   // must come first as inits below depend on config
   await fetchConfig()
 
-  if (window['sentryEnable'] === 'true') {
+  if ((window as any).sentryEnable === 'true') {
     // initialize Sentry
     console.info('Initializing Sentry...') // eslint-disable-line no-console
     Sentry.init({
-      dsn: window['sentryDsn'],
+      dsn: (window as any).sentryDsn,
       integrations: [new Integrations.Vue({ Vue, attachProps: true })]
     })
   }
 
   // initialize Launch Darkly
-  if (window['ldClientId']) {
+  if ((window as any).ldClientId) {
     await initLdClient()
   }
 

@@ -1,8 +1,10 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import { CorpTypeCd, NumWord, PartyTypes, RoleTypes, RuleIds } from '@/enums'
-import { ActionBindingIF, AddressIF, ConfirmDialogType, OrgPersonIF, PeopleAndRoleIF,
-  PeopleAndRolesResourceIF, RegistrationStateIF, TombstoneIF } from '@/interfaces'
+import {
+  ActionBindingIF, AddressIF, ConfirmDialogType, OrgPersonIF, PeopleAndRoleIF,
+  PeopleAndRolesResourceIF, RegistrationStateIF, TombstoneIF
+} from '@/interfaces'
 
 /**
  * Mixin that provides common people and roles methods.
@@ -39,7 +41,7 @@ export default class PeopleRolesMixin extends Vue {
   readonly NumWord = NumWord
   readonly RuleIds = RuleIds
 
-  protected currentOrgPerson: OrgPersonIF = null
+  protected currentOrgPerson = null as OrgPersonIF
   protected showOrgPersonForm = false
   protected activeIndex = NaN // new org/person
 

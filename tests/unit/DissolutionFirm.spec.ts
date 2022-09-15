@@ -1,6 +1,6 @@
 import Vuetify from 'vuetify'
 import { shallowWrapperFactory } from '../jest-wrapper-factory'
-import { mount, shallowMount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import { getVuexStore } from '@/store'
 import DissolutionFirm from '@/views/DissolutionFirm/DissolutionFirm.vue'
 import { DissolutionResources } from '@/resources/'

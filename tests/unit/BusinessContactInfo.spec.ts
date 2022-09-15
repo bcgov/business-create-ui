@@ -8,7 +8,7 @@ import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
 Vue.use(Vuetify)
 const store = getVuexStore()
 
-let vuetify = new Vuetify({})
+const vuetify = new Vuetify({})
 
 // Events
 const formValidEvent = 'valid'
@@ -54,7 +54,7 @@ function createComponent (
   }
   return mount(BusinessContactInfo, {
     store,
-    propsData: { initialValue: businessContact, isEditing: isEditing },
+    propsData: { initialValue: businessContact, isEditing },
     vuetify
   })
 }
@@ -73,7 +73,8 @@ describe('Business Contact Info component', () => {
     const wrapper: Wrapper<BusinessContactInfo> = createComponent(email, email)
     await Vue.nextTick()
     expect(getLastEvent(wrapper, formValidEvent)).toBe(true)
-    expect(getLastEvent(wrapper, formDataChangeEvent)).toStrictEqual({ email: email,
+    expect(getLastEvent(wrapper, formDataChangeEvent)).toStrictEqual({
+      email,
       confirmEmail: email,
       phone: ''
     })
@@ -84,7 +85,8 @@ describe('Business Contact Info component', () => {
     const wrapper: Wrapper<BusinessContactInfo> = createComponent(invalidEmail, invalidEmail)
     await Vue.nextTick()
     expect(getLastEvent(wrapper, formValidEvent)).toBe(false)
-    expect(getLastEvent(wrapper, formDataChangeEvent)).toStrictEqual({ email: invalidEmail,
+    expect(getLastEvent(wrapper, formDataChangeEvent)).toStrictEqual({
+      email: invalidEmail,
       confirmEmail: invalidEmail,
       phone: ''
     })
@@ -95,7 +97,8 @@ describe('Business Contact Info component', () => {
     const wrapper: Wrapper<BusinessContactInfo> = createComponent(email, email, invalidPhoneNumber)
     await Vue.nextTick()
     expect(getLastEvent(wrapper, formValidEvent)).toBe(false)
-    expect(getLastEvent(wrapper, formDataChangeEvent)).toStrictEqual({ email: email,
+    expect(getLastEvent(wrapper, formDataChangeEvent)).toStrictEqual({
+      email,
       confirmEmail: email,
       phone: '(11'
     })
@@ -108,7 +111,8 @@ describe('Business Contact Info component', () => {
     inputElement.setValue(invalidEmail)
     await Vue.nextTick()
     expect(getLastEvent(wrapper, formValidEvent)).toBe(false)
-    expect(getLastEvent(wrapper, formDataChangeEvent)).toStrictEqual({ email: invalidEmail,
+    expect(getLastEvent(wrapper, formDataChangeEvent)).toStrictEqual({
+      email: invalidEmail,
       confirmEmail: email,
       phone: ''
     })
@@ -123,7 +127,8 @@ describe('Business Contact Info component', () => {
     inputElement.setValue(invalidEmail)
     await Vue.nextTick()
     expect(getLastEvent(wrapper, formValidEvent)).toBe(false)
-    expect(getLastEvent(wrapper, formDataChangeEvent)).toStrictEqual({ email: invalidEmail,
+    expect(getLastEvent(wrapper, formDataChangeEvent)).toStrictEqual({
+      email: invalidEmail,
       confirmEmail: email,
       phone: ''
     })
@@ -137,7 +142,8 @@ describe('Business Contact Info component', () => {
     inputElement.setValue(invalidPhoneNumber)
     inputElement.trigger('change')
     await Vue.nextTick()
-    expect(getLastEvent(wrapper, formDataChangeEvent)).toStrictEqual({ email: email,
+    expect(getLastEvent(wrapper, formDataChangeEvent)).toStrictEqual({
+      email,
       confirmEmail: email,
       phone: '(11'
     })
