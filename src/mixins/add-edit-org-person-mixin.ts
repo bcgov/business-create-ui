@@ -40,6 +40,7 @@ export default class AddEditOrgPersonMixin extends Vue {
 
   @Getter getCurrentDate!: string
   @Getter isRoleStaff!: boolean
+  @Getter isSbcStaff!: boolean
   @Getter isTypeBcomp!: boolean
   @Getter isTypeCoop!: boolean
   @Getter isTypeSoleProp!: boolean
