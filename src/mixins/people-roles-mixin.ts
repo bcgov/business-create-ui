@@ -25,6 +25,7 @@ export default class PeopleRolesMixin extends Vue {
   @Getter isTypeSoleProp!: boolean
   @Getter isTypePartnership!: boolean
   @Getter isRoleStaff!: boolean
+  @Getter isSbcStaff!: boolean
 
   @Action setOrgPersonList!: ActionBindingIF
   @Action setAddPeopleAndRoleStepValidity!: ActionBindingIF
