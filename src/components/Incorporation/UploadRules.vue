@@ -75,8 +75,32 @@
           </ul>
 
           <!-- help section 3 -->
-          <p id="help-text-section-3"
-            v-for="(item, index) in getCreateRulesResource.helpSection.helpText.section3.items"
+          <p class="help-section-title mt-4">
+            The Cooperative Association Regulation provide a
+            <a href="https://www.bclaws.gov.bc.ca/civix/document/id/complete/statreg/391_2000#ScheduleB">Schedule B</a>
+            Schedule B template of Rules. The rules adopted by a Cooperative Association may be in this form, a modified
+            form of these Rules or in another form altogether.
+          </p>
+          <p class="help-section-title font-weight-bold mt-4">
+            {{getCreateMemorandumResource.helpSection.helpText.section3.label}}
+          </p>
+          <ul class="bulleted-list mt-4">
+            <li
+              v-for="(item, index) in getCreateMemorandumResource.helpSection.helpText.section3.items"
+              class="mt-2"
+              :key="index"
+              v-html="item"
+            />
+          </ul>
+          <p class="help-section-title mt-4">
+            Before choosing to use the
+            <a href="https://www.bclaws.gov.bc.ca/civix/document/id/complete/statreg/391_2000#ScheduleB">Schedule B</a>
+            Form of Rules, please review them carefully to decide whether they work for the Cooperative Association.
+          </p>
+
+          <!-- help section 4 -->
+          <p id="help-text-section-4"
+            v-for="(item, index) in getCreateRulesResource.helpSection.helpText.section4.items"
             class="mt-4"
             :key="index"
             v-html="item"
@@ -115,17 +139,6 @@
                       the Rules of the Association:
                     </p>
                     <div class="mt-2 mb-0 font-weight-bold">{{getNameRequestDetails.approvedName}}</div>
-                  </v-col>
-                </v-row>
-              </li>
-              <li class="mt-4">
-                <v-row no-gutters>
-                  <v-col cols="1"><v-icon>mdi-circle-small</v-icon></v-col>
-                  <v-col cols="11">
-                    <p class="mb-0">
-                      Each Subscriber and Witness has signed and dated the Rules of the
-                      Association and their name is printed under their signature.
-                    </p>
                   </v-col>
                 </v-row>
               </li>

@@ -135,10 +135,13 @@
                         <span v-on="on" class="tool-tip dotted-underline">Dissolution Provision</span>
                       </template>
                       Dissolution Provision &dash; all Cooperative Associations should have provisions for the
-                      distribution of their property after they have been dissolved or wound up.  See example
-                      memorandum for information relevant to your Cooperative Association type.
+                      distribution of their assets after they have been dissolved or wound up. See example
+                      memorandum for information relevant to your Cooperative Association type. If the cooperative
+                      decides to not adopt one of the sample dissolution clauses in their memorandum, the cooperative
+                      should put a dissolution clause into their rules. For more information about what a dissolution
+                      clause is, contact BC Registries.
                     </v-tooltip>
-                    in the Memorandum of Association.
+                    in the Memorandum or Rules of Association.
                   </v-col>
                 </v-row>
               </li>
