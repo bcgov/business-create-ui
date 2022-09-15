@@ -64,7 +64,7 @@
                   label="First Name"
                   v-model.trim="orgPerson.officer.firstName"
                   :rules="enableRules ? Rules.FirstNameRules : []"
-                  :readonly="isCompletingParty && (!isRoleStaff || !isSbcStaff)"
+                  :readonly="isCompletingParty && !(isRoleStaff || isSbcStaff)"
                 />
                 <v-text-field
                   filled
@@ -72,7 +72,7 @@
                   label="Middle Name (Optional)"
                   v-model.trim="orgPerson.officer.middleName"
                   :rules="enableRules ? Rules.MiddleNameRules : []"
-                  :readonly="isCompletingParty && (!isRoleStaff || !isSbcStaff)"
+                  :readonly="isCompletingParty && !(isRoleStaff || isSbcStaff)"
                 />
                 <v-text-field
                   filled
@@ -80,7 +80,7 @@
                   label="Last Name"
                   v-model.trim="orgPerson.officer.lastName"
                   :rules="enableRules ? Rules.LastNameRules : []"
-                  :readonly="isCompletingParty && (!isRoleStaff || !isSbcStaff)"
+                  :readonly="isCompletingParty && !(isRoleStaff || isSbcStaff)"
                 />
               </div>
             </article>
@@ -228,7 +228,7 @@
                 label="Email Address"
                 v-model.trim="orgPerson.officer.email"
                 :rules="enableRules ? Rules.EmailRules : []"
-                :readonly="isCompletingParty && (!isRoleStaff || !isSbcStaff)"
+                :readonly="isCompletingParty && !(isRoleStaff || isSbcStaff)"
               />
             </article>
 
