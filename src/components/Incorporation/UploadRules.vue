@@ -1,7 +1,7 @@
 <template>
   <div id="upload-rules">
     <!-- Intro section -->
-    <section class="mt-10">
+    <section id="header-rules-section" class="mt-10">
       <header>
         <h2>1. Rules of the Association</h2>
         <p>Before submitting your incorporation application you must <b>complete, sign, and date</b> the
@@ -17,7 +17,7 @@
     </section>
 
     <!-- Help section -->
-    <div v-if="getCreateRulesResource.helpSection" class="mt-5">
+    <div v-if="getCreateRulesResource.helpSection" class="mt-5" id="help-rules-section">
       <span class="help-btn" @click="helpToggle = !helpToggle">
         <v-icon color="primary" style="padding-right: 5px">mdi-help-circle-outline</v-icon>
         <span v-if="!helpToggle">{{ getCreateRulesResource.helpSection.header }}</span>
@@ -74,13 +74,14 @@
             </li>
           </ul>
 
-          <!-- help section 3 -->
-          <p class="help-section-title mt-4">
+          <p class="mt-4">
             The Cooperative Association Regulation provide a
             <a href="https://www.bclaws.gov.bc.ca/civix/document/id/complete/statreg/391_2000#ScheduleB">Schedule B</a>
             Schedule B template of Rules. The rules adopted by a Cooperative Association may be in this form, a modified
             form of these Rules or in another form altogether.
           </p>
+
+          <!-- help section 3 -->
           <p class="help-section-title font-weight-bold mt-4">
             {{getCreateRulesResource.helpSection.helpText.section3.label}}
           </p>
@@ -92,7 +93,8 @@
               v-html="item"
             />
           </ul>
-          <p class="help-section-title mt-4">
+
+          <p class="mt-4">
             Before choosing to use the
             <a href="https://www.bclaws.gov.bc.ca/civix/document/id/complete/statreg/391_2000#ScheduleB">Schedule B</a>
             Form of Rules, please review them carefully to decide whether they work for the Cooperative Association.
