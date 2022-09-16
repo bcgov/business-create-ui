@@ -77,7 +77,7 @@
           <p class="mt-4">
             The Cooperative Association Regulation provide a
             <a href="https://www.bclaws.gov.bc.ca/civix/document/id/complete/statreg/391_2000#ScheduleB">Schedule B</a>
-            Schedule B template of Rules. The rules adopted by a Cooperative Association may be in this form, a modified
+            template of Rules. The rules adopted by a Cooperative Association may be in this form, a modified
             form of these Rules or in another form altogether.
           </p>
 
