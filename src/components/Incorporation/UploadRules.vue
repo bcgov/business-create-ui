@@ -82,11 +82,11 @@
             form of these Rules or in another form altogether.
           </p>
           <p class="help-section-title font-weight-bold mt-4">
-            {{getCreateMemorandumResource.helpSection.helpText.section3.label}}
+            {{getCreateRulesResource.helpSection.helpText.section3.label}}
           </p>
           <ul class="bulleted-list mt-4">
             <li
-              v-for="(item, index) in getCreateMemorandumResource.helpSection.helpText.section3.items"
+              v-for="(item, index) in getCreateRulesResource.helpSection.helpText.section3.items"
               class="mt-2"
               :key="index"
               v-html="item"
