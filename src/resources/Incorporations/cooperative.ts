@@ -118,19 +118,12 @@ export const CooperativeResource: IncorporationResourceIF = {
         section3: {
           label: 'The template can be used if:',
           items: [
-            {
-              type: ItemTypes.TEXT,
-              value: 'The Cooperative Association will NOT be a Housing or Community Service Cooperative Association.'
-            },
-            {
-              type: ItemTypes.TEXT,
-              value: 'The Cooperative Association has share capital consisting of membership shares with par value.'
-            },
-            {
-              type: ItemTypes.TEXT,
-              value: 'The Cooperative Association has investment shares that may be issued only to members.'
-            }
-          ]
+            `The Cooperative Association will <span class="font-weight-bold">not</span> be a Housing or Community\
+              Service Cooperative Association.`,
+            'The Cooperative Association has share capital consisting of membership shares with par value.',
+            'The Cooperative Association has investment shares that may be issued only to members.'
+          ],
+          href: 'https://www.bclaws.gov.bc.ca/civix/document/id/complete/statreg/391_2000#ScheduleB'
         },
         section4: {
           items: [

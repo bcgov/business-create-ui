@@ -74,14 +74,14 @@
             </li>
           </ul>
 
+          <!-- help section 3 -->
           <p class="mt-4">
             The Cooperative Association Regulation provide a
-            <a href="https://www.bclaws.gov.bc.ca/civix/document/id/complete/statreg/391_2000#ScheduleB">Schedule B</a>
+            <a :href="getCreateRulesResource.helpSection.helpText.section3.href" target="_blank">Schedule B</a>
             template of Rules. The rules adopted by a Cooperative Association may be in this form, a modified
             form of these Rules or in another form altogether.
           </p>
 
-          <!-- help section 3 -->
           <p class="help-section-title font-weight-bold mt-4">
             {{getCreateRulesResource.helpSection.helpText.section3.label}}
           </p>
@@ -96,7 +96,7 @@
 
           <p class="mt-4">
             Before choosing to use the
-            <a href="https://www.bclaws.gov.bc.ca/civix/document/id/complete/statreg/391_2000#ScheduleB">Schedule B</a>
+            <a :href="getCreateRulesResource.helpSection.helpText.section3.href" target="_blank">Schedule B</a>
             Form of Rules, please review them carefully to decide whether they work for the Cooperative Association.
           </p>
 
