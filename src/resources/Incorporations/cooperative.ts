@@ -116,6 +116,16 @@ export const CooperativeResource: IncorporationResourceIF = {
           ]
         },
         section3: {
+          label: 'The template can be used if:',
+          items: [
+            `The Cooperative Association will <span class="font-weight-bold">not</span> be a Housing or Community\
+              Service Cooperative Association.`,
+            'The Cooperative Association has share capital consisting of membership shares with par value.',
+            'The Cooperative Association has investment shares that may be issued only to members.'
+          ],
+          href: 'https://www.bclaws.gov.bc.ca/civix/document/id/complete/statreg/391_2000#ScheduleB'
+        },
+        section4: {
           items: [
             `Applicants need to define their rules correctly. BC Registries is not responsible for verifying or offering
               advice about creating rules. You may want to get advice from a lawyer for help setting up your rules.`,
