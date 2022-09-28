@@ -1,4 +1,5 @@
-import { Component, Vue } from 'vue-property-decorator'
+import Vue from 'vue'
+import { Component } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import { CorpTypeCd, NumWord, PartyTypes, RoleTypes, RuleIds } from '@/enums'
 import {
@@ -45,7 +46,8 @@ export default class PeopleRolesMixin extends Vue {
   protected showOrgPersonForm = false
   protected activeIndex = NaN // new org/person
 
-  protected async mounted (): Promise<void> {
+  /** Called when component is mounted. */
+  async mounted (): Promise<void> {
     // set initial validity
     this.setAddPeopleAndRoleStepValidity(this.hasValidRoles())
   }

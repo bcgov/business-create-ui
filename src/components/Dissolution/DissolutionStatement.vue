@@ -22,7 +22,7 @@
               :value="item.key"
               :id="`dissolution-statement-${item.key}`"
             >
-              <template slot="label">
+              <template v-slot:label>
                 <div v-html="item.value" class="dissolution-statement-option" />
               </template>
             </v-radio>
@@ -51,7 +51,8 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Vue, Prop } from 'vue-property-decorator'
+import Vue from 'vue'
+import { Component, Prop } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 
 // Interfaces & enums
@@ -72,7 +73,7 @@ export default class DissolutionStatement extends Vue {
   protected dissolutionStatementType = null as DissolutionStatementTypes
 
   /** Called when component is created. */
-  protected created (): void {
+  created (): void {
     if (this.getDissolutionStatementStep) {
       this.dissolutionStatementType = this.getDissolutionStatementStep.dissolutionStatementType
     }
@@ -114,7 +115,7 @@ export default class DissolutionStatement extends Vue {
   padding-top: 0;
   margin-top: 0;
 
-  ::v-deep .v-input--selection-controls__input {
+  :deep(.v-input--selection-controls__input) {
     margin-right: 1rem;
   }
 

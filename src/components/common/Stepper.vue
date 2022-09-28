@@ -46,7 +46,8 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Vue } from 'vue-property-decorator'
+import Vue from 'vue'
+import { Component } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 
 // Enums
@@ -219,12 +220,14 @@ export default class Stepper extends Vue {
 }
 
 // Vuetify Overrides
-::v-deep .v-btn:not(.v-btn--round).v-size--default {
-  max-width: 64px;
-}
+:deep() {
+  .v-btn:not(.v-btn--round).v-size--default {
+    max-width: 64px;
+  }
 
-::v-deep .v-card > *:last-child:not(.v-btn):not(.v-chip) {
-  border-bottom: 3px solid red !important;
-  border-bottom-left-radius: 2px !important;
+  .v-card > *:last-child:not(.v-btn):not(.v-chip) {
+    border-bottom: 3px solid red !important;
+    border-bottom-left-radius: 2px !important;
+  }
 }
 </style>

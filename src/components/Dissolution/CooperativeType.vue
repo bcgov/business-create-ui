@@ -59,11 +59,12 @@ export default class CooperativeType extends Mixins(EnumMixin) {
   protected cooperativeType = null as CoopTypes
 
   // Validation rules
-  readonly cooperativeTypeRules: Array<Function> = [
+  readonly cooperativeTypeRules: Array<(v) => boolean | string> = [
     v => !!v || 'This field is required' // is not empty
   ]
 
-  protected mounted (): void {
+  /** Called when component is mounted. */
+  mounted (): void {
     // Set local model when resuming draft
     if (this.getCooperativeType) this.cooperativeType = this.getCooperativeType
   }
@@ -85,28 +86,32 @@ export default class CooperativeType extends Mixins(EnumMixin) {
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
 
-// remove extra space taken by error message
-::v-deep .v-text-field__details {
-  margin-bottom: -8px !important;
-}
+:deep() {
+  // remove extra space taken by error message
+  .v-text-field__details {
+    margin-bottom: -8px !important;
+  }
 
-// Vuetify Overrides
-::v-deep .v-list-item .v-list-item__title, .v-list-item .v-list-item__subtitle {
-  color: $gray7;
-}
+  // Vuetify Overrides
+  .v-list-item .v-list-item__title,
+  .v-list-item .v-list-item__subtitle {
+    color: $gray7;
+  }
 
-::v-deep .v-list-item--link:hover:not(.v-list-item--active) {
-  background-color: $gray1;
-  color: $app-blue !important;
-}
-
-::v-deep .v-list-item:hover {
-  .v-list-item__title {
+  .v-list-item--link:hover:not(.v-list-item--active) {
+    background-color: $gray1;
     color: $app-blue !important;
   }
-}
 
-::v-deep .v-list-item--active .v-list-item__title, .v-list-item .v-list-item__subtitle {
-  color: $app-blue !important;
+  .v-list-item:hover {
+    .v-list-item__title {
+      color: $app-blue !important;
+    }
+  }
+
+  .v-list-item--active .v-list-item__title,
+  .v-list-item .v-list-item__subtitle {
+    color: $app-blue !important;
+  }
 }
 </style>

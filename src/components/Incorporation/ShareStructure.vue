@@ -188,8 +188,8 @@ export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
   readonly excludedWordsListForSeries: string [] = ['share', 'shares']
 
   // Rules
-  protected getNameRule (): Array<Function> {
-    const rules: Array<Function> = [
+  protected getNameRule (): Array<(v) => boolean | string> {
+    const rules: Array<(v) => boolean | string> = [
       v => !!v || 'A name is required',
       v => !/^\s/g.test(v) || 'Invalid spaces', // leading spaces
       v => !/\s$/g.test(v) || 'Invalid spaces' // trailing spaces
@@ -215,8 +215,8 @@ export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
     return rules
   }
 
-  protected getMaximumShareRule (): Array<Function> {
-    let rules = [] as Array<Function>
+  protected getMaximumShareRule (): Array<(v) => boolean | string> {
+    let rules = [] as Array<(v) => boolean | string>
     if (!this.hasNoMaximumShares) {
       rules = [
         (v: string) => (v !== '' && v !== null && v !== undefined) || 'Number of shares is required',
@@ -248,7 +248,7 @@ export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
     return rules
   }
 
-  protected getParValueRule (): Array<Function> {
+  protected getParValueRule (): Array<(v) => boolean | string> {
     if (!this.hasNoParValue) {
       return [
         v => (v !== '' && v !== null && v !== undefined) || 'Par value is required',
@@ -260,7 +260,7 @@ export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
     return []
   }
 
-  protected getCurrencyRule (): Array<Function> {
+  protected getCurrencyRule (): Array<(v) => boolean | string> {
     if (!this.hasNoParValue) {
       return [v => !!v || 'Currency is required']
     }
@@ -268,7 +268,7 @@ export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
   }
 
   /** Called when component is created. */
-  protected created (): void {
+  created (): void {
     if (this.initialValue) {
       this.shareStructure = { ...this.initialValue }
       this.hasNoMaximumShares = !this.shareStructure.hasMaximumShares

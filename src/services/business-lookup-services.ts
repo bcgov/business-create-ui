@@ -19,7 +19,7 @@ export default class BusinessLookupServices {
   static get accountId (): string {
     // if we can't get account id from ACCOUNT_ID
     // then try to get it from CURRENT_ACCOUNT
-    let accountId: string = sessionStorage.getItem('ACCOUNT_ID')
+    let accountId = sessionStorage.getItem('ACCOUNT_ID')
     if (!accountId) {
       const currentAccount = sessionStorage.getItem('CURRENT_ACCOUNT')
       accountId = JSON.parse(currentAccount)?.id

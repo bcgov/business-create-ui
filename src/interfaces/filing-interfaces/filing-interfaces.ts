@@ -35,7 +35,7 @@ export interface IncorporationFilingIF {
       legalName?: string // only set when there is an NR
     }
     nameTranslations: NameTranslationIF[]
-    offices: IncorporationAddressIF | {}
+    offices: IncorporationAddressIF | object
     contactPoint: {
       email: string
       phone: string

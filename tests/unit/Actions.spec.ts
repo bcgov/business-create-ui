@@ -1,3 +1,5 @@
+/* eslint prefer-promise-reject-errors: "off" */
+
 import Vue from 'vue'
 import Vuetify from 'vuetify'
 import VueRouter from 'vue-router'
@@ -108,14 +110,13 @@ describe('Emits error event if NR validation fails in file and pay', () => {
     delete window.location
     window.location = { assign: jest.fn() } as any
 
-    const get = sinon.stub(axios, 'get')
-
     const expiredNR = { ...nrData }
     expiredNR.expirationDate = 'Thu, 31 Dec 2019 23:59:59 GMT'
     expiredNR.state = 'EXPIRED'
 
     // GET NR data
-    get.withArgs('nameRequests/NR 1234567')
+    sinon.stub(axios, 'get')
+      .withArgs('nameRequests/NR 1234567')
       .returns(new Promise(resolve => resolve({
         data: expiredNR
       })))
@@ -359,15 +360,12 @@ describe('Actions component - Filing Functionality', () => {
     // mock the window.location.assign function
     delete window.location
     window.location = { assign: jest.fn() } as any
-    const get = sinon.stub(axios, 'get')
 
     // GET NR data
-    get.withArgs('nameRequests/NR 1234567')
+    sinon.stub(axios, 'get')
+      .withArgs('nameRequests/NR 1234567')
       .returns(new Promise(resolve => resolve({
-        data:
-        {
-          ...nrData
-        }
+        data: { ...nrData }
       })))
 
     // init store

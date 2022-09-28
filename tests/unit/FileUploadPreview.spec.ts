@@ -25,7 +25,7 @@ console.log = jest.fn()
 
 function myArrayBuffer () {
   // this: File or Blob
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     const fr = new FileReader()
     fr.onload = () => {
       resolve(fr.result)

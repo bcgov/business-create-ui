@@ -42,7 +42,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Emit, Prop, Vue, Watch } from 'vue-property-decorator'
+import Vue from 'vue'
+import { Component, Emit, Prop, Watch } from 'vue-property-decorator'
 import { mask } from 'vue-the-mask'
 import { FormIF } from '@/interfaces'
 import { Rules } from '@/rules'
@@ -83,7 +84,7 @@ export default class BusinessNumber extends Vue {
   protected value = null as string
 
   /** Called when component is mounted. */
-  protected mounted (): void {
+  mounted (): void {
     // init model variable + validate
     this.value = this.businessNumber
     this.onBlur()

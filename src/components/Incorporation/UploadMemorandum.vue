@@ -383,7 +383,7 @@ export default class UploadMemorandum extends Mixins(CommonMixin, DocumentMixin)
   }
 
   /** Called when component is created. */
-  protected created (): void {
+  created (): void {
     this.uploadMemorandumDoc = this.getCreateMemorandumStep.memorandumDoc as File
     this.uploadMemorandumDocKey = this.getCreateMemorandumStep.docKey
     this.memorandumConfirmed = this.getCreateMemorandumStep.memorandumConfirmed
@@ -391,7 +391,8 @@ export default class UploadMemorandum extends Mixins(CommonMixin, DocumentMixin)
     this.hasMemorandumConfirmed = this.memorandumConfirmed
   }
 
-  protected async mounted (): Promise<void> {
+  /** Called when component is mounted. */
+  async mounted (): Promise<void> {
     // wait for components to load/stabilize then update validation state in store
     await this.$nextTick()
     this.updateMemorandumStepValidity()
@@ -467,7 +468,7 @@ ul {
   }
 }
 
-::v-deep #confirm-memorandum-section {
+:deep(#confirm-memorandum-section) {
   // override default validation styling so checkbox does not turn red on validation error
   .v-input--selection-controls__input .error--text {
     color: $app-lt-gray !important;
@@ -477,7 +478,7 @@ ul {
 .chk-memorandum {
   color: $gray9;
 
-  ::v-deep {
+  :deep() {
     .theme--light.v-icon {
       color: $gray9;
     }

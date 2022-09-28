@@ -111,11 +111,11 @@
                   v-model="orgPerson.confirmBusiness"
                   :rules="enableRules ? [(v) => !!v] : []"
                 >
-                  <template v-if="isProprietor" slot="label">
+                  <template v-if="isProprietor" v-slot:label>
                     I confirm that the business proprietor being added is not legally required to
                     register in B.C.
                   </template>
-                  <template v-if="isPartner" slot="label">
+                  <template v-else-if="isPartner" v-slot:label>
                     I confirm that the business partner being added is not legally required to
                     register in B.C.
                   </template>
@@ -331,7 +331,7 @@ export default class RegAddEditOrgPerson extends Mixins(AddEditOrgPersonMixin) {
   //
 
   /** The validation rules for the Organization Name. */
-  readonly OrgNameRules: Array<Function> = [
+  readonly OrgNameRules: Array<(v) => boolean | string> = [
     v => !!v?.trim() || 'Business or corporation name is required',
     v => (v?.length <= 150) || 'Cannot exceed 150 characters' // maximum character count
   ]
@@ -404,7 +404,7 @@ div.three-column {
 }
 
 // align checkbox with top of its label
-::v-deep .v-input--checkbox .v-input__slot {
+:deep(.v-input--checkbox .v-input__slot) {
   align-items: flex-start;
 
   .v-input--selection-controls__input {

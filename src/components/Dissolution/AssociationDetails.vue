@@ -119,7 +119,7 @@ import { isEmpty } from 'lodash'
 })
 export default class AssociationDetails extends Mixins(CommonMixin, EnumMixin, DateMixin) {
   @Prop({ default: false }) readonly isSummary!: boolean
-  @Prop({ default: 'Address' }) readonly addressLabel1: string
+  @Prop({ default: 'Address' }) readonly addressLabel!: string
   @Prop({ default: 'Company' }) readonly entityLabel!: string
   @Prop({ default: false }) readonly showBusinessDate!: boolean
   @Prop({ default: true }) readonly showContactInfo!: boolean
@@ -196,7 +196,7 @@ export default class AssociationDetails extends Mixins(CommonMixin, EnumMixin, D
 }
 
 // add missing whitespace between title and addresses
-::v-deep #contact-info .col-sm-3 {
-  padding-bottom: 16px;
+:deep(#contact-info .col-sm-3) {
+  padding-bottom: 1rem;
 }
 </style>

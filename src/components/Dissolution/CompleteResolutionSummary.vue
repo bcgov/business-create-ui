@@ -190,53 +190,58 @@ export default class CompleteResolutionSummary extends Mixins(DateMixin) {
 
 // styles specific to resolution summary section
 #resolution-summary-section-3 {
-  // removes dotted line bottom border on text area
-  ::v-deep .v-text-field.v-input--is-readonly .v-input__slot:before {
-    border-style: none !important;
-  }
+  :deep() {
+    // remove dotted line bottom border on text area
+    .v-text-field.v-input--is-readonly .v-input__slot:before {
+      border-style: none !important;
+    }
 
-  // remove extra bottom and top margins from text area
-  ::v-deep .v-text-field.v-text-field--enclosed .v-text-field__details {
-    margin-bottom: 0px !important;
-  }
+    // remove extra bottom and top margins from text area
+    .v-text-field.v-text-field--enclosed .v-text-field__details {
+      margin-bottom: 0px !important;
+    }
 
-  ::v-deep .v-input__slot {
-    margin-bottom: 0px !important
-  }
+    .v-input__slot {
+      margin-bottom: 0px !important
+    }
 
-  ::v-deep .v-textarea.v-text-field--box .v-text-field__prefix, .v-textarea.v-text-field--box textarea,
-  .v-textarea.v-text-field--enclosed .v-text-field__prefix, .v-textarea.v-text-field--enclosed textarea {
-    margin-top: 0px !important;
-  }
+    .v-textarea.v-text-field--box .v-text-field__prefix,
+    .v-textarea.v-text-field--box textarea,
+    .v-textarea.v-text-field--enclosed .v-text-field__prefix,
+    .v-textarea.v-text-field--enclosed textarea {
+      margin-top: 0px !important;
+    }
 
-  ::v-deep .v-textarea.v-text-field--enclosed.v-text-field--single-line:not(.v-input--dense) textarea {
-    margin-top: 0px !important;
-  }
+    .v-textarea.v-text-field--enclosed.v-text-field--single-line:not(.v-input--dense) textarea {
+      margin-top: 0px !important;
+    }
 
-  // remove min-height requirements for text area
-  ::v-deep input__slot, .v-text-field--outlined > .v-input__control > .v-input__slot {
-    min-height: 0px !important;
-  }
+    // remove min-height requirements for text area
+    .v-text-field--outlined > .v-input__control > .v-input__slot {
+      min-height: 0px !important;
+    }
 
-  ::v-deep .v-text-field--filled > .v-input__control > .v-input__slot, .v-text-field--full-width > .v-input__control >
-  .v-input__slot, .v-text-field--outlined > .v-input__control > .v-input__slot {
-    min-height: 0px !important;
-  }
+    .v-text-field--filled > .v-input__control > .v-input__slot,
+    .v-text-field--full-width > .v-input__control > .v-input__slot,
+    .v-text-field--outlined > .v-input__control > .v-input__slot {
+      min-height: 0px !important;
+    }
 
-  // set line-height for text area such that it lines with label text
-  ::v-deep .v-textarea textarea {
-    line-height: 1.45rem !important;
-  }
+    // set line-height for text area such that it lines with label text
+    .v-textarea textarea {
+      line-height: 1.45rem !important;
+    }
 
-  // remove text area padding
-  ::v-deep .v-text-field.v-text-field--enclosed:not(.v-text-field--rounded) > .v-input__control >
-  .v-input__slot, .v-text-field.v-text-field--enclosed .v-text-field__details {
-    padding: 0px !important;
-  }
+    // remove text area padding
+    .v-text-field.v-text-field--enclosed:not(.v-text-field--rounded) > .v-input__control > .v-input__slot,
+    .v-text-field.v-text-field--enclosed .v-text-field__details {
+      padding: 0px !important;
+    }
 
-  ::v-deep #resolution-text {
-    margin-top: 0px !important;
-    color: $gray7 !important;
+    #resolution-text {
+      margin-top: 0px !important;
+      color: $gray7 !important;
+    }
   }
 }
 

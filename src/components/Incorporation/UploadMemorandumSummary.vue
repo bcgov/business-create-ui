@@ -29,7 +29,8 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Vue } from 'vue-property-decorator'
+import Vue from 'vue'
+import { Component } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 
 // Enums

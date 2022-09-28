@@ -338,7 +338,7 @@ export default class CompleteAffidavit extends Mixins(CommonMixin, DocumentMixin
   }
 
   /** Called when component is created. */
-  protected created (): void {
+  created (): void {
     this.uploadAffidavitDoc = this.getAffidavitStep.affidavitDoc as File
     this.uploadAffidavitDocKey = this.getAffidavitStep.docKey
     this.affidavitConfirmed = this.getAffidavitStep.affidavitConfirmed
@@ -346,7 +346,8 @@ export default class CompleteAffidavit extends Mixins(CommonMixin, DocumentMixin
     this.hasAffidavitConfirmed = this.affidavitConfirmed
   }
 
-  protected async mounted (): Promise<void> {
+  /** Called when component is mounted. */
+  async mounted (): Promise<void> {
     // wait for components to load/stabilize then update validation state in store
     await this.$nextTick()
     this.updateAffidavitStepValidity()
@@ -404,7 +405,7 @@ ul {
   }
 }
 
-::v-deep {
+:deep() {
   /** override default validation styling preventing inputs from turning
   red on validation error before the review and confirm step has been visted. */
   .v-label .theme--light .error--text,
@@ -420,7 +421,7 @@ ul {
   }
 }
 
-.invalid-section ::v-deep {
+.invalid-section :deep() {
   /** Resets default validation styling after the review and confirm step has been visited. */
   .v-input--checkbox .v-input__control .v-input__slot .v-label,
   .v-messages__message,
@@ -435,7 +436,7 @@ ul {
 .chk-affidavit {
   color: $gray9;
 
-  ::v-deep {
+  :deep() {
     .theme--light.v-icon {
       color: $gray9;
     }
@@ -479,12 +480,12 @@ ul {
 
 #upload-affidavit-card {
   // file upload input field
-  ::v-deep label.v-label.theme--light {
+  :deep(label.v-label.theme--light) {
     color: $gray7 !important;
   }
 
   // remove extra space taken by error message
-  ::v-deep .v-text-field__details {
+  :deep(.v-text-field__details) {
     margin-bottom: -8px !important;
   }
 }

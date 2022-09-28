@@ -404,7 +404,7 @@ export default class DissolutionFirm extends Mixins(DateMixin, EnumMixin) {
   }
 
   /** Validations rules for start date field. */
-  get startDateRules (): Array<Function> {
+  get startDateRules (): Array<(v) => boolean | string> {
     return [
       (v: string) => !!v || 'Dissolution date is required',
       (v: string) =>
@@ -534,7 +534,7 @@ h2::before {
 }
 
 // override error red on title labels (except error-text one)
-::v-deep #document-delivery.invalid-section {
+:deep(#document-delivery.invalid-section) {
   .title-label:not(.error-text) {
     color: $gray9 !important;
   }

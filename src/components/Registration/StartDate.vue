@@ -78,7 +78,7 @@ export default class StartDate extends Mixins(DateMixin) {
   }
 
   /** Validations rules for start date field. */
-  get startDateRules (): Array<Function> {
+  get startDateRules (): Array<(v) => boolean | string> {
     return [
       (v: string) => !!v || 'Business start date is required',
       (v: string) =>
@@ -118,7 +118,7 @@ export default class StartDate extends Mixins(DateMixin) {
 }
 
 // remove extra space taken by error message
-::v-deep .v-text-field__details {
+:deep(.v-text-field__details) {
   margin-bottom: -8px !important;
 }
 </style>

@@ -66,7 +66,8 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Prop, Vue, Emit } from 'vue-property-decorator'
+import Vue from 'vue'
+import { Component, Prop, Emit } from 'vue-property-decorator'
 
 // Interfaces
 import { NameTranslationIF } from '@/interfaces'
@@ -81,6 +82,7 @@ export default class ListNameTranslations extends Vue {
    * @param index The active index which is subject to change.
    */
   @Emit('editNameTranslation')
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private emitNameEdit (index: number): void {}
 
   /**
@@ -88,6 +90,7 @@ export default class ListNameTranslations extends Vue {
    * @param index The active index which is subject to removal.
    */
   @Emit('removeNameTranslation')
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private emitRemoveName (index: number): void {}
 }
 </script>

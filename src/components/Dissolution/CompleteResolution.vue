@@ -268,7 +268,9 @@
               :rules="confirmCompletionResolution"
               @change="onResolutionConfirmedChange($event)"
             >
-              <div slot="label" v-html="confirmLabel"></div>
+              <template v-slot:label>
+                <div v-html="confirmLabel" />
+              </template>
             </v-checkbox>
             <ul>
               <li class="mt-4"
@@ -415,7 +417,7 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin) {
   }
 
   /** Validations rules for resolution date field. */
-  get resolutionDateRules (): Array<Function> {
+  get resolutionDateRules (): Array<(v) => boolean | string> {
     return [
       (v: string) => !!v || 'Resolution date is required',
       (v: string) =>
@@ -429,7 +431,7 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin) {
   }
 
   /** Validations rules for signing date field. */
-  get signatureDateRules (): Array<Function> {
+  get signatureDateRules (): Array<(v) => boolean | string> {
     return [
       (v: string) => !!v || 'Signature date is required',
       (v: string) =>
@@ -492,7 +494,7 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin) {
     return this.getCurrentJsDate
   }
 
-  get resolutionTextRules (): Array<Function> {
+  get resolutionTextRules (): Array<(v) => boolean | string> {
     return [
       v => (v && v.trim().length > 0) || 'Resolution text is required',
       v => (v && v.length <= this.MAX_RESOLUTION_TEXT_LENGTH) || 'Maximum characters exceeded',
@@ -603,7 +605,7 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin) {
   }
 
   /** Called when component is created. */
-  protected created (): void {
+  created (): void {
     const foundingDate = this.apiToDate(this.getBusinessFoundingDate)
     foundingDate.setHours(0, 0, 0, 0)
     this.foundingDate = foundingDate
@@ -614,7 +616,8 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin) {
     this.signatureDateText = this.getCreateResolutionStep.signingDate
   }
 
-  protected async mounted (): Promise<void> {
+  /** Called when component is mounted. */
+  async mounted (): Promise<void> {
     // wait for components to load/stabilize then update validation state in store
     await this.$nextTick()
     this.updateResolutionStepValidationDetail()
@@ -718,7 +721,7 @@ ul {
 
 // Used for title/placeholder text of input fields.  This was required as some input fields require
 // were not using the expected color of $gray7
-::v-deep label.v-label.theme--light {
+:deep(label.v-label.theme--light) {
   color: $gray7 !important;
 }
 
@@ -766,12 +769,12 @@ ul {
 
 #resolution-text-section {
   // text area word count counter
-  ::v-deep .v-counter {
+  :deep(.v-counter) {
     color: $gray7 !important;
   }
 }
 
-::v-deep {
+:deep() {
   /** Override default validation styling so invalid sections do
   not turn red on validation error */
   .v-input--selection-controls__input .error--text,
@@ -784,7 +787,7 @@ ul {
   }
 }
 
-.invalid-section ::v-deep {
+.invalid-section :deep() {
   /** Inserts red validation styling on invalid sections after the review
   and confirm page has been visted.  */
   .v-input--checkbox .v-input__control .v-input__slot .v-label {
@@ -803,7 +806,7 @@ ul {
 .chk-resolution {
   color: $gray9;
 
-  ::v-deep {
+  :deep() {
     .theme--light.v-icon {
       color: $gray9;
     }
@@ -846,7 +849,7 @@ ul {
   }
 }
 
-::v-deep #confirm-resolution-section .v-input__slot {
+:deep(#confirm-resolution-section .v-input__slot) {
   align-items: unset !important;
 
   label div {
@@ -875,21 +878,21 @@ ul {
   font-size: $px-14;
 
   // remove extra space taken by error message
-  ::v-deep .v-text-field__details {
+  :deep(.v-text-field__details) {
     margin-bottom: -8px !important;
   }
 }
 
 #resolution-text-card {
   // remove extra space taken by error message
-  ::v-deep .v-text-field__details {
+  :deep(.v-text-field__details) {
     margin-bottom: -8px !important;
   }
 }
 
 #resolution-signature-card {
   // remove extra space taken by error message
-  ::v-deep .date-picker-form .v-text-field__details {
+  :deep(.date-picker-form .v-text-field__details) {
     margin-bottom: -8px !important;
   }
 }

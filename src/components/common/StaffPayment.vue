@@ -12,7 +12,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Emit, Prop, Vue } from 'vue-property-decorator'
+import Vue from 'vue'
+import { Component, Emit, Prop } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import { StaffPayment as StaffPaymentShared } from '@bcrs-shared-components/staff-payment'
 import { ActionBindingIF, StaffPaymentIF, StaffPaymentStepIF } from '@/interfaces'
@@ -92,26 +93,28 @@ export default class StaffPayment extends Vue {
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
 
-::v-deep .v-input .v-label {
-  font-weight: normal;
-}
-
-::v-deep .v-input--radio-group__input {
-  .v-radio:not(:first-child) {
-    padding-top: 2rem;
+:deep() {
+  .v-input .v-label {
+    font-weight: normal;
   }
-  .v-input--checkbox {
-    padding-top: 2rem;
+
+  .v-input--radio-group__input {
+    .v-radio:not(:first-child) {
+      padding-top: 2rem;
+    }
+    .v-input--checkbox {
+      padding-top: 2rem;
+    }
   }
-}
 
-::v-deep .v-input--selection-controls__ripple {
-  color: $gray7;
-}
-
-::v-deep .v-text-field__slot, ::v-deep .v-radio {
-  .v-label {
+  .v-input--selection-controls__ripple {
     color: $gray7;
+  }
+
+  .v-text-field__slot, .v-radio {
+    .v-label {
+      color: $gray7;
+    }
   }
 }
 </style>

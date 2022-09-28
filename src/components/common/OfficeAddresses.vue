@@ -271,7 +271,7 @@ export default class OfficeAddresses extends Mixins(CommonMixin) {
   readonly CorpTypeCd = CorpTypeCd
 
   /** Called when component is created. */
-  protected created (): void {
+  created (): void {
     // on first load, determine inherited flags based on address values and update parent
     this.setAddresses(true)
     this.emitValid()
@@ -580,7 +580,7 @@ export default class OfficeAddresses extends Mixins(CommonMixin) {
 }
 
 // italicize delivery instructions and remove top margin
-::v-deep .base-address .address-block .delivery-instructions {
+:deep(.base-address .address-block .delivery-instructions) {
   font-size: $px-14;
   font-style: italic;
   margin-top: 0.5rem !important;

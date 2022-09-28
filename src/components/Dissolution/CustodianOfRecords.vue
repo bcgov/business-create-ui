@@ -56,7 +56,7 @@
               >
                 <!-- Person input -->
                 <v-radio :value="PartyTypes.PERSON">
-                  <template slot="label">
+                  <template v-slot:label>
                     <span class="item-label" :class="{ 'title-label': isInError }">
                       Person's Name
                     </span>
@@ -98,7 +98,7 @@
 
                 <!-- Org input -->
                 <v-radio :value="PartyTypes.ORGANIZATION" class="pt-2">
-                  <template slot="label">
+                  <template v-slot:label>
                     <span class="item-label" :class="{ 'title-label': isInError }">
                       Corporation or Firm Name
                     </span>
@@ -262,7 +262,8 @@ export default class CustodianOfRecords extends Mixins(CommonMixin) {
   readonly Rules = Rules
   readonly PartyTypes = PartyTypes
 
-  protected created (): void {
+  /** Called when component is created. */
+  created (): void {
     // Define local model using values initialized in store.
     this.custodian = this.getDissolutionCustodian
 
@@ -451,7 +452,7 @@ export default class CustodianOfRecords extends Mixins(CommonMixin) {
     padding-top: 1.5rem;
   }
 
-  ::v-deep .v-input--selection-controls__input {
+  :deep(.v-input--selection-controls__input) {
     margin-right: 1rem;
   }
 }
@@ -485,21 +486,21 @@ export default class CustodianOfRecords extends Mixins(CommonMixin) {
 }
 
 // Vuetify styling overrides
-::v-deep .v-text-field .v-label {
+:deep(.v-text-field .v-label) {
   font-weight: normal;
   font-size: $px-16;
   color: $gray7;
   letter-spacing: -0.2px;
 }
 
-::v-deep .v-input--selection-controls .v-input__slot > .v-label {
+:deep(.v-input--selection-controls .v-input__slot > .v-label) {
   font-size: $px-16;
   color: $gray7;
   font-weight: normal;
 }
 
 // italicize delivery instructions and remove top margin
-::v-deep .base-address .address-block .delivery-instructions {
+:deep(.base-address .address-block .delivery-instructions) {
   font-size: $px-14;
   font-style: italic;
   margin-top: 0.5rem !important;

@@ -93,7 +93,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop, Watch, Emit, Mixins } from 'vue-property-decorator'
+import Vue from 'vue'
+import { Component, Prop, Watch, Emit, Mixins } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 import { mask } from 'vue-the-mask'
 import { ContactPointIF, EmptyContactPoint } from '@/interfaces'
@@ -148,9 +149,11 @@ export default class BusinessContactInfo extends Mixins(CommonMixin) {
 
   // Events
   @Emit('update')
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private emitContactInfo (contactInfo: ContactPointIF): void {}
 
   @Emit('valid')
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private emitValid (valid: boolean): void {}
 }
 </script>
@@ -177,7 +180,7 @@ export default class BusinessContactInfo extends Mixins(CommonMixin) {
 }
 
 // un-bold v-text-field labels
-::v-deep .v-label {
+:deep(.v-label) {
   font-weight: normal;
   color: $gray7;
 }

@@ -92,7 +92,7 @@
       </div>
     </transition>
 
-    <SbcHeader />
+    <SbcHeader class="d-flex" />
 
     <PaySystemAlert />
 
@@ -446,7 +446,7 @@ export default class App extends Mixins(
   }
 
   /** Called when component is created. */
-  protected async created (): Promise<void> {
+  async created (): Promise<void> {
     // update Current Js Date now and every 1 minute thereafter
     await this.updateCurrentJsDate()
     this.updateCurrentJsDateId = setInterval(this.updateCurrentJsDate, 60000)
@@ -499,8 +499,8 @@ export default class App extends Mixins(
     this.setCurrentJsDate(jsDate)
   }
 
-  /** Called when component is destroyed. */
-  protected beforeDestroy (): void {
+  /** Called before component is destroyed. */
+  beforeDestroy (): void {
     // stop Update Current Js Date timer
     clearInterval(this.updateCurrentJsDateId)
 
@@ -791,7 +791,7 @@ export default class App extends Mixins(
 
     // merge draft properties into empty filing so all properties are initialized
     let resources: any
-    let parseFiling: Function
+    let parseFiling: (draftFiling) => void
     switch (this.getFilingType) {
       case FilingTypes.INCORPORATION_APPLICATION:
         draftFiling = { ...this.buildIncorporationFiling(), ...draftFiling }
@@ -1095,7 +1095,7 @@ export default class App extends Mixins(
 @import '@/assets/styles/theme.scss';
 
 // display drop-down menu on top of stepper and fee summary
-::v-deep .app-header {
+:deep(.app-header) {
   z-index: 3;
 }
 

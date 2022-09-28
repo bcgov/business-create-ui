@@ -1,4 +1,5 @@
-import { Component, Emit, Prop, Vue } from 'vue-property-decorator'
+import Vue from 'vue'
+import { Component, Emit, Prop } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import { cloneDeep, isEqual } from 'lodash'
 import { v4 as uuidv4 } from 'uuid'
@@ -81,7 +82,7 @@ export default class AddEditOrgPersonMixin extends Vue {
   readonly Rules = Rules
 
   /** The validation rules for the Roles. */
-  get roleRules (): Array<Function> {
+  get roleRules (): Array<(v) => boolean | string> {
     return [() => this.selectedRoles.length > 0 || 'A role is required']
   }
 
@@ -190,7 +191,7 @@ export default class AddEditOrgPersonMixin extends Vue {
   }
 
   /** Called when component is created. */
-  protected created (): void {
+  created (): void {
     // mark this step as invalid while adding or editing
     this.setAddPeopleAndRoleStepValidity(false)
 
