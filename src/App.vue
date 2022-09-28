@@ -172,7 +172,7 @@ import { Action, Getter } from 'vuex-class'
 import { StatusCodes } from 'http-status-codes'
 import { cloneDeep } from 'lodash'
 import * as Sentry from '@sentry/browser'
-import { getFeatureFlag, updateLdUser, navigate, sleep } from '@/utils'
+import { getFeatureFlag, updateLdUser, navigate, sleep, getKeycloakRoles } from '@/utils'
 
 // Components, dialogs and views
 import Actions from '@/components/common/Actions.vue'
@@ -233,6 +233,7 @@ import {
   StaffPaymentOptions
 } from '@/enums'
 import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
+import { consoleSandbox } from '@sentry/utils'
 
 @Component({
   components: {
@@ -1048,9 +1049,8 @@ export default class App extends Mixins(
 
   /** Gets authorizations from Auth API, verifies roles, and stores them. */
   private async checkAuth (id: string): Promise<any> {
-    // NB: will throw if API error
-    const authRoles = await AuthServices.fetchAuthorizations(id)
-    // NB: roles array may contain 'view', 'edit', 'staff' or nothing
+    const authRoles = getKeycloakRoles()
+    console.log('AuthRoles: ', authRoles)
     if (authRoles && authRoles.length > 0) {
       this.setAuthRoles(authRoles)
     } else {
