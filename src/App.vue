@@ -233,7 +233,6 @@ import {
   StaffPaymentOptions
 } from '@/enums'
 import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
-import { consoleSandbox } from '@sentry/utils'
 
 @Component({
   components: {
@@ -1050,7 +1049,6 @@ export default class App extends Mixins(
   /** Gets authorizations from Auth API, verifies roles, and stores them. */
   private async checkAuth (id: string): Promise<any> {
     const authRoles = getKeycloakRoles()
-    console.log('AuthRoles: ', authRoles)
     if (authRoles && authRoles.length > 0) {
       this.setAuthRoles(authRoles)
     } else {
