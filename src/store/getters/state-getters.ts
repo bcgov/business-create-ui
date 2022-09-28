@@ -101,7 +101,6 @@ export const isGovAccountUser = (state: StateIF): boolean => {
 /** Whether the user is SBC Staff (which is not the same as Staff). */
 export const isSbcStaff = (state: StateIF): boolean => {
   const orgInfo = getOrgInformation(state)
-  console.log(orgInfo)
   return (orgInfo?.orgType?.includes('SBC_STAFF') || false)
 }
 
