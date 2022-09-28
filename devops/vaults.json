@@ -50,5 +50,12 @@
         "application": [
             "business-create-ui"
         ]
+    },
+    {
+        "vault": "webchat",
+        "application": [
+            "base",
+            "business-create-ui"
+        ]
     }
 ]
