@@ -1,8 +1,6 @@
 <template>
   <div class="mt-10" id="dissolution-firm-form">
-    <v-card
-      outlined class="message-box rounded-0"
-    >
+    <v-card outlined class="message-box rounded-0">
       <p>
         <strong>Important:</strong> You are about to dissolve
         <strong class="text-capitalize">{{ getBusinessLegalName }}</strong>.
@@ -12,8 +10,9 @@
         business under the Partnership Act.
       </p>
     </v-card>
+
+    <!-- Dissolution Summary -->
     <section class="mt-10">
-      <!-- Dissolution summary -->
       <v-card flat id="dissolution-summary" class="mt-6">
         <header class="review-header rounded-t">
           <v-icon class="ml-2" color="appDkBlue">mdi-domain-remove</v-icon>
@@ -35,7 +34,7 @@
       </v-card>
     </section>
 
-    <!-- Dissolution Dissolution Date -->
+    <!-- Dissolution Date -->
     <section id="dissolution-date-section" class="mt-10">
       <header>
         <h2>Business Dissolution Date</h2>
@@ -45,8 +44,8 @@
           The dissolution date cannot be in the future.
         </p>
       </header>
-      <v-card flat class="py-8 px-6 mt-6" :class="{ 'invalid-section': isDissolutionDateInvalid }">
 
+      <v-card flat class="py-8 px-6 mt-6" :class="{ 'invalid-section': isDissolutionDateInvalid }">
        <!-- EDIT SECTION -->
         <v-row no-gutters class="pb-0">
           <v-col cols="12" sm="3" class="pr-4">
@@ -78,6 +77,7 @@
           Copies of the dissolution documents will be sent to the email addresses listed below.
         </p>
       </header>
+
       <v-card flat class="mt-6">
         <DocumentDelivery
           class="py-8 px-6"
@@ -109,6 +109,7 @@
           Only the number below will appear on the transaction report and receipt for this filing.
         </p>
       </header>
+
        <v-card flat class="mt-6">
         <TransactionalFolioNumber
           class="py-8 px-6"
@@ -121,22 +122,25 @@
        </v-card>
     </section>
 
+    <!-- Completing Party -->
     <section id="completing-party-section" class="mt-10">
-          <h2 class="mb-6">Completing Party</h2>
-          <v-card flat class="mt-6" :class="{ 'invalid-section': isCompletingPartyInvalid }">
-            <CompletingParty
-              class="py-8 px-6 section-container py-6"
-              :invalidSection="isCompletingPartyInvalid"
-              :completingParty="getCompletingParty"
-              :enableAddEdit="isRoleStaff"
-              :addressSchema="PersonAddressSchema"
-              :validate="isCompletingPartyInvalid"
-              @update="onUpdate($event)"
-              @valid="onValid($event)"
-            />
+      <header>
+        <h2 class="mb-6">Completing Party</h2>
+      </header>
 
-          </v-card>
-        </section>
+      <v-card flat class="mt-6" :class="{ 'invalid-section': isCompletingPartyInvalid }">
+        <CompletingParty
+          class="py-8 px-6 section-container py-6"
+          :invalidSection="isCompletingPartyInvalid"
+          :completingParty="getCompletingParty"
+          :enableAddEdit="isRoleStaff"
+          :addressSchema="PersonAddressSchema"
+          :validate="isCompletingPartyInvalid"
+          @update="onUpdate($event)"
+          @valid="onValid($event)"
+        />
+      </v-card>
+    </section>
 
     <!-- Certify -->
     <section id="certify-section" class="mt-10">
@@ -146,23 +150,24 @@
           Confirm the legal name of the person authorized to complete and submit this dissolution.
         </p>
       </header>
+
       <v-card flat class="mt-6" :class="{ 'invalid-section': isCertifyInvalid }">
-      <Certify
-        class="py-8 px-6"
-        :currentDate="getCurrentDate"
-        :certifiedBy="getCertifyState.certifiedBy"
-        :entityDisplay="getCompletingPartyStatement.entityDisplay"
-        :isCertified="getCertifyState.valid"
-        :statements="getCompletingPartyStatement.certifyStatements"
-        :message="getCompletingPartyStatement.certifyClause"
-        :isStaff="isRoleStaff"
-        :firstColumn="3"
-        :secondColumn="9"
-        :invalidSection="isCertifyInvalid"
-        :disableEdit="!isRoleStaff"
-        @update:certifiedBy="onCertifiedBy($event)"
-        @update:isCertified="onIsCertified($event)"
-      />
+        <Certify
+          class="py-8 px-6"
+          :currentDate="getCurrentDate"
+          :certifiedBy="getCertifyState.certifiedBy"
+          :entityDisplay="getCompletingPartyStatement.entityDisplay"
+          :isCertified="getCertifyState.valid"
+          :statements="getCompletingPartyStatement.certifyStatements"
+          :message="getCompletingPartyStatement.certifyClause"
+          :isStaff="isRoleStaff"
+          :firstColumn="3"
+          :secondColumn="9"
+          :invalidSection="isCertifyInvalid"
+          :disableEdit="!isRoleStaff"
+          @update:certifiedBy="onCertifiedBy($event)"
+          @update:isCertified="onIsCertified($event)"
+        />
       </v-card>
     </section>
 
@@ -176,19 +181,19 @@
           Plan of Arrangement.
         </p>
       </header>
+
       <v-card flat class="mt-6" :class="{ 'invalid-section': isCourtOrderInvalid }">
-      <CourtOrderPoa
-        class="py-8 px-6"
-        id="court-order"
-        :autoValidation="getValidateSteps"
-        :draftCourtOrderNumber="getCourtOrderStep.courtOrder.fileNumber"
-        :hasDraftPlanOfArrangement="getCourtOrderStep.courtOrder.hasPlanOfArrangement"
-        :courtOrderNumberRequired="true"
-        :invalidSection="isCourtOrderInvalid"
-        @emitCourtNumber="setCourtOrderFileNumber($event)"
-        @emitPoa="setHasPlanOfArrangement($event)"
-        @emitValid="setCourtOrderValidity($event)"
-      />
+        <CourtOrderPoa
+          class="py-8 px-6"
+          :autoValidation="getValidateSteps"
+          :draftCourtOrderNumber="getCourtOrderStep.courtOrder.fileNumber"
+          :hasDraftPlanOfArrangement="getCourtOrderStep.courtOrder.hasPlanOfArrangement"
+          :courtOrderNumberRequired="true"
+          :invalidSection="isCourtOrderInvalid"
+          @emitCourtNumber="setCourtOrderFileNumber($event)"
+          @emitPoa="setHasPlanOfArrangement($event)"
+          @emitValid="setCourtOrderValidity($event)"
+        />
       </v-card>
     </section>
 
@@ -198,6 +203,7 @@
         <h2>Staff Payment</h2>
         <p class="mt-4"></p>
       </header>
+
       <v-card flat class="mt-6">
         <StaffPayment class="py-8 px-6"/>
       </v-card>
@@ -477,25 +483,6 @@ h2::before {
   }
 }
 
-#effective-date-text {
-  color: $gray7;
-}
-
-// FUTURE: this should be under court-order-poa-section below
- #court-order {
-  .row {
-    .col-9 {
-      padding-left: 1rem !important;
-    }
-  }
-
-  #court-order-label, #poa-label {
-    font-size: $px-16;
-    font-weight: bold;
-    color: $gray9;
-  }
-}
-
 .upload-success-message {
   color: $gray7;
 
@@ -517,7 +504,6 @@ h2::before {
 #certify-section,
 #court-order-poa-section,
 #staff-payment-section {
-
   .row {
     padding: 0.75rem 0;
 
@@ -533,6 +519,13 @@ h2::before {
   }
 }
 
+#dissolution-date-section .v-card {
+  // remove extra space taken by error message
+  :deep(.v-text-field__details) {
+    margin-bottom: -8px !important;
+  }
+}
+
 // override error red on title labels (except error-text one)
 :deep(#document-delivery.invalid-section) {
   .title-label:not(.error-text) {
@@ -542,7 +535,6 @@ h2::before {
 
 // styles specific to certify section
 #certify-section {
-
   .v-input--checkbox .v-input__slot {
     align-items: flex-start;
   }

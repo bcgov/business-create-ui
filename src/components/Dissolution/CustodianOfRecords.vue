@@ -499,13 +499,6 @@ export default class CustodianOfRecords extends Mixins(CommonMixin) {
   font-weight: normal;
 }
 
-// italicize delivery instructions and remove top margin
-:deep(.base-address .address-block .delivery-instructions) {
-  font-size: $px-14;
-  font-style: italic;
-  margin-top: 0.5rem !important;
-}
-
 .inherit-checkbox {
   margin-top: 0;
   padding-top: 0;

@@ -89,7 +89,7 @@
 
             <section class="px-6">
               <v-container
-                id="effective-date-time"
+                id="effective-date-time-container"
                 :class="{ 'invalid': isDissolutionDateTimeInvalid }"
               >
                 <v-row no-gutters>

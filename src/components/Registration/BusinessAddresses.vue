@@ -314,11 +314,4 @@ export default class BusinessAddresses extends Mixins(CommonMixin) {
   font-size: $px-14;
   font-weight: bold;
 }
-
-// italicize delivery instructions and remove top margin
-:deep(.base-address .address-block .delivery-instructions) {
-  font-size: $px-14;
-  font-style: italic;
-  margin-top: 0.5rem !important;
-}
 </style>

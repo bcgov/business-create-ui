@@ -99,7 +99,7 @@
     <div class="app-body">
       <!-- Don't show page if an error dialog is displayed. -->
       <main v-if="!isErrorDialog">
-        <BreadCrumb :breadcrumbs="breadcrumbs" />
+        <Breadcrumb :breadcrumbs="breadcrumbs" />
 
         <div id="entity-info-wrapper">
           <v-container class="py-5">
@@ -176,7 +176,7 @@ import { getFeatureFlag, updateLdUser, navigate, sleep } from '@/utils'
 
 // Components, dialogs and views
 import Actions from '@/components/common/Actions.vue'
-import { BreadCrumb } from '@bcrs-shared-components/bread-crumb'
+import { Breadcrumb } from '@bcrs-shared-components/breadcrumb'
 import { WebChat } from '@bcrs-shared-components/web-chat'
 import EntityInfo from '@/components/common/EntityInfo.vue'
 import PaySystemAlert from 'sbc-common-components/src/components/PaySystemAlert.vue'
@@ -237,7 +237,7 @@ import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
 @Component({
   components: {
     Actions,
-    BreadCrumb,
+    Breadcrumb,
     EntityInfo,
     PaySystemAlert,
     SbcFeeSummary,

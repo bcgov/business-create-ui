@@ -81,18 +81,18 @@
     </template>
 
     <template v-if="showContactInfo">
-        <v-divider class="mx-6" />
+      <v-divider class="mx-6" />
 
-        <!-- Contact Info -->
-        <article class="section-container">
-          <ContactInfo
-            :businessContact="getBusinessContact"
-            :disableActions="isSummary"
-            :customMsg="contactInfoMsg"
-            editLabel="Change"
-            @contactInfoChange="onContactInfoChange($event)"
-          />
-        </article>
+      <!-- Contact Info -->
+      <article class="section-container">
+        <ContactInfo
+          :businessContact="getBusinessContact"
+          :disableActions="isSummary"
+          :customMsg="contactInfoMsg"
+          editLabel="Change"
+          @contactInfoChange="onContactInfoChange($event)"
+        />
+      </article>
     </template>
   </div>
 </template>
@@ -193,10 +193,5 @@ export default class AssociationDetails extends Mixins(CommonMixin, EnumMixin, D
 #company-name {
   font-size: $px-22;
   color: $gray9;
-}
-
-// add missing whitespace between title and addresses
-:deep(#contact-info .col-sm-3) {
-  padding-bottom: 1rem;
 }
 </style>

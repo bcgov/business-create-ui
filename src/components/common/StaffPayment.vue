@@ -89,32 +89,3 @@ export default class StaffPayment extends Vue {
   private emitHaveChanges (): void {}
 }
 </script>
-
-<style lang="scss" scoped>
-@import '@/assets/styles/theme.scss';
-
-:deep() {
-  .v-input .v-label {
-    font-weight: normal;
-  }
-
-  .v-input--radio-group__input {
-    .v-radio:not(:first-child) {
-      padding-top: 2rem;
-    }
-    .v-input--checkbox {
-      padding-top: 2rem;
-    }
-  }
-
-  .v-input--selection-controls__ripple {
-    color: $gray7;
-  }
-
-  .v-text-field__slot, .v-radio {
-    .v-label {
-      color: $gray7;
-    }
-  }
-}
-</style>
