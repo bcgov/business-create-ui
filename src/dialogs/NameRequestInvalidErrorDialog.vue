@@ -64,7 +64,7 @@ export default class NameRequestInvalidErrorDialog extends Vue {
   }
 
   // Pass click events to parent.
-  @Emit() protected okay () {}
-  @Emit() protected redirect () {}
+  @Emit() protected okay (): void {}
+  @Emit() protected redirect (): void {}
 }
 </script>
