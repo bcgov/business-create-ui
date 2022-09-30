@@ -204,8 +204,8 @@ export default class CompleteAffidavit extends Mixins(CommonMixin, DocumentMixin
   protected hasAffidavitConfirmed = false
   protected affidavitConfirmed = false
   protected fileUploadCustomErrorMsg = ''
-  protected uploadAffidavitDoc = null as File
-  protected uploadAffidavitDocKey = null as string
+  protected uploadAffidavitDoc: File = null
+  protected uploadAffidavitDocKey: string = null
   protected helpToggle = false
 
   // Global getters
@@ -339,7 +339,7 @@ export default class CompleteAffidavit extends Mixins(CommonMixin, DocumentMixin
 
   /** Called when component is created. */
   created (): void {
-    this.uploadAffidavitDoc = this.getAffidavitStep.affidavitDoc as File
+    this.uploadAffidavitDoc = this.getAffidavitStep.affidavitDoc
     this.uploadAffidavitDocKey = this.getAffidavitStep.docKey
     this.affidavitConfirmed = this.getAffidavitStep.affidavitConfirmed
     this.hasValidUploadFile = !!this.uploadAffidavitDocKey

@@ -20,7 +20,7 @@ export default class CommonMixin extends Vue {
    * @param props an optional array of properties to omit during the comparison
    * @return a boolean indicating a match of objects
    */
-  isSame (objA: object, objB: object, props = [] as string[]): boolean {
+  isSame (objA: object, objB: object, props: string[] = []): boolean {
     return isEqual({ ...omit(objA, props) }, { ...omit(objB, props) })
   }
 

@@ -67,9 +67,9 @@ function createShareStructure (
   type,
   name,
   hasMaximumShares = true,
-  maxNumberOfShares = null as number,
+  maxNumberOfShares: number = null,
   hasParValue = true,
-  parValue = null as number,
+  parValue: number = null,
   currency = null,
   hasRightsOrRestrictions = false
 ): ShareClassIF {

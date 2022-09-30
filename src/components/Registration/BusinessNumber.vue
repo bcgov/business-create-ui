@@ -81,7 +81,7 @@ export default class BusinessNumber extends Vue {
   protected enableRules = false
   protected errorMessages = []
   protected valid = true
-  protected value = null as string
+  protected value: string = null
 
   /** Called when component is mounted. */
   mounted (): void {

@@ -513,7 +513,7 @@ export default class App extends Mixins(
   /** Called to init main entity identifier. */
   private assignIdentifier (): void {
     // Capture identifier from query param
-    const id = this.$route.query?.id as string
+    const id: string = this.$route.query?.id
     // Assign any valid business identifiers and init dissolution
     if (id?.startsWith('CP') || id?.startsWith('BC') || id?.startsWith('FM')) {
       this.setBusinessId(id)

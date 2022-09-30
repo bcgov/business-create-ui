@@ -270,8 +270,8 @@ export default class UploadMemorandum extends Mixins(CommonMixin, DocumentMixin)
   protected hasMemorandumConfirmed = false
   protected memorandumConfirmed = false
   protected fileUploadCustomErrorMsg = ''
-  protected uploadMemorandumDoc = null as File
-  protected uploadMemorandumDocKey = null as string
+  protected uploadMemorandumDoc: File = null
+  protected uploadMemorandumDocKey: string = null
   protected helpToggle = false
 
   @Getter getShowErrors!: boolean
@@ -384,7 +384,7 @@ export default class UploadMemorandum extends Mixins(CommonMixin, DocumentMixin)
 
   /** Called when component is created. */
   created (): void {
-    this.uploadMemorandumDoc = this.getCreateMemorandumStep.memorandumDoc as File
+    this.uploadMemorandumDoc = this.getCreateMemorandumStep.memorandumDoc
     this.uploadMemorandumDocKey = this.getCreateMemorandumStep.docKey
     this.memorandumConfirmed = this.getCreateMemorandumStep.memorandumConfirmed
     this.hasValidUploadFile = !!this.uploadMemorandumDocKey

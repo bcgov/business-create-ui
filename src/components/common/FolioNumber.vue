@@ -47,7 +47,7 @@ export default class FolioNumber extends Vue {
   @Prop({ default: false }) readonly showErrors!: boolean
 
   // Local properties
-  protected folioNumber = null as string
+  protected folioNumber: string = null
   protected formValid = false
 
   // Validation rules

@@ -79,7 +79,7 @@ export default class AgreementType extends Vue {
 
   @Action setIncorporationAgreementStepData!: ActionBindingIF
 
-  protected agreementType = null as string
+  protected agreementType: string = null
 
   // Enum for template
   readonly RouteNames = RouteNames

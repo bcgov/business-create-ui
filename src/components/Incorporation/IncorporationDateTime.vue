@@ -126,8 +126,8 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
   protected datePicker = ''
 
   // Time properties
-  protected selectHour = [] as string[]
-  protected selectMinute = [] as string[]
+  protected selectHour: string[] = []
+  protected selectMinute: string[] = []
   protected selectPeriod = 'AM'
 
   // Date Time Selectors

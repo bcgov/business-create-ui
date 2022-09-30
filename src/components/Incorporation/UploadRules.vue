@@ -236,8 +236,8 @@ export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
   protected hasRulesConfirmed = false
   protected rulesConfirmed = false
   protected fileUploadCustomErrorMsg = ''
-  protected uploadRulesDoc = null as File
-  protected uploadRulesDocKey = null as string
+  protected uploadRulesDoc: File = null
+  protected uploadRulesDocKey: string = null
   protected helpToggle = false
 
   @Getter getShowErrors!: boolean
@@ -342,7 +342,7 @@ export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
 
   /** Called when component is created. */
   created (): void {
-    this.uploadRulesDoc = this.getCreateRulesStep.rulesDoc as File
+    this.uploadRulesDoc = this.getCreateRulesStep.rulesDoc
     this.uploadRulesDocKey = this.getCreateRulesStep.docKey
     this.rulesConfirmed = this.getCreateRulesStep.rulesConfirmed
     this.hasValidUploadFile = !!this.uploadRulesDocKey
