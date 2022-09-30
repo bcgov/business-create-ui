@@ -59,7 +59,6 @@ export const wrapperFactory = (
 ) => {
   const store = getVuexStore()
   if (routeName) router.push({ name: routeName }).catch(() => {})
-
   if (stateValues) applyStoreValues(store, stateValues, resource)
   return mount(component, {
     propsData: {

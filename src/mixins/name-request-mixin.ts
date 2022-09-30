@@ -1,5 +1,5 @@
 // Libraries
-import { Component, Mixins } from 'vue-property-decorator'
+import { Component } from 'vue-property-decorator'
 import { NameRequestStates, NameRequestTypes } from '@/enums'
 import { NameRequestIF } from '@/interfaces'
 import { DateMixin } from '@/mixins'
