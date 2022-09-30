@@ -228,6 +228,7 @@ import { CompletingParty } from '@bcrs-shared-components/completing-party'
 import StaffPayment from '@/components/common/StaffPayment.vue'
 import TransactionalFolioNumber from '@/components/common/TransactionalFolioNumber.vue'
 import { CorpTypeCd, RoleTypes, RouteNames } from '@/enums'
+import { VuetifyRuleFunction } from '@/types'
 
 import {
   ActionBindingIF,
@@ -410,7 +411,7 @@ export default class DissolutionFirm extends Mixins(DateMixin, EnumMixin) {
   }
 
   /** Validations rules for start date field. */
-  get startDateRules (): Array<(v) => boolean | string> {
+  get startDateRules (): Array<VuetifyRuleFunction> {
     return [
       (v: string) => !!v || 'Dissolution date is required',
       (v: string) =>

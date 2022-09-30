@@ -312,7 +312,8 @@ import { BusinessLookup } from '@bcrs-shared-components/business-lookup'
 import HelpContactUs from '@/components/Registration/HelpContactUs.vue'
 import { AddEditOrgPersonMixin } from '@/mixins'
 import { Rules } from '@/rules'
-import { BusinessLookupServices } from '@/services/'
+import { BusinessLookupServices } from '@/services'
+import { VuetifyRuleFunction } from '@/types'
 
 /** This is a sub-component of PeopleAndRoles. */
 @Component({
@@ -331,7 +332,7 @@ export default class RegAddEditOrgPerson extends Mixins(AddEditOrgPersonMixin) {
   //
 
   /** The validation rules for the Organization Name. */
-  readonly OrgNameRules: Array<(v) => boolean | string> = [
+  readonly OrgNameRules: Array<VuetifyRuleFunction> = [
     v => !!v?.trim() || 'Business or corporation name is required',
     v => (v?.length <= 150) || 'Cannot exceed 150 characters' // maximum character count
   ]

@@ -38,6 +38,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import { Component, Emit, Prop, Watch } from 'vue-property-decorator'
+import { VuetifyRuleFunction } from '@/types'
 
 @Component({})
 export default class FolioNumber extends Vue {
@@ -50,7 +51,7 @@ export default class FolioNumber extends Vue {
   protected formValid = false
 
   // Validation rules
-  readonly rules: Array<(v) => boolean | string> = [
+  readonly rules: Array<VuetifyRuleFunction> = [
     v => (!v || v.length <= 50) || 'Cannot exceed 50 characters' // maximum character count
   ]
 

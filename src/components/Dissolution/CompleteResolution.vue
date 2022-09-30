@@ -310,7 +310,7 @@ import { Action, Getter } from 'vuex-class'
 // Shared Components
 import { DatePicker as DatePickerShared } from '@bcrs-shared-components/date-picker'
 
-// Interfaces
+// Interfaces, enums, etc
 import {
   ActionBindingIF,
   CreateResolutionIF,
@@ -321,15 +321,10 @@ import {
   PersonIF,
   EmptyPerson
 } from '@/interfaces'
-
-// Enums
 import { BulletListTypes, CorpTypeCd, ItemTypes, RouteNames } from '@/enums'
-
-// Mixins
 import { CommonMixin, DateMixin } from '@/mixins'
-
-// Validation
 import { Rules, RuleHelpers } from '@/rules'
+import { VuetifyRuleFunction } from '@/types'
 
 @Component({
   components: {
@@ -417,7 +412,7 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin) {
   }
 
   /** Validations rules for resolution date field. */
-  get resolutionDateRules (): Array<(v) => boolean | string> {
+  get resolutionDateRules (): Array<VuetifyRuleFunction> {
     return [
       (v: string) => !!v || 'Resolution date is required',
       (v: string) =>
@@ -431,7 +426,7 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin) {
   }
 
   /** Validations rules for signing date field. */
-  get signatureDateRules (): Array<(v) => boolean | string> {
+  get signatureDateRules (): Array<VuetifyRuleFunction> {
     return [
       (v: string) => !!v || 'Signature date is required',
       (v: string) =>
@@ -494,7 +489,7 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin) {
     return this.getCurrentJsDate
   }
 
-  get resolutionTextRules (): Array<(v) => boolean | string> {
+  get resolutionTextRules (): Array<VuetifyRuleFunction> {
     return [
       v => (v && v.trim().length > 0) || 'Resolution text is required',
       v => (v && v.length <= this.MAX_RESOLUTION_TEXT_LENGTH) || 'Maximum characters exceeded',

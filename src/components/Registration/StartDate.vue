@@ -30,6 +30,7 @@ import { ActionBindingIF, RegistrationStateIF } from '@/interfaces'
 import { DatePicker as DatePickerShared } from '@bcrs-shared-components/date-picker'
 import { RuleHelpers } from '@/rules'
 import { DateMixin } from '@/mixins'
+import { VuetifyRuleFunction } from '@/types'
 
 @Component({
   components: {
@@ -78,7 +79,7 @@ export default class StartDate extends Mixins(DateMixin) {
   }
 
   /** Validations rules for start date field. */
-  get startDateRules (): Array<(v) => boolean | string> {
+  get startDateRules (): Array<VuetifyRuleFunction> {
     return [
       (v: string) => !!v || 'Business start date is required',
       (v: string) =>

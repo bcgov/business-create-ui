@@ -26,6 +26,7 @@ import { Getter } from 'vuex-class'
 import { CoopTypes } from '@/enums'
 import { FormIF } from '@/interfaces'
 import { EnumMixin } from '@/mixins'
+import { VuetifyRuleFunction } from '@/types'
 
 @Component({})
 export default class CooperativeType extends Mixins(EnumMixin) {
@@ -59,7 +60,7 @@ export default class CooperativeType extends Mixins(EnumMixin) {
   protected cooperativeType = null as CoopTypes
 
   // Validation rules
-  readonly cooperativeTypeRules: Array<(v) => boolean | string> = [
+  readonly cooperativeTypeRules: Array<VuetifyRuleFunction> = [
     v => !!v || 'This field is required' // is not empty
   ]
 

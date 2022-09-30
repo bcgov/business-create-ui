@@ -19,7 +19,8 @@ import {
 } from '@/interfaces'
 import { Rules } from '@/rules'
 import { PersonAddressSchema } from '@/schemas'
-import { LegalServices } from '@/services/'
+import { LegalServices } from '@/services'
+import { VuetifyRuleFunction } from '@/types'
 
 /**
  * Mixin that provides common add/edit org/person methods.
@@ -82,7 +83,7 @@ export default class AddEditOrgPersonMixin extends Vue {
   readonly Rules = Rules
 
   /** The validation rules for the Roles. */
-  get roleRules (): Array<(v) => boolean | string> {
+  get roleRules (): Array<VuetifyRuleFunction> {
     return [() => this.selectedRoles.length > 0 || 'A role is required']
   }
 

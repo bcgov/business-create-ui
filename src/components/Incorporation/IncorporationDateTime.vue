@@ -101,14 +101,11 @@
 // Libraries
 import { Component, Mixins, Watch, Emit, Prop } from 'vue-property-decorator'
 
-// Mixins
+// Mixins, constants, etc
 import { DateMixin } from '@/mixins'
-
-// Constants
 import { ISIMMEDIATE, ISFUTUREEFFECTIVE } from '@/constants'
-
-// Interfaces
 import { EffectiveDateTimeIF, FormIF } from '@/interfaces'
+import { VuetifyRuleFunction } from '@/types'
 
 @Component({})
 export default class IncorporationDateTime extends Mixins(DateMixin) {
@@ -143,7 +140,7 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
   readonly timePeriod: Array<string> = ['AM', 'PM']
 
   /** The array of validations rules for the effective date Date field. */
-  get dateRules (): Array<(v) => boolean | string> {
+  get dateRules (): Array<VuetifyRuleFunction> {
     const expectedDateFormat = /^(19|20)\d\d[-.](0[1-9]|1[012])[-.](0[1-9]|[12][0-9]|3[01])$/
 
     return [
@@ -154,14 +151,14 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
   }
 
   /** The array of validations rules for effective date hours field. */
-  get hourRules (): Array<(v) => boolean | string> {
+  get hourRules (): Array<VuetifyRuleFunction> {
     return [
       v => this.dateText !== '' && (/^([1-9]|1[012])$/.test(v) || '')
     ]
   }
 
   /** The array of validations rules for the effective date minutes field. */
-  get minuteRules (): Array<(v) => boolean | string> {
+  get minuteRules (): Array<VuetifyRuleFunction> {
     return [
       v => this.dateText !== '' && (/^([0-5]?[0-9])$/.test(v) || '')
     ]

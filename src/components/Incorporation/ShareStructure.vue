@@ -159,11 +159,10 @@
 // Libraries
 import { Component, Prop, Emit, Mixins } from 'vue-property-decorator'
 
-// Interfaces
+// Interfaces, mixins, etc
 import { ShareClassIF, FormIF } from '@/interfaces'
-
-// Mixins
 import { CurrencyLookupMixin } from '@/mixins'
+import { VuetifyRuleFunction } from '@/types'
 
 @Component({})
 export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
@@ -188,8 +187,8 @@ export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
   readonly excludedWordsListForSeries: string [] = ['share', 'shares']
 
   // Rules
-  protected getNameRule (): Array<(v) => boolean | string> {
-    const rules: Array<(v) => boolean | string> = [
+  protected getNameRule (): Array<VuetifyRuleFunction> {
+    const rules: Array<VuetifyRuleFunction> = [
       v => !!v || 'A name is required',
       v => !/^\s/g.test(v) || 'Invalid spaces', // leading spaces
       v => !/\s$/g.test(v) || 'Invalid spaces' // trailing spaces
@@ -215,8 +214,8 @@ export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
     return rules
   }
 
-  protected getMaximumShareRule (): Array<(v) => boolean | string> {
-    let rules = [] as Array<(v) => boolean | string>
+  protected getMaximumShareRule (): Array<VuetifyRuleFunction> {
+    let rules = [] as Array<VuetifyRuleFunction>
     if (!this.hasNoMaximumShares) {
       rules = [
         (v: string) => (v !== '' && v !== null && v !== undefined) || 'Number of shares is required',
@@ -248,7 +247,7 @@ export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
     return rules
   }
 
-  protected getParValueRule (): Array<(v) => boolean | string> {
+  protected getParValueRule (): Array<VuetifyRuleFunction> {
     if (!this.hasNoParValue) {
       return [
         v => (v !== '' && v !== null && v !== undefined) || 'Par value is required',
@@ -260,7 +259,7 @@ export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
     return []
   }
 
-  protected getCurrencyRule (): Array<(v) => boolean | string> {
+  protected getCurrencyRule (): Array<VuetifyRuleFunction> {
     if (!this.hasNoParValue) {
       return [v => !!v || 'Currency is required']
     }
