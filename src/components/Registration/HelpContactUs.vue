@@ -25,7 +25,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import Vue from 'vue'
+import { Component } from 'vue-property-decorator'
 import RegistriesContactInfo from '@/components/common/RegistriesContactInfo.vue'
 
 @Component({
@@ -65,7 +66,7 @@ export default class HelpContactUs extends Vue {
   direction: rtl;
 }
 
-::v-deep .contact-container {
+:deep(.contact-container) {
   font-size: $px-16;
   line-height: 24px;
 }

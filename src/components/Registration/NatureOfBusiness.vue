@@ -9,7 +9,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Emit, Prop, Vue } from 'vue-property-decorator'
+import Vue from 'vue'
+import { Component, Emit, Prop } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import { ActionBindingIF, RegistrationStateIF } from '@/interfaces'
 import { NaicsServices } from '@/services/'
@@ -29,6 +30,7 @@ export default class NatureOfBusiness extends Vue {
   readonly NaicsServices = NaicsServices
 
   @Emit('valid')
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private emitValid (val: boolean): void {}
 }
 </script>

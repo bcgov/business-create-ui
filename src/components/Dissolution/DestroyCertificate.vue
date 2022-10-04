@@ -16,7 +16,7 @@
             @change="setHasCertificateDestroyed"
             hide-details
           >
-            <template slot="label">
+            <template v-slot:label>
               <span class="destroy-certificate-option"
                 v-html="destroyCertificateDescription"
                 :class="{'error-text': showErrorSummary}" />
@@ -49,7 +49,8 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Vue, Prop } from 'vue-property-decorator'
+import Vue from 'vue'
+import { Component, Prop } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 
 // Interfaces
@@ -68,7 +69,7 @@ export default class DestroyCertificate extends Vue {
 
   protected hasCertificateDestroyed = false
 
-  readonly destroyCertificateDescription: string = `Certificates of incorporation, name change, and amalgamation for
+  readonly destroyCertificateDescription = `Certificates of incorporation, name change, and amalgamation for
     the Cooperative Association will be deleted and/or destroyed after dissolution.`
 }
 </script>
@@ -88,7 +89,7 @@ export default class DestroyCertificate extends Vue {
 }
 
 .destroy-certificate-checkbox {
-  ::v-deep .v-input__slot {
+  :deep(.v-input__slot) {
     align-items: flex-start;
   }
 }

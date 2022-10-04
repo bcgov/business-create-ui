@@ -50,7 +50,7 @@ export default class TransactionalFolioNumber extends Mixins(CommonMixin) {
   protected localFolioNumber = ''
 
   /** Called when component is mounted. */
-  protected mounted (): void {
+  mounted (): void {
     // restore transactional FN if it exists, otherwise use account FN
     this.localFolioNumber = this.transactionalFolioNumber || this.accountFolioNumber
   }
@@ -68,9 +68,11 @@ export default class TransactionalFolioNumber extends Mixins(CommonMixin) {
   }
 
   @Emit('change')
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private emitChange (change: string): void {}
 
   @Emit('valid')
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private emitValid (valid: boolean): void {}
 }
 </script>

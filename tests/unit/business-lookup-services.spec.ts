@@ -1,5 +1,5 @@
 import sinon from 'sinon'
-import { axiosInstance as axios } from '@/utils'
+import { AxiosInstance as axios } from '@/utils'
 import BusinessLookupServices from '@/services/business-lookup-services'
 
 describe('Business Lookup Services', () => {

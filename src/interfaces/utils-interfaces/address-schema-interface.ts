@@ -1,9 +1,9 @@
 export interface AddressSchemaIF {
-  streetAddress: {}
-  streetAddressAdditional: {}
-  addressCity: {}
-  addressCountry: {}
-  addressRegion: {}
-  postalCode: {}
-  deliveryInstructions: {}
+  streetAddress: object
+  streetAddressAdditional: object
+  addressCity: object
+  addressCountry: object
+  addressRegion: object
+  postalCode: object
+  deliveryInstructions: object
 }

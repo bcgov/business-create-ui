@@ -17,7 +17,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import Vue from 'vue'
+import { Component, Prop } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import { ActionBindingIF, CertifyIF, CertifyStatementIF } from '@/interfaces'
 import { Certify as CertifyShared } from '@bcrs-shared-components/certify'

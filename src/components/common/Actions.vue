@@ -96,7 +96,7 @@
 <script lang="ts">
 import { Component, Mixins, Emit } from 'vue-property-decorator'
 import { Getter, Action } from 'vuex-class'
-import { navigate } from '@/utils'
+import { Navigate } from '@/utils'
 import { ActionBindingIF } from '@/interfaces'
 import { DateMixin, FilingTemplateMixin, NameRequestMixin } from '@/mixins'
 import { LegalServices } from '@/services/'
@@ -267,10 +267,10 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Name
           const payUrl = authUrl + 'makepayment/' + paymentToken + '/' + encodeURIComponent(returnUrl)
           // assume Pay URL is always reachable
           // otherwise user will have to retry payment later
-          navigate(payUrl)
+          Navigate(payUrl)
         } else {
           // navigate to Dashboard URL
-          navigate(returnUrl)
+          Navigate(returnUrl)
         }
       } else {
         const error = new Error('Missing Payment Token')

@@ -164,7 +164,7 @@ export default class BusinessAddresses extends Mixins(CommonMixin) {
   }
 
   /** Called when component is created. */
-  protected created (): void {
+  created (): void {
     // don't allow "same as" if mailing address is not in BC/Canada
     this.checkboxDisabled = (this.mailingAddress.addressRegion !== REGION_BC ||
       this.mailingAddress.addressCountry !== COUNTRY_CA)
@@ -313,12 +313,5 @@ export default class BusinessAddresses extends Mixins(CommonMixin) {
 .summary-section-header {
   font-size: $px-14;
   font-weight: bold;
-}
-
-// italicize delivery instructions and remove top margin
-::v-deep .base-address .address-block .delivery-instructions {
-  font-size: $px-14;
-  font-style: italic;
-  margin-top: 0.5rem !important;
 }
 </style>

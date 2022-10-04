@@ -210,6 +210,7 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
    * @param index The active index which is subject to removal.
    */
   @Emit('removePerson')
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   protected emitRemovePerson (index: number): void {}
 
   /**
@@ -217,6 +218,7 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
    * @param index The active index which is subject to change.
    */
   @Emit('editPerson')
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   protected emitPersonInfo (index: number): void {}
 }
 </script>
@@ -319,12 +321,5 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
   &.mdi-delete {
     margin-top: -2px;
   }
-}
-
-// italicize delivery instructions and remove top margin
-::v-deep .base-address .address-block .delivery-instructions {
-  font-size: $px-14;
-  font-style: italic;
-  margin-top: 0.5rem !important;
 }
 </style>

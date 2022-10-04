@@ -36,7 +36,9 @@
 </template>
 
 <script lang="ts">
-import { Component, Emit, Prop, Vue, Watch } from 'vue-property-decorator'
+import Vue from 'vue'
+import { Component, Emit, Prop, Watch } from 'vue-property-decorator'
+import { VuetifyRuleFunction } from '@/types'
 
 @Component({})
 export default class FolioNumber extends Vue {
@@ -45,16 +47,16 @@ export default class FolioNumber extends Vue {
   @Prop({ default: false }) readonly showErrors!: boolean
 
   // Local properties
-  protected folioNumber = null as string
+  protected folioNumber: string = null
   protected formValid = false
 
   // Validation rules
-  readonly rules: Array<Function> = [
+  readonly rules: Array<VuetifyRuleFunction> = [
     v => (!v || v.length <= 50) || 'Cannot exceed 50 characters' // maximum character count
   ]
 
   /** Called when component is created. */
-  protected created (): void {
+  created (): void {
     if (this.initialValue) {
       this.folioNumber = this.initialValue
     }
@@ -88,9 +90,11 @@ export default class FolioNumber extends Vue {
 
   // Events
   @Emit('update')
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private emitFolioNumber (folioNumber: string): void {}
 
   @Emit('valid')
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private emitValid (valid: boolean): void {}
 }
 </script>
@@ -104,7 +108,7 @@ export default class FolioNumber extends Vue {
 }
 
 // remove extra space taken by error message
-::v-deep .v-text-field__details {
+:deep(.v-text-field__details) {
   margin-bottom: -8px !important;
 }
 </style>

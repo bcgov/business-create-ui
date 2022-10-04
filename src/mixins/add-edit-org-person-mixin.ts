@@ -1,4 +1,5 @@
-import { Component, Emit, Prop, Vue } from 'vue-property-decorator'
+import Vue from 'vue'
+import { Component, Emit, Prop } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import { cloneDeep, isEqual } from 'lodash'
 import { v4 as uuidv4 } from 'uuid'
@@ -18,12 +19,13 @@ import {
 } from '@/interfaces'
 import { Rules } from '@/rules'
 import { PersonAddressSchema } from '@/schemas'
-import { LegalServices } from '@/services/'
+import { LegalServices } from '@/services'
+import { VuetifyRuleFunction } from '@/types'
 
 /**
  * Mixin that provides common add/edit org/person methods.
  */
-@Component({ components: {} })
+@Component({})
 export default class AddEditOrgPersonMixin extends Vue {
   // Refs
   $refs!: {
@@ -81,7 +83,7 @@ export default class AddEditOrgPersonMixin extends Vue {
   readonly Rules = Rules
 
   /** The validation rules for the Roles. */
-  get roleRules (): Array<Function> {
+  get roleRules (): Array<VuetifyRuleFunction> {
     return [() => this.selectedRoles.length > 0 || 'A role is required']
   }
 
@@ -190,7 +192,7 @@ export default class AddEditOrgPersonMixin extends Vue {
   }
 
   /** Called when component is created. */
-  protected created (): void {
+  created (): void {
     // mark this step as invalid while adding or editing
     this.setAddPeopleAndRoleStepValidity(false)
 

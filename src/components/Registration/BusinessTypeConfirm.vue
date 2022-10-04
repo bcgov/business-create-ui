@@ -22,7 +22,7 @@
               v-model="checked"
               class="mt-0 pt-0"
             >
-              <template slot="label">
+              <template v-slot:label>
                 <div class="certify-stmt" :class="{'error--text': showErrors}">{{ text }}</div>
               </template>
             </v-checkbox>
@@ -33,7 +33,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Emit, Prop, Vue, Watch } from 'vue-property-decorator'
+import Vue from 'vue'
+import { Component, Emit, Prop, Watch } from 'vue-property-decorator'
 
 @Component
 export default class BusinessTypeConfirm extends Vue {
@@ -64,7 +65,7 @@ export default class BusinessTypeConfirm extends Vue {
     'will be required.'
 
   /** Called when component is mounted. */
-  protected mounted (): void {
+  mounted (): void {
     // init model variable + validate
     this.checked = this.businessTypeConfirm
     this.label = this.isTypePartnership ? this.label : this.labelSP
@@ -120,12 +121,12 @@ export default class BusinessTypeConfirm extends Vue {
 }
 
 // Align the checkbox slot to the top left
-::v-deep .v-input--checkbox .v-input__slot {
+:deep(.v-input--checkbox .v-input__slot) {
   align-items: flex-start;
 }
 
 // Align the checkbox icon with the left of the text (GP or SP)
-::v-deep .v-input--checkbox .v-input__slot .v-input--selection-controls__input {
+:deep(.v-input--checkbox .v-input__slot .v-input--selection-controls__input) {
   margin-left: -3px;
 }
 

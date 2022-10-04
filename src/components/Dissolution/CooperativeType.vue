@@ -21,14 +21,16 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Emit, Watch, Mixins, Prop } from 'vue-property-decorator'
+import Vue from 'vue'
+import { Component, Emit, Watch, Prop } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 import { CoopTypes } from '@/enums'
 import { FormIF } from '@/interfaces'
-import { EnumMixin } from '@/mixins'
+import { VuetifyRuleFunction } from '@/types'
+import { CoopTypeToDescription } from '@/utils'
 
 @Component({})
-export default class CooperativeType extends Mixins(EnumMixin) {
+export default class CooperativeType extends Vue {
   // Refs
   $refs!: {
     cooperativeTypeForm: FormIF
@@ -44,26 +46,27 @@ export default class CooperativeType extends Mixins(EnumMixin) {
   readonly items: Array<any> = [
     {
       value: CoopTypes.COMMUNITY_SERVICE_COOPERATIVE,
-      text: this.coopTypeToDescription(CoopTypes.COMMUNITY_SERVICE_COOPERATIVE)
+      text: CoopTypeToDescription(CoopTypes.COMMUNITY_SERVICE_COOPERATIVE)
     },
     {
       value: CoopTypes.ORDINARY_COOPERATIVE,
-      text: this.coopTypeToDescription(CoopTypes.ORDINARY_COOPERATIVE)
+      text: CoopTypeToDescription(CoopTypes.ORDINARY_COOPERATIVE)
     },
     {
       value: CoopTypes.HOUSING_COOPERATIVE,
-      text: this.coopTypeToDescription(CoopTypes.HOUSING_COOPERATIVE)
+      text: CoopTypeToDescription(CoopTypes.HOUSING_COOPERATIVE)
     }
   ]
 
   protected cooperativeType = null as CoopTypes
 
   // Validation rules
-  readonly cooperativeTypeRules: Array<Function> = [
+  readonly cooperativeTypeRules: Array<VuetifyRuleFunction> = [
     v => !!v || 'This field is required' // is not empty
   ]
 
-  protected mounted (): void {
+  /** Called when component is mounted. */
+  mounted (): void {
     // Set local model when resuming draft
     if (this.getCooperativeType) this.cooperativeType = this.getCooperativeType
   }
@@ -85,28 +88,32 @@ export default class CooperativeType extends Mixins(EnumMixin) {
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
 
-// remove extra space taken by error message
-::v-deep .v-text-field__details {
-  margin-bottom: -8px !important;
-}
+:deep() {
+  // remove extra space taken by error message
+  .v-text-field__details {
+    margin-bottom: -8px !important;
+  }
 
-// Vuetify Overrides
-::v-deep .v-list-item .v-list-item__title, .v-list-item .v-list-item__subtitle {
-  color: $gray7;
-}
+  // Vuetify Overrides
+  .v-list-item .v-list-item__title,
+  .v-list-item .v-list-item__subtitle {
+    color: $gray7;
+  }
 
-::v-deep .v-list-item--link:hover:not(.v-list-item--active) {
-  background-color: $gray1;
-  color: $app-blue !important;
-}
-
-::v-deep .v-list-item:hover {
-  .v-list-item__title {
+  .v-list-item--link:hover:not(.v-list-item--active) {
+    background-color: $gray1;
     color: $app-blue !important;
   }
-}
 
-::v-deep .v-list-item--active .v-list-item__title, .v-list-item .v-list-item__subtitle {
-  color: $app-blue !important;
+  .v-list-item:hover {
+    .v-list-item__title {
+      color: $app-blue !important;
+    }
+  }
+
+  .v-list-item--active .v-list-item__title,
+  .v-list-item .v-list-item__subtitle {
+    color: $app-blue !important;
+  }
 }
 </style>

@@ -92,14 +92,14 @@
       </div>
     </transition>
 
-    <SbcHeader />
+    <SbcHeader class="d-flex" />
 
     <PaySystemAlert />
 
     <div class="app-body">
       <!-- Don't show page if an error dialog is displayed. -->
       <main v-if="!isErrorDialog">
-        <BreadCrumb :breadcrumbs="breadcrumbs" />
+        <Breadcrumb :breadcrumbs="breadcrumbs" />
 
         <div id="entity-info-wrapper">
           <v-container class="py-5">
@@ -172,11 +172,11 @@ import { Action, Getter } from 'vuex-class'
 import { StatusCodes } from 'http-status-codes'
 import { cloneDeep } from 'lodash'
 import * as Sentry from '@sentry/browser'
-import { getFeatureFlag, updateLdUser, navigate, sleep } from '@/utils'
+import { GetFeatureFlag, UpdateLdUser, Navigate, Sleep } from '@/utils'
 
 // Components, dialogs and views
 import Actions from '@/components/common/Actions.vue'
-import { BreadCrumb } from '@bcrs-shared-components/bread-crumb'
+import { Breadcrumb } from '@bcrs-shared-components/breadcrumb'
 import { WebChat } from '@bcrs-shared-components/web-chat'
 import EntityInfo from '@/components/common/EntityInfo.vue'
 import PaySystemAlert from 'sbc-common-components/src/components/PaySystemAlert.vue'
@@ -191,7 +191,6 @@ import * as Views from '@/views'
 import {
   CommonMixin,
   DateMixin,
-  EnumMixin,
   FilingTemplateMixin,
   NameRequestMixin
 } from '@/mixins'
@@ -237,7 +236,7 @@ import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
 @Component({
   components: {
     Actions,
-    BreadCrumb,
+    Breadcrumb,
     EntityInfo,
     PaySystemAlert,
     SbcFeeSummary,
@@ -252,7 +251,6 @@ import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
 export default class App extends Mixins(
   CommonMixin,
   DateMixin,
-  EnumMixin,
   FilingTemplateMixin,
   NameRequestMixin
 ) {
@@ -446,7 +444,7 @@ export default class App extends Mixins(
   }
 
   /** Called when component is created. */
-  protected async created (): Promise<void> {
+  async created (): Promise<void> {
     // update Current Js Date now and every 1 minute thereafter
     await this.updateCurrentJsDate()
     this.updateCurrentJsDateId = setInterval(this.updateCurrentJsDate, 60000)
@@ -499,8 +497,8 @@ export default class App extends Mixins(
     this.setCurrentJsDate(jsDate)
   }
 
-  /** Called when component is destroyed. */
-  protected beforeDestroy (): void {
+  /** Called before component is destroyed. */
+  beforeDestroy (): void {
     // stop Update Current Js Date timer
     clearInterval(this.updateCurrentJsDateId)
 
@@ -513,7 +511,7 @@ export default class App extends Mixins(
   /** Called to init main entity identifier. */
   private assignIdentifier (): void {
     // Capture identifier from query param
-    const id = this.$route.query?.id as string
+    const id: string = this.$route.query?.id
     // Assign any valid business identifiers and init dissolution
     if (id?.startsWith('CP') || id?.startsWith('BC') || id?.startsWith('FM')) {
       this.setBusinessId(id)
@@ -528,7 +526,7 @@ export default class App extends Mixins(
     this.fileAndPayInvalidNameRequestDialog = false
     const manageBusinessUrl = `${sessionStorage.getItem('AUTH_WEB_URL')}business`
     this.setHaveChanges(false)
-    navigate(manageBusinessUrl)
+    Navigate(manageBusinessUrl)
   }
 
   /** Called to navigate to dashboard. */
@@ -537,7 +535,7 @@ export default class App extends Mixins(
     if (!this.getHaveChanges || force) {
       // navigate to dashboard
       const dashboardUrl = sessionStorage.getItem('DASHBOARD_URL')
-      navigate(dashboardUrl + this.getEntityIdentifier)
+      Navigate(dashboardUrl + this.getEntityIdentifier)
       return
     }
 
@@ -561,7 +559,7 @@ export default class App extends Mixins(
       this.setHaveChanges(false)
       // navigate to dashboard
       const dashboardUrl = sessionStorage.getItem('DASHBOARD_URL')
-      navigate(dashboardUrl + this.getEntityIdentifier)
+      Navigate(dashboardUrl + this.getEntityIdentifier)
     })
   }
 
@@ -605,7 +603,7 @@ export default class App extends Mixins(
     this.resetFlags()
 
     // check that current route matches a supported filing type
-    const supportedFilings = await getFeatureFlag('supported-filings')
+    const supportedFilings = await GetFeatureFlag('supported-filings')
     if (!supportedFilings?.includes(this.$route.meta.filingType)) {
       window.alert('This filing type is not available at the moment. Please check again later.')
       this.goToDashboard(true)
@@ -791,7 +789,7 @@ export default class App extends Mixins(
 
     // merge draft properties into empty filing so all properties are initialized
     let resources: any
-    let parseFiling: Function
+    let parseFiling: (draftFiling) => void
     switch (this.getFilingType) {
       case FilingTypes.INCORPORATION_APPLICATION:
         draftFiling = { ...this.buildIncorporationFiling(), ...draftFiling }
@@ -959,7 +957,7 @@ export default class App extends Mixins(
       const currentAccount = sessionStorage.getItem(SessionStorageKeys.CurrentAccount)
       account = JSON.parse(currentAccount)
       if (account) break
-      await sleep(100)
+      await Sleep(100)
     }
     return account
   }
@@ -1018,7 +1016,7 @@ export default class App extends Mixins(
     // remove leading { and trailing } and tokenize string
     const custom: any = { roles: userInfo.roles?.slice(1, -1).split(',') }
 
-    await updateLdUser(key, email, firstName, lastName, custom)
+    await UpdateLdUser(key, email, firstName, lastName, custom)
   }
 
   /** Stores business info from Legal API. */
@@ -1095,7 +1093,7 @@ export default class App extends Mixins(
 @import '@/assets/styles/theme.scss';
 
 // display drop-down menu on top of stepper and fee summary
-::v-deep .app-header {
+:deep(.app-header) {
   z-index: 3;
 }
 

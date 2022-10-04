@@ -196,7 +196,7 @@ export default class IncorporationDefineCompany extends Mixins(CommonMixin) {
   }
 
   /** Called when component is created. */
-  protected created (): void {
+  created (): void {
     // temporarily ignore data changes
     this.setIgnoreChanges(true)
 
@@ -388,7 +388,7 @@ header {
 }
 
 // Vuetify Overrides
-::v-deep .v-select__selection--comma {
+:deep(.v-select__selection--comma) {
   overflow: inherit;
 }
 </style>

@@ -11,7 +11,7 @@
           @change="setRegistrationFeeAcknowledgement($event)"
           hide-details
         >
-          <template slot="label">
+          <template v-slot:label>
             <div class="acknowledge-stmt" :class="{'error-text': invalidSection}">
               I acknowledge that additional fees may be required to change this registration after payment
               has been made.
@@ -24,7 +24,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import Vue from 'vue'
+import { Component } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import { ActionBindingIF, RegistrationStateIF } from '@/interfaces'
 
@@ -63,7 +64,7 @@ label {
 }
 
 // align checkbox with top of its label
-::v-deep .v-input--checkbox .v-input__slot {
+:deep(.v-input--checkbox .v-input__slot) {
   align-items: flex-start;
 }
 </style>

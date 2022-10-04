@@ -67,7 +67,7 @@ for (const test of reviewConfirmTestCases) {
       )
 
       const expected = (test.entityType !== 'CP')
-      expect(wrapper.find('#effective-date-time').exists()).toBe(expected)
+      expect(wrapper.find('#effective-date-time-container').exists()).toBe(expected)
     })
 
     it('displays Affidavit section', () => {

@@ -13,7 +13,7 @@
             @change="changeCareAndCustodyType()"
           >
             <v-radio id="liquidator-radio-btn" :value="RoleTypes.LIQUIDATOR">
-              <template slot="label">
+              <template v-slot:label>
                 <span class="care-and-custody-option">
                   A <strong>Liquidator</strong> has been appointed for the care and custody of the
                   Cooperative Association's records
@@ -21,7 +21,7 @@
               </template>
             </v-radio>
             <v-radio id="custodian-radio-btn" :value="RoleTypes.CUSTODIAN">
-              <template slot="label">
+              <template v-slot:label>
                 <span class="care-and-custody-option">
                   A <strong>Custodian of Records</strong> has been appointed for the care and custody of the Cooperative
                   Association's records.
@@ -37,7 +37,8 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Vue, Prop } from 'vue-property-decorator'
+import Vue from 'vue'
+import { Component, Prop } from 'vue-property-decorator'
 import { RoleTypes } from '@/enums'
 
 @Component
@@ -67,7 +68,7 @@ export default class CareAndCustodySelect extends Vue {
   padding-top: 0;
   margin-top: 0;
 
-  ::v-deep .v-input--selection-controls__input {
+  :deep(.v-input--selection-controls__input) {
     margin-right: 1rem;
   }
 

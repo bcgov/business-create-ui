@@ -20,7 +20,7 @@
         disable-sort
         hide-default-footer
       >
-        <template v-slot:item="row" class="share-data-table">
+        <template v-slot:item="row">
 
           <!-- Share Class Rows-->
           <tr :key="row.item.id" class="class-row" :class="{ 'class-row-has-series': row.item.series.length}">
@@ -166,7 +166,8 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Prop, Vue, Emit } from 'vue-property-decorator'
+import Vue from 'vue'
+import { Component, Prop, Emit } from 'vue-property-decorator'
 import 'array.prototype.move'
 
 // Enums
@@ -250,6 +251,7 @@ export default class ListShareClass extends Vue {
    * @param index The active index which is subject to removal.
    */
   @Emit('removeClass')
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   protected emitRemoveClass (index: number): void {}
 
   /**
@@ -257,6 +259,7 @@ export default class ListShareClass extends Vue {
    * @param index The active index which is subject to removal.
    */
   @Emit('removeSeries')
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   protected emitRemoveSeries (index: number, seriesIndex: number): void {}
 
   /**
@@ -264,6 +267,7 @@ export default class ListShareClass extends Vue {
    * @param addSeries The series item to be edited.
    */
   @Emit('addSeries')
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   protected emitAddSeries (index: number): void {}
 
   /**
@@ -271,6 +275,7 @@ export default class ListShareClass extends Vue {
    * @param classItem The series item to be edited.
    */
   @Emit('editClass')
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   protected emitShareClass (index: number): void {}
 
   /**
@@ -278,6 +283,7 @@ export default class ListShareClass extends Vue {
    * @param seriesItem The series item to be edited.
    */
   @Emit('editSeries')
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   protected emitShareSeries (index: number, seriesIndex: number): void {}
 }
 </script>

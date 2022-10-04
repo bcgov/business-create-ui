@@ -32,7 +32,7 @@
         :value="item.code"
         @change="changeAgreementType()"
       >
-        <template slot="label">
+        <template v-slot:label>
           <div v-html="item.description" class="agreement-option" />
         </template>
       </v-checkbox>
@@ -52,7 +52,7 @@
           :value="item.code"
           :id="`agreement-type-${item.code}`"
         >
-          <template slot="label">
+          <template v-slot:label>
             <div v-html="item.description" class="agreement-option ml-6" />
           </template>
         </v-radio>
@@ -62,7 +62,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import Vue from 'vue'
+import { Component, Prop } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import { ActionBindingIF, IncorporationAgreementIF, IncorporationAgreementTypeIF } from '@/interfaces'
 import { RouteNames } from '@/enums'
@@ -78,7 +79,7 @@ export default class AgreementType extends Vue {
 
   @Action setIncorporationAgreementStepData!: ActionBindingIF
 
-  protected agreementType = null as string
+  protected agreementType: string = null
 
   // Enum for template
   readonly RouteNames = RouteNames
@@ -90,11 +91,12 @@ export default class AgreementType extends Vue {
   }
 
   /** Called when component is created. */
-  protected created (): void {
+  created (): void {
     this.agreementType = this.getIncorporationAgreementStep.agreementType
   }
 
-  protected mounted (): void {
+  /** Called when component is mounted. */
+  mounted (): void {
     this.setIncorporationAgreementStepData({
       valid: !!this.agreementType,
       agreementType: this.agreementType

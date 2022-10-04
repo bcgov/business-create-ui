@@ -236,8 +236,8 @@ export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
   protected hasRulesConfirmed = false
   protected rulesConfirmed = false
   protected fileUploadCustomErrorMsg = ''
-  protected uploadRulesDoc = null as File
-  protected uploadRulesDocKey = null as string
+  protected uploadRulesDoc: File = null
+  protected uploadRulesDocKey: string = null
   protected helpToggle = false
 
   @Getter getShowErrors!: boolean
@@ -341,15 +341,16 @@ export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
   }
 
   /** Called when component is created. */
-  protected created (): void {
-    this.uploadRulesDoc = this.getCreateRulesStep.rulesDoc as File
+  created (): void {
+    this.uploadRulesDoc = this.getCreateRulesStep.rulesDoc
     this.uploadRulesDocKey = this.getCreateRulesStep.docKey
     this.rulesConfirmed = this.getCreateRulesStep.rulesConfirmed
     this.hasValidUploadFile = !!this.uploadRulesDocKey
     this.hasRulesConfirmed = this.rulesConfirmed
   }
 
-  protected async mounted (): Promise<void> {
+  /** Called when component is mounted. */
+  async mounted (): Promise<void> {
     // wait for components to load/stabilize then update validation state in store
     await this.$nextTick()
     this.updateRulesStepValidity()
@@ -425,7 +426,7 @@ ul {
   }
 }
 
-::v-deep #confirm-rules-section {
+:deep(#confirm-rules-section) {
   // override default validation styling so checkbox does not turn red on validation error
   .v-input--selection-controls__input .error--text{
     color: $app-lt-gray !important;
@@ -435,7 +436,7 @@ ul {
 .chk-rules {
   color: $gray9;
 
-  ::v-deep {
+  :deep() {
     .theme--light.v-icon {
       color: $gray9;
     }

@@ -1,15 +1,15 @@
 /* eslint-disable no-console */
-import { axiosInstance as axios } from '@/utils'
+import { AxiosInstance as axios } from '@/utils'
 
 /**
  * Fetches config from environment and API.
  * @returns A promise to get & set session storage keys with appropriate values.
  */
-export async function fetchConfig (): Promise<any> {
+export async function FetchConfig (): Promise<any> {
   // get config from environment
-  const origin: string = window.location.origin
+  const origin = window.location.origin
   const processEnvVueAppPath: string = process.env.VUE_APP_PATH
-  const processEnvBaseUrl = process.env.BASE_URL
+  const processEnvBaseUrl: string = process.env.BASE_URL
 
   if (!origin || !processEnvVueAppPath || !processEnvBaseUrl) {
     return Promise.reject(new Error('Missing environment variables'))
@@ -42,7 +42,7 @@ export async function fetchConfig (): Promise<any> {
   sessionStorage.setItem('AUTH_WEB_URL', authWebUrl)
   console.log('Set Auth Web URL to: ' + authWebUrl)
 
-  const registryHomeUrl = response.data.REGISTRY_HOME_URL
+  const registryHomeUrl: string = response.data.REGISTRY_HOME_URL
   sessionStorage.setItem('REGISTRY_HOME_URL', registryHomeUrl)
   console.info('Set Registry Home URL to: ' + registryHomeUrl)
 
@@ -54,33 +54,33 @@ export async function fetchConfig (): Promise<any> {
   sessionStorage.setItem('DASHBOARD_URL', dashboardUrl)
   console.log('Set Dashboard URL to: ' + dashboardUrl)
 
-  const legalApiUrl: string = response.data.LEGAL_API_URL + response.data.LEGAL_API_VERSION_2 + '/'
+  const legalApiUrl: string = (response.data.LEGAL_API_URL + response.data.LEGAL_API_VERSION_2 + '/')
   // set base URL for axios calls
   axios.defaults.baseURL = legalApiUrl
   console.log('Set Legal API URL to: ' + legalApiUrl)
 
-  const naicsUrl: string = response.data.NAICS_API_URL + response.data.NAICS_API_VERSION + '/'
+  const naicsUrl: string = (response.data.NAICS_API_URL + response.data.NAICS_API_VERSION + '/')
   sessionStorage.setItem('NAICS_URL', naicsUrl)
   console.log('Set NAICS URL to: ' + naicsUrl)
 
-  const registriesSearchApiUrl: string = response.data.REGISTRIES_SEARCH_API_URL +
-                                         response.data.REGISTRIES_SEARCH_API_VERSION + '/'
+  const registriesSearchApiUrl: string =
+    (response.data.REGISTRIES_SEARCH_API_URL + response.data.REGISTRIES_SEARCH_API_VERSION + '/')
   sessionStorage.setItem('REGISTRIES_SEARCH_API_URL', registriesSearchApiUrl)
   console.log('Set Registries Search API URL to: ' + registriesSearchApiUrl)
 
   const businessApiKey: string = response.data.BUSINESS_API_KEY
   sessionStorage.setItem('BUSINESS_API_KEY', businessApiKey)
 
-  const authApiUrl: string = response.data.AUTH_API_URL + response.data.AUTH_API_VERSION + '/'
+  const authApiUrl: string = (response.data.AUTH_API_URL + response.data.AUTH_API_VERSION + '/')
   sessionStorage.setItem('AUTH_API_URL', authApiUrl)
   console.log('Set Auth API URL to: ' + authApiUrl)
 
-  const payApiUrl: string = response.data.PAY_API_URL + response.data.PAY_API_VERSION + '/'
+  const payApiUrl: string = (response.data.PAY_API_URL + response.data.PAY_API_VERSION + '/')
   sessionStorage.setItem('PAY_API_URL', payApiUrl)
   console.log('Set Pay API URL to: ' + payApiUrl)
 
   // for system alert banner (sbc-common-components)
-  const statusApiUrl: string = response.data.STATUS_API_URL + response.data.STATUS_API_VERSION
+  const statusApiUrl: string = (response.data.STATUS_API_URL + response.data.STATUS_API_VERSION)
   sessionStorage.setItem('STATUS_API_URL', statusApiUrl)
   console.log('Set Status API URL to: ' + statusApiUrl)
 
@@ -100,10 +100,10 @@ export async function fetchConfig (): Promise<any> {
   const ldClientId: string = response.data.BUSINESS_CREATE_LD_CLIENT_ID;
   (<any>window).ldClientId = ldClientId
 
-  const sentryEnable = response.data.SENTRY_ENABLE;
+  const sentryEnable: string = response.data.SENTRY_ENABLE;
   (<any>window).sentryEnable = sentryEnable
 
-  const sentryDsn = response.data.SENTRY_DSN;
+  const sentryDsn: string = response.data.SENTRY_DSN;
   (<any>window).sentryDsn = sentryDsn
 
   const webChatReason: string = response.data.WEBCHAT_REASON;

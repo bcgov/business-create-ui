@@ -39,8 +39,8 @@ export default class FileUploadPreview extends Mixins(DocumentMixin) {
     fileUploadInput: HTMLFormElement
   }
 
-  private fileUpload = null as File
-  private customErrorMessages = [] as string[]
+  private fileUpload: File = null
+  private customErrorMessages: string[] = []
 
   protected fileUploadRules = [
     (v) => {
@@ -59,7 +59,8 @@ export default class FileUploadPreview extends Mixins(DocumentMixin) {
     }
   ]
 
-  protected async mounted (): Promise<void> {
+  /** Called when component is mounted. */
+  async mounted (): Promise<void> {
     if (this.inputFile) {
       this.fileUpload = this.inputFile
       await this.$nextTick()
@@ -139,20 +140,18 @@ export default class FileUploadPreview extends Mixins(DocumentMixin) {
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
 
-::v-deep {
-  .file-upload-preview {
-    .v-input__append-outer {
-      margin-top: 10px !important
-    }
-    .v-input__slot {
-      background-color: $gray1 !important;
-    }
-    .v-file-input__text {
-     color: $app-blue !important;
-    }
-    .v-input__icon--prepend button {
-      color: $app-blue !important;
-    }
+:deep(.file-upload-preview) {
+  .v-input__append-outer {
+    margin-top: 10px !important
+  }
+  .v-input__slot {
+    background-color: $gray1 !important;
+  }
+  .v-file-input__text {
+    color: $app-blue !important;
+  }
+  .v-input__icon--prepend button {
+    color: $app-blue !important;
   }
 }
 </style>

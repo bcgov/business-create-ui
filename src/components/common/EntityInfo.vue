@@ -3,7 +3,7 @@
     <v-row no-gutters>
       <v-col cols="12" md="9">
         <div v-show="isEntityType" id="entity-legal-name">
-          {{ legalName || getNumberedEntityName }}
+          {{ legalName || numberedEntityName }}
         </div>
 
         <div id="entity-description">
@@ -53,12 +53,12 @@
         <template v-if="!isRegistrationFiling">
           <div id="entity-business-email">
             <span class="business-info-label">Email:</span>
-            {{ getEmail || 'Not Available' }}
+            {{ email || 'Not Available' }}
           </div>
 
           <div id="entity-business-phone">
             <span class="business-info-label">Phone:</span>
-            {{ getPhone || 'Not Available' }}
+            {{ phone || 'Not Available' }}
           </div>
         </template>
       </v-col>
@@ -71,12 +71,13 @@ import { Component, Mixins } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 import { CorpTypeCd, FilingNames, FilingTypes } from '@/enums'
 import { ContactPointIF, RegistrationStateIF } from '@/interfaces'
-import { EnumMixin, DateMixin } from '@/mixins'
+import { DateMixin } from '@/mixins'
 import { StaffComments } from '@bcrs-shared-components/staff-comments'
-import { axiosInstance as axios } from '@/utils'
+import { AxiosInstance as axios } from '@/utils'
+import { GetCorpFullDescription, GetCorpNumberedDescription } from '@bcrs-shared-components/corp-type-module'
 
 @Component({ components: { StaffComments } })
-export default class EntityInfo extends Mixins(EnumMixin, DateMixin) {
+export default class EntityInfo extends Mixins(DateMixin) {
   @Getter getBusinessLegalName!: string
   @Getter getBusinessContact!: ContactPointIF
   @Getter getEntityIdentifier!: string
@@ -110,7 +111,7 @@ export default class EntityInfo extends Mixins(EnumMixin, DateMixin) {
 
   /** The entity description.  */
   get entityDescription (): string {
-    const corpTypeDescription = this.getCorpTypeDescription(this.getEntityType)
+    const corpTypeDescription = GetCorpFullDescription(this.getEntityType)
     if (this.isTypeSoleProp && this.getTempId) {
       return `${corpTypeDescription} / Doing Business As (DBA)`
     }
@@ -122,18 +123,18 @@ export default class EntityInfo extends Mixins(EnumMixin, DateMixin) {
   }
 
   /** The numbered entity name. */
-  get getNumberedEntityName (): string {
-    return `${this.getCorpTypeNumberedDescription(this.getEntityType)}`
+  get numberedEntityName (): string {
+    return GetCorpNumberedDescription(this.getEntityType)
   }
 
-  get getEmail (): string {
+  get email (): string {
     if (this.isIncorporationFiling) {
       return this.getUserEmail
     }
     return this.getBusinessContact.email
   }
 
-  get getPhone (): string {
+  get phone (): string {
     if (this.isIncorporationFiling) {
       return this.getUserPhone
     }

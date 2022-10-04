@@ -1,5 +1,5 @@
 // Libraries
-import { Component, Mixins } from 'vue-property-decorator'
+import { Component } from 'vue-property-decorator'
 import { NameRequestStates, NameRequestTypes } from '@/enums'
 import { NameRequestIF } from '@/interfaces'
 import { DateMixin } from '@/mixins'
@@ -7,8 +7,10 @@ import { DateMixin } from '@/mixins'
 /**
  * Mixin for processing Name Request objects.
  */
-@Component({})
-export default class NameRequestMixin extends Mixins(DateMixin) {
+@Component({
+  extends: DateMixin
+})
+export default class NameRequestMixin extends DateMixin {
   /**
    * Generates Name Request state for the store.
    * @param nr the name request response payload

@@ -1,5 +1,5 @@
 // Libraries
-import { axiosInstance as axios } from '@/utils'
+import { AxiosInstance as axios } from '@/utils'
 import { CorpTypeCd, FilingCodes } from '@/enums'
 import { FeesIF } from '@/interfaces'
 

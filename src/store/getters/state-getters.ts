@@ -365,12 +365,12 @@ export const getNameRequest = (state: StateIF): NameRequestIF => {
 }
 
 /** The Name Request Details object. */
-export const getNameRequestDetails = (state: StateIF): NameRequestDetailsIF | {} => {
+export const getNameRequestDetails = (state: StateIF): NameRequestDetailsIF | object => {
   return getNameRequest(state).details
 }
 
 /** The Name Request Applicant object. */
-export const getNameRequestApplicant = (state: StateIF): NameRequestApplicantIF | {} => {
+export const getNameRequestApplicant = (state: StateIF): NameRequestApplicantIF | object => {
   return getNameRequest(state).applicant
 }
 

@@ -165,11 +165,8 @@
 </template>
 
 <script lang="ts">
-// Libraries
 import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
-
-// Interfaces
 import {
   ActionBindingIF,
   AffidavitResourceIF,
@@ -178,22 +175,17 @@ import {
   ValidationDetailIF,
   UploadAffidavitIF
 } from '@/interfaces'
-
-// Enums
 import { RouteNames, ItemTypes, PdfPageSize, CorpTypeCd } from '@/enums'
-
-// Mixins
-import { CommonMixin, DocumentMixin, EnumMixin } from '@/mixins'
-
-// Components
+import { CommonMixin, DocumentMixin } from '@/mixins'
 import FileUploadPreview from '@/components/common/FileUploadPreview.vue'
+import { GetCorpNumberedDescription } from '@bcrs-shared-components/corp-type-module'
 
 @Component({
   components: {
     FileUploadPreview
   }
 })
-export default class CompleteAffidavit extends Mixins(CommonMixin, DocumentMixin, EnumMixin) {
+export default class CompleteAffidavit extends Mixins(CommonMixin, DocumentMixin) {
   // Refs
   $refs!: {
     confirmAffidavitChk: FormIF
@@ -204,8 +196,8 @@ export default class CompleteAffidavit extends Mixins(CommonMixin, DocumentMixin
   protected hasAffidavitConfirmed = false
   protected affidavitConfirmed = false
   protected fileUploadCustomErrorMsg = ''
-  protected uploadAffidavitDoc = null as File
-  protected uploadAffidavitDocKey = null as string
+  protected uploadAffidavitDoc: File = null
+  protected uploadAffidavitDocKey: string = null
   protected helpToggle = false
 
   // Global getters
@@ -236,7 +228,7 @@ export default class CompleteAffidavit extends Mixins(CommonMixin, DocumentMixin
 
   /** The entity name. */
   get entityName (): string {
-    return this.getBusinessLegalName || `${this.getCorpTypeNumberedDescription(this.getEntityType)}`
+    return this.getBusinessLegalName || GetCorpNumberedDescription(this.getEntityType)
   }
 
   get entityTitle (): string {
@@ -338,15 +330,16 @@ export default class CompleteAffidavit extends Mixins(CommonMixin, DocumentMixin
   }
 
   /** Called when component is created. */
-  protected created (): void {
-    this.uploadAffidavitDoc = this.getAffidavitStep.affidavitDoc as File
+  created (): void {
+    this.uploadAffidavitDoc = this.getAffidavitStep.affidavitDoc
     this.uploadAffidavitDocKey = this.getAffidavitStep.docKey
     this.affidavitConfirmed = this.getAffidavitStep.affidavitConfirmed
     this.hasValidUploadFile = !!this.uploadAffidavitDocKey
     this.hasAffidavitConfirmed = this.affidavitConfirmed
   }
 
-  protected async mounted (): Promise<void> {
+  /** Called when component is mounted. */
+  async mounted (): Promise<void> {
     // wait for components to load/stabilize then update validation state in store
     await this.$nextTick()
     this.updateAffidavitStepValidity()
@@ -404,7 +397,7 @@ ul {
   }
 }
 
-::v-deep {
+:deep() {
   /** override default validation styling preventing inputs from turning
   red on validation error before the review and confirm step has been visted. */
   .v-label .theme--light .error--text,
@@ -420,7 +413,7 @@ ul {
   }
 }
 
-.invalid-section ::v-deep {
+.invalid-section :deep() {
   /** Resets default validation styling after the review and confirm step has been visited. */
   .v-input--checkbox .v-input__control .v-input__slot .v-label,
   .v-messages__message,
@@ -435,7 +428,7 @@ ul {
 .chk-affidavit {
   color: $gray9;
 
-  ::v-deep {
+  :deep() {
     .theme--light.v-icon {
       color: $gray9;
     }
@@ -479,12 +472,12 @@ ul {
 
 #upload-affidavit-card {
   // file upload input field
-  ::v-deep label.v-label.theme--light {
+  :deep(label.v-label.theme--light) {
     color: $gray7 !important;
   }
 
   // remove extra space taken by error message
-  ::v-deep .v-text-field__details {
+  :deep(.v-text-field__details) {
     margin-bottom: -8px !important;
   }
 }

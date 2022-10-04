@@ -25,7 +25,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop, Emit } from 'vue-property-decorator'
+import Vue from 'vue'
+import { Component, Prop, Emit } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 import RegistriesContactInfo from '@/components/common/RegistriesContactInfo.vue'
 
@@ -44,7 +45,7 @@ export default class FetchErrorDialog extends Vue {
   @Prop({ default: '' }) readonly attach!: string
 
   // Pass click events to parent.
-  @Emit() protected exit () {}
-  @Emit() protected retry () {}
+  @Emit() protected exit (): void {}
+  @Emit() protected retry (): void {}
 }
 </script>

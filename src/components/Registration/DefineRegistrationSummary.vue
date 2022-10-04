@@ -109,8 +109,9 @@ import { ContactPointIF, RegistrationStateIF } from '@/interfaces'
 import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
 import FolioNumber from '@/components/common/FolioNumber.vue'
 import BusinessAddresses from '@/components/Registration/BusinessAddresses.vue'
-import { DateMixin, EnumMixin } from '@/mixins'
+import { DateMixin } from '@/mixins'
 import { CorpTypeCd, RouteNames } from '@/enums'
+import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 
 @Component({
   components: {
@@ -119,7 +120,7 @@ import { CorpTypeCd, RouteNames } from '@/enums'
     FolioNumber
   }
 })
-export default class DefineRegistrationSummary extends Mixins(DateMixin, EnumMixin) {
+export default class DefineRegistrationSummary extends Mixins(DateMixin) {
   // Getters
   @Getter getApprovedName!: string
   // @Getter isPremiumAccount!: boolean // DISABLED PER TICKET # 12306
@@ -131,7 +132,7 @@ export default class DefineRegistrationSummary extends Mixins(DateMixin, EnumMix
 
   /** The entity description. */
   get entityDescription (): string {
-    return this.getCorpTypeDescription(this.getEntityType)
+    return GetCorpFullDescription(this.getEntityType)
   }
 
   /** The business valid flag. */

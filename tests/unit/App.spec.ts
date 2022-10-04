@@ -5,7 +5,7 @@ import flushPromises from 'flush-promises'
 import sinon from 'sinon'
 import { getVuexStore } from '@/store'
 import { mount, shallowMount, createLocalVue } from '@vue/test-utils'
-import { axiosInstance as axios } from '@/utils'
+import { AxiosInstance as axios } from '@/utils'
 import App from '@/App.vue'
 import SbcHeader from 'sbc-common-components/src/components/SbcHeader.vue'
 import SbcFooter from 'sbc-common-components/src/components/SbcFooter.vue'
@@ -273,7 +273,7 @@ describe('Incorporation - Define Company page for a BEN (numbered)', () => {
 
     // GET current user's info
     get.withArgs('https://auth.api.url/users/@me')
-      .returns(new Promise((resolve) => resolve({
+      .returns(new Promise(resolve => resolve({
         data:
         {
           contacts: [
@@ -289,7 +289,7 @@ describe('Incorporation - Define Company page for a BEN (numbered)', () => {
 
     // GET specified org's info
     get.withArgs('https://auth.api.url/orgs/668')
-      .returns(new Promise((resolve) => resolve({
+      .returns(new Promise(resolve => resolve({
         data:
         {
           mailingAddress:
@@ -306,7 +306,7 @@ describe('Incorporation - Define Company page for a BEN (numbered)', () => {
 
     // GET authorizations (role)
     get.withArgs('https://auth.api.url/entities/T7654321/authorizations')
-      .returns(new Promise((resolve) => resolve({
+      .returns(new Promise(resolve => resolve({
         data:
         {
           roles: ['edit', 'view']
@@ -339,7 +339,7 @@ describe('Incorporation - Define Company page for a BEN (numbered)', () => {
 
     // GET filing fees
     get.withArgs('https://pay.api.url/fees/BEN/BCINC?futureEffective=true')
-      .returns(new Promise((resolve) => resolve({
+      .returns(new Promise(resolve => resolve({
         data:
         {
           filingFees: { futureEffectiveFees: 100 }
@@ -432,7 +432,7 @@ describe('Incorporation - Define Company page for a BEN (named)', () => {
 
     // GET current user's info
     get.withArgs('https://auth.api.url/users/@me')
-      .returns(new Promise((resolve) => resolve({
+      .returns(new Promise(resolve => resolve({
         data:
         {
           contacts: [
@@ -448,7 +448,7 @@ describe('Incorporation - Define Company page for a BEN (named)', () => {
 
     // GET specified org's info
     get.withArgs('https://auth.api.url/orgs/668')
-      .returns(new Promise((resolve) => resolve({
+      .returns(new Promise(resolve => resolve({
         data:
         {
           mailingAddress:
@@ -465,7 +465,7 @@ describe('Incorporation - Define Company page for a BEN (named)', () => {
 
     // GET authorizations (role)
     get.withArgs('https://auth.api.url/entities/T1234567/authorizations')
-      .returns(new Promise((resolve) => resolve({
+      .returns(new Promise(resolve => resolve({
         data:
         {
           roles: ['edit', 'view']
@@ -494,7 +494,7 @@ describe('Incorporation - Define Company page for a BEN (named)', () => {
 
     // GET filing fees
     get.withArgs('https://pay.api.url/fees/BEN/BCINC?futureEffective=true')
-      .returns(new Promise((resolve) => resolve({
+      .returns(new Promise(resolve => resolve({
         data:
         {
           filingFees: { futureEffectiveFees: 100 }
@@ -645,7 +645,7 @@ describe('Dissolution - Define Dissolution page for a BEN', () => {
     store.state.stateModel.effectiveDateTime.isFutureEffective = false
     store.state.stateModel.staffPaymentStep.staffPayment.isPriority = false
 
-    const feesPromise = new Promise((resolve) => resolve({
+    const feesPromise = new Promise(resolve => resolve({
       data:
       {
         filingFees: 20.0,
@@ -663,7 +663,7 @@ describe('Dissolution - Define Dissolution page for a BEN', () => {
       }
     }))
 
-    const feesFutureEffectivePromise = new Promise((resolve) => resolve({
+    const feesFutureEffectivePromise = new Promise(resolve => resolve({
       data:
       {
         filingFees: 20.0,
@@ -693,7 +693,7 @@ describe('Dissolution - Define Dissolution page for a BEN', () => {
 
     // GET current user's info
     get.withArgs('https://auth.api.url/users/@me')
-      .returns(new Promise((resolve) => resolve({
+      .returns(new Promise(resolve => resolve({
         data:
         {
           contacts: [
@@ -709,7 +709,7 @@ describe('Dissolution - Define Dissolution page for a BEN', () => {
 
     // GET specified org's info
     get.withArgs('https://auth.api.url/orgs/668')
-      .returns(new Promise((resolve) => resolve({
+      .returns(new Promise(resolve => resolve({
         data:
         {
           mailingAddress:
@@ -726,7 +726,7 @@ describe('Dissolution - Define Dissolution page for a BEN', () => {
 
     // GET auth info
     get.withArgs('https://auth.api.url/entities/BC0870803')
-      .returns(new Promise((resolve) => resolve({
+      .returns(new Promise(resolve => resolve({
         data:
         {
           contacts: [],
@@ -736,7 +736,7 @@ describe('Dissolution - Define Dissolution page for a BEN', () => {
 
     // GET authorizations (role)
     get.withArgs('https://auth.api.url/entities/BC0870803/authorizations')
-      .returns(new Promise((resolve) => resolve({
+      .returns(new Promise(resolve => resolve({
         data:
         {
           roles: ['edit', 'view']
@@ -745,7 +745,7 @@ describe('Dissolution - Define Dissolution page for a BEN', () => {
 
     // GET business data
     get.withArgs('entities/BC0870803')
-      .returns(new Promise((resolve) => resolve({
+      .returns(new Promise(resolve => resolve({
         data:
         {
           affiliations: [5925],
@@ -771,7 +771,7 @@ describe('Dissolution - Define Dissolution page for a BEN', () => {
 
     // GET business info from Legal API
     get.withArgs('businesses/BC0870803')
-      .returns(new Promise((resolve) => resolve({
+      .returns(new Promise(resolve => resolve({
         data:
         {
         // Legal API Business data
@@ -788,7 +788,7 @@ describe('Dissolution - Define Dissolution page for a BEN', () => {
 
     // GET business tasks
     get.withArgs('businesses/BC0870803/tasks')
-      .returns(new Promise((resolve) => resolve({
+      .returns(new Promise(resolve => resolve({
         data:
         {
           tasks: [{
@@ -849,7 +849,7 @@ describe('Dissolution - Define Dissolution page for a BEN', () => {
 
     // GET staff comments
     get.withArgs('businesses/BC0870803/comments')
-      .returns(new Promise((resolve) => resolve({
+      .returns(new Promise(resolve => resolve({
         data: []
       })))
 

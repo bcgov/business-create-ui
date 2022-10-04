@@ -81,18 +81,18 @@
     </template>
 
     <template v-if="showContactInfo">
-        <v-divider class="mx-6" />
+      <v-divider class="mx-6" />
 
-        <!-- Contact Info -->
-        <article class="section-container">
-          <ContactInfo
-            :businessContact="getBusinessContact"
-            :disableActions="isSummary"
-            :customMsg="contactInfoMsg"
-            editLabel="Change"
-            @contactInfoChange="onContactInfoChange($event)"
-          />
-        </article>
+      <!-- Contact Info -->
+      <article class="section-container">
+        <ContactInfo
+          :businessContact="getBusinessContact"
+          :disableActions="isSummary"
+          :customMsg="contactInfoMsg"
+          editLabel="Change"
+          @contactInfoChange="onContactInfoChange($event)"
+        />
+      </article>
     </template>
   </div>
 </template>
@@ -105,9 +105,10 @@ import { ActionBindingIF, AddressIF, ContactPointIF, BusinessIF } from '@/interf
 import { ContactInfo } from '@bcrs-shared-components/contact-info'
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
 import OfficeAddresses from '@/components/common/OfficeAddresses.vue'
-import { CommonMixin, EnumMixin, DateMixin } from '@/mixins'
+import { CommonMixin, DateMixin } from '@/mixins'
 import { CoopTypes, CorpTypeCd } from '@/enums'
 import { isEmpty } from 'lodash'
+import { GetCorpFullDescription, GetCorpNumberedDescription } from '@bcrs-shared-components/corp-type-module'
 
 @Component({
   components: {
@@ -117,9 +118,9 @@ import { isEmpty } from 'lodash'
     MailingAddress: BaseAddress
   }
 })
-export default class AssociationDetails extends Mixins(CommonMixin, EnumMixin, DateMixin) {
+export default class AssociationDetails extends Mixins(CommonMixin, DateMixin) {
   @Prop({ default: false }) readonly isSummary!: boolean
-  @Prop({ default: 'Address' }) readonly addressLabel1: string
+  @Prop({ default: 'Address' }) readonly addressLabel!: string
   @Prop({ default: 'Company' }) readonly entityLabel!: string
   @Prop({ default: false }) readonly showBusinessDate!: boolean
   @Prop({ default: true }) readonly showContactInfo!: boolean
@@ -146,12 +147,12 @@ export default class AssociationDetails extends Mixins(CommonMixin, EnumMixin, D
 
   /** The entity name. */
   get entityName (): string {
-    return this.getBusinessLegalName || `${this.getCorpTypeNumberedDescription(this.getEntityType)}`
+    return this.getBusinessLegalName || GetCorpNumberedDescription(this.getEntityType)
   }
 
   /** The entity description.  */
   get entityDescription (): string {
-    return `${this.getCorpTypeDescription(this.getEntityType)}`
+    return GetCorpFullDescription(this.getEntityType)
   }
 
   /** The business start date. */
@@ -193,10 +194,5 @@ export default class AssociationDetails extends Mixins(CommonMixin, EnumMixin, D
 #company-name {
   font-size: $px-22;
   color: $gray9;
-}
-
-// add missing whitespace between title and addresses
-::v-deep #contact-info .col-sm-3 {
-  padding-bottom: 16px;
 }
 </style>

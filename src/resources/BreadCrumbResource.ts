@@ -3,14 +3,13 @@ import { BreadcrumbIF } from '@/interfaces'
 import { getVuexStore } from '@/store'
 import { GetCorpNumberedDescription } from '@bcrs-shared-components/corp-type-module'
 
-const getCorpTypeNumberedDescription = GetCorpNumberedDescription
 const store = getVuexStore()
 
 /** Returns legal name. */
 function getLegalName (): string {
-  const getFilingType = store.getters.getFilingType as FilingTypes
-  const getBusinessLegalName = store.getters.getBusinessLegalName as string
-  const getApprovedName = store.getters.getApprovedName as string
+  const getFilingType: FilingTypes = store.getters.getFilingType
+  const getBusinessLegalName: string = store.getters.getBusinessLegalName
+  const getApprovedName: string = store.getters.getApprovedName
 
   switch (getFilingType) {
     case FilingTypes.VOLUNTARY_DISSOLUTION: return getBusinessLegalName
@@ -22,17 +21,17 @@ function getLegalName (): string {
 /** Returns numbered entity name. */
 function getNumberedEntityName (): string {
   const getEntityType = store.getters.getEntityType as CorpTypeCd
-  return `${getCorpTypeNumberedDescription(getEntityType)}`
+  return GetCorpNumberedDescription(getEntityType)
 }
 
 /** Returns URL param string with Account ID if present, else empty string. */
 function getParams (): string {
-  const accountId = JSON.parse(sessionStorage.getItem('CURRENT_ACCOUNT'))?.id
+  const accountId: number = JSON.parse(sessionStorage.getItem('CURRENT_ACCOUNT'))?.id
   return accountId ? `?accountid=${accountId}` : ''
 }
 
 export function getEntityDashboardBreadcrumb (): BreadcrumbIF {
-  const getEntityIdentifier = store.getters.getEntityIdentifier as string
+  const getEntityIdentifier: string = store.getters.getEntityIdentifier
   return {
     text: getLegalName() || getNumberedEntityName(),
     href: `${sessionStorage.getItem('DASHBOARD_URL')}${getEntityIdentifier}/${getParams()}`
