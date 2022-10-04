@@ -1,11 +1,11 @@
 /* eslint-disable no-console */
-import { axiosInstance as axios } from '@/utils'
+import { AxiosInstance as axios } from '@/utils'
 
 /**
  * Fetches config from environment and API.
  * @returns A promise to get & set session storage keys with appropriate values.
  */
-export async function fetchConfig (): Promise<any> {
+export async function FetchConfig (): Promise<any> {
   // get config from environment
   const origin = window.location.origin
   const processEnvVueAppPath: string = process.env.VUE_APP_PATH

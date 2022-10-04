@@ -177,7 +177,8 @@ import {
   NameTranslationIF,
   RegistrationStateIF
 } from '@/interfaces'
-import { DateMixin, EnumMixin } from '@/mixins'
+import { DateMixin } from '@/mixins'
+import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 
 @Component({
   components: {
@@ -186,7 +187,7 @@ import { DateMixin, EnumMixin } from '@/mixins'
     ListNameTranslations
   }
 })
-export default class NameRequestInfo extends Mixins(DateMixin, EnumMixin) {
+export default class NameRequestInfo extends Mixins(DateMixin) {
   // Refs
   $refs!: {
     confirmTranslationRemovalDialog: ConfirmDialogType
@@ -221,7 +222,7 @@ export default class NameRequestInfo extends Mixins(DateMixin, EnumMixin) {
 
   /** The entity title.  */
   get getEntityTypeDescription (): string {
-    const corpTypeDescription = this.getCorpTypeDescription(this.getEntityType)
+    const corpTypeDescription = GetCorpFullDescription(this.getEntityType)
     if (this.isTypeSoleProp) {
       return `${corpTypeDescription} or Doing Business As (DBA)`
     }

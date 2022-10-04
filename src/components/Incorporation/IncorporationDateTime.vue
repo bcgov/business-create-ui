@@ -98,10 +98,7 @@
 // FUTURE: replace this with EffectiveDateTime.vue
 //
 
-// Libraries
 import { Component, Mixins, Watch, Emit, Prop } from 'vue-property-decorator'
-
-// Mixins, constants, etc
 import { DateMixin } from '@/mixins'
 import { ISIMMEDIATE, ISFUTUREEFFECTIVE } from '@/constants'
 import { EffectiveDateTimeIF, FormIF } from '@/interfaces'

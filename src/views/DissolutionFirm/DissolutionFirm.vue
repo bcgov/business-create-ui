@@ -214,7 +214,7 @@
 <script lang="ts">
 import { Component, Mixins } from 'vue-property-decorator'
 import { Getter, Action } from 'vuex-class'
-import { DateMixin, EnumMixin } from '@/mixins'
+import { DateMixin } from '@/mixins'
 import AssociationDetails from '@/components/Dissolution/AssociationDetails.vue'
 import { Certify } from '@bcrs-shared-components/certify'
 
@@ -242,6 +242,7 @@ import {
   StaffPaymentStepIF
 } from '@/interfaces'
 import { PersonAddressSchema } from '@/schemas/'
+import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 
 @Component({
   components: {
@@ -256,7 +257,7 @@ import { PersonAddressSchema } from '@/schemas/'
     CompletingParty
   }
 })
-export default class DissolutionFirm extends Mixins(DateMixin, EnumMixin) {
+export default class DissolutionFirm extends Mixins(DateMixin) {
   // Global getters
   @Getter getEntityType!: CorpTypeCd
   @Getter getBusinessLegalName!: string
@@ -426,7 +427,7 @@ export default class DissolutionFirm extends Mixins(DateMixin, EnumMixin) {
 
   /** The entity description.  */
   protected corpTypeDescription (): string {
-    return this.getCorpTypeDescription(this.getEntityType)
+    return GetCorpFullDescription(this.getEntityType)
   }
 
   protected onUpdate (cp: CompletingPartyIF): void {

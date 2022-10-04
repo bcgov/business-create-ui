@@ -1,5 +1,5 @@
 // Libraries
-import { axiosInstance as axios } from '@/utils'
+import { AxiosInstance as axios } from '@/utils'
 import { StatusCodes } from 'http-status-codes'
 import { DissolutionFilingIF, IncorporationFilingIF, RegistrationFilingIF } from '@/interfaces'
 import { FilingTypes } from '@/enums'

@@ -25,7 +25,7 @@ import '@/assets/styles/overrides.scss'
 import App from '@/App.vue'
 
 // Helpers
-import { fetchConfig, initLdClient, navigate } from '@/utils'
+import { FetchConfig, InitLdClient, Navigate } from '@/utils'
 import KeycloakService from 'sbc-common-components/src/services/keycloak.services'
 
 // get rid of "You are running Vue in development mode" console message
@@ -41,7 +41,7 @@ Vue.use(VueObserveVisibility)
 async function start () {
   // fetch config from environment and API
   // must come first as inits below depend on config
-  await fetchConfig()
+  await FetchConfig()
 
   if ((window as any).sentryEnable === 'true') {
     // initialize Sentry
@@ -54,7 +54,7 @@ async function start () {
 
   // initialize Launch Darkly
   if ((window as any).ldClientId) {
-    await initLdClient()
+    await InitLdClient()
   }
 
   // configure KeyCloak Service
@@ -97,11 +97,11 @@ async function start () {
 start().catch(error => {
   // log any error after configuring sentry.
   // it helps to identify configuration issues specific to the environment.
-  // note that it won't log anything related to `fetchConfig()` since sentry is depending on a config value.
+  // note that it won't log anything related to `FetchConfig()` since sentry is depending on a config value.
   Sentry.captureException(error)
   console.error(error) // eslint-disable-line no-console
   alert('There was an error starting this page. (See console for details.)\n' +
     'Please try again later.')
   // try to navigate to Business Registry home page
-  navigate(sessionStorage.getItem('BUSINESSES_URL'))
+  Navigate(sessionStorage.getItem('BUSINESSES_URL'))
 })

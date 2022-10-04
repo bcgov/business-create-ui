@@ -172,7 +172,7 @@ import { Action, Getter } from 'vuex-class'
 import { StatusCodes } from 'http-status-codes'
 import { cloneDeep } from 'lodash'
 import * as Sentry from '@sentry/browser'
-import { getFeatureFlag, updateLdUser, navigate, sleep } from '@/utils'
+import { GetFeatureFlag, UpdateLdUser, Navigate, Sleep } from '@/utils'
 
 // Components, dialogs and views
 import Actions from '@/components/common/Actions.vue'
@@ -191,7 +191,6 @@ import * as Views from '@/views'
 import {
   CommonMixin,
   DateMixin,
-  EnumMixin,
   FilingTemplateMixin,
   NameRequestMixin
 } from '@/mixins'
@@ -252,7 +251,6 @@ import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
 export default class App extends Mixins(
   CommonMixin,
   DateMixin,
-  EnumMixin,
   FilingTemplateMixin,
   NameRequestMixin
 ) {
@@ -528,7 +526,7 @@ export default class App extends Mixins(
     this.fileAndPayInvalidNameRequestDialog = false
     const manageBusinessUrl = `${sessionStorage.getItem('AUTH_WEB_URL')}business`
     this.setHaveChanges(false)
-    navigate(manageBusinessUrl)
+    Navigate(manageBusinessUrl)
   }
 
   /** Called to navigate to dashboard. */
@@ -537,7 +535,7 @@ export default class App extends Mixins(
     if (!this.getHaveChanges || force) {
       // navigate to dashboard
       const dashboardUrl = sessionStorage.getItem('DASHBOARD_URL')
-      navigate(dashboardUrl + this.getEntityIdentifier)
+      Navigate(dashboardUrl + this.getEntityIdentifier)
       return
     }
 
@@ -561,7 +559,7 @@ export default class App extends Mixins(
       this.setHaveChanges(false)
       // navigate to dashboard
       const dashboardUrl = sessionStorage.getItem('DASHBOARD_URL')
-      navigate(dashboardUrl + this.getEntityIdentifier)
+      Navigate(dashboardUrl + this.getEntityIdentifier)
     })
   }
 
@@ -605,7 +603,7 @@ export default class App extends Mixins(
     this.resetFlags()
 
     // check that current route matches a supported filing type
-    const supportedFilings = await getFeatureFlag('supported-filings')
+    const supportedFilings = await GetFeatureFlag('supported-filings')
     if (!supportedFilings?.includes(this.$route.meta.filingType)) {
       window.alert('This filing type is not available at the moment. Please check again later.')
       this.goToDashboard(true)
@@ -959,7 +957,7 @@ export default class App extends Mixins(
       const currentAccount = sessionStorage.getItem(SessionStorageKeys.CurrentAccount)
       account = JSON.parse(currentAccount)
       if (account) break
-      await sleep(100)
+      await Sleep(100)
     }
     return account
   }
@@ -1018,7 +1016,7 @@ export default class App extends Mixins(
     // remove leading { and trailing } and tokenize string
     const custom: any = { roles: userInfo.roles?.slice(1, -1).split(',') }
 
-    await updateLdUser(key, email, firstName, lastName, custom)
+    await UpdateLdUser(key, email, firstName, lastName, custom)
   }
 
   /** Stores business info from Legal API. */

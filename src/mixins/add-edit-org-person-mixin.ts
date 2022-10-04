@@ -25,7 +25,7 @@ import { VuetifyRuleFunction } from '@/types'
 /**
  * Mixin that provides common add/edit org/person methods.
  */
-@Component({ components: {} })
+@Component({})
 export default class AddEditOrgPersonMixin extends Vue {
   // Refs
   $refs!: {

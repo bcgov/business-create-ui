@@ -3,10 +3,9 @@
     <v-card outlined class="message-box mt-10">
       <p>
         <strong>Important:</strong> You are about to voluntarily dissolve <strong>{{ entityName }}</strong>.
-        Once this process is completed and the required documents are filed, the
-        {{ getCorpTypeDescription(this.getEntityType) }} is struck from the register and dissolved, ceasing to be
-        an incorporated {{ entityDesignation }} under the {{ entityAct }}. All assets and liabilities must be addressed
-        prior to filing.
+        Once this process is completed and the required documents are filed, the {{ corpDescription }}
+        is struck from the register and dissolved, ceasing to be an incorporated {{ entityDesignation }}
+        under the {{ entityAct }}. All assets and liabilities must be addressed prior to filing.
       </p>
     </v-card>
 
@@ -97,8 +96,9 @@ import DestroyCertificate from '@/components/Dissolution/DestroyCertificate.vue'
 import DissolutionStatement from '@/components/Dissolution/DissolutionStatement.vue'
 import HelpSection from '@/components/common/HelpSection.vue'
 import { ActionBindingIF, CustodianResourceIF, DissolutionStatementIF } from '@/interfaces'
-import { CommonMixin, EnumMixin } from '@/mixins'
+import { CommonMixin } from '@/mixins'
 import { CorpTypeCd, RouteNames } from '@/enums'
+import { GetCorpFullDescription, GetCorpNumberedDescription } from '@bcrs-shared-components/corp-type-module'
 
 @Component({
   components: {
@@ -110,7 +110,7 @@ import { CorpTypeCd, RouteNames } from '@/enums'
     HelpSection
   }
 })
-export default class DissolutionDefineDissolution extends Mixins(CommonMixin, EnumMixin) {
+export default class DissolutionDefineDissolution extends Mixins(CommonMixin) {
   // Global getters
   @Getter getBusinessLegalName!: string
   @Getter getCustodialRecordsResources!: CustodianResourceIF
@@ -125,9 +125,13 @@ export default class DissolutionDefineDissolution extends Mixins(CommonMixin, En
   // Global actions
   @Action setCustodianValidity!: ActionBindingIF
 
+  get corpDescription (): string {
+    return GetCorpFullDescription(this.getEntityType)
+  }
+
   /** The entity name. */
   get entityName (): string {
-    return this.getBusinessLegalName || `${this.getCorpTypeNumberedDescription(this.getEntityType)}`
+    return this.getBusinessLegalName || GetCorpNumberedDescription(this.getEntityType)
   }
 
   /** The entity designation. */

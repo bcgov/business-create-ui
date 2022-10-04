@@ -137,14 +137,14 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins } from 'vue-property-decorator'
+import Vue from 'vue'
+import { Component } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import {
   ActionBindingIF, ContactPointIF, CertifyIF, EffectiveDateTimeIF, IncorporationAgreementIF,
   ShareStructureIF
 } from '@/interfaces'
 import { CorpTypeCd } from '@/enums'
-import { EnumMixin } from '@/mixins'
 import AgreementType from '@/components/common/AgreementType.vue'
 import CardHeader from '@/components/common/CardHeader.vue'
 import Certify from '@/components/common/Certify.vue'
@@ -155,6 +155,7 @@ import ListShareClass from '@/components/Incorporation/ListShareClass.vue'
 import SummaryDefineCompany from '@/components/Incorporation/SummaryDefineCompany.vue'
 import UploadMemorandumSummary from '@/components/Incorporation/UploadMemorandumSummary.vue'
 import UploadRulesSummary from '@/components/Incorporation/UploadRulesSummary.vue'
+import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 
 @Component({
   components: {
@@ -170,7 +171,7 @@ import UploadRulesSummary from '@/components/Incorporation/UploadRulesSummary.vu
     UploadRulesSummary
   }
 })
-export default class IncorporationReviewConfirm extends Mixins(EnumMixin) {
+export default class IncorporationReviewConfirm extends Vue {
   @Getter getBusinessContact!: ContactPointIF
   @Getter getCertifyState!: CertifyIF
   @Getter getCompanyTitle!: string
@@ -194,7 +195,7 @@ export default class IncorporationReviewConfirm extends Mixins(EnumMixin) {
 
   /** The entity description,  */
   get getEntityDescription (): string {
-    return `${this.getCorpTypeDescription(this.getEntityType)}`
+    return GetCorpFullDescription(this.getEntityType)
   }
 
   /** Is true when the effective date-time conditions are not met. */

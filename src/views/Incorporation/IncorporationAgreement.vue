@@ -224,14 +224,15 @@ import { Getter } from 'vuex-class'
 import AgreementType from '@/components/common/AgreementType.vue'
 import { IncorporationAgreementIF } from '@/interfaces'
 import { CorpTypeCd, RouteNames } from '@/enums'
-import { CommonMixin, EnumMixin } from '@/mixins'
+import { CommonMixin } from '@/mixins'
+import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 
 @Component({
   components: {
     AgreementType
   }
 })
-export default class IncorporationAgreement extends Mixins(CommonMixin, EnumMixin) {
+export default class IncorporationAgreement extends Mixins(CommonMixin) {
   @Getter isTypeBcomp!: boolean
   @Getter isTypeBcCcc!: boolean
   @Getter getEntityType!: CorpTypeCd
@@ -249,7 +250,7 @@ export default class IncorporationAgreement extends Mixins(CommonMixin, EnumMixi
 
   /** The entity description. */
   get entityDescription (): string {
-    return `${this.getCorpTypeDescription(this.getEntityType)}`
+    return GetCorpFullDescription(this.getEntityType)
   }
 
   get documentURL (): string {

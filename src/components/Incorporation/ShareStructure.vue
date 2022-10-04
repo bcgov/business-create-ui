@@ -156,10 +156,7 @@
 </template>
 
 <script lang="ts">
-// Libraries
 import { Component, Prop, Emit, Mixins } from 'vue-property-decorator'
-
-// Interfaces, mixins, etc
 import { ShareClassIF, FormIF } from '@/interfaces'
 import { CurrencyLookupMixin } from '@/mixins'
 import { VuetifyRuleFunction } from '@/types'

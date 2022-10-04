@@ -3,7 +3,6 @@ import { BreadcrumbIF } from '@/interfaces'
 import { getVuexStore } from '@/store'
 import { GetCorpNumberedDescription } from '@bcrs-shared-components/corp-type-module'
 
-const getCorpTypeNumberedDescription = GetCorpNumberedDescription
 const store = getVuexStore()
 
 /** Returns legal name. */
@@ -22,7 +21,7 @@ function getLegalName (): string {
 /** Returns numbered entity name. */
 function getNumberedEntityName (): string {
   const getEntityType = store.getters.getEntityType as CorpTypeCd
-  return `${getCorpTypeNumberedDescription(getEntityType)}`
+  return GetCorpNumberedDescription(getEntityType)
 }
 
 /** Returns URL param string with Account ID if present, else empty string. */

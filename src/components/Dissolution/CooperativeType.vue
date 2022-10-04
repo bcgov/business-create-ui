@@ -21,15 +21,16 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Emit, Watch, Mixins, Prop } from 'vue-property-decorator'
+import Vue from 'vue'
+import { Component, Emit, Watch, Prop } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 import { CoopTypes } from '@/enums'
 import { FormIF } from '@/interfaces'
-import { EnumMixin } from '@/mixins'
 import { VuetifyRuleFunction } from '@/types'
+import { CoopTypeToDescription } from '@/utils'
 
 @Component({})
-export default class CooperativeType extends Mixins(EnumMixin) {
+export default class CooperativeType extends Vue {
   // Refs
   $refs!: {
     cooperativeTypeForm: FormIF
@@ -45,15 +46,15 @@ export default class CooperativeType extends Mixins(EnumMixin) {
   readonly items: Array<any> = [
     {
       value: CoopTypes.COMMUNITY_SERVICE_COOPERATIVE,
-      text: this.coopTypeToDescription(CoopTypes.COMMUNITY_SERVICE_COOPERATIVE)
+      text: CoopTypeToDescription(CoopTypes.COMMUNITY_SERVICE_COOPERATIVE)
     },
     {
       value: CoopTypes.ORDINARY_COOPERATIVE,
-      text: this.coopTypeToDescription(CoopTypes.ORDINARY_COOPERATIVE)
+      text: CoopTypeToDescription(CoopTypes.ORDINARY_COOPERATIVE)
     },
     {
       value: CoopTypes.HOUSING_COOPERATIVE,
-      text: this.coopTypeToDescription(CoopTypes.HOUSING_COOPERATIVE)
+      text: CoopTypeToDescription(CoopTypes.HOUSING_COOPERATIVE)
     }
   ]
 

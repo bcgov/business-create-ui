@@ -165,11 +165,8 @@
 </template>
 
 <script lang="ts">
-// Libraries
 import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
-
-// Interfaces
 import {
   ActionBindingIF,
   AffidavitResourceIF,
@@ -178,22 +175,17 @@ import {
   ValidationDetailIF,
   UploadAffidavitIF
 } from '@/interfaces'
-
-// Enums
 import { RouteNames, ItemTypes, PdfPageSize, CorpTypeCd } from '@/enums'
-
-// Mixins
-import { CommonMixin, DocumentMixin, EnumMixin } from '@/mixins'
-
-// Components
+import { CommonMixin, DocumentMixin } from '@/mixins'
 import FileUploadPreview from '@/components/common/FileUploadPreview.vue'
+import { GetCorpNumberedDescription } from '@bcrs-shared-components/corp-type-module'
 
 @Component({
   components: {
     FileUploadPreview
   }
 })
-export default class CompleteAffidavit extends Mixins(CommonMixin, DocumentMixin, EnumMixin) {
+export default class CompleteAffidavit extends Mixins(CommonMixin, DocumentMixin) {
   // Refs
   $refs!: {
     confirmAffidavitChk: FormIF
@@ -236,7 +228,7 @@ export default class CompleteAffidavit extends Mixins(CommonMixin, DocumentMixin
 
   /** The entity name. */
   get entityName (): string {
-    return this.getBusinessLegalName || `${this.getCorpTypeNumberedDescription(this.getEntityType)}`
+    return this.getBusinessLegalName || GetCorpNumberedDescription(this.getEntityType)
   }
 
   get entityTitle (): string {

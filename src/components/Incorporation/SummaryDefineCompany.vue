@@ -47,7 +47,7 @@
             </v-col>
             <v-col cols="12" sm="9">
               <div class="cooperative-type ml-n1">
-                <span>{{ getCooperativeType ? coopTypeToDescription(getCooperativeType) : '(Not Entered)' }}</span>
+                <span>{{ coopDescription }}</span>
               </div>
             </v-col>
           </v-row>
@@ -90,14 +90,16 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins } from 'vue-property-decorator'
+import Vue from 'vue'
+import { Component } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 import { ContactPointIF, DefineCompanyIF, NameTranslationIF } from '@/interfaces'
 import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
 import FolioNumber from '@/components/common/FolioNumber.vue'
 import OfficeAddresses from '@/components/common/OfficeAddresses.vue'
-import { EnumMixin } from '@/mixins'
 import { CoopTypes, CorpTypeCd, RouteNames } from '@/enums'
+import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
+import { CoopTypeToDescription } from '@/utils'
 
 @Component({
   components: {
@@ -106,7 +108,7 @@ import { CoopTypes, CorpTypeCd, RouteNames } from '@/enums'
     OfficeAddresses
   }
 })
-export default class SummaryDefineCompany extends Mixins(EnumMixin) {
+export default class SummaryDefineCompany extends Vue {
   // Getters
   @Getter getApprovedName!: string
   @Getter getCooperativeType!: CoopTypes
@@ -121,11 +123,15 @@ export default class SummaryDefineCompany extends Mixins(EnumMixin) {
 
   /** The entity description  */
   get entityDescription (): string {
-    return `${this.getCorpTypeDescription(this.getEntityType)}`
+    return GetCorpFullDescription(this.getEntityType)
   }
 
-  // Enum for template
+  // for template
   readonly RouteNames = RouteNames
+
+  get coopDescription (): string {
+    return (this.getCooperativeType ? CoopTypeToDescription(this.getCooperativeType) : '(Not Entered)')
+  }
 }
 </script>
 

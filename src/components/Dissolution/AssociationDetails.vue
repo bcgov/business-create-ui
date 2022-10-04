@@ -105,9 +105,10 @@ import { ActionBindingIF, AddressIF, ContactPointIF, BusinessIF } from '@/interf
 import { ContactInfo } from '@bcrs-shared-components/contact-info'
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
 import OfficeAddresses from '@/components/common/OfficeAddresses.vue'
-import { CommonMixin, EnumMixin, DateMixin } from '@/mixins'
+import { CommonMixin, DateMixin } from '@/mixins'
 import { CoopTypes, CorpTypeCd } from '@/enums'
 import { isEmpty } from 'lodash'
+import { GetCorpFullDescription, GetCorpNumberedDescription } from '@bcrs-shared-components/corp-type-module'
 
 @Component({
   components: {
@@ -117,7 +118,7 @@ import { isEmpty } from 'lodash'
     MailingAddress: BaseAddress
   }
 })
-export default class AssociationDetails extends Mixins(CommonMixin, EnumMixin, DateMixin) {
+export default class AssociationDetails extends Mixins(CommonMixin, DateMixin) {
   @Prop({ default: false }) readonly isSummary!: boolean
   @Prop({ default: 'Address' }) readonly addressLabel!: string
   @Prop({ default: 'Company' }) readonly entityLabel!: string
@@ -146,12 +147,12 @@ export default class AssociationDetails extends Mixins(CommonMixin, EnumMixin, D
 
   /** The entity name. */
   get entityName (): string {
-    return this.getBusinessLegalName || `${this.getCorpTypeNumberedDescription(this.getEntityType)}`
+    return this.getBusinessLegalName || GetCorpNumberedDescription(this.getEntityType)
   }
 
   /** The entity description.  */
   get entityDescription (): string {
-    return `${this.getCorpTypeDescription(this.getEntityType)}`
+    return GetCorpFullDescription(this.getEntityType)
   }
 
   /** The business start date. */

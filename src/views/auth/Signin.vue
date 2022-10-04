@@ -5,7 +5,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
-import { navigate } from '@/utils'
+import { Navigate } from '@/utils'
 
 @Component({})
 export default class Signin extends Vue {
@@ -16,7 +16,7 @@ export default class Signin extends Vue {
     const baseUrl = sessionStorage.getItem('BASE_URL').replace(/\/$/, '') // remove trailing /
     const redirect = this.$route.query.redirect
     const returnUrl = encodeURIComponent(baseUrl + redirect)
-    navigate(`${loginUrl}?return=${returnUrl}`)
+    Navigate(`${loginUrl}?return=${returnUrl}`)
   }
 }
 </script>
