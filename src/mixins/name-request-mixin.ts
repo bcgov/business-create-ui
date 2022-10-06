@@ -7,9 +7,7 @@ import { DateMixin } from '@/mixins'
 /**
  * Mixin for processing Name Request objects.
  */
-@Component({
-  extends: DateMixin
-})
+@Component({})
 export default class NameRequestMixin extends DateMixin {
   /**
    * Generates Name Request state for the store.

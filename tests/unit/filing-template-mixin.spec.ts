@@ -1,5 +1,5 @@
 import { wrapperFactory } from '../jest-wrapper-factory'
-import MixinTester from './mixin-tester.vue'
+import MixinTester from '@/mixin-tester.vue'
 import { getVuexStore } from '@/store'
 
 const store = getVuexStore()

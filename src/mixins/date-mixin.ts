@@ -10,9 +10,7 @@ import { CommonMixin } from '@/mixins'
 /**
  * Mixin that provides some useful date utilities.
  */
-@Component({
-  extends: CommonMixin
-})
+@Component({})
 export default class DateMixin extends CommonMixin {
   @Getter getCurrentJsDate!: Date
 
