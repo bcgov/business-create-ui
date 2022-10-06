@@ -51,9 +51,7 @@ import {
 /**
  * Mixin that provides the integration with the Legal API.
  */
-@Component({
-  extends: DateMixin
-})
+@Component({})
 export default class FilingTemplateMixin extends DateMixin {
   @Getter isTypeBcomp!: boolean
   @Getter isTypeCoop!: boolean
