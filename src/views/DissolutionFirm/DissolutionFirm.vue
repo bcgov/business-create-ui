@@ -227,9 +227,8 @@ import { RuleHelpers } from '@/rules'
 import { CompletingParty } from '@bcrs-shared-components/completing-party'
 import StaffPayment from '@/components/common/StaffPayment.vue'
 import TransactionalFolioNumber from '@/components/common/TransactionalFolioNumber.vue'
-import { AccountTypes, CorpTypeCd, RoleTypes, RouteNames } from '@/enums'
+import { CorpTypeCd, RoleTypes, RouteNames } from '@/enums'
 import { VuetifyRuleFunction } from '@/types'
-import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
 
 import {
   ActionBindingIF,
