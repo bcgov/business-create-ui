@@ -133,7 +133,7 @@
           class="py-8 px-6 section-container py-6"
           :invalidSection="isCompletingPartyInvalid"
           :completingParty="getCompletingParty"
-          :enableAddEdit="isRoleStaff"
+          :enableAddEdit="isRoleStaff || isSbcStaff"
           :addressSchema="PersonAddressSchema"
           :validate="isCompletingPartyInvalid"
           @update="onUpdate($event)"
@@ -164,7 +164,7 @@
           :firstColumn="3"
           :secondColumn="9"
           :invalidSection="isCertifyInvalid"
-          :disableEdit="!isRoleStaff"
+          :disableEdit="!isRoleStaff && !isSbcStaff"
           @update:certifiedBy="onCertifiedBy($event)"
           @update:isCertified="onIsCertified($event)"
         />
@@ -272,6 +272,7 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
   @Getter getValidateSteps!: boolean
   @Getter isPremiumAccount!: boolean
   @Getter isRoleStaff!: boolean
+  @Getter isSbcStaff!: boolean
   @Getter getFolioNumber!: string
   @Getter getTransactionalFolioNumber!: string
   @Getter getBusinessFoundingDate!: string
