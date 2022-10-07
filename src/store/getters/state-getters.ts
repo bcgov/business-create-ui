@@ -190,8 +190,7 @@ export const isPremiumAccount = (state: StateIF): boolean => {
 
 /** Whether the user is SBC Staff (which is not the same as Staff). */
 export const isSbcStaff = (state: StateIF): boolean => {
-  const orgInfo = getOrgInformation(state)
-  return (orgInfo?.orgType === AccountTypes.SBC_STAFF)
+  return (getAccountInformation(state).accountType === AccountTypes.SBC_STAFF)
 }
 
 /** The Org Information object. */
