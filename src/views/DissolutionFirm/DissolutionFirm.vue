@@ -273,6 +273,7 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
   @Getter getValidateSteps!: boolean
   @Getter isPremiumAccount!: boolean
   @Getter isRoleStaff!: boolean
+  @Getter isSbcStaff!: boolean
   @Getter getFolioNumber!: string
   @Getter getTransactionalFolioNumber!: string
   @Getter getBusinessFoundingDate!: string
@@ -360,20 +361,6 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
       }
     }
     return emailList
-  }
-
-  // FUTURE: pull this from shared auth composable (after vue3 upgrade)
-  get isSbcStaff (): boolean {
-    const currentAccount = sessionStorage.getItem(SessionStorageKeys.CurrentAccount)
-    console.log(currentAccount)
-    if (!currentAccount) return false
-    try {
-      console.log(JSON.parse(currentAccount).accountType)
-      return JSON.parse(currentAccount).accountType === AccountTypes.SBC_STAFF
-    } catch (error) {
-      console.log('Error parsing current account =', error)
-      return false
-    }
   }
 
   /** Handler for Valid change event. */

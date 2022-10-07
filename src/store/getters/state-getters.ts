@@ -100,8 +100,7 @@ export const isGovAccountUser = (state: StateIF): boolean => {
 
 /** Whether the user is SBC Staff (which is not the same as Staff). */
 export const isSbcStaff = (state: StateIF): boolean => {
-  const orgInfo = getOrgInformation(state)
-  return (orgInfo?.orgType === 'SBC_STAFF')
+  return state.stateModel.accountInformation?.accountType === AccountTypes.SBC_STAFF
 }
 
 /** Whether the entity type has been identified. */
