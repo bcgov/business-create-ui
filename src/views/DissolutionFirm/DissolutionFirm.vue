@@ -133,7 +133,7 @@
           class="py-8 px-6 section-container py-6"
           :invalidSection="isCompletingPartyInvalid"
           :completingParty="getCompletingParty"
-          :enableAddEdit="isRoleStaff"
+          :enableAddEdit="isRoleStaff || isSbcStaff"
           :addressSchema="PersonAddressSchema"
           :validate="isCompletingPartyInvalid"
           @update="onUpdate($event)"
@@ -164,7 +164,7 @@
           :firstColumn="3"
           :secondColumn="9"
           :invalidSection="isCertifyInvalid"
-          :disableEdit="!isRoleStaff"
+          :disableEdit="!isRoleStaff && !isSbcStaff"
           @update:certifiedBy="onCertifiedBy($event)"
           @update:isCertified="onIsCertified($event)"
         />
@@ -227,8 +227,9 @@ import { RuleHelpers } from '@/rules'
 import { CompletingParty } from '@bcrs-shared-components/completing-party'
 import StaffPayment from '@/components/common/StaffPayment.vue'
 import TransactionalFolioNumber from '@/components/common/TransactionalFolioNumber.vue'
-import { CorpTypeCd, RoleTypes, RouteNames } from '@/enums'
+import { AccountTypes, CorpTypeCd, RoleTypes, RouteNames } from '@/enums'
 import { VuetifyRuleFunction } from '@/types'
+import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
 
 import {
   ActionBindingIF,
@@ -359,6 +360,20 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
       }
     }
     return emailList
+  }
+
+  // FUTURE: pull this from shared auth composable (after vue3 upgrade)
+  get isSbcStaff (): boolean {
+    const currentAccount = sessionStorage.getItem(SessionStorageKeys.CurrentAccount)
+    console.log(currentAccount)
+    if (!currentAccount) return false
+    try {
+      console.log(JSON.parse(currentAccount).accountType)
+      return JSON.parse(currentAccount).accountType === AccountTypes.SBC_STAFF
+    } catch (error) {
+      console.log('Error parsing current account =', error)
+      return false
+    }
   }
 
   /** Handler for Valid change event. */
