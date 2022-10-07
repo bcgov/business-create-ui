@@ -98,11 +98,6 @@ export const isGovAccountUser = (state: StateIF): boolean => {
   return getTombstone(state).authRoles.includes('gov_account_user')
 }
 
-/** Whether the user is SBC Staff (which is not the same as Staff). */
-export const isSbcStaff = (state: StateIF): boolean => {
-  return state.stateModel.accountInformation?.accountType === AccountTypes.SBC_STAFF
-}
-
 /** Whether the entity type has been identified. */
 export const isEntityType = (state: StateIF): boolean => {
   return !!getEntityType(state)
@@ -191,6 +186,12 @@ export const isBaseCompany = (state: StateIF): boolean => {
 /** Whether the current account is a premium account. */
 export const isPremiumAccount = (state: StateIF): boolean => {
   return (getAccountInformation(state).accountType === AccountTypes.PREMIUM)
+}
+
+/** Whether the user is SBC Staff (which is not the same as Staff). */
+export const isSbcStaff = (state: StateIF): boolean => {
+  const orgInfo = getOrgInformation(state)
+  return (orgInfo?.orgType === AccountTypes.SBC_STAFF)
 }
 
 /** The Org Information object. */
