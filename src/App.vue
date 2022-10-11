@@ -92,7 +92,7 @@
       </div>
     </transition>
 
-    <SbcHeader class="d-flex" />
+    <SbcHeader />
 
     <PaySystemAlert />
 
