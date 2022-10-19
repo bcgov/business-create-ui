@@ -1,6 +1,6 @@
 {
   "name": "business-create-ui",
-  "version": "4.3.2",
+  "version": "4.3.3",
   "private": true,
   "appName": "Create UI",
   "sbcName": "SBC Common Components",
@@ -27,7 +27,7 @@
     "@bcrs-shared-components/enums": "1.0.23",
     "@bcrs-shared-components/help-business-number": "1.1.1",
     "@bcrs-shared-components/interfaces": "1.0.44",
-    "@bcrs-shared-components/nature-of-business": "1.1.1",
+    "@bcrs-shared-components/nature-of-business": "1.2.0",
     "@bcrs-shared-components/staff-comments": "1.3.1",
     "@bcrs-shared-components/staff-payment": "2.1.1",
     "@bcrs-shared-components/web-chat": "2.1.1",
