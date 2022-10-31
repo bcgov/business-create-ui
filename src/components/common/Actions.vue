@@ -197,7 +197,6 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Name
       return
     }
 
-    this.setIsSavingResuming(false)
     this.emitGoToDashboard()
   }
 
@@ -219,7 +218,6 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Name
         !this.isValidDateTime(this.getEffectiveDateTime.effectiveDate)
       ) {
         this.setEffectiveDateTimeValid(false)
-        this.setIsFilingPaying(false)
 
         // don't call window.scrollTo during Jest tests because jsdom doesn't implement it
         if (!this.isJestRunning) window.scrollTo({ top: 1250, behavior: 'smooth' })
