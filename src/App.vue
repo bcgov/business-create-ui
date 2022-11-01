@@ -634,9 +634,6 @@ export default class App extends Mixins(
         console.log('Launch Darkly update error =', error) // eslint-disable-line no-console
       })
 
-      // set completing party before draft filing dissolution create
-      this.setCompletingParty(this.getCompletingParties())
-
       // fetch the draft filing and resources
       try {
         if (this.getBusinessId) {
@@ -669,6 +666,9 @@ export default class App extends Mixins(
         this.fetchErrorDialog = !this.isErrorDialog
         throw error // go to catch()
       }
+
+      // set completing party
+      this.setCompletingParty(this.getCompletingParties())
 
       // load parties only for SP/GP businesses
       if (this.isTypeFirm && this.getBusinessId) this.loadPartiesInformation()
