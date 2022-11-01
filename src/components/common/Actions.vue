@@ -181,6 +181,8 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Name
   protected async onClickSaveResume (): Promise<void> {
     // prevent double saving
     if (this.isBusySaving) return
+    // If Save and Resume is successful setIsFilingPaying should't be reset to false,
+    // this prevent buttons from being re-enabled if the page is slow to redirect.
     this.setIsSavingResuming(true)
 
     try {
@@ -211,6 +213,8 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Name
     if (this.isApplicationValid) {
       // prevent double saving
       if (this.isBusySaving) return
+      // If File and Pay is successful setIsFilingPaying should't be reset to false,
+      // this prevent buttons from being re-enabled if the page is slow to redirect.
       this.setIsFilingPaying(true)
 
       if (

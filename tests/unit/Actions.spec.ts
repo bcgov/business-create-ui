@@ -406,6 +406,7 @@ describe('Actions component - Filing Functionality', () => {
     store.state.stateModel.effectiveDateTime.isFutureEffective = filing.header.isFutureEffective
     store.state.stateModel.incorporationAgreementStep.agreementType =
       filing.incorporationApplication.incorporationAgreement.agreementType
+    store.state.stateModel.isSavingResuming = false
 
     const localVue = createLocalVue()
     localVue.use(VueRouter)
