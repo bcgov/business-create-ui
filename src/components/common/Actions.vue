@@ -181,6 +181,8 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Name
   protected async onClickSaveResume (): Promise<void> {
     // prevent double saving
     if (this.isBusySaving) return
+    // If Save and Resume is successful setIsFilingPaying should't be reset to false,
+    // this prevent buttons from being re-enabled if the page is slow to redirect.
     this.setIsSavingResuming(true)
 
     try {
@@ -197,7 +199,6 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Name
       return
     }
 
-    this.setIsSavingResuming(false)
     this.emitGoToDashboard()
   }
 
@@ -212,6 +213,8 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Name
     if (this.isApplicationValid) {
       // prevent double saving
       if (this.isBusySaving) return
+      // If File and Pay is successful setIsFilingPaying should't be reset to false,
+      // this prevent buttons from being re-enabled if the page is slow to redirect.
       this.setIsFilingPaying(true)
 
       if (
@@ -219,7 +222,6 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Name
         !this.isValidDateTime(this.getEffectiveDateTime.effectiveDate)
       ) {
         this.setEffectiveDateTimeValid(false)
-        this.setIsFilingPaying(false)
 
         // don't call window.scrollTo during Jest tests because jsdom doesn't implement it
         if (!this.isJestRunning) window.scrollTo({ top: 1250, behavior: 'smooth' })
