@@ -191,7 +191,7 @@ export default class PeopleAndRoles extends Mixins(PeopleRolesMixin) {
     if (roleType === RoleTypes.COMPLETING_PARTY && partyType === PartyTypes.PERSON) {
       this.currentOrgPerson.officer.firstName = this.getUserFirstName || ''
       this.currentOrgPerson.officer.lastName = this.getUserLastName || ''
-      this.currentOrgPerson.officer.email = this.getTombstone.userEmail
+      this.currentOrgPerson.officer.email = this.getUserEmail
       this.currentOrgPerson.mailingAddress = this.getUserAddress || { ...EmptyAddress }
     }
 

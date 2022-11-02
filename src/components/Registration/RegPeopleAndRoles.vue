@@ -229,7 +229,7 @@ export default class RegPeopleAndRoles extends Mixins(PeopleRolesMixin) {
       this.isSbcStaff)) {
       this.currentOrgPerson.officer.firstName = this.getUserFirstName || ''
       this.currentOrgPerson.officer.lastName = this.getUserLastName || ''
-      this.currentOrgPerson.officer.email = this.getTombstone.userEmail
+      this.currentOrgPerson.officer.email = this.getUserEmail
       this.currentOrgPerson.mailingAddress = this.getUserAddress || { ...EmptyAddress }
     }
 

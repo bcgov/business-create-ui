@@ -20,7 +20,7 @@ export default class PeopleRolesMixin extends Vue {
   @Getter getShowErrors!: boolean
   @Getter getPeopleAndRolesResource!: PeopleAndRolesResourceIF
   @Getter getAddPeopleAndRoleStep!: PeopleAndRoleIF
-  @Getter getTombstone!: TombstoneIF
+  @Getter getUserEmail!: string
   @Getter getUserFirstName!: string
   @Getter getUserLastName!: string
   @Getter getUserAddress!: AddressIF
