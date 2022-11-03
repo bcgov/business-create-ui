@@ -862,7 +862,7 @@ export default class App extends Mixins(
       // ensure types match
       if (nrResponse.legalType === 'CCC' && this.getEntityType === CorpTypeCd.BC_CCC) {
         // TEMPORARY FIX:
-        // at the moment, Legal API is passing CCC instead of CC
+        // at the moment, Namex API is passing CCC instead of CC
         // remove this when no longer needed
       } else if (nrResponse.legalType !== this.getEntityType) {
         console.log('NR legal type doesn\'t match entity type') // eslint-disable-line no-console
