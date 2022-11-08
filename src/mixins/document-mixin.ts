@@ -63,17 +63,16 @@ export default class DocumentMixin extends Vue {
     const pdfBufferData = await file.arrayBuffer()
     const pdfData = new Uint8Array(pdfBufferData) // put it in a Uint8Array
     const pdf = await pdfjsLib.getDocument({ data: pdfData })
-    let isvalidPageSize = true
     for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
       const p1 = await pdf.getPage(pageNum)
       const [x, y, w, h] = p1._pageInfo.view
       const width = w - x
       const height = h - y
-      isvalidPageSize = (width / pageSizeInfo.pointsPerInch === pageSizeInfo.width) &&
+      let isvalidPageSize = (width / pageSizeInfo.pointsPerInch === pageSizeInfo.width) &&
         (height / pageSizeInfo.pointsPerInch === pageSizeInfo.height)
-      if (!isvalidPageSize) return isvalidPageSize
+      if (!isvalidPageSize) return false
     }
-    return isvalidPageSize
+    return true
   }
 
   async retrieveFileInfo (file: File): Promise<PdfInfoIF> {
