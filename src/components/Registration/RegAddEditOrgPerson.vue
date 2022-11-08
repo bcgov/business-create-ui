@@ -63,7 +63,7 @@
                   class="item first-name"
                   label="First Name"
                   v-model.trim="orgPerson.officer.firstName"
-                  :rules="enableRules ? Rules.FirstNameRules : []"
+                  :rules="enableRules ? Rules.FirstNameRulesFirms : []"
                   :readonly="isCompletingParty && !(isRoleStaff || isSbcStaff)"
                 />
                 <v-text-field
@@ -71,7 +71,7 @@
                   class="item middle-name"
                   label="Middle Name (Optional)"
                   v-model.trim="orgPerson.officer.middleName"
-                  :rules="enableRules ? Rules.MiddleNameRules : []"
+                  :rules="enableRules ? Rules.MiddleNameRulesFirms : []"
                   :readonly="isCompletingParty && !(isRoleStaff || isSbcStaff)"
                 />
                 <v-text-field

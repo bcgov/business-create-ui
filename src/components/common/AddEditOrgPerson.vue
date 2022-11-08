@@ -73,7 +73,7 @@
                   label="First Name"
                   id="person__first-name"
                   v-model.trim="orgPerson.officer.firstName"
-                  :rules="enableRules ? Rules.FirstNameRules20Char : []"
+                  :rules="enableRules ? Rules.FirstNameRules : []"
                   :readonly="isCompletingParty && !isRoleStaff && isTypeCoop"
                 />
                 <v-text-field
@@ -82,7 +82,7 @@
                   label="Middle Name (Optional)"
                   id="person__middle-name"
                   v-model.trim="orgPerson.officer.middleName"
-                  :rules="enableRules ? Rules.MiddleNameRules20Char: []"
+                  :rules="enableRules ? Rules.MiddleNameRules: []"
                   :readonly="isCompletingParty && !isRoleStaff && isTypeCoop"
                 />
                 <v-text-field
