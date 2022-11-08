@@ -53,7 +53,7 @@ export default class DocumentMixin extends Vue {
   }
 
   /**
-   * Checks whether pdf file is using specified page size by checking width and height of 1st page of pdf file
+   * Checks whether pdf file is using specified page size by checking width and height of all pages of pdf file
    * @param file pdf file to be checked
    * @param pageSize enum value used to represent page size to check for
    * @return Promise<boolean> whether pdf file is expected page size
@@ -63,12 +63,16 @@ export default class DocumentMixin extends Vue {
     const pdfBufferData = await file.arrayBuffer()
     const pdfData = new Uint8Array(pdfBufferData) // put it in a Uint8Array
     const pdf = await pdfjsLib.getDocument({ data: pdfData })
-    const p1 = await pdf.getPage(1)
-    const [x, y, w, h] = p1._pageInfo.view
-    const width = w - x
-    const height = h - y
-    const isvalidPageSize = (width / pageSizeInfo.pointsPerInch === pageSizeInfo.width) &&
-      (height / pageSizeInfo.pointsPerInch === pageSizeInfo.height)
+    let isvalidPageSize = true
+    for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+      const p1 = await pdf.getPage(pageNum)
+      const [x, y, w, h] = p1._pageInfo.view
+      const width = w - x
+      const height = h - y
+      isvalidPageSize = (width / pageSizeInfo.pointsPerInch === pageSizeInfo.width) &&
+        (height / pageSizeInfo.pointsPerInch === pageSizeInfo.height)
+      if (!isvalidPageSize) return isvalidPageSize
+    }
     return isvalidPageSize
   }
 
