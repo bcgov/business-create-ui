@@ -203,6 +203,29 @@ describe('FileUploadPreview component', () => {
     wrapper.destroy()
   }, 30000)
 
+  it('rejects when the second page is not an accepted size', async () => {
+    const fs = require('fs')
+    const data = fs.readFileSync('./tests/unit/test-data/invalidSecondPage.pdf', 'utf8')
+    const invalidSecondPagePdf = new File([data], 'invalidSecondPage.pdf', { type: 'application/pdf' })
+    const wrapper = mount(FileUploadPreview, {
+      propsData: { pdfPageSize: PdfPageSize.LETTER_SIZE },
+      vuetify
+    })
+    const fileInput = wrapper.find('input[type="file"]')
+    setupFileInput(fileInput)
+    inputValue = invalidSecondPagePdf.name
+    inputFilesGet.mockReturnValue([invalidSecondPagePdf])
+    fileInput.trigger('change')
+
+    await waitForUpdate(5)
+
+    const messages = wrapper.findAll('.error--text .v-messages__message')
+    expect(messages.length).toBe(1)
+    expect(messages.at(0).text()).toBe('Document must be set to fit onto 8.5” x 11” letter-size paper')
+
+    wrapper.destroy()
+  }, 30000)
+
   it('rejects encrypted files', async () => {
     const fs = require('fs')
     const data = fs.readFileSync('./tests/unit/test-data/encrypted.pdf', 'utf8')
