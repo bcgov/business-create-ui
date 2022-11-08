@@ -594,6 +594,33 @@ describe('Registration Add/Edit Org/Person component', () => {
     wrapper.destroy()
   })
 
+  it('Displays error message when user enters person names that are too long', async () => {
+    const wrapper = createComponent(validCompletingParty, NaN, null)
+
+    const firstNameInput = wrapper.find(`${firstNameSelector} input`)
+    const middleNameInput = wrapper.find(`${middleNameSelector} input`)
+    const lastNameInput = wrapper.find(`${lastNameSelector} input`)
+
+    firstNameInput.setValue('1234567890123456789012345678901')
+    firstNameInput.trigger('change')
+    middleNameInput.setValue('1234567890123456789012345678901')
+    middleNameInput.trigger('change')
+    lastNameInput.setValue('1234567890123456789012345678901')
+    lastNameInput.trigger('change')
+    await Vue.nextTick()
+    await flushPromises()
+    await Vue.nextTick()
+
+    const messages = wrapper.findAll('.v-messages.error--text')
+    expect(messages.length).toBe(3)
+    expect(messages.at(0).text()).toBe('Cannot exceed 30 characters')
+    expect(messages.at(1).text()).toBe('Cannot exceed 30 characters')
+    expect(messages.at(2).text()).toBe('Cannot exceed 30 characters')
+    expect(wrapper.vm.$data.addPersonOrgFormValid).toBe(false)
+
+    wrapper.destroy()
+  })
+
   it('displays errors and does not submit form when clicking Done button and form is invalid', async () => {
     const wrapper = createComponent({ ...EmptyOrgPerson }, NaN, null)
 
