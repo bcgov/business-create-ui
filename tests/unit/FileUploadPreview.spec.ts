@@ -205,16 +205,16 @@ describe('FileUploadPreview component', () => {
 
   it('rejects when the second page is not an accepted size', async () => {
     const fs = require('fs')
-    const data = fs.readFileSync('./tests/unit/test-data/invalidSize.pdf', 'utf8')
-    const invalidSizePdf = new File([data], 'invalidSize.pdf', { type: 'application/pdf' })
+    const data = fs.readFileSync('./tests/unit/test-data/invalidSecondPage.pdf', 'utf8')
+    const invalidSecondPagePdf = new File([data], 'invalidSecondPage.pdf', { type: 'application/pdf' })
     const wrapper = mount(FileUploadPreview, {
       propsData: { pdfPageSize: PdfPageSize.LETTER_SIZE },
       vuetify
     })
     const fileInput = wrapper.find('input[type="file"]')
     setupFileInput(fileInput)
-    inputValue = invalidSizePdf.name
-    inputFilesGet.mockReturnValue([invalidSizePdf])
+    inputValue = invalidSecondPagePdf.name
+    inputFilesGet.mockReturnValue([invalidSecondPagePdf])
     fileInput.trigger('change')
 
     await waitForUpdate(5)
