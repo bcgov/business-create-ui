@@ -299,38 +299,12 @@ describe('Name Request Info component without a NR', () => {
 describe('Name Request Info component - Name Translation section', () => {
   let wrapper: any
 
-  const mockNrData = {
-    nrNumber: 'NR 1234567',
-    entityType: 'BEN',
-    filingId: null,
-    applicant: {
-      addressLine1: '45 Frasier Drive',
-      addressLine2: null,
-      addressLine3: null,
-      city: 'Victoria',
-      countryTypeCode: 'CA',
-      postalCode: 'V9E 2A1',
-      stateProvinceCode: 'BC',
-      emailAddress: 'test@gov.bc.ca',
-      phoneNumber: '250-356-9090',
-      firstName: 'John',
-      middleName: 'Joe',
-      lastName: 'Doe'
-    },
-    details: {
-      approvedName: 'MADRONA BREAD BASKET INC.',
-      consentFlag: null,
-      expirationDate: '2020-06-24T07:00:00+00:00',
-      status: 'APPROVED'
-    }
-  }
-
   beforeEach(() => {
     // Entity type will always be set with or without an NR
     store.state.stateModel.entityType = 'BEN'
     // Temp Id will always be set with or without an NR
     store.state.stateModel.tempId = 'T1234567'
-    store.state.stateModel.nameRequest.nrNumber = null // mockNrData.nrNumber
+    store.state.stateModel.nameRequest.nrNumber = null
     wrapper = mount(NameRequestInfo, { vuetify, store })
   })
 
