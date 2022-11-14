@@ -77,7 +77,7 @@ for (const [i, test] of tests.entries()) {
     })
 
     it('displays the component', () => {
-      expect(wrapper.find(TransactionalFolioNumber).exists()).toBe(true)
+      expect(wrapper.findComponent(TransactionalFolioNumber).exists()).toBe(true)
     })
 
     itIf(!test.props.transactionalFolioNumber && !!test.props.accountFolioNumber)('displays the default account folio number', () => {

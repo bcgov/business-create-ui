@@ -28,7 +28,7 @@ describe('Fetch Error Dialog', () => {
     expect(wrapper.find('#dialog-title').text()).toBe('Unable to Resume Application')
     expect(wrapper.findAll('p').length).toBe(1)
     expect(wrapper.findAll('p').at(0).text()).toContain('We were unable to resume your')
-    expect(wrapper.find(RegistriesContactInfo).exists()).toBe(false)
+    expect(wrapper.findComponent(RegistriesContactInfo).exists()).toBe(false)
     expect(wrapper.find('#dialog-exit-button').exists()).toBe(true)
     expect(wrapper.find('#dialog-retry-button').exists()).toBe(true)
 
@@ -50,7 +50,7 @@ describe('Fetch Error Dialog', () => {
     expect(wrapper.findAll('p').length).toBe(2)
     expect(wrapper.findAll('p').at(0).text()).toContain('We were unable to resume your')
     expect(wrapper.findAll('p').at(1).text()).toContain('If this error persists')
-    expect(wrapper.find(RegistriesContactInfo).exists()).toBe(true)
+    expect(wrapper.findComponent(RegistriesContactInfo).exists()).toBe(true)
     expect(wrapper.find('#dialog-exit-button').exists()).toBe(true)
     expect(wrapper.find('#dialog-retry-button').exists()).toBe(true)
 

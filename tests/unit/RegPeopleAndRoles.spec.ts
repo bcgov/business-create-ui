@@ -89,7 +89,7 @@ describe('Registration People And Roles component - SP', () => {
     expect(wrapper.find(btnStartAddCompletingParty).exists()).toBeTruthy()
     expect(wrapper.find(btnStartAddCompletingParty).text()).toContain('Start by Adding the Completing Party')
     // also verify list people component
-    expect(wrapper.find(ListPeopleAndRoles).exists()).toBeFalsy()
+    expect(wrapper.findComponent(ListPeopleAndRoles).exists()).toBeFalsy()
     wrapper.destroy()
   })
 
@@ -107,7 +107,7 @@ describe('Registration People And Roles component - SP', () => {
     const wrapper = wrapperFactory()
     expect(wrapper.find(btnStartAddCompletingParty).exists()).toBeFalsy()
     // also verify list people component
-    expect(wrapper.find(ListPeopleAndRoles).exists()).toBeTruthy()
+    expect(wrapper.findComponent(ListPeopleAndRoles).exists()).toBeTruthy()
     wrapper.destroy()
   })
 
@@ -140,7 +140,7 @@ describe('Registration People And Roles component - SP', () => {
     const wrapper = wrapperFactory()
 
     // verify before click
-    expect(wrapper.find(RegAddEditOrgPerson).exists()).toBe(false)
+    expect(wrapper.findComponent(RegAddEditOrgPerson).exists()).toBe(false)
 
     // click the Add Person button
     await wrapper.vm.$el.querySelector(btnAddPerson).click()
@@ -152,7 +152,7 @@ describe('Registration People And Roles component - SP', () => {
     await flushPromises()
 
     // verify after click
-    expect(wrapper.find(RegAddEditOrgPerson).exists()).toBe(true)
+    expect(wrapper.findComponent(RegAddEditOrgPerson).exists()).toBe(true)
 
     wrapper.destroy()
   })
@@ -171,14 +171,14 @@ describe('Registration People And Roles component - SP', () => {
   it('it does not show people list component when people list is empty', () => {
     store.state.stateModel.addPeopleAndRoleStep.orgPeople = []
     const wrapper = wrapperFactory()
-    expect(wrapper.find(ListPeopleAndRoles).exists()).toBeFalsy()
+    expect(wrapper.findComponent(ListPeopleAndRoles).exists()).toBeFalsy()
     wrapper.destroy()
   })
 
   it('shows the people list component when people list is not empty', () => {
     store.state.stateModel.addPeopleAndRoleStep.orgPeople = getPersonList()
     const wrapper = wrapperFactory()
-    expect(wrapper.find(ListPeopleAndRoles).exists()).toBeTruthy()
+    expect(wrapper.findComponent(ListPeopleAndRoles).exists()).toBeTruthy()
     wrapper.destroy()
   })
 
@@ -187,7 +187,7 @@ describe('Registration People And Roles component - SP', () => {
     const wrapper = wrapperFactory()
 
     // verify before click
-    expect(wrapper.find(ListPeopleAndRoles).exists()).toBe(true)
+    expect(wrapper.findComponent(ListPeopleAndRoles).exists()).toBe(true)
 
     // call the On Remove Person event handler
     wrapper.vm.onRemovePerson(0)
@@ -202,7 +202,7 @@ describe('Registration People And Roles component - SP', () => {
     await flushPromises()
 
     // verify after click
-    expect(wrapper.find(ListPeopleAndRoles).exists()).toBe(false)
+    expect(wrapper.findComponent(ListPeopleAndRoles).exists()).toBe(false)
 
     wrapper.destroy()
   })
@@ -230,7 +230,7 @@ describe('Registration People And Roles component - GP', () => {
     expect(wrapper.find(btnStartAddCompletingParty).exists()).toBeTruthy()
     expect(wrapper.find(btnStartAddCompletingParty).text()).toContain('Start by Adding the Completing Party')
     // also verify list people component
-    expect(wrapper.find(ListPeopleAndRoles).exists()).toBeFalsy()
+    expect(wrapper.findComponent(ListPeopleAndRoles).exists()).toBeFalsy()
     wrapper.destroy()
   })
 
@@ -248,7 +248,7 @@ describe('Registration People And Roles component - GP', () => {
     const wrapper = wrapperFactory()
     expect(wrapper.find(btnStartAddCompletingParty).exists()).toBeFalsy()
     // also verify list people component
-    expect(wrapper.find(ListPeopleAndRoles).exists()).toBeTruthy()
+    expect(wrapper.findComponent(ListPeopleAndRoles).exists()).toBeTruthy()
     wrapper.destroy()
   })
 
@@ -281,7 +281,7 @@ describe('Registration People And Roles component - GP', () => {
     const wrapper = wrapperFactory()
 
     // verify before click
-    expect(wrapper.find(RegAddEditOrgPerson).exists()).toBe(false)
+    expect(wrapper.findComponent(RegAddEditOrgPerson).exists()).toBe(false)
 
     // click the Add Person button
     await wrapper.vm.$el.querySelector(btnAddPerson).click()
@@ -292,7 +292,7 @@ describe('Registration People And Roles component - GP', () => {
     await flushPromises()
 
     // verify after click
-    expect(wrapper.find(RegAddEditOrgPerson).exists()).toBe(true)
+    expect(wrapper.findComponent(RegAddEditOrgPerson).exists()).toBe(true)
 
     wrapper.destroy()
   })
@@ -312,14 +312,14 @@ describe('Registration People And Roles component - GP', () => {
   it('it does not show people list component when people list is empty', () => {
     store.state.stateModel.addPeopleAndRoleStep.orgPeople = []
     const wrapper = wrapperFactory()
-    expect(wrapper.find(ListPeopleAndRoles).exists()).toBeFalsy()
+    expect(wrapper.findComponent(ListPeopleAndRoles).exists()).toBeFalsy()
     wrapper.destroy()
   })
 
   it('shows the people list component when people list is not empty', () => {
     store.state.stateModel.addPeopleAndRoleStep.orgPeople = getPersonList()
     const wrapper = wrapperFactory()
-    expect(wrapper.find(ListPeopleAndRoles).exists()).toBeTruthy()
+    expect(wrapper.findComponent(ListPeopleAndRoles).exists()).toBeTruthy()
     wrapper.destroy()
   })
 
@@ -328,7 +328,7 @@ describe('Registration People And Roles component - GP', () => {
     const wrapper = wrapperFactory()
 
     // verify before click
-    expect(wrapper.find(ListPeopleAndRoles).exists()).toBe(true)
+    expect(wrapper.findComponent(ListPeopleAndRoles).exists()).toBe(true)
 
     // call the On Remove Person event handler
     wrapper.vm.onRemovePerson(0)
@@ -343,7 +343,7 @@ describe('Registration People And Roles component - GP', () => {
     await flushPromises()
 
     // verify after click
-    expect(wrapper.find(ListPeopleAndRoles).exists()).toBe(false)
+    expect(wrapper.findComponent(ListPeopleAndRoles).exists()).toBe(false)
 
     wrapper.destroy()
   })

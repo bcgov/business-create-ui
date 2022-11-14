@@ -36,7 +36,7 @@ describe('HelpBusinessNumber', () => {
     expect(wrapper.find('p').text()).toContain('If you require further assistance')
 
     // verify contact info component
-    expect(wrapper.find(RegistriesContactInfo).exists()).toBe(true)
+    expect(wrapper.findComponent(RegistriesContactInfo).exists()).toBe(true)
 
     wrapper.destroy()
   })

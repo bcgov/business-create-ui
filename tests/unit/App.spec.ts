@@ -526,12 +526,12 @@ describe('Incorporation - Define Company page for a BEN (named)', () => {
   })
 
   it('renders the sub-components properly', () => {
-    expect(wrapper.find(SbcHeader).exists()).toBe(true)
-    expect(wrapper.find(SbcFooter).exists()).toBe(true)
-    expect(wrapper.find(SbcFeeSummary).exists()).toBe(true)
-    expect(wrapper.find(EntityInfo).exists()).toBe(true)
-    expect(wrapper.find(Stepper).exists()).toBe(true)
-    expect(wrapper.find(Actions).exists()).toBe(true)
+    expect(wrapper.findComponent(SbcHeader).exists()).toBe(true)
+    expect(wrapper.findComponent(SbcFooter).exists()).toBe(true)
+    expect(wrapper.findComponent(SbcFeeSummary).exists()).toBe(true)
+    expect(wrapper.findComponent(EntityInfo).exists()).toBe(true)
+    expect(wrapper.findComponent(Stepper).exists()).toBe(true)
+    expect(wrapper.findComponent(Actions).exists()).toBe(true)
   })
 
   it('gets auth and user info properly', () => {
@@ -880,11 +880,11 @@ describe('Dissolution - Define Dissolution page for a BEN', () => {
   })
 
   it('renders the sub-components properly', () => {
-    expect(wrapper.find(SbcHeader).exists()).toBe(true)
-    expect(wrapper.find(SbcFooter).exists()).toBe(true)
-    expect(wrapper.find(SbcFeeSummary).exists()).toBe(true)
-    expect(wrapper.find(EntityInfo).exists()).toBe(true)
-    expect(wrapper.find(Stepper).exists()).toBe(true)
-    expect(wrapper.find(Actions).exists()).toBe(true)
+    expect(wrapper.findComponent(SbcHeader).exists()).toBe(true)
+    expect(wrapper.findComponent(SbcFooter).exists()).toBe(true)
+    expect(wrapper.findComponent(SbcFeeSummary).exists()).toBe(true)
+    expect(wrapper.findComponent(EntityInfo).exists()).toBe(true)
+    expect(wrapper.findComponent(Stepper).exists()).toBe(true)
+    expect(wrapper.findComponent(Actions).exists()).toBe(true)
   })
 })
