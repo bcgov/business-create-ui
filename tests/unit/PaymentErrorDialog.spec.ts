@@ -34,7 +34,7 @@ describe('Payment Error Dialog', () => {
     expect(wrapper.find('#dialog-title').text()).toBe('Unable to Process Payment')
     expect(wrapper.findAll('p').length).toBe(1)
     expect(wrapper.findAll('p').at(0).text()).toContain('We are unable to process your payment')
-    expect(wrapper.find(RegistriesContactInfo).exists()).toBe(false)
+    expect(wrapper.findComponent(RegistriesContactInfo).exists()).toBe(false)
     expect(wrapper.find('#dialog-exit-button').exists()).toBe(false)
     expect(wrapper.find('#dialog-okay-button').exists()).toBe(true)
 
@@ -61,7 +61,7 @@ describe('Payment Error Dialog', () => {
     expect(wrapper.findAll('li').at(0).text()).toContain('Monday to Friday')
     expect(wrapper.findAll('li').at(1).text()).toContain('Saturday')
     expect(wrapper.findAll('li').at(2).text()).toContain('Sunday')
-    expect(wrapper.find(RegistriesContactInfo).exists()).toBe(true)
+    expect(wrapper.findComponent(RegistriesContactInfo).exists()).toBe(true)
     expect(wrapper.find('#dialog-exit-button').exists()).toBe(true)
 
     wrapper.destroy()
@@ -110,7 +110,7 @@ describe('Payment Error Dialog', () => {
     expect(wrapper.findAll('span').length).toBe(2)
     expect(wrapper.findAll('span').at(1).text()).toContain('Your account is in the 3 day PAD confirmation period.')
 
-    expect(wrapper.find(RegistriesContactInfo).exists()).toBe(true)
+    expect(wrapper.findComponent(RegistriesContactInfo).exists()).toBe(true)
     expect(wrapper.find('#dialog-exit-button').exists()).toBe(true)
 
     wrapper.destroy()
@@ -146,7 +146,7 @@ describe('Payment Error Dialog', () => {
     expect(wrapper.find('#dialog-exit-button').exists()).toBe(true)
     expect(wrapper.find('#dialog-okay-button').exists()).toBe(false)
 
-    expect(wrapper.find(RegistriesContactInfo).exists()).toBe(true)
+    expect(wrapper.findComponent(RegistriesContactInfo).exists()).toBe(true)
     expect(wrapper.find('#dialog-exit-button').exists()).toBe(true)
 
     wrapper.destroy()

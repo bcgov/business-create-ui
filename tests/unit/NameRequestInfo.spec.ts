@@ -282,8 +282,8 @@ describe('Name Request Info component', () => {
     await Vue.nextTick()
 
     expect(wrapper.find('#name-translation-container').exists()).toBeTruthy()
-    expect(wrapper.find(AddNameTranslation).exists()).toBeTruthy()
-    expect(wrapper.find(ListNameTranslations).exists()).toBeFalsy()
+    expect(wrapper.findComponent(AddNameTranslation).exists()).toBeTruthy()
+    expect(wrapper.findComponent(ListNameTranslations).exists()).toBeFalsy()
   })
 
   it('renders the list name translation component', async () => {
@@ -297,9 +297,9 @@ describe('Name Request Info component', () => {
 
     await Vue.nextTick()
 
-    expect(wrapper.find('#name-translation-container').exists()).toBeTruthy()
-    expect(wrapper.find(AddNameTranslation).exists()).toBeFalsy()
-    expect(wrapper.find(ListNameTranslations).exists()).toBeTruthy()
+    expect(wrapper.findComponent('#name-translation-container').exists()).toBeTruthy()
+    expect(wrapper.findComponent(AddNameTranslation).exists()).toBeFalsy()
+    expect(wrapper.findComponent(ListNameTranslations).exists()).toBeTruthy()
   })
 })
 
