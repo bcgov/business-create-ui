@@ -1,5 +1,5 @@
 <template>
-  <v-card flat id="name-translations-list">
+  <v-card flat id="list-name-translations">
     <!-- List Headers -->
     <v-row class="name-translation-title list-item__subtitle" no-gutters>
       <v-col>
@@ -19,7 +19,7 @@
       </v-col>
 
       <!-- Actions Column -->
-      <v-col>
+      <v-col class="col-auto">
         <div class="actions mt-n1 float-right">
           <span class="edit-action">
             <v-btn
@@ -27,7 +27,7 @@
               text
               color="primary"
               :disabled="isAddingNameTranslation"
-              @click="emitNameEdit(index)"
+              @click="editTranslation(index)"
             >
                 <v-icon small>mdi-pencil</v-icon>
                 <span>Edit</span>
@@ -49,7 +49,7 @@
                 </v-btn>
               </template>
               <v-list class="more-actions-list">
-                <v-list-item @click="emitRemoveName(index)">
+                <v-list-item @click="removeTranslation(index)">
                   <v-list-item-title>
                     <v-icon small color="primary">mdi-delete</v-icon>
                     <span class="ml-2">Remove</span>
@@ -81,17 +81,17 @@ export default class ListNameTranslations extends Vue {
    * Emit an index and event to the parent to handle editing.
    * @param index The active index which is subject to change.
    */
-  @Emit('editNameTranslation')
+  @Emit('editTranslation')
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  private emitNameEdit (index: number): void {}
+  protected editTranslation (index: number): void {}
 
   /**
    * Emit an index and event to the parent to handle removal.
    * @param index The active index which is subject to removal.
    */
-  @Emit('removeNameTranslation')
+  @Emit('removeTranslation')
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  private emitRemoveName (index: number): void {}
+  protected removeTranslation (index: number): void {}
 }
 </script>
 

@@ -12,34 +12,34 @@ const vuetify = new Vuetify({})
 const store = getVuexStore()
 document.body.setAttribute('data-app', 'true')
 
-describe('Name Request Info component', () => {
-  let wrapper: any
-
-  const mockNrData = {
-    nrNumber: 'NR 1234567',
-    entityType: 'BEN',
-    filingId: null,
-    applicant: {
-      addressLine1: '45 Frasier Drive',
-      addressLine2: null,
-      addressLine3: null,
-      city: 'Victoria',
-      countryTypeCode: 'CA',
-      postalCode: 'V9E 2A1',
-      stateProvinceCode: 'BC',
-      emailAddress: 'test@gov.bc.ca',
-      phoneNumber: '250-356-9090',
-      firstName: 'John',
-      middleName: 'Joe',
-      lastName: 'Doe'
-    },
-    details: {
-      approvedName: 'MADRONA BREAD BASKET INC.',
-      consentFlag: null,
-      expirationDate: '2020-06-24T07:00:00+00:00',
-      status: 'APPROVED'
-    }
+const mockNrData = {
+  nrNumber: 'NR 1234567',
+  entityType: 'BEN',
+  filingId: null,
+  applicant: {
+    addressLine1: '45 Frasier Drive',
+    addressLine2: null,
+    addressLine3: null,
+    city: 'Victoria',
+    countryTypeCode: 'CA',
+    postalCode: 'V9E 2A1',
+    stateProvinceCode: 'BC',
+    emailAddress: 'test@gov.bc.ca',
+    phoneNumber: '250-356-9090',
+    firstName: 'John',
+    middleName: 'Joe',
+    lastName: 'Doe'
+  },
+  details: {
+    approvedName: 'MADRONA BREAD BASKET INC.',
+    consentFlag: null,
+    expirationDate: '2020-06-24T07:00:00+00:00',
+    status: 'APPROVED'
   }
+}
+
+describe('Name Request Info with a NR', () => {
+  let wrapper: any
 
   beforeEach(() => {
     // Entity type will always be set with or without an NR
@@ -83,9 +83,7 @@ describe('Name Request Info component', () => {
   })
 
   it('renders the Name Request information with data', async () => {
-    store.state.stateModel.nameRequest = { ...mockNrData }
-
-    await Vue.nextTick()
+    await wrapper.vm.$store.commit('mutateNameRequestState', { ...mockNrData })
 
     const nrListSelector = '#name-request-info ul li'
     const itemCount = wrapper.vm.$el.querySelectorAll(nrListSelector).length
@@ -105,9 +103,7 @@ describe('Name Request Info component', () => {
   })
 
   it('renders the Name Request applicant information with data', async () => {
-    store.state.stateModel.nameRequest = { ...mockNrData }
-
-    await Vue.nextTick()
+    await wrapper.vm.$store.commit('mutateNameRequestState', { ...mockNrData })
 
     const nrListSelector = '#name-request-applicant-info ul li'
     const itemCount = wrapper.vm.$el.querySelectorAll(nrListSelector).length
@@ -126,7 +122,6 @@ describe('Name Request Info component', () => {
   it('renders the Name Request applicant information with no data', () => {
     const nrListSelector = '#name-request-applicant-info ul li'
     const itemCount = wrapper.vm.$el.querySelectorAll(nrListSelector).length
-
     expect(itemCount).toEqual(4)
 
     const name = wrapper.vm.$el.querySelectorAll(nrListSelector)[0]
@@ -144,7 +139,6 @@ describe('Name Request Info component', () => {
     store.state.stateModel.nameRequest.applicant.addressLine1 = 'line 1'
     store.state.stateModel.nameRequest.applicant.addressLine2 = 'line 2'
     store.state.stateModel.nameRequest.applicant.addressLine3 = 'line 3'
-
     await Vue.nextTick()
 
     const nrListSelector = '#name-request-applicant-info ul li'
@@ -165,7 +159,6 @@ describe('Name Request Info component', () => {
     store.state.stateModel.nameRequest = { ...mockNrData }
     store.state.stateModel.nameRequest.details.status = 'CONDITIONAL'
     store.state.stateModel.nameRequest.details.consentFlag = null
-
     await Vue.nextTick()
 
     const nrListSelector = '#name-request-info ul li'
@@ -190,7 +183,6 @@ describe('Name Request Info component', () => {
     store.state.stateModel.nameRequest = { ...mockNrData }
     store.state.stateModel.nameRequest.details.status = 'CONDITIONAL'
     store.state.stateModel.nameRequest.details.consentFlag = 'R'
-
     await Vue.nextTick()
 
     const nrListSelector = '#name-request-info ul li'
@@ -215,7 +207,6 @@ describe('Name Request Info component', () => {
     store.state.stateModel.nameRequest = { ...mockNrData }
     store.state.stateModel.nameRequest.details.status = 'CONDITIONAL'
     store.state.stateModel.nameRequest.details.consentFlag = 'N'
-
     await Vue.nextTick()
 
     const nrListSelector = '#name-request-info ul li'
@@ -240,7 +231,6 @@ describe('Name Request Info component', () => {
     store.state.stateModel.nameRequest = { ...mockNrData }
     store.state.stateModel.nameRequest.details.status = 'CONDITIONAL'
     store.state.stateModel.nameRequest.details.consentFlag = 'Y'
-
     await Vue.nextTick()
 
     const nrListSelector = '#name-request-info ul li'
@@ -261,49 +251,9 @@ describe('Name Request Info component', () => {
     expect(status.textContent).toContain('Status: CONDITIONAL')
     expect(conditionConsent.textContent).toContain('Condition/Consent: Not Received')
   })
-
-  it('renders the option for name translation', async () => {
-    store.state.stateModel.nameRequest = { ...mockNrData }
-
-    expect(wrapper.find('#name-translation-info').exists()).toBeTruthy()
-    expect(wrapper.vm.hasNameTranslation).toBe(false)
-
-    expect(wrapper.find('#name-translation-container').exists()).toBeFalsy()
-  })
-
-  it('renders the add name translation component', async () => {
-    store.state.stateModel.nameRequest = { ...mockNrData }
-
-    expect(wrapper.find('#name-translation-info').exists()).toBeTruthy()
-    expect(wrapper.vm.hasNameTranslation).toBe(false)
-
-    wrapper.find('#name-translation-checkbox').trigger('click')
-
-    await Vue.nextTick()
-
-    expect(wrapper.find('#name-translation-container').exists()).toBeTruthy()
-    expect(wrapper.findComponent(AddNameTranslation).exists()).toBeTruthy()
-    expect(wrapper.findComponent(ListNameTranslations).exists()).toBeFalsy()
-  })
-
-  it('renders the list name translation component', async () => {
-    store.state.stateModel.nameTranslations = ['Mock Name Translation', 'Another Mock Name Translation']
-    store.state.stateModel.nameRequest = { ...mockNrData }
-
-    await Vue.nextTick()
-
-    expect(wrapper.find('#name-translation-info').exists()).toBeTruthy()
-    expect(wrapper.vm.hasNameTranslation).toBe(true)
-
-    await Vue.nextTick()
-
-    expect(wrapper.findComponent('#name-translation-container').exists()).toBeTruthy()
-    expect(wrapper.findComponent(AddNameTranslation).exists()).toBeFalsy()
-    expect(wrapper.findComponent(ListNameTranslations).exists()).toBeTruthy()
-  })
 })
 
-describe('Name Request Info component without an NR', () => {
+describe('Name Request Info component without a NR', () => {
   let wrapper: any
 
   beforeEach(() => {
@@ -343,5 +293,58 @@ describe('Name Request Info component without an NR', () => {
     expect(bulletOne.textContent).toContain('You will be filing this Incorporation Application')
     expect(bulletTwo.textContent).toContain('Your Incorporation Number will be generated at the end')
     expect(bulletThree.textContent).toContain('It is not possible to request a specific Incorporation Number')
+  })
+})
+
+describe('Name Request Info component - Name Translation section', () => {
+  let wrapper: any
+
+  beforeEach(() => {
+    // Entity type will always be set with or without an NR
+    store.state.stateModel.entityType = 'BEN'
+    // Temp Id will always be set with or without an NR
+    store.state.stateModel.tempId = 'T1234567'
+    store.state.stateModel.nameRequest.nrNumber = null
+    wrapper = mount(NameRequestInfo, { vuetify, store })
+  })
+
+  afterEach(() => {
+    wrapper.destroy()
+  })
+
+  it('renders the option for name translation', async () => {
+    await wrapper.vm.$store.commit('mutateNameRequestState', { ...mockNrData })
+
+    expect(wrapper.find('#name-translation-info').exists()).toBeTruthy()
+    expect(wrapper.vm.hasNameTranslation).toBe(false)
+
+    expect(wrapper.findComponent(AddNameTranslation).exists()).toBeFalsy()
+    expect(wrapper.findComponent(ListNameTranslations).exists()).toBeFalsy()
+  })
+
+  it('renders the add name translation component', async () => {
+    await wrapper.vm.$store.commit('mutateNameRequestState', { ...mockNrData })
+
+    expect(wrapper.find('#name-translation-info').exists()).toBeTruthy()
+    expect(wrapper.vm.hasNameTranslation).toBe(false)
+
+    await wrapper.find('#name-translation-checkbox').trigger('click')
+
+    expect(wrapper.findComponent(AddNameTranslation).exists()).toBeTruthy()
+    expect(wrapper.findComponent(ListNameTranslations).exists()).toBeFalsy()
+  })
+
+  it('renders the list name translation component', async () => {
+    await wrapper.vm.$store.commit('mutateNameTranslation', [
+      'Mock Name Translation',
+      'Another Mock Name Translation'
+    ])
+    await wrapper.vm.$store.commit('mutateNameRequestState', { ...mockNrData })
+
+    expect(wrapper.find('#name-translation-info').exists()).toBeTruthy()
+    expect(wrapper.vm.hasNameTranslation).toBe(true)
+
+    expect(wrapper.findComponent(AddNameTranslation).exists()).toBeFalsy()
+    expect(wrapper.findComponent(ListNameTranslations).exists()).toBeTruthy()
   })
 })

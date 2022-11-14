@@ -3,7 +3,6 @@ import Vuelidate from 'vuelidate'
 import Vuetify from 'vuetify'
 import VueRouter from 'vue-router'
 import mockRouter from './MockRouter'
-import flushPromises from 'flush-promises'
 import { getVuexStore } from '@/store'
 import { createLocalVue, mount } from '@vue/test-utils'
 import AddNameTranslation from '@/components/common/AddNameTranslation.vue'
@@ -15,7 +14,7 @@ const vuetify = new Vuetify({})
 const store = getVuexStore()
 
 // Local references
-const addTranslationInput = '#name-translation-input'
+const nameTranslationInput = '#name-translation-input'
 const doneBtn = '#btn-done'
 const removeBtn = '#btn-remove'
 const cancelBtn = '#btn-cancel'
@@ -31,163 +30,190 @@ describe('Add Name Translation component', () => {
     // Init Store
     store.state.stateModel.nameTranslations = []
 
-    wrapperFactory = (propsData) => {
-      return mount(AddNameTranslation, {
+    wrapperFactory = async (propsData: any) => {
+      const wrapper = mount(AddNameTranslation, {
         localVue,
         router,
         store,
         vuetify,
         propsData: { ...propsData }
       })
+      await Vue.nextTick()
+      return wrapper
     }
   })
 
-  it('displays the input field and buttons in the Add Name Translation form', () => {
-    const wrapper = wrapperFactory()
+  it('displays the input field and buttons', async () => {
+    const wrapper = await wrapperFactory()
 
     // Verify input field
-    expect(wrapper.find(addTranslationInput).exists()).toBeTruthy()
+    expect(wrapper.find(nameTranslationInput).exists()).toBeTruthy()
 
-    // Verify Action btns and there default states
+    // Verify Action btns and their default states
     expect(wrapper.find(doneBtn).exists()).toBeTruthy()
-    expect(wrapper.find(doneBtn).attributes('disabled')).toBeTruthy()
+    expect(wrapper.find(doneBtn).attributes('disabled')).toBe('disabled')
 
     expect(wrapper.find(removeBtn).exists()).toBeTruthy()
-    expect(wrapper.find(removeBtn).attributes('disabled')).toBeTruthy()
+    expect(wrapper.find(removeBtn).attributes('disabled')).toBe('disabled')
 
     expect(wrapper.find(cancelBtn).exists()).toBeTruthy()
-    expect(wrapper.find(cancelBtn).attributes('disabled')).toBeUndefined()
+    expect(wrapper.find(cancelBtn).attributes('disabled')).toBeUndefined() // enabled
 
     wrapper.destroy()
   })
 
-  it('enables the Done button when the input field meets validation rules', async () => {
-    const wrapper = wrapperFactory()
+  it('enables the Done button when the input is valid', async () => {
+    const wrapper = await wrapperFactory()
 
     // Verify input field
-    expect(wrapper.find(addTranslationInput).exists()).toBeTruthy()
+    expect(wrapper.find(nameTranslationInput).exists()).toBeTruthy()
 
-    // Set Input field values
-    wrapper.vm.$el.querySelector(addTranslationInput).textContent = 'Mock Name Translation'
-    wrapper.find(addTranslationInput).setValue('MockNameTranslation')
-    wrapper.find(addTranslationInput).trigger('change')
-    await flushPromises()
+    // Set Input field value
+    const validText = 'Valid Name Translation'
+    wrapper.vm.$el.querySelector(nameTranslationInput).textContent = validText
+    await wrapper.find(nameTranslationInput).setValue(validText)
+    await wrapper.find(nameTranslationInput).trigger('change')
 
-    wrapper.find(addTranslationInput).trigger('input')
-    expect(wrapper.find(addTranslationInput).text()).toEqual('Mock Name Translation')
+    expect(wrapper.find(nameTranslationInput).text()).toEqual(validText)
 
-    // Verify Action btns and there states
+    // Verify Action btns and their states
     expect(wrapper.find(doneBtn).exists()).toBeTruthy()
-    expect(wrapper.find(doneBtn).attributes('disabled')).toBeUndefined()
+    expect(wrapper.find(doneBtn).attributes('disabled')).toBeUndefined() // enabled
 
     expect(wrapper.find(removeBtn).exists()).toBeTruthy()
-    expect(wrapper.find(removeBtn).attributes('disabled')).toBeTruthy()
+    expect(wrapper.find(removeBtn).attributes('disabled')).toBe('disabled')
 
     expect(wrapper.find(cancelBtn).exists()).toBeTruthy()
-    expect(wrapper.find(cancelBtn).attributes('disabled')).toBeUndefined()
+    expect(wrapper.find(cancelBtn).attributes('disabled')).toBeUndefined() // enabled
 
     wrapper.destroy()
   })
 
-  it('enables the Done button when the input field meets validation rules in French characters', async () => {
-    const wrapper = wrapperFactory()
+  it('enables the Done button when the input is valid - French characters', async () => {
+    const wrapper = await wrapperFactory()
 
     // Verify input field
-    expect(wrapper.find(addTranslationInput).exists()).toBeTruthy()
+    expect(wrapper.find(nameTranslationInput).exists()).toBeTruthy()
 
-    // Set Input field values
-    wrapper.vm.$el.querySelector(addTranslationInput).textContent = 'Nom commercial simulé'
-    wrapper.find(addTranslationInput).setValue('Nom commercial simulé')
-    wrapper.find(addTranslationInput).trigger('change')
-    await flushPromises()
+    // Set Input field value
+    const validText = 'Nom Commercial Simulé'
+    wrapper.vm.$el.querySelector(nameTranslationInput).textContent = validText
+    await wrapper.find(nameTranslationInput).setValue(validText)
+    await wrapper.find(nameTranslationInput).trigger('change')
 
-    wrapper.find(addTranslationInput).trigger('input')
-    expect(wrapper.find(addTranslationInput).text()).toEqual('Nom commercial simulé')
+    expect(wrapper.find(nameTranslationInput).text()).toEqual(validText)
 
-    // Verify Action btns and there states
+    // Verify Action btns and their states
     expect(wrapper.find(doneBtn).exists()).toBeTruthy()
-    expect(wrapper.find(doneBtn).attributes('disabled')).toBeUndefined()
+    expect(wrapper.find(doneBtn).attributes('disabled')).toBeUndefined() // enabled
 
     expect(wrapper.find(removeBtn).exists()).toBeTruthy()
-    expect(wrapper.find(removeBtn).attributes('disabled')).toBeTruthy()
+    expect(wrapper.find(removeBtn).attributes('disabled')).toBe('disabled')
 
     expect(wrapper.find(cancelBtn).exists()).toBeTruthy()
-    expect(wrapper.find(cancelBtn).attributes('disabled')).toBeUndefined()
+    expect(wrapper.find(cancelBtn).attributes('disabled')).toBeUndefined() // enabled
 
     wrapper.destroy()
   })
 
-  it('disables the Done button when the input field does NOT meet validation rules', async () => {
-    const wrapper = wrapperFactory()
+  it('disables the Done button when the input contains an invalid character', async () => {
+    const wrapper = await wrapperFactory()
 
     // Verify input field
-    expect(wrapper.find(addTranslationInput).exists()).toBeTruthy()
+    expect(wrapper.find(nameTranslationInput).exists()).toBeTruthy()
 
-    // Set Input field values
-    wrapper.vm.$el.querySelector(addTranslationInput).textContent = 'Mock Fail 1212'
-    wrapper.find(addTranslationInput).setValue('Mock Fail 1212')
-    wrapper.find(addTranslationInput).trigger('change')
-    await flushPromises()
+    // Set Input field value
+    const invalidText = 'Invalid Name Translation 123'
+    wrapper.vm.$el.querySelector(nameTranslationInput).textContent = invalidText
+    await wrapper.find(nameTranslationInput).setValue(invalidText)
+    await wrapper.find(nameTranslationInput).trigger('change')
 
-    wrapper.find(addTranslationInput).trigger('input')
-    expect(wrapper.find(addTranslationInput).text()).toEqual('Mock Fail 1212')
+    expect(wrapper.find(nameTranslationInput).text()).toEqual(invalidText)
 
-    // Verify Action btns and there states
+    // Verify Action btns and their states
     expect(wrapper.find(doneBtn).exists()).toBeTruthy()
-    expect(wrapper.find(doneBtn).attributes('disabled')).toBeTruthy()
+    expect(wrapper.find(doneBtn).attributes('disabled')).toBe('disabled')
 
     expect(wrapper.find(removeBtn).exists()).toBeTruthy()
-    expect(wrapper.find(removeBtn).attributes('disabled')).toBeTruthy()
+    expect(wrapper.find(removeBtn).attributes('disabled')).toBe('disabled')
 
     expect(wrapper.find(cancelBtn).exists()).toBeTruthy()
-    expect(wrapper.find(cancelBtn).attributes('disabled')).toBeUndefined()
+    expect(wrapper.find(cancelBtn).attributes('disabled')).toBeUndefined() // enabled
 
     wrapper.destroy()
   })
 
-  it('opens the Add Name Translation with the correct Name when Editing a Name Translation', async () => {
-    const wrapper = wrapperFactory({ editNameTranslation: 'Mock Name Edit' })
-    await flushPromises()
+  it('disables the Done button when the input is too long', async () => {
+    const wrapper = await wrapperFactory()
 
     // Verify input field
-    expect(wrapper.find(addTranslationInput).exists()).toBeTruthy()
-    expect(wrapper.find(addTranslationInput).element.value).toContain('Mock Name Edit')
+    expect(wrapper.find(nameTranslationInput).exists()).toBeTruthy()
 
-    // Verify Action btns and there states
+    // Set Input field value
+    const invalidText = 'a'.repeat(51)
+    wrapper.vm.$el.querySelector(nameTranslationInput).textContent = invalidText
+    await wrapper.find(nameTranslationInput).setValue(invalidText)
+    await wrapper.find(nameTranslationInput).trigger('change')
+
+    expect(wrapper.find(nameTranslationInput).text()).toEqual(invalidText)
+
+    // Verify Action btns and their states
     expect(wrapper.find(doneBtn).exists()).toBeTruthy()
-    expect(wrapper.find(doneBtn).attributes('disabled')).toBeUndefined()
+    expect(wrapper.find(doneBtn).attributes('disabled')).toBe('disabled')
 
     expect(wrapper.find(removeBtn).exists()).toBeTruthy()
-    expect(wrapper.find(removeBtn).attributes('disabled')).toBeUndefined()
+    expect(wrapper.find(removeBtn).attributes('disabled')).toBe('disabled')
 
     expect(wrapper.find(cancelBtn).exists()).toBeTruthy()
-    expect(wrapper.find(cancelBtn).attributes('disabled')).toBeUndefined()
+    expect(wrapper.find(cancelBtn).attributes('disabled')).toBeUndefined() // enabled
 
     wrapper.destroy()
   })
 
-  it('disables the Done btn when editing a name translation that does NOT meet validation', async () => {
-    const wrapper = wrapperFactory({ editNameTranslation: 'Mock Name Edit' })
-    await flushPromises()
+  it('displays the correct Name when editing a Name Translation', async () => {
+    const wrapper = await wrapperFactory({ editNameTranslation: 'Mock Name Edit' })
 
     // Verify input field
-    expect(wrapper.find(addTranslationInput).exists()).toBeTruthy()
-    expect(wrapper.find(addTranslationInput).element.value).toContain('Mock Name Edit')
+    expect(wrapper.find(nameTranslationInput).exists()).toBeTruthy()
+    expect(wrapper.find(nameTranslationInput).element.value).toContain('Mock Name Edit')
+
+    // Verify Action btns and their states
+    expect(wrapper.find(doneBtn).exists()).toBeTruthy()
+    expect(wrapper.find(doneBtn).attributes('disabled')).toBeUndefined() // enabled
+
+    expect(wrapper.find(removeBtn).exists()).toBeTruthy()
+    expect(wrapper.find(removeBtn).attributes('disabled')).toBeUndefined() // enabled
+
+    expect(wrapper.find(cancelBtn).exists()).toBeTruthy()
+    expect(wrapper.find(cancelBtn).attributes('disabled')).toBeUndefined() // enabled
+
+    wrapper.destroy()
+  })
+
+  it('disables the Done button when editing an invalid name translation', async () => {
+    const wrapper = await wrapperFactory({ editNameTranslation: 'Mock Name Edit' })
+
+    // Verify input field
+    expect(wrapper.find(nameTranslationInput).exists()).toBeTruthy()
+    expect(wrapper.find(nameTranslationInput).element.value).toContain('Mock Name Edit')
 
     // Edit the name
-    wrapper.find(addTranslationInput).setValue('Mock edit fail 1212')
-    wrapper.find(addTranslationInput).trigger('change')
-    await flushPromises()
+    const invalidText = 'Invalid Name Translation 123'
+    wrapper.vm.$el.querySelector(nameTranslationInput).textContent = invalidText
+    await wrapper.find(nameTranslationInput).setValue(invalidText)
+    await wrapper.find(nameTranslationInput).trigger('change')
 
-    // Verify Action btns and there states
+    expect(wrapper.find(nameTranslationInput).text()).toEqual(invalidText)
+
+    // Verify Action btns and their states
     expect(wrapper.find(doneBtn).exists()).toBeTruthy()
-    expect(wrapper.find(doneBtn).attributes('disabled')).toBeTruthy()
+    expect(wrapper.find(doneBtn).attributes('disabled')).toBe('disabled')
 
     expect(wrapper.find(removeBtn).exists()).toBeTruthy()
-    expect(wrapper.find(removeBtn).attributes('disabled')).toBeUndefined()
+    expect(wrapper.find(removeBtn).attributes('disabled')).toBeUndefined() // enabled
 
     expect(wrapper.find(cancelBtn).exists()).toBeTruthy()
-    expect(wrapper.find(cancelBtn).attributes('disabled')).toBeUndefined()
+    expect(wrapper.find(cancelBtn).attributes('disabled')).toBeUndefined() // enabled
 
     wrapper.destroy()
   })

@@ -120,6 +120,7 @@
                 Names that use other writing systems must spell the name phonetically in English or
                 French.
               </p>
+
               <v-btn
                 outlined color="primary"
                 class="mt-6"
@@ -129,33 +130,29 @@
                 <v-icon>mdi-plus</v-icon>
                 <span>Add a Name Translation</span>
               </v-btn>
+
+              <!-- Add Name Translation component -->
+              <div v-if="isAddingNameTranslation" class="mt-6">
+                <AddNameTranslation
+                  :edit-name-translation="editingNameTranslation"
+                  @addTranslation="addNameTranslation($event)"
+                  @cancelTranslation="cancelNameTranslation()"
+                  @removeTranslation="removeNameTranslation(editIndex)"
+                />
+              </div>
+
+              <!-- List Name Translation component -->
+              <div v-if="getNameTranslations && getNameTranslations.length > 0" class="mt-6">
+                <ListNameTranslations
+                  :isAddingNameTranslation="isAddingNameTranslation"
+                  :translationsList="getNameTranslations"
+                  @editTranslation="editNameTranslation($event)"
+                  @removeTranslation="removeNameTranslation($event)"
+                />
+              </div>
             </template>
           </v-col>
         </v-row>
-
-        <!-- Name Translation Components -->
-        <template v-if="hasNameTranslation">
-          <v-row no-gutters id="name-translation-container" class="mt-6">
-            <v-col cols="12" sm="3" />
-
-            <v-col cols="12" sm="9">
-              <AddNameTranslation
-                v-if="isAddingNameTranslation"
-                :edit-name-translation="editingNameTranslation"
-                @addTranslation="addName($event)"
-                @cancelTranslation="cancelNameTranslation()"
-                @removeTranslation="removeNameTranslation(editIndex)"
-              />
-              <ListNameTranslations
-                v-if="getNameTranslations && getNameTranslations.length > 0"
-                :isAddingNameTranslation="isAddingNameTranslation"
-                :translationsList="getNameTranslations"
-                @editNameTranslation="editNameTranslation($event)"
-                @removeNameTranslation="removeNameTranslation($event)"
-              />
-            </v-col>
-          </v-row>
-        </template>
       </div>
     </template>
   </div>
@@ -307,7 +304,7 @@ export default class NameRequestInfo extends Mixins(DateMixin) {
    * Adds or updates a name translation.
    * @param name The name to add
    */
-  protected addName (name: string): void {
+  protected addNameTranslation (name: string): void {
     const nameTranslations = Object.assign([], this.getNameTranslations)
 
     // Handle name translation adds or updates
