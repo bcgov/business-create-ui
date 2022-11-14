@@ -144,7 +144,7 @@
                   <v-btn large color="primary" class="form-primary-btn"
                     @click="validateForm()" :disabled="!formValid" id="btn-done">Done</v-btn>
 
-                  <v-btn large class="form-cancel-btn" @click="resetFormAndData(true)" id="btn-cancel">Cancel</v-btn>
+                  <v-btn large @click="resetFormAndData(true)" id="btn-cancel">Cancel</v-btn>
                 </div>
               </v-form>
             </div>

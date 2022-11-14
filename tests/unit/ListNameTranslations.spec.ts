@@ -15,7 +15,7 @@ const store = getVuexStore()
 document.body.setAttribute('data-app', 'true')
 
 // Local references
-const nameTranslationsUi = '#name-translations-list'
+const nameTranslationsUi = '#list-name-translations'
 const nameTranslationsList = [
   { name: 'First mock name translation ltd.' },
   { name: 'Second mock name translation inc' },
@@ -109,11 +109,11 @@ describe('List Name Translation component', () => {
 
     // Select the first name to edit
     await editBtns.at(0).trigger('click')
-    expect(wrapper.emitted('editNameTranslation').pop()).toEqual([0])
+    expect(wrapper.emitted('editTranslation').pop()).toEqual([0])
 
     // Select the third name to edit
     await editBtns.at(2).trigger('click')
-    expect(wrapper.emitted('editNameTranslation').pop()).toEqual([2])
+    expect(wrapper.emitted('editTranslation').pop()).toEqual([2])
 
     wrapper.destroy()
   })
@@ -137,7 +137,7 @@ describe('List Name Translation component', () => {
     expect(removeBtns.at(0).attributes('disabled')).toBeUndefined()
     await removeBtns.at(0).trigger('click')
 
-    expect(wrapper.emitted('removeNameTranslation').pop()).toEqual([0])
+    expect(wrapper.emitted('removeTranslation').pop()).toEqual([0])
 
     wrapper.destroy()
   })

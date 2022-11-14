@@ -1,40 +1,38 @@
 <template>
-  <div id="name-translation">
+  <div id="add-name-translation">
     <!-- Name Translation form -->
-    <v-form v-model="nameTranslationForm" class="name-translation-form">
-      <v-row>
-        <v-col class="pb-0">
-          <v-text-field
-            filled
-            persistent-hint
-            id="name-translation-input"
-            label="Enter Name Translation"
-            v-model="nameTranslation"
-            :rules="nameTranslationRules"
-          />
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col class="form__btns pt-0">
-          <v-btn large color="error" id="btn-remove"
-            :disabled="!editNameTranslation"
-            @click="removeTranslation()"
-          >
-            Remove
-          </v-btn>
-          <v-btn large color="primary" id="btn-done" class="form-primary-btn"
-            :disabled="!nameTranslationForm"
-            @click="addTranslation()"
-          >
-            Done
-          </v-btn>
-          <v-btn large id="btn-cancel" class="form-cancel-btn"
-            @click="cancelTranslation()"
-          >
-            Cancel
-          </v-btn>
-        </v-col>
-      </v-row>
+    <v-form v-model="nameTranslationForm">
+      <v-text-field
+        filled
+        persistent-hint
+        id="name-translation-input"
+        label="Enter Name Translation"
+        v-model="nameTranslation"
+        :rules="nameTranslationRules"
+      />
+
+      <div class="form__btns">
+        <v-btn large color="error" id="btn-remove"
+          :disabled="!editNameTranslation"
+          @click="removeTranslation()"
+        >
+          Remove
+        </v-btn>
+
+        <v-btn large color="primary" id="btn-done"
+          class="form-primary-btn"
+          :disabled="!nameTranslationForm"
+          @click="addTranslation()"
+        >
+          Done
+        </v-btn>
+
+        <v-btn large id="btn-cancel"
+          @click="cancelTranslation()"
+        >
+          Cancel
+        </v-btn>
+      </div>
     </v-form>
   </div>
 </template>
@@ -57,7 +55,7 @@ export default class AddNameTranslation extends Vue {
   readonly nameTranslationRules: Array<VuetifyRuleFunction> = [
     v => !!v || 'A name translation is required', // is not empty
     v => /^[A-Za-zÀ-ÿ_@./#’&+-]+(?: [A-Za-zÀ-ÿ_@./#’&+-]+)*$/.test(v) || 'Invalid character', // English, French and single spaces
-    v => (!v || v.length <= 150) || 'Cannot exceed 150 characters' // maximum character count
+    v => (!v || v.length <= 50) || 'Cannot exceed 50 characters' // maximum character count
   ]
 
   /** Called when component is mounted. */
