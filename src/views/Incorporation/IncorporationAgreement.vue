@@ -32,7 +32,7 @@
         containing a
         <v-tooltip top max-width="20rem" content-class="top-tooltip" transition="fade-transition">
           <template v-slot:activator="{ on }">
-            <span v-on="on" class="tool-tip">benefit provision</span>
+            <span v-on="on" class="tool-tip"> benefit provision</span>
           </template>
           <span>
             Clauses in the Articles which specify the public benefits to be promoted by the Benefit Company and the
