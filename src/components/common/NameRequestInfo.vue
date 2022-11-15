@@ -109,7 +109,7 @@
             >
               <template v-slot:label>
                 <span class="translation-checkbox-label">
-                  This company uses one of more translations of its name outside of Canada.
+                  This company uses one or more translations of its name outside of Canada.
                 </span>
               </template>
             </v-checkbox>
