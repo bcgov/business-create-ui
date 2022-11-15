@@ -29,7 +29,11 @@
             <label>Name Translation</label>
           </v-col>
           <v-col cols="12" sm="9">
-            <div v-for="(nameTranslation, index) in getNameTranslations" :key="`name_translation_${index}`">
+            <div
+              v-for="(nameTranslation, index) in getNameTranslations"
+              class="text-uppercase"
+              :key="`name_translation_${index}`"
+            >
               {{ nameTranslation.name }}
             </div>
           </v-col>

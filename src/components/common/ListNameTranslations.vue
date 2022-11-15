@@ -15,7 +15,7 @@
       no-gutters
     >
       <v-col class="text-truncate">
-        <span class="name-title">{{translation.name}}</span>
+        <span class="name-title text-uppercase">{{translation.name}}</span>
       </v-col>
 
       <!-- Actions Column -->
@@ -29,35 +29,34 @@
               :disabled="isAddingNameTranslation"
               @click="editTranslation(index)"
             >
-                <v-icon small>mdi-pencil</v-icon>
-                <span>Edit</span>
+              <v-icon small>mdi-pencil</v-icon>
+              <span>Edit</span>
             </v-btn>
           </span>
+
           <!-- more actions menu -->
-          <span>
-            <v-menu offset-y>
-              <template v-slot:activator="{ on }">
-                <v-btn
-                  text
-                  small
-                  v-on="on"
-                  color="primary"
-                  class="more-actions-btn"
-                  :disabled="isAddingNameTranslation"
-                >
-                  <v-icon>mdi-menu-down</v-icon>
-                </v-btn>
-              </template>
-              <v-list class="more-actions-list">
-                <v-list-item @click="removeTranslation(index)">
-                  <v-list-item-title>
-                    <v-icon small color="primary">mdi-delete</v-icon>
-                    <span class="ml-2">Remove</span>
-                  </v-list-item-title>
-                </v-list-item>
-              </v-list>
-            </v-menu>
-          </span>
+          <v-menu offset-y>
+            <template v-slot:activator="{ on }">
+              <v-btn
+                text
+                small
+                v-on="on"
+                color="primary"
+                class="more-actions-btn"
+                :disabled="isAddingNameTranslation"
+              >
+                <v-icon>mdi-menu-down</v-icon>
+              </v-btn>
+            </template>
+            <v-list class="more-actions-list">
+              <v-list-item @click="removeTranslation(index)">
+                <v-list-item-title>
+                  <v-icon small color="primary">mdi-delete</v-icon>
+                  <span class="ml-2">Remove</span>
+                </v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
         </div>
       </v-col>
     </v-row>
@@ -99,7 +98,6 @@ export default class ListNameTranslations extends Vue {
 @import '@/assets/styles/theme.scss';
 
 .name-translation-title {
-  display: flex;
   background-color: $BCgovBlue5O;
   padding: 0.5rem 1.25rem;
   font-size: $px-14;
@@ -107,7 +105,7 @@ export default class ListNameTranslations extends Vue {
 
 .names-translation-content {
   padding: 0.5rem 1.25rem;
-  border-top: 1px solid $gray1;
+  border-top: 1px solid $gray4;
   font-size: $px-14;
 
   .name-title {
@@ -116,7 +114,7 @@ export default class ListNameTranslations extends Vue {
 
   .actions {
     .edit-action {
-      border-right: 1px solid $gray2;
+      border-right: 1px solid $gray4;
     }
 
     .v-btn + .v-btn {
