@@ -1,15 +1,5 @@
 <template>
   <div id="incorporation-define-company">
-    <template v-if="isTypeBcomp">
-      <!-- Company Statement -->
-      <section id="company-statement-section" class="mt-10">
-        <p v-if="getCompanyTitle">
-          <span id="company-statement-label">{{ getCompanyTitle }}:</span>
-          {{ getCompanyDescription }}
-        </p>
-      </section>
-    </template>
-
     <!-- Name -->
     <section class="mt-10">
       <header id="name-header">
@@ -163,8 +153,6 @@ import OfficeAddresses from '@/components/common/OfficeAddresses.vue'
   }
 })
 export default class IncorporationDefineCompany extends Mixins(CommonMixin) {
-  @Getter getCompanyTitle!: string
-  @Getter getCompanyDescription!: string
   @Getter isEntityType!: boolean
   @Getter isPremiumAccount!: boolean
   @Getter isTypeBcomp!: boolean
@@ -351,12 +339,6 @@ header {
   p {
     padding-top:0.5rem
   }
-}
-
-#company-statement-label {
-  letter-spacing: -0.04rem;
-  color: $gray9;
-  font-weight: bold;
 }
 
 // Coop Type Help section

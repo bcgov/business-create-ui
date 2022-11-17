@@ -17,16 +17,6 @@ import {
 // model -- in other words, for the currently-selected entity type.
 //
 
-/** The company title. */
-export const getCompanyTitle = (state: StateIF): string => {
-  return state.resourceModel.title
-}
-
-/** The company description. */
-export const getCompanyDescription = (state: StateIF): string => {
-  return state.resourceModel.description
-}
-
 /** The company display name. */
 export const getCompanyDisplayName = (state: StateIF): string => {
   return state.resourceModel.displayName

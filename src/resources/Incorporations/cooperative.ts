@@ -6,9 +6,6 @@ import { CoopStepsTemplate } from '@/resources/Incorporations/stepTemplates'
 export const CooperativeResource: IncorporationResourceIF = {
   entityType: CorpTypeCd.COOP,
   displayName: GetCorpFullDescription(CorpTypeCd.COOP),
-  title: '',
-  description: '',
-  statement: '',
   steps: CoopStepsTemplate,
   filingData: [{
     entityType: CorpTypeCd.COOP,

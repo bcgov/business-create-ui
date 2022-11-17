@@ -1,15 +1,5 @@
 <template>
   <div id="incorporation-review-confirm">
-    <template v-if="isTypeBcomp">
-      <!-- Company Statement -->
-      <section id="company-statement-section" class="mt-10">
-        <p v-if="getCompanyTitle">
-          <span id="company-statement-label">{{ getCompanyTitle }}:</span>
-          {{ getCompanyDescription }}
-        </p>
-      </section>
-    </template>
-
     <!-- Review and Confirm -->
     <section class="mt-10">
       <header>
@@ -174,11 +164,8 @@ import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module
 export default class IncorporationReviewConfirm extends Vue {
   @Getter getBusinessContact!: ContactPointIF
   @Getter getCertifyState!: CertifyIF
-  @Getter getCompanyTitle!: string
-  @Getter getCompanyDescription!: string
   @Getter getValidateSteps!: boolean
   @Getter isBaseCompany!: boolean
-  @Getter isTypeBcomp!: boolean
   @Getter isTypeCoop!: boolean
   @Getter isRoleStaff!: boolean
   @Getter getEffectiveDateTime!: EffectiveDateTimeIF
@@ -222,11 +209,5 @@ h2::before {
   /* Increment "header-counter" by 1 */
   counter-increment: header-counter;
   content: counter(header-counter) '. ';
-}
-
-#company-statement-label {
-  letter-spacing: -0.04rem;
-  font-weight: bold;
-  color: $gray9;
 }
 </style>

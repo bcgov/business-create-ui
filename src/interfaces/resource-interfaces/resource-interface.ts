@@ -8,9 +8,6 @@ import { CorpTypeCd } from '@/enums'
 export interface IncorporationResourceIF {
   entityType: CorpTypeCd
   displayName: string
-  title: string
-  description: string
-  statement: string
   steps: Array<StepIF>
   filingData: Array<FilingDataIF>
   peopleAndRoles: PeopleAndRolesResourceIF
