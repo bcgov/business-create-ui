@@ -6,10 +6,6 @@ import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module
 export const UnlimitedCompanyResource: IncorporationResourceIF = {
   entityType: CorpTypeCd.BC_ULC_COMPANY,
   displayName: GetCorpFullDescription(CorpTypeCd.BC_ULC_COMPANY),
-  title: 'Unlimited Liability Company Statement',
-  description: 'The shareholders of this company are jointly and severally liable to satisfy the debts and ' +
-    'liabilities of this company to the extent provided in section 51.3 of the Business Corporations Act.',
-  statement: null,
   steps: BaseStepsTemplate,
   filingData: [{
     entityType: CorpTypeCd.BC_ULC_COMPANY,

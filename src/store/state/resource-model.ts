@@ -3,9 +3,6 @@ import { DissolutionResourceIF, IncorporationResourceIF } from '@/interfaces'
 const incorporationResourceModel: IncorporationResourceIF = {
   entityType: null,
   displayName: '',
-  title: '',
-  description: '',
-  statement: '',
   steps: [],
   filingData: null,
   peopleAndRoles: {

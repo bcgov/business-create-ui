@@ -5,15 +5,11 @@ import IncorporationReviewConfirm from '@/views/Incorporation/IncorporationRevie
 const reviewConfirmTestCases = [
   {
     entityType: 'CP',
-    headerTitle: 'Review',
-    hasStatement: false,
-    statement: ''
+    headerTitle: 'Review'
   },
   {
     entityType: 'BEN',
-    headerTitle: 'Review',
-    hasStatement: true,
-    statement: 'This company is a benefit company'
+    headerTitle: 'Review'
   }
 ]
 
@@ -26,16 +22,6 @@ for (const test of reviewConfirmTestCases) {
 
       // verify page content
       expect(wrapper.find('h2').text()).toContain(test.headerTitle)
-    })
-
-    it('displays benefit company statement', () => {
-      wrapper = shallowWrapperFactory(IncorporationReviewConfirm, null, { entityType: test.entityType })
-
-      expect(wrapper.find('#company-statement-section').exists()).toBe(test.hasStatement)
-
-      if (test.hasStatement) {
-        expect(wrapper.find('#company-statement-section p').text()).toContain(test.statement)
-      }
     })
 
     // FUTURE: Expand unit testing for validation on step 5. Include routing to appropriate steps from error links.
