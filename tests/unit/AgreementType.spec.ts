@@ -27,38 +27,41 @@ const agreementTypeTestCases = [
   {
     entityType: CorpTypeCd.BC_COMPANY,
     sampleAgreement: {
-      agreementType: 'Table-1'
+      agreementType: 'sample'
     },
     customAgreement: {
       agreementType: 'custom'
     },
-    sampleSummaryText: 'The sample Incorporation Agreement and Table 1 Articles ' +
-      'has been completed and a copy has been added to the company\'s record book.',
+    sampleSummaryText: 'The sample Incorporation Agreement and Articles ' +
+    'have been completed and a copy has been added to the company\'s record book.',
     customSummaryText: 'The custom Incorporation Agreement and custom Articles ' +
-      'has been completed and a copy has been added to the company\'s record book.'
+    'have been completed and a copy has been added to the company\'s record book.'
   },
   {
-    entityType: CorpTypeCd.BC_ULC_COMPANY,
+    entityType: CorpTypeCd.BC_CCC,
     sampleAgreement: {
-      agreementType: 'Table-1'
+      agreementType: 'sample'
     },
     customAgreement: {
       agreementType: 'custom'
     },
-    sampleSummaryText: 'The sample Incorporation Agreement and Table 1 Articles ' +
-      'has been completed and a copy has been added to the company\'s record book.',
-    customSummaryText: 'The custom Incorporation Agreement and custom Articles ' +
-      'has been completed and a copy has been added to the company\'s record book.'
+    sampleSummaryText: 'The sample Incorporation Agreement and Articles containing the community provision' +
+    ' required by the Business Corporations Act 51.911 has been completed and a copy has been added to the' +
+    ' company\'s record book.',
+    customSummaryText: 'The custom Incorporation Agreement and custom Articles containing the community' +
+    ' provision required by the Business Corporations Act 51.911 has been completed and a copy has been added' +
+    ' to the company\'s record book.'
   }
 ]
 
-const cccTestCase = {
-  entityType: CorpTypeCd.BC_CCC,
-  sampleAgreement: {
-    agreementType: 'sample'
+const ulcTestCase = {
+  entityType: CorpTypeCd.BC_ULC_COMPANY,
+  customAgreement: {
+    agreementType: 'custom'
   },
-  sampleSummaryText: 'The Incorporation Agreement and Articles containing the community purposes has been ' +
-    'completed and a copy has been added to the company\'s record book.'
+  customSummaryText: 'The custom Incorporation Agreement and custom Articles containing the liability' +
+  ' provision required by the Business Corporations Act 51.11 has been completed and a copy has been added' +
+  ' to the company\'s record book.'
 }
 
 for (const test of agreementTypeTestCases) {
@@ -190,7 +193,7 @@ for (const test of agreementTypeTestCases) {
   })
 }
 
-describe('Incorporation agreement component for a Community Contribution Company', () => {
+describe('Incorporation agreement component for a BC Unlimited Liability Company', () => {
   let wrapper: any
 
   it('Loads the component in edit mode and both agreement types are not selected', () => {
@@ -198,11 +201,11 @@ describe('Incorporation agreement component for a Community Contribution Company
       AgreementType,
       null,
       {
-        entityType: cccTestCase.entityType,
+        entityType: ulcTestCase.entityType,
         incorporationAgreementStep: ''
       }
     )
-    const sampleSelector = `${typeSelector}${cccTestCase.sampleAgreement.agreementType}`
+    const sampleSelector = `${typeSelector}${ulcTestCase.customAgreement.agreementType}`
 
     expect(wrapper.find(sampleSelector).attributes('aria-checked')).toBe('false')
   })
@@ -212,11 +215,11 @@ describe('Incorporation agreement component for a Community Contribution Company
       AgreementType,
       null,
       {
-        entityType: cccTestCase.entityType,
-        incorporationAgreementStep: cccTestCase.sampleAgreement
+        entityType: ulcTestCase.entityType,
+        incorporationAgreementStep: ulcTestCase.customAgreement
       }
     )
-    const sampleSelector = `${typeSelector}${cccTestCase.sampleAgreement.agreementType}`
+    const sampleSelector = `${typeSelector}${ulcTestCase.customAgreement.agreementType}`
 
     expect(wrapper.find(sampleSelector).attributes('aria-checked')).toBe('true')
   })
@@ -226,12 +229,12 @@ describe('Incorporation agreement component for a Community Contribution Company
       AgreementType,
       { isSummary: true },
       {
-        entityType: cccTestCase.entityType,
-        incorporationAgreementStep: cccTestCase.sampleAgreement
+        entityType: ulcTestCase.entityType,
+        incorporationAgreementStep: ulcTestCase.customAgreement
       }
     )
 
-    expect(wrapper.find(summaryTextSelector).text()).toContain(cccTestCase.sampleSummaryText)
+    expect(wrapper.find(summaryTextSelector).text()).toContain(ulcTestCase.customSummaryText)
   })
 
   it('Displays the error message in summary view if no agreement type is selected', () => {
@@ -242,7 +245,7 @@ describe('Incorporation agreement component for a Community Contribution Company
         showErrorSummary: true
       },
       {
-        entityType: cccTestCase.entityType
+        entityType: ulcTestCase.entityType
       }
     )
 
@@ -254,7 +257,7 @@ describe('Incorporation agreement component for a Community Contribution Company
       AgreementType,
       null,
       {
-        entityType: cccTestCase.entityType,
+        entityType: ulcTestCase.entityType,
         incorporationAgreementStep: {
           agreementType: null
         }
@@ -265,12 +268,12 @@ describe('Incorporation agreement component for a Community Contribution Company
     expect(wrapper.vm.$data.agreementType).toBe(null)
 
     // Select the Sample Radio btn
-    const sampleSelector = `${typeSelector}${cccTestCase.sampleAgreement.agreementType}`
+    const sampleSelector = `${typeSelector}${ulcTestCase.customAgreement.agreementType}`
     const radio = wrapper.find(sampleSelector)
     radio.trigger('click')
     await Vue.nextTick()
 
     // Verify state is updated
-    expect(wrapper.vm.$data.agreementType).toBe(cccTestCase.sampleAgreement.agreementType)
+    expect(wrapper.vm.$data.agreementType).toBe(ulcTestCase.customAgreement.agreementType)
   })
 })

@@ -78,14 +78,14 @@ export const LimitedCompanyResource: IncorporationResourceIF = {
     article: 'Sample_articles.pdf',
     documents: [
       {
-        code: 'Table-1',
-        description: 'The <b>sample Incorporation Agreement and Table 1 Articles</b> ' +
-          'has been completed and a copy has been added to the company\'s record book.'
+        code: 'sample',
+        description: 'The <b>sample Incorporation Agreement and Articles</b> ' +
+          'have been completed and a copy has been added to the company\'s record book.'
       },
       {
         code: 'custom',
         description: 'The <b>custom Incorporation Agreement and custom Articles</b> ' +
-          'has been completed and a copy has been added to the company\'s record book.'
+          'have been completed and a copy has been added to the company\'s record book.'
       }
     ]
   },

@@ -22,21 +22,21 @@
     </template>
 
     <!-- EDIT SECTION -->
-    <template v-else-if="isTypeBcCcc">
+    <div v-if="isTypeBcUlcCompany" :class="{ 'invalid-section': showErrorSummary }">
       <v-checkbox
         v-for="(item, index) in getIncorporationAgreementDocuments"
-        :id="`agreement-type-${item.code}`"
-        class="agreement-option-list"
-        :key="index"
         v-model="agreementType"
+        class="ml-6 mt-0 agreement-option-list"
+        :id="`agreement-type-${item.code}`"
+        :key="index"
         :value="item.code"
         @change="changeAgreementType()"
       >
         <template v-slot:label>
-          <div v-html="item.description" class="agreement-option" />
+          <div v-html="item.description" class="ml-6 py-4 agreement-option" />
         </template>
       </v-checkbox>
-    </template>
+    </div>
 
     <!-- EDIT SECTION -->
     <div class="py-8 px-6" v-else :class="{ 'invalid-section': showErrorSummary }">
@@ -74,7 +74,7 @@ export default class AgreementType extends Vue {
   @Prop({ default: false }) readonly isSummary!: boolean
 
   @Getter getIncorporationAgreementDocuments!: Array<IncorporationAgreementTypeIF>
-  @Getter isTypeBcCcc!: boolean
+  @Getter isTypeBcUlcCompany!: boolean
   @Getter getIncorporationAgreementStep!: IncorporationAgreementIF
 
   @Action setIncorporationAgreementStepData!: ActionBindingIF

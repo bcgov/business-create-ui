@@ -78,14 +78,10 @@ export const UnlimitedCompanyResource: IncorporationResourceIF = {
     article: 'Sample_articles.pdf',
     documents: [
       {
-        code: 'Table-1',
-        description: 'The <b>sample Incorporation Agreement and Table 1 Articles</b> ' +
-          'has been completed and a copy has been added to the company\'s record book.'
-      },
-      {
         code: 'custom',
-        description: 'The <b>custom Incorporation Agreement and custom Articles</b> ' +
-          'has been completed and a copy has been added to the company\'s record book.'
+        description: 'The <b>custom Incorporation Agreement and custom Articles</b> containing the liability' +
+        ' provision required by the Business Corporations Act 51.11 has been completed and a copy has been added' +
+        ' to the company\'s record book.'
       }
     ]
   },
