@@ -114,7 +114,7 @@
             </ul>
           </div>
 
-          <template v-if="!isTypeBcCcc">
+          <template v-if="isTypeBcomp">
             <div class="help-div">
               <div class="articles-statements-footer">
                 In this case, you need to create a unique Incorporation Agreement and set of
@@ -123,18 +123,20 @@
                 to help you prepare your Incorporation Agreement and Articles.
               </div>
             </div>
-            <div class="help-div">
-              <h3>Retain the signed Incorporation Agreement and {{ entityDescription }} Articles</h3>
-              <ul>
-                <li>
-                  The company is required to keep signed copies of the Incorporation Agreement and
-                  Articles in the company’s record book. For a complete list of records a company
-                  is required to keep please see <a :href="section42Url" target="_blank">section 42</a>
-                  of the Business Corporations Act.
-                </li>
-              </ul>
-            </div>
           </template>
+
+          <div class="help-div">
+            <h3>Retain the signed Incorporation Agreement and {{ entityDescription }} Articles</h3>
+            <ul>
+              <li>
+                The company is required to keep signed copies of the Incorporation Agreement and
+                Articles in the company’s record book. For a complete list of records, a company
+                is required to keep please see <a :href="section42Url" target="_blank">section 42</a>
+                of the Business Corporations Act.
+              </li>
+            </ul>
+          </div>
+
           <u class="help-btn" @click="helpToggle = !helpToggle"><small>Hide Help</small></u>
         </section>
       </v-expand-transition>
