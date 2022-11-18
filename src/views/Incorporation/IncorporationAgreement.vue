@@ -22,27 +22,27 @@
         <v-tooltip top max-width="20rem" content-class="top-tooltip" transition="fade-transition">
           <template v-slot:activator="{ on }">
             <span v-if="isTypeBcomp" v-on="on" class="tool-tip"> Benefit Company Articles</span>
-            <span v-if="isTypeBcCompany" v-on="on" class="tool-tip"><br>BC LTD Articles.</span>
-            <span v-if="isTypeBcUlcCompany" v-on="on" class="tool-tip"> Unlimited Liability Company Articles</span>
-            <span v-if="isTypeBcCcc" v-on="on" class="tool-tip"> Community Contribution Company Articles</span>
+            <span v-else-if="isTypeBcCompany" v-on="on" class="tool-tip"><br>BC LTD Articles.</span>
+            <span v-else-if="isTypeBcUlcCompany" v-on="on" class="tool-tip"> Unlimited Liability Company Articles</span>
+            <span v-else-if="isTypeBcCcc" v-on="on" class="tool-tip"> Community Contribution Company Articles</span>
           </template>
           <span v-if="isTypeBcomp">
             The Articles for a Benefit Company must state the benefits the company intends to provide to society, as
             well as outlining the rules and procedures for corporate matters such as holding meetings, issuing and
             transferring shares, and duties of directors and officers.
           </span>
-          <span v-if="isTypeBcCompany">
+          <span v-else-if="isTypeBcCompany">
             Articles should outline the rules and procedures for corporate matters such as holding meetings, issuing
             and transferring shares, and duties of directors and officers.
           </span>
-          <span v-if="isTypeBcUlcCompany">
+          <span v-else-if="isTypeBcUlcCompany">
             The Articles for an Unlimited Liability Company must include the following statement: “The shareholders of
             this company are jointly and severally liable to satisfy the debts and liabilities of this company to the
             extent provided in section 51.3 of the Business Corporations Act.” Articles should also outline the rules
             and procedures for corporate matters such as holding meetings, issuing and transferring shares, and duties
             of directors and officers.
           </span>
-          <span v-if="isTypeBcCcc">
+          <span v-else-if="isTypeBcCcc">
             The Articles for a Community Contribution Company must include the following statements “This company is a
             community contribution company, and, as such, has purposes beneficial to society. This company is
             restricted, in accordance with Part 2.2 of the Business Corporations Act, in its ability to pay dividends
@@ -56,15 +56,15 @@
           <v-tooltip top max-width="20rem" content-class="top-tooltip" transition="fade-transition">
             <template v-slot:activator="{ on }">
               <span v-if="isTypeBcomp" v-on="on" class="tool-tip"> benefit provision</span>
-              <span v-if="isTypeBcUlcCompany" v-on="on" class="tool-tip"> liability provision</span>
-              <span v-if="isTypeBcCcc" v-on="on" class="tool-tip"> community provision</span>
+              <span v-else-if="isTypeBcUlcCompany" v-on="on" class="tool-tip"> liability provision</span>
+              <span v-else-if="isTypeBcCcc" v-on="on" class="tool-tip"> community provision</span>
             </template>
             <span v-if="isTypeBcomp">
               Clauses in the Articles which specify the public benefits to be promoted by the Benefit Company and the
               company's commitment to promote those benefits and to conduct business in a responsible and sustainable
               manner.
             </span>
-            <span v-if="isTypeBcUlcCompany || isTypeBcCcc">
+            <span v-else-if="isTypeBcUlcCompany || isTypeBcCcc">
               A clause in the Articles which communicates the liability statement required by the Business Corporations
               Act 51.11.
             </span>
@@ -188,7 +188,7 @@
         <header id="confirm-agreement">
           <h2 v-if="isTypeBcomp || isTypeBcCompany || isTypeBcCcc">3. Confirm Incorporation Agreement and Article
             Completion</h2>
-          <h2 v-if="isTypeBcUlcCompany">2. Confirm Incorporation Agreement and Article Completion</h2>
+          <h2 v-else-if="isTypeBcUlcCompany">2. Confirm Incorporation Agreement and Article Completion</h2>
         </header>
 
         <v-card flat class="mt-6">
