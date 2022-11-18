@@ -6,9 +6,6 @@ import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module
 export const LimitedCompanyResource: IncorporationResourceIF = {
   entityType: CorpTypeCd.BC_COMPANY,
   displayName: GetCorpFullDescription(CorpTypeCd.BC_COMPANY),
-  title: null,
-  description: null,
-  statement: null,
   steps: BaseStepsTemplate,
   filingData: [{
     entityType: CorpTypeCd.BC_COMPANY,

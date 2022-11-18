@@ -4,28 +4,19 @@ import DefineCompany from '@/views/Incorporation/IncorporationDefineCompany.vue'
 // Test Case Data
 const mockEntityInfo = [
   {
-    entityType: 'CP',
-    description: ''
+    entityType: 'CP'
   },
   {
-    entityType: 'BEN',
-    description: 'This company is a benefit company and, as such, has purposes that include conducting its ' +
-      'business in a responsible and sustainable manner and promoting one or more public benefits.'
+    entityType: 'BEN'
   },
   {
-    entityType: 'BC',
-    description: ''
+    entityType: 'BC'
   },
   {
-    entityType: 'ULC',
-    description: 'The shareholders of this company are jointly and severally liable to satisfy the debts and ' +
-      'liabilities of this company to the extent provided in section 51.3 of the Business Corporations Act.'
+    entityType: 'ULC'
   },
   {
-    entityType: 'CC',
-    description: 'This company is a community contribution company, and, as such, has purposes beneficial to ' +
-      'society. This company is restricted, in accordance with Part 2.2 of the BCA, in its ability to pay ' +
-      'dividends and to distribute its assets on dissolution or otherwise.'
+    entityType: 'CC'
   }
 ]
 
@@ -67,11 +58,6 @@ for (const mock of mockEntityInfo) {
     it('displays folio number when it is a premium account', () => {
       expect(wrapper.find('#folio-number-header').exists()).toBe(true)
       expect(wrapper.find('#folio-number-header').text()).toContain('Folio / Reference Number (Optional)')
-    })
-
-    itIf(mock.entityType === 'BEN')('displays company statement', () => {
-      expect(wrapper.find('#company-statement-section').exists()).toBe(true)
-      expect(wrapper.find('#company-statement-section p').text()).toContain(mock.description)
     })
   })
 

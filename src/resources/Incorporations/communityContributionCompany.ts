@@ -6,11 +6,6 @@ import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module
 export const CommunityContributionCompanyResource: IncorporationResourceIF = {
   entityType: CorpTypeCd.BC_CCC,
   displayName: GetCorpFullDescription(CorpTypeCd.BC_CCC),
-  title: 'Community Contribution Company Statement',
-  description: 'This company is a community contribution company, and, as such, has purposes beneficial to ' +
-    'society. This company is restricted, in accordance with Part 2.2 of the BCA, in its ability to pay ' +
-    'dividends and to distribute its assets on dissolution or otherwise.',
-  statement: null,
   steps: BaseStepsTemplate,
   filingData: [{
     entityType: CorpTypeCd.BC_CCC,
