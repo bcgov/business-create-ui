@@ -39,6 +39,11 @@ export const LimitedCompanyResource: IncorporationResourceIF = {
   shareClasses: {
     countMinimum: 1
   },
+  incorporationArticles: {
+    articles: '<br>BC LTD Articles',
+    articlesTooltip: 'Articles should outline the rules and procedures for corporate matters such as holding ' +
+    'meetings, issuing and transferring shares, and duties of directors and officers.'
+  },
   incorporationAgreement: {
     helpSection: [
       {

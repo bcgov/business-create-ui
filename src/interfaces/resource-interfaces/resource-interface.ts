@@ -24,6 +24,12 @@ export interface IncorporationResourceIF {
   shareClasses?: {
     countMinimum: number
   }
+  incorporationArticles?: {
+    articles: string,
+    articlesTooltip: string,
+    provisions?: string,
+    provisionTooltip?: string
+  }
   incorporationAgreement?: {
     helpSection: Array<HelpSectionIF>
     article: string

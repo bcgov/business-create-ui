@@ -39,6 +39,16 @@ export const BenefitCompanyResource: IncorporationResourceIF = {
   shareClasses: {
     countMinimum: 1
   },
+  incorporationArticles: {
+    articles: 'Benefit Company Articles',
+    articlesTooltip: 'The Articles for a Benefit Company must state the benefits the company intends to provide to ' +
+     'society, as well as outlining the rules and procedures for corporate matters such as holding meetings, issuing' +
+     ' and transferring shares, and duties of directors and officers.',
+    provisions: ' benefit provision',
+    provisionTooltip: 'Clauses in the Articles which specify the public benefits to be promoted by the Benefit ' +
+    'Company and the company\'s commitment to promote those benefits and to conduct business in a responsible and ' +
+    'sustainable manner.'
+  },
   incorporationAgreement: {
     helpSection: [
       {
