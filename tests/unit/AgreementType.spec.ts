@@ -1,3 +1,4 @@
+import { getShowErrors } from './../../src/store/getters/state-getters';
 import Vue from 'vue'
 import { wrapperFactory } from '../jest-wrapper-factory'
 import AgreementType from '@/components/common/AgreementType.vue'
@@ -135,6 +136,13 @@ for (const test of agreementTypeTestCases) {
         },
         {
           entityType: test.entityType
+        },
+        null,
+        null,
+        {
+          getShowErrors: {
+            get (): boolean { return true }
+          }
         }
       )
 
@@ -246,6 +254,13 @@ describe('Incorporation agreement component for a BC Unlimited Liability Company
       },
       {
         entityType: ulcTestCase.entityType
+      },
+      null,
+      null,
+      {
+        getShowErrors: {
+          get (): boolean { return true }
+        }
       }
     )
 
