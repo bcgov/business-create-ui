@@ -63,7 +63,7 @@ export const CommunityContributionCompanyResource: IncorporationResourceIF = {
         ]
       }
     ],
-    article: 'Sample_articles.pdf',
+    article: 'community_contribution_company__corporation_agreement.pdf',
     documents: [
       {
         code: 'sample',
