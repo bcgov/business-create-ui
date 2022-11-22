@@ -40,7 +40,7 @@ export const LimitedCompanyResource: IncorporationResourceIF = {
     countMinimum: 1
   },
   incorporationArticles: {
-    articles: '<br>BC LTD Articles',
+    articles: '<br>BC LTD Articles.', // Line break is required to prevent tooltip from splitting the screen.
     articlesTooltip: 'Articles should outline the rules and procedures for corporate matters such as holding ' +
     'meetings, issuing and transferring shares, and duties of directors and officers.'
   },

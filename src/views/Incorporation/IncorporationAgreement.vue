@@ -18,7 +18,7 @@
             incorporators and the first shareholders of the corporation.
           </span>
         </v-tooltip>
-        , and a set of
+        <span>, and a set of </span>
         <v-tooltip top max-width="20rem" content-class="top-tooltip" transition="fade-transition">
           <template v-slot:activator="{ on }">
             <span v-on="on" class="tool-tip" v-html="getIncorporationArticlesResource.articles"></span>

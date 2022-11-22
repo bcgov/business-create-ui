@@ -40,7 +40,7 @@ export const UnlimitedCompanyResource: IncorporationResourceIF = {
     countMinimum: 1
   },
   incorporationArticles: {
-    articles: ' Unlimited Liability Company Articles',
+    articles: 'Unlimited Liability Company Articles',
     articlesTooltip: 'The Articles for an Unlimited Liability Company must include the following statement: “The ' +
     'shareholders of this company are jointly and severally liable to satisfy the debts and liabilities of this ' +
     'company to the extent provided in section 51.3 of the Business Corporations Act.” Articles should also outline ' +

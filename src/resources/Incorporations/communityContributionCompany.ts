@@ -40,7 +40,7 @@ export const CommunityContributionCompanyResource: IncorporationResourceIF = {
     countMinimum: 1
   },
   incorporationArticles: {
-    articles: ' Community Contribution Company Articles',
+    articles: 'Community Contribution Company Articles',
     articlesTooltip: 'The Articles for a Community Contribution Company must include the following statements “This ' +
     'company is a community contribution company, and, as such, has purposes beneficial to society. This company is ' +
     'restricted, in accordance with Part 2.2 of the Business Corporations Act, in its ability to pay dividends and ' +
