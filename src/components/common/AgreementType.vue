@@ -3,7 +3,7 @@
     <!-- SUMMARY SECTION -->
     <template v-if="isSummary">
       <!-- Summary Warning -->
-      <section v-if="showErrorSummary" class="agreement-invalid-message invalid-section">
+      <section v-if="showErrorSummary && getShowErrors" class="agreement-invalid-message invalid-section">
         <span>
           <v-icon color="error">mdi-information-outline</v-icon>
           <span class="error-text mx-1">This step is unfinished.</span>
@@ -22,7 +22,7 @@
     </template>
 
     <!-- EDIT SECTION -->
-    <div v-if="isTypeBcUlcCompany" :class="{ 'invalid-section': showErrorSummary }">
+    <div v-if="isTypeBcUlcCompany" :class="{ 'invalid-section': showErrorSummary && getShowErrors }">
       <v-checkbox
         v-for="(item, index) in getIncorporationAgreementDocuments"
         v-model="agreementType"
@@ -39,7 +39,7 @@
     </div>
 
     <!-- EDIT SECTION -->
-    <div class="py-8 px-6" v-else :class="{ 'invalid-section': showErrorSummary }">
+    <div class="py-8 px-6" v-else :class="{ 'invalid-section': showErrorSummary && getShowErrors }">
       <v-radio-group
         class="mt-0 pt-0"
         hide-details
@@ -76,6 +76,7 @@ export default class AgreementType extends Vue {
   @Getter getIncorporationAgreementDocuments!: Array<IncorporationAgreementTypeIF>
   @Getter isTypeBcUlcCompany!: boolean
   @Getter getIncorporationAgreementStep!: IncorporationAgreementIF
+  @Getter getShowErrors!: boolean
 
   @Action setIncorporationAgreementStepData!: ActionBindingIF
 
