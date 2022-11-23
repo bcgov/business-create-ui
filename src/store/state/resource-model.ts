@@ -18,6 +18,12 @@ const incorporationResourceModel: IncorporationResourceIF = {
   shareClasses: {
     countMinimum: null
   },
+  incorporationArticles: {
+    articles: null,
+    articlesTooltip: null,
+    provisions: null,
+    provisionTooltip: null
+  },
   incorporationAgreement: null,
   reviewAndConfirm: {
     completingPartyStatement: {

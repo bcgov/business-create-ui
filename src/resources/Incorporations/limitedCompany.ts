@@ -39,6 +39,11 @@ export const LimitedCompanyResource: IncorporationResourceIF = {
   shareClasses: {
     countMinimum: 1
   },
+  incorporationArticles: {
+    articles: '<br>BC LTD Articles.', // Line break is required to prevent tooltip from splitting the screen.
+    articlesTooltip: 'Articles should outline the rules and procedures for corporate matters such as holding ' +
+    'meetings, issuing and transferring shares, and duties of directors and officers.'
+  },
   incorporationAgreement: {
     helpSection: [
       {
@@ -78,8 +83,8 @@ export const LimitedCompanyResource: IncorporationResourceIF = {
     article: 'Sample_articles.pdf',
     documents: [
       {
-        code: 'Table-1',
-        description: 'The <b>sample Incorporation Agreement and Table 1 Articles</b> ' +
+        code: 'sample',
+        description: 'The <b>sample Incorporation Agreement and Articles</b> ' +
           'has been completed and a copy has been added to the company\'s record book.'
       },
       {

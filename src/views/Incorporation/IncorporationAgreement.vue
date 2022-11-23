@@ -7,8 +7,8 @@
       </header>
 
       <!-- Benefit Company header-->
-      <p v-if="isTypeBcomp">
-        Before submitting your incorporation application you <b>must complete, sign, and date</b> an
+      <div class="pt-2 pb-3">
+        <span>Before submitting your incorporation application you <b>must complete, sign, and date</b> an</span>
         <v-tooltip top max-width="20rem" content-class="top-tooltip" transition="fade-transition">
           <template v-slot:activator="{ on }">
             <span v-on="on" class="tool-tip"> Incorporation Agreement</span>
@@ -18,68 +18,24 @@
             incorporators and the first shareholders of the corporation.
           </span>
         </v-tooltip>
-        , and a set of
+        <span>, and a set of </span>
         <v-tooltip top max-width="20rem" content-class="top-tooltip" transition="fade-transition">
           <template v-slot:activator="{ on }">
-            <span v-on="on" class="tool-tip"> Benefit Company Articles</span>
+            <span v-on="on" class="tool-tip" v-html="getIncorporationArticlesResource.articles"></span>
           </template>
-          <span>
-            The Articles for a Benefit Company must state the benefits the company intends to provide to society, as
-            well as outlining the rules and procedures for corporate matters such as holding meetings, issuing and
-            transferring shares, and duties of directors and officers.
-          </span>
+          <span v-html="getIncorporationArticlesResource.articlesTooltip"></span>
         </v-tooltip>
-        containing a
-        <v-tooltip top max-width="20rem" content-class="top-tooltip" transition="fade-transition">
-          <template v-slot:activator="{ on }">
-            <span v-on="on" class="tool-tip"> benefit provision</span>
-          </template>
-          <span>
-            Clauses in the Articles which specify the public benefits to be promoted by the Benefit Company and the
-            company's commitment to promote those benefits and to conduct business in a responsible and sustainable
-            manner.
-          </span>
-        </v-tooltip>
-        for the company you are about to incorporate.
-      </p>
-
-      <!-- All other entities -->
-      <p v-else>
-        Before submitting your incorporation application you <b>must complete, sign, and date</b> an
-        <v-tooltip top max-width="20rem" content-class="top-tooltip" transition="fade-transition">
-          <template v-slot:activator="{ on }">
-            <span v-on="on" class="tool-tip"> Incorporation Agreement</span>
-          </template>
-          <span>
-            A document that is signed and dated by the people who agree to form the corporation. They are the
-            incorporators and the first shareholders of the corporation.
-          </span>
-        </v-tooltip>
-        , and a set of
-        <v-tooltip top max-width="20rem" content-class="top-tooltip" transition="fade-transition">
-          <template v-slot:activator="{ on }">
-            <span v-on="on" class="tool-tip">Articles</span>
-          </template>
-          <span>
-            The articles for a company must outline the rules and procedures for corporate matters such as holding
-            meetings, issuing and transferring shares, and duties of directors and officers.
-          </span>
-        </v-tooltip>
-        <template v-if="isTypeBcCcc">
-          containing the
+        <template v-if="isTypeBcomp || isTypeBcUlcCompany || isTypeBcCcc">
+          containing a
           <v-tooltip top max-width="20rem" content-class="top-tooltip" transition="fade-transition">
             <template v-slot:activator="{ on }">
-              <span v-on="on" class="tool-tip">community purposes</span>
+              <span v-on="on" class="tool-tip" v-html="getIncorporationArticlesResource.provisions"></span>
             </template>
-            <span>
-            One or more of the primary purposes of a community contribution company must be community purposes and those
-            community purposes must be set out in its articles.
-          </span>
+            <span v-html="getIncorporationArticlesResource.provisionTooltip"></span>
           </v-tooltip>
           for the company you are about to incorporate.
         </template>
-        <template v-else>.</template>
-      </p>
+      </div>
 
       <!-- Help Section -->
       <span class="help-btn" @click="helpToggle = !helpToggle">
@@ -140,21 +96,8 @@
       </v-expand-transition>
     </section>
 
-    <!-- Agreement Type -->
-    <template v-if="isTypeBcCcc">
-      <section class="mt-10">
-        <header id="confirm-agreement">
-          <h2>2. Confirm Incorporation Agreement and Article Completion</h2>
-        </header>
-
-        <v-card flat class="mt-6">
-          <AgreementType :showErrorSummary="!getIncorporationAgreementStep.valid" />
-        </v-card>
-      </section>
-    </template>
-
     <!-- Sample Templates -->
-    <template v-else>
+    <template>
       <section class="mt-10">
         <header>
           <h2>2. Sample Templates</h2>
@@ -235,9 +178,12 @@ import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module
 export default class IncorporationAgreement extends Mixins(CommonMixin) {
   @Getter isTypeBcomp!: boolean
   @Getter isTypeBcCcc!: boolean
+  @Getter isTypeBcCompany!: boolean
+  @Getter isTypeBcUlcCompany!: boolean
   @Getter getEntityType!: CorpTypeCd
   @Getter getIncorporationAgreementStep!: IncorporationAgreementIF
   @Getter getIncorporationAgreementResource!: any
+  @Getter getIncorporationArticlesResource!: any
   @Getter getSampleArticle!: string
   @Getter getShowErrors!: boolean
 
