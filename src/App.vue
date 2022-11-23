@@ -567,7 +567,7 @@ export default class App extends Mixins(
   /** The list of completing parties. */
   private getCompletingParties (): CompletingPartyIF {
     let completingParty = null as CompletingPartyIF
-    if (!this.isRoleStaff) { // if staff role set as null
+    if (!(this.isRoleStaff || this.isSbcStaff)) { // if staff role set as null
       completingParty = {
         firstName: this.getUserFirstName,
         middleName: '',
