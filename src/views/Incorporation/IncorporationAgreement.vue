@@ -98,7 +98,7 @@
 
     <!-- Sample Templates -->
     <template>
-      <section v-if="isTypeBcomp || isTypeBcCompany || isTypeBcCcc" class="mt-10">
+      <section class="mt-10">
         <header>
           <h2>2. Sample Templates</h2>
         </header>
@@ -150,9 +150,7 @@
 
       <section class="mt-10">
         <header id="confirm-agreement">
-          <h2 v-if="isTypeBcomp || isTypeBcCompany || isTypeBcCcc">3. Confirm Incorporation Agreement and Article
-            Completion</h2>
-          <h2 v-else-if="isTypeBcUlcCompany">2. Confirm Incorporation Agreement and Article Completion</h2>
+          <h2>3. Confirm Incorporation Agreement and Article Completion</h2>
         </header>
 
         <v-card flat class="mt-6">

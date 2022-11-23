@@ -34,9 +34,9 @@ const agreementTypeTestCases = [
       agreementType: 'custom'
     },
     sampleSummaryText: 'The sample Incorporation Agreement and Articles ' +
-    'have been completed and a copy has been added to the company\'s record book.',
+    'has been completed and a copy has been added to the company\'s record book.',
     customSummaryText: 'The custom Incorporation Agreement and custom Articles ' +
-    'have been completed and a copy has been added to the company\'s record book.'
+    'has been completed and a copy has been added to the company\'s record book.'
   },
   {
     entityType: CorpTypeCd.BC_CCC,
