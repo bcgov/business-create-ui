@@ -37,33 +37,29 @@ const agreementTypeTestCases = [
     'has been completed and a copy has been added to the company\'s record book.',
     customSummaryText: 'The custom Incorporation Agreement and custom Articles ' +
     'has been completed and a copy has been added to the company\'s record book.'
-  },
+  }
+]
+
+const ulcAndCccTestCases = [
   {
-    entityType: CorpTypeCd.BC_CCC,
-    sampleAgreement: {
-      agreementType: 'sample'
-    },
+    entityType: CorpTypeCd.BC_ULC_COMPANY,
     customAgreement: {
       agreementType: 'custom'
     },
-    sampleSummaryText: 'The sample Incorporation Agreement and Articles containing the community provision' +
-    ' required by the Business Corporations Act 51.911 has been completed and a copy has been added to the' +
-    ' company\'s record book.',
+    customSummaryText: 'The custom Incorporation Agreement and custom Articles containing the liability' +
+    ' provision required by the Business Corporations Act 51.11 has been completed and a copy has been added' +
+    ' to the company\'s record book.'
+  },
+  {
+    entityType: CorpTypeCd.BC_CCC,
+    customAgreement: {
+      agreementType: 'custom'
+    },
     customSummaryText: 'The custom Incorporation Agreement and custom Articles containing the community' +
     ' provision required by the Business Corporations Act 51.911 has been completed and a copy has been added' +
     ' to the company\'s record book.'
   }
 ]
-
-const ulcTestCase = {
-  entityType: CorpTypeCd.BC_ULC_COMPANY,
-  customAgreement: {
-    agreementType: 'custom'
-  },
-  customSummaryText: 'The custom Incorporation Agreement and custom Articles containing the liability' +
-  ' provision required by the Business Corporations Act 51.11 has been completed and a copy has been added' +
-  ' to the company\'s record book.'
-}
 
 for (const test of agreementTypeTestCases) {
   describe(`Incorporation agreement component for a ${GetCorpFullDescription(test.entityType)}`, () => {
@@ -201,94 +197,96 @@ for (const test of agreementTypeTestCases) {
   })
 }
 
-describe('Incorporation agreement component for a BC Unlimited Liability Company', () => {
-  let wrapper: any
+for (const test of ulcAndCccTestCases) {
+  describe(`Incorporation agreement component for a ${GetCorpFullDescription(test.entityType)}`, () => {
+    let wrapper: any
 
-  it('Loads the component in edit mode and both agreement types are not selected', () => {
-    wrapper = wrapperFactory(
-      AgreementType,
-      null,
-      {
-        entityType: ulcTestCase.entityType,
-        incorporationAgreementStep: ''
-      }
-    )
-    const sampleSelector = `${typeSelector}${ulcTestCase.customAgreement.agreementType}`
-
-    expect(wrapper.find(sampleSelector).attributes('aria-checked')).toBe('false')
-  })
-
-  it('Selects the radio button if the value is set in the store', () => {
-    wrapper = wrapperFactory(
-      AgreementType,
-      null,
-      {
-        entityType: ulcTestCase.entityType,
-        incorporationAgreementStep: ulcTestCase.customAgreement
-      }
-    )
-    const sampleSelector = `${typeSelector}${ulcTestCase.customAgreement.agreementType}`
-
-    expect(wrapper.find(sampleSelector).attributes('aria-checked')).toBe('true')
-  })
-
-  it('Displays the summary text for sample agreement type', () => {
-    wrapper = wrapperFactory(
-      AgreementType,
-      { isSummary: true },
-      {
-        entityType: ulcTestCase.entityType,
-        incorporationAgreementStep: ulcTestCase.customAgreement
-      }
-    )
-
-    expect(wrapper.find(summaryTextSelector).text()).toContain(ulcTestCase.customSummaryText)
-  })
-
-  it('Displays the error message in summary view if no agreement type is selected', () => {
-    wrapper = wrapperFactory(
-      AgreementType,
-      {
-        isSummary: true,
-        showErrorSummary: true
-      },
-      {
-        entityType: ulcTestCase.entityType
-      },
-      null,
-      null,
-      {
-        getShowErrors: {
-          get (): boolean { return true }
+    it('Loads the component in edit mode and both agreement types are not selected', () => {
+      wrapper = wrapperFactory(
+        AgreementType,
+        null,
+        {
+          entityType: test.entityType,
+          incorporationAgreementStep: ''
         }
-      }
-    )
+      )
+      const sampleSelector = `${typeSelector}${test.customAgreement.agreementType}`
 
-    expect(wrapper.find(summaryErrorMessageSelector).text()).toContain('This step is unfinished.')
-  })
+      expect(wrapper.find(sampleSelector).attributes('aria-checked')).toBe('false')
+    })
 
-  it('Updates the store correctly if a sample agreement type is selected', async () => {
-    wrapper = wrapperFactory(
-      AgreementType,
-      null,
-      {
-        entityType: ulcTestCase.entityType,
-        incorporationAgreementStep: {
-          agreementType: null
+    it('Selects the radio button if the value is set in the store', () => {
+      wrapper = wrapperFactory(
+        AgreementType,
+        null,
+        {
+          entityType: test.entityType,
+          incorporationAgreementStep: test.customAgreement
         }
-      }
-    )
+      )
+      const sampleSelector = `${typeSelector}${test.customAgreement.agreementType}`
 
-    // Verify agreement type is null
-    expect(wrapper.vm.$data.agreementType).toBe(null)
+      expect(wrapper.find(sampleSelector).attributes('aria-checked')).toBe('true')
+    })
 
-    // Select the Sample Radio btn
-    const sampleSelector = `${typeSelector}${ulcTestCase.customAgreement.agreementType}`
-    const radio = wrapper.find(sampleSelector)
-    radio.trigger('click')
-    await Vue.nextTick()
+    it('Displays the summary text for sample agreement type', () => {
+      wrapper = wrapperFactory(
+        AgreementType,
+        { isSummary: true },
+        {
+          entityType: test.entityType,
+          incorporationAgreementStep: test.customAgreement
+        }
+      )
 
-    // Verify state is updated
-    expect(wrapper.vm.$data.agreementType).toBe(ulcTestCase.customAgreement.agreementType)
+      expect(wrapper.find(summaryTextSelector).text()).toContain(test.customSummaryText)
+    })
+
+    it('Displays the error message in summary view if no agreement type is selected', () => {
+      wrapper = wrapperFactory(
+        AgreementType,
+        {
+          isSummary: true,
+          showErrorSummary: true
+        },
+        {
+          entityType: test.entityType
+        },
+        null,
+        null,
+        {
+          getShowErrors: {
+            get (): boolean { return true }
+          }
+        }
+      )
+
+      expect(wrapper.find(summaryErrorMessageSelector).text()).toContain('This step is unfinished.')
+    })
+
+    it('Updates the store correctly if a sample agreement type is selected', async () => {
+      wrapper = wrapperFactory(
+        AgreementType,
+        null,
+        {
+          entityType: test.entityType,
+          incorporationAgreementStep: {
+            agreementType: null
+          }
+        }
+      )
+
+      // Verify agreement type is null
+      expect(wrapper.vm.$data.agreementType).toBe(null)
+
+      // Select the Sample Radio btn
+      const sampleSelector = `${typeSelector}${test.customAgreement.agreementType}`
+      const radio = wrapper.find(sampleSelector)
+      radio.trigger('click')
+      await Vue.nextTick()
+
+      // Verify state is updated
+      expect(wrapper.vm.$data.agreementType).toBe(test.customAgreement.agreementType)
+    })
   })
-})
+}

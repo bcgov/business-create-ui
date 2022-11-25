@@ -75,14 +75,8 @@ export const CommunityContributionCompanyResource: IncorporationResourceIF = {
         ]
       }
     ],
-    article: 'community_contribution_company__corporation_agreement.pdf',
+    article: 'community_contribution_company_corporation_agreement.pdf',
     documents: [
-      {
-        code: 'sample',
-        description: 'The <b>sample Incorporation Agreement and Articles</b> containing the community provision' +
-        ' required by the Business Corporations Act 51.911 has been completed and a copy has been added to the' +
-        ' company\'s record book.'
-      },
       {
         code: 'custom',
         description: 'The <b>custom Incorporation Agreement and custom Articles</b> containing the community' +
