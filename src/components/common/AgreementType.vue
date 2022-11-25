@@ -22,7 +22,7 @@
     </template>
 
     <!-- EDIT SECTION -->
-    <div v-if="isTypeBcUlcCompany" :class="{ 'invalid-section': showErrorSummary && getShowErrors }">
+    <div v-if="isTypeBcUlcCompany || isTypeBcCcc" :class="{ 'invalid-section': showErrorSummary && getShowErrors }">
       <v-checkbox
         v-for="(item, index) in getIncorporationAgreementDocuments"
         v-model="agreementType"
@@ -75,6 +75,7 @@ export default class AgreementType extends Vue {
 
   @Getter getIncorporationAgreementDocuments!: Array<IncorporationAgreementTypeIF>
   @Getter isTypeBcUlcCompany!: boolean
+  @Getter isTypeBcCcc!: boolean
   @Getter getIncorporationAgreementStep!: IncorporationAgreementIF
   @Getter getShowErrors!: boolean
 
