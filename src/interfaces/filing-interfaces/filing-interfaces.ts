@@ -50,6 +50,9 @@ export interface IncorporationFilingIF {
     incorporationAgreement?: {
       agreementType: string
     }
+    // ULC only:
+    courtOrder?: CourtOrderIF
+
     // CP only:
     rules?: any
     memorandum?: any

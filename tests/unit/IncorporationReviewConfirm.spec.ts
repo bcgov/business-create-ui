@@ -1,15 +1,26 @@
 import { shallowWrapperFactory } from '../jest-wrapper-factory'
 import IncorporationReviewConfirm from '@/views/Incorporation/IncorporationReviewConfirm.vue'
+import { IncorporationResources } from '@/resources/'
+import SummaryDefineCompany from '@/components/Incorporation/SummaryDefineCompany.vue'
+import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
+import Certify from '@/components/common/Certify.vue'
 
 // Test Case Data
 const reviewConfirmTestCases = [
   {
-    entityType: 'CP',
-    headerTitle: 'Review'
+    entityType: 'CP'
   },
   {
-    entityType: 'BEN',
-    headerTitle: 'Review'
+    entityType: 'BEN'
+  },
+  {
+    entityType: 'ULC'
+  },
+  {
+    entityType: 'BC'
+  },
+  {
+    entityType: 'CC'
   }
 ]
 
@@ -21,7 +32,43 @@ for (const test of reviewConfirmTestCases) {
       wrapper = shallowWrapperFactory(IncorporationReviewConfirm, null, { entityType: test.entityType })
 
       // verify page content
-      expect(wrapper.find('h2').text()).toContain(test.headerTitle)
+      expect(wrapper.find('h2').text()).toBe('Review and Confirm')
+
+      // verify Define company component displayed
+      expect(wrapper.findComponent(SummaryDefineCompany).exists()).toBe(true)
+
+      // verify People and roles component displayed
+      expect(wrapper.findComponent(ListPeopleAndRoles).exists()).toBe(true)
+
+      // verify Certify component displayed
+      expect(wrapper.findComponent(Certify).exists()).toBe(true)
+    })
+
+    it('displays Certify section', () => {
+      wrapper = shallowWrapperFactory(
+        IncorporationReviewConfirm,
+        null,
+        { entityType: test.entityType },
+        null,
+        IncorporationResources
+      )
+
+      expect(wrapper.find('#certify-section').exists()).toBe(true)
+    })
+
+    it('displays Court Order and Plan of Arrangement section only for ULC', () => {
+      wrapper = shallowWrapperFactory(
+        IncorporationReviewConfirm,
+        null,
+        {
+          entityType: test.entityType
+        },
+        null,
+        IncorporationResources
+      )
+
+      const expected = (test.entityType === 'ULC')
+      expect(wrapper.find('#court-order-poa-section').exists()).toBe(test.entityType === 'ULC')
     })
 
     // FUTURE: Expand unit testing for validation on step 5. Include routing to appropriate steps from error links.

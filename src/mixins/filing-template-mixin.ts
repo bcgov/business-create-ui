@@ -200,6 +200,15 @@ export default class FilingTemplateMixin extends DateMixin {
         filing.incorporationApplication.incorporationAgreement = {
           agreementType: this.getIncorporationAgreementStep.agreementType
         }
+
+        if (this.getEntityType === CorpTypeCd.BC_ULC_COMPANY) {
+          const courtOrder = this.getCourtOrderStep.courtOrder
+          filing.incorporationApplication.courtOrder = {
+            fileNumber: courtOrder.fileNumber,
+            effectOfOrder: courtOrder.hasPlanOfArrangement ? EffectOfOrders.PLAN_OF_ARRANGEMENT : '',
+            hasPlanOfArrangement: courtOrder.hasPlanOfArrangement
+          }
+        }
         break
     }
 
@@ -310,6 +319,10 @@ export default class FilingTemplateMixin extends DateMixin {
           agreementType: draftFiling.incorporationApplication.incorporationAgreement?.agreementType
         })
 
+        if (this.getEntityType === CorpTypeCd.BC_ULC_COMPANY) {
+          this.setCourtOrderFileNumber(draftFiling.incorporationApplication.courtOrder?.fileNumber)
+          this.setHasPlanOfArrangement(draftFiling.incorporationApplication.courtOrder?.hasPlanOfArrangement)
+        }
         break
     }
 
