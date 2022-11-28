@@ -123,6 +123,33 @@
         />
       </v-card>
     </section>
+
+    <!-- Court Order and Plan of Arrangement -->
+    <section id="court-order-poa-section" class="mt-10" v-if="isTypeBcUlcCompany">
+      <header>
+        <h2>Court Order and Plan of Arrangement</h2>
+        <p class="mt-4">
+          If this filing is pursuant to a court order, enter the court order number. If this
+          filing is pursuant to a plan of arrangement, enter the court order number and select
+          Plan of Arrangement.
+        </p>
+      </header>
+
+      <v-card flat class="mt-6">
+        <CourtOrderPoa
+          class="py-8 px-6"
+          :class="{ 'invalid-section': isCourtOrderInvalid }"
+          :autoValidation="getValidateSteps"
+          :draftCourtOrderNumber="getCourtOrderStep.courtOrder.fileNumber"
+          :hasDraftPlanOfArrangement="getCourtOrderStep.courtOrder.hasPlanOfArrangement"
+          :courtOrderNumberRequired="true"
+          :invalidSection="isCourtOrderInvalid"
+          @emitCourtNumber="setCourtOrderFileNumber($event)"
+          @emitPoa="setHasPlanOfArrangement($event)"
+          @emitValid="setCourtOrderValidity($event)"
+        />
+      </v-card>
+    </section>
   </div>
 </template>
 
@@ -132,12 +159,14 @@ import { Component } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import {
   ActionBindingIF, ContactPointIF, CertifyIF, EffectiveDateTimeIF, IncorporationAgreementIF,
-  ShareStructureIF
+  ShareStructureIF,
+  CourtOrderStepIF
 } from '@/interfaces'
 import { CorpTypeCd } from '@/enums'
 import AgreementType from '@/components/common/AgreementType.vue'
 import CardHeader from '@/components/common/CardHeader.vue'
 import Certify from '@/components/common/Certify.vue'
+import { CourtOrderPoa } from '@bcrs-shared-components/court-order-poa'
 import { DocumentDelivery } from '@bcrs-shared-components/document-delivery'
 import IncorporationDateTime from '@/components/Incorporation/IncorporationDateTime.vue'
 import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
@@ -146,12 +175,19 @@ import SummaryDefineCompany from '@/components/Incorporation/SummaryDefineCompan
 import UploadMemorandumSummary from '@/components/Incorporation/UploadMemorandumSummary.vue'
 import UploadRulesSummary from '@/components/Incorporation/UploadRulesSummary.vue'
 import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
+import { setEffectiveDateTimeValid, setEffectiveDate, setIsFutureEffective, setCourtOrderFileNumber,
+  setHasPlanOfArrangement, setCourtOrderValidity } from '@/store/actions'
+import { getCompanyDisplayName, isBaseCompany, getCreateShareStructureStep, getIncorporationAgreementStep, isTypeCoop,
+  getEffectiveDateTime, getBusinessContact, getUserEmail, isRoleStaff, isTypeBcUlcCompany, getValidateSteps }
+  from '@/store/getters'
+import { VCard } from 'vuetify/lib'
 
 @Component({
   components: {
     AgreementType,
     CardHeader,
     Certify,
+    CourtOrderPoa,
     DocumentDelivery,
     IncorporationDateTime,
     ListPeopleAndRoles,
@@ -164,7 +200,9 @@ import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module
 export default class IncorporationReviewConfirm extends Vue {
   @Getter getBusinessContact!: ContactPointIF
   @Getter getCertifyState!: CertifyIF
+  @Getter getCourtOrderStep!: CourtOrderStepIF
   @Getter getValidateSteps!: boolean
+  @Getter isTypeBcUlcCompany!: boolean
   @Getter isBaseCompany!: boolean
   @Getter isTypeCoop!: boolean
   @Getter isRoleStaff!: boolean
@@ -175,10 +213,13 @@ export default class IncorporationReviewConfirm extends Vue {
   @Getter getCompanyDisplayName!: string
   @Getter getEntityType!: CorpTypeCd
 
+  @Action setCertifyState!: ActionBindingIF
+  @Action setCourtOrderFileNumber!: ActionBindingIF
+  @Action setCourtOrderValidity!: ActionBindingIF
   @Action setEffectiveDateTimeValid!: ActionBindingIF
   @Action setEffectiveDate!: ActionBindingIF
+  @Action setHasPlanOfArrangement!: ActionBindingIF
   @Action setIsFutureEffective!: ActionBindingIF
-  @Action setCertifyState!: ActionBindingIF
 
   /** The entity description,  */
   get getEntityDescription (): string {
@@ -193,6 +234,11 @@ export default class IncorporationReviewConfirm extends Vue {
   /** Is true when the certify conditions are not met. */
   get isCertifyInvalid (): boolean {
     return this.getValidateSteps && !(this.getCertifyState.certifiedBy && this.getCertifyState.valid)
+  }
+
+  /** Is true when the Court Order conditions are not met. */
+  get isCourtOrderInvalid (): boolean {
+    return (this.getValidateSteps && !this.getCourtOrderStep.valid)
   }
 }
 </script>
