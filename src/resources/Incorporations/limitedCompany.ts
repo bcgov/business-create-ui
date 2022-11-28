@@ -80,7 +80,7 @@ export const LimitedCompanyResource: IncorporationResourceIF = {
         ]
       }
     ],
-    article: 'bc_limited_company_corporation_agreement.pdf',
+    article: 'bc_limited_company_incorporation_agreement.pdf',
     documents: [
       {
         code: 'sample',

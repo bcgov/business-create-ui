@@ -86,7 +86,7 @@ export const UnlimitedCompanyResource: IncorporationResourceIF = {
         ]
       }
     ],
-    article: 'unlimited_liability_company_corporation_agreement.pdf',
+    article: 'unlimited_liability_company_incorporation_agreement.pdf',
     documents: [
       {
         code: 'custom',
