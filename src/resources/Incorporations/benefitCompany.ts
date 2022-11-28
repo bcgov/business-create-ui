@@ -94,7 +94,7 @@ export const BenefitCompanyResource: IncorporationResourceIF = {
         ]
       }
     ],
-    article: 'benefit_company_corporation_agreement.pdf',
+    article: 'benefit_company_incorporation_agreement.pdf',
     documents: [
       {
         code: 'sample',
