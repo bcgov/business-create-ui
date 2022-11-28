@@ -39,6 +39,18 @@ export const CommunityContributionCompanyResource: IncorporationResourceIF = {
   shareClasses: {
     countMinimum: 1
   },
+  incorporationArticles: {
+    articles: 'Community Contribution Company Articles',
+    articlesTooltip: 'The Articles for a Community Contribution Company must include the following statements “This ' +
+    'company is a community contribution company, and, as such, has purposes beneficial to society. This company is ' +
+    'restricted, in accordance with Part 2.2 of the Business Corporations Act, in its ability to pay dividends and ' +
+    'to distribute its assets on dissolution or otherwise.” Articles should also outline the rules and procedures ' +
+    'for corporate matters such as holding meetings, issuing and transferring shares, and duties of directors ' +
+    'and officers.',
+    provisions: 'community provision',
+    provisionTooltip: 'A clause in the Articles which communicates the liability statement required by the Business ' +
+    'Corporations Act 51.11.'
+  },
   incorporationAgreement: {
     helpSection: [
       {
@@ -63,12 +75,13 @@ export const CommunityContributionCompanyResource: IncorporationResourceIF = {
         ]
       }
     ],
-    article: 'Sample_articles.pdf',
+    article: 'community_contribution_company_corporation_agreement.pdf',
     documents: [
       {
-        code: 'sample',
-        description: 'The <b>Incorporation Agreement and Articles</b> containing the community purposes has been ' +
-          'completed and a copy has been added to the company\'s record book.'
+        code: 'custom',
+        description: 'The <b>custom Incorporation Agreement and custom Articles</b> containing the community' +
+        ' provision required by the Business Corporations Act 51.911 has been completed and a copy has been added' +
+        ' to the company\'s record book.'
       }
     ]
   },
