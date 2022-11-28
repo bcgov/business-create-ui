@@ -85,6 +85,7 @@ export default class FilingTemplateMixin extends DateMixin {
   @Getter getStaffPaymentStep!: StaffPaymentStepIF
   @Getter getCourtOrderStep!: CourtOrderStepIF
   @Getter isRoleStaff!: boolean
+  @Getter isTypeBcUlcCompany!: boolean
   @Getter getDissolutionStatementStep!: DissolutionStatementIF
   @Getter getDissolutionCustodian!: OrgPersonIF
   @Getter getFolioNumber!: string
@@ -201,7 +202,7 @@ export default class FilingTemplateMixin extends DateMixin {
           agreementType: this.getIncorporationAgreementStep.agreementType
         }
 
-        if (this.getEntityType === CorpTypeCd.BC_ULC_COMPANY) {
+        if (this.isTypeBcUlcCompany) {
           const courtOrder = this.getCourtOrderStep.courtOrder
           filing.incorporationApplication.courtOrder = {
             fileNumber: courtOrder.fileNumber,
@@ -319,7 +320,7 @@ export default class FilingTemplateMixin extends DateMixin {
           agreementType: draftFiling.incorporationApplication.incorporationAgreement?.agreementType
         })
 
-        if (this.getEntityType === CorpTypeCd.BC_ULC_COMPANY) {
+        if (this.isTypeBcUlcCompany) {
           this.setCourtOrderFileNumber(draftFiling.incorporationApplication.courtOrder?.fileNumber)
           this.setHasPlanOfArrangement(draftFiling.incorporationApplication.courtOrder?.hasPlanOfArrangement)
         }
