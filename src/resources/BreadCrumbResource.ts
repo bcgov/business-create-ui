@@ -9,12 +9,12 @@ const store = getVuexStore()
 function getLegalName (): string {
   const getFilingType: FilingTypes = store.getters.getFilingType
   const getBusinessLegalName: string = store.getters.getBusinessLegalName
-  const getApprovedName: string = store.getters.getApprovedName
+  const getNameRequestApprovedName: string = store.getters.getNameRequestApprovedName
 
   switch (getFilingType) {
     case FilingTypes.VOLUNTARY_DISSOLUTION: return getBusinessLegalName
-    case FilingTypes.INCORPORATION_APPLICATION: return getApprovedName
-    case FilingTypes.REGISTRATION: return getApprovedName
+    case FilingTypes.INCORPORATION_APPLICATION: return getNameRequestApprovedName
+    case FilingTypes.REGISTRATION: return getNameRequestApprovedName
   }
 }
 

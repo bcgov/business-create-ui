@@ -18,13 +18,13 @@
           <v-col cols="12" sm="9" class="pt-4 pt-sm-0">
             <ul class="name-request-list-items">
               <li id="name-request-title">
-                <strong>{{ getNameRequestNumber }}</strong> - {{ getNameRequestDetails.approvedName }}
+                <strong>{{ getNameRequestNumber }}</strong> - {{ getNameRequestApprovedName }}
               </li>
               <li class="mt-4"><strong>Entity Type:</strong> {{ getEntityTypeDescription }}</li>
               <li><strong>Request Type:</strong> {{ requestType }}</li>
-              <li><strong>Expiry Date:</strong> {{ formattedExpirationDate() }}</li>
-              <li><strong>Status:</strong> {{ nameRequestStatus }}</li>
-              <li id="condition-consent" v-if="getNameRequestDetails.status === NameRequestStates.CONDITIONAL">
+              <li><strong>Expiry Date:</strong> {{ expirationDate }}</li>
+              <li><strong>Status:</strong> {{ state }}</li>
+              <li id="condition-consent" v-if="state === NameRequestStates.CONDITIONAL">
                 <strong>Condition/Consent:</strong> {{ conditionConsent }}
               </li>
             </ul>
@@ -43,10 +43,10 @@
 
           <v-col cols="12" sm="9" class="pt-4 pt-sm-0">
             <ul class="applicant-list-items">
-              <li><strong>Name:</strong> {{ applicantName() }}</li>
-              <li><strong>Address:</strong> {{ applicantAddress() }}</li>
-              <li><strong>Email:</strong> {{ getNameRequestApplicant.emailAddress }}</li>
-              <li><strong>Phone:</strong> {{ getNameRequestApplicant.phoneNumber }}</li>
+              <li><strong>Name:</strong> {{ applicantName }}</li>
+              <li><strong>Address:</strong> {{ applicantAddress }}</li>
+              <li><strong>Email:</strong> {{ emailAddress }}</li>
+              <li><strong>Phone:</strong> {{ phoneNumber }}</li>
             </ul>
           </v-col>
         </v-row>
@@ -167,10 +167,10 @@ import { ConfirmDialog } from '@bcrs-shared-components/confirm-dialog'
 import ListNameTranslations from '@/components/common/ListNameTranslations.vue'
 import { CorpTypeCd, NameRequestStates } from '@/enums'
 import {
-  NameRequestDetailsIF,
-  NameRequestApplicantIF,
-  ConfirmDialogType,
   ActionBindingIF,
+  ConfirmDialogType,
+  NameRequestApplicantIF,
+  NameRequestIF,
   NameTranslationIF,
   RegistrationStateIF
 } from '@/interfaces'
@@ -207,9 +207,9 @@ export default class NameRequestInfo extends Mixins(DateMixin) {
   @Action setNameTranslationState!: ActionBindingIF
 
   @Getter getEntityType!: CorpTypeCd
+  @Getter getNameRequest!: NameRequestIF
   @Getter getNameRequestNumber!: string
-  @Getter getNameRequestDetails!: NameRequestDetailsIF
-  @Getter getNameRequestApplicant!: NameRequestApplicantIF
+  @Getter getNameRequestApprovedName!: string
   @Getter getNameTranslations!: NameTranslationIF[]
   @Getter getRegistration!: RegistrationStateIF
   @Getter isTypeCoop: boolean
@@ -217,7 +217,7 @@ export default class NameRequestInfo extends Mixins(DateMixin) {
   @Getter isTypePartnership: boolean
   @Getter getShowErrors!: boolean
 
-  /** The entity title.  */
+  /** The entity type description.  */
   get getEntityTypeDescription (): string {
     const corpTypeDescription = GetCorpFullDescription(this.getEntityType)
     if (this.isTypeSoleProp) {
@@ -236,68 +236,80 @@ export default class NameRequestInfo extends Mixins(DateMixin) {
     return true
   }
 
-  /** Returns formatted expiration date. */
-  protected formattedExpirationDate (): string {
-    const date = this.apiToDate(this.getNameRequestDetails.expirationDate)
-    return this.dateToPacificDate(date)
+  /** The expiration date. */
+  get expirationDate (): string {
+    return this.apiToPacificDateTime(this.getNameRequest.expirationDate, true)
   }
 
-  /** The name request status string. */
-  get nameRequestStatus (): string {
-    if (this.getNameRequestDetails.status === NameRequestStates.APPROVED) {
+  /** The state. */
+  get state (): NameRequestStates {
+    if (this.getNameRequest.state === NameRequestStates.APPROVED) {
       return 'Approved'
     }
-    return this.getNameRequestDetails.status?.toString() || null
+    return this.getNameRequest.state?.toString() || null
   }
 
   /** The condition/consent string. */
   get conditionConsent (): string {
-    if (this.getNameRequestDetails.status === NameRequestStates.APPROVED) {
+    const consentFlag = this.getNameRequest.consentFlag
+    if (this.getNameRequest.state === NameRequestStates.APPROVED) {
       return this.NOT_REQUIRED_STATE
     }
-    if (this.getNameRequestDetails.consentFlag === null) {
+    if (consentFlag === null) {
       return this.NOT_REQUIRED_STATE
     }
-    if (this.getNameRequestDetails.consentFlag === 'R') {
+    if (consentFlag === 'R') {
       return this.RECEIVED_STATE
     }
-    if (this.getNameRequestDetails.consentFlag === 'N') {
+    if (consentFlag === 'N') {
       return this.WAIVED_STATE
     }
     return this.NOT_RECEIVED_STATE
   }
 
-  /** Returns formatted applicant name. */
-  protected applicantName (): string {
-    let name = this.getNameRequestApplicant.firstName
-    if (this.getNameRequestApplicant.middleName) {
-      name = `${name} ${this.getNameRequestApplicant.middleName} ${this.getNameRequestApplicant.lastName}`
+  /** The applicant. */
+  get applicant (): NameRequestApplicantIF {
+    return this.getNameRequest.applicants // not an array
+  }
+
+  /** The applicant's name. */
+  get applicantName (): string {
+    let name = this.applicant.firstName
+    if (this.applicant.middleName) {
+      name = `${name} ${this.applicant.middleName} ${this.applicant.lastName}`
     } else {
-      name = `${name} ${this.getNameRequestApplicant.lastName}`
+      name = `${name} ${this.applicant.lastName}`
     }
     return name
   }
 
-  /** Returns formatted address string. */
-  protected applicantAddress (): string {
-    // Get Address info
-    const city = this.getNameRequestApplicant.city
-    const stateProvince = this.getNameRequestApplicant.stateProvinceCode
-    const postal = this.getNameRequestApplicant.postalCode
-    const country = this.getNameRequestApplicant.countryTypeCode
-      ? getName(this.getNameRequestApplicant.countryTypeCode)
-      : ''
+  /** The applicant's address. */
+  get applicantAddress (): string {
+    const city = this.applicant.city
+    const stateProvince = this.applicant.stateProvinceCd
+    const postal = this.applicant.postalCd
+    const country = this.applicant.countryTypeCd ? getName(this.applicant.countryTypeCd) : ''
 
     // Build address lines
-    let address = this.getNameRequestApplicant.addressLine1
-    if (this.getNameRequestApplicant.addressLine2) {
-      address = `${address}, ${this.getNameRequestApplicant.addressLine2}`
+    let address = this.applicant.addrLine1
+    if (this.applicant.addrLine2) {
+      address = `${address}, ${this.applicant.addrLine2}`
     }
-    if (this.getNameRequestApplicant.addressLine3) {
-      address = `${address}, ${this.getNameRequestApplicant.addressLine3}`
+    if (this.applicant.addrLine3) {
+      address = `${address}, ${this.applicant.addrLine3}`
     }
 
     return `${address}, ${city}, ${stateProvince}, ${postal}, ${country}`
+  }
+
+  /** The applicant's email address. */
+  get emailAddress (): string {
+    return this.applicant.emailAddress
+  }
+
+  /** The applicant's phone number. */
+  get phoneNumber (): string {
+    return this.applicant.phoneNumber
   }
 
   /**
@@ -388,7 +400,7 @@ export default class NameRequestInfo extends Mixins(DateMixin) {
 
   /** Whether name translation is valid. */
   get isValidNameTranslation (): boolean {
-    return this.hasNameTranslation ? this.getNameTranslations?.length > 0 : true
+    return (this.hasNameTranslation ? this.getNameTranslations?.length > 0 : true)
   }
 
   // Events

@@ -117,6 +117,7 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Name
   @Getter isSaving!: boolean
   @Getter isSavingResuming!: boolean
   @Getter isFilingPaying!: boolean
+  @Getter getNameRequestNumber!: string
 
   @Action setIsSaving!: ActionBindingIF
   @Action setIsSavingResuming!: ActionBindingIF
@@ -233,7 +234,7 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Name
       // from the processNameRequest method in App.vue. This method shows a generic message if
       // the Name Request is not valid and clicking ok in the pop up redirects to the Manage Businesses
       // dashboard.
-      if (this.isNamedBusiness) {
+      if (this.getNameRequestNumber) {
         try {
           await this.validateNameRequest(this.getNameRequestNumber)
         } catch (error) {
@@ -304,9 +305,17 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Name
       throw new Error(error)
     })
 
-    if (!nrResponse || !this.isNrValid(nrResponse)) {
+    // ensure NR was found
+    if (!nrResponse) {
       this.$root.$emit('name-request-invalid-error', NameRequestStates.INVALID)
       throw new Error('Invalid Name Request')
+    }
+
+    // ensure NR is valid
+    const error = this.isNrInvalid(nrResponse)
+    if (error) {
+      this.$root.$emit('name-request-invalid-error', NameRequestStates.INVALID)
+      throw new Error(error)
     }
 
     // ensure NR is consumable

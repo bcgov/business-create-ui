@@ -182,8 +182,12 @@ export const mutateOrgInformation = (state: StateIF, orgInfo: OrgInformationIF) 
   state.stateModel.orgInformation = orgInfo
 }
 
-export const mutateNameRequestState = (state: StateIF, nameRequestState: NameRequestIF) => {
-  state.stateModel.nameRequest = nameRequestState
+export const mutateNameRequest = (state: StateIF, nameRequest: NameRequestIF) => {
+  state.stateModel.nameRequest = nameRequest
+}
+
+export const mutateNameRequestApprovedName = (state: StateIF, name: string) => {
+  state.stateModel.nameRequestApprovedName = name
 }
 
 export const mutateNameTranslation = (state: StateIF, nameTranslationState: NameTranslationIF[]) => {

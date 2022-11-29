@@ -18,7 +18,7 @@
             <label id="company-label">Name</label>
           </v-col>
           <v-col cols="12" sm="9" class="pt-4 pt-sm-0">
-            <div id="company-name">{{ getApprovedName || 'Unavailable' }}</div>
+            <div id="company-name">{{ getNameRequestApprovedName || 'Unavailable' }}</div>
             <div id="company-description">{{ entityDescription }}</div>
           </v-col>
         </v-row>
@@ -122,7 +122,7 @@ import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module
 })
 export default class DefineRegistrationSummary extends Mixins(DateMixin) {
   // Getters
-  @Getter getApprovedName!: string
+  @Getter getNameRequestApprovedName!: string
   // @Getter isPremiumAccount!: boolean // DISABLED PER TICKET # 12306
   @Getter getBusinessContact!: ContactPointIF
   @Getter getFolioNumber!: string

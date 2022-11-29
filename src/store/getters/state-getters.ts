@@ -6,7 +6,8 @@ import {
   DissolutionTypes,
   FilingNames,
   FilingTypes,
-  FilingTypesSubTitle
+  FilingTypesSubTitle,
+  NameRequestStates
 } from '@/enums'
 import {
   AccountInformationIF,
@@ -25,8 +26,6 @@ import {
   EffectiveDateTimeIF,
   FeesIF,
   IncorporationAgreementIF,
-  NameRequestApplicantIF,
-  NameRequestDetailsIF,
   NameRequestIF,
   NameTranslationIF,
   OrgPersonIF,
@@ -251,20 +250,19 @@ export const getBusiness = (state: StateIF): BusinessIF => {
   return state.stateModel.business
 }
 
-/** Whether this IA is for a Named Business. */
-export const isNamedBusiness = (state: StateIF): boolean => {
-  // a named business has a NR number
-  return !!getNameRequestNumber(state)
+/** The Name Request object. */
+export const getNameRequest = (state: StateIF): NameRequestIF => {
+  return state.stateModel.nameRequest
 }
 
-/** The Number of a Name Request. */
+/** The Name Request approved name. */
+export const getNameRequestApprovedName = (state: StateIF): string => {
+  return state.stateModel.nameRequestApprovedName
+}
+
+/** The Name Request number. */
 export const getNameRequestNumber = (state: StateIF): string => {
-  return getNameRequest(state).nrNumber
-}
-
-/** The Approved Name of a Name Request. */
-export const getApprovedName = (state: StateIF): string => {
-  return (getNameRequestDetails(state) as NameRequestDetailsIF).approvedName
+  return getNameRequest(state)?.nrNum
 }
 
 /** The Tombstone object. */
@@ -356,21 +354,6 @@ export const getCreateResolutionStep = (state: StateIF): CreateResolutionIF => {
 /** The Effective Date-Time object. */
 export const getEffectiveDateTime = (state: StateIF): EffectiveDateTimeIF => {
   return state.stateModel.effectiveDateTime
-}
-
-/** The Name Request object. */
-export const getNameRequest = (state: StateIF): NameRequestIF => {
-  return state.stateModel.nameRequest
-}
-
-/** The Name Request Details object. */
-export const getNameRequestDetails = (state: StateIF): NameRequestDetailsIF | object => {
-  return getNameRequest(state).details
-}
-
-/** The Name Request Applicant object. */
-export const getNameRequestApplicant = (state: StateIF): NameRequestApplicantIF | object => {
-  return getNameRequest(state).applicant
 }
 
 /** The Name Translations object array. */
