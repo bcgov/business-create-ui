@@ -23,7 +23,7 @@
               <li class="mt-4"><strong>Entity Type:</strong> {{ getEntityTypeDescription }}</li>
               <li><strong>Request Type:</strong> {{ requestType }}</li>
               <li><strong>Expiry Date:</strong> {{ expirationDate }}</li>
-              <li><strong>Status:</strong> {{ state }}</li>
+              <li><strong>Status:</strong> {{ Capitalize(state) }}</li>
               <li id="condition-consent" v-if="state === NameRequestStates.CONDITIONAL">
                 <strong>Condition/Consent:</strong> {{ conditionConsent }}
               </li>
@@ -176,6 +176,7 @@ import {
 } from '@/interfaces'
 import { DateMixin } from '@/mixins'
 import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
+import { Capitalize } from '@/utils'
 
 @Component({
   components: {
@@ -190,8 +191,9 @@ export default class NameRequestInfo extends Mixins(DateMixin) {
     confirmTranslationRemovalDialog: ConfirmDialogType
   }
 
-  // Enum for template
+  // For template
   readonly NameRequestStates = NameRequestStates
+  readonly Capitalize = Capitalize
 
   // Local properties
   protected hasNameTranslation = false

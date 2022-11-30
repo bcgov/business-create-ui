@@ -88,7 +88,7 @@ describe('Name Request Info with a NR', () => {
 
   it('renders the Name Request information with data', async () => {
     await wrapper.vm.$store.commit('mutateNameRequest', { ...mockNrData })
-    await wrapper.vm.$store.commit('mutateNameRequestApprovedName', mockNrData.names[0].name )
+    await wrapper.vm.$store.commit('mutateNameRequestApprovedName', mockNrData.names[0].name)
 
     const nrListSelector = '#name-request-info ul li'
     const itemCount = wrapper.vm.$el.querySelectorAll(nrListSelector).length
@@ -181,7 +181,7 @@ describe('Name Request Info with a NR', () => {
     expect(entityType.textContent).toContain('Entity Type: BC Benefit Company')
     expect(requestType.textContent).toContain('Request Type: New Business')
     expect(expiryDate.textContent).toContain('Expiry Date: Jun 24, 2020')
-    expect(status.textContent).toContain('Status: CONDITIONAL')
+    expect(status.textContent).toContain('Status: Conditional')
     expect(conditionConsent.textContent).toContain('Condition/Consent: Not Required')
   })
 
@@ -206,7 +206,7 @@ describe('Name Request Info with a NR', () => {
     expect(entityType.textContent).toContain('Entity Type: BC Benefit Company')
     expect(requestType.textContent).toContain('Request Type: New Business')
     expect(expiryDate.textContent).toContain('Expiry Date: Jun 24, 2020')
-    expect(status.textContent).toContain('Status: CONDITIONAL')
+    expect(status.textContent).toContain('Status: Conditional')
     expect(conditionConsent.textContent).toContain('Condition/Consent: Received')
   })
 
@@ -231,7 +231,7 @@ describe('Name Request Info with a NR', () => {
     expect(entityType.textContent).toContain('Entity Type: BC Benefit Company')
     expect(requestType.textContent).toContain('Request Type: New Business')
     expect(expiryDate.textContent).toContain('Expiry Date: Jun 24, 2020')
-    expect(status.textContent).toContain('Status: CONDITIONAL')
+    expect(status.textContent).toContain('Status: Conditional')
     expect(conditionConsent.textContent).toContain('Condition/Consent: Waived')
   })
 
@@ -257,7 +257,7 @@ describe('Name Request Info with a NR', () => {
     expect(entityType.textContent).toContain('Entity Type: BC Benefit Company')
     expect(requestType.textContent).toContain('Request Type: New Business')
     expect(expiryDate.textContent).toContain('Expiry Date: Jun 24, 2020')
-    expect(status.textContent).toContain('Status: CONDITIONAL')
+    expect(status.textContent).toContain('Status: Conditional')
     expect(conditionConsent.textContent).toContain('Condition/Consent: Not Received')
   })
 })
