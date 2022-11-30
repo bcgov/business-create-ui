@@ -1,4 +1,5 @@
 export * from './AxiosInstance'
+export * from './Capitalize'
 export * from './FetchConfig'
 export * from './CoopTypeToDescription'
 export * from './feature-flag-utils'
