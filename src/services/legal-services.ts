@@ -1,7 +1,8 @@
 // Libraries
 import { AxiosInstance as axios } from '@/utils'
 import { StatusCodes } from 'http-status-codes'
-import { DissolutionFilingIF, IncorporationFilingIF, RegistrationFilingIF } from '@/interfaces'
+import { DissolutionFilingIF, IncorporationFilingIF, NameRequestIF, RegistrationFilingIF }
+  from '@/interfaces'
 import { FilingTypes } from '@/enums'
 
 /**
@@ -105,7 +106,7 @@ export default class LegalServices {
    * @param nrNumber the name request number (eg, NR 1234567)
    * @returns a promise to return the NR data, or null if not found
    */
-  static async fetchNameRequest (nrNumber: string): Promise<any> {
+  static async fetchNameRequest (nrNumber: string): Promise<NameRequestIF> {
     if (!nrNumber) throw new Error('Invalid parameter \'nrNumber\'')
 
     const url = `nameRequests/${nrNumber}`

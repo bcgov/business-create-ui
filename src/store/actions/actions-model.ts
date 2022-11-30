@@ -148,8 +148,12 @@ export const setOrgInformation: ActionIF = ({ commit }, orgInfo: OrgInformationI
   commit('mutateOrgInformation', orgInfo)
 }
 
-export const setNameRequestState: ActionIF = ({ commit }, nameRequestState: NameRequestIF): void => {
-  commit('mutateNameRequestState', nameRequestState)
+export const setNameRequest: ActionIF = ({ commit }, nameRequest: NameRequestIF): void => {
+  commit('mutateNameRequest', nameRequest)
+}
+
+export const setNameRequestApprovedName: ActionIF = ({ commit }, name: string): void => {
+  commit('mutateNameRequestApprovedName', name)
 }
 
 export const setNameTranslationState: ActionIF = ({ commit }, nameTranslationState: NameTranslationIF): void => {

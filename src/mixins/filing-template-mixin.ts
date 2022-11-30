@@ -31,7 +31,6 @@ import {
   RegistrationStateIF,
   RegistrationFilingIF,
   EmptyNaics,
-  NameRequestIF,
   PartyIF,
   CompletingPartyIF
 } from '@/interfaces'
@@ -56,10 +55,9 @@ export default class FilingTemplateMixin extends DateMixin {
   @Getter isTypeBcomp!: boolean
   @Getter isTypeCoop!: boolean
   @Getter isTypeSoleProp!: boolean
-  @Getter isNamedBusiness!: boolean
   @Getter getAffidavitStep!: UploadAffidavitIF
   @Getter getNameRequestNumber!: string
-  @Getter getApprovedName!: string
+  @Getter getNameRequestApprovedName!: string
   @Getter getBusiness!: BusinessIF
   @Getter getBusinessLegalName!: string
   @Getter getBusinessFoundingDate!: string
@@ -93,7 +91,6 @@ export default class FilingTemplateMixin extends DateMixin {
   @Getter isPremiumAccount!: boolean
   @Getter getRegistration!: RegistrationStateIF
   @Getter getFilingId!: number
-  @Getter getNameRequest!: NameRequestIF
   @Getter getCompletingParty!: CompletingPartyIF
   @Getter getDissolutionDate!: string
   @Getter isTypeFirm!: boolean
@@ -214,9 +211,9 @@ export default class FilingTemplateMixin extends DateMixin {
     }
 
     // If this is a named IA then add Name Request Number and Approved Name.
-    if (this.isNamedBusiness) {
+    if (this.getNameRequestNumber) {
       filing.incorporationApplication.nameRequest.nrNumber = this.getNameRequestNumber
-      filing.incorporationApplication.nameRequest.legalName = this.getApprovedName
+      filing.incorporationApplication.nameRequest.legalName = this.getNameRequestApprovedName
     }
 
     // If this is a future effective filing then save the effective date.
@@ -384,9 +381,9 @@ export default class FilingTemplateMixin extends DateMixin {
             : {}
         },
         nameRequest: {
-          legalName: this.getNameRequest.details.approvedName,
+          legalName: this.getNameRequestApprovedName,
           legalType: this.getEntityType,
-          nrNumber: this.getNameRequest.nrNumber
+          nrNumber: this.getNameRequestNumber
         },
         parties: this.orgPersonsToParties(this.getAddPeopleAndRoleStep.orgPeople),
         startDate: this.getRegistration.startDate,

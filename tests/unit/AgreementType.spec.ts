@@ -1,4 +1,4 @@
-import { getShowErrors } from './../../src/store/getters/state-getters';
+import { getShowErrors } from './../../src/store/getters/state-getters'
 import Vue from 'vue'
 import { wrapperFactory } from '../jest-wrapper-factory'
 import AgreementType from '@/components/common/AgreementType.vue'

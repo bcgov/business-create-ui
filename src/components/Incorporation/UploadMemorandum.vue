@@ -120,7 +120,7 @@
                   <v-col cols="1"><v-icon>mdi-circle-small</v-icon></v-col>
                   <v-col cols="11">
                     The Cooperative name is identified <b>exactly</b> as follows throughout the Memorandum:
-                    <p class="font-weight-bold mb-0">{{getNameRequestDetails.approvedName}}</p>
+                    <p class="font-weight-bold mb-0">{{getNameRequestApprovedName}}</p>
                   </v-col>
                 </v-row>
               </li>
@@ -240,7 +240,6 @@ import {
   CreateMemorandumIF,
   CreateMemorandumResourceIF,
   DocumentUpload,
-  NameRequestDetailsIF,
   FormIF,
   ValidationDetailIF
 } from '@/interfaces'
@@ -275,7 +274,7 @@ export default class UploadMemorandum extends Mixins(CommonMixin, DocumentMixin)
   protected helpToggle = false
 
   @Getter getShowErrors!: boolean
-  @Getter getNameRequestDetails!: NameRequestDetailsIF
+  @Getter getNameRequestApprovedName!: string
   @Getter getCreateMemorandumResource!: CreateMemorandumResourceIF
   @Getter getCreateMemorandumStep!: CreateMemorandumIF
   @Getter getUserKeycloakGuid!: string

@@ -18,7 +18,7 @@
             <label id="company-label">Name</label>
           </v-col>
           <v-col cols="12" sm="9" class="pt-4 pt-sm-0">
-            <div id="company-name">{{ getApprovedName || '[Incorporation Number] B.C. Ltd.' }}</div>
+            <div id="company-name">{{ getNameRequestApprovedName || '[Incorporation Number] B.C. Ltd.' }}</div>
             <div id="company-description">{{ entityDescription }}</div>
           </v-col>
         </v-row>
@@ -113,8 +113,11 @@ import { CoopTypeToDescription } from '@/utils'
   }
 })
 export default class SummaryDefineCompany extends Vue {
+  // for template
+  readonly RouteNames = RouteNames
+
   // Getters
-  @Getter getApprovedName!: string
+  @Getter getNameRequestApprovedName!: string
   @Getter getCooperativeType!: CoopTypes
   @Getter isDefineCompanyValid!: boolean
   @Getter isPremiumAccount!: boolean
@@ -125,14 +128,12 @@ export default class SummaryDefineCompany extends Vue {
   @Getter getFolioNumber!: string
   @Getter getEntityType!: CorpTypeCd
 
-  /** The entity description  */
+  /** The entity description. */
   get entityDescription (): string {
     return GetCorpFullDescription(this.getEntityType)
   }
 
-  // for template
-  readonly RouteNames = RouteNames
-
+  /** The coop description. */
   get coopDescription (): string {
     return (this.getCooperativeType ? CoopTypeToDescription(this.getCooperativeType) : '(Not Entered)')
   }

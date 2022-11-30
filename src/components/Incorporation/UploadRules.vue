@@ -140,7 +140,7 @@
                       The Cooperative name is identified <b>exactly</b> as follows throughout
                       the Rules of the Association:
                     </p>
-                    <div class="mt-2 mb-0 font-weight-bold">{{getNameRequestDetails.approvedName}}</div>
+                    <div class="mt-2 mb-0 font-weight-bold">{{getNameRequestApprovedName}}</div>
                   </v-col>
                 </v-row>
               </li>
@@ -212,7 +212,6 @@ import {
   CreateRulesIF,
   CreateRulesResourceIF,
   DocumentUpload,
-  NameRequestDetailsIF,
   FormIF,
   ValidationDetailIF
 } from '@/interfaces'
@@ -241,7 +240,7 @@ export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
   protected helpToggle = false
 
   @Getter getShowErrors!: boolean
-  @Getter getNameRequestDetails!: NameRequestDetailsIF
+  @Getter getNameRequestApprovedName!: string
   @Getter getCreateRulesResource!: CreateRulesResourceIF
   @Getter getCreateRulesStep!: CreateRulesIF
   @Getter getUserKeycloakGuid!: string
