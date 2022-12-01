@@ -58,7 +58,7 @@ export const CommunityContributionCompanyResource: IncorporationResourceIF = {
         helpText: [
           `The sample Incorporation Agreement and Company Articles is a template that you can use to create an 
             incorporation agreement and articles for your company. It uses all the standard provisions by legislation. 
-            There are three types of samples depending on if you’re incorporating a Limited Company, a Benefit Company, 
+            There are three types of samples depending on if you're incorporating a Limited Company, a Benefit Company, 
             or a Community Contribution Company. There is currently no Incorporation Sample for Unlimited 
             Liability Companies.`,
           `If you would like to customize any other provisions in the Articles, you cannot use these samples. 
