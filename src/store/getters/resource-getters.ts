@@ -27,6 +27,11 @@ export const getPeopleAndRolesResource = (state: StateIF): any => {
   return state.resourceModel.peopleAndRoles
 }
 
+/** The Incorporation Articles */
+export const getIncorporationArticlesResource = (state: StateIF): any => {
+  return state.resourceModel.incorporationArticles
+}
+
 /** The Create Rules object. */
 export const getCreateRulesResource = (state: StateIF): CreateRulesResourceIF => {
   return state.resourceModel.createRules

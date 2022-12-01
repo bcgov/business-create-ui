@@ -86,7 +86,7 @@ export default class EntityInfo extends Mixins(DateMixin) {
   @Getter getEntityType!: CorpTypeCd
   @Getter getFilingName!: FilingNames
   @Getter getNameRequestNumber!: string
-  @Getter getApprovedName!: string
+  @Getter getNameRequestApprovedName!: string
   @Getter getFilingType!: FilingTypes
   @Getter getRegistration!: RegistrationStateIF
   @Getter isEntityType!: boolean
@@ -148,9 +148,9 @@ export default class EntityInfo extends Mixins(DateMixin) {
       case FilingTypes.VOLUNTARY_DISSOLUTION:
         return this.getBusinessLegalName
       case FilingTypes.INCORPORATION_APPLICATION:
-        return this.getApprovedName
+        return this.getNameRequestApprovedName
       case FilingTypes.REGISTRATION:
-        return this.getApprovedName
+        return this.getNameRequestApprovedName
     }
   }
 }

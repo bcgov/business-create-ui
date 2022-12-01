@@ -39,6 +39,17 @@ export const UnlimitedCompanyResource: IncorporationResourceIF = {
   shareClasses: {
     countMinimum: 1
   },
+  incorporationArticles: {
+    articles: 'Unlimited Liability Company Articles',
+    articlesTooltip: 'The Articles for an Unlimited Liability Company must include the following statement: “The ' +
+    'shareholders of this company are jointly and severally liable to satisfy the debts and liabilities of this ' +
+    'company to the extent provided in section 51.3 of the Business Corporations Act.” Articles should also outline ' +
+    'the rules and procedures for corporate matters such as holding meetings, issuing and transferring shares, and ' +
+    'duties of directors and officers.',
+    provisions: 'liability provision',
+    provisionTooltip: 'A clause in the Articles which communicates the liability statement required by the Business ' +
+    'Corporations Act 51.11.'
+  },
   incorporationAgreement: {
     helpSection: [
       {
@@ -62,17 +73,13 @@ export const UnlimitedCompanyResource: IncorporationResourceIF = {
         ]
       }
     ],
-    article: 'Sample_articles.pdf',
+    article: 'unlimited_liability_company_incorporation_agreement.pdf',
     documents: [
       {
-        code: 'Table-1',
-        description: 'The <b>sample Incorporation Agreement and Table 1 Articles</b> ' +
-          'has been completed and a copy has been added to the company\'s record book.'
-      },
-      {
         code: 'custom',
-        description: 'The <b>custom Incorporation Agreement and custom Articles</b> ' +
-          'has been completed and a copy has been added to the company\'s record book.'
+        description: 'The <b>custom Incorporation Agreement and custom Articles</b> containing the liability' +
+        ' provision required by the Business Corporations Act 51.11 has been completed and a copy has been added' +
+        ' to the company\'s record book.'
       }
     ]
   },

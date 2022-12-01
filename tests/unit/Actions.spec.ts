@@ -124,10 +124,10 @@ describe('Emits error event if NR validation fails in file and pay', () => {
     // init store
     store.state.stateModel.currentDate = '2020/01/29'
     store.state.stateModel.nameRequest = {
-      entityType: 'BEN',
-      nrNumber: 'NR 1234567',
-      details: { approvedName: 'My Name Request Inc.' }
+      legalType: 'BEN',
+      nrNum: 'NR 1234567'
     }
+    store.state.stateModel.nameRequestApprovedName = 'My Name Request Inc.'
     store.state.stateModel.tombstone = {
       authRoles: [],
       filingType: 'incorporationApplication',
@@ -371,10 +371,10 @@ describe('Actions component - Filing Functionality', () => {
     // init store
     store.state.stateModel.currentDate = '2020/01/29'
     store.state.stateModel.nameRequest = {
-      entityType: 'BEN',
-      nrNumber: 'NR 1234567',
-      details: { approvedName: 'My Name Request Inc.' }
+      legalType: 'BEN',
+      nrNum: 'NR 1234567'
     }
+    store.state.stateModel.nameRequestApprovedName = 'My Name Request Inc.'
     store.state.stateModel.nameTranslations = []
     store.state.stateModel.tombstone = {
       authRoles: [],

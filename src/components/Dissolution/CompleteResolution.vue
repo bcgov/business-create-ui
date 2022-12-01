@@ -316,7 +316,6 @@ import {
   CreateResolutionIF,
   CreateResolutionResourceIF,
   FormIF,
-  NameRequestDetailsIF,
   ValidationDetailIF,
   PersonIF,
   EmptyPerson
@@ -361,7 +360,6 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin) {
 
   @Getter getShowErrors!: boolean
   @Getter isTypeCoop!: boolean
-  @Getter getNameRequestDetails!: NameRequestDetailsIF
   @Getter getCreateResolutionResource!: CreateResolutionResourceIF
   @Getter getCreateResolutionStep!: CreateResolutionIF
   @Getter getBusinessLegalName!: string

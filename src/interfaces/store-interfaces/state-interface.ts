@@ -38,6 +38,7 @@ export interface StateModelIF {
   businessContact: ContactPointIF
   dissolution: DissolutionStateIF
   nameRequest: NameRequestIF
+  nameRequestApprovedName: string
   nameTranslations: NameTranslationIF[]
   currentDate: string
   effectiveDateTime: EffectiveDateTimeIF

@@ -1,43 +1,56 @@
-import { CorpTypeCd, NameRequestStates } from '@/enums'
+import { CorpTypeCd, NameRequestStates, NameRequestTypes } from '@/enums'
 
-/** Name request response details interface. */
-export interface NameRequestDetailsIF {
-  approvedName: string
-  status: NameRequestStates
-  consentFlag: string
-  expirationDate: string
-}
-
-/** Name request applicant details interface. */
+/**
+ * Name request applicant interface.
+ * Includes only the properties we care about.
+ */
 export interface NameRequestApplicantIF {
-  firstName: string
-  middleName: string
-  lastName: string
-  emailAddress: string
-  phoneNumber: string
-  addressLine1: string
-  addressLine2: string
-  addressLine3: string
+  addrLine1: string
+  addrLine2: string
+  addrLine3: string
   city: string
-  countryTypeCode: string
-  postalCode: string
-  stateProvinceCode: string
+  countryTypeCd: string
+  emailAddress: string
+  firstName: string
+  lastName: string
+  middleName: string
+  phoneNumber: string
+  postalCd: string
+  stateProvinceCd: string
 }
 
-/** Name Request state interface. */
+/**
+ * Name request name interaface.
+ * Includes only the properties we care about.
+ */
+export interface NameRequestNameIF {
+  name: string
+  state: NameRequestStates
+}
+
+/**
+ * Name request interface.
+ * Includes only the properties we care about.
+ */
 export interface NameRequestIF {
-  nrNumber: string
-  entityType: CorpTypeCd
-  details: NameRequestDetailsIF
-  applicant: NameRequestApplicantIF
-  filingId: number
+  applicants: NameRequestApplicantIF
+  consentFlag: string
+  expirationDate: string // yyyy-mm-ddRhh:mm:ss+00:00
+  legalType: CorpTypeCd
+  names: Array<NameRequestNameIF>
+  nrNum: string
+  request_action_cd: NameRequestTypes // eslint-disable-line camelcase
+  state: NameRequestStates
 }
 
 // NB: use cloneDeep when assigning EmptyOrgPerson
 export const EmptyNameRequest: NameRequestIF = {
-  nrNumber: '',
-  entityType: null,
-  details: {} as NameRequestDetailsIF,
-  applicant: {} as NameRequestApplicantIF,
-  filingId: null
+  applicants: {} as NameRequestApplicantIF,
+  consentFlag: null,
+  expirationDate: null,
+  legalType: null,
+  names: [],
+  nrNum: '',
+  request_action_cd: null,
+  state: null
 }

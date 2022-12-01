@@ -296,20 +296,21 @@ export default class App extends Mixins(
   @Action setShowErrors!: ActionBindingIF
   @Action setFeePrices!: ActionBindingIF
   @Action setFilingType!: ActionBindingIF
-  @Action setNameRequestState!: ActionBindingIF
+  @Action setNameRequest!: ActionBindingIF
+  @Action setNameRequestApprovedName!: ActionBindingIF
   @Action setCompletingParty!: ActionBindingIF
   @Action setParties!: ActionBindingIF
   @Action setAdminFreeze!: ActionBindingIF
-  @Action setBusinessNumber: ActionBindingIF
-  @Action setIdentifier: ActionBindingIF
-  @Action setEntityName: ActionBindingIF
-  @Action setEntityState: ActionBindingIF
-  @Action setEntityFoundingDate: ActionBindingIF
-  @Action setLastAnnualReportDate: ActionBindingIF
-  @Action setLastAddressChangeDate: ActionBindingIF
-  @Action setLastDirectorChangeDate: ActionBindingIF
-  @Action setWarnings: ActionBindingIF
-  @Action setGoodStanding: ActionBindingIF
+  @Action setBusinessNumber!: ActionBindingIF
+  @Action setIdentifier!: ActionBindingIF
+  @Action setEntityName!: ActionBindingIF
+  @Action setEntityState!: ActionBindingIF
+  @Action setEntityFoundingDate!: ActionBindingIF
+  @Action setLastAnnualReportDate!: ActionBindingIF
+  @Action setLastAddressChangeDate!: ActionBindingIF
+  @Action setLastDirectorChangeDate!: ActionBindingIF
+  @Action setWarnings!: ActionBindingIF
+  @Action setGoodStanding!: ActionBindingIF
   @Action setWindowWidth!: ActionBindingIF
 
   // Local properties
@@ -567,7 +568,7 @@ export default class App extends Mixins(
   /** The list of completing parties. */
   private getCompletingParties (): CompletingPartyIF {
     let completingParty = null as CompletingPartyIF
-    if (!this.isRoleStaff) { // if staff role set as null
+    if (!(this.isRoleStaff || this.isSbcStaff)) { // if staff role set as null
       completingParty = {
         firstName: this.getUserFirstName,
         middleName: '',
@@ -852,19 +853,16 @@ export default class App extends Mixins(
       }
 
       // ensure NR is valid
-      if (!this.isNrValid(nrResponse)) {
-        console.log('NR is not valid') // eslint-disable-line no-console
+      const error = this.isNrInvalid(nrResponse)
+      if (error) {
+        console.log(error) // eslint-disable-line no-console
         this.nameRequestInvalidType = NameRequestStates.INVALID
         this.nameRequestInvalidErrorDialog = true
         return
       }
 
       // ensure types match
-      if (nrResponse.legalType === 'CCC' && this.getEntityType === CorpTypeCd.BC_CCC) {
-        // TEMPORARY FIX:
-        // at the moment, Namex API is passing CCC instead of CC
-        // remove this when no longer needed
-      } else if (nrResponse.legalType !== this.getEntityType) {
+      if (nrResponse.legalType !== this.getEntityType) {
         console.log('NR legal type doesn\'t match entity type') // eslint-disable-line no-console
         this.nameRequestInvalidType = NameRequestStates.INVALID
         this.nameRequestInvalidErrorDialog = true
@@ -880,9 +878,12 @@ export default class App extends Mixins(
         return
       }
 
-      // if we get this far, the NR is good to go!
-      const nameRequestState = this.generateNameRequestState(nrResponse, filing.Id)
-      this.setNameRequestState(nameRequestState)
+      // save the NR
+      this.setNameRequest(nrResponse)
+
+      // save the approved name
+      const approvedName = this.getNrApprovedName(nrResponse)
+      this.setNameRequestApprovedName(approvedName)
     } catch (error) {
       // errors should be handled above
       console.error('Unhandled error in processNameRequest() =', error) // eslint-disable-line no-console

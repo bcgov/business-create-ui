@@ -8,7 +8,7 @@
           <p>
             <b>
               The Name Request {{ getNameRequestNumber }} and the Incorporation Application for
-              {{ getApprovedName }} are no longer valid.
+              {{ getNameRequestApprovedName }} are no longer valid.
             </b>
           </p>
           <p>If you still wish to incorporate a Benefit Company, please contact Registry Staff as soon as possible.</p>
@@ -52,7 +52,7 @@ export default class FileAndPayInvalidNameRequestDialog extends Vue {
   @Prop({ default: '' }) readonly attach!: string
 
   @Getter getNameRequestNumber!: string
-  @Getter getApprovedName!: string
+  @Getter getNameRequestApprovedName!: string
 
   @Emit() protected okay (): void {}
 }

@@ -241,16 +241,10 @@ const nrData = {
   expirationDate: 'Thu, 31 Dec 2099 23:59:59 GMT',
   names: [
     {
-      choice: 1,
-      consumptionDate: null,
-      corpNum: null,
       name: 'ABC 1234',
       state: 'APPROVED'
     },
     {
-      choice: 2,
-      consumptionDate: null,
-      corpNum: null,
       name: 'CDE 1234',
       state: 'NE'
     }
@@ -391,31 +385,18 @@ describe('Incorporation - Define Company page for a BEN (numbered)', () => {
   })
 
   it('does not load a name request into the store', () => {
-    // All Name request specific fields should be empty
-    expect(store.state.stateModel.nameRequest.nrNumber).toEqual('')
-    expect(store.state.stateModel.filingId).toBe(54321)
+    // Validate empty Name Request fields
+    expect(store.state.stateModel.nameRequest.applicants).toEqual({})
+    expect(store.state.stateModel.nameRequest.consentFlag).toBeNull()
+    expect(store.state.stateModel.nameRequest.expirationDate).toBeNull()
+    expect(store.state.stateModel.nameRequest.legalType).toBeNull()
+    expect(store.state.stateModel.nameRequest.names).toEqual([])
+    expect(store.state.stateModel.nameRequest.nrNum).toBe('')
+    expect(store.state.stateModel.nameRequest.request_action_cd).toBeNull()
+    expect(store.state.stateModel.nameRequest.state).toBeNull()
 
-    // Validate no NR Details
-    expect(store.state.stateModel.nameRequest.details.approvedName).toBeUndefined()
-    expect(store.state.stateModel.nameRequest.details.status).toBeUndefined()
-    expect(store.state.stateModel.nameRequest.details.consentFlag).toBeUndefined()
-    expect(store.state.stateModel.nameRequest.details.expirationDate).toBeUndefined()
-
-    // Validate no NR Applicant
-    expect(store.state.stateModel.nameRequest.applicant.firstName).toBeUndefined()
-    expect(store.state.stateModel.nameRequest.applicant.middleName).toBeUndefined()
-    expect(store.state.stateModel.nameRequest.applicant.lastName).toBeUndefined()
-    expect(store.state.stateModel.nameRequest.applicant.emailAddress).toBeUndefined()
-    expect(store.state.stateModel.nameRequest.applicant.phoneNumber).toBeUndefined()
-    expect(store.state.stateModel.nameRequest.applicant.addressLine1).toBeUndefined()
-    expect(store.state.stateModel.nameRequest.applicant.addressLine2).toBeUndefined()
-    expect(store.state.stateModel.nameRequest.applicant.addressLine3).toBeUndefined()
-    expect(store.state.stateModel.nameRequest.applicant.city).toBeUndefined()
-    expect(store.state.stateModel.nameRequest.applicant.countryTypeCode)
-      .toBeUndefined()
-    expect(store.state.stateModel.nameRequest.applicant.postalCode).toBeUndefined()
-    expect(store.state.stateModel.nameRequest.applicant.stateProvinceCode)
-      .toBeUndefined()
+    // Validate empty Approved Name
+    expect(store.state.stateModel.nameRequestApprovedName).toBeNull()
   })
 })
 
@@ -571,32 +552,41 @@ describe('Incorporation - Define Company page for a BEN (named)', () => {
   })
 
   it('loads a name request into the store', () => {
-    // Validate Name Request
     expect(store.state.stateModel.entityType).toBe('BEN')
-    expect(store.state.stateModel.nameRequest.nrNumber).toBe(nrData.nrNum)
     expect(store.state.stateModel.filingId).toBe(12345)
-    expect(store.state.stateModel.nameRequest.details).toBeDefined()
-    expect(store.state.stateModel.nameRequest.applicant).toBeDefined()
 
-    // Validate NR Details
-    expect(store.state.stateModel.nameRequest.details.approvedName).toBe(nrData.names[0].name)
-    expect(store.state.stateModel.nameRequest.details.status).toBe(nrData.state)
-    expect(store.state.stateModel.nameRequest.details.consentFlag).toBe(nrData.consentFlag)
-    expect(store.state.stateModel.nameRequest.details.expirationDate).toBe(nrData.expirationDate)
+    // Validate Name Request fields
+    expect(store.state.stateModel.nameRequest.consentFlag).toBe(nrData.consentFlag)
+    expect(store.state.stateModel.nameRequest.expirationDate).toBe(nrData.expirationDate)
+    expect(store.state.stateModel.nameRequest.legalType).toBe(nrData.legalType)
+    expect(store.state.stateModel.nameRequest.nrNum).toBe(nrData.nrNum)
+    expect(store.state.stateModel.nameRequest.request_action_cd).toBe(nrData.request_action_cd)
+    expect(store.state.stateModel.nameRequest.state).toBe(nrData.state)
 
     // Validate NR Applicant
-    expect(store.state.stateModel.nameRequest.applicant.firstName).toBe(nrData.applicants.firstName)
-    expect(store.state.stateModel.nameRequest.applicant.middleName).toBe(nrData.applicants.middleName)
-    expect(store.state.stateModel.nameRequest.applicant.lastName).toBe(nrData.applicants.lastName)
-    expect(store.state.stateModel.nameRequest.applicant.emailAddress).toBe(nrData.applicants.emailAddress)
-    expect(store.state.stateModel.nameRequest.applicant.phoneNumber).toBe(nrData.applicants.phoneNumber)
-    expect(store.state.stateModel.nameRequest.applicant.addressLine1).toBe(nrData.applicants.addrLine1)
-    expect(store.state.stateModel.nameRequest.applicant.addressLine2).toBe(nrData.applicants.addrLine2)
-    expect(store.state.stateModel.nameRequest.applicant.addressLine3).toBe(nrData.applicants.addrLine3)
-    expect(store.state.stateModel.nameRequest.applicant.city).toBe(nrData.applicants.city)
-    expect(store.state.stateModel.nameRequest.applicant.countryTypeCode).toBe(nrData.applicants.countryTypeCd)
-    expect(store.state.stateModel.nameRequest.applicant.postalCode).toBe(nrData.applicants.postalCd)
-    expect(store.state.stateModel.nameRequest.applicant.stateProvinceCode).toBe(nrData.applicants.stateProvinceCd)
+    expect(store.state.stateModel.nameRequest.applicants).toBeDefined()
+    expect(store.state.stateModel.nameRequest.applicants.firstName).toBe(nrData.applicants.firstName)
+    expect(store.state.stateModel.nameRequest.applicants.middleName).toBe(nrData.applicants.middleName)
+    expect(store.state.stateModel.nameRequest.applicants.lastName).toBe(nrData.applicants.lastName)
+    expect(store.state.stateModel.nameRequest.applicants.emailAddress).toBe(nrData.applicants.emailAddress)
+    expect(store.state.stateModel.nameRequest.applicants.phoneNumber).toBe(nrData.applicants.phoneNumber)
+    expect(store.state.stateModel.nameRequest.applicants.addrLine1).toBe(nrData.applicants.addrLine1)
+    expect(store.state.stateModel.nameRequest.applicants.addrLine2).toBe(nrData.applicants.addrLine2)
+    expect(store.state.stateModel.nameRequest.applicants.addrLine3).toBe(nrData.applicants.addrLine3)
+    expect(store.state.stateModel.nameRequest.applicants.city).toBe(nrData.applicants.city)
+    expect(store.state.stateModel.nameRequest.applicants.countryTypeCd).toBe(nrData.applicants.countryTypeCd)
+    expect(store.state.stateModel.nameRequest.applicants.postalCd).toBe(nrData.applicants.postalCd)
+    expect(store.state.stateModel.nameRequest.applicants.stateProvinceCd).toBe(nrData.applicants.stateProvinceCd)
+
+    // Validate NR Names
+    expect(store.state.stateModel.nameRequest.names).toBeDefined()
+    expect(store.state.stateModel.nameRequest.names[0].name).toBe(nrData.names[0].name)
+    expect(store.state.stateModel.nameRequest.names[0].state).toBe(nrData.names[0].state)
+    expect(store.state.stateModel.nameRequest.names[1].name).toBe(nrData.names[1].name)
+    expect(store.state.stateModel.nameRequest.names[1].state).toBe(nrData.names[1].state)
+
+    // Validate Approved Name
+    expect(store.state.stateModel.nameRequestApprovedName).toBe(nrData.names[0].name)
   })
 
   it('shows confirm popup if exiting before saving changes', async () => {

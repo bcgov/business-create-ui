@@ -126,7 +126,6 @@ export default class AssociationDetails extends Mixins(CommonMixin, DateMixin) {
   @Prop({ default: true }) readonly showContactInfo!: boolean
 
   // Global getters
-  @Getter getApprovedName!: string
   @Getter getFolioNumber!: string
   @Getter getBusinessId!: string
   @Getter getBusiness!: BusinessIF

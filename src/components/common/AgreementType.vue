@@ -3,7 +3,7 @@
     <!-- SUMMARY SECTION -->
     <template v-if="isSummary">
       <!-- Summary Warning -->
-      <section v-if="showErrorSummary" class="agreement-invalid-message invalid-section">
+      <section v-if="showErrorSummary && getShowErrors" class="agreement-invalid-message invalid-section">
         <span>
           <v-icon color="error">mdi-information-outline</v-icon>
           <span class="error-text mx-1">This step is unfinished.</span>
@@ -22,24 +22,24 @@
     </template>
 
     <!-- EDIT SECTION -->
-    <template v-else-if="isTypeBcCcc">
+    <div v-if="isTypeBcUlcCompany || isTypeBcCcc" :class="{ 'invalid-section': showErrorSummary && getShowErrors }">
       <v-checkbox
         v-for="(item, index) in getIncorporationAgreementDocuments"
-        :id="`agreement-type-${item.code}`"
-        class="agreement-option-list"
-        :key="index"
         v-model="agreementType"
+        class="ml-6 mt-0 agreement-option-list"
+        :id="`agreement-type-${item.code}`"
+        :key="index"
         :value="item.code"
         @change="changeAgreementType()"
       >
         <template v-slot:label>
-          <div v-html="item.description" class="agreement-option" />
+          <div v-html="item.description" class="ml-6 py-4 agreement-option" />
         </template>
       </v-checkbox>
-    </template>
+    </div>
 
     <!-- EDIT SECTION -->
-    <div class="py-8 px-6" v-else :class="{ 'invalid-section': showErrorSummary }">
+    <div class="py-8 px-6" v-else :class="{ 'invalid-section': showErrorSummary && getShowErrors }">
       <v-radio-group
         class="mt-0 pt-0"
         hide-details
@@ -74,8 +74,10 @@ export default class AgreementType extends Vue {
   @Prop({ default: false }) readonly isSummary!: boolean
 
   @Getter getIncorporationAgreementDocuments!: Array<IncorporationAgreementTypeIF>
+  @Getter isTypeBcUlcCompany!: boolean
   @Getter isTypeBcCcc!: boolean
   @Getter getIncorporationAgreementStep!: IncorporationAgreementIF
+  @Getter getShowErrors!: boolean
 
   @Action setIncorporationAgreementStepData!: ActionBindingIF
 

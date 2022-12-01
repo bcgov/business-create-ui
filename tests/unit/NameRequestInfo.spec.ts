@@ -13,29 +13,33 @@ const store = getVuexStore()
 document.body.setAttribute('data-app', 'true')
 
 const mockNrData = {
-  nrNumber: 'NR 1234567',
-  entityType: 'BEN',
-  filingId: null,
-  applicant: {
-    addressLine1: '45 Frasier Drive',
-    addressLine2: null,
-    addressLine3: null,
+  applicants: {
+    addrLine1: '45 Frasier Drive',
+    addrLine2: null,
+    addrLine3: null,
     city: 'Victoria',
-    countryTypeCode: 'CA',
-    postalCode: 'V9E 2A1',
-    stateProvinceCode: 'BC',
+    countryTypeCd: 'CA',
+    postalCd: 'V9E 2A1',
+    stateProvinceCd: 'BC',
     emailAddress: 'test@gov.bc.ca',
     phoneNumber: '250-356-9090',
     firstName: 'John',
     middleName: 'Joe',
     lastName: 'Doe'
   },
-  details: {
-    approvedName: 'MADRONA BREAD BASKET INC.',
-    consentFlag: null,
-    expirationDate: '2020-06-24T07:00:00+00:00',
-    status: 'APPROVED'
-  }
+  consentFlag: null,
+  expirationDate: '2020-06-24T07:00:00+00:00',
+  legalType: 'BEN',
+  names: [
+    {
+      name: 'MADRONA BREAD BASKET INC.',
+      state: 'APPROVED'
+    }
+  ],
+  nrNum: 'NR 1234567',
+  request_action_cd: 'NEW',
+  state: 'APPROVED'
+  // }
 }
 
 describe('Name Request Info with a NR', () => {
@@ -46,7 +50,7 @@ describe('Name Request Info with a NR', () => {
     store.state.stateModel.entityType = 'BEN'
     // Temp Id will always be set with or without an NR
     store.state.stateModel.tempId = 'T1234567'
-    store.state.stateModel.nameRequest.nrNumber = mockNrData.nrNumber
+    store.state.stateModel.nameRequest.nrNum = mockNrData.nrNum
     wrapper = mount(NameRequestInfo, { vuetify, store })
   })
 
@@ -83,7 +87,8 @@ describe('Name Request Info with a NR', () => {
   })
 
   it('renders the Name Request information with data', async () => {
-    await wrapper.vm.$store.commit('mutateNameRequestState', { ...mockNrData })
+    await wrapper.vm.$store.commit('mutateNameRequest', { ...mockNrData })
+    await wrapper.vm.$store.commit('mutateNameRequestApprovedName', mockNrData.names[0].name)
 
     const nrListSelector = '#name-request-info ul li'
     const itemCount = wrapper.vm.$el.querySelectorAll(nrListSelector).length
@@ -103,7 +108,7 @@ describe('Name Request Info with a NR', () => {
   })
 
   it('renders the Name Request applicant information with data', async () => {
-    await wrapper.vm.$store.commit('mutateNameRequestState', { ...mockNrData })
+    await wrapper.vm.$store.commit('mutateNameRequest', { ...mockNrData })
 
     const nrListSelector = '#name-request-applicant-info ul li'
     const itemCount = wrapper.vm.$el.querySelectorAll(nrListSelector).length
@@ -136,9 +141,9 @@ describe('Name Request Info with a NR', () => {
 
   it('renders the Name Request applicant information with multi address line data', async () => {
     store.state.stateModel.nameRequest = { ...mockNrData }
-    store.state.stateModel.nameRequest.applicant.addressLine1 = 'line 1'
-    store.state.stateModel.nameRequest.applicant.addressLine2 = 'line 2'
-    store.state.stateModel.nameRequest.applicant.addressLine3 = 'line 3'
+    store.state.stateModel.nameRequest.applicants.addrLine1 = 'line 1'
+    store.state.stateModel.nameRequest.applicants.addrLine2 = 'line 2'
+    store.state.stateModel.nameRequest.applicants.addrLine3 = 'line 3'
     await Vue.nextTick()
 
     const nrListSelector = '#name-request-applicant-info ul li'
@@ -157,8 +162,9 @@ describe('Name Request Info with a NR', () => {
 
   it('renders the Name Request information with consent not required', async () => {
     store.state.stateModel.nameRequest = { ...mockNrData }
-    store.state.stateModel.nameRequest.details.status = 'CONDITIONAL'
-    store.state.stateModel.nameRequest.details.consentFlag = null
+    store.state.stateModel.nameRequest.state = 'CONDITIONAL'
+    store.state.stateModel.nameRequest.consentFlag = null
+    store.state.stateModel.nameRequestApprovedName = mockNrData.names[0].name
     await Vue.nextTick()
 
     const nrListSelector = '#name-request-info ul li'
@@ -175,14 +181,15 @@ describe('Name Request Info with a NR', () => {
     expect(entityType.textContent).toContain('Entity Type: BC Benefit Company')
     expect(requestType.textContent).toContain('Request Type: New Business')
     expect(expiryDate.textContent).toContain('Expiry Date: Jun 24, 2020')
-    expect(status.textContent).toContain('Status: CONDITIONAL')
+    expect(status.textContent).toContain('Status: Conditional')
     expect(conditionConsent.textContent).toContain('Condition/Consent: Not Required')
   })
 
   it('renders the Name Request information with consent received', async () => {
     store.state.stateModel.nameRequest = { ...mockNrData }
-    store.state.stateModel.nameRequest.details.status = 'CONDITIONAL'
-    store.state.stateModel.nameRequest.details.consentFlag = 'R'
+    store.state.stateModel.nameRequest.state = 'CONDITIONAL'
+    store.state.stateModel.nameRequest.consentFlag = 'R'
+    store.state.stateModel.nameRequestApprovedName = mockNrData.names[0].name
     await Vue.nextTick()
 
     const nrListSelector = '#name-request-info ul li'
@@ -199,14 +206,15 @@ describe('Name Request Info with a NR', () => {
     expect(entityType.textContent).toContain('Entity Type: BC Benefit Company')
     expect(requestType.textContent).toContain('Request Type: New Business')
     expect(expiryDate.textContent).toContain('Expiry Date: Jun 24, 2020')
-    expect(status.textContent).toContain('Status: CONDITIONAL')
+    expect(status.textContent).toContain('Status: Conditional')
     expect(conditionConsent.textContent).toContain('Condition/Consent: Received')
   })
 
   it('renders the Name Request information with consent waived', async () => {
     store.state.stateModel.nameRequest = { ...mockNrData }
-    store.state.stateModel.nameRequest.details.status = 'CONDITIONAL'
-    store.state.stateModel.nameRequest.details.consentFlag = 'N'
+    store.state.stateModel.nameRequest.state = 'CONDITIONAL'
+    store.state.stateModel.nameRequest.consentFlag = 'N'
+    store.state.stateModel.nameRequestApprovedName = mockNrData.names[0].name
     await Vue.nextTick()
 
     const nrListSelector = '#name-request-info ul li'
@@ -223,14 +231,15 @@ describe('Name Request Info with a NR', () => {
     expect(entityType.textContent).toContain('Entity Type: BC Benefit Company')
     expect(requestType.textContent).toContain('Request Type: New Business')
     expect(expiryDate.textContent).toContain('Expiry Date: Jun 24, 2020')
-    expect(status.textContent).toContain('Status: CONDITIONAL')
+    expect(status.textContent).toContain('Status: Conditional')
     expect(conditionConsent.textContent).toContain('Condition/Consent: Waived')
   })
 
   it('renders the Name Request information with consent required', async () => {
     store.state.stateModel.nameRequest = { ...mockNrData }
-    store.state.stateModel.nameRequest.details.status = 'CONDITIONAL'
-    store.state.stateModel.nameRequest.details.consentFlag = 'Y'
+    store.state.stateModel.nameRequest.state = 'CONDITIONAL'
+    store.state.stateModel.nameRequest.consentFlag = 'Y'
+    store.state.stateModel.nameRequestApprovedName = mockNrData.names[0].name
     await Vue.nextTick()
 
     const nrListSelector = '#name-request-info ul li'
@@ -248,7 +257,7 @@ describe('Name Request Info with a NR', () => {
     expect(entityType.textContent).toContain('Entity Type: BC Benefit Company')
     expect(requestType.textContent).toContain('Request Type: New Business')
     expect(expiryDate.textContent).toContain('Expiry Date: Jun 24, 2020')
-    expect(status.textContent).toContain('Status: CONDITIONAL')
+    expect(status.textContent).toContain('Status: Conditional')
     expect(conditionConsent.textContent).toContain('Condition/Consent: Not Received')
   })
 })
@@ -261,7 +270,7 @@ describe('Name Request Info component without a NR', () => {
     store.state.stateModel.entityType = 'BEN'
     // Temp Id will always be set with or without an NR
     store.state.stateModel.tempId = 'T1234567'
-    store.state.stateModel.nameRequest.nrNumber = null
+    store.state.stateModel.nameRequest.nrNum = null
     wrapper = mount(NameRequestInfo, { vuetify, store })
   })
 
@@ -304,7 +313,7 @@ describe('Name Request Info component - Name Translation section', () => {
     store.state.stateModel.entityType = 'BEN'
     // Temp Id will always be set with or without an NR
     store.state.stateModel.tempId = 'T1234567'
-    store.state.stateModel.nameRequest.nrNumber = null
+    store.state.stateModel.nameRequest.nrNum = null
     wrapper = mount(NameRequestInfo, { vuetify, store })
   })
 
@@ -313,8 +322,6 @@ describe('Name Request Info component - Name Translation section', () => {
   })
 
   it('renders the option for name translation', async () => {
-    await wrapper.vm.$store.commit('mutateNameRequestState', { ...mockNrData })
-
     expect(wrapper.find('#name-translation-info').exists()).toBeTruthy()
     expect(wrapper.vm.hasNameTranslation).toBe(false)
 
@@ -322,9 +329,7 @@ describe('Name Request Info component - Name Translation section', () => {
     expect(wrapper.findComponent(ListNameTranslations).exists()).toBeFalsy()
   })
 
-  it('renders the add name translation component', async () => {
-    await wrapper.vm.$store.commit('mutateNameRequestState', { ...mockNrData })
-
+  it('renders the Add Name Translation component', async () => {
     expect(wrapper.find('#name-translation-info').exists()).toBeTruthy()
     expect(wrapper.vm.hasNameTranslation).toBe(false)
 
@@ -334,12 +339,11 @@ describe('Name Request Info component - Name Translation section', () => {
     expect(wrapper.findComponent(ListNameTranslations).exists()).toBeFalsy()
   })
 
-  it('renders the list name translation component', async () => {
+  it('renders the List Name Translation component', async () => {
     await wrapper.vm.$store.commit('mutateNameTranslation', [
       'Mock Name Translation',
       'Another Mock Name Translation'
     ])
-    await wrapper.vm.$store.commit('mutateNameRequestState', { ...mockNrData })
 
     expect(wrapper.find('#name-translation-info').exists()).toBeTruthy()
     expect(wrapper.vm.hasNameTranslation).toBe(true)

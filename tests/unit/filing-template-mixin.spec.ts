@@ -52,7 +52,6 @@ describe('Registration Filing', () => {
 
     // populate store
     store.state.stateModel.tempId = 'T1234567'
-
     store.state.stateModel.registration.businessAddress = {
       deliveryAddress: {
         addressCity: 'Alpha',
@@ -73,30 +72,24 @@ describe('Registration Filing', () => {
         streetAddressAdditional: 'Suite 2'
       }
     }
-
     store.state.stateModel.registration.naics = {
       naicsCode: '12345',
       naicsDescription: 'Some NAICS Description'
     }
-
     store.state.stateModel.nameRequest = {
-      entityType: 'SP',
-      nrNumber: 'NR 1234567',
-      details: { approvedName: 'My Approved Name' }
+      legalType: 'SP',
+      nrNum: 'NR 1234567'
     }
-
+    store.state.stateModel.nameRequestApprovedName = 'My Approved Name'
     store.state.stateModel.businessContact = {
       email: 'eleven@example.com',
       phone: '(111) 222-3333',
       extension: '444'
     }
-
     store.state.stateModel.entityType = 'SP' // sole prop
     store.state.stateModel.registration.businessType = 'SP' // not DBA
-
     store.state.stateModel.registration.businessNumber = '111222333'
     store.state.stateModel.registration.businessTypeConfirm = false
-
     store.state.stateModel.addPeopleAndRoleStep.orgPeople = [
       {
         officer: {

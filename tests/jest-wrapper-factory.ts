@@ -55,7 +55,8 @@ export const wrapperFactory = (
   propsData = null,
   stateValues = null,
   routeName = null,
-  resource = null
+  resource = null,
+  computed = null
 ) => {
   const store = getVuexStore()
   if (routeName) router.push({ name: routeName }).catch(() => {})
@@ -67,7 +68,8 @@ export const wrapperFactory = (
     localVue,
     router,
     store,
-    vuetify
+    vuetify,
+    computed
   })
 }
 

@@ -12,11 +12,9 @@ const mockEntityInfo = [
     numberedDesc: 'Numbered Cooperative Association',
     tempId: 'T1234567',
     nameRequest: {
-      nrNumber: 'NR 1234567',
-      details: {
-        approvedName: 'Xyz Ltd.'
-      }
-    }
+      nrNum: 'NR 1234567'
+    },
+    nameRequestApprovedName: 'Xyz Ltd.'
   },
   {
     entityType: 'BEN',
@@ -27,11 +25,9 @@ const mockEntityInfo = [
     numberedDesc: 'Numbered Benefit Company',
     tempId: 'T1234567',
     nameRequest: {
-      nrNumber: 'NR 1234567',
-      details: {
-        approvedName: 'Xyz Ltd.'
-      }
-    }
+      nrNum: 'NR 1234567'
+    },
+    nameRequestApprovedName: 'Xyz Ltd.'
   },
   {
     entityType: 'BC',
@@ -42,11 +38,9 @@ const mockEntityInfo = [
     numberedDesc: 'Numbered Limited Company',
     tempId: 'T1234567',
     nameRequest: {
-      nrNumber: 'NR 1234567',
-      details: {
-        approvedName: 'Xyz Ltd.'
-      }
-    }
+      nrNum: 'NR 1234567'
+    },
+    nameRequestApprovedName: 'Xyz Ltd.'
   },
   {
     entityType: 'ULC',
@@ -57,11 +51,9 @@ const mockEntityInfo = [
     numberedDesc: 'Numbered Unlimited Liability Company',
     tempId: 'T1234567',
     nameRequest: {
-      nrNumber: 'NR 1234567',
-      details: {
-        approvedName: 'Xyz Ltd.'
-      }
-    }
+      nrNum: 'NR 1234567'
+    },
+    nameRequestApprovedName: 'Xyz Ltd.'
   },
   {
     entityType: 'CC',
@@ -72,11 +64,9 @@ const mockEntityInfo = [
     numberedDesc: '',
     tempId: 'T1234567',
     nameRequest: {
-      nrNumber: 'NR 1234567',
-      details: {
-        approvedName: 'Xyz Ltd.'
-      }
-    }
+      nrNum: 'NR 1234567'
+    },
+    nameRequestApprovedName: 'Xyz Ltd.'
   }
 ]
 
@@ -88,7 +78,7 @@ const mockEntityInfo = [
 // warnings, which should be cleaned up.
 //
 for (const mock of mockEntityInfo) {
-  describe(`Entity Info component with an NR for a ${mock.entityType}`, () => {
+  describe(`Entity Info component for a ${mock.entityType} with a NR`, () => {
     let wrapper: any
 
     beforeEach(() => {
@@ -96,11 +86,12 @@ for (const mock of mockEntityInfo) {
         tombstone: mock.tombstone,
         entityType: mock.entityType,
         tempId: mock.tempId,
-        nameRequest: mock.nameRequest
+        nameRequest: mock.nameRequest,
+        nameRequestApprovedName: mock.nameRequestApprovedName
       }, 'incorporation-define-company')
     })
 
-    it(`renders the Name Request header when the EntityType(${mock.entityType}) is present`, async () => {
+    it('renders the Name Request header', async () => {
       expect(wrapper.vm.$el.querySelector('#entity-legal-name').textContent)
         .toContain('Xyz Ltd.')
 
@@ -112,7 +103,7 @@ for (const mock of mockEntityInfo) {
     })
   })
 
-  describe(`Entity Info component without an NR for a ${mock.entityType}`, () => {
+  describe(`Entity Info component for a ${mock.entityType} without a NR`, () => {
     let wrapper: any
 
     beforeEach(() => {
@@ -120,22 +111,17 @@ for (const mock of mockEntityInfo) {
         tombstone: mock.tombstone,
         entityType: mock.entityType,
         tempId: mock.tempId,
-        nameRequest: {
-          nrNumber: null,
-          details: {
-            approvedName: null
-          }
-        }
+        nameRequest: { nrNum: null },
+        nameRequestApprovedName: null
       }, 'incorporation-define-company')
     })
 
-    it(`renders the Numbered Company header when the EntityType(${mock.entityType}) is present with no NR`,
-      async () => {
-        expect(wrapper.vm.$el.querySelector('#entity-legal-name').textContent)
-          .toContain(`${mock.numberedDesc}`)
+    it('renders the Numbered Company header', async () => {
+      expect(wrapper.vm.$el.querySelector('#entity-legal-name').textContent)
+        .toContain(`${mock.numberedDesc}`)
 
-        expect(wrapper.vm.$el.querySelector('#entity-description').textContent)
-          .toContain(`${mock.description} Incorporation Application`)
-      })
+      expect(wrapper.vm.$el.querySelector('#entity-description').textContent)
+        .toContain(`${mock.description} Incorporation Application`)
+    })
   })
 }
