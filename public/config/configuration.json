@@ -7,6 +7,7 @@
   "BUSINESSES_URL": "https://dev.bcregistry.ca/business/auth/",
   "BUSINESS_CREATE_LD_CLIENT_ID": "5e6142dd29b3030a850285b3",
   "DASHBOARD_URL": "https://dev.bcregistry.ca/business/",
+  "HOTJAR_ID": "3274073",
   "KEYCLOAK_CONFIG_PATH": "/local-keycloak-config-url/keycloak.json",
   "LEGAL_API_URL": "https://legal-api-dev.apps.silver.devops.gov.bc.ca",
   "LEGAL_API_VERSION_2": "/api/v2",
