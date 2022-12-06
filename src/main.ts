@@ -13,6 +13,7 @@ import Vue2Filters from 'vue2-filters' // needed by SbcFeeSummary
 import * as Sentry from '@sentry/browser'
 import * as Integrations from '@sentry/integrations'
 import VueObserveVisibility from 'vue-observe-visibility' // added to help with rendering of text area heights properly
+import Hotjar from 'vue-hotjar'
 
 // Styles
 // NB: order matters - do not change
@@ -52,8 +53,16 @@ async function start () {
     })
   }
 
+  // initialize Hotjar
+  const hotjarId: string = (window as any).hotjarId
+  if (hotjarId) {
+    console.info('Initializing Hotjar...') // eslint-disable-line no-console
+    Vue.use(Hotjar, { id: hotjarId })
+  }
+
   // initialize Launch Darkly
   if ((window as any).ldClientId) {
+    console.info('Initializing Launch Darkly...') // eslint-disable-line no-console
     await InitLdClient()
   }
 
