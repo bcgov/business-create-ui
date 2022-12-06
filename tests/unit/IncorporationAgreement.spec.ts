@@ -6,7 +6,7 @@ const incorporationAgreementTestcases = [
   {
     entityType: 'BEN',
     helpHeader1: 'What is the sample Incorporation Agreement and Benefit Company Articles?',
-    helpHeader2: 'Can I use the sample Incorporation Agreement and Benefit Company Articles?',
+    helpHeader2: 'What is a Benefit Provision?',
     helpText1: 'The sample Incorporation Agreement and Benefit Company Articles is a template that you can use'
   },
   {
@@ -18,13 +18,13 @@ const incorporationAgreementTestcases = [
   {
     entityType: 'ULC',
     helpHeader1: 'What is the sample Incorporation Agreement and Unlimited Liability Company Articles?',
-    helpHeader2: 'Retain the signed Incorporation Agreement and BC Unlimited Liability Company Articles',
+    helpHeader2: 'What is a Liability Provision?',
     helpText1: 'The sample Incorporation Agreement and Company Articles is a template that you can use to create an'
   },
   {
     entityType: 'CC',
     helpHeader1: 'What is the sample Incorporation Agreement and BC Community Contribution Company Articles?',
-    helpHeader2: 'Retain the signed Incorporation Agreement and BC Community Contribution Company Articles',
+    helpHeader2: 'What is a Community Provision?',
     helpText1: 'The sample Incorporation Agreement and Company Articles is a template that you can use to create an'
   }
 ]
@@ -54,7 +54,7 @@ for (const test of incorporationAgreementTestcases) {
       expect(helpSection.exists()).toBe(true)
       expect(helpHeaders.at(0).text()).toContain(test.helpHeader1)
       expect(helpList.at(0).text()).toContain(test.helpText1)
-      expect(helpHeaders.at(2).text()).toContain(test.helpHeader2)
+      expect(helpHeaders.at(1).text()).toContain(test.helpHeader2)
     })
   })
 }

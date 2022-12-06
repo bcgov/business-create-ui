@@ -65,11 +65,11 @@ export const UnlimitedCompanyResource: IncorporationResourceIF = {
         ]
       },
       {
-        header: 'What is a Benefit Provision?',
+        header: 'What is a Liability Provision?',
         helpText: [
-          `A Benefit Provision is a statement by the company of its public benefits and its commitments to promote those
-           public benefits and to conduct business in a responsible and sustainable manner.`,
-          'A Benefit Company must include a benefit provision in its Articles.'
+          `A Liability Provision is a statement by the company of the shareholders joint liability to satisfy all debts
+            and liabilities of the company.`,
+          'An Unlimited Liability Company must include a Liability Provision in its Articles.'
         ]
       }
     ],

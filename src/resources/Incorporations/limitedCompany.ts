@@ -57,14 +57,6 @@ export const LimitedCompanyResource: IncorporationResourceIF = {
           `If you would like to customize any other provisions in the Articles, you cannot use these samples. 
             We recommend seeking professional assistance from a lawyer or accountant to help you prepare your articles.`
         ]
-      },
-      {
-        header: 'What is a Benefit Provision?',
-        helpText: [
-          `A Benefit Provision is a statement by the company of its public benefits and its commitments to promote those
-            public benefits and to conduct business in a responsible and sustainable manner.`,
-          `A Benefit Company must include a benefit provision in its Articles.`
-        ]
       }
     ],
     article: 'bc_limited_company_incorporation_agreement.pdf',
