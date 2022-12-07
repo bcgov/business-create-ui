@@ -21,8 +21,8 @@
       </div>
     </template>
 
+    <!-- EDIT SECTION -->
     <template v-if="!isSummary">
-      <!-- EDIT SECTION -->
       <div v-if="isTypeBcUlcCompany || isTypeBcCcc" :class="{ 'invalid-section': showErrorSummary && getShowErrors }">
         <v-checkbox
           v-for="(item, index) in getIncorporationAgreementDocuments"
@@ -39,7 +39,6 @@
         </v-checkbox>
       </div>
 
-      <!-- EDIT SECTION -->
       <div class="py-8 px-6" v-else :class="{ 'invalid-section': showErrorSummary && getShowErrors }">
         <v-radio-group
           class="mt-0 pt-0"
