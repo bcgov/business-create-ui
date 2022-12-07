@@ -11,19 +11,19 @@ const incorporationAgreementTestcases = [
   },
   {
     entityType: 'BC',
-    helpHeader1: 'What is the sample Incorporation Agreement and BC Limited Company Articles?',
-    helpHeader2: 'Retain the signed Incorporation Agreement and BC Limited Company Articles',
+    helpHeader1: 'What is the sample Incorporation Agreement and Company Articles?',
+    helpHeader2: 'Retain the signed Incorporation Agreement and Company Articles',
     helpText1: 'The sample Incorporation Agreement and Company Articles is a template that you can use to create an'
   },
   {
     entityType: 'ULC',
-    helpHeader1: 'What is the sample Incorporation Agreement and Unlimited Liability Company Articles?',
+    helpHeader1: 'What is the sample Incorporation Agreement and Company Articles?',
     helpHeader2: 'What is a Liability Provision?',
     helpText1: 'The sample Incorporation Agreement and Company Articles is a template that you can use to create an'
   },
   {
     entityType: 'CC',
-    helpHeader1: 'What is the sample Incorporation Agreement and BC Community Contribution Company Articles?',
+    helpHeader1: 'What is the sample Incorporation Agreement and Company Articles?',
     helpHeader2: 'What is a Community Provision?',
     helpText1: 'The sample Incorporation Agreement and Company Articles is a template that you can use to create an'
   }
