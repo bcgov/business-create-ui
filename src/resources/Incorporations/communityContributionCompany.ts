@@ -54,13 +54,12 @@ export const CommunityContributionCompanyResource: IncorporationResourceIF = {
   incorporationAgreement: {
     helpSection: [
       {
-        header: 'What is the sample Incorporation Agreement and BC Community Contribution Company Articles?',
+        header: 'What is the sample Incorporation Agreement and Company Articles?',
         helpText: [
           `The sample Incorporation Agreement and Company Articles is a template that you can use to create an 
-            incorporation agreement and articles for your company. It uses all the standard provisions by legislation. 
+            Incorporation Agreement and articles for your company. It uses all the standard provisions by legislation. 
             There are three types of samples depending on if you're incorporating a Limited Company, a Benefit Company, 
-            or a Community Contribution Company. There is currently no Incorporation Sample for Unlimited 
-            Liability Companies.`,
+            Unlimited Liability Company, or a Community Contribution Company.`,
           `If you would like to customize any other provisions in the Articles, you cannot use these samples. 
             We recommend seeking professional assistance from a lawyer or accountant to help you prepare your articles.`
         ]
