@@ -54,24 +54,22 @@ export const CommunityContributionCompanyResource: IncorporationResourceIF = {
   incorporationAgreement: {
     helpSection: [
       {
-        header: 'How do I create an Incorporation Agreement and Articles?',
+        header: 'What is the sample Incorporation Agreement and Company Articles?',
         helpText: [
-          'We recommend seeking legal assistance in creating your Incorporation Agreement and Articles.'
+          `The sample Incorporation Agreement and Company Articles is a template that you can use to create an 
+            Incorporation Agreement and articles for your company. It uses all the standard provisions by legislation. 
+            There are three types of samples depending on if you're incorporating a Limited Company, a Benefit Company, 
+            Unlimited Liability Company, or a Community Contribution Company.`,
+          `If you would like to customize any other provisions in the Articles, you cannot use these samples. 
+            We recommend seeking professional assistance from a lawyer or accountant to help you prepare your articles.`
         ]
       },
       {
-        header: 'What are the community purposes?',
+        header: 'What is a Community Provision?',
         helpText: [
-          `One or more of the primary purposes of a community contribution company must be community purposes. These
-            purposes must be set out in the company's articles.`
-        ]
-      },
-      {
-        header: 'Retain the signed Incorporation Agreement and Articles',
-        helpText: [
-          `The company is required to keep signed copies of the Incorporation Agreement and Articles in the company's
-            record book. For a complete list of records a company is required to keep please see section 42 of the
-            Business Corporations Act.`
+          `A Community Provision is a statement by the company of its benefits to society and its restrictions in its 
+            ability to pay dividends and distribute assets.`,
+          `A Community Contribution Company must include a community provision in its Articles.`
         ]
       }
     ],
