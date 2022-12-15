@@ -9,17 +9,18 @@
         label="Enter Name Translation"
         v-model="nameTranslation"
         :rules="nameTranslationRules"
+        @input="nameTranslation = nameTranslation.toUpperCase()"
       />
 
       <div class="form__btns">
-        <v-btn large color="error" id="btn-remove"
+        <v-btn large color="error" id="name-translation-btn-remove"
           :disabled="!editNameTranslation"
           @click="removeTranslation()"
         >
           Remove
         </v-btn>
 
-        <v-btn large color="primary" id="btn-done"
+        <v-btn large color="primary" id="name-translation-btn-done"
           class="form-primary-btn"
           :disabled="!nameTranslationForm"
           @click="addTranslation()"
@@ -27,7 +28,7 @@
           Done
         </v-btn>
 
-        <v-btn large id="btn-cancel"
+        <v-btn large id="name-translation-btn-cancel"
           @click="cancelTranslation()"
         >
           Cancel
