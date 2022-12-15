@@ -15,7 +15,7 @@
       no-gutters
     >
       <v-col class="text-truncate">
-        <span class="name-title text-uppercase">{{translation.name}}</span>
+        <span class="name-title">{{translation.name}}</span>
       </v-col>
 
       <!-- Actions Column -->
