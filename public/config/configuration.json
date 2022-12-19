@@ -20,7 +20,7 @@
   "SITEMINDER_LOGOUT_URL": "https://logontest7.gov.bc.ca/clp-cgi/logoff.cgi",
   "STATUS_API_URL": "https://status-api-dev.apps.silver.devops.gov.bc.ca",
   "STATUS_API_VERSION": "/api/v1",
-  "REGISTRY_HOME_URL": "https://yfthig-dev.web.app/",
+  "REGISTRY_HOME_URL": "https://dev.bcros.ca/",
   "REGISTRIES_SEARCH_API_URL": "https://bcregistry-dev.apigee.net/registry-search",
   "REGISTRIES_SEARCH_API_VERSION": "/api/v1",
   "WEBCHAT_REASON": "",
