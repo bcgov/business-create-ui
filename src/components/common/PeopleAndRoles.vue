@@ -145,7 +145,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins } from 'vue-property-decorator'
+import Vue from 'vue'
+import { Component } from 'vue-property-decorator'
 import { cloneDeep } from 'lodash'
 import { EmptyAddress, EmptyOrgPerson } from '@/interfaces'
 import { PartyTypes, RoleTypes } from '@/enums'
@@ -161,9 +162,12 @@ import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
     ConfirmDialog,
     HelpSection,
     ListPeopleAndRoles
-  }
+  },
+  mixins: [
+    PeopleRolesMixin
+  ]
 })
-export default class PeopleAndRoles extends Mixins(PeopleRolesMixin) {
+export default class PeopleAndRoles extends Vue {
   //
   // NB: see mixin for common properties, methods, etc.
   //

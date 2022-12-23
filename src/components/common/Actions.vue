@@ -94,7 +94,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Emit } from 'vue-property-decorator'
+import Vue from 'vue'
+import { Component, Emit } from 'vue-property-decorator'
 import { Getter, Action } from 'vuex-class'
 import { Navigate } from '@/utils'
 import { ActionBindingIF } from '@/interfaces'
@@ -102,8 +103,14 @@ import { DateMixin, FilingTemplateMixin, NameRequestMixin } from '@/mixins'
 import { LegalServices } from '@/services/'
 import { FilingTypes, NameRequestStates, RouteNames } from '@/enums'
 
-@Component({})
-export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, NameRequestMixin) {
+@Component({
+  mixins: [
+    DateMixin,
+    FilingTemplateMixin,
+    NameRequestMixin
+  ]
+})
+export default class Actions extends Vue {
   @Getter getEntityIdentifier!: string
   @Getter getFilingType!: string
   @Getter isApplicationValid!: boolean

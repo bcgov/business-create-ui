@@ -83,7 +83,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Emit, Mixins, Prop, Watch } from 'vue-property-decorator'
+import Vue from 'vue'
+import { Component, Emit, Prop, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import { isEmpty, isEqual } from 'lodash'
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
@@ -109,9 +110,12 @@ const DefaultAddress: AddressIF = {
   components: {
     DeliveryAddress: BaseAddress,
     MailingAddress: BaseAddress
-  }
+  },
+  mixins: [
+    CommonMixin
+  ]
 })
-export default class BusinessAddresses extends Mixins(CommonMixin) {
+export default class BusinessAddresses extends Vue {
   // Refs for BaseAddress components so we can access form validation
   $refs!: {
     mailingAddress: any

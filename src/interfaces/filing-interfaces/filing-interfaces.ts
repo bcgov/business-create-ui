@@ -9,13 +9,13 @@ import {
   ShareClassIF,
   SpecialResolutionIF
 } from '@/interfaces'
-import { BusinessTypes, CorpTypeCd, DissolutionStatementTypes, DissolutionTypes } from '@/enums'
+import { BusinessTypes, CorpTypeCd, DissolutionStatementTypes, DissolutionTypes, FilingTypes } from '@/enums'
 import { RegistrationNameRequestIF } from '../store-interfaces/state-interfaces/registration-state-interface'
 
 /** Interface for incorporation filing data saved to the Legal API. */
 export interface IncorporationFilingIF {
   header: {
-    name: string
+    name: FilingTypes
     certifiedBy: string
     date: string
     effectiveDate?: string // Optional and should be set only for future effective filings
@@ -72,7 +72,7 @@ export interface IncorporationFilingIF {
   }
 }
 
-/** Interface for incorporation filing data saved to the Legal API. */
+/** Interface for registration filing data saved to the Legal API. */
 export interface RegistrationFilingIF {
   header: {
     name: string
@@ -116,7 +116,7 @@ export interface RegistrationFilingIF {
   }
 }
 
-/** Interface for incorporation filing data saved to the Legal API. */
+/** Interface for dissolution filing data saved to the Legal API. */
 export interface DissolutionFilingIF {
   header: {
     name: string

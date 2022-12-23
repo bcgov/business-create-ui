@@ -5,7 +5,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Watch } from 'vue-property-decorator'
+import Vue from 'vue'
+import { Component, Watch } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 import { CreateRulesIF } from '@/interfaces'
 import { CommonMixin } from '@/mixins'
@@ -16,9 +17,12 @@ import { RouteNames } from '@/enums'
 @Component({
   components: {
     UploadRules
-  }
+  },
+  mixins: [
+    CommonMixin
+  ]
 })
-export default class IncorporationRules extends Mixins(CommonMixin) {
+export default class IncorporationRules extends Vue {
   @Getter getShowErrors!: boolean
   @Getter getCreateRulesStep!: CreateRulesIF
 

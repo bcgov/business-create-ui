@@ -188,7 +188,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Emit, Prop, Watch, Mixins } from 'vue-property-decorator'
+import Vue from 'vue'
+import { Component, Emit, Prop, Watch } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 import { isEmpty } from 'lodash'
 import { OfficeAddressSchema } from '@/schemas'
@@ -201,9 +202,12 @@ import { CommonMixin } from '@/mixins'
   components: {
     DeliveryAddress: BaseAddress,
     MailingAddress: BaseAddress
-  }
+  },
+  mixins: [
+    CommonMixin
+  ]
 })
-export default class OfficeAddresses extends Mixins(CommonMixin) {
+export default class OfficeAddresses extends Vue {
   // Refs for sbc common base address components so we can access form validation
   $refs!: {
     regMailingAddress: any

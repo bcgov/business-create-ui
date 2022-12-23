@@ -21,7 +21,7 @@ describe('Stepper component', () => {
         id: 'step-1-btn',
         step: 1,
         icon: 'mdi-domain',
-        text: 'Define Your \nBusiness',
+        text: 'Define Your\nBusiness',
         to: 'registration-define-business',
         component: 'registration-define-business'
       },
@@ -29,7 +29,7 @@ describe('Stepper component', () => {
         id: 'step-2-btn',
         step: 2,
         icon: 'mdi-account-multiple-plus',
-        text: 'Add People \nand Roles',
+        text: 'Add People\nand Roles',
         to: 'registration-people-roles',
         component: 'registration-people-roles'
       },
@@ -67,8 +67,8 @@ describe('Stepper component', () => {
 
     const labels = wrapper.findAll('#step-buttons-container .step__label')
     expect(labels.length).toBe(3)
-    expect(labels.at(0).text()).toBe('Define Your \nBusiness')
-    expect(labels.at(1).text()).toBe('Add People \nand Roles')
+    expect(labels.at(0).text()).toBe('Define Your\nBusiness')
+    expect(labels.at(1).text()).toBe('Add People\nand Roles')
     expect(labels.at(2).text()).toBe('Review\nand Confirm')
   })
 })

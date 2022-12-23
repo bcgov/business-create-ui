@@ -166,8 +166,9 @@
 
 <script lang="ts">
 // Libraries
+import Vue from 'vue'
 import axios from 'axios'
-import { Component, Mixins, Watch } from 'vue-property-decorator'
+import { Component, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import { StatusCodes } from 'http-status-codes'
 import { cloneDeep } from 'lodash'
@@ -247,14 +248,15 @@ import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
     WebChat,
     ...Dialogs,
     ...Views
-  }
+  },
+  mixins: [
+    CommonMixin,
+    DateMixin,
+    FilingTemplateMixin,
+    NameRequestMixin
+  ]
 })
-export default class App extends Mixins(
-  CommonMixin,
-  DateMixin,
-  FilingTemplateMixin,
-  NameRequestMixin
-) {
+export default class App extends Vue {
   // Refs
   $refs!: {
     confirm: ConfirmDialogType

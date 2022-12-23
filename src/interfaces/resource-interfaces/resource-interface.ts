@@ -1,10 +1,11 @@
 import {
-  AffidavitResourceIF, FilingDataIF, HelpSectionIF, IncorporationAgreementTypeIF, KeyValueIF, PeopleAndRolesResourceIF,
-  StepIF, CreateRulesResourceIF, CreateMemorandumResourceIF, CreateResolutionResourceIF, CustodianResourceIF
+  AffidavitResourceIF, FilingDataIF, HelpSectionIF, IncorporationAgreementTypeIF, KeyValueIF,
+  PeopleAndRolesResourceIF, StepIF, CreateRulesResourceIF, CreateMemorandumResourceIF,
+  CreateResolutionResourceIF, CustodianResourceIF
 } from '@/interfaces'
 import { CorpTypeCd } from '@/enums'
 
-// Interface to define the resource model
+/** Incorporation Resource interface. */
 export interface IncorporationResourceIF {
   entityType: CorpTypeCd
   displayName: string
@@ -41,6 +42,7 @@ export interface IncorporationResourceIF {
   createMemorandum?: CreateMemorandumResourceIF
 }
 
+/** Registration Resource interface. */
 export interface RegistrationResourceIF {
   entityType: CorpTypeCd
   displayName: string
@@ -57,7 +59,7 @@ export interface RegistrationResourceIF {
   }
 }
 
-// Interface to define the resource model
+/** Dissolution Resource interface. */
 export interface DissolutionResourceIF {
   entityType: CorpTypeCd
   displayName: string
@@ -80,4 +82,4 @@ export interface DissolutionResourceIF {
   createResolution?: CreateResolutionResourceIF
 }
 
-export interface ResourceIF extends DissolutionResourceIF, IncorporationResourceIF, RegistrationResourceIF {}
+export interface ResourceIF extends IncorporationResourceIF, RegistrationResourceIF, DissolutionResourceIF {}

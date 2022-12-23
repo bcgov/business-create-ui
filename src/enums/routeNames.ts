@@ -2,7 +2,7 @@
  * Enum for route names for vue router.
  */
 export enum RouteNames {
-  // Common route names
+  // Auth route names
   SIGN_IN = 'signin',
   SIGN_OUT = 'signout',
 
@@ -26,7 +26,6 @@ export enum RouteNames {
   REGISTRATION_PEOPLE_ROLES = 'registration-people-roles',
   REGISTRATION_REVIEW_CONFIRM = 'registration-review-confirm',
 
-  // firm Dissolution (SP and GP)
+  // Firm Dissolution (SP and GP)
   DISSOLUTION_FIRM = 'dissolution-firm',
-
 }

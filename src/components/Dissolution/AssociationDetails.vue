@@ -98,7 +98,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Prop } from 'vue-property-decorator'
+import Vue from 'vue'
+import { Component, Prop } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import { AuthServices } from '@/services/'
 import { ActionBindingIF, AddressIF, ContactPointIF, BusinessIF } from '@/interfaces'
@@ -116,9 +117,13 @@ import { GetCorpFullDescription, GetCorpNumberedDescription } from '@bcrs-shared
     OfficeAddresses,
     DeliveryAddress: BaseAddress,
     MailingAddress: BaseAddress
-  }
+  },
+  mixins: [
+    CommonMixin,
+    DateMixin
+  ]
 })
-export default class AssociationDetails extends Mixins(CommonMixin, DateMixin) {
+export default class AssociationDetails extends Vue {
   @Prop({ default: false }) readonly isSummary!: boolean
   @Prop({ default: 'Address' }) readonly addressLabel!: string
   @Prop({ default: 'Company' }) readonly entityLabel!: string

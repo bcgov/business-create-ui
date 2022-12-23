@@ -171,7 +171,6 @@ export const routes = [
       noStepper: true // to hide stepper for this view
     }
   },
-
   {
     // default/fallback route
     // must be last

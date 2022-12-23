@@ -1,4 +1,4 @@
-import { RouteNames, ViewComponentNames } from '@/enums'
+import { RouteNames, Views } from '@/enums'
 
 /**
  * The Registration step template.
@@ -9,17 +9,17 @@ export const RegistrationSteps = [
     id: 'step-1-btn',
     step: 1,
     icon: 'mdi-domain',
-    text: 'Define Your \nBusiness',
+    text: 'Define Your\nBusiness',
     to: RouteNames.REGISTRATION_DEFINE_BUSINESS,
-    component: ViewComponentNames.REGISTRATION_DEFINE_BUSINESS
+    component: Views.REGISTRATION_DEFINE_BUSINESS
   },
   {
     id: 'step-2-btn',
     step: 2,
     icon: 'mdi-account-multiple-plus',
-    text: 'Add People \nand Roles',
+    text: 'Add People\nand Roles',
     to: RouteNames.REGISTRATION_PEOPLE_ROLES,
-    component: ViewComponentNames.REGISTRATION_PEOPLE_ROLES
+    component: Views.REGISTRATION_PEOPLE_ROLES
 
   },
   {
@@ -28,6 +28,6 @@ export const RegistrationSteps = [
     icon: 'mdi-text-box-check-outline',
     text: 'Review\nand Confirm',
     to: RouteNames.REGISTRATION_REVIEW_CONFIRM,
-    component: ViewComponentNames.REGISTRATION_REVIEW_CONFIRM
+    component: Views.REGISTRATION_REVIEW_CONFIRM
   }
 ]

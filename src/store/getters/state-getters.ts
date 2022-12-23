@@ -6,8 +6,7 @@ import {
   DissolutionTypes,
   FilingNames,
   FilingTypes,
-  FilingTypesSubTitle,
-  NameRequestStates
+  FilingTypesSubTitle
 } from '@/enums'
 import {
   AccountInformationIF,
@@ -42,6 +41,13 @@ import {
 } from '@/interfaces'
 import { getMaxStep } from './resource-getters'
 
+/** True if current screen width is mobile. */
+export const isMobile = (state: StateIF): boolean => {
+  // fall back to base window width if no window size changes have occurred
+  const width = state.stateModel.windowWidth || window.innerWidth
+  return (width < new Vuetify().framework.breakpoint.thresholds.sm)
+}
+
 /** Whether the current filing is an Incorporation. */
 export const isIncorporationFiling = (state: StateIF): boolean => {
   return getFilingType(state) === FilingTypes.INCORPORATION_APPLICATION
@@ -68,11 +74,7 @@ export const getFilingName = (state: StateIF): FilingNames => {
     case FilingTypes.INCORPORATION_APPLICATION: return FilingNames.INCORPORATION_APPLICATION
     case FilingTypes.REGISTRATION: return FilingNames.REGISTRATION
     case FilingTypes.VOLUNTARY_DISSOLUTION:
-      if (isTypeFirm(state)) {
-        return FilingNames.DISSOLUTION_FIRM
-      }
-      return FilingNames.VOLUNTARY_DISSOLUTION
-
+      return isTypeFirm(state) ? FilingNames.DISSOLUTION_FIRM : FilingNames.VOLUNTARY_DISSOLUTION
     default: return null // should never happen
   }
 }
@@ -677,11 +679,4 @@ export const getDissolutionDate = (state: StateIF): string => {
 /** The parties list. */
 export const getParties = (state: StateIF): Array<PartyIF> => {
   return state.stateModel.parties
-}
-
-/** True if current screen width is mobile. */
-export const isMobile = (state: StateIF): boolean => {
-  // fall back to base window width if no window size changes have occurred
-  const width = state.stateModel.windowWidth || window.innerWidth
-  return (width < new Vuetify().framework.breakpoint.thresholds.sm)
 }

@@ -11,6 +11,8 @@ export { default as DissolutionDefineDissolution } from './Dissolution/Dissoluti
 export { default as DissolutionResolution } from './Dissolution/DissolutionResolution.vue'
 export { default as DissolutionReviewConfirm } from './Dissolution/DissolutionReviewConfirm.vue'
 
+export { default as DissolutionFirm } from './DissolutionFirm/DissolutionFirm.vue'
+
 export { default as IncorporationAgreement } from './Incorporation/IncorporationAgreement.vue'
 export { default as IncorporationDefineCompany } from './Incorporation/IncorporationDefineCompany.vue'
 export { default as IncorporationMemorandum } from './Incorporation/IncorporationMemorandum.vue'
@@ -22,5 +24,3 @@ export { default as IncorporationShareStructure } from './Incorporation/Incorpor
 export { default as RegistrationDefineBusiness } from './Registration/RegistrationDefineBusiness.vue'
 export { default as RegistrationPeopleRoles } from './Registration/RegistrationPeopleRoles.vue'
 export { default as RegistrationReviewConfirm } from './Registration/RegistrationReviewConfirm.vue'
-
-export { default as DissolutionFirm } from './DissolutionFirm/DissolutionFirm.vue'

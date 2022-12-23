@@ -122,7 +122,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Mixins, Emit } from 'vue-property-decorator'
+import Vue from 'vue'
+import { Component, Prop, Emit } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
 import { CommonMixin } from '@/mixins'
@@ -137,9 +138,12 @@ import { PartyTypes, RoleTypes, RouteNames } from '@/enums'
   components: {
     DeliveryAddress: BaseAddress,
     MailingAddress: BaseAddress
-  }
+  },
+  mixins: [
+    CommonMixin
+  ]
 })
-export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
+export default class ListPeopleAndRoles extends Vue {
   @Prop({ default: false }) readonly isSummary!: boolean
   @Prop({ default: false }) readonly disabled!: boolean
 

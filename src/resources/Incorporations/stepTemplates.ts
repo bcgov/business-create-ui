@@ -1,4 +1,4 @@
-import { RouteNames, ViewComponentNames } from '@/enums'
+import { RouteNames, Views } from '@/enums'
 
 /**
  * The base step template.
@@ -11,7 +11,7 @@ export const BaseStepsTemplate = [
     icon: 'mdi-domain',
     text: 'Define Your\nCompany',
     to: RouteNames.INCORPORATION_DEFINE_COMPANY,
-    component: ViewComponentNames.INCORPORATION_DEFINE_COMPANY
+    component: Views.INCORPORATION_DEFINE_COMPANY
   },
   {
     id: 'step-2-btn',
@@ -19,7 +19,7 @@ export const BaseStepsTemplate = [
     icon: 'mdi-account-multiple-plus',
     text: 'Add People\nand Roles',
     to: RouteNames.INCORPORATION_PEOPLE_ROLES,
-    component: ViewComponentNames.INCORPORATION_PEOPLE_ROLES
+    component: Views.INCORPORATION_PEOPLE_ROLES
 
   },
   {
@@ -28,7 +28,7 @@ export const BaseStepsTemplate = [
     icon: 'mdi-sitemap',
     text: 'Create Share\nStructure',
     to: RouteNames.INCORPORATION_SHARE_STRUCTURE,
-    component: ViewComponentNames.INCORPORATION_SHARE_STRUCTURE
+    component: Views.INCORPORATION_SHARE_STRUCTURE
   },
   {
     id: 'step-4-btn',
@@ -36,7 +36,7 @@ export const BaseStepsTemplate = [
     icon: 'mdi-handshake',
     text: 'Incorporation\nAgreement',
     to: RouteNames.INCORPORATION_AGREEMENT,
-    component: ViewComponentNames.INCORPORATION_AGREEMENT
+    component: Views.INCORPORATION_AGREEMENT
   },
   {
     id: 'step-5-btn',
@@ -44,7 +44,7 @@ export const BaseStepsTemplate = [
     icon: 'mdi-text-box-check-outline',
     text: 'Review\nand Confirm',
     to: RouteNames.INCORPORATION_REVIEW_CONFIRM,
-    component: ViewComponentNames.INCORPORATION_REVIEW_CONFIRM
+    component: Views.INCORPORATION_REVIEW_CONFIRM
   }
 ]
 
@@ -58,7 +58,7 @@ export const CoopStepsTemplate = [
     icon: 'mdi-domain',
     text: 'Define Your\nCooperative',
     to: RouteNames.INCORPORATION_DEFINE_COMPANY,
-    component: ViewComponentNames.INCORPORATION_DEFINE_COMPANY
+    component: Views.INCORPORATION_DEFINE_COMPANY
   },
   {
     id: 'step-2-btn',
@@ -66,7 +66,7 @@ export const CoopStepsTemplate = [
     icon: 'mdi-account-multiple-plus',
     text: 'Add People\nand Roles',
     to: RouteNames.INCORPORATION_PEOPLE_ROLES,
-    component: ViewComponentNames.INCORPORATION_PEOPLE_ROLES
+    component: Views.INCORPORATION_PEOPLE_ROLES
   },
   {
     id: 'step-3-btn',
@@ -74,7 +74,7 @@ export const CoopStepsTemplate = [
     icon: 'mdi-format-list-text',
     text: 'Upload Rules',
     to: RouteNames.INCORPORATION_RULES,
-    component: ViewComponentNames.INCORPORATION_RULES
+    component: Views.INCORPORATION_RULES
   },
   {
     id: 'step-4-btn',
@@ -82,7 +82,7 @@ export const CoopStepsTemplate = [
     icon: 'mdi-text-box-multiple',
     text: 'Upload\nMemorandum',
     to: RouteNames.INCORPORATION_MEMORANDUM,
-    component: ViewComponentNames.INCORPORATION_MEMORANDUM
+    component: Views.INCORPORATION_MEMORANDUM
   },
   {
     id: 'step-5-btn',
@@ -90,6 +90,6 @@ export const CoopStepsTemplate = [
     icon: 'mdi-text-box-check-outline',
     text: 'Review\nand Confirm',
     to: RouteNames.INCORPORATION_REVIEW_CONFIRM,
-    component: ViewComponentNames.INCORPORATION_REVIEW_CONFIRM
+    component: Views.INCORPORATION_REVIEW_CONFIRM
   }
 ]

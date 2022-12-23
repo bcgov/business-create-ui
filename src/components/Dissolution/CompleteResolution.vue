@@ -304,7 +304,8 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Mixins, Watch } from 'vue-property-decorator'
+import Vue from 'vue'
+import { Component, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 
 // Shared Components
@@ -328,9 +329,13 @@ import { VuetifyRuleFunction } from '@/types'
 @Component({
   components: {
     DatePickerShared
-  }
+  },
+  mixins: [
+    CommonMixin,
+    DateMixin
+  ]
 })
-export default class CompleteResolution extends Mixins(CommonMixin, DateMixin) {
+export default class CompleteResolution extends Vue {
   // Refs
   $refs!: {
     resolutionDatePickerRef: DatePickerShared

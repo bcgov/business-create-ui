@@ -87,7 +87,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Watch } from 'vue-property-decorator'
+import Vue from 'vue'
+import { Component, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import AssociationDetails from '@/components/Dissolution/AssociationDetails.vue'
 // import CareAndCustodySelect from '@/components/Dissolution/CareAndCustodySelect.vue'
@@ -108,9 +109,12 @@ import { GetCorpFullDescription, GetCorpNumberedDescription } from '@bcrs-shared
     DestroyCertificate,
     DissolutionStatement,
     HelpSection
-  }
+  },
+  mixins: [
+    CommonMixin
+  ]
 })
-export default class DissolutionDefineDissolution extends Mixins(CommonMixin) {
+export default class DissolutionDefineDissolution extends Vue {
   // Global getters
   @Getter getBusinessLegalName!: string
   @Getter getCustodialRecordsResources!: CustodianResourceIF

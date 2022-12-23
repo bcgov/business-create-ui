@@ -231,7 +231,8 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Mixins, Watch } from 'vue-property-decorator'
+import Vue from 'vue'
+import { Component, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 
 // Interfaces
@@ -256,9 +257,13 @@ import FileUploadPreview from '@/components/common/FileUploadPreview.vue'
 @Component({
   components: {
     FileUploadPreview
-  }
+  },
+  mixins: [
+    CommonMixin,
+    DocumentMixin
+  ]
 })
-export default class UploadMemorandum extends Mixins(CommonMixin, DocumentMixin) {
+export default class UploadMemorandum extends Vue {
   // Refs
   $refs!: {
     confirmMemorandumChk: FormIF

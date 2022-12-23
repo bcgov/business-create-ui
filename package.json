@@ -1,6 +1,6 @@
 {
   "name": "business-create-ui",
-  "version": "4.4.3",
+  "version": "4.5.0",
   "private": true,
   "appName": "Create UI",
   "sbcName": "SBC Common Components",
@@ -63,6 +63,7 @@
     "@types/vuelidate": "^0.7.15",
     "@typescript-eslint/eslint-plugin": "^5.38.0",
     "@typescript-eslint/parser": "^5.38.0",
+    "@volar-plugins/vetur": "latest",
     "@vue/cli-plugin-babel": "^4.5.19",
     "@vue/cli-plugin-eslint": "^4.5.19",
     "@vue/cli-plugin-typescript": "^4.5.19",

@@ -35,8 +35,7 @@ import {
   CompletingPartyIF
 } from '@/interfaces'
 
-// Constants and enums
-import { INCORPORATION_APPLICATION, REGISTRATION } from '@/constants'
+// Enums
 import {
   CorpTypeCd,
   DissolutionTypes,
@@ -142,7 +141,7 @@ export default class FilingTemplateMixin extends DateMixin {
     // Build the main filing.
     const filing: IncorporationFilingIF = {
       header: {
-        name: INCORPORATION_APPLICATION,
+        name: FilingTypes.INCORPORATION_APPLICATION,
         certifiedBy: this.getCertifyState.certifiedBy,
         date: this.getCurrentDate,
         filingId: this.getFilingId,
@@ -355,7 +354,7 @@ export default class FilingTemplateMixin extends DateMixin {
     // Build the main filing.
     const filing: RegistrationFilingIF = {
       header: {
-        name: REGISTRATION,
+        name: FilingTypes.REGISTRATION,
         certifiedBy: this.getCertifyState.certifiedBy,
         date: this.getCurrentDate,
         filingId: this.getFilingId,
@@ -774,8 +773,9 @@ export default class FilingTemplateMixin extends DateMixin {
     }
   }
 
-  /** If a Transactional Folio number was entered then override the Folio number
-   *  @param filing The dissolution or registration filing.
+  /**
+   * If a Transactional Folio number was entered then override the Folio number
+   * @param filing the filing body to update
    */
   private buildFolioNumber (filing: DissolutionFilingIF | RegistrationFilingIF): void {
     // override Folio Number if TFN exists and is different than default FN

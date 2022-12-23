@@ -205,7 +205,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Watch } from 'vue-property-decorator'
+import Vue from 'vue'
+import { Component, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import {
   ActionBindingIF,
@@ -222,9 +223,13 @@ import FileUploadPreview from '@/components/common/FileUploadPreview.vue'
 @Component({
   components: {
     FileUploadPreview
-  }
+  },
+  mixins: [
+    CommonMixin,
+    DocumentMixin
+  ]
 })
-export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
+export default class UploadRules extends Vue {
   // Refs
   $refs!: {
     confirmRulesChk: FormIF

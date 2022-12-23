@@ -5,7 +5,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Watch } from 'vue-property-decorator'
+import Vue from 'vue'
+import { Component, Watch } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 import { CreateMemorandumIF } from '@/interfaces'
 import { CommonMixin } from '@/mixins'
@@ -15,9 +16,12 @@ import { RouteNames } from '@/enums'
 @Component({
   components: {
     UploadMemorandum
-  }
+  },
+  mixins: [
+    CommonMixin
+  ]
 })
-export default class IncorporationMemorandum extends Mixins(CommonMixin) {
+export default class IncorporationMemorandum extends Vue {
   @Getter getShowErrors!: boolean
   @Getter getCreateMemorandumStep!: CreateMemorandumIF
 

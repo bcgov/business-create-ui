@@ -304,7 +304,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins } from 'vue-property-decorator'
+import Vue from 'vue'
+import { Component } from 'vue-property-decorator'
 import { mask } from 'vue-the-mask'
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
 import { ConfirmDialog } from '@bcrs-shared-components/confirm-dialog'
@@ -324,9 +325,14 @@ import { VuetifyRuleFunction } from '@/types'
     MailingAddress: BaseAddress,
     HelpContactUs
   },
-  directives: { mask }
+  directives: {
+    mask
+  },
+  mixins: [
+    AddEditOrgPersonMixin
+  ]
 })
-export default class RegAddEditOrgPerson extends Mixins(AddEditOrgPersonMixin) {
+export default class RegAddEditOrgPerson extends Vue {
   //
   // NB: see mixin for common properties, methods, etc.
   //

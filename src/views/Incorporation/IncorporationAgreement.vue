@@ -175,7 +175,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Watch } from 'vue-property-decorator'
+import Vue from 'vue'
+import { Component, Watch } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 import AgreementType from '@/components/common/AgreementType.vue'
 import { IncorporationAgreementIF } from '@/interfaces'
@@ -186,9 +187,12 @@ import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module
 @Component({
   components: {
     AgreementType
-  }
+  },
+  mixins: [
+    CommonMixin
+  ]
 })
-export default class IncorporationAgreement extends Mixins(CommonMixin) {
+export default class IncorporationAgreement extends Vue {
   @Getter isTypeBcomp!: boolean
   @Getter isTypeBcCcc!: boolean
   @Getter isTypeBcCompany!: boolean

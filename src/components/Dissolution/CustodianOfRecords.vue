@@ -213,7 +213,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Emit, Mixins, Prop, Watch } from 'vue-property-decorator'
+import Vue from 'vue'
+import { Component, Emit, Prop, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import { CoopOfficeAddressSchema, OfficeAddressSchema } from '@/schemas'
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
@@ -227,9 +228,12 @@ import { cloneDeep } from 'lodash'
   components: {
     DeliveryAddress: BaseAddress,
     MailingAddress: BaseAddress
-  }
+  },
+  mixins: [
+    CommonMixin
+  ]
 })
-export default class CustodianOfRecords extends Mixins(CommonMixin) {
+export default class CustodianOfRecords extends Vue {
   // Refs for root form and base address components to access form validation
   $refs!: {
     addCustodianForm: FormIF
