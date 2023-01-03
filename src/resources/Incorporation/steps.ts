@@ -1,10 +1,10 @@
 import { RouteNames, Views } from '@/enums'
 
 /**
- * The base step template.
- * Currently used for BEN, BC, ULC and CCC.
+ * The incorporation steps object for corporations.
+ * Currently used for BC, BEN, CC and ULC.
  */
-export const BaseStepsTemplate = [
+export const IncorporationStepsCorp = [
   {
     id: 'step-1-btn',
     step: 1,
@@ -49,9 +49,9 @@ export const BaseStepsTemplate = [
 ]
 
 /**
- * The step template for COOPs.
+ * The incorporation steps object for Coops.
  */
-export const CoopStepsTemplate = [
+export const IncorporationStepsCoop = [
   {
     id: 'step-1-btn',
     step: 1,

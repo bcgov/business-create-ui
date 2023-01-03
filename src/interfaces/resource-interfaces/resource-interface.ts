@@ -5,7 +5,30 @@ import {
 } from '@/interfaces'
 import { CorpTypeCd } from '@/enums'
 
-/** Incorporation Resource interface. */
+/** Dissolution resource interface. */
+export interface DissolutionResourceIF {
+  entityType: CorpTypeCd
+  displayName: string
+  steps: Array<StepIF>
+  filingData: Array<FilingDataIF>
+  detailsTitle: string
+  custodialRecords?: CustodianResourceIF
+  dissolutionStatements?: Array<KeyValueIF>
+  affidavit?: AffidavitResourceIF
+  reviewAndConfirm: {
+    completingPartyStatement: {
+      certifyStatementHeader: string
+      certifyStatements: Array<string>
+      certifyClause: string
+      entityDisplay: string
+    }
+  }
+
+  // CP only
+  createResolution?: CreateResolutionResourceIF
+}
+
+/** Incorporation resource interface. */
 export interface IncorporationResourceIF {
   entityType: CorpTypeCd
   displayName: string
@@ -42,7 +65,7 @@ export interface IncorporationResourceIF {
   createMemorandum?: CreateMemorandumResourceIF
 }
 
-/** Registration Resource interface. */
+/** Registration resource interface. */
 export interface RegistrationResourceIF {
   entityType: CorpTypeCd
   displayName: string
@@ -59,27 +82,4 @@ export interface RegistrationResourceIF {
   }
 }
 
-/** Dissolution Resource interface. */
-export interface DissolutionResourceIF {
-  entityType: CorpTypeCd
-  displayName: string
-  steps: Array<StepIF>
-  filingData: Array<FilingDataIF>
-  detailsTitle: string
-  custodialRecords?: CustodianResourceIF
-  dissolutionStatements?: Array<KeyValueIF>
-  affidavit?: AffidavitResourceIF
-  reviewAndConfirm: {
-    completingPartyStatement: {
-      certifyStatementHeader: string
-      certifyStatements: Array<string>
-      certifyClause: string
-      entityDisplay: string
-    }
-  }
-
-  // CP only
-  createResolution?: CreateResolutionResourceIF
-}
-
-export interface ResourceIF extends IncorporationResourceIF, RegistrationResourceIF, DissolutionResourceIF {}
+export interface ResourceIF extends DissolutionResourceIF, IncorporationResourceIF, RegistrationResourceIF {}

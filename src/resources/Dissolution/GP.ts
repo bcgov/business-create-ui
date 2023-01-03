@@ -1,12 +1,12 @@
 import { DissolutionResourceIF } from '@/interfaces'
 import { CorpTypeCd, FilingCodes, ItemTypes } from '@/enums'
 import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
-import { CorpFirmDissolutionSteps } from '@/resources/Dissolutions/stepTemplates'
+import { DissolutionStepsFirm } from './steps'
 
-export const GeneralPartnershipDissolutionResource: DissolutionResourceIF = {
+export const DissolutionResourceGp: DissolutionResourceIF = {
   entityType: CorpTypeCd.PARTNERSHIP,
   displayName: GetCorpFullDescription(CorpTypeCd.PARTNERSHIP),
-  steps: CorpFirmDissolutionSteps,
+  steps: DissolutionStepsFirm,
   filingData: [{
     entityType: CorpTypeCd.PARTNERSHIP,
     filingTypeCode: FilingCodes.DISSOLUTION_VOLUNTARY

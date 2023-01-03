@@ -1,8 +1,8 @@
 import { RouteNames, Views } from '@/enums'
 
 /**
- * The Registration step template.
- * Currently used for both Sole Props and General Partnerships.
+ * The registration steps object.
+ * Currently used for SPs and GPs.
  */
 export const RegistrationSteps = [
   {

@@ -6,7 +6,7 @@ import mockRouter from './MockRouter'
 import { getVuexStore } from '@/store'
 import { createLocalVue, mount } from '@vue/test-utils'
 import PeopleAndRoles from '@/components/common/PeopleAndRoles.vue'
-import { BenefitCompanyResource } from '@/resources/Incorporations/benefitCompany'
+import { IncorporationResourceBen } from '@/resources/Incorporation/BEN'
 
 Vue.use(Vuetify)
 Vue.use(Vuelidate)
@@ -72,7 +72,7 @@ describe('People And Roles component', () => {
     localVue.use(VueRouter)
     const router = mockRouter.mock()
 
-    store.state.resourceModel = BenefitCompanyResource
+    store.state.resourceModel = IncorporationResourceBen
 
     wrapperFactory = () => {
       return mount(PeopleAndRoles, {

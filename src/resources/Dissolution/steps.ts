@@ -1,10 +1,9 @@
 import { RouteNames, Views } from '@/enums'
 
 /**
- * The Coop step template.
- * Currently used for CP.
+ * The dissolution steps object for Coops.
  */
-export const CoopDissolutionSteps = [
+export const DissolutionStepsCoop = [
   {
     id: 'step-1-btn',
     step: 1,
@@ -41,10 +40,10 @@ export const CoopDissolutionSteps = [
 ]
 
 /**
- * The Corp step template.
+ * The dissolutions steps object for corps.
  * Currently used for BEN, BC, ULC and CCC.
  */
-export const CorpDissolutionSteps = [
+export const DissolutionStepsCorp = [
   {
     id: 'step-1-btn',
     step: 1,
@@ -81,14 +80,11 @@ export const CorpDissolutionSteps = [
 ]
 
 /**
- * The stepper template is not needed for SP and GP filing types
- * Hiding of stepper is done by passign meta from route,
- * Still we need one minimum step to render component
- * Currently used for SP, GP.
- * Later we can fix, if we didnt pass stepper, UI should render without stepper
+ * The dissolution steps object for firms (SP and GP).
+ * Note that the stepper is hidden via meta property in route object
+ * but we still need 1 step to define the dynamic component.
  */
-
-export const CorpFirmDissolutionSteps = [
+export const DissolutionStepsFirm = [
   {
     id: 'step-1-btn',
     step: 1,

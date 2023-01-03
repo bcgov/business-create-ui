@@ -5,8 +5,8 @@ import flushPromises from 'flush-promises'
 import { getVuexStore } from '@/store'
 import { mount } from '@vue/test-utils'
 import RegPeopleAndRoles from '@/components/Registration/RegPeopleAndRoles.vue'
-import { SoleProprietorshipResource } from '@/resources/Registrations/soleProprietorship'
-import { GeneralPartnershipResource } from '@/resources/Registrations/generalPartnership'
+import { RegistrationResourceSp } from '@/resources/Registration/SP'
+import { RegistrationResourceGp } from '@/resources/Registration/GP'
 import RegAddEditOrgPerson from '@/components/Registration/RegAddEditOrgPerson.vue'
 import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
 
@@ -72,7 +72,7 @@ describe('Registration People And Roles component - SP', () => {
 
   beforeEach(() => {
     store.state.stateModel.entityType = 'SP'
-    store.state.resourceModel = SoleProprietorshipResource
+    store.state.resourceModel = RegistrationResourceSp
     wrapperFactory = () => mount(RegPeopleAndRoles, {
       store,
       vuetify,
@@ -213,7 +213,7 @@ describe('Registration People And Roles component - GP', () => {
 
   beforeEach(() => {
     store.state.stateModel.entityType = 'GP'
-    store.state.resourceModel = GeneralPartnershipResource
+    store.state.resourceModel = RegistrationResourceGp
     wrapperFactory = () => mount(RegPeopleAndRoles, {
       store,
       vuetify,

@@ -1,21 +1,22 @@
 import { DissolutionResourceIF } from '@/interfaces'
 import { BulletListTypes, CorpTypeCd, FilingCodes, ItemTypes } from '@/enums'
 import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
-import { CorpDissolutionSteps } from '@/resources/Dissolutions/stepTemplates'
+import { DissolutionStepsCorp } from './steps'
 
-export const UnlimitedDissolutionResource: DissolutionResourceIF = {
-  entityType: CorpTypeCd.BC_ULC_COMPANY,
-  displayName: GetCorpFullDescription(CorpTypeCd.BC_ULC_COMPANY),
-  steps: CorpDissolutionSteps,
+export const DissolutionResourceBen: DissolutionResourceIF = {
+  entityType: CorpTypeCd.BENEFIT_COMPANY,
+  displayName: GetCorpFullDescription(CorpTypeCd.BENEFIT_COMPANY),
+  steps: DissolutionStepsCorp,
   filingData: [{
-    entityType: CorpTypeCd.BC_ULC_COMPANY,
+    entityType: CorpTypeCd.BENEFIT_COMPANY,
     filingTypeCode: FilingCodes.DISSOLUTION_VOLUNTARY
   }],
   detailsTitle: 'Company Details',
   custodialRecords: {
-    sectionSubtitle: `Enter the name (person or corporation or firm), email address and mailing and delivery addresses
-      of the Custodian of Records who will be responsible for the care and custody of the Company's records. Addresses
-      must be located in BC.`,
+    sectionSubtitle: `Enter the name (person or corporation or firm) and email address of the Custodian of Records, who
+    will be responsible for the care and custody of the Company's records. Enter the physical delivery address where the
+     dissolved company records will be maintained, and the mailing address where the custodian can be reached. These
+     addresses must be located in B.C.`,
     custodianTitle: 'Custodian of Records',
     helpSection: {
       header: 'Help with Custodian of Records',
@@ -36,7 +37,7 @@ export const UnlimitedDissolutionResource: DissolutionResourceIF = {
       helpText: [
         'The Company has no assets; and',
         `The Company has no liabilities or has made provision for the payment of each of the Company's unpaid
-          liabilities and has obtained the written consent to that provision for payment from each creditor.`
+        liabilities and has obtained the written consent to that provision for payment from each creditor.`
       ],
       note: `The affidavit is to be sworn before a Commissioner for Taking Oaths for British Columbia with a seal
         affixed.`
@@ -62,7 +63,7 @@ export const UnlimitedDissolutionResource: DissolutionResourceIF = {
       certifyClause: `Note: It is an offence to make a false or misleading statement in respect
         of a material fact in a record submitted to the Corporate Registry for filing.
         See section 427 of the Business Corporations Act.`,
-      entityDisplay: GetCorpFullDescription(CorpTypeCd.BC_ULC_COMPANY)
+      entityDisplay: GetCorpFullDescription(CorpTypeCd.BENEFIT_COMPANY)
     }
   },
   createResolution: {
