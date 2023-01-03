@@ -26,13 +26,18 @@
 </template>
 
 <script lang="ts">
-import { Component, Emit, Mixins, Prop, Watch } from 'vue-property-decorator'
+import Vue from 'vue'
+import { Component, Emit, Prop, Watch } from 'vue-property-decorator'
 import { CommonMixin } from '@/mixins'
 import { FormFieldType } from '@/interfaces'
 import { Rules } from '@/rules'
 
-@Component({})
-export default class TransactionalFolioNumber extends Mixins(CommonMixin) {
+@Component({
+  mixins: [
+    CommonMixin
+  ]
+})
+export default class TransactionalFolioNumber extends Vue {
   // Refs
   $refs!: {
     folioNumberInput: FormFieldType

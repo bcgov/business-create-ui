@@ -1,8 +1,7 @@
 // Libraries
 import { AxiosInstance as axios } from '@/utils'
 import { StatusCodes } from 'http-status-codes'
-import { DissolutionFilingIF, IncorporationFilingIF, NameRequestIF, RegistrationFilingIF }
-  from '@/interfaces'
+import { DissolutionFilingIF, IncorporationFilingIF, NameRequestIF, RegistrationFilingIF } from '@/interfaces'
 import { FilingTypes } from '@/enums'
 
 /**
@@ -32,9 +31,9 @@ export default class LegalServices {
 
         switch (filingName) {
           case FilingTypes.INCORPORATION_APPLICATION:
-            return this.formatEmptyIaFiling(filing)
+            return this.formatEmptyIncorporationApplication(filing)
           case FilingTypes.REGISTRATION:
-            return this.formatEmptyRegFiling(filing)
+            return this.formatEmptyRegistration(filing)
           default:
             throw new Error('Invalid filing name')
         }
@@ -169,7 +168,7 @@ export default class LegalServices {
     * @param filing the filing fetched from legal-api
     * @returns the filing in safe-empty state if applicable
   */
-  private static formatEmptyIaFiling (filing: any): IncorporationFilingIF {
+  private static formatEmptyIncorporationApplication (filing: any): IncorporationFilingIF {
     const toReturn = filing
     if (toReturn.incorporationApplication) {
       // set offices
@@ -203,7 +202,7 @@ export default class LegalServices {
    * @param filing the filing fetched from legal-api
    * @returns the filing in safe-empty state if applicable
    */
-  private static formatEmptyRegFiling (filing: any): RegistrationFilingIF {
+  private static formatEmptyRegistration (filing: any): RegistrationFilingIF {
     const toReturn = filing
     if (toReturn.registration) {
       // set offices

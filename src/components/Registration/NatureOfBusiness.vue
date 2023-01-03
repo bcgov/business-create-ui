@@ -18,7 +18,9 @@ import { NatureOfBusiness as NatureOfBusinessShared } from '@bcrs-shared-compone
 
 /** This is a shim between the view and the atomic component. */
 @Component({
-  components: { NatureOfBusinessShared }
+  components: {
+    NatureOfBusinessShared
+  }
 })
 export default class NatureOfBusiness extends Vue {
   @Prop({ required: true }) readonly showErrors!: boolean

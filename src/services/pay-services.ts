@@ -23,7 +23,7 @@ export default class PayServices {
     return axios.get(url)
       .then(response => {
         const fees = response?.data
-        if (!fees.filingFees) {
+        if (!fees) {
           throw new Error('Invalid API response')
         }
         return fees

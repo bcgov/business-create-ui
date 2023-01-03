@@ -21,7 +21,9 @@ import { StaffPaymentOptions } from '@/enums'
 
 /** This is a shim between the view and the atomic component. */
 @Component({
-  components: { StaffPaymentShared }
+  components: {
+    StaffPaymentShared
+  }
 })
 export default class StaffPayment extends Vue {
   /** Whether to display priority checkbox. */

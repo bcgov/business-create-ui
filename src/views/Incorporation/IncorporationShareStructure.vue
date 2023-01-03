@@ -112,7 +112,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Watch } from 'vue-property-decorator'
+import Vue from 'vue'
+import { Component, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import { v4 as uuidv4 } from 'uuid'
 import {
@@ -127,9 +128,12 @@ import ShareStructure from '@/components/Incorporation/ShareStructure.vue'
   components: {
     ListShareClass,
     ShareStructure
-  }
+  },
+  mixins: [
+    CommonMixin
+  ]
 })
-export default class IncorporationShareStructure extends Mixins(CommonMixin) {
+export default class IncorporationShareStructure extends Vue {
   @Getter getCreateShareStructureStep!: ShareStructureIF
   @Getter getShowErrors!: boolean
 

@@ -281,7 +281,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins } from 'vue-property-decorator'
+import Vue from 'vue'
+import { Component } from 'vue-property-decorator'
 import { Getter, Action } from 'vuex-class'
 import { DateMixin } from '@/mixins'
 import AssociationDetails from '@/components/Dissolution/AssociationDetails.vue'
@@ -322,9 +323,12 @@ import {
     EffectiveDateTime,
     StaffPayment,
     TransactionalFolioNumber
-  }
+  },
+  mixins: [
+    DateMixin
+  ]
 })
-export default class DissolutionReviewConfirm extends Mixins(DateMixin) {
+export default class DissolutionReviewConfirm extends Vue {
   // Global getters
   @Getter getAffidavitStep!: UploadAffidavitIF
   @Getter getBusinessContact!: ContactPointIF

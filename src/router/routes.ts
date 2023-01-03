@@ -168,10 +168,9 @@ export const routes = [
       step: 1,
       requiresAuth: true,
       filingType: FilingTypes.VOLUNTARY_DISSOLUTION,
-      noStepper: true // to hide stepper for this view
+      noStepper: true // hide stepper for this route/filing type
     }
   },
-
   {
     // default/fallback route
     // must be last

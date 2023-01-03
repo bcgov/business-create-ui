@@ -11,7 +11,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Watch } from 'vue-property-decorator'
+import Vue from 'vue'
+import { Component, Watch } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 import { PeopleAndRoleIF, PeopleAndRolesResourceIF } from '@/interfaces'
 import { CommonMixin } from '@/mixins'
@@ -21,9 +22,12 @@ import PeopleAndRoles from '@/components/common/PeopleAndRoles.vue'
 @Component({
   components: {
     PeopleAndRoles
-  }
+  },
+  mixins: [
+    CommonMixin
+  ]
 })
-export default class IncorporationPeopleRoles extends Mixins(CommonMixin) {
+export default class IncorporationPeopleRoles extends Vue {
   @Getter getShowErrors!: boolean
   @Getter getAddPeopleAndRoleStep!: PeopleAndRoleIF
   @Getter getPeopleAndRolesResource!: PeopleAndRolesResourceIF

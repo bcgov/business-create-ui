@@ -24,7 +24,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Emit, Mixins, Watch } from 'vue-property-decorator'
+import Vue from 'vue'
+import { Component, Emit, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import { ActionBindingIF, RegistrationStateIF } from '@/interfaces'
 import { DatePicker as DatePickerShared } from '@bcrs-shared-components/date-picker'
@@ -35,9 +36,12 @@ import { VuetifyRuleFunction } from '@/types'
 @Component({
   components: {
     DatePickerShared
-  }
+  },
+  mixins: [
+    DateMixin
+  ]
 })
-export default class StartDate extends Mixins(DateMixin) {
+export default class StartDate extends Vue {
   // Refs
   $refs!: {
     startDateRef: DatePickerShared

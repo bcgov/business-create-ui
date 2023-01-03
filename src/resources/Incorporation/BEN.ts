@@ -1,12 +1,12 @@
 import { IncorporationResourceIF } from '@/interfaces'
 import { CorpTypeCd, FilingCodes, RuleIds } from '@/enums'
-import { BaseStepsTemplate } from './stepTemplates'
+import { IncorporationStepsCorp } from './steps'
 import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 
-export const BenefitCompanyResource: IncorporationResourceIF = {
+export const IncorporationResourceBen: IncorporationResourceIF = {
   entityType: CorpTypeCd.BENEFIT_COMPANY,
   displayName: GetCorpFullDescription(CorpTypeCd.BENEFIT_COMPANY),
-  steps: BaseStepsTemplate,
+  steps: IncorporationStepsCorp,
   filingData: [{
     entityType: CorpTypeCd.BENEFIT_COMPANY,
     filingTypeCode: FilingCodes.INCORPORATION_BEN

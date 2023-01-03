@@ -126,7 +126,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Watch } from 'vue-property-decorator'
+import Vue from 'vue'
+import { Component, Watch } from 'vue-property-decorator'
 import { Getter, Action } from 'vuex-class'
 import {
   ActionBindingIF,
@@ -150,9 +151,12 @@ import OfficeAddresses from '@/components/common/OfficeAddresses.vue'
     FolioNumber,
     NameRequestInfo,
     OfficeAddresses
-  }
+  },
+  mixins: [
+    CommonMixin
+  ]
 })
-export default class IncorporationDefineCompany extends Mixins(CommonMixin) {
+export default class IncorporationDefineCompany extends Vue {
   @Getter isEntityType!: boolean
   @Getter isPremiumAccount!: boolean
   @Getter isTypeBcomp!: boolean

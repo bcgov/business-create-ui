@@ -30,7 +30,9 @@ import { Component } from 'vue-property-decorator'
 import RegistriesContactInfo from '@/components/common/RegistriesContactInfo.vue'
 
 @Component({
-  components: { RegistriesContactInfo }
+  components: {
+    RegistriesContactInfo
+  }
 })
 export default class HelpContactUs extends Vue {
   helpToggle = false

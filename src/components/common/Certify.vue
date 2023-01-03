@@ -25,7 +25,9 @@ import { Certify as CertifyShared } from '@bcrs-shared-components/certify'
 
 /** This is a shim between the view and the atomic component. */
 @Component({
-  components: { CertifyShared }
+  components: {
+    CertifyShared
+  }
 })
 export default class Certify extends Vue {
   @Prop({ required: true }) readonly disableEdit!: boolean

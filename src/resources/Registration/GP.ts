@@ -1,9 +1,9 @@
 import { RegistrationResourceIF } from '@/interfaces'
 import { CorpTypeCd, FilingCodes, RuleIds } from '@/enums'
 import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
-import { RegistrationSteps } from '@/resources/Registrations/stepTemplates'
+import { RegistrationSteps } from './steps'
 
-export const GeneralPartnershipResource: RegistrationResourceIF = {
+export const RegistrationResourceGp: RegistrationResourceIF = {
   entityType: CorpTypeCd.PARTNERSHIP,
   displayName: GetCorpFullDescription(CorpTypeCd.PARTNERSHIP),
   steps: RegistrationSteps,

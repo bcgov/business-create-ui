@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-10" id="dissolution-firm-form">
+  <div class="mt-10" id="dissolution-firm">
     <v-card outlined class="message-box rounded-0">
       <p>
         <strong>Important:</strong> You are about to dissolve
@@ -212,7 +212,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins } from 'vue-property-decorator'
+import Vue from 'vue'
+import { Component } from 'vue-property-decorator'
 import { Getter, Action } from 'vuex-class'
 import { DateMixin } from '@/mixins'
 import AssociationDetails from '@/components/Dissolution/AssociationDetails.vue'
@@ -255,9 +256,12 @@ import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module
     ListPeopleAndRoles,
     DatePickerShared,
     CompletingParty
-  }
+  },
+  mixins: [
+    DateMixin
+  ]
 })
-export default class DissolutionFirm extends Mixins(DateMixin) {
+export default class DissolutionFirm extends Vue {
   // Global getters
   @Getter getEntityType!: CorpTypeCd
   @Getter getBusinessLegalName!: string
@@ -445,7 +449,7 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
 
-#dissolution-firm-form {
+#dissolution-firm {
   /* Set "header-counter" to 0 */
   counter-reset: header-counter;
 }

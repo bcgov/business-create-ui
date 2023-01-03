@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuetify from 'vuetify'
 import { getVuexStore } from '@/store'
 import { shallowMount } from '@vue/test-utils'
-import { CooperativeResource } from '@/resources/Incorporations'
+import { IncorporationResourceCp } from '@/resources/Incorporation/CP'
 import UploadRules from '@/components/Incorporation/UploadRules.vue'
 
 Vue.use(Vuetify)
@@ -13,7 +13,7 @@ describe(`Upload Rules view for a COOP`, () => {
   let wrapper: any
 
   beforeEach(() => {
-    store.state.resourceModel.createRules = CooperativeResource.createRules
+    store.state.resourceModel.createRules = IncorporationResourceCp.createRules
     wrapper = shallowMount(UploadRules, {
       vuetify,
       store,
@@ -63,7 +63,7 @@ describe(`Upload Rules view for a COOP`, () => {
   })
 
   it('renders the help section', () => {
-    const helpSection = CooperativeResource.createRules.helpSection
+    const helpSection = IncorporationResourceCp.createRules.helpSection
     const help = wrapper.find('#help-rules-section')
     expect(help.find('span span').text()).toContain(helpSection.header)
     expect(help.find('#create-rules-help-header').text()).toContain(helpSection.header)

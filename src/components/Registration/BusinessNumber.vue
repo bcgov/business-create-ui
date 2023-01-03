@@ -57,8 +57,12 @@ import { HelpBusinessNumber } from '@bcrs-shared-components/help-business-number
  * - disables validation after leaving text field if the value is falsy
  */
 @Component({
-  components: { HelpBusinessNumber },
-  directives: { mask }
+  components: {
+    HelpBusinessNumber
+  },
+  directives: {
+    mask
+  }
 })
 export default class BusinessNumber extends Vue {
   $refs!: {

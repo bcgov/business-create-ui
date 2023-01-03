@@ -1,49 +1,49 @@
 import { DissolutionResourceIF, IncorporationResourceIF, RegistrationResourceIF } from '@/interfaces'
 
 import {
-  BenefitCompanyResource,
-  CommunityContributionCompanyResource,
-  CooperativeResource,
-  LimitedCompanyResource,
-  UnlimitedCompanyResource
-} from './Incorporations'
+  DissolutionResourceBc,
+  DissolutionResourceBen,
+  DissolutionResourceCc,
+  DissolutionResourceCp,
+  DissolutionResourceGp,
+  DissolutionResourceSp,
+  DissolutionResourceUlc
+} from './Dissolution/'
 
 import {
-  SoleProprietorshipResource,
-  GeneralPartnershipResource
-} from './Registrations'
+  IncorporationResourceBc,
+  IncorporationResourceBen,
+  IncorporationResourceCc,
+  IncorporationResourceCp,
+  IncorporationResourceUlc
+} from './Incorporation/'
 
 import {
-  BenefitCompanyDissolutionResource,
-  CommunityContributionCompanyDissolutionResource,
-  CooperativeDissolutionResource,
-  LimitedCompanyDissolutionResource,
-  UnlimitedDissolutionResource,
-  SoleProprietorshipDissolutionResource,
-  GeneralPartnershipDissolutionResource
-} from './Dissolutions'
+  RegistrationResourceGp,
+  RegistrationResourceSp
+} from './Registration/'
+
+export const DissolutionResources: Array<DissolutionResourceIF> = [
+  DissolutionResourceBc,
+  DissolutionResourceBen,
+  DissolutionResourceCc,
+  DissolutionResourceCp,
+  DissolutionResourceGp,
+  DissolutionResourceSp,
+  DissolutionResourceUlc
+]
 
 export const IncorporationResources: Array<IncorporationResourceIF> = [
-  BenefitCompanyResource,
-  CommunityContributionCompanyResource,
-  CooperativeResource,
-  LimitedCompanyResource,
-  UnlimitedCompanyResource
+  IncorporationResourceBc,
+  IncorporationResourceBen,
+  IncorporationResourceCc,
+  IncorporationResourceCp,
+  IncorporationResourceUlc
 ]
 
 export const RegistrationResources: Array<RegistrationResourceIF> = [
-  SoleProprietorshipResource,
-  GeneralPartnershipResource
-]
-
-export const DissolutionResources: Array<DissolutionResourceIF> = [
-  BenefitCompanyDissolutionResource,
-  CommunityContributionCompanyDissolutionResource,
-  CooperativeDissolutionResource,
-  LimitedCompanyDissolutionResource,
-  UnlimitedDissolutionResource,
-  SoleProprietorshipDissolutionResource,
-  GeneralPartnershipDissolutionResource
+  RegistrationResourceGp,
+  RegistrationResourceSp
 ]
 
 export * from './BreadCrumbResource'

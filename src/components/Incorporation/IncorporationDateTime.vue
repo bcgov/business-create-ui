@@ -98,14 +98,19 @@
 // FUTURE: replace this with EffectiveDateTime.vue
 //
 
-import { Component, Mixins, Watch, Emit, Prop } from 'vue-property-decorator'
+import Vue from 'vue'
+import { Component, Watch, Emit, Prop } from 'vue-property-decorator'
 import { DateMixin } from '@/mixins'
 import { ISIMMEDIATE, ISFUTUREEFFECTIVE } from '@/constants'
 import { EffectiveDateTimeIF, FormIF } from '@/interfaces'
 import { VuetifyRuleFunction } from '@/types'
 
-@Component({})
-export default class IncorporationDateTime extends Mixins(DateMixin) {
+@Component({
+  mixins: [
+    DateMixin
+  ]
+})
+export default class IncorporationDateTime extends Vue {
   // Refs
   $refs!: {
     dateTimeForm: FormIF

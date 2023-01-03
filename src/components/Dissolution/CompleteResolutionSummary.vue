@@ -97,7 +97,8 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Mixins, Watch } from 'vue-property-decorator'
+import Vue from 'vue'
+import { Component, Watch } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 import { DateMixin } from '@/mixins'
 
@@ -105,8 +106,12 @@ import { DateMixin } from '@/mixins'
 import { RouteNames } from '@/enums'
 import { CreateResolutionIF, CreateResolutionResourceIF, FormIF } from '@/interfaces'
 
-@Component({})
-export default class CompleteResolutionSummary extends Mixins(DateMixin) {
+@Component({
+  mixins: [
+    DateMixin
+  ]
+})
+export default class CompleteResolutionSummary extends Vue {
   // Refs
   $refs!: {
     resolutionTextRef: FormIF

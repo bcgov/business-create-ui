@@ -156,7 +156,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins } from 'vue-property-decorator'
+import Vue from 'vue'
+import { Component } from 'vue-property-decorator'
 import { Action } from 'vuex-class'
 import { cloneDeep } from 'lodash'
 import { ActionBindingIF, EmptyAddress, EmptyOrgPerson } from '@/interfaces'
@@ -177,9 +178,12 @@ import RegAddEditOrgPerson from '@/components/Registration/RegAddEditOrgPerson.v
     HelpSection,
     ListPeopleAndRoles,
     RegAddEditOrgPerson
-  }
+  },
+  mixins: [
+    PeopleRolesMixin
+  ]
 })
-export default class RegPeopleAndRoles extends Mixins(PeopleRolesMixin) {
+export default class RegPeopleAndRoles extends Vue {
   @Action setRegistrationBusinessType!: ActionBindingIF
 
   //

@@ -165,7 +165,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Watch } from 'vue-property-decorator'
+import Vue from 'vue'
+import { Component, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import {
   ActionBindingIF,
@@ -183,9 +184,13 @@ import { GetCorpNumberedDescription } from '@bcrs-shared-components/corp-type-mo
 @Component({
   components: {
     FileUploadPreview
-  }
+  },
+  mixins: [
+    CommonMixin,
+    DocumentMixin
+  ]
 })
-export default class CompleteAffidavit extends Mixins(CommonMixin, DocumentMixin) {
+export default class CompleteAffidavit extends Vue {
   // Refs
   $refs!: {
     confirmAffidavitChk: FormIF

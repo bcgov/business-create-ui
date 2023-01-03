@@ -159,7 +159,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Emit, Mixins, Watch } from 'vue-property-decorator'
+import Vue from 'vue'
+import { Component, Emit, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import { getName } from 'country-list'
 import AddNameTranslation from '@/components/common/AddNameTranslation.vue'
@@ -183,9 +184,12 @@ import { Capitalize } from '@/utils'
     AddNameTranslation,
     ConfirmDialog,
     ListNameTranslations
-  }
+  },
+  mixins: [
+    DateMixin
+  ]
 })
-export default class NameRequestInfo extends Mixins(DateMixin) {
+export default class NameRequestInfo extends Vue {
   // Refs
   $refs!: {
     confirmTranslationRemovalDialog: ConfirmDialogType

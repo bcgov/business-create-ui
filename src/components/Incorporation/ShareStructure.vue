@@ -156,13 +156,18 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Emit, Mixins } from 'vue-property-decorator'
+import Vue from 'vue'
+import { Component, Prop, Emit } from 'vue-property-decorator'
 import { ShareClassIF, FormIF } from '@/interfaces'
 import { CurrencyLookupMixin } from '@/mixins'
 import { VuetifyRuleFunction } from '@/types'
 
-@Component({})
-export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
+@Component({
+  mixins: [
+    CurrencyLookupMixin
+  ]
+})
+export default class ShareStructure extends Vue {
   // Refs
   $refs!: {
     shareStructureForm: FormIF

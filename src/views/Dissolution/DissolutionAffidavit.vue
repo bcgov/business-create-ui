@@ -5,7 +5,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Watch } from 'vue-property-decorator'
+import Vue from 'vue'
+import { Component, Watch } from 'vue-property-decorator'
 import Affidavit from '@/components/Dissolution/CompleteAffidavit.vue'
 import { RouteNames } from '@/enums'
 import { CommonMixin } from '@/mixins'
@@ -15,9 +16,12 @@ import { UploadAffidavitIF } from '@/interfaces'
 @Component({
   components: {
     Affidavit
-  }
+  },
+  mixins: [
+    CommonMixin
+  ]
 })
-export default class DissolutionAffidavit extends Mixins(CommonMixin) {
+export default class DissolutionAffidavit extends Vue {
   // Global getter
   @Getter getAffidavitStep!: UploadAffidavitIF
   @Getter getShowErrors!: boolean

@@ -1,15 +1,15 @@
 import { IncorporationResourceIF } from '@/interfaces'
 import { CorpTypeCd, FilingCodes, RuleIds } from '@/enums'
-import { BaseStepsTemplate } from './stepTemplates'
+import { IncorporationStepsCorp } from './steps'
 import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 
-export const CommunityContributionCompanyResource: IncorporationResourceIF = {
-  entityType: CorpTypeCd.BC_CCC,
-  displayName: GetCorpFullDescription(CorpTypeCd.BC_CCC),
-  steps: BaseStepsTemplate,
+export const IncorporationResourceUlc: IncorporationResourceIF = {
+  entityType: CorpTypeCd.BC_ULC_COMPANY,
+  displayName: GetCorpFullDescription(CorpTypeCd.BC_ULC_COMPANY),
+  steps: IncorporationStepsCorp,
   filingData: [{
-    entityType: CorpTypeCd.BC_CCC,
-    filingTypeCode: FilingCodes.INCORPORATION_CC
+    entityType: CorpTypeCd.BC_ULC_COMPANY,
+    filingTypeCode: FilingCodes.INCORPORATION_ULC
   }],
   peopleAndRoles: {
     header: '1. Add People or Corporations/Firms to your Application',
@@ -31,8 +31,8 @@ export const CommunityContributionCompanyResource: IncorporationResourceIF = {
       },
       {
         id: RuleIds.NUM_DIRECTORS,
-        text: 'At least three Directors',
-        test: (num) => { return (num >= 3) }
+        text: 'At least one Director',
+        test: (num) => { return (num >= 1) }
       }
     ]
   },
@@ -40,14 +40,13 @@ export const CommunityContributionCompanyResource: IncorporationResourceIF = {
     countMinimum: 1
   },
   incorporationArticles: {
-    articles: 'Community Contribution Company Articles',
-    articlesTooltip: 'The Articles for a Community Contribution Company must include the following statements “This ' +
-    'company is a community contribution company, and, as such, has purposes beneficial to society. This company is ' +
-    'restricted, in accordance with Part 2.2 of the Business Corporations Act, in its ability to pay dividends and ' +
-    'to distribute its assets on dissolution or otherwise.” Articles should also outline the rules and procedures ' +
-    'for corporate matters such as holding meetings, issuing and transferring shares, and duties of directors ' +
-    'and officers.',
-    provisions: 'community provision',
+    articles: 'Unlimited Liability Company Articles',
+    articlesTooltip: 'The Articles for an Unlimited Liability Company must include the following statement: “The ' +
+    'shareholders of this company are jointly and severally liable to satisfy the debts and liabilities of this ' +
+    'company to the extent provided in section 51.3 of the Business Corporations Act.” Articles should also outline ' +
+    'the rules and procedures for corporate matters such as holding meetings, issuing and transferring shares, and ' +
+    'duties of directors and officers.',
+    provisions: 'liability provision',
     provisionTooltip: 'A clause in the Articles which communicates the liability statement required by the Business ' +
     'Corporations Act 51.11.'
   },
@@ -57,28 +56,28 @@ export const CommunityContributionCompanyResource: IncorporationResourceIF = {
         header: 'What is the sample Incorporation Agreement and Company Articles?',
         helpText: [
           `The sample Incorporation Agreement and Company Articles is a template that you can use to create an 
-            Incorporation Agreement and articles for your company. It uses all the standard provisions by legislation. 
+            incorporation agreement and articles for your company. It uses all the standard provisions by legislation. 
             There are three types of samples depending on if you're incorporating a Limited Company, a Benefit Company, 
-            Unlimited Liability Company, or a Community Contribution Company.`,
-          `If you would like to customize any other provisions in the Articles, you cannot use these samples. 
+            or a Community Contribution Company.`,
+          `If you would like to customize any other provisions in the Articles, you cannot use these samples.
             We recommend seeking professional assistance from a lawyer or accountant to help you prepare your articles.`
         ]
       },
       {
-        header: 'What is a Community Provision?',
+        header: 'What is a Liability Provision?',
         helpText: [
-          `A Community Provision is a statement by the company of its benefits to society and its restrictions in its 
-            ability to pay dividends and distribute assets.`,
-          `A Community Contribution Company must include a community provision in its Articles.`
+          `A Liability Provision is a statement by the company of the shareholders joint liability to satisfy all debts
+            and liabilities of the company.`,
+          'An Unlimited Liability Company must include a Liability Provision in its Articles.'
         ]
       }
     ],
-    article: 'community_contribution_company_incorporation_agreement.pdf',
+    article: 'unlimited_liability_company_incorporation_agreement.pdf',
     documents: [
       {
         code: 'custom',
-        description: 'The <b>custom Incorporation Agreement and custom Articles</b> containing the community' +
-        ' provision required by the Business Corporations Act 51.911 has been completed and a copy has been added' +
+        description: 'The <b>custom Incorporation Agreement and custom Articles</b> containing the liability' +
+        ' provision required by the Business Corporations Act 51.11 has been completed and a copy has been added' +
         ' to the company\'s record book.'
       }
     ]

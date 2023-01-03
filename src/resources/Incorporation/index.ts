@@ -1,0 +1,5 @@
+export * from '@/resources/Incorporation/BC'
+export * from '@/resources/Incorporation/BEN'
+export * from '@/resources/Incorporation/CC'
+export * from '@/resources/Incorporation/CP'
+export * from '@/resources/Incorporation/ULC'

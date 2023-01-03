@@ -1,10 +1,34 @@
 import {
-  AffidavitResourceIF, FilingDataIF, HelpSectionIF, IncorporationAgreementTypeIF, KeyValueIF, PeopleAndRolesResourceIF,
-  StepIF, CreateRulesResourceIF, CreateMemorandumResourceIF, CreateResolutionResourceIF, CustodianResourceIF
+  AffidavitResourceIF, FilingDataIF, HelpSectionIF, IncorporationAgreementTypeIF, KeyValueIF,
+  PeopleAndRolesResourceIF, StepIF, CreateRulesResourceIF, CreateMemorandumResourceIF,
+  CreateResolutionResourceIF, CustodianResourceIF
 } from '@/interfaces'
 import { CorpTypeCd } from '@/enums'
 
-// Interface to define the resource model
+/** Dissolution resource interface. */
+export interface DissolutionResourceIF {
+  entityType: CorpTypeCd
+  displayName: string
+  steps: Array<StepIF>
+  filingData: Array<FilingDataIF>
+  detailsTitle: string
+  custodialRecords?: CustodianResourceIF
+  dissolutionStatements?: Array<KeyValueIF>
+  affidavit?: AffidavitResourceIF
+  reviewAndConfirm: {
+    completingPartyStatement: {
+      certifyStatementHeader: string
+      certifyStatements: Array<string>
+      certifyClause: string
+      entityDisplay: string
+    }
+  }
+
+  // CP only
+  createResolution?: CreateResolutionResourceIF
+}
+
+/** Incorporation resource interface. */
 export interface IncorporationResourceIF {
   entityType: CorpTypeCd
   displayName: string
@@ -41,6 +65,7 @@ export interface IncorporationResourceIF {
   createMemorandum?: CreateMemorandumResourceIF
 }
 
+/** Registration resource interface. */
 export interface RegistrationResourceIF {
   entityType: CorpTypeCd
   displayName: string
@@ -55,29 +80,6 @@ export interface RegistrationResourceIF {
       entityDisplay: string
     }
   }
-}
-
-// Interface to define the resource model
-export interface DissolutionResourceIF {
-  entityType: CorpTypeCd
-  displayName: string
-  steps: Array<StepIF>
-  filingData: Array<FilingDataIF>
-  detailsTitle: string
-  custodialRecords?: CustodianResourceIF
-  dissolutionStatements?: Array<KeyValueIF>
-  affidavit?: AffidavitResourceIF
-  reviewAndConfirm: {
-    completingPartyStatement: {
-      certifyStatementHeader: string
-      certifyStatements: Array<string>
-      certifyClause: string
-      entityDisplay: string
-    }
-  }
-
-  // CP only
-  createResolution?: CreateResolutionResourceIF
 }
 
 export interface ResourceIF extends DissolutionResourceIF, IncorporationResourceIF, RegistrationResourceIF {}

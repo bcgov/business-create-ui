@@ -67,7 +67,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins } from 'vue-property-decorator'
+import Vue from 'vue'
+import { Component } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 import { CorpTypeCd, FilingNames, FilingTypes } from '@/enums'
 import { ContactPointIF, RegistrationStateIF } from '@/interfaces'
@@ -76,8 +77,15 @@ import { StaffComments } from '@bcrs-shared-components/staff-comments'
 import { AxiosInstance as axios } from '@/utils'
 import { GetCorpFullDescription, GetCorpNumberedDescription } from '@bcrs-shared-components/corp-type-module'
 
-@Component({ components: { StaffComments } })
-export default class EntityInfo extends Mixins(DateMixin) {
+@Component({
+  components: {
+    StaffComments
+  },
+  mixins: [
+    DateMixin
+  ]
+})
+export default class EntityInfo extends Vue {
   @Getter getBusinessLegalName!: string
   @Getter getBusinessContact!: ContactPointIF
   @Getter getEntityIdentifier!: string

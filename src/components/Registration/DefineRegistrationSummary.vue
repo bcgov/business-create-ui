@@ -103,7 +103,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins } from 'vue-property-decorator'
+import Vue from 'vue'
+import { Component } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 import { ContactPointIF, RegistrationStateIF } from '@/interfaces'
 import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
@@ -118,9 +119,12 @@ import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module
     BusinessAddresses,
     BusinessContactInfo,
     FolioNumber
-  }
+  },
+  mixins: [
+    DateMixin
+  ]
 })
-export default class DefineRegistrationSummary extends Mixins(DateMixin) {
+export default class DefineRegistrationSummary extends Vue {
   // Getters
   @Getter getNameRequestApprovedName!: string
   // @Getter isPremiumAccount!: boolean // DISABLED PER TICKET # 12306
