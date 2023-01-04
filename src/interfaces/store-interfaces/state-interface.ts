@@ -18,6 +18,7 @@ import {
   PeopleAndRoleIF,
   RegistrationStateIF,
   ResourceIF,
+  RestorationStateIF,
   ShareStructureIF,
   StaffPaymentStepIF,
   TombstoneIF,
@@ -67,6 +68,7 @@ export interface StateModelIF {
   registration: RegistrationStateIF
   completingParty?: CompletingPartyIF
   parties?: Array<PartyIF>
+  restoration: RestorationStateIF
 
   // staffPaymentStep and courtOrder are common and for now are only used in dissolution
   staffPaymentStep: StaffPaymentStepIF

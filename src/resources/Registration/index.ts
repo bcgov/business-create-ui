@@ -1,2 +1,2 @@
-export * from '@/resources/Registration/GP'
-export * from '@/resources/Registration/SP'
+export * from './GP'
+export * from './SP'

@@ -159,6 +159,8 @@ export default class EntityInfo extends Vue {
         return this.getNameRequestApprovedName
       case FilingTypes.REGISTRATION:
         return this.getNameRequestApprovedName
+      case FilingTypes.RESTORATION:
+        return this.getNameRequestApprovedName
     }
   }
 }

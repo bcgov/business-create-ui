@@ -193,6 +193,16 @@ export const stateModel: StateModelIF = {
     businessTypeConfirm: false,
     isAutoPopulatedBusinessNumber: false
   },
+  // *** TODO: update
+  restoration: {
+    applicantInfoValid: false,
+    businessInfoValid: false,
+    businessNameValid: false
+    // defineBusinessValid: false,
+    // startDate: '',
+    // businessAddress: null,
+    // businessNumber: null
+  },
   completingParty: null,
   parties: null,
   windowWidth: 0

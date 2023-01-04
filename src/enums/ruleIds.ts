@@ -7,4 +7,5 @@ export enum RuleIds {
   DIRECTOR_PROVINCE = 4,
   NUM_PROPRIETORS = 5,
   NUM_PARTNERS = 6,
+  NUM_APPLICANT = 7,
 }

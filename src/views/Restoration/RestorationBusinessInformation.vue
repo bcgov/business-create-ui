@@ -1,5 +1,5 @@
 <template>
-  <div id="incorporation-define-company">
+  <div id="restoration-business-information">
     <!-- Name -->
     <section class="mt-10">
       <header id="name-header">
@@ -156,7 +156,7 @@ import OfficeAddresses from '@/components/common/OfficeAddresses.vue'
     CommonMixin
   ]
 })
-export default class IncorporationDefineCompany extends Vue {
+export default class RestorationBusinessInformation extends Vue {
   @Getter isEntityType!: boolean
   @Getter isPremiumAccount!: boolean
   @Getter isTypeBcomp!: boolean
@@ -197,7 +197,7 @@ export default class IncorporationDefineCompany extends Vue {
     }
 
     // watch data changes once page has loaded (in next tick)
-    this.$nextTick(() => {
+    Vue.nextTick(() => {
       this.setIgnoreChanges(false)
     })
   }
@@ -271,7 +271,7 @@ export default class IncorporationDefineCompany extends Vue {
   private async scrollToInvalidComponent (): Promise<void> {
     if (this.getShowErrors && this.$route.name === RouteNames.INCORPORATION_DEFINE_COMPANY) {
       // scroll to invalid components
-      await this.$nextTick()
+      await Vue.nextTick()
       await this.validateAndScroll(
         {
           hasValidNameTranslation: this.hasValidNameTranslation,
@@ -294,7 +294,7 @@ export default class IncorporationDefineCompany extends Vue {
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
 
-#incorporation-define-company {
+#restoration-business-information {
   /* Set "header-counter" to 0 */
   counter-reset: header-counter;
 }

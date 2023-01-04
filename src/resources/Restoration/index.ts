@@ -1,7 +1,4 @@
 export * from './BC'
 export * from './BEN'
 export * from './CC'
-export * from './CP'
-export * from './GP'
-export * from './SP'
 export * from './ULC'

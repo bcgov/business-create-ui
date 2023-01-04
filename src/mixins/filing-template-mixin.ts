@@ -28,8 +28,10 @@ import {
   DocumentDeliveryIF,
   OrgPersonIF,
   SpecialResolutionIF,
-  RegistrationStateIF,
   RegistrationFilingIF,
+  RegistrationStateIF,
+  RestorationFilingIF,
+  RestorationStateIF,
   EmptyNaics,
   PartyIF,
   CompletingPartyIF
@@ -89,6 +91,7 @@ export default class FilingTemplateMixin extends DateMixin {
   @Getter getTransactionalFolioNumber!: string
   @Getter isPremiumAccount!: boolean
   @Getter getRegistration!: RegistrationStateIF
+  @Getter getRestoration!: RestorationStateIF
   @Getter getFilingId!: number
   @Getter getCompletingParty!: CompletingPartyIF
   @Getter getDissolutionDate!: string
@@ -252,7 +255,7 @@ export default class FilingTemplateMixin extends DateMixin {
     })
 
     // restore Persons and Organizations
-    this.setOrgPersonList(draftFiling.incorporationApplication.parties)
+    this.setOrgPersonList(draftFiling.incorporationApplication.parties || [])
 
     // conditionally restore the entity-specific sections
     switch (this.getEntityType) {
@@ -405,6 +408,55 @@ export default class FilingTemplateMixin extends DateMixin {
     return filing
   }
 
+  /**
+   * Builds a restoration filing from store data. Used when saving a filing.
+   * @returns the filing body to save
+   */
+  buildRestorationFiling (): any {
+    // Build the main filing.
+    const filing: RestorationFilingIF = {
+      header: {
+        name: FilingTypes.RESTORATION,
+        certifiedBy: this.getCertifyState.certifiedBy,
+        date: this.getCurrentDate,
+        filingId: this.getFilingId,
+        folioNumber: this.getFolioNumber, // default FN; may be overwritten by staff BCOL FN
+        isFutureEffective: false
+      },
+      business: {
+        legalType: this.getEntityType,
+        identifier: this.getBusinessId,
+        legalName: this.getBusinessLegalName,
+        foundingDate: this.getBusinessFoundingDate
+      },
+      // *** TODO: update
+      restoration: {
+        date: '',
+        type: '',
+        expiry: '',
+        nameRequest: {
+          legalName: this.getNameRequestApprovedName,
+          legalType: this.getEntityType,
+          nrNumber: this.getNameRequestNumber
+        },
+        nameTranslations: this.getNameTranslations,
+        parties: this.orgPersonsToParties(this.getAddPeopleAndRoleStep.orgPeople)
+      }
+    }
+
+    if (this.isRoleStaff) {
+      // Add staff payment data.
+      this.buildStaffPayment(filing)
+    }
+
+    // NB: Premium account is mutually exclusive with staff role.
+    if (this.isPremiumAccount) {
+      this.buildFolioNumber(filing)
+    }
+
+    return filing
+  }
+
   private orgPersonsToParties (orgPersons: OrgPersonIF[]): PartyIF[] {
     return orgPersons.map(orgPerson => {
       // convert businessNumber -> taxId
@@ -466,7 +518,7 @@ export default class FilingTemplateMixin extends DateMixin {
     this.setRegistrationStartDate(draftFiling.registration.startDate)
 
     // restore Persons and Organizations
-    this.setOrgPersonList(this.partiesToOrgPersons(draftFiling.registration.parties))
+    this.setOrgPersonList(this.partiesToOrgPersons(draftFiling.registration.parties || []))
 
     // restore Certify state
     this.setCertifyState({
@@ -476,6 +528,58 @@ export default class FilingTemplateMixin extends DateMixin {
 
     // do not restore Fee Acknowledgement
     this.setRegistrationFeeAcknowledgement(false)
+
+    // NB: Staff role is mutually exclusive with premium account.
+    if (this.isRoleStaff) {
+      // restore Staff Payment data
+      this.parseStaffPayment(draftFiling)
+    }
+
+    // if this is a premium account and Transactional Folio Number exists then restore it
+    // NB: Premium account is mutually exclusive with staff role.
+    if (this.isPremiumAccount) {
+      // if Transactional Folio Number exists then restore it
+      if (draftFiling.header.isTransactionalFolioNumber && draftFiling.header.folioNumber) {
+        this.setTransactionalFolioNumber(draftFiling.header.folioNumber)
+      }
+    }
+  }
+
+  /**
+   * Parses a draft restoration filing into the store. Used when loading a filing.
+   * @param draftFiling the filing body to parse
+   */
+  parseRestorationDraft (draftFiling: any): void {
+    // NB: don't parse Name Request object -- NR is fetched from namex/NRO instead
+
+    // save filing id
+    this.setFilingId(+draftFiling.header.filingId)
+
+    // restore Business data
+    this.setEntityType(draftFiling.business.legalType)
+    this.setLegalName(draftFiling.business.legalName)
+    this.setFoundingDate(draftFiling.business.foundingDate)
+
+    // restore Restoration data
+
+    // *** TODO: restore date
+    // *** TODO: restore type
+    // *** TODO: restore expiry
+
+    // NB: no need to restore Name Request data
+    // it will be reloaded from NR endpoint in App.vue
+
+    // restore Name Translations
+    this.setNameTranslationState(draftFiling.restoration.nameTranslations || [])
+
+    // restore Persons and Organizations
+    this.setOrgPersonList(this.partiesToOrgPersons(draftFiling.restoration.parties || []))
+
+    // restore Certify state
+    this.setCertifyState({
+      valid: false,
+      certifiedBy: draftFiling.header.certifiedBy
+    })
 
     // NB: Staff role is mutually exclusive with premium account.
     if (this.isRoleStaff) {
@@ -746,7 +850,7 @@ export default class FilingTemplateMixin extends DateMixin {
    * Builds dissolution staff payment data from store data.
    * @param filing the filing body to update
    */
-  private buildStaffPayment (filing: DissolutionFilingIF | RegistrationFilingIF): void {
+  private buildStaffPayment (filing: DissolutionFilingIF | RegistrationFilingIF | RestorationFilingIF): void {
     // Populate Staff Payment according to payment option
     const staffPayment = this.getStaffPaymentStep.staffPayment
     switch (staffPayment.option) {
@@ -777,7 +881,7 @@ export default class FilingTemplateMixin extends DateMixin {
    * If a Transactional Folio number was entered then override the Folio number
    * @param filing the filing body to update
    */
-  private buildFolioNumber (filing: DissolutionFilingIF | RegistrationFilingIF): void {
+  private buildFolioNumber (filing: DissolutionFilingIF | RegistrationFilingIF | RestorationFilingIF): void {
     // override Folio Number if TFN exists and is different than default FN
     // also save a flag to correctly restore a draft later
     const fn = this.getFolioNumber
@@ -831,5 +935,67 @@ export default class FilingTemplateMixin extends DateMixin {
         isPriority: false
       })
     }
+  }
+
+  /**
+   * Ensure consistent object structure for an Incorporation Application, whether it contains
+   * a Name Request or not, and whether it is an initial * draft or it has been previously
+   * saved. Object merging does not work very well otherwise due to nested properties.
+   * @param filing the filing fetched from legal-api
+   * @returns the filing in safe-empty state if applicable
+   */
+  formatEmptyIncorporationApplication (filing: any): IncorporationFilingIF {
+    const toReturn = filing
+    if (toReturn.incorporationApplication) {
+      // set offices
+      if (!toReturn.incorporationApplication?.offices) {
+        toReturn.incorporationApplication.offices = []
+      }
+      // set contact point
+      if (!toReturn.incorporationApplication?.contactPoint) {
+        toReturn.incorporationApplication.contactPoint = {
+          email: '',
+          phone: ''
+        }
+      }
+      // set parties
+      if (!toReturn.incorporationApplication?.parties) {
+        toReturn.incorporationApplication.parties = []
+      }
+      // set share classes
+      if (!toReturn.incorporationApplication?.shareClasses) {
+        toReturn.incorporationApplication.shareClasses = []
+      }
+    }
+    return toReturn
+  }
+
+  /**
+   * Ensure consistent object structure for a Registration, whether it contains a Name
+   * Request or not, and whether it is an initial draft or it has been previously saved.
+   * Object merging does not work very well otherwise due to nested properties.
+   * @param filing the filing fetched from legal-api
+   * @returns the filing in safe-empty state if applicable
+   */
+  formatEmptyRegistration (filing: any): RegistrationFilingIF {
+    const toReturn = filing
+    if (toReturn.registration) {
+      // set offices
+      if (!toReturn.registration?.offices) {
+        toReturn.registration.offices = {}
+      }
+      // set contact point
+      if (!toReturn.registration?.contactPoint) {
+        toReturn.registration.contactPoint = {
+          email: '',
+          phone: ''
+        }
+      }
+      // set parties
+      if (!toReturn.registration?.parties) {
+        toReturn.registration.parties = []
+      }
+    }
+    return toReturn
   }
 }

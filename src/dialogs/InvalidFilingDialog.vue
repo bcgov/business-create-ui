@@ -1,11 +1,11 @@
 <template>
   <v-dialog v-model="dialog" width="45rem" persistent :attach="attach"
-            content-class="invalid-incorporation-application-dialog">
+            content-class="invalid-filing-dialog">
     <v-card>
-      <v-card-title id="dialog-title">Incorporation Application Does Not Exist</v-card-title>
+      <v-card-title id="dialog-title">Filing Does Not Exist</v-card-title>
 
       <v-card-text>
-        <p class="genErr">The incorporation application you are attempting to open does not exist -
+        <p class="genErr">The filing you are attempting to open does not exist -
           it may have been filed, or it may be pending filing or payment.</p>
       </v-card-text>
 
@@ -24,7 +24,7 @@ import Vue from 'vue'
 import { Component, Prop, Emit } from 'vue-property-decorator'
 
 @Component({})
-export default class InvalidIncorporationDialogDialog extends Vue {
+export default class InvalidFilingDialog extends Vue {
   /** Prop to display the dialog. */
   @Prop({ default: false }) readonly dialog!: boolean
 

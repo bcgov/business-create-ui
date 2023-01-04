@@ -1,4 +1,5 @@
-import { DissolutionResourceIF, IncorporationResourceIF, RegistrationResourceIF } from '@/interfaces'
+import { DissolutionResourceIF, IncorporationResourceIF, RegistrationResourceIF, RestorationResourceIF }
+  from '@/interfaces'
 
 import {
   DissolutionResourceBc,
@@ -23,6 +24,13 @@ import {
   RegistrationResourceSp
 } from './Registration/'
 
+import {
+  RestorationResourceBc,
+  RestorationResourceBen,
+  RestorationResourceCc,
+  RestorationResourceUlc
+} from './Restoration/'
+
 export const DissolutionResources: Array<DissolutionResourceIF> = [
   DissolutionResourceBc,
   DissolutionResourceBen,
@@ -44,6 +52,13 @@ export const IncorporationResources: Array<IncorporationResourceIF> = [
 export const RegistrationResources: Array<RegistrationResourceIF> = [
   RegistrationResourceGp,
   RegistrationResourceSp
+]
+
+export const RestorationResources: Array<RestorationResourceIF> = [
+  RestorationResourceBc,
+  RestorationResourceBen,
+  RestorationResourceCc,
+  RestorationResourceUlc
 ]
 
 export * from './BreadCrumbResource'

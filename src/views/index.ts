@@ -24,3 +24,8 @@ export { default as IncorporationShareStructure } from './Incorporation/Incorpor
 export { default as RegistrationDefineBusiness } from './Registration/RegistrationDefineBusiness.vue'
 export { default as RegistrationPeopleRoles } from './Registration/RegistrationPeopleRoles.vue'
 export { default as RegistrationReviewConfirm } from './Registration/RegistrationReviewConfirm.vue'
+
+export { default as RestorationApplicantInformation } from './Restoration/RestorationApplicantInformation.vue'
+export { default as RestorationBusinessInformation } from './Restoration/RestorationBusinessInformation.vue'
+export { default as RestorationBusinessName } from './Restoration/RestorationBusinessName.vue'
+export { default as RestorationReviewConfirm } from './Restoration/RestorationReviewConfirm.vue'

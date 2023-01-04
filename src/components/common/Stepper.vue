@@ -52,11 +52,12 @@ import { Getter } from 'vuex-class'
 
 // Enums
 import { RouteNames } from '@/enums'
-import { RegistrationStateIF } from '@/interfaces'
+import { RegistrationStateIF, RestorationStateIF } from '@/interfaces'
 
 @Component({})
 export default class Stepper extends Vue {
   @Getter getRegistration!: RegistrationStateIF
+  @Getter getRestoration!: RestorationStateIF
   @Getter getShowErrors!: boolean
   @Getter getSteps!: Array<any>
   @Getter getValidateSteps!: boolean
@@ -72,11 +73,17 @@ export default class Stepper extends Vue {
   @Getter isMemorandumValid!: boolean
   @Getter isRegistrationValid!: boolean
   @Getter isResolutionValid!: boolean
+  @Getter isRestorationValid!: boolean
   @Getter isRulesValid!: boolean
 
   /** Returns true if the step route is valid. */
-  private isValid (route: RouteNames): boolean {
+  protected isValid (route: RouteNames): boolean {
     switch (route) {
+      case RouteNames.DISSOLUTION_AFFIDAVIT: return this.isAffidavitValid
+      case RouteNames.DISSOLUTION_DEFINE_DISSOLUTION: return this.isDissolutionDefineDissolutionValid
+      case RouteNames.DISSOLUTION_RESOLUTION: return this.isResolutionValid
+      case RouteNames.DISSOLUTION_REVIEW_CONFIRM: return this.isDissolutionValid
+
       case RouteNames.INCORPORATION_AGREEMENT: return this.isIncorporationAgreementValid
       case RouteNames.INCORPORATION_DEFINE_COMPANY: return this.isDefineCompanyValid
       case RouteNames.INCORPORATION_MEMORANDUM: return this.isMemorandumValid
@@ -85,23 +92,23 @@ export default class Stepper extends Vue {
       case RouteNames.INCORPORATION_RULES: return this.isRulesValid
       case RouteNames.INCORPORATION_SHARE_STRUCTURE: return this.isCreateShareStructureValid
 
-      case RouteNames.DISSOLUTION_AFFIDAVIT: return this.isAffidavitValid
-      case RouteNames.DISSOLUTION_DEFINE_DISSOLUTION: return this.isDissolutionDefineDissolutionValid
-      case RouteNames.DISSOLUTION_RESOLUTION: return this.isResolutionValid
-      case RouteNames.DISSOLUTION_REVIEW_CONFIRM: return this.isDissolutionValid
-
       case RouteNames.REGISTRATION_DEFINE_BUSINESS: return this.getRegistration.defineBusinessValid
       case RouteNames.REGISTRATION_PEOPLE_ROLES: return this.isAddPeopleAndRolesValid
       case RouteNames.REGISTRATION_REVIEW_CONFIRM: return this.isRegistrationValid
+
+      case RouteNames.RESTORATION_APPLICANT_INFORMATION: return this.getRestoration.applicantInfoValid
+      case RouteNames.RESTORATION_BUSINESS_INFORMATION: return this.getRestoration.businessInfoValid
+      case RouteNames.RESTORATION_BUSINESS_NAME: return this.getRestoration.businessNameValid
+      case RouteNames.RESTORATION_REVIEW_CONFIRM: return this.isRestorationValid
     }
     return false
   }
 
-  private goTo (step) {
+  protected goTo (step) {
     this.$router.push(step.to).catch(() => {})
   }
 
-  private isCurrentStep (step): boolean {
+  protected isCurrentStep (step): boolean {
     return this.$route.name === step.to
   }
 }
