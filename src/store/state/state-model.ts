@@ -193,8 +193,8 @@ export const stateModel: StateModelIF = {
     businessTypeConfirm: false,
     isAutoPopulatedBusinessNumber: false
   },
-  // *** TODO: update
   restoration: {
+    // *** TODO: add/remove properties as needed
     applicantInfoValid: false,
     businessInfoValid: false,
     businessNameValid: false

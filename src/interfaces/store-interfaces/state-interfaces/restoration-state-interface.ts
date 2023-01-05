@@ -7,7 +7,7 @@ export interface RestorationNameRequestIF {
   nrNumber: string
 }
 
-// *** TODO: update
+// *** TODO: add/remove properties as needed
 export interface RestorationStateIF {
   applicantInfoValid: boolean
   businessInfoValid: boolean

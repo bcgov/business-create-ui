@@ -84,7 +84,7 @@ export interface RegistrationResourceIF {
 
 /** Restoration resource interface. */
 export interface RestorationResourceIF {
-  // *** TODO: update
+  // *** TODO: add/remove properties as needed
   entityType: CorpTypeCd
   displayName: string
   steps: Array<StepIF>

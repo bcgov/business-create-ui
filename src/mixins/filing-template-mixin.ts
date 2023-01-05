@@ -429,7 +429,7 @@ export default class FilingTemplateMixin extends DateMixin {
         legalName: this.getBusinessLegalName,
         foundingDate: this.getBusinessFoundingDate
       },
-      // *** TODO: update
+      // *** TODO: add/remove properties as needed
       restoration: {
         date: '',
         type: '',

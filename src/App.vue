@@ -620,6 +620,10 @@ export default class App extends Vue {
 
       // handle the filing according to whether we have a business id or temp id
       try {
+        // safety checks
+        if (this.getBusinessId && this.getTempId) throw new Error('Both business id and temp id exist')
+        if (!this.getBusinessId && !this.getTempId) throw new Error('Neither business id nor temp id exist')
+
         if (this.getBusinessId) {
           // this should be a Dissolution or Restoration filing
           // (only dissolutions/restorations have a business id)
@@ -1048,6 +1052,7 @@ export default class App extends Vue {
   private async checkAuth (id: string): Promise<any> {
     // NB: will throw if API error
     const authRoles = await AuthServices.fetchAuthorizations(id)
+
     // NB: roles array may contain 'view', 'edit', 'staff' or nothing
     if (authRoles && authRoles.length > 0) {
       this.setAuthRoles(authRoles)
