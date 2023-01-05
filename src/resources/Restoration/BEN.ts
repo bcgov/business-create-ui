@@ -9,7 +9,7 @@ export const RestorationResourceBen: RestorationResourceIF = {
   steps: RestorationSteps,
   filingData: [{
     entityType: CorpTypeCd.BENEFIT_COMPANY,
-    filingTypeCode: FilingCodes.RESTORATION_BEN
+    filingTypeCode: FilingCodes.RESTORATION_FULL
   }],
   peopleAndRoles: {
     header: '1. Add Applicant Information',

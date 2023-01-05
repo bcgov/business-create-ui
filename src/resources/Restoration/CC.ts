@@ -9,7 +9,7 @@ export const RestorationResourceCc: RestorationResourceIF = {
   steps: RestorationSteps,
   filingData: [{
     entityType: CorpTypeCd.BC_CCC,
-    filingTypeCode: FilingCodes.RESTORATION_CC
+    filingTypeCode: FilingCodes.RESTORATION_FULL
   }],
   peopleAndRoles: {
     header: '1. Add People or Corporations/Firms to your Application',
