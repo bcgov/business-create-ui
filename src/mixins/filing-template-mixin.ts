@@ -199,11 +199,14 @@ export default class FilingTemplateMixin extends DateMixin {
         }
 
         if (this.isTypeBcUlcCompany) {
+          // Add Court Order ONLY when it is required and applied.
           const courtOrder = this.getCourtOrderStep.courtOrder
-          filing.incorporationApplication.courtOrder = {
-            fileNumber: courtOrder.fileNumber,
-            effectOfOrder: courtOrder.hasPlanOfArrangement ? EffectOfOrders.PLAN_OF_ARRANGEMENT : '',
-            hasPlanOfArrangement: courtOrder.hasPlanOfArrangement
+          if (courtOrder.hasPlanOfArrangement || courtOrder.fileNumber) {
+            filing.incorporationApplication.courtOrder = {
+              fileNumber: courtOrder.fileNumber,
+              effectOfOrder: courtOrder.hasPlanOfArrangement ? EffectOfOrders.PLAN_OF_ARRANGEMENT : '',
+              hasPlanOfArrangement: courtOrder.hasPlanOfArrangement
+            }
           }
         }
         break
@@ -317,8 +320,8 @@ export default class FilingTemplateMixin extends DateMixin {
         })
 
         if (this.isTypeBcUlcCompany) {
-          this.setCourtOrderFileNumber(draftFiling.incorporationApplication.courtOrder?.fileNumber)
-          this.setHasPlanOfArrangement(draftFiling.incorporationApplication.courtOrder?.hasPlanOfArrangement)
+          this.setCourtOrderFileNumber(draftFiling.incorporationApplication.courtOrder?.fileNumber || '')
+          this.setHasPlanOfArrangement(draftFiling.incorporationApplication.courtOrder?.hasPlanOfArrangement || false)
         }
         break
     }
@@ -714,8 +717,8 @@ export default class FilingTemplateMixin extends DateMixin {
     this.setAffidavit(uploadAffidavit)
 
     // restore Court Order data
-    this.setCourtOrderFileNumber(draftFiling.dissolution.courtOrder?.fileNumber)
-    this.setHasPlanOfArrangement(draftFiling.dissolution.courtOrder?.hasPlanOfArrangement)
+    this.setCourtOrderFileNumber(draftFiling.dissolution.courtOrder?.fileNumber || '')
+    this.setHasPlanOfArrangement(draftFiling.dissolution.courtOrder?.hasPlanOfArrangement || false)
 
     // NB: do not restore/overwrite Folio Number - just use the FN from auth info (see App.vue)
 

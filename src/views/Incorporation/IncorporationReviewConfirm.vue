@@ -142,7 +142,7 @@
           :autoValidation="getValidateSteps"
           :draftCourtOrderNumber="getCourtOrderStep.courtOrder.fileNumber"
           :hasDraftPlanOfArrangement="getCourtOrderStep.courtOrder.hasPlanOfArrangement"
-          :courtOrderNumberRequired="true"
+          :courtOrderNumberRequired="false"
           :invalidSection="isCourtOrderInvalid"
           @emitCourtNumber="setCourtOrderFileNumber($event)"
           @emitPoa="setHasPlanOfArrangement($event)"

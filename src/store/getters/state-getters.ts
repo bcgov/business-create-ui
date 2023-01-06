@@ -493,7 +493,8 @@ export const isIncorporationApplicationValid = (state: StateIF): boolean => {
   const isBaseStepsValid = (
     getCreateShareStructureStep(state).valid &&
     getEffectiveDateTime(state).valid &&
-    getIncorporationAgreementStep(state).valid
+    getIncorporationAgreementStep(state).valid &&
+    getCourtOrderStep(state).valid
   )
 
   // Coop steps
