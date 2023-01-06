@@ -262,8 +262,8 @@ export default class App extends Vue {
   @Getter getFilingType!: FilingTypes
   @Getter getFilingName!: FilingNames
   @Getter isDissolutionFiling!: boolean
+  @Getter isRestorationFiling!: boolean
   @Getter getSteps!: Array<StepIF>
-  @Getter getAccountInformation!: AccountInformationIF
   @Getter isSbcStaff!: boolean
   @Getter getFilingSubtitle!: string
   @Getter getUserFirstName!: string
@@ -413,7 +413,7 @@ export default class App extends Vue {
 
   /** The Fee Summary filing text for businesses. */
   get filingLabelText (): string {
-  // text ovveride for firm dissolutions
+    // text override for firm dissolutions
     return (this.isTypeFirm && this.isDissolutionFiling) ? 'Dissolution' : null
   }
 
@@ -553,7 +553,7 @@ export default class App extends Vue {
   /** The list of completing parties. */
   private getCompletingParties (): CompletingPartyIF {
     let completingParty = null as CompletingPartyIF
-    if (!(this.isRoleStaff || this.isSbcStaff)) { // if staff role set as null
+    if (!this.isRoleStaff && !this.isSbcStaff) { // if not staff
       completingParty = {
         firstName: this.getUserFirstName,
         middleName: '',
@@ -570,7 +570,7 @@ export default class App extends Vue {
         phone: this.getUserPhone
       }
     } else {
-      // set blank firstname and lastname for staff role
+      // if staff role then set blank completing party
       completingParty = {
         firstName: '',
         lastName: '',
@@ -598,24 +598,11 @@ export default class App extends Vue {
       // set current date from "real time" date from server
       this.setCurrentDate(this.dateToYyyyMmDd(this.getCurrentJsDate))
 
-      // get user info
-      const userInfo = await this.getSaveUserInfo().catch(error => {
-        console.log('User info error =', error) // eslint-disable-line no-console
-        this.accountAuthorizationDialog = true
-        throw error // go to catch()
-      })
-
       // load account information
       await this.loadAccountInformation().catch(error => {
         console.log('Account info error =', error) // eslint-disable-line no-console
         this.accountAuthorizationDialog = true
         throw error // go to catch()
-      })
-
-      // update Launch Darkly
-      await this.updateLaunchDarkly(userInfo).catch(error => {
-        // just log the error -- no need to halt app
-        console.log('Launch Darkly update error =', error) // eslint-disable-line no-console
       })
 
       // handle the filing according to whether we have a business id or temp id
@@ -644,6 +631,19 @@ export default class App extends Vue {
         this.fetchErrorDialog = !this.isErrorDialog
         throw error // go to catch()
       }
+
+      // get user info
+      const userInfo = await this.loadUserInfo().catch(error => {
+        console.log('User info error =', error) // eslint-disable-line no-console
+        this.accountAuthorizationDialog = true
+        throw error // go to catch()
+      })
+
+      // update Launch Darkly
+      await this.updateLaunchDarkly(userInfo).catch(error => {
+        // just log the error -- no need to halt app
+        console.log('Launch Darkly update error =', error) // eslint-disable-line no-console
+      })
 
       // set completing party
       this.setCompletingParty(this.getCompletingParties())
@@ -901,20 +901,20 @@ export default class App extends Vue {
   }
 
   /** Gets user info and stores user's email, first name and last name. */
-  private async getSaveUserInfo (): Promise<any> {
+  private async loadUserInfo (): Promise<any> {
     // NB: will throw if API error
     const userInfo = await AuthServices.fetchUserInfo()
 
-    // get auth org info for dissolution only
-    // (this data is not available for an IA)
-    if (this.isDissolutionFiling) {
+    // get auth org info for dissolution/restoration only
+    // (this data is not available for an incorporation/registration)
+    if (this.isDissolutionFiling || this.isRestorationFiling) {
       const { contacts, folioNumber } = await AuthServices.fetchAuthInfo(this.getBusinessId)
       if (contacts?.length > 0) {
         this.setBusinessContact(contacts[0])
       }
-      // for a dissolution, set folio number from auth info
-      // (for an incorporation, it is set in IncorporationDefineCompany.vue)
-      // (for a registration, it is set in RegistrationDefineBusiness.vue)
+      // set folio number from auth info
+      // (for an incorporation, this is set in IncorporationDefineCompany.vue)
+      // (for a registration, this is set in RegistrationDefineBusiness.vue)
       this.setFolioNumber(folioNumber)
     }
     if (!userInfo) throw new Error('Invalid user info')
@@ -950,12 +950,32 @@ export default class App extends Vue {
   }
 
   /**
+   * Gets account info and stores it.
+   * Among other things, this is how we find out if this is a staff account.
+   */
+  private async loadAccountInformation (): Promise<any> {
+    const currentAccount = await this.getCurrentAccount()
+    if (currentAccount) {
+      const accountInfo: AccountInformationIF = {
+        accountType: currentAccount.accountType,
+        id: currentAccount.id,
+        label: currentAccount.label,
+        type: currentAccount.type
+      }
+      this.setAccountInformation(accountInfo)
+
+      // get org info
+      await this.loadOrgInfo(accountInfo?.id)
+    }
+  }
+
+  /**
    * Gets current account from object in session storage.
-   * Wait up to 10 sec for current account to be synced (typically by SbcHeader).
+   * Wait up to 5 sec for current account to be synced (typically by SbcHeader).
    */
   private async getCurrentAccount (): Promise<any> {
-    let account: any
-    for (let i = 0; i < 100; i++) {
+    let account = null
+    for (let i = 0; i < 50; i++) {
       const currentAccount = sessionStorage.getItem(SessionStorageKeys.CurrentAccount)
       account = JSON.parse(currentAccount)
       if (account) break
@@ -964,28 +984,8 @@ export default class App extends Vue {
     return account
   }
 
-  /** Gets account info and stores it. */
-  private async loadAccountInformation (): Promise<any> {
-    // NB: staff don't have current account (but SBC Staff do)
-    if (!this.isRoleStaff) {
-      const currentAccount = await this.getCurrentAccount()
-      if (currentAccount) {
-        const accountInfo: AccountInformationIF = {
-          accountType: currentAccount.accountType,
-          id: currentAccount.id,
-          label: currentAccount.label,
-          type: currentAccount.type
-        }
-        this.setAccountInformation(accountInfo)
-
-        // get org info
-        await this.getSaveOrgInfo(accountInfo?.id)
-      }
-    }
-  }
-
-  /** Gets and stores org info and user's address. */
-  private async getSaveOrgInfo (orgId: number): Promise<void> {
+  /** Gets org info and user's address and stores it. */
+  private async loadOrgInfo (orgId: number): Promise<void> {
     if (!orgId) throw new Error('Invalid org id')
 
     // NB: will throw if API error

@@ -17,6 +17,7 @@ export default class PeopleRolesMixin extends Vue {
     confirmDialog: ConfirmDialogType
   }
 
+  // NB: some of these are used by components that use this mixin
   @Getter getShowErrors!: boolean
   @Getter getPeopleAndRolesResource!: PeopleAndRolesResourceIF
   @Getter getAddPeopleAndRoleStep!: PeopleAndRoleIF
