@@ -6,6 +6,15 @@ export enum Views {
   SIGN_IN = 'signin',
   SIGN_OUT = 'signout',
 
+  // Dissolution views
+  DISSOLUTION_AFFIDAVIT = 'dissolution-affidavit',
+  DISSOLUTION_DEFINE_DISSOLUTION = 'dissolution-define-dissolution',
+  DISSOLUTION_RESOLUTION = 'dissolution-resolution',
+  DISSOLUTION_REVIEW_CONFIRM = 'dissolution-review-confirm',
+
+  // Dissolution view - SP and GP
+  DISSOLUTION_FIRM = 'dissolution-firm',
+
   // Incorporation views
   INCORPORATION_AGREEMENT = 'incorporation-agreement',
   INCORPORATION_DEFINE_COMPANY = 'incorporation-define-company',
@@ -15,17 +24,14 @@ export enum Views {
   INCORPORATION_RULES = 'incorporation-rules',
   INCORPORATION_SHARE_STRUCTURE = 'incorporation-share-structure',
 
-  // Dissolution views
-  DISSOLUTION_AFFIDAVIT = 'dissolution-affidavit',
-  DISSOLUTION_DEFINE_DISSOLUTION = 'dissolution-define-dissolution',
-  DISSOLUTION_RESOLUTION = 'dissolution-resolution',
-  DISSOLUTION_REVIEW_CONFIRM = 'dissolution-review-confirm',
-
   // Registration views
   REGISTRATION_DEFINE_BUSINESS = 'registration-define-business',
   REGISTRATION_PEOPLE_ROLES = 'registration-people-roles',
   REGISTRATION_REVIEW_CONFIRM = 'registration-review-confirm',
 
-  // Firm dissolution view
-  DISSOLUTION_FIRM = 'dissolution-firm',
+  // Restorations views
+  RESTORATION_APPLICANT_INFORMATION = 'restoration-applicant-information',
+  RESTORATION_BUSINESS_INFORMATION = 'restoration-business-information',
+  RESTORATION_BUSINESS_NAME = 'restoration-business-name',
+  RESTORATION_REVIEW_CONFIRM = 'restoration-review-confirm',
 }

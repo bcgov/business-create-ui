@@ -175,12 +175,6 @@ import SummaryDefineCompany from '@/components/Incorporation/SummaryDefineCompan
 import UploadMemorandumSummary from '@/components/Incorporation/UploadMemorandumSummary.vue'
 import UploadRulesSummary from '@/components/Incorporation/UploadRulesSummary.vue'
 import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
-import { setEffectiveDateTimeValid, setEffectiveDate, setIsFutureEffective, setCourtOrderFileNumber,
-  setHasPlanOfArrangement, setCourtOrderValidity } from '@/store/actions'
-import { getCompanyDisplayName, isBaseCompany, getCreateShareStructureStep, getIncorporationAgreementStep, isTypeCoop,
-  getEffectiveDateTime, getBusinessContact, getUserEmail, isRoleStaff, isTypeBcUlcCompany, getValidateSteps }
-  from '@/store/getters'
-import { VCard } from 'vuetify/lib'
 
 @Component({
   components: {

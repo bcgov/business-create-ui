@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuetify from 'vuetify'
 import { getVuexStore } from '@/store'
 import { shallowMount, mount } from '@vue/test-utils'
-import InvalidIncorporationApplicationDialog from '@/dialogs/InvalidIncorporationApplicationDialog.vue'
+import InvalidIncorporationApplicationDialog from '@/dialogs/InvalidFilingDialog.vue'
 
 Vue.use(Vuetify)
 
@@ -12,7 +12,7 @@ const store = getVuexStore()
 // Prevent the warning "[Vuetify] Unable to locate target [data-app]"
 document.body.setAttribute('data-app', 'true')
 
-describe('Invalid Incorporation Application Dialog', () => {
+describe('Invalid Filing Dialog', () => {
   it('renders the component properly', () => {
     const wrapper = shallowMount(InvalidIncorporationApplicationDialog,
       {
@@ -20,12 +20,12 @@ describe('Invalid Incorporation Application Dialog', () => {
         store,
         propsData: { dialog: true }
       })
-    expect(wrapper.attributes('contentclass')).toBe('invalid-incorporation-application-dialog')
+    expect(wrapper.attributes('contentclass')).toBe('invalid-filing-dialog')
     expect(wrapper.isVisible()).toBe(true)
-    expect(wrapper.find('#dialog-title').text()).toBe('Incorporation Application Does Not Exist')
+    expect(wrapper.find('#dialog-title').text()).toBe('Filing Does Not Exist')
     expect(wrapper.findAll('p').length).toBe(1)
     expect(wrapper.findAll('p').at(0).text())
-      .toContain('The incorporation application you are attempting to open does not exist')
+      .toContain('The filing you are attempting to open does not exist')
     expect(wrapper.find('#dialog-exit-button').exists()).toBe(true)
 
     wrapper.destroy()

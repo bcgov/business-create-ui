@@ -24,7 +24,7 @@ describe('Legal Services', () => {
       })))
 
     // fetch draft and check it
-    const draft: any = await LegalServices.fetchDraftApplication('123')
+    const draft: any = await LegalServices.fetchFirstOrOnlyFiling('123')
     expect(draft).not.toBeFalsy()
     expect(draft).toHaveProperty('header')
     expect(draft).toHaveProperty('registration')
@@ -43,7 +43,7 @@ describe('Legal Services', () => {
       })))
 
     // fetch draft and check it
-    const draft: any = await LegalServices.fetchDraftApplication('123')
+    const draft: any = await LegalServices.fetchFirstOrOnlyFiling('123')
     expect(draft).not.toBeFalsy()
     expect(draft).toHaveProperty('header')
     expect(draft).toHaveProperty('registration')

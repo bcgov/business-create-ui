@@ -82,4 +82,23 @@ export interface RegistrationResourceIF {
   }
 }
 
-export interface ResourceIF extends DissolutionResourceIF, IncorporationResourceIF, RegistrationResourceIF {}
+/** Restoration resource interface. */
+export interface RestorationResourceIF {
+  // *** TODO: add/remove properties as needed
+  entityType: CorpTypeCd
+  displayName: string
+  steps: Array<StepIF>
+  filingData: Array<FilingDataIF>
+  peopleAndRoles: PeopleAndRolesResourceIF
+  reviewAndConfirm: {
+    completingPartyStatement: {
+      certifyStatementHeader: string
+      certifyStatements: Array<string>
+      certifyClause: string
+      entityDisplay: string
+    }
+  }
+}
+
+export interface ResourceIF extends DissolutionResourceIF, IncorporationResourceIF, RegistrationResourceIF,
+  RestorationResourceIF {}

@@ -22,15 +22,9 @@
       @retry="fetchData()"
     />
 
-    <InvalidDissolutionDialog
+    <InvalidFilingDialog
       attach="#app"
-      :dialog="invalidDissolutionDialog"
-      @exit="goToDashboard(true)"
-    />
-
-    <InvalidIncorporationApplicationDialog
-      attach="#app"
-      :dialog="invalidIncorporationApplicationDialog"
+      :dialog="invalidFilingDialog"
       @exit="goToDashboard(true)"
     />
 
@@ -203,7 +197,6 @@ import {
   BusinessIF,
   CompletingPartyIF,
   ConfirmDialogType,
-  DissolutionResourceIF,
   EmptyFees,
   FilingDataIF,
   OrgInformationIF,
@@ -212,13 +205,14 @@ import {
 } from '@/interfaces'
 import {
   DissolutionResources,
+  IncorporationResources,
+  RegistrationResources,
+  RestorationResources,
   getEntityDashboardBreadcrumb,
   getMyBusinessRegistryBreadcrumb,
   getRegistryDashboardBreadcrumb,
   getSbcStaffDashboardBreadcrumb,
-  getStaffDashboardBreadcrumb,
-  IncorporationResources,
-  RegistrationResources
+  getStaffDashboardBreadcrumb
 } from '@/resources'
 import { AuthServices, LegalServices, PayServices } from '@/services/'
 
@@ -268,8 +262,8 @@ export default class App extends Vue {
   @Getter getFilingType!: FilingTypes
   @Getter getFilingName!: FilingNames
   @Getter isDissolutionFiling!: boolean
+  @Getter isRestorationFiling!: boolean
   @Getter getSteps!: Array<StepIF>
-  @Getter getAccountInformation!: AccountInformationIF
   @Getter isSbcStaff!: boolean
   @Getter getFilingSubtitle!: string
   @Getter getUserFirstName!: string
@@ -318,8 +312,7 @@ export default class App extends Vue {
   // Local properties
   protected accountAuthorizationDialog = false
   protected fetchErrorDialog = false
-  protected invalidDissolutionDialog = false
-  protected invalidIncorporationApplicationDialog = false
+  protected invalidFilingDialog = false
   protected invalidRouteDialog = false
   protected paymentErrorDialog = false
   protected saveErrorDialog = false
@@ -410,7 +403,8 @@ export default class App extends Vue {
       this.accountAuthorizationDialog ||
       this.nameRequestInvalidErrorDialog ||
       this.fetchErrorDialog ||
-      this.invalidIncorporationApplicationDialog ||
+      this.invalidFilingDialog ||
+      this.invalidRouteDialog ||
       this.paymentErrorDialog ||
       this.saveErrorDialog ||
       this.fileAndPayInvalidNameRequestDialog
@@ -419,7 +413,7 @@ export default class App extends Vue {
 
   /** The Fee Summary filing text for businesses. */
   get filingLabelText (): string {
-  // text ovveride for firm dissolutions
+    // text override for firm dissolutions
     return (this.isTypeFirm && this.isDissolutionFiling) ? 'Dissolution' : null
   }
 
@@ -433,6 +427,7 @@ export default class App extends Vue {
     switch (this.getFilingType) {
       case FilingTypes.INCORPORATION_APPLICATION: return 'Application'
       case FilingTypes.REGISTRATION: return 'Registration'
+      case FilingTypes.RESTORATION: return 'Restoration'
       case FilingTypes.VOLUNTARY_DISSOLUTION: return 'Filing'
     }
   }
@@ -450,6 +445,7 @@ export default class App extends Vue {
   /** Called when component is created. */
   async created (): Promise<void> {
     // update Current Js Date now and every 1 minute thereafter
+    // FUTURE: use a web worker to fetch once an hour instead?
     await this.updateCurrentJsDate()
     this.updateCurrentJsDateId = setInterval(this.updateCurrentJsDate, 60000)
 
@@ -512,20 +508,7 @@ export default class App extends Vue {
     this.$root.$off('name-request-retrieve-error')
   }
 
-  /** Called to init main entity identifier. */
-  private assignIdentifier (): void {
-    // Capture identifier from query param
-    const id: string = this.$route.query?.id
-    // Assign any valid business identifiers and init dissolution
-    if (id?.startsWith('CP') || id?.startsWith('BC') || id?.startsWith('FM')) {
-      this.setBusinessId(id)
-      this.setFilingType(FilingTypes.VOLUNTARY_DISSOLUTION)
-    } else {
-      // Assign temp reg number
-      this.setTempId(id)
-    }
-  }
-
+  /** Called to navigate to My Business Registry. */
   private goToManageBusinessDashboard (): void {
     this.fileAndPayInvalidNameRequestDialog = false
     const manageBusinessUrl = `${sessionStorage.getItem('AUTH_WEB_URL')}business`
@@ -533,7 +516,7 @@ export default class App extends Vue {
     Navigate(manageBusinessUrl)
   }
 
-  /** Called to navigate to dashboard. */
+  /** Called to navigate to entity's dashboard. */
   private goToDashboard (force = false): void {
     // check if there are no data changes
     if (!this.getHaveChanges || force) {
@@ -570,7 +553,7 @@ export default class App extends Vue {
   /** The list of completing parties. */
   private getCompletingParties (): CompletingPartyIF {
     let completingParty = null as CompletingPartyIF
-    if (!(this.isRoleStaff || this.isSbcStaff)) { // if staff role set as null
+    if (!this.isRoleStaff && !this.isSbcStaff) { // if not staff
       completingParty = {
         firstName: this.getUserFirstName,
         middleName: '',
@@ -587,7 +570,7 @@ export default class App extends Vue {
         phone: this.getUserPhone
       }
     } else {
-      // set blank firstname and lastname for staff role
+      // if staff role then set blank completing party
       completingParty = {
         firstName: '',
         lastName: '',
@@ -598,11 +581,8 @@ export default class App extends Vue {
     return completingParty
   }
 
-  /** Fetches NR data and fetches draft filing. */
-  private async fetchData (routeChanged = false): Promise<void> {
-    // only fetch data on first route change
-    if (routeChanged && this.haveData) return
-
+  /** Fetches user info, draft filing, NR data, etc. */
+  private async fetchData (): Promise<void> {
     // reset errors in case this method is invoked more than once (ie, retry)
     this.resetFlags()
 
@@ -618,13 +598,6 @@ export default class App extends Vue {
       // set current date from "real time" date from server
       this.setCurrentDate(this.dateToYyyyMmDd(this.getCurrentJsDate))
 
-      // get user info
-      const userInfo = await this.getSaveUserInfo().catch(error => {
-        console.log('User info error =', error) // eslint-disable-line no-console
-        this.accountAuthorizationDialog = true
-        throw error // go to catch()
-      })
-
       // load account information
       await this.loadAccountInformation().catch(error => {
         console.log('Account info error =', error) // eslint-disable-line no-console
@@ -632,33 +605,21 @@ export default class App extends Vue {
         throw error // go to catch()
       })
 
-      // update Launch Darkly
-      await this.updateLaunchDarkly(userInfo).catch(error => {
-        // just log the error -- no need to halt app
-        console.log('Launch Darkly update error =', error) // eslint-disable-line no-console
-      })
-
-      // fetch the draft filing and resources
+      // handle the filing according to whether we have a business id or temp id
       try {
+        // safety checks
+        if (this.getBusinessId && this.getTempId) throw new Error('Both business id and temp id exist')
+        if (!this.getBusinessId && !this.getTempId) throw new Error('Neither business id nor temp id exist')
+
         if (this.getBusinessId) {
-          await this.fetchBusinessData() // throws on error
-          // this is a Dissolution filing
-          // (only dissolutions have a business id)
-          const resources = await this.handleDraftDissolution()
-          if (!resources) {
-            // go to catch()
-            throw new Error(`Invalid dissolution resources, entity type = ${this.getEntityType}`)
-          }
-          this.setResources(resources)
-        } else {
-          // this is an Incorporation or Registration filing
-          // (only incorporations and registrations have a temp id)
-          const resources = await this.handleDraftApplication()
-          if (!resources) {
-            // go to catch()
-            throw new Error(`Invalid ${this.getFilingType} resources, entity type = ${this.getEntityType}`)
-          }
-          this.setResources(resources)
+          // this should be a Dissolution or Restoration filing
+          // (only dissolutions/restorations have a business id)
+          await this.handleDissolutionOrRestoration(this.getBusinessId)
+        }
+        if (this.getTempId) {
+          // this should be an Incorporation or Registration filing
+          // (only incorporations/registrations have a temp id)
+          await this.handleIaOrRegistration(this.getTempId)
         }
       } catch (error) {
         // Log exception to Sentry due to incomplete business data.
@@ -671,11 +632,26 @@ export default class App extends Vue {
         throw error // go to catch()
       }
 
+      // get user info
+      const userInfo = await this.loadUserInfo().catch(error => {
+        console.log('User info error =', error) // eslint-disable-line no-console
+        this.accountAuthorizationDialog = true
+        throw error // go to catch()
+      })
+
+      // update Launch Darkly
+      await this.updateLaunchDarkly(userInfo).catch(error => {
+        // just log the error -- no need to halt app
+        console.log('Launch Darkly update error =', error) // eslint-disable-line no-console
+      })
+
       // set completing party
       this.setCompletingParty(this.getCompletingParties())
 
       // load parties only for SP/GP businesses
-      if (this.isTypeFirm && this.getBusinessId) this.loadPartiesInformation()
+      if (this.isTypeFirm && this.getBusinessId) {
+        await this.loadPartiesInformation(this.getBusinessId)
+      }
 
       // if user is on a route not valid for the current filing type
       // then try to re-route them
@@ -693,6 +669,9 @@ export default class App extends Vue {
             return
           case FilingTypes.REGISTRATION:
             this.$router.push(RouteNames.REGISTRATION_DEFINE_BUSINESS).catch(() => {})
+            return
+          case FilingTypes.RESTORATION:
+            this.$router.push(RouteNames.RESTORATION_BUSINESS_NAME).catch(() => {})
             return
           default:
             this.invalidRouteDialog = true
@@ -736,98 +715,113 @@ export default class App extends Vue {
     }
   }
 
-  /** Fetches and stores the business data. */
-  async fetchBusinessData (): Promise<void> {
-    const data = await LegalServices.fetchBusinessInfo(this.getBusinessId)
-
-    this.storeBusinessInfo(data)
-  }
-
-  /** Fetches draft dissolution and returns the resources. */
-  private async handleDraftDissolution (): Promise<DissolutionResourceIF> {
+  /** Fetches draft Dissolution or Restoration and sets the resources. */
+  private async handleDissolutionOrRestoration (businessId: string): Promise<void> {
     // ensure user is authorized to use this business
-    await this.checkAuth(this.getBusinessId).catch(error => {
+    await this.checkAuth(businessId).catch(error => {
       console.log('Auth error =', error) // eslint-disable-line no-console
       this.accountAuthorizationDialog = true
       throw error
     })
 
-    // fetch draft filing
-    // NB: will throw if API error
-    let draftFiling = await LegalServices.fetchDraftDissolution(this.getBusinessId)
-
-    // check if filing is in a valid state to be edited
-    this.invalidDissolutionDialog = !this.hasValidFilingState(draftFiling)
-    if (this.invalidDissolutionDialog) return null
-
-    // merge draft properties into empty filing so all properties are initialized
-    const emptyFiling = this.buildDissolutionFiling()
-    draftFiling = { ...emptyFiling, ...draftFiling }
-
-    // parse draft filing into the store
-    if (draftFiling) {
-      this.parseDissolutionDraft(draftFiling)
-    }
-
-    // return the resources
-    return DissolutionResources.find(x => x.entityType === this.getEntityType)
-  }
-
-  /** Fetches draft incorporation or registration and returns the resources. */
-  private async handleDraftApplication (): Promise<ResourceIF> {
-    // ensure user is authorized to use this IA
-    await this.checkAuth(this.getTempId).catch(error => {
-      console.log('Auth error =', error) // eslint-disable-line no-console
-      this.accountAuthorizationDialog = true
-      throw error
-    })
+    // load business info
+    await this.loadBusinessInfo(businessId)
 
     // fetch draft filing
     // NB: will throw if API error
-    let draftFiling = await LegalServices.fetchDraftApplication(this.getTempId)
+    let draftFiling = await LegalServices.fetchFirstTask(businessId)
 
-    this.setFilingType(draftFiling.header.name) // either IA or reg
+    this.setFilingType(draftFiling.header.name)
 
     // check if filing is in a valid state to be edited
-    if (!this.hasValidFilingState(draftFiling)) return null
+    this.invalidFilingDialog = !this.hasValidFilingState(draftFiling)
+    if (this.invalidFilingDialog) return null
 
-    // merge draft properties into empty filing so all properties are initialized
-    let resources: any
-    let parseFiling: (draftFiling) => void
+    // parse draft filing into the store and get the resources
+    let resources: ResourceIF
     switch (this.getFilingType) {
-      case FilingTypes.INCORPORATION_APPLICATION:
-        draftFiling = { ...this.buildIncorporationFiling(), ...draftFiling }
-        resources = IncorporationResources
-        parseFiling = this.parseIncorporationDraft
+      case FilingTypes.VOLUNTARY_DISSOLUTION:
+        draftFiling = {
+          ...this.buildDissolutionFiling(),
+          ...draftFiling
+        }
+        this.parseDissolutionDraft(draftFiling)
+        resources = DissolutionResources.find(x => x.entityType === this.getEntityType)
         break
-      case FilingTypes.REGISTRATION:
-        draftFiling = { ...this.buildRegistrationFiling(), ...draftFiling }
-        resources = RegistrationResources
-        parseFiling = this.parseRegistrationDraft
+      case FilingTypes.RESTORATION:
+        draftFiling = {
+          ...this.buildRestorationFiling(),
+          ...draftFiling
+        }
+        this.parseRestorationDraft(draftFiling)
+        resources = RestorationResources.find(x => x.entityType === this.getEntityType)
         break
       default:
         throw new Error(`Invalid filing type = ${this.getFilingType}`)
     }
 
-    // parse draft filing into the store
-    if (draftFiling) {
-      parseFiling(draftFiling)
+    // set the resources
+    if (!resources) throw new Error(`Invalid ${this.getEntityType} resources`)
+    this.setResources(resources)
+  }
+
+  /** Fetches draft IA or Registration and sets the resources. */
+  private async handleIaOrRegistration (tempId: string): Promise<void> {
+    // ensure user is authorized to use this IA
+    await this.checkAuth(tempId).catch(error => {
+      console.log('Auth error =', error) // eslint-disable-line no-console
+      this.accountAuthorizationDialog = true
+      throw error
+    })
+
+    // fetch draft filing
+    // NB: will throw if API error
+    let draftFiling = await LegalServices.fetchFirstOrOnlyFiling(tempId)
+
+    this.setFilingType(draftFiling.header.name)
+
+    // check if filing is in a valid state to be edited
+    this.invalidFilingDialog = !this.hasValidFilingState(draftFiling)
+    if (this.invalidFilingDialog) return null
+
+    // parse draft filing into the store and get the resources
+    let resources: ResourceIF
+    switch (this.getFilingType) {
+      case FilingTypes.INCORPORATION_APPLICATION:
+        draftFiling = {
+          ...this.buildIncorporationFiling(),
+          ...this.formatEmptyIncorporationApplication(draftFiling)
+        }
+        this.parseIncorporationDraft(draftFiling)
+        resources = IncorporationResources.find(x => x.entityType === this.getEntityType)
+        break
+      case FilingTypes.REGISTRATION:
+        draftFiling = {
+          ...this.buildRegistrationFiling(),
+          ...this.formatEmptyRegistration(draftFiling)
+        }
+        this.parseRegistrationDraft(draftFiling)
+        resources = RegistrationResources.find(x => x.entityType === this.getEntityType)
+        break
+      default:
+        throw new Error(`Invalid filing type = ${this.getFilingType}`)
     }
+
+    // set the resources
+    if (!resources) throw new Error(`Invalid ${this.getEntityType} resources`)
+    this.setResources(resources)
 
     // verify nameRequest object
     const nameRequest = draftFiling[draftFiling.header?.name]?.nameRequest
     if (!nameRequest) throw new Error('Missing Name Request object')
 
-    // Fetches and validates the NR and sets the data to the store. This method is different
+    // Fetch and validate the NR and set the data to the store. This method is different
     // from the validateNameRequest method in Actions.vue. This method sets the data to
-    // the store shows a specific message for different invalid states and redirection is to the
-    // Filings Dashboard.
+    // the store shows a specific message for different invalid states and redirection is
+    // to the Filings Dashboard.
     if (nameRequest?.nrNumber) {
       await this.processNameRequest(draftFiling)
     }
-
-    // return the resources
-    return resources.find(x => x.entityType === this.getEntityType)
   }
 
   /** Used to check if the filing is in a valid state for changes. */
@@ -896,7 +890,7 @@ export default class App extends Vue {
   private resetFlags (): void {
     this.haveData = false
     this.nameRequestInvalidErrorDialog = false
-    this.invalidIncorporationApplicationDialog = false
+    this.invalidFilingDialog = false
     this.accountAuthorizationDialog = false
     this.fetchErrorDialog = false
     this.paymentErrorDialog = false
@@ -907,20 +901,20 @@ export default class App extends Vue {
   }
 
   /** Gets user info and stores user's email, first name and last name. */
-  private async getSaveUserInfo (): Promise<any> {
+  private async loadUserInfo (): Promise<any> {
     // NB: will throw if API error
     const userInfo = await AuthServices.fetchUserInfo()
 
-    // get auth org info for dissolution only
-    // (this data is not available for an IA)
-    if (this.isDissolutionFiling) {
+    // get auth org info for dissolution/restoration only
+    // (this data is not available for an incorporation/registration)
+    if (this.isDissolutionFiling || this.isRestorationFiling) {
       const { contacts, folioNumber } = await AuthServices.fetchAuthInfo(this.getBusinessId)
       if (contacts?.length > 0) {
         this.setBusinessContact(contacts[0])
       }
-      // for a dissolution, set folio number from auth info
-      // (for an incorporation, it is set in IncorporationDefineCompany.vue)
-      // (for a registration, it is set in RegistrationDefineBusiness.vue)
+      // set folio number from auth info
+      // (for an incorporation, this is set in IncorporationDefineCompany.vue)
+      // (for a registration, this is set in RegistrationDefineBusiness.vue)
       this.setFolioNumber(folioNumber)
     }
     if (!userInfo) throw new Error('Invalid user info')
@@ -956,12 +950,32 @@ export default class App extends Vue {
   }
 
   /**
+   * Gets account info and stores it.
+   * Among other things, this is how we find out if this is a staff account.
+   */
+  private async loadAccountInformation (): Promise<any> {
+    const currentAccount = await this.getCurrentAccount()
+    if (currentAccount) {
+      const accountInfo: AccountInformationIF = {
+        accountType: currentAccount.accountType,
+        id: currentAccount.id,
+        label: currentAccount.label,
+        type: currentAccount.type
+      }
+      this.setAccountInformation(accountInfo)
+
+      // get org info
+      await this.loadOrgInfo(accountInfo?.id)
+    }
+  }
+
+  /**
    * Gets current account from object in session storage.
-   * Wait up to 10 sec for current account to be synced (typically by SbcHeader).
+   * Wait up to 5 sec for current account to be synced (typically by SbcHeader).
    */
   private async getCurrentAccount (): Promise<any> {
-    let account: any
-    for (let i = 0; i < 100; i++) {
+    let account = null
+    for (let i = 0; i < 50; i++) {
       const currentAccount = sessionStorage.getItem(SessionStorageKeys.CurrentAccount)
       account = JSON.parse(currentAccount)
       if (account) break
@@ -970,28 +984,8 @@ export default class App extends Vue {
     return account
   }
 
-  /** Gets account info and stores it. */
-  private async loadAccountInformation (): Promise<any> {
-    // NB: staff don't have current account (but SBC Staff do)
-    if (!this.isRoleStaff) {
-      const currentAccount = await this.getCurrentAccount()
-      if (currentAccount) {
-        const accountInfo: AccountInformationIF = {
-          accountType: currentAccount.accountType,
-          id: currentAccount.id,
-          label: currentAccount.label,
-          type: currentAccount.type
-        }
-        this.setAccountInformation(accountInfo)
-
-        // get org info
-        await this.getSaveOrgInfo(accountInfo?.id)
-      }
-    }
-  }
-
-  /** Gets and stores org info and user's address. */
-  private async getSaveOrgInfo (orgId: number): Promise<void> {
+  /** Gets org info and user's address and stores it. */
+  private async loadOrgInfo (orgId: number): Promise<void> {
     if (!orgId) throw new Error('Invalid org id')
 
     // NB: will throw if API error
@@ -1027,8 +1021,10 @@ export default class App extends Vue {
     await UpdateLdUser(key, email, firstName, lastName, custom)
   }
 
-  /** Stores business info from Legal API. */
-  storeBusinessInfo (response: any): void {
+  /** Gets and stores business info. */
+  private async loadBusinessInfo (businessId: string): Promise<void> {
+    const response = await LegalServices.fetchBusinessInfo(businessId)
+
     const business = response?.data?.business as BusinessIF
 
     if (!business) {
@@ -1056,6 +1052,7 @@ export default class App extends Vue {
   private async checkAuth (id: string): Promise<any> {
     // NB: will throw if API error
     const authRoles = await AuthServices.fetchAuthorizations(id)
+
     // NB: roles array may contain 'view', 'edit', 'staff' or nothing
     if (authRoles && authRoles.length > 0) {
       this.setAuthRoles(authRoles)
@@ -1065,9 +1062,9 @@ export default class App extends Vue {
   }
 
   /** Gets and stores parties info . */
-  private async loadPartiesInformation (): Promise<any> {
+  private async loadPartiesInformation (businessId: string): Promise<any> {
     // NB: will throw if API error
-    const parties = await LegalServices.fetchParties(this.getBusinessId)
+    const parties = await LegalServices.fetchParties(businessId)
 
     if (parties?.parties?.length > 0) {
       this.setParties(parties.parties)
@@ -1076,20 +1073,34 @@ export default class App extends Vue {
     }
   }
 
-  /** Called when $route property changes. */
+  /** Called initially and when $route property changes (ie, on step changes). */
   @Watch('$route', { immediate: false })
   private async onRouteChanged (): Promise<void> {
     // init only if we are not on signin or signout route
     if (!this.isRouteName(RouteNames.SIGN_IN) && !this.isRouteName(RouteNames.SIGN_OUT)) {
-      this.assignIdentifier()
       this.setCurrentStep(this.$route.meta?.step || 1)
-      await this.fetchData(true)
+
+      // avoid duplicate assignment/fetches
+      if (!this.haveData) {
+        // assign the business id or temp id
+        const id = this.$route.query?.id as string
+        if (id?.startsWith('CP') || id?.startsWith('BC') || id?.startsWith('FM')) {
+          this.setBusinessId(id)
+        } else {
+          this.setTempId(id)
+        }
+
+        // fetch the data
+        await this.fetchData()
+      }
     }
 
+    // enable validation when review pages are shown
     if (
       this.isRouteName(RouteNames.DISSOLUTION_REVIEW_CONFIRM) ||
       this.isRouteName(RouteNames.INCORPORATION_REVIEW_CONFIRM) ||
-      this.isRouteName(RouteNames.REGISTRATION_REVIEW_CONFIRM)
+      this.isRouteName(RouteNames.REGISTRATION_REVIEW_CONFIRM) ||
+      this.isRouteName(RouteNames.RESTORATION_REVIEW_CONFIRM)
     ) {
       this.setShowErrors(true)
     }

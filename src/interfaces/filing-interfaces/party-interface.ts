@@ -29,5 +29,5 @@ export interface PartyIF {
 }
 
 export interface CompletingPartyIF extends CompletingPartyIFCommon {
-  valid?:boolean
+  valid?: boolean
 }

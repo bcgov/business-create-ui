@@ -164,3 +164,39 @@ export interface DissolutionFilingIF {
   }
   specialResolution?: SpecialResolutionIF
 }
+
+/** Interface for restoration filing data saved to the Legal API. */
+export interface RestorationFilingIF {
+  header: {
+    name: string
+    certifiedBy: string
+    date: string
+    effectiveDate?: string // not saved by UI but may be provided by API
+    filingId?: number // not saved by UI but may be provided by API
+    folioNumber?: string // optional and only displayed for certain account types
+    isTransactionalFolioNumber?: boolean // Optional - Premium accounts only
+    isFutureEffective: boolean
+
+    // staff payment properties:
+    routingSlipNumber?: string
+    bcolAccountNumber?: string
+    datNumber?: string
+    waiveFees?: boolean
+    priority?: boolean
+  }
+  business: {
+    legalType: CorpTypeCd
+    identifier: string
+    legalName: string
+    foundingDate: string
+  }
+  // *** TODO: update according to schema
+  restoration: {
+    date: any
+    type: any
+    expiry: any
+    nameTranslations: NameTranslationIF[]
+    nameRequest: RegistrationNameRequestIF
+    parties: PartyIF[]
+  }
+}

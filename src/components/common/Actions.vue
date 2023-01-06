@@ -113,7 +113,7 @@ import { FilingTypes, NameRequestStates, RouteNames } from '@/enums'
 export default class Actions extends Vue {
   @Getter getEntityIdentifier!: string
   @Getter getFilingType!: string
-  @Getter isApplicationValid!: boolean
+  @Getter isFilingValid!: boolean
   @Getter isEntityType!: boolean
   @Getter getCurrentStep!: number
   @Getter isShowReviewConfirmBtn!: boolean
@@ -147,7 +147,8 @@ export default class Actions extends Vue {
     return (
       this.$route.name === RouteNames.DISSOLUTION_REVIEW_CONFIRM ||
       this.$route.name === RouteNames.INCORPORATION_REVIEW_CONFIRM ||
-      this.$route.name === RouteNames.REGISTRATION_REVIEW_CONFIRM
+      this.$route.name === RouteNames.REGISTRATION_REVIEW_CONFIRM ||
+      this.$route.name === RouteNames.RESTORATION_REVIEW_CONFIRM
     )
   }
 
@@ -218,7 +219,7 @@ export default class Actions extends Vue {
     // Prompt Step validations
     this.setValidateSteps(true)
 
-    if (this.isApplicationValid) {
+    if (this.isFilingValid) {
       // prevent double saving
       if (this.isBusySaving) return
       // If File and Pay is successful setIsFilingPaying should't be reset to false,
@@ -300,6 +301,8 @@ export default class Actions extends Vue {
         return this.buildIncorporationFiling()
       case FilingTypes.REGISTRATION:
         return this.buildRegistrationFiling()
+      case FilingTypes.RESTORATION:
+        return this.buildRestorationFiling()
       case FilingTypes.VOLUNTARY_DISSOLUTION:
         return this.buildDissolutionFiling()
     }

@@ -15,6 +15,7 @@ function getLegalName (): string {
     case FilingTypes.VOLUNTARY_DISSOLUTION: return getBusinessLegalName
     case FilingTypes.INCORPORATION_APPLICATION: return getNameRequestApprovedName
     case FilingTypes.REGISTRATION: return getNameRequestApprovedName
+    case FilingTypes.RESTORATION: return getNameRequestApprovedName
   }
 }
 

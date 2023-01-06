@@ -30,6 +30,7 @@ import {
   OrgPersonIF,
   PeopleAndRoleIF,
   RegistrationStateIF,
+  RestorationStateIF,
   ShareStructureIF,
   StaffPaymentStepIF,
   StateIF,
@@ -63,6 +64,11 @@ export const isRegistrationFiling = (state: StateIF): boolean => {
   return getFilingType(state) === FilingTypes.REGISTRATION
 }
 
+/** Whether the current filing is a Restoration. */
+export const isRestorationFiling = (state: StateIF): boolean => {
+  return getFilingType(state) === FilingTypes.RESTORATION
+}
+
 /** The current filing type. */
 export const getFilingType = (state: StateIF): FilingTypes => {
   return getTombstone(state).filingType
@@ -73,6 +79,7 @@ export const getFilingName = (state: StateIF): FilingNames => {
   switch (getFilingType(state)) {
     case FilingTypes.INCORPORATION_APPLICATION: return FilingNames.INCORPORATION_APPLICATION
     case FilingTypes.REGISTRATION: return FilingNames.REGISTRATION
+    case FilingTypes.RESTORATION: return FilingNames.RESTORATION
     case FilingTypes.VOLUNTARY_DISSOLUTION:
       return isTypeFirm(state) ? FilingNames.DISSOLUTION_FIRM : FilingNames.VOLUNTARY_DISSOLUTION
     default: return null // should never happen
@@ -231,9 +238,10 @@ export const getBusinessNumber = (state: StateIF): string => {
 
 export const getEntityIdentifier = (state: StateIF): string => {
   switch (getFilingType(state)) {
-    case FilingTypes.VOLUNTARY_DISSOLUTION: return getBusinessId(state)
     case FilingTypes.INCORPORATION_APPLICATION: return getTempId(state)
     case FilingTypes.REGISTRATION: return getTempId(state)
+    case FilingTypes.RESTORATION: return getBusinessId(state)
+    case FilingTypes.VOLUNTARY_DISSOLUTION: return getBusinessId(state)
   }
 }
 
@@ -436,12 +444,13 @@ export const isIncorporationAgreementValid = (state: StateIF): boolean => {
   return getIncorporationAgreementStep(state).valid
 }
 
-/** Whether all the steps are valid. */
-export const isApplicationValid = (state: StateIF): boolean => {
+/** Whether the subject filing is valid. */
+export const isFilingValid = (state: StateIF): boolean => {
   if (isIncorporationFiling(state)) return isIncorporationApplicationValid(state)
   if (isDissolutionFiling(state)) return isDissolutionValid(state)
   if (isRegistrationFiling(state)) return isRegistrationValid(state)
-  return false
+  if (isRestorationFiling(state)) return isRestorationValid(state)
+  return false // should never happen
 }
 
 /** Whether all the dissolution steps are valid. */
@@ -455,7 +464,7 @@ export const isDissolutionValid = (state: StateIF): boolean => {
   // only for Staff role
   const isCourtOrderValid = isRoleStaff(state) ? getCourtOrderStep(state).valid : true
   const isStaffPaymentValid = isRoleStaff(state) ? getStaffPaymentStep(state).valid : true
-  const isCompletingPartyValid = isRoleStaff(state) ? getCompletingParty(state).valid : true
+  const isCompletingPartyValid = isRoleStaff(state) ? getCompletingParty(state)?.valid : true
 
   const isDissolutionDateValid = !!getDissolutionDate(state)
 
@@ -529,6 +538,19 @@ export const isRegistrationValid = (state: StateIF): boolean => {
     isCertifyValid &&
     isFeeAcknowledgementValid &&
     isStaffPaymentValid
+  )
+}
+
+/** Whether all the restoration steps are valid. */
+export const isRestorationValid = (state: StateIF): boolean => {
+  const isCertifyValid = getCertifyState(state).valid && !!getCertifyState(state).certifiedBy
+
+  return (
+    getRestoration(state).applicantInfoValid &&
+    getRestoration(state).businessInfoValid &&
+    getRestoration(state).businessNameValid &&
+    isCertifyValid &&
+    getStaffPaymentStep(state).valid
   )
 }
 
@@ -679,4 +701,13 @@ export const getDissolutionDate = (state: StateIF): string => {
 /** The parties list. */
 export const getParties = (state: StateIF): Array<PartyIF> => {
   return state.stateModel.parties
+}
+
+//
+// Restoration getters
+//
+
+/** The restoration object. */
+export const getRestoration = (state: StateIF): RestorationStateIF => {
+  return state.stateModel.restoration
 }
