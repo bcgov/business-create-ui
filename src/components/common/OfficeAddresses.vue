@@ -230,7 +230,7 @@ export default class OfficeAddresses extends Vue {
   @Prop({ default: false }) readonly showErrors!: boolean
 
   @Getter getDefineCompanyStep!: DefineCompanyIF
-  @Getter isTypeBcomp!: boolean
+  @Getter isBaseCompany!: boolean
   @Getter isTypeCoop!: boolean
   @Getter getEntityType!: CorpTypeCd
 
@@ -311,8 +311,8 @@ export default class OfficeAddresses extends Vue {
           )
         }
       }
-
-      if (this.isTypeBcomp) {
+      // check isTypeBcomp below ... needed?
+      if (this.isBaseCompany) {
         this.recMailingAddress = this.addresses.recordsOffice?.mailingAddress
         this.recDeliveryAddress = this.addresses.recordsOffice?.deliveryAddress
 
