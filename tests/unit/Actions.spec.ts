@@ -143,6 +143,7 @@ describe('Emits error event if NR validation fails in file and pay', () => {
     store.state.stateModel.createShareStructureStep = { valid: true }
     store.state.stateModel.incorporationAgreementStep = { valid: true }
     store.state.stateModel.effectiveDateTime = { valid: true }
+    store.state.stateModel.courtOrderStep = { valid: true }
 
     const localVue = createLocalVue()
     localVue.use(VueRouter)

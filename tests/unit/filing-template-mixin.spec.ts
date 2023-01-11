@@ -493,3 +493,41 @@ describe('Staff Payment', () => {
     })
   })
 })
+
+for (const entityType of ['BEN', 'BC', 'CC', 'ULC']) {
+  describe('Base corporate incorporation filing: ' + entityType, () => {
+    // load coop filing data
+    let ia = require('./test-data/incorpApp.json')
+    ia.filing.business.legalType = entityType
+    ia.filing.incorporationApplication.nameRequest.legalType = entityType
+    let wrapper: any
+
+    beforeEach(() => {
+      wrapper = wrapperFactory(MixinTester, null, {})
+    })
+
+    afterEach(() => {
+      wrapper.destroy()
+    })
+
+    it('courtOrder attribute is not required', () => {
+      wrapper.vm.parseIncorporationDraft(ia.filing)
+      const filing = wrapper.vm.buildIncorporationFiling()
+      expect(filing.incorporationApplication).not.toHaveProperty('courtNumber')
+    })
+
+    it('can include courtOrder attribute', () => {
+      ia.filing.incorporationApplication.courtOrder = {
+        'fileNumber': '12034567',
+        'hasPlanOfArrangement': true
+      }
+      wrapper.vm.parseIncorporationDraft(ia.filing)
+      const filing = wrapper.vm.buildIncorporationFiling()
+      expect(filing.incorporationApplication.courtOrder).toEqual({
+        fileNumber: '12034567',
+        effectOfOrder: 'planOfArrangement',
+        hasPlanOfArrangement: true
+      })
+    })
+  })
+}

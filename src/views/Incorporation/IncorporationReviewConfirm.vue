@@ -125,7 +125,7 @@
     </section>
 
     <!-- Court Order and Plan of Arrangement -->
-    <section id="court-order-poa-section" class="mt-10" v-if="isTypeBcUlcCompany">
+    <section id="court-order-poa-section" class="mt-10" v-if="isBaseCompany">
       <header>
         <h2>Court Order and Plan of Arrangement</h2>
         <p class="mt-4">
@@ -142,7 +142,7 @@
           :autoValidation="getValidateSteps"
           :draftCourtOrderNumber="getCourtOrderStep.courtOrder.fileNumber"
           :hasDraftPlanOfArrangement="getCourtOrderStep.courtOrder.hasPlanOfArrangement"
-          :courtOrderNumberRequired="true"
+          :courtOrderNumberRequired="false"
           :invalidSection="isCourtOrderInvalid"
           @emitCourtNumber="setCourtOrderFileNumber($event)"
           @emitPoa="setHasPlanOfArrangement($event)"

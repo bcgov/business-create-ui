@@ -84,7 +84,6 @@ export default class FilingTemplateMixin extends DateMixin {
   @Getter getStaffPaymentStep!: StaffPaymentStepIF
   @Getter getCourtOrderStep!: CourtOrderStepIF
   @Getter isRoleStaff!: boolean
-  @Getter isTypeBcUlcCompany!: boolean
   @Getter getDissolutionStatementStep!: DissolutionStatementIF
   @Getter getDissolutionCustodian!: OrgPersonIF
   @Getter getFolioNumber!: string
@@ -201,8 +200,8 @@ export default class FilingTemplateMixin extends DateMixin {
           agreementType: this.getIncorporationAgreementStep.agreementType
         }
 
-        if (this.isTypeBcUlcCompany) {
-          const courtOrder = this.getCourtOrderStep.courtOrder
+        const courtOrder = this.getCourtOrderStep.courtOrder
+        if (courtOrder && (courtOrder.hasPlanOfArrangement || courtOrder.fileNumber)) {
           filing.incorporationApplication.courtOrder = {
             fileNumber: courtOrder.fileNumber,
             effectOfOrder: courtOrder.hasPlanOfArrangement ? EffectOfOrders.PLAN_OF_ARRANGEMENT : '',
@@ -318,11 +317,9 @@ export default class FilingTemplateMixin extends DateMixin {
         this.setIncorporationAgreementStepData({
           agreementType: draftFiling.incorporationApplication.incorporationAgreement?.agreementType
         })
-
-        if (this.isTypeBcUlcCompany) {
-          this.setCourtOrderFileNumber(draftFiling.incorporationApplication.courtOrder?.fileNumber)
-          this.setHasPlanOfArrangement(draftFiling.incorporationApplication.courtOrder?.hasPlanOfArrangement)
-        }
+        // set courtOrder attribute
+        this.setCourtOrderFileNumber(draftFiling.incorporationApplication.courtOrder?.fileNumber || '')
+        this.setHasPlanOfArrangement(draftFiling.incorporationApplication.courtOrder?.hasPlanOfArrangement || false)
         break
     }
 
@@ -818,8 +815,8 @@ export default class FilingTemplateMixin extends DateMixin {
     this.setAffidavit(uploadAffidavit)
 
     // restore Court Order data
-    this.setCourtOrderFileNumber(draftFiling.dissolution.courtOrder?.fileNumber)
-    this.setHasPlanOfArrangement(draftFiling.dissolution.courtOrder?.hasPlanOfArrangement)
+    this.setCourtOrderFileNumber(draftFiling.dissolution.courtOrder?.fileNumber || '')
+    this.setHasPlanOfArrangement(draftFiling.dissolution.courtOrder?.hasPlanOfArrangement || false)
 
     // NB: do not restore/overwrite Folio Number - just use the FN from auth info (see App.vue)
 

@@ -1,0 +1,169 @@
+{
+	"filing": {
+		"business": {
+			"identifier": "id123abc",
+			"legalType": "BC"
+		},
+		"documents": [],
+		"header": {
+			"affectedFilings": [],
+			"availableOnPaperOnly": false,
+			"certifiedBy": "BCREGTEST Rosette ELEVEN",
+			"colinIds": [],
+			"comments": [],
+			"date": "2021-10-26T20:30:00.230581+00:00",
+			"effectiveDate": "2021-10-26T20:30:00.230609+00:00",
+			"filingId": 112950,
+			"inColinOnly": false,
+			"isCorrected": false,
+			"isCorrectionPending": false,
+			"isFutureEffective": false,
+			"name": "incorporationApplication",
+			"paymentStatusCode": "COMPLETED",
+			"paymentToken": "13408",
+			"status": "PAID",
+			"submitter": "bcsc/iaptaestlb6ita56a3sqwhvvdulxqsl5"
+		},
+		"incorporationApplication": {
+			"contactPoint": {
+				"email": "eleven@email.com",
+				"phone": "(555) 555-5555"
+			},
+			"nameRequest": {
+				"legalName": "TEST INC IA",
+				"legalType": "CP",
+				"nrNumber": "NR 5269136"
+			},
+			"nameTranslations": [],
+			"offices": {
+				"registeredOffice": {
+					"deliveryAddress": {
+						"addressCity": "Victoria",
+						"addressCountry": "CA",
+						"addressRegion": "BC",
+						"deliveryInstructions": "",
+						"postalCode": "V8W 3H2",
+						"streetAddress": "735 Broughton St",
+						"streetAddressAdditional": ""
+					},
+					"mailingAddress": {
+						"addressCity": "Victoria",
+						"addressCountry": "CA",
+						"addressRegion": "BC",
+						"deliveryInstructions": "",
+						"postalCode": "V8W 3H2",
+						"streetAddress": "735 Broughton St",
+						"streetAddressAdditional": ""
+					}
+				}
+			},
+			"parties": [
+				{
+					"deliveryAddress": {
+						"addressCity": "Smithers",
+						"addressCountry": "CA",
+						"addressRegion": "BC",
+						"postalCode": "V0J 2N2",
+						"streetAddress": "5-6421 Airport Rd",
+						"streetAddressAdditional": ""
+					},
+					"mailingAddress": {
+						"addressCity": "Smithers",
+						"addressCountry": "CA",
+						"addressRegion": "BC",
+						"postalCode": "V0J 2N2",
+						"streetAddress": "5-6421 Airport Rd",
+						"streetAddressAdditional": ""
+					},
+					"officer": {
+						"email": "a@test.com",
+						"firstName": "BCREGTEST Rosette",
+						"id": "79825708-ca1d-41f6-86b0-fa7f30f93c5d",
+						"lastName": "ELEVEN",
+						"middleName": "",
+						"organizationName": "",
+						"partyType": "person"
+					},
+					"roles": [
+						{
+							"appointmentDate": "2021-10-26",
+							"roleType": "Completing Party"
+						},
+						{
+							"appointmentDate": "2021-10-26",
+							"roleType": "Director"
+						}
+					]
+				},
+				{
+					"deliveryAddress": {
+						"addressCity": "Victoria",
+						"addressCountry": "CA",
+						"addressRegion": "BC",
+						"deliveryInstructions": "",
+						"postalCode": "V8W 3H2",
+						"streetAddress": "735 Broughton St",
+						"streetAddressAdditional": ""
+					},
+					"mailingAddress": {
+						"addressCity": "Victoria",
+						"addressCountry": "CA",
+						"addressRegion": "BC",
+						"deliveryInstructions": "",
+						"postalCode": "V8W 3H2",
+						"streetAddress": "735 Broughton St",
+						"streetAddressAdditional": ""
+					},
+					"officer": {
+						"firstName": "John",
+						"id": "7b755f98-c183-4e04-96fd-027715f06c49",
+						"lastName": "Test",
+						"middleName": "",
+						"organizationName": "",
+						"partyType": "person"
+					},
+					"roles": [
+						{
+							"appointmentDate": "2021-10-26",
+							"roleType": "Director"
+						}
+					]
+				},
+				{
+					"deliveryAddress": {
+						"addressCity": "Victoria",
+						"addressCountry": "CA",
+						"addressRegion": "BC",
+						"deliveryInstructions": "",
+						"postalCode": "V8W 3H2",
+						"streetAddress": "735 Broughton St",
+						"streetAddressAdditional": ""
+					},
+					"mailingAddress": {
+						"addressCity": "Victoria",
+						"addressCountry": "CA",
+						"addressRegion": "BC",
+						"deliveryInstructions": "",
+						"postalCode": "V8W 3H2",
+						"streetAddress": "735 Broughton St",
+						"streetAddressAdditional": ""
+					},
+					"officer": {
+						"firstName": "Anna",
+						"id": "1d759481-7395-4826-87bc-666b5518d4d6",
+						"lastName": "Test",
+						"middleName": "",
+						"organizationName": "",
+						"partyType": "person"
+					},
+					"roles": [
+						{
+							"appointmentDate": "2021-10-26",
+							"roleType": "Director"
+						}
+					]
+				}
+			]
+		}
+	}
+}

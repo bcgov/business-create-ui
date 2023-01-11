@@ -56,7 +56,7 @@ for (const test of reviewConfirmTestCases) {
       expect(wrapper.find('#certify-section').exists()).toBe(true)
     })
 
-    it('displays Court Order and Plan of Arrangement section only for ULC', () => {
+    it('displays Court Order and Plan of Arrangement section only for BEN, ULC, CC, BC', () => {
       wrapper = shallowWrapperFactory(
         IncorporationReviewConfirm,
         null,
@@ -67,8 +67,7 @@ for (const test of reviewConfirmTestCases) {
         IncorporationResources
       )
 
-      const expected = (test.entityType === 'ULC')
-      expect(wrapper.find('#court-order-poa-section').exists()).toBe(test.entityType === 'ULC')
+      expect(wrapper.find('#court-order-poa-section').exists()).toBe(['BEN', 'ULC', 'CC', 'BC'].includes(test.entityType))
     })
 
     // FUTURE: Expand unit testing for validation on step 5. Include routing to appropriate steps from error links.
