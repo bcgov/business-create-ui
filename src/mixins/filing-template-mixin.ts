@@ -82,7 +82,6 @@ export default class FilingTemplateMixin extends DateMixin {
   @Getter getStaffPaymentStep!: StaffPaymentStepIF
   @Getter getCourtOrderStep!: CourtOrderStepIF
   @Getter isRoleStaff!: boolean
-  @Getter isBaseCompany!: boolean
   @Getter getDissolutionStatementStep!: DissolutionStatementIF
   @Getter getDissolutionCustodian!: OrgPersonIF
   @Getter getFolioNumber!: string
