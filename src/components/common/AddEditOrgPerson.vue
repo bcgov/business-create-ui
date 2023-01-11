@@ -8,7 +8,6 @@
       <v-row no-gutters>
         <v-col cols="12" sm="3" class="pr-4 d-none d-sm-block">
           <!-- Title for org -->
-          <!-- check isTypeBcomp below ... needed? -->
           <label
             v-if="isOrg && isTypeBcomp"
             class="add-org-header"
