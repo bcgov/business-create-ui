@@ -174,6 +174,7 @@ export default class Actions extends Vue {
       // clear flag
       this.setHaveChanges(false)
     } catch (error) {
+      console.log('Error on onClickSave(): ', error)
       this.$root.$emit('save-error-event', error)
       this.setIsSaving(false)
       return

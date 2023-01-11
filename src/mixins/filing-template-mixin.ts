@@ -82,7 +82,7 @@ export default class FilingTemplateMixin extends DateMixin {
   @Getter getStaffPaymentStep!: StaffPaymentStepIF
   @Getter getCourtOrderStep!: CourtOrderStepIF
   @Getter isRoleStaff!: boolean
-  @Getter isTypeBcUlcCompany!: boolean
+  @Getter isBaseCompany!: boolean
   @Getter getDissolutionStatementStep!: DissolutionStatementIF
   @Getter getDissolutionCustodian!: OrgPersonIF
   @Getter getFolioNumber!: string
@@ -198,15 +198,12 @@ export default class FilingTemplateMixin extends DateMixin {
           agreementType: this.getIncorporationAgreementStep.agreementType
         }
 
-        if (this.isTypeBcUlcCompany) {
-          // Add Court Order ONLY when it is required and applied.
-          const courtOrder = this.getCourtOrderStep.courtOrder
-          if (courtOrder.hasPlanOfArrangement || courtOrder.fileNumber) {
-            filing.incorporationApplication.courtOrder = {
-              fileNumber: courtOrder.fileNumber,
-              effectOfOrder: courtOrder.hasPlanOfArrangement ? EffectOfOrders.PLAN_OF_ARRANGEMENT : '',
-              hasPlanOfArrangement: courtOrder.hasPlanOfArrangement
-            }
+        const courtOrder = this.getCourtOrderStep.courtOrder
+        if (courtOrder && (courtOrder.hasPlanOfArrangement || courtOrder.fileNumber)) {
+          filing.incorporationApplication.courtOrder = {
+            fileNumber: courtOrder.fileNumber,
+            effectOfOrder: courtOrder.hasPlanOfArrangement ? EffectOfOrders.PLAN_OF_ARRANGEMENT : '',
+            hasPlanOfArrangement: courtOrder.hasPlanOfArrangement
           }
         }
         break
@@ -318,11 +315,9 @@ export default class FilingTemplateMixin extends DateMixin {
         this.setIncorporationAgreementStepData({
           agreementType: draftFiling.incorporationApplication.incorporationAgreement?.agreementType
         })
-
-        if (this.isTypeBcUlcCompany) {
-          this.setCourtOrderFileNumber(draftFiling.incorporationApplication.courtOrder?.fileNumber || '')
-          this.setHasPlanOfArrangement(draftFiling.incorporationApplication.courtOrder?.hasPlanOfArrangement || false)
-        }
+        // set courtOrder attribute
+        this.setCourtOrderFileNumber(draftFiling.incorporationApplication.courtOrder?.fileNumber || '')
+        this.setHasPlanOfArrangement(draftFiling.incorporationApplication.courtOrder?.hasPlanOfArrangement || false)
         break
     }
 
