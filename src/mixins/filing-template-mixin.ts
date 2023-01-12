@@ -53,7 +53,6 @@ import {
  */
 @Component({})
 export default class FilingTemplateMixin extends DateMixin {
-  @Getter isTypeBcomp!: boolean
   @Getter isTypeCoop!: boolean
   @Getter isTypeSoleProp!: boolean
   @Getter getAffidavitStep!: UploadAffidavitIF
