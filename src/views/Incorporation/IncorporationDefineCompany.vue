@@ -159,7 +159,7 @@ import OfficeAddresses from '@/components/common/OfficeAddresses.vue'
 export default class IncorporationDefineCompany extends Vue {
   @Getter isEntityType!: boolean
   @Getter isPremiumAccount!: boolean
-  @Getter isTypeBcomp!: boolean
+  @Getter isBaseCompany!: boolean
   @Getter isTypeCoop!: boolean
   @Getter getDefineCompanyStep!: DefineCompanyIF
   @Getter getShowErrors!: boolean
@@ -214,7 +214,7 @@ export default class IncorporationDefineCompany extends Vue {
       streetAddressAdditional: ''
     }
 
-    if (this.isTypeBcomp) {
+    if (this.isBaseCompany) {
       this.setOfficeAddresses({
         registeredOffice: {
           mailingAddress: defaultAddress,

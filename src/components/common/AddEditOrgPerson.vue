@@ -9,7 +9,7 @@
         <v-col cols="12" sm="3" class="pr-4 d-none d-sm-block">
           <!-- Title for org -->
           <label
-            v-if="isOrg && isTypeBcomp"
+            v-if="isOrg && isBaseCompany"
             class="add-org-header"
             :class="{'error-text': !addPersonOrgFormValid}"
           >
@@ -236,6 +236,7 @@ import { Component } from 'vue-property-decorator'
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
 import { ConfirmDialog } from '@bcrs-shared-components/confirm-dialog'
 import { AddEditOrgPersonMixin } from '@/mixins'
+import { Getter } from 'vuex-class'
 
 /** This is a sub-component of PeopleAndRoles. */
 @Component({
@@ -249,6 +250,7 @@ import { AddEditOrgPersonMixin } from '@/mixins'
   ]
 })
 export default class AddEditOrgPerson extends Vue {
+  @Getter isBaseCompany!: boolean
   //
   // NB: see mixin for common properties, methods, etc.
   //
