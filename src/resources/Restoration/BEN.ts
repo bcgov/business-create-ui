@@ -12,14 +12,22 @@ export const RestorationResourceBen: RestorationResourceIF = {
     filingTypeCode: FilingCodes.RESTORATION_FULL
   }],
   peopleAndRoles: {
-    header: '1. Add Applicant Information',
-    blurb: 'Your application must include one of the following:',
+    header: 'Add Applicant Information',
+    blurb: null,
     helpSection: null,
+    addOrganization: 'Add a Business or a Corporation',
+    rolesTitle: 'Relationship to the Company to be Restored',
+    rolesSubtitle: 'Please select all that apply.',
     rules: [
       {
-        id: RuleIds.NUM_APPLICANT,
-        text: 'The applicant(s)',
-        test: (num) => { return (num >= 1) }
+        id: RuleIds.NUM_APPLICANT_PERSON,
+        text: 'An individual',
+        test: (num) => { return (num === 1) }
+      },
+      {
+        id: RuleIds.NUM_APPLICANT_ORG,
+        text: 'A business or corporation',
+        test: (num) => { return (num === 1) }
       }
     ]
   },

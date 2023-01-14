@@ -12,17 +12,22 @@ export const RestorationResourceCc: RestorationResourceIF = {
     filingTypeCode: FilingCodes.RESTORATION_FULL
   }],
   peopleAndRoles: {
-    header: '1. Add People or Corporations/Firms to your Application',
-    blurb: `Add the people and Corporations/firms who will have a role in your company. People
-      can have multiple roles; Corporations/firms can only be Incorporators.`,
+    header: 'Add Applicant Information',
+    blurb: null,
     helpSection: null,
-    addIncorporator: true,
-    addOrganization: 'Add a Corporation or Firm',
+    addOrganization: 'Add a Business or a Corporation',
+    rolesTitle: 'Relationship to the Company to be Restored',
+    rolesSubtitle: 'Please select all that apply.',
     rules: [
       {
-        id: RuleIds.NUM_APPLICANT,
-        text: 'The applicant(s)',
-        test: (num) => { return (num >= 1) }
+        id: RuleIds.NUM_APPLICANT_PERSON,
+        text: 'An individual',
+        test: (num) => { return (num === 1) }
+      },
+      {
+        id: RuleIds.NUM_APPLICANT_ORG,
+        text: 'A business or corporation',
+        test: (num) => { return (num === 1) }
       }
     ]
   },

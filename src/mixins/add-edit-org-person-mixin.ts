@@ -3,7 +3,7 @@ import { Component, Emit, Prop } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import { cloneDeep, isEqual } from 'lodash'
 import { v4 as uuidv4 } from 'uuid'
-import { CorpTypeCd, PartyTypes, RoleTypes } from '@/enums'
+import { CorpTypeCd, PartyTypes, RoleTypes, RuleIds } from '@/enums'
 import {
   ActionBindingIF,
   AddressIF,
@@ -82,6 +82,19 @@ export default class AddEditOrgPersonMixin extends Vue {
   readonly PartyTypes = PartyTypes
   readonly Rules = Rules
 
+  /** Whether a Completing Party is required. */
+  get requireCompletingParty (): boolean {
+    return this.getPeopleAndRolesResource.rules.some(r => r.id === RuleIds.NUM_COMPLETING_PARTY)
+  }
+
+  /** Whether a Director(s) is required. */
+  get requireDirector (): boolean {
+    const r1 = this.getPeopleAndRolesResource.rules.some(r => r.id === RuleIds.NUM_DIRECTORS)
+    const r2 = this.getPeopleAndRolesResource.rules.some(r => r.id === RuleIds.NUM_APPLICANT_PERSON)
+    const r3 = this.getPeopleAndRolesResource.rules.some(r => r.id === RuleIds.NUM_APPLICANT_ORG)
+    return (r1 || r2 || r3)
+  }
+
   /** The validation rules for the Roles. */
   get roleRules (): Array<VuetifyRuleFunction> {
     return [() => this.selectedRoles.length > 0 || 'A role is required']
@@ -129,6 +142,8 @@ export default class AddEditOrgPersonMixin extends Vue {
 
   /** Whether the Completing Party role should be shown. */
   get showCompletingPartyRole (): boolean {
+    if (!this.requireCompletingParty) return false
+
     const isRoleCompletingParty = this.orgPerson.roles.some(role => role.roleType === RoleTypes.COMPLETING_PARTY)
     // either this is the completing party,
     // or this is staff adding/editing a person
@@ -144,7 +159,7 @@ export default class AddEditOrgPersonMixin extends Vue {
   /** Whether the Director role should be shown. */
   get showDirectorRole (): boolean {
     // only a person can be a director
-    return this.isPerson
+    return (this.requireDirector && this.isPerson)
   }
 
   /** Whether the Proprietor role should be shown. */

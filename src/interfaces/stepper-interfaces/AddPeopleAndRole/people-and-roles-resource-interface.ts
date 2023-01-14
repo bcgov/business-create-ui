@@ -17,5 +17,7 @@ export interface PeopleAndRolesResourceIF {
   addIncorporator?: boolean
   addOrganization?: string
   addBusiness?: boolean
+  rolesTitle?: string // restorations only
+  rolesSubtitle?: string // restorations only
   rules: Array<Rule>
 }
