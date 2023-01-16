@@ -185,7 +185,6 @@
       <v-card flat class="mt-6" :class="{ 'invalid-section': isCourtOrderInvalid }">
         <CourtOrderPoa
           class="py-8 px-6"
-          :autoValidation="getValidateSteps"
           :draftCourtOrderNumber="getCourtOrderStep.courtOrder.fileNumber"
           :hasDraftPlanOfArrangement="getCourtOrderStep.courtOrder.hasPlanOfArrangement"
           :courtOrderNumberRequired="true"
