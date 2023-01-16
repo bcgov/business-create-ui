@@ -79,7 +79,7 @@ export const getFilingName = (state: StateIF): FilingNames => {
   switch (getFilingType(state)) {
     case FilingTypes.INCORPORATION_APPLICATION: return FilingNames.INCORPORATION_APPLICATION
     case FilingTypes.REGISTRATION: return FilingNames.REGISTRATION
-    case FilingTypes.RESTORATION: return FilingNames.RESTORATION
+    case FilingTypes.RESTORATION: return FilingNames.RESTORATION_APPLICATION
     case FilingTypes.VOLUNTARY_DISSOLUTION:
       return isTypeFirm(state) ? FilingNames.DISSOLUTION_FIRM : FilingNames.VOLUNTARY_DISSOLUTION
     default: return null // should never happen
