@@ -159,6 +159,11 @@ describe('Emits error event if NR validation fails in file and pay', () => {
   })
 
   it('Emits the error event for an expired NR', async () => {
+    // mock the console.log function to hide "Eror on onClickFilePay():"
+    const { log } = console
+    delete console.log
+    console.log = jest.fn()
+
     const mockBuildFiling = jest.spyOn(wrapper.vm, 'buildIncorporationFiling')
 
     await wrapper.vm.onClickFilePay()
@@ -169,6 +174,9 @@ describe('Emits error event if NR validation fails in file and pay', () => {
     expect(mockBuildFiling).not.toHaveBeenCalled()
     expect(window.location.assign).not.toHaveBeenCalled()
     expect(wrapper.vm.$route.name).toBe('incorporation-review-confirm')
+
+    // restore console.log
+    console.log = log
   })
 })
 
@@ -477,6 +485,11 @@ describe('Actions component - Filing Functionality', () => {
   })
 
   it('Emits the error event for a PAD error', async () => {
+    // mock the console.log function to hide "Eror on onClickFilePay():"
+    const { log } = console
+    delete console.log
+    console.log = jest.fn()
+
     const padErrorFiling = {
       errors: [
         {
@@ -509,6 +522,9 @@ describe('Actions component - Filing Functionality', () => {
       'will be able to do transactions only after the period is over.')
 
     expect(window.location.assign).not.toHaveBeenCalled()
+
+    // restore console.log
+    console.log = log
   })
 
   it('Calls the buildIncorporationFiling and updateFiling methods when onClickFilePay is called', async () => {

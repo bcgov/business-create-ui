@@ -248,7 +248,7 @@ export default class Actions extends Vue {
         try {
           await this.validateNameRequest(this.getNameRequestNumber)
         } catch (error) {
-          console.log('Error on onClickFilePay(): ', error)
+          console.log('Error validating NR in onClickFilePay(): ', error)
           this.setIsFilingPaying(false)
           return
         }
@@ -264,7 +264,7 @@ export default class Actions extends Vue {
         // clear flag
         this.setHaveChanges(false)
       } catch (error) {
-        console.log('Error on onClickFilePay(): ', error)
+        console.log('Error updating filing in onClickFilePay(): ', error)
         this.$root.$emit('save-error-event', error)
         this.setIsFilingPaying(false)
         return
