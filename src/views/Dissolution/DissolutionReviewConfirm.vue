@@ -254,7 +254,6 @@
         <CourtOrderPoa
           class="py-8 px-6"
           :class="{ 'invalid-section': isCourtOrderInvalid }"
-          :autoValidation="getValidateSteps"
           :draftCourtOrderNumber="getCourtOrderStep.courtOrder.fileNumber"
           :hasDraftPlanOfArrangement="getCourtOrderStep.courtOrder.hasPlanOfArrangement"
           :courtOrderNumberRequired="true"
