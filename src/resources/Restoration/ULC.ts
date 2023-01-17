@@ -7,17 +7,28 @@ export const RestorationResourceUlc: RestorationResourceIF = {
   entityType: CorpTypeCd.BC_ULC_COMPANY,
   displayName: GetCorpFullDescription(CorpTypeCd.BC_ULC_COMPANY),
   steps: RestorationSteps,
-  filingData: [{
-    entityType: CorpTypeCd.BC_ULC_COMPANY,
-    filingTypeCode: FilingCodes.RESTORATION_FULL
-  }],
+  filingData: [
+    // order matters - see resource-getters.ts
+    {
+      entityType: CorpTypeCd.BC_ULC_COMPANY,
+      filingTypeCode: FilingCodes.RESTORATION_FULL
+    },
+    {
+      entityType: CorpTypeCd.BC_ULC_COMPANY,
+      filingTypeCode: FilingCodes.RESTORATION_LIMITED
+    }
+  ],
   peopleAndRoles: {
     header: 'Add Applicant Information',
     blurb: null,
     helpSection: null,
     addOrganization: 'Add a Business or a Corporation',
     rolesTitle: 'Relationship to the Company to be Restored',
-    rolesSubtitle: 'Please select all that apply.',
+    rolesSubtitle: [
+      // order matters - see resource-getters.ts
+      'Please select all that apply.',
+      'Select other if you are not associated with the company.'
+    ],
     rules: [
       {
         id: RuleIds.NUM_APPLICANT_PERSON,

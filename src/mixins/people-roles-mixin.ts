@@ -133,14 +133,14 @@ export default class PeopleRolesMixin extends Vue {
   }
 
   /** Whether the Number of Incorporators rule is valid. Always true if rule doesn't exist. */
-  get validMinimumIncorporators (): boolean {
+  get validNumIncorporators (): boolean {
     const rule = this.getPeopleAndRolesResource.rules.find(r => r.id === RuleIds.NUM_INCORPORATORS)
     if (!rule) return true
     return rule.test(this.incorporators.length)
   }
 
   /** Whether the Number of Directors rule is valid. Always true if rule doesn't exist. */
-  get validMinimumDirectors (): boolean {
+  get validNumDirectors (): boolean {
     const rule = this.getPeopleAndRolesResource.rules.find(r => r.id === RuleIds.NUM_DIRECTORS)
     if (!rule) return true
     return rule.test(this.directors.length)
@@ -152,7 +152,7 @@ export default class PeopleRolesMixin extends Vue {
     if (!rule) return true
     const num = this.directors.filter(d => rule.test(d.mailingAddress.addressCountry)).length
     // evaluate this rule only when there are enough minimum directors
-    return (this.validMinimumDirectors && num > this.directors.length / 2) // more than half
+    return (this.validNumDirectors && num > this.directors.length / 2) // more than half
   }
 
   /** Whether the Director Province rule is valid. Always true if rule doesn't exist. */
@@ -175,6 +175,7 @@ export default class PeopleRolesMixin extends Vue {
   /** Whether the Applicant Org rule is valid. Always true if rule doesn't exist. */
   get validApplicantOrg (): boolean {
     const rule = this.getPeopleAndRolesResource.rules.find(r => r.id === RuleIds.NUM_APPLICANT_ORG)
+    if (!rule) return true
     return rule.test(this.applicants.length)
   }
 
@@ -317,10 +318,12 @@ export default class PeopleRolesMixin extends Vue {
   protected hasValidRoles (): boolean {
     return (
       this.validNumCompletingParty &&
-      this.validMinimumIncorporators &&
-      this.validMinimumDirectors &&
+      this.validNumIncorporators &&
+      this.validNumDirectors &&
       this.validDirectorCountry &&
       this.validDirectorProvince &&
+      this.validApplicantPerson &&
+      this.validApplicantOrg &&
       this.validNumProprietors &&
       this.validNumPartners &&
       !this.validPeopleWithNoRoles

@@ -1,33 +1,11 @@
-import { BusinessTypes, CoopTypes, CorpTypeCd, DissolutionTypes, EntityState, FilingTypes } from '@/enums'
-import {
-  AccountInformationIF,
-  AddressIF,
-  BusinessAddressIF,
-  ContactPointIF,
-  CertifyIF,
-  CreateMemorandumIF,
-  CreateResolutionIF,
-  CreateRulesIF,
-  DissolutionStatementIF,
-  FeesIF,
-  IncorporationAddressIF,
-  IncorporationAgreementIF,
-  NaicsIF,
-  NameRequestIF,
-  NameTranslationIF,
-  OfficeAddressIF,
-  OrgInformationIF,
-  OrgPersonIF,
-  ResourceIF,
-  ShareClassIF,
-  StaffPaymentIF,
-  StateIF,
-  UploadAffidavitIF,
-  ValidationDetailIF,
-  CompletingPartyIF,
-  PartyIF,
-  BusinessWarningIF
-} from '@/interfaces'
+import { BusinessTypes, CoopTypes, CorpTypeCd, DissolutionTypes, EntityState, FilingTypes,
+  RestorationTypes } from '@/enums'
+import { AccountInformationIF, AddressIF, BusinessAddressIF, BusinessWarningIF, CertifyIF,
+  CompletingPartyIF, ContactPointIF, CreateMemorandumIF, CreateResolutionIF, CreateRulesIF,
+  DissolutionStatementIF, FeesIF, IncorporationAddressIF, IncorporationAgreementIF, NaicsIF,
+  NameRequestIF, NameTranslationIF, OfficeAddressIF, OrgInformationIF, OrgPersonIF, PartyIF,
+  ResourceIF, ShareClassIF, StaffPaymentIF, StateIF, UploadAffidavitIF, ValidationDetailIF }
+  from '@/interfaces'
 
 export const mutateBusinessId = (state: StateIF, businessId: string) => {
   state.stateModel.business.businessId = businessId
@@ -426,4 +404,16 @@ export const mutateGoodStanding = (state: StateIF, goodStanding: boolean) => {
 
 export const mutateWindowWidth = (state: StateIF, width: number) => {
   state.stateModel.windowWidth = width
+}
+
+export const mutateRestorationDate = (state: StateIF, date: string) => {
+  state.stateModel.restoration.date = date
+}
+
+export const mutateRestorationType = (state: StateIF, type: RestorationTypes) => {
+  state.stateModel.restoration.type = type
+}
+
+export const mutateRestorationExpiry = (state: StateIF, expiry: string) => {
+  state.stateModel.restoration.expiry = expiry
 }

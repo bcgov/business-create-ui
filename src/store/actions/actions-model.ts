@@ -1,12 +1,9 @@
-import {
-  AccountInformationIF, ActionIF, AddressIF, BusinessWarningIF, ContactPointIF, CertifyIF, DissolutionStatementIF,
-  IncorporationAddressIF, IncorporationAgreementIF, NameRequestIF, NameTranslationIF, OrgPersonIF,
-  ResourceIF, ShareClassIF, CreateRulesIF, CreateMemorandumIF, ValidationDetailIF, FeesIF,
-  UploadAffidavitIF, CreateResolutionIF, OrgInformationIF, NaicsIF,
-  CompletingPartyIF,
-  PartyIF
-} from '@/interfaces'
-import { BusinessTypes, CoopTypes, CorpTypeCd, EntityState } from '@/enums'
+import { AccountInformationIF, ActionIF, AddressIF, BusinessWarningIF, CertifyIF, CompletingPartyIF,
+  ContactPointIF, CreateResolutionIF, CreateRulesIF, CreateMemorandumIF, DissolutionStatementIF,
+  FeesIF, IncorporationAddressIF, IncorporationAgreementIF, NaicsIF, NameRequestIF, NameTranslationIF,
+  OrgInformationIF, OrgPersonIF, PartyIF, ResourceIF, ShareClassIF, UploadAffidavitIF,
+  ValidationDetailIF } from '@/interfaces'
+import { BusinessTypes, CoopTypes, CorpTypeCd, EntityState, RestorationTypes } from '@/enums'
 
 export const setBusinessId: ActionIF = ({ commit }, businessId): void => {
   commit('mutateBusinessId', businessId)
@@ -280,10 +277,6 @@ export const setCustodianOfRecords: ActionIF = ({ commit }, custodian: OrgPerson
   commit('mutateCustodianOfRecords', custodian)
 }
 
-//
-// Registration actions
-//
-
 export const setRegistrationDefineBusinessValid: ActionIF = ({ commit }, val: boolean): void => {
   commit('mutateRegistrationDefineBusinessValid', val)
 }
@@ -336,10 +329,6 @@ export const setParties: ActionIF = ({ commit }, val: Array<PartyIF>): void => {
   commit('mutateParties', val)
 }
 
-//
-// BusinessId
-//
-
 export const setAdminFreeze: ActionIF = ({ commit }, adminFreeze: boolean): void => {
   commit('mutateAdminFreeze', adminFreeze)
 }
@@ -382,4 +371,16 @@ export const setWarnings : ActionIF = ({ commit }, businessWarnings: Array<Busin
 
 export const setWindowWidth: ActionIF = ({ commit }, width: number): void => {
   commit('mutateWindowWidth', width)
+}
+
+export const setRestorationDate: ActionIF = ({ commit }, date: string): void => {
+  commit('mutateRestorationDate', date)
+}
+
+export const setRestorationType: ActionIF = ({ commit }, type: RestorationTypes): void => {
+  commit('mutateRestorationType', type)
+}
+
+export const setRestorationExpiry: ActionIF = ({ commit }, expiry: string): void => {
+  commit('mutateRestorationExpiry', expiry)
 }

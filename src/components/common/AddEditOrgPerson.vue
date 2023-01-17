@@ -54,11 +54,12 @@
             </p>
           </v-card>
 
+          <div v-if="isCompletingParty && !isRoleStaff && isTypeCoop" class="mt-8" />
+
           <v-form
             lazy-validation
             ref="addPersonOrgForm"
             class="appoint-form"
-            :class="{ 'mt-8': isCompletingParty && !isRoleStaff && isTypeCoop}"
             v-model="addPersonOrgFormValid"
             v-on:submit.prevent
           >
@@ -121,7 +122,6 @@
               <div class="form__row three-column mt-4">
                 <v-card flat rounded="sm" class="item gray-card px-4">
                   <v-row no-gutters class="align-center mt-4">
-
                     <v-col cols="4" v-if="showCompletingPartyRole">
                       <v-checkbox
                         id="cp-checkbox"
@@ -160,7 +160,6 @@
                       />
                     </v-col>
 
-                    <!-- *** TODO: disable conditionally? -->
                     <v-col cols="4" v-if="showHeirLegalRepRole">
                       <v-checkbox
                         id="heir-legal-rep-checkbox"
@@ -168,7 +167,7 @@
                         v-model="selectedRoles"
                         :value="RoleTypes.HEIR_LEGAL_REP"
                         :label="RoleTypes.HEIR_LEGAL_REP"
-                        :disabled="false"
+                        :disabled="disableHeirLegalRepRole"
                         :rules="enableRules ? roleRules : []"
                       />
                     </v-col>
@@ -180,7 +179,7 @@
                         v-model="selectedRoles"
                         :value="RoleTypes.OFFICER"
                         :label="RoleTypes.OFFICER"
-                        :disabled="false"
+                        :disabled="disableOfficerRole"
                         :rules="enableRules ? roleRules : []"
                       />
                     </v-col>
@@ -192,7 +191,7 @@
                         v-model="selectedRoles"
                         :value="RoleTypes.SHAREHOLDER"
                         :label="RoleTypes.SHAREHOLDER"
-                        :disabled="false"
+                        :disabled="disableShareholderRole"
                         :rules="enableRules ? roleRules : []"
                       />
                     </v-col>
@@ -204,19 +203,19 @@
                         v-model="selectedRoles"
                         :value="RoleTypes.COURT_ORDERED_PARTY"
                         :label="RoleTypes.COURT_ORDERED_PARTY"
-                        :disabled="false"
+                        :disabled="disableCourtOrderedPartyRole"
                         :rules="enableRules ? roleRules : []"
                       />
                     </v-col>
 
-                    <v-col cols="4" v-if="showOther">
+                    <v-col cols="4" v-if="showOtherRole">
                       <v-checkbox
                         id="other-checkbox"
                         class="mt-0"
                         v-model="selectedRoles"
                         :value="RoleTypes.OTHER"
                         :label="RoleTypes.OTHER"
-                        :disabled="false"
+                        :disabled="disableOtherRole"
                         :rules="enableRules ? roleRules : []"
                       />
                     </v-col>

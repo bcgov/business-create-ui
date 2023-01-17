@@ -183,50 +183,17 @@ import * as Dialogs from '@/dialogs'
 import * as Views from '@/views'
 
 // Mixins, interfaces, etc
-import {
-  CommonMixin,
-  DateMixin,
-  FilingTemplateMixin,
-  NameRequestMixin
-} from '@/mixins'
-import {
-  AccountInformationIF,
-  ActionBindingIF,
-  AddressIF,
-  BreadcrumbIF,
-  BusinessIF,
-  CompletingPartyIF,
-  ConfirmDialogType,
-  EmptyFees,
-  FilingDataIF,
-  OrgInformationIF,
-  ResourceIF,
-  StepIF
-} from '@/interfaces'
-import {
-  DissolutionResources,
-  IncorporationResources,
-  RegistrationResources,
-  RestorationResources,
-  getEntityDashboardBreadcrumb,
-  getMyBusinessRegistryBreadcrumb,
-  getRegistryDashboardBreadcrumb,
-  getSbcStaffDashboardBreadcrumb,
-  getStaffDashboardBreadcrumb
-} from '@/resources'
+import { CommonMixin, DateMixin, FilingTemplateMixin, NameRequestMixin } from '@/mixins'
+import { AccountInformationIF, ActionBindingIF, AddressIF, BreadcrumbIF, BusinessIF, CompletingPartyIF,
+  ConfirmDialogType, EmptyFees, FilingDataIF, OrgInformationIF, ResourceIF, StepIF } from '@/interfaces'
+import { DissolutionResources, IncorporationResources, RegistrationResources, RestorationResources,
+  getEntityDashboardBreadcrumb, getMyBusinessRegistryBreadcrumb, getRegistryDashboardBreadcrumb,
+  getSbcStaffDashboardBreadcrumb, getStaffDashboardBreadcrumb } from '@/resources'
 import { AuthServices, LegalServices, PayServices } from '@/services/'
 
 // Enums and Constants
-import {
-  CorpTypeCd,
-  FilingCodes,
-  FilingNames,
-  FilingStatus,
-  FilingTypes,
-  NameRequestStates,
-  RouteNames,
-  StaffPaymentOptions
-} from '@/enums'
+import { CorpTypeCd, FilingCodes, FilingNames, FilingStatus, FilingTypes, NameRequestStates, RouteNames,
+  StaffPaymentOptions } from '@/enums'
 import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
 
 @Component({
@@ -364,23 +331,23 @@ export default class App extends Vue {
   /** Data for fee summary component. */
   get feeFilingData (): Array<FilingDataIF> {
     let filingData = [] as Array<FilingDataIF>
+
     if (this.getFilingData) {
       filingData = cloneDeep(this.getFilingData)
-      if (this.isTypeCoop && this.getFilingData.length > 0) {
-        // Only set Future Effective and Priority to Special Resolution Fee
-        const specialResolutionFilingData = filingData.find(x => x.filingTypeCode === FilingCodes.SPECIAL_RESOLUTION)
-        if (specialResolutionFilingData) {
-          if (this.getStaffPaymentStep.staffPayment.option === StaffPaymentOptions.NO_FEE) {
-            filingData.forEach(x => {
-              x.waiveFees = true
-            })
-          } else {
-            specialResolutionFilingData.futureEffective = this.getEffectiveDateTime.isFutureEffective
-            specialResolutionFilingData.priority = this.getStaffPaymentStep.staffPayment.isPriority
-          }
+
+      if (this.isTypeCoop && this.isDissolutionFiling) {
+        const specialResolutionFilingData =
+          filingData.find(x => x.filingTypeCode === FilingCodes.SPECIAL_RESOLUTION)
+
+        if (this.getStaffPaymentStep.staffPayment.option === StaffPaymentOptions.NO_FEE) {
+          filingData.forEach(x => { x.waiveFees = true })
+        } else if (specialResolutionFilingData) {
+          // update futureEffective/priority on Special Resolution data only
+          specialResolutionFilingData.futureEffective = this.getEffectiveDateTime.isFutureEffective
+          specialResolutionFilingData.priority = this.getStaffPaymentStep.staffPayment.isPriority
         }
-      } else if (this.getFilingData[0]) {
-        // Avoid waiveFee with priority or futureEffective in the same request
+      } else if (filingData[0]) {
+        // avoid waiveFee with futureEffective/priority in the same request
         if (this.getStaffPaymentStep.staffPayment.option === StaffPaymentOptions.NO_FEE) {
           filingData[0].waiveFees = true
         } else {
@@ -389,6 +356,7 @@ export default class App extends Vue {
         }
       }
     }
+
     return filingData
   }
 
@@ -680,6 +648,7 @@ export default class App extends Vue {
       }
 
       // fetch and set the fee prices to display in the text
+      // (currently used for dissolution filings only)
       const filingFees = []
       for (const filingData of this.getFilingData) {
         await PayServices.fetchFilingFees(filingData.filingTypeCode, filingData.entityType, true)

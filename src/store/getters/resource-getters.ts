@@ -1,16 +1,7 @@
-import {
-  AffidavitResourceIF,
-  CertifyStatementIF,
-  CustodianResourceIF,
-  CreateMemorandumResourceIF,
-  CreateRulesResourceIF,
-  FilingDataIF,
-  IncorporationAgreementTypeIF,
-  CreateResolutionResourceIF,
-  KeyValueIF,
-  StateIF,
-  StepIF
-} from '@/interfaces'
+import { AffidavitResourceIF, CertifyStatementIF, CustodianResourceIF, CreateMemorandumResourceIF,
+  CreateResolutionResourceIF, CreateRulesResourceIF, FilingDataIF, IncorporationAgreementTypeIF,
+  KeyValueIF, StateIF, StepIF } from '@/interfaces'
+import { isLimitedRestorationFiling, isFullRestorationFiling } from './state-getters'
 
 //
 // The getters in this file return values from the current resource
@@ -24,7 +15,14 @@ export const getCompanyDisplayName = (state: StateIF): string => {
 
 /** The People and Roles object. */
 export const getPeopleAndRolesResource = (state: StateIF): any => {
-  return state.resourceModel.peopleAndRoles
+  const peopleAndRoles = state.resourceModel.peopleAndRoles
+  if (isFullRestorationFiling(state)) {
+    peopleAndRoles.rolesSubtitle = peopleAndRoles.rolesSubtitle[0]
+  }
+  if (isLimitedRestorationFiling(state)) {
+    peopleAndRoles.rolesSubtitle = peopleAndRoles.rolesSubtitle[1]
+  }
+  return peopleAndRoles
 }
 
 /** The Incorporation Articles */
@@ -64,6 +62,12 @@ export const getSteps = (state: StateIF): Array<StepIF> => {
 
 /** The resource filing data. */
 export const getFilingData = (state: StateIF): Array<FilingDataIF> => {
+  if (isFullRestorationFiling(state)) {
+    return [state.resourceModel.filingData[0]]
+  }
+  if (isLimitedRestorationFiling(state)) {
+    return [state.resourceModel.filingData[1]]
+  }
   return state.resourceModel.filingData
 }
 
