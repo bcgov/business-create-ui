@@ -1,45 +1,12 @@
 import Vuetify from 'vuetify'
-import {
-  AccountTypes,
-  CoopTypes,
-  CorpTypeCd,
-  DissolutionTypes,
-  FilingNames,
-  FilingTypes,
-  FilingTypesSubTitle
-} from '@/enums'
-import {
-  AccountInformationIF,
-  AddressIF,
-  ContactPointIF,
-  BusinessIF,
-  CertifyIF,
-  CourtOrderStepIF,
-  CreateMemorandumIF,
-  CreateResolutionIF,
-  CreateRulesIF,
-  DefineCompanyIF,
-  DissolutionStatementIF,
-  DissolutionStateIF,
-  DocumentDeliveryIF,
-  EffectiveDateTimeIF,
-  FeesIF,
-  IncorporationAgreementIF,
-  NameRequestIF,
-  NameTranslationIF,
-  OrgPersonIF,
-  PeopleAndRoleIF,
-  RegistrationStateIF,
-  RestorationStateIF,
-  ShareStructureIF,
-  StaffPaymentStepIF,
-  StateIF,
-  TombstoneIF,
-  UploadAffidavitIF,
-  OrgInformationIF,
-  CompletingPartyIF,
-  PartyIF
-} from '@/interfaces'
+import { AccountTypes, CoopTypes, CorpTypeCd, DissolutionTypes, FilingNames, FilingTypes,
+  FilingTypesSubTitle, RestorationTypes } from '@/enums'
+import { AccountInformationIF, AddressIF, BusinessIF, CertifyIF, CompletingPartyIF, ContactPointIF,
+  CourtOrderStepIF, CreateMemorandumIF, CreateResolutionIF, CreateRulesIF, DefineCompanyIF,
+  DissolutionStatementIF, DissolutionStateIF, DocumentDeliveryIF, EffectiveDateTimeIF, FeesIF,
+  IncorporationAgreementIF, NameRequestIF, NameTranslationIF, OrgInformationIF, OrgPersonIF,
+  PartyIF, PeopleAndRoleIF, RegistrationStateIF, RestorationStateIF, ShareStructureIF,
+  StaffPaymentStepIF, StateIF, TombstoneIF, UploadAffidavitIF } from '@/interfaces'
 import { getMaxStep } from './resource-getters'
 
 /** True if current screen width is mobile. */
@@ -711,4 +678,9 @@ export const getParties = (state: StateIF): Array<PartyIF> => {
 /** The restoration object. */
 export const getRestoration = (state: StateIF): RestorationStateIF => {
   return state.stateModel.restoration
+}
+
+/** The restoration type. */
+export const getRestorationType = (state: StateIF): RestorationTypes => {
+  return state.stateModel.restoration.type
 }

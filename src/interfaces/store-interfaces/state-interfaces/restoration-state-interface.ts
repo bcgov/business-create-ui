@@ -1,5 +1,4 @@
-import { BusinessAddressIF } from '@/interfaces'
-import { CorpTypeCd } from '@/enums'
+import { CorpTypeCd, RestorationTypes } from '@/enums'
 
 export interface RestorationNameRequestIF {
   legalName: string
@@ -12,6 +11,9 @@ export interface RestorationStateIF {
   applicantInfoValid: boolean
   businessInfoValid: boolean
   businessNameValid: boolean
+  date: string // FUTURE: describe format here
+  type: RestorationTypes
+  expiry?: string // FUTURE: describe format here
   // defineBusinessValid: boolean
   // startDate: string
   // businessAddress: BusinessAddressIF

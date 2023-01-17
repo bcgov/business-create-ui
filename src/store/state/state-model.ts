@@ -197,7 +197,10 @@ export const stateModel: StateModelIF = {
     // *** TODO: add/remove properties as needed
     applicantInfoValid: false,
     businessInfoValid: false,
-    businessNameValid: false
+    businessNameValid: false,
+    date: '',
+    type: null,
+    expiry: null
     // defineBusinessValid: false,
     // startDate: '',
     // businessAddress: null,

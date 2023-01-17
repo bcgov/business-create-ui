@@ -113,6 +113,7 @@
         <span>Add a Person</span>
       </v-btn>
 
+      <!-- *** TODO: do not add as Incorporator for restorations -->
       <v-btn
         v-if="getPeopleAndRolesResource.addOrganization"
         id="btn-add-organization"
@@ -193,6 +194,7 @@ export default class PeopleAndRoles extends Vue {
       this.currentOrgPerson.roles = [{ roleType }]
     } else if (this.validNumCompletingParty && !this.getPeopleAndRolesResource.addIncorporator) {
       // only Director role is possible - pre-select it
+      // *** TODO: do not add as Director for restorations
       this.currentOrgPerson.roles = [{ roleType: RoleTypes.DIRECTOR }]
     } else {
       // no roles pre-selected

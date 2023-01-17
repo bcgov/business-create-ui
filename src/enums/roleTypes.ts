@@ -8,6 +8,7 @@ export enum RoleTypes {
   INCORPORATOR = 'Incorporator',
   LIQUIDATOR = 'Liquidator',
   OFFICER = 'Officer',
+  OTHER = 'Other',
   PARTNER = 'Partner',
   PROPRIETOR = 'Proprietor',
   SHAREHOLDER = 'Shareholder',
