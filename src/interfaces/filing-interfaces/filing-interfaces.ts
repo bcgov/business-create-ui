@@ -1,15 +1,7 @@
-import {
-  OfficeAddressIF,
-  BusinessAddressIF,
-  CourtOrderIF,
-  IncorporationAddressIF,
-  NameTranslationIF,
-  NaicsIF,
-  PartyIF,
-  ShareClassIF,
-  SpecialResolutionIF
-} from '@/interfaces'
-import { BusinessTypes, CorpTypeCd, DissolutionStatementTypes, DissolutionTypes, FilingTypes } from '@/enums'
+import { BusinessAddressIF, CourtOrderIF, IncorporationAddressIF, NaicsIF, NameTranslationIF,
+  OfficeAddressIF, PartyIF, ShareClassIF, SpecialResolutionIF } from '@/interfaces'
+import { BusinessTypes, CorpTypeCd, DissolutionStatementTypes, DissolutionTypes, FilingTypes,
+  RestorationTypes } from '@/enums'
 import { RegistrationNameRequestIF } from '../store-interfaces/state-interfaces/registration-state-interface'
 
 /** Interface for incorporation filing data saved to the Legal API. */
@@ -18,9 +10,9 @@ export interface IncorporationFilingIF {
     name: FilingTypes
     certifiedBy: string
     date: string
-    effectiveDate?: string // Optional and should be set only for future effective filings
-    filingId?: number // Optional as this is not required when building a filing - causes an error for new filings
-    folioNumber?: string // Optional to the user and only displayed for certain account types
+    effectiveDate?: string // should be set only for future effective filings
+    filingId?: number // for existing filings (not used when building a new filing)
+    folioNumber?: string // only displayed for certain account types
     isFutureEffective: boolean
   }
   business: {
@@ -192,9 +184,9 @@ export interface RestorationFilingIF {
   }
   // *** TODO: update according to schema
   restoration: {
-    date: any
-    type: any
-    expiry: any
+    date: string
+    type: RestorationTypes
+    expiry: string
     nameTranslations: NameTranslationIF[]
     nameRequest: RegistrationNameRequestIF
     parties: PartyIF[]

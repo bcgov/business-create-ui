@@ -1,45 +1,12 @@
 import Vuetify from 'vuetify'
-import {
-  AccountTypes,
-  CoopTypes,
-  CorpTypeCd,
-  DissolutionTypes,
-  FilingNames,
-  FilingTypes,
-  FilingTypesSubTitle
-} from '@/enums'
-import {
-  AccountInformationIF,
-  AddressIF,
-  ContactPointIF,
-  BusinessIF,
-  CertifyIF,
-  CourtOrderStepIF,
-  CreateMemorandumIF,
-  CreateResolutionIF,
-  CreateRulesIF,
-  DefineCompanyIF,
-  DissolutionStatementIF,
-  DissolutionStateIF,
-  DocumentDeliveryIF,
-  EffectiveDateTimeIF,
-  FeesIF,
-  IncorporationAgreementIF,
-  NameRequestIF,
-  NameTranslationIF,
-  OrgPersonIF,
-  PeopleAndRoleIF,
-  RegistrationStateIF,
-  RestorationStateIF,
-  ShareStructureIF,
-  StaffPaymentStepIF,
-  StateIF,
-  TombstoneIF,
-  UploadAffidavitIF,
-  OrgInformationIF,
-  CompletingPartyIF,
-  PartyIF
-} from '@/interfaces'
+import { AccountTypes, CoopTypes, CorpTypeCd, DissolutionTypes, FilingNames, FilingTypes,
+  FilingTypesSubTitle, RestorationTypes } from '@/enums'
+import { AccountInformationIF, AddressIF, BusinessIF, CertifyIF, CompletingPartyIF, ContactPointIF,
+  CourtOrderStepIF, CreateMemorandumIF, CreateResolutionIF, CreateRulesIF, DefineCompanyIF,
+  DissolutionStatementIF, DissolutionStateIF, DocumentDeliveryIF, EffectiveDateTimeIF, FeesIF,
+  IncorporationAgreementIF, NameRequestIF, NameTranslationIF, OrgInformationIF, OrgPersonIF,
+  PartyIF, PeopleAndRoleIF, RegistrationStateIF, RestorationStateIF, ShareStructureIF,
+  StaffPaymentStepIF, StateIF, TombstoneIF, UploadAffidavitIF } from '@/interfaces'
 import { getMaxStep } from './resource-getters'
 
 /** True if current screen width is mobile. */
@@ -79,7 +46,7 @@ export const getFilingName = (state: StateIF): FilingNames => {
   switch (getFilingType(state)) {
     case FilingTypes.INCORPORATION_APPLICATION: return FilingNames.INCORPORATION_APPLICATION
     case FilingTypes.REGISTRATION: return FilingNames.REGISTRATION
-    case FilingTypes.RESTORATION: return FilingNames.RESTORATION
+    case FilingTypes.RESTORATION: return FilingNames.RESTORATION_APPLICATION
     case FilingTypes.VOLUNTARY_DISSOLUTION:
       return isTypeFirm(state) ? FilingNames.DISSOLUTION_FIRM : FilingNames.VOLUNTARY_DISSOLUTION
     default: return null // should never happen
@@ -711,4 +678,9 @@ export const getParties = (state: StateIF): Array<PartyIF> => {
 /** The restoration object. */
 export const getRestoration = (state: StateIF): RestorationStateIF => {
   return state.stateModel.restoration
+}
+
+/** The restoration type. */
+export const getRestorationType = (state: StateIF): RestorationTypes => {
+  return state.stateModel.restoration.type
 }

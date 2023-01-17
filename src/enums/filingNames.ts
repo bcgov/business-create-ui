@@ -1,7 +1,7 @@
 export enum FilingNames {
   INCORPORATION_APPLICATION = 'Incorporation Application',
   REGISTRATION = 'Registration',
-  RESTORATION = 'Restoration',
+  RESTORATION_APPLICATION = 'Restoration Application',
   VOLUNTARY_DISSOLUTION = 'Voluntary Dissolution',
   DISSOLUTION_FIRM = 'Dissolution',
 }

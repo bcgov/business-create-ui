@@ -67,7 +67,8 @@ for (const test of reviewConfirmTestCases) {
         IncorporationResources
       )
 
-      expect(wrapper.find('#court-order-poa-section').exists()).toBe(['BEN', 'ULC', 'CC', 'BC'].includes(test.entityType))
+      expect(wrapper.find('#court-order-poa-section').exists()).toBe(['BEN', 'ULC', 'CC', 'BC']
+        .includes(test.entityType))
     })
 
     // FUTURE: Expand unit testing for validation on step 5. Include routing to appropriate steps from error links.
