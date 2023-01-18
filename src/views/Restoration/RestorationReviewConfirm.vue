@@ -60,6 +60,18 @@
         />
       </v-card>
     </section>
+
+    <!-- Staff Payment -->
+    <section id="staff-payment-section" class="mt-10" v-if="isRoleStaff">
+      <header>
+        <h2>Staff Payment</h2>
+        <p class="mt-4"></p>
+      </header>
+
+      <v-card flat class="mt-6">
+        <StaffPayment class="py-8 px-6" />
+      </v-card>
+    </section>
   </div>
 </template>
 
@@ -76,6 +88,7 @@ import { DocumentDelivery } from '@bcrs-shared-components/document-delivery'
 import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
 import SummaryDefineCompany from '@/components/Incorporation/SummaryDefineCompany.vue'
 import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
+import StaffPayment from '@/components/common/StaffPayment.vue'
 
 @Component({
   components: {
@@ -83,6 +96,7 @@ import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module
     Certify,
     DocumentDelivery,
     ListPeopleAndRoles,
+    StaffPayment,
     SummaryDefineCompany
   }
 })

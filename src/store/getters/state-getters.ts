@@ -18,22 +18,32 @@ export const isMobile = (state: StateIF): boolean => {
 
 /** Whether the current filing is an Incorporation. */
 export const isIncorporationFiling = (state: StateIF): boolean => {
-  return getFilingType(state) === FilingTypes.INCORPORATION_APPLICATION
+  return (getFilingType(state) === FilingTypes.INCORPORATION_APPLICATION)
 }
 
 /** Whether the current filing is a Dissolution. */
 export const isDissolutionFiling = (state: StateIF): boolean => {
-  return getFilingType(state) === FilingTypes.VOLUNTARY_DISSOLUTION
+  return (getFilingType(state) === FilingTypes.VOLUNTARY_DISSOLUTION)
 }
 
 /** Whether the current filing is a Registration. */
 export const isRegistrationFiling = (state: StateIF): boolean => {
-  return getFilingType(state) === FilingTypes.REGISTRATION
+  return (getFilingType(state) === FilingTypes.REGISTRATION)
 }
 
 /** Whether the current filing is a Restoration. */
 export const isRestorationFiling = (state: StateIF): boolean => {
-  return getFilingType(state) === FilingTypes.RESTORATION
+  return (getFilingType(state) === FilingTypes.RESTORATION)
+}
+
+/** Whether the current filing is a Limited Restoration. */
+export const isLimitedRestorationFiling = (state: StateIF): boolean => {
+  return (getRestoration(state).type === RestorationTypes.LIMITED)
+}
+
+/** Whether the current filing is a Full Restoration. */
+export const isFullRestorationFiling = (state: StateIF): boolean => {
+  return (getRestoration(state).type === RestorationTypes.FULL)
 }
 
 /** The current filing type. */
@@ -512,13 +522,14 @@ export const isRegistrationValid = (state: StateIF): boolean => {
 /** Whether all the restoration steps are valid. */
 export const isRestorationValid = (state: StateIF): boolean => {
   const isCertifyValid = getCertifyState(state).valid && !!getCertifyState(state).certifiedBy
+  const isStaffPaymentValid = isRoleStaff(state) ? getStaffPaymentStep(state).valid : true
 
   return (
     getRestoration(state).applicantInfoValid &&
     getRestoration(state).businessInfoValid &&
     getRestoration(state).businessNameValid &&
     isCertifyValid &&
-    getStaffPaymentStep(state).valid
+    isStaffPaymentValid
   )
 }
 
@@ -590,6 +601,11 @@ export const getCourtOrderStep = (state: StateIF): CourtOrderStepIF => {
 
 export const getDocumentDelivery = (state: StateIF): DocumentDeliveryIF => {
   return state.stateModel.documentDelivery
+}
+
+/** The restoration object. */
+export const getRestoration = (state: StateIF): RestorationStateIF => {
+  return state.stateModel.restoration
 }
 
 //
@@ -669,18 +685,4 @@ export const getDissolutionDate = (state: StateIF): string => {
 /** The parties list. */
 export const getParties = (state: StateIF): Array<PartyIF> => {
   return state.stateModel.parties
-}
-
-//
-// Restoration getters
-//
-
-/** The restoration object. */
-export const getRestoration = (state: StateIF): RestorationStateIF => {
-  return state.stateModel.restoration
-}
-
-/** The restoration type. */
-export const getRestorationType = (state: StateIF): RestorationTypes => {
-  return state.stateModel.restoration.type
 }

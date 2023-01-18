@@ -3,7 +3,7 @@ import { Component, Emit, Prop } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import { cloneDeep, isEqual } from 'lodash'
 import { v4 as uuidv4 } from 'uuid'
-import { CorpTypeCd, PartyTypes, RestorationTypes, RoleTypes, RuleIds } from '@/enums'
+import { CorpTypeCd, PartyTypes, RoleTypes, RuleIds } from '@/enums'
 import { ActionBindingIF, AddressIF, BusinessLookupIF, ConfirmDialogType, EmptyAddress,
   EmptyBusinessLookup, FormIF, OrgPersonIF, PeopleAndRolesResourceIF, RegistrationStateIF,
   RolesIF } from '@/interfaces'
@@ -28,7 +28,6 @@ export default class AddEditOrgPersonMixin extends Vue {
   @Prop({ required: true }) readonly initialValue!: OrgPersonIF
   @Prop({ required: true }) readonly activeIndex!: number // is NaN for new org/person
   @Prop({ required: true }) readonly existingCompletingParty!: OrgPersonIF
-  @Prop({ default: false }) readonly addIncorporator!: boolean
 
   @Getter getCurrentDate!: string
   @Getter isRoleStaff!: boolean
@@ -40,8 +39,8 @@ export default class AddEditOrgPersonMixin extends Vue {
   @Getter getEntityType!: CorpTypeCd
   @Getter getPeopleAndRolesResource!: PeopleAndRolesResourceIF
   @Getter getRegistration!: RegistrationStateIF
-  @Getter isRestorationFiling!: boolean
-  @Getter getRestorationType: RestorationTypes
+  @Getter isFullRestorationFiling!: boolean
+  @Getter isLimitedRestorationFiling: boolean
 
   @Action setAddPeopleAndRoleStepValidity!: ActionBindingIF
   @Action setRegistrationBusinessNumber!: ActionBindingIF
@@ -77,6 +76,11 @@ export default class AddEditOrgPersonMixin extends Vue {
   /** Whether a Completing Party is required. */
   get requireCompletingParty (): boolean {
     return this.getPeopleAndRolesResource.rules.some(r => r.id === RuleIds.NUM_COMPLETING_PARTY)
+  }
+
+  /** Whether an Incorporator is required. */
+  get requireIncorporator (): boolean {
+    return this.getPeopleAndRolesResource.rules.some(r => r.id === RuleIds.NUM_INCORPORATORS)
   }
 
   /** Whether a Director(s) is required. */
@@ -141,41 +145,41 @@ export default class AddEditOrgPersonMixin extends Vue {
 
   /** Whether the Incorporator role should be shown. */
   get showIncorporatorRole (): boolean {
-    // show this role according to prop from parent parent component (ie, per resource file)
-    return this.addIncorporator
+    return this.requireIncorporator
   }
 
   /** Whether the Director role should be shown. */
   get showDirectorRole (): boolean {
     // always show this role for restoration filings
-    if (this.isRestorationFiling) return true
+    if (this.isFullRestorationFiling || this.isLimitedRestorationFiling) return true
     // only a person can be a director
     return (this.requireDirector && this.isPerson)
   }
 
   /** Whether the Heir or Legal Representative role should be shown. */
   get showHeirLegalRepRole (): boolean {
-    if (this.isRestorationFiling) return true
+    return (this.isFullRestorationFiling || this.isLimitedRestorationFiling)
   }
 
   /** Whether the Officer role should be shown. */
   get showOfficerRole (): boolean {
-    if (this.isRestorationFiling) return true
+    return (this.isFullRestorationFiling || this.isLimitedRestorationFiling)
   }
 
   /** Whether the Shareholder role should be shown. */
   get showShareholderRole (): boolean {
-    if (this.isRestorationFiling) return true
+    return (this.isFullRestorationFiling || this.isLimitedRestorationFiling)
   }
 
   /** Whether the Court Ordered Party role should be shown. */
   get showCourtOrderedPartyRole (): boolean {
-    if (this.isRestorationFiling) return true
+    return (this.isFullRestorationFiling || this.isLimitedRestorationFiling)
   }
 
-  /** Whether the Court Ordered Other role should be shown. */
-  get showOther (): boolean {
-    return (this.isRestorationFiling && this.getRestorationType === RestorationTypes.LIMITED)
+  /** Whether the Other role should be shown. */
+  get showOtherRole (): boolean {
+    // limited restorations only
+    return this.isLimitedRestorationFiling
   }
 
   /** Whether the Proprietor role should be shown. */
@@ -205,9 +209,34 @@ export default class AddEditOrgPersonMixin extends Vue {
   // *** TODO: test this (should be disabled if it's the only role displayed)
   get disableDirectorRole (): boolean {
     // always enable this role for restoration filings
-    if (this.isRestorationFiling) return false
+    if (this.isFullRestorationFiling || this.isLimitedRestorationFiling) return false
     // disable this role if it's the only role displayed
     return (!this.showCompletingPartyRole && !this.showIncorporatorRole && this.showDirectorRole)
+  }
+
+  /** Whether the Heir or Legal Representative role should be disabled. */
+  get disableHeirLegalRepRole (): boolean {
+    return false
+  }
+
+  /** Whether the Officer role should be disabled. */
+  get disableOfficerRole (): boolean {
+    return false
+  }
+
+  /** Whether the Shareholder role should be disabled. */
+  get disableShareholderRole (): boolean {
+    return false
+  }
+
+  /** Whether the Court Ordered Party role should be disabled. */
+  get disableCourtOrderedPartyRole (): boolean {
+    return false
+  }
+
+  /** Whether the Other role should be disabled. */
+  get disableOtherRole (): boolean {
+    return false
   }
 
   /**

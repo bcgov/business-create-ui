@@ -14,10 +14,9 @@ export interface PeopleAndRolesResourceIF {
     helpText: Array<string>
   }
   blurb2?: string | Array<string>
-  addIncorporator?: boolean
   addOrganization?: string
   addBusiness?: boolean
   rolesTitle?: string // restorations only
-  rolesSubtitle?: string // restorations only
+  rolesSubtitle?: string | Array<string> // restorations only
   rules: Array<Rule>
 }

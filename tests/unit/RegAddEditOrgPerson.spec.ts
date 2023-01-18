@@ -198,16 +198,14 @@ const validPartnerOrg = {
 function createComponent (
   initialValue: any, // org-person
   activeIndex: number,
-  existingCompletingParty: any,
-  addIncorporator = true
+  existingCompletingParty: any
 ): Wrapper<RegAddEditOrgPerson> {
   return mount(RegAddEditOrgPerson, {
     data () { return { enableRules: true } },
     propsData: {
       initialValue,
       activeIndex,
-      existingCompletingParty,
-      addIncorporator
+      existingCompletingParty
     },
     store,
     vuetify

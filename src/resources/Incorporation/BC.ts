@@ -16,7 +16,6 @@ export const IncorporationResourceBc: IncorporationResourceIF = {
     blurb: `Add the people and Corporations/firms who will have a role in your company. People
       can have multiple roles; Corporations/firms can only be Incorporators.`,
     helpSection: null,
-    addIncorporator: true,
     addOrganization: 'Add a Corporation or Firm',
     rules: [
       {
