@@ -132,6 +132,7 @@ function createComponent (
   initialValue: any, // person
   activeIndex: number,
   existingCompletingParty: any,
+  addIncorporator = true,
   computed = null
 ): Wrapper<AddEditOrgPerson> {
   const localVue = createLocalVue()
@@ -142,7 +143,8 @@ function createComponent (
     propsData: {
       initialValue,
       activeIndex,
-      existingCompletingParty
+      existingCompletingParty,
+      addIncorporator
     },
     computed,
     store,
@@ -335,6 +337,7 @@ describe('Add/Edit Org/Person component', () => {
       validIncorporator,
       NaN,
       validPersonData,
+      null,
       { requireCompletingParty: () => true }
     )
 
@@ -354,6 +357,7 @@ describe('Add/Edit Org/Person component', () => {
       validIncorporator,
       NaN,
       validPersonData,
+      null,
       { requireCompletingParty: () => true }
     )
 

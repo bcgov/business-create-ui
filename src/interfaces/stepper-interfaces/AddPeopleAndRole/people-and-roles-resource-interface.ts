@@ -14,7 +14,8 @@ export interface PeopleAndRolesResourceIF {
     helpText: Array<string>
   }
   blurb2?: string | Array<string>
-  addOrganization?: string
+  addIncorporator?: boolean
+  addOrganization?: boolean
   addBusiness?: boolean
   rolesTitle?: string // restorations only
   rolesSubtitle?: string | Array<string> // restorations only

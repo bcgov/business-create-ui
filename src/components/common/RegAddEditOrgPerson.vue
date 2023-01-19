@@ -45,11 +45,12 @@
             </p>
           </v-card>
 
+          <div v-if="isCompletingParty && !isRoleStaff" class="mt-8" />
+
           <v-form
             lazy-validation
             ref="addPersonOrgForm"
             class="appoint-form"
-            :class="{ 'mt-8': isCompletingParty && !isRoleStaff}"
             v-model="addPersonOrgFormValid"
             v-on:submit.prevent
           >
@@ -180,40 +181,115 @@
 
             <!-- Roles -->
             <article class="mt-8">
-              <label>Roles</label>
-              <v-card flat rounded="sm" class="gray-card mt-4 px-4">
-                <v-row class="align-center">
-                  <v-col cols="4" v-if="showCompletingPartyRole" class="py-0">
-                    <v-checkbox
-                      class="mt-5"
-                      v-model="selectedRoles"
-                      :value="RoleTypes.COMPLETING_PARTY"
-                      :label="RoleTypes.COMPLETING_PARTY"
-                      :disabled="true"
-                    />
-                  </v-col>
+              <label>{{ getPeopleAndRolesResource.rolesTitle || 'Roles' }}</label>
+              <div v-if="getPeopleAndRolesResource.rolesSubtitle">
+                {{ getPeopleAndRolesResource.rolesSubtitle }}
+              </div>
+              <div class="form__row three-column mt-4">
+                <v-card flat rounded="sm" class="item gray-card px-4">
+                  <v-row no-gutters class="align-center mt-5">
+                    <v-col cols="4" v-if="showCompletingPartyRole">
+                      <v-checkbox
+                        id="cp-checkbox"
+                        class="mt-0"
+                        v-model="selectedRoles"
+                        :value="RoleTypes.COMPLETING_PARTY"
+                        :label="RoleTypes.COMPLETING_PARTY"
+                        :disabled="isTypeSoleProp || isTypePartnership"
+                      />
+                    </v-col>
 
-                  <v-col cols="4" v-if="showProprietorRole" class="py-0">
-                    <v-checkbox
-                      class="mt-5"
-                      v-model="selectedRoles"
-                      :value="RoleTypes.PROPRIETOR"
-                      :label="RoleTypes.PROPRIETOR"
-                      :disabled="true"
-                    />
-                  </v-col>
+                    <v-col cols="4" v-if="showProprietorRole">
+                      <v-checkbox
+                        id="proprietor-checkbox"
+                        class="mt-0"
+                        v-model="selectedRoles"
+                        :value="RoleTypes.PROPRIETOR"
+                        :label="RoleTypes.PROPRIETOR"
+                        :disabled="isTypeSoleProp || isTypePartnership"
+                      />
+                    </v-col>
 
-                  <v-col cols="4" v-if="showPartnerRole" class="py-0">
-                    <v-checkbox
-                      class="mt-5"
-                      v-model="selectedRoles"
-                      :value="RoleTypes.PARTNER"
-                      :label="RoleTypes.PARTNER"
-                      :disabled="true"
-                    />
-                  </v-col>
-                </v-row>
-              </v-card>
+                    <v-col cols="4" v-if="showPartnerRole">
+                      <v-checkbox
+                        id="partner-checkbox"
+                        class="mt-0"
+                        v-model="selectedRoles"
+                        :value="RoleTypes.PARTNER"
+                        :label="RoleTypes.PARTNER"
+                        :disabled="isTypeSoleProp || isTypePartnership"
+                      />
+                    </v-col>
+
+                    <v-col cols="4" v-if="showDirectorRole">
+                      <v-checkbox
+                        id="director-checkbox"
+                        class="mt-0"
+                        v-model="selectedRoles"
+                        :value="RoleTypes.DIRECTOR"
+                        :label="RoleTypes.DIRECTOR"
+                        :rules="enableRules ? roleRules : []"
+                        @click="updateSameAsMailingChkBox()"
+                      />
+                    </v-col>
+
+                    <v-col cols="4" v-if="showHeirLegalRepRole">
+                      <v-checkbox
+                        id="heir-legal-rep-checkbox"
+                        class="mt-0"
+                        v-model="selectedRoles"
+                        :value="RoleTypes.HEIR_LEGAL_REP"
+                        :label="RoleTypes.HEIR_LEGAL_REP"
+                        :rules="enableRules ? roleRules : []"
+                      />
+                    </v-col>
+
+                    <v-col cols="4" v-if="showOfficerRole">
+                      <v-checkbox
+                        id="officer-checkbox"
+                        class="mt-0"
+                        v-model="selectedRoles"
+                        :value="RoleTypes.OFFICER"
+                        :label="RoleTypes.OFFICER"
+                        :rules="enableRules ? roleRules : []"
+                      />
+                    </v-col>
+
+                    <v-col cols="4" v-if="showShareholderRole">
+                      <v-checkbox
+                        id="shareholder-checkbox"
+                        class="mt-0"
+                        v-model="selectedRoles"
+                        :value="RoleTypes.SHAREHOLDER"
+                        :label="RoleTypes.SHAREHOLDER"
+                        :rules="enableRules ? roleRules : []"
+                      />
+                    </v-col>
+
+                    <v-col cols="4" v-if="showCourtOrderedPartyRole">
+                      <v-checkbox
+                        id="court-ordered-party-checkbox"
+                        class="mt-0"
+                        v-model="selectedRoles"
+                        :value="RoleTypes.COURT_ORDERED_PARTY"
+                        :label="RoleTypes.COURT_ORDERED_PARTY"
+                        :rules="enableRules ? roleRules : []"
+                      />
+                    </v-col>
+
+                    <v-col cols="4" v-if="showOtherRole">
+                      <v-checkbox
+                        id="other-checkbox"
+                        class="mt-0"
+                        v-model="selectedRoles"
+                        :value="RoleTypes.OTHER"
+                        :label="RoleTypes.OTHER"
+                        :rules="enableRules ? roleRules : []"
+                      />
+                    </v-col>
+                  </v-row>
+                </v-card>
+              </div>
             </article>
 
             <!-- Email Address -->
@@ -237,7 +313,7 @@
               <label>Mailing Address</label>
               <MailingAddress
                 ref="mailingAddressNew"
-                class="mt-4 mb-n6"
+                class="mt-4"
                 :editing="true"
                 :schema="PersonAddressSchema"
                 :address="inProgressMailingAddress"
@@ -252,7 +328,7 @@
             </article>
 
             <!-- Delivery Address (for proprietors and partners only) -->
-            <div v-if="isProprietor || isPartner" class="mt-8">
+            <div v-if="isProprietor || isPartner">
               <v-checkbox
                 class="inherit-checkbox"
                 hide-details
@@ -260,11 +336,11 @@
                 v-model="inheritMailingAddress"
               />
 
-              <article v-if="!inheritMailingAddress" class="mt-8">
+              <article v-if="!inheritMailingAddress" class="mt-6">
                 <label>Delivery Address</label>
                 <DeliveryAddress
                   ref="deliveryAddressNew"
-                  class="mt-4 mb-n6"
+                  class="mt-4"
                   :editing="true"
                   :schema="PersonAddressSchema"
                   :address="inProgressDeliveryAddress"
@@ -281,19 +357,21 @@
             </div>
 
             <!-- Action Buttons -->
-            <div class="form__btns mt-10">
+            <div class="form__btns mt-6">
               <v-btn
+                id="btn-remove"
                 large outlined color="error"
-                class="btn-outlined-error btn-remove"
+                class="btn-outlined-error"
                 :disabled="isNaN(activeIndex)"
                 @click="emitRemovePerson(activeIndex)">Remove</v-btn>
               <v-btn
+                id="btn-done"
                 large color="primary"
-                class="ml-auto btn-done"
+                class="ml-auto"
                 @click="validateAddPersonOrgForm()">Done</v-btn>
               <v-btn
+                id="btn-cancel"
                 large outlined color="primary"
-                class="btn-cancel"
                 @click="resetAddPersonData(true)">Cancel</v-btn>
             </div>
           </v-form>
@@ -312,7 +390,6 @@ import { ConfirmDialog } from '@bcrs-shared-components/confirm-dialog'
 import { BusinessLookup } from '@bcrs-shared-components/business-lookup'
 import HelpContactUs from '@/components/Registration/HelpContactUs.vue'
 import { AddEditOrgPersonMixin } from '@/mixins'
-import { Rules } from '@/rules'
 import { BusinessLookupServices } from '@/services'
 import { VuetifyRuleFunction } from '@/types'
 
@@ -342,9 +419,6 @@ export default class RegAddEditOrgPerson extends Vue {
     v => !!v?.trim() || 'Business or corporation name is required',
     v => (v?.length <= 150) || 'Cannot exceed 150 characters' // maximum character count
   ]
-
-  // Rules for template
-  readonly Rules = Rules
 
   readonly BusinessLookupServices = BusinessLookupServices
 }
