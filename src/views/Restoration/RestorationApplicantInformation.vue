@@ -5,7 +5,7 @@
         <h2>{{ getPeopleAndRolesResource.header }}</h2>
       </header>
 
-      <PeopleAndRoles />
+      <RegPeopleAndRoles />
     </section>
   </div>
 </template>
@@ -17,11 +17,11 @@ import { Getter } from 'vuex-class'
 import { PeopleAndRoleIF, PeopleAndRolesResourceIF } from '@/interfaces'
 import { CommonMixin } from '@/mixins'
 import { RouteNames } from '@/enums'
-import PeopleAndRoles from '@/components/common/PeopleAndRoles.vue'
+import RegPeopleAndRoles from '@/components/common/RegPeopleAndRoles.vue'
 
 @Component({
   components: {
-    PeopleAndRoles
+    RegPeopleAndRoles
   },
   mixins: [
     CommonMixin

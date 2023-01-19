@@ -22,7 +22,6 @@ export const RestorationResourceBen: RestorationResourceIF = {
     header: 'Add Applicant Information',
     blurb: null,
     helpSection: null,
-    addOrganization: 'Add a Business or a Corporation',
     rolesTitle: 'Relationship to the Company to be Restored',
     rolesSubtitle: [
       // order matters - see resource-getters.ts

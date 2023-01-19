@@ -10,6 +10,7 @@ const incorporationResourceModel: IncorporationResourceIF = {
     blurb: null,
     helpSection: null,
     blurb2: null,
+    addIncorporator: null,
     addOrganization: null,
     addBusiness: null,
     rules: []

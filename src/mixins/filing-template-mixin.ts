@@ -391,8 +391,9 @@ export default class FilingTemplateMixin extends DateMixin {
         foundingDate: this.getBusinessFoundingDate
       },
       // *** TODO: add/remove properties as needed
+      // *** TODO: add expiry date option for future resume
       restoration: {
-        date: this.getRestoration.date,
+        date: this.getCurrentDate,
         type: this.getRestoration.type,
         expiry: this.getRestoration.expiry || undefined, // can't be null
         nameRequest: {
@@ -522,6 +523,7 @@ export default class FilingTemplateMixin extends DateMixin {
     this.setFoundingDate(draftFiling.business.foundingDate)
 
     // restore Restoration data
+    // *** TODO: restore expiry date option, not date (which is computed)
     this.setRestorationDate(draftFiling.restoration.date)
     this.setRestorationType(draftFiling.restoration.type)
     this.setRestorationExpiry(draftFiling.restoration.expiry || null)

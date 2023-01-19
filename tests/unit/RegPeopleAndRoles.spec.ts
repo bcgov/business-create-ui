@@ -4,10 +4,10 @@ import Vuetify from 'vuetify'
 import flushPromises from 'flush-promises'
 import { getVuexStore } from '@/store'
 import { mount } from '@vue/test-utils'
-import RegPeopleAndRoles from '@/components/Registration/RegPeopleAndRoles.vue'
+import RegPeopleAndRoles from '@/components/common/RegPeopleAndRoles.vue'
 import { RegistrationResourceSp } from '@/resources/Registration/SP'
 import { RegistrationResourceGp } from '@/resources/Registration/GP'
-import RegAddEditOrgPerson from '@/components/Registration/RegAddEditOrgPerson.vue'
+import RegAddEditOrgPerson from '@/components/common/RegAddEditOrgPerson.vue'
 import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
 
 // mock the console.warn function to hide "[Vuetify] Unable to locate target XXX"
@@ -20,10 +20,10 @@ const vuetify = new Vuetify({})
 const store = getVuexStore()
 
 // selectors to test changes to the DOM elements
-const btnStartAddCompletingParty = '.btn-start-add-cp'
-const btnAddCompletingParty = '.btn-add-cp'
-const btnAddPerson = '.btn-add-person'
-const btnAddOrganization = '.btn-add-organization'
+const btnStartAddCompletingParty = '#btn-start-add-cp'
+const btnAddCompletingParty = '#btn-add-cp'
+const btnAddPerson = '#btn-add-person'
+const btnAddOrganization = '#btn-add-organization'
 const checkCompletingParty = '.cp-valid'
 const checkProprietor = '.proprietor-valid'
 const checkPartner = '.partner-valid'

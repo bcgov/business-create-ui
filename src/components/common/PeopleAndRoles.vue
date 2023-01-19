@@ -55,18 +55,6 @@
             <v-icon v-else>mdi-circle-small</v-icon>
             <span class="rule-item-txt">{{rule.text}}</span>
           </li>
-          <li v-if="rule.id === RuleIds.NUM_APPLICANT_PERSON" :key="index">
-            <v-icon v-if="validApplicantPerson" color="green darken-2" class="dir-valid">mdi-check</v-icon>
-            <v-icon v-else-if="getShowErrors" color="error" class="dir-invalid">mdi-close</v-icon>
-            <v-icon v-else>mdi-circle-small</v-icon>
-            <span class="rule-item-txt">{{rule.text}}</span>
-          </li>
-          <li v-if="rule.id === RuleIds.NUM_APPLICANT_ORG" :key="index">
-            <v-icon v-if="validApplicantOrg" color="green darken-2" class="dir-valid">mdi-check</v-icon>
-            <v-icon v-else-if="getShowErrors" color="error" class="dir-invalid">mdi-close</v-icon>
-            <v-icon v-else>mdi-circle-small</v-icon>
-            <span class="rule-item-txt">{{rule.text}}</span>
-          </li>
         </template>
       </ul>
     </section>
@@ -113,7 +101,6 @@
         <span>Add a Person</span>
       </v-btn>
 
-      <!-- *** TODO: do not add as Incorporator for restorations -->
       <v-btn
         v-if="getPeopleAndRolesResource.addOrganization"
         id="btn-add-organization"
@@ -124,7 +111,7 @@
         @click="addOrgPerson(RoleTypes.INCORPORATOR, PartyTypes.ORGANIZATION)"
       >
         <v-icon>mdi-domain-plus</v-icon>
-        <span>{{getPeopleAndRolesResource.addOrganization}}</span>
+        <span>Add a Corporation or Firm</span>
       </v-btn>
     </div>
 
@@ -136,6 +123,7 @@
           :initialValue="currentOrgPerson"
           :activeIndex="activeIndex"
           :existingCompletingParty="completingParty"
+          :addIncorporator="getPeopleAndRolesResource.addIncorporator"
           @addEditPerson="onAddEditPerson($event)"
           @removePerson="onRemovePerson($event)"
           @resetEvent="resetData()"
@@ -188,8 +176,16 @@ export default class PeopleAndRoles extends Vue {
     // first assign empty org/person object
     this.currentOrgPerson = cloneDeep(EmptyOrgPerson)
 
-    // assign pre-selected role if any
-    this.currentOrgPerson.roles = roleType ? [{ roleType }] : []
+    if (roleType) {
+      // a role was provided - pre-select it
+      this.currentOrgPerson.roles = [{ roleType }]
+    } else if (this.validNumCompletingParty && !this.getPeopleAndRolesResource.addIncorporator) {
+      // only Director role is possible - pre-select it
+      this.currentOrgPerson.roles = [{ roleType: RoleTypes.DIRECTOR }]
+    } else {
+      // no roles pre-selected
+      this.currentOrgPerson.roles = []
+    }
 
     // assign party type (org or person)
     this.currentOrgPerson.officer.partyType = partyType
