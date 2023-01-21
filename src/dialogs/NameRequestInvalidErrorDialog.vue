@@ -4,25 +4,25 @@
       <v-card-title id="dialog-title">Invalid Incorporation Application</v-card-title>
 
       <v-card-text>
-        <p class="genErr" v-if="type === NameRequestStates.EXPIRED">
+        <p class="font-14" v-if="type === NameRequestStates.EXPIRED">
           The specified name request has expired.</p>
 
-        <p class="genErr" v-else-if="type === NameRequestStates.NOT_APPROVED">
+        <p class="font-14" v-else-if="type === NameRequestStates.NOT_APPROVED">
           The specified name request has not been approved.</p>
 
-        <p class="genErr" v-else-if="type === NameRequestStates.NEED_CONSENT">
+        <p class="font-14" v-else-if="type === NameRequestStates.NEED_CONSENT">
           The specified name request is awaiting consent.</p>
 
-        <p class="genErr" v-else-if="type === NameRequestStates.NOT_FOUND">
+        <p class="font-14" v-else-if="type === NameRequestStates.NOT_FOUND">
           The specified name request could not be found.</p>
 
-        <p class="genErr" v-else-if="type === NameRequestStates.CONSUMED">
+        <p class="font-14" v-else-if="type === NameRequestStates.CONSUMED">
           The specified name request has already been consumed.</p>
 
-        <p class="genErr" v-else-if="type === NameRequestStates.INVALID">
+        <p class="font-14" v-else-if="type === NameRequestStates.INVALID">
           The specified name request data is invalid.</p>
 
-        <p class="genErr" v-else>An unexpected error has occurred.</p>
+        <p class="font-14" v-else>An unexpected error has occurred.</p>
       </v-card-text>
 
       <v-divider class="my-0" />

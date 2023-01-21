@@ -5,7 +5,7 @@
       <v-card-title id="dialog-title">Filing Does Not Exist</v-card-title>
 
       <v-card-text>
-        <p class="genErr">The filing you are attempting to open does not exist -
+        <p class="font-14">The filing you are attempting to open does not exist -
           it may have been filed, or it may be pending filing or payment.</p>
       </v-card-text>
 
