@@ -41,6 +41,13 @@
       @retry="fetchData()"
     />
 
+    <FilingSurveyDialog
+      attach="#app"
+      :dialog="filingSurveyDialog"
+      @no="filingSurveyDialog = false"
+      @yes="filingSurveyDialog = false"
+    />
+
     <PaymentErrorDialog
       attach="#app"
       filingName="Application"
@@ -279,6 +286,7 @@ export default class App extends Vue {
   // Local properties
   protected accountAuthorizationDialog = false
   protected fetchErrorDialog = false
+  protected filingSurveyDialog = false
   protected invalidFilingDialog = false
   protected invalidRouteDialog = false
   protected paymentErrorDialog = false
@@ -371,6 +379,7 @@ export default class App extends Vue {
       this.accountAuthorizationDialog ||
       this.nameRequestInvalidErrorDialog ||
       this.fetchErrorDialog ||
+      this.filingSurveyDialog ||
       this.invalidFilingDialog ||
       this.invalidRouteDialog ||
       this.paymentErrorDialog ||
@@ -553,6 +562,10 @@ export default class App extends Vue {
   private async fetchData (): Promise<void> {
     // reset errors in case this method is invoked more than once (ie, retry)
     this.resetFlags()
+
+    // *** TODO: read cookie; if it doesn't exist or is expired then show survey
+    // for now do this temporarily
+    if (this.$route.hash.includes('#show-survey')) this.filingSurveyDialog = true
 
     // check that current route matches a supported filing type
     const supportedFilings = await GetFeatureFlag('supported-filings')
@@ -862,6 +875,7 @@ export default class App extends Vue {
     this.invalidFilingDialog = false
     this.accountAuthorizationDialog = false
     this.fetchErrorDialog = false
+    this.filingSurveyDialog = false
     this.paymentErrorDialog = false
     this.saveErrorDialog = false
     this.fileAndPayInvalidNameRequestDialog = false

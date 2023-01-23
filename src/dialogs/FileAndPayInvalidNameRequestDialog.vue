@@ -4,7 +4,7 @@
       <v-card-title id="dialog-title">Invalid Name Request (NR) / Incorporation Application</v-card-title>
       <v-card-text id="dialog-text">
         <!-- display errors -->
-        <div class="genErr mb-4">
+        <div class="font-14 mb-4">
           <p>
             <b>
               The Name Request {{ getNameRequestNumber }} and the Incorporation Application for
@@ -18,7 +18,7 @@
             available to anyone wishing to start their business with that name.
           </div>
         </div>
-        <p class="genErr">Registries contact information:</p>
+        <p class="font-14">Registries contact information:</p>
         <RegistriesContactInfo />
       </v-card-text>
 

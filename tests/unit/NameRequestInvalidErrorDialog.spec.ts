@@ -19,7 +19,7 @@ describe('Name Request Invalid Error Dialog', () => {
       })
 
     expect(wrapper.find('#dialog-title').text()).toBe('Invalid Incorporation Application')
-    expect(wrapper.find('.genErr').text()).toBe('The specified name request could not be found.')
+    expect(wrapper.find('.font-14').text()).toBe('The specified name request could not be found.')
     expect(wrapper.find('#dialog-redirect-button').exists()).toBe(true)
     expect(wrapper.find('#dialog-ok-button').exists()).toBe(false)
     wrapper.destroy()
@@ -36,7 +36,7 @@ describe('Name Request Invalid Error Dialog', () => {
       })
 
     expect(wrapper.find('#dialog-title').text()).toBe('Invalid Incorporation Application')
-    expect(wrapper.find('.genErr').text()).toBe('The specified name request has expired.')
+    expect(wrapper.find('.font-14').text()).toBe('The specified name request has expired.')
     expect(wrapper.find('#dialog-redirect-button').exists()).toBe(false)
     expect(wrapper.find('#dialog-ok-button').exists()).toBe(true)
     wrapper.destroy()
@@ -53,7 +53,7 @@ describe('Name Request Invalid Error Dialog', () => {
       })
 
     expect(wrapper.find('#dialog-title').text()).toBe('Invalid Incorporation Application')
-    expect(wrapper.find('.genErr').text()).toBe('The specified name request has already been consumed.')
+    expect(wrapper.find('.font-14').text()).toBe('The specified name request has already been consumed.')
     expect(wrapper.find('#dialog-redirect-button').exists()).toBe(true)
     expect(wrapper.find('#dialog-ok-button').exists()).toBe(false)
     wrapper.destroy()
@@ -70,7 +70,7 @@ describe('Name Request Invalid Error Dialog', () => {
       })
 
     expect(wrapper.find('#dialog-title').text()).toBe('Invalid Incorporation Application')
-    expect(wrapper.find('.genErr').text()).toBe('The specified name request has not been approved.')
+    expect(wrapper.find('.font-14').text()).toBe('The specified name request has not been approved.')
     expect(wrapper.find('#dialog-redirect-button').exists()).toBe(false)
     expect(wrapper.find('#dialog-ok-button').exists()).toBe(true)
     wrapper.destroy()
@@ -87,7 +87,7 @@ describe('Name Request Invalid Error Dialog', () => {
       })
 
     expect(wrapper.find('#dialog-title').text()).toBe('Invalid Incorporation Application')
-    expect(wrapper.find('.genErr').text()).toBe('An unexpected error has occurred.')
+    expect(wrapper.find('.font-14').text()).toBe('An unexpected error has occurred.')
     expect(wrapper.find('#dialog-redirect-button').exists()).toBe(true)
     expect(wrapper.find('#dialog-ok-button').exists()).toBe(false)
     wrapper.destroy()
@@ -104,7 +104,7 @@ describe('Name Request Invalid Error Dialog', () => {
       })
 
     expect(wrapper.find('#dialog-title').text()).toBe('Invalid Incorporation Application')
-    expect(wrapper.find('.genErr').text()).toBe('The specified name request is awaiting consent.')
+    expect(wrapper.find('.font-14').text()).toBe('The specified name request is awaiting consent.')
     expect(wrapper.find('#dialog-redirect-button').exists()).toBe(false)
     expect(wrapper.find('#dialog-ok-button').exists()).toBe(true)
     wrapper.destroy()
@@ -121,7 +121,7 @@ describe('Name Request Invalid Error Dialog', () => {
       })
 
     expect(wrapper.find('#dialog-title').text()).toBe('Invalid Incorporation Application')
-    expect(wrapper.find('.genErr').text()).toBe('The specified name request data is invalid.')
+    expect(wrapper.find('.font-14').text()).toBe('The specified name request data is invalid.')
     expect(wrapper.find('#dialog-redirect-button').exists()).toBe(true)
     expect(wrapper.find('#dialog-ok-button').exists()).toBe(false)
     wrapper.destroy()
