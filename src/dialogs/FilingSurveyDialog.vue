@@ -3,7 +3,7 @@
     <v-card class="px-10 py-6">
       <v-card-title class="d-flex justify-space-between align-center">
         <span class="font-weight-bold">Filing Survey</span>
-        <v-btn icon large class="dialog-close" @click="no()"><v-icon>mdi-close</v-icon></v-btn>
+        <v-btn icon large color="primary" class="dialog-close" @click="no()"><v-icon>mdi-close</v-icon></v-btn>
       </v-card-title>
 
       <v-card-text>
@@ -35,7 +35,7 @@
           class="mr-sm-3 px-8"
           @click="no()"
         >
-          <span>NOT RIGHT NOW</span>
+          <span>Not Right Now</span>
         </v-btn>
         <v-btn
           id="dialog-yes-button"
@@ -43,7 +43,7 @@
           class="ml-sm-3 px-8"
           @click="yes()"
         >
-          <span>YES, I'LL PARTICIPATE</span>
+          <span>Yes, I'll Participate</span>
         </v-btn>
       </v-card-actions>
     </v-card>

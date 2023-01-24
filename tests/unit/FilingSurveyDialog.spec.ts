@@ -64,7 +64,7 @@ describe('Filing Survey Dialog', () => {
 
     // verify and click button
     const button = wrapper.find('#dialog-no-button')
-    expect(button.text()).toBe('NOT RIGHT NOW')
+    expect(button.text()).toBe('Not Right Now')
     button.trigger('click')
     await Vue.nextTick()
 
@@ -85,7 +85,7 @@ describe('Filing Survey Dialog', () => {
 
     // verify and click button
     const button = wrapper.find('#dialog-yes-button')
-    expect(button.text()).toBe('YES, I\'LL PARTICIPATE')
+    expect(button.text()).toBe('Yes, I\'ll Participate')
     button.trigger('click')
     await Vue.nextTick()
 
