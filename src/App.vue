@@ -239,6 +239,7 @@ export default class App extends Vue {
   @Getter getFilingName!: FilingNames
   @Getter isDissolutionFiling!: boolean
   @Getter isRestorationFiling!: boolean
+  @Getter isIncorporationFiling!: boolean
   @Getter getSteps!: Array<StepIF>
   @Getter isSbcStaff!: boolean
   @Getter getFilingSubtitle!: string
@@ -417,6 +418,12 @@ export default class App extends Vue {
     return !this.$route.meta.noStepper
   }
 
+  /** The current domain. */
+  get domain (): string {
+    // remove possible leading period
+    return window.location.hostname.replace(/^\./, '')
+  }
+
   /** Helper to check is the current route matches */
   private isRouteName (routeName: RouteNames): boolean {
     return (this.$route.name === routeName)
@@ -543,12 +550,11 @@ export default class App extends Vue {
 
   /** Called to save or delete "hide survey" cookie. */
   protected updateSurveyCookie (doNotShow: boolean): void {
-    const domain = window.location.hostname
     if (doNotShow) {
       // hide survey for 30 days
-      Cookies.set(this.IA_SURVEY_KEY, 'do-not-show', { domain, expires: 30 })
+      Cookies.set(this.IA_SURVEY_KEY, 'do-not-show', { domain: this.domain, expires: 30 })
     } else {
-      Cookies.remove(this.IA_SURVEY_KEY, { domain })
+      Cookies.remove(this.IA_SURVEY_KEY, { domain: this.domain })
     }
   }
 
@@ -587,16 +593,6 @@ export default class App extends Vue {
   private async fetchData (): Promise<void> {
     // reset errors in case this method is invoked more than once (ie, retry)
     this.resetFlags()
-
-    // check if IA Survey ID is configured
-    const iaSurveyId = sessionStorage.getItem('IA_SURVEY_ID')
-    if (iaSurveyId) {
-      // check for cookie; if it doesn't exist then show survey dialog
-      // NB: cookie is auto-removed when it expires
-      const domain = window.location.hostname
-      const cookie = Cookies.get(this.IA_SURVEY_KEY, { domain })
-      if (!cookie) this.filingSurveyDialog = true
-    }
 
     // check that current route matches a supported filing type
     const supportedFilings = await GetFeatureFlag('supported-filings')
@@ -1106,6 +1102,19 @@ export default class App extends Vue {
 
         // fetch the data
         await this.fetchData()
+
+        // show survey dialog...
+        // - if this is an Incorporation Application filing
+        // - if the IA Survey ID is configured
+        // - if the cookie doesn't exist (eg, never set, or expired)
+        if (this.isIncorporationFiling) {
+          if (sessionStorage.getItem('IA_SURVEY_ID')) {
+            const cookie = Cookies.get(this.IA_SURVEY_KEY, { domain: this.domain })
+            if (!cookie) {
+              this.filingSurveyDialog = true
+            }
+          }
+        }
       }
     }
 
