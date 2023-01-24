@@ -31,7 +31,28 @@ describe('Filing Survey Dialog', () => {
     wrapper.destroy()
   })
 
-  it('emits an event when No button is clicked', async () => {
+  it('emits an event when "Do not show" button is clicked', async () => {
+    const wrapper = mount(FilingSurveyDialog,
+      {
+        vuetify,
+        store,
+        propsData: { dialog: true }
+      })
+
+    expect(wrapper.emitted('doNotShow')).toBeUndefined()
+
+    // verify and click checkbox
+    const checkbox = wrapper.find('.dialog-checkbox')
+    expect(checkbox.text()).toBe('Do not show this message again')
+    checkbox.find('input').trigger('click')
+    await Vue.nextTick()
+
+    expect(wrapper.emitted('doNotShow').length).toBe(1)
+
+    wrapper.destroy()
+  })
+
+  it('emits an event when "No" button is clicked', async () => {
     const wrapper = mount(FilingSurveyDialog,
       {
         vuetify,
@@ -41,10 +62,10 @@ describe('Filing Survey Dialog', () => {
 
     expect(wrapper.emitted('no')).toBeUndefined()
 
-    // verify and click No button
-    const exitButton = wrapper.find('#dialog-no-button')
-    expect(exitButton.text()).toBe('NOT RIGHT NOW')
-    exitButton.trigger('click')
+    // verify and click button
+    const button = wrapper.find('#dialog-no-button')
+    expect(button.text()).toBe('NOT RIGHT NOW')
+    button.trigger('click')
     await Vue.nextTick()
 
     expect(wrapper.emitted('no').length).toBe(1)
@@ -52,7 +73,7 @@ describe('Filing Survey Dialog', () => {
     wrapper.destroy()
   })
 
-  it('emits an event when Yes button is clicked', async () => {
+  it('emits an event when "Yes" button is clicked', async () => {
     const wrapper = mount(FilingSurveyDialog,
       {
         vuetify,
@@ -62,10 +83,10 @@ describe('Filing Survey Dialog', () => {
 
     expect(wrapper.emitted('yes')).toBeUndefined()
 
-    // verify and click retry button
-    const retryButton = wrapper.find('#dialog-yes-button')
-    expect(retryButton.text()).toBe('YES, I\'LL PARTICIPATE')
-    retryButton.trigger('click')
+    // verify and click button
+    const button = wrapper.find('#dialog-yes-button')
+    expect(button.text()).toBe('YES, I\'LL PARTICIPATE')
+    button.trigger('click')
     await Vue.nextTick()
 
     expect(wrapper.emitted('yes').length).toBe(1)

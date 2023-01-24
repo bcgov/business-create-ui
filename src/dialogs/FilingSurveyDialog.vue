@@ -21,10 +21,9 @@
         </p>
 
         <v-checkbox
-          id="dialog-checkbox"
           hide-details
           label="Do not show this message again"
-          class="mt-6"
+          class="dialog-checkbox mt-6"
           @change="doNotShow($event)"
         />
       </v-card-text>
