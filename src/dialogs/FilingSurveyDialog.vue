@@ -25,7 +25,7 @@
           hide-details
           label="Do not show this message again"
           class="mt-6"
-          @change="updateCookie($event)"
+          @change="doNotShow($event)"
         />
       </v-card-text>
 
@@ -63,15 +63,10 @@ export default class FilingSurveyDialog extends Vue {
   /** Prop to provide attachment selector. */
   @Prop({ default: '' }) readonly attach!: string
 
-  // Pass click events to parent.
+  // Pass events to parent.
   @Emit() protected no (): void {}
   @Emit() protected yes (): void {}
-
-  /** Saves a cookie to prevent showing this dialog for a while. */
-  protected updateCookie (val: boolean) {
-    // *** TODO: save a cookie with an expiry date
-    // and maybe delete cookie if not needed?
-  }
+  @Emit('doNotShow') protected doNotShow (val: boolean): void {}
 }
 </script>
 

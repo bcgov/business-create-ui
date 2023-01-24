@@ -45,7 +45,8 @@
       attach="#app"
       :dialog="filingSurveyDialog"
       @no="filingSurveyDialog = false"
-      @yes="filingSurveyDialog = false"
+      @yes="filingSurveyDialog = false; launchFilingSurvey()"
+      @doNotShow="updateSurveyCookie($event)"
     />
 
     <PaymentErrorDialog
@@ -169,6 +170,7 @@
 // Libraries
 import Vue from 'vue'
 import axios from 'axios'
+import Cookies from 'js-cookie'
 import { Component, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import { StatusCodes } from 'http-status-codes'
@@ -301,6 +303,7 @@ export default class App extends Vue {
   // Local constants
   readonly STAFF_ROLE = 'STAFF'
   readonly GOV_ACCOUNT_USER = 'GOV_ACCOUNT_USER'
+  readonly IA_SURVEY_KEY = 'IA-SURVEY'
 
   // declarations for template
   readonly RouteNames = RouteNames
@@ -527,6 +530,28 @@ export default class App extends Vue {
     })
   }
 
+  /** Opens Auth Web in a new tab with the survey query param. */
+  protected launchFilingSurvey (): void {
+    const iaSurveyId = sessionStorage.getItem('IA_SURVEY_ID')
+
+    // safety check
+    if (iaSurveyId) {
+      const url = `${sessionStorage.getItem('AUTH_WEB_URL')}?survey=${iaSurveyId}`
+      this.window.open(url, '_blank', 'noreferrer')
+    }
+  }
+
+  /** Called to save or delete "hide survey" cookie. */
+  protected updateSurveyCookie (doNotShow: boolean): void {
+    const domain = window.location.hostname
+    if (doNotShow) {
+      // hide survey for 30 days
+      Cookies.set(this.IA_SURVEY_KEY, 'do-not-show', { domain, expires: 30 })
+    } else {
+      Cookies.remove(this.IA_SURVEY_KEY, { domain })
+    }
+  }
+
   /** The list of completing parties. */
   private getCompletingParties (): CompletingPartyIF {
     let completingParty = null as CompletingPartyIF
@@ -563,9 +588,15 @@ export default class App extends Vue {
     // reset errors in case this method is invoked more than once (ie, retry)
     this.resetFlags()
 
-    // *** TODO: read cookie; if it doesn't exist or is expired then show survey
-    // for now do this temporarily
-    if (this.$route.hash.includes('#show-survey')) this.filingSurveyDialog = true
+    // check if IA Survey ID is configured
+    const iaSurveyId = sessionStorage.getItem('IA_SURVEY_ID')
+    if (iaSurveyId) {
+      // check for cookie; if it doesn't exist then show survey dialog
+      // NB: cookie is auto-removed when it expires
+      const domain = window.location.hostname
+      const cookie = Cookies.get(this.IA_SURVEY_KEY, { domain })
+      if (!cookie) this.filingSurveyDialog = true
+    }
 
     // check that current route matches a supported filing type
     const supportedFilings = await GetFeatureFlag('supported-filings')
