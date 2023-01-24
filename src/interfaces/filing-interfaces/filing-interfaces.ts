@@ -190,5 +190,11 @@ export interface RestorationFilingIF {
     nameTranslations: NameTranslationIF[]
     nameRequest: RegistrationNameRequestIF
     parties: PartyIF[]
+    offices: IncorporationAddressIF | object
+    contactPoint: {
+      email: string
+      phone: string
+      extension?: number
+    }
   }
 }

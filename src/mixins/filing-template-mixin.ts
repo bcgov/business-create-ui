@@ -401,7 +401,16 @@ export default class FilingTemplateMixin extends DateMixin {
           nrNumber: this.getNameRequestNumber
         },
         nameTranslations: this.getNameTranslations,
-        parties: this.orgPersonsToParties(this.getAddPeopleAndRoleStep.orgPeople)
+        parties: this.orgPersonsToParties(this.getAddPeopleAndRoleStep.orgPeople),
+        offices: this.getDefineCompanyStep.officeAddresses,
+        contactPoint: {
+          email: this.getBusinessContact.email,
+          phone: this.getBusinessContact.phone,
+          // don't save extension if it's empty
+          ...this.getBusinessContact.extension
+            ? { extension: +this.getBusinessContact.extension }
+            : {}
+        }
       }
     }
 
@@ -534,6 +543,15 @@ export default class FilingTemplateMixin extends DateMixin {
 
     // restore Persons and Organizations
     this.setOrgPersonList(this.partiesToOrgPersons(draftFiling.restoration.parties || []))
+
+    // restore Office addresses
+    this.setOfficeAddresses(draftFiling.restoration.offices)
+
+    // restore Contact Info
+    // this.setBusinessContact({
+    //   ...draftFiling.restoration.contactPoint
+    //   // confirmEmail: draftFiling.restoration.contactPoint.email
+    // })
 
     // restore Certify state
     this.setCertifyState({
@@ -955,6 +973,31 @@ export default class FilingTemplateMixin extends DateMixin {
       if (!toReturn.registration?.parties) {
         toReturn.registration.parties = []
       }
+    }
+    return toReturn
+  }
+
+  /**
+   * Ensure consistent object structure for a Restoration, whether it contains a Name
+   * Request or not, and whether it is an initial draft or it has been previously saved.
+   * Object merging does not work very well otherwise due to nested properties.
+   * @param filing the filing fetched from legal-api
+   * @returns the filing in safe-empty state if applicable
+   */
+  formatEmptyRestoration (filing: any): RestorationFilingIF {
+    const toReturn = filing
+    if (toReturn.restoration) {
+      // set offices
+      if (!toReturn.restoration?.offices) {
+        toReturn.restoration.offices = {}
+      }
+      // set contact point
+      // if (toReturn.restoration?.contactPoint) {
+      //   toReturn.restoration.contactPoint = {
+      //     email: '',
+      //     phone: ''
+      //   }
+      // }
     }
     return toReturn
   }

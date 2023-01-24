@@ -720,7 +720,7 @@ export default class App extends Vue {
       case FilingTypes.RESTORATION:
         draftFiling = {
           ...this.buildRestorationFiling(),
-          ...draftFiling
+          ...this.formatEmptyRestoration(draftFiling)
         }
         this.parseRestorationDraft(draftFiling)
         resources = RestorationResources.find(x => x.entityType === this.getEntityType)
