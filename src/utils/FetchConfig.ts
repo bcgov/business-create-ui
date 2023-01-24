@@ -95,7 +95,8 @@ export async function FetchConfig (): Promise<any> {
   }
 
   const iaSurveyId: string = response.data.IA_SURVEY_ID
-  sessionStorage.setItem('IA_SURVEY_ID', iaSurveyId)
+  // NB: assign fallback otherwise sessionStorage will store string "undefined"
+  sessionStorage.setItem('IA_SURVEY_ID', iaSurveyId || '')
 
   const hotjarId: string = response.data.HOTJAR_ID;
   (<any>window).hotjarId = hotjarId
