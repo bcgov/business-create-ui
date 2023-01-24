@@ -94,6 +94,9 @@ export async function FetchConfig (): Promise<any> {
     console.info('Set Siteminder Logout URL to: ' + siteminderLogoutUrl)
   }
 
+  const iaSurveyId: string = response.data.IA_SURVEY_ID
+  sessionStorage.setItem('IA_SURVEY_ID', iaSurveyId)
+
   const hotjarId: string = response.data.HOTJAR_ID;
   (<any>window).hotjarId = hotjarId
 
