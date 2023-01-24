@@ -1108,7 +1108,7 @@ export default class App extends Vue {
         // - if the IA Survey ID is configured
         // - if the cookie doesn't exist (eg, never set, or expired)
         if (this.isIncorporationFiling) {
-          if (sessionStorage.getItem('IA_SURVEY_ID')) {
+          if (+sessionStorage.getItem('IA_SURVEY_ID')) {
             const cookie = Cookies.get(this.IA_SURVEY_KEY, { domain: this.domain })
             if (!cookie) {
               this.filingSurveyDialog = true
