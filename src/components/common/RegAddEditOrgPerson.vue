@@ -180,11 +180,8 @@
             </template>
 
             <!-- Roles -->
-            <article class="mt-8">
-              <label>{{ getPeopleAndRolesResource.rolesTitle || 'Roles' }}</label>
-              <div v-if="getPeopleAndRolesResource.rolesSubtitle">
-                {{ getPeopleAndRolesResource.rolesSubtitle }}
-              </div>
+            <article class="mt-8" v-if="showRoles">
+              <label>Roles</label>
               <div class="form__row three-column mt-4">
                 <v-card flat rounded="sm" class="item gray-card px-4">
                   <v-row no-gutters class="align-center mt-5">
@@ -230,61 +227,6 @@
                         :label="RoleTypes.DIRECTOR"
                         :rules="enableRules ? roleRules : []"
                         @click="updateSameAsMailingChkBox()"
-                      />
-                    </v-col>
-
-                    <v-col cols="4" v-if="showHeirLegalRepRole">
-                      <v-checkbox
-                        id="heir-legal-rep-checkbox"
-                        class="mt-0"
-                        v-model="selectedRoles"
-                        :value="RoleTypes.HEIR_LEGAL_REP"
-                        :label="RoleTypes.HEIR_LEGAL_REP"
-                        :rules="enableRules ? roleRules : []"
-                      />
-                    </v-col>
-
-                    <v-col cols="4" v-if="showOfficerRole">
-                      <v-checkbox
-                        id="officer-checkbox"
-                        class="mt-0"
-                        v-model="selectedRoles"
-                        :value="RoleTypes.OFFICER"
-                        :label="RoleTypes.OFFICER"
-                        :rules="enableRules ? roleRules : []"
-                      />
-                    </v-col>
-
-                    <v-col cols="4" v-if="showShareholderRole">
-                      <v-checkbox
-                        id="shareholder-checkbox"
-                        class="mt-0"
-                        v-model="selectedRoles"
-                        :value="RoleTypes.SHAREHOLDER"
-                        :label="RoleTypes.SHAREHOLDER"
-                        :rules="enableRules ? roleRules : []"
-                      />
-                    </v-col>
-
-                    <v-col cols="4" v-if="showCourtOrderedPartyRole">
-                      <v-checkbox
-                        id="court-ordered-party-checkbox"
-                        class="mt-0"
-                        v-model="selectedRoles"
-                        :value="RoleTypes.COURT_ORDERED_PARTY"
-                        :label="RoleTypes.COURT_ORDERED_PARTY"
-                        :rules="enableRules ? roleRules : []"
-                      />
-                    </v-col>
-
-                    <v-col cols="4" v-if="showOtherRole">
-                      <v-checkbox
-                        id="other-checkbox"
-                        class="mt-0"
-                        v-model="selectedRoles"
-                        :value="RoleTypes.OTHER"
-                        :label="RoleTypes.OTHER"
-                        :rules="enableRules ? roleRules : []"
                       />
                     </v-col>
                   </v-row>

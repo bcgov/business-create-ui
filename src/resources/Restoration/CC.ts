@@ -22,12 +22,6 @@ export const RestorationResourceCc: RestorationResourceIF = {
     header: 'Add Applicant Information',
     blurb: null,
     helpSection: null,
-    rolesTitle: 'Relationship to the Company to be Restored',
-    rolesSubtitle: [
-      // order matters - see resource-getters.ts
-      'Please select all that apply.',
-      'Select other if you are not associated with the company.'
-    ],
     rules: [
       {
         id: RuleIds.NUM_APPLICANT_PERSON,
