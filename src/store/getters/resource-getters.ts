@@ -15,14 +15,7 @@ export const getCompanyDisplayName = (state: StateIF): string => {
 
 /** The People and Roles object. */
 export const getPeopleAndRolesResource = (state: StateIF): any => {
-  const peopleAndRoles = state.resourceModel.peopleAndRoles
-  if (isFullRestorationFiling(state)) {
-    peopleAndRoles.rolesSubtitle = peopleAndRoles.rolesSubtitle[0]
-  }
-  if (isLimitedRestorationFiling(state)) {
-    peopleAndRoles.rolesSubtitle = peopleAndRoles.rolesSubtitle[1]
-  }
-  return peopleAndRoles
+  return state.resourceModel.peopleAndRoles
 }
 
 /** The Incorporation Articles */
