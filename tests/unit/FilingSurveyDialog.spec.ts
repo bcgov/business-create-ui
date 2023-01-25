@@ -20,11 +20,10 @@ describe('Filing Survey Dialog', () => {
 
     expect(wrapper.find('.v-dialog').classes()).toContain('filing-survey-dialog')
     expect(wrapper.isVisible()).toBe(true)
-    expect(wrapper.find('.v-card__title').text()).toBe('Filing Survey')
-    expect(wrapper.findAll('p').length).toBe(3)
-    expect(wrapper.findAll('p').at(0).text()).toContain('Do you want to')
-    expect(wrapper.findAll('p').at(1).text()).toContain('This information can')
-    expect(wrapper.findAll('p').at(2).text()).toContain('Privacy Statement')
+    expect(wrapper.find('.v-card__title').text()).toBe('Tell Us About Your Experience Today')
+    expect(wrapper.findAll('p').length).toBe(2)
+    expect(wrapper.findAll('p').at(0).text()).toContain('Do you want to help us improve')
+    expect(wrapper.findAll('p').at(1).text()).toContain('Privacy Statement')
     expect(wrapper.find('#dialog-no-button').exists()).toBe(true)
     expect(wrapper.find('#dialog-yes-button').exists()).toBe(true)
 

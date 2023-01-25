@@ -2,18 +2,14 @@
   <v-dialog v-model="dialog" width="45rem" persistent :attach="attach" content-class="filing-survey-dialog">
     <v-card class="px-10 py-6">
       <v-card-title class="d-flex justify-space-between align-center">
-        <span class="font-weight-bold">Filing Survey</span>
+        <span class="font-weight-bold">Tell Us About Your Experience Today</span>
         <v-btn icon large color="primary" class="dialog-close" @click="no()"><v-icon>mdi-close</v-icon></v-btn>
       </v-card-title>
 
       <v-card-text>
         <p>
-          Do you want to be part of our continuous improvement process by sharing
-          your experience? A two-minute survey will appear in a new tab for you to
-          share your filing experience.
-        </p>
-        <p>
-          This information can really help us improve our services.
+          Do you want to help us improve by sharing your experience today? A two-minute
+          survey will appear in a new tab for you to fill out after your visit.
         </p>
 
         <p>
