@@ -159,9 +159,9 @@ export default class RegistrationReviewConfirm extends Vue {
   @Getter isPremiumAccount!: boolean
   @Getter getCertifyState!: CertifyIF
   @Getter isRoleStaff!: boolean
+  @Getter isSbcStaff!: boolean
   @Getter getValidateSteps!: boolean
   @Getter getDocumentDelivery!: DocumentDeliveryIF
-  @Getter isSbcStaff!: boolean
   @Getter isTypeSoleProp!: boolean
   @Getter isTypePartnership!: boolean
   @Getter getAddPeopleAndRoleStep!: PeopleAndRoleIF

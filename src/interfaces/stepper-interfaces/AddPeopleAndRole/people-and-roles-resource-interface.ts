@@ -1,6 +1,6 @@
 import { RuleIds } from '@/enums'
 
-interface Rule {
+interface RuleIF {
   id: RuleIds
   text: string
   test: (...args) => boolean // rule function
@@ -17,5 +17,5 @@ export interface PeopleAndRolesResourceIF {
   addIncorporator?: boolean
   addOrganization?: boolean
   addBusiness?: boolean
-  rules: Array<Rule>
+  rules: Array<RuleIF>
 }

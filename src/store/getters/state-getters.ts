@@ -525,7 +525,7 @@ export const isRestorationValid = (state: StateIF): boolean => {
   const isStaffPaymentValid = isRoleStaff(state) ? getStaffPaymentStep(state).valid : true
 
   return (
-    getRestoration(state).applicantInfoValid &&
+    isAddPeopleAndRolesValid(state) &&
     getRestoration(state).businessInfoValid &&
     getRestoration(state).businessNameValid &&
     isCertifyValid &&

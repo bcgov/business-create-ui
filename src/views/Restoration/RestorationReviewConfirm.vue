@@ -18,7 +18,12 @@
       <!-- People and Roles -->
       <v-card id="people-and-roles-vcard" flat class="mt-6">
         <CardHeader icon="mdi-account-multiple-plus" label="People and Roles" />
-        <ListPeopleAndRoles :isSummary="true" />
+        <ListPeopleAndRoles
+          :isSummary="true"
+          :showDeliveryAddressColumn="!isFullRestorationFiling && !isLimitedRestorationFiling"
+          :showRolesColumn="!isFullRestorationFiling && !isLimitedRestorationFiling"
+          :showEmailColumn="isFullRestorationFiling || isLimitedRestorationFiling"
+        />
       </v-card>
     </section>
 
@@ -108,6 +113,8 @@ export default class RestorationReviewConfirm extends Vue {
   @Getter getUserEmail!: string
   @Getter getCompanyDisplayName!: string
   @Getter getEntityType!: CorpTypeCd
+  @Getter isFullRestorationFiling!: boolean
+  @Getter isLimitedRestorationFiling!: boolean
 
   @Action setCertifyState!: ActionBindingIF
 

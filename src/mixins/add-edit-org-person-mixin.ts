@@ -119,6 +119,11 @@ export default class AddEditOrgPersonMixin extends Vue {
     return this.selectedRoles.includes(RoleTypes.PARTNER)
   }
 
+  /** Whether Applicant is checked. */
+  get isApplicant (): boolean {
+    return this.selectedRoles.includes(RoleTypes.APPLICANT)
+  }
+
   /** Whether current data object is a person. */
   get isPerson (): boolean {
     return (this.orgPerson.officer?.partyType === PartyTypes.PERSON)
@@ -488,6 +493,9 @@ export default class AddEditOrgPersonMixin extends Vue {
     }
     if (this.isPartner) {
       roles.push({ roleType: RoleTypes.PARTNER, appointmentDate: this.getCurrentDate })
+    }
+    if (this.isApplicant) {
+      roles.push({ roleType: RoleTypes.APPLICANT, appointmentDate: this.getCurrentDate })
     }
 
     return roles
