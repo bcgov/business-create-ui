@@ -5,7 +5,7 @@ import { mount, Wrapper } from '@vue/test-utils'
 import flushPromises from 'flush-promises'
 import { getLastEvent } from '../get-last-event'
 import { getVuexStore } from '@/store'
-import RegAddEditOrgPerson from '@/components/Registration/RegAddEditOrgPerson.vue'
+import RegAddEditOrgPerson from '@/components/common/RegAddEditOrgPerson.vue'
 import { EmptyOrgPerson } from '@/interfaces'
 
 // mock the console.warn function to hide "[Vuetify] Unable to locate target XXX"
@@ -30,9 +30,9 @@ const lastNameSelector = '.last-name'
 const confirmCheckboxSelector = '.confirm-checkbox'
 const orgNameSelector = '.org-name'
 const emailAddressSelector = '.email-address'
-const buttonRemoveSelector = '.btn-remove'
-const buttonDoneSelector = '.btn-done'
-const buttonCancelSelector = '.btn-cancel'
+const buttonRemoveSelector = '#btn-remove'
+const buttonDoneSelector = '#btn-done'
+const buttonCancelSelector = '#btn-cancel'
 
 const validCompletingParty = {
   officer: {

@@ -4,11 +4,11 @@
       <v-card-title id="dialog-title">Unable to Resume Application</v-card-title>
 
       <v-card-text>
-        <p class="genErr">We were unable to resume your application. You can retry to resume your
+        <p class="font-14">We were unable to resume your application. You can retry to resume your
           application now, or you can exit and return to the dashboard.</p>
 
         <template v-if="!isRoleStaff">
-          <p class="genErr">If this error persists, please contact us:</p>
+          <p class="font-14">If this error persists, please contact us:</p>
           <RegistriesContactInfo />
         </template>
       </v-card-text>

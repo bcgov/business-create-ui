@@ -36,6 +36,18 @@
             <v-icon v-else>mdi-circle-small</v-icon>
             <span class="rule-item-txt">{{rule.text}}</span>
           </li>
+          <li v-if="rule.id === RuleIds.NUM_APPLICANT_PERSON" :key="index">
+            <v-icon v-if="validApplicantPerson" color="green darken-2" class="dir-valid">mdi-check</v-icon>
+            <v-icon v-else-if="getShowErrors" color="error" class="dir-invalid">mdi-close</v-icon>
+            <v-icon v-else>mdi-circle-small</v-icon>
+            <span class="rule-item-txt">{{rule.text}}</span>
+          </li>
+          <li v-if="rule.id === RuleIds.NUM_APPLICANT_ORG" :key="index">
+            <v-icon v-if="validApplicantOrg" color="green darken-2" class="dir-valid">mdi-check</v-icon>
+            <v-icon v-else-if="getShowErrors" color="error" class="dir-invalid">mdi-close</v-icon>
+            <v-icon v-else>mdi-circle-small</v-icon>
+            <span class="rule-item-txt">{{rule.text}}</span>
+          </li>
         </template>
       </ul>
     </section>
@@ -50,11 +62,12 @@
     </template>
 
     <!-- Start by Adding the Completing Party -->
-    <div v-if="orgPersonList.length === 0">
+    <div v-if="(orgPersonList.length === 0) && requireCompletingParty">
       <v-btn
+        id="btn-start-add-cp"
         outlined
         color="primary"
-        class="btn-outlined-primary mt-6 btn-start-add-cp"
+        class="btn-outlined-primary mt-6"
         :disabled="showOrgPersonForm"
         @click="addOrgPerson(RoleTypes.COMPLETING_PARTY, PartyTypes.PERSON)"
       >
@@ -64,12 +77,13 @@
     </div>
 
     <!-- Add a Person or Organization -->
-    <div v-if="orgPersonList.length > 0">
+    <div v-if="(orgPersonList.length > 0) || !requireCompletingParty">
       <v-btn
-        v-if="!validNumCompletingParty"
+        v-if="requireCompletingParty && !validNumCompletingParty"
+        id="btn-add-cp"
         outlined
         color="primary"
-        class="btn-outlined-primary mt-6 btn-add-cp"
+        class="btn-outlined-primary mt-6"
         :disabled="showOrgPersonForm"
         @click="addOrgPerson(RoleTypes.COMPLETING_PARTY, PartyTypes.PERSON)"
       >
@@ -80,9 +94,10 @@
       <template v-if="isTypeSoleProp">
         <v-btn
           v-if="!validNumProprietors"
+          id="btn-add-person"
           outlined
           color="primary"
-          class="btn-outlined-primary mt-6 btn-add-person"
+          class="btn-outlined-primary mt-6"
           :disabled="showOrgPersonForm"
           @click="addOrgPerson(RoleTypes.PROPRIETOR, PartyTypes.PERSON)"
         >
@@ -92,9 +107,10 @@
 
         <v-btn
           v-if="!validNumProprietors"
+          id="btn-add-organization"
           outlined
           color="primary"
-          class="btn-outlined-primary mt-6 btn-add-organization"
+          class="btn-outlined-primary mt-6"
           :disabled="showOrgPersonForm"
           @click="addOrgPerson(RoleTypes.PROPRIETOR, PartyTypes.ORGANIZATION)"
         >
@@ -105,9 +121,10 @@
 
       <template v-if="isTypePartnership">
         <v-btn
+          id="btn-add-person"
           outlined
           color="primary"
-          class="btn-outlined-primary mt-6 btn-add-person"
+          class="btn-outlined-primary mt-6"
           :disabled="showOrgPersonForm"
           @click="addOrgPerson(RoleTypes.PARTNER, PartyTypes.PERSON)"
         >
@@ -116,11 +133,38 @@
         </v-btn>
 
         <v-btn
+          id="btn-add-organization"
           outlined
           color="primary"
-          class="btn-outlined-primary mt-6 btn-add-organization"
+          class="btn-outlined-primary mt-6"
           :disabled="showOrgPersonForm"
           @click="addOrgPerson(RoleTypes.PARTNER, PartyTypes.ORGANIZATION)"
+        >
+          <v-icon>mdi-domain-plus</v-icon>
+          <span>Add a Business or a Corporation</span>
+        </v-btn>
+      </template>
+
+      <template v-if="isFullRestorationFiling || isLimitedRestorationFiling">
+        <v-btn
+          id="btn-add-person"
+          outlined
+          color="primary"
+          class="btn-outlined-primary mt-6"
+          :disabled="showOrgPersonForm"
+          @click="addOrgPerson(null, PartyTypes.PERSON)"
+        >
+          <v-icon>mdi-account-plus</v-icon>
+          <span>Add a Person</span>
+        </v-btn>
+
+        <v-btn
+          id="btn-add-organization"
+          outlined
+          color="primary"
+          class="btn-outlined-primary mt-6"
+          :disabled="showOrgPersonForm"
+          @click="addOrgPerson(null, PartyTypes.ORGANIZATION)"
         >
           <v-icon>mdi-domain-plus</v-icon>
           <span>Add a Business or a Corporation</span>
@@ -166,7 +210,7 @@ import { PeopleRolesMixin } from '@/mixins'
 import { ConfirmDialog } from '@bcrs-shared-components/confirm-dialog'
 import HelpSection from '@/components/common/HelpSection.vue'
 import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
-import RegAddEditOrgPerson from '@/components/Registration/RegAddEditOrgPerson.vue'
+import RegAddEditOrgPerson from '@/components/common/RegAddEditOrgPerson.vue'
 
 /**
  * This is similar to the common PeopleAndRoles component but this

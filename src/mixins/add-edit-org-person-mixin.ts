@@ -32,6 +32,7 @@ export default class AddEditOrgPersonMixin extends Vue {
   @Getter getCurrentDate!: string
   @Getter isRoleStaff!: boolean
   @Getter isSbcStaff!: boolean
+  @Getter isBaseCompany!: boolean
   @Getter isTypeBcomp!: boolean
   @Getter isTypeCoop!: boolean
   @Getter isTypeSoleProp!: boolean
@@ -133,14 +134,22 @@ export default class AddEditOrgPersonMixin extends Vue {
     return this.orgPerson?.isLookupBusiness && !!this.inProgressBusinessLookup.identifier
   }
 
+  get showRoles (): boolean {
+    return (
+      this.showCompletingPartyRole ||
+      this.showIncorporatorRole ||
+      this.showDirectorRole
+    )
+  }
+
   /** Whether the Completing Party role should be shown. */
   get showCompletingPartyRole (): boolean {
     if (!this.requireCompletingParty) return false
 
-    const isRoleCompletingParty = this.orgPerson.roles.some(role => role.roleType === RoleTypes.COMPLETING_PARTY)
+    const showCompletingParty = this.orgPerson.roles.some(role => role.roleType === RoleTypes.COMPLETING_PARTY)
     // either this is the completing party,
     // or this is staff adding/editing a person
-    return (isRoleCompletingParty || (this.isRoleStaff && this.isPerson))
+    return (showCompletingParty || (this.isRoleStaff && this.isPerson))
   }
 
   /** Whether the Incorporator role should be shown. */
@@ -150,36 +159,8 @@ export default class AddEditOrgPersonMixin extends Vue {
 
   /** Whether the Director role should be shown. */
   get showDirectorRole (): boolean {
-    // always show this role for restoration filings
-    if (this.isFullRestorationFiling || this.isLimitedRestorationFiling) return true
     // only a person can be a director
     return (this.requireDirector && this.isPerson)
-  }
-
-  /** Whether the Heir or Legal Representative role should be shown. */
-  get showHeirLegalRepRole (): boolean {
-    return (this.isFullRestorationFiling || this.isLimitedRestorationFiling)
-  }
-
-  /** Whether the Officer role should be shown. */
-  get showOfficerRole (): boolean {
-    return (this.isFullRestorationFiling || this.isLimitedRestorationFiling)
-  }
-
-  /** Whether the Shareholder role should be shown. */
-  get showShareholderRole (): boolean {
-    return (this.isFullRestorationFiling || this.isLimitedRestorationFiling)
-  }
-
-  /** Whether the Court Ordered Party role should be shown. */
-  get showCourtOrderedPartyRole (): boolean {
-    return (this.isFullRestorationFiling || this.isLimitedRestorationFiling)
-  }
-
-  /** Whether the Other role should be shown. */
-  get showOtherRole (): boolean {
-    // limited restorations only
-    return this.isLimitedRestorationFiling
   }
 
   /** Whether the Proprietor role should be shown. */
@@ -199,44 +180,15 @@ export default class AddEditOrgPersonMixin extends Vue {
   }
 
   /** Whether the Incorporator role should be disabled. */
-  // *** TODO: test this (should be disabled if it's the only role displayed)
   get disableIncorporatorRole (): boolean {
     // disable this role if it's the only role displayed
     return (!this.showCompletingPartyRole && !this.showDirectorRole && this.showIncorporatorRole)
   }
 
   /** Whether the Director role should be disabled. */
-  // *** TODO: test this (should be disabled if it's the only role displayed)
   get disableDirectorRole (): boolean {
-    // always enable this role for restoration filings
-    if (this.isFullRestorationFiling || this.isLimitedRestorationFiling) return false
     // disable this role if it's the only role displayed
     return (!this.showCompletingPartyRole && !this.showIncorporatorRole && this.showDirectorRole)
-  }
-
-  /** Whether the Heir or Legal Representative role should be disabled. */
-  get disableHeirLegalRepRole (): boolean {
-    return false
-  }
-
-  /** Whether the Officer role should be disabled. */
-  get disableOfficerRole (): boolean {
-    return false
-  }
-
-  /** Whether the Shareholder role should be disabled. */
-  get disableShareholderRole (): boolean {
-    return false
-  }
-
-  /** Whether the Court Ordered Party role should be disabled. */
-  get disableCourtOrderedPartyRole (): boolean {
-    return false
-  }
-
-  /** Whether the Other role should be disabled. */
-  get disableOtherRole (): boolean {
-    return false
   }
 
   /**

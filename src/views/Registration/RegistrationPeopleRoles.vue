@@ -17,7 +17,7 @@ import { Getter } from 'vuex-class'
 import { PeopleAndRoleIF, PeopleAndRolesResourceIF } from '@/interfaces'
 import { CommonMixin } from '@/mixins'
 import { RouteNames } from '@/enums'
-import RegPeopleAndRoles from '@/components/Registration/RegPeopleAndRoles.vue'
+import RegPeopleAndRoles from '@/components/common/RegPeopleAndRoles.vue'
 
 @Component({
   components: {

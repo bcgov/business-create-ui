@@ -57,5 +57,11 @@
             "base",
             "business-create-ui"
         ]
+    },
+    {
+        "vault": "hotjar",
+        "application": [
+            "shared"
+        ]
     }
 ]

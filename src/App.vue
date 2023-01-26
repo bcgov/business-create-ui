@@ -41,6 +41,14 @@
       @retry="fetchData()"
     />
 
+    <FilingSurveyDialog
+      attach="#app"
+      :dialog="filingSurveyDialog"
+      @no="filingSurveyDialog = false"
+      @yes="filingSurveyDialog = false; launchFilingSurvey()"
+      @doNotShow="doNotShowSurvey($event)"
+    />
+
     <PaymentErrorDialog
       attach="#app"
       filingName="Application"
@@ -230,6 +238,7 @@ export default class App extends Vue {
   @Getter getFilingName!: FilingNames
   @Getter isDissolutionFiling!: boolean
   @Getter isRestorationFiling!: boolean
+  @Getter isIncorporationFiling!: boolean
   @Getter getSteps!: Array<StepIF>
   @Getter isSbcStaff!: boolean
   @Getter getFilingSubtitle!: string
@@ -279,6 +288,7 @@ export default class App extends Vue {
   // Local properties
   protected accountAuthorizationDialog = false
   protected fetchErrorDialog = false
+  protected filingSurveyDialog = false
   protected invalidFilingDialog = false
   protected invalidRouteDialog = false
   protected paymentErrorDialog = false
@@ -371,6 +381,7 @@ export default class App extends Vue {
       this.accountAuthorizationDialog ||
       this.nameRequestInvalidErrorDialog ||
       this.fetchErrorDialog ||
+      this.filingSurveyDialog ||
       this.invalidFilingDialog ||
       this.invalidRouteDialog ||
       this.paymentErrorDialog ||
@@ -403,6 +414,11 @@ export default class App extends Vue {
   // check to use stepper view or not
   get isStepperView (): boolean {
     return !this.$route.meta.noStepper
+  }
+
+  /** The current IA survey id, or zero if empty. */
+  get iaSurveyId (): number {
+    return +sessionStorage.getItem('IA_SURVEY_ID')
   }
 
   /** Helper to check is the current route matches */
@@ -516,6 +532,28 @@ export default class App extends Vue {
       const dashboardUrl = sessionStorage.getItem('DASHBOARD_URL')
       Navigate(dashboardUrl + this.getEntityIdentifier)
     })
+  }
+
+  /** Opens Auth Web in a new tab with the survey query param. */
+  protected launchFilingSurvey (): void {
+    // safety check
+    if (this.iaSurveyId > 0) {
+      const url = `${sessionStorage.getItem('AUTH_WEB_URL')}?survey=${this.iaSurveyId}`
+      this.window.open(url, '_blank', 'noreferrer')
+    }
+  }
+
+  /** Called to update "do not show again" state. */
+  protected doNotShowSurvey (doNotShow: boolean): void {
+    if (doNotShow) {
+      // safety check
+      if (this.iaSurveyId > 0) {
+        // save id of survey to hide
+        localStorage.setItem('HIDE_SURVEY', this.iaSurveyId)
+      }
+    } else {
+      localStorage.removeItem('HIDE_SURVEY')
+    }
   }
 
   /** The list of completing parties. */
@@ -862,6 +900,7 @@ export default class App extends Vue {
     this.invalidFilingDialog = false
     this.accountAuthorizationDialog = false
     this.fetchErrorDialog = false
+    this.filingSurveyDialog = false
     this.paymentErrorDialog = false
     this.saveErrorDialog = false
     this.fileAndPayInvalidNameRequestDialog = false
@@ -1061,6 +1100,19 @@ export default class App extends Vue {
 
         // fetch the data
         await this.fetchData()
+
+        // show survey dialog...
+        // - if this is an Incorporation Application filing
+        // - if the IA Survey ID is configured
+        // - if the survey id hasn't been saved
+        if (this.isIncorporationFiling) {
+          if (this.iaSurveyId > 0) {
+            const savedId = +localStorage.getItem('HIDE_SURVEY')
+            if (savedId !== this.iaSurveyId) {
+              this.filingSurveyDialog = true
+            }
+          }
+        }
       }
     }
 

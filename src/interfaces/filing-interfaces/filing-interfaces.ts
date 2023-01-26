@@ -184,9 +184,9 @@ export interface RestorationFilingIF {
   }
   // *** TODO: update according to schema
   restoration: {
-    date: string
+    date: string // today, as YYYY-MM-DD
     type: RestorationTypes
-    expiry: string
+    expiry?: string // YYYY-MM-DD
     nameTranslations: NameTranslationIF[]
     nameRequest: RegistrationNameRequestIF
     parties: PartyIF[]

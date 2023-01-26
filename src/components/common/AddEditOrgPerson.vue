@@ -65,7 +65,7 @@
           >
             <!-- Person's Name -->
             <article v-if="isPerson">
-              <div class="font-weight-bold">Person's Name</div>
+              <label>Person's Name</label>
               <div class="form__row three-column mt-4">
                 <!-- NB: only staff can change Completing Party names -->
                 <v-text-field
@@ -100,7 +100,7 @@
 
             <!-- Org's Name -->
             <article v-if="isOrg">
-              <div class="font-weight-bold">Corporation or Firm Name</div>
+              <label>Corporation or Firm Name</label>
               <div class="org-name-container mt-4">
                 <v-text-field
                   filled
@@ -115,13 +115,10 @@
 
             <!-- Roles -->
             <article class="mt-2">
-              <div class="font-weight-bold">{{ getPeopleAndRolesResource.rolesTitle || 'Roles' }}</div>
-              <div v-if="getPeopleAndRolesResource.rolesSubtitle">
-                {{ getPeopleAndRolesResource.rolesSubtitle }}
-              </div>
+              <label>Roles</label>
               <div class="form__row three-column mt-4">
                 <v-card flat rounded="sm" class="item gray-card px-4">
-                  <v-row no-gutters class="align-center mt-4">
+                  <v-row no-gutters class="align-center mt-5">
                     <v-col cols="4" v-if="showCompletingPartyRole">
                       <v-checkbox
                         id="cp-checkbox"
@@ -159,76 +156,14 @@
                         @click="updateSameAsMailingChkBox()"
                       />
                     </v-col>
-
-                    <v-col cols="4" v-if="showHeirLegalRepRole">
-                      <v-checkbox
-                        id="heir-legal-rep-checkbox"
-                        class="mt-0"
-                        v-model="selectedRoles"
-                        :value="RoleTypes.HEIR_LEGAL_REP"
-                        :label="RoleTypes.HEIR_LEGAL_REP"
-                        :disabled="disableHeirLegalRepRole"
-                        :rules="enableRules ? roleRules : []"
-                      />
-                    </v-col>
-
-                    <v-col cols="4" v-if="showOfficerRole">
-                      <v-checkbox
-                        id="officer-checkbox"
-                        class="mt-0"
-                        v-model="selectedRoles"
-                        :value="RoleTypes.OFFICER"
-                        :label="RoleTypes.OFFICER"
-                        :disabled="disableOfficerRole"
-                        :rules="enableRules ? roleRules : []"
-                      />
-                    </v-col>
-
-                    <v-col cols="4" v-if="showShareholderRole">
-                      <v-checkbox
-                        id="shareholder-checkbox"
-                        class="mt-0"
-                        v-model="selectedRoles"
-                        :value="RoleTypes.SHAREHOLDER"
-                        :label="RoleTypes.SHAREHOLDER"
-                        :disabled="disableShareholderRole"
-                        :rules="enableRules ? roleRules : []"
-                      />
-                    </v-col>
-
-                    <v-col cols="4" v-if="showCourtOrderedPartyRole">
-                      <v-checkbox
-                        id="court-ordered-party-checkbox"
-                        class="mt-0"
-                        v-model="selectedRoles"
-                        :value="RoleTypes.COURT_ORDERED_PARTY"
-                        :label="RoleTypes.COURT_ORDERED_PARTY"
-                        :disabled="disableCourtOrderedPartyRole"
-                        :rules="enableRules ? roleRules : []"
-                      />
-                    </v-col>
-
-                    <v-col cols="4" v-if="showOtherRole">
-                      <v-checkbox
-                        id="other-checkbox"
-                        class="mt-0"
-                        v-model="selectedRoles"
-                        :value="RoleTypes.OTHER"
-                        :label="RoleTypes.OTHER"
-                        :disabled="disableOtherRole"
-                        :rules="enableRules ? roleRules : []"
-                      />
-                    </v-col>
                   </v-row>
                 </v-card>
               </div>
             </article>
 
-            <!-- *** TODO: add email address here for restorations -->
-
             <!-- Mailing Address -->
             <article class="mt-8">
-              <div class="font-weight-bold">Mailing Address</div>
+              <label>Mailing Address</label>
               <MailingAddress
                 ref="mailingAddressNew"
                 class="mt-4"
@@ -254,8 +189,8 @@
                 v-model="inheritMailingAddress"
               />
 
-              <article v-if="!inheritMailingAddress">
-                <div class="font-weight-bold mt-4">Delivery Address</div>
+              <article v-if="!inheritMailingAddress" class="mt-6">
+                <label>Delivery Address</label>
                 <DeliveryAddress
                   ref="deliveryAddressNew"
                   class="mt-4"
@@ -305,8 +240,6 @@ import { Component } from 'vue-property-decorator'
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
 import { ConfirmDialog } from '@bcrs-shared-components/confirm-dialog'
 import { AddEditOrgPersonMixin } from '@/mixins'
-import { PeopleAndRolesResourceIF } from '@/interfaces'
-import { Getter } from 'vuex-class'
 
 /** This is a sub-component of PeopleAndRoles. */
 @Component({
@@ -320,9 +253,6 @@ import { Getter } from 'vuex-class'
   ]
 })
 export default class AddEditOrgPerson extends Vue {
-  @Getter isBaseCompany!: boolean
-  @Getter getPeopleAndRolesResource!: PeopleAndRolesResourceIF
-
   //
   // NB: see mixin for common properties, methods, etc.
   //

@@ -11,9 +11,9 @@ export interface RestorationStateIF {
   applicantInfoValid: boolean
   businessInfoValid: boolean
   businessNameValid: boolean
-  date: string // FUTURE: describe format here
+  date: string // YYYY-MM-DD
   type: RestorationTypes
-  expiry?: string // FUTURE: describe format here
+  expiry?: string // YYYY-MM-DD
   // defineBusinessValid: boolean
   // startDate: string
   // businessAddress: BusinessAddressIF

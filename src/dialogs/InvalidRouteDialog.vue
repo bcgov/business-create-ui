@@ -5,7 +5,7 @@
       <v-card-title id="dialog-title">Invalid Route</v-card-title>
 
       <v-card-text>
-        <p class="genErr">The route you are trying to access does not exist for the current entity or filing type.</p>
+        <p class="font-14">The route you are trying to access does not exist for the current entity or filing type.</p>
       </v-card-text>
 
       <v-divider class="my-0" />

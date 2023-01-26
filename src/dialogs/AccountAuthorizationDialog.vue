@@ -4,7 +4,7 @@
       <v-card-title id="dialog-title">Account Authorization</v-card-title>
 
       <v-card-text>
-        <p class="genErr">This account appears to be unable to access this name request, incorporation application,
+        <p class="font-14">This account appears to be unable to access this name request, incorporation application,
           or business. You can retry, or you can exit and return to the dashboard.</p>
       </v-card-text>
 
