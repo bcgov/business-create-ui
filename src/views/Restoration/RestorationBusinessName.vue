@@ -1,4 +1,4 @@
-<!-- <template>
+<template>
   <div id="restoration-business-name">
     <!-- Name -->
     <section class="mt-10">
@@ -376,4 +376,4 @@ header {
 :deep(.v-select__selection--comma) {
   overflow: inherit;
 }
-</style> -->
+</style>
