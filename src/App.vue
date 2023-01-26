@@ -46,7 +46,7 @@
       :dialog="filingSurveyDialog"
       @no="filingSurveyDialog = false"
       @yes="filingSurveyDialog = false; launchFilingSurvey()"
-      @doNotShow="updateSurveyCookie($event)"
+      @doNotShow="doNotShowSurvey($event)"
     />
 
     <PaymentErrorDialog
@@ -170,7 +170,6 @@
 // Libraries
 import Vue from 'vue'
 import axios from 'axios'
-import Cookies from 'js-cookie'
 import { Component, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import { StatusCodes } from 'http-status-codes'
@@ -304,7 +303,6 @@ export default class App extends Vue {
   // Local constants
   readonly STAFF_ROLE = 'STAFF'
   readonly GOV_ACCOUNT_USER = 'GOV_ACCOUNT_USER'
-  readonly IA_SURVEY_KEY = 'IA-SURVEY'
 
   // declarations for template
   readonly RouteNames = RouteNames
@@ -418,10 +416,9 @@ export default class App extends Vue {
     return !this.$route.meta.noStepper
   }
 
-  /** The current domain. */
-  get domain (): string {
-    // remove possible leading period
-    return window.location.hostname.replace(/^\./, '')
+  /** The current IA survey id, or zero if empty. */
+  get iaSurveyId (): number {
+    return +sessionStorage.getItem('IA_SURVEY_ID')
   }
 
   /** Helper to check is the current route matches */
@@ -539,22 +536,23 @@ export default class App extends Vue {
 
   /** Opens Auth Web in a new tab with the survey query param. */
   protected launchFilingSurvey (): void {
-    const iaSurveyId = sessionStorage.getItem('IA_SURVEY_ID')
-
     // safety check
-    if (iaSurveyId) {
-      const url = `${sessionStorage.getItem('AUTH_WEB_URL')}?survey=${iaSurveyId}`
+    if (this.iaSurveyId > 0) {
+      const url = `${sessionStorage.getItem('AUTH_WEB_URL')}?survey=${this.iaSurveyId}`
       this.window.open(url, '_blank', 'noreferrer')
     }
   }
 
-  /** Called to save or delete "hide survey" cookie. */
-  protected updateSurveyCookie (doNotShow: boolean): void {
+  /** Called to update "do not show again" state. */
+  protected doNotShowSurvey (doNotShow: boolean): void {
     if (doNotShow) {
-      // hide survey for 30 days
-      Cookies.set(this.IA_SURVEY_KEY, 'do-not-show', { domain: this.domain, expires: 30 })
+      // safety check
+      if (this.iaSurveyId > 0) {
+        // save id of survey to hide
+        localStorage.setItem('HIDE_SURVEY', this.iaSurveyId)
+      }
     } else {
-      Cookies.remove(this.IA_SURVEY_KEY, { domain: this.domain })
+      localStorage.removeItem('HIDE_SURVEY')
     }
   }
 
@@ -1106,11 +1104,11 @@ export default class App extends Vue {
         // show survey dialog...
         // - if this is an Incorporation Application filing
         // - if the IA Survey ID is configured
-        // - if the cookie doesn't exist (eg, never set, or expired)
+        // - if the survey id hasn't been saved
         if (this.isIncorporationFiling) {
-          if (+sessionStorage.getItem('IA_SURVEY_ID')) {
-            const cookie = Cookies.get(this.IA_SURVEY_KEY, { domain: this.domain })
-            if (!cookie) {
+          if (this.iaSurveyId > 0) {
+            const savedId = +localStorage.getItem('HIDE_SURVEY')
+            if (savedId !== this.iaSurveyId) {
               this.filingSurveyDialog = true
             }
           }
