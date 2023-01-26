@@ -8,6 +8,7 @@ import { LastNameRules } from './last-name-rules'
 import { MiddleNameRules, MiddleNameRulesFirms } from './middle-name-rules'
 import { OrgNameRules } from './org-name-rules'
 import { PhoneRules } from './phone-rules'
+import { CustomMonthRule } from './month-rules'
 
 export const Rules = {
   BusinessNumberRules,
@@ -21,7 +22,8 @@ export const Rules = {
   MiddleNameRules,
   MiddleNameRulesFirms,
   OrgNameRules,
-  PhoneRules
+  PhoneRules,
+  CustomMonthRule
 }
 
 export const RuleHelpers = {
