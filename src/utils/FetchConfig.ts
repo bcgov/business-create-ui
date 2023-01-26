@@ -95,7 +95,7 @@ export async function FetchConfig (): Promise<any> {
   }
 
   const iaSurveyId: string = response.data.IA_SURVEY_ID
-  // NB: assign fallback otherwise sessionStorage will store string "undefined"
+  // NB: set empty string if iaSurveyId is falsy (undefined, null or 0)
   sessionStorage.setItem('IA_SURVEY_ID', iaSurveyId || '')
 
   const hotjarId: string = response.data.HOTJAR_ID;
