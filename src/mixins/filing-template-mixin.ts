@@ -550,10 +550,10 @@ export default class FilingTemplateMixin extends DateMixin {
     this.setOfficeAddresses(draftFiling.restoration.offices)
 
     // restore Contact Info
-    // this.setBusinessContact({
-    //   ...draftFiling.restoration.contactPoint
-    //   // confirmEmail: draftFiling.restoration.contactPoint.email
-    // })
+    this.setBusinessContact({
+      ...draftFiling.restoration.contactPoint,
+      confirmEmail: draftFiling.restoration.contactPoint.email
+    })
 
     // restore Certify state
     this.setCertifyState({
@@ -991,15 +991,15 @@ export default class FilingTemplateMixin extends DateMixin {
     if (toReturn.restoration) {
       // set offices
       if (!toReturn.restoration?.offices) {
-        toReturn.restoration.offices = {}
+        toReturn.restoration.offices = []
       }
       // set contact point
-      // if (toReturn.restoration?.contactPoint) {
-      //   toReturn.restoration.contactPoint = {
-      //     email: '',
-      //     phone: ''
-      //   }
-      // }
+      if (!toReturn.restoration?.contactPoint) {
+        toReturn.restoration.contactPoint = {
+          email: '',
+          phone: ''
+        }
+      }
     }
     return toReturn
   }

@@ -14,11 +14,11 @@
     </section>
 
     <!-- Cooperative Association Type -->
-    <section class="mt-10" v-show="isTypeCoop">
+    <!-- <section class="mt-10" v-show="isTypeCoop">
       <header id="association-type-header">
-        <h2>Cooperative Association Type</h2>
+        <h2>Cooperative Association Type</h2> -->
         <!-- Help Section -->
-        <div class="mt-4">
+        <!-- <div class="mt-4">
           <span class="help-btn" @click="coopHelpToggle = !coopHelpToggle">
             <v-icon color="primary" style="padding-right: 5px">mdi-help-circle-outline</v-icon>
             <span v-if="!coopHelpToggle">Help with Cooperative Association Types</span>
@@ -51,9 +51,9 @@
             <u class="help-btn" @click="coopHelpToggle = !coopHelpToggle"><small>Hide Help</small></u>
           </section>
         </div>
-      </header>
+      </header> -->
 
-      <div :class="{ 'invalid-section': getShowErrors && !hasValidCooperativeType }">
+      <!-- <div :class="{ 'invalid-section': getShowErrors && !hasValidCooperativeType }">
         <v-card flat class="step-container">
           <CooperativeType
             :showErrors="getShowErrors"
@@ -61,10 +61,10 @@
           />
         </v-card>
       </div>
-    </section>
+    </section> -->
 
     <!-- Registered Office Addresses -->
-    <section class="mt-10" v-show="isEntityType">
+    <!-- <section class="mt-10" v-show="isEntityType">
       <header id="office-address-header">
         <h2>Registered <span v-if="!isTypeCoop">and Records</span> Office
           Addresses</h2>
@@ -81,10 +81,10 @@
           @valid="onAddressFormValidityChange($event)"
         />
       </div>
-    </section>
+    </section> -->
 
     <!-- Registered Office Contact Information -->
-    <section class="mt-10" v-show="isEntityType">
+    <!-- <section class="mt-10" v-show="isEntityType">
       <header id="registered-office-contact-header">
         <h2>Registered Office Contact Information</h2>
         <p>Enter the contact information for the business. The Corporate Registry will use this to communicate with the
@@ -103,10 +103,10 @@
           @valid="onBusinessContactFormValidityChange($event)"
         />
       </v-card>
-    </section>
+    </section> -->
 
     <!-- Folio / Reference Number -->
-    <section class="mt-10" v-if="isEntityType && isPremiumAccount">
+    <!-- <section class="mt-10" v-if="isEntityType && isPremiumAccount">
       <header id="folio-number-header">
         <h2>Folio / Reference Number (Optional)</h2>
         <p>Add an optional Folio or Reference Number about this business for your own tracking purposes.
@@ -121,7 +121,7 @@
           @update="setFolioNumber($event)"
         />
       </v-card>
-    </section>
+    </section> -->
   </div>
 </template>
 

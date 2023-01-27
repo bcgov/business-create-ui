@@ -914,8 +914,9 @@ export default class App extends Vue {
     const userInfo = await AuthServices.fetchUserInfo()
 
     // get auth org info for dissolution/restoration only
+    // do not need to set auth org/contact info for Restoration as it is likely to change
     // (this data is not available for an incorporation/registration)
-    if (this.isDissolutionFiling || this.isRestorationFiling) {
+    if (this.isDissolutionFiling) {
       const { contacts, folioNumber } = await AuthServices.fetchAuthInfo(this.getBusinessId)
       if (contacts?.length > 0) {
         this.setBusinessContact(contacts[0])

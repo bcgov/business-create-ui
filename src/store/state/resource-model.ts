@@ -1,4 +1,4 @@
-import { DissolutionResourceIF, IncorporationResourceIF } from '@/interfaces'
+import { DissolutionResourceIF, IncorporationResourceIF, RestorationResourceIF } from '@/interfaces'
 
 const incorporationResourceModel: IncorporationResourceIF = {
   entityType: null,
@@ -69,8 +69,25 @@ const dissolutionResourceModel: DissolutionResourceIF = {
   custodialRecords: null
 }
 
+const restorationResourceModel: RestorationResourceIF = {
+  entityType: null,
+  displayName: '',
+  steps: [],
+  filingData: null,
+  reviewAndConfirm: {
+    completingPartyStatement: {
+      certifyStatementHeader: null,
+      certifyStatements: [],
+      certifyClause: null,
+      entityDisplay: null
+    }
+  },
+  peopleAndRoles: undefined
+}
+
 export const resourceModel: any = {
   ...incorporationResourceModel,
   ...dissolutionResourceModel,
-  ...registrationResourceModel
+  ...registrationResourceModel,
+  ...restorationResourceModel
 }
