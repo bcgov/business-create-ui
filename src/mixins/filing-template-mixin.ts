@@ -97,6 +97,7 @@ export default class FilingTemplateMixin extends DateMixin {
   @Action setDissolutionDate!: ActionBindingIF
   @Action setRestorationType!: ActionBindingIF
   @Action setRestorationExpiry!: ActionBindingIF
+  @Action setRestorationRelationships!: ActionBindingIF
 
   /**
    * Builds an incorporation filing from store data. Used when saving a filing.
@@ -407,7 +408,8 @@ export default class FilingTemplateMixin extends DateMixin {
           ...this.getBusinessContact.extension
             ? { extension: +this.getBusinessContact.extension }
             : {}
-        }
+        },
+        relationships: this.getRestoration.relationships
       }
     }
 
@@ -530,6 +532,7 @@ export default class FilingTemplateMixin extends DateMixin {
     // restore Restoration data
     this.setRestorationType(draftFiling.restoration.type)
     this.setRestorationExpiry(draftFiling.restoration.expiry || null)
+    this.setRestorationRelationships(draftFiling.restoration.relationships || null)
 
     // NB: no need to restore Name Request data
     // it will be reloaded from NR endpoint in App.vue

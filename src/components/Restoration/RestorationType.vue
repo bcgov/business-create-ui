@@ -27,7 +27,6 @@
         </v-radio-group>
       </v-col>
     </v-row>
-    <RestorationTypeSummary/>
   </v-card>
 </template>
 

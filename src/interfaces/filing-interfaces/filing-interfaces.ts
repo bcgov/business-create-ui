@@ -186,5 +186,6 @@ export interface RestorationFilingIF {
     parties: PartyIF[]
     offices: RegisteredRecordsAddressesIF | object
     contactPoint: ContactPointIF
+    relationships?: RelationshipTypes[]
   }
 }

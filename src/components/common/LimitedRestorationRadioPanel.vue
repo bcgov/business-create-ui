@@ -4,7 +4,7 @@
     <v-radio label="18 months" value=18 />
     <v-radio label="12 months" value=12 />
     <v-radio label="6 months" value=6 />
-    <v-row>
+    <v-row class="custom-month">
       <v-radio label="Month(s): " value="customMonths">
       </v-radio>
       <v-col sm="2">
@@ -84,5 +84,9 @@ export default class LimitedRestorationRadioPanel extends Vue {
   padding-top: 0;
   margin-top: 0;
   margin-left: 2rem;
+}
+
+.custom-month{
+  margin-bottom: -3rem;
 }
 </style>

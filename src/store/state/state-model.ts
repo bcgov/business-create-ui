@@ -206,7 +206,8 @@ export const stateModel: StateModelIF = {
     businessInfoValid: false,
     businessNameValid: false,
     type: null,
-    expiry: null
+    expiry: null,
+    relationships: null
     // defineBusinessValid: false,
     // startDate: '',
     // businessAddress: null,

@@ -3,7 +3,9 @@
     <v-tooltip content-class="top-tooltip" transition="fade-transition" top>
       <template v-slot:activator="{ on, attrs }">
         <div class="relationship_title" v-bind="attrs" v-on="on">
-          <span class="dotted-underline">{{ getPeopleAndRolesResource.rolesTitle || 'Relationship' }}</span>
+          <span class="dotted-underline">
+            Please select applicant's relationship to the company at the time the company was dissolved:
+          </span>
         </div>
       </template>
       Full restoration application must be related to the dissolved business.
@@ -13,30 +15,30 @@
         <v-row no-gutters class="align-center mt-5">
 
           <v-col cols="4">
-            <v-checkbox id="heir-legal-rep-checkbox" class="mt-0" v-model="selectedRoles"
-              :value="RoleTypes.HEIR_LEGAL_REP" :label="RoleTypes.HEIR_LEGAL_REP"
-              :rules="roleRules" />
+            <v-checkbox id="heir-legal-rep-checkbox" class="mt-0" v-model="selectedRelationships"
+              :value="RelationshipTypes.HEIR_LEGAL_REP" :label="RelationshipTypes.HEIR_LEGAL_REP"
+              :rules="relationshipRules" />
           </v-col>
 
           <v-col cols="4">
-            <v-checkbox id="officer-checkbox" class="mt-0" v-model="selectedRoles" :value="RoleTypes.OFFICER"
-              :label="RoleTypes.OFFICER" :rules="roleRules" />
+            <v-checkbox id="officer-checkbox" class="mt-0" v-model="selectedRelationships" :value="RelationshipTypes.OFFICER"
+              :label="RelationshipTypes.OFFICER" :rules="relationshipRules" />
           </v-col>
 
           <v-col cols="4">
-            <v-checkbox id="director-checkbox" class="mt-0" v-model="selectedRoles" :value="RoleTypes.DIRECTOR"
-              :label="RoleTypes.DIRECTOR" :rules="roleRules" />
+            <v-checkbox id="director-checkbox" class="mt-0" v-model="selectedRelationships" :value="RelationshipTypes.DIRECTOR"
+              :label="RelationshipTypes.DIRECTOR" :rules="relationshipRules" />
           </v-col>
 
           <v-col cols="4">
-            <v-checkbox id="shareholder-checkbox" class="mt-0" v-model="selectedRoles" :value="RoleTypes.SHAREHOLDER"
-              :label="RoleTypes.SHAREHOLDER" :rules="roleRules" />
+            <v-checkbox id="shareholder-checkbox" class="mt-0" v-model="selectedRelationships" :value="RelationshipTypes.SHAREHOLDER"
+              :label="RelationshipTypes.SHAREHOLDER" :rules="relationshipRules" />
           </v-col>
 
           <v-col cols="4">
-            <v-checkbox id="court-ordered-party-checkbox" class="mt-0" v-model="selectedRoles"
-              :value="RoleTypes.COURT_ORDERED_PARTY" :label="RoleTypes.COURT_ORDERED_PARTY"
-              :rules="roleRules" />
+            <v-checkbox id="court-ordered-party-checkbox" class="mt-0" v-model="selectedRelationships"
+              :value="RelationshipTypes.COURT_ORDERED_PARTY" :label="RelationshipTypes.COURT_ORDERED_PARTY"
+              :rules="relationshipRules" />
           </v-col>
         </v-row>
       </v-card>
@@ -50,6 +52,8 @@ import { Component, Watch, Emit, Prop } from 'vue-property-decorator'
 import { AddEditOrgPersonMixin } from '@/mixins'
 import { EffectiveDateTimeIF, FormIF } from '@/interfaces'
 import { VuetifyRuleFunction } from '@/types'
+import { Getter, Action } from 'vuex-class'
+import { RelationshipTypes } from '@/enums/relationshipTypes'
 
 @Component({
   mixins: [
@@ -58,9 +62,28 @@ import { VuetifyRuleFunction } from '@/types'
 })
 
 export default class RelationshipsPanel extends Vue {
+  @Action setRestorationRelationships!: ActionBindingIF
+
+  // Local properties
+  protected selectedRelationships = [] as Array<RelationshipTypes>
+
+  // Relationship Types Enum for the template
+  readonly RelationshipTypes = RelationshipTypes
+
   /** Called before the component is mounted */
   beforeMount (): void {
-    this.selectedRoles.push(this.RoleTypes.HEIR_LEGAL_REP)
+    this.selectedRelationships.push(RelationshipTypes.HEIR_LEGAL_REP)
+  }
+
+  /** The validation rules for the Relationships. */
+  get relationshipRules (): Array<VuetifyRuleFunction> {
+    return [() => this.selectedRelationships.length > 0 || 'A relationship is required']
+  }
+
+   /** Set state of Relationships Array when a radio is selected/deselected. */
+   @Watch('selectedRelationships')
+  private setRelationships (val) {
+    this.setRestorationRelationships(this.selectedRelationships)
   }
 }
 

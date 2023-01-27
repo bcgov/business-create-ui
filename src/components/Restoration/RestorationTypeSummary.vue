@@ -13,7 +13,7 @@
           </template>
           <template v-else>
             <label>Full Restoration</label><br/>
-            <span></span>
+            <span>Applicant's relationship: {{ this.getRestoration.relationships }}</span>
           </template>
         </v-col>
       </v-row>
