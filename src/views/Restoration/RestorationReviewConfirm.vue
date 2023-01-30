@@ -12,7 +12,7 @@
 
       <v-card id="company-summary-vcard" flat class="mt-6">
         <CardHeader icon="mdi-domain" :label="getCompanyDisplayName" />
-        <SummaryDefineCompany />
+        <SummaryBusinessInformation />
       </v-card>
 
       <!-- People and Roles -->
@@ -86,7 +86,7 @@ import CardHeader from '@/components/common/CardHeader.vue'
 import Certify from '@/components/common/Certify.vue'
 import { DocumentDelivery } from '@bcrs-shared-components/document-delivery'
 import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
-import SummaryDefineCompany from '@/components/Incorporation/SummaryDefineCompany.vue'
+import SummaryBusinessInformation from '@/components/Restoration/SummaryBusinessInformation.vue'
 import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 import StaffPayment from '@/components/common/StaffPayment.vue'
 
@@ -97,7 +97,7 @@ import StaffPayment from '@/components/common/StaffPayment.vue'
     DocumentDelivery,
     ListPeopleAndRoles,
     StaffPayment,
-    SummaryDefineCompany
+    SummaryBusinessInformation
   }
 })
 export default class RestorationReviewConfirm extends Vue {
