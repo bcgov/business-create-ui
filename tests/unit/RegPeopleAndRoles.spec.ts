@@ -24,9 +24,9 @@ const btnStartAddCompletingParty = '#btn-start-add-cp'
 const btnAddCompletingParty = '#btn-add-cp'
 const btnAddPerson = '#btn-add-person'
 const btnAddOrganization = '#btn-add-organization'
-const checkCompletingParty = '.cp-valid'
-const checkProprietor = '.proprietor-valid'
-const checkPartner = '.partner-valid'
+const completingPartyRule = '.completing-party-rule'
+const proprietorsRule = '.proprietors-rule'
+const partnersRule = '.partners-rule'
 
 function getPersonList (roles = null): any {
   const completingPartyRole = {
@@ -163,8 +163,8 @@ describe('Registration People And Roles component - SP', () => {
       { roles: [{ roleType: 'Proprietor' }] }
     ]
     const wrapper = wrapperFactory()
-    expect(wrapper.find(checkCompletingParty).exists()).toBeTruthy()
-    expect(wrapper.find(checkProprietor).exists()).toBeTruthy()
+    expect(wrapper.find(completingPartyRule).exists()).toBeTruthy()
+    expect(wrapper.find(proprietorsRule).exists()).toBeTruthy()
     wrapper.destroy()
   })
 
@@ -304,8 +304,8 @@ describe('Registration People And Roles component - GP', () => {
       { roles: [{ roleType: 'Partner' }] }
     ]
     const wrapper = wrapperFactory()
-    expect(wrapper.find(checkCompletingParty).exists()).toBeTruthy()
-    expect(wrapper.find(checkPartner).exists()).toBeTruthy()
+    expect(wrapper.find(completingPartyRule).exists()).toBeTruthy()
+    expect(wrapper.find(partnersRule).exists()).toBeTruthy()
     wrapper.destroy()
   })
 

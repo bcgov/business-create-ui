@@ -112,9 +112,18 @@ export default class PeopleRolesMixin extends Vue {
     return this.orgPersonList.filter(person => this.isPartner(person))
   }
 
-  /** The list of applicants. */
-  get applicants (): OrgPersonIF[] {
-    return this.orgPersonList.filter(person => this.isApplicant(person))
+  /** The list of applicant-persons. */
+  get applicantPersons (): OrgPersonIF[] {
+    return this.orgPersonList.filter(person =>
+      this.isApplicant(person) && this.isPerson(person)
+    )
+  }
+
+  /** The list of applicant-orgs. */
+  get applicantOrgs (): OrgPersonIF[] {
+    return this.orgPersonList.filter(person =>
+      this.isApplicant(person) && this.isOrganization(person)
+    )
   }
 
   /** The list of people without roles. */
@@ -171,14 +180,14 @@ export default class PeopleRolesMixin extends Vue {
   get validApplicantPerson (): boolean {
     const rule = this.getPeopleAndRolesResource.rules.find(r => r.id === RuleIds.NUM_APPLICANT_PERSON)
     if (!rule) return true
-    return rule.test(this.applicants.length)
+    return rule.test(this.applicantPersons.length)
   }
 
   /** Whether the Applicant Org rule is valid. Always true if rule doesn't exist. */
   get validApplicantOrg (): boolean {
     const rule = this.getPeopleAndRolesResource.rules.find(r => r.id === RuleIds.NUM_APPLICANT_ORG)
     if (!rule) return true
-    return rule.test(this.applicants.length)
+    return rule.test(this.applicantOrgs.length)
   }
 
   /** Whether the Number of Proprietors rule is valid. Always true if rule doesn't exist. */
@@ -210,6 +219,16 @@ export default class PeopleRolesMixin extends Vue {
     return (orgPerson?.officer.partyType === PartyTypes.ORGANIZATION)
   }
 
+  /** Returns true if specified org/person is an applicant. */
+  public isApplicant (orgPerson: OrgPersonIF): boolean {
+    return orgPerson?.roles.some(role => role.roleType === RoleTypes.APPLICANT)
+  }
+
+  /** Returns true if specified org/person is a completing party. */
+  public isCompletingParty (orgPerson: OrgPersonIF): boolean {
+    return orgPerson?.roles.some(role => role.roleType === RoleTypes.COMPLETING_PARTY)
+  }
+
   /** Returns true if specified org/person is a director. */
   public isDirector (orgPerson: OrgPersonIF): boolean {
     return orgPerson?.roles.some(role => role.roleType === RoleTypes.DIRECTOR)
@@ -220,24 +239,14 @@ export default class PeopleRolesMixin extends Vue {
     return orgPerson?.roles.some(role => role.roleType === RoleTypes.INCORPORATOR)
   }
 
-  /** Returns true if specified org/person is a completing party. */
-  public isCompletingParty (orgPerson: OrgPersonIF): boolean {
-    return orgPerson?.roles.some(role => role.roleType === RoleTypes.COMPLETING_PARTY)
-  }
-
-  /** Returns true if specified org/person is a proprietor. */
-  public isProprietor (orgPerson: OrgPersonIF): boolean {
-    return orgPerson?.roles.some(role => role.roleType === RoleTypes.PROPRIETOR)
-  }
-
   /** Returns true if specified org/person is a partner. */
   public isPartner (orgPerson: OrgPersonIF): boolean {
     return orgPerson?.roles.some(role => role.roleType === RoleTypes.PARTNER)
   }
 
-  /** Returns true if specified org/person is an applicant. */
-  public isApplicant (orgPerson: OrgPersonIF): boolean {
-    return orgPerson?.roles.some(role => role.roleType === RoleTypes.APPLICANT)
+  /** Returns true if specified org/person is a proprietor. */
+  public isProprietor (orgPerson: OrgPersonIF): boolean {
+    return orgPerson?.roles.some(role => role.roleType === RoleTypes.PROPRIETOR)
   }
 
   /** Called by ListPeopleAndRoles component event. */
@@ -324,8 +333,7 @@ export default class PeopleRolesMixin extends Vue {
       this.validNumDirectors &&
       this.validDirectorCountry &&
       this.validDirectorProvince &&
-      this.validApplicantPerson &&
-      this.validApplicantOrg &&
+      (this.validApplicantPerson || this.validApplicantOrg) &&
       this.validNumProprietors &&
       this.validNumPartners &&
       !this.validPeopleWithNoRoles

@@ -96,7 +96,7 @@ export default class Stepper extends Vue {
       case RouteNames.REGISTRATION_PEOPLE_ROLES: return this.isAddPeopleAndRolesValid
       case RouteNames.REGISTRATION_REVIEW_CONFIRM: return this.isRegistrationValid
 
-      case RouteNames.RESTORATION_APPLICANT_INFORMATION: return this.getRestoration.applicantInfoValid
+      case RouteNames.RESTORATION_APPLICANT_INFORMATION: return this.isAddPeopleAndRolesValid
       case RouteNames.RESTORATION_BUSINESS_INFORMATION: return this.isDefineCompanyValid
       case RouteNames.RESTORATION_BUSINESS_NAME: return this.getRestoration.businessNameValid
       case RouteNames.RESTORATION_REVIEW_CONFIRM: return this.isRestorationValid

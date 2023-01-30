@@ -14,6 +14,10 @@
             id="router-link"
             :to="{ path: `/${RouteNames.REGISTRATION_PEOPLE_ROLES}` }"
           >Return to this step to finish it</router-link>
+          <router-link v-if="isFullRestorationFiling || isLimitedRestorationFiling"
+            id="router-link"
+            :to="{ path: `/${RouteNames.RESTORATION_APPLICANT_INFORMATION}` }"
+          >Return to this step to finish it</router-link>
         </span>
       </div>
 
@@ -60,7 +64,7 @@
             <MailingAddress :address="orgPerson.mailingAddress" />
           </v-col>
 
-          <v-col class="delivery-address-column">
+          <v-col class="delivery-address-column" v-if="showDeliveryAddressColumn">
             <template v-if="isDirector(orgPerson) || isProprietor(orgPerson) || isPartner(orgPerson)">
               <p v-if="isSame(orgPerson.mailingAddress, orgPerson.deliveryAddress)">
                 Same as Mailing Address
@@ -69,10 +73,14 @@
             </template>
           </v-col>
 
-          <v-col class="roles-column">
+          <v-col class="roles-column" v-if="showRolesColumn">
             <p v-for="(role, index) in orgPerson.roles" :key="index">
               {{ role.roleType }}
             </p>
+          </v-col>
+
+          <v-col class="email-column" v-if="showEmailColumn">
+            <p>{{ orgPerson.officer.email }}</p>
           </v-col>
 
           <v-col v-if="!isSummary" class="actions-column" :class="{'disabled':disabled}">
@@ -146,9 +154,14 @@ import { PartyTypes, RoleTypes, RouteNames } from '@/enums'
 export default class ListPeopleAndRoles extends Vue {
   @Prop({ default: false }) readonly isSummary!: boolean
   @Prop({ default: false }) readonly disabled!: boolean
+  @Prop({ default: true }) readonly showDeliveryAddressColumn!: boolean
+  @Prop({ default: true }) readonly showRolesColumn!: boolean
+  @Prop({ default: false }) readonly showEmailColumn!: boolean
 
   @Getter isIncorporationFiling!: boolean
   @Getter isRegistrationFiling!: boolean
+  @Getter isFullRestorationFiling!: boolean
+  @Getter isLimitedRestorationFiling!: boolean
   @Getter getAddPeopleAndRoleStep!: PeopleAndRoleIF
   @Getter getShowErrors!: boolean
 
@@ -156,8 +169,15 @@ export default class ListPeopleAndRoles extends Vue {
   readonly RouteNames = RouteNames
 
   // Local properties
-  readonly tableHeaders: Array<string> = ['Name', 'Mailing Address', 'Delivery Address', 'Roles']
   protected activeIndex: number // is NaN for new org/person
+
+  get tableHeaders (): Array<string> {
+    const headers = ['Name', 'Mailing Address']
+    if (this.showDeliveryAddressColumn) headers.push('Delivery Address')
+    if (this.showRolesColumn) headers.push('Roles')
+    if (this.showEmailColumn) headers.push('Email')
+    return headers
+  }
 
   /** The person list. */
   get personList (): Array<OrgPersonIF> {

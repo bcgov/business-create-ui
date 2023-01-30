@@ -138,7 +138,8 @@
             </v-col>
 
             <v-col cols="12" lg="3">
-              <aside>
+              <!-- Render fee summary only after data is loaded. -->
+              <aside v-if="haveData">
                 <affix relative-element-selector=".col-lg-9" :offset="{ top: 100, bottom: -100 }">
                   <SbcFeeSummary
                     :filingData="feeFilingData"
@@ -545,14 +546,14 @@ export default class App extends Vue {
 
   /** Called to update "do not show again" state. */
   protected doNotShowSurvey (doNotShow: boolean): void {
-    if (doNotShow) {
-      // safety check
-      if (this.iaSurveyId > 0) {
+    // safety check
+    if (this.iaSurveyId > 0) {
+      if (doNotShow) {
         // save id of survey to hide
         localStorage.setItem('HIDE_SURVEY', this.iaSurveyId)
+      } else {
+        localStorage.removeItem('HIDE_SURVEY')
       }
-    } else {
-      localStorage.removeItem('HIDE_SURVEY')
     }
   }
 
@@ -592,12 +593,15 @@ export default class App extends Vue {
     // reset errors in case this method is invoked more than once (ie, retry)
     this.resetFlags()
 
-    // check that current route matches a supported filing type
-    const supportedFilings = await GetFeatureFlag('supported-filings')
-    if (!supportedFilings?.includes(this.$route.meta.filingType)) {
-      window.alert('This filing type is not available at the moment. Please check again later.')
-      this.goToDashboard(true)
-      return
+    // don't check FF during Jest tests
+    if (!this.isJestRunning) {
+      // check that current route matches a supported filing type
+      const supportedFilings = await GetFeatureFlag('supported-filings')
+      if (!supportedFilings?.includes(this.$route.meta.filingType)) {
+        window.alert('This filing type is not available at the moment. Please check again later.')
+        this.goToDashboard(true)
+        return
+      }
     }
 
     try {
@@ -637,6 +641,10 @@ export default class App extends Vue {
         this.fetchErrorDialog = !this.isErrorDialog
         throw error // go to catch()
       }
+
+      // FUTURE:
+      // by now, we know what type of filing this is
+      // add staff check for certain filings (ie, restorations)
 
       // get user info
       const userInfo = await this.loadUserInfo().catch(error => {

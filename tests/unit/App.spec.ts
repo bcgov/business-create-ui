@@ -895,7 +895,7 @@ describe('Dissolution - Define Dissolution page for a BEN', () => {
 })
 
 // *** TODO: implement more tests!
-describe('Restoration - Restore Business Name for a BEN', () => {
+describe('Restoration - Restore Business Name page for a BEN', () => {
   let wrapper: any
   const { assign } = window.location
 
@@ -907,24 +907,6 @@ describe('Restoration - Restore Business Name for a BEN', () => {
     store.state.stateModel.tempId = ''
     store.state.stateModel.business.businessId = ''
     store.state.stateModel.staffPaymentStep.staffPayment.isPriority = false
-
-    const feesPromise = new Promise(resolve => resolve({
-      data:
-      {
-        filingFees: 123.0,
-        filingType: 'Restoration',
-        filingTypeCode: 'RESTORATION_BEN',
-        futureEffectiveFees: 0,
-        priorityFees: 0,
-        processingFees: 0,
-        serviceFees: 2.0,
-        tax: {
-          gst: 0,
-          pst: 0
-        },
-        total: 125.0
-      }
-    }))
 
     const get = sinon.stub(axios, 'get')
 
@@ -971,8 +953,13 @@ describe('Restoration - Restore Business Name for a BEN', () => {
       })))
 
     // GET filing fees
-    get.withArgs('https://pay.api.url/fees/BEN/RESTORATION_BEN?futureEffective=true')
-      .returns(feesPromise)
+    get.withArgs('https://pay.api.url/fees/BEN/RESTF?futureEffective=true')
+      .returns(new Promise(resolve => resolve({
+        data:
+        {
+          filingFees: {}
+        }
+      })))
 
     // GET auth info
     get.withArgs('https://auth.api.url/entities/BC0870803')
@@ -1022,7 +1009,8 @@ describe('Restoration - Restore Business Name for a BEN', () => {
             taxId: '123456789',
             identifier: 'BC0870803',
             foundingDate: '2021-10-07T20:37:41+00:00',
-            legalType: 'BEN'
+            legalType: 'BEN',
+            state: 'HISTORICAL'
           }
         }
       })))
@@ -1044,7 +1032,7 @@ describe('Restoration - Restore Business Name for a BEN', () => {
                   foundingDate: '2021-10-07T20:37:41+00:00'
                 },
                 restoration: {
-                  // *** TODO: add necessary properties here
+                  type: 'fullRestoration'
                 },
                 header: {
                   affectedFilings: [],

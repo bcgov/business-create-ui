@@ -1,8 +1,9 @@
 import { BusinessAddressIF, CourtOrderIF, IncorporationAddressIF, NaicsIF, NameTranslationIF,
-  OfficeAddressIF, PartyIF, ShareClassIF, SpecialResolutionIF } from '@/interfaces'
+  OfficeAddressIF, PartyIF, RegistrationNameRequestIF, ShareClassIF, SpecialResolutionIF }
+  from '@/interfaces'
 import { BusinessTypes, CorpTypeCd, DissolutionStatementTypes, DissolutionTypes, FilingTypes,
   RestorationTypes } from '@/enums'
-import { RegistrationNameRequestIF } from '../store-interfaces/state-interfaces/registration-state-interface'
+import { ContactPointIF } from '@bcrs-shared-components/interfaces'
 
 /** Interface for incorporation filing data saved to the Legal API. */
 export interface IncorporationFilingIF {
@@ -28,11 +29,7 @@ export interface IncorporationFilingIF {
     }
     nameTranslations: NameTranslationIF[]
     offices: IncorporationAddressIF | object
-    contactPoint: {
-      email: string
-      phone: string
-      extension?: number
-    }
+    contactPoint: ContactPointIF
     parties: PartyIF[]
 
     // BEN / CC / BC / ULC only:
@@ -93,11 +90,7 @@ export interface RegistrationFilingIF {
       businessOffice: BusinessAddressIF
     }
     businessType: BusinessTypes
-    contactPoint: {
-      email: string
-      extension?: number
-      phone: string
-    }
+    contactPoint: ContactPointIF
     nameRequest: RegistrationNameRequestIF
     parties: PartyIF[]
     startDate: string
@@ -182,13 +175,15 @@ export interface RestorationFilingIF {
     legalName: string
     foundingDate: string
   }
-  // *** TODO: update according to schema
   restoration: {
     date: string // today, as YYYY-MM-DD
     type: RestorationTypes
+    relationships?: any // *** TODO: udpate type
     expiry?: string // YYYY-MM-DD
-    nameTranslations: NameTranslationIF[]
-    nameRequest: RegistrationNameRequestIF
+    approvalType?: any // *** TODO: udpate type
+    courtOrder?: CourtOrderIF
+    nameTranslations?: NameTranslationIF[]
+    nameRequest?: RegistrationNameRequestIF
     parties: PartyIF[]
     offices: IncorporationAddressIF | object
     contactPoint: {
