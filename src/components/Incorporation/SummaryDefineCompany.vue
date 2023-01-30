@@ -5,8 +5,12 @@
         <span>
           <v-icon color="error">mdi-information-outline</v-icon>
           <span class="error-text mx-1">This step is unfinished.</span>
-          <router-link
+          <router-link v-if="isIncorporationFiling"
             :to="{ path: `/${RouteNames.INCORPORATION_DEFINE_COMPANY}` }"
+          >Return to this step to finish it</router-link>
+          <router-link v-if="isFullRestorationFiling || isLimitedRestorationFiling"
+            id="router-link"
+            :to="{ path: `/${RouteNames.RESTORATION_BUSINESS_INFORMATION}` }"
           >Return to this step to finish it</router-link>
         </span>
       </div>
@@ -127,6 +131,9 @@ export default class SummaryDefineCompany extends Vue {
   @Getter getBusinessContact!: ContactPointIF
   @Getter getFolioNumber!: string
   @Getter getEntityType!: CorpTypeCd
+  @Getter isIncorporationFiling!: boolean
+  @Getter isFullRestorationFiling!: boolean
+  @Getter isLimitedRestorationFiling!: boolean
 
   /** The entity description. */
   get entityDescription (): string {

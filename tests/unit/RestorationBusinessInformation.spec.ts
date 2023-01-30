@@ -27,15 +27,6 @@ for (const test of restorationBusinessInfo) {
   describe(`Restoration business information for a ${test.entityType}`, () => {
     let wrapper: any
 
-    it('renders components correctly', () => {
-      wrapper = shallowWrapperFactory(RestorationBusinessInformation, null, { entityType: test.entityType })
-
-      expect(wrapper.find('h2').text()).toBe('Registered and Records Office Addresses')
-
-      expect(wrapper.findComponent(OfficeAddresses).exists()).toBe(true)
-      expect(wrapper.findComponent(BusinessContactInfo).exists()).toBe(true)
-    })
-
     it('renders the component properly', () => {
       const wrapper = shallowWrapperFactory(
         RestorationBusinessInformation,
@@ -47,6 +38,13 @@ for (const test of restorationBusinessInfo) {
 
       // verify page is rendered
       expect(wrapper.find('#restoration-business-information').exists()).toBe(true)
+
+      // verify header
+      expect(wrapper.find('h2').text()).toBe('Registered and Records Office Addresses')
+
+      // verify components are rendered
+      expect(wrapper.findComponent(OfficeAddresses).exists()).toBe(true)
+      expect(wrapper.findComponent(BusinessContactInfo).exists()).toBe(true)
     })
   })
 }
