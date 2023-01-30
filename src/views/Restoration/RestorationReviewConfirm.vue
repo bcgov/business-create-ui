@@ -22,7 +22,7 @@
       </v-card>
 
       <!-- Business Information -->
-      <v-card id="company-summary-vcard" flat class="mt-6">
+      <v-card id="business-info-summary-vcard" flat class="mt-6">
         <CardHeader icon="mdi-domain" label="Business Information" />
         <SummaryBusinessInformation />
       </v-card>
