@@ -311,7 +311,7 @@ export default class OfficeAddresses extends Vue {
           )
         }
       }
-      if (this.isBaseCompany) {
+      if (this.isBaseCompany && this.addresses.recordsOffice) {
         this.recMailingAddress = this.addresses.recordsOffice?.mailingAddress
         this.recDeliveryAddress = this.addresses.recordsOffice?.deliveryAddress
 

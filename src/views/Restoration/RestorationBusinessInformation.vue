@@ -2,7 +2,7 @@
   <div id="restoration-business-information">
 
     <!-- Registered Office Addresses -->
-    <section class="mt-10">
+    <section class="mt-10" v-show="isEntityType">
       <header id="office-address-header">
         <h2>Registered and Records Office Addresses</h2>
         <p>Enter the Registered Office and Records Office Mailing and Delivery Addresses. All addresses must be
@@ -21,7 +21,7 @@
     </section>
 
     <!-- Registered Office Contact Information -->
-    <section class="mt-10">
+    <section class="mt-10" v-show="isEntityType">
       <header id="registered-office-contact-header">
         <h2>Registered Office Contact Information</h2>
         <p>Enter the contact information for the business. The Corporate Registry will use this to communicate with the
@@ -71,9 +71,7 @@ import OfficeAddresses from '@/components/common/OfficeAddresses.vue'
 })
 export default class RestorationBusinessInformation extends Vue {
   @Getter isEntityType!: boolean
-  @Getter isPremiumAccount!: boolean
-  @Getter isTypeBcomp!: boolean
-  @Getter isTypeCoop!: boolean
+  @Getter isBaseCompany!: boolean
   @Getter getDefineCompanyStep!: DefineCompanyIF
   @Getter getShowErrors!: boolean
   @Getter getBusinessContact!: ContactPointIF
@@ -121,16 +119,25 @@ export default class RestorationBusinessInformation extends Vue {
       streetAddressAdditional: ''
     }
 
-    this.setOfficeAddresses({
-      registeredOffice: {
-        mailingAddress: defaultAddress,
-        deliveryAddress: defaultAddress
-      },
-      recordsOffice: {
-        mailingAddress: defaultAddress,
-        deliveryAddress: defaultAddress
-      }
-    })
+    if (this.isBaseCompany) {
+      this.setOfficeAddresses({
+        registeredOffice: {
+          mailingAddress: defaultAddress,
+          deliveryAddress: defaultAddress
+        },
+        recordsOffice: {
+          mailingAddress: defaultAddress,
+          deliveryAddress: defaultAddress
+        }
+      })
+    } else {
+      this.setOfficeAddresses({
+        registeredOffice: {
+          mailingAddress: defaultAddress,
+          deliveryAddress: defaultAddress
+        }
+      })
+    }
   }
 
   private onBusinessContactFormValidityChange (valid: boolean): void {
