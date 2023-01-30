@@ -4,7 +4,7 @@ import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
 
 const store = getVuexStore()
 
-describe('List People And Roles component', () => {
+describe('List People And Roles component - BEN IA', () => {
   let wrapper: any
 
   const mockPersonList = [
@@ -62,7 +62,8 @@ describe('List People And Roles component', () => {
     }
   ]
 
-  beforeEach(() => {
+  beforeAll(() => {
+    store.state.stateModel.entityType = 'BEN'
     store.state.stateModel.tombstone.filingType = 'incorporationApplication'
   })
 
@@ -71,23 +72,34 @@ describe('List People And Roles component', () => {
   })
 
   it('does not show the peoples / roles list if there is no data to display', () => {
-    wrapper = shallowWrapperFactory(ListPeopleAndRoles)
-    const displayListCount = wrapper.vm.$el.querySelectorAll('.people-roles-content').length
+    wrapper = shallowWrapperFactory(
+      ListPeopleAndRoles,
+      null,
+      { addPeopleAndRoleStep: { orgPeople: [] } }
+    )
 
-    expect(displayListCount).toEqual(0)
-    expect(wrapper.vm.$el.querySelector('.people-roles-content')).toBeNull()
+    expect(wrapper.findAll('.people-roles-content').length).toEqual(0)
+    expect(wrapper.find('.people-roles-header').exists()).toBe(false)
+    expect(wrapper.find('.people-roles-content').exists()).toBe(false)
   })
 
   it('displays the correct amount of peoples / roles list when data is present', () => {
-    wrapper = shallowWrapperFactory(ListPeopleAndRoles,
+    wrapper = shallowWrapperFactory(
+      ListPeopleAndRoles,
       null,
       { addPeopleAndRoleStep: { orgPeople: mockPersonList } }
     )
 
-    const displayListCount = wrapper.vm.$el.querySelectorAll('.people-roles-content').length
+    const header = wrapper.find('.people-roles-header')
+    expect(header.exists()).toBe(true)
+    expect(header.text()).toContain('Name')
+    expect(header.text()).toContain('Mailing Address')
+    expect(header.text()).toContain('Delivery Address')
+    expect(header.text()).toContain('Roles')
+    expect(header.text()).not.toContain('Email')
 
-    expect(displayListCount).toEqual(2)
-    expect(wrapper.vm.$el.querySelector('.people-roles-content')).not.toBeNull()
+    expect(wrapper.findAll('.people-roles-content').length).toEqual(2)
+    expect(wrapper.find('.people-roles-content').exists()).toBe(true)
   })
 
   it('displays the correct name data in the peoples / roles list', () => {
@@ -243,7 +255,7 @@ describe('List People And Roles component', () => {
   })
 })
 
-describe('List People And Roles component - SP/GP', () => {
+describe('List People And Roles component - SP registration', () => {
   let wrapper: any
 
   const mockPersonList = [
@@ -319,7 +331,8 @@ describe('List People And Roles component - SP/GP', () => {
     }
   ]
 
-  beforeEach(() => {
+  beforeAll(() => {
+    store.state.stateModel.entityType = 'SP'
     store.state.stateModel.tombstone.filingType = 'registration'
   })
 
@@ -367,5 +380,86 @@ describe('List People And Roles component - SP/GP', () => {
     // verify second party's roles
     expect(peoplesListItem2.querySelectorAll('.roles-column p')[0].textContent)
       .toContain('Completing Party')
+  })
+})
+
+describe('List People And Roles component - BEN restoration', () => {
+  let wrapper: any
+
+  const mockPersonList = [
+    {
+      officer: {
+        id: 0,
+        firstName: 'Cameron',
+        lastName: 'Bowler',
+        middleName: 'D',
+        organizationName: '',
+        partyType: 'person',
+        email: 'applicant@example.com'
+      },
+      roles: [
+        { roleType: 'Applicant', appointmentDate: '2020-03-30' }
+      ],
+      mailingAddress: {
+        streetAddress: '122-12210 Boul De Pierrefonds',
+        streetAddressAdditional: '',
+        addressCity: 'Pierrefonds',
+        addressRegion: 'QC',
+        postalCode: 'H9A 2X6',
+        addressCountry: 'CA'
+      }
+    }
+  ]
+
+  beforeAll(() => {
+    store.state.stateModel.entityType = 'BEN'
+    store.state.stateModel.tombstone.filingType = 'restoration'
+  })
+
+  afterEach(() => {
+    wrapper.destroy()
+  })
+
+  it('does not show the peoples / roles list if there is no data to display', () => {
+    wrapper = shallowWrapperFactory(
+      ListPeopleAndRoles,
+      {
+        showDeliveryAddressColumn: false,
+        showRolesColumn: false,
+        showEmailColumn: true
+      },
+      {
+        addPeopleAndRoleStep: { orgPeople: [] }
+      }
+    )
+
+    expect(wrapper.findAll('.people-roles-content').length).toEqual(0)
+    expect(wrapper.find('.people-roles-header').exists()).toBe(false)
+    expect(wrapper.find('.people-roles-content').exists()).toBe(false)
+  })
+
+  it('displays the correct amount of peoples / roles list when data is present', () => {
+    wrapper = shallowWrapperFactory(
+      ListPeopleAndRoles,
+      {
+        showDeliveryAddressColumn: false,
+        showRolesColumn: false,
+        showEmailColumn: true
+      },
+      {
+        addPeopleAndRoleStep: { orgPeople: mockPersonList }
+      }
+    )
+
+    const header = wrapper.find('.people-roles-header')
+    expect(header.exists()).toBe(true)
+    expect(header.text()).toContain('Name')
+    expect(header.text()).toContain('Mailing Address')
+    expect(header.text()).not.toContain('Delivery Address')
+    expect(header.text()).not.toContain('Roles')
+    expect(header.text()).toContain('Email')
+
+    expect(wrapper.findAll('.people-roles-content').length).toEqual(1)
+    expect(wrapper.find('.people-roles-content').exists()).toBe(true)
   })
 })

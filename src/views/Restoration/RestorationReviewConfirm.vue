@@ -10,15 +10,21 @@
           </p>
       </header>
 
-      <v-card id="company-summary-vcard" flat class="mt-6">
-        <CardHeader icon="mdi-domain" :label="getCompanyDisplayName" />
-        <SummaryDefineCompany />
+      <!-- Applicant Information -->
+      <v-card id="people-and-roles-vcard" flat class="mt-6">
+        <CardHeader icon="mdi-account-multiple-plus" label="Applicant Information" />
+        <ListPeopleAndRoles
+          :isSummary="true"
+          :showDeliveryAddressColumn="!isFullRestorationFiling && !isLimitedRestorationFiling"
+          :showRolesColumn="!isFullRestorationFiling && !isLimitedRestorationFiling"
+          :showEmailColumn="isFullRestorationFiling || isLimitedRestorationFiling"
+        />
       </v-card>
 
-      <!-- People and Roles -->
-      <v-card id="people-and-roles-vcard" flat class="mt-6">
-        <CardHeader icon="mdi-account-multiple-plus" label="People and Roles" />
-        <ListPeopleAndRoles :isSummary="true" />
+      <!-- Business Information -->
+      <v-card id="company-summary-vcard" flat class="mt-6">
+        <CardHeader icon="mdi-domain" label="Business Information" />
+        <SummaryDefineCompany />
       </v-card>
     </section>
 
@@ -27,16 +33,18 @@
       <header>
         <h2>Document Delivery</h2>
         <p class="mt-4">
-          Copies of the incorporation documents will be sent to the email addresses listed below.
+          Copies of the restoration documents will be sent to the email addresses listed below.
         </p>
       </header>
 
       <v-card flat class="mt-6">
         <DocumentDelivery
           class="py-8 px-6"
-          :contactValue="getBusinessContact.email"
-          :completingPartyEmail="getUserEmail"
-          contactLabel="Registered Office"
+          contactLabel="Business Office"
+          :contactValue="businessOfficeEmail"
+          additionalLabel="Applicant"
+          :additionalValue="applicantEmail"
+          :showCompletingParty="false"
         />
       </v-card>
     </section>
@@ -79,9 +87,9 @@
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
-import { ActionBindingIF, ContactPointIF, CertifyIF, EffectiveDateTimeIF, IncorporationAgreementIF,
-  ShareStructureIF, CourtOrderStepIF } from '@/interfaces'
-import { CorpTypeCd } from '@/enums'
+import { ActionBindingIF, CertifyIF, ContactPointIF, CourtOrderStepIF, EffectiveDateTimeIF,
+  IncorporationAgreementIF, PeopleAndRoleIF, ShareStructureIF } from '@/interfaces'
+import { CorpTypeCd, RoleTypes } from '@/enums'
 import CardHeader from '@/components/common/CardHeader.vue'
 import Certify from '@/components/common/Certify.vue'
 import { DocumentDelivery } from '@bcrs-shared-components/document-delivery'
@@ -106,14 +114,28 @@ export default class RestorationReviewConfirm extends Vue {
   @Getter getValidateSteps!: boolean
   @Getter isRoleStaff!: boolean
   @Getter getUserEmail!: string
-  @Getter getCompanyDisplayName!: string
   @Getter getEntityType!: CorpTypeCd
+  @Getter isFullRestorationFiling!: boolean
+  @Getter isLimitedRestorationFiling!: boolean
+  @Getter getAddPeopleAndRoleStep!: PeopleAndRoleIF
 
   @Action setCertifyState!: ActionBindingIF
 
   /** The entity description,  */
   get getEntityDescription (): string {
     return GetCorpFullDescription(this.getEntityType)
+  }
+
+  get businessOfficeEmail (): string {
+    return this.getBusinessContact.email
+  }
+
+  get applicantEmail (): string {
+    const orgPeople = this.getAddPeopleAndRoleStep.orgPeople
+    const applicants = orgPeople.filter(
+      orgPerson => orgPerson.roles.some(role => role.roleType === RoleTypes.APPLICANT)
+    )
+    return applicants[0]?.officer.email
   }
 
   /** Is true when the certify conditions are not met. */

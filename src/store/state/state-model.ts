@@ -194,8 +194,6 @@ export const stateModel: StateModelIF = {
     isAutoPopulatedBusinessNumber: false
   },
   restoration: {
-    // *** TODO: add/remove properties as needed
-    applicantInfoValid: false,
     businessInfoValid: false,
     businessNameValid: false,
     date: '',

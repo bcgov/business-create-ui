@@ -18,36 +18,41 @@
       <div class="subhead">Your application must include the following:</div>
       <ul>
         <template v-for="(rule, index) in getPeopleAndRolesResource.rules">
-          <li v-if="rule.id === RuleIds.NUM_COMPLETING_PARTY" :key="index">
-            <v-icon v-if="validNumCompletingParty" color="green darken-2" class="cp-valid">mdi-check</v-icon>
-            <v-icon v-else-if="getShowErrors" color="error" class="cp-invalid">mdi-close</v-icon>
-            <v-icon v-else>mdi-circle-small</v-icon>
-            <span class="rule-item-txt">{{rule.text}}</span>
-          </li>
-          <li v-if="rule.id === RuleIds.NUM_PROPRIETORS" :key="index">
-            <v-icon v-if="validNumProprietors" color="green darken-2" class="proprietor-valid">mdi-check</v-icon>
-            <v-icon v-else-if="getShowErrors" color="error" class="proprietor-invalid">mdi-close</v-icon>
-            <v-icon v-else>mdi-circle-small</v-icon>
-            <span class="rule-item-txt">{{rule.text}}</span>
-          </li>
-          <li v-if="rule.id === RuleIds.NUM_PARTNERS" :key="index">
-            <v-icon v-if="validNumPartners" color="green darken-2" class="partner-valid">mdi-check</v-icon>
-            <v-icon v-else-if="getShowErrors" color="error" class="partner-invalid">mdi-close</v-icon>
-            <v-icon v-else>mdi-circle-small</v-icon>
-            <span class="rule-item-txt">{{rule.text}}</span>
-          </li>
-          <li v-if="rule.id === RuleIds.NUM_APPLICANT_PERSON" :key="index">
-            <v-icon v-if="validApplicantPerson" color="green darken-2" class="dir-valid">mdi-check</v-icon>
-            <v-icon v-else-if="getShowErrors" color="error" class="dir-invalid">mdi-close</v-icon>
-            <v-icon v-else>mdi-circle-small</v-icon>
-            <span class="rule-item-txt">{{rule.text}}</span>
-          </li>
-          <li v-if="rule.id === RuleIds.NUM_APPLICANT_ORG" :key="index">
-            <v-icon v-if="validApplicantOrg" color="green darken-2" class="dir-valid">mdi-check</v-icon>
-            <v-icon v-else-if="getShowErrors" color="error" class="dir-invalid">mdi-close</v-icon>
-            <v-icon v-else>mdi-circle-small</v-icon>
-            <span class="rule-item-txt">{{rule.text}}</span>
-          </li>
+          <RuleListItem class="completing-party-rule pt-2"
+            v-if="rule.id === RuleIds.NUM_COMPLETING_PARTY"
+            :key="index"
+            :valid="validNumCompletingParty"
+            :showErrors="getShowErrors"
+            :text="rule.text"
+          />
+          <RuleListItem class="proprietors-rule pt-2"
+            v-if="rule.id === RuleIds.NUM_PROPRIETORS"
+            :key="index"
+            :valid="validNumProprietors"
+            :showErrors="getShowErrors"
+            :text="rule.text"
+          />
+          <RuleListItem class="partners-rule pt-2"
+            v-if="rule.id === RuleIds.NUM_PARTNERS"
+            :key="index"
+            :valid="validNumPartners"
+            :showErrors="getShowErrors"
+            :text="rule.text"
+          />
+          <RuleListItem class="applicant-person-rule pt-2"
+            v-if="rule.id === RuleIds.NUM_APPLICANT_PERSON"
+            :key="index"
+            :valid="validApplicantPerson"
+            :showErrors="getShowErrors && !validApplicantOrg"
+            :text="rule.text"
+          />
+          <RuleListItem class="applicant-org-rule pt-2"
+            v-if="rule.id === RuleIds.NUM_APPLICANT_ORG"
+            :key="index"
+            :valid="validApplicantOrg"
+            :showErrors="getShowErrors && !validApplicantPerson"
+            :text="rule.text"
+          />
         </template>
       </ul>
     </section>
@@ -151,8 +156,8 @@
           outlined
           color="primary"
           class="btn-outlined-primary mt-6"
-          :disabled="showOrgPersonForm"
-          @click="addOrgPerson(null, PartyTypes.PERSON)"
+          :disabled="showOrgPersonForm || validApplicantPerson || validApplicantOrg"
+          @click="addOrgPerson(RoleTypes.APPLICANT, PartyTypes.PERSON)"
         >
           <v-icon>mdi-account-plus</v-icon>
           <span>Add a Person</span>
@@ -163,8 +168,8 @@
           outlined
           color="primary"
           class="btn-outlined-primary mt-6"
-          :disabled="showOrgPersonForm"
-          @click="addOrgPerson(null, PartyTypes.ORGANIZATION)"
+          :disabled="showOrgPersonForm || validApplicantPerson || validApplicantOrg"
+          @click="addOrgPerson(RoleTypes.APPLICANT, PartyTypes.ORGANIZATION)"
         >
           <v-icon>mdi-domain-plus</v-icon>
           <span>Add a Business or a Corporation</span>
@@ -192,6 +197,9 @@
       <ListPeopleAndRoles
         :isSummary="false"
         :disabled="showOrgPersonForm"
+        :showDeliveryAddressColumn="!isFullRestorationFiling && !isLimitedRestorationFiling"
+        :showRolesColumn="!isFullRestorationFiling && !isLimitedRestorationFiling"
+        :showEmailColumn="isFullRestorationFiling || isLimitedRestorationFiling"
         @editPerson="onEditPerson($event)"
         @removePerson="onRemovePerson($event)"
       />
@@ -211,6 +219,7 @@ import { ConfirmDialog } from '@bcrs-shared-components/confirm-dialog'
 import HelpSection from '@/components/common/HelpSection.vue'
 import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
 import RegAddEditOrgPerson from '@/components/common/RegAddEditOrgPerson.vue'
+import RuleListItem from '@/components/common/RuleListItem.vue'
 
 /**
  * This is similar to the common PeopleAndRoles component but this
@@ -221,7 +230,8 @@ import RegAddEditOrgPerson from '@/components/common/RegAddEditOrgPerson.vue'
     ConfirmDialog,
     HelpSection,
     ListPeopleAndRoles,
-    RegAddEditOrgPerson
+    RegAddEditOrgPerson,
+    RuleListItem
   },
   mixins: [
     PeopleRolesMixin
@@ -273,8 +283,11 @@ export default class RegPeopleAndRoles extends Vue {
 
     // pre-populate Completing Party's name, email address and mailing address only if logged in user is not staff
     // (registries or sbc)
-    if (roleType === RoleTypes.COMPLETING_PARTY && partyType === PartyTypes.PERSON && !(this.isRoleStaff ||
-      this.isSbcStaff)) {
+    if (
+      (roleType === RoleTypes.COMPLETING_PARTY) &&
+      (partyType === PartyTypes.PERSON) &&
+      !(this.isRoleStaff || this.isSbcStaff)
+    ) {
       this.currentOrgPerson.officer.firstName = this.getUserFirstName || ''
       this.currentOrgPerson.officer.lastName = this.getUserLastName || ''
       this.currentOrgPerson.officer.email = this.getUserEmail
@@ -312,10 +325,6 @@ export default class RegPeopleAndRoles extends Vue {
   color: $gray9;
 }
 
-.v-icon.mdi-circle-small {
-  margin-top: -2px;
-}
-
 ul {
   padding-top: 0.5rem;
   list-style: none;
@@ -323,16 +332,8 @@ ul {
   padding-left: 1rem;
 }
 
-li {
-  padding-top: 0.5rem;
-}
-
 p {
   padding-top: 0.5rem;
-}
-
-.rule-item-txt {
-  margin-left: 0.5rem;
 }
 
 .v-btn:not(.v-btn--round).v-size--default {
