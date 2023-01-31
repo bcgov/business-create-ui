@@ -82,7 +82,16 @@ const restorationResourceModel: RestorationResourceIF = {
       entityDisplay: null
     }
   },
-  peopleAndRoles: undefined
+  peopleAndRoles: {
+    header: null,
+    blurb: null,
+    helpSection: null,
+    blurb2: null,
+    addIncorporator: null,
+    addOrganization: null,
+    addBusiness: null,
+    rules: []
+  }
 }
 
 export const resourceModel: any = {
