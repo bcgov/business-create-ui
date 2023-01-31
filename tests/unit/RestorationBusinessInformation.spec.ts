@@ -7,9 +7,6 @@ import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
 // Test Case Data
 const restorationBusinessInfo = [
   {
-    entityType: 'CP'
-  },
-  {
     entityType: 'BEN'
   },
   {
