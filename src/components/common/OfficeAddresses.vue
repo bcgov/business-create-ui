@@ -194,7 +194,7 @@ import { Getter } from 'vuex-class'
 import { isEmpty } from 'lodash'
 import { OfficeAddressSchema } from '@/schemas'
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
-import { AddressIF, DefineCompanyIF, IncorporationAddressIF } from '@/interfaces'
+import { AddressIF, DefineCompanyIF, RegisteredRecordsAddressesIF } from '@/interfaces'
 import { CorpTypeCd } from '@/enums'
 import { CommonMixin } from '@/mixins'
 
@@ -222,7 +222,7 @@ export default class OfficeAddresses extends Vue {
    * from other step.
    * This will be emitted back to the parent page when the addresses are updated.
    */
-  @Prop({ default: null }) readonly inputAddresses!: IncorporationAddressIF
+  @Prop({ default: null }) readonly inputAddresses!: RegisteredRecordsAddressesIF
 
   /** Whether to show the editable forms for the addresses (true) or just the static display addresses (false). */
   @Prop({ default: true }) readonly isEditing!: boolean
@@ -235,7 +235,7 @@ export default class OfficeAddresses extends Vue {
   @Getter getEntityType!: CorpTypeCd
 
   // Local properties
-  protected addresses: IncorporationAddressIF = this.inputAddresses
+  protected addresses: RegisteredRecordsAddressesIF = this.inputAddresses
   readonly defaultAddress: AddressIF = {
     addressCity: '',
     addressCountry: 'CA',

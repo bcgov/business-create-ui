@@ -53,7 +53,7 @@ import {
   AddressIF,
   ContactPointIF,
   DefineCompanyIF,
-  IncorporationAddressIF
+  RegisteredRecordsAddressesIF
 } from '@/interfaces'
 import { CommonMixin } from '@/mixins'
 import { CoopTypes, CorpTypeCd, RouteNames } from '@/enums'
@@ -87,8 +87,8 @@ export default class RestorationBusinessInformation extends Vue {
   // Enum for template
   readonly CorpTypeCd = CorpTypeCd
 
-  get addresses (): IncorporationAddressIF {
-    return this.getDefineCompanyStep.officeAddresses as IncorporationAddressIF
+  get addresses (): RegisteredRecordsAddressesIF {
+    return this.getDefineCompanyStep.officeAddresses as RegisteredRecordsAddressesIF
   }
 
   /** Called when component is created. */

@@ -1,4 +1,4 @@
-import { BusinessAddressIF, CourtOrderIF, IncorporationAddressIF, NaicsIF, NameTranslationIF,
+import { BusinessAddressIF, CourtOrderIF, RegisteredRecordsAddressesIF, NaicsIF, NameTranslationIF,
   OfficeAddressIF, PartyIF, RegistrationNameRequestIF, ShareClassIF, SpecialResolutionIF }
   from '@/interfaces'
 import { BusinessTypes, CorpTypeCd, DissolutionStatementTypes, DissolutionTypes, FilingTypes,
@@ -28,7 +28,7 @@ export interface IncorporationFilingIF {
       legalName?: string // only set when there is an NR
     }
     nameTranslations: NameTranslationIF[]
-    offices: IncorporationAddressIF | object
+    offices: RegisteredRecordsAddressesIF | object
     contactPoint: ContactPointIF
     parties: PartyIF[]
 
@@ -185,7 +185,7 @@ export interface RestorationFilingIF {
     nameTranslations?: NameTranslationIF[]
     nameRequest?: RegistrationNameRequestIF
     parties: PartyIF[]
-    offices: IncorporationAddressIF | object
+    offices: RegisteredRecordsAddressesIF | object
     contactPoint: {
       email: string
       phone: string
