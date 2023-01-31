@@ -39,10 +39,12 @@ for (const test of restorationBusinessInfo) {
       // verify page is rendered
       expect(wrapper.find('#restoration-business-information').exists()).toBe(true)
 
-      // verify header
-      expect(wrapper.find('h2').text()).toBe('Registered and Records Office Addresses')
+      // verify headers
+      expect(wrapper.findAll('h2').length).toBe(2)
+      expect(wrapper.findAll('h2').at(0).text()).toContain('Registered and Records Office Addresses')
+      expect(wrapper.findAll('h2').at(1).text()).toContain('Registered Office Contact Information')
 
-      // verify components are rendered
+      // verify components on page are rendered
       expect(wrapper.findComponent(OfficeAddresses).exists()).toBe(true)
       expect(wrapper.findComponent(BusinessContactInfo).exists()).toBe(true)
     })
