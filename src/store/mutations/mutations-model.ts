@@ -406,10 +406,6 @@ export const mutateWindowWidth = (state: StateIF, width: number) => {
   state.stateModel.windowWidth = width
 }
 
-export const mutateRestorationDate = (state: StateIF, date: string) => {
-  state.stateModel.restoration.date = date
-}
-
 export const mutateRestorationType = (state: StateIF, type: RestorationTypes) => {
   state.stateModel.restoration.type = type
 }

@@ -9,7 +9,6 @@ export interface RestorationNameRequestIF {
 export interface RestorationStateIF {
   businessInfoValid: boolean
   businessNameValid: boolean
-  date: string // YYYY-MM-DD
   type: RestorationTypes
   expiry?: string // YYYY-MM-DD
   // defineBusinessValid: boolean
