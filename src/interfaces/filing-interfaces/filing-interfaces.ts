@@ -176,7 +176,6 @@ export interface RestorationFilingIF {
     foundingDate: string
   }
   restoration: {
-    date: string // today, as YYYY-MM-DD
     type: RestorationTypes
     relationships?: any // *** TODO: udpate type
     expiry?: string // YYYY-MM-DD

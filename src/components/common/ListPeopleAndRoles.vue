@@ -175,7 +175,7 @@ export default class ListPeopleAndRoles extends Vue {
     const headers = ['Name', 'Mailing Address']
     if (this.showDeliveryAddressColumn) headers.push('Delivery Address')
     if (this.showRolesColumn) headers.push('Roles')
-    if (this.showEmailColumn) headers.push('Email')
+    if (this.showEmailColumn) headers.push('Email Address')
     return headers
   }
 

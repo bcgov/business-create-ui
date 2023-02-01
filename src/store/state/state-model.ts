@@ -196,7 +196,6 @@ export const stateModel: StateModelIF = {
   restoration: {
     businessInfoValid: false,
     businessNameValid: false,
-    date: '',
     type: null,
     expiry: null
     // defineBusinessValid: false,
