@@ -544,7 +544,9 @@ export default class FilingTemplateMixin extends DateMixin {
     this.setOrgPersonList(this.partiesToOrgPersons(draftFiling.restoration.parties || []))
 
     // restore Office addresses
-    this.setOfficeAddresses(draftFiling.restoration.offices)
+    if (draftFiling.restoration.offices) {
+      this.setOfficeAddresses(draftFiling.restoration.offices)
+    }
 
     // restore Contact Info
     this.setBusinessContact({

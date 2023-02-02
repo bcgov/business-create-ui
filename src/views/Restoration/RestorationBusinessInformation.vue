@@ -109,17 +109,13 @@ export default class RestorationBusinessInformation extends Vue {
   }
 
   private isEmptyRecordsAddress () : boolean {
-    const recordsAddress = this.addresses.recordsOffice
-    if (!recordsAddress.mailingAddress ||
-      !recordsAddress.deliveryAddress) {
+    if (!this.addresses.recordsOffice?.mailingAddress || !this.addresses.recordsOffice?.deliveryAddress) {
       return true
     }
   }
 
   private isEmptyRegisteredAddress () : boolean {
-    const registeredAddress = this.addresses.registeredOffice
-    if (!registeredAddress.mailingAddress ||
-      !registeredAddress.deliveryAddress) {
+    if (!this.addresses.registeredOffice?.mailingAddress || !this.addresses.registeredOffice?.deliveryAddress) {
       return true
     }
   }
