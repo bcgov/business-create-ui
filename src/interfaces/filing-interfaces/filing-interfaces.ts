@@ -186,10 +186,6 @@ export interface RestorationFilingIF {
     nameRequest?: RegistrationNameRequestIF
     parties: PartyIF[]
     offices: RegisteredRecordsAddressesIF | object
-    contactPoint: {
-      email: string
-      phone: string
-      extension?: number
-    }
+    contactPoint: ContactPointIF
   }
 }

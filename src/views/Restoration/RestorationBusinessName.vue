@@ -1,5 +1,18 @@
 <template>
   <div id="restoration-business-name">
+    <!-- Name -->
+    <section class="mt-10">
+      <header id="name-header">
+        <h2>Name</h2>
+      </header>
+
+      <v-card flat class="mt-5">
+        <NameRequestInfo
+          @hasNameTranslation="onNameTranslation($event)"
+        />
+      </v-card>
+    </section>
+
     <!-- Cooperative Association Type -->
     <section class="mt-10" v-show="isTypeCoop">
       <header id="association-type-header">

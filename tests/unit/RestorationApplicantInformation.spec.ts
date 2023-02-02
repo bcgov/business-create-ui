@@ -3,7 +3,7 @@ import { RestorationApplicantInformation } from '@/views'
 import { RestorationResources } from '@/resources/'
 
 describe('Restoration Review Confirm view', () => {
-  xit('renders the component properly', () => {
+  it('renders the component properly', () => {
     const wrapper = shallowWrapperFactory(
       RestorationApplicantInformation,
       null,

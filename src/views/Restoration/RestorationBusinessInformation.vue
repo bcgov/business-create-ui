@@ -96,8 +96,9 @@ export default class RestorationBusinessInformation extends Vue {
     // temporarily ignore data changes
     this.setIgnoreChanges(true)
 
-    // if no addresses were fetched, set default addresses
-    if (!this.addresses.registeredOffice && !this.addresses.recordsOffice) {
+    // if no addresses were fetched or are 'undefined', set default addresses
+
+    if (this.isEmptyRecordsAddress() || this.isEmptyRegisteredAddress()) {
       this.setDefaultAddresses()
     }
 
@@ -105,6 +106,22 @@ export default class RestorationBusinessInformation extends Vue {
     Vue.nextTick(() => {
       this.setIgnoreChanges(false)
     })
+  }
+
+  private isEmptyRecordsAddress () : boolean {
+    const recordsAddress = this.addresses.recordsOffice
+    if (!recordsAddress.mailingAddress ||
+      !recordsAddress.deliveryAddress) {
+      return true
+    }
+  }
+
+  private isEmptyRegisteredAddress () : boolean {
+    const registeredAddress = this.addresses.registeredOffice
+    if (!registeredAddress.mailingAddress ||
+      !registeredAddress.deliveryAddress) {
+      return true
+    }
   }
 
   /** Sets default addresses in filing. (Will get overwritten by a fetched draft filing if there is one.) */
