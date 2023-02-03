@@ -1,6 +1,6 @@
 import { AccountInformationIF, ActionIF, AddressIF, BusinessWarningIF, CertifyIF, CompletingPartyIF,
   ContactPointIF, CreateResolutionIF, CreateRulesIF, CreateMemorandumIF, DissolutionStatementIF,
-  FeesIF, IncorporationAddressIF, IncorporationAgreementIF, NaicsIF, NameRequestIF, NameTranslationIF,
+  FeesIF, RegisteredRecordsAddressesIF, IncorporationAgreementIF, NaicsIF, NameRequestIF, NameTranslationIF,
   OrgInformationIF, OrgPersonIF, PartyIF, ResourceIF, ShareClassIF, UploadAffidavitIF,
   ValidationDetailIF } from '@/interfaces'
 import { BusinessTypes, CoopTypes, CorpTypeCd, EntityState, RestorationTypes } from '@/enums'
@@ -121,7 +121,7 @@ export const setDefineCompanyStepValidity: ActionIF = ({ commit }, valid: boolea
   commit('mutateDefineCompanyStepValidity', valid)
 }
 
-export const setOfficeAddresses: ActionIF = ({ commit }, address: IncorporationAddressIF): void => {
+export const setOfficeAddresses: ActionIF = ({ commit }, address: RegisteredRecordsAddressesIF): void => {
   commit('mutateOfficeAddresses', address)
 }
 
@@ -285,7 +285,7 @@ export const setRegistrationStartDate: ActionIF = ({ commit }, val: string): voi
   commit('mutateRegistrationStartDate', val)
 }
 
-export const setRegistrationBusinessAddress: ActionIF = ({ commit }, val: IncorporationAddressIF): void => {
+export const setRegistrationBusinessAddress: ActionIF = ({ commit }, val: RegisteredRecordsAddressesIF): void => {
   commit('mutateRegistrationBusinessAddress', val)
 }
 

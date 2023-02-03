@@ -2,7 +2,7 @@ import { BusinessTypes, CoopTypes, CorpTypeCd, DissolutionTypes, EntityState, Fi
   RestorationTypes } from '@/enums'
 import { AccountInformationIF, AddressIF, BusinessAddressIF, BusinessWarningIF, CertifyIF,
   CompletingPartyIF, ContactPointIF, CreateMemorandumIF, CreateResolutionIF, CreateRulesIF,
-  DissolutionStatementIF, FeesIF, IncorporationAddressIF, IncorporationAgreementIF, NaicsIF,
+  DissolutionStatementIF, FeesIF, RegisteredRecordsAddressesIF, IncorporationAgreementIF, NaicsIF,
   NameRequestIF, NameTranslationIF, OfficeAddressIF, OrgInformationIF, OrgPersonIF, PartyIF,
   ResourceIF, ShareClassIF, StaffPaymentIF, StateIF, UploadAffidavitIF, ValidationDetailIF }
   from '@/interfaces'
@@ -124,7 +124,7 @@ export const mutateDefineCompanyStepValidity = (state: StateIF, valid: boolean) 
   state.stateModel.defineCompanyStep.valid = valid
 }
 
-export const mutateOfficeAddresses = (state: StateIF, addresses: IncorporationAddressIF) => {
+export const mutateOfficeAddresses = (state: StateIF, addresses: RegisteredRecordsAddressesIF) => {
   state.stateModel.defineCompanyStep.officeAddresses = addresses
   if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
 }

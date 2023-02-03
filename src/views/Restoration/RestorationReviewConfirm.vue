@@ -22,7 +22,7 @@
       </v-card>
 
       <!-- Business Information -->
-      <v-card id="company-summary-vcard" flat class="mt-6">
+      <v-card id="business-info-summary-vcard" flat class="mt-6">
         <CardHeader icon="mdi-domain" label="Business Information" />
         <SummaryDefineCompany />
       </v-card>
@@ -94,9 +94,9 @@ import CardHeader from '@/components/common/CardHeader.vue'
 import Certify from '@/components/common/Certify.vue'
 import { DocumentDelivery } from '@bcrs-shared-components/document-delivery'
 import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
-import SummaryDefineCompany from '@/components/Incorporation/SummaryDefineCompany.vue'
 import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 import StaffPayment from '@/components/common/StaffPayment.vue'
+import SummaryDefineCompany from '@/components/Incorporation/SummaryDefineCompany.vue'
 
 @Component({
   components: {

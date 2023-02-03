@@ -9,7 +9,7 @@ export interface OfficeAddressIF {
 }
 
 /** Interface to define an incorporation address. */
-export interface IncorporationAddressIF {
+export interface RegisteredRecordsAddressesIF {
   registeredOffice: OfficeAddressIF
   // Records Address is required for BCOMPs.
   // Records Address may be optional for other app types.

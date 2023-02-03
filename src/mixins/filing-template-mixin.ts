@@ -6,7 +6,7 @@ import { ActionBindingIF, BusinessIF, ContactPointIF, CertifyIF, CompletingParty
   DissolutionStatementIF, DocIF, DocumentDeliveryIF, EffectiveDateTimeIF, EmptyNaics,
   IncorporationAgreementIF, IncorporationFilingIF, NameTranslationIF, OrgPersonIF, PartyIF,
   PeopleAndRoleIF, RegistrationFilingIF, RegistrationStateIF, RestorationFilingIF, RestorationStateIF,
-  ShareStructureIF, SpecialResolutionIF, StaffPaymentStepIF, UploadAffidavitIF } from '@/interfaces'
+  ShareStructureIF, SpecialResolutionIF, StaffPaymentStepIF, UploadAffidavitIF, EmptyContactPoint } from '@/interfaces'
 import { CorpTypeCd, DissolutionTypes, EffectOfOrders, FilingTypes, PartyTypes, RoleTypes,
   StaffPaymentOptions } from '@/enums'
 
@@ -399,8 +399,15 @@ export default class FilingTemplateMixin extends DateMixin {
         },
         nameTranslations: this.getNameTranslations,
         parties: this.orgPersonsToParties(this.getAddPeopleAndRoleStep.orgPeople),
-        offices: undefined, // *** TODO: update
-        contactPoint: undefined // *** TODO: update
+        offices: this.getDefineCompanyStep.officeAddresses,
+        contactPoint: {
+          email: this.getBusinessContact.email,
+          phone: this.getBusinessContact.phone,
+          // don't save extension if it's empty
+          ...this.getBusinessContact.extension
+            ? { extension: +this.getBusinessContact.extension }
+            : {}
+        }
       }
     }
 
@@ -532,6 +539,19 @@ export default class FilingTemplateMixin extends DateMixin {
 
     // restore Persons and Organizations
     this.setOrgPersonList(this.partiesToOrgPersons(draftFiling.restoration.parties || []))
+
+    // restore Office addresses
+    if (draftFiling.restoration.offices) {
+      this.setOfficeAddresses(draftFiling.restoration.offices)
+    }
+
+    // restore Contact Info
+    if (draftFiling.restoration.contactPoint) {
+      this.setBusinessContact({
+        ...draftFiling.restoration.contactPoint,
+        confirmEmail: draftFiling.restoration.contactPoint?.email
+      })
+    }
 
     // restore Certify state
     this.setCertifyState({

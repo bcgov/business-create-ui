@@ -113,7 +113,16 @@ export const stateModel: StateModelIF = {
   defineCompanyStep: {
     valid: false,
     cooperativeType: null,
-    officeAddresses: {}
+    officeAddresses: {
+      registeredOffice: {
+        mailingAddress: { ...EmptyAddress },
+        deliveryAddress: { ...EmptyAddress }
+      },
+      recordsOffice: {
+        mailingAddress: { ...EmptyAddress },
+        deliveryAddress: { ...EmptyAddress }
+      }
+    }
   },
   addPeopleAndRoleStep: {
     valid: false,
