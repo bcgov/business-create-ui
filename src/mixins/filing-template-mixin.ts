@@ -6,7 +6,7 @@ import { ActionBindingIF, BusinessIF, ContactPointIF, CertifyIF, CompletingParty
   DissolutionStatementIF, DocIF, DocumentDeliveryIF, EffectiveDateTimeIF, EmptyNaics,
   IncorporationAgreementIF, IncorporationFilingIF, NameTranslationIF, OrgPersonIF, PartyIF,
   PeopleAndRoleIF, RegistrationFilingIF, RegistrationStateIF, RestorationFilingIF, RestorationStateIF,
-  ShareStructureIF, SpecialResolutionIF, StaffPaymentStepIF, UploadAffidavitIF } from '@/interfaces'
+  ShareStructureIF, SpecialResolutionIF, StaffPaymentStepIF, UploadAffidavitIF, EmptyContactPoint } from '@/interfaces'
 import { CorpTypeCd, DissolutionTypes, EffectOfOrders, FilingTypes, PartyTypes, RoleTypes,
   StaffPaymentOptions } from '@/enums'
 
@@ -988,16 +988,9 @@ export default class FilingTemplateMixin extends DateMixin {
   formatEmptyRestoration (filing: any): RestorationFilingIF {
     const toReturn = filing
     if (toReturn.restoration) {
-      // set offices
-      if (!toReturn.restoration?.offices) {
-        toReturn.restoration.offices = []
-      }
       // set contact point
       if (!toReturn.restoration?.contactPoint) {
-        toReturn.restoration.contactPoint = {
-          email: '',
-          phone: ''
-        }
+        toReturn.restoration.contactPoint = EmptyContactPoint
       }
     }
     return toReturn

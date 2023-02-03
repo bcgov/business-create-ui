@@ -98,7 +98,7 @@ export default class RestorationBusinessInformation extends Vue {
 
     // if no addresses were fetched or are 'undefined', set default addresses
 
-    if (this.isEmptyRecordsAddress() || this.isEmptyRegisteredAddress()) {
+    if (this.isEmptyRecordsAddress || this.isEmptyRegisteredAddress) {
       this.setDefaultAddresses()
     }
 
@@ -108,15 +108,19 @@ export default class RestorationBusinessInformation extends Vue {
     })
   }
 
-  private isEmptyRecordsAddress () : boolean {
+  get isEmptyRecordsAddress () : boolean {
     if (!this.addresses.recordsOffice?.mailingAddress || !this.addresses.recordsOffice?.deliveryAddress) {
       return true
+    } else {
+      return false
     }
   }
 
-  private isEmptyRegisteredAddress () : boolean {
+  get isEmptyRegisteredAddress () : boolean {
     if (!this.addresses.registeredOffice?.mailingAddress || !this.addresses.registeredOffice?.deliveryAddress) {
       return true
+    } else {
+      return false
     }
   }
 
