@@ -976,22 +976,4 @@ export default class FilingTemplateMixin extends DateMixin {
     }
     return toReturn
   }
-
-  /**
-   * Ensure consistent object structure for a Restoration, whether it contains a Name
-   * Request or not, and whether it is an initial draft or it has been previously saved.
-   * Object merging does not work very well otherwise due to nested properties.
-   * @param filing the filing fetched from legal-api
-   * @returns the filing in safe-empty state if applicable
-   */
-  formatEmptyRestoration (filing: any): RestorationFilingIF {
-    const toReturn = filing
-    if (toReturn.restoration) {
-      // set contact point
-      if (!toReturn.restoration?.contactPoint) {
-        toReturn.restoration.contactPoint = { ...EmptyContactPoint }
-      }
-    }
-    return toReturn
-  }
 }
