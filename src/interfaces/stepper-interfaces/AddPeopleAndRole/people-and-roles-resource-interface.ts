@@ -8,6 +8,7 @@ interface RuleIF {
 
 export interface PeopleAndRolesResourceIF {
   header: string
+  subheader?: string
   blurb: string | Array<string>
   helpSection: {
     header: string

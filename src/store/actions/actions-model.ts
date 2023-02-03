@@ -373,10 +373,6 @@ export const setWindowWidth: ActionIF = ({ commit }, width: number): void => {
   commit('mutateWindowWidth', width)
 }
 
-export const setRestorationDate: ActionIF = ({ commit }, date: string): void => {
-  commit('mutateRestorationDate', date)
-}
-
 export const setRestorationType: ActionIF = ({ commit }, type: RestorationTypes): void => {
   commit('mutateRestorationType', type)
 }

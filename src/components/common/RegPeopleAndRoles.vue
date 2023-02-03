@@ -15,7 +15,7 @@
 
     <!-- Checklist section -->
     <section class="mt-5">
-      <div class="subhead">Your application must include the following:</div>
+      <div class="subhead">{{ subheader }}</div>
       <ul>
         <template v-for="(rule, index) in getPeopleAndRolesResource.rules">
           <RuleListItem class="completing-party-rule pt-2"
@@ -243,6 +243,13 @@ export default class RegPeopleAndRoles extends Vue {
   //
   // NB: see mixin for common properties, methods, etc.
   //
+
+  get subheader (): string {
+    return (
+      this.getPeopleAndRolesResource.subheader ||
+      'Your application must include the following:'
+    )
+  }
 
   protected async addOrgPerson (roleType: RoleTypes, partyType: PartyTypes): Promise<void> {
     const isProprietor = (roleType === RoleTypes.PROPRIETOR)

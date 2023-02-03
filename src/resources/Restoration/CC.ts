@@ -20,6 +20,7 @@ export const RestorationResourceCc: RestorationResourceIF = {
   ],
   peopleAndRoles: {
     header: 'Add Applicant Information',
+    subheader: 'Your application must include one of the following:',
     blurb: null,
     helpSection: null,
     rules: [

@@ -95,7 +95,6 @@ export default class FilingTemplateMixin extends DateMixin {
   @Action setRegistrationBusinessType!: ActionBindingIF
   @Action setRegistrationBusinessTypeConfirm!: ActionBindingIF
   @Action setDissolutionDate!: ActionBindingIF
-  @Action setRestorationDate!: ActionBindingIF
   @Action setRestorationType!: ActionBindingIF
   @Action setRestorationExpiry!: ActionBindingIF
 
@@ -391,7 +390,6 @@ export default class FilingTemplateMixin extends DateMixin {
         foundingDate: this.getBusinessFoundingDate
       },
       restoration: {
-        date: this.getCurrentDate,
         type: this.getRestoration.type,
         expiry: this.getRestoration.expiry || undefined, // can't be null
         nameRequest: {
@@ -530,7 +528,6 @@ export default class FilingTemplateMixin extends DateMixin {
     this.setFoundingDate(draftFiling.business.foundingDate)
 
     // restore Restoration data
-    this.setRestorationDate(draftFiling.restoration.date)
     this.setRestorationType(draftFiling.restoration.type)
     this.setRestorationExpiry(draftFiling.restoration.expiry || null)
 

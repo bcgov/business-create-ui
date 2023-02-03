@@ -180,7 +180,7 @@ export default class BusinessAddresses extends Vue {
   /** Called when the "same as" checkbox value has changed. */
   protected onCheckboxChanged (): void {
     if (this.inheritMailingAddress) {
-      // clone mailing address into delivery address
+      // copy mailing address into delivery address
       this.deliveryAddress = { ...this.mailingAddress }
     } else {
       // reset delivery address
