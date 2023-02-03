@@ -97,7 +97,6 @@ export default class RestorationBusinessInformation extends Vue {
     this.setIgnoreChanges(true)
 
     // if no addresses were fetched or are 'undefined', set default addresses
-
     if (this.isEmptyRecordsAddress || this.isEmptyRegisteredAddress) {
       this.setDefaultAddresses()
     }
