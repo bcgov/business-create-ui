@@ -3,8 +3,7 @@ import { AccountInformationIF, ActionIF, AddressIF, BusinessWarningIF, CertifyIF
   FeesIF, RegisteredRecordsAddressesIF, IncorporationAgreementIF, NaicsIF, NameRequestIF, NameTranslationIF,
   OrgInformationIF, OrgPersonIF, PartyIF, ResourceIF, ShareClassIF, UploadAffidavitIF,
   ValidationDetailIF } from '@/interfaces'
-import { BusinessTypes, CoopTypes, CorpTypeCd, EntityState, RestorationTypes } from '@/enums'
-import { RelationshipTypes } from '@/enums/relationshipTypes'
+import { BusinessTypes, CoopTypes, CorpTypeCd, EntityState, RestorationTypes, RelationshipTypes } from '@/enums'
 
 export const setBusinessId: ActionIF = ({ commit }, businessId): void => {
   commit('mutateBusinessId', businessId)
@@ -384,4 +383,8 @@ export const setRestorationExpiry: ActionIF = ({ commit }, expiry: string): void
 
 export const setRestorationRelationships: ActionIF = ({ commit }, relationships: RelationshipTypes[]): void => {
   commit('mutateRestorationRelationships', relationships)
+}
+
+export const setRestorationTypeValid: ActionIF = ({ commit }, isRestorationTypeValid: boolean): void => {
+  commit('mutateRestorationIsValid', isRestorationTypeValid)
 }

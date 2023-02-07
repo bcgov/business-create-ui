@@ -2,7 +2,7 @@ import { BusinessAddressIF, CourtOrderIF, RegisteredRecordsAddressesIF, NaicsIF,
   OfficeAddressIF, PartyIF, RegistrationNameRequestIF, ShareClassIF, SpecialResolutionIF }
   from '@/interfaces'
 import { BusinessTypes, CorpTypeCd, DissolutionStatementTypes, DissolutionTypes, FilingTypes,
-  RestorationTypes } from '@/enums'
+  RestorationTypes, RelationshipTypes } from '@/enums'
 import { ContactPointIF } from '@bcrs-shared-components/interfaces'
 
 /** Interface for incorporation filing data saved to the Legal API. */

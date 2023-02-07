@@ -207,7 +207,7 @@ export const stateModel: StateModelIF = {
     businessNameValid: false,
     type: null,
     expiry: null,
-    relationships: null
+    relationships: []
     // defineBusinessValid: false,
     // startDate: '',
     // businessAddress: null,
@@ -215,5 +215,6 @@ export const stateModel: StateModelIF = {
   },
   completingParty: null,
   parties: null,
-  windowWidth: 0
+  windowWidth: 0,
+  isRestorationTypeValid: true
 }

@@ -15,7 +15,7 @@
         <p>Determine the restoration and approval type.</p>
       </header>
 
-      <div :class="{ 'invalid-section': getShowErrors && !addressFormValid }">
+      <div :class="{ 'invalid-section': getShowErrors && !isRestorationTypeValid }">
         <RestorationType/>
       </div>
     </section>
@@ -82,6 +82,7 @@ export default class RestorationBusinessName extends Vue {
   @Getter getShowErrors!: boolean
   @Getter getBusinessContact!: ContactPointIF
   @Getter getFolioNumber!: string
+  @Getter isRestorationTypeValid!: boolean
 
   @Action setBusinessContact!: ActionBindingIF
   @Action setCooperativeType!: ActionBindingIF

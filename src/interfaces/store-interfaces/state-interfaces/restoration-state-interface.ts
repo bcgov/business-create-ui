@@ -1,5 +1,4 @@
-import { CorpTypeCd, RestorationTypes } from '@/enums'
-import { RelationshipTypes } from '@/enums/relationshipTypes'
+import { CorpTypeCd, RestorationTypes, RelationshipTypes } from '@/enums'
 
 export interface RestorationNameRequestIF {
   legalName: string

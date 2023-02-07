@@ -532,7 +532,7 @@ export default class FilingTemplateMixin extends DateMixin {
     // restore Restoration data
     this.setRestorationType(draftFiling.restoration.type)
     this.setRestorationExpiry(draftFiling.restoration.expiry || null)
-    this.setRestorationRelationships(draftFiling.restoration.relationships || null)
+    this.setRestorationRelationships(draftFiling.restoration.relationships || [])
 
     // NB: no need to restore Name Request data
     // it will be reloaded from NR endpoint in App.vue

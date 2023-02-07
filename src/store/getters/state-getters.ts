@@ -608,6 +608,11 @@ export const getRestoration = (state: StateIF): RestorationStateIF => {
   return state.stateModel.restoration
 }
 
+/** The restoration object. */
+export const isRestorationTypeValid = (state: StateIF): boolean => {
+  return state.stateModel.isRestorationTypeValid
+}
+
 //
 // Dissolution getters
 //

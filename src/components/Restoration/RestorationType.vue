@@ -1,29 +1,44 @@
 <template>
-  <v-card flat id="restoration-type">
-
+  <v-card flat id="restoration-type" class="pa-6">
     <v-row>
+
       <v-col cols="12" sm="3" class="pr-4">
         <label>Restoration Type</label>
       </v-col>
 
       <v-col cols="12" sm="9">
-        <v-radio-group column class="radio-group" v-model="selectRestorationType">
+        <v-radio-group column class="pt-0 mt-0" v-model="selectRestorationType">
           <v-radio label="Full Restoration" value="isFull" />
-          <!-- Relationship To Company Checkboxes -->
 
+          <!-- Relationship To Company Checkboxes -->
           <v-expand-transition>
             <v-card flat v-if="isFull">
-              <RelationshipsPanel/>
+              <div class="ml-8">
+                Please select
+                <v-tooltip content-class="top-tooltip" transition="fade-transition" top>
+                  <template v-slot:activator="{ on, attrs }">
+                    <span class="dotted-underline" v-bind="attrs" v-on="on">
+                      applicant's relationship
+                    </span>
+                  </template>
+                  Full restoration application must be related to the dissolved business.
+                </v-tooltip>
+                to the company at the time the company was dissolved:
+              </div>
+              <RelationshipsPanel :draftRelationships="getRestoration.relationships"
+                @changed="setRestorationRelationships($event)" @valid="setRestorationTypeValid($event)" />
             </v-card>
           </v-expand-transition>
-
           <v-radio label="Limited Restoration" value="isLimited" />
+
           <!-- Limited Restoration Radio Panel -->
           <v-expand-transition>
             <v-card flat v-if="isLimited">
-             <LimitedRestorationRadioPanel/>
+              <LimitedRestorationPanel :currentDate="getCurrentDate" :expiryDate="getRestoration.expiry"
+                @expiry="setRestorationExpiry($event)" />
             </v-card>
           </v-expand-transition>
+
         </v-radio-group>
       </v-col>
     </v-row>
@@ -31,41 +46,51 @@
 </template>
 
 <script lang="ts">
-
 import Vue from 'vue'
 import { Component, Watch, Emit, Prop } from 'vue-property-decorator'
-import { DateMixin, AddEditOrgPersonMixin } from '@/mixins'
-import { ISLIMITEDRESTORATION } from '@/constants'
-import { EffectiveDateTimeIF, FormIF } from '@/interfaces'
-import { VuetifyRuleFunction } from '@/types'
+import { DateMixin, CommonMixin } from '@/mixins'
+import { ISLIMITEDRESTORATION, ISFULLRESTORATION } from '@/constants'
 import { Getter, Action } from 'vuex-class'
-import RelationshipsPanel from '@/components/common/RelationshipsPanel.vue'
-import LimitedRestorationRadioPanel from '@/components/common/LimitedRestorationRadioPanel.vue'
-import RestorationTypeSummary from './RestorationTypeSummary.vue'
-import { RestorationTypes } from '@/enums'
+import { RestorationTypes, RouteNames } from '@/enums'
+import { RelationshipsPanel } from '@bcrs-shared-components/relationships-panel'
+import { LimitedRestorationPanel } from '@bcrs-shared-components/limited-restoration-panel'
 
 @Component({
   mixins: [
     DateMixin,
-    AddEditOrgPersonMixin
+    CommonMixin
   ],
   components: {
     RelationshipsPanel,
-    LimitedRestorationRadioPanel,
-    RestorationTypeSummary
+    LimitedRestorationPanel
   }
 })
 export default class RestorationType extends Vue {
+  @Getter getRestoration!: RestorationStateIF
+  @Getter getCurrentDate!: string
+  @Getter isRestorationTypeValid!: boolean
+
   @Action setRestorationType!: ActionBindingIF
   @Action setRestorationExpiry!: ActionBindingIF
+  @Action setRestorationRelationships!: ActionBindingIF
+  @Action setRestorationTypeValid!: ActionBindingIF
 
   // Local properties
   protected isFull = false
   protected isLimited = false
   protected selectRestorationType = ''
 
-  /** Called when component is mounted. */
+  /**
+   * Called when component is mounted.
+   * Automatically check limited or full restoration when user continues a draft as per last selection.
+   */
   mounted (): void {
+    if (this.getRestoration.type === RestorationTypes.LIMITED) {
+      this.selectRestorationType = ISLIMITEDRESTORATION
+      this.isFull = !this.isLimited
+    } else if (this.getRestoration.type === RestorationTypes.FULL) {
+      this.selectRestorationType = ISFULLRESTORATION
+    }
   }
 
   /**
@@ -78,9 +103,27 @@ export default class RestorationType extends Vue {
     this.isFull = !this.isLimited
     if (this.isLimited) {
       this.setRestorationType(RestorationTypes.LIMITED)
+      this.setRestorationRelationships([])
+      this.setRestorationTypeValid(true)
     } else {
       this.setRestorationType(RestorationTypes.FULL)
       this.setRestorationExpiry(null)
+    }
+  }
+
+  @Watch('$route')
+  private async scrollToInvalidComponent (): Promise<void> {
+    if (this.$route.name === RouteNames.RESTORATION_BUSINESS_NAME) {
+      // scroll to invalid components
+      await this.$nextTick()
+      await this.validateAndScroll(
+        {
+          restorationValid: this.isRestorationTypeValid
+        },
+        [
+          'relationships-panel'
+        ]
+      )
     }
   }
 }
@@ -93,13 +136,4 @@ label {
   font-weight: bold;
 }
 
-#restoration-type {
-  padding: 1.5rem;
-  font-size: $px-16;
-}
-
-.radio-group {
-  padding-top: 0;
-  margin-top: 0;
-}
 </style>

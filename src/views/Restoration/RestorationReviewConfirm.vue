@@ -25,7 +25,6 @@
       <v-card id="business-info-summary-vcard" flat class="mt-6">
         <CardHeader icon="mdi-domain" label="Business Information" />
         <SummaryDefineCompany />
-        <RestorationTypeSummary/>
       </v-card>
     </section>
 
