@@ -177,7 +177,6 @@ export interface RestorationFilingIF {
   }
   restoration: {
     type: RestorationTypes
-    relationships?: any // *** TODO: udpate type
     expiry?: string // YYYY-MM-DD
     approvalType?: any // *** TODO: udpate type
     courtOrder?: CourtOrderIF
