@@ -115,8 +115,9 @@
               <header>
                 <h1>{{ getFilingName }}</h1>
               </header>
-              <p class="mt-4" v-if="getFilingSubtitle">
-                {{ getFilingSubtitle }}
+              <p class="mt-4" v-if="isFirmDissolution">
+                Confirm the following information, select the dissolution date and certify
+                your dissolution before filing.
               </p>
 
               <Stepper class="mt-10" v-if="isStepperView" />
@@ -144,7 +145,7 @@
                   <SbcFeeSummary
                     :filingData="feeFilingData"
                     :payURL="payApiUrl"
-                    :filingLabel="filingLabelText"
+                    :filingLabel="filingLabel"
                   />
                 </affix>
               </aside>
@@ -242,7 +243,6 @@ export default class App extends Vue {
   @Getter isIncorporationFiling!: boolean
   @Getter getSteps!: Array<StepIF>
   @Getter isSbcStaff!: boolean
-  @Getter getFilingSubtitle!: string
   @Getter getUserFirstName!: string
   @Getter getUserLastName!: string
   @Getter getUserPhone!: string
@@ -391,10 +391,15 @@ export default class App extends Vue {
     )
   }
 
-  /** The Fee Summary filing text for businesses. */
-  get filingLabelText (): string {
+  /** Whether the current filing is a firm dissolution. */
+  get isFirmDissolution (): boolean {
+    return (this.isTypeFirm && this.isDissolutionFiling)
+  }
+
+  /** The fee summary filing label. */
+  get filingLabel (): string {
     // text override for firm dissolutions
-    return (this.isTypeFirm && this.isDissolutionFiling) ? 'Dissolution' : null
+    return this.isFirmDissolution ? 'Dissolution' : null
   }
 
   /** The About text. */
@@ -408,11 +413,11 @@ export default class App extends Vue {
       case FilingTypes.INCORPORATION_APPLICATION: return 'Application'
       case FilingTypes.REGISTRATION: return 'Registration'
       case FilingTypes.RESTORATION: return 'Restoration'
-      case FilingTypes.VOLUNTARY_DISSOLUTION: return 'Filing'
+      case FilingTypes.DISSOLUTION: return 'Filing'
     }
   }
 
-  // check to use stepper view or not
+  /** Whether to use stepper view. */
   get isStepperView (): boolean {
     return !this.$route.meta.noStepper
   }
@@ -671,7 +676,7 @@ export default class App extends Vue {
       // then try to re-route them
       if (this.$route.meta.filingType !== this.getFilingType) {
         switch (this.getFilingType) {
-          case FilingTypes.VOLUNTARY_DISSOLUTION:
+          case FilingTypes.DISSOLUTION:
             if (this.isTypeFirm) {
               this.$router.push(RouteNames.DISSOLUTION_FIRM).catch(() => {})
             } else {
@@ -689,7 +694,7 @@ export default class App extends Vue {
             return
           default:
             this.invalidRouteDialog = true
-            throw new Error(`Invalid filing type = ${this.getFilingType}`) // go to catch()
+            throw new Error(`fetchData(): invalid filing type = ${this.getFilingType}`) // go to catch()
         }
       }
 
@@ -755,7 +760,7 @@ export default class App extends Vue {
     // parse draft filing into the store and get the resources
     let resources: ResourceIF
     switch (this.getFilingType) {
-      case FilingTypes.VOLUNTARY_DISSOLUTION:
+      case FilingTypes.DISSOLUTION:
         draftFiling = {
           ...this.buildDissolutionFiling(),
           ...draftFiling
@@ -772,7 +777,7 @@ export default class App extends Vue {
         resources = RestorationResources.find(x => x.entityType === this.getEntityType)
         break
       default:
-        throw new Error(`Invalid filing type = ${this.getFilingType}`)
+        throw new Error(`handleDissolutionOrRestoration(): invalid filing type = ${this.getFilingType}`)
     }
 
     // set the resources
@@ -819,7 +824,7 @@ export default class App extends Vue {
         resources = RegistrationResources.find(x => x.entityType === this.getEntityType)
         break
       default:
-        throw new Error(`Invalid filing type = ${this.getFilingType}`)
+        throw new Error(`handleIaOrRegistration(): invalid filing type = ${this.getFilingType}`)
     }
 
     // set the resources

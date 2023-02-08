@@ -601,7 +601,7 @@ export default class FilingTemplateMixin extends DateMixin {
     // Build the main filing.
     const filing: DissolutionFilingIF = {
       header: {
-        name: FilingTypes.VOLUNTARY_DISSOLUTION,
+        name: FilingTypes.DISSOLUTION,
         certifiedBy: this.getCertifyState.certifiedBy,
         date: this.getCurrentDate,
         filingId: this.getFilingId,

@@ -338,10 +338,8 @@ h2::before {
   }
 }
 
-header {
-  p {
-    padding-top:0.5rem
-  }
+header p {
+  padding-top:0.5rem
 }
 
 // Coop Type Help section

@@ -63,4 +63,18 @@ export default class NameRequestMixin extends Vue {
     }
     return null // should never happen
   }
+
+  /**
+   * Map the request type to a display description.
+   * @param nrRequestType the name request type code
+   */
+  getNrRequestDesc (nrRequestType: NameRequestTypes): string {
+    switch (nrRequestType) {
+      case NameRequestTypes.NEW: return 'New Business'
+      case NameRequestTypes.CHANGE_NAME: return 'Change of Name'
+      case NameRequestTypes.CONVERSION: return 'Conversion'
+      case NameRequestTypes.RESTORATION: return 'Restoration'
+    }
+    return null // should never happen
+  }
 }

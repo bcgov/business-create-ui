@@ -33,7 +33,7 @@ export interface NameRequestNameIF {
  * Includes only the properties we care about.
  */
 export interface NameRequestIF {
-  applicants: NameRequestApplicantIF
+  applicants: NameRequestApplicantIF // object, not array
   consentFlag: string
   expirationDate: string // yyyy-mm-ddRhh:mm:ss+00:00
   legalType: CorpTypeCd

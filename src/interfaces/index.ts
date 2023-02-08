@@ -1,3 +1,7 @@
+// Common interfaces
+export * from './common/address-interface'
+export * from './common/correct-name-option-interface'
+
 // Filing interfaces
 export * from './filing-interfaces/filing-interfaces'
 export * from './filing-interfaces/filing-data-interface'
@@ -7,6 +11,9 @@ export * from './filing-interfaces/party-interface'
 
 // Payment interfaces
 export * from './payment-interfaces/fees-interface'
+
+// Registration interfaces
+export * from './Registration/business-address-interface'
 
 // Resource interfaces
 export * from './resource-interfaces/component-resource-interfaces/affidavit-resource-interface'
@@ -65,12 +72,6 @@ export * from './utils-interfaces/key-value-interface'
 export * from './utils-interfaces/pdf-info-interface'
 export * from './utils-interfaces/validation-detail-interface'
 export * from './utils-interfaces/validation-item-detail-interface'
-
-// Common interfaces
-export * from './common/address-interface'
-
-// Registration interfaces
-export * from './Registration/business-address-interface'
 
 // External interfaces
 // NB: importing EmptyAddress doesn't work in local components
