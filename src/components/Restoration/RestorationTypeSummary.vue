@@ -13,17 +13,17 @@
 
       <v-row>
         <v-col class="px-4">
-          <label>Restoration Type</label>
+          <label class="font-weight-bold">Restoration Type</label>
         </v-col>
 
         <v-col cols="12" sm="9">
-          <template v-if="getRestoration.type === 'limitedRestoration'">
-            <label>Limited Restoration</label><br/>
-            <span>Expire on {{ this.yyyyMmDdToPacificDate(this.getRestoration.expiry) }}</span>
+          <template v-if="getRestoration.type === RestorationTypes.LIMITED">
+            <label class="font-weight-bold">Limited Restoration</label><br/>
+            <span class="limited-text">Expire on {{ this.yyyyMmDdToPacificDate(this.getRestoration.expiry) }}</span>
           </template>
           <template v-else>
-            <label>Full Restoration</label><br/>
-            <span v-if="isRestorationTypeValid">
+            <label class="font-weight-bold">Full Restoration</label><br/>
+            <span class="full-text" v-if="isRestorationTypeValid">
               Applicant's relationship: {{ (this.getRestoration.relationships).join(', ') }}.
             </span>
           </template>
@@ -37,7 +37,7 @@ import Vue from 'vue'
 import { Component, Watch } from 'vue-property-decorator'
 import { DateMixin } from '@/mixins'
 import { Getter, Action } from 'vuex-class'
-import { RouteNames } from '@/enums'
+import { RouteNames, RestorationTypes } from '@/enums'
 
   @Component({
     mixins: [
@@ -50,6 +50,7 @@ export default class RestorationTypeSummary extends Vue {
   @Getter isRestorationTypeValid!: boolean
 
   readonly RouteNames = RouteNames
+  readonly RestorationTypes = RestorationTypes
 }
 
 </script>
@@ -57,11 +58,7 @@ export default class RestorationTypeSummary extends Vue {
 <style lang="scss" scoped>
   @import '@/assets/styles/theme.scss';
 
-  label {
-    font-weight: bold;
-  }
-
-  .error-message {
+.error-message {
   color: $app-red;
 }
 </style>

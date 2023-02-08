@@ -610,7 +610,7 @@ export const getRestoration = (state: StateIF): RestorationStateIF => {
 
 /** The restoration object. */
 export const isRestorationTypeValid = (state: StateIF): boolean => {
-  return state.stateModel.isRestorationTypeValid
+  return state.stateModel.restoration.isRestorationTypeValid
 }
 
 //

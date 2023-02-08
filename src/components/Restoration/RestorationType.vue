@@ -3,12 +3,12 @@
     <v-row>
 
       <v-col cols="12" sm="3" class="pr-4">
-        <label>Restoration Type</label>
+        <label class="font-weight-bold">Restoration Type</label>
       </v-col>
 
       <v-col cols="12" sm="9">
         <v-radio-group column class="pt-0 mt-0" v-model="selectRestorationType">
-          <v-radio label="Full Restoration" value="isFull" />
+          <v-radio id="full-radio-button" label="Full Restoration" :value=RestorationTypes.FULL />
 
           <!-- Relationship To Company Checkboxes -->
           <v-expand-transition>
@@ -29,7 +29,7 @@
                 @changed="setRestorationRelationships($event)" @valid="setRestorationTypeValid($event)" />
             </v-card>
           </v-expand-transition>
-          <v-radio label="Limited Restoration" value="isLimited" />
+          <v-radio id="limited-radio-button" label="Limited Restoration" :value=RestorationTypes.LIMITED />
 
           <!-- Limited Restoration Radio Panel -->
           <v-expand-transition>
@@ -49,7 +49,6 @@
 import Vue from 'vue'
 import { Component, Watch, Emit, Prop } from 'vue-property-decorator'
 import { DateMixin, CommonMixin } from '@/mixins'
-import { ISLIMITEDRESTORATION, ISFULLRESTORATION } from '@/constants'
 import { Getter, Action } from 'vuex-class'
 import { RestorationTypes, RouteNames } from '@/enums'
 import { RelationshipsPanel } from '@bcrs-shared-components/relationships-panel'
@@ -80,16 +79,18 @@ export default class RestorationType extends Vue {
   protected isLimited = false
   protected selectRestorationType = ''
 
+  readonly RestorationTypes = RestorationTypes
+
   /**
    * Called when component is mounted.
    * Automatically check limited or full restoration when user continues a draft as per last selection.
    */
   mounted (): void {
     if (this.getRestoration.type === RestorationTypes.LIMITED) {
-      this.selectRestorationType = ISLIMITEDRESTORATION
+      this.selectRestorationType = RestorationTypes.LIMITED
       this.isFull = !this.isLimited
-    } else if (this.getRestoration.type === RestorationTypes.FULL) {
-      this.selectRestorationType = ISFULLRESTORATION
+    } else {
+      this.selectRestorationType = RestorationTypes.FULL
     }
   }
 
@@ -99,7 +100,7 @@ export default class RestorationType extends Vue {
    */
   @Watch('selectRestorationType')
   private setLimitedRestorationChoice (val) {
-    this.isLimited = val === ISLIMITEDRESTORATION
+    this.isLimited = val === RestorationTypes.LIMITED
     this.isFull = !this.isLimited
     if (this.isLimited) {
       this.setRestorationType(RestorationTypes.LIMITED)
@@ -131,9 +132,5 @@ export default class RestorationType extends Vue {
 
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
-
-label {
-  font-weight: bold;
-}
 
 </style>

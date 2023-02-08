@@ -10,6 +10,12 @@
           </p>
       </header>
 
+      <!-- Business Name -->
+      <v-card id="business-name-summary-vcard" flat class="mt-6">
+        <CardHeader icon="mdi-domain" label="Business Name" />
+        <RestorationTypeSummary />
+      </v-card>
+
       <!-- Applicant Information -->
       <v-card id="people-and-roles-vcard" flat class="mt-6">
         <CardHeader icon="mdi-account-multiple-plus" label="Applicant Information" />

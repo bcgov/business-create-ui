@@ -69,7 +69,6 @@ export interface StateModelIF {
   completingParty?: CompletingPartyIF
   parties?: Array<PartyIF>
   restoration: RestorationStateIF
-  isRestorationTypeValid: boolean
 
   // staffPaymentStep and courtOrder are common and for now are only used in dissolution
   staffPaymentStep: StaffPaymentStepIF

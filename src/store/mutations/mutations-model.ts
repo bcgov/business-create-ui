@@ -419,5 +419,5 @@ export const mutateRestorationRelationships = (state: StateIF, relationships: Re
 }
 
 export const mutateRestorationIsValid = (state: StateIF, isRestorationTypeValid: boolean) => {
-  state.stateModel.isRestorationTypeValid = isRestorationTypeValid
+  state.stateModel.restoration.isRestorationTypeValid = isRestorationTypeValid
 }
