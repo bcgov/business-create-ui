@@ -75,7 +75,7 @@ export default class RestorationType extends Vue {
   @Action setRestorationTypeValid!: ActionBindingIF
 
   // Local properties
-  protected selectRestorationType = null
+  protected selectRestorationType:string = null
 
   readonly RestorationTypes = RestorationTypes
 
