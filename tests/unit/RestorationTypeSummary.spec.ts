@@ -26,7 +26,7 @@ describe(`Initialize Restoration Type Component`, () => {
       type: 'fullRestoration',
       expiry: null,
       relationships: ['Officer'],
-      isRestorationTypeValid: true
+      restorationTypeValid: true
     }
     wrapperFactory = () => mount(RestorationTypeSummary, {
       store,
