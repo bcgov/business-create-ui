@@ -69,7 +69,7 @@
           <h2>Restoration Type</h2>
           <p>Determine the restoration and approval type.</p>
         </header>
-        <div :class="{ 'invalid-section': getShowErrors && !isRestorationTypeValid }">
+        <div :class="{ 'invalid-section': getShowErrors && !getRestorationTypeValid }">
           <RestorationType />
         </div>
       </section>
@@ -177,13 +177,15 @@ export default class RestorationBusinessName extends Vue {
   @Getter getShowErrors!: boolean
   @Getter getBusinessContact!: ContactPointIF
   @Getter getFolioNumber!: string
-  @Getter isRestorationTypeValid!: boolean
+  @Getter getRestorationTypeValid!: boolean
+
   @Action setBusinessContact!: ActionBindingIF
   @Action setCooperativeType!: ActionBindingIF
   @Action setFolioNumber!: ActionBindingIF
   @Action setOfficeAddresses!: ActionBindingIF
   @Action setDefineCompanyStepValidity!: ActionBindingIF
   @Action setIgnoreChanges!: ActionBindingIF
+
   protected businessContactFormValid = false
   protected addressFormValid = false
   protected hasValidNameTranslation = true

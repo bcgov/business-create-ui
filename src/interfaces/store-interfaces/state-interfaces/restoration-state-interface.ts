@@ -12,7 +12,7 @@ export interface RestorationStateIF {
   type: RestorationTypes
   expiry?: string // YYYY-MM-DD
   relationships?: RelationshipTypes[]
-  isRestorationTypeValid: boolean
+  restorationTypeValid: boolean
   // defineBusinessValid: boolean
   // startDate: string
   // businessAddress: BusinessAddressIF

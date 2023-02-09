@@ -418,6 +418,6 @@ export const mutateRestorationRelationships = (state: StateIF, relationships: Re
   state.stateModel.restoration.relationships = relationships
 }
 
-export const mutateRestorationIsValid = (state: StateIF, isRestorationTypeValid: boolean) => {
-  state.stateModel.restoration.isRestorationTypeValid = isRestorationTypeValid
+export const mutateRestorationTypeValid = (state: StateIF, restorationTypeValid: boolean) => {
+  state.stateModel.restoration.restorationTypeValid = restorationTypeValid
 }

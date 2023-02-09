@@ -67,7 +67,7 @@ import { LimitedRestorationPanel } from '@bcrs-shared-components/limited-restora
 export default class RestorationType extends Vue {
   @Getter getRestoration!: RestorationStateIF
   @Getter getCurrentDate!: string
-  @Getter isRestorationTypeValid!: boolean
+  @Getter getRestorationTypeValid!: boolean
 
   @Action setRestorationType!: ActionBindingIF
   @Action setRestorationExpiry!: ActionBindingIF
@@ -75,9 +75,7 @@ export default class RestorationType extends Vue {
   @Action setRestorationTypeValid!: ActionBindingIF
 
   // Local properties
-  protected isFull = false
-  protected isLimited = false
-  protected selectRestorationType = ''
+  protected selectRestorationType = null
 
   readonly RestorationTypes = RestorationTypes
 
@@ -88,10 +86,19 @@ export default class RestorationType extends Vue {
   mounted (): void {
     if (this.getRestoration.type === RestorationTypes.LIMITED) {
       this.selectRestorationType = RestorationTypes.LIMITED
-      this.isFull = !this.isLimited
     } else {
       this.selectRestorationType = RestorationTypes.FULL
     }
+  }
+
+  // Computed value getter that returns true if current restoration is full
+  get isFull (): boolean {
+    return (this.getRestoration.type === RestorationTypes.FULL)
+  }
+
+  // Computed value getter that returns true if current restoration is limited
+  get isLimited (): boolean {
+    return (this.getRestoration.type === RestorationTypes.LIMITED)
   }
 
   /**
@@ -99,15 +106,12 @@ export default class RestorationType extends Vue {
    * @param val The value of the selected radio button
    */
   @Watch('selectRestorationType')
-  private setLimitedRestorationChoice (val) {
-    this.isLimited = val === RestorationTypes.LIMITED
-    this.isFull = !this.isLimited
+  private setRestorationChoice (val) {
+    this.setRestorationType(val)
     if (this.isLimited) {
-      this.setRestorationType(RestorationTypes.LIMITED)
       this.setRestorationRelationships([])
       this.setRestorationTypeValid(true)
     } else {
-      this.setRestorationType(RestorationTypes.FULL)
       this.setRestorationExpiry(null)
     }
   }
@@ -119,7 +123,7 @@ export default class RestorationType extends Vue {
       await this.$nextTick()
       await this.validateAndScroll(
         {
-          restorationValid: this.isRestorationTypeValid
+          restorationValid: this.getRestorationTypeValid
         },
         [
           'relationships-panel'
@@ -129,8 +133,3 @@ export default class RestorationType extends Vue {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-@import '@/assets/styles/theme.scss';
-
-</style>

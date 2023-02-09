@@ -385,6 +385,6 @@ export const setRestorationRelationships: ActionIF = ({ commit }, relationships:
   commit('mutateRestorationRelationships', relationships)
 }
 
-export const setRestorationTypeValid: ActionIF = ({ commit }, isRestorationTypeValid: boolean): void => {
-  commit('mutateRestorationIsValid', isRestorationTypeValid)
+export const setRestorationTypeValid: ActionIF = ({ commit }, restorationTypeValid: boolean): void => {
+  commit('mutateRestorationTypeValid', restorationTypeValid)
 }
