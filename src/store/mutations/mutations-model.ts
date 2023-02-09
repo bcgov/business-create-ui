@@ -1,5 +1,5 @@
 import { BusinessTypes, CoopTypes, CorpTypeCd, DissolutionTypes, EntityState, FilingTypes,
-  RestorationTypes } from '@/enums'
+  RestorationTypes, RelationshipTypes } from '@/enums'
 import { AccountInformationIF, AddressIF, BusinessAddressIF, BusinessWarningIF, CertifyIF,
   CompletingPartyIF, ContactPointIF, CreateMemorandumIF, CreateResolutionIF, CreateRulesIF,
   DissolutionStatementIF, FeesIF, RegisteredRecordsAddressesIF, IncorporationAgreementIF, NaicsIF,
@@ -412,4 +412,12 @@ export const mutateRestorationType = (state: StateIF, type: RestorationTypes) =>
 
 export const mutateRestorationExpiry = (state: StateIF, expiry: string) => {
   state.stateModel.restoration.expiry = expiry
+}
+
+export const mutateRestorationRelationships = (state: StateIF, relationships: RelationshipTypes[]) => {
+  state.stateModel.restoration.relationships = relationships
+}
+
+export const mutateRestorationTypeValid = (state: StateIF, restorationTypeValid: boolean) => {
+  state.stateModel.restoration.restorationTypeValid = restorationTypeValid
 }

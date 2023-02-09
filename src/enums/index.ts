@@ -27,5 +27,6 @@ export {
   EffectiveDateTypes,
   EntityStates,
   FilingCodes,
+  RelationshipTypes,
   StaffPaymentOptions
 } from '@bcrs-shared-components/enums'

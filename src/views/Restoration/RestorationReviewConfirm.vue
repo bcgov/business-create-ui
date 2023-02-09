@@ -10,6 +10,12 @@
           </p>
       </header>
 
+      <!-- Business Name -->
+      <v-card id="business-name-summary-vcard" flat class="mt-6">
+        <CardHeader icon="mdi-domain" label="Business Name" />
+        <RestorationTypeSummary />
+      </v-card>
+
       <!-- Applicant Information -->
       <v-card id="people-and-roles-vcard" flat class="mt-6">
         <CardHeader icon="mdi-account-multiple-plus" label="Applicant Information" />
@@ -97,6 +103,7 @@ import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
 import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 import StaffPayment from '@/components/common/StaffPayment.vue'
 import SummaryDefineCompany from '@/components/Incorporation/SummaryDefineCompany.vue'
+import RestorationTypeSummary from '@/components/Restoration/RestorationTypeSummary.vue'
 
 @Component({
   components: {
@@ -105,7 +112,8 @@ import SummaryDefineCompany from '@/components/Incorporation/SummaryDefineCompan
     DocumentDelivery,
     ListPeopleAndRoles,
     StaffPayment,
-    SummaryDefineCompany
+    SummaryDefineCompany,
+    RestorationTypeSummary
   }
 })
 export default class RestorationReviewConfirm extends Vue {
