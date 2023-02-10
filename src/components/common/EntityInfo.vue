@@ -153,7 +153,7 @@ export default class EntityInfo extends Vue {
 
   get legalName (): string {
     switch (this.getFilingType) {
-      case FilingTypes.VOLUNTARY_DISSOLUTION:
+      case FilingTypes.DISSOLUTION:
         return this.getBusinessLegalName
       case FilingTypes.INCORPORATION_APPLICATION:
         return this.getNameRequestApprovedName

@@ -307,7 +307,7 @@ export default class Actions extends Vue {
         return this.buildRegistrationFiling()
       case FilingTypes.RESTORATION:
         return this.buildRestorationFiling()
-      case FilingTypes.VOLUNTARY_DISSOLUTION:
+      case FilingTypes.DISSOLUTION:
         return this.buildDissolutionFiling()
     }
   }

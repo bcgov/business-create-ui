@@ -1,6 +1,6 @@
 import Vuetify from 'vuetify'
 import { AccountTypes, CoopTypes, CorpTypeCd, DissolutionTypes, FilingNames, FilingTypes,
-  FilingTypesSubTitle, RestorationTypes } from '@/enums'
+  RestorationTypes } from '@/enums'
 import { AccountInformationIF, AddressIF, BusinessIF, CertifyIF, CompletingPartyIF, ContactPointIF,
   CourtOrderStepIF, CreateMemorandumIF, CreateResolutionIF, CreateRulesIF, DefineCompanyIF,
   DissolutionStatementIF, DissolutionStateIF, DocumentDeliveryIF, EffectiveDateTimeIF, FeesIF,
@@ -23,7 +23,7 @@ export const isIncorporationFiling = (state: StateIF): boolean => {
 
 /** Whether the current filing is a Dissolution. */
 export const isDissolutionFiling = (state: StateIF): boolean => {
-  return (getFilingType(state) === FilingTypes.VOLUNTARY_DISSOLUTION)
+  return (getFilingType(state) === FilingTypes.DISSOLUTION)
 }
 
 /** Whether the current filing is a Registration. */
@@ -57,7 +57,7 @@ export const getFilingName = (state: StateIF): FilingNames => {
     case FilingTypes.INCORPORATION_APPLICATION: return FilingNames.INCORPORATION_APPLICATION
     case FilingTypes.REGISTRATION: return FilingNames.REGISTRATION
     case FilingTypes.RESTORATION: return FilingNames.RESTORATION_APPLICATION
-    case FilingTypes.VOLUNTARY_DISSOLUTION:
+    case FilingTypes.DISSOLUTION:
       return isTypeFirm(state) ? FilingNames.DISSOLUTION_FIRM : FilingNames.VOLUNTARY_DISSOLUTION
     default: return null // should never happen
   }
@@ -208,7 +208,7 @@ export const getBusinessId = (state: StateIF): string => {
   return state.stateModel.business.businessId
 }
 
-/** The Business Identifier. */
+/** The Business Number (aka Tax ID). */
 export const getBusinessNumber = (state: StateIF): string => {
   return state.stateModel.business.taxId
 }
@@ -218,7 +218,7 @@ export const getEntityIdentifier = (state: StateIF): string => {
     case FilingTypes.INCORPORATION_APPLICATION: return getTempId(state)
     case FilingTypes.REGISTRATION: return getTempId(state)
     case FilingTypes.RESTORATION: return getBusinessId(state)
-    case FilingTypes.VOLUNTARY_DISSOLUTION: return getBusinessId(state)
+    case FilingTypes.DISSOLUTION: return getBusinessId(state)
   }
 }
 
@@ -660,21 +660,9 @@ export const isDissolutionDefineDissolutionValid = (state: StateIF): boolean => 
   return isCoopDefineDissolutionValid && isDissolutionCustodianValid(state)
 }
 
-//
-// Registration getters
-//
-
 /** The registration object. */
 export const getRegistration = (state: StateIF): RegistrationStateIF => {
   return state.stateModel.registration
-}
-
-/** The current filing subtitle. */
-export const getFilingSubtitle = (state: StateIF): string => {
-  if (isDissolutionFiling(state) && isTypeFirm(state)) {
-    return FilingTypesSubTitle.SOLE_PROP_SUB_TITLE
-  }
-  return null
 }
 
 /** The completing party data. */

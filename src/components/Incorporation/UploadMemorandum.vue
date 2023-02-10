@@ -414,10 +414,8 @@ export default class UploadMemorandum extends Vue {
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
 
-header {
-  p {
-    padding-top: 0.5rem;
-  }
+header p {
+  padding-top: 0.5rem;
 }
 
 ul {

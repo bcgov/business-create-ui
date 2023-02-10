@@ -636,7 +636,7 @@ describe('Incorporation - Define Company page for a BEN (named)', () => {
   })
 })
 
-describe('Dissolution - Define Dissolution page for a BEN', () => {
+describe('Voluntary Dissolution - Define Dissolution page for a BEN', () => {
   let wrapper: any
   const { assign } = window.location
 
@@ -894,8 +894,7 @@ describe('Dissolution - Define Dissolution page for a BEN', () => {
   })
 })
 
-// *** TODO: implement more tests!
-describe('Restoration - Restore Business Name page for a BEN', () => {
+describe('Restoration - App page', () => {
   let wrapper: any
   const { assign } = window.location
 

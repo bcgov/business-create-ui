@@ -21,27 +21,34 @@ const restorationBusinessInfo = [
 ]
 
 for (const test of restorationBusinessInfo) {
-  describe(`Restoration business information for a ${test.entityType}`, () => {
+  describe(`Restoration Business Information for a ${test.entityType}`, () => {
     let wrapper: any
 
-    it('renders the component properly', () => {
-      const wrapper = shallowWrapperFactory(
+    beforeAll(() => {
+      wrapper = shallowWrapperFactory(
         RestorationBusinessInformation,
         null,
         { entityType: test.entityType },
         null,
         RestorationResources
       )
+    })
 
-      // verify page is rendered
+    afterAll(() => {
+      wrapper.destroy()
+    })
+
+    it('renders the page', () => {
       expect(wrapper.find('#restoration-business-information').exists()).toBe(true)
+    })
 
-      // verify headers
+    it('displays header', () => {
       expect(wrapper.findAll('h2').length).toBe(2)
       expect(wrapper.findAll('h2').at(0).text()).toContain('Registered and Records Office Addresses')
       expect(wrapper.findAll('h2').at(1).text()).toContain('Registered Office Contact Information')
+    })
 
-      // verify components on page are rendered
+    it('displays sub-components', () => {
       expect(wrapper.findComponent(OfficeAddresses).exists()).toBe(true)
       expect(wrapper.findComponent(BusinessContactInfo).exists()).toBe(true)
     })

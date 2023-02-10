@@ -1,7 +1,7 @@
 <template>
   <div id="restoration-applicant-information">
-    <section class="mt-10">
-      <header id="people-role-header">
+    <section id="add-applicant-info-section" class="mt-10">
+      <header>
         <h2>{{ getPeopleAndRolesResource.header }}</h2>
       </header>
 
@@ -42,7 +42,7 @@ export default class RestorationApplicantInformation extends Vue {
           peopleAndRoles: this.getAddPeopleAndRoleStep.valid
         },
         [
-          'people-and-roles'
+          'add-applicant-info-section'
         ]
       )
     }

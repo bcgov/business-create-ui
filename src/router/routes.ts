@@ -97,7 +97,7 @@ export const routes = [
     meta: {
       step: 1,
       requiresAuth: true,
-      filingType: FilingTypes.VOLUNTARY_DISSOLUTION
+      filingType: FilingTypes.DISSOLUTION
     }
   },
   {
@@ -107,7 +107,7 @@ export const routes = [
     meta: {
       step: 2,
       requiresAuth: true,
-      filingType: FilingTypes.VOLUNTARY_DISSOLUTION
+      filingType: FilingTypes.DISSOLUTION
     }
   },
   {
@@ -117,7 +117,7 @@ export const routes = [
     meta: {
       step: 3,
       requiresAuth: true,
-      filingType: FilingTypes.VOLUNTARY_DISSOLUTION
+      filingType: FilingTypes.DISSOLUTION
     }
   },
   {
@@ -127,7 +127,7 @@ export const routes = [
     meta: {
       step: 4,
       requiresAuth: true,
-      filingType: FilingTypes.VOLUNTARY_DISSOLUTION
+      filingType: FilingTypes.DISSOLUTION
     }
   },
   {
@@ -167,7 +167,7 @@ export const routes = [
     meta: {
       step: 1,
       requiresAuth: true,
-      filingType: FilingTypes.VOLUNTARY_DISSOLUTION,
+      filingType: FilingTypes.DISSOLUTION,
       noStepper: true // hide stepper for this route/filing type
     }
   },

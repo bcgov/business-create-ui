@@ -1,137 +1,29 @@
 <template>
   <div id="restoration-business-name">
     <!-- Name -->
-    <section class="mt-10">
-      <header id="name-header">
+    <section id="name-section" class="mt-10">
+      <header>
         <h2>Name</h2>
+        <p>Add a Name Request that is reserved for this restoration application or restore
+          as a numbered company.</p>
       </header>
 
       <v-card flat class="mt-5">
-        <NameRequestInfo
+        <BusinessName
           @hasNameTranslation="onNameTranslation($event)"
         />
       </v-card>
     </section>
 
-    <!-- Cooperative Association Type -->
-    <section class="mt-10" v-show="isTypeCoop">
-      <header id="association-type-header">
-        <h2>Cooperative Association Type</h2>
-        <!-- Help Section -->
-        <div class="mt-4">
-          <span class="help-btn" @click="coopHelpToggle = !coopHelpToggle">
-            <v-icon color="primary" style="padding-right: 5px">mdi-help-circle-outline</v-icon>
-            <span v-if="!coopHelpToggle">Help with Cooperative Association Types</span>
-            <span v-else>Hide Help</span>
-          </span>
-          <section v-show="coopHelpToggle" class="coop-type-help">
-            <header id="coop-type-help-header">
-              <h2>Help with Cooperative Association Types</h2>
-            </header>
-
-            <p><strong>Community Service Cooperatives</strong> are a particular kind of cooperative
-              recognized under the Cooperative Association Act. Community Service Cooperatives have a
-              similar status to that of non-profit societies. This type of cooperative also requires the
-              inclusion of non-alterable clauses in their rules to ensure they operate on a non-profit
-              basis, and their purpose is charitable, or to provide health, social, educational, or other
-              community services. Community Service Cooperatives cannot be Housing Cooperatives and cannot
-              issue investment shares.
-            </p>
-            <p><strong>Housing Cooperatives</strong> are a specific type of cooperative incorporated under
-              the Cooperative Association Act that provides housing to its members. Members may purchase
-              shares to join the Housing Cooperative and elect directors who will govern the cooperative.
-              Housing Cooperatives cannot issue investment shares. The Cooperative Association Act details
-              special provisions for Housing Cooperatives that need to be considered when deciding to
-              incorporate.
-            </p>
-            <p>An <strong>Ordinary Cooperative</strong> is a cooperative that may have a wide range of
-              purposes and is neither a Housing nor a Community Service Cooperative. The cooperative may
-              operate as a for-profit association and may issue investment shares.
-            </p>
-            <u class="help-btn" @click="coopHelpToggle = !coopHelpToggle"><small>Hide Help</small></u>
-          </section>
-        </div>
+    <!-- Restoration Type -->
+    <section id="restoration-type-section" class="mt-10">
+      <header>
+        <h2>Restoration Type</h2>
+        <p>Determine the restoration and approval type.</p>
       </header>
-
-      <div :class="{ 'invalid-section': getShowErrors && !hasValidCooperativeType }">
-        <v-card flat class="step-container">
-          <CooperativeType
-            :showErrors="getShowErrors"
-            @hasCooperativeType="onCooperativeType($event)"
-          />
-        </v-card>
+      <div :class="{ 'invalid-section': getShowErrors && !getRestorationTypeValid }">
+        <RestorationType />
       </div>
-    </section>
-
-      <!--Restoration Type is here-->
-      <section class="mt-10">
-        <header>
-          <h2>Restoration Type</h2>
-          <p>Determine the restoration and approval type.</p>
-        </header>
-        <div :class="{ 'invalid-section': getShowErrors && !getRestorationTypeValid }">
-          <RestorationType />
-        </div>
-      </section>
-
-    <!-- Registered Office Addresses -->
-    <section class="mt-10" v-show="isEntityType">
-      <header id="office-address-header">
-        <h2>Registered <span v-if="!isTypeCoop">and Records</span> Office
-          Addresses</h2>
-        <p>Enter the Registered Office <span v-if="!isTypeCoop">and Records Office
-          </span> Mailing and Delivery Addresses. All addresses must be located in BC.
-        </p>
-      </header>
-
-      <div :class="{ 'invalid-section': getShowErrors && !addressFormValid }">
-        <OfficeAddresses
-          :showErrors="getShowErrors"
-          :inputAddresses="addresses"
-          @update:addresses="setOfficeAddresses($event)"
-          @valid="onAddressFormValidityChange($event)"
-        />
-      </div>
-    </section>
-
-    <!-- Registered Office Contact Information -->
-    <section class="mt-10" v-show="isEntityType">
-      <header id="registered-office-contact-header">
-        <h2>Registered Office Contact Information</h2>
-        <p>Enter the contact information for the business. The Corporate Registry will use this to communicate with the
-          business in the future, including sending documents and notifications.
-        </p>
-      </header>
-
-      <v-card flat class="py-8 px-6"
-        :class="{ 'invalid-section': getShowErrors && !businessContactFormValid }"
-      >
-        <BusinessContactInfo
-          :initialValue="getBusinessContact"
-          :isEditing="true"
-          :showErrors="getShowErrors"
-          @update="setBusinessContact($event)"
-          @valid="onBusinessContactFormValidityChange($event)"
-        />
-      </v-card>
-    </section>
-
-    <!-- Folio / Reference Number -->
-    <section class="mt-10" v-if="isEntityType && isPremiumAccount">
-      <header id="folio-number-header">
-        <h2>Folio / Reference Number (Optional)</h2>
-        <p>Add an optional Folio or Reference Number about this business for your own tracking purposes.
-           This information is not used by the BC Business Registry.
-        </p>
-      </header>
-
-      <v-card flat class="step-container">
-        <FolioNumber
-          :initialValue="getFolioNumber"
-          :isEditing="true"
-          @update="setFolioNumber($event)"
-        />
-      </v-card>
     </section>
   </div>
 </template>
@@ -140,28 +32,15 @@
 import Vue from 'vue'
 import { Component, Watch } from 'vue-property-decorator'
 import { Getter, Action } from 'vuex-class'
-import {
-  ActionBindingIF,
-  AddressIF,
-  ContactPointIF,
-  DefineCompanyIF,
-  RegisteredRecordsAddressesIF
-} from '@/interfaces'
+import { ActionBindingIF } from '@/interfaces'
 import { CommonMixin } from '@/mixins'
-import { CoopTypes, CorpTypeCd, RouteNames } from '@/enums'
-import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
-import CooperativeType from '@/components/Dissolution/CooperativeType.vue'
-import FolioNumber from '@/components/common/FolioNumber.vue'
-import NameRequestInfo from '@/components/common/NameRequestInfo.vue'
-import OfficeAddresses from '@/components/common/OfficeAddresses.vue'
+import { CorpTypeCd, RouteNames } from '@/enums'
+import BusinessName from '@/components/Restoration/BusinessName.vue'
 import RestorationType from '@/components/Restoration/RestorationType.vue'
+
 @Component({
   components: {
-    BusinessContactInfo,
-    CooperativeType,
-    FolioNumber,
-    NameRequestInfo,
-    OfficeAddresses,
+    BusinessName,
     RestorationType
   },
   mixins: [
@@ -169,122 +48,47 @@ import RestorationType from '@/components/Restoration/RestorationType.vue'
   ]
 })
 export default class RestorationBusinessName extends Vue {
-  @Getter isEntityType!: boolean
-  @Getter isPremiumAccount!: boolean
-  @Getter isTypeBcomp!: boolean
-  @Getter isTypeCoop!: boolean
-  @Getter getDefineCompanyStep!: DefineCompanyIF
   @Getter getShowErrors!: boolean
-  @Getter getBusinessContact!: ContactPointIF
-  @Getter getFolioNumber!: string
-  @Getter getRestorationTypeValid!: boolean
 
-  @Action setBusinessContact!: ActionBindingIF
-  @Action setCooperativeType!: ActionBindingIF
-  @Action setFolioNumber!: ActionBindingIF
-  @Action setOfficeAddresses!: ActionBindingIF
   @Action setDefineCompanyStepValidity!: ActionBindingIF
   @Action setIgnoreChanges!: ActionBindingIF
 
-  protected businessContactFormValid = false
-  protected addressFormValid = false
   protected hasValidNameTranslation = true
-  protected hasValidCooperativeType = false
-  protected coopHelpToggle = false
+
   // Enum for template
   readonly CorpTypeCd = CorpTypeCd
-  get addresses (): RegisteredRecordsAddressesIF {
-    return this.getDefineCompanyStep.officeAddresses as RegisteredRecordsAddressesIF
-  }
+
   /** Called when component is created. */
   created (): void {
     // temporarily ignore data changes
     this.setIgnoreChanges(true)
-    // if no addresses were fetched, set default addresses
-    if (!this.addresses.registeredOffice && !this.addresses.recordsOffice) {
-      this.setDefaultAddresses()
-    }
+
     // watch data changes once page has loaded (in next tick)
     Vue.nextTick(() => {
       this.setIgnoreChanges(false)
     })
   }
-  /** Sets default addresses in filing. (Will get overwritten by a fetched draft filing if there is one.) */
-  private setDefaultAddresses (): void {
-    const defaultAddress: AddressIF = {
-      addressCity: '',
-      addressCountry: 'CA',
-      addressRegion: 'BC',
-      deliveryInstructions: '',
-      postalCode: '',
-      streetAddress: '',
-      streetAddressAdditional: ''
-    }
-    if (this.isTypeBcomp) {
-      this.setOfficeAddresses({
-        registeredOffice: {
-          mailingAddress: defaultAddress,
-          deliveryAddress: defaultAddress
-        },
-        recordsOffice: {
-          mailingAddress: defaultAddress,
-          deliveryAddress: defaultAddress
-        }
-      })
-    } else {
-      this.setOfficeAddresses({
-        registeredOffice: {
-          mailingAddress: defaultAddress,
-          deliveryAddress: defaultAddress
-        }
-      })
-    }
-  }
+
   private onNameTranslation (valid: boolean): void {
-    this.hasValidNameTranslation = valid
-    this.setDefineCompanyStepValidity(
-      this.businessContactFormValid &&
-      this.addressFormValid &&
-      this.hasValidNameTranslation
-    )
-  }
-  private onCooperativeType (cooperativeType: CoopTypes): void {
-    this.hasValidCooperativeType = !!cooperativeType
-    this.setCooperativeType(cooperativeType)
-  }
-  private onBusinessContactFormValidityChange (valid: boolean): void {
-    this.businessContactFormValid = valid
-    this.setDefineCompanyStepValidity(
-      this.businessContactFormValid &&
-      this.addressFormValid &&
-      this.hasValidNameTranslation
-    )
-  }
-  private onAddressFormValidityChange (valid: boolean): void {
-    this.addressFormValid = valid
-    this.setDefineCompanyStepValidity(
-      this.businessContactFormValid &&
-      this.addressFormValid &&
-      this.hasValidNameTranslation
-    )
+    // *** TODO: hook this up
+    // this.hasValidNameTranslation = valid
+    // this.setDefineCompanyStepValidity(
+    //   this.hasValidNameTranslation
+    // )
   }
   @Watch('$route')
   private async scrollToInvalidComponent (): Promise<void> {
-    if (this.getShowErrors && this.$route.name === RouteNames.INCORPORATION_DEFINE_COMPANY) {
+    if (this.getShowErrors && this.$route.name === RouteNames.RESTORATION_BUSINESS_NAME) {
       // scroll to invalid components
       await Vue.nextTick()
       await this.validateAndScroll(
         {
           hasValidNameTranslation: this.hasValidNameTranslation,
-          hasValidCooperativeType: this.isTypeCoop ? this.hasValidCooperativeType : true,
-          addressFormValid: this.addressFormValid,
-          businessContactFormValid: this.businessContactFormValid
+          hasValidRestorationType: this.getRestorationTypeValid
         },
         [
-          'name-header',
-          'association-type-header',
-          'office-address-header',
-          'registered-office-contact-header'
+          'name-section',
+          'restoration-type-section'
         ]
       )
     }
@@ -294,30 +98,37 @@ export default class RestorationBusinessName extends Vue {
 
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
+
 #restoration-business-name {
   /* Set "header-counter" to 0 */
   counter-reset: header-counter;
 }
+
 h2::before {
   /* Increment "header-counter" by 1 */
   counter-increment: header-counter;
   content: counter(header-counter) '. ';
 }
+
 .value.name-request {
   width: 100%;
   min-width: 24rem;
 }
+
 .meta-container {
   display: flex;
   flex-flow: column nowrap;
   position: relative;
+
   > label:first-child {
     font-weight: bold;
   }
 }
+
 @media (min-width: 768px) {
   .meta-container {
     flex-flow: row nowrap;
+
     > label:first-child {
       flex: 0 0 auto;
       padding-right: 2rem;
@@ -325,41 +136,8 @@ h2::before {
     }
   }
 }
-#business-buttons-container {
-  .v-btn + .v-btn {
-    margin-left: 0.5rem;
-  }
-}
-header {
-  p {
-    padding-top:0.5rem
-  }
-}
-// Coop Type Help section
-.help-btn {
-  cursor: pointer;
-  color: $app-blue;
-  vertical-align: middle;
-}
-.coop-type-help {
-  margin: 2rem 0;
-  border-top: 1px dashed $gray6;
-  border-bottom: 1px dashed $gray6;
-  padding: 1rem 0;
-  #coop-type-help-header {
-    display: flex;
-    justify-content: center;
-  }
-  h2, h4 {
-    padding: 1rem 0;
-  }
-  u {
-    display: flex;
-    direction: rtl;
-  }
-}
-// Vuetify Overrides
-:deep(.v-select__selection--comma) {
-  overflow: inherit;
+
+header p {
+  padding-top:0.5rem
 }
 </style>

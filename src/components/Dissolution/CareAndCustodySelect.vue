@@ -45,12 +45,14 @@ import { RoleTypes } from '@/enums'
 export default class CareAndCustodySelect extends Vue {
   @Prop({ default: false }) readonly showErrorSummary!: boolean
 
+  // for template
   readonly RoleTypes = RoleTypes
 
+  // local variable
   protected liquidatorOrCustodian = null as RoleTypes
 
   protected changeCareAndCustodyType (): void {
-    // Todo: Apply option to store when required
+    // FUTURE: save `liquidatorOrCustodian` to store when required
   }
 }
 </script>

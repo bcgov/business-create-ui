@@ -3,8 +3,7 @@ import Vuetify from 'vuetify'
 import { mount } from '@vue/test-utils'
 import { getVuexStore } from '@/store'
 import NameRequestInfo from '@/components/common/NameRequestInfo.vue'
-import AddNameTranslation from '@/components/common/AddNameTranslation.vue'
-import ListNameTranslations from '@/components/common/ListNameTranslations.vue'
+import NameTranslation from '@/components/common/NameTranslation.vue'
 
 Vue.use(Vuetify)
 
@@ -59,84 +58,65 @@ describe('Name Request Info with a NR', () => {
   })
 
   it('renders name request info labels', () => {
-    expect(wrapper.vm.$el.querySelector('#name-request-info').textContent)
+    expect(wrapper.vm.$el.querySelector('#name-request').textContent)
       .toContain('Name Request')
 
-    expect(wrapper.vm.$el.querySelector('#name-request-applicant-info').textContent)
+    expect(wrapper.vm.$el.querySelector('#name-request-applicant').textContent)
       .toContain('Name Request Applicant')
+
+    // verify that Name Translation component is rendered
+    expect(wrapper.findComponent(NameTranslation).exists()).toBe(true)
   })
 
   it('renders the Name Request information with no data', () => {
-    const nrListSelector = '#name-request-info ul li'
-    const itemCount = wrapper.vm.$el.querySelectorAll(nrListSelector).length
-
-    expect(itemCount).toEqual(5)
     expect(wrapper.find('#condition-consent').exists()).toBe(false)
 
-    const title = wrapper.vm.$el.querySelectorAll(nrListSelector)[0]
-    const entityType = wrapper.vm.$el.querySelectorAll(nrListSelector)[1]
-    const requestType = wrapper.vm.$el.querySelectorAll(nrListSelector)[2]
-    const expiryDate = wrapper.vm.$el.querySelectorAll(nrListSelector)[3]
-    const status = wrapper.vm.$el.querySelectorAll(nrListSelector)[4]
+    const listItems = wrapper.vm.$el.querySelectorAll('#name-request ul li')
+    expect(listItems.length).toEqual(5)
 
-    expect(title.textContent).toBeDefined()
-    expect(entityType.textContent).toContain('Entity Type:')
-    expect(requestType.textContent).toContain('Request Type:')
-    expect(expiryDate.textContent).toContain('Expiry Date:')
-    expect(status.textContent).toContain('Status:')
+    expect(listItems[0].textContent).toBeDefined()
+    expect(listItems[1].textContent).toContain('Entity Type:')
+    expect(listItems[2].textContent).toContain('Request Type:')
+    expect(listItems[3].textContent).toContain('Expiry Date:')
+    expect(listItems[4].textContent).toContain('Status:')
   })
 
   it('renders the Name Request information with data', async () => {
     await wrapper.vm.$store.commit('mutateNameRequest', { ...mockNrData })
     await wrapper.vm.$store.commit('mutateNameRequestApprovedName', mockNrData.names[0].name)
 
-    const nrListSelector = '#name-request-info ul li'
-    const itemCount = wrapper.vm.$el.querySelectorAll(nrListSelector).length
-    const title = wrapper.vm.$el.querySelectorAll(nrListSelector)[0]
-    const entityType = wrapper.vm.$el.querySelectorAll(nrListSelector)[1]
-    const requestType = wrapper.vm.$el.querySelectorAll(nrListSelector)[2]
-    const expiryDate = wrapper.vm.$el.querySelectorAll(nrListSelector)[3]
-    const status = wrapper.vm.$el.querySelectorAll(nrListSelector)[4]
-
-    expect(itemCount).toEqual(5)
     expect(wrapper.find('#condition-consent').exists()).toBe(false)
-    expect(title.textContent).toContain('NR 1234567 - MADRONA BREAD BASKET INC.')
-    expect(entityType.textContent).toContain('Entity Type: BC Benefit Company')
-    expect(requestType.textContent).toContain('Request Type: New Business')
-    expect(expiryDate.textContent).toContain('Expiry Date: Jun 24, 2020')
-    expect(status.textContent).toContain('Status: Approved')
+
+    const listItems = wrapper.vm.$el.querySelectorAll('#name-request ul li')
+    expect(listItems.length).toEqual(5)
+
+    expect(listItems[0].textContent).toContain('NR 1234567 - MADRONA BREAD BASKET INC.')
+    expect(listItems[1].textContent).toContain('Entity Type: BC Benefit Company')
+    expect(listItems[2].textContent).toContain('Request Type: New Business')
+    expect(listItems[3].textContent).toContain('Expiry Date: Jun 24, 2020')
+    expect(listItems[4].textContent).toContain('Status: Approved')
   })
 
   it('renders the Name Request applicant information with data', async () => {
     await wrapper.vm.$store.commit('mutateNameRequest', { ...mockNrData })
 
-    const nrListSelector = '#name-request-applicant-info ul li'
-    const itemCount = wrapper.vm.$el.querySelectorAll(nrListSelector).length
-    const name = wrapper.vm.$el.querySelectorAll(nrListSelector)[0]
-    const address = wrapper.vm.$el.querySelectorAll(nrListSelector)[1]
-    const email = wrapper.vm.$el.querySelectorAll(nrListSelector)[2]
-    const phone = wrapper.vm.$el.querySelectorAll(nrListSelector)[3]
+    const listItems = wrapper.vm.$el.querySelectorAll('#name-request-applicant ul li')
+    expect(listItems.length).toEqual(4)
 
-    expect(itemCount).toEqual(4)
-    expect(name.textContent).toContain('Name: John Joe Doe')
-    expect(address.textContent).toContain('Address: 45 Frasier Drive, Victoria, BC, V9E 2A1, Canada')
-    expect(email.textContent).toContain('Email: test@gov.bc.ca')
-    expect(phone.textContent).toContain('Phone: 250-356-9090')
+    expect(listItems[0].textContent).toContain('Name: John Joe Doe')
+    expect(listItems[1].textContent).toContain('Address: 45 Frasier Drive, Victoria, BC, V9E 2A1, Canada')
+    expect(listItems[2].textContent).toContain('Email: test@gov.bc.ca')
+    expect(listItems[3].textContent).toContain('Phone: 250-356-9090')
   })
 
   it('renders the Name Request applicant information with no data', () => {
-    const nrListSelector = '#name-request-applicant-info ul li'
-    const itemCount = wrapper.vm.$el.querySelectorAll(nrListSelector).length
-    expect(itemCount).toEqual(4)
+    const listItems = wrapper.vm.$el.querySelectorAll('#name-request-applicant ul li')
+    expect(listItems.length).toEqual(4)
 
-    const name = wrapper.vm.$el.querySelectorAll(nrListSelector)[0]
-    const address = wrapper.vm.$el.querySelectorAll(nrListSelector)[1]
-    const email = wrapper.vm.$el.querySelectorAll(nrListSelector)[2]
-    const phone = wrapper.vm.$el.querySelectorAll(nrListSelector)[3]
-    expect(name.textContent).toContain('Name:')
-    expect(address.textContent).toContain('Address:')
-    expect(email.textContent).toContain('Email:')
-    expect(phone.textContent).toContain('Phone:')
+    expect(listItems[0].textContent).toContain('Name:')
+    expect(listItems[1].textContent).toContain('Address:')
+    expect(listItems[2].textContent).toContain('Email:')
+    expect(listItems[3].textContent).toContain('Phone:')
   })
 
   it('renders the Name Request applicant information with multi address line data', async () => {
@@ -146,18 +126,13 @@ describe('Name Request Info with a NR', () => {
     store.state.stateModel.nameRequest.applicants.addrLine3 = 'line 3'
     await Vue.nextTick()
 
-    const nrListSelector = '#name-request-applicant-info ul li'
-    const itemCount = wrapper.vm.$el.querySelectorAll(nrListSelector).length
-    const name = wrapper.vm.$el.querySelectorAll(nrListSelector)[0]
-    const address = wrapper.vm.$el.querySelectorAll(nrListSelector)[1]
-    const email = wrapper.vm.$el.querySelectorAll(nrListSelector)[2]
-    const phone = wrapper.vm.$el.querySelectorAll(nrListSelector)[3]
+    const listItems = wrapper.vm.$el.querySelectorAll('#name-request-applicant ul li')
+    expect(listItems.length).toEqual(4)
 
-    expect(itemCount).toEqual(4)
-    expect(name.textContent).toContain('Name: John Joe Doe')
-    expect(address.textContent).toContain('Address: line 1, line 2, line 3, Victoria, BC, V9E 2A1, Canada')
-    expect(email.textContent).toContain('Email: test@gov.bc.ca')
-    expect(phone.textContent).toContain('Phone: 250-356-9090')
+    expect(listItems[0].textContent).toContain('Name: John Joe Doe')
+    expect(listItems[1].textContent).toContain('Address: line 1, line 2, line 3, Victoria, BC, V9E 2A1, Canada')
+    expect(listItems[2].textContent).toContain('Email: test@gov.bc.ca')
+    expect(listItems[3].textContent).toContain('Phone: 250-356-9090')
   })
 
   it('renders the Name Request information with consent not required', async () => {
@@ -167,22 +142,17 @@ describe('Name Request Info with a NR', () => {
     store.state.stateModel.nameRequestApprovedName = mockNrData.names[0].name
     await Vue.nextTick()
 
-    const nrListSelector = '#name-request-info ul li'
-    const itemCount = wrapper.vm.$el.querySelectorAll(nrListSelector).length
-    const title = wrapper.vm.$el.querySelectorAll(nrListSelector)[0]
-    const entityType = wrapper.vm.$el.querySelectorAll(nrListSelector)[1]
-    const requestType = wrapper.vm.$el.querySelectorAll(nrListSelector)[2]
-    const expiryDate = wrapper.vm.$el.querySelectorAll(nrListSelector)[3]
-    const status = wrapper.vm.$el.querySelectorAll(nrListSelector)[4]
-    const conditionConsent = wrapper.vm.$el.querySelectorAll(nrListSelector)[5]
-    expect(itemCount).toEqual(6)
     expect(wrapper.find('#condition-consent').exists()).toBe(true)
-    expect(title.textContent).toContain('NR 1234567 - MADRONA BREAD BASKET INC.')
-    expect(entityType.textContent).toContain('Entity Type: BC Benefit Company')
-    expect(requestType.textContent).toContain('Request Type: New Business')
-    expect(expiryDate.textContent).toContain('Expiry Date: Jun 24, 2020')
-    expect(status.textContent).toContain('Status: Conditional')
-    expect(conditionConsent.textContent).toContain('Condition/Consent: Not Required')
+
+    const listItems = wrapper.vm.$el.querySelectorAll('#name-request ul li')
+    expect(listItems.length).toEqual(6)
+
+    expect(listItems[0].textContent).toContain('NR 1234567 - MADRONA BREAD BASKET INC.')
+    expect(listItems[1].textContent).toContain('Entity Type: BC Benefit Company')
+    expect(listItems[2].textContent).toContain('Request Type: New Business')
+    expect(listItems[3].textContent).toContain('Expiry Date: Jun 24, 2020')
+    expect(listItems[4].textContent).toContain('Status: Conditional')
+    expect(listItems[5].textContent).toContain('Condition/Consent: Not Required')
   })
 
   it('renders the Name Request information with consent received', async () => {
@@ -192,22 +162,17 @@ describe('Name Request Info with a NR', () => {
     store.state.stateModel.nameRequestApprovedName = mockNrData.names[0].name
     await Vue.nextTick()
 
-    const nrListSelector = '#name-request-info ul li'
-    const itemCount = wrapper.vm.$el.querySelectorAll(nrListSelector).length
-    const title = wrapper.vm.$el.querySelectorAll(nrListSelector)[0]
-    const entityType = wrapper.vm.$el.querySelectorAll(nrListSelector)[1]
-    const requestType = wrapper.vm.$el.querySelectorAll(nrListSelector)[2]
-    const expiryDate = wrapper.vm.$el.querySelectorAll(nrListSelector)[3]
-    const status = wrapper.vm.$el.querySelectorAll(nrListSelector)[4]
-    const conditionConsent = wrapper.vm.$el.querySelectorAll(nrListSelector)[5]
-    expect(itemCount).toEqual(6)
     expect(wrapper.find('#condition-consent').exists()).toBe(true)
-    expect(title.textContent).toContain('NR 1234567 - MADRONA BREAD BASKET INC.')
-    expect(entityType.textContent).toContain('Entity Type: BC Benefit Company')
-    expect(requestType.textContent).toContain('Request Type: New Business')
-    expect(expiryDate.textContent).toContain('Expiry Date: Jun 24, 2020')
-    expect(status.textContent).toContain('Status: Conditional')
-    expect(conditionConsent.textContent).toContain('Condition/Consent: Received')
+
+    const listItems = wrapper.vm.$el.querySelectorAll('#name-request ul li')
+    expect(listItems.length).toEqual(6)
+
+    expect(listItems[0].textContent).toContain('NR 1234567 - MADRONA BREAD BASKET INC.')
+    expect(listItems[1].textContent).toContain('Entity Type: BC Benefit Company')
+    expect(listItems[2].textContent).toContain('Request Type: New Business')
+    expect(listItems[3].textContent).toContain('Expiry Date: Jun 24, 2020')
+    expect(listItems[4].textContent).toContain('Status: Conditional')
+    expect(listItems[5].textContent).toContain('Condition/Consent: Received')
   })
 
   it('renders the Name Request information with consent waived', async () => {
@@ -217,22 +182,17 @@ describe('Name Request Info with a NR', () => {
     store.state.stateModel.nameRequestApprovedName = mockNrData.names[0].name
     await Vue.nextTick()
 
-    const nrListSelector = '#name-request-info ul li'
-    const itemCount = wrapper.vm.$el.querySelectorAll(nrListSelector).length
-    const title = wrapper.vm.$el.querySelectorAll(nrListSelector)[0]
-    const entityType = wrapper.vm.$el.querySelectorAll(nrListSelector)[1]
-    const requestType = wrapper.vm.$el.querySelectorAll(nrListSelector)[2]
-    const expiryDate = wrapper.vm.$el.querySelectorAll(nrListSelector)[3]
-    const status = wrapper.vm.$el.querySelectorAll(nrListSelector)[4]
-    const conditionConsent = wrapper.vm.$el.querySelectorAll(nrListSelector)[5]
-    expect(itemCount).toEqual(6)
     expect(wrapper.find('#condition-consent').exists()).toBe(true)
-    expect(title.textContent).toContain('NR 1234567 - MADRONA BREAD BASKET INC.')
-    expect(entityType.textContent).toContain('Entity Type: BC Benefit Company')
-    expect(requestType.textContent).toContain('Request Type: New Business')
-    expect(expiryDate.textContent).toContain('Expiry Date: Jun 24, 2020')
-    expect(status.textContent).toContain('Status: Conditional')
-    expect(conditionConsent.textContent).toContain('Condition/Consent: Waived')
+
+    const listItems = wrapper.vm.$el.querySelectorAll('#name-request ul li')
+    expect(listItems.length).toEqual(6)
+
+    expect(listItems[0].textContent).toContain('NR 1234567 - MADRONA BREAD BASKET INC.')
+    expect(listItems[1].textContent).toContain('Entity Type: BC Benefit Company')
+    expect(listItems[2].textContent).toContain('Request Type: New Business')
+    expect(listItems[3].textContent).toContain('Expiry Date: Jun 24, 2020')
+    expect(listItems[4].textContent).toContain('Status: Conditional')
+    expect(listItems[5].textContent).toContain('Condition/Consent: Waived')
   })
 
   it('renders the Name Request information with consent required', async () => {
@@ -242,23 +202,17 @@ describe('Name Request Info with a NR', () => {
     store.state.stateModel.nameRequestApprovedName = mockNrData.names[0].name
     await Vue.nextTick()
 
-    const nrListSelector = '#name-request-info ul li'
-    const itemCount = wrapper.vm.$el.querySelectorAll(nrListSelector).length
-    const title = wrapper.vm.$el.querySelectorAll(nrListSelector)[0]
-    const entityType = wrapper.vm.$el.querySelectorAll(nrListSelector)[1]
-    const requestType = wrapper.vm.$el.querySelectorAll(nrListSelector)[2]
-    const expiryDate = wrapper.vm.$el.querySelectorAll(nrListSelector)[3]
-    const status = wrapper.vm.$el.querySelectorAll(nrListSelector)[4]
-    const conditionConsent = wrapper.vm.$el.querySelectorAll(nrListSelector)[5]
-
-    expect(itemCount).toEqual(6)
     expect(wrapper.find('#condition-consent').exists()).toBe(true)
-    expect(title.textContent).toContain('NR 1234567 - MADRONA BREAD BASKET INC.')
-    expect(entityType.textContent).toContain('Entity Type: BC Benefit Company')
-    expect(requestType.textContent).toContain('Request Type: New Business')
-    expect(expiryDate.textContent).toContain('Expiry Date: Jun 24, 2020')
-    expect(status.textContent).toContain('Status: Conditional')
-    expect(conditionConsent.textContent).toContain('Condition/Consent: Not Received')
+
+    const listItems = wrapper.vm.$el.querySelectorAll('#name-request ul li')
+    expect(listItems.length).toEqual(6)
+
+    expect(listItems[0].textContent).toContain('NR 1234567 - MADRONA BREAD BASKET INC.')
+    expect(listItems[1].textContent).toContain('Entity Type: BC Benefit Company')
+    expect(listItems[2].textContent).toContain('Request Type: New Business')
+    expect(listItems[3].textContent).toContain('Expiry Date: Jun 24, 2020')
+    expect(listItems[4].textContent).toContain('Status: Conditional')
+    expect(listItems[5].textContent).toContain('Condition/Consent: Not Received')
   })
 })
 
@@ -287,68 +241,13 @@ describe('Name Request Info component without a NR', () => {
 
   it('renders the numbered company content', () => {
     const listItems = wrapper.vm.$el.querySelectorAll('.numbered-company-list-items li')
+    expect(listItems.length).toEqual(6)
 
-    const title = listItems[0]
-    const entityType = listItems[1]
-    const requestType = listItems[2]
-    const bulletOne = listItems[3]
-    const bulletTwo = listItems[4]
-    const bulletThree = listItems[5]
-
-    expect(title.textContent).toContain('[Incorporation Number] B.C. Ltd.')
-    expect(entityType.textContent).toContain('Entity Type: BC Benefit Company')
-    expect(requestType.textContent).toContain('Request Type: New Business')
-
-    expect(bulletOne.textContent).toContain('You will be filing this Incorporation Application')
-    expect(bulletTwo.textContent).toContain('Your Incorporation Number will be generated at the end')
-    expect(bulletThree.textContent).toContain('It is not possible to request a specific Incorporation Number')
-  })
-})
-
-describe('Name Request Info component - Name Translation section', () => {
-  let wrapper: any
-
-  beforeEach(() => {
-    // Entity type will always be set with or without an NR
-    store.state.stateModel.entityType = 'BEN'
-    // Temp Id will always be set with or without an NR
-    store.state.stateModel.tempId = 'T1234567'
-    store.state.stateModel.nameRequest.nrNum = null
-    wrapper = mount(NameRequestInfo, { vuetify, store })
-  })
-
-  afterEach(() => {
-    wrapper.destroy()
-  })
-
-  it('renders the option for name translation', async () => {
-    expect(wrapper.find('#name-translation-info').exists()).toBeTruthy()
-    expect(wrapper.vm.hasNameTranslation).toBe(false)
-
-    expect(wrapper.findComponent(AddNameTranslation).exists()).toBeFalsy()
-    expect(wrapper.findComponent(ListNameTranslations).exists()).toBeFalsy()
-  })
-
-  it('renders the Add Name Translation component', async () => {
-    expect(wrapper.find('#name-translation-info').exists()).toBeTruthy()
-    expect(wrapper.vm.hasNameTranslation).toBe(false)
-
-    await wrapper.find('#name-translation-checkbox').trigger('click')
-
-    expect(wrapper.findComponent(AddNameTranslation).exists()).toBeTruthy()
-    expect(wrapper.findComponent(ListNameTranslations).exists()).toBeFalsy()
-  })
-
-  it('renders the List Name Translation component', async () => {
-    await wrapper.vm.$store.commit('mutateNameTranslation', [
-      'Mock Name Translation',
-      'Another Mock Name Translation'
-    ])
-
-    expect(wrapper.find('#name-translation-info').exists()).toBeTruthy()
-    expect(wrapper.vm.hasNameTranslation).toBe(true)
-
-    expect(wrapper.findComponent(AddNameTranslation).exists()).toBeFalsy()
-    expect(wrapper.findComponent(ListNameTranslations).exists()).toBeTruthy()
+    expect(listItems[0].textContent).toContain('[Incorporation Number] B.C. Ltd.')
+    expect(listItems[1].textContent).toContain('Entity Type: BC Benefit Company')
+    expect(listItems[2].textContent).toContain('Request Type: New Business')
+    expect(listItems[3].textContent).toContain('You will be filing this Incorporation Application')
+    expect(listItems[4].textContent).toContain('Your Incorporation Number will be generated at the end')
+    expect(listItems[5].textContent).toContain('It is not possible to request a specific Incorporation Number')
   })
 })
