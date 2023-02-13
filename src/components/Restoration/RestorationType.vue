@@ -42,6 +42,14 @@
         </v-radio-group>
       </v-col>
     </v-row>
+    <ApprovalType class="font-weight-bold ml-2"
+    :draftCourtOrderNumber="4"
+    :draftApprovedByRegistrar="false"
+    :filingType="restoration"
+    :isCourtOrderOnly="false"
+    @emitRadioButtonChange="setRestorationApprovalType($event)"
+    @emitCourtNumberChange="setRestorationApprovalType($event)"
+    />
   </v-card>
 </template>
 
@@ -51,8 +59,10 @@ import { Component, Watch, Emit, Prop } from 'vue-property-decorator'
 import { DateMixin, CommonMixin } from '@/mixins'
 import { Getter, Action } from 'vuex-class'
 import { RestorationTypes, RouteNames } from '@/enums'
-import { RelationshipsPanel } from '@bcrs-shared-components/relationships-panel'
+import { ApprovalType } from '@bcrs-shared-components/approval-type'
 import { LimitedRestorationPanel } from '@bcrs-shared-components/limited-restoration-panel'
+import { RelationshipsPanel } from '@bcrs-shared-components/relationships-panel'
+import { ActionBindingIF } from '@/interfaces'
 
 @Component({
   mixins: [
@@ -60,6 +70,7 @@ import { LimitedRestorationPanel } from '@bcrs-shared-components/limited-restora
     CommonMixin
   ],
   components: {
+    ApprovalType,
     RelationshipsPanel,
     LimitedRestorationPanel
   }
@@ -73,6 +84,7 @@ export default class RestorationType extends Vue {
   @Action setRestorationExpiry!: ActionBindingIF
   @Action setRestorationRelationships!: ActionBindingIF
   @Action setRestorationTypeValid!: ActionBindingIF
+  @Action setRestorationApprovalType!: ActionBindingIF
 
   // Local properties
   protected selectRestorationType:RestorationTypes = null
@@ -133,3 +145,8 @@ export default class RestorationType extends Vue {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+@import '@/assets/styles/theme.scss';
+
+</style>

@@ -98,6 +98,7 @@ export default class FilingTemplateMixin extends DateMixin {
   @Action setRestorationType!: ActionBindingIF
   @Action setRestorationExpiry!: ActionBindingIF
   @Action setRestorationRelationships!: ActionBindingIF
+  @Action setRestorationApprovalType!: ActionBindingIF
 
   /**
    * Builds an incorporation filing from store data. Used when saving a filing.
@@ -391,6 +392,7 @@ export default class FilingTemplateMixin extends DateMixin {
         foundingDate: this.getBusinessFoundingDate
       },
       restoration: {
+        approvalType: this.getRestoration.approvalType,
         type: this.getRestoration.type,
         expiry: this.getRestoration.expiry || undefined, // can't be null
         nameRequest: {
@@ -530,6 +532,7 @@ export default class FilingTemplateMixin extends DateMixin {
     this.setFoundingDate(draftFiling.business.foundingDate)
 
     // restore Restoration data
+    this.setRestorationApprovalType(draftFiling.restoration.approvalType)
     this.setRestorationType(draftFiling.restoration.type)
     this.setRestorationExpiry(draftFiling.restoration.expiry || null)
     this.setRestorationRelationships(draftFiling.restoration.relationships || [])

@@ -203,6 +203,7 @@ export const stateModel: StateModelIF = {
     isAutoPopulatedBusinessNumber: false
   },
   restoration: {
+    approvalType: null,
     businessInfoValid: false,
     businessNameValid: false,
     type: null,

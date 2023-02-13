@@ -1,4 +1,5 @@
 export * from './accountTypes'
+export * from './approvalTypes'
 export * from './bulletListTypes'
 export * from './dissolutionStatementTypes'
 export * from './dissolutionTypes'

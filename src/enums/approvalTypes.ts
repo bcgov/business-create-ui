@@ -1,0 +1,4 @@
+export enum ApprovalTypes {
+  VIA_COURT_ORDER = 'VIA COURT ORDER',
+  VIA_REGISTRAR = 'VIA REGISTRAR'
+}

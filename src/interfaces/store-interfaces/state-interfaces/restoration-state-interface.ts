@@ -1,4 +1,4 @@
-import { CorpTypeCd, RestorationTypes, RelationshipTypes } from '@/enums'
+import { ApprovalTypes, CorpTypeCd, RestorationTypes, RelationshipTypes } from '@/enums'
 
 export interface RestorationNameRequestIF {
   legalName: string
@@ -7,6 +7,7 @@ export interface RestorationNameRequestIF {
 }
 
 export interface RestorationStateIF {
+  approvalType: ApprovalTypes
   businessInfoValid: boolean
   businessNameValid: boolean
   type: RestorationTypes
