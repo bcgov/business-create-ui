@@ -19,7 +19,7 @@
         <v-col cols="12" sm="9">
           <template v-if="getRestoration.type === RestorationTypes.LIMITED">
             <label class="font-weight-bold">Limited Restoration</label><br/>
-            <span class="limited-text">Expire on {{ this.yyyyMmDdToPacificDate(this.getRestoration.expiry) }}</span>
+            <span class="limited-text">Expires on {{ this.yyyyMmDdToPacificDate(this.getRestoration.expiry) }}</span>
           </template>
           <template v-else>
             <label class="font-weight-bold">Full Restoration</label><br/>

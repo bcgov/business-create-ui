@@ -3,17 +3,22 @@
     <v-row>
 
       <v-col cols="12" sm="3" class="pr-4">
-        <label class="font-weight-bold">Restoration Type</label>
+        <label
+        v-bind:class="{'invalid': !getRestorationTypeValid, 'valid-title': getRestorationTypeValid}"
+        class="font-weight-bold">Restoration Type</label>
       </v-col>
 
       <v-col cols="12" sm="9">
         <v-radio-group column class="pt-0 mt-0" v-model="selectRestorationType">
-          <v-radio id="full-radio-button" label="Full Restoration" :value=RestorationTypes.FULL />
+          <v-radio id="full-radio-button" :value=RestorationTypes.FULL>
+            <span slot="label" class="valid-text">Full Restoration</span>
+          </v-radio>
 
           <!-- Relationship To Company Checkboxes -->
           <v-expand-transition>
-            <v-card flat v-if="isFull">
-              <div class="ml-8">
+            <v-card v-bind:class="{'invalid': !getRestorationTypeValid, 'valid-text': getRestorationTypeValid}"
+            flat v-if="isFull">
+              <div class="ml-8 test">
                 Please select
                 <v-tooltip content-class="top-tooltip" transition="fade-transition" top>
                   <template v-slot:activator="{ on, attrs }">
@@ -21,20 +26,22 @@
                       applicant's relationship
                     </span>
                   </template>
-                  Full restoration application must be related to the dissolved business.
+                  Full restoration applicant must be related to the dissolved business.
                 </v-tooltip>
                 to the company at the time the company was dissolved:
               </div>
               <RelationshipsPanel :draftRelationships="getRestoration.relationships"
-                @changed="setRestorationRelationships($event)" @valid="setRestorationTypeValid($event)" />
+                @changed="setRestorationRelationships($event)" @valid="setRestorationTypeValid($event)"/>
             </v-card>
           </v-expand-transition>
-          <v-radio id="limited-radio-button" label="Limited Restoration" :value=RestorationTypes.LIMITED />
+          <v-radio id="limited-radio-button" :value=RestorationTypes.LIMITED>
+            <span slot="label" class="valid-text">Limited Restoration</span>
+          </v-radio>
 
           <!-- Limited Restoration Radio Panel -->
           <v-expand-transition>
             <v-card flat v-if="isLimited">
-              <LimitedRestorationPanel :currentDate="getCurrentDate" :expiryDate="getRestoration.expiry"
+                <LimitedRestorationPanel :currentDate="getCurrentDate" :expiryDate="getRestoration.expiry"
                 @expiry="setRestorationExpiry($event)" />
             </v-card>
           </v-expand-transition>
@@ -133,3 +140,18 @@ export default class RestorationType extends Vue {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+@import '@/assets/styles/theme.scss';
+
+.valid-title {
+  color: $gray9;
+}
+.invalid {
+  color: $app-red;
+}
+
+.valid-text {
+  color: $gray7;
+}
+</style>
