@@ -1,7 +1,7 @@
 import { BusinessAddressIF, CourtOrderIF, RegisteredRecordsAddressesIF, NaicsIF, NameTranslationIF,
   OfficeAddressIF, PartyIF, RegistrationNameRequestIF, ShareClassIF, SpecialResolutionIF }
   from '@/interfaces'
-import { BusinessTypes, CorpTypeCd, DissolutionStatementTypes, DissolutionTypes, FilingTypes,
+import { ApprovalTypes, BusinessTypes, CorpTypeCd, DissolutionStatementTypes, DissolutionTypes, FilingTypes,
   RestorationTypes, RelationshipTypes } from '@/enums'
 import { ContactPointIF } from '@bcrs-shared-components/interfaces'
 
@@ -176,12 +176,14 @@ export interface RestorationFilingIF {
     foundingDate: string
   }
   restoration: {
+    approvalType?: ApprovalTypes
     type: RestorationTypes
     expiry?: string // YYYY-MM-DD
-    approvalType?: any // *** TODO: udpate type
     courtOrder?: CourtOrderIF
     nameTranslations?: NameTranslationIF[]
     nameRequest?: RegistrationNameRequestIF
+    noticeDate?: string // YYYY-MM-DD
+    applicationDate?: string // YYYY-MM-DD
     parties: PartyIF[]
     offices: RegisteredRecordsAddressesIF | object
     contactPoint: ContactPointIF

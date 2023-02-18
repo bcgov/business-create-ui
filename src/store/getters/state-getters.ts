@@ -1,6 +1,6 @@
 import Vuetify from 'vuetify'
-import { AccountTypes, ApprovalTypes, CoopTypes, CorpTypeCd, DissolutionTypes, FilingNames, FilingTypes,
-  FilingTypesSubTitle, RestorationTypes } from '@/enums'
+import { AccountTypes, CoopTypes, CorpTypeCd, DissolutionTypes, FilingNames,
+  FilingTypes, RestorationTypes } from '@/enums'
 import { AccountInformationIF, AddressIF, BusinessIF, CertifyIF, CompletingPartyIF, ContactPointIF,
   CourtOrderStepIF, CreateMemorandumIF, CreateResolutionIF, CreateRulesIF, DefineCompanyIF,
   DissolutionStatementIF, DissolutionStateIF, DocumentDeliveryIF, EffectiveDateTimeIF, FeesIF,
@@ -613,9 +613,9 @@ export const getRestorationTypeValid = (state: StateIF): boolean => {
   return state.stateModel.restoration.restorationTypeValid
 }
 
-/** The restoration approval type. */
-export const getRestorationApprovalType = (state: StateIF): ApprovalTypes => {
-  return state.stateModel.restoration.approvalType
+/** The approval type validity. */
+export const getApprovalTypeValid = (state: StateIF): boolean => {
+  return state.stateModel.restoration.approvalTypeValid
 }
 
 //

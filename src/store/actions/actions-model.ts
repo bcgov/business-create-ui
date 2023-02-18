@@ -1,5 +1,5 @@
 import { AccountInformationIF, ActionIF, AddressIF, BusinessWarningIF, CertifyIF, CompletingPartyIF,
-  ContactPointIF, CreateResolutionIF, CreateRulesIF, CreateMemorandumIF, DissolutionStatementIF,
+  ContactPointIF, CourtOrderIF, CreateResolutionIF, CreateRulesIF, CreateMemorandumIF, DissolutionStatementIF,
   FeesIF, RegisteredRecordsAddressesIF, IncorporationAgreementIF, NaicsIF, NameRequestIF, NameTranslationIF,
   OrgInformationIF, OrgPersonIF, PartyIF, ResourceIF, ShareClassIF, UploadAffidavitIF,
   ValidationDetailIF } from '@/interfaces'
@@ -391,5 +391,25 @@ export const setRestorationTypeValid: ActionIF = ({ commit }, restorationTypeVal
 }
 
 export const setRestorationApprovalType: ActionIF = ({ commit }, approvalType: ApprovalTypes): void => {
-  commit('mutateRestorationTypeValid', approvalType)
+  commit('mutateRestorationApprovalType', approvalType)
+}
+
+export const setRestorationCourtOrderNumber: ActionIF = ({ commit }, fileNumber: string): void => {
+  commit('mutateRestorationCourtOrderNumber', fileNumber)
+}
+
+export const setRestorationCourtOrder: ActionIF = ({ commit }, courtOrder: CourtOrderIF): void => {
+  commit('mutateRestorationCourtOrder', courtOrder)
+}
+
+export const setRestorationNoticeDate: ActionIF = ({ commit }, noticeDate: string): void => {
+  commit('mutateRestorationNoticeDate', noticeDate)
+}
+
+export const setRestorationApplicationDate: ActionIF = ({ commit }, applicationDate: string): void => {
+  commit('mutateRestorationApplicationDate', applicationDate)
+}
+
+export const setApprovalTypeValid: ActionIF = ({ commit }, approvalTypeValid: boolean): void => {
+  commit('mutateApprovalTypeValid', approvalTypeValid)
 }

@@ -204,12 +204,16 @@ export const stateModel: StateModelIF = {
   },
   restoration: {
     approvalType: null,
+    courtOrder: null,
     businessInfoValid: false,
     businessNameValid: false,
     type: null,
     expiry: null,
+    noticeDate: null,
+    applicationDate: null,
     relationships: [],
-    restorationTypeValid: true
+    restorationTypeValid: true,
+    approvalTypeValid: true
     // defineBusinessValid: false,
     // startDate: '',
     // businessAddress: null,

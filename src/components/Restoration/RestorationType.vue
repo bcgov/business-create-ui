@@ -42,13 +42,16 @@
         </v-radio-group>
       </v-col>
     </v-row>
-    <ApprovalType class="font-weight-bold ml-2"
-    :draftCourtOrderNumber="4"
-    :draftApprovedByRegistrar="false"
-    :filingType="restoration"
-    :isCourtOrderOnly="false"
-    @emitRadioButtonChange="setRestorationApprovalType($event)"
-    @emitCourtNumberChange="setRestorationApprovalType($event)"
+    <ApprovalType class="font-weight-bold pl-1"
+    :courtOrderNumber="getRestoration.courtOrder.fileNumber"
+    :approvedByRegistrar="getRestoration.noticeDate && getRestoration.applicationDate"
+    :noticeDate="getRestoration.noticeDate"
+    :applicationDate="getRestoration.applicationDate"
+    @radioButtonChange="setRestorationApprovalType($event)"
+    @courtNumberChange="setRestorationCourtOrder({ fileNumber: $event })"
+    @update:noticeDate="setRestorationNoticeDate($event)"
+    @update:applicationDate="setRestorationApplicationDate($event)"
+    @valid="setApprovalTypeValid($event)"
     />
   </v-card>
 </template>
@@ -76,6 +79,7 @@ import { ActionBindingIF } from '@/interfaces'
   }
 })
 export default class RestorationType extends Vue {
+  @Getter getApprovalTypeValid!: boolean
   @Getter getRestoration!: RestorationStateIF
   @Getter getCurrentDate!: string
   @Getter getRestorationTypeValid!: boolean
@@ -85,6 +89,10 @@ export default class RestorationType extends Vue {
   @Action setRestorationRelationships!: ActionBindingIF
   @Action setRestorationTypeValid!: ActionBindingIF
   @Action setRestorationApprovalType!: ActionBindingIF
+  @Action setRestorationCourtOrder!: ActionBindingIF
+  @Action setRestorationNoticeDate!: ActionBindingIF
+  @Action setRestorationApplicationDate!: ActionBindingIF
+  @Action setApprovalTypeValid!: ActionBindingIF
 
   // Local properties
   protected selectRestorationType:RestorationTypes = null
@@ -135,10 +143,12 @@ export default class RestorationType extends Vue {
       await this.$nextTick()
       await this.validateAndScroll(
         {
-          restorationValid: this.getRestorationTypeValid
+          restorationValid: this.getRestorationTypeValid,
+          approvalValid: this.getApprovalTypeValid
         },
         [
-          'relationships-panel'
+          'relationships-panel',
+          'approval-type'
         ]
       )
     }

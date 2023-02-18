@@ -99,6 +99,9 @@ export default class FilingTemplateMixin extends DateMixin {
   @Action setRestorationExpiry!: ActionBindingIF
   @Action setRestorationRelationships!: ActionBindingIF
   @Action setRestorationApprovalType!: ActionBindingIF
+  @Action setRestorationCourtOrder!: ActionBindingIF
+  @Action setRestorationNoticeDate!: ActionBindingIF
+  @Action setRestorationApplicationDate!: ActionBindingIF
 
   /**
    * Builds an incorporation filing from store data. Used when saving a filing.
@@ -392,7 +395,9 @@ export default class FilingTemplateMixin extends DateMixin {
         foundingDate: this.getBusinessFoundingDate
       },
       restoration: {
+        applicationDate: this.getRestoration.applicationDate,
         approvalType: this.getRestoration.approvalType,
+        courtOrder: this.getRestoration.courtOrder || { fileNumber: null }, // can't be null
         type: this.getRestoration.type,
         expiry: this.getRestoration.expiry || undefined, // can't be null
         nameRequest: {
@@ -401,6 +406,7 @@ export default class FilingTemplateMixin extends DateMixin {
           nrNumber: this.getNameRequestNumber
         },
         nameTranslations: this.getNameTranslations,
+        noticeDate: this.getRestoration.noticeDate,
         parties: this.orgPersonsToParties(this.getAddPeopleAndRoleStep.orgPeople),
         offices: this.getDefineCompanyStep.officeAddresses,
         contactPoint: {
@@ -532,10 +538,18 @@ export default class FilingTemplateMixin extends DateMixin {
     this.setFoundingDate(draftFiling.business.foundingDate)
 
     // restore Restoration data
+    if (draftFiling.restoration.applicationDate) {
+      this.setRestorationApplicationDate(draftFiling.restoration.applicationDate)
+    }
     this.setRestorationApprovalType(draftFiling.restoration.approvalType)
+    this.setRestorationCourtOrder(draftFiling.restoration.courtOrder || { fileNumber: null })
     this.setRestorationType(draftFiling.restoration.type)
     this.setRestorationExpiry(draftFiling.restoration.expiry || null)
     this.setRestorationRelationships(draftFiling.restoration.relationships || [])
+    this.setRestorationNoticeDate(draftFiling.restoration.noticeDate || null)
+    if (draftFiling.restoration.noticeDate) {
+      this.setRestorationApplicationDate(draftFiling.restoration.noticeDate)
+    }
 
     // NB: no need to restore Name Request data
     // it will be reloaded from NR endpoint in App.vue

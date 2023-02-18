@@ -21,7 +21,7 @@
         <h2>Restoration Type</h2>
         <p>Determine the restoration and approval type.</p>
       </header>
-      <div :class="{ 'invalid-section': getShowErrors && !getRestorationTypeValid }">
+      <div :class="{ 'invalid-section': getShowErrors && !getRestorationTypeValid || !getApprovalTypeValid }">
         <RestorationType />
       </div>
     </section>
@@ -48,7 +48,9 @@ import RestorationType from '@/components/Restoration/RestorationType.vue'
   ]
 })
 export default class RestorationBusinessName extends Vue {
+  @Getter getApprovalTypeValid!: boolean
   @Getter getShowErrors!: boolean
+  @Getter getRestorationTypeValid!: boolean
 
   @Action setDefineCompanyStepValidity!: ActionBindingIF
   @Action setIgnoreChanges!: ActionBindingIF

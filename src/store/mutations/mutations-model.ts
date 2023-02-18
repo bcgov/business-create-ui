@@ -1,7 +1,7 @@
 import { ApprovalTypes, BusinessTypes, CoopTypes, CorpTypeCd, DissolutionTypes, EntityState, FilingTypes,
   RestorationTypes, RelationshipTypes } from '@/enums'
 import { AccountInformationIF, AddressIF, BusinessAddressIF, BusinessWarningIF, CertifyIF,
-  CompletingPartyIF, ContactPointIF, CreateMemorandumIF, CreateResolutionIF, CreateRulesIF,
+  CompletingPartyIF, ContactPointIF, CourtOrderIF, CreateMemorandumIF, CreateResolutionIF, CreateRulesIF,
   DissolutionStatementIF, FeesIF, RegisteredRecordsAddressesIF, IncorporationAgreementIF, NaicsIF,
   NameRequestIF, NameTranslationIF, OfficeAddressIF, OrgInformationIF, OrgPersonIF, PartyIF,
   ResourceIF, ShareClassIF, StaffPaymentIF, StateIF, UploadAffidavitIF, ValidationDetailIF }
@@ -424,4 +424,24 @@ export const mutateRestorationTypeValid = (state: StateIF, restorationTypeValid:
 
 export const mutateRestorationApprovalType = (state: StateIF, approvalType: ApprovalTypes) => {
   state.stateModel.restoration.approvalType = approvalType
+}
+
+export const mutateRestorationCourtOrderNumber = (state: StateIF, fileNumber: string) => {
+  state.stateModel.restoration.courtOrder.fileNumber = fileNumber
+}
+
+export const mutateRestorationCourtOrder = (state: StateIF, courtOrder: CourtOrderIF) => {
+  state.stateModel.restoration.courtOrder = courtOrder
+}
+
+export const mutateRestorationNoticeDate = (state: StateIF, noticeDate: string) => {
+  state.stateModel.restoration.noticeDate = noticeDate
+}
+
+export const mutateRestorationApplicationDate = (state: StateIF, applicationDate: string) => {
+  state.stateModel.restoration.applicationDate = applicationDate
+}
+
+export const mutateApprovalTypeValid = (state: StateIF, approvalTypeValid: boolean) => {
+  state.stateModel.restoration.approvalTypeValid = approvalTypeValid
 }
