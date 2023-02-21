@@ -1,9 +1,9 @@
 <template>
   <div id="business-name">
     <!-- *** TODO: remove before flight -->
-    <pre>companyName={{ companyName }}</pre>
-    <pre>getNameRequestApprovedName={{ getNameRequestApprovedName }}</pre>
-    <pre>isCorrectingName={{ isCorrectingName }}</pre>
+    <!-- <pre>companyName={{ companyName }}</pre> -->
+    <!-- <pre>getNameRequestApprovedName={{ getNameRequestApprovedName }}</pre> -->
+    <!-- <pre>isCorrectingName={{ isCorrectingName }}</pre> -->
     <!-- Display Mode -->
     <template v-if="isNewName">
       <NameRequestInfo />
@@ -21,8 +21,8 @@
           <label :class="{ 'error-text': invalidSection }">
             <strong>Business Name</strong>
             <!-- *** TODO: remove before flight -->
-            <div>ULC => NR 4766680</div>
-            <div>BC => NR 3335087</div>
+            <!-- <div>ULC => NR 4766680</div> -->
+            <!-- <div>BC => NR 3335087</div> -->
           </label>
         </v-col>
 
@@ -130,7 +130,7 @@ export default class BusinessName extends Vue {
 
   /** Whether a new business legal name was entered. */
   get isNewName (): boolean {
-    console.log('*** nr approved name =', this.companyName)
+    // console.log('*** nr approved name =', this.companyName)
     // Approved Name is null when we start
     // and is set when a name option is selected
     return !!this.getNameRequestApprovedName // *** TODO: verify intial vs updated
@@ -138,7 +138,7 @@ export default class BusinessName extends Vue {
 
   /** Reset company name values to original. */
   protected resetName (): void {
-    // *** TODO: implement
+    // *** TODO: implement more here?
     // // reset business information, except for association type.
     // const businessInfo = { ...this.getEntitySnapshot.businessInfo, associationType: this.getAssociationType }
     // this.setBusinessInformation(businessInfo)
@@ -168,7 +168,7 @@ export default class BusinessName extends Vue {
 
   /** On saved=True event, updates UI state. */
   private onSaved (saved: boolean): void {
-    console.log('*** onSaved() =', saved)
+    // console.log('*** onSaved() =', saved)
     if (saved) this.isCorrectingName = false
   }
 
