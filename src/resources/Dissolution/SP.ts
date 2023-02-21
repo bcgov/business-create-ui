@@ -12,10 +12,8 @@ export const DissolutionResourceSp: DissolutionResourceIF = {
     filingTypeCode: FilingCodes.DISSOLUTION_VOLUNTARY
   }],
   detailsTitle: 'Company Details',
-
   reviewAndConfirm: {
     completingPartyStatement: {
-      certifyStatementHeader: null,
       certifyStatements: [],
       certifyClause: `Note: It is an offence to make or assist in making a false or misleading statement
       in a record filed under the Partnership Act. 

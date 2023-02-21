@@ -1,9 +1,10 @@
 import { AccountInformationIF, ActionIF, AddressIF, BusinessWarningIF, CertifyIF, CompletingPartyIF,
-  ContactPointIF, CreateResolutionIF, CreateRulesIF, CreateMemorandumIF, DissolutionStatementIF,
-  FeesIF, RegisteredRecordsAddressesIF, IncorporationAgreementIF, NaicsIF, NameRequestIF, NameTranslationIF,
-  OrgInformationIF, OrgPersonIF, PartyIF, ResourceIF, ShareClassIF, UploadAffidavitIF,
-  ValidationDetailIF } from '@/interfaces'
-import { BusinessTypes, CoopTypes, CorpTypeCd, EntityState, RestorationTypes, RelationshipTypes } from '@/enums'
+  ContactPointIF, CourtOrderIF, CreateResolutionIF, CreateRulesIF, CreateMemorandumIF,
+  DissolutionStatementIF, FeesIF, RegisteredRecordsAddressesIF, IncorporationAgreementIF, NaicsIF,
+  NameRequestIF, NameTranslationIF, OrgInformationIF, OrgPersonIF, PartyIF, ResourceIF, ShareClassIF,
+  UploadAffidavitIF, ValidationDetailIF } from '@/interfaces'
+import { ApprovalTypes, BusinessTypes, CoopTypes, CorpTypeCd, EntityState, RestorationTypes,
+  RelationshipTypes } from '@/enums'
 
 export const setBusinessId: ActionIF = ({ commit }, businessId): void => {
   commit('mutateBusinessId', businessId)
@@ -153,8 +154,12 @@ export const setNameRequestApprovedName: ActionIF = ({ commit }, name: string): 
   commit('mutateNameRequestApprovedName', name)
 }
 
-export const setNameTranslationState: ActionIF = ({ commit }, nameTranslationState: NameTranslationIF): void => {
-  commit('mutateNameTranslation', nameTranslationState)
+export const setNameTranslations: ActionIF = ({ commit }, nameTranslations: NameTranslationIF[]): void => {
+  commit('mutateNameTranslations', nameTranslations)
+}
+
+export const setNameTranslationsValid: ActionIF = ({ commit }, valid: boolean): void => {
+  commit('mutateNameTranslationsValid', valid)
 }
 
 export const setFilingId: ActionIF = ({ commit }, filingId: number): void => {
@@ -385,6 +390,34 @@ export const setRestorationRelationships: ActionIF = ({ commit }, relationships:
   commit('mutateRestorationRelationships', relationships)
 }
 
-export const setRestorationTypeValid: ActionIF = ({ commit }, restorationTypeValid: boolean): void => {
-  commit('mutateRestorationTypeValid', restorationTypeValid)
+export const setBusinessNameValid: ActionIF = ({ commit }, valid: boolean): void => {
+  commit('mutateBusinessNameValid', valid)
+}
+
+export const setRestorationTypeValid: ActionIF = ({ commit }, valid: boolean): void => {
+  commit('mutateRestorationTypeValid', valid)
+}
+
+export const setRestorationApprovalType: ActionIF = ({ commit }, type: ApprovalTypes): void => {
+  commit('mutateRestorationApprovalType', type)
+}
+
+export const setRestorationCourtOrderNumber: ActionIF = ({ commit }, fileNumber: string): void => {
+  commit('mutateRestorationCourtOrderNumber', fileNumber)
+}
+
+export const setRestorationCourtOrder: ActionIF = ({ commit }, courtOrder: CourtOrderIF): void => {
+  commit('mutateRestorationCourtOrder', courtOrder)
+}
+
+export const setRestorationNoticeDate: ActionIF = ({ commit }, date: string): void => {
+  commit('mutateRestorationNoticeDate', date)
+}
+
+export const setRestorationApplicationDate: ActionIF = ({ commit }, date: string): void => {
+  commit('mutateRestorationApplicationDate', date)
+}
+
+export const setApprovalTypeValid: ActionIF = ({ commit }, valid: boolean): void => {
+  commit('mutateApprovalTypeValid', valid)
 }

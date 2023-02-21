@@ -52,12 +52,11 @@ import { Getter } from 'vuex-class'
 
 // Enums
 import { RouteNames } from '@/enums'
-import { RegistrationStateIF, RestorationStateIF } from '@/interfaces'
+import { RegistrationStateIF } from '@/interfaces'
 
 @Component({})
 export default class Stepper extends Vue {
   @Getter getRegistration!: RegistrationStateIF
-  @Getter getRestoration!: RestorationStateIF
   @Getter getShowErrors!: boolean
   @Getter getSteps!: Array<any>
   @Getter getValidateSteps!: boolean
@@ -73,6 +72,7 @@ export default class Stepper extends Vue {
   @Getter isMemorandumValid!: boolean
   @Getter isRegistrationValid!: boolean
   @Getter isResolutionValid!: boolean
+  @Getter isRestoreBusinessNameValid!: boolean
   @Getter isRestorationValid!: boolean
   @Getter isRulesValid!: boolean
 
@@ -98,7 +98,7 @@ export default class Stepper extends Vue {
 
       case RouteNames.RESTORATION_APPLICANT_INFORMATION: return this.isAddPeopleAndRolesValid
       case RouteNames.RESTORATION_BUSINESS_INFORMATION: return this.isDefineCompanyValid
-      case RouteNames.RESTORATION_BUSINESS_NAME: return this.getRestoration.businessNameValid
+      case RouteNames.RESTORATION_BUSINESS_NAME: return this.isRestoreBusinessNameValid
       case RouteNames.RESTORATION_REVIEW_CONFIRM: return this.isRestorationValid
     }
     return false

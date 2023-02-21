@@ -348,6 +348,11 @@ export const getNameTranslations = (state: StateIF): NameTranslationIF[] => {
   return state.stateModel.nameTranslations
 }
 
+/** The Name Translations oject validity. */
+export const getNameTranslationsValid = (state: StateIF): boolean => {
+  return state.stateModel.nameTranslationsValid
+}
+
 /** Whether we are ignoring data changes. */
 export const ignoreChanges = (state: StateIF): boolean => {
   return state.stateModel.ignoreChanges
@@ -400,10 +405,20 @@ export const isBusySaving = (state: StateIF): boolean => {
 
 /** Is true when the step is valid. */
 export const isDefineCompanyValid = (state: StateIF): boolean => {
-  // If entity is a Coop, check for Coop Type assignment, flagged valid for non-coop entities.
-  const isValidCoopType = isTypeCoop(state) ? !!getCooperativeType(state) : true
+  if (isTypeCoop(state)) {
+    return (!!getCooperativeType(state) && getDefineCompanyStep(state).valid)
+  }
+  return getDefineCompanyStep(state).valid
+}
 
-  return getDefineCompanyStep(state).valid && isValidCoopType
+/** Is true when the step is valid. */
+export const isRestoreBusinessNameValid = (state: StateIF): boolean => {
+  return (
+    getBusinessNameValid(state) &&
+    getNameTranslationsValid(state) &&
+    getRestorationTypeValid(state) &&
+    getApprovalTypeValid(state)
+  )
 }
 
 /** Is true when the step is valid. */
@@ -496,7 +511,7 @@ export const isIncorporationApplicationValid = (state: StateIF): boolean => {
   const isCertifyValid = getCertifyState(state).valid && !!getCertifyState(state).certifiedBy
 
   return (
-    getDefineCompanyStep(state).valid &&
+    isDefineCompanyValid(state) &&
     isAddPeopleAndRolesValid(state) &&
     isDocumentValid &&
     isCertifyValid
@@ -525,11 +540,11 @@ export const isRestorationValid = (state: StateIF): boolean => {
   const isStaffPaymentValid = isRoleStaff(state) ? getStaffPaymentStep(state).valid : true
 
   return (
-    isAddPeopleAndRolesValid(state) &&
-    getDefineCompanyStep(state).valid &&
-    getRestoration(state).businessNameValid &&
-    isCertifyValid &&
-    isStaffPaymentValid
+    isRestoreBusinessNameValid(state) && // step 1
+    isAddPeopleAndRolesValid(state) && // step 2
+    isDefineCompanyValid(state) && // step 3
+    isCertifyValid && // step 4
+    isStaffPaymentValid // step 4
   )
 }
 
@@ -608,9 +623,19 @@ export const getRestoration = (state: StateIF): RestorationStateIF => {
   return state.stateModel.restoration
 }
 
+/** The business name validity. */
+export const getBusinessNameValid = (state: StateIF): boolean => {
+  return state.stateModel.restoration.businessNameValid
+}
+
 /** The restoration type validity. */
 export const getRestorationTypeValid = (state: StateIF): boolean => {
   return state.stateModel.restoration.restorationTypeValid
+}
+
+/** The approval type validity. */
+export const getApprovalTypeValid = (state: StateIF): boolean => {
+  return state.stateModel.restoration.approvalTypeValid
 }
 
 //

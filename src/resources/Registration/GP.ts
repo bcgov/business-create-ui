@@ -32,7 +32,6 @@ export const RegistrationResourceGp: RegistrationResourceIF = {
   },
   reviewAndConfirm: {
     completingPartyStatement: {
-      certifyStatementHeader: null,
       certifyStatements: [],
       certifyClause: 'Note: It is an offence to make or assist in making a false or misleading ' +
         'statement in a record filed under the Partnership Act. A person who commits this ' +

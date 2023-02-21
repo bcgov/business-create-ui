@@ -462,7 +462,7 @@ export default class App extends Vue {
         this.setHaveChanges(false)
         this.paymentErrorDialog = true
       } else {
-        console.log('save error =', error) // eslint-disable-line no-console
+        console.log('Save error =', error) // eslint-disable-line no-console
         this.saveErrorDialog = true
       }
     })

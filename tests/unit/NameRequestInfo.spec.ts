@@ -3,7 +3,6 @@ import Vuetify from 'vuetify'
 import { mount } from '@vue/test-utils'
 import { getVuexStore } from '@/store'
 import NameRequestInfo from '@/components/common/NameRequestInfo.vue'
-import NameTranslation from '@/components/common/NameTranslation.vue'
 
 Vue.use(Vuetify)
 
@@ -37,8 +36,8 @@ const mockNrData = {
   ],
   nrNum: 'NR 1234567',
   request_action_cd: 'NEW',
+  requestTypeCd: 'BC',
   state: 'APPROVED'
-  // }
 }
 
 describe('Name Request Info with a NR', () => {
@@ -63,9 +62,6 @@ describe('Name Request Info with a NR', () => {
 
     expect(wrapper.vm.$el.querySelector('#name-request-applicant').textContent)
       .toContain('Name Request Applicant')
-
-    // verify that Name Translation component is rendered
-    expect(wrapper.findComponent(NameTranslation).exists()).toBe(true)
   })
 
   it('renders the Name Request information with no data', () => {
@@ -243,7 +239,7 @@ describe('Name Request Info component without a NR', () => {
     const listItems = wrapper.vm.$el.querySelectorAll('.numbered-company-list-items li')
     expect(listItems.length).toEqual(6)
 
-    expect(listItems[0].textContent).toContain('[Incorporation Number] B.C. Ltd.')
+    expect(listItems[0].textContent).toContain('[Incorporation Number] B.C. LTD.')
     expect(listItems[1].textContent).toContain('Entity Type: BC Benefit Company')
     expect(listItems[2].textContent).toContain('Request Type: New Business')
     expect(listItems[3].textContent).toContain('You will be filing this Incorporation Application')

@@ -7,15 +7,14 @@
       </header>
 
       <v-card flat class="mt-5">
-        <NameRequestInfo
-          @hasNameTranslation="onNameTranslation($event)"
-        />
+        <NameRequestInfo />
+        <NameTranslations v-if="!isTypeCoop" class="mt-n8" />
       </v-card>
     </section>
 
     <!-- Cooperative Association Type -->
     <section class="mt-10" v-show="isTypeCoop">
-      <header id="association-type-header">
+      <header id="cooperative-type-header">
         <h2>Cooperative Association Type</h2>
         <!-- Help Section -->
         <div class="mt-4">
@@ -57,7 +56,7 @@
         <v-card flat class="step-container">
           <CooperativeType
             :showErrors="getShowErrors"
-            @hasCooperativeType="onCooperativeType($event)"
+            @hasCooperativeType="onHasCooperativeType($event)"
           />
         </v-card>
       </div>
@@ -78,7 +77,7 @@
           :showErrors="getShowErrors"
           :inputAddresses="addresses"
           @update:addresses="setOfficeAddresses($event)"
-          @valid="onAddressFormValidityChange($event)"
+          @valid="onOfficeAddressesValid($event)"
         />
       </div>
     </section>
@@ -100,7 +99,7 @@
           :isEditing="true"
           :showErrors="getShowErrors"
           @update="setBusinessContact($event)"
-          @valid="onBusinessContactFormValidityChange($event)"
+          @valid="onBusinessContactInfoValid($event)"
         />
       </v-card>
     </section>
@@ -141,16 +140,18 @@ import { CoopTypes, CorpTypeCd, RouteNames } from '@/enums'
 import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
 import CooperativeType from '@/components/Dissolution/CooperativeType.vue'
 import FolioNumber from '@/components/common/FolioNumber.vue'
-import NameRequestInfo from '@/components/common/NameRequestInfo.vue'
 import OfficeAddresses from '@/components/common/OfficeAddresses.vue'
+import NameRequestInfo from '@/components/common/NameRequestInfo.vue'
+import NameTranslations from '@/components/common/NameTranslations.vue'
 
 @Component({
   components: {
     BusinessContactInfo,
     CooperativeType,
     FolioNumber,
+    OfficeAddresses,
     NameRequestInfo,
-    OfficeAddresses
+    NameTranslations
   },
   mixins: [
     CommonMixin
@@ -165,6 +166,7 @@ export default class IncorporationDefineCompany extends Vue {
   @Getter getShowErrors!: boolean
   @Getter getBusinessContact!: ContactPointIF
   @Getter getFolioNumber!: string
+  @Getter getNameTranslationsValid!: boolean
 
   @Action setBusinessContact!: ActionBindingIF
   @Action setCooperativeType!: ActionBindingIF
@@ -175,12 +177,29 @@ export default class IncorporationDefineCompany extends Vue {
 
   protected businessContactFormValid = false
   protected addressFormValid = false
-  protected hasValidNameTranslation = true
   protected hasValidCooperativeType = false
   protected coopHelpToggle = false
 
   // Enum for template
   readonly CorpTypeCd = CorpTypeCd
+
+  /** Array of valid components. Must match validFlags. */
+  readonly validComponents = [
+    'name-header',
+    'cooperative-type-header',
+    'office-address-header',
+    'registered-office-contact-header'
+  ]
+
+  /** Object of valid flags. Must match validComponents. */
+  get validFlags (): object {
+    return {
+      validNameTranslation: this.isTypeCoop ? true : this.getNameTranslationsValid,
+      validCooperativeType: this.isTypeCoop ? this.hasValidCooperativeType : true,
+      validAddressForm: this.addressFormValid,
+      validBusinessContactForm: this.businessContactFormValid
+    }
+  }
 
   get addresses (): RegisteredRecordsAddressesIF {
     return this.getDefineCompanyStep.officeAddresses as RegisteredRecordsAddressesIF
@@ -235,35 +254,35 @@ export default class IncorporationDefineCompany extends Vue {
     }
   }
 
-  private onNameTranslation (valid: boolean): void {
-    this.hasValidNameTranslation = valid
+  @Watch('getNameTranslationsValid', { deep: true })
+  private onNameTranslationsValid (valid: boolean): void {
     this.setDefineCompanyStepValidity(
       this.businessContactFormValid &&
       this.addressFormValid &&
-      this.hasValidNameTranslation
+      this.getNameTranslationsValid
     )
   }
 
-  private onCooperativeType (cooperativeType: CoopTypes): void {
+  private onHasCooperativeType (cooperativeType: CoopTypes): void {
     this.hasValidCooperativeType = !!cooperativeType
     this.setCooperativeType(cooperativeType)
   }
 
-  private onBusinessContactFormValidityChange (valid: boolean): void {
+  private onBusinessContactInfoValid (valid: boolean): void {
     this.businessContactFormValid = valid
     this.setDefineCompanyStepValidity(
       this.businessContactFormValid &&
       this.addressFormValid &&
-      this.hasValidNameTranslation
+      this.getNameTranslationsValid
     )
   }
 
-  private onAddressFormValidityChange (valid: boolean): void {
+  private onOfficeAddressesValid (valid: boolean): void {
     this.addressFormValid = valid
     this.setDefineCompanyStepValidity(
       this.businessContactFormValid &&
       this.addressFormValid &&
-      this.hasValidNameTranslation
+      this.getNameTranslationsValid
     )
   }
 
@@ -272,20 +291,7 @@ export default class IncorporationDefineCompany extends Vue {
     if (this.getShowErrors && this.$route.name === RouteNames.INCORPORATION_DEFINE_COMPANY) {
       // scroll to invalid components
       await this.$nextTick()
-      await this.validateAndScroll(
-        {
-          hasValidNameTranslation: this.hasValidNameTranslation,
-          hasValidCooperativeType: this.isTypeCoop ? this.hasValidCooperativeType : true,
-          addressFormValid: this.addressFormValid,
-          businessContactFormValid: this.businessContactFormValid
-        },
-        [
-          'name-header',
-          'association-type-header',
-          'office-address-header',
-          'registered-office-contact-header'
-        ]
-      )
+      await this.validateAndScroll(this.validFlags, this.validComponents)
     }
   }
 }

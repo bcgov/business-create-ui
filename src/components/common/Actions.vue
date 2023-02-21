@@ -312,28 +312,29 @@ export default class Actions extends Vue {
     }
   }
 
+  // FUTURE: merge this with NameRequestMixin::validateNameRequest()
   /** Fetches NR and validates it. */
   private async validateNameRequest (nrNumber: string): Promise<void> {
-    const nrResponse = await LegalServices.fetchNameRequest(nrNumber).catch(error => {
+    const nameRequest = await LegalServices.fetchNameRequest(nrNumber).catch(error => {
       this.$root.$emit('name-request-retrieve-error')
       throw new Error(error)
     })
 
     // ensure NR was found
-    if (!nrResponse) {
+    if (!nameRequest) {
       this.$root.$emit('name-request-invalid-error', NameRequestStates.INVALID)
       throw new Error('Invalid Name Request')
     }
 
     // ensure NR is valid
-    const error = this.isNrInvalid(nrResponse)
+    const error = this.isNrInvalid(nameRequest)
     if (error) {
       this.$root.$emit('name-request-invalid-error', NameRequestStates.INVALID)
       throw new Error(error)
     }
 
     // ensure NR is consumable
-    const state = this.getNrState(nrResponse)
+    const state = this.getNrState(nameRequest)
     if (state !== NameRequestStates.APPROVED && state !== NameRequestStates.CONDITIONAL) {
       this.$root.$emit('name-request-invalid-error', state || NameRequestStates.INVALID)
       throw new Error('Invalid Name request')

@@ -94,7 +94,7 @@
           </tr>
 
           <!-- Share Series rows -->
-          <tr v-for="(seriesItem, index) in row.item.series" :key="`class:${row.index}-Series:${index}`"
+          <tr v-for="(seriesItem, index) in row.item.series" :key="`class-${row.index}_series-${index}`"
               class="series-row"
               :class="{ 'series-row-last': index === row.item.series.length - 1}"
           >

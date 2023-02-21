@@ -234,7 +234,7 @@ import {
   ActionBindingIF,
   ContactPointIF,
   CertifyIF,
-  CertifyStatementIF,
+  CompletingPartyStatementIF,
   CourtOrderStepIF,
   DocumentDeliveryIF,
   CompletingPartyIF,
@@ -266,7 +266,7 @@ export default class DissolutionFirm extends Vue {
   @Getter getBusinessLegalName!: string
   @Getter getBusinessContact!: ContactPointIF
   @Getter getCertifyState!: CertifyIF
-  @Getter getCompletingPartyStatement!: CertifyStatementIF
+  @Getter getCompletingPartyStatement!: CompletingPartyStatementIF
   @Getter getCourtOrderStep!: CourtOrderStepIF
   @Getter getCurrentDate!: string
   @Getter getDissolutionCustodianEmail!: string

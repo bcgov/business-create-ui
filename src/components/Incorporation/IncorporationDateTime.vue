@@ -423,7 +423,7 @@ label {
     top: -2rem;
     padding: 0 12px;
     font-size: $px-12;
-    font-weight: 500;
+    font-weight: normal;
     color: $app-red !important;
   }
 }

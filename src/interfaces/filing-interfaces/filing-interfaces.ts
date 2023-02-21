@@ -1,8 +1,8 @@
 import { BusinessAddressIF, CourtOrderIF, RegisteredRecordsAddressesIF, NaicsIF, NameTranslationIF,
-  OfficeAddressIF, PartyIF, RegistrationNameRequestIF, ShareClassIF, SpecialResolutionIF }
-  from '@/interfaces'
-import { BusinessTypes, CorpTypeCd, DissolutionStatementTypes, DissolutionTypes, FilingTypes,
-  RestorationTypes, RelationshipTypes } from '@/enums'
+  OfficeAddressIF, PartyIF, RegistrationNameRequestIF, RestorationNameRequestIF, ShareClassIF,
+  SpecialResolutionIF } from '@/interfaces'
+import { ApprovalTypes, BusinessTypes, CorpTypeCd, DissolutionStatementTypes, DissolutionTypes,
+  FilingTypes, RestorationTypes, RelationshipTypes } from '@/enums'
 import { ContactPointIF } from '@bcrs-shared-components/interfaces'
 
 /** Interface for incorporation filing data saved to the Legal API. */
@@ -170,21 +170,23 @@ export interface RestorationFilingIF {
     priority?: boolean
   }
   business: {
-    legalType: CorpTypeCd
+    foundingDate: string
     identifier: string
     legalName: string
-    foundingDate: string
+    legalType: CorpTypeCd
   }
   restoration: {
-    type: RestorationTypes
-    expiry?: string // YYYY-MM-DD
-    approvalType?: any // *** TODO: udpate type
-    courtOrder?: CourtOrderIF
-    nameTranslations?: NameTranslationIF[]
-    nameRequest?: RegistrationNameRequestIF
-    parties: PartyIF[]
-    offices: RegisteredRecordsAddressesIF | object
+    applicationDate: string // YYYY-MM-DD
+    approvalType: ApprovalTypes
     contactPoint: ContactPointIF
-    relationships?: RelationshipTypes[]
+    courtOrder: CourtOrderIF
+    expiry: string // YYYY-MM-DD
+    nameRequest: RestorationNameRequestIF
+    nameTranslations: NameTranslationIF[]
+    noticeDate: string // YYYY-MM-DD
+    offices: RegisteredRecordsAddressesIF | object
+    parties: PartyIF[]
+    relationships: RelationshipTypes[]
+    type: RestorationTypes
   }
 }

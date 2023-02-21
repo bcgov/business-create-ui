@@ -1,4 +1,4 @@
-import { AffidavitResourceIF, CertifyStatementIF, CustodianResourceIF, CreateMemorandumResourceIF,
+import { AffidavitResourceIF, CompletingPartyStatementIF, CustodianResourceIF, CreateMemorandumResourceIF,
   CreateResolutionResourceIF, CreateRulesResourceIF, FilingDataIF, IncorporationAgreementTypeIF,
   KeyValueIF, StateIF, StepIF } from '@/interfaces'
 import { isLimitedRestorationFiling, isFullRestorationFiling } from './state-getters'
@@ -38,8 +38,8 @@ export const getCreateResolutionResource = (state: StateIF): CreateResolutionRes
   return state.resourceModel.createResolution
 }
 
-/** The completing party statement resources. */
-export const getCompletingPartyStatement = (state: StateIF): CertifyStatementIF => {
+/** The completing party statement object. */
+export const getCompletingPartyStatement = (state: StateIF): CompletingPartyStatementIF => {
   return state.resourceModel.reviewAndConfirm.completingPartyStatement
 }
 

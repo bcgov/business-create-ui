@@ -1,7 +1,3 @@
-// Common interfaces
-export * from './common/address-interface'
-export * from './common/correct-name-option-interface'
-
 // Filing interfaces
 export * from './filing-interfaces/filing-interfaces'
 export * from './filing-interfaces/filing-data-interface'
@@ -18,7 +14,7 @@ export * from './Registration/business-address-interface'
 // Resource interfaces
 export * from './resource-interfaces/component-resource-interfaces/affidavit-resource-interface'
 export * from './resource-interfaces/component-resource-interfaces/agreement-types-interface'
-export * from './resource-interfaces/component-resource-interfaces/certifyStatement-interface'
+export * from './resource-interfaces/component-resource-interfaces/completing-party-interface'
 export * from './resource-interfaces/component-resource-interfaces/step-interface'
 export * from './resource-interfaces/component-resource-interfaces/custodian-resource-interface'
 export * from './resource-interfaces/resource-interface'
@@ -53,7 +49,6 @@ export * from './store-interfaces/state-interfaces/auth-information-interface'
 export * from './store-interfaces/state-interfaces/business-interface'
 export * from './store-interfaces/state-interfaces/dissolution-state-interface'
 export * from './store-interfaces/state-interfaces/document-delivery-interface'
-export * from './store-interfaces/state-interfaces/name-request-interface'
 export * from './store-interfaces/state-interfaces/org-information-interface'
 export * from './store-interfaces/state-interfaces/registration-state-interface'
 export * from './store-interfaces/state-interfaces/restoration-state-interface'
@@ -76,6 +71,7 @@ export * from './utils-interfaces/validation-item-detail-interface'
 // External interfaces
 // NB: importing EmptyAddress doesn't work in local components
 export {
+  AddressIF,
   BreadcrumbIF,
   BusinessLookupIF,
   BusinessLookupResultIF,
@@ -85,7 +81,11 @@ export {
   EmptyBusinessLookup,
   EmptyContactPoint,
   EmptyNaics,
+  EmptyNameRequest,
   NaicsIF,
   NaicsResultIF,
+  NrApplicantIF,
+  NrNameIF,
+  NameRequestIF,
   StaffPaymentIF
 } from '@bcrs-shared-components/interfaces'

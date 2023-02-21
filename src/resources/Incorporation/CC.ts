@@ -85,9 +85,6 @@ export const IncorporationResourceCc: IncorporationResourceIF = {
   },
   reviewAndConfirm: {
     completingPartyStatement: {
-      certifyStatementHeader: `the Completing Party, have examined the Company
-        Articles and the Incorporation Agreement applicable to the company that is to be
-        incorporated by the filing of this Incorporation Application and confirm that:`,
       certifyStatements: [
         'An original signature has been placed on each of those signature lines,',
 

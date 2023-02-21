@@ -4,9 +4,9 @@ import { Action, Getter } from 'vuex-class'
 import { cloneDeep, isEqual } from 'lodash'
 import { v4 as uuidv4 } from 'uuid'
 import { CorpTypeCd, PartyTypes, RoleTypes, RuleIds } from '@/enums'
-import { ActionBindingIF, AddressIF, BusinessLookupIF, ConfirmDialogType, EmptyAddress,
-  EmptyBusinessLookup, FormIF, OrgPersonIF, PeopleAndRolesResourceIF, RegistrationStateIF,
-  RolesIF } from '@/interfaces'
+import { ActionBindingIF, AddressIF, BusinessLookupIF, ConfirmDialogType, EmptyBusinessLookup,
+  FormIF, OrgPersonIF, PeopleAndRolesResourceIF, RegistrationStateIF, RolesIF } from '@/interfaces'
+import { EmptyAddress } from '@bcrs-shared-components/interfaces'
 import { Rules } from '@/rules'
 import { PersonAddressSchema } from '@/schemas'
 import { LegalServices } from '@/services'

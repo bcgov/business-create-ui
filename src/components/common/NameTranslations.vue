@@ -1,17 +1,17 @@
 <template>
-  <div id="name-translation">
+  <div id="name-translations">
     <ConfirmDialog
       ref="confirmDialog"
-      attach="#name-translation"
+      attach="#name-translations"
     />
 
     <div
       class="section-container"
-      :class="{ 'invalid-section': getShowErrors && !isValidNameTranslation }"
+      :class="{ 'invalid-section': getShowErrors && !nameTranslationsValid }"
     >
-      <v-row no-gutters id="name-translation-info">
+      <v-row no-gutters>
         <v-col cols="12" sm="3" class="pr-4">
-          <label>
+          <label :class="{ 'error-text': getShowErrors && !nameTranslationsValid }">
             <strong>Name Translation</strong>
           </label>
         </v-col>
@@ -19,19 +19,19 @@
         <v-col cols="12" sm="9" class="pt-4 pt-sm-0">
           <v-checkbox
             class="pt-0 mt-0"
-            v-model="hasNameTranslation"
+            v-model="checkbox"
             id="name-translation-checkbox"
-            @click="confirmNameTranslation()"
+            @click="onCheckboxClick()"
             hide-details
           >
             <template v-slot:label>
-              <span class="translation-checkbox-label">
+              <span class="checkbox-label">
                 This company uses one or more translations of its name outside of Canada.
               </span>
             </template>
           </v-checkbox>
 
-          <template v-if="hasNameTranslation">
+          <template v-if="checkbox">
             <p class="mt-4 mb-0">
               <b>Note:</b> Name translations must use the Latin Alphabet (English, French, etc.).
               Names that use other writing systems must spell the name phonetically in English or
@@ -48,25 +48,29 @@
               <span>Add a Name Translation</span>
             </v-btn>
 
-            <!-- Add Name Translation component -->
-            <div v-if="isAddingNameTranslation" class="mt-6">
-              <AddNameTranslation
-                :edit-name-translation="editingNameTranslation"
-                @addTranslation="addNameTranslation($event)"
-                @cancelTranslation="cancelNameTranslation()"
-                @removeTranslation="removeNameTranslation(editIndex)"
-              />
-            </div>
+            <!-- Add/Edit Name Translation -->
+            <v-expand-transition>
+              <div v-if="isAddingNameTranslation" class="mt-6">
+                <AddNameTranslation
+                  :edit-name-translation="editingNameTranslation"
+                  @addTranslation="addNameTranslation($event)"
+                  @cancelTranslation="cancelNameTranslation()"
+                  @removeTranslation="removeNameTranslation(editIndex)"
+                />
+              </div>
+            </v-expand-transition>
 
-            <!-- List Name Translation component -->
-            <div v-if="getNameTranslations && getNameTranslations.length > 0" class="mt-6">
-              <ListNameTranslations
-                :isAddingNameTranslation="isAddingNameTranslation"
-                :translationsList="getNameTranslations"
-                @editTranslation="editNameTranslation($event)"
-                @removeTranslation="removeNameTranslation($event)"
-              />
-            </div>
+            <!-- List Name Translation -->
+            <v-expand-transition>
+              <div v-if="getNameTranslations.length > 0" class="mt-6">
+                <ListNameTranslations
+                  :isAddingNameTranslation="isAddingNameTranslation"
+                  :translationsList="getNameTranslations"
+                  @editTranslation="editNameTranslation($event)"
+                  @removeTranslation="removeNameTranslation($event)"
+                />
+              </div>
+            </v-expand-transition>
           </template>
         </v-col>
       </v-row>
@@ -76,7 +80,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { Component, Emit, Watch } from 'vue-property-decorator'
+import { Component, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 import { ConfirmDialog } from '@bcrs-shared-components/confirm-dialog'
 import AddNameTranslation from '@/components/common/AddNameTranslation.vue'
@@ -91,87 +95,88 @@ import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module
     ListNameTranslations
   }
 })
-export default class NameRequestInfo extends Vue {
+export default class NameTranslations extends Vue {
   // Refs
   $refs!: {
     confirmDialog: ConfirmDialogType
   }
 
   // Local properties
-  protected hasNameTranslation = false
-  protected isAddingNameTranslation = true
+  protected checkbox = false
+  protected isAddingNameTranslation = false
   protected editingNameTranslation = ''
   protected editIndex = -1
 
-  @Action setNameTranslationState!: ActionBindingIF
+  @Action setNameTranslations!: ActionBindingIF
+  @Action setNameTranslationsValid!: ActionBindingIF
 
   @Getter getNameTranslations!: NameTranslationIF[]
   @Getter getShowErrors!: boolean
 
-  /** Whether name translation is valid. */
-  get isValidNameTranslation (): boolean {
-    return (this.hasNameTranslation ? this.getNameTranslations?.length > 0 : true)
+  /** Whether this component is valid. */
+  get nameTranslationsValid (): boolean {
+    // valid if checkbox is not checked
+    if (!this.checkbox) return true
+    // valid if there are name translations and the add panel is not open
+    if (this.getNameTranslations.length > 0 && !this.isAddingNameTranslation) return true
+    // otherwise invalid
+    return false
   }
 
   /**
    * Adds or updates a name translation.
-   * @param name The name to add
+   * @param name the name to add
    */
   protected addNameTranslation (name: string): void {
-    const nameTranslations = Object.assign([], this.getNameTranslations)
+    // make a copy (to trigger update)
+    const nameTranslations = [ ...this.getNameTranslations ]
 
-    // Handle name translation adds or updates
+    // edit or add name
     this.editIndex > -1
       ? nameTranslations[this.editIndex].name = name
       : nameTranslations.push({ name })
 
-    this.setNameTranslationState(nameTranslations)
-
-    // Emit Validation
-    this.emitHasNameTranslation()
-
+    this.setNameTranslations(nameTranslations)
     this.cancelNameTranslation()
   }
 
   /**
    * Sets specified name translation to be edited.
-   * @param index Index number of the name translation to edit
+   * @param index the index number of the name to edit
    */
   protected editNameTranslation (index: number): void {
-    const nameTranslations = Object.assign([], this.getNameTranslations)
-    this.editingNameTranslation = nameTranslations[index].name
-    this.editIndex = index
     this.isAddingNameTranslation = true
+    this.editingNameTranslation = this.getNameTranslations[index].name
+    this.editIndex = index
   }
 
-  /**
-   * Removes a name translation.
-   * @param index Index number of the name translation to remove
-   */
-  protected removeNameTranslation (index: number): void {
-    const nameTranslations = Object.assign([], this.getNameTranslations)
-    nameTranslations.splice(index, 1)
-
-    this.setNameTranslationState(nameTranslations)
-
-    // Emit Validation
-    this.emitHasNameTranslation()
-
-    this.cancelNameTranslation()
-  }
-
-  /** Cancels adding or editing of name translation. */
+  /** Cancels adding or editing of the current name translation. */
   protected cancelNameTranslation (): void {
     this.isAddingNameTranslation = false
     this.editingNameTranslation = ''
     this.editIndex = -1
   }
 
-  /** Handles name translation checkbox logic. */
-  protected confirmNameTranslation (val: boolean) {
+  /**
+   * Removes a name translation.
+   * @param index the index number of the name to remove
+   */
+  protected removeNameTranslation (index: number): void {
+    // make a copy (to trigger update)
+    const nameTranslations = [ ...this.getNameTranslations ]
+    nameTranslations.splice(index, 1)
+
+    this.setNameTranslations(nameTranslations)
+    this.cancelNameTranslation()
+  }
+
+  /**
+   * Handles name translations checkbox logic.
+   */
+  protected onCheckboxClick () {
     // if user is unchecking the box and there are name translations
     // then prompt whether to delete them all
-    if (!this.hasNameTranslation && this.getNameTranslations?.length > 0) {
+    if (!this.checkbox && this.getNameTranslations.length > 0) {
       // open confirmation dialog and wait for response
       this.$refs.confirmDialog.open(
         'Remove All Name Translations',
@@ -185,31 +190,34 @@ export default class NameRequestInfo extends Vue {
         }
       ).then(async (confirm) => {
         if (confirm) {
-          this.setNameTranslationState([])
+          this.setNameTranslations([])
+          this.cancelNameTranslation()
           // clear the checkbox
-          this.hasNameTranslation = false
+          this.checkbox = false
         }
       }).catch(() => {
         // reset the checkbox
-        this.hasNameTranslation = true
+        this.checkbox = true
       })
     }
-
-    // Emit Validation
-    this.emitHasNameTranslation()
   }
 
+  /**
+   * Initially and when name translations list changes, opens the component.
+   */
   @Watch('getNameTranslations', { deep: true, immediate: true })
   private updateNameTranslation (): void {
-    if (this.getNameTranslations?.length > 0) {
-      this.isAddingNameTranslation = false
-      this.hasNameTranslation = true
+    if (this.getNameTranslations.length > 0) {
+      this.checkbox = true
     }
   }
 
-  @Emit('hasNameTranslation')
-  protected emitHasNameTranslation (): boolean {
-    return this.isValidNameTranslation
+  /**
+   * When component validity changes, updates the store.
+   */
+  @Watch('nameTranslationsValid', { immediate: true })
+  private onNameTranslationsValid (val: boolean): void {
+    this.setNameTranslationsValid(val)
   }
 }
 </script>
@@ -217,9 +225,13 @@ export default class NameRequestInfo extends Vue {
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
 
-.translation-checkbox-label {
+.checkbox-label {
   margin-top: 1px;
   font-size: $px-14;
   color: $gray9;
+}
+
+p {
+  font-size: $px-14;
 }
 </style>

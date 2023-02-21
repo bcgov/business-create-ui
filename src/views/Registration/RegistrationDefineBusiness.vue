@@ -48,7 +48,6 @@
           @valid="onBusinessNumberValidEvent($event)"
         />
       </v-card>
-
     </section>
 
     <!-- Business Addresses -->
@@ -171,6 +170,16 @@ export default class RegistrationDefineBusiness extends Vue {
   businessContactValid = false
   startDateValid = false
 
+  /** Array of valid components. Must match validFlags. */
+  readonly validComponents = [
+    'business-type-confirm-header',
+    'nature-of-business-header',
+    'business-number-header',
+    'business-addresses-header',
+    'business-contact-header',
+    'business-start-date-header'
+  ]
+
   /** Object of valid flags. Must match validComponents. */
   get validFlags (): object {
     return {
@@ -182,16 +191,6 @@ export default class RegistrationDefineBusiness extends Vue {
       businessStartDateValid: this.startDateValid
     }
   }
-
-  /** Array of valid components. Must match validFlags. */
-  readonly validComponents = [
-    'business-type-confirm-header',
-    'nature-of-business-header',
-    'business-number-header',
-    'business-addresses-header',
-    'business-contact-header',
-    'business-start-date-header'
-  ]
 
   /** True if all flags are valid. */
   get allFlagsValid (): boolean {

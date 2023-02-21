@@ -11,9 +11,9 @@
       </header>
 
       <!-- Business Name -->
-      <v-card id="business-name-summary-vcard" flat class="mt-6">
-        <CardHeader icon="mdi-domain" label="Business Name" />
-        <RestorationTypeSummary />
+      <v-card id="summary-restore-business-vcard" flat class="mt-6">
+        <CardHeader icon="mdi-domain-plus" label="Business Name" />
+        <SummaryRestoreBusiness />
       </v-card>
 
       <!-- Applicant Information -->
@@ -93,8 +93,7 @@
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
-import { ActionBindingIF, CertifyIF, ContactPointIF, CourtOrderStepIF, EffectiveDateTimeIF,
-  IncorporationAgreementIF, PeopleAndRoleIF, ShareStructureIF } from '@/interfaces'
+import { ActionBindingIF, CertifyIF, ContactPointIF, PeopleAndRoleIF } from '@/interfaces'
 import { CorpTypeCd, RoleTypes } from '@/enums'
 import CardHeader from '@/components/common/CardHeader.vue'
 import Certify from '@/components/common/Certify.vue'
@@ -103,7 +102,7 @@ import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
 import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 import StaffPayment from '@/components/common/StaffPayment.vue'
 import SummaryDefineCompany from '@/components/Incorporation/SummaryDefineCompany.vue'
-import RestorationTypeSummary from '@/components/Restoration/RestorationTypeSummary.vue'
+import SummaryRestoreBusiness from '@/components/Restoration/SummaryRestoreBusiness.vue'
 
 @Component({
   components: {
@@ -113,7 +112,7 @@ import RestorationTypeSummary from '@/components/Restoration/RestorationTypeSumm
     ListPeopleAndRoles,
     StaffPayment,
     SummaryDefineCompany,
-    RestorationTypeSummary
+    SummaryRestoreBusiness
   }
 })
 export default class RestorationReviewConfirm extends Vue {

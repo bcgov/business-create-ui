@@ -172,7 +172,6 @@ export const IncorporationResourceCp: IncorporationResourceIF = {
   },
   reviewAndConfirm: {
     completingPartyStatement: {
-      certifyStatementHeader: null,
       certifyStatements: [],
       certifyClause: `Note: It is an offence to make a false or misleading statement in respect
         of a material fact in a record submitted to the Corporate Registry for filing.

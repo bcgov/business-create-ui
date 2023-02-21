@@ -1,56 +1,70 @@
 <template>
-  <v-card flat id="restoration-type" class="pa-6">
-    <v-row>
+  <div id="restoration-type">
+    <div class="section-container" :class="{ 'invalid-section': invalidSection }">
+      <v-row no-gutters>
+        <v-col cols="12" sm="3" class="pr-4">
+          <label :class="{ 'error-text': invalidSection }">
+            <strong>Restoration Type</strong>
+          </label>
+        </v-col>
 
-      <v-col cols="12" sm="3" class="pr-4">
-        <label class="font-weight-bold">Restoration Type</label>
-      </v-col>
+        <v-col cols="12" sm="9">
+          <v-radio-group
+            class="mt-0 pt-0"
+            v-model="selectRestorationType"
+            @change="changeRestorationType()"
+          >
+            <v-radio id="full-radio-button" label="Full Restoration" :value=RestorationTypes.FULL />
 
-      <v-col cols="12" sm="9">
-        <v-radio-group column class="pt-0 mt-0" v-model="selectRestorationType">
-          <v-radio id="full-radio-button" label="Full Restoration" :value=RestorationTypes.FULL />
-
-          <!-- Relationship To Company Checkboxes -->
-          <v-expand-transition>
-            <v-card flat v-if="isFull">
-              <div class="ml-8">
-                Please select
-                <v-tooltip content-class="top-tooltip" transition="fade-transition" top>
-                  <template v-slot:activator="{ on, attrs }">
-                    <span class="dotted-underline" v-bind="attrs" v-on="on">
-                      applicant's relationship
-                    </span>
-                  </template>
-                  Full restoration application must be related to the dissolved business.
-                </v-tooltip>
-                to the company at the time the company was dissolved:
+            <!-- Relationship To Company Checkboxes -->
+            <v-expand-transition>
+              <div v-if="isFull">
+                <div class="ml-8">
+                  Please select
+                  <v-tooltip content-class="top-tooltip" transition="fade-transition" top>
+                    <template v-slot:activator="{ on, attrs }">
+                      <span class="dotted-underline" v-bind="attrs" v-on="on">
+                        applicant's relationship
+                      </span>
+                    </template>
+                    Full restoration application must be related to the dissolved business.
+                  </v-tooltip>
+                  to the company at the time the company was dissolved:
+                </div>
+                <RelationshipsPanel
+                  :draftRelationships="getRestoration.relationships"
+                  @changed="setRestorationRelationships($event)"
+                  @valid="setRestorationTypeValid($event)"
+                />
               </div>
-              <RelationshipsPanel :draftRelationships="getRestoration.relationships"
-                @changed="setRestorationRelationships($event)" @valid="setRestorationTypeValid($event)" />
-            </v-card>
-          </v-expand-transition>
-          <v-radio id="limited-radio-button" label="Limited Restoration" :value=RestorationTypes.LIMITED />
+            </v-expand-transition>
 
-          <!-- Limited Restoration Radio Panel -->
-          <v-expand-transition>
-            <v-card flat v-if="isLimited">
-              <LimitedRestorationPanel :currentDate="getCurrentDate" :expiryDate="getRestoration.expiry"
-                @expiry="setRestorationExpiry($event)" />
-            </v-card>
-          </v-expand-transition>
+            <v-radio id="limited-radio-button" label="Limited Restoration" :value=RestorationTypes.LIMITED />
 
-        </v-radio-group>
-      </v-col>
-    </v-row>
-  </v-card>
+            <!-- Limited Restoration Radio Panel -->
+            <v-expand-transition>
+              <div v-if="isLimited">
+                <LimitedRestorationPanel
+                  :currentDate="getCurrentDate"
+                  :expiryDate="getRestoration.expiry"
+                  @expiry="setRestorationExpiry($event)"
+                />
+              </div>
+            </v-expand-transition>
+          </v-radio-group>
+        </v-col>
+      </v-row>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
-import { Component, Watch, Emit, Prop } from 'vue-property-decorator'
+import { Component, Watch } from 'vue-property-decorator'
 import { DateMixin, CommonMixin } from '@/mixins'
 import { Getter, Action } from 'vuex-class'
-import { RestorationTypes, RouteNames } from '@/enums'
+import { RestorationTypes } from '@/enums'
+import { RestorationStateIF } from '@/interfaces'
 import { RelationshipsPanel } from '@bcrs-shared-components/relationships-panel'
 import { LimitedRestorationPanel } from '@bcrs-shared-components/limited-restoration-panel'
 
@@ -65,71 +79,58 @@ import { LimitedRestorationPanel } from '@bcrs-shared-components/limited-restora
   }
 })
 export default class RestorationType extends Vue {
-  @Getter getRestoration!: RestorationStateIF
   @Getter getCurrentDate!: string
+  @Getter getRestoration!: RestorationStateIF
   @Getter getRestorationTypeValid!: boolean
+  @Getter getShowErrors!: boolean
 
-  @Action setRestorationType!: ActionBindingIF
   @Action setRestorationExpiry!: ActionBindingIF
   @Action setRestorationRelationships!: ActionBindingIF
+  @Action setRestorationType!: ActionBindingIF
   @Action setRestorationTypeValid!: ActionBindingIF
 
   // Local properties
-  protected selectRestorationType:RestorationTypes = null
+  protected selectRestorationType: RestorationTypes = null
 
+  // Enum for template
   readonly RestorationTypes = RestorationTypes
 
-  /**
-   * Called when component is mounted.
-   * Automatically check limited or full restoration when user continues a draft as per last selection.
-   */
-  mounted (): void {
-    if (this.getRestoration.type === RestorationTypes.LIMITED) {
-      this.selectRestorationType = RestorationTypes.LIMITED
-    } else {
-      this.selectRestorationType = RestorationTypes.FULL
-    }
-  }
-
-  // Computed value getter that returns true if current restoration is full
+  /** Is true if current restoration is full. */
   get isFull (): boolean {
     return (this.getRestoration.type === RestorationTypes.FULL)
   }
 
-  // Computed value getter that returns true if current restoration is limited
+  /** Is true if current restoration is limited. */
   get isLimited (): boolean {
     return (this.getRestoration.type === RestorationTypes.LIMITED)
   }
 
+  /** This section's validity state (when prompted by app). */
+  get invalidSection (): boolean {
+    return (this.getShowErrors && !this.getRestorationTypeValid)
+  }
+
   /**
-   * Set the selected Limited Restoration choice
-   * @param val The value of the selected radio button
+   * Sets the selected Limited Restoration choice.
+   * @param val the value of the selected radio button
    */
-  @Watch('selectRestorationType')
-  private setRestorationChoice (val) {
-    this.setRestorationType(val)
+  protected changeRestorationType (): void {
+    this.setRestorationType(this.selectRestorationType)
     if (this.isLimited) {
       this.setRestorationRelationships([])
-      this.setRestorationTypeValid(true)
     } else {
       this.setRestorationExpiry(null)
     }
   }
 
-  @Watch('$route')
-  private async scrollToInvalidComponent (): Promise<void> {
-    if (this.$route.name === RouteNames.RESTORATION_BUSINESS_NAME) {
-      // scroll to invalid components
-      await this.$nextTick()
-      await this.validateAndScroll(
-        {
-          restorationValid: this.getRestorationTypeValid
-        },
-        [
-          'relationships-panel'
-        ]
-      )
-    }
+  /** Initially and when restoration type changes, updates local property. */
+  @Watch('getRestoration.type', { immediate: true })
+  private onRestorationType (val: RestorationTypes): void {
+    this.selectRestorationType = val
+
+    // if Limited, set validity to true
+    // if Full then validity is set by RelationshipsPanel
+    if (this.isLimited) this.setRestorationTypeValid(true)
   }
 }
 </script>

@@ -41,6 +41,7 @@ export interface StateModelIF {
   nameRequest: NameRequestIF
   nameRequestApprovedName: string
   nameTranslations: NameTranslationIF[]
+  nameTranslationsValid: boolean
   currentDate: string
   effectiveDateTime: EffectiveDateTimeIF
   certifyState: CertifyIF

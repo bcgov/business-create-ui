@@ -67,7 +67,7 @@ export default class FilingTemplateMixin extends DateMixin {
   @Action setFoundingDate!: ActionBindingIF
   @Action setCooperativeType!: ActionBindingIF
   @Action setOfficeAddresses!: ActionBindingIF
-  @Action setNameTranslationState!: ActionBindingIF
+  @Action setNameTranslations!: ActionBindingIF
   @Action setDefineCompanyStepValidity!: ActionBindingIF
   @Action setOrgPersonList!: ActionBindingIF
   @Action setCertifyState!: ActionBindingIF
@@ -98,6 +98,10 @@ export default class FilingTemplateMixin extends DateMixin {
   @Action setRestorationType!: ActionBindingIF
   @Action setRestorationExpiry!: ActionBindingIF
   @Action setRestorationRelationships!: ActionBindingIF
+  @Action setRestorationApprovalType!: ActionBindingIF
+  @Action setRestorationCourtOrder!: ActionBindingIF
+  @Action setRestorationNoticeDate!: ActionBindingIF
+  @Action setRestorationApplicationDate!: ActionBindingIF
 
   /**
    * Builds an incorporation filing from store data. Used when saving a filing.
@@ -209,7 +213,9 @@ export default class FilingTemplateMixin extends DateMixin {
     this.setOfficeAddresses(draftFiling.incorporationApplication.offices)
 
     // restore Name Translations
-    this.setNameTranslationState(draftFiling.incorporationApplication.nameTranslations || [])
+    if (draftFiling.incorporationApplication.nameTranslations) {
+      this.setNameTranslations(draftFiling.incorporationApplication.nameTranslations)
+    }
 
     // restore Contact Info
     this.setBusinessContact({
@@ -218,7 +224,9 @@ export default class FilingTemplateMixin extends DateMixin {
     })
 
     // restore Persons and Organizations
-    this.setOrgPersonList(draftFiling.incorporationApplication.parties || [])
+    if (draftFiling.incorporationApplication.parties) {
+      this.setOrgPersonList(draftFiling.incorporationApplication.parties)
+    }
 
     // conditionally restore the entity-specific sections
     switch (this.getEntityType) {
@@ -281,9 +289,13 @@ export default class FilingTemplateMixin extends DateMixin {
         this.setIncorporationAgreementStepData({
           agreementType: draftFiling.incorporationApplication.incorporationAgreement?.agreementType
         })
-        // set courtOrder attribute
-        this.setCourtOrderFileNumber(draftFiling.incorporationApplication.courtOrder?.fileNumber || '')
-        this.setHasPlanOfArrangement(draftFiling.incorporationApplication.courtOrder?.hasPlanOfArrangement || false)
+        // set court order fields
+        if (draftFiling.incorporationApplication.courtOrder?.fileNumber) {
+          this.setCourtOrderFileNumber(draftFiling.incorporationApplication.courtOrder.fileNumber)
+        }
+        if (draftFiling.incorporationApplication.courtOrder?.hasPlanOfArrangement) {
+          this.setHasPlanOfArrangement(draftFiling.incorporationApplication.courtOrder.hasPlanOfArrangement)
+        }
         break
     }
 
@@ -391,16 +403,8 @@ export default class FilingTemplateMixin extends DateMixin {
         foundingDate: this.getBusinessFoundingDate
       },
       restoration: {
-        type: this.getRestoration.type,
-        expiry: this.getRestoration.expiry || undefined, // can't be null
-        nameRequest: {
-          legalName: this.getNameRequestApprovedName,
-          legalType: this.getEntityType,
-          nrNumber: this.getNameRequestNumber
-        },
-        nameTranslations: this.getNameTranslations,
-        parties: this.orgPersonsToParties(this.getAddPeopleAndRoleStep.orgPeople),
-        offices: this.getDefineCompanyStep.officeAddresses,
+        applicationDate: this.getRestoration.applicationDate,
+        approvalType: this.getRestoration.approvalType,
         contactPoint: {
           email: this.getBusinessContact.email,
           phone: this.getBusinessContact.phone,
@@ -409,7 +413,19 @@ export default class FilingTemplateMixin extends DateMixin {
             ? { extension: +this.getBusinessContact.extension }
             : {}
         },
-        relationships: this.getRestoration.relationships
+        courtOrder: this.getRestoration.courtOrder,
+        expiry: this.getRestoration.expiry || undefined, // can't be null
+        nameRequest: {
+          legalName: this.getNameRequestApprovedName,
+          legalType: this.getEntityType,
+          nrNumber: this.getNameRequestNumber
+        },
+        nameTranslations: this.getNameTranslations,
+        noticeDate: this.getRestoration.noticeDate,
+        offices: this.getDefineCompanyStep.officeAddresses,
+        parties: this.orgPersonsToParties(this.getAddPeopleAndRoleStep.orgPeople),
+        relationships: this.getRestoration.relationships,
+        type: this.getRestoration.type
       }
     }
 
@@ -530,18 +546,39 @@ export default class FilingTemplateMixin extends DateMixin {
     this.setFoundingDate(draftFiling.business.foundingDate)
 
     // restore Restoration data
+    if (draftFiling.restoration.applicationDate) {
+      this.setRestorationApplicationDate(draftFiling.restoration.applicationDate)
+    }
+    this.setRestorationApprovalType(draftFiling.restoration.approvalType)
+    if (draftFiling.restoration.courtOrder) {
+      this.setRestorationCourtOrder(draftFiling.restoration.courtOrder)
+    }
     this.setRestorationType(draftFiling.restoration.type)
-    this.setRestorationExpiry(draftFiling.restoration.expiry || null)
-    this.setRestorationRelationships(draftFiling.restoration.relationships || [])
+    if (draftFiling.restoration.expiry) {
+      this.setRestorationExpiry(draftFiling.restoration.expiry)
+    }
+    if (draftFiling.restoration.relationships) {
+      this.setRestorationRelationships(draftFiling.restoration.relationships)
+    }
+    if (draftFiling.restoration.noticeDate) {
+      this.setRestorationNoticeDate(draftFiling.restoration.noticeDate)
+    }
+    if (draftFiling.restoration.applicationDate) {
+      this.setRestorationApplicationDate(draftFiling.restoration.applicationDate)
+    }
 
     // NB: no need to restore Name Request data
     // it will be reloaded from NR endpoint in App.vue
 
     // restore Name Translations
-    this.setNameTranslationState(draftFiling.restoration.nameTranslations || [])
+    if (draftFiling.restoration.nameTranslations) {
+      this.setNameTranslations(draftFiling.restoration.nameTranslations)
+    }
 
     // restore Persons and Organizations
-    this.setOrgPersonList(this.partiesToOrgPersons(draftFiling.restoration.parties || []))
+    if (draftFiling.restoration.parties) {
+      this.setOrgPersonList(this.partiesToOrgPersons(draftFiling.restoration.parties))
+    }
 
     // restore Office addresses
     if (draftFiling.restoration.offices) {
