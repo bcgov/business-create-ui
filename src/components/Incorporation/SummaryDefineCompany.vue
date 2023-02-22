@@ -23,7 +23,7 @@
               <label id="company-label">Name</label>
             </v-col>
             <v-col cols="12" sm="9" class="pt-4 pt-sm-0">
-              <div id="company-name">{{ getNameRequestApprovedName || '[Incorporation Number] B.C. LTD.' }}</div>
+              <div id="company-name">{{ companyName }}</div>
               <div id="company-description">{{ entityDescription }}</div>
             </v-col>
           </v-row>
@@ -136,6 +136,11 @@ export default class SummaryDefineCompany extends Vue {
   @Getter isIncorporationFiling!: boolean
   @Getter isFullRestorationFiling!: boolean
   @Getter isLimitedRestorationFiling!: boolean
+
+  /** The company name. */
+  get companyName (): string {
+    return this.getNameRequestApprovedName || '[Incorporation Number] B.C. LTD.'
+  }
 
   /** The entity description. */
   get entityDescription (): string {
