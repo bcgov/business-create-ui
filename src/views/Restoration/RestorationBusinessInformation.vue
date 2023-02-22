@@ -1,7 +1,7 @@
 <template>
   <div id="restoration-business-information">
 
-    <!-- Registered Office Addresses -->
+    <!-- Registered and Records Office Addresses -->
     <section class="mt-10" v-show="isEntityType">
       <header id="office-address-header">
         <h2>Registered and Records Office Addresses</h2>

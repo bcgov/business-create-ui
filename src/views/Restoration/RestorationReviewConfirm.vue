@@ -11,13 +11,13 @@
       </header>
 
       <!-- Business Name -->
-      <v-card id="summary-restore-business-vcard" flat class="mt-6">
+      <v-card id="business-name-vcard" flat class="mt-6">
         <CardHeader icon="mdi-domain-plus" label="Business Name" />
         <SummaryRestoreBusiness />
       </v-card>
 
       <!-- Applicant Information -->
-      <v-card id="people-and-roles-vcard" flat class="mt-6">
+      <v-card id="applicant-information-vcard" flat class="mt-6">
         <CardHeader icon="mdi-account-multiple-plus" label="Applicant Information" />
         <ListPeopleAndRoles
           :isSummary="true"
@@ -28,7 +28,7 @@
       </v-card>
 
       <!-- Business Information -->
-      <v-card id="business-info-summary-vcard" flat class="mt-6">
+      <v-card id="business-information-vcard" flat class="mt-6">
         <CardHeader icon="mdi-domain" label="Business Information" />
         <SummaryDefineCompany />
       </v-card>

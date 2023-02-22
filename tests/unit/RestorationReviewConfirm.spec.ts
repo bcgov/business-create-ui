@@ -1,6 +1,8 @@
 import { shallowWrapperFactory } from '../jest-wrapper-factory'
 import { RestorationReviewConfirm } from '@/views'
 import { RestorationResources } from '@/resources/'
+import CardHeader from '@/components/common/CardHeader.vue'
+import SummaryRestoreBusiness from '@/components/Restoration/SummaryRestoreBusiness.vue'
 import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
 import SummaryDefineCompany from '@/components/Incorporation/SummaryDefineCompany.vue'
 import { DocumentDelivery } from '@bcrs-shared-components/document-delivery'
@@ -51,8 +53,21 @@ for (const test of restorationBusinessInfo) {
     it('displays Review and Confirm section', () => {
       const section = wrapper.findAll('section').at(0)
       expect(section.find('header h2').text()).toBe('Review and Confirm')
-      expect(section.findComponent(ListPeopleAndRoles).exists()).toBe(true)
-      expect(section.findComponent(SummaryDefineCompany).exists()).toBe(true)
+
+      // verify business name vcard
+      let vcard = section.find('#business-name-vcard')
+      expect(vcard.findComponent(CardHeader).attributes('label')).toBe('Business Name')
+      expect(vcard.findComponent(SummaryRestoreBusiness).exists()).toBe(true)
+
+      // verify applicant information vcard
+      vcard = section.find('#applicant-information-vcard')
+      expect(vcard.findComponent(CardHeader).attributes('label')).toBe('Applicant Information')
+      expect(vcard.findComponent(ListPeopleAndRoles).exists()).toBe(true)
+
+      // verify business information vcard
+      vcard = section.find('#business-information-vcard')
+      expect(vcard.findComponent(CardHeader).attributes('label')).toBe('Business Information')
+      expect(vcard.findComponent(SummaryDefineCompany).exists()).toBe(true)
     })
 
     it('displays Document Delivery section', () => {
