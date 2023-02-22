@@ -52,11 +52,11 @@
 
           <v-col cols="12" sm="9">
             <template v-if="isLimitedRestoration">
-              <p class="font-weight-bold">Limited Restoration</p>
+              <p id="limited-restoration">Limited Restoration</p>
               <p id="expires-on">Expires on {{ expiry }}</p>
             </template>
             <template v-else>
-              <p class="font-weight-bold">Full Restoration</p>
+              <p id="full-restoration">Full Restoration</p>
               <p id="applicants-relationships">Applicant's relationship(s): {{ relationships }}.</p>
             </template>
           </v-col>
@@ -159,6 +159,12 @@ export default class SummaryRestoreBusiness extends Vue {
 
 p {
   margin-bottom: 0;
+}
+
+#limited-restoration,
+#full-restoration {
+  font-weight: bold;
+  color: $gray9;
 }
 
 #company-description,
