@@ -417,9 +417,9 @@ export default class FilingTemplateMixin extends DateMixin {
         courtOrder: this.getRestoration.courtOrder,
         expiry: this.getRestoration.expiry || undefined, // can't be null
         nameRequest: {
-          legalName: this.getNameRequestApprovedName,
           legalType: this.getEntityType,
-          nrNumber: this.getNameRequestNumber
+          legalName: this.getNameRequestApprovedName || undefined, // can't be null
+          nrNumber: this.getNameRequestNumber || undefined // can't be null
         },
         nameTranslations: this.getNameTranslations,
         noticeDate: this.getRestoration.noticeDate,

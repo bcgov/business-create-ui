@@ -7,9 +7,9 @@
         <p>Add a Name Request that is reserved for this restoration application or restore
           as a numbered company.</p>
         <!-- *** TODO: remove before flight -->
-        <!-- <pre>getBusinessNameValid={{ getBusinessNameValid }}</pre> -->
-        <!-- <pre>getNameTranslationsValid={{ getNameTranslationsValid }}</pre> -->
-        <!-- <pre>getRestorationTypeValid={{ getRestorationTypeValid }}</pre> -->
+        <!-- <pre>getBusinessLegalName={{ getBusinessLegalName }}</pre>
+        <pre>getNameRequestApprovedName={{ getNameRequestApprovedName }}</pre>
+        <pre>getBusinessNameValid={{ getBusinessNameValid }}</pre> -->
       </header>
       <v-card flat class="mt-5">
         <BusinessName id="business-name" />
@@ -64,6 +64,10 @@ export default class RestorationBusinessName extends Vue {
   @Getter getNameTranslationsValid!: boolean
   @Getter getRestorationTypeValid!: boolean
   @Getter getShowErrors!: boolean
+
+  // *** for debugging:
+  // @Getter getNameRequestApprovedName!: string
+  // @Getter getBusinessLegalName!: string
 
   @Action setIgnoreChanges!: ActionBindingIF
 

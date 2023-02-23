@@ -1,14 +1,10 @@
 <template>
   <div id="name-request-info">
     <template v-if="getNameRequestNumber">
+      <!-- Name Request -->
       <div class="section-container mb-n8">
-        <!-- Name Request -->
         <v-row no-gutters id="name-request">
-          <v-col cols="12" sm="3" class="pr-4">
-            <label>
-              <strong>Name Request</strong>
-            </label>
-          </v-col>
+          <v-col cols="12" sm="3" class="pr-4"><label>Name Request</label></v-col>
 
           <v-col cols="12" sm="8" class="pt-4 pt-sm-0">
             <ul class="name-request-list-items">
@@ -25,18 +21,14 @@
             </ul>
           </v-col>
 
-          <!-- extra column is for possible action butto -->
+          <!-- extra column is for possible action button -->
         </v-row>
       </div>
 
       <!-- Name Request Applicant -->
       <div class="section-container">
         <v-row no-gutters id="name-request-applicant">
-          <v-col cols="12" sm="3" class="pr-4">
-            <label>
-              <strong>Name Request Applicant</strong>
-            </label>
-          </v-col>
+          <v-col cols="12" sm="3" class="pr-4"><label>Name Request Applicant</label></v-col>
 
           <v-col cols="12" sm="9" class="pt-4 pt-sm-0">
             <ul class="applicant-list-items">
@@ -50,18 +42,21 @@
       </div>
     </template>
 
-    <!-- Name -->
-    <template v-else>
+    <template v-else-if="getNameRequestApprovedName">
+      <!-- Changed Name -->
       <div class="section-container">
-        <v-row
-          no-gutters
-          id="numbered-company-info"
-        >
-          <v-col cols="12" sm="3" class="pr-4">
-            <label>
-              <strong>Name</strong>
-            </label>
-          </v-col>
+        <v-row no-gutters id="changed-name-info">
+          <v-col cols="12" sm="3" class="pr-4"><label>Name</label></v-col>
+          <v-col cols="12" sm="9" id="changed-name-title">{{ getNameRequestApprovedName }}</v-col>
+        </v-row>
+      </div>
+    </template>
+
+    <template v-else>
+      <!-- Numbered Company -->
+      <div class="section-container">
+        <v-row no-gutters id="numbered-company-info">
+          <v-col cols="12" sm="3" class="pr-4"><label>Name</label></v-col>
 
           <v-col cols="12" sm="9">
             <ul class="numbered-company-list-items">
@@ -194,6 +189,12 @@ ul {
 #name-request-title,
 #numbered-company-title {
   font-size: $px-20;
+}
+
+#changed-name-title {
+  font-size: $px-22;
+  font-weight: bold;
+  color: $gray9;
 }
 
 .numbered-company-list-items {

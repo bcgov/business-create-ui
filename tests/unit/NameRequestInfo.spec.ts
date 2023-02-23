@@ -221,6 +221,7 @@ describe('Name Request Info component without a NR', () => {
     // Temp Id will always be set with or without an NR
     store.state.stateModel.tempId = 'T1234567'
     store.state.stateModel.nameRequest.nrNum = null
+    store.state.stateModel.nameRequestApprovedName = null
     wrapper = mount(NameRequestInfo, { vuetify, store })
   })
 

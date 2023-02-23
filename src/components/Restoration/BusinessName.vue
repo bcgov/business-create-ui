@@ -1,10 +1,5 @@
 <template>
   <div id="business-name">
-    <!-- *** TODO: remove before flight -->
-    <!-- <pre>companyName={{ companyName }}</pre> -->
-    <!-- <pre>getNameRequestApprovedName={{ getNameRequestApprovedName }}</pre> -->
-    <!-- <pre>isCorrectingName={{ isCorrectingName }}</pre> -->
-
     <!-- Editing Mode -->
     <div v-if="!isNewName" class="section-container" :class="{ 'invalid-section': invalidSection }">
       <v-row no-gutters>
@@ -51,13 +46,12 @@
 import Vue from 'vue'
 import { Component, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
-import { ActionBindingIF, EmptyNameRequest, EntitySnapshotIF, FlagsCompanyInfoIF, NrApplicantIF,
-  NameRequestIF } from '@/interfaces/'
+import { ActionBindingIF, EmptyNameRequest, NrApplicantIF, NameRequestIF } from '@/interfaces/'
 import { ContactPointIF } from '@bcrs-shared-components/interfaces/'
 import { CommonMixin, DateMixin, NameRequestMixin } from '@/mixins/'
 import { CoopTypes, NameChangeOptions, NrRequestActionCodes } from '@/enums/'
+import { CorpTypeCd } from '@bcrs-shared-components/enums/'
 import { LegalServices } from '@/services/'
-import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module/'
 import { CorrectName } from '@bcrs-shared-components/correct-name/'
 import NameRequestInfo from '@/components/common/NameRequestInfo.vue'
 
@@ -92,7 +86,7 @@ export default class BusinessName extends Vue {
   protected isCorrectingName = true // display options initially
 
   get companyName (): string {
-    // *** TODO: use initial company name if it exists
+    // *** TODO: use initial company name if it exists?
     return (this.getNameRequestApprovedName || this.getBusinessLegalName)
   }
 
@@ -103,13 +97,12 @@ export default class BusinessName extends Vue {
 
   /** The current options for name changes. */
   get correctionNameChoices (): Array<NameChangeOptions> {
-    // *** TODO: uncomment after testing
-    // if (this.isRestorationFiling) {
-    //   return [
-    //     NameChangeOptions.CORRECT_NAME_TO_NUMBER,
-    //     NameChangeOptions.CORRECT_NEW_NR
-    //   ]
-    // }
+    if (this.isRestorationFiling) {
+      return [
+        NameChangeOptions.CORRECT_NAME_TO_NUMBER,
+        NameChangeOptions.CORRECT_NEW_NR
+      ]
+    }
 
     // fallback case - not used for now
     return [
@@ -127,7 +120,6 @@ export default class BusinessName extends Vue {
 
   /** Whether a new business legal name was entered. */
   get isNewName (): boolean {
-    // console.log('*** nr approved name =', this.companyName)
     // Approved Name is null when we start
     // and is set when a name option is selected
     return !!this.getNameRequestApprovedName // *** TODO: verify intial vs updated
@@ -165,7 +157,6 @@ export default class BusinessName extends Vue {
 
   /** On saved=True event, updates UI state. */
   private onSaved (saved: boolean): void {
-    // console.log('*** onSaved() =', saved)
     if (saved) this.isCorrectingName = false
   }
 
