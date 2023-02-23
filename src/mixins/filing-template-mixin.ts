@@ -6,9 +6,10 @@ import { ActionBindingIF, BusinessIF, ContactPointIF, CertifyIF, CompletingParty
   DissolutionStatementIF, DocIF, DocumentDeliveryIF, EffectiveDateTimeIF, EmptyNaics,
   IncorporationAgreementIF, IncorporationFilingIF, NameTranslationIF, OrgPersonIF, PartyIF,
   PeopleAndRoleIF, RegistrationFilingIF, RegistrationStateIF, RestorationFilingIF, RestorationStateIF,
-  ShareStructureIF, SpecialResolutionIF, StaffPaymentStepIF, UploadAffidavitIF, EmptyContactPoint } from '@/interfaces'
-import { CorpTypeCd, DissolutionTypes, EffectOfOrders, FilingTypes, PartyTypes, RoleTypes,
-  StaffPaymentOptions } from '@/enums'
+  ShareStructureIF, SpecialResolutionIF, StaffPaymentStepIF, UploadAffidavitIF } from '@/interfaces'
+import { DissolutionTypes, EffectOfOrders, FilingTypes, PartyTypes, RoleTypes, StaffPaymentOptions }
+  from '@/enums'
+import { CorpTypeCd } from '@bcrs-shared-components/enums/'
 
 /**
  * Mixin that provides the integration with the Legal API.

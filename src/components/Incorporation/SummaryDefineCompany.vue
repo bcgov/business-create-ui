@@ -107,7 +107,8 @@ import { ContactPointIF, DefineCompanyIF, NameTranslationIF } from '@/interfaces
 import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
 import FolioNumber from '@/components/common/FolioNumber.vue'
 import OfficeAddresses from '@/components/common/OfficeAddresses.vue'
-import { CoopTypes, CorpTypeCd, RouteNames } from '@/enums'
+import { CoopTypes, RouteNames } from '@/enums'
+import { CorpTypeCd } from '@bcrs-shared-components/enums/'
 import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 import { CoopTypeToDescription } from '@/utils'
 

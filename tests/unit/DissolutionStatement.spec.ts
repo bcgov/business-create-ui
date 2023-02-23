@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import { wrapperFactory } from '../jest-wrapper-factory'
 import DissolutionStatement from '@/components/Dissolution/DissolutionStatement.vue'
-import { CorpTypeCd, DissolutionStatementTypes } from '@/enums'
+import { DissolutionStatementTypes } from '@/enums'
+import { CorpTypeCd } from '@bcrs-shared-components/enums/'
 import { DissolutionResources } from '@/resources'
 
 // Input field selectors to test changes to the DOM elements.

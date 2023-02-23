@@ -217,17 +217,16 @@ import { Getter, Action } from 'vuex-class'
 import { DateMixin } from '@/mixins'
 import AssociationDetails from '@/components/Dissolution/AssociationDetails.vue'
 import { Certify } from '@bcrs-shared-components/certify'
-
 import { CourtOrderPoa } from '@bcrs-shared-components/court-order-poa'
 import { DocumentDelivery } from '@bcrs-shared-components/document-delivery'
 import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
-
 import { DatePicker as DatePickerShared } from '@bcrs-shared-components/date-picker'
 import { RuleHelpers } from '@/rules'
 import { CompletingParty } from '@bcrs-shared-components/completing-party'
 import StaffPayment from '@/components/common/StaffPayment.vue'
 import TransactionalFolioNumber from '@/components/common/TransactionalFolioNumber.vue'
-import { CorpTypeCd, RoleTypes, RouteNames } from '@/enums'
+import { RoleTypes, RouteNames } from '@/enums'
+import { CorpTypeCd } from '@bcrs-shared-components/enums/'
 import { VuetifyRuleFunction } from '@/types'
 
 import {

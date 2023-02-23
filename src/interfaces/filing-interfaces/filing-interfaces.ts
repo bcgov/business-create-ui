@@ -1,9 +1,20 @@
 import { BusinessAddressIF, CourtOrderIF, RegisteredRecordsAddressesIF, NaicsIF, NameTranslationIF,
-  OfficeAddressIF, PartyIF, RegistrationNameRequestIF, RestorationNameRequestIF, ShareClassIF,
-  SpecialResolutionIF } from '@/interfaces'
-import { ApprovalTypes, BusinessTypes, CorpTypeCd, DissolutionStatementTypes, DissolutionTypes,
-  FilingTypes, RestorationTypes, RelationshipTypes } from '@/enums'
+  OfficeAddressIF, PartyIF, ShareClassIF, SpecialResolutionIF } from '@/interfaces'
+import { ApprovalTypes, BusinessTypes, DissolutionStatementTypes, DissolutionTypes, FilingTypes,
+  RestorationTypes, RelationshipTypes } from '@/enums'
+import { CorpTypeCd } from '@bcrs-shared-components/enums/'
 import { ContactPointIF } from '@bcrs-shared-components/interfaces'
+
+/**
+ * Name Request interface for filings.
+ * Not the same as NR data from Namex API.
+ * Ref: https://github.com/bcgov/business-schemas/blob/main/src/registry_schemas/schemas/name_request.json
+ */
+interface NameRequestFilingIF {
+  legalType: CorpTypeCd
+  legalName?: string // only set when there is a name change (including NR)
+  nrNumber?: string // only set when there is an NR
+}
 
 /** Interface for incorporation filing data saved to the Legal API. */
 export interface IncorporationFilingIF {
@@ -21,12 +32,7 @@ export interface IncorporationFilingIF {
     identifier: string
   }
   incorporationApplication: {
-    // NB: nameRequest must match schema
-    nameRequest: {
-      legalType: CorpTypeCd
-      nrNumber?: string // only set when there is an NR
-      legalName?: string // only set when there is an NR
-    }
+    nameRequest: NameRequestFilingIF
     nameTranslations: NameTranslationIF[]
     offices: RegisteredRecordsAddressesIF | object
     contactPoint: ContactPointIF
@@ -91,7 +97,7 @@ export interface RegistrationFilingIF {
     }
     businessType: BusinessTypes
     contactPoint: ContactPointIF
-    nameRequest: RegistrationNameRequestIF
+    nameRequest: NameRequestFilingIF
     parties: PartyIF[]
     startDate: string
     businessTypeConfirm: boolean
@@ -181,7 +187,7 @@ export interface RestorationFilingIF {
     contactPoint: ContactPointIF
     courtOrder: CourtOrderIF
     expiry: string // YYYY-MM-DD
-    nameRequest: RestorationNameRequestIF
+    nameRequest: NameRequestFilingIF
     nameTranslations: NameTranslationIF[]
     noticeDate: string // YYYY-MM-DD
     offices: RegisteredRecordsAddressesIF | object

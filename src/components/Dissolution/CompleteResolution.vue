@@ -321,7 +321,8 @@ import {
   PersonIF,
   EmptyPerson
 } from '@/interfaces'
-import { BulletListTypes, CorpTypeCd, ItemTypes, RouteNames } from '@/enums'
+import { BulletListTypes, ItemTypes, RouteNames } from '@/enums'
+import { CorpTypeCd } from '@bcrs-shared-components/enums/'
 import { CommonMixin, DateMixin } from '@/mixins'
 import { Rules, RuleHelpers } from '@/rules'
 import { VuetifyRuleFunction } from '@/types'

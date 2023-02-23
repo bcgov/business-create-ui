@@ -1,6 +1,7 @@
 import Vuetify from 'vuetify'
-import { AccountTypes, CoopTypes, CorpTypeCd, DissolutionTypes, FilingNames, FilingTypes,
-  RestorationTypes } from '@/enums'
+import { AccountTypes, CoopTypes, DissolutionTypes, FilingNames, FilingTypes, RestorationTypes }
+  from '@/enums'
+import { CorpTypeCd } from '@bcrs-shared-components/enums/'
 import { AccountInformationIF, AddressIF, BusinessIF, CertifyIF, CompletingPartyIF, ContactPointIF,
   CourtOrderStepIF, CreateMemorandumIF, CreateResolutionIF, CreateRulesIF, DefineCompanyIF,
   DissolutionStatementIF, DissolutionStateIF, DocumentDeliveryIF, EffectiveDateTimeIF, FeesIF,

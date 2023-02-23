@@ -48,15 +48,11 @@
 import Vue from 'vue'
 import { Component, Watch } from 'vue-property-decorator'
 import { Getter, Action } from 'vuex-class'
-import {
-  ActionBindingIF,
-  AddressIF,
-  ContactPointIF,
-  DefineCompanyIF,
-  RegisteredRecordsAddressesIF
-} from '@/interfaces'
+import { ActionBindingIF, AddressIF, ContactPointIF, DefineCompanyIF, RegisteredRecordsAddressesIF }
+  from '@/interfaces'
 import { CommonMixin } from '@/mixins'
-import { CoopTypes, CorpTypeCd, RouteNames } from '@/enums'
+import { CoopTypes, RouteNames } from '@/enums'
+import { CorpTypeCd } from '@bcrs-shared-components/enums/'
 import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
 import OfficeAddresses from '@/components/common/OfficeAddresses.vue'
 

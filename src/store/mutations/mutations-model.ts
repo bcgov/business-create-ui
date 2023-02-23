@@ -1,5 +1,6 @@
-import { ApprovalTypes, BusinessTypes, CoopTypes, CorpTypeCd, DissolutionTypes, EntityState,
-  FilingTypes, RestorationTypes, RelationshipTypes } from '@/enums'
+import { ApprovalTypes, BusinessTypes, CoopTypes, DissolutionTypes, EntityState, FilingTypes,
+  RestorationTypes, RelationshipTypes } from '@/enums'
+import { CorpTypeCd } from '@bcrs-shared-components/enums/'
 import { AccountInformationIF, AddressIF, BusinessAddressIF, BusinessWarningIF, CertifyIF,
   CompletingPartyIF, ContactPointIF, CourtOrderIF, CreateMemorandumIF, CreateResolutionIF,
   CreateRulesIF, DissolutionStatementIF, FeesIF, RegisteredRecordsAddressesIF,

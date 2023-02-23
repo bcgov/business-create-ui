@@ -1,4 +1,4 @@
-import { CorpTypeCd } from '@/enums'
+import { CorpTypeCd } from '@bcrs-shared-components/enums/'
 import {
   AccountInformationIF,
   ContactPointIF,

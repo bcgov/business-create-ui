@@ -1,4 +1,5 @@
-import { CorpTypeCd, FilingCodes } from '@/enums'
+import { FilingCodes } from '@/enums'
+import { CorpTypeCd } from '@bcrs-shared-components/enums/'
 
 /** Filing data for SBC Fee Summary component. */
 export interface FilingDataIF {

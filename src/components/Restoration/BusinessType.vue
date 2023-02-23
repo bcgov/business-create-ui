@@ -20,7 +20,8 @@
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
-import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module/'
+import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module/'
+import { CorpTypeCd } from '@bcrs-shared-components/enums/'
 
 @Component({})
 export default class BusinessType extends Vue {

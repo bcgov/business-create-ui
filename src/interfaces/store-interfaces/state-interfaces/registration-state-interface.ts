@@ -1,11 +1,5 @@
 import { BusinessAddressIF, NaicsIF } from '@/interfaces'
-import { BusinessTypes, CorpTypeCd } from '@/enums'
-
-export interface RegistrationNameRequestIF {
-  legalName: string
-  legalType: CorpTypeCd
-  nrNumber: string
-}
+import { BusinessTypes } from '@/enums'
 
 export interface RegistrationStateIF {
   defineBusinessValid: boolean

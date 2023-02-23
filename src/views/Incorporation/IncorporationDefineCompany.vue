@@ -136,7 +136,8 @@ import {
   RegisteredRecordsAddressesIF
 } from '@/interfaces'
 import { CommonMixin } from '@/mixins'
-import { CoopTypes, CorpTypeCd, RouteNames } from '@/enums'
+import { CoopTypes, RouteNames } from '@/enums'
+import { CorpTypeCd } from '@bcrs-shared-components/enums/'
 import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
 import CooperativeType from '@/components/Dissolution/CooperativeType.vue'
 import FolioNumber from '@/components/common/FolioNumber.vue'

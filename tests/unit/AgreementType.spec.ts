@@ -1,8 +1,7 @@
-import { getShowErrors } from './../../src/store/getters/state-getters'
 import Vue from 'vue'
 import { wrapperFactory } from '../jest-wrapper-factory'
 import AgreementType from '@/components/common/AgreementType.vue'
-import { CorpTypeCd } from '@/enums'
+import { CorpTypeCd } from '@bcrs-shared-components/enums/'
 import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 
 // Input field selectors to test changes to the DOM elements.

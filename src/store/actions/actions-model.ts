@@ -3,8 +3,9 @@ import { AccountInformationIF, ActionIF, AddressIF, BusinessWarningIF, CertifyIF
   DissolutionStatementIF, FeesIF, RegisteredRecordsAddressesIF, IncorporationAgreementIF, NaicsIF,
   NameRequestIF, NameTranslationIF, OrgInformationIF, OrgPersonIF, PartyIF, ResourceIF, ShareClassIF,
   UploadAffidavitIF, ValidationDetailIF } from '@/interfaces'
-import { ApprovalTypes, BusinessTypes, CoopTypes, CorpTypeCd, EntityState, RestorationTypes,
-  RelationshipTypes } from '@/enums'
+import { ApprovalTypes, BusinessTypes, CoopTypes, EntityState, RestorationTypes, RelationshipTypes }
+  from '@/enums'
+import { CorpTypeCd } from '@bcrs-shared-components/enums/'
 
 export const setBusinessId: ActionIF = ({ commit }, businessId): void => {
   commit('mutateBusinessId', businessId)
