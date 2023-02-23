@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
 import { omit, isEqual } from 'lodash'
-import { ConfirmDialogType, ValidationItemDetailIF } from '@/interfaces'
+import { ValidationItemDetailIF } from '@/interfaces'
 import { getName } from 'country-list'
 
 /**
@@ -136,24 +136,5 @@ export default class CommonMixin extends Vue {
     }
 
     return null
-  }
-
-  /**
-   * Helper to show the confirm dialogs.
-   * @param ref The dialog reference
-   * @param title The title content in dialog header
-   * @param message The content body
-   * @param yes The YES action label
-   * @param no The NO cancel label
-   * */
-  async showConfirmDialog (ref: ConfirmDialogType, title: string, message: string, yes: string, no: string = null):
-    Promise<boolean> {
-    return ref.open(title, message, {
-      width: '45rem',
-      persistent: true,
-      yes,
-      no,
-      cancel: null
-    }).catch(() => false)
   }
 }

@@ -389,17 +389,10 @@ export default class PeopleRolesMixin extends Vue {
     )
   }
 
-  /**
-   * Helper to show the confirm dialogs.
-   * Similar to CommonMixin::showConfirmDialog().
-   */
+  /** Helper to show the confirm dialogs. */
   private async showConfirmDialog (title: string, message: string, yes: string, no: string): Promise<boolean> {
     return this.$refs.confirmDialog.open(title, message, {
-      width: '40rem',
-      persistent: true,
-      yes,
-      no,
-      cancel: null
+      width: '40rem', persistent: true, yes, no, cancel: null
     }).catch(() => false)
   }
 }

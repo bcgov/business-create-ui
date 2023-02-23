@@ -6,6 +6,7 @@ import { shallowMount } from '@vue/test-utils'
 import LegalServices from '@/services/legal-services'
 import BusinessName from '@/components/Restoration/BusinessName.vue'
 import { CorrectName } from '@bcrs-shared-components/correct-name/'
+import NameRequestInfo from '@/components/common/NameRequestInfo.vue'
 
 // mock the console.warn function to hide "[Vuetify] Unable to locate target XXX"
 console.warn = jest.fn()
@@ -20,37 +21,80 @@ const store = getVuexStore()
 const mockFetchNameRequest = jest.spyOn((LegalServices as any), 'updateFiling').mockImplementation()
 
 // *** TODO: fix/enhance
-xdescribe('Business Name component', () => {
+describe('Business Name component', () => {
   let wrapperFactory: any
 
-  beforeEach(() => {
-    // store.state.stateModel.restoration = {
-    //   type: 'fullRestoration',
-    //   expiry: null,
-    //   relationships: [],
-    //   businessNameValid: true
-    //   restorationTypeValid: true
-    // }
+  beforeAll(() => {
+    // tombstone data for all tests
     store.state.stateModel.businessId = 'BC1234567'
     store.state.stateModel.entityType = 'BC'
-    // store.state.stateModel.nameRequest = {
-    //   applicants: {},
-    //   consentFlag: null,
-    //   expirationDate: null,
-    //   legalType: null,
-    //   names: [],
-    //   nrNum: 'NR 1234567',
-    //   request_action_cd: null,
-    //   requestTypeCd: 'BC',
-    //   state: null
-    // }
+    store.state.stateModel.business.legalName = 'My Business Name'
+    store.state.stateModel.nameRequestApprovedName = 'NR Approved Name'
+    store.state.stateModel.tombstone.filingType = 'restoration'
+
     wrapperFactory = () => shallowMount(BusinessName, {
       store,
       vuetify
     })
   })
 
-  it('renders the component initially', () => {
+  beforeEach(() => {
+    // empty restoration before each test
+    store.state.stateModel.restoration = {
+      applicationDate: null,
+      approvalType: null,
+      approvalTypeValid: true,
+      businessNameValid: false,
+      courtOrder: {
+        fileNumber: null
+      },
+      expiry: null,
+      noticeDate: null,
+      relationships: [],
+      restorationTypeValid: false,
+      type: null
+    }
+
+    // empty name request before each test
+    store.state.stateModel.nameRequest = {
+      applicants: {},
+      consentFlag: null,
+      entity_type_cd: null,
+      expirationDate: null,
+      furnished: null,
+      legalType: null,
+      names: [],
+      nrNum: '',
+      priorityCd: null,
+      requestTypeCd: null,
+      request_action_cd: null,
+      state: null
+    }
+
+    // initial values before each test
+    store.state.stateModel.nameRequestApprovedName = null
+    store.state.stateModel.showErrors = false
+  })
+
+  it('renders the component', () => {
+    const wrapper = wrapperFactory()
+    expect(wrapper.find('#business-name').exists()).toBe(true)
+  })
+
+  it('displays editing mode sub-components', () => {
+    const wrapper = wrapperFactory()
+    expect(wrapper.find('label').text()).toBe('Business Name')
+    expect(wrapper.findComponent(CorrectName).exists()).toBe(true)
+  })
+
+  it('displays display mode sub-components', () => {
+    store.state.stateModel.nameRequestApprovedName = 'NR Approved Name'
+
+    const wrapper = wrapperFactory()
+    expect(wrapper.findComponent(NameRequestInfo).exists()).toBe(true)
+  })
+
+  xit('renders the component initially', () => {
     const wrapper = wrapperFactory()
     console.log('>>> is new name: ', wrapper.vm.isNewName) // true
 
@@ -81,18 +125,18 @@ xdescribe('Business Name component', () => {
     expect(wrapper.findComponent(CorrectName).exists()).toBe(true)
   })
 
-  it('selects the full restoration button if draft was a full restoration.', () => {
+  xit('selects the full restoration button if draft was a full restoration.', () => {
     const wrapper = wrapperFactory()
     expect(wrapper.vm.$data.selectRestorationType).toEqual('fullRestoration')
   })
 
-  it('selects the limited restoration button if draft was a limited restoration.', () => {
+  xit('selects the limited restoration button if draft was a limited restoration.', () => {
     store.state.stateModel.restoration.type = 'limitedRestoration'
     const wrapper = wrapperFactory()
     expect(wrapper.vm.$data.selectRestorationType).toEqual('limitedRestoration')
   })
 
-  it('changes the restoration type from full to limited when the corresponding button is pressed.', async () => {
+  xit('changes the restoration type from full to limited when the corresponding button is pressed.', async () => {
     const wrapper = wrapperFactory()
     const input = wrapper.find('#limited-radio-button')
     input.setChecked()
@@ -103,7 +147,7 @@ xdescribe('Business Name component', () => {
     expect(store.state.stateModel.restoration.relationships).toEqual([])
   })
 
-  it('changes the restoration type from limited to full when the corresponding button is pressed.', async () => {
+  xit('changes the restoration type from limited to full when the corresponding button is pressed.', async () => {
     store.state.stateModel.restoration.type = 'limitedRestoration'
     const wrapper = wrapperFactory()
     const input = wrapper.find('#full-radio-button')

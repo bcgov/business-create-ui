@@ -4,18 +4,9 @@
     <!-- <pre>companyName={{ companyName }}</pre> -->
     <!-- <pre>getNameRequestApprovedName={{ getNameRequestApprovedName }}</pre> -->
     <!-- <pre>isCorrectingName={{ isCorrectingName }}</pre> -->
-    <!-- Display Mode -->
-    <template v-if="isNewName">
-      <NameRequestInfo />
-
-      <v-btn text color="primary" class="btn-undo" @click="resetName()">
-        <v-icon small>mdi-undo</v-icon>
-        <span>Undo</span>
-      </v-btn>
-    </template>
 
     <!-- Editing Mode -->
-    <div v-else class="section-container" :class="{ 'invalid-section': invalidSection }">
+    <div v-if="!isNewName" class="section-container" :class="{ 'invalid-section': invalidSection }">
       <v-row no-gutters>
         <v-col cols="12" sm="3" class="pr-4">
           <label :class="{ 'error-text': invalidSection }">
@@ -44,6 +35,15 @@
       </v-row>
     </div>
 
+    <!-- Display Mode -->
+    <template v-else>
+      <NameRequestInfo />
+
+      <v-btn text color="primary" class="btn-undo" @click="resetName()">
+        <v-icon small>mdi-undo</v-icon>
+        <span>Undo</span>
+      </v-btn>
+    </template>
   </div>
 </template>
 
@@ -76,12 +76,9 @@ export default class BusinessName extends Vue {
   // Global getters
   @Getter getBusinessId!: string
   @Getter getBusinessLegalName!: string
-  @Getter getBusinessNumber!: string
   @Getter getEntityType!: CorpTypeCd
   @Getter getNameRequest!: NameRequestIF
   @Getter getNameRequestApprovedName!: string
-  @Getter isRestorationFiling!: boolean
-
   @Getter getShowErrors!: boolean
   @Getter isRestorationFiling!: boolean
 
