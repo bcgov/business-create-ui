@@ -59,7 +59,6 @@ describe('Business Name component', () => {
     store.state.stateModel.nameRequest = {
       applicants: {},
       consentFlag: null,
-      entity_type_cd: null,
       expirationDate: null,
       furnished: null,
       legalType: null,

@@ -19,12 +19,12 @@ export { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 export {
   AccountTypes,
   ApprovalTypes,
+  CorrectNameOptions,
   EffectiveDateTypes,
   EntityStates,
   FilingCodes,
   FilingNames,
   FilingTypes,
-  NameChangeOptions,
   NameRequestStates,
   NrRequestActionCodes,
   RelationshipTypes,

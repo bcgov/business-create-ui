@@ -19,7 +19,8 @@
           </v-col>
 
           <v-col cols="12" sm="9" class="pt-4 pt-sm-0">
-            <div id="company-name">{{ getNameRequestApprovedName || '[Incorporation Number] B.C. LTD.' }}</div>
+            <pre>getCorrectNameOption={{ getCorrectNameOption }}</pre>
+            <div id="company-name">{{ companyName }}</div>
             <div id="company-description">{{ entityDescription }}</div>
           </v-col>
         </v-row>
@@ -92,7 +93,7 @@ import { Component, Watch } from 'vue-property-decorator'
 import { DateMixin } from '@/mixins'
 import { Getter, Action } from 'vuex-class'
 import { ApprovalTypes, RouteNames, RestorationTypes } from '@/enums'
-import { CorpTypeCd } from '@bcrs-shared-components/enums/'
+import { CorpTypeCd, CorrectNameOptions } from '@bcrs-shared-components/enums/'
 import { NameTranslationIF, RestorationStateIF } from '@/interfaces'
 import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 
@@ -103,6 +104,7 @@ import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module
 })
 export default class SummaryRestoreBusiness extends Vue {
   @Getter getEntityType!: CorpTypeCd
+  @Getter getCorrectNameOption!: CorrectNameOptions
   @Getter getNameRequestApprovedName!: string
   @Getter getNameTranslations!: NameTranslationIF[]
   @Getter getRestoration!: RestorationStateIF
@@ -111,6 +113,19 @@ export default class SummaryRestoreBusiness extends Vue {
   // for template
   readonly RouteNames = RouteNames
   readonly ApprovalTypes = ApprovalTypes
+
+  /** The company name. */
+  get companyName (): string {
+    switch (this.getCorrectNameOption) {
+      case CorrectNameOptions.CORRECT_NAME:
+        break // not applicable to restoration
+      case CorrectNameOptions.CORRECT_NAME_TO_NUMBER:
+        return this.getNameRequestApprovedName
+      case CorrectNameOptions.CORRECT_NEW_NR:
+        return this.getNameRequestApprovedName
+    }
+    return '[Unknown]'
+  }
 
   /** The entity description. */
   get entityDescription (): string {

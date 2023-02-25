@@ -784,6 +784,15 @@ export default class App extends Vue {
     // set the resources
     if (!resources) throw new Error(`Invalid ${this.getEntityType} resources`)
     this.setResources(resources)
+
+    // Fetch and validate the NR and set the data to the store. This method is different
+    // from the validateNameRequest method in Actions.vue. This method sets the data to
+    // the store shows a specific message for different invalid states and redirection is
+    // to the Filings Dashboard.
+    const nrNumber = draftFiling[draftFiling.header?.name]?.nameRequest?.nrNumber
+    if (nrNumber) {
+      await this.processNameRequest(draftFiling)
+    }
   }
 
   /** Fetches draft IA or Registration and sets the resources. */

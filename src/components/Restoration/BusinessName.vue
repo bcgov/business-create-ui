@@ -6,25 +6,27 @@
         <v-col cols="12" sm="3" class="pr-4">
           <label :class="{ 'error-text': invalidSection }">
             <strong>Business Name</strong>
-            <!-- *** TODO: remove before flight -->
-            <!-- <div>ULC => NR 4766680</div> -->
-            <!-- <div>BC => NR 3335087</div> -->
           </label>
+          <!-- *** TODO: remove before flight -->
+          <div>ULC => NR 4766680</div>
+          <div>BC => NR 3335087</div>
         </v-col>
 
         <v-col cols="12" sm="9" class="pt-4 pt-sm-0">
           <CorrectName
             actionTxt="restore the business"
-            :correctionNameChoices="correctionNameChoices"
             :businessId="getBusinessId"
-            :entityType="getEntityType"
-            :nameRequest="getNameRequest"
             :companyName="companyName"
+            :correctionNameChoices="correctionNameChoices"
+            :entityType="getEntityType"
             :fetchAndValidateNr="fetchAndValidateNr"
+            :formType="formType"
+            :nameRequest="getNameRequest"
+            @cancel="resetName()"
             @saved="onSaved($event)"
-            @cancel="isCorrectingName = false"
-            @update:nameRequest="setNameRequest($event)"
-            @update:approvedName="setNameRequestApprovedName($event)"
+            @update:companyName="onUpdateCompanyName($event)"
+            @update:formType="formType = $event"
+            @update:nameRequest="onUpdateNameRequest($event)"
           />
         </v-col>
       </v-row>
@@ -49,8 +51,8 @@ import { Action, Getter } from 'vuex-class'
 import { ActionBindingIF, EmptyNameRequest, NrApplicantIF, NameRequestIF } from '@/interfaces/'
 import { ContactPointIF } from '@bcrs-shared-components/interfaces/'
 import { CommonMixin, DateMixin, NameRequestMixin } from '@/mixins/'
-import { CoopTypes, NameChangeOptions, NrRequestActionCodes } from '@/enums/'
-import { CorpTypeCd } from '@bcrs-shared-components/enums/'
+import { CoopTypes, NrRequestActionCodes } from '@/enums/'
+import { CorpTypeCd, CorrectNameOptions } from '@bcrs-shared-components/enums/'
 import { LegalServices } from '@/services/'
 import { CorrectName } from '@bcrs-shared-components/correct-name/'
 import NameRequestInfo from '@/components/common/NameRequestInfo.vue'
@@ -69,7 +71,9 @@ import NameRequestInfo from '@/components/common/NameRequestInfo.vue'
 export default class BusinessName extends Vue {
   // Global getters
   @Getter getBusinessId!: string
+  @Getter getBusinessId!: string
   @Getter getBusinessLegalName!: string
+  @Getter getCorrectNameOption!: CorrectNameOptions
   @Getter getEntityType!: CorpTypeCd
   @Getter getNameRequest!: NameRequestIF
   @Getter getNameRequestApprovedName!: string
@@ -78,15 +82,17 @@ export default class BusinessName extends Vue {
 
   // Global actions
   @Action setBusinessNameValid!: ActionBindingIF
+  @Action setCorrectNameOption!: ActionBindingIF
   @Action setNameRequest!: ActionBindingIF
   @Action setNameRequestApprovedName!: ActionBindingIF
 
   protected dropdown: boolean = null
   protected correctNameChoices: Array<string> = []
   protected isCorrectingName = true // display options initially
+  protected formType: CorrectNameOptions = null
 
+  /** The company name. */
   get companyName (): string {
-    // *** TODO: use initial company name if it exists?
     return (this.getNameRequestApprovedName || this.getBusinessLegalName)
   }
 
@@ -96,19 +102,20 @@ export default class BusinessName extends Vue {
   }
 
   /** The current options for name changes. */
-  get correctionNameChoices (): Array<NameChangeOptions> {
-    if (this.isRestorationFiling) {
-      return [
-        NameChangeOptions.CORRECT_NAME_TO_NUMBER,
-        NameChangeOptions.CORRECT_NEW_NR
-      ]
-    }
+  get correctionNameChoices (): Array<CorrectNameOptions> {
+    // *** TODO :remove before flight
+    // if (this.isRestorationFiling) {
+    //   return [
+    //     CorrectNameOptions.CORRECT_NAME_TO_NUMBER,
+    //     CorrectNameOptions.CORRECT_NEW_NR
+    //   ]
+    // }
 
     // fallback case - not used for now
     return [
-      NameChangeOptions.CORRECT_NAME,
-      NameChangeOptions.CORRECT_NAME_TO_NUMBER,
-      NameChangeOptions.CORRECT_NEW_NR
+      CorrectNameOptions.CORRECT_NAME,
+      CorrectNameOptions.CORRECT_NAME_TO_NUMBER,
+      CorrectNameOptions.CORRECT_NEW_NR
     ]
   }
 
@@ -127,16 +134,13 @@ export default class BusinessName extends Vue {
 
   /** Reset company name values to original. */
   protected resetName (): void {
-    // *** TODO: implement more here?
-    // // reset business information, except for association type.
-    // const businessInfo = { ...this.getEntitySnapshot.businessInfo, associationType: this.getAssociationType }
-    // this.setBusinessInformation(businessInfo)
-
     // clear out existing data
     this.setNameRequest(EmptyNameRequest)
     this.setNameRequestApprovedName(null)
+    this.setCorrectNameOption(null)
 
     // reset flags
+    this.formType = null
     this.isCorrectingName = true
   }
 
@@ -156,8 +160,19 @@ export default class BusinessName extends Vue {
   }
 
   /** On saved=True event, updates UI state. */
-  private onSaved (saved: boolean): void {
+  protected onSaved (saved: boolean): void {
     if (saved) this.isCorrectingName = false
+  }
+
+  /** On company name update, sets store accordingly. */
+  protected onUpdateCompanyName (name: string): void {
+    this.setCorrectNameOption(this.formType)
+    this.setNameRequestApprovedName(name)
+  }
+
+  /** On name request update, sets store accordingly. */
+  protected onUpdateNameRequest (nameRequest: NameRequestIF): void {
+    this.setNameRequest(nameRequest)
   }
 
   /** Updates component validity initially and when isCorrectingName changed. */

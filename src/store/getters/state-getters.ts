@@ -1,7 +1,7 @@
 import Vuetify from 'vuetify'
 import { AccountTypes, CoopTypes, DissolutionTypes, FilingNames, FilingTypes, RestorationTypes }
   from '@/enums'
-import { CorpTypeCd } from '@bcrs-shared-components/enums/'
+import { CorpTypeCd, CorrectNameOptions } from '@bcrs-shared-components/enums/'
 import { AccountInformationIF, AddressIF, BusinessIF, CertifyIF, CompletingPartyIF, ContactPointIF,
   CourtOrderStepIF, CreateMemorandumIF, CreateResolutionIF, CreateRulesIF, DefineCompanyIF,
   DissolutionStatementIF, DissolutionStateIF, DocumentDeliveryIF, EffectiveDateTimeIF, FeesIF,
@@ -246,6 +246,11 @@ export const getNameRequest = (state: StateIF): NameRequestIF => {
 /** The Name Request approved name. */
 export const getNameRequestApprovedName = (state: StateIF): string => {
   return state.stateModel.nameRequestApprovedName
+}
+
+/** The Correct Name Option. */
+export const getCorrectNameOption = (state: StateIF): CorrectNameOptions => {
+  return state.stateModel.correctNameOption
 }
 
 /** The Name Request number. */

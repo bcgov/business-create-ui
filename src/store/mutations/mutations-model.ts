@@ -1,6 +1,6 @@
 import { ApprovalTypes, BusinessTypes, CoopTypes, DissolutionTypes, EntityState, FilingTypes,
   RestorationTypes, RelationshipTypes } from '@/enums'
-import { CorpTypeCd } from '@bcrs-shared-components/enums/'
+import { CorpTypeCd, CorrectNameOptions } from '@bcrs-shared-components/enums/'
 import { AccountInformationIF, AddressIF, BusinessAddressIF, BusinessWarningIF, CertifyIF,
   CompletingPartyIF, ContactPointIF, CourtOrderIF, CreateMemorandumIF, CreateResolutionIF,
   CreateRulesIF, DissolutionStatementIF, FeesIF, RegisteredRecordsAddressesIF,
@@ -167,6 +167,10 @@ export const mutateNameRequest = (state: StateIF, nameRequest: NameRequestIF) =>
 
 export const mutateNameRequestApprovedName = (state: StateIF, name: string) => {
   state.stateModel.nameRequestApprovedName = name
+}
+
+export const mutateCorrectNameOption = (state: StateIF, option: CorrectNameOptions) => {
+  state.stateModel.correctNameOption = option
 }
 
 export const mutateNameTranslations = (state: StateIF, nameTranslations: NameTranslationIF[]) => {

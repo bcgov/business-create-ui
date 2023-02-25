@@ -1,4 +1,4 @@
-import { CorpTypeCd } from '@bcrs-shared-components/enums/'
+import { CorpTypeCd, CorrectNameOptions } from '@bcrs-shared-components/enums/'
 import {
   AccountInformationIF,
   ContactPointIF,
@@ -40,6 +40,7 @@ export interface StateModelIF {
   dissolution: DissolutionStateIF
   nameRequest: NameRequestIF
   nameRequestApprovedName: string
+  correctNameOption: CorrectNameOptions
   nameTranslations: NameTranslationIF[]
   nameTranslationsValid: boolean
   currentDate: string

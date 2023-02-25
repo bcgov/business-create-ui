@@ -2,7 +2,7 @@ import { BusinessAddressIF, CourtOrderIF, RegisteredRecordsAddressesIF, NaicsIF,
   OfficeAddressIF, PartyIF, ShareClassIF, SpecialResolutionIF } from '@/interfaces'
 import { ApprovalTypes, BusinessTypes, DissolutionStatementTypes, DissolutionTypes, FilingTypes,
   RestorationTypes, RelationshipTypes } from '@/enums'
-import { CorpTypeCd } from '@bcrs-shared-components/enums/'
+import { CorpTypeCd, CorrectNameOptions } from '@bcrs-shared-components/enums/'
 import { ContactPointIF } from '@bcrs-shared-components/interfaces'
 
 /**
@@ -10,10 +10,11 @@ import { ContactPointIF } from '@bcrs-shared-components/interfaces'
  * Not the same as NR data from Namex API.
  * Ref: https://github.com/bcgov/business-schemas/blob/main/src/registry_schemas/schemas/name_request.json
  */
-interface NameRequestFilingIF {
+export interface NameRequestFilingIF {
   legalType: CorpTypeCd
   legalName?: string // only set when there is a name change (including NR)
   nrNumber?: string // only set when there is an NR
+  correctNameOption?: CorrectNameOptions // only used by UI for save and resume
 }
 
 /** Interface for incorporation filing data saved to the Legal API. */
