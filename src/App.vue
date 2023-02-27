@@ -84,6 +84,14 @@
       :webChatUrl="window['webChatUrl']"
     />
 
+    <!-- Display the Genesys WebMessage for SP/GP registrations only -->
+    <GenesysWebMessage
+      v-if="getFilingType === FilingTypes.REGISTRATION"
+      genesysURL="https://apps.cac1.pure.cloud/genesys-bootstrap/genesys.min.js"
+      environmentKey="cac1"
+      deploymentKey="42ed05f4-d545-436b-ba2c-94b66ed3396f"
+    />
+
     <!-- Initial Page Load Transition -->
     <transition name="fade">
       <div class="loading-container" v-show="!haveData && !isErrorDialog">
@@ -182,6 +190,7 @@ import { GetFeatureFlag, UpdateLdUser, Navigate, Sleep } from '@/utils'
 // Components, dialogs and views
 import Actions from '@/components/common/Actions.vue'
 import { Breadcrumb } from '@bcrs-shared-components/breadcrumb'
+import { GenesysWebMessage } from '@bcrs-shared-components/genesys-web-message'
 import { WebChat } from '@bcrs-shared-components/web-chat'
 import EntityInfo from '@/components/common/EntityInfo.vue'
 import PaySystemAlert from 'sbc-common-components/src/components/PaySystemAlert.vue'
@@ -212,6 +221,7 @@ import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
     Actions,
     Breadcrumb,
     EntityInfo,
+    GenesysWebMessage,
     PaySystemAlert,
     SbcFeeSummary,
     SbcFooter,
