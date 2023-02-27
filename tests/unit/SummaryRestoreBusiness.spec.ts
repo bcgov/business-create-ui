@@ -30,9 +30,11 @@ describe('Summary Restore Business component', () => {
       restorationTypeValid: true,
       type: 'fullRestoration'
     }
+
     // *** TODO: add name request details and verify them
     // *** TODO: add name translations and verify them
     // *** TODO: add approval type and verify it
+
     wrapperFactory = () => mount(SummaryRestoreBusiness, {
       store,
       vuetify

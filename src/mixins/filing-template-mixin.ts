@@ -440,7 +440,6 @@ export default class FilingTemplateMixin extends DateMixin {
       case CorrectNameOptions.CORRECT_NAME_TO_NUMBER:
         filing.restoration.nameRequest.correctNameOption = CorrectNameOptions.CORRECT_NAME_TO_NUMBER
         filing.restoration.nameRequest.legalName = this.getNameRequestApprovedName
-        // *** TODO: need any more NR properties here?
         break
       case CorrectNameOptions.CORRECT_NEW_NR:
         filing.restoration.nameRequest.correctNameOption = CorrectNameOptions.CORRECT_NEW_NR

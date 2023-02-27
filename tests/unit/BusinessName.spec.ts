@@ -95,10 +95,11 @@ describe('Business Name component', () => {
 
   xit('renders the component initially', () => {
     const wrapper = wrapperFactory()
-    console.log('>>> is new name: ', wrapper.vm.isNewName) // true
 
     // *** TODO: verify Name Request Info component
     // *** TODO: verify Undo button
+
+    // console.log('>>> is new name: ', wrapper.vm.isNewName) // true
 
     expect(wrapper.find('#business-name').exists()).toBe(true)
     expect(wrapper.find('label').text()).toBe('Business Name')

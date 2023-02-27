@@ -8,8 +8,8 @@
             <strong>Business Name</strong>
           </label>
           <!-- *** TODO: remove before flight -->
-          <div>ULC => NR 4766680</div>
-          <div>BC => NR 3335087</div>
+          <!-- <div>ULC => NR 4766680</div> -->
+          <!-- <div>BC => NR 3335087</div> -->
         </v-col>
 
         <v-col cols="12" sm="9" class="pt-4 pt-sm-0">
@@ -103,13 +103,12 @@ export default class BusinessName extends Vue {
 
   /** The current options for name changes. */
   get correctionNameChoices (): Array<CorrectNameOptions> {
-    // *** TODO :remove before flight
-    // if (this.isRestorationFiling) {
-    //   return [
-    //     CorrectNameOptions.CORRECT_NAME_TO_NUMBER,
-    //     CorrectNameOptions.CORRECT_NEW_NR
-    //   ]
-    // }
+    if (this.isRestorationFiling) {
+      return [
+        CorrectNameOptions.CORRECT_NAME_TO_NUMBER,
+        CorrectNameOptions.CORRECT_NEW_NR
+      ]
+    }
 
     // fallback case - not used for now
     return [
