@@ -27,7 +27,7 @@
   "REGISTRY_HOME_URL": "https://dev.bcros.ca/",
   "REGISTRIES_SEARCH_API_URL": "https://bcregistry-dev.apigee.net/registry-search",
   "REGISTRIES_SEARCH_API_VERSION": "/api/v1",
-  "WEBCHAT_REASON": "zzz",
+  "WEBCHAT_REASON": "",
   "WEBCHAT_STATUS_URL": "",
   "WEBCHAT_URL": ""
 }
