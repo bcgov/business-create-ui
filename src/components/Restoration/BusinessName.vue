@@ -1,132 +1,66 @@
 <template>
   <div id="business-name">
-    <div class="section-container" :class="{'invalid-section': invalidSection}">
-      <!-- Business Name -->
+    <!-- Editing Mode -->
+    <div v-if="!isNewName" class="section-container" :class="{ 'invalid-section': invalidSection }">
       <v-row no-gutters>
         <v-col cols="12" sm="3" class="pr-4">
-          <label :class="{'error-text': invalidSection}">
+          <label :class="{ 'error-text': invalidSection }">
             <strong>Business Name</strong>
           </label>
-        </v-col>
-
-        <!-- Editing Mode -->
-        <template v-if="isEditingNames">
-          <v-col cols="12" sm="9" class="pt-4 pt-sm-0">
-            <CorrectNameOptions
-              :correctionNameChoices="nameChangeOptions"
-              @isSaved="onNameChange($event)"
-              @cancel="isEditingNames = false"
-            />
-          </v-col>
-        </template>
-
-        <!-- Display Mode -->
-        <template v-else>
-          <v-col cols="12" sm="7" class="mt-n1 pt-4 pt-sm-0">
-            <div class="company-name font-weight-bold text-uppercase">{{ companyName }}</div>
-
-            <!-- Name Request Info -->
-            <template v-if="hasNewNr">
-              <div class="company-name mt-2">{{getNameRequest.nrNum || 'Unknown'}}</div>
-              <div class="company-info mt-4">
-                <span class="subtitle">Business Type: </span>
-                <span :class="{ 'has-conflict': isConflictingLegalType}"
-                      class="info-text">{{GetCorpFullDescription(getNameRequest.legalType)}}
-                </span>
-                <v-tooltip
-                  v-if="isConflictingLegalType"
-                  top
-                  content-class="top-tooltip"
-                  transition="fade-transition"
-                  nudge-right="3"
-                >
-                  <template v-slot:activator="{ on }">
-                    <v-icon v-on="on" color="error" small>
-                      mdi-alert
-                    </v-icon>
-                  </template>
-                  <span>Business Types do not match. The Name Request type must match the business type before
-                    you can continue.</span>
-                </v-tooltip>
-              </div>
-              <div class="company-info">
-                <span class="subtitle">Request Type: </span>
-                <span class="info-text">{{getNrRequestDesc(getNameRequest.requestType)}}</span>
-              </div>
-              <div class="company-info">
-                <span class="subtitle">Expiry Date: </span>
-                <span class="info-text">{{expiryDate || 'Unknown'}}</span>
-              </div>
-              <div class="company-info">
-                <span class="subtitle">Status: </span>
-                <span class="info-text text-capitalize">{{nrStatus}}</span>
-              </div>
-            </template>
-          </v-col>
-
-          <!-- Actions -->
-          <v-col cols="2" class="my-n1">
-            <div class="actions mr-4">
-              <v-btn v-if="hasCompanyNameChanged" text color="primary" id="btn-undo" @click="resetName()">
-                <v-icon small>mdi-undo</v-icon>
-                <span>Undo</span>
-              </v-btn>
-            </div>
-          </v-col>
-        </template>
-      </v-row>
-
-      <!-- Name Request Applicant -->
-      <v-row v-if="hasNewNr" no-gutters class="sub-section">
-        <v-col cols="12" sm="3" class="pr-4">
-          <label class="pr-4">
-            <strong>Name Request Applicant</strong>
-          </label>
+          <!-- *** TODO: remove before flight -->
+          <!-- <div>ULC => NR 4766680</div> -->
+          <!-- <div>BC => NR 3335087</div> -->
         </v-col>
 
         <v-col cols="12" sm="9" class="pt-4 pt-sm-0">
-          <div class="name-request-applicant-info">
-            <span class="subtitle">Name: </span>
-            <span class="info-text">{{nrApplicant.fullName}}</span>
-          </div>
-          <div class="name-request-applicant-info">
-            <span class="subtitle">Address: </span>
-            <span class="info-text">{{nrApplicant.fullAddress}}</span>
-          </div>
-          <div class="name-request-applicant-info">
-            <span class="subtitle">Email: </span>
-            <span class="info-text">{{nrApplicant.emailAddress || 'N/A'}}</span>
-          </div>
-          <div class="name-request-applicant-info">
-            <span class="subtitle">Phone: </span>
-            <span class="info-text">{{phoneNumber || 'N/A'}}</span>
-          </div>
+          <CorrectName
+            actionTxt="restore the business"
+            :businessId="getBusinessId"
+            :companyName="companyName"
+            :correctionNameChoices="correctionNameChoices"
+            :entityType="getEntityType"
+            :fetchAndValidateNr="fetchAndValidateNr"
+            :formType="formType"
+            :nameRequest="getNameRequest"
+            @cancel="resetName()"
+            @saved="onSaved($event)"
+            @update:companyName="onUpdateCompanyName($event)"
+            @update:formType="formType = $event"
+            @update:nameRequest="onUpdateNameRequest($event)"
+          />
         </v-col>
       </v-row>
     </div>
 
-    <!-- Name Translation -->
-    <NameTranslation @hasNameTranslation="emitHasNameTranslation($event)" />
+    <!-- Display Mode -->
+    <template v-else>
+      <NameRequestInfo />
+
+      <v-btn text color="primary" class="btn-undo" @click="resetName()">
+        <v-icon small>mdi-undo</v-icon>
+        <span>Undo</span>
+      </v-btn>
+    </template>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
-import { Component, Emit, Prop, Watch } from 'vue-property-decorator'
+import { Component, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
-import { ActionBindingIF, EntitySnapshotIF, FlagsCompanyInfoIF, NameRequestApplicantIF, NameRequestIF }
-  from '@/interfaces/'
+import { ActionBindingIF, EmptyNameRequest, NrApplicantIF, NameRequestIF } from '@/interfaces/'
 import { ContactPointIF } from '@bcrs-shared-components/interfaces/'
 import { CommonMixin, DateMixin, NameRequestMixin } from '@/mixins/'
-import { CoopTypes, NameChangeOptions } from '@/enums/'
-import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module/'
-import CorrectNameOptions from '@/components/Restoration/CorrectNameOptions.vue'
-import NameTranslation from '@/components/common/NameTranslation.vue'
+import { CoopTypes, NrRequestActionCodes } from '@/enums/'
+import { CorpTypeCd, CorrectNameOptions } from '@bcrs-shared-components/enums/'
+import { LegalServices } from '@/services/'
+import { CorrectName } from '@bcrs-shared-components/correct-name/'
+import NameRequestInfo from '@/components/common/NameRequestInfo.vue'
 
 @Component({
   components: {
-    CorrectNameOptions,
-    NameTranslation
+    CorrectName,
+    NameRequestInfo
   },
   mixins: [
     CommonMixin,
@@ -135,183 +69,138 @@ import NameTranslation from '@/components/common/NameTranslation.vue'
   ]
 })
 export default class BusinessName extends Vue {
-  // for template
-  readonly GetCorpFullDescription = GetCorpFullDescription
-
-  @Prop({ default: false }) getComponentValidate!: boolean
-
   // Global getters
-  @Getter getNameRequest!: NameRequestIF
-  @Getter getBusinessNumber!: string
-  @Getter getNameRequest!: NameRequestIF
+  @Getter getBusinessId!: string
+  @Getter getBusinessId!: string
+  @Getter getBusinessLegalName!: string
+  @Getter getCorrectNameOption!: CorrectNameOptions
   @Getter getEntityType!: CorpTypeCd
+  @Getter getNameRequest!: NameRequestIF
+  @Getter getNameRequestApprovedName!: string
+  @Getter getShowErrors!: boolean
+  @Getter isRestorationFiling!: boolean
 
   // Global actions
-  // @Action setEditingCompanyName!: ActionBindingIF
-  // @Action setValidComponent!: ActionBindingIF
-
-  // *** TODO
-  private setEditingCompanyName (): void {}
-  private setValidComponent (): void {}
+  @Action setBusinessNameValid!: ActionBindingIF
+  @Action setCorrectNameOption!: ActionBindingIF
+  @Action setNameRequest!: ActionBindingIF
+  @Action setNameRequestApprovedName!: ActionBindingIF
 
   protected dropdown: boolean = null
-  protected hasCompanyNameChanged = false
   protected correctNameChoices: Array<string> = []
-  protected isEditingNames = false
-  protected isEditingType = false
-  protected isEditingTranslations = false
+  protected isCorrectingName = true // display options initially
+  protected formType: CorrectNameOptions = null
 
-  /** The current NR number. */
-  get nrNum (): string {
-    return this.getNameRequest.nrNum
-  }
-
-  /** True if a new NR number has been entered. */
-  get hasNewNr (): boolean {
-    return !!this.getNameRequest.nrNum
-  }
-
-  /** True if entity type is different from NR legal type. */
-  get isConflictingLegalType (): boolean {
-    return (this.getEntityType !== this.getNameRequest.legalType)
-  }
-
-  /** The section validity state (when prompted by app). */
-  get invalidSection (): boolean {
-    return (this.getComponentValidate && this.isEditingNames)
-  }
-
-  /** The translation section validity state (when prompted by app). */
-  get invalidTranslationSection (): boolean {
-    return (this.getComponentValidate && this.isEditingTranslations)
-  }
-
-  /** The company name (from NR, or incorporation number). */
+  /** The company name. */
   get companyName (): string {
-    if (this.nameRequestLegalName) return this.nameRequestLegalName
-
-    return `${this.getBusinessNumber || '[Incorporation Number]'} B.C. Ltd.`
+    return (this.getNameRequestApprovedName || this.getBusinessLegalName)
   }
 
-  /** Name Request applicant info */
-  get nrApplicant (): NameRequestApplicantIF {
-    return this.getNameRequest.applicants // not an array
+  /** This section's validity state (when prompted by app). */
+  get invalidSection (): boolean {
+    return (this.getShowErrors && this.isCorrectingName)
   }
 
-  /** Name Request status */
-  get nrStatus (): string {
-    return (this.getNameRequest.status || '').toLowerCase()
-  }
-
-  /** Name Request expiry */
-  get expiryDate (): string {
-    const expiry = this.getNameRequest.expiry
-    if (expiry) {
-      return this.apiToPacificDateTime(expiry)
+  /** The current options for name changes. */
+  get correctionNameChoices (): Array<CorrectNameOptions> {
+    if (this.isRestorationFiling) {
+      return [
+        CorrectNameOptions.CORRECT_NAME_TO_NUMBER,
+        CorrectNameOptions.CORRECT_NEW_NR
+      ]
     }
-    return null
-  }
 
-  /** The Name Request Legal Name (approved name). */
-  // *** TODO: reconcile this with getNameRequestApprovedName()
-  get nameRequestLegalName (): string {
-    return this.getNrApprovedName(this.getNameRequest)
-  }
-
-  /** Name Request phone number */
-  get phoneNumber (): string {
-    return this.toDisplayPhone(this.nrApplicant.phoneNumber)
-  }
-
-  /** The current options for change of name correction or edit. */
-  get nameChangeOptions (): Array<NameChangeOptions> {
+    // fallback case - not used for now
     return [
-      NameChangeOptions.CORRECT_NAME_TO_NUMBER,
-      NameChangeOptions.CORRECT_NEW_NR
+      CorrectNameOptions.CORRECT_NAME,
+      CorrectNameOptions.CORRECT_NAME_TO_NUMBER,
+      CorrectNameOptions.CORRECT_NEW_NR
     ]
   }
 
-  /** Whether a new business legal name was entered.. */
-  // *** TODO: combine this with isNewName ?
-  get isNewName () {
-    const originalName = this.nameRequestLegalName
-    const currentName = this.getEntitySnapshot?.businessInfo.legalName
-    return (originalName !== currentName)
+  /** The request action code for this filing type. */
+  get requestActionCode (): NrRequestActionCodes {
+    if (this.isRestorationFiling) return NrRequestActionCodes.RESTORE
+    return null
+  }
+
+  /** Whether a new business legal name was entered. */
+  get isNewName (): boolean {
+    // Approved Name is null when we start
+    // and is set when a name option is selected
+    return !!this.getNameRequestApprovedName // *** TODO: verify intial vs updated
   }
 
   /** Reset company name values to original. */
-  protected resetName () {
-    // *** TODO: implement
-    // // reset business information, except for association type.
-    // const businessInfo = { ...this.getEntitySnapshot.businessInfo, associationType: this.getAssociationType }
-    // this.setBusinessInformation(businessInfo)
+  protected resetName (): void {
+    // clear out existing data
+    this.setNameRequest(EmptyNameRequest)
+    this.setNameRequestApprovedName(null)
+    this.setCorrectNameOption(null)
 
-    // // reset name request
-    // this.setNameRequest({
-    //   legalType: this.getEntitySnapshot.businessInfo.legalType,
-    //   legalName: this.getEntitySnapshot.businessInfo.legalName,
-    //   nrNumber: this.getEntitySnapshot.businessInfo.nrNumber
-    // })
-
-    // reset flag
-    this.hasCompanyNameChanged = false
+    // reset flags
+    this.formType = null
+    this.isCorrectingName = true
   }
 
   /**
-   * Updates UI when Name Request is updated (ie, on resume draft)
-   * or when correct name options are done.
+   * Fetches and validation a NR.
+   * @param nrNum the NR number
+   * @param phone the phone number to match
+   * @param email the email address to match
+   * @returns a promise to return the NR, or throws a printable error
    */
-  @Watch('getNameRequest')
-  private onNameChange (isSaved = false): void {
-    this.hasCompanyNameChanged = this.isNewName
-    if (isSaved) this.isEditingNames = false
+  protected async fetchAndValidateNr (nrNum: string, phone: string, email: string): Promise<NameRequestIF> {
+    const nameRequest = await LegalServices.fetchNameRequest(nrNum)
+    if (!nameRequest) throw new Error('Error fetching Name Request')
+
+    // validateNameRequest() already throws printable errors
+    return this.validateNameRequest(nameRequest, this.requestActionCode, phone, email)
   }
 
-  /** Updates store initially and when isEditingName property has changed. */
-  @Watch('isEditingNames', { immediate: true })
-  private onEditingNameChanged (val: boolean): void {
-    this.setValidComponent({ key: 'isValidCompanyName', value: !val })
-    this.setEditingCompanyName(val)
+  /** On saved=True event, updates UI state. */
+  protected onSaved (saved: boolean): void {
+    if (saved) this.isCorrectingName = false
   }
 
-  /** Updates store initially and when isEditingType property has changed. */
-  @Watch('isEditingType', { immediate: true })
-  private onEditingTypeChanged (val: boolean): void {
-    this.setValidComponent({ key: 'isValidBusinessType', value: !val })
+  /** On company name update, sets store accordingly. */
+  protected onUpdateCompanyName (name: string): void {
+    this.setCorrectNameOption(this.formType)
+    this.setNameRequestApprovedName(name)
   }
 
-  /** Updates store initially and when isEditingTranslations property has changed. */
-  @Watch('isEditingTranslations', { immediate: true })
-  private onEditingTranslationChanged (val: boolean): void {
-    this.setValidComponent({ key: 'isValidNameTranslation', value: !val })
+  /** On name request update, sets store accordingly. */
+  protected onUpdateNameRequest (nameRequest: NameRequestIF): void {
+    this.setNameRequest(nameRequest)
   }
 
-  @Emit('hasNameTranslation')
-  protected emitHasNameTranslation (val: boolean): void {}
+  /** Updates component validity initially and when isCorrectingName changed. */
+  @Watch('isCorrectingName', { immediate: true })
+  private updateComponentValidity (val: boolean): void {
+    this.setBusinessNameValid(!val)
+  }
 }
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/theme.scss';
-
-.company-name {
-  font-size: $px-24;
-}
-
-.company-info {
-  padding-top: 0.5rem;
-}
-
-.name-request-applicant-info:not(:first-child) {
-  padding-top: 0.5rem
-}
-
-.actions {
+// position the Undo button "on top of" NameRequestInfo
+.btn-undo {
   position: absolute;
-  right: 0;
+  top: 22px;
+  right: 20px;
+}
 
-  .v-btn {
-    min-width: 0.5rem;
+// "sm" breakpoint
+@media (min-width: 600px) {
+  .btn-undo {
+    top: 24px;
+  }
+}
+
+// "md" breakpoint
+@media (min-width: 960px) {
+  .btn-undo {
+    top: 28px;
   }
 }
 </style>

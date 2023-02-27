@@ -156,12 +156,9 @@
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
-import {
-  ActionBindingIF, ContactPointIF, CertifyIF, EffectiveDateTimeIF, IncorporationAgreementIF,
-  ShareStructureIF,
-  CourtOrderStepIF
-} from '@/interfaces'
-import { CorpTypeCd } from '@/enums'
+import { ActionBindingIF, ContactPointIF, CertifyIF, EffectiveDateTimeIF, IncorporationAgreementIF,
+  ShareStructureIF, CourtOrderStepIF } from '@/interfaces'
+import { CorpTypeCd } from '@bcrs-shared-components/enums/'
 import AgreementType from '@/components/common/AgreementType.vue'
 import CardHeader from '@/components/common/CardHeader.vue'
 import Certify from '@/components/common/Certify.vue'

@@ -4,100 +4,109 @@ import { DateMixin } from '@/mixins'
 import { ActionBindingIF, BusinessIF, ContactPointIF, CertifyIF, CompletingPartyIF, CourtOrderStepIF,
   CreateMemorandumIF, CreateResolutionIF, CreateRulesIF, DefineCompanyIF, DissolutionFilingIF,
   DissolutionStatementIF, DocIF, DocumentDeliveryIF, EffectiveDateTimeIF, EmptyNaics,
-  IncorporationAgreementIF, IncorporationFilingIF, NameTranslationIF, OrgPersonIF, PartyIF,
-  PeopleAndRoleIF, RegistrationFilingIF, RegistrationStateIF, RestorationFilingIF, RestorationStateIF,
-  ShareStructureIF, SpecialResolutionIF, StaffPaymentStepIF, UploadAffidavitIF, EmptyContactPoint } from '@/interfaces'
-import { CorpTypeCd, DissolutionTypes, EffectOfOrders, FilingTypes, PartyTypes, RoleTypes,
-  StaffPaymentOptions } from '@/enums'
+  IncorporationAgreementIF, IncorporationFilingIF, NameRequestFilingIF, NameTranslationIF, OrgPersonIF,
+  PartyIF, PeopleAndRoleIF, RegistrationFilingIF, RegistrationStateIF, RestorationFilingIF,
+  RestorationStateIF, ShareStructureIF, SpecialResolutionIF, StaffPaymentStepIF, UploadAffidavitIF }
+  from '@/interfaces'
+import { DissolutionTypes, EffectOfOrders, FilingTypes, PartyTypes, RoleTypes, StaffPaymentOptions }
+  from '@/enums'
+import { CorpTypeCd, CorrectNameOptions } from '@bcrs-shared-components/enums/'
 
 /**
  * Mixin that provides the integration with the Legal API.
  */
 @Component({})
 export default class FilingTemplateMixin extends DateMixin {
-  @Getter isTypeCoop!: boolean
-  @Getter isTypeSoleProp!: boolean
+  @Getter getAddPeopleAndRoleStep!: PeopleAndRoleIF
   @Getter getAffidavitStep!: UploadAffidavitIF
-  @Getter getNameRequestNumber!: string
-  @Getter getNameRequestApprovedName!: string
   @Getter getBusiness!: BusinessIF
-  @Getter getBusinessLegalName!: string
+  @Getter getBusinessContact!: ContactPointIF
   @Getter getBusinessFoundingDate!: string
+  @Getter getBusinessId!: string
+  @Getter getBusinessLegalName!: string
+  @Getter getCertifyState!: CertifyIF
+  @Getter getCompletingParty!: CompletingPartyIF
+  @Getter getCorrectNameOption!: CorrectNameOptions
+  @Getter getCourtOrderStep!: CourtOrderStepIF
+  @Getter getCreateMemorandumStep!: CreateMemorandumIF
+  @Getter getCreateRulesStep!: CreateRulesIF
+  @Getter getCreateResolutionStep!: CreateResolutionIF
+  @Getter getCreateShareStructureStep!: ShareStructureIF
+  @Getter getCurrentDate!: string
+  @Getter getDefineCompanyStep!: DefineCompanyIF
+  @Getter getDissolutionDate!: string
+  @Getter getDissolutionCustodian!: OrgPersonIF
+  @Getter getDissolutionStatementStep!: DissolutionStatementIF
   @Getter getDissolutionType!: DissolutionTypes
-  @Getter getTempId!: string
+  @Getter getDocumentDelivery!: DocumentDeliveryIF
   @Getter getEffectiveDateTime!: EffectiveDateTimeIF
   @Getter getEntityType!: CorpTypeCd
-  @Getter getCurrentDate!: string
-  @Getter getCertifyState!: CertifyIF
-  @Getter getDefineCompanyStep!: DefineCompanyIF
-  @Getter getNameTranslations!: NameTranslationIF[]
-  @Getter getAddPeopleAndRoleStep!: PeopleAndRoleIF
-  @Getter getCreateShareStructureStep!: ShareStructureIF
-  @Getter getIncorporationAgreementStep!: IncorporationAgreementIF
-  @Getter getBusinessContact!: ContactPointIF
-  @Getter getCreateRulesStep!: CreateRulesIF
-  @Getter getCreateMemorandumStep!: CreateMemorandumIF
-  @Getter getMemorandum!: any
-  @Getter getCreateResolutionStep!: CreateResolutionIF
-  @Getter getResolution!: any
-  @Getter getBusinessId!: string
-  @Getter getDocumentDelivery!: DocumentDeliveryIF
-  @Getter getStaffPaymentStep!: StaffPaymentStepIF
-  @Getter getCourtOrderStep!: CourtOrderStepIF
-  @Getter isRoleStaff!: boolean
-  @Getter getDissolutionStatementStep!: DissolutionStatementIF
-  @Getter getDissolutionCustodian!: OrgPersonIF
+  @Getter getFilingId!: number
   @Getter getFolioNumber!: string
+  @Getter getIncorporationAgreementStep!: IncorporationAgreementIF
+  @Getter getMemorandum!: any
+  @Getter getNameRequestApprovedName!: string
+  @Getter getNameRequestNumber!: string
+  @Getter getNameTranslations!: NameTranslationIF[]
+  @Getter getRegistration!: RegistrationStateIF
+  @Getter getResolution!: any
+  @Getter getRestoration!: RestorationStateIF
+  @Getter getStaffPaymentStep!: StaffPaymentStepIF
+  @Getter getTempId!: string
   @Getter getTransactionalFolioNumber!: string
   @Getter isPremiumAccount!: boolean
-  @Getter getRegistration!: RegistrationStateIF
-  @Getter getRestoration!: RestorationStateIF
-  @Getter getFilingId!: number
-  @Getter getCompletingParty!: CompletingPartyIF
-  @Getter getDissolutionDate!: string
+  @Getter isRoleStaff!: boolean
+  @Getter isTypeCoop!: boolean
   @Getter isTypeFirm!: boolean
+  @Getter isTypeSoleProp!: boolean
 
   @Action setAffidavit!: ActionBindingIF
-  @Action setFilingId!: ActionBindingIF
-  @Action setEntityType!: ActionBindingIF
   @Action setBusinessAddress!: ActionBindingIF
   @Action setBusinessContact!: ActionBindingIF
-  @Action setDissolutionType!: ActionBindingIF
-  @Action setLegalName!: ActionBindingIF
-  @Action setFoundingDate!: ActionBindingIF
-  @Action setCooperativeType!: ActionBindingIF
-  @Action setOfficeAddresses!: ActionBindingIF
-  @Action setNameTranslationState!: ActionBindingIF
-  @Action setDefineCompanyStepValidity!: ActionBindingIF
-  @Action setOrgPersonList!: ActionBindingIF
   @Action setCertifyState!: ActionBindingIF
-  @Action setShareClasses!: ActionBindingIF
-  @Action setEffectiveDate!: ActionBindingIF
-  @Action setIsFutureEffective!: ActionBindingIF
-  @Action setFolioNumber!: ActionBindingIF
-  @Action setTransactionalFolioNumber!: ActionBindingIF
-  @Action setIncorporationAgreementStepData!: ActionBindingIF
-  @Action setRules!: ActionBindingIF
-  @Action setMemorandum!: ActionBindingIF
+  @Action setCooperativeType!: ActionBindingIF
+  @Action setCorrectNameOption!: ActionBindingIF
   @Action setCourtOrderFileNumber!: ActionBindingIF
-  @Action setHasPlanOfArrangement!: ActionBindingIF
-  @Action setStaffPayment!: ActionBindingIF
-  @Action setResolution!: ActionBindingIF
-  @Action setDocumentOptionalEmail!: ActionBindingIF
-  @Action setDissolutionStatementStepData!: ActionBindingIF
   @Action setCustodianOfRecords!: ActionBindingIF
-  @Action setRegistrationStartDate!: ActionBindingIF
-  @Action setRegistrationBusinessAddress!: ActionBindingIF
-  @Action setRegistrationFeeAcknowledgement!: ActionBindingIF
-  @Action setRegistrationNaics!: ActionBindingIF
-  @Action setRegistrationBusinessNumber!: ActionBindingIF
+  @Action setDefineCompanyStepValidity!: ActionBindingIF
+  @Action setDissolutionDate!: ActionBindingIF
+  @Action setDissolutionStatementStepData!: ActionBindingIF
+  @Action setDissolutionType!: ActionBindingIF
+  @Action setDocumentOptionalEmail!: ActionBindingIF
+  @Action setEffectiveDate!: ActionBindingIF
+  @Action setEntityType!: ActionBindingIF
+  @Action setFilingId!: ActionBindingIF
+  @Action setFolioNumber!: ActionBindingIF
+  @Action setIncorporationAgreementStepData!: ActionBindingIF
+  @Action setHasPlanOfArrangement!: ActionBindingIF
   @Action setIsAutoPopulatedBusinessNumber!: ActionBindingIF
+  @Action setIsFutureEffective!: ActionBindingIF
+  @Action setFoundingDate!: ActionBindingIF
+  @Action setLegalName!: ActionBindingIF
+  @Action setMemorandum!: ActionBindingIF
+  @Action setNameRequestApprovedName!: ActionBindingIF
+  @Action setNameTranslations!: ActionBindingIF
+  @Action setOfficeAddresses!: ActionBindingIF
+  @Action setOrgPersonList!: ActionBindingIF
+  @Action setRegistrationBusinessAddress!: ActionBindingIF
+  @Action setRegistrationBusinessNumber!: ActionBindingIF
   @Action setRegistrationBusinessType!: ActionBindingIF
   @Action setRegistrationBusinessTypeConfirm!: ActionBindingIF
-  @Action setDissolutionDate!: ActionBindingIF
-  @Action setRestorationType!: ActionBindingIF
+  @Action setRegistrationFeeAcknowledgement!: ActionBindingIF
+  @Action setRegistrationNaics!: ActionBindingIF
+  @Action setRegistrationStartDate!: ActionBindingIF
+  @Action setResolution!: ActionBindingIF
+  @Action setRestorationApplicationDate!: ActionBindingIF
+  @Action setRestorationApprovalType!: ActionBindingIF
+  @Action setRestorationCourtOrder!: ActionBindingIF
   @Action setRestorationExpiry!: ActionBindingIF
+  @Action setRestorationNoticeDate!: ActionBindingIF
   @Action setRestorationRelationships!: ActionBindingIF
+  @Action setRestorationType!: ActionBindingIF
+  @Action setRules!: ActionBindingIF
+  @Action setShareClasses!: ActionBindingIF
+  @Action setStaffPayment!: ActionBindingIF
+  @Action setTransactionalFolioNumber!: ActionBindingIF
 
   /**
    * Builds an incorporation filing from store data. Used when saving a filing.
@@ -209,7 +218,9 @@ export default class FilingTemplateMixin extends DateMixin {
     this.setOfficeAddresses(draftFiling.incorporationApplication.offices)
 
     // restore Name Translations
-    this.setNameTranslationState(draftFiling.incorporationApplication.nameTranslations || [])
+    if (draftFiling.incorporationApplication.nameTranslations) {
+      this.setNameTranslations(draftFiling.incorporationApplication.nameTranslations)
+    }
 
     // restore Contact Info
     this.setBusinessContact({
@@ -218,7 +229,9 @@ export default class FilingTemplateMixin extends DateMixin {
     })
 
     // restore Persons and Organizations
-    this.setOrgPersonList(draftFiling.incorporationApplication.parties || [])
+    if (draftFiling.incorporationApplication.parties) {
+      this.setOrgPersonList(draftFiling.incorporationApplication.parties)
+    }
 
     // conditionally restore the entity-specific sections
     switch (this.getEntityType) {
@@ -281,9 +294,13 @@ export default class FilingTemplateMixin extends DateMixin {
         this.setIncorporationAgreementStepData({
           agreementType: draftFiling.incorporationApplication.incorporationAgreement?.agreementType
         })
-        // set courtOrder attribute
-        this.setCourtOrderFileNumber(draftFiling.incorporationApplication.courtOrder?.fileNumber || '')
-        this.setHasPlanOfArrangement(draftFiling.incorporationApplication.courtOrder?.hasPlanOfArrangement || false)
+        // set court order fields
+        if (draftFiling.incorporationApplication.courtOrder?.fileNumber) {
+          this.setCourtOrderFileNumber(draftFiling.incorporationApplication.courtOrder.fileNumber)
+        }
+        if (draftFiling.incorporationApplication.courtOrder?.hasPlanOfArrangement) {
+          this.setHasPlanOfArrangement(draftFiling.incorporationApplication.courtOrder.hasPlanOfArrangement)
+        }
         break
     }
 
@@ -391,16 +408,8 @@ export default class FilingTemplateMixin extends DateMixin {
         foundingDate: this.getBusinessFoundingDate
       },
       restoration: {
-        type: this.getRestoration.type,
-        expiry: this.getRestoration.expiry || undefined, // can't be null
-        nameRequest: {
-          legalName: this.getNameRequestApprovedName,
-          legalType: this.getEntityType,
-          nrNumber: this.getNameRequestNumber
-        },
-        nameTranslations: this.getNameTranslations,
-        parties: this.orgPersonsToParties(this.getAddPeopleAndRoleStep.orgPeople),
-        offices: this.getDefineCompanyStep.officeAddresses,
+        applicationDate: this.getRestoration.applicationDate,
+        approvalType: this.getRestoration.approvalType,
         contactPoint: {
           email: this.getBusinessContact.email,
           phone: this.getBusinessContact.phone,
@@ -409,8 +418,33 @@ export default class FilingTemplateMixin extends DateMixin {
             ? { extension: +this.getBusinessContact.extension }
             : {}
         },
-        relationships: this.getRestoration.relationships
+        courtOrder: this.getRestoration.courtOrder,
+        expiry: this.getRestoration.expiry || undefined, // can't be null
+        nameRequest: {
+          legalType: this.getEntityType
+        },
+        nameTranslations: this.getNameTranslations,
+        noticeDate: this.getRestoration.noticeDate,
+        offices: this.getDefineCompanyStep.officeAddresses,
+        parties: this.orgPersonsToParties(this.getAddPeopleAndRoleStep.orgPeople),
+        relationships: this.getRestoration.relationships,
+        type: this.getRestoration.type
       }
+    }
+
+    // Add business name data.
+    switch (this.getCorrectNameOption) {
+      case CorrectNameOptions.CORRECT_NAME:
+        // not applicable to restoration
+        break
+      case CorrectNameOptions.CORRECT_NAME_TO_NUMBER:
+        filing.restoration.nameRequest.correctNameOption = CorrectNameOptions.CORRECT_NAME_TO_NUMBER
+        filing.restoration.nameRequest.legalName = this.getNameRequestApprovedName
+        break
+      case CorrectNameOptions.CORRECT_NEW_NR:
+        filing.restoration.nameRequest.correctNameOption = CorrectNameOptions.CORRECT_NEW_NR
+        filing.restoration.nameRequest.nrNumber = this.getNameRequestNumber
+        break
     }
 
     if (this.isRoleStaff) {
@@ -477,7 +511,7 @@ export default class FilingTemplateMixin extends DateMixin {
     // restore Business Type Confirm
     this.setRegistrationBusinessTypeConfirm(draftFiling.registration.businessTypeConfirm || false)
 
-    // NB: no need to restore Name Request data
+    // NB: do not restore Name Request data
     // it will be reloaded from NR endpoint in App.vue
 
     // restore Entity Type
@@ -530,18 +564,54 @@ export default class FilingTemplateMixin extends DateMixin {
     this.setFoundingDate(draftFiling.business.foundingDate)
 
     // restore Restoration data
+    if (draftFiling.restoration.applicationDate) {
+      this.setRestorationApplicationDate(draftFiling.restoration.applicationDate)
+    }
+    this.setRestorationApprovalType(draftFiling.restoration.approvalType)
+    if (draftFiling.restoration.courtOrder) {
+      this.setRestorationCourtOrder(draftFiling.restoration.courtOrder)
+    }
     this.setRestorationType(draftFiling.restoration.type)
-    this.setRestorationExpiry(draftFiling.restoration.expiry || null)
-    this.setRestorationRelationships(draftFiling.restoration.relationships || [])
+    if (draftFiling.restoration.expiry) {
+      this.setRestorationExpiry(draftFiling.restoration.expiry)
+    }
+    if (draftFiling.restoration.relationships) {
+      this.setRestorationRelationships(draftFiling.restoration.relationships)
+    }
+    if (draftFiling.restoration.noticeDate) {
+      this.setRestorationNoticeDate(draftFiling.restoration.noticeDate)
+    }
+    if (draftFiling.restoration.applicationDate) {
+      this.setRestorationApplicationDate(draftFiling.restoration.applicationDate)
+    }
 
-    // NB: no need to restore Name Request data
-    // it will be reloaded from NR endpoint in App.vue
+    // restore business name data
+    const nameRequest = draftFiling.restoration.nameRequest as NameRequestFilingIF
+    switch (nameRequest?.correctNameOption) {
+      case CorrectNameOptions.CORRECT_NAME:
+        // not applicable to restoration
+        break
+      case CorrectNameOptions.CORRECT_NAME_TO_NUMBER:
+        this.setCorrectNameOption(CorrectNameOptions.CORRECT_NAME_TO_NUMBER)
+        // restore numbered name
+        this.setNameRequestApprovedName(nameRequest.legalName)
+        break
+      case CorrectNameOptions.CORRECT_NEW_NR:
+        this.setCorrectNameOption(CorrectNameOptions.CORRECT_NEW_NR)
+        // NB: do not restore Name Request data
+        // it will be reloaded from NR endpoint in App.vue
+        break
+    }
 
     // restore Name Translations
-    this.setNameTranslationState(draftFiling.restoration.nameTranslations || [])
+    if (draftFiling.restoration.nameTranslations) {
+      this.setNameTranslations(draftFiling.restoration.nameTranslations)
+    }
 
     // restore Persons and Organizations
-    this.setOrgPersonList(this.partiesToOrgPersons(draftFiling.restoration.parties || []))
+    if (draftFiling.restoration.parties) {
+      this.setOrgPersonList(this.partiesToOrgPersons(draftFiling.restoration.parties))
+    }
 
     // restore Office addresses
     if (draftFiling.restoration.offices) {

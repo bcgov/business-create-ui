@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
-import { CorpTypeCd, NumWord, PartyTypes, RoleTypes, RuleIds } from '@/enums'
+import { NumWord, PartyTypes, RoleTypes, RuleIds } from '@/enums'
+import { CorpTypeCd } from '@bcrs-shared-components/enums/'
 import { ActionBindingIF, AddressIF, ConfirmDialogType, OrgPersonIF, PeopleAndRoleIF,
   PeopleAndRolesResourceIF, RegistrationStateIF } from '@/interfaces'
 

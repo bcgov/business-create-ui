@@ -1,6 +1,5 @@
 import {
   EmptyAccountInformation,
-  EmptyAddress,
   EmptyContactPoint,
   EmptyFees,
   EmptyNameRequest,
@@ -8,6 +7,7 @@ import {
   EmptyNaics,
   StateModelIF
 } from '@/interfaces'
+import { EmptyAddress } from '@bcrs-shared-components/interfaces'
 import { cloneDeep } from 'lodash'
 
 export const stateModel: StateModelIF = {
@@ -86,7 +86,9 @@ export const stateModel: StateModelIF = {
   orgInformation: null,
   nameRequest: cloneDeep(EmptyNameRequest),
   nameRequestApprovedName: null,
+  correctNameOption: null,
   nameTranslations: [],
+  nameTranslationsValid: true,
   currentDate: '',
   effectiveDateTime: {
     valid: false,
@@ -203,16 +205,18 @@ export const stateModel: StateModelIF = {
     isAutoPopulatedBusinessNumber: false
   },
   restoration: {
-    businessInfoValid: false,
+    applicationDate: null,
+    approvalType: null,
+    approvalTypeValid: true,
     businessNameValid: false,
-    type: null,
+    courtOrder: {
+      fileNumber: null
+    },
     expiry: null,
+    noticeDate: null,
     relationships: [],
-    restorationTypeValid: true
-    // defineBusinessValid: false,
-    // startDate: '',
-    // businessAddress: null,
-    // businessNumber: null
+    restorationTypeValid: false,
+    type: null
   },
   completingParty: null,
   parties: null,

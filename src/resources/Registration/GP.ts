@@ -1,5 +1,6 @@
 import { RegistrationResourceIF } from '@/interfaces'
-import { CorpTypeCd, FilingCodes, RuleIds } from '@/enums'
+import { FilingCodes, RuleIds } from '@/enums'
+import { CorpTypeCd } from '@bcrs-shared-components/enums/'
 import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 import { RegistrationSteps } from './steps'
 
@@ -32,7 +33,6 @@ export const RegistrationResourceGp: RegistrationResourceIF = {
   },
   reviewAndConfirm: {
     completingPartyStatement: {
-      certifyStatementHeader: null,
       certifyStatements: [],
       certifyClause: 'Note: It is an offence to make or assist in making a false or misleading ' +
         'statement in a record filed under the Partnership Act. A person who commits this ' +

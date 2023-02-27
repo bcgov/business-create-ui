@@ -202,8 +202,9 @@ import { DissolutionResources, IncorporationResources, RegistrationResources, Re
 import { AuthServices, LegalServices, PayServices } from '@/services/'
 
 // Enums and Constants
-import { CorpTypeCd, FilingCodes, FilingNames, FilingStatus, FilingTypes, NameRequestStates, RouteNames,
-  StaffPaymentOptions } from '@/enums'
+import { FilingCodes, FilingNames, FilingStatus, FilingTypes, NameRequestStates, RouteNames, StaffPaymentOptions }
+  from '@/enums'
+import { CorpTypeCd } from '@bcrs-shared-components/enums/'
 import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
 
 @Component({
@@ -462,7 +463,7 @@ export default class App extends Vue {
         this.setHaveChanges(false)
         this.paymentErrorDialog = true
       } else {
-        console.log('save error =', error) // eslint-disable-line no-console
+        console.log('Save error =', error) // eslint-disable-line no-console
         this.saveErrorDialog = true
       }
     })
@@ -783,6 +784,15 @@ export default class App extends Vue {
     // set the resources
     if (!resources) throw new Error(`Invalid ${this.getEntityType} resources`)
     this.setResources(resources)
+
+    // Fetch and validate the NR and set the data to the store. This method is different
+    // from the validateNameRequest method in Actions.vue. This method sets the data to
+    // the store shows a specific message for different invalid states and redirection is
+    // to the Filings Dashboard.
+    const nrNumber = draftFiling[draftFiling.header?.name]?.nameRequest?.nrNumber
+    if (nrNumber) {
+      await this.processNameRequest(draftFiling)
+    }
   }
 
   /** Fetches draft IA or Registration and sets the resources. */

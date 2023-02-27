@@ -20,7 +20,7 @@
 import Vue from 'vue'
 import { Component, Prop } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
-import { ActionBindingIF, CertifyIF, CertifyStatementIF } from '@/interfaces'
+import { ActionBindingIF, CertifyIF, CompletingPartyStatementIF } from '@/interfaces'
 import { Certify as CertifyShared } from '@bcrs-shared-components/certify'
 
 /** This is a shim between the view and the atomic component. */
@@ -35,7 +35,7 @@ export default class Certify extends Vue {
   @Prop({ required: true }) readonly isStaff!: boolean
 
   @Getter getCertifyState!: CertifyIF
-  @Getter getCompletingPartyStatement!: CertifyStatementIF
+  @Getter getCompletingPartyStatement!: CompletingPartyStatementIF
   @Getter getCurrentDate!: string
 
   @Action setCertifyState!: ActionBindingIF

@@ -1,4 +1,5 @@
-import { DissolutionResourceIF, IncorporationResourceIF, RestorationResourceIF } from '@/interfaces'
+import { DissolutionResourceIF, EmptyCompletingPartyStatement, IncorporationResourceIF,
+  RestorationResourceIF } from '@/interfaces'
 
 const incorporationResourceModel: IncorporationResourceIF = {
   entityType: null,
@@ -26,12 +27,7 @@ const incorporationResourceModel: IncorporationResourceIF = {
   },
   incorporationAgreement: null,
   reviewAndConfirm: {
-    completingPartyStatement: {
-      certifyStatementHeader: null,
-      certifyStatements: [],
-      certifyClause: null,
-      entityDisplay: null
-    }
+    completingPartyStatement: { ...EmptyCompletingPartyStatement }
   }
 }
 
@@ -42,12 +38,7 @@ const registrationResourceModel: any = {
   steps: [],
   filingData: null,
   reviewAndConfirm: {
-    completingPartyStatement: {
-      certifyStatementHeader: null,
-      certifyStatements: [],
-      certifyClause: null,
-      entityDisplay: null
-    }
+    completingPartyStatement: { ...EmptyCompletingPartyStatement }
   }
 }
 
@@ -59,12 +50,7 @@ const dissolutionResourceModel: DissolutionResourceIF = {
   detailsTitle: '',
   affidavit: null,
   reviewAndConfirm: {
-    completingPartyStatement: {
-      certifyStatementHeader: null,
-      certifyStatements: [],
-      certifyClause: null,
-      entityDisplay: null
-    }
+    completingPartyStatement: { ...EmptyCompletingPartyStatement }
   },
   custodialRecords: null
 }
@@ -75,12 +61,7 @@ const restorationResourceModel: RestorationResourceIF = {
   steps: [],
   filingData: null,
   reviewAndConfirm: {
-    completingPartyStatement: {
-      certifyStatementHeader: null,
-      certifyStatements: [],
-      certifyClause: null,
-      entityDisplay: null
-    }
+    completingPartyStatement: { ...EmptyCompletingPartyStatement }
   },
   peopleAndRoles: {
     header: null,

@@ -1,20 +1,15 @@
-import { CorpTypeCd, RestorationTypes, RelationshipTypes } from '@/enums'
-
-export interface RestorationNameRequestIF {
-  legalName: string
-  legalType: CorpTypeCd
-  nrNumber: string
-}
+import { ApprovalTypes, RestorationTypes, RelationshipTypes } from '@/enums'
+import { CourtOrderIF } from '@/interfaces'
 
 export interface RestorationStateIF {
-  businessInfoValid: boolean
+  applicationDate?: string // YYYY-MM-DD
+  approvalType: ApprovalTypes
+  approvalTypeValid: boolean
   businessNameValid: boolean
-  type: RestorationTypes
+  courtOrder?: CourtOrderIF
   expiry?: string // YYYY-MM-DD
+  noticeDate?: string // YYYY-MM-DD
   relationships?: RelationshipTypes[]
   restorationTypeValid: boolean
-  // defineBusinessValid: boolean
-  // startDate: string
-  // businessAddress: BusinessAddressIF
-  // businessNumber?: string
+  type: RestorationTypes
 }

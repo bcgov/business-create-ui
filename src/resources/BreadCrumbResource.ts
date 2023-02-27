@@ -1,4 +1,5 @@
-import { CorpTypeCd, FilingTypes } from '@/enums'
+import { FilingTypes } from '@/enums'
+import { CorpTypeCd } from '@bcrs-shared-components/enums/'
 import { BreadcrumbIF } from '@/interfaces'
 import { getVuexStore } from '@/store'
 import { GetCorpNumberedDescription } from '@bcrs-shared-components/corp-type-module'

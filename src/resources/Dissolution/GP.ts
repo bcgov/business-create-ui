@@ -1,5 +1,6 @@
 import { DissolutionResourceIF } from '@/interfaces'
-import { CorpTypeCd, FilingCodes, ItemTypes } from '@/enums'
+import { FilingCodes, ItemTypes } from '@/enums'
+import { CorpTypeCd } from '@bcrs-shared-components/enums/'
 import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 import { DissolutionStepsFirm } from './steps'
 
@@ -12,10 +13,8 @@ export const DissolutionResourceGp: DissolutionResourceIF = {
     filingTypeCode: FilingCodes.DISSOLUTION_VOLUNTARY
   }],
   detailsTitle: 'Company Details',
-
   reviewAndConfirm: {
     completingPartyStatement: {
-      certifyStatementHeader: null,
       certifyStatements: [],
       certifyClause: `Note: It is an offence to make or assist in making a false or misleading statement
       in a record filed under the Partnership Act. 

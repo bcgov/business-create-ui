@@ -28,7 +28,10 @@ for (const test of restorationBusinessInfo) {
       wrapper = shallowWrapperFactory(
         RestorationBusinessInformation,
         null,
-        { entityType: test.entityType },
+        {
+          entityType: test.entityType,
+          tombstone: { authRoles: ['staff'] }
+        },
         null,
         RestorationResources
       )
@@ -42,14 +45,15 @@ for (const test of restorationBusinessInfo) {
       expect(wrapper.find('#restoration-business-information').exists()).toBe(true)
     })
 
-    it('displays header', () => {
-      expect(wrapper.findAll('h2').length).toBe(2)
-      expect(wrapper.findAll('h2').at(0).text()).toContain('Registered and Records Office Addresses')
-      expect(wrapper.findAll('h2').at(1).text()).toContain('Registered Office Contact Information')
+    it('displays Registered and Records Office Addresses section', () => {
+      const section = wrapper.findAll('section').at(0)
+      expect(section.find('header h2').text()).toBe('Registered and Records Office Addresses')
+      expect(section.findComponent(OfficeAddresses).exists()).toBe(true)
     })
 
-    it('displays sub-components', () => {
-      expect(wrapper.findComponent(OfficeAddresses).exists()).toBe(true)
+    it('displays Registered Office Contact Information section', () => {
+      const section = wrapper.findAll('section').at(1)
+      expect(section.find('header h2').text()).toBe('Registered Office Contact Information')
       expect(wrapper.findComponent(BusinessContactInfo).exists()).toBe(true)
     })
   })

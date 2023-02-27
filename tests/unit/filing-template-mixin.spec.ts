@@ -20,7 +20,7 @@ describe('Incorporation Filing - Coop', () => {
   it('no name translations for a coop IA', () => {
     wrapper.vm.parseIncorporationDraft(COOP_IA.filing)
 
-    // no name translation input
+    // no name translations
     expect(wrapper.vm.getNameTranslations.length).toBe(0)
 
     // after building filing data, the name translations should be empty as well

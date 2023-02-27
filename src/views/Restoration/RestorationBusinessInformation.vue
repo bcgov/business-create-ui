@@ -1,7 +1,7 @@
 <template>
   <div id="restoration-business-information">
 
-    <!-- Registered Office Addresses -->
+    <!-- Registered and Records Office Addresses -->
     <section class="mt-10" v-show="isEntityType">
       <header id="office-address-header">
         <h2>Registered and Records Office Addresses</h2>
@@ -48,15 +48,11 @@
 import Vue from 'vue'
 import { Component, Watch } from 'vue-property-decorator'
 import { Getter, Action } from 'vuex-class'
-import {
-  ActionBindingIF,
-  AddressIF,
-  ContactPointIF,
-  DefineCompanyIF,
-  RegisteredRecordsAddressesIF
-} from '@/interfaces'
+import { ActionBindingIF, AddressIF, ContactPointIF, DefineCompanyIF, RegisteredRecordsAddressesIF }
+  from '@/interfaces'
 import { CommonMixin } from '@/mixins'
-import { CoopTypes, CorpTypeCd, RouteNames } from '@/enums'
+import { CoopTypes, RouteNames } from '@/enums'
+import { CorpTypeCd } from '@bcrs-shared-components/enums/'
 import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
 import OfficeAddresses from '@/components/common/OfficeAddresses.vue'
 
@@ -235,7 +231,7 @@ h2::before {
 }
 
 header p {
-  padding-top:0.5rem
+  padding-top: 0.5rem;
 }
 
 // Coop Type Help section

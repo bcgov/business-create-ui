@@ -27,7 +27,10 @@ for (const test of restorationBusinessInfo) {
       wrapper = shallowWrapperFactory(
         RestorationApplicantInformation,
         null,
-        { entityType: test.entityType },
+        {
+          entityType: test.entityType,
+          tombstone: { authRoles: ['staff'] }
+        },
         null,
         RestorationResources
       )

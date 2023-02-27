@@ -1,5 +1,6 @@
 import { IncorporationResourceIF } from '@/interfaces'
-import { CorpTypeCd, FilingCodes, RuleIds } from '@/enums'
+import { FilingCodes, RuleIds } from '@/enums'
+import { CorpTypeCd } from '@bcrs-shared-components/enums/'
 import { IncorporationStepsCorp } from './steps'
 import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 
@@ -74,9 +75,6 @@ export const IncorporationResourceBc: IncorporationResourceIF = {
   },
   reviewAndConfirm: {
     completingPartyStatement: {
-      certifyStatementHeader: `the Completing Party, have examined the Company
-        Articles and the Incorporation Agreement applicable to the company that is to be
-        incorporated by the filing of this Incorporation Application and confirm that:`,
       certifyStatements: [
         'An original signature has been placed on each of those signature lines,',
 

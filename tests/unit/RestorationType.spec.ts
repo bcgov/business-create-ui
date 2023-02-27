@@ -14,7 +14,7 @@ Vue.use(Vuelidate)
 const vuetify = new Vuetify({})
 const store = getVuexStore()
 
-describe(`Initialize Restoration Type Component`, () => {
+describe('Restoration Type component', () => {
   let wrapperFactory: any
 
   beforeEach(() => {
@@ -36,18 +36,18 @@ describe(`Initialize Restoration Type Component`, () => {
     expect(wrapper.find('#restoration-type').exists()).toBe(true)
   })
 
-  it('The full restoration button is selected correctly if draft was a full restoration.', () => {
+  it('selects the full restoration button if draft was a full restoration.', () => {
     const wrapper = wrapperFactory()
     expect(wrapper.vm.$data.selectRestorationType).toEqual('fullRestoration')
   })
 
-  it('The limited restoration button is selected if draft was a limited restoration.', () => {
+  it('selects the limited restoration button if draft was a limited restoration.', () => {
     store.state.stateModel.restoration.type = 'limitedRestoration'
     const wrapper = wrapperFactory()
     expect(wrapper.vm.$data.selectRestorationType).toEqual('limitedRestoration')
   })
 
-  it('The restoration type is changed from full to limited when the corresponding button is pressed.', async () => {
+  it('changes the restoration type from full to limited when the corresponding button is pressed.', async () => {
     const wrapper = wrapperFactory()
     const input = wrapper.find('#limited-radio-button')
     input.setChecked()
@@ -58,7 +58,7 @@ describe(`Initialize Restoration Type Component`, () => {
     expect(store.state.stateModel.restoration.relationships).toEqual([])
   })
 
-  it('The restoration type is changed from limited to full when the corresponding button is pressed.', async () => {
+  it('changes the restoration type from limited to full when the corresponding button is pressed.', async () => {
     store.state.stateModel.restoration.type = 'limitedRestoration'
     const wrapper = wrapperFactory()
     const input = wrapper.find('#full-radio-button')

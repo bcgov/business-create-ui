@@ -1,11 +1,12 @@
-import { BusinessTypes, CoopTypes, CorpTypeCd, DissolutionTypes, EntityState, FilingTypes,
+import { ApprovalTypes, BusinessTypes, CoopTypes, DissolutionTypes, EntityState, FilingTypes,
   RestorationTypes, RelationshipTypes } from '@/enums'
+import { CorpTypeCd, CorrectNameOptions } from '@bcrs-shared-components/enums/'
 import { AccountInformationIF, AddressIF, BusinessAddressIF, BusinessWarningIF, CertifyIF,
-  CompletingPartyIF, ContactPointIF, CreateMemorandumIF, CreateResolutionIF, CreateRulesIF,
-  DissolutionStatementIF, FeesIF, RegisteredRecordsAddressesIF, IncorporationAgreementIF, NaicsIF,
-  NameRequestIF, NameTranslationIF, OfficeAddressIF, OrgInformationIF, OrgPersonIF, PartyIF,
-  ResourceIF, ShareClassIF, StaffPaymentIF, StateIF, UploadAffidavitIF, ValidationDetailIF }
-  from '@/interfaces'
+  CompletingPartyIF, ContactPointIF, CourtOrderIF, CreateMemorandumIF, CreateResolutionIF,
+  CreateRulesIF, DissolutionStatementIF, FeesIF, RegisteredRecordsAddressesIF,
+  IncorporationAgreementIF, NaicsIF, NameRequestIF, NameTranslationIF, OfficeAddressIF,
+  OrgInformationIF, OrgPersonIF, PartyIF, ResourceIF, ShareClassIF, StaffPaymentIF, StateIF,
+  UploadAffidavitIF, ValidationDetailIF } from '@/interfaces'
 
 export const mutateBusinessId = (state: StateIF, businessId: string) => {
   state.stateModel.business.businessId = businessId
@@ -168,9 +169,17 @@ export const mutateNameRequestApprovedName = (state: StateIF, name: string) => {
   state.stateModel.nameRequestApprovedName = name
 }
 
-export const mutateNameTranslation = (state: StateIF, nameTranslationState: NameTranslationIF[]) => {
-  state.stateModel.nameTranslations = nameTranslationState
+export const mutateCorrectNameOption = (state: StateIF, option: CorrectNameOptions) => {
+  state.stateModel.correctNameOption = option
+}
+
+export const mutateNameTranslations = (state: StateIF, nameTranslations: NameTranslationIF[]) => {
+  state.stateModel.nameTranslations = nameTranslations
   if (!state.stateModel.ignoreChanges) mutateHaveChanges(state, true)
+}
+
+export const mutateNameTranslationsValid = (state: StateIF, valid: boolean) => {
+  state.stateModel.nameTranslationsValid = valid
 }
 
 export const mutateFilingId = (state: StateIF, filingId: number) => {
@@ -418,6 +427,34 @@ export const mutateRestorationRelationships = (state: StateIF, relationships: Re
   state.stateModel.restoration.relationships = relationships
 }
 
-export const mutateRestorationTypeValid = (state: StateIF, restorationTypeValid: boolean) => {
-  state.stateModel.restoration.restorationTypeValid = restorationTypeValid
+export const mutateBusinessNameValid = (state: StateIF, valid: boolean) => {
+  state.stateModel.restoration.businessNameValid = valid
+}
+
+export const mutateRestorationTypeValid = (state: StateIF, valid: boolean) => {
+  state.stateModel.restoration.restorationTypeValid = valid
+}
+
+export const mutateRestorationApprovalType = (state: StateIF, type: ApprovalTypes) => {
+  state.stateModel.restoration.approvalType = type
+}
+
+export const mutateRestorationCourtOrderNumber = (state: StateIF, fileNumber: string) => {
+  state.stateModel.restoration.courtOrder.fileNumber = fileNumber
+}
+
+export const mutateRestorationCourtOrder = (state: StateIF, courtOrder: CourtOrderIF) => {
+  state.stateModel.restoration.courtOrder = courtOrder
+}
+
+export const mutateRestorationNoticeDate = (state: StateIF, date: string) => {
+  state.stateModel.restoration.noticeDate = date
+}
+
+export const mutateRestorationApplicationDate = (state: StateIF, date: string) => {
+  state.stateModel.restoration.applicationDate = date
+}
+
+export const mutateApprovalTypeValid = (state: StateIF, valid: boolean) => {
+  state.stateModel.restoration.approvalTypeValid = valid
 }

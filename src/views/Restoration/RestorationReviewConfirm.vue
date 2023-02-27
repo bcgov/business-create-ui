@@ -11,13 +11,13 @@
       </header>
 
       <!-- Business Name -->
-      <v-card id="business-name-summary-vcard" flat class="mt-6">
-        <CardHeader icon="mdi-domain" label="Business Name" />
-        <RestorationTypeSummary />
+      <v-card id="business-name-vcard" flat class="mt-6">
+        <CardHeader icon="mdi-domain-plus" label="Business Name" />
+        <SummaryRestoreBusiness />
       </v-card>
 
       <!-- Applicant Information -->
-      <v-card id="people-and-roles-vcard" flat class="mt-6">
+      <v-card id="applicant-information-vcard" flat class="mt-6">
         <CardHeader icon="mdi-account-multiple-plus" label="Applicant Information" />
         <ListPeopleAndRoles
           :isSummary="true"
@@ -28,7 +28,7 @@
       </v-card>
 
       <!-- Business Information -->
-      <v-card id="business-info-summary-vcard" flat class="mt-6">
+      <v-card id="business-information-vcard" flat class="mt-6">
         <CardHeader icon="mdi-domain" label="Business Information" />
         <SummaryDefineCompany />
       </v-card>
@@ -93,9 +93,9 @@
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
-import { ActionBindingIF, CertifyIF, ContactPointIF, CourtOrderStepIF, EffectiveDateTimeIF,
-  IncorporationAgreementIF, PeopleAndRoleIF, ShareStructureIF } from '@/interfaces'
-import { CorpTypeCd, RoleTypes } from '@/enums'
+import { ActionBindingIF, CertifyIF, ContactPointIF, PeopleAndRoleIF } from '@/interfaces'
+import { RoleTypes } from '@/enums'
+import { CorpTypeCd } from '@bcrs-shared-components/enums/'
 import CardHeader from '@/components/common/CardHeader.vue'
 import Certify from '@/components/common/Certify.vue'
 import { DocumentDelivery } from '@bcrs-shared-components/document-delivery'
@@ -103,7 +103,7 @@ import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
 import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 import StaffPayment from '@/components/common/StaffPayment.vue'
 import SummaryDefineCompany from '@/components/Incorporation/SummaryDefineCompany.vue'
-import RestorationTypeSummary from '@/components/Restoration/RestorationTypeSummary.vue'
+import SummaryRestoreBusiness from '@/components/Restoration/SummaryRestoreBusiness.vue'
 
 @Component({
   components: {
@@ -113,7 +113,7 @@ import RestorationTypeSummary from '@/components/Restoration/RestorationTypeSumm
     ListPeopleAndRoles,
     StaffPayment,
     SummaryDefineCompany,
-    RestorationTypeSummary
+    SummaryRestoreBusiness
   }
 })
 export default class RestorationReviewConfirm extends Vue {

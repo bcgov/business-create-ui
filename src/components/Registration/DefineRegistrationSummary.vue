@@ -111,7 +111,8 @@ import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
 import FolioNumber from '@/components/common/FolioNumber.vue'
 import BusinessAddresses from '@/components/Registration/BusinessAddresses.vue'
 import { DateMixin } from '@/mixins'
-import { CorpTypeCd, RouteNames } from '@/enums'
+import { RouteNames } from '@/enums'
+import { CorpTypeCd } from '@bcrs-shared-components/enums/'
 import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 
 @Component({

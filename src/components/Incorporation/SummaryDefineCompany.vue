@@ -15,39 +15,41 @@
         </span>
       </div>
 
-      <!-- Name -->
-      <article class="section-container">
-        <v-row no-gutters>
-          <v-col cols="12" sm="3" class="pr-4">
-            <label id="company-label">Name</label>
-          </v-col>
-          <v-col cols="12" sm="9" class="pt-4 pt-sm-0">
-            <div id="company-name">{{ getNameRequestApprovedName || '[Incorporation Number] B.C. Ltd.' }}</div>
-            <div id="company-description">{{ entityDescription }}</div>
-          </v-col>
-        </v-row>
+      <template v-if="showCompanyName">
+        <!-- Name -->
+        <article class="section-container">
+          <v-row no-gutters>
+            <v-col cols="12" sm="3" class="pr-4">
+              <label id="company-label">Name</label>
+            </v-col>
+            <v-col cols="12" sm="9" class="pt-4 pt-sm-0">
+              <div id="company-name">{{ companyName }}</div>
+              <div id="company-description">{{ entityDescription }}</div>
+            </v-col>
+          </v-row>
 
-        <!-- Name Translation -->
-        <v-row no-gutters v-if="getNameTranslations && getNameTranslations.length" class="mt-3">
-          <v-col cols="12" sm="3" class="pr-4">
-            <label>Name Translation</label>
-          </v-col>
-          <v-col cols="12" sm="9">
-            <div
-              v-for="(nameTranslation, index) in getNameTranslations"
-              class="text-uppercase"
-              :key="`name_translation_${index}`"
-            >
-              {{ nameTranslation.name }}
-            </div>
-          </v-col>
-        </v-row>
-      </article>
+          <!-- Name Translation -->
+          <v-row no-gutters v-if="getNameTranslations && getNameTranslations.length > 0" class="mt-3">
+            <v-col cols="12" sm="3" class="pr-4">
+              <label>Name Translation</label>
+            </v-col>
+            <v-col cols="12" sm="9">
+              <div
+                v-for="(nameTranslation, index) in getNameTranslations"
+                class="text-uppercase"
+                :key="`name-translation-${index}`"
+              >
+                {{ nameTranslation.name }}
+              </div>
+            </v-col>
+          </v-row>
+        </article>
+
+        <v-divider class="mx-6" />
+      </template>
 
       <!-- Type -->
       <template v-if="isTypeCoop">
-        <v-divider class="mx-6" />
-
         <article class="section-container">
           <v-row no-gutters>
             <v-col cols="12" sm="3" class="pr-4">
@@ -60,9 +62,9 @@
             </v-col>
           </v-row>
         </article>
-      </template>
 
-      <v-divider class="mx-6" />
+        <v-divider class="mx-6" />
+      </template>
 
       <!-- Registered Office / Records Office -->
       <article class="section-container">
@@ -105,7 +107,8 @@ import { ContactPointIF, DefineCompanyIF, NameTranslationIF } from '@/interfaces
 import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
 import FolioNumber from '@/components/common/FolioNumber.vue'
 import OfficeAddresses from '@/components/common/OfficeAddresses.vue'
-import { CoopTypes, CorpTypeCd, RouteNames } from '@/enums'
+import { CoopTypes, RouteNames } from '@/enums'
+import { CorpTypeCd } from '@bcrs-shared-components/enums/'
 import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 import { CoopTypeToDescription } from '@/utils'
 
@@ -135,6 +138,11 @@ export default class SummaryDefineCompany extends Vue {
   @Getter isFullRestorationFiling!: boolean
   @Getter isLimitedRestorationFiling!: boolean
 
+  /** The company name. */
+  get companyName (): string {
+    return this.getNameRequestApprovedName || '[Incorporation Number] B.C. LTD.'
+  }
+
   /** The entity description. */
   get entityDescription (): string {
     return GetCorpFullDescription(this.getEntityType)
@@ -143,6 +151,12 @@ export default class SummaryDefineCompany extends Vue {
   /** The coop description. */
   get coopDescription (): string {
     return (this.getCooperativeType ? CoopTypeToDescription(this.getCooperativeType) : '(Not Entered)')
+  }
+
+  /** Whether to show the company name section. */
+  get showCompanyName (): boolean {
+    if (this.isFullRestorationFiling || this.isLimitedRestorationFiling) return false
+    return true
   }
 }
 </script>

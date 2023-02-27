@@ -2,13 +2,9 @@
   <div id="entity-info">
     <v-row no-gutters>
       <v-col cols="12" md="9">
-        <div v-show="isEntityType" id="entity-legal-name">
-          {{ legalName || numberedEntityName }}
-        </div>
+        <div v-show="isEntityType" id="entity-legal-name">{{ entityLegalName }}</div>
 
-        <div id="entity-description">
-          {{ entityDescription }}
-        </div>
+        <div id="entity-description">{{ entityDescription }}</div>
 
         <menu class="mt-5">
           <!-- Staff Comments -->
@@ -39,14 +35,14 @@
         <template v-if="isTypeFirm && getBusinessId">
           <div id="entity-business-registration-number">
             <span class="business-info-label">Registration Number:</span>
-            {{ this.getEntityIdentifier || "Not Available" }}
+            {{ getEntityIdentifier || "Not Available" }}
           </div>
         </template>
 
          <template v-if="isTypeFirm && getBusinessId">
           <div id="entity-business-business-number">
             <span class="business-info-label">Business Number:</span>
-            {{ this.getBusinessNumber || "Not Available" }}
+            {{ getBusinessNumber || "Not Available" }}
           </div>
         </template>
 
@@ -70,7 +66,8 @@
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
-import { CorpTypeCd, FilingNames, FilingTypes } from '@/enums'
+import { FilingNames, FilingTypes } from '@/enums'
+import { CorpTypeCd } from '@bcrs-shared-components/enums/'
 import { ContactPointIF, RegistrationStateIF } from '@/interfaces'
 import { DateMixin } from '@/mixins'
 import { StaffComments } from '@bcrs-shared-components/staff-comments'
@@ -111,28 +108,41 @@ export default class EntityInfo extends Vue {
   // declaration for template
   readonly axios = axios
 
-  /** The business start date. */
-  get businessStartDate (): string {
-    // it will be same as foundingDate
-    return this.dateToPacificDate(this.apiToDate(this.getBusinessFoundingDate), true)
+  /** The entity legal name (old name, new name, or numbered description). */
+  get entityLegalName (): string {
+    const numberedDescription = GetCorpNumberedDescription(this.getEntityType)
+
+    // name comes from different places depending on filing type
+    switch (this.getFilingType) {
+      case FilingTypes.DISSOLUTION:
+        return (this.getBusinessLegalName || numberedDescription)
+      case FilingTypes.INCORPORATION_APPLICATION:
+        return (this.getNameRequestApprovedName || numberedDescription)
+      case FilingTypes.REGISTRATION:
+        return (this.getNameRequestApprovedName || numberedDescription)
+      case FilingTypes.RESTORATION:
+        return (this.getBusinessLegalName || numberedDescription)
+    }
+    return '' // should never happen
   }
 
   /** The entity description.  */
   get entityDescription (): string {
     const corpTypeDescription = GetCorpFullDescription(this.getEntityType)
+
     if (this.isTypeSoleProp && this.getTempId) {
       return `${corpTypeDescription} / Doing Business As (DBA)`
-    }
-    if (this.isTypeFirm) {
+    } else if (this.isTypeFirm) {
       return corpTypeDescription
     } else {
       return `${corpTypeDescription} ${this.getFilingName}`
     }
   }
 
-  /** The numbered entity name. */
-  get numberedEntityName (): string {
-    return GetCorpNumberedDescription(this.getEntityType)
+  /** The business start date. */
+  get businessStartDate (): string {
+    // it will be same as foundingDate
+    return this.dateToPacificDate(this.apiToDate(this.getBusinessFoundingDate), true)
   }
 
   get email (): string {
@@ -149,19 +159,6 @@ export default class EntityInfo extends Vue {
     const phone = this.getBusinessContact.phone
     const ext = this.getBusinessContact.extension
     return `${phone}${ext ? (' x' + ext) : ''}`
-  }
-
-  get legalName (): string {
-    switch (this.getFilingType) {
-      case FilingTypes.DISSOLUTION:
-        return this.getBusinessLegalName
-      case FilingTypes.INCORPORATION_APPLICATION:
-        return this.getNameRequestApprovedName
-      case FilingTypes.REGISTRATION:
-        return this.getNameRequestApprovedName
-      case FilingTypes.RESTORATION:
-        return this.getNameRequestApprovedName
-    }
   }
 }
 </script>

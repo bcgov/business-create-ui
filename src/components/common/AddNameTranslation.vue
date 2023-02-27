@@ -78,3 +78,10 @@ export default class AddNameTranslation extends Vue {
   protected removeTranslation (): void {}
 }
 </script>
+
+<style lang="scss" scoped>
+// un-bold the text field label
+.v-text-field :deep(.v-label) {
+  font-weight: normal;
+}
+</style>

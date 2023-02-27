@@ -1,4 +1,3 @@
-export * from './accountTypes'
 export * from './bulletListTypes'
 export * from './dissolutionStatementTypes'
 export * from './dissolutionTypes'
@@ -9,7 +8,6 @@ export * from './filingStatus'
 export * from './itemTypes'
 export * from './partyTypes'
 export * from './modes'
-export * from './name-change-options'
 export * from './numWord'
 export * from './pdfPageSize'
 export * from './routeNames'
@@ -19,13 +17,16 @@ export * from './views'
 // external enums
 export { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 export {
+  AccountTypes,
+  ApprovalTypes,
+  CorrectNameOptions,
   EffectiveDateTypes,
   EntityStates,
   FilingCodes,
   FilingNames,
   FilingTypes,
   NameRequestStates,
-  NameRequestTypes,
+  NrRequestActionCodes,
   RelationshipTypes,
   RestorationTypes,
   RoleTypes,

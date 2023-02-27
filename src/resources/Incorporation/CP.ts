@@ -1,5 +1,6 @@
 import { IncorporationResourceIF } from '@/interfaces'
-import { CorpTypeCd, FilingCodes, RuleIds, ItemTypes } from '@/enums'
+import { FilingCodes, RuleIds, ItemTypes } from '@/enums'
+import { CorpTypeCd } from '@bcrs-shared-components/enums/'
 import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 import { IncorporationStepsCoop } from '@/resources/Incorporation/steps'
 
@@ -172,7 +173,6 @@ export const IncorporationResourceCp: IncorporationResourceIF = {
   },
   reviewAndConfirm: {
     completingPartyStatement: {
-      certifyStatementHeader: null,
       certifyStatements: [],
       certifyClause: `Note: It is an offence to make a false or misleading statement in respect
         of a material fact in a record submitted to the Corporate Registry for filing.

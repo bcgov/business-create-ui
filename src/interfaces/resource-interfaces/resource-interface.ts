@@ -1,9 +1,9 @@
 import {
   AffidavitResourceIF, FilingDataIF, HelpSectionIF, IncorporationAgreementTypeIF, KeyValueIF,
   PeopleAndRolesResourceIF, StepIF, CreateRulesResourceIF, CreateMemorandumResourceIF,
-  CreateResolutionResourceIF, CustodianResourceIF
+  CreateResolutionResourceIF, CustodianResourceIF, CompletingPartyStatementIF
 } from '@/interfaces'
-import { CorpTypeCd } from '@/enums'
+import { CorpTypeCd } from '@bcrs-shared-components/enums/'
 
 /** Dissolution resource interface. */
 export interface DissolutionResourceIF {
@@ -16,12 +16,7 @@ export interface DissolutionResourceIF {
   dissolutionStatements?: Array<KeyValueIF>
   affidavit?: AffidavitResourceIF
   reviewAndConfirm: {
-    completingPartyStatement: {
-      certifyStatementHeader: string
-      certifyStatements: Array<string>
-      certifyClause: string
-      entityDisplay: string
-    }
+    completingPartyStatement: CompletingPartyStatementIF
   }
 
   // CP only
@@ -36,12 +31,7 @@ export interface IncorporationResourceIF {
   filingData: Array<FilingDataIF>
   peopleAndRoles: PeopleAndRolesResourceIF
   reviewAndConfirm: {
-    completingPartyStatement: {
-      certifyStatementHeader: string
-      certifyStatements: Array<string>
-      certifyClause: string
-      entityDisplay: string
-    }
+    completingPartyStatement: CompletingPartyStatementIF
   }
 
   // BEN / CC / BC / ULC only:
@@ -73,12 +63,7 @@ export interface RegistrationResourceIF {
   filingData: Array<FilingDataIF>
   peopleAndRoles: PeopleAndRolesResourceIF
   reviewAndConfirm: {
-    completingPartyStatement: {
-      certifyStatementHeader: string
-      certifyStatements: Array<string>
-      certifyClause: string
-      entityDisplay: string
-    }
+    completingPartyStatement: CompletingPartyStatementIF
   }
 }
 
@@ -90,12 +75,7 @@ export interface RestorationResourceIF {
   filingData: Array<FilingDataIF>
   peopleAndRoles: PeopleAndRolesResourceIF
   reviewAndConfirm: {
-    completingPartyStatement: {
-      certifyStatementHeader: string
-      certifyStatements: Array<string>
-      certifyClause: string
-      entityDisplay: string
-    }
+    completingPartyStatement: CompletingPartyStatementIF
   }
 }
 

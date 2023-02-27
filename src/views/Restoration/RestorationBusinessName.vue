@@ -1,29 +1,33 @@
 <template>
   <div id="restoration-business-name">
-    <!-- Name -->
+    <!-- Business Name and Name Translations -->
     <section id="name-section" class="mt-10">
       <header>
         <h2>Name</h2>
         <p>Add a Name Request that is reserved for this restoration application or restore
           as a numbered company.</p>
+        <!-- *** TODO: remove before flight -->
+        <!-- <pre>getBusinessLegalName={{ getBusinessLegalName }}</pre> -->
+        <!-- <pre>getNameRequestApprovedName={{ getNameRequestApprovedName }}</pre> -->
+        <!-- <pre>getBusinessNameValid={{ getBusinessNameValid }}</pre> -->
       </header>
-
       <v-card flat class="mt-5">
-        <BusinessName
-          @hasNameTranslation="onNameTranslation($event)"
-        />
+        <BusinessName id="business-name" />
+        <BusinessType id="business-type" class="mt-n8" />
+        <NameTranslations id="name-translations" class="mt-n8" />
       </v-card>
     </section>
 
-    <!-- Restoration Type -->
+    <!-- Restoration Type and Approval Type -->
     <section id="restoration-type-section" class="mt-10">
       <header>
         <h2>Restoration Type</h2>
         <p>Determine the restoration and approval type.</p>
       </header>
-      <div :class="{ 'invalid-section': getShowErrors && !getRestorationTypeValid }">
-        <RestorationType />
-      </div>
+      <v-card flat class="mt-5">
+        <RestorationType id="restoration-type" />
+        <ApprovalType id="approval-type" class="mt-n8" />
+      </v-card>
     </section>
   </div>
 </template>
@@ -34,13 +38,20 @@ import { Component, Watch } from 'vue-property-decorator'
 import { Getter, Action } from 'vuex-class'
 import { ActionBindingIF } from '@/interfaces'
 import { CommonMixin } from '@/mixins'
-import { CorpTypeCd, RouteNames } from '@/enums'
+import { RouteNames } from '@/enums'
+import { CorpTypeCd } from '@bcrs-shared-components/enums/'
+import ApprovalType from '@/components/Restoration/ApprovalType.vue'
 import BusinessName from '@/components/Restoration/BusinessName.vue'
+import BusinessType from '@/components/Restoration/BusinessType.vue'
+import NameTranslations from '@/components/common/NameTranslations.vue'
 import RestorationType from '@/components/Restoration/RestorationType.vue'
 
 @Component({
   components: {
+    ApprovalType,
     BusinessName,
+    BusinessType,
+    NameTranslations,
     RestorationType
   },
   mixins: [
@@ -48,15 +59,38 @@ import RestorationType from '@/components/Restoration/RestorationType.vue'
   ]
 })
 export default class RestorationBusinessName extends Vue {
+  @Getter getApprovalTypeValid!: boolean
+  @Getter getBusinessNameValid!: boolean
+  @Getter getNameTranslationsValid!: boolean
+  @Getter getRestorationTypeValid!: boolean
   @Getter getShowErrors!: boolean
 
-  @Action setDefineCompanyStepValidity!: ActionBindingIF
-  @Action setIgnoreChanges!: ActionBindingIF
+  // *** for debugging:
+  // @Getter getNameRequestApprovedName!: string
+  // @Getter getBusinessLegalName!: string
 
-  protected hasValidNameTranslation = true
+  @Action setIgnoreChanges!: ActionBindingIF
 
   // Enum for template
   readonly CorpTypeCd = CorpTypeCd
+
+  /** Array of valid components. Must match validFlags. */
+  readonly validComponents = [
+    'business-name',
+    'name-translations',
+    'restoration-type',
+    'approval-type'
+  ]
+
+  /** Object of valid flags. Must match validComponents. */
+  get validFlags (): object {
+    return {
+      businessName: this.getBusinessNameValid,
+      bameTranslation: this.getNameTranslationsValid,
+      restorationType: this.getRestorationTypeValid,
+      approavalType: this.getApprovalTypeValid
+    }
+  }
 
   /** Called when component is created. */
   created (): void {
@@ -69,28 +103,12 @@ export default class RestorationBusinessName extends Vue {
     })
   }
 
-  private onNameTranslation (valid: boolean): void {
-    // *** TODO: hook this up
-    // this.hasValidNameTranslation = valid
-    // this.setDefineCompanyStepValidity(
-    //   this.hasValidNameTranslation
-    // )
-  }
   @Watch('$route')
   private async scrollToInvalidComponent (): Promise<void> {
     if (this.getShowErrors && this.$route.name === RouteNames.RESTORATION_BUSINESS_NAME) {
       // scroll to invalid components
       await Vue.nextTick()
-      await this.validateAndScroll(
-        {
-          hasValidNameTranslation: this.hasValidNameTranslation,
-          hasValidRestorationType: this.getRestorationTypeValid
-        },
-        [
-          'name-section',
-          'restoration-type-section'
-        ]
-      )
+      await this.validateAndScroll(this.validFlags, this.validComponents)
     }
   }
 }
@@ -110,34 +128,7 @@ h2::before {
   content: counter(header-counter) '. ';
 }
 
-.value.name-request {
-  width: 100%;
-  min-width: 24rem;
-}
-
-.meta-container {
-  display: flex;
-  flex-flow: column nowrap;
-  position: relative;
-
-  > label:first-child {
-    font-weight: bold;
-  }
-}
-
-@media (min-width: 768px) {
-  .meta-container {
-    flex-flow: row nowrap;
-
-    > label:first-child {
-      flex: 0 0 auto;
-      padding-right: 2rem;
-      width: 12rem;
-    }
-  }
-}
-
 header p {
-  padding-top:0.5rem
+  padding-top: 0.5rem;
 }
 </style>

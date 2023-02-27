@@ -1,5 +1,6 @@
 import { DissolutionResourceIF } from '@/interfaces'
-import { BulletListTypes, CorpTypeCd, DissolutionStatementTypes, FilingCodes, ItemTypes } from '@/enums'
+import { BulletListTypes, DissolutionStatementTypes, FilingCodes, ItemTypes } from '@/enums'
+import { CorpTypeCd } from '@bcrs-shared-components/enums/'
 import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 import { DissolutionStepsCoop } from './steps'
 
@@ -86,7 +87,6 @@ export const DissolutionResourceCp: DissolutionResourceIF = {
   },
   reviewAndConfirm: {
     completingPartyStatement: {
-      certifyStatementHeader: null,
       certifyStatements: [],
       certifyClause: `Note: It is an offence to make a false or misleading statement in respect
         of a material fact in a record submitted to the Corporate Registry for filing.

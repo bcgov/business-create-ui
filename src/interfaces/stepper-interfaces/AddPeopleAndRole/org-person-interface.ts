@@ -1,4 +1,5 @@
-import { AddressIF, EmptyAddress, RolesIF } from '@/interfaces'
+import { AddressIF, RolesIF } from '@/interfaces'
+import { EmptyAddress } from '@bcrs-shared-components/interfaces'
 import { PartyTypes } from '@/enums'
 
 export interface OfficerIF {

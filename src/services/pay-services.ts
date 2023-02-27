@@ -1,6 +1,6 @@
-// Libraries
 import { AxiosInstance as axios } from '@/utils'
-import { CorpTypeCd, FilingCodes } from '@/enums'
+import { FilingCodes } from '@/enums'
+import { CorpTypeCd } from '@bcrs-shared-components/enums/'
 import { FeesIF } from '@/interfaces'
 
 /**

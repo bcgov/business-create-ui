@@ -195,7 +195,7 @@ import { isEmpty } from 'lodash'
 import { OfficeAddressSchema } from '@/schemas'
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
 import { AddressIF, DefineCompanyIF, RegisteredRecordsAddressesIF } from '@/interfaces'
-import { CorpTypeCd } from '@/enums'
+import { CorpTypeCd } from '@bcrs-shared-components/enums/'
 import { CommonMixin } from '@/mixins'
 
 @Component({

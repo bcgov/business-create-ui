@@ -1,16 +1,12 @@
 <template>
   <div id="name-request-info">
     <template v-if="getNameRequestNumber">
-      <div class="section-container">
-        <!-- Name Request -->
+      <!-- Name Request -->
+      <div class="section-container mb-n8">
         <v-row no-gutters id="name-request">
-          <v-col cols="12" sm="3" class="pr-4">
-            <label>
-              <strong>Name Request</strong>
-            </label>
-          </v-col>
+          <v-col cols="12" sm="3" class="pr-4"><label>Name Request</label></v-col>
 
-          <v-col cols="12" sm="9" class="pt-4 pt-sm-0">
+          <v-col cols="12" sm="8" class="pt-4 pt-sm-0">
             <ul class="name-request-list-items">
               <li id="name-request-title">
                 <strong>{{ getNameRequestNumber }}</strong> - {{ getNameRequestApprovedName }}
@@ -18,58 +14,59 @@
               <li class="mt-4"><strong>Entity Type:</strong> {{ getEntityTypeDescription }}</li>
               <li><strong>Request Type:</strong> {{ requestType }}</li>
               <li><strong>Expiry Date:</strong> {{ expirationDate }}</li>
-              <li><strong>Status:</strong> {{ Capitalize(state) }}</li>
-              <li id="condition-consent" v-if="state === NameRequestStates.CONDITIONAL">
+              <li><strong>Status:</strong> {{ state }}</li>
+              <li id="condition-consent" v-if="isConditional">
                 <strong>Condition/Consent:</strong> {{ conditionConsent }}
               </li>
             </ul>
           </v-col>
+
+          <!-- extra column is for possible action button -->
         </v-row>
       </div>
 
       <!-- Name Request Applicant -->
       <div class="section-container">
         <v-row no-gutters id="name-request-applicant">
-          <v-col cols="12" sm="3" class="pr-4">
-            <label>
-              <strong>Name Request Applicant</strong>
-            </label>
-          </v-col>
+          <v-col cols="12" sm="3" class="pr-4"><label>Name Request Applicant</label></v-col>
 
           <v-col cols="12" sm="9" class="pt-4 pt-sm-0">
             <ul class="applicant-list-items">
-              <li><strong>Name:</strong> {{ applicantName }}</li>
-              <li><strong>Address:</strong> {{ applicantAddress }}</li>
-              <li><strong>Email:</strong> {{ emailAddress }}</li>
-              <li><strong>Phone:</strong> {{ phoneNumber }}</li>
+              <li><strong>Name:</strong> {{ formatFullName(applicant) }}</li>
+              <li><strong>Address:</strong> {{ formatFullAddress(applicant) }}</li>
+              <li><strong>Email:</strong> {{ applicant.emailAddress }}</li>
+              <li><strong>Phone:</strong> {{ applicant.phoneNumber }}</li>
             </ul>
           </v-col>
         </v-row>
       </div>
     </template>
 
-    <!-- Name -->
-    <template v-else>
+    <template v-else-if="getNameRequestApprovedName">
+      <!-- Changed Name -->
       <div class="section-container">
-        <v-row
-          no-gutters
-          id="numbered-company-info"
-        >
-          <v-col cols="12" sm="3" class="pr-4">
-            <label>
-              <strong>Name</strong>
-            </label>
-          </v-col>
+        <v-row no-gutters id="changed-name-info">
+          <v-col cols="12" sm="3" class="pr-4"><label>Name</label></v-col>
+          <v-col cols="12" sm="9" id="changed-name-title">{{ getNameRequestApprovedName }}</v-col>
+        </v-row>
+      </div>
+    </template>
+
+    <template v-else>
+      <!-- Numbered Company -->
+      <div class="section-container">
+        <v-row no-gutters id="numbered-company-info">
+          <v-col cols="12" sm="3" class="pr-4"><label>Name</label></v-col>
 
           <v-col cols="12" sm="9">
             <ul class="numbered-company-list-items">
               <li id="numbered-company-title">
-                <strong>[Incorporation Number]</strong> B.C. Ltd.
+                <strong>[Incorporation Number]</strong> B.C. LTD.
               </li>
               <li class="mt-4"><strong>Entity Type:</strong> {{ getEntityTypeDescription }}</li>
               <li class="mt-2"><strong>Request Type:</strong> {{ requestType }}</li>
               <li class="bullet-point mt-4 ml-6">You will be filing this Incorporation Application for a company
-                created by adding "B.C. Ltd." after the Incorporation Number.
+                created by adding "B.C. LTD." after the Incorporation Number.
               </li>
               <li class="bullet-point ml-6">Your Incorporation Number will be generated at the end of the filing
                 transaction.
@@ -80,42 +77,29 @@
         </v-row>
       </div>
     </template>
-
-    <!-- Name Translation -->
-    <NameTranslation
-      v-if="showNameTranslation"
-      @hasNameTranslation="emitHasNameTranslation($event)"
-    />
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
-import { Component, Emit, Watch } from 'vue-property-decorator'
+import { Component } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
-import { getName } from 'country-list'
-import NameTranslation from '@/components/common/NameTranslation.vue'
-import { CorpTypeCd, NameRequestStates } from '@/enums'
-import {
-  NameRequestApplicantIF,
-  NameRequestIFRegistrationStateIF
-} from '@/interfaces'
-import { DateMixin } from '@/mixins'
+import { NameRequestStates, NrRequestActionCodes } from '@/enums'
+import { CorpTypeCd } from '@bcrs-shared-components/enums/'
+import { NrApplicantIF, NameRequestIF } from '@/interfaces'
+import { CommonMixin, DateMixin } from '@/mixins'
 import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 import { Capitalize } from '@/utils'
 
 @Component({
-  components: {
-    NameTranslation
-  },
   mixins: [
+    CommonMixin,
     DateMixin
   ]
 })
 export default class NameRequestInfo extends Vue {
   // For template
   readonly NameRequestStates = NameRequestStates
-  readonly Capitalize = Capitalize
 
   readonly RECEIVED_STATE = 'Received'
   readonly NOT_RECEIVED_STATE = 'Not Received'
@@ -124,11 +108,9 @@ export default class NameRequestInfo extends Vue {
 
   @Getter getEntityType!: CorpTypeCd
   @Getter getNameRequest!: NameRequestIF
-  @Getter getNameRequestNumber!: string
   @Getter getNameRequestApprovedName!: string
-  @Getter isTypeCoop: boolean
+  @Getter getNameRequestNumber!: string
   @Getter isTypeSoleProp: boolean
-  @Getter isTypePartnership: boolean
 
   /** The entity type description.  */
   get getEntityTypeDescription (): string {
@@ -141,7 +123,15 @@ export default class NameRequestInfo extends Vue {
 
   /** The request type. */
   get requestType (): string {
-    return 'New Business'
+    switch (this.getNameRequest.request_action_cd) {
+      case NrRequestActionCodes.NEW_BUSINESS: return 'New Business'
+      case NrRequestActionCodes.RESTORE: return 'Restoration Request'
+    }
+    return '' // should never happen
+  }
+
+  get isConditional (): boolean {
+    return (this.getNameRequest.state === NameRequestStates.CONDITIONAL)
   }
 
   /** The expiration date. */
@@ -154,7 +144,7 @@ export default class NameRequestInfo extends Vue {
     if (this.getNameRequest.state === NameRequestStates.APPROVED) {
       return 'Approved'
     }
-    return this.getNameRequest.state?.toString() || null
+    return Capitalize(this.getNameRequest.state?.toString() || null)
   }
 
   /** The condition/consent string. */
@@ -176,58 +166,9 @@ export default class NameRequestInfo extends Vue {
   }
 
   /** The applicant. */
-  get applicant (): NameRequestApplicantIF {
-    return this.getNameRequest.applicants // not an array
+  get applicant (): NrApplicantIF {
+    return this.getNameRequest.applicants // object not array
   }
-
-  /** The applicant's name. */
-  get applicantName (): string {
-    let name = this.applicant.firstName
-    if (this.applicant.middleName) {
-      name = `${name} ${this.applicant.middleName} ${this.applicant.lastName}`
-    } else {
-      name = `${name} ${this.applicant.lastName}`
-    }
-    return name
-  }
-
-  /** The applicant's address. */
-  get applicantAddress (): string {
-    const city = this.applicant.city
-    const stateProvince = this.applicant.stateProvinceCd
-    const postal = this.applicant.postalCd
-    const country = this.applicant.countryTypeCd ? getName(this.applicant.countryTypeCd) : ''
-
-    // Build address lines
-    let address = this.applicant.addrLine1
-    if (this.applicant.addrLine2) {
-      address = `${address}, ${this.applicant.addrLine2}`
-    }
-    if (this.applicant.addrLine3) {
-      address = `${address}, ${this.applicant.addrLine3}`
-    }
-
-    return `${address}, ${city}, ${stateProvince}, ${postal}, ${country}`
-  }
-
-  /** The applicant's email address. */
-  get emailAddress (): string {
-    return this.applicant.emailAddress
-  }
-
-  /** The applicant's phone number. */
-  get phoneNumber (): string {
-    return this.applicant.phoneNumber
-  }
-
-  /** Whether to show the name translation component. */
-  get showNameTranslation (): boolean {
-    if (this.isTypeCoop || this.isTypeSoleProp || this.isTypePartnership) return false
-    return true
-  }
-
-  @Emit('hasNameTranslation')
-  protected emitHasNameTranslation (val: boolean): void {}
 }
 </script>
 
@@ -248,6 +189,12 @@ ul {
 #name-request-title,
 #numbered-company-title {
   font-size: $px-20;
+}
+
+#changed-name-title {
+  font-size: $px-22;
+  font-weight: bold;
+  color: $gray9;
 }
 
 .numbered-company-list-items {
