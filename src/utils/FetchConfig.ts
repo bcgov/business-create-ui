@@ -115,15 +115,12 @@ export async function FetchConfig (): Promise<any> {
 
   const genesysEnv: string = response.data.GENESYS_ENV;
   (<any>window).genesysEnv = genesysEnv
-  if (genesysEnv) console.info('Set Genesys Environment to: ' + genesysEnv)
 
   const genesysId: string = response.data.GENESYS_ID;
   (<any>window).genesysId = genesysId
-  if (genesysId) console.info('Set Genesys Development Key to: ' + genesysId)
 
   const genesysUrl: string = response.data.GENESYS_URL;
   (<any>window).genesysUrl = genesysUrl
-  if (genesysUrl) console.info('Set Genesys URL to: ' + genesysUrl)
 
   const webChatReason: string = response.data.WEBCHAT_REASON;
   (<any>window).webChatReason = webChatReason
