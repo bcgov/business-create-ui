@@ -7,6 +7,9 @@
   "BUSINESSES_URL": "https://dev.bcregistry.ca/business/auth/",
   "BUSINESS_CREATE_LD_CLIENT_ID": "5e6142dd29b3030a850285b3",
   "DASHBOARD_URL": "https://dev.bcregistry.ca/business/",
+  "GENESYS_ENV": "",
+  "GENESYS_ID": "",
+  "GENESYS_URL": "",
   "HOTJAR_ID": "",
   "IA_SURVEY_ID": "",
   "KEYCLOAK_CONFIG_PATH": "/local-keycloak-config-url/keycloak.json",
@@ -24,7 +27,7 @@
   "REGISTRY_HOME_URL": "https://dev.bcros.ca/",
   "REGISTRIES_SEARCH_API_URL": "https://bcregistry-dev.apigee.net/registry-search",
   "REGISTRIES_SEARCH_API_VERSION": "/api/v1",
-  "WEBCHAT_REASON": "",
+  "WEBCHAT_REASON": "zzz",
   "WEBCHAT_STATUS_URL": "",
   "WEBCHAT_URL": ""
 }

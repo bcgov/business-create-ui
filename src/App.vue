@@ -87,9 +87,9 @@
     <!-- Display the Genesys WebMessage for SP/GP registrations only -->
     <GenesysWebMessage
       v-if="getFilingType === FilingTypes.REGISTRATION"
-      genesysURL="https://apps.cac1.pure.cloud/genesys-bootstrap/genesys.min.js"
-      environmentKey="cac1"
-      deploymentKey="42ed05f4-d545-436b-ba2c-94b66ed3396f"
+      :genesysURL="window['genesysUrl']"
+      :environmentKey="window['genesysEnv']"
+      :deploymentKey="window['genesysId']"
     />
 
     <!-- Initial Page Load Transition -->
