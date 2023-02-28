@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@babel/compat-data": "^7.19.1",
-    "@bcrs-shared-components/approval-type": "1.0.13",
+    "@bcrs-shared-components/approval-type": "1.0.14",
     "@bcrs-shared-components/breadcrumb": "2.1.15",
     "@bcrs-shared-components/business-lookup": "1.1.17",
     "@bcrs-shared-components/certify": "2.1.15",
