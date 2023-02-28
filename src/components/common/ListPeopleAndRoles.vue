@@ -28,6 +28,11 @@
           <v-col v-for="(title, index) in tableHeaders" :key="index">
             <span>{{ title }}</span>
           </v-col>
+
+          <!-- conditional empty alignment column -->
+          <v-col v-if="showAlignmentColumn" />
+
+          <!-- conditional action columns (no header) -->
           <v-col v-if="!isSummary" class="actions-width" />
         </v-row>
 
@@ -82,6 +87,9 @@
           <v-col class="email-column" v-if="showEmailColumn">
             <p>{{ orgPerson.officer.email }}</p>
           </v-col>
+
+          <!-- conditional empty alignment column -->
+          <v-col v-if="showAlignmentColumn" />
 
           <v-col v-if="!isSummary" class="actions-column" :class="{'disabled':disabled}">
             <div class="float-right">
@@ -179,6 +187,13 @@ export default class ListPeopleAndRoles extends Vue {
     return headers
   }
 
+  /**
+   * Whether to show an empty column, for alignment with the rest of the data.
+   * Ie, we want at least 4 columns on the summary page
+   */
+  get showAlignmentColumn (): boolean {
+    return (this.isSummary && this.tableHeaders.length < 4)
+  }
   /** The person list. */
   get personList (): Array<OrgPersonIF> {
     return this.getAddPeopleAndRoleStep.orgPeople
