@@ -72,7 +72,7 @@ describe('Business Name component', () => {
     wrapper.destroy()
   })
 
-  it('renders the component in editing mode initially', () => {
+  it('renders the component in editing mode initially and with no error styling', () => {
     expectBusinessNameExists()
     expectSectionExists()
     expectSectionValid()
@@ -82,7 +82,7 @@ describe('Business Name component', () => {
     expectUndoButtonExists(false)
   })
 
-  it('renders the component with error validation when no option has been selected', async () => {
+  it('renders the component with error styling when no option has been selected', async () => {
     store.state.stateModel.showErrors = true
     await Vue.nextTick()
 
