@@ -418,7 +418,6 @@ export default class FilingTemplateMixin extends DateMixin {
             ? { extension: +this.getBusinessContact.extension }
             : {}
         },
-        courtOrder: this.getRestoration.courtOrder,
         expiry: this.getRestoration.expiry || undefined, // can't be null
         nameRequest: {
           legalType: this.getEntityType
@@ -431,6 +430,10 @@ export default class FilingTemplateMixin extends DateMixin {
         type: this.getRestoration.type
       }
     }
+
+    // Add court order data.
+    const fileNumber = this.getRestoration.courtOrder.fileNumber
+    if (fileNumber) filing.restoration.courtOrder = { fileNumber }
 
     // Add business name data.
     switch (this.getCorrectNameOption) {
