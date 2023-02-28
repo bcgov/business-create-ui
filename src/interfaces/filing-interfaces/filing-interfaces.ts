@@ -183,17 +183,17 @@ export interface RestorationFilingIF {
     legalType: CorpTypeCd
   }
   restoration: {
-    applicationDate: string // YYYY-MM-DD
-    approvalType: ApprovalTypes
+    applicationDate?: string // YYYY-MM-DD
+    approvalType?: ApprovalTypes
     contactPoint: ContactPointIF
-    courtOrder: CourtOrderIF
-    expiry: string // YYYY-MM-DD
-    nameRequest: NameRequestFilingIF
-    nameTranslations: NameTranslationIF[]
-    noticeDate: string // YYYY-MM-DD
+    courtOrder?: CourtOrderIF
+    expiry?: string // YYYY-MM-DD
+    nameRequest?: NameRequestFilingIF
+    nameTranslations?: NameTranslationIF[]
+    noticeDate?: string // YYYY-MM-DD
     offices: RegisteredRecordsAddressesIF | object
     parties: PartyIF[]
-    relationships: RelationshipTypes[]
+    relationships?: RelationshipTypes[]
     type: RestorationTypes
   }
 }
