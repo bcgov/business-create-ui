@@ -7,9 +7,6 @@
           <label :class="{ 'error-text': invalidSection }">
             <strong>Business Name</strong>
           </label>
-          <!-- *** TODO: remove before flight -->
-          <!-- <div>ULC => NR 4766680</div> -->
-          <!-- <div>BC => NR 3335087</div> -->
         </v-col>
 
         <v-col cols="12" sm="9" class="pt-4 pt-sm-0">
@@ -23,7 +20,6 @@
             :formType="formType"
             :nameRequest="getNameRequest"
             @cancel="resetName()"
-            @saved="onSaved($event)"
             @update:companyName="onUpdateCompanyName($event)"
             @update:formType="formType = $event"
             @update:nameRequest="onUpdateNameRequest($event)"
@@ -71,7 +67,6 @@ import NameRequestInfo from '@/components/common/NameRequestInfo.vue'
 export default class BusinessName extends Vue {
   // Global getters
   @Getter getBusinessId!: string
-  @Getter getBusinessId!: string
   @Getter getBusinessLegalName!: string
   @Getter getCorrectNameOption!: CorrectNameOptions
   @Getter getEntityType!: CorpTypeCd
@@ -88,7 +83,6 @@ export default class BusinessName extends Vue {
 
   protected dropdown: boolean = null
   protected correctNameChoices: Array<string> = []
-  protected isCorrectingName = true // display options initially
   protected formType: CorrectNameOptions = null
 
   /** The company name. */
@@ -98,7 +92,7 @@ export default class BusinessName extends Vue {
 
   /** This section's validity state (when prompted by app). */
   get invalidSection (): boolean {
-    return (this.getShowErrors && this.isCorrectingName)
+    return (this.getShowErrors && !this.getCorrectNameOption)
   }
 
   /** The current options for name changes. */
@@ -120,7 +114,11 @@ export default class BusinessName extends Vue {
 
   /** The request action code for this filing type. */
   get requestActionCode (): NrRequestActionCodes {
-    if (this.isRestorationFiling) return NrRequestActionCodes.RESTORE
+    if (this.isRestorationFiling) {
+      return NrRequestActionCodes.RESTORE
+    }
+
+    // fallback case - not used for now
     return null
   }
 
@@ -128,7 +126,7 @@ export default class BusinessName extends Vue {
   get isNewName (): boolean {
     // Approved Name is null when we start
     // and is set when a name option is selected
-    return !!this.getNameRequestApprovedName // *** TODO: verify intial vs updated
+    return !!this.getNameRequestApprovedName
   }
 
   /** Reset company name values to original. */
@@ -138,9 +136,8 @@ export default class BusinessName extends Vue {
     this.setNameRequestApprovedName(null)
     this.setCorrectNameOption(null)
 
-    // reset flags
+    // reset flag
     this.formType = null
-    this.isCorrectingName = true
   }
 
   /**
@@ -158,11 +155,6 @@ export default class BusinessName extends Vue {
     return this.validateNameRequest(nameRequest, this.requestActionCode, phone, email)
   }
 
-  /** On saved=True event, updates UI state. */
-  protected onSaved (saved: boolean): void {
-    if (saved) this.isCorrectingName = false
-  }
-
   /** On company name update, sets store accordingly. */
   protected onUpdateCompanyName (name: string): void {
     this.setCorrectNameOption(this.formType)
@@ -174,10 +166,10 @@ export default class BusinessName extends Vue {
     this.setNameRequest(nameRequest)
   }
 
-  /** Updates component validity initially and when isCorrectingName changed. */
-  @Watch('isCorrectingName', { immediate: true })
+  /** Updates component validity initially and when correct name option has changed. */
+  @Watch('getCorrectNameOption', { immediate: true })
   private updateComponentValidity (val: boolean): void {
-    this.setBusinessNameValid(!val)
+    this.setBusinessNameValid(!!this.getCorrectNameOption)
   }
 }
 </script>

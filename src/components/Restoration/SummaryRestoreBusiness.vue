@@ -19,7 +19,6 @@
           </v-col>
 
           <v-col cols="12" sm="9" class="pt-4 pt-sm-0">
-            <pre>getCorrectNameOption={{ getCorrectNameOption }}</pre>
             <div id="company-name">{{ companyName }}</div>
             <div id="company-description">{{ entityDescription }}</div>
           </v-col>
@@ -58,7 +57,7 @@
             </template>
             <template v-else>
               <p id="full-restoration">Full Restoration</p>
-              <p id="applicants-relationships">Applicant's relationship(s): {{ relationships }}.</p>
+              <p id="applicants-relationships">Applicant's relationship(s): {{ relationships }}</p>
             </template>
           </v-col>
         </v-row>
@@ -79,6 +78,10 @@
               <label>Approved by Registrar</label>
               <p id="notice-date">BC Gazette publish date: {{ noticeDate }}</p>
               <p id="application-date">Application for Restoration mailed date: {{ applicationDate }}</p>
+            </template>
+
+            <template v-else>
+              <p id="unknown-approval-type">[Unknown]</p>
             </template>
           </v-col>
         </v-row>
@@ -141,7 +144,7 @@ export default class SummaryRestoreBusiness extends Vue {
   }
 
   get relationships (): string {
-    return this.getRestoration.relationships.join(', ')
+    return this.getRestoration.relationships.join(', ') || '[Unknown]'
   }
 
   get noticeDate (): string {
@@ -189,7 +192,8 @@ p {
 #applicants-relationships,
 #court-order-number,
 #notice-date,
-#application-date {
+#application-date,
+#unknown-approval-type {
   color: $gray7;
 }
 </style>
