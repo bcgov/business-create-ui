@@ -113,6 +113,15 @@ export async function FetchConfig (): Promise<any> {
   const sentryDsn: string = response.data.SENTRY_DSN;
   (<any>window).sentryDsn = sentryDsn
 
+  const genesysEnv: string = response.data.GENESYS_ENV;
+  (<any>window).genesysEnv = genesysEnv
+
+  const genesysId: string = response.data.GENESYS_ID;
+  (<any>window).genesysId = genesysId
+
+  const genesysUrl: string = response.data.GENESYS_URL;
+  (<any>window).genesysUrl = genesysUrl
+
   const webChatReason: string = response.data.WEBCHAT_REASON;
   (<any>window).webChatReason = webChatReason
 
