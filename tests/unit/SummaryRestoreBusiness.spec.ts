@@ -14,8 +14,12 @@ Vue.use(Vuelidate)
 const vuetify = new Vuetify({})
 const store = getVuexStore()
 
-describe('Summary Restore Business component', () => {
-  let wrapperFactory: any
+// *** TODO: implement
+xdescribe('Summary Restore Business component', () => {
+  const wrapperFactory = () => mount(SummaryRestoreBusiness, {
+    store,
+    vuetify
+  })
 
   beforeEach(() => {
     store.state.stateModel.restoration = {
@@ -31,14 +35,10 @@ describe('Summary Restore Business component', () => {
       type: 'fullRestoration'
     }
 
-    // *** TODO: add name request details and verify them
-    // *** TODO: add name translations and verify them
-    // *** TODO: add approval type and verify it
-
-    wrapperFactory = () => mount(SummaryRestoreBusiness, {
-      store,
-      vuetify
-    })
+    // *** verify name and description (unknown, NR, number)
+    // *** verify name translation (none, one, multiple)
+    // *** verify restoration type (none, full, limited)
+    // *** verify approval type (unknown, court order, via registrar)
   })
 
   it('renders the component properly', () => {

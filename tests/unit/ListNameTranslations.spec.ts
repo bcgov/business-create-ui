@@ -40,7 +40,7 @@ describe('List Name Translation component', () => {
         router,
         store,
         vuetify,
-        propsData: { ...propsData }
+        propsData
       })
       await Vue.nextTick()
       return wrapper

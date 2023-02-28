@@ -20,142 +20,157 @@ const store = getVuexStore()
 // mock services function
 const mockFetchNameRequest = jest.spyOn((LegalServices as any), 'updateFiling').mockImplementation()
 
-// *** TODO: fix/enhance
 describe('Business Name component', () => {
-  let wrapperFactory: any
+  let wrapper: any
 
-  beforeAll(() => {
-    // tombstone data for all tests
+  function expectBusinessNameExists (): void {
+    expect(wrapper.findComponent(BusinessName).exists()).toBe(true)
+  }
+
+  function expectSectionExists (exists = true): void {
+    expect(wrapper.find('.section-container').exists()).toBe(exists)
+  }
+
+  function expectSectionValid (valid = true): void {
+    expect(wrapper.find('.section-container').classes('invalid-section')).toBe(!valid)
+  }
+
+  function expectLabelExists (exists = true): void {
+    expect(wrapper.find('label').exists()).toBe(exists)
+    if (exists) expect(wrapper.find('label').text()).toBe('Business Name')
+  }
+
+  function expectCorrectNameExists (exists = true): void {
+    expect(wrapper.findComponent(CorrectName).exists()).toBe(exists)
+  }
+
+  function expectNameRequestInfoExists (exists = true): void {
+    expect(wrapper.findComponent(NameRequestInfo).exists()).toBe(exists)
+  }
+
+  function expectUndoButtonExists (exists = true): void {
+    expect(wrapper.find('.btn-undo').exists()).toBe(exists)
+    if (exists) expect(wrapper.find('.btn-undo span').text()).toBe('Undo')
+  }
+
+  beforeEach(() => {
+    // tombstone data
     store.state.stateModel.businessId = 'BC1234567'
     store.state.stateModel.entityType = 'BC'
     store.state.stateModel.business.legalName = 'My Business Name'
-    store.state.stateModel.nameRequestApprovedName = 'NR Approved Name'
     store.state.stateModel.tombstone.filingType = 'restoration'
 
-    wrapperFactory = () => shallowMount(BusinessName, {
-      store,
-      vuetify
-    })
-  })
-
-  beforeEach(() => {
-    // empty restoration before each test
-    store.state.stateModel.restoration = {
-      applicationDate: null,
-      approvalType: null,
-      approvalTypeValid: true,
-      businessNameValid: false,
-      courtOrder: {
-        fileNumber: null
-      },
-      expiry: null,
-      noticeDate: null,
-      relationships: [],
-      restorationTypeValid: false,
-      type: null
-    }
-
-    // empty name request before each test
-    store.state.stateModel.nameRequest = {
-      applicants: {},
-      consentFlag: null,
-      expirationDate: null,
-      furnished: null,
-      legalType: null,
-      names: [],
-      nrNum: '',
-      priorityCd: null,
-      requestTypeCd: null,
-      request_action_cd: null,
-      state: null
-    }
-
-    // initial values before each test
+    // initial values
+    store.state.stateModel.correctNameOption = null
     store.state.stateModel.nameRequestApprovedName = null
     store.state.stateModel.showErrors = false
+
+    wrapper = shallowMount(BusinessName, { store, vuetify })
   })
 
-  it('renders the component', () => {
-    const wrapper = wrapperFactory()
-    expect(wrapper.find('#business-name').exists()).toBe(true)
+  afterEach(() => {
+    wrapper.destroy()
   })
 
-  it('displays editing mode sub-components', () => {
-    const wrapper = wrapperFactory()
-    expect(wrapper.find('label').text()).toBe('Business Name')
-    expect(wrapper.findComponent(CorrectName).exists()).toBe(true)
+  it('renders the component in editing mode initially', () => {
+    expectBusinessNameExists()
+    expectSectionExists()
+    expectSectionValid()
+    expectLabelExists()
+    expectCorrectNameExists()
+    expectNameRequestInfoExists(false)
+    expectUndoButtonExists(false)
   })
 
-  it('displays display mode sub-components', () => {
+  it('renders the component with error validation when no option has been selected', async () => {
+    store.state.stateModel.showErrors = true
+    await Vue.nextTick()
+
+    expectBusinessNameExists()
+    expectSectionExists()
+    expectSectionValid(false)
+    expectLabelExists()
+    expectCorrectNameExists()
+    expectNameRequestInfoExists(false)
+    expectUndoButtonExists(false)
+  })
+
+  it('renders the component in display mode when incorp number is used as name', async () => {
+    store.state.stateModel.correctNameOption = 'correct-name-to-number'
+    store.state.stateModel.nameRequestApprovedName = '1234567 B.C. LTD.'
+    await Vue.nextTick()
+
+    expectBusinessNameExists()
+    expectSectionExists(false)
+    expectLabelExists(false)
+    expectCorrectNameExists(false)
+    expectNameRequestInfoExists()
+    expectUndoButtonExists()
+  })
+
+  it('renders the component in display mode when new name request is used', async () => {
+    store.state.stateModel.correctNameOption = 'correct-new-nr'
     store.state.stateModel.nameRequestApprovedName = 'NR Approved Name'
-
-    const wrapper = wrapperFactory()
-    expect(wrapper.findComponent(NameRequestInfo).exists()).toBe(true)
-  })
-
-  xit('renders the component initially', () => {
-    const wrapper = wrapperFactory()
-
-    // *** TODO: verify Name Request Info component
-    // *** TODO: verify Undo button
-
-    // console.log('>>> is new name: ', wrapper.vm.isNewName) // true
-
-    expect(wrapper.find('#business-name').exists()).toBe(true)
-    expect(wrapper.find('label').text()).toBe('Business Name')
-
-    // should be True initially
-    expect(wrapper.vm.isCorrectingName).toBe(true)
-
-    // should be False initially
-    expect(wrapper.vm.hasNr).toBe(false)
-
-    // should have 2 choices
-    expect(wrapper.vm.correctionNameChoices).toEqual([ 'correct-name-to-number', 'correct-new-nr' ])
-
-    // console.log('>>> business id: ', wrapper.vm.getBusinessId)
-    // console.log('>>> entity type: ', wrapper.vm.getEntityType)
-    // console.log('>>> name request: ', wrapper.vm.getNameRequest)
-    // console.log('>>> NR num: ', wrapper.vm.getNameRequest.nrNum)
-
-    // services function should be defined
-    expect(wrapper.vm.LegalServices.fetchNameRequest).toBeDefined()
-
-    // Correct Name Options component should be rendered
-    expect(wrapper.findComponent(CorrectName).exists()).toBe(true)
-  })
-
-  xit('selects the full restoration button if draft was a full restoration.', () => {
-    const wrapper = wrapperFactory()
-    expect(wrapper.vm.$data.selectRestorationType).toEqual('fullRestoration')
-  })
-
-  xit('selects the limited restoration button if draft was a limited restoration.', () => {
-    store.state.stateModel.restoration.type = 'limitedRestoration'
-    const wrapper = wrapperFactory()
-    expect(wrapper.vm.$data.selectRestorationType).toEqual('limitedRestoration')
-  })
-
-  xit('changes the restoration type from full to limited when the corresponding button is pressed.', async () => {
-    const wrapper = wrapperFactory()
-    const input = wrapper.find('#limited-radio-button')
-    input.setChecked()
     await Vue.nextTick()
 
-    expect(wrapper.vm.$data.selectRestorationType).toEqual('limitedRestoration')
-    expect(store.state.stateModel.restoration.type).toEqual('limitedRestoration')
-    expect(store.state.stateModel.restoration.relationships).toEqual([])
+    expectBusinessNameExists()
+    expectSectionExists(false)
+    expectLabelExists(false)
+    expectCorrectNameExists(false)
+    expectNameRequestInfoExists()
+    expectUndoButtonExists()
   })
 
-  xit('changes the restoration type from limited to full when the corresponding button is pressed.', async () => {
-    store.state.stateModel.restoration.type = 'limitedRestoration'
-    const wrapper = wrapperFactory()
-    const input = wrapper.find('#full-radio-button')
-    input.setChecked()
+  it('computes companyName correctly', async () => {
+    expect(wrapper.vm.companyName).toBe('My Business Name') // initial value
+
+    store.state.stateModel.nameRequestApprovedName = 'NR Approved Name'
     await Vue.nextTick()
 
-    expect(wrapper.vm.$data.selectRestorationType).toEqual('fullRestoration')
-    expect(store.state.stateModel.restoration.type).toEqual('fullRestoration')
-    expect(store.state.stateModel.restoration.expiry).toEqual(null)
+    expect(wrapper.vm.companyName).toBe('NR Approved Name')
+  })
+
+  const tests = [
+    { showErrors: false, correctNameOption: null, expected: false },
+    { showErrors: false, correctNameOption: 'correct-new-nr', expected: false },
+    { showErrors: true, correctNameOption: null, expected: true },
+    { showErrors: 'correct-new-nr', correctNameOption: 'correct-new-nr', expected: false }
+  ]
+
+  for (const test of tests) {
+    const showErrors = test.showErrors
+    const correctNameOption = test.correctNameOption
+    const expected = test.expected
+
+    // eslint-disable-next-line max-len
+    it(`computes invalidSection correctly when showErrors is ${showErrors} and correctNameOptions is ${correctNameOption}`, async () => {
+      store.state.stateModel.showErrors = showErrors
+      store.state.stateModel.correctNameOption = correctNameOption
+      await Vue.nextTick()
+
+      expect(wrapper.vm.invalidSection).toBe(expected)
+    })
+  }
+
+  it('computes correctionNameChoices correctly', async () => {
+    const correctionNameChoices = wrapper.vm.correctionNameChoices
+    // verify initial values
+    expect(correctionNameChoices.length).toBe(2)
+    expect(correctionNameChoices[0]).toBe('correct-name-to-number')
+    expect(correctionNameChoices[1]).toBe('correct-new-nr')
+  })
+
+  it('computes requestActionCode correctly', async () => {
+    // verify initial value
+    expect(wrapper.vm.requestActionCode).toBe('REH')
+  })
+
+  it('computes isNewName correctly', async () => {
+    expect(wrapper.vm.isNewName).toBe(false) // initial value
+
+    store.state.stateModel.nameRequestApprovedName = 'NR Approved Name'
+    await Vue.nextTick()
+
+    expect(wrapper.vm.isNewName).toBe(true)
   })
 })
