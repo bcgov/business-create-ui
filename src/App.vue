@@ -76,7 +76,7 @@
 
     <!-- Display WebChat for SP/GP registrations only -->
     <WebChat
-      v-if="getFilingType === FilingTypes.REGISTRATION"
+      v-if="getFilingType === FilingTypes.REGISTRATION && enableOldWebchat"
       :axios="axios"
       :isMobile="isMobile"
       :webChatReason="window['webChatReason']"
@@ -86,7 +86,7 @@
 
     <!-- Display the Genesys WebMessage for SP/GP registrations only -->
     <GenesysWebMessage
-      v-if="getFilingType === FilingTypes.REGISTRATION"
+      v-if="getFilingType === FilingTypes.REGISTRATION && enableGenesysWebMessage"
       :genesysURL="window['genesysUrl']"
       :environmentKey="window['genesysEnv']"
       :deploymentKey="window['genesysId']"
@@ -1159,6 +1159,16 @@ export default class App extends Vue {
     ) {
       this.setShowErrors(true)
     }
+  }
+
+  /** Whether the old webchat should be enabled. */
+  get enableOldWebchat (): boolean {
+    return !!getFeatureFlag('enable-web-chat')
+  }
+
+  /** Whether the Genesys web message should be enabled. */
+  get enableGenesysWebMessage (): boolean {
+    return !!getFeatureFlag('enable-genesys-web-message')
   }
 }
 </script>
