@@ -76,7 +76,7 @@
 
     <!-- Display WebChat for SP/GP registrations only -->
     <WebChat
-      v-if="getFilingType === FilingTypes.REGISTRATION && enableOldWebchat"
+      v-if="enableOldWebchat && getFilingType === FilingTypes.REGISTRATION"
       :axios="axios"
       :isMobile="isMobile"
       :webChatReason="window['webChatReason']"
@@ -86,7 +86,7 @@
 
     <!-- Display the Genesys WebMessage for SP/GP registrations only -->
     <GenesysWebMessage
-      v-if="getFilingType === FilingTypes.REGISTRATION && enableGenesysWebMessage"
+      v-if="enableGenesysWebMessage && getFilingType === FilingTypes.REGISTRATION"
       :genesysURL="window['genesysUrl']"
       :environmentKey="window['genesysEnv']"
       :deploymentKey="window['genesysId']"
