@@ -18,7 +18,7 @@
 
             <!-- Relationship To Company Checkboxes -->
             <v-expand-transition>
-              <div v-if="isFull">
+              <div v-if="isFullRestorationFiling">
                 <div class="ml-8">
                   Please select
                   <v-tooltip content-class="top-tooltip" transition="fade-transition" top>
@@ -43,7 +43,7 @@
 
             <!-- Limited Restoration Radio Panel -->
             <v-expand-transition>
-              <div v-if="isLimited">
+              <div v-if="isLimitedRestorationFiling">
                 <LimitedRestorationPanel
                   :currentDate="getCurrentDate"
                   :expiryDate="getRestoration.expiry"
@@ -83,6 +83,8 @@ export default class RestorationType extends Vue {
   @Getter getRestoration!: RestorationStateIF
   @Getter getRestorationTypeValid!: boolean
   @Getter getShowErrors!: boolean
+  @Getter isLimitedRestorationFiling!: boolean
+  @Getter isFullRestorationFiling!: boolean
 
   @Action setRestorationExpiry!: ActionBindingIF
   @Action setRestorationRelationships!: ActionBindingIF
@@ -95,16 +97,6 @@ export default class RestorationType extends Vue {
   // Enum for template
   readonly RestorationTypes = RestorationTypes
 
-  /** Is true if current restoration is full. */
-  get isFull (): boolean {
-    return (this.getRestoration.type === RestorationTypes.FULL)
-  }
-
-  /** Is true if current restoration is limited. */
-  get isLimited (): boolean {
-    return (this.getRestoration.type === RestorationTypes.LIMITED)
-  }
-
   /** This section's validity state (when prompted by app). */
   get invalidSection (): boolean {
     return (this.getShowErrors && !this.getRestorationTypeValid)
@@ -116,7 +108,7 @@ export default class RestorationType extends Vue {
    */
   protected changeRestorationType (): void {
     this.setRestorationType(this.selectRestorationType)
-    if (this.isLimited) {
+    if (this.isLimitedRestorationFiling) {
       this.setRestorationRelationships([])
     } else {
       this.setRestorationExpiry(null)
@@ -130,7 +122,7 @@ export default class RestorationType extends Vue {
 
     // if Limited, set validity to true
     // if Full then validity is set by RelationshipsPanel
-    if (this.isLimited) this.setRestorationTypeValid(true)
+    if (this.isLimitedRestorationFiling) this.setRestorationTypeValid(true)
   }
 }
 </script>
