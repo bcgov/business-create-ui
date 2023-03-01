@@ -173,7 +173,16 @@ describe('Summary Restore Business component', () => {
     expect(wrapper.find('#applicants-relationships').text()).toBe('Applicant\'s relationship(s): [Unknown]')
   })
 
-  it('shows court oder approval type', () => {
+  it('shows unknown restoration type', async () => {
+    store.state.stateModel.restoration.type = null
+    await Vue.nextTick()
+    expectSummaryBusinessRestoreExists()
+    expectSectionValid()
+    expectErrorMessage(false)
+    expect(wrapper.find('#unknown-restoration-type').text()).toBe('[Unknown]')
+  })
+
+  it('shows court order approval type', () => {
     expectSummaryBusinessRestoreExists()
     expectSectionValid()
     expectErrorMessage(false)

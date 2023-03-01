@@ -51,13 +51,16 @@
           </v-col>
 
           <v-col cols="12" sm="9">
-            <template v-if="isLimitedRestoration">
+            <template v-if="isLimitedRestorationFiling">
               <p id="limited-restoration">Limited Restoration</p>
               <p id="expires-on">Expires on {{ expiry }}</p>
             </template>
-            <template v-else>
+            <template v-else-if="isFullRestorationFiling">
               <p id="full-restoration">Full Restoration</p>
               <p id="applicants-relationships">Applicant's relationship(s): {{ relationships }}</p>
+            </template>
+            <template v-else>
+              <p id="unknown-restoration-type">[Unknown]</p>
             </template>
           </v-col>
         </v-row>
@@ -95,7 +98,7 @@ import Vue from 'vue'
 import { Component, Watch } from 'vue-property-decorator'
 import { DateMixin } from '@/mixins'
 import { Getter, Action } from 'vuex-class'
-import { ApprovalTypes, RouteNames, RestorationTypes } from '@/enums'
+import { ApprovalTypes, RouteNames } from '@/enums'
 import { CorpTypeCd, CorrectNameOptions } from '@bcrs-shared-components/enums/'
 import { NameTranslationIF, RestorationStateIF } from '@/interfaces'
 import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
@@ -112,6 +115,8 @@ export default class SummaryRestoreBusiness extends Vue {
   @Getter getNameTranslations!: NameTranslationIF[]
   @Getter getRestoration!: RestorationStateIF
   @Getter isRestoreBusinessNameValid!: boolean
+  @Getter isLimitedRestorationFiling!: boolean
+  @Getter isFullRestorationFiling!: boolean
 
   // for template
   readonly RouteNames = RouteNames
@@ -133,10 +138,6 @@ export default class SummaryRestoreBusiness extends Vue {
   /** The entity description. */
   get entityDescription (): string {
     return GetCorpFullDescription(this.getEntityType)
-  }
-
-  get isLimitedRestoration (): boolean {
-    return (this.getRestoration.type === RestorationTypes.LIMITED)
   }
 
   get expiry (): string {
@@ -193,6 +194,7 @@ p {
 #court-order-number,
 #notice-date,
 #application-date,
+#unknown-restoration-type,
 #unknown-approval-type {
   color: $gray7;
 }
