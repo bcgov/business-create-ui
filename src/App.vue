@@ -1163,12 +1163,12 @@ export default class App extends Vue {
 
   /** Whether the old webchat should be enabled. */
   get enableOldWebchat (): boolean {
-    return !!getFeatureFlag('enable-web-chat')
+    return !!GetFeatureFlag('enable-web-chat')
   }
 
   /** Whether the Genesys web message should be enabled. */
   get enableGenesysWebMessage (): boolean {
-    return !!getFeatureFlag('enable-genesys-web-message')
+    return !!GetFeatureFlag('enable-genesys-web-message')
   }
 }
 </script>
