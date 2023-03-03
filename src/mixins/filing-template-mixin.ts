@@ -10,7 +10,7 @@ import { ActionBindingIF, BusinessIF, ContactPointIF, CertifyIF, CompletingParty
   from '@/interfaces'
 import { DissolutionTypes, EffectOfOrders, FilingTypes, PartyTypes, RoleTypes, StaffPaymentOptions }
   from '@/enums'
-import { CorpTypeCd, CorrectNameOptions } from '@bcrs-shared-components/enums/'
+import { CorpTypeCd, CorrectNameOptions, RestorationTypes } from '@bcrs-shared-components/enums/'
 
 /**
  * Mixin that provides the integration with the Legal API.
@@ -418,7 +418,7 @@ export default class FilingTemplateMixin extends DateMixin {
             ? { extension: +this.getBusinessContact.extension }
             : {}
         },
-        expiry: this.getRestoration.expiry || undefined, // can't be null
+        expiry: this.getRestoration.restorationTypeValid ? this.getRestoration.expiry : undefined, // can't be null
         nameRequest: {
           legalType: this.getEntityType
         },
@@ -427,7 +427,7 @@ export default class FilingTemplateMixin extends DateMixin {
         offices: this.getDefineCompanyStep.officeAddresses,
         parties: this.orgPersonsToParties(this.getAddPeopleAndRoleStep.orgPeople),
         relationships: this.getRestoration.relationships,
-        type: this.getRestoration.type
+        type: this.getRestoration.type || RestorationTypes.FULL
       }
     }
 

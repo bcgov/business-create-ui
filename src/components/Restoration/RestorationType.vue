@@ -23,7 +23,7 @@
             <!-- Relationship To Company Checkboxes -->
             <v-expand-transition>
               <div v-if="isFullRestorationFiling" :class="{ 'error-text': invalidSection }">
-                <div class="ml-8">
+                <div class="ml-8 tooltip-text">
                   Please select
                   <v-tooltip content-class="top-tooltip" transition="fade-transition" top>
                     <template v-slot:activator="{ on, attrs }">
@@ -117,7 +117,7 @@ export default class RestorationType extends Vue {
    */
   mounted (): void {
     if (this.isFullRestorationFiling && this.getRestoration.relationships.length === 0) {
-      this.setRestorationType('Full/Limited')
+      this.setRestorationType(null)
       this.setRestorationTypeValid(false)
     }
   }
@@ -139,16 +139,16 @@ export default class RestorationType extends Vue {
   @Watch('getRestoration.type', { immediate: true })
   private onRestorationType (val: RestorationTypes): void {
     this.selectRestorationType = val
-
-    // if Limited, set validity to true
-    // if Full then validity is set by RelationshipsPanel
-    if (this.isLimitedRestorationFiling) this.setRestorationTypeValid(true)
   }
 }
 </script>
 
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
+.tooltip-text {
+  color: $gray7;
+}
+
 :deep() {
   // Fix font of all the radio buttons.
   .radio-button {
