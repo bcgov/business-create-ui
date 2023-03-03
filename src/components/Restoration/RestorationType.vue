@@ -14,11 +14,15 @@
             v-model="selectRestorationType"
             @change="changeRestorationType()"
           >
-            <v-radio id="full-radio-button" label="Full Restoration" :value=RestorationTypes.FULL />
+            <v-radio
+              class="radio-button"
+              id="full-radio-button"
+              label="Full Restoration"
+              :value=RestorationTypes.FULL />
 
             <!-- Relationship To Company Checkboxes -->
             <v-expand-transition>
-              <div v-if="isFullRestorationFiling">
+              <div v-if="isFullRestorationFiling" :class="{ 'error-text': invalidSection }">
                 <div class="ml-8">
                   Please select
                   <v-tooltip content-class="top-tooltip" transition="fade-transition" top>
@@ -39,15 +43,20 @@
               </div>
             </v-expand-transition>
 
-            <v-radio id="limited-radio-button" label="Limited Restoration" :value=RestorationTypes.LIMITED />
+            <v-radio
+              class="pt-4 radio-button"
+              id="limited-radio-button"
+              label="Limited Restoration"
+              :value=RestorationTypes.LIMITED />
 
             <!-- Limited Restoration Radio Panel -->
             <v-expand-transition>
-              <div v-if="isLimitedRestorationFiling">
+              <div v-if="isLimitedRestorationFiling" class="mb-n12">
                 <LimitedRestorationPanel
                   :currentDate="getCurrentDate"
                   :expiryDate="getRestoration.expiry"
                   @expiry="setRestorationExpiry($event)"
+                  @valid="setRestorationTypeValid($event)"
                 />
               </div>
             </v-expand-transition>
@@ -103,6 +112,17 @@ export default class RestorationType extends Vue {
   }
 
   /**
+   * Default State (if applicable) when we create new Restoration.
+   * No radio button is selected.
+   */
+  mounted (): void {
+    if (this.isFullRestorationFiling && this.getRestoration.relationships.length === 0) {
+      this.setRestorationType('Full/Limited')
+      this.setRestorationTypeValid(false)
+    }
+  }
+
+  /**
    * Sets the selected Limited Restoration choice.
    * @param val the value of the selected radio button
    */
@@ -126,3 +146,24 @@ export default class RestorationType extends Vue {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+@import '@/assets/styles/theme.scss';
+:deep() {
+  // Fix font of all the radio buttons.
+  .radio-button {
+    label {
+      font-weight: normal;
+      color: $gray7;
+    }
+  }
+
+  // Fix font of the relationships panel & center text with the checkboxes.
+  .v-input--checkbox .v-input__control .v-input__slot .v-label {
+    color: $gray7;
+    font-weight: normal;
+    align-items: stretch;
+    height: 1.3rem;
+  }
+}
+</style>
