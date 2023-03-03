@@ -118,7 +118,6 @@ export default class RestorationType extends Vue {
   mounted (): void {
     if (this.isFullRestorationFiling && this.getRestoration.relationships.length === 0) {
       this.setRestorationType(null)
-      this.setRestorationTypeValid(false)
     }
   }
 
