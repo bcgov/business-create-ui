@@ -22,8 +22,8 @@
 
             <!-- Relationship To Company Checkboxes -->
             <v-expand-transition>
-              <div v-if="isFullRestorationFiling" :class="{ 'error-text': invalidSection }">
-                <div class="ml-8 tooltip-text">
+              <div v-if="isFullRestorationFiling">
+                <div class="ml-8 tooltip-text" :class="{ 'error-text': invalidSection }">
                   Please select
                   <v-tooltip content-class="top-tooltip" transition="fade-transition" top>
                     <template v-slot:activator="{ on, attrs }">
