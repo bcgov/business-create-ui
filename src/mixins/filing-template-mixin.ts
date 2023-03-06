@@ -418,7 +418,7 @@ export default class FilingTemplateMixin extends DateMixin {
             ? { extension: +this.getBusinessContact.extension }
             : {}
         },
-        expiry: this.getRestoration.restorationTypeValid ? this.getRestoration.expiry : undefined, // can't be null
+        expiry: this.getRestoration.expiry || undefined, // can't be null
         nameRequest: {
           legalType: this.getEntityType
         },
@@ -427,7 +427,7 @@ export default class FilingTemplateMixin extends DateMixin {
         offices: this.getDefineCompanyStep.officeAddresses,
         parties: this.orgPersonsToParties(this.getAddPeopleAndRoleStep.orgPeople),
         relationships: this.getRestoration.relationships,
-        type: this.getRestoration.type || RestorationTypes.FULL
+        type: this.getRestoration.type
       }
     }
 

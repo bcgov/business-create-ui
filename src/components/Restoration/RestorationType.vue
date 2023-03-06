@@ -51,7 +51,7 @@
 
             <!-- Limited Restoration Radio Panel -->
             <v-expand-transition>
-              <div v-if="isLimitedRestorationFiling" class="mb-n12">
+              <div v-if="isLimitedRestorationFiling">
                 <LimitedRestorationPanel
                   :currentDate="getCurrentDate"
                   :expiryDate="getRestoration.expiry"
@@ -112,16 +112,6 @@ export default class RestorationType extends Vue {
   }
 
   /**
-   * Default State (if applicable) when we create new Restoration.
-   * No radio button is selected.
-   */
-  mounted (): void {
-    if (this.isFullRestorationFiling && this.getRestoration.relationships.length === 0) {
-      this.setRestorationType(null)
-    }
-  }
-
-  /**
    * Sets the selected Limited Restoration choice.
    * @param val the value of the selected radio button
    */
@@ -162,7 +152,7 @@ export default class RestorationType extends Vue {
     color: $gray7;
     font-weight: normal;
     align-items: stretch;
-    height: 1.3rem;
+    height: 1.25rem;
   }
 }
 </style>
