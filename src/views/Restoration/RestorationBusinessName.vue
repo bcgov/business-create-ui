@@ -22,7 +22,7 @@
       </header>
       <v-card flat class="mt-5">
         <RestorationType id="restoration-type" />
-        <ApprovalType id="approval-type" class="mt-n8" />
+        <ApprovalType id="approval-type" class="mt-n10" />
       </v-card>
     </section>
   </div>

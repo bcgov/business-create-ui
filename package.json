@@ -1,6 +1,6 @@
 {
   "name": "business-create-ui",
-  "version": "4.6.5",
+  "version": "4.6.6",
   "private": true,
   "appName": "Create UI",
   "sbcName": "SBC Common Components",
@@ -30,7 +30,7 @@
     "@bcrs-shared-components/genesys-web-message": "1.0.0",
     "@bcrs-shared-components/help-business-number": "1.1.1",
     "@bcrs-shared-components/interfaces": "1.0.58",
-    "@bcrs-shared-components/limited-restoration-panel": "1.0.0",
+    "@bcrs-shared-components/limited-restoration-panel": "1.0.3",
     "@bcrs-shared-components/mixins": "1.1.7",
     "@bcrs-shared-components/nature-of-business": "1.2.14",
     "@bcrs-shared-components/relationships-panel": "1.0.9",
