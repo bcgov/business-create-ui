@@ -10,7 +10,7 @@ import { ActionBindingIF, BusinessIF, ContactPointIF, CertifyIF, CompletingParty
   from '@/interfaces'
 import { DissolutionTypes, EffectOfOrders, FilingTypes, PartyTypes, RoleTypes, StaffPaymentOptions }
   from '@/enums'
-import { CorpTypeCd, CorrectNameOptions, RestorationTypes } from '@bcrs-shared-components/enums/'
+import { CorpTypeCd, CorrectNameOptions } from '@bcrs-shared-components/enums/'
 
 /**
  * Mixin that provides the integration with the Legal API.
