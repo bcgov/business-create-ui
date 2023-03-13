@@ -164,7 +164,7 @@
                   <v-card outlined class="message-box rounded-0">
                     <p>
                       <strong>Important:</strong> If the addresses shown below are out of date, you
-                      may update them here. The updates are applicable only to this registration.
+                      may update them here. The updates are applicable only to this application.
                     </p>
                   </v-card>
                 </div>
