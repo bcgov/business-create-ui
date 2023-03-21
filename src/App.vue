@@ -444,7 +444,7 @@ export default class App extends Vue {
 
   /** Get banner text. */
   get bannerText (): string | null {
-    const bannerText: string = getFeatureFlag('banner-text')
+    const bannerText: string = GetFeatureFlag('banner-text')
     // remove spaces so that " " becomes falsy
     return bannerText?.trim()
   }
