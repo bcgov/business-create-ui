@@ -443,10 +443,10 @@ export default class App extends Vue {
   }
 
   /** Get banner text. */
-  get bannerText (): string | null {
+  get bannerText (): string {
     const bannerText: string = GetFeatureFlag('banner-text')
     // remove spaces so that " " becomes falsy
-    return bannerText?.trim()
+    return bannerText?.trim() || null
   }
 
   /** Helper to check is the current route matches */
