@@ -104,7 +104,13 @@
 
     <SbcHeader />
 
-    <PaySystemAlert />
+    <!-- Alert banner -->
+    <v-alert
+      tile dense
+      type="warning"
+      v-if="bannerText">
+      <div v-html="bannerText" class="mb-0 text-center colour-dk-text"></div>
+    </v-alert>
 
     <div class="app-body">
       <!-- Don't show page if an error dialog is displayed. -->
@@ -193,7 +199,6 @@ import { Breadcrumb } from '@bcrs-shared-components/breadcrumb'
 import { GenesysWebMessage } from '@bcrs-shared-components/genesys-web-message'
 import { WebChat } from '@bcrs-shared-components/web-chat'
 import EntityInfo from '@/components/common/EntityInfo.vue'
-import PaySystemAlert from 'sbc-common-components/src/components/PaySystemAlert.vue'
 import SbcFeeSummary from 'sbc-common-components/src/components/SbcFeeSummary.vue'
 import SbcFooter from 'sbc-common-components/src/components/SbcFooter.vue'
 import SbcHeader from 'sbc-common-components/src/components/SbcHeader.vue'
@@ -222,7 +227,6 @@ import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
     Breadcrumb,
     EntityInfo,
     GenesysWebMessage,
-    PaySystemAlert,
     SbcFeeSummary,
     SbcFooter,
     SbcHeader,
@@ -436,6 +440,13 @@ export default class App extends Vue {
   /** The current IA survey id, or zero if empty. */
   get iaSurveyId (): number {
     return +sessionStorage.getItem('IA_SURVEY_ID')
+  }
+
+  /** Get banner text. */
+  get bannerText (): string | null {
+    const bannerText: string = getFeatureFlag('banner-text')
+    // remove spaces so that " " becomes falsy
+    return bannerText?.trim()
   }
 
   /** Helper to check is the current route matches */
