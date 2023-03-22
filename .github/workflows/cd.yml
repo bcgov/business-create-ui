@@ -47,7 +47,7 @@ jobs:
               && unzip -od /usr/local/bin/ op.zip \
               && rm op.zip ;\
           op inject -i ./devops/vaults.env -o .env -f
-          sed -i~ '/^VUE_APP_PATH=/s/=.*/="\/businesses\/create"/' .env
+          sed -i~ '/^VUE_APP_PATH=/s/=.*/="\businesses\/create"/' .env
 
       - name: CD Flow
         shell: bash
@@ -107,7 +107,7 @@ jobs:
               && unzip -od /usr/local/bin/ op.zip \
               && rm op.zip ;\
           op inject -i ./devops/vaults.env -o .env -f
-          sed -i~ '/^VUE_APP_PATH=/s/=.*/="\/businesses\/create"/' .env
+          sed -i~ '/^VUE_APP_PATH=/s/=.*/="\businesses\/create"/' .env
 
       - name: CD Flow
         shell: bash
