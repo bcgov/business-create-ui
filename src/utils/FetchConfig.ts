@@ -63,6 +63,15 @@ export async function FetchConfig (): Promise<any> {
     sessionStorage.setItem('SITEMINDER_LOGOUT_URL', siteminderLogoutUrl)
   }
 
+  const keycloakAuthUrl: string = process.env.VUE_APP_KEYCLOAK_AUTH_URL;
+  (<any>window).keycloakAuthUrl = keycloakAuthUrl
+
+  const keycloakRealm: string = process.env.VUE_APP_KEYCLOAK_REALM;
+  (<any>window).keycloakRealm = keycloakRealm
+
+  const keycloakClientId: string = process.env.VUE_APP_KEYCLOAK_CLIENTID;
+  (<any>window).keycloakClientId = keycloakClientId
+
   const iaSurveyId: string = process.env.VUE_APP_IA_SURVEY_ID
   // NB: set empty string if iaSurveyId is falsy (undefined, null or 0)
   sessionStorage.setItem('IA_SURVEY_ID', iaSurveyId || '')
