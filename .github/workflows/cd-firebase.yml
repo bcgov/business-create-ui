@@ -1,4 +1,4 @@
-name: BUSINESS CREATE UI CD
+name: BUSINESS CREATE UI CD - GCP
 
 on:
   push:
