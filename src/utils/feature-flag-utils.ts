@@ -15,7 +15,10 @@ const defaultFlagSet: LDFlagSet = {
     FilingTypes.REGISTRATION
   ],
   'enable-web-chat': false, // by default, old webchat is disabled
-  'enable-genesys-web-message': false // by default, genesys web message is disabled
+  'enable-genesys-web-message': false, // by default, genesys web message is disabled
+  'sentry-enable': false, // by default, no sentry logs
+  'banner-text': '' // by default, there is no banner text
+
 }
 
 /**
