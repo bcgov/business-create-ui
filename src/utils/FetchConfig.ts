@@ -38,7 +38,7 @@ export async function FetchConfig (): Promise<any> {
   // set base URL for axios calls
   axios.defaults.baseURL = legalApiUrl
 
-  const naicsUrl: string = (process.env.VUE_APP_NAICS_API_URL + process.env.VUE_APP_NAICS_API_VERSION + '/')
+  const naicsUrl: string = (process.env.VUE_APP_NAICS_API_URL + process.env.VUE_APP_NAICS_API_VERSION_2 + '/')
   sessionStorage.setItem('NAICS_URL', naicsUrl)
 
   const registriesSearchApiUrl: string =
