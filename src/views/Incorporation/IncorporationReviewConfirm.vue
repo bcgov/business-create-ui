@@ -61,7 +61,7 @@
       </template>
     </section>
 
-    <template  v-if="isBaseCompany">
+    <template v-if="isBaseCompany">
       <!-- Incorporation Date and Time -->
       <section id="incorporation-date-time-section" class="mt-10">
         <header>
