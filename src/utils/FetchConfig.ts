@@ -16,7 +16,7 @@ export async function FetchConfig (): Promise<any> {
   }
 
   // set Base URL for returning from redirects
-  const baseUrl = `${origin}/${processEnvVueAppPath}/`
+  const baseUrl = `${origin}${processEnvVueAppPath}`
   sessionStorage.setItem('BASE_URL', baseUrl)
 
   // set Base for Vue Router
