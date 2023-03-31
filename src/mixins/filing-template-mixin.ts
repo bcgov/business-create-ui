@@ -408,7 +408,7 @@ export default class FilingTemplateMixin extends DateMixin {
         foundingDate: this.getBusinessFoundingDate
       },
       restoration: {
-        applicationDate: this.getRestoration.applicationDate,
+        applicationDate: this.getRestoration.applicationDate || undefined, // can't be null
         approvalType: this.getRestoration.approvalType,
         contactPoint: {
           email: this.getBusinessContact.email,
@@ -423,7 +423,7 @@ export default class FilingTemplateMixin extends DateMixin {
           legalType: this.getEntityType
         },
         nameTranslations: this.getNameTranslations,
-        noticeDate: this.getRestoration.noticeDate,
+        noticeDate: this.getRestoration.noticeDate || undefined, // can't be null
         offices: this.getDefineCompanyStep.officeAddresses,
         parties: this.orgPersonsToParties(this.getAddPeopleAndRoleStep.orgPeople),
         relationships: this.getRestoration.relationships,
