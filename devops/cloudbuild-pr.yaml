@@ -24,7 +24,7 @@ steps:
       - 'VUE_APP_WEBCHAT_REASON=$_VUE_APP_WEBCHAT_REASON'
       - 'VUE_APP_WEBCHAT_STATUS_URL=$_VUE_APP_WEBCHAT_STATUS_URL'
       - 'VUE_APP_IA_SURVEY_ID=$_VUE_APP_IA_SURVEY_ID'
-    args: ['--openssl-legacy-provider', 'run', 'build']
+    args: ['run', 'build']
 
   #
   # Deploy to firebase channel, using the PR #
