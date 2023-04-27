@@ -10,8 +10,7 @@ import { getVueRouter } from '@/router'
 import { getVuexStore } from '@/store'
 import Affix from 'vue-affix'
 import Vue2Filters from 'vue2-filters' // needed by SbcFeeSummary
-import * as Sentry from '@sentry/browser'
-import * as Integrations from '@sentry/integrations'
+import * as Sentry from '@sentry/vue'
 import VueObserveVisibility from 'vue-observe-visibility' // added to help with rendering of text area heights properly
 import Hotjar from 'vue-hotjar'
 
@@ -54,8 +53,8 @@ async function start () {
     // initialize Sentry
     console.info('Initializing Sentry...') // eslint-disable-line no-console
     Sentry.init({
-      dsn: (window as any).sentryDsn,
-      integrations: [new Integrations.Vue({ Vue, attachProps: true })]
+      Vue,
+      dsn: (window as any).sentryDsn
     })
   }
 
