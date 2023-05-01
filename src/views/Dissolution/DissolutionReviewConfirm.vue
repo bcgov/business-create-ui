@@ -280,8 +280,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component } from 'vue-property-decorator'
+import { Component, Mixins } from 'vue-property-decorator'
 import { Getter, Action } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { DateMixin } from '@/mixins'
@@ -323,24 +322,24 @@ import {
     EffectiveDateTime,
     StaffPayment,
     TransactionalFolioNumber
-  },
-  mixins: [
-    DateMixin
-  ]
+  }
 })
-export default class DissolutionReviewConfirm extends Vue {
+export default class DissolutionReviewConfirm extends Mixins(DateMixin) {
   // Global getters
   @Getter(useStore) getAffidavitStep!: UploadAffidavitIF
   @Getter(useStore) getBusinessContact!: ContactPointIF
   @Getter(useStore) getCertifyState!: CertifyIF
   @Getter(useStore) getCourtOrderStep!: CourtOrderStepIF
-  @Getter(useStore) getDissolutionCustodianEmail!: string
-  @Getter(useStore) getDocumentDelivery!: DocumentDeliveryIF
-  @Getter(useStore) getEffectiveDateTime!: EffectiveDateTimeIF
   @Getter(useStore) getCreateResolutionResource!: CreateResolutionResourceIF
   @Getter(useStore) getCreateResolutionStep!: CreateResolutionIF
-  @Getter(useStore) getFeePrices!: Array<FeesIF>
+  @Getter(useStore) getDissolutionCustodianEmail!: string
   @Getter(useStore) getDissolutionHasCertificateDestroyed!: boolean
+  @Getter(useStore) getDocumentDelivery!: DocumentDeliveryIF
+  @Getter(useStore) getEffectiveDateTime!: EffectiveDateTimeIF
+  @Getter(useStore) getFeePrices!: Array<FeesIF>
+  @Getter(useStore) getFolioNumber!: string
+  @Getter(useStore) getShowErrors!: boolean
+  @Getter(useStore) getTransactionalFolioNumber!: string
   @Getter(useStore) getUserEmail!: string
   @Getter(useStore) getValidateSteps!: boolean
   @Getter(useStore) isAffidavitValid!: boolean
@@ -348,27 +347,24 @@ export default class DissolutionReviewConfirm extends Vue {
   @Getter(useStore) isPremiumAccount!: boolean
   @Getter(useStore) isRoleStaff!: boolean
   @Getter(useStore) isTypeCoop!: boolean
-  @Getter(useStore) getFolioNumber!: string
-  @Getter(useStore) getTransactionalFolioNumber!: string
-  @Getter(useStore) getShowErrors!: boolean
 
   // Global actions
-  @Action(useStore) setEffectiveDateTimeValid!: ActionBindingIF
-  @Action(useStore) setEffectiveDate!: ActionBindingIF
-  @Action(useStore) setIsFutureEffective!: ActionBindingIF
-  @Action(useStore) setCourtOrderFileNumber!: ActionBindingIF
-  @Action(useStore) setHasPlanOfArrangement!: ActionBindingIF
-  @Action(useStore) setCourtOrderValidity!: ActionBindingIF
   @Action(useStore) setCertifyState!: ActionBindingIF
+  @Action(useStore) setCourtOrderFileNumber!: ActionBindingIF
+  @Action(useStore) setCourtOrderValidity!: ActionBindingIF
   @Action(useStore) setDocumentOptionalEmail!: ActionBindingIF
   @Action(useStore) setDocumentOptionalEmailValidity!: ActionBindingIF
+  @Action(useStore) setEffectiveDate!: ActionBindingIF
+  @Action(useStore) setEffectiveDateTimeValid!: ActionBindingIF
+  @Action(useStore) setHasPlanOfArrangement!: ActionBindingIF
+  @Action(useStore) setIsFutureEffective!: ActionBindingIF
   @Action(useStore) setTransactionalFolioNumber!: ActionBindingIF
   @Action(useStore) setTransactionalFolioNumberValidity!: ActionBindingIF
 
   // Enum for template
   readonly RouteNames = RouteNames
 
-  // local variables
+  // Local variable
   isDissolutionCustodianValid = false
 
   /** Is true when the Dissolution Date and Time section is invalid. */
@@ -389,7 +385,7 @@ export default class DissolutionReviewConfirm extends Vue {
   /** The affidavit summary to display, depending on entity type. */
   get affidavitSummary (): string {
     return this.isTypeCoop
-      ? this.getAffidavitStep.affidavitDoc?.name
+      ? this.getAffidavitStep.affidavitFile?.name
       : 'The affidavit required by section 316(1)(a) of the Business Corporations Act has ' +
         'been completed and deposited in the company\'s records book.'
   }

@@ -81,8 +81,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component } from 'vue-property-decorator'
+import { Component, Mixins } from 'vue-property-decorator'
 import { Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { NameRequestStates, NrRequestActionCodes } from '@/enums'
@@ -92,13 +91,8 @@ import { CommonMixin, DateMixin } from '@/mixins'
 import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 import { Capitalize } from '@/utils'
 
-@Component({
-  mixins: [
-    CommonMixin,
-    DateMixin
-  ]
-})
-export default class NameRequestInfo extends Vue {
+@Component({})
+export default class NameRequestInfo extends Mixins(CommonMixin, DateMixin) {
   // For template
   readonly NameRequestStates = NameRequestStates
 
@@ -137,15 +131,13 @@ export default class NameRequestInfo extends Vue {
 
   /** The expiration date. */
   get expirationDate (): string {
-    return this.apiToPacificDateTime(this.getNameRequest.expirationDate, true)
+    return this.apiToPacificDateTime(this.getNameRequest.expirationDate)
   }
 
   /** The state. */
-  get state (): NameRequestStates {
-    if (this.getNameRequest.state === NameRequestStates.APPROVED) {
-      return 'Approved'
-    }
-    return Capitalize(this.getNameRequest.state?.toString() || null)
+  get state (): string {
+    const state = this.getNameRequest.state?.toString().split('_').join(' ')
+    return Capitalize(state || '')
   }
 
   /** The condition/consent string. */

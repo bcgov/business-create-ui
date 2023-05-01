@@ -63,27 +63,26 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component, Prop } from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { ActionBindingIF, IncorporationAgreementIF, IncorporationAgreementTypeIF } from '@/interfaces'
 import { RouteNames } from '@/enums'
 
-@Component
+@Component({})
 export default class AgreementType extends Vue {
   @Prop({ default: false }) readonly showErrorSummary!: boolean
   @Prop({ default: false }) readonly isSummary!: boolean
 
   @Getter(useStore) getIncorporationAgreementDocuments!: Array<IncorporationAgreementTypeIF>
-  @Getter(useStore) isTypeBcUlcCompany!: boolean
-  @Getter(useStore) isTypeBcCcc!: boolean
   @Getter(useStore) getIncorporationAgreementStep!: IncorporationAgreementIF
   @Getter(useStore) getShowErrors!: boolean
+  @Getter(useStore) isTypeBcCcc!: boolean
+  @Getter(useStore) isTypeBcUlcCompany!: boolean
 
   @Action(useStore) setIncorporationAgreementStepData!: ActionBindingIF
 
-  protected agreementType: string = null
+  agreementType = null as string
 
   // Enum for template
   readonly RouteNames = RouteNames
@@ -107,7 +106,7 @@ export default class AgreementType extends Vue {
     })
   }
 
-  protected changeAgreementType (): void {
+  changeAgreementType (): void {
     this.setIncorporationAgreementStepData({
       valid: !!this.agreementType,
       agreementType: this.agreementType

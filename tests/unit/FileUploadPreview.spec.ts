@@ -8,19 +8,12 @@ import { waitForUpdate } from '../wait-for-update'
 Vue.use(Vuetify)
 const vuetify = new Vuetify({})
 
-const oneMBFile = new File([new ArrayBuffer(1048576)], 'oneMBFile.pdf',
-  { type: 'application/pdf' })
-const elevenMBFile = new File([new ArrayBuffer(1048576 * 11)], 'elevenMBFile.pdf',
-  { type: 'application/pdf' })
+// Note: the following arrayBuffer code is needed as jest does not provide arrayBuffer
+//  and this is required to test the scenarios where the pdf.js library is used.
+File.prototype.arrayBuffer = File.prototype.arrayBuffer || myArrayBuffer as any
+Blob.prototype.arrayBuffer = Blob.prototype.arrayBuffer || myArrayBuffer as any
 
-// Note: the following arrayBuffer code was needed as jest does not provide arrayBuffer and this is required
-//  to test the scenarios where the pdf.js library is used
-// @ts-ignore
-File.prototype.arrayBuffer = File.prototype.arrayBuffer || myArrayBuffer
-// @ts-ignore
-Blob.prototype.arrayBuffer = Blob.prototype.arrayBuffer || myArrayBuffer
-
-// mock the console.log function to hide PDF library warnings
+// mock the console.log function to hide PDF library warnings (due to invalid mocked PDF files)
 console.log = jest.fn()
 
 function myArrayBuffer () {
@@ -36,6 +29,10 @@ function myArrayBuffer () {
 }
 
 describe('FileUploadPreview component', () => {
+  // mock some large PDF files
+  const oneMBFile = new File([new ArrayBuffer(1048576)], 'oneMBFile.pdf', { type: 'application/pdf' })
+  const elevenMBFile = new File([new ArrayBuffer(1048576 * 11)], 'elevenMBFile.pdf', { type: 'application/pdf' })
+
   let inputValueGet
   let inputValueSet
   let inputValue = ''
@@ -57,9 +54,7 @@ describe('FileUploadPreview component', () => {
   beforeEach(() => {
     inputFilesGet = jest.fn()
     inputValueGet = jest.fn().mockReturnValue(inputValue)
-    inputValueSet = jest.fn().mockImplementation(v => {
-      inputValue = v
-    })
+    inputValueSet = jest.fn().mockImplementation(v => { inputValue = v })
   })
 
   it('displays file upload preview component', async () => {
@@ -72,6 +67,7 @@ describe('FileUploadPreview component', () => {
     expect(wrapper.find('.file-upload-preview input[type="file"]').exists()).toBe(true)
     expect(wrapper.find('.file-upload-preview button').exists()).toBe(true)
     expect(wrapper.find('.v-messages__message').text()).toEqual('File must be a PDF. Maximum 30MB.')
+
     wrapper.destroy()
   })
 
@@ -80,10 +76,9 @@ describe('FileUploadPreview component', () => {
       propsData: { inputFile: null, isRequired: false },
       vuetify
     })
-    const fileInput = wrapper.find('.file-upload-preview input[type="file"]')
-    fileInput.trigger('change')
-    await Vue.nextTick()
 
+    const fileInput = wrapper.find('.file-upload-preview input[type="file"]')
+    await fileInput.trigger('change')
     expect(wrapper.find('.error--text .v-messages__message').exists()).toBeFalsy()
 
     wrapper.destroy()
@@ -91,13 +86,12 @@ describe('FileUploadPreview component', () => {
 
   it('rejects when file is required and not provided', async () => {
     const wrapper = mount(FileUploadPreview, {
-      propsData: { inputFile: null },
+      propsData: { inputFile: null, isRequired: true },
       vuetify
     })
-    const fileInput = wrapper.find('.file-upload-preview input[type="file"]')
-    fileInput.trigger('change')
-    await Vue.nextTick()
 
+    const fileInput = wrapper.find('.file-upload-preview input[type="file"]')
+    await fileInput.trigger('change')
     const messages = wrapper.findAll('.error--text .v-messages__message')
     expect(messages.length).toBe(1)
     expect(messages.at(0).text()).toBe('File is required')
@@ -110,13 +104,12 @@ describe('FileUploadPreview component', () => {
       propsData: { maxSize: 10 * 1024 },
       vuetify
     })
+
     const fileInput = wrapper.find('input[type="file"]')
     setupFileInput(fileInput)
     inputValue = oneMBFile.name
     inputFilesGet.mockReturnValue([oneMBFile])
-    fileInput.trigger('change')
-    await Vue.nextTick()
-
+    await fileInput.trigger('change')
     expect(wrapper.find('.error--text .v-messages__message').exists()).toBeFalsy()
 
     wrapper.destroy()
@@ -127,13 +120,12 @@ describe('FileUploadPreview component', () => {
       propsData: { maxSize: 10 * 1024 },
       vuetify
     })
+
     const fileInput = wrapper.find('input[type="file"]')
     setupFileInput(fileInput)
     inputValue = elevenMBFile.name
     inputFilesGet.mockReturnValue([elevenMBFile])
-    fileInput.trigger('change')
-    await Vue.nextTick()
-
+    await fileInput.trigger('change')
     const messages = wrapper.findAll('.error--text .v-messages__message')
     expect(messages.length).toBe(1)
     expect(messages.at(0).text()).toBe('Exceeds maximum 10 MB file size')
@@ -146,13 +138,12 @@ describe('FileUploadPreview component', () => {
       propsData: {},
       vuetify
     })
+
     const fileInput = wrapper.find('input[type="file"]')
     setupFileInput(fileInput)
     inputValue = oneMBFile.name
     inputFilesGet.mockReturnValue([oneMBFile])
-    wrapper.setProps({ customErrorMessage: 'test custom error message' })
-    await waitForUpdate(1)
-
+    await wrapper.setProps({ customErrorMessage: 'test custom error message' })
     const messages = wrapper.findAll('.error--text .v-messages__message')
     expect(messages.length).toBe(1)
     expect(messages.at(0).text()).toBe('test custom error message')
@@ -168,17 +159,16 @@ describe('FileUploadPreview component', () => {
       propsData: { pdfPageSize: PdfPageSize.LETTER_SIZE },
       vuetify
     })
+
     const fileInput = wrapper.find('input[type="file"]')
     setupFileInput(fileInput)
     inputValue = letterSizePdf.name
     inputFilesGet.mockReturnValue([letterSizePdf])
-    fileInput.trigger('change')
-    await waitForUpdate(3)
-
+    await fileInput.trigger('change')
     expect(wrapper.find('.error--text .v-messages__message').exists()).toBeFalsy()
 
     wrapper.destroy()
-  }, 30000)
+  })
 
   it('rejects when pdf page size is not accepted size', async () => {
     const fs = require('fs')
@@ -188,20 +178,19 @@ describe('FileUploadPreview component', () => {
       propsData: { pdfPageSize: PdfPageSize.LETTER_SIZE },
       vuetify
     })
+
     const fileInput = wrapper.find('input[type="file"]')
     setupFileInput(fileInput)
     inputValue = nonLetterSizePdf.name
     inputFilesGet.mockReturnValue([nonLetterSizePdf])
-    fileInput.trigger('change')
-
+    await fileInput.trigger('change')
     await waitForUpdate(5)
-
     const messages = wrapper.findAll('.error--text .v-messages__message')
     expect(messages.length).toBe(1)
     expect(messages.at(0).text()).toBe('Document must be set to fit onto 8.5” x 11” letter-size paper')
 
     wrapper.destroy()
-  }, 30000)
+  }, 10000)
 
   it('rejects when the second page is not an accepted size', async () => {
     const fs = require('fs')
@@ -211,20 +200,19 @@ describe('FileUploadPreview component', () => {
       propsData: { pdfPageSize: PdfPageSize.LETTER_SIZE },
       vuetify
     })
+
     const fileInput = wrapper.find('input[type="file"]')
     setupFileInput(fileInput)
     inputValue = invalidSecondPagePdf.name
     inputFilesGet.mockReturnValue([invalidSecondPagePdf])
-    fileInput.trigger('change')
-
+    await fileInput.trigger('change')
     await waitForUpdate(5)
-
     const messages = wrapper.findAll('.error--text .v-messages__message')
     expect(messages.length).toBe(1)
     expect(messages.at(0).text()).toBe('Document must be set to fit onto 8.5” x 11” letter-size paper')
 
     wrapper.destroy()
-  }, 30000)
+  }, 10000)
 
   it('rejects encrypted files', async () => {
     const fs = require('fs')
@@ -234,14 +222,13 @@ describe('FileUploadPreview component', () => {
       propsData: { pdfPageSize: PdfPageSize.LETTER_SIZE },
       vuetify
     })
+
     const fileInput = wrapper.find('input[type="file"]')
     setupFileInput(fileInput)
     inputValue = encryptedPdf.name
     inputFilesGet.mockReturnValue([encryptedPdf])
-    fileInput.trigger('change')
-
+    await fileInput.trigger('change')
     await waitForUpdate(3)
-
     const messages = wrapper.findAll('.error--text .v-messages__message')
     expect(messages.length).toBe(1)
     expect(messages.at(0).text()).toBe('File must be unencrypted')
@@ -258,14 +245,13 @@ describe('FileUploadPreview component', () => {
       propsData: { pdfPageSize: PdfPageSize.LETTER_SIZE },
       vuetify
     })
+
     const fileInput = wrapper.find('input[type="file"]')
     setupFileInput(fileInput)
     inputValue = encryptedPdf.name
     inputFilesGet.mockReturnValue([encryptedPdf])
-    fileInput.trigger('change')
-
+    await fileInput.trigger('change')
     await waitForUpdate(3)
-
     const messages = wrapper.findAll('.error--text .v-messages__message')
     expect(messages.length).toBe(1)
     expect(messages.at(0).text()).toBe('File content cannot be locked')
@@ -278,11 +264,12 @@ describe('FileUploadPreview component', () => {
       propsData: { maxSize: 10 * 1024 },
       vuetify
     })
+
     const fileInput = wrapper.find('input[type="file"]')
     setupFileInput(fileInput)
     inputValue = oneMBFile.name
     inputFilesGet.mockReturnValue([oneMBFile])
-    fileInput.trigger('change')
+    await fileInput.trigger('change')
     await waitForUpdate(3)
     expect(wrapper.emitted('fileSelected').pop()[0]).toEqual(oneMBFile)
 
@@ -294,13 +281,13 @@ describe('FileUploadPreview component', () => {
       propsData: { maxSize: 10 * 1024 },
       vuetify
     })
+
     const fileInput = wrapper.find('input[type="file"]')
     setupFileInput(fileInput)
     inputValue = oneMBFile.name
     inputFilesGet.mockReturnValue([oneMBFile])
-    fileInput.trigger('change')
+    await fileInput.trigger('change')
     await waitForUpdate(3)
-
     expect(wrapper.emitted('isFileValid').pop()[0]).toEqual(true)
 
     wrapper.destroy()

@@ -94,8 +94,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component, Emit } from 'vue-property-decorator'
+import { Component, Emit, Mixins } from 'vue-property-decorator'
 import { Getter, Action } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { Navigate } from '@/utils'
@@ -104,34 +103,27 @@ import { DateMixin, FilingTemplateMixin, NameRequestMixin } from '@/mixins'
 import { LegalServices } from '@/services/'
 import { FilingTypes, NameRequestStates, RouteNames } from '@/enums'
 
-@Component({
-  mixins: [
-    DateMixin,
-    FilingTemplateMixin,
-    NameRequestMixin
-  ]
-})
-export default class Actions extends Vue {
+@Component({})
+export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, NameRequestMixin) {
+  @Getter(useStore) getCurrentStep!: number
   @Getter(useStore) getEntityIdentifier!: string
   @Getter(useStore) getFilingType!: string
-  @Getter(useStore) isFilingValid!: boolean
-  @Getter(useStore) isEntityType!: boolean
-  @Getter(useStore) getCurrentStep!: number
-  @Getter(useStore) isShowReviewConfirmBtn!: boolean
-  @Getter(useStore) isShowFilePayBtn!: boolean
-  @Getter(useStore) isBusySaving!: boolean
-  @Getter(useStore) getSteps!: Array<any>
   @Getter(useStore) getMaxStep!: number
+  @Getter(useStore) getSteps!: Array<any>
+  @Getter(useStore) isBusySaving!: boolean
+  @Getter(useStore) isEntityType!: boolean
+  @Getter(useStore) isFilingPaying!: boolean
+  @Getter(useStore) isFilingValid!: boolean
   @Getter(useStore) isSaving!: boolean
   @Getter(useStore) isSavingResuming!: boolean
-  @Getter(useStore) isFilingPaying!: boolean
-  @Getter(useStore) getNameRequestNumber!: string
+  @Getter(useStore) isShowFilePayBtn!: boolean
+  @Getter(useStore) isShowReviewConfirmBtn!: boolean
 
+  @Action(useStore) setEffectiveDateTimeValid!: ActionBindingIF
+  @Action(useStore) setHaveChanges!: ActionBindingIF
+  @Action(useStore) setIsFilingPaying!: ActionBindingIF
   @Action(useStore) setIsSaving!: ActionBindingIF
   @Action(useStore) setIsSavingResuming!: ActionBindingIF
-  @Action(useStore) setIsFilingPaying!: ActionBindingIF
-  @Action(useStore) setHaveChanges!: ActionBindingIF
-  @Action(useStore) setEffectiveDateTimeValid!: ActionBindingIF
   @Action(useStore) setValidateSteps!: ActionBindingIF
 
   /** Is True if Jest is running the code. */
@@ -154,7 +146,7 @@ export default class Actions extends Vue {
   }
 
   /** Called when Cancel button is clicked. */
-  protected onClickCancel (): void {
+  onClickCancel (): void {
     this.emitGoToDashboard()
   }
 
@@ -162,7 +154,7 @@ export default class Actions extends Vue {
    * Called when Save button is clicked.
    * @returns a promise (ie, this is an async method)
    */
-  protected async onClickSave (): Promise<void> {
+  async onClickSave (): Promise<void> {
     // prevent double saving
     if (this.isBusySaving) return
     this.setIsSaving(true)
@@ -176,7 +168,7 @@ export default class Actions extends Vue {
       // clear flag
       this.setHaveChanges(false)
     } catch (error) {
-      console.log('Error on onClickSave(): ', error)
+      console.log('Error on onClickSave(): ', error) // eslint-disable-line no-console
       this.$root.$emit('save-error-event', error)
       this.setIsSaving(false)
       return
@@ -189,7 +181,7 @@ export default class Actions extends Vue {
    * Called when Save and Resume Later button is clicked.
    * @returns a promise (ie, this is an async method)
    */
-  protected async onClickSaveResume (): Promise<void> {
+  async onClickSaveResume (): Promise<void> {
     // prevent double saving
     if (this.isBusySaving) return
     // If Save and Resume is successful setIsFilingPaying should't be reset to false,
@@ -205,7 +197,7 @@ export default class Actions extends Vue {
       // clear flag
       this.setHaveChanges(false)
     } catch (error) {
-      console.log('Error on onClickSaveResume(): ', error)
+      console.log('Error on onClickSaveResume(): ', error) // eslint-disable-line no-console
       this.$root.$emit('save-error-event', error)
       this.setIsSavingResuming(false)
       return
@@ -218,7 +210,7 @@ export default class Actions extends Vue {
    * Called when File and Pay button is clicked.
    * @returns a promise (ie, this is an async method)
    */
-  protected async onClickFilePay (): Promise<void> {
+  async onClickFilePay (): Promise<void> {
     // Prompt Step validations
     this.setValidateSteps(true)
 
@@ -247,9 +239,9 @@ export default class Actions extends Vue {
       // dashboard.
       if (this.getNameRequestNumber) {
         try {
-          await this.validateNameRequest(this.getNameRequestNumber)
+          await this._validateNameRequest(this.getNameRequestNumber)
         } catch (error) {
-          console.log('Error validating NR in onClickFilePay(): ', error)
+          console.log('Error validating NR in onClickFilePay(): ', error) // eslint-disable-line no-console
           this.setIsFilingPaying(false)
           return
         }
@@ -265,7 +257,7 @@ export default class Actions extends Vue {
         // clear flag
         this.setHaveChanges(false)
       } catch (error) {
-        console.log('Error updating filing in onClickFilePay(): ', error)
+        console.log('Error updating filing in onClickFilePay(): ', error) // eslint-disable-line no-console
         this.$root.$emit('save-error-event', error)
         this.setIsFilingPaying(false)
         return
@@ -315,7 +307,7 @@ export default class Actions extends Vue {
 
   // FUTURE: merge this with NameRequestMixin::validateNameRequest()
   /** Fetches NR and validates it. */
-  private async validateNameRequest (nrNumber: string): Promise<void> {
+  private async _validateNameRequest (nrNumber: string): Promise<void> {
     const nameRequest = await LegalServices.fetchNameRequest(nrNumber).catch(error => {
       this.$root.$emit('name-request-retrieve-error')
       throw new Error(error)
@@ -351,7 +343,7 @@ export default class Actions extends Vue {
   /** Label for the Next button. */
   get nextButtonLabel (): string {
     const nextStep = this.next()
-    return nextStep ? nextStep.text.replace('\n', ' ') : ''
+    return nextStep ? nextStep.text.replaceAll('\n', ' ') : ''
   }
 
   /** Returns the next step. */

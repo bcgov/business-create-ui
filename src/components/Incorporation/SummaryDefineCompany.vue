@@ -100,8 +100,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component } from 'vue-property-decorator'
+import { Component, Vue } from 'vue-property-decorator'
 import { Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { ContactPointIF, DefineCompanyIF, NameTranslationIF } from '@/interfaces'
@@ -125,19 +124,19 @@ export default class SummaryDefineCompany extends Vue {
   readonly RouteNames = RouteNames
 
   // Getters
-  @Getter(useStore) getNameRequestApprovedName!: string
+  @Getter(useStore) getBusinessContact!: ContactPointIF
   @Getter(useStore) getCooperativeType!: CoopTypes
+  @Getter(useStore) getDefineCompanyStep!: DefineCompanyIF
+  @Getter(useStore) getEntityType!: CorpTypeCd
+  @Getter(useStore) getFolioNumber!: string
+  @Getter(useStore) getNameRequestApprovedName!: string
+  @Getter(useStore) getNameTranslations!: NameTranslationIF[]
   @Getter(useStore) isDefineCompanyValid!: boolean
+  @Getter(useStore) isFullRestorationFiling!: boolean
+  @Getter(useStore) isIncorporationFiling!: boolean
+  @Getter(useStore) isLimitedRestorationFiling!: boolean
   @Getter(useStore) isPremiumAccount!: boolean
   @Getter(useStore) isTypeCoop!: boolean
-  @Getter(useStore) getNameTranslations!: NameTranslationIF[]
-  @Getter(useStore) getDefineCompanyStep!: DefineCompanyIF
-  @Getter(useStore) getBusinessContact!: ContactPointIF
-  @Getter(useStore) getFolioNumber!: string
-  @Getter(useStore) getEntityType!: CorpTypeCd
-  @Getter(useStore) isIncorporationFiling!: boolean
-  @Getter(useStore) isFullRestorationFiling!: boolean
-  @Getter(useStore) isLimitedRestorationFiling!: boolean
 
   /** The company name. */
   get companyName (): string {

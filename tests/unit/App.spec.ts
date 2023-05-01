@@ -380,18 +380,15 @@ describe('Incorporation - Define Company page for a BEN (numbered)', () => {
     expect(store.stateModel.filingId).toBe(54321)
 
     // Validate no offices are loaded
-    expect(store.stateModel.defineCompanyStep.officeAddresses)
-      .toBeDefined()
-    expect(store.stateModel.defineCompanyStep.officeAddresses.recordsOffice)
-      .toBeUndefined()
+    expect(store.stateModel.defineCompanyStep.officeAddresses).toBeDefined()
+    expect(store.stateModel.defineCompanyStep.officeAddresses.recordsOffice).toBeUndefined()
+    expect(store.stateModel.defineCompanyStep.officeAddresses.registeredOffice).toBeUndefined()
 
     // Validate Contact Info
-    expect(store.stateModel.businessContact)
-      .toBeDefined()
+    expect(store.stateModel.businessContact).toBeDefined()
 
     // Validate Share Structure
-    expect(store.stateModel.createShareStructureStep.shareClasses)
-      .toBeDefined()
+    expect(store.stateModel.createShareStructureStep.shareClasses).toBeDefined()
   })
 
   it('does not load a name request into the store', () => {

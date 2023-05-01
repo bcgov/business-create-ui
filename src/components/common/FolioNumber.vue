@@ -36,8 +36,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component, Emit, Prop, Watch } from 'vue-property-decorator'
+import { Component, Emit, Prop, Vue, Watch } from 'vue-property-decorator'
 import { VuetifyRuleFunction } from '@/types'
 
 @Component({})
@@ -47,8 +46,8 @@ export default class FolioNumber extends Vue {
   @Prop({ default: false }) readonly showErrors!: boolean
 
   // Local properties
-  protected folioNumber: string = null
-  protected formValid = false
+  folioNumber = null as string
+  formValid = false
 
   // Validation rules
   readonly rules: Array<VuetifyRuleFunction> = [

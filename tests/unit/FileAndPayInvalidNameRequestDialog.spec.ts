@@ -5,6 +5,7 @@ import { createPinia, setActivePinia } from 'pinia'
 import { useStore } from '@/store/store'
 import FileAndPayInvalidNameRequestDialog from '@/dialogs/FileAndPayInvalidNameRequestDialog.vue'
 import { CorpTypeCd } from '@/enums'
+import { NameRequestIF } from '@bcrs-shared-components/interfaces'
 
 Vue.use(Vuetify)
 
@@ -15,7 +16,7 @@ const store = useStore()
 store.stateModel.nameRequest = {
   legalType: CorpTypeCd.BENEFIT_COMPANY,
   nrNum: 'NR 1234567'
-}
+} as NameRequestIF
 store.stateModel.nameRequestApprovedName = 'My Name Request Inc.'
 
 describe('FileAndPayInvalidNameRequestDialog - Verify that dialog is displayed correctly', () => {

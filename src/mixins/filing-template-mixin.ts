@@ -1,14 +1,13 @@
-import { Component } from 'vue-property-decorator'
+import { Component, Mixins } from 'vue-property-decorator'
 import { Getter, Action } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { DateMixin } from '@/mixins'
 import { ActionBindingIF, BusinessIF, ContactPointIF, CertifyIF, CompletingPartyIF, CourtOrderStepIF,
   CreateMemorandumIF, CreateResolutionIF, CreateRulesIF, DefineCompanyIF, DissolutionFilingIF,
-  DissolutionStatementIF, DocIF, DocumentDeliveryIF, EffectiveDateTimeIF, EmptyNaics,
-  IncorporationAgreementIF, IncorporationFilingIF, NameRequestFilingIF, NameTranslationIF, OrgPersonIF,
-  PartyIF, PeopleAndRoleIF, RegistrationFilingIF, RegistrationStateIF, RestorationFilingIF,
-  RestorationStateIF, ShareStructureIF, SpecialResolutionIF, StaffPaymentStepIF, UploadAffidavitIF }
-  from '@/interfaces'
+  DissolutionStatementIF, DocumentDeliveryIF, EffectiveDateTimeIF, EmptyNaics, IncorporationAgreementIF,
+  IncorporationFilingIF, NameRequestFilingIF, NameTranslationIF, OrgPersonIF, PartyIF, PeopleAndRoleIF,
+  RegistrationFilingIF, RegistrationStateIF, RestorationFilingIF, RestorationStateIF, ShareStructureIF,
+  SpecialResolutionIF, StaffPaymentStepIF, UploadAffidavitIF } from '@/interfaces'
 import { DissolutionTypes, EffectOfOrders, FilingTypes, PartyTypes, RoleTypes, StaffPaymentOptions }
   from '@/enums'
 import { CorpTypeCd, CorrectNameOptions } from '@bcrs-shared-components/enums/'
@@ -17,7 +16,7 @@ import { CorpTypeCd, CorrectNameOptions } from '@bcrs-shared-components/enums/'
  * Mixin that provides the integration with the Legal API.
  */
 @Component({})
-export default class FilingTemplateMixin extends DateMixin {
+export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Getter(useStore) getAddPeopleAndRoleStep!: PeopleAndRoleIF
   @Getter(useStore) getAffidavitStep!: UploadAffidavitIF
   @Getter(useStore) getBusiness!: BusinessIF
@@ -114,6 +113,14 @@ export default class FilingTemplateMixin extends DateMixin {
    * @returns the filing body to save
    */
   buildIncorporationFiling (): IncorporationFilingIF {
+    function fixNullAddressType (orgPeople: OrgPersonIF[]): OrgPersonIF[] {
+      return orgPeople.map(p => {
+        if (p.deliveryAddress?.addressType === null) delete p.deliveryAddress.addressType
+        if (p.mailingAddress?.addressType === null) delete p.mailingAddress.addressType
+        return p
+      })
+    }
+
     // Build the main filing.
     const filing: IncorporationFilingIF = {
       header: {
@@ -142,7 +149,7 @@ export default class FilingTemplateMixin extends DateMixin {
             ? { extension: +this.getBusinessContact.extension }
             : {}
         },
-        parties: this.getAddPeopleAndRoleStep.orgPeople
+        parties: fixNullAddressType(this.getAddPeopleAndRoleStep.orgPeople)
       }
     }
 
@@ -152,14 +159,14 @@ export default class FilingTemplateMixin extends DateMixin {
         filing.incorporationApplication.cooperative = {
           cooperativeAssociationType: this.getDefineCompanyStep.cooperativeType,
           rulesFileKey: this.getCreateRulesStep.docKey || null,
-          rulesFileName: this.getCreateRulesStep.rulesDoc?.name || null,
-          rulesFileSize: this.getCreateRulesStep.rulesDoc?.size || null,
-          rulesFileLastModified: this.getCreateRulesStep.rulesDoc?.lastModified || null,
+          rulesFileName: this.getCreateRulesStep.rulesFile?.name || null,
+          rulesFileSize: this.getCreateRulesStep.rulesFile?.size || null,
+          rulesFileLastModified: this.getCreateRulesStep.rulesFile?.lastModified || null,
           rulesConfirmed: this.getCreateRulesStep.rulesConfirmed || false,
           memorandumFileKey: this.getCreateMemorandumStep.docKey || null,
-          memorandumFileName: this.getCreateMemorandumStep?.memorandumDoc?.name || null,
-          memorandumFileSize: this.getCreateMemorandumStep?.memorandumDoc?.size || null,
-          memorandumFileLastModified: this.getCreateMemorandumStep?.memorandumDoc?.lastModified || null,
+          memorandumFileName: this.getCreateMemorandumStep?.memorandumFile?.name || null,
+          memorandumFileSize: this.getCreateMemorandumStep?.memorandumFile?.size || null,
+          memorandumFileLastModified: this.getCreateMemorandumStep?.memorandumFile?.lastModified || null,
           memorandumConfirmed: this.getCreateMemorandumStep.memorandumConfirmed || false
         }
         break
@@ -241,13 +248,13 @@ export default class FilingTemplateMixin extends DateMixin {
         this.setCooperativeType(draftFiling.incorporationApplication.cooperative?.cooperativeAssociationType)
 
         // restore Rules
-        let rulesDoc = null as DocIF
+        let rulesFile = null as File
         if (draftFiling.incorporationApplication.cooperative?.rulesFileKey) {
-          rulesDoc = {
+          rulesFile = {
             name: draftFiling.incorporationApplication.cooperative?.rulesFileName,
             lastModified: draftFiling.incorporationApplication.cooperative?.rulesFileLastModified,
             size: draftFiling.incorporationApplication.cooperative?.rulesFileSize
-          }
+          } as File
         }
         const createRules: CreateRulesIF = {
           validationDetail: {
@@ -255,19 +262,19 @@ export default class FilingTemplateMixin extends DateMixin {
             validationItemDetails: []
           },
           rulesConfirmed: draftFiling.incorporationApplication.cooperative?.rulesConfirmed,
-          rulesDoc,
+          rulesFile,
           docKey: draftFiling.incorporationApplication.cooperative?.rulesFileKey
         }
         this.setRules(createRules)
 
         // restore Memorandum
-        let memorandumDoc = null as DocIF
+        let memorandumFile = null as File
         if (draftFiling.incorporationApplication.cooperative?.memorandumFileKey) {
-          memorandumDoc = {
+          memorandumFile = {
             name: draftFiling.incorporationApplication.cooperative?.memorandumFileName,
             lastModified: draftFiling.incorporationApplication.cooperative?.memorandumFileLastModified,
             size: draftFiling.incorporationApplication.cooperative?.memorandumFileSize
-          }
+          } as File
         }
         const createMemorandum: CreateMemorandumIF = {
           validationDetail: {
@@ -275,7 +282,7 @@ export default class FilingTemplateMixin extends DateMixin {
             validationItemDetails: []
           },
           memorandumConfirmed: draftFiling.incorporationApplication.cooperative?.memorandumConfirmed,
-          memorandumDoc,
+          memorandumFile,
           docKey: draftFiling.incorporationApplication.cooperative?.memorandumFileKey
         }
         this.setMemorandum(createMemorandum)
@@ -713,9 +720,9 @@ export default class FilingTemplateMixin extends DateMixin {
           ...filing.dissolution,
           dissolutionStatementType: this.getDissolutionStatementStep.dissolutionStatementType || null,
           affidavitFileKey: this.getAffidavitStep.docKey || null,
-          affidavitFileName: this.getAffidavitStep.affidavitDoc?.name || null,
-          affidavitFileSize: this.getAffidavitStep.affidavitDoc?.size || null,
-          affidavitFileLastModified: this.getAffidavitStep.affidavitDoc?.lastModified || null
+          affidavitFileName: this.getAffidavitStep.affidavitFile?.name || null,
+          affidavitFileSize: this.getAffidavitStep.affidavitFile?.size || null,
+          affidavitFileLastModified: this.getAffidavitStep.affidavitFile?.lastModified || null
         }
         filing.specialResolution = {
           ...filing.specialResolution,
@@ -854,13 +861,13 @@ export default class FilingTemplateMixin extends DateMixin {
     // }
 
     // restore Affidavit
-    let affidavitDoc = null as DocIF
+    let affidavitFile = null as File
     if (draftFiling.dissolution?.affidavitFileKey) {
-      affidavitDoc = {
+      affidavitFile = {
         name: draftFiling.dissolution.affidavitFileName,
         lastModified: draftFiling.dissolution.affidavitFileLastModified,
         size: draftFiling.dissolution.affidavitFileSize
-      }
+      } as File
     }
     const uploadAffidavit: UploadAffidavitIF = {
       validationDetail: {
@@ -868,7 +875,7 @@ export default class FilingTemplateMixin extends DateMixin {
         validationItemDetails: []
       },
       affidavitConfirmed: draftFiling.dissolution?.affidavitConfirmed,
-      affidavitDoc,
+      affidavitFile,
       docKey: draftFiling.dissolution?.affidavitFileKey
     }
     this.setAffidavit(uploadAffidavit)

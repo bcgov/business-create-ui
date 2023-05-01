@@ -73,17 +73,17 @@
       </article>
 
       <!-- Folio or Reference Number -->
-      <!-- DISABLED PER TICKET # 12306 -->
-      <!-- <template v-if="isPremiumAccount">
-        <v-divider class="mx-6" />
+      <template v-if="isPremiumAccount">
+        <!-- DISABLED PER TICKET # 12306 -->
+        <!-- <v-divider class="mx-6" />
 
         <article class="section-container">
           <FolioNumber
             :initialValue="getFolioNumber"
             :isEditing="false"
           />
-        </article>
-      </template> -->
+        </article> -->
+      </template>
 
       <v-divider class="mx-6" />
 
@@ -103,8 +103,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component } from 'vue-property-decorator'
+import { Component, Mixins } from 'vue-property-decorator'
 import { Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { ContactPointIF, RegistrationStateIF } from '@/interfaces'
@@ -121,19 +120,16 @@ import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module
     BusinessAddresses,
     BusinessContactInfo,
     FolioNumber
-  },
-  mixins: [
-    DateMixin
-  ]
+  }
 })
-export default class DefineRegistrationSummary extends Vue {
+export default class DefineRegistrationSummary extends Mixins(DateMixin) {
   // Getters
-  @Getter(useStore) getNameRequestApprovedName!: string
-  // @Getter(useStore) isPremiumAccount!: boolean // DISABLED PER TICKET # 12306
   @Getter(useStore) getBusinessContact!: ContactPointIF
-  @Getter(useStore) getFolioNumber!: string
-  @Getter(useStore) getRegistration!: RegistrationStateIF
   @Getter(useStore) getEntityType!: CorpTypeCd
+  @Getter(useStore) getFolioNumber!: string
+  @Getter(useStore) getNameRequestApprovedName!: string
+  @Getter(useStore) getRegistration!: RegistrationStateIF
+  @Getter(useStore) isPremiumAccount!: boolean
   @Getter(useStore) isTypePartnership: boolean
 
   /** The entity description. */

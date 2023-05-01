@@ -45,14 +45,13 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component, Watch } from 'vue-property-decorator'
+import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { Getter, Action } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { ActionBindingIF, AddressIF, ContactPointIF, DefineCompanyIF, RegisteredRecordsAddressesIF }
   from '@/interfaces'
 import { CommonMixin } from '@/mixins'
-import { CoopTypes, RouteNames } from '@/enums'
+import { RouteNames } from '@/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/enums/'
 import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
 import OfficeAddresses from '@/components/common/OfficeAddresses.vue'
@@ -61,25 +60,23 @@ import OfficeAddresses from '@/components/common/OfficeAddresses.vue'
   components: {
     BusinessContactInfo,
     OfficeAddresses
-  },
-  mixins: [
-    CommonMixin
-  ]
+  }
 })
-export default class RestorationBusinessInformation extends Vue {
-  @Getter(useStore) isEntityType!: boolean
-  @Getter(useStore) isBaseCompany!: boolean
+export default class RestorationBusinessInformation extends Mixins(CommonMixin) {
+  @Getter(useStore) getBusinessContact!: ContactPointIF
   @Getter(useStore) getDefineCompanyStep!: DefineCompanyIF
   @Getter(useStore) getShowErrors!: boolean
-  @Getter(useStore) getBusinessContact!: ContactPointIF
+  @Getter(useStore) isBaseCompany!: boolean
+  @Getter(useStore) isEntityType!: boolean
 
   @Action(useStore) setBusinessContact!: ActionBindingIF
-  @Action(useStore) setOfficeAddresses!: ActionBindingIF
   @Action(useStore) setDefineCompanyStepValidity!: ActionBindingIF
   @Action(useStore) setIgnoreChanges!: ActionBindingIF
+  @Action(useStore) setOfficeAddresses!: ActionBindingIF
 
-  protected businessContactFormValid = false
-  protected addressFormValid = false
+  // Local variables
+  businessContactFormValid = false
+  addressFormValid = false
 
   // Enum for template
   readonly CorpTypeCd = CorpTypeCd
@@ -99,7 +96,7 @@ export default class RestorationBusinessInformation extends Vue {
     }
 
     // watch data changes once page has loaded (in next tick)
-    Vue.nextTick(() => {
+    this.$nextTick(() => {
       this.setIgnoreChanges(false)
     })
   }
@@ -153,7 +150,7 @@ export default class RestorationBusinessInformation extends Vue {
     }
   }
 
-  private onBusinessContactFormValidityChange (valid: boolean): void {
+  onBusinessContactFormValidityChange (valid: boolean): void {
     this.businessContactFormValid = valid
     this.setDefineCompanyStepValidity(
       this.businessContactFormValid &&
@@ -161,7 +158,7 @@ export default class RestorationBusinessInformation extends Vue {
     )
   }
 
-  private onAddressFormValidityChange (valid: boolean): void {
+  onAddressFormValidityChange (valid: boolean): void {
     this.addressFormValid = valid
     this.setDefineCompanyStepValidity(
       this.businessContactFormValid &&
@@ -173,7 +170,7 @@ export default class RestorationBusinessInformation extends Vue {
   private async scrollToInvalidComponent (): Promise<void> {
     if (this.getShowErrors && this.$route.name === RouteNames.RESTORATION_BUSINESS_INFORMATION) {
       // scroll to invalid components
-      await Vue.nextTick()
+      await this.$nextTick()
       await this.validateAndScroll(
         {
           addressFormValid: this.addressFormValid,

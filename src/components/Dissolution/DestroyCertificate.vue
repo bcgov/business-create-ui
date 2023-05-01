@@ -49,8 +49,7 @@
 
 <script lang="ts">
 // Libraries
-import Vue from 'vue'
-import { Component, Prop } from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 
@@ -68,7 +67,7 @@ export default class DestroyCertificate extends Vue {
   @Prop({ default: false }) readonly showErrorSummary!: boolean
   @Prop({ default: false }) readonly isSummary!: boolean
 
-  protected hasCertificateDestroyed = false
+  hasCertificateDestroyed = false
 
   readonly destroyCertificateDescription = `Certificates of incorporation, name change, and amalgamation for
     the Cooperative Association will be deleted and/or destroyed after dissolution.`

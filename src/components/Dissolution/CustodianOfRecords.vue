@@ -213,8 +213,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component, Emit, Prop, Watch } from 'vue-property-decorator'
+import { Component, Emit, Mixins, Prop, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { CoopOfficeAddressSchema, OfficeAddressSchema } from '@/schemas'
@@ -229,12 +228,9 @@ import { cloneDeep } from 'lodash'
   components: {
     DeliveryAddress: BaseAddress,
     MailingAddress: BaseAddress
-  },
-  mixins: [
-    CommonMixin
-  ]
+  }
 })
-export default class CustodianOfRecords extends Vue {
+export default class CustodianOfRecords extends Mixins(CommonMixin) {
   // Refs for root form and base address components to access form validation
   $refs!: {
     addCustodianForm: FormIF
@@ -245,21 +241,21 @@ export default class CustodianOfRecords extends Vue {
   @Prop({ default: false }) readonly isSummary!: boolean
   @Prop({ default: false }) readonly showErrors!: boolean
 
+  @Getter(useStore) getCustodialRecordsResources!: CustodianResourceIF
   @Getter(useStore) getDissolutionCustodian!: OrgPersonIF
   @Getter(useStore) getDissolutionCustodianEmail!: string
-  @Getter(useStore) getCustodialRecordsResources!: CustodianResourceIF
   @Getter(useStore) isTypeCoop!: boolean
 
   @Action(useStore) setCustodianOfRecords: ActionBindingIF
 
   // Local properties
-  protected addCustodianValid = true
-  protected custodian = null as OrgPersonIF
-  protected defaultAddress = null as AddressIF
+  addCustodianValid = true
+  custodian = null as OrgPersonIF
+  private defaultAddress = null as AddressIF
 
   // Validation events from BaseAddress:
-  protected mailingAddressValid = true
-  protected deliveryAddressValid = true
+  private mailingAddressValid = true
+  private deliveryAddressValid = true
 
   // Schema and rules for template
   readonly OfficeAddressSchema = OfficeAddressSchema
@@ -350,7 +346,7 @@ export default class CustodianOfRecords extends Vue {
   }
 
   /** Keep local custodian addresses in sync with base address common component. */
-  protected syncAddresses (baseAddress: AddressIF, newAddress: AddressIF): void {
+  syncAddresses (baseAddress: AddressIF, newAddress: AddressIF): void {
     Object.assign(baseAddress, newAddress)
     if (this.inheritMailingAddress) {
       this.custodian.deliveryAddress = { ...newAddress }
@@ -358,7 +354,7 @@ export default class CustodianOfRecords extends Vue {
   }
 
   /** Sync party type selection with store and reset the unselected party type fields. */
-  protected syncCustodianPartyType (partyType: PartyTypes): void {
+  syncCustodianPartyType (partyType: PartyTypes): void {
     this.custodian.officer.partyType = partyType
     switch (partyType) {
       case PartyTypes.PERSON:
@@ -377,7 +373,7 @@ export default class CustodianOfRecords extends Vue {
    * @param addressToValidate the address to set the validity of
    * @param isValid a boolean indicating the validity of the address
    */
-  protected updateAddressValid (addressToValidate: string, isValid: boolean): void {
+  updateAddressValid (addressToValidate: string, isValid: boolean): void {
     switch (addressToValidate) {
       case 'mailingAddress':
         this.mailingAddressValid = isValid
@@ -386,6 +382,7 @@ export default class CustodianOfRecords extends Vue {
         this.deliveryAddressValid = isValid
         break
       default:
+        // eslint-disable-next-line no-console
         console.log(`Error: Address- ${addressToValidate} not found`)
     }
   }

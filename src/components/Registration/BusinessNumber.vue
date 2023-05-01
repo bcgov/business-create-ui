@@ -42,8 +42,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component, Emit, Prop, Watch } from 'vue-property-decorator'
+import { Component, Emit, Prop, Vue, Watch } from 'vue-property-decorator'
 import { mask } from 'vue-the-mask'
 import { FormIF } from '@/interfaces'
 import { Rules } from '@/rules'
@@ -82,10 +81,10 @@ export default class BusinessNumber extends Vue {
   @Prop({ default: false }) readonly isTypeSoleProp!: boolean
 
   // Local variables
-  protected enableRules = false
-  protected errorMessages = []
-  protected valid = true
-  protected value: string = null
+  enableRules = false
+  errorMessages = [] as any
+  valid = true
+  value = null as string
 
   /** Called when component is mounted. */
   mounted (): void {
@@ -95,7 +94,7 @@ export default class BusinessNumber extends Vue {
   }
 
   /** Called on init and when user leaves the text field. */
-  protected onBlur (): void {
+  onBlur (): void {
     // enable or disable validation + validate
     this.enableRules = Boolean(this.value) // false if value has been cleared
     this.valid = this.validate()

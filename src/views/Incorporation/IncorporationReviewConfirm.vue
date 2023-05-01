@@ -153,8 +153,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component } from 'vue-property-decorator'
+import { Component, Vue } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { ActionBindingIF, ContactPointIF, CertifyIF, EffectiveDateTimeIF, IncorporationAgreementIF,
@@ -191,24 +190,24 @@ import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module
 export default class IncorporationReviewConfirm extends Vue {
   @Getter(useStore) getBusinessContact!: ContactPointIF
   @Getter(useStore) getCertifyState!: CertifyIF
-  @Getter(useStore) getCourtOrderStep!: CourtOrderStepIF
-  @Getter(useStore) getValidateSteps!: boolean
-  @Getter(useStore) isTypeBcUlcCompany!: boolean
-  @Getter(useStore) isBaseCompany!: boolean
-  @Getter(useStore) isTypeCoop!: boolean
-  @Getter(useStore) isRoleStaff!: boolean
-  @Getter(useStore) getEffectiveDateTime!: EffectiveDateTimeIF
-  @Getter(useStore) getUserEmail!: string
-  @Getter(useStore) getCreateShareStructureStep!: ShareStructureIF
-  @Getter(useStore) getIncorporationAgreementStep!: IncorporationAgreementIF
   @Getter(useStore) getCompanyDisplayName!: string
+  @Getter(useStore) getCourtOrderStep!: CourtOrderStepIF
+  @Getter(useStore) getCreateShareStructureStep!: ShareStructureIF
+  @Getter(useStore) getEffectiveDateTime!: EffectiveDateTimeIF
   @Getter(useStore) getEntityType!: CorpTypeCd
+  @Getter(useStore) getIncorporationAgreementStep!: IncorporationAgreementIF
+  @Getter(useStore) getUserEmail!: string
+  @Getter(useStore) getValidateSteps!: boolean
+  @Getter(useStore) isBaseCompany!: boolean
+  @Getter(useStore) isRoleStaff!: boolean
+  @Getter(useStore) isTypeBcUlcCompany!: boolean
+  @Getter(useStore) isTypeCoop!: boolean
 
   @Action(useStore) setCertifyState!: ActionBindingIF
   @Action(useStore) setCourtOrderFileNumber!: ActionBindingIF
   @Action(useStore) setCourtOrderValidity!: ActionBindingIF
-  @Action(useStore) setEffectiveDateTimeValid!: ActionBindingIF
   @Action(useStore) setEffectiveDate!: ActionBindingIF
+  @Action(useStore) setEffectiveDateTimeValid!: ActionBindingIF
   @Action(useStore) setHasPlanOfArrangement!: ActionBindingIF
   @Action(useStore) setIsFutureEffective!: ActionBindingIF
 

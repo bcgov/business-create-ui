@@ -18,8 +18,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component } from 'vue-property-decorator'
+import { Component, Vue } from 'vue-property-decorator'
 import { Getter, Action } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { ActionBindingIF, RestorationStateIF } from '@/interfaces'
@@ -35,11 +34,11 @@ export default class ApprovalType extends Vue {
   @Getter(useStore) getRestoration!: RestorationStateIF
   @Getter(useStore) getShowErrors!: boolean
 
+  @Action(useStore) setApprovalTypeValid!: ActionBindingIF
+  @Action(useStore) setRestorationApplicationDate!: ActionBindingIF
   @Action(useStore) setRestorationApprovalType!: ActionBindingIF
   @Action(useStore) setRestorationCourtOrder!: ActionBindingIF
   @Action(useStore) setRestorationNoticeDate!: ActionBindingIF
-  @Action(useStore) setRestorationApplicationDate!: ActionBindingIF
-  @Action(useStore) setApprovalTypeValid!: ActionBindingIF
 
   /** This section's validity state (when prompted by app). */
   get invalidSection (): boolean {

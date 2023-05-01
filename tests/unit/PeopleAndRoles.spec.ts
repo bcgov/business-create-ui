@@ -8,6 +8,7 @@ import { useStore } from '@/store/store'
 import { createLocalVue, mount } from '@vue/test-utils'
 import PeopleAndRoles from '@/components/common/PeopleAndRoles.vue'
 import { IncorporationResourceBen } from '@/resources/Incorporation/BEN'
+import { ResourceIF } from '@/interfaces'
 
 Vue.use(Vuetify)
 Vue.use(Vuelidate)
@@ -74,7 +75,7 @@ describe('People And Roles component', () => {
     localVue.use(VueRouter)
     const router = mockRouter.mock()
 
-    store.resourceModel = IncorporationResourceBen
+    store.resourceModel = IncorporationResourceBen as ResourceIF
 
     wrapperFactory = () => {
       return mount(PeopleAndRoles, {

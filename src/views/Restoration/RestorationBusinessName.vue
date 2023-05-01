@@ -29,8 +29,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component, Watch } from 'vue-property-decorator'
+import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { Getter, Action } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { ActionBindingIF } from '@/interfaces'
@@ -50,12 +49,9 @@ import RestorationType from '@/components/Restoration/RestorationType.vue'
     BusinessType,
     NameTranslations,
     RestorationType
-  },
-  mixins: [
-    CommonMixin
-  ]
+  }
 })
-export default class RestorationBusinessName extends Vue {
+export default class RestorationBusinessName extends Mixins(CommonMixin) {
   @Getter(useStore) getApprovalTypeValid!: boolean
   @Getter(useStore) getBusinessNameValid!: boolean
   @Getter(useStore) getNameTranslationsValid!: boolean
@@ -91,7 +87,7 @@ export default class RestorationBusinessName extends Vue {
     this.setIgnoreChanges(true)
 
     // watch data changes once page has loaded (in next tick)
-    Vue.nextTick(() => {
+    this.$nextTick(() => {
       this.setIgnoreChanges(false)
     })
   }
@@ -100,7 +96,7 @@ export default class RestorationBusinessName extends Vue {
   private async scrollToInvalidComponent (): Promise<void> {
     if (this.getShowErrors && this.$route.name === RouteNames.RESTORATION_BUSINESS_NAME) {
       // scroll to invalid components
-      await Vue.nextTick()
+      await this.$nextTick()
       await this.validateAndScroll(this.validFlags, this.validComponents)
     }
   }

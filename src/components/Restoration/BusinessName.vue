@@ -41,14 +41,12 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component, Watch } from 'vue-property-decorator'
+import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
-import { ActionBindingIF, EmptyNameRequest, NrApplicantIF, NameRequestIF } from '@/interfaces/'
-import { ContactPointIF } from '@bcrs-shared-components/interfaces/'
+import { ActionBindingIF, EmptyNameRequest, NameRequestIF } from '@/interfaces/'
 import { CommonMixin, DateMixin, NameRequestMixin } from '@/mixins/'
-import { CoopTypes, NrRequestActionCodes } from '@/enums/'
+import { NrRequestActionCodes } from '@/enums/'
 import { CorpTypeCd, CorrectNameOptions } from '@bcrs-shared-components/enums/'
 import { LegalServices } from '@/services/'
 import { CorrectName } from '@bcrs-shared-components/correct-name/'
@@ -58,14 +56,9 @@ import NameRequestInfo from '@/components/common/NameRequestInfo.vue'
   components: {
     CorrectName,
     NameRequestInfo
-  },
-  mixins: [
-    CommonMixin,
-    DateMixin,
-    NameRequestMixin
-  ]
+  }
 })
-export default class BusinessName extends Vue {
+export default class BusinessName extends Mixins(CommonMixin, DateMixin, NameRequestMixin) {
   // Global getters
   @Getter(useStore) getBusinessId!: string
   @Getter(useStore) getBusinessLegalName!: string
@@ -82,9 +75,8 @@ export default class BusinessName extends Vue {
   @Action(useStore) setNameRequest!: ActionBindingIF
   @Action(useStore) setNameRequestApprovedName!: ActionBindingIF
 
-  protected dropdown: boolean = null
-  protected correctNameChoices: Array<string> = []
-  protected formType: CorrectNameOptions = null
+  // Local variable
+  formType: CorrectNameOptions = null
 
   /** The company name. */
   get companyName (): string {
@@ -131,7 +123,7 @@ export default class BusinessName extends Vue {
   }
 
   /** Reset company name values to original. */
-  protected resetName (): void {
+  resetName (): void {
     // clear out existing data
     this.setNameRequest(EmptyNameRequest)
     this.setNameRequestApprovedName(null)
@@ -148,7 +140,7 @@ export default class BusinessName extends Vue {
    * @param email the email address to match
    * @returns a promise to return the NR, or throws a printable error
    */
-  protected async fetchAndValidateNr (nrNum: string, phone: string, email: string): Promise<NameRequestIF> {
+  async fetchAndValidateNr (nrNum: string, phone: string, email: string): Promise<NameRequestIF> {
     const nameRequest = await LegalServices.fetchNameRequest(nrNum)
     if (!nameRequest) throw new Error('Error fetching Name Request')
 
@@ -157,13 +149,13 @@ export default class BusinessName extends Vue {
   }
 
   /** On company name update, sets store accordingly. */
-  protected onUpdateCompanyName (name: string): void {
+  onUpdateCompanyName (name: string): void {
     this.setCorrectNameOption(this.formType)
     this.setNameRequestApprovedName(name)
   }
 
   /** On name request update, sets store accordingly. */
-  protected onUpdateNameRequest (nameRequest: NameRequestIF): void {
+  onUpdateNameRequest (nameRequest: NameRequestIF): void {
     this.setNameRequest(nameRequest)
   }
 

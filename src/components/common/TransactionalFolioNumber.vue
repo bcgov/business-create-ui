@@ -26,18 +26,13 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component, Emit, Prop, Watch } from 'vue-property-decorator'
+import { Component, Emit, Mixins, Prop, Watch } from 'vue-property-decorator'
 import { CommonMixin } from '@/mixins'
 import { FormFieldType } from '@/interfaces'
 import { Rules } from '@/rules'
 
-@Component({
-  mixins: [
-    CommonMixin
-  ]
-})
-export default class TransactionalFolioNumber extends Vue {
+@Component({})
+export default class TransactionalFolioNumber extends Mixins(CommonMixin) {
   // Refs
   $refs!: {
     folioNumberInput: FormFieldType
@@ -52,7 +47,7 @@ export default class TransactionalFolioNumber extends Vue {
   readonly Rules = Rules
 
   // Local properties
-  protected localFolioNumber = ''
+  localFolioNumber = ''
 
   /** Called when component is mounted. */
   mounted (): void {

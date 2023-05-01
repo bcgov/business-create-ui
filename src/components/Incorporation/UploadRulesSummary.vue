@@ -18,7 +18,7 @@
           <v-icon class="upload-success-chk">mdi-check</v-icon>
         </v-col>
         <v-col md="11" id="file-name-col">
-          <span id="file-name" v-if="getCreateRulesStep.rulesDoc" >{{getCreateRulesStep.rulesDoc.name}}</span>
+          <span id="file-name" v-if="getCreateRulesStep.rulesFile" >{{getCreateRulesStep.rulesFile.name}}</span>
         </v-col>
       </v-row>
     </div>
@@ -27,8 +27,7 @@
 
 <script lang="ts">
 // Libraries
-import Vue from 'vue'
-import { Component } from 'vue-property-decorator'
+import { Component, Vue } from 'vue-property-decorator'
 import { Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 

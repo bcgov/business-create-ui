@@ -97,7 +97,7 @@
       />
     </v-card>
 
-    <v-card flat v-if="this.shareClasses.length > 0">
+    <v-card flat v-if="shareClasses.length > 0">
       <ListShareClass
         :shareClasses="shareClasses"
         :componentDisabled="showShareStructureForm"
@@ -112,14 +112,12 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component, Watch } from 'vue-property-decorator'
+import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { v4 as uuidv4 } from 'uuid'
-import {
-  ActionBindingIF, NewShareClass, NewShareSeries, ShareClassIF, ShareStructureIF
-} from '@/interfaces'
+import { ActionBindingIF, NewShareClass, NewShareSeries, ShareClassIF, ShareStructureIF }
+  from '@/interfaces'
 import { CommonMixin } from '@/mixins'
 import { RouteNames } from '@/enums'
 import ListShareClass from '@/components/Incorporation/ListShareClass.vue'
@@ -129,17 +127,14 @@ import ShareStructure from '@/components/Incorporation/ShareStructure.vue'
   components: {
     ListShareClass,
     ShareStructure
-  },
-  mixins: [
-    CommonMixin
-  ]
+  }
 })
-export default class IncorporationShareStructure extends Vue {
+export default class IncorporationShareStructure extends Mixins(CommonMixin) {
   @Getter(useStore) getCreateShareStructureStep!: ShareStructureIF
   @Getter(useStore) getShowErrors!: boolean
 
-  @Action(useStore) setShareClasses!: ActionBindingIF
   @Action(useStore) setCreateShareStructureStepValidity!: ActionBindingIF
+  @Action(useStore) setShareClasses!: ActionBindingIF
 
   readonly sharesHelpSample: ShareClassIF[] = [{
     id: '1',
@@ -158,13 +153,12 @@ export default class IncorporationShareStructure extends Vue {
   readonly helpLink = 'https://www2.gov.bc.ca/gov/content/employment-business/business/' +
     'managing-a-business/permits-licences/businesses-incorporated-companies'
 
-  protected showShareStructureForm = false
-  protected currentShareStructure = null as ShareClassIF
-
-  protected activeIndex = -1
-  protected parentIndex = -1
-  protected shareId = ''
-  protected helpToggle = false
+  showShareStructureForm = false
+  currentShareStructure = null as ShareClassIF
+  activeIndex = -1
+  parentIndex = -1
+  shareId = ''
+  helpToggle = false
 
   get shareClasses (): ShareClassIF[] {
     return this.getCreateShareStructureStep.shareClasses
@@ -179,7 +173,7 @@ export default class IncorporationShareStructure extends Vue {
   // Event Handlers
   //
 
-  protected initNewShareClass (): void {
+  initNewShareClass (): void {
     this.currentShareStructure = { ...NewShareClass }
     this.currentShareStructure.priority =
     this.shareClasses.length === 0 ? 1 : this.shareClasses[this.shareClasses.length - 1].priority + 1
@@ -189,14 +183,14 @@ export default class IncorporationShareStructure extends Vue {
     this.showShareStructureForm = true
   }
 
-  protected initShareClassForEdit (index: number): void {
+  initShareClassForEdit (index: number): void {
     this.currentShareStructure = { ...this.shareClasses[index] }
     this.activeIndex = index
     this.parentIndex = -1
     this.showShareStructureForm = true
   }
 
-  protected initNewShareSeries (shareClassIndex: number): void {
+  initNewShareSeries (shareClassIndex: number): void {
     this.activeIndex = -1
     this.parentIndex = shareClassIndex
 
@@ -213,7 +207,7 @@ export default class IncorporationShareStructure extends Vue {
     this.showShareStructureForm = true
   }
 
-  protected addEditShareClass (shareStructure: ShareClassIF): void {
+  addEditShareClass (shareStructure: ShareClassIF): void {
     const newList: ShareClassIF[] = [...this.shareClasses]
     // New Share Structue.
     if (this.activeIndex === -1) {
@@ -227,7 +221,7 @@ export default class IncorporationShareStructure extends Vue {
     this.resetData()
   }
 
-  protected editSeries (index: number, seriesIndex: number): void {
+  editSeries (index: number, seriesIndex: number): void {
     this.activeIndex = seriesIndex
     this.parentIndex = index
     const newList: ShareClassIF[] = [...this.shareClasses]
@@ -235,7 +229,7 @@ export default class IncorporationShareStructure extends Vue {
     this.showShareStructureForm = true
   }
 
-  protected removeSeries (index: number, seriesIndex: number): void {
+  removeSeries (index: number, seriesIndex: number): void {
     this.activeIndex = seriesIndex
     this.parentIndex = index
     const newList: ShareClassIF[] = [...this.shareClasses]
@@ -247,7 +241,7 @@ export default class IncorporationShareStructure extends Vue {
     this.resetData()
   }
 
-  protected addEditShareSeries (shareSeries: ShareClassIF): void {
+  addEditShareSeries (shareSeries: ShareClassIF): void {
     const newList: ShareClassIF[] = [...this.shareClasses]
     const parentShareClass = newList[this.parentIndex]
     const series = [...parentShareClass.series]
@@ -263,7 +257,7 @@ export default class IncorporationShareStructure extends Vue {
     this.resetData()
   }
 
-  protected removeShareClass (index: number): void {
+  removeShareClass (index: number): void {
     const newList: ShareClassIF[] = [...this.shareClasses]
     newList.splice(index, 1)
     this.setShareClasses(newList)
@@ -271,7 +265,7 @@ export default class IncorporationShareStructure extends Vue {
     this.resetData()
   }
 
-  protected resetData (): void {
+  resetData (): void {
     this.currentShareStructure = null
     this.activeIndex = -1
     this.showShareStructureForm = false

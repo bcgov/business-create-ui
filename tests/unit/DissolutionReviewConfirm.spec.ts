@@ -53,6 +53,8 @@ for (const test of reviewConfirmTestCases) {
 
       // verify page content
       expect(wrapper.find('h2').text()).toBe('Review and Confirm')
+
+      wrapper.destroy()
     })
 
     it('displays Effective Date Time section for corp', () => {
@@ -68,6 +70,8 @@ for (const test of reviewConfirmTestCases) {
 
       const expected = (test.entityType !== 'CP')
       expect(wrapper.find('#effective-date-time-container').exists()).toBe(expected)
+
+      wrapper.destroy()
     })
 
     it('displays Affidavit section', () => {
@@ -80,6 +84,8 @@ for (const test of reviewConfirmTestCases) {
       )
 
       expect(wrapper.find('#affidavit-summary').exists()).toBe(true)
+
+      wrapper.destroy()
     })
 
     it('displays Resolution section', () => {
@@ -90,7 +96,10 @@ for (const test of reviewConfirmTestCases) {
         null,
         DissolutionResources
       )
+
       expect(wrapper.find('#resolution-summary').exists()).toBe(true)
+
+      wrapper.destroy()
     })
 
     it('displays Documents Delivery section', () => {
@@ -103,6 +112,8 @@ for (const test of reviewConfirmTestCases) {
       )
 
       expect(wrapper.find('#document-delivery-section').exists()).toBe(true)
+
+      wrapper.destroy()
     })
 
     it('displays Folio Number section only for premium', () => {
@@ -118,6 +129,8 @@ for (const test of reviewConfirmTestCases) {
       )
 
       expect(wrapper.find('#folio-number-section').exists()).toBe(test.isPremium)
+
+      wrapper.destroy()
     })
 
     it('displays Certify section', () => {
@@ -130,6 +143,8 @@ for (const test of reviewConfirmTestCases) {
       )
 
       expect(wrapper.find('#certify-section').exists()).toBe(true)
+
+      wrapper.destroy()
     })
 
     it('displays Court Order and Plan of Arrangement section only for staff', () => {
@@ -145,6 +160,8 @@ for (const test of reviewConfirmTestCases) {
       )
 
       expect(wrapper.find('#court-order-poa-section').exists()).toBe(test.isStaff)
+
+      wrapper.destroy()
     })
 
     it('displays Staff Payment section only for staff', () => {
@@ -160,6 +177,8 @@ for (const test of reviewConfirmTestCases) {
       )
 
       expect(wrapper.find('#staff-payment-section').exists()).toBe(test.isStaff)
+
+      wrapper.destroy()
     })
 
     // FUTURE: Expand unit testing for validation on step 5. Include routing to appropriate steps from error links.

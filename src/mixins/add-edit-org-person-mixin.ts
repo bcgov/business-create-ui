@@ -1,5 +1,4 @@
-import Vue from 'vue'
-import { Component, Emit, Prop } from 'vue-property-decorator'
+import { Component, Emit, Prop, Vue } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { cloneDeep, isEqual } from 'lodash'
@@ -32,40 +31,39 @@ export default class AddEditOrgPersonMixin extends Vue {
   @Prop({ required: true }) readonly existingCompletingParty!: OrgPersonIF
 
   @Getter(useStore) getCurrentDate!: string
-  @Getter(useStore) isRoleStaff!: boolean
-  @Getter(useStore) isSbcStaff!: boolean
-  @Getter(useStore) isBaseCompany!: boolean
-  @Getter(useStore) isTypeBcomp!: boolean
-  @Getter(useStore) isTypeCoop!: boolean
-  @Getter(useStore) isTypeSoleProp!: boolean
-  @Getter(useStore) isTypePartnership!: boolean
   @Getter(useStore) getEntityType!: CorpTypeCd
   @Getter(useStore) getPeopleAndRolesResource!: PeopleAndRolesResourceIF
   @Getter(useStore) getRegistration!: RegistrationStateIF
+  @Getter(useStore) isBaseCompany!: boolean
   @Getter(useStore) isFullRestorationFiling!: boolean
   @Getter(useStore) isLimitedRestorationFiling: boolean
+  @Getter(useStore) isRoleStaff!: boolean
+  @Getter(useStore) isSbcStaff!: boolean
+  @Getter(useStore) isTypeBcomp!: boolean
+  @Getter(useStore) isTypeCoop!: boolean
+  @Getter(useStore) isTypePartnership!: boolean
+  @Getter(useStore) isTypeSoleProp!: boolean
 
   @Action(useStore) setAddPeopleAndRoleStepValidity!: ActionBindingIF
-  @Action(useStore) setRegistrationBusinessNumber!: ActionBindingIF
   @Action(useStore) setIsAutoPopulatedBusinessNumber!: ActionBindingIF
+  @Action(useStore) setRegistrationBusinessNumber!: ActionBindingIF
 
   // Local properties
-  protected orgPerson = null as OrgPersonIF
-  protected addPersonOrgFormValid = true
-  protected enableRules = false
-
-  protected inProgressBusinessLookup = EmptyBusinessLookup
+  orgPerson = null as OrgPersonIF
+  addPersonOrgFormValid = true
+  enableRules = false
+  inProgressBusinessLookup = EmptyBusinessLookup
 
   // Address related properties
-  protected inProgressMailingAddress = {} as AddressIF
-  protected inProgressDeliveryAddress = {} as AddressIF
-  protected inheritMailingAddress = true
-  protected mailingAddressValid = false
-  protected deliveryAddressValid = false
-  protected reassignCompletingParty = false
+  inProgressMailingAddress = {} as AddressIF
+  inProgressDeliveryAddress = {} as AddressIF
+  inheritMailingAddress = true
+  mailingAddressValid = false
+  deliveryAddressValid = false
+  reassignCompletingParty = false
 
   /** Model value for roles checboxes. */
-  protected selectedRoles = [] as Array<RoleTypes>
+  selectedRoles = [] as Array<RoleTypes>
 
   // Person Address schema for template
   readonly PersonAddressSchema = PersonAddressSchema
@@ -248,7 +246,7 @@ export default class AddEditOrgPersonMixin extends Vue {
   }
 
   /** decide if the "Delivery Address same as Mailing Address" check box should be checked */
-  protected updateSameAsMailingChkBox (): void {
+  updateSameAsMailingChkBox (): void {
     // safety check
     if (!this.isDirector && !this.isProprietor && !this.isPartner) return
 
@@ -266,7 +264,7 @@ export default class AddEditOrgPersonMixin extends Vue {
   }
 
   /** Whether the address object is empty or with only with default input values */
-  protected isEmptyAddress (address: AddressIF): boolean {
+  private isEmptyAddress (address: AddressIF): boolean {
     return !address ||
            (!address.addressCity &&
            (!address.addressCountry || address.addressCountry === 'CA') &&
@@ -278,7 +276,7 @@ export default class AddEditOrgPersonMixin extends Vue {
   }
 
   /** Address component event handler - called when mailing address has changed. */
-  protected updateMailingAddress (address: AddressIF): void {
+  updateMailingAddress (address: AddressIF): void {
     // only update if equal
     // (workaround for BaseAddress always telling us there's a new address)
     if (!isEqual(this.inProgressMailingAddress, address)) {
@@ -287,7 +285,7 @@ export default class AddEditOrgPersonMixin extends Vue {
   }
 
   /** Address component event handler - called when delivery address has changed. */
-  protected updateDeliveryAddress (address: AddressIF): void {
+  updateDeliveryAddress (address: AddressIF): void {
     // only update if equal
     // (workaround for BaseAddress always telling us there's a new address)
     if (!isEqual(this.inProgressDeliveryAddress, address)) {
@@ -299,7 +297,7 @@ export default class AddEditOrgPersonMixin extends Vue {
    * Address component event handler - called when it is rendered and when
    * the user has changed a mailing address field.
    */
-  protected updateMailingAddressValidity (valid: boolean): void {
+  updateMailingAddressValidity (valid: boolean): void {
     this.mailingAddressValid = valid
     // validate the main form to update dummy component rules
     this.$refs.addPersonOrgForm && this.$refs.addPersonOrgForm.validate()
@@ -309,13 +307,13 @@ export default class AddEditOrgPersonMixin extends Vue {
    * Address component event handler - called when it is rendered and when
    * the user has changed a delivery address field.
    */
-  protected updateDeliveryAddressValidity (valid: boolean): void {
+  updateDeliveryAddressValidity (valid: boolean): void {
     this.deliveryAddressValid = valid
     // validate the main form to update dummy component rules
     this.$refs.addPersonOrgForm && this.$refs.addPersonOrgForm.validate()
   }
 
-  protected swapIsLookupBusiness (): void {
+  swapIsLookupBusiness (): void {
     this.orgPerson.isLookupBusiness = !this.orgPerson?.isLookupBusiness
   }
 
@@ -323,7 +321,7 @@ export default class AddEditOrgPersonMixin extends Vue {
    * BusinessLookup component event handler - called when it is rendered and when
    * the user undo selected business.
    */
-  protected resetBusinessDetails (): void {
+  resetBusinessDetails (): void {
     this.updateBusinessDetails(EmptyBusinessLookup)
     this.inProgressMailingAddress = {} as AddressIF
     this.inProgressDeliveryAddress = {} as AddressIF
@@ -340,7 +338,7 @@ export default class AddEditOrgPersonMixin extends Vue {
    * BusinessLookup component event handler - called when it is rendered and when
    * the user has selected a business.
    */
-  protected async updateBusinessDetails (businessLookup: BusinessLookupIF): Promise<void> {
+  async updateBusinessDetails (businessLookup: BusinessLookupIF): Promise<void> {
     this.orgPerson.officer.organizationName = businessLookup.name
     this.orgPerson.officer.identifier = businessLookup.identifier
     // sanitize Business Number
@@ -364,7 +362,7 @@ export default class AddEditOrgPersonMixin extends Vue {
     }
   }
 
-  protected async assignCompletingPartyRole (): Promise<void> {
+  async assignCompletingPartyRole (): Promise<void> {
     if (
       this.orgPerson &&
       this.isCompletingParty &&
@@ -394,9 +392,9 @@ export default class AddEditOrgPersonMixin extends Vue {
   }
 
   /** Called when the user clicks the Done button. */
-  protected async validateAddPersonOrgForm (): Promise<void> {
+  async validateAddPersonOrgForm (): Promise<void> {
     this.enableRules = true
-    await Vue.nextTick()
+    await this.$nextTick()
 
     // validate all the forms
     // NB: main form depends on address forms
@@ -503,7 +501,7 @@ export default class AddEditOrgPersonMixin extends Vue {
     return roles
   }
 
-  protected resetAddPersonData (emitEvent: boolean): void {
+  resetAddPersonData (emitEvent: boolean): void {
     // first reset the address form(s)
     this.$refs.mailingAddressNew.$refs.addressForm.reset()
     if (this.$refs.deliveryAddressNew) {
@@ -539,7 +537,7 @@ export default class AddEditOrgPersonMixin extends Vue {
   private emitResetEvent (): void {}
 
   @Emit('removePerson')
-  protected emitRemovePerson (activeIndex: number): number {
+  emitRemovePerson (activeIndex: number): number {
     return activeIndex
   }
 

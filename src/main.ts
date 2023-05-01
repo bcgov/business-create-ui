@@ -4,7 +4,7 @@ import 'regenerator-runtime/runtime' // to use transpiled generator functions
 
 // Vue Libraries
 import Vue from 'vue'
-import Vuetify from 'vuetify/lib'
+import Vuetify from 'vuetify'
 import Vuelidate from 'vuelidate'
 import { getVueRouter } from '@/router'
 import { getPiniaStore, getVuexStore } from '@/store'
@@ -14,15 +14,17 @@ import * as Sentry from '@sentry/vue'
 import VueObserveVisibility from 'vue-observe-visibility' // added to help with rendering of text area heights properly
 import Hotjar from 'vue-hotjar'
 
+// Base App
+// NB: must come before style imports
+import App from '@/App.vue'
+
 // Styles
 // NB: order matters - do not change
+import 'vuetify/dist/vuetify.min.css'
 import '@mdi/font/css/materialdesignicons.min.css' // ensure you are using css-loader
 import '@/assets/styles/base.scss'
 import '@/assets/styles/layout.scss'
 import '@/assets/styles/overrides.scss'
-
-// Base App
-import App from '@/App.vue'
 
 // Helpers
 import { FetchConfig, GetFeatureFlag, InitLdClient, Navigate } from '@/utils'

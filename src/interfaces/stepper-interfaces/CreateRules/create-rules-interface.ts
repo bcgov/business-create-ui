@@ -1,8 +1,8 @@
-import { DocIF, ValidationDetailIF } from '@/interfaces'
+import { ValidationDetailIF } from '@/interfaces'
 
 export interface CreateRulesIF {
   validationDetail: ValidationDetailIF
   rulesConfirmed: boolean
-  rulesDoc: DocIF
+  rulesFile: File
   docKey: string
 }

@@ -35,7 +35,7 @@ describe('Summary Restore Business component', () => {
 
   beforeEach(() => {
     // all valid initial data
-    store.stateModel.businessId = 'BC1234567'
+    store.stateModel.business.businessId = 'BC1234567'
     store.stateModel.entityType = CorpTypeCd.BC_COMPANY
     store.stateModel.business.legalName = 'My Business Name' // not used in this component
     store.stateModel.tombstone.filingType = FilingTypes.RESTORATION

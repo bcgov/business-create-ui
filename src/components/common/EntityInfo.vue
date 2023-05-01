@@ -63,8 +63,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component } from 'vue-property-decorator'
+import { Component, Mixins } from 'vue-property-decorator'
 import { Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { FilingNames, FilingTypes } from '@/enums'
@@ -78,32 +77,29 @@ import { GetCorpFullDescription, GetCorpNumberedDescription } from '@bcrs-shared
 @Component({
   components: {
     StaffComments
-  },
-  mixins: [
-    DateMixin
-  ]
+  }
 })
-export default class EntityInfo extends Vue {
-  @Getter(useStore) getBusinessLegalName!: string
+export default class EntityInfo extends Mixins(DateMixin) {
   @Getter(useStore) getBusinessContact!: ContactPointIF
+  @Getter(useStore) getBusinessId!: string
+  @Getter(useStore) getBusinessFoundingDate!: string
+  @Getter(useStore) getBusinessLegalName!: string
+  @Getter(useStore) getBusinessNumber!: string
   @Getter(useStore) getEntityIdentifier!: string
-  @Getter(useStore) getUserEmail!: string
-  @Getter(useStore) getUserPhone!: string
   @Getter(useStore) getEntityType!: CorpTypeCd
   @Getter(useStore) getFilingName!: FilingNames
-  @Getter(useStore) getNameRequestNumber!: string
-  @Getter(useStore) getNameRequestApprovedName!: string
   @Getter(useStore) getFilingType!: FilingTypes
+  @Getter(useStore) getNameRequestApprovedName!: string
+  @Getter(useStore) getNameRequestNumber!: string
   @Getter(useStore) getRegistration!: RegistrationStateIF
+  @Getter(useStore) getTempId!: string
+  @Getter(useStore) getUserEmail!: string
+  @Getter(useStore) getUserPhone!: string
   @Getter(useStore) isEntityType!: boolean
   @Getter(useStore) isIncorporationFiling!: boolean
   @Getter(useStore) isRegistrationFiling!: boolean
-  @Getter(useStore) getBusinessId!: string
-  @Getter(useStore) getBusinessNumber!: string
   @Getter(useStore) isRoleStaff!: boolean
   @Getter(useStore) isTypeFirm!: boolean
-  @Getter(useStore) getBusinessFoundingDate!: string
-  @Getter(useStore) getTempId!: string
   @Getter(useStore) isTypeSoleProp!: boolean
 
   // declaration for template

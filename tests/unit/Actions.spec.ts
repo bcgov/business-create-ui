@@ -12,6 +12,9 @@ import Actions from '@/components/common/Actions.vue'
 import mockRouter from './MockRouter'
 import LegalServices from '@/services/legal-services'
 import { CorpTypeCd, FilingTypes } from '@/enums'
+import { CourtOrderStepIF, DefineCompanyIF, EffectiveDateTimeIF, IncorporationAgreementIF, NameRequestIF,
+  OrgPersonIF, PeopleAndRoleIF, ShareStructureIF, TombstoneIF } from '@/interfaces'
+import { ShareClassIF } from '@bcrs-shared-components/interfaces'
 
 Vue.use(Vuetify)
 
@@ -89,11 +92,11 @@ describe('Actions component', () => {
     }
     store.stateModel.entityType = CorpTypeCd.BENEFIT_COMPANY
     store.stateModel.nameRequest.legalType = CorpTypeCd.BENEFIT_COMPANY
-    store.stateModel.defineCompanyStep = { valid: true }
-    store.stateModel.addPeopleAndRoleStep = { valid: true }
-    store.stateModel.createShareStructureStep = { valid: true }
-    store.stateModel.incorporationAgreementStep = { valid: true }
-    store.stateModel.effectiveDateTime = { valid: true }
+    store.stateModel.defineCompanyStep = { valid: true } as DefineCompanyIF
+    store.stateModel.addPeopleAndRoleStep = { valid: true } as PeopleAndRoleIF
+    store.stateModel.createShareStructureStep = { valid: true } as ShareStructureIF
+    store.stateModel.incorporationAgreementStep = { valid: true } as IncorporationAgreementIF
+    store.stateModel.effectiveDateTime = { valid: true } as EffectiveDateTimeIF
     await Vue.nextTick()
 
     // verify File and Pay button state
@@ -130,24 +133,24 @@ describe('Emits error event if NR validation fails in file and pay', () => {
     store.stateModel.nameRequest = {
       legalType: CorpTypeCd.BENEFIT_COMPANY,
       nrNum: 'NR 1234567'
-    }
+    } as NameRequestIF
     store.stateModel.nameRequestApprovedName = 'My Name Request Inc.'
     store.stateModel.tombstone = {
       authRoles: [],
       filingType: FilingTypes.INCORPORATION_APPLICATION,
       userEmail: 'completing-party@example.com'
-    }
+    } as TombstoneIF
     store.stateModel.certifyState = {
       valid: true,
       certifiedBy: 'Some certifier'
     }
     store.stateModel.entityType = CorpTypeCd.BENEFIT_COMPANY
-    store.stateModel.defineCompanyStep = { valid: true }
-    store.stateModel.addPeopleAndRoleStep = { valid: true }
-    store.stateModel.createShareStructureStep = { valid: true }
-    store.stateModel.incorporationAgreementStep = { valid: true }
-    store.stateModel.effectiveDateTime = { valid: true }
-    store.stateModel.courtOrderStep = { valid: true }
+    store.stateModel.defineCompanyStep = { valid: true } as DefineCompanyIF
+    store.stateModel.addPeopleAndRoleStep = { valid: true } as PeopleAndRoleIF
+    store.stateModel.createShareStructureStep = { valid: true } as ShareStructureIF
+    store.stateModel.incorporationAgreementStep = { valid: true } as IncorporationAgreementIF
+    store.stateModel.effectiveDateTime = { valid: true } as EffectiveDateTimeIF
+    store.stateModel.courtOrderStep = { valid: true } as CourtOrderStepIF
 
     const localVue = createLocalVue()
     localVue.use(VueRouter)
@@ -254,7 +257,7 @@ describe('Actions component - Filing Functionality', () => {
       parties: [
         {
           officer: {
-            id: 1,
+            id: '1',
             firstName: 'Joe',
             lastName: 'Swanson',
             middleName: 'P',
@@ -292,7 +295,7 @@ describe('Actions component - Filing Functionality', () => {
         },
         {
           officer: {
-            id: 2,
+            id: '2',
             firstName: '',
             lastName: '',
             middleName: '',
@@ -319,7 +322,7 @@ describe('Actions component - Filing Functionality', () => {
       shareStructure: {
         shareClasses: [
           {
-            id: 1,
+            id: '1',
             name: 'ShareClass1',
             priority: 1,
             hasMaximumShares: true,
@@ -330,7 +333,7 @@ describe('Actions component - Filing Functionality', () => {
             hasRightsOrRestrictions: false,
             series: [
               {
-                id: 1,
+                id: '1',
                 name: 'ShareSeries1',
                 priority: 1,
                 hasMaximumShares: true,
@@ -338,7 +341,7 @@ describe('Actions component - Filing Functionality', () => {
                 hasRightsOrRestrictions: false
               },
               {
-                id: 2,
+                id: '2',
                 name: 'ShareSeries2',
                 priority: 2,
                 hasMaximumShares: true,
@@ -348,7 +351,7 @@ describe('Actions component - Filing Functionality', () => {
             ]
           },
           {
-            id: 2,
+            id: '2',
             name: 'ShareClass2',
             priority: 1,
             hasMaximumShares: false,
@@ -386,7 +389,7 @@ describe('Actions component - Filing Functionality', () => {
     store.stateModel.nameRequest = {
       legalType: CorpTypeCd.BENEFIT_COMPANY,
       nrNum: 'NR 1234567'
-    }
+    } as NameRequestIF
     store.stateModel.nameRequestApprovedName = 'My Name Request Inc.'
     store.stateModel.nameTranslations = []
     store.stateModel.tombstone = {
@@ -394,7 +397,7 @@ describe('Actions component - Filing Functionality', () => {
       filingType: FilingTypes.INCORPORATION_APPLICATION,
       userEmail: 'completing-party@example.com',
       folioNumber: '123456'
-    }
+    } as TombstoneIF
     store.stateModel.certifyState.certifiedBy = filing.header.certifiedBy
     store.stateModel.businessContact = {
       email: filing.incorporationApplication.contactPoint.email,
@@ -409,10 +412,10 @@ describe('Actions component - Filing Functionality', () => {
       extension: 444
     }
     store.stateModel.defineCompanyStep.officeAddresses = filing.incorporationApplication.offices
-    store.stateModel.defineCompanyStep.folioNumber = filing.header.folioNumber
-    store.stateModel.addPeopleAndRoleStep.orgPeople = filing.incorporationApplication.parties
+    store.stateModel.tombstone.folioNumber = filing.header.folioNumber
+    store.stateModel.addPeopleAndRoleStep.orgPeople = filing.incorporationApplication.parties as OrgPersonIF[]
     store.stateModel.createShareStructureStep.shareClasses =
-      filing.incorporationApplication.shareStructure.shareClasses
+      filing.incorporationApplication.shareStructure.shareClasses as ShareClassIF[]
     store.stateModel.filingId = 1234
     store.stateModel.entityType = CorpTypeCd.BENEFIT_COMPANY
     store.stateModel.tempId = 'T1234567'

@@ -165,13 +165,9 @@
 </template>
 
 <script lang="ts">
-// Libraries
-import Vue from 'vue'
-import { Component, Prop, Emit } from 'vue-property-decorator'
-import 'array.prototype.move'
-
-// Enums
+import { Component, Emit, Prop, Vue } from 'vue-property-decorator'
 import { RouteNames } from '@/enums'
+import { arrayMoveMutable } from 'array-move'
 
 @Component({})
 export default class ListShareClass extends Vue {
@@ -204,17 +200,17 @@ export default class ListShareClass extends Vue {
    * @param seriesIndex The index of the series
    */
   protected moveIndex (indexFrom: number, direction: string, seriesIndex = -1): void {
-    let indexTo
+    let indexTo: number
     if (seriesIndex >= 0) {
       indexTo = direction === 'up' ? seriesIndex - 1 : seriesIndex + 1
       this.shareClasses[indexFrom].series[seriesIndex].priority = indexTo
       this.shareClasses[indexFrom].series[seriesIndex].priority = indexFrom
-      this.shareClasses[indexFrom].series.move(seriesIndex, indexTo)
+      arrayMoveMutable(this.shareClasses[indexFrom].series, seriesIndex, indexTo)
     } else {
       indexTo = direction === 'up' ? indexFrom - 1 : indexFrom + 1
       this.shareClasses[indexFrom].priority = indexTo
       this.shareClasses[indexTo].priority = indexFrom
-      this.shareClasses.move(indexFrom, indexTo)
+      arrayMoveMutable(this.shareClasses, indexFrom, indexTo)
     }
   }
 
