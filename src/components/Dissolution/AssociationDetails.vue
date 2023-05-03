@@ -100,7 +100,8 @@
 <script lang="ts">
 import Vue from 'vue'
 import { Component, Prop } from 'vue-property-decorator'
-import { Action, Getter } from 'vuex-class'
+import { Action, Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 import { AuthServices } from '@/services/'
 import { ActionBindingIF, AddressIF, ContactPointIF, BusinessIF } from '@/interfaces'
 import { ContactInfo } from '@bcrs-shared-components/contact-info'
@@ -132,20 +133,20 @@ export default class AssociationDetails extends Vue {
   @Prop({ default: true }) readonly showContactInfo!: boolean
 
   // Global getters
-  @Getter getFolioNumber!: string
-  @Getter getBusinessId!: string
-  @Getter getBusiness!: BusinessIF
-  @Getter getBusinessContact!: ContactPointIF
-  @Getter getCompanyDisplayName!: string
-  @Getter getCooperativeType!: CoopTypes
-  @Getter getBusinessLegalName!: string
-  @Getter isPremiumAccount!: boolean
-  @Getter isTypeCoop!: boolean
-  @Getter getEntityType!: CorpTypeCd
-  @Getter getBusinessFoundingDate!: string
+  @Getter(useStore) getFolioNumber!: string
+  @Getter(useStore) getBusinessId!: string
+  @Getter(useStore) getBusiness!: BusinessIF
+  @Getter(useStore) getBusinessContact!: ContactPointIF
+  @Getter(useStore) getCompanyDisplayName!: string
+  @Getter(useStore) getCooperativeType!: CoopTypes
+  @Getter(useStore) getBusinessLegalName!: string
+  @Getter(useStore) isPremiumAccount!: boolean
+  @Getter(useStore) isTypeCoop!: boolean
+  @Getter(useStore) getEntityType!: CorpTypeCd
+  @Getter(useStore) getBusinessFoundingDate!: string
   // Global setters
-  @Action setBusinessContact!: ActionBindingIF
-  @Action setIgnoreChanges!: ActionBindingIF
+  @Action(useStore) setBusinessContact!: ActionBindingIF
+  @Action(useStore) setIgnoreChanges!: ActionBindingIF
 
   private contactInfoMsg = `Registered Office Contact Information is required for dissolution documents delivery.
   Any changes made will be applied immediately.`

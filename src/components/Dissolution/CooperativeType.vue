@@ -23,7 +23,8 @@
 // Libraries
 import Vue from 'vue'
 import { Component, Emit, Watch, Prop } from 'vue-property-decorator'
-import { Getter } from 'vuex-class'
+import { Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 import { CoopTypes } from '@/enums'
 import { FormIF } from '@/interfaces'
 import { VuetifyRuleFunction } from '@/types'
@@ -40,7 +41,7 @@ export default class CooperativeType extends Vue {
   @Prop({ default: false }) readonly showErrors!: boolean
 
   // Global getter
-  @Getter getCooperativeType!: CoopTypes
+  @Getter(useStore) getCooperativeType!: CoopTypes
 
   // Local properties
   readonly items: Array<any> = [

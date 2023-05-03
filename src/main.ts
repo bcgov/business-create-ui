@@ -7,7 +7,7 @@ import Vue from 'vue'
 import Vuetify from 'vuetify/lib'
 import Vuelidate from 'vuelidate'
 import { getVueRouter } from '@/router'
-import { getVuexStore } from '@/store'
+import { getPiniaStore, getVuexStore } from '@/store'
 import Affix from 'vue-affix'
 import Vue2Filters from 'vue2-filters' // needed by SbcFeeSummary
 import * as Sentry from '@sentry/vue'
@@ -103,6 +103,7 @@ async function start () {
     }),
     router: getVueRouter(),
     store: getVuexStore(),
+    pinia: getPiniaStore(),
     render: h => h(App)
   }).$mount('#app')
 }

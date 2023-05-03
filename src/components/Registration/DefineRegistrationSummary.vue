@@ -105,7 +105,8 @@
 <script lang="ts">
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
-import { Getter } from 'vuex-class'
+import { Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 import { ContactPointIF, RegistrationStateIF } from '@/interfaces'
 import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
 import FolioNumber from '@/components/common/FolioNumber.vue'
@@ -127,13 +128,13 @@ import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module
 })
 export default class DefineRegistrationSummary extends Vue {
   // Getters
-  @Getter getNameRequestApprovedName!: string
-  // @Getter isPremiumAccount!: boolean // DISABLED PER TICKET # 12306
-  @Getter getBusinessContact!: ContactPointIF
-  @Getter getFolioNumber!: string
-  @Getter getRegistration!: RegistrationStateIF
-  @Getter getEntityType!: CorpTypeCd
-  @Getter isTypePartnership: boolean
+  @Getter(useStore) getNameRequestApprovedName!: string
+  // @Getter(useStore) isPremiumAccount!: boolean // DISABLED PER TICKET # 12306
+  @Getter(useStore) getBusinessContact!: ContactPointIF
+  @Getter(useStore) getFolioNumber!: string
+  @Getter(useStore) getRegistration!: RegistrationStateIF
+  @Getter(useStore) getEntityType!: CorpTypeCd
+  @Getter(useStore) isTypePartnership: boolean
 
   /** The entity description. */
   get entityDescription (): string {

@@ -85,7 +85,8 @@
 <script lang="ts">
 import Vue from 'vue'
 import { Component, Emit, Prop, Watch } from 'vue-property-decorator'
-import { Action, Getter } from 'vuex-class'
+import { Action, Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 import { isEmpty, isEqual } from 'lodash'
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
 import { RegistrationMailingAddressSchema, RegistrationDeliveryAddressSchema } from '@/schemas'
@@ -132,9 +133,9 @@ export default class BusinessAddresses extends Vue {
   /** Whether to show errors (editing mode only). */
   @Prop({ required: true }) readonly showErrors!: boolean
 
-  @Getter getRegistration!: RegistrationStateIF
+  @Getter(useStore) getRegistration!: RegistrationStateIF
 
-  @Action setRegistrationBusinessAddress!: ActionBindingIF
+  @Action(useStore) setRegistrationBusinessAddress!: ActionBindingIF
 
   // BaseAddress state variables
   // (Note that if the initial value is undefined, the class property will not be

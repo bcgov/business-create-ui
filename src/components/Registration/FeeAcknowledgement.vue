@@ -26,15 +26,16 @@
 <script lang="ts">
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
-import { Action, Getter } from 'vuex-class'
+import { Action, Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 import { ActionBindingIF, RegistrationStateIF } from '@/interfaces'
 
 @Component({})
 export default class FeeAcknowledgement extends Vue {
-  @Getter getRegistration!: RegistrationStateIF
-  @Getter getValidateSteps!: boolean
+  @Getter(useStore) getRegistration!: RegistrationStateIF
+  @Getter(useStore) getValidateSteps!: boolean
 
-  @Action setRegistrationFeeAcknowledgement!: ActionBindingIF
+  @Action(useStore) setRegistrationFeeAcknowledgement!: ActionBindingIF
 
   get invalidSection (): boolean {
     return this.getValidateSteps && !this.getRegistration.feeAcknowledgement

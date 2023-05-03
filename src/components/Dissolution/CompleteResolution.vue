@@ -306,7 +306,8 @@
 // Libraries
 import Vue from 'vue'
 import { Component, Watch } from 'vue-property-decorator'
-import { Action, Getter } from 'vuex-class'
+import { Action, Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 
 // Shared Components
 import { DatePicker as DatePickerShared } from '@bcrs-shared-components/date-picker'
@@ -364,15 +365,15 @@ export default class CompleteResolution extends Vue {
   private signatureDateText = ''
   private foundingDate = null as Date
 
-  @Getter getShowErrors!: boolean
-  @Getter isTypeCoop!: boolean
-  @Getter getCreateResolutionResource!: CreateResolutionResourceIF
-  @Getter getCreateResolutionStep!: CreateResolutionIF
-  @Getter getBusinessLegalName!: string
-  @Getter getBusinessFoundingDate!: string
+  @Getter(useStore) getShowErrors!: boolean
+  @Getter(useStore) isTypeCoop!: boolean
+  @Getter(useStore) getCreateResolutionResource!: CreateResolutionResourceIF
+  @Getter(useStore) getCreateResolutionStep!: CreateResolutionIF
+  @Getter(useStore) getBusinessLegalName!: string
+  @Getter(useStore) getBusinessFoundingDate!: string
 
-  @Action setResolution!: ActionBindingIF
-  @Action setResolutionStepValidationDetail!: ActionBindingIF
+  @Action(useStore) setResolution!: ActionBindingIF
+  @Action(useStore) setResolutionStepValidationDetail!: ActionBindingIF
 
   // Enums for template
   readonly RouteNames = RouteNames

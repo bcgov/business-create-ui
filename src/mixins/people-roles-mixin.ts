@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
-import { Action, Getter } from 'vuex-class'
+import { Action, Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 import { NumWord, PartyTypes, RoleTypes, RuleIds } from '@/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/enums/'
 import { ActionBindingIF, AddressIF, ConfirmDialogType, OrgPersonIF, PeopleAndRoleIF,
@@ -17,25 +18,25 @@ export default class PeopleRolesMixin extends Vue {
   }
 
   // NB: some of these are used by components that use this mixin
-  @Getter getShowErrors!: boolean
-  @Getter getPeopleAndRolesResource!: PeopleAndRolesResourceIF
-  @Getter getAddPeopleAndRoleStep!: PeopleAndRoleIF
-  @Getter getUserEmail!: string
-  @Getter getUserFirstName!: string
-  @Getter getUserLastName!: string
-  @Getter getUserAddress!: AddressIF
-  @Getter getRegistration!: RegistrationStateIF
-  @Getter isTypeSoleProp!: boolean
-  @Getter isTypePartnership!: boolean
-  @Getter isRoleStaff!: boolean
-  @Getter isSbcStaff!: boolean
-  @Getter isFullRestorationFiling!: boolean
-  @Getter isLimitedRestorationFiling: boolean
+  @Getter(useStore) getShowErrors!: boolean
+  @Getter(useStore) getPeopleAndRolesResource!: PeopleAndRolesResourceIF
+  @Getter(useStore) getAddPeopleAndRoleStep!: PeopleAndRoleIF
+  @Getter(useStore) getUserEmail!: string
+  @Getter(useStore) getUserFirstName!: string
+  @Getter(useStore) getUserLastName!: string
+  @Getter(useStore) getUserAddress!: AddressIF
+  @Getter(useStore) getRegistration!: RegistrationStateIF
+  @Getter(useStore) isTypeSoleProp!: boolean
+  @Getter(useStore) isTypePartnership!: boolean
+  @Getter(useStore) isRoleStaff!: boolean
+  @Getter(useStore) isSbcStaff!: boolean
+  @Getter(useStore) isFullRestorationFiling!: boolean
+  @Getter(useStore) isLimitedRestorationFiling: boolean
 
-  @Action setOrgPersonList!: ActionBindingIF
-  @Action setAddPeopleAndRoleStepValidity!: ActionBindingIF
-  @Action setRegistrationBusinessNumber!: ActionBindingIF
-  @Action setIsAutoPopulatedBusinessNumber!: ActionBindingIF
+  @Action(useStore) setOrgPersonList!: ActionBindingIF
+  @Action(useStore) setAddPeopleAndRoleStepValidity!: ActionBindingIF
+  @Action(useStore) setRegistrationBusinessNumber!: ActionBindingIF
+  @Action(useStore) setIsAutoPopulatedBusinessNumber!: ActionBindingIF
 
   // Enums for template
   readonly CorpTypeCd = CorpTypeCd

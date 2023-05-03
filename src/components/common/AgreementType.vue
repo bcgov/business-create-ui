@@ -65,7 +65,8 @@
 <script lang="ts">
 import Vue from 'vue'
 import { Component, Prop } from 'vue-property-decorator'
-import { Action, Getter } from 'vuex-class'
+import { Action, Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 import { ActionBindingIF, IncorporationAgreementIF, IncorporationAgreementTypeIF } from '@/interfaces'
 import { RouteNames } from '@/enums'
 
@@ -74,13 +75,13 @@ export default class AgreementType extends Vue {
   @Prop({ default: false }) readonly showErrorSummary!: boolean
   @Prop({ default: false }) readonly isSummary!: boolean
 
-  @Getter getIncorporationAgreementDocuments!: Array<IncorporationAgreementTypeIF>
-  @Getter isTypeBcUlcCompany!: boolean
-  @Getter isTypeBcCcc!: boolean
-  @Getter getIncorporationAgreementStep!: IncorporationAgreementIF
-  @Getter getShowErrors!: boolean
+  @Getter(useStore) getIncorporationAgreementDocuments!: Array<IncorporationAgreementTypeIF>
+  @Getter(useStore) isTypeBcUlcCompany!: boolean
+  @Getter(useStore) isTypeBcCcc!: boolean
+  @Getter(useStore) getIncorporationAgreementStep!: IncorporationAgreementIF
+  @Getter(useStore) getShowErrors!: boolean
 
-  @Action setIncorporationAgreementStepData!: ActionBindingIF
+  @Action(useStore) setIncorporationAgreementStepData!: ActionBindingIF
 
   protected agreementType: string = null
 

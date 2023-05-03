@@ -187,7 +187,8 @@
 import Vue from 'vue'
 import axios from 'axios'
 import { Component, Watch } from 'vue-property-decorator'
-import { Action, Getter } from 'vuex-class'
+import { Action, Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 import { StatusCodes } from 'http-status-codes'
 import { cloneDeep } from 'lodash'
 import * as Sentry from '@sentry/browser'
@@ -248,58 +249,58 @@ export default class App extends Vue {
     confirm: ConfirmDialogType
   }
 
-  @Getter getEntityIdentifier!: string
-  @Getter getHaveChanges!: boolean
-  @Getter getFilingData!: Array<FilingDataIF>
-  @Getter getFilingType!: FilingTypes
-  @Getter getFilingName!: FilingNames
-  @Getter isDissolutionFiling!: boolean
-  @Getter isRestorationFiling!: boolean
-  @Getter isIncorporationFiling!: boolean
-  @Getter getSteps!: Array<StepIF>
-  @Getter isSbcStaff!: boolean
-  @Getter getUserFirstName!: string
-  @Getter getUserLastName!: string
-  @Getter getUserPhone!: string
-  @Getter getUserEmail!: string
-  @Getter getOrgInformation!: OrgInformationIF
-  @Getter isMobile!: boolean
+  @Getter(useStore) getEntityIdentifier!: string
+  @Getter(useStore) getHaveChanges!: boolean
+  @Getter(useStore) getFilingData!: Array<FilingDataIF>
+  @Getter(useStore) getFilingType!: FilingTypes
+  @Getter(useStore) getFilingName!: FilingNames
+  @Getter(useStore) isDissolutionFiling!: boolean
+  @Getter(useStore) isRestorationFiling!: boolean
+  @Getter(useStore) isIncorporationFiling!: boolean
+  @Getter(useStore) getSteps!: Array<StepIF>
+  @Getter(useStore) isSbcStaff!: boolean
+  @Getter(useStore) getUserFirstName!: string
+  @Getter(useStore) getUserLastName!: string
+  @Getter(useStore) getUserPhone!: string
+  @Getter(useStore) getUserEmail!: string
+  @Getter(useStore) getOrgInformation!: OrgInformationIF
+  @Getter(useStore) isMobile!: boolean
 
-  @Action setBusinessId!: ActionBindingIF
-  @Action setCurrentStep!: ActionBindingIF
-  @Action setCurrentDate!: ActionBindingIF
-  @Action setCurrentJsDate!: ActionBindingIF
-  @Action setResources!: ActionBindingIF
-  @Action setUserEmail!: ActionBindingIF
-  @Action setUserPhone!: ActionBindingIF
-  @Action setUserFirstName!: ActionBindingIF
-  @Action setUserLastName!: ActionBindingIF
-  @Action setUserKeycloakGuid!: ActionBindingIF
-  @Action setUserAddress!: ActionBindingIF
-  @Action setAuthRoles!: ActionBindingIF
-  @Action setHaveChanges!: ActionBindingIF
-  @Action setAccountInformation!: ActionBindingIF
-  @Action setOrgInformation!: ActionBindingIF
-  @Action setTempId!: ActionBindingIF
-  @Action setShowErrors!: ActionBindingIF
-  @Action setFeePrices!: ActionBindingIF
-  @Action setFilingType!: ActionBindingIF
-  @Action setNameRequest!: ActionBindingIF
-  @Action setNameRequestApprovedName!: ActionBindingIF
-  @Action setCompletingParty!: ActionBindingIF
-  @Action setParties!: ActionBindingIF
-  @Action setAdminFreeze!: ActionBindingIF
-  @Action setBusinessNumber!: ActionBindingIF
-  @Action setIdentifier!: ActionBindingIF
-  @Action setEntityName!: ActionBindingIF
-  @Action setEntityState!: ActionBindingIF
-  @Action setEntityFoundingDate!: ActionBindingIF
-  @Action setLastAnnualReportDate!: ActionBindingIF
-  @Action setLastAddressChangeDate!: ActionBindingIF
-  @Action setLastDirectorChangeDate!: ActionBindingIF
-  @Action setWarnings!: ActionBindingIF
-  @Action setGoodStanding!: ActionBindingIF
-  @Action setWindowWidth!: ActionBindingIF
+  @Action(useStore) setBusinessId!: ActionBindingIF
+  @Action(useStore) setCurrentStep!: ActionBindingIF
+  @Action(useStore) setCurrentDate!: ActionBindingIF
+  @Action(useStore) setCurrentJsDate!: ActionBindingIF
+  @Action(useStore) setResources!: ActionBindingIF
+  @Action(useStore) setUserEmail!: ActionBindingIF
+  @Action(useStore) setUserPhone!: ActionBindingIF
+  @Action(useStore) setUserFirstName!: ActionBindingIF
+  @Action(useStore) setUserLastName!: ActionBindingIF
+  @Action(useStore) setUserKeycloakGuid!: ActionBindingIF
+  @Action(useStore) setUserAddress!: ActionBindingIF
+  @Action(useStore) setAuthRoles!: ActionBindingIF
+  @Action(useStore) setHaveChanges!: ActionBindingIF
+  @Action(useStore) setAccountInformation!: ActionBindingIF
+  @Action(useStore) setOrgInformation!: ActionBindingIF
+  @Action(useStore) setTempId!: ActionBindingIF
+  @Action(useStore) setShowErrors!: ActionBindingIF
+  @Action(useStore) setFeePrices!: ActionBindingIF
+  @Action(useStore) setFilingType!: ActionBindingIF
+  @Action(useStore) setNameRequest!: ActionBindingIF
+  @Action(useStore) setNameRequestApprovedName!: ActionBindingIF
+  @Action(useStore) setCompletingParty!: ActionBindingIF
+  @Action(useStore) setParties!: ActionBindingIF
+  @Action(useStore) setAdminFreeze!: ActionBindingIF
+  @Action(useStore) setBusinessNumber!: ActionBindingIF
+  @Action(useStore) setIdentifier!: ActionBindingIF
+  @Action(useStore) setEntityName!: ActionBindingIF
+  @Action(useStore) setEntityState!: ActionBindingIF
+  @Action(useStore) setEntityFoundingDate!: ActionBindingIF
+  @Action(useStore) setLastAnnualReportDate!: ActionBindingIF
+  @Action(useStore) setLastAddressChangeDate!: ActionBindingIF
+  @Action(useStore) setLastDirectorChangeDate!: ActionBindingIF
+  @Action(useStore) setWarnings!: ActionBindingIF
+  @Action(useStore) setGoodStanding!: ActionBindingIF
+  @Action(useStore) setWindowWidth!: ActionBindingIF
 
   // Local properties
   protected accountAuthorizationDialog = false

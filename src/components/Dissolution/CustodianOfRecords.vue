@@ -215,7 +215,8 @@
 <script lang="ts">
 import Vue from 'vue'
 import { Component, Emit, Prop, Watch } from 'vue-property-decorator'
-import { Action, Getter } from 'vuex-class'
+import { Action, Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 import { CoopOfficeAddressSchema, OfficeAddressSchema } from '@/schemas'
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
 import { ActionBindingIF, AddressIF, AddressSchemaIF, CustodianResourceIF, FormIF, OrgPersonIF } from '@/interfaces'
@@ -244,12 +245,12 @@ export default class CustodianOfRecords extends Vue {
   @Prop({ default: false }) readonly isSummary!: boolean
   @Prop({ default: false }) readonly showErrors!: boolean
 
-  @Getter getDissolutionCustodian!: OrgPersonIF
-  @Getter getDissolutionCustodianEmail!: string
-  @Getter getCustodialRecordsResources!: CustodianResourceIF
-  @Getter isTypeCoop!: boolean
+  @Getter(useStore) getDissolutionCustodian!: OrgPersonIF
+  @Getter(useStore) getDissolutionCustodianEmail!: string
+  @Getter(useStore) getCustodialRecordsResources!: CustodianResourceIF
+  @Getter(useStore) isTypeCoop!: boolean
 
-  @Action setCustodianOfRecords: ActionBindingIF
+  @Action(useStore) setCustodianOfRecords: ActionBindingIF
 
   // Local properties
   protected addCustodianValid = true

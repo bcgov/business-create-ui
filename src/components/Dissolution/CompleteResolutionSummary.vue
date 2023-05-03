@@ -99,7 +99,8 @@
 // Libraries
 import Vue from 'vue'
 import { Component, Watch } from 'vue-property-decorator'
-import { Getter } from 'vuex-class'
+import { Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 import { DateMixin } from '@/mixins'
 
 // Enums
@@ -120,10 +121,10 @@ export default class CompleteResolutionSummary extends Vue {
   // initialize to true so resolution text height will right height on initial load
   private resolutionTextHeightUpdateRequired = true
 
-  @Getter getCreateResolutionStep!: CreateResolutionIF
-  @Getter getCreateResolutionResource!: CreateResolutionResourceIF
-  @Getter isBaseCompany!: boolean
-  @Getter isTypeCoop!: boolean
+  @Getter(useStore) getCreateResolutionStep!: CreateResolutionIF
+  @Getter(useStore) getCreateResolutionResource!: CreateResolutionResourceIF
+  @Getter(useStore) isBaseCompany!: boolean
+  @Getter(useStore) isTypeCoop!: boolean
 
   // Enum for template
   readonly RouteNames = RouteNames

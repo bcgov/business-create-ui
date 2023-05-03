@@ -43,7 +43,8 @@
 <script lang="ts">
 import Vue from 'vue'
 import { Component, Watch } from 'vue-property-decorator'
-import { Action, Getter } from 'vuex-class'
+import { Action, Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 import { ActionBindingIF, EmptyNameRequest, NrApplicantIF, NameRequestIF } from '@/interfaces/'
 import { ContactPointIF } from '@bcrs-shared-components/interfaces/'
 import { CommonMixin, DateMixin, NameRequestMixin } from '@/mixins/'
@@ -66,20 +67,20 @@ import NameRequestInfo from '@/components/common/NameRequestInfo.vue'
 })
 export default class BusinessName extends Vue {
   // Global getters
-  @Getter getBusinessId!: string
-  @Getter getBusinessLegalName!: string
-  @Getter getCorrectNameOption!: CorrectNameOptions
-  @Getter getEntityType!: CorpTypeCd
-  @Getter getNameRequest!: NameRequestIF
-  @Getter getNameRequestApprovedName!: string
-  @Getter getShowErrors!: boolean
-  @Getter isRestorationFiling!: boolean
+  @Getter(useStore) getBusinessId!: string
+  @Getter(useStore) getBusinessLegalName!: string
+  @Getter(useStore) getCorrectNameOption!: CorrectNameOptions
+  @Getter(useStore) getEntityType!: CorpTypeCd
+  @Getter(useStore) getNameRequest!: NameRequestIF
+  @Getter(useStore) getNameRequestApprovedName!: string
+  @Getter(useStore) getShowErrors!: boolean
+  @Getter(useStore) isRestorationFiling!: boolean
 
   // Global actions
-  @Action setBusinessNameValid!: ActionBindingIF
-  @Action setCorrectNameOption!: ActionBindingIF
-  @Action setNameRequest!: ActionBindingIF
-  @Action setNameRequestApprovedName!: ActionBindingIF
+  @Action(useStore) setBusinessNameValid!: ActionBindingIF
+  @Action(useStore) setCorrectNameOption!: ActionBindingIF
+  @Action(useStore) setNameRequest!: ActionBindingIF
+  @Action(useStore) setNameRequestApprovedName!: ActionBindingIF
 
   protected dropdown: boolean = null
   protected correctNameChoices: Array<string> = []

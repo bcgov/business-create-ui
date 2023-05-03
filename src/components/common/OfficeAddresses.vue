@@ -190,7 +190,8 @@
 <script lang="ts">
 import Vue from 'vue'
 import { Component, Emit, Prop, Watch } from 'vue-property-decorator'
-import { Getter } from 'vuex-class'
+import { Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 import { isEmpty } from 'lodash'
 import { OfficeAddressSchema } from '@/schemas'
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
@@ -229,10 +230,10 @@ export default class OfficeAddresses extends Vue {
 
   @Prop({ default: false }) readonly showErrors!: boolean
 
-  @Getter getDefineCompanyStep!: DefineCompanyIF
-  @Getter isBaseCompany!: boolean
-  @Getter isTypeCoop!: boolean
-  @Getter getEntityType!: CorpTypeCd
+  @Getter(useStore) getDefineCompanyStep!: DefineCompanyIF
+  @Getter(useStore) isBaseCompany!: boolean
+  @Getter(useStore) isTypeCoop!: boolean
+  @Getter(useStore) getEntityType!: CorpTypeCd
 
   // Local properties
   protected addresses: RegisteredRecordsAddressesIF = this.inputAddresses

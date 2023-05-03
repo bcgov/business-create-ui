@@ -127,7 +127,8 @@
 <script lang="ts">
 import Vue from 'vue'
 import { Component, Watch } from 'vue-property-decorator'
-import { Getter, Action } from 'vuex-class'
+import { Getter, Action } from 'pinia-class'
+import { useStore } from '@/store/store'
 import {
   ActionBindingIF,
   AddressIF,
@@ -159,22 +160,22 @@ import NameTranslations from '@/components/common/NameTranslations.vue'
   ]
 })
 export default class IncorporationDefineCompany extends Vue {
-  @Getter isEntityType!: boolean
-  @Getter isPremiumAccount!: boolean
-  @Getter isBaseCompany!: boolean
-  @Getter isTypeCoop!: boolean
-  @Getter getDefineCompanyStep!: DefineCompanyIF
-  @Getter getShowErrors!: boolean
-  @Getter getBusinessContact!: ContactPointIF
-  @Getter getFolioNumber!: string
-  @Getter getNameTranslationsValid!: boolean
+  @Getter(useStore) isEntityType!: boolean
+  @Getter(useStore) isPremiumAccount!: boolean
+  @Getter(useStore) isBaseCompany!: boolean
+  @Getter(useStore) isTypeCoop!: boolean
+  @Getter(useStore) getDefineCompanyStep!: DefineCompanyIF
+  @Getter(useStore) getShowErrors!: boolean
+  @Getter(useStore) getBusinessContact!: ContactPointIF
+  @Getter(useStore) getFolioNumber!: string
+  @Getter(useStore) getNameTranslationsValid!: boolean
 
-  @Action setBusinessContact!: ActionBindingIF
-  @Action setCooperativeType!: ActionBindingIF
-  @Action setFolioNumber!: ActionBindingIF
-  @Action setOfficeAddresses!: ActionBindingIF
-  @Action setDefineCompanyStepValidity!: ActionBindingIF
-  @Action setIgnoreChanges!: ActionBindingIF
+  @Action(useStore) setBusinessContact!: ActionBindingIF
+  @Action(useStore) setCooperativeType!: ActionBindingIF
+  @Action(useStore) setFolioNumber!: ActionBindingIF
+  @Action(useStore) setOfficeAddresses!: ActionBindingIF
+  @Action(useStore) setDefineCompanyStepValidity!: ActionBindingIF
+  @Action(useStore) setIgnoreChanges!: ActionBindingIF
 
   protected businessContactFormValid = false
   protected addressFormValid = false

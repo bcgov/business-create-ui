@@ -14,7 +14,8 @@
 <script lang="ts">
 import Vue from 'vue'
 import { Component, Emit, Prop } from 'vue-property-decorator'
-import { Action, Getter } from 'vuex-class'
+import { Action, Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 import { StaffPayment as StaffPaymentShared } from '@bcrs-shared-components/staff-payment'
 import { ActionBindingIF, StaffPaymentIF, StaffPaymentStepIF } from '@/interfaces'
 import { StaffPaymentOptions } from '@/enums'
@@ -30,12 +31,12 @@ export default class StaffPayment extends Vue {
   @Prop({ default: true }) readonly displayPriorityCheckbox!: boolean
 
   // Global getters
-  @Getter getStaffPaymentStep!: StaffPaymentStepIF
-  @Getter getValidateSteps!: boolean
+  @Getter(useStore) getStaffPaymentStep!: StaffPaymentStepIF
+  @Getter(useStore) getValidateSteps!: boolean
 
   // Global actions
-  @Action setStaffPayment!: ActionBindingIF
-  @Action setStaffPaymentValidity!: ActionBindingIF
+  @Action(useStore) setStaffPayment!: ActionBindingIF
+  @Action(useStore) setStaffPaymentValidity!: ActionBindingIF
 
   /** Check validity state, only when prompted by app. */
   get invalidStaffPayment (): boolean {

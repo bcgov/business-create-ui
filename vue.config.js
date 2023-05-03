@@ -12,6 +12,15 @@ const aboutText2 = (sbcName && sbcVersion) ? `${sbcName} v${sbcVersion}` : ''
 
 module.exports = {
   configureWebpack: {
+    module: {
+      rules: [
+        {
+          test: /\.mjs$/,
+          include: /node_modules/,
+          type: 'javascript/auto'
+        }
+      ]
+    },
     plugins: [
       new webpack.DefinePlugin({
         'process.env': {

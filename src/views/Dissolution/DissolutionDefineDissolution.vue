@@ -89,7 +89,8 @@
 <script lang="ts">
 import Vue from 'vue'
 import { Component, Watch } from 'vue-property-decorator'
-import { Action, Getter } from 'vuex-class'
+import { Action, Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 import AssociationDetails from '@/components/Dissolution/AssociationDetails.vue'
 // import CareAndCustodySelect from '@/components/Dissolution/CareAndCustodySelect.vue'
 import CustodianOfRecords from '@/components/Dissolution/CustodianOfRecords.vue'
@@ -117,18 +118,18 @@ import { GetCorpFullDescription, GetCorpNumberedDescription } from '@bcrs-shared
 })
 export default class DissolutionDefineDissolution extends Vue {
   // Global getters
-  @Getter getBusinessLegalName!: string
-  @Getter getCustodialRecordsResources!: CustodianResourceIF
-  @Getter getDissolutionDetailsTitle!: string
-  @Getter getDissolutionStatementStep!: DissolutionStatementIF
-  @Getter getDissolutionHasCertificateDestroyed!: boolean
-  @Getter getShowErrors!: boolean
-  @Getter isDissolutionCustodianValid!: boolean
-  @Getter isTypeCoop: boolean
-  @Getter getEntityType!: CorpTypeCd
+  @Getter(useStore) getBusinessLegalName!: string
+  @Getter(useStore) getCustodialRecordsResources!: CustodianResourceIF
+  @Getter(useStore) getDissolutionDetailsTitle!: string
+  @Getter(useStore) getDissolutionStatementStep!: DissolutionStatementIF
+  @Getter(useStore) getDissolutionHasCertificateDestroyed!: boolean
+  @Getter(useStore) getShowErrors!: boolean
+  @Getter(useStore) isDissolutionCustodianValid!: boolean
+  @Getter(useStore) isTypeCoop: boolean
+  @Getter(useStore) getEntityType!: CorpTypeCd
 
   // Global actions
-  @Action setCustodianValidity!: ActionBindingIF
+  @Action(useStore) setCustodianValidity!: ActionBindingIF
 
   get corpDescription (): string {
     return GetCorpFullDescription(this.getEntityType)

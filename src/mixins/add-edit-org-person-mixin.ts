@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import { Component, Emit, Prop } from 'vue-property-decorator'
-import { Action, Getter } from 'vuex-class'
+import { Action, Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 import { cloneDeep, isEqual } from 'lodash'
 import { v4 as uuidv4 } from 'uuid'
 import { PartyTypes, RoleTypes, RuleIds } from '@/enums'
@@ -30,23 +31,23 @@ export default class AddEditOrgPersonMixin extends Vue {
   @Prop({ required: true }) readonly activeIndex!: number // is NaN for new org/person
   @Prop({ required: true }) readonly existingCompletingParty!: OrgPersonIF
 
-  @Getter getCurrentDate!: string
-  @Getter isRoleStaff!: boolean
-  @Getter isSbcStaff!: boolean
-  @Getter isBaseCompany!: boolean
-  @Getter isTypeBcomp!: boolean
-  @Getter isTypeCoop!: boolean
-  @Getter isTypeSoleProp!: boolean
-  @Getter isTypePartnership!: boolean
-  @Getter getEntityType!: CorpTypeCd
-  @Getter getPeopleAndRolesResource!: PeopleAndRolesResourceIF
-  @Getter getRegistration!: RegistrationStateIF
-  @Getter isFullRestorationFiling!: boolean
-  @Getter isLimitedRestorationFiling: boolean
+  @Getter(useStore) getCurrentDate!: string
+  @Getter(useStore) isRoleStaff!: boolean
+  @Getter(useStore) isSbcStaff!: boolean
+  @Getter(useStore) isBaseCompany!: boolean
+  @Getter(useStore) isTypeBcomp!: boolean
+  @Getter(useStore) isTypeCoop!: boolean
+  @Getter(useStore) isTypeSoleProp!: boolean
+  @Getter(useStore) isTypePartnership!: boolean
+  @Getter(useStore) getEntityType!: CorpTypeCd
+  @Getter(useStore) getPeopleAndRolesResource!: PeopleAndRolesResourceIF
+  @Getter(useStore) getRegistration!: RegistrationStateIF
+  @Getter(useStore) isFullRestorationFiling!: boolean
+  @Getter(useStore) isLimitedRestorationFiling: boolean
 
-  @Action setAddPeopleAndRoleStepValidity!: ActionBindingIF
-  @Action setRegistrationBusinessNumber!: ActionBindingIF
-  @Action setIsAutoPopulatedBusinessNumber!: ActionBindingIF
+  @Action(useStore) setAddPeopleAndRoleStepValidity!: ActionBindingIF
+  @Action(useStore) setRegistrationBusinessNumber!: ActionBindingIF
+  @Action(useStore) setIsAutoPopulatedBusinessNumber!: ActionBindingIF
 
   // Local properties
   protected orgPerson = null as OrgPersonIF
