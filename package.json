@@ -88,7 +88,6 @@
     "sass": "~1.32.13",
     "sass-loader": "^10.1.1",
     "sinon": "^14.0.0",
-    "ts-jest": "^27.0.4",
     "typescript": "4.5.5",
     "vue-cli-plugin-vuetify": "^2.5.8",
     "vue-plugin-helper-decorator": "^0.0.12",
