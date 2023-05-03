@@ -51,7 +51,8 @@
 // Libraries
 import Vue from 'vue'
 import { Component, Prop } from 'vue-property-decorator'
-import { Action, Getter } from 'vuex-class'
+import { Action, Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 
 // Interfaces
 import { ActionBindingIF } from '@/interfaces'
@@ -59,10 +60,10 @@ import { ActionBindingIF } from '@/interfaces'
 @Component
 export default class DestroyCertificate extends Vue {
   // Global getters
-  @Getter getDissolutionHasCertificateDestroyed!: boolean
+  @Getter(useStore) getDissolutionHasCertificateDestroyed!: boolean
 
   // Global setters
-  @Action setHasCertificateDestroyed!: ActionBindingIF
+  @Action(useStore) setHasCertificateDestroyed!: ActionBindingIF
 
   @Prop({ default: false }) readonly showErrorSummary!: boolean
   @Prop({ default: false }) readonly isSummary!: boolean

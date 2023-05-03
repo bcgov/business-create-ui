@@ -13,7 +13,8 @@
 <script lang="ts">
 import Vue from 'vue'
 import { Component, Watch } from 'vue-property-decorator'
-import { Getter } from 'vuex-class'
+import { Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 import { PeopleAndRoleIF, PeopleAndRolesResourceIF } from '@/interfaces'
 import { CommonMixin } from '@/mixins'
 import { RouteNames } from '@/enums'
@@ -28,9 +29,9 @@ import RegPeopleAndRoles from '@/components/common/RegPeopleAndRoles.vue'
   ]
 })
 export default class RegistrationPeopleRoles extends Vue {
-  @Getter getShowErrors!: boolean
-  @Getter getAddPeopleAndRoleStep!: PeopleAndRoleIF
-  @Getter getPeopleAndRolesResource!: PeopleAndRolesResourceIF
+  @Getter(useStore) getShowErrors!: boolean
+  @Getter(useStore) getAddPeopleAndRoleStep!: PeopleAndRoleIF
+  @Getter(useStore) getPeopleAndRolesResource!: PeopleAndRolesResourceIF
 
   @Watch('$route')
   private async scrollToInvalidComponent (): Promise<void> {

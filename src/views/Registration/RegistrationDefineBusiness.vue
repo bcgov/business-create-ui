@@ -124,7 +124,8 @@
 <script lang="ts">
 import Vue from 'vue'
 import { Component, Watch } from 'vue-property-decorator'
-import { Action, Getter } from 'vuex-class'
+import { Action, Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 import BusinessAddresses from '@/components/Registration/BusinessAddresses.vue'
 import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
 import BusinessNumber from '@/components/Registration/BusinessNumber.vue'
@@ -151,16 +152,16 @@ import { CommonMixin } from '@/mixins'
   ]
 })
 export default class RegistrationDefineBusiness extends Vue {
-  @Getter getBusinessContact!: ContactPointIF
-  @Getter getRegistration!: RegistrationStateIF
-  @Getter getShowErrors!: boolean
-  @Getter isTypePartnership!: boolean
-  @Getter isTypeSoleProp!: boolean
+  @Getter(useStore) getBusinessContact!: ContactPointIF
+  @Getter(useStore) getRegistration!: RegistrationStateIF
+  @Getter(useStore) getShowErrors!: boolean
+  @Getter(useStore) isTypePartnership!: boolean
+  @Getter(useStore) isTypeSoleProp!: boolean
 
-  @Action setBusinessContact!: ActionBindingIF
-  @Action setRegistrationDefineBusinessValid!: ActionBindingIF
-  @Action setRegistrationBusinessNumber!: ActionBindingIF
-  @Action setRegistrationBusinessTypeConfirm!: ActionBindingIF
+  @Action(useStore) setBusinessContact!: ActionBindingIF
+  @Action(useStore) setRegistrationDefineBusinessValid!: ActionBindingIF
+  @Action(useStore) setRegistrationBusinessNumber!: ActionBindingIF
+  @Action(useStore) setRegistrationBusinessTypeConfirm!: ActionBindingIF
 
   // local variables
   businessTypeConfirmValid = false

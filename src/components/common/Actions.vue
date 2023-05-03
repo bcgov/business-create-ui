@@ -96,7 +96,8 @@
 <script lang="ts">
 import Vue from 'vue'
 import { Component, Emit } from 'vue-property-decorator'
-import { Getter, Action } from 'vuex-class'
+import { Getter, Action } from 'pinia-class'
+import { useStore } from '@/store/store'
 import { Navigate } from '@/utils'
 import { ActionBindingIF } from '@/interfaces'
 import { DateMixin, FilingTemplateMixin, NameRequestMixin } from '@/mixins'
@@ -111,27 +112,27 @@ import { FilingTypes, NameRequestStates, RouteNames } from '@/enums'
   ]
 })
 export default class Actions extends Vue {
-  @Getter getEntityIdentifier!: string
-  @Getter getFilingType!: string
-  @Getter isFilingValid!: boolean
-  @Getter isEntityType!: boolean
-  @Getter getCurrentStep!: number
-  @Getter isShowReviewConfirmBtn!: boolean
-  @Getter isShowFilePayBtn!: boolean
-  @Getter isBusySaving!: boolean
-  @Getter getSteps!: Array<any>
-  @Getter getMaxStep!: number
-  @Getter isSaving!: boolean
-  @Getter isSavingResuming!: boolean
-  @Getter isFilingPaying!: boolean
-  @Getter getNameRequestNumber!: string
+  @Getter(useStore) getEntityIdentifier!: string
+  @Getter(useStore) getFilingType!: string
+  @Getter(useStore) isFilingValid!: boolean
+  @Getter(useStore) isEntityType!: boolean
+  @Getter(useStore) getCurrentStep!: number
+  @Getter(useStore) isShowReviewConfirmBtn!: boolean
+  @Getter(useStore) isShowFilePayBtn!: boolean
+  @Getter(useStore) isBusySaving!: boolean
+  @Getter(useStore) getSteps!: Array<any>
+  @Getter(useStore) getMaxStep!: number
+  @Getter(useStore) isSaving!: boolean
+  @Getter(useStore) isSavingResuming!: boolean
+  @Getter(useStore) isFilingPaying!: boolean
+  @Getter(useStore) getNameRequestNumber!: string
 
-  @Action setIsSaving!: ActionBindingIF
-  @Action setIsSavingResuming!: ActionBindingIF
-  @Action setIsFilingPaying!: ActionBindingIF
-  @Action setHaveChanges!: ActionBindingIF
-  @Action setEffectiveDateTimeValid!: ActionBindingIF
-  @Action setValidateSteps!: ActionBindingIF
+  @Action(useStore) setIsSaving!: ActionBindingIF
+  @Action(useStore) setIsSavingResuming!: ActionBindingIF
+  @Action(useStore) setIsFilingPaying!: ActionBindingIF
+  @Action(useStore) setHaveChanges!: ActionBindingIF
+  @Action(useStore) setEffectiveDateTimeValid!: ActionBindingIF
+  @Action(useStore) setValidateSteps!: ActionBindingIF
 
   /** Is True if Jest is running the code. */
   get isJestRunning (): boolean {

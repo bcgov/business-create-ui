@@ -1,16 +1,18 @@
 import { FilingTypes } from '@/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/enums/'
 import { BreadcrumbIF } from '@/interfaces'
-import { getVuexStore } from '@/store'
+import { createPinia, setActivePinia } from 'pinia'
+import { useStore } from '@/store/store'
 import { GetCorpNumberedDescription } from '@bcrs-shared-components/corp-type-module'
 
-const store = getVuexStore()
+setActivePinia(createPinia())
+const store = useStore()
 
 /** Returns legal name. */
 function getLegalName (): string {
-  const getFilingType: FilingTypes = store.getters.getFilingType
-  const getBusinessLegalName: string = store.getters.getBusinessLegalName
-  const getNameRequestApprovedName: string = store.getters.getNameRequestApprovedName
+  const getFilingType: FilingTypes = store.getFilingType
+  const getBusinessLegalName: string = store.getBusinessLegalName
+  const getNameRequestApprovedName: string = store.getNameRequestApprovedName
 
   switch (getFilingType) {
     case FilingTypes.DISSOLUTION: return getBusinessLegalName
@@ -22,7 +24,7 @@ function getLegalName (): string {
 
 /** Returns numbered entity name. */
 function getNumberedEntityName (): string {
-  const getEntityType = store.getters.getEntityType as CorpTypeCd
+  const getEntityType = store.getEntityType as CorpTypeCd
   return GetCorpNumberedDescription(getEntityType)
 }
 
@@ -33,7 +35,7 @@ function getParams (): string {
 }
 
 export function getEntityDashboardBreadcrumb (): BreadcrumbIF {
-  const getEntityIdentifier: string = store.getters.getEntityIdentifier
+  const getEntityIdentifier: string = store.getEntityIdentifier
   return {
     text: getLegalName() || getNumberedEntityName(),
     href: `${sessionStorage.getItem('DASHBOARD_URL')}${getEntityIdentifier}/${getParams()}`

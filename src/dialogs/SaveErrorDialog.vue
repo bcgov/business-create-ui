@@ -62,7 +62,8 @@
 <script lang="ts">
 import Vue from 'vue'
 import { Component, Prop, Emit } from 'vue-property-decorator'
-import { Getter } from 'vuex-class'
+import { Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 import RegistriesContactInfo from '@/components/common/RegistriesContactInfo.vue'
 
 @Component({
@@ -71,7 +72,7 @@ import RegistriesContactInfo from '@/components/common/RegistriesContactInfo.vue
   }
 })
 export default class SaveErrorDialog extends Vue {
-  @Getter isRoleStaff!: boolean
+  @Getter(useStore) isRoleStaff!: boolean
 
   /** Prop containing filing name. */
   @Prop({ default: 'Application' }) readonly filingName!: string

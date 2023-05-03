@@ -140,7 +140,8 @@
 <script lang="ts">
 import Vue from 'vue'
 import { Component, Prop, Emit } from 'vue-property-decorator'
-import { Getter } from 'vuex-class'
+import { Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
 import { CommonMixin } from '@/mixins'
 import { OrgPersonIF, PeopleAndRoleIF } from '@/interfaces'
@@ -166,12 +167,12 @@ export default class ListPeopleAndRoles extends Vue {
   @Prop({ default: true }) readonly showRolesColumn!: boolean
   @Prop({ default: false }) readonly showEmailColumn!: boolean
 
-  @Getter isIncorporationFiling!: boolean
-  @Getter isRegistrationFiling!: boolean
-  @Getter isFullRestorationFiling!: boolean
-  @Getter isLimitedRestorationFiling!: boolean
-  @Getter getAddPeopleAndRoleStep!: PeopleAndRoleIF
-  @Getter getShowErrors!: boolean
+  @Getter(useStore) isIncorporationFiling!: boolean
+  @Getter(useStore) isRegistrationFiling!: boolean
+  @Getter(useStore) isFullRestorationFiling!: boolean
+  @Getter(useStore) isLimitedRestorationFiling!: boolean
+  @Getter(useStore) getAddPeopleAndRoleStep!: PeopleAndRoleIF
+  @Getter(useStore) getShowErrors!: boolean
 
   // Enum for template
   readonly RouteNames = RouteNames

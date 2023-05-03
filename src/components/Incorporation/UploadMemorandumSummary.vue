@@ -31,7 +31,8 @@
 // Libraries
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
-import { Getter } from 'vuex-class'
+import { Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 
 // Enums
 import { RouteNames } from '@/enums'
@@ -39,7 +40,7 @@ import { CreateMemorandumIF } from '@/interfaces'
 
 @Component({})
 export default class UploadMemorandumSummary extends Vue {
-  @Getter getCreateMemorandumStep!: CreateMemorandumIF
+  @Getter(useStore) getCreateMemorandumStep!: CreateMemorandumIF
 
   // Enum for template
   readonly RouteNames = RouteNames

@@ -7,7 +7,8 @@
 <script lang="ts">
 import Vue from 'vue'
 import { Component, Watch } from 'vue-property-decorator'
-import { Getter } from 'vuex-class'
+import { Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 import { CreateResolutionIF } from '@/interfaces'
 import { CommonMixin } from '@/mixins'
 import CompleteResolution from '@/components/Dissolution/CompleteResolution.vue'
@@ -22,8 +23,8 @@ import { RouteNames } from '@/enums'
   ]
 })
 export default class DissolutionResolution extends Vue {
-  @Getter getShowErrors!: boolean
-  @Getter getCreateResolutionStep!: CreateResolutionIF
+  @Getter(useStore) getShowErrors!: boolean
+  @Getter(useStore) getCreateResolutionStep!: CreateResolutionIF
 
   @Watch('$route')
   private async scrollToInvalidComponent (): Promise<void> {

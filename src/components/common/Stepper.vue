@@ -48,7 +48,8 @@
 // Libraries
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
-import { Getter } from 'vuex-class'
+import { Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 
 // Enums
 import { RouteNames } from '@/enums'
@@ -56,25 +57,25 @@ import { RegistrationStateIF } from '@/interfaces'
 
 @Component({})
 export default class Stepper extends Vue {
-  @Getter getRegistration!: RegistrationStateIF
-  @Getter getShowErrors!: boolean
-  @Getter getSteps!: Array<any>
-  @Getter getValidateSteps!: boolean
-  @Getter isAddPeopleAndRolesValid!: boolean
-  @Getter isAffidavitValid!: boolean
-  @Getter isBusySaving!: boolean
-  @Getter isCreateShareStructureValid!: boolean
-  @Getter isDefineCompanyValid!: boolean
-  @Getter isDissolutionDefineDissolutionValid!: boolean
-  @Getter isDissolutionValid!: boolean
-  @Getter isIncorporationAgreementValid!: boolean
-  @Getter isIncorporationApplicationValid!: boolean
-  @Getter isMemorandumValid!: boolean
-  @Getter isRegistrationValid!: boolean
-  @Getter isResolutionValid!: boolean
-  @Getter isRestoreBusinessNameValid!: boolean
-  @Getter isRestorationValid!: boolean
-  @Getter isRulesValid!: boolean
+  @Getter(useStore) getRegistration!: RegistrationStateIF
+  @Getter(useStore) getShowErrors!: boolean
+  @Getter(useStore) getSteps!: Array<any>
+  @Getter(useStore) getValidateSteps!: boolean
+  @Getter(useStore) isAddPeopleAndRolesValid!: boolean
+  @Getter(useStore) isAffidavitValid!: boolean
+  @Getter(useStore) isBusySaving!: boolean
+  @Getter(useStore) isCreateShareStructureValid!: boolean
+  @Getter(useStore) isDefineCompanyValid!: boolean
+  @Getter(useStore) isDissolutionDefineDissolutionValid!: boolean
+  @Getter(useStore) isDissolutionValid!: boolean
+  @Getter(useStore) isIncorporationAgreementValid!: boolean
+  @Getter(useStore) isIncorporationApplicationValid!: boolean
+  @Getter(useStore) isMemorandumValid!: boolean
+  @Getter(useStore) isRegistrationValid!: boolean
+  @Getter(useStore) isResolutionValid!: boolean
+  @Getter(useStore) isRestoreBusinessNameValid!: boolean
+  @Getter(useStore) isRestorationValid!: boolean
+  @Getter(useStore) isRulesValid!: boolean
 
   /** Returns true if the step route is valid. */
   protected isValid (route: RouteNames): boolean {

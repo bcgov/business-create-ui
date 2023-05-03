@@ -92,7 +92,8 @@
 <script lang="ts">
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
-import { Action, Getter } from 'vuex-class'
+import { Action, Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 import { ActionBindingIF, CertifyIF, ContactPointIF, PeopleAndRoleIF } from '@/interfaces'
 import { RoleTypes } from '@/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/enums/'
@@ -117,17 +118,17 @@ import SummaryRestoreBusiness from '@/components/Restoration/SummaryRestoreBusin
   }
 })
 export default class RestorationReviewConfirm extends Vue {
-  @Getter getBusinessContact!: ContactPointIF
-  @Getter getCertifyState!: CertifyIF
-  @Getter getValidateSteps!: boolean
-  @Getter isRoleStaff!: boolean
-  @Getter getUserEmail!: string
-  @Getter getEntityType!: CorpTypeCd
-  @Getter isFullRestorationFiling!: boolean
-  @Getter isLimitedRestorationFiling!: boolean
-  @Getter getAddPeopleAndRoleStep!: PeopleAndRoleIF
+  @Getter(useStore) getBusinessContact!: ContactPointIF
+  @Getter(useStore) getCertifyState!: CertifyIF
+  @Getter(useStore) getValidateSteps!: boolean
+  @Getter(useStore) isRoleStaff!: boolean
+  @Getter(useStore) getUserEmail!: string
+  @Getter(useStore) getEntityType!: CorpTypeCd
+  @Getter(useStore) isFullRestorationFiling!: boolean
+  @Getter(useStore) isLimitedRestorationFiling!: boolean
+  @Getter(useStore) getAddPeopleAndRoleStep!: PeopleAndRoleIF
 
-  @Action setCertifyState!: ActionBindingIF
+  @Action(useStore) setCertifyState!: ActionBindingIF
 
   /** The entity description,  */
   get getEntityDescription (): string {

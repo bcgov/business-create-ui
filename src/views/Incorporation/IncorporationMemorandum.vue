@@ -7,7 +7,8 @@
 <script lang="ts">
 import Vue from 'vue'
 import { Component, Watch } from 'vue-property-decorator'
-import { Getter } from 'vuex-class'
+import { Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 import { CreateMemorandumIF } from '@/interfaces'
 import { CommonMixin } from '@/mixins'
 import UploadMemorandum from '@/components/Incorporation/UploadMemorandum.vue'
@@ -22,8 +23,8 @@ import { RouteNames } from '@/enums'
   ]
 })
 export default class IncorporationMemorandum extends Vue {
-  @Getter getShowErrors!: boolean
-  @Getter getCreateMemorandumStep!: CreateMemorandumIF
+  @Getter(useStore) getShowErrors!: boolean
+  @Getter(useStore) getCreateMemorandumStep!: CreateMemorandumIF
 
   @Watch('$route')
   private async scrollToInvalidComponent (): Promise<void> {

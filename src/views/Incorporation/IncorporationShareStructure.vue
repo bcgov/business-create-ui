@@ -114,7 +114,8 @@
 <script lang="ts">
 import Vue from 'vue'
 import { Component, Watch } from 'vue-property-decorator'
-import { Action, Getter } from 'vuex-class'
+import { Action, Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 import { v4 as uuidv4 } from 'uuid'
 import {
   ActionBindingIF, NewShareClass, NewShareSeries, ShareClassIF, ShareStructureIF
@@ -134,11 +135,11 @@ import ShareStructure from '@/components/Incorporation/ShareStructure.vue'
   ]
 })
 export default class IncorporationShareStructure extends Vue {
-  @Getter getCreateShareStructureStep!: ShareStructureIF
-  @Getter getShowErrors!: boolean
+  @Getter(useStore) getCreateShareStructureStep!: ShareStructureIF
+  @Getter(useStore) getShowErrors!: boolean
 
-  @Action setShareClasses!: ActionBindingIF
-  @Action setCreateShareStructureStepValidity!: ActionBindingIF
+  @Action(useStore) setShareClasses!: ActionBindingIF
+  @Action(useStore) setCreateShareStructureStepValidity!: ActionBindingIF
 
   readonly sharesHelpSample: ShareClassIF[] = [{
     id: '1',

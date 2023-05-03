@@ -29,7 +29,8 @@
 // Libraries
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
-import { Getter } from 'vuex-class'
+import { Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 
 // Enums
 import { RouteNames } from '@/enums'
@@ -37,7 +38,7 @@ import { CreateRulesIF } from '@/interfaces'
 
 @Component({})
 export default class UploadRulesSummary extends Vue {
-  @Getter getCreateRulesStep!: CreateRulesIF
+  @Getter(useStore) getCreateRulesStep!: CreateRulesIF
 
   // Enum for template
   readonly RouteNames = RouteNames

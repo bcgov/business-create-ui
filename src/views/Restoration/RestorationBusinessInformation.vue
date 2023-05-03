@@ -47,7 +47,8 @@
 <script lang="ts">
 import Vue from 'vue'
 import { Component, Watch } from 'vue-property-decorator'
-import { Getter, Action } from 'vuex-class'
+import { Getter, Action } from 'pinia-class'
+import { useStore } from '@/store/store'
 import { ActionBindingIF, AddressIF, ContactPointIF, DefineCompanyIF, RegisteredRecordsAddressesIF }
   from '@/interfaces'
 import { CommonMixin } from '@/mixins'
@@ -66,16 +67,16 @@ import OfficeAddresses from '@/components/common/OfficeAddresses.vue'
   ]
 })
 export default class RestorationBusinessInformation extends Vue {
-  @Getter isEntityType!: boolean
-  @Getter isBaseCompany!: boolean
-  @Getter getDefineCompanyStep!: DefineCompanyIF
-  @Getter getShowErrors!: boolean
-  @Getter getBusinessContact!: ContactPointIF
+  @Getter(useStore) isEntityType!: boolean
+  @Getter(useStore) isBaseCompany!: boolean
+  @Getter(useStore) getDefineCompanyStep!: DefineCompanyIF
+  @Getter(useStore) getShowErrors!: boolean
+  @Getter(useStore) getBusinessContact!: ContactPointIF
 
-  @Action setBusinessContact!: ActionBindingIF
-  @Action setOfficeAddresses!: ActionBindingIF
-  @Action setDefineCompanyStepValidity!: ActionBindingIF
-  @Action setIgnoreChanges!: ActionBindingIF
+  @Action(useStore) setBusinessContact!: ActionBindingIF
+  @Action(useStore) setOfficeAddresses!: ActionBindingIF
+  @Action(useStore) setDefineCompanyStepValidity!: ActionBindingIF
+  @Action(useStore) setIgnoreChanges!: ActionBindingIF
 
   protected businessContactFormValid = false
   protected addressFormValid = false
