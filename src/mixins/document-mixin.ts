@@ -4,8 +4,9 @@ import { AxiosResponse } from 'axios'
 import { AxiosInstance as axios } from '@/utils'
 import { DocumentUpload, PdfInfoIF } from '@/interfaces'
 import { PdfPageSize } from '@/enums'
-import pdfjsLib from 'pdfjs-dist/build/pdf'
-pdfjsLib.GlobalWorkerOptions.workerSrc = require('pdfjs-dist/build/pdf.worker.entry')
+// import pdfjsLib from 'pdfjs-dist/build/pdf'
+// pdfjsLib.GlobalWorkerOptions.workerSrc = require('pdfjs-dist/build/pdf.worker.entry')
+const pdfjsLib = {} as any // *** TEMPORARY WORKAROUND ***
 
 @Component({})
 export default class DocumentMixin extends Vue {
@@ -68,7 +69,7 @@ export default class DocumentMixin extends Vue {
       const [x, y, w, h] = p1._pageInfo.view
       const width = w - x
       const height = h - y
-      let isvalidPageSize = (width / pageSizeInfo.pointsPerInch === pageSizeInfo.width) &&
+      const isvalidPageSize = (width / pageSizeInfo.pointsPerInch === pageSizeInfo.width) &&
         (height / pageSizeInfo.pointsPerInch === pageSizeInfo.height)
       if (!isvalidPageSize) return false
     }

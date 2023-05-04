@@ -1052,9 +1052,9 @@ export const useStore = defineStore('store', {
     setIgnoreChanges (ignoreChanges: boolean) {
       this.stateModel.ignoreChanges = ignoreChanges
     },
-    // setHaveChanges (haveChanges: boolean) {
-    //   commit('mutateHaveChanges', haveChanges)
-    // },
+    setHaveChanges (haveChanges: boolean) {
+      this.stateModel.haveChanges = haveChanges
+    },
     setValidateSteps (validate: boolean) {
       this.stateModel.validateSteps = validate
     },

@@ -219,7 +219,6 @@ import { AuthServices, LegalServices, PayServices } from '@/services/'
 // Enums and Constants
 import { FilingCodes, FilingNames, FilingStatus, FilingTypes, NameRequestStates, RouteNames, StaffPaymentOptions }
   from '@/enums'
-import { CorpTypeCd } from '@bcrs-shared-components/enums/'
 import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
 
 @Component({

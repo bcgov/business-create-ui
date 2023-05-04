@@ -497,7 +497,7 @@ describe('Staff Payment', () => {
 for (const entityType of ['BEN', 'BC', 'CC', 'ULC']) {
   describe('Base corporate incorporation filing: ' + entityType, () => {
     // load coop filing data
-    let ia = require('./test-data/incorpApp.json')
+    const ia = require('./test-data/incorpApp.json')
     ia.filing.business.legalType = entityType
     ia.filing.incorporationApplication.nameRequest.legalType = entityType
     let wrapper: any

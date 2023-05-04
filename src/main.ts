@@ -14,15 +14,15 @@ import * as Sentry from '@sentry/vue'
 import VueObserveVisibility from 'vue-observe-visibility' // added to help with rendering of text area heights properly
 import Hotjar from 'vue-hotjar'
 
+// Base App
+import App from '@/App.vue'
+
 // Styles
 // NB: order matters - do not change
 import '@mdi/font/css/materialdesignicons.min.css' // ensure you are using css-loader
 import '@/assets/styles/base.scss'
 import '@/assets/styles/layout.scss'
 import '@/assets/styles/overrides.scss'
-
-// Base App
-import App from '@/App.vue'
 
 // Helpers
 import { FetchConfig, GetFeatureFlag, InitLdClient, Navigate } from '@/utils'

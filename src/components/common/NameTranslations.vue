@@ -87,7 +87,6 @@ import { ConfirmDialog } from '@bcrs-shared-components/confirm-dialog'
 import AddNameTranslation from '@/components/common/AddNameTranslation.vue'
 import ListNameTranslations from '@/components/common/ListNameTranslations.vue'
 import { ActionBindingIF, ConfirmDialogType, NameTranslationIF } from '@/interfaces'
-import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 
 @Component({
   components: {
