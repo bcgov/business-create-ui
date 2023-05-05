@@ -8,7 +8,8 @@ import VueRouter from 'vue-router'
 import mockRouter from './unit/MockRouter'
 
 // Store
-import { getVuexStore } from '@/store'
+import { createPinia, setActivePinia } from 'pinia'
+import { useStore } from '@/store/store'
 
 // Utils
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
@@ -35,7 +36,8 @@ export const shallowWrapperFactory = (
   routeName = null,
   resource = null
 ) => {
-  const store = getVuexStore()
+  setActivePinia(createPinia())
+  const store = useStore()
   if (routeName) router.push({ name: routeName }).catch(() => {})
 
   if (stateValues) applyStoreValues(store, stateValues, resource)
@@ -45,7 +47,6 @@ export const shallowWrapperFactory = (
     },
     localVue,
     router,
-    store,
     vuetify
   })
 }
@@ -58,7 +59,8 @@ export const wrapperFactory = (
   resource = null,
   computed = null
 ) => {
-  const store = getVuexStore()
+  setActivePinia(createPinia())
+  const store = useStore()
   if (routeName) router.push({ name: routeName }).catch(() => {})
   if (stateValues) applyStoreValues(store, stateValues, resource)
   return mount(component, {
@@ -67,7 +69,6 @@ export const wrapperFactory = (
     },
     localVue,
     router,
-    store,
     vuetify,
     computed
   })
@@ -76,11 +77,11 @@ export const wrapperFactory = (
 const applyStoreValues = (store, stateValues, resource = null) => {
   resource = resource || IncorporationResources
   // Set Company Resources
-  store.state.resourceModel = resource.find(x => x.entityType === stateValues.entityType)
+  store.resourceModel = resource.find(x => x.entityType === stateValues.entityType)
 
   // Set individual state properties
   const stateKeys = Object.keys(stateValues)
   stateKeys.forEach((key) => {
-    store.state.stateModel[key] = stateValues[key]
+    store.stateModel[key] = stateValues[key]
   })
 }

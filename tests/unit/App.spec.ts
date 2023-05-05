@@ -3,7 +3,8 @@ import Vuetify from 'vuetify'
 import VueRouter from 'vue-router'
 import flushPromises from 'flush-promises'
 import sinon from 'sinon'
-import { getVuexStore } from '@/store'
+import { createPinia, setActivePinia } from 'pinia'
+import { useStore } from '@/store/store'
 import { shallowMount, createLocalVue } from '@vue/test-utils'
 import { AxiosInstance as axios } from '@/utils'
 import App from '@/App.vue'
@@ -36,7 +37,8 @@ console.warn = jest.fn()
 Vue.use(Vuetify)
 
 const vuetify = new Vuetify({})
-const store = getVuexStore()
+setActivePinia(createPinia())
+const store = useStore()
 
 // Prevent the warning "[Vuetify] Unable to locate target [data-app]"
 document.body.setAttribute('data-app', 'true')
@@ -267,8 +269,8 @@ describe('Incorporation - Define Company page for a BEN (numbered)', () => {
     delete window.location
     window.location = { assign: jest.fn() } as any
 
-    store.state.stateModel.tempId = ''
-    store.state.stateModel.business.businessId = ''
+    store.stateModel.tempId = ''
+    store.stateModel.business.businessId = ''
 
     const get = sinon.stub(axios, 'get')
 
@@ -357,7 +359,6 @@ describe('Incorporation - Define Company page for a BEN (numbered)', () => {
 
     wrapper = shallowMount(App, {
       localVue,
-      store,
       router,
       vuetify,
       stubs: { Affix: true }
@@ -375,37 +376,37 @@ describe('Incorporation - Define Company page for a BEN (numbered)', () => {
 
   it('loads a draft filing into the store', () => {
     // Validate IA for numbered company
-    expect(store.state.stateModel.entityType).toBe('BEN')
-    expect(store.state.stateModel.filingId).toBe(54321)
+    expect(store.stateModel.entityType).toBe('BEN')
+    expect(store.stateModel.filingId).toBe(54321)
 
     // Validate no offices are loaded
-    expect(store.state.stateModel.defineCompanyStep.officeAddresses)
+    expect(store.stateModel.defineCompanyStep.officeAddresses)
       .toBeDefined()
-    expect(store.state.stateModel.defineCompanyStep.officeAddresses.recordsOffice)
+    expect(store.stateModel.defineCompanyStep.officeAddresses.recordsOffice)
       .toBeUndefined()
 
     // Validate Contact Info
-    expect(store.state.stateModel.businessContact)
+    expect(store.stateModel.businessContact)
       .toBeDefined()
 
     // Validate Share Structure
-    expect(store.state.stateModel.createShareStructureStep.shareClasses)
+    expect(store.stateModel.createShareStructureStep.shareClasses)
       .toBeDefined()
   })
 
   it('does not load a name request into the store', () => {
     // Validate empty Name Request fields
-    expect(store.state.stateModel.nameRequest.applicants).toEqual({})
-    expect(store.state.stateModel.nameRequest.consentFlag).toBeNull()
-    expect(store.state.stateModel.nameRequest.expirationDate).toBeNull()
-    expect(store.state.stateModel.nameRequest.legalType).toBeNull()
-    expect(store.state.stateModel.nameRequest.names).toEqual([])
-    expect(store.state.stateModel.nameRequest.nrNum).toBe('')
-    expect(store.state.stateModel.nameRequest.request_action_cd).toBeNull()
-    expect(store.state.stateModel.nameRequest.state).toBeNull()
+    expect(store.stateModel.nameRequest.applicants).toEqual({})
+    expect(store.stateModel.nameRequest.consentFlag).toBeNull()
+    expect(store.stateModel.nameRequest.expirationDate).toBeNull()
+    expect(store.stateModel.nameRequest.legalType).toBeNull()
+    expect(store.stateModel.nameRequest.names).toEqual([])
+    expect(store.stateModel.nameRequest.nrNum).toBe('')
+    expect(store.stateModel.nameRequest.request_action_cd).toBeNull()
+    expect(store.stateModel.nameRequest.state).toBeNull()
 
     // Validate empty Approved Name
-    expect(store.state.stateModel.nameRequestApprovedName).toBeNull()
+    expect(store.stateModel.nameRequestApprovedName).toBeNull()
   })
 })
 
@@ -418,8 +419,8 @@ describe('Incorporation - Define Company page for a BEN (named)', () => {
     delete window.location
     window.location = { assign: jest.fn() } as any
 
-    store.state.stateModel.tempId = ''
-    store.state.stateModel.business.businessId = ''
+    store.stateModel.tempId = ''
+    store.stateModel.business.businessId = ''
 
     const get = sinon.stub(axios, 'get')
 
@@ -504,7 +505,6 @@ describe('Incorporation - Define Company page for a BEN (named)', () => {
 
     wrapper = shallowMount(App, {
       localVue,
-      store,
       router,
       vuetify,
       stubs: { Affix: true, ConfirmDialog }
@@ -530,82 +530,82 @@ describe('Incorporation - Define Company page for a BEN (named)', () => {
   })
 
   it('gets auth and user info properly', () => {
-    expect(store.getters.isAuthEdit).toBe(true)
-    expect(store.getters.isAuthView).toBe(true)
-    expect(store.state.stateModel.tombstone.userEmail).toBe('completing-party@example.com')
+    expect(store.isAuthEdit).toBe(true)
+    expect(store.isAuthView).toBe(true)
+    expect(store.stateModel.tombstone.userEmail).toBe('completing-party@example.com')
   })
 
   it('loads a draft filing into the store', () => {
     // Validate Filing ID - set by fetchDraft()
-    expect(store.state.stateModel.filingId).toBe(12345)
+    expect(store.stateModel.filingId).toBe(12345)
 
     // Validate Entity Type
-    expect(store.state.stateModel.entityType).toBe('BEN')
+    expect(store.stateModel.entityType).toBe('BEN')
 
     // Validate Office Addresses
-    expect(store.state.stateModel.defineCompanyStep.officeAddresses.registeredOffice)
+    expect(store.stateModel.defineCompanyStep.officeAddresses.registeredOffice)
       .toStrictEqual(filingData.incorporationApplication.offices.registeredOffice)
-    expect(store.state.stateModel.defineCompanyStep.officeAddresses.recordsOffice)
+    expect(store.stateModel.defineCompanyStep.officeAddresses.recordsOffice)
       .toStrictEqual(filingData.incorporationApplication.offices.recordsOffice)
 
     // Validate Contact Info
-    expect(store.state.stateModel.businessContact)
+    expect(store.stateModel.businessContact)
       .toStrictEqual(filingData.incorporationApplication.contactPoint)
 
     // Validate People And Roles
-    expect(store.state.stateModel.addPeopleAndRoleStep.orgPeople)
+    expect(store.stateModel.addPeopleAndRoleStep.orgPeople)
       .toStrictEqual(filingData.incorporationApplication.parties)
 
     // Validate Share Structure
-    expect(store.state.stateModel.createShareStructureStep.shareClasses)
+    expect(store.stateModel.createShareStructureStep.shareClasses)
       .toStrictEqual(filingData.incorporationApplication.shareStructure.shareClasses)
 
     // Validate Incorporation Agreement
-    expect(store.state.stateModel.incorporationAgreementStep.agreementType)
+    expect(store.stateModel.incorporationAgreementStep.agreementType)
       .toStrictEqual(filingData.incorporationApplication.incorporationAgreement.agreementType)
   })
 
   it('loads a name request into the store', () => {
-    expect(store.state.stateModel.entityType).toBe('BEN')
-    expect(store.state.stateModel.filingId).toBe(12345)
+    expect(store.stateModel.entityType).toBe('BEN')
+    expect(store.stateModel.filingId).toBe(12345)
 
     // Validate Name Request fields
-    expect(store.state.stateModel.nameRequest.consentFlag).toBe(nrData.consentFlag)
-    expect(store.state.stateModel.nameRequest.expirationDate).toBe(nrData.expirationDate)
-    expect(store.state.stateModel.nameRequest.legalType).toBe(nrData.legalType)
-    expect(store.state.stateModel.nameRequest.nrNum).toBe(nrData.nrNum)
-    expect(store.state.stateModel.nameRequest.request_action_cd).toBe(nrData.request_action_cd)
-    expect(store.state.stateModel.nameRequest.state).toBe(nrData.state)
+    expect(store.stateModel.nameRequest.consentFlag).toBe(nrData.consentFlag)
+    expect(store.stateModel.nameRequest.expirationDate).toBe(nrData.expirationDate)
+    expect(store.stateModel.nameRequest.legalType).toBe(nrData.legalType)
+    expect(store.stateModel.nameRequest.nrNum).toBe(nrData.nrNum)
+    expect(store.stateModel.nameRequest.request_action_cd).toBe(nrData.request_action_cd)
+    expect(store.stateModel.nameRequest.state).toBe(nrData.state)
 
     // Validate NR Applicant
-    expect(store.state.stateModel.nameRequest.applicants).toBeDefined()
-    expect(store.state.stateModel.nameRequest.applicants.firstName).toBe(nrData.applicants.firstName)
-    expect(store.state.stateModel.nameRequest.applicants.middleName).toBe(nrData.applicants.middleName)
-    expect(store.state.stateModel.nameRequest.applicants.lastName).toBe(nrData.applicants.lastName)
-    expect(store.state.stateModel.nameRequest.applicants.emailAddress).toBe(nrData.applicants.emailAddress)
-    expect(store.state.stateModel.nameRequest.applicants.phoneNumber).toBe(nrData.applicants.phoneNumber)
-    expect(store.state.stateModel.nameRequest.applicants.addrLine1).toBe(nrData.applicants.addrLine1)
-    expect(store.state.stateModel.nameRequest.applicants.addrLine2).toBe(nrData.applicants.addrLine2)
-    expect(store.state.stateModel.nameRequest.applicants.addrLine3).toBe(nrData.applicants.addrLine3)
-    expect(store.state.stateModel.nameRequest.applicants.city).toBe(nrData.applicants.city)
-    expect(store.state.stateModel.nameRequest.applicants.countryTypeCd).toBe(nrData.applicants.countryTypeCd)
-    expect(store.state.stateModel.nameRequest.applicants.postalCd).toBe(nrData.applicants.postalCd)
-    expect(store.state.stateModel.nameRequest.applicants.stateProvinceCd).toBe(nrData.applicants.stateProvinceCd)
+    expect(store.stateModel.nameRequest.applicants).toBeDefined()
+    expect(store.stateModel.nameRequest.applicants.firstName).toBe(nrData.applicants.firstName)
+    expect(store.stateModel.nameRequest.applicants.middleName).toBe(nrData.applicants.middleName)
+    expect(store.stateModel.nameRequest.applicants.lastName).toBe(nrData.applicants.lastName)
+    expect(store.stateModel.nameRequest.applicants.emailAddress).toBe(nrData.applicants.emailAddress)
+    expect(store.stateModel.nameRequest.applicants.phoneNumber).toBe(nrData.applicants.phoneNumber)
+    expect(store.stateModel.nameRequest.applicants.addrLine1).toBe(nrData.applicants.addrLine1)
+    expect(store.stateModel.nameRequest.applicants.addrLine2).toBe(nrData.applicants.addrLine2)
+    expect(store.stateModel.nameRequest.applicants.addrLine3).toBe(nrData.applicants.addrLine3)
+    expect(store.stateModel.nameRequest.applicants.city).toBe(nrData.applicants.city)
+    expect(store.stateModel.nameRequest.applicants.countryTypeCd).toBe(nrData.applicants.countryTypeCd)
+    expect(store.stateModel.nameRequest.applicants.postalCd).toBe(nrData.applicants.postalCd)
+    expect(store.stateModel.nameRequest.applicants.stateProvinceCd).toBe(nrData.applicants.stateProvinceCd)
 
     // Validate NR Names
-    expect(store.state.stateModel.nameRequest.names).toBeDefined()
-    expect(store.state.stateModel.nameRequest.names[0].name).toBe(nrData.names[0].name)
-    expect(store.state.stateModel.nameRequest.names[0].state).toBe(nrData.names[0].state)
-    expect(store.state.stateModel.nameRequest.names[1].name).toBe(nrData.names[1].name)
-    expect(store.state.stateModel.nameRequest.names[1].state).toBe(nrData.names[1].state)
+    expect(store.stateModel.nameRequest.names).toBeDefined()
+    expect(store.stateModel.nameRequest.names[0].name).toBe(nrData.names[0].name)
+    expect(store.stateModel.nameRequest.names[0].state).toBe(nrData.names[0].state)
+    expect(store.stateModel.nameRequest.names[1].name).toBe(nrData.names[1].name)
+    expect(store.stateModel.nameRequest.names[1].state).toBe(nrData.names[1].state)
 
     // Validate Approved Name
-    expect(store.state.stateModel.nameRequestApprovedName).toBe(nrData.names[0].name)
+    expect(store.stateModel.nameRequestApprovedName).toBe(nrData.names[0].name)
   })
 
   it('shows confirm popup if exiting before saving changes', async () => {
     // simulate that we have unsaved changes
-    store.state.stateModel.haveChanges = true
+    store.stateModel.haveChanges = true
 
     // call Go To Dashboard event handler
     await wrapper.vm.goToDashboard()
@@ -622,7 +622,7 @@ describe('Incorporation - Define Company page for a BEN (named)', () => {
 
   it('redirects to dashboard if exiting after saving changes', async () => {
     // simulate that we have no unsaved changes
-    store.state.stateModel.haveChanges = false
+    store.stateModel.haveChanges = false
 
     // call Go To Dashboard event handler
     await wrapper.vm.goToDashboard()
@@ -646,10 +646,10 @@ describe('Voluntary Dissolution - Define Dissolution page for a BEN', () => {
     delete window.location
     window.location = { assign: jest.fn() } as any
 
-    store.state.stateModel.tempId = ''
-    store.state.stateModel.business.businessId = ''
-    store.state.stateModel.effectiveDateTime.isFutureEffective = false
-    store.state.stateModel.staffPaymentStep.staffPayment.isPriority = false
+    store.stateModel.tempId = ''
+    store.stateModel.business.businessId = ''
+    store.stateModel.effectiveDateTime.isFutureEffective = false
+    store.stateModel.staffPaymentStep.staffPayment.isPriority = false
 
     const feesPromise = new Promise(resolve => resolve({
       data:
@@ -869,7 +869,6 @@ describe('Voluntary Dissolution - Define Dissolution page for a BEN', () => {
 
     wrapper = shallowMount(App, {
       localVue,
-      store,
       router,
       vuetify,
       stubs: { Affix: true }
@@ -904,9 +903,9 @@ describe('Restoration - App page', () => {
     delete window.location
     window.location = { assign: jest.fn() } as any
 
-    store.state.stateModel.tempId = ''
-    store.state.stateModel.business.businessId = ''
-    store.state.stateModel.staffPaymentStep.staffPayment.isPriority = false
+    store.stateModel.tempId = ''
+    store.stateModel.business.businessId = ''
+    store.stateModel.staffPaymentStep.staffPayment.isPriority = false
 
     const get = sinon.stub(axios, 'get')
 
@@ -1066,7 +1065,6 @@ describe('Restoration - App page', () => {
 
     wrapper = shallowMount(App, {
       localVue,
-      store,
       router,
       vuetify,
       stubs: { Affix: true }

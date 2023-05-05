@@ -3,18 +3,21 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify'
 import VueRouter from 'vue-router'
-import { getVuexStore } from '@/store'
+import { createPinia, setActivePinia } from 'pinia'
+import { useStore } from '@/store/store'
 import { shallowMount, createLocalVue, createWrapper } from '@vue/test-utils'
 import sinon from 'sinon'
 import { AxiosInstance as axios } from '@/utils'
 import Actions from '@/components/common/Actions.vue'
 import mockRouter from './MockRouter'
 import LegalServices from '@/services/legal-services'
+import { CorpTypeCd, FilingTypes } from '@/enums'
 
 Vue.use(Vuetify)
 
 const vuetify = new Vuetify({})
-const store = getVuexStore()
+setActivePinia(createPinia())
+const store = useStore()
 
 // mock services function
 const mockUpdateFiling = jest.spyOn((LegalServices as any), 'updateFiling').mockImplementation()
@@ -72,7 +75,7 @@ describe('Actions component', () => {
     const localVue = createLocalVue()
     localVue.use(VueRouter)
     const router = mockRouter.mock()
-    wrapper = shallowMount(Actions, { localVue, store, router, vuetify })
+    wrapper = shallowMount(Actions, { localVue, router, vuetify })
   })
 
   afterEach(() => {
@@ -80,17 +83,17 @@ describe('Actions component', () => {
   })
 
   it('Enables File and Pay button when certify from is valid', async () => {
-    store.state.stateModel.certifyState = {
+    store.stateModel.certifyState = {
       valid: true,
       certifiedBy: 'Some certifier'
     }
-    store.state.stateModel.entityType = 'BEN'
-    store.state.stateModel.nameRequest = { entityType: 'BEN' }
-    store.state.stateModel.defineCompanyStep = { valid: true }
-    store.state.stateModel.addPeopleAndRoleStep = { valid: true }
-    store.state.stateModel.createShareStructureStep = { valid: true }
-    store.state.stateModel.incorporationAgreementStep = { valid: true }
-    store.state.stateModel.effectiveDateTime = { valid: true }
+    store.stateModel.entityType = CorpTypeCd.BENEFIT_COMPANY
+    store.stateModel.nameRequest.legalType = CorpTypeCd.BENEFIT_COMPANY
+    store.stateModel.defineCompanyStep = { valid: true }
+    store.stateModel.addPeopleAndRoleStep = { valid: true }
+    store.stateModel.createShareStructureStep = { valid: true }
+    store.stateModel.incorporationAgreementStep = { valid: true }
+    store.stateModel.effectiveDateTime = { valid: true }
     await Vue.nextTick()
 
     // verify File and Pay button state
@@ -123,34 +126,34 @@ describe('Emits error event if NR validation fails in file and pay', () => {
       })))
 
     // init store
-    store.state.stateModel.currentDate = '2020/01/29'
-    store.state.stateModel.nameRequest = {
-      legalType: 'BEN',
+    store.stateModel.currentDate = '2020/01/29'
+    store.stateModel.nameRequest = {
+      legalType: CorpTypeCd.BENEFIT_COMPANY,
       nrNum: 'NR 1234567'
     }
-    store.state.stateModel.nameRequestApprovedName = 'My Name Request Inc.'
-    store.state.stateModel.tombstone = {
+    store.stateModel.nameRequestApprovedName = 'My Name Request Inc.'
+    store.stateModel.tombstone = {
       authRoles: [],
-      filingType: 'incorporationApplication',
+      filingType: FilingTypes.INCORPORATION_APPLICATION,
       userEmail: 'completing-party@example.com'
     }
-    store.state.stateModel.certifyState = {
+    store.stateModel.certifyState = {
       valid: true,
       certifiedBy: 'Some certifier'
     }
-    store.state.stateModel.entityType = 'BEN'
-    store.state.stateModel.defineCompanyStep = { valid: true }
-    store.state.stateModel.addPeopleAndRoleStep = { valid: true }
-    store.state.stateModel.createShareStructureStep = { valid: true }
-    store.state.stateModel.incorporationAgreementStep = { valid: true }
-    store.state.stateModel.effectiveDateTime = { valid: true }
-    store.state.stateModel.courtOrderStep = { valid: true }
+    store.stateModel.entityType = CorpTypeCd.BENEFIT_COMPANY
+    store.stateModel.defineCompanyStep = { valid: true }
+    store.stateModel.addPeopleAndRoleStep = { valid: true }
+    store.stateModel.createShareStructureStep = { valid: true }
+    store.stateModel.incorporationAgreementStep = { valid: true }
+    store.stateModel.effectiveDateTime = { valid: true }
+    store.stateModel.courtOrderStep = { valid: true }
 
     const localVue = createLocalVue()
     localVue.use(VueRouter)
     const router = mockRouter.mock()
     router.push({ name: 'incorporation-review-confirm', query: { id: 'T1234567' } })
-    wrapper = shallowMount(Actions, { localVue, store, router, vuetify })
+    wrapper = shallowMount(Actions, { localVue, router, vuetify })
   })
 
   afterEach(() => {
@@ -379,50 +382,50 @@ describe('Actions component - Filing Functionality', () => {
       })))
 
     // init store
-    store.state.stateModel.currentDate = '2020/01/29'
-    store.state.stateModel.nameRequest = {
-      legalType: 'BEN',
+    store.stateModel.currentDate = '2020/01/29'
+    store.stateModel.nameRequest = {
+      legalType: CorpTypeCd.BENEFIT_COMPANY,
       nrNum: 'NR 1234567'
     }
-    store.state.stateModel.nameRequestApprovedName = 'My Name Request Inc.'
-    store.state.stateModel.nameTranslations = []
-    store.state.stateModel.tombstone = {
+    store.stateModel.nameRequestApprovedName = 'My Name Request Inc.'
+    store.stateModel.nameTranslations = []
+    store.stateModel.tombstone = {
       authRoles: [],
-      filingType: 'incorporationApplication',
+      filingType: FilingTypes.INCORPORATION_APPLICATION,
       userEmail: 'completing-party@example.com',
       folioNumber: '123456'
     }
-    store.state.stateModel.certifyState.certifiedBy = filing.header.certifiedBy
-    store.state.stateModel.businessContact = {
+    store.stateModel.certifyState.certifiedBy = filing.header.certifiedBy
+    store.stateModel.businessContact = {
       email: filing.incorporationApplication.contactPoint.email,
       phone: filing.incorporationApplication.contactPoint.phone,
       extension: filing.incorporationApplication.contactPoint.extension
     }
-    store.state.stateModel.effectiveDateTime.effectiveDate = effectiveDate
-    store.state.stateModel.businessContact = {
+    store.stateModel.effectiveDateTime.effectiveDate = effectiveDate
+    store.stateModel.businessContact = {
       email: 'registered-office@example.com',
       confirmEmail: 'registered-office@example.com',
       phone: '111-222-3333',
       extension: 444
     }
-    store.state.stateModel.defineCompanyStep.officeAddresses = filing.incorporationApplication.offices
-    store.state.stateModel.defineCompanyStep.folioNumber = filing.header.folioNumber
-    store.state.stateModel.addPeopleAndRoleStep.orgPeople = filing.incorporationApplication.parties
-    store.state.stateModel.createShareStructureStep.shareClasses =
+    store.stateModel.defineCompanyStep.officeAddresses = filing.incorporationApplication.offices
+    store.stateModel.defineCompanyStep.folioNumber = filing.header.folioNumber
+    store.stateModel.addPeopleAndRoleStep.orgPeople = filing.incorporationApplication.parties
+    store.stateModel.createShareStructureStep.shareClasses =
       filing.incorporationApplication.shareStructure.shareClasses
-    store.state.stateModel.filingId = 1234
-    store.state.stateModel.entityType = 'BEN'
-    store.state.stateModel.tempId = 'T1234567'
-    store.state.stateModel.effectiveDateTime.isFutureEffective = filing.header.isFutureEffective
-    store.state.stateModel.incorporationAgreementStep.agreementType =
+    store.stateModel.filingId = 1234
+    store.stateModel.entityType = CorpTypeCd.BENEFIT_COMPANY
+    store.stateModel.tempId = 'T1234567'
+    store.stateModel.effectiveDateTime.isFutureEffective = filing.header.isFutureEffective
+    store.stateModel.incorporationAgreementStep.agreementType =
       filing.incorporationApplication.incorporationAgreement.agreementType
-    store.state.stateModel.isSavingResuming = false
+    store.stateModel.isSavingResuming = false
 
     const localVue = createLocalVue()
     localVue.use(VueRouter)
     const router = mockRouter.mock()
     router.push({ name: 'incorporation-define-company', query: { id: 'T1234567' } })
-    wrapper = shallowMount(Actions, { localVue, store, router, vuetify })
+    wrapper = shallowMount(Actions, { localVue, router, vuetify })
   })
 
   afterEach(() => {

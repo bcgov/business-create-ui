@@ -1,13 +1,15 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify'
-import { getVuexStore } from '@/store'
+import { createPinia, setActivePinia } from 'pinia'
+import { useStore } from '@/store/store'
 import { shallowMount, mount } from '@vue/test-utils'
 import InvalidIncorporationApplicationDialog from '@/dialogs/InvalidFilingDialog.vue'
 
 Vue.use(Vuetify)
 
 const vuetify = new Vuetify({})
-const store = getVuexStore()
+setActivePinia(createPinia())
+const store = useStore()
 
 // Prevent the warning "[Vuetify] Unable to locate target [data-app]"
 document.body.setAttribute('data-app', 'true')
@@ -17,7 +19,6 @@ describe('Invalid Filing Dialog', () => {
     const wrapper = shallowMount(InvalidIncorporationApplicationDialog,
       {
         vuetify,
-        store,
         propsData: { dialog: true }
       })
     expect(wrapper.attributes('contentclass')).toBe('invalid-filing-dialog')
@@ -35,7 +36,6 @@ describe('Invalid Filing Dialog', () => {
     const wrapper = mount(InvalidIncorporationApplicationDialog,
       {
         vuetify,
-        store,
         propsData: { dialog: true }
       })
 
