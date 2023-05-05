@@ -617,17 +617,17 @@ export const useStore = defineStore('store', {
     },
 
     /**
-   * Is true when the user has tried to submit a filing,
-   * ie, after clicking File and Pay.
-   */
+     * Is true when the user has tried to submit a filing,
+     * ie, after clicking File and Pay.
+     */
     getValidateSteps (): boolean {
       return this.stateModel.validateSteps
     },
 
     /**
-   * Is true when the user should see the validation errors,
-   * ie, after navigating to review page.
-   */
+     * Is true when the user should see the validation errors,
+     * ie, after navigating to review page.
+     */
     getShowErrors (): boolean {
       return this.stateModel.showErrors
     },
