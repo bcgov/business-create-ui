@@ -558,7 +558,7 @@ export const useStore = defineStore('store', {
 
     /** Whether all the incorporation steps are valid. */
     isIncorporationApplicationValid (): boolean {
-    // Base company steps
+      // Base company steps
       const isBaseStepsValid = (
         this.getCreateShareStructureStep.valid &&
         this.getEffectiveDateTime.valid &&
