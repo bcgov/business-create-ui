@@ -84,12 +84,10 @@ describe('Registration Filing', () => {
       nrNum: 'NR 1234567'
     }
     store.stateModel.nameRequestApprovedName = 'My Approved Name'
-
-    const extension: any = '444'
     store.stateModel.businessContact = {
       email: 'eleven@example.com',
       phone: '(111) 222-3333',
-      extension: extension
+      extension: '444'
     }
     store.stateModel.entityType = CorpTypeCd.SOLE_PROP // sole prop
     store.stateModel.registration.businessType = BusinessTypes.SP // not DBA
