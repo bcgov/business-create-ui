@@ -64,9 +64,9 @@ describe('Office Address delivery address <same as> is unchecked by default', ()
   const CORP_TYPES = [
     CorpTypeCd.COOP,
     CorpTypeCd.BENEFIT_COMPANY
-    // 'CC',
-    // 'BC',
-    // 'ULC'
+    // CorpTypeCd.BC_CCC,
+    // CorpTypeCd.BC_COMPANY,
+    // CorpTypeCd.BC_ULC_COMPANY
   ]
 
   afterEach(() => {
