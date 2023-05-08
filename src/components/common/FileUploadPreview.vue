@@ -47,22 +47,24 @@ export default class FileUploadPreview extends Vue {
   private fileUpload: File = null
   private customErrorMessages: string[] = []
 
-  protected fileUploadRules = [
-    (v) => {
-      if (this.isRequired) {
-        return !!v || this.inputFileLabel + ' is required'
+  get fileUploadRules () {
+    return [
+      (file) => {
+        if (this.isRequired) {
+          return !!file || this.inputFileLabel + ' is required'
+        }
+        return true
+      },
+      (file) => {
+        if (this.maxSize) {
+          const maxSizeMB = this.maxSize / 1024
+          const errorMsg = 'Exceeds maximum ' + maxSizeMB.toString() + ' MB file size'
+          return (file?.size <= (this.maxSize * 1024)) || errorMsg
+        }
+        return true
       }
-      return true
-    },
-    (file) => {
-      if (this.maxSize) {
-        const maxSizeMB = this.maxSize / 1024
-        const errorMsg = 'Exceeds maximum ' + maxSizeMB.toString() + ' MB file size'
-        return (file?.size <= (this.maxSize * 1024)) || errorMsg
-      }
-      return true
-    }
-  ]
+    ]
+  }
 
   /** Called when component is mounted. */
   async mounted (): Promise<void> {
