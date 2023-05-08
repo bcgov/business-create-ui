@@ -125,8 +125,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component, Watch } from 'vue-property-decorator'
+import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { Getter, Action } from 'pinia-class'
 import { useStore } from '@/store/store'
 import {
@@ -154,33 +153,30 @@ import NameTranslations from '@/components/common/NameTranslations.vue'
     OfficeAddresses,
     NameRequestInfo,
     NameTranslations
-  },
-  mixins: [
-    CommonMixin
-  ]
+  }
 })
-export default class IncorporationDefineCompany extends Vue {
-  @Getter(useStore) isEntityType!: boolean
-  @Getter(useStore) isPremiumAccount!: boolean
-  @Getter(useStore) isBaseCompany!: boolean
-  @Getter(useStore) isTypeCoop!: boolean
-  @Getter(useStore) getDefineCompanyStep!: DefineCompanyIF
-  @Getter(useStore) getShowErrors!: boolean
+export default class IncorporationDefineCompany extends Mixins(CommonMixin) {
   @Getter(useStore) getBusinessContact!: ContactPointIF
+  @Getter(useStore) getDefineCompanyStep!: DefineCompanyIF
   @Getter(useStore) getFolioNumber!: string
   @Getter(useStore) getNameTranslationsValid!: boolean
+  @Getter(useStore) getShowErrors!: boolean
+  @Getter(useStore) isBaseCompany!: boolean
+  @Getter(useStore) isEntityType!: boolean
+  @Getter(useStore) isPremiumAccount!: boolean
+  @Getter(useStore) isTypeCoop!: boolean
 
   @Action(useStore) setBusinessContact!: ActionBindingIF
   @Action(useStore) setCooperativeType!: ActionBindingIF
-  @Action(useStore) setFolioNumber!: ActionBindingIF
-  @Action(useStore) setOfficeAddresses!: ActionBindingIF
   @Action(useStore) setDefineCompanyStepValidity!: ActionBindingIF
+  @Action(useStore) setFolioNumber!: ActionBindingIF
   @Action(useStore) setIgnoreChanges!: ActionBindingIF
+  @Action(useStore) setOfficeAddresses!: ActionBindingIF
 
-  protected businessContactFormValid = false
-  protected addressFormValid = false
-  protected hasValidCooperativeType = false
-  protected coopHelpToggle = false
+  businessContactFormValid = false
+  addressFormValid = false
+  hasValidCooperativeType = false
+  coopHelpToggle = false
 
   // Enum for template
   readonly CorpTypeCd = CorpTypeCd
@@ -265,12 +261,12 @@ export default class IncorporationDefineCompany extends Vue {
     )
   }
 
-  private onHasCooperativeType (cooperativeType: CoopTypes): void {
+  onHasCooperativeType (cooperativeType: CoopTypes): void {
     this.hasValidCooperativeType = !!cooperativeType
     this.setCooperativeType(cooperativeType)
   }
 
-  private onBusinessContactInfoValid (valid: boolean): void {
+  onBusinessContactInfoValid (valid: boolean): void {
     this.businessContactFormValid = valid
     this.setDefineCompanyStepValidity(
       this.businessContactFormValid &&
@@ -279,7 +275,7 @@ export default class IncorporationDefineCompany extends Vue {
     )
   }
 
-  private onOfficeAddressesValid (valid: boolean): void {
+  onOfficeAddressesValid (valid: boolean): void {
     this.addressFormValid = valid
     this.setDefineCompanyStepValidity(
       this.businessContactFormValid &&

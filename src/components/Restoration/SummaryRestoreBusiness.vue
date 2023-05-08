@@ -94,22 +94,17 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component, Watch } from 'vue-property-decorator'
+import { Component, Mixins } from 'vue-property-decorator'
 import { DateMixin } from '@/mixins'
-import { Getter, Action } from 'pinia-class'
+import { Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { ApprovalTypes, RouteNames } from '@/enums'
 import { CorpTypeCd, CorrectNameOptions } from '@bcrs-shared-components/enums/'
 import { NameTranslationIF, RestorationStateIF } from '@/interfaces'
 import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 
-@Component({
-  mixins: [
-    DateMixin
-  ]
-})
-export default class SummaryRestoreBusiness extends Vue {
+@Component({})
+export default class SummaryRestoreBusiness extends Mixins(DateMixin) {
   @Getter(useStore) getEntityType!: CorpTypeCd
   @Getter(useStore) getCorrectNameOption!: CorrectNameOptions
   @Getter(useStore) getNameRequestApprovedName!: string

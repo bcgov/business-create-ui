@@ -125,8 +125,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component } from 'vue-property-decorator'
+import { Component, Vue } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { ActionBindingIF, ContactPointIF, CertifyIF, DocumentDeliveryIF, PeopleAndRoleIF } from '@/interfaces'
@@ -153,19 +152,19 @@ import TransactionalFolioNumber from '@/components/common/TransactionalFolioNumb
   }
 })
 export default class RegistrationReviewConfirm extends Vue {
+  @Getter(useStore) getAddPeopleAndRoleStep!: PeopleAndRoleIF
   @Getter(useStore) getBusinessContact!: ContactPointIF
-  @Getter(useStore) getUserEmail!: string
+  @Getter(useStore) getCertifyState!: CertifyIF
+  @Getter(useStore) getDocumentDelivery!: DocumentDeliveryIF
   @Getter(useStore) getFolioNumber!: string
   @Getter(useStore) getTransactionalFolioNumber!: string
+  @Getter(useStore) getUserEmail!: string
+  @Getter(useStore) getValidateSteps!: boolean
   @Getter(useStore) isPremiumAccount!: boolean
-  @Getter(useStore) getCertifyState!: CertifyIF
   @Getter(useStore) isRoleStaff!: boolean
   @Getter(useStore) isSbcStaff!: boolean
-  @Getter(useStore) getValidateSteps!: boolean
-  @Getter(useStore) getDocumentDelivery!: DocumentDeliveryIF
-  @Getter(useStore) isTypeSoleProp!: boolean
   @Getter(useStore) isTypePartnership!: boolean
-  @Getter(useStore) getAddPeopleAndRoleStep!: PeopleAndRoleIF
+  @Getter(useStore) isTypeSoleProp!: boolean
 
   @Action(useStore) setDocumentOptionalEmailValidity!: ActionBindingIF
   @Action(useStore) setTransactionalFolioNumber!: ActionBindingIF

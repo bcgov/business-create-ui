@@ -11,6 +11,7 @@ import { RegistrationResourceGp } from '@/resources/Registration/GP'
 import RegAddEditOrgPerson from '@/components/common/RegAddEditOrgPerson.vue'
 import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
 import { CorpTypeCd, RoleTypes } from '@/enums'
+import { OrgPersonIF, ResourceIF } from '@/interfaces'
 
 // mock the console.warn function to hide "[Vuetify] Unable to locate target XXX"
 console.warn = jest.fn()
@@ -75,7 +76,7 @@ describe('Registration People And Roles component - SP', () => {
 
   beforeEach(() => {
     store.stateModel.entityType = CorpTypeCd.SOLE_PROP
-    store.resourceModel = RegistrationResourceSp
+    store.resourceModel = RegistrationResourceSp as ResourceIF
     wrapperFactory = () => mount(RegPeopleAndRoles, {
       vuetify,
       stubs: {
@@ -161,8 +162,8 @@ describe('Registration People And Roles component - SP', () => {
 
   it('shows check mark next to roles added', () => {
     store.stateModel.addPeopleAndRoleStep.orgPeople = [
-      { roles: [{ roleType: RoleTypes.COMPLETING_PARTY }] },
-      { roles: [{ roleType: RoleTypes.PROPRIETOR }] }
+      { roles: [{ roleType: RoleTypes.COMPLETING_PARTY }] } as OrgPersonIF,
+      { roles: [{ roleType: RoleTypes.PROPRIETOR }] } as OrgPersonIF
     ]
     const wrapper = wrapperFactory()
     expect(wrapper.find(completingPartyRule).exists()).toBeTruthy()
@@ -215,7 +216,7 @@ describe('Registration People And Roles component - GP', () => {
 
   beforeEach(() => {
     store.stateModel.entityType = CorpTypeCd.PARTNERSHIP
-    store.resourceModel = RegistrationResourceGp
+    store.resourceModel = RegistrationResourceGp as ResourceIF
     wrapperFactory = () => mount(RegPeopleAndRoles, {
       vuetify,
       stubs: {
@@ -300,9 +301,9 @@ describe('Registration People And Roles component - GP', () => {
 
   it('shows check mark next to roles added', () => {
     store.stateModel.addPeopleAndRoleStep.orgPeople = [
-      { roles: [{ roleType: RoleTypes.COMPLETING_PARTY }] },
-      { roles: [{ roleType: RoleTypes.PARTNER }] },
-      { roles: [{ roleType: RoleTypes.PARTNER }] }
+      { roles: [{ roleType: RoleTypes.COMPLETING_PARTY }] } as OrgPersonIF,
+      { roles: [{ roleType: RoleTypes.PARTNER }] } as OrgPersonIF,
+      { roles: [{ roleType: RoleTypes.PARTNER }] } as OrgPersonIF
     ]
     const wrapper = wrapperFactory()
     expect(wrapper.find(completingPartyRule).exists()).toBeTruthy()

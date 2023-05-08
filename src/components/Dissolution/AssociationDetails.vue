@@ -98,8 +98,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component, Prop } from 'vue-property-decorator'
+import { Component, Mixins, Prop } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { AuthServices } from '@/services/'
@@ -119,13 +118,9 @@ import { GetCorpFullDescription, GetCorpNumberedDescription } from '@bcrs-shared
     OfficeAddresses,
     DeliveryAddress: BaseAddress,
     MailingAddress: BaseAddress
-  },
-  mixins: [
-    CommonMixin,
-    DateMixin
-  ]
+  }
 })
-export default class AssociationDetails extends Vue {
+export default class AssociationDetails extends Mixins(CommonMixin, DateMixin) {
   @Prop({ default: false }) readonly isSummary!: boolean
   @Prop({ default: 'Address' }) readonly addressLabel!: string
   @Prop({ default: 'Company' }) readonly entityLabel!: string
@@ -148,7 +143,7 @@ export default class AssociationDetails extends Vue {
   @Action(useStore) setBusinessContact!: ActionBindingIF
   @Action(useStore) setIgnoreChanges!: ActionBindingIF
 
-  private contactInfoMsg = `Registered Office Contact Information is required for dissolution documents delivery.
+  readonly contactInfoMsg = `Registered Office Contact Information is required for dissolution documents delivery.
   Any changes made will be applied immediately.`
 
   /** The entity name. */
@@ -168,12 +163,12 @@ export default class AssociationDetails extends Vue {
   }
 
   /** Whether the address object is empty. */
-  protected isEmptyAddress (address: AddressIF): boolean {
+  isEmptyAddress (address: AddressIF): boolean {
     return isEmpty(address)
   }
 
   /** Event handler for contact information changes. */
-  protected async onContactInfoChange (event: ContactPointIF): Promise<void> {
+  async onContactInfoChange (event: ContactPointIF): Promise<void> {
     // temporarily ignore data changes
     this.setIgnoreChanges(true)
 

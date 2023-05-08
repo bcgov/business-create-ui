@@ -42,7 +42,7 @@ for (const test of incorporationAgreementTestcases) {
     })
 
     it('displayes correct help text ', async () => {
-      let helpBtns = wrapper.findAll('.help-btn')
+      const helpBtns = wrapper.findAll('.help-btn')
       expect(helpBtns.at(0).text()).toBe('Help with Incorporation Agreement and Articles')
 
       await wrapper.find('.help-btn').trigger('click')

@@ -9,8 +9,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component, Emit, Prop } from 'vue-property-decorator'
+import { Component, Emit, Prop, Vue } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { ActionBindingIF, RegistrationStateIF } from '@/interfaces'
@@ -34,6 +33,6 @@ export default class NatureOfBusiness extends Vue {
 
   @Emit('valid')
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  private emitValid (val: boolean): void {}
+  emitValid (val: boolean): void {}
 }
 </script>

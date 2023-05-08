@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator'
+import { Component, Mixins } from 'vue-property-decorator'
 import { Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { isDate } from 'lodash'
@@ -12,7 +12,7 @@ import { CommonMixin } from '@/mixins'
  * Mixin that provides some useful date utilities.
  */
 @Component({})
-export default class DateMixin extends CommonMixin {
+export default class DateMixin extends Mixins(CommonMixin) {
   @Getter(useStore) getCurrentJsDate!: Date
 
   /**

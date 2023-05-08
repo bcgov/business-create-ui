@@ -145,8 +145,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component } from 'vue-property-decorator'
+import { Component, Mixins } from 'vue-property-decorator'
 import { cloneDeep } from 'lodash'
 import { EmptyOrgPerson } from '@/interfaces'
 import { EmptyAddress } from '@bcrs-shared-components/interfaces'
@@ -163,17 +162,14 @@ import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
     ConfirmDialog,
     HelpSection,
     ListPeopleAndRoles
-  },
-  mixins: [
-    PeopleRolesMixin
-  ]
+  }
 })
-export default class PeopleAndRoles extends Vue {
+export default class PeopleAndRoles extends Mixins(PeopleRolesMixin) {
   //
   // NB: see mixin for common properties, methods, etc.
   //
 
-  protected addOrgPerson (roleType: RoleTypes, partyType: PartyTypes): void {
+  addOrgPerson (roleType: RoleTypes, partyType: PartyTypes): void {
     // first assign empty org/person object
     this.currentOrgPerson = cloneDeep(EmptyOrgPerson)
 

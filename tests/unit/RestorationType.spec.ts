@@ -6,6 +6,7 @@ import { useStore } from '@/store/store'
 import { mount } from '@vue/test-utils'
 import RestorationType from '@/components/Restoration/RestorationType.vue'
 import { RestorationTypes } from '@/enums'
+import { RestorationStateIF } from '@/interfaces'
 
 // mock the console.warn function to hide "[Vuetify] Unable to locate target XXX"
 console.warn = jest.fn()
@@ -26,7 +27,7 @@ describe('Restoration Type component', () => {
       expiry: null,
       relationships: [],
       restorationTypeValid: true
-    }
+    } as RestorationStateIF
     wrapperFactory = () => mount(RestorationType, {
       vuetify
     })

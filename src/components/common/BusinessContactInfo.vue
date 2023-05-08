@@ -93,8 +93,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component, Prop, Watch, Emit } from 'vue-property-decorator'
+import { Component, Emit, Mixins, Prop, Vue, Watch } from 'vue-property-decorator'
 import { Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { mask } from 'vue-the-mask'
@@ -105,12 +104,9 @@ import { Rules } from '@/rules'
 @Component({
   directives: {
     mask
-  },
-  mixins: [
-    CommonMixin
-  ]
+  }
 })
-export default class BusinessContactInfo extends Vue {
+export default class BusinessContactInfo extends Mixins(CommonMixin) {
   @Prop({ default: () => {} }) readonly initialValue!: ContactPointIF
   @Prop({ default: false }) readonly isEditing!: boolean
   @Prop({ default: false }) readonly showErrors!: boolean
@@ -120,11 +116,11 @@ export default class BusinessContactInfo extends Vue {
   // Rules for template
   readonly Rules = Rules
 
-  protected contact = this.initialValue
-  protected formValid = false
+  contact = this.initialValue
+  formValid = false
 
   // Rules
-  private emailMustMatch (): string {
+  emailMustMatch (): string {
     return (this.contact.email === this.contact.confirmEmail) ? '' : 'Email addresses must match'
   }
 

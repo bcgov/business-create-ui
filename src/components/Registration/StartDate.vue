@@ -24,8 +24,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component, Emit, Watch } from 'vue-property-decorator'
+import { Component, Emit, Mixins, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { ActionBindingIF, RegistrationStateIF } from '@/interfaces'
@@ -37,12 +36,9 @@ import { VuetifyRuleFunction } from '@/types'
 @Component({
   components: {
     DatePickerShared
-  },
-  mixins: [
-    DateMixin
-  ]
+  }
 })
-export default class StartDate extends Vue {
+export default class StartDate extends Mixins(DateMixin) {
   // Refs
   $refs!: {
     startDateRef: DatePickerShared
@@ -97,7 +93,7 @@ export default class StartDate extends Vue {
     ]
   }
 
-  protected startDateHandler (dateString: string): void {
+  startDateHandler (dateString: string): void {
     this.dateText = dateString
     this.setRegistrationStartDate(dateString)
     this.emitValid()

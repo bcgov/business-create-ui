@@ -175,8 +175,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component, Watch } from 'vue-property-decorator'
+import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import AgreementType from '@/components/common/AgreementType.vue'
@@ -189,26 +188,23 @@ import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module
 @Component({
   components: {
     AgreementType
-  },
-  mixins: [
-    CommonMixin
-  ]
+  }
 })
-export default class IncorporationAgreement extends Vue {
+export default class IncorporationAgreement extends Mixins(CommonMixin) {
   @Getter(useStore) isTypeBcomp!: boolean
   @Getter(useStore) isTypeBcCcc!: boolean
   @Getter(useStore) isTypeBcCompany!: boolean
   @Getter(useStore) isTypeBcUlcCompany!: boolean
   @Getter(useStore) getEntityType!: CorpTypeCd
-  @Getter(useStore) getIncorporationAgreementStep!: IncorporationAgreementIF
   @Getter(useStore) getIncorporationAgreementResource!: any
+  @Getter(useStore) getIncorporationAgreementStep!: IncorporationAgreementIF
   @Getter(useStore) getIncorporationArticlesResource!: any
   @Getter(useStore) getSampleArticle!: string
   @Getter(useStore) getShowErrors!: boolean
 
   // Local properties
-  protected helpToggle = false
-  protected readMoreFlag = false
+  helpToggle = false
+  readMoreFlag = false
 
   readonly section42Url = 'https://www.bclaws.gov.bc.ca/civix/document/id/complete/statreg/' +
     '02057_02#section42'

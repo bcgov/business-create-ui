@@ -51,8 +51,7 @@
 
 <script lang="ts">
 // Libraries
-import Vue from 'vue'
-import { Component, Prop } from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 
@@ -71,7 +70,8 @@ export default class DissolutionStatement extends Vue {
   // Global setters
   @Action(useStore) setDissolutionStatementStepData!: ActionBindingIF
 
-  protected dissolutionStatementType = null as DissolutionStatementTypes
+  // Local variable
+  dissolutionStatementType = null as DissolutionStatementTypes
 
   /** Called when component is created. */
   created (): void {
@@ -89,7 +89,7 @@ export default class DissolutionStatement extends Vue {
     return value || '(Not entered)'
   }
 
-  protected changeDissolutionStatementType (): void {
+  changeDissolutionStatementType (): void {
     this.setDissolutionStatementStepData({
       valid: !!this.dissolutionStatementType,
       dissolutionStatementType: this.dissolutionStatementType

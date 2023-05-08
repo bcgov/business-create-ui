@@ -207,7 +207,7 @@
                   :businessLookup="inProgressBusinessLookup"
                   :BusinessLookupServices="BusinessLookupServices"
                   @setBusiness="updateBusinessDetails($event)"
-                  @undoBusiness="resetBusinessDetails($event)"
+                  @undoBusiness="resetBusinessDetails()"
                 />
               </article>
             </template>
@@ -357,8 +357,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component } from 'vue-property-decorator'
+import { Component, Mixins } from 'vue-property-decorator'
 import { mask } from 'vue-the-mask'
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
 import { ConfirmDialog } from '@bcrs-shared-components/confirm-dialog'
@@ -379,12 +378,9 @@ import { VuetifyRuleFunction } from '@/types'
   },
   directives: {
     mask
-  },
-  mixins: [
-    AddEditOrgPersonMixin
-  ]
+  }
 })
-export default class RegAddEditOrgPerson extends Vue {
+export default class RegAddEditOrgPerson extends Mixins(AddEditOrgPersonMixin) {
   //
   // NB: see mixin for common properties, methods, etc.
   //

@@ -18,8 +18,8 @@
           <v-icon class="upload-success-chk">mdi-check</v-icon>
         </v-col>
         <v-col md="11" id="file-name-col">
-          <span v-if="getCreateMemorandumStep.memorandumDoc" id="file-name">
-            {{getCreateMemorandumStep.memorandumDoc.name}}
+          <span v-if="getCreateMemorandumStep.memorandumFile" id="file-name">
+            {{getCreateMemorandumStep.memorandumFile.name}}
           </span>
         </v-col>
       </v-row>
@@ -29,8 +29,7 @@
 
 <script lang="ts">
 // Libraries
-import Vue from 'vue'
-import { Component } from 'vue-property-decorator'
+import { Component, Vue } from 'vue-property-decorator'
 import { Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 

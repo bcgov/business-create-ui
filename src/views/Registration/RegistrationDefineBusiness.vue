@@ -122,8 +122,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component, Watch } from 'vue-property-decorator'
+import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import BusinessAddresses from '@/components/Registration/BusinessAddresses.vue'
@@ -146,12 +145,9 @@ import { CommonMixin } from '@/mixins'
     NameRequestInfo,
     NatureOfBusiness,
     StartDate
-  },
-  mixins: [
-    CommonMixin
-  ]
+  }
 })
-export default class RegistrationDefineBusiness extends Vue {
+export default class RegistrationDefineBusiness extends Mixins(CommonMixin) {
   @Getter(useStore) getBusinessContact!: ContactPointIF
   @Getter(useStore) getRegistration!: RegistrationStateIF
   @Getter(useStore) getShowErrors!: boolean
@@ -159,11 +155,11 @@ export default class RegistrationDefineBusiness extends Vue {
   @Getter(useStore) isTypeSoleProp!: boolean
 
   @Action(useStore) setBusinessContact!: ActionBindingIF
-  @Action(useStore) setRegistrationDefineBusinessValid!: ActionBindingIF
   @Action(useStore) setRegistrationBusinessNumber!: ActionBindingIF
   @Action(useStore) setRegistrationBusinessTypeConfirm!: ActionBindingIF
+  @Action(useStore) setRegistrationDefineBusinessValid!: ActionBindingIF
 
-  // local variables
+  // Local variables
   businessTypeConfirmValid = false
   natureOfBusinessValid = false
   businessNumberValid = false

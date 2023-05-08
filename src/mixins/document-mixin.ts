@@ -1,11 +1,8 @@
-import Vue from 'vue'
-import { Component } from 'vue-property-decorator'
+import { Component, Vue } from 'vue-property-decorator'
 import { AxiosResponse } from 'axios'
 import { AxiosInstance as axios } from '@/utils'
 import { DocumentUpload, PdfInfoIF } from '@/interfaces'
 import { PdfPageSize } from '@/enums'
-import pdfjsLib from 'pdfjs-dist/build/pdf'
-pdfjsLib.GlobalWorkerOptions.workerSrc = require('pdfjs-dist/build/pdf.worker.entry')
 
 @Component({})
 export default class DocumentMixin extends Vue {
@@ -18,6 +15,16 @@ export default class DocumentMixin extends Vue {
       height: 11,
       validationErrorMsg: 'Document must be set to fit onto 8.5” x 11” letter-size paper'
     }
+  }
+
+  private pdfjsLib: any
+
+  created () {
+    // NB: we load the lib and worker this way to avoid a memory leak (esp in unit tests)
+    // NB: must use require instead of import or this doesn't work
+    // NB: must use legacy build for unit tests not running in Node 18+
+    this.pdfjsLib = require('pdfjs-dist/legacy/build/pdf.js')
+    this.pdfjsLib.GlobalWorkerOptions.workerSrc = require('pdfjs-dist/legacy/build/pdf.worker.entry')
   }
 
   async getPresignedUrl (fileName: string): Promise<DocumentUpload> {
@@ -60,27 +67,27 @@ export default class DocumentMixin extends Vue {
    */
   async isPageSize (file: File, pageSize: PdfPageSize): Promise<boolean> {
     const pageSizeInfo = this.pageSizeDict[pageSize]
-    const pdfBufferData = await file.arrayBuffer()
-    const pdfData = new Uint8Array(pdfBufferData) // put it in a Uint8Array
-    const pdf = await pdfjsLib.getDocument({ data: pdfData })
-    for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
-      const p1 = await pdf.getPage(pageNum)
-      const [x, y, w, h] = p1._pageInfo.view
+    const arrayBuffer = await file.arrayBuffer()
+    const data = new Uint8Array(arrayBuffer) // put it in a Uint8Array
+    const document = await this.pdfjsLib.getDocument({ data }).promise
+    for (let pageNum = 1; pageNum <= document.numPages; pageNum++) {
+      const page = await document.getPage(pageNum)
+      const [x, y, w, h] = page._pageInfo.view
       const width = w - x
       const height = h - y
-      let isvalidPageSize = (width / pageSizeInfo.pointsPerInch === pageSizeInfo.width) &&
+      const isValidPageSize = (width / pageSizeInfo.pointsPerInch === pageSizeInfo.width) &&
         (height / pageSizeInfo.pointsPerInch === pageSizeInfo.height)
-      if (!isvalidPageSize) return false
+      if (!isValidPageSize) return false
     }
     return true
   }
 
   async retrieveFileInfo (file: File): Promise<PdfInfoIF> {
     try {
-      const pdfBufferData = await file.arrayBuffer()
-      const pdfData = new Uint8Array(pdfBufferData) // put it in a Uint8Array
-      const pdf = await pdfjsLib.getDocument({ data: pdfData })
-      const perms = await pdf.getPermissions()
+      const arrayBuffer = await file.arrayBuffer()
+      const data = new Uint8Array(arrayBuffer) // put it in a Uint8Array
+      const document = await this.pdfjsLib.getDocument({ data }).promise
+      const perms = await document.getPermissions()
       return { isEncrypted: false, isContentLocked: !!perms }
     } catch (error) {
       if ((error as any).name === 'PasswordException') {

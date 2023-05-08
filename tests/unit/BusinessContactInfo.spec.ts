@@ -45,7 +45,7 @@ function createComponent (
   email = '',
   confirmEmail = '',
   phone = '',
-  extension: number = null,
+  extension = NaN,
   isEditing = true
 ): Wrapper<BusinessContactInfo> {
   const businessContact = {

@@ -165,8 +165,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component, Watch } from 'vue-property-decorator'
+import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import {
@@ -186,35 +185,32 @@ import { GetCorpNumberedDescription } from '@bcrs-shared-components/corp-type-mo
 @Component({
   components: {
     FileUploadPreview
-  },
-  mixins: [
-    CommonMixin,
-    DocumentMixin
-  ]
+  }
 })
-export default class CompleteAffidavit extends Vue {
+export default class CompleteAffidavit extends Mixins(CommonMixin, DocumentMixin) {
   // Refs
   $refs!: {
     confirmAffidavitChk: FormIF
   }
 
   readonly INPUT_FILE_LABEL = 'Affidavit'
-  protected hasValidUploadFile = false
-  protected hasAffidavitConfirmed = false
-  protected affidavitConfirmed = false
-  protected fileUploadCustomErrorMsg = ''
-  protected uploadAffidavitDoc: File = null
-  protected uploadAffidavitDocKey: string = null
-  protected helpToggle = false
+
+  affidavitConfirmed = false
+  fileUploadCustomErrorMsg = ''
+  hasAffidavitConfirmed = false
+  hasValidUploadFile = false
+  helpToggle = false
+  uploadAffidavitDoc = null as File
+  uploadAffidavitDocKey = null as string
 
   // Global getters
   @Getter(useStore) getAffidavitResources!: AffidavitResourceIF
-  @Getter(useStore) getBusinessLegalName!: string
-  @Getter(useStore) isTypeCoop!: boolean
-  @Getter(useStore) getShowErrors!: boolean
   @Getter(useStore) getAffidavitStep!: UploadAffidavitIF
-  @Getter(useStore) getUserKeycloakGuid!: string
+  @Getter(useStore) getBusinessLegalName!: string
   @Getter(useStore) getEntityType!: CorpTypeCd
+  @Getter(useStore) getShowErrors!: boolean
+  @Getter(useStore) getUserKeycloakGuid!: string
+  @Getter(useStore) isTypeCoop!: boolean
 
   @Action(useStore) setAffidavit!: ActionBindingIF
   @Action(useStore) setAffidavitStepValidity!: ActionBindingIF
@@ -251,12 +247,12 @@ export default class CompleteAffidavit extends Vue {
     this.uploadAffidavitDocKey = null
   }
 
-  protected onFileUploadValid (val) {
+  onFileUploadValid (val) {
     this.hasValidUploadFile = val
     this.updateAffidavitStepValidity()
   }
 
-  protected async fileSelected (file) {
+  async fileSelected (file) {
     // reset state of file uploader to ensure not in manual error mode
     this.fileUploadCustomErrorMsg = ''
     if (file) {
@@ -271,7 +267,7 @@ export default class CompleteAffidavit extends Vue {
       this.uploadAffidavitDocKey = null
       this.setAffidavit({
         ...this.getAffidavitStep,
-        affidavitDoc: null,
+        affidavitFile: null,
         docKey: null
       })
     }
@@ -287,14 +283,14 @@ export default class CompleteAffidavit extends Vue {
       const res = await this.uploadToUrl(doc.preSignedUrl, this.uploadAffidavitDoc, doc.key, this.getUserKeycloakGuid)
 
       if (res && res.status === 200) {
-        const affidavitDoc = {
+        const affidavitFile = {
           name: this.uploadAffidavitDoc.name,
           lastModified: this.uploadAffidavitDoc.lastModified,
           size: this.uploadAffidavitDoc.size
         }
         this.setAffidavit({
           ...this.getAffidavitStep,
-          affidavitDoc,
+          affidavitFile,
           docKey: doc.key
         })
       } else {
@@ -327,7 +323,7 @@ export default class CompleteAffidavit extends Vue {
     this.setAffidavitStepValidity(validationDetail)
   }
 
-  private onAffidavitConfirmedChange (affidavitConfirmed: boolean): void {
+  onAffidavitConfirmedChange (affidavitConfirmed: boolean): void {
     this.hasAffidavitConfirmed = affidavitConfirmed
     this.updateAffidavitStepValidity()
     this.setAffidavit({
@@ -338,7 +334,7 @@ export default class CompleteAffidavit extends Vue {
 
   /** Called when component is created. */
   created (): void {
-    this.uploadAffidavitDoc = this.getAffidavitStep.affidavitDoc
+    this.uploadAffidavitDoc = this.getAffidavitStep.affidavitFile
     this.uploadAffidavitDocKey = this.getAffidavitStep.docKey
     this.affidavitConfirmed = this.getAffidavitStep.affidavitConfirmed
     this.hasValidUploadFile = !!this.uploadAffidavitDocKey

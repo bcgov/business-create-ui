@@ -61,8 +61,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component, Prop, Emit } from 'vue-property-decorator'
+import { Component, Emit, Prop, Vue } from 'vue-property-decorator'
 import { Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import RegistriesContactInfo from '@/components/common/RegistriesContactInfo.vue'
@@ -91,8 +90,8 @@ export default class PaymentErrorDialog extends Vue {
   @Prop({ default: () => [] }) readonly warnings!: any[]
 
   /** Pass click event to parent. */
-  @Emit() protected exit (): void {}
-  @Emit() protected okay (): void {}
+  @Emit() exit (): void {}
+  @Emit() okay (): void {}
 
   /** The number of errors in the passed-in array. */
   get numErrors (): number {

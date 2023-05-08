@@ -90,8 +90,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component } from 'vue-property-decorator'
+import { Component, Vue } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { ActionBindingIF, CertifyIF, ContactPointIF, PeopleAndRoleIF } from '@/interfaces'
@@ -118,15 +117,15 @@ import SummaryRestoreBusiness from '@/components/Restoration/SummaryRestoreBusin
   }
 })
 export default class RestorationReviewConfirm extends Vue {
+  @Getter(useStore) getAddPeopleAndRoleStep!: PeopleAndRoleIF
   @Getter(useStore) getBusinessContact!: ContactPointIF
   @Getter(useStore) getCertifyState!: CertifyIF
-  @Getter(useStore) getValidateSteps!: boolean
-  @Getter(useStore) isRoleStaff!: boolean
-  @Getter(useStore) getUserEmail!: string
   @Getter(useStore) getEntityType!: CorpTypeCd
+  @Getter(useStore) getUserEmail!: string
+  @Getter(useStore) getValidateSteps!: boolean
   @Getter(useStore) isFullRestorationFiling!: boolean
   @Getter(useStore) isLimitedRestorationFiling!: boolean
-  @Getter(useStore) getAddPeopleAndRoleStep!: PeopleAndRoleIF
+  @Getter(useStore) isRoleStaff!: boolean
 
   @Action(useStore) setCertifyState!: ActionBindingIF
 

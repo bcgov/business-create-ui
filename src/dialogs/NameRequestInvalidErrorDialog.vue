@@ -36,8 +36,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component, Prop, Emit } from 'vue-property-decorator'
+import { Component, Emit, Prop, Vue } from 'vue-property-decorator'
 import { NameRequestStates } from '@/enums'
 
 @Component({})
@@ -64,7 +63,7 @@ export default class NameRequestInvalidErrorDialog extends Vue {
   }
 
   // Pass click events to parent.
-  @Emit() protected okay (): void {}
-  @Emit() protected redirect (): void {}
+  @Emit() okay (): void {}
+  @Emit() redirect (): void {}
 }
 </script>

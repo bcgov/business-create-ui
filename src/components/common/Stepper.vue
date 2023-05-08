@@ -1,53 +1,51 @@
 <template>
   <v-card id="step-buttons-container">
-    <template v-for="(step, index) in getSteps">
-      <div
-        class="step"
-        :key="index"
-        @click="goTo(step)"
-        v-on:keyup.tab="goTo(step)"
-        :class="{'active-step': isCurrentStep(step)}"
-      >
-        <div class="step__indicator">
-          <div class="step__line"></div>
-          <v-btn
-            outlined fab
-            color="primary"
-            :id=step.id
-            class="step__btn"
-            tabindex="-1"
-            :disabled=isBusySaving
-            :ripple="false"
-            :class="{ 'selected-btn': isCurrentStep(step) }"
-          >
-            <v-icon class="step__icon" :class="{ 'selected-icon': isCurrentStep(step) }">{{ step.icon }}</v-icon>
-          </v-btn>
-          <v-icon class="step__btn2" size="30" color="success darken-1" v-show="isValid(step.to)">
-            mdi-check-circle
-          </v-icon>
-          <v-icon class="step__btn2" size="30" color="error darken-1"
-            v-show="!isValid(step.to) && getShowErrors && getValidateSteps">
-            mdi-close-circle
-          </v-icon>
-        </div>
+    <div
+      v-for="(step, index) in getSteps"
+      class="step"
+      :key="index"
+      @click="goTo(step)"
+      v-on:keyup.tab="goTo(step)"
+      :class="{'active-step': isCurrentStep(step)}"
+    >
+      <div class="step__indicator">
+        <div class="step__line"></div>
         <v-btn
-          class="step__label pre-line px-3"
-          text
+          outlined fab
+          color="primary"
+          :id=step.id
+          class="step__btn"
+          tabindex="-1"
+          :disabled=isBusySaving
           :ripple="false"
-          :disabled=step.disabled
-          :class="[{'active__btn__text': isCurrentStep(step)}, 'inactive__btn__text']"
+          :class="{ 'selected-btn': isCurrentStep(step) }"
         >
-          {{ step.text }}
+          <v-icon class="step__icon" :class="{ 'selected-icon': isCurrentStep(step) }">{{ step.icon }}</v-icon>
         </v-btn>
+        <v-icon class="step__btn2" size="30" color="success darken-1" v-show="isValid(step.to)">
+          mdi-check-circle
+        </v-icon>
+        <v-icon class="step__btn2" size="30" color="error darken-1"
+          v-show="!isValid(step.to) && getShowErrors && getValidateSteps">
+          mdi-close-circle
+        </v-icon>
       </div>
-    </template>
+      <v-btn
+        class="step__label pre-line px-3"
+        text
+        :ripple="false"
+        :disabled=step.disabled
+        :class="[{'active__btn__text': isCurrentStep(step)}, 'inactive__btn__text']"
+      >
+        {{ step.text }}
+      </v-btn>
+    </div>
   </v-card>
 </template>
 
 <script lang="ts">
 // Libraries
-import Vue from 'vue'
-import { Component } from 'vue-property-decorator'
+import { Component, Vue } from 'vue-property-decorator'
 import { Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 
@@ -78,7 +76,7 @@ export default class Stepper extends Vue {
   @Getter(useStore) isRulesValid!: boolean
 
   /** Returns true if the step route is valid. */
-  protected isValid (route: RouteNames): boolean {
+  isValid (route: RouteNames): boolean {
     switch (route) {
       case RouteNames.DISSOLUTION_AFFIDAVIT: return this.isAffidavitValid
       case RouteNames.DISSOLUTION_DEFINE_DISSOLUTION: return this.isDissolutionDefineDissolutionValid
@@ -105,11 +103,11 @@ export default class Stepper extends Vue {
     return false
   }
 
-  protected goTo (step) {
+  goTo (step) {
     this.$router.push(step.to).catch(() => {})
   }
 
-  protected isCurrentStep (step): boolean {
+  isCurrentStep (step): boolean {
     return this.$route.name === step.to
   }
 }
@@ -218,13 +216,13 @@ export default class Stepper extends Vue {
   text-align: center;
 }
 
+.inactive__btn__text {
+  color: $app-blue !important;
+}
+
 .active__btn__text {
   font-weight: bold;
   color: $gray9 !important;
-}
-
-.inactive__btn__text {
-  color: $app-blue;
 }
 
 // Vuetify Overrides

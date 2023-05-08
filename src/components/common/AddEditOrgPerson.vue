@@ -235,8 +235,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component } from 'vue-property-decorator'
+import { Component, Mixins } from 'vue-property-decorator'
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
 import { ConfirmDialog } from '@bcrs-shared-components/confirm-dialog'
 import { AddEditOrgPersonMixin } from '@/mixins'
@@ -247,12 +246,9 @@ import { AddEditOrgPersonMixin } from '@/mixins'
     ConfirmDialog,
     DeliveryAddress: BaseAddress,
     MailingAddress: BaseAddress
-  },
-  mixins: [
-    AddEditOrgPersonMixin
-  ]
+  }
 })
-export default class AddEditOrgPerson extends Vue {
+export default class AddEditOrgPerson extends Mixins(AddEditOrgPersonMixin) {
   //
   // NB: see mixin for common properties, methods, etc.
   //
