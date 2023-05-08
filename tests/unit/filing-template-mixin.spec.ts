@@ -3,6 +3,7 @@ import MixinTester from '@/mixin-tester.vue'
 import { createPinia, setActivePinia } from 'pinia'
 import { useStore } from '@/store/store'
 import { BusinessTypes, CorpTypeCd, PartyTypes, RoleTypes } from '@/enums'
+import { NameRequestIF } from '@/interfaces'
 
 setActivePinia(createPinia())
 const store = useStore()
@@ -82,12 +83,13 @@ describe('Registration Filing', () => {
     store.stateModel.nameRequest = {
       legalType: CorpTypeCd.SOLE_PROP,
       nrNum: 'NR 1234567'
-    }
+    } as NameRequestIF
+
     store.stateModel.nameRequestApprovedName = 'My Approved Name'
     store.stateModel.businessContact = {
       email: 'eleven@example.com',
       phone: '(111) 222-3333',
-      extension: '444'
+      extension: 444
     }
     store.stateModel.entityType = CorpTypeCd.SOLE_PROP // sole prop
     store.stateModel.registration.businessType = BusinessTypes.SP // not DBA

@@ -5,6 +5,7 @@ import { createPinia, setActivePinia } from 'pinia'
 import { useStore } from '@/store/store'
 import NameRequestInfo from '@/components/common/NameRequestInfo.vue'
 import { CorpTypeCd, NameRequestStates } from '@/enums'
+import { NameRequestIF } from '@/interfaces'
 
 Vue.use(Vuetify)
 
@@ -41,7 +42,7 @@ const mockNrData = {
   request_action_cd: 'NEW',
   requestTypeCd: 'BC',
   state: 'APPROVED'
-}
+} as NameRequestIF
 
 describe('Name Request Info with a NR', () => {
   let wrapper: any
@@ -81,9 +82,8 @@ describe('Name Request Info with a NR', () => {
   })
 
   it('renders the Name Request information with data', async () => {
-    store.stateModel.nameRequest = mockNrData
-    store.stateModel.nameRequestApprovedName = mockNrData.names[0].name
-    await Vue.nextTick()
+    await store.setNameRequest(mockNrData)
+    await store.setNameRequestApprovedName(mockNrData.names[0].name)
 
     expect(wrapper.find('#condition-consent').exists()).toBe(false)
 
@@ -98,8 +98,7 @@ describe('Name Request Info with a NR', () => {
   })
 
   it('renders the Name Request applicant information with data', async () => {
-    store.stateModel.nameRequest = mockNrData
-
+    await store.setNameRequest(mockNrData)
     const listItems = wrapper.vm.$el.querySelectorAll('#name-request-applicant ul li')
     expect(listItems.length).toEqual(4)
 
