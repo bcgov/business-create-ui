@@ -71,7 +71,8 @@
 import Vue from 'vue'
 import { Component, Watch } from 'vue-property-decorator'
 import { DateMixin, CommonMixin } from '@/mixins'
-import { Getter, Action } from 'vuex-class'
+import { Getter, Action } from 'pinia-class'
+import { useStore } from '@/store/store'
 import { RestorationTypes } from '@/enums'
 import { RestorationStateIF } from '@/interfaces'
 import { RelationshipsPanel } from '@bcrs-shared-components/relationships-panel'
@@ -88,17 +89,17 @@ import { LimitedRestorationPanel } from '@bcrs-shared-components/limited-restora
   }
 })
 export default class RestorationType extends Vue {
-  @Getter getCurrentDate!: string
-  @Getter getRestoration!: RestorationStateIF
-  @Getter getRestorationTypeValid!: boolean
-  @Getter getShowErrors!: boolean
-  @Getter isLimitedRestorationFiling!: boolean
-  @Getter isFullRestorationFiling!: boolean
+  @Getter(useStore) getCurrentDate!: string
+  @Getter(useStore) getRestoration!: RestorationStateIF
+  @Getter(useStore) getRestorationTypeValid!: boolean
+  @Getter(useStore) getShowErrors!: boolean
+  @Getter(useStore) isLimitedRestorationFiling!: boolean
+  @Getter(useStore) isFullRestorationFiling!: boolean
 
-  @Action setRestorationExpiry!: ActionBindingIF
-  @Action setRestorationRelationships!: ActionBindingIF
-  @Action setRestorationType!: ActionBindingIF
-  @Action setRestorationTypeValid!: ActionBindingIF
+  @Action(useStore) setRestorationExpiry!: ActionBindingIF
+  @Action(useStore) setRestorationRelationships!: ActionBindingIF
+  @Action(useStore) setRestorationType!: ActionBindingIF
+  @Action(useStore) setRestorationTypeValid!: ActionBindingIF
 
   // Local properties
   protected selectRestorationType: RestorationTypes = null

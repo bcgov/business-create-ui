@@ -1,15 +1,17 @@
 import Vuetify from 'vuetify'
 import { shallowWrapperFactory } from '../jest-wrapper-factory'
 import { mount } from '@vue/test-utils'
-import { getVuexStore } from '@/store'
+import { createPinia, setActivePinia } from 'pinia'
+import { useStore } from '@/store/store'
 import DissolutionFirm from '@/views/DissolutionFirm/DissolutionFirm.vue'
 import { DissolutionResources } from '@/resources/'
 
 const vuetify = new Vuetify({})
-const store = getVuexStore()
-store.state.stateModel.business.foundingDate = '2022-06-07T00:00:00.000+00:00'
-store.state.stateModel.tombstone.authRoles = ['staff']
-store.state.stateModel.completingParty = {
+setActivePinia(createPinia())
+const store = useStore()
+store.stateModel.business.foundingDate = '2022-06-07T00:00:00.000+00:00'
+store.stateModel.tombstone.authRoles = ['staff']
+store.stateModel.completingParty = {
   firstName: 'Wira',
   middleName: 'Rosmunda',
   lastName: 'Conrad',
@@ -106,7 +108,7 @@ for (const test of dissolutionFirmTestCases) {
     it('displays Completing Party section', async () => {
       wrapper = mount(
         DissolutionFirm,
-        { store, vuetify }
+        { vuetify }
       )
       expect(wrapper.find('#completing-party-section').exists()).toBe(true)
       expect(wrapper.find('#completing-party').exists()).toBe(true)

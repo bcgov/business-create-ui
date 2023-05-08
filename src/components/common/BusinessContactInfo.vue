@@ -95,7 +95,8 @@
 <script lang="ts">
 import Vue from 'vue'
 import { Component, Prop, Watch, Emit } from 'vue-property-decorator'
-import { Getter } from 'vuex-class'
+import { Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 import { mask } from 'vue-the-mask'
 import { ContactPointIF, EmptyContactPoint } from '@/interfaces'
 import { CommonMixin } from '@/mixins'
@@ -114,7 +115,7 @@ export default class BusinessContactInfo extends Vue {
   @Prop({ default: false }) readonly isEditing!: boolean
   @Prop({ default: false }) readonly showErrors!: boolean
 
-  @Getter isIncorporationFiling!: boolean
+  @Getter(useStore) isIncorporationFiling!: boolean
 
   // Rules for template
   readonly Rules = Rules

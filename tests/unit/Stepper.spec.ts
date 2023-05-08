@@ -1,28 +1,31 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify'
 import VueRouter from 'vue-router'
-import { getVuexStore } from '@/store'
+import { createPinia, setActivePinia } from 'pinia'
+import { useStore } from '@/store/store'
 import { shallowMount } from '@vue/test-utils'
 import Stepper from '@/components/common/Stepper.vue'
+import { RouteNames } from '@/enums'
 
 Vue.use(Vuetify)
 Vue.use(VueRouter)
 const router = new VueRouter()
 
 const vuetify = new Vuetify({})
-const store = getVuexStore()
+setActivePinia(createPinia())
+const store = useStore()
 
 describe('Stepper component', () => {
   let wrapper: any
 
   beforeEach(() => {
-    store.state.resourceModel.steps = [
+    store.resourceModel.steps = [
       {
         id: 'step-1-btn',
         step: 1,
         icon: 'mdi-domain',
         text: 'Define Your\nBusiness',
-        to: 'registration-define-business',
+        to: RouteNames.REGISTRATION_DEFINE_BUSINESS,
         component: 'registration-define-business'
       },
       {
@@ -30,7 +33,7 @@ describe('Stepper component', () => {
         step: 2,
         icon: 'mdi-account-multiple-plus',
         text: 'Add People\nand Roles',
-        to: 'registration-people-roles',
+        to: RouteNames.REGISTRATION_PEOPLE_ROLES,
         component: 'registration-people-roles'
       },
       {
@@ -38,12 +41,12 @@ describe('Stepper component', () => {
         step: 3,
         icon: 'mdi-text-box-check-outline',
         text: 'Review\nand Confirm',
-        to: 'registration-review-confirm',
+        to: RouteNames.REGISTRATION_REVIEW_CONFIRM,
         component: 'registration-review-confirm'
       }
     ]
-    store.state.stateModel.validateSteps = false
-    wrapper = shallowMount(Stepper, { store, vuetify, router })
+    store.stateModel.validateSteps = false
+    wrapper = shallowMount(Stepper, { vuetify, router })
   })
 
   afterEach(() => {
@@ -55,7 +58,7 @@ describe('Stepper component', () => {
   })
 
   it('renders the icons properly', () => {
-    wrapper = shallowMount(Stepper, { store, vuetify, router })
+    wrapper = shallowMount(Stepper, { vuetify, router })
     const indicators = wrapper.findAll('#step-buttons-container .step__indicator')
     expect(indicators.length).toBe(3)
 

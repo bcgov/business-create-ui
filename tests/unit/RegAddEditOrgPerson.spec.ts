@@ -4,9 +4,11 @@ import Vuelidate from 'vuelidate'
 import { mount, Wrapper } from '@vue/test-utils'
 import flushPromises from 'flush-promises'
 import { getLastEvent } from '../get-last-event'
-import { getVuexStore } from '@/store'
+import { createPinia, setActivePinia } from 'pinia'
+import { useStore } from '@/store/store'
 import RegAddEditOrgPerson from '@/components/common/RegAddEditOrgPerson.vue'
 import { EmptyOrgPerson } from '@/interfaces'
+import { CorpTypeCd } from '@/enums'
 
 // mock the console.warn function to hide "[Vuetify] Unable to locate target XXX"
 console.warn = jest.fn()
@@ -15,7 +17,8 @@ Vue.use(Vuetify)
 Vue.use(Vuelidate)
 
 const vuetify = new Vuetify({})
-const store = getVuexStore()
+setActivePinia(createPinia())
+const store = useStore()
 
 // Events
 const addEditPersonEvent = 'addEditPerson'
@@ -207,13 +210,12 @@ function createComponent (
       activeIndex,
       existingCompletingParty
     },
-    store,
     vuetify
   })
 }
 
-store.state.stateModel.nameRequest.entityType = 'SP'
-store.state.stateModel.currentDate = '2021-04-01'
+store.stateModel.nameRequest.legalType = CorpTypeCd.SOLE_PROP
+store.stateModel.currentDate = '2021-04-01'
 
 describe('Registration Add/Edit Org/Person component', () => {
   it('loads the component and sets the data for completing party', () => {

@@ -2,13 +2,15 @@ import Vue from 'vue'
 import Vuelidate from 'vuelidate'
 import Vuetify from 'vuetify'
 import flushPromises from 'flush-promises'
-import { getVuexStore } from '@/store'
+import { createPinia, setActivePinia } from 'pinia'
+import { useStore } from '@/store/store'
 import { mount } from '@vue/test-utils'
 import RegPeopleAndRoles from '@/components/common/RegPeopleAndRoles.vue'
 import { RegistrationResourceSp } from '@/resources/Registration/SP'
 import { RegistrationResourceGp } from '@/resources/Registration/GP'
 import RegAddEditOrgPerson from '@/components/common/RegAddEditOrgPerson.vue'
 import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
+import { CorpTypeCd, RoleTypes } from '@/enums'
 
 // mock the console.warn function to hide "[Vuetify] Unable to locate target XXX"
 console.warn = jest.fn()
@@ -17,7 +19,8 @@ Vue.use(Vuetify)
 Vue.use(Vuelidate)
 
 const vuetify = new Vuetify({})
-const store = getVuexStore()
+setActivePinia(createPinia())
+const store = useStore()
 
 // selectors to test changes to the DOM elements
 const btnStartAddCompletingParty = '#btn-start-add-cp'
@@ -71,10 +74,9 @@ describe('Registration People And Roles component - SP', () => {
   let wrapperFactory: any
 
   beforeEach(() => {
-    store.state.stateModel.entityType = 'SP'
-    store.state.resourceModel = RegistrationResourceSp
+    store.stateModel.entityType = CorpTypeCd.SOLE_PROP
+    store.resourceModel = RegistrationResourceSp
     wrapperFactory = () => mount(RegPeopleAndRoles, {
-      store,
       vuetify,
       stubs: {
         RegAddEditOrgPerson: true,
@@ -84,7 +86,7 @@ describe('Registration People And Roles component - SP', () => {
   })
 
   it('shows Start Add Completing Party button when people list is empty', () => {
-    store.state.stateModel.addPeopleAndRoleStep.orgPeople = []
+    store.stateModel.addPeopleAndRoleStep.orgPeople = []
     const wrapper = wrapperFactory()
     expect(wrapper.find(btnStartAddCompletingParty).exists()).toBeTruthy()
     expect(wrapper.find(btnStartAddCompletingParty).text()).toContain('Start by Adding the Completing Party')
@@ -94,7 +96,7 @@ describe('Registration People And Roles component - SP', () => {
   })
 
   it('does not show the other buttons when people list is empty', () => {
-    store.state.stateModel.addPeopleAndRoleStep.orgPeople = []
+    store.stateModel.addPeopleAndRoleStep.orgPeople = []
     const wrapper = wrapperFactory()
     expect(wrapper.find(btnAddPerson).exists()).toBeFalsy()
     expect(wrapper.find(btnAddCompletingParty).exists()).toBeFalsy()
@@ -103,7 +105,7 @@ describe('Registration People And Roles component - SP', () => {
   })
 
   it('does not show Start Add Completing Party button when people list is not empty', () => {
-    store.state.stateModel.addPeopleAndRoleStep.orgPeople = getPersonList()
+    store.stateModel.addPeopleAndRoleStep.orgPeople = getPersonList()
     const wrapper = wrapperFactory()
     expect(wrapper.find(btnStartAddCompletingParty).exists()).toBeFalsy()
     // also verify list people component
@@ -112,7 +114,7 @@ describe('Registration People And Roles component - SP', () => {
   })
 
   it('shows Add Person and Add Organization buttons when people list is not empty', async () => {
-    store.state.stateModel.addPeopleAndRoleStep.orgPeople = getPersonList()
+    store.stateModel.addPeopleAndRoleStep.orgPeople = getPersonList()
     const wrapper = wrapperFactory()
     expect(wrapper.find(btnAddPerson).exists()).toBeTruthy()
     expect(wrapper.find(btnAddOrganization).exists()).toBeTruthy()
@@ -120,7 +122,7 @@ describe('Registration People And Roles component - SP', () => {
   })
 
   it('shows Add Completing Party button when people list is not empty and has no completing party', () => {
-    store.state.stateModel.addPeopleAndRoleStep.orgPeople = getPersonList([
+    store.stateModel.addPeopleAndRoleStep.orgPeople = getPersonList([
       { roleType: 'Proprietor', appointmentDate: '2020-03-30' }
     ])
     const wrapper = wrapperFactory()
@@ -129,14 +131,14 @@ describe('Registration People And Roles component - SP', () => {
   })
 
   it('does not show Add Completing Party Button when people list is not empty and has completing party', () => {
-    store.state.stateModel.addPeopleAndRoleStep.orgPeople = getPersonList()
+    store.stateModel.addPeopleAndRoleStep.orgPeople = getPersonList()
     const wrapper = wrapperFactory()
     expect(wrapper.find(btnAddCompletingParty).exists()).toBeFalsy()
     wrapper.destroy()
   })
 
   it('renders the add-edit component when add button is clicked', async () => {
-    store.state.stateModel.addPeopleAndRoleStep.orgPeople = getPersonList()
+    store.stateModel.addPeopleAndRoleStep.orgPeople = getPersonList()
     const wrapper = wrapperFactory()
 
     // verify before click
@@ -158,9 +160,9 @@ describe('Registration People And Roles component - SP', () => {
   })
 
   it('shows check mark next to roles added', () => {
-    store.state.stateModel.addPeopleAndRoleStep.orgPeople = [
-      { roles: [{ roleType: 'Completing Party' }] },
-      { roles: [{ roleType: 'Proprietor' }] }
+    store.stateModel.addPeopleAndRoleStep.orgPeople = [
+      { roles: [{ roleType: RoleTypes.COMPLETING_PARTY }] },
+      { roles: [{ roleType: RoleTypes.PROPRIETOR }] }
     ]
     const wrapper = wrapperFactory()
     expect(wrapper.find(completingPartyRule).exists()).toBeTruthy()
@@ -169,21 +171,21 @@ describe('Registration People And Roles component - SP', () => {
   })
 
   it('it does not show people list component when people list is empty', () => {
-    store.state.stateModel.addPeopleAndRoleStep.orgPeople = []
+    store.stateModel.addPeopleAndRoleStep.orgPeople = []
     const wrapper = wrapperFactory()
     expect(wrapper.findComponent(ListPeopleAndRoles).exists()).toBeFalsy()
     wrapper.destroy()
   })
 
   it('shows the people list component when people list is not empty', () => {
-    store.state.stateModel.addPeopleAndRoleStep.orgPeople = getPersonList()
+    store.stateModel.addPeopleAndRoleStep.orgPeople = getPersonList()
     const wrapper = wrapperFactory()
     expect(wrapper.findComponent(ListPeopleAndRoles).exists()).toBeTruthy()
     wrapper.destroy()
   })
 
   it('destroys the people list component when the last org-person is removed', async () => {
-    store.state.stateModel.addPeopleAndRoleStep.orgPeople = getPersonList()
+    store.stateModel.addPeopleAndRoleStep.orgPeople = getPersonList()
     const wrapper = wrapperFactory()
 
     // verify before click
@@ -212,10 +214,9 @@ describe('Registration People And Roles component - GP', () => {
   let wrapperFactory: any
 
   beforeEach(() => {
-    store.state.stateModel.entityType = 'GP'
-    store.state.resourceModel = RegistrationResourceGp
+    store.stateModel.entityType = CorpTypeCd.PARTNERSHIP
+    store.resourceModel = RegistrationResourceGp
     wrapperFactory = () => mount(RegPeopleAndRoles, {
-      store,
       vuetify,
       stubs: {
         RegAddEditOrgPerson: true,
@@ -225,7 +226,7 @@ describe('Registration People And Roles component - GP', () => {
   })
 
   it('shows Start Add Completing Party button when people list is empty', () => {
-    store.state.stateModel.addPeopleAndRoleStep.orgPeople = []
+    store.stateModel.addPeopleAndRoleStep.orgPeople = []
     const wrapper = wrapperFactory()
     expect(wrapper.find(btnStartAddCompletingParty).exists()).toBeTruthy()
     expect(wrapper.find(btnStartAddCompletingParty).text()).toContain('Start by Adding the Completing Party')
@@ -235,7 +236,7 @@ describe('Registration People And Roles component - GP', () => {
   })
 
   it('does not show the other buttons when people list is empty', () => {
-    store.state.stateModel.addPeopleAndRoleStep.orgPeople = []
+    store.stateModel.addPeopleAndRoleStep.orgPeople = []
     const wrapper = wrapperFactory()
     expect(wrapper.find(btnAddPerson).exists()).toBeFalsy()
     expect(wrapper.find(btnAddCompletingParty).exists()).toBeFalsy()
@@ -244,7 +245,7 @@ describe('Registration People And Roles component - GP', () => {
   })
 
   it('does not show Start Add Completing Party button when people list is not empty', () => {
-    store.state.stateModel.addPeopleAndRoleStep.orgPeople = getPersonList()
+    store.stateModel.addPeopleAndRoleStep.orgPeople = getPersonList()
     const wrapper = wrapperFactory()
     expect(wrapper.find(btnStartAddCompletingParty).exists()).toBeFalsy()
     // also verify list people component
@@ -253,7 +254,7 @@ describe('Registration People And Roles component - GP', () => {
   })
 
   it('shows Add Person and Add Organization buttons when people list is not empty', async () => {
-    store.state.stateModel.addPeopleAndRoleStep.orgPeople = getPersonList()
+    store.stateModel.addPeopleAndRoleStep.orgPeople = getPersonList()
     const wrapper = wrapperFactory()
     expect(wrapper.find(btnAddPerson).exists()).toBeTruthy()
     expect(wrapper.find(btnAddOrganization).exists()).toBeTruthy()
@@ -261,7 +262,7 @@ describe('Registration People And Roles component - GP', () => {
   })
 
   it('shows Add Completing Party button when people list is not empty and has no completing party', () => {
-    store.state.stateModel.addPeopleAndRoleStep.orgPeople = getPersonList([
+    store.stateModel.addPeopleAndRoleStep.orgPeople = getPersonList([
       { roleType: 'Partner', appointmentDate: '2020-03-30' }
     ])
     const wrapper = wrapperFactory()
@@ -270,14 +271,14 @@ describe('Registration People And Roles component - GP', () => {
   })
 
   it('does not show Add Completing Party Button when people list is not empty and has completing party', () => {
-    store.state.stateModel.addPeopleAndRoleStep.orgPeople = getPersonList()
+    store.stateModel.addPeopleAndRoleStep.orgPeople = getPersonList()
     const wrapper = wrapperFactory()
     expect(wrapper.find(btnAddCompletingParty).exists()).toBeFalsy()
     wrapper.destroy()
   })
 
   it('renders the add-edit component when add button is clicked', async () => {
-    store.state.stateModel.addPeopleAndRoleStep.orgPeople = getPersonList()
+    store.stateModel.addPeopleAndRoleStep.orgPeople = getPersonList()
     const wrapper = wrapperFactory()
 
     // verify before click
@@ -298,10 +299,10 @@ describe('Registration People And Roles component - GP', () => {
   })
 
   it('shows check mark next to roles added', () => {
-    store.state.stateModel.addPeopleAndRoleStep.orgPeople = [
-      { roles: [{ roleType: 'Completing Party' }] },
-      { roles: [{ roleType: 'Partner' }] },
-      { roles: [{ roleType: 'Partner' }] }
+    store.stateModel.addPeopleAndRoleStep.orgPeople = [
+      { roles: [{ roleType: RoleTypes.COMPLETING_PARTY }] },
+      { roles: [{ roleType: RoleTypes.PARTNER }] },
+      { roles: [{ roleType: RoleTypes.PARTNER }] }
     ]
     const wrapper = wrapperFactory()
     expect(wrapper.find(completingPartyRule).exists()).toBeTruthy()
@@ -310,21 +311,21 @@ describe('Registration People And Roles component - GP', () => {
   })
 
   it('it does not show people list component when people list is empty', () => {
-    store.state.stateModel.addPeopleAndRoleStep.orgPeople = []
+    store.stateModel.addPeopleAndRoleStep.orgPeople = []
     const wrapper = wrapperFactory()
     expect(wrapper.findComponent(ListPeopleAndRoles).exists()).toBeFalsy()
     wrapper.destroy()
   })
 
   it('shows the people list component when people list is not empty', () => {
-    store.state.stateModel.addPeopleAndRoleStep.orgPeople = getPersonList()
+    store.stateModel.addPeopleAndRoleStep.orgPeople = getPersonList()
     const wrapper = wrapperFactory()
     expect(wrapper.findComponent(ListPeopleAndRoles).exists()).toBeTruthy()
     wrapper.destroy()
   })
 
   it('destroys the people list component when the last org-person is removed', async () => {
-    store.state.stateModel.addPeopleAndRoleStep.orgPeople = getPersonList()
+    store.stateModel.addPeopleAndRoleStep.orgPeople = getPersonList()
     const wrapper = wrapperFactory()
 
     // verify before click

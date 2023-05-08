@@ -1,20 +1,21 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify'
-import { getVuexStore } from '@/store'
+import { createPinia, setActivePinia } from 'pinia'
+import { useStore } from '@/store/store'
 import { mount } from '@vue/test-utils'
 import FilingSurveyDialog from '@/dialogs/FilingSurveyDialog.vue'
 
 Vue.use(Vuetify)
 
 const vuetify = new Vuetify({})
-const store = getVuexStore()
+setActivePinia(createPinia())
+const store = useStore()
 
 describe('Filing Survey Dialog', () => {
   it('renders the component properly', () => {
     const wrapper = mount(FilingSurveyDialog,
       {
         vuetify,
-        store,
         propsData: { dialog: true }
       })
 
@@ -34,7 +35,6 @@ describe('Filing Survey Dialog', () => {
     const wrapper = mount(FilingSurveyDialog,
       {
         vuetify,
-        store,
         propsData: { dialog: true }
       })
 
@@ -55,7 +55,6 @@ describe('Filing Survey Dialog', () => {
     const wrapper = mount(FilingSurveyDialog,
       {
         vuetify,
-        store,
         propsData: { dialog: true }
       })
 
@@ -76,7 +75,6 @@ describe('Filing Survey Dialog', () => {
     const wrapper = mount(FilingSurveyDialog,
       {
         vuetify,
-        store,
         propsData: { dialog: true }
       })
 

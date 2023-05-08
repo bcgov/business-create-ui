@@ -207,7 +207,8 @@
 <script lang="ts">
 import Vue from 'vue'
 import { Component, Watch } from 'vue-property-decorator'
-import { Action, Getter } from 'vuex-class'
+import { Action, Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 import {
   ActionBindingIF,
   CreateRulesIF,
@@ -244,14 +245,14 @@ export default class UploadRules extends Vue {
   protected uploadRulesDocKey: string = null
   protected helpToggle = false
 
-  @Getter getShowErrors!: boolean
-  @Getter getNameRequestApprovedName!: string
-  @Getter getCreateRulesResource!: CreateRulesResourceIF
-  @Getter getCreateRulesStep!: CreateRulesIF
-  @Getter getUserKeycloakGuid!: string
+  @Getter(useStore) getShowErrors!: boolean
+  @Getter(useStore) getNameRequestApprovedName!: string
+  @Getter(useStore) getCreateRulesResource!: CreateRulesResourceIF
+  @Getter(useStore) getCreateRulesStep!: CreateRulesIF
+  @Getter(useStore) getUserKeycloakGuid!: string
 
-  @Action setRules!: ActionBindingIF
-  @Action setRulesStepValidity!: ActionBindingIF
+  @Action(useStore) setRules!: ActionBindingIF
+  @Action(useStore) setRulesStepValidity!: ActionBindingIF
 
   // Enum for template
   readonly RouteNames = RouteNames

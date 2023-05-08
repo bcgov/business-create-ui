@@ -1,13 +1,11 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify'
-import { getVuexStore } from '@/store'
 import { shallowMount, mount } from '@vue/test-utils'
 import AccountAuthorizationDialog from '@/dialogs/AccountAuthorizationDialog.vue'
 
 Vue.use(Vuetify)
 
 const vuetify = new Vuetify({})
-const store = getVuexStore()
 
 // Prevent the warning "[Vuetify] Unable to locate target [data-app]"
 document.body.setAttribute('data-app', 'true')
@@ -17,7 +15,6 @@ describe('Account Authorization Dialog', () => {
     const wrapper = shallowMount(AccountAuthorizationDialog,
       {
         vuetify,
-        store,
         propsData: { dialog: true }
       })
     expect(wrapper.attributes('contentclass')).toBe('account-authorization-dialog')
@@ -36,7 +33,6 @@ describe('Account Authorization Dialog', () => {
     const wrapper = mount(AccountAuthorizationDialog,
       {
         vuetify,
-        store,
         propsData: { dialog: true }
       })
 
@@ -57,7 +53,6 @@ describe('Account Authorization Dialog', () => {
     const wrapper = mount(AccountAuthorizationDialog,
       {
         vuetify,
-        store,
         propsData: { dialog: true }
       })
 

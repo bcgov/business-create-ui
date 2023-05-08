@@ -167,7 +167,8 @@
 <script lang="ts">
 import Vue from 'vue'
 import { Component, Watch } from 'vue-property-decorator'
-import { Action, Getter } from 'vuex-class'
+import { Action, Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 import {
   ActionBindingIF,
   AffidavitResourceIF,
@@ -207,16 +208,16 @@ export default class CompleteAffidavit extends Vue {
   protected helpToggle = false
 
   // Global getters
-  @Getter getAffidavitResources!: AffidavitResourceIF
-  @Getter getBusinessLegalName!: string
-  @Getter isTypeCoop!: boolean
-  @Getter getShowErrors!: boolean
-  @Getter getAffidavitStep!: UploadAffidavitIF
-  @Getter getUserKeycloakGuid!: string
-  @Getter getEntityType!: CorpTypeCd
+  @Getter(useStore) getAffidavitResources!: AffidavitResourceIF
+  @Getter(useStore) getBusinessLegalName!: string
+  @Getter(useStore) isTypeCoop!: boolean
+  @Getter(useStore) getShowErrors!: boolean
+  @Getter(useStore) getAffidavitStep!: UploadAffidavitIF
+  @Getter(useStore) getUserKeycloakGuid!: string
+  @Getter(useStore) getEntityType!: CorpTypeCd
 
-  @Action setAffidavit!: ActionBindingIF
-  @Action setAffidavitStepValidity!: ActionBindingIF
+  @Action(useStore) setAffidavit!: ActionBindingIF
+  @Action(useStore) setAffidavitStepValidity!: ActionBindingIF
 
   // Enum for template
   readonly RouteNames = RouteNames

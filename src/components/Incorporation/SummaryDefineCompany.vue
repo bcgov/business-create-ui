@@ -102,7 +102,8 @@
 <script lang="ts">
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
-import { Getter } from 'vuex-class'
+import { Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 import { ContactPointIF, DefineCompanyIF, NameTranslationIF } from '@/interfaces'
 import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
 import FolioNumber from '@/components/common/FolioNumber.vue'
@@ -124,19 +125,19 @@ export default class SummaryDefineCompany extends Vue {
   readonly RouteNames = RouteNames
 
   // Getters
-  @Getter getNameRequestApprovedName!: string
-  @Getter getCooperativeType!: CoopTypes
-  @Getter isDefineCompanyValid!: boolean
-  @Getter isPremiumAccount!: boolean
-  @Getter isTypeCoop!: boolean
-  @Getter getNameTranslations!: NameTranslationIF[]
-  @Getter getDefineCompanyStep!: DefineCompanyIF
-  @Getter getBusinessContact!: ContactPointIF
-  @Getter getFolioNumber!: string
-  @Getter getEntityType!: CorpTypeCd
-  @Getter isIncorporationFiling!: boolean
-  @Getter isFullRestorationFiling!: boolean
-  @Getter isLimitedRestorationFiling!: boolean
+  @Getter(useStore) getNameRequestApprovedName!: string
+  @Getter(useStore) getCooperativeType!: CoopTypes
+  @Getter(useStore) isDefineCompanyValid!: boolean
+  @Getter(useStore) isPremiumAccount!: boolean
+  @Getter(useStore) isTypeCoop!: boolean
+  @Getter(useStore) getNameTranslations!: NameTranslationIF[]
+  @Getter(useStore) getDefineCompanyStep!: DefineCompanyIF
+  @Getter(useStore) getBusinessContact!: ContactPointIF
+  @Getter(useStore) getFolioNumber!: string
+  @Getter(useStore) getEntityType!: CorpTypeCd
+  @Getter(useStore) isIncorporationFiling!: boolean
+  @Getter(useStore) isFullRestorationFiling!: boolean
+  @Getter(useStore) isLimitedRestorationFiling!: boolean
 
   /** The company name. */
   get companyName (): string {

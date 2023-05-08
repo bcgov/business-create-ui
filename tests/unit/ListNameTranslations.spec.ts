@@ -3,7 +3,8 @@ import Vuelidate from 'vuelidate'
 import Vuetify from 'vuetify'
 import VueRouter from 'vue-router'
 import mockRouter from './MockRouter'
-import { getVuexStore } from '@/store'
+import { createPinia, setActivePinia } from 'pinia'
+import { useStore } from '@/store/store'
 import { createLocalVue, mount } from '@vue/test-utils'
 import ListNameTranslations from '@/components/common/ListNameTranslations.vue'
 
@@ -11,7 +12,8 @@ Vue.use(Vuetify)
 Vue.use(Vuelidate)
 
 const vuetify = new Vuetify({})
-const store = getVuexStore()
+setActivePinia(createPinia())
+const store = useStore()
 document.body.setAttribute('data-app', 'true')
 
 // Local references
@@ -32,13 +34,12 @@ describe('List Name Translation component', () => {
     const router = mockRouter.mock()
 
     // Init Store
-    store.state.stateModel.nameTranslations = []
+    store.stateModel.nameTranslations = []
 
     wrapperFactory = async (propsData) => {
       const wrapper = mount(ListNameTranslations, {
         localVue,
         router,
-        store,
         vuetify,
         propsData
       })

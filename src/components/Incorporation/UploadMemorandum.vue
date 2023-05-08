@@ -233,7 +233,8 @@
 // Libraries
 import Vue from 'vue'
 import { Component, Watch } from 'vue-property-decorator'
-import { Action, Getter } from 'vuex-class'
+import { Action, Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 
 // Interfaces
 import {
@@ -278,14 +279,14 @@ export default class UploadMemorandum extends Vue {
   protected uploadMemorandumDocKey: string = null
   protected helpToggle = false
 
-  @Getter getShowErrors!: boolean
-  @Getter getNameRequestApprovedName!: string
-  @Getter getCreateMemorandumResource!: CreateMemorandumResourceIF
-  @Getter getCreateMemorandumStep!: CreateMemorandumIF
-  @Getter getUserKeycloakGuid!: string
+  @Getter(useStore) getShowErrors!: boolean
+  @Getter(useStore) getNameRequestApprovedName!: string
+  @Getter(useStore) getCreateMemorandumResource!: CreateMemorandumResourceIF
+  @Getter(useStore) getCreateMemorandumStep!: CreateMemorandumIF
+  @Getter(useStore) getUserKeycloakGuid!: string
 
-  @Action setMemorandum!: ActionBindingIF
-  @Action setMemorandumStepValidity!: ActionBindingIF
+  @Action(useStore) setMemorandum!: ActionBindingIF
+  @Action(useStore) setMemorandumStepValidity!: ActionBindingIF
 
   // Enum for template
   readonly RouteNames = RouteNames

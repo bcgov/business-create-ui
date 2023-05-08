@@ -10,7 +10,8 @@ import { Component, Watch } from 'vue-property-decorator'
 import Affidavit from '@/components/Dissolution/CompleteAffidavit.vue'
 import { RouteNames } from '@/enums'
 import { CommonMixin } from '@/mixins'
-import { Getter } from 'vuex-class'
+import { Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 import { UploadAffidavitIF } from '@/interfaces'
 
 @Component({
@@ -23,8 +24,8 @@ import { UploadAffidavitIF } from '@/interfaces'
 })
 export default class DissolutionAffidavit extends Vue {
   // Global getter
-  @Getter getAffidavitStep!: UploadAffidavitIF
-  @Getter getShowErrors!: boolean
+  @Getter(useStore) getAffidavitStep!: UploadAffidavitIF
+  @Getter(useStore) getShowErrors!: boolean
 
   @Watch('$route')
   private async scrollToInvalidComponent (): Promise<void> {

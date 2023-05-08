@@ -1,8 +1,12 @@
 import { wrapperFactory } from '../jest-wrapper-factory'
 import MixinTester from '@/mixin-tester.vue'
-import { getVuexStore } from '@/store'
+import { createPinia, setActivePinia } from 'pinia'
+import { useStore } from '@/store/store'
+import { BusinessTypes, CorpTypeCd, PartyTypes, RoleTypes } from '@/enums'
+import { NameRequestIF } from '@/interfaces'
 
-const store = getVuexStore()
+setActivePinia(createPinia())
+const store = useStore()
 
 describe('Incorporation Filing - Coop', () => {
   // load coop filing data
@@ -51,8 +55,8 @@ describe('Registration Filing', () => {
     //   start date
 
     // populate store
-    store.state.stateModel.tempId = 'T1234567'
-    store.state.stateModel.registration.businessAddress = {
+    store.stateModel.tempId = 'T1234567'
+    store.stateModel.registration.businessAddress = {
       deliveryAddress: {
         addressCity: 'Alpha',
         addressCountry: 'CA',
@@ -72,32 +76,33 @@ describe('Registration Filing', () => {
         streetAddressAdditional: 'Suite 2'
       }
     }
-    store.state.stateModel.registration.naics = {
+    store.stateModel.registration.naics = {
       naicsCode: '12345',
       naicsDescription: 'Some NAICS Description'
     }
-    store.state.stateModel.nameRequest = {
-      legalType: 'SP',
+    store.stateModel.nameRequest = {
+      legalType: CorpTypeCd.SOLE_PROP,
       nrNum: 'NR 1234567'
-    }
-    store.state.stateModel.nameRequestApprovedName = 'My Approved Name'
-    store.state.stateModel.businessContact = {
+    } as NameRequestIF
+
+    store.stateModel.nameRequestApprovedName = 'My Approved Name'
+    store.stateModel.businessContact = {
       email: 'eleven@example.com',
       phone: '(111) 222-3333',
-      extension: '444'
+      extension: 444
     }
-    store.state.stateModel.entityType = 'SP' // sole prop
-    store.state.stateModel.registration.businessType = 'SP' // not DBA
-    store.state.stateModel.registration.businessNumber = '111222333'
-    store.state.stateModel.registration.businessTypeConfirm = false
-    store.state.stateModel.addPeopleAndRoleStep.orgPeople = [
+    store.stateModel.entityType = CorpTypeCd.SOLE_PROP // sole prop
+    store.stateModel.registration.businessType = BusinessTypes.SP // not DBA
+    store.stateModel.registration.businessNumber = '111222333'
+    store.stateModel.registration.businessTypeConfirm = false
+    store.stateModel.addPeopleAndRoleStep.orgPeople = [
       {
         officer: {
           id: '1234',
           email: 'lucille@bcregtest.gov.bc.ca',
           lastName: 'TWENTY',
           firstName: 'BCREGTEST Lucille',
-          partyType: 'person',
+          partyType: PartyTypes.PERSON,
           middleName: '',
           organizationName: '',
           businessNumber: ''
@@ -112,7 +117,7 @@ describe('Registration Filing', () => {
         },
         roles: [
           {
-            roleType: 'Completing Party',
+            roleType: RoleTypes.COMPLETING_PARTY,
             appointmentDate: '2022-05-17'
           }
         ]
@@ -123,7 +128,7 @@ describe('Registration Filing', () => {
           email: 'kitty@example.com',
           lastName: '',
           firstName: '',
-          partyType: 'organization',
+          partyType: PartyTypes.ORGANIZATION,
           middleName: '',
           organizationName: 'Crazy Cat Consulting Company',
           businessNumber: '123456789'
@@ -146,7 +151,7 @@ describe('Registration Filing', () => {
         },
         roles: [
           {
-            roleType: 'Proprietor',
+            roleType: RoleTypes.PROPRIETOR,
             appointmentDate: '2022-05-17'
           }
         ]
@@ -279,7 +284,7 @@ describe('Registration Filing', () => {
     //   staff filing data
 
     // verify the store
-    expect(store.state.stateModel.registration).toEqual({
+    expect(store.stateModel.registration).toEqual({
       defineBusinessValid: false,
       startDate: '2021-02-03',
       businessAddress: {
@@ -313,7 +318,7 @@ describe('Registration Filing', () => {
       isAutoPopulatedBusinessNumber: false
     })
     // NB: name request object is not restored from filing
-    expect(store.state.stateModel.businessContact).toEqual({
+    expect(store.stateModel.businessContact).toEqual({
       email: 'eleven@example.com',
       confirmEmail: 'eleven@example.com',
       phone: '(111) 222-3333',
@@ -324,7 +329,7 @@ describe('Registration Filing', () => {
 
 describe('Staff Payment', () => {
   it('builds FAS data correctly', () => {
-    store.state.stateModel.staffPaymentStep.staffPayment = {
+    store.stateModel.staffPaymentStep.staffPayment = {
       option: 1,
       routingSlipNumber: '123456789',
       bcolAccountNumber: '123456',
@@ -347,7 +352,7 @@ describe('Staff Payment', () => {
   })
 
   it('builds BCOL data correctly', () => {
-    store.state.stateModel.staffPaymentStep.staffPayment = {
+    store.stateModel.staffPaymentStep.staffPayment = {
       option: 2,
       routingSlipNumber: '123456789',
       bcolAccountNumber: '123456',
@@ -372,7 +377,7 @@ describe('Staff Payment', () => {
   })
 
   it('builds NO_FEE data correctly', () => {
-    store.state.stateModel.staffPaymentStep.staffPayment = {
+    store.stateModel.staffPaymentStep.staffPayment = {
       option: 0,
       routingSlipNumber: '123456789',
       bcolAccountNumber: '123456',
@@ -395,7 +400,7 @@ describe('Staff Payment', () => {
   })
 
   it('builds NONE data correctly', () => {
-    store.state.stateModel.staffPaymentStep.staffPayment = {
+    store.stateModel.staffPaymentStep.staffPayment = {
       option: -1,
       routingSlipNumber: '123456789',
       bcolAccountNumber: '123456',
@@ -424,7 +429,7 @@ describe('Staff Payment', () => {
       }
     })
 
-    expect(store.state.stateModel.staffPaymentStep.staffPayment).toEqual({
+    expect(store.stateModel.staffPaymentStep.staffPayment).toEqual({
       option: 1,
       routingSlipNumber: '123456789',
       bcolAccountNumber: '',
@@ -446,7 +451,7 @@ describe('Staff Payment', () => {
       }
     })
 
-    expect(store.state.stateModel.staffPaymentStep.staffPayment).toEqual({
+    expect(store.stateModel.staffPaymentStep.staffPayment).toEqual({
       option: 2,
       routingSlipNumber: '',
       bcolAccountNumber: '123456',
@@ -465,7 +470,7 @@ describe('Staff Payment', () => {
       }
     })
 
-    expect(store.state.stateModel.staffPaymentStep.staffPayment).toEqual({
+    expect(store.stateModel.staffPaymentStep.staffPayment).toEqual({
       option: 0,
       routingSlipNumber: '',
       bcolAccountNumber: '',
@@ -483,7 +488,7 @@ describe('Staff Payment', () => {
     })
 
     // check store for expected data
-    expect(store.state.stateModel.staffPaymentStep.staffPayment).toEqual({
+    expect(store.stateModel.staffPaymentStep.staffPayment).toEqual({
       option: -1,
       routingSlipNumber: '',
       bcolAccountNumber: '',

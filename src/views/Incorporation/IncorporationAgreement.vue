@@ -177,7 +177,8 @@
 <script lang="ts">
 import Vue from 'vue'
 import { Component, Watch } from 'vue-property-decorator'
-import { Getter } from 'vuex-class'
+import { Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 import AgreementType from '@/components/common/AgreementType.vue'
 import { IncorporationAgreementIF } from '@/interfaces'
 import { RouteNames } from '@/enums'
@@ -194,16 +195,16 @@ import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module
   ]
 })
 export default class IncorporationAgreement extends Vue {
-  @Getter isTypeBcomp!: boolean
-  @Getter isTypeBcCcc!: boolean
-  @Getter isTypeBcCompany!: boolean
-  @Getter isTypeBcUlcCompany!: boolean
-  @Getter getEntityType!: CorpTypeCd
-  @Getter getIncorporationAgreementStep!: IncorporationAgreementIF
-  @Getter getIncorporationAgreementResource!: any
-  @Getter getIncorporationArticlesResource!: any
-  @Getter getSampleArticle!: string
-  @Getter getShowErrors!: boolean
+  @Getter(useStore) isTypeBcomp!: boolean
+  @Getter(useStore) isTypeBcCcc!: boolean
+  @Getter(useStore) isTypeBcCompany!: boolean
+  @Getter(useStore) isTypeBcUlcCompany!: boolean
+  @Getter(useStore) getEntityType!: CorpTypeCd
+  @Getter(useStore) getIncorporationAgreementStep!: IncorporationAgreementIF
+  @Getter(useStore) getIncorporationAgreementResource!: any
+  @Getter(useStore) getIncorporationArticlesResource!: any
+  @Getter(useStore) getSampleArticle!: string
+  @Getter(useStore) getShowErrors!: boolean
 
   // Local properties
   protected helpToggle = false

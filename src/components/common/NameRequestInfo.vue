@@ -83,7 +83,8 @@
 <script lang="ts">
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
-import { Getter } from 'vuex-class'
+import { Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 import { NameRequestStates, NrRequestActionCodes } from '@/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/enums/'
 import { NrApplicantIF, NameRequestIF } from '@/interfaces'
@@ -106,11 +107,11 @@ export default class NameRequestInfo extends Vue {
   readonly NOT_REQUIRED_STATE = 'Not Required'
   readonly WAIVED_STATE = 'Waived'
 
-  @Getter getEntityType!: CorpTypeCd
-  @Getter getNameRequest!: NameRequestIF
-  @Getter getNameRequestApprovedName!: string
-  @Getter getNameRequestNumber!: string
-  @Getter isTypeSoleProp: boolean
+  @Getter(useStore) getEntityType!: CorpTypeCd
+  @Getter(useStore) getNameRequest!: NameRequestIF
+  @Getter(useStore) getNameRequestApprovedName!: string
+  @Getter(useStore) getNameRequestNumber!: string
+  @Getter(useStore) isTypeSoleProp: boolean
 
   /** The entity type description.  */
   get getEntityTypeDescription (): string {

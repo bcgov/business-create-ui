@@ -19,13 +19,14 @@
 <script lang="ts">
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
-import { Getter } from 'vuex-class'
+import { Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module/'
 import { CorpTypeCd } from '@bcrs-shared-components/enums/'
 
 @Component({})
 export default class BusinessType extends Vue {
-  @Getter getEntityType!: CorpTypeCd
+  @Getter(useStore) getEntityType!: CorpTypeCd
 
   get businessType (): string {
     return GetCorpFullDescription(this.getEntityType)

@@ -81,7 +81,8 @@
 <script lang="ts">
 import Vue from 'vue'
 import { Component, Watch } from 'vue-property-decorator'
-import { Action, Getter } from 'vuex-class'
+import { Action, Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 import { ConfirmDialog } from '@bcrs-shared-components/confirm-dialog'
 import AddNameTranslation from '@/components/common/AddNameTranslation.vue'
 import ListNameTranslations from '@/components/common/ListNameTranslations.vue'
@@ -107,11 +108,11 @@ export default class NameTranslations extends Vue {
   protected editingNameTranslation = ''
   protected editIndex = -1
 
-  @Action setNameTranslations!: ActionBindingIF
-  @Action setNameTranslationsValid!: ActionBindingIF
+  @Action(useStore) setNameTranslations!: ActionBindingIF
+  @Action(useStore) setNameTranslationsValid!: ActionBindingIF
 
-  @Getter getNameTranslations!: NameTranslationIF[]
-  @Getter getShowErrors!: boolean
+  @Getter(useStore) getNameTranslations!: NameTranslationIF[]
+  @Getter(useStore) getShowErrors!: boolean
 
   /** Whether this component is valid. */
   get nameTranslationsValid (): boolean {

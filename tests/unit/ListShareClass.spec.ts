@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import Vuelidate from 'vuelidate'
 import Vuetify from 'vuetify'
-import { getVuexStore } from '@/store'
+import { createPinia, setActivePinia } from 'pinia'
+import { useStore } from '@/store/store'
 import { createLocalVue, mount } from '@vue/test-utils'
 import ListShareClass from '@/components/Incorporation/ListShareClass.vue'
 
@@ -12,7 +13,8 @@ const vuetify = new Vuetify({})
 const localVue = createLocalVue()
 
 // Store
-const store = getVuexStore()
+setActivePinia(createPinia())
+const store = useStore()
 document.body.setAttribute('data-app', 'true')
 
 describe('List Shares and Series component', () => {
@@ -90,7 +92,6 @@ describe('List Shares and Series component', () => {
     wrapper = mount(ListShareClass, {
       localVue,
       vuetify,
-      store,
       propsData: { shareClasses }
     })
   })

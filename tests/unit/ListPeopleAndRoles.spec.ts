@@ -1,8 +1,11 @@
 import { wrapperFactory, shallowWrapperFactory } from '../jest-wrapper-factory'
-import { getVuexStore } from '@/store'
+import { createPinia, setActivePinia } from 'pinia'
+import { useStore } from '@/store/store'
 import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
+import { CorpTypeCd, FilingTypes } from '@/enums'
 
-const store = getVuexStore()
+setActivePinia(createPinia())
+const store = useStore()
 
 describe('List People And Roles component - BEN IA', () => {
   let wrapper: any
@@ -63,8 +66,8 @@ describe('List People And Roles component - BEN IA', () => {
   ]
 
   beforeAll(() => {
-    store.state.stateModel.entityType = 'BEN'
-    store.state.stateModel.tombstone.filingType = 'incorporationApplication'
+    store.stateModel.entityType = CorpTypeCd.BENEFIT_COMPANY
+    store.stateModel.tombstone.filingType = FilingTypes.INCORPORATION_APPLICATION
   })
 
   afterEach(() => {
@@ -332,8 +335,8 @@ describe('List People And Roles component - SP registration', () => {
   ]
 
   beforeAll(() => {
-    store.state.stateModel.entityType = 'SP'
-    store.state.stateModel.tombstone.filingType = 'registration'
+    store.stateModel.entityType = CorpTypeCd.SOLE_PROP
+    store.stateModel.tombstone.filingType = FilingTypes.REGISTRATION
   })
 
   afterEach(() => {
@@ -412,8 +415,8 @@ describe('List People And Roles component - BEN restoration', () => {
   ]
 
   beforeAll(() => {
-    store.state.stateModel.entityType = 'BEN'
-    store.state.stateModel.tombstone.filingType = 'restoration'
+    store.stateModel.entityType = CorpTypeCd.BENEFIT_COMPANY
+    store.stateModel.tombstone.filingType = FilingTypes.RESTORATION
   })
 
   afterEach(() => {

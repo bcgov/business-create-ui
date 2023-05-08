@@ -1,25 +1,27 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify'
 import { shallowMount } from '@vue/test-utils'
-import { getVuexStore } from '@/store'
+import { createPinia, setActivePinia } from 'pinia'
+import { useStore } from '@/store/store'
 import FileAndPayInvalidNameRequestDialog from '@/dialogs/FileAndPayInvalidNameRequestDialog.vue'
+import { CorpTypeCd } from '@/enums'
 
 Vue.use(Vuetify)
 
 const vuetify = new Vuetify({})
-const store = getVuexStore()
+setActivePinia(createPinia())
+const store = useStore()
 
-store.state.stateModel.nameRequest = {
-  legalType: 'BEN',
+store.stateModel.nameRequest = {
+  legalType: CorpTypeCd.BENEFIT_COMPANY,
   nrNum: 'NR 1234567'
 }
-store.state.stateModel.nameRequestApprovedName = 'My Name Request Inc.'
+store.stateModel.nameRequestApprovedName = 'My Name Request Inc.'
 
 describe('FileAndPayInvalidNameRequestDialog - Verify that dialog is displayed correctly', () => {
   it('displays dialog with the proper store data', async () => {
     const wrapper = shallowMount(FileAndPayInvalidNameRequestDialog,
       {
-        store,
         vuetify
       })
 

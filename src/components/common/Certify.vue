@@ -19,7 +19,8 @@
 <script lang="ts">
 import Vue from 'vue'
 import { Component, Prop } from 'vue-property-decorator'
-import { Action, Getter } from 'vuex-class'
+import { Action, Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 import { ActionBindingIF, CertifyIF, CompletingPartyStatementIF } from '@/interfaces'
 import { Certify as CertifyShared } from '@bcrs-shared-components/certify'
 
@@ -34,11 +35,11 @@ export default class Certify extends Vue {
   @Prop({ required: true }) readonly invalidSection!: boolean
   @Prop({ required: true }) readonly isStaff!: boolean
 
-  @Getter getCertifyState!: CertifyIF
-  @Getter getCompletingPartyStatement!: CompletingPartyStatementIF
-  @Getter getCurrentDate!: string
+  @Getter(useStore) getCertifyState!: CertifyIF
+  @Getter(useStore) getCompletingPartyStatement!: CompletingPartyStatementIF
+  @Getter(useStore) getCurrentDate!: string
 
-  @Action setCertifyState!: ActionBindingIF
+  @Action(useStore) setCertifyState!: ActionBindingIF
 
   /** Handler for CertifiedBy change event. */
   onCertifiedBy (val: string): void {

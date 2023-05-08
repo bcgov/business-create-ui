@@ -26,7 +26,8 @@
 <script lang="ts">
 import Vue from 'vue'
 import { Component, Emit, Watch } from 'vue-property-decorator'
-import { Action, Getter } from 'vuex-class'
+import { Action, Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 import { ActionBindingIF, RegistrationStateIF } from '@/interfaces'
 import { DatePicker as DatePickerShared } from '@bcrs-shared-components/date-picker'
 import { RuleHelpers } from '@/rules'
@@ -48,11 +49,11 @@ export default class StartDate extends Vue {
   }
 
   // Global actions
-  @Action setRegistrationStartDate!: ActionBindingIF
+  @Action(useStore) setRegistrationStartDate!: ActionBindingIF
 
   // Global getters
-  @Getter getRegistration!: RegistrationStateIF
-  @Getter getShowErrors!: boolean
+  @Getter(useStore) getRegistration!: RegistrationStateIF
+  @Getter(useStore) getShowErrors!: boolean
 
   protected dateText = ''
 

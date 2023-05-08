@@ -1,9 +1,11 @@
 import Vue from 'vue'
 import Vuelidate from 'vuelidate'
 import Vuetify from 'vuetify'
-import { getVuexStore } from '@/store'
+import { createPinia, setActivePinia } from 'pinia'
+import { useStore } from '@/store/store'
 import { mount } from '@vue/test-utils'
 import RestorationType from '@/components/Restoration/RestorationType.vue'
+import { RestorationTypes } from '@/enums'
 
 // mock the console.warn function to hide "[Vuetify] Unable to locate target XXX"
 console.warn = jest.fn()
@@ -12,20 +14,20 @@ Vue.use(Vuetify)
 Vue.use(Vuelidate)
 
 const vuetify = new Vuetify({})
-const store = getVuexStore()
+setActivePinia(createPinia())
+const store = useStore()
 
 describe('Restoration Type component', () => {
   let wrapperFactory: any
 
   beforeEach(() => {
-    store.state.stateModel.restoration = {
-      type: 'fullRestoration',
+    store.stateModel.restoration = {
+      type: RestorationTypes.FULL,
       expiry: null,
       relationships: [],
       restorationTypeValid: true
     }
     wrapperFactory = () => mount(RestorationType, {
-      store,
       vuetify
     })
   })
@@ -42,7 +44,7 @@ describe('Restoration Type component', () => {
   })
 
   it('selects the limited restoration button if draft was a limited restoration.', () => {
-    store.state.stateModel.restoration.type = 'limitedRestoration'
+    store.stateModel.restoration.type = RestorationTypes.LIMITED
     const wrapper = wrapperFactory()
     expect(wrapper.vm.$data.selectRestorationType).toEqual('limitedRestoration')
   })
@@ -54,19 +56,19 @@ describe('Restoration Type component', () => {
     await Vue.nextTick()
 
     expect(wrapper.vm.$data.selectRestorationType).toEqual('limitedRestoration')
-    expect(store.state.stateModel.restoration.type).toEqual('limitedRestoration')
-    expect(store.state.stateModel.restoration.relationships).toEqual([])
+    expect(store.stateModel.restoration.type).toEqual('limitedRestoration')
+    expect(store.stateModel.restoration.relationships).toEqual([])
   })
 
   it('changes the restoration type from limited to full when the corresponding button is pressed.', async () => {
-    store.state.stateModel.restoration.type = 'limitedRestoration'
+    store.stateModel.restoration.type = RestorationTypes.LIMITED
     const wrapper = wrapperFactory()
     const input = wrapper.find('#full-radio-button')
     input.setChecked()
     await Vue.nextTick()
 
     expect(wrapper.vm.$data.selectRestorationType).toEqual('fullRestoration')
-    expect(store.state.stateModel.restoration.type).toEqual('fullRestoration')
-    expect(store.state.stateModel.restoration.expiry).toEqual(null)
+    expect(store.stateModel.restoration.type).toEqual('fullRestoration')
+    expect(store.stateModel.restoration.expiry).toEqual(null)
   })
 })

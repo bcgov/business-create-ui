@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify'
-import { getVuexStore } from '@/store'
+import { createPinia, setActivePinia } from 'pinia'
+import { useStore } from '@/store/store'
 import { shallowMount, mount } from '@vue/test-utils'
 import FetchErrorDialog from '@/dialogs/FetchErrorDialog.vue'
 import RegistriesContactInfo from '@/components/common/RegistriesContactInfo.vue'
@@ -8,18 +9,18 @@ import RegistriesContactInfo from '@/components/common/RegistriesContactInfo.vue
 Vue.use(Vuetify)
 
 const vuetify = new Vuetify({})
-const store = getVuexStore()
+setActivePinia(createPinia())
+const store = useStore()
 
 // Prevent the warning "[Vuetify] Unable to locate target [data-app]"
 document.body.setAttribute('data-app', 'true')
 
 describe('Fetch Error Dialog', () => {
   it('renders the component properly as a staff user', () => {
-    store.state.stateModel.tombstone.authRoles = ['staff', 'edit', 'view']
+    store.stateModel.tombstone.authRoles = ['staff', 'edit', 'view']
     const wrapper = shallowMount(FetchErrorDialog,
       {
         vuetify,
-        store,
         propsData: { dialog: true }
       })
 
@@ -36,11 +37,10 @@ describe('Fetch Error Dialog', () => {
   })
 
   it('renders the component properly as a regular user', () => {
-    store.state.stateModel.tombstone.authRoles = ['edit', 'view']
+    store.stateModel.tombstone.authRoles = ['edit', 'view']
     const wrapper = shallowMount(FetchErrorDialog,
       {
         vuetify,
-        store,
         propsData: { dialog: true }
       })
 
@@ -61,7 +61,6 @@ describe('Fetch Error Dialog', () => {
     const wrapper = mount(FetchErrorDialog,
       {
         vuetify,
-        store,
         propsData: { dialog: true }
       })
 
@@ -82,7 +81,6 @@ describe('Fetch Error Dialog', () => {
     const wrapper = mount(FetchErrorDialog,
       {
         vuetify,
-        store,
         propsData: { dialog: true }
       })
 

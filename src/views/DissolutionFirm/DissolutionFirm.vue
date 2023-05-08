@@ -213,7 +213,8 @@
 <script lang="ts">
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
-import { Getter, Action } from 'vuex-class'
+import { Getter, Action } from 'pinia-class'
+import { useStore } from '@/store/store'
 import { DateMixin } from '@/mixins'
 import AssociationDetails from '@/components/Dissolution/AssociationDetails.vue'
 import { Certify } from '@bcrs-shared-components/certify'
@@ -261,42 +262,42 @@ import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module
 })
 export default class DissolutionFirm extends Vue {
   // Global getters
-  @Getter getEntityType!: CorpTypeCd
-  @Getter getBusinessLegalName!: string
-  @Getter getBusinessContact!: ContactPointIF
-  @Getter getCertifyState!: CertifyIF
-  @Getter getCompletingPartyStatement!: CompletingPartyStatementIF
-  @Getter getCourtOrderStep!: CourtOrderStepIF
-  @Getter getCurrentDate!: string
-  @Getter getDissolutionCustodianEmail!: string
-  @Getter getDocumentDelivery!: DocumentDeliveryIF
-  @Getter getUserEmail!: string
-  @Getter getValidateSteps!: boolean
-  @Getter isPremiumAccount!: boolean
-  @Getter isRoleStaff!: boolean
-  @Getter isSbcStaff!: boolean
-  @Getter getFolioNumber!: string
-  @Getter getTransactionalFolioNumber!: string
-  @Getter getBusinessFoundingDate!: string
-  @Getter getCompletingParty!: CompletingPartyIF
-  @Getter getDissolutionDate!: string
-  @Getter getParties!: Array<PartyIF>
-  @Getter isTypeSoleProp: boolean
-  @Getter isTypeFirm: boolean
-  @Getter getStaffPaymentStep!: StaffPaymentStepIF
+  @Getter(useStore) getEntityType!: CorpTypeCd
+  @Getter(useStore) getBusinessLegalName!: string
+  @Getter(useStore) getBusinessContact!: ContactPointIF
+  @Getter(useStore) getCertifyState!: CertifyIF
+  @Getter(useStore) getCompletingPartyStatement!: CompletingPartyStatementIF
+  @Getter(useStore) getCourtOrderStep!: CourtOrderStepIF
+  @Getter(useStore) getCurrentDate!: string
+  @Getter(useStore) getDissolutionCustodianEmail!: string
+  @Getter(useStore) getDocumentDelivery!: DocumentDeliveryIF
+  @Getter(useStore) getUserEmail!: string
+  @Getter(useStore) getValidateSteps!: boolean
+  @Getter(useStore) isPremiumAccount!: boolean
+  @Getter(useStore) isRoleStaff!: boolean
+  @Getter(useStore) isSbcStaff!: boolean
+  @Getter(useStore) getFolioNumber!: string
+  @Getter(useStore) getTransactionalFolioNumber!: string
+  @Getter(useStore) getBusinessFoundingDate!: string
+  @Getter(useStore) getCompletingParty!: CompletingPartyIF
+  @Getter(useStore) getDissolutionDate!: string
+  @Getter(useStore) getParties!: Array<PartyIF>
+  @Getter(useStore) isTypeSoleProp: boolean
+  @Getter(useStore) isTypeFirm: boolean
+  @Getter(useStore) getStaffPaymentStep!: StaffPaymentStepIF
 
   // Global actions
-  @Action setCourtOrderFileNumber!: ActionBindingIF
-  @Action setHasPlanOfArrangement!: ActionBindingIF
-  @Action setCourtOrderValidity!: ActionBindingIF
-  @Action setCertifyState!: ActionBindingIF
-  @Action setDocumentOptionalEmail!: ActionBindingIF
-  @Action setDocumentOptionalEmailValidity!: ActionBindingIF
-  @Action setTransactionalFolioNumber!: ActionBindingIF
-  @Action setTransactionalFolioNumberValidity!: ActionBindingIF
-  @Action setCompletingParty!: ActionBindingIF
-  @Action setCompletingPartyValidity!: ActionBindingIF
-  @Action setDissolutionDate!: ActionBindingIF
+  @Action(useStore) setCourtOrderFileNumber!: ActionBindingIF
+  @Action(useStore) setHasPlanOfArrangement!: ActionBindingIF
+  @Action(useStore) setCourtOrderValidity!: ActionBindingIF
+  @Action(useStore) setCertifyState!: ActionBindingIF
+  @Action(useStore) setDocumentOptionalEmail!: ActionBindingIF
+  @Action(useStore) setDocumentOptionalEmailValidity!: ActionBindingIF
+  @Action(useStore) setTransactionalFolioNumber!: ActionBindingIF
+  @Action(useStore) setTransactionalFolioNumberValidity!: ActionBindingIF
+  @Action(useStore) setCompletingParty!: ActionBindingIF
+  @Action(useStore) setCompletingPartyValidity!: ActionBindingIF
+  @Action(useStore) setDissolutionDate!: ActionBindingIF
 
   // Enum for template
   readonly RouteNames = RouteNames

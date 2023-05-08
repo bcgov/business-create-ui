@@ -97,7 +97,8 @@
 import Vue from 'vue'
 import { Component, Watch } from 'vue-property-decorator'
 import { DateMixin } from '@/mixins'
-import { Getter, Action } from 'vuex-class'
+import { Getter, Action } from 'pinia-class'
+import { useStore } from '@/store/store'
 import { ApprovalTypes, RouteNames } from '@/enums'
 import { CorpTypeCd, CorrectNameOptions } from '@bcrs-shared-components/enums/'
 import { NameTranslationIF, RestorationStateIF } from '@/interfaces'
@@ -109,14 +110,14 @@ import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module
   ]
 })
 export default class SummaryRestoreBusiness extends Vue {
-  @Getter getEntityType!: CorpTypeCd
-  @Getter getCorrectNameOption!: CorrectNameOptions
-  @Getter getNameRequestApprovedName!: string
-  @Getter getNameTranslations!: NameTranslationIF[]
-  @Getter getRestoration!: RestorationStateIF
-  @Getter isRestoreBusinessNameValid!: boolean
-  @Getter isLimitedRestorationFiling!: boolean
-  @Getter isFullRestorationFiling!: boolean
+  @Getter(useStore) getEntityType!: CorpTypeCd
+  @Getter(useStore) getCorrectNameOption!: CorrectNameOptions
+  @Getter(useStore) getNameRequestApprovedName!: string
+  @Getter(useStore) getNameTranslations!: NameTranslationIF[]
+  @Getter(useStore) getRestoration!: RestorationStateIF
+  @Getter(useStore) isRestoreBusinessNameValid!: boolean
+  @Getter(useStore) isLimitedRestorationFiling!: boolean
+  @Getter(useStore) isFullRestorationFiling!: boolean
 
   // for template
   readonly RouteNames = RouteNames
