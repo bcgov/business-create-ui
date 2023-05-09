@@ -573,7 +573,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
 
     // restore Business data
     this.setEntityType(draftFiling.business.legalType || this.getBusinessLegalType)
-    this.setLegalName(draftFiling.business.legalName || this.getBusinessLegalName)
+    this.setLegalName(null) // don't show original legal name since it's no longer valid
     this.setFoundingDate(draftFiling.business.foundingDate || this.getBusinessFoundingDate)
 
     // restore Restoration data
