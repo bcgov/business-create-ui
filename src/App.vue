@@ -268,7 +268,6 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   @Action(useStore) setCurrentJsDate!: ActionBindingIF
   @Action(useStore) setCurrentStep!: ActionBindingIF
   @Action(useStore) setEntityFoundingDate!: ActionBindingIF
-  @Action(useStore) setEntityName!: ActionBindingIF
   @Action(useStore) setEntityState!: ActionBindingIF
   @Action(useStore) setFeePrices!: ActionBindingIF
   @Action(useStore) setFilingType!: ActionBindingIF
@@ -1082,7 +1081,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
 
     // FUTURE: change this to a single setter/object?
     this.setAdminFreeze(business.adminFreeze)
-    this.setEntityName(business.legalName)
+    this.setLegalName(business.legalName)
     this.setEntityState(business.state)
     this.setBusinessNumber(business.taxId || null) // may be empty
     this.setIdentifier(business.identifier)
