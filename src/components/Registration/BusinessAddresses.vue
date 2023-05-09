@@ -83,9 +83,9 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component, Emit, Prop, Watch } from 'vue-property-decorator'
-import { Action, Getter } from 'vuex-class'
+import { Component, Emit, Mixins, Prop, Watch } from 'vue-property-decorator'
+import { Action, Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 import { isEmpty, isEqual } from 'lodash'
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
 import { RegistrationMailingAddressSchema, RegistrationDeliveryAddressSchema } from '@/schemas'
@@ -111,12 +111,9 @@ const DefaultAddress: AddressIF = {
   components: {
     DeliveryAddress: BaseAddress,
     MailingAddress: BaseAddress
-  },
-  mixins: [
-    CommonMixin
-  ]
+  }
 })
-export default class BusinessAddresses extends Vue {
+export default class BusinessAddresses extends Mixins(CommonMixin) {
   // Refs for BaseAddress components so we can access form validation
   $refs!: {
     mailingAddress: any
@@ -132,21 +129,21 @@ export default class BusinessAddresses extends Vue {
   /** Whether to show errors (editing mode only). */
   @Prop({ required: true }) readonly showErrors!: boolean
 
-  @Getter getRegistration!: RegistrationStateIF
+  @Getter(useStore) getRegistration!: RegistrationStateIF
 
-  @Action setRegistrationBusinessAddress!: ActionBindingIF
+  @Action(useStore) setRegistrationBusinessAddress!: ActionBindingIF
 
   // BaseAddress state variables
   // (Note that if the initial value is undefined, the class property will not be
   // reactive, which means the changes for the properties will not be detected.)
-  protected mailingAddress = null as AddressIF
-  protected deliveryAddress = null as AddressIF
-  protected mailingAddressValid = false
-  protected deliveryAddressValid = false
+  mailingAddress = null as AddressIF
+  deliveryAddress = null as AddressIF
+  private mailingAddressValid = false
+  private deliveryAddressValid = false
 
   // State of checkbox
-  protected inheritMailingAddress = false
-  protected checkboxDisabled = false
+  inheritMailingAddress = false
+  checkboxDisabled = false
 
   // Misc for template
   readonly RegistrationMailingAddressSchema = RegistrationMailingAddressSchema
@@ -160,7 +157,7 @@ export default class BusinessAddresses extends Vue {
   }
 
   /** Returns true if the address object is empty or with only with default values. */
-  protected isEmptyAddress (address: AddressIF): boolean {
+  isEmptyAddress (address: AddressIF): boolean {
     return (
       isEmpty(address) ||
       this.isSame(address, EmptyAddress) ||
@@ -179,7 +176,7 @@ export default class BusinessAddresses extends Vue {
   }
 
   /** Called when the "same as" checkbox value has changed. */
-  protected onCheckboxChanged (): void {
+  onCheckboxChanged (): void {
     if (this.inheritMailingAddress) {
       // copy mailing address into delivery address
       this.deliveryAddress = { ...this.mailingAddress }
@@ -199,7 +196,7 @@ export default class BusinessAddresses extends Vue {
    * @param addressToUpdate the address type to set the data of
    * @param address the new address data
    */
-  protected updateAddress (addressToUpdate: string, address: AddressIF): void {
+  updateAddress (addressToUpdate: string, address: AddressIF): void {
     switch (addressToUpdate) {
       case this.MAILING_ADDRESS:
         // avoid reactive looping
@@ -241,7 +238,7 @@ export default class BusinessAddresses extends Vue {
    * @param addressToValidate the address type to set the validity of
    * @param valid whether the address is valid
    */
-  protected updateAddressValid (addressToValidate: string, valid: boolean): void {
+  updateAddressValid (addressToValidate: string, valid: boolean): void {
     switch (addressToValidate) {
       case this.MAILING_ADDRESS:
         this.mailingAddressValid = valid

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <section v-if="isBaseCompany && this.getCreateResolutionStep.validationDetail.valid"
+    <section v-if="isBaseCompany && getCreateResolutionStep.validationDetail.valid"
       class="section-container upload-success-message"
     >
       <v-row no-gutters>
@@ -60,7 +60,7 @@
             hide-details
             background-color="white"
             v-model="resolutionText"
-            v-observe-visibility="{ callback: onResolutionVisibilityChanged}"
+            v-observe-visibility="{ callback: onResolutionVisibilityChanged }"
           />
         </v-col>
       </v-row>
@@ -97,21 +97,17 @@
 
 <script lang="ts">
 // Libraries
-import Vue from 'vue'
-import { Component, Watch } from 'vue-property-decorator'
-import { Getter } from 'vuex-class'
+import { Component, Mixins, Watch } from 'vue-property-decorator'
+import { Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 import { DateMixin } from '@/mixins'
 
 // Enums
 import { RouteNames } from '@/enums'
 import { CreateResolutionIF, CreateResolutionResourceIF, FormIF } from '@/interfaces'
 
-@Component({
-  mixins: [
-    DateMixin
-  ]
-})
-export default class CompleteResolutionSummary extends Vue {
+@Component({})
+export default class CompleteResolutionSummary extends Mixins(DateMixin) {
   // Refs
   $refs!: {
     resolutionTextRef: FormIF
@@ -120,10 +116,10 @@ export default class CompleteResolutionSummary extends Vue {
   // initialize to true so resolution text height will right height on initial load
   private resolutionTextHeightUpdateRequired = true
 
-  @Getter getCreateResolutionStep!: CreateResolutionIF
-  @Getter getCreateResolutionResource!: CreateResolutionResourceIF
-  @Getter isBaseCompany!: boolean
-  @Getter isTypeCoop!: boolean
+  @Getter(useStore) getCreateResolutionResource!: CreateResolutionResourceIF
+  @Getter(useStore) getCreateResolutionStep!: CreateResolutionIF
+  @Getter(useStore) isBaseCompany!: boolean
+  @Getter(useStore) isTypeCoop!: boolean
 
   // Enum for template
   readonly RouteNames = RouteNames
@@ -181,7 +177,7 @@ export default class CompleteResolutionSummary extends Vue {
   // v-observe-visibility property, we are able to force a re-calculation of the text area height when a user navigates
   // to the complete resolution summary step from another step for the first time. This results in the text area being
   // rendered to the appropriate height.
-  private onResolutionVisibilityChanged (isVisible, entry) {
+  onResolutionVisibilityChanged (isVisible: boolean, _entry): void {
     if (isVisible && this.resolutionTextHeightUpdateRequired) {
       this.resolutionTextHeightUpdateRequired = false
       this.$refs.resolutionTextRef.calculateInputHeight()

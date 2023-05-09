@@ -68,40 +68,36 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component, Watch } from 'vue-property-decorator'
+import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { DateMixin, CommonMixin } from '@/mixins'
-import { Getter, Action } from 'vuex-class'
+import { Getter, Action } from 'pinia-class'
+import { useStore } from '@/store/store'
 import { RestorationTypes } from '@/enums'
-import { RestorationStateIF } from '@/interfaces'
+import { ActionBindingIF, RestorationStateIF } from '@/interfaces'
 import { RelationshipsPanel } from '@bcrs-shared-components/relationships-panel'
 import { LimitedRestorationPanel } from '@bcrs-shared-components/limited-restoration-panel'
 
 @Component({
-  mixins: [
-    DateMixin,
-    CommonMixin
-  ],
   components: {
     RelationshipsPanel,
     LimitedRestorationPanel
   }
 })
-export default class RestorationType extends Vue {
-  @Getter getCurrentDate!: string
-  @Getter getRestoration!: RestorationStateIF
-  @Getter getRestorationTypeValid!: boolean
-  @Getter getShowErrors!: boolean
-  @Getter isLimitedRestorationFiling!: boolean
-  @Getter isFullRestorationFiling!: boolean
+export default class RestorationType extends Mixins(DateMixin, CommonMixin) {
+  @Getter(useStore) getCurrentDate!: string
+  @Getter(useStore) getRestoration!: RestorationStateIF
+  @Getter(useStore) getRestorationTypeValid!: boolean
+  @Getter(useStore) getShowErrors!: boolean
+  @Getter(useStore) isLimitedRestorationFiling!: boolean
+  @Getter(useStore) isFullRestorationFiling!: boolean
 
-  @Action setRestorationExpiry!: ActionBindingIF
-  @Action setRestorationRelationships!: ActionBindingIF
-  @Action setRestorationType!: ActionBindingIF
-  @Action setRestorationTypeValid!: ActionBindingIF
+  @Action(useStore) setRestorationExpiry!: ActionBindingIF
+  @Action(useStore) setRestorationRelationships!: ActionBindingIF
+  @Action(useStore) setRestorationType!: ActionBindingIF
+  @Action(useStore) setRestorationTypeValid!: ActionBindingIF
 
   // Local properties
-  protected selectRestorationType: RestorationTypes = null
+  selectRestorationType: RestorationTypes = null
 
   // Enum for template
   readonly RestorationTypes = RestorationTypes
@@ -115,7 +111,7 @@ export default class RestorationType extends Vue {
    * Sets the selected Limited Restoration choice.
    * @param val the value of the selected radio button
    */
-  protected changeRestorationType (): void {
+  changeRestorationType (): void {
     this.setRestorationType(this.selectRestorationType)
     if (this.isLimitedRestorationFiling) {
       this.setRestorationRelationships([])

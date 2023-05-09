@@ -1,6 +1,6 @@
-import Vue from 'vue'
-import { Component } from 'vue-property-decorator'
-import { Action, Getter } from 'vuex-class'
+import { Component, Vue } from 'vue-property-decorator'
+import { Action, Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 import { NumWord, PartyTypes, RoleTypes, RuleIds } from '@/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/enums/'
 import { ActionBindingIF, AddressIF, ConfirmDialogType, OrgPersonIF, PeopleAndRoleIF,
@@ -17,25 +17,25 @@ export default class PeopleRolesMixin extends Vue {
   }
 
   // NB: some of these are used by components that use this mixin
-  @Getter getShowErrors!: boolean
-  @Getter getPeopleAndRolesResource!: PeopleAndRolesResourceIF
-  @Getter getAddPeopleAndRoleStep!: PeopleAndRoleIF
-  @Getter getUserEmail!: string
-  @Getter getUserFirstName!: string
-  @Getter getUserLastName!: string
-  @Getter getUserAddress!: AddressIF
-  @Getter getRegistration!: RegistrationStateIF
-  @Getter isTypeSoleProp!: boolean
-  @Getter isTypePartnership!: boolean
-  @Getter isRoleStaff!: boolean
-  @Getter isSbcStaff!: boolean
-  @Getter isFullRestorationFiling!: boolean
-  @Getter isLimitedRestorationFiling: boolean
+  @Getter(useStore) getAddPeopleAndRoleStep!: PeopleAndRoleIF
+  @Getter(useStore) getPeopleAndRolesResource!: PeopleAndRolesResourceIF
+  @Getter(useStore) getRegistration!: RegistrationStateIF
+  @Getter(useStore) getShowErrors!: boolean
+  @Getter(useStore) getUserAddress!: AddressIF
+  @Getter(useStore) getUserEmail!: string
+  @Getter(useStore) getUserFirstName!: string
+  @Getter(useStore) getUserLastName!: string
+  @Getter(useStore) isFullRestorationFiling!: boolean
+  @Getter(useStore) isLimitedRestorationFiling: boolean
+  @Getter(useStore) isRoleStaff!: boolean
+  @Getter(useStore) isSbcStaff!: boolean
+  @Getter(useStore) isTypeSoleProp!: boolean
+  @Getter(useStore) isTypePartnership!: boolean
 
-  @Action setOrgPersonList!: ActionBindingIF
-  @Action setAddPeopleAndRoleStepValidity!: ActionBindingIF
-  @Action setRegistrationBusinessNumber!: ActionBindingIF
-  @Action setIsAutoPopulatedBusinessNumber!: ActionBindingIF
+  @Action(useStore) setAddPeopleAndRoleStepValidity!: ActionBindingIF
+  @Action(useStore) setIsAutoPopulatedBusinessNumber!: ActionBindingIF
+  @Action(useStore) setOrgPersonList!: ActionBindingIF
+  @Action(useStore) setRegistrationBusinessNumber!: ActionBindingIF
 
   // Enums for template
   readonly CorpTypeCd = CorpTypeCd
@@ -44,9 +44,10 @@ export default class PeopleRolesMixin extends Vue {
   readonly NumWord = NumWord
   readonly RuleIds = RuleIds
 
-  protected currentOrgPerson = null as OrgPersonIF
-  protected showOrgPersonForm = false
-  protected activeIndex = NaN // new org/person
+  // Local variables
+  currentOrgPerson = null as OrgPersonIF
+  showOrgPersonForm = false
+  activeIndex = NaN // new org/person
 
   /** Called when component is mounted. */
   async mounted (): Promise<void> {
@@ -251,14 +252,14 @@ export default class PeopleRolesMixin extends Vue {
   }
 
   /** Called by ListPeopleAndRoles component event. */
-  protected onEditPerson (index: number): void {
+  onEditPerson (index: number): void {
     this.currentOrgPerson = { ...this.orgPersonList[index] }
     this.activeIndex = index
     this.showOrgPersonForm = true
   }
 
   /** Called by (Reg)AddEditOrgPerson component event. */
-  protected onAddEditPerson (person: OrgPersonIF): void {
+  onAddEditPerson (person: OrgPersonIF): void {
     const newList: OrgPersonIF[] = Object.assign([], this.orgPersonList)
     if (isNaN(this.activeIndex)) {
       // add person
@@ -273,7 +274,7 @@ export default class PeopleRolesMixin extends Vue {
   }
 
   /** Called by ListPeopleAndRoles component event. */
-  protected async onRemovePerson (index: number): Promise<void> {
+  async onRemovePerson (index: number): Promise<void> {
     const orgPerson = this.orgPersonList[index]
     const isProprietor = this.isProprietor(orgPerson)
     const isPartner = this.isPartner(orgPerson)
@@ -304,7 +305,7 @@ export default class PeopleRolesMixin extends Vue {
   }
 
   /** Called by AddEditOrgPerson component event when reassigning the CP. */
-  protected onRemoveCompletingPartyRole () {
+  onRemoveCompletingPartyRole () {
     const newList: OrgPersonIF[] = Object.assign([], this.orgPersonList)
     const completingParty =
       newList.find(people => people.roles.some(role => role.roleType === RoleTypes.COMPLETING_PARTY))
@@ -319,7 +320,7 @@ export default class PeopleRolesMixin extends Vue {
   }
 
   /** Called to clean up after adding/editing/remove a person or cancelling the AddEdit component. */
-  protected resetData (): void {
+  resetData (): void {
     this.currentOrgPerson = null
     this.activeIndex = NaN // new org/person
     this.showOrgPersonForm = false
@@ -327,7 +328,7 @@ export default class PeopleRolesMixin extends Vue {
     this.setAddPeopleAndRoleStepValidity(this.hasValidRoles())
   }
 
-  protected hasValidRoles (): boolean {
+  private hasValidRoles (): boolean {
     return (
       this.validNumCompletingParty &&
       this.validNumIncorporators &&
@@ -341,7 +342,7 @@ export default class PeopleRolesMixin extends Vue {
     )
   }
 
-  protected async confirmAddProprietorPerson (): Promise<boolean> {
+  async confirmAddProprietorPerson (): Promise<boolean> {
     return this.showConfirmDialog(
       'Add a Person',
       'By adding an individual as the proprietor, you will be registering a ' +
@@ -352,7 +353,7 @@ export default class PeopleRolesMixin extends Vue {
     )
   }
 
-  protected async confirmAddProprietorOrganization (): Promise<boolean> {
+  async confirmAddProprietorOrganization (): Promise<boolean> {
     return this.showConfirmDialog(
       'Add a Business or a Corporation',
       'By adding an existing business, society or a corporation as the proprietor, you will ' +
@@ -363,7 +364,7 @@ export default class PeopleRolesMixin extends Vue {
     )
   }
 
-  protected async confirmRemoveProprietorPerson (): Promise<boolean> {
+  private async confirmRemoveProprietorPerson (): Promise<boolean> {
     return this.showConfirmDialog(
       'Remove Person',
       'Remove this person from your business?',
@@ -372,7 +373,7 @@ export default class PeopleRolesMixin extends Vue {
     )
   }
 
-  protected async confirmRemoveProprietorOrganization (): Promise<boolean> {
+  private async confirmRemoveProprietorOrganization (): Promise<boolean> {
     return this.showConfirmDialog(
       'Remove Person or Business / Corporation',
       'Remove this person or business / corporation from your business?',
@@ -381,7 +382,7 @@ export default class PeopleRolesMixin extends Vue {
     )
   }
 
-  protected async confirmRemove (): Promise<boolean> {
+  private async confirmRemove (): Promise<boolean> {
     return this.showConfirmDialog(
       'Remove Person or Corporation / Firm',
       'Remove this Person or Corporation or Firm from your Company?',

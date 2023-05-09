@@ -79,14 +79,13 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component, Watch } from 'vue-property-decorator'
-import { Action, Getter } from 'vuex-class'
+import { Component, Vue, Watch } from 'vue-property-decorator'
+import { Action, Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 import { ConfirmDialog } from '@bcrs-shared-components/confirm-dialog'
 import AddNameTranslation from '@/components/common/AddNameTranslation.vue'
 import ListNameTranslations from '@/components/common/ListNameTranslations.vue'
 import { ActionBindingIF, ConfirmDialogType, NameTranslationIF } from '@/interfaces'
-import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 
 @Component({
   components: {
@@ -102,16 +101,16 @@ export default class NameTranslations extends Vue {
   }
 
   // Local properties
-  protected checkbox = false
-  protected isAddingNameTranslation = false
-  protected editingNameTranslation = ''
-  protected editIndex = -1
+  checkbox = false
+  isAddingNameTranslation = false
+  editingNameTranslation = ''
+  editIndex = -1
 
-  @Action setNameTranslations!: ActionBindingIF
-  @Action setNameTranslationsValid!: ActionBindingIF
+  @Action(useStore) setNameTranslations!: ActionBindingIF
+  @Action(useStore) setNameTranslationsValid!: ActionBindingIF
 
-  @Getter getNameTranslations!: NameTranslationIF[]
-  @Getter getShowErrors!: boolean
+  @Getter(useStore) getNameTranslations!: NameTranslationIF[]
+  @Getter(useStore) getShowErrors!: boolean
 
   /** Whether this component is valid. */
   get nameTranslationsValid (): boolean {
@@ -127,7 +126,7 @@ export default class NameTranslations extends Vue {
    * Adds or updates a name translation.
    * @param name the name to add
    */
-  protected addNameTranslation (name: string): void {
+  addNameTranslation (name: string): void {
     // make a copy (to trigger update)
     const nameTranslations = [ ...this.getNameTranslations ]
 
@@ -144,14 +143,14 @@ export default class NameTranslations extends Vue {
    * Sets specified name translation to be edited.
    * @param index the index number of the name to edit
    */
-  protected editNameTranslation (index: number): void {
+  editNameTranslation (index: number): void {
     this.isAddingNameTranslation = true
     this.editingNameTranslation = this.getNameTranslations[index].name
     this.editIndex = index
   }
 
   /** Cancels adding or editing of the current name translation. */
-  protected cancelNameTranslation (): void {
+  cancelNameTranslation (): void {
     this.isAddingNameTranslation = false
     this.editingNameTranslation = ''
     this.editIndex = -1
@@ -161,7 +160,7 @@ export default class NameTranslations extends Vue {
    * Removes a name translation.
    * @param index the index number of the name to remove
    */
-  protected removeNameTranslation (index: number): void {
+  removeNameTranslation (index: number): void {
     // make a copy (to trigger update)
     const nameTranslations = [ ...this.getNameTranslations ]
     nameTranslations.splice(index, 1)
@@ -173,7 +172,7 @@ export default class NameTranslations extends Vue {
   /**
    * Handles name translations checkbox logic.
    */
-  protected onCheckboxClick () {
+  onCheckboxClick () {
     // if user is unchecking the box and there are name translations
     // then prompt whether to delete them all
     if (!this.checkbox && this.getNameTranslations.length > 0) {

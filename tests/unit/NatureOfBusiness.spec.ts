@@ -1,13 +1,15 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify'
-import { getVuexStore } from '@/store'
+import { createPinia, setActivePinia } from 'pinia'
+import { useStore } from '@/store/store'
 import { shallowMount } from '@vue/test-utils'
 import NatureOfBusiness from '@/components/Registration/NatureOfBusiness.vue'
 
 Vue.use(Vuetify)
 
 const vuetify = new Vuetify({})
-const store = getVuexStore()
+setActivePinia(createPinia())
+const store = useStore()
 
 describe('Nature Of Business component', () => {
   let wrapper: any
@@ -16,7 +18,6 @@ describe('Nature Of Business component', () => {
     wrapper = shallowMount(
       NatureOfBusiness,
       {
-        store,
         vuetify,
         propsData: {
           showErrors: false

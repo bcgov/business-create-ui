@@ -40,8 +40,7 @@
 
 <script lang="ts">
 // Libraries
-import Vue from 'vue'
-import { Component, Emit, Prop } from 'vue-property-decorator'
+import { Component, Emit, Prop, Vue } from 'vue-property-decorator'
 import { VuetifyRuleFunction } from '@/types'
 
 @Component({})
@@ -49,8 +48,8 @@ export default class AddNameTranslation extends Vue {
   @Prop({ default: '' }) readonly editNameTranslation!: string
 
   // Local properties
-  protected nameTranslationForm = false
-  protected nameTranslation = ''
+  nameTranslationForm = false
+  nameTranslation = ''
 
   // Validation rules
   readonly nameTranslationRules: Array<VuetifyRuleFunction> = [
@@ -67,15 +66,15 @@ export default class AddNameTranslation extends Vue {
 
   // Events
   @Emit('addTranslation')
-  protected addTranslation (): string {
+  addTranslation (): string {
     return this.nameTranslation
   }
 
   @Emit('cancelTranslation')
-  protected cancelTranslation (): void {}
+  cancelTranslation (): void {}
 
   @Emit('removeTranslation')
-  protected removeTranslation (): void {}
+  removeTranslation (): void {}
 }
 </script>
 

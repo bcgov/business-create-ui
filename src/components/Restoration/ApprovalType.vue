@@ -18,9 +18,9 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component } from 'vue-property-decorator'
-import { Getter, Action } from 'vuex-class'
+import { Component, Vue } from 'vue-property-decorator'
+import { Getter, Action } from 'pinia-class'
+import { useStore } from '@/store/store'
 import { ActionBindingIF, RestorationStateIF } from '@/interfaces'
 import { ApprovalType as ApprovalTypeShared } from '@bcrs-shared-components/approval-type'
 
@@ -30,15 +30,15 @@ import { ApprovalType as ApprovalTypeShared } from '@bcrs-shared-components/appr
   }
 })
 export default class ApprovalType extends Vue {
-  @Getter getApprovalTypeValid!: boolean
-  @Getter getRestoration!: RestorationStateIF
-  @Getter getShowErrors!: boolean
+  @Getter(useStore) getApprovalTypeValid!: boolean
+  @Getter(useStore) getRestoration!: RestorationStateIF
+  @Getter(useStore) getShowErrors!: boolean
 
-  @Action setRestorationApprovalType!: ActionBindingIF
-  @Action setRestorationCourtOrder!: ActionBindingIF
-  @Action setRestorationNoticeDate!: ActionBindingIF
-  @Action setRestorationApplicationDate!: ActionBindingIF
-  @Action setApprovalTypeValid!: ActionBindingIF
+  @Action(useStore) setApprovalTypeValid!: ActionBindingIF
+  @Action(useStore) setRestorationApplicationDate!: ActionBindingIF
+  @Action(useStore) setRestorationApprovalType!: ActionBindingIF
+  @Action(useStore) setRestorationCourtOrder!: ActionBindingIF
+  @Action(useStore) setRestorationNoticeDate!: ActionBindingIF
 
   /** This section's validity state (when prompted by app). */
   get invalidSection (): boolean {

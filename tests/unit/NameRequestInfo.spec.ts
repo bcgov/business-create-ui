@@ -1,13 +1,17 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify'
 import { mount } from '@vue/test-utils'
-import { getVuexStore } from '@/store'
+import { createPinia, setActivePinia } from 'pinia'
+import { useStore } from '@/store/store'
 import NameRequestInfo from '@/components/common/NameRequestInfo.vue'
+import { CorpTypeCd, NameRequestStates } from '@/enums'
+import { NameRequestIF } from '@/interfaces'
 
 Vue.use(Vuetify)
 
 const vuetify = new Vuetify({})
-const store = getVuexStore()
+setActivePinia(createPinia())
+const store = useStore()
 document.body.setAttribute('data-app', 'true')
 
 const mockNrData = {
@@ -38,18 +42,18 @@ const mockNrData = {
   request_action_cd: 'NEW',
   requestTypeCd: 'BC',
   state: 'APPROVED'
-}
+} as NameRequestIF
 
 describe('Name Request Info with a NR', () => {
   let wrapper: any
 
   beforeEach(() => {
     // Entity type will always be set with or without an NR
-    store.state.stateModel.entityType = 'BEN'
+    store.stateModel.entityType = CorpTypeCd.BENEFIT_COMPANY
     // Temp Id will always be set with or without an NR
-    store.state.stateModel.tempId = 'T1234567'
-    store.state.stateModel.nameRequest.nrNum = mockNrData.nrNum
-    wrapper = mount(NameRequestInfo, { vuetify, store })
+    store.stateModel.tempId = 'T1234567'
+    store.stateModel.nameRequest.nrNum = mockNrData.nrNum
+    wrapper = mount(NameRequestInfo, { vuetify })
   })
 
   afterEach(() => {
@@ -78,8 +82,8 @@ describe('Name Request Info with a NR', () => {
   })
 
   it('renders the Name Request information with data', async () => {
-    await wrapper.vm.$store.commit('mutateNameRequest', { ...mockNrData })
-    await wrapper.vm.$store.commit('mutateNameRequestApprovedName', mockNrData.names[0].name)
+    await store.setNameRequest(mockNrData)
+    await store.setNameRequestApprovedName(mockNrData.names[0].name)
 
     expect(wrapper.find('#condition-consent').exists()).toBe(false)
 
@@ -94,8 +98,7 @@ describe('Name Request Info with a NR', () => {
   })
 
   it('renders the Name Request applicant information with data', async () => {
-    await wrapper.vm.$store.commit('mutateNameRequest', { ...mockNrData })
-
+    await store.setNameRequest(mockNrData)
     const listItems = wrapper.vm.$el.querySelectorAll('#name-request-applicant ul li')
     expect(listItems.length).toEqual(4)
 
@@ -116,10 +119,10 @@ describe('Name Request Info with a NR', () => {
   })
 
   it('renders the Name Request applicant information with multi address line data', async () => {
-    store.state.stateModel.nameRequest = { ...mockNrData }
-    store.state.stateModel.nameRequest.applicants.addrLine1 = 'line 1'
-    store.state.stateModel.nameRequest.applicants.addrLine2 = 'line 2'
-    store.state.stateModel.nameRequest.applicants.addrLine3 = 'line 3'
+    store.stateModel.nameRequest = { ...mockNrData }
+    store.stateModel.nameRequest.applicants.addrLine1 = 'line 1'
+    store.stateModel.nameRequest.applicants.addrLine2 = 'line 2'
+    store.stateModel.nameRequest.applicants.addrLine3 = 'line 3'
     await Vue.nextTick()
 
     const listItems = wrapper.vm.$el.querySelectorAll('#name-request-applicant ul li')
@@ -132,10 +135,10 @@ describe('Name Request Info with a NR', () => {
   })
 
   it('renders the Name Request information with consent not required', async () => {
-    store.state.stateModel.nameRequest = { ...mockNrData }
-    store.state.stateModel.nameRequest.state = 'CONDITIONAL'
-    store.state.stateModel.nameRequest.consentFlag = null
-    store.state.stateModel.nameRequestApprovedName = mockNrData.names[0].name
+    store.stateModel.nameRequest = { ...mockNrData }
+    store.stateModel.nameRequest.state = NameRequestStates.CONDITIONAL
+    store.stateModel.nameRequest.consentFlag = null
+    store.stateModel.nameRequestApprovedName = mockNrData.names[0].name
     await Vue.nextTick()
 
     expect(wrapper.find('#condition-consent').exists()).toBe(true)
@@ -152,10 +155,10 @@ describe('Name Request Info with a NR', () => {
   })
 
   it('renders the Name Request information with consent received', async () => {
-    store.state.stateModel.nameRequest = { ...mockNrData }
-    store.state.stateModel.nameRequest.state = 'CONDITIONAL'
-    store.state.stateModel.nameRequest.consentFlag = 'R'
-    store.state.stateModel.nameRequestApprovedName = mockNrData.names[0].name
+    store.stateModel.nameRequest = { ...mockNrData }
+    store.stateModel.nameRequest.state = NameRequestStates.CONDITIONAL
+    store.stateModel.nameRequest.consentFlag = 'R'
+    store.stateModel.nameRequestApprovedName = mockNrData.names[0].name
     await Vue.nextTick()
 
     expect(wrapper.find('#condition-consent').exists()).toBe(true)
@@ -172,10 +175,10 @@ describe('Name Request Info with a NR', () => {
   })
 
   it('renders the Name Request information with consent waived', async () => {
-    store.state.stateModel.nameRequest = { ...mockNrData }
-    store.state.stateModel.nameRequest.state = 'CONDITIONAL'
-    store.state.stateModel.nameRequest.consentFlag = 'N'
-    store.state.stateModel.nameRequestApprovedName = mockNrData.names[0].name
+    store.stateModel.nameRequest = { ...mockNrData }
+    store.stateModel.nameRequest.state = NameRequestStates.CONDITIONAL
+    store.stateModel.nameRequest.consentFlag = 'N'
+    store.stateModel.nameRequestApprovedName = mockNrData.names[0].name
     await Vue.nextTick()
 
     expect(wrapper.find('#condition-consent').exists()).toBe(true)
@@ -192,10 +195,10 @@ describe('Name Request Info with a NR', () => {
   })
 
   it('renders the Name Request information with consent required', async () => {
-    store.state.stateModel.nameRequest = { ...mockNrData }
-    store.state.stateModel.nameRequest.state = 'CONDITIONAL'
-    store.state.stateModel.nameRequest.consentFlag = 'Y'
-    store.state.stateModel.nameRequestApprovedName = mockNrData.names[0].name
+    store.stateModel.nameRequest = { ...mockNrData }
+    store.stateModel.nameRequest.state = NameRequestStates.CONDITIONAL
+    store.stateModel.nameRequest.consentFlag = 'Y'
+    store.stateModel.nameRequestApprovedName = mockNrData.names[0].name
     await Vue.nextTick()
 
     expect(wrapper.find('#condition-consent').exists()).toBe(true)
@@ -217,12 +220,12 @@ describe('Name Request Info component without a NR', () => {
 
   beforeEach(() => {
     // Entity type will always be set with or without an NR
-    store.state.stateModel.entityType = 'BEN'
+    store.stateModel.entityType = CorpTypeCd.BENEFIT_COMPANY
     // Temp Id will always be set with or without an NR
-    store.state.stateModel.tempId = 'T1234567'
-    store.state.stateModel.nameRequest.nrNum = null
-    store.state.stateModel.nameRequestApprovedName = null
-    wrapper = mount(NameRequestInfo, { vuetify, store })
+    store.stateModel.tempId = 'T1234567'
+    store.stateModel.nameRequest.nrNum = null
+    store.stateModel.nameRequestApprovedName = null
+    wrapper = mount(NameRequestInfo, { vuetify })
   })
 
   afterEach(() => {

@@ -18,8 +18,8 @@
           <v-icon class="upload-success-chk">mdi-check</v-icon>
         </v-col>
         <v-col md="11" id="file-name-col">
-          <span v-if="getCreateMemorandumStep.memorandumDoc" id="file-name">
-            {{getCreateMemorandumStep.memorandumDoc.name}}
+          <span v-if="getCreateMemorandumStep.memorandumFile" id="file-name">
+            {{getCreateMemorandumStep.memorandumFile.name}}
           </span>
         </v-col>
       </v-row>
@@ -29,9 +29,9 @@
 
 <script lang="ts">
 // Libraries
-import Vue from 'vue'
-import { Component } from 'vue-property-decorator'
-import { Getter } from 'vuex-class'
+import { Component, Vue } from 'vue-property-decorator'
+import { Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 
 // Enums
 import { RouteNames } from '@/enums'
@@ -39,7 +39,7 @@ import { CreateMemorandumIF } from '@/interfaces'
 
 @Component({})
 export default class UploadMemorandumSummary extends Vue {
-  @Getter getCreateMemorandumStep!: CreateMemorandumIF
+  @Getter(useStore) getCreateMemorandumStep!: CreateMemorandumIF
 
   // Enum for template
   readonly RouteNames = RouteNames

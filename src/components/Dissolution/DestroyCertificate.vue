@@ -49,9 +49,9 @@
 
 <script lang="ts">
 // Libraries
-import Vue from 'vue'
-import { Component, Prop } from 'vue-property-decorator'
-import { Action, Getter } from 'vuex-class'
+import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Action, Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 
 // Interfaces
 import { ActionBindingIF } from '@/interfaces'
@@ -59,15 +59,15 @@ import { ActionBindingIF } from '@/interfaces'
 @Component
 export default class DestroyCertificate extends Vue {
   // Global getters
-  @Getter getDissolutionHasCertificateDestroyed!: boolean
+  @Getter(useStore) getDissolutionHasCertificateDestroyed!: boolean
 
   // Global setters
-  @Action setHasCertificateDestroyed!: ActionBindingIF
+  @Action(useStore) setHasCertificateDestroyed!: ActionBindingIF
 
   @Prop({ default: false }) readonly showErrorSummary!: boolean
   @Prop({ default: false }) readonly isSummary!: boolean
 
-  protected hasCertificateDestroyed = false
+  hasCertificateDestroyed = false
 
   readonly destroyCertificateDescription = `Certificates of incorporation, name change, and amalgamation for
     the Cooperative Association will be deleted and/or destroyed after dissolution.`

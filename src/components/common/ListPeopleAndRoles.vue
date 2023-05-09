@@ -138,9 +138,9 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component, Prop, Emit } from 'vue-property-decorator'
-import { Getter } from 'vuex-class'
+import { Component, Mixins, Prop, Emit } from 'vue-property-decorator'
+import { Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
 import { CommonMixin } from '@/mixins'
 import { OrgPersonIF, PeopleAndRoleIF } from '@/interfaces'
@@ -154,24 +154,21 @@ import { PartyTypes, RoleTypes, RouteNames } from '@/enums'
   components: {
     DeliveryAddress: BaseAddress,
     MailingAddress: BaseAddress
-  },
-  mixins: [
-    CommonMixin
-  ]
+  }
 })
-export default class ListPeopleAndRoles extends Vue {
+export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
   @Prop({ default: false }) readonly isSummary!: boolean
   @Prop({ default: false }) readonly disabled!: boolean
   @Prop({ default: true }) readonly showDeliveryAddressColumn!: boolean
   @Prop({ default: true }) readonly showRolesColumn!: boolean
   @Prop({ default: false }) readonly showEmailColumn!: boolean
 
-  @Getter isIncorporationFiling!: boolean
-  @Getter isRegistrationFiling!: boolean
-  @Getter isFullRestorationFiling!: boolean
-  @Getter isLimitedRestorationFiling!: boolean
-  @Getter getAddPeopleAndRoleStep!: PeopleAndRoleIF
-  @Getter getShowErrors!: boolean
+  @Getter(useStore) getAddPeopleAndRoleStep!: PeopleAndRoleIF
+  @Getter(useStore) getShowErrors!: boolean
+  @Getter(useStore) isFullRestorationFiling!: boolean
+  @Getter(useStore) isIncorporationFiling!: boolean
+  @Getter(useStore) isLimitedRestorationFiling!: boolean
+  @Getter(useStore) isRegistrationFiling!: boolean
 
   // Enum for template
   readonly RouteNames = RouteNames
@@ -205,42 +202,42 @@ export default class ListPeopleAndRoles extends Vue {
   }
 
   /** Returns true if org-person is a person. */
-  protected isPerson (orgPerson: OrgPersonIF): boolean {
+  isPerson (orgPerson: OrgPersonIF): boolean {
     return (orgPerson.officer?.partyType === PartyTypes.PERSON)
   }
 
   /** Returns true if org-person is an organization (corporation/firm). */
-  protected isOrg (orgPerson: OrgPersonIF): boolean {
+  isOrg (orgPerson: OrgPersonIF): boolean {
     return (orgPerson.officer?.partyType === PartyTypes.ORGANIZATION)
   }
 
   /** Returns true if specified org/person is a director. */
-  protected isDirector (orgPerson: OrgPersonIF): boolean {
+  isDirector (orgPerson: OrgPersonIF): boolean {
     return orgPerson?.roles.some(role => role.roleType === RoleTypes.DIRECTOR)
   }
 
   /** Returns true if specified org/person is a proprietor. */
-  public isProprietor (orgPerson: OrgPersonIF): boolean {
+  isProprietor (orgPerson: OrgPersonIF): boolean {
     return orgPerson?.roles.some(role => role.roleType === RoleTypes.PROPRIETOR)
   }
 
   /** Returns true if specified org/person is a partner. */
-  public isPartner (orgPerson: OrgPersonIF): boolean {
+  isPartner (orgPerson: OrgPersonIF): boolean {
     return orgPerson?.roles.some(role => role.roleType === RoleTypes.PARTNER)
   }
 
   /** Formats the org-person's name. */
-  protected formatName (orgPerson: OrgPersonIF): string {
+  formatName (orgPerson: OrgPersonIF): string {
     return orgPerson?.officer?.organizationName
       ? orgPerson?.officer?.organizationName
       : `${orgPerson.officer.firstName} ${orgPerson.officer.middleName || ''} ${orgPerson.officer.lastName}`
   }
 
-  protected officerEmail (orgPerson: OrgPersonIF): string {
+  officerEmail (orgPerson: OrgPersonIF): string {
     return orgPerson.officer?.email
   }
 
-  protected officerBusinessNumber (orgPerson: OrgPersonIF): string {
+  officerBusinessNumber (orgPerson: OrgPersonIF): string {
     return orgPerson.officer?.businessNumber
   }
 
@@ -250,7 +247,7 @@ export default class ListPeopleAndRoles extends Vue {
    */
   @Emit('removePerson')
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  protected emitRemovePerson (index: number): void {}
+  emitRemovePerson (index: number): void {}
 
   /**
    * Emit an index and event to the parent to handle editing.
@@ -258,7 +255,7 @@ export default class ListPeopleAndRoles extends Vue {
    */
   @Emit('editPerson')
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  protected emitPersonInfo (index: number): void {}
+  emitPersonInfo (index: number): void {}
 }
 </script>
 

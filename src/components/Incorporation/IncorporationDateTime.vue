@@ -98,19 +98,14 @@
 // FUTURE: replace this with EffectiveDateTime.vue
 //
 
-import Vue from 'vue'
-import { Component, Watch, Emit, Prop } from 'vue-property-decorator'
+import { Component, Emit, Mixins, Prop, Watch } from 'vue-property-decorator'
 import { DateMixin } from '@/mixins'
 import { ISIMMEDIATE, ISFUTUREEFFECTIVE } from '@/constants'
 import { EffectiveDateTimeIF, FormIF } from '@/interfaces'
 import { VuetifyRuleFunction } from '@/types'
 
-@Component({
-  mixins: [
-    DateMixin
-  ]
-})
-export default class IncorporationDateTime extends Vue {
+@Component({})
+export default class IncorporationDateTime extends Mixins(DateMixin) {
   // Refs
   $refs!: {
     dateTimeForm: FormIF
@@ -119,18 +114,18 @@ export default class IncorporationDateTime extends Vue {
   @Prop({ default: null }) readonly effectiveDateTime!: EffectiveDateTimeIF
 
   // Local properties
-  protected isImmediate = false
-  protected isFutureEffective = false
+  isImmediate = false
+  isFutureEffective = false
 
   // Date properties
-  protected selectDate = ''
-  protected dateText = ''
-  protected datePicker = ''
+  selectDate = ''
+  dateText = ''
+  datePicker = ''
 
   // Time properties
-  protected selectHour: string[] = []
-  protected selectMinute: string[] = []
-  protected selectPeriod = 'AM'
+  selectHour = [] as string[]
+  selectMinute = [] as string[]
+  selectPeriod = 'AM'
 
   // Date Time Selectors
   readonly hours: Array<string> = [...Array(12).keys()]
@@ -254,14 +249,14 @@ export default class IncorporationDateTime extends Vue {
   }
 
   /** The minimum time that can be entered (now + 3 minutes). */
-  protected minTime (): string {
+  minTime (): string {
     const date = this.getCurrentJsDate
     return new Date(date.getTime() + 180000)
       .toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })
   }
 
   /** The maximum time that can be entered (now + 10 days at current time). */
-  protected maxTime (): string {
+  maxTime (): string {
     const date = new Date(this.getCurrentJsDate) // make a copy
     date.setDate(date.getDate() + 10)
     return new Date(date.getTime())

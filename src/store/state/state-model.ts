@@ -140,7 +140,7 @@ export const stateModel: StateModelIF = {
       validationItemDetails: []
     },
     rulesConfirmed: false,
-    rulesDoc: null,
+    rulesFile: null,
     docKey: null
   },
   incorporationAgreementStep: {
@@ -153,7 +153,7 @@ export const stateModel: StateModelIF = {
       validationItemDetails: []
     },
     memorandumConfirmed: false,
-    memorandumDoc: null,
+    memorandumFile: null,
     docKey: null
   },
   uploadAffidavitStep: {
@@ -162,7 +162,7 @@ export const stateModel: StateModelIF = {
       validationItemDetails: []
     },
     affidavitConfirmed: false,
-    affidavitDoc: null,
+    affidavitFile: null,
     docKey: null
   },
   createResolutionStep: {

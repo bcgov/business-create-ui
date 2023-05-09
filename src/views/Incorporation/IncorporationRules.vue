@@ -5,9 +5,9 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component, Watch } from 'vue-property-decorator'
-import { Getter } from 'vuex-class'
+import { Component, Mixins, Watch } from 'vue-property-decorator'
+import { Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 import { CreateRulesIF } from '@/interfaces'
 import { CommonMixin } from '@/mixins'
 import UploadRules from '@/components/Incorporation/UploadRules.vue'
@@ -17,14 +17,11 @@ import { RouteNames } from '@/enums'
 @Component({
   components: {
     UploadRules
-  },
-  mixins: [
-    CommonMixin
-  ]
+  }
 })
-export default class IncorporationRules extends Vue {
-  @Getter getShowErrors!: boolean
-  @Getter getCreateRulesStep!: CreateRulesIF
+export default class IncorporationRules extends Mixins(CommonMixin) {
+  @Getter(useStore) getCreateRulesStep!: CreateRulesIF
+  @Getter(useStore) getShowErrors!: boolean
 
   @Watch('$route')
   private async scrollToInvalidComponent (): Promise<void> {

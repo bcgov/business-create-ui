@@ -27,8 +27,8 @@
         <v-col cols="12" sm="4" class="pr-4 pt-4 pt-sm-0">
           <label class="mailing-address-header">Mailing Address</label>
           <MailingAddress
-            v-if="!isEmptyAddress(getBusiness.officeAddress.mailingAddress)"
-            :address="getBusiness.officeAddress.mailingAddress"
+            v-if="!isEmptyAddress(getBusinessOfficeAddress.mailingAddress)"
+            :address="getBusinessOfficeAddress.mailingAddress"
             :editing="false"
           />
           <div v-else>(Not entered)</div>
@@ -37,12 +37,12 @@
         <v-col cols="12" sm="4" class="pr-4 pt-4 pt-sm-0">
           <label class="delivery-address-header">Delivery Address</label>
           <DeliveryAddress
-            v-if="!isEmptyAddress(getBusiness.officeAddress.deliveryAddress) &&
-             !isSame(getBusiness.officeAddress.mailingAddress, getBusiness.officeAddress.deliveryAddress, ['id'])"
-            :address="getBusiness.officeAddress.deliveryAddress"
+            v-if="!isEmptyAddress(getBusinessOfficeAddress.deliveryAddress) &&
+             !isSame(getBusinessOfficeAddress.mailingAddress, getBusinessOfficeAddress.deliveryAddress, ['id'])"
+            :address="getBusinessOfficeAddress.deliveryAddress"
             :editing="false"
           />
-          <div v-else-if="isEmptyAddress(getBusiness.officeAddress.deliveryAddress)">(Not entered)</div>
+          <div v-else-if="isEmptyAddress(getBusinessOfficeAddress.deliveryAddress)">(Not entered)</div>
           <div v-else>Same as Mailing Address</div>
         </v-col>
       </v-row>
@@ -98,11 +98,11 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component, Prop } from 'vue-property-decorator'
-import { Action, Getter } from 'vuex-class'
+import { Component, Mixins, Prop } from 'vue-property-decorator'
+import { Action, Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 import { AuthServices } from '@/services/'
-import { ActionBindingIF, AddressIF, ContactPointIF, BusinessIF } from '@/interfaces'
+import { ActionBindingIF, AddressIF, ContactPointIF, OfficeAddressIF } from '@/interfaces'
 import { ContactInfo } from '@bcrs-shared-components/contact-info'
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
 import OfficeAddresses from '@/components/common/OfficeAddresses.vue'
@@ -118,13 +118,9 @@ import { GetCorpFullDescription, GetCorpNumberedDescription } from '@bcrs-shared
     OfficeAddresses,
     DeliveryAddress: BaseAddress,
     MailingAddress: BaseAddress
-  },
-  mixins: [
-    CommonMixin,
-    DateMixin
-  ]
+  }
 })
-export default class AssociationDetails extends Vue {
+export default class AssociationDetails extends Mixins(CommonMixin, DateMixin) {
   @Prop({ default: false }) readonly isSummary!: boolean
   @Prop({ default: 'Address' }) readonly addressLabel!: string
   @Prop({ default: 'Company' }) readonly entityLabel!: string
@@ -132,22 +128,23 @@ export default class AssociationDetails extends Vue {
   @Prop({ default: true }) readonly showContactInfo!: boolean
 
   // Global getters
-  @Getter getFolioNumber!: string
-  @Getter getBusinessId!: string
-  @Getter getBusiness!: BusinessIF
-  @Getter getBusinessContact!: ContactPointIF
-  @Getter getCompanyDisplayName!: string
-  @Getter getCooperativeType!: CoopTypes
-  @Getter getBusinessLegalName!: string
-  @Getter isPremiumAccount!: boolean
-  @Getter isTypeCoop!: boolean
-  @Getter getEntityType!: CorpTypeCd
-  @Getter getBusinessFoundingDate!: string
-  // Global setters
-  @Action setBusinessContact!: ActionBindingIF
-  @Action setIgnoreChanges!: ActionBindingIF
+  @Getter(useStore) getBusinessContact!: ContactPointIF
+  @Getter(useStore) getBusinessFoundingDate!: string
+  @Getter(useStore) getBusinessId!: string
+  @Getter(useStore) getBusinessLegalName!: string
+  @Getter(useStore) getBusinessOfficeAddress!: OfficeAddressIF
+  @Getter(useStore) getCompanyDisplayName!: string
+  @Getter(useStore) getCooperativeType!: CoopTypes
+  @Getter(useStore) getEntityType!: CorpTypeCd
+  @Getter(useStore) getFolioNumber!: string
+  @Getter(useStore) isPremiumAccount!: boolean
+  @Getter(useStore) isTypeCoop!: boolean
 
-  private contactInfoMsg = `Registered Office Contact Information is required for dissolution documents delivery.
+  // Global setters
+  @Action(useStore) setBusinessContact!: ActionBindingIF
+  @Action(useStore) setIgnoreChanges!: ActionBindingIF
+
+  readonly contactInfoMsg = `Registered Office Contact Information is required for dissolution documents delivery.
   Any changes made will be applied immediately.`
 
   /** The entity name. */
@@ -167,12 +164,12 @@ export default class AssociationDetails extends Vue {
   }
 
   /** Whether the address object is empty. */
-  protected isEmptyAddress (address: AddressIF): boolean {
+  isEmptyAddress (address: AddressIF): boolean {
     return isEmpty(address)
   }
 
   /** Event handler for contact information changes. */
-  protected async onContactInfoChange (event: ContactPointIF): Promise<void> {
+  async onContactInfoChange (event: ContactPointIF): Promise<void> {
     // temporarily ignore data changes
     this.setIgnoreChanges(true)
 

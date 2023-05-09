@@ -156,18 +156,13 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component, Prop, Emit } from 'vue-property-decorator'
+import { Component, Emit, Mixins, Prop } from 'vue-property-decorator'
 import { ShareClassIF, FormIF } from '@/interfaces'
 import { CurrencyLookupMixin } from '@/mixins'
 import { VuetifyRuleFunction } from '@/types'
 
-@Component({
-  mixins: [
-    CurrencyLookupMixin
-  ]
-})
-export default class ShareStructure extends Vue {
+@Component({})
+export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
   // Refs
   $refs!: {
     shareStructureForm: FormIF
@@ -180,16 +175,16 @@ export default class ShareStructure extends Vue {
   @Prop({ required: true }) readonly shareClasses!: ShareClassIF[]
 
   // Local properties
-  protected shareStructure = null as ShareClassIF
-  protected formValid = true
-  protected hasNoMaximumShares = false
-  protected hasNoParValue = false
+  shareStructure = null as ShareClassIF
+  formValid = true
+  hasNoMaximumShares = false
+  hasNoParValue = false
 
   readonly excludedWordsListForClass: string [] = ['share', 'shares', 'value']
   readonly excludedWordsListForSeries: string [] = ['share', 'shares']
 
   // Rules
-  protected getNameRule (): Array<VuetifyRuleFunction> {
+  getNameRule (): Array<VuetifyRuleFunction> {
     const rules: Array<VuetifyRuleFunction> = [
       v => !!v || 'A name is required',
       v => !/^\s/g.test(v) || 'Invalid spaces', // leading spaces
@@ -216,7 +211,7 @@ export default class ShareStructure extends Vue {
     return rules
   }
 
-  protected getMaximumShareRule (): Array<VuetifyRuleFunction> {
+  getMaximumShareRule (): Array<VuetifyRuleFunction> {
     let rules = [] as Array<VuetifyRuleFunction>
     if (!this.hasNoMaximumShares) {
       rules = [
@@ -249,7 +244,7 @@ export default class ShareStructure extends Vue {
     return rules
   }
 
-  protected getParValueRule (): Array<VuetifyRuleFunction> {
+  getParValueRule (): Array<VuetifyRuleFunction> {
     if (!this.hasNoParValue) {
       return [
         v => (v !== '' && v !== null && v !== undefined) || 'Par value is required',
@@ -261,7 +256,7 @@ export default class ShareStructure extends Vue {
     return []
   }
 
-  protected getCurrencyRule (): Array<VuetifyRuleFunction> {
+  getCurrencyRule (): Array<VuetifyRuleFunction> {
     if (!this.hasNoParValue) {
       return [v => !!v || 'Currency is required']
     }
@@ -283,7 +278,7 @@ export default class ShareStructure extends Vue {
   }
 
   // Methods
-  protected validateForm (): void {
+  validateForm (): void {
     if (this.formValid) {
       const shareStructure: ShareClassIF = this.addShareStructure()
       this.emitAddShareStructureEvent(shareStructure)
@@ -299,7 +294,7 @@ export default class ShareStructure extends Vue {
     }
   }
 
-  protected addShareStructure (): ShareClassIF {
+  addShareStructure (): ShareClassIF {
     const shareStructureToAdd: ShareClassIF = { ...this.shareStructure }
     if (this.activeIndex === -1) {
       shareStructureToAdd.id = this.shareId
@@ -310,7 +305,7 @@ export default class ShareStructure extends Vue {
     return shareStructureToAdd
   }
 
-  protected removeShareStructure (): void {
+  removeShareStructure (): void {
     if (this.isClass) {
       this.emitRemoveShareClassEvent(this.activeIndex)
     } else if (this.isSeries) {
@@ -318,20 +313,20 @@ export default class ShareStructure extends Vue {
     }
   }
 
-  protected resetFormAndData (emitEvent: boolean): void {
+  resetFormAndData (emitEvent: boolean): void {
     this.$refs.shareStructureForm.reset()
     if (emitEvent) {
       this.emitResetEvent()
     }
   }
 
-  protected changeMaximumShareFlag (): void {
+  changeMaximumShareFlag (): void {
     if (this.hasNoMaximumShares) {
       this.shareStructure.maxNumberOfShares = null
     }
   }
 
-  protected changeParValueFlag (): void {
+  changeParValueFlag (): void {
     if (this.hasNoParValue) {
       this.shareStructure.currency = null
       this.shareStructure.parValue = null

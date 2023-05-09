@@ -3,7 +3,8 @@ import Vue from 'vue'
 import Vuelidate from 'vuelidate'
 import Vuetify from 'vuetify'
 import { getLastEvent } from '../get-last-event'
-import { getVuexStore } from '@/store'
+import { createPinia, setActivePinia } from 'pinia'
+import { useStore } from '@/store/store'
 
 // Utils
 import { createLocalVue, mount } from '@vue/test-utils'
@@ -16,13 +17,14 @@ Vue.use(Vuelidate)
 const vuetify = new Vuetify({})
 
 // Store
-const store = getVuexStore()
+setActivePinia(createPinia())
+const store = useStore()
 document.body.setAttribute('data-app', 'true')
 
 describe('Incorporation Date Time component', () => {
   let wrapperFactory: any
   const today = new Date()
-  store.state.stateModel.currentJsDate = today
+  store.stateModel.currentJsDate = today
 
   const dateTimeDefault = {
     valid: false,
@@ -51,7 +53,6 @@ describe('Incorporation Date Time component', () => {
           ...propsData
         },
         localVue,
-        store,
         vuetify
       })
     }

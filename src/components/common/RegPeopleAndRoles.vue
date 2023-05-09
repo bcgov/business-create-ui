@@ -208,9 +208,9 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component } from 'vue-property-decorator'
-import { Action } from 'vuex-class'
+import { Component, Mixins } from 'vue-property-decorator'
+import { Action } from 'pinia-class'
+import { useStore } from '@/store/store'
 import { cloneDeep } from 'lodash'
 import { ActionBindingIF, EmptyOrgPerson } from '@/interfaces'
 import { EmptyAddress } from '@bcrs-shared-components/interfaces'
@@ -233,13 +233,10 @@ import RuleListItem from '@/components/common/RuleListItem.vue'
     ListPeopleAndRoles,
     RegAddEditOrgPerson,
     RuleListItem
-  },
-  mixins: [
-    PeopleRolesMixin
-  ]
+  }
 })
-export default class RegPeopleAndRoles extends Vue {
-  @Action setRegistrationBusinessType!: ActionBindingIF
+export default class RegPeopleAndRoles extends Mixins(PeopleRolesMixin) {
+  @Action(useStore) setRegistrationBusinessType!: ActionBindingIF
 
   //
   // NB: see mixin for common properties, methods, etc.
@@ -252,7 +249,7 @@ export default class RegPeopleAndRoles extends Vue {
     )
   }
 
-  protected async addOrgPerson (roleType: RoleTypes, partyType: PartyTypes): Promise<void> {
+  async addOrgPerson (roleType: RoleTypes, partyType: PartyTypes): Promise<void> {
     const isProprietor = (roleType === RoleTypes.PROPRIETOR)
     const isPerson = (partyType === PartyTypes.PERSON)
     const isOrganization = (partyType === PartyTypes.ORGANIZATION)

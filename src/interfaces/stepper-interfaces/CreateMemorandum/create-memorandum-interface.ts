@@ -1,8 +1,8 @@
-import { DocIF, ValidationDetailIF } from '@/interfaces'
+import { ValidationDetailIF } from '@/interfaces'
 
 export interface CreateMemorandumIF {
   validationDetail: ValidationDetailIF
   memorandumConfirmed: boolean
-  memorandumDoc: DocIF
+  memorandumFile: File
   docKey: string
 }

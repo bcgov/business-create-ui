@@ -20,17 +20,12 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component, Emit, Prop, Watch } from 'vue-property-decorator'
+import { Component, Emit, Mixins, Prop, Watch } from 'vue-property-decorator'
 import { DocumentMixin } from '@/mixins'
 import { PdfPageSize } from '@/enums'
 
-@Component({
-  mixins: [
-    DocumentMixin
-  ]
-})
-export default class FileUploadPreview extends Vue {
+@Component({})
+export default class FileUploadPreview extends Mixins(DocumentMixin) {
   @Prop({ default: null }) readonly inputFile!: File
   @Prop({ default: 'File' }) readonly inputFileLabel!: string
   @Prop({ default: true }) readonly isRequired!: boolean
@@ -44,25 +39,28 @@ export default class FileUploadPreview extends Vue {
     fileUploadInput: HTMLFormElement
   }
 
-  private fileUpload: File = null
-  private customErrorMessages: string[] = []
+  // Local variables
+  fileUpload = null as File
+  customErrorMessages = [] as string[]
 
-  protected fileUploadRules = [
-    (v) => {
-      if (this.isRequired) {
-        return !!v || this.inputFileLabel + ' is required'
+  get fileUploadRules () {
+    return [
+      (file) => {
+        if (this.isRequired) {
+          return !!file || this.inputFileLabel + ' is required'
+        }
+        return true
+      },
+      (file) => {
+        if (this.maxSize) {
+          const maxSizeMB = this.maxSize / 1024
+          const errorMsg = 'Exceeds maximum ' + maxSizeMB.toString() + ' MB file size'
+          return (file?.size <= (this.maxSize * 1024)) || errorMsg
+        }
+        return true
       }
-      return true
-    },
-    (file) => {
-      if (this.maxSize) {
-        const maxSizeMB = this.maxSize / 1024
-        const errorMsg = 'Exceeds maximum ' + maxSizeMB.toString() + ' MB file size'
-        return (file?.size <= (this.maxSize * 1024)) || errorMsg
-      }
-      return true
-    }
-  ]
+    ]
+  }
 
   /** Called when component is mounted. */
   async mounted (): Promise<void> {
@@ -73,8 +71,8 @@ export default class FileUploadPreview extends Vue {
     }
   }
 
-  protected fileChange (file) {
-    this.emitFileSelected(file)
+  async fileChange (file): Promise<void> {
+    await this.emitFileSelected(file)
   }
 
   // Note: the validation is done this way as opposed to being all defined in the validation rules(fileUploadRules)
@@ -82,9 +80,9 @@ export default class FileUploadPreview extends Vue {
   //  around this limitation.  vuelidate does support this but this would mean introducing a component that
   //  is using a different validation approach or updating all components to use vuelidate.  Have decided
   //  to do this for the time being.
-  private async validateFileInput (file) {
+  private async validateFileInput (file): Promise<boolean> {
     this.customErrorMessages = []
-    const isValid = this.$refs.fileUploadInput.validate()
+    const isValid = this.$refs.fileUploadInput.validate() as boolean
     // only perform page size validation when other validation has passed
     if (isValid && file) {
       if (typeof file.arrayBuffer === 'undefined') { return true }
@@ -108,7 +106,7 @@ export default class FileUploadPreview extends Vue {
     return isValid
   }
 
-  private async validatePageSize (file): Promise<boolean|string> {
+  private async validatePageSize (file): Promise<boolean> {
     if (this.pdfPageSize && typeof file.arrayBuffer !== 'undefined') {
       const isValidPageSize = await this.isPageSize(file, this.pdfPageSize)
       return isValidPageSize
@@ -117,21 +115,20 @@ export default class FileUploadPreview extends Vue {
   }
 
   @Emit('fileSelected')
-  async emitFileSelected (file) {
+  async emitFileSelected (file): Promise<any> {
     await this.isFileValid(file)
     return file
   }
 
   @Emit('isFileValid')
-  async isFileValid (file) {
-    const result = await this.validateFileInput(file)
-    return result
+  async isFileValid (file): Promise<boolean> {
+    return this.validateFileInput(file)
   }
 
   @Watch('showErrors')
-  private onShowErrorsChanged (): void {
+  private async onShowErrorsChanged (): Promise<void> {
     if (this.showErrors) {
-      this.validateFileInput(this.fileUpload)
+      await this.validateFileInput(this.fileUpload)
     }
   }
 

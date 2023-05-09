@@ -63,9 +63,9 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component } from 'vue-property-decorator'
-import { Getter } from 'vuex-class'
+import { Component, Mixins } from 'vue-property-decorator'
+import { Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 import { FilingNames, FilingTypes } from '@/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/enums/'
 import { ContactPointIF, RegistrationStateIF } from '@/interfaces'
@@ -77,33 +77,30 @@ import { GetCorpFullDescription, GetCorpNumberedDescription } from '@bcrs-shared
 @Component({
   components: {
     StaffComments
-  },
-  mixins: [
-    DateMixin
-  ]
+  }
 })
-export default class EntityInfo extends Vue {
-  @Getter getBusinessLegalName!: string
-  @Getter getBusinessContact!: ContactPointIF
-  @Getter getEntityIdentifier!: string
-  @Getter getUserEmail!: string
-  @Getter getUserPhone!: string
-  @Getter getEntityType!: CorpTypeCd
-  @Getter getFilingName!: FilingNames
-  @Getter getNameRequestNumber!: string
-  @Getter getNameRequestApprovedName!: string
-  @Getter getFilingType!: FilingTypes
-  @Getter getRegistration!: RegistrationStateIF
-  @Getter isEntityType!: boolean
-  @Getter isIncorporationFiling!: boolean
-  @Getter isRegistrationFiling!: boolean
-  @Getter getBusinessId!: string
-  @Getter getBusinessNumber!: string
-  @Getter isRoleStaff!: boolean
-  @Getter isTypeFirm!: boolean
-  @Getter getBusinessFoundingDate!: string
-  @Getter getTempId!: string
-  @Getter isTypeSoleProp!: boolean
+export default class EntityInfo extends Mixins(DateMixin) {
+  @Getter(useStore) getBusinessContact!: ContactPointIF
+  @Getter(useStore) getBusinessId!: string
+  @Getter(useStore) getBusinessFoundingDate!: string
+  @Getter(useStore) getBusinessLegalName!: string
+  @Getter(useStore) getBusinessNumber!: string
+  @Getter(useStore) getEntityIdentifier!: string
+  @Getter(useStore) getEntityType!: CorpTypeCd
+  @Getter(useStore) getFilingName!: FilingNames
+  @Getter(useStore) getFilingType!: FilingTypes
+  @Getter(useStore) getNameRequestApprovedName!: string
+  @Getter(useStore) getNameRequestNumber!: string
+  @Getter(useStore) getRegistration!: RegistrationStateIF
+  @Getter(useStore) getTempId!: string
+  @Getter(useStore) getUserEmail!: string
+  @Getter(useStore) getUserPhone!: string
+  @Getter(useStore) isEntityType!: boolean
+  @Getter(useStore) isIncorporationFiling!: boolean
+  @Getter(useStore) isRegistrationFiling!: boolean
+  @Getter(useStore) isRoleStaff!: boolean
+  @Getter(useStore) isTypeFirm!: boolean
+  @Getter(useStore) isTypeSoleProp!: boolean
 
   // declaration for template
   readonly axios = axios

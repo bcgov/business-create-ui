@@ -4,9 +4,11 @@ import Vuelidate from 'vuelidate'
 import { mount, Wrapper, createLocalVue } from '@vue/test-utils'
 import flushPromises from 'flush-promises'
 import { getLastEvent } from '../get-last-event'
-import { getVuexStore } from '@/store'
+import { createPinia, setActivePinia } from 'pinia'
+import { useStore } from '@/store/store'
 import AddEditOrgPerson from '@/components/common/AddEditOrgPerson.vue'
 import { EmptyOrgPerson } from '@/interfaces'
+import { CorpTypeCd } from '@/enums'
 
 // mock the console.warn function to hide "[Vuetify] Unable to locate target XXX"
 console.warn = jest.fn()
@@ -18,7 +20,8 @@ Vue.use(Vuetify)
 Vue.use(Vuelidate)
 
 const vuetify = new Vuetify({})
-const store = getVuexStore()
+setActivePinia(createPinia())
+const store = useStore()
 
 // Events
 const addEditPersonEvent = 'addEditPerson'
@@ -147,13 +150,12 @@ function createComponent (
       addIncorporator
     },
     computed,
-    store,
     vuetify
   })
 }
 
-store.state.stateModel.nameRequest.entityType = 'BEN'
-store.state.stateModel.currentDate = '2020-03-30'
+store.stateModel.nameRequest.legalType = CorpTypeCd.BENEFIT_COMPANY
+store.stateModel.currentDate = '2020-03-30'
 
 describe('Add/Edit Org/Person component', () => {
   it('Loads the component and sets data for person', async () => {
@@ -332,7 +334,7 @@ describe('Add/Edit Org/Person component', () => {
   })
 
   it('Shows popup if there is already a completing party', async () => {
-    store.state.stateModel.tombstone.authRoles = ['staff']
+    store.stateModel.tombstone.authRoles = ['staff']
     const wrapper: Wrapper<AddEditOrgPerson> = createComponent(
       validIncorporator,
       NaN,
@@ -348,11 +350,11 @@ describe('Add/Edit Org/Person component', () => {
     expect(wrapper.vm.$refs.confirmDialog).toBeTruthy()
 
     wrapper.destroy()
-    store.state.stateModel.tombstone.authRoles = []
+    store.stateModel.tombstone.authRoles = []
   })
 
   it('Emits events correctly on confirming reassign completing party', async () => {
-    store.state.stateModel.tombstone.authRoles = ['staff']
+    store.stateModel.tombstone.authRoles = ['staff']
     const wrapper: Wrapper<AddEditOrgPerson> = createComponent(
       validIncorporator,
       NaN,
@@ -388,7 +390,7 @@ describe('Add/Edit Org/Person component', () => {
     expect(event.roles[1].roleType).toBe('Incorporator')
 
     wrapper.destroy()
-    store.state.stateModel.tombstone.authRoles = []
+    store.stateModel.tombstone.authRoles = []
   })
 
   it('Emits cancel event', async () => {

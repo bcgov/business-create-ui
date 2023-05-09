@@ -18,7 +18,7 @@
           <v-icon class="upload-success-chk">mdi-check</v-icon>
         </v-col>
         <v-col md="11" id="file-name-col">
-          <span id="file-name" v-if="getCreateRulesStep.rulesDoc" >{{getCreateRulesStep.rulesDoc.name}}</span>
+          <span id="file-name" v-if="getCreateRulesStep.rulesFile" >{{getCreateRulesStep.rulesFile.name}}</span>
         </v-col>
       </v-row>
     </div>
@@ -27,9 +27,9 @@
 
 <script lang="ts">
 // Libraries
-import Vue from 'vue'
-import { Component } from 'vue-property-decorator'
-import { Getter } from 'vuex-class'
+import { Component, Vue } from 'vue-property-decorator'
+import { Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 
 // Enums
 import { RouteNames } from '@/enums'
@@ -37,7 +37,7 @@ import { CreateRulesIF } from '@/interfaces'
 
 @Component({})
 export default class UploadRulesSummary extends Vue {
-  @Getter getCreateRulesStep!: CreateRulesIF
+  @Getter(useStore) getCreateRulesStep!: CreateRulesIF
 
   // Enum for template
   readonly RouteNames = RouteNames

@@ -125,9 +125,9 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component } from 'vue-property-decorator'
-import { Action, Getter } from 'vuex-class'
+import { Component, Vue } from 'vue-property-decorator'
+import { Action, Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 import { ActionBindingIF, ContactPointIF, CertifyIF, DocumentDeliveryIF, PeopleAndRoleIF } from '@/interfaces'
 import { RoleTypes } from '@/enums'
 import CardHeader from '@/components/common/CardHeader.vue'
@@ -152,23 +152,23 @@ import TransactionalFolioNumber from '@/components/common/TransactionalFolioNumb
   }
 })
 export default class RegistrationReviewConfirm extends Vue {
-  @Getter getBusinessContact!: ContactPointIF
-  @Getter getUserEmail!: string
-  @Getter getFolioNumber!: string
-  @Getter getTransactionalFolioNumber!: string
-  @Getter isPremiumAccount!: boolean
-  @Getter getCertifyState!: CertifyIF
-  @Getter isRoleStaff!: boolean
-  @Getter isSbcStaff!: boolean
-  @Getter getValidateSteps!: boolean
-  @Getter getDocumentDelivery!: DocumentDeliveryIF
-  @Getter isTypeSoleProp!: boolean
-  @Getter isTypePartnership!: boolean
-  @Getter getAddPeopleAndRoleStep!: PeopleAndRoleIF
+  @Getter(useStore) getAddPeopleAndRoleStep!: PeopleAndRoleIF
+  @Getter(useStore) getBusinessContact!: ContactPointIF
+  @Getter(useStore) getCertifyState!: CertifyIF
+  @Getter(useStore) getDocumentDelivery!: DocumentDeliveryIF
+  @Getter(useStore) getFolioNumber!: string
+  @Getter(useStore) getTransactionalFolioNumber!: string
+  @Getter(useStore) getUserEmail!: string
+  @Getter(useStore) getValidateSteps!: boolean
+  @Getter(useStore) isPremiumAccount!: boolean
+  @Getter(useStore) isRoleStaff!: boolean
+  @Getter(useStore) isSbcStaff!: boolean
+  @Getter(useStore) isTypePartnership!: boolean
+  @Getter(useStore) isTypeSoleProp!: boolean
 
-  @Action setDocumentOptionalEmailValidity!: ActionBindingIF
-  @Action setTransactionalFolioNumber!: ActionBindingIF
-  @Action setTransactionalFolioNumberValidity!: ActionBindingIF
+  @Action(useStore) setDocumentOptionalEmailValidity!: ActionBindingIF
+  @Action(useStore) setTransactionalFolioNumber!: ActionBindingIF
+  @Action(useStore) setTransactionalFolioNumberValidity!: ActionBindingIF
 
   /** The Document Delivery additional email label. */
   get documentDeliveryAdditionalLabel (): string {

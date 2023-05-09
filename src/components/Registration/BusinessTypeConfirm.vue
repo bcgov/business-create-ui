@@ -15,7 +15,7 @@
         </v-col>
 
         <v-col cols="12" sm="9">
-          <p class="mb-0">{{ label }}</p>
+          <p class="mb-0">{{ isTypePartnership ? labelGP : labelSP }}</p>
           <div id="business-checkbox-div">
             <v-checkbox
               hide-details
@@ -23,7 +23,9 @@
               class="mt-0 pt-0"
             >
               <template v-slot:label>
-                <div class="certify-stmt" :class="{'error--text': showErrors}">{{ text }}</div>
+                <div class="certify-stmt" :class="{'error--text': showErrors}">
+                  {{ isTypePartnership ? textGP : textSP }}
+                </div>
               </template>
             </v-checkbox>
           </div>
@@ -33,8 +35,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component, Emit, Prop, Watch } from 'vue-property-decorator'
+import { Component, Emit, Prop, Vue, Watch } from 'vue-property-decorator'
 
 @Component
 export default class BusinessTypeConfirm extends Vue {
@@ -50,16 +51,16 @@ export default class BusinessTypeConfirm extends Vue {
   /** Whether to show errors. */
   @Prop({ required: true }) readonly showErrors!: boolean
 
-  // Local variables
-  protected checked = false
-  protected label = 'General Partnership'
-  protected labelSP = 'BC Sole Proprietorship / Doing Business As (DBA) Registration'
-  protected text = 'I acknowledge that a General Partnership cannot be ' +
+  // Local variable
+  checked = false
+
+  readonly labelGP = 'General Partnership'
+  readonly labelSP = 'BC Sole Proprietorship / Doing Business As (DBA) Registration'
+  readonly textGP = 'I acknowledge that a General Partnership cannot be ' +
     'changed into a Sole Proprietorship (including DBA). If this is ' +
     'necessary, a new Name Request Number and Statement of Registration ' +
     '(along with associated fees) will be required.'
-
-  protected textSP = 'I acknowledge that a Sole Proprietorship (including DBA) ' +
+  readonly textSP = 'I acknowledge that a Sole Proprietorship (including DBA) ' +
     'cannot be changed into a General Partnership. If this is necessary, a new ' +
     'Name Request Number and Statement of Registration (along with associated fees) ' +
     'will be required.'
@@ -68,8 +69,6 @@ export default class BusinessTypeConfirm extends Vue {
   mounted (): void {
     // init model variable + validate
     this.checked = this.businessTypeConfirm
-    this.label = this.isTypePartnership ? this.label : this.labelSP
-    this.text = this.isTypePartnership ? this.text : this.textSP
     this.emitValid()
   }
 

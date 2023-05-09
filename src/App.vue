@@ -184,10 +184,10 @@
 
 <script lang="ts">
 // Libraries
-import Vue from 'vue'
 import axios from 'axios'
-import { Component, Watch } from 'vue-property-decorator'
-import { Action, Getter } from 'vuex-class'
+import { Component, Mixins, Watch } from 'vue-property-decorator'
+import { Action, Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 import { StatusCodes } from 'http-status-codes'
 import { cloneDeep } from 'lodash'
 import * as Sentry from '@sentry/browser'
@@ -218,7 +218,6 @@ import { AuthServices, LegalServices, PayServices } from '@/services/'
 // Enums and Constants
 import { FilingCodes, FilingNames, FilingStatus, FilingTypes, NameRequestStates, RouteNames, StaffPaymentOptions }
   from '@/enums'
-import { CorpTypeCd } from '@bcrs-shared-components/enums/'
 import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
 
 @Component({
@@ -234,87 +233,79 @@ import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
     WebChat,
     ...Dialogs,
     ...Views
-  },
-  mixins: [
-    CommonMixin,
-    DateMixin,
-    FilingTemplateMixin,
-    NameRequestMixin
-  ]
+  }
 })
-export default class App extends Vue {
+export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMixin, NameRequestMixin) {
   // Refs
   $refs!: {
     confirm: ConfirmDialogType
   }
 
-  @Getter getEntityIdentifier!: string
-  @Getter getHaveChanges!: boolean
-  @Getter getFilingData!: Array<FilingDataIF>
-  @Getter getFilingType!: FilingTypes
-  @Getter getFilingName!: FilingNames
-  @Getter isDissolutionFiling!: boolean
-  @Getter isRestorationFiling!: boolean
-  @Getter isIncorporationFiling!: boolean
-  @Getter getSteps!: Array<StepIF>
-  @Getter isSbcStaff!: boolean
-  @Getter getUserFirstName!: string
-  @Getter getUserLastName!: string
-  @Getter getUserPhone!: string
-  @Getter getUserEmail!: string
-  @Getter getOrgInformation!: OrgInformationIF
-  @Getter isMobile!: boolean
+  @Getter(useStore) getEntityIdentifier!: string
+  @Getter(useStore) getFilingData!: Array<FilingDataIF>
+  @Getter(useStore) getFilingName!: FilingNames
+  @Getter(useStore) getFilingType!: FilingTypes
+  @Getter(useStore) getHaveChanges!: boolean
+  @Getter(useStore) getOrgInformation!: OrgInformationIF
+  @Getter(useStore) getSteps!: Array<StepIF>
+  @Getter(useStore) getUserFirstName!: string
+  @Getter(useStore) getUserLastName!: string
+  @Getter(useStore) getUserEmail!: string
+  @Getter(useStore) getUserPhone!: string
+  @Getter(useStore) isDissolutionFiling!: boolean
+  @Getter(useStore) isIncorporationFiling!: boolean
+  @Getter(useStore) isMobile!: boolean
+  @Getter(useStore) isRestorationFiling!: boolean
+  @Getter(useStore) isSbcStaff!: boolean
 
-  @Action setBusinessId!: ActionBindingIF
-  @Action setCurrentStep!: ActionBindingIF
-  @Action setCurrentDate!: ActionBindingIF
-  @Action setCurrentJsDate!: ActionBindingIF
-  @Action setResources!: ActionBindingIF
-  @Action setUserEmail!: ActionBindingIF
-  @Action setUserPhone!: ActionBindingIF
-  @Action setUserFirstName!: ActionBindingIF
-  @Action setUserLastName!: ActionBindingIF
-  @Action setUserKeycloakGuid!: ActionBindingIF
-  @Action setUserAddress!: ActionBindingIF
-  @Action setAuthRoles!: ActionBindingIF
-  @Action setHaveChanges!: ActionBindingIF
-  @Action setAccountInformation!: ActionBindingIF
-  @Action setOrgInformation!: ActionBindingIF
-  @Action setTempId!: ActionBindingIF
-  @Action setShowErrors!: ActionBindingIF
-  @Action setFeePrices!: ActionBindingIF
-  @Action setFilingType!: ActionBindingIF
-  @Action setNameRequest!: ActionBindingIF
-  @Action setNameRequestApprovedName!: ActionBindingIF
-  @Action setCompletingParty!: ActionBindingIF
-  @Action setParties!: ActionBindingIF
-  @Action setAdminFreeze!: ActionBindingIF
-  @Action setBusinessNumber!: ActionBindingIF
-  @Action setIdentifier!: ActionBindingIF
-  @Action setEntityName!: ActionBindingIF
-  @Action setEntityState!: ActionBindingIF
-  @Action setEntityFoundingDate!: ActionBindingIF
-  @Action setLastAnnualReportDate!: ActionBindingIF
-  @Action setLastAddressChangeDate!: ActionBindingIF
-  @Action setLastDirectorChangeDate!: ActionBindingIF
-  @Action setWarnings!: ActionBindingIF
-  @Action setGoodStanding!: ActionBindingIF
-  @Action setWindowWidth!: ActionBindingIF
+  @Action(useStore) setAccountInformation!: ActionBindingIF
+  @Action(useStore) setAdminFreeze!: ActionBindingIF
+  @Action(useStore) setAuthRoles!: ActionBindingIF
+  @Action(useStore) setBusinessId!: ActionBindingIF
+  @Action(useStore) setBusinessNumber!: ActionBindingIF
+  @Action(useStore) setCompletingParty!: ActionBindingIF
+  @Action(useStore) setCurrentDate!: ActionBindingIF
+  @Action(useStore) setCurrentJsDate!: ActionBindingIF
+  @Action(useStore) setCurrentStep!: ActionBindingIF
+  @Action(useStore) setEntityFoundingDate!: ActionBindingIF
+  @Action(useStore) setEntityState!: ActionBindingIF
+  @Action(useStore) setFeePrices!: ActionBindingIF
+  @Action(useStore) setFilingType!: ActionBindingIF
+  @Action(useStore) setGoodStanding!: ActionBindingIF
+  @Action(useStore) setIdentifier!: ActionBindingIF
+  @Action(useStore) setLastAddressChangeDate!: ActionBindingIF
+  @Action(useStore) setLastAnnualReportDate!: ActionBindingIF
+  @Action(useStore) setLastDirectorChangeDate!: ActionBindingIF
+  @Action(useStore) setNameRequest!: ActionBindingIF
+  @Action(useStore) setParties!: ActionBindingIF
+  @Action(useStore) setResources!: ActionBindingIF
+  @Action(useStore) setUserAddress!: ActionBindingIF
+  @Action(useStore) setUserEmail!: ActionBindingIF
+  @Action(useStore) setUserFirstName!: ActionBindingIF
+  @Action(useStore) setUserKeycloakGuid!: ActionBindingIF
+  @Action(useStore) setUserLastName!: ActionBindingIF
+  @Action(useStore) setUserPhone!: ActionBindingIF
+  @Action(useStore) setHaveChanges!: ActionBindingIF
+  @Action(useStore) setOrgInformation!: ActionBindingIF
+  @Action(useStore) setShowErrors!: ActionBindingIF
+  @Action(useStore) setTempId!: ActionBindingIF
+  @Action(useStore) setWarnings!: ActionBindingIF
+  @Action(useStore) setWindowWidth!: ActionBindingIF
 
   // Local properties
-  protected accountAuthorizationDialog = false
-  protected fetchErrorDialog = false
-  protected filingSurveyDialog = false
-  protected invalidFilingDialog = false
-  protected invalidRouteDialog = false
-  protected paymentErrorDialog = false
-  protected saveErrorDialog = false
-  protected nameRequestInvalidErrorDialog = false
-  protected nameRequestInvalidType = ''
-  protected haveData = false
-  protected saveErrors = []
-  protected saveWarnings = []
-  protected fileAndPayInvalidNameRequestDialog = false
+  accountAuthorizationDialog = false
+  fetchErrorDialog = false
+  filingSurveyDialog = false
+  invalidFilingDialog = false
+  invalidRouteDialog = false
+  paymentErrorDialog = false
+  saveErrorDialog = false
+  nameRequestInvalidErrorDialog = false
+  nameRequestInvalidType = ''
+  haveData = false
+  saveErrors = []
+  saveWarnings = []
+  fileAndPayInvalidNameRequestDialog = false
 
   // Local constants
   readonly STAFF_ROLE = 'STAFF'
@@ -450,7 +441,7 @@ export default class App extends Vue {
   }
 
   /** Helper to check is the current route matches */
-  private isRouteName (routeName: RouteNames): boolean {
+  isRouteName (routeName: RouteNames): boolean {
     return (this.$route.name === routeName)
   }
 
@@ -521,7 +512,7 @@ export default class App extends Vue {
   }
 
   /** Called to navigate to My Business Registry. */
-  private goToManageBusinessDashboard (): void {
+  goToManageBusinessDashboard (): void {
     this.fileAndPayInvalidNameRequestDialog = false
     const manageBusinessUrl = `${sessionStorage.getItem('AUTH_WEB_URL')}business`
     this.setHaveChanges(false)
@@ -529,7 +520,7 @@ export default class App extends Vue {
   }
 
   /** Called to navigate to entity's dashboard. */
-  private goToDashboard (force = false): void {
+  goToDashboard (force = false): void {
     // check if there are no data changes
     if (!this.getHaveChanges || force) {
       // navigate to dashboard
@@ -563,7 +554,7 @@ export default class App extends Vue {
   }
 
   /** Opens Auth Web in a new tab with the survey query param. */
-  protected launchFilingSurvey (): void {
+  launchFilingSurvey (): void {
     // safety check
     if (this.iaSurveyId > 0) {
       const url = `${sessionStorage.getItem('AUTH_WEB_URL')}?survey=${this.iaSurveyId}`
@@ -572,12 +563,12 @@ export default class App extends Vue {
   }
 
   /** Called to update "do not show again" state. */
-  protected doNotShowSurvey (doNotShow: boolean): void {
+  doNotShowSurvey (doNotShow: boolean): void {
     // safety check
     if (this.iaSurveyId > 0) {
       if (doNotShow) {
         // save id of survey to hide
-        localStorage.setItem('HIDE_SURVEY', this.iaSurveyId)
+        localStorage.setItem('HIDE_SURVEY', this.iaSurveyId.toString())
       } else {
         localStorage.removeItem('HIDE_SURVEY')
       }
@@ -616,7 +607,7 @@ export default class App extends Vue {
   }
 
   /** Fetches user info, draft filing, NR data, etc. */
-  private async fetchData (): Promise<void> {
+  async fetchData (): Promise<void> {
     // reset errors in case this method is invoked more than once (ie, retry)
     this.resetFlags()
 
@@ -788,7 +779,7 @@ export default class App extends Vue {
           ...draftFiling
         }
         this.parseDissolutionDraft(draftFiling)
-        resources = DissolutionResources.find(x => x.entityType === this.getEntityType)
+        resources = DissolutionResources.find(x => x.entityType === this.getEntityType) as ResourceIF
         break
       case FilingTypes.RESTORATION:
         draftFiling = {
@@ -796,7 +787,7 @@ export default class App extends Vue {
           ...draftFiling
         }
         this.parseRestorationDraft(draftFiling)
-        resources = RestorationResources.find(x => x.entityType === this.getEntityType)
+        resources = RestorationResources.find(x => x.entityType === this.getEntityType) as ResourceIF
         break
       default:
         throw new Error(`handleDissolutionOrRestoration(): invalid filing type = ${this.getFilingType}`)
@@ -844,7 +835,7 @@ export default class App extends Vue {
           ...this.formatEmptyIncorporationApplication(draftFiling)
         }
         this.parseIncorporationDraft(draftFiling)
-        resources = IncorporationResources.find(x => x.entityType === this.getEntityType)
+        resources = IncorporationResources.find(x => x.entityType === this.getEntityType) as ResourceIF
         break
       case FilingTypes.REGISTRATION:
         draftFiling = {
@@ -852,7 +843,7 @@ export default class App extends Vue {
           ...this.formatEmptyRegistration(draftFiling)
         }
         this.parseRegistrationDraft(draftFiling)
-        resources = RegistrationResources.find(x => x.entityType === this.getEntityType)
+        resources = RegistrationResources.find(x => x.entityType === this.getEntityType) as ResourceIF
         break
       default:
         throw new Error(`handleIaOrRegistration(): invalid filing type = ${this.getFilingType}`)
@@ -989,7 +980,7 @@ export default class App extends Vue {
       // this is an IDIR user
       this.setUserPhone(userInfo.phone)
     } else if (userInfo.type !== this.STAFF_ROLE && userInfo.type !== this.GOV_ACCOUNT_USER) {
-      console.info('Invalid user phone')
+      console.info('Invalid user phone') // eslint-disable-line no-console
     }
 
     if (!userInfo.firstname) throw new Error('Invalid user first name')
@@ -1090,7 +1081,7 @@ export default class App extends Vue {
 
     // FUTURE: change this to a single setter/object?
     this.setAdminFreeze(business.adminFreeze)
-    this.setEntityName(business.legalName)
+    this.setLegalName(business.legalName)
     this.setEntityState(business.state)
     this.setBusinessNumber(business.taxId || null) // may be empty
     this.setIdentifier(business.identifier)

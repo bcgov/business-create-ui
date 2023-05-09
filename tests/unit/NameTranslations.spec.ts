@@ -1,15 +1,18 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify'
 import { mount } from '@vue/test-utils'
-import { getVuexStore } from '@/store'
+import { createPinia, setActivePinia } from 'pinia'
+import { useStore } from '@/store/store'
 import NameTranslations from '@/components/common/NameTranslations.vue'
 import AddNameTranslation from '@/components/common/AddNameTranslation.vue'
 import ListNameTranslations from '@/components/common/ListNameTranslations.vue'
+import { CorpTypeCd } from '@/enums'
 
 Vue.use(Vuetify)
 
 const vuetify = new Vuetify({})
-const store = getVuexStore()
+setActivePinia(createPinia())
+const store = useStore()
 document.body.setAttribute('data-app', 'true')
 
 describe('Name Translations component', () => {
@@ -17,12 +20,12 @@ describe('Name Translations component', () => {
 
   beforeEach(() => {
     // Entity type will always be set with or without an NR
-    store.state.stateModel.entityType = 'BEN'
+    store.stateModel.entityType = CorpTypeCd.BENEFIT_COMPANY
     // Temp Id will always be set with or without an NR
-    store.state.stateModel.tempId = 'T1234567'
-    store.state.stateModel.nameRequest.nrNum = null
+    store.stateModel.tempId = 'T1234567'
+    store.stateModel.nameRequest.nrNum = null
 
-    wrapper = mount(NameTranslations, { vuetify, store })
+    wrapper = mount(NameTranslations, { vuetify })
   })
 
   afterEach(() => {
@@ -77,10 +80,12 @@ describe('Name Translations component', () => {
     expect(wrapper.vm.checkbox).toBe(false)
 
     // set some name translations in the store
-    await wrapper.vm.$store.commit('mutateNameTranslations', [
-      'Mock Name Translation',
-      'Another Mock Name Translation'
+    store.setNameTranslations([
+      { name: 'Mock Name Translation' },
+      { name: 'Another Mock Name Translation' }
     ])
+
+    await Vue.nextTick()
 
     // the checkbox should automatically be checked
     expect(wrapper.vm.checkbox).toBe(true)

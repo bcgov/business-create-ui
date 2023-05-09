@@ -1,9 +1,12 @@
 import Vue from 'vue'
 import Vuelidate from 'vuelidate'
 import Vuetify from 'vuetify'
-import { getVuexStore } from '@/store'
+import { createPinia, setActivePinia } from 'pinia'
+import { useStore } from '@/store/store'
 import { mount } from '@vue/test-utils'
 import SummaryRestoreBusiness from '@/components/Restoration/SummaryRestoreBusiness.vue'
+import { ApprovalTypes, CorpTypeCd, CorrectNameOptions, FilingTypes, RelationshipTypes, RestorationTypes }
+  from '@/enums'
 
 // mock the console.warn function to hide "[Vuetify] Unable to locate target XXX"
 console.warn = jest.fn()
@@ -12,7 +15,8 @@ Vue.use(Vuetify)
 Vue.use(Vuelidate)
 
 const vuetify = new Vuetify({})
-const store = getVuexStore()
+setActivePinia(createPinia())
+const store = useStore()
 
 describe('Summary Restore Business component', () => {
   let wrapper: any
@@ -31,15 +35,15 @@ describe('Summary Restore Business component', () => {
 
   beforeEach(() => {
     // all valid initial data
-    store.state.stateModel.businessId = 'BC1234567'
-    store.state.stateModel.entityType = 'BC'
-    store.state.stateModel.business.legalName = 'My Business Name' // not used in this component
-    store.state.stateModel.tombstone.filingType = 'restoration'
-    store.state.stateModel.correctNameOption = 'correct-new-nr'
-    store.state.stateModel.nameRequestApprovedName = 'NR Approved Name'
-    store.state.stateModel.restoration = {
+    store.stateModel.business.businessId = 'BC1234567'
+    store.stateModel.entityType = CorpTypeCd.BC_COMPANY
+    store.stateModel.business.legalName = 'My Business Name' // not used in this component
+    store.stateModel.tombstone.filingType = FilingTypes.RESTORATION
+    store.stateModel.correctNameOption = CorrectNameOptions.CORRECT_NEW_NR
+    store.stateModel.nameRequestApprovedName = 'NR Approved Name'
+    store.stateModel.restoration = {
       applicationDate: null,
-      approvalType: 'courtOrder',
+      approvalType: ApprovalTypes.VIA_COURT_ORDER,
       approvalTypeValid: true,
       businessNameValid: true,
       courtOrder: { fileNumber: '12345' },
@@ -47,17 +51,17 @@ describe('Summary Restore Business component', () => {
       noticeDate: null,
       relationships: [],
       restorationTypeValid: true,
-      type: 'limitedRestoration'
+      type: RestorationTypes.LIMITED
     }
-    store.state.stateModel.nameTranslationsValid = true
-    store.state.stateModel.nameTranslations = [
+    store.stateModel.nameTranslationsValid = true
+    store.stateModel.nameTranslations = [
       { name: 'AAA' },
       { name: 'BBB' },
       { name: 'CCC' }
     ]
-    store.state.stateModel.showErrors = false
+    store.stateModel.showErrors = false
 
-    wrapper = mount(SummaryRestoreBusiness, { store, vuetify, stubs: ['router-link'] })
+    wrapper = mount(SummaryRestoreBusiness, { vuetify, stubs: ['router-link'] })
   })
 
   afterEach(() => {
@@ -71,7 +75,7 @@ describe('Summary Restore Business component', () => {
   })
 
   it('shows "step is unfinished" message if Business Name is invalid', async () => {
-    store.state.stateModel.restoration.businessNameValid = false
+    store.stateModel.restoration.businessNameValid = false
     await Vue.nextTick()
     expectSummaryBusinessRestoreExists()
     expectSectionValid(false)
@@ -79,7 +83,7 @@ describe('Summary Restore Business component', () => {
   })
 
   it('shows "step is unfinished" message if Name Translations is invalid', async () => {
-    store.state.stateModel.nameTranslationsValid = false
+    store.stateModel.nameTranslationsValid = false
     await Vue.nextTick()
     expectSummaryBusinessRestoreExists()
     expectSectionValid(false)
@@ -87,7 +91,7 @@ describe('Summary Restore Business component', () => {
   })
 
   it('shows "step is unfinished" message if Restoration Type is invalid', async () => {
-    store.state.stateModel.restoration.restorationTypeValid = false
+    store.stateModel.restoration.restorationTypeValid = false
     await Vue.nextTick()
     expectSummaryBusinessRestoreExists()
     expectSectionValid(false)
@@ -95,7 +99,7 @@ describe('Summary Restore Business component', () => {
   })
 
   it('shows "step is unfinished" message if Approval Type is invalid', async () => {
-    store.state.stateModel.restoration.approvalTypeValid = false
+    store.stateModel.restoration.approvalTypeValid = false
     await Vue.nextTick()
     expectSummaryBusinessRestoreExists()
     expectSectionValid(false)
@@ -112,8 +116,8 @@ describe('Summary Restore Business component', () => {
   })
 
   it('shows numbered company name', async () => {
-    store.state.stateModel.correctNameOption = 'correct-name-to-number'
-    store.state.stateModel.nameRequestApprovedName = '1234567 B.C. LTD.'
+    store.stateModel.correctNameOption = CorrectNameOptions.CORRECT_NAME_TO_NUMBER
+    store.stateModel.nameRequestApprovedName = '1234567 B.C. LTD.'
     await Vue.nextTick()
     expectSummaryBusinessRestoreExists()
     expectSectionValid()
@@ -122,7 +126,7 @@ describe('Summary Restore Business component', () => {
   })
 
   it('shows unknown company name', async () => {
-    store.state.stateModel.correctNameOption = null
+    store.stateModel.correctNameOption = null
     await Vue.nextTick()
     expectSummaryBusinessRestoreExists()
     expectSectionValid()
@@ -152,8 +156,12 @@ describe('Summary Restore Business component', () => {
   })
 
   it('shows full restoration type with relationships', async () => {
-    store.state.stateModel.restoration.type = 'fullRestoration'
-    store.state.stateModel.restoration.relationships = ['Director', 'Officer', 'Shareholder']
+    store.stateModel.restoration.type = RestorationTypes.FULL
+    store.stateModel.restoration.relationships = [
+      RelationshipTypes.DIRECTOR,
+      RelationshipTypes.OFFICER,
+      RelationshipTypes.SHAREHOLDER
+    ]
     await Vue.nextTick()
     expectSummaryBusinessRestoreExists()
     expectSectionValid()
@@ -164,8 +172,8 @@ describe('Summary Restore Business component', () => {
   })
 
   it('shows full restoration type with unknown relationships', async () => {
-    store.state.stateModel.restoration.type = 'fullRestoration'
-    store.state.stateModel.restoration.relationships = []
+    store.stateModel.restoration.type = RestorationTypes.FULL
+    store.stateModel.restoration.relationships = []
     await Vue.nextTick()
     expectSummaryBusinessRestoreExists()
     expectSectionValid()
@@ -174,7 +182,7 @@ describe('Summary Restore Business component', () => {
   })
 
   it('shows unknown restoration type', async () => {
-    store.state.stateModel.restoration.type = null
+    store.stateModel.restoration.type = null
     await Vue.nextTick()
     expectSummaryBusinessRestoreExists()
     expectSectionValid()
@@ -192,9 +200,9 @@ describe('Summary Restore Business component', () => {
   })
 
   it('shows registrar approval type', async () => {
-    store.state.stateModel.restoration.approvalType = 'registrar'
-    store.state.stateModel.restoration.noticeDate = '2023-01-01'
-    store.state.stateModel.restoration.applicationDate = '2023-02-01'
+    store.stateModel.restoration.approvalType = ApprovalTypes.VIA_REGISTRAR
+    store.stateModel.restoration.noticeDate = '2023-01-01'
+    store.stateModel.restoration.applicationDate = '2023-02-01'
     await Vue.nextTick()
     expectSummaryBusinessRestoreExists()
     expectSectionValid()
@@ -205,7 +213,7 @@ describe('Summary Restore Business component', () => {
   })
 
   it('shows unknown approval type', async () => {
-    store.state.stateModel.restoration.approvalType = null
+    store.stateModel.restoration.approvalType = null
     await Vue.nextTick()
     expectSummaryBusinessRestoreExists()
     expectSectionValid()

@@ -205,9 +205,9 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component, Watch } from 'vue-property-decorator'
-import { Action, Getter } from 'vuex-class'
+import { Component, Mixins, Watch } from 'vue-property-decorator'
+import { Action, Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 import {
   ActionBindingIF,
   CreateRulesIF,
@@ -223,35 +223,33 @@ import FileUploadPreview from '@/components/common/FileUploadPreview.vue'
 @Component({
   components: {
     FileUploadPreview
-  },
-  mixins: [
-    CommonMixin,
-    DocumentMixin
-  ]
+  }
 })
-export default class UploadRules extends Vue {
+export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
   // Refs
   $refs!: {
     confirmRulesChk: FormIF
   }
 
   readonly INPUT_FILE_LABEL = 'Rules of Association'
-  protected hasValidUploadFile = false
-  protected hasRulesConfirmed = false
-  protected rulesConfirmed = false
-  protected fileUploadCustomErrorMsg = ''
-  protected uploadRulesDoc: File = null
-  protected uploadRulesDocKey: string = null
-  protected helpToggle = false
 
-  @Getter getShowErrors!: boolean
-  @Getter getNameRequestApprovedName!: string
-  @Getter getCreateRulesResource!: CreateRulesResourceIF
-  @Getter getCreateRulesStep!: CreateRulesIF
-  @Getter getUserKeycloakGuid!: string
+  // Local variables
+  hasValidUploadFile = false
+  hasRulesConfirmed = false
+  rulesConfirmed = false
+  fileUploadCustomErrorMsg = ''
+  uploadRulesDoc = null as File
+  uploadRulesDocKey = null as string
+  helpToggle = false
 
-  @Action setRules!: ActionBindingIF
-  @Action setRulesStepValidity!: ActionBindingIF
+  @Getter(useStore) getCreateRulesResource!: CreateRulesResourceIF
+  @Getter(useStore) getCreateRulesStep!: CreateRulesIF
+  @Getter(useStore) getNameRequestApprovedName!: string
+  @Getter(useStore) getShowErrors!: boolean
+  @Getter(useStore) getUserKeycloakGuid!: string
+
+  @Action(useStore) setRules!: ActionBindingIF
+  @Action(useStore) setRulesStepValidity!: ActionBindingIF
 
   // Enum for template
   readonly RouteNames = RouteNames
@@ -267,12 +265,12 @@ export default class UploadRules extends Vue {
     this.uploadRulesDocKey = null
   }
 
-  protected isFileUploadValidFn (val) {
+  isFileUploadValidFn (val) {
     this.hasValidUploadFile = val
     this.updateRulesStepValidity()
   }
 
-  protected async fileSelected (file) {
+  async fileSelected (file) {
     // reset state of file uploader to ensure not in manual error mode
     this.fileUploadCustomErrorMsg = ''
     if (file) {
@@ -287,7 +285,7 @@ export default class UploadRules extends Vue {
       this.uploadRulesDocKey = null
       this.setRules({
         ...this.getCreateRulesStep,
-        rulesDoc: null,
+        rulesFile: null,
         docKey: null
       })
     }
@@ -303,14 +301,14 @@ export default class UploadRules extends Vue {
       const res = await this.uploadToUrl(doc.preSignedUrl, this.uploadRulesDoc, doc.key, this.getUserKeycloakGuid)
 
       if (res && res.status === 200) {
-        const rulesDoc = {
+        const rulesFile = {
           name: this.uploadRulesDoc.name,
           lastModified: this.uploadRulesDoc.lastModified,
           size: this.uploadRulesDoc.size
         }
         this.setRules({
           ...this.getCreateRulesStep,
-          rulesDoc,
+          rulesFile,
           docKey: doc.key
         })
       } else {
@@ -335,7 +333,7 @@ export default class UploadRules extends Vue {
     this.setRulesStepValidity(validationDetail)
   }
 
-  protected onRulesConfirmedChange (rulesConfirmed: boolean): void {
+  onRulesConfirmedChange (rulesConfirmed: boolean): void {
     this.hasRulesConfirmed = rulesConfirmed
     this.updateRulesStepValidity()
     this.setRules({
@@ -346,7 +344,7 @@ export default class UploadRules extends Vue {
 
   /** Called when component is created. */
   created (): void {
-    this.uploadRulesDoc = this.getCreateRulesStep.rulesDoc
+    this.uploadRulesDoc = this.getCreateRulesStep.rulesFile
     this.uploadRulesDocKey = this.getCreateRulesStep.docKey
     this.rulesConfirmed = this.getCreateRulesStep.rulesConfirmed
     this.hasValidUploadFile = !!this.uploadRulesDocKey

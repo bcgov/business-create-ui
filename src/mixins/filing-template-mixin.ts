@@ -1,13 +1,13 @@
-import { Component } from 'vue-property-decorator'
-import { Getter, Action } from 'vuex-class'
+import { Component, Mixins } from 'vue-property-decorator'
+import { Getter, Action } from 'pinia-class'
+import { useStore } from '@/store/store'
 import { DateMixin } from '@/mixins'
-import { ActionBindingIF, BusinessIF, ContactPointIF, CertifyIF, CompletingPartyIF, CourtOrderStepIF,
+import { ActionBindingIF, ContactPointIF, CertifyIF, CompletingPartyIF, CourtOrderStepIF,
   CreateMemorandumIF, CreateResolutionIF, CreateRulesIF, DefineCompanyIF, DissolutionFilingIF,
-  DissolutionStatementIF, DocIF, DocumentDeliveryIF, EffectiveDateTimeIF, EmptyNaics,
-  IncorporationAgreementIF, IncorporationFilingIF, NameRequestFilingIF, NameTranslationIF, OrgPersonIF,
-  PartyIF, PeopleAndRoleIF, RegistrationFilingIF, RegistrationStateIF, RestorationFilingIF,
-  RestorationStateIF, ShareStructureIF, SpecialResolutionIF, StaffPaymentStepIF, UploadAffidavitIF }
-  from '@/interfaces'
+  DissolutionStatementIF, DocumentDeliveryIF, EffectiveDateTimeIF, EmptyNaics, IncorporationAgreementIF,
+  IncorporationFilingIF, NameRequestFilingIF, NameTranslationIF, OfficeAddressIF, OrgPersonIF, PartyIF,
+  PeopleAndRoleIF, RegistrationFilingIF, RegistrationStateIF, RestorationFilingIF, RestorationStateIF,
+  ShareStructureIF, SpecialResolutionIF, StaffPaymentStepIF, UploadAffidavitIF } from '@/interfaces'
 import { DissolutionTypes, EffectOfOrders, FilingTypes, PartyTypes, RoleTypes, StaffPaymentOptions }
   from '@/enums'
 import { CorpTypeCd, CorrectNameOptions } from '@bcrs-shared-components/enums/'
@@ -16,103 +16,112 @@ import { CorpTypeCd, CorrectNameOptions } from '@bcrs-shared-components/enums/'
  * Mixin that provides the integration with the Legal API.
  */
 @Component({})
-export default class FilingTemplateMixin extends DateMixin {
-  @Getter getAddPeopleAndRoleStep!: PeopleAndRoleIF
-  @Getter getAffidavitStep!: UploadAffidavitIF
-  @Getter getBusiness!: BusinessIF
-  @Getter getBusinessContact!: ContactPointIF
-  @Getter getBusinessFoundingDate!: string
-  @Getter getBusinessId!: string
-  @Getter getBusinessLegalName!: string
-  @Getter getCertifyState!: CertifyIF
-  @Getter getCompletingParty!: CompletingPartyIF
-  @Getter getCorrectNameOption!: CorrectNameOptions
-  @Getter getCourtOrderStep!: CourtOrderStepIF
-  @Getter getCreateMemorandumStep!: CreateMemorandumIF
-  @Getter getCreateRulesStep!: CreateRulesIF
-  @Getter getCreateResolutionStep!: CreateResolutionIF
-  @Getter getCreateShareStructureStep!: ShareStructureIF
-  @Getter getCurrentDate!: string
-  @Getter getDefineCompanyStep!: DefineCompanyIF
-  @Getter getDissolutionDate!: string
-  @Getter getDissolutionCustodian!: OrgPersonIF
-  @Getter getDissolutionStatementStep!: DissolutionStatementIF
-  @Getter getDissolutionType!: DissolutionTypes
-  @Getter getDocumentDelivery!: DocumentDeliveryIF
-  @Getter getEffectiveDateTime!: EffectiveDateTimeIF
-  @Getter getEntityType!: CorpTypeCd
-  @Getter getFilingId!: number
-  @Getter getFolioNumber!: string
-  @Getter getIncorporationAgreementStep!: IncorporationAgreementIF
-  @Getter getMemorandum!: any
-  @Getter getNameRequestApprovedName!: string
-  @Getter getNameRequestNumber!: string
-  @Getter getNameTranslations!: NameTranslationIF[]
-  @Getter getRegistration!: RegistrationStateIF
-  @Getter getResolution!: any
-  @Getter getRestoration!: RestorationStateIF
-  @Getter getStaffPaymentStep!: StaffPaymentStepIF
-  @Getter getTempId!: string
-  @Getter getTransactionalFolioNumber!: string
-  @Getter isPremiumAccount!: boolean
-  @Getter isRoleStaff!: boolean
-  @Getter isTypeCoop!: boolean
-  @Getter isTypeFirm!: boolean
-  @Getter isTypeSoleProp!: boolean
+export default class FilingTemplateMixin extends Mixins(DateMixin) {
+  @Getter(useStore) getAddPeopleAndRoleStep!: PeopleAndRoleIF
+  @Getter(useStore) getAffidavitStep!: UploadAffidavitIF
+  @Getter(useStore) getBusinessContact!: ContactPointIF
+  @Getter(useStore) getBusinessFoundingDate!: string
+  @Getter(useStore) getBusinessId!: string
+  @Getter(useStore) getBusinessLegalName!: string
+  @Getter(useStore) getBusinessLegalType!: CorpTypeCd
+  @Getter(useStore) getBusinessOfficeAddress!: OfficeAddressIF
+  @Getter(useStore) getCertifyState!: CertifyIF
+  @Getter(useStore) getCompletingParty!: CompletingPartyIF
+  @Getter(useStore) getCorrectNameOption!: CorrectNameOptions
+  @Getter(useStore) getCourtOrderStep!: CourtOrderStepIF
+  @Getter(useStore) getCreateMemorandumStep!: CreateMemorandumIF
+  @Getter(useStore) getCreateRulesStep!: CreateRulesIF
+  @Getter(useStore) getCreateResolutionStep!: CreateResolutionIF
+  @Getter(useStore) getCreateShareStructureStep!: ShareStructureIF
+  @Getter(useStore) getCurrentDate!: string
+  @Getter(useStore) getDefineCompanyStep!: DefineCompanyIF
+  @Getter(useStore) getDissolutionDate!: string
+  @Getter(useStore) getDissolutionCustodian!: OrgPersonIF
+  @Getter(useStore) getDissolutionStatementStep!: DissolutionStatementIF
+  @Getter(useStore) getDissolutionType!: DissolutionTypes
+  @Getter(useStore) getDocumentDelivery!: DocumentDeliveryIF
+  @Getter(useStore) getEffectiveDateTime!: EffectiveDateTimeIF
+  @Getter(useStore) getEntityType!: CorpTypeCd
+  @Getter(useStore) getFilingId!: number
+  @Getter(useStore) getFolioNumber!: string
+  @Getter(useStore) getIncorporationAgreementStep!: IncorporationAgreementIF
+  @Getter(useStore) getMemorandum!: any
+  @Getter(useStore) getNameRequestApprovedName!: string
+  @Getter(useStore) getNameRequestNumber!: string
+  @Getter(useStore) getNameTranslations!: NameTranslationIF[]
+  @Getter(useStore) getRegistration!: RegistrationStateIF
+  @Getter(useStore) getResolution!: any
+  @Getter(useStore) getRestoration!: RestorationStateIF
+  @Getter(useStore) getStaffPaymentStep!: StaffPaymentStepIF
+  @Getter(useStore) getTempId!: string
+  @Getter(useStore) getTransactionalFolioNumber!: string
+  @Getter(useStore) isPremiumAccount!: boolean
+  @Getter(useStore) isRoleStaff!: boolean
+  @Getter(useStore) isTypeCoop!: boolean
+  @Getter(useStore) isTypeFirm!: boolean
+  @Getter(useStore) isTypeSoleProp!: boolean
 
-  @Action setAffidavit!: ActionBindingIF
-  @Action setBusinessAddress!: ActionBindingIF
-  @Action setBusinessContact!: ActionBindingIF
-  @Action setCertifyState!: ActionBindingIF
-  @Action setCooperativeType!: ActionBindingIF
-  @Action setCorrectNameOption!: ActionBindingIF
-  @Action setCourtOrderFileNumber!: ActionBindingIF
-  @Action setCustodianOfRecords!: ActionBindingIF
-  @Action setDefineCompanyStepValidity!: ActionBindingIF
-  @Action setDissolutionDate!: ActionBindingIF
-  @Action setDissolutionStatementStepData!: ActionBindingIF
-  @Action setDissolutionType!: ActionBindingIF
-  @Action setDocumentOptionalEmail!: ActionBindingIF
-  @Action setEffectiveDate!: ActionBindingIF
-  @Action setEntityType!: ActionBindingIF
-  @Action setFilingId!: ActionBindingIF
-  @Action setFolioNumber!: ActionBindingIF
-  @Action setIncorporationAgreementStepData!: ActionBindingIF
-  @Action setHasPlanOfArrangement!: ActionBindingIF
-  @Action setIsAutoPopulatedBusinessNumber!: ActionBindingIF
-  @Action setIsFutureEffective!: ActionBindingIF
-  @Action setFoundingDate!: ActionBindingIF
-  @Action setLegalName!: ActionBindingIF
-  @Action setMemorandum!: ActionBindingIF
-  @Action setNameRequestApprovedName!: ActionBindingIF
-  @Action setNameTranslations!: ActionBindingIF
-  @Action setOfficeAddresses!: ActionBindingIF
-  @Action setOrgPersonList!: ActionBindingIF
-  @Action setRegistrationBusinessAddress!: ActionBindingIF
-  @Action setRegistrationBusinessNumber!: ActionBindingIF
-  @Action setRegistrationBusinessType!: ActionBindingIF
-  @Action setRegistrationBusinessTypeConfirm!: ActionBindingIF
-  @Action setRegistrationFeeAcknowledgement!: ActionBindingIF
-  @Action setRegistrationNaics!: ActionBindingIF
-  @Action setRegistrationStartDate!: ActionBindingIF
-  @Action setResolution!: ActionBindingIF
-  @Action setRestorationApplicationDate!: ActionBindingIF
-  @Action setRestorationApprovalType!: ActionBindingIF
-  @Action setRestorationCourtOrder!: ActionBindingIF
-  @Action setRestorationExpiry!: ActionBindingIF
-  @Action setRestorationNoticeDate!: ActionBindingIF
-  @Action setRestorationRelationships!: ActionBindingIF
-  @Action setRestorationType!: ActionBindingIF
-  @Action setRules!: ActionBindingIF
-  @Action setShareClasses!: ActionBindingIF
-  @Action setStaffPayment!: ActionBindingIF
-  @Action setTransactionalFolioNumber!: ActionBindingIF
+  @Action(useStore) setAffidavit!: ActionBindingIF
+  @Action(useStore) setBusinessAddress!: ActionBindingIF
+  @Action(useStore) setBusinessContact!: ActionBindingIF
+  @Action(useStore) setCertifyState!: ActionBindingIF
+  @Action(useStore) setCooperativeType!: ActionBindingIF
+  @Action(useStore) setCorrectNameOption!: ActionBindingIF
+  @Action(useStore) setCourtOrderFileNumber!: ActionBindingIF
+  @Action(useStore) setCustodianOfRecords!: ActionBindingIF
+  @Action(useStore) setDefineCompanyStepValidity!: ActionBindingIF
+  @Action(useStore) setDissolutionDate!: ActionBindingIF
+  @Action(useStore) setDissolutionStatementStepData!: ActionBindingIF
+  @Action(useStore) setDissolutionType!: ActionBindingIF
+  @Action(useStore) setDocumentOptionalEmail!: ActionBindingIF
+  @Action(useStore) setEffectiveDate!: ActionBindingIF
+  @Action(useStore) setEntityType!: ActionBindingIF
+  @Action(useStore) setFilingId!: ActionBindingIF
+  @Action(useStore) setFolioNumber!: ActionBindingIF
+  @Action(useStore) setIncorporationAgreementStepData!: ActionBindingIF
+  @Action(useStore) setHasPlanOfArrangement!: ActionBindingIF
+  @Action(useStore) setIsAutoPopulatedBusinessNumber!: ActionBindingIF
+  @Action(useStore) setIsFutureEffective!: ActionBindingIF
+  @Action(useStore) setFoundingDate!: ActionBindingIF
+  @Action(useStore) setLegalName!: ActionBindingIF
+  @Action(useStore) setMemorandum!: ActionBindingIF
+  @Action(useStore) setNameRequestApprovedName!: ActionBindingIF
+  @Action(useStore) setNameTranslations!: ActionBindingIF
+  @Action(useStore) setOfficeAddresses!: ActionBindingIF
+  @Action(useStore) setOrgPersonList!: ActionBindingIF
+  @Action(useStore) setRegistrationBusinessAddress!: ActionBindingIF
+  @Action(useStore) setRegistrationBusinessNumber!: ActionBindingIF
+  @Action(useStore) setRegistrationBusinessType!: ActionBindingIF
+  @Action(useStore) setRegistrationBusinessTypeConfirm!: ActionBindingIF
+  @Action(useStore) setRegistrationFeeAcknowledgement!: ActionBindingIF
+  @Action(useStore) setRegistrationNaics!: ActionBindingIF
+  @Action(useStore) setRegistrationStartDate!: ActionBindingIF
+  @Action(useStore) setResolution!: ActionBindingIF
+  @Action(useStore) setRestorationApplicationDate!: ActionBindingIF
+  @Action(useStore) setRestorationApprovalType!: ActionBindingIF
+  @Action(useStore) setRestorationCourtOrder!: ActionBindingIF
+  @Action(useStore) setRestorationExpiry!: ActionBindingIF
+  @Action(useStore) setRestorationNoticeDate!: ActionBindingIF
+  @Action(useStore) setRestorationRelationships!: ActionBindingIF
+  @Action(useStore) setRestorationType!: ActionBindingIF
+  @Action(useStore) setRules!: ActionBindingIF
+  @Action(useStore) setShareClasses!: ActionBindingIF
+  @Action(useStore) setStaffPayment!: ActionBindingIF
+  @Action(useStore) setTransactionalFolioNumber!: ActionBindingIF
 
   /**
    * Builds an incorporation filing from store data. Used when saving a filing.
    * @returns the filing body to save
    */
   buildIncorporationFiling (): IncorporationFilingIF {
+    function fixNullAddressType (orgPeople: OrgPersonIF[]): OrgPersonIF[] {
+      return orgPeople.map(p => {
+        if (p.deliveryAddress?.addressType === null) delete p.deliveryAddress.addressType
+        if (p.mailingAddress?.addressType === null) delete p.mailingAddress.addressType
+        return p
+      })
+    }
+
     // Build the main filing.
     const filing: IncorporationFilingIF = {
       header: {
@@ -141,7 +150,7 @@ export default class FilingTemplateMixin extends DateMixin {
             ? { extension: +this.getBusinessContact.extension }
             : {}
         },
-        parties: this.getAddPeopleAndRoleStep.orgPeople
+        parties: fixNullAddressType(this.getAddPeopleAndRoleStep.orgPeople)
       }
     }
 
@@ -151,14 +160,14 @@ export default class FilingTemplateMixin extends DateMixin {
         filing.incorporationApplication.cooperative = {
           cooperativeAssociationType: this.getDefineCompanyStep.cooperativeType,
           rulesFileKey: this.getCreateRulesStep.docKey || null,
-          rulesFileName: this.getCreateRulesStep.rulesDoc?.name || null,
-          rulesFileSize: this.getCreateRulesStep.rulesDoc?.size || null,
-          rulesFileLastModified: this.getCreateRulesStep.rulesDoc?.lastModified || null,
+          rulesFileName: this.getCreateRulesStep.rulesFile?.name || null,
+          rulesFileSize: this.getCreateRulesStep.rulesFile?.size || null,
+          rulesFileLastModified: this.getCreateRulesStep.rulesFile?.lastModified || null,
           rulesConfirmed: this.getCreateRulesStep.rulesConfirmed || false,
           memorandumFileKey: this.getCreateMemorandumStep.docKey || null,
-          memorandumFileName: this.getCreateMemorandumStep?.memorandumDoc?.name || null,
-          memorandumFileSize: this.getCreateMemorandumStep?.memorandumDoc?.size || null,
-          memorandumFileLastModified: this.getCreateMemorandumStep?.memorandumDoc?.lastModified || null,
+          memorandumFileName: this.getCreateMemorandumStep?.memorandumFile?.name || null,
+          memorandumFileSize: this.getCreateMemorandumStep?.memorandumFile?.size || null,
+          memorandumFileLastModified: this.getCreateMemorandumStep?.memorandumFile?.lastModified || null,
           memorandumConfirmed: this.getCreateMemorandumStep.memorandumConfirmed || false
         }
         break
@@ -240,13 +249,13 @@ export default class FilingTemplateMixin extends DateMixin {
         this.setCooperativeType(draftFiling.incorporationApplication.cooperative?.cooperativeAssociationType)
 
         // restore Rules
-        let rulesDoc = null as DocIF
+        let rulesFile = null as File
         if (draftFiling.incorporationApplication.cooperative?.rulesFileKey) {
-          rulesDoc = {
+          rulesFile = {
             name: draftFiling.incorporationApplication.cooperative?.rulesFileName,
             lastModified: draftFiling.incorporationApplication.cooperative?.rulesFileLastModified,
             size: draftFiling.incorporationApplication.cooperative?.rulesFileSize
-          }
+          } as File
         }
         const createRules: CreateRulesIF = {
           validationDetail: {
@@ -254,19 +263,19 @@ export default class FilingTemplateMixin extends DateMixin {
             validationItemDetails: []
           },
           rulesConfirmed: draftFiling.incorporationApplication.cooperative?.rulesConfirmed,
-          rulesDoc,
+          rulesFile,
           docKey: draftFiling.incorporationApplication.cooperative?.rulesFileKey
         }
         this.setRules(createRules)
 
         // restore Memorandum
-        let memorandumDoc = null as DocIF
+        let memorandumFile = null as File
         if (draftFiling.incorporationApplication.cooperative?.memorandumFileKey) {
-          memorandumDoc = {
+          memorandumFile = {
             name: draftFiling.incorporationApplication.cooperative?.memorandumFileName,
             lastModified: draftFiling.incorporationApplication.cooperative?.memorandumFileLastModified,
             size: draftFiling.incorporationApplication.cooperative?.memorandumFileSize
-          }
+          } as File
         }
         const createMemorandum: CreateMemorandumIF = {
           validationDetail: {
@@ -274,7 +283,7 @@ export default class FilingTemplateMixin extends DateMixin {
             validationItemDetails: []
           },
           memorandumConfirmed: draftFiling.incorporationApplication.cooperative?.memorandumConfirmed,
-          memorandumDoc,
+          memorandumFile,
           docKey: draftFiling.incorporationApplication.cooperative?.memorandumFileKey
         }
         this.setMemorandum(createMemorandum)
@@ -563,9 +572,9 @@ export default class FilingTemplateMixin extends DateMixin {
     this.setFilingId(+draftFiling.header.filingId)
 
     // restore Business data
-    this.setEntityType(draftFiling.business.legalType)
-    this.setLegalName(draftFiling.business.legalName)
-    this.setFoundingDate(draftFiling.business.foundingDate)
+    this.setEntityType(draftFiling.business.legalType || this.getBusinessLegalType)
+    this.setLegalName(draftFiling.business.legalName || this.getBusinessLegalName)
+    this.setFoundingDate(draftFiling.business.foundingDate || this.getBusinessFoundingDate)
 
     // restore Restoration data
     if (draftFiling.restoration.applicationDate) {
@@ -691,7 +700,7 @@ export default class FilingTemplateMixin extends DateMixin {
       dissolution: {
         dissolutionDate: this.getCurrentDate,
         affidavitConfirmed: this.getAffidavitStep.validationDetail.validationItemDetails[0]?.valid || false,
-        custodialOffice: this.getBusiness.officeAddress,
+        custodialOffice: this.getBusinessOfficeAddress,
         dissolutionType: this.getDissolutionType,
         parties: [{
           ...this.getDissolutionCustodian,
@@ -712,9 +721,9 @@ export default class FilingTemplateMixin extends DateMixin {
           ...filing.dissolution,
           dissolutionStatementType: this.getDissolutionStatementStep.dissolutionStatementType || null,
           affidavitFileKey: this.getAffidavitStep.docKey || null,
-          affidavitFileName: this.getAffidavitStep.affidavitDoc?.name || null,
-          affidavitFileSize: this.getAffidavitStep.affidavitDoc?.size || null,
-          affidavitFileLastModified: this.getAffidavitStep.affidavitDoc?.lastModified || null
+          affidavitFileName: this.getAffidavitStep.affidavitFile?.name || null,
+          affidavitFileSize: this.getAffidavitStep.affidavitFile?.size || null,
+          affidavitFileLastModified: this.getAffidavitStep.affidavitFile?.lastModified || null
         }
         filing.specialResolution = {
           ...filing.specialResolution,
@@ -803,9 +812,9 @@ export default class FilingTemplateMixin extends DateMixin {
     this.setFilingId(+draftFiling.header.filingId)
 
     // restore Business data
-    this.setEntityType(draftFiling.business.legalType)
-    this.setLegalName(draftFiling.business.legalName)
-    this.setFoundingDate(draftFiling.business.foundingDate)
+    this.setEntityType(draftFiling.business.legalType || this.getBusinessLegalType)
+    this.setLegalName(draftFiling.business.legalName || this.getBusinessLegalName)
+    this.setFoundingDate(draftFiling.business.foundingDate || this.getBusinessFoundingDate)
 
     // restore Dissolution data
     this.setBusinessAddress(draftFiling.dissolution.custodialOffice)
@@ -853,13 +862,13 @@ export default class FilingTemplateMixin extends DateMixin {
     // }
 
     // restore Affidavit
-    let affidavitDoc = null as DocIF
+    let affidavitFile = null as File
     if (draftFiling.dissolution?.affidavitFileKey) {
-      affidavitDoc = {
+      affidavitFile = {
         name: draftFiling.dissolution.affidavitFileName,
         lastModified: draftFiling.dissolution.affidavitFileLastModified,
         size: draftFiling.dissolution.affidavitFileSize
-      }
+      } as File
     }
     const uploadAffidavit: UploadAffidavitIF = {
       validationDetail: {
@@ -867,7 +876,7 @@ export default class FilingTemplateMixin extends DateMixin {
         validationItemDetails: []
       },
       affidavitConfirmed: draftFiling.dissolution?.affidavitConfirmed,
-      affidavitDoc,
+      affidavitFile,
       docKey: draftFiling.dissolution?.affidavitFileKey
     }
     this.setAffidavit(uploadAffidavit)

@@ -115,7 +115,7 @@
 
       <p class="section-description mt-2">{{getCreateResolutionResource.resolutionDateSection.description}}</p>
 
-      <div class="mt-4" :class="{ 'invalid-section': getShowErrors && !this.isResolutionDateValid }">
+      <div class="mt-4" :class="{ 'invalid-section': getShowErrors && !isResolutionDateValid }">
         <v-card flat id="resolution-date-card" class="py-8 px-6">
           <v-row no-gutters>
             <v-col cols="12" sm="3" class="pr-4 d-none d-sm-block">
@@ -149,7 +149,7 @@
 
       <p class="section-description mt-2">{{getCreateResolutionResource.resolutionTextSection.description}}</p>
 
-      <div class="mt-4" :class="{ 'invalid-section': getShowErrors && !this.isResolutionTextValid }">
+      <div class="mt-4" :class="{ 'invalid-section': getShowErrors && !isResolutionTextValid }">
         <v-card flat id="resolution-text-card" class="py-8 px-6">
           <v-row no-gutters>
             <v-col cols="12" sm="3" class="pr-4 d-none d-sm-block">
@@ -186,7 +186,7 @@
       <p class="section-description mt-2">{{getCreateResolutionResource.resolutionSignatureSection.description}}</p>
 
       <div class="mt-4"
-        :class="{ 'invalid-section': getShowErrors && (!this.isSigningPersonValid || !this.isSigningDateValid) }"
+        :class="{ 'invalid-section': getShowErrors && (!isSigningPersonValid || !isSigningDateValid) }"
       >
         <v-card flat id="resolution-signature-card" class="py-8 px-6">
           <v-row no-gutters>
@@ -304,9 +304,9 @@
 
 <script lang="ts">
 // Libraries
-import Vue from 'vue'
-import { Component, Watch } from 'vue-property-decorator'
-import { Action, Getter } from 'vuex-class'
+import { Component, Mixins, Watch } from 'vue-property-decorator'
+import { Action, Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 
 // Shared Components
 import { DatePicker as DatePickerShared } from '@bcrs-shared-components/date-picker'
@@ -330,13 +330,9 @@ import { VuetifyRuleFunction } from '@/types'
 @Component({
   components: {
     DatePickerShared
-  },
-  mixins: [
-    CommonMixin,
-    DateMixin
-  ]
+  }
 })
-export default class CompleteResolution extends Vue {
+export default class CompleteResolution extends Mixins(CommonMixin, DateMixin) {
   // Refs
   $refs!: {
     resolutionDatePickerRef: DatePickerShared
@@ -351,28 +347,29 @@ export default class CompleteResolution extends Vue {
     confirmResolutionChkRef: FormIF
   }
 
+  // Constants
   readonly MAX_RESOLUTION_TEXT_LENGTH = 1000
-  private resolutionText = ''
-  private resolutionConfirmed = false
-  private helpToggle = false
   readonly PLACEHOLDER_LEGAL_NAME = 'legal_name'
   readonly PLACEHOLDER_LEGAL_NAME_INLINE = 'legal_name_inline'
-  private signingPerson = { ...EmptyPerson } as PersonIF
 
-  // Date properties
-  private resolutionDateText = ''
-  private signatureDateText = ''
+  // Local variables
+  resolutionText = ''
+  resolutionConfirmed = false
+  helpToggle = false
+  signingPerson = { ...EmptyPerson } as PersonIF
+  resolutionDateText = ''
+  signatureDateText = ''
   private foundingDate = null as Date
 
-  @Getter getShowErrors!: boolean
-  @Getter isTypeCoop!: boolean
-  @Getter getCreateResolutionResource!: CreateResolutionResourceIF
-  @Getter getCreateResolutionStep!: CreateResolutionIF
-  @Getter getBusinessLegalName!: string
-  @Getter getBusinessFoundingDate!: string
+  @Getter(useStore) getBusinessFoundingDate!: string
+  @Getter(useStore) getBusinessLegalName!: string
+  @Getter(useStore) getCreateResolutionResource!: CreateResolutionResourceIF
+  @Getter(useStore) getCreateResolutionStep!: CreateResolutionIF
+  @Getter(useStore) getShowErrors!: boolean
+  @Getter(useStore) isTypeCoop!: boolean
 
-  @Action setResolution!: ActionBindingIF
-  @Action setResolutionStepValidationDetail!: ActionBindingIF
+  @Action(useStore) setResolution!: ActionBindingIF
+  @Action(useStore) setResolutionStepValidationDetail!: ActionBindingIF
 
   // Enums for template
   readonly RouteNames = RouteNames
@@ -382,6 +379,10 @@ export default class CompleteResolution extends Vue {
 
   // Validation Rules
   readonly Rules = Rules
+
+  readonly confirmCompletionResolution = [
+    (v) => { return !!v }
+  ]
 
   get documentURL (): string {
     const docUrl = sessionStorage.getItem('BASE_URL') +
@@ -394,7 +395,7 @@ export default class CompleteResolution extends Vue {
     return this.getShowErrors && !this.isConfirmResolutionValid
   }
 
-  protected previewImageSource (): string {
+  previewImageSource (): string {
     // Note: the image file path did not resolve correctly when using the require function directly.  In order
     // to get the image path resolving correctly, needed to get the image context first and use that to build
     // the final image file path
@@ -501,10 +502,6 @@ export default class CompleteResolution extends Vue {
     ]
   }
 
-  protected confirmCompletionResolution = [
-    (v) => { return !!v }
-  ]
-
   get isResolutionDateValid (): boolean {
     return this.$refs.resolutionDatePickerRef?.isDateValid()
   }
@@ -591,7 +588,7 @@ export default class CompleteResolution extends Vue {
     }
   }
 
-  protected async onResolutionConfirmedChange (resolutionConfirmed: boolean): Promise<void> {
+  async onResolutionConfirmedChange (resolutionConfirmed: boolean): Promise<void> {
     // This is required as there are timing issues between this component and the CompleteResolutionSummary
     // component.  The CompleteResolutionSummary isn't always able to detect that the confirm checkbox
     // value has changed without using nextTick()
@@ -646,7 +643,7 @@ export default class CompleteResolution extends Vue {
     }
   }
 
-  protected async onResolutionDateSync (val: string): Promise<void> {
+  async onResolutionDateSync (val: string): Promise<void> {
     await this.$nextTick()
     this.resolutionDateText = val
     this.setResolution({
@@ -663,7 +660,7 @@ export default class CompleteResolution extends Vue {
     this.updateResolutionStepValidationDetail()
   }
 
-  protected onResolutionTextChanged (val: string) {
+  onResolutionTextChanged (val: string) {
     this.setResolution({
       ...this.getCreateResolutionStep,
       resolutionText: val
@@ -676,7 +673,7 @@ export default class CompleteResolution extends Vue {
   // v-observe-visibility property, we are able to force a re-calculation of the text area height when a user navigates
   // to the complete resolution step from another step for the first time. This results in the text area being rendered
   // to the appropriate height.
-  protected onResolutionVisibilityChanged (isVisible, entry) {
+  onResolutionVisibilityChanged (isVisible: boolean, _entry): void {
     if (isVisible) {
       this.$refs.resolutionTextRef.calculateInputHeight()
     }
@@ -694,7 +691,7 @@ export default class CompleteResolution extends Vue {
     }
   }
 
-  protected async onSigningDateSync (val: string): Promise<void> {
+  async onSigningDateSync (val: string): Promise<void> {
     await this.$nextTick()
     this.signatureDateText = val
     this.setResolution({

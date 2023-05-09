@@ -9,9 +9,9 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component, Emit, Prop } from 'vue-property-decorator'
-import { Action, Getter } from 'vuex-class'
+import { Component, Emit, Prop, Vue } from 'vue-property-decorator'
+import { Action, Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 import { ActionBindingIF, RegistrationStateIF } from '@/interfaces'
 import { NaicsServices } from '@/services/'
 import { NatureOfBusiness as NatureOfBusinessShared } from '@bcrs-shared-components/nature-of-business'
@@ -25,14 +25,14 @@ import { NatureOfBusiness as NatureOfBusinessShared } from '@bcrs-shared-compone
 export default class NatureOfBusiness extends Vue {
   @Prop({ required: true }) readonly showErrors!: boolean
 
-  @Getter getRegistration!: RegistrationStateIF
+  @Getter(useStore) getRegistration!: RegistrationStateIF
 
-  @Action setRegistrationNaics!: ActionBindingIF
+  @Action(useStore) setRegistrationNaics!: ActionBindingIF
 
   readonly NaicsServices = NaicsServices
 
   @Emit('valid')
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  private emitValid (val: boolean): void {}
+  emitValid (val: boolean): void {}
 }
 </script>

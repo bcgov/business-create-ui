@@ -51,9 +51,9 @@
 
 <script lang="ts">
 // Libraries
-import Vue from 'vue'
-import { Component, Prop } from 'vue-property-decorator'
-import { Action, Getter } from 'vuex-class'
+import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Action, Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 
 // Interfaces & enums
 import { ActionBindingIF, DissolutionStatementIF, KeyValueIF } from '@/interfaces'
@@ -64,13 +64,14 @@ export default class DissolutionStatement extends Vue {
   @Prop({ default: false }) readonly isSummary!: boolean
 
   // Global getters
-  @Getter getDissolutionStatements!: Array<KeyValueIF>
-  @Getter getDissolutionStatementStep!: DissolutionStatementIF
+  @Getter(useStore) getDissolutionStatements!: Array<KeyValueIF>
+  @Getter(useStore) getDissolutionStatementStep!: DissolutionStatementIF
 
   // Global setters
-  @Action setDissolutionStatementStepData!: ActionBindingIF
+  @Action(useStore) setDissolutionStatementStepData!: ActionBindingIF
 
-  protected dissolutionStatementType = null as DissolutionStatementTypes
+  // Local variable
+  dissolutionStatementType = null as DissolutionStatementTypes
 
   /** Called when component is created. */
   created (): void {
@@ -88,7 +89,7 @@ export default class DissolutionStatement extends Vue {
     return value || '(Not entered)'
   }
 
-  protected changeDissolutionStatementType (): void {
+  changeDissolutionStatementType (): void {
     this.setDissolutionStatementStepData({
       valid: !!this.dissolutionStatementType,
       dissolutionStatementType: this.dissolutionStatementType

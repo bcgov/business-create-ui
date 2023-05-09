@@ -47,8 +47,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component, Prop, Emit } from 'vue-property-decorator'
+import { Component, Emit, Prop, Vue } from 'vue-property-decorator'
 
 @Component({})
 export default class FilingSurveyDialog extends Vue {
@@ -59,9 +58,9 @@ export default class FilingSurveyDialog extends Vue {
   @Prop({ default: '' }) readonly attach!: string
 
   // Pass events to parent.
-  @Emit() protected no (): void {}
-  @Emit() protected yes (): void {}
-  @Emit('doNotShow') protected doNotShow (val: boolean): void {}
+  @Emit() no (): void {}
+  @Emit() yes (): void {}
+  @Emit('doNotShow') doNotShow (val: boolean): void {}
 }
 </script>
 

@@ -81,9 +81,9 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component } from 'vue-property-decorator'
-import { Getter } from 'vuex-class'
+import { Component, Mixins } from 'vue-property-decorator'
+import { Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 import { NameRequestStates, NrRequestActionCodes } from '@/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/enums/'
 import { NrApplicantIF, NameRequestIF } from '@/interfaces'
@@ -91,13 +91,8 @@ import { CommonMixin, DateMixin } from '@/mixins'
 import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 import { Capitalize } from '@/utils'
 
-@Component({
-  mixins: [
-    CommonMixin,
-    DateMixin
-  ]
-})
-export default class NameRequestInfo extends Vue {
+@Component({})
+export default class NameRequestInfo extends Mixins(CommonMixin, DateMixin) {
   // For template
   readonly NameRequestStates = NameRequestStates
 
@@ -106,11 +101,11 @@ export default class NameRequestInfo extends Vue {
   readonly NOT_REQUIRED_STATE = 'Not Required'
   readonly WAIVED_STATE = 'Waived'
 
-  @Getter getEntityType!: CorpTypeCd
-  @Getter getNameRequest!: NameRequestIF
-  @Getter getNameRequestApprovedName!: string
-  @Getter getNameRequestNumber!: string
-  @Getter isTypeSoleProp: boolean
+  @Getter(useStore) getEntityType!: CorpTypeCd
+  @Getter(useStore) getNameRequest!: NameRequestIF
+  @Getter(useStore) getNameRequestApprovedName!: string
+  @Getter(useStore) getNameRequestNumber!: string
+  @Getter(useStore) isTypeSoleProp: boolean
 
   /** The entity type description.  */
   get getEntityTypeDescription (): string {
@@ -136,15 +131,13 @@ export default class NameRequestInfo extends Vue {
 
   /** The expiration date. */
   get expirationDate (): string {
-    return this.apiToPacificDateTime(this.getNameRequest.expirationDate, true)
+    return this.apiToPacificDateTime(this.getNameRequest.expirationDate)
   }
 
   /** The state. */
-  get state (): NameRequestStates {
-    if (this.getNameRequest.state === NameRequestStates.APPROVED) {
-      return 'Approved'
-    }
-    return Capitalize(this.getNameRequest.state?.toString() || null)
+  get state (): string {
+    const state = this.getNameRequest.state?.toString().split('_').join(' ')
+    return Capitalize(state || '')
   }
 
   /** The condition/consent string. */

@@ -1,15 +1,18 @@
 import Vue from 'vue'
 import Vuelidate from 'vuelidate'
 import Vuetify from 'vuetify'
-import { getVuexStore } from '@/store'
+import { createPinia, setActivePinia } from 'pinia'
+import { useStore } from '@/store/store'
 import { createLocalVue, shallowMount, mount } from '@vue/test-utils'
 import BusinessAddresses from '@/components/Registration/BusinessAddresses.vue'
+import { CorpTypeCd } from '@/enums'
 
 Vue.use(Vuetify)
 Vue.use(Vuelidate)
 
 const vuetify = new Vuetify({})
-const store = getVuexStore()
+setActivePinia(createPinia())
+const store = useStore()
 
 xdescribe('Business Address delivery address <same as> is unchecked by default', () => {
   let wrapper: any
@@ -36,8 +39,8 @@ xdescribe('Business Address delivery address <same as> is unchecked by default',
   }
 
   const CORP_TYPES = [
-    'SP',
-    'GP'
+    CorpTypeCd.SOLE_PROP,
+    CorpTypeCd.PARTNERSHIP
   ]
 
   afterEach(() => {
@@ -47,7 +50,7 @@ xdescribe('Business Address delivery address <same as> is unchecked by default',
   test.each(CORP_TYPES)('display both mailing and delivery addresses when creating for %p', async (corptype) => {
     const localVue = createLocalVue()
     // pre-set entity type when mounting
-    store.state.stateModel.entityType = corptype
+    store.stateModel.entityType = corptype
 
     wrapper = mount(BusinessAddresses, {
       propsData: {
@@ -55,7 +58,6 @@ xdescribe('Business Address delivery address <same as> is unchecked by default',
         isEditing: true
       },
       localVue,
-      store,
       vuetify
     })
 
@@ -105,7 +107,6 @@ xdescribe('Business Addresses', () => {
         isEditing: true
       },
       localVue,
-      store,
       vuetify
     })
   })
@@ -116,7 +117,7 @@ xdescribe('Business Addresses', () => {
 
   beforeAll(() => {
     // init store
-    store.state.stateModel.entityType = 'SP'
+    store.stateModel.entityType = CorpTypeCd.SOLE_PROP
   })
 
   it('does not show the summary when editing', () => {
@@ -185,7 +186,6 @@ xdescribe('same as checkbox resets addresses to default when unchecked - BCOMP',
         isEditing: true
       },
       localVue,
-      store,
       vuetify
     })
   })
@@ -196,7 +196,7 @@ xdescribe('same as checkbox resets addresses to default when unchecked - BCOMP',
 
   beforeAll(() => {
     // init store
-    store.state.stateModel.entityType = 'BEN'
+    store.stateModel.entityType = CorpTypeCd.BENEFIT_COMPANY
   })
 
   it('should reset registered and records delivery addresses', async () => {
@@ -330,7 +330,7 @@ xdescribe('should properly emit valid', () => {
 
   beforeAll(() => {
     // init store
-    store.state.stateModel.entityType = 'BEN'
+    store.stateModel.entityType = CorpTypeCd.BENEFIT_COMPANY
   })
 
   it('should emit valid form', async () => {
@@ -342,7 +342,6 @@ xdescribe('should properly emit valid', () => {
         isEditing: true
       },
       localVue,
-      store,
       vuetify
     })
     await Vue.nextTick()
@@ -359,7 +358,6 @@ xdescribe('should properly emit valid', () => {
         isEditing: true
       },
       localVue,
-      store,
       vuetify
     })
     await Vue.nextTick()
@@ -376,7 +374,6 @@ xdescribe('should properly emit valid', () => {
         isEditing: true
       },
       localVue,
-      store,
       vuetify
     })
     await Vue.nextTick()
@@ -393,7 +390,6 @@ xdescribe('should properly emit valid', () => {
         isEditing: true
       },
       localVue,
-      store,
       vuetify
     })
     await Vue.nextTick()
@@ -410,7 +406,6 @@ xdescribe('should properly emit valid', () => {
         isEditing: true
       },
       localVue,
-      store,
       vuetify
     })
     await Vue.nextTick()
@@ -447,7 +442,6 @@ xdescribe('Business Addresses - Summary', () => {
         isEditing: false
       },
       localVue,
-      store,
       vuetify
     })
   })
@@ -458,7 +452,7 @@ xdescribe('Business Addresses - Summary', () => {
 
   beforeAll(() => {
     // init store
-    store.state.stateModel.nameRequest.entityType = 'BEN'
+    store.stateModel.nameRequest.legalType = CorpTypeCd.BENEFIT_COMPANY
   })
 
   it('displays the summary ui when in summary mode', () => {

@@ -211,9 +211,9 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component } from 'vue-property-decorator'
-import { Getter, Action } from 'vuex-class'
+import { Component, Mixins } from 'vue-property-decorator'
+import { Getter, Action } from 'pinia-class'
+import { useStore } from '@/store/store'
 import { DateMixin } from '@/mixins'
 import AssociationDetails from '@/components/Dissolution/AssociationDetails.vue'
 import { Certify } from '@bcrs-shared-components/certify'
@@ -254,49 +254,46 @@ import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module
     ListPeopleAndRoles,
     DatePickerShared,
     CompletingParty
-  },
-  mixins: [
-    DateMixin
-  ]
+  }
 })
-export default class DissolutionFirm extends Vue {
+export default class DissolutionFirm extends Mixins(DateMixin) {
   // Global getters
-  @Getter getEntityType!: CorpTypeCd
-  @Getter getBusinessLegalName!: string
-  @Getter getBusinessContact!: ContactPointIF
-  @Getter getCertifyState!: CertifyIF
-  @Getter getCompletingPartyStatement!: CompletingPartyStatementIF
-  @Getter getCourtOrderStep!: CourtOrderStepIF
-  @Getter getCurrentDate!: string
-  @Getter getDissolutionCustodianEmail!: string
-  @Getter getDocumentDelivery!: DocumentDeliveryIF
-  @Getter getUserEmail!: string
-  @Getter getValidateSteps!: boolean
-  @Getter isPremiumAccount!: boolean
-  @Getter isRoleStaff!: boolean
-  @Getter isSbcStaff!: boolean
-  @Getter getFolioNumber!: string
-  @Getter getTransactionalFolioNumber!: string
-  @Getter getBusinessFoundingDate!: string
-  @Getter getCompletingParty!: CompletingPartyIF
-  @Getter getDissolutionDate!: string
-  @Getter getParties!: Array<PartyIF>
-  @Getter isTypeSoleProp: boolean
-  @Getter isTypeFirm: boolean
-  @Getter getStaffPaymentStep!: StaffPaymentStepIF
+  @Getter(useStore) getBusinessContact!: ContactPointIF
+  @Getter(useStore) getBusinessFoundingDate!: string
+  @Getter(useStore) getBusinessLegalName!: string
+  @Getter(useStore) getCertifyState!: CertifyIF
+  @Getter(useStore) getCompletingParty!: CompletingPartyIF
+  @Getter(useStore) getCompletingPartyStatement!: CompletingPartyStatementIF
+  @Getter(useStore) getCourtOrderStep!: CourtOrderStepIF
+  @Getter(useStore) getCurrentDate!: string
+  @Getter(useStore) getDissolutionCustodianEmail!: string
+  @Getter(useStore) getDissolutionDate!: string
+  @Getter(useStore) getDocumentDelivery!: DocumentDeliveryIF
+  @Getter(useStore) getEntityType!: CorpTypeCd
+  @Getter(useStore) getFolioNumber!: string
+  @Getter(useStore) getParties!: Array<PartyIF>
+  @Getter(useStore) getStaffPaymentStep!: StaffPaymentStepIF
+  @Getter(useStore) getTransactionalFolioNumber!: string
+  @Getter(useStore) getUserEmail!: string
+  @Getter(useStore) getValidateSteps!: boolean
+  @Getter(useStore) isPremiumAccount!: boolean
+  @Getter(useStore) isRoleStaff!: boolean
+  @Getter(useStore) isSbcStaff!: boolean
+  @Getter(useStore) isTypeFirm: boolean
+  @Getter(useStore) isTypeSoleProp: boolean
 
   // Global actions
-  @Action setCourtOrderFileNumber!: ActionBindingIF
-  @Action setHasPlanOfArrangement!: ActionBindingIF
-  @Action setCourtOrderValidity!: ActionBindingIF
-  @Action setCertifyState!: ActionBindingIF
-  @Action setDocumentOptionalEmail!: ActionBindingIF
-  @Action setDocumentOptionalEmailValidity!: ActionBindingIF
-  @Action setTransactionalFolioNumber!: ActionBindingIF
-  @Action setTransactionalFolioNumberValidity!: ActionBindingIF
-  @Action setCompletingParty!: ActionBindingIF
-  @Action setCompletingPartyValidity!: ActionBindingIF
-  @Action setDissolutionDate!: ActionBindingIF
+  @Action(useStore) setCertifyState!: ActionBindingIF
+  @Action(useStore) setCompletingParty!: ActionBindingIF
+  @Action(useStore) setCompletingPartyValidity!: ActionBindingIF
+  @Action(useStore) setCourtOrderFileNumber!: ActionBindingIF
+  @Action(useStore) setCourtOrderValidity!: ActionBindingIF
+  @Action(useStore) setDissolutionDate!: ActionBindingIF
+  @Action(useStore) setDocumentOptionalEmail!: ActionBindingIF
+  @Action(useStore) setDocumentOptionalEmailValidity!: ActionBindingIF
+  @Action(useStore) setHasPlanOfArrangement!: ActionBindingIF
+  @Action(useStore) setTransactionalFolioNumber!: ActionBindingIF
+  @Action(useStore) setTransactionalFolioNumberValidity!: ActionBindingIF
 
   // Enum for template
   readonly RouteNames = RouteNames
@@ -365,7 +362,7 @@ export default class DissolutionFirm extends Vue {
   }
 
   /** Handler for Valid change event. */
-  protected onIsCertified (val: boolean): void {
+  onIsCertified (val: boolean): void {
     this.setCertifyState(
       {
         valid: val,
@@ -375,7 +372,7 @@ export default class DissolutionFirm extends Vue {
   }
 
   /** Handler for CertifiedBy change event. */
-  protected onCertifiedBy (val: string): void {
+  onCertifiedBy (val: string): void {
     this.setCertifyState(
       {
         valid: this.getCertifyState.valid,
@@ -385,7 +382,7 @@ export default class DissolutionFirm extends Vue {
   }
 
   /** Dissolution Error */
-  protected dissolutionError (): string {
+  dissolutionError (): string {
     if (this.isTypeFirm && this.getValidateSteps && !this.getDissolutionDate) {
       return 'Business dissolution date is required'
     }
@@ -429,15 +426,15 @@ export default class DissolutionFirm extends Vue {
   }
 
   /** The entity description.  */
-  protected corpTypeDescription (): string {
+  corpTypeDescription (): string {
     return GetCorpFullDescription(this.getEntityType)
   }
 
-  protected onUpdate (cp: CompletingPartyIF): void {
+  onUpdate (cp: CompletingPartyIF): void {
     this.setCompletingParty(cp)
   }
 
-  protected onValid (valid: boolean): void {
+  onValid (valid: boolean): void {
     this.completingPartyValid = valid
     this.setCompletingPartyValidity(valid)
   }

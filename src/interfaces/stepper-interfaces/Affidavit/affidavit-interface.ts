@@ -1,8 +1,8 @@
-import { DocIF, ValidationDetailIF } from '@/interfaces'
+import { ValidationDetailIF } from '@/interfaces'
 
 export interface UploadAffidavitIF {
   validationDetail: ValidationDetailIF
   affidavitConfirmed: boolean
-  affidavitDoc: DocIF
+  affidavitFile: File
   docKey: string
 }

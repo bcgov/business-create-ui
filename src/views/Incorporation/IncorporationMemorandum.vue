@@ -5,9 +5,9 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component, Watch } from 'vue-property-decorator'
-import { Getter } from 'vuex-class'
+import { Component, Mixins, Watch } from 'vue-property-decorator'
+import { Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 import { CreateMemorandumIF } from '@/interfaces'
 import { CommonMixin } from '@/mixins'
 import UploadMemorandum from '@/components/Incorporation/UploadMemorandum.vue'
@@ -16,14 +16,11 @@ import { RouteNames } from '@/enums'
 @Component({
   components: {
     UploadMemorandum
-  },
-  mixins: [
-    CommonMixin
-  ]
+  }
 })
-export default class IncorporationMemorandum extends Vue {
-  @Getter getShowErrors!: boolean
-  @Getter getCreateMemorandumStep!: CreateMemorandumIF
+export default class IncorporationMemorandum extends Mixins(CommonMixin) {
+  @Getter(useStore) getCreateMemorandumStep!: CreateMemorandumIF
+  @Getter(useStore) getShowErrors!: boolean
 
   @Watch('$route')
   private async scrollToInvalidComponent (): Promise<void> {

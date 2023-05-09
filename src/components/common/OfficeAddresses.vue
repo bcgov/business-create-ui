@@ -188,9 +188,9 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component, Emit, Prop, Watch } from 'vue-property-decorator'
-import { Getter } from 'vuex-class'
+import { Component, Emit, Mixins, Prop, Watch } from 'vue-property-decorator'
+import { Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 import { isEmpty } from 'lodash'
 import { OfficeAddressSchema } from '@/schemas'
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
@@ -202,12 +202,9 @@ import { CommonMixin } from '@/mixins'
   components: {
     DeliveryAddress: BaseAddress,
     MailingAddress: BaseAddress
-  },
-  mixins: [
-    CommonMixin
-  ]
+  }
 })
-export default class OfficeAddresses extends Vue {
+export default class OfficeAddresses extends Mixins(CommonMixin) {
   // Refs for sbc common base address components so we can access form validation
   $refs!: {
     regMailingAddress: any
@@ -229,10 +226,10 @@ export default class OfficeAddresses extends Vue {
 
   @Prop({ default: false }) readonly showErrors!: boolean
 
-  @Getter getDefineCompanyStep!: DefineCompanyIF
-  @Getter isBaseCompany!: boolean
-  @Getter isTypeCoop!: boolean
-  @Getter getEntityType!: CorpTypeCd
+  @Getter(useStore) getDefineCompanyStep!: DefineCompanyIF
+  @Getter(useStore) getEntityType!: CorpTypeCd
+  @Getter(useStore) isBaseCompany!: boolean
+  @Getter(useStore) isTypeCoop!: boolean
 
   // Local properties
   protected addresses: RegisteredRecordsAddressesIF = this.inputAddresses
@@ -247,28 +244,32 @@ export default class OfficeAddresses extends Vue {
   }
 
   // The 4 addresses that are the current state of the BaseAddress components:
-  protected mailingAddress = {} as AddressIF
-  protected deliveryAddress = {} as AddressIF
-  protected recMailingAddress = {} as AddressIF
-  protected recDeliveryAddress = {} as AddressIF
+  mailingAddress = {} as AddressIF
+  deliveryAddress = {} as AddressIF
+  recMailingAddress = {} as AddressIF
+  recDeliveryAddress = {} as AddressIF
 
   // Validation events from BaseAddress:
-  protected mailingAddressValid = true
-  protected deliveryAddressValid = true
-  protected recMailingAddressValid = true
-  protected recDeliveryAddressValid = true
+  private mailingAddressValid = true
+  private deliveryAddressValid = true
+  private recMailingAddressValid = true
+  private recDeliveryAddressValid = true
 
-  /** State of the checkbox for determining whether the Delivery address is the same as the Mailing address. */
-  protected inheritMailingAddress = true
+  /**
+   * State of the checkbox for determining whether the Delivery address is the same as the Mailing address.
+   */
+  inheritMailingAddress = true
 
   /**
    * State of the checkbox for determining whether or not the mailing address is the same as the delivery address.
    * For Records Office.
    */
-  protected inheritRecMailingAddress = true
+  inheritRecMailingAddress = true
 
-  /** State of the checkbox for determining whether the Record address is the same as the Registered address. */
-  protected inheritRegisteredAddress = true
+  /**
+   * State of the checkbox for determining whether the Record address is the same as the Registered address.
+   */
+  inheritRegisteredAddress = true
 
   // Imports for template
   readonly OfficeAddressSchema = OfficeAddressSchema
@@ -349,7 +350,7 @@ export default class OfficeAddresses extends Vue {
   }
 
   /** Whether the address object is empty or with only with default input values */
-  protected isEmptyAddress (address: AddressIF): boolean {
+  isEmptyAddress (address: AddressIF): boolean {
     return isEmpty(address) ||
            (!address.addressCity &&
            (!address.addressCountry || address.addressCountry === 'CA') &&
@@ -376,7 +377,7 @@ export default class OfficeAddresses extends Vue {
   //
 
   /** Sets the Registered Delivery Address to the Registered Mailing Address. */
-  protected setDeliveryAddressToMailingAddress (): void {
+  setDeliveryAddressToMailingAddress (): void {
     if (this.inheritMailingAddress) {
       this.deliveryAddress = { ...this.mailingAddress }
     } else {
@@ -393,7 +394,7 @@ export default class OfficeAddresses extends Vue {
   }
 
   /** Sets the Records office addresses to the Registered office addresses. */
-  protected setRecordOfficeToRegisteredOffice (): void {
+  setRecordOfficeToRegisteredOffice (): void {
     if (this.inheritRegisteredAddress) {
       this.recDeliveryAddress = { ...this.deliveryAddress }
       this.recMailingAddress = { ...this.mailingAddress }
@@ -407,7 +408,7 @@ export default class OfficeAddresses extends Vue {
   }
 
   /** Sets the Records Delivery Address to Records Mailing Address. */
-  protected setRecordDeliveryAddressToMailingAddress (): void {
+  setRecordDeliveryAddressToMailingAddress (): void {
     if (this.inheritRecMailingAddress) {
       this.recDeliveryAddress = { ...this.recMailingAddress }
     } else {
@@ -423,7 +424,7 @@ export default class OfficeAddresses extends Vue {
    * @param baseAddress the address object to update
    * @param newAddress the new address data
    */
-  protected updateAddress (addressToUpdate: string, baseAddress: AddressIF, newAddress: AddressIF): void {
+  updateAddress (addressToUpdate: string, baseAddress: AddressIF, newAddress: AddressIF): void {
     Object.assign(baseAddress, newAddress)
     switch (addressToUpdate) {
       case 'mailingAddress':
@@ -460,7 +461,7 @@ export default class OfficeAddresses extends Vue {
    * @param addressToValidate the address type to set the validity of
    * @param valid whether the address is valid
    */
-  protected updateAddressValid (addressToValidate: string, valid: boolean): void {
+  updateAddressValid (addressToValidate: string, valid: boolean): void {
     switch (addressToValidate) {
       case 'deliveryAddress':
         this.deliveryAddressValid = valid

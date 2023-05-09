@@ -2,11 +2,13 @@ import Vue from 'vue'
 import Vuetify from 'vuetify'
 import { mount, Wrapper } from '@vue/test-utils'
 import { getLastEvent } from '../get-last-event'
-import { getVuexStore } from '@/store'
+import { createPinia, setActivePinia } from 'pinia'
+import { useStore } from '@/store/store'
 import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
 
 Vue.use(Vuetify)
-const store = getVuexStore()
+setActivePinia(createPinia())
+const store = useStore()
 
 const vuetify = new Vuetify({})
 
@@ -43,7 +45,7 @@ function createComponent (
   email = '',
   confirmEmail = '',
   phone = '',
-  extension: number = null,
+  extension = NaN,
   isEditing = true
 ): Wrapper<BusinessContactInfo> {
   const businessContact = {
@@ -53,7 +55,6 @@ function createComponent (
     ...extension ? { extension } : {}
   }
   return mount(BusinessContactInfo, {
-    store,
     propsData: { initialValue: businessContact, isEditing },
     vuetify
   })

@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import Vuelidate from 'vuelidate'
 import Vuetify from 'vuetify'
-import { getVuexStore } from '@/store'
+import { createPinia, setActivePinia } from 'pinia'
+import { useStore } from '@/store/store'
 import { createLocalVue, mount } from '@vue/test-utils'
 import ListShareClass from '@/components/Incorporation/ListShareClass.vue'
 
@@ -12,7 +13,8 @@ const vuetify = new Vuetify({})
 const localVue = createLocalVue()
 
 // Store
-const store = getVuexStore()
+setActivePinia(createPinia())
+const store = useStore()
 document.body.setAttribute('data-app', 'true')
 
 describe('List Shares and Series component', () => {
@@ -90,7 +92,6 @@ describe('List Shares and Series component', () => {
     wrapper = mount(ListShareClass, {
       localVue,
       vuetify,
-      store,
       propsData: { shareClasses }
     })
   })
@@ -137,7 +138,7 @@ describe('List Shares and Series component', () => {
     const seriesListItem1 = wrapper.vm.$el.querySelectorAll('.v-data-table .series-row')[1]
 
     expect(seriesListItem1.querySelectorAll('td')[0].textContent).toContain('Share Series 2')
-    expect(seriesListItem1.querySelectorAll('td')[1].textContent).toContain(100)
+    expect(seriesListItem1.querySelectorAll('td')[1].textContent).toContain('100')
     expect(seriesListItem1.querySelectorAll('td')[2].textContent).toContain('1.58')
     expect(seriesListItem1.querySelectorAll('td')[3].textContent).toContain('CAD')
     expect(seriesListItem1.querySelectorAll('td')[4].textContent).toContain('No')
@@ -145,7 +146,7 @@ describe('List Shares and Series component', () => {
     const seriesListItem2 = wrapper.vm.$el.querySelectorAll('.v-data-table .series-row')[2]
 
     expect(seriesListItem2.querySelectorAll('td')[0].textContent).toContain('Share Series 3')
-    expect(seriesListItem2.querySelectorAll('td')[1].textContent).toContain(50)
+    expect(seriesListItem2.querySelectorAll('td')[1].textContent).toContain('50')
     expect(seriesListItem2.querySelectorAll('td')[2].textContent).toContain('No Par Value')
     expect(seriesListItem2.querySelectorAll('td')[3].textContent).toContain('')
     expect(seriesListItem2.querySelectorAll('td')[4].textContent).toContain('No')

@@ -231,9 +231,9 @@
 
 <script lang="ts">
 // Libraries
-import Vue from 'vue'
-import { Component, Watch } from 'vue-property-decorator'
-import { Action, Getter } from 'vuex-class'
+import { Component, Mixins, Watch } from 'vue-property-decorator'
+import { Action, Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 
 // Interfaces
 import {
@@ -257,35 +257,33 @@ import FileUploadPreview from '@/components/common/FileUploadPreview.vue'
 @Component({
   components: {
     FileUploadPreview
-  },
-  mixins: [
-    CommonMixin,
-    DocumentMixin
-  ]
+  }
 })
-export default class UploadMemorandum extends Vue {
+export default class UploadMemorandum extends Mixins(CommonMixin, DocumentMixin) {
   // Refs
   $refs!: {
     confirmMemorandumChk: FormIF
   }
 
+  @Getter(useStore) getCreateMemorandumResource!: CreateMemorandumResourceIF
+  @Getter(useStore) getCreateMemorandumStep!: CreateMemorandumIF
+  @Getter(useStore) getNameRequestApprovedName!: string
+  @Getter(useStore) getShowErrors!: boolean
+  @Getter(useStore) getUserKeycloakGuid!: string
+
+  @Action(useStore) setMemorandum!: ActionBindingIF
+  @Action(useStore) setMemorandumStepValidity!: ActionBindingIF
+
   readonly INPUT_FILE_LABEL = 'Memorandum of Association'
-  protected hasValidUploadFile = false
-  protected hasMemorandumConfirmed = false
-  protected memorandumConfirmed = false
-  protected fileUploadCustomErrorMsg = ''
-  protected uploadMemorandumDoc: File = null
-  protected uploadMemorandumDocKey: string = null
-  protected helpToggle = false
 
-  @Getter getShowErrors!: boolean
-  @Getter getNameRequestApprovedName!: string
-  @Getter getCreateMemorandumResource!: CreateMemorandumResourceIF
-  @Getter getCreateMemorandumStep!: CreateMemorandumIF
-  @Getter getUserKeycloakGuid!: string
-
-  @Action setMemorandum!: ActionBindingIF
-  @Action setMemorandumStepValidity!: ActionBindingIF
+  // Local variables
+  fileUploadCustomErrorMsg = ''
+  hasMemorandumConfirmed = false
+  hasValidUploadFile = false
+  helpToggle = false
+  memorandumConfirmed = false
+  uploadMemorandumDoc = null as File
+  uploadMemorandumDocKey = null as string
 
   // Enum for template
   readonly RouteNames = RouteNames
@@ -305,12 +303,12 @@ export default class UploadMemorandum extends Vue {
     this.uploadMemorandumDocKey = null
   }
 
-  protected isFileUploadValidFn (val) {
+  isFileUploadValidFn (val) {
     this.hasValidUploadFile = val
     this.updateMemorandumStepValidity()
   }
 
-  protected async fileSelected (file) {
+  async fileSelected (file) {
     // reset state of file uploader to ensure not in manual error mode
     this.fileUploadCustomErrorMsg = ''
     if (file) {
@@ -325,7 +323,7 @@ export default class UploadMemorandum extends Vue {
       this.uploadMemorandumDocKey = null
       this.setMemorandum({
         ...this.getCreateMemorandumStep,
-        memorandumDoc: null,
+        memorandumFile: null,
         docKey: null
       })
     }
@@ -341,14 +339,14 @@ export default class UploadMemorandum extends Vue {
       const res = await this.uploadToUrl(doc.preSignedUrl, this.uploadMemorandumDoc, doc.key, this.getUserKeycloakGuid)
 
       if (res && res.status === 200) {
-        const memorandumDoc = {
+        const memorandumFile = {
           name: this.uploadMemorandumDoc.name,
           lastModified: this.uploadMemorandumDoc.lastModified,
           size: this.uploadMemorandumDoc.size
         }
         this.setMemorandum({
           ...this.getCreateMemorandumStep,
-          memorandumDoc,
+          memorandumFile,
           docKey: doc.key
         })
       } else {
@@ -377,7 +375,7 @@ export default class UploadMemorandum extends Vue {
     this.setMemorandumStepValidity(validationDetail)
   }
 
-  protected onMemorandumConfirmedChange (memorandumConfirmed: boolean): void {
+  onMemorandumConfirmedChange (memorandumConfirmed: boolean): void {
     this.hasMemorandumConfirmed = memorandumConfirmed
     this.updateMemorandumStepValidity()
     this.setMemorandum({
@@ -388,7 +386,7 @@ export default class UploadMemorandum extends Vue {
 
   /** Called when component is created. */
   created (): void {
-    this.uploadMemorandumDoc = this.getCreateMemorandumStep.memorandumDoc
+    this.uploadMemorandumDoc = this.getCreateMemorandumStep.memorandumFile
     this.uploadMemorandumDocKey = this.getCreateMemorandumStep.docKey
     this.memorandumConfirmed = this.getCreateMemorandumStep.memorandumConfirmed
     this.hasValidUploadFile = !!this.uploadMemorandumDocKey

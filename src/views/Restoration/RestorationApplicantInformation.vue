@@ -11,9 +11,9 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component, Watch } from 'vue-property-decorator'
-import { Getter } from 'vuex-class'
+import { Component, Mixins, Watch } from 'vue-property-decorator'
+import { Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 import { PeopleAndRoleIF, PeopleAndRolesResourceIF } from '@/interfaces'
 import { CommonMixin } from '@/mixins'
 import { RouteNames } from '@/enums'
@@ -22,21 +22,18 @@ import RegPeopleAndRoles from '@/components/common/RegPeopleAndRoles.vue'
 @Component({
   components: {
     RegPeopleAndRoles
-  },
-  mixins: [
-    CommonMixin
-  ]
+  }
 })
-export default class RestorationApplicantInformation extends Vue {
-  @Getter getShowErrors!: boolean
-  @Getter getAddPeopleAndRoleStep!: PeopleAndRoleIF
-  @Getter getPeopleAndRolesResource!: PeopleAndRolesResourceIF
+export default class RestorationApplicantInformation extends Mixins(CommonMixin) {
+  @Getter(useStore) getAddPeopleAndRoleStep!: PeopleAndRoleIF
+  @Getter(useStore) getPeopleAndRolesResource!: PeopleAndRolesResourceIF
+  @Getter(useStore) getShowErrors!: boolean
 
   @Watch('$route')
   private async scrollToInvalidComponent (): Promise<void> {
     if (this.getShowErrors && this.$route.name === RouteNames.INCORPORATION_PEOPLE_ROLES) {
       // scroll to invalid components
-      await Vue.nextTick()
+      await this.$nextTick()
       await this.validateAndScroll(
         {
           peopleAndRoles: this.getAddPeopleAndRoleStep.valid

@@ -153,9 +153,9 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component } from 'vue-property-decorator'
-import { Action, Getter } from 'vuex-class'
+import { Component, Vue } from 'vue-property-decorator'
+import { Action, Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 import { ActionBindingIF, ContactPointIF, CertifyIF, EffectiveDateTimeIF, IncorporationAgreementIF,
   ShareStructureIF, CourtOrderStepIF } from '@/interfaces'
 import { CorpTypeCd } from '@bcrs-shared-components/enums/'
@@ -188,28 +188,28 @@ import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module
   }
 })
 export default class IncorporationReviewConfirm extends Vue {
-  @Getter getBusinessContact!: ContactPointIF
-  @Getter getCertifyState!: CertifyIF
-  @Getter getCourtOrderStep!: CourtOrderStepIF
-  @Getter getValidateSteps!: boolean
-  @Getter isTypeBcUlcCompany!: boolean
-  @Getter isBaseCompany!: boolean
-  @Getter isTypeCoop!: boolean
-  @Getter isRoleStaff!: boolean
-  @Getter getEffectiveDateTime!: EffectiveDateTimeIF
-  @Getter getUserEmail!: string
-  @Getter getCreateShareStructureStep!: ShareStructureIF
-  @Getter getIncorporationAgreementStep!: IncorporationAgreementIF
-  @Getter getCompanyDisplayName!: string
-  @Getter getEntityType!: CorpTypeCd
+  @Getter(useStore) getBusinessContact!: ContactPointIF
+  @Getter(useStore) getCertifyState!: CertifyIF
+  @Getter(useStore) getCompanyDisplayName!: string
+  @Getter(useStore) getCourtOrderStep!: CourtOrderStepIF
+  @Getter(useStore) getCreateShareStructureStep!: ShareStructureIF
+  @Getter(useStore) getEffectiveDateTime!: EffectiveDateTimeIF
+  @Getter(useStore) getEntityType!: CorpTypeCd
+  @Getter(useStore) getIncorporationAgreementStep!: IncorporationAgreementIF
+  @Getter(useStore) getUserEmail!: string
+  @Getter(useStore) getValidateSteps!: boolean
+  @Getter(useStore) isBaseCompany!: boolean
+  @Getter(useStore) isRoleStaff!: boolean
+  @Getter(useStore) isTypeBcUlcCompany!: boolean
+  @Getter(useStore) isTypeCoop!: boolean
 
-  @Action setCertifyState!: ActionBindingIF
-  @Action setCourtOrderFileNumber!: ActionBindingIF
-  @Action setCourtOrderValidity!: ActionBindingIF
-  @Action setEffectiveDateTimeValid!: ActionBindingIF
-  @Action setEffectiveDate!: ActionBindingIF
-  @Action setHasPlanOfArrangement!: ActionBindingIF
-  @Action setIsFutureEffective!: ActionBindingIF
+  @Action(useStore) setCertifyState!: ActionBindingIF
+  @Action(useStore) setCourtOrderFileNumber!: ActionBindingIF
+  @Action(useStore) setCourtOrderValidity!: ActionBindingIF
+  @Action(useStore) setEffectiveDate!: ActionBindingIF
+  @Action(useStore) setEffectiveDateTimeValid!: ActionBindingIF
+  @Action(useStore) setHasPlanOfArrangement!: ActionBindingIF
+  @Action(useStore) setIsFutureEffective!: ActionBindingIF
 
   /** The entity description,  */
   get getEntityDescription (): string {

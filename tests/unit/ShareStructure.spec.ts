@@ -1,15 +1,18 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify'
 import { mount, Wrapper, createLocalVue } from '@vue/test-utils'
-import { getVuexStore } from '@/store'
+import { createPinia, setActivePinia } from 'pinia'
+import { useStore } from '@/store/store'
 import ShareStructure from '@/components/Incorporation/ShareStructure.vue'
 import { ShareClassIF } from '@/interfaces'
 import { waitForUpdate } from '../wait-for-update'
+import { CorpTypeCd } from '@/enums'
 
 Vue.use(Vuetify)
 
 const vuetify = new Vuetify({})
-const store = getVuexStore()
+setActivePinia(createPinia())
+const store = useStore()
 
 // Events
 const addEditShareClassEvent = 'addEditClass'
@@ -56,7 +59,6 @@ function createComponent (
       parentIndex,
       shareClasses
     },
-    store,
     vuetify
   })
 }
@@ -67,9 +69,9 @@ function createShareStructure (
   type,
   name,
   hasMaximumShares = true,
-  maxNumberOfShares: number = null,
+  maxNumberOfShares = null as number,
   hasParValue = true,
-  parValue: number = null,
+  parValue = null as number,
   currency = null,
   hasRightsOrRestrictions = false
 ): ShareClassIF {
@@ -91,8 +93,8 @@ function createShareStructure (
   return shareStructure
 }
 
-store.state.stateModel.nameRequest.entityType = 'BEN'
-store.state.stateModel.currentDate = '2020-03-30'
+store.stateModel.nameRequest.legalType = CorpTypeCd.BENEFIT_COMPANY
+store.stateModel.currentDate = '2020-03-30'
 
 describe('Share Structure component', () => {
   it('Loads the component and sets data for share structure', async () => {

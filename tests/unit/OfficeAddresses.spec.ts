@@ -1,15 +1,18 @@
 import Vue from 'vue'
 import Vuelidate from 'vuelidate'
 import Vuetify from 'vuetify'
-import { getVuexStore } from '@/store'
+import { createPinia, setActivePinia } from 'pinia'
+import { useStore } from '@/store/store'
 import { createLocalVue, shallowMount, mount } from '@vue/test-utils'
 import OfficeAddresses from '@/components/common/OfficeAddresses.vue'
+import { CorpTypeCd } from '@/enums'
 
 Vue.use(Vuetify)
 Vue.use(Vuelidate)
 
 const vuetify = new Vuetify({})
-const store = getVuexStore()
+setActivePinia(createPinia())
+const store = useStore()
 
 describe('Office Address delivery address <same as> is unchecked by default', () => {
   let wrapper: any
@@ -59,11 +62,11 @@ describe('Office Address delivery address <same as> is unchecked by default', ()
 
   // the commented corp types are not available to test currently
   const CORP_TYPES = [
-    'CP',
-    'BEN'
-    // 'CC',
-    // 'BC',
-    // 'ULC'
+    CorpTypeCd.COOP,
+    CorpTypeCd.BENEFIT_COMPANY
+    // CorpTypeCd.BC_CCC,
+    // CorpTypeCd.BC_COMPANY,
+    // CorpTypeCd.BC_ULC_COMPANY
   ]
 
   afterEach(() => {
@@ -73,7 +76,7 @@ describe('Office Address delivery address <same as> is unchecked by default', ()
   test.each(CORP_TYPES)('display both mailing and delivery addresses when creating for %p', async (corptype) => {
     const localVue = createLocalVue()
     // pre-set entity type when mounting.
-    store.state.stateModel.entityType = corptype
+    store.stateModel.entityType = corptype
 
     let addresses: any
     if (corptype === 'CP') {
@@ -92,7 +95,6 @@ describe('Office Address delivery address <same as> is unchecked by default', ()
         isEditing: true
       },
       localVue,
-      store,
       vuetify
     })
 
@@ -142,7 +144,6 @@ describe('Office Addresses component - COOP', () => {
         isEditing: true
       },
       localVue,
-      store,
       vuetify
     })
   })
@@ -153,7 +154,7 @@ describe('Office Addresses component - COOP', () => {
 
   beforeAll(() => {
     // init store
-    store.state.stateModel.entityType = 'CP'
+    store.stateModel.entityType = CorpTypeCd.COOP
   })
 
   it('does not show the summary ui when editing', () => {
@@ -240,7 +241,6 @@ describe('Office Addresses component - BCOMP', () => {
         isEditing: true
       },
       localVue,
-      store,
       vuetify
     })
   })
@@ -251,7 +251,7 @@ describe('Office Addresses component - BCOMP', () => {
 
   beforeAll(() => {
     // init store
-    store.state.stateModel.entityType = 'BEN'
+    store.stateModel.entityType = CorpTypeCd.BENEFIT_COMPANY
   })
 
   it('does not show the summary ui when editing', () => {
@@ -345,7 +345,6 @@ describe('same as checkboxes reset addresses to default when unchecked - BCOMP',
         isEditing: true
       },
       localVue,
-      store,
       vuetify
     })
   })
@@ -356,7 +355,7 @@ describe('same as checkboxes reset addresses to default when unchecked - BCOMP',
 
   beforeAll(() => {
     // init store
-    store.state.stateModel.entityType = 'BEN'
+    store.stateModel.entityType = CorpTypeCd.BENEFIT_COMPANY
   })
 
   it('should reset registered and records delivery addresses', async () => {
@@ -490,7 +489,7 @@ describe('should properly emit valid - BCOMP', () => {
 
   beforeAll(() => {
     // init store
-    store.state.stateModel.entityType = 'BEN'
+    store.stateModel.entityType = CorpTypeCd.BENEFIT_COMPANY
   })
 
   it('should emit valid form', async () => {
@@ -503,7 +502,6 @@ describe('should properly emit valid - BCOMP', () => {
         isEditing: true
       },
       localVue,
-      store,
       vuetify
     })
     await Vue.nextTick()
@@ -521,7 +519,6 @@ describe('should properly emit valid - BCOMP', () => {
         isEditing: true
       },
       localVue,
-      store,
       vuetify
     })
     await Vue.nextTick()
@@ -539,7 +536,6 @@ describe('should properly emit valid - BCOMP', () => {
         isEditing: true
       },
       localVue,
-      store,
       vuetify
     })
     await Vue.nextTick()
@@ -557,7 +553,6 @@ describe('should properly emit valid - BCOMP', () => {
         isEditing: true
       },
       localVue,
-      store,
       vuetify
     })
     await Vue.nextTick()
@@ -575,7 +570,6 @@ describe('should properly emit valid - BCOMP', () => {
         isEditing: true
       },
       localVue,
-      store,
       vuetify
     })
     await Vue.nextTick()
@@ -629,7 +623,6 @@ describe('Office Addresses component - Summary UI', () => {
         isEditing: false
       },
       localVue,
-      store,
       vuetify
     })
   })
@@ -640,7 +633,7 @@ describe('Office Addresses component - Summary UI', () => {
 
   beforeAll(() => {
     // init store
-    store.state.stateModel.nameRequest.entityType = 'BEN'
+    store.stateModel.nameRequest.legalType = CorpTypeCd.BENEFIT_COMPANY
   })
 
   it('displays the summary ui when in summary mode', () => {
