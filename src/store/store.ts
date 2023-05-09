@@ -20,7 +20,6 @@ import {
   AddressIF,
   AffidavitResourceIF,
   BusinessAddressIF,
-  BusinessIF,
   BusinessWarningIF,
   CertifyIF,
   CompletingPartyIF,
@@ -48,6 +47,7 @@ import {
   NaicsIF,
   NameRequestIF,
   NameTranslationIF,
+  OfficeAddressIF,
   OrgInformationIF,
   OrgPersonIF,
   PartyIF,
@@ -295,9 +295,9 @@ export const useStore = defineStore('store', {
       return this.stateModel.business.foundingDate
     },
 
-    /** The Business Data. */
-    getBusiness (): BusinessIF {
-      return this.stateModel.business
+    /** The Business Office Address. */
+    getBusinessOfficeAddress (): OfficeAddressIF {
+      return this.stateModel.business.officeAddress
     },
 
     /** The Name Request object. */
@@ -1150,9 +1150,6 @@ export const useStore = defineStore('store', {
     },
     setAdminFreeze (adminFreeze: boolean) {
       this.stateModel.business.adminFreeze = adminFreeze
-    },
-    setEntityName (legalName: string) {
-      this.stateModel.business.legalName = legalName
     },
     setEntityState (entityState: EntityState) {
       this.stateModel.business.state = entityState

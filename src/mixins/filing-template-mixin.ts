@@ -2,12 +2,12 @@ import { Component, Mixins } from 'vue-property-decorator'
 import { Getter, Action } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { DateMixin } from '@/mixins'
-import { ActionBindingIF, BusinessIF, ContactPointIF, CertifyIF, CompletingPartyIF, CourtOrderStepIF,
+import { ActionBindingIF, ContactPointIF, CertifyIF, CompletingPartyIF, CourtOrderStepIF,
   CreateMemorandumIF, CreateResolutionIF, CreateRulesIF, DefineCompanyIF, DissolutionFilingIF,
   DissolutionStatementIF, DocumentDeliveryIF, EffectiveDateTimeIF, EmptyNaics, IncorporationAgreementIF,
-  IncorporationFilingIF, NameRequestFilingIF, NameTranslationIF, OrgPersonIF, PartyIF, PeopleAndRoleIF,
-  RegistrationFilingIF, RegistrationStateIF, RestorationFilingIF, RestorationStateIF, ShareStructureIF,
-  SpecialResolutionIF, StaffPaymentStepIF, UploadAffidavitIF } from '@/interfaces'
+  IncorporationFilingIF, NameRequestFilingIF, NameTranslationIF, OfficeAddressIF, OrgPersonIF, PartyIF,
+  PeopleAndRoleIF, RegistrationFilingIF, RegistrationStateIF, RestorationFilingIF, RestorationStateIF,
+  ShareStructureIF, SpecialResolutionIF, StaffPaymentStepIF, UploadAffidavitIF } from '@/interfaces'
 import { DissolutionTypes, EffectOfOrders, FilingTypes, PartyTypes, RoleTypes, StaffPaymentOptions }
   from '@/enums'
 import { CorpTypeCd, CorrectNameOptions } from '@bcrs-shared-components/enums/'
@@ -19,11 +19,12 @@ import { CorpTypeCd, CorrectNameOptions } from '@bcrs-shared-components/enums/'
 export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Getter(useStore) getAddPeopleAndRoleStep!: PeopleAndRoleIF
   @Getter(useStore) getAffidavitStep!: UploadAffidavitIF
-  @Getter(useStore) getBusiness!: BusinessIF
   @Getter(useStore) getBusinessContact!: ContactPointIF
   @Getter(useStore) getBusinessFoundingDate!: string
   @Getter(useStore) getBusinessId!: string
   @Getter(useStore) getBusinessLegalName!: string
+  @Getter(useStore) getBusinessLegalType!: CorpTypeCd
+  @Getter(useStore) getBusinessOfficeAddress!: OfficeAddressIF
   @Getter(useStore) getCertifyState!: CertifyIF
   @Getter(useStore) getCompletingParty!: CompletingPartyIF
   @Getter(useStore) getCorrectNameOption!: CorrectNameOptions
@@ -571,9 +572,9 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     this.setFilingId(+draftFiling.header.filingId)
 
     // restore Business data
-    this.setEntityType(draftFiling.business.legalType)
-    this.setLegalName(draftFiling.business.legalName)
-    this.setFoundingDate(draftFiling.business.foundingDate)
+    this.setEntityType(draftFiling.business.legalType || this.getBusinessLegalType)
+    this.setLegalName(draftFiling.business.legalName || this.getBusinessLegalName)
+    this.setFoundingDate(draftFiling.business.foundingDate || this.getBusinessFoundingDate)
 
     // restore Restoration data
     if (draftFiling.restoration.applicationDate) {
@@ -699,7 +700,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
       dissolution: {
         dissolutionDate: this.getCurrentDate,
         affidavitConfirmed: this.getAffidavitStep.validationDetail.validationItemDetails[0]?.valid || false,
-        custodialOffice: this.getBusiness.officeAddress,
+        custodialOffice: this.getBusinessOfficeAddress,
         dissolutionType: this.getDissolutionType,
         parties: [{
           ...this.getDissolutionCustodian,
@@ -811,9 +812,9 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     this.setFilingId(+draftFiling.header.filingId)
 
     // restore Business data
-    this.setEntityType(draftFiling.business.legalType)
-    this.setLegalName(draftFiling.business.legalName)
-    this.setFoundingDate(draftFiling.business.foundingDate)
+    this.setEntityType(draftFiling.business.legalType || this.getBusinessLegalType)
+    this.setLegalName(draftFiling.business.legalName || this.getBusinessLegalName)
+    this.setFoundingDate(draftFiling.business.foundingDate || this.getBusinessFoundingDate)
 
     // restore Dissolution data
     this.setBusinessAddress(draftFiling.dissolution.custodialOffice)
