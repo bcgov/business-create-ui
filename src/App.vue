@@ -1196,4 +1196,8 @@ aside {
 .vue-affix {
   width: 282px;
 }
+// override Vuetify's indentation of the ul
+:deep(ul.fee-list) {
+  padding-left: 0;
+}
 </style>
