@@ -179,7 +179,6 @@ export interface RestorationFilingIF {
   business: {
     foundingDate: string
     identifier: string
-    legalName: string
     legalType: CorpTypeCd
   }
   restoration: {

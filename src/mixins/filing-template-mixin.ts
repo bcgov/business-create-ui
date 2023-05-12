@@ -413,7 +413,6 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
       business: {
         legalType: this.getEntityType,
         identifier: this.getBusinessId,
-        legalName: this.getBusinessLegalName,
         foundingDate: this.getBusinessFoundingDate
       },
       restoration: {
