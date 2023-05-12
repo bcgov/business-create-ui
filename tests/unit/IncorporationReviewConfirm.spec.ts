@@ -8,19 +8,44 @@ import Certify from '@/components/common/Certify.vue'
 // Test Case Data
 const reviewConfirmTestCases = [
   {
-    entityType: 'CP'
+    entityType: 'CP',
+    isStaff: true
   },
   {
-    entityType: 'BEN'
+    entityType: 'CP',
+    isStaff: false
   },
   {
-    entityType: 'ULC'
+    entityType: 'BEN',
+    isStaff: true
   },
   {
-    entityType: 'BC'
+    entityType: 'BEN',
+    isStaff: false
   },
   {
-    entityType: 'CC'
+    entityType: 'ULC',
+    isStaff: true
+  },
+  {
+    entityType: 'ULC',
+    isStaff: false
+  },
+  {
+    entityType: 'BC',
+    isStaff: true
+  },
+  {
+    entityType: 'BC',
+    isStaff: false
+  },
+  {
+    entityType: 'CC',
+    isStaff: true
+  },
+  {
+    entityType: 'CC',
+    isStaff: false
   }
 ]
 
@@ -71,6 +96,18 @@ for (const test of reviewConfirmTestCases) {
         .includes(test.entityType))
     })
 
+    it('displays Staff Payment section only for staff', () => {
+      wrapper = shallowWrapperFactory(
+        IncorporationReviewConfirm,
+        null,
+        {
+          entityType: test.entityType,
+          tombstone: { authRoles: test.isStaff ? ['staff'] : [] }
+        },
+        null,
+        IncorporationResources
+      )
+    })
     // FUTURE: Expand unit testing for validation on step 5. Include routing to appropriate steps from error links.
   })
 }

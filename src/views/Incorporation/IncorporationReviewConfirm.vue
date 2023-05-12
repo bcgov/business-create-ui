@@ -149,6 +149,18 @@
         />
       </v-card>
     </section>
+
+    <!-- Staff Payment -->
+    <section id="staff-payment-section" class="mt-10" v-if="isRoleStaff">
+      <header>
+        <h2>Staff Payment</h2>
+        <p class="mt-4"></p>
+      </header>
+
+      <v-card flat class="mt-6">
+        <StaffPayment class="py-8 px-6" />
+      </v-card>
+    </section>
   </div>
 </template>
 
@@ -171,6 +183,7 @@ import SummaryDefineCompany from '@/components/Incorporation/SummaryDefineCompan
 import UploadMemorandumSummary from '@/components/Incorporation/UploadMemorandumSummary.vue'
 import UploadRulesSummary from '@/components/Incorporation/UploadRulesSummary.vue'
 import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
+import StaffPayment from '@/components/common/StaffPayment.vue'
 
 @Component({
   components: {
@@ -184,7 +197,8 @@ import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module
     ListShareClass,
     SummaryDefineCompany,
     UploadMemorandumSummary,
-    UploadRulesSummary
+    UploadRulesSummary,
+    StaffPayment
   }
 })
 export default class IncorporationReviewConfirm extends Vue {
