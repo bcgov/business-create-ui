@@ -27,6 +27,13 @@ export interface IncorporationFilingIF {
     filingId?: number // for existing filings (not used when building a new filing)
     folioNumber?: string // only displayed for certain account types
     isFutureEffective: boolean
+
+    // staff payment properties:
+    routingSlipNumber?: string
+    bcolAccountNumber?: string
+    datNumber?: string
+    waiveFees?: boolean
+    priority?: boolean
   }
   business: {
     legalType: CorpTypeCd

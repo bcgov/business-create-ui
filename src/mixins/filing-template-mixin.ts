@@ -204,6 +204,10 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
       filing.header.effectiveDate = this.dateToApi(this.getEffectiveDateTime.effectiveDate)
     }
 
+    if (this.isRoleStaff) {
+      // Add staff payment data.
+      this.buildStaffPayment(filing)
+    }
     return filing
   }
 
@@ -326,6 +330,11 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
       // Check that Effective Date is in the future, to improve UX and
       // to work around the default effective date set by the back end.
       if (effectiveDate >= this.getCurrentJsDate) this.setEffectiveDate(effectiveDate)
+    }
+
+    if (this.isRoleStaff) {
+      // restore Staff Payment data
+      this.parseStaffPayment(draftFiling)
     }
 
     // if this is a premium account and Folio Number exists then restore it
@@ -913,7 +922,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
    * Builds dissolution staff payment data from store data.
    * @param filing the filing body to update
    */
-  private buildStaffPayment (filing: DissolutionFilingIF | RegistrationFilingIF | RestorationFilingIF): void {
+  private buildStaffPayment (filing: DissolutionFilingIF | RegistrationFilingIF | RestorationFilingIF | IncorporationFilingIF): void {
     // Populate Staff Payment according to payment option
     const staffPayment = this.getStaffPaymentStep.staffPayment
     switch (staffPayment.option) {
@@ -959,7 +968,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
    * Parses dissolution staff payment data into the store.
    * @param filing the filing body to parse
    */
-  private parseStaffPayment (filing: DissolutionFilingIF): void {
+  private parseStaffPayment (filing: DissolutionFilingIF | RegistrationFilingIF | RestorationFilingIF | IncorporationFilingIF): void {
     // Parse staff payment
     if (filing.header.routingSlipNumber) {
       this.setStaffPayment({
