@@ -922,7 +922,9 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
    * Builds dissolution staff payment data from store data.
    * @param filing the filing body to update
    */
-  private buildStaffPayment (filing: DissolutionFilingIF | RegistrationFilingIF | RestorationFilingIF | IncorporationFilingIF): void {
+  private buildStaffPayment (
+    filing: DissolutionFilingIF | RegistrationFilingIF | RestorationFilingIF | IncorporationFilingIF
+  ): void {
     // Populate Staff Payment according to payment option
     const staffPayment = this.getStaffPaymentStep.staffPayment
     switch (staffPayment.option) {
@@ -968,7 +970,9 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
    * Parses dissolution staff payment data into the store.
    * @param filing the filing body to parse
    */
-  private parseStaffPayment (filing: DissolutionFilingIF | RegistrationFilingIF | RestorationFilingIF | IncorporationFilingIF): void {
+  private parseStaffPayment (
+    filing: DissolutionFilingIF | RegistrationFilingIF | RestorationFilingIF | IncorporationFilingIF
+  ): void {
     // Parse staff payment
     if (filing.header.routingSlipNumber) {
       this.setStaffPayment({
