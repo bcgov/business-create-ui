@@ -102,7 +102,7 @@ for (const test of reviewConfirmTestCases) {
         null,
         {
           entityType: test.entityType,
-          tombstone: { authRoles: test.isStaff ? ['staff'] : [] }
+          tombstone: { keycloakRoles: test.isStaff ? ['staff'] : [] }
         },
         null,
         IncorporationResources

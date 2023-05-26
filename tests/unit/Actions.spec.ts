@@ -136,9 +136,9 @@ describe('Emits error event if NR validation fails in file and pay', () => {
     } as NameRequestIF
     store.stateModel.nameRequestApprovedName = 'My Name Request Inc.'
     store.stateModel.tombstone = {
-      authRoles: [],
       filingType: FilingTypes.INCORPORATION_APPLICATION,
-      userEmail: 'completing-party@example.com'
+      userEmail: 'completing-party@example.com',
+      keycloakRoles: []
     } as TombstoneIF
     store.stateModel.certifyState = {
       valid: true,
@@ -393,10 +393,10 @@ describe('Actions component - Filing Functionality', () => {
     store.stateModel.nameRequestApprovedName = 'My Name Request Inc.'
     store.stateModel.nameTranslations = []
     store.stateModel.tombstone = {
-      authRoles: [],
       filingType: FilingTypes.INCORPORATION_APPLICATION,
       userEmail: 'completing-party@example.com',
-      folioNumber: '123456'
+      folioNumber: '123456',
+      keycloakRoles: []
     } as TombstoneIF
     store.stateModel.certifyState.certifiedBy = filing.header.certifiedBy
     store.stateModel.businessContact = {

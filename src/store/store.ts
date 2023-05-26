@@ -61,7 +61,6 @@ import {
   StaffPaymentStepIF,
   StateIF,
   StepIF,
-  TombstoneIF,
   UploadAffidavitIF,
   ValidationDetailIF
 } from '@/interfaces'
@@ -126,24 +125,9 @@ export const useStore = defineStore('store', {
       }
     },
 
-    /** Whether the user has "staff" auth role. */
+    /** Whether the user has "staff" Keycloak role. */
     isRoleStaff (): boolean {
-      return this.getTombstone.authRoles.includes('staff')
-    },
-
-    /** Whether the user is authorized to edit. */
-    isAuthEdit (): boolean {
-      return this.getTombstone.authRoles.includes('edit')
-    },
-
-    /** Whether the user is authorized to view. */
-    isAuthView (): boolean {
-      return this.getTombstone.authRoles.includes('view')
-    },
-
-    /** Whether the user has "gov account user" auth role. */
-    isGovAccountUser (): boolean {
-      return this.getTombstone.authRoles.includes('gov_account_user')
+      return this.stateModel.tombstone.keycloakRoles.includes('staff')
     },
 
     /** Whether the entity type has been identified. */
@@ -158,17 +142,17 @@ export const useStore = defineStore('store', {
 
     /** The account folio number. */
     getFolioNumber (): string {
-      return this.getTombstone.folioNumber
+      return this.stateModel.tombstone.folioNumber
     },
 
     /** The transactional folio number. */
     getTransactionalFolioNumber (): string {
-      return this.getTombstone.transactionalFolioNumber
+      return this.stateModel.tombstone.transactionalFolioNumber
     },
 
     /** Is true when the transactional folio number is valid. */
     getTransactionalFolioNumberValid (): boolean {
-      return this.getTombstone.transactionalFolioNumberValid
+      return this.stateModel.tombstone.transactionalFolioNumberValid
     },
 
     /** The staff payment folio number. */
@@ -318,11 +302,6 @@ export const useStore = defineStore('store', {
     /** The Name Request number. */
     getNameRequestNumber (): string {
       return this.getNameRequest?.nrNum
-    },
-
-    /** The Tombstone object. */
-    getTombstone (): TombstoneIF {
-      return this.stateModel.tombstone
     },
 
     /** The Company Step object. */
@@ -642,32 +621,37 @@ export const useStore = defineStore('store', {
 
     /** The users's email address. */
     getUserEmail (): string {
-      return (this.getTombstone.userEmail)
+      return this.stateModel.tombstone.userEmail
     },
 
     /** The users's phone number. */
     getUserPhone (): string {
-      return this.getTombstone.userPhone
+      return this.stateModel.tombstone.userPhone
     },
 
     /** The user's first name. */
     getUserFirstName (): string {
-      return (this.getTombstone.userFirstName)
+      return this.stateModel.tombstone.userFirstName
     },
 
     /** The user's last name. */
     getUserLastName (): string {
-      return (this.getTombstone.userLastName)
+      return this.stateModel.tombstone.userLastName
     },
 
-    /** The user's keycloak guid. */
-    getUserKeycloakGuid (): string {
-      return (this.getTombstone.userKeycloakGuid)
+    /** The user's GUID from the Keycloak token (JWT). */
+    getKeycloakGuid (): string {
+      return this.stateModel.tombstone.keycloakGuid
+    },
+
+    /** The user's roles from the Keycloak token (JWT). */
+    getKeycloakRoles (): Array<string> {
+      return this.stateModel.tombstone.keycloakRoles
     },
 
     /** The user's address. */
     getUserAddress (): AddressIF {
-      return (this.getTombstone.userAddress)
+      return (this.stateModel.tombstone.userAddress)
     },
 
     /** The fee prices. */
@@ -913,9 +897,6 @@ export const useStore = defineStore('store', {
     setIsFilingPaying (isFilingPaying: boolean) {
       this.stateModel.isFilingPaying = isFilingPaying
     },
-    setAuthRoles (authRoles: Array<string>) {
-      this.stateModel.tombstone.authRoles = authRoles
-    },
     setUserEmail (userEmail: string) {
       this.stateModel.tombstone.userEmail = userEmail
     },
@@ -928,8 +909,11 @@ export const useStore = defineStore('store', {
     setUserLastName (userLastName: string) {
       this.stateModel.tombstone.userLastName = userLastName
     },
-    setUserKeycloakGuid (userKeycloakGuid: string) {
-      this.stateModel.tombstone.userKeycloakGuid = userKeycloakGuid
+    setKeycloakGuid (keycloakGuid: string) {
+      this.stateModel.tombstone.keycloakGuid = keycloakGuid
+    },
+    setKeycloakRoles (keycloakRoles: Array<string>) {
+      this.stateModel.tombstone.keycloakRoles = keycloakRoles
     },
     setUserAddress (userAddress: AddressIF) {
       this.stateModel.tombstone.userAddress = userAddress

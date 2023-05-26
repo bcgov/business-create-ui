@@ -10,7 +10,7 @@ const vuetify = new Vuetify({})
 setActivePinia(createPinia())
 const store = useStore()
 store.stateModel.business.foundingDate = '2022-06-07T00:00:00.000+00:00'
-store.stateModel.tombstone.authRoles = ['staff']
+store.stateModel.tombstone.keycloakRoles = ['staff']
 store.stateModel.completingParty = {
   firstName: 'Wira',
   middleName: 'Rosmunda',

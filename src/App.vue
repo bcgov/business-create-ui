@@ -51,7 +51,6 @@
 
     <PaymentErrorDialog
       attach="#app"
-      filingName="Application"
       :dialog="paymentErrorDialog"
       :errors="saveErrors"
       :warnings="saveWarnings"
@@ -61,7 +60,6 @@
 
     <SaveErrorDialog
       attach="#app"
-      :filingName="saveErrorDialogName"
       :dialog="saveErrorDialog"
       :errors="saveErrors"
       :warnings="saveWarnings"
@@ -246,6 +244,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   @Getter(useStore) getFilingName!: FilingNames
   @Getter(useStore) getFilingType!: FilingTypes
   @Getter(useStore) getHaveChanges!: boolean
+  @Getter(useStore) getKeycloakRoles!: Array<string>
   @Getter(useStore) getOrgInformation!: OrgInformationIF
   @Getter(useStore) getSteps!: Array<StepIF>
   @Getter(useStore) getUserFirstName!: string
@@ -260,7 +259,6 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
 
   @Action(useStore) setAccountInformation!: ActionBindingIF
   @Action(useStore) setAdminFreeze!: ActionBindingIF
-  @Action(useStore) setAuthRoles!: ActionBindingIF
   @Action(useStore) setBusinessId!: ActionBindingIF
   @Action(useStore) setBusinessNumber!: ActionBindingIF
   @Action(useStore) setCompletingParty!: ActionBindingIF
@@ -273,6 +271,8 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   @Action(useStore) setFilingType!: ActionBindingIF
   @Action(useStore) setGoodStanding!: ActionBindingIF
   @Action(useStore) setIdentifier!: ActionBindingIF
+  @Action(useStore) setKeycloakGuid!: ActionBindingIF
+  @Action(useStore) setKeycloakRoles!: ActionBindingIF
   @Action(useStore) setLastAddressChangeDate!: ActionBindingIF
   @Action(useStore) setLastAnnualReportDate!: ActionBindingIF
   @Action(useStore) setLastDirectorChangeDate!: ActionBindingIF
@@ -282,7 +282,6 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   @Action(useStore) setUserAddress!: ActionBindingIF
   @Action(useStore) setUserEmail!: ActionBindingIF
   @Action(useStore) setUserFirstName!: ActionBindingIF
-  @Action(useStore) setUserKeycloakGuid!: ActionBindingIF
   @Action(useStore) setUserLastName!: ActionBindingIF
   @Action(useStore) setUserPhone!: ActionBindingIF
   @Action(useStore) setHaveChanges!: ActionBindingIF
@@ -411,16 +410,6 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   /** The About text. */
   get aboutText (): string {
     return process.env.ABOUT_TEXT
-  }
-
-  /** The header name for the Save Error Dialog. */
-  get saveErrorDialogName (): string {
-    switch (this.getFilingType) {
-      case FilingTypes.INCORPORATION_APPLICATION: return 'Application'
-      case FilingTypes.REGISTRATION: return 'Registration'
-      case FilingTypes.RESTORATION: return 'Restoration'
-      case FilingTypes.DISSOLUTION: return 'Filing'
-    }
   }
 
   /** Whether to use stepper view. */
@@ -660,8 +649,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
         throw error // go to catch()
       }
 
-      // FUTURE:
-      // by now, we know what type of filing this is
+      // FUTURE: since we know what type of filing this is,
       // add staff check for certain filings (ie, restorations)
 
       // get user info
@@ -671,8 +659,15 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
         throw error // go to catch()
       })
 
+      // get Keycloak roles
+      const keycloakRoles = await this.loadKeycloakRoles().catch(error => {
+        console.log('Keycloak roles error =', error) // eslint-disable-line no-console
+        this.accountAuthorizationDialog = true
+        throw error // go to catch()
+      })
+
       // update Launch Darkly
-      await this.updateLaunchDarkly(userInfo).catch(error => {
+      await this.updateLaunchDarkly(userInfo, keycloakRoles).catch(error => {
         // just log the error -- no need to halt app
         console.log('Launch Darkly update error =', error) // eslint-disable-line no-console
       })
@@ -943,13 +938,13 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     this.saveWarnings = []
   }
 
-  /** Gets user info and stores user's email, first name and last name. */
+  /**
+   * Fetches user info, stores it, and returns it.
+   * May also fetch and store auth info.
+   */
   private async loadUserInfo (): Promise<any> {
-    // NB: will throw if API error
-    const userInfo = await AuthServices.fetchUserInfo()
-
-    // get auth org info for dissolution/restoration only
-    // do not need to set auth org/contact info for Restoration as it is likely to change hence left empty
+    // fetch auth org info for dissolution/restoration only
+    // do not set auth org/contact info for Restoration as it is likely to change
     // (this data is not available for an incorporation/registration)
     if (this.isDissolutionFiling) {
       const { contacts, folioNumber } = await AuthServices.fetchAuthInfo(this.getBusinessId)
@@ -961,6 +956,9 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       // (for a registration, this is set in RegistrationDefineBusiness.vue)
       this.setFolioNumber(folioNumber)
     }
+
+    // NB: will throw if API error
+    const userInfo = await AuthServices.fetchUserInfo()
     if (!userInfo) throw new Error('Invalid user info')
 
     if (userInfo.contacts?.length > 0 && userInfo.contacts[0].email) {
@@ -980,6 +978,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       // this is an IDIR user
       this.setUserPhone(userInfo.phone)
     } else if (userInfo.type !== this.STAFF_ROLE && userInfo.type !== this.GOV_ACCOUNT_USER) {
+      // not an error
       console.info('Invalid user phone') // eslint-disable-line no-console
     }
 
@@ -988,9 +987,36 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
 
     this.setUserFirstName(userInfo.firstname)
     this.setUserLastName(userInfo.lastname)
-    this.setUserKeycloakGuid(userInfo.keycloakGuid)
+    this.setKeycloakGuid(userInfo.keycloakGuid)
 
     return userInfo
+  }
+
+  /** Gets Keycloak roles, stores them, and returns them. */
+  private async loadKeycloakRoles (): Promise<string[]> {
+    const jwt = getJWT()
+    const keycloakRoles = (jwt.roles || []) as Array<string>
+    if (keycloakRoles.length < 1) throw new Error('Invalid Keycloak roles')
+    this.setKeycloakRoles(keycloakRoles)
+    return keycloakRoles
+
+    /** Gets Keycloak JWT and parses it. */
+    function getJWT (): any {
+      // get KC token (JWT) from session storage
+      const keycloakToken = sessionStorage.getItem(SessionStorageKeys.KeyCloakToken)
+      if (!keycloakToken) throw new Error('Error getting Keycloak token')
+
+      // decode and parse the JWT
+      try {
+        const base64Url = keycloakToken.split('.')[1]
+        const base64 = decodeURIComponent(window.atob(base64Url).split('').map(function (c) {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+        }).join(''))
+        return JSON.parse(base64)
+      } catch (error) {
+        throw new Error('Error parsing JWT - ' + error)
+      }
+    }
   }
 
   /**
@@ -1015,7 +1041,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
 
   /**
    * Gets current account from object in session storage.
-   * Wait up to 5 sec for current account to be synced (typically by SbcHeader).
+   * Waits up to 5 sec for current account to be synced (typically by SbcHeader).
    */
   private async getCurrentAccount (): Promise<any> {
     let account = null
@@ -1028,7 +1054,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     return account
   }
 
-  /** Gets org info and user's address and stores it. */
+  /** Fetches org info and stores it and user's address. */
   private async loadOrgInfo (orgId: number): Promise<void> {
     if (!orgId) throw new Error('Invalid org id')
 
@@ -1053,19 +1079,19 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   }
 
   /** Updates Launch Darkly with current user info. */
-  private async updateLaunchDarkly (userInfo: any): Promise<void> {
+  private async updateLaunchDarkly (userInfo: any, keycloakRoles: string[]): Promise<void> {
     // since username is unique, use it as the user key
     const key: string = userInfo.username
     const email: string = userInfo.contacts[0]?.email || userInfo.email
     const firstName: string = userInfo.firstname
     const lastName: string = userInfo.lastname
-    // remove leading { and trailing } and tokenize string
-    const custom: any = { roles: userInfo.roles?.slice(1, -1).split(',') }
+    // store Keycloak roles in custom object
+    const custom = { roles: keycloakRoles } as any
 
     await UpdateLdUser(key, email, firstName, lastName, custom)
   }
 
-  /** Gets and stores business info. */
+  /** Fetches and stores business info. */
   private async loadBusinessInfo (businessId: string): Promise<void> {
     const response = await LegalServices.fetchBusinessInfo(businessId)
 
@@ -1092,20 +1118,19 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     this.setGoodStanding(business.goodStanding)
   }
 
-  /** Gets authorizations from Auth API, verifies roles, and stores them. */
+  /** Fetches authorizations and verifies roles. */
   private async checkAuth (id: string): Promise<any> {
     // NB: will throw if API error
     const authRoles = await AuthServices.fetchAuthorizations(id)
 
+    // verify that array has at least one role
     // NB: roles array may contain 'view', 'edit', 'staff' or nothing
-    if (authRoles && authRoles.length > 0) {
-      this.setAuthRoles(authRoles)
-    } else {
+    if (!Array.isArray(authRoles) || authRoles.length < 1) {
       throw new Error('Invalid auth roles')
     }
   }
 
-  /** Gets and stores parties info . */
+  /** Fetches and stores parties info . */
   private async loadPartiesInformation (businessId: string): Promise<any> {
     // NB: will throw if API error
     const parties = await LegalServices.fetchParties(businessId)

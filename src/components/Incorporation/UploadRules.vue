@@ -246,7 +246,7 @@ export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
   @Getter(useStore) getCreateRulesStep!: CreateRulesIF
   @Getter(useStore) getNameRequestApprovedName!: string
   @Getter(useStore) getShowErrors!: boolean
-  @Getter(useStore) getUserKeycloakGuid!: string
+  @Getter(useStore) getKeycloakGuid!: string
 
   @Action(useStore) setRules!: ActionBindingIF
   @Action(useStore) setRulesStepValidity!: ActionBindingIF
@@ -298,7 +298,7 @@ export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
       const doc: DocumentUpload = await this.getPresignedUrl(this.uploadRulesDoc.name)
 
       // NB: will return error response if API error
-      const res = await this.uploadToUrl(doc.preSignedUrl, this.uploadRulesDoc, doc.key, this.getUserKeycloakGuid)
+      const res = await this.uploadToUrl(doc.preSignedUrl, this.uploadRulesDoc, doc.key, this.getKeycloakGuid)
 
       if (res && res.status === 200) {
         const rulesFile = {

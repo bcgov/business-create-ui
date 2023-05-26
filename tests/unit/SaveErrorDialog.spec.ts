@@ -17,7 +17,7 @@ document.body.setAttribute('data-app', 'true')
 
 describe('Save Error Dialog', () => {
   it('renders the component properly as a staff user with no errors or warnings', () => {
-    store.stateModel.tombstone.authRoles = ['staff', 'edit', 'view']
+    store.stateModel.tombstone.keycloakRoles = ['staff']
     const wrapper = shallowMount(SaveErrorDialog,
       {
         vuetify,
@@ -37,7 +37,7 @@ describe('Save Error Dialog', () => {
   })
 
   it('renders the component properly as a regular user with no errors or warnings', () => {
-    store.stateModel.tombstone.authRoles = ['edit', 'view']
+    store.stateModel.tombstone.keycloakRoles = []
     const wrapper = shallowMount(SaveErrorDialog,
       {
         vuetify,
@@ -59,7 +59,7 @@ describe('Save Error Dialog', () => {
   })
 
   it('renders the component properly when there are only errors', () => {
-    store.stateModel.tombstone.authRoles = ['edit', 'view']
+    store.stateModel.tombstone.keycloakRoles = []
     const wrapper = shallowMount(SaveErrorDialog,
       {
         vuetify,
@@ -86,7 +86,7 @@ describe('Save Error Dialog', () => {
   })
 
   it('renders the component properly when there are only warnings', () => {
-    store.stateModel.tombstone.authRoles = ['edit', 'view']
+    store.stateModel.tombstone.keycloakRoles = []
     const wrapper = shallowMount(SaveErrorDialog,
       {
         vuetify,
@@ -113,7 +113,7 @@ describe('Save Error Dialog', () => {
   })
 
   it('renders the component properly when there are both errors and warnings', () => {
-    store.stateModel.tombstone.authRoles = ['edit', 'view']
+    store.stateModel.tombstone.keycloakRoles = []
     const wrapper = shallowMount(SaveErrorDialog,
       {
         vuetify,

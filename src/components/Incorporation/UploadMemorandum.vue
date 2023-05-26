@@ -269,7 +269,7 @@ export default class UploadMemorandum extends Mixins(CommonMixin, DocumentMixin)
   @Getter(useStore) getCreateMemorandumStep!: CreateMemorandumIF
   @Getter(useStore) getNameRequestApprovedName!: string
   @Getter(useStore) getShowErrors!: boolean
-  @Getter(useStore) getUserKeycloakGuid!: string
+  @Getter(useStore) getKeycloakGuid!: string
 
   @Action(useStore) setMemorandum!: ActionBindingIF
   @Action(useStore) setMemorandumStepValidity!: ActionBindingIF
@@ -336,7 +336,7 @@ export default class UploadMemorandum extends Mixins(CommonMixin, DocumentMixin)
       const doc: DocumentUpload = await this.getPresignedUrl(this.uploadMemorandumDoc.name)
 
       // NB: will return error response if API error
-      const res = await this.uploadToUrl(doc.preSignedUrl, this.uploadMemorandumDoc, doc.key, this.getUserKeycloakGuid)
+      const res = await this.uploadToUrl(doc.preSignedUrl, this.uploadMemorandumDoc, doc.key, this.getKeycloakGuid)
 
       if (res && res.status === 200) {
         const memorandumFile = {

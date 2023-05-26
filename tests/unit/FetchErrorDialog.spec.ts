@@ -17,7 +17,7 @@ document.body.setAttribute('data-app', 'true')
 
 describe('Fetch Error Dialog', () => {
   it('renders the component properly as a staff user', () => {
-    store.stateModel.tombstone.authRoles = ['staff', 'edit', 'view']
+    store.stateModel.tombstone.keycloakRoles = ['staff']
     const wrapper = shallowMount(FetchErrorDialog,
       {
         vuetify,
@@ -37,7 +37,7 @@ describe('Fetch Error Dialog', () => {
   })
 
   it('renders the component properly as a regular user', () => {
-    store.stateModel.tombstone.authRoles = ['edit', 'view']
+    store.stateModel.tombstone.keycloakRoles = []
     const wrapper = shallowMount(FetchErrorDialog,
       {
         vuetify,

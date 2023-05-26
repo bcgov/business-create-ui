@@ -334,7 +334,7 @@ describe('Add/Edit Org/Person component', () => {
   })
 
   it('Shows popup if there is already a completing party', async () => {
-    store.stateModel.tombstone.authRoles = ['staff']
+    store.stateModel.tombstone.keycloakRoles = ['staff']
     const wrapper: Wrapper<AddEditOrgPerson> = createComponent(
       validIncorporator,
       NaN,
@@ -350,11 +350,11 @@ describe('Add/Edit Org/Person component', () => {
     expect(wrapper.vm.$refs.confirmDialog).toBeTruthy()
 
     wrapper.destroy()
-    store.stateModel.tombstone.authRoles = []
+    store.stateModel.tombstone.keycloakRoles = []
   })
 
   it('Emits events correctly on confirming reassign completing party', async () => {
-    store.stateModel.tombstone.authRoles = ['staff']
+    store.stateModel.tombstone.keycloakRoles = ['staff']
     const wrapper: Wrapper<AddEditOrgPerson> = createComponent(
       validIncorporator,
       NaN,
@@ -390,7 +390,6 @@ describe('Add/Edit Org/Person component', () => {
     expect(event.roles[1].roleType).toBe('Incorporator')
 
     wrapper.destroy()
-    store.stateModel.tombstone.authRoles = []
   })
 
   it('Emits cancel event', async () => {
