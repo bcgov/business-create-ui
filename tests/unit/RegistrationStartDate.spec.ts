@@ -47,9 +47,9 @@ for (const mock of mockEntity) {
       expect(wrapper.find('#date-picker').text()).toContain('Start Date')
     })
 
-    it('verifies min start date to be today 2 years in the past', async () => {
+    it('verifies min start date to be today 10 years in the past', async () => {
       const mockDate = new Date(today)
-      mockDate.setFullYear(mockDate.getFullYear() - 2)
+      mockDate.setFullYear(mockDate.getFullYear() - 10)
       mockDate.setHours(0, 0, 0)
 
       expect(wrapper.vm.startDateMin).toStrictEqual(mockDate)

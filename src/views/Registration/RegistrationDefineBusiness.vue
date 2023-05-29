@@ -99,16 +99,21 @@
       <header id="business-start-date-header">
         <h2>Business Start Date</h2>
         <p class="mt-4">
-          Enter the start date of the business. The start date can be
-          <v-tooltip top max-width="20rem" content-class="top-tooltip" transition="fade-transition">
-            <template v-slot:activator="{ on }">
-              <span v-on="on" class="tool-tip dotted-underline">no more than 2 years in the past</span>
-            </template>
-            <span>Choose the oldest date possible even if the actual start date is older than 2 years in the
-              past.</span>
-          </v-tooltip>
-          and 90 days in the future. Make certain that this is the correct date as it cannot be easily
-          corrected afterwards.
+          <template v-if="isRoleStaff">
+            Enter the start date of the business. The start date can be no more than 90 days in the future.
+          </template>
+          <template v-else>
+            Enter the start date of the business. The start date can be
+            <v-tooltip top max-width="20rem" content-class="top-tooltip" transition="fade-transition">
+              <template v-slot:activator="{ on }">
+                <span v-on="on" class="tool-tip dotted-underline">no more than 10 years in the past</span>
+              </template>
+              <span>Choose the oldest date possible even if the actual start date is older than 10 years in the
+                past.</span>
+            </v-tooltip>
+            and 90 days in the future.
+          </template>
+          Make certain that this is the correct date as it cannot be easily corrected afterwards.
         </p>
       </header>
 
@@ -151,6 +156,7 @@ export default class RegistrationDefineBusiness extends Mixins(CommonMixin) {
   @Getter(useStore) getBusinessContact!: ContactPointIF
   @Getter(useStore) getRegistration!: RegistrationStateIF
   @Getter(useStore) getShowErrors!: boolean
+  @Getter(useStore) isRoleStaff!: boolean
   @Getter(useStore) isTypePartnership!: boolean
   @Getter(useStore) isTypeSoleProp!: boolean
 

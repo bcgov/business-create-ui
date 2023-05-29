@@ -50,13 +50,14 @@ export default class StartDate extends Mixins(DateMixin) {
   // Global getters
   @Getter(useStore) getRegistration!: RegistrationStateIF
   @Getter(useStore) getShowErrors!: boolean
+  @Getter(useStore) isRoleStaff!: boolean
 
   protected dateText = ''
 
-  /** The minimum start date that can be entered (Up to 2 years ago today). */
+  /** The minimum start date that can be entered (up to 10 years ago today). */
   get startDateMin (): Date {
     const startDateMin = new Date(this.getCurrentJsDate) // make a copy
-    startDateMin.setFullYear(startDateMin.getFullYear() - 2)
+    startDateMin.setFullYear(startDateMin.getFullYear() - 10)
     startDateMin.setHours(0, 0, 0) // Set time to 0 for accurate Date Rules comparison
 
     return startDateMin
@@ -64,6 +65,9 @@ export default class StartDate extends Mixins(DateMixin) {
 
   /** The minimum start date string. */
   get startDateMinStr (): string {
+    // no minimum start date restriction for staff
+    if (this.isRoleStaff) return ''
+
     return this.dateToYyyyMmDd(this.startDateMin)
   }
 
@@ -81,16 +85,22 @@ export default class StartDate extends Mixins(DateMixin) {
 
   /** Validations rules for start date field. */
   get startDateRules (): Array<VuetifyRuleFunction> {
-    return [
-      (v: string) => !!v || 'Business start date is required',
-      (v: string) =>
-        RuleHelpers.DateRuleHelpers
-          .isBetweenDates(this.startDateMin,
-            this.startDateMax,
-            v) ||
+    const rules = [(v: string) => !!v || 'Business start date is required'] as VuetifyRuleFunction[]
+    if (this.isRoleStaff) {
+      // validate only max date for staff
+      rules.push((v: string) => (
+        RuleHelpers.DateRuleHelpers.isNotAfterDate(this.startDateMax, v) ||
+        `Date cannot be after ${this.dateToPacificDate(this.startDateMax, true)}`
+      ))
+    } else {
+      // validate min and max date
+      rules.push((v: string) => (
+        RuleHelpers.DateRuleHelpers.isBetweenDates(this.startDateMin, this.startDateMax, v) ||
         `Date should be between ${this.dateToPacificDate(this.startDateMin, true)} and
-        ${this.dateToPacificDate(this.startDateMax, true)}`
-    ]
+          ${this.dateToPacificDate(this.startDateMax, true)}`
+      ))
+    }
+    return rules
   }
 
   startDateHandler (dateString: string): void {
