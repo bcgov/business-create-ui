@@ -6,7 +6,7 @@
       <v-card-text id="dialog-text">
         <!-- display common message -->
         <div class="font-15" v-if="!isRoleStaff">
-          <p>We are unable to process your payment at this time. This Application has been saved
+          <p>We are unable to process your payment at this time. This {{ filingName }} has been saved
             as a DRAFT, you can retry your payment from your Business Registry dashboard at a later time.</p>
         </div>
 
@@ -73,6 +73,9 @@ import RegistriesContactInfo from '@/components/common/RegistriesContactInfo.vue
 })
 export default class PaymentErrorDialog extends Vue {
   @Getter(useStore) isRoleStaff!: boolean
+
+  /** Prop containing filing name. */
+  @Prop({ default: 'Filing' }) readonly filingName!: string
 
   /** Prop to display the dialog. */
   @Prop({ default: false }) readonly dialog!: boolean

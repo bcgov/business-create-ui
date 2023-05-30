@@ -51,6 +51,7 @@
 
     <PaymentErrorDialog
       attach="#app"
+      filingName="Application"
       :dialog="paymentErrorDialog"
       :errors="saveErrors"
       :warnings="saveWarnings"
