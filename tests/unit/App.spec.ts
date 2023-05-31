@@ -364,6 +364,11 @@ describe('Incorporation - Define Company page for a BEN (numbered)', () => {
       stubs: { Affix: true }
     })
 
+    // return some valid Keycloak roles
+    jest.spyOn(wrapper.vm, 'loadKeycloakRoles').mockImplementation(() => {
+      return Promise.resolve(['edit', 'view'])
+    })
+
     // wait for all queries to complete
     await flushPromises()
   })
@@ -507,6 +512,11 @@ describe('Incorporation - Define Company page for a BEN (named)', () => {
       stubs: { Affix: true, ConfirmDialog }
     })
 
+    // return some valid Keycloak roles
+    jest.spyOn(wrapper.vm, 'loadKeycloakRoles').mockImplementation(() => {
+      return Promise.resolve(['edit', 'view'])
+    })
+
     // wait for all queries to complete
     await flushPromises()
   })
@@ -526,9 +536,7 @@ describe('Incorporation - Define Company page for a BEN (named)', () => {
     expect(wrapper.findComponent(Actions).exists()).toBe(true)
   })
 
-  it('gets auth and user info properly', () => {
-    expect(store.isAuthEdit).toBe(true)
-    expect(store.isAuthView).toBe(true)
+  it('gets user email properly', () => {
     expect(store.stateModel.tombstone.userEmail).toBe('completing-party@example.com')
   })
 
@@ -871,6 +879,11 @@ describe('Voluntary Dissolution - Define Dissolution page for a BEN', () => {
       stubs: { Affix: true }
     })
 
+    // return some valid Keycloak roles
+    jest.spyOn(wrapper.vm, 'loadKeycloakRoles').mockImplementation(() => {
+      return Promise.resolve(['edit', 'view'])
+    })
+
     // wait for all queries to complete
     await flushPromises()
   })
@@ -1065,6 +1078,11 @@ describe('Restoration - App page', () => {
       router,
       vuetify,
       stubs: { Affix: true }
+    })
+
+    // return some valid Keycloak roles
+    jest.spyOn(wrapper.vm, 'loadKeycloakRoles').mockImplementation(() => {
+      return Promise.resolve(['edit', 'view'])
     })
 
     // wait for all queries to complete

@@ -209,7 +209,7 @@ export default class CompleteAffidavit extends Mixins(CommonMixin, DocumentMixin
   @Getter(useStore) getBusinessLegalName!: string
   @Getter(useStore) getEntityType!: CorpTypeCd
   @Getter(useStore) getShowErrors!: boolean
-  @Getter(useStore) getUserKeycloakGuid!: string
+  @Getter(useStore) getKeycloakGuid!: string
   @Getter(useStore) isTypeCoop!: boolean
 
   @Action(useStore) setAffidavit!: ActionBindingIF
@@ -280,7 +280,7 @@ export default class CompleteAffidavit extends Mixins(CommonMixin, DocumentMixin
       const doc: DocumentUpload = await this.getPresignedUrl(this.uploadAffidavitDoc.name)
 
       // NB: will return error response if API error
-      const res = await this.uploadToUrl(doc.preSignedUrl, this.uploadAffidavitDoc, doc.key, this.getUserKeycloakGuid)
+      const res = await this.uploadToUrl(doc.preSignedUrl, this.uploadAffidavitDoc, doc.key, this.getKeycloakGuid)
 
       if (res && res.status === 200) {
         const affidavitFile = {

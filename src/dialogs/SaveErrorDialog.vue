@@ -64,6 +64,7 @@ import { Component, Emit, Prop, Vue } from 'vue-property-decorator'
 import { Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import RegistriesContactInfo from '@/components/common/RegistriesContactInfo.vue'
+import { FilingTypes } from '@bcrs-shared-components/enums'
 
 @Component({
   components: {
@@ -72,9 +73,7 @@ import RegistriesContactInfo from '@/components/common/RegistriesContactInfo.vue
 })
 export default class SaveErrorDialog extends Vue {
   @Getter(useStore) isRoleStaff!: boolean
-
-  /** Prop containing filing name. */
-  @Prop({ default: 'Application' }) readonly filingName!: string
+  @Getter(useStore) getFilingType!: FilingTypes
 
   /** Prop to display the dialog. */
   @Prop({ default: false }) readonly dialog!: boolean
@@ -91,6 +90,17 @@ export default class SaveErrorDialog extends Vue {
   // Pass click events to parent.
   @Emit() exit (): void {}
   @Emit() okay (): void {}
+
+  /** The filing name. */
+  get filingName (): string {
+    switch (this.getFilingType) {
+      case FilingTypes.INCORPORATION_APPLICATION: return 'Application'
+      case FilingTypes.REGISTRATION: return 'Registration'
+      case FilingTypes.RESTORATION: return 'Restoration'
+      case FilingTypes.DISSOLUTION: return 'Filing'
+      default: return 'Application'
+    }
+  }
 
   /** The number of errors in the passed-in array. */
   get numErrors (): number {

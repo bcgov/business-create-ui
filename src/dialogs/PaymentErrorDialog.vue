@@ -6,7 +6,7 @@
       <v-card-text id="dialog-text">
         <!-- display common message -->
         <div class="font-15" v-if="!isRoleStaff">
-          <p>We are unable to process your payment at this time. This {{filingName}} has been saved
+          <p>We are unable to process your payment at this time. This {{ filingName }} has been saved
             as a DRAFT, you can retry your payment from your Business Registry dashboard at a later time.</p>
         </div>
 
