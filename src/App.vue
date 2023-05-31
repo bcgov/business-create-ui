@@ -49,6 +49,7 @@
       @doNotShow="doNotShowSurvey($event)"
     />
 
+    <!-- FUTURE: pass actual filing name -->
     <PaymentErrorDialog
       attach="#app"
       filingName="Application"
