@@ -1,65 +1,53 @@
-import { wrapperFactory } from '../jest-wrapper-factory'
-import { RegistrationResources } from '@/resources'
+import Vue from 'vue'
+import Vuetify from 'vuetify'
+import { mount } from '@vue/test-utils'
+import { createPinia, setActivePinia } from 'pinia'
+import { useStore } from '@/store/store'
 import StartDate from '@/components/Registration/StartDate.vue'
 
-// Test Case Data
-const mockEntity = [
-  {
-    entityType: 'SP',
-    initialValue: '2022-02-08'
-  },
-  {
-    entityType: 'GP',
-    initialValue: '2022-02-08'
-  }
-]
+Vue.use(Vuetify)
+const vuetify = new Vuetify({})
 
-for (const mock of mockEntity) {
-  describe(`Start Date component for a ${mock.entityType}`, () => {
-    let wrapper: any
-    const today = new Date()
+setActivePinia(createPinia())
+const store = useStore()
 
-    beforeEach(() => {
-      wrapper = wrapperFactory(
-        StartDate,
-        null,
-        {
-          entityType: mock.entityType,
-          currentJsDate: today
-        },
-        null,
-        RegistrationResources
-      )
-    })
+describe('Start Date component', () => {
+  let wrapper: any
 
-    afterEach(() => {
-      wrapper.destroy()
-    })
-
-    it('renders the component properly', () => {
-      // verify component
-      expect(wrapper.find('.start-date-title').text()).toBe('Start Date')
-      expect(wrapper.find('#start-date-selector').exists()).toBe(true)
-      expect(wrapper.find('#date-picker').exists()).toBe(true)
-    })
-
-    it('renders the correct initial text', async () => {
-      expect(wrapper.find('#date-picker').text()).toContain('Start Date')
-    })
-
-    it('verifies min start date to be today 10 years in the past', async () => {
-      const mockDate = new Date(today)
-      mockDate.setFullYear(mockDate.getFullYear() - 10)
-      mockDate.setHours(0, 0, 0)
-
-      expect(wrapper.vm.startDateMin).toStrictEqual(mockDate)
-    })
-
-    it('verifies max start date to be today + 90 days in the future', async () => {
-      const mockDate = new Date(today)
-      mockDate.setDate(mockDate.getDay() + 90)
-
-      expect(wrapper.vm.startDateMax).toStrictEqual(mockDate)
-    })
+  beforeEach(() => {
+    wrapper = mount(StartDate, { vuetify })
   })
-}
+
+  afterEach(() => {
+    wrapper.destroy()
+  })
+
+  it('renders the component properly', () => {
+    // verify component
+    expect(wrapper.find('.start-date-title').text()).toBe('Start Date')
+    expect(wrapper.find('#start-date-selector').exists()).toBe(true)
+    expect(wrapper.find('#date-picker').exists()).toBe(true)
+  })
+
+  it('renders the correct initial text', async () => {
+    expect(wrapper.find('#date-picker').text()).toContain('Start Date')
+  })
+
+  it('has correct minimum and maximum dates for a staff user ', () => {
+    // set datetime in UTC so tests pass both locally and in GitHub
+    store.setCurrentJsDate(new Date('2023-06-14T12:00:00.000Z'))
+    store.setKeycloakRoles(['staff'])
+
+    expect(wrapper.vm.startDateMin).toBe(null) // no minimum date
+    expect(wrapper.vm.startDateMax).toBe('2023-09-12') // 90 days from now
+  })
+
+  it('has correct minimum and maximum dates for a regular user', () => {
+    // set datetime in UTC so tests pass both locally and in GitHub
+    store.setCurrentJsDate(new Date('2023-06-14T12:00:00.000Z'))
+    store.setKeycloakRoles([])
+
+    expect(wrapper.vm.startDateMin).toBe('2013-06-14') // 10 years ago
+    expect(wrapper.vm.startDateMax).toBe('2023-09-12') // 90 days from now
+  })
+})

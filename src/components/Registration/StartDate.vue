@@ -13,9 +13,8 @@
           :nudgeRight="40"
           :nudgeTop="85"
           :initialValue="getRegistration.startDate"
-          :minDate="startDateMinStr"
-          :maxDate="startDateMaxStr"
-          :inputRules="getShowErrors ? startDateRules : []"
+          :minDate="startDateMin"
+          :maxDate="startDateMax"
           @emitDateSync="startDateHandler($event)"
         />
       </v-col>
@@ -29,9 +28,7 @@ import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { ActionBindingIF, RegistrationStateIF } from '@/interfaces'
 import { DatePicker as DatePickerShared } from '@bcrs-shared-components/date-picker'
-import { RuleHelpers } from '@/rules'
 import { DateMixin } from '@/mixins'
-import { VuetifyRuleFunction } from '@/types'
 
 @Component({
   components: {
@@ -54,53 +51,21 @@ export default class StartDate extends Mixins(DateMixin) {
 
   protected dateText = ''
 
-  /** The minimum start date that can be entered (up to 10 years ago today). */
-  get startDateMin (): Date {
-    const startDateMin = new Date(this.getCurrentJsDate) // make a copy
-    startDateMin.setFullYear(startDateMin.getFullYear() - 10)
-    startDateMin.setHours(0, 0, 0) // Set time to 0 for accurate Date Rules comparison
+  /** The minimum start date that can be entered (up to 10 years before today). */
+  get startDateMin (): string {
+    // no min date for staff
+    if (this.isRoleStaff) return null
 
-    return startDateMin
+    const date = new Date(this.getCurrentJsDate) // make a copy
+    date.setFullYear(date.getFullYear() - 10)
+    return this.dateToYyyyMmDd(date)
   }
 
-  /** The minimum start date string. */
-  get startDateMinStr (): string {
-    // no minimum start date restriction for staff
-    if (this.isRoleStaff) return ''
-
-    return this.dateToYyyyMmDd(this.startDateMin)
-  }
-
-  /** The maximum start date that can be entered (Up to 90 days from today). */
-  get startDateMax (): Date {
-    const startDateMax = new Date(this.getCurrentJsDate) // make a copy
-    startDateMax.setDate(startDateMax.getDay() + 90)
-    return startDateMax
-  }
-
-  /** The maximum start date string. */
-  get startDateMaxStr (): string {
-    return this.dateToYyyyMmDd(this.startDateMax)
-  }
-
-  /** Validations rules for start date field. */
-  get startDateRules (): Array<VuetifyRuleFunction> {
-    const rules = [(v: string) => !!v || 'Business start date is required'] as VuetifyRuleFunction[]
-    if (this.isRoleStaff) {
-      // validate only max date for staff
-      rules.push((v: string) => (
-        RuleHelpers.DateRuleHelpers.isNotAfterDate(this.startDateMax, v) ||
-        `Date cannot be after ${this.dateToPacificDate(this.startDateMax, true)}`
-      ))
-    } else {
-      // validate min and max date
-      rules.push((v: string) => (
-        RuleHelpers.DateRuleHelpers.isBetweenDates(this.startDateMin, this.startDateMax, v) ||
-        `Date should be between ${this.dateToPacificDate(this.startDateMin, true)} and
-          ${this.dateToPacificDate(this.startDateMax, true)}`
-      ))
-    }
-    return rules
+  /** The maximum start date that can be entered (up to 90 days after today). */
+  get startDateMax (): string {
+    const date = new Date(this.getCurrentJsDate) // make a copy
+    date.setDate(date.getDate() + 90)
+    return this.dateToYyyyMmDd(date)
   }
 
   startDateHandler (dateString: string): void {
