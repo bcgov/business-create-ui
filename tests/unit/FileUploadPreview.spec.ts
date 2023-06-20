@@ -23,6 +23,7 @@ function myArrayBuffer () {
     fr.onload = () => {
       resolve(fr.result)
     }
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     fr.readAsArrayBuffer(this)
   })

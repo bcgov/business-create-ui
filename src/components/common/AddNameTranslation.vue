@@ -3,24 +3,30 @@
     <!-- Name Translation form -->
     <v-form v-model="nameTranslationForm">
       <v-text-field
+        id="name-translation-input"
+        v-model="nameTranslation"
         filled
         persistent-hint
-        id="name-translation-input"
         label="Enter Name Translation"
-        v-model="nameTranslation"
         :rules="nameTranslationRules"
         @input="nameTranslation = nameTranslation.toUpperCase()"
       />
 
       <div class="form__btns">
-        <v-btn large color="error" id="name-translation-btn-remove"
+        <v-btn
+          id="name-translation-btn-remove"
+          large
+          color="error"
           :disabled="!editNameTranslation"
           @click="removeTranslation()"
         >
           Remove
         </v-btn>
 
-        <v-btn large color="primary" id="name-translation-btn-done"
+        <v-btn
+          id="name-translation-btn-done"
+          large
+          color="primary"
           class="form-primary-btn"
           :disabled="!nameTranslationForm"
           @click="addTranslation()"
@@ -28,7 +34,9 @@
           Done
         </v-btn>
 
-        <v-btn large id="name-translation-btn-cancel"
+        <v-btn
+          id="name-translation-btn-cancel"
+          large
           @click="cancelTranslation()"
         >
           Cancel

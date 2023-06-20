@@ -1,11 +1,14 @@
 <template>
-  <div id="action-buttons-container" class="list-item pa-0">
-
+  <div
+    id="action-buttons-container"
+    class="list-item pa-0"
+  >
     <div class="buttons-left">
       <v-btn
         v-if="isSummaryStep"
         id="app-summary-cancel-btn"
-        large outlined
+        large
+        outlined
         color="primary"
         :disabled="isBusySaving"
         @click="onClickCancel()"
@@ -15,7 +18,8 @@
 
       <v-btn
         id="save-btn"
-        large outlined
+        large
+        outlined
         color="primary"
         :disabled="!isEntityType || isBusySaving"
         :loading="isSaving"
@@ -26,7 +30,8 @@
 
       <v-btn
         id="save-resume-btn"
-        large outlined
+        large
+        outlined
         color="primary"
         :disabled="!isEntityType || isBusySaving"
         :loading="isSavingResuming"
@@ -39,11 +44,12 @@
     <div class="buttons-right">
       <v-fade-transition hide-on-leave>
         <v-btn
+          v-show="isShowBackBtn"
           id="back-btn"
-          large outlined
+          large
+          outlined
           color="primary"
           :to="previousRoute"
-          v-show="isShowBackBtn"
           :disabled="isBusySaving"
         >
           <v-icon>mdi-chevron-left</v-icon>
@@ -53,11 +59,11 @@
 
       <v-fade-transition hide-on-leave>
         <v-btn
+          v-show="isShowReviewConfirmBtn"
           id="review-confirm-btn"
           large
           color="primary"
           :to="nextRoute"
-          v-show="isShowReviewConfirmBtn"
           :disabled="isBusySaving"
         >
           <span class="font-weight-bold">{{ nextButtonLabel }}</span>
@@ -67,10 +73,10 @@
 
       <v-fade-transition hide-on-leave>
         <v-btn
+          v-show="isShowFilePayBtn"
           id="file-pay-btn"
           large
           color="primary"
-          v-show="isShowFilePayBtn"
           :loading="isFilingPaying"
           @click="onClickFilePay()"
         >
@@ -81,7 +87,8 @@
       <v-btn
         v-if="!isSummaryStep"
         id="app-cancel-btn"
-        large outlined
+        large
+        outlined
         color="primary"
         :disabled="isBusySaving"
         @click="onClickCancel()"
@@ -89,7 +96,6 @@
         <span>Cancel</span>
       </v-btn>
     </div>
-
   </div>
 </template>
 

@@ -2,65 +2,99 @@
   <div id="business-contact-info">
     <!-- EDIT SECTION -->
     <template v-if="isEditing">
-      <v-form v-model="formValid" ref="form">
-        <v-row no-gutters class="edit-section">
+      <v-form
+        ref="form"
+        v-model="formValid"
+      >
+        <v-row
+          no-gutters
+          class="edit-section"
+        >
           <!-- Email Address -->
-          <v-col cols="12" sm="3" class="pr-4">
+          <v-col
+            cols="12"
+            sm="3"
+            class="pr-4"
+          >
             <label class="title-label">Email Address</label>
           </v-col>
-          <v-col cols="12" sm="9" class="pt-4 pt-sm-0">
+          <v-col
+            cols="12"
+            sm="9"
+            class="pt-4 pt-sm-0"
+          >
             <v-text-field
+              id="txt-email"
+              v-model="contact.email"
               filled
               label="Email Address"
               req
               persistent-hint
               :rules="Rules.EmailRules"
-              v-model="contact.email"
-              id="txt-email"
             />
           </v-col>
 
           <!-- Confirm Email -->
-          <v-col cols="12" sm="3" class="pr-4">
+          <v-col
+            cols="12"
+            sm="3"
+            class="pr-4"
+          >
             <label class="title-label">Confirm Email</label>
           </v-col>
-          <v-col cols="12" sm="9" class="pt-4 pt-sm-0">
+          <v-col
+            cols="12"
+            sm="9"
+            class="pt-4 pt-sm-0"
+          >
             <v-text-field
+              id="txt-confirm-email"
+              v-model="contact.confirmEmail"
               filled
               label="Confirm Email Address"
               req
               persistent-hint
               :error-messages="emailMustMatch()"
-              v-model="contact.confirmEmail"
-              id="txt-confirm-email"
             />
           </v-col>
 
           <!-- Phone Number -->
-          <v-col cols="12" sm="3" class="pr-4">
+          <v-col
+            cols="12"
+            sm="3"
+            class="pr-4"
+          >
             <label class="title-label">Phone Number</label>
           </v-col>
-          <v-col cols="6" sm="4" class="pr-2 pt-4 pt-sm-0">
+          <v-col
+            cols="6"
+            sm="4"
+            class="pr-2 pt-4 pt-sm-0"
+          >
             <v-text-field
+              id="txt-phone"
+              v-model="contact.phone"
+              v-mask="['(###) ###-####']"
               filled
               label="Phone Number (Optional)"
               persistent-hint
               hint="Example: (555) 555-5555"
               type="tel"
-              v-mask="['(###) ###-####']"
-              v-model="contact.phone"
               :rules="Rules.PhoneRules"
-              id="txt-phone"
             />
           </v-col>
-          <v-col cols="6" sm="4" class="pl-2 pt-4 pt-sm-0">
+          <v-col
+            cols="6"
+            sm="4"
+            class="pl-2 pt-4 pt-sm-0"
+          >
             <v-text-field
+              id="txt-phone-extension"
+              v-model="contact.extension"
+              v-mask="'#####'"
               filled
               label="Extension (Optional)"
               persistent-hint
-              v-mask="'#####'"
-              v-model="contact.extension"
-              id="txt-phone-extension"
             />
           </v-col>
         </v-row>
@@ -69,23 +103,49 @@
 
     <!-- SUMMARY SECTION -->
     <template v-else>
-      <v-row no-gutters class="summary-section">
-        <v-col cols="12" sm="3" class="pr-4">
+      <v-row
+        no-gutters
+        class="summary-section"
+      >
+        <v-col
+          cols="12"
+          sm="3"
+          class="pr-4"
+        >
           <label v-if="isIncorporationFiling">Registered Office Contact Information</label>
           <label v-else>Business Contact Information</label>
         </v-col>
 
-        <v-col cols="12" sm="4" class="pr-4 pt-4 pt-sm-0">
+        <v-col
+          cols="12"
+          sm="4"
+          class="pr-4 pt-4 pt-sm-0"
+        >
           <label class="email-header">Email Address</label>
-          <div id="lbl-email">{{ !!contact.email ? contact.email : '(Not entered)' }}</div>
+          <div id="lbl-email">
+            {{ !!contact.email ? contact.email : '(Not entered)' }}
+          </div>
         </v-col>
 
-        <v-col cols="12" sm="4" class="pr-4 pt-4 pt-sm-0">
+        <v-col
+          cols="12"
+          sm="4"
+          class="pr-4 pt-4 pt-sm-0"
+        >
           <label class="phone-header">Phone Number</label>
-          <div id="lbl-phone" v-if="!!contact.phone">{{ contact.phone }}
+          <div
+            v-if="!!contact.phone"
+            id="lbl-phone"
+          >
+            {{ contact.phone }}
             <span v-if="!!contact.extension">Ext: {{ contact.extension }}</span>
           </div>
-          <div id="lbl-phone" v-else>(Not entered)</div>
+          <div
+            v-else
+            id="lbl-phone"
+          >
+            (Not entered)
+          </div>
         </v-col>
       </v-row>
     </template>

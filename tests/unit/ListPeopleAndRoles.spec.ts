@@ -356,7 +356,7 @@ describe('List People And Roles component - SP registration', () => {
     expect(peoplesListItem1.querySelector('.name-column .name').textContent)
       .toBe('Crazy Cat Consulting Company')
     expect(peoplesListItem1.querySelector('.name-column .email').textContent)
-      .toBe('proprietor@example.com')
+      .toContain('proprietor@example.com')
     expect(peoplesListItem1.querySelector('.name-column .business-number').textContent)
       .toContain('123456789')
 
@@ -364,7 +364,7 @@ describe('List People And Roles component - SP registration', () => {
     expect(peoplesListItem2.querySelector('.name-column .name').textContent)
       .toBe('Lucille BCREGTEST TWENTY')
     expect(peoplesListItem2.querySelector('.name-column .email').textContent)
-      .toBe('lucille@example.com')
+      .toContain('lucille@example.com')
   })
 
   it('displays the correct roles', () => {

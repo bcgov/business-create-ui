@@ -6,29 +6,48 @@
         <h2>Name</h2>
       </header>
 
-      <v-card flat class="mt-5">
+      <v-card
+        flat
+        class="mt-5"
+      >
         <NameRequestInfo />
-        <NameTranslations v-if="!isTypeCoop" class="mt-n8" />
+        <NameTranslations
+          v-if="!isTypeCoop"
+          class="mt-n8"
+        />
       </v-card>
     </section>
 
     <!-- Cooperative Association Type -->
-    <section class="mt-10" v-show="isTypeCoop">
+    <section
+      v-show="isTypeCoop"
+      class="mt-10"
+    >
       <header id="cooperative-type-header">
         <h2>Cooperative Association Type</h2>
         <!-- Help Section -->
         <div class="mt-4">
-          <span class="help-btn" @click="coopHelpToggle = !coopHelpToggle">
-            <v-icon color="primary" style="padding-right: 5px">mdi-help-circle-outline</v-icon>
+          <span
+            class="help-btn"
+            @click="coopHelpToggle = !coopHelpToggle"
+          >
+            <v-icon
+              color="primary"
+              style="padding-right: 5px"
+            >mdi-help-circle-outline</v-icon>
             <span v-if="!coopHelpToggle">Help with Cooperative Association Types</span>
             <span v-else>Hide Help</span>
           </span>
-          <section v-show="coopHelpToggle" class="coop-type-help">
+          <section
+            v-show="coopHelpToggle"
+            class="coop-type-help"
+          >
             <header id="coop-type-help-header">
               <h2>Help with Cooperative Association Types</h2>
             </header>
 
-            <p><strong>Community Service Cooperatives</strong> are a particular kind of cooperative
+            <p>
+              <strong>Community Service Cooperatives</strong> are a particular kind of cooperative
               recognized under the Cooperative Association Act. Community Service Cooperatives have a
               similar status to that of non-profit societies. This type of cooperative also requires the
               inclusion of non-alterable clauses in their rules to ensure they operate on a non-profit
@@ -36,24 +55,32 @@
               community services. Community Service Cooperatives cannot be Housing Cooperatives and cannot
               issue investment shares.
             </p>
-            <p><strong>Housing Cooperatives</strong> are a specific type of cooperative incorporated under
+            <p>
+              <strong>Housing Cooperatives</strong> are a specific type of cooperative incorporated under
               the Cooperative Association Act that provides housing to its members. Members may purchase
               shares to join the Housing Cooperative and elect directors who will govern the cooperative.
               Housing Cooperatives cannot issue investment shares. The Cooperative Association Act details
               special provisions for Housing Cooperatives that need to be considered when deciding to
               incorporate.
             </p>
-            <p>An <strong>Ordinary Cooperative</strong> is a cooperative that may have a wide range of
+            <p>
+              An <strong>Ordinary Cooperative</strong> is a cooperative that may have a wide range of
               purposes and is neither a Housing nor a Community Service Cooperative. The cooperative may
               operate as a for-profit association and may issue investment shares.
             </p>
-            <u class="help-btn" @click="coopHelpToggle = !coopHelpToggle"><small>Hide Help</small></u>
+            <u
+              class="help-btn"
+              @click="coopHelpToggle = !coopHelpToggle"
+            ><small>Hide Help</small></u>
           </section>
         </div>
       </header>
 
       <div :class="{ 'invalid-section': getShowErrors && !hasValidCooperativeType }">
-        <v-card flat class="step-container">
+        <v-card
+          flat
+          class="step-container"
+        >
           <CooperativeType
             :showErrors="getShowErrors"
             @hasCooperativeType="onHasCooperativeType($event)"
@@ -63,11 +90,17 @@
     </section>
 
     <!-- Registered Office Addresses -->
-    <section class="mt-10" v-show="isEntityType">
+    <section
+      v-show="isEntityType"
+      class="mt-10"
+    >
       <header id="office-address-header">
-        <h2>Registered <span v-if="!isTypeCoop">and Records</span> Office
-          Addresses</h2>
-        <p>Enter the Registered Office <span v-if="!isTypeCoop">and Records Office
+        <h2>
+          Registered <span v-if="!isTypeCoop">and Records</span> Office
+          Addresses
+        </h2>
+        <p>
+          Enter the Registered Office <span v-if="!isTypeCoop">and Records Office
           </span> Mailing and Delivery Addresses. All addresses must be located in BC.
         </p>
       </header>
@@ -83,15 +116,21 @@
     </section>
 
     <!-- Registered Office Contact Information -->
-    <section class="mt-10" v-show="isEntityType">
+    <section
+      v-show="isEntityType"
+      class="mt-10"
+    >
       <header id="registered-office-contact-header">
         <h2>Registered Office Contact Information</h2>
-        <p>Enter the contact information for the business. The Corporate Registry will use this to communicate with the
+        <p>
+          Enter the contact information for the business. The Corporate Registry will use this to communicate with the
           business in the future, including sending documents and notifications.
         </p>
       </header>
 
-      <v-card flat class="py-8 px-6"
+      <v-card
+        flat
+        class="py-8 px-6"
         :class="{ 'invalid-section': getShowErrors && !businessContactFormValid }"
       >
         <BusinessContactInfo
@@ -105,15 +144,22 @@
     </section>
 
     <!-- Folio / Reference Number -->
-    <section class="mt-10" v-if="isEntityType && isPremiumAccount">
+    <section
+      v-if="isEntityType && isPremiumAccount"
+      class="mt-10"
+    >
       <header id="folio-number-header">
         <h2>Folio / Reference Number (Optional)</h2>
-        <p>Add an optional Folio or Reference Number about this business for your own tracking purposes.
-           This information is not used by the BC Business Registry.
+        <p>
+          Add an optional Folio or Reference Number about this business for your own tracking purposes.
+          This information is not used by the BC Business Registry.
         </p>
       </header>
 
-      <v-card flat class="step-container">
+      <v-card
+        flat
+        class="step-container"
+      >
         <FolioNumber
           :initialValue="getFolioNumber"
           :isEditing="true"

@@ -1,6 +1,12 @@
 <template>
-  <div class="mt-10" id="dissolution-firm">
-    <v-card outlined class="message-box rounded-0">
+  <div
+    id="dissolution-firm"
+    class="mt-10"
+  >
+    <v-card
+      outlined
+      class="message-box rounded-0"
+    >
       <p>
         <strong>Important:</strong> You are about to dissolve
         <strong class="text-capitalize">{{ getBusinessLegalName }}</strong>.
@@ -13,18 +19,27 @@
 
     <!-- Dissolution Summary -->
     <section class="mt-10">
-      <v-card flat id="dissolution-summary" class="mt-6">
+      <v-card
+        id="dissolution-summary"
+        flat
+        class="mt-6"
+      >
         <header class="review-header rounded-t">
-          <v-icon class="ml-2" color="appDkBlue">mdi-domain-remove</v-icon>
+          <v-icon
+            class="ml-2"
+            color="appDkBlue"
+          >
+            mdi-domain-remove
+          </v-icon>
           <label class="font-weight-bold pl-2">Dissolution</label>
         </header>
 
-        <div class="pb-8" >
+        <div class="pb-8">
           <!-- Association Details -->
           <section>
             <AssociationDetails
-              entityLabel= "Business"
-              addressLabel= "Business Address"
+              entityLabel="Business"
+              addressLabel="Business Address"
               :showContactInfo="false"
               :showBusinessDate="true"
               :isSummary="true"
@@ -35,7 +50,10 @@
     </section>
 
     <!-- Dissolution Date -->
-    <section id="dissolution-date-section" class="mt-10">
+    <section
+      id="dissolution-date-section"
+      class="mt-10"
+    >
       <header>
         <h2>Business Dissolution Date</h2>
         <p class="mt-4 ">
@@ -45,13 +63,29 @@
         </p>
       </header>
 
-      <v-card flat class="py-8 px-6 mt-6" :class="{ 'invalid-section': isDissolutionDateInvalid }">
-       <!-- EDIT SECTION -->
-        <v-row no-gutters class="pb-0">
-          <v-col cols="12" sm="3" class="pr-4">
+      <v-card
+        flat
+        class="py-8 px-6 mt-6"
+        :class="{ 'invalid-section': isDissolutionDateInvalid }"
+      >
+        <!-- EDIT SECTION -->
+        <v-row
+          no-gutters
+          class="pb-0"
+        >
+          <v-col
+            cols="12"
+            sm="3"
+            class="pr-4"
+          >
             <label class="start-date-title font-weight-bold title-label">Dissolution Date</label>
           </v-col>
-          <v-col cols="12" sm="9" class="pt-4 pt-sm-0" id="start-date-selector">
+          <v-col
+            id="start-date-selector"
+            cols="12"
+            sm="9"
+            class="pt-4 pt-sm-0"
+          >
             <DatePickerShared
               id="date-picker"
               title="Dissolution Date"
@@ -61,8 +95,8 @@
               :maxDate="startDateMaxStr"
               :inputRules="startDateRules"
               :errorMsg="dissolutionError()"
-              @emitDateSync="setDissolutionDate($event)"
               :initialValue="getDissolutionDate"
+              @emitDateSync="setDissolutionDate($event)"
             />
           </v-col>
         </v-row>
@@ -70,7 +104,10 @@
     </section>
 
     <!-- Dissolution Documents Delivery -->
-    <section id="document-delivery-section" class="mt-10">
+    <section
+      id="document-delivery-section"
+      class="mt-10"
+    >
       <header>
         <h2>Documents Delivery</h2>
         <p class="mt-4 mb-6">
@@ -78,7 +115,10 @@
         </p>
       </header>
 
-      <v-card flat class="mt-6">
+      <v-card
+        flat
+        class="mt-6"
+      >
         <DocumentDelivery
           class="py-8 px-6"
           :class="{ 'invalid-section': isDocumentDeliveryInvalid }"
@@ -89,17 +129,21 @@
           :custodianEmail="getDissolutionCustodianEmail"
           :completingPartyEmail="getUserEmail"
           :documentOptionalEmail="getDocumentDelivery.documentOptionalEmail"
-          @update:optionalEmail="setDocumentOptionalEmail($event)"
-          @valid="setDocumentOptionalEmailValidity($event)"
           :additionalLabel="additionalLabel"
           :additionalValue="additionalValue"
           contactLabel="Business Contact"
+          @update:optionalEmail="setDocumentOptionalEmail($event)"
+          @valid="setDocumentOptionalEmailValidity($event)"
         />
       </v-card>
     </section>
 
     <!-- Folio or Reference Number -->
-    <section id="folio-number-section" class="mt-10" v-if="isPremiumAccount">
+    <section
+      v-if="isPremiumAccount"
+      id="folio-number-section"
+      class="mt-10"
+    >
       <header>
         <h2>Folio or Reference Number for this Filing</h2>
         <p class="mt-4 mb-6">
@@ -110,7 +154,10 @@
         </p>
       </header>
 
-       <v-card flat class="mt-6">
+      <v-card
+        flat
+        class="mt-6"
+      >
         <TransactionalFolioNumber
           class="py-8 px-6"
           :accountFolioNumber="getFolioNumber"
@@ -119,16 +166,25 @@
           @change="setTransactionalFolioNumber($event)"
           @valid="setTransactionalFolioNumberValidity($event)"
         />
-       </v-card>
+      </v-card>
     </section>
 
     <!-- Completing Party -->
-    <section id="completing-party-section" class="mt-10">
+    <section
+      id="completing-party-section"
+      class="mt-10"
+    >
       <header>
-        <h2 class="mb-6">Completing Party</h2>
+        <h2 class="mb-6">
+          Completing Party
+        </h2>
       </header>
 
-      <v-card flat class="mt-6" :class="{ 'invalid-section': isCompletingPartyInvalid }">
+      <v-card
+        flat
+        class="mt-6"
+        :class="{ 'invalid-section': isCompletingPartyInvalid }"
+      >
         <CompletingParty
           class="py-8 px-6 section-container py-6"
           :invalidSection="isCompletingPartyInvalid"
@@ -143,7 +199,10 @@
     </section>
 
     <!-- Certify -->
-    <section id="certify-section" class="mt-10">
+    <section
+      id="certify-section"
+      class="mt-10"
+    >
       <header>
         <h2>Certify</h2>
         <p class="mt-4 mb-6">
@@ -151,7 +210,11 @@
         </p>
       </header>
 
-      <v-card flat class="mt-6" :class="{ 'invalid-section': isCertifyInvalid }">
+      <v-card
+        flat
+        class="mt-6"
+        :class="{ 'invalid-section': isCertifyInvalid }"
+      >
         <Certify
           class="py-8 px-6"
           :currentDate="getCurrentDate"
@@ -172,7 +235,11 @@
     </section>
 
     <!-- Court Order and Plan of Arrangement -->
-    <section id="court-order-poa-section" class="mt-10" v-if="isRoleStaff">
+    <section
+      v-if="isRoleStaff"
+      id="court-order-poa-section"
+      class="mt-10"
+    >
       <header>
         <h2>Court Order and Plan of Arrangement</h2>
         <p class="mt-4 mb-6">
@@ -182,7 +249,11 @@
         </p>
       </header>
 
-      <v-card flat class="mt-6" :class="{ 'invalid-section': isCourtOrderInvalid }">
+      <v-card
+        flat
+        class="mt-6"
+        :class="{ 'invalid-section': isCourtOrderInvalid }"
+      >
         <CourtOrderPoa
           class="py-8 px-6"
           :draftCourtOrderNumber="getCourtOrderStep.courtOrder.fileNumber"
@@ -197,14 +268,21 @@
     </section>
 
     <!-- Staff Payment -->
-    <section id="staff-payment-section" class="mt-10" v-if="isRoleStaff">
+    <section
+      v-if="isRoleStaff"
+      id="staff-payment-section"
+      class="mt-10"
+    >
       <header>
         <h2>Staff Payment</h2>
-        <p class="mt-4"></p>
+        <p class="mt-4" />
       </header>
 
-      <v-card flat class="mt-6">
-        <StaffPayment class="py-8 px-6"/>
+      <v-card
+        flat
+        class="mt-6"
+      >
+        <StaffPayment class="py-8 px-6" />
       </v-card>
     </section>
   </div>

@@ -1,20 +1,46 @@
 <template>
   <div class="help-section-component">
-    <div class="help-btn" @click="helpToggle = !helpToggle">
-      <v-icon color="primary">mdi-help-circle-outline</v-icon>
-      <span v-if="!helpToggle" class="pl-2">{{ header }}</span>
-      <span v-else class="pl-2">Hide Help</span>
+    <div
+      class="help-btn"
+      @click="helpToggle = !helpToggle"
+    >
+      <v-icon color="primary">
+        mdi-help-circle-outline
+      </v-icon>
+      <span
+        v-if="!helpToggle"
+        class="pl-2"
+      >{{ header }}</span>
+      <span
+        v-else
+        class="pl-2"
+      >Hide Help</span>
     </div>
 
     <v-expand-transition>
-      <section v-if="helpToggle" class="help-section">
+      <section
+        v-if="helpToggle"
+        class="help-section"
+      >
         <header class="help-header">
-          <h2 class="py-4 px-0">{{ header }}</h2>
+          <h2 class="py-4 px-0">
+            {{ header }}
+          </h2>
         </header>
 
-        <p v-for="(item, index) in items" :key="index" class="my-4" v-html="item" />
+        <p
+          v-for="(item, index) in items"
+          :key="index"
+          class="my-4"
+          v-html="item"
+        />
 
-        <div class="help-btn bottom" @click="helpToggle = !helpToggle">Hide Help</div>
+        <div
+          class="help-btn bottom"
+          @click="helpToggle = !helpToggle"
+        >
+          Hide Help
+        </div>
       </section>
     </v-expand-transition>
   </div>

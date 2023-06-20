@@ -1,27 +1,43 @@
 <template>
   <!-- FUTURE: update layout to match other components -->
   <div id="care-and-custody-select">
-    <div class="section-container" :class="{ 'invalid-section': showErrorSummary }">
+    <div
+      class="section-container"
+      :class="{ 'invalid-section': showErrorSummary }"
+    >
       <v-row no-gutters>
-        <v-col cols="12" sm="3">
+        <v-col
+          cols="12"
+          sm="3"
+        >
           <label class="care-and-custody-title title-label">Care and Custody<br>of Records</label>
         </v-col>
-        <v-col cols="12" sm="9">
+        <v-col
+          cols="12"
+          sm="9"
+        >
           <v-radio-group
-            column class="pt-0 mt-0 care-and-custody-option-list"
             v-model="liquidatorOrCustodian"
+            column
+            class="pt-0 mt-0 care-and-custody-option-list"
             @change="changeCareAndCustodyType()"
           >
-            <v-radio id="liquidator-radio-btn" :value="RoleTypes.LIQUIDATOR">
-              <template v-slot:label>
+            <v-radio
+              id="liquidator-radio-btn"
+              :value="RoleTypes.LIQUIDATOR"
+            >
+              <template #label>
                 <span class="care-and-custody-option">
                   A <strong>Liquidator</strong> has been appointed for the care and custody of the
                   Cooperative Association's records
                 </span>
               </template>
             </v-radio>
-            <v-radio id="custodian-radio-btn" :value="RoleTypes.CUSTODIAN">
-              <template v-slot:label>
+            <v-radio
+              id="custodian-radio-btn"
+              :value="RoleTypes.CUSTODIAN"
+            >
+              <template #label>
                 <span class="care-and-custody-option">
                   A <strong>Custodian of Records</strong> has been appointed for the care and custody of the Cooperative
                   Association's records.

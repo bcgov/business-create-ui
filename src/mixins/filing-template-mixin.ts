@@ -174,7 +174,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
       case CorpTypeCd.BENEFIT_COMPANY:
       case CorpTypeCd.BC_CCC:
       case CorpTypeCd.BC_COMPANY:
-      case CorpTypeCd.BC_ULC_COMPANY:
+      case CorpTypeCd.BC_ULC_COMPANY: {
         filing.incorporationApplication.shareStructure = {
           shareClasses: this.getCreateShareStructureStep.shareClasses
         }
@@ -191,6 +191,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
           }
         }
         break
+      }
     }
 
     // If this is a named IA then add Name Request Number and Approved Name.

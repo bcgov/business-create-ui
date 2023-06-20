@@ -1,18 +1,34 @@
 <template>
-  <v-dialog v-model="dialog" width="45rem" persistent :attach="attach"
-            content-class="invalid-route-dialog">
+  <v-dialog
+    v-model="dialog"
+    width="45rem"
+    persistent
+    :attach="attach"
+    content-class="invalid-route-dialog"
+  >
     <v-card>
-      <v-card-title id="dialog-title">Invalid Route</v-card-title>
+      <v-card-title id="dialog-title">
+        Invalid Route
+      </v-card-title>
 
       <v-card-text>
-        <p class="font-14">The route you are trying to access does not exist for the current entity or filing type.</p>
+        <p class="font-14">
+          The route you are trying to access does not exist for the current entity or filing type.
+        </p>
       </v-card-text>
 
       <v-divider class="my-0" />
 
       <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn id="dialog-exit-button" color="primary" text @click="exit()">Go to Dashboard</v-btn>
+        <v-spacer />
+        <v-btn
+          id="dialog-exit-button"
+          color="primary"
+          text
+          @click="exit()"
+        >
+          Go to Dashboard
+        </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>

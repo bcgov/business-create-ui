@@ -1,15 +1,27 @@
 <template>
   <div id="business-name">
     <!-- Editing Mode -->
-    <div v-if="!isNewName" class="section-container" :class="{ 'invalid-section': invalidSection }">
+    <div
+      v-if="!isNewName"
+      class="section-container"
+      :class="{ 'invalid-section': invalidSection }"
+    >
       <v-row no-gutters>
-        <v-col cols="12" sm="3" class="pr-4">
+        <v-col
+          cols="12"
+          sm="3"
+          class="pr-4"
+        >
           <label :class="{ 'error-text': invalidSection }">
             <strong>Business Name</strong>
           </label>
         </v-col>
 
-        <v-col cols="12" sm="9" class="pt-4 pt-sm-0">
+        <v-col
+          cols="12"
+          sm="9"
+          class="pt-4 pt-sm-0"
+        >
           <CorrectName
             actionTxt="restore the business"
             :businessId="getBusinessId"
@@ -32,8 +44,15 @@
     <template v-else>
       <NameRequestInfo />
 
-      <v-btn text color="primary" class="btn-undo" @click="resetName()">
-        <v-icon small>mdi-undo</v-icon>
+      <v-btn
+        text
+        color="primary"
+        class="btn-undo"
+        @click="resetName()"
+      >
+        <v-icon small>
+          mdi-undo
+        </v-icon>
         <span>Undo</span>
       </v-btn>
     </template>

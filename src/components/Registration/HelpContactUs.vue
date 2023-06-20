@@ -1,15 +1,34 @@
 <template>
   <div id="help-contact-us">
-    <div class="help-btn" @click="helpToggle = !helpToggle">
-      <v-icon color="primary" class="mt-n1">mdi-help-circle-outline</v-icon>
-      <span v-if="!helpToggle" class="pl-2">Need Help? Contact Us</span>
-      <span v-else class="pl-2">Hide Help</span>
+    <div
+      class="help-btn"
+      @click="helpToggle = !helpToggle"
+    >
+      <v-icon
+        color="primary"
+        class="mt-n1"
+      >
+        mdi-help-circle-outline
+      </v-icon>
+      <span
+        v-if="!helpToggle"
+        class="pl-2"
+      >Need Help? Contact Us</span>
+      <span
+        v-else
+        class="pl-2"
+      >Hide Help</span>
     </div>
 
     <v-expand-transition>
-      <section v-if="helpToggle" class="help-section">
+      <section
+        v-if="helpToggle"
+        class="help-section"
+      >
         <header class="help-header">
-          <h2 class="py-4 px-0">Contact BC Registries</h2>
+          <h2 class="py-4 px-0">
+            Contact BC Registries
+          </h2>
         </header>
 
         <p class="my-4">
@@ -18,7 +37,12 @@
 
         <RegistriesContactInfo />
 
-        <div class="help-btn bottom" @click="helpToggle = !helpToggle">Hide Help</div>
+        <div
+          class="help-btn bottom"
+          @click="helpToggle = !helpToggle"
+        >
+          Hide Help
+        </div>
       </section>
     </v-expand-transition>
   </div>

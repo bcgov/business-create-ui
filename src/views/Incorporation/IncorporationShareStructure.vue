@@ -13,14 +13,23 @@
     </section>
 
     <!-- Help Section -->
-    <span class="help-btn" @click="helpToggle = !helpToggle">
-      <v-icon color="primary" style="padding-right: 5px">mdi-help-circle-outline</v-icon>
+    <span
+      class="help-btn"
+      @click="helpToggle = !helpToggle"
+    >
+      <v-icon
+        color="primary"
+        style="padding-right: 5px"
+      >mdi-help-circle-outline</v-icon>
       <span v-if="!helpToggle">Help with Share Structure</span>
       <span v-else>Hide Help</span>
     </span>
 
     <v-expand-transition>
-      <section v-show="helpToggle" class="share-structure-help">
+      <section
+        v-show="helpToggle"
+        class="share-structure-help"
+      >
         <header id="share-structure-help-header">
           <h2>Share Structure Help</h2>
         </header>
@@ -39,11 +48,16 @@
 
         <v-card flat>
           <header class="share-summary-header">
-            <v-icon color="appDkBlue">mdi-sitemap</v-icon>
+            <v-icon color="appDkBlue">
+              mdi-sitemap
+            </v-icon>
             <label class="share-summary-header-title pl-2">Share Structure</label>
           </header>
 
-          <ListShareClass :shareClasses="sharesHelpSample" :isSummary="true" />
+          <ListShareClass
+            :shareClasses="sharesHelpSample"
+            :isSummary="true"
+          />
         </v-card>
 
         <p><small>Sample Share Structure</small></p>
@@ -58,31 +72,55 @@
         <p>
           Refer to this <a :href="helpLink">link</a> to obtain more information on incorporating a company.
         </p>
-        <u class="help-btn" @click="helpToggle = !helpToggle"><small>Hide Help</small></u>
+        <u
+          class="help-btn"
+          @click="helpToggle = !helpToggle"
+        ><small>Hide Help</small></u>
       </section>
     </v-expand-transition>
 
     <p>Your application must include the following:</p>
     <ul>
       <li>
-        <v-icon v-if="shareClasses.length > 0" color="green darken-2" class="cp-valid">mdi-check</v-icon>
-        <v-icon v-else-if="getShowErrors" color="error" class="cp-invalid">mdi-close</v-icon>
-        <v-icon v-else>mdi-circle-small</v-icon>
+        <v-icon
+          v-if="shareClasses.length > 0"
+          color="green darken-2"
+          class="cp-valid"
+        >
+          mdi-check
+        </v-icon>
+        <v-icon
+          v-else-if="getShowErrors"
+          color="error"
+          class="cp-invalid"
+        >
+          mdi-close
+        </v-icon>
+        <v-icon v-else>
+          mdi-circle-small
+        </v-icon>
         <span class="ml-2">At least one Class of Shares</span>
       </li>
     </ul>
 
     <div class="py-8">
-      <v-btn outlined color="primary"  id="btn-start-add-cp"
-      :disabled="showShareStructureForm"
-      @click="initNewShareClass()"
-    >
+      <v-btn
+        id="btn-start-add-cp"
+        outlined
+        color="primary"
+        :disabled="showShareStructureForm"
+        @click="initNewShareClass()"
+      >
         <v-icon>mdi-plus</v-icon>
         <span>Add Share Class</span>
       </v-btn>
     </div>
 
-    <v-card flat class="my-4" v-if="showShareStructureForm">
+    <v-card
+      v-if="showShareStructureForm"
+      flat
+      class="my-4"
+    >
       <ShareStructure
         :initialValue="currentShareStructure"
         :activeIndex="activeIndex"
@@ -97,7 +135,10 @@
       />
     </v-card>
 
-    <v-card flat v-if="shareClasses.length > 0">
+    <v-card
+      v-if="shareClasses.length > 0"
+      flat
+    >
       <ListShareClass
         :shareClasses="shareClasses"
         :componentDisabled="showShareStructureForm"

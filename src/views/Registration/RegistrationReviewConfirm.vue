@@ -1,7 +1,10 @@
 <template>
   <div id="registration-review-confirm">
     <!-- Review and Confirm -->
-    <section id="review-and-confirm-section" class="mt-10">
+    <section
+      id="review-and-confirm-section"
+      class="mt-10"
+    >
       <header>
         <h2>Review and Confirm</h2>
         <p class="mt-4">
@@ -11,20 +14,37 @@
       </header>
 
       <!-- Your Business -->
-      <v-card id="your-business-vcard" flat class="mt-6">
-        <CardHeader icon="mdi-domain" label="Your Business" />
+      <v-card
+        id="your-business-vcard"
+        flat
+        class="mt-6"
+      >
+        <CardHeader
+          icon="mdi-domain"
+          label="Your Business"
+        />
         <DefineRegistrationSummary />
       </v-card>
 
       <!-- People and Roles -->
-      <v-card id="people-and-roles-vcard" flat class="mt-6">
-        <CardHeader icon="mdi-account-multiple-plus" label="People and Roles" />
+      <v-card
+        id="people-and-roles-vcard"
+        flat
+        class="mt-6"
+      >
+        <CardHeader
+          icon="mdi-account-multiple-plus"
+          label="People and Roles"
+        />
         <ListPeopleAndRoles :isSummary="true" />
       </v-card>
     </section>
 
     <!-- Document Delivery -->
-    <section id="document-delivery-section" class="mt-10">
+    <section
+      id="document-delivery-section"
+      class="mt-10"
+    >
       <header>
         <h2>Document Delivery</h2>
         <p class="mt-4">
@@ -32,7 +52,10 @@
         </p>
       </header>
 
-      <v-card flat class="mt-6">
+      <v-card
+        flat
+        class="mt-6"
+      >
         <DocumentDelivery
           class="py-8 px-6"
           :class="{ 'invalid-section': isDocumentDeliveryInvalid }"
@@ -49,7 +72,11 @@
     </section>
 
     <!-- Transactional Folio Number -->
-    <section id="folio-section" class="mt-10" v-if="isPremiumAccount">
+    <section
+      v-if="isPremiumAccount"
+      id="folio-section"
+      class="mt-10"
+    >
       <header>
         <h2>Folio or Reference Number for this Filing</h2>
         <p class="mt-4">
@@ -60,7 +87,10 @@
         </p>
       </header>
 
-      <v-card flat class="mt-6">
+      <v-card
+        flat
+        class="mt-6"
+      >
         <TransactionalFolioNumber
           class="py-8 px-6"
           :accountFolioNumber="getFolioNumber"
@@ -73,7 +103,10 @@
     </section>
 
     <!-- Certify -->
-    <section id="certify-section" class="mt-10">
+    <section
+      id="certify-section"
+      class="mt-10"
+    >
       <header>
         <h2>Certify</h2>
         <p class="mt-4">
@@ -81,7 +114,10 @@
         </p>
       </header>
 
-      <v-card flat class="mt-6">
+      <v-card
+        flat
+        class="mt-6"
+      >
         <Certify
           class="py-8 px-6"
           :class="{ 'invalid-section': isCertifyInvalid }"
@@ -110,13 +146,19 @@
 
     <template v-if="isRoleStaff">
       <!-- Staff Payment -->
-      <section id="staff-payment-section" class="mt-10">
+      <section
+        id="staff-payment-section"
+        class="mt-10"
+      >
         <header>
           <h2>Staff Payment</h2>
-          <p class="mt-4"></p>
+          <p class="mt-4" />
         </header>
 
-        <v-card flat class="mt-6">
+        <v-card
+          flat
+          class="mt-6"
+        >
           <StaffPayment class="py-8 px-6" />
         </v-card>
       </section>

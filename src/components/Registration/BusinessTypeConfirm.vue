@@ -1,36 +1,49 @@
 <template>
   <div id="business-type-confirm">
-      <v-row no-gutters>
-        <v-col cols="12" sm="3" class="pr-4">
-          <label class="d-block">Business Type</label>
-          <v-chip
-            v-if="hasBusinessTypeChecked"
-            id="checked-chip"
-            x-small label
-            color="primary"
-            text-color="white"
-          >
-            Checked
-          </v-chip>
-        </v-col>
+    <v-row no-gutters>
+      <v-col
+        cols="12"
+        sm="3"
+        class="pr-4"
+      >
+        <label class="d-block">Business Type</label>
+        <v-chip
+          v-if="hasBusinessTypeChecked"
+          id="checked-chip"
+          x-small
+          label
+          color="primary"
+          text-color="white"
+        >
+          Checked
+        </v-chip>
+      </v-col>
 
-        <v-col cols="12" sm="9">
-          <p class="mb-0">{{ isTypePartnership ? labelGP : labelSP }}</p>
-          <div id="business-checkbox-div">
-            <v-checkbox
-              hide-details
-              v-model="checked"
-              class="mt-0 pt-0"
-            >
-              <template v-slot:label>
-                <div class="certify-stmt" :class="{'error--text': showErrors}">
-                  {{ isTypePartnership ? textGP : textSP }}
-                </div>
-              </template>
-            </v-checkbox>
-          </div>
-        </v-col>
-      </v-row>
+      <v-col
+        cols="12"
+        sm="9"
+      >
+        <p class="mb-0">
+          {{ isTypePartnership ? labelGP : labelSP }}
+        </p>
+        <div id="business-checkbox-div">
+          <v-checkbox
+            v-model="checked"
+            hide-details
+            class="mt-0 pt-0"
+          >
+            <template #label>
+              <div
+                class="certify-stmt"
+                :class="{'error--text': showErrors}"
+              >
+                {{ isTypePartnership ? textGP : textSP }}
+              </div>
+            </template>
+          </v-checkbox>
+        </div>
+      </v-col>
+    </v-row>
   </div>
 </template>
 

@@ -1,18 +1,29 @@
 <template>
   <div id="fee-acknowledgement">
     <v-row no-gutters>
-      <v-col cols="12" sm="3" class="pr-4">
+      <v-col
+        cols="12"
+        sm="3"
+        class="pr-4"
+      >
         <label :class="{'error-text': invalidSection}">Acknowledgement</label>
       </v-col>
-      <v-col cols="12" sm="9" class="pt-4 pt-sm-0">
+      <v-col
+        cols="12"
+        sm="9"
+        class="pt-4 pt-sm-0"
+      >
         <v-checkbox
           id="fee-acknowledgement-checkbox"
           :input-value="getRegistration.feeAcknowledgement"
-          @change="setRegistrationFeeAcknowledgement($event)"
           hide-details
+          @change="setRegistrationFeeAcknowledgement($event)"
         >
-          <template v-slot:label>
-            <div class="acknowledge-stmt" :class="{'error-text': invalidSection}">
+          <template #label>
+            <div
+              class="acknowledge-stmt"
+              :class="{'error-text': invalidSection}"
+            >
               I acknowledge that additional fees may be required to change this registration after payment
               has been made.
             </div>

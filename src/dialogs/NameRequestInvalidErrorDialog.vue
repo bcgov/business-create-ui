@@ -1,35 +1,88 @@
 <template>
-  <v-dialog v-model="dialog" width="45rem" persistent :attach="attach" content-class="namerequest-invalid-error-dialog">
+  <v-dialog
+    v-model="dialog"
+    width="45rem"
+    persistent
+    :attach="attach"
+    content-class="namerequest-invalid-error-dialog"
+  >
     <v-card>
-      <v-card-title id="dialog-title">Invalid Incorporation Application</v-card-title>
+      <v-card-title id="dialog-title">
+        Invalid Incorporation Application
+      </v-card-title>
 
       <v-card-text>
-        <p class="font-14" v-if="type === NameRequestStates.EXPIRED">
-          The specified name request has expired.</p>
+        <p
+          v-if="type === NameRequestStates.EXPIRED"
+          class="font-14"
+        >
+          The specified name request has expired.
+        </p>
 
-        <p class="font-14" v-else-if="type === NameRequestStates.NOT_APPROVED">
-          The specified name request has not been approved.</p>
+        <p
+          v-else-if="type === NameRequestStates.NOT_APPROVED"
+          class="font-14"
+        >
+          The specified name request has not been approved.
+        </p>
 
-        <p class="font-14" v-else-if="type === NameRequestStates.NEED_CONSENT">
-          The specified name request is awaiting consent.</p>
+        <p
+          v-else-if="type === NameRequestStates.NEED_CONSENT"
+          class="font-14"
+        >
+          The specified name request is awaiting consent.
+        </p>
 
-        <p class="font-14" v-else-if="type === NameRequestStates.NOT_FOUND">
-          The specified name request could not be found.</p>
+        <p
+          v-else-if="type === NameRequestStates.NOT_FOUND"
+          class="font-14"
+        >
+          The specified name request could not be found.
+        </p>
 
-        <p class="font-14" v-else-if="type === NameRequestStates.CONSUMED">
-          The specified name request has already been consumed.</p>
+        <p
+          v-else-if="type === NameRequestStates.CONSUMED"
+          class="font-14"
+        >
+          The specified name request has already been consumed.
+        </p>
 
-        <p class="font-14" v-else-if="type === NameRequestStates.INVALID">
-          The specified name request data is invalid.</p>
+        <p
+          v-else-if="type === NameRequestStates.INVALID"
+          class="font-14"
+        >
+          The specified name request data is invalid.
+        </p>
 
-        <p class="font-14" v-else>An unexpected error has occurred.</p>
+        <p
+          v-else
+          class="font-14"
+        >
+          An unexpected error has occurred.
+        </p>
       </v-card-text>
 
       <v-divider class="my-0" />
 
       <v-card-actions>
-        <v-btn v-if="showOkay" id="dialog-ok-button" color="primary" text @click="okay()">OK</v-btn>
-        <v-btn v-else id="dialog-redirect-button" color="primary" text @click="redirect()">Back to Dashboard</v-btn>
+        <v-btn
+          v-if="showOkay"
+          id="dialog-ok-button"
+          color="primary"
+          text
+          @click="okay()"
+        >
+          OK
+        </v-btn>
+        <v-btn
+          v-else
+          id="dialog-redirect-button"
+          color="primary"
+          text
+          @click="redirect()"
+        >
+          Back to Dashboard
+        </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>

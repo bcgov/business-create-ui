@@ -1,8 +1,25 @@
 <template>
   <li class="rule-list-item">
-    <v-icon v-if="valid" color="green darken-2" class="rule-valid">mdi-check</v-icon>
-    <v-icon v-else-if="showErrors" color="error" class="rule-invalid">mdi-close</v-icon>
-    <v-icon v-else class="rule-initial">mdi-circle-small</v-icon>
+    <v-icon
+      v-if="valid"
+      color="green darken-2"
+      class="rule-valid"
+    >
+      mdi-check
+    </v-icon>
+    <v-icon
+      v-else-if="showErrors"
+      color="error"
+      class="rule-invalid"
+    >
+      mdi-close
+    </v-icon>
+    <v-icon
+      v-else
+      class="rule-initial"
+    >
+      mdi-circle-small
+    </v-icon>
     <span class="rule-text ml-2">{{ text }}</span>
   </li>
 </template>

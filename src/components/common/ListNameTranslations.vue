@@ -1,7 +1,13 @@
 <template>
-  <v-card flat id="list-name-translations">
+  <v-card
+    id="list-name-translations"
+    flat
+  >
     <!-- List Headers -->
-    <v-row class="name-translation-title list-item__subtitle" no-gutters>
+    <v-row
+      class="name-translation-title list-item__subtitle"
+      no-gutters
+    >
       <v-col>
         <h3>Name Translations:</h3>
       </v-col>
@@ -9,13 +15,13 @@
 
     <!-- List Content -->
     <v-row
-      class="names-translation-content gray-background"
       v-for="(translation, index) in translationsList"
       :key="`name_translation_${index}`"
+      class="names-translation-content gray-background"
       no-gutters
     >
       <v-col class="text-truncate">
-        <span class="name-title">{{translation.name}}</span>
+        <span class="name-title">{{ translation.name }}</span>
       </v-col>
 
       <!-- Actions Column -->
@@ -36,14 +42,14 @@
 
           <!-- more actions menu -->
           <v-menu offset-y>
-            <template v-slot:activator="{ on }">
+            <template #activator="{ on }">
               <v-btn
                 text
                 small
-                v-on="on"
                 color="primary"
                 class="more-actions-btn"
                 :disabled="isAddingNameTranslation"
+                v-on="on"
               >
                 <v-icon>mdi-menu-down</v-icon>
               </v-btn>
@@ -51,7 +57,12 @@
             <v-list class="more-actions-list">
               <v-list-item @click="removeTranslation(index)">
                 <v-list-item-title>
-                  <v-icon small color="primary">mdi-delete</v-icon>
+                  <v-icon
+                    small
+                    color="primary"
+                  >
+                    mdi-delete
+                  </v-icon>
                   <span class="ml-2">Remove</span>
                 </v-list-item-title>
               </v-list-item>

@@ -1,19 +1,29 @@
 <template>
-  <v-form ref="cooperativeTypeForm" id="cooperative-type">
+  <v-form
+    id="cooperative-type"
+    ref="cooperativeTypeForm"
+  >
     <v-row no-gutters>
-      <v-col cols="12" sm="3" class="pr-4">
+      <v-col
+        cols="12"
+        sm="3"
+        class="pr-4"
+      >
         <label><strong>Select Type</strong></label>
       </v-col>
-      <v-col cols="12" sm="9" class="pt-4 pt-sm-0">
+      <v-col
+        cols="12"
+        sm="9"
+        class="pt-4 pt-sm-0"
+      >
         <v-select
-          filled
           id="cooperative-type-input"
+          v-model="cooperativeType"
+          filled
           label="Cooperative Association Type"
           :items="items"
-          v-model="cooperativeType"
           :rules="cooperativeTypeRules"
-        >
-        </v-select>
+        />
       </v-col>
     </v-row>
   </v-form>

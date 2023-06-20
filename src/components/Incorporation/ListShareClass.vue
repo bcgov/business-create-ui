@@ -2,7 +2,10 @@
   <div id="list-share-class">
     <section :class="{ 'invalid-section': showErrorSummary }">
       <!-- Summary Warning -->
-      <div v-if="isSummary && showErrorSummary" class="share-summary-invalid-message">
+      <div
+        v-if="isSummary && showErrorSummary"
+        class="share-summary-invalid-message"
+      >
         <span>
           <v-icon color="error">mdi-information-outline</v-icon>
           <span class="error-text mx-1">This step is unfinished.</span>
@@ -20,11 +23,16 @@
         disable-sort
         hide-default-footer
       >
-        <template v-slot:item="row">
-
+        <template #item="row">
           <!-- Share Class Rows-->
-          <tr :key="row.item.id" class="class-row" :class="{ 'class-row-has-series': row.item.series.length}">
-            <td class="list-item__title">{{ row.item.name }}</td>
+          <tr
+            :key="row.item.id"
+            class="class-row"
+            :class="{ 'class-row-has-series': row.item.series.length}"
+          >
+            <td class="list-item__title">
+              {{ row.item.name }}
+            </td>
             <td>{{ row.item.maxNumberOfShares ? (+row.item.maxNumberOfShares).toLocaleString() : 'No Maximum' }}</td>
             <td>{{ row.item.parValue ? row.item.parValue : 'No Par Value' }}</td>
             <td>{{ row.item.currency }}</td>
@@ -34,10 +42,13 @@
             <td v-if="!isSummary">
               <div class="actions">
                 <span class="edit-action">
-                  <v-btn small text color="primary"
+                  <v-btn
                     :id="'class-' + row.index + '-change-btn'"
-                    @click="emitShareClass(row.index)"
+                    small
+                    text
+                    color="primary"
                     :disabled="componentDisabled"
+                    @click="emitShareClass(row.index)"
                   >
                     <v-icon small>mdi-pencil</v-icon>
                     <span>Edit</span>
@@ -46,12 +57,18 @@
 
                 <!-- Share Class Dropdown Actions -->
                 <span>
-                  <v-menu offset-y  :disabled="componentDisabled">
-                    <template v-slot:activator="{ on }">
-                      <v-btn text small
+                  <v-menu
+                    offset-y
+                    :disabled="componentDisabled"
+                  >
+                    <template #activator="{ on }">
+                      <v-btn
+                        text
+                        small
                         color="primary"
                         class="more-actions-btn"
-                        v-on="on">
+                        v-on="on"
+                      >
                         <v-icon>mdi-menu-down</v-icon>
                       </v-btn>
                     </template>
@@ -60,14 +77,15 @@
                         class="actions-dropdown_item"
                         :class="{ 'item-disabled': !row.item.hasRightsOrRestrictions }"
                         :disabled="!row.item.hasRightsOrRestrictions"
-                        @click="emitAddSeries(row.index)">
+                        @click="emitAddSeries(row.index)"
+                      >
                         <v-list-item-subtitle><v-icon>mdi-playlist-plus</v-icon> Add Series</v-list-item-subtitle>
                       </v-list-item>
                       <v-list-item
                         class="actions-dropdown_item"
                         :class="{ 'item-disabled': isMoveDisabled(row.index, 'up') }"
-                        @click="moveIndex(row.index, 'up')"
                         :disabled="isMoveDisabled(row.index, 'up')"
+                        @click="moveIndex(row.index, 'up')"
                       >
                         <v-list-item-subtitle class="move-up-selector">
                           <v-icon>mdi-arrow-up</v-icon> Move Up
@@ -76,14 +94,17 @@
                       <v-list-item
                         class="actions-dropdown_item"
                         :class="{ 'item-disabled': isMoveDisabled(row.index, 'down') }"
-                        @click="moveIndex(row.index, 'down')"
                         :disabled="isMoveDisabled(row.index, 'down')"
+                        @click="moveIndex(row.index, 'down')"
                       >
                         <v-list-item-subtitle class="move-down-selector">
                           <v-icon>mdi-arrow-down</v-icon> Move Down
                         </v-list-item-subtitle>
                       </v-list-item>
-                      <v-list-item class="actions-dropdown_item" @click="emitRemoveClass(row.index)">
+                      <v-list-item
+                        class="actions-dropdown_item"
+                        @click="emitRemoveClass(row.index)"
+                      >
                         <v-list-item-subtitle><v-icon>mdi-delete</v-icon> Remove</v-list-item-subtitle>
                       </v-list-item>
                     </v-list>
@@ -94,13 +115,19 @@
           </tr>
 
           <!-- Share Series rows -->
-          <tr v-for="(seriesItem, index) in row.item.series" :key="`class-${row.index}_series-${index}`"
-              class="series-row"
-              :class="{ 'series-row-last': index === row.item.series.length - 1}"
+          <tr
+            v-for="(seriesItem, index) in row.item.series"
+            :key="`class-${row.index}_series-${index}`"
+            class="series-row"
+            :class="{ 'series-row-last': index === row.item.series.length - 1}"
           >
-            <td class="series-name"><span>{{ seriesItem.name }}</span></td>
-            <td>{{ seriesItem.maxNumberOfShares ? (+seriesItem.maxNumberOfShares).toLocaleString()
-              : 'No Maximum' }}</td>
+            <td class="series-name">
+              <span>{{ seriesItem.name }}</span>
+            </td>
+            <td>
+              {{ seriesItem.maxNumberOfShares ? (+seriesItem.maxNumberOfShares).toLocaleString()
+                : 'No Maximum' }}
+            </td>
             <td>{{ row.item.parValue ? row.item.parValue : 'No Par Value' }}</td>
             <td>{{ row.item.currency }}</td>
             <td>{{ seriesItem.hasRightsOrRestrictions ? 'Yes' : 'No' }}</td>
@@ -109,8 +136,11 @@
             <td v-if="!isSummary">
               <div class="actions">
                 <span class="edit-action">
-                  <v-btn small text color="primary"
+                  <v-btn
                     :id="'series-' + index + '-change-btn'"
+                    small
+                    text
+                    color="primary"
                     @click="emitShareSeries(row.index, index)"
                   >
                     <v-icon small>mdi-pencil</v-icon>
@@ -120,41 +150,48 @@
 
                 <!-- Share Series Dropdown Actions -->
                 <span>
-                    <v-menu offset-y>
-                      <template v-slot:activator="{ on }">
-                        <v-btn text small color="primary"
-                          class="more-actions-btn" v-on="on"
-                        >
-                          <v-icon>mdi-menu-down</v-icon>
-                        </v-btn>
-                      </template>
-                      <v-list class="more-actions">
-                        <v-list-item
-                          class="actions-dropdown_item"
-                          :class="{ 'item-disabled': isMoveDisabled(row.index, 'up', index) }"
-                          @click="moveIndex(row.index, 'up', index)"
-                          :disabled="isMoveDisabled(row.index, 'up', index)"
-                        >
-                          <v-list-item-subtitle class="move-up-selector">
-                            <v-icon>mdi-arrow-up</v-icon> Move Up
-                          </v-list-item-subtitle>
-                        </v-list-item>
-                        <v-list-item
-                          class="actions-dropdown_item"
-                          :class="{ 'item-disabled': isMoveDisabled(row.index, 'down', index) }"
-                          @click="moveIndex(row.index, 'down', index)"
-                          :disabled="isMoveDisabled(row.index, 'down', index)"
-                        >
-                          <v-list-item-subtitle class="move-down-selector">
-                            <v-icon>mdi-arrow-down</v-icon> Move Down
-                          </v-list-item-subtitle>
-                        </v-list-item>
-                        <v-list-item class="actions-dropdown_item" @click="emitRemoveSeries(row.index, index)">
-                          <v-list-item-subtitle><v-icon>mdi-delete</v-icon> Remove</v-list-item-subtitle>
-                        </v-list-item>
-                      </v-list>
-                    </v-menu>
-                  </span>
+                  <v-menu offset-y>
+                    <template #activator="{ on }">
+                      <v-btn
+                        text
+                        small
+                        color="primary"
+                        class="more-actions-btn"
+                        v-on="on"
+                      >
+                        <v-icon>mdi-menu-down</v-icon>
+                      </v-btn>
+                    </template>
+                    <v-list class="more-actions">
+                      <v-list-item
+                        class="actions-dropdown_item"
+                        :class="{ 'item-disabled': isMoveDisabled(row.index, 'up', index) }"
+                        :disabled="isMoveDisabled(row.index, 'up', index)"
+                        @click="moveIndex(row.index, 'up', index)"
+                      >
+                        <v-list-item-subtitle class="move-up-selector">
+                          <v-icon>mdi-arrow-up</v-icon> Move Up
+                        </v-list-item-subtitle>
+                      </v-list-item>
+                      <v-list-item
+                        class="actions-dropdown_item"
+                        :class="{ 'item-disabled': isMoveDisabled(row.index, 'down', index) }"
+                        :disabled="isMoveDisabled(row.index, 'down', index)"
+                        @click="moveIndex(row.index, 'down', index)"
+                      >
+                        <v-list-item-subtitle class="move-down-selector">
+                          <v-icon>mdi-arrow-down</v-icon> Move Down
+                        </v-list-item-subtitle>
+                      </v-list-item>
+                      <v-list-item
+                        class="actions-dropdown_item"
+                        @click="emitRemoveSeries(row.index, index)"
+                      >
+                        <v-list-item-subtitle><v-icon>mdi-delete</v-icon> Remove</v-list-item-subtitle>
+                      </v-list-item>
+                    </v-list>
+                  </v-menu>
+                </span>
               </div>
             </td>
           </tr>

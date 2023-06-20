@@ -3,12 +3,23 @@
     <!-- EDIT SECTION -->
     <template v-if="isEditing">
       <!-- Mailing Address -->
-      <v-row no-gutters class="edit-section">
-        <v-col cols="12" sm="3" class="pr-4">
+      <v-row
+        no-gutters
+        class="edit-section"
+      >
+        <v-col
+          cols="12"
+          sm="3"
+          class="pr-4"
+        >
           <label class="title-label">Mailing Address</label>
         </v-col>
 
-        <v-col cols="12" sm="9" class="pt-4 pt-sm-0">
+        <v-col
+          cols="12"
+          sm="9"
+          class="pt-4 pt-sm-0"
+        >
           <MailingAddress
             id="address-mailing"
             ref="mailingAddress"
@@ -22,30 +33,41 @@
       </v-row>
 
       <!-- Delivery Address -->
-      <v-row no-gutters class="edit-section">
-        <v-col cols="12" sm="3" class="pr-4">
+      <v-row
+        no-gutters
+        class="edit-section"
+      >
+        <v-col
+          cols="12"
+          sm="3"
+          class="pr-4"
+        >
           <label class="title-label">Delivery Address</label>
         </v-col>
 
-        <v-col cols="12" sm="9" class="pt-4 pt-sm-0">
+        <v-col
+          cols="12"
+          sm="9"
+          class="pt-4 pt-sm-0"
+        >
           <v-checkbox
             id="same-as-mailing-checkbox"
+            v-model="inheritMailingAddress"
             class="inherit-checkbox"
             hide-details
             label="Same as Mailing Address"
-            v-model="inheritMailingAddress"
-            v-on:change="onCheckboxChanged()"
             :disabled="checkboxDisabled"
             noPoBox="true"
+            @change="onCheckboxChanged()"
           />
           <template
             v-if="!isSame(mailingAddress, deliveryAddress, ['actions']) || !inheritMailingAddress"
           >
             <DeliveryAddress
+              v-if="!inheritMailingAddress"
               id="address-delivery"
               ref="deliveryAddress"
               class="pt-6"
-              v-if="!inheritMailingAddress"
               :address="deliveryAddress"
               :editing="true"
               :schema="RegistrationDeliveryAddressSchema"
@@ -60,22 +82,51 @@
 
     <!-- SUMMARY SECTION -->
     <template v-else>
-      <v-row no-gutters class="summary-section">
-        <v-col cols="12" sm="3" class="pr-4">
+      <v-row
+        no-gutters
+        class="summary-section"
+      >
+        <v-col
+          cols="12"
+          sm="3"
+          class="pr-4"
+        >
           <label class="summary-section-title">Business Addresses</label>
         </v-col>
 
-        <v-col cols="12" sm="4" class="pr-4 pt-4 pt-sm-0">
+        <v-col
+          cols="12"
+          sm="4"
+          class="pr-4 pt-4 pt-sm-0"
+        >
           <label class="summary-section-header">Mailing Address</label>
-          <div v-if="isEmptyAddress(mailingAddress)">(Not entered)</div>
-          <MailingAddress v-else :address="mailingAddress" :editing="false" />
+          <div v-if="isEmptyAddress(mailingAddress)">
+            (Not entered)
+          </div>
+          <MailingAddress
+            v-else
+            :address="mailingAddress"
+            :editing="false"
+          />
         </v-col>
 
-        <v-col cols="12" sm="4" class="pr-4 pt-4 pt-sm-0">
+        <v-col
+          cols="12"
+          sm="4"
+          class="pr-4 pt-4 pt-sm-0"
+        >
           <label class="summary-section-header">Delivery Address</label>
-          <div v-if="isEmptyAddress(deliveryAddress)">(Not entered)</div>
-          <div v-else-if="isSame(mailingAddress, deliveryAddress)">Same as Mailing Address</div>
-          <DeliveryAddress v-else :address="deliveryAddress" :editing="false" />
+          <div v-if="isEmptyAddress(deliveryAddress)">
+            (Not entered)
+          </div>
+          <div v-else-if="isSame(mailingAddress, deliveryAddress)">
+            Same as Mailing Address
+          </div>
+          <DeliveryAddress
+            v-else
+            :address="deliveryAddress"
+            :editing="false"
+          />
         </v-col>
       </v-row>
     </template>

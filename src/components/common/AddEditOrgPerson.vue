@@ -4,9 +4,16 @@
       ref="confirmDialog"
       attach="#add-edit-org-person"
     />
-    <section class="px-6 py-10" :class="{ 'invalid-section': !addPersonOrgFormValid }">
+    <section
+      class="px-6 py-10"
+      :class="{ 'invalid-section': !addPersonOrgFormValid }"
+    >
       <v-row no-gutters>
-        <v-col cols="12" sm="3" class="pr-4 d-none d-sm-block">
+        <v-col
+          cols="12"
+          sm="3"
+          class="pr-4 d-none d-sm-block"
+        >
           <!-- Title for org -->
           <label
             v-if="isOrg && isBaseCompany"
@@ -38,10 +45,14 @@
           </label>
         </v-col>
 
-        <v-col cols="12" sm="9">
+        <v-col
+          cols="12"
+          sm="9"
+        >
           <v-card
-            outlined class="message-box rounded-0"
             v-if="isCompletingParty && !isRoleStaff && isTypeCoop"
+            outlined
+            class="message-box rounded-0"
           >
             <p>
               <strong>Important:</strong> The Completing Party information below is based on your
@@ -54,14 +65,17 @@
             </p>
           </v-card>
 
-          <div v-if="isCompletingParty && !isRoleStaff && isTypeCoop" class="mt-8" />
+          <div
+            v-if="isCompletingParty && !isRoleStaff && isTypeCoop"
+            class="mt-8"
+          />
 
           <v-form
-            lazy-validation
             ref="addPersonOrgForm"
-            class="appoint-form"
             v-model="addPersonOrgFormValid"
-            v-on:submit.prevent
+            lazy-validation
+            class="appoint-form"
+            @submit.prevent
           >
             <!-- Person's Name -->
             <article v-if="isPerson">
@@ -69,29 +83,29 @@
               <div class="form__row three-column mt-4">
                 <!-- NB: only staff can change Completing Party names -->
                 <v-text-field
+                  id="person__first-name"
+                  v-model.trim="orgPerson.officer.firstName"
                   filled
                   class="item"
                   label="First Name"
-                  id="person__first-name"
-                  v-model.trim="orgPerson.officer.firstName"
                   :rules="enableRules ? Rules.FirstNameRules : []"
                   :readonly="isCompletingParty && !isRoleStaff && isTypeCoop"
                 />
                 <v-text-field
+                  id="person__middle-name"
+                  v-model.trim="orgPerson.officer.middleName"
                   filled
                   class="item"
                   label="Middle Name (Optional)"
-                  id="person__middle-name"
-                  v-model.trim="orgPerson.officer.middleName"
                   :rules="enableRules ? Rules.MiddleNameRules: []"
                   :readonly="isCompletingParty && !isRoleStaff && isTypeCoop"
                 />
                 <v-text-field
+                  id="person__last-name"
+                  v-model.trim="orgPerson.officer.lastName"
                   filled
                   class="item"
                   label="Last Name"
-                  id="person__last-name"
-                  v-model.trim="orgPerson.officer.lastName"
                   :rules="enableRules ? Rules.LastNameRules : []"
                   :readonly="isCompletingParty && !isRoleStaff && isTypeCoop"
                 />
@@ -103,11 +117,11 @@
               <label>Corporation or Firm Name</label>
               <div class="org-name-container mt-4">
                 <v-text-field
+                  id="org-name"
+                  v-model.trim="orgPerson.officer.organizationName"
                   filled
                   class="item"
                   label="Full Legal Corporation or Firm Name"
-                  id="org-name"
-                  v-model.trim="orgPerson.officer.organizationName"
                   :rules="enableRules ? Rules.OrgNameRules : []"
                 />
               </div>
@@ -117,13 +131,23 @@
             <article class="mt-2">
               <label>Roles</label>
               <div class="form__row three-column mt-4">
-                <v-card flat rounded="sm" class="item gray-card px-4">
-                  <v-row no-gutters class="align-center mt-5">
-                    <v-col cols="4" v-if="showCompletingPartyRole">
+                <v-card
+                  flat
+                  rounded="sm"
+                  class="item gray-card px-4"
+                >
+                  <v-row
+                    no-gutters
+                    class="align-center mt-5"
+                  >
+                    <v-col
+                      v-if="showCompletingPartyRole"
+                      cols="4"
+                    >
                       <v-checkbox
                         id="cp-checkbox"
-                        class="mt-0"
                         v-model="selectedRoles"
+                        class="mt-0"
                         :value="RoleTypes.COMPLETING_PARTY"
                         :label="RoleTypes.COMPLETING_PARTY"
                         :disabled="disableCompletingPartyRole"
@@ -132,11 +156,14 @@
                       />
                     </v-col>
 
-                    <v-col cols="4" v-if="showIncorporatorRole">
+                    <v-col
+                      v-if="showIncorporatorRole"
+                      cols="4"
+                    >
                       <v-checkbox
                         id="incorporator-checkbox"
-                        class="mt-0"
                         v-model="selectedRoles"
+                        class="mt-0"
                         :value="RoleTypes.INCORPORATOR"
                         :label="RoleTypes.INCORPORATOR"
                         :disabled="disableIncorporatorRole"
@@ -144,11 +171,14 @@
                       />
                     </v-col>
 
-                    <v-col cols="4" v-if="showDirectorRole">
+                    <v-col
+                      v-if="showDirectorRole"
+                      cols="4"
+                    >
                       <v-checkbox
                         id="director-checkbox"
-                        class="mt-0"
                         v-model="selectedRoles"
+                        class="mt-0"
                         :value="RoleTypes.DIRECTOR"
                         :label="RoleTypes.DIRECTOR"
                         :disabled="disableDirectorRole"
@@ -183,13 +213,16 @@
             <!-- Delivery Address (for directors only) -->
             <div v-if="isDirector">
               <v-checkbox
+                v-model="inheritMailingAddress"
                 class="inherit-checkbox"
                 hide-details
                 label="Delivery Address same as Mailing Address"
-                v-model="inheritMailingAddress"
               />
 
-              <article v-if="!inheritMailingAddress" class="mt-6">
+              <article
+                v-if="!inheritMailingAddress"
+                class="mt-6"
+              >
                 <label>Delivery Address</label>
                 <DeliveryAddress
                   ref="deliveryAddressNew"
@@ -213,19 +246,33 @@
             <div class="form__btns mt-6">
               <v-btn
                 id="btn-remove"
-                large outlined color="error"
+                large
+                outlined
+                color="error"
                 class="btn-outlined-error"
                 :disabled="isNaN(activeIndex)"
-                @click="emitRemovePerson(activeIndex)">Remove</v-btn>
+                @click="emitRemovePerson(activeIndex)"
+              >
+                Remove
+              </v-btn>
               <v-btn
                 id="btn-done"
-                large color="primary"
+                large
+                color="primary"
                 class="ml-auto"
-                @click="validateAddPersonOrgForm()">Done</v-btn>
+                @click="validateAddPersonOrgForm()"
+              >
+                Done
+              </v-btn>
               <v-btn
                 id="btn-cancel"
-                large outlined color="primary"
-                @click="resetAddPersonData(true)">Cancel</v-btn>
+                large
+                outlined
+                color="primary"
+                @click="resetAddPersonData(true)"
+              >
+                Cancel
+              </v-btn>
             </div>
           </v-form>
         </v-col>

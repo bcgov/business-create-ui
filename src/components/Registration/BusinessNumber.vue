@@ -1,12 +1,17 @@
 <template>
   <div id="business-number">
     <v-row no-gutters>
-      <v-col cols="12" sm="3" class="pr-4">
+      <v-col
+        cols="12"
+        sm="3"
+        class="pr-4"
+      >
         <label class="d-block">Business Number</label>
         <v-chip
           v-if="hasBusinessNumberChanged"
           id="changed-chip"
-          x-small label
+          x-small
+          label
           color="primary"
           text-color="white"
         >
@@ -14,24 +19,28 @@
         </v-chip>
       </v-col>
 
-      <v-col cols="12" sm="9">
+      <v-col
+        cols="12"
+        sm="9"
+      >
         <p class="mb-0">
           If you have an existing business number, enter it below and we will contact
           Canada Revenue Agency and ask them to link it to this registration.
         </p>
-        <HelpBusinessNumber class="mt-4"
+        <HelpBusinessNumber
+          class="mt-4"
           :isTypePartnership="isTypePartnership"
           :isTypeSoleProp="isTypeSoleProp"
         />
         <v-text-field
+          ref="textField"
+          v-model="value"
+          v-mask="['#########']"
           filled
           persistent-hint
-          ref="textField"
           class="item mt-4 mb-n2"
           label="Business Number (Optional)"
           hint="First 9 digits of the CRA Business Number"
-          v-model="value"
-          v-mask="['#########']"
           :error="!valid"
           :error-messages="errorMessages"
           @blur="onBlur()"

@@ -12,17 +12,17 @@
             <div class="meta-container__inner">
               <v-form
                 ref="shareStructureForm"
-                class="share-structure-form"
                 v-model="formValid"
-                v-on:submit.prevent="addShareStructure()"
+                class="share-structure-form"
+                @submit.prevent="addShareStructure()"
               >
                 <v-text-field
+                  id="txt-name"
+                  v-model="shareStructure.name"
                   filled
                   :label="shareStructure.type + ' Name [Shares]'"
                   :hint="'Enter the name of the  '+ shareStructure.type.toLowerCase() +
-                  '  - the words &quot;Shares&quot; is automatically added'"
-                  id="txt-name"
-                  v-model="shareStructure.name"
+                    '  - the words &quot;Shares&quot; is automatically added'"
                   :rules="getNameRule()"
                   suffix="Shares"
                   persistent-hint
@@ -37,14 +37,14 @@
                   @change="changeMaximumShareFlag()"
                 >
                   <v-radio :value="false">
-                    <template v-slot:label>
+                    <template #label>
                       <v-row>
                         <v-col cols="6">
                           <v-text-field
-                            filled
-                            label="Maximum Number of Shares"
                             id="txt-max-shares"
                             v-model.number="shareStructure.maxNumberOfShares"
+                            filled
+                            label="Maximum Number of Shares"
                             persistent-hint
                             :hint="'Enter the maximum number of shares in the ' + shareStructure.type"
                             :rules="getMaximumShareRule()"
@@ -54,26 +54,35 @@
                       </v-row>
                     </template>
                   </v-radio>
-                  <v-radio :value="true" label="No maximum" id="lbl-no-maximum" v-if="isNoMaxSharesVisible" />
+                  <v-radio
+                    v-if="isNoMaxSharesVisible"
+                    id="lbl-no-maximum"
+                    :value="true"
+                    label="No maximum"
+                  />
                 </v-radio-group>
 
                 <v-divider class="mt-2 mb-4" />
 
                 <v-radio-group
+                  v-show="isClass"
                   v-model="hasNoParValue"
                   column
                   class="radio-group"
-                  @change="changeParValueFlag()" v-show="isClass"
+                  @change="changeParValueFlag()"
                 >
-                  <v-radio :value="false" id="radio-par-value">
-                    <template v-slot:label>
+                  <v-radio
+                    id="radio-par-value"
+                    :value="false"
+                  >
+                    <template #label>
                       <v-row>
                         <v-col cols="6">
                           <v-text-field
-                            filled
-                            label="Par Value"
                             id="class-par-value"
                             v-model.number="shareStructure.parValue"
+                            filled
+                            label="Par Value"
                             :rules="getParValueRule()"
                             hint="Enter the initial value of each share"
                             persistent-hint
@@ -81,19 +90,19 @@
                         </v-col>
                         <v-col cols="6">
                           <v-select
+                            id="class-currency"
+                            v-model="shareStructure.currency"
                             :items="getCurrencyList()"
                             filled
                             label="Currency"
-                            v-model="shareStructure.currency"
                             :rules="getCurrencyRule()"
                             item-text="`${data.item.name}, ${data.item.code}`"
                             item-value="code"
-                            id="class-currency"
                           >
-                            <template slot="selection" slot-scope="data">
-                               {{ data.item.name }} ({{ data.item.code }})
+                            <template #selection="data">
+                              {{ data.item.name }} ({{ data.item.code }})
                             </template>
-                            <template slot="item" slot-scope="data">
+                            <template #item="data">
                               {{ data.item.name }} ({{ data.item.code }})
                             </template>
                           </v-select>
@@ -101,15 +110,19 @@
                       </v-row>
                     </template>
                   </v-radio>
-                  <v-radio :value="true" label="No par value" id="radio-no-par" />
+                  <v-radio
+                    id="radio-no-par"
+                    :value="true"
+                    label="No par value"
+                  />
                 </v-radio-group>
 
                 <div v-show="isSeries">
                   <v-row v-if="shareStructure.hasParValue">
                     <v-col cols="6">
                       <v-text-field
-                        label="Par Value"
                         id="series-par-value"
+                        label="Par Value"
                         :value="shareStructure.parValue"
                         :disabled="true"
                         width="10"
@@ -124,7 +137,12 @@
                       />
                     </v-col>
                   </v-row>
-                  <v-label id="lbl-no-par" v-else>No par value</v-label>
+                  <v-label
+                    v-else
+                    id="lbl-no-par"
+                  >
+                    No par value
+                  </v-label>
                 </div>
 
                 <v-divider class="mt-2 mb-4" />
@@ -132,19 +150,40 @@
                 <div class="form__row">
                   <v-checkbox
                     id="special-rights-check-box"
-                    :label="'This share ' + shareStructure.type.toLowerCase() + ' has special rights or restrictions'"
                     v-model="shareStructure.hasRightsOrRestrictions"
+                    :label="'This share ' + shareStructure.type.toLowerCase() + ' has special rights or restrictions'"
                   />
                 </div>
 
                 <div class="form__row form__btns">
-                  <v-btn large color="error" :disabled="activeIndex === -1"
-                    @click="removeShareStructure()" id="btn-remove">Remove</v-btn>
+                  <v-btn
+                    id="btn-remove"
+                    large
+                    color="error"
+                    :disabled="activeIndex === -1"
+                    @click="removeShareStructure()"
+                  >
+                    Remove
+                  </v-btn>
 
-                  <v-btn large color="primary" class="form-primary-btn"
-                    @click="validateForm()" :disabled="!formValid" id="btn-done">Done</v-btn>
+                  <v-btn
+                    id="btn-done"
+                    large
+                    color="primary"
+                    class="form-primary-btn"
+                    :disabled="!formValid"
+                    @click="validateForm()"
+                  >
+                    Done
+                  </v-btn>
 
-                  <v-btn large @click="resetFormAndData(true)" id="btn-cancel">Cancel</v-btn>
+                  <v-btn
+                    id="btn-cancel"
+                    large
+                    @click="resetFormAndData(true)"
+                  >
+                    Cancel
+                  </v-btn>
                 </div>
               </v-form>
             </div>

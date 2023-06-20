@@ -11,14 +11,29 @@
       </header>
 
       <!-- Dissolution summary -->
-      <v-card flat id="dissolution-summary" class="mt-6">
+      <v-card
+        id="dissolution-summary"
+        flat
+        class="mt-6"
+      >
         <header class="review-header">
-          <v-icon class="ml-2" color="appDkBlue">mdi-domain-remove</v-icon>
+          <v-icon
+            class="ml-2"
+            color="appDkBlue"
+          >
+            mdi-domain-remove
+          </v-icon>
           <label class="font-weight-bold pl-2">Dissolution</label>
         </header>
 
-        <div class="pb-8" :class="{ 'invalid-section': !isDissolutionDefineDissolutionValid }">
-          <section class="mx-6 pt-8" v-if="!isDissolutionDefineDissolutionValid">
+        <div
+          class="pb-8"
+          :class="{ 'invalid-section': !isDissolutionDefineDissolutionValid }"
+        >
+          <section
+            v-if="!isDissolutionDefineDissolutionValid"
+            class="mx-6 pt-8"
+          >
             <span>
               <v-icon color="error">mdi-information-outline</v-icon>
               <span class="error-text mx-1">This step is unfinished.</span>
@@ -31,9 +46,9 @@
           <!-- Association Details -->
           <section>
             <AssociationDetails
-              :entityLabel= "isTypeCoop ? 'Cooperative Association' : 'Company'"
+              :entityLabel="isTypeCoop ? 'Cooperative Association' : 'Company'"
               :isSummary="true"
-              />
+            />
           </section>
 
           <!-- Dissolution Statement -->
@@ -93,15 +108,24 @@
                 :class="{ 'invalid': isDissolutionDateTimeInvalid }"
               >
                 <v-row no-gutters>
-                  <v-col cols="3" class="inner-col-1 pr-4">
+                  <v-col
+                    cols="3"
+                    class="inner-col-1 pr-4"
+                  >
                     <label class="font-weight-bold">Dissolution Date and Time</label>
                   </v-col>
 
-                  <v-col cols="9" class="inner-col-2 pt-4 pt-sm-0">
-                    <p id="effective-date-time-instructions" class="info-text">
+                  <v-col
+                    cols="9"
+                    class="inner-col-2 pt-4 pt-sm-0"
+                  >
+                    <p
+                      id="effective-date-time-instructions"
+                      class="info-text"
+                    >
                       Select the date and time of the dissolution of the Company. You may select a date
                       up to 10 days in the future (note: there is an <strong>additional fee of
-                      {{ futureEffectiveFeePrice }}</strong> to enter a dissolution date in the future).
+                        {{ futureEffectiveFeePrice }}</strong> to enter a dissolution date in the future).
                       Unless a business has special requirements, most businesses select an immediate
                       date and time for dissolution.
                     </p>
@@ -115,12 +139,14 @@
                       @isFutureEffective="setIsFutureEffective($event)"
                     />
 
-                    <v-card flat class="px-16 pb-8 mt-n12"
-                      id="effective-date-text"
+                    <v-card
                       v-if="getEffectiveDateTime.isFutureEffective && getEffectiveDateTime.valid"
+                      id="effective-date-text"
+                      flat
+                      class="px-16 pb-8 mt-n12"
                     >
                       The dissolution for this business will be effective as of:<br>
-                      <strong>{{futureEffectiveDate}}</strong>
+                      <strong>{{ futureEffectiveDate }}</strong>
                     </v-card>
                   </v-col>
                 </v-row>
@@ -131,34 +157,64 @@
       </v-card>
 
       <!-- Resolution -->
-      <v-card flat id="resolution-summary" class="mt-6">
+      <v-card
+        id="resolution-summary"
+        flat
+        class="mt-6"
+      >
         <header class="review-header">
-          <v-icon class="ml-2" color="appDkBlue">mdi-handshake</v-icon>
-          <label class="font-weight-bold pl-2">{{getCreateResolutionResource.reviewConfirmHeader}}</label>
+          <v-icon
+            class="ml-2"
+            color="appDkBlue"
+          >
+            mdi-handshake
+          </v-icon>
+          <label class="font-weight-bold pl-2">{{ getCreateResolutionResource.reviewConfirmHeader }}</label>
         </header>
 
         <CompleteResolutionSummary />
       </v-card>
 
       <!-- Affidavit -->
-      <v-card flat id="affidavit-summary" class="mt-6">
+      <v-card
+        id="affidavit-summary"
+        flat
+        class="mt-6"
+      >
         <header class="review-header">
-          <v-icon class="ml-2" color="appDkBlue">mdi-book-variant-multiple</v-icon>
+          <v-icon
+            class="ml-2"
+            color="appDkBlue"
+          >
+            mdi-book-variant-multiple
+          </v-icon>
           <label class="font-weight-bold pl-2">Affidavit</label>
         </header>
 
-        <section v-if="!isAffidavitValid" class="section-container invalid-section">
-          <v-icon color="error">mdi-information-outline</v-icon>
+        <section
+          v-if="!isAffidavitValid"
+          class="section-container invalid-section"
+        >
+          <v-icon color="error">
+            mdi-information-outline
+          </v-icon>
           <span class="error-text mx-1">This step is unfinished.</span>
           <router-link
             :to="{ path: `/${RouteNames.DISSOLUTION_AFFIDAVIT}` }"
-          >Return to this step to finish it</router-link>
+          >
+            Return to this step to finish it
+          </router-link>
         </section>
 
-        <section v-else class="section-container">
+        <section
+          v-else
+          class="section-container"
+        >
           <v-row no-gutters>
             <v-col cols="1">
-              <v-icon color="successCheckmark">mdi-check</v-icon>
+              <v-icon color="successCheckmark">
+                mdi-check
+              </v-icon>
             </v-col>
             <v-col cols="11">
               <span class="break-spaces">{{ affidavitSummary }}</span>
@@ -169,7 +225,10 @@
     </section>
 
     <!-- Dissolution Documents Delivery -->
-    <section id="document-delivery-section" class="mt-10">
+    <section
+      id="document-delivery-section"
+      class="mt-10"
+    >
       <header>
         <h2>Dissolution Documents Delivery</h2>
         <p class="mt-4">
@@ -177,7 +236,10 @@
         </p>
       </header>
 
-      <v-card flat class="mt-6">
+      <v-card
+        flat
+        class="mt-6"
+      >
         <DocumentDelivery
           class="py-8 px-6"
           :class="{ 'invalid-section': isDocumentDeliveryInvalid }"
@@ -188,15 +250,19 @@
           :custodianEmail="getDissolutionCustodianEmail"
           :completingPartyEmail="getUserEmail"
           :documentOptionalEmail="getDocumentDelivery.documentOptionalEmail"
+          contactLabel="Registered Office"
           @update:optionalEmail="setDocumentOptionalEmail($event)"
           @valid="setDocumentOptionalEmailValidity($event)"
-          contactLabel="Registered Office"
         />
       </v-card>
     </section>
 
     <!-- Transactional Folio Number -->
-    <section id="folio-number-section" class="mt-10" v-if="isPremiumAccount">
+    <section
+      v-if="isPremiumAccount"
+      id="folio-number-section"
+      class="mt-10"
+    >
       <header>
         <h2>Folio or Reference Number for this Filing</h2>
         <p class="mt-4">
@@ -207,7 +273,10 @@
         </p>
       </header>
 
-      <v-card flat class="mt-6">
+      <v-card
+        flat
+        class="mt-6"
+      >
         <TransactionalFolioNumber
           class="py-8 px-6"
           :accountFolioNumber="getFolioNumber"
@@ -220,7 +289,10 @@
     </section>
 
     <!-- Certify -->
-    <section id="certify-section" class="mt-10">
+    <section
+      id="certify-section"
+      class="mt-10"
+    >
       <header>
         <h2>Certify</h2>
         <p class="mt-4">
@@ -228,7 +300,10 @@
         </p>
       </header>
 
-      <v-card flat class="mt-6">
+      <v-card
+        flat
+        class="mt-6"
+      >
         <Certify
           class="py-8 px-6"
           :class="{ 'invalid-section': isCertifyInvalid }"
@@ -240,7 +315,11 @@
     </section>
 
     <!-- Court Order and Plan of Arrangement -->
-    <section id="court-order-poa-section" class="mt-10" v-if="isRoleStaff">
+    <section
+      v-if="isRoleStaff"
+      id="court-order-poa-section"
+      class="mt-10"
+    >
       <header>
         <h2>Court Order and Plan of Arrangement</h2>
         <p class="mt-4">
@@ -250,7 +329,10 @@
         </p>
       </header>
 
-      <v-card flat class="mt-6">
+      <v-card
+        flat
+        class="mt-6"
+      >
         <CourtOrderPoa
           class="py-8 px-6"
           :class="{ 'invalid-section': isCourtOrderInvalid }"
@@ -266,13 +348,20 @@
     </section>
 
     <!-- Staff Payment -->
-    <section id="staff-payment-section" class="mt-10" v-if="isRoleStaff">
+    <section
+      v-if="isRoleStaff"
+      id="staff-payment-section"
+      class="mt-10"
+    >
       <header>
         <h2>Staff Payment</h2>
-        <p class="mt-4"></p>
+        <p class="mt-4" />
       </header>
 
-      <v-card flat class="mt-6">
+      <v-card
+        flat
+        class="mt-6"
+      >
         <StaffPayment class="py-8 px-6" />
       </v-card>
     </section>

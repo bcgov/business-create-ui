@@ -7,18 +7,32 @@
         <p class="mt-4">
           Review the information in your application. If you need to change or complete anything,
           return to the step to make the necessary change.
-          </p>
+        </p>
       </header>
 
       <!-- Business Name -->
-      <v-card id="business-name-vcard" flat class="mt-6">
-        <CardHeader icon="mdi-domain-plus" label="Business Name" />
+      <v-card
+        id="business-name-vcard"
+        flat
+        class="mt-6"
+      >
+        <CardHeader
+          icon="mdi-domain-plus"
+          label="Business Name"
+        />
         <SummaryRestoreBusiness />
       </v-card>
 
       <!-- Applicant Information -->
-      <v-card id="applicant-information-vcard" flat class="mt-6">
-        <CardHeader icon="mdi-account-multiple-plus" label="Applicant Information" />
+      <v-card
+        id="applicant-information-vcard"
+        flat
+        class="mt-6"
+      >
+        <CardHeader
+          icon="mdi-account-multiple-plus"
+          label="Applicant Information"
+        />
         <ListPeopleAndRoles
           :isSummary="true"
           :showDeliveryAddressColumn="!isFullRestorationFiling && !isLimitedRestorationFiling"
@@ -28,14 +42,24 @@
       </v-card>
 
       <!-- Business Information -->
-      <v-card id="business-information-vcard" flat class="mt-6">
-        <CardHeader icon="mdi-domain" label="Business Information" />
+      <v-card
+        id="business-information-vcard"
+        flat
+        class="mt-6"
+      >
+        <CardHeader
+          icon="mdi-domain"
+          label="Business Information"
+        />
         <SummaryDefineCompany />
       </v-card>
     </section>
 
     <!-- Document Delivery -->
-    <section id="document-delivery-section" class="mt-10">
+    <section
+      id="document-delivery-section"
+      class="mt-10"
+    >
       <header>
         <h2>Document Delivery</h2>
         <p class="mt-4">
@@ -43,7 +67,10 @@
         </p>
       </header>
 
-      <v-card flat class="mt-6">
+      <v-card
+        flat
+        class="mt-6"
+      >
         <DocumentDelivery
           class="py-8 px-6"
           contactLabel="Business Office"
@@ -56,7 +83,10 @@
     </section>
 
     <!-- Certify -->
-    <section id="certify-section" class="mt-10">
+    <section
+      id="certify-section"
+      class="mt-10"
+    >
       <header>
         <h2>Certify</h2>
         <p class="mt-4">
@@ -64,7 +94,10 @@
         </p>
       </header>
 
-      <v-card flat class="mt-6">
+      <v-card
+        flat
+        class="mt-6"
+      >
         <Certify
           class="py-8 px-6"
           :class="{ 'invalid-section': isCertifyInvalid }"
@@ -76,13 +109,20 @@
     </section>
 
     <!-- Staff Payment -->
-    <section id="staff-payment-section" class="mt-10" v-if="isRoleStaff">
+    <section
+      v-if="isRoleStaff"
+      id="staff-payment-section"
+      class="mt-10"
+    >
       <header>
         <h2>Staff Payment</h2>
-        <p class="mt-4"></p>
+        <p class="mt-4" />
       </header>
 
-      <v-card flat class="mt-6">
+      <v-card
+        flat
+        class="mt-6"
+      >
         <StaffPayment class="py-8 px-6" />
       </v-card>
     </section>

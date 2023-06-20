@@ -1,6 +1,9 @@
 <template>
   <div id="upload-rules-summary">
-    <div v-if="!getCreateRulesStep.validationDetail.valid" class="invalid-section">
+    <div
+      v-if="!getCreateRulesStep.validationDetail.valid"
+      class="invalid-section"
+    >
       <div class="upload-rules-error-message">
         <span>
           <v-icon color="error">mdi-information-outline</v-icon>
@@ -12,13 +15,24 @@
       </div>
     </div>
 
-    <div v-if="getCreateRulesStep.validationDetail.valid" class="upload-rules-success-message">
+    <div
+      v-if="getCreateRulesStep.validationDetail.valid"
+      class="upload-rules-success-message"
+    >
       <v-row no-gutters>
         <v-col md="1">
-          <v-icon class="upload-success-chk">mdi-check</v-icon>
+          <v-icon class="upload-success-chk">
+            mdi-check
+          </v-icon>
         </v-col>
-        <v-col md="11" id="file-name-col">
-          <span id="file-name" v-if="getCreateRulesStep.rulesFile" >{{getCreateRulesStep.rulesFile.name}}</span>
+        <v-col
+          id="file-name-col"
+          md="11"
+        >
+          <span
+            v-if="getCreateRulesStep.rulesFile"
+            id="file-name"
+          >{{ getCreateRulesStep.rulesFile.name }}</span>
         </v-col>
       </v-row>
     </div>

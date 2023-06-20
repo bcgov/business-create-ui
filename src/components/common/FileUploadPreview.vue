@@ -1,21 +1,23 @@
 <template>
-  <v-form ref="fileUploadInput" lazy-validation>
+  <v-form
+    ref="fileUploadInput"
+    lazy-validation
+  >
     <v-file-input
+      v-model="fileUpload"
       label="Select a file to upload"
       filled
       dense
-      v-model="fileUpload"
       accept=".pdf"
       class="file-upload-preview"
       :rules="fileUploadRules"
       show-size
-      @change="fileChange($event)"
       color="primary"
       hint="File must be a PDF. Maximum 30MB."
       persistent-hint
       :error-messages="customErrorMessages"
-    >
-    </v-file-input>
+      @change="fileChange($event)"
+    />
   </v-form>
 </template>
 
