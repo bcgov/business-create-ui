@@ -10,6 +10,7 @@
       <v-card-title id="dialog-title">
         Invalid Name Request (NR) / Incorporation Application
       </v-card-title>
+
       <v-card-text id="dialog-text">
         <!-- display errors -->
         <div class="font-14 mb-4">
