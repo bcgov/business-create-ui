@@ -7,48 +7,63 @@
 
     <!-- Blurb(s) -->
     <template v-if="blurb">
-      <p class="blurb-para" v-html="blurb" />
+      <p
+        class="blurb-para"
+        v-html="blurb"
+      />
     </template>
     <template v-if="blurbs">
-      <p v-for="(blurb, index) in blurbs" :key="index" class="blurb-para" v-html="blurb" />
+      <p
+        v-for="(blurb, index) in blurbs"
+        :key="index"
+        class="blurb-para"
+        v-html="blurb"
+      />
     </template>
 
     <!-- Checklist section -->
     <section class="mt-5">
-      <div class="subhead">{{ subheader }}</div>
+      <div class="subhead">
+        {{ subheader }}
+      </div>
       <ul>
         <template v-for="(rule, index) in getPeopleAndRolesResource.rules">
-          <RuleListItem class="completing-party-rule pt-2"
+          <RuleListItem
             v-if="rule.id === RuleIds.NUM_COMPLETING_PARTY"
             :key="index"
+            class="completing-party-rule pt-2"
             :valid="validNumCompletingParty"
             :showErrors="getShowErrors"
             :text="rule.text"
           />
-          <RuleListItem class="proprietors-rule pt-2"
+          <RuleListItem
             v-if="rule.id === RuleIds.NUM_PROPRIETORS"
             :key="index"
+            class="proprietors-rule pt-2"
             :valid="validNumProprietors"
             :showErrors="getShowErrors"
             :text="rule.text"
           />
-          <RuleListItem class="partners-rule pt-2"
+          <RuleListItem
             v-if="rule.id === RuleIds.NUM_PARTNERS"
             :key="index"
+            class="partners-rule pt-2"
             :valid="validNumPartners"
             :showErrors="getShowErrors"
             :text="rule.text"
           />
-          <RuleListItem class="applicant-person-rule pt-2"
+          <RuleListItem
             v-if="rule.id === RuleIds.NUM_APPLICANT_PERSON"
             :key="index"
+            class="applicant-person-rule pt-2"
             :valid="validApplicantPerson"
             :showErrors="getShowErrors && !validApplicantOrg"
             :text="rule.text"
           />
-          <RuleListItem class="applicant-org-rule pt-2"
+          <RuleListItem
             v-if="rule.id === RuleIds.NUM_APPLICANT_ORG"
             :key="index"
+            class="applicant-org-rule pt-2"
             :valid="validApplicantOrg"
             :showErrors="getShowErrors && !validApplicantPerson"
             :text="rule.text"
@@ -60,10 +75,18 @@
     <!-- More blurb(s) -->
     <!-- NB: only shown when user needs to select the Proproietor -->
     <template v-if="blurb2 && orgPersonList.length > 0 && !validNumProprietors">
-      <p class="blurb-para" v-html="blurb2" />
+      <p
+        class="blurb-para"
+        v-html="blurb2"
+      />
     </template>
     <template v-if="blurbs2 && orgPersonList.length > 0 && !validNumProprietors">
-      <p v-for="(blurb, index) in blurbs2" :key="`blurb2-${index}`" class="blurb-para" v-html="blurb" />
+      <p
+        v-for="(blurb, index) in blurbs2"
+        :key="`blurb2-${index}`"
+        class="blurb-para"
+        v-html="blurb"
+      />
     </template>
 
     <!-- Start by Adding the Completing Party -->
@@ -179,7 +202,11 @@
 
     <!-- Add/Edit Bus/Corp -->
     <v-expand-transition>
-      <v-card flat v-if="showOrgPersonForm" class="mt-8">
+      <v-card
+        v-if="showOrgPersonForm"
+        flat
+        class="mt-8"
+      >
         <RegAddEditOrgPerson
           :initialValue="currentOrgPerson"
           :activeIndex="activeIndex"
@@ -193,7 +220,11 @@
     </v-expand-transition>
 
     <!-- List of People and Roles -->
-    <v-card flat v-if="orgPersonList.length > 0" class="mt-8">
+    <v-card
+      v-if="orgPersonList.length > 0"
+      flat
+      class="mt-8"
+    >
       <ListPeopleAndRoles
         :isSummary="false"
         :disabled="showOrgPersonForm"

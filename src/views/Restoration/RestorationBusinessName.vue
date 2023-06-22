@@ -1,28 +1,51 @@
 <template>
   <div id="restoration-business-name">
     <!-- Business Name and Name Translations -->
-    <section id="name-section" class="mt-10">
+    <section
+      id="name-section"
+      class="mt-10"
+    >
       <header>
         <h2>Name</h2>
-        <p>Add a Name Request that is reserved for this restoration application or restore
-          as a numbered company.</p>
+        <p>
+          Add a Name Request that is reserved for this restoration application or restore
+          as a numbered company.
+        </p>
       </header>
-      <v-card flat class="mt-5">
+      <v-card
+        flat
+        class="mt-5"
+      >
         <BusinessName id="business-name" />
-        <BusinessType id="business-type" class="mt-n8" />
-        <NameTranslations id="name-translations" class="mt-n8" />
+        <BusinessType
+          id="business-type"
+          class="mt-n8"
+        />
+        <NameTranslations
+          id="name-translations"
+          class="mt-n8"
+        />
       </v-card>
     </section>
 
     <!-- Restoration Type and Approval Type -->
-    <section id="restoration-type-section" class="mt-10">
+    <section
+      id="restoration-type-section"
+      class="mt-10"
+    >
       <header>
         <h2>Restoration Type</h2>
         <p>Determine the restoration and approval type.</p>
       </header>
-      <v-card flat class="mt-5">
+      <v-card
+        flat
+        class="mt-5"
+      >
         <RestorationType id="restoration-type" />
-        <ApprovalType id="approval-type" class="mt-n10" />
+        <ApprovalType
+          id="approval-type"
+          class="mt-n10"
+        />
       </v-card>
     </section>
   </div>

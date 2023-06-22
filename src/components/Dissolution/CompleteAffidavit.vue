@@ -4,10 +4,19 @@
     <section class="mt-10">
       <header>
         <h2>1. Affidavit</h2>
-        <p>Before submitting the voluntary dissolution you must <b>complete and sign</b> an
-          <v-tooltip top max-width="15rem" content-class="top-tooltip" transition="fade-transition">
-            <template v-slot:activator="{ on }">
-              <span v-on="on" class="tool-tip dotted-underline"> affidavit </span>
+        <p>
+          Before submitting the voluntary dissolution you must <b>complete and sign</b> an
+          <v-tooltip
+            top
+            max-width="15rem"
+            content-class="top-tooltip"
+            transition="fade-transition"
+          >
+            <template #activator="{ on }">
+              <span
+                class="tool-tip dotted-underline"
+                v-on="on"
+              > affidavit </span>
             </template>
             <span>
               Affidavit – A declaration signed by a Commissioner for Taking Oaths.
@@ -19,68 +28,120 @@
     </section>
 
     <!-- Help section -->
-    <div class="mt-5" v-if="getAffidavitResources.helpSection">
-      <span class="help-btn" @click="helpToggle = !helpToggle">
-        <v-icon color="primary" class="pr-1">mdi-help-circle-outline</v-icon>
+    <div
+      v-if="getAffidavitResources.helpSection"
+      class="mt-5"
+    >
+      <span
+        class="help-btn"
+        @click="helpToggle = !helpToggle"
+      >
+        <v-icon
+          color="primary"
+          class="pr-1"
+        >mdi-help-circle-outline</v-icon>
         <span v-if="!helpToggle">Help with Affidavit</span>
         <span v-else>Hide Help</span>
       </span>
 
       <v-expand-transition>
-        <section v-show="helpToggle" class="affidavit-help">
+        <section
+          v-show="helpToggle"
+          class="affidavit-help"
+        >
           <header id="affidavit-help-header">
             <h2>Help with Affidavit</h2>
           </header>
 
-          <p>{{getAffidavitResources.helpSection.header}}</p>
+          <p>{{ getAffidavitResources.helpSection.header }}</p>
           <ul class="bulleted-list mt-6">
             <li
               v-for="(item, index) in getAffidavitResources.helpSection.helpText"
-              class="mt-2"
               :key="index"
+              class="mt-2"
               v-html="item"
             />
           </ul>
-          <p class="mt-4"><strong>Note:</strong> {{ getAffidavitResources.helpSection.note }}</p>
-          <u class="help-btn" @click="helpToggle = !helpToggle"><small>Hide Help</small></u>
+          <p class="mt-4">
+            <strong>Note:</strong> {{ getAffidavitResources.helpSection.note }}
+          </p>
+          <u
+            class="help-btn"
+            @click="helpToggle = !helpToggle"
+          ><small>Hide Help</small></u>
         </section>
       </v-expand-transition>
     </div>
 
     <!-- Sample Affidavit -->
-    <section id="sample-affidavit-section" class="mt-10">
+    <section
+      id="sample-affidavit-section"
+      class="mt-10"
+    >
       <header id="sample-affidavit-header">
         <h2>2. Sample Affidavit</h2>
       </header>
 
-      <p class="mt-2">For your convenience, we have provided a sample affidavit with instructions.</p>
+      <p class="mt-2">
+        For your convenience, we have provided a sample affidavit with instructions.
+      </p>
 
-      <v-card flat class="py-8 px-6">
+      <v-card
+        flat
+        class="py-8 px-6"
+      >
         <div class="d-flex flex-column flex-sm-row justify-center align-center">
-          <img v-if="isTypeCoop" src="@/assets/images/BCRegistries_CoopAffidavit-x2.png" class="preview-image"/>
-          <img v-else src="@/assets/images/BCRegistries_CorporationAffidavit-x2.png" class="preview-image"/>
+          <img
+            v-if="isTypeCoop"
+            src="@/assets/images/BCRegistries_CoopAffidavit-x2.png"
+            class="preview-image"
+          >
+          <img
+            v-else
+            src="@/assets/images/BCRegistries_CorporationAffidavit-x2.png"
+            class="preview-image"
+          >
           <div class="px-8" />
           <div class="download-link-container py-5">
-            <v-icon color="primary" class="mt-n1">mdi-file-pdf-outline</v-icon>
-            <a :href="documentURL" download class="ml-1">Download the Sample Affidavit</a>
+            <v-icon
+              color="primary"
+              class="mt-n1"
+            >
+              mdi-file-pdf-outline
+            </v-icon>
+            <a
+              :href="documentURL"
+              download
+              class="ml-1"
+            >Download the Sample Affidavit</a>
           </div>
         </div>
       </v-card>
     </section>
 
     <!-- Confirm Affidavit Completion -->
-    <section id="confirm-affidavit-section" class="mt-10">
+    <section
+      id="confirm-affidavit-section"
+      class="mt-10"
+    >
       <header id="confirm-affidavit-header">
         <h2>3. Confirm Affidavit Completion</h2>
       </header>
 
-      <div class="mt-4" :class="{ 'invalid-section': isInvalid }">
-        <v-card flat id="confirm-affidavit-card" class="py-8 px-6">
+      <div
+        class="mt-4"
+        :class="{ 'invalid-section': isInvalid }"
+      >
+        <v-card
+          id="confirm-affidavit-card"
+          flat
+          class="py-8 px-6"
+        >
           <v-form ref="confirmAffidavitChk">
             <v-checkbox
               id="chk-confirm-affidavit"
-              class="chk-affidavit mt-0 pt-0"
               v-model="affidavitConfirmed"
+              class="chk-affidavit mt-0 pt-0"
               hide-details
               :rules="confirmCompletionAffidavit"
               :label="getAffidavitResources.confirmSection.checkboxLabel"
@@ -89,21 +150,29 @@
             <ul>
               <li class="mt-4">
                 <v-row no-gutters>
-                  <v-col cols="1"><v-icon>mdi-circle-small</v-icon></v-col>
+                  <v-col cols="1">
+                    <v-icon>mdi-circle-small</v-icon>
+                  </v-col>
                   <v-col cols="11">
                     The {{ entityTitle }} name is identified <b>exactly</b> as follows throughout the affidavit:
-                    <p class="font-weight-bold mb-0">{{ entityName }}</p>
+                    <p class="font-weight-bold mb-0">
+                      {{ entityName }}
+                    </p>
                   </v-col>
                 </v-row>
               </li>
               <li
-                class="mt-4"
                 v-for="(item, index) in getAffidavitResources.confirmSection.confirmText"
                 :key="index"
+                class="mt-4"
               >
                 <v-row no-gutters>
-                  <v-col cols="1"><v-icon>mdi-circle-small</v-icon></v-col>
-                  <v-col cols="11">{{item}}</v-col>
+                  <v-col cols="1">
+                    <v-icon>mdi-circle-small</v-icon>
+                  </v-col>
+                  <v-col cols="11">
+                    {{ item }}
+                  </v-col>
                 </v-row>
               </li>
             </ul>
@@ -113,7 +182,11 @@
     </section>
 
     <!-- Upload Affidavit -->
-    <section v-if="isTypeCoop" id="upload-affidavit-section" class="mt-10">
+    <section
+      v-if="isTypeCoop"
+      id="upload-affidavit-section"
+      class="mt-10"
+    >
       <header id="upload-affidavit-header">
         <h2>4. Upload Affidavit</h2>
         <p>Upload a PDF of the signed and sealed affidavit.</p>
@@ -139,13 +212,28 @@
         </ul>
       </header>
 
-      <div class="mt-4" :class="{ 'invalid-section': getShowErrors && !hasValidUploadFile }">
-        <v-card flat id="upload-affidavit-card" class="py-8 px-6">
+      <div
+        class="mt-4"
+        :class="{ 'invalid-section': getShowErrors && !hasValidUploadFile }"
+      >
+        <v-card
+          id="upload-affidavit-card"
+          flat
+          class="py-8 px-6"
+        >
           <v-row no-gutters>
-            <v-col cols="12" sm="3" class="pr-4">
+            <v-col
+              cols="12"
+              sm="3"
+              class="pr-4"
+            >
               <label class="upload-affidavit-title">Upload Affidavit</label>
             </v-col>
-            <v-col cols="12" sm="9" class="pt-4 pt-sm-0">
+            <v-col
+              cols="12"
+              sm="9"
+              class="pt-4 pt-sm-0"
+            >
               <FileUploadPreview
                 :inputFileLabel="INPUT_FILE_LABEL"
                 :maxSize="MAX_FILE_SIZE"

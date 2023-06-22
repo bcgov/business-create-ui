@@ -1,33 +1,55 @@
 <template>
   <div id="restoration-type">
-    <div class="section-container" :class="{ 'invalid-section': invalidSection }">
+    <div
+      class="section-container"
+      :class="{ 'invalid-section': invalidSection }"
+    >
       <v-row no-gutters>
-        <v-col cols="12" sm="3" class="pr-4">
+        <v-col
+          cols="12"
+          sm="3"
+          class="pr-4"
+        >
           <label :class="{ 'error-text': invalidSection }">
             <strong>Restoration Type</strong>
           </label>
         </v-col>
 
-        <v-col cols="12" sm="9">
+        <v-col
+          cols="12"
+          sm="9"
+        >
           <v-radio-group
-            class="mt-0 pt-0"
             v-model="selectRestorationType"
+            class="mt-0 pt-0"
             @change="changeRestorationType()"
           >
             <v-radio
-              class="radio-button"
               id="full-radio-button"
+              class="radio-button"
               label="Full Restoration"
-              :value=RestorationTypes.FULL />
+              :value="RestorationTypes.FULL"
+            />
 
             <!-- Relationship To Company Checkboxes -->
             <v-expand-transition>
               <div v-if="isFullRestorationFiling">
-                <div class="ml-8 tooltip-text" :class="{ 'error-text': invalidSection }">
+                <div
+                  class="ml-8 tooltip-text"
+                  :class="{ 'error-text': invalidSection }"
+                >
                   Please select
-                  <v-tooltip content-class="top-tooltip" transition="fade-transition" top>
-                    <template v-slot:activator="{ on, attrs }">
-                      <span class="dotted-underline" v-bind="attrs" v-on="on">
+                  <v-tooltip
+                    content-class="top-tooltip"
+                    transition="fade-transition"
+                    top
+                  >
+                    <template #activator="{ on, attrs }">
+                      <span
+                        class="dotted-underline"
+                        v-bind="attrs"
+                        v-on="on"
+                      >
                         applicant's relationship
                       </span>
                     </template>
@@ -44,10 +66,11 @@
             </v-expand-transition>
 
             <v-radio
-              class="pt-4 radio-button"
               id="limited-radio-button"
+              class="pt-4 radio-button"
               label="Limited Restoration"
-              :value=RestorationTypes.LIMITED />
+              :value="RestorationTypes.LIMITED"
+            />
 
             <!-- Limited Restoration Radio Panel -->
             <v-expand-transition>

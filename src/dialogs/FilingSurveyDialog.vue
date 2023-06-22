@@ -1,9 +1,23 @@
 <template>
-  <v-dialog v-model="dialog" width="45rem" persistent :attach="attach" content-class="filing-survey-dialog">
+  <v-dialog
+    v-model="dialog"
+    width="45rem"
+    persistent
+    :attach="attach"
+    content-class="filing-survey-dialog"
+  >
     <v-card class="px-10 py-6">
       <v-card-title class="d-flex justify-space-between align-center">
         <span class="font-weight-bold">Tell Us About Your Experience Today</span>
-        <v-btn icon large color="primary" class="dialog-close" @click="no()"><v-icon>mdi-close</v-icon></v-btn>
+        <v-btn
+          icon
+          large
+          color="primary"
+          class="dialog-close"
+          @click="no()"
+        >
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
       </v-card-title>
 
       <v-card-text>
@@ -13,7 +27,10 @@
         </p>
 
         <p>
-          Our <a href="https://www2.gov.bc.ca/gov/content/home/privacy" target="_blank">Privacy Statement</a>
+          Our <a
+            href="https://www2.gov.bc.ca/gov/content/home/privacy"
+            target="_blank"
+          >Privacy Statement</a>
         </p>
 
         <v-checkbox
@@ -27,7 +44,9 @@
       <v-card-actions class="d-flex justify-center">
         <v-btn
           id="dialog-no-button"
-          large outlined color="primary"
+          large
+          outlined
+          color="primary"
           class="mr-sm-3 px-8"
           @click="no()"
         >
@@ -35,7 +54,8 @@
         </v-btn>
         <v-btn
           id="dialog-yes-button"
-          large color="primary"
+          large
+          color="primary"
           class="ml-sm-3 px-8"
           @click="yes()"
         >

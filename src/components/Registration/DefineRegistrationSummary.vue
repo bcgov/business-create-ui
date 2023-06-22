@@ -1,7 +1,10 @@
 <template>
   <div id="define-registration-summary">
     <section :class="{ 'invalid-section': !defineBusinessValid }">
-      <div v-if="!defineBusinessValid" class="define-registration-step-error-message">
+      <div
+        v-if="!defineBusinessValid"
+        class="define-registration-step-error-message"
+      >
         <span>
           <v-icon color="error">mdi-information-outline</v-icon>
           <span class="error-text mx-1">This step is unfinished.</span>
@@ -14,12 +17,24 @@
       <!-- Name -->
       <article class="section-container">
         <v-row no-gutters>
-          <v-col cols="12" sm="3" class="pr-4">
+          <v-col
+            cols="12"
+            sm="3"
+            class="pr-4"
+          >
             <label id="company-label">Name</label>
           </v-col>
-          <v-col cols="12" sm="9" class="pt-4 pt-sm-0">
-            <div id="company-name">{{ getNameRequestApprovedName || 'Unavailable' }}</div>
-            <div id="company-description">{{ entityDescription }}</div>
+          <v-col
+            cols="12"
+            sm="9"
+            class="pt-4 pt-sm-0"
+          >
+            <div id="company-name">
+              {{ getNameRequestApprovedName || 'Unavailable' }}
+            </div>
+            <div id="company-description">
+              {{ entityDescription }}
+            </div>
           </v-col>
         </v-row>
       </article>
@@ -29,10 +44,17 @@
       <!-- Nature of Business -->
       <article class="section-container">
         <v-row no-gutters>
-          <v-col cols="12" sm="3" class="pr-4">
+          <v-col
+            cols="12"
+            sm="3"
+            class="pr-4"
+          >
             <label>Nature of Business</label>
           </v-col>
-          <v-col cols="12" sm="9">
+          <v-col
+            cols="12"
+            sm="9"
+          >
             <span>{{ natureOfBusiness || '(Not entered)' }}</span>
           </v-col>
         </v-row>
@@ -63,10 +85,17 @@
       <!-- Business Start Date -->
       <article class="section-container">
         <v-row no-gutters>
-          <v-col cols="12" sm="3" class="pr-4">
+          <v-col
+            cols="12"
+            sm="3"
+            class="pr-4"
+          >
             <label>Business Start Date</label>
           </v-col>
-          <v-col cols="12" sm="9">
+          <v-col
+            cols="12"
+            sm="9"
+          >
             <div>{{ businessStartDate || '(Not entered)' }}</div>
           </v-col>
         </v-row>
@@ -90,10 +119,17 @@
       <!-- Business Number -->
       <article class="section-container">
         <v-row no-gutters>
-          <v-col cols="12" sm="3" class="pr-4">
+          <v-col
+            cols="12"
+            sm="3"
+            class="pr-4"
+          >
             <label>Business Number</label>
           </v-col>
-          <v-col cols="12" sm="9">
+          <v-col
+            cols="12"
+            sm="9"
+          >
             <span>{{ businessNumber || '(Not entered)' }}</span>
           </v-col>
         </v-row>

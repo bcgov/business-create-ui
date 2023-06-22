@@ -10,21 +10,29 @@
       :class="{ 'invalid-section': getShowErrors && !nameTranslationsValid }"
     >
       <v-row no-gutters>
-        <v-col cols="12" sm="3" class="pr-4">
+        <v-col
+          cols="12"
+          sm="3"
+          class="pr-4"
+        >
           <label :class="{ 'error-text': getShowErrors && !nameTranslationsValid }">
             <strong>Name Translation</strong>
           </label>
         </v-col>
 
-        <v-col cols="12" sm="9" class="pt-4 pt-sm-0">
+        <v-col
+          cols="12"
+          sm="9"
+          class="pt-4 pt-sm-0"
+        >
           <v-checkbox
-            class="pt-0 mt-0"
-            v-model="checkbox"
             id="name-translation-checkbox"
-            @click="onCheckboxClick()"
+            v-model="checkbox"
+            class="pt-0 mt-0"
             hide-details
+            @click="onCheckboxClick()"
           >
-            <template v-slot:label>
+            <template #label>
               <span class="checkbox-label">
                 This company uses one or more translations of its name outside of Canada.
               </span>
@@ -39,10 +47,11 @@
             </p>
 
             <v-btn
-              outlined color="primary"
+              outlined
+              color="primary"
               class="mt-6"
-              @click="isAddingNameTranslation = true"
               :disabled="isAddingNameTranslation"
+              @click="isAddingNameTranslation = true"
             >
               <v-icon>mdi-plus</v-icon>
               <span>Add a Name Translation</span>
@@ -50,7 +59,10 @@
 
             <!-- Add/Edit Name Translation -->
             <v-expand-transition>
-              <div v-if="isAddingNameTranslation" class="mt-6">
+              <div
+                v-if="isAddingNameTranslation"
+                class="mt-6"
+              >
                 <AddNameTranslation
                   :edit-name-translation="editingNameTranslation"
                   @addTranslation="addNameTranslation($event)"
@@ -62,7 +74,10 @@
 
             <!-- List Name Translation -->
             <v-expand-transition>
-              <div v-if="getNameTranslations.length > 0" class="mt-6">
+              <div
+                v-if="getNameTranslations.length > 0"
+                class="mt-6"
+              >
                 <ListNameTranslations
                   :isAddingNameTranslation="isAddingNameTranslation"
                   :translationsList="getNameTranslations"

@@ -1,6 +1,9 @@
 <template>
   <div id="dissolution-define-dissolution">
-    <v-card outlined class="message-box mt-10">
+    <v-card
+      outlined
+      class="message-box mt-10"
+    >
       <p>
         <strong>Important:</strong> You are about to voluntarily dissolve <strong>{{ entityName }}</strong>.
         Once this process is completed and the required documents are filed, the {{ corpDescription }}
@@ -14,23 +17,32 @@
         <h2>1. {{ getDissolutionDetailsTitle }}</h2>
       </header>
 
-      <v-card flat class="mt-5">
+      <v-card
+        flat
+        class="mt-5"
+      >
         <AssociationDetails
-        :entityLabel= "isTypeCoop ? 'Cooperative Association' : 'Company'"
-      />
+          :entityLabel="isTypeCoop ? 'Cooperative Association' : 'Company'"
+        />
       </v-card>
     </section>
 
     <!-- Dissolution Statement -->
-    <section class="mt-10" v-if="isTypeCoop">
+    <section
+      v-if="isTypeCoop"
+      class="mt-10"
+    >
       <header id="dissolution-statement-header">
         <h2>2. Dissolution Statement</h2>
-        <p class="mt-4">Choose a dissolution statement regarding dissolution and
+        <p class="mt-4">
+          Choose a dissolution statement regarding dissolution and
           the Cooperative Association's assets and liabilities:
         </p>
       </header>
 
-      <v-card flat class="mt-5 py-8 px-6"
+      <v-card
+        flat
+        class="mt-5 py-8 px-6"
         :class="{ 'invalid-section': showDissolutionStatementErrors }"
       >
         <DissolutionStatement />
@@ -40,18 +52,22 @@
     <!-- Custodian of Records -->
     <section class="mt-10">
       <header id="custodian-header">
-        <h2>{{isTypeCoop ? 3 : 2 }}. {{ getCustodialRecordsResources.custodianTitle }}</h2>
-        <p class="mt-4">{{getCustodialRecordsResources.sectionSubtitle}}</p>
+        <h2>{{ isTypeCoop ? 3 : 2 }}. {{ getCustodialRecordsResources.custodianTitle }}</h2>
+        <p class="mt-4">
+          {{ getCustodialRecordsResources.sectionSubtitle }}
+        </p>
       </header>
 
       <!-- Help Section -->
       <HelpSection
-        class="mt-5"
         v-if="getCustodialRecordsResources.helpSection"
+        class="mt-5"
         :helpSection="getCustodialRecordsResources.helpSection"
       />
 
-      <v-card flat class="mt-5 py-8 px-6"
+      <v-card
+        flat
+        class="mt-5 py-8 px-6"
         :class="{ 'invalid-section': getShowErrors && !isDissolutionCustodianValid }"
       >
         <CustodianOfRecords
@@ -62,20 +78,27 @@
     </section>
 
     <!-- Delete and/or Destroy Certificates -->
-    <section class="mt-10" v-if="isTypeCoop">
+    <section
+      v-if="isTypeCoop"
+      class="mt-10"
+    >
       <header id="delete-certificates-header">
-        <h2>{{isTypeCoop ? 4 : 3 }}. Delete and/or Destroy Certificates</h2>
-        <p class="mt-4">After dissolution, all original certificates of incorporation, name change, or amalgamation
+        <h2>{{ isTypeCoop ? 4 : 3 }}. Delete and/or Destroy Certificates</h2>
+        <p class="mt-4">
+          After dissolution, all original certificates of incorporation, name change, or amalgamation
           are not valid and must not be used by the Cooperative Association. Any copies of these documents must
           be deleted and/or destroyed.
         </p>
-        <p class="mt-4 delete-certificates-note"><strong>Note:</strong> The Cooperative Association Act requires
+        <p class="mt-4 delete-certificates-note">
+          <strong>Note:</strong> The Cooperative Association Act requires
           that the application for a voluntary dissolution be accompanied by the Certificate of Incorporation.
           The Certificate of Incorporation is on file for this Cooperative Association.
         </p>
       </header>
 
-      <v-card flat class="mt-5 py-8 px-6"
+      <v-card
+        flat
+        class="mt-5 py-8 px-6"
         :class="{ 'invalid-section': showDestroyCertificateErrors }"
       >
         <DestroyCertificate

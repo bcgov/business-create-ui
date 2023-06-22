@@ -2,24 +2,36 @@
   <div id="destroy-certificate">
     <!-- EDIT SECTION -->
     <template v-if="!isSummary">
-      <v-row no-gutters class="edit-section">
-        <v-col cols="12" sm="3" class="pr-4 d-none d-sm-block">
+      <v-row
+        no-gutters
+        class="edit-section"
+      >
+        <v-col
+          cols="12"
+          sm="3"
+          class="pr-4 d-none d-sm-block"
+        >
           <label class="destroy-certificate-title title-label">
             Delete and/or Destroy Certificates
           </label>
         </v-col>
 
-        <v-col cols="12" sm="9">
+        <v-col
+          cols="12"
+          sm="9"
+        >
           <v-checkbox
-            class="destroy-certificate-checkbox ma-0 pa-0"
             v-model="hasCertificateDestroyed"
-            @change="setHasCertificateDestroyed"
+            class="destroy-certificate-checkbox ma-0 pa-0"
             hide-details
+            @change="setHasCertificateDestroyed"
           >
-            <template v-slot:label>
-              <span class="destroy-certificate-option"
+            <template #label>
+              <span
+                class="destroy-certificate-option"
+                :class="{'error-text': showErrorSummary}"
                 v-html="destroyCertificateDescription"
-                :class="{'error-text': showErrorSummary}" />
+              />
             </template>
           </v-checkbox>
         </v-col>
@@ -28,19 +40,41 @@
 
     <!-- SUMMARY SECTION-->
     <template v-else>
-      <v-row no-gutters class="summary-section">
-        <v-col cols="12" sm="3" class="inner-col-1 pr-4">
+      <v-row
+        no-gutters
+        class="summary-section"
+      >
+        <v-col
+          cols="12"
+          sm="3"
+          class="inner-col-1 pr-4"
+        >
           <label class="summary-section-title">Delete and/or Destroy Certificates</label>
         </v-col>
 
-        <v-col cols="12" sm="9" class="inner-col-2 pt-4 pt-sm-0">
-          <div v-if="getDissolutionHasCertificateDestroyed" class="d-flex">
+        <v-col
+          cols="12"
+          sm="9"
+          class="inner-col-2 pt-4 pt-sm-0"
+        >
+          <div
+            v-if="getDissolutionHasCertificateDestroyed"
+            class="d-flex"
+          >
             <span>
-              <v-icon class="ml-n1 pr-2" color="successCheckmark">mdi-check</v-icon>
+              <v-icon
+                class="ml-n1 pr-2"
+                color="successCheckmark"
+              >mdi-check</v-icon>
             </span>
             <span class="destroy-certificate-summary-description">{{ destroyCertificateDescription }}</span>
           </div>
-          <div v-else class="destroy-certificate-summary-description">(Not entered)</div>
+          <div
+            v-else
+            class="destroy-certificate-summary-description"
+          >
+            (Not entered)
+          </div>
         </v-col>
       </v-row>
     </template>

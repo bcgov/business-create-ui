@@ -1,22 +1,35 @@
 <template>
-  <div id="transactional-folio-number"
+  <div
+    id="transactional-folio-number"
     :class="{ 'invalid-section': !isValid }"
   >
     <v-row no-gutters>
-      <v-col cols="12" sm="3" class="pr-4">
-        <label class="title-label" :class="{ 'error-text': !isValid }">
+      <v-col
+        cols="12"
+        sm="3"
+        class="pr-4"
+      >
+        <label
+          class="title-label"
+          :class="{ 'error-text': !isValid }"
+        >
           <strong>Folio or Reference Number</strong>
         </label>
       </v-col>
 
-      <v-col cols="12" sm="9" class="pt-4 pt-sm-0">
+      <v-col
+        cols="12"
+        sm="9"
+        class="pt-4 pt-sm-0"
+      >
         <v-text-field
-          filled persistent-hint
           id="folio-number-input"
           ref="folioNumberInput"
+          v-model.trim="localFolioNumber"
+          filled
+          persistent-hint
           autocomplete="chrome-off"
           label="Folio or Reference Number (Optional)"
-          v-model.trim="localFolioNumber"
           :name="Math.random()"
           :rules="doValidate ? Rules.FolioNumberRules: []"
         />

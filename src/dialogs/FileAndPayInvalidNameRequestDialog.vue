@@ -1,7 +1,16 @@
 <template>
-  <v-dialog v-model="dialog" width="45rem" persistent :attach="attach" content-class="file-pay-nr-error-dialog">
+  <v-dialog
+    v-model="dialog"
+    width="45rem"
+    persistent
+    :attach="attach"
+    content-class="file-pay-nr-error-dialog"
+  >
     <v-card>
-      <v-card-title id="dialog-title">Invalid Name Request (NR) / Incorporation Application</v-card-title>
+      <v-card-title id="dialog-title">
+        Invalid Name Request (NR) / Incorporation Application
+      </v-card-title>
+
       <v-card-text id="dialog-text">
         <!-- display errors -->
         <div class="font-14 mb-4">
@@ -12,13 +21,17 @@
             </b>
           </p>
           <p>If you still wish to incorporate a Benefit Company, please contact Registry Staff as soon as possible.</p>
-          <div class="mt-5 info-section">IMPORTANT:</div>
+          <div class="mt-5 info-section">
+            IMPORTANT:
+          </div>
           <div class="info-section">
             Once the reservation period for a Name Request expires or is otherwise cancelled, that name becomes
             available to anyone wishing to start their business with that name.
           </div>
         </div>
-        <p class="font-14">Registries contact information:</p>
+        <p class="font-14">
+          Registries contact information:
+        </p>
         <RegistriesContactInfo />
       </v-card-text>
 
@@ -26,8 +39,15 @@
 
       <!-- if there are errors, or neither errors nor warnings... -->
       <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn id="dialog-okay-button" color="primary" text @click="okay()">OK</v-btn>
+        <v-spacer />
+        <v-btn
+          id="dialog-okay-button"
+          color="primary"
+          text
+          @click="okay()"
+        >
+          OK
+        </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>

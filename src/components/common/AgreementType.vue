@@ -3,7 +3,10 @@
     <!-- SUMMARY SECTION -->
     <template v-if="isSummary">
       <!-- Summary Warning -->
-      <section v-if="showErrorSummary && getShowErrors" class="agreement-invalid-message invalid-section">
+      <section
+        v-if="showErrorSummary && getShowErrors"
+        class="agreement-invalid-message invalid-section"
+      >
         <span>
           <v-icon color="error">mdi-information-outline</v-icon>
           <span class="error-text mx-1">This step is unfinished.</span>
@@ -15,45 +18,66 @@
       </section>
 
       <!-- Summary Content -->
-      <div v-else class="summary-desc">
-        <v-icon color="green darken-2" class="agreement-valid-icon">mdi-check</v-icon>
-        <div v-html="agreementTypeDescription"></div>
+      <div
+        v-else
+        class="summary-desc"
+      >
+        <v-icon
+          color="green darken-2"
+          class="agreement-valid-icon"
+        >
+          mdi-check
+        </v-icon>
+        <div v-html="agreementTypeDescription" />
       </div>
     </template>
 
     <!-- EDIT SECTION -->
     <template v-if="!isSummary">
-      <div v-if="isTypeBcUlcCompany || isTypeBcCcc" :class="{ 'invalid-section': showErrorSummary && getShowErrors }">
+      <div
+        v-if="isTypeBcUlcCompany || isTypeBcCcc"
+        :class="{ 'invalid-section': showErrorSummary && getShowErrors }"
+      >
         <v-checkbox
           v-for="(item, index) in getIncorporationAgreementDocuments"
-          v-model="agreementType"
-          class="ml-6 mt-0 agreement-option-list"
           :id="`agreement-type-${item.code}`"
           :key="index"
+          v-model="agreementType"
+          class="ml-6 mt-0 agreement-option-list"
           :value="item.code"
           @change="changeAgreementType()"
         >
-          <template v-slot:label>
-            <div v-html="item.description" class="ml-6 py-4 agreement-option" />
+          <template #label>
+            <div
+              class="ml-6 py-4 agreement-option"
+              v-html="item.description"
+            />
           </template>
         </v-checkbox>
       </div>
 
-      <div class="py-8 px-6" v-else :class="{ 'invalid-section': showErrorSummary && getShowErrors }">
+      <div
+        v-else
+        class="py-8 px-6"
+        :class="{ 'invalid-section': showErrorSummary && getShowErrors }"
+      >
         <v-radio-group
+          v-model="agreementType"
           class="mt-0 pt-0"
           hide-details
-          v-model="agreementType"
           @change="changeAgreementType()"
         >
           <v-radio
             v-for="(item, index) in getIncorporationAgreementDocuments"
+            :id="`agreement-type-${item.code}`"
             :key="index"
             :value="item.code"
-            :id="`agreement-type-${item.code}`"
           >
-            <template v-slot:label>
-              <div v-html="item.description" class="agreement-option ml-6" />
+            <template #label>
+              <div
+                class="agreement-option ml-6"
+                v-html="item.description"
+              />
             </template>
           </v-radio>
         </v-radio-group>

@@ -2,17 +2,31 @@
   <div id="folio-number">
     <!-- EDIT SECTION -->
     <template v-if="isEditing">
-      <v-row no-gutters id="folio-number-editing">
-        <v-col cols="12" sm="3" class="pr-4">
+      <v-row
+        id="folio-number-editing"
+        no-gutters
+      >
+        <v-col
+          cols="12"
+          sm="3"
+          class="pr-4"
+        >
           <label class="folio-number-title title-label">Folio Number</label>
         </v-col>
-        <v-col cols="12" sm="9" class="pt-4 pt-sm-0">
-          <v-form v-model="formValid" ref="form">
+        <v-col
+          cols="12"
+          sm="9"
+          class="pt-4 pt-sm-0"
+        >
+          <v-form
+            ref="form"
+            v-model="formValid"
+          >
             <v-text-field
               id="folio-number-text-field"
+              v-model="folioNumber"
               label="Folio or Reference Number (Optional)"
               persistent-hint
-              v-model="folioNumber"
               filled
               :rules="rules"
             />
@@ -23,12 +37,24 @@
 
     <!-- SUMMARY SECTION -->
     <template v-else>
-      <v-row no-gutters id="folio-number-read-only">
-        <v-col cols="12" sm="3" class="pr-4">
+      <v-row
+        id="folio-number-read-only"
+        no-gutters
+      >
+        <v-col
+          cols="12"
+          sm="3"
+          class="pr-4"
+        >
           <label class="folio-number-title">Folio or Reference Number</label>
         </v-col>
-        <v-col cols="12" sm="9">
-          <div id="lbl-folio-number">{{ folioNumber || '(Not entered)' }}</div>
+        <v-col
+          cols="12"
+          sm="9"
+        >
+          <div id="lbl-folio-number">
+            {{ folioNumber || '(Not entered)' }}
+          </div>
         </v-col>
       </v-row>
     </template>

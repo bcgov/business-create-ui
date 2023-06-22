@@ -5,9 +5,16 @@
       attach="#reg-add-edit-org-person"
     />
 
-    <section class="px-6 py-10" :class="{ 'invalid-section': !addPersonOrgFormValid }">
+    <section
+      class="px-6 py-10"
+      :class="{ 'invalid-section': !addPersonOrgFormValid }"
+    >
       <v-row no-gutters>
-        <v-col cols="12" sm="3" class="pr-4 d-none d-sm-block">
+        <v-col
+          cols="12"
+          sm="3"
+          class="pr-4 d-none d-sm-block"
+        >
           <!-- Title for org -->
           <label
             v-if="isOrg"
@@ -29,10 +36,14 @@
           </label>
         </v-col>
 
-        <v-col cols="12" sm="9">
+        <v-col
+          cols="12"
+          sm="9"
+        >
           <v-card
-            outlined class="message-box rounded-0"
             v-if="isCompletingParty && !isRoleStaff"
+            outlined
+            class="message-box rounded-0"
           >
             <p>
               <strong>Important:</strong> The Completing Party information below is based on your
@@ -45,14 +56,17 @@
             </p>
           </v-card>
 
-          <div v-if="isCompletingParty && !isRoleStaff" class="mt-8" />
+          <div
+            v-if="isCompletingParty && !isRoleStaff"
+            class="mt-8"
+          />
 
           <v-form
-            lazy-validation
             ref="addPersonOrgForm"
-            class="appoint-form"
             v-model="addPersonOrgFormValid"
-            v-on:submit.prevent
+            lazy-validation
+            class="appoint-form"
+            @submit.prevent
           >
             <!-- Person's Name -->
             <article v-if="isPerson">
@@ -60,26 +74,26 @@
               <div class="three-column mt-4 mb-n6">
                 <!-- NB: only staff can change Completing Party names -->
                 <v-text-field
+                  v-model.trim="orgPerson.officer.firstName"
                   filled
                   class="item first-name"
                   label="First Name"
-                  v-model.trim="orgPerson.officer.firstName"
                   :rules="enableRules ? Rules.FirstNameRulesFirms : []"
                   :readonly="isCompletingParty && !(isRoleStaff || isSbcStaff)"
                 />
                 <v-text-field
+                  v-model.trim="orgPerson.officer.middleName"
                   filled
                   class="item middle-name"
                   label="Middle Name (Optional)"
-                  v-model.trim="orgPerson.officer.middleName"
                   :rules="enableRules ? Rules.MiddleNameRulesFirms : []"
                   :readonly="isCompletingParty && !(isRoleStaff || isSbcStaff)"
                 />
                 <v-text-field
+                  v-model.trim="orgPerson.officer.lastName"
                   filled
                   class="item last-name"
                   label="Last Name"
-                  v-model.trim="orgPerson.officer.lastName"
                   :rules="enableRules ? Rules.LastNameRules : []"
                   :readonly="isCompletingParty && !(isRoleStaff || isSbcStaff)"
                 />
@@ -89,11 +103,17 @@
             <!-- Business or Corporation -->
             <template v-if="isOrg">
               <!-- Business or Corporation Unregistered in B.C. -->
-              <article v-if="!orgPerson.isLookupBusiness" class="manual-add-article">
+              <article
+                v-if="!orgPerson.isLookupBusiness"
+                class="manual-add-article"
+              >
                 <label>
                   {{ isNaN(activeIndex) ? 'Add' : ' Edit' }} Business or Corporation Not Registered in B.C.
                 </label>
-                <a class="lookup-toggle float-right" @click="swapIsLookupBusiness()">
+                <a
+                  class="lookup-toggle float-right"
+                  @click="swapIsLookupBusiness()"
+                >
                   Business or Corporation Registered in B.C.
                 </a>
 
@@ -118,20 +138,29 @@
 
                 <!-- Confirm checkbox (org only) -->
                 <v-checkbox
+                  v-model="orgPerson.confirmBusiness"
                   class="confirm-checkbox mt-8"
                   hide-details
-                  v-model="orgPerson.confirmBusiness"
                   :rules="enableRules ? [(v) => !!v] : []"
                 >
-                  <template v-if="isProprietor" v-slot:label>
+                  <template
+                    v-if="isProprietor"
+                    #label
+                  >
                     I confirm that the business proprietor being added is not legally required to register
                     in B.C.
                   </template>
-                  <template v-else-if="isPartner" v-slot:label>
+                  <template
+                    v-else-if="isPartner"
+                    #label
+                  >
                     I confirm that the business partner being added is not legally required to register in
                     B.C.
                   </template>
-                  <template v-else v-slot:label>
+                  <template
+                    v-else
+                    #label
+                  >
                     I confirm that the business or corporation being added is not legally required to
                     register in B.C.
                   </template>
@@ -139,29 +168,44 @@
 
                 <!-- Organization Name (org only) -->
                 <v-text-field
+                  v-model.trim="orgPerson.officer.organizationName"
                   filled
                   class="mt-8 mb-n6 org-name"
                   label="Business or Corporation Name"
-                  v-model.trim="orgPerson.officer.organizationName"
                   :rules="enableRules ? OrgNameRules : []"
                 />
 
                 <!-- Business Number (readonly) -->
-                <article class="mt-8" v-if="isProprietor">
-                  <label>Business Number:</label> {{getRegistration.businessNumber || '(Not entered)'}}
+                <article
+                  v-if="isProprietor"
+                  class="mt-8"
+                >
+                  <label>Business Number:</label> {{ getRegistration.businessNumber || '(Not entered)' }}
                 </article>
 
                 <v-divider class="mt-8" />
               </article>
 
               <!-- Business or Corporation Look up -->
-              <article v-else class="business-lookup-article">
+              <article
+                v-else
+                class="business-lookup-article"
+              >
                 <label>Business or Corporation Registered in B.C.</label>
-                <a class="lookup-toggle float-right" @click="swapIsLookupBusiness()">
+                <a
+                  class="lookup-toggle float-right"
+                  @click="swapIsLookupBusiness()"
+                >
                   Business or Corporation Not Registered in B.C.
                 </a>
-                <div class="mt-6" v-if="hasBusinessSelectedFromLookup">
-                  <v-card outlined class="message-box rounded-0">
+                <div
+                  v-if="hasBusinessSelectedFromLookup"
+                  class="mt-6"
+                >
+                  <v-card
+                    outlined
+                    class="message-box rounded-0"
+                  >
                     <p>
                       <strong>Important:</strong> If the addresses shown below are out of date, you
                       may update them here. The updates are applicable only to this application.
@@ -213,49 +257,71 @@
             </template>
 
             <!-- Roles -->
-            <article class="mt-8" v-if="showRoles">
+            <article
+              v-if="showRoles"
+              class="mt-8"
+            >
               <label>Roles</label>
               <div class="form__row three-column mt-4">
-                <v-card flat rounded="sm" class="item gray-card px-4">
-                  <v-row no-gutters class="align-center mt-5">
-                    <v-col cols="4" v-if="showCompletingPartyRole">
+                <v-card
+                  flat
+                  rounded="sm"
+                  class="item gray-card px-4"
+                >
+                  <v-row
+                    no-gutters
+                    class="align-center mt-5"
+                  >
+                    <v-col
+                      v-if="showCompletingPartyRole"
+                      cols="4"
+                    >
                       <v-checkbox
                         id="cp-checkbox"
-                        class="mt-0"
                         v-model="selectedRoles"
+                        class="mt-0"
                         :value="RoleTypes.COMPLETING_PARTY"
                         :label="RoleTypes.COMPLETING_PARTY"
                         :disabled="isTypeSoleProp || isTypePartnership"
                       />
                     </v-col>
 
-                    <v-col cols="4" v-if="showProprietorRole">
+                    <v-col
+                      v-if="showProprietorRole"
+                      cols="4"
+                    >
                       <v-checkbox
                         id="proprietor-checkbox"
-                        class="mt-0"
                         v-model="selectedRoles"
+                        class="mt-0"
                         :value="RoleTypes.PROPRIETOR"
                         :label="RoleTypes.PROPRIETOR"
                         :disabled="isTypeSoleProp || isTypePartnership"
                       />
                     </v-col>
 
-                    <v-col cols="4" v-if="showPartnerRole">
+                    <v-col
+                      v-if="showPartnerRole"
+                      cols="4"
+                    >
                       <v-checkbox
                         id="partner-checkbox"
-                        class="mt-0"
                         v-model="selectedRoles"
+                        class="mt-0"
                         :value="RoleTypes.PARTNER"
                         :label="RoleTypes.PARTNER"
                         :disabled="isTypeSoleProp || isTypePartnership"
                       />
                     </v-col>
 
-                    <v-col cols="4" v-if="showDirectorRole">
+                    <v-col
+                      v-if="showDirectorRole"
+                      cols="4"
+                    >
                       <v-checkbox
                         id="director-checkbox"
-                        class="mt-0"
                         v-model="selectedRoles"
+                        class="mt-0"
                         :value="RoleTypes.DIRECTOR"
                         :label="RoleTypes.DIRECTOR"
                         :rules="enableRules ? roleRules : []"
@@ -274,10 +340,10 @@
                 Copies of the registration documents will be sent to this email address.
               </p>
               <v-text-field
+                v-model.trim="orgPerson.officer.email"
                 filled
                 class="item email-address mt-4 mb-n6"
                 label="Email Address"
-                v-model.trim="orgPerson.officer.email"
                 :rules="enableRules ? Rules.EmailRules : []"
                 :readonly="isCompletingParty && !(isRoleStaff || isSbcStaff)"
               />
@@ -305,13 +371,16 @@
             <!-- Delivery Address (for proprietors and partners only) -->
             <div v-if="isProprietor || isPartner">
               <v-checkbox
+                v-model="inheritMailingAddress"
                 class="inherit-checkbox"
                 hide-details
                 label="Delivery Address same as Mailing Address"
-                v-model="inheritMailingAddress"
               />
 
-              <article v-if="!inheritMailingAddress" class="mt-6">
+              <article
+                v-if="!inheritMailingAddress"
+                class="mt-6"
+              >
                 <label>Delivery Address</label>
                 <DeliveryAddress
                   ref="deliveryAddressNew"
@@ -335,19 +404,33 @@
             <div class="form__btns mt-6">
               <v-btn
                 id="btn-remove"
-                large outlined color="error"
+                large
+                outlined
+                color="error"
                 class="btn-outlined-error"
                 :disabled="isNaN(activeIndex)"
-                @click="emitRemovePerson(activeIndex)">Remove</v-btn>
+                @click="emitRemovePerson(activeIndex)"
+              >
+                Remove
+              </v-btn>
               <v-btn
                 id="btn-done"
-                large color="primary"
+                large
+                color="primary"
                 class="ml-auto"
-                @click="validateAddPersonOrgForm()">Done</v-btn>
+                @click="validateAddPersonOrgForm()"
+              >
+                Done
+              </v-btn>
               <v-btn
                 id="btn-cancel"
-                large outlined color="primary"
-                @click="resetAddPersonData(true)">Cancel</v-btn>
+                large
+                outlined
+                color="primary"
+                @click="resetAddPersonData(true)"
+              >
+                Cancel
+              </v-btn>
             </div>
           </v-form>
         </v-col>

@@ -1,93 +1,158 @@
 <template>
   <div>
-    <section v-if="isBaseCompany && getCreateResolutionStep.validationDetail.valid"
+    <section
+      v-if="isBaseCompany && getCreateResolutionStep.validationDetail.valid"
       class="section-container upload-success-message"
     >
       <v-row no-gutters>
         <v-col cols="1">
-          <v-icon color="successCheckmark">mdi-check</v-icon>
+          <v-icon color="successCheckmark">
+            mdi-check
+          </v-icon>
         </v-col>
-        <v-col cols="11" id="file-name-col">
+        <v-col
+          id="file-name-col"
+          cols="11"
+        >
           <span>The resolution was completed and deposited in the Company's records book.</span>
         </v-col>
       </v-row>
     </section>
 
-    <section v-if="allResolutionValidationItemsInvalid"
+    <section
+      v-if="allResolutionValidationItemsInvalid"
       class="section-container invalid-section"
     >
-      <v-icon color="error">mdi-information-outline</v-icon>
+      <v-icon color="error">
+        mdi-information-outline
+      </v-icon>
       <span class="error-text mx-1">This step is unfinished.</span>
       <router-link
         :to="{ path: `/${RouteNames.DISSOLUTION_RESOLUTION}` }"
-      >Return to this step to finish it</router-link>
+      >
+        Return to this step to finish it
+      </router-link>
     </section>
 
-    <section v-if="isTypeCoop && !allResolutionValidationItemsInvalid"
+    <section
+      v-if="isTypeCoop && !allResolutionValidationItemsInvalid"
       id="resolution-summary-section-3"
       class="section-container"
       :class="{ 'invalid-section': !getCreateResolutionStep.validationDetail.valid }"
     >
-      <div v-if="!getCreateResolutionStep.validationDetail.valid" class="pb-6">
-        <v-icon color="error">mdi-information-outline</v-icon>
+      <div
+        v-if="!getCreateResolutionStep.validationDetail.valid"
+        class="pb-6"
+      >
+        <v-icon color="error">
+          mdi-information-outline
+        </v-icon>
         <span class="error-text mx-1">This step is unfinished.</span>
         <router-link
           :to="{ path: `/${RouteNames.DISSOLUTION_RESOLUTION}` }"
-        >Return to this step to finish it</router-link>
+        >
+          Return to this step to finish it
+        </router-link>
       </div>
 
       <v-row no-gutters>
-        <v-col cols="12" sm="3" class="pr-4">
+        <v-col
+          cols="12"
+          sm="3"
+          class="pr-4"
+        >
           <label class="font-weight-bold">Resolution Date</label>
         </v-col>
-        <v-col cols="12" sm="9">
-          {{resolutionDate}}
+        <v-col
+          cols="12"
+          sm="9"
+        >
+          {{ resolutionDate }}
         </v-col>
       </v-row>
 
-      <v-row class="mt-5" no-gutters>
-        <v-col cols="12" sm="3" class="pr-4">
+      <v-row
+        class="mt-5"
+        no-gutters
+      >
+        <v-col
+          cols="12"
+          sm="3"
+          class="pr-4"
+        >
           <label class="font-weight-bold">Resolution Text</label>
         </v-col>
-        <v-col cols="12" sm="9">
+        <v-col
+          cols="12"
+          sm="9"
+        >
           <v-textarea
-            ref="resolutionTextRef"
             id="resolution-text"
+            ref="resolutionTextRef"
+            v-model="resolutionText"
+            v-observe-visibility="{ callback: onResolutionVisibilityChanged }"
             rows="1"
             auto-grow
             readonly
             filled
             hide-details
             background-color="white"
-            v-model="resolutionText"
-            v-observe-visibility="{ callback: onResolutionVisibilityChanged }"
           />
         </v-col>
       </v-row>
 
-      <v-row class="mt-3" no-gutters>
-        <v-col cols="12" sm="3" class="pr-4">
+      <v-row
+        class="mt-3"
+        no-gutters
+      >
+        <v-col
+          cols="12"
+          sm="3"
+          class="pr-4"
+        >
           <label class="font-weight-bold">Signing Party</label>
         </v-col>
-        <v-col cols="12" sm="9">
-          {{signingParty}}
+        <v-col
+          cols="12"
+          sm="9"
+        >
+          {{ signingParty }}
         </v-col>
       </v-row>
 
-      <v-row class="mt-5" no-gutters>
-        <v-col cols="12" sm="3" class="pr-4">
+      <v-row
+        class="mt-5"
+        no-gutters
+      >
+        <v-col
+          cols="12"
+          sm="3"
+          class="pr-4"
+        >
           <label class="font-weight-bold">Date Signed</label>
         </v-col>
-        <v-col cols="12" sm="9">
-          {{signingDate}}
+        <v-col
+          cols="12"
+          sm="9"
+        >
+          {{ signingDate }}
         </v-col>
       </v-row>
 
-      <v-row v-if="getCreateResolutionStep.resolutionConfirmed" class="mt-5" no-gutters>
+      <v-row
+        v-if="getCreateResolutionStep.resolutionConfirmed"
+        class="mt-5"
+        no-gutters
+      >
         <v-col cols="1">
-          <v-icon color="successCheckmark">mdi-check</v-icon>
+          <v-icon color="successCheckmark">
+            mdi-check
+          </v-icon>
         </v-col>
-        <v-col cols="11" id="file-name-col">
+        <v-col
+          id="file-name-col"
+          cols="11"
+        >
           <span>{{ getCreateResolutionResource.confirmSection.reviewSummaryText }}</span>
         </v-col>
       </v-row>

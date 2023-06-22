@@ -1,5 +1,8 @@
 <template>
-  <div id="staff-payment-container" :class="{'invalid-section': invalidStaffPayment}">
+  <div
+    id="staff-payment-container"
+    :class="{'invalid-section': invalidStaffPayment}"
+  >
     <StaffPaymentShared
       :staffPaymentData="getStaffPaymentStep.staffPayment"
       :displayPriorityCheckbox="displayPriorityCheckbox"

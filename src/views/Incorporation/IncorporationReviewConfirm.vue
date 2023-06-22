@@ -7,24 +7,45 @@
         <p class="mt-4">
           Review the information in your application. If you need to change or complete anything,
           return to the step to make the necessary change.
-          </p>
+        </p>
       </header>
 
-      <v-card id="company-summary-vcard" flat class="mt-6">
-        <CardHeader icon="mdi-domain" :label="getCompanyDisplayName" />
+      <v-card
+        id="company-summary-vcard"
+        flat
+        class="mt-6"
+      >
+        <CardHeader
+          icon="mdi-domain"
+          :label="getCompanyDisplayName"
+        />
         <SummaryDefineCompany />
       </v-card>
 
       <!-- People and Roles -->
-      <v-card id="people-and-roles-vcard" flat class="mt-6">
-        <CardHeader icon="mdi-account-multiple-plus" label="People and Roles" />
+      <v-card
+        id="people-and-roles-vcard"
+        flat
+        class="mt-6"
+      >
+        <CardHeader
+          icon="mdi-account-multiple-plus"
+          label="People and Roles"
+        />
         <ListPeopleAndRoles :isSummary="true" />
       </v-card>
 
       <!-- Share Structure -->
       <template v-if="isBaseCompany">
-        <v-card id="share-structure-vcard" flat class="mt-6">
-          <CardHeader icon="mdi-sitemap" label="Share Structure" />
+        <v-card
+          id="share-structure-vcard"
+          flat
+          class="mt-6"
+        >
+          <CardHeader
+            icon="mdi-sitemap"
+            label="Share Structure"
+          />
           <ListShareClass
             :isSummary="true"
             :shareClasses="getCreateShareStructureStep.shareClasses"
@@ -35,8 +56,15 @@
 
       <!-- Agreement Type -->
       <template v-if="isBaseCompany">
-        <v-card id="agreement-type-vcard" flat class="mt-6">
-          <CardHeader icon="mdi-handshake" :label="`Incorporation Agreement and ${getEntityDescription} Articles`" />
+        <v-card
+          id="agreement-type-vcard"
+          flat
+          class="mt-6"
+        >
+          <CardHeader
+            icon="mdi-handshake"
+            :label="`Incorporation Agreement and ${getEntityDescription} Articles`"
+          />
           <AgreementType
             :isSummary="true"
             :showErrorSummary="!getIncorporationAgreementStep.valid"
@@ -46,16 +74,30 @@
 
       <!-- Rules -->
       <template v-if="isTypeCoop">
-        <v-card id="rules-vcard" flat class="mt-6">
-          <CardHeader icon="mdi-format-list-text" label="Rules" />
+        <v-card
+          id="rules-vcard"
+          flat
+          class="mt-6"
+        >
+          <CardHeader
+            icon="mdi-format-list-text"
+            label="Rules"
+          />
           <UploadRulesSummary />
         </v-card>
       </template>
 
       <!-- Memorandum -->
       <template v-if="isTypeCoop">
-        <v-card id="memorandum-vcard" flat class="mt-6">
-          <CardHeader icon="mdi-text-box-multiple" label="Memorandum" />
+        <v-card
+          id="memorandum-vcard"
+          flat
+          class="mt-6"
+        >
+          <CardHeader
+            icon="mdi-text-box-multiple"
+            label="Memorandum"
+          />
           <UploadMemorandumSummary />
         </v-card>
       </template>
@@ -63,7 +105,10 @@
 
     <template v-if="isBaseCompany">
       <!-- Incorporation Date and Time -->
-      <section id="incorporation-date-time-section" class="mt-10">
+      <section
+        id="incorporation-date-time-section"
+        class="mt-10"
+      >
         <header>
           <h2>Incorporation Date and Time</h2>
           <p class="mt-4">
@@ -86,7 +131,10 @@
     </template>
 
     <!-- Document Delivery -->
-    <section id="document-delivery-section" class="mt-10">
+    <section
+      id="document-delivery-section"
+      class="mt-10"
+    >
       <header>
         <h2>Document Delivery</h2>
         <p class="mt-4">
@@ -94,7 +142,10 @@
         </p>
       </header>
 
-      <v-card flat class="mt-6">
+      <v-card
+        flat
+        class="mt-6"
+      >
         <DocumentDelivery
           class="py-8 px-6"
           :contactValue="getBusinessContact.email"
@@ -105,7 +156,10 @@
     </section>
 
     <!-- Certify -->
-    <section id="certify-section" class="mt-10">
+    <section
+      id="certify-section"
+      class="mt-10"
+    >
       <header>
         <h2>Certify</h2>
         <p class="mt-4">
@@ -113,7 +167,10 @@
         </p>
       </header>
 
-      <v-card flat class="mt-6">
+      <v-card
+        flat
+        class="mt-6"
+      >
         <Certify
           class="py-8 px-6"
           :class="{ 'invalid-section': isCertifyInvalid }"
@@ -125,7 +182,11 @@
     </section>
 
     <!-- Court Order and Plan of Arrangement -->
-    <section id="court-order-poa-section" class="mt-10" v-if="isBaseCompany">
+    <section
+      v-if="isBaseCompany"
+      id="court-order-poa-section"
+      class="mt-10"
+    >
       <header>
         <h2>Court Order and Plan of Arrangement</h2>
         <p class="mt-4">
@@ -135,7 +196,10 @@
         </p>
       </header>
 
-      <v-card flat class="mt-6">
+      <v-card
+        flat
+        class="mt-6"
+      >
         <CourtOrderPoa
           class="py-8 px-6"
           :class="{ 'invalid-section': isCourtOrderInvalid }"
@@ -151,13 +215,20 @@
     </section>
 
     <!-- Staff Payment -->
-    <section id="staff-payment-section" class="mt-10" v-if="isRoleStaff">
+    <section
+      v-if="isRoleStaff"
+      id="staff-payment-section"
+      class="mt-10"
+    >
       <header>
         <h2>Staff Payment</h2>
-        <p class="mt-4"></p>
+        <p class="mt-4" />
       </header>
 
-      <v-card flat class="mt-6">
+      <v-card
+        flat
+        class="mt-6"
+      >
         <StaffPayment class="py-8 px-6" />
       </v-card>
     </section>

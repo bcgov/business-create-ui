@@ -1,5 +1,8 @@
 <template>
-  <v-app class="app-container" id="app">
+  <v-app
+    id="app"
+    class="app-container"
+  >
     <!-- Dialogs -->
     <NameRequestInvalidErrorDialog
       attach="#app"
@@ -10,9 +13,9 @@
     />
 
     <FileAndPayInvalidNameRequestDialog
-     attach="#app"
-     :dialog="fileAndPayInvalidNameRequestDialog"
-     @okay="goToManageBusinessDashboard()"
+      attach="#app"
+      :dialog="fileAndPayInvalidNameRequestDialog"
+      @okay="goToManageBusinessDashboard()"
     />
 
     <AccountAuthorizationDialog
@@ -94,10 +97,19 @@
 
     <!-- Initial Page Load Transition -->
     <transition name="fade">
-      <div class="loading-container" v-show="!haveData && !isErrorDialog">
+      <div
+        v-show="!haveData && !isErrorDialog"
+        class="loading-container"
+      >
         <div class="loading__content">
-          <v-progress-circular color="primary" size="50" indeterminate />
-          <div class="loading-msg">Loading</div>
+          <v-progress-circular
+            color="primary"
+            size="50"
+            indeterminate
+          />
+          <div class="loading-msg">
+            Loading
+          </div>
         </div>
       </div>
     </transition>
@@ -106,10 +118,15 @@
 
     <!-- Alert banner -->
     <v-alert
-      tile dense
+      v-if="bannerText"
+      tile
+      dense
       type="warning"
-      v-if="bannerText">
-      <div v-html="bannerText" class="mb-0 text-center colour-dk-text"></div>
+    >
+      <div
+        class="mb-0 text-center colour-dk-text"
+        v-html="bannerText"
+      />
     </v-alert>
 
     <div class="app-body">
@@ -123,18 +140,30 @@
           </v-container>
         </div>
 
-        <v-container id="container-main" class="py-8">
+        <v-container
+          id="container-main"
+          class="py-8"
+        >
           <v-row>
-            <v-col cols="12" lg="9">
+            <v-col
+              cols="12"
+              lg="9"
+            >
               <header>
                 <h1>{{ getFilingName }}</h1>
               </header>
-              <p class="mt-4" v-if="isFirmDissolution">
+              <p
+                v-if="isFirmDissolution"
+                class="mt-4"
+              >
                 Confirm the following information, select the dissolution date and certify
                 your dissolution before filing.
               </p>
 
-              <Stepper class="mt-10" v-if="isStepperView" />
+              <Stepper
+                v-if="isStepperView"
+                class="mt-10"
+              />
 
               <!-- Sign in and sign out components -->
               <Signin v-if="isRouteName(RouteNames.SIGN_IN)" />
@@ -144,18 +173,24 @@
               <template v-if="haveData">
                 <!-- Use v-show so all pages (steps) are initialized/rendered. -->
                 <component
+                  :is="step.component"
                   v-for="step in getSteps"
                   v-show="isRouteName(step.to)"
-                  :is="step.component"
                   :key="step.step"
                 />
               </template>
             </v-col>
 
-            <v-col cols="12" lg="3">
+            <v-col
+              cols="12"
+              lg="3"
+            >
               <!-- Render fee summary only after data is loaded. -->
               <aside v-if="haveData">
-                <affix relative-element-selector=".col-lg-9" :offset="{ top: 100, bottom: -100 }">
+                <affix
+                  relative-element-selector=".col-lg-9"
+                  :offset="{ top: 100, bottom: -100 }"
+                >
                   <SbcFeeSummary
                     :filingData="feeFilingData"
                     :payURL="payApiUrl"
@@ -178,7 +213,7 @@
       </main>
     </div>
 
-    <SbcFooter :aboutText=aboutText />
+    <SbcFooter :aboutText="aboutText" />
   </v-app>
 </template>
 

@@ -3,19 +3,37 @@
     <template v-if="getNameRequestNumber">
       <!-- Name Request -->
       <div class="section-container mb-n8">
-        <v-row no-gutters id="name-request">
-          <v-col cols="12" sm="3" class="pr-4"><label>Name Request</label></v-col>
+        <v-row
+          id="name-request"
+          no-gutters
+        >
+          <v-col
+            cols="12"
+            sm="3"
+            class="pr-4"
+          >
+            <label>Name Request</label>
+          </v-col>
 
-          <v-col cols="12" sm="8" class="pt-4 pt-sm-0">
+          <v-col
+            cols="12"
+            sm="8"
+            class="pt-4 pt-sm-0"
+          >
             <ul class="name-request-list-items">
               <li id="name-request-title">
                 <strong>{{ getNameRequestNumber }}</strong> - {{ getNameRequestApprovedName }}
               </li>
-              <li class="mt-4"><strong>Entity Type:</strong> {{ getEntityTypeDescription }}</li>
+              <li class="mt-4">
+                <strong>Entity Type:</strong> {{ getEntityTypeDescription }}
+              </li>
               <li><strong>Request Type:</strong> {{ requestType }}</li>
               <li><strong>Expiry Date:</strong> {{ expirationDate }}</li>
               <li><strong>Status:</strong> {{ state }}</li>
-              <li id="condition-consent" v-if="isConditional">
+              <li
+                v-if="isConditional"
+                id="condition-consent"
+              >
                 <strong>Condition/Consent:</strong> {{ conditionConsent }}
               </li>
             </ul>
@@ -27,10 +45,23 @@
 
       <!-- Name Request Applicant -->
       <div class="section-container">
-        <v-row no-gutters id="name-request-applicant">
-          <v-col cols="12" sm="3" class="pr-4"><label>Name Request Applicant</label></v-col>
+        <v-row
+          id="name-request-applicant"
+          no-gutters
+        >
+          <v-col
+            cols="12"
+            sm="3"
+            class="pr-4"
+          >
+            <label>Name Request Applicant</label>
+          </v-col>
 
-          <v-col cols="12" sm="9" class="pt-4 pt-sm-0">
+          <v-col
+            cols="12"
+            sm="9"
+            class="pt-4 pt-sm-0"
+          >
             <ul class="applicant-list-items">
               <li><strong>Name:</strong> {{ formatFullName(applicant) }}</li>
               <li><strong>Address:</strong> {{ formatFullAddress(applicant) }}</li>
@@ -45,9 +76,24 @@
     <template v-else-if="getNameRequestApprovedName">
       <!-- Changed Name -->
       <div class="section-container">
-        <v-row no-gutters id="changed-name-info">
-          <v-col cols="12" sm="3" class="pr-4"><label>Name</label></v-col>
-          <v-col cols="12" sm="9" id="changed-name-title">{{ getNameRequestApprovedName }}</v-col>
+        <v-row
+          id="changed-name-info"
+          no-gutters
+        >
+          <v-col
+            cols="12"
+            sm="3"
+            class="pr-4"
+          >
+            <label>Name</label>
+          </v-col>
+          <v-col
+            id="changed-name-title"
+            cols="12"
+            sm="9"
+          >
+            {{ getNameRequestApprovedName }}
+          </v-col>
         </v-row>
       </div>
     </template>
@@ -55,23 +101,43 @@
     <template v-else>
       <!-- Numbered Company -->
       <div class="section-container">
-        <v-row no-gutters id="numbered-company-info">
-          <v-col cols="12" sm="3" class="pr-4"><label>Name</label></v-col>
+        <v-row
+          id="numbered-company-info"
+          no-gutters
+        >
+          <v-col
+            cols="12"
+            sm="3"
+            class="pr-4"
+          >
+            <label>Name</label>
+          </v-col>
 
-          <v-col cols="12" sm="9">
+          <v-col
+            cols="12"
+            sm="9"
+          >
             <ul class="numbered-company-list-items">
               <li id="numbered-company-title">
                 <strong>[Incorporation Number]</strong> B.C. LTD.
               </li>
-              <li class="mt-4"><strong>Entity Type:</strong> {{ getEntityTypeDescription }}</li>
-              <li class="mt-2"><strong>Request Type:</strong> {{ requestType }}</li>
-              <li class="bullet-point mt-4 ml-6">You will be filing this Incorporation Application for a company
+              <li class="mt-4">
+                <strong>Entity Type:</strong> {{ getEntityTypeDescription }}
+              </li>
+              <li class="mt-2">
+                <strong>Request Type:</strong> {{ requestType }}
+              </li>
+              <li class="bullet-point mt-4 ml-6">
+                You will be filing this Incorporation Application for a company
                 created by adding "B.C. LTD." after the Incorporation Number.
               </li>
-              <li class="bullet-point ml-6">Your Incorporation Number will be generated at the end of the filing
+              <li class="bullet-point ml-6">
+                Your Incorporation Number will be generated at the end of the filing
                 transaction.
               </li>
-              <li class="bullet-point ml-6">It is not possible to request a specific Incorporation Number.</li>
+              <li class="bullet-point ml-6">
+                It is not possible to request a specific Incorporation Number.
+              </li>
             </ul>
           </v-col>
         </v-row>

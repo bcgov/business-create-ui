@@ -3,13 +3,23 @@
     <article class="section-container">
       <!-- Entity Name, etc -->
       <v-row no-gutters>
-        <v-col cols="12" sm="3" class="pr-4">
-          <label >{{entityLabel}}</label>
+        <v-col
+          cols="12"
+          sm="3"
+          class="pr-4"
+        >
+          <label>{{ entityLabel }}</label>
         </v-col>
 
-        <v-col cols="12" sm="9" class="mt-n1">
+        <v-col
+          cols="12"
+          sm="9"
+          class="mt-n1"
+        >
           <label id="company-name">{{ entityName }}</label>
-          <div class="my-1">{{ entityDescription }}</div>
+          <div class="my-1">
+            {{ entityDescription }}
+          </div>
           <div>{{ getBusinessId }}</div>
         </v-col>
       </v-row>
@@ -20,43 +30,68 @@
     <!-- Address -->
     <article class="section-container">
       <v-row no-gutters>
-        <v-col cols="12" sm="3" class="pr-4">
-          <label>{{addressLabel}}</label>
+        <v-col
+          cols="12"
+          sm="3"
+          class="pr-4"
+        >
+          <label>{{ addressLabel }}</label>
         </v-col>
 
-        <v-col cols="12" sm="4" class="pr-4 pt-4 pt-sm-0">
+        <v-col
+          cols="12"
+          sm="4"
+          class="pr-4 pt-4 pt-sm-0"
+        >
           <label class="mailing-address-header">Mailing Address</label>
           <MailingAddress
             v-if="!isEmptyAddress(getBusinessOfficeAddress.mailingAddress)"
             :address="getBusinessOfficeAddress.mailingAddress"
             :editing="false"
           />
-          <div v-else>(Not entered)</div>
+          <div v-else>
+            (Not entered)
+          </div>
         </v-col>
 
-        <v-col cols="12" sm="4" class="pr-4 pt-4 pt-sm-0">
+        <v-col
+          cols="12"
+          sm="4"
+          class="pr-4 pt-4 pt-sm-0"
+        >
           <label class="delivery-address-header">Delivery Address</label>
           <DeliveryAddress
             v-if="!isEmptyAddress(getBusinessOfficeAddress.deliveryAddress) &&
-             !isSame(getBusinessOfficeAddress.mailingAddress, getBusinessOfficeAddress.deliveryAddress, ['id'])"
+              !isSame(getBusinessOfficeAddress.mailingAddress, getBusinessOfficeAddress.deliveryAddress, ['id'])"
             :address="getBusinessOfficeAddress.deliveryAddress"
             :editing="false"
           />
-          <div v-else-if="isEmptyAddress(getBusinessOfficeAddress.deliveryAddress)">(Not entered)</div>
-          <div v-else>Same as Mailing Address</div>
+          <div v-else-if="isEmptyAddress(getBusinessOfficeAddress.deliveryAddress)">
+            (Not entered)
+          </div>
+          <div v-else>
+            Same as Mailing Address
+          </div>
         </v-col>
       </v-row>
     </article>
 
     <template v-if="showBusinessDate">
       <v-divider class="mx-6" />
-        <!-- Business Start Date -->
+      <!-- Business Start Date -->
       <article class="section-container">
         <v-row no-gutters>
-          <v-col cols="12" sm="3" class="pr-4">
+          <v-col
+            cols="12"
+            sm="3"
+            class="pr-4"
+          >
             <label>Business Start Date</label>
           </v-col>
-          <v-col cols="12" sm="9">
+          <v-col
+            cols="12"
+            sm="9"
+          >
             <div>{{ businessStartDate || '(Not entered)' }}</div>
           </v-col>
         </v-row>
@@ -69,12 +104,21 @@
 
       <article class="section-container">
         <v-row no-gutters>
-          <v-col cols="12" sm="3" class="pr-4">
+          <v-col
+            cols="12"
+            sm="3"
+            class="pr-4"
+          >
             <label>Folio or Reference Number</label>
           </v-col>
 
-          <v-col cols="12" sm="9">
-            <div id="lbl-folio-number">{{ getFolioNumber || '(Not entered)' }}</div>
+          <v-col
+            cols="12"
+            sm="9"
+          >
+            <div id="lbl-folio-number">
+              {{ getFolioNumber || '(Not entered)' }}
+            </div>
           </v-col>
         </v-row>
       </article>

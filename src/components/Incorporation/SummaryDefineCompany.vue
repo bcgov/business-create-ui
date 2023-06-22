@@ -1,14 +1,19 @@
 <template>
   <div id="summary-define-company">
     <section :class="{ 'invalid-section': !isDefineCompanyValid }">
-      <div v-if="!isDefineCompanyValid" class="defineCompanyStepErrorMessage">
+      <div
+        v-if="!isDefineCompanyValid"
+        class="defineCompanyStepErrorMessage"
+      >
         <span>
           <v-icon color="error">mdi-information-outline</v-icon>
           <span class="error-text mx-1">This step is unfinished.</span>
-          <router-link v-if="isIncorporationFiling"
+          <router-link
+            v-if="isIncorporationFiling"
             :to="{ path: `/${RouteNames.INCORPORATION_DEFINE_COMPANY}` }"
           >Return to this step to finish it</router-link>
-          <router-link v-if="isFullRestorationFiling || isLimitedRestorationFiling"
+          <router-link
+            v-if="isFullRestorationFiling || isLimitedRestorationFiling"
             id="router-link"
             :to="{ path: `/${RouteNames.RESTORATION_BUSINESS_INFORMATION}` }"
           >Return to this step to finish it</router-link>
@@ -19,25 +24,48 @@
         <!-- Name -->
         <article class="section-container">
           <v-row no-gutters>
-            <v-col cols="12" sm="3" class="pr-4">
+            <v-col
+              cols="12"
+              sm="3"
+              class="pr-4"
+            >
               <label id="company-label">Name</label>
             </v-col>
-            <v-col cols="12" sm="9" class="pt-4 pt-sm-0">
-              <div id="company-name">{{ companyName }}</div>
-              <div id="company-description">{{ entityDescription }}</div>
+            <v-col
+              cols="12"
+              sm="9"
+              class="pt-4 pt-sm-0"
+            >
+              <div id="company-name">
+                {{ companyName }}
+              </div>
+              <div id="company-description">
+                {{ entityDescription }}
+              </div>
             </v-col>
           </v-row>
 
           <!-- Name Translation -->
-          <v-row no-gutters v-if="getNameTranslations && getNameTranslations.length > 0" class="mt-3">
-            <v-col cols="12" sm="3" class="pr-4">
+          <v-row
+            v-if="getNameTranslations && getNameTranslations.length > 0"
+            no-gutters
+            class="mt-3"
+          >
+            <v-col
+              cols="12"
+              sm="3"
+              class="pr-4"
+            >
               <label>Name Translation</label>
             </v-col>
-            <v-col cols="12" sm="9">
+            <v-col
+              cols="12"
+              sm="9"
+            >
               <div
                 v-for="(nameTranslation, index) in getNameTranslations"
-                class="text-uppercase"
                 :key="`name-translation-${index}`"
+                class="text-uppercase"
               >
                 {{ nameTranslation.name }}
               </div>
@@ -52,10 +80,17 @@
       <template v-if="isTypeCoop">
         <article class="section-container">
           <v-row no-gutters>
-            <v-col cols="12" sm="3" class="pr-4">
+            <v-col
+              cols="12"
+              sm="3"
+              class="pr-4"
+            >
               <label>Type</label>
             </v-col>
-            <v-col cols="12" sm="9">
+            <v-col
+              cols="12"
+              sm="9"
+            >
               <div class="cooperative-type ml-n1">
                 <span>{{ coopDescription }}</span>
               </div>

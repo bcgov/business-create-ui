@@ -1,12 +1,15 @@
 <template>
   <div id="restoration-business-information">
-
     <!-- Registered and Records Office Addresses -->
-    <section class="mt-10" v-show="isEntityType">
+    <section
+      v-show="isEntityType"
+      class="mt-10"
+    >
       <header id="office-address-header">
         <h2>Registered and Records Office Addresses</h2>
-        <p>Enter the Registered Office and Records Office Mailing and Delivery Addresses. All addresses must be
-           located in BC.
+        <p>
+          Enter the Registered Office and Records Office Mailing and Delivery Addresses. All addresses must be
+          located in BC.
         </p>
       </header>
 
@@ -21,15 +24,21 @@
     </section>
 
     <!-- Registered Office Contact Information -->
-    <section class="mt-10" v-show="isEntityType">
+    <section
+      v-show="isEntityType"
+      class="mt-10"
+    >
       <header id="registered-office-contact-header">
         <h2>Registered Office Contact Information</h2>
-        <p>Enter the contact information for the business. The Corporate Registry will use this to communicate with the
+        <p>
+          Enter the contact information for the business. The Corporate Registry will use this to communicate with the
           business in the future, including sending documents and notifications.
         </p>
       </header>
 
-      <v-card flat class="py-8 px-6"
+      <v-card
+        flat
+        class="py-8 px-6"
         :class="{ 'invalid-section': getShowErrors && !businessContactFormValid }"
       >
         <BusinessContactInfo

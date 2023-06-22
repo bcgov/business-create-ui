@@ -1,21 +1,35 @@
 <template>
   <div id="complete-resolution">
     <!-- Intro section -->
-    <section id="resolution-intro-section" class="mt-10">
+    <section
+      id="resolution-intro-section"
+      class="mt-10"
+    >
       <header>
-        <h2>{{getCreateResolutionResource.introSection.header}}</h2>
+        <h2>{{ getCreateResolutionResource.introSection.header }}</h2>
         <p class="section-description mt-2">
-          <span v-for="(partialItem, index) in getCreateResolutionResource.introSection.items" :key="index">
-            <span v-if="partialItem.type === ItemTypes.TEXT" v-html="partialItem.value"></span>
-            <v-tooltip v-if="partialItem.type === ItemTypes.TOOLTIP"
-              top max-width="15rem"
+          <span
+            v-for="(partialItem, index) in getCreateResolutionResource.introSection.items"
+            :key="index"
+          >
+            <span
+              v-if="partialItem.type === ItemTypes.TEXT"
+              v-html="partialItem.value"
+            />
+            <v-tooltip
+              v-if="partialItem.type === ItemTypes.TOOLTIP"
+              top
+              max-width="15rem"
               content-class="top-tooltip"
               transition="fade-transition"
             >
-              <template v-slot:activator="{ on }">
-                <span v-on="on" class="tool-tip dotted-underline"> {{partialItem.value.label}} </span>
+              <template #activator="{ on }">
+                <span
+                  class="tool-tip dotted-underline"
+                  v-on="on"
+                > {{ partialItem.value.label }} </span>
               </template>
-              <span>{{partialItem.value.text}}</span>
+              <span>{{ partialItem.value.text }}</span>
             </v-tooltip>
           </span>
         </p>
@@ -23,39 +37,71 @@
     </section>
 
     <!-- Help section -->
-    <div v-if="getCreateResolutionResource.helpSection" class="mt-5">
-      <span class="help-btn" @click="helpToggle = !helpToggle">
-        <v-icon color="primary" style="padding-right: 5px">mdi-help-circle-outline</v-icon>
+    <div
+      v-if="getCreateResolutionResource.helpSection"
+      class="mt-5"
+    >
+      <span
+        class="help-btn"
+        @click="helpToggle = !helpToggle"
+      >
+        <v-icon
+          color="primary"
+          style="padding-right: 5px"
+        >mdi-help-circle-outline</v-icon>
         <span v-if="!helpToggle">{{ getCreateResolutionResource.helpSection.header }}</span>
         <span v-else>Hide Help</span>
       </span>
 
       <v-expand-transition>
-        <section v-show="helpToggle" class="create-resolution-help">
+        <section
+          v-show="helpToggle"
+          class="create-resolution-help"
+        >
           <header class="create-resolution-help-header">
-            <h2>{{getCreateResolutionResource.helpSection.header}}</h2>
+            <h2>{{ getCreateResolutionResource.helpSection.header }}</h2>
           </header>
 
           <span
             v-for="(item, index) in getCreateResolutionResource.helpSection.helpText.section1.items"
             :key="index"
           >
-            <p v-if="item.type === ItemTypes.TEXT" v-html="item.value" class="mt-3"></p>
+            <p
+              v-if="item.type === ItemTypes.TEXT"
+              class="mt-3"
+              v-html="item.value"
+            />
             <v-row v-if="item.type === ItemTypes.PARTIAL_ITEMS">
               <v-col cols="11">
-                <span v-for="(partialItem, index) in item.value" :key="index">
-                  <span v-if="partialItem.type === ItemTypes.TEXT" v-html="partialItem.value" />
-                  <a v-if="partialItem.type === ItemTypes.LINK"
+                <span
+                  v-for="(partialItem, index) in item.value"
+                  :key="index"
+                >
+                  <span
+                    v-if="partialItem.type === ItemTypes.TEXT"
+                    v-html="partialItem.value"
+                  />
+                  <a
+                    v-if="partialItem.type === ItemTypes.LINK"
                     :href="partialItem.value.href"
                     target="_blank"
-                  >{{partialItem.value.linkText}}
-                    <v-icon dense color="primary">mdi-open-in-new</v-icon>
+                  >{{ partialItem.value.linkText }}
+                    <v-icon
+                      dense
+                      color="primary"
+                    >mdi-open-in-new</v-icon>
                   </a>
                 </span>
               </v-col>
             </v-row>
-            <ul v-if="item.type === ItemTypes.BULLET_LIST" class="mt-1">
-              <li v-for="(bulletItem, index) in item.value" :key="index">
+            <ul
+              v-if="item.type === ItemTypes.BULLET_LIST"
+              class="mt-1"
+            >
+              <li
+                v-for="(bulletItem, index) in item.value"
+                :key="index"
+              >
                 <v-row class="mt-1">
                   <v-col
                     v-if="item.bulletListType === BulletListTypes.CIRCLE_SMALL"
@@ -69,37 +115,65 @@
                     cols="1"
                     class="pt-1 pb-1"
                   >
-                    ({{convertIntToChar(index)}})
+                    ({{ convertIntToChar(index) }})
                   </v-col>
-                  <v-col cols="11" class="ml-n11 pt-1 pb-1">
-                    <span>{{bulletItem}}</span>
+                  <v-col
+                    cols="11"
+                    class="ml-n11 pt-1 pb-1"
+                  >
+                    <span>{{ bulletItem }}</span>
                   </v-col>
                 </v-row>
               </li>
             </ul>
           </span>
-          <u class="help-btn" @click="helpToggle = !helpToggle"><small>Hide Help</small></u>
+          <u
+            class="help-btn"
+            @click="helpToggle = !helpToggle"
+          ><small>Hide Help</small></u>
         </section>
       </v-expand-transition>
     </div>
 
     <!-- Special Resolution Form -->
-    <section id="sample-resolution-section" v-if="isTypeCoop" class="mt-10">
+    <section
+      v-if="isTypeCoop"
+      id="sample-resolution-section"
+      class="mt-10"
+    >
       <header id="sample-resolution-header">
-        <h2>{{getCreateResolutionResource.sampleFormSection.header}}</h2>
+        <h2>{{ getCreateResolutionResource.sampleFormSection.header }}</h2>
       </header>
 
-      <p class="section-description mt-2" v-html="getCreateResolutionResource.sampleFormSection.text"></p>
+      <p
+        class="section-description mt-2"
+        v-html="getCreateResolutionResource.sampleFormSection.text"
+      />
 
       <div class="mt-4">
-        <v-card flat class="py-8 px-6">
+        <v-card
+          flat
+          class="py-8 px-6"
+        >
           <div class="d-flex flex-column flex-sm-row justify-center align-center">
-            <img :src="previewImageSource()" class="preview-image" />
+            <img
+              :src="previewImageSource()"
+              class="preview-image"
+            >
             <div class="px-8" />
             <div class="download-link-container py-5">
-              <v-icon color="primary" class="mt-n1">mdi-file-pdf-outline</v-icon>
-              <a :href="documentURL" download class="ml-1">
-                {{getCreateResolutionResource.sampleFormSection.downloadDocLabel}}
+              <v-icon
+                color="primary"
+                class="mt-n1"
+              >
+                mdi-file-pdf-outline
+              </v-icon>
+              <a
+                :href="documentURL"
+                download
+                class="ml-1"
+              >
+                {{ getCreateResolutionResource.sampleFormSection.downloadDocLabel }}
               </a>
             </div>
           </div>
@@ -108,22 +182,42 @@
     </section>
 
     <!-- Resolution Date -->
-    <section id="resolution-date-section" v-if="isTypeCoop" class="mt-10">
+    <section
+      v-if="isTypeCoop"
+      id="resolution-date-section"
+      class="mt-10"
+    >
       <header id="resolution-date-header">
-        <h2>{{getCreateResolutionResource.resolutionDateSection.header}}</h2>
+        <h2>{{ getCreateResolutionResource.resolutionDateSection.header }}</h2>
       </header>
 
-      <p class="section-description mt-2">{{getCreateResolutionResource.resolutionDateSection.description}}</p>
+      <p class="section-description mt-2">
+        {{ getCreateResolutionResource.resolutionDateSection.description }}
+      </p>
 
-      <div class="mt-4" :class="{ 'invalid-section': getShowErrors && !isResolutionDateValid }">
-        <v-card flat id="resolution-date-card" class="py-8 px-6">
+      <div
+        class="mt-4"
+        :class="{ 'invalid-section': getShowErrors && !isResolutionDateValid }"
+      >
+        <v-card
+          id="resolution-date-card"
+          flat
+          class="py-8 px-6"
+        >
           <v-row no-gutters>
-            <v-col cols="12" sm="3" class="pr-4 d-none d-sm-block">
+            <v-col
+              cols="12"
+              sm="3"
+              class="pr-4 d-none d-sm-block"
+            >
               <label class="resolution-date-vcard-title mt-4">
                 Resolution Date
               </label>
             </v-col>
-            <v-col cols="12" sm="9">
+            <v-col
+              cols="12"
+              sm="9"
+            >
               <DatePickerShared
                 ref="resolutionDatePickerRef"
                 title="Resolution Date"
@@ -142,33 +236,54 @@
     </section>
 
     <!-- Resolution Text -->
-    <section id="resolution-text-section" v-if="isTypeCoop" class="mt-10">
+    <section
+      v-if="isTypeCoop"
+      id="resolution-text-section"
+      class="mt-10"
+    >
       <header id="resolution-text-header">
-        <h2>{{getCreateResolutionResource.resolutionTextSection.header}}</h2>
+        <h2>{{ getCreateResolutionResource.resolutionTextSection.header }}</h2>
       </header>
 
-      <p class="section-description mt-2">{{getCreateResolutionResource.resolutionTextSection.description}}</p>
+      <p class="section-description mt-2">
+        {{ getCreateResolutionResource.resolutionTextSection.description }}
+      </p>
 
-      <div class="mt-4" :class="{ 'invalid-section': getShowErrors && !isResolutionTextValid }">
-        <v-card flat id="resolution-text-card" class="py-8 px-6">
+      <div
+        class="mt-4"
+        :class="{ 'invalid-section': getShowErrors && !isResolutionTextValid }"
+      >
+        <v-card
+          id="resolution-text-card"
+          flat
+          class="py-8 px-6"
+        >
           <v-row no-gutters>
-            <v-col cols="12" sm="3" class="pr-4 d-none d-sm-block">
+            <v-col
+              cols="12"
+              sm="3"
+              class="pr-4 d-none d-sm-block"
+            >
               <label class="resolution-text-vcard-title mt-4">
-                {{getCreateResolutionResource.resolutionTextSection.textLabel}}
+                {{ getCreateResolutionResource.resolutionTextSection.textLabel }}
               </label>
             </v-col>
-            <v-col cols="12" sm="9">
+            <v-col
+              cols="12"
+              sm="9"
+            >
               <v-form ref="resolutionTextFormRef">
-                <v-textarea ref="resolutionTextRef"
-                            auto-grow
-                            filled
-                            :label="getCreateResolutionResource.resolutionTextSection.textPlaceholder"
-                            rows="6"
-                            :counter="MAX_RESOLUTION_TEXT_LENGTH"
-                            v-model="resolutionText"
-                            :rules="resolutionTextRules"
-                            @change="onResolutionTextChanged($event)"
-                            v-observe-visibility="{ callback: onResolutionVisibilityChanged, once: true }"
+                <v-textarea
+                  ref="resolutionTextRef"
+                  v-model="resolutionText"
+                  v-observe-visibility="{ callback: onResolutionVisibilityChanged, once: true }"
+                  auto-grow
+                  filled
+                  :label="getCreateResolutionResource.resolutionTextSection.textPlaceholder"
+                  rows="6"
+                  :counter="MAX_RESOLUTION_TEXT_LENGTH"
+                  :rules="resolutionTextRules"
+                  @change="onResolutionTextChanged($event)"
                 />
               </v-form>
             </v-col>
@@ -178,61 +293,88 @@
     </section>
 
     <!-- Resolution Signature -->
-    <section id="resolution-signature-info-section" v-if="isTypeCoop" class="mt-10">
+    <section
+      v-if="isTypeCoop"
+      id="resolution-signature-info-section"
+      class="mt-10"
+    >
       <header id="resolution-signature-info-header">
-        <h2>{{getCreateResolutionResource.resolutionSignatureSection.header}}</h2>
+        <h2>{{ getCreateResolutionResource.resolutionSignatureSection.header }}</h2>
       </header>
 
-      <p class="section-description mt-2">{{getCreateResolutionResource.resolutionSignatureSection.description}}</p>
+      <p class="section-description mt-2">
+        {{ getCreateResolutionResource.resolutionSignatureSection.description }}
+      </p>
 
-      <div class="mt-4"
+      <div
+        class="mt-4"
         :class="{ 'invalid-section': getShowErrors && (!isSigningPersonValid || !isSigningDateValid) }"
       >
-        <v-card flat id="resolution-signature-card" class="py-8 px-6">
+        <v-card
+          id="resolution-signature-card"
+          flat
+          class="py-8 px-6"
+        >
           <v-row no-gutters>
-            <v-col cols="12" sm="3" class="pr-4">
+            <v-col
+              cols="12"
+              sm="3"
+              class="pr-4"
+            >
               <label class="resolution-signature-vcard-title">Signing Party</label>
             </v-col>
-            <v-col cols="12" sm="9" class="pt-4 pt-sm-0">
+            <v-col
+              cols="12"
+              sm="9"
+              class="pt-4 pt-sm-0"
+            >
               <v-form ref="signingPersonFormRef">
                 <div class="form__row three-column">
                   <v-text-field
+                    id="person__first-name"
                     ref="signingPersonGivenNameRef"
+                    v-model="signingPerson.givenName"
                     filled
                     class="item"
                     label="First Name"
-                    id="person__first-name"
-                    v-model="signingPerson.givenName"
                     :rules="Rules.FirstNameRules"
                   />
                   <v-text-field
+                    id="person__middle-name"
                     ref="signingPersonMiddleNameRef"
+                    v-model="signingPerson.additionalName"
                     filled
                     class="item"
                     label="Middle Name (Optional)"
-                    id="person__middle-name"
-                    v-model="signingPerson.additionalName"
                     :rules="Rules.MiddleNameRules"
                   />
                   <v-text-field
+                    id="person__last-name"
                     ref="signingPersonFamilyNameRef"
+                    v-model="signingPerson.familyName"
                     filled
                     class="item"
                     label="Last Name"
-                    id="person__last-name"
-                    v-model="signingPerson.familyName"
                     :rules="Rules.LastNameRules"
-                    />
+                  />
                 </div>
               </v-form>
             </v-col>
           </v-row>
 
           <v-row no-gutters>
-            <v-col cols="12" sm="3" class="pr-4">
+            <v-col
+              cols="12"
+              sm="3"
+              class="pr-4"
+            >
               <label class="resolution-signature-vcard-title">Date Signed</label>
             </v-col>
-            <v-col cols="12" sm="9" class="pt-4 pt-sm-0">
+            <v-col
+              cols="12"
+              sm="9"
+              class="pt-4 pt-sm-0"
+            >
               <DatePickerShared
                 ref="signatureDatePickerRef"
                 title="Date Signed"
@@ -251,45 +393,79 @@
     </section>
 
     <!-- Confirm Resolution -->
-    <section id="confirm-resolution-section" class="mt-10">
+    <section
+      id="confirm-resolution-section"
+      class="mt-10"
+    >
       <header id="resolution-confirm-header">
-        <h2>{{getCreateResolutionResource.confirmSection.header}}</h2>
+        <h2>{{ getCreateResolutionResource.confirmSection.header }}</h2>
       </header>
 
-      <div class="mt-4" :class="{ 'invalid-section': isInvalid }">
-        <v-card flat id="confirm-resolution-card" class="py-8 px-6">
+      <div
+        class="mt-4"
+        :class="{ 'invalid-section': isInvalid }"
+      >
+        <v-card
+          id="confirm-resolution-card"
+          flat
+          class="py-8 px-6"
+        >
           <v-form ref="confirmResolutionChkFormRef">
             <v-checkbox
-              ref="confirmResolutionChkRef"
               id="chk-confirm-resolution"
-              class="chk-resolution mt-0 pt-0"
+              ref="confirmResolutionChkRef"
               v-model="resolutionConfirmed"
+              class="chk-resolution mt-0 pt-0"
               hide-details
               :rules="confirmCompletionResolution"
               @change="onResolutionConfirmedChange($event)"
             >
-              <template v-slot:label>
+              <template #label>
                 <div v-html="confirmLabel" />
               </template>
             </v-checkbox>
             <ul>
-              <li class="mt-4"
+              <li
                 v-for="(item, index) in getCreateResolutionResource.confirmSection.items"
                 :key="index"
+                class="mt-4"
               >
-                <v-row v-if="item.type === ItemTypes.TEXT" no-gutters>
-                  <v-col cols="1"><v-icon>mdi-circle-small</v-icon></v-col>
-                  <v-col cols="11">{{item.value}}</v-col>
-                </v-row>
-                <v-row v-if="item.type === ItemTypes.PARTIAL_ITEMS" no-gutters>
-                  <v-col cols="1"><v-icon>mdi-circle-small</v-icon></v-col>
+                <v-row
+                  v-if="item.type === ItemTypes.TEXT"
+                  no-gutters
+                >
+                  <v-col cols="1">
+                    <v-icon>mdi-circle-small</v-icon>
+                  </v-col>
                   <v-col cols="11">
-                    <span v-for="(partialItem, index) in item.value" :key="index">
-                      <span v-if="partialItem.type === ItemTypes.TEXT" v-html="partialItem.value" />
-                      <span v-if="partialItem.type === ItemTypes.PLACEHOLDER &&
-                        partialItem.value === PLACEHOLDER_LEGAL_NAME_INLINE">{{getBusinessLegalName}}</span>
-                      <p class="font-weight-bold mb-0" v-if="partialItem.type === ItemTypes.PLACEHOLDER &&
-                        partialItem.value === PLACEHOLDER_LEGAL_NAME">{{getBusinessLegalName}}</p>
+                    {{ item.value }}
+                  </v-col>
+                </v-row>
+                <v-row
+                  v-if="item.type === ItemTypes.PARTIAL_ITEMS"
+                  no-gutters
+                >
+                  <v-col cols="1">
+                    <v-icon>mdi-circle-small</v-icon>
+                  </v-col>
+                  <v-col cols="11">
+                    <span
+                      v-for="(partialItem, index) in item.value"
+                      :key="index"
+                    >
+                      <span
+                        v-if="partialItem.type === ItemTypes.TEXT"
+                        v-html="partialItem.value"
+                      />
+                      <span
+                        v-if="partialItem.type === ItemTypes.PLACEHOLDER &&
+                          partialItem.value === PLACEHOLDER_LEGAL_NAME_INLINE"
+                      >{{ getBusinessLegalName }}</span>
+                      <p
+                        v-if="partialItem.type === ItemTypes.PLACEHOLDER &&
+                          partialItem.value === PLACEHOLDER_LEGAL_NAME"
+                        class="font-weight-bold mb-0"
+                      >{{ getBusinessLegalName }}</p>
                     </span>
                   </v-col>
                 </v-row>

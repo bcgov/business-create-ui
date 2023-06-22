@@ -2,28 +2,41 @@
   <div id="dissolution-statement">
     <!-- EDIT SECTION -->
     <template v-if="!isSummary">
-      <v-row no-gutters class="edit-section">
-        <v-col cols="12" sm="3" class="pr-4 d-none d-sm-block">
+      <v-row
+        no-gutters
+        class="edit-section"
+      >
+        <v-col
+          cols="12"
+          sm="3"
+          class="pr-4 d-none d-sm-block"
+        >
           <label class="dissolution-statement-title title-label">
             Dissolution Statement
           </label>
         </v-col>
 
-        <v-col cols="12" sm="9">
+        <v-col
+          cols="12"
+          sm="9"
+        >
           <v-radio-group
             v-model="dissolutionStatementType"
-            @change="changeDissolutionStatementType()"
             class="dissolution-statement-option-list"
             hide-details
+            @change="changeDissolutionStatementType()"
           >
             <v-radio
               v-for="(item, index) in getDissolutionStatements"
+              :id="`dissolution-statement-${item.key}`"
               :key="index"
               :value="item.key"
-              :id="`dissolution-statement-${item.key}`"
             >
-              <template v-slot:label>
-                <div v-html="item.value" class="dissolution-statement-option" />
+              <template #label>
+                <div
+                  class="dissolution-statement-option"
+                  v-html="item.value"
+                />
               </template>
             </v-radio>
           </v-radio-group>
@@ -33,12 +46,23 @@
 
     <!-- SUMMARY SECTION -->
     <template v-else>
-      <v-row no-gutters class="summary-section">
-        <v-col cols="12" sm="3" class="inner-col-1 pr-4">
+      <v-row
+        no-gutters
+        class="summary-section"
+      >
+        <v-col
+          cols="12"
+          sm="3"
+          class="inner-col-1 pr-4"
+        >
           <label class="summary-section-title">Dissolution Statement</label>
         </v-col>
 
-        <v-col cols="12" sm="9" class="inner-col-2 pt-4 pt-sm-0">
+        <v-col
+          cols="12"
+          sm="9"
+          class="inner-col-2 pt-4 pt-sm-0"
+        >
           <div
             class="dissolution-summary-description"
             v-html="dissolutionStatementDescription"

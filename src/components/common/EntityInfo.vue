@@ -1,26 +1,45 @@
 <template>
   <div id="entity-info">
     <v-row no-gutters>
-      <v-col cols="12" md="9">
-        <div v-show="isEntityType" id="entity-legal-name">{{ entityLegalName }}</div>
+      <v-col
+        cols="12"
+        md="9"
+      >
+        <div
+          v-show="isEntityType"
+          id="entity-legal-name"
+        >
+          {{ entityLegalName }}
+        </div>
 
-        <div id="entity-description">{{ entityDescription }}</div>
+        <div id="entity-description">
+          {{ entityDescription }}
+        </div>
 
         <menu class="mt-5">
           <!-- Staff Comments -->
-          <div class=" ml-n3" v-if="getBusinessId && isRoleStaff">
+          <div
+            v-if="getBusinessId && isRoleStaff"
+            class=" ml-n3"
+          >
             <StaffComments
+              :key="getBusinessId"
               :axios="axios"
               :businessId="getBusinessId"
               maxLength="2000"
-              :key="getBusinessId"
             />
           </div>
         </menu>
       </v-col>
 
-      <v-col cols="12" md="3">
-        <div v-if="getNameRequestNumber" id="entity-nr-number">
+      <v-col
+        cols="12"
+        md="3"
+      >
+        <div
+          v-if="getNameRequestNumber"
+          id="entity-nr-number"
+        >
           <span class="business-info-label">Name Request:</span>
           {{ getNameRequestNumber }}
         </div>
@@ -39,7 +58,7 @@
           </div>
         </template>
 
-         <template v-if="isTypeFirm && getBusinessId">
+        <template v-if="isTypeFirm && getBusinessId">
           <div id="entity-business-business-number">
             <span class="business-info-label">Business Number:</span>
             {{ getBusinessNumber || "Not Available" }}

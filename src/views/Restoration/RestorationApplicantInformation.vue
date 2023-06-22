@@ -1,6 +1,9 @@
 <template>
   <div id="restoration-applicant-information">
-    <section id="add-applicant-info-section" class="mt-10">
+    <section
+      id="add-applicant-info-section"
+      class="mt-10"
+    >
       <header>
         <h2>{{ getPeopleAndRolesResource.header }}</h2>
       </header>

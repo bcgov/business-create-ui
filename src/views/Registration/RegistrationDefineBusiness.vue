@@ -6,7 +6,10 @@
         <h2>Name</h2>
       </header>
 
-      <v-card flat class="mt-5">
+      <v-card
+        flat
+        class="mt-5"
+      >
         <NameRequestInfo />
 
         <v-divider class="mx-6" />
@@ -60,7 +63,9 @@
         </p>
       </header>
 
-      <v-card flat class="py-8 px-6"
+      <v-card
+        flat
+        class="py-8 px-6"
         :class="{ 'invalid-section': getShowErrors && !businessAddressesValid }"
       >
         <BusinessAddresses
@@ -81,7 +86,9 @@
         </p>
       </header>
 
-      <v-card flat class="py-8 px-6"
+      <v-card
+        flat
+        class="py-8 px-6"
         :class="{ 'invalid-section': getShowErrors && !businessContactValid }"
       >
         <BusinessContactInfo
@@ -104,9 +111,17 @@
           </template>
           <template v-else>
             Enter the start date of the business. The start date can be
-            <v-tooltip top max-width="20rem" content-class="top-tooltip" transition="fade-transition">
-              <template v-slot:activator="{ on }">
-                <span v-on="on" class="tool-tip dotted-underline">no more than 10 years in the past</span>
+            <v-tooltip
+              top
+              max-width="20rem"
+              content-class="top-tooltip"
+              transition="fade-transition"
+            >
+              <template #activator="{ on }">
+                <span
+                  class="tool-tip dotted-underline"
+                  v-on="on"
+                >no more than 10 years in the past</span>
               </template>
               <span>Choose the oldest date possible even if the actual start date is older than 10 years in the
                 past.</span>
@@ -117,7 +132,11 @@
         </p>
       </header>
 
-      <v-card flat class="step-container" :class="{ 'invalid-section': getShowErrors && !startDateValid }">
+      <v-card
+        flat
+        class="step-container"
+        :class="{ 'invalid-section': getShowErrors && !startDateValid }"
+      >
         <StartDate
           @valid="onStartDateValidEvent($event)"
         />

@@ -2,19 +2,25 @@
   <div id="list-people-roles">
     <section :class="{ 'invalid-section': showErrorSummary }">
       <!-- Summary Warning -->
-      <div v-if="isSummary && showErrorSummary" class="people-roles-invalid-message">
+      <div
+        v-if="isSummary && showErrorSummary"
+        class="people-roles-invalid-message"
+      >
         <span>
           <v-icon color="error">mdi-information-outline</v-icon>
           <span class="error-text mx-1">This step is unfinished.</span>
-          <router-link v-if="isIncorporationFiling"
+          <router-link
+            v-if="isIncorporationFiling"
             id="router-link"
             :to="{ path: `/${RouteNames.INCORPORATION_PEOPLE_ROLES}` }"
           >Return to this step to finish it</router-link>
-          <router-link v-if="isRegistrationFiling"
+          <router-link
+            v-if="isRegistrationFiling"
             id="router-link"
             :to="{ path: `/${RouteNames.REGISTRATION_PEOPLE_ROLES}` }"
           >Return to this step to finish it</router-link>
-          <router-link v-if="isFullRestorationFiling || isLimitedRestorationFiling"
+          <router-link
+            v-if="isFullRestorationFiling || isLimitedRestorationFiling"
             id="router-link"
             :to="{ path: `/${RouteNames.RESTORATION_APPLICANT_INFORMATION}` }"
           >Return to this step to finish it</router-link>
@@ -22,10 +28,19 @@
       </div>
 
       <!-- List Display Section -->
-      <div id="people-roles-list" v-if="personList.length > 0">
+      <div
+        v-if="personList.length > 0"
+        id="people-roles-list"
+      >
         <!-- List Headers -->
-        <v-row class="people-roles-header" no-gutters>
-          <v-col v-for="(title, index) in tableHeaders" :key="index">
+        <v-row
+          class="people-roles-header"
+          no-gutters
+        >
+          <v-col
+            v-for="(title, index) in tableHeaders"
+            :key="index"
+          >
             <span>{{ title }}</span>
           </v-col>
 
@@ -33,31 +48,51 @@
           <v-col v-if="showAlignmentColumn" />
 
           <!-- conditional action columns (no header) -->
-          <v-col v-if="!isSummary" class="actions-width" />
+          <v-col
+            v-if="!isSummary"
+            class="actions-width"
+          />
         </v-row>
 
         <!-- List Content -->
         <v-row
-          class="people-roles-content"
           v-for="(orgPerson, index) in personList"
           :key="index"
+          class="people-roles-content"
           no-gutters
         >
           <v-col class="name-column d-flex text-break">
             <div class="pr-2">
-              <v-icon color="gray9" v-if="isPerson(orgPerson)">mdi-account</v-icon>
-              <v-icon color="gray9" v-if="isOrg(orgPerson)">mdi-domain</v-icon>
+              <v-icon
+                v-if="isPerson(orgPerson)"
+                color="gray9"
+              >
+                mdi-account
+              </v-icon>
+              <v-icon
+                v-if="isOrg(orgPerson)"
+                color="gray9"
+              >
+                mdi-domain
+              </v-icon>
             </div>
             <div>
-              <span class="name" :class="{'text-uppercase':isOrg(orgPerson)}"
-                >{{ formatName(orgPerson) }}</span>
+              <span
+                class="name"
+                :class="{'text-uppercase':isOrg(orgPerson)}"
+              >{{ formatName(orgPerson) }}</span>
 
               <template v-if="isRegistrationFiling">
                 <div v-if="officerEmail(orgPerson)">
-                  <p class="email">{{ officerEmail(orgPerson) }}</p>
+                  <p class="email">
+                    {{ officerEmail(orgPerson) }}
+                  </p>
                 </div>
 
-                <div v-if="officerBusinessNumber(orgPerson)" class="mt-2 business-number">
+                <div
+                  v-if="officerBusinessNumber(orgPerson)"
+                  class="mt-2 business-number"
+                >
                   <p>Business Number:</p>
                   <p>{{ officerBusinessNumber(orgPerson) }}</p>
                 </div>
@@ -69,33 +104,54 @@
             <MailingAddress :address="orgPerson.mailingAddress" />
           </v-col>
 
-          <v-col class="delivery-address-column" v-if="showDeliveryAddressColumn">
+          <v-col
+            v-if="showDeliveryAddressColumn"
+            class="delivery-address-column"
+          >
             <template v-if="isDirector(orgPerson) || isProprietor(orgPerson) || isPartner(orgPerson)">
               <p v-if="isSame(orgPerson.mailingAddress, orgPerson.deliveryAddress)">
                 Same as Mailing Address
               </p>
-              <DeliveryAddress v-else :address="orgPerson.deliveryAddress" />
+              <DeliveryAddress
+                v-else
+                :address="orgPerson.deliveryAddress"
+              />
             </template>
           </v-col>
 
-          <v-col class="roles-column" v-if="showRolesColumn">
-            <p v-for="(role, index) in orgPerson.roles" :key="index">
+          <v-col
+            v-if="showRolesColumn"
+            class="roles-column"
+          >
+            <p
+              v-for="(role, index) in orgPerson.roles"
+              :key="index"
+            >
               {{ role.roleType }}
             </p>
           </v-col>
 
-          <v-col class="email-column" v-if="showEmailColumn">
+          <v-col
+            v-if="showEmailColumn"
+            class="email-column"
+          >
             <p>{{ orgPerson.officer.email }}</p>
           </v-col>
 
           <!-- conditional empty alignment column -->
           <v-col v-if="showAlignmentColumn" />
 
-          <v-col v-if="!isSummary" class="actions-column" :class="{'disabled':disabled}">
+          <v-col
+            v-if="!isSummary"
+            class="actions-column"
+            :class="{'disabled':disabled}"
+          >
             <div class="float-right">
               <span class="edit-action">
-                <v-btn text color="primary"
+                <v-btn
                   :id="`officer-${index}-change-btn`"
+                  text
+                  color="primary"
                   :tabindex="disabled ? -1 : 0"
                   @click="disabled ? null : emitPersonInfo(index)"
                 >
@@ -106,15 +162,19 @@
 
               <!-- More Actions menu -->
               <span>
-                <v-menu offset-y left :disabled="disabled">
-                  <template v-slot:activator="{ on }">
+                <v-menu
+                  offset-y
+                  left
+                  :disabled="disabled"
+                >
+                  <template #activator="{ on }">
                     <v-btn
                       text
                       small
-                      v-on="on"
                       color="primary"
                       class="more-actions-btn"
                       :tabindex="disabled ? -1 : 0"
+                      v-on="on"
                     >
                       <v-icon>mdi-menu-down</v-icon>
                     </v-btn>
@@ -122,7 +182,10 @@
                   <v-list class="more-actions-list">
                     <v-list-item @click="emitRemovePerson(index)">
                       <v-list-item-title>
-                        <v-icon small color="primary">mdi-delete</v-icon>
+                        <v-icon
+                          small
+                          color="primary"
+                        >mdi-delete</v-icon>
                         <span class="ml-2">Remove</span>
                       </v-list-item-title>
                     </v-list-item>

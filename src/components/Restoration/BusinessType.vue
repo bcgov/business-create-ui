@@ -2,13 +2,21 @@
   <div id="business-type">
     <div class="section-container">
       <v-row no-gutters>
-        <v-col cols="12" sm="3" class="pr-4">
+        <v-col
+          cols="12"
+          sm="3"
+          class="pr-4"
+        >
           <label>
             <strong>Business Type</strong>
           </label>
         </v-col>
 
-        <v-col cols="12" sm="9" class="pt-4 pt-sm-0">
+        <v-col
+          cols="12"
+          sm="9"
+          class="pt-4 pt-sm-0"
+        >
           {{ businessType }}
         </v-col>
       </v-row>

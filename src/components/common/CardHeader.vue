@@ -1,7 +1,9 @@
 <template>
   <header class="v-card-header rounded-t">
-    <v-icon color="appDkBlue">{{icon}}</v-icon>
-    <label class="v-card-label pl-2">{{label}}</label>
+    <v-icon color="appDkBlue">
+      {{ icon }}
+    </v-icon>
+    <label class="v-card-label pl-2">{{ label }}</label>
   </header>
 </template>
 
