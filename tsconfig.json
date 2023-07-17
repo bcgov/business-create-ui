@@ -14,7 +14,7 @@
     "sourceMap": true,
     "baseUrl": ".",
     "types": [
-      "webpack-env",
+      "vite/client",
       "jest",
       "vuetify"
     ],
@@ -43,5 +43,6 @@
   ],
   "vueCompilerOptions": {
     "target": 2.7
-  }
+  },
+  
 }
