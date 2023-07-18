@@ -116,8 +116,8 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
    * Builds an incorporation filing from store data. Used when saving a filing.
    * @returns the filing body to save
    */
-  buildIncorporationFiling(): IncorporationFilingIF {
-    function fixNullAddressType(orgPeople: OrgPersonIF[]): OrgPersonIF[] {
+  buildIncorporationFiling (): IncorporationFilingIF {
+    function fixNullAddressType (orgPeople: OrgPersonIF[]): OrgPersonIF[] {
       return orgPeople.map(p => {
         if (p.deliveryAddress?.addressType === null) delete p.deliveryAddress.addressType
         if (p.mailingAddress?.addressType === null) delete p.mailingAddress.addressType
@@ -219,7 +219,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
    * Parses a draft incorporation filing into the store. Used when loading a filing.
    * @param draftFiling the filing body to parse
    */
-  parseIncorporationDraft(draftFiling: any): void {
+  parseIncorporationDraft (draftFiling: any): void {
     // FUTURE: set types so each of these validate their parameters
     // ref: https://www.typescriptlang.org/docs/handbook/generics.html
 
@@ -353,7 +353,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
    * Builds a registration filing from store data. Used when saving a filing.
    * @returns the filing body to save
    */
-  buildRegistrationFiling(): any {
+  buildRegistrationFiling (): any {
     // Build the main filing.
     const filing: RegistrationFilingIF = {
       header: {
@@ -412,7 +412,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
    * Builds a restoration filing from store data. Used when saving a filing.
    * @returns the filing body to save
    */
-  buildRestorationFiling(): any {
+  buildRestorationFiling (): any {
     // Build the main filing.
     const filing: RestorationFilingIF = {
       header: {
@@ -485,7 +485,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     return filing
   }
 
-  private orgPersonsToParties(orgPersons: OrgPersonIF[]): PartyIF[] {
+  private orgPersonsToParties (orgPersons: OrgPersonIF[]): PartyIF[] {
     return orgPersons.map(orgPerson => {
       // convert businessNumber -> taxId
       const party = {
@@ -508,7 +508,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
    * Parses a draft registration filing into the store. Used when loading a filing.
    * @param draftFiling the filing body to parse
    */
-  parseRegistrationDraft(draftFiling: any): void {
+  parseRegistrationDraft (draftFiling: any): void {
     // NB: don't parse Name Request object -- NR is fetched from namex/NRO instead
 
     // save filing id
@@ -577,7 +577,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
    * Parses a draft restoration filing into the store. Used when loading a filing.
    * @param draftFiling the filing body to parse
    */
-  parseRestorationDraft(draftFiling: any): void {
+  parseRestorationDraft (draftFiling: any): void {
     // NB: don't parse Name Request object -- NR is fetched from namex/NRO instead
 
     // save filing id
@@ -673,7 +673,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     }
   }
 
-  private partiesToOrgPersons(parties: PartyIF[]): OrgPersonIF[] {
+  private partiesToOrgPersons (parties: PartyIF[]): OrgPersonIF[] {
     return parties.map(party => {
       // convert taxId -> businessNumber
       const orgPerson = {
@@ -692,7 +692,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
    * Builds a dissolution filing from store data. Used when saving a filing.
    * @returns the filing body to save
    */
-  buildDissolutionFiling(): DissolutionFilingIF {
+  buildDissolutionFiling (): DissolutionFilingIF {
     // Build the main filing.
     const filing: DissolutionFilingIF = {
       header: {
@@ -819,7 +819,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
    * Parses a draft dissolution filing into the store. Used when loading a filing.
    * @param draftFiling the filing body to parse
    */
-  parseDissolutionDraft(draftFiling: any): void {
+  parseDissolutionDraft (draftFiling: any): void {
     // save filing id
     this.setFilingId(+draftFiling.header.filingId)
 
@@ -926,7 +926,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
    * Builds dissolution staff payment data from store data.
    * @param filing the filing body to update
    */
-  private buildStaffPayment(
+  private buildStaffPayment (
     filing: DissolutionFilingIF | RegistrationFilingIF | RestorationFilingIF | IncorporationFilingIF
   ): void {
     // Populate Staff Payment according to payment option
@@ -959,7 +959,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
    * If a Transactional Folio number was entered then override the Folio number
    * @param filing the filing body to update
    */
-  private buildFolioNumber(filing: DissolutionFilingIF | RegistrationFilingIF | RestorationFilingIF): void {
+  private buildFolioNumber (filing: DissolutionFilingIF | RegistrationFilingIF | RestorationFilingIF): void {
     // override Folio Number if TFN exists and is different than default FN
     // also save a flag to correctly restore a draft later
     const fn = this.getFolioNumber
@@ -1024,7 +1024,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
    * @param filing the filing fetched from legal-api
    * @returns the filing in safe-empty state if applicable
    */
-  formatEmptyIncorporationApplication(filing: any): IncorporationFilingIF {
+  formatEmptyIncorporationApplication (filing: any): IncorporationFilingIF {
     const toReturn = filing
     if (toReturn.incorporationApplication) {
       // set offices
@@ -1057,7 +1057,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
    * @param filing the filing fetched from legal-api
    * @returns the filing in safe-empty state if applicable
    */
-  formatEmptyRegistration(filing: any): RegistrationFilingIF {
+  formatEmptyRegistration (filing: any): RegistrationFilingIF {
     const toReturn = filing
     if (toReturn.registration) {
       // set offices
