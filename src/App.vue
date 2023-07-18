@@ -243,16 +243,17 @@ import * as Views from '@/views'
 
 // Mixins, interfaces, etc
 import { CommonMixin, DateMixin, FilingTemplateMixin, NameRequestMixin } from '@/mixins'
-import { AccountInformationIF, AddressIF, BreadcrumbIF, BusinessIF, CompletingPartyIF,
-  ConfirmDialogType, EmptyFees, FilingDataIF, OrgInformationIF, ResourceIF, StepIF } from '@/interfaces'
+import { AccountInformationIF, AddressIF, BreadcrumbIF, BusinessIF, BusinessWarningIF, CompletingPartyIF,
+  ConfirmDialogType, EmptyFees, FeesIF, FilingDataIF, NameRequestIF, OrgInformationIF, PartyIF, ResourceIF,
+  StepIF } from '@/interfaces'
 import { DissolutionResources, IncorporationResources, RegistrationResources, RestorationResources,
   getEntityDashboardBreadcrumb, getMyBusinessRegistryBreadcrumb, getRegistryDashboardBreadcrumb,
   getSbcStaffDashboardBreadcrumb, getStaffDashboardBreadcrumb } from '@/resources'
 import { AuthServices, LegalServices, PayServices } from '@/services/'
 
 // Enums and Constants
-import { FilingCodes, FilingNames, FilingStatus, FilingTypes, NameRequestStates, RouteNames, StaffPaymentOptions }
-  from '@/enums'
+import { EntityState, FilingCodes, FilingNames, FilingStatus, FilingTypes, NameRequestStates, RouteNames,
+  StaffPaymentOptions } from '@/enums'
 import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
 
 @Component({
