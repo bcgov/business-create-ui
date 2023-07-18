@@ -141,7 +141,7 @@ import { isEmpty, isEqual } from 'lodash'
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
 import { RegistrationMailingAddressSchema, RegistrationDeliveryAddressSchema } from '@/schemas'
 import { CommonMixin } from '@/mixins'
-import { ActionBindingIF, AddressIF, BusinessAddressIF, RegistrationStateIF } from '@/interfaces'
+import { AddressIF, BusinessAddressIF, RegistrationStateIF } from '@/interfaces'
 import { EmptyAddress } from '@bcrs-shared-components/interfaces'
 
 const REGION_BC = 'BC'
@@ -182,7 +182,7 @@ export default class BusinessAddresses extends Mixins(CommonMixin) {
 
   @Getter(useStore) getRegistration!: RegistrationStateIF
 
-  @Action(useStore) setRegistrationBusinessAddress!: ActionBindingIF
+  @Action(useStore) setRegistrationBusinessAddress!: (x: BusinessAddressIF) => void
 
   // BaseAddress state variables
   // (Note that if the initial value is undefined, the class property will not be

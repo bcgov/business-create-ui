@@ -243,7 +243,7 @@ import * as Views from '@/views'
 
 // Mixins, interfaces, etc
 import { CommonMixin, DateMixin, FilingTemplateMixin, NameRequestMixin } from '@/mixins'
-import { AccountInformationIF, ActionBindingIF, AddressIF, BreadcrumbIF, BusinessIF, CompletingPartyIF,
+import { AccountInformationIF, AddressIF, BreadcrumbIF, BusinessIF, CompletingPartyIF,
   ConfirmDialogType, EmptyFees, FilingDataIF, OrgInformationIF, ResourceIF, StepIF } from '@/interfaces'
 import { DissolutionResources, IncorporationResources, RegistrationResources, RestorationResources,
   getEntityDashboardBreadcrumb, getMyBusinessRegistryBreadcrumb, getRegistryDashboardBreadcrumb,
@@ -294,39 +294,38 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   @Getter(useStore) isRestorationFiling!: boolean
   @Getter(useStore) isSbcStaff!: boolean
 
-  @Action(useStore) setAccountInformation!: ActionBindingIF
-  @Action(useStore) setAdminFreeze!: ActionBindingIF
-  @Action(useStore) setBusinessId!: ActionBindingIF
-  @Action(useStore) setBusinessNumber!: ActionBindingIF
-  @Action(useStore) setCompletingParty!: ActionBindingIF
-  @Action(useStore) setCurrentDate!: ActionBindingIF
-  @Action(useStore) setCurrentJsDate!: ActionBindingIF
-  @Action(useStore) setCurrentStep!: ActionBindingIF
-  @Action(useStore) setEntityFoundingDate!: ActionBindingIF
-  @Action(useStore) setEntityState!: ActionBindingIF
-  @Action(useStore) setFeePrices!: ActionBindingIF
-  @Action(useStore) setFilingType!: ActionBindingIF
-  @Action(useStore) setGoodStanding!: ActionBindingIF
-  @Action(useStore) setIdentifier!: ActionBindingIF
-  @Action(useStore) setKeycloakGuid!: ActionBindingIF
-  @Action(useStore) setKeycloakRoles!: ActionBindingIF
-  @Action(useStore) setLastAddressChangeDate!: ActionBindingIF
-  @Action(useStore) setLastAnnualReportDate!: ActionBindingIF
-  @Action(useStore) setLastDirectorChangeDate!: ActionBindingIF
-  @Action(useStore) setNameRequest!: ActionBindingIF
-  @Action(useStore) setParties!: ActionBindingIF
-  @Action(useStore) setResources!: ActionBindingIF
-  @Action(useStore) setUserAddress!: ActionBindingIF
-  @Action(useStore) setUserEmail!: ActionBindingIF
-  @Action(useStore) setUserFirstName!: ActionBindingIF
-  @Action(useStore) setUserLastName!: ActionBindingIF
-  @Action(useStore) setUserPhone!: ActionBindingIF
-  @Action(useStore) setHaveChanges!: ActionBindingIF
-  @Action(useStore) setOrgInformation!: ActionBindingIF
-  @Action(useStore) setShowErrors!: ActionBindingIF
-  @Action(useStore) setTempId!: ActionBindingIF
-  @Action(useStore) setWarnings!: ActionBindingIF
-  @Action(useStore) setWindowWidth!: ActionBindingIF
+  @Action(useStore) setAccountInformation!: (x: AccountInformationIF) => void
+  @Action(useStore) setAdminFreeze!: (x: boolean) => void
+  @Action(useStore) setBusinessId!: (x: string) => void
+  @Action(useStore) setBusinessNumber!: (x: string) => void
+  @Action(useStore) setCompletingParty!: (x: CompletingPartyIF) => void
+  @Action(useStore) setCurrentDate!: (x: string) => void
+  @Action(useStore) setCurrentJsDate!: (x: Date) => void
+  @Action(useStore) setCurrentStep!: (x: number) => void
+  @Action(useStore) setEntityState!: (x: EntityState) => void
+  @Action(useStore) setFeePrices!: (x: Array<FeesIF>) => void
+  @Action(useStore) setFilingType!: (x: FilingTypes) => void
+  @Action(useStore) setGoodStanding!: (x: boolean) => void
+  @Action(useStore) setIdentifier!: (x: string) => void
+  @Action(useStore) setKeycloakGuid!: (x: string) => void
+  @Action(useStore) setKeycloakRoles!: (x: Array<string>) => void
+  @Action(useStore) setLastAddressChangeDate!: (x: string) => void
+  @Action(useStore) setLastAnnualReportDate!: (x: string) => void
+  @Action(useStore) setLastDirectorChangeDate!: (x: string) => void
+  @Action(useStore) setNameRequest!: (x: NameRequestIF) => void
+  @Action(useStore) setParties!: (x: Array<PartyIF>) => void
+  @Action(useStore) setResources!: (x: ResourceIF) => void
+  @Action(useStore) setUserAddress!: (x: AddressIF) => void
+  @Action(useStore) setUserEmail!: (x: string) => void
+  @Action(useStore) setUserFirstName!: (x: string) => void
+  @Action(useStore) setUserLastName!: (x: string) => void
+  @Action(useStore) setUserPhone!: (x: string) => void
+  @Action(useStore) setHaveChanges!: (x: boolean) => void
+  @Action(useStore) setOrgInformation!: (x: OrgInformationIF) => void
+  @Action(useStore) setShowErrors!: (x: boolean) => void
+  @Action(useStore) setTempId!: (x: string) => void
+  @Action(useStore) setWarnings!: (x: Array<BusinessWarningIF>) => void
+  @Action(useStore) setWindowWidth!: (x: number) => void
 
   // Local properties
   accountAuthorizationDialog = false

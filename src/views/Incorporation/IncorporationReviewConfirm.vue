@@ -239,7 +239,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
-import { ActionBindingIF, ContactPointIF, CertifyIF, EffectiveDateTimeIF, IncorporationAgreementIF,
+import { ContactPointIF, CertifyIF, EffectiveDateTimeIF, IncorporationAgreementIF,
   ShareStructureIF, CourtOrderStepIF } from '@/interfaces'
 import { CorpTypeCd } from '@bcrs-shared-components/enums/'
 import AgreementType from '@/components/common/AgreementType.vue'
@@ -288,13 +288,13 @@ export default class IncorporationReviewConfirm extends Vue {
   @Getter(useStore) isTypeBcUlcCompany!: boolean
   @Getter(useStore) isTypeCoop!: boolean
 
-  @Action(useStore) setCertifyState!: ActionBindingIF
-  @Action(useStore) setCourtOrderFileNumber!: ActionBindingIF
-  @Action(useStore) setCourtOrderValidity!: ActionBindingIF
-  @Action(useStore) setEffectiveDate!: ActionBindingIF
-  @Action(useStore) setEffectiveDateTimeValid!: ActionBindingIF
-  @Action(useStore) setHasPlanOfArrangement!: ActionBindingIF
-  @Action(useStore) setIsFutureEffective!: ActionBindingIF
+  @Action(useStore) setCertifyState!: (x: CertifyIF) => void
+  @Action(useStore) setCourtOrderFileNumber!: (x: string) => void
+  @Action(useStore) setCourtOrderValidity!: (x: boolean) => void
+  @Action(useStore) setEffectiveDate!: (x: Date) => void
+  @Action(useStore) setEffectiveDateTimeValid!: (x: boolean) => void
+  @Action(useStore) setHasPlanOfArrangement!: (x: boolean) => void
+  @Action(useStore) setIsFutureEffective!: (x: boolean) => void
 
   /** The entity description,  */
   get getEntityDescription (): string {

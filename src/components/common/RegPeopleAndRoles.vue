@@ -243,7 +243,7 @@ import { Component, Mixins } from 'vue-property-decorator'
 import { Action } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { cloneDeep } from 'lodash'
-import { ActionBindingIF, EmptyOrgPerson } from '@/interfaces'
+import { EmptyOrgPerson } from '@/interfaces'
 import { EmptyAddress } from '@bcrs-shared-components/interfaces'
 import { BusinessTypes, PartyTypes, RoleTypes } from '@/enums'
 import { PeopleRolesMixin } from '@/mixins'
@@ -267,7 +267,7 @@ import RuleListItem from '@/components/common/RuleListItem.vue'
   }
 })
 export default class RegPeopleAndRoles extends Mixins(PeopleRolesMixin) {
-  @Action(useStore) setRegistrationBusinessType!: ActionBindingIF
+  @Action(useStore) setRegistrationBusinessType!: (x: BusinessTypes) => void
 
   //
   // NB: see mixin for common properties, methods, etc.

@@ -3,7 +3,7 @@ import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { NumWord, PartyTypes, RoleTypes, RuleIds } from '@/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/enums/'
-import { ActionBindingIF, AddressIF, ConfirmDialogType, OrgPersonIF, PeopleAndRoleIF,
+import { AddressIF, ConfirmDialogType, OrgPersonIF, PeopleAndRoleIF,
   PeopleAndRolesResourceIF, RegistrationStateIF } from '@/interfaces'
 
 /**
@@ -32,10 +32,10 @@ export default class PeopleRolesMixin extends Vue {
   @Getter(useStore) isTypeSoleProp!: boolean
   @Getter(useStore) isTypePartnership!: boolean
 
-  @Action(useStore) setAddPeopleAndRoleStepValidity!: ActionBindingIF
-  @Action(useStore) setIsAutoPopulatedBusinessNumber!: ActionBindingIF
-  @Action(useStore) setOrgPersonList!: ActionBindingIF
-  @Action(useStore) setRegistrationBusinessNumber!: ActionBindingIF
+  @Action(useStore) setAddPeopleAndRoleStepValidity!: (x: boolean) => void
+  @Action(useStore) setIsAutoPopulatedBusinessNumber!: (x: boolean) => void
+  @Action(useStore) setOrgPersonList!: (x: OrgPersonIF[]) => void
+  @Action(useStore) setRegistrationBusinessNumber!: (x: string) => void
 
   // Enums for template
   readonly CorpTypeCd = CorpTypeCd

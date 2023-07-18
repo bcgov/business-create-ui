@@ -12,7 +12,7 @@
 import { Component, Emit, Prop, Vue } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
-import { ActionBindingIF, RegistrationStateIF } from '@/interfaces'
+import { NaicsIF, RegistrationStateIF } from '@/interfaces'
 import { NaicsServices } from '@/services/'
 import { NatureOfBusiness as NatureOfBusinessShared } from '@bcrs-shared-components/nature-of-business'
 
@@ -27,7 +27,7 @@ export default class NatureOfBusiness extends Vue {
 
   @Getter(useStore) getRegistration!: RegistrationStateIF
 
-  @Action(useStore) setRegistrationNaics!: ActionBindingIF
+  @Action(useStore) setRegistrationNaics!: (x: NaicsIF) => void
 
   readonly NaicsServices = NaicsServices
 

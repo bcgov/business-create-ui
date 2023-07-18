@@ -489,7 +489,6 @@ import { DatePicker as DatePickerShared } from '@bcrs-shared-components/date-pic
 
 // Interfaces, enums, etc
 import {
-  ActionBindingIF,
   CreateResolutionIF,
   CreateResolutionResourceIF,
   FormIF,
@@ -544,8 +543,8 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin) {
   @Getter(useStore) getShowErrors!: boolean
   @Getter(useStore) isTypeCoop!: boolean
 
-  @Action(useStore) setResolution!: ActionBindingIF
-  @Action(useStore) setResolutionStepValidationDetail!: ActionBindingIF
+  @Action(useStore) setResolution!: (x: CreateResolutionIF) => void
+  @Action(useStore) setResolutionStepValidationDetail!: (x: ValidationDetailIF) => void
 
   // Enums for template
   readonly RouteNames = RouteNames

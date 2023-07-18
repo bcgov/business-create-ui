@@ -2,14 +2,17 @@ import { Component, Mixins } from 'vue-property-decorator'
 import { Getter, Action } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { DateMixin } from '@/mixins'
-import { ActionBindingIF, ContactPointIF, CertifyIF, CompletingPartyIF, CourtOrderStepIF,
+import {
+  BusinessAddressIF, ContactPointIF, CertifyIF, CompletingPartyIF, CourtOrderIF, CourtOrderStepIF,
   CreateMemorandumIF, CreateResolutionIF, CreateRulesIF, DefineCompanyIF, DissolutionFilingIF,
   DissolutionStatementIF, DocumentDeliveryIF, EffectiveDateTimeIF, EmptyNaics, IncorporationAgreementIF,
-  IncorporationFilingIF, NameRequestFilingIF, NameTranslationIF, OfficeAddressIF, OrgPersonIF, PartyIF,
-  PeopleAndRoleIF, RegistrationFilingIF, RegistrationStateIF, RestorationFilingIF, RestorationStateIF,
-  ShareStructureIF, SpecialResolutionIF, StaffPaymentStepIF, UploadAffidavitIF } from '@/interfaces'
-import { DissolutionTypes, EffectOfOrders, FilingTypes, PartyTypes, RoleTypes, StaffPaymentOptions }
-  from '@/enums'
+  IncorporationFilingIF, NaicsIF, NameRequestFilingIF, NameTranslationIF, OfficeAddressIF, OrgPersonIF, PartyIF,
+  PeopleAndRoleIF, RegisteredRecordsAddressesIF, RegistrationFilingIF, RegistrationStateIF, RestorationFilingIF,
+  RestorationStateIF, ShareClassIF, ShareStructureIF, SpecialResolutionIF, StaffPaymentStepIF, UploadAffidavitIF
+} from '@/interfaces'
+import { ApprovalTypes, BusinessTypes, CoopTypes, DissolutionTypes, EffectOfOrders, FilingTypes,
+  PartyTypes, RelationshipTypes, RestorationTypes, RoleTypes, StaffPaymentOptions
+} from '@/enums'
 import { CorpTypeCd, CorrectNameOptions } from '@bcrs-shared-components/enums/'
 
 /**
@@ -61,60 +64,60 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Getter(useStore) isTypeFirm!: boolean
   @Getter(useStore) isTypeSoleProp!: boolean
 
-  @Action(useStore) setAffidavit!: ActionBindingIF
-  @Action(useStore) setBusinessAddress!: ActionBindingIF
-  @Action(useStore) setBusinessContact!: ActionBindingIF
-  @Action(useStore) setCertifyState!: ActionBindingIF
-  @Action(useStore) setCooperativeType!: ActionBindingIF
-  @Action(useStore) setCorrectNameOption!: ActionBindingIF
-  @Action(useStore) setCourtOrderFileNumber!: ActionBindingIF
-  @Action(useStore) setCustodianOfRecords!: ActionBindingIF
-  @Action(useStore) setDefineCompanyStepValidity!: ActionBindingIF
-  @Action(useStore) setDissolutionDate!: ActionBindingIF
-  @Action(useStore) setDissolutionStatementStepData!: ActionBindingIF
-  @Action(useStore) setDissolutionType!: ActionBindingIF
-  @Action(useStore) setDocumentOptionalEmail!: ActionBindingIF
-  @Action(useStore) setEffectiveDate!: ActionBindingIF
-  @Action(useStore) setEntityType!: ActionBindingIF
-  @Action(useStore) setFilingId!: ActionBindingIF
-  @Action(useStore) setFolioNumber!: ActionBindingIF
-  @Action(useStore) setIncorporationAgreementStepData!: ActionBindingIF
-  @Action(useStore) setHasPlanOfArrangement!: ActionBindingIF
-  @Action(useStore) setIsAutoPopulatedBusinessNumber!: ActionBindingIF
-  @Action(useStore) setIsFutureEffective!: ActionBindingIF
-  @Action(useStore) setFoundingDate!: ActionBindingIF
-  @Action(useStore) setLegalName!: ActionBindingIF
-  @Action(useStore) setMemorandum!: ActionBindingIF
-  @Action(useStore) setNameRequestApprovedName!: ActionBindingIF
-  @Action(useStore) setNameTranslations!: ActionBindingIF
-  @Action(useStore) setOfficeAddresses!: ActionBindingIF
-  @Action(useStore) setOrgPersonList!: ActionBindingIF
-  @Action(useStore) setRegistrationBusinessAddress!: ActionBindingIF
-  @Action(useStore) setRegistrationBusinessNumber!: ActionBindingIF
-  @Action(useStore) setRegistrationBusinessType!: ActionBindingIF
-  @Action(useStore) setRegistrationBusinessTypeConfirm!: ActionBindingIF
-  @Action(useStore) setRegistrationFeeAcknowledgement!: ActionBindingIF
-  @Action(useStore) setRegistrationNaics!: ActionBindingIF
-  @Action(useStore) setRegistrationStartDate!: ActionBindingIF
-  @Action(useStore) setResolution!: ActionBindingIF
-  @Action(useStore) setRestorationApplicationDate!: ActionBindingIF
-  @Action(useStore) setRestorationApprovalType!: ActionBindingIF
-  @Action(useStore) setRestorationCourtOrder!: ActionBindingIF
-  @Action(useStore) setRestorationExpiry!: ActionBindingIF
-  @Action(useStore) setRestorationNoticeDate!: ActionBindingIF
-  @Action(useStore) setRestorationRelationships!: ActionBindingIF
-  @Action(useStore) setRestorationType!: ActionBindingIF
-  @Action(useStore) setRules!: ActionBindingIF
-  @Action(useStore) setShareClasses!: ActionBindingIF
-  @Action(useStore) setStaffPayment!: ActionBindingIF
-  @Action(useStore) setTransactionalFolioNumber!: ActionBindingIF
+  @Action(useStore) setAffidavit!: (x: UploadAffidavitIF) => void
+  @Action(useStore) setBusinessAddress!: (x: any) => void
+  @Action(useStore) setBusinessContact!: (x: ContactPointIF) => void
+  @Action(useStore) setCertifyState!: (x: CertifyIF) => void
+  @Action(useStore) setCooperativeType!: (x: CoopTypes) => void
+  @Action(useStore) setCorrectNameOption!: (x: CorrectNameOptions) => void
+  @Action(useStore) setCourtOrderFileNumber!: (x: string) => void
+  @Action(useStore) setCustodianOfRecords!: (x: OrgPersonIF) => void
+  @Action(useStore) setDefineCompanyStepValidity!: (x: boolean) => void
+  @Action(useStore) setDissolutionDate!: (x: string) => void
+  @Action(useStore) setDissolutionStatementStepData!: (x: DissolutionStatementIF) => void
+  @Action(useStore) setDissolutionType!: (x: DissolutionTypes) => void
+  @Action(useStore) setDocumentOptionalEmail!: (x: string) => void
+  @Action(useStore) setEffectiveDate!: (x: Date) => void
+  @Action(useStore) setEntityType!: (x: CorpTypeCd) => void
+  @Action(useStore) setFilingId!: (x: number) => void
+  @Action(useStore) setFolioNumber!: (x: string) => void
+  @Action(useStore) setIncorporationAgreementStepData!: (x: IncorporationAgreementIF) => void
+  @Action(useStore) setHasPlanOfArrangement!: (x: boolean) => void
+  @Action(useStore) setIsAutoPopulatedBusinessNumber!: (x: boolean) => void
+  @Action(useStore) setIsFutureEffective!: (x: boolean) => void
+  @Action(useStore) setFoundingDate!: (x: string) => void
+  @Action(useStore) setLegalName!: (x: string) => void
+  @Action(useStore) setMemorandum!: (x: CreateMemorandumIF) => void
+  @Action(useStore) setNameRequestApprovedName!: (x: string) => void
+  @Action(useStore) setNameTranslations!: (x: NameTranslationIF[]) => void
+  @Action(useStore) setOfficeAddresses!: (x: RegisteredRecordsAddressesIF) => void
+  @Action(useStore) setOrgPersonList!: (x: OrgPersonIF[]) => void
+  @Action(useStore) setRegistrationBusinessAddress!: (x: BusinessAddressIF) => void
+  @Action(useStore) setRegistrationBusinessNumber!: (x: string) => void
+  @Action(useStore) setRegistrationBusinessType!: (x: BusinessTypes) => void
+  @Action(useStore) setRegistrationBusinessTypeConfirm!: (x: boolean) => void
+  @Action(useStore) setRegistrationFeeAcknowledgement!: (x: boolean) => void
+  @Action(useStore) setRegistrationNaics!: (x: NaicsIF) => void
+  @Action(useStore) setRegistrationStartDate!: (x: string) => void
+  @Action(useStore) setResolution!: (x: CreateResolutionIF) => void
+  @Action(useStore) setRestorationApplicationDate!: (x: string) => void
+  @Action(useStore) setRestorationApprovalType!: (x: ApprovalTypes) => void
+  @Action(useStore) setRestorationCourtOrder!: (x: CourtOrderIF) => void
+  @Action(useStore) setRestorationExpiry!: (x: string) => void
+  @Action(useStore) setRestorationNoticeDate!: (x: string) => void
+  @Action(useStore) setRestorationRelationships!: (x: RelationshipTypes[]) => void
+  @Action(useStore) setRestorationType!: (x: RestorationTypes) => void
+  @Action(useStore) setRules!: (x: CreateRulesIF) => void
+  @Action(useStore) setShareClasses!: (x: ShareClassIF[]) => void
+  @Action(useStore) setStaffPayment!: (x: any) => void
+  @Action(useStore) setTransactionalFolioNumber!: (x: string) => void
 
   /**
    * Builds an incorporation filing from store data. Used when saving a filing.
    * @returns the filing body to save
    */
-  buildIncorporationFiling (): IncorporationFilingIF {
-    function fixNullAddressType (orgPeople: OrgPersonIF[]): OrgPersonIF[] {
+  buildIncorporationFiling(): IncorporationFilingIF {
+    function fixNullAddressType(orgPeople: OrgPersonIF[]): OrgPersonIF[] {
       return orgPeople.map(p => {
         if (p.deliveryAddress?.addressType === null) delete p.deliveryAddress.addressType
         if (p.mailingAddress?.addressType === null) delete p.mailingAddress.addressType
@@ -216,7 +219,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
    * Parses a draft incorporation filing into the store. Used when loading a filing.
    * @param draftFiling the filing body to parse
    */
-  parseIncorporationDraft (draftFiling: any): void {
+  parseIncorporationDraft(draftFiling: any): void {
     // FUTURE: set types so each of these validate their parameters
     // ref: https://www.typescriptlang.org/docs/handbook/generics.html
 
@@ -350,7 +353,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
    * Builds a registration filing from store data. Used when saving a filing.
    * @returns the filing body to save
    */
-  buildRegistrationFiling (): any {
+  buildRegistrationFiling(): any {
     // Build the main filing.
     const filing: RegistrationFilingIF = {
       header: {
@@ -409,7 +412,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
    * Builds a restoration filing from store data. Used when saving a filing.
    * @returns the filing body to save
    */
-  buildRestorationFiling (): any {
+  buildRestorationFiling(): any {
     // Build the main filing.
     const filing: RestorationFilingIF = {
       header: {
@@ -482,7 +485,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     return filing
   }
 
-  private orgPersonsToParties (orgPersons: OrgPersonIF[]): PartyIF[] {
+  private orgPersonsToParties(orgPersons: OrgPersonIF[]): PartyIF[] {
     return orgPersons.map(orgPerson => {
       // convert businessNumber -> taxId
       const party = {
@@ -505,7 +508,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
    * Parses a draft registration filing into the store. Used when loading a filing.
    * @param draftFiling the filing body to parse
    */
-  parseRegistrationDraft (draftFiling: any): void {
+  parseRegistrationDraft(draftFiling: any): void {
     // NB: don't parse Name Request object -- NR is fetched from namex/NRO instead
 
     // save filing id
@@ -574,7 +577,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
    * Parses a draft restoration filing into the store. Used when loading a filing.
    * @param draftFiling the filing body to parse
    */
-  parseRestorationDraft (draftFiling: any): void {
+  parseRestorationDraft(draftFiling: any): void {
     // NB: don't parse Name Request object -- NR is fetched from namex/NRO instead
 
     // save filing id
@@ -670,7 +673,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     }
   }
 
-  private partiesToOrgPersons (parties: PartyIF[]): OrgPersonIF[] {
+  private partiesToOrgPersons(parties: PartyIF[]): OrgPersonIF[] {
     return parties.map(party => {
       // convert taxId -> businessNumber
       const orgPerson = {
@@ -689,7 +692,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
    * Builds a dissolution filing from store data. Used when saving a filing.
    * @returns the filing body to save
    */
-  buildDissolutionFiling (): DissolutionFilingIF {
+  buildDissolutionFiling(): DissolutionFilingIF {
     // Build the main filing.
     const filing: DissolutionFilingIF = {
       header: {
@@ -816,7 +819,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
    * Parses a draft dissolution filing into the store. Used when loading a filing.
    * @param draftFiling the filing body to parse
    */
-  parseDissolutionDraft (draftFiling: any): void {
+  parseDissolutionDraft(draftFiling: any): void {
     // save filing id
     this.setFilingId(+draftFiling.header.filingId)
 
@@ -923,7 +926,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
    * Builds dissolution staff payment data from store data.
    * @param filing the filing body to update
    */
-  private buildStaffPayment (
+  private buildStaffPayment(
     filing: DissolutionFilingIF | RegistrationFilingIF | RestorationFilingIF | IncorporationFilingIF
   ): void {
     // Populate Staff Payment according to payment option
@@ -956,7 +959,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
    * If a Transactional Folio number was entered then override the Folio number
    * @param filing the filing body to update
    */
-  private buildFolioNumber (filing: DissolutionFilingIF | RegistrationFilingIF | RestorationFilingIF): void {
+  private buildFolioNumber(filing: DissolutionFilingIF | RegistrationFilingIF | RestorationFilingIF): void {
     // override Folio Number if TFN exists and is different than default FN
     // also save a flag to correctly restore a draft later
     const fn = this.getFolioNumber
@@ -971,7 +974,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
    * Parses dissolution staff payment data into the store.
    * @param filing the filing body to parse
    */
-  private parseStaffPayment (
+  private parseStaffPayment(
     filing: DissolutionFilingIF | RegistrationFilingIF | RestorationFilingIF | IncorporationFilingIF
   ): void {
     // Parse staff payment
@@ -1021,7 +1024,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
    * @param filing the filing fetched from legal-api
    * @returns the filing in safe-empty state if applicable
    */
-  formatEmptyIncorporationApplication (filing: any): IncorporationFilingIF {
+  formatEmptyIncorporationApplication(filing: any): IncorporationFilingIF {
     const toReturn = filing
     if (toReturn.incorporationApplication) {
       // set offices
@@ -1054,7 +1057,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
    * @param filing the filing fetched from legal-api
    * @returns the filing in safe-empty state if applicable
    */
-  formatEmptyRegistration (filing: any): RegistrationFilingIF {
+  formatEmptyRegistration(filing: any): RegistrationFilingIF {
     const toReturn = filing
     if (toReturn.registration) {
       // set offices

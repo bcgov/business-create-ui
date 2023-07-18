@@ -35,7 +35,7 @@
 import { Component, Emit, Mixins, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
-import { ActionBindingIF, RegistrationStateIF } from '@/interfaces'
+import { RegistrationStateIF } from '@/interfaces'
 import { DatePicker as DatePickerShared } from '@bcrs-shared-components/date-picker'
 import { DateMixin } from '@/mixins'
 
@@ -51,7 +51,7 @@ export default class StartDate extends Mixins(DateMixin) {
   }
 
   // Global actions
-  @Action(useStore) setRegistrationStartDate!: ActionBindingIF
+  @Action(useStore) setRegistrationStartDate!: (x: string) => void
 
   // Global getters
   @Getter(useStore) getRegistration!: RegistrationStateIF

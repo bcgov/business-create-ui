@@ -291,7 +291,7 @@ import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { CoopOfficeAddressSchema, OfficeAddressSchema } from '@/schemas'
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
-import { ActionBindingIF, AddressIF, AddressSchemaIF, CustodianResourceIF, FormIF, OrgPersonIF } from '@/interfaces'
+import { AddressIF, AddressSchemaIF, CustodianResourceIF, FormIF, OrgPersonIF } from '@/interfaces'
 import { PartyTypes } from '@/enums'
 import { CommonMixin } from '@/mixins'
 import { Rules } from '@/rules'
@@ -319,7 +319,7 @@ export default class CustodianOfRecords extends Mixins(CommonMixin) {
   @Getter(useStore) getDissolutionCustodianEmail!: string
   @Getter(useStore) isTypeCoop!: boolean
 
-  @Action(useStore) setCustodianOfRecords: ActionBindingIF
+  @Action(useStore) setCustodianOfRecords: (x: OrgPersonIF) => void
 
   // Local properties
   addCustodianValid = true

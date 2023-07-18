@@ -90,7 +90,7 @@
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
-import { ActionBindingIF, IncorporationAgreementIF, IncorporationAgreementTypeIF } from '@/interfaces'
+import { IncorporationAgreementIF, IncorporationAgreementTypeIF } from '@/interfaces'
 import { RouteNames } from '@/enums'
 
 @Component({})
@@ -104,7 +104,7 @@ export default class AgreementType extends Vue {
   @Getter(useStore) isTypeBcCcc!: boolean
   @Getter(useStore) isTypeBcUlcCompany!: boolean
 
-  @Action(useStore) setIncorporationAgreementStepData!: ActionBindingIF
+  @Action(useStore) setIncorporationAgreementStepData!: (x: IncorporationAgreementIF) => void
 
   agreementType = null as string
 

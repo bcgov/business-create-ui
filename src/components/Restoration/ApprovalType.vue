@@ -24,7 +24,8 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { Getter, Action } from 'pinia-class'
 import { useStore } from '@/store/store'
-import { ActionBindingIF, RestorationStateIF } from '@/interfaces'
+import { ApprovalTypes } from '@/enums'
+import { CourtOrderIF, RestorationStateIF } from '@/interfaces'
 import { ApprovalType as ApprovalTypeShared } from '@bcrs-shared-components/approval-type'
 
 @Component({
@@ -37,11 +38,11 @@ export default class ApprovalType extends Vue {
   @Getter(useStore) getRestoration!: RestorationStateIF
   @Getter(useStore) getShowErrors!: boolean
 
-  @Action(useStore) setApprovalTypeValid!: ActionBindingIF
-  @Action(useStore) setRestorationApplicationDate!: ActionBindingIF
-  @Action(useStore) setRestorationApprovalType!: ActionBindingIF
-  @Action(useStore) setRestorationCourtOrder!: ActionBindingIF
-  @Action(useStore) setRestorationNoticeDate!: ActionBindingIF
+  @Action(useStore) setApprovalTypeValid!: (x: boolean) => void
+  @Action(useStore) setRestorationApplicationDate!: (x: string) => void
+  @Action(useStore) setRestorationApprovalType!: (x: ApprovalTypes) => void
+  @Action(useStore) setRestorationCourtOrder!: (x: CourtOrderIF) => void
+  @Action(useStore) setRestorationNoticeDate!: (x: string) => void
 
   /** This section's validity state (when prompted by app). */
   get invalidSection (): boolean {

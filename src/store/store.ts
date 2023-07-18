@@ -858,16 +858,16 @@ export const useStore = defineStore('store', {
     }
   },
   actions: {
-    setBusinessId (businessId) {
+    setBusinessId (businessId: string) {
       this.stateModel.business.businessId = businessId
     },
     setBusinessAddress (address) {
       this.stateModel.business.officeAddress = address
     },
-    setLegalName (legalName) {
+    setLegalName (legalName: string) {
       this.stateModel.business.legalName = legalName
     },
-    setFoundingDate (foundingDate) {
+    setFoundingDate (foundingDate: string) {
       this.stateModel.business.foundingDate = foundingDate
     },
     setFilingType (filingType: FilingTypes) {
@@ -1074,7 +1074,7 @@ export const useStore = defineStore('store', {
       this.stateModel.documentDelivery.documentOptionalEmail = documentOptionalEmail
       if (!this.stateModel.ignoreChanges) this.stateModel.haveChanges = true
     },
-    setDocumentOptionalEmailValidity (validity) {
+    setDocumentOptionalEmailValidity (validity: boolean) {
       this.stateModel.documentDelivery.valid = validity
     },
     setHasCertificateDestroyed (hasCertificateDestroyed: boolean) {

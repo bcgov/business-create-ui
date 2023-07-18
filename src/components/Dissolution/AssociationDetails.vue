@@ -146,7 +146,7 @@ import { Component, Mixins, Prop } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { AuthServices } from '@/services/'
-import { ActionBindingIF, AddressIF, ContactPointIF, OfficeAddressIF } from '@/interfaces'
+import { AddressIF, ContactPointIF, OfficeAddressIF } from '@/interfaces'
 import { ContactInfo } from '@bcrs-shared-components/contact-info'
 import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
 import OfficeAddresses from '@/components/common/OfficeAddresses.vue'
@@ -185,8 +185,8 @@ export default class AssociationDetails extends Mixins(CommonMixin, DateMixin) {
   @Getter(useStore) isTypeCoop!: boolean
 
   // Global setters
-  @Action(useStore) setBusinessContact!: ActionBindingIF
-  @Action(useStore) setIgnoreChanges!: ActionBindingIF
+  @Action(useStore) setBusinessContact!: (x: ContactPointIF) => void
+  @Action(useStore) setIgnoreChanges!: (x: boolean) => void
 
   readonly contactInfoMsg = `Registered Office Contact Information is required for dissolution documents delivery.
   Any changes made will be applied immediately.`

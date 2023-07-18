@@ -308,7 +308,6 @@ import { CorpTypeCd } from '@bcrs-shared-components/enums/'
 import { VuetifyRuleFunction } from '@/types'
 
 import {
-  ActionBindingIF,
   ContactPointIF,
   CertifyIF,
   CompletingPartyStatementIF,
@@ -361,17 +360,17 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
   @Getter(useStore) isTypeSoleProp: boolean
 
   // Global actions
-  @Action(useStore) setCertifyState!: ActionBindingIF
-  @Action(useStore) setCompletingParty!: ActionBindingIF
-  @Action(useStore) setCompletingPartyValidity!: ActionBindingIF
-  @Action(useStore) setCourtOrderFileNumber!: ActionBindingIF
-  @Action(useStore) setCourtOrderValidity!: ActionBindingIF
-  @Action(useStore) setDissolutionDate!: ActionBindingIF
-  @Action(useStore) setDocumentOptionalEmail!: ActionBindingIF
-  @Action(useStore) setDocumentOptionalEmailValidity!: ActionBindingIF
-  @Action(useStore) setHasPlanOfArrangement!: ActionBindingIF
-  @Action(useStore) setTransactionalFolioNumber!: ActionBindingIF
-  @Action(useStore) setTransactionalFolioNumberValidity!: ActionBindingIF
+  @Action(useStore) setCertifyState!: (x: CertifyIF) => void
+  @Action(useStore) setCompletingParty!: (x: CompletingPartyIF) => void
+  @Action(useStore) setCompletingPartyValidity!: (x: boolean) => void
+  @Action(useStore) setCourtOrderFileNumber!: (x: string) => void
+  @Action(useStore) setCourtOrderValidity!: (x: boolean) => void
+  @Action(useStore) setDissolutionDate!: (x: string) => void
+  @Action(useStore) setDocumentOptionalEmail!: (x: string) => void
+  @Action(useStore) setDocumentOptionalEmailValidity!: (x: boolean) => void
+  @Action(useStore) setHasPlanOfArrangement!: (x: boolean) => void
+  @Action(useStore) setTransactionalFolioNumber!: (x: string) => void
+  @Action(useStore) setTransactionalFolioNumberValidity!: (x: boolean) => void
 
   // Enum for template
   readonly RouteNames = RouteNames

@@ -170,7 +170,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
-import { ActionBindingIF, ContactPointIF, CertifyIF, DocumentDeliveryIF, PeopleAndRoleIF } from '@/interfaces'
+import { ContactPointIF, CertifyIF, DocumentDeliveryIF, PeopleAndRoleIF } from '@/interfaces'
 import { RoleTypes } from '@/enums'
 import CardHeader from '@/components/common/CardHeader.vue'
 import Certify from '@/components/common/Certify.vue'
@@ -208,9 +208,9 @@ export default class RegistrationReviewConfirm extends Vue {
   @Getter(useStore) isTypePartnership!: boolean
   @Getter(useStore) isTypeSoleProp!: boolean
 
-  @Action(useStore) setDocumentOptionalEmailValidity!: ActionBindingIF
-  @Action(useStore) setTransactionalFolioNumber!: ActionBindingIF
-  @Action(useStore) setTransactionalFolioNumberValidity!: ActionBindingIF
+  @Action(useStore) setDocumentOptionalEmailValidity!: (x: boolean) => void
+  @Action(useStore) setTransactionalFolioNumber!: (x: string) => void
+  @Action(useStore) setTransactionalFolioNumberValidity!: (x: boolean) => void
 
   /** The Document Delivery additional email label. */
   get documentDeliveryAdditionalLabel (): string {

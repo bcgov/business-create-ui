@@ -104,7 +104,6 @@ import { Component, Emit, Mixins } from 'vue-property-decorator'
 import { Getter, Action } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { Navigate } from '@/utils'
-import { ActionBindingIF } from '@/interfaces'
 import { DateMixin, FilingTemplateMixin, NameRequestMixin } from '@/mixins'
 import { LegalServices } from '@/services/'
 import { FilingTypes, NameRequestStates, RouteNames } from '@/enums'
@@ -125,12 +124,12 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Name
   @Getter(useStore) isShowFilePayBtn!: boolean
   @Getter(useStore) isShowReviewConfirmBtn!: boolean
 
-  @Action(useStore) setEffectiveDateTimeValid!: ActionBindingIF
-  @Action(useStore) setHaveChanges!: ActionBindingIF
-  @Action(useStore) setIsFilingPaying!: ActionBindingIF
-  @Action(useStore) setIsSaving!: ActionBindingIF
-  @Action(useStore) setIsSavingResuming!: ActionBindingIF
-  @Action(useStore) setValidateSteps!: ActionBindingIF
+  @Action(useStore) setEffectiveDateTimeValid!: (x: boolean) => void
+  @Action(useStore) setHaveChanges!: (x: boolean) => void
+  @Action(useStore) setIsFilingPaying!: (x: boolean) => void
+  @Action(useStore) setIsSaving!: (x: boolean) => void
+  @Action(useStore) setIsSavingResuming!: (x: boolean) => void
+  @Action(useStore) setValidateSteps!: (x: boolean) => void
 
   /** Is True if Jest is running the code. */
   get isJestRunning (): boolean {

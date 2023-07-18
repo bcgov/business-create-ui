@@ -133,7 +133,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
-import { ActionBindingIF, CertifyIF, ContactPointIF, PeopleAndRoleIF } from '@/interfaces'
+import { CertifyIF, ContactPointIF, PeopleAndRoleIF } from '@/interfaces'
 import { RoleTypes } from '@/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/enums/'
 import CardHeader from '@/components/common/CardHeader.vue'
@@ -167,7 +167,7 @@ export default class RestorationReviewConfirm extends Vue {
   @Getter(useStore) isLimitedRestorationFiling!: boolean
   @Getter(useStore) isRoleStaff!: boolean
 
-  @Action(useStore) setCertifyState!: ActionBindingIF
+  @Action(useStore) setCertifyState!: (x: CertifyIF) => void
 
   /** The entity description,  */
   get getEntityDescription (): string {

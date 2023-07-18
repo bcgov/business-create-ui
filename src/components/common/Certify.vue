@@ -20,7 +20,7 @@
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
-import { ActionBindingIF, CertifyIF, CompletingPartyStatementIF } from '@/interfaces'
+import { CertifyIF, CompletingPartyStatementIF } from '@/interfaces'
 import { Certify as CertifyShared } from '@bcrs-shared-components/certify'
 
 /** This is a shim between the view and the atomic component. */
@@ -38,7 +38,7 @@ export default class Certify extends Vue {
   @Getter(useStore) getCompletingPartyStatement!: CompletingPartyStatementIF
   @Getter(useStore) getCurrentDate!: string
 
-  @Action(useStore) setCertifyState!: ActionBindingIF
+  @Action(useStore) setCertifyState!: (x: CertifyIF) => void
 
   /** Handler for CertifiedBy change event. */
   onCertifiedBy (val: string): void {

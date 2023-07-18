@@ -157,7 +157,7 @@ import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { v4 as uuidv4 } from 'uuid'
-import { ActionBindingIF, NewShareClass, NewShareSeries, ShareClassIF, ShareStructureIF }
+import { NewShareClass, NewShareSeries, ShareClassIF, ShareStructureIF }
   from '@/interfaces'
 import { CommonMixin } from '@/mixins'
 import { RouteNames } from '@/enums'
@@ -174,8 +174,8 @@ export default class IncorporationShareStructure extends Mixins(CommonMixin) {
   @Getter(useStore) getCreateShareStructureStep!: ShareStructureIF
   @Getter(useStore) getShowErrors!: boolean
 
-  @Action(useStore) setCreateShareStructureStepValidity!: ActionBindingIF
-  @Action(useStore) setShareClasses!: ActionBindingIF
+  @Action(useStore) setCreateShareStructureStepValidity!: (x: boolean) => void
+  @Action(useStore) setShareClasses!: (x: ShareClassIF[]) => void
 
   readonly sharesHelpSample: ShareClassIF[] = [{
     id: '1',
