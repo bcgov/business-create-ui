@@ -8,7 +8,8 @@ import {
   DissolutionStatementIF, DocumentDeliveryIF, EffectiveDateTimeIF, EmptyNaics, IncorporationAgreementIF,
   IncorporationFilingIF, NaicsIF, NameRequestFilingIF, NameTranslationIF, OfficeAddressIF, OrgPersonIF, PartyIF,
   PeopleAndRoleIF, RegisteredRecordsAddressesIF, RegistrationFilingIF, RegistrationStateIF, RestorationFilingIF,
-  RestorationStateIF, ShareClassIF, ShareStructureIF, SpecialResolutionIF, StaffPaymentStepIF, UploadAffidavitIF
+  RestorationStateIF, ShareClassIF, ShareStructureIF, SpecialResolutionIF, StaffPaymentIF, StaffPaymentStepIF,
+  UploadAffidavitIF
 } from '@/interfaces'
 import { ApprovalTypes, BusinessTypes, CoopTypes, DissolutionTypes, EffectOfOrders, FilingTypes,
   PartyTypes, RelationshipTypes, RestorationTypes, RoleTypes, StaffPaymentOptions
@@ -65,7 +66,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Getter(useStore) isTypeSoleProp!: boolean
 
   @Action(useStore) setAffidavit!: (x: UploadAffidavitIF) => void
-  @Action(useStore) setBusinessAddress!: (x: any) => void
+  @Action(useStore) setBusinessAddress!: (x: OfficeAddressIF) => void
   @Action(useStore) setBusinessContact!: (x: ContactPointIF) => void
   @Action(useStore) setCertifyState!: (x: CertifyIF) => void
   @Action(useStore) setCooperativeType!: (x: CoopTypes) => void
@@ -109,7 +110,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Action(useStore) setRestorationType!: (x: RestorationTypes) => void
   @Action(useStore) setRules!: (x: CreateRulesIF) => void
   @Action(useStore) setShareClasses!: (x: ShareClassIF[]) => void
-  @Action(useStore) setStaffPayment!: (x: any) => void
+  @Action(useStore) setStaffPayment!: (x: StaffPaymentIF) => void
   @Action(useStore) setTransactionalFolioNumber!: (x: string) => void
 
   /**
@@ -309,7 +310,8 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
 
         // restore Incorporation Agreement
         this.setIncorporationAgreementStepData({
-          agreementType: draftFiling.incorporationApplication.incorporationAgreement?.agreementType
+          agreementType: draftFiling.incorporationApplication.incorporationAgreement?.agreementType,
+          valid: false
         })
         // set court order fields
         if (draftFiling.incorporationApplication.courtOrder?.fileNumber) {
@@ -974,7 +976,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
    * Parses dissolution staff payment data into the store.
    * @param filing the filing body to parse
    */
-  private parseStaffPayment(
+  private parseStaffPayment (
     filing: DissolutionFilingIF | RegistrationFilingIF | RestorationFilingIF | IncorporationFilingIF
   ): void {
     // Parse staff payment

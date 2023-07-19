@@ -58,6 +58,7 @@ import {
   RestorationStateIF,
   ShareClassIF,
   ShareStructureIF,
+  StaffPaymentIF,
   StaffPaymentStepIF,
   StateIF,
   StepIF,
@@ -861,7 +862,7 @@ export const useStore = defineStore('store', {
     setBusinessId (businessId: string) {
       this.stateModel.business.businessId = businessId
     },
-    setBusinessAddress (address) {
+    setBusinessAddress (address: OfficeAddressIF) {
       this.stateModel.business.officeAddress = address
     },
     setLegalName (legalName: string) {
@@ -1054,7 +1055,7 @@ export const useStore = defineStore('store', {
     setFeePrices (feePrices: Array<FeesIF>) {
       this.stateModel.feePrices = feePrices
     },
-    setStaffPayment (staffPayment) {
+    setStaffPayment (staffPayment: StaffPaymentIF) {
       this.stateModel.staffPaymentStep.staffPayment = staffPayment
       if (!this.stateModel.ignoreChanges) this.stateModel.haveChanges = true
     },

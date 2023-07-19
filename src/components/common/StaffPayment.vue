@@ -37,7 +37,7 @@ export default class StaffPayment extends Vue {
   @Getter(useStore) getValidateSteps!: boolean
 
   // Global actions
-  @Action(useStore) setStaffPayment!: (x: any) => void
+  @Action(useStore) setStaffPayment!: (x: StaffPaymentIF) => void
   @Action(useStore) setStaffPaymentValidity!: (x: boolean) => void
 
   /** Check validity state, only when prompted by app. */
