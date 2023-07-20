@@ -100,7 +100,7 @@ import { useStore } from '@/store/store'
 import { ConfirmDialog } from '@bcrs-shared-components/confirm-dialog'
 import AddNameTranslation from '@/components/common/AddNameTranslation.vue'
 import ListNameTranslations from '@/components/common/ListNameTranslations.vue'
-import { ActionBindingIF, ConfirmDialogType, NameTranslationIF } from '@/interfaces'
+import { ConfirmDialogType, NameTranslationIF } from '@/interfaces'
 
 @Component({
   components: {
@@ -121,8 +121,8 @@ export default class NameTranslations extends Vue {
   editingNameTranslation = ''
   editIndex = -1
 
-  @Action(useStore) setNameTranslations!: ActionBindingIF
-  @Action(useStore) setNameTranslationsValid!: ActionBindingIF
+  @Action(useStore) setNameTranslations!: (x: NameTranslationIF[]) => void
+  @Action(useStore) setNameTranslationsValid!: (x: boolean) => void
 
   @Getter(useStore) getNameTranslations!: NameTranslationIF[]
   @Getter(useStore) getShowErrors!: boolean

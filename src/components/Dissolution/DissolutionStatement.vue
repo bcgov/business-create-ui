@@ -80,7 +80,7 @@ import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 
 // Interfaces & enums
-import { ActionBindingIF, DissolutionStatementIF, KeyValueIF } from '@/interfaces'
+import { DissolutionStatementIF, KeyValueIF } from '@/interfaces'
 import { DissolutionStatementTypes } from '@/enums'
 
 @Component
@@ -92,7 +92,7 @@ export default class DissolutionStatement extends Vue {
   @Getter(useStore) getDissolutionStatementStep!: DissolutionStatementIF
 
   // Global setters
-  @Action(useStore) setDissolutionStatementStepData!: ActionBindingIF
+  @Action(useStore) setDissolutionStatementStepData!: (x: DissolutionStatementIF) => void
 
   // Local variable
   dissolutionStatementType = null as DissolutionStatementTypes

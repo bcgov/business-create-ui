@@ -5,7 +5,7 @@ import { cloneDeep, isEqual } from 'lodash'
 import { v4 as uuidv4 } from 'uuid'
 import { PartyTypes, RoleTypes, RuleIds } from '@/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/enums/'
-import { ActionBindingIF, AddressIF, BusinessLookupIF, ConfirmDialogType, EmptyBusinessLookup,
+import { AddressIF, BusinessLookupIF, ConfirmDialogType, EmptyBusinessLookup,
   FormIF, OrgPersonIF, PeopleAndRolesResourceIF, RegistrationStateIF, RolesIF } from '@/interfaces'
 import { EmptyAddress } from '@bcrs-shared-components/interfaces'
 import { Rules } from '@/rules'
@@ -44,9 +44,9 @@ export default class AddEditOrgPersonMixin extends Vue {
   @Getter(useStore) isTypePartnership!: boolean
   @Getter(useStore) isTypeSoleProp!: boolean
 
-  @Action(useStore) setAddPeopleAndRoleStepValidity!: ActionBindingIF
-  @Action(useStore) setIsAutoPopulatedBusinessNumber!: ActionBindingIF
-  @Action(useStore) setRegistrationBusinessNumber!: ActionBindingIF
+  @Action(useStore) setAddPeopleAndRoleStepValidity!: (x: boolean) => void
+  @Action(useStore) setIsAutoPopulatedBusinessNumber!: (x: boolean) => void
+  @Action(useStore) setRegistrationBusinessNumber!: (x: string) => void
 
   // Local properties
   orgPerson = null as OrgPersonIF

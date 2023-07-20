@@ -175,7 +175,6 @@ import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { Getter, Action } from 'pinia-class'
 import { useStore } from '@/store/store'
 import {
-  ActionBindingIF,
   AddressIF,
   ContactPointIF,
   DefineCompanyIF,
@@ -212,12 +211,12 @@ export default class IncorporationDefineCompany extends Mixins(CommonMixin) {
   @Getter(useStore) isPremiumAccount!: boolean
   @Getter(useStore) isTypeCoop!: boolean
 
-  @Action(useStore) setBusinessContact!: ActionBindingIF
-  @Action(useStore) setCooperativeType!: ActionBindingIF
-  @Action(useStore) setDefineCompanyStepValidity!: ActionBindingIF
-  @Action(useStore) setFolioNumber!: ActionBindingIF
-  @Action(useStore) setIgnoreChanges!: ActionBindingIF
-  @Action(useStore) setOfficeAddresses!: ActionBindingIF
+  @Action(useStore) setBusinessContact!: (x: ContactPointIF) => void
+  @Action(useStore) setCooperativeType!: (x: CoopTypes) => void
+  @Action(useStore) setDefineCompanyStepValidity!: (x: boolean) => void
+  @Action(useStore) setFolioNumber!: (x: string) => void
+  @Action(useStore) setIgnoreChanges!: (x: boolean) => void
+  @Action(useStore) setOfficeAddresses!: (x: RegisteredRecordsAddressesIF) => void
 
   businessContactFormValid = false
   addressFormValid = false

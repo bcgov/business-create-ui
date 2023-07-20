@@ -57,7 +57,7 @@
 import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { Getter, Action } from 'pinia-class'
 import { useStore } from '@/store/store'
-import { ActionBindingIF, AddressIF, ContactPointIF, DefineCompanyIF, RegisteredRecordsAddressesIF }
+import { AddressIF, ContactPointIF, DefineCompanyIF, RegisteredRecordsAddressesIF }
   from '@/interfaces'
 import { CommonMixin } from '@/mixins'
 import { RouteNames } from '@/enums'
@@ -78,10 +78,10 @@ export default class RestorationBusinessInformation extends Mixins(CommonMixin) 
   @Getter(useStore) isBaseCompany!: boolean
   @Getter(useStore) isEntityType!: boolean
 
-  @Action(useStore) setBusinessContact!: ActionBindingIF
-  @Action(useStore) setDefineCompanyStepValidity!: ActionBindingIF
-  @Action(useStore) setIgnoreChanges!: ActionBindingIF
-  @Action(useStore) setOfficeAddresses!: ActionBindingIF
+  @Action(useStore) setBusinessContact!: (x: ContactPointIF) => void
+  @Action(useStore) setDefineCompanyStepValidity!: (x: boolean) => void
+  @Action(useStore) setIgnoreChanges!: (x: boolean) => void
+  @Action(useStore) setOfficeAddresses!: (x: RegisteredRecordsAddressesIF) => void
 
   // Local variables
   businessContactFormValid = false

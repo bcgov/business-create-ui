@@ -63,7 +63,7 @@
 import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
-import { ActionBindingIF, EmptyNameRequest, NameRequestIF } from '@/interfaces/'
+import { EmptyNameRequest, NameRequestIF } from '@/interfaces/'
 import { CommonMixin, DateMixin, NameRequestMixin } from '@/mixins/'
 import { NrRequestActionCodes } from '@/enums/'
 import { CorpTypeCd, CorrectNameOptions } from '@bcrs-shared-components/enums/'
@@ -89,10 +89,10 @@ export default class BusinessName extends Mixins(CommonMixin, DateMixin, NameReq
   @Getter(useStore) isRestorationFiling!: boolean
 
   // Global actions
-  @Action(useStore) setBusinessNameValid!: ActionBindingIF
-  @Action(useStore) setCorrectNameOption!: ActionBindingIF
-  @Action(useStore) setNameRequest!: ActionBindingIF
-  @Action(useStore) setNameRequestApprovedName!: ActionBindingIF
+  @Action(useStore) setBusinessNameValid!: (x: boolean) => void
+  @Action(useStore) setCorrectNameOption!: (x: CorrectNameOptions) => void
+  @Action(useStore) setNameRequest!: (x: string) => void
+  @Action(useStore) setNameRequestApprovedName!: (x: string) => void
 
   // Local variable
   formType: CorrectNameOptions = null

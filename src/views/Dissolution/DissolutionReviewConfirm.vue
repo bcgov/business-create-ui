@@ -386,7 +386,6 @@ import StaffPayment from '@/components/common/StaffPayment.vue'
 import TransactionalFolioNumber from '@/components/common/TransactionalFolioNumber.vue'
 import { RouteNames } from '@/enums'
 import {
-  ActionBindingIF,
   ContactPointIF,
   CertifyIF,
   CourtOrderStepIF,
@@ -438,17 +437,17 @@ export default class DissolutionReviewConfirm extends Mixins(DateMixin) {
   @Getter(useStore) isTypeCoop!: boolean
 
   // Global actions
-  @Action(useStore) setCertifyState!: ActionBindingIF
-  @Action(useStore) setCourtOrderFileNumber!: ActionBindingIF
-  @Action(useStore) setCourtOrderValidity!: ActionBindingIF
-  @Action(useStore) setDocumentOptionalEmail!: ActionBindingIF
-  @Action(useStore) setDocumentOptionalEmailValidity!: ActionBindingIF
-  @Action(useStore) setEffectiveDate!: ActionBindingIF
-  @Action(useStore) setEffectiveDateTimeValid!: ActionBindingIF
-  @Action(useStore) setHasPlanOfArrangement!: ActionBindingIF
-  @Action(useStore) setIsFutureEffective!: ActionBindingIF
-  @Action(useStore) setTransactionalFolioNumber!: ActionBindingIF
-  @Action(useStore) setTransactionalFolioNumberValidity!: ActionBindingIF
+  @Action(useStore) setCertifyState!: (x: CertifyIF) => void
+  @Action(useStore) setCourtOrderFileNumber!: (x: string) => void
+  @Action(useStore) setCourtOrderValidity!: (x: boolean) => void
+  @Action(useStore) setDocumentOptionalEmail!: (x: string) => void
+  @Action(useStore) setDocumentOptionalEmailValidity!: (x: boolean) => void
+  @Action(useStore) setEffectiveDate!: (x: Date) => void
+  @Action(useStore) setEffectiveDateTimeValid!: (x: boolean) => void
+  @Action(useStore) setHasPlanOfArrangement!: (x: boolean) => void
+  @Action(useStore) setIsFutureEffective!: (x: boolean) => void
+  @Action(useStore) setTransactionalFolioNumber!: (x: string) => void
+  @Action(useStore) setTransactionalFolioNumberValidity!: (x: boolean) => void
 
   // Enum for template
   readonly RouteNames = RouteNames

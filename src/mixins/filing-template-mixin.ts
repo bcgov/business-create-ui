@@ -2,14 +2,18 @@ import { Component, Mixins } from 'vue-property-decorator'
 import { Getter, Action } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { DateMixin } from '@/mixins'
-import { ActionBindingIF, ContactPointIF, CertifyIF, CompletingPartyIF, CourtOrderStepIF,
+import {
+  BusinessAddressIF, ContactPointIF, CertifyIF, CompletingPartyIF, CourtOrderIF, CourtOrderStepIF,
   CreateMemorandumIF, CreateResolutionIF, CreateRulesIF, DefineCompanyIF, DissolutionFilingIF,
   DissolutionStatementIF, DocumentDeliveryIF, EffectiveDateTimeIF, EmptyNaics, IncorporationAgreementIF,
-  IncorporationFilingIF, NameRequestFilingIF, NameTranslationIF, OfficeAddressIF, OrgPersonIF, PartyIF,
-  PeopleAndRoleIF, RegistrationFilingIF, RegistrationStateIF, RestorationFilingIF, RestorationStateIF,
-  ShareStructureIF, SpecialResolutionIF, StaffPaymentStepIF, UploadAffidavitIF } from '@/interfaces'
-import { DissolutionTypes, EffectOfOrders, FilingTypes, PartyTypes, RoleTypes, StaffPaymentOptions }
-  from '@/enums'
+  IncorporationFilingIF, NaicsIF, NameRequestFilingIF, NameTranslationIF, OfficeAddressIF, OrgPersonIF, PartyIF,
+  PeopleAndRoleIF, RegisteredRecordsAddressesIF, RegistrationFilingIF, RegistrationStateIF, RestorationFilingIF,
+  RestorationStateIF, ShareClassIF, ShareStructureIF, SpecialResolutionIF, StaffPaymentIF, StaffPaymentStepIF,
+  UploadAffidavitIF
+} from '@/interfaces'
+import { ApprovalTypes, BusinessTypes, CoopTypes, DissolutionTypes, EffectOfOrders, FilingTypes,
+  PartyTypes, RelationshipTypes, RestorationTypes, RoleTypes, StaffPaymentOptions
+} from '@/enums'
 import { CorpTypeCd, CorrectNameOptions } from '@bcrs-shared-components/enums/'
 
 /**
@@ -61,53 +65,53 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Getter(useStore) isTypeFirm!: boolean
   @Getter(useStore) isTypeSoleProp!: boolean
 
-  @Action(useStore) setAffidavit!: ActionBindingIF
-  @Action(useStore) setBusinessAddress!: ActionBindingIF
-  @Action(useStore) setBusinessContact!: ActionBindingIF
-  @Action(useStore) setCertifyState!: ActionBindingIF
-  @Action(useStore) setCooperativeType!: ActionBindingIF
-  @Action(useStore) setCorrectNameOption!: ActionBindingIF
-  @Action(useStore) setCourtOrderFileNumber!: ActionBindingIF
-  @Action(useStore) setCustodianOfRecords!: ActionBindingIF
-  @Action(useStore) setDefineCompanyStepValidity!: ActionBindingIF
-  @Action(useStore) setDissolutionDate!: ActionBindingIF
-  @Action(useStore) setDissolutionStatementStepData!: ActionBindingIF
-  @Action(useStore) setDissolutionType!: ActionBindingIF
-  @Action(useStore) setDocumentOptionalEmail!: ActionBindingIF
-  @Action(useStore) setEffectiveDate!: ActionBindingIF
-  @Action(useStore) setEntityType!: ActionBindingIF
-  @Action(useStore) setFilingId!: ActionBindingIF
-  @Action(useStore) setFolioNumber!: ActionBindingIF
-  @Action(useStore) setIncorporationAgreementStepData!: ActionBindingIF
-  @Action(useStore) setHasPlanOfArrangement!: ActionBindingIF
-  @Action(useStore) setIsAutoPopulatedBusinessNumber!: ActionBindingIF
-  @Action(useStore) setIsFutureEffective!: ActionBindingIF
-  @Action(useStore) setFoundingDate!: ActionBindingIF
-  @Action(useStore) setLegalName!: ActionBindingIF
-  @Action(useStore) setMemorandum!: ActionBindingIF
-  @Action(useStore) setNameRequestApprovedName!: ActionBindingIF
-  @Action(useStore) setNameTranslations!: ActionBindingIF
-  @Action(useStore) setOfficeAddresses!: ActionBindingIF
-  @Action(useStore) setOrgPersonList!: ActionBindingIF
-  @Action(useStore) setRegistrationBusinessAddress!: ActionBindingIF
-  @Action(useStore) setRegistrationBusinessNumber!: ActionBindingIF
-  @Action(useStore) setRegistrationBusinessType!: ActionBindingIF
-  @Action(useStore) setRegistrationBusinessTypeConfirm!: ActionBindingIF
-  @Action(useStore) setRegistrationFeeAcknowledgement!: ActionBindingIF
-  @Action(useStore) setRegistrationNaics!: ActionBindingIF
-  @Action(useStore) setRegistrationStartDate!: ActionBindingIF
-  @Action(useStore) setResolution!: ActionBindingIF
-  @Action(useStore) setRestorationApplicationDate!: ActionBindingIF
-  @Action(useStore) setRestorationApprovalType!: ActionBindingIF
-  @Action(useStore) setRestorationCourtOrder!: ActionBindingIF
-  @Action(useStore) setRestorationExpiry!: ActionBindingIF
-  @Action(useStore) setRestorationNoticeDate!: ActionBindingIF
-  @Action(useStore) setRestorationRelationships!: ActionBindingIF
-  @Action(useStore) setRestorationType!: ActionBindingIF
-  @Action(useStore) setRules!: ActionBindingIF
-  @Action(useStore) setShareClasses!: ActionBindingIF
-  @Action(useStore) setStaffPayment!: ActionBindingIF
-  @Action(useStore) setTransactionalFolioNumber!: ActionBindingIF
+  @Action(useStore) setAffidavit!: (x: UploadAffidavitIF) => void
+  @Action(useStore) setBusinessAddress!: (x: OfficeAddressIF) => void
+  @Action(useStore) setBusinessContact!: (x: ContactPointIF) => void
+  @Action(useStore) setCertifyState!: (x: CertifyIF) => void
+  @Action(useStore) setCooperativeType!: (x: CoopTypes) => void
+  @Action(useStore) setCorrectNameOption!: (x: CorrectNameOptions) => void
+  @Action(useStore) setCourtOrderFileNumber!: (x: string) => void
+  @Action(useStore) setCustodianOfRecords!: (x: OrgPersonIF) => void
+  @Action(useStore) setDefineCompanyStepValidity!: (x: boolean) => void
+  @Action(useStore) setDissolutionDate!: (x: string) => void
+  @Action(useStore) setDissolutionStatementStepData!: (x: DissolutionStatementIF) => void
+  @Action(useStore) setDissolutionType!: (x: DissolutionTypes) => void
+  @Action(useStore) setDocumentOptionalEmail!: (x: string) => void
+  @Action(useStore) setEffectiveDate!: (x: Date) => void
+  @Action(useStore) setEntityType!: (x: CorpTypeCd) => void
+  @Action(useStore) setFilingId!: (x: number) => void
+  @Action(useStore) setFolioNumber!: (x: string) => void
+  @Action(useStore) setIncorporationAgreementStepData!: (x: IncorporationAgreementIF) => void
+  @Action(useStore) setHasPlanOfArrangement!: (x: boolean) => void
+  @Action(useStore) setIsAutoPopulatedBusinessNumber!: (x: boolean) => void
+  @Action(useStore) setIsFutureEffective!: (x: boolean) => void
+  @Action(useStore) setFoundingDate!: (x: string) => void
+  @Action(useStore) setLegalName!: (x: string) => void
+  @Action(useStore) setMemorandum!: (x: CreateMemorandumIF) => void
+  @Action(useStore) setNameRequestApprovedName!: (x: string) => void
+  @Action(useStore) setNameTranslations!: (x: NameTranslationIF[]) => void
+  @Action(useStore) setOfficeAddresses!: (x: RegisteredRecordsAddressesIF) => void
+  @Action(useStore) setOrgPersonList!: (x: OrgPersonIF[]) => void
+  @Action(useStore) setRegistrationBusinessAddress!: (x: BusinessAddressIF) => void
+  @Action(useStore) setRegistrationBusinessNumber!: (x: string) => void
+  @Action(useStore) setRegistrationBusinessType!: (x: BusinessTypes) => void
+  @Action(useStore) setRegistrationBusinessTypeConfirm!: (x: boolean) => void
+  @Action(useStore) setRegistrationFeeAcknowledgement!: (x: boolean) => void
+  @Action(useStore) setRegistrationNaics!: (x: NaicsIF) => void
+  @Action(useStore) setRegistrationStartDate!: (x: string) => void
+  @Action(useStore) setResolution!: (x: CreateResolutionIF) => void
+  @Action(useStore) setRestorationApplicationDate!: (x: string) => void
+  @Action(useStore) setRestorationApprovalType!: (x: ApprovalTypes) => void
+  @Action(useStore) setRestorationCourtOrder!: (x: CourtOrderIF) => void
+  @Action(useStore) setRestorationExpiry!: (x: string) => void
+  @Action(useStore) setRestorationNoticeDate!: (x: string) => void
+  @Action(useStore) setRestorationRelationships!: (x: RelationshipTypes[]) => void
+  @Action(useStore) setRestorationType!: (x: RestorationTypes) => void
+  @Action(useStore) setRules!: (x: CreateRulesIF) => void
+  @Action(useStore) setShareClasses!: (x: ShareClassIF[]) => void
+  @Action(useStore) setStaffPayment!: (x: StaffPaymentIF) => void
+  @Action(useStore) setTransactionalFolioNumber!: (x: string) => void
 
   /**
    * Builds an incorporation filing from store data. Used when saving a filing.
@@ -306,7 +310,8 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
 
         // restore Incorporation Agreement
         this.setIncorporationAgreementStepData({
-          agreementType: draftFiling.incorporationApplication.incorporationAgreement?.agreementType
+          agreementType: draftFiling.incorporationApplication.incorporationAgreement?.agreementType,
+          valid: false
         })
         // set court order fields
         if (draftFiling.incorporationApplication.courtOrder?.fileNumber) {

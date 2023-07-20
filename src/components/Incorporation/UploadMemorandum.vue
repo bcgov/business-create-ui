@@ -334,7 +334,6 @@ import { useStore } from '@/store/store'
 
 // Interfaces
 import {
-  ActionBindingIF,
   CreateMemorandumIF,
   CreateMemorandumResourceIF,
   DocumentUpload,
@@ -368,8 +367,8 @@ export default class UploadMemorandum extends Mixins(CommonMixin, DocumentMixin)
   @Getter(useStore) getShowErrors!: boolean
   @Getter(useStore) getKeycloakGuid!: string
 
-  @Action(useStore) setMemorandum!: ActionBindingIF
-  @Action(useStore) setMemorandumStepValidity!: ActionBindingIF
+  @Action(useStore) setMemorandum!: (x: CreateMemorandumIF) => void
+  @Action(useStore) setMemorandumStepValidity!: (x: ValidationDetailIF) => void
 
   readonly INPUT_FILE_LABEL = 'Memorandum of Association'
 

@@ -285,7 +285,6 @@ import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import {
-  ActionBindingIF,
   CreateRulesIF,
   CreateRulesResourceIF,
   DocumentUpload,
@@ -324,8 +323,8 @@ export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
   @Getter(useStore) getShowErrors!: boolean
   @Getter(useStore) getKeycloakGuid!: string
 
-  @Action(useStore) setRules!: ActionBindingIF
-  @Action(useStore) setRulesStepValidity!: ActionBindingIF
+  @Action(useStore) setRules!: (x: CreateRulesIF) => void
+  @Action(useStore) setRulesStepValidity!: (x: ValidationDetailIF) => void
 
   // Enum for template
   readonly RouteNames = RouteNames

@@ -257,7 +257,6 @@ import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import {
-  ActionBindingIF,
   AffidavitResourceIF,
   DocumentUpload,
   FormIF,
@@ -300,8 +299,8 @@ export default class CompleteAffidavit extends Mixins(CommonMixin, DocumentMixin
   @Getter(useStore) getKeycloakGuid!: string
   @Getter(useStore) isTypeCoop!: boolean
 
-  @Action(useStore) setAffidavit!: ActionBindingIF
-  @Action(useStore) setAffidavitStepValidity!: ActionBindingIF
+  @Action(useStore) setAffidavit!: (x: UploadAffidavitIF) => void
+  @Action(useStore) setAffidavitStepValidity!: (x: ValidationDetailIF) => void
 
   // Enum for template
   readonly RouteNames = RouteNames

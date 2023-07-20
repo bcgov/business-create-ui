@@ -19,7 +19,7 @@ import { Component, Emit, Prop, Vue } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { StaffPayment as StaffPaymentShared } from '@bcrs-shared-components/staff-payment'
-import { ActionBindingIF, StaffPaymentIF, StaffPaymentStepIF } from '@/interfaces'
+import { StaffPaymentIF, StaffPaymentStepIF } from '@/interfaces'
 import { StaffPaymentOptions } from '@/enums'
 
 /** This is a shim between the view and the atomic component. */
@@ -37,8 +37,8 @@ export default class StaffPayment extends Vue {
   @Getter(useStore) getValidateSteps!: boolean
 
   // Global actions
-  @Action(useStore) setStaffPayment!: ActionBindingIF
-  @Action(useStore) setStaffPaymentValidity!: ActionBindingIF
+  @Action(useStore) setStaffPayment!: (x: StaffPaymentIF) => void
+  @Action(useStore) setStaffPaymentValidity!: (x: boolean) => void
 
   /** Check validity state, only when prompted by app. */
   get invalidStaffPayment (): boolean {

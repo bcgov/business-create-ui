@@ -119,7 +119,7 @@ import CustodianOfRecords from '@/components/Dissolution/CustodianOfRecords.vue'
 import DestroyCertificate from '@/components/Dissolution/DestroyCertificate.vue'
 import DissolutionStatement from '@/components/Dissolution/DissolutionStatement.vue'
 import HelpSection from '@/components/common/HelpSection.vue'
-import { ActionBindingIF, CustodianResourceIF, DissolutionStatementIF } from '@/interfaces'
+import { CustodianResourceIF, DissolutionStatementIF } from '@/interfaces'
 import { CommonMixin } from '@/mixins'
 import { RouteNames } from '@/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/enums/'
@@ -148,7 +148,7 @@ export default class DissolutionDefineDissolution extends Mixins(CommonMixin) {
   @Getter(useStore) isTypeCoop: boolean
 
   // Global actions
-  @Action(useStore) setCustodianValidity!: ActionBindingIF
+  @Action(useStore) setCustodianValidity!: (x: boolean) => void
 
   get corpDescription (): string {
     return GetCorpFullDescription(this.getEntityType)

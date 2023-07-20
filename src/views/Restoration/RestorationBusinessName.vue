@@ -55,7 +55,6 @@
 import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { Getter, Action } from 'pinia-class'
 import { useStore } from '@/store/store'
-import { ActionBindingIF } from '@/interfaces'
 import { CommonMixin } from '@/mixins'
 import { RouteNames } from '@/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/enums/'
@@ -81,7 +80,7 @@ export default class RestorationBusinessName extends Mixins(CommonMixin) {
   @Getter(useStore) getRestorationTypeValid!: boolean
   @Getter(useStore) getShowErrors!: boolean
 
-  @Action(useStore) setIgnoreChanges!: ActionBindingIF
+  @Action(useStore) setIgnoreChanges!: (x: boolean) => void
 
   // Enum for template
   readonly CorpTypeCd = CorpTypeCd

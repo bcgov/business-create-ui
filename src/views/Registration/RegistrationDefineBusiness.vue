@@ -156,7 +156,7 @@ import BusinessTypeConfirm from '@/components/Registration/BusinessTypeConfirm.v
 import NameRequestInfo from '@/components/common/NameRequestInfo.vue'
 import NatureOfBusiness from '@/components/Registration/NatureOfBusiness.vue'
 import StartDate from '@/components/Registration/StartDate.vue'
-import { ActionBindingIF, ContactPointIF, RegistrationStateIF } from '@/interfaces'
+import { ContactPointIF, RegistrationStateIF } from '@/interfaces'
 import { RouteNames } from '@/enums'
 import { CommonMixin } from '@/mixins'
 
@@ -179,10 +179,10 @@ export default class RegistrationDefineBusiness extends Mixins(CommonMixin) {
   @Getter(useStore) isTypePartnership!: boolean
   @Getter(useStore) isTypeSoleProp!: boolean
 
-  @Action(useStore) setBusinessContact!: ActionBindingIF
-  @Action(useStore) setRegistrationBusinessNumber!: ActionBindingIF
-  @Action(useStore) setRegistrationBusinessTypeConfirm!: ActionBindingIF
-  @Action(useStore) setRegistrationDefineBusinessValid!: ActionBindingIF
+  @Action(useStore) setBusinessContact!: (x: ContactPointIF) => void
+  @Action(useStore) setRegistrationBusinessNumber!: (x: string) => void
+  @Action(useStore) setRegistrationBusinessTypeConfirm!: (x: boolean) => void
+  @Action(useStore) setRegistrationDefineBusinessValid!: (x: boolean) => void
 
   // Local variables
   businessTypeConfirmValid = false
