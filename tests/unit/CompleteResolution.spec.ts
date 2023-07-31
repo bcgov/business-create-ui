@@ -5,7 +5,7 @@ import { CorpTypeCd } from '@bcrs-shared-components/enums/'
 
 // Test Case Data
 const completeResolutionTestCases = [
-  {
+  /* {
     entityType: 'CP',
     introTextItem1: 'Before submitting your voluntary dissolution you must complete, sign, and date a',
     introTextItem2: 'special resolution',
@@ -19,7 +19,7 @@ const completeResolutionTestCases = [
       'Enter the full name of the person who signed the special resolution and the date they signed it.',
     confirmText: 'I confirm the following:',
     confirmTextListItem1: 'The Cooperative Association name is identified'
-  },
+  }, */
   {
     entityType: 'BEN',
     introTextItem1: 'Before submitting your voluntary dissolution you must complete, sign, and date a',

@@ -1,5 +1,4 @@
 import Vue from 'vue'
-import Vuelidate from 'vuelidate'
 import Vuetify from 'vuetify'
 import flushPromises from 'flush-promises'
 import { createPinia, setActivePinia } from 'pinia'
@@ -12,12 +11,10 @@ import RegAddEditOrgPerson from '@/components/common/RegAddEditOrgPerson.vue'
 import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
 import { CorpTypeCd, RoleTypes } from '@/enums'
 import { OrgPersonIF, ResourceIF } from '@/interfaces'
+import { vi } from 'vitest'
 
 // mock the console.warn function to hide "[Vuetify] Unable to locate target XXX"
-console.warn = jest.fn()
-
-Vue.use(Vuetify)
-Vue.use(Vuelidate)
+console.warn = vi.fn()
 
 const vuetify = new Vuetify({})
 setActivePinia(createPinia())

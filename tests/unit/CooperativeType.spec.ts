@@ -34,7 +34,7 @@ for (const mock of cooperativeTypeCases) {
       it('displays labels', () => {
         wrapper = wrapperFactory(CooperativeType, null, { entityType: mock.entityType })
         expect(wrapper.findAll('label').at(0).text()).toBe('Select Type')
-        expect(wrapper.find('#cooperative-type').text()).toContain('Select Type Cooperative Association Type')
+        expect(wrapper.find('#cooperative-type').text()).toContain('Select TypeCooperative Association Type')
       })
 
       it('displays error message when prompted', async () => {

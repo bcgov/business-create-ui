@@ -3,10 +3,8 @@
  * Do not import this file in this project - see README.md.
  */
 
-// external common components
-export { default as BaseAddress } from 'sbc-common-components/src/components/BaseAddress.vue'
-
 // external shared components
+export { BaseAddress } from '@bcrs-shared-components/base-address'
 export { ContactInfo } from '@bcrs-shared-components/contact-info'
 export { Certify } from '@bcrs-shared-components/certify'
 export { CourtOrderPoa } from '@bcrs-shared-components/court-order-poa'

@@ -1,6 +1,5 @@
 // Libraries
 import Vue from 'vue'
-import Vuelidate from 'vuelidate'
 import Vuetify from 'vuetify'
 import { getLastEvent } from '../get-last-event'
 import { createPinia, setActivePinia } from 'pinia'
@@ -12,8 +11,6 @@ import { createLocalVue, mount } from '@vue/test-utils'
 // Components
 import IncorporationDateTime from '@/components/Incorporation/IncorporationDateTime.vue'
 
-Vue.use(Vuetify)
-Vue.use(Vuelidate)
 const vuetify = new Vuetify({})
 
 // Store

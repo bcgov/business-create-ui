@@ -54,15 +54,15 @@ describe('Legal Services', () => {
     sinon.restore()
   })
 
-  xit('fetches a draft dissolution', async () => {
+  it.skip('fetches a draft dissolution', async () => {
     // FUTURE
   })
 
-  xit('updates a filing', async () => {
+  it.skip('updates a filing', async () => {
     // FUTURE
   })
 
-  xit('fetches a name request', async () => {
+  it.skip('fetches a name request', async () => {
     // FUTURE
   })
 })

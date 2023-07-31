@@ -446,7 +446,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
 
   /** The About text. */
   get aboutText (): string {
-    return process.env.ABOUT_TEXT
+    return import.meta.env.ABOUT_TEXT
   }
 
   /** Whether to use stepper view. */
