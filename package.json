@@ -90,7 +90,6 @@
     "intersection-observer": "^0.12.2",
     "sass": "~1.32.13",
     "sinon": "^14.0.2",
-    "tslib": "2.6.0",
     "typescript": "^4.5.5",
     "vite": "4.3.9",
     "vite-plugin-environment": "^1.1.3",
