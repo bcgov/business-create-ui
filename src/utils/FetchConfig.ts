@@ -80,7 +80,6 @@ export async function FetchConfig (): Promise<any> {
   (<any>window).hotjarId = hotjarId
 
   const addressCompleteKey: string = import.meta.env.VUE_APP_ADDRESS_COMPLETE_KEY;
-  console.log(addressCompleteKey);
   (<any>window).addressCompleteKey = addressCompleteKey
 
   const ldClientId: string = import.meta.env.VUE_APP_BUSINESS_CREATE_LD_CLIENT_ID;
