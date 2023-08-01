@@ -237,7 +237,6 @@ export default class RegistrationDefineBusiness extends Mixins(CommonMixin) {
   }
 
   onBusinessAddressValidEvent (valid: boolean): void {
-    console.log(import.meta.env.VUE_APP_ADDRESS_COMPLETE_KEY)
     this.businessAddressesValid = valid
     this.setRegistrationDefineBusinessValid(this.allFlagsValid)
   }
