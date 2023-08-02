@@ -7,6 +7,7 @@ import { shallowMount } from '@vue/test-utils'
 import Stepper from '@/components/common/Stepper.vue'
 import { RouteNames } from '@/enums'
 
+Vue.use(Vuetify)
 Vue.use(VueRouter)
 const router = new VueRouter()
 
