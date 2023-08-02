@@ -5,5 +5,5 @@ module.exports = {
   transpileDependencies: [
     'vuetify'
   ],
-  publicPath: `${import.meta.env.VUE_APP_PATH}`
+  publicPath: `${import.meta.env.VITE_PATH}`
 }
