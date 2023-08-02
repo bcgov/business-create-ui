@@ -25,6 +25,7 @@ export default defineConfig(() => {
             : aboutText2 ? `"${aboutText2}"`
               : ''
     },
+    envPrefix: 'VITE_', // Need to remove this after fixing vaults. Use import.meta.env with VUE_APP.
     plugins: [
       vue(),
       EnvironmentPlugin({
