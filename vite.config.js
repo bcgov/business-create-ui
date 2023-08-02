@@ -46,7 +46,7 @@ export default defineConfig(() => {
       globals: true,
       setupFiles: ['./tests/setup.ts'],
       // disable threads to fix module did not self-register error
-      threads: !process.env.GITHUB_ACTIONS,
+      threads: false,
       // hide Vue Devtools message
       onConsoleLog: function (log) {
         if (log.includes('Download the Vue Devtools extension')) {

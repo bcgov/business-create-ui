@@ -22,7 +22,6 @@ export default class DocumentMixin extends Vue {
 
   async created () {
     // NB: we load the lib and worker this way to avoid a memory leak (esp in unit tests)
-    // NB: must use require instead of import or this doesn't work
     // NB: must use legacy build for unit tests not running in Node 18+
     this.pdfjsLib = pdfjs
     this.pdfjsLib.GlobalWorkerOptions.workerSrc = await import('pdfjs-dist/legacy/build/pdf.worker.entry')
