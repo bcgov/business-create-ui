@@ -2,9 +2,8 @@ import { Component, Vue } from 'vue-property-decorator'
 import { AxiosResponse } from 'axios'
 import { AxiosInstance as axios } from '@/utils'
 import { DocumentUpload, PdfInfoIF } from '@/interfaces'
-import * as pdfjs from 'pdfjs-dist/legacy/build/pdf'
-import pdfjsWorker from 'pdfjs-dist/legacy/build/pdf.worker?worker'
 import { PdfPageSize } from '@/enums'
+import * as pdfjs from 'pdfjs-dist/legacy/build/pdf'
 
 @Component({})
 export default class DocumentMixin extends Vue {
@@ -19,20 +18,14 @@ export default class DocumentMixin extends Vue {
     }
   }
 
-  created () {
+  pdfjsLib: any
+
+  async created () {
     // NB: we load the lib and worker this way to avoid a memory leak (esp in unit tests)
     // NB: must use require instead of import or this doesn't work
     // NB: must use legacy build for unit tests not running in Node 18+
-    try {
-      if (typeof window === 'undefined' || !('Worker' in window)) {
-        throw new Error('Web Workers not supported in this environment.')
-      }
-
-      window.pdfjsWorker = pdfjsWorker
-      pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
-    } catch (error) {
-      console.log(error)
-    }
+    this.pdfjsLib = pdfjs
+    this.pdfjsLib.GlobalWorkerOptions.workerSrc = await import('pdfjs-dist/legacy/build/pdf.worker.entry')
   }
 
   async getPresignedUrl (fileName: string): Promise<DocumentUpload> {
@@ -77,7 +70,7 @@ export default class DocumentMixin extends Vue {
     const pageSizeInfo = this.pageSizeDict[pageSize]
     const arrayBuffer = await file.arrayBuffer()
     const data = new Uint8Array(arrayBuffer) // put it in a Uint8Array
-    const document = await pdfjs.getDocument({ data }).promise
+    const document = await this.pdfjsLib.getDocument({ data }).promise
     for (let pageNum = 1; pageNum <= document.numPages; pageNum++) {
       const page = await document.getPage(pageNum)
       const [x, y, w, h] = page._pageInfo.view
@@ -94,7 +87,7 @@ export default class DocumentMixin extends Vue {
     try {
       const arrayBuffer = await file.arrayBuffer()
       const data = new Uint8Array(arrayBuffer) // put it in a Uint8Array
-      const document = await pdfjs.getDocument({ data }).promise
+      const document = await this.pdfjsLib.getDocument({ data }).promise
       const perms = await document.getPermissions()
       return { isEncrypted: false, isContentLocked: !!perms }
     } catch (error) {
