@@ -41,12 +41,12 @@ export default defineConfig(() => {
     },
     test: {
       // simulate DOM with happy-dom
-      environment: 'happy-dom',
+      environment: 'jsdom',
       // enable jest-like global test APIs
       globals: true,
       setupFiles: ['./tests/setup.ts'],
       // disable threads on GH actions to speed it up
-      threads: !process.env.GITHUB_ACTIONS,
+      threads: true,
       // hide Vue Devtools message
       onConsoleLog: function (log) {
         if (log.includes('Download the Vue Devtools extension')) {
