@@ -45,8 +45,8 @@ export default defineConfig(() => {
       // enable jest-like global test APIs
       globals: true,
       setupFiles: ['./tests/setup.ts'],
-      // disable threads to fix module did not self-register error
-      threads: false,
+      // disable threads on GH actions to speed it up
+      threads: !process.env.GITHUB_ACTIONS,
       // hide Vue Devtools message
       onConsoleLog: function (log) {
         if (log.includes('Download the Vue Devtools extension')) {
