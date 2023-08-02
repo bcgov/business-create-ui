@@ -52,6 +52,7 @@
     "pdfjs-dist": "3.9.179",
     "pinia": "^2.0.35",
     "pinia-class": "^0.0.3",
+    "regenerator-runtime": "^0.13.11",
     "sbc-common-components": "3.0.8",
     "uuid": "^9.0.0",
     "vue": "2.7.14",
