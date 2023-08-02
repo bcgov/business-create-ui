@@ -43,6 +43,5 @@
   ],
   "vueCompilerOptions": {
     "target": 2.7
-  },
-  
+  }
 }
