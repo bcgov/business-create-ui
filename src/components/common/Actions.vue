@@ -132,7 +132,7 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Name
   @Action(useStore) setValidateSteps!: (x: boolean) => void
 
   /** Is True if Jest is running the code. */
-  get isJestRunning (): boolean {
+  get isVitestRunning (): boolean {
     return (import.meta.env.JEST_WORKER_ID !== undefined)
   }
 
@@ -233,7 +233,7 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Name
         this.setEffectiveDateTimeValid(false)
 
         // don't call window.scrollTo during Jest tests because jsdom doesn't implement it
-        if (!this.isJestRunning) window.scrollTo({ top: 1250, behavior: 'smooth' })
+        if (!this.isVitestRunning) window.scrollTo({ top: 1250, behavior: 'smooth' })
         this.setIsFilingPaying(false)
         return
       }
@@ -292,7 +292,7 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Name
       }
     } else {
       // don't call window.scrollTo during Jest tests because jsdom doesn't implement it
-      if (!this.isJestRunning) window.scrollTo({ top: 0, behavior: 'smooth' })
+      if (!this.isVitestRunning) window.scrollTo({ top: 0, behavior: 'smooth' })
     }
   }
 

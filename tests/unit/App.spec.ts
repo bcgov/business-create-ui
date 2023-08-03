@@ -1091,7 +1091,7 @@ describe('Restoration - App page', () => {
   it('renders the sub-components properly', () => {
     expect(wrapper.findComponent(SbcHeader).exists()).toBe(true)
     expect(wrapper.findComponent(SbcFooter).exists()).toBe(true)
-    // expect(wrapper.findComponent(SbcFeeSummary).exists()).toBe(true)
+    expect(wrapper.findComponent(SbcFeeSummary).exists()).toBe(true)
     expect(wrapper.findComponent(EntityInfo).exists()).toBe(true)
     expect(wrapper.findComponent(Stepper).exists()).toBe(true)
     expect(wrapper.findComponent(Actions).exists()).toBe(true)

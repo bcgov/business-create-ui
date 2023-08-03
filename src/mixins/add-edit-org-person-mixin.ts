@@ -447,9 +447,9 @@ export default class AddEditOrgPersonMixin extends Vue {
 
   /** Copy of function in Common mixin (since this mixin cannot extend another mixin). */
   private async scrollToTop (element: any): Promise<void> {
-    const isJestRunning = (import.meta.env.JEST_WORKER_ID !== undefined)
+    const isVitestRunning = (import.meta.env.JEST_WORKER_ID !== undefined)
     // don't call window.scrollTo during Jest tests because jsdom doesn't implement it
-    if (element && !isJestRunning) await element.scrollIntoView({ behavior: 'smooth' })
+    if (element && !isVitestRunning) await element.scrollIntoView({ behavior: 'smooth' })
   }
 
   /** Helper to set the current director data. */

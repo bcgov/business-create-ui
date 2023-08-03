@@ -10,8 +10,8 @@ import { getName } from 'country-list'
 @Component({})
 export default class CommonMixin extends Vue {
   /** Is True if Jest is running the code. */
-  get isJestRunning (): boolean {
-    return (import.meta.env.JEST_WORKER_ID !== undefined)
+  get isVitestRunning (): boolean {
+    return (import.meta.env.VITEST_WORKER_ID !== undefined)
   }
 
   /**
@@ -31,7 +31,7 @@ export default class CommonMixin extends Vue {
    */
   async scrollToTop (element: any): Promise<void> {
     // don't call window.scrollTo during Jest tests because jsdom doesn't implement it
-    if (element && !this.isJestRunning) {
+    if (element && !this.isVitestRunning) {
       await element.scrollIntoView({ behavior: 'smooth' })
     }
   }

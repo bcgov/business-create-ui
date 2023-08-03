@@ -638,7 +638,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     this.resetFlags()
 
     // don't check FF during Jest tests
-    if (!this.isJestRunning) {
+    if (!this.isVitestRunning) {
       // check that current route matches a supported filing type
       const supportedFilings = await GetFeatureFlag('supported-filings')
       if (!supportedFilings?.includes(this.$route.meta.filingType)) {
