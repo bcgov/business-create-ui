@@ -519,7 +519,7 @@ describe('Actions component - Filing Functionality', () => {
     expect(mockBuildFiling).toHaveReturned()
 
     expect(mockUpdateFiling).toHaveBeenCalledWith('T1234567', filing, false)
-    // expect(mockUpdateFiling).toHaveReturned()
+    expect(mockUpdateFiling).toHaveLastReturnedWith(padErrorFiling)
 
     const rootWrapper = createWrapper(wrapper.vm.$root)
     const events = rootWrapper.emitted('save-error-event')
