@@ -78,8 +78,8 @@ async function start () {
   await KeycloakService.setKeycloakConfigUrl(keycloakConfig)
 
   // initialize token service which will do a check-sso to initiate session
-  // don't start during Jest tests as it messes up the test JWT
-  if (import.meta.env.JEST_WORKER_ID === undefined) {
+  // don't start during Vitest tests as it messes up the test JWT
+  if (import.meta.env.VITEST_WORKER_ID === undefined) {
     console.info('Starting token refresh service...') // eslint-disable-line no-console
     await KeycloakService.initializeToken()
   }

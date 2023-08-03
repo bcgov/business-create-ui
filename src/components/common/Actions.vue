@@ -133,7 +133,7 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Name
 
   /** Is True if Vitest is running the code. */
   get isVitestRunning (): boolean {
-    return (import.meta.env.JEST_WORKER_ID !== undefined)
+    return (import.meta.env.VITEST_WORKER_ID !== undefined)
   }
 
   /** Is True if the Back button should be displayed. */
