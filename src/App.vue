@@ -637,7 +637,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     // reset errors in case this method is invoked more than once (ie, retry)
     this.resetFlags()
 
-    // don't check FF during Jest tests
+    // don't check FF during Vitest tests
     if (!this.isVitestRunning) {
       // check that current route matches a supported filing type
       const supportedFilings = await GetFeatureFlag('supported-filings')
