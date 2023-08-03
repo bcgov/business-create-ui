@@ -11,7 +11,7 @@ import { getName } from 'country-list'
 export default class CommonMixin extends Vue {
   /** Is True if Vitest is running the code. */
   get isVitestRunning (): boolean {
-    return (import.meta.env.VITEST_WORKER_ID !== undefined)
+    return (import.meta.env.VITEST !== undefined)
   }
 
   /**
