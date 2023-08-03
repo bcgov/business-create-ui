@@ -204,7 +204,7 @@
 import { Component, Mixins, Prop, Emit } from 'vue-property-decorator'
 import { Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
-import { BaseAddress } from '@bcrs-shared-components/base-address'
+import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
 import { CommonMixin } from '@/mixins'
 import { OrgPersonIF, PeopleAndRoleIF } from '@/interfaces'
 import { PartyTypes, RoleTypes, RouteNames } from '@/enums'
