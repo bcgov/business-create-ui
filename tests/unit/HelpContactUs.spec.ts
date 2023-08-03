@@ -1,10 +1,8 @@
-import Vue from 'vue'
 import Vuetify from 'vuetify'
 import { mount } from '@vue/test-utils'
 import HelpContactUs from '@/components/Registration/HelpContactUs.vue'
 import RegistriesContactInfo from '@/components/common/RegistriesContactInfo.vue'
 
-Vue.use(Vuetify)
 const vuetify = new Vuetify({})
 
 describe('HelpBusinessNumber', () => {

@@ -8,8 +8,6 @@ import { ShareClassIF } from '@/interfaces'
 import { waitForUpdate } from '../wait-for-update'
 import { CorpTypeCd } from '@/enums'
 
-Vue.use(Vuetify)
-
 const vuetify = new Vuetify({})
 setActivePinia(createPinia())
 const store = useStore()
@@ -299,7 +297,7 @@ describe('Share Structure component', () => {
     inputElement.trigger('change')
     await waitForUpdate()
 
-    expect(wrapper.find(formSelector).text()).toContain('Number of shares is required')
+    expect(wrapper.find(formSelector).text()).toContain('Enter the name of the  class')
     expect(wrapper.vm.$data.formValid).toBe(false)
 
     // after entering and deleting value

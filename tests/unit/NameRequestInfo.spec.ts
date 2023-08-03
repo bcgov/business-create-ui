@@ -7,8 +7,6 @@ import NameRequestInfo from '@/components/common/NameRequestInfo.vue'
 import { CorpTypeCd, NameRequestStates } from '@/enums'
 import { NameRequestIF } from '@/interfaces'
 
-Vue.use(Vuetify)
-
 const vuetify = new Vuetify({})
 setActivePinia(createPinia())
 const store = useStore()

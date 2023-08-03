@@ -1,11 +1,8 @@
-import Vue from 'vue'
 import Vuetify from 'vuetify'
 import { createPinia, setActivePinia } from 'pinia'
 import { useStore } from '@/store/store'
 import { mount } from '@vue/test-utils'
 import FeeAcknowledgement from '@/components/Registration/FeeAcknowledgement.vue'
-
-Vue.use(Vuetify)
 
 const vuetify = new Vuetify({})
 setActivePinia(createPinia())

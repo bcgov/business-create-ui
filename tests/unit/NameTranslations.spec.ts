@@ -8,8 +8,6 @@ import AddNameTranslation from '@/components/common/AddNameTranslation.vue'
 import ListNameTranslations from '@/components/common/ListNameTranslations.vue'
 import { CorpTypeCd } from '@/enums'
 
-Vue.use(Vuetify)
-
 const vuetify = new Vuetify({})
 setActivePinia(createPinia())
 const store = useStore()

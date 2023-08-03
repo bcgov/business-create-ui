@@ -1,5 +1,4 @@
 import Vue from 'vue'
-import Vuelidate from 'vuelidate'
 import Vuetify from 'vuetify'
 import { createPinia, setActivePinia } from 'pinia'
 import { useStore } from '@/store/store'
@@ -9,19 +8,17 @@ import BusinessName from '@/components/Restoration/BusinessName.vue'
 import { CorrectName } from '@bcrs-shared-components/correct-name/'
 import NameRequestInfo from '@/components/common/NameRequestInfo.vue'
 import { CorpTypeCd, CorrectNameOptions, FilingTypes } from '@/enums'
+import { vi } from 'vitest'
 
 // mock the console.warn function to hide "[Vuetify] Unable to locate target XXX"
-console.warn = jest.fn()
-
-Vue.use(Vuetify)
-Vue.use(Vuelidate)
+console.warn = vi.fn()
 
 const vuetify = new Vuetify({})
 setActivePinia(createPinia())
 const store = useStore()
 
 // mock services function
-const mockFetchNameRequest = jest.spyOn((LegalServices as any), 'updateFiling').mockImplementation()
+const mockFetchNameRequest = vi.spyOn((LegalServices as any), 'updateFiling').mockImplementation()
 
 describe('Business Name component', () => {
   let wrapper: any

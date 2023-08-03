@@ -1,5 +1,4 @@
 import Vue from 'vue'
-import Vuelidate from 'vuelidate'
 import Vuetify from 'vuetify'
 import { createPinia, setActivePinia } from 'pinia'
 import { useStore } from '@/store/store'
@@ -7,12 +6,10 @@ import { mount } from '@vue/test-utils'
 import SummaryRestoreBusiness from '@/components/Restoration/SummaryRestoreBusiness.vue'
 import { ApprovalTypes, CorpTypeCd, CorrectNameOptions, FilingTypes, RelationshipTypes, RestorationTypes }
   from '@/enums'
+import { vi } from 'vitest'
 
 // mock the console.warn function to hide "[Vuetify] Unable to locate target XXX"
-console.warn = jest.fn()
-
-Vue.use(Vuetify)
-Vue.use(Vuelidate)
+console.warn = vi.fn()
 
 const vuetify = new Vuetify({})
 setActivePinia(createPinia())

@@ -68,7 +68,7 @@ export * from './utils-interfaces/validation-item-detail-interface'
 
 // External interfaces
 // NB: importing EmptyAddress doesn't work in local components
-export {
+export type {
   AddressIF,
   BreadcrumbIF,
   BusinessLookupIF,
@@ -76,14 +76,17 @@ export {
   CommentIF,
   ContactPointIF,
   EffectiveDateTimeIF,
-  EmptyBusinessLookup,
-  EmptyContactPoint,
-  EmptyNaics,
-  EmptyNameRequest,
   NaicsIF,
   NaicsResultIF,
   NrApplicantIF,
   NrNameIF,
   NameRequestIF,
   StaffPaymentIF
+} from '@bcrs-shared-components/interfaces'
+
+export {
+  EmptyBusinessLookup,
+  EmptyContactPoint,
+  EmptyNaics,
+  EmptyNameRequest
 } from '@bcrs-shared-components/interfaces'

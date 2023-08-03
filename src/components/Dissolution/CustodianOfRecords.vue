@@ -365,6 +365,7 @@ export default class CustodianOfRecords extends Mixins(CommonMixin) {
 
   /** The custodian person or org name to display. */
   get getCustodianName (): string {
+    // eslint-disable-next-line no-unsafe-optional-chaining
     const { firstName, middleName, lastName, organizationName } = this.getDissolutionCustodian?.officer
     if (this.isPerson && firstName && lastName) {
       return `${firstName} ${middleName} ${lastName}`
