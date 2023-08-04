@@ -1,5 +1,4 @@
 import Vue from 'vue'
-import Vuelidate from 'vuelidate'
 import Vuetify from 'vuetify'
 import { createPinia, setActivePinia } from 'pinia'
 import { useStore } from '@/store/store'
@@ -7,14 +6,11 @@ import { createLocalVue, shallowMount, mount } from '@vue/test-utils'
 import BusinessAddresses from '@/components/Registration/BusinessAddresses.vue'
 import { CorpTypeCd } from '@/enums'
 
-Vue.use(Vuetify)
-Vue.use(Vuelidate)
-
 const vuetify = new Vuetify({})
 setActivePinia(createPinia())
 const store = useStore()
 
-xdescribe('Business Address delivery address <same as> is unchecked by default', () => {
+describe.skip('Business Address delivery address <same as> is unchecked by default', () => {
   let wrapper: any
 
   const BUSINESS_ADDRESSES = {
@@ -77,7 +73,7 @@ xdescribe('Business Address delivery address <same as> is unchecked by default',
   })
 })
 
-xdescribe('Business Addresses', () => {
+describe.skip('Business Addresses', () => {
   let wrapper: any
 
   const registeredOffice = {
@@ -158,7 +154,7 @@ xdescribe('Business Addresses', () => {
   })
 })
 
-xdescribe('same as checkbox resets addresses to default when unchecked - BCOMP', () => {
+describe.skip('same as checkbox resets addresses to default when unchecked - BCOMP', () => {
   let wrapper: any
 
   const registeredOffice = {
@@ -288,7 +284,7 @@ xdescribe('same as checkbox resets addresses to default when unchecked - BCOMP',
   })
 })
 
-xdescribe('should properly emit valid', () => {
+describe.skip('should properly emit valid', () => {
   let wrapper: any
   const localVue = createLocalVue()
 
@@ -414,7 +410,7 @@ xdescribe('should properly emit valid', () => {
   })
 })
 
-xdescribe('Business Addresses - Summary', () => {
+describe.skip('Business Addresses - Summary', () => {
   let wrapper: any
 
   const registeredOffice = {

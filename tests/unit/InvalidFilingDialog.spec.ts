@@ -5,8 +5,6 @@ import { useStore } from '@/store/store'
 import { shallowMount, mount } from '@vue/test-utils'
 import InvalidIncorporationApplicationDialog from '@/dialogs/InvalidFilingDialog.vue'
 
-Vue.use(Vuetify)
-
 const vuetify = new Vuetify({})
 setActivePinia(createPinia())
 const store = useStore()

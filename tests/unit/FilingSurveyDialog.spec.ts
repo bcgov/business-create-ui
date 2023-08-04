@@ -5,8 +5,6 @@ import { useStore } from '@/store/store'
 import { mount } from '@vue/test-utils'
 import FilingSurveyDialog from '@/dialogs/FilingSurveyDialog.vue'
 
-Vue.use(Vuetify)
-
 const vuetify = new Vuetify({})
 setActivePinia(createPinia())
 const store = useStore()

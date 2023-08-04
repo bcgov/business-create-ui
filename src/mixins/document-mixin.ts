@@ -3,6 +3,7 @@ import { AxiosResponse } from 'axios'
 import { AxiosInstance as axios } from '@/utils'
 import { DocumentUpload, PdfInfoIF } from '@/interfaces'
 import { PdfPageSize } from '@/enums'
+import * as pdfjs from 'pdfjs-dist/legacy/build/pdf'
 
 @Component({})
 export default class DocumentMixin extends Vue {
@@ -17,14 +18,13 @@ export default class DocumentMixin extends Vue {
     }
   }
 
-  private pdfjsLib: any
+  pdfjsLib: any
 
-  created () {
+  async created () {
     // NB: we load the lib and worker this way to avoid a memory leak (esp in unit tests)
-    // NB: must use require instead of import or this doesn't work
     // NB: must use legacy build for unit tests not running in Node 18+
-    this.pdfjsLib = require('pdfjs-dist/legacy/build/pdf.js')
-    this.pdfjsLib.GlobalWorkerOptions.workerSrc = require('pdfjs-dist/legacy/build/pdf.worker.entry')
+    this.pdfjsLib = pdfjs
+    this.pdfjsLib.GlobalWorkerOptions.workerSrc = await import('pdfjs-dist/legacy/build/pdf.worker.entry')
   }
 
   async getPresignedUrl (fileName: string): Promise<DocumentUpload> {

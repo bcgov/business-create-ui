@@ -1,4 +1,3 @@
-import Vue from 'vue'
 import Vuetify from 'vuetify'
 import VueRouter from 'vue-router'
 import flushPromises from 'flush-promises'
@@ -16,11 +15,11 @@ import EntityInfo from '@/components/common/EntityInfo.vue'
 import Stepper from '@/components/common/Stepper.vue'
 import { ConfirmDialog } from '@bcrs-shared-components/confirm-dialog'
 import mockRouter from './MockRouter'
-import Vuelidate from 'vuelidate'
+import { vi } from 'vitest'
 
 // mock fetch() as it is not defined in Jest
 // NB: it should be `global.fetch` but that doesn't work and this does
-window.fetch = jest.fn().mockImplementation(() => {
+window.fetch = vi.fn().mockImplementation(() => {
   return {
     headers: { get: () => new Date() },
     ok: true,
@@ -29,12 +28,10 @@ window.fetch = jest.fn().mockImplementation(() => {
 })
 
 // mock alert() as it is not defined in Jest
-window.alert = jest.fn()
+window.alert = vi.fn()
 
 // mock the console.warn function to hide "[Vuetify] Unable to locate target XXX"
-console.warn = jest.fn()
-
-Vue.use(Vuetify)
+console.warn = vi.fn()
 
 const vuetify = new Vuetify({})
 setActivePinia(createPinia())
@@ -267,7 +264,7 @@ describe('Incorporation - Define Company page for a BEN (numbered)', () => {
   beforeEach(async () => {
     // mock the window.location.assign function
     delete window.location
-    window.location = { assign: jest.fn() } as any
+    window.location = { assign: vi.fn() } as any
 
     store.stateModel.tempId = ''
     store.stateModel.business.businessId = ''
@@ -352,7 +349,6 @@ describe('Incorporation - Define Company page for a BEN (numbered)', () => {
     // create a Local Vue and install router on it
     const localVue = createLocalVue()
     localVue.use(VueRouter)
-    localVue.use(Vuelidate)
     localVue.filter('currency', (x) => x)
     const router = mockRouter.mock()
     router.push({ name: 'incorporation-define-company', query: { id: 'T7654321' } })
@@ -365,7 +361,7 @@ describe('Incorporation - Define Company page for a BEN (numbered)', () => {
     })
 
     // return some valid Keycloak roles
-    jest.spyOn(wrapper.vm, 'loadKeycloakRoles').mockImplementation(() => {
+    vi.spyOn(wrapper.vm, 'loadKeycloakRoles').mockImplementation(() => {
       return Promise.resolve(['edit', 'view'])
     })
 
@@ -419,7 +415,7 @@ describe('Incorporation - Define Company page for a BEN (named)', () => {
   beforeEach(async () => {
     // mock the window.location.assign function
     delete window.location
-    window.location = { assign: jest.fn() } as any
+    window.location = { assign: vi.fn() } as any
 
     store.stateModel.tempId = ''
     store.stateModel.business.businessId = ''
@@ -500,7 +496,6 @@ describe('Incorporation - Define Company page for a BEN (named)', () => {
     // create a Local Vue and install router on it
     const localVue = createLocalVue()
     localVue.use(VueRouter)
-    localVue.use(Vuelidate)
     localVue.filter('currency', (x) => x)
     const router = mockRouter.mock()
     router.push({ name: 'incorporation-define-company', query: { id: 'T1234567' } })
@@ -513,7 +508,7 @@ describe('Incorporation - Define Company page for a BEN (named)', () => {
     })
 
     // return some valid Keycloak roles
-    jest.spyOn(wrapper.vm, 'loadKeycloakRoles').mockImplementation(() => {
+    vi.spyOn(wrapper.vm, 'loadKeycloakRoles').mockImplementation(() => {
       return Promise.resolve(['edit', 'view'])
     })
 
@@ -649,7 +644,7 @@ describe('Voluntary Dissolution - Define Dissolution page for a BEN', () => {
   beforeEach(async () => {
     // mock the window.location.assign function
     delete window.location
-    window.location = { assign: jest.fn() } as any
+    window.location = { assign: vi.fn() } as any
 
     store.stateModel.tempId = ''
     store.stateModel.business.businessId = ''
@@ -867,7 +862,6 @@ describe('Voluntary Dissolution - Define Dissolution page for a BEN', () => {
     // create a Local Vue and install a few things on it
     const localVue = createLocalVue()
     localVue.use(VueRouter)
-    localVue.use(Vuelidate)
     localVue.filter('currency', (x) => x)
     const router = mockRouter.mock()
     router.push({ name: 'dissolution-define-dissolution', query: { id: 'BC0870803' } })
@@ -880,7 +874,7 @@ describe('Voluntary Dissolution - Define Dissolution page for a BEN', () => {
     })
 
     // return some valid Keycloak roles
-    jest.spyOn(wrapper.vm, 'loadKeycloakRoles').mockImplementation(() => {
+    vi.spyOn(wrapper.vm, 'loadKeycloakRoles').mockImplementation(() => {
       return Promise.resolve(['edit', 'view'])
     })
 
@@ -911,7 +905,7 @@ describe('Restoration - App page', () => {
   beforeEach(async () => {
     // mock the window.location.assign function
     delete window.location
-    window.location = { assign: jest.fn() } as any
+    window.location = { assign: vi.fn() } as any
 
     store.stateModel.tempId = ''
     store.stateModel.business.businessId = ''
@@ -1068,7 +1062,6 @@ describe('Restoration - App page', () => {
     // create a Local Vue and install a few things on it
     const localVue = createLocalVue()
     localVue.use(VueRouter)
-    localVue.use(Vuelidate)
     localVue.filter('currency', (x) => x)
     const router = mockRouter.mock()
     router.push({ name: 'restoration-business-name', query: { id: 'BC0870803' } })
@@ -1081,7 +1074,7 @@ describe('Restoration - App page', () => {
     })
 
     // return some valid Keycloak roles
-    jest.spyOn(wrapper.vm, 'loadKeycloakRoles').mockImplementation(() => {
+    vi.spyOn(wrapper.vm, 'loadKeycloakRoles').mockImplementation(() => {
       return Promise.resolve(['edit', 'view'])
     })
 

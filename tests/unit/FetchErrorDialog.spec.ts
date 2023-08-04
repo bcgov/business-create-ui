@@ -6,8 +6,6 @@ import { shallowMount, mount } from '@vue/test-utils'
 import FetchErrorDialog from '@/dialogs/FetchErrorDialog.vue'
 import RegistriesContactInfo from '@/components/common/RegistriesContactInfo.vue'
 
-Vue.use(Vuetify)
-
 const vuetify = new Vuetify({})
 setActivePinia(createPinia())
 const store = useStore()
