@@ -39,6 +39,10 @@ export default defineConfig(() => {
       },
       extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json', '.vue']
     },
+    server: {
+      host: true,
+      port: 8080
+    },
     test: {
       // simulate DOM with happy-dom
       environment: 'happy-dom',
