@@ -6,7 +6,6 @@ import { createPinia, setActivePinia } from 'pinia'
 import { useStore } from '@/store/store'
 import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
 
-Vue.use(Vuetify)
 setActivePinia(createPinia())
 const store = useStore()
 

@@ -1,5 +1,4 @@
 import Vue from 'vue'
-import Vuelidate from 'vuelidate'
 import Vuetify from 'vuetify'
 import VueRouter from 'vue-router'
 import mockRouter from './MockRouter'
@@ -9,9 +8,6 @@ import { createLocalVue, mount } from '@vue/test-utils'
 import PeopleAndRoles from '@/components/common/PeopleAndRoles.vue'
 import { IncorporationResourceBen } from '@/resources/Incorporation/BEN'
 import { ResourceIF } from '@/interfaces'
-
-Vue.use(Vuetify)
-Vue.use(Vuelidate)
 
 const vuetify = new Vuetify({})
 setActivePinia(createPinia())

@@ -4,8 +4,8 @@ import { mount, Wrapper } from '@vue/test-utils'
 import FileUploadPreview from '@/components/common/FileUploadPreview.vue'
 import { PdfPageSize } from '@/enums/pdfPageSize'
 import { waitForUpdate } from '../wait-for-update'
+import { vi } from 'vitest'
 
-Vue.use(Vuetify)
 const vuetify = new Vuetify({})
 
 // Note: the following arrayBuffer code is needed as jest does not provide arrayBuffer
@@ -14,7 +14,7 @@ File.prototype.arrayBuffer = File.prototype.arrayBuffer || myArrayBuffer as any
 Blob.prototype.arrayBuffer = Blob.prototype.arrayBuffer || myArrayBuffer as any
 
 // mock the console.log function to hide PDF library warnings (due to invalid mocked PDF files)
-console.log = jest.fn()
+console.log = vi.fn()
 
 function myArrayBuffer () {
   // this: File or Blob
@@ -53,9 +53,9 @@ describe('FileUploadPreview component', () => {
   }
 
   beforeEach(() => {
-    inputFilesGet = jest.fn()
-    inputValueGet = jest.fn().mockReturnValue(inputValue)
-    inputValueSet = jest.fn().mockImplementation(v => { inputValue = v })
+    inputFilesGet = vi.fn()
+    inputValueGet = vi.fn().mockReturnValue(inputValue)
+    inputValueSet = vi.fn().mockImplementation(v => { inputValue = v })
   })
 
   it('displays file upload preview component', async () => {

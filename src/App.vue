@@ -446,7 +446,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
 
   /** The About text. */
   get aboutText (): string {
-    return process.env.ABOUT_TEXT
+    return import.meta.env.ABOUT_TEXT
   }
 
   /** Whether to use stepper view. */
@@ -637,8 +637,8 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     // reset errors in case this method is invoked more than once (ie, retry)
     this.resetFlags()
 
-    // don't check FF during Jest tests
-    if (!this.isJestRunning) {
+    // don't check FF during Vitest tests
+    if (!this.isVitestRunning) {
       // check that current route matches a supported filing type
       const supportedFilings = await GetFeatureFlag('supported-filings')
       if (!supportedFilings?.includes(this.$route.meta.filingType)) {

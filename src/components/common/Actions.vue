@@ -104,12 +104,12 @@ import { Component, Emit, Mixins } from 'vue-property-decorator'
 import { Getter, Action } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { Navigate } from '@/utils'
-import { DateMixin, FilingTemplateMixin, NameRequestMixin } from '@/mixins'
+import { CommonMixin, DateMixin, FilingTemplateMixin, NameRequestMixin } from '@/mixins'
 import { LegalServices } from '@/services/'
 import { FilingTypes, NameRequestStates, RouteNames } from '@/enums'
 
 @Component({})
-export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, NameRequestMixin) {
+export default class Actions extends Mixins(CommonMixin, DateMixin, FilingTemplateMixin, NameRequestMixin) {
   @Getter(useStore) getCurrentStep!: number
   @Getter(useStore) getEntityIdentifier!: string
   @Getter(useStore) getFilingType!: string
@@ -130,11 +130,6 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Name
   @Action(useStore) setIsSaving!: (x: boolean) => void
   @Action(useStore) setIsSavingResuming!: (x: boolean) => void
   @Action(useStore) setValidateSteps!: (x: boolean) => void
-
-  /** Is True if Jest is running the code. */
-  get isJestRunning (): boolean {
-    return (process.env.JEST_WORKER_ID !== undefined)
-  }
 
   /** Is True if the Back button should be displayed. */
   get isShowBackBtn (): boolean {
@@ -232,8 +227,8 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Name
       ) {
         this.setEffectiveDateTimeValid(false)
 
-        // don't call window.scrollTo during Jest tests because jsdom doesn't implement it
-        if (!this.isJestRunning) window.scrollTo({ top: 1250, behavior: 'smooth' })
+        // don't call window.scrollTo during Vitest tests because happy-dom doesn't implement it
+        if (!this.isVitestRunning) window.scrollTo({ top: 1250, behavior: 'smooth' })
         this.setIsFilingPaying(false)
         return
       }
@@ -291,8 +286,8 @@ export default class Actions extends Mixins(DateMixin, FilingTemplateMixin, Name
         this.setIsFilingPaying(false)
       }
     } else {
-      // don't call window.scrollTo during Jest tests because jsdom doesn't implement it
-      if (!this.isJestRunning) window.scrollTo({ top: 0, behavior: 'smooth' })
+      // don't call window.scrollTo during Vitest tests because happy-dom doesn't implement it
+      if (!this.isVitestRunning) window.scrollTo({ top: 0, behavior: 'smooth' })
     }
   }
 

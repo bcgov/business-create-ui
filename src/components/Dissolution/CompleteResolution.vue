@@ -575,7 +575,7 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin) {
     // to get the image path resolving correctly, needed to get the image context first and use that to build
     // the final image file path
 
-    if (this.isJestRunning) { return '' }
+    if (this.isVitestRunning) { return '' }
     const images = require.context('@/assets/images/', false, /\.png$/)
     return images('./' + this.getCreateResolutionResource.sampleFormSection.previewImagePath)
   }
