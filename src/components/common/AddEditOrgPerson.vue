@@ -283,7 +283,7 @@
 
 <script lang="ts">
 import { Component, Mixins } from 'vue-property-decorator'
-import BaseAddress from 'sbc-common-components/src/components/BaseAddress.vue'
+import { BaseAddress } from '@bcrs-shared-components/base-address'
 import { ConfirmDialog } from '@bcrs-shared-components/confirm-dialog'
 import { AddEditOrgPersonMixin } from '@/mixins'
 
