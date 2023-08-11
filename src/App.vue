@@ -25,6 +25,12 @@
       @retry="fetchData()"
     />
 
+    <AccountContactMissingDialog
+      attach="#app"
+      :dialog="accountContactMissingDialog"
+      @exit="goToDashboard(true)"
+    />
+
     <InvalidFilingDialog
       attach="#app"
       :dialog="invalidFilingDialog"
@@ -330,6 +336,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
 
   // Local properties
   accountAuthorizationDialog = false
+  accountContactMissingDialog = false
   fetchErrorDialog = false
   filingSurveyDialog = false
   invalidFilingDialog = false
@@ -422,6 +429,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   get isErrorDialog (): boolean {
     return (
       this.accountAuthorizationDialog ||
+      this.accountContactMissingDialog ||
       this.nameRequestInvalidErrorDialog ||
       this.fetchErrorDialog ||
       this.filingSurveyDialog ||
@@ -692,7 +700,11 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       // get user info
       const userInfo = await this.loadUserInfo().catch(error => {
         console.log('User info error =', error) // eslint-disable-line no-console
-        this.accountAuthorizationDialog = true
+        if (error.message === ('Invalid user email' || 'Invalid user phone')) {
+          this.accountContactMissingDialog = true
+        } else {
+          this.accountAuthorizationDialog = true
+        }
         throw error // go to catch()
       })
 
@@ -966,6 +978,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     this.nameRequestInvalidErrorDialog = false
     this.invalidFilingDialog = false
     this.accountAuthorizationDialog = false
+    this.accountContactMissingDialog = false
     this.fetchErrorDialog = false
     this.filingSurveyDialog = false
     this.paymentErrorDialog = false
