@@ -13,6 +13,7 @@ export * from './pdfPageSize'
 export * from './routeNames'
 export * from './ruleIds'
 export * from './views'
+export * from './errorTypes'
 
 // external enums
 export { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'

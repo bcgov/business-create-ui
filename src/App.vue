@@ -258,7 +258,7 @@ import { DissolutionResources, IncorporationResources, RegistrationResources, Re
 import { AuthServices, LegalServices, PayServices } from '@/services/'
 
 // Enums and Constants
-import { EntityState, FilingCodes, FilingNames, FilingStatus, FilingTypes, NameRequestStates, RouteNames,
+import { EntityState, ErrorTypes, FilingCodes, FilingNames, FilingStatus, FilingTypes, NameRequestStates, RouteNames,
   StaffPaymentOptions } from '@/enums'
 import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
 
@@ -700,7 +700,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       // get user info
       const userInfo = await this.loadUserInfo().catch(error => {
         console.log('User info error =', error) // eslint-disable-line no-console
-        if (error.message === ('Invalid user email' || 'Invalid user phone')) {
+        if (error.message === (ErrorTypes.INVALID_USER_EMAIL || ErrorTypes.INVALID_USER_PHONE)) {
           this.accountContactMissingDialog = true
         } else {
           this.accountAuthorizationDialog = true
@@ -1009,7 +1009,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
 
     // NB: will throw if API error
     const userInfo = await AuthServices.fetchUserInfo()
-    if (!userInfo) throw new Error('Invalid user info')
+    if (!userInfo) throw new Error(ErrorTypes.INVALID_USER_INFO)
 
     if (userInfo.contacts?.length > 0 && userInfo.contacts[0].email) {
       // this is a BCSC user
@@ -1018,7 +1018,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       // this is an IDIR user
       this.setUserEmail(userInfo.email)
     } else if (userInfo.type !== this.STAFF_ROLE && userInfo.type !== this.GOV_ACCOUNT_USER) {
-      throw new Error('Invalid user email')
+      throw new Error(ErrorTypes.INVALID_USER_EMAIL)
     }
 
     if (userInfo.contacts?.length > 0 && userInfo.contacts[0].phone) {
@@ -1028,12 +1028,13 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       // this is an IDIR user
       this.setUserPhone(userInfo.phone)
     } else if (userInfo.type !== this.STAFF_ROLE && userInfo.type !== this.GOV_ACCOUNT_USER) {
-      // not an error
-      console.info('Invalid user phone') // eslint-disable-line no-console
+      // let user redirect to user profile page to update phone
+      console.info(ErrorTypes.INVALID_USER_PHONE) // eslint-disable-line no-console
+      throw new Error(ErrorTypes.INVALID_USER_PHONE)
     }
 
-    if (!userInfo.firstname) throw new Error('Invalid user first name')
-    if (!userInfo.lastname) throw new Error('Invalid user last name')
+    if (!userInfo.firstname) throw new Error(ErrorTypes.INVALID_USER_FIRST_NAME)
+    if (!userInfo.lastname) throw new Error(ErrorTypes.INVALID_USER_LAST_NAME)
 
     this.setUserFirstName(userInfo.firstname)
     this.setUserLastName(userInfo.lastname)
