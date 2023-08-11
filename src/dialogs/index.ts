@@ -4,6 +4,7 @@
  */
 
 export { default as AccountAuthorizationDialog } from './AccountAuthorizationDialog.vue'
+export { default as AccountContactMissingDialog } from './AccountContactMissingDialog.vue'
 export { default as FetchErrorDialog } from './FetchErrorDialog.vue'
 export { default as FileAndPayInvalidNameRequestDialog } from './FileAndPayInvalidNameRequestDialog.vue'
 export { default as FilingSurveyDialog } from './FilingSurveyDialog.vue'

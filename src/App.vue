@@ -25,6 +25,12 @@
       @retry="fetchData()"
     />
 
+    <AccountContactMissingDialog
+      attach="#app"
+      :dialog="accountContactMissingDialog"
+      @exit="goToDashboard(true)"
+    />
+
     <InvalidFilingDialog
       attach="#app"
       :dialog="invalidFilingDialog"
@@ -252,7 +258,7 @@ import { DissolutionResources, IncorporationResources, RegistrationResources, Re
 import { AuthServices, LegalServices, PayServices } from '@/services/'
 
 // Enums and Constants
-import { EntityState, FilingCodes, FilingNames, FilingStatus, FilingTypes, NameRequestStates, RouteNames,
+import { EntityState, ErrorTypes, FilingCodes, FilingNames, FilingStatus, FilingTypes, NameRequestStates, RouteNames,
   StaffPaymentOptions } from '@/enums'
 import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
 
@@ -330,6 +336,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
 
   // Local properties
   accountAuthorizationDialog = false
+  accountContactMissingDialog = false
   fetchErrorDialog = false
   filingSurveyDialog = false
   invalidFilingDialog = false
@@ -422,6 +429,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   get isErrorDialog (): boolean {
     return (
       this.accountAuthorizationDialog ||
+      this.accountContactMissingDialog ||
       this.nameRequestInvalidErrorDialog ||
       this.fetchErrorDialog ||
       this.filingSurveyDialog ||
@@ -692,7 +700,11 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       // get user info
       const userInfo = await this.loadUserInfo().catch(error => {
         console.log('User info error =', error) // eslint-disable-line no-console
-        this.accountAuthorizationDialog = true
+        if ([ErrorTypes.INVALID_USER_EMAIL, ErrorTypes.INVALID_USER_PHONE].includes(error.message)) {
+          this.accountContactMissingDialog = true
+        } else {
+          this.accountAuthorizationDialog = true
+        }
         throw error // go to catch()
       })
 
@@ -966,6 +978,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     this.nameRequestInvalidErrorDialog = false
     this.invalidFilingDialog = false
     this.accountAuthorizationDialog = false
+    this.accountContactMissingDialog = false
     this.fetchErrorDialog = false
     this.filingSurveyDialog = false
     this.paymentErrorDialog = false
@@ -996,7 +1009,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
 
     // NB: will throw if API error
     const userInfo = await AuthServices.fetchUserInfo()
-    if (!userInfo) throw new Error('Invalid user info')
+    if (!userInfo) throw new Error(ErrorTypes.INVALID_USER_INFO)
 
     if (userInfo.contacts?.length > 0 && userInfo.contacts[0].email) {
       // this is a BCSC user
@@ -1005,7 +1018,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       // this is an IDIR user
       this.setUserEmail(userInfo.email)
     } else if (userInfo.type !== this.STAFF_ROLE && userInfo.type !== this.GOV_ACCOUNT_USER) {
-      throw new Error('Invalid user email')
+      throw new Error(ErrorTypes.INVALID_USER_EMAIL)
     }
 
     if (userInfo.contacts?.length > 0 && userInfo.contacts[0].phone) {
@@ -1019,8 +1032,8 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       console.info('Invalid user phone') // eslint-disable-line no-console
     }
 
-    if (!userInfo.firstname) throw new Error('Invalid user first name')
-    if (!userInfo.lastname) throw new Error('Invalid user last name')
+    if (!userInfo.firstname) throw new Error(ErrorTypes.INVALID_USER_FIRST_NAME)
+    if (!userInfo.lastname) throw new Error(ErrorTypes.INVALID_USER_LAST_NAME)
 
     this.setUserFirstName(userInfo.firstname)
     this.setUserLastName(userInfo.lastname)
