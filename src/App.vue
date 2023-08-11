@@ -700,7 +700,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       // get user info
       const userInfo = await this.loadUserInfo().catch(error => {
         console.log('User info error =', error) // eslint-disable-line no-console
-        if (error.message === (ErrorTypes.INVALID_USER_EMAIL || ErrorTypes.INVALID_USER_PHONE)) {
+        if ([ErrorTypes.INVALID_USER_EMAIL, ErrorTypes.INVALID_USER_PHONE].includes(error.message)) {
           this.accountContactMissingDialog = true
         } else {
           this.accountAuthorizationDialog = true
@@ -1028,9 +1028,8 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       // this is an IDIR user
       this.setUserPhone(userInfo.phone)
     } else if (userInfo.type !== this.STAFF_ROLE && userInfo.type !== this.GOV_ACCOUNT_USER) {
-      // let user redirect to user profile page to update phone
-      console.info(ErrorTypes.INVALID_USER_PHONE) // eslint-disable-line no-console
-      throw new Error(ErrorTypes.INVALID_USER_PHONE)
+      // not an error
+      console.info('Invalid user phone') // eslint-disable-line no-console
     }
 
     if (!userInfo.firstname) throw new Error(ErrorTypes.INVALID_USER_FIRST_NAME)
