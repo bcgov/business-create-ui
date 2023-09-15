@@ -570,12 +570,13 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin) {
     return this.getShowErrors && !this.isConfirmResolutionValid
   }
 
-  previewImageSource (): URL {
+  previewImageSource (): string {
     // Note: the image file path did not resolve correctly when using the require function directly.  In order
     // to get the image path resolving correctly, needed to get the image context first and use that to build
     // the final image file path
+    if (this.isVitestRunning) return ''
     const imagePath = this.getCreateResolutionResource.sampleFormSection.previewImagePath
-    return new URL(`@/assets/images/${imagePath}`, import.meta.url)
+    return new URL(`/src/assets/images/${imagePath}`, import.meta.url).href
   }
 
   get confirmLabel (): string {
