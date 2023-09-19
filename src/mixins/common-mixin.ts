@@ -9,6 +9,11 @@ import { getName } from 'country-list'
  */
 @Component({})
 export default class CommonMixin extends Vue {
+  /** Is True if Vitest is running the code. */
+  get isVitestRunning (): boolean {
+    return (import.meta.env.VITEST !== undefined)
+  }
+
   /**
    * Compares two objects while omitting specified properties from the comparison.
    * @param objA the first object to compare

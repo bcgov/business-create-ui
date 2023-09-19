@@ -39,9 +39,9 @@ describe('AccountContactMissingDialog.vue', () => {
     })
 
     // Override window.location
-    Object.defineProperty(window, "location", {
+    Object.defineProperty(window, 'location', {
       value: new URL('https://dev.account.bcregistry.gov.bc.ca'),
-      configurable: true,
+      configurable: true
     })
 
     // Calling the method directly
