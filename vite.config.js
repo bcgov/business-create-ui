@@ -44,8 +44,8 @@ export default defineConfig(() => {
       port: 8080
     },
     test: {
-      // simulate DOM with happy-dom
-      environment: 'happy-dom',
+      // simulate DOM with jsdom
+      environment: 'jsdom',
       // enable jest-like global test APIs
       globals: true,
       setupFiles: ['./tests/setup.ts'],

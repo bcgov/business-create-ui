@@ -38,19 +38,16 @@ describe('AccountContactMissingDialog.vue', () => {
       propsData: { dialog: true }
     })
 
-    // Override window.location.href
-    let redirectedUrl = ''
-    // eslint-disable-next-line accessor-pairs
-    Object.defineProperty(window.location, 'href', {
-      set (url: string) {
-        redirectedUrl = url
-      }
+    // Override window.location
+    Object.defineProperty(window, "location", {
+      value: new URL('https://dev.account.bcregistry.gov.bc.ca'),
+      configurable: true,
     })
 
     // Calling the method directly
     wrapper.vm.redirectToUserProfile()
 
     // Checking the logic inside the method
-    expect(redirectedUrl).toBe('https://dev.account.bcregistry.gov.bc.ca/userprofile')
+    expect(window.location.href).toBe('https://dev.account.bcregistry.gov.bc.ca/userprofile')
   })
 })

@@ -227,8 +227,7 @@ export default class Actions extends Mixins(CommonMixin, DateMixin, FilingTempla
       ) {
         this.setEffectiveDateTimeValid(false)
 
-        // don't call window.scrollTo during Vitest tests because happy-dom doesn't implement it
-        if (!this.isVitestRunning) window.scrollTo({ top: 1250, behavior: 'smooth' })
+        window.scrollTo({ top: 1250, behavior: 'smooth' })
         this.setIsFilingPaying(false)
         return
       }
@@ -286,8 +285,8 @@ export default class Actions extends Mixins(CommonMixin, DateMixin, FilingTempla
         this.setIsFilingPaying(false)
       }
     } else {
-      // don't call window.scrollTo during Vitest tests because happy-dom doesn't implement it
-      if (!this.isVitestRunning) window.scrollTo({ top: 0, behavior: 'smooth' })
+      // don't call window.scrollTo during Vitest tests because jsdom doesn't implement it
+      window.scrollTo({ top: 0, behavior: 'smooth' })
     }
   }
 

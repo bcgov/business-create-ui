@@ -575,7 +575,7 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin) {
     // to get the image path resolving correctly, needed to get the image context first and use that to build
     // the final image file path
     const imagePath = this.getCreateResolutionResource.sampleFormSection.previewImagePath
-    return `/src/assets/images/${imagePath}`
+    return new URL(`/src/assets/images/${imagePath}`, import.meta.url).href
   }
 
   get confirmLabel (): string {
