@@ -86,10 +86,6 @@
           </v-radio-group>
         </v-col>
       </v-row>
-
-      <!-- Vuetify Divider Line b/w restoration and approval type -->
-      <v-divider></v-divider>
-
     </div>
   </div>
 </template>
