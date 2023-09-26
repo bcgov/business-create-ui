@@ -44,7 +44,7 @@
         <RestorationType id="restoration-type" />
 
         <!-- Divider b/w Restoration and Approval type -->
-        <v-divider/>
+        <v-divider />
 
         <ApprovalType
           id="approval-type"
@@ -62,13 +62,12 @@ import { useStore } from '@/store/store'
 import { CommonMixin } from '@/mixins'
 import { RouteNames } from '@/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/enums/'
-import {VDivider} from 'vuetify/lib'
+import { VDivider } from 'vuetify/lib'
 import ApprovalType from '@/components/Restoration/ApprovalType.vue'
 import BusinessName from '@/components/Restoration/BusinessName.vue'
 import BusinessType from '@/components/Restoration/BusinessType.vue'
 import NameTranslations from '@/components/common/NameTranslations.vue'
 import RestorationType from '@/components/Restoration/RestorationType.vue'
-
 
 @Component({
   components: {
@@ -151,4 +150,3 @@ header p {
 }
 
 </style>
-
