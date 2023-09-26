@@ -146,5 +146,4 @@ h2::before {
 header p {
   padding-top: 0.5rem;
 }
-
 </style>
