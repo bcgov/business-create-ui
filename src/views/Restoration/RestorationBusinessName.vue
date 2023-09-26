@@ -62,7 +62,6 @@ import { useStore } from '@/store/store'
 import { CommonMixin } from '@/mixins'
 import { RouteNames } from '@/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/enums/'
-import { VDivider } from 'vuetify/lib'
 import ApprovalType from '@/components/Restoration/ApprovalType.vue'
 import BusinessName from '@/components/Restoration/BusinessName.vue'
 import BusinessType from '@/components/Restoration/BusinessType.vue'
@@ -75,8 +74,7 @@ import RestorationType from '@/components/Restoration/RestorationType.vue'
     BusinessName,
     BusinessType,
     NameTranslations,
-    RestorationType,
-    VDivider
+    RestorationType
   }
 })
 export default class RestorationBusinessName extends Mixins(CommonMixin) {
