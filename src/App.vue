@@ -1034,7 +1034,6 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       console.info('Invalid user phone') // eslint-disable-line no-console
     }
 
-    // if (!userInfo.firstname) throw new Error(ErrorTypes.INVALID_USER_FIRST_NAME)
     if (!userInfo.lastname) throw new Error(ErrorTypes.INVALID_USER_LAST_NAME)
 
     this.setUserFirstName(userInfo.firstname)
