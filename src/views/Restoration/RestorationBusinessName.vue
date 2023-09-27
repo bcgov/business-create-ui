@@ -39,16 +39,16 @@
       </header>
       <v-card
         flat
-        class="mt-4"
+        class="mt-5"
       >
         <RestorationType id="restoration-type" />
 
         <!-- Divider b/w Restoration and Approval type -->
-        <v-divider />
+        <v-divider class="mb-12 ml-5 mr-5"></v-divider>
 
         <ApprovalType
           id="approval-type"
-          class="mt-4"
+          class="mt-n10"
         />
       </v-card>
     </section>
