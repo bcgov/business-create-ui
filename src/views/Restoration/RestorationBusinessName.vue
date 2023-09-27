@@ -41,7 +41,11 @@
         flat
         class="mt-5"
       >
-        <RestorationType id="restoration-type" />
+        <RestorationType id="restoration-type" class="mb-n5"/>
+
+        <!-- Divider b/w Restoration and Approval type -->
+        <v-divider class="mb-11 mr-5 ml-5"></v-divider>
+
         <ApprovalType
           id="approval-type"
           class="mt-n10"
