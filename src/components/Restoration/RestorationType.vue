@@ -3,6 +3,7 @@
     <div
       class="section-container"
       :class="{ 'invalid-section': invalidSection }"
+      :style="invalidSection ? {margin: '0 9px 0 0'} : {}"
     >
       <v-row no-gutters>
         <v-col
