@@ -98,7 +98,7 @@
           v-if="isRoleStaff"
           id="dialog-okay-button"
           color="primary"
-          text
+          variant="text"
           @click="okay()"
         >
           OK
@@ -107,7 +107,7 @@
           v-else
           id="dialog-exit-button"
           color="primary"
-          text
+          variant="text"
           @click="exit()"
         >
           Back to My Dashboard

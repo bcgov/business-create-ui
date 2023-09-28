@@ -150,12 +150,12 @@
               <span class="edit-action">
                 <v-btn
                   :id="`officer-${index}-change-btn`"
-                  text
+                  variant="text"
                   color="primary"
                   :tabindex="disabled ? -1 : 0"
                   @click="disabled ? null : emitPersonInfo(index)"
                 >
-                  <v-icon small>mdi-pencil</v-icon>
+                  <v-icon size="small">mdi-pencil</v-icon>
                   <span>Edit</span>
                 </v-btn>
               </span>
@@ -163,14 +163,13 @@
               <!-- More Actions menu -->
               <span>
                 <v-menu
-                  offset-y
-                  left
+                  location="left"
                   :disabled="disabled"
                 >
                   <template #activator="{ on }">
                     <v-btn
-                      text
-                      small
+                      variant="text"
+                      size="small"
                       color="primary"
                       class="more-actions-btn"
                       :tabindex="disabled ? -1 : 0"
@@ -183,7 +182,7 @@
                     <v-list-item @click="emitRemovePerson(index)">
                       <v-list-item-title>
                         <v-icon
-                          small
+                          size="small"
                           color="primary"
                         >mdi-delete</v-icon>
                         <span class="ml-2">Remove</span>

@@ -13,7 +13,6 @@
           x-small
           label
           color="primary"
-          text-color="white"
         >
           Changed
         </v-chip>
@@ -36,7 +35,7 @@
           ref="textField"
           v-model="value"
           v-mask="['#########']"
-          filled
+          variant="filled"
           persistent-hint
           class="item mt-4 mb-n2"
           label="Business Number (Optional)"

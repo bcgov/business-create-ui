@@ -22,7 +22,7 @@
             v-model="selectRestorationType"
             class="mt-0 pt-0"
             hide-details="auto"
-            @change="changeRestorationType()"
+            @update:modelValue="changeRestorationType()"
           >
             <v-radio
               id="full-radio-button"
@@ -42,7 +42,7 @@
                   <v-tooltip
                     content-class="top-tooltip"
                     transition="fade-transition"
-                    top
+                    location="top"
                   >
                     <template #activator="{ on, attrs }">
                       <span

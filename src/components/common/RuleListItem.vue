@@ -2,7 +2,7 @@
   <li class="rule-list-item">
     <v-icon
       v-if="valid"
-      color="green darken-2"
+      color="green-darken-2"
       class="rule-valid"
     >
       mdi-check

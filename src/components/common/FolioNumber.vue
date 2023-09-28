@@ -27,7 +27,7 @@
               v-model="folioNumber"
               label="Folio or Reference Number (Optional)"
               persistent-hint
-              filled
+              variant="filled"
               :rules="rules"
             />
           </v-form>

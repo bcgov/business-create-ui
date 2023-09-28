@@ -1,7 +1,7 @@
 <template>
   <div id="dissolution-define-dissolution">
     <v-card
-      outlined
+      variant="outlined"
       class="message-box mt-10"
     >
       <p>

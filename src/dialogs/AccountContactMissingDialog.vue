@@ -23,7 +23,7 @@
         <v-btn
           id="dialog-exit-button"
           color="primary"
-          text
+          variant="text"
           @click="exit()"
         >
           Exit
@@ -32,7 +32,7 @@
         <v-btn
           id="to-user-profile-button"
           color="primary"
-          text
+          variant="text"
           @click="redirectToUserProfile"
         >
           OK

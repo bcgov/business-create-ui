@@ -112,7 +112,7 @@
           <template v-else>
             Enter the start date of the business. The start date can be
             <v-tooltip
-              top
+              location="top"
               max-width="20rem"
               content-class="top-tooltip"
               transition="fade-transition"

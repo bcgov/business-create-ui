@@ -86,7 +86,7 @@ async function start () {
 
   // start Vue application
   console.info('Starting app...') // eslint-disable-line no-console
-  new Vue({
+  const app = Vue.createApp({
     vuetify: new Vuetify({
       iconfont: 'mdi',
       theme: {
@@ -107,7 +107,8 @@ async function start () {
     store: getVuexStore(),
     pinia: getPiniaStore(),
     render: h => h(App)
-  }).$mount('#app')
+  })
+  app.mount('#app')
 }
 
 // execution and error handling

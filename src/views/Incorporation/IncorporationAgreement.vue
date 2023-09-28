@@ -10,7 +10,7 @@
       <div class="pt-2 pb-3">
         <span>Before submitting your incorporation application you <b>must complete, sign, and date</b> an</span>
         <v-tooltip
-          top
+          location="top"
           max-width="20rem"
           content-class="top-tooltip"
           transition="fade-transition"
@@ -28,7 +28,7 @@
         </v-tooltip>
         <span>, and a set of </span>
         <v-tooltip
-          top
+          location="top"
           max-width="20rem"
           content-class="top-tooltip"
           transition="fade-transition"
@@ -45,7 +45,7 @@
         <template v-if="isTypeBcomp || isTypeBcUlcCompany || isTypeBcCcc">
           containing a
           <v-tooltip
-            top
+            location="top"
             max-width="20rem"
             content-class="top-tooltip"
             transition="fade-transition"

@@ -84,7 +84,7 @@
       <li>
         <v-icon
           v-if="shareClasses.length > 0"
-          color="green darken-2"
+          color="green-darken-2"
           class="cp-valid"
         >
           mdi-check
@@ -106,7 +106,7 @@
     <div class="py-8">
       <v-btn
         id="btn-start-add-cp"
-        outlined
+        variant="outlined"
         color="primary"
         :disabled="showShareStructureForm"
         @click="initNewShareClass()"

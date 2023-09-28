@@ -42,7 +42,7 @@
         >
           <v-card
             v-if="isCompletingParty && !isRoleStaff"
-            outlined
+            variant="outlined"
             class="message-box rounded-0"
           >
             <p>
@@ -75,7 +75,7 @@
                 <!-- NB: only staff can change Completing Party names -->
                 <v-text-field
                   v-model.trim="orgPerson.officer.firstName"
-                  filled
+                  variant="filled"
                   class="item first-name"
                   label="First Name"
                   :rules="enableRules ?
@@ -85,7 +85,7 @@
                 />
                 <v-text-field
                   v-model.trim="orgPerson.officer.middleName"
-                  filled
+                  variant="filled"
                   class="item middle-name"
                   label="Middle Name (Optional)"
                   :rules="enableRules ? Rules.MiddleNameRulesFirms : []"
@@ -93,7 +93,7 @@
                 />
                 <v-text-field
                   v-model.trim="orgPerson.officer.lastName"
-                  filled
+                  variant="filled"
                   class="item last-name"
                   label="Last Name"
                   :rules="enableRules ? Rules.LastNameRules : []"
@@ -171,7 +171,7 @@
                 <!-- Organization Name (org only) -->
                 <v-text-field
                   v-model.trim="orgPerson.officer.organizationName"
-                  filled
+                  variant="filled"
                   class="mt-8 mb-n6 org-name"
                   label="Business or Corporation Name"
                   :rules="enableRules ? OrgNameRules : []"
@@ -205,7 +205,7 @@
                   class="mt-6"
                 >
                   <v-card
-                    outlined
+                    variant="outlined"
                     class="message-box rounded-0"
                   >
                     <p>
@@ -343,7 +343,7 @@
               </p>
               <v-text-field
                 v-model.trim="orgPerson.officer.email"
-                filled
+                variant="filled"
                 class="item email-address mt-4 mb-n6"
                 label="Email Address"
                 :rules="enableRules ? Rules.EmailRules : []"
@@ -406,8 +406,8 @@
             <div class="form__btns mt-6">
               <v-btn
                 id="btn-remove"
-                large
-                outlined
+                size="large"
+                variant="outlined"
                 color="error"
                 class="btn-outlined-error"
                 :disabled="isNaN(activeIndex)"
@@ -417,7 +417,7 @@
               </v-btn>
               <v-btn
                 id="btn-done"
-                large
+                size="large"
                 color="primary"
                 class="ml-auto"
                 @click="validateAddPersonOrgForm()"
@@ -426,8 +426,8 @@
               </v-btn>
               <v-btn
                 id="btn-cancel"
-                large
-                outlined
+                size="large"
+                variant="outlined"
                 color="primary"
                 @click="resetAddPersonData(true)"
               >

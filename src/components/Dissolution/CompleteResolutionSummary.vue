@@ -94,9 +94,9 @@
             rows="1"
             auto-grow
             readonly
-            filled
+            variant="filled"
             hide-details
-            background-color="white"
+            bg-color="white"
           />
         </v-col>
       </v-row>

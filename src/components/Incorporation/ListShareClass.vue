@@ -44,13 +44,13 @@
                 <span class="edit-action">
                   <v-btn
                     :id="'class-' + row.index + '-change-btn'"
-                    small
-                    text
+                    size="small"
+                    variant="text"
                     color="primary"
                     :disabled="componentDisabled"
                     @click="emitShareClass(row.index)"
                   >
-                    <v-icon small>mdi-pencil</v-icon>
+                    <v-icon size="small">mdi-pencil</v-icon>
                     <span>Edit</span>
                   </v-btn>
                 </span>
@@ -58,13 +58,12 @@
                 <!-- Share Class Dropdown Actions -->
                 <span>
                   <v-menu
-                    offset-y
                     :disabled="componentDisabled"
                   >
                     <template #activator="{ on }">
                       <v-btn
-                        text
-                        small
+                        variant="text"
+                        size="small"
                         color="primary"
                         class="more-actions-btn"
                         v-on="on"
@@ -138,23 +137,23 @@
                 <span class="edit-action">
                   <v-btn
                     :id="'series-' + index + '-change-btn'"
-                    small
-                    text
+                    size="small"
+                    variant="text"
                     color="primary"
                     @click="emitShareSeries(row.index, index)"
                   >
-                    <v-icon small>mdi-pencil</v-icon>
+                    <v-icon size="small">mdi-pencil</v-icon>
                     <span>Edit</span>
                   </v-btn>
                 </span>
 
                 <!-- Share Series Dropdown Actions -->
                 <span>
-                  <v-menu offset-y>
+                  <v-menu>
                     <template #activator="{ on }">
                       <v-btn
-                        text
-                        small
+                        variant="text"
+                        size="small"
                         color="primary"
                         class="more-actions-btn"
                         v-on="on"

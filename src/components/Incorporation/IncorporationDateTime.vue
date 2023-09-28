@@ -18,7 +18,6 @@
       >
         <v-radio-group
           v-model="selectDate"
-          column
           class="radio-group"
         >
           <v-radio
@@ -37,9 +36,8 @@
         >
           <v-menu
             close-on-content-click
-            :nudge-right="40"
+            :offset="40"
             transition="scale-transition"
-            offset-y
             min-width="290px"
           >
             <template #activator="{ on }">
@@ -50,7 +48,7 @@
                 append-icon="mdi-calendar"
                 :rules="dateRules"
                 :disabled="!isFutureEffective"
-                filled
+                variant="filled"
                 v-on="on"
               />
             </template>
@@ -75,7 +73,7 @@
                 label="Hour"
                 :disabled="!isFutureEffective || !dateText"
                 :rules="hourRules"
-                filled
+                variant="filled"
               />
             </v-col>
             <span
@@ -94,7 +92,7 @@
                 :items="minutes"
                 :disabled="!isFutureEffective || !dateText"
                 :rules="minuteRules"
-                filled
+                variant="filled"
               />
             </v-col>
             <v-col
@@ -107,7 +105,7 @@
                 v-model="selectPeriod"
                 :items="timePeriod"
                 :disabled="!isFutureEffective || !dateText"
-                filled
+                variant="filled"
               />
             </v-col>
             <v-col

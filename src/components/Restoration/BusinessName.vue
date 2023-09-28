@@ -45,12 +45,12 @@
       <NameRequestInfo />
 
       <v-btn
-        text
+        variant="text"
         color="primary"
         class="btn-undo"
         @click="resetName()"
       >
-        <v-icon small>
+        <v-icon size="small">
           mdi-undo
         </v-icon>
         <span>Undo</span>

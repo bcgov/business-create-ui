@@ -24,7 +24,7 @@
             v-model="dissolutionStatementType"
             class="dissolution-statement-option-list"
             hide-details
-            @change="changeDissolutionStatementType()"
+            @update:modelValue="changeDissolutionStatementType()"
           >
             <v-radio
               v-for="(item, index) in getDissolutionStatements"

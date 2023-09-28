@@ -7,7 +7,7 @@
         <p>
           Before submitting your incorporation application you must <b>complete, sign, and date</b> the
           <v-tooltip
-            top
+            location="top"
             max-width="20rem"
             content-class="top-tooltip"
             transition="fade-transition"
@@ -165,7 +165,7 @@
               hide-details=""
               :rules="confirmCompletionMemorandum"
               label="I confirm the following items are included as required in the Memorandum of Association:"
-              @change="onMemorandumConfirmedChange($event)"
+              @update:modelValue="onMemorandumConfirmedChange($event)"
             />
             <ul>
               <li class="mt-4">
@@ -190,7 +190,7 @@
                   <v-col cols="11">
                     If required, there is a
                     <v-tooltip
-                      top
+                      location="top"
                       max-width="20rem"
                       content-class="top-tooltip"
                       transition="fade-transition"
@@ -221,7 +221,7 @@
                   <v-col cols="11">
                     The
                     <v-tooltip
-                      top
+                      location="top"
                       max-width="20rem"
                       content-class="top-tooltip"
                       transition="fade-transition"

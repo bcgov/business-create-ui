@@ -125,8 +125,8 @@
     <!-- Alert banner -->
     <v-alert
       v-if="bannerText"
-      tile
-      dense
+      rounded="0"
+      density="compact"
       type="warning"
     >
       <div

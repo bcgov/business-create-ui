@@ -19,7 +19,7 @@
         <v-select
           id="cooperative-type-input"
           v-model="cooperativeType"
-          filled
+          variant="filled"
           label="Cooperative Association Type"
           :items="items"
           :rules="cooperativeTypeRules"

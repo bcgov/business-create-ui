@@ -7,8 +7,8 @@
       <v-btn
         v-if="isSummaryStep"
         id="app-summary-cancel-btn"
-        large
-        outlined
+        size="large"
+        variant="outlined"
         color="primary"
         :disabled="isBusySaving"
         @click="onClickCancel()"
@@ -18,8 +18,8 @@
 
       <v-btn
         id="save-btn"
-        large
-        outlined
+        size="large"
+        variant="outlined"
         color="primary"
         :disabled="!isEntityType || isBusySaving"
         :loading="isSaving"
@@ -30,8 +30,8 @@
 
       <v-btn
         id="save-resume-btn"
-        large
-        outlined
+        size="large"
+        variant="outlined"
         color="primary"
         :disabled="!isEntityType || isBusySaving"
         :loading="isSavingResuming"
@@ -46,8 +46,8 @@
         <v-btn
           v-show="isShowBackBtn"
           id="back-btn"
-          large
-          outlined
+          size="large"
+          variant="outlined"
           color="primary"
           :to="previousRoute"
           :disabled="isBusySaving"
@@ -61,7 +61,7 @@
         <v-btn
           v-show="isShowReviewConfirmBtn"
           id="review-confirm-btn"
-          large
+          size="large"
           color="primary"
           :to="nextRoute"
           :disabled="isBusySaving"
@@ -75,7 +75,7 @@
         <v-btn
           v-show="isShowFilePayBtn"
           id="file-pay-btn"
-          large
+          size="large"
           color="primary"
           :loading="isFilingPaying"
           @click="onClickFilePay()"
@@ -87,8 +87,8 @@
       <v-btn
         v-if="!isSummaryStep"
         id="app-cancel-btn"
-        large
-        outlined
+        size="large"
+        variant="outlined"
         color="primary"
         :disabled="isBusySaving"
         @click="onClickCancel()"

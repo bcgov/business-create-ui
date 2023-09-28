@@ -29,23 +29,23 @@
         <div class="actions mt-n1 float-right">
           <span class="edit-action">
             <v-btn
-              small
-              text
+              size="small"
+              variant="text"
               color="primary"
               :disabled="isAddingNameTranslation"
               @click="editTranslation(index)"
             >
-              <v-icon small>mdi-pencil</v-icon>
+              <v-icon size="small">mdi-pencil</v-icon>
               <span>Edit</span>
             </v-btn>
           </span>
 
           <!-- more actions menu -->
-          <v-menu offset-y>
+          <v-menu>
             <template #activator="{ on }">
               <v-btn
-                text
-                small
+                variant="text"
+                size="small"
                 color="primary"
                 class="more-actions-btn"
                 :disabled="isAddingNameTranslation"
@@ -58,7 +58,7 @@
               <v-list-item @click="removeTranslation(index)">
                 <v-list-item-title>
                   <v-icon
-                    small
+                    size="small"
                     color="primary"
                   >
                     mdi-delete

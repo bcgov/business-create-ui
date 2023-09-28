@@ -26,7 +26,7 @@
           id="folio-number-input"
           ref="folioNumberInput"
           v-model.trim="localFolioNumber"
-          filled
+          variant="filled"
           persistent-hint
           autocomplete="chrome-off"
           label="Folio or Reference Number (Optional)"

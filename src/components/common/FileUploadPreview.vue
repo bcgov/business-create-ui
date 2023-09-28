@@ -6,8 +6,8 @@
     <v-file-input
       v-model="fileUpload"
       label="Select a file to upload"
-      filled
-      dense
+      variant="filled"
+      density="compact"
       accept=".pdf"
       class="file-upload-preview"
       :rules="fileUploadRules"

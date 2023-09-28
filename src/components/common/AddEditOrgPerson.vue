@@ -51,7 +51,7 @@
         >
           <v-card
             v-if="isCompletingParty && !isRoleStaff && isTypeCoop"
-            outlined
+            variant="outlined"
             class="message-box rounded-0"
           >
             <p>
@@ -85,7 +85,7 @@
                 <v-text-field
                   id="person__first-name"
                   v-model.trim="orgPerson.officer.firstName"
-                  filled
+                  variant="filled"
                   class="item"
                   label="First Name"
                   :rules="enableRules ? Rules.FirstNameRules : []"
@@ -94,7 +94,7 @@
                 <v-text-field
                   id="person__middle-name"
                   v-model.trim="orgPerson.officer.middleName"
-                  filled
+                  variant="filled"
                   class="item"
                   label="Middle Name (Optional)"
                   :rules="enableRules ? Rules.MiddleNameRules: []"
@@ -103,7 +103,7 @@
                 <v-text-field
                   id="person__last-name"
                   v-model.trim="orgPerson.officer.lastName"
-                  filled
+                  variant="filled"
                   class="item"
                   label="Last Name"
                   :rules="enableRules ? Rules.LastNameRules : []"
@@ -119,7 +119,7 @@
                 <v-text-field
                   id="org-name"
                   v-model.trim="orgPerson.officer.organizationName"
-                  filled
+                  variant="filled"
                   class="item"
                   label="Full Legal Corporation or Firm Name"
                   :rules="enableRules ? Rules.OrgNameRules : []"
@@ -152,7 +152,7 @@
                         :label="RoleTypes.COMPLETING_PARTY"
                         :disabled="disableCompletingPartyRole"
                         :rules="enableRules ? roleRules: []"
-                        @change="assignCompletingPartyRole()"
+                        @update:modelValue="assignCompletingPartyRole()"
                       />
                     </v-col>
 
@@ -246,8 +246,8 @@
             <div class="form__btns mt-6">
               <v-btn
                 id="btn-remove"
-                large
-                outlined
+                size="large"
+                variant="outlined"
                 color="error"
                 class="btn-outlined-error"
                 :disabled="isNaN(activeIndex)"
@@ -257,7 +257,7 @@
               </v-btn>
               <v-btn
                 id="btn-done"
-                large
+                size="large"
                 color="primary"
                 class="ml-auto"
                 @click="validateAddPersonOrgForm()"
@@ -266,8 +266,8 @@
               </v-btn>
               <v-btn
                 id="btn-cancel"
-                large
-                outlined
+                size="large"
+                variant="outlined"
                 color="primary"
                 @click="resetAddPersonData(true)"
               >

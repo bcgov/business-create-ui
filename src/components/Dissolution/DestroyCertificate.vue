@@ -24,7 +24,7 @@
             v-model="hasCertificateDestroyed"
             class="destroy-certificate-checkbox ma-0 pa-0"
             hide-details
-            @change="setHasCertificateDestroyed"
+            @update:modelValue="setHasCertificateDestroyed"
           >
             <template #label>
               <span

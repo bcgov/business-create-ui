@@ -31,7 +31,7 @@
         <v-btn
           id="dialog-exit-button"
           color="primary"
-          text
+          variant="text"
           @click="exit()"
         >
           Return to dashboard
@@ -40,7 +40,7 @@
         <v-btn
           id="dialog-retry-button"
           color="primary"
-          text
+          variant="text"
           @click="retry()"
         >
           Retry

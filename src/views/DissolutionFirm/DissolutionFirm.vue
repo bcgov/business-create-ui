@@ -4,7 +4,7 @@
     class="mt-10"
   >
     <v-card
-      outlined
+      variant="outlined"
       class="message-box rounded-0"
     >
       <p>

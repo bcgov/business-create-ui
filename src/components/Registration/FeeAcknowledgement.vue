@@ -15,9 +15,9 @@
       >
         <v-checkbox
           id="fee-acknowledgement-checkbox"
-          :input-value="getRegistration.feeAcknowledgement"
+          :model-value="getRegistration.feeAcknowledgement"
           hide-details
-          @change="setRegistrationFeeAcknowledgement($event)"
+          @update:modelValue="setRegistrationFeeAcknowledgement($event)"
         >
           <template #label>
             <div

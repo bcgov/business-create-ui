@@ -5,17 +5,17 @@
       <v-text-field
         id="name-translation-input"
         v-model="nameTranslation"
-        filled
+        variant="filled"
         persistent-hint
         label="Enter Name Translation"
         :rules="nameTranslationRules"
-        @input="nameTranslation = nameTranslation.toUpperCase()"
+        @update:modelValue="nameTranslation = nameTranslation.toUpperCase()"
       />
 
       <div class="form__btns">
         <v-btn
           id="name-translation-btn-remove"
-          large
+          size="large"
           color="error"
           :disabled="!editNameTranslation"
           @click="removeTranslation()"
@@ -25,7 +25,7 @@
 
         <v-btn
           id="name-translation-btn-done"
-          large
+          size="large"
           color="primary"
           class="form-primary-btn"
           :disabled="!nameTranslationForm"
@@ -36,7 +36,7 @@
 
         <v-btn
           id="name-translation-btn-cancel"
-          large
+          size="large"
           @click="cancelTranslation()"
         >
           Cancel

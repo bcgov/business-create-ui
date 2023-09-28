@@ -12,8 +12,7 @@
         <div class="step__line" />
         <v-btn
           :id="step.id"
-          outlined
-          fab
+          variant="outlined"
           color="primary"
           class="step__btn"
           tabindex="-1"
@@ -32,7 +31,7 @@
           v-show="isValid(step.to)"
           class="step__btn2"
           size="30"
-          color="success darken-1"
+          color="success-darken-1"
         >
           mdi-check-circle
         </v-icon>
@@ -40,14 +39,14 @@
           v-show="!isValid(step.to) && getShowErrors && getValidateSteps"
           class="step__btn2"
           size="30"
-          color="error darken-1"
+          color="error-darken-1"
         >
           mdi-close-circle
         </v-icon>
       </div>
       <v-btn
         class="step__label pre-line px-3"
-        text
+        variant="text"
         :ripple="false"
         :disabled="step.disabled"
         :class="[{'active__btn__text': isCurrentStep(step)}, 'inactive__btn__text']"

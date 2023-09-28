@@ -47,7 +47,7 @@
             </p>
 
             <v-btn
-              outlined
+              variant="outlined"
               color="primary"
               class="mt-6"
               :disabled="isAddingNameTranslation"

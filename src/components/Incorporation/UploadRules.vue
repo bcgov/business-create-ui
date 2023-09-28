@@ -10,7 +10,7 @@
         <p>
           Before submitting your incorporation application you must <b>complete, sign, and date</b> the
           <v-tooltip
-            top
+            location="top"
             max-width="20rem"
             content-class="top-tooltip"
             transition="fade-transition"
@@ -96,7 +96,7 @@
                   >
                     {{ partialItem.value.linkText }}
                     <v-icon
-                      dense
+                      size="small"
                       color="primary"
                     >mdi-open-in-new</v-icon>
                   </a>
@@ -180,7 +180,7 @@
               hide-details
               :rules="confirmCompletionRules"
               label="I confirm the following items are included as required in the Rules of the Association:"
-              @change="onRulesConfirmedChange($event)"
+              @update:modelValue="onRulesConfirmedChange($event)"
             />
             <ul>
               <li class="mt-4">

@@ -83,7 +83,7 @@
         <v-btn
           id="dialog-exit-button"
           color="primary"
-          text
+          variant="text"
           @click="exit()"
         >
           Exit without saving
@@ -92,7 +92,7 @@
         <v-btn
           id="dialog-okay-button"
           color="primary"
-          text
+          variant="text"
           @click="okay()"
         >
           OK
@@ -105,7 +105,7 @@
         <v-btn
           id="dialog-okay-button"
           color="primary"
-          text
+          variant="text"
           @click="okay()"
         >
           OK

@@ -7,7 +7,7 @@
         <p>
           Before submitting the voluntary dissolution you must <b>complete and sign</b> an
           <v-tooltip
-            top
+            location="top"
             max-width="15rem"
             content-class="top-tooltip"
             transition="fade-transition"
@@ -145,7 +145,7 @@
               hide-details
               :rules="confirmCompletionAffidavit"
               :label="getAffidavitResources.confirmSection.checkboxLabel"
-              @change="onAffidavitConfirmedChange($event)"
+              @update:modelValue="onAffidavitConfirmedChange($event)"
             />
             <ul>
               <li class="mt-4">

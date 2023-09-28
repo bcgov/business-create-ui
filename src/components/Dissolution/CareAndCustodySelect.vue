@@ -18,9 +18,8 @@
         >
           <v-radio-group
             v-model="liquidatorOrCustodian"
-            column
             class="pt-0 mt-0 care-and-custody-option-list"
-            @change="changeCareAndCustodyType()"
+            @update:modelValue="changeCareAndCustodyType()"
           >
             <v-radio
               id="liquidator-radio-btn"

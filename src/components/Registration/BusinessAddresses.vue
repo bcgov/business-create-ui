@@ -58,7 +58,7 @@
             label="Same as Mailing Address"
             :disabled="checkboxDisabled"
             noPoBox="true"
-            @change="onCheckboxChanged()"
+            @update:modelValue="onCheckboxChanged()"
           />
           <template
             v-if="!isSame(mailingAddress, deliveryAddress, ['actions']) || !inheritMailingAddress"
