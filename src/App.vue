@@ -776,9 +776,9 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
         this.setCertifyState(
           {
             valid: this.getCertifyState.valid,
-            certifiedBy: userInfo.firstName ?
-             `${userInfo.firstname} ${userInfo.lastname}` :
-             `${userInfo.lastname}`
+            certifiedBy: userInfo.firstName
+              ? `${userInfo.firstname} ${userInfo.lastname}`
+              : `${userInfo.lastname}`
           }
         )
       }
