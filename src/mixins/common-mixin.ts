@@ -1,4 +1,4 @@
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue } from 'vue-facing-decorator'
 import { isEqual } from 'lodash'
 import omit from 'lodash.omit'
 import { ValidationItemDetailIF } from '@/interfaces'

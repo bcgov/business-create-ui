@@ -50,7 +50,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Emit, Prop, Vue, Watch } from 'vue-property-decorator'
+import { Component, Emit, Prop, Vue, Watch } from 'vue-facing-decorator'
 import { mask } from 'vue-the-mask'
 import { FormIF } from '@/interfaces'
 import { Rules } from '@/rules'

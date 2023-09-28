@@ -193,7 +193,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Emit, Mixins, Prop } from 'vue-property-decorator'
+import { Component, Emit, Mixins, Prop } from 'vue-facing-decorator'
 import { ShareClassIF, FormIF } from '@/interfaces'
 import { CurrencyLookupMixin } from '@/mixins'
 import { VuetifyRuleFunction } from '@/types'

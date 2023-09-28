@@ -31,7 +31,7 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Emit, Prop, Vue, Watch } from 'vue-property-decorator'
+import { Component, Emit, Prop, Vue, Watch } from 'vue-facing-decorator'
 import { Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { CoopTypes } from '@/enums'

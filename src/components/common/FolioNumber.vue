@@ -62,7 +62,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Emit, Prop, Vue, Watch } from 'vue-property-decorator'
+import { Component, Emit, Prop, Vue, Watch } from 'vue-facing-decorator'
 import { VuetifyRuleFunction } from '@/types'
 
 @Component({})

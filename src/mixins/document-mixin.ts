@@ -1,4 +1,4 @@
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue } from 'vue-facing-decorator'
 import { AxiosResponse } from 'axios'
 import { AxiosInstance as axios } from '@/utils'
 import { DocumentUpload, PdfInfoIF } from '@/interfaces'

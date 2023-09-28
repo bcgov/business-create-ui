@@ -76,7 +76,7 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Emit, Prop, Vue } from 'vue-property-decorator'
+import { Component, Emit, Prop, Vue } from 'vue-facing-decorator'
 
 // Interfaces
 import { NameTranslationIF } from '@/interfaces'

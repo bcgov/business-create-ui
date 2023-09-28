@@ -248,7 +248,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins } from 'vue-property-decorator'
+import { Component, Mixins } from 'vue-facing-decorator'
 import { cloneDeep } from 'lodash'
 import { EmptyOrgPerson } from '@/interfaces'
 import { EmptyAddress } from '@bcrs-shared-components/interfaces'

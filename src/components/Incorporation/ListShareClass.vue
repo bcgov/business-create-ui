@@ -201,7 +201,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Emit, Prop, Vue } from 'vue-property-decorator'
+import { Component, Emit, Prop, Vue } from 'vue-facing-decorator'
 import { RouteNames } from '@/enums'
 import { arrayMoveMutable } from 'array-move'
 

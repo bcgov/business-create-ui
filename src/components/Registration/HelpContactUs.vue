@@ -49,7 +49,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue } from 'vue-facing-decorator'
 import RegistriesContactInfo from '@/components/common/RegistriesContactInfo.vue'
 
 @Component({

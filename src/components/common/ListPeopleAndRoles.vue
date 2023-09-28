@@ -200,7 +200,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Prop, Emit } from 'vue-property-decorator'
+import { Component, Mixins, Prop, Emit } from 'vue-facing-decorator'
 import { Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { BaseAddress } from '@bcrs-shared-components/base-address'

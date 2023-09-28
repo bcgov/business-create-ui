@@ -22,7 +22,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Emit, Mixins, Prop, Watch } from 'vue-property-decorator'
+import { Component, Emit, Mixins, Prop, Watch } from 'vue-facing-decorator'
 import { DocumentMixin } from '@/mixins'
 import { PdfPageSize } from '@/enums'
 

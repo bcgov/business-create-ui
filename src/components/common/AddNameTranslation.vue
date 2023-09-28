@@ -48,7 +48,7 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Emit, Prop, Vue } from 'vue-property-decorator'
+import { Component, Emit, Prop, Vue } from 'vue-facing-decorator'
 import { VuetifyRuleFunction } from '@/types'
 
 @Component({})

@@ -39,7 +39,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Emit, Mixins, Prop, Watch } from 'vue-property-decorator'
+import { Component, Emit, Mixins, Prop, Watch } from 'vue-facing-decorator'
 import { CommonMixin } from '@/mixins'
 import { FormFieldType } from '@/interfaces'
 import { Rules } from '@/rules'
