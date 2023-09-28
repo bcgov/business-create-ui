@@ -79,7 +79,7 @@
                   class="item first-name"
                   label="First Name"
                   :rules="enableRules ?
-                   (isCompletingParty ? Rules.FirstNameRulesFirms.slice(1) :
+                   (isCompletingParty ? Rules.FirstNameRulesFirmsCP :
                    Rules.FirstNameRulesFirms) : []"
                   :readonly="isCompletingParty && !(isRoleStaff || isSbcStaff)"
                 />
