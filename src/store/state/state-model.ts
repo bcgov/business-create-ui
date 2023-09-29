@@ -55,6 +55,7 @@ export const stateModel: StateModelIF = {
     taxId: '',
     state: null,
     stateFiling: '',
+    startDate: '',
     submitter: ''
   },
   businessContact: { ...EmptyContactPoint },

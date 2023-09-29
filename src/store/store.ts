@@ -280,6 +280,11 @@ export const useStore = defineStore('store', {
       return this.stateModel.business.foundingDate
     },
 
+    /** The Business Start Date. */
+    getBusinessStartDate (): string {
+      return this.stateModel.business.startDate
+    },
+
     /** The Business Office Address. */
     getBusinessOfficeAddress (): OfficeAddressIF {
       return this.stateModel.business.officeAddress
@@ -864,6 +869,9 @@ export const useStore = defineStore('store', {
     },
     setBusinessAddress (address: OfficeAddressIF) {
       this.stateModel.business.officeAddress = address
+    },
+    setBusinessStartDate (startDate: string) {
+      this.stateModel.business.startDate = startDate
     },
     setLegalName (legalName: string) {
       this.stateModel.business.legalName = legalName

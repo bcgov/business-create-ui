@@ -1167,6 +1167,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     this.setLastDirectorChangeDate(business.lastDirectorChangeDate) // may be empty
     this.setWarnings(Array.isArray(business.warnings) ? business.warnings : [])
     this.setGoodStanding(business.goodStanding)
+    this.setBusinessStartDate(business.startDate)
   }
 
   /** Fetches authorizations and verifies roles. */

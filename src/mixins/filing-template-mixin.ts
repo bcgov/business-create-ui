@@ -29,6 +29,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Getter(useStore) getBusinessLegalName!: string
   @Getter(useStore) getBusinessLegalType!: CorpTypeCd
   @Getter(useStore) getBusinessOfficeAddress!: OfficeAddressIF
+  @Getter(useStore) getBusinessStartDate!: string
   @Getter(useStore) getCertifyState!: CertifyIF
   @Getter(useStore) getCompletingParty!: CompletingPartyIF
   @Getter(useStore) getCorrectNameOption!: CorrectNameOptions
@@ -111,6 +112,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Action(useStore) setRules!: (x: CreateRulesIF) => void
   @Action(useStore) setShareClasses!: (x: ShareClassIF[]) => void
   @Action(useStore) setStaffPayment!: (x: StaffPaymentIF) => void
+  @Action(useStore) setBusinessStartDate!: (x: string) => void
   @Action(useStore) setTransactionalFolioNumber!: (x: string) => void
 
   /**
@@ -709,7 +711,8 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
         legalType: this.getEntityType,
         identifier: this.getBusinessId,
         legalName: this.getBusinessLegalName,
-        foundingDate: this.getBusinessFoundingDate
+        foundingDate: this.getBusinessFoundingDate,
+        startDate: this.getBusinessStartDate
       },
       dissolution: {
         dissolutionDate: this.getCurrentDate,
@@ -829,6 +832,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     this.setEntityType(draftFiling.business.legalType || this.getBusinessLegalType)
     this.setLegalName(draftFiling.business.legalName || this.getBusinessLegalName)
     this.setFoundingDate(draftFiling.business.foundingDate || this.getBusinessFoundingDate)
+    this.setBusinessStartDate(draftFiling.business.startDate || this.getBusinessStartDate)
 
     // restore Dissolution data
     this.setBusinessAddress(draftFiling.dissolution.custodialOffice)
