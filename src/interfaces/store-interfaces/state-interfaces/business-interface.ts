@@ -38,6 +38,6 @@ export interface BusinessIF {
   taxId?: string // aka Business Number // may be undefined
   state: EntityState
   stateFiling?: string
-  startDate: ApiDateTimeUtc | string
+  startDate: ApiDateTimeUtc
   submitter: string // not used
 }

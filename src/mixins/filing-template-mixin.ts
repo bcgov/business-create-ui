@@ -711,7 +711,8 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
         legalType: this.getEntityType,
         identifier: this.getBusinessId,
         legalName: this.getBusinessLegalName,
-        foundingDate: this.getBusinessFoundingDate
+        foundingDate: this.getBusinessFoundingDate,
+        startDate: this.getBusinessStartDate
       },
       dissolution: {
         dissolutionDate: this.getCurrentDate,
@@ -831,7 +832,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     this.setEntityType(draftFiling.business.legalType || this.getBusinessLegalType)
     this.setLegalName(draftFiling.business.legalName || this.getBusinessLegalName)
     this.setFoundingDate(draftFiling.business.foundingDate || this.getBusinessFoundingDate)
-    this.setBusinessStartDate(this.getBusinessStartDate)
+    this.setBusinessStartDate(draftFiling.business.startDate || this.getBusinessStartDate)
 
     // restore Dissolution data
     this.setBusinessAddress(draftFiling.dissolution.custodialOffice)

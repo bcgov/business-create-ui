@@ -140,6 +140,7 @@ export interface DissolutionFilingIF {
     identifier: string
     legalName: string
     foundingDate: string
+    startDate: string
   }
   dissolution: {
     dissolutionDate: string
