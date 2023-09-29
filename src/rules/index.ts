@@ -2,7 +2,7 @@ import { BusinessNumberRules } from './business-number-rules'
 import { CommonRules } from './common-rules'
 import { DateRules, DateRuleHelpers } from './date-rules'
 import { EmailRules } from './email-rules'
-import { FirstNameRules, FirstNameRulesFirms } from './first-name-rules'
+import { FirstNameRules, FirstNameRulesFirms, FirstNameRulesFirmsCP } from './first-name-rules'
 import { FolioNumberRules } from './folio-number-rules'
 import { LastNameRules } from './last-name-rules'
 import { MiddleNameRules, MiddleNameRulesFirms } from './middle-name-rules'
@@ -16,6 +16,7 @@ export const Rules = {
   EmailRules,
   FirstNameRules,
   FirstNameRulesFirms,
+  FirstNameRulesFirmsCP,
   FolioNumberRules,
   LastNameRules,
   MiddleNameRules,
