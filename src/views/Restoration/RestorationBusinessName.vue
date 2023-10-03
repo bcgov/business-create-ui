@@ -41,7 +41,11 @@
         flat
         class="mt-5"
       >
-        <RestorationType id="restoration-type" class="mb-n5"/>
+        <RestorationType 
+          id="restoration-type" 
+          class="mb-n5"
+          :class="{ 'approval-restoration-invalid-section': invalidSectionRestoration }"
+        />
 
         <!-- Divider b/w Restoration and Approval type -->
         <v-divider class="mb-11 mr-5 ml-5"></v-divider>
@@ -49,6 +53,7 @@
         <ApprovalType
           id="approval-type"
           class="mt-n10"
+          :class="{ 'approval-restoration-invalid-section': invalidSectionApproval }"
         />
       </v-card>
     </section>
@@ -107,6 +112,15 @@ export default class RestorationBusinessName extends Mixins(CommonMixin) {
     }
   }
 
+  /** This section's validity state for Restoration and Approval (when prompted by app). */
+  get invalidSectionApproval (): boolean {
+    return (this.getShowErrors && !this.getApprovalTypeValid)
+  }
+
+  get invalidSectionRestoration (): boolean {
+    return (this.getShowErrors && !this.getRestorationTypeValid)
+  }
+
   /** Called when component is created. */
   created (): void {
     // temporarily ignore data changes
@@ -145,5 +159,12 @@ h2::before {
 
 header p {
   padding-top: 0.5rem;
+}
+
+/* Invalid Section border for Approval and Restoration Type */
+.approval-restoration-invalid-section{
+  box-shadow: inset 3px 0 0 $app-red;
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
 }
 </style>
