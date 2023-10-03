@@ -47,7 +47,7 @@
         <template v-if="isTypeFirm && getBusinessId">
           <div id="entity-business-registration-date">
             <span class="business-info-label">Registration Date:</span>
-            {{ businessStartDate || "Not Available" }}
+            {{ registrationDate || "Not Available" }}
           </div>
         </template>
 
@@ -155,8 +155,8 @@ export default class EntityInfo extends Mixins(DateMixin) {
     }
   }
 
-  /** The business start date. */
-  get businessStartDate (): string {
+  /** The business registration date. */
+  get registrationDate (): string {
     // it will be same as foundingDate
     return this.dateToPacificDate(this.apiToDate(this.getBusinessFoundingDate), true)
   }
