@@ -43,12 +43,11 @@
       >
         <RestorationType
           id="restoration-type"
-          class="mb-n5"
           :class="{ 'approval-restoration-invalid-section': invalidSectionRestoration }"
         />
 
         <!-- Divider b/w Restoration and Approval type -->
-        <v-divider class="mb-11 mr-5 ml-5"></v-divider>
+        <v-divider class="mb-10 mr-5 ml-5"></v-divider>
 
         <ApprovalType
           id="approval-type"
