@@ -41,8 +41,8 @@
         flat
         class="mt-5"
       >
-        <RestorationType 
-          id="restoration-type" 
+        <RestorationType
+          id="restoration-type"
           class="mb-n5"
           :class="{ 'approval-restoration-invalid-section': invalidSectionRestoration }"
         />
