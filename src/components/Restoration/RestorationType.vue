@@ -2,7 +2,6 @@
   <div id="restoration-type">
     <div
       class="section-container"
-      :class="{ 'invalid-section': invalidSection }"
     >
       <v-row no-gutters>
         <v-col

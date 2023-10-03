@@ -2,7 +2,6 @@
   <div id="approval-type">
     <div
       class="section-container"
-      :class="{ 'invalid-section': invalidSection }"
     >
       <ApprovalTypeShared
         :courtOrderNumber="getRestoration.courtOrder.fileNumber"
