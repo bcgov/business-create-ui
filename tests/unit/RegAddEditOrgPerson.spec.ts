@@ -582,9 +582,8 @@ describe('Registration Add/Edit Org/Person component', () => {
     await flushPromises()
 
     const messages = wrapper.findAll('.v-messages.error--text')
-    expect(messages.length).toBe(2)
-    expect(messages.at(0).text()).toBe('First name is required')
-    expect(messages.at(1).text()).toBe('Last name is required')
+    expect(messages.length).toBe(1)
+    expect(messages.at(0).text()).toBe('Last name is required')
 
     expect(wrapper.vm.$data.addPersonOrgFormValid).toBe(false)
 

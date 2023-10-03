@@ -177,6 +177,7 @@ export default class AssociationDetails extends Mixins(CommonMixin, DateMixin) {
   @Getter(useStore) getBusinessId!: string
   @Getter(useStore) getBusinessLegalName!: string
   @Getter(useStore) getBusinessOfficeAddress!: OfficeAddressIF
+  @Getter(useStore) getBusinessStartDate!: string
   @Getter(useStore) getCompanyDisplayName!: string
   @Getter(useStore) getCooperativeType!: CoopTypes
   @Getter(useStore) getEntityType!: CorpTypeCd
@@ -203,8 +204,7 @@ export default class AssociationDetails extends Mixins(CommonMixin, DateMixin) {
 
   /** The business start date. */
   get businessStartDate (): string {
-    // it will be same as foundingDate
-    return this.dateToPacificDate(this.apiToDate(this.getBusinessFoundingDate), true)
+    return this.yyyyMmDdToPacificDate(this.getBusinessStartDate, true)
   }
 
   /** Whether the address object is empty. */

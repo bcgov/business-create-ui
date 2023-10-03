@@ -776,7 +776,9 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
         this.setCertifyState(
           {
             valid: this.getCertifyState.valid,
-            certifiedBy: `${userInfo.firstname} ${userInfo.lastname}`
+            certifiedBy: userInfo.firstName
+              ? `${userInfo.firstname} ${userInfo.lastname}`
+              : `${userInfo.lastname}`
           }
         )
       }
@@ -1032,7 +1034,6 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       console.info('Invalid user phone') // eslint-disable-line no-console
     }
 
-    if (!userInfo.firstname) throw new Error(ErrorTypes.INVALID_USER_FIRST_NAME)
     if (!userInfo.lastname) throw new Error(ErrorTypes.INVALID_USER_LAST_NAME)
 
     this.setUserFirstName(userInfo.firstname)
@@ -1166,6 +1167,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     this.setLastDirectorChangeDate(business.lastDirectorChangeDate) // may be empty
     this.setWarnings(Array.isArray(business.warnings) ? business.warnings : [])
     this.setGoodStanding(business.goodStanding)
+    this.setBusinessStartDate(business.startDate)
   }
 
   /** Fetches authorizations and verifies roles. */

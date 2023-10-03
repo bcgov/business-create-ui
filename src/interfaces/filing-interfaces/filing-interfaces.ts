@@ -140,6 +140,7 @@ export interface DissolutionFilingIF {
     identifier: string
     legalName: string
     foundingDate: string
+    startDate: string // Populated/used only (not NULL) in Firm Dissolution filing
   }
   dissolution: {
     dissolutionDate: string
