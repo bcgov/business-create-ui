@@ -1160,6 +1160,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     // FUTURE: change this to a single setter/object?
     this.setAdminFreeze(business.adminFreeze)
     {
+      // store operating name if it exists (only used for firms atm)
       const alternateName = business.alternateNames?.find(x => x.identifier === business.identifier)
       if (alternateName) this.setOperatingName(alternateName.operatingName)
     }

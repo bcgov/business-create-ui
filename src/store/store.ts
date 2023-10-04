@@ -270,8 +270,9 @@ export const useStore = defineStore('store', {
       }
     },
 
-    /** The Business Legal Name. */
+    /** The Business Legal Name (or Operating Name if this is a firm). */
     getBusinessLegalName (): string {
+      if (this.isTypeFirm) return this.stateModel.operatingName
       return this.stateModel.business.legalName
     },
 
@@ -298,11 +299,6 @@ export const useStore = defineStore('store', {
     /** The Name Request approved name. */
     getNameRequestApprovedName (): string {
       return this.stateModel.nameRequestApprovedName
-    },
-
-    /** The Operating Name. */
-    getOperatingName (): string {
-      return this.stateModel.operatingName
     },
 
     /** The Correct Name Option. */
@@ -884,6 +880,9 @@ export const useStore = defineStore('store', {
     setFoundingDate (foundingDate: string) {
       this.stateModel.business.foundingDate = foundingDate
     },
+    setOperatingName (name: string) {
+      this.stateModel.operatingName = name
+    },
     setFilingType (filingType: FilingTypes) {
       this.stateModel.tombstone.filingType = filingType
     },
@@ -990,9 +989,6 @@ export const useStore = defineStore('store', {
     },
     setNameRequestApprovedName (name: string) {
       this.stateModel.nameRequestApprovedName = name
-    },
-    setOperatingName (name: string) {
-      this.stateModel.operatingName = name
     },
     setCorrectNameOption (option: CorrectNameOptions) {
       this.stateModel.correctNameOption = option
