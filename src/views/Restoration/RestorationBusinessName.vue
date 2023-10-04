@@ -47,11 +47,15 @@
         />
 
         <!-- Divider b/w Restoration and Approval type -->
-        <v-divider class="mb-10 mr-5 ml-5"></v-divider>
+        <div
+          class="px-5"
+          :class="{ 'invalid-divider': invalidSectionRestoration && invalidSectionApproval }"
+        >
+          <v-divider />
+        </div>
 
         <ApprovalType
           id="approval-type"
-          class="mt-n10"
           :class="{ 'approval-restoration-invalid-section': invalidSectionApproval }"
         />
       </v-card>
@@ -165,5 +169,10 @@ header p {
   box-shadow: inset 3px 0 0 $app-red;
   border-top-left-radius: 0 !important;
   border-bottom-left-radius: 0 !important;
+}
+
+#restoration-type-section .v-card .invalid-divider {
+  border-left: 3px solid $BCgovInputError !important;
+  padding-left: calc(20px - 3px) !important;
 }
 </style>
