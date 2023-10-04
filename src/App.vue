@@ -320,6 +320,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   @Action(useStore) setLastAnnualReportDate!: (x: string) => void
   @Action(useStore) setLastDirectorChangeDate!: (x: string) => void
   @Action(useStore) setNameRequest!: (x: NameRequestIF) => void
+  @Action(useStore) setOperatingName!: (x: string) => void
   @Action(useStore) setParties!: (x: Array<PartyIF>) => void
   @Action(useStore) setResources!: (x: ResourceIF) => void
   @Action(useStore) setUserAddress!: (x: AddressIF) => void
@@ -361,7 +362,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   readonly window = window
 
   /** The Update Current JS Date timer id. */
-  private updateCurrentJsDateId = 0
+  private updateCurrentJsDateId = null as any // NodeJS.Timeout
 
   /** The route breadcrumbs list. */
   get breadcrumbs (): Array<BreadcrumbIF> {
@@ -810,7 +811,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     // NB: will throw if API error
     let draftFiling = await LegalServices.fetchFirstTask(businessId)
 
-    this.setFilingType(draftFiling.header.name)
+    this.setFilingType(draftFiling.header.name as FilingTypes)
 
     // check if filing is in a valid state to be edited
     this.invalidFilingDialog = !this.hasValidFilingState(draftFiling)
@@ -866,7 +867,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     // NB: will throw if API error
     let draftFiling = await LegalServices.fetchFirstOrOnlyFiling(tempId)
 
-    this.setFilingType(draftFiling.header.name)
+    this.setFilingType(draftFiling.header.name as FilingTypes)
 
     // check if filing is in a valid state to be edited
     this.invalidFilingDialog = !this.hasValidFilingState(draftFiling)
@@ -1158,16 +1159,20 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
 
     // FUTURE: change this to a single setter/object?
     this.setAdminFreeze(business.adminFreeze)
-    this.setLegalName(business.legalName)
-    this.setEntityState(business.state)
+    {
+      const alternateName = business.alternateNames?.find(x => x.identifier === business.identifier)
+      if (alternateName) this.setOperatingName(alternateName.operatingName)
+    }
     this.setBusinessNumber(business.taxId || null) // may be empty
-    this.setIdentifier(business.identifier)
-    this.setLastAnnualReportDate(business.lastAnnualReportDate) // may be empty
-    this.setLastAddressChangeDate(business.lastAddressChangeDate) // may be empty
-    this.setLastDirectorChangeDate(business.lastDirectorChangeDate) // may be empty
-    this.setWarnings(Array.isArray(business.warnings) ? business.warnings : [])
-    this.setGoodStanding(business.goodStanding)
     this.setBusinessStartDate(business.startDate)
+    this.setEntityState(business.state)
+    this.setGoodStanding(business.goodStanding)
+    this.setIdentifier(business.identifier)
+    this.setLastAddressChangeDate(business.lastAddressChangeDate) // may be empty
+    this.setLastAnnualReportDate(business.lastAnnualReportDate) // may be empty
+    this.setLastDirectorChangeDate(business.lastDirectorChangeDate) // may be empty
+    this.setLegalName(business.legalName)
+    this.setWarnings(Array.isArray(business.warnings) ? business.warnings : [])
   }
 
   /** Fetches authorizations and verifies roles. */

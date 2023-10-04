@@ -300,6 +300,11 @@ export const useStore = defineStore('store', {
       return this.stateModel.nameRequestApprovedName
     },
 
+    /** The Operating Name. */
+    getOperatingName (): string {
+      return this.stateModel.operatingName
+    },
+
     /** The Correct Name Option. */
     getCorrectNameOption (): CorrectNameOptions {
       return this.stateModel.correctNameOption
@@ -985,6 +990,9 @@ export const useStore = defineStore('store', {
     },
     setNameRequestApprovedName (name: string) {
       this.stateModel.nameRequestApprovedName = name
+    },
+    setOperatingName (name: string) {
+      this.stateModel.operatingName = name
     },
     setCorrectNameOption (option: CorrectNameOptions) {
       this.stateModel.correctNameOption = option
