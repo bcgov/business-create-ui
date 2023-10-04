@@ -20,7 +20,7 @@
         >
           <v-radio-group
             v-model="selectRestorationType"
-            class="mt-0 mb-n5 pt-0"
+            class="mt-0 pt-0"
             hide-details="auto"
             @change="changeRestorationType()"
           >
