@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Watch } from 'vue-facing-decorator'
+import { Component, mixins, Watch } from 'vue-facing-decorator'
 import { Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { PeopleAndRoleIF, PeopleAndRolesResourceIF } from '@/interfaces'
@@ -27,7 +27,7 @@ import RegPeopleAndRoles from '@/components/common/RegPeopleAndRoles.vue'
     RegPeopleAndRoles
   }
 })
-export default class RestorationApplicantInformation extends Mixins(CommonMixin) {
+export default class RestorationApplicantInformation extends mixins(CommonMixin) {
   @Getter(useStore) getAddPeopleAndRoleStep!: PeopleAndRoleIF
   @Getter(useStore) getPeopleAndRolesResource!: PeopleAndRolesResourceIF
   @Getter(useStore) getShowErrors!: boolean

@@ -139,7 +139,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins } from 'vue-facing-decorator'
+import { Component, mixins } from 'vue-facing-decorator'
 import { Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { ContactPointIF, RegistrationStateIF } from '@/interfaces'
@@ -158,7 +158,7 @@ import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module
     FolioNumber
   }
 })
-export default class DefineRegistrationSummary extends Mixins(DateMixin) {
+export default class DefineRegistrationSummary extends mixins(DateMixin) {
   // Getters
   @Getter(useStore) getBusinessContact!: ContactPointIF
   @Getter(useStore) getEntityType!: CorpTypeCd

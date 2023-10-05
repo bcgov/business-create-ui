@@ -100,7 +100,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Emit, Mixins } from 'vue-facing-decorator'
+import { Component, Emit, mixins } from 'vue-facing-decorator'
 import { Getter, Action } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { Navigate } from '@/utils'
@@ -109,7 +109,7 @@ import { LegalServices } from '@/services/'
 import { FilingTypes, NameRequestStates, RouteNames } from '@/enums'
 
 @Component({})
-export default class Actions extends Mixins(CommonMixin, DateMixin, FilingTemplateMixin, NameRequestMixin) {
+export default class Actions extends mixins(CommonMixin, DateMixin, FilingTemplateMixin, NameRequestMixin) {
   @Getter(useStore) getCurrentStep!: number
   @Getter(useStore) getEntityIdentifier!: string
   @Getter(useStore) getFilingType!: string

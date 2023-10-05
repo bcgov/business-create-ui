@@ -248,7 +248,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins } from 'vue-facing-decorator'
+import { Component, mixins } from 'vue-facing-decorator'
 import { cloneDeep } from 'lodash'
 import { EmptyOrgPerson } from '@/interfaces'
 import { EmptyAddress } from '@bcrs-shared-components/interfaces'
@@ -267,7 +267,7 @@ import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
     ListPeopleAndRoles
   }
 })
-export default class PeopleAndRoles extends Mixins(PeopleRolesMixin) {
+export default class PeopleAndRoles extends mixins(PeopleRolesMixin) {
   //
   // NB: see mixin for common properties, methods, etc.
   //

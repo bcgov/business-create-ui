@@ -153,7 +153,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Emit, Mixins, Prop, Vue, Watch } from 'vue-facing-decorator'
+import { Component, Emit, mixins, Prop, Vue, Watch } from 'vue-facing-decorator'
 import { Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { mask } from 'vue-the-mask'
@@ -166,7 +166,7 @@ import { Rules } from '@/rules'
     mask
   }
 })
-export default class BusinessContactInfo extends Mixins(CommonMixin) {
+export default class BusinessContactInfo extends mixins(CommonMixin) {
   @Prop({ default: () => {} }) readonly initialValue!: ContactPointIF
   @Prop({ default: false }) readonly isEditing!: boolean
   @Prop({ default: false }) readonly showErrors!: boolean

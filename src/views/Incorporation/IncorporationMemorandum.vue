@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Watch } from 'vue-facing-decorator'
+import { Component, mixins, Watch } from 'vue-facing-decorator'
 import { Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { CreateMemorandumIF } from '@/interfaces'
@@ -18,7 +18,7 @@ import { RouteNames } from '@/enums'
     UploadMemorandum
   }
 })
-export default class IncorporationMemorandum extends Mixins(CommonMixin) {
+export default class IncorporationMemorandum extends mixins(CommonMixin) {
   @Getter(useStore) getCreateMemorandumStep!: CreateMemorandumIF
   @Getter(useStore) getShowErrors!: boolean
 

@@ -193,13 +193,13 @@
 </template>
 
 <script lang="ts">
-import { Component, Emit, Mixins, Prop } from 'vue-facing-decorator'
+import { Component, Emit, mixins, Prop } from 'vue-facing-decorator'
 import { ShareClassIF, FormIF } from '@/interfaces'
 import { CurrencyLookupMixin } from '@/mixins'
 import { VuetifyRuleFunction } from '@/types'
 
 @Component({})
-export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
+export default class ShareStructure extends mixins(CurrencyLookupMixin) {
   // Refs
   $refs!: {
     shareStructureForm: FormIF

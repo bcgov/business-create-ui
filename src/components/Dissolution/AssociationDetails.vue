@@ -142,7 +142,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Prop } from 'vue-facing-decorator'
+import { Component, mixins, Prop } from 'vue-facing-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { AuthServices } from '@/services/'
@@ -164,7 +164,7 @@ import { GetCorpFullDescription, GetCorpNumberedDescription } from '@bcrs-shared
     MailingAddress: BaseAddress
   }
 })
-export default class AssociationDetails extends Mixins(CommonMixin, DateMixin) {
+export default class AssociationDetails extends mixins(CommonMixin, DateMixin) {
   @Prop({ default: false }) readonly isSummary!: boolean
   @Prop({ default: 'Address' }) readonly addressLabel!: string
   @Prop({ default: 'Company' }) readonly entityLabel!: string

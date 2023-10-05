@@ -480,7 +480,7 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Mixins, Watch } from 'vue-facing-decorator'
+import { Component, mixins, Watch } from 'vue-facing-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 
@@ -507,7 +507,7 @@ import { VuetifyRuleFunction } from '@/types'
     DatePickerShared
   }
 })
-export default class CompleteResolution extends Mixins(CommonMixin, DateMixin) {
+export default class CompleteResolution extends mixins(CommonMixin, DateMixin) {
   // Refs
   $refs!: {
     resolutionDatePickerRef: DatePickerShared

@@ -320,7 +320,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Emit, Mixins, Prop, Watch } from 'vue-facing-decorator'
+import { Component, Emit, mixins, Prop, Watch } from 'vue-facing-decorator'
 import { Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { isEmpty } from 'lodash'
@@ -336,7 +336,7 @@ import { CommonMixin } from '@/mixins'
     MailingAddress: BaseAddress
   }
 })
-export default class OfficeAddresses extends Mixins(CommonMixin) {
+export default class OfficeAddresses extends mixins(CommonMixin) {
   // Refs for sbc common base address components so we can access form validation
   $refs!: {
     regMailingAddress: any

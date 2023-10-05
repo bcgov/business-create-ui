@@ -153,7 +153,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Watch } from 'vue-facing-decorator'
+import { Component, mixins, Watch } from 'vue-facing-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { v4 as uuidv4 } from 'uuid'
@@ -170,7 +170,7 @@ import ShareStructure from '@/components/Incorporation/ShareStructure.vue'
     ShareStructure
   }
 })
-export default class IncorporationShareStructure extends Mixins(CommonMixin) {
+export default class IncorporationShareStructure extends mixins(CommonMixin) {
   @Getter(useStore) getCreateShareStructureStep!: ShareStructureIF
   @Getter(useStore) getShowErrors!: boolean
 

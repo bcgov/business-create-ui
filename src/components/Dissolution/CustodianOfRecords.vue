@@ -285,7 +285,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Emit, Mixins, Prop, Watch } from 'vue-facing-decorator'
+import { Component, Emit, mixins, Prop, Watch } from 'vue-facing-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { CoopOfficeAddressSchema, OfficeAddressSchema } from '@/schemas'
@@ -302,7 +302,7 @@ import { cloneDeep } from 'lodash'
     MailingAddress: BaseAddress
   }
 })
-export default class CustodianOfRecords extends Mixins(CommonMixin) {
+export default class CustodianOfRecords extends mixins(CommonMixin) {
   // Refs for root form and base address components to access form validation
   $refs!: {
     addCustodianForm: FormIF

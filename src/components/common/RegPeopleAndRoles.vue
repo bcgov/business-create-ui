@@ -239,7 +239,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins } from 'vue-facing-decorator'
+import { Component, mixins } from 'vue-facing-decorator'
 import { Action } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { cloneDeep } from 'lodash'
@@ -266,7 +266,7 @@ import RuleListItem from '@/components/common/RuleListItem.vue'
     RuleListItem
   }
 })
-export default class RegPeopleAndRoles extends Mixins(PeopleRolesMixin) {
+export default class RegPeopleAndRoles extends mixins(PeopleRolesMixin) {
   @Action(useStore) setRegistrationBusinessType!: (x: BusinessTypes) => void
 
   //

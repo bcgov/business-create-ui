@@ -32,7 +32,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Emit, Mixins, Watch } from 'vue-facing-decorator'
+import { Component, Emit, mixins, Watch } from 'vue-facing-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { RegistrationStateIF } from '@/interfaces'
@@ -44,7 +44,7 @@ import { DateMixin } from '@/mixins'
     DatePickerShared
   }
 })
-export default class StartDate extends Mixins(DateMixin) {
+export default class StartDate extends mixins(DateMixin) {
   // Refs
   $refs!: {
     startDateRef: DatePickerShared

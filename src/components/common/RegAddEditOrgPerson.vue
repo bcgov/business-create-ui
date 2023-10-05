@@ -442,7 +442,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins } from 'vue-facing-decorator'
+import { Component, mixins } from 'vue-facing-decorator'
 import { mask } from 'vue-the-mask'
 import { BaseAddress } from '@bcrs-shared-components/base-address'
 import { ConfirmDialog } from '@bcrs-shared-components/confirm-dialog'
@@ -465,7 +465,7 @@ import { VuetifyRuleFunction } from '@/types'
     mask
   }
 })
-export default class RegAddEditOrgPerson extends Mixins(AddEditOrgPersonMixin) {
+export default class RegAddEditOrgPerson extends mixins(AddEditOrgPersonMixin) {
   //
   // NB: see mixin for common properties, methods, etc.
   //

@@ -39,13 +39,13 @@
 </template>
 
 <script lang="ts">
-import { Component, Emit, Mixins, Prop, Watch } from 'vue-facing-decorator'
+import { Component, Emit, mixins, Prop, Watch } from 'vue-facing-decorator'
 import { CommonMixin } from '@/mixins'
 import { FormFieldType } from '@/interfaces'
 import { Rules } from '@/rules'
 
 @Component({})
-export default class TransactionalFolioNumber extends Mixins(CommonMixin) {
+export default class TransactionalFolioNumber extends mixins(CommonMixin) {
   // Refs
   $refs!: {
     folioNumberInput: FormFieldType

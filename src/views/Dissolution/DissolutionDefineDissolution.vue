@@ -110,7 +110,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Watch } from 'vue-facing-decorator'
+import { Component, mixins, Watch } from 'vue-facing-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import AssociationDetails from '@/components/Dissolution/AssociationDetails.vue'
@@ -135,7 +135,7 @@ import { GetCorpFullDescription, GetCorpNumberedDescription } from '@bcrs-shared
     HelpSection
   }
 })
-export default class DissolutionDefineDissolution extends Mixins(CommonMixin) {
+export default class DissolutionDefineDissolution extends mixins(CommonMixin) {
   // Global getters
   @Getter(useStore) getBusinessLegalName!: string
   @Getter(useStore) getCustodialRecordsResources!: CustodianResourceIF

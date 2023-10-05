@@ -146,7 +146,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Watch } from 'vue-facing-decorator'
+import { Component, mixins, Watch } from 'vue-facing-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import BusinessAddresses from '@/components/Registration/BusinessAddresses.vue'
@@ -171,7 +171,7 @@ import { CommonMixin } from '@/mixins'
     StartDate
   }
 })
-export default class RegistrationDefineBusiness extends Mixins(CommonMixin) {
+export default class RegistrationDefineBusiness extends mixins(CommonMixin) {
   @Getter(useStore) getBusinessContact!: ContactPointIF
   @Getter(useStore) getRegistration!: RegistrationStateIF
   @Getter(useStore) getShowErrors!: boolean

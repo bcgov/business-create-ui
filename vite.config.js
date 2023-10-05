@@ -2,6 +2,7 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import EnvironmentPlugin from 'vite-plugin-environment'
 import ViteRequireContext from '@originjs/vite-plugin-require-context'
+import vuetify from 'vite-plugin-vuetify'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const path = require('path')
@@ -28,6 +29,7 @@ export default defineConfig(() => {
     envPrefix: 'VUE_APP_', // Need to remove this after fixing vaults. Use import.meta.env with VUE_APP.
     plugins: [
       vue(),
+      vuetify({ autoImport: true }),
       EnvironmentPlugin({
         BUILD: 'web' // Fix for Vuelidate, allows process.env with Vite.
       }),

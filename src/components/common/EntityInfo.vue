@@ -82,7 +82,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins } from 'vue-facing-decorator'
+import { Component, mixins } from 'vue-facing-decorator'
 import { Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { FilingNames, FilingTypes } from '@/enums'
@@ -98,7 +98,7 @@ import { GetCorpFullDescription, GetCorpNumberedDescription } from '@bcrs-shared
     StaffComments
   }
 })
-export default class EntityInfo extends Mixins(DateMixin) {
+export default class EntityInfo extends mixins(DateMixin) {
   @Getter(useStore) getBusinessContact!: ContactPointIF
   @Getter(useStore) getBusinessId!: string
   @Getter(useStore) getBusinessFoundingDate!: string

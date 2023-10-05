@@ -369,7 +369,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins } from 'vue-facing-decorator'
+import { Component, mixins } from 'vue-facing-decorator'
 import { Getter, Action } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { DateMixin } from '@/mixins'
@@ -412,7 +412,7 @@ import {
     TransactionalFolioNumber
   }
 })
-export default class DissolutionReviewConfirm extends Mixins(DateMixin) {
+export default class DissolutionReviewConfirm extends mixins(DateMixin) {
   // Global getters
   @Getter(useStore) getAffidavitStep!: UploadAffidavitIF
   @Getter(useStore) getBusinessContact!: ContactPointIF

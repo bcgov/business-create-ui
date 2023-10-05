@@ -281,7 +281,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Watch } from 'vue-facing-decorator'
+import { Component, mixins, Watch } from 'vue-facing-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import {
@@ -300,7 +300,7 @@ import FileUploadPreview from '@/components/common/FileUploadPreview.vue'
     FileUploadPreview
   }
 })
-export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
+export default class UploadRules extends mixins(CommonMixin, DocumentMixin) {
   // Refs
   $refs!: {
     confirmRulesChk: FormIF

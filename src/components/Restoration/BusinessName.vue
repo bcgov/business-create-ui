@@ -60,7 +60,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Watch } from 'vue-facing-decorator'
+import { Component, mixins, Watch } from 'vue-facing-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { EmptyNameRequest, NameRequestIF } from '@/interfaces/'
@@ -77,7 +77,7 @@ import NameRequestInfo from '@/components/common/NameRequestInfo.vue'
     NameRequestInfo
   }
 })
-export default class BusinessName extends Mixins(CommonMixin, DateMixin, NameRequestMixin) {
+export default class BusinessName extends mixins(CommonMixin, DateMixin, NameRequestMixin) {
   // Global getters
   @Getter(useStore) getBusinessId!: string
   @Getter(useStore) getBusinessLegalName!: string

@@ -200,7 +200,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Prop, Emit } from 'vue-facing-decorator'
+import { Component, mixins, Prop, Emit } from 'vue-facing-decorator'
 import { Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { BaseAddress } from '@bcrs-shared-components/base-address'
@@ -218,7 +218,7 @@ import { PartyTypes, RoleTypes, RouteNames } from '@/enums'
     MailingAddress: BaseAddress
   }
 })
-export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
+export default class ListPeopleAndRoles extends mixins(CommonMixin) {
   @Prop({ default: false }) readonly isSummary!: boolean
   @Prop({ default: false }) readonly disabled!: boolean
   @Prop({ default: true }) readonly showDeliveryAddressColumn!: boolean

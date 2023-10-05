@@ -162,7 +162,7 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Mixins, Watch } from 'vue-facing-decorator'
+import { Component, mixins, Watch } from 'vue-facing-decorator'
 import { Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { DateMixin } from '@/mixins'
@@ -172,7 +172,7 @@ import { RouteNames } from '@/enums'
 import { CreateResolutionIF, CreateResolutionResourceIF, FormIF } from '@/interfaces'
 
 @Component({})
-export default class CompleteResolutionSummary extends Mixins(DateMixin) {
+export default class CompleteResolutionSummary extends mixins(DateMixin) {
   // Refs
   $refs!: {
     resolutionTextRef: FormIF

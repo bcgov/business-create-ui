@@ -3,16 +3,15 @@ import 'core-js/stable' // to polyfill ECMAScript features
 import 'regenerator-runtime/runtime' // to use transpiled generator functions
 
 // Vue Libraries
-import Vue from 'vue'
-import Vuetify from 'vuetify'
+import { createApp } from 'vue'
 import Vuelidate from 'vuelidate'
 import { getVueRouter } from '@/router'
-import { getPiniaStore, getVuexStore } from '@/store'
+import { getPiniaStore } from '@/store'
 import Affix from 'vue-affix'
-import Vue2Filters from 'vue2-filters' // needed by SbcFeeSummary
 import * as Sentry from '@sentry/vue'
 import VueObserveVisibility from 'vue-observe-visibility' // added to help with rendering of text area heights properly
 import Hotjar from 'vue-hotjar'
+import vuetify from './plugins/vuetify'
 
 // Base App
 // NB: must come before style imports
@@ -31,19 +30,23 @@ import { FetchConfig, GetFeatureFlag, InitLdClient, Navigate } from '@/utils'
 import KeycloakService from 'sbc-common-components/src/services/keycloak.services'
 
 // get rid of "You are running Vue in development mode" console message
-Vue.config.productionTip = false
+// https://v3-migration.vuejs.org/breaking-changes/global-api.html#config-productiontip-removed
+// Vue.config.productionTip = false
 
-Vue.use(Vuetify)
-Vue.use(Affix)
-Vue.use(Vuelidate)
-Vue.use(Vue2Filters)
-Vue.use(VueObserveVisibility)
+// Vue.use(Vuetify)
+// Vue.use(Affix)
+// Vue.use(Vuelidate)
+// Vue.use(Vue2Filters)
+// Vue.use(VueObserveVisibility)
 
 // main code
 async function start () {
   // fetch config from environment and API
   // must come first as inits below depend on config
   await FetchConfig()
+
+  const router = getVueRouter()
+  const app = createApp(App)
 
   // initialize Launch Darkly
   if ((window as any).ldClientId) {
@@ -55,7 +58,7 @@ async function start () {
     // initialize Sentry
     console.info('Initializing Sentry...') // eslint-disable-line no-console
     Sentry.init({
-      Vue,
+      app,
       dsn: (window as any).sentryDsn
     })
   }
@@ -64,7 +67,7 @@ async function start () {
   const hotjarId: string = (window as any).hotjarId
   if (hotjarId) {
     console.info('Initializing Hotjar...') // eslint-disable-line no-console
-    Vue.use(Hotjar, { id: hotjarId })
+    app.use(Hotjar, { id: hotjarId })
   }
 
   // configure KeyCloak Service
@@ -86,29 +89,10 @@ async function start () {
 
   // start Vue application
   console.info('Starting app...') // eslint-disable-line no-console
-  const app = Vue.createApp({
-    vuetify: new Vuetify({
-      iconfont: 'mdi',
-      theme: {
-        themes: {
-          light: {
-            primary: '#1669bb', // same as $app-blue
-            appDkBlue: '#38598a', // same as $app-dk-blue
-            success: '#1a9031', // same as $app-green
-            successCheckmark: '#2e8540', // same as $app-dk-green
-            error: '#d3272c', // same as $app-red
-            gray7: '#495057', // same as $gray7
-            gray9: '#212529' // same as $gray9
-          }
-        }
-      }
-    }),
-    router: getVueRouter(),
-    store: getVuexStore(),
-    pinia: getPiniaStore(),
-    render: h => h(App)
-  })
-  app.mount('#app')
+  app.use(Affix)
+  app.use(Vuelidate)
+  app.use(VueObserveVisibility)
+  app.use(router).use(getPiniaStore()).use(vuetify).mount('#app')
 }
 
 // execution and error handling

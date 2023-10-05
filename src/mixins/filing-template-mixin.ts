@@ -1,4 +1,4 @@
-import { Component, Mixins } from 'vue-facing-decorator'
+import { Component, mixins } from 'vue-facing-decorator'
 import { Getter, Action } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { DateMixin } from '@/mixins'
@@ -20,7 +20,7 @@ import { CorpTypeCd, CorrectNameOptions } from '@bcrs-shared-components/enums/'
  * Mixin that provides the integration with the Legal API.
  */
 @Component({})
-export default class FilingTemplateMixin extends Mixins(DateMixin) {
+export default class FilingTemplateMixin extends mixins(DateMixin) {
   @Getter(useStore) getAddPeopleAndRoleStep!: PeopleAndRoleIF
   @Getter(useStore) getAffidavitStep!: UploadAffidavitIF
   @Getter(useStore) getBusinessContact!: ContactPointIF

@@ -22,12 +22,12 @@
 </template>
 
 <script lang="ts">
-import { Component, Emit, Mixins, Prop, Watch } from 'vue-facing-decorator'
+import { Component, Emit, mixins, Prop, Watch } from 'vue-facing-decorator'
 import { DocumentMixin } from '@/mixins'
 import { PdfPageSize } from '@/enums'
 
 @Component({})
-export default class FileUploadPreview extends Mixins(DocumentMixin) {
+export default class FileUploadPreview extends mixins(DocumentMixin) {
   @Prop({ default: null }) readonly inputFile!: File
   @Prop({ default: 'File' }) readonly inputFileLabel!: string
   @Prop({ default: true }) readonly isRequired!: boolean
