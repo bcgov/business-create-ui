@@ -5,7 +5,7 @@ RUN npm install
 COPY ./ .
 RUN npm run build
 
-FROM nginx:1.18.0 as production-stage
+# FROM nginx:1.18.0 as production-stage
 
 ARG VCS_REF="missing"
 ARG BUILD_DATE="missing"
