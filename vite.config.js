@@ -41,6 +41,18 @@ export default defineConfig(() => {
       },
       extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json', '.vue']
     },
+    build: {
+      rollupOptions: {
+        external: [
+          'vuetify/lib/components/VBtn/index.mjs',
+          'vuetify/lib/components/VGrid/index.mjs',
+          'vuetify/lib/components/VIcon/index.mjs',
+          'vuetify/lib/components/VAlert/index.mjs',
+          'vuetify/lib/components/VCard/index.mjs',
+          'vuetify/lib/components/transitions/index.mjs'
+        ]
+      }
+    },
     server: {
       host: true,
       port: 8080

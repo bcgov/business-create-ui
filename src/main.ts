@@ -17,14 +17,6 @@ import vuetify from './plugins/vuetify'
 // NB: must come before style imports
 import App from '@/App.vue'
 
-// Styles
-// NB: order matters - do not change
-import 'vuetify/dist/vuetify.min.css'
-import '@mdi/font/css/materialdesignicons.min.css' // ensure you are using css-loader
-import '@/assets/styles/base.scss'
-import '@/assets/styles/layout.scss'
-import '@/assets/styles/overrides.scss'
-
 // Helpers
 import { FetchConfig, GetFeatureFlag, InitLdClient, Navigate } from '@/utils'
 import KeycloakService from 'sbc-common-components/src/services/keycloak.services'
