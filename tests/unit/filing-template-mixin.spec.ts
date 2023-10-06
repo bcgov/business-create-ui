@@ -1,4 +1,4 @@
-import { wrapperFactory } from '../jest-wrapper-factory'
+import { wrapperFactory } from '../vitest-wrapper-factory'
 import MixinTester from '@/mixin-tester.vue'
 import { createPinia, setActivePinia } from 'pinia'
 import { useStore } from '@/store/store'

@@ -1,4 +1,4 @@
-import { wrapperFactory } from '../jest-wrapper-factory'
+import { wrapperFactory } from '../vitest-wrapper-factory'
 import CompleteResolution from '@/components/Dissolution/CompleteResolution.vue'
 import { DissolutionResources } from '@/resources'
 import { CorpTypeCd } from '@bcrs-shared-components/enums/'

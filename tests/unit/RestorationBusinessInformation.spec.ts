@@ -1,4 +1,4 @@
-import { shallowWrapperFactory } from '../jest-wrapper-factory'
+import { shallowWrapperFactory } from '../vitest-wrapper-factory'
 import { RestorationBusinessInformation } from '@/views'
 import { RestorationResources } from '@/resources/'
 import OfficeAddresses from '@/components/common/OfficeAddresses.vue'

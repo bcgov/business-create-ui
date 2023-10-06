@@ -1,4 +1,4 @@
-import { shallowWrapperFactory } from '../jest-wrapper-factory'
+import { shallowWrapperFactory } from '../vitest-wrapper-factory'
 import AssociationDetails from '@/components/Dissolution/AssociationDetails.vue'
 import { CorpTypeCd } from '@bcrs-shared-components/enums/'
 

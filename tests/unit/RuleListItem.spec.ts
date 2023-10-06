@@ -1,4 +1,4 @@
-import { wrapperFactory } from '../jest-wrapper-factory'
+import { wrapperFactory } from '../vitest-wrapper-factory'
 import RuleListItem from '@/components/common/RuleListItem.vue'
 
 describe('Rule List Item component', () => {

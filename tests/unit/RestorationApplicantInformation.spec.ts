@@ -1,4 +1,4 @@
-import { shallowWrapperFactory } from '../jest-wrapper-factory'
+import { shallowWrapperFactory } from '../vitest-wrapper-factory'
 import { RestorationApplicantInformation } from '@/views'
 import { RestorationResources } from '@/resources/'
 import RegPeopleAndRoles from '@/components/common/RegPeopleAndRoles.vue'

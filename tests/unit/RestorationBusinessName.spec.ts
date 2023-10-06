@@ -1,4 +1,4 @@
-import { shallowWrapperFactory } from '../jest-wrapper-factory'
+import { shallowWrapperFactory } from '../vitest-wrapper-factory'
 import { RestorationBusinessName } from '@/views'
 import { RestorationResources } from '@/resources/'
 import ApprovalType from '@/components/Restoration/ApprovalType.vue'
