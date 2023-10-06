@@ -1,5 +1,7 @@
-import { wrapperFactory } from '../jest-wrapper-factory'
+import { shallowWrapperFactory, wrapperFactory } from '../jest-wrapper-factory'
 import EntityInfo from '@/components/common/EntityInfo.vue'
+import { FilingTypes } from '@/enums'
+import { CorpTypeCd } from '@bcrs-shared-components/enums/'
 
 // Test Case Data
 const mockEntityInfo = [
@@ -91,6 +93,10 @@ for (const mock of mockEntityInfo) {
       }, 'incorporation-define-company')
     })
 
+    afterEach(() => {
+      wrapper.destroy()
+    })
+
     it('renders the Name Request header', async () => {
       expect(wrapper.vm.$el.querySelector('#entity-legal-name').textContent)
         .toContain('Xyz Ltd.')
@@ -116,7 +122,11 @@ for (const mock of mockEntityInfo) {
       }, 'incorporation-define-company')
     })
 
-    it('renders the Numbered Company header', async () => {
+    afterEach(() => {
+      wrapper.destroy()
+    })
+
+    it('renders the Numbered Company header', () => {
       expect(wrapper.vm.$el.querySelector('#entity-legal-name').textContent)
         .toContain(`${mock.numberedDesc}`)
 
@@ -125,3 +135,39 @@ for (const mock of mockEntityInfo) {
     })
   })
 }
+
+describe('Entity Info component for firms', () => {
+  it('displays NR approved name correctly for a SP registration', () => {
+    const wrapper = shallowWrapperFactory(
+      EntityInfo,
+      null,
+      {
+        business: { legalName: 'My Legal Name' },
+        entityType: CorpTypeCd.SOLE_PROP,
+        nameRequestApprovedName: 'My NR Approved Name',
+        tombstone: { filingType: FilingTypes.REGISTRATION }
+      }
+    )
+
+    expect(wrapper.find('#entity-legal-name').text()).toBe('My NR Approved Name')
+
+    wrapper.destroy()
+  })
+
+  it('displays operating name correctly for a SP dissolution', () => {
+    const wrapper = shallowWrapperFactory(
+      EntityInfo,
+      null,
+      {
+        business: { legalName: 'My Legal Name' },
+        entityType: CorpTypeCd.SOLE_PROP,
+        operatingName: 'My Operating Name',
+        tombstone: { filingType: FilingTypes.DISSOLUTION }
+      }
+    )
+
+    expect(wrapper.find('#entity-legal-name').text()).toBe('My Operating Name')
+
+    wrapper.destroy()
+  })
+})
