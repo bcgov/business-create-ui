@@ -19,6 +19,7 @@ export default createVuetify({
         colors: {
           primary: '#1669bb', // same as $$primary-blue
           darkBlue: '#38598a',
+          darkGreen: '#388E3C',
           error: '#d3272c',
           success: '#1a9031',
           warning: '#ffc107'

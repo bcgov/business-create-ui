@@ -84,7 +84,7 @@
       <li>
         <v-icon
           v-if="shareClasses.length > 0"
-          color="green-darken-2"
+          color="darkGreen"
           class="cp-valid"
         >
           mdi-check

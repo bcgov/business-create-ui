@@ -23,7 +23,7 @@
         class="summary-desc"
       >
         <v-icon
-          color="green-darken-2"
+          color="darkGreen"
           class="agreement-valid-icon"
         >
           mdi-check

@@ -41,7 +41,7 @@
           >
             <v-icon
               v-if="validNumCompletingParty"
-              color="green-darken-2"
+              color="darkGreen"
               class="cp-valid"
             >
               mdi-check
@@ -64,7 +64,7 @@
           >
             <v-icon
               v-if="validNumIncorporators"
-              color="green-darken-2"
+              color="darkGreen"
               class="incorp-valid"
             >
               mdi-check
@@ -87,7 +87,7 @@
           >
             <v-icon
               v-if="validNumDirectors"
-              color="green-darken-2"
+              color="darkGreen"
               class="dir-valid"
             >
               mdi-check
@@ -110,7 +110,7 @@
           >
             <v-icon
               v-if="validDirectorCountry"
-              color="green-darken-2"
+              color="darkGreen"
               class="dir-valid"
             >
               mdi-check
@@ -133,7 +133,7 @@
           >
             <v-icon
               v-if="validDirectorProvince"
-              color="green-darken-2"
+              color="darkGreen"
               class="dir-valid"
             >
               mdi-check
