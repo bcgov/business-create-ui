@@ -68,6 +68,7 @@
             <template v-else>
               <v-radio-group
                 v-model="custodian.officer.partyType"
+                direction="vertical"
                 class="person-or-org-radio-group"
                 @update:modelValue="syncCustodianPartyType($event)"
               >

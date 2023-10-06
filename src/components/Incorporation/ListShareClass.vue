@@ -58,6 +58,7 @@
                 <!-- Share Class Dropdown Actions -->
                 <span>
                   <v-menu
+                    location="bottom"
                     :disabled="componentDisabled"
                   >
                     <template #activator="{ on }">
@@ -149,7 +150,7 @@
 
                 <!-- Share Series Dropdown Actions -->
                 <span>
-                  <v-menu>
+                  <v-menu location="bottom">
                     <template #activator="{ on }">
                       <v-btn
                         variant="text"

@@ -18,6 +18,7 @@
         >
           <v-radio-group
             v-model="liquidatorOrCustodian"
+            direction="vertical"
             class="pt-0 mt-0 care-and-custody-option-list"
             @update:modelValue="changeCareAndCustodyType()"
           >

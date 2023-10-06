@@ -1,6 +1,7 @@
 // Pinia store
 import { defineStore } from 'pinia'
-// import Vuetify from 'vuetify'
+import vuetify from '../plugins/vuetify'
+import { useDisplay } from 'vuetify'
 import { resourceModel, stateModel } from './state'
 import {
   AccountTypes,
@@ -75,9 +76,8 @@ export const useStore = defineStore('store', {
     /** True if current screen width is mobile. */
     isMobile (): boolean {
     // fall back to base window width if no window size changes have occurred
-      const width = this.stateModel.windowWidth || window.innerWidth
-      return width < 333
-      // return (width < new Vuetify().framework.breakpoint.thresholds.sm)
+    // https://vuetifyjs.com/en/features/display-and-platform/#interface
+      return useDisplay().mobile.value
     },
 
     /** Whether the current filing is an Incorporation. */

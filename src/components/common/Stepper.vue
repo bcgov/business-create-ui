@@ -14,7 +14,7 @@
           :id="step.id"
           variant="outlined"
           color="primary"
-          class="step__btn"
+          class="step__btn rounded-circle"
           tabindex="-1"
           :disabled="isBusySaving"
           :ripple="false"

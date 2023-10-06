@@ -32,6 +32,7 @@
 
                 <v-radio-group
                   v-model="hasNoMaximumShares"
+                  direction="vertical"
                   class="radio-group"
                   @update:modelValue="changeMaximumShareFlag()"
                 >
@@ -66,6 +67,7 @@
                 <v-radio-group
                   v-show="isClass"
                   v-model="hasNoParValue"
+                  direction="vertical"
                   class="radio-group"
                   @update:modelValue="changeParValueFlag()"
                 >

@@ -163,7 +163,7 @@
               <!-- More Actions menu -->
               <span>
                 <v-menu
-                  location="left"
+                  location="left bottom"
                   :disabled="disabled"
                 >
                   <template #activator="{ on }">

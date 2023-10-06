@@ -13,6 +13,7 @@
           x-small
           label
           color="primary"
+          text-color="white"
         >
           Changed
         </v-chip>

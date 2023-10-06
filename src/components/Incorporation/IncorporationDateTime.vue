@@ -18,6 +18,7 @@
       >
         <v-radio-group
           v-model="selectDate"
+          direction="vertical"
           class="radio-group"
         >
           <v-radio
@@ -38,6 +39,7 @@
             close-on-content-click
             :offset="40"
             transition="scale-transition"
+            location="bottom"
             min-width="290px"
           >
             <template #activator="{ on }">

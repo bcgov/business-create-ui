@@ -12,6 +12,7 @@ import * as Sentry from '@sentry/vue'
 import VueObserveVisibility from 'vue-observe-visibility' // added to help with rendering of text area heights properly
 import Hotjar from 'vue-hotjar'
 import vuetify from './plugins/vuetify'
+import { PiniaVuePlugin } from 'pinia'
 
 // Base App
 // NB: must come before style imports

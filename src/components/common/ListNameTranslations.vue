@@ -41,7 +41,7 @@
           </span>
 
           <!-- more actions menu -->
-          <v-menu>
+          <v-menu location="bottom">
             <template #activator="{ on }">
               <v-btn
                 variant="text"
