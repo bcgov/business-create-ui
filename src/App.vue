@@ -120,13 +120,11 @@
       </div>
     </transition>
 
-    <SbcHeader />
-
     <!-- Alert banner -->
     <v-alert
       v-if="bannerText"
-      tile
-      dense
+      rounded="0"
+      density="compact"
       type="warning"
     >
       <div
@@ -138,7 +136,6 @@
     <div class="app-body">
       <!-- Don't show page if an error dialog is displayed. -->
       <main v-if="!isErrorDialog">
-        <Breadcrumb :breadcrumbs="breadcrumbs" />
 
         <div id="entity-info-wrapper">
           <v-container class="py-5">
@@ -197,11 +194,6 @@
                   relative-element-selector=".col-lg-9"
                   :offset="{ top: 100, bottom: -100 }"
                 >
-                  <SbcFeeSummary
-                    :filingData="feeFilingData"
-                    :payURL="payApiUrl"
-                    :filingLabel="filingLabel"
-                  />
                 </affix>
               </aside>
             </v-col>
@@ -226,7 +218,7 @@
 <script lang="ts">
 // Libraries
 import axios from 'axios'
-import { Component, Mixins, Watch } from 'vue-property-decorator'
+import { Component, mixins, Watch } from 'vue-facing-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { StatusCodes } from 'http-status-codes'
@@ -240,9 +232,8 @@ import { Breadcrumb } from '@bcrs-shared-components/breadcrumb'
 import { GenesysWebMessage } from '@bcrs-shared-components/genesys-web-message'
 import { WebChat } from '@bcrs-shared-components/web-chat'
 import EntityInfo from '@/components/common/EntityInfo.vue'
-import SbcFeeSummary from 'sbc-common-components/src/components/SbcFeeSummary.vue'
+import { FeeSummary } from '@bcrs-shared-components/fee-summary'
 import SbcFooter from 'sbc-common-components/src/components/SbcFooter.vue'
-import SbcHeader from 'sbc-common-components/src/components/SbcHeader.vue'
 import Stepper from '@/components/common/Stepper.vue'
 import * as Dialogs from '@/dialogs'
 import * as Views from '@/views'
@@ -268,16 +259,15 @@ import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
     Breadcrumb,
     EntityInfo,
     GenesysWebMessage,
-    SbcFeeSummary,
+    FeeSummary,
     SbcFooter,
-    SbcHeader,
     Stepper,
     WebChat,
     ...Dialogs,
     ...Views
   }
 })
-export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMixin, NameRequestMixin) {
+export default class App extends mixins(CommonMixin, DateMixin, FilingTemplateMixin, NameRequestMixin) {
   // Refs
   $refs!: {
     confirm: ConfirmDialogType
@@ -499,30 +489,30 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     window.addEventListener('resize', () => this.setWindowWidth(window.innerWidth))
 
     // listen for save error event
-    this.$root.$on('save-error-event', async error => {
-      // save errors/warnings
-      this.saveErrors = error?.response?.data?.errors || []
-      this.saveWarnings = error?.response?.data?.warnings || []
+    // this.$root.$on('save-error-event', async error => {
+    //   // save errors/warnings
+    //   this.saveErrors = error?.response?.data?.errors || []
+    //   this.saveWarnings = error?.response?.data?.warnings || []
 
-      if (error?.response?.status === StatusCodes.PAYMENT_REQUIRED) {
-        // changes were saved if a 402 is received, so clear flag
-        this.setHaveChanges(false)
-        this.paymentErrorDialog = true
-      } else {
-        console.log('Save error =', error) // eslint-disable-line no-console
-        this.saveErrorDialog = true
-      }
-    })
+    //   if (error?.response?.status === StatusCodes.PAYMENT_REQUIRED) {
+    //     // changes were saved if a 402 is received, so clear flag
+    //     this.setHaveChanges(false)
+    //     this.paymentErrorDialog = true
+    //   } else {
+    //     console.log('Save error =', error) // eslint-disable-line no-console
+    //     this.saveErrorDialog = true
+    //   }
+    // })
 
-    this.$root.$on('name-request-invalid-error', async error => {
-      console.log('NR error during File and Pay =', error) // eslint-disable-line no-console
-      this.fileAndPayInvalidNameRequestDialog = true
-    })
+    // this.$root.$on('name-request-invalid-error', async error => {
+    //   console.log('NR error during File and Pay =', error) // eslint-disable-line no-console
+    //   this.fileAndPayInvalidNameRequestDialog = true
+    // })
 
-    this.$root.$on('name-request-retrieve-error', async () => {
-      console.log('Error while retrieving NR during File and Pay') // eslint-disable-line no-console
-      this.nameRequestInvalidErrorDialog = true
-    })
+    // this.$root.$on('name-request-retrieve-error', async () => {
+    //   console.log('Error while retrieving NR during File and Pay') // eslint-disable-line no-console
+    //   this.nameRequestInvalidErrorDialog = true
+    // })
 
     // init app
     this.onRouteChanged()
@@ -540,9 +530,9 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     clearInterval(this.updateCurrentJsDateId)
 
     // stop listening for save error event
-    this.$root.$off('save-error-event')
-    this.$root.$off('name-request-invalid-errort')
-    this.$root.$off('name-request-retrieve-error')
+    // this.$root.$off('save-error-event')
+    // this.$root.$off('name-request-invalid-errort')
+    // this.$root.$off('name-request-retrieve-error')
   }
 
   /** Called to navigate to My Business Registry. */

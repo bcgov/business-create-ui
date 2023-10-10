@@ -23,7 +23,7 @@
         class="summary-desc"
       >
         <v-icon
-          color="green darken-2"
+          color="darkGreen"
           class="agreement-valid-icon"
         >
           mdi-check
@@ -45,7 +45,7 @@
           v-model="agreementType"
           class="ml-6 mt-0 agreement-option-list"
           :value="item.code"
-          @change="changeAgreementType()"
+          @update:modelValue="changeAgreementType()"
         >
           <template #label>
             <div
@@ -65,7 +65,7 @@
           v-model="agreementType"
           class="mt-0 pt-0"
           hide-details
-          @change="changeAgreementType()"
+          @update:modelValue="changeAgreementType()"
         >
           <v-radio
             v-for="(item, index) in getIncorporationAgreementDocuments"
@@ -87,7 +87,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-facing-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { IncorporationAgreementIF, IncorporationAgreementTypeIF } from '@/interfaces'

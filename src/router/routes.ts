@@ -216,7 +216,7 @@ export const routes = [
     // must be last
     // NB: this route is IA-specific but App::fetchData() will reroute
     // if user is on a route not valid for the current filing type
-    path: '*',
+    path: '/:catchAll(.*)',
     redirect: '/incorporation-define-company'
   }
 ]

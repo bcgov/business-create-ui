@@ -24,7 +24,7 @@
             v-model="hasCertificateDestroyed"
             class="destroy-certificate-checkbox ma-0 pa-0"
             hide-details
-            @change="setHasCertificateDestroyed"
+            @update:modelValue="setHasCertificateDestroyed"
           >
             <template #label>
               <span
@@ -83,7 +83,7 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-facing-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 

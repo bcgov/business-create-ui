@@ -69,7 +69,7 @@
           v-if="showOkay"
           id="dialog-ok-button"
           color="primary"
-          text
+          variant="text"
           @click="okay()"
         >
           OK
@@ -78,7 +78,7 @@
           v-else
           id="dialog-redirect-button"
           color="primary"
-          text
+          variant="text"
           @click="redirect()"
         >
           Back to Dashboard
@@ -89,7 +89,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Emit, Prop, Vue } from 'vue-property-decorator'
+import { Component, Emit, Prop, Vue } from 'vue-facing-decorator'
 import { NameRequestStates } from '@/enums'
 
 @Component({})

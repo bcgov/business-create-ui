@@ -1,7 +1,8 @@
 import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue2'
+import vue from '@vitejs/plugin-vue'
 import EnvironmentPlugin from 'vite-plugin-environment'
 import ViteRequireContext from '@originjs/vite-plugin-require-context'
+import vuetify from 'vite-plugin-vuetify'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const path = require('path')
@@ -28,6 +29,7 @@ export default defineConfig(() => {
     envPrefix: 'VUE_APP_', // Need to remove this after fixing vaults. Use import.meta.env with VUE_APP.
     plugins: [
       vue(),
+      vuetify({ autoImport: true }),
       EnvironmentPlugin({
         BUILD: 'web' // Fix for Vuelidate, allows process.env with Vite.
       }),
@@ -38,6 +40,18 @@ export default defineConfig(() => {
         '@': path.resolve(__dirname, './src')
       },
       extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json', '.vue']
+    },
+    build: {
+      rollupOptions: {
+        external: [
+          'vuetify/lib/components/VBtn/index.mjs',
+          'vuetify/lib/components/VGrid/index.mjs',
+          'vuetify/lib/components/VIcon/index.mjs',
+          'vuetify/lib/components/VAlert/index.mjs',
+          'vuetify/lib/components/VCard/index.mjs',
+          'vuetify/lib/components/transitions/index.mjs'
+        ]
+      }
     },
     server: {
       host: true,

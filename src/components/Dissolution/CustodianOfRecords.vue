@@ -37,7 +37,7 @@
                   <v-text-field
                     id="person__first-name"
                     v-model.trim="custodian.officer.firstName"
-                    filled
+                    variant="filled"
                     label="First Name"
                     :rules="Rules.FirstNameRules"
                   />
@@ -46,7 +46,7 @@
                   <v-text-field
                     id="person__middle-name"
                     v-model.trim="custodian.officer.middleName"
-                    filled
+                    variant="filled"
                     class="px-5"
                     label="Middle Name (Optional)"
                     :rules="Rules.MiddleNameRules"
@@ -56,7 +56,7 @@
                   <v-text-field
                     id="person__last-name"
                     v-model.trim="custodian.officer.lastName"
-                    filled
+                    variant="filled"
                     label="Last Name"
                     :rules="Rules.LastNameRules"
                   />
@@ -68,9 +68,9 @@
             <template v-else>
               <v-radio-group
                 v-model="custodian.officer.partyType"
-                column
+                direction="vertical"
                 class="person-or-org-radio-group"
-                @change="syncCustodianPartyType($event)"
+                @update:modelValue="syncCustodianPartyType($event)"
               >
                 <!-- Person input -->
                 <v-radio :value="PartyTypes.PERSON">
@@ -91,31 +91,31 @@
                     <v-text-field
                       id="person__first-name"
                       v-model.trim="custodian.officer.firstName"
-                      filled
+                      variant="filled"
                       label="First Name"
                       :rules="isPerson ? Rules.FirstNameRules : []"
-                      @input="syncCustodianPartyType(PartyTypes.PERSON)"
+                      @update:modelValue="syncCustodianPartyType(PartyTypes.PERSON)"
                     />
                   </v-col>
                   <v-col>
                     <v-text-field
                       id="person__middle-name"
                       v-model.trim="custodian.officer.middleName"
-                      filled
+                      variant="filled"
                       class="px-5"
                       label="Middle Name (Optional)"
                       :rules="isPerson ? Rules.MiddleNameRules : []"
-                      @input="syncCustodianPartyType(PartyTypes.PERSON)"
+                      @update:modelValue="syncCustodianPartyType(PartyTypes.PERSON)"
                     />
                   </v-col>
                   <v-col>
                     <v-text-field
                       id="person__last-name"
                       v-model.trim="custodian.officer.lastName"
-                      filled
+                      variant="filled"
                       label="Last Name"
                       :rules="isPerson ? Rules.LastNameRules : []"
-                      @input="syncCustodianPartyType(PartyTypes.PERSON)"
+                      @update:modelValue="syncCustodianPartyType(PartyTypes.PERSON)"
                     />
                   </v-col>
                 </v-row>
@@ -142,10 +142,10 @@
                     <v-text-field
                       id="organization__name"
                       v-model.trim="custodian.officer.organizationName"
-                      filled
+                      variant="filled"
                       label="Corporation or Firm Name"
                       :rules="isOrg ? Rules.OrgNameRules : []"
-                      @input="syncCustodianPartyType(PartyTypes.ORGANIZATION)"
+                      @update:modelValue="syncCustodianPartyType(PartyTypes.ORGANIZATION)"
                     />
                   </v-col>
                 </v-row>
@@ -163,7 +163,7 @@
                 <v-text-field
                   id="person__email"
                   v-model="custodian.officer.email"
-                  filled
+                  variant="filled"
                   label="Email Address"
                   :rules="Rules.EmailRules"
                 />
@@ -286,7 +286,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Emit, Mixins, Prop, Watch } from 'vue-property-decorator'
+import { Component, Emit, mixins, Prop, Watch } from 'vue-facing-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { CoopOfficeAddressSchema, OfficeAddressSchema } from '@/schemas'
@@ -303,7 +303,7 @@ import { cloneDeep } from 'lodash'
     MailingAddress: BaseAddress
   }
 })
-export default class CustodianOfRecords extends Mixins(CommonMixin) {
+export default class CustodianOfRecords extends mixins(CommonMixin) {
   // Refs for root form and base address components to access form validation
   $refs!: {
     addCustodianForm: FormIF

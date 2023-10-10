@@ -10,7 +10,7 @@
       <div class="pt-2 pb-3">
         <span>Before submitting your incorporation application you <b>must complete, sign, and date</b> an</span>
         <v-tooltip
-          top
+          location="top"
           max-width="20rem"
           content-class="top-tooltip"
           transition="fade-transition"
@@ -28,7 +28,7 @@
         </v-tooltip>
         <span>, and a set of </span>
         <v-tooltip
-          top
+          location="top"
           max-width="20rem"
           content-class="top-tooltip"
           transition="fade-transition"
@@ -45,7 +45,7 @@
         <template v-if="isTypeBcomp || isTypeBcUlcCompany || isTypeBcCcc">
           containing a
           <v-tooltip
-            top
+            location="top"
             max-width="20rem"
             content-class="top-tooltip"
             transition="fade-transition"
@@ -261,7 +261,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Watch } from 'vue-property-decorator'
+import { Component, mixins, Watch } from 'vue-facing-decorator'
 import { Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import AgreementType from '@/components/common/AgreementType.vue'
@@ -276,7 +276,7 @@ import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module
     AgreementType
   }
 })
-export default class IncorporationAgreement extends Mixins(CommonMixin) {
+export default class IncorporationAgreement extends mixins(CommonMixin) {
   @Getter(useStore) isTypeBcomp!: boolean
   @Getter(useStore) isTypeBcCcc!: boolean
   @Getter(useStore) isTypeBcCompany!: boolean

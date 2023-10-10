@@ -26,7 +26,7 @@
           id="folio-number-input"
           ref="folioNumberInput"
           v-model.trim="localFolioNumber"
-          filled
+          variant="filled"
           persistent-hint
           autocomplete="chrome-off"
           label="Folio or Reference Number (Optional)"
@@ -39,13 +39,13 @@
 </template>
 
 <script lang="ts">
-import { Component, Emit, Mixins, Prop, Watch } from 'vue-property-decorator'
+import { Component, Emit, mixins, Prop, Watch } from 'vue-facing-decorator'
 import { CommonMixin } from '@/mixins'
 import { FormFieldType } from '@/interfaces'
 import { Rules } from '@/rules'
 
 @Component({})
-export default class TransactionalFolioNumber extends Mixins(CommonMixin) {
+export default class TransactionalFolioNumber extends mixins(CommonMixin) {
   // Refs
   $refs!: {
     folioNumberInput: FormFieldType

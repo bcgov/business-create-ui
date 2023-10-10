@@ -18,9 +18,9 @@
         >
           <v-radio-group
             v-model="liquidatorOrCustodian"
-            column
+            direction="vertical"
             class="pt-0 mt-0 care-and-custody-option-list"
-            @change="changeCareAndCustodyType()"
+            @update:modelValue="changeCareAndCustodyType()"
           >
             <v-radio
               id="liquidator-radio-btn"
@@ -53,7 +53,7 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-facing-decorator'
 import { RoleTypes } from '@/enums'
 
 @Component

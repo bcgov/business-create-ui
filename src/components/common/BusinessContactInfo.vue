@@ -26,7 +26,7 @@
             <v-text-field
               id="txt-email"
               v-model="contact.email"
-              filled
+              variant="filled"
               label="Email Address"
               req
               persistent-hint
@@ -50,7 +50,7 @@
             <v-text-field
               id="txt-confirm-email"
               v-model="contact.confirmEmail"
-              filled
+              variant="filled"
               label="Confirm Email Address"
               req
               persistent-hint
@@ -75,7 +75,7 @@
               id="txt-phone"
               v-model="contact.phone"
               v-mask="['(###) ###-####']"
-              filled
+              variant="filled"
               label="Phone Number (Optional)"
               persistent-hint
               hint="Example: (555) 555-5555"
@@ -92,7 +92,7 @@
               id="txt-phone-extension"
               v-model="contact.extension"
               v-mask="'#####'"
-              filled
+              variant="filled"
               label="Extension (Optional)"
               persistent-hint
             />
@@ -153,7 +153,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Emit, Mixins, Prop, Vue, Watch } from 'vue-property-decorator'
+import { Component, Emit, mixins, Prop, Vue, Watch } from 'vue-facing-decorator'
 import { Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { mask } from 'vue-the-mask'
@@ -166,7 +166,7 @@ import { Rules } from '@/rules'
     mask
   }
 })
-export default class BusinessContactInfo extends Mixins(CommonMixin) {
+export default class BusinessContactInfo extends mixins(CommonMixin) {
   @Prop({ default: () => {} }) readonly initialValue!: ContactPointIF
   @Prop({ default: false }) readonly isEditing!: boolean
   @Prop({ default: false }) readonly showErrors!: boolean

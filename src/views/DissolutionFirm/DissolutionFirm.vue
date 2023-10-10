@@ -4,7 +4,7 @@
     class="mt-10"
   >
     <v-card
-      outlined
+      variant="outlined"
       class="message-box rounded-0"
     >
       <p>
@@ -289,7 +289,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins } from 'vue-property-decorator'
+import { Component, mixins } from 'vue-facing-decorator'
 import { Getter, Action } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { DateMixin } from '@/mixins'
@@ -333,7 +333,7 @@ import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module
     CompletingParty
   }
 })
-export default class DissolutionFirm extends Mixins(DateMixin) {
+export default class DissolutionFirm extends mixins(DateMixin) {
   // Global getters
   @Getter(useStore) getBusinessContact!: ContactPointIF
   @Getter(useStore) getBusinessFoundingDate!: string

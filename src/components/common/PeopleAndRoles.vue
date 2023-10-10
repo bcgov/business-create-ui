@@ -41,7 +41,7 @@
           >
             <v-icon
               v-if="validNumCompletingParty"
-              color="green darken-2"
+              color="darkGreen"
               class="cp-valid"
             >
               mdi-check
@@ -64,7 +64,7 @@
           >
             <v-icon
               v-if="validNumIncorporators"
-              color="green darken-2"
+              color="darkGreen"
               class="incorp-valid"
             >
               mdi-check
@@ -87,7 +87,7 @@
           >
             <v-icon
               v-if="validNumDirectors"
-              color="green darken-2"
+              color="darkGreen"
               class="dir-valid"
             >
               mdi-check
@@ -110,7 +110,7 @@
           >
             <v-icon
               v-if="validDirectorCountry"
-              color="green darken-2"
+              color="darkGreen"
               class="dir-valid"
             >
               mdi-check
@@ -133,7 +133,7 @@
           >
             <v-icon
               v-if="validDirectorProvince"
-              color="green darken-2"
+              color="darkGreen"
               class="dir-valid"
             >
               mdi-check
@@ -158,7 +158,7 @@
     <div v-if="(orgPersonList.length === 0) && requireCompletingParty">
       <v-btn
         id="btn-start-add-cp"
-        outlined
+        variant="outlined"
         color="primary"
         class="btn-outlined-primary mt-6"
         :disabled="showOrgPersonForm"
@@ -174,7 +174,7 @@
       <v-btn
         v-if="requireCompletingParty && !validNumCompletingParty"
         id="btn-add-cp"
-        outlined
+        variant="outlined"
         color="primary"
         class="btn-outlined-primary mt-6"
         :disabled="showOrgPersonForm"
@@ -186,7 +186,7 @@
 
       <v-btn
         id="btn-add-person"
-        outlined
+        variant="outlined"
         color="primary"
         class="btn-outlined-primary mt-6"
         :disabled="showOrgPersonForm"
@@ -199,7 +199,7 @@
       <v-btn
         v-if="getPeopleAndRolesResource.addOrganization"
         id="btn-add-organization"
-        outlined
+        variant="outlined"
         color="primary"
         class="btn-outlined-primary mt-6"
         :disabled="showOrgPersonForm"
@@ -248,7 +248,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins } from 'vue-property-decorator'
+import { Component, mixins } from 'vue-facing-decorator'
 import { cloneDeep } from 'lodash'
 import { EmptyOrgPerson } from '@/interfaces'
 import { EmptyAddress } from '@bcrs-shared-components/interfaces'
@@ -267,7 +267,7 @@ import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
     ListPeopleAndRoles
   }
 })
-export default class PeopleAndRoles extends Mixins(PeopleRolesMixin) {
+export default class PeopleAndRoles extends mixins(PeopleRolesMixin) {
   //
   // NB: see mixin for common properties, methods, etc.
   //

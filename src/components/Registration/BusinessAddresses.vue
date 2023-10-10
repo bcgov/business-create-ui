@@ -58,7 +58,7 @@
             label="Same as Mailing Address"
             :disabled="checkboxDisabled"
             noPoBox="true"
-            @change="onCheckboxChanged()"
+            @update:modelValue="onCheckboxChanged()"
           />
           <template
             v-if="!isSame(mailingAddress, deliveryAddress, ['actions']) || !inheritMailingAddress"
@@ -134,7 +134,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Emit, Mixins, Prop, Watch } from 'vue-property-decorator'
+import { Component, Emit, mixins, Prop, Watch } from 'vue-facing-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { isEmpty, isEqual } from 'lodash'
@@ -164,7 +164,7 @@ const DefaultAddress: AddressIF = {
     MailingAddress: BaseAddress
   }
 })
-export default class BusinessAddresses extends Mixins(CommonMixin) {
+export default class BusinessAddresses extends mixins(CommonMixin) {
   // Refs for BaseAddress components so we can access form validation
   $refs!: {
     mailingAddress: any

@@ -54,7 +54,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Watch } from 'vue-property-decorator'
+import { Component, mixins, Watch } from 'vue-facing-decorator'
 import { Getter, Action } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { AddressIF, ContactPointIF, DefineCompanyIF, RegisteredRecordsAddressesIF }
@@ -71,7 +71,7 @@ import OfficeAddresses from '@/components/common/OfficeAddresses.vue'
     OfficeAddresses
   }
 })
-export default class RestorationBusinessInformation extends Mixins(CommonMixin) {
+export default class RestorationBusinessInformation extends mixins(CommonMixin) {
   @Getter(useStore) getBusinessContact!: ContactPointIF
   @Getter(useStore) getDefineCompanyStep!: DefineCompanyIF
   @Getter(useStore) getShowErrors!: boolean

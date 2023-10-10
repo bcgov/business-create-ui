@@ -83,7 +83,7 @@
         <v-btn
           id="dialog-exit-button"
           color="primary"
-          text
+          variant="text"
           @click="exit()"
         >
           Exit without saving
@@ -92,7 +92,7 @@
         <v-btn
           id="dialog-okay-button"
           color="primary"
-          text
+          variant="text"
           @click="okay()"
         >
           OK
@@ -105,7 +105,7 @@
         <v-btn
           id="dialog-okay-button"
           color="primary"
-          text
+          variant="text"
           @click="okay()"
         >
           OK
@@ -116,7 +116,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Emit, Prop, Vue } from 'vue-property-decorator'
+import { Component, Emit, Prop, Vue } from 'vue-facing-decorator'
 import { Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import RegistriesContactInfo from '@/components/common/RegistriesContactInfo.vue'

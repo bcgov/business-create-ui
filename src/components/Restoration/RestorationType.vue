@@ -22,7 +22,7 @@
             v-model="selectRestorationType"
             class="mt-0 pt-0"
             hide-details="auto"
-            @change="changeRestorationType()"
+            @update:modelValue="changeRestorationType()"
           >
             <v-radio
               id="full-radio-button"
@@ -42,7 +42,7 @@
                   <v-tooltip
                     content-class="top-tooltip"
                     transition="fade-transition"
-                    top
+                    location="top"
                   >
                     <template #activator="{ on, attrs }">
                       <span
@@ -91,7 +91,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Watch } from 'vue-property-decorator'
+import { Component, mixins, Watch } from 'vue-facing-decorator'
 import { DateMixin, CommonMixin } from '@/mixins'
 import { Getter, Action } from 'pinia-class'
 import { useStore } from '@/store/store'
@@ -106,7 +106,7 @@ import { LimitedRestorationPanel } from '@bcrs-shared-components/limited-restora
     LimitedRestorationPanel
   }
 })
-export default class RestorationType extends Mixins(DateMixin, CommonMixin) {
+export default class RestorationType extends mixins(DateMixin, CommonMixin) {
   @Getter(useStore) getCurrentDate!: string
   @Getter(useStore) getRestoration!: RestorationStateIF
   @Getter(useStore) getRestorationTypeValid!: boolean

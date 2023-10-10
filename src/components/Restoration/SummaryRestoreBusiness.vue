@@ -155,7 +155,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins } from 'vue-property-decorator'
+import { Component, mixins } from 'vue-facing-decorator'
 import { DateMixin } from '@/mixins'
 import { Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
@@ -165,7 +165,7 @@ import { NameTranslationIF, RestorationStateIF } from '@/interfaces'
 import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 
 @Component({})
-export default class SummaryRestoreBusiness extends Mixins(DateMixin) {
+export default class SummaryRestoreBusiness extends mixins(DateMixin) {
   @Getter(useStore) getEntityType!: CorpTypeCd
   @Getter(useStore) getCorrectNameOption!: CorrectNameOptions
   @Getter(useStore) getNameRequestApprovedName!: string

@@ -18,7 +18,7 @@
             />
             <v-tooltip
               v-if="partialItem.type === ItemTypes.TOOLTIP"
-              top
+              location="top"
               max-width="15rem"
               content-class="top-tooltip"
               transition="fade-transition"
@@ -87,7 +87,7 @@
                     target="_blank"
                   >{{ partialItem.value.linkText }}
                     <v-icon
-                      dense
+                      size="small"
                       color="primary"
                     >mdi-open-in-new</v-icon>
                   </a>
@@ -278,7 +278,7 @@
                   v-model="resolutionText"
                   v-observe-visibility="{ callback: onResolutionVisibilityChanged, once: true }"
                   auto-grow
-                  filled
+                  variant="filled"
                   :label="getCreateResolutionResource.resolutionTextSection.textPlaceholder"
                   rows="6"
                   :counter="MAX_RESOLUTION_TEXT_LENGTH"
@@ -334,7 +334,7 @@
                     id="person__first-name"
                     ref="signingPersonGivenNameRef"
                     v-model="signingPerson.givenName"
-                    filled
+                    variant="filled"
                     class="item"
                     label="First Name"
                     :rules="Rules.FirstNameRules"
@@ -343,7 +343,7 @@
                     id="person__middle-name"
                     ref="signingPersonMiddleNameRef"
                     v-model="signingPerson.additionalName"
-                    filled
+                    variant="filled"
                     class="item"
                     label="Middle Name (Optional)"
                     :rules="Rules.MiddleNameRules"
@@ -352,7 +352,7 @@
                     id="person__last-name"
                     ref="signingPersonFamilyNameRef"
                     v-model="signingPerson.familyName"
-                    filled
+                    variant="filled"
                     class="item"
                     label="Last Name"
                     :rules="Rules.LastNameRules"
@@ -418,7 +418,7 @@
               class="chk-resolution mt-0 pt-0"
               hide-details
               :rules="confirmCompletionResolution"
-              @change="onResolutionConfirmedChange($event)"
+              @update:modelValue="onResolutionConfirmedChange($event)"
             >
               <template #label>
                 <div v-html="confirmLabel" />
@@ -480,7 +480,7 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Mixins, Watch } from 'vue-property-decorator'
+import { Component, mixins, Watch } from 'vue-facing-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 
@@ -507,7 +507,7 @@ import { VuetifyRuleFunction } from '@/types'
     DatePickerShared
   }
 })
-export default class CompleteResolution extends Mixins(CommonMixin, DateMixin) {
+export default class CompleteResolution extends mixins(CommonMixin, DateMixin) {
   // Refs
   $refs!: {
     resolutionDatePickerRef: DatePickerShared

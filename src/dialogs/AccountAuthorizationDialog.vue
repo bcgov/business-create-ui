@@ -24,7 +24,7 @@
         <v-btn
           id="dialog-exit-button"
           color="primary"
-          text
+          variant="text"
           @click="exit()"
         >
           Exit
@@ -33,7 +33,7 @@
         <v-btn
           id="dialog-retry-button"
           color="primary"
-          text
+          variant="text"
           @click="retry()"
         >
           Retry
@@ -44,7 +44,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Emit, Prop, Vue } from 'vue-property-decorator'
+import { Component, Emit, Prop, Vue } from 'vue-facing-decorator'
 
 @Component({})
 export default class AccountAuthorizationDialog extends Vue {

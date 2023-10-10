@@ -45,12 +45,12 @@
       <NameRequestInfo />
 
       <v-btn
-        text
+        variant="text"
         color="primary"
         class="btn-undo"
         @click="resetName()"
       >
-        <v-icon small>
+        <v-icon size="small">
           mdi-undo
         </v-icon>
         <span>Undo</span>
@@ -60,7 +60,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Watch } from 'vue-property-decorator'
+import { Component, mixins, Watch } from 'vue-facing-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { EmptyNameRequest, NameRequestIF } from '@/interfaces/'
@@ -77,7 +77,7 @@ import NameRequestInfo from '@/components/common/NameRequestInfo.vue'
     NameRequestInfo
   }
 })
-export default class BusinessName extends Mixins(CommonMixin, DateMixin, NameRequestMixin) {
+export default class BusinessName extends mixins(CommonMixin, DateMixin, NameRequestMixin) {
   // Global getters
   @Getter(useStore) getBusinessId!: string
   @Getter(useStore) getBusinessLegalName!: string

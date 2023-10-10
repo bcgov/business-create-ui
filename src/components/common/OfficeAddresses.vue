@@ -77,7 +77,7 @@
               class="inherit-checkbox"
               hide-details
               label="Same as Mailing Address"
-              @change="setDeliveryAddressToMailingAddress()"
+              @update:modelValue="setDeliveryAddressToMailingAddress()"
             />
             <template
               v-if="!isSame(mailingAddress, deliveryAddress, ['actions']) || !inheritMailingAddress"
@@ -123,7 +123,7 @@
               class="inherit-checkbox"
               hide-details
               label="Same as Registered Office"
-              @change="setRecordOfficeToRegisteredOffice()"
+              @update:modelValue="setRecordOfficeToRegisteredOffice()"
             />
           </v-col>
         </v-row>
@@ -186,7 +186,7 @@
                   class="inherit-checkbox"
                   hide-details
                   label="Same as Mailing Address"
-                  @change="setRecordDeliveryAddressToMailingAddress()"
+                  @update:modelValue="setRecordDeliveryAddressToMailingAddress()"
                 />
                 <template
                   v-if="!isSame(recMailingAddress, recDeliveryAddress, ['actions']) || !inheritRecMailingAddress"
@@ -320,7 +320,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Emit, Mixins, Prop, Watch } from 'vue-property-decorator'
+import { Component, Emit, mixins, Prop, Watch } from 'vue-facing-decorator'
 import { Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { isEmpty } from 'lodash'
@@ -336,7 +336,7 @@ import { CommonMixin } from '@/mixins'
     MailingAddress: BaseAddress
   }
 })
-export default class OfficeAddresses extends Mixins(CommonMixin) {
+export default class OfficeAddresses extends mixins(CommonMixin) {
   // Refs for sbc common base address components so we can access form validation
   $refs!: {
     regMailingAddress: any

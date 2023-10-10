@@ -93,7 +93,7 @@
     <div v-if="(orgPersonList.length === 0) && requireCompletingParty">
       <v-btn
         id="btn-start-add-cp"
-        outlined
+        variant="outlined"
         color="primary"
         class="btn-outlined-primary mt-6"
         :disabled="showOrgPersonForm"
@@ -109,7 +109,7 @@
       <v-btn
         v-if="requireCompletingParty && !validNumCompletingParty"
         id="btn-add-cp"
-        outlined
+        variant="outlined"
         color="primary"
         class="btn-outlined-primary mt-6"
         :disabled="showOrgPersonForm"
@@ -123,7 +123,7 @@
         <v-btn
           v-if="!validNumProprietors"
           id="btn-add-person"
-          outlined
+          variant="outlined"
           color="primary"
           class="btn-outlined-primary mt-6"
           :disabled="showOrgPersonForm"
@@ -136,7 +136,7 @@
         <v-btn
           v-if="!validNumProprietors"
           id="btn-add-organization"
-          outlined
+          variant="outlined"
           color="primary"
           class="btn-outlined-primary mt-6"
           :disabled="showOrgPersonForm"
@@ -150,7 +150,7 @@
       <template v-if="isTypePartnership">
         <v-btn
           id="btn-add-person"
-          outlined
+          variant="outlined"
           color="primary"
           class="btn-outlined-primary mt-6"
           :disabled="showOrgPersonForm"
@@ -162,7 +162,7 @@
 
         <v-btn
           id="btn-add-organization"
-          outlined
+          variant="outlined"
           color="primary"
           class="btn-outlined-primary mt-6"
           :disabled="showOrgPersonForm"
@@ -176,7 +176,7 @@
       <template v-if="isFullRestorationFiling || isLimitedRestorationFiling">
         <v-btn
           id="btn-add-person"
-          outlined
+          variant="outlined"
           color="primary"
           class="btn-outlined-primary mt-6"
           :disabled="showOrgPersonForm || validApplicantPerson || validApplicantOrg"
@@ -188,7 +188,7 @@
 
         <v-btn
           id="btn-add-organization"
-          outlined
+          variant="outlined"
           color="primary"
           class="btn-outlined-primary mt-6"
           :disabled="showOrgPersonForm || validApplicantPerson || validApplicantOrg"
@@ -239,7 +239,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins } from 'vue-property-decorator'
+import { Component, mixins } from 'vue-facing-decorator'
 import { Action } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { cloneDeep } from 'lodash'
@@ -266,7 +266,7 @@ import RuleListItem from '@/components/common/RuleListItem.vue'
     RuleListItem
   }
 })
-export default class RegPeopleAndRoles extends Mixins(PeopleRolesMixin) {
+export default class RegPeopleAndRoles extends mixins(PeopleRolesMixin) {
   @Action(useStore) setRegistrationBusinessType!: (x: BusinessTypes) => void
 
   //

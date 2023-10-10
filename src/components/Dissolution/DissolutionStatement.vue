@@ -24,7 +24,7 @@
             v-model="dissolutionStatementType"
             class="dissolution-statement-option-list"
             hide-details
-            @change="changeDissolutionStatementType()"
+            @update:modelValue="changeDissolutionStatementType()"
           >
             <v-radio
               v-for="(item, index) in getDissolutionStatements"
@@ -75,7 +75,7 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-facing-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 

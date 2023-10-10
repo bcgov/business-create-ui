@@ -18,7 +18,7 @@
       >
         <v-radio-group
           v-model="selectDate"
-          column
+          direction="vertical"
           class="radio-group"
         >
           <v-radio
@@ -37,9 +37,9 @@
         >
           <v-menu
             close-on-content-click
-            :nudge-right="40"
+            :offset="40"
             transition="scale-transition"
-            offset-y
+            location="bottom"
             min-width="290px"
           >
             <template #activator="{ on }">
@@ -50,7 +50,7 @@
                 append-icon="mdi-calendar"
                 :rules="dateRules"
                 :disabled="!isFutureEffective"
-                filled
+                variant="filled"
                 v-on="on"
               />
             </template>
@@ -75,7 +75,7 @@
                 label="Hour"
                 :disabled="!isFutureEffective || !dateText"
                 :rules="hourRules"
-                filled
+                variant="filled"
               />
             </v-col>
             <span
@@ -94,7 +94,7 @@
                 :items="minutes"
                 :disabled="!isFutureEffective || !dateText"
                 :rules="minuteRules"
-                filled
+                variant="filled"
               />
             </v-col>
             <v-col
@@ -107,7 +107,7 @@
                 v-model="selectPeriod"
                 :items="timePeriod"
                 :disabled="!isFutureEffective || !dateText"
-                filled
+                variant="filled"
               />
             </v-col>
             <v-col
@@ -150,14 +150,14 @@
 // FUTURE: replace this with EffectiveDateTime.vue
 //
 
-import { Component, Emit, Mixins, Prop, Watch } from 'vue-property-decorator'
+import { Component, Emit, mixins, Prop, Watch } from 'vue-facing-decorator'
 import { DateMixin } from '@/mixins'
 import { ISIMMEDIATE, ISFUTUREEFFECTIVE } from '@/constants'
 import { EffectiveDateTimeIF, FormIF } from '@/interfaces'
 import { VuetifyRuleFunction } from '@/types'
 
 @Component({})
-export default class IncorporationDateTime extends Mixins(DateMixin) {
+export default class IncorporationDateTime extends mixins(DateMixin) {
   // Refs
   $refs!: {
     dateTimeForm: FormIF

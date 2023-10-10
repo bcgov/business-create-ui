@@ -171,7 +171,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Watch } from 'vue-property-decorator'
+import { Component, mixins, Watch } from 'vue-facing-decorator'
 import { Getter, Action } from 'pinia-class'
 import { useStore } from '@/store/store'
 import {
@@ -200,7 +200,7 @@ import NameTranslations from '@/components/common/NameTranslations.vue'
     NameTranslations
   }
 })
-export default class IncorporationDefineCompany extends Mixins(CommonMixin) {
+export default class IncorporationDefineCompany extends mixins(CommonMixin) {
   @Getter(useStore) getBusinessContact!: ContactPointIF
   @Getter(useStore) getDefineCompanyStep!: DefineCompanyIF
   @Getter(useStore) getFolioNumber!: string

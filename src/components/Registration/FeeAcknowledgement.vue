@@ -15,9 +15,9 @@
       >
         <v-checkbox
           id="fee-acknowledgement-checkbox"
-          :input-value="getRegistration.feeAcknowledgement"
+          :model-value="getRegistration.feeAcknowledgement"
           hide-details
-          @change="setRegistrationFeeAcknowledgement($event)"
+          @update:modelValue="setRegistrationFeeAcknowledgement($event)"
         >
           <template #label>
             <div
@@ -35,7 +35,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue } from 'vue-facing-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { RegistrationStateIF } from '@/interfaces'

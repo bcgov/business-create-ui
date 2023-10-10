@@ -2,7 +2,7 @@
   <li class="rule-list-item">
     <v-icon
       v-if="valid"
-      color="green darken-2"
+      color="darkGreen"
       class="rule-valid"
     >
       mdi-check
@@ -25,7 +25,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-facing-decorator'
 
 @Component({})
 export default class RuleListItem extends Vue {

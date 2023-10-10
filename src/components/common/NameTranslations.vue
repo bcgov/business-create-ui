@@ -47,7 +47,7 @@
             </p>
 
             <v-btn
-              outlined
+              variant="outlined"
               color="primary"
               class="mt-6"
               :disabled="isAddingNameTranslation"
@@ -94,7 +94,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from 'vue-property-decorator'
+import { Component, Vue, Watch } from 'vue-facing-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { ConfirmDialog } from '@bcrs-shared-components/confirm-dialog'

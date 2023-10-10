@@ -19,7 +19,7 @@
                 <v-text-field
                   id="txt-name"
                   v-model="shareStructure.name"
-                  filled
+                  variant="filled"
                   :label="shareStructure.type + ' Name [Shares]'"
                   :hint="'Enter the name of the  '+ shareStructure.type.toLowerCase() +
                     '  - the words &quot;Shares&quot; is automatically added'"
@@ -32,9 +32,9 @@
 
                 <v-radio-group
                   v-model="hasNoMaximumShares"
-                  column
+                  direction="vertical"
                   class="radio-group"
-                  @change="changeMaximumShareFlag()"
+                  @update:modelValue="changeMaximumShareFlag()"
                 >
                   <v-radio :value="false">
                     <template #label>
@@ -43,7 +43,7 @@
                           <v-text-field
                             id="txt-max-shares"
                             v-model.number="shareStructure.maxNumberOfShares"
-                            filled
+                            variant="filled"
                             label="Maximum Number of Shares"
                             persistent-hint
                             :hint="'Enter the maximum number of shares in the ' + shareStructure.type"
@@ -67,9 +67,9 @@
                 <v-radio-group
                   v-show="isClass"
                   v-model="hasNoParValue"
-                  column
+                  direction="vertical"
                   class="radio-group"
-                  @change="changeParValueFlag()"
+                  @update:modelValue="changeParValueFlag()"
                 >
                   <v-radio
                     id="radio-par-value"
@@ -81,7 +81,7 @@
                           <v-text-field
                             id="class-par-value"
                             v-model.number="shareStructure.parValue"
-                            filled
+                            variant="filled"
                             label="Par Value"
                             :rules="getParValueRule()"
                             hint="Enter the initial value of each share"
@@ -93,10 +93,10 @@
                             id="class-currency"
                             v-model="shareStructure.currency"
                             :items="getCurrencyList()"
-                            filled
+                            variant="filled"
                             label="Currency"
                             :rules="getCurrencyRule()"
-                            item-text="`${data.item.name}, ${data.item.code}`"
+                            item-title="`${data.item.name}, ${data.item.code}`"
                             item-value="code"
                           >
                             <template #selection="data">
@@ -123,7 +123,7 @@
                       <v-text-field
                         id="series-par-value"
                         label="Par Value"
-                        :value="shareStructure.parValue"
+                        :model-value="shareStructure.parValue"
                         :disabled="true"
                         width="10"
                       />
@@ -132,7 +132,7 @@
                       <v-text-field
                         id="series-currency"
                         label="Currency"
-                        :value="`${getCurrencyNameByCode(shareStructure.currency)} (${shareStructure.currency})`"
+                        :model-value="`${getCurrencyNameByCode(shareStructure.currency)} (${shareStructure.currency})`"
                         :disabled="true"
                       />
                     </v-col>
@@ -158,7 +158,7 @@
                 <div class="form__row form__btns">
                   <v-btn
                     id="btn-remove"
-                    large
+                    size="large"
                     color="error"
                     :disabled="activeIndex === -1"
                     @click="removeShareStructure()"
@@ -168,7 +168,7 @@
 
                   <v-btn
                     id="btn-done"
-                    large
+                    size="large"
                     color="primary"
                     class="form-primary-btn"
                     :disabled="!formValid"
@@ -179,7 +179,7 @@
 
                   <v-btn
                     id="btn-cancel"
-                    large
+                    size="large"
                     @click="resetFormAndData(true)"
                   >
                     Cancel
@@ -195,13 +195,13 @@
 </template>
 
 <script lang="ts">
-import { Component, Emit, Mixins, Prop } from 'vue-property-decorator'
+import { Component, Emit, mixins, Prop } from 'vue-facing-decorator'
 import { ShareClassIF, FormIF } from '@/interfaces'
 import { CurrencyLookupMixin } from '@/mixins'
 import { VuetifyRuleFunction } from '@/types'
 
 @Component({})
-export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
+export default class ShareStructure extends mixins(CurrencyLookupMixin) {
   // Refs
   $refs!: {
     shareStructureForm: FormIF

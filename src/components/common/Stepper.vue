@@ -12,10 +12,9 @@
         <div class="step__line" />
         <v-btn
           :id="step.id"
-          outlined
-          fab
+          variant="outlined"
           color="primary"
-          class="step__btn"
+          class="step__btn rounded-circle"
           tabindex="-1"
           :disabled="isBusySaving"
           :ripple="false"
@@ -32,7 +31,7 @@
           v-show="isValid(step.to)"
           class="step__btn2"
           size="30"
-          color="success darken-1"
+          color="success-darken-1"
         >
           mdi-check-circle
         </v-icon>
@@ -40,14 +39,14 @@
           v-show="!isValid(step.to) && getShowErrors && getValidateSteps"
           class="step__btn2"
           size="30"
-          color="error darken-1"
+          color="error-darken-1"
         >
           mdi-close-circle
         </v-icon>
       </div>
       <v-btn
         class="step__label pre-line px-3"
-        text
+        variant="text"
         :ripple="false"
         :disabled="step.disabled"
         :class="[{'active__btn__text': isCurrentStep(step)}, 'inactive__btn__text']"
@@ -60,7 +59,7 @@
 
 <script lang="ts">
 // Libraries
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue } from 'vue-facing-decorator'
 import { Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 

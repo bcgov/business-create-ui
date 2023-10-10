@@ -147,7 +147,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins } from 'vue-property-decorator'
+import { Component, mixins } from 'vue-facing-decorator'
 import { Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { NameRequestStates, NrRequestActionCodes } from '@/enums'
@@ -158,7 +158,7 @@ import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module
 import { Capitalize } from '@/utils'
 
 @Component({})
-export default class NameRequestInfo extends Mixins(CommonMixin, DateMixin) {
+export default class NameRequestInfo extends mixins(CommonMixin, DateMixin) {
   // For template
   readonly NameRequestStates = NameRequestStates
 

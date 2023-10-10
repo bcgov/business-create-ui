@@ -64,7 +64,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Watch } from 'vue-property-decorator'
+import { Component, mixins, Watch } from 'vue-facing-decorator'
 import { Getter, Action } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { CommonMixin } from '@/mixins'
@@ -85,7 +85,7 @@ import RestorationType from '@/components/Restoration/RestorationType.vue'
     RestorationType
   }
 })
-export default class RestorationBusinessName extends Mixins(CommonMixin) {
+export default class RestorationBusinessName extends mixins(CommonMixin) {
   @Getter(useStore) getApprovalTypeValid!: boolean
   @Getter(useStore) getBusinessNameValid!: boolean
   @Getter(useStore) getNameTranslationsValid!: boolean

@@ -11,7 +11,7 @@
         <span class="font-weight-bold">Tell Us About Your Experience Today</span>
         <v-btn
           icon
-          large
+          size="large"
           color="primary"
           class="dialog-close"
           @click="no()"
@@ -37,15 +37,15 @@
           hide-details
           label="Do not show this message again"
           class="dialog-checkbox mt-6"
-          @change="doNotShow($event)"
+          @update:modelValue="doNotShow($event)"
         />
       </v-card-text>
 
       <v-card-actions class="d-flex justify-center">
         <v-btn
           id="dialog-no-button"
-          large
-          outlined
+          size="large"
+          variant="outlined"
           color="primary"
           class="mr-sm-3 px-8"
           @click="no()"
@@ -54,7 +54,7 @@
         </v-btn>
         <v-btn
           id="dialog-yes-button"
-          large
+          size="large"
           color="primary"
           class="ml-sm-3 px-8"
           @click="yes()"
@@ -67,7 +67,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Emit, Prop, Vue } from 'vue-property-decorator'
+import { Component, Emit, Prop, Vue } from 'vue-facing-decorator'
 
 @Component({})
 export default class FilingSurveyDialog extends Vue {
