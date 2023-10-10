@@ -320,7 +320,7 @@ export const useStore = defineStore('store', {
 
     /** The Business Legal Name (or Operating Name if this is a firm). */
     getBusinessLegalName (): string {
-      if (this.isTypeFirm) return this.stateModel.operatingName
+      if (this.isTypeFirm) return this.stateModel.operatingName || 'Unknown'
       return this.stateModel.business.legalName
     },
 
