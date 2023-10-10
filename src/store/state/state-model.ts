@@ -88,6 +88,7 @@ export const stateModel: StateModelIF = {
   orgInformation: null,
   nameRequest: cloneDeep(EmptyNameRequest),
   nameRequestApprovedName: null,
+  operatingName: null,
   correctNameOption: null,
   nameTranslations: [],
   nameTranslationsValid: true,

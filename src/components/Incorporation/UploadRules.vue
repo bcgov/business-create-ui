@@ -380,7 +380,7 @@ export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
           name: this.uploadRulesDoc.name,
           lastModified: this.uploadRulesDoc.lastModified,
           size: this.uploadRulesDoc.size
-        }
+        } as File
         this.setRules({
           ...this.getCreateRulesStep,
           rulesFile,
