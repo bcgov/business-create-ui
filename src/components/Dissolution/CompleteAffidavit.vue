@@ -317,7 +317,7 @@ export default class CompleteAffidavit extends Mixins(CommonMixin, DocumentMixin
 
   /** The entity name. */
   get entityName (): string {
-    return this.getBusinessLegalName || GetCorpNumberedDescription(this.getEntityType)
+    return this.getBusinessLegalName || GetCorpNumberedDescription(this.getEntityType as any)
   }
 
   get entityTitle (): string {
@@ -373,7 +373,7 @@ export default class CompleteAffidavit extends Mixins(CommonMixin, DocumentMixin
           name: this.uploadAffidavitDoc.name,
           lastModified: this.uploadAffidavitDoc.lastModified,
           size: this.uploadAffidavitDoc.size
-        }
+        } as File
         this.setAffidavit({
           ...this.getAffidavitStep,
           affidavitFile,

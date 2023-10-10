@@ -43,6 +43,7 @@ export interface StateModelIF {
   dissolution: DissolutionStateIF
   nameRequest: NameRequestIF
   nameRequestApprovedName: string
+  operatingName: string
   correctNameOption: CorrectNameOptions
   nameTranslations: NameTranslationIF[]
   nameTranslationsValid: boolean
@@ -81,6 +82,7 @@ export interface StateModelIF {
   staffPaymentStep: StaffPaymentStepIF
   courtOrderStep: CourtOrderStepIF
 
+  // to calculate if this is a mobile screen
   windowWidth: number
 }
 

@@ -6,6 +6,7 @@ import { createPinia, setActivePinia } from 'pinia'
 import { useStore } from '@/store/store'
 import { shallowMount, createLocalVue } from '@vue/test-utils'
 import { AxiosInstance as axios } from '@/utils'
+import { shallowWrapperFactory } from '../vitest-wrapper-factory'
 import App from '@/App.vue'
 import SbcHeader from 'sbc-common-components/src/components/SbcHeader.vue'
 import SbcFooter from 'sbc-common-components/src/components/SbcFooter.vue'
@@ -15,6 +16,9 @@ import EntityInfo from '@/components/common/EntityInfo.vue'
 import Stepper from '@/components/common/Stepper.vue'
 import { ConfirmDialog } from '@bcrs-shared-components/confirm-dialog'
 import mockRouter from './MockRouter'
+import { vi } from 'vitest'
+import { FilingTypes } from '@/enums'
+import { CorpTypeCd } from '@bcrs-shared-components/enums/'
 
 // mock fetch() as it is not defined in Jest
 // NB: it should be `global.fetch` but that doesn't work and this does
@@ -1094,5 +1098,55 @@ describe('Restoration - App page', () => {
     expect(wrapper.findComponent(EntityInfo).exists()).toBe(true)
     expect(wrapper.findComponent(Stepper).exists()).toBe(true)
     expect(wrapper.findComponent(Actions).exists()).toBe(true)
+  })
+})
+
+describe('Breadcrumbs for firms', () => {
+  it('computes breadcrumbs correctly for a SP registration', () => {
+    const wrapper = shallowWrapperFactory(
+      App,
+      null,
+      {
+        business: { legalName: 'My Legal Name' },
+        entityType: CorpTypeCd.SOLE_PROP,
+        nameRequestApprovedName: 'My NR Approved Name',
+        tombstone: {
+          filingType: FilingTypes.REGISTRATION,
+          keycloakRoles: []
+        }
+      }
+    )
+
+    const breadcrumbs = (wrapper.vm as any).breadcrumbs
+    expect(breadcrumbs.at(0).text).toBe('BC Registries Dashboard')
+    expect(breadcrumbs.at(1).text).toBe('My Business Registry')
+    expect(breadcrumbs.at(2).text).toBe('My NR Approved Name')
+    expect(breadcrumbs.at(3).text).toBe('Registration')
+
+    wrapper.destroy()
+  })
+
+  it('computes breadcrumbs correctly for a SP dissolution', () => {
+    const wrapper = shallowWrapperFactory(
+      App,
+      null,
+      {
+        business: { legalName: 'My Legal Name' },
+        entityType: CorpTypeCd.SOLE_PROP,
+        operatingName: 'My Operating Name',
+        tombstone: {
+          filingType: FilingTypes.DISSOLUTION,
+          keycloakRoles: []
+        }
+      }
+    )
+
+    const breadcrumbs = (wrapper.vm as any).breadcrumbs
+    expect(breadcrumbs.at(0).text).toBe('BC Registries Dashboard')
+    expect(breadcrumbs.at(1).text).toBe('My Business Registry')
+    expect(breadcrumbs.at(2).text).toBe('My Operating Name')
+    expect(breadcrumbs.at(3).text).toBe('Dissolution')
+
+    wrapper.destroy()
   })
 })
