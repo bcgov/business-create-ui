@@ -504,7 +504,7 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
 
   /** The entity description.  */
   corpTypeDescription (): string {
-    return GetCorpFullDescription(this.getEntityType)
+    return GetCorpFullDescription(this.getEntityType as any)
   }
 
   onUpdate (cp: CompletingPartyIF): void {

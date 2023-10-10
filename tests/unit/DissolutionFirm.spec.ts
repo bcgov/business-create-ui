@@ -1,5 +1,5 @@
 import Vuetify from 'vuetify'
-import { shallowWrapperFactory } from '../jest-wrapper-factory'
+import { shallowWrapperFactory } from '../vitest-wrapper-factory'
 import { mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { useStore } from '@/store/store'

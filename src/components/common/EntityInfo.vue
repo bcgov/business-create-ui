@@ -126,7 +126,7 @@ export default class EntityInfo extends Mixins(DateMixin) {
 
   /** The entity legal name (old name, new name, or numbered description). */
   get entityLegalName (): string {
-    const numberedDescription = GetCorpNumberedDescription(this.getEntityType)
+    const numberedDescription = GetCorpNumberedDescription(this.getEntityType as any)
 
     // name comes from different places depending on filing type
     switch (this.getFilingType) {
@@ -142,9 +142,9 @@ export default class EntityInfo extends Mixins(DateMixin) {
     return '' // should never happen
   }
 
-  /** The entity description.  */
+  /** The entity description. */
   get entityDescription (): string {
-    const corpTypeDescription = GetCorpFullDescription(this.getEntityType)
+    const corpTypeDescription = GetCorpFullDescription(this.getEntityType as any)
 
     if (this.isTypeSoleProp && this.getTempId) {
       return `${corpTypeDescription} / Doing Business As (DBA)`

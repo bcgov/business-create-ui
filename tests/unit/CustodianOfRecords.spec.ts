@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { shallowWrapperFactory } from '../jest-wrapper-factory'
+import { shallowWrapperFactory } from '../vitest-wrapper-factory'
 import CustodianOfRecords from '@/components/Dissolution/CustodianOfRecords.vue'
 import { DissolutionResources } from '@/resources'
 import { PartyTypes } from '@/enums'
