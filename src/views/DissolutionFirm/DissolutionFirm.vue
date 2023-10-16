@@ -58,7 +58,7 @@
         <h2>Business Dissolution Date</h2>
         <p class="mt-4 ">
           Enter the dissolution date of the business.
-          The dissolution date must be after the business start date and registration date.
+          The dissolution date must be on or after the registration date.
           The dissolution date cannot be in the future.
         </p>
       </header>
@@ -469,7 +469,7 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
   /** The minimum start date that can be entered (greater than registration date). */
   get startDateMin (): Date {
     const date = this.apiToDate(this.getBusinessFoundingDate)
-    date.setDate(date.getDate() + 1)
+    date.setDate(date.getDate())
     return date
   }
 
