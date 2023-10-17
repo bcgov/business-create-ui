@@ -16,7 +16,7 @@ export const DateRuleHelpers = {
     if (!dateStrToValidate) return true
     const date = new Date(dateStrToValidate) // eg, September 5, 2022
     minDate.setHours(0, 0, 0) // Removing the hour to properly compare in case selected date was same as minimum.
-    maxDate.setHours(0, 0, 0)
+    maxDate.setHours(23, 59, 59)
     return (date >= minDate) && (date <= maxDate)
   },
   /** Whether date string to validate is not before min date. */
