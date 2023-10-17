@@ -155,6 +155,9 @@ for (const test of dissolutionFirmTestCases) {
       expect(rules[1]('June 6, 2022')).toBe(true)
       // A valid date is selected (after registration date and not in the future)
       expect(rules[1]('June 7, 2022')).toBe(true)
+      // An invalid date is selected (in the future)
+      expect(rules[1]('September 7, 2022')).toContain('Dissolution Date must be after June 6, 2022 and up to')
+      expect(rules[1]('September 7, 2022')).toContain('June 14, 2022')
     })
   })
 }
