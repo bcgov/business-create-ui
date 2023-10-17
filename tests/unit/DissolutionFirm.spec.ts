@@ -145,6 +145,7 @@ for (const test of dissolutionFirmTestCases) {
         { vuetify }
       )
       const rules = wrapper.vm.startDateRules
+      store.stateModel.business.foundingDate = '2022-06-06T23:59:59.000+00:00'
       store.setCurrentJsDate(new Date('2022-06-14T00:00:00.000'))
 
       expect(rules[0]('')).toBe('Dissolution date is required') // no date is selected
