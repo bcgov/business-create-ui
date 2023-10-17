@@ -151,7 +151,8 @@ for (const test of dissolutionFirmTestCases) {
       expect(rules[0]('')).toBe('Dissolution date is required') // no date is selected
       expect(rules[0]('October 16, 2023')).toBe(true) // date is selected
       // A date before the registration date is selected (invalid)
-      expect(rules[1]('June 5, 2022')).toContain('Dissolution Date must be after June 6')
+      expect(rules[1]('June 5, 2022')).toContain('Dissolution Date must be after June 6, 2022 and up to')
+      expect(rules[1]('June 5, 2022')).toContain('June 14, 2022')
       // A valid date is selected (on registration date)
       expect(rules[1]('June 6, 2022')).toBe(true)
       // A valid date is selected (after registration date and not in the future)
