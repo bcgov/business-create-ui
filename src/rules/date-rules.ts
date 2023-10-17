@@ -30,7 +30,7 @@ export const DateRuleHelpers = {
   isNotAfterDate (maxDate: Date, dateStrToValidate: string): boolean {
     if (!dateStrToValidate) return true
     const date = new Date(dateStrToValidate) // eg, September 5, 2022
-    maxDate.setHours(0, 0, 0)
+    maxDate.setHours(23, 59, 59)
     return (date <= maxDate)
   }
 }
