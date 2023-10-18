@@ -15,18 +15,22 @@ export const DateRuleHelpers = {
   isBetweenDates (minDate: Date, maxDate: Date, dateStrToValidate: string): boolean {
     if (!dateStrToValidate) return true
     const date = new Date(dateStrToValidate) // eg, September 5, 2022
+    minDate.setHours(0, 0, 0) // Removing the hour to properly compare in case selected date was same as minimum.
+    maxDate.setHours(23, 59, 59)
     return (date >= minDate) && (date <= maxDate)
   },
   /** Whether date string to validate is not before min date. */
   isNotBeforeDate (minDate: Date, dateStrToValidate: string): boolean {
     if (!dateStrToValidate) return true
     const date = new Date(dateStrToValidate) // eg, September 5, 2022
+    minDate.setHours(0, 0, 0)
     return (date >= minDate)
   },
   /** Whether date string to validate is not after max date. */
   isNotAfterDate (maxDate: Date, dateStrToValidate: string): boolean {
     if (!dateStrToValidate) return true
     const date = new Date(dateStrToValidate) // eg, September 5, 2022
+    maxDate.setHours(23, 59, 59)
     return (date <= maxDate)
   }
 }

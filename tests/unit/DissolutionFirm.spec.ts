@@ -138,5 +138,28 @@ for (const test of dissolutionFirmTestCases) {
       expect(errorMessages.at(0).text()).toBe('Cannot exceed 20 characters')
       expect(errorMessages.at(1).text()).toBe('Cannot exceed 20 characters')
     })
+
+    it('display correct date rules', async () => {
+      wrapper = mount(
+        DissolutionFirm,
+        { vuetify }
+      )
+      const rules = wrapper.vm.startDateRules
+      store.stateModel.business.foundingDate = '2022-06-06T23:59:59.000+00:00'
+      store.setCurrentJsDate(new Date('2022-06-14T00:00:00.000'))
+
+      expect(rules[0]('')).toBe('Dissolution date is required') // no date is selected
+      expect(rules[0]('October 16, 2023')).toBe(true) // date is selected
+      // A date before the registration date is selected (invalid)
+      expect(rules[1]('June 5, 2022')).toContain('Dissolution Date must be after June 6, 2022 and up to')
+      expect(rules[1]('June 5, 2022')).toContain('June 14, 2022')
+      // A valid date is selected (on registration date)
+      expect(rules[1]('June 6, 2022')).toBe(true)
+      // A valid date is selected (after registration date and not in the future)
+      expect(rules[1]('June 7, 2022')).toBe(true)
+      // An invalid date is selected (in the future)
+      expect(rules[1]('September 7, 2022')).toContain('Dissolution Date must be after June 6, 2022 and up to')
+      expect(rules[1]('September 7, 2022')).toContain('June 14, 2022')
+    })
   })
 }
