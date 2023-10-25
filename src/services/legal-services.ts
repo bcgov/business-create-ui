@@ -119,7 +119,7 @@ export default class LegalServices {
   static async fetchNameRequest (nrNumber: string): Promise<NameRequestIF> {
     if (!nrNumber) throw new Error('Invalid parameter \'nrNumber\'')
 
-    let url = `nameRequests/${nrNumber}`
+    const url = `nameRequests/${nrNumber}`
     return axios.get(url)
       .then(response => {
         const data = response?.data
@@ -143,7 +143,7 @@ export default class LegalServices {
   static async fetchValidContactNr (nrNumber: string, phone?: string, email?: string): Promise<NameRequestIF> {
     if (!nrNumber) throw new Error('Invalid parameter \'nrNumber\'')
 
-    let url = `nameRequests/${nrNumber}/validate?phone=${phone}&email=${email}`
+    const url = `nameRequests/${nrNumber}/validate?phone=${phone}&email=${email}`
     return axios.get(url)
       .then(response => {
         const data = response?.data
