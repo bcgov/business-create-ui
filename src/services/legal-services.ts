@@ -119,7 +119,31 @@ export default class LegalServices {
   static async fetchNameRequest (nrNumber: string): Promise<NameRequestIF> {
     if (!nrNumber) throw new Error('Invalid parameter \'nrNumber\'')
 
-    const url = `nameRequests/${nrNumber}`
+    let url = `nameRequests/${nrNumber}`
+    return axios.get(url)
+      .then(response => {
+        const data = response?.data
+        if (!data) throw new Error('Invalid API response')
+        return data
+      }).catch(error => {
+        if (error?.response?.status === StatusCodes.NOT_FOUND) {
+          return null // NR not found (not an error)
+        }
+        throw error
+      })
+  }
+
+  /**
+   * Fetches name request data with phone and email validation.
+   * @param nrNumber the name request number (eg, NR 1234567)
+   * @param phone the name request phone (eg, 12321232)
+   * @param email the name request email (eg, ab@gmail.com)
+   * @returns a promise to return the NR data, or null if not found
+   */
+  static async fetchValidContactNr (nrNumber: string, phone?: string, email?: string): Promise<NameRequestIF> {
+    if (!nrNumber) throw new Error('Invalid parameter \'nrNumber\'')
+
+    let url = `nameRequests/${nrNumber}/validate?phone=${phone}&email=${email}`
     return axios.get(url)
       .then(response => {
         const data = response?.data
