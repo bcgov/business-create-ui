@@ -307,7 +307,7 @@ export default class Actions extends Mixins(CommonMixin, DateMixin, FilingTempla
   // FUTURE: merge this with NameRequestMixin::validateNameRequest()
   /** Fetches NR and validates it. */
   private async _validateNameRequest (nrNumber: string): Promise<void> {
-    const nameRequest = await LegalServices.fetchNameRequest(nrNumber).catch(error => {
+    const nameRequest = await LegalServices.fetchValidContactNr(nrNumber).catch(error => {
       this.$root.$emit('name-request-retrieve-error')
       throw new Error(error)
     })

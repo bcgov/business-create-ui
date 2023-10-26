@@ -137,10 +137,10 @@ export default class LegalServices {
    * Fetches name request data with phone and email validation.
    * @param nrNumber the name request number (eg, NR 1234567)
    * @param phone the name request phone (eg, 12321232)
-   * @param email the name request email (eg, ab@gmail.com)
+   * @param email the name request email (eg, nr@example.com)
    * @returns a promise to return the NR data, or null if not found
    */
-  static async fetchValidContactNr (nrNumber: string, phone?: string, email?: string): Promise<NameRequestIF> {
+  static async fetchValidContactNr (nrNumber: string, phone = '', email = ''): Promise<NameRequestIF> {
     if (!nrNumber) throw new Error('Invalid parameter \'nrNumber\'')
 
     const url = `nameRequests/${nrNumber}/validate?phone=${phone}&email=${email}`
@@ -152,6 +152,10 @@ export default class LegalServices {
       }).catch(error => {
         if (error?.response?.status === StatusCodes.NOT_FOUND) {
           return null // NR not found (not an error)
+        } else if (error?.response?.status === StatusCodes.BAD_REQUEST) {
+          throw new Error('Sent invalid email or phone number.') // Sent invalid email or phone
+        } else if (error?.response?.status === StatusCodes.FORBIDDEN) {
+          throw new Error('Not sent email or phone number.') // Not sent the email or phone
         }
         throw error
       })

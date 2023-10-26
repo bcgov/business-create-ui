@@ -163,7 +163,8 @@ export default class BusinessName extends Mixins(CommonMixin, DateMixin, NameReq
     const nameRequest = await LegalServices.fetchValidContactNr(nrNum, phone, email)
     if (!nameRequest) throw new Error('Error fetching Name Request')
 
-    return nameRequest
+    // validateNameRequest() already throws printable errors
+    return this.validateNameRequest(nameRequest, this.requestActionCode)
   }
 
   /** On company name update, sets store accordingly. */
