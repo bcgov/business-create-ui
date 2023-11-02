@@ -3,7 +3,7 @@ name: BUSINESS CREATE UI CD - legal name
 on:
   push:
     branches:
-      - main
+      - feature-legal-name
   workflow_dispatch:
     inputs:
       environment:
