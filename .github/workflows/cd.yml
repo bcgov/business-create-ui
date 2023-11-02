@@ -1,4 +1,4 @@
-name: BUSINESS CREATE UI CD
+name: BUSINESS CREATE UI CD - legal name
 
 on:
   push:
@@ -27,6 +27,6 @@ jobs:
       environment: ${{ inputs.environment }}
       tagname: ${{ inputs.tagname }}
     secrets:
-      APP_NAME: "business-create"
+      APP_NAME: "business-create-le"
       OP_CONNECT_URL: ${{ secrets.OP_CONNECT_URL }}
       OP_CONNECT_TOKEN: ${{ secrets.OP_CONNECT_TOKEN }}
