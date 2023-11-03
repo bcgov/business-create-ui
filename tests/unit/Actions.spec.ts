@@ -122,7 +122,7 @@ describe('Emits error event if NR validation fails in file and pay', () => {
 
     // GET NR data
     sinon.stub(axios, 'get')
-      .withArgs('nameRequests/NR 1234567')
+      .withArgs('nameRequests/NR 1234567/validate?phone=&email=')
       .returns(new Promise(resolve => resolve({
         data: expiredNR
       })))
@@ -378,7 +378,7 @@ describe('Actions component - Filing Functionality', () => {
 
     // GET NR data
     sinon.stub(axios, 'get')
-      .withArgs('nameRequests/NR 1234567')
+      .withArgs('nameRequests/NR 1234567/validate?phone=&email=')
       .returns(new Promise(resolve => resolve({
         data: { ...nrData }
       })))

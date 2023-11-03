@@ -465,7 +465,7 @@ describe('Incorporation - Define Company page for a BEN (named)', () => {
       })))
 
     // GET NR data
-    get.withArgs('nameRequests/NR 1234567')
+    get.withArgs('nameRequests/NR 1234567/validate?phone=&email=')
       .returns(new Promise(resolve => resolve({
         data:
         {
