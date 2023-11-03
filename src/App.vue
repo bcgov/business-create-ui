@@ -925,7 +925,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       const nrNumber = filing[filing.header?.name].nameRequest.nrNumber
 
       // fetch NR data
-      const nrResponse = await LegalServices.fetchNameRequest(nrNumber).catch(error => {
+      const nrResponse = await LegalServices.fetchValidContactNr(nrNumber).catch(error => {
         console.log('NR error =', error) // eslint-disable-line no-console
         this.nameRequestInvalidErrorDialog = true
       })

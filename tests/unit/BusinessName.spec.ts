@@ -18,7 +18,7 @@ setActivePinia(createPinia())
 const store = useStore()
 
 // mock services function
-const mockFetchNameRequest = vi.spyOn((LegalServices as any), 'updateFiling').mockImplementation()
+const mockFetchValidContactNr = vi.spyOn((LegalServices as any), 'updateFiling').mockImplementation()
 
 describe('Business Name component', () => {
   let wrapper: any

@@ -160,11 +160,11 @@ export default class BusinessName extends Mixins(CommonMixin, DateMixin, NameReq
    * @returns a promise to return the NR, or throws a printable error
    */
   async fetchAndValidateNr (nrNum: string, phone: string, email: string): Promise<NameRequestIF> {
-    const nameRequest = await LegalServices.fetchNameRequest(nrNum)
+    const nameRequest = await LegalServices.fetchValidContactNr(nrNum, phone, email)
     if (!nameRequest) throw new Error('Error fetching Name Request')
 
     // validateNameRequest() already throws printable errors
-    return this.validateNameRequest(nameRequest, this.requestActionCode, phone, email)
+    return this.validateNameRequest(nameRequest, this.requestActionCode)
   }
 
   /** On company name update, sets store accordingly. */
