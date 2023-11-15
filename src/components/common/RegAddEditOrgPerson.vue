@@ -21,8 +21,22 @@
             class="add-org-header"
             :class="{'error-text': !addPersonOrgFormValid}"
           >
-            <span v-if="isNaN(activeIndex)">Add Business or Corporation</span>
-            <span v-else>Edit Business or Corporation</span>
+            <span v-if="isNaN(activeIndex)">
+              <span v-if="isTypePartnership">
+                Add a Business as a Partner
+              </span>
+              <span v-else="isTypeSoleProp">
+                Add a Business as the Proprietor
+              </span>
+            </span>
+            <span v-else>
+              <span v-if="isTypePartnership">
+                Edit a Business as a Partner
+              </span>
+              <span v-else="isTypeSoleProp">
+                Edit a Business as the Proprietor
+              </span>
+            </span>
           </label>
 
           <!-- Title for person -->
@@ -104,102 +118,18 @@
 
             <!-- Business or Corporation -->
             <template v-if="isOrg">
-              <!-- Business or Corporation Unregistered in B.C. -->
-              <article
-                v-if="!orgPerson.isLookupBusiness"
-                class="manual-add-article"
-              >
-                <label>
-                  {{ isNaN(activeIndex) ? 'Add' : ' Edit' }} Business or Corporation Not Registered in B.C.
-                </label>
-                <a
-                  class="lookup-toggle float-right"
-                  @click="swapIsLookupBusiness()"
-                >
-                  Business or Corporation Registered in B.C.
-                </a>
 
-                <p class="mt-6 mb-0">
-                  <template v-if="isProprietor">
-                    You may add a company that is not legally required to register in B.C. such as a bank
-                    or railway as the Proprietor. All other types of businesses not registered in B.C.
-                    cannot be the Proprietor.
-                  </template>
-                  <template v-else-if="isPartner">
-                    You may add a company that is not legally required to register in B.C. such as a bank
-                    or railway as a partner. All other types of businesses not registered in B.C. cannot be
-                    a partner.
-                  </template>
-                  <template v-else>
-                    You may add a company that is not legally required to register in B.C. such as a bank
-                    or railway.
-                  </template>
-                </p>
-
-                <HelpContactUs class="mt-6" />
-
-                <!-- Confirm checkbox (org only) -->
-                <v-checkbox
-                  v-model="orgPerson.confirmBusiness"
-                  class="confirm-checkbox mt-8"
-                  hide-details
-                  :rules="enableRules ? [(v) => !!v] : []"
-                >
-                  <template
-                    v-if="isProprietor"
-                    #label
-                  >
-                    I confirm that the business proprietor being added is not legally required to register
-                    in B.C.
-                  </template>
-                  <template
-                    v-else-if="isPartner"
-                    #label
-                  >
-                    I confirm that the business partner being added is not legally required to register in
-                    B.C.
-                  </template>
-                  <template
-                    v-else
-                    #label
-                  >
-                    I confirm that the business or corporation being added is not legally required to
-                    register in B.C.
-                  </template>
-                </v-checkbox>
-
-                <!-- Organization Name (org only) -->
-                <v-text-field
-                  v-model.trim="orgPerson.officer.organizationName"
-                  filled
-                  class="mt-8 mb-n6 org-name"
-                  label="Business or Corporation Name"
-                  :rules="enableRules ? OrgNameRules : []"
-                />
-
-                <!-- Business Number (readonly) -->
-                <article
-                  v-if="isProprietor"
-                  class="mt-8"
-                >
-                  <label>Business Number:</label> {{ getRegistration.businessNumber || '(Not entered)' }}
-                </article>
-
-                <v-divider class="mt-8" />
-              </article>
+              <template v-if="isTypeSoleProp">
+                <p>Enter an existing B.C. business as the proprietor.</p>
+              </template>
+              <template v-else="isTypePartnership">
+                <p>Enter an existing B.C. business as a partner.</p>
+              </template>
 
               <!-- Business or Corporation Look up -->
               <article
-                v-else
                 class="business-lookup-article"
               >
-                <label>Business or Corporation Registered in B.C.</label>
-                <a
-                  class="lookup-toggle float-right"
-                  @click="swapIsLookupBusiness()"
-                >
-                  Business or Corporation Not Registered in B.C.
-                </a>
                 <div
                   v-if="hasBusinessSelectedFromLookup"
                   class="mt-6"
@@ -214,47 +144,17 @@
                     </p>
                   </v-card>
                 </div>
-                <div v-else-if="isProprietor">
-                  <p class="mt-6 mb-0">
-                    To add a registered B.C. business or corporation as the Proprietor, enter the name
-                    or incorporation number.
-                  </p>
-                  <p class="mt-6 mb-0">
-                    If you are adding a company that is not legally required to register in B.C. such as
-                    a bank or a railway, use the manual entry form. All other types of business cannot
-                    be the Proprietor.
-                  </p>
-                </div>
-                <div v-else-if="isPartner">
-                  <p class="mt-6 mb-0">
-                    To add a registered B.C. business or corporation as a partner, enter the name or
-                    incorporation number.
-                  </p>
-                  <p class="mt-6 mb-0">
-                    If you are adding a company that is not legally required to register in B.C. such as
-                    a bank or a railway, use the manual entry form. All other types of business cannot
-                    be a partner.
-                  </p>
-                  <HelpContactUs class="mt-6" />
-                </div>
-                <div v-else>
-                  <p class="mt-6 mb-0">
-                    To add a registered B.C. business or corporation, enter the name or incorporation
-                    number.
-                  </p>
-                  <p class="mt-6 mb-0">
-                    If you are adding a company that is not legally required to register in B.C. such as
-                    a bank or a railway, use the manual entry form.
-                  </p>
-                </div>
 
                 <BusinessLookup
                   :showErrors="enableRules"
                   :businessLookup="inProgressBusinessLookup"
                   :BusinessLookupServices="BusinessLookupServices"
+                  :label="businessLookupLabel"
                   @setBusiness="updateBusinessDetails($event)"
                   @undoBusiness="resetBusinessDetails()"
                 />
+                
+                <HelpContactUs class="mt-0.25" />
               </article>
             </template>
 

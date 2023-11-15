@@ -9,9 +9,9 @@
       </v-icon>
       <span class="px-2">Canada and U.S. Toll Free:</span>
       <a
-        href="tel:+1-877-526-1526"
+        href="tel:+1-877-370-1033"
         class="contact-value"
-      >1-877-526-1526</a>
+      >1-877-370-1033</a>
     </li>
     <li class="contact-container">
       <v-icon
@@ -22,22 +22,9 @@
       </v-icon>
       <span class="px-2">Victoria Office:</span>
       <a
-        href="tel:+1-250-387-7848"
+        href="tel:+1-250-370-1033"
         class="contact-value"
-      >250-387-7848</a>
-    </li>
-    <li class="contact-container">
-      <v-icon
-        class="contact-icon"
-        size="18px"
-      >
-        mdi-email
-      </v-icon>
-      <span class="px-2">Email:</span>
-      <a
-        href="mailto:BCRegistries@gov.bc.ca"
-        class="contact-value"
-      >BCRegistries@gov.bc.ca</a>
+      >250-370-1033</a>
     </li>
   </ul>
 </template>
