@@ -25,7 +25,7 @@
               <span v-if="isTypePartnership">
                 Add a Business as a Partner
               </span>
-              <span v-else="isTypeSoleProp">
+              <span v-else>
                 Add a Business as the Proprietor
               </span>
             </span>
@@ -33,7 +33,7 @@
               <span v-if="isTypePartnership">
                 Edit a Business as a Partner
               </span>
-              <span v-else="isTypeSoleProp">
+              <span v-else>
                 Edit a Business as the Proprietor
               </span>
             </span>
@@ -122,7 +122,7 @@
               <template v-if="isTypeSoleProp">
                 <p>Enter an existing B.C. business as the proprietor.</p>
               </template>
-              <template v-else="isTypePartnership">
+              <template v-else>
                 <p>Enter an existing B.C. business as a partner.</p>
               </template>
 
@@ -153,7 +153,7 @@
                   @setBusiness="updateBusinessDetails($event)"
                   @undoBusiness="resetBusinessDetails()"
                 />
-                
+
                 <HelpContactUs class="mt-0.25" />
               </article>
             </template>
