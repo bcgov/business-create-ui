@@ -63,8 +63,8 @@
           </header>
 
           <span
-            v-for="(item, index) in getCreateResolutionResource.helpSection.helpText.section1.items"
-            :key="index"
+            v-for="(item, index1) in getCreateResolutionResource.helpSection.helpText.section1.items"
+            :key="index1"
           >
             <p
               v-if="item.type === ItemTypes.TEXT"
@@ -74,8 +74,8 @@
             <v-row v-if="item.type === ItemTypes.PARTIAL_ITEMS">
               <v-col cols="11">
                 <span
-                  v-for="(partialItem, index) in item.value"
-                  :key="index"
+                  v-for="(partialItem, index2) in item.value"
+                  :key="index2"
                 >
                   <span
                     v-if="partialItem.type === ItemTypes.TEXT"
@@ -426,8 +426,8 @@
             </v-checkbox>
             <ul>
               <li
-                v-for="(item, index) in getCreateResolutionResource.confirmSection.items"
-                :key="index"
+                v-for="(item, index1) in getCreateResolutionResource.confirmSection.items"
+                :key="index1"
                 class="mt-4"
               >
                 <v-row
@@ -450,8 +450,8 @@
                   </v-col>
                   <v-col cols="11">
                     <span
-                      v-for="(partialItem, index) in item.value"
-                      :key="index"
+                      v-for="(partialItem, index2) in item.value"
+                      :key="index2"
                     >
                       <span
                         v-if="partialItem.type === ItemTypes.TEXT"
@@ -846,7 +846,7 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin) {
   // v-observe-visibility property, we are able to force a re-calculation of the text area height when a user navigates
   // to the complete resolution step from another step for the first time. This results in the text area being rendered
   // to the appropriate height.
-  onResolutionVisibilityChanged (isVisible: boolean, _entry): void {
+  onResolutionVisibilityChanged (isVisible: boolean): void {
     if (isVisible) {
       this.$refs.resolutionTextRef.calculateInputHeight()
     }

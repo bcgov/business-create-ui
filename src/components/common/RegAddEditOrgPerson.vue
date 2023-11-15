@@ -79,8 +79,8 @@
                   class="item first-name"
                   label="First Name"
                   :rules="enableRules ?
-                   (isCompletingParty ? Rules.FirstNameRulesFirmsCP :
-                   Rules.FirstNameRulesFirms) : []"
+                    (isCompletingParty ? Rules.FirstNameRulesFirmsCP :
+                      Rules.FirstNameRulesFirms) : []"
                   :readonly="isCompletingParty && !(isRoleStaff || isSbcStaff)"
                 />
                 <v-text-field

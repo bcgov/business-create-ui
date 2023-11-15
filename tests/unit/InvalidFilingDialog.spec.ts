@@ -1,13 +1,11 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify'
 import { createPinia, setActivePinia } from 'pinia'
-import { useStore } from '@/store/store'
 import { shallowMount, mount } from '@vue/test-utils'
 import InvalidIncorporationApplicationDialog from '@/dialogs/InvalidFilingDialog.vue'
 
 const vuetify = new Vuetify({})
 setActivePinia(createPinia())
-const store = useStore()
 
 // Prevent the warning "[Vuetify] Unable to locate target [data-app]"
 document.body.setAttribute('data-app', 'true')

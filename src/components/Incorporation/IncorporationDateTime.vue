@@ -340,7 +340,7 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
    * @param val The date input
    */
   @Watch('dateText')
-  private onEffectiveDateManual (val: string): void {
+  private onEffectiveDateManual (): void {
     this.constructDate()
   }
 
@@ -349,7 +349,7 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
    * @param val The hour selected
    */
   @Watch('selectHour')
-  private onHourUpdate (val: string): void {
+  private onHourUpdate (): void {
     this.constructDate()
   }
 
@@ -358,7 +358,7 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
    * @param val The minute selected
    */
   @Watch('selectMinute')
-  private onMinuteUpdate (val: string): void {
+  private onMinuteUpdate (): void {
     this.constructDate()
   }
 
@@ -367,7 +367,7 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
    * @param val The time period selected
    */
   @Watch('selectPeriod')
-  private onPeriodUpdate (val: string): void {
+  private onPeriodUpdate (): void {
     this.constructDate()
   }
 
@@ -376,8 +376,8 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
    * @param val The value of the selected radio button
    */
   @Watch('selectDate')
-  private setDateTimeChoice (val) {
-    this.isFutureEffective = val === ISFUTUREEFFECTIVE
+  private setDateTimeChoice (val: string) {
+    this.isFutureEffective = (val === ISFUTUREEFFECTIVE)
     this.isImmediate = !this.isFutureEffective
 
     // Clear DateTimes when immediate is selected
