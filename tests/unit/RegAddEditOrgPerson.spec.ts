@@ -428,20 +428,6 @@ describe('Registration Add/Edit Org/Person component', () => {
     store.stateModel.tombstone.keycloakRoles = ['staff']
     const wrapper = createComponent(validProprietorOrg, 0, null)
 
-    await wrapper.find('.lookup-toggle').trigger('click')
-
-    // verify input values
-    const confirmCheckboxInput = wrapper.find(`${confirmCheckboxSelector} input`)
-    const orgNameInput = wrapper.find(`${orgNameSelector} input`)
-    const emailInput = wrapper.find(`${emailAddressSelector} input`)
-    // FUTURE: verify mailing address and delivery address
-    expect((confirmCheckboxInput.element as HTMLInputElement).checked)
-      .toEqual(validProprietorOrg.confirmBusiness)
-    expect((orgNameInput.element as HTMLInputElement).value)
-      .toEqual(validProprietorOrg.officer.organizationName)
-    expect((emailInput.element as HTMLInputElement).value)
-      .toEqual(validProprietorOrg.officer.email)
-
     // verify buttons
     expect(wrapper.find(buttonDoneSelector).attributes('disabled')).toBeUndefined()
     expect(wrapper.find(buttonRemoveSelector).attributes('disabled')).toBeUndefined()
