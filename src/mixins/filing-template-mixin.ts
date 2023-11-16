@@ -14,7 +14,8 @@ import {
 import { ApprovalTypes, BusinessTypes, CoopTypes, DissolutionTypes, EffectOfOrders, FilingTypes,
   PartyTypes, RelationshipTypes, RestorationTypes, RoleTypes, StaffPaymentOptions
 } from '@/enums'
-import { CorpTypeCd, CorrectNameOptions } from '@bcrs-shared-components/enums/'
+import { CorrectNameOptions } from '@bcrs-shared-components/enums/'
+import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module/'
 
 /**
  * Mixin that provides the integration with the Legal API.

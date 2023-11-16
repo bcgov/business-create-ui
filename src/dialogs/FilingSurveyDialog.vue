@@ -80,6 +80,7 @@ export default class FilingSurveyDialog extends Vue {
   // Pass events to parent.
   @Emit() no (): void {}
   @Emit() yes (): void {}
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   @Emit('doNotShow') doNotShow (val: boolean): void {}
 }
 </script>

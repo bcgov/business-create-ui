@@ -298,7 +298,7 @@ export default class IncorporationDefineCompany extends Mixins(CommonMixin) {
   }
 
   @Watch('getNameTranslationsValid', { deep: true })
-  private onNameTranslationsValid (valid: boolean): void {
+  private onNameTranslationsValid (): void {
     this.setDefineCompanyStepValidity(
       this.businessContactFormValid &&
       this.addressFormValid &&

@@ -2,7 +2,8 @@ import { BusinessAddressIF, CourtOrderIF, RegisteredRecordsAddressesIF, NaicsIF,
   OfficeAddressIF, PartyIF, ShareClassIF, SpecialResolutionIF } from '@/interfaces'
 import { ApprovalTypes, BusinessTypes, DissolutionStatementTypes, DissolutionTypes, FilingTypes,
   RestorationTypes, RelationshipTypes } from '@/enums'
-import { CorpTypeCd, CorrectNameOptions } from '@bcrs-shared-components/enums/'
+import { CorrectNameOptions } from '@bcrs-shared-components/enums/'
+import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module/'
 import { ContactPointIF } from '@bcrs-shared-components/interfaces'
 
 /**
@@ -78,7 +79,7 @@ export interface IncorporationFilingIF {
 /** Interface for registration filing data saved to the Legal API. */
 export interface RegistrationFilingIF {
   header: {
-    name: string
+    name: FilingTypes
     certifiedBy: string
     date: string
     effectiveDate?: string // not saved by UI but may be provided by API
@@ -118,7 +119,7 @@ export interface RegistrationFilingIF {
 /** Interface for dissolution filing data saved to the Legal API. */
 export interface DissolutionFilingIF {
   header: {
-    name: string
+    name: FilingTypes
     certifiedBy: string
     date: string
     effectiveDate?: string // Optional and should be set only for future effective filings
@@ -168,7 +169,7 @@ export interface DissolutionFilingIF {
 /** Interface for restoration filing data saved to the Legal API. */
 export interface RestorationFilingIF {
   header: {
-    name: string
+    name: FilingTypes
     certifiedBy: string
     date: string
     effectiveDate?: string // not saved by UI but may be provided by API

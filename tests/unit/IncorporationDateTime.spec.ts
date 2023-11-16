@@ -12,10 +12,10 @@ import { createLocalVue, mount } from '@vue/test-utils'
 import IncorporationDateTime from '@/components/Incorporation/IncorporationDateTime.vue'
 
 const vuetify = new Vuetify({})
-
-// Store
 setActivePinia(createPinia())
 const store = useStore()
+
+// Prevent the warning "[Vuetify] Unable to locate target [data-app]"
 document.body.setAttribute('data-app', 'true')
 
 describe('Incorporation Date Time component', () => {

@@ -1,8 +1,8 @@
 import { FilingTypes } from '@/enums'
+import { GetCorpNumberedDescription } from '@bcrs-shared-components/corp-type-module'
 import { BreadcrumbIF } from '@/interfaces'
 import { createPinia, setActivePinia } from 'pinia'
 import { useStore } from '@/store/store'
-import { GetCorpNumberedDescription } from '@bcrs-shared-components/corp-type-module'
 
 setActivePinia(createPinia())
 const store = useStore()

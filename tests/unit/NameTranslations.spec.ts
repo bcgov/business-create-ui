@@ -6,11 +6,13 @@ import { useStore } from '@/store/store'
 import NameTranslations from '@/components/common/NameTranslations.vue'
 import AddNameTranslation from '@/components/common/AddNameTranslation.vue'
 import ListNameTranslations from '@/components/common/ListNameTranslations.vue'
-import { CorpTypeCd } from '@/enums'
+import { CorpTypeCd } from '@bcrs-shared-components/enums'
 
 const vuetify = new Vuetify({})
 setActivePinia(createPinia())
 const store = useStore()
+
+// Prevent the warning "[Vuetify] Unable to locate target [data-app]"
 document.body.setAttribute('data-app', 'true')
 
 describe('Name Translations component', () => {

@@ -616,7 +616,7 @@ export default class OfficeAddresses extends Mixins(CommonMixin) {
 
   // Watchers
   @Watch('formValid')
-  private onFormValidityChange (val: boolean): void {
+  private onFormValidityChange (): void {
     this.emitValid()
   }
 

@@ -1,7 +1,6 @@
 import { RegistrationResourceIF } from '@/interfaces'
 import { FilingCodes, RuleIds } from '@/enums'
-import { CorpTypeCd } from '@bcrs-shared-components/enums/'
-import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
+import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 import { RegistrationSteps } from './steps'
 
 export const RegistrationResourceGp: RegistrationResourceIF = {

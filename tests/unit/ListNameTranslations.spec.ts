@@ -10,6 +10,8 @@ import ListNameTranslations from '@/components/common/ListNameTranslations.vue'
 const vuetify = new Vuetify({})
 setActivePinia(createPinia())
 const store = useStore()
+
+// Prevent the warning "[Vuetify] Unable to locate target [data-app]"
 document.body.setAttribute('data-app', 'true')
 
 // Local references

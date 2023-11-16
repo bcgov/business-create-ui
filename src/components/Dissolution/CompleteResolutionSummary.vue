@@ -242,7 +242,7 @@ export default class CompleteResolutionSummary extends Mixins(DateMixin) {
   // v-observe-visibility property, we are able to force a re-calculation of the text area height when a user navigates
   // to the complete resolution summary step from another step for the first time. This results in the text area being
   // rendered to the appropriate height.
-  onResolutionVisibilityChanged (isVisible: boolean, _entry): void {
+  onResolutionVisibilityChanged (isVisible: boolean): void {
     if (isVisible && this.resolutionTextHeightUpdateRequired) {
       this.resolutionTextHeightUpdateRequired = false
       this.$refs.resolutionTextRef.calculateInputHeight()

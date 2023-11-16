@@ -180,7 +180,7 @@ export default class BusinessName extends Mixins(CommonMixin, DateMixin, NameReq
 
   /** Updates component validity initially and when correct name option has changed. */
   @Watch('getCorrectNameOption', { immediate: true })
-  private updateComponentValidity (val: boolean): void {
+  private updateComponentValidity (): void {
     this.setBusinessNameValid(!!this.getCorrectNameOption)
   }
 }
