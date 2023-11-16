@@ -116,18 +116,10 @@
               </div>
             </article>
 
-            <!-- Business or Corporation -->
+            <!-- Business or Corporation Look up-->
             <template v-if="isOrg">
-
-              <template v-if="isTypeSoleProp">
-                <p>Enter an existing B.C. business as the proprietor.</p>
-              </template>
-              <template v-else>
-                <p>Enter an existing B.C. business as a partner.</p>
-              </template>
-
-              <!-- Business or Corporation Look up -->
-              <article
+              
+              <article 
                 class="business-lookup-article"
               >
                 <div
@@ -143,6 +135,17 @@
                       may update them here. The updates are applicable only to this application.
                     </p>
                   </v-card>
+                </div>
+                <div v-else-if="isProprietor">
+                  <p class="mb-0">
+                    Enter an existing B.C. business as the proprietor.
+                  </p>
+                </div>
+                <div v-else-if="isPartner">
+                  <p class="mb-0">
+                    Enter an existing B.C. business as a partner.
+                  </p>
+
                 </div>
 
                 <BusinessLookup
