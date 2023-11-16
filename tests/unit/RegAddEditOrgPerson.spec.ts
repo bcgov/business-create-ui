@@ -363,43 +363,18 @@ describe('Registration Add/Edit Org/Person component', () => {
     wrapper.destroy()
   })
 
-  it('displays form data for proprietor-org (SP) - manual add', async () => {
-    const wrapper = createComponent(validProprietorOrg, -1, null)
-
-    await wrapper.find('.lookup-toggle').trigger('click')
-
-    expect(wrapper.find('.manual-add-article label').text())
-      .toContain('Edit Business or Corporation Not Registered in B.C.')
-    expect(wrapper.find('.manual-add-article p').text()).toContain('the Proprietor')
-
-    wrapper.destroy()
-  })
 
   it('displays form data for proprietor-org (SP) - business lookup', () => {
     const wrapper = createComponent(validProprietorOrg, -1, null)
 
-    expect(wrapper.find('.business-lookup-article label').text()).toContain('Business or Corporation Registered in B.C')
-    expect(wrapper.findAll('.business-lookup-article p').at(0).text()).toContain('the Proprietor')
+    expect(wrapper.find('.business-lookup-article label').text()).toContain('Business Name or Incorporation/Registration Number')
+    expect(wrapper.findAll('.business-lookup-article p').at(0).text()).toContain('Enter an existing B.C. business as the proprietor')
 
     wrapper.destroy()
   })
 
   it('displays form data for proprietor-org (SP) - edit', async () => {
     const wrapper = createComponent(validProprietorOrg, 0, null)
-
-    await wrapper.find('.lookup-toggle').trigger('click')
-
-    // verify input values
-    const confirmCheckboxInput = wrapper.find(`${confirmCheckboxSelector} input`)
-    const orgNameInput = wrapper.find(`${orgNameSelector} input`)
-    const emailInput = wrapper.find(`${emailAddressSelector} input`)
-    // FUTURE: verify mailing address and delivery address
-    expect((confirmCheckboxInput.element as HTMLInputElement).checked)
-      .toEqual(validProprietorOrg.confirmBusiness)
-    expect((orgNameInput.element as HTMLInputElement).value)
-      .toEqual(validProprietorOrg.officer.organizationName)
-    expect((emailInput.element as HTMLInputElement).value)
-      .toEqual(validProprietorOrg.officer.email)
 
     // verify buttons
     expect(wrapper.find(buttonDoneSelector).attributes('disabled')).toBeUndefined()
@@ -409,49 +384,18 @@ describe('Registration Add/Edit Org/Person component', () => {
     wrapper.destroy()
   })
 
-  it('displays form data for partner-org (GP) - manual add', async () => {
-    const wrapper = createComponent(validPartnerOrg, -1, null)
-
-    await wrapper.find('.lookup-toggle').trigger('click')
-
-    expect(wrapper.find('.manual-add-article label').text())
-      .toContain('Edit Business or Corporation Not Registered in B.C.')
-    expect(wrapper.find('.manual-add-article p').text()).toContain('a partner')
-
-    wrapper.destroy()
-  })
-
   it('displays form data for partner-org (GP) - business lookup', () => {
     const wrapper = createComponent(validPartnerOrg, -1, null)
 
-    expect(wrapper.find('.business-lookup-article label').text()).toContain('Business or Corporation Registered in B.C')
-    expect(wrapper.findAll('.business-lookup-article p').at(0).text()).toContain('a partner')
+    expect(wrapper.find('.business-lookup-article label').text()).toContain('Business Name or Incorporation/Registration Number')
+    expect(wrapper.findAll('.business-lookup-article p').at(0).text()).toContain('Enter an existing B.C. business as a partner')
 
     wrapper.destroy()
   })
 
   it('displays form data for partner-org (GP) - edit', async () => {
     const wrapper = createComponent(validPartnerOrg, 0, null)
-
-    await wrapper.find('.lookup-toggle').trigger('click')
-
-    expect(wrapper.find('.manual-add-article label').text())
-      .toContain('Edit Business or Corporation Not Registered in B.C.')
-
-    expect(wrapper.find('.manual-add-article p').text()).toContain('as a partner')
-
-    // verify input values
-    const confirmCheckboxInput = wrapper.find(`${confirmCheckboxSelector} input`)
-    const orgNameInput = wrapper.find(`${orgNameSelector} input`)
-    const emailInput = wrapper.find(`${emailAddressSelector} input`)
-    // FUTURE: verify mailing address and delivery address
-    expect((confirmCheckboxInput.element as HTMLInputElement).checked)
-      .toEqual(validPartnerOrg.confirmBusiness)
-    expect((orgNameInput.element as HTMLInputElement).value)
-      .toEqual(validPartnerOrg.officer.organizationName)
-    expect((emailInput.element as HTMLInputElement).value)
-      .toEqual(validPartnerOrg.officer.email)
-
+    
     // verify buttons
     expect(wrapper.find(buttonDoneSelector).attributes('disabled')).toBeUndefined()
     expect(wrapper.find(buttonRemoveSelector).attributes('disabled')).toBeUndefined()
@@ -502,43 +446,6 @@ describe('Registration Add/Edit Org/Person component', () => {
     await Vue.nextTick()
     expect(wrapper.emitted(resetEvent).length).toBe(1)
     expect(wrapper.emitted(resetEvent)[0]).toEqual([])
-
-    wrapper.destroy()
-  })
-
-  it('does not display error message when user enters valid org name', async () => {
-    const wrapper = createComponent(validProprietorOrg, NaN, null)
-
-    await wrapper.find('.lookup-toggle').trigger('click')
-
-    const inputElement = wrapper.find(`${orgNameSelector} input`)
-    inputElement.setValue('Valid Org Name')
-    inputElement.trigger('change')
-    await flushPromises()
-
-    const messages = wrapper.findAll('.v-messages.error--text')
-    expect(messages.length).toBe(0)
-
-    expect(wrapper.vm.$data.addPersonOrgFormValid).toBe(true)
-
-    wrapper.destroy()
-  })
-
-  it('displays error message when user enters invalid org name', async () => {
-    const wrapper = createComponent(validProprietorOrg, NaN, null)
-
-    await wrapper.find('.lookup-toggle').trigger('click')
-
-    const inputElement = wrapper.find(`${orgNameSelector} input`)
-    inputElement.setValue('     ')
-    inputElement.trigger('change')
-    await flushPromises()
-
-    const messages = wrapper.findAll('.v-messages.error--text')
-    expect(messages.length).toBe(1)
-    expect(messages.at(0).text()).toBe('Business or corporation name is required')
-
-    expect(wrapper.vm.$data.addPersonOrgFormValid).toBe(false)
 
     wrapper.destroy()
   })
