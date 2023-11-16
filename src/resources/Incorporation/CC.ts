@@ -1,8 +1,7 @@
 import { IncorporationResourceIF } from '@/interfaces'
 import { FilingCodes, RuleIds } from '@/enums'
-import { CorpTypeCd } from '@bcrs-shared-components/enums/'
+import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 import { IncorporationStepsCorp } from './steps'
-import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 
 export const IncorporationResourceCc: IncorporationResourceIF = {
   entityType: CorpTypeCd.BC_CCC,

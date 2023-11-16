@@ -1,9 +1,8 @@
 import { FilingTypes } from '@/enums'
-import { CorpTypeCd } from '@bcrs-shared-components/enums/'
+import { GetCorpNumberedDescription } from '@bcrs-shared-components/corp-type-module'
 import { BreadcrumbIF } from '@/interfaces'
 import { createPinia, setActivePinia } from 'pinia'
 import { useStore } from '@/store/store'
-import { GetCorpNumberedDescription } from '@bcrs-shared-components/corp-type-module'
 
 setActivePinia(createPinia())
 const store = useStore()
@@ -24,7 +23,7 @@ function getLegalName (): string {
 
 /** Returns numbered entity name. */
 function getNumberedEntityName (): string {
-  const getEntityType = store.getEntityType as CorpTypeCd
+  const getEntityType = store.getEntityType
   return GetCorpNumberedDescription(getEntityType)
 }
 

@@ -3,7 +3,7 @@ import {
   PeopleAndRolesResourceIF, StepIF, CreateRulesResourceIF, CreateMemorandumResourceIF,
   CreateResolutionResourceIF, CustodianResourceIF, CompletingPartyStatementIF
 } from '@/interfaces'
-import { CorpTypeCd } from '@bcrs-shared-components/enums/'
+import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 
 /** Dissolution resource interface. */
 export interface DissolutionResourceIF {
