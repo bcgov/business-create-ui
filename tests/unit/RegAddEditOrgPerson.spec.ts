@@ -375,6 +375,13 @@ describe('Registration Add/Edit Org/Person component', () => {
   it('displays form data for proprietor-org (SP) - edit', async () => {
     const wrapper = createComponent(validProprietorOrg, 0, null)
 
+    // verify input values
+    const emailInput = wrapper.find(`${emailAddressSelector} input`)
+    // FUTURE: verify mailing address and delivery address
+    expect((emailInput.element as HTMLInputElement).value)
+      .toEqual(validProprietorOrg.officer.email)
+
+
     // verify buttons
     expect(wrapper.find(buttonDoneSelector).attributes('disabled')).toBeUndefined()
     expect(wrapper.find(buttonRemoveSelector).attributes('disabled')).toBeUndefined()
@@ -394,6 +401,12 @@ describe('Registration Add/Edit Org/Person component', () => {
 
   it('displays form data for partner-org (GP) - edit', async () => {
     const wrapper = createComponent(validPartnerOrg, 0, null)
+
+    // verify input values
+    const emailInput = wrapper.find(`${emailAddressSelector} input`)
+    // FUTURE: verify mailing address and delivery address
+    expect((emailInput.element as HTMLInputElement).value)
+      .toEqual(validPartnerOrg.officer.email)
 
     // verify buttons
     expect(wrapper.find(buttonDoneSelector).attributes('disabled')).toBeUndefined()
