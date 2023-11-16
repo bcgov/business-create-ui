@@ -118,8 +118,8 @@
 
             <!-- Business or Corporation Look up-->
             <template v-if="isOrg">
-              
-              <article 
+
+              <article
                 class="business-lookup-article"
               >
                 <div

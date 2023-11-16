@@ -363,11 +363,10 @@ describe('Registration Add/Edit Org/Person component', () => {
     wrapper.destroy()
   })
 
-
   it('displays form data for proprietor-org (SP) - business lookup', () => {
     const wrapper = createComponent(validProprietorOrg, -1, null)
 
-    expect(wrapper.find('.business-lookup-article label').text()).toContain('Business Name or Incorporation/Registration Number')
+    expect(wrapper.find('.business-lookup-article label').text()).toContain('Business Name')
     expect(wrapper.findAll('.business-lookup-article p').at(0).text()).toContain('Enter an existing B.C. business as the proprietor')
 
     wrapper.destroy()
@@ -387,7 +386,7 @@ describe('Registration Add/Edit Org/Person component', () => {
   it('displays form data for partner-org (GP) - business lookup', () => {
     const wrapper = createComponent(validPartnerOrg, -1, null)
 
-    expect(wrapper.find('.business-lookup-article label').text()).toContain('Business Name or Incorporation/Registration Number')
+    expect(wrapper.find('.business-lookup-article label').text()).toContain('Business Name')
     expect(wrapper.findAll('.business-lookup-article p').at(0).text()).toContain('Enter an existing B.C. business as a partner')
 
     wrapper.destroy()
@@ -395,7 +394,7 @@ describe('Registration Add/Edit Org/Person component', () => {
 
   it('displays form data for partner-org (GP) - edit', async () => {
     const wrapper = createComponent(validPartnerOrg, 0, null)
-    
+
     // verify buttons
     expect(wrapper.find(buttonDoneSelector).attributes('disabled')).toBeUndefined()
     expect(wrapper.find(buttonRemoveSelector).attributes('disabled')).toBeUndefined()
