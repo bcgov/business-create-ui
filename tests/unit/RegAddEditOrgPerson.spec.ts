@@ -366,7 +366,7 @@ describe('Registration Add/Edit Org/Person component', () => {
   it('displays form data for proprietor-org (SP) - business lookup', () => {
     const wrapper = createComponent(validProprietorOrg, -1, null)
 
-    expect(wrapper.find('.business-lookup-article label').text()).toContain('Business Name')
+    expect(wrapper.find('.business-lookup-article label').text()).toContain('Business')
     expect(wrapper.findAll('.business-lookup-article p').at(0).text()).toContain('Enter an existing B.C. business as the proprietor')
 
     wrapper.destroy()
@@ -386,7 +386,7 @@ describe('Registration Add/Edit Org/Person component', () => {
   it('displays form data for partner-org (GP) - business lookup', () => {
     const wrapper = createComponent(validPartnerOrg, -1, null)
 
-    expect(wrapper.find('.business-lookup-article label').text()).toContain('Business Name')
+    expect(wrapper.find('.business-lookup-article label').text()).toContain('Business')
     expect(wrapper.findAll('.business-lookup-article p').at(0).text()).toContain('Enter an existing B.C. business as a partner')
 
     wrapper.destroy()
