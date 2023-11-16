@@ -381,7 +381,6 @@ describe('Registration Add/Edit Org/Person component', () => {
     expect((emailInput.element as HTMLInputElement).value)
       .toEqual(validProprietorOrg.officer.email)
 
-
     // verify buttons
     expect(wrapper.find(buttonDoneSelector).attributes('disabled')).toBeUndefined()
     expect(wrapper.find(buttonRemoveSelector).attributes('disabled')).toBeUndefined()
