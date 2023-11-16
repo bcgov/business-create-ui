@@ -56,8 +56,8 @@
 
         <!-- List Content -->
         <v-row
-          v-for="(orgPerson, index) in personList"
-          :key="index"
+          v-for="(orgPerson, index1) in personList"
+          :key="index1"
           class="people-roles-content"
           no-gutters
         >
@@ -124,8 +124,8 @@
             class="roles-column"
           >
             <p
-              v-for="(role, index) in orgPerson.roles"
-              :key="index"
+              v-for="(role, index2) in orgPerson.roles"
+              :key="index2"
             >
               {{ role.roleType }}
             </p>
@@ -149,11 +149,11 @@
             <div class="float-right">
               <span class="edit-action">
                 <v-btn
-                  :id="`officer-${index}-change-btn`"
+                  :id="`officer-${index1}-change-btn`"
                   text
                   color="primary"
                   :tabindex="disabled ? -1 : 0"
-                  @click="disabled ? null : emitPersonInfo(index)"
+                  @click="disabled ? null : emitPersonInfo(index1)"
                 >
                   <v-icon small>mdi-pencil</v-icon>
                   <span>Edit</span>
@@ -180,7 +180,7 @@
                     </v-btn>
                   </template>
                   <v-list class="more-actions-list">
-                    <v-list-item @click="emitRemovePerson(index)">
+                    <v-list-item @click="emitRemovePerson(index1)">
                       <v-list-item-title>
                         <v-icon
                           small

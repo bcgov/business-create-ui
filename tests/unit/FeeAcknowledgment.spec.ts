@@ -1,12 +1,10 @@
 import Vuetify from 'vuetify'
 import { createPinia, setActivePinia } from 'pinia'
-import { useStore } from '@/store/store'
 import { mount } from '@vue/test-utils'
 import FeeAcknowledgement from '@/components/Registration/FeeAcknowledgement.vue'
 
 const vuetify = new Vuetify({})
 setActivePinia(createPinia())
-const store = useStore()
 
 describe('Stepper component', () => {
   let wrapper: any

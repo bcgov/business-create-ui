@@ -91,7 +91,7 @@ export default class BusinessName extends Mixins(CommonMixin, DateMixin, NameReq
   // Global actions
   @Action(useStore) setBusinessNameValid!: (x: boolean) => void
   @Action(useStore) setCorrectNameOption!: (x: CorrectNameOptions) => void
-  @Action(useStore) setNameRequest!: (x: string) => void
+  @Action(useStore) setNameRequest!: (x: NameRequestIF) => void
   @Action(useStore) setNameRequestApprovedName!: (x: string) => void
 
   // Local variable
@@ -180,7 +180,7 @@ export default class BusinessName extends Mixins(CommonMixin, DateMixin, NameReq
 
   /** Updates component validity initially and when correct name option has changed. */
   @Watch('getCorrectNameOption', { immediate: true })
-  private updateComponentValidity (val: boolean): void {
+  private updateComponentValidity (): void {
     this.setBusinessNameValid(!!this.getCorrectNameOption)
   }
 }

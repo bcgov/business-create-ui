@@ -1,4 +1,4 @@
-import { shallowWrapperFactory, wrapperFactory } from '../jest-wrapper-factory'
+import { wrapperFactory } from '../jest-wrapper-factory'
 import IncorporationAgreement from '@/views/Incorporation/IncorporationAgreement.vue'
 import { IncorporationResources } from '@/resources/'
 

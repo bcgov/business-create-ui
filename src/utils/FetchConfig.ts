@@ -34,7 +34,8 @@ export async function FetchConfig (): Promise<any> {
   const dashboardUrl: string = import.meta.env.VUE_APP_DASHBOARD_URL
   sessionStorage.setItem('DASHBOARD_URL', dashboardUrl)
 
-  const legalApiUrl: string = (import.meta.env.VUE_APP_LEGAL_API_URL + import.meta.env.VUE_APP_LEGAL_API_VERSION_2 + '/')
+  const legalApiUrl: string =
+    (import.meta.env.VUE_APP_LEGAL_API_URL + import.meta.env.VUE_APP_LEGAL_API_VERSION_2 + '/')
   // set base URL for axios calls
   axios.defaults.baseURL = legalApiUrl
 

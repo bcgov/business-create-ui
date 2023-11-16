@@ -4,12 +4,15 @@ import { mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { useStore } from '@/store/store'
 import NameRequestInfo from '@/components/common/NameRequestInfo.vue'
-import { CorpTypeCd, NameRequestStates } from '@/enums'
+import { NameRequestStates } from '@/enums'
+import { CorpTypeCd } from '@bcrs-shared-components/enums'
 import { NameRequestIF } from '@/interfaces'
 
 const vuetify = new Vuetify({})
 setActivePinia(createPinia())
 const store = useStore()
+
+// Prevent the warning "[Vuetify] Unable to locate target [data-app]"
 document.body.setAttribute('data-app', 'true')
 
 const mockNrData = {

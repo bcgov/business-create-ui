@@ -1,15 +1,13 @@
 import Vuetify from 'vuetify'
 import { createPinia, setActivePinia } from 'pinia'
-import { useStore } from '@/store/store'
 import { createLocalVue, mount } from '@vue/test-utils'
 import ListShareClass from '@/components/Incorporation/ListShareClass.vue'
 
 const vuetify = new Vuetify({})
 const localVue = createLocalVue()
-
-// Store
 setActivePinia(createPinia())
-const store = useStore()
+
+// Prevent the warning "[Vuetify] Unable to locate target [data-app]"
 document.body.setAttribute('data-app', 'true')
 
 describe('List Shares and Series component', () => {

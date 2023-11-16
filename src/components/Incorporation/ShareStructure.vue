@@ -387,15 +387,19 @@ export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
 
   // Events
   @Emit('addEditClass')
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private emitAddEditShareClassEvent (shareClass: ShareClassIF): void {}
 
   @Emit('addEditSeries')
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private emitAddEditShareSeriesEvent (shareSeries: ShareClassIF): void {}
 
   @Emit('removeClass')
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private emitRemoveShareClassEvent (shareClassIndex: number): void {}
 
   @Emit('removeSeries')
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private emitRemoveShareSeriesEvent (parentIndex: number, shareSeriesIndex: number): void {}
 
   @Emit('resetEvent')

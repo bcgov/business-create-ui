@@ -1,4 +1,5 @@
-import { CorpTypeCd, CorrectNameOptions } from '@bcrs-shared-components/enums/'
+import { CorrectNameOptions } from '@bcrs-shared-components/enums/'
+import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import {
   AccountInformationIF,
   ContactPointIF,
