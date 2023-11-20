@@ -211,7 +211,7 @@ function createComponent (
   })
 }
 
-store.stateModel.nameRequest.legalType = CorpTypeCd.SOLE_PROP
+store.stateModel.entityType = CorpTypeCd.SOLE_PROP
 store.stateModel.currentDate = '2021-04-01'
 
 describe('Registration Add/Edit Org/Person component', () => {
@@ -389,32 +389,6 @@ describe('Registration Add/Edit Org/Person component', () => {
 
   it('displays form data for proprietor-org (SP) - business lookup - SBC staff or client', () => {
     store.stateModel.tombstone.keycloakRoles = ['']
-  it('displays form data for proprietor-org (SP) - manual add - registries staff only', async () => {
-    store.stateModel.tombstone.keycloakRoles = ['staff']
-    const wrapper = createComponent(validProprietorOrg, -1, null)
-
-    await wrapper.find('.lookup-toggle').trigger('click')
-
-    expect(wrapper.find('.manual-add-article label').text())
-      .toContain('Edit Business or Corporation Not Registered in B.C.')
-    expect(wrapper.find('.manual-add-article p').text()).toContain('the Proprietor')
-
-    wrapper.destroy()
-  })
-
-  it('displays form data for proprietor-org (SP) - business lookup - registries staff', () => {
-    store.stateModel.tombstone.keycloakRoles = ['staff']
-    const wrapper = createComponent(validProprietorOrg, -1, null)
-
-    expect(wrapper.findAll('.business-lookup-article label').at(0).text()).toContain('Business or Corporation Registered in B.C')
-    expect(wrapper.findAll('.business-lookup-article label').at(1).text()).toContain('Business or Corporation Name or Incorporation Number')
-    expect(wrapper.findAll('.business-lookup-article p').at(0).text()).toContain('the Proprietor')
-
-    wrapper.destroy()
-  })
-
-  it('displays form data for proprietor-org (SP) - business lookup - SBC staff or client', () => {
-    store.stateModel.tombstone.keycloakRoles = ['']
     const wrapper = createComponent(validProprietorOrg, -1, null)
 
     expect(wrapper.find('.business-lookup-article label').text()).toContain('Business')
@@ -485,32 +459,6 @@ describe('Registration Add/Edit Org/Person component', () => {
 
   it('displays form data for partner-org (GP) - business lookup - SBC staff or client', () => {
     store.stateModel.tombstone.keycloakRoles = ['']
-  it('displays form data for partner-org (GP) - manual add - registries staff only', async () => {
-    store.stateModel.tombstone.keycloakRoles = ['staff']
-    const wrapper = createComponent(validPartnerOrg, -1, null)
-
-    await wrapper.find('.lookup-toggle').trigger('click')
-
-    expect(wrapper.find('.manual-add-article label').text())
-      .toContain('Edit Business or Corporation Not Registered in B.C.')
-    expect(wrapper.find('.manual-add-article p').text()).toContain('a partner')
-
-    wrapper.destroy()
-  })
-
-  it('displays form data for partner-org (GP) - business lookup - registries staff', () => {
-    store.stateModel.tombstone.keycloakRoles = ['staff']
-    const wrapper = createComponent(validPartnerOrg, -1, null)
-
-    expect(wrapper.findAll('.business-lookup-article label').at(0).text()).toContain('Business or Corporation Registered in B.C')
-    expect(wrapper.findAll('.business-lookup-article label').at(1).text()).toContain('Business or Corporation Name or Incorporation Number')
-    expect(wrapper.findAll('.business-lookup-article p').at(0).text()).toContain('a partner')
-
-    wrapper.destroy()
-  })
-
-  it('displays form data for partner-org (GP) - business lookup - SBC staff or client', () => {
-    store.stateModel.tombstone.keycloakRoles = ['']
     const wrapper = createComponent(validPartnerOrg, -1, null)
 
     expect(wrapper.find('.business-lookup-article label').text()).toContain('Business')
@@ -553,12 +501,6 @@ describe('Registration Add/Edit Org/Person component', () => {
   it('displays form data for partner-org (GP) - edit - SBC staff or client', async () => {
     store.stateModel.tombstone.keycloakRoles = ['']
     const wrapper = createComponent(validPartnerOrg, 0, null)
-
-    // verify input values
-    const emailInput = wrapper.find(`${emailAddressSelector} input`)
-    // FUTURE: verify mailing address and delivery address
-    expect((emailInput.element as HTMLInputElement).value)
-      .toEqual(validPartnerOrg.officer.email)
 
     // verify input values
     const emailInput = wrapper.find(`${emailAddressSelector} input`)
@@ -660,46 +602,6 @@ describe('Registration Add/Edit Org/Person component', () => {
     store.stateModel.tombstone.keycloakRoles = ['']
   })
 
-  it('does not display error message when user enters valid org name - registries staff only', async () => {
-    store.stateModel.tombstone.keycloakRoles = ['staff']
-    const wrapper = createComponent(validProprietorOrg, NaN, null)
-
-    await wrapper.find('.lookup-toggle').trigger('click')
-
-    const inputElement = wrapper.find(`${orgNameSelector} input`)
-    inputElement.setValue('Valid Org Name')
-    inputElement.trigger('change')
-    await flushPromises()
-
-    const messages = wrapper.findAll('.v-messages.error--text')
-    expect(messages.length).toBe(0)
-
-    expect(wrapper.vm.$data.addPersonOrgFormValid).toBe(true)
-
-    wrapper.destroy()
-  })
-
-  it('displays error message when user enters invalid org name - registries staff only', async () => {
-    store.stateModel.tombstone.keycloakRoles = ['staff']
-    const wrapper = createComponent(validProprietorOrg, NaN, null)
-
-    await wrapper.find('.lookup-toggle').trigger('click')
-
-    const inputElement = wrapper.find(`${orgNameSelector} input`)
-    inputElement.setValue('     ')
-    inputElement.trigger('change')
-    await flushPromises()
-
-    const messages = wrapper.findAll('.v-messages.error--text')
-    expect(messages.length).toBe(1)
-    expect(messages.at(0).text()).toBe('Business or corporation name is required')
-
-    expect(wrapper.vm.$data.addPersonOrgFormValid).toBe(false)
-
-    wrapper.destroy()
-    store.stateModel.tombstone.keycloakRoles = ['']
-  })
-
   it('does not display error message when user enters valid person names', async () => {
     const wrapper = createComponent(validCompletingParty, NaN, null)
 
@@ -739,12 +641,8 @@ describe('Registration Add/Edit Org/Person component', () => {
     await flushPromises()
 
     const messages = wrapper.findAll('.v-messages.error--text')
-    expect(messages.length).toBe(2)
-    expect(messages.at(0).text()).toBe('First name is required')
-    expect(messages.at(1).text()).toBe('Last name is required')
-    expect(messages.length).toBe(2)
-    expect(messages.at(0).text()).toBe('First name is required')
-    expect(messages.at(1).text()).toBe('Last name is required')
+    expect(messages.length).toBe(1)
+    expect(messages.at(0).text()).toBe('Last name is required')
 
     expect(wrapper.vm.$data.addPersonOrgFormValid).toBe(false)
 

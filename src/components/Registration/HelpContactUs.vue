@@ -31,15 +31,6 @@
           </h2>
         </header>
 
-        <!-- <p class="my-4">
-          <div v-if="isTypeFirm">
-            If you require further assistance adding a business, please contact us.
-          </div>
-          <div v-else>
-            If you require further assistance adding a business or corporation, please contact us.
-          </div>
-        </p> -->
-
         <div v-if="isTypeFirm">
           <p class="my-4">
             If you require further assistance adding a business, please contact us.
