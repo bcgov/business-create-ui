@@ -29,6 +29,13 @@
   </ul>
 </template>
 
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator'
+
+@Component({})
+export default class FirmContactInfo extends Vue {}
+</script>
+
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
 
