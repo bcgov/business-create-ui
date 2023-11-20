@@ -50,12 +50,10 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import RegistriesContactInfo from '@/components/common/RegistriesContactInfo.vue'
 import FirmContactInfo from '@/components/common/FirmContactInfo.vue'
 
 @Component({
   components: {
-    RegistriesContactInfo,
     FirmContactInfo
   }
 })
