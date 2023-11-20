@@ -31,11 +31,28 @@
           </h2>
         </header>
 
-        <p class="my-4">
-          If you require further assistance adding a business or corporation, please contact us.
-        </p>
+        <!-- <p class="my-4">
+          <div v-if="isTypeFirm">
+            If you require further assistance adding a business, please contact us.
+          </div>
+          <div v-else>
+            If you require further assistance adding a business or corporation, please contact us.
+          </div>
+        </p> -->
 
-        <RegistriesContactInfo />
+        <div v-if="isTypeFirm">
+          <p class="my-4">
+            If you require further assistance adding a business, please contact us.
+          </p>
+          <FirmContactInfo />
+        </div>
+
+        <div v-else>
+          <p class="my-4">
+            If you require further assistance adding a business or corporation, please contact us.
+          </p>
+          <RegistriesContactInfo />
+        </div>
 
         <div
           class="help-btn bottom"
@@ -51,14 +68,19 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import RegistriesContactInfo from '@/components/common/RegistriesContactInfo.vue'
+import FirmContactInfo from '@/components/common/FirmContactInfo.vue'
+import { Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 
 @Component({
   components: {
-    RegistriesContactInfo
+    RegistriesContactInfo,
+    FirmContactInfo
   }
 })
 export default class HelpContactUs extends Vue {
   helpToggle = false
+  @Getter(useStore) isTypeFirm!: boolean
 }
 </script>
 
