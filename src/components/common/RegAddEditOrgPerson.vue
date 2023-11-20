@@ -21,8 +21,30 @@
             class="add-org-header"
             :class="{'error-text': !addPersonOrgFormValid}"
           >
-            <span v-if="isNaN(activeIndex)">Add Business or Corporation</span>
-            <span v-else>Edit Business or Corporation</span>
+            <div v-if="isRoleStaff">
+              <span v-if="isNaN(activeIndex)">Add Business or Corporation</span>
+              <span v-else>Edit Business or Corporation</span>
+            </div>
+
+            <div v-else>
+              <template v-if="isNaN(activeIndex)">
+                <template v-if="isTypePartnership">
+                  Add a Business as a Partner
+                </template>
+                <template v-else>
+                  Add a Business as the Proprietor
+                </template>
+              </template>
+
+              <template v-else>
+                <template v-if="isTypePartnership">
+                  Edit a Business as a Partner
+                </template>
+                <template v-else>
+                  Edit a Business as the Proprietor
+                </template>
+              </template>
+            </div>
           </label>
 
           <!-- Title for person -->
@@ -104,9 +126,9 @@
 
             <!-- Business or Corporation -->
             <template v-if="isOrg">
-              <!-- Business or Corporation Unregistered in B.C. -->
+              <!-- Business or Corporation Unregistered in B.C. (Registries Staff Only) -->
               <article
-                v-if="!orgPerson.isLookupBusiness"
+                v-if="!orgPerson.isLookupBusiness && isRoleStaff"
                 class="manual-add-article"
               >
                 <label>
@@ -136,7 +158,7 @@
                   </template>
                 </p>
 
-                <HelpContactUs class="mt-6" />
+                <HelpContactUs class="help" />
 
                 <!-- Confirm checkbox (org only) -->
                 <v-checkbox
@@ -188,9 +210,9 @@
                 <v-divider class="mt-8" />
               </article>
 
-              <!-- Business or Corporation Look up -->
+              <!-- Business or Corporation Look up with Registries Staff-->
               <article
-                v-else
+                v-else-if="isRoleStaff"
                 class="business-lookup-article"
               >
                 <label>Business or Corporation Registered in B.C.</label>
@@ -235,7 +257,7 @@
                     a bank or a railway, use the manual entry form. All other types of business cannot
                     be a partner.
                   </p>
-                  <HelpContactUs class="mt-6" />
+                  <HelpContactUs class="help" />
                 </div>
                 <div v-else>
                   <p class="mt-6 mb-0">
@@ -252,6 +274,48 @@
                   :showErrors="enableRules"
                   :businessLookup="inProgressBusinessLookup"
                   :BusinessLookupServices="BusinessLookupServices"
+                  @setBusiness="updateBusinessDetails($event)"
+                  @undoBusiness="resetBusinessDetails()"
+                />
+              </article>
+
+              <!-- Business or Corporation Look up with SBC Staff or Clients-->
+              <article
+                v-else
+                class="business-lookup-article"
+              >
+                <div
+                  v-if="hasBusinessSelectedFromLookup"
+                  class="mt-6"
+                >
+                  <v-card
+                    outlined
+                    class="message-box rounded-0"
+                  >
+                    <p>
+                      <strong>Important:</strong> If the addresses shown below are out of date, you
+                      may update them here. The updates are applicable only to this application.
+                    </p>
+                  </v-card>
+                </div>
+                <div v-if="isProprietor">
+                  <p class="mb-0">
+                    Enter an existing B.C. business as the proprietor.
+                  </p>
+                </div>
+                <div v-else>
+                  <p class="mb-0">
+                    Enter an existing B.C. business as a partner.
+                  </p>
+                </div>
+
+                <HelpContactUs class="help" />
+
+                <BusinessLookup
+                  :showErrors="enableRules"
+                  :businessLookup="inProgressBusinessLookup"
+                  :BusinessLookupServices="BusinessLookupServices"
+                  label="Business Name or Incorporation/Registration Number"
                   @setBusiness="updateBusinessDetails($event)"
                   @undoBusiness="resetBusinessDetails()"
                 />
@@ -538,6 +602,11 @@ div.three-column {
   padding-top: 0;
   margin-left: -3px;
   color: $gray7;
+}
+
+.help {
+  margin-top: 30px;
+  margin-bottom: 40px;
 }
 
 // align checkbox with top of its label

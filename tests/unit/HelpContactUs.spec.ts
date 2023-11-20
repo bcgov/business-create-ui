@@ -1,7 +1,7 @@
 import Vuetify from 'vuetify'
 import { mount } from '@vue/test-utils'
 import HelpContactUs from '@/components/Registration/HelpContactUs.vue'
-import RegistriesContactInfo from '@/components/common/RegistriesContactInfo.vue'
+import FirmContactInfo from '@/components/common/FirmContactInfo.vue'
 
 const vuetify = new Vuetify({})
 
@@ -31,10 +31,11 @@ describe('HelpBusinessNumber', () => {
     expect(wrapper.find('.help-header h2').text()).toBe('Contact BC Registries')
 
     // verify paragraph
-    expect(wrapper.find('p').text()).toContain('If you require further assistance')
+    expect(wrapper.find('p').text())
+      .toContain('If you require further assistance adding a business, please contact us.')
 
     // verify contact info component
-    expect(wrapper.findComponent(RegistriesContactInfo).exists()).toBe(true)
+    expect(wrapper.findComponent(FirmContactInfo).exists()).toBe(true)
 
     wrapper.destroy()
   })

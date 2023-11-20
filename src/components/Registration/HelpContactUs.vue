@@ -32,10 +32,10 @@
         </header>
 
         <p class="my-4">
-          If you require further assistance adding a business or corporation, please contact us.
+          If you require further assistance adding a business, please contact us.
         </p>
 
-        <RegistriesContactInfo />
+        <FirmContactInfo />
 
         <div
           class="help-btn bottom"
@@ -50,11 +50,11 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import RegistriesContactInfo from '@/components/common/RegistriesContactInfo.vue'
+import FirmContactInfo from '@/components/common/FirmContactInfo.vue'
 
 @Component({
   components: {
-    RegistriesContactInfo
+    FirmContactInfo
   }
 })
 export default class HelpContactUs extends Vue {
