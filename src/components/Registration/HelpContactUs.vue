@@ -31,19 +31,11 @@
           </h2>
         </header>
 
-        <div v-if="isTypeFirm">
-          <p class="my-4">
-            If you require further assistance adding a business, please contact us.
-          </p>
-          <FirmContactInfo />
-        </div>
+        <p class="my-4">
+          If you require further assistance adding a business, please contact us.
+        </p>
 
-        <div v-else>
-          <p class="my-4">
-            If you require further assistance adding a business or corporation, please contact us.
-          </p>
-          <RegistriesContactInfo />
-        </div>
+        <FirmContactInfo />
 
         <div
           class="help-btn bottom"
