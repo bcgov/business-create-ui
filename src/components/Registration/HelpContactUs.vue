@@ -52,8 +52,6 @@
 import { Component, Vue } from 'vue-property-decorator'
 import RegistriesContactInfo from '@/components/common/RegistriesContactInfo.vue'
 import FirmContactInfo from '@/components/common/FirmContactInfo.vue'
-import { Getter } from 'pinia-class'
-import { useStore } from '@/store/store'
 
 @Component({
   components: {
@@ -63,7 +61,6 @@ import { useStore } from '@/store/store'
 })
 export default class HelpContactUs extends Vue {
   helpToggle = false
-  @Getter(useStore) isTypeFirm!: boolean
 }
 </script>
 

@@ -29,13 +29,6 @@
   </ul>
 </template>
 
-<script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
-
-@Component({})
-export default class RegistriesContactInfo extends Vue {}
-</script>
-
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
 
@@ -43,15 +36,15 @@ export default class RegistriesContactInfo extends Vue {}
   font-size: $px-15;
   color: $gray7;
   display: flex;
+}
 
-  .contact-icon {
-    flex: 0 0 1.375rem;
-    justify-content: flex-start;
-    color: $app-dk-blue;
-  }
+.contact-icon {
+  flex: 0 0 1.375rem;
+  justify-content: flex-start;
+  color: $app-dk-blue;
+}
 
-  .contact-value {
-    flex: 1 1;
-  }
+.contact-value {
+  flex: 1 1;
 }
 </style>

@@ -31,7 +31,8 @@ describe('HelpBusinessNumber', () => {
     expect(wrapper.find('.help-header h2').text()).toBe('Contact BC Registries')
 
     // verify paragraph
-    expect(wrapper.find('p').text()).toContain('If you require further assistance adding a business, please contact us.')
+    expect(wrapper.find('p').text())
+      .toContain('If you require further assistance adding a business, please contact us.')
 
     // verify contact info component
     expect(wrapper.findComponent(FirmContactInfo).exists()).toBe(true)

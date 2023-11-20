@@ -380,8 +380,10 @@ describe('Registration Add/Edit Org/Person component', () => {
     store.stateModel.tombstone.keycloakRoles = ['staff']
     const wrapper = createComponent(validProprietorOrg, -1, null)
 
-    expect(wrapper.findAll('.business-lookup-article label').at(0).text()).toContain('Business or Corporation Registered in B.C')
-    expect(wrapper.findAll('.business-lookup-article label').at(1).text()).toContain('Business or Corporation Name or Incorporation Number')
+    expect(wrapper.findAll('.business-lookup-article label').at(0).text())
+      .toContain('Business or Corporation Registered in B.C')
+    expect(wrapper.findAll('.business-lookup-article label').at(1).text())
+      .toContain('Business or Corporation Name or Incorporation Number')
     expect(wrapper.findAll('.business-lookup-article p').at(0).text()).toContain('the Proprietor')
 
     wrapper.destroy()
@@ -392,7 +394,8 @@ describe('Registration Add/Edit Org/Person component', () => {
     const wrapper = createComponent(validProprietorOrg, -1, null)
 
     expect(wrapper.find('.business-lookup-article label').text()).toContain('Business')
-    expect(wrapper.findAll('.business-lookup-article p').at(0).text()).toContain('Enter an existing B.C. business as the proprietor')
+    expect(wrapper.findAll('.business-lookup-article p').at(0).text())
+      .toContain('Enter an existing B.C. business as the proprietor')
 
     wrapper.destroy()
   })
@@ -450,8 +453,10 @@ describe('Registration Add/Edit Org/Person component', () => {
     store.stateModel.tombstone.keycloakRoles = ['staff']
     const wrapper = createComponent(validPartnerOrg, -1, null)
 
-    expect(wrapper.findAll('.business-lookup-article label').at(0).text()).toContain('Business or Corporation Registered in B.C')
-    expect(wrapper.findAll('.business-lookup-article label').at(1).text()).toContain('Business or Corporation Name or Incorporation Number')
+    expect(wrapper.findAll('.business-lookup-article label').at(0).text())
+      .toContain('Business or Corporation Registered in B.C')
+    expect(wrapper.findAll('.business-lookup-article label').at(1).text())
+      .toContain('Business or Corporation Name or Incorporation Number')
     expect(wrapper.findAll('.business-lookup-article p').at(0).text()).toContain('a partner')
 
     wrapper.destroy()
@@ -462,7 +467,8 @@ describe('Registration Add/Edit Org/Person component', () => {
     const wrapper = createComponent(validPartnerOrg, -1, null)
 
     expect(wrapper.find('.business-lookup-article label').text()).toContain('Business')
-    expect(wrapper.findAll('.business-lookup-article p').at(0).text()).toContain('Enter an existing B.C. business as a partner')
+    expect(wrapper.findAll('.business-lookup-article p').at(0).text())
+      .toContain('Enter an existing B.C. business as a partner')
 
     wrapper.destroy()
   })
