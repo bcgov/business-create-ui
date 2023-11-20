@@ -53,7 +53,6 @@ export default class AddEditOrgPersonMixin extends Vue {
   addPersonOrgFormValid = true
   enableRules = false
   inProgressBusinessLookup = EmptyBusinessLookup
-  businessLookupLabel = 'Business Name or Incorporation/Registration Number'
 
   // Address related properties
   inProgressMailingAddress = {} as AddressIF

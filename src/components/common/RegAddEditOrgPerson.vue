@@ -125,7 +125,7 @@
               </div>
             </article>
 
-            <!-- Business or Corporation Look up-->
+            <!-- Business or Corporation -->
             <template v-if="isOrg">
               <!-- Business or Corporation Unregistered in B.C. (Registries Staff Only) -->
               <article
