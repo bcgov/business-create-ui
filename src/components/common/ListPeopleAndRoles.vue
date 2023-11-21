@@ -29,6 +29,11 @@
           >Return to this step to finish it</router-link>
 
           <router-link
+            v-if="isAmalgamationFiling"
+            id="router-link"
+            :to="{ path: `/${RouteNames.AMALG_REG_PEOPLE_ROLES}` }"
+          >Return to this step to finish it</router-link>
+          <router-link
             v-if="isIncorporationFiling"
             id="router-link"
             :to="{ path: `/${RouteNames.INCORPORATION_PEOPLE_ROLES}` }"

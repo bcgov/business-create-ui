@@ -37,6 +37,10 @@
           >Return to this step to finish it</router-link>
 
           <router-link
+            v-if="isAmalgamationFiling"
+            :to="{ path: `/${RouteNames.AMALG_REG_INFORMATION}` }"
+          >Return to this step to finish it</router-link>
+          <router-link
             v-if="isIncorporationFiling"
             :to="{ path: `/${RouteNames.INCORPORATION_DEFINE_COMPANY}` }"
           >Return to this step to finish it</router-link>
