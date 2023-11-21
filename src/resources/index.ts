@@ -1,5 +1,17 @@
-import { DissolutionResourceIF, IncorporationResourceIF, RegistrationResourceIF, RestorationResourceIF }
-  from '@/interfaces'
+import {
+  AmalgamationRegResourceIF,
+  DissolutionResourceIF,
+  IncorporationResourceIF,
+  RegistrationResourceIF,
+  RestorationResourceIF
+} from '@/interfaces'
+
+import {
+  AmalgamationRegResourceBc,
+  AmalgamationRegResourceBen,
+  AmalgamationRegResourceCc,
+  AmalgamationRegResourceUlc
+} from './AmalgamationRegular/'
 
 import {
   DissolutionResourceBc,
@@ -31,6 +43,13 @@ import {
   RestorationResourceUlc
 } from './Restoration/'
 
+export const AmalgamationRegResources: Array<AmalgamationRegResourceIF> = [
+  AmalgamationRegResourceBc,
+  AmalgamationRegResourceBen,
+  AmalgamationRegResourceCc,
+  AmalgamationRegResourceUlc
+]
+
 export const DissolutionResources: Array<DissolutionResourceIF> = [
   DissolutionResourceBc,
   DissolutionResourceBen,
@@ -61,4 +80,4 @@ export const RestorationResources: Array<RestorationResourceIF> = [
   RestorationResourceUlc
 ]
 
-export * from './BreadCrumbResource'
+export * from './BreadcrumbResource'

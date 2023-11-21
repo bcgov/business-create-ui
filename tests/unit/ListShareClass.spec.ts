@@ -1,7 +1,7 @@
 import Vuetify from 'vuetify'
 import { createPinia, setActivePinia } from 'pinia'
 import { createLocalVue, mount } from '@vue/test-utils'
-import ListShareClass from '@/components/Incorporation/ListShareClass.vue'
+import ListShareClass from '@/components/common/ListShareClass.vue'
 
 const vuetify = new Vuetify({})
 const localVue = createLocalVue()

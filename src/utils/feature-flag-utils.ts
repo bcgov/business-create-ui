@@ -1,5 +1,4 @@
 import { initialize, LDClient, LDFlagSet, LDOptions, LDUser } from 'launchdarkly-js-client-sdk'
-import { FilingTypes } from '@/enums'
 
 // get rid of "element implicitly has an 'any' type..."
 declare const window: any
@@ -9,15 +8,12 @@ declare const window: any
  * Uses "business-create" project (per LD client id in config).
  */
 const defaultFlagSet: LDFlagSet = {
-  'supported-filings': [
-    FilingTypes.DISSOLUTION,
-    FilingTypes.INCORPORATION_APPLICATION,
-    FilingTypes.REGISTRATION
-  ],
+  'supported-filings': [],
   'enable-web-chat': false, // by default, old webchat is disabled
   'enable-genesys-web-message': false, // by default, genesys web message is disabled
   'sentry-enable': false, // by default, no sentry logs
-  'banner-text': '' // by default, there is no banner text
+  'banner-text': '', // by default, there is no banner text
+  'supported-amalgamation-entities': []
 
 }
 

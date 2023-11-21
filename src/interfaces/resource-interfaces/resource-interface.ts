@@ -5,6 +5,33 @@ import {
 } from '@/interfaces'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 
+/** Amalgamation (regular) resource interface. */
+export interface AmalgamationRegResourceIF {
+  entityType: CorpTypeCd
+  displayName: string
+  steps: Array<StepIF>
+  filingData: Array<FilingDataIF>
+  peopleAndRoles: PeopleAndRolesResourceIF
+  reviewAndConfirm: {
+    completingPartyStatement: CompletingPartyStatementIF
+  }
+
+  shareClasses?: {
+    countMinimum: number
+  }
+  incorporationArticles?: {
+    articles: string,
+    articlesTooltip: string,
+    provisions?: string,
+    provisionTooltip?: string
+  }
+  incorporationAgreement?: {
+    helpSection: Array<HelpSectionIF>
+    article: string
+    documents: Array<IncorporationAgreementTypeIF>
+  }
+}
+
 /** Dissolution resource interface. */
 export interface DissolutionResourceIF {
   entityType: CorpTypeCd
@@ -79,5 +106,5 @@ export interface RestorationResourceIF {
   }
 }
 
-export interface ResourceIF extends DissolutionResourceIF, IncorporationResourceIF, RegistrationResourceIF,
-  RestorationResourceIF {}
+export interface ResourceIF extends AmalgamationRegResourceIF, DissolutionResourceIF,
+  IncorporationResourceIF, RegistrationResourceIF, RestorationResourceIF {}

@@ -1,5 +1,5 @@
 <template>
-  <div id="incorporation-share-structure">
+  <div id="amalgamation-regular-share-structure">
     <section class="mt-10">
       <header>
         <h2>1. Create Your Authorized Share Structure</h2>
@@ -170,7 +170,7 @@ import ShareStructure from '@/components/common/ShareStructure.vue'
     ShareStructure
   }
 })
-export default class IncorporationShareStructure extends Mixins(CommonMixin) {
+export default class AmalgamationRegularShareStructure extends Mixins(CommonMixin) {
   @Getter(useStore) getCreateShareStructureStep!: ShareStructureIF
   @Getter(useStore) getShowErrors!: boolean
 

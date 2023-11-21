@@ -9,6 +9,10 @@
           <v-icon color="error">mdi-information-outline</v-icon>
           <span class="error-text mx-1">This step is unfinished.</span>
           <router-link
+            v-if="isAmalgamationFiling"
+            :to="{ path: `/${RouteNames.AMALG_REG_INFORMATION}` }"
+          >Return to this step to finish it</router-link>
+          <router-link
             v-if="isIncorporationFiling"
             :to="{ path: `/${RouteNames.INCORPORATION_DEFINE_COMPANY}` }"
           >Return to this step to finish it</router-link>
@@ -19,6 +23,32 @@
           >Return to this step to finish it</router-link>
         </span>
       </div>
+
+      <template v-if="isAmalgamationFiling">
+        <article class="section-container pb-0">
+          <v-row no-gutters>
+            <v-col
+              cols="12"
+              sm="3"
+              class="pr-4"
+            >
+              <label id="amalgamation-type-label">Amalgamation Type</label>
+            </v-col>
+            <v-col
+              cols="12"
+              sm="9"
+              class="pt-4 pt-sm-0"
+            >
+              <div id="amalgamation-type">
+                <span v-if="isAmalgamationFilingRegular">Regular</span>
+                <span v-else-if="isAmalgamationFilingHorizontal">Horizontal</span>
+                <span v-else-if="isAmalgamationFilingVertical">Vertical</span>
+                <span v-else>[Unknown]</span>
+              </div>
+            </v-col>
+          </v-row>
+        </article>
+      </template>
 
       <template v-if="showCompanyName">
         <!-- Name -->
@@ -139,12 +169,11 @@ import { Component, Vue } from 'vue-property-decorator'
 import { Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { ContactPointIF, DefineCompanyIF, NameTranslationIF } from '@/interfaces'
-import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
-import FolioNumber from '@/components/common/FolioNumber.vue'
-import OfficeAddresses from '@/components/common/OfficeAddresses.vue'
+import BusinessContactInfo from './BusinessContactInfo.vue'
+import FolioNumber from './FolioNumber.vue'
+import OfficeAddresses from './OfficeAddresses.vue'
 import { CoopTypes, RouteNames } from '@/enums'
-import { CorpTypeCd } from '@bcrs-shared-components/enums/'
-import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
+import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 import { CoopTypeToDescription } from '@/utils'
 
 @Component({
@@ -166,6 +195,10 @@ export default class SummaryDefineCompany extends Vue {
   @Getter(useStore) getFolioNumber!: string
   @Getter(useStore) getNameRequestApprovedName!: string
   @Getter(useStore) getNameTranslations!: NameTranslationIF[]
+  @Getter(useStore) isAmalgamationFiling!: boolean
+  @Getter(useStore) isAmalgamationFilingRegular!: boolean
+  @Getter(useStore) isAmalgamationFilingHorizontal!: boolean
+  @Getter(useStore) isAmalgamationFilingVertical!: boolean
   @Getter(useStore) isDefineCompanyValid!: boolean
   @Getter(useStore) isFullRestorationFiling!: boolean
   @Getter(useStore) isIncorporationFiling!: boolean
