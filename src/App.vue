@@ -252,9 +252,9 @@ import { CommonMixin, DateMixin, FilingTemplateMixin, NameRequestMixin } from '@
 import { AccountInformationIF, AddressIF, BreadcrumbIF, BusinessIF, BusinessWarningIF, CompletingPartyIF,
   ConfirmDialogType, EmptyFees, FeesIF, FilingDataIF, NameRequestIF, OrgInformationIF, PartyIF, ResourceIF,
   StepIF } from '@/interfaces'
-import { DissolutionResources, IncorporationResources, RegistrationResources, RestorationResources,
-  getEntityDashboardBreadcrumb, getMyBusinessRegistryBreadcrumb, getRegistryDashboardBreadcrumb,
-  getSbcStaffDashboardBreadcrumb, getStaffDashboardBreadcrumb } from '@/resources'
+import { AmalgamationRegResources, DissolutionResources, IncorporationResources, RegistrationResources,
+  RestorationResources, getEntityDashboardBreadcrumb, getMyBusinessRegistryBreadcrumb,
+  getRegistryDashboardBreadcrumb, getSbcStaffDashboardBreadcrumb, getStaffDashboardBreadcrumb } from '@/resources'
 import { AuthServices, LegalServices, PayServices } from '@/services/'
 
 // Enums and Constants
@@ -295,6 +295,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   @Getter(useStore) getUserLastName!: string
   @Getter(useStore) getUserEmail!: string
   @Getter(useStore) getUserPhone!: string
+  @Getter(useStore) isAmalgamationFiling!: boolean
   @Getter(useStore) isDissolutionFiling!: boolean
   @Getter(useStore) isIncorporationFiling!: boolean
   @Getter(useStore) isMobile!: boolean
@@ -361,7 +362,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   readonly window = window
 
   /** The Update Current JS Date timer id. */
-  private updateCurrentJsDateId = 0
+  private updateCurrentJsDateId = null // may be number or NodeJS.Timeout
 
   /** The route breadcrumbs list. */
   get breadcrumbs (): Array<BreadcrumbIF> {
@@ -674,14 +675,10 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
         if (!this.getBusinessId && !this.getTempId) throw new Error('Neither business id nor temp id exist')
 
         if (this.getBusinessId) {
-          // this should be a Dissolution or Restoration filing
-          // (only dissolutions/restorations have a business id)
-          await this.handleDissolutionOrRestoration(this.getBusinessId)
+          await this.handleDraftWithBusinessId(this.getBusinessId)
         }
         if (this.getTempId) {
-          // this should be an Incorporation or Registration filing
-          // (only incorporations/registrations have a temp id)
-          await this.handleIaOrRegistration(this.getTempId)
+          await this.handleDraftWithTempId(this.getTempId)
         }
       } catch (error) {
         // Log exception to Sentry due to incomplete business data.
@@ -733,22 +730,25 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       // then try to re-route them
       if (this.$route.meta.filingType !== this.getFilingType) {
         switch (this.getFilingType) {
+          case FilingTypes.AMALGAMATION:
+            this.$router.push(RouteNames.AMALG_REG_INFORMATION).catch(() => {})
+            break
           case FilingTypes.DISSOLUTION:
             if (this.isTypeFirm) {
               this.$router.push(RouteNames.DISSOLUTION_FIRM).catch(() => {})
             } else {
               this.$router.push(RouteNames.DISSOLUTION_DEFINE_DISSOLUTION).catch(() => {})
             }
-            return
+            return // *** TODO: should this be "break"?
           case FilingTypes.INCORPORATION_APPLICATION:
             this.$router.push(RouteNames.INCORPORATION_DEFINE_COMPANY).catch(() => {})
-            return
+            return // *** TODO: should this be "break"?
           case FilingTypes.REGISTRATION:
             this.$router.push(RouteNames.REGISTRATION_DEFINE_BUSINESS).catch(() => {})
-            return
+            return // *** TODO: should this be "break"?
           case FilingTypes.RESTORATION:
             this.$router.push(RouteNames.RESTORATION_BUSINESS_NAME).catch(() => {})
-            return
+            return // *** TODO: should this be "break"?
           default:
             this.invalidRouteDialog = true
             throw new Error(`fetchData(): invalid filing type = ${this.getFilingType}`) // go to catch()
@@ -794,8 +794,11 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     }
   }
 
-  /** Fetches draft Dissolution or Restoration and sets the resources. */
-  private async handleDissolutionOrRestoration (businessId: string): Promise<void> {
+  /**
+   * Fetches draft Dissolution / Restoration and sets the resources.
+   * (Only dissolutions/restorations have a Business ID.)
+   */
+  private async handleDraftWithBusinessId (businessId: string): Promise<void> {
     // ensure user is authorized to use this business
     await this.checkAuth(businessId).catch(error => {
       console.log('Auth error =', error) // eslint-disable-line no-console
@@ -836,7 +839,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
         resources = RestorationResources.find(x => x.entityType === this.getEntityType) as ResourceIF
         break
       default:
-        throw new Error(`handleDissolutionOrRestoration(): invalid filing type = ${this.getFilingType}`)
+        throw new Error(`handleDraftWithBusinessId(): invalid filing type = ${this.getFilingType}`)
     }
 
     // set the resources
@@ -853,8 +856,11 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     }
   }
 
-  /** Fetches draft IA or Registration and sets the resources. */
-  private async handleIaOrRegistration (tempId: string): Promise<void> {
+  /**
+   * Fetches draft Amalgamation / IA / Registration and sets the resources.
+   * (Only amalgamations/incorporations/registrations have a Temp ID.)
+   */
+  private async handleDraftWithTempId (tempId: string): Promise<void> {
     // ensure user is authorized to use this IA
     await this.checkAuth(tempId).catch(error => {
       console.log('Auth error =', error) // eslint-disable-line no-console
@@ -875,6 +881,14 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     // parse draft filing into the store and get the resources
     let resources: ResourceIF
     switch (this.getFilingType) {
+      case FilingTypes.AMALGAMATION:
+        draftFiling = {
+          ...this.buildAmalgamationFiling(),
+          ...draftFiling
+        }
+        this.parseAmalgamationDraft(draftFiling)
+        resources = AmalgamationRegResources.find(x => x.entityType === this.getEntityType) as ResourceIF
+        break
       case FilingTypes.INCORPORATION_APPLICATION:
         draftFiling = {
           ...this.buildIncorporationFiling(),
@@ -892,7 +906,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
         resources = RegistrationResources.find(x => x.entityType === this.getEntityType) as ResourceIF
         break
       default:
-        throw new Error(`handleIaOrRegistration(): invalid filing type = ${this.getFilingType}`)
+        throw new Error(`handleDraftWithTempId(): invalid filing type = ${this.getFilingType}`)
     }
 
     // set the resources
@@ -1231,6 +1245,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
 
     // enable validation when review pages are shown
     if (
+      this.isRouteName(RouteNames.AMALG_REG_REVIEW_CONFIRM) ||
       this.isRouteName(RouteNames.DISSOLUTION_REVIEW_CONFIRM) ||
       this.isRouteName(RouteNames.INCORPORATION_REVIEW_CONFIRM) ||
       this.isRouteName(RouteNames.REGISTRATION_REVIEW_CONFIRM) ||

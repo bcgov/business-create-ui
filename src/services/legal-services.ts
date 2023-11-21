@@ -1,8 +1,7 @@
-// Libraries
 import { AxiosInstance as axios } from '@/utils'
 import { StatusCodes } from 'http-status-codes'
-import { DissolutionFilingIF, IncorporationFilingIF, NameRequestIF, RegistrationFilingIF, RestorationFilingIF }
-  from '@/interfaces'
+import { AmalgamationFilingIF, DissolutionFilingIF, IncorporationFilingIF, NameRequestIF, RegistrationFilingIF,
+  RestorationFilingIF } from '@/interfaces'
 import { FilingTypes } from '@/enums'
 
 /**
@@ -15,7 +14,8 @@ export default class LegalServices {
    * @param tempId the temp registration number
    * @returns a promise to return the draft filing, else exception
    */
-  static async fetchFirstOrOnlyFiling (tempId: string): Promise<IncorporationFilingIF | RegistrationFilingIF> {
+  // eslint-disable-next-line max-len
+  static async fetchFirstOrOnlyFiling (tempId: string): Promise<AmalgamationFilingIF | IncorporationFilingIF | RegistrationFilingIF> {
     const url = `businesses/${tempId}/filings`
     return axios.get(url)
       .then(response => {

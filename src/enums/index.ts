@@ -20,6 +20,7 @@ export { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 export {
   AccountTypes,
   ApprovalTypes,
+  AmalgamationTypes,
   CorrectNameOptions,
   EffectiveDateTypes,
   EntityStates,

@@ -87,7 +87,7 @@ import RestorationType from '@/components/Restoration/RestorationType.vue'
 })
 export default class RestorationBusinessName extends Mixins(CommonMixin) {
   @Getter(useStore) getApprovalTypeValid!: boolean
-  @Getter(useStore) getBusinessNameValid!: boolean
+  @Getter(useStore) getRestorationBusinessNameValid!: boolean
   @Getter(useStore) getNameTranslationsValid!: boolean
   @Getter(useStore) getRestorationTypeValid!: boolean
   @Getter(useStore) getShowErrors!: boolean
@@ -108,7 +108,7 @@ export default class RestorationBusinessName extends Mixins(CommonMixin) {
   /** Object of valid flags. Must match validComponents. */
   get validFlags (): object {
     return {
-      businessName: this.getBusinessNameValid,
+      businessName: this.getRestorationBusinessNameValid,
       bameTranslation: this.getNameTranslationsValid,
       restorationType: this.getRestorationTypeValid,
       approavalType: this.getApprovalTypeValid

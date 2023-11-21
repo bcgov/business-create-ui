@@ -10,6 +10,12 @@
           <v-icon color="error">mdi-information-outline</v-icon>
           <span class="error-text mx-1">This step is unfinished.</span>
           <router-link
+            v-if="isAmalgamationFiling"
+            id="router-link"
+            :to="{ path: `/${RouteNames.AMALG_REG_SHARE_STRUCTURE}` }"
+          >Return to this step to finish it</router-link>
+          <router-link
+            v-if="isIncorporationFiling"
             id="router-link"
             :to="{ path: `/${RouteNames.INCORPORATION_SHARE_STRUCTURE}` }"
           >Return to this step to finish it</router-link>
@@ -210,6 +216,8 @@ import { arrayMoveMutable } from 'array-move'
 export default class ListShareClass extends Vue {
   @Prop({ default: () => [] }) readonly shareClasses!: any
   @Prop({ default: false }) readonly componentDisabled!: boolean
+  @Prop({ default: false }) readonly isAmalgamationFiling!: boolean
+  @Prop({ default: false }) readonly isIncorporationFiling!: boolean
   @Prop({ default: false }) readonly isSummary!: boolean
   @Prop({ default: false }) readonly showErrorSummary!: boolean
 
@@ -236,7 +244,7 @@ export default class ListShareClass extends Vue {
    * @param direction The direction of the move
    * @param seriesIndex The index of the series
    */
-  protected moveIndex (indexFrom: number, direction: string, seriesIndex = -1): void {
+  moveIndex (indexFrom: number, direction: string, seriesIndex = -1): void {
     let indexTo: number
     if (seriesIndex >= 0) {
       indexTo = direction === 'up' ? seriesIndex - 1 : seriesIndex + 1
@@ -258,7 +266,7 @@ export default class ListShareClass extends Vue {
    * @param seriesIndex index of the series item
    * @returns A boolean indicating if a move is enabled
    */
-  protected isMoveDisabled (index: number, direction: string, seriesIndex = -1): boolean {
+  isMoveDisabled (index: number, direction: string, seriesIndex = -1): boolean {
     const seriesCheck = seriesIndex >= 0
     const arrBoundry = seriesCheck ? this.shareClasses[index].series.length - 1 : this.shareClasses.length - 1
     switch (direction) {
@@ -285,7 +293,7 @@ export default class ListShareClass extends Vue {
    */
   @Emit('removeClass')
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  protected emitRemoveClass (index: number): void {}
+  emitRemoveClass (index: number): void {}
 
   /**
    * Emit an index and event to the parent to handle removal.
@@ -293,7 +301,7 @@ export default class ListShareClass extends Vue {
    */
   @Emit('removeSeries')
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  protected emitRemoveSeries (index: number, seriesIndex: number): void {}
+  emitRemoveSeries (index: number, seriesIndex: number): void {}
 
   /**
    * Emit an class and event to the parent to handle editing.
@@ -301,7 +309,7 @@ export default class ListShareClass extends Vue {
    */
   @Emit('addSeries')
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  protected emitAddSeries (index: number): void {}
+  emitAddSeries (index: number): void {}
 
   /**
    * Emit an class and event to the parent to handle editing.
@@ -309,7 +317,7 @@ export default class ListShareClass extends Vue {
    */
   @Emit('editClass')
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  protected emitShareClass (index: number): void {}
+  emitShareClass (index: number): void {}
 
   /**
    * Emit an  series item and event to the parent to handle editing.
@@ -317,7 +325,7 @@ export default class ListShareClass extends Vue {
    */
   @Emit('editSeries')
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  protected emitShareSeries (index: number, seriesIndex: number): void {}
+  emitShareSeries (index: number, seriesIndex: number): void {}
 }
 </script>
 

@@ -6,6 +6,12 @@
 export { default as Signin } from './auth/Signin.vue'
 export { default as Signout } from './auth/Signout.vue'
 
+export { default as AmalgRegBusinessInfo } from './AmalgamationRegular/BusinessInfo.vue'
+export { default as AmalgRegInformation } from './AmalgamationRegular/Information.vue'
+export { default as AmalgRegPeopleRoles } from './AmalgamationRegular/PeopleRoles.vue'
+export { default as AmalgRegReviewConfirm } from './AmalgamationRegular/ReviewConfirm.vue'
+export { default as AmalgRegShareStructure } from './AmalgamationRegular/ShareStructure.vue'
+
 export { default as DissolutionAffidavit } from './Dissolution/DissolutionAffidavit.vue'
 export { default as DissolutionDefineDissolution } from './Dissolution/DissolutionDefineDissolution.vue'
 export { default as DissolutionResolution } from './Dissolution/DissolutionResolution.vue'

@@ -6,6 +6,13 @@ export enum Views {
   SIGN_IN = 'signin',
   SIGN_OUT = 'signout',
 
+  // Amalgamation views
+  AMALGAMATION_REG_BUSINESS_INFO = 'amalg-reg-business-info',
+  AMALGAMATION_REG_INFORMATION = 'amalg-reg-information',
+  AMALGAMATION_REG_PEOPLE_ROLES = 'amalg-reg-people-roles',
+  AMALGAMATION_REG_REVIEW_CONFIRM = 'amalg-reg-review-confirm',
+  AMALGAMATION_REG_SHARE_STRUCTURE = 'amalg-reg-share-structure',
+
   // Dissolution views
   DISSOLUTION_AFFIDAVIT = 'dissolution-affidavit',
   DISSOLUTION_DEFINE_DISSOLUTION = 'dissolution-define-dissolution',

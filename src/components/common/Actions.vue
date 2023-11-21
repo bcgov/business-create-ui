@@ -293,6 +293,8 @@ export default class Actions extends Mixins(CommonMixin, DateMixin, FilingTempla
   /** Prepare filing for saving/filing. */
   private prepareFiling (): any {
     switch (this.getFilingType) {
+      case FilingTypes.AMALGAMATION:
+        return this.buildAmalgamationFiling()
       case FilingTypes.INCORPORATION_APPLICATION:
         return this.buildIncorporationFiling()
       case FilingTypes.REGISTRATION:

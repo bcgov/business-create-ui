@@ -80,40 +80,43 @@ export default class Stepper extends Vue {
   @Getter(useStore) isCreateShareStructureValid!: boolean
   @Getter(useStore) isDefineCompanyValid!: boolean
   @Getter(useStore) isDissolutionDefineDissolutionValid!: boolean
-  @Getter(useStore) isDissolutionValid!: boolean
+  @Getter(useStore) isFilingValid!: boolean
   @Getter(useStore) isIncorporationAgreementValid!: boolean
-  @Getter(useStore) isIncorporationApplicationValid!: boolean
   @Getter(useStore) isMemorandumValid!: boolean
-  @Getter(useStore) isRegistrationValid!: boolean
   @Getter(useStore) isResolutionValid!: boolean
   @Getter(useStore) isRestoreBusinessNameValid!: boolean
-  @Getter(useStore) isRestorationValid!: boolean
   @Getter(useStore) isRulesValid!: boolean
 
   /** Returns true if the step route is valid. */
   isValid (route: RouteNames): boolean {
     switch (route) {
+      case RouteNames.AMALG_REG_INFORMATION: return false // *** TODO
+      case RouteNames.AMALG_REG_BUSINESS_INFO: return false // *** TODO
+      case RouteNames.AMALG_REG_PEOPLE_ROLES: return this.isAddPeopleAndRolesValid
+      case RouteNames.AMALG_REG_SHARE_STRUCTURE: return this.isCreateShareStructureValid
+      case RouteNames.AMALG_REG_REVIEW_CONFIRM: return this.isFilingValid
+
       case RouteNames.DISSOLUTION_AFFIDAVIT: return this.isAffidavitValid
       case RouteNames.DISSOLUTION_DEFINE_DISSOLUTION: return this.isDissolutionDefineDissolutionValid
       case RouteNames.DISSOLUTION_RESOLUTION: return this.isResolutionValid
-      case RouteNames.DISSOLUTION_REVIEW_CONFIRM: return this.isDissolutionValid
+      case RouteNames.DISSOLUTION_REVIEW_CONFIRM: return this.isFilingValid
 
       case RouteNames.INCORPORATION_AGREEMENT: return this.isIncorporationAgreementValid
       case RouteNames.INCORPORATION_DEFINE_COMPANY: return this.isDefineCompanyValid
       case RouteNames.INCORPORATION_MEMORANDUM: return this.isMemorandumValid
       case RouteNames.INCORPORATION_PEOPLE_ROLES: return this.isAddPeopleAndRolesValid
-      case RouteNames.INCORPORATION_REVIEW_CONFIRM: return this.isIncorporationApplicationValid
+      case RouteNames.INCORPORATION_REVIEW_CONFIRM: return this.isFilingValid
       case RouteNames.INCORPORATION_RULES: return this.isRulesValid
       case RouteNames.INCORPORATION_SHARE_STRUCTURE: return this.isCreateShareStructureValid
 
       case RouteNames.REGISTRATION_DEFINE_BUSINESS: return this.getRegistration.defineBusinessValid
       case RouteNames.REGISTRATION_PEOPLE_ROLES: return this.isAddPeopleAndRolesValid
-      case RouteNames.REGISTRATION_REVIEW_CONFIRM: return this.isRegistrationValid
+      case RouteNames.REGISTRATION_REVIEW_CONFIRM: return this.isFilingValid
 
       case RouteNames.RESTORATION_APPLICANT_INFORMATION: return this.isAddPeopleAndRolesValid
       case RouteNames.RESTORATION_BUSINESS_INFORMATION: return this.isDefineCompanyValid
       case RouteNames.RESTORATION_BUSINESS_NAME: return this.isRestoreBusinessNameValid
-      case RouteNames.RESTORATION_REVIEW_CONFIRM: return this.isRestorationValid
+      case RouteNames.RESTORATION_REVIEW_CONFIRM: return this.isFilingValid
     }
     return false
   }
