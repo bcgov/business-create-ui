@@ -4,6 +4,7 @@ import Vuetify from 'vuetify'
 import { resourceModel, stateModel } from './state'
 import {
   AccountTypes,
+  AmalgamationTypes,
   ApprovalTypes,
   BusinessTypes,
   CoopTypes,
@@ -80,6 +81,26 @@ export const useStore = defineStore('store', {
       return (width < new Vuetify().framework.breakpoint.thresholds.sm)
     },
 
+    /** Whether the current filing is an Amalgamation. */
+    isAmalgamationFiling (): boolean {
+      return (this.stateModel.tombstone.filingType === FilingTypes.AMALGAMATION)
+    },
+
+    /** Whether the current filing is a Regular Amalgamation. */
+    isAmalgamationFilingRegular (): boolean {
+      return (this.getAmalgamationType === AmalgamationTypes.REGULAR)
+    },
+
+    /** Whether the current filing is a Horizontal Amalgamation. */
+    isAmalgamationFilingHorizontal (): boolean {
+      return (this.getAmalgamationType === AmalgamationTypes.HORIZONTAL)
+    },
+
+    /** Whether the current filing is a Vertical Amalgamation. */
+    isAmalgamationFilingVertical (): boolean {
+      return (this.getAmalgamationType === AmalgamationTypes.VERTICAL)
+    },
+
     /** Whether the current filing is an Incorporation. */
     isIncorporationFiling (): boolean {
       return (this.stateModel.tombstone.filingType === FilingTypes.INCORPORATION_APPLICATION)
@@ -118,6 +139,7 @@ export const useStore = defineStore('store', {
     /** The current filing name. */
     getFilingName (): FilingNames {
       switch (this.getFilingType) {
+        case FilingTypes.AMALGAMATION: return FilingNames.AMALGAMATION
         case FilingTypes.INCORPORATION_APPLICATION: return FilingNames.INCORPORATION_APPLICATION
         case FilingTypes.REGISTRATION: return FilingNames.REGISTRATION
         case FilingTypes.RESTORATION: return FilingNames.RESTORATION_APPLICATION
@@ -264,6 +286,7 @@ export const useStore = defineStore('store', {
 
     getEntityIdentifier (): string {
       switch (this.getFilingType) {
+        case FilingTypes.AMALGAMATION: return this.getTempId
         case FilingTypes.INCORPORATION_APPLICATION: return this.getTempId
         case FilingTypes.REGISTRATION: return this.getTempId
         case FilingTypes.RESTORATION: return this.getBusinessId
@@ -469,7 +492,7 @@ export const useStore = defineStore('store', {
     /** Is true when the step is valid. */
     isRestoreBusinessNameValid (): boolean {
       return (
-        this.getBusinessNameValid &&
+        this.getRestorationBusinessNameValid &&
         this.getNameTranslationsValid &&
         this.getRestorationTypeValid &&
         this.getApprovalTypeValid
@@ -493,6 +516,12 @@ export const useStore = defineStore('store', {
 
     /** Whether the subject filing is valid. */
     isFilingValid (): boolean {
+      if (this.isAmalgamationFiling) {
+        if (this.isAmalgamationFilingRegular) return this.isAmalgamationRegularValid
+        if (this.isAmalgamationFilingHorizontal) return false // FUTURE
+        if (this.isAmalgamationFilingVertical) return false // FUTURE
+        return false // should never happen
+      }
       if (this.isIncorporationFiling) return this.isIncorporationApplicationValid
       if (this.isDissolutionFiling) return this.isDissolutionValid
       if (this.isRegistrationFiling) return this.isRegistrationValid
@@ -541,6 +570,12 @@ export const useStore = defineStore('store', {
         isCourtOrderValid &&
         isStaffPaymentValid
       )
+    },
+
+    /** Whether all the amalgamation (regular) steps are valid. */
+    isAmalgamationRegularValid (): boolean {
+      // *** TODO: implement this
+      return false
     },
 
     /** Whether all the incorporation steps are valid. */
@@ -681,13 +716,18 @@ export const useStore = defineStore('store', {
       return this.stateModel.documentDelivery
     },
 
+    /** The amalgamation type. */
+    getAmalgamationType (): AmalgamationTypes {
+      return this.stateModel.amalgamation.type
+    },
+
     /** The restoration object. */
     getRestoration (): RestorationStateIF {
       return this.stateModel.restoration
     },
 
-    /** The business name validity. */
-    getBusinessNameValid (): boolean {
+    /** The restoration business name validity. */
+    getRestorationBusinessNameValid (): boolean {
       return this.stateModel.restoration.businessNameValid
     },
 
@@ -783,7 +823,7 @@ export const useStore = defineStore('store', {
       return this.resourceModel.peopleAndRoles
     },
 
-    /** The Incorporation Articles */
+    /** The Incorporation Articles. */
     getIncorporationArticlesResource (): any {
       return this.resourceModel.incorporationArticles
     },
@@ -1178,6 +1218,9 @@ export const useStore = defineStore('store', {
     },
     setWindowWidth (width: number) {
       this.stateModel.windowWidth = width
+    },
+    setAmalgamationType (type: AmalgamationTypes) {
+      this.stateModel.amalgamation.type = type
     },
     setRestorationType (type: RestorationTypes) {
       this.stateModel.restoration.type = type

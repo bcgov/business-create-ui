@@ -1,5 +1,5 @@
 <template>
-  <div id="incorporation-review-confirm">
+  <div id="amalgamation-regular-review-confirm">
     <!-- Review and Confirm -->
     <section class="mt-10">
       <header>
@@ -10,16 +10,32 @@
         </p>
       </header>
 
+      <!-- Amalgamation Information -->
       <v-card
         id="company-summary-vcard"
         flat
         class="mt-6"
       >
         <CardHeader
-          icon="mdi-domain"
-          :label="getCompanyDisplayName"
+          icon="mdi-domain-plus"
+          :label="getFilingName"
         />
         <SummaryDefineCompany />
+      </v-card>
+
+      <!-- Amalgamating Businesses Information -->
+      <v-card
+        id="people-and-roles-vcard"
+        flat
+        class="mt-6"
+      >
+        <CardHeader
+          icon="mdi-domain"
+          label="Amalgamating Businesses Information"
+        />
+        <div class="pa-4">
+          [*** TODO: Amalgamating Businesses summary component ***]
+        </div>
       </v-card>
 
       <!-- People and Roles -->
@@ -36,99 +52,48 @@
       </v-card>
 
       <!-- Share Structure -->
-      <template v-if="isBaseCompany">
-        <v-card
-          id="share-structure-vcard"
-          flat
-          class="mt-6"
-        >
-          <CardHeader
-            icon="mdi-sitemap"
-            label="Share Structure"
-          />
-          <ListShareClass
-            :isSummary="true"
-            :shareClasses="getCreateShareStructureStep.shareClasses"
-            :showErrorSummary="!getCreateShareStructureStep.valid"
-          />
-        </v-card>
-      </template>
-
-      <!-- Agreement Type -->
-      <template v-if="isBaseCompany">
-        <v-card
-          id="agreement-type-vcard"
-          flat
-          class="mt-6"
-        >
-          <CardHeader
-            icon="mdi-handshake"
-            :label="`Incorporation Agreement and ${getEntityDescription} Articles`"
-          />
-          <AgreementType
-            :isSummary="true"
-            :showErrorSummary="!getIncorporationAgreementStep.valid"
-          />
-        </v-card>
-      </template>
-
-      <!-- Rules -->
-      <template v-if="isTypeCoop">
-        <v-card
-          id="rules-vcard"
-          flat
-          class="mt-6"
-        >
-          <CardHeader
-            icon="mdi-format-list-text"
-            label="Rules"
-          />
-          <UploadRulesSummary />
-        </v-card>
-      </template>
-
-      <!-- Memorandum -->
-      <template v-if="isTypeCoop">
-        <v-card
-          id="memorandum-vcard"
-          flat
-          class="mt-6"
-        >
-          <CardHeader
-            icon="mdi-text-box-multiple"
-            label="Memorandum"
-          />
-          <UploadMemorandumSummary />
-        </v-card>
-      </template>
+      <v-card
+        id="share-structure-vcard"
+        flat
+        class="mt-6"
+      >
+        <CardHeader
+          icon="mdi-sitemap"
+          label="Share Structure"
+        />
+        <ListShareClass
+          :isSummary="true"
+          :shareClasses="getCreateShareStructureStep.shareClasses"
+          :showErrorSummary="!getCreateShareStructureStep.valid"
+          :isAmalgamationFiling="true"
+        />
+      </v-card>
     </section>
 
-    <template v-if="isBaseCompany">
-      <!-- Incorporation Date and Time -->
-      <section
-        id="incorporation-date-time-section"
-        class="mt-10"
-      >
-        <header>
-          <h2>Incorporation Date and Time</h2>
-          <p class="mt-4">
-            Select the Date and Time of incorporation for your business. You may select a date up
-            to 10 days in the future (note: there is an <strong>additional fee of $100</strong> to
-            enter an incorporation date in the future). Unless a business has special requirements,
-            most businesses select an immediate Date and Time of Incorporation.
-          </p>
-        </header>
+    <!-- Amalgamation Date and Time -->
+    <section
+      id="amalgamation-date-time-section"
+      class="mt-10"
+    >
+      <header>
+        <h2>Amalgamation Date and Time</h2>
+        <p class="mt-4">
+          Select the Date and Time of amalgamation for your business. You may select a date up
+          to 10 days in the future (note: there is an <strong>additional fee of $100</strong> to
+          enter an amalgamation date in the future). Unless a business has special requirements,
+          most businesses select an immediate Date and Time of Amalgamation.
+        </p>
+      </header>
 
-        <IncorporationDateTime
-          class="mt-6"
-          :class="{ 'invalid-section': isEffectiveDateTimeInvalid }"
-          :effectiveDateTime="getEffectiveDateTime"
-          @valid="setEffectiveDateTimeValid($event)"
-          @effectiveDate="setEffectiveDate($event)"
-          @isFutureEffective="setIsFutureEffective($event)"
-        />
-      </section>
-    </template>
+      <IncorporationDateTime
+        class="mt-6"
+        :class="{ 'invalid-section': isEffectiveDateTimeInvalid }"
+        :effectiveDateTime="getEffectiveDateTime"
+        @valid="setEffectiveDateTimeValid($event)"
+        @effectiveDate="setEffectiveDate($event)"
+        @isFutureEffective="setIsFutureEffective($event)"
+      />
+    </section>
 
     <!-- Document Delivery -->
     <section
@@ -155,6 +120,50 @@
       </v-card>
     </section>
 
+    <!-- Folio or Reference Number -->
+    <section
+      id="folio-number-section"
+      class="mt-10"
+    >
+      <header>
+        <h2>Folio or Reference Number for this Filing</h2>
+        <p class="mt-4">
+          *** TODO ***
+        </p>
+      </header>
+
+      <v-card
+        flat
+        class="mt-6"
+      >
+        <div class="pa-4">
+          [*** TODO: Folio Number component ***]
+        </div>
+      </v-card>
+    </section>
+
+    <!-- Amalgamation Statement -->
+    <section
+      id="amalgamation-statement-section"
+      class="mt-10"
+    >
+      <header>
+        <h2>Amalgamation Statement</h2>
+        <p class="mt-4">
+          *** TODO ***
+        </p>
+      </header>
+
+      <v-card
+        flat
+        class="mt-6"
+      >
+        <div class="pa-4">
+          [*** TODO: Amalgamation Statement component ***]
+        </div>
+      </v-card>
+    </section>
+
     <!-- Certify -->
     <section
       id="certify-section"
@@ -174,7 +183,7 @@
         <Certify
           class="py-8 px-6"
           :class="{ 'invalid-section': isCertifyInvalid }"
-          :disableEdit="!isRoleStaff && isTypeCoop"
+          :disableEdit="!isRoleStaff"
           :invalidSection="isCertifyInvalid"
           :isStaff="isRoleStaff"
         />
@@ -182,8 +191,7 @@
     </section>
 
     <!-- Court Order and Plan of Arrangement -->
-    <section
-      v-if="isBaseCompany"
+    <!-- <section
       id="court-order-poa-section"
       class="mt-10"
     >
@@ -212,7 +220,7 @@
           @emitValid="setCourtOrderValidity($event)"
         />
       </v-card>
-    </section>
+    </section> -->
 
     <!-- Staff Payment -->
     <section
@@ -239,9 +247,8 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
-import { ContactPointIF, CertifyIF, EffectiveDateTimeIF, IncorporationAgreementIF,
-  ShareStructureIF, CourtOrderStepIF } from '@/interfaces'
-import AgreementType from '@/components/common/AgreementType.vue'
+import { ContactPointIF, CertifyIF, EffectiveDateTimeIF, IncorporationAgreementIF, ShareStructureIF,
+  CourtOrderStepIF } from '@/interfaces'
 import CardHeader from '@/components/common/CardHeader.vue'
 import Certify from '@/components/common/Certify.vue'
 import { CourtOrderPoa } from '@bcrs-shared-components/court-order-poa'
@@ -250,14 +257,12 @@ import IncorporationDateTime from '@/components/Incorporation/IncorporationDateT
 import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
 import ListShareClass from '@/components/common/ListShareClass.vue'
 import SummaryDefineCompany from '@/components/common/SummaryDefineCompany.vue'
-import UploadMemorandumSummary from '@/components/Incorporation/UploadMemorandumSummary.vue'
-import UploadRulesSummary from '@/components/Incorporation/UploadRulesSummary.vue'
 import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 import StaffPayment from '@/components/common/StaffPayment.vue'
+import { FilingNames } from '@bcrs-shared-components/enums'
 
 @Component({
   components: {
-    AgreementType,
     CardHeader,
     Certify,
     CourtOrderPoa,
@@ -266,26 +271,21 @@ import StaffPayment from '@/components/common/StaffPayment.vue'
     ListPeopleAndRoles,
     ListShareClass,
     SummaryDefineCompany,
-    UploadMemorandumSummary,
-    UploadRulesSummary,
     StaffPayment
   }
 })
-export default class IncorporationReviewConfirm extends Vue {
+export default class AmalgamationRegularReviewConfirm extends Vue {
   @Getter(useStore) getBusinessContact!: ContactPointIF
   @Getter(useStore) getCertifyState!: CertifyIF
-  @Getter(useStore) getCompanyDisplayName!: string
   @Getter(useStore) getCourtOrderStep!: CourtOrderStepIF
   @Getter(useStore) getCreateShareStructureStep!: ShareStructureIF
   @Getter(useStore) getEffectiveDateTime!: EffectiveDateTimeIF
   @Getter(useStore) getEntityType!: CorpTypeCd
+  @Getter(useStore) getFilingName!: FilingNames
   @Getter(useStore) getIncorporationAgreementStep!: IncorporationAgreementIF
   @Getter(useStore) getUserEmail!: string
   @Getter(useStore) getValidateSteps!: boolean
-  @Getter(useStore) isBaseCompany!: boolean
   @Getter(useStore) isRoleStaff!: boolean
-  @Getter(useStore) isTypeBcUlcCompany!: boolean
-  @Getter(useStore) isTypeCoop!: boolean
 
   @Action(useStore) setCertifyState!: (x: CertifyIF) => void
   @Action(useStore) setCourtOrderFileNumber!: (x: string) => void
@@ -320,7 +320,7 @@ export default class IncorporationReviewConfirm extends Vue {
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
 
-#incorporation-review-confirm {
+#amalgamation-regular-review-confirm {
   /* Set "header-counter" to 0 */
   counter-reset: header-counter;
 }

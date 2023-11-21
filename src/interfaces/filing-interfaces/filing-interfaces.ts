@@ -1,7 +1,7 @@
 import { BusinessAddressIF, CourtOrderIF, RegisteredRecordsAddressesIF, NaicsIF, NameTranslationIF,
   OfficeAddressIF, PartyIF, ShareClassIF, SpecialResolutionIF } from '@/interfaces'
-import { ApprovalTypes, BusinessTypes, DissolutionStatementTypes, DissolutionTypes, FilingTypes,
-  RestorationTypes, RelationshipTypes } from '@/enums'
+import { AmalgamationTypes, ApprovalTypes, BusinessTypes, DissolutionStatementTypes, DissolutionTypes,
+  FilingTypes, RestorationTypes, RelationshipTypes } from '@/enums'
 import { CorrectNameOptions } from '@bcrs-shared-components/enums/'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module/'
 import { ContactPointIF } from '@bcrs-shared-components/interfaces'
@@ -16,6 +16,48 @@ export interface NameRequestFilingIF {
   legalName?: string // only set when there is a name change (including NR)
   nrNumber?: string // only set when there is an NR
   correctNameOption?: CorrectNameOptions // only used by UI for save and resume
+}
+
+/** Interface for amalgamation filing data saved to the Legal API. */
+export interface AmalgamationFilingIF {
+  header: {
+    name: FilingTypes
+    certifiedBy: string
+    date: string
+    effectiveDate?: string // should be set only for future effective filings
+    filingId?: number // for existing filings (not used when building a new filing)
+    folioNumber?: string // only displayed for certain account types
+    isFutureEffective: boolean
+
+    // staff payment properties:
+    routingSlipNumber?: string
+    bcolAccountNumber?: string
+    datNumber?: string
+    waiveFees?: boolean
+    priority?: boolean
+  }
+  business: {
+    legalType: CorpTypeCd
+    identifier: string
+  }
+  amalgamation: {
+    amalgamationType: AmalgamationTypes
+    nameRequest: NameRequestFilingIF
+    nameTranslations: NameTranslationIF[]
+    offices: RegisteredRecordsAddressesIF | object
+    contactPoint: ContactPointIF
+    parties: PartyIF[]
+
+    // BEN / CC / BC / ULC only:
+    shareStructure?: {
+      shareClasses: ShareClassIF[]
+    }
+    incorporationAgreement?: {
+      agreementType: string
+    }
+    // ULC only:
+    courtOrder?: CourtOrderIF
+  }
 }
 
 /** Interface for incorporation filing data saved to the Legal API. */

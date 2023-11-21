@@ -1,7 +1,7 @@
 import { shallowWrapperFactory } from '../vitest-wrapper-factory'
 import IncorporationReviewConfirm from '@/views/Incorporation/IncorporationReviewConfirm.vue'
 import { IncorporationResources } from '@/resources/'
-import SummaryDefineCompany from '@/components/Incorporation/SummaryDefineCompany.vue'
+import SummaryDefineCompany from '@/components/common/SummaryDefineCompany.vue'
 import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
 import Certify from '@/components/common/Certify.vue'
 

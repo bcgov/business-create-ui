@@ -86,12 +86,12 @@ import { Component, Mixins } from 'vue-property-decorator'
 import { Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { FilingNames, FilingTypes } from '@/enums'
-import { CorpTypeCd } from '@bcrs-shared-components/enums/'
 import { ContactPointIF, RegistrationStateIF } from '@/interfaces'
 import { DateMixin } from '@/mixins'
 import { StaffComments } from '@bcrs-shared-components/staff-comments'
 import { AxiosInstance as axios } from '@/utils'
-import { GetCorpFullDescription, GetCorpNumberedDescription } from '@bcrs-shared-components/corp-type-module'
+import { CorpTypeCd, GetCorpFullDescription, GetCorpNumberedDescription }
+  from '@bcrs-shared-components/corp-type-module'
 
 @Component({
   components: {
@@ -130,6 +130,8 @@ export default class EntityInfo extends Mixins(DateMixin) {
 
     // name comes from different places depending on filing type
     switch (this.getFilingType) {
+      case FilingTypes.AMALGAMATION:
+        return (this.getNameRequestApprovedName || numberedDescription)
       case FilingTypes.DISSOLUTION:
         return (this.getBusinessLegalName || numberedDescription)
       case FilingTypes.INCORPORATION_APPLICATION:

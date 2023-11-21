@@ -2,11 +2,14 @@ import { CorrectNameOptions } from '@bcrs-shared-components/enums/'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import {
   AccountInformationIF,
+  AmalgamationStateIF,
   ContactPointIF,
   BusinessIF,
   CertifyIF,
+  CompletingPartyIF,
   CourtOrderStepIF,
   CreateMemorandumIF,
+  CreateResolutionIF,
   CreateRulesIF,
   DefineCompanyIF,
   DissolutionStateIF,
@@ -16,6 +19,8 @@ import {
   IncorporationAgreementIF,
   NameRequestIF,
   NameTranslationIF,
+  OrgInformationIF,
+  PartyIF,
   PeopleAndRoleIF,
   RegistrationStateIF,
   ResourceIF,
@@ -23,11 +28,7 @@ import {
   ShareStructureIF,
   StaffPaymentStepIF,
   TombstoneIF,
-  UploadAffidavitIF,
-  CreateResolutionIF,
-  OrgInformationIF,
-  CompletingPartyIF,
-  PartyIF
+  UploadAffidavitIF
 } from '@/interfaces'
 
 // State model interface
@@ -72,6 +73,7 @@ export interface StateModelIF {
   registration: RegistrationStateIF
   completingParty?: CompletingPartyIF
   parties?: Array<PartyIF>
+  amalgamation: AmalgamationStateIF
   restoration: RestorationStateIF
 
   // staffPaymentStep and courtOrder are common and for now are only used in dissolution

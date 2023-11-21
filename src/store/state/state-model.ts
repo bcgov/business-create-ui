@@ -206,6 +206,20 @@ export const stateModel: StateModelIF = {
     businessTypeConfirm: false,
     isAutoPopulatedBusinessNumber: false
   },
+  amalgamation: {
+    applicationDate: null,
+    approvalType: null,
+    approvalTypeValid: true,
+    businessNameValid: false,
+    courtOrder: {
+      fileNumber: null
+    },
+    expiry: null,
+    noticeDate: null,
+    relationships: [],
+    restorationTypeValid: false,
+    type: null
+  },
   restoration: {
     applicationDate: null,
     approvalType: null,

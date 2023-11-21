@@ -245,7 +245,7 @@ export default class IncorporationDefineCompany extends Mixins(CommonMixin) {
   }
 
   get addresses (): RegisteredRecordsAddressesIF {
-    return this.getDefineCompanyStep.officeAddresses as RegisteredRecordsAddressesIF
+    return this.getDefineCompanyStep.officeAddresses
   }
 
   /** Called when component is created. */
