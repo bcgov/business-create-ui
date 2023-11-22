@@ -155,11 +155,12 @@ export default class BusinessName extends Mixins(CommonMixin, DateMixin, NameReq
   /**
    * Fetches and validation a NR.
    * @param nrNum the NR number
+   * @param businessId the business id
    * @param phone the phone number to match
    * @param email the email address to match
    * @returns a promise to return the NR, or throws a printable error
    */
-  async fetchAndValidateNr (nrNum: string, phone: string, email: string): Promise<NameRequestIF> {
+  async fetchAndValidateNr (nrNum: string, businessId: string, phone: string, email: string): Promise<NameRequestIF> {
     const nameRequest = await LegalServices.fetchValidContactNr(nrNum, phone, email)
     if (!nameRequest) throw new Error('Error fetching Name Request')
 
