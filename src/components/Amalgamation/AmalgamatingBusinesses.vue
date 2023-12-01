@@ -146,6 +146,7 @@ import { BusinessIF, BusinessLookupIF, EmptyBusinessLookup } from '@/interfaces'
 })
 export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
   @Getter(useStore) getAmalgamatingBusinesses!: Array<BusinessIF>
+  @Getter(useStore) isAmalgamationFilingHorizontal!: boolean
   @Getter(useStore) isRoleStaff!: boolean
 
   @Action(useStore) setAmalgamatingBusinesses!: (x: Array<BusinessIF>) => void
@@ -191,6 +192,16 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
     // this.addAmalgatingForeignBusinessDisabled = true
   }
 
+  // Add to the amalgamating businesses array.
+  // If EP (A type), cannot be part of short form horizontal amalgamation.
+  pushToAmalgamatingBusinesses (business: any): void {
+    if (this.isAmalgamationFilingHorizontal) {
+      if (business.legalType !== 'A') this.amalgamatingBuinesses.push(business)
+    } else {
+      this.amalgamatingBuinesses.push(business)
+    }
+  }
+
   async setAmalgamatingBusiness (businessLookup: BusinessLookupIF): Promise<void> {
     // Get the amalgamating business information
     // Will have a different format depending on the business
@@ -221,11 +232,9 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
       const filteredBusinesses = this.amalgamatingBuinesses.filter(function (id) {
         return id.identifier === business.identifier
       })
-      if (filteredBusinesses.length === 0) {
-        this.amalgamatingBuinesses.push(business)
-      }
+      if (filteredBusinesses.length === 0) this.pushToAmalgamatingBusinesses(business)
     } else {
-      this.amalgamatingBuinesses.push(business)
+      this.pushToAmalgamatingBusinesses(business)
     }
 
     // Set the amalgamated businesses array in the store.
