@@ -14,7 +14,7 @@
 
     <v-btn
       v-if="isRoleStaff"
-      id="btn-add-amalgamating-business"
+      id="btn-add-amalgamating-foreign-business"
       outlined
       color="primary"
       class="ml-2 btn-outlined-primary"
