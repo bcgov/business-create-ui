@@ -242,7 +242,7 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
   height: 44px;
 }
 
-// Overriding the section container class right padding. 
+// Overriding the section container class right padding.
 .section-container {
   padding-right: 0rem;
 }
