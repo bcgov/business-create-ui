@@ -741,7 +741,7 @@ export const useStore = defineStore('store', {
       return this.stateModel.restoration.approvalTypeValid
     },
 
-    /** The amalgamting businesses. */
+    /** The amalgamating businesses. */
     getAmalgamatingBusinesses (): Array<BusinessIF> {
       return this.stateModel.amalgamation.amalgamatingBusinesses
     },

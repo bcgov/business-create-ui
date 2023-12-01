@@ -55,7 +55,7 @@
               :businessLookup="initialBusinessLookupObject"
               :BusinessLookupServices="BusinessLookupServices"
               label="Business Name or Incorporation Number"
-              @setBusiness="setAmalgamatingBusiness($event)"
+              @setBusiness="saveAmalgamatingBusiness($event)"
             />
             <v-row
               class="justify-end mr-0 mt-2"
@@ -192,17 +192,7 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
     // this.addAmalgatingForeignBusinessDisabled = true
   }
 
-  // Add to the amalgamating businesses array.
-  // If EP (A type), cannot be part of short form horizontal amalgamation.
-  pushToAmalgamatingBusinesses (business: any): void {
-    if (this.isAmalgamationFilingHorizontal) {
-      if (business.legalType !== 'A') this.amalgamatingBuinesses.push(business)
-    } else {
-      this.amalgamatingBuinesses.push(business)
-    }
-  }
-
-  async setAmalgamatingBusiness (businessLookup: BusinessLookupIF): Promise<void> {
+  async saveAmalgamatingBusiness (businessLookup: BusinessLookupIF): Promise<void> {
     // Get the amalgamating business information
     // Will have a different format depending on the business
     let business = await LegalServices.fetchBusinessInfo(businessLookup.identifier)
@@ -229,12 +219,12 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
     // If the amalgamating businesses array is not empty, check if identifier already exists.
     // If identifier already exists, don't add the business to the array.
     if (this.amalgamatingBuinesses.length > 0) {
-      const filteredBusinesses = this.amalgamatingBuinesses.filter(function (id) {
+      const businessExists = this.amalgamatingBuinesses.find(function (id) {
         return id.identifier === business.identifier
       })
-      if (filteredBusinesses.length === 0) this.pushToAmalgamatingBusinesses(business)
+      if (!businessExists) this.amalgamatingBuinesses.push(business)
     } else {
-      this.pushToAmalgamatingBusinesses(business)
+      this.amalgamatingBuinesses.push(business)
     }
 
     // Set the amalgamated businesses array in the store.
@@ -250,6 +240,11 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
 
 .v-btn:not(.v-btn--round).v-size--default {
   height: 44px;
+}
+
+// Overriding the section container class right padding. 
+.section-container {
+  padding-right: 0rem;
 }
 
 </style>
