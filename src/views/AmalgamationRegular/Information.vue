@@ -2,7 +2,7 @@
   <div id="amalgamation-regular-information">
     <!-- Amalgamating Businesses -->
     <section class="mt-10">
-      <header id="name-header">
+      <header id="amalgamating-businesses">
         <h2>Amalgamating Businesses</h2>
         <p class="mt-4">
           Add the amalgamating businesses to the list.
@@ -13,12 +13,12 @@
         </p>
       </header>
 
-      <AmalgamatingBusinesses />
+      <AmalgamatingBusinesses @valid="amalgamatingBusinessesValid=$event" />
     </section>
 
     <!-- Resulting Business Name and Type -->
     <section class="mt-10">
-      <header id="name-header">
+      <header id="resulting-business-name">
         <h2>Resulting Business Name and Type</h2>
       </header>
 
@@ -77,7 +77,7 @@ export default class AmalgamationRegularInformation extends Mixins(CommonMixin) 
   /** Array of valid components. Must match validFlags below. */
   readonly validComponents = [
     'amalgamating-businesses',
-    'name-header'
+    'resulting-business-name'
   ]
 
   /** Object of valid flags. Must match validComponents above. */

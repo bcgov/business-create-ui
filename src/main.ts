@@ -98,7 +98,8 @@ async function start () {
             successCheckmark: '#2e8540', // same as $app-dk-green
             error: '#d3272c', // same as $app-red
             gray7: '#495057', // same as $gray7
-            gray9: '#212529' // same as $gray9
+            gray9: '#212529', // same as $gray9
+            warning: '#f8661a' // same as $app-orange
           }
         }
       }
