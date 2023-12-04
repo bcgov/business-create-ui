@@ -22,7 +22,6 @@ import {
   AddressIF,
   AffidavitResourceIF,
   BusinessAddressIF,
-  BusinessIF,
   BusinessWarningIF,
   CertifyIF,
   CompletingPartyIF,
@@ -743,7 +742,7 @@ export const useStore = defineStore('store', {
     },
 
     /** The amalgamating businesses. */
-    getAmalgamatingBusinesses (): Array<BusinessIF> {
+    getAmalgamatingBusinesses (): Array<any> {
       return this.stateModel.amalgamation.amalgamatingBusinesses
     },
 
@@ -1225,7 +1224,7 @@ export const useStore = defineStore('store', {
     setWindowWidth (width: number) {
       this.stateModel.windowWidth = width
     },
-    setAmalgamatingBusinesses (amalgamatingBusinesses: Array<BusinessIF>) {
+    setAmalgamatingBusinesses (amalgamatingBusinesses: Array<any>) {
       this.stateModel.amalgamation.amalgamatingBusinesses = amalgamatingBusinesses
     },
     setAmalgamationType (type: AmalgamationTypes) {

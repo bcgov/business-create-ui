@@ -41,7 +41,7 @@ export interface AmalgamationFilingIF {
     identifier: string
   }
   amalgamation: {
-    amalgamationType: AmalgamationTypes
+    type: AmalgamationTypes
     nameRequest: NameRequestFilingIF
     nameTranslations: NameTranslationIF[]
     offices: RegisteredRecordsAddressesIF | object

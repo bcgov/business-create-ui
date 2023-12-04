@@ -32,9 +32,7 @@
         flat
         class="section-container mt-4 pr-0"
       >
-        <v-row
-          no-gutters
-        >
+        <v-row no-gutters>
           <v-col
             cols="12"
             sm="3"
@@ -82,9 +80,7 @@
         flat
         class="section-container mt-4"
       >
-        <v-row
-          no-gutters
-        >
+        <v-row no-gutters>
           <v-col
             cols="12"
             sm="3"
@@ -104,7 +100,8 @@
         </v-row>
       </v-card>
     </v-expand-transition>
-    <v-row class="mt-4 ml-1">
+
+    <!-- <v-row class="mt-4 ml-1">
       <ul>
         Amalgamating Businesses: <br><br>
         <li
@@ -126,7 +123,15 @@
           </template>
         </li>
       </ul>
-    </v-row>
+    </v-row> -->
+
+    <!-- FOR DEBUGGING -->
+    <!-- <pre>getAmalgamatingBusinesses={{ getAmalgamatingBusinesses }}</pre> -->
+    <BusinessTable
+      class="mt-8"
+      :class="{ 'invalid-section': getShowErrors && !businessTableValid }"
+      @valid="businessTableValid=$event"
+    />
   </div>
 </template>
 
@@ -137,24 +142,28 @@ import { useStore } from '@/store/store'
 import { CommonMixin } from '@/mixins'
 import { BusinessLookupServices, LegalServices } from '@/services'
 import { BusinessLookup } from '@bcrs-shared-components/business-lookup'
-import { BusinessIF, BusinessLookupIF, EmptyBusinessLookup } from '@/interfaces'
+import { BusinessLookupIF, EmptyBusinessLookup } from '@/interfaces'
+import BusinessTable from '@/components/Amalgamation/BusinessTable.vue'
 
 @Component({
   components: {
-    BusinessLookup
+    BusinessLookup,
+    BusinessTable
   }
 })
 export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
-  @Getter(useStore) getAmalgamatingBusinesses!: Array<BusinessIF>
+  @Getter(useStore) getAmalgamatingBusinesses!: Array<any>
+  @Getter(useStore) getShowErrors!: boolean
   @Getter(useStore) isAmalgamationFilingHorizontal!: boolean
   @Getter(useStore) isRoleStaff!: boolean
 
-  @Action(useStore) setAmalgamatingBusinesses!: (x: Array<BusinessIF>) => void
+  @Action(useStore) setAmalgamatingBusinesses!: (x: Array<any>) => void
 
   // Local properties
   amalgamatingBusinessesValid = false
   amalgamatingBusinesses = []
   initialBusinessLookupObject = EmptyBusinessLookup
+  businessTableValid = false
 
   // Button properties
   isAddingAmalgamatingBusiness = false

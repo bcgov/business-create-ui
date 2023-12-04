@@ -7,8 +7,130 @@ import {
   EmptyNaics,
   StateModelIF
 } from '@/interfaces'
+import { BusinessStatuses } from '@/enums'
 import { EmptyAddress } from '@bcrs-shared-components/interfaces'
 import { cloneDeep } from 'lodash'
+import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
+
+const AMALGAMATING_BUSINESSES = [
+  {
+    businessId: 'BC1111111',
+    name: 'Frozen Yogurt',
+    email: 'froyo@example.com',
+    type: CorpTypeCd.BC_COMPANY,
+    address: {
+      streetAddress: '1234 Main St',
+      addressCity: 'Vancouver',
+      addressRegion: 'BC',
+      postalCode: 'V6A 1A1',
+      addressCountry: 'CA'
+    },
+    role: 'Holding Company',
+    goodStanding: true,
+    status: BusinessStatuses.OK
+  },
+  {
+    businessId: 'BC2222222',
+    name: 'Jelly Bean',
+    email: 'oval.treat@example.com',
+    type: CorpTypeCd.BC_COMPANY,
+    address: {
+      streetAddress: '1234 Main St',
+      addressCity: 'Vancouver',
+      addressRegion: 'BC',
+      postalCode: 'V6A 1A1',
+      addressCountry: 'CA'
+    },
+    role: 'Amalgamating Business',
+    goodStanding: false
+  },
+  {
+    businessId: 'BC3333333',
+    name: 'Cupcake',
+    email: 'cute.sugarbomb@example.com',
+    type: CorpTypeCd.BC_COMPANY,
+    address: {
+      streetAddress: '1234 Main St',
+      addressCity: 'Vancouver',
+      addressRegion: 'BC',
+      postalCode: 'V6A 1A1',
+      addressCountry: 'CA'
+    },
+    role: 'Amalgamating Business',
+    goodStanding: true,
+    status: BusinessStatuses.OK
+  },
+  {
+    businessId: 'BC4444444',
+    name: 'Eclair',
+    email: null,
+    type: CorpTypeCd.BC_COMPANY, // *** TODO: we may not know this until affiliated
+    jurisdiction: null,
+    address: null,
+    role: 'Amalgamating Business',
+    goodStanding: true,
+    status: BusinessStatuses.ERROR_AFFILIATION
+  },
+  {
+    businessId: '12345678',
+    name: 'Gingerbread',
+    email: null,
+    type: CorpTypeCd.FOREIGN,
+    jurisdiction: 'United States of America',
+    address: null,
+    role: 'Amalgamating Business',
+    goodStanding: true,
+    status: BusinessStatuses.ERROR_FOREIGN
+  },
+  {
+    businessId: 'BC5555555',
+    name: 'Lollipop',
+    email: 'sucker@example.com',
+    type: CorpTypeCd.BC_COMPANY,
+    address: {
+      streetAddress: '1234 Main St',
+      addressCity: 'Vancouver',
+      addressRegion: 'BC',
+      postalCode: 'V6A 1A1',
+      addressCountry: 'CA'
+    },
+    role: 'Amalgamating Business',
+    goodStanding: true,
+    status: BusinessStatuses.OK
+  },
+  {
+    businessId: 'BC6666666',
+    name: 'Oreo Ice Cream Sandwich',
+    email: 'we.all.scream@example.com',
+    type: CorpTypeCd.BC_CCC,
+    address: {
+      streetAddress: '1234 Main St',
+      addressCity: 'Vancouver',
+      addressRegion: 'BC',
+      postalCode: 'V6A 1A1',
+      addressCountry: 'CA'
+    },
+    role: 'Amalgamating Business',
+    goodStanding: true,
+    status: BusinessStatuses.ERROR_CCC_MISMATCH
+  },
+  {
+    businessId: 'BC7777777',
+    name: 'Donut',
+    email: 'holey.goodness@example.com',
+    type: CorpTypeCd.BC_ULC_COMPANY,
+    address: {
+      streetAddress: '1234 Main St',
+      addressCity: 'Vancouver',
+      addressRegion: 'BC',
+      postalCode: 'V6A 1A1',
+      addressCountry: 'CA'
+    },
+    role: 'Amalgamating Business',
+    goodStanding: true,
+    status: BusinessStatuses.OK
+  }
+]
 
 export const stateModel: StateModelIF = {
   currentJsDate: null,
@@ -207,7 +329,7 @@ export const stateModel: StateModelIF = {
     isAutoPopulatedBusinessNumber: false
   },
   amalgamation: {
-    amalgamatingBusinesses: [],
+    amalgamatingBusinesses: cloneDeep(AMALGAMATING_BUSINESSES),
     type: null
   },
   restoration: {
