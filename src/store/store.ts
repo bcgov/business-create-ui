@@ -23,6 +23,7 @@ import {
   AffidavitResourceIF,
   AmalgamatingBusinessIF,
   BusinessAddressIF,
+  BusinessIF,
   BusinessWarningIF,
   CertifyIF,
   CompletingPartyIF,
