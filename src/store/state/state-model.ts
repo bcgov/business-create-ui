@@ -118,7 +118,7 @@ const AMALGAMATING_BUSINESSES = [
     businessId: 'BC7777777',
     name: 'Donut',
     email: 'holey.goodness@example.com',
-    type: CorpTypeCd.BC_COMPANY,
+    type: CorpTypeCd.BC_ULC_COMPANY,
     address: {
       streetAddress: '1234 Main St',
       addressCity: 'Vancouver',
