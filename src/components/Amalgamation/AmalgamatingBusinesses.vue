@@ -52,6 +52,7 @@
               :showErrors="false"
               :businessLookup="initialBusinessLookupObject"
               :BusinessLookupServices="BusinessLookupServices"
+              legalTypes="BC,BEN,CC,ULC,A"
               label="Business Name or Incorporation Number"
               @setBusiness="saveAmalgamatingBusiness($event)"
             />
@@ -111,7 +112,8 @@
           <template v-if="business.foundingDate">
             Legal Name: {{ business.legalName }} <br>
             Legal Type: {{ business.legalType }} <br>
-            Mailing Address: {{ business.officeAddress.mailingAddress }} <br>
+            Mailing Address: {{ business.officeAddress.registeredOffice.mailingAddress }} <br>
+            Email Address: {{ business.businessContact.email }} <br>
             State: {{ business.state }} <br>
             Good Standing: {{ business.goodStanding }} <br>
         </template>
@@ -140,7 +142,7 @@ import { Component, Mixins } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { CommonMixin } from '@/mixins'
-import { BusinessLookupServices, LegalServices } from '@/services'
+import { AuthServices, BusinessLookupServices, LegalServices } from '@/services'
 import { BusinessLookup } from '@bcrs-shared-components/business-lookup'
 import { AmalgamatingBusinessIF, BusinessLookupIF, EmptyBusinessLookup } from '@/interfaces'
 import BusinessTable from '@/components/Amalgamation/BusinessTable.vue'
@@ -189,27 +191,24 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
   }
 
   async saveAmalgamatingBusiness (businessLookup: BusinessLookupIF): Promise<void> {
-    // Get the amalgamating business information
-    // Will have a different format depending on the business
-    let business = await LegalServices.fetchBusinessInfo(businessLookup.identifier)
-      .then((response) => {
-        return response?.data?.business
-      }).catch(() => {
-        return businessLookup
-      })
+    let business = null
 
-    // Get the address of the amalgamating business
-    if (businessLookup.identifier && business.foundingDate) {
-      const addresses = await LegalServices.fetchAddresses(businessLookup.identifier)
-        .then((data) => {
-          // SP and GP have businessOffice instead of registeredOffice
-          return data?.registeredOffice || data?.businessOffice
-        }).catch(() => {
-          return undefined
-        })
-      if (addresses) {
-        business.officeAddress = addresses
-      }
+    // Get the amalgamating business information, mailing address, and email if in LEAR.
+    // Otherwise, return the businesslookup object.
+    const data = await Promise.all([
+      LegalServices.fetchBusinessInfo(businessLookup.identifier),
+      AuthServices.fetchAuthInfo(businessLookup.identifier),
+      LegalServices.fetchAddresses(businessLookup.identifier)
+    ]).catch((error) => {
+      return error
+    })
+
+    if (data.length === 3) {
+      business = data[0].data?.business
+      business.businessContact = data[1].contacts[0]
+      business.officeAddress = data[2]
+    } else {
+      business = businessLookup
     }
 
     // If the amalgamating businesses array is not empty, check if identifier already exists.
