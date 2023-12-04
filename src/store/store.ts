@@ -22,6 +22,7 @@ import {
   AddressIF,
   AffidavitResourceIF,
   BusinessAddressIF,
+  BusinessIF,
   BusinessWarningIF,
   CertifyIF,
   CompletingPartyIF,
@@ -740,6 +741,11 @@ export const useStore = defineStore('store', {
       return this.stateModel.restoration.approvalTypeValid
     },
 
+    /** The amalgamating businesses. */
+    getAmalgamatingBusinesses (): Array<BusinessIF> {
+      return this.stateModel.amalgamation.amalgamatingBusinesses
+    },
+
     //
     // Dissolution getters
     //
@@ -1214,6 +1220,9 @@ export const useStore = defineStore('store', {
     },
     setWindowWidth (width: number) {
       this.stateModel.windowWidth = width
+    },
+    setAmalgamatingBusinesses (amalgamatingBusinesses: Array<BusinessIF>) {
+      this.stateModel.amalgamation.amalgamatingBusinesses = amalgamatingBusinesses
     },
     setAmalgamationType (type: AmalgamationTypes) {
       this.stateModel.amalgamation.type = type

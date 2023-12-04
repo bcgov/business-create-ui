@@ -5,15 +5,15 @@
       <header id="name-header">
         <h2>Amalgamating Businesses</h2>
         <p class="mt-4">
-          Add each amalgamating business below.
+          Add the amalgamating businesses to the list.
         </p>
         <p class="mt-4">
-          Your BC Registries account must have access to each business involved in this amalgamation
-          before the amalgamation application can be filed.
+          <strong>Important:</strong> The amalgamating businesses must be visible on your
+          My Business Registry list before the amalgamation filing can be completed.
         </p>
       </header>
 
-      [*** TODO: Amalgamating Businesses component ***]
+      <AmalgamatingBusinesses />
     </section>
 
     <!-- Resulting Business Name and Type -->
@@ -52,9 +52,11 @@ import { RouteNames } from '@/enums'
 import { ExpandableHelp } from '@bcrs-shared-components/expandable-help'
 import NameRequestInfo from '@/components/common/NameRequestInfo.vue'
 import NameTranslations from '@/components/common/NameTranslations.vue'
+import AmalgamatingBusinesses from '@/components/Amalgamation/AmalgamatingBusinesses.vue'
 
 @Component({
   components: {
+    AmalgamatingBusinesses,
     ExpandableHelp,
     NameRequestInfo,
     NameTranslations
