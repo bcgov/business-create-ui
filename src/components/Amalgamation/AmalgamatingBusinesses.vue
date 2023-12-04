@@ -5,7 +5,7 @@
       outlined
       color="primary"
       class="btn-outlined-primary"
-      :disabled="addAmalgatingBusinessDisabled"
+      :disabled="isAddingAmalgamatingBusiness || isAddingAmalgamatingForeignBusiness"
       @click="onAddBusinessClick()"
     >
       <v-icon>mdi-domain-plus</v-icon>
@@ -18,7 +18,7 @@
       outlined
       color="primary"
       class="ml-2 btn-outlined-primary"
-      :disabled="addAmalgatingForeignBusinessDisabled"
+      :disabled="isAddingAmalgamatingBusiness || isAddingAmalgamatingForeignBusiness"
       @click="onAddForeignBusinessClick()"
     >
       <v-icon>mdi-domain-plus</v-icon>
@@ -30,7 +30,7 @@
       <v-card
         v-if="isAddingAmalgamatingBusiness"
         flat
-        class="section-container mt-4"
+        class="section-container mt-4 pr-0"
       >
         <v-row
           no-gutters
@@ -108,7 +108,7 @@
       <ul>
         Amalgamating Businesses: <br><br>
         <li
-          v-for="(business, index) in amalgamatingBuinesses"
+          v-for="(business, index) in amalgamatingBusinesses"
           :key="index"
         >
           <template v-if="business.foundingDate">
@@ -153,43 +153,30 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
 
   // Local properties
   amalgamatingBusinessesValid = false
-  amalgamatingBuinesses = []
+  amalgamatingBusinesses = []
   initialBusinessLookupObject = EmptyBusinessLookup
 
-  // Add an Amalgamating Business button properties
+  // Button properties
   isAddingAmalgamatingBusiness = false
-  addAmalgatingBusinessDisabled = false
-
-  // Add an Amalgamating Foreign Business button properties
   isAddingAmalgamatingForeignBusiness = false
-  addAmalgatingForeignBusinessDisabled = false
 
   readonly BusinessLookupServices = BusinessLookupServices
 
   // Cancel button in "Add an Amalgamating Business" is pressed.
   addAmalgamatingBusinessCancel (): void {
     this.isAddingAmalgamatingBusiness = false
-    // Enable buttons
-    this.addAmalgatingBusinessDisabled = false
-    this.addAmalgatingForeignBusinessDisabled = false
   }
 
   // "Add an Amalgamating Business" button is pressed.
   onAddBusinessClick (): void {
     this.isAddingAmalgamatingBusiness = true
     this.isAddingAmalgamatingForeignBusiness = false
-    // Disable buttons
-    this.addAmalgatingBusinessDisabled = true
-    this.addAmalgatingForeignBusinessDisabled = true
   }
 
   // "Add an Amalgamating Foreign Business" button is pressed.
   onAddForeignBusinessClick (): void {
     this.isAddingAmalgamatingBusiness = false
     this.isAddingAmalgamatingForeignBusiness = true
-    // Disable buttons (Please comment out the lines below or remove in part 2)
-    // this.addAmalgatingBusinessDisabled = true
-    // this.addAmalgatingForeignBusinessDisabled = true
   }
 
   async saveAmalgamatingBusiness (businessLookup: BusinessLookupIF): Promise<void> {
@@ -218,17 +205,17 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
 
     // If the amalgamating businesses array is not empty, check if identifier already exists.
     // If identifier already exists, don't add the business to the array.
-    if (this.amalgamatingBuinesses.length > 0) {
-      const businessExists = this.amalgamatingBuinesses.find(function (id) {
+    if (this.amalgamatingBusinesses.length > 0) {
+      const businessExists = this.amalgamatingBusinesses.find(function (id) {
         return id.identifier === business.identifier
       })
-      if (!businessExists) this.amalgamatingBuinesses.push(business)
+      if (!businessExists) this.amalgamatingBusinesses.push(business)
     } else {
-      this.amalgamatingBuinesses.push(business)
+      this.amalgamatingBusinesses.push(business)
     }
 
     // Set the amalgamated businesses array in the store.
-    this.setAmalgamatingBusinesses(this.amalgamatingBuinesses)
+    this.setAmalgamatingBusinesses(this.amalgamatingBusinesses)
     // Close the "Add an Amalgamating Business" Panel.
     this.addAmalgamatingBusinessCancel()
   }
@@ -240,11 +227,6 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
 
 .v-btn:not(.v-btn--round).v-size--default {
   height: 44px;
-}
-
-// Overriding the section container class right padding.
-.section-container {
-  padding-right: 0rem;
 }
 
 </style>
