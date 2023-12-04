@@ -69,6 +69,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Getter(useStore) isTypeSoleProp!: boolean
 
   @Action(useStore) setAffidavit!: (x: UploadAffidavitIF) => void
+  @Action(useStore) setAmalgamationType!: (x: AmalgamationTypes) => void
   @Action(useStore) setBusinessAddress!: (x: OfficeAddressIF) => void
   @Action(useStore) setBusinessContact!: (x: ContactPointIF) => void
   @Action(useStore) setCertifyState!: (x: CertifyIF) => void
@@ -145,7 +146,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
         identifier: this.getTempId
       },
       amalgamation: {
-        amalgamationType: this.getAmalgamationType,
+        type: this.getAmalgamationType,
         nameRequest: {
           legalType: this.getEntityType
         },
@@ -209,6 +210,9 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
 
     // save filing id
     this.setFilingId(+draftFiling.header.filingId)
+
+    // restore Amalgamation Type
+    this.setAmalgamationType(draftFiling.amalgamation.type || AmalgamationTypes.REGULAR)
 
     // restore Entity Type
     this.setEntityType(draftFiling.amalgamation.nameRequest.legalType)
