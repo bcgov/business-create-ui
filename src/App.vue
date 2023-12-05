@@ -770,16 +770,16 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
             } else {
               this.$router.push(RouteNames.DISSOLUTION_DEFINE_DISSOLUTION).catch(() => {})
             }
-            return // *** TODO: should this be "break"?
+            return
           case FilingTypes.INCORPORATION_APPLICATION:
             this.$router.push(RouteNames.INCORPORATION_DEFINE_COMPANY).catch(() => {})
-            return // *** TODO: should this be "break"?
+            return
           case FilingTypes.REGISTRATION:
             this.$router.push(RouteNames.REGISTRATION_DEFINE_BUSINESS).catch(() => {})
-            return // *** TODO: should this be "break"?
+            return
           case FilingTypes.RESTORATION:
             this.$router.push(RouteNames.RESTORATION_BUSINESS_NAME).catch(() => {})
-            return // *** TODO: should this be "break"?
+            return
           default:
             this.invalidRouteDialog = true
             throw new Error(`fetchData(): invalid filing type = ${this.getFilingType}`) // go to catch()
