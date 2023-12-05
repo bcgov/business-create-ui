@@ -155,11 +155,13 @@ import BusinessTable from '@/components/Amalgamation/BusinessTable.vue'
 })
 export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
   @Getter(useStore) getAmalgamatingBusinesses!: AmalgamatingBusinessIF[]
+  @Getter(useStore) getAmalgamatingBusinessesValid!: boolean
   @Getter(useStore) getShowErrors!: boolean
   @Getter(useStore) isAmalgamationFilingHorizontal!: boolean
   @Getter(useStore) isRoleStaff!: boolean
 
   @Action(useStore) setAmalgamatingBusinesses!: (x: Array<any>) => void
+  @Action(useStore) setAmalgamatingBusinessesValid!: (x: boolean) => void
 
   // Local properties
   amalgamatingBusinessesValid = false
@@ -176,18 +178,21 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
   // Cancel button in "Add an Amalgamating Business" is pressed.
   addAmalgamatingBusinessCancel (): void {
     this.isAddingAmalgamatingBusiness = false
+    this.setAmalgamatingBusinessesValid(true)
   }
 
   // "Add an Amalgamating Business" button is pressed.
   onAddBusinessClick (): void {
     this.isAddingAmalgamatingBusiness = true
     this.isAddingAmalgamatingForeignBusiness = false
+    this.setAmalgamatingBusinessesValid(false)
   }
 
   // "Add an Amalgamating Foreign Business" button is pressed.
   onAddForeignBusinessClick (): void {
     this.isAddingAmalgamatingBusiness = false
     this.isAddingAmalgamatingForeignBusiness = true
+    this.setAmalgamatingBusinessesValid(false)
   }
 
   async saveAmalgamatingBusiness (businessLookup: BusinessLookupIF): Promise<void> {
@@ -227,6 +232,7 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
 
     // Close the "Add an Amalgamating Business" Panel.
     this.isAddingAmalgamatingBusiness = false
+    this.setAmalgamatingBusinessesValid(true)
   }
 }
 </script>
