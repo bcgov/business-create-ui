@@ -96,7 +96,8 @@ export default class BusinessTable extends Vue {
   @Getter(useStore) getShowErrors!: boolean
   @Getter(useStore) isBaseCompany!: boolean
   @Getter(useStore) isRoleStaff!: boolean
-  @Getter(useStore) isTypeBcCcc!: CorpTypeCd
+  @Getter(useStore) isTypeBcCcc!: boolean
+  @Getter(useStore) isTypeBcUlcCompany!: boolean
 
   @Action(useStore) setAmalgamatingBusinesses!: (x: AmalgamatingBusinessIF[]) => void
   @Action(useStore) setDefineCompanyStepValidity!: (x: boolean) => void
@@ -107,27 +108,48 @@ export default class BusinessTable extends Vue {
   // readonly isForeign = (item: AmalgamatingBusinessIF): boolean => (item?.type === 'foreign')
 
   /**
-   * This is the list of amalgamating businesses with status computed.
-   * In other words, this is where the business rules are applied.
+   * This is the list of amalgamating businesses with computed statuses.
+   * In other words, these are the business rules.
    */
   get businesses (): AmalgamatingBusinessIF[] {
     return this.getAmalgamatingBusinesses.map(business => {
-      if (business.type === 'foreign' && !this.isRoleStaff) {
-        // disallow foreign if not staff
+      /* eslint-disable brace-style */
+
+      // disallow foreign into ULC if not staff
+      // *** TODO: need to resolve this with FOREIGN rule
+      if (business.type === 'foreign' && this.isTypeBcUlcCompany && !this.isRoleStaff) {
         business.status = AmalgamatingStatuses.ERROR_FOREIGN
-      } else if (business.type === 'lear' && !business.address) {
-        // assume business is not affiliated if we don't have address
+      }
+
+      // disallow foreign altogether if not staff
+      // (could happen if staff added it and regular user resumes draft)
+      else if (business.type === 'foreign' && !this.isRoleStaff) {
+        business.status = AmalgamatingStatuses.ERROR_FOREIGN
+      }
+
+      // assume business is not affiliated if we don't have address
+      else if (business.type === 'lear' && !business.address) {
         business.status = AmalgamatingStatuses.ERROR_AFFILIATION
-      } else if (business.type === 'lear' && business.goodStanding === false && !this.isRoleStaff) {
-        // disallow goodStanding=false (not True or undefined or null) if not staff
-        business.status = AmalgamatingStatuses.ERROR_NIGS
-      } else if (business.type === 'lear' && business.legalType === CorpTypeCd.BC_CCC && !this.isTypeBcCcc) {
-        // identify CCC mismatch
+      }
+
+      // identify CCC mismatch
+      else if (business.type === 'lear' && business.legalType === CorpTypeCd.BC_CCC && !this.isTypeBcCcc) {
         business.status = AmalgamatingStatuses.ERROR_CCC_MISMATCH
-      } else {
-        // otherwise, status is OK
+      }
+
+      // disallow NIGS if not staff
+      else if (business.type === 'lear' && !business.goodStanding && !this.isRoleStaff) {
+        business.status = AmalgamatingStatuses.ERROR_NIGS
+      }
+
+      // check for future effective filing
+
+      // otherwise, status is OK
+      else {
         business.status = AmalgamatingStatuses.OK
       }
+      /* eslint-enable brace-style */
+
       return business
     })
   }
