@@ -264,10 +264,9 @@ import {
   UploadAffidavitIF
 } from '@/interfaces'
 import { RouteNames, ItemTypes, PdfPageSize } from '@/enums'
-import { CorpTypeCd } from '@bcrs-shared-components/enums/'
 import { CommonMixin, DocumentMixin } from '@/mixins'
 import FileUploadPreview from '@/components/common/FileUploadPreview.vue'
-import { GetCorpNumberedDescription } from '@bcrs-shared-components/corp-type-module'
+import { CorpTypeCd, GetCorpNumberedDescription } from '@bcrs-shared-components/corp-type-module'
 
 @Component({
   components: {

@@ -1,4 +1,5 @@
 import { CorrectNameOptions } from '@bcrs-shared-components/enums/'
+import { NameRequestIF } from '@bcrs-shared-components/interfaces/'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import {
   AccountInformationIF,
@@ -17,7 +18,6 @@ import {
   EffectiveDateTimeIF,
   FeesIF,
   IncorporationAgreementIF,
-  NameRequestIF,
   NameTranslationIF,
   OrgInformationIF,
   PartyIF,

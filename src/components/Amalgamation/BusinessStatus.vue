@@ -33,40 +33,58 @@ export default class BusinessStatus extends Vue {
 
   get icon (): string {
     switch (this.status) {
-      case AmalgamatingStatuses.OK: return 'mdi-check'
+      case AmalgamatingStatuses.OK:
+        return 'mdi-check'
 
       case AmalgamatingStatuses.ERROR_AFFILIATION:
       case AmalgamatingStatuses.ERROR_CCC_MISMATCH:
       case AmalgamatingStatuses.ERROR_FOREIGN:
-      case AmalgamatingStatuses.ERROR_NIGS: return 'mdi-alert'
+      case AmalgamatingStatuses.ERROR_FOREIGN_UNLIMITED:
+      case AmalgamatingStatuses.ERROR_FUTURE_EFFECTIVE_FILING:
+      case AmalgamatingStatuses.ERROR_LIMITED_RESTORATION:
+      case AmalgamatingStatuses.ERROR_NIGS:
+        return 'mdi-alert'
 
-      default: return 'mdi-alert-circle-outline' // should never happen
+      default:
+        return 'mdi-alert-circle-outline' // should never happen
     }
   }
 
   get color (): string {
     switch (this.status) {
-      case AmalgamatingStatuses.OK: return 'success'
+      case AmalgamatingStatuses.OK:
+        return 'success'
 
       case AmalgamatingStatuses.ERROR_AFFILIATION:
       case AmalgamatingStatuses.ERROR_CCC_MISMATCH:
       case AmalgamatingStatuses.ERROR_FOREIGN:
-      case AmalgamatingStatuses.ERROR_NIGS: return 'warning'
+      case AmalgamatingStatuses.ERROR_FOREIGN_UNLIMITED:
+      case AmalgamatingStatuses.ERROR_FUTURE_EFFECTIVE_FILING:
+      case AmalgamatingStatuses.ERROR_LIMITED_RESTORATION:
+      case AmalgamatingStatuses.ERROR_NIGS:
+        return 'warning'
 
-      default: return 'error' // should never happen
+      default:
+        return 'error' // should never happen
     }
   }
 
   get text (): string {
     switch (this.status) {
-      case AmalgamatingStatuses.OK: return 'Ready'
+      case AmalgamatingStatuses.OK:
+        return 'Ready'
 
       case AmalgamatingStatuses.ERROR_AFFILIATION:
       case AmalgamatingStatuses.ERROR_CCC_MISMATCH:
       case AmalgamatingStatuses.ERROR_FOREIGN:
-      case AmalgamatingStatuses.ERROR_NIGS: return 'Attention Required'
+      case AmalgamatingStatuses.ERROR_FOREIGN_UNLIMITED:
+      case AmalgamatingStatuses.ERROR_FUTURE_EFFECTIVE_FILING:
+      case AmalgamatingStatuses.ERROR_LIMITED_RESTORATION:
+      case AmalgamatingStatuses.ERROR_NIGS:
+        return 'Attention Required'
 
-      default: return '(Unknown)' // should never happen
+      default:
+        return '(Unknown)' // should never happen
     }
   }
 
@@ -81,13 +99,22 @@ export default class BusinessStatus extends Vue {
         return 'A BC Community Contribution Company must amalgamate to form a new BC Community ' +
           'Contribution Company.'
       case AmalgamatingStatuses.ERROR_FOREIGN:
+        return 'A foreign corporation cannot be amalgamated except by Registries staff.'
+      case AmalgamatingStatuses.ERROR_FOREIGN_UNLIMITED:
         return 'A foreign corporation must not amalgamate with a limited company and continue as ' +
           'an unlimited liability company.'
+      case AmalgamatingStatuses.ERROR_FUTURE_EFFECTIVE_FILING:
+        return 'This business has a future effective filing. It cannot be part of an amalgamation ' +
+          'until all future effective filings have come into effect.'
+      case AmalgamatingStatuses.ERROR_LIMITED_RESTORATION:
+        return 'This business is under limited restoration. It cannot be part of an amalgamation ' +
+          'unless it is fully restored.'
       case AmalgamatingStatuses.ERROR_NIGS:
         return 'This business is not in good standing. This filing cannot be submitted until all ' +
           'businesses are in good standing.'
 
-      default: return null // should never happen
+      default:
+        return null // should never happen
     }
   }
 }

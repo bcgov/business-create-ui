@@ -4,7 +4,7 @@ import { useStore } from '@/store/store'
 import { cloneDeep, isEqual } from 'lodash'
 import { v4 as uuidv4 } from 'uuid'
 import { PartyTypes, RoleTypes, RuleIds } from '@/enums'
-import { CorpTypeCd } from '@bcrs-shared-components/enums/'
+import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import { AddressIF, BusinessLookupIF, ConfirmDialogType, EmptyBusinessLookup,
   FormIF, OrgPersonIF, PeopleAndRolesResourceIF, RegistrationStateIF, RolesIF } from '@/interfaces'
 import { EmptyAddress } from '@bcrs-shared-components/interfaces'

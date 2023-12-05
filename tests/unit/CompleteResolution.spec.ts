@@ -1,7 +1,7 @@
 import { wrapperFactory } from '../jest-wrapper-factory'
 import CompleteResolution from '@/components/Dissolution/CompleteResolution.vue'
 import { DissolutionResources } from '@/resources'
-import { CorpTypeCd } from '@bcrs-shared-components/enums/'
+import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 
 // Test Case Data
 const completeResolutionTestCases = [

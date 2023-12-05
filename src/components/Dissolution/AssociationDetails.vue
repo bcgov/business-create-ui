@@ -152,9 +152,9 @@ import { BaseAddress } from '@bcrs-shared-components/base-address'
 import OfficeAddresses from '@/components/common/OfficeAddresses.vue'
 import { CommonMixin, DateMixin } from '@/mixins'
 import { CoopTypes } from '@/enums'
-import { CorpTypeCd } from '@bcrs-shared-components/enums/'
 import { isEmpty } from 'lodash'
-import { GetCorpFullDescription, GetCorpNumberedDescription } from '@bcrs-shared-components/corp-type-module'
+import { CorpTypeCd, GetCorpFullDescription, GetCorpNumberedDescription }
+  from '@bcrs-shared-components/corp-type-module'
 
 @Component({
   components: {

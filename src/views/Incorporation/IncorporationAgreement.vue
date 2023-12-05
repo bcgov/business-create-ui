@@ -264,9 +264,9 @@ import { Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import AgreementType from '@/components/common/AgreementType.vue'
 import { IncorporationAgreementIF } from '@/interfaces'
-import { CorpTypeCd, RouteNames } from '@/enums'
+import { RouteNames } from '@/enums'
 import { CommonMixin } from '@/mixins'
-import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
+import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 
 @Component({
   components: {

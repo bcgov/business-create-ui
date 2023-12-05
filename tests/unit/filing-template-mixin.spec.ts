@@ -2,7 +2,8 @@ import { wrapperFactory } from '../jest-wrapper-factory'
 import MixinTester from '@/mixin-tester.vue'
 import { createPinia, setActivePinia } from 'pinia'
 import { useStore } from '@/store/store'
-import { BusinessTypes, CorpTypeCd, PartyTypes, RoleTypes } from '@/enums'
+import { BusinessTypes, PartyTypes, RoleTypes } from '@/enums'
+import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import { NameRequestIF } from '@/interfaces'
 
 setActivePinia(createPinia())

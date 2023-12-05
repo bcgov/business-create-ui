@@ -61,7 +61,7 @@ import { AddressIF, ContactPointIF, DefineCompanyIF, RegisteredRecordsAddressesI
   from '@/interfaces'
 import { CommonMixin } from '@/mixins'
 import { RouteNames } from '@/enums'
-import { CorpTypeCd } from '@bcrs-shared-components/enums/'
+import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
 import OfficeAddresses from '@/components/common/OfficeAddresses.vue'
 

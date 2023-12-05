@@ -497,7 +497,7 @@ import {
   EmptyPerson
 } from '@/interfaces'
 import { BulletListTypes, ItemTypes, RouteNames } from '@/enums'
-import { CorpTypeCd } from '@bcrs-shared-components/enums/'
+import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import { CommonMixin, DateMixin } from '@/mixins'
 import { Rules, RuleHelpers } from '@/rules'
 import { VuetifyRuleFunction } from '@/types'
