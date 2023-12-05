@@ -212,19 +212,20 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
       business = data[0].data?.business
       business.businessContact = data[1].contacts[0]
       business.officeAddress = data[2]
-    } else {
-      business = businessLookup
     }
 
+    // If the business is not null (LEAR Entity)
     // If the amalgamating businesses array is not empty, check if identifier already exists.
     // If identifier already exists, don't add the business to the array.
-    if (this.amalgamatingBusinesses.length > 0) {
-      const businessExists = this.amalgamatingBusinesses.find(function (id) {
-        return id.identifier === business.identifier
-      })
-      if (!businessExists) this.amalgamatingBusinesses.push(business)
-    } else {
-      this.amalgamatingBusinesses.push(business)
+    if (business) {
+      if (this.amalgamatingBusinesses) {
+        const businessExists = this.amalgamatingBusinesses.find(
+          (id) => id.identifier === business.identifier
+        )
+        if (!businessExists) this.amalgamatingBusinesses.push(business)
+      } else {
+        this.amalgamatingBusinesses.push(business)
+      }
     }
 
     // Set the amalgamated businesses array in the store.
