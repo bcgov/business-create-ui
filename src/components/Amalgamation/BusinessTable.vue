@@ -35,8 +35,7 @@
             </template>
 
             <template v-if="item.type === 'foreign'">
-              <span v-if="item.foreignJurisdiction">{{ jurisdiction(item) }}</span>
-              <span v-else>(Unknown)</span>
+              {{ jurisdiction(item) }}
             </template>
           </td>
 
