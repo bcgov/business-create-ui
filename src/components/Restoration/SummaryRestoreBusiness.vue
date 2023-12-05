@@ -160,9 +160,9 @@ import { DateMixin } from '@/mixins'
 import { Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { ApprovalTypes, RouteNames } from '@/enums'
-import { CorpTypeCd, CorrectNameOptions } from '@bcrs-shared-components/enums/'
+import { CorrectNameOptions } from '@bcrs-shared-components/enums/'
 import { NameTranslationIF, RestorationStateIF } from '@/interfaces'
-import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
+import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 
 @Component({})
 export default class SummaryRestoreBusiness extends Mixins(DateMixin) {

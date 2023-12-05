@@ -182,7 +182,7 @@ import {
 } from '@/interfaces'
 import { CommonMixin } from '@/mixins'
 import { CoopTypes, RouteNames } from '@/enums'
-import { CorpTypeCd } from '@bcrs-shared-components/enums/'
+import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
 import CooperativeType from '@/components/Dissolution/CooperativeType.vue'
 import FolioNumber from '@/components/common/FolioNumber.vue'

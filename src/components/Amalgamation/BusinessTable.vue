@@ -72,7 +72,7 @@ import { AmalgamatingStatuses, AmlRoles } from '@/enums'
 import { AmalgamatingBusinessIF, DefineCompanyIF } from '@/interfaces'
 import { BaseAddress } from '@bcrs-shared-components/base-address'
 import BusinessStatus from './BusinessStatus.vue'
-import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
+import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 
 @Component({
   components: {
@@ -90,17 +90,35 @@ export default class BusinessTable extends Vue {
   @Getter(useStore) getShowErrors!: boolean
   @Getter(useStore) isBaseCompany!: boolean
   @Getter(useStore) isRoleStaff!: boolean
+  @Getter(useStore) isTypeBcCcc!: CorpTypeCd
 
   @Action(useStore) setAmalgamatingBusinesses!: (x: AmalgamatingBusinessIF[]) => void
   @Action(useStore) setDefineCompanyStepValidity!: (x: boolean) => void
   @Action(useStore) setIgnoreChanges!: (x: boolean) => void
 
+  /**
+   * This is the list of amalgamating businesses with status computed.
+   * In other words, this is where the business rules are applied.
+   */
   get businesses (): any[] {
     // *** TODO: use "map" to compute status from other info
     //           eg, if business.goodStanding != true then status = ERROR_NIGS
     return this.getAmalgamatingBusinesses.map(business => {
-      if (business.type === 'lear' && business.goodStanding === false) {
+      if (business.type === 'foreign' && !this.isRoleStaff) {
+        // disallow foreign if not staff
+        business.status = AmalgamatingStatuses.ERROR_FOREIGN
+      } else if (business.type === 'lear' && !business.email) {
+        // assume business is not affiliated if we don't have email
+        business.status = AmalgamatingStatuses.ERROR_AFFILIATION
+      } else if (business.type === 'lear' && business.goodStanding === false && !this.isRoleStaff) {
+        // disallow goodStanding=false (not True or undefined or null) if not staff
         business.status = AmalgamatingStatuses.ERROR_NIGS
+      } else if (business.type === 'lear' && business.legalType === CorpTypeCd.BC_CCC && !this.isTypeBcCcc) {
+        // identify CCC mismatch
+        business.status = AmalgamatingStatuses.ERROR_CCC_MISMATCH
+      } else {
+        // otherwise, status is OK
+        business.status = AmalgamatingStatuses.OK
       }
       return business
     })

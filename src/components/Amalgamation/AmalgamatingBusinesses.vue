@@ -225,8 +225,9 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
 
     // Set the amalgamated businesses array in the store.
     this.setAmalgamatingBusinesses(this.amalgamatingBusinesses)
+
     // Close the "Add an Amalgamating Business" Panel.
-    this.addAmalgamatingBusinessCancel()
+    this.isAddingAmalgamatingBusiness = false
   }
 }
 </script>

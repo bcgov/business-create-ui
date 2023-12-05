@@ -8,7 +8,7 @@ import {
   EmptyNaics,
   StateModelIF
 } from '@/interfaces'
-import { AmalgamatingStatuses, AmlRoles } from '@/enums'
+import { AmlRoles } from '@/enums'
 import { EmptyAddress } from '@bcrs-shared-components/interfaces'
 import { cloneDeep } from 'lodash'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
@@ -28,8 +28,7 @@ const AMALGAMATING_BUSINESSES: AmalgamatingBusinessIF[] = [
       addressCountry: 'CA'
     },
     role: AmlRoles.HOLDING,
-    goodStanding: true,
-    status: AmalgamatingStatuses.OK
+    goodStanding: true
   },
   {
     type: 'lear',
@@ -38,8 +37,7 @@ const AMALGAMATING_BUSINESSES: AmalgamatingBusinessIF[] = [
     email: 'sucker@example.com',
     legalType: CorpTypeCd.EXTRA_PRO_A,
     role: AmlRoles.AMALGAMATING,
-    goodStanding: true,
-    status: AmalgamatingStatuses.OK
+    goodStanding: true
   },
   {
     type: 'lear',
@@ -55,34 +53,30 @@ const AMALGAMATING_BUSINESSES: AmalgamatingBusinessIF[] = [
       addressCountry: 'CA'
     },
     role: AmlRoles.AMALGAMATING,
-    goodStanding: false,
-    status: AmalgamatingStatuses.ERROR_NIGS
+    goodStanding: false
   },
   {
     type: 'lear',
-    identifier: 'BC4444444',
-    name: 'Eclair',
+    identifier: 'BC4444444', // we know this from the business lookup
+    name: 'Eclair', // we know this from the business lookup
     email: null,
-    legalType: CorpTypeCd.BC_COMPANY, // *** KARIM: we can get this from the business lookup
+    legalType: CorpTypeCd.BC_COMPANY, // we know this from the business lookup
     role: AmlRoles.AMALGAMATING,
-    goodStanding: null,
-    status: AmalgamatingStatuses.ERROR_AFFILIATION
+    goodStanding: undefined // we don't know this yet
   },
   {
     type: 'foreign',
     corpNumber: 'ABC123',
     legalName: 'Gingerbread USA',
     foreignJurisdiction: { country: 'US' },
-    role: AmlRoles.AMALGAMATING,
-    status: AmalgamatingStatuses.ERROR_FOREIGN
+    role: AmlRoles.AMALGAMATING
   },
   {
     type: 'foreign',
     corpNumber: 'XYZ789',
     legalName: 'Oreo Ice Cream Sandwich',
     foreignJurisdiction: { region: 'FEDERAL', country: 'CA' },
-    role: AmlRoles.AMALGAMATING,
-    status: AmalgamatingStatuses.ERROR_FOREIGN
+    role: AmlRoles.AMALGAMATING
   },
   {
     type: 'lear',
@@ -98,8 +92,7 @@ const AMALGAMATING_BUSINESSES: AmalgamatingBusinessIF[] = [
       addressCountry: 'CA'
     },
     role: AmlRoles.AMALGAMATING,
-    goodStanding: true,
-    status: AmalgamatingStatuses.ERROR_CCC_MISMATCH
+    goodStanding: true
   },
   {
     type: 'lear',
@@ -115,8 +108,7 @@ const AMALGAMATING_BUSINESSES: AmalgamatingBusinessIF[] = [
       addressCountry: 'CA'
     },
     role: AmlRoles.AMALGAMATING,
-    goodStanding: true,
-    status: AmalgamatingStatuses.OK
+    goodStanding: true
   }
 ]
 

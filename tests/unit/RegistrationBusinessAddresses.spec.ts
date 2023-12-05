@@ -4,7 +4,7 @@ import { createPinia, setActivePinia } from 'pinia'
 import { useStore } from '@/store/store'
 import { createLocalVue, shallowMount, mount } from '@vue/test-utils'
 import BusinessAddresses from '@/components/Registration/BusinessAddresses.vue'
-import { CorpTypeCd } from '@/enums'
+import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 
 const vuetify = new Vuetify({})
 setActivePinia(createPinia())

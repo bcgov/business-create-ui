@@ -304,7 +304,6 @@ import { CompletingParty } from '@bcrs-shared-components/completing-party'
 import StaffPayment from '@/components/common/StaffPayment.vue'
 import TransactionalFolioNumber from '@/components/common/TransactionalFolioNumber.vue'
 import { RoleTypes, RouteNames } from '@/enums'
-import { CorpTypeCd } from '@bcrs-shared-components/enums/'
 import { VuetifyRuleFunction } from '@/types'
 
 import {
@@ -318,7 +317,7 @@ import {
   StaffPaymentStepIF
 } from '@/interfaces'
 import { PersonAddressSchema } from '@/schemas/'
-import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
+import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 
 @Component({
   components: {
