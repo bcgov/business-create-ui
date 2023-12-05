@@ -5,7 +5,7 @@ import { createPinia, setActivePinia } from 'pinia'
 import { useStore } from '@/store/store'
 import NameRequestInfo from '@/components/common/NameRequestInfo.vue'
 import { NameRequestStates } from '@/enums'
-import { CorpTypeCd } from '@bcrs-shared-components/enums'
+import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import { NameRequestIF } from '@/interfaces'
 
 const vuetify = new Vuetify({})

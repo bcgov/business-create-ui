@@ -114,7 +114,7 @@
             Mailing Address: {{ business.officeAddress.mailingAddress }} <br>
             State: {{ business.state }} <br>
             Good Standing: {{ business.goodStanding }} <br>
-          </template>
+        </template>
           <template v-else>
             Legal Name: {{ business.name }} <br>
             Legal Type: {{ business.legalType }} <br>
@@ -142,7 +142,7 @@ import { useStore } from '@/store/store'
 import { CommonMixin } from '@/mixins'
 import { BusinessLookupServices, LegalServices } from '@/services'
 import { BusinessLookup } from '@bcrs-shared-components/business-lookup'
-import { BusinessLookupIF, EmptyBusinessLookup } from '@/interfaces'
+import { AmalgamatingBusinessIF, BusinessLookupIF, EmptyBusinessLookup } from '@/interfaces'
 import BusinessTable from '@/components/Amalgamation/BusinessTable.vue'
 
 @Component({
@@ -152,7 +152,7 @@ import BusinessTable from '@/components/Amalgamation/BusinessTable.vue'
   }
 })
 export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
-  @Getter(useStore) getAmalgamatingBusinesses!: Array<any>
+  @Getter(useStore) getAmalgamatingBusinesses!: AmalgamatingBusinessIF[]
   @Getter(useStore) getShowErrors!: boolean
   @Getter(useStore) isAmalgamationFilingHorizontal!: boolean
   @Getter(useStore) isRoleStaff!: boolean
