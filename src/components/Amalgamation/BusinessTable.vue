@@ -15,14 +15,14 @@
       <tbody>
         <tr
           v-for="(item, index) in businesses"
-          :key="item.identifier"
+          :key="item.identifier || item.corpNumber"
         >
           <td class="business-name">
-            <strong>{{ item.name }}</strong><br>{{ item.email }}
+            <strong>{{ item.name || item.legalName }}</strong><br>{{ item.email }}
           </td>
 
           <td class="business-type">
-            {{ GetCorpFullDescription(item.legalType) }}
+            {{ GetCorpFullDescription(item.legalType) || 'Foreign' }}
           </td>
 
           <td class="business-address">
@@ -35,9 +35,7 @@
           </td>
 
           <td class="business-role">
-            <span v-if="item.role === AmlRoles.AMALGAMATING">Amalgamating Business</span>
-            <span v-else-if="item.role === AmlRoles.HOLDING">Holding Company</span>
-            <span v-else>(Unknown)</span>
+            {{ role(item) }}
           </td>
 
           <td class="business-status">
@@ -101,7 +99,9 @@ export default class BusinessTable extends Vue {
     // *** TODO: use "map" to compute status from other info
     //           eg, if business.goodStanding != true then status = ERROR_NIGS
     return this.getAmalgamatingBusinesses.map(business => {
-      if (business.type === 'lear' && !business.goodStanding) business.status = AmalgamatingStatuses.ERROR_NIGS
+      if (business.type === 'lear' && business.goodStanding === false) {
+        business.status = AmalgamatingStatuses.ERROR_NIGS
+      }
       return business
     })
   }
@@ -114,7 +114,13 @@ export default class BusinessTable extends Vue {
       if (region) return `${region}, ${country}`
       return country
     }
-    return null // should never happen
+    return '(Unknown)' // should never happen
+  }
+
+  role (item: any): string {
+    if (item.role === AmlRoles.AMALGAMATING) return 'Amalgamating Business'
+    if (item.role === AmlRoles.HOLDING) return 'Holding Company'
+    return '(Unknown)' // should never happen
   }
 
   removeBusiness (index: number): void {

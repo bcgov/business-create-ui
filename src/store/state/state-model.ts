@@ -33,6 +33,16 @@ const AMALGAMATING_BUSINESSES: AmalgamatingBusinessIF[] = [
   },
   {
     type: 'lear',
+    identifier: 'A5555555',
+    name: 'Lollipop Canada',
+    email: 'sucker@example.com',
+    legalType: CorpTypeCd.EXTRA_PRO_A,
+    role: AmlRoles.AMALGAMATING,
+    goodStanding: true,
+    status: AmalgamatingStatuses.OK
+  },
+  {
+    type: 'lear',
     identifier: 'BC2222222',
     name: 'Jelly Bean',
     email: 'oval.treat@example.com',
@@ -50,39 +60,13 @@ const AMALGAMATING_BUSINESSES: AmalgamatingBusinessIF[] = [
   },
   {
     type: 'lear',
-    identifier: 'BC3333333',
-    name: 'Cupcake',
-    email: 'cute.sugarbomb@example.com',
-    legalType: CorpTypeCd.BC_COMPANY,
-    address: {
-      streetAddress: '1234 Main St',
-      addressCity: 'Vancouver',
-      addressRegion: 'BC',
-      postalCode: 'V6A 1A1',
-      addressCountry: 'CA'
-    },
-    role: AmlRoles.AMALGAMATING,
-    goodStanding: true,
-    status: AmalgamatingStatuses.OK
-  },
-  {
-    type: 'lear',
     identifier: 'BC4444444',
     name: 'Eclair',
     email: null,
     legalType: CorpTypeCd.BC_COMPANY, // *** KARIM: we can get this from the business lookup
     role: AmlRoles.AMALGAMATING,
+    goodStanding: null,
     status: AmalgamatingStatuses.ERROR_AFFILIATION
-  },
-  {
-    type: 'lear',
-    identifier: 'A5555555',
-    name: 'Lollipop Canada',
-    email: 'sucker@example.com',
-    legalType: CorpTypeCd.EXTRA_PRO_A,
-    role: AmlRoles.AMALGAMATING,
-    goodStanding: true,
-    status: AmalgamatingStatuses.OK
   },
   {
     type: 'foreign',
@@ -98,14 +82,31 @@ const AMALGAMATING_BUSINESSES: AmalgamatingBusinessIF[] = [
     legalName: 'Oreo Ice Cream Sandwich',
     foreignJurisdiction: { region: 'FEDERAL', country: 'CA' },
     role: AmlRoles.AMALGAMATING,
-    status: AmalgamatingStatuses.ERROR_CCC_MISMATCH
+    status: AmalgamatingStatuses.ERROR_FOREIGN
   },
   {
     type: 'lear',
     identifier: 'BC7777777',
     name: 'Donut',
     email: 'holey.goodness@example.com',
-    legalType: CorpTypeCd.BC_ULC_COMPANY,
+    legalType: CorpTypeCd.BC_CCC,
+    address: {
+      streetAddress: '1234 Main St',
+      addressCity: 'Vancouver',
+      addressRegion: 'BC',
+      postalCode: 'V6A 1A1',
+      addressCountry: 'CA'
+    },
+    role: AmlRoles.AMALGAMATING,
+    goodStanding: true,
+    status: AmalgamatingStatuses.ERROR_CCC_MISMATCH
+  },
+  {
+    type: 'lear',
+    identifier: 'BC3333333',
+    name: 'Cupcake',
+    email: 'cute.sugarbomb@example.com',
+    legalType: CorpTypeCd.BC_COMPANY,
     address: {
       streetAddress: '1234 Main St',
       addressCity: 'Vancouver',
