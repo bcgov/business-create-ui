@@ -15,23 +15,29 @@
       <tbody>
         <tr
           v-for="(item, index) in businesses"
-          :key="item.identifier || item.corpNumber"
+          :key="(item.type === 'lear' && item.identifier) || (item.type === 'foreign' && item.corpNumber)"
         >
           <td class="business-name">
-            <strong>{{ item.name || item.legalName }}</strong><br>{{ item.email }}
+            <strong>{{ name(item) }}</strong><br>{{ (item.type === 'lear') && item.email }}
           </td>
 
           <td class="business-type">
-            {{ GetCorpFullDescription(item.legalType) || 'Foreign' }}
+            {{ type(item) }}
           </td>
 
           <td class="business-address">
-            <BaseAddress
-              v-if="item.address"
-              :address="item.address"
-            />
-            <span v-else-if="item.foreignJurisdiction">{{ jurisdiction(item) }}</span>
-            <span v-else>Affiliate to view</span>
+            <template v-if="item.type === 'lear'">
+              <BaseAddress
+                v-if="item.address"
+                :address="item.address"
+              />
+              <span v-else>Affiliate to view</span>
+            </template>
+
+            <template v-if="item.type === 'foreign'">
+              <span v-if="item.foreignJurisdiction">{{ jurisdiction(item) }}</span>
+              <span v-else>(Unknown)</span>
+            </template>
           </td>
 
           <td class="business-role">
@@ -96,19 +102,21 @@ export default class BusinessTable extends Vue {
   @Action(useStore) setDefineCompanyStepValidity!: (x: boolean) => void
   @Action(useStore) setIgnoreChanges!: (x: boolean) => void
 
+  // *** I'M STILL WONDERING IF I WANT TO USE THESE
+  // readonly isLear = (item: AmalgamatingBusinessIF): boolean => (item?.type === 'lear')
+  // readonly isForeign = (item: AmalgamatingBusinessIF): boolean => (item?.type === 'foreign')
+
   /**
    * This is the list of amalgamating businesses with status computed.
    * In other words, this is where the business rules are applied.
    */
-  get businesses (): any[] {
-    // *** TODO: use "map" to compute status from other info
-    //           eg, if business.goodStanding != true then status = ERROR_NIGS
+  get businesses (): AmalgamatingBusinessIF[] {
     return this.getAmalgamatingBusinesses.map(business => {
       if (business.type === 'foreign' && !this.isRoleStaff) {
         // disallow foreign if not staff
         business.status = AmalgamatingStatuses.ERROR_FOREIGN
-      } else if (business.type === 'lear' && !business.email) {
-        // assume business is not affiliated if we don't have email
+      } else if (business.type === 'lear' && !business.address) {
+        // assume business is not affiliated if we don't have address
         business.status = AmalgamatingStatuses.ERROR_AFFILIATION
       } else if (business.type === 'lear' && business.goodStanding === false && !this.isRoleStaff) {
         // disallow goodStanding=false (not True or undefined or null) if not staff
@@ -124,8 +132,20 @@ export default class BusinessTable extends Vue {
     })
   }
 
-  jurisdiction (item: any): string {
-    const fj = item?.foreignJurisdiction
+  name (item: AmalgamatingBusinessIF): string {
+    if (item?.type === 'lear') return item.name
+    if (item?.type === 'foreign') return item.legalName
+    return '(Unknown)' // should never happen
+  }
+
+  type (item: AmalgamatingBusinessIF): string {
+    if (item?.type === 'lear') return GetCorpFullDescription(item.legalType)
+    if (item?.type === 'foreign') return 'Foreign'
+    return '(Unknown)' // should never happen
+  }
+
+  jurisdiction (item: AmalgamatingBusinessIF): string {
+    const fj = (item?.type === 'foreign') && item.foreignJurisdiction
     if (fj?.country) {
       const country = getName(fj.country)
       const region = (fj.region === 'FEDERAL' ? 'Federal' : fj.region)
@@ -135,7 +155,7 @@ export default class BusinessTable extends Vue {
     return '(Unknown)' // should never happen
   }
 
-  role (item: any): string {
+  role (item: AmalgamatingBusinessIF): string {
     if (item.role === AmlRoles.AMALGAMATING) return 'Amalgamating Business'
     if (item.role === AmlRoles.HOLDING) return 'Holding Company'
     return '(Unknown)' // should never happen
@@ -188,7 +208,6 @@ export default class BusinessTable extends Vue {
       padding-right: 2rem;
     }
     & td.business-name {
-      min-width: 120px;
       max-width: 200px;
       // show ellipsis when email overflows
       // (doesn't affect name because name breaks on spaces)
@@ -196,14 +215,13 @@ export default class BusinessTable extends Vue {
       text-overflow: ellipsis;
     }
     & td.business-type {
-      min-width: 120px;
       max-width: 150px;
     }
     & td.business-address {
       min-width: 200px;
     }
     & td.business-role {
-      max-width: 120px;
+      max-width: 130px;
     }
     & td.business-status {
       max-width: 120px;

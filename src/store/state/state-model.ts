@@ -31,15 +31,24 @@ const AMALGAMATING_BUSINESSES: AmalgamatingBusinessIF[] = [
     goodStanding: true
   },
   {
+    // this business is an xpro and should only be valid if staff
     type: 'lear',
     identifier: 'A5555555',
     name: 'Lollipop Canada',
     email: 'sucker@example.com',
     legalType: CorpTypeCd.EXTRA_PRO_A,
+    address: {
+      streetAddress: '4321 Principal Ave',
+      addressCity: 'Halifax',
+      addressRegion: 'NS',
+      postalCode: 'B3H 1A1',
+      addressCountry: 'CA'
+    },
     role: AmlRoles.AMALGAMATING,
     goodStanding: true
   },
   {
+    // this business is NIGS and should only be valid if staff
     type: 'lear',
     identifier: 'BC2222222',
     name: 'Jelly Bean',
@@ -56,13 +65,24 @@ const AMALGAMATING_BUSINESSES: AmalgamatingBusinessIF[] = [
     goodStanding: false
   },
   {
+    // this business has 2 issues:
+    // 1. not affiliated
+    // 2. not in good standing
     type: 'lear',
     identifier: 'BC4444444', // we know this from the business lookup
     name: 'Eclair', // we know this from the business lookup
-    email: null,
+    email: undefined, // we don't know this yet (not affiliated)
     legalType: CorpTypeCd.BC_COMPANY, // we know this from the business lookup
+    address: undefined, // we don't know this yet (not affiliated)
     role: AmlRoles.AMALGAMATING,
-    goodStanding: undefined // we don't know this yet
+    goodStanding: false // we know this from the business lookup
+  },
+  {
+    type: 'foreign',
+    corpNumber: 'XYZ789',
+    legalName: 'Ice Cream Sandwich Canada',
+    foreignJurisdiction: { region: 'FEDERAL', country: 'CA' },
+    role: AmlRoles.AMALGAMATING
   },
   {
     type: 'foreign',
@@ -72,13 +92,7 @@ const AMALGAMATING_BUSINESSES: AmalgamatingBusinessIF[] = [
     role: AmlRoles.AMALGAMATING
   },
   {
-    type: 'foreign',
-    corpNumber: 'XYZ789',
-    legalName: 'Oreo Ice Cream Sandwich',
-    foreignJurisdiction: { region: 'FEDERAL', country: 'CA' },
-    role: AmlRoles.AMALGAMATING
-  },
-  {
+    // this business is CCC and should only be valid if amalg type is CCC
     type: 'lear',
     identifier: 'BC7777777',
     name: 'Donut',
