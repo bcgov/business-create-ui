@@ -6,7 +6,7 @@ import { useStore } from '@/store/store'
 import NameTranslations from '@/components/common/NameTranslations.vue'
 import AddNameTranslation from '@/components/common/AddNameTranslation.vue'
 import ListNameTranslations from '@/components/common/ListNameTranslations.vue'
-import { CorpTypeCd } from '@bcrs-shared-components/enums'
+import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 
 const vuetify = new Vuetify({})
 setActivePinia(createPinia())
