@@ -1,8 +1,7 @@
 import { RestorationResourceIF } from '@/interfaces'
 import { FilingCodes, RuleIds } from '@/enums'
-import { CorpTypeCd } from '@bcrs-shared-components/enums/'
 import { RestorationSteps } from './steps'
-import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
+import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 
 export const RestorationResourceUlc: RestorationResourceIF = {
   entityType: CorpTypeCd.BC_ULC_COMPANY,

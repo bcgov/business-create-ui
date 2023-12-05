@@ -17,7 +17,6 @@ export * from './views'
 export * from './errorTypes'
 
 // external enums
-export { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 export {
   AccountTypes,
   ApprovalTypes,

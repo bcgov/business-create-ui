@@ -1,5 +1,5 @@
 import { EntityState } from '@/enums'
-import { CorpTypeCd } from '@bcrs-shared-components/enums/'
+import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import { IsoDatePacific, ApiDateTimeUtc } from '@bcrs-shared-components/interfaces'
 import { ContactPointIF, OfficeAddressIF } from '@/interfaces'
 

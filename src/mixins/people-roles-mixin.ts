@@ -2,7 +2,7 @@ import { Component, Vue } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { NumWord, PartyTypes, RoleTypes, RuleIds } from '@/enums'
-import { CorpTypeCd } from '@bcrs-shared-components/enums/'
+import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import { AddressIF, ConfirmDialogType, OrgPersonIF, PeopleAndRoleIF,
   PeopleAndRolesResourceIF, RegistrationStateIF } from '@/interfaces'
 
