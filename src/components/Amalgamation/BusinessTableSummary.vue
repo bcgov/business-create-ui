@@ -3,7 +3,7 @@
     <template #default>
       <thead>
         <tr>
-          <th>Name</th>
+          <th>Business Name</th>
           <th>Mailing Address</th>
           <th>Role</th>
         </tr>
@@ -12,11 +12,13 @@
       <tbody>
         <tr
           v-for="item in getAmalgamatingBusinesses"
-          :key="(item.type === 'lear' && item.identifier) || (item.type === 'foreign' && item.corpNumber)"
+          :key="key(item)"
         >
           <td class="business-name">
-            <v-icon color="gray9">mdi-domain</v-icon>
-            <strong>{{ name(item) }}</strong><br>{{ (item.type === 'lear') && item.email }}
+            <v-icon color="gray9">
+              mdi-domain
+            </v-icon>
+            <strong>{{ name(item) }}</strong><br>{{ email(item) }}
           </td>
 
           <td class="business-address">
@@ -57,15 +59,26 @@ import { BaseAddress } from '@bcrs-shared-components/base-address'
     BaseAddress
   }
 })
-export default class BusinessTable extends Vue {
+export default class BusinessTableSummary extends Vue {
   readonly AmlRoles = AmlRoles
 
   @Getter(useStore) getAmalgamatingBusinesses!: AmalgamatingBusinessIF[]
+
+  key (item: AmalgamatingBusinessIF): string {
+    if (item?.type === 'lear') return item.identifier
+    if (item?.type === 'foreign') return item.corpNumber
+    return null // should never happen
+  }
 
   name (item: AmalgamatingBusinessIF): string {
     if (item?.type === 'lear') return item.name
     if (item?.type === 'foreign') return item.legalName
     return '(Unknown)' // should never happen
+  }
+
+  email (item: AmalgamatingBusinessIF): string {
+    if (item?.type === 'lear') return item.email
+    return null // should never happen
   }
 
   jurisdiction (item: AmalgamatingBusinessIF): string {

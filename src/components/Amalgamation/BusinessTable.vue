@@ -15,10 +15,10 @@
       <tbody>
         <tr
           v-for="(item, index) in businesses"
-          :key="(item.type === 'lear' && item.identifier) || (item.type === 'foreign' && item.corpNumber)"
+          :key="key(item)"
         >
           <td class="business-name">
-            <strong>{{ name(item) }}</strong><br>{{ (item.type === 'lear') && item.email }}
+            <strong>{{ name(item) }}</strong><br>{{ email(item) }}
           </td>
 
           <td class="business-type">
@@ -159,10 +159,21 @@ export default class BusinessTable extends Vue {
     })
   }
 
+  key (item: AmalgamatingBusinessIF): string {
+    if (item?.type === 'lear') return item.identifier
+    if (item?.type === 'foreign') return item.corpNumber
+    return null // should never happen
+  }
+
   name (item: AmalgamatingBusinessIF): string {
     if (item?.type === 'lear') return item.name
     if (item?.type === 'foreign') return item.legalName
     return '(Unknown)' // should never happen
+  }
+
+  email (item: AmalgamatingBusinessIF): string {
+    if (item?.type === 'lear') return item.email
+    return null // should never happen
   }
 
   type (item: AmalgamatingBusinessIF): string {
