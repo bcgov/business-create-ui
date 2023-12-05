@@ -107,6 +107,13 @@ export default class BusinessTable extends Vue {
   // readonly isLear = (item: AmalgamatingBusinessIF): boolean => (item?.type === 'lear')
   // readonly isForeign = (item: AmalgamatingBusinessIF): boolean => (item?.type === 'foreign')
 
+  /** True if there a limited company in the table. */
+  get isAnyLimited (): boolean {
+    return this.businesses.some(business =>
+      (business.type === 'lear' && business.legalType === CorpTypeCd.BC_COMPANY)
+    )
+  }
+
   /**
    * This is the list of amalgamating businesses with computed statuses.
    * In other words, these are the business rules.
@@ -115,20 +122,19 @@ export default class BusinessTable extends Vue {
     return this.getAmalgamatingBusinesses.map(business => {
       /* eslint-disable brace-style */
 
-      // disallow foreign into ULC if not staff
-      // *** TODO: need to resolve this with FOREIGN rule
-      if (business.type === 'foreign' && this.isTypeBcUlcCompany && !this.isRoleStaff) {
-        business.status = AmalgamatingStatuses.ERROR_FOREIGN
-      }
-
       // disallow foreign altogether if not staff
       // (could happen if staff added it and regular user resumes draft)
-      else if (business.type === 'foreign' && !this.isRoleStaff) {
+      if (business.type === 'foreign' && !this.isRoleStaff) {
         business.status = AmalgamatingStatuses.ERROR_FOREIGN
       }
 
-      // assume business is not affiliated if we don't have address
-      else if (business.type === 'lear' && !business.address) {
+      // disallow foreign into ULC if there is also a limited
+      else if (business.type === 'foreign' && this.isTypeBcUlcCompany && this.isAnyLimited) {
+        business.status = AmalgamatingStatuses.ERROR_FOREIGN
+      }
+
+      // assume business is not affiliated if we don't have address (non-staff only)
+      else if (business.type === 'lear' && !business.address && !this.isRoleStaff) {
         business.status = AmalgamatingStatuses.ERROR_AFFILIATION
       }
 
@@ -142,7 +148,11 @@ export default class BusinessTable extends Vue {
         business.status = AmalgamatingStatuses.ERROR_NIGS
       }
 
+      // check if limited restoration
+      // *** TODO
+
       // check for future effective filing
+      // *** TODO
 
       // otherwise, status is OK
       else {
