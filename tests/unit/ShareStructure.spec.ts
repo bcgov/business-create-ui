@@ -6,7 +6,7 @@ import { useStore } from '@/store/store'
 import ShareStructure from '@/components/common/ShareStructure.vue'
 import { ShareClassIF } from '@/interfaces'
 import { waitForUpdate } from '../wait-for-update'
-import { CorpTypeCd } from '@bcrs-shared-components/enums'
+import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 
 const vuetify = new Vuetify({})
 setActivePinia(createPinia())

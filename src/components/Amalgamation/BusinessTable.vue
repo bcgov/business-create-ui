@@ -15,14 +15,14 @@
       <tbody>
         <tr
           v-for="(item, index) in businesses"
-          :key="item.businessId"
+          :key="item.identifier"
         >
           <td class="business-name">
             <strong>{{ item.name }}</strong><br>{{ item.email }}
           </td>
 
           <td class="business-type">
-            {{ GetCorpFullDescription(item.type) }}
+            {{ GetCorpFullDescription(item.legalType) }}
           </td>
 
           <td class="business-address">
@@ -30,12 +30,14 @@
               v-if="item.address"
               :address="item.address"
             />
-            <span v-else-if="item.jurisdiction">{{ item.jurisdiction }}</span>
+            <span v-else-if="item.foreignJurisdiction">{{ jurisdiction(item) }}</span>
             <span v-else>Affiliate to view</span>
           </td>
 
           <td class="business-role">
-            {{ item.role }}
+            <span v-if="item.role === AmlRoles.AMALGAMATING">Amalgamating Business</span>
+            <span v-else-if="item.role === AmlRoles.HOLDING">Holding Company</span>
+            <span v-else>(Unknown)</span>
           </td>
 
           <td class="business-status">
@@ -66,9 +68,10 @@
 <script lang="ts">
 import { Component, Emit, Vue, Watch } from 'vue-property-decorator'
 import { Getter, Action } from 'pinia-class'
+import { getName } from 'country-list'
 import { useStore } from '@/store/store'
-import { BusinessStatuses } from '@/enums'
-import { DefineCompanyIF } from '@/interfaces'
+import { AmalgamatingStatuses, AmlRoles } from '@/enums'
+import { AmalgamatingBusinessIF, DefineCompanyIF } from '@/interfaces'
 import { BaseAddress } from '@bcrs-shared-components/base-address'
 import BusinessStatus from './BusinessStatus.vue'
 import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
@@ -80,16 +83,17 @@ import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module
   }
 })
 export default class BusinessTable extends Vue {
+  readonly AmlRoles = AmlRoles
   readonly GetCorpFullDescription = GetCorpFullDescription
 
-  @Getter(useStore) getAmalgamatingBusinesses!: any[]
+  @Getter(useStore) getAmalgamatingBusinesses!: AmalgamatingBusinessIF[]
   @Getter(useStore) getDefineCompanyStep!: DefineCompanyIF
   @Getter(useStore) getNameTranslationsValid!: boolean
   @Getter(useStore) getShowErrors!: boolean
   @Getter(useStore) isBaseCompany!: boolean
   @Getter(useStore) isRoleStaff!: boolean
 
-  @Action(useStore) setAmalgamatingBusinesses!: (x: any[]) => void
+  @Action(useStore) setAmalgamatingBusinesses!: (x: AmalgamatingBusinessIF[]) => void
   @Action(useStore) setDefineCompanyStepValidity!: (x: boolean) => void
   @Action(useStore) setIgnoreChanges!: (x: boolean) => void
 
@@ -97,9 +101,20 @@ export default class BusinessTable extends Vue {
     // *** TODO: use "map" to compute status from other info
     //           eg, if business.goodStanding != true then status = ERROR_NIGS
     return this.getAmalgamatingBusinesses.map(business => {
-      if (!business.goodStanding) business.status = BusinessStatuses.ERROR_NIGS
+      if (business.type === 'lear' && !business.goodStanding) business.status = AmalgamatingStatuses.ERROR_NIGS
       return business
     })
+  }
+
+  jurisdiction (item: any): string {
+    const fj = item?.foreignJurisdiction
+    if (fj?.country) {
+      const country = getName(fj.country)
+      const region = (fj.region === 'FEDERAL' ? 'Federal' : fj.region)
+      if (region) return `${region}, ${country}`
+      return country
+    }
+    return null // should never happen
   }
 
   removeBusiness (index: number): void {
@@ -111,7 +126,7 @@ export default class BusinessTable extends Vue {
   @Watch('businesses', { deep: true, immediate: true })
   @Emit('valid')
   private emitValidity (): boolean {
-    return this.businesses.every(business => business.status === BusinessStatuses.OK)
+    return this.businesses.every(business => business.status === AmalgamatingStatuses.OK)
   }
 }
 </script>
@@ -167,7 +182,7 @@ export default class BusinessTable extends Vue {
       max-width: 120px;
     }
     & td.business-status {
-      max-width: 100px;
+      max-width: 120px;
     }
     & td.business-actions {
       max-width: 125px;

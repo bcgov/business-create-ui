@@ -25,65 +25,65 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
-import { BusinessStatuses } from '@/enums'
+import { AmalgamatingStatuses } from '@/enums'
 
 @Component({})
 export default class BusinessStatus extends Vue {
-  @Prop({ required: true }) readonly status!: BusinessStatuses
+  @Prop({ required: true }) readonly status!: AmalgamatingStatuses
 
   get icon (): string {
     switch (this.status) {
-      case BusinessStatuses.OK: return 'mdi-check'
+      case AmalgamatingStatuses.OK: return 'mdi-check'
 
-      case BusinessStatuses.ERROR_AFFILIATION:
-      case BusinessStatuses.ERROR_CCC_MISMATCH:
-      case BusinessStatuses.ERROR_FOREIGN:
-      case BusinessStatuses.ERROR_NIGS: return 'mdi-alert'
+      case AmalgamatingStatuses.ERROR_AFFILIATION:
+      case AmalgamatingStatuses.ERROR_CCC_MISMATCH:
+      case AmalgamatingStatuses.ERROR_FOREIGN:
+      case AmalgamatingStatuses.ERROR_NIGS: return 'mdi-alert'
 
-      default: return 'mdi-help' // should never happen
+      default: return 'mdi-alert-circle-outline' // should never happen
     }
   }
 
   get color (): string {
     switch (this.status) {
-      case BusinessStatuses.OK: return 'success'
+      case AmalgamatingStatuses.OK: return 'success'
 
-      case BusinessStatuses.ERROR_AFFILIATION:
-      case BusinessStatuses.ERROR_CCC_MISMATCH:
-      case BusinessStatuses.ERROR_FOREIGN:
-      case BusinessStatuses.ERROR_NIGS: return 'warning'
+      case AmalgamatingStatuses.ERROR_AFFILIATION:
+      case AmalgamatingStatuses.ERROR_CCC_MISMATCH:
+      case AmalgamatingStatuses.ERROR_FOREIGN:
+      case AmalgamatingStatuses.ERROR_NIGS: return 'warning'
 
-      default: return 'gray7' // should never happen
+      default: return 'error' // should never happen
     }
   }
 
   get text (): string {
     switch (this.status) {
-      case BusinessStatuses.OK: return 'Ready'
+      case AmalgamatingStatuses.OK: return 'Ready'
 
-      case BusinessStatuses.ERROR_AFFILIATION:
-      case BusinessStatuses.ERROR_CCC_MISMATCH:
-      case BusinessStatuses.ERROR_FOREIGN:
-      case BusinessStatuses.ERROR_NIGS: return 'Attention Required'
+      case AmalgamatingStatuses.ERROR_AFFILIATION:
+      case AmalgamatingStatuses.ERROR_CCC_MISMATCH:
+      case AmalgamatingStatuses.ERROR_FOREIGN:
+      case AmalgamatingStatuses.ERROR_NIGS: return 'Attention Required'
 
-      default: return 'Unknown' // should never happen
+      default: return '(Unknown)' // should never happen
     }
   }
 
   get tooltip (): string {
     switch (this.status) {
-      case BusinessStatuses.OK:
+      case AmalgamatingStatuses.OK:
         return ''
-      case BusinessStatuses.ERROR_AFFILIATION:
+      case AmalgamatingStatuses.ERROR_AFFILIATION:
         return 'This business is not affiliated with the currently selected BC Registries account. ' +
          'Affiliate this business with the account on My Business Registry page.'
-      case BusinessStatuses.ERROR_CCC_MISMATCH:
+      case AmalgamatingStatuses.ERROR_CCC_MISMATCH:
         return 'A BC Community Contribution Company must amalgamate to form a new BC Community ' +
           'Contribution Company.'
-      case BusinessStatuses.ERROR_FOREIGN:
+      case AmalgamatingStatuses.ERROR_FOREIGN:
         return 'A foreign corporation must not amalgamate with a limited company and continue as ' +
           'an unlimited liability company.'
-      case BusinessStatuses.ERROR_NIGS:
+      case AmalgamatingStatuses.ERROR_NIGS:
         return 'This business is not in good standing. This filing cannot be submitted until all ' +
           'businesses are in good standing.'
 

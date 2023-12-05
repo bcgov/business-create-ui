@@ -8,7 +8,7 @@ import BusinessName from '@/components/Restoration/BusinessName.vue'
 import { CorrectName } from '@bcrs-shared-components/correct-name/'
 import NameRequestInfo from '@/components/common/NameRequestInfo.vue'
 import { CorrectNameOptions, FilingTypes } from '@/enums'
-import { CorpTypeCd } from '@bcrs-shared-components/enums'
+import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import { vi } from 'vitest'
 
 // mock the console.warn function to hide "[Vuetify] Unable to locate target XXX"
