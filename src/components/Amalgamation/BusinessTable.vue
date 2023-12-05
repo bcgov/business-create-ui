@@ -75,7 +75,7 @@ import { Getter, Action } from 'pinia-class'
 import { getName } from 'country-list'
 import { useStore } from '@/store/store'
 import { AmalgamatingStatuses, AmlRoles } from '@/enums'
-import { AmalgamatingBusinessIF, DefineCompanyIF } from '@/interfaces'
+import { AmalgamatingBusinessIF } from '@/interfaces'
 import { BaseAddress } from '@bcrs-shared-components/base-address'
 import BusinessStatus from './BusinessStatus.vue'
 import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
@@ -91,17 +91,12 @@ export default class BusinessTable extends Vue {
   readonly GetCorpFullDescription = GetCorpFullDescription
 
   @Getter(useStore) getAmalgamatingBusinesses!: AmalgamatingBusinessIF[]
-  @Getter(useStore) getDefineCompanyStep!: DefineCompanyIF
-  @Getter(useStore) getNameTranslationsValid!: boolean
-  @Getter(useStore) getShowErrors!: boolean
-  @Getter(useStore) isBaseCompany!: boolean
   @Getter(useStore) isRoleStaff!: boolean
   @Getter(useStore) isTypeBcCcc!: boolean
   @Getter(useStore) isTypeBcUlcCompany!: boolean
 
   @Action(useStore) setAmalgamatingBusinesses!: (x: AmalgamatingBusinessIF[]) => void
   @Action(useStore) setDefineCompanyStepValidity!: (x: boolean) => void
-  @Action(useStore) setIgnoreChanges!: (x: boolean) => void
 
   // *** I'M STILL WONDERING IF I WANT TO USE THESE
   // readonly isLear = (item: AmalgamatingBusinessIF): boolean => (item?.type === 'lear')
@@ -196,6 +191,7 @@ export default class BusinessTable extends Vue {
   removeBusiness (index: number): void {
     const temp = this.getAmalgamatingBusinesses
     temp.splice(index, 1)
+    // set updated list to trigger reactivity
     this.setAmalgamatingBusinesses(temp)
   }
 

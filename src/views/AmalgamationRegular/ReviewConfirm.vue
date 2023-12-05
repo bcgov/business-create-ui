@@ -34,7 +34,7 @@
           label="Amalgamating Businesses Information"
         />
         <div class="pa-4">
-          [*** TODO: Amalgamating Businesses summary component ***]
+          <BusinessTableSummary />
         </div>
       </v-card>
 
@@ -253,16 +253,18 @@ import CardHeader from '@/components/common/CardHeader.vue'
 import Certify from '@/components/common/Certify.vue'
 import { CourtOrderPoa } from '@bcrs-shared-components/court-order-poa'
 import { DocumentDelivery } from '@bcrs-shared-components/document-delivery'
+import BusinessTableSummary from '@/components/Amalgamation/BusinessTableSummary.vue'
 import IncorporationDateTime from '@/components/Incorporation/IncorporationDateTime.vue'
 import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
 import ListShareClass from '@/components/common/ListShareClass.vue'
 import SummaryDefineCompany from '@/components/common/SummaryDefineCompany.vue'
-import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 import StaffPayment from '@/components/common/StaffPayment.vue'
+import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 import { FilingNames } from '@bcrs-shared-components/enums'
 
 @Component({
   components: {
+    BusinessTableSummary,
     CardHeader,
     Certify,
     CourtOrderPoa,
