@@ -127,8 +127,6 @@
       </ul>
     </v-row> -->
 
-    <!-- FOR DEBUGGING -->
-    <!-- <pre>getAmalgamatingBusinesses={{ getAmalgamatingBusinesses }}</pre> -->
     <BusinessTable
       class="mt-8"
       :class="{ 'invalid-section': getShowErrors && !businessTableValid }"
@@ -138,7 +136,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins } from 'vue-property-decorator'
+import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { CommonMixin } from '@/mixins'
@@ -161,11 +159,10 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
   @Getter(useStore) isAmalgamationFilingHorizontal!: boolean
   @Getter(useStore) isRoleStaff!: boolean
 
-  @Action(useStore) setAmalgamatingBusinesses!: (x: Array<any>) => void
+  @Action(useStore) setAmalgamatingBusinesses!: (x: Array<AmalgamatingBusinessIF>) => void
   @Action(useStore) setAmalgamatingBusinessesValid!: (x: boolean) => void
 
   // Local properties
-  amalgamatingBusinessesValid = false
   amalgamatingBusinesses = []
   initialBusinessLookupObject = EmptyBusinessLookup
   businessTableValid = false
@@ -247,6 +244,18 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
     this.isAddingAmalgamatingBusiness = false
     this.setAmalgamatingBusinessesValid(true)
   }
+
+  /** Sets validity according to various flags. */
+  @Watch('businessTableValid')
+  @Watch('isAddingAmalgamatingBusiness')
+  @Watch('isAddingAmalgamatingForeignBusiness')
+  private onBusinessTableValid (): void {
+    this.setAmalgamatingBusinessesValid(
+      this.businessTableValid &&
+      !this.isAddingAmalgamatingBusiness &&
+      !this.isAddingAmalgamatingForeignBusiness
+    )
+  }
 }
 </script>
 
@@ -256,5 +265,4 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
 .v-btn:not(.v-btn--round).v-size--default {
   height: 44px;
 }
-
 </style>

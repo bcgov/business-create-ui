@@ -42,7 +42,7 @@ export type AmalgamatingBusinessIF = AmalgamatingLearIF | AmalgamatingForeignIF
 /** State interface for amalgamation-specific data. */
 export interface AmalgamationStateIF {
   amalgamatingBusinesses: Array<AmalgamatingBusinessIF>
-  courtApproval: boolean
   amalgamatingBusinessesValid: boolean
+  courtApproval: boolean
   type: AmalgamationTypes
 }
