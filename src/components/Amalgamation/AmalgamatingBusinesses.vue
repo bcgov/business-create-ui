@@ -230,11 +230,7 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
         goodStanding: business.goodStanding
       } as AmalgamatingBusinessIF
 
-      if (this.amalgamatingBusinesses) {
-        if (!this.amalgamatingBusinesses.find(b => b.identifier === business.identifier)) {
-          this.amalgamatingBusinesses.push(tingBusiness)
-        }
-      } else {
+      if (!this.amalgamatingBusinesses.find(b => b.identifier === business.identifier)) {
         this.amalgamatingBusinesses.push(tingBusiness)
       }
     }
