@@ -324,6 +324,7 @@ export const stateModel: StateModelIF = {
   },
   amalgamation: {
     amalgamatingBusinesses: cloneDeep(AMALGAMATING_BUSINESSES),
+    amalgamatingBusinessesValid: false,
     courtApproval: null,
     type: null
   },
