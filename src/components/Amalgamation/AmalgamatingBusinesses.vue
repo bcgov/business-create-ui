@@ -215,26 +215,25 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
       business.officeAddress = data[2]
     }
 
-    const tingBusiness = {
-      type: 'lear',
-      role: AmlRoles.AMALGAMATING,
-      identifier: business.identifier,
-      name: business.legalName,
-      email: business.businessContact.email,
-      legalType: business.legalType,
-      address: business.officeAddress.registeredOffice.mailingAddress,
-      goodStanding: business.goodStanding
-    } as AmalgamatingBusinessIF
-
-    // If the business is not null (LEAR Entity)
+    // If the business is not null (LEAR Entity), create from it a TING business following the interface.
     // If the amalgamating businesses array is not empty, check if identifier already exists.
     // If identifier already exists, don't add the business to the array.
     if (business) {
+      const tingBusiness = {
+        type: 'lear',
+        role: AmlRoles.AMALGAMATING,
+        identifier: business.identifier,
+        name: business.legalName,
+        email: business.businessContact.email,
+        legalType: business.legalType,
+        address: business.officeAddress.registeredOffice.mailingAddress,
+        goodStanding: business.goodStanding
+      } as AmalgamatingBusinessIF
+
       if (this.amalgamatingBusinesses) {
-        const businessExists = this.amalgamatingBusinesses.find(
-          (id) => id.identifier === business.identifier
-        )
-        if (!businessExists) this.amalgamatingBusinesses.push(tingBusiness)
+        if (!this.amalgamatingBusinesses.find(b => b.identifier === business.identifier)) {
+          this.amalgamatingBusinesses.push(tingBusiness)
+        }
       } else {
         this.amalgamatingBusinesses.push(tingBusiness)
       }
