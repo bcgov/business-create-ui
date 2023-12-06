@@ -242,13 +242,17 @@ describe('Name Request Info component without a NR', () => {
 
   it('renders the numbered company content', () => {
     const listItems = wrapper.vm.$el.querySelectorAll('.numbered-company-list-items li')
-    expect(listItems.length).toEqual(6)
+    expect(listItems.length).toEqual(4)
 
     expect(listItems[0].textContent).toContain('[Incorporation Number] B.C. LTD.')
-    expect(listItems[1].textContent).toContain('Entity Type: BC Benefit Company')
-    expect(listItems[2].textContent).toContain('Request Type: New Business')
-    expect(listItems[3].textContent).toContain('You will be filing this Incorporation Application')
-    expect(listItems[4].textContent).toContain('Your Incorporation Number will be generated at the end')
-    expect(listItems[5].textContent).toContain('It is not possible to request a specific Incorporation Number')
+    expect(listItems[1].textContent).toContain('You will be filing this Incorporation Application')
+    expect(listItems[2].textContent).toContain('Your Incorporation Number will be generated at the end')
+    expect(listItems[3].textContent).toContain('It is not possible to request a specific Incorporation Number')
+  })
+
+  it('renders the resulting business type', () => {
+    const listItems = wrapper.vm.$el.querySelectorAll('.entity-type-description li')
+    expect(listItems.length).toEqual(1)
+    expect(listItems[0].textContent).toContain(' BC Benefit Company ')
   })
 })

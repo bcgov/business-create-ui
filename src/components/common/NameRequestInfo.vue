@@ -146,8 +146,10 @@
             sm="9"
             class="mt-4"
           >
-            <ul>
-              {{ getEntityTypeDescription }}
+            <ul class="entity-type-description">
+              <li>
+                {{ getEntityTypeDescription }}
+              </li>
             </ul>
           </v-col>
         </v-row>
