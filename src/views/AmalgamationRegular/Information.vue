@@ -27,7 +27,7 @@
         helpLabel="Help with Business Type"
       >
         <template #content>
-          [*** TODO: help text component ***]
+          <HelpText />
         </template>
       </ExpandableHelp>
 
@@ -50,6 +50,7 @@ import { DefineCompanyIF } from '@/interfaces'
 import { CommonMixin } from '@/mixins'
 import { RouteNames } from '@/enums'
 import { ExpandableHelp } from '@bcrs-shared-components/expandable-help'
+import HelpText from '@/components/common/HelpText.vue'
 import NameRequestInfo from '@/components/common/NameRequestInfo.vue'
 import NameTranslations from '@/components/common/NameTranslations.vue'
 import AmalgamatingBusinesses from '@/components/Amalgamation/AmalgamatingBusinesses.vue'
@@ -58,6 +59,7 @@ import AmalgamatingBusinesses from '@/components/Amalgamation/AmalgamatingBusine
   components: {
     AmalgamatingBusinesses,
     ExpandableHelp,
+    HelpText,
     NameRequestInfo,
     NameTranslations
   }

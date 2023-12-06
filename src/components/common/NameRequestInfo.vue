@@ -110,7 +110,7 @@
             sm="3"
             class="pr-4"
           >
-            <label>Name</label>
+            <label>Resulting Business Name</label>
           </v-col>
 
           <v-col
@@ -120,12 +120,6 @@
             <ul class="numbered-company-list-items">
               <li id="numbered-company-title">
                 <strong>[Incorporation Number]</strong> B.C. LTD.
-              </li>
-              <li class="mt-4">
-                <strong>Entity Type:</strong> {{ getEntityTypeDescription }}
-              </li>
-              <li class="mt-2">
-                <strong>Request Type:</strong> {{ requestType }}
               </li>
               <li class="bullet-point mt-4 ml-6">
                 You will be filing this Incorporation Application for a company
@@ -138,6 +132,22 @@
               <li class="bullet-point ml-6">
                 It is not possible to request a specific Incorporation Number.
               </li>
+            </ul>
+          </v-col>
+          <v-col
+            cols="12"
+            sm="3"
+            class="pr-4 mt-4"
+          >
+            <label>Resulting Business Type</label>
+          </v-col>
+          <v-col
+            cols="12"
+            sm="9"
+            class="mt-4"
+          >
+            <ul>
+              {{ getEntityTypeDescription }}
             </ul>
           </v-col>
         </v-row>
