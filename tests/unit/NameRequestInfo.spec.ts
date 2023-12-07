@@ -4,7 +4,7 @@ import { mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { useStore } from '@/store/store'
 import NameRequestInfo from '@/components/common/NameRequestInfo.vue'
-import { NameRequestStates } from '@/enums'
+import { NameRequestStates, FilingTypes } from '@/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import { NameRequestIF } from '@/interfaces'
 
@@ -216,6 +216,47 @@ describe('Name Request Info with a NR', () => {
   })
 })
 
+describe('Numbered Amalgamation Info component', () => {
+  let wrapper: any
+
+  beforeEach(() => {
+    store.stateModel.tombstone.filingType = FilingTypes.AMALGAMATION
+    store.stateModel.tempId = 'T1234567'
+    store.stateModel.entityType = CorpTypeCd.BENEFIT_COMPANY
+    store.stateModel.nameRequest.nrNum = null
+    store.stateModel.nameRequestApprovedName = null
+    wrapper = mount(NameRequestInfo, { vuetify })
+  })
+
+  afterEach(() => {
+    wrapper.destroy()
+  })
+
+  it('renders numbered company info', () => {
+    expect(wrapper.vm.$el.querySelector('#numbered-amalgamation-info').textContent)
+      .toContain('Resulting Business Name')
+
+    expect(wrapper.vm.$el.querySelector('.numbered-company-list-items')).toBeDefined()
+  })
+
+  it('renders the numbered amalgamation content', () => {
+    const listItems = wrapper.vm.$el.querySelectorAll('.numbered-company-list-items li')
+    expect(listItems.length).toEqual(4)
+
+    expect(listItems[0].textContent).toContain('[Incorporation Number] B.C. LTD.')
+    expect(listItems[1].textContent).toContain('You will be filing this Incorporation Application')
+    expect(listItems[2].textContent).toContain('Your Incorporation Number will be generated at the end')
+    expect(listItems[3].textContent).toContain('It is not possible to request a specific Incorporation Number')
+  })
+
+  it('renders the entity type description content', () => {
+    const listItems = wrapper.vm.$el.querySelectorAll('.entity-type-description li')
+    expect(listItems.length).toEqual(1)
+
+    expect(listItems[0].textContent).toContain(' BC Benefit Company ')
+  })
+})
+
 describe('Name Request Info component without a NR', () => {
   let wrapper: any
 
@@ -226,6 +267,7 @@ describe('Name Request Info component without a NR', () => {
     store.stateModel.tempId = 'T1234567'
     store.stateModel.nameRequest.nrNum = null
     store.stateModel.nameRequestApprovedName = null
+    store.stateModel.tombstone.filingType = FilingTypes.REGISTRATION
     wrapper = mount(NameRequestInfo, { vuetify })
   })
 
