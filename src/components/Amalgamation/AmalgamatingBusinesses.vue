@@ -106,7 +106,7 @@
       <ul>
         Amalgamating Businesses: <br><br>
         <li
-          v-for="(business, index) in amalgamatingBusinesses"
+          v-for="(business, index) in getAmalgamatingBusinesses"
           :key="index"
         >
           <template v-if="business.foundingDate">
@@ -163,7 +163,6 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
   @Action(useStore) setAmalgamatingBusinessesValid!: (x: boolean) => void
 
   // Local properties
-  amalgamatingBusinesses = []
   initialBusinessLookupObject = EmptyBusinessLookup
   businessTableValid = false
 
@@ -172,11 +171,6 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
   isAddingAmalgamatingForeignBusiness = false
 
   readonly BusinessLookupServices = BusinessLookupServices
-
-  // If continuing a draft, initialize the amalgamatingBusinesses array as the previously saved one.
-  mounted (): void {
-    if (this.getAmalgamatingBusinesses) this.amalgamatingBusinesses = this.getAmalgamatingBusinesses
-  }
 
   // Cancel button in "Add an Amalgamating Business" is pressed.
   addAmalgamatingBusinessCancel (): void {
@@ -221,6 +215,8 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
     // If the amalgamating businesses array is not empty, check if identifier already exists.
     // If identifier already exists, don't add the business to the array.
     if (business) {
+      const amalgamatingBusinesses = this.getAmalgamatingBusinesses
+
       const tingBusiness = {
         type: 'lear',
         role: AmlRoles.AMALGAMATING,
@@ -232,13 +228,13 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
         goodStanding: business.goodStanding
       } as AmalgamatingBusinessIF
 
-      if (!this.amalgamatingBusinesses.find(b => b.identifier === business.identifier)) {
-        this.amalgamatingBusinesses.push(tingBusiness)
+      if (!amalgamatingBusinesses.find((b: any) => b.identifier === business.identifier)) {
+        amalgamatingBusinesses.push(tingBusiness)
+
+        // Set the new amalgamated businesses array in the store.
+        this.setAmalgamatingBusinesses(amalgamatingBusinesses)
       }
     }
-
-    // Set the amalgamated businesses array in the store.
-    this.setAmalgamatingBusinesses(this.amalgamatingBusinesses)
 
     // Close the "Add an Amalgamating Business" Panel.
     this.isAddingAmalgamatingBusiness = false
