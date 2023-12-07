@@ -176,6 +176,11 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
 
   readonly BusinessLookupServices = BusinessLookupServices
 
+  // If continuing a draft, initialize the amalgamatingBusinesses array as the previously saved one.
+  mounted (): void {
+    if (this.getAmalgamatingBusinesses) this.amalgamatingBusinesses = this.getAmalgamatingBusinesses
+  }
+
   // Cancel button in "Add an Amalgamating Business" is pressed.
   addAmalgamatingBusinessCancel (): void {
     this.isAddingAmalgamatingBusiness = false
