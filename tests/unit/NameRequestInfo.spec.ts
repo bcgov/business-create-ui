@@ -215,6 +215,7 @@ describe('Name Request Info with a NR', () => {
     expect(listItems[5].textContent).toContain('Condition/Consent: Not Received')
   })
 })
+
 describe('Numbered Amalgamation Info component', () => {
   let wrapper: any
 
@@ -255,6 +256,7 @@ describe('Numbered Amalgamation Info component', () => {
     expect(listItems[0].textContent).toContain(' BC Benefit Company ')
   })
 })
+
 describe('Name Request Info component without a NR', () => {
   let wrapper: any
 
