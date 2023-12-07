@@ -238,7 +238,7 @@ describe('Numbered Amalgamation Info component', () => {
     expect(wrapper.vm.$el.querySelector('.numbered-amalgamation-list-items')).toBeDefined()
   })
 
-  it('renders the numbered company content', () => {
+  it('renders the numbered amalgamation content', () => {
     const listItems = wrapper.vm.$el.querySelectorAll('.numbered-amalgamation-list-items li')
     expect(listItems.length).toEqual(4)
 
@@ -246,6 +246,13 @@ describe('Numbered Amalgamation Info component', () => {
     expect(listItems[1].textContent).toContain('You will be filing this Incorporation Application')
     expect(listItems[2].textContent).toContain('Your Incorporation Number will be generated at the end')
     expect(listItems[3].textContent).toContain('It is not possible to request a specific Incorporation Number')
+  })
+
+  it('renders the entity type description content', () => {
+    const listItems = wrapper.vm.$el.querySelectorAll('.entity-type-description li')
+    expect(listItems.length).toEqual(1)
+
+    expect(listItems[0].textContent).toContain(' BC Benefit Company ')
   })
 })
 describe('Name Request Info component without a NR', () => {
