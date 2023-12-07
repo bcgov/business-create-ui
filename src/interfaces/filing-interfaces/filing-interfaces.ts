@@ -1,5 +1,5 @@
-import { BusinessAddressIF, CourtOrderIF, RegisteredRecordsAddressesIF, NaicsIF, NameTranslationIF,
-  OfficeAddressIF, PartyIF, ShareClassIF, SpecialResolutionIF } from '@/interfaces'
+import { AmalgamatingBusinessIF, BusinessAddressIF, CourtOrderIF, RegisteredRecordsAddressesIF, NaicsIF,
+  NameTranslationIF, OfficeAddressIF, PartyIF, ShareClassIF, SpecialResolutionIF } from '@/interfaces'
 import { AmalgamationTypes, ApprovalTypes, BusinessTypes, DissolutionStatementTypes, DissolutionTypes,
   FilingTypes, RestorationTypes, RelationshipTypes } from '@/enums'
 import { CorrectNameOptions } from '@bcrs-shared-components/enums/'
@@ -41,6 +41,8 @@ export interface AmalgamationFilingIF {
     identifier: string
   }
   amalgamation: {
+    amalgamatingBusinesses: AmalgamatingBusinessIF[]
+    courtApproval: boolean
     type: AmalgamationTypes
     nameRequest: NameRequestFilingIF
     nameTranslations: NameTranslationIF[]
