@@ -203,6 +203,20 @@
         </v-row>
       </div>
     </template>
+    <template v-else-if="isAmalgamationFiling && !getNameRequestNumber">
+      <!-- Numbered Amalgamation-->
+      <div class="section-container">
+        <v-row
+          id="numbered-amalgamation-info"
+          no-gutters
+        >
+          <v-col
+            cols="12"
+            sm="3"
+            class="pr-4"
+          >
+            <label>Resulting Business Name</label>
+          </v-col>
 
     <!-- display other numbered company info -->
     <template v-else>
@@ -278,6 +292,7 @@ export default class NameRequestInfo extends Mixins(CommonMixin, DateMixin) {
   @Getter(useStore) isTypeBcCcc!: boolean
   @Getter(useStore) isTypeBcUlcCompany!: boolean
   @Getter(useStore) isTypeSoleProp: boolean
+  @Getter(useStore) isAmalgamationFiling!: boolean
 
   get numberedCompanySuffix (): string {
     if (this.isTypeBcCcc) return 'B.C. COMMUNITY CONTRIBUTION COMPANY'
