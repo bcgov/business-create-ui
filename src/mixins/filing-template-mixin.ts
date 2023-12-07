@@ -234,6 +234,16 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
       this.setAmalgamationCourtApproval(draftFiling.amalgamationApplication.courtApproval)
     }
 
+    // restore the amalgamating businesses array
+    if (draftFiling.amalgamation.amalgamatingBusinesses) {
+      this.setAmalgamatingBusinesses(draftFiling.amalgamation.amalgamatingBusinesses)
+    }
+
+    // restore the amalgamation court approval
+    if (draftFiling.amalgamation.courtApproval) {
+      this.setAmalgamationCourtApproval(draftFiling.amalgamation.courtApproval)
+    }
+
     // restore Office Addresses
     if (draftFiling.amalgamationApplication.offices) {
       this.setOfficeAddresses(draftFiling.amalgamationApplication.offices)
