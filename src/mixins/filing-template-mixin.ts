@@ -3,8 +3,8 @@ import { Getter, Action } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { DateMixin } from '@/mixins'
 import {
-  AmalgamationFilingIF, BusinessAddressIF, ContactPointIF, CertifyIF, CompletingPartyIF, CourtOrderIF,
-  CourtOrderStepIF, CreateMemorandumIF, CreateResolutionIF, CreateRulesIF, DefineCompanyIF,
+  AmalgamatingBusinessIF, AmalgamationFilingIF, BusinessAddressIF, ContactPointIF, CertifyIF, CompletingPartyIF,
+  CourtOrderIF, CourtOrderStepIF, CreateMemorandumIF, CreateResolutionIF, CreateRulesIF, DefineCompanyIF,
   DissolutionFilingIF, DissolutionStatementIF, DocumentDeliveryIF, EffectiveDateTimeIF, EmptyContactPoint,
   EmptyNaics, IncorporationAgreementIF, IncorporationFilingIF, NaicsIF, NameRequestFilingIF,
   NameTranslationIF, OfficeAddressIF, OrgPersonIF, PartyIF, PeopleAndRoleIF, RegisteredRecordsAddressesIF,
@@ -24,6 +24,8 @@ import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module/'
 export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Getter(useStore) getAddPeopleAndRoleStep!: PeopleAndRoleIF
   @Getter(useStore) getAffidavitStep!: UploadAffidavitIF
+  @Getter(useStore) getAmalgamatingBusinesses!: AmalgamatingBusinessIF[]
+  @Getter(useStore) getAmalgamationCourtApproval!: boolean
   @Getter(useStore) getAmalgamationType!: AmalgamationTypes
   @Getter(useStore) getBusinessContact!: ContactPointIF
   @Getter(useStore) getBusinessFoundingDate!: string
@@ -70,6 +72,8 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
 
   @Action(useStore) setAffidavit!: (x: UploadAffidavitIF) => void
   @Action(useStore) setAmalgamationType!: (x: AmalgamationTypes) => void
+  @Action(useStore) setAmalgamatingBusinesses!: (x: Array<any>) => void
+  @Action(useStore) setAmalgamationCourtApproval!: (x: boolean) => void
   @Action(useStore) setBusinessAddress!: (x: OfficeAddressIF) => void
   @Action(useStore) setBusinessContact!: (x: ContactPointIF) => void
   @Action(useStore) setCertifyState!: (x: CertifyIF) => void
@@ -146,6 +150,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
         identifier: this.getTempId
       },
       amalgamation: {
+        amalgamatingBusinesses: this.getAmalgamatingBusinesses,
         type: this.getAmalgamationType,
         nameRequest: {
           legalType: this.getEntityType
@@ -160,6 +165,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
             ? { extension: +this.getBusinessContact.extension }
             : {}
         },
+        courtApproval: this.getAmalgamationCourtApproval,
         parties: fixNullAddressType(this.getAddPeopleAndRoleStep.orgPeople)
       }
     }
@@ -216,6 +222,16 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
 
     // restore Entity Type
     this.setEntityType(draftFiling.amalgamation.nameRequest.legalType)
+
+    // restore the amalgamating businesses array
+    if (draftFiling.amalgamation.amalgamatingBusinesses) {
+      this.setAmalgamatingBusinesses(draftFiling.amalgamation.amalgamatingBusinesses)
+    }
+
+    // restore the amalgamation court approval
+    if (draftFiling.amalgamation.courtApproval) {
+      this.setAmalgamationCourtApproval(draftFiling.amalgamation.courtApproval)
+    }
 
     // restore Office Addresses
     // *** TODO: verify whether we need to assign fallback
