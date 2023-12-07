@@ -97,12 +97,11 @@
         </v-row>
       </div>
     </template>
-
-    <template v-else>
-      <!-- Numbered Company -->
+    <template v-else-if="isAmalgamationFiling && !getNameRequestNumber">
+      <!-- Numbered Amalgamation-->
       <div class="section-container">
         <v-row
-          id="numbered-company-info"
+          id="numbered-amalgamation-info"
           no-gutters
         >
           <v-col
@@ -117,7 +116,7 @@
             cols="12"
             sm="9"
           >
-            <ul class="numbered-company-list-items">
+            <ul class="numbered-amalgamation-list-items">
               <li id="numbered-company-title">
                 <strong>[Incorporation Number]</strong> B.C. LTD.
               </li>
@@ -155,6 +154,51 @@
         </v-row>
       </div>
     </template>
+    <template v-else>
+      <!-- Numbered Company -->
+      <div class="section-container">
+        <v-row
+          id="numbered-company-info"
+          no-gutters
+        >
+          <v-col
+            cols="12"
+            sm="3"
+            class="pr-4"
+          >
+            <label>Name</label>
+          </v-col>
+
+          <v-col
+            cols="12"
+            sm="9"
+          >
+            <ul class="numbered-company-list-items">
+              <li id="numbered-company-title">
+                <strong>[Incorporation Number]</strong> B.C. LTD.
+              </li>
+              <li class="mt-4">
+                <strong>Entity Type:</strong> {{ getEntityTypeDescription }}
+              </li>
+              <li class="mt-2">
+                <strong>Request Type:</strong> {{ requestType }}
+              </li>
+              <li class="bullet-point mt-4 ml-6">
+                You will be filing this Incorporation Application for a company
+                created by adding "B.C. LTD." after the Incorporation Number.
+              </li>
+              <li class="bullet-point ml-6">
+                Your Incorporation Number will be generated at the end of the filing
+                transaction.
+              </li>
+              <li class="bullet-point ml-6">
+                It is not possible to request a specific Incorporation Number.
+              </li>
+            </ul>
+          </v-col>
+        </v-row>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -183,6 +227,7 @@ export default class NameRequestInfo extends Mixins(CommonMixin, DateMixin) {
   @Getter(useStore) getNameRequestApprovedName!: string
   @Getter(useStore) getNameRequestNumber!: string
   @Getter(useStore) isTypeSoleProp: boolean
+  @Getter(useStore) isAmalgamationFiling!: boolean
 
   /** The entity type description.  */
   get getEntityTypeDescription (): string {
@@ -198,6 +243,7 @@ export default class NameRequestInfo extends Mixins(CommonMixin, DateMixin) {
     switch (this.getNameRequest.request_action_cd) {
       case NrRequestActionCodes.NEW_BUSINESS: return 'New Business'
       case NrRequestActionCodes.RESTORE: return 'Restoration Request'
+      case NrRequestActionCodes.AMALGAMATE: return 'Amalgamation'
     }
     return '' // should never happen
   }
