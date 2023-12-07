@@ -24,16 +24,15 @@
               <li id="name-request-title">
                 <strong>{{ getNameRequestNumber }}</strong> - {{ getNameRequestApprovedName }}
               </li>
-
-              <li class="bullet-point mt-4">
+              <li class="mt-4">
                 <strong>Entity Type:</strong> {{ getEntityTypeDescription }}
               </li>
-              <li class="bullet-point mt-4"><strong>Request Type:</strong> {{ requestType }}</li>
-              <li class="bullet-point mt-4"><strong>Expiry Date:</strong> {{ expirationDate }}</li>
-              <li class="bullet-point mt-4"><strong>Status:</strong> {{ state }}</li>
+              <li><strong>Request Type:</strong> {{ requestType }}</li>
+              <li><strong>Expiry Date:</strong> {{ expirationDate }}</li>
+              <li><strong>Status:</strong> {{ state }}</li>
               <li
                 v-if="isConditional"
-                class="bullet-point mt-4"
+                id="condition-consent"
               >
                 <strong>Condition/Consent:</strong> {{ conditionConsent }}
               </li>
@@ -117,11 +116,11 @@
             cols="12"
             sm="9"
           >
-            <ul class="numbered-amalgamation-list-items">
+            <ul class="numbered-company-list-items">
               <li id="numbered-company-title">
                 <strong>[Incorporation Number]</strong> B.C. LTD.
               </li>
-              <li class="bullet-point ml-6">
+              <li class="bullet-point mt-4 ml-6">
                 You will be filing this Incorporation Application for a company
                 created by adding "B.C. LTD." after the Incorporation Number.
               </li>
@@ -315,15 +314,6 @@ ul {
 }
 
 .numbered-company-list-items {
-  .bullet-point::before {
-    content: "\2022";
-    display: inline-block;
-    width: 1.5em;
-    margin-left: -1.5em;
-  }
-}
-
-.numbered-amalgamation-list-items {
   .bullet-point::before {
     content: "\2022";
     display: inline-block;

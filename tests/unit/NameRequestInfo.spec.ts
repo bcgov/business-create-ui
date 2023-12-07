@@ -236,11 +236,11 @@ describe('Numbered Amalgamation Info component', () => {
     expect(wrapper.vm.$el.querySelector('#numbered-amalgamation-info').textContent)
       .toContain('Resulting Business Name')
 
-    expect(wrapper.vm.$el.querySelector('.numbered-amalgamation-list-items')).toBeDefined()
+    expect(wrapper.vm.$el.querySelector('.numbered-company-list-items')).toBeDefined()
   })
 
   it('renders the numbered amalgamation content', () => {
-    const listItems = wrapper.vm.$el.querySelectorAll('.numbered-amalgamation-list-items li')
+    const listItems = wrapper.vm.$el.querySelectorAll('.numbered-company-list-items li')
     expect(listItems.length).toEqual(4)
 
     expect(listItems[0].textContent).toContain('[Incorporation Number] B.C. LTD.')
