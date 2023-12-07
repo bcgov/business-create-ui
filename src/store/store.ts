@@ -746,6 +746,16 @@ export const useStore = defineStore('store', {
       return this.stateModel.amalgamation.amalgamatingBusinesses
     },
 
+    /** The amalgamating businesses validity. */
+    getAmalgamatingBusinessesValid (): boolean {
+      return this.stateModel.amalgamation.amalgamatingBusinessesValid
+    },
+
+    /** The amalgamation court approval. */
+    getAmalgamationCourtApproval (): boolean {
+      return this.stateModel.amalgamation.courtApproval
+    },
+
     //
     // Dissolution getters
     //
@@ -1223,6 +1233,12 @@ export const useStore = defineStore('store', {
     },
     setAmalgamatingBusinesses (amalgamatingBusinesses: Array<AmalgamatingBusinessIF>) {
       this.stateModel.amalgamation.amalgamatingBusinesses = amalgamatingBusinesses
+    },
+    setAmalgamatingBusinessesValid (valid: boolean) {
+      this.stateModel.amalgamation.amalgamatingBusinessesValid = valid
+    },
+    setAmalgamationCourtApproval (courtApproval: boolean) {
+      this.stateModel.amalgamation.courtApproval = courtApproval
     },
     setAmalgamationType (type: AmalgamationTypes) {
       this.stateModel.amalgamation.type = type
