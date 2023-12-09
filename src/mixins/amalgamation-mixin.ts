@@ -108,7 +108,9 @@ export default class AmalgamationMixin extends Vue {
 
   // check if limited restoration
   // *** TODO
+  // *** need to look at all business' filings
 
   // check for future effective filing
   // *** TODO
+  // *** need to look at all business' filings
 }
