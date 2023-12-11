@@ -25,24 +25,24 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
-import { AmalgamatingStatuses } from '@/enums'
+import { AmlStatuses } from '@/enums'
 
 @Component({})
 export default class BusinessStatus extends Vue {
-  @Prop({ required: true }) readonly status!: AmalgamatingStatuses
+  @Prop({ required: true }) readonly status!: AmlStatuses
 
   get icon (): string {
     switch (this.status) {
-      case AmalgamatingStatuses.OK:
+      case AmlStatuses.OK:
         return 'mdi-check'
 
-      case AmalgamatingStatuses.ERROR_AFFILIATION:
-      case AmalgamatingStatuses.ERROR_CCC_MISMATCH:
-      case AmalgamatingStatuses.ERROR_FOREIGN:
-      case AmalgamatingStatuses.ERROR_FOREIGN_UNLIMITED:
-      case AmalgamatingStatuses.ERROR_FUTURE_EFFECTIVE_FILING:
-      case AmalgamatingStatuses.ERROR_LIMITED_RESTORATION:
-      case AmalgamatingStatuses.ERROR_NIGS:
+      case AmlStatuses.ERROR_NOT_AFFILIATED:
+      case AmlStatuses.ERROR_CCC_MISMATCH:
+      case AmlStatuses.ERROR_FOREIGN:
+      case AmlStatuses.ERROR_FOREIGN_UNLIMITED:
+      case AmlStatuses.ERROR_FUTURE_EFFECTIVE_FILING:
+      case AmlStatuses.ERROR_LIMITED_RESTORATION:
+      case AmlStatuses.ERROR_NOT_IN_GOOD_STANDING:
         return 'mdi-alert'
 
       default:
@@ -52,16 +52,16 @@ export default class BusinessStatus extends Vue {
 
   get color (): string {
     switch (this.status) {
-      case AmalgamatingStatuses.OK:
+      case AmlStatuses.OK:
         return 'success'
 
-      case AmalgamatingStatuses.ERROR_AFFILIATION:
-      case AmalgamatingStatuses.ERROR_CCC_MISMATCH:
-      case AmalgamatingStatuses.ERROR_FOREIGN:
-      case AmalgamatingStatuses.ERROR_FOREIGN_UNLIMITED:
-      case AmalgamatingStatuses.ERROR_FUTURE_EFFECTIVE_FILING:
-      case AmalgamatingStatuses.ERROR_LIMITED_RESTORATION:
-      case AmalgamatingStatuses.ERROR_NIGS:
+      case AmlStatuses.ERROR_NOT_AFFILIATED:
+      case AmlStatuses.ERROR_CCC_MISMATCH:
+      case AmlStatuses.ERROR_FOREIGN:
+      case AmlStatuses.ERROR_FOREIGN_UNLIMITED:
+      case AmlStatuses.ERROR_FUTURE_EFFECTIVE_FILING:
+      case AmlStatuses.ERROR_LIMITED_RESTORATION:
+      case AmlStatuses.ERROR_NOT_IN_GOOD_STANDING:
         return 'warning'
 
       default:
@@ -71,16 +71,16 @@ export default class BusinessStatus extends Vue {
 
   get text (): string {
     switch (this.status) {
-      case AmalgamatingStatuses.OK:
+      case AmlStatuses.OK:
         return 'Ready'
 
-      case AmalgamatingStatuses.ERROR_AFFILIATION:
-      case AmalgamatingStatuses.ERROR_CCC_MISMATCH:
-      case AmalgamatingStatuses.ERROR_FOREIGN:
-      case AmalgamatingStatuses.ERROR_FOREIGN_UNLIMITED:
-      case AmalgamatingStatuses.ERROR_FUTURE_EFFECTIVE_FILING:
-      case AmalgamatingStatuses.ERROR_LIMITED_RESTORATION:
-      case AmalgamatingStatuses.ERROR_NIGS:
+      case AmlStatuses.ERROR_NOT_AFFILIATED:
+      case AmlStatuses.ERROR_CCC_MISMATCH:
+      case AmlStatuses.ERROR_FOREIGN:
+      case AmlStatuses.ERROR_FOREIGN_UNLIMITED:
+      case AmlStatuses.ERROR_FUTURE_EFFECTIVE_FILING:
+      case AmlStatuses.ERROR_LIMITED_RESTORATION:
+      case AmlStatuses.ERROR_NOT_IN_GOOD_STANDING:
         return 'Attention Required'
 
       default:
@@ -90,26 +90,26 @@ export default class BusinessStatus extends Vue {
 
   get tooltip (): string {
     switch (this.status) {
-      case AmalgamatingStatuses.OK:
+      case AmlStatuses.OK:
         return ''
-      case AmalgamatingStatuses.ERROR_AFFILIATION:
+      case AmlStatuses.ERROR_NOT_AFFILIATED:
         return 'This business is not affiliated with the currently selected BC Registries account. ' +
          'Affiliate this business with the account on My Business Registry page.'
-      case AmalgamatingStatuses.ERROR_CCC_MISMATCH:
+      case AmlStatuses.ERROR_CCC_MISMATCH:
         return 'A BC Community Contribution Company must amalgamate to form a new BC Community ' +
           'Contribution Company.'
-      case AmalgamatingStatuses.ERROR_FOREIGN:
+      case AmlStatuses.ERROR_FOREIGN:
         return 'A foreign corporation cannot be amalgamated except by Registries staff.'
-      case AmalgamatingStatuses.ERROR_FOREIGN_UNLIMITED:
+      case AmlStatuses.ERROR_FOREIGN_UNLIMITED:
         return 'A foreign corporation must not amalgamate with a limited company and continue as ' +
           'an unlimited liability company.'
-      case AmalgamatingStatuses.ERROR_FUTURE_EFFECTIVE_FILING:
+      case AmlStatuses.ERROR_FUTURE_EFFECTIVE_FILING:
         return 'This business has a future effective filing. It cannot be part of an amalgamation ' +
           'until all future effective filings have come into effect.'
-      case AmalgamatingStatuses.ERROR_LIMITED_RESTORATION:
+      case AmlStatuses.ERROR_LIMITED_RESTORATION:
         return 'This business is under limited restoration. It cannot be part of an amalgamation ' +
           'unless it is fully restored.'
-      case AmalgamatingStatuses.ERROR_NIGS:
+      case AmlStatuses.ERROR_NOT_IN_GOOD_STANDING:
         return 'This business is not in good standing. This filing cannot be submitted until all ' +
           'businesses are in good standing.'
 

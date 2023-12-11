@@ -8,14 +8,14 @@ import {
   EmptyNaics,
   StateModelIF
 } from '@/interfaces'
-import { AmlRoles } from '@/enums'
+import { AmlRoles, AmlTypes } from '@/enums'
 import { EmptyAddress } from '@bcrs-shared-components/interfaces'
 import { cloneDeep } from 'lodash'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 
 const AMALGAMATING_BUSINESSES: AmalgamatingBusinessIF[] = [
   {
-    type: 'lear',
+    type: AmlTypes.LEAR,
     identifier: 'BC1111111',
     name: 'Frozen Yogurt',
     email: 'froyo@example.com',
@@ -28,11 +28,11 @@ const AMALGAMATING_BUSINESSES: AmalgamatingBusinessIF[] = [
       addressCountry: 'CA'
     },
     role: AmlRoles.HOLDING,
-    goodStanding: true
+    isNotInGoodStanding: true
   },
   {
     // this business is an xpro and should only be valid if staff
-    type: 'lear',
+    type: AmlTypes.LEAR,
     identifier: 'A5555555',
     name: 'Lollipop Canada',
     email: 'sucker@example.com',
@@ -45,11 +45,11 @@ const AMALGAMATING_BUSINESSES: AmalgamatingBusinessIF[] = [
       addressCountry: 'CA'
     },
     role: AmlRoles.AMALGAMATING,
-    goodStanding: true
+    isNotInGoodStanding: true
   },
   {
     // this business is NIGS and should only be valid if staff
-    type: 'lear',
+    type: AmlTypes.LEAR,
     identifier: 'BC2222222',
     name: 'Jelly Bean',
     email: 'oval.treat@example.com',
@@ -62,30 +62,30 @@ const AMALGAMATING_BUSINESSES: AmalgamatingBusinessIF[] = [
       addressCountry: 'CA'
     },
     role: AmlRoles.AMALGAMATING,
-    goodStanding: false
+    isNotInGoodStanding: false
   },
   {
     // this business has 2 issues:
     // 1. not affiliated
     // 2. not in good standing
-    type: 'lear',
+    type: AmlTypes.LEAR,
     identifier: 'BC4444444', // we know this from the business lookup
     name: 'Eclair', // we know this from the business lookup
     email: undefined, // we don't know this yet (not affiliated)
     legalType: CorpTypeCd.BC_COMPANY, // we know this from the business lookup
     address: undefined, // we don't know this yet (not affiliated)
     role: AmlRoles.AMALGAMATING,
-    goodStanding: false // we know this from the business lookup
+    isNotInGoodStanding: false // we know this from the business lookup
   },
   {
-    type: 'foreign',
+    type: AmlTypes.FOREIGN,
     corpNumber: 'XYZ789',
     legalName: 'Ice Cream Sandwich Canada',
     foreignJurisdiction: { region: 'FEDERAL', country: 'CA' },
     role: AmlRoles.AMALGAMATING
   },
   {
-    type: 'foreign',
+    type: AmlTypes.FOREIGN,
     corpNumber: 'ABC123',
     legalName: 'Gingerbread USA',
     foreignJurisdiction: { country: 'US' },
@@ -93,7 +93,7 @@ const AMALGAMATING_BUSINESSES: AmalgamatingBusinessIF[] = [
   },
   {
     // this business is CCC and should only be valid if amalg type is CCC
-    type: 'lear',
+    type: AmlTypes.LEAR,
     identifier: 'BC7777777',
     name: 'Donut',
     email: 'holey.goodness@example.com',
@@ -106,10 +106,10 @@ const AMALGAMATING_BUSINESSES: AmalgamatingBusinessIF[] = [
       addressCountry: 'CA'
     },
     role: AmlRoles.AMALGAMATING,
-    goodStanding: true
+    isNotInGoodStanding: true
   },
   {
-    type: 'lear',
+    type: AmlTypes.LEAR,
     identifier: 'BC3333333',
     name: 'Cupcake',
     email: 'cute.sugarbomb@example.com',
@@ -122,7 +122,7 @@ const AMALGAMATING_BUSINESSES: AmalgamatingBusinessIF[] = [
       addressCountry: 'CA'
     },
     role: AmlRoles.AMALGAMATING,
-    goodStanding: true
+    isNotInGoodStanding: true
   }
 ]
 

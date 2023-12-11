@@ -1,10 +1,10 @@
 import { AddressIF } from '@/interfaces'
-import { AmalgamatingStatuses, AmalgamationTypes, AmlRoles } from '@/enums'
+import { AmlStatuses, AmalgamationTypes, AmlRoles, AmlTypes } from '@/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 
 /** Interface for LEAR amalgamating businesses. */
 interface AmalgamatingLearIF {
-  type: 'lear'
+  type: AmlTypes.LEAR
 
   // properties in schema:
   role: AmlRoles
@@ -15,13 +15,15 @@ interface AmalgamatingLearIF {
   email?: string
   legalType?: CorpTypeCd
   address?: AddressIF
-  goodStanding?: boolean
-  status?: AmalgamatingStatuses
+  status?: AmlStatuses // computed status (base on business rules)
+  isNotInGoodStanding?: boolean // whether business is in good standing
+  isFutureEffective?: boolean // whether business has a FE filing
+  isLimitedRestoration?: boolean // whether business is in limited restoration
 }
 
 /** Interface for foreign amalgamating businesses. */
 interface AmalgamatingForeignIF {
-  type: 'foreign'
+  type: AmlTypes.FOREIGN
 
   // properties in schema:
   role: AmlRoles
@@ -33,7 +35,7 @@ interface AmalgamatingForeignIF {
   corpNumber: string
 
   // properties for UI only:
-  status?: AmalgamatingStatuses
+  status?: AmlStatuses
 }
 
 // type alias (union type)

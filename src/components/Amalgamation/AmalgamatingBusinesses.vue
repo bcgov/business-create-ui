@@ -153,7 +153,7 @@ import { CommonMixin } from '@/mixins'
 import { AuthServices, BusinessLookupServices, LegalServices } from '@/services'
 import { BusinessLookup } from '@bcrs-shared-components/business-lookup'
 import { AmalgamatingBusinessIF, BusinessLookupIF, EmptyBusinessLookup } from '@/interfaces'
-import { AmlRoles } from '@/enums'
+import { AmlRoles, AmlTypes, RestorationTypes } from '@/enums'
 import BusinessTable from '@/components/Amalgamation/BusinessTable.vue'
 
 @Component({
@@ -190,11 +190,12 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
     const data = await Promise.all([
       LegalServices.fetchBusinessInfo(businessLookup.identifier),
       AuthServices.fetchAuthInfo(businessLookup.identifier),
-      LegalServices.fetchAddresses(businessLookup.identifier)
-    ]).catch(() => {}) // ignore promise errors
+      LegalServices.fetchAddresses(businessLookup.identifier),
+      LegalServices.fetchFilings(businessLookup.identifier)
+    ]).catch(() => {}) // ignore errors
 
     // check for errors
-    if (!data || data.length !== 3) {
+    if (!data || data.length !== 4) {
       this.snackbarText = 'Unable to add this business.'
       this.snackbar = true
       return
@@ -203,6 +204,7 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
     const businessInfo = data[0]
     const authInfo = data[1]
     const addresses = data[2]
+    const filings = data[3]
 
     // If identifier already exists, don't add the business to the array.
     if (this.getAmalgamatingBusinesses.find((b: any) => b.identifier === businessInfo.identifier)) {
@@ -211,17 +213,22 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
       return
     }
 
-    // Create amalgamating business object.
-    const tingBusiness = {
-      type: 'lear',
+    // Create amalgamating business object. Assume all data is good.
+    const tingBusiness: AmalgamatingBusinessIF = {
+      type: AmlTypes.LEAR,
       role: AmlRoles.AMALGAMATING,
       identifier: businessInfo.identifier,
       name: businessInfo.legalName,
       email: authInfo.contacts[0].email,
       legalType: businessInfo.legalType,
       address: addresses.registeredOffice.mailingAddress,
-      goodStanding: businessInfo.goodStanding
-    } as AmalgamatingBusinessIF
+      isNotInGoodStanding: (businessInfo.goodStanding === false),
+      isFutureEffective: (filings[0].isFutureEffective === true),
+      isLimitedRestoration: (filings[0].filingSubType === RestorationTypes.LIMITED) ||
+        (filings[0].filingSubType === RestorationTypes.LTD_EXTEND)
+    }
+
+    // console.log('*** tingBusiness =', tingBusiness)
 
     // Add the new business to a new array and store the new array.
     const amalgamatingBusinesses = this.getAmalgamatingBusinesses

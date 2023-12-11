@@ -9,6 +9,25 @@ import { FilingTypes } from '@/enums'
  */
 export default class LegalServices {
   /**
+   * Fetches filings list.
+   * @param businessId the business identifier (aka entity inc no)
+   * @returns the filings list
+   */
+  static async fetchFilings (businessId: string): Promise<any[]> {
+    const url = `businesses/${businessId}/filings`
+    return axios.get(url)
+      .then(response => {
+        const filings = response?.data?.filings as any[]
+        if (!filings) {
+          // eslint-disable-next-line no-console
+          console.log('fetchFilings() error - invalid response =', response)
+          throw new Error('Invalid filings list')
+        }
+        return filings
+      })
+  }
+
+  /**
    * Fetches the first or only filing.
    * This is expected to be a draft IA or Registration.
    * @param tempId the temp registration number

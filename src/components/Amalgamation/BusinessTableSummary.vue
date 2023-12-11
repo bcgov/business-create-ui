@@ -22,7 +22,7 @@
           </td>
 
           <td class="business-address">
-            <template v-if="item.type === 'lear'">
+            <template v-if="item.type === AmlTypes.LEAR">
               <BaseAddress
                 v-if="item.address"
                 :address="item.address"
@@ -30,7 +30,7 @@
               <span v-else>Affiliate to view</span>
             </template>
 
-            <template v-if="item.type === 'foreign'">
+            <template v-if="item.type === AmlTypes.FOREIGN">
               {{ jurisdiction(item) }}
             </template>
           </td>
@@ -49,7 +49,7 @@ import { Component, Vue } from 'vue-property-decorator'
 import { Getter } from 'pinia-class'
 import { getName } from 'country-list'
 import { useStore } from '@/store/store'
-import { AmlRoles } from '@/enums'
+import { AmlRoles, AmlTypes } from '@/enums'
 import { AmalgamatingBusinessIF } from '@/interfaces'
 import { BaseAddress } from '@bcrs-shared-components/base-address'
 
@@ -60,28 +60,29 @@ import { BaseAddress } from '@bcrs-shared-components/base-address'
 })
 export default class BusinessTableSummary extends Vue {
   readonly AmlRoles = AmlRoles
+  readonly AmlTypes = AmlTypes
 
   @Getter(useStore) getAmalgamatingBusinesses!: AmalgamatingBusinessIF[]
 
   key (item: AmalgamatingBusinessIF): string {
-    if (item?.type === 'lear') return item.identifier
-    if (item?.type === 'foreign') return item.corpNumber
+    if (item?.type === AmlTypes.LEAR) return item.identifier
+    if (item?.type === AmlTypes.FOREIGN) return item.corpNumber
     return null // should never happen
   }
 
   name (item: AmalgamatingBusinessIF): string {
-    if (item?.type === 'lear') return item.name
-    if (item?.type === 'foreign') return item.legalName
+    if (item?.type === AmlTypes.LEAR) return item.name
+    if (item?.type === AmlTypes.FOREIGN) return item.legalName
     return '(Unknown)' // should never happen
   }
 
   email (item: AmalgamatingBusinessIF): string {
-    if (item?.type === 'lear') return item.email
+    if (item?.type === AmlTypes.LEAR) return item.email
     return null // should never happen
   }
 
   jurisdiction (item: AmalgamatingBusinessIF): string {
-    const fj = (item?.type === 'foreign') && item.foreignJurisdiction
+    const fj = (item?.type === AmlTypes.FOREIGN) && item.foreignJurisdiction
     if (fj?.country) {
       const country = getName(fj.country)
       const region = (fj.region === 'FEDERAL' ? 'Federal' : fj.region)

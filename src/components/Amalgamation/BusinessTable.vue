@@ -26,7 +26,7 @@
           </td>
 
           <td class="business-address">
-            <template v-if="item.type === 'lear'">
+            <template v-if="item.type === AmlTypes.LEAR">
               <BaseAddress
                 v-if="item.address"
                 :address="item.address"
@@ -34,7 +34,7 @@
               <span v-else>Affiliate to view</span>
             </template>
 
-            <template v-if="item.type === 'foreign'">
+            <template v-if="item.type === AmlTypes.FOREIGN">
               {{ jurisdiction(item) }}
             </template>
           </td>
@@ -73,7 +73,7 @@ import { Component, Emit, Mixins, Watch } from 'vue-property-decorator'
 import { Action } from 'pinia-class'
 import { getName } from 'country-list'
 import { useStore } from '@/store/store'
-import { AmalgamatingStatuses, AmlRoles } from '@/enums'
+import { AmlStatuses, AmlRoles, AmlTypes } from '@/enums'
 import { AmalgamatingBusinessIF } from '@/interfaces'
 import { BaseAddress } from '@bcrs-shared-components/base-address'
 import BusinessStatus from './BusinessStatus.vue'
@@ -88,6 +88,7 @@ import { AmalgamationMixin } from '@/mixins'
 })
 export default class BusinessTable extends Mixins(AmalgamationMixin) {
   readonly AmlRoles = AmlRoles
+  readonly AmlTypes = AmlTypes
   readonly GetCorpFullDescription = GetCorpFullDescription
 
   @Action(useStore) setAmalgamatingBusinesses!: (x: AmalgamatingBusinessIF[]) => void
@@ -102,14 +103,14 @@ export default class BusinessTable extends Mixins(AmalgamationMixin) {
       // evaluate the rules for the current business
       // assign the value of the first failed rule (if any) else OK
       business.status = this.rules.reduce(
-        (status: AmalgamatingStatuses, rule: (business: AmalgamatingBusinessIF) => AmalgamatingStatuses) => {
+        (status: AmlStatuses, rule: (business: AmalgamatingBusinessIF) => AmlStatuses) => {
           // if we already failed a rule, don't check the rest of the rules
           if (status) return status
           // return the value of the current rule (may be null)
           return rule(business)
         },
         null
-      ) || AmalgamatingStatuses.OK
+      ) || AmlStatuses.OK
 
       // return updated business object
       return business
@@ -117,30 +118,30 @@ export default class BusinessTable extends Mixins(AmalgamationMixin) {
   }
 
   key (item: AmalgamatingBusinessIF): string {
-    if (item?.type === 'lear') return item.identifier
-    if (item?.type === 'foreign') return item.corpNumber
+    if (item?.type === AmlTypes.LEAR) return item.identifier
+    if (item?.type === AmlTypes.FOREIGN) return item.corpNumber
     return null // should never happen
   }
 
   name (item: AmalgamatingBusinessIF): string {
-    if (item?.type === 'lear') return item.name
-    if (item?.type === 'foreign') return item.legalName
+    if (item?.type === AmlTypes.LEAR) return item.name
+    if (item?.type === AmlTypes.FOREIGN) return item.legalName
     return '(Unknown)' // should never happen
   }
 
   email (item: AmalgamatingBusinessIF): string {
-    if (item?.type === 'lear') return item.email
+    if (item?.type === AmlTypes.LEAR) return item.email
     return null // should never happen
   }
 
   type (item: AmalgamatingBusinessIF): string {
-    if (item?.type === 'lear') return GetCorpFullDescription(item.legalType)
-    if (item?.type === 'foreign') return 'Foreign'
+    if (item?.type === AmlTypes.LEAR) return GetCorpFullDescription(item.legalType)
+    if (item?.type === AmlTypes.FOREIGN) return 'Foreign'
     return '(Unknown)' // should never happen
   }
 
   jurisdiction (item: AmalgamatingBusinessIF): string {
-    const fj = (item?.type === 'foreign') && item.foreignJurisdiction
+    const fj = (item?.type === AmlTypes.FOREIGN) && item.foreignJurisdiction
     if (fj?.country) {
       const country = getName(fj.country)
       const region = (fj.region === 'FEDERAL' ? 'Federal' : fj.region)
@@ -166,7 +167,7 @@ export default class BusinessTable extends Mixins(AmalgamationMixin) {
   @Watch('businesses', { deep: true, immediate: true })
   @Emit('valid')
   private emitValidity (): boolean {
-    return this.businesses.every(business => business.status === AmalgamatingStatuses.OK)
+    return this.businesses.every(business => business.status === AmlStatuses.OK)
   }
 }
 </script>
