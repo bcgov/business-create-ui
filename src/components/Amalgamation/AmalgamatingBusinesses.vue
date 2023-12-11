@@ -155,6 +155,7 @@ import { BusinessLookup } from '@bcrs-shared-components/business-lookup'
 import { AmalgamatingBusinessIF, BusinessLookupResultIF, EmptyBusinessLookup } from '@/interfaces'
 import { AmlRoles, AmlTypes, RestorationTypes } from '@/enums'
 import BusinessTable from '@/components/Amalgamation/BusinessTable.vue'
+import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 
 @Component({
   components: {
@@ -194,19 +195,45 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
       LegalServices.fetchFilings(businessLookup.identifier)
     ]).then(results => results.map((result: any) => result.value))
 
-    // check if all elements are undefined
-    if (!data.some(d => d)) {
-      this.snackbarText = 'Unable to add that business.'
-      this.snackbar = true
-      return
-    }
-
     const authInfo = data[0]
     const businessInfo = data[1]
     const addresses = data[2]
     const filings = data[3]
 
-    // If identifier already exists, don't add the business to the array.
+    // console.log('*** data =', data)
+
+    // Check for unaffiliated business.
+    if (!authInfo) {
+      // If a staff account couldn't fetch the auth info then the business doesn't exist.
+      if (this.isRoleStaff) {
+        this.snackbarText = 'Business doesn\'t exist in LEAR.'
+        this.snackbar = true
+        return
+      }
+
+      // Otherwise, assume the business is unaffiliated and add it to the table.
+      this.pushAmalgamatingBusiness({
+        type: AmlTypes.LEAR,
+        role: AmlRoles.AMALGAMATING,
+        identifier: businessLookup.identifier,
+        name: businessLookup.name,
+        legalType: businessLookup.legalType as unknown as CorpTypeCd
+      })
+
+      // Close the "Add an Amalgamating Business" panel.
+      this.isAddingAmalgamatingBusiness = false
+
+      return
+    }
+
+    // Check for Legal API fetch issues.
+    if (!businessInfo || !addresses || !filings) {
+      this.snackbarText = 'Unable to add that business.'
+      this.snackbar = true
+      return
+    }
+
+    // Verify that identifier doesn't already exist.
     if (this.getAmalgamatingBusinesses.find((b: any) => b.identifier === businessInfo.identifier)) {
       this.snackbarText = 'Business is already in table.'
       this.snackbar = true
@@ -214,19 +241,18 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
     }
 
     // Create amalgamating business object.
-    // If we couldn't fetch some data, use business lookup data instead.
     const tingBusiness: AmalgamatingBusinessIF = {
       type: AmlTypes.LEAR,
       role: AmlRoles.AMALGAMATING,
-      identifier: businessInfo?.identifier || businessLookup.identifier,
-      name: businessInfo?.legalName || businessLookup.name,
-      email: authInfo?.contacts[0]?.email, // may be undefined
-      legalType: businessInfo?.legalType || businessLookup.legalType,
-      address: addresses?.registeredOffice?.mailingAddress, // may be undefined
-      isNotInGoodStanding: (businessInfo?.goodStanding === false),
-      isFutureEffective: (filings[0]?.isFutureEffective === true),
-      isLimitedRestoration: (filings[0]?.filingSubType === RestorationTypes.LIMITED) ||
-        (filings[0]?.filingSubType === RestorationTypes.LTD_EXTEND)
+      identifier: businessInfo.identifier,
+      name: businessInfo.legalName,
+      email: authInfo.contacts[0].email,
+      legalType: businessInfo.legalType,
+      address: addresses.registeredOffice.mailingAddress,
+      isNotInGoodStanding: (businessInfo.goodStanding === false),
+      isFutureEffective: (filings[0].isFutureEffective === true),
+      isLimitedRestoration: (filings[0].filingSubType === RestorationTypes.LIMITED) ||
+        (filings[0].filingSubType === RestorationTypes.LTD_EXTEND)
     }
 
     // Add the new business to the amalgamating businesses list.
