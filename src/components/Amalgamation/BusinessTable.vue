@@ -13,6 +13,14 @@
       </thead>
 
       <tbody>
+        <tr v-if="!businesses.length">
+          <td colspan="6">
+            <p class="text-center">
+              No businesses added
+            </p>
+          </td>
+        </tr>
+
         <tr
           v-for="(item, index) in businesses"
           :key="key(item)"

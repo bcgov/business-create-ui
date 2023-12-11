@@ -26,10 +26,6 @@ export default class AmalgamationMixin extends Vue {
     this.rule6
   ]
 
-  // *** I'M STILL WONDERING IF I WANT TO USE THESE
-  // readonly isLear = (item: AmalgamatingBusinessIF): boolean => (item?.type === AmlTypes.LEAR)
-  // readonly isForeign = (item: AmalgamatingBusinessIF): boolean => (item?.type === AmlTypes.FOREIGN)
-
   /** True if there a limited company in the table. */
   get isAnyLimited (): boolean {
     return this.getAmalgamatingBusinesses.some(business =>
@@ -44,28 +40,13 @@ export default class AmalgamationMixin extends Vue {
     )
   }
 
-  // readonly amalgamationRules = [
-  //   {
-  //     id: 0,
-  //     rule: (v: any) => !!v || 'Required',
-  //     status: AmlStatuses.ERROR_FOREIGN
-  //   }
-  // ]
-
+  // *** TODO
   // A BC Company cannot amalgamate with an existing Unlimited Liability Company from Alberta,
   // Nova Scotia, or the USA to form a BC Unlimited Liability Company.
 
-  // disallow foreign into ULC if there is also a limited
-  rule1 (business: AmalgamatingBusinessIF): AmlStatuses {
-    if (business.type === AmlTypes.FOREIGN && this.isTypeBcUlcCompany && this.isAnyLimited) {
-      return AmlStatuses.ERROR_FOREIGN
-    }
-    return null
-  }
-
   // disallow foreign altogether if not staff
   // (could happen if staff added it and regular user resumes draft)
-  rule2 (business: AmalgamatingBusinessIF): AmlStatuses {
+  rule1 (business: AmalgamatingBusinessIF): AmlStatuses {
     if (business.type === AmlTypes.FOREIGN && !this.isRoleStaff) {
       return AmlStatuses.ERROR_FOREIGN
     }
@@ -73,6 +54,15 @@ export default class AmalgamationMixin extends Vue {
   }
 
   // disallow foreign into ULC if there is also a limited
+  rule2 (business: AmalgamatingBusinessIF): AmlStatuses {
+    if (business.type === AmlTypes.FOREIGN && this.isTypeBcUlcCompany && this.isAnyLimited) {
+      return AmlStatuses.ERROR_FOREIGN
+    }
+    return null
+  }
+
+  // disallow foreign into ULC if there is also a limited
+  // *** TODO: this is a duplicate; reuse this for something else
   rule3 (business: AmalgamatingBusinessIF): AmlStatuses {
     if (business.type === AmlTypes.FOREIGN && this.isTypeBcUlcCompany && this.isAnyLimited) {
       return AmlStatuses.ERROR_FOREIGN
@@ -80,7 +70,7 @@ export default class AmalgamationMixin extends Vue {
     return null
   }
 
-  // assume business is not affiliated if we don't have address (non-staff only)
+  // if we don't have address, assume business is not affiliated (non-staff only)
   rule4 (business: AmalgamatingBusinessIF): AmlStatuses {
     // *** TODO: revert staff check
     if (business.type === AmlTypes.LEAR && !business.address /* && !this.isRoleStaff */) {

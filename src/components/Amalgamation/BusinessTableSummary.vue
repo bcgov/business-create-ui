@@ -10,6 +10,14 @@
       </thead>
 
       <tbody>
+        <tr v-if="!getAmalgamatingBusinesses.length">
+          <td colspan="6">
+            <p class="text-center mb-0">
+              No businesses added
+            </p>
+          </td>
+        </tr>
+
         <tr
           v-for="item in getAmalgamatingBusinesses"
           :key="key(item)"

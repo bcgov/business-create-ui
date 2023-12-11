@@ -36,12 +36,12 @@ export default class BusinessStatus extends Vue {
       case AmlStatuses.OK:
         return 'mdi-check'
 
-      case AmlStatuses.ERROR_NOT_AFFILIATED:
       case AmlStatuses.ERROR_CCC_MISMATCH:
       case AmlStatuses.ERROR_FOREIGN:
       case AmlStatuses.ERROR_FOREIGN_UNLIMITED:
       case AmlStatuses.ERROR_FUTURE_EFFECTIVE_FILING:
       case AmlStatuses.ERROR_LIMITED_RESTORATION:
+      case AmlStatuses.ERROR_NOT_AFFILIATED:
       case AmlStatuses.ERROR_NOT_IN_GOOD_STANDING:
         return 'mdi-alert'
 
@@ -55,12 +55,12 @@ export default class BusinessStatus extends Vue {
       case AmlStatuses.OK:
         return 'success'
 
-      case AmlStatuses.ERROR_NOT_AFFILIATED:
       case AmlStatuses.ERROR_CCC_MISMATCH:
       case AmlStatuses.ERROR_FOREIGN:
       case AmlStatuses.ERROR_FOREIGN_UNLIMITED:
       case AmlStatuses.ERROR_FUTURE_EFFECTIVE_FILING:
       case AmlStatuses.ERROR_LIMITED_RESTORATION:
+      case AmlStatuses.ERROR_NOT_AFFILIATED:
       case AmlStatuses.ERROR_NOT_IN_GOOD_STANDING:
         return 'warning'
 
@@ -74,12 +74,12 @@ export default class BusinessStatus extends Vue {
       case AmlStatuses.OK:
         return 'Ready'
 
-      case AmlStatuses.ERROR_NOT_AFFILIATED:
       case AmlStatuses.ERROR_CCC_MISMATCH:
       case AmlStatuses.ERROR_FOREIGN:
       case AmlStatuses.ERROR_FOREIGN_UNLIMITED:
       case AmlStatuses.ERROR_FUTURE_EFFECTIVE_FILING:
       case AmlStatuses.ERROR_LIMITED_RESTORATION:
+      case AmlStatuses.ERROR_NOT_AFFILIATED:
       case AmlStatuses.ERROR_NOT_IN_GOOD_STANDING:
         return 'Attention Required'
 
@@ -92,9 +92,6 @@ export default class BusinessStatus extends Vue {
     switch (this.status) {
       case AmlStatuses.OK:
         return ''
-      case AmlStatuses.ERROR_NOT_AFFILIATED:
-        return 'This business is not affiliated with the currently selected BC Registries account. ' +
-         'Affiliate this business with the account on My Business Registry page.'
       case AmlStatuses.ERROR_CCC_MISMATCH:
         return 'A BC Community Contribution Company must amalgamate to form a new BC Community ' +
           'Contribution Company.'
@@ -109,6 +106,9 @@ export default class BusinessStatus extends Vue {
       case AmlStatuses.ERROR_LIMITED_RESTORATION:
         return 'This business is under limited restoration. It cannot be part of an amalgamation ' +
           'unless it is fully restored.'
+      case AmlStatuses.ERROR_NOT_AFFILIATED:
+        return 'This business is not affiliated with the currently selected BC Registries account. ' +
+         'Affiliate this business with the account on My Business Registry page.'
       case AmlStatuses.ERROR_NOT_IN_GOOD_STANDING:
         return 'This business is not in good standing. This filing cannot be submitted until all ' +
           'businesses are in good standing.'

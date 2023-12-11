@@ -17,7 +17,7 @@ export default class LegalServices {
     const url = `businesses/${businessId}/filings`
     return axios.get(url)
       .then(response => {
-        const filings = response?.data?.filings as any[]
+        const filings = response?.data?.filings
         if (!filings) {
           // eslint-disable-next-line no-console
           console.log('fetchFilings() error - invalid response =', response)
@@ -178,7 +178,7 @@ export default class LegalServices {
    * @returns a promise to return the addresses from the response, else exception
    */
   static fetchAddresses (businessId: string): Promise<any> {
-    const url = `businesses/${businessId}/addresses`
+    const url = `businesses/${businessId}/addresses2`
     return axios.get(url).then(response => {
       const data = response?.data
       if (!data) throw new Error('Invalid API response')

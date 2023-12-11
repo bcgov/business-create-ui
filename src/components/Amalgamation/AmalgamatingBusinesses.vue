@@ -152,7 +152,7 @@ import { useStore } from '@/store/store'
 import { CommonMixin } from '@/mixins'
 import { AuthServices, BusinessLookupServices, LegalServices } from '@/services'
 import { BusinessLookup } from '@bcrs-shared-components/business-lookup'
-import { AmalgamatingBusinessIF, BusinessLookupIF, EmptyBusinessLookup } from '@/interfaces'
+import { AmalgamatingBusinessIF, BusinessLookupResultIF, EmptyBusinessLookup } from '@/interfaces'
 import { AmlRoles, AmlTypes, RestorationTypes } from '@/enums'
 import BusinessTable from '@/components/Amalgamation/BusinessTable.vue'
 
@@ -184,25 +184,25 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
   isAddingAmalgamatingBusiness = false
   isAddingAmalgamatingForeignBusiness = false
 
-  async saveAmalgamatingBusiness (businessLookup: BusinessLookupIF): Promise<void> {
-    // Get the amalgamating business information, auth info and addresses, and email if in LEAR.
-    // Otherwise, return the businesslookup object.
-    const data = await Promise.all([
-      LegalServices.fetchBusinessInfo(businessLookup.identifier),
+  async saveAmalgamatingBusiness (businessLookup: BusinessLookupResultIF): Promise<void> {
+    // Get the auth info, business info, addresses and filings in parallel.
+    // Return data array; if any call failed, that item will be undefined.
+    const data = await Promise.allSettled([
       AuthServices.fetchAuthInfo(businessLookup.identifier),
+      LegalServices.fetchBusinessInfo(businessLookup.identifier),
       LegalServices.fetchAddresses(businessLookup.identifier),
       LegalServices.fetchFilings(businessLookup.identifier)
-    ]).catch(() => {}) // ignore errors
+    ]).then(results => results.map((result: any) => result.value))
 
-    // check for errors
-    if (!data || data.length !== 4) {
-      this.snackbarText = 'Unable to add this business.'
+    // check if all elements are undefined
+    if (!data.some(d => d)) {
+      this.snackbarText = 'Unable to add that business.'
       this.snackbar = true
       return
     }
 
-    const businessInfo = data[0]
-    const authInfo = data[1]
+    const authInfo = data[0]
+    const businessInfo = data[1]
     const addresses = data[2]
     const filings = data[3]
 
@@ -213,22 +213,21 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
       return
     }
 
-    // Create amalgamating business object. Assume all data is good.
+    // Create amalgamating business object.
+    // If we couldn't fetch some data, use business lookup data instead.
     const tingBusiness: AmalgamatingBusinessIF = {
       type: AmlTypes.LEAR,
       role: AmlRoles.AMALGAMATING,
-      identifier: businessInfo.identifier,
-      name: businessInfo.legalName,
-      email: authInfo.contacts[0].email,
-      legalType: businessInfo.legalType,
-      address: addresses.registeredOffice.mailingAddress,
-      isNotInGoodStanding: (businessInfo.goodStanding === false),
-      isFutureEffective: (filings[0].isFutureEffective === true),
-      isLimitedRestoration: (filings[0].filingSubType === RestorationTypes.LIMITED) ||
-        (filings[0].filingSubType === RestorationTypes.LTD_EXTEND)
+      identifier: businessInfo?.identifier || businessLookup.identifier,
+      name: businessInfo?.legalName || businessLookup.name,
+      email: authInfo?.contacts[0]?.email, // may be undefined
+      legalType: businessInfo?.legalType || businessLookup.legalType,
+      address: addresses?.registeredOffice?.mailingAddress, // may be undefined
+      isNotInGoodStanding: (businessInfo?.goodStanding === false),
+      isFutureEffective: (filings[0]?.isFutureEffective === true),
+      isLimitedRestoration: (filings[0]?.filingSubType === RestorationTypes.LIMITED) ||
+        (filings[0]?.filingSubType === RestorationTypes.LTD_EXTEND)
     }
-
-    // console.log('*** tingBusiness =', tingBusiness)
 
     // Add the new business to a new array and store the new array.
     const amalgamatingBusinesses = this.getAmalgamatingBusinesses
