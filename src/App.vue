@@ -249,7 +249,7 @@ import * as Views from '@/views'
 
 // Mixins, interfaces, etc
 import { CommonMixin, DateMixin, FilingTemplateMixin, NameRequestMixin } from '@/mixins'
-import { AccountInformationIF, AddressIF, BreadcrumbIF, BusinessIF, BusinessWarningIF, CompletingPartyIF,
+import { AccountInformationIF, AddressIF, BreadcrumbIF, BusinessWarningIF, CompletingPartyIF,
   ConfirmDialogType, EmptyFees, FeesIF, FilingDataIF, NameRequestIF, OrgInformationIF, PartyIF, ResourceIF,
   StepIF } from '@/interfaces'
 import { AmalgamationRegResources, DissolutionResources, IncorporationResources, RegistrationResources,
@@ -1158,9 +1158,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
 
   /** Fetches and stores business info. */
   private async loadBusinessInfo (businessId: string): Promise<void> {
-    const response = await LegalServices.fetchBusinessInfo(businessId)
-
-    const business = response?.data?.business as BusinessIF
+    const business = await LegalServices.fetchBusinessInfo(businessId).catch(() => {})
 
     if (!business) {
       throw new Error('Invalid business info')

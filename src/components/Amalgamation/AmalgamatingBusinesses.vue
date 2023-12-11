@@ -6,7 +6,7 @@
       color="primary"
       class="btn-outlined-primary"
       :disabled="isAddingAmalgamatingBusiness || isAddingAmalgamatingForeignBusiness"
-      @click="onAddBusinessClick()"
+      @click="isAddingAmalgamatingBusiness = true"
     >
       <v-icon>mdi-domain-plus</v-icon>
       <span>Add an Amalgamating Business</span>
@@ -19,7 +19,7 @@
       color="primary"
       class="ml-2 btn-outlined-primary"
       :disabled="isAddingAmalgamatingBusiness || isAddingAmalgamatingForeignBusiness"
-      @click="onAddForeignBusinessClick()"
+      @click="isAddingAmalgamatingForeignBusiness = true"
     >
       <v-icon>mdi-domain-plus</v-icon>
       <span>Add an Amalgamating Foreign Business</span>
@@ -46,8 +46,8 @@
             class="ml-8"
           >
             <span>Enter the name or the incorporation number of the registered BC business
-              to add to this application.
-            </span>
+              to add to this application.</span>
+
             <BusinessLookup
               :showErrors="false"
               :businessLookup="initialBusinessLookupObject"
@@ -56,6 +56,7 @@
               label="Business Name or Incorporation Number"
               @setBusiness="saveAmalgamatingBusiness($event)"
             />
+
             <v-row
               class="justify-end mr-0 mt-2"
             >
@@ -64,7 +65,7 @@
                 large
                 outlined
                 color="primary"
-                @click="addAmalgamatingBusinessCancel()"
+                @click="isAddingAmalgamatingBusiness = false"
               >
                 <span>Cancel</span>
               </v-btn>
@@ -95,6 +96,20 @@
             class="ml-8"
           >
             <span>**TODO**</span>
+
+            <v-row
+              class="justify-end mr-0 mt-2"
+            >
+              <v-btn
+                id="app-cancel-btn"
+                large
+                outlined
+                color="primary"
+                @click="isAddingAmalgamatingForeignBusiness = false"
+              >
+                <span>Cancel</span>
+              </v-btn>
+            </v-row>
           </v-col>
 
           <!-- extra column is for possible action button -->
@@ -102,30 +117,25 @@
       </v-card>
     </v-expand-transition>
 
-    <!-- <v-row class="mt-4 ml-1">
-      <ul>
-        Amalgamating Businesses: <br><br>
-        <li
-          v-for="(business, index) in getAmalgamatingBusinesses"
-          :key="index"
+    <!-- snackbar to temporarily show fetch errors -->
+    <v-snackbar
+      v-model="snackbar"
+      timeout="5000"
+    >
+      {{ snackbarText }}
+
+      <template #action="{ attrs }">
+        <v-btn
+          color="error"
+          class="font-weight-bold"
+          text
+          v-bind="attrs"
+          @click="snackbar = false"
         >
-          <template v-if="business.foundingDate">
-            Legal Name: {{ business.legalName }} <br>
-            Legal Type: {{ business.legalType }} <br>
-            Mailing Address: {{ business.officeAddress.registeredOffice.mailingAddress }} <br>
-            Email Address: {{ business.businessContact.email }} <br>
-            State: {{ business.state }} <br>
-            Good Standing: {{ business.goodStanding }} <br>
-        </template>
-          <template v-else>
-            Legal Name: {{ business.name }} <br>
-            Legal Type: {{ business.legalType }} <br>
-            Identifier: {{ business.identifier }} <br>
-            Status: {{ business.status }}
-          </template>
-        </li>
-      </ul>
-    </v-row> -->
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
 
     <BusinessTable
       class="mt-8"
@@ -153,6 +163,8 @@ import BusinessTable from '@/components/Amalgamation/BusinessTable.vue'
   }
 })
 export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
+  readonly BusinessLookupServices = BusinessLookupServices
+
   @Getter(useStore) getAmalgamatingBusinesses!: AmalgamatingBusinessIF[]
   @Getter(useStore) getAmalgamatingBusinessesValid!: boolean
   @Getter(useStore) getShowErrors!: boolean
@@ -165,80 +177,59 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
   // Local properties
   initialBusinessLookupObject = EmptyBusinessLookup
   businessTableValid = false
+  snackbar = false
+  snackbarText = ''
 
   // Button properties
   isAddingAmalgamatingBusiness = false
   isAddingAmalgamatingForeignBusiness = false
 
-  readonly BusinessLookupServices = BusinessLookupServices
-
-  // Cancel button in "Add an Amalgamating Business" is pressed.
-  addAmalgamatingBusinessCancel (): void {
-    this.isAddingAmalgamatingBusiness = false
-    this.setAmalgamatingBusinessesValid(true)
-  }
-
-  // "Add an Amalgamating Business" button is pressed.
-  onAddBusinessClick (): void {
-    this.isAddingAmalgamatingBusiness = true
-    this.isAddingAmalgamatingForeignBusiness = false
-    this.setAmalgamatingBusinessesValid(false)
-  }
-
-  // "Add an Amalgamating Foreign Business" button is pressed.
-  onAddForeignBusinessClick (): void {
-    this.isAddingAmalgamatingBusiness = false
-    this.isAddingAmalgamatingForeignBusiness = true
-    this.setAmalgamatingBusinessesValid(false)
-  }
-
   async saveAmalgamatingBusiness (businessLookup: BusinessLookupIF): Promise<void> {
-    let business = null
-
-    // Get the amalgamating business information, mailing address, and email if in LEAR.
+    // Get the amalgamating business information, auth info and addresses, and email if in LEAR.
     // Otherwise, return the businesslookup object.
     const data = await Promise.all([
       LegalServices.fetchBusinessInfo(businessLookup.identifier),
       AuthServices.fetchAuthInfo(businessLookup.identifier),
       LegalServices.fetchAddresses(businessLookup.identifier)
-    ]).catch((error) => {
-      return error
-    })
+    ]).catch(() => {}) // ignore promise errors
 
-    if (data.length === 3) {
-      business = data[0].data?.business
-      business.businessContact = data[1].contacts[0]
-      business.officeAddress = data[2]
+    // check for errors
+    if (!data || data.length !== 3) {
+      this.snackbarText = 'Unable to add this business.'
+      this.snackbar = true
+      return
     }
 
-    // If the business is not null (LEAR Entity), create from it a TING business following the interface.
-    // If the amalgamating businesses array is not empty, check if identifier already exists.
+    const businessInfo = data[0]
+    const authInfo = data[1]
+    const addresses = data[2]
+
     // If identifier already exists, don't add the business to the array.
-    if (business) {
-      const amalgamatingBusinesses = this.getAmalgamatingBusinesses
-
-      const tingBusiness = {
-        type: 'lear',
-        role: AmlRoles.AMALGAMATING,
-        identifier: business.identifier,
-        name: business.legalName,
-        email: business.businessContact.email,
-        legalType: business.legalType,
-        address: business.officeAddress.registeredOffice.mailingAddress,
-        goodStanding: business.goodStanding
-      } as AmalgamatingBusinessIF
-
-      if (!amalgamatingBusinesses.find((b: any) => b.identifier === business.identifier)) {
-        amalgamatingBusinesses.push(tingBusiness)
-
-        // Set the new amalgamated businesses array in the store.
-        this.setAmalgamatingBusinesses(amalgamatingBusinesses)
-      }
+    if (this.getAmalgamatingBusinesses.find((b: any) => b.identifier === businessInfo.identifier)) {
+      this.snackbarText = 'Business is already in table.'
+      this.snackbar = true
+      return
     }
 
-    // Close the "Add an Amalgamating Business" Panel.
+    // Create amalgamating business object.
+    const tingBusiness = {
+      type: 'lear',
+      role: AmlRoles.AMALGAMATING,
+      identifier: businessInfo.identifier,
+      name: businessInfo.legalName,
+      email: authInfo.contacts[0].email,
+      legalType: businessInfo.legalType,
+      address: addresses.registeredOffice.mailingAddress,
+      goodStanding: businessInfo.goodStanding
+    } as AmalgamatingBusinessIF
+
+    // Add the new business to a new array and store the new array.
+    const amalgamatingBusinesses = this.getAmalgamatingBusinesses
+    amalgamatingBusinesses.push(tingBusiness)
+    this.setAmalgamatingBusinesses(amalgamatingBusinesses)
+
+    // Close the "Add an Amalgamating Business" panel.
     this.isAddingAmalgamatingBusiness = false
-    this.setAmalgamatingBusinessesValid(true)
   }
 
   /** Sets validity according to various flags. */

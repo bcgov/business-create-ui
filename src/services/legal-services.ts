@@ -1,7 +1,7 @@
 import { AxiosInstance as axios } from '@/utils'
 import { StatusCodes } from 'http-status-codes'
-import { AmalgamationFilingIF, DissolutionFilingIF, IncorporationFilingIF, NameRequestIF, RegistrationFilingIF,
-  RestorationFilingIF } from '@/interfaces'
+import { AmalgamationFilingIF, BusinessIF, DissolutionFilingIF, IncorporationFilingIF, NameRequestIF,
+  RegistrationFilingIF, RestorationFilingIF } from '@/interfaces'
 import { FilingTypes } from '@/enums'
 
 /**
@@ -175,10 +175,14 @@ export default class LegalServices {
   /**
    * Fetches business info.
    * @param businessId the business identifier
-   * @returns a promise to return the info from the response, else exception
+   * @returns a promise to return the business info, else exception
    */
-  static async fetchBusinessInfo (businessId: string): Promise<any> {
+  static async fetchBusinessInfo (businessId: string): Promise<BusinessIF> {
     const url = `businesses/${businessId}`
-    return axios.get(url)
+    return axios.get(url).then(response => {
+      const data = response?.data
+      if (!data) throw new Error('Invalid API response')
+      return data.business
+    })
   }
 }
