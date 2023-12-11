@@ -178,7 +178,7 @@ export default class LegalServices {
    * @returns a promise to return the addresses from the response, else exception
    */
   static fetchAddresses (businessId: string): Promise<any> {
-    const url = `businesses/${businessId}/addresses2`
+    const url = `businesses/${businessId}/addresses`
     return axios.get(url).then(response => {
       const data = response?.data
       if (!data) throw new Error('Invalid API response')

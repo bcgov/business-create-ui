@@ -230,6 +230,7 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
     }
 
     // Add the new business to a new array and store the new array.
+    // *** TODO: create a new action for this instead
     const amalgamatingBusinesses = this.getAmalgamatingBusinesses
     amalgamatingBusinesses.push(tingBusiness)
     this.setAmalgamatingBusinesses(amalgamatingBusinesses)
