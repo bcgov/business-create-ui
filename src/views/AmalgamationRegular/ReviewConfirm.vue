@@ -33,7 +33,10 @@
           icon="mdi-domain"
           label="Amalgamating Businesses Information"
         />
-        <div class="pa-4">
+        <div
+          class="pa-4"
+          :class="{ 'invalid-section': !getAmalgamatingBusinessesValid }"
+        >
           <BusinessTableSummary />
         </div>
       </v-card>
@@ -277,6 +280,7 @@ import { FilingNames } from '@bcrs-shared-components/enums'
   }
 })
 export default class AmalgamationRegularReviewConfirm extends Vue {
+  @Getter(useStore) getAmalgamatingBusinessesValid!: boolean
   @Getter(useStore) getBusinessContact!: ContactPointIF
   @Getter(useStore) getCertifyState!: CertifyIF
   @Getter(useStore) getCourtOrderStep!: CourtOrderStepIF
