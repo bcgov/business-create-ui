@@ -99,8 +99,8 @@ export default class BusinessTable extends Mixins(AmalgamationMixin) {
   readonly AmlTypes = AmlTypes
   readonly GetCorpFullDescription = GetCorpFullDescription
 
-  @Action(useStore) setAmalgamatingBusinesses!: (x: AmalgamatingBusinessIF[]) => void
   @Action(useStore) setDefineCompanyStepValidity!: (x: boolean) => void
+  @Action(useStore) spliceAmalgamatingBusiness!: (x: number) => void
 
   /**
    * This is the list of amalgamating businesses with computed statuses.
@@ -166,10 +166,8 @@ export default class BusinessTable extends Mixins(AmalgamationMixin) {
   }
 
   removeBusiness (index: number): void {
-    const temp = this.getAmalgamatingBusinesses
-    temp.splice(index, 1)
-    // set updated list to trigger reactivity
-    this.setAmalgamatingBusinesses(temp)
+    // Delete this item from amalgamating businesses list.
+    this.spliceAmalgamatingBusiness(index)
   }
 
   @Watch('businesses', { deep: true, immediate: true })

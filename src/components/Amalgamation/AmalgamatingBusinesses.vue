@@ -171,7 +171,7 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
   @Getter(useStore) isAmalgamationFilingHorizontal!: boolean
   @Getter(useStore) isRoleStaff!: boolean
 
-  @Action(useStore) setAmalgamatingBusinesses!: (x: Array<AmalgamatingBusinessIF>) => void
+  @Action(useStore) pushAmalgamatingBusiness!: (x: AmalgamatingBusinessIF) => void
   @Action(useStore) setAmalgamatingBusinessesValid!: (x: boolean) => void
 
   // Local properties
@@ -229,11 +229,8 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
         (filings[0]?.filingSubType === RestorationTypes.LTD_EXTEND)
     }
 
-    // Add the new business to a new array and store the new array.
-    // *** TODO: create a new action for this instead
-    const amalgamatingBusinesses = this.getAmalgamatingBusinesses
-    amalgamatingBusinesses.push(tingBusiness)
-    this.setAmalgamatingBusinesses(amalgamatingBusinesses)
+    // Add the new business to the amalgamating businesses list.
+    this.pushAmalgamatingBusiness(tingBusiness)
 
     // Close the "Add an Amalgamating Business" panel.
     this.isAddingAmalgamatingBusiness = false
