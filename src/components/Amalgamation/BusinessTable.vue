@@ -69,15 +69,16 @@
 </template>
 
 <script lang="ts">
-import { Component, Emit, Vue, Watch } from 'vue-property-decorator'
-import { Getter, Action } from 'pinia-class'
+import { Component, Emit, Mixins, Watch } from 'vue-property-decorator'
+import { Action } from 'pinia-class'
 import { getName } from 'country-list'
 import { useStore } from '@/store/store'
 import { AmalgamatingStatuses, AmlRoles } from '@/enums'
 import { AmalgamatingBusinessIF } from '@/interfaces'
 import { BaseAddress } from '@bcrs-shared-components/base-address'
 import BusinessStatus from './BusinessStatus.vue'
-import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
+import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
+import { AmalgamationMixin } from '@/mixins'
 
 @Component({
   components: {
@@ -85,75 +86,32 @@ import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp
     BusinessStatus
   }
 })
-export default class BusinessTable extends Vue {
+export default class BusinessTable extends Mixins(AmalgamationMixin) {
   readonly AmlRoles = AmlRoles
   readonly GetCorpFullDescription = GetCorpFullDescription
-
-  @Getter(useStore) getAmalgamatingBusinesses!: AmalgamatingBusinessIF[]
-  @Getter(useStore) isRoleStaff!: boolean
-  @Getter(useStore) isTypeBcCcc!: boolean
-  @Getter(useStore) isTypeBcUlcCompany!: boolean
 
   @Action(useStore) setAmalgamatingBusinesses!: (x: AmalgamatingBusinessIF[]) => void
   @Action(useStore) setDefineCompanyStepValidity!: (x: boolean) => void
 
-  // *** I'M STILL WONDERING IF I WANT TO USE THESE
-  // readonly isLear = (item: AmalgamatingBusinessIF): boolean => (item?.type === 'lear')
-  // readonly isForeign = (item: AmalgamatingBusinessIF): boolean => (item?.type === 'foreign')
-
-  /** True if there a limited company in the table. */
-  get isAnyLimited (): boolean {
-    return this.businesses.some(business =>
-      (business.type === 'lear' && business.legalType === CorpTypeCd.BC_COMPANY)
-    )
-  }
-
   /**
    * This is the list of amalgamating businesses with computed statuses.
-   * In other words, these are the business rules.
+   * In other words, this is where the business rules are evaluated.
    */
   get businesses (): AmalgamatingBusinessIF[] {
     return this.getAmalgamatingBusinesses.map(business => {
-      /* eslint-disable brace-style */
+      // evaluate the rules for the current business
+      // assign the value of the first failed rule (if any) else OK
+      business.status = this.rules.reduce(
+        (status: AmalgamatingStatuses, rule: (business: AmalgamatingBusinessIF) => AmalgamatingStatuses) => {
+          // if we already failed a rule, don't check the rest of the rules
+          if (status) return status
+          // return the value of the current rule (may be null)
+          return rule(business)
+        },
+        null
+      ) || AmalgamatingStatuses.OK
 
-      // disallow foreign altogether if not staff
-      // (could happen if staff added it and regular user resumes draft)
-      if (business.type === 'foreign' && !this.isRoleStaff) {
-        business.status = AmalgamatingStatuses.ERROR_FOREIGN
-      }
-
-      // disallow foreign into ULC if there is also a limited
-      else if (business.type === 'foreign' && this.isTypeBcUlcCompany && this.isAnyLimited) {
-        business.status = AmalgamatingStatuses.ERROR_FOREIGN
-      }
-
-      // assume business is not affiliated if we don't have address (non-staff only)
-      else if (business.type === 'lear' && !business.address && !this.isRoleStaff) {
-        business.status = AmalgamatingStatuses.ERROR_AFFILIATION
-      }
-
-      // identify CCC mismatch
-      else if (business.type === 'lear' && business.legalType === CorpTypeCd.BC_CCC && !this.isTypeBcCcc) {
-        business.status = AmalgamatingStatuses.ERROR_CCC_MISMATCH
-      }
-
-      // disallow NIGS if not staff
-      else if (business.type === 'lear' && !business.goodStanding && !this.isRoleStaff) {
-        business.status = AmalgamatingStatuses.ERROR_NIGS
-      }
-
-      // check if limited restoration
-      // *** TODO
-
-      // check for future effective filing
-      // *** TODO
-
-      // otherwise, status is OK
-      else {
-        business.status = AmalgamatingStatuses.OK
-      }
-      /* eslint-enable brace-style */
-
+      // return updated business object
       return business
     })
   }

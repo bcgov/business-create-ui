@@ -106,7 +106,7 @@
       <ul>
         Amalgamating Businesses: <br><br>
         <li
-          v-for="(business, index) in amalgamatingBusinesses"
+          v-for="(business, index) in getAmalgamatingBusinesses"
           :key="index"
         >
           <template v-if="business.foundingDate">
@@ -127,8 +127,6 @@
       </ul>
     </v-row> -->
 
-    <!-- FOR DEBUGGING -->
-    <!-- <pre>getAmalgamatingBusinesses={{ getAmalgamatingBusinesses }}</pre> -->
     <BusinessTable
       class="mt-8"
       :class="{ 'invalid-section': getShowErrors && !businessTableValid }"
@@ -138,7 +136,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins } from 'vue-property-decorator'
+import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { CommonMixin } from '@/mixins'
@@ -161,12 +159,10 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
   @Getter(useStore) isAmalgamationFilingHorizontal!: boolean
   @Getter(useStore) isRoleStaff!: boolean
 
-  @Action(useStore) setAmalgamatingBusinesses!: (x: Array<any>) => void
+  @Action(useStore) setAmalgamatingBusinesses!: (x: Array<AmalgamatingBusinessIF>) => void
   @Action(useStore) setAmalgamatingBusinessesValid!: (x: boolean) => void
 
   // Local properties
-  amalgamatingBusinessesValid = false
-  amalgamatingBusinesses = []
   initialBusinessLookupObject = EmptyBusinessLookup
   businessTableValid = false
 
@@ -175,11 +171,6 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
   isAddingAmalgamatingForeignBusiness = false
 
   readonly BusinessLookupServices = BusinessLookupServices
-
-  // If continuing a draft, initialize the amalgamatingBusinesses array as the previously saved one.
-  mounted (): void {
-    if (this.getAmalgamatingBusinesses) this.amalgamatingBusinesses = this.getAmalgamatingBusinesses
-  }
 
   // Cancel button in "Add an Amalgamating Business" is pressed.
   addAmalgamatingBusinessCancel (): void {
@@ -224,6 +215,8 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
     // If the amalgamating businesses array is not empty, check if identifier already exists.
     // If identifier already exists, don't add the business to the array.
     if (business) {
+      const amalgamatingBusinesses = this.getAmalgamatingBusinesses
+
       const tingBusiness = {
         type: 'lear',
         role: AmlRoles.AMALGAMATING,
@@ -235,17 +228,29 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
         goodStanding: business.goodStanding
       } as AmalgamatingBusinessIF
 
-      if (!this.amalgamatingBusinesses.find(b => b.identifier === business.identifier)) {
-        this.amalgamatingBusinesses.push(tingBusiness)
+      if (!amalgamatingBusinesses.find((b: any) => b.identifier === business.identifier)) {
+        amalgamatingBusinesses.push(tingBusiness)
+
+        // Set the new amalgamated businesses array in the store.
+        this.setAmalgamatingBusinesses(amalgamatingBusinesses)
       }
     }
-
-    // Set the amalgamated businesses array in the store.
-    this.setAmalgamatingBusinesses(this.amalgamatingBusinesses)
 
     // Close the "Add an Amalgamating Business" Panel.
     this.isAddingAmalgamatingBusiness = false
     this.setAmalgamatingBusinessesValid(true)
+  }
+
+  /** Sets validity according to various flags. */
+  @Watch('businessTableValid')
+  @Watch('isAddingAmalgamatingBusiness')
+  @Watch('isAddingAmalgamatingForeignBusiness')
+  private onBusinessTableValid (): void {
+    this.setAmalgamatingBusinessesValid(
+      this.businessTableValid &&
+      !this.isAddingAmalgamatingBusiness &&
+      !this.isAddingAmalgamatingForeignBusiness
+    )
   }
 }
 </script>
@@ -256,5 +261,4 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
 .v-btn:not(.v-btn--round).v-size--default {
   height: 44px;
 }
-
 </style>
