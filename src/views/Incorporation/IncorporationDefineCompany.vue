@@ -237,7 +237,7 @@ export default class IncorporationDefineCompany extends Mixins(CommonMixin) {
   /** Object of valid flags. Must match validComponents. */
   get validFlags (): object {
     return {
-      validNameTranslation: this.isTypeCoop ? true : this.getNameTranslationsValid,
+      validNameTranslations: this.isTypeCoop ? true : this.getNameTranslationsValid,
       validCooperativeType: this.isTypeCoop ? this.hasValidCooperativeType : true,
       validAddressForm: this.addressFormValid,
       validBusinessContactForm: this.businessContactFormValid

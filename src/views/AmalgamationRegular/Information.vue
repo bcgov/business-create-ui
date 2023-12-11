@@ -46,7 +46,6 @@
 import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { Getter, Action } from 'pinia-class'
 import { useStore } from '@/store/store'
-import { DefineCompanyIF } from '@/interfaces'
 import { CommonMixin } from '@/mixins'
 import { RouteNames } from '@/enums'
 import { ExpandableHelp } from '@bcrs-shared-components/expandable-help'
@@ -65,10 +64,9 @@ import NameTranslations from '@/components/common/NameTranslations.vue'
   }
 })
 export default class AmalgamationRegularInformation extends Mixins(CommonMixin) {
-  @Getter(useStore) getDefineCompanyStep!: DefineCompanyIF
+  @Getter(useStore) getAmalgamatingBusinessesValid!: boolean
   @Getter(useStore) getNameTranslationsValid!: boolean
   @Getter(useStore) getShowErrors!: boolean
-  @Getter(useStore) isBaseCompany!: boolean
 
   @Action(useStore) setDefineCompanyStepValidity!: (x: boolean) => void
   @Action(useStore) setIgnoreChanges!: (x: boolean) => void
@@ -85,8 +83,8 @@ export default class AmalgamationRegularInformation extends Mixins(CommonMixin) 
   /** Object of valid flags. Must match validComponents above. */
   get validFlags (): object {
     return {
-      validAmalgamatingBusinesses: this.amalgamatingBusinessesValid,
-      validNameTranslation: this.getNameTranslationsValid
+      validAmalgamatingBusinesses: this.getAmalgamatingBusinessesValid,
+      validNameTranslations: this.getNameTranslationsValid
     }
   }
 
@@ -101,8 +99,8 @@ export default class AmalgamationRegularInformation extends Mixins(CommonMixin) 
     })
   }
 
-  onAmalgamatingBusinessesValid (valid: boolean): void {
-    this.amalgamatingBusinessesValid = valid
+  @Watch('getAmalgamatingBusinessesValid')
+  private onAmalgamatingBusinessesValid (): void {
     this.setDefineCompanyStepValidity(
       this.amalgamatingBusinessesValid &&
       this.getNameTranslationsValid
