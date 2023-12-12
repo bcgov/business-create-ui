@@ -82,10 +82,74 @@
         flat
         class="section-container mt-4"
       >
-        <ForeignBusiness
-          @add:foreignBusiness="saveAmalgamatingForeignBusiness($event)"
-          @cancel="isAddingAmalgamatingForeignBusiness = false"
-        />
+        <v-form
+          id="foreignBusinessForm"
+          ref="foreignBusinessForm"
+          @submit.prevent
+        >
+          <v-row no-gutters>
+            <v-col
+              cols="12"
+              sm="3"
+            >
+              <label>Add a Foreign Business</label>
+            </v-col>
+            <v-col
+              cols="12"
+              sm="9"
+            >
+              <Jurisdiction
+                :errorMessages="jurisdictionErrorMessage"
+                @change="onJurisdictionChange($event)"
+              />
+            </v-col>
+            <v-col
+              cols="12"
+              sm="9"
+              offset="3"
+            >
+              <v-text-field
+                v-model="legalName"
+                filled
+                label="Business' full legal name in home jurisdiction"
+                :rules="foreignBusinessRules"
+              />
+            </v-col>
+            <v-col
+              cols="12"
+              sm="9"
+              offset="3"
+            >
+              <v-text-field
+                v-model="corpNumber"
+                filled
+                label="Corporate number in home jurisdiction"
+                :rules="foreignBusinessRules"
+              />
+            </v-col>
+            <v-col
+              cols="auto"
+              class="ms-auto"
+            >
+              <v-btn
+                large
+                color="primary"
+                class="mr-3"
+                @click="saveAmalgamatingForeignBusiness()"
+              >
+                Add
+              </v-btn>
+              <v-btn
+                large
+                outlined
+                color="primary"
+                @click="isAddingAmalgamatingForeignBusiness = false"
+              >
+                Cancel
+              </v-btn>
+            </v-col>
+          </v-row>
+        </v-form>
       </v-card>
     </v-expand-transition>
 
@@ -124,20 +188,26 @@ import { useStore } from '@/store/store'
 import { AmalgamationMixin, CommonMixin } from '@/mixins'
 import { BusinessLookupServices } from '@/services'
 import { BusinessLookup } from '@bcrs-shared-components/business-lookup'
+import { Jurisdiction } from '@bcrs-shared-components/jurisdiction'
 import { AmalgamatingBusinessIF, BusinessLookupResultIF, EmptyBusinessLookup } from '@/interfaces'
 import { AmlRoles, AmlTypes } from '@/enums'
+import { Location } from '@bcrs-shared-components/enums'
 import BusinessTable from '@/components/Amalgamation/BusinessTable.vue'
-import ForeignBusiness from '@/components/Amalgamation/ForeignBusiness.vue'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 
 @Component({
   components: {
     BusinessLookup,
     BusinessTable,
-    ForeignBusiness
+    Jurisdiction
   }
 })
 export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, CommonMixin) {
+  // Refs
+  $refs!: {
+    foreignBusinessForm: any
+  }
+
   readonly BusinessLookupServices = BusinessLookupServices
 
   @Getter(useStore) getAmalgamatingBusinessesValid!: boolean
@@ -153,9 +223,29 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
   snackbar = false
   snackbarText = ''
 
+  // Foreign business properties
+  jurisdiction = null
+  legalName = null
+  corpNumber = null
+  isCan = false
+  isForeignBusinessValid = false
+  jurisdictionErrorMessage = ''
+
   // Button properties
   isAddingAmalgamatingBusiness = false
   isAddingAmalgamatingForeignBusiness = false
+
+  /** TextField rules for "Add an Amalgamating Foreign Business" Panel. */
+  get foreignBusinessRules (): Array<(v) => boolean | string> {
+    return [ v => !!v || 'Required.' ]
+  }
+
+  /** Called when Jurisdiction menu item is changed. */
+  onJurisdictionChange (jurisdiction: any): void {
+    this.jurisdiction = jurisdiction
+    this.isCan = jurisdiction.group === 0
+    this.jurisdictionErrorMessage = this.jurisdiction ? '' : 'Required.'
+  }
 
   async saveAmalgamatingBusiness (businessLookup: BusinessLookupResultIF): Promise<void> {
     // Show spinner since the network calls below can take a few seconds.
@@ -241,12 +331,39 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
     this.$root.$emit('showSpinner', false)
   }
 
-  saveAmalgamatingForeignBusiness (tingBusiness: AmalgamatingBusinessIF): void {
+  saveAmalgamatingForeignBusiness (): void {
+    // Validate
+    this.validateAddAmalgamatingForeignBusiness()
+    if (!this.isForeignBusinessValid) return
+
+    // Create the amalgamating foreign business object
+    const tingBusiness = {
+      type: AmlTypes.FOREIGN,
+      role: AmlRoles.AMALGAMATING,
+      foreignJurisdiction: {
+        region: this.isCan ? this.jurisdiction.text : '',
+        country: this.isCan ? Location.CA : this.jurisdiction.value
+      },
+      legalName: this.legalName,
+      corpNumber: this.corpNumber
+    } as AmalgamatingBusinessIF
+
     // Set the amalgamated businesses array in the store.
     this.pushAmalgamatingBusiness(tingBusiness)
 
     // Close the "Add an Amalgamating Foreign Business" Panel.
     this.isAddingAmalgamatingForeignBusiness = false
+  }
+
+  /** Validate Add Amalgamating Foreign Business. */
+  validateAddAmalgamatingForeignBusiness (): void {
+    this.isForeignBusinessValid = (
+      this.jurisdiction &&
+      this.legalName &&
+      this.corpNumber
+    )
+    this.jurisdictionErrorMessage = this.jurisdiction ? '' : 'Required.'
+    this.$refs.foreignBusinessForm.validate()
   }
 
   /** Sets validity according to various flags. */
@@ -259,6 +376,12 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
       !this.isAddingAmalgamatingBusiness &&
       !this.isAddingAmalgamatingForeignBusiness
     )
+
+    // Reset "Add an Amalgamating Foreign Business" Panel on change
+    this.jurisdiction = null
+    this.legalName = null
+    this.corpNumber = null
+    this.jurisdictionErrorMessage = ''
   }
 }
 </script>
@@ -268,5 +391,13 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
 
 .v-btn:not(.v-btn--round).v-size--default {
   height: 44px;
+}
+
+#foreignBusinessForm {
+  // un-bold v-text-field labels
+  :deep(.v-label) {
+      font-weight: normal;
+    color: $gray7;
+  }
 }
 </style>
