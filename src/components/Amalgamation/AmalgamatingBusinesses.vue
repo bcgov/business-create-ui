@@ -6,7 +6,7 @@
       color="primary"
       class="btn-outlined-primary"
       :disabled="isAddingAmalgamatingBusiness || isAddingAmalgamatingForeignBusiness"
-      @click="onAddBusinessClick()"
+      @click="isAddingAmalgamatingBusiness = true"
     >
       <v-icon>mdi-domain-plus</v-icon>
       <span>Add an Amalgamating Business</span>
@@ -19,7 +19,7 @@
       color="primary"
       class="ml-2 btn-outlined-primary"
       :disabled="isAddingAmalgamatingBusiness || isAddingAmalgamatingForeignBusiness"
-      @click="onAddForeignBusinessClick()"
+      @click="isAddingAmalgamatingForeignBusiness = true"
     >
       <v-icon>mdi-domain-plus</v-icon>
       <span>Add an Amalgamating Foreign Business</span>
@@ -46,8 +46,8 @@
             class="ml-8"
           >
             <span>Enter the name or the incorporation number of the registered BC business
-              to add to this application.
-            </span>
+              to add to this application.</span>
+
             <BusinessLookup
               :showErrors="false"
               :businessLookup="initialBusinessLookupObject"
@@ -56,6 +56,7 @@
               label="Business Name or Incorporation Number"
               @setBusiness="saveAmalgamatingBusiness($event)"
             />
+
             <v-row
               class="justify-end mr-0 mt-2"
             >
@@ -64,7 +65,7 @@
                 large
                 outlined
                 color="primary"
-                @click="addAmalgamatingBusinessCancel()"
+                @click="isAddingAmalgamatingBusiness = false"
               >
                 <span>Cancel</span>
               </v-btn>
@@ -95,6 +96,20 @@
             class="ml-8"
           >
             <span>**TODO**</span>
+
+            <v-row
+              class="justify-end mr-0 mt-2"
+            >
+              <v-btn
+                id="app-cancel-btn"
+                large
+                outlined
+                color="primary"
+                @click="isAddingAmalgamatingForeignBusiness = false"
+              >
+                <span>Cancel</span>
+              </v-btn>
+            </v-row>
           </v-col>
 
           <!-- extra column is for possible action button -->
@@ -102,30 +117,25 @@
       </v-card>
     </v-expand-transition>
 
-    <!-- <v-row class="mt-4 ml-1">
-      <ul>
-        Amalgamating Businesses: <br><br>
-        <li
-          v-for="(business, index) in getAmalgamatingBusinesses"
-          :key="index"
+    <!-- snackbar to temporarily show fetch errors -->
+    <v-snackbar
+      v-model="snackbar"
+      timeout="5000"
+    >
+      {{ snackbarText }}
+
+      <template #action="{ attrs }">
+        <v-btn
+          color="error"
+          class="font-weight-bold"
+          text
+          v-bind="attrs"
+          @click="snackbar = false"
         >
-          <template v-if="business.foundingDate">
-            Legal Name: {{ business.legalName }} <br>
-            Legal Type: {{ business.legalType }} <br>
-            Mailing Address: {{ business.officeAddress.registeredOffice.mailingAddress }} <br>
-            Email Address: {{ business.businessContact.email }} <br>
-            State: {{ business.state }} <br>
-            Good Standing: {{ business.goodStanding }} <br>
-        </template>
-          <template v-else>
-            Legal Name: {{ business.name }} <br>
-            Legal Type: {{ business.legalType }} <br>
-            Identifier: {{ business.identifier }} <br>
-            Status: {{ business.status }}
-          </template>
-        </li>
-      </ul>
-    </v-row> -->
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
 
     <BusinessTable
       class="mt-8"
@@ -142,9 +152,10 @@ import { useStore } from '@/store/store'
 import { CommonMixin } from '@/mixins'
 import { AuthServices, BusinessLookupServices, LegalServices } from '@/services'
 import { BusinessLookup } from '@bcrs-shared-components/business-lookup'
-import { AmalgamatingBusinessIF, BusinessLookupIF, EmptyBusinessLookup } from '@/interfaces'
-import { AmlRoles } from '@/enums'
+import { AmalgamatingBusinessIF, BusinessLookupResultIF, EmptyBusinessLookup } from '@/interfaces'
+import { AmlRoles, AmlTypes, RestorationTypes } from '@/enums'
 import BusinessTable from '@/components/Amalgamation/BusinessTable.vue'
+import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 
 @Component({
   components: {
@@ -153,92 +164,115 @@ import BusinessTable from '@/components/Amalgamation/BusinessTable.vue'
   }
 })
 export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
+  readonly BusinessLookupServices = BusinessLookupServices
+
   @Getter(useStore) getAmalgamatingBusinesses!: AmalgamatingBusinessIF[]
   @Getter(useStore) getAmalgamatingBusinessesValid!: boolean
+  @Getter(useStore) getCurrentDate!: string
   @Getter(useStore) getShowErrors!: boolean
   @Getter(useStore) isAmalgamationFilingHorizontal!: boolean
   @Getter(useStore) isRoleStaff!: boolean
 
-  @Action(useStore) setAmalgamatingBusinesses!: (x: Array<AmalgamatingBusinessIF>) => void
+  @Action(useStore) pushAmalgamatingBusiness!: (x: AmalgamatingBusinessIF) => void
   @Action(useStore) setAmalgamatingBusinessesValid!: (x: boolean) => void
 
   // Local properties
   initialBusinessLookupObject = EmptyBusinessLookup
   businessTableValid = false
+  snackbar = false
+  snackbarText = ''
 
   // Button properties
   isAddingAmalgamatingBusiness = false
   isAddingAmalgamatingForeignBusiness = false
 
-  readonly BusinessLookupServices = BusinessLookupServices
-
-  // Cancel button in "Add an Amalgamating Business" is pressed.
-  addAmalgamatingBusinessCancel (): void {
-    this.isAddingAmalgamatingBusiness = false
-    this.setAmalgamatingBusinessesValid(true)
-  }
-
-  // "Add an Amalgamating Business" button is pressed.
-  onAddBusinessClick (): void {
-    this.isAddingAmalgamatingBusiness = true
-    this.isAddingAmalgamatingForeignBusiness = false
-    this.setAmalgamatingBusinessesValid(false)
-  }
-
-  // "Add an Amalgamating Foreign Business" button is pressed.
-  onAddForeignBusinessClick (): void {
-    this.isAddingAmalgamatingBusiness = false
-    this.isAddingAmalgamatingForeignBusiness = true
-    this.setAmalgamatingBusinessesValid(false)
-  }
-
-  async saveAmalgamatingBusiness (businessLookup: BusinessLookupIF): Promise<void> {
-    let business = null
-
-    // Get the amalgamating business information, mailing address, and email if in LEAR.
-    // Otherwise, return the businesslookup object.
-    const data = await Promise.all([
-      LegalServices.fetchBusinessInfo(businessLookup.identifier),
+  async saveAmalgamatingBusiness (businessLookup: BusinessLookupResultIF): Promise<void> {
+    // Get the auth info, business info, addresses and filings in parallel.
+    // Return data array; if any call failed, that item will be undefined.
+    const data = await Promise.allSettled([
       AuthServices.fetchAuthInfo(businessLookup.identifier),
-      LegalServices.fetchAddresses(businessLookup.identifier)
-    ]).catch((error) => {
-      return error
-    })
+      LegalServices.fetchBusinessInfo(businessLookup.identifier),
+      LegalServices.fetchAddresses(businessLookup.identifier),
+      LegalServices.fetchFirstOrOnlyFiling(businessLookup.identifier)
+    ]).then(results => results.map((result: any) => result.value))
 
-    if (data.length === 3) {
-      business = data[0].data?.business
-      business.businessContact = data[1].contacts[0]
-      business.officeAddress = data[2]
-    }
+    const authInfo = data[0]
+    const businessInfo = data[1]
+    const addresses = data[2]
+    const firstFiling = data[3]
 
-    // If the business is not null (LEAR Entity), create from it a TING business following the interface.
-    // If the amalgamating businesses array is not empty, check if identifier already exists.
-    // If identifier already exists, don't add the business to the array.
-    if (business) {
-      const amalgamatingBusinesses = this.getAmalgamatingBusinesses
-
-      const tingBusiness = {
-        type: 'lear',
-        role: AmlRoles.AMALGAMATING,
-        identifier: business.identifier,
-        name: business.legalName,
-        email: business.businessContact.email,
-        legalType: business.legalType,
-        address: business.officeAddress.registeredOffice.mailingAddress,
-        goodStanding: business.goodStanding
-      } as AmalgamatingBusinessIF
-
-      if (!amalgamatingBusinesses.find((b: any) => b.identifier === business.identifier)) {
-        amalgamatingBusinesses.push(tingBusiness)
-
-        // Set the new amalgamated businesses array in the store.
-        this.setAmalgamatingBusinesses(amalgamatingBusinesses)
+    // Check for unaffiliated business.
+    if (!authInfo) {
+      // If a staff account couldn't fetch the auth info then the business doesn't exist.
+      if (this.isRoleStaff) {
+        this.snackbarText = 'Business doesn\'t exist in LEAR.'
+        this.snackbar = true
+        return
       }
+
+      // Otherwise, assume the business is unaffiliated and add it to the table.
+      this.pushAmalgamatingBusiness({
+        type: AmlTypes.LEAR,
+        role: AmlRoles.AMALGAMATING,
+        identifier: businessLookup.identifier,
+        name: businessLookup.name,
+        legalType: businessLookup.legalType as unknown as CorpTypeCd
+      })
+
+      // Close the "Add an Amalgamating Business" panel.
+      this.isAddingAmalgamatingBusiness = false
+
+      return
     }
 
-    // Close the "Add an Amalgamating Business" Panel.
+    // Check for Legal API fetch issues.
+    if (!businessInfo || !addresses || !firstFiling) {
+      this.snackbarText = 'Unable to add that business.'
+      this.snackbar = true
+      return
+    }
+
+    // Verify that identifier doesn't already exist.
+    if (this.getAmalgamatingBusinesses.find((b: any) => b.identifier === businessInfo.identifier)) {
+      this.snackbarText = 'Business is already in table.'
+      this.snackbar = true
+      return
+    }
+
+    // If there is a state filing and restoration expiry date isn't in the past and the state filing is a
+    // limited restoration or limited restoration extension, then this business is in limited restoration.
+    const isLimitedRestoration = async (): Promise<boolean> => {
+      // check for no state filing
+      if (!businessInfo.stateFiling) return false
+      // check for expired restoration
+      if (this.getCurrentDate > businessInfo.restorationExpiryDate) return false
+      // fetch state filing
+      const stateFiling = await LegalServices.fetchFiling(businessInfo.stateFiling)
+      return (
+        stateFiling.restoration.type === RestorationTypes.LIMITED ||
+        stateFiling.restoration.type === RestorationTypes.LTD_EXTEND
+      )
+    }
+
+    // Create amalgamating business object.
+    const tingBusiness: AmalgamatingBusinessIF = {
+      type: AmlTypes.LEAR,
+      role: AmlRoles.AMALGAMATING,
+      identifier: businessInfo.identifier,
+      name: businessInfo.legalName,
+      email: authInfo.contacts[0].email,
+      legalType: businessInfo.legalType,
+      address: addresses.registeredOffice.mailingAddress,
+      isNotInGoodStanding: (businessInfo.goodStanding === false),
+      isFutureEffective: (firstFiling.isFutureEffective === true),
+      isLimitedRestoration: await isLimitedRestoration()
+    }
+
+    // Add the new business to the amalgamating businesses list.
+    this.pushAmalgamatingBusiness(tingBusiness)
+
+    // Close the "Add an Amalgamating Business" panel.
     this.isAddingAmalgamatingBusiness = false
-    this.setAmalgamatingBusinessesValid(true)
   }
 
   /** Sets validity according to various flags. */
