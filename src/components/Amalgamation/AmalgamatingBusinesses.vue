@@ -117,6 +117,12 @@
       </v-card>
     </v-expand-transition>
 
+    <BusinessTable
+      class="mt-8"
+      :class="{ 'invalid-section': getShowErrors && !businessTableValid }"
+      @valid="businessTableValid=$event"
+    />
+
     <!-- snackbar to temporarily show fetch errors -->
     <v-snackbar
       v-model="snackbar"
@@ -136,12 +142,6 @@
         </v-btn>
       </template>
     </v-snackbar>
-
-    <BusinessTable
-      class="mt-8"
-      :class="{ 'invalid-section': getShowErrors && !businessTableValid }"
-      @valid="businessTableValid=$event"
-    />
   </div>
 </template>
 
@@ -187,14 +187,15 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
   isAddingAmalgamatingForeignBusiness = false
 
   async saveAmalgamatingBusiness (businessLookup: BusinessLookupResultIF): Promise<void> {
-    // Get the auth info, business info, addresses and filings in parallel.
-    // Return data array; if any call failed, that item will be undefined.
+    // Get the auth info, business info, addresses and filings concurrently.
+    // Return data array; if any call failed, that item will be null.
+    // *** TODO: add spinner as these calls may take a few seconds
     const data = await Promise.allSettled([
       AuthServices.fetchAuthInfo(businessLookup.identifier),
       LegalServices.fetchBusinessInfo(businessLookup.identifier),
       LegalServices.fetchAddresses(businessLookup.identifier),
       LegalServices.fetchFirstOrOnlyFiling(businessLookup.identifier)
-    ]).then(results => results.map((result: any) => result.value))
+    ]).then(results => results.map((result: any) => result.value || null))
 
     const authInfo = data[0]
     const businessInfo = data[1]
@@ -232,15 +233,15 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
       return
     }
 
-    // Verify that identifier doesn't already exist.
+    // Check for duplicate.
     if (this.getAmalgamatingBusinesses.find((b: any) => b.identifier === businessInfo.identifier)) {
       this.snackbarText = 'Business is already in table.'
       this.snackbar = true
       return
     }
 
-    // If there is a state filing and restoration expiry date isn't in the past and the state filing is a
-    // limited restoration or limited restoration extension, then this business is in limited restoration.
+    // This business is in limited restoration if there is a state filing and restoration expiry date isn't
+    // in the past and the state filing is a limited restoration or a limited restoration extension.
     const isLimitedRestoration = async (): Promise<boolean> => {
       // check for no state filing
       if (!businessInfo.stateFiling) return false
