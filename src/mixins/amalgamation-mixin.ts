@@ -23,7 +23,8 @@ export default class AmalgamationMixin extends Vue {
     this.futureEffectiveFiling,
     this.foreign,
     this.foreignUlc,
-    this.cccMismatch
+    this.cccMismatch,
+    this.ulcMismatch
   ]
 
   /** If we don't have an address, assume business is not affiliated (except for staff). */
@@ -77,7 +78,7 @@ export default class AmalgamationMixin extends Vue {
     return null
   }
 
-  /** Identify CCC mismatch. */
+  /** Disallow CCC mismatch. */
   cccMismatch (business: AmalgamatingBusinessIF): AmlStatuses {
     if (business.type === AmlTypes.LEAR && business.legalType === CorpTypeCd.BC_CCC && !this.isTypeBcCcc) {
       return AmlStatuses.ERROR_CCC_MISMATCH
@@ -85,11 +86,37 @@ export default class AmalgamationMixin extends Vue {
     return null
   }
 
-  // *** TODO: identify ULC mismatch here, and more...
+  /** Disallow ULC mismatch. */
+  ulcMismatch (business: AmalgamatingBusinessIF): AmlStatuses {
+    if (
+      business.type === AmlTypes.LEAR &&
+      business.legalType === CorpTypeCd.BC_ULC_COMPANY &&
+      !this.isTypeBcUlcCompany
+    ) {
+      return AmlStatuses.ERROR_ULC_MISMATCH
+    }
+    return null
+  }
+
+  // TODO: cannot add foreign ULC if there is a BC company and ted is ULC
+
+  // TODO: cannot add BC company if there is a foreign ULC and ted is ULC
 
   //
   // HELPERS
   //
+
+  /** True if there a foreign company in the table. */
+  get isAnyForeign (): boolean {
+    return this.getAmalgamatingBusinesses.some(business => (business.type === AmlTypes.FOREIGN))
+  }
+
+  /** True if there a CCC in the table. */
+  get isAnyCcc (): boolean {
+    return this.getAmalgamatingBusinesses.some(business =>
+      (business.type === AmlTypes.LEAR && business.legalType === CorpTypeCd.BC_CCC)
+    )
+  }
 
   /** True if there a limited company in the table. */
   get isAnyLimited (): boolean {
@@ -98,11 +125,10 @@ export default class AmalgamationMixin extends Vue {
     )
   }
 
-  /** True if there is an unlimited company in the table in Alberta, Nova Scotia or USA. */
-  get isAnyUnlimitedAbNsUsa (): boolean {
-    // *** TODO: finish implementation
+  /** True if there is an unlimited company in the table. */
+  get isAnyUnlimited (): boolean {
     return this.getAmalgamatingBusinesses.some(business =>
-      (business.type === AmlTypes.LEAR && business.legalType === CorpTypeCd.BC_COMPANY)
+      (business.type === AmlTypes.LEAR && business.legalType === CorpTypeCd.BC_ULC_COMPANY)
     )
   }
 }

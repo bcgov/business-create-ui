@@ -43,6 +43,7 @@ export default class BusinessStatus extends Vue {
       case AmlStatuses.ERROR_LIMITED_RESTORATION:
       case AmlStatuses.ERROR_NOT_AFFILIATED:
       case AmlStatuses.ERROR_NOT_IN_GOOD_STANDING:
+      case AmlStatuses.ERROR_ULC_MISMATCH:
         return 'mdi-alert'
 
       default:
@@ -62,6 +63,7 @@ export default class BusinessStatus extends Vue {
       case AmlStatuses.ERROR_LIMITED_RESTORATION:
       case AmlStatuses.ERROR_NOT_AFFILIATED:
       case AmlStatuses.ERROR_NOT_IN_GOOD_STANDING:
+      case AmlStatuses.ERROR_ULC_MISMATCH:
         return 'warning'
 
       default:
@@ -81,6 +83,7 @@ export default class BusinessStatus extends Vue {
       case AmlStatuses.ERROR_LIMITED_RESTORATION:
       case AmlStatuses.ERROR_NOT_AFFILIATED:
       case AmlStatuses.ERROR_NOT_IN_GOOD_STANDING:
+      case AmlStatuses.ERROR_ULC_MISMATCH:
         return 'Attention Required'
 
       default:
@@ -112,6 +115,9 @@ export default class BusinessStatus extends Vue {
       case AmlStatuses.ERROR_NOT_IN_GOOD_STANDING:
         return 'This business is not in good standing. This filing cannot be submitted until all ' +
           'businesses are in good standing.'
+      case AmlStatuses.ERROR_ULC_MISMATCH:
+        return 'A BC Unlimited Liability Company must amalgamate to form a new BC Unlimited Liability ' +
+          'Company.'
 
       default:
         return null // should never happen

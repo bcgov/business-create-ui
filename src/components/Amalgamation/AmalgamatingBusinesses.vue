@@ -126,7 +126,7 @@
     <!-- snackbar to temporarily show fetch errors -->
     <v-snackbar
       v-model="snackbar"
-      timeout="5000"
+      timeout="3000"
     >
       {{ snackbarText }}
 
