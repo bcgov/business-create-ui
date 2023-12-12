@@ -23,7 +23,8 @@ export default class AmalgamationMixin extends Vue {
     this.rule3,
     this.rule4,
     this.rule5,
-    this.rule6
+    this.rule6,
+    this.rule7
   ]
 
   /** True if there a limited company in the table. */
@@ -61,17 +62,8 @@ export default class AmalgamationMixin extends Vue {
     return null
   }
 
-  // disallow foreign into ULC if there is also a limited
-  // *** TODO: this is a duplicate; reuse this for something else
+  // if we don't have an address, assume business is not affiliated (non-staff only)
   rule3 (business: AmalgamatingBusinessIF): AmlStatuses {
-    if (business.type === AmlTypes.FOREIGN && this.isTypeBcUlcCompany && this.isAnyLimited) {
-      return AmlStatuses.ERROR_FOREIGN
-    }
-    return null
-  }
-
-  // if we don't have address, assume business is not affiliated (non-staff only)
-  rule4 (business: AmalgamatingBusinessIF): AmlStatuses {
     // *** TODO: revert staff check
     if (business.type === AmlTypes.LEAR && !business.address /* && !this.isRoleStaff */) {
       return AmlStatuses.ERROR_NOT_AFFILIATED
@@ -80,9 +72,18 @@ export default class AmalgamationMixin extends Vue {
   }
 
   // identify CCC mismatch
-  rule5 (business: AmalgamatingBusinessIF): AmlStatuses {
+  rule4 (business: AmalgamatingBusinessIF): AmlStatuses {
     if (business.type === AmlTypes.LEAR && business.legalType === CorpTypeCd.BC_CCC && !this.isTypeBcCcc) {
       return AmlStatuses.ERROR_CCC_MISMATCH
+    }
+    return null
+  }
+
+  // disallow limited restoration if not staff
+  rule5 (business: AmalgamatingBusinessIF): AmlStatuses {
+    // *** TODO: revert staff check
+    if (business.type === AmlTypes.LEAR && business.isLimitedRestoration /* && !this.isRoleStaff */) {
+      return AmlStatuses.ERROR_LIMITED_RESTORATION
     }
     return null
   }
@@ -96,19 +97,10 @@ export default class AmalgamationMixin extends Vue {
     return null
   }
 
-  // disallow limited restoration if not staff
+  // check for future effective filing
   rule7 (business: AmalgamatingBusinessIF): AmlStatuses {
     // *** TODO: revert staff check
-    if (business.type === AmlTypes.LEAR && business.isLimitedRestoration /* && !this.isRoleStaff */) {
-      return AmlStatuses.ERROR_LIMITED_RESTORATION
-    }
-    return null
-  }
-
-  // check for future effective filing
-  rule8 (business: AmalgamatingBusinessIF): AmlStatuses {
-    // *** TODO: revert staff check
-    if (business.type === AmlTypes.LEAR && business.isLimitedRestoration /* && !this.isRoleStaff */) {
+    if (business.type === AmlTypes.LEAR && business.isFutureEffective /* && !this.isRoleStaff */) {
       return AmlStatuses.ERROR_FUTURE_EFFECTIVE_FILING
     }
     return null

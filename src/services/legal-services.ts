@@ -36,16 +36,24 @@ export default class LegalServices {
   // eslint-disable-next-line max-len
   static async fetchFirstOrOnlyFiling (tempId: string): Promise<AmalgamationFilingIF | IncorporationFilingIF | RegistrationFilingIF> {
     const url = `businesses/${tempId}/filings`
+
     return axios.get(url)
       .then(response => {
-        let filing
-        // if response is a list then look at only the first filing
-        if (Array.isArray(response?.data?.filings)) filing = response.data.filings[0].filing
-        // otherwise expect response to be a single filing
-        if (response?.data?.filing) filing = response.data.filing
+        let filing, filingName, filingId
 
-        const filingName = filing?.header?.name as FilingTypes
-        const filingId = +filing?.header?.filingId || 0
+        // if response is a list then look at only the first filing
+        if (Array.isArray(response?.data?.filings)) {
+          filing = response.data.filings[0]
+          filingName = filing?.name as FilingTypes
+          filingId = filing?.filingId
+        }
+
+        // otherwise expect response to be a single filing
+        if (response?.data?.filing) {
+          filing = response.data.filing
+          filingName = filing?.header?.name as FilingTypes
+          filingId = +filing?.header?.filingId || 0
+        }
 
         if (!filing || !filingName || !filingId) {
           throw new Error('Invalid API response')
@@ -79,18 +87,19 @@ export default class LegalServices {
   }
 
   /**
-   * Fetches the specified filing.
-   * @param businessId the business identifier
-   * @param filingId the filing id
-   * @returns a promise to return the filing, else exception
+   * Fetches a filing.
+   * @param url the full URL to fetch the filing
+   * @returns the filing object
    */
-  static async fetchFiling (businessId: string, filingId: number): Promise<any> {
-    // get the draft filing from the tasks endpoint
-    const url = `businesses/${businessId}/filings/${filingId}`
+  static async fetchFiling (url: string): Promise<any> {
     return axios.get(url)
       .then(response => {
         const filing = response?.data?.filing
-        if (!filing) throw new Error('Invalid API response')
+        if (!filing) {
+          // eslint-disable-next-line no-console
+          console.log('fetchFiling() error - invalid response =', response)
+          throw new Error('Invalid filing')
+        }
         return filing
       })
   }

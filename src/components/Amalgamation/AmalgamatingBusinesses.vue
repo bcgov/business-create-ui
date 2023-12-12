@@ -168,6 +168,7 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
 
   @Getter(useStore) getAmalgamatingBusinesses!: AmalgamatingBusinessIF[]
   @Getter(useStore) getAmalgamatingBusinessesValid!: boolean
+  @Getter(useStore) getCurrentDate!: string
   @Getter(useStore) getShowErrors!: boolean
   @Getter(useStore) isAmalgamationFilingHorizontal!: boolean
   @Getter(useStore) isRoleStaff!: boolean
@@ -192,15 +193,13 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
       AuthServices.fetchAuthInfo(businessLookup.identifier),
       LegalServices.fetchBusinessInfo(businessLookup.identifier),
       LegalServices.fetchAddresses(businessLookup.identifier),
-      LegalServices.fetchFilings(businessLookup.identifier)
+      LegalServices.fetchFirstOrOnlyFiling(businessLookup.identifier)
     ]).then(results => results.map((result: any) => result.value))
 
     const authInfo = data[0]
     const businessInfo = data[1]
     const addresses = data[2]
-    const filings = data[3]
-
-    // console.log('*** data =', data)
+    const firstFiling = data[3]
 
     // Check for unaffiliated business.
     if (!authInfo) {
@@ -227,7 +226,7 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
     }
 
     // Check for Legal API fetch issues.
-    if (!businessInfo || !addresses || !filings) {
+    if (!businessInfo || !addresses || !firstFiling) {
       this.snackbarText = 'Unable to add that business.'
       this.snackbar = true
       return
@@ -240,6 +239,21 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
       return
     }
 
+    // If there is a state filing and restoration expiry date isn't in the past and the state filing is a
+    // limited restoration or limited restoration extension, then this business is in limited restoration.
+    const isLimitedRestoration = async (): Promise<boolean> => {
+      // check for no state filing
+      if (!businessInfo.stateFiling) return false
+      // check for expired restoration
+      if (this.getCurrentDate > businessInfo.restorationExpiryDate) return false
+      // fetch state filing
+      const stateFiling = await LegalServices.fetchFiling(businessInfo.stateFiling)
+      return (
+        stateFiling.restoration.type === RestorationTypes.LIMITED ||
+        stateFiling.restoration.type === RestorationTypes.LTD_EXTEND
+      )
+    }
+
     // Create amalgamating business object.
     const tingBusiness: AmalgamatingBusinessIF = {
       type: AmlTypes.LEAR,
@@ -250,9 +264,8 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
       legalType: businessInfo.legalType,
       address: addresses.registeredOffice.mailingAddress,
       isNotInGoodStanding: (businessInfo.goodStanding === false),
-      isFutureEffective: (filings[0].isFutureEffective === true),
-      isLimitedRestoration: (filings[0].filingSubType === RestorationTypes.LIMITED) ||
-        (filings[0].filingSubType === RestorationTypes.LTD_EXTEND)
+      isFutureEffective: (firstFiling.isFutureEffective === true),
+      isLimitedRestoration: await isLimitedRestoration()
     }
 
     // Add the new business to the amalgamating businesses list.
