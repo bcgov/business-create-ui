@@ -82,38 +82,10 @@
         flat
         class="section-container mt-4"
       >
-        <v-row no-gutters>
-          <v-col
-            cols="12"
-            sm="3"
-          >
-            <label>Add a Foreign Business</label>
-          </v-col>
-
-          <v-col
-            cols="12"
-            sm="8"
-            class="ml-8"
-          >
-            <span>**TODO**</span>
-
-            <v-row
-              class="justify-end mr-0 mt-2"
-            >
-              <v-btn
-                id="app-cancel-btn"
-                large
-                outlined
-                color="primary"
-                @click="isAddingAmalgamatingForeignBusiness = false"
-              >
-                <span>Cancel</span>
-              </v-btn>
-            </v-row>
-          </v-col>
-
-          <!-- extra column is for possible action button -->
-        </v-row>
+        <ForeignBusiness
+          @add:foreignBusiness="saveAmalgamatingForeignBusiness($event)"
+          @cancel="addForeignBusinessCancel()"
+        />
       </v-card>
     </v-expand-transition>
 
@@ -155,12 +127,14 @@ import { BusinessLookup } from '@bcrs-shared-components/business-lookup'
 import { AmalgamatingBusinessIF, BusinessLookupResultIF, EmptyBusinessLookup } from '@/interfaces'
 import { AmlRoles, AmlTypes } from '@/enums'
 import BusinessTable from '@/components/Amalgamation/BusinessTable.vue'
+import ForeignBusiness from '@/components/Amalgamation/ForeignBusiness.vue'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 
 @Component({
   components: {
     BusinessLookup,
-    BusinessTable
+    BusinessTable,
+    ForeignBusiness
   }
 })
 export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, CommonMixin) {
@@ -265,6 +239,14 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
 
     // Hide spinner.
     this.$root.$emit('showSpinner', false)
+  }
+
+  saveAmalgamatingForeignBusiness (tingBusiness: AmalgamatingBusinessIF): void {
+    // Set the amalgamated businesses array in the store.
+    this.pushAmalgamatingBusiness(tingBusiness)
+
+    // Close the "Add an Amalgamating Foreign Business" Panel.
+    this.isAddingAmalgamatingBusiness = false
   }
 
   /** Sets validity according to various flags. */
