@@ -19,7 +19,7 @@
             label="Select the home jurisdiction"
             :errorMessages="jurisdictionErrorMessage"
             :menuItems="jurisdictionOptions"
-            :value="jurisdiction?.text"
+            :value="jurisdiction ? jurisdiction.text : ''"
             @change="onJurisdictionChange($event)"
           />
         </v-col>
