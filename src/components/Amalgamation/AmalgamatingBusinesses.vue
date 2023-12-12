@@ -84,7 +84,7 @@
       >
         <ForeignBusiness
           @add:foreignBusiness="saveAmalgamatingForeignBusiness($event)"
-          @cancel="addForeignBusinessCancel()"
+          @cancel="isAddingAmalgamatingForeignBusiness = false"
         />
       </v-card>
     </v-expand-transition>
@@ -246,7 +246,7 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
     this.pushAmalgamatingBusiness(tingBusiness)
 
     // Close the "Add an Amalgamating Foreign Business" Panel.
-    this.isAddingAmalgamatingBusiness = false
+    this.isAddingAmalgamatingForeignBusiness = false
   }
 
   /** Sets validity according to various flags. */
