@@ -72,6 +72,7 @@
     </v-form>
   </section>
 </template>
+
 <script lang="ts">
 import { Component, Emit, Vue } from 'vue-property-decorator'
 import NestedSelect from '@/components/common/NestedSelect.vue'
@@ -179,6 +180,7 @@ export default class ForeignBusiness extends Vue {
   }
 }
 </script>
+
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
 
