@@ -137,7 +137,7 @@
                 class="mr-3"
                 @click="saveAmalgamatingForeignBusiness()"
               >
-                Add
+                <span>Add</span>
               </v-btn>
               <v-btn
                 large
@@ -145,7 +145,7 @@
                 color="primary"
                 @click="isAddingAmalgamatingForeignBusiness = false"
               >
-                Cancel
+                <span>Cancel</span>
               </v-btn>
             </v-col>
           </v-row>
