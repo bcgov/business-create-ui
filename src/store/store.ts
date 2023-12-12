@@ -1243,6 +1243,14 @@ export const useStore = defineStore('store', {
     setAmalgamatingBusinesses (amalgamatingBusinesses: Array<AmalgamatingBusinessIF>) {
       this.stateModel.amalgamation.amalgamatingBusinesses = amalgamatingBusinesses
     },
+    /** Adds specified item to end of amalgamating businesses list. */
+    pushAmalgamatingBusiness (item: AmalgamatingBusinessIF) {
+      this.stateModel.amalgamation.amalgamatingBusinesses.push(item)
+    },
+    /** Deletes item at specified index from amalgamating businesses list. */
+    spliceAmalgamatingBusiness (index: number) {
+      this.stateModel.amalgamation.amalgamatingBusinesses.splice(index, 1)
+    },
     setAmalgamatingBusinessesValid (valid: boolean) {
       this.stateModel.amalgamation.amalgamatingBusinessesValid = valid
     },
