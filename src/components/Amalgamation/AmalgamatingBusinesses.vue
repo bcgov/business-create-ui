@@ -187,9 +187,11 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
   isAddingAmalgamatingForeignBusiness = false
 
   async saveAmalgamatingBusiness (businessLookup: BusinessLookupResultIF): Promise<void> {
-    // Get the auth info, business info, addresses and filings concurrently.
+    // Show spinner since the network calls below can take a few seconds.
+    this.$root.$emit('showSpinner', true)
+
+    // Get the auth info, business info, addresses and latest filing concurrently.
     // Return data array; if any call failed, that item will be null.
-    // *** TODO: add spinner as these calls may take a few seconds
     const data = await Promise.allSettled([
       AuthServices.fetchAuthInfo(businessLookup.identifier),
       LegalServices.fetchBusinessInfo(businessLookup.identifier),
@@ -208,6 +210,10 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
       if (this.isRoleStaff) {
         this.snackbarText = 'Business doesn\'t exist in LEAR.'
         this.snackbar = true
+
+        // Hide spinner.
+        this.$root.$emit('showSpinner', false)
+
         return
       }
 
@@ -223,6 +229,9 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
       // Close the "Add an Amalgamating Business" panel.
       this.isAddingAmalgamatingBusiness = false
 
+      // Hide spinner.
+      this.$root.$emit('showSpinner', false)
+
       return
     }
 
@@ -230,6 +239,10 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
     if (!businessInfo || !addresses || !firstFiling) {
       this.snackbarText = 'Unable to add that business.'
       this.snackbar = true
+
+      // Hide spinner.
+      this.$root.$emit('showSpinner', false)
+
       return
     }
 
@@ -237,6 +250,10 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
     if (this.getAmalgamatingBusinesses.find((b: any) => b.identifier === businessInfo.identifier)) {
       this.snackbarText = 'Business is already in table.'
       this.snackbar = true
+
+      // Hide spinner.
+      this.$root.$emit('showSpinner', false)
+
       return
     }
 
@@ -274,6 +291,9 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
 
     // Close the "Add an Amalgamating Business" panel.
     this.isAddingAmalgamatingBusiness = false
+
+    // Hide spinner.
+    this.$root.$emit('showSpinner', false)
   }
 
   /** Sets validity according to various flags. */

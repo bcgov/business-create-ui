@@ -18,12 +18,12 @@ export default class AmalgamationMixin extends Vue {
   /** Iterable array of rule functions, sorted by importance. */
   readonly rules = [
     this.notAffiliated,
-    this.cccMismatch,
     this.notInGoodStanding,
     this.limitedRestoration,
     this.futureEffectiveFiling,
     this.foreign,
-    this.foreignUlc
+    this.foreignUlc,
+    this.cccMismatch
   ]
 
   /** If we don't have an address, assume business is not affiliated (except for staff). */
@@ -33,16 +33,6 @@ export default class AmalgamationMixin extends Vue {
     }
     return null
   }
-
-  /** Identify CCC mismatch. */
-  cccMismatch (business: AmalgamatingBusinessIF): AmlStatuses {
-    if (business.type === AmlTypes.LEAR && business.legalType === CorpTypeCd.BC_CCC && !this.isTypeBcCcc) {
-      return AmlStatuses.ERROR_CCC_MISMATCH
-    }
-    return null
-  }
-
-  // *** TODO: identify ULC mismatch here
 
   /** Disallow if NIGS (except for staff). */
   notInGoodStanding (business: AmalgamatingBusinessIF): AmlStatuses {
@@ -87,7 +77,15 @@ export default class AmalgamationMixin extends Vue {
     return null
   }
 
-  // *** TODO: add more rules here
+  /** Identify CCC mismatch. */
+  cccMismatch (business: AmalgamatingBusinessIF): AmlStatuses {
+    if (business.type === AmlTypes.LEAR && business.legalType === CorpTypeCd.BC_CCC && !this.isTypeBcCcc) {
+      return AmlStatuses.ERROR_CCC_MISMATCH
+    }
+    return null
+  }
+
+  // *** TODO: identify ULC mismatch here, and more...
 
   //
   // HELPERS

@@ -99,7 +99,7 @@ export default class BusinessStatus extends Vue {
         return 'A foreign corporation cannot be amalgamated except by Registries staff.'
       case AmlStatuses.ERROR_FOREIGN_UNLIMITED:
         return 'A foreign corporation must not amalgamate with a limited company and continue as ' +
-          'an unlimited liability company.'
+          'an Unlimited Liability Company.'
       case AmlStatuses.ERROR_FUTURE_EFFECTIVE_FILING:
         return 'This business has a future effective filing. It cannot be part of an amalgamation ' +
           'until all future effective filings have come into effect.'
