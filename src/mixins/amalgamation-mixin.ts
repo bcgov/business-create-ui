@@ -59,7 +59,7 @@ export default class AmalgamationMixin extends Vue {
    * Get the business information, mailing address, email, and first filing if in LEAR.
    * Otherwise, return error.
    */
-  async fetchBusinessInfoForTing (item: any): Promise<any> {
+  async fetchAmalgamatingBusinessInfo (item: any): Promise<any> {
     // Get the auth info, business info, addresses and filings in parallel.
     // Return data array; if any call failed, that item will be undefined.
     const data = await Promise.allSettled([
@@ -83,11 +83,11 @@ export default class AmalgamationMixin extends Vue {
   }
 
   /**
-   * If there is a state filing and restoration expiry date isn't in the past and the state filing is a
-   * limited restoration or limited restoration extension, then this business is in limited restoration.
+   * This business is in limited restoration if there is a state filing and restoration expiry date isn't
+   * in the past and the state filing is a limited restoration or a limited restoration extension.
    * @param business The business to check if is in Limited Restoration or not.
    */
-  isLimitedRestoration = async (business: any): Promise<boolean> => {
+  async isLimitedRestoration (business: any): Promise<boolean> {
     // check for no state filing
     if (!business.businessInfo.stateFiling) return false
     // check for expired restoration
@@ -106,7 +106,7 @@ export default class AmalgamationMixin extends Vue {
    */
   async refetchAmalgamatingBusinessesInfo (): Promise<void> {
     const fetchTingInfo = async (item: any): Promise<AmalgamatingBusinessIF> => {
-      const tingBusiness = await this.fetchBusinessInfoForTing(item)
+      const tingBusiness = await this.fetchAmalgamatingBusinessInfo(item)
       if (!tingBusiness.authInfo) {
         return {
           type: AmlTypes.LEAR,

@@ -187,21 +187,8 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
     // Show spinner since the network calls below can take a few seconds.
     this.$root.$emit('showSpinner', true)
 
-    // Get the auth info, business info, addresses and latest filing concurrently.
-    // Return data array; if any call failed, that item will be null.
-    const data = await Promise.allSettled([
-      AuthServices.fetchAuthInfo(businessLookup.identifier),
-      LegalServices.fetchBusinessInfo(businessLookup.identifier),
-      LegalServices.fetchAddresses(businessLookup.identifier),
-      LegalServices.fetchFirstOrOnlyFiling(businessLookup.identifier)
-    ]).then(results => results.map((result: any) => result.value || null))
-
-    const authInfo = data[0]
-    const businessInfo = data[1]
-    const addresses = data[2]
-    const firstFiling = data[3]
     // Get the business information
-    const business = await this.fetchBusinessInfoForTing(businessLookup)
+    const business = await this.fetchAmalgamatingBusinessInfo(businessLookup)
 
     // Check for unaffiliated business.
     if (!business.authInfo) {
@@ -254,21 +241,6 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
       this.$root.$emit('showSpinner', false)
 
       return
-    }
-
-    // This business is in limited restoration if there is a state filing and restoration expiry date isn't
-    // in the past and the state filing is a limited restoration or a limited restoration extension.
-    const isLimitedRestoration = async (): Promise<boolean> => {
-      // check for no state filing
-      if (!businessInfo.stateFiling) return false
-      // check for expired restoration
-      if (this.getCurrentDate > businessInfo.restorationExpiryDate) return false
-      // fetch state filing
-      const stateFiling = await LegalServices.fetchFiling(businessInfo.stateFiling)
-      return (
-        stateFiling.restoration.type === RestorationTypes.LIMITED ||
-        stateFiling.restoration.type === RestorationTypes.LTD_EXTEND
-      )
     }
 
     // Create amalgamating business object.
