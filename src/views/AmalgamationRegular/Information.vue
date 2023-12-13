@@ -1,5 +1,23 @@
 <template>
   <div id="amalgamation-regular-information">
+    <v-fade-transition>
+      <div
+        v-show="showSpinner"
+        class="loading-container grayed-out"
+      >
+        <div class="loading__content">
+          <v-progress-circular
+            color="primary"
+            size="50"
+            indeterminate
+          />
+          <div class="loading-msg white--text">
+            Fetching data
+          </div>
+        </div>
+      </div>
+    </v-fade-transition>
+
     <!-- Amalgamating Businesses -->
     <section class="mt-10">
       <header id="amalgamating-businesses">
@@ -72,6 +90,7 @@ export default class AmalgamationRegularInformation extends Mixins(CommonMixin) 
   @Action(useStore) setIgnoreChanges!: (x: boolean) => void
 
   // Local properties
+  showSpinner = false
   amalgamatingBusinessesValid = false
 
   /** Array of valid components. Must match validFlags below. */
@@ -97,6 +116,9 @@ export default class AmalgamationRegularInformation extends Mixins(CommonMixin) 
     this.$nextTick(() => {
       this.setIgnoreChanges(false)
     })
+
+    // listen for spinner show/hide events
+    this.$root.$on('showSpinner', (flag = false) => { this.showSpinner = flag })
   }
 
   @Watch('getAmalgamatingBusinessesValid')
@@ -128,6 +150,13 @@ export default class AmalgamationRegularInformation extends Mixins(CommonMixin) 
 
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
+
+.loading-container.grayed-out {
+  // these are the same styles as dialog overlay:
+  opacity: 0.46;
+  background-color: rgb(33, 33, 33); // grey darken-4
+  border-color: rgb(33, 33, 33); // grey darken-4
+}
 
 #amalgamation-regular-information {
   /* Set "header-counter" to 0 */
