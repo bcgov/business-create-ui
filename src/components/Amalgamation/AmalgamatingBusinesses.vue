@@ -149,11 +149,11 @@
 import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
-import { CommonMixin } from '@/mixins'
-import { AuthServices, BusinessLookupServices, LegalServices } from '@/services'
+import { AmalgamationMixin, CommonMixin } from '@/mixins'
+import { BusinessLookupServices } from '@/services'
 import { BusinessLookup } from '@bcrs-shared-components/business-lookup'
 import { AmalgamatingBusinessIF, BusinessLookupResultIF, EmptyBusinessLookup } from '@/interfaces'
-import { AmlRoles, AmlTypes, RestorationTypes } from '@/enums'
+import { AmlRoles, AmlTypes } from '@/enums'
 import BusinessTable from '@/components/Amalgamation/BusinessTable.vue'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 
@@ -163,15 +163,12 @@ import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
     BusinessTable
   }
 })
-export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
+export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, CommonMixin) {
   readonly BusinessLookupServices = BusinessLookupServices
 
-  @Getter(useStore) getAmalgamatingBusinesses!: AmalgamatingBusinessIF[]
   @Getter(useStore) getAmalgamatingBusinessesValid!: boolean
-  @Getter(useStore) getCurrentDate!: string
   @Getter(useStore) getShowErrors!: boolean
   @Getter(useStore) isAmalgamationFilingHorizontal!: boolean
-  @Getter(useStore) isRoleStaff!: boolean
 
   @Action(useStore) pushAmalgamatingBusiness!: (x: AmalgamatingBusinessIF) => void
   @Action(useStore) setAmalgamatingBusinessesValid!: (x: boolean) => void
@@ -190,22 +187,11 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
     // Show spinner since the network calls below can take a few seconds.
     this.$root.$emit('showSpinner', true)
 
-    // Get the auth info, business info, addresses and latest filing concurrently.
-    // Return data array; if any call failed, that item will be null.
-    const data = await Promise.allSettled([
-      AuthServices.fetchAuthInfo(businessLookup.identifier),
-      LegalServices.fetchBusinessInfo(businessLookup.identifier),
-      LegalServices.fetchAddresses(businessLookup.identifier),
-      LegalServices.fetchFirstOrOnlyFiling(businessLookup.identifier)
-    ]).then(results => results.map((result: any) => result.value || null))
-
-    const authInfo = data[0]
-    const businessInfo = data[1]
-    const addresses = data[2]
-    const firstFiling = data[3]
+    // Get the business information
+    const business = await this.fetchAmalgamatingBusinessInfo(businessLookup)
 
     // Check for unaffiliated business.
-    if (!authInfo) {
+    if (!business.authInfo) {
       // If a staff account couldn't fetch the auth info then the business doesn't exist.
       if (this.isRoleStaff) {
         this.snackbarText = 'Business doesn\'t exist in LEAR.'
@@ -236,7 +222,7 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
     }
 
     // Check for Legal API fetch issues.
-    if (!businessInfo || !addresses || !firstFiling) {
+    if (!business.businessInfo || !business.addresses || !business.firstFiling) {
       this.snackbarText = 'Unable to add that business.'
       this.snackbar = true
 
@@ -247,7 +233,7 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
     }
 
     // Check for duplicate.
-    if (this.getAmalgamatingBusinesses.find((b: any) => b.identifier === businessInfo.identifier)) {
+    if (this.getAmalgamatingBusinesses.find((b: any) => b.identifier === business.businessInfo.identifier)) {
       this.snackbarText = 'Business is already in table.'
       this.snackbar = true
 
@@ -257,33 +243,18 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
       return
     }
 
-    // This business is in limited restoration if there is a state filing and restoration expiry date isn't
-    // in the past and the state filing is a limited restoration or a limited restoration extension.
-    const isLimitedRestoration = async (): Promise<boolean> => {
-      // check for no state filing
-      if (!businessInfo.stateFiling) return false
-      // check for expired restoration
-      if (this.getCurrentDate > businessInfo.restorationExpiryDate) return false
-      // fetch state filing
-      const stateFiling = await LegalServices.fetchFiling(businessInfo.stateFiling)
-      return (
-        stateFiling.restoration.type === RestorationTypes.LIMITED ||
-        stateFiling.restoration.type === RestorationTypes.LTD_EXTEND
-      )
-    }
-
     // Create amalgamating business object.
     const tingBusiness: AmalgamatingBusinessIF = {
       type: AmlTypes.LEAR,
       role: AmlRoles.AMALGAMATING,
-      identifier: businessInfo.identifier,
-      name: businessInfo.legalName,
-      email: authInfo.contacts[0].email,
-      legalType: businessInfo.legalType,
-      address: addresses.registeredOffice.mailingAddress,
-      isNotInGoodStanding: (businessInfo.goodStanding === false),
-      isFutureEffective: (firstFiling.isFutureEffective === true),
-      isLimitedRestoration: await isLimitedRestoration()
+      identifier: business.businessInfo.identifier,
+      name: business.businessInfo.legalName,
+      email: business.authInfo.contacts[0].email,
+      legalType: business.businessInfo.legalType,
+      address: business.addresses.registeredOffice.mailingAddress,
+      isNotInGoodStanding: (business.businessInfo.goodStanding === false),
+      isFutureEffective: (business.firstFiling.isFutureEffective === true),
+      isLimitedRestoration: await this.isLimitedRestoration(business)
     }
 
     // Add the new business to the amalgamating businesses list.
