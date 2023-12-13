@@ -1,9 +1,10 @@
 import { Component, Vue } from 'vue-property-decorator'
-import { Getter } from 'pinia-class'
+import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
-import { AmlStatuses, AmlTypes } from '@/enums'
+import { AmlRoles, AmlStatuses, AmlTypes, RestorationTypes } from '@/enums'
 import { AmalgamatingBusinessIF } from '@/interfaces'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
+import { AuthServices, LegalServices } from '@/services'
 
 /**
  * Mixin that provides amalgamation rules, etc.
@@ -11,9 +12,12 @@ import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 @Component({})
 export default class AmalgamationMixin extends Vue {
   @Getter(useStore) getAmalgamatingBusinesses!: AmalgamatingBusinessIF[]
+  @Getter(useStore) getCurrentDate!: string
   @Getter(useStore) isRoleStaff!: boolean
   @Getter(useStore) isTypeBcCcc!: boolean
   @Getter(useStore) isTypeBcUlcCompany!: boolean
+
+  @Action(useStore) setAmalgamatingBusinesses!: (x: Array<any>) => void
 
   /** Iterable array of rule functions, sorted by importance. */
   readonly rules = [
@@ -49,6 +53,87 @@ export default class AmalgamationMixin extends Vue {
       return AmlStatuses.ERROR_LIMITED_RESTORATION
     }
     return null
+  }
+
+  /**
+   * Get the business information, mailing address, email, and first filing if in LEAR.
+   * Otherwise, return error.
+   */
+  async fetchBusinessInfoForTing (item: any): Promise<any> {
+    // Get the auth info, business info, addresses and filings in parallel.
+    // Return data array; if any call failed, that item will be undefined.
+    const data = await Promise.allSettled([
+      AuthServices.fetchAuthInfo(item.identifier),
+      LegalServices.fetchBusinessInfo(item.identifier),
+      LegalServices.fetchAddresses(item.identifier),
+      LegalServices.fetchFirstOrOnlyFiling(item.identifier)
+    ]).then(results => results.map((result: any) => result.value))
+
+    const authInfo = data[0]
+    const businessInfo = data[1]
+    const addresses = data[2]
+    const firstFiling = data[3]
+
+    return {
+      authInfo,
+      businessInfo,
+      addresses,
+      firstFiling
+    }
+  }
+
+  /**
+   * If there is a state filing and restoration expiry date isn't in the past and the state filing is a
+   * limited restoration or limited restoration extension, then this business is in limited restoration.
+   * @param business The business to check if is in Limited Restoration or not.
+   */
+  isLimitedRestoration = async (business: any): Promise<boolean> => {
+    // check for no state filing
+    if (!business.businessInfo.stateFiling) return false
+    // check for expired restoration
+    if (this.getCurrentDate > business.businessInfo.restorationExpiryDate) return false
+    // fetch state filing
+    const stateFiling = await LegalServices.fetchFiling(business.businessInfo.stateFiling)
+    return (
+      stateFiling.restoration.type === RestorationTypes.LIMITED ||
+      stateFiling.restoration.type === RestorationTypes.LTD_EXTEND
+    )
+  }
+
+  /**
+   * Re-fetch the draft amalgamating businesses information and set in the store.
+   * Need to do that because the businesses might have changed from last draft save.
+   */
+  async refetchAmalgamatingBusinessesInfo (): Promise<void> {
+    const fetchTingInfo = async (item: any): Promise<AmalgamatingBusinessIF> => {
+      let tingBusiness = await this.fetchBusinessInfoForTing(item)
+      if (!tingBusiness.authInfo) {
+        return {
+          type: AmlTypes.LEAR,
+          role: AmlRoles.AMALGAMATING,
+          identifier: item.identifier,
+          name: item.name,
+          legalType: item.legalType as unknown as CorpTypeCd
+        }
+      } else {
+        return {
+          type: AmlTypes.LEAR,
+          role: AmlRoles.AMALGAMATING,
+          identifier: tingBusiness.businessInfo.identifier,
+          name: tingBusiness.businessInfo.legalName,
+          email: tingBusiness.authInfo.contacts[0].email,
+          legalType: tingBusiness.businessInfo.legalType,
+          address: tingBusiness.addresses.registeredOffice.mailingAddress,
+          isNotInGoodStanding: (tingBusiness.businessInfo.goodStanding === false),
+          isFutureEffective: (tingBusiness.firstFiling.isFutureEffective === true),
+          isLimitedRestoration: await this.isLimitedRestoration(tingBusiness)
+        }
+      }
+    } 
+
+    this.setAmalgamatingBusinesses(
+      await Promise.all(this.getAmalgamatingBusinesses.map(fetchTingInfo))
+    )
   }
 
   /** Disallow if future effective filing. */
