@@ -117,10 +117,16 @@
       </v-card>
     </v-expand-transition>
 
+    <BusinessTable
+      class="mt-8"
+      :class="{ 'invalid-section': getShowErrors && !businessTableValid }"
+      @valid="businessTableValid=$event"
+    />
+
     <!-- snackbar to temporarily show fetch errors -->
     <v-snackbar
       v-model="snackbar"
-      timeout="5000"
+      timeout="3000"
     >
       {{ snackbarText }}
 
@@ -136,12 +142,6 @@
         </v-btn>
       </template>
     </v-snackbar>
-
-    <BusinessTable
-      class="mt-8"
-      :class="{ 'invalid-section': getShowErrors && !businessTableValid }"
-      @valid="businessTableValid=$event"
-    />
   </div>
 </template>
 
@@ -187,14 +187,17 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
   isAddingAmalgamatingForeignBusiness = false
 
   async saveAmalgamatingBusiness (businessLookup: BusinessLookupResultIF): Promise<void> {
-    // Get the auth info, business info, addresses and filings in parallel.
-    // Return data array; if any call failed, that item will be undefined.
+    // Show spinner since the network calls below can take a few seconds.
+    this.$root.$emit('showSpinner', true)
+
+    // Get the auth info, business info, addresses and latest filing concurrently.
+    // Return data array; if any call failed, that item will be null.
     const data = await Promise.allSettled([
       AuthServices.fetchAuthInfo(businessLookup.identifier),
       LegalServices.fetchBusinessInfo(businessLookup.identifier),
       LegalServices.fetchAddresses(businessLookup.identifier),
       LegalServices.fetchFirstOrOnlyFiling(businessLookup.identifier)
-    ]).then(results => results.map((result: any) => result.value))
+    ]).then(results => results.map((result: any) => result.value || null))
 
     const authInfo = data[0]
     const businessInfo = data[1]
@@ -207,6 +210,10 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
       if (this.isRoleStaff) {
         this.snackbarText = 'Business doesn\'t exist in LEAR.'
         this.snackbar = true
+
+        // Hide spinner.
+        this.$root.$emit('showSpinner', false)
+
         return
       }
 
@@ -222,6 +229,9 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
       // Close the "Add an Amalgamating Business" panel.
       this.isAddingAmalgamatingBusiness = false
 
+      // Hide spinner.
+      this.$root.$emit('showSpinner', false)
+
       return
     }
 
@@ -229,18 +239,26 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
     if (!businessInfo || !addresses || !firstFiling) {
       this.snackbarText = 'Unable to add that business.'
       this.snackbar = true
+
+      // Hide spinner.
+      this.$root.$emit('showSpinner', false)
+
       return
     }
 
-    // Verify that identifier doesn't already exist.
+    // Check for duplicate.
     if (this.getAmalgamatingBusinesses.find((b: any) => b.identifier === businessInfo.identifier)) {
       this.snackbarText = 'Business is already in table.'
       this.snackbar = true
+
+      // Hide spinner.
+      this.$root.$emit('showSpinner', false)
+
       return
     }
 
-    // If there is a state filing and restoration expiry date isn't in the past and the state filing is a
-    // limited restoration or limited restoration extension, then this business is in limited restoration.
+    // This business is in limited restoration if there is a state filing and restoration expiry date isn't
+    // in the past and the state filing is a limited restoration or a limited restoration extension.
     const isLimitedRestoration = async (): Promise<boolean> => {
       // check for no state filing
       if (!businessInfo.stateFiling) return false
@@ -273,6 +291,9 @@ export default class AmalgamatingBusinesses extends Mixins(CommonMixin) {
 
     // Close the "Add an Amalgamating Business" panel.
     this.isAddingAmalgamatingBusiness = false
+
+    // Hide spinner.
+    this.$root.$emit('showSpinner', false)
   }
 
   /** Sets validity according to various flags. */

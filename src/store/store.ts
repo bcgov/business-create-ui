@@ -577,9 +577,9 @@ export const useStore = defineStore('store', {
       // *** TODO: add checks for review page components
       return (
         this.getAmalgamatingBusinessesValid &&
-        this.getDefineCompanyStep.valid &&
-        this.getAddPeopleAndRoleStep.valid &&
-        this.getCreateShareStructureStep.valid
+        this.isDefineCompanyValid &&
+        this.isAddPeopleAndRolesValid &&
+        this.isCreateShareStructureValid
       )
     },
 
@@ -587,9 +587,9 @@ export const useStore = defineStore('store', {
     isIncorporationApplicationValid (): boolean {
       // Base company steps
       const isBaseStepsValid = (
-        this.getCreateShareStructureStep.valid &&
+        this.isCreateShareStructureValid &&
         this.getEffectiveDateTime.valid &&
-        this.getIncorporationAgreementStep.valid &&
+        this.isIncorporationAgreementValid &&
         this.getCourtOrderStep.valid
       )
 

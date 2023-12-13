@@ -70,6 +70,7 @@ import { RegistrationStateIF } from '@/interfaces'
 
 @Component({})
 export default class Stepper extends Vue {
+  @Getter(useStore) getAmalgamatingBusinessesValid!: boolean
   @Getter(useStore) getRegistration!: RegistrationStateIF
   @Getter(useStore) getShowErrors!: boolean
   @Getter(useStore) getSteps!: Array<any>
@@ -90,8 +91,8 @@ export default class Stepper extends Vue {
   /** Returns true if the step route is valid. */
   isValid (route: RouteNames): boolean {
     switch (route) {
-      case RouteNames.AMALG_REG_INFORMATION: return false // *** TODO
-      case RouteNames.AMALG_REG_BUSINESS_INFO: return false // *** TODO
+      case RouteNames.AMALG_REG_INFORMATION: return this.getAmalgamatingBusinessesValid
+      case RouteNames.AMALG_REG_BUSINESS_INFO: return this.isDefineCompanyValid
       case RouteNames.AMALG_REG_PEOPLE_ROLES: return this.isAddPeopleAndRolesValid
       case RouteNames.AMALG_REG_SHARE_STRUCTURE: return this.isCreateShareStructureValid
       case RouteNames.AMALG_REG_REVIEW_CONFIRM: return this.isFilingValid
