@@ -106,7 +106,7 @@ export default class AmalgamationMixin extends Vue {
    */
   async refetchAmalgamatingBusinessesInfo (): Promise<void> {
     const fetchTingInfo = async (item: any): Promise<AmalgamatingBusinessIF> => {
-      let tingBusiness = await this.fetchBusinessInfoForTing(item)
+      const tingBusiness = await this.fetchBusinessInfoForTing(item)
       if (!tingBusiness.authInfo) {
         return {
           type: AmlTypes.LEAR,
@@ -129,7 +129,7 @@ export default class AmalgamationMixin extends Vue {
           isLimitedRestoration: await this.isLimitedRestoration(tingBusiness)
         }
       }
-    } 
+    }
 
     this.setAmalgamatingBusinesses(
       await Promise.all(this.getAmalgamatingBusinesses.map(fetchTingInfo))
