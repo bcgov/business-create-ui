@@ -1,9 +1,9 @@
 import { Component, Mixins } from 'vue-property-decorator'
 import { Getter, Action } from 'pinia-class'
 import { useStore } from '@/store/store'
-import { DateMixin } from '@/mixins'
+import { AmalgamationMixin, DateMixin } from '@/mixins'
 import {
-  AmalgamatingBusinessIF, AmalgamationFilingIF, BusinessAddressIF, ContactPointIF, CertifyIF, CompletingPartyIF,
+  AmalgamationFilingIF, BusinessAddressIF, ContactPointIF, CertifyIF, CompletingPartyIF,
   CourtOrderIF, CourtOrderStepIF, CreateMemorandumIF, CreateResolutionIF, CreateRulesIF, DefineCompanyIF,
   DissolutionFilingIF, DissolutionStatementIF, DocumentDeliveryIF, EffectiveDateTimeIF, EmptyContactPoint,
   EmptyNaics, IncorporationAgreementIF, IncorporationFilingIF, NaicsIF, NameRequestFilingIF,
@@ -21,10 +21,9 @@ import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module/'
  * Mixin that provides the integration with the Legal API.
  */
 @Component({})
-export default class FilingTemplateMixin extends Mixins(DateMixin) {
+export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateMixin) {
   @Getter(useStore) getAddPeopleAndRoleStep!: PeopleAndRoleIF
   @Getter(useStore) getAffidavitStep!: UploadAffidavitIF
-  @Getter(useStore) getAmalgamatingBusinesses!: AmalgamatingBusinessIF[]
   @Getter(useStore) getAmalgamationCourtApproval!: boolean
   @Getter(useStore) getAmalgamationType!: AmalgamationTypes
   @Getter(useStore) getBusinessContact!: ContactPointIF
@@ -65,7 +64,6 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Getter(useStore) getTempId!: string
   @Getter(useStore) getTransactionalFolioNumber!: string
   @Getter(useStore) isPremiumAccount!: boolean
-  @Getter(useStore) isRoleStaff!: boolean
   @Getter(useStore) isTypeCoop!: boolean
   @Getter(useStore) isTypeFirm!: boolean
   @Getter(useStore) isTypeSoleProp!: boolean
@@ -226,6 +224,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     // restore the amalgamating businesses array
     if (draftFiling.amalgamation.amalgamatingBusinesses) {
       this.setAmalgamatingBusinesses(draftFiling.amalgamation.amalgamatingBusinesses)
+      this.refetchAmalgamatingBusinessesInfo()
     }
 
     // restore the amalgamation court approval
