@@ -131,7 +131,7 @@
       <header>
         <h2>Folio or Reference Number for this Filing</h2>
         <p class="mt-4">
-          *** TODO ***
+          [*** TODO: blurb ***]
         </p>
       </header>
 
@@ -153,7 +153,7 @@
       <header>
         <h2>Amalgamation Statement</h2>
         <p class="mt-4">
-          *** TODO ***
+          [*** TODO: blurb ***]
         </p>
       </header>
 

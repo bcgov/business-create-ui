@@ -15,17 +15,108 @@ export default class AmalgamationMixin extends Vue {
   @Getter(useStore) isTypeBcCcc!: boolean
   @Getter(useStore) isTypeBcUlcCompany!: boolean
 
-  // *** TODO: finish this, maybe name them something recognizable...
   /** Iterable array of rule functions, sorted by importance. */
   readonly rules = [
-    this.rule1,
-    this.rule2,
-    this.rule3,
-    this.rule4,
-    this.rule5,
-    this.rule6,
-    this.rule7
+    this.notAffiliated,
+    this.notInGoodStanding,
+    this.limitedRestoration,
+    this.futureEffectiveFiling,
+    this.foreign,
+    this.foreignUlc,
+    this.cccMismatch,
+    this.ulcMismatch
   ]
+
+  /** If we don't have an address, assume business is not affiliated (except for staff). */
+  notAffiliated (business: AmalgamatingBusinessIF): AmlStatuses {
+    if (business.type === AmlTypes.LEAR && !business.address && !this.isRoleStaff) {
+      return AmlStatuses.ERROR_NOT_AFFILIATED
+    }
+    return null
+  }
+
+  /** Disallow if NIGS (except for staff). */
+  notInGoodStanding (business: AmalgamatingBusinessIF): AmlStatuses {
+    if (business.type === AmlTypes.LEAR && business.isNotInGoodStanding && !this.isRoleStaff) {
+      return AmlStatuses.ERROR_NOT_IN_GOOD_STANDING
+    }
+    return null
+  }
+
+  /** Disallow if limited restoration (except for staff). */
+  limitedRestoration (business: AmalgamatingBusinessIF): AmlStatuses {
+    if (business.type === AmlTypes.LEAR && business.isLimitedRestoration && !this.isRoleStaff) {
+      return AmlStatuses.ERROR_LIMITED_RESTORATION
+    }
+    return null
+  }
+
+  /** Disallow if future effective filing. */
+  futureEffectiveFiling (business: AmalgamatingBusinessIF): AmlStatuses {
+    if (business.type === AmlTypes.LEAR && business.isFutureEffective) {
+      return AmlStatuses.ERROR_FUTURE_EFFECTIVE_FILING
+    }
+    return null
+  }
+
+  /**
+   * Disallow altogether if foreign (except for staff).
+   * (Could happen if staff added it and regular user resumes draft.)
+   */
+  foreign (business: AmalgamatingBusinessIF): AmlStatuses {
+    if (business.type === AmlTypes.FOREIGN && !this.isRoleStaff) {
+      return AmlStatuses.ERROR_FOREIGN
+    }
+    return null
+  }
+
+  /** Disallow if foreign into ULC if there is also a limited. */
+  foreignUlc (business: AmalgamatingBusinessIF): AmlStatuses {
+    if (business.type === AmlTypes.FOREIGN && this.isTypeBcUlcCompany && this.isAnyLimited) {
+      return AmlStatuses.ERROR_FOREIGN
+    }
+    return null
+  }
+
+  /** Disallow CCC mismatch. */
+  cccMismatch (business: AmalgamatingBusinessIF): AmlStatuses {
+    if (business.type === AmlTypes.LEAR && business.legalType === CorpTypeCd.BC_CCC && !this.isTypeBcCcc) {
+      return AmlStatuses.ERROR_CCC_MISMATCH
+    }
+    return null
+  }
+
+  /** Disallow ULC mismatch. */
+  ulcMismatch (business: AmalgamatingBusinessIF): AmlStatuses {
+    if (
+      business.type === AmlTypes.LEAR &&
+      business.legalType === CorpTypeCd.BC_ULC_COMPANY &&
+      !this.isTypeBcUlcCompany
+    ) {
+      return AmlStatuses.ERROR_ULC_MISMATCH
+    }
+    return null
+  }
+
+  // TODO: cannot add foreign ULC if there is a BC company and ted is ULC
+
+  // TODO: cannot add BC company if there is a foreign ULC and ted is ULC
+
+  //
+  // HELPERS
+  //
+
+  /** True if there a foreign company in the table. */
+  get isAnyForeign (): boolean {
+    return this.getAmalgamatingBusinesses.some(business => (business.type === AmlTypes.FOREIGN))
+  }
+
+  /** True if there a CCC in the table. */
+  get isAnyCcc (): boolean {
+    return this.getAmalgamatingBusinesses.some(business =>
+      (business.type === AmlTypes.LEAR && business.legalType === CorpTypeCd.BC_CCC)
+    )
+  }
 
   /** True if there a limited company in the table. */
   get isAnyLimited (): boolean {
@@ -34,75 +125,10 @@ export default class AmalgamationMixin extends Vue {
     )
   }
 
-  /** True if there an unlimited company in the table in Alberta, Nova Scotia or USA. */
-  get isAnyUnlimitedAbNsUsa (): boolean {
+  /** True if there is an unlimited company in the table. */
+  get isAnyUnlimited (): boolean {
     return this.getAmalgamatingBusinesses.some(business =>
-      (business.type === AmlTypes.LEAR && business.legalType === CorpTypeCd.BC_COMPANY)
+      (business.type === AmlTypes.LEAR && business.legalType === CorpTypeCd.BC_ULC_COMPANY)
     )
-  }
-
-  // *** TODO
-  // A BC Company cannot amalgamate with an existing Unlimited Liability Company from Alberta,
-  // Nova Scotia, or the USA to form a BC Unlimited Liability Company.
-
-  // disallow foreign altogether if not staff
-  // (could happen if staff added it and regular user resumes draft)
-  rule1 (business: AmalgamatingBusinessIF): AmlStatuses {
-    if (business.type === AmlTypes.FOREIGN && !this.isRoleStaff) {
-      return AmlStatuses.ERROR_FOREIGN
-    }
-    return null
-  }
-
-  // disallow foreign into ULC if there is also a limited
-  rule2 (business: AmalgamatingBusinessIF): AmlStatuses {
-    if (business.type === AmlTypes.FOREIGN && this.isTypeBcUlcCompany && this.isAnyLimited) {
-      return AmlStatuses.ERROR_FOREIGN
-    }
-    return null
-  }
-
-  // if we don't have an address, assume business is not affiliated (non-staff only)
-  rule3 (business: AmalgamatingBusinessIF): AmlStatuses {
-    // *** TODO: revert staff check
-    if (business.type === AmlTypes.LEAR && !business.address /* && !this.isRoleStaff */) {
-      return AmlStatuses.ERROR_NOT_AFFILIATED
-    }
-    return null
-  }
-
-  // identify CCC mismatch
-  rule4 (business: AmalgamatingBusinessIF): AmlStatuses {
-    if (business.type === AmlTypes.LEAR && business.legalType === CorpTypeCd.BC_CCC && !this.isTypeBcCcc) {
-      return AmlStatuses.ERROR_CCC_MISMATCH
-    }
-    return null
-  }
-
-  // disallow limited restoration if not staff
-  rule5 (business: AmalgamatingBusinessIF): AmlStatuses {
-    // *** TODO: revert staff check
-    if (business.type === AmlTypes.LEAR && business.isLimitedRestoration /* && !this.isRoleStaff */) {
-      return AmlStatuses.ERROR_LIMITED_RESTORATION
-    }
-    return null
-  }
-
-  // disallow NIGS if not staff
-  rule6 (business: AmalgamatingBusinessIF): AmlStatuses {
-    // *** TODO: revert staff check
-    if (business.type === AmlTypes.LEAR && business.isNotInGoodStanding /* && !this.isRoleStaff */) {
-      return AmlStatuses.ERROR_NOT_IN_GOOD_STANDING
-    }
-    return null
-  }
-
-  // check for future effective filing
-  rule7 (business: AmalgamatingBusinessIF): AmlStatuses {
-    // *** TODO: revert staff check
-    if (business.type === AmlTypes.LEAR && business.isFutureEffective /* && !this.isRoleStaff */) {
-      return AmlStatuses.ERROR_FUTURE_EFFECTIVE_FILING
-    }
-    return null
   }
 }

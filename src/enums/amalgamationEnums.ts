@@ -7,6 +7,7 @@ export enum AmlStatuses {
   ERROR_LIMITED_RESTORATION,
   ERROR_NOT_AFFILIATED,
   ERROR_NOT_IN_GOOD_STANDING,
+  ERROR_ULC_MISMATCH,
 }
 
 export enum AmlRoles {
