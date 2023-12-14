@@ -493,6 +493,12 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
       !this.isAddingAmalgamatingBusiness &&
       !this.isAddingAmalgamatingForeignBusiness
     )
+
+    // Reset "Add an Amalgamating Foreign Business" Panel on change
+    this.jurisdiction = null
+    this.legalName = null
+    this.corpNumber = null
+    this.jurisdictionErrorMessage = ''
   }
 }
 </script>

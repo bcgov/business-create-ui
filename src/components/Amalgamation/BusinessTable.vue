@@ -155,7 +155,7 @@ export default class BusinessTable extends Mixins(AmalgamationMixin) {
     const fj = (item?.type === AmlTypes.FOREIGN) && item.foreignJurisdiction
     if (fj?.country) {
       const country = getName(fj.country)
-      const region = (fj.region === 'FEDERAL' ? 'Federal' : fj.region)
+      const region = fj.region
       if (region) return `${region}, ${country}`
       return country
     }
