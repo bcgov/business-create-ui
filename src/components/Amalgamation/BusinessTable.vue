@@ -112,7 +112,7 @@ export default class BusinessTable extends Mixins(AmalgamationMixin) {
       // assign the value of the first failed rule (if any) else OK
       business.status = this.rules.reduce(
         (status: AmlStatuses, rule: (business: AmalgamatingBusinessIF) => AmlStatuses) => {
-          // if we already failed a rule, don't check the rest of the rules
+          // if we already failed a rule, don't evaluate the current rule
           if (status) return status
           // return the value of the current rule (may be null)
           return rule(business)
