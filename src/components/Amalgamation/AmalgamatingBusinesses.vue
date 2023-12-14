@@ -191,7 +191,7 @@ import { BusinessLookup } from '@bcrs-shared-components/business-lookup'
 import { Jurisdiction } from '@bcrs-shared-components/jurisdiction'
 import { AmalgamatingBusinessIF, BusinessLookupResultIF, EmptyBusinessLookup } from '@/interfaces'
 import { AmlRoles, AmlTypes } from '@/enums'
-import { Location } from '@bcrs-shared-components/enums'
+import { JurisdictionLocation } from '@bcrs-shared-components/enums'
 import BusinessTable from '@/components/Amalgamation/BusinessTable.vue'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 
@@ -342,7 +342,7 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
       role: AmlRoles.AMALGAMATING,
       foreignJurisdiction: {
         region: this.isCan ? this.jurisdiction.text : '',
-        country: this.isCan ? Location.CA : this.jurisdiction.value
+        country: this.isCan ? JurisdictionLocation.CA : this.jurisdiction.value
       },
       legalName: this.legalName,
       corpNumber: this.corpNumber
