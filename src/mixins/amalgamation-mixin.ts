@@ -322,6 +322,20 @@ export default class AmalgamationMixin extends Vue {
   // (not all are used atm)
   //
 
+  /** True if all companies in the table are foreign. */
+  get isAllForeign (): boolean {
+    return this.getAmalgamatingBusinesses.every(business => (business.type === AmlTypes.FOREIGN))
+  }
+
+  /** True if all companies in the table are foreign or extra-provincial. */
+  get isAllForeignOrEp (): boolean {
+    return this.getAmalgamatingBusinesses.every(business =>
+      (business.type === AmlTypes.FOREIGN ||
+        (business.type === AmlTypes.LEAR && business.legalType === CorpTypeCd.EXTRA_PRO_A)
+      )
+    )
+  }
+
   /** True if there a foreign company in the table. */
   get isAnyForeign (): boolean {
     return this.getAmalgamatingBusinesses.some(business => (business.type === AmlTypes.FOREIGN))

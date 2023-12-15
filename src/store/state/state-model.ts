@@ -1,5 +1,4 @@
 import {
-  AmalgamatingBusinessIF,
   EmptyAccountInformation,
   EmptyContactPoint,
   EmptyFees,
@@ -8,123 +7,8 @@ import {
   EmptyNaics,
   StateModelIF
 } from '@/interfaces'
-import { AmlRoles, AmlTypes } from '@/enums'
 import { EmptyAddress } from '@bcrs-shared-components/interfaces'
 import { cloneDeep } from 'lodash'
-import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
-
-// const AMALGAMATING_BUSINESSES: AmalgamatingBusinessIF[] = [
-//   {
-//     type: AmlTypes.LEAR,
-//     identifier: 'BC1111111',
-//     name: 'Frozen Yogurt',
-//     email: 'froyo@example.com',
-//     legalType: CorpTypeCd.BC_COMPANY,
-//     address: {
-//       streetAddress: '1234 Main St',
-//       addressCity: 'Vancouver',
-//       addressRegion: 'BC',
-//       postalCode: 'V6A 1A1',
-//       addressCountry: 'CA'
-//     },
-//     role: AmlRoles.HOLDING,
-//     isNotInGoodStanding: true
-//   },
-//   {
-//     // this business is an xpro and should only be valid if staff
-//     type: AmlTypes.LEAR,
-//     identifier: 'A5555555',
-//     name: 'Lollipop Canada',
-//     email: 'sucker@example.com',
-//     legalType: CorpTypeCd.EXTRA_PRO_A,
-//     address: {
-//       streetAddress: '4321 Principal Ave',
-//       addressCity: 'Halifax',
-//       addressRegion: 'NS',
-//       postalCode: 'B3H 1A1',
-//       addressCountry: 'CA'
-//     },
-//     role: AmlRoles.AMALGAMATING,
-//     isNotInGoodStanding: true
-//   },
-//   {
-//     // this business is NIGS and should only be valid if staff
-//     type: AmlTypes.LEAR,
-//     identifier: 'BC2222222',
-//     name: 'Jelly Bean',
-//     email: 'oval.treat@example.com',
-//     legalType: CorpTypeCd.BC_COMPANY,
-//     address: {
-//       streetAddress: '1234 Main St',
-//       addressCity: 'Vancouver',
-//       addressRegion: 'BC',
-//       postalCode: 'V6A 1A1',
-//       addressCountry: 'CA'
-//     },
-//     role: AmlRoles.AMALGAMATING,
-//     isNotInGoodStanding: false
-//   },
-//   {
-//     // this business has 2 issues:
-//     // 1. not affiliated
-//     // 2. not in good standing
-//     type: AmlTypes.LEAR,
-//     identifier: 'BC4444444', // we know this from the business lookup
-//     name: 'Eclair', // we know this from the business lookup
-//     email: undefined, // we don't know this yet (not affiliated)
-//     legalType: CorpTypeCd.BC_COMPANY, // we know this from the business lookup
-//     address: undefined, // we don't know this yet (not affiliated)
-//     role: AmlRoles.AMALGAMATING,
-//     isNotInGoodStanding: false // we know this from the business lookup
-//   },
-//   {
-//     type: AmlTypes.FOREIGN,
-//     corpNumber: 'XYZ789',
-//     legalName: 'Ice Cream Sandwich Canada',
-//     foreignJurisdiction: { region: 'FEDERAL', country: 'CA' },
-//     role: AmlRoles.AMALGAMATING
-//   },
-//   {
-//     type: AmlTypes.FOREIGN,
-//     corpNumber: 'ABC123',
-//     legalName: 'Gingerbread USA',
-//     foreignJurisdiction: { country: 'US' },
-//     role: AmlRoles.AMALGAMATING
-//   },
-//   {
-//     // this business is CCC and should only be valid if amalg type is CCC
-//     type: AmlTypes.LEAR,
-//     identifier: 'BC7777777',
-//     name: 'Donut',
-//     email: 'holey.goodness@example.com',
-//     legalType: CorpTypeCd.BC_CCC,
-//     address: {
-//       streetAddress: '1234 Main St',
-//       addressCity: 'Vancouver',
-//       addressRegion: 'BC',
-//       postalCode: 'V6A 1A1',
-//       addressCountry: 'CA'
-//     },
-//     role: AmlRoles.AMALGAMATING,
-//     isNotInGoodStanding: true
-//   },
-//   {
-//     type: AmlTypes.LEAR,
-//     identifier: 'BC3333333',
-//     name: 'Cupcake',
-//     email: 'cute.sugarbomb@example.com',
-//     legalType: CorpTypeCd.BC_COMPANY,
-//     address: {
-//       streetAddress: '1234 Main St',
-//       addressCity: 'Vancouver',
-//       addressRegion: 'BC',
-//       postalCode: 'V6A 1A1',
-//       addressCountry: 'CA'
-//     },
-//     role: AmlRoles.AMALGAMATING,
-//     isNotInGoodStanding: true
-//   }
-// ]
 
 export const stateModel: StateModelIF = {
   currentJsDate: null,

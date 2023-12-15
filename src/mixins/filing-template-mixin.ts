@@ -12,8 +12,9 @@ import {
   ShareStructureIF, SpecialResolutionIF, StaffPaymentIF, StaffPaymentStepIF, UploadAffidavitIF
 } from '@/interfaces'
 import {
-  AmalgamationTypes, ApprovalTypes, BusinessTypes, CoopTypes, CorrectNameOptions, DissolutionTypes,
-  EffectOfOrders, FilingTypes, PartyTypes, RelationshipTypes, RestorationTypes, RoleTypes, StaffPaymentOptions
+  AmalgamationTypes, AmlRoles, AmlTypes, ApprovalTypes, BusinessTypes, CoopTypes, CorrectNameOptions,
+  DissolutionTypes, EffectOfOrders, FilingTypes, PartyTypes, RelationshipTypes, RestorationTypes, RoleTypes,
+  StaffPaymentOptions
 } from '@/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module/'
 
@@ -236,7 +237,24 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
 
     // restore the amalgamating businesses array
     if (draftFiling.amalgamation.amalgamatingBusinesses) {
-      this.setAmalgamatingBusinesses(draftFiling.amalgamation.amalgamatingBusinesses)
+      this.setAmalgamatingBusinesses([
+        // *** TODO: remove static items when they are no longer needed for testing
+        // {
+        //   type: AmlTypes.FOREIGN,
+        //   corpNumber: 'XYZ789',
+        //   legalName: 'Ice Cream Sandwich Canada',
+        //   foreignJurisdiction: { region: 'FEDERAL', country: 'CA' },
+        //   role: AmlRoles.AMALGAMATING
+        // },
+        // {
+        //   type: AmlTypes.FOREIGN,
+        //   corpNumber: 'ABC123',
+        //   legalName: 'Gingerbread USA',
+        //   foreignJurisdiction: { country: 'US' },
+        //   role: AmlRoles.AMALGAMATING
+        // },
+        ...draftFiling.amalgamation.amalgamatingBusinesses
+      ])
       this.refetchAmalgamatingBusinessesInfo()
     }
 
