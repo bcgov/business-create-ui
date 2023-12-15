@@ -298,10 +298,8 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
     }
 
     // if this is a premium account and Folio Number exists then restore it
-    if (this.isPremiumAccount) {
-      if (draftFiling.header.folioNumber) {
-        this.setFolioNumber(draftFiling.header.folioNumber)
-      }
+    if (draftFiling.header.folioNumber) {
+      this.setFolioNumber(draftFiling.header.folioNumber)
     }
   }
 
