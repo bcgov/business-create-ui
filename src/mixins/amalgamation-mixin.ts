@@ -8,11 +8,13 @@ import { AuthServices, LegalServices } from '@/services'
 
 /**
  * Mixin that provides amalgamation rules, etc.
+ * Note that the error text is declared in BusinessStatus.vue.
  */
 @Component({})
 export default class AmalgamationMixin extends Vue {
   @Getter(useStore) getAmalgamatingBusinesses!: AmalgamatingBusinessIF[]
   @Getter(useStore) getCurrentDate!: string
+  @Getter(useStore) isAmalgamationFilingHorizontal!: boolean
   @Getter(useStore) isRoleStaff!: boolean
   @Getter(useStore) isTypeBcCcc!: boolean
   @Getter(useStore) isTypeBcUlcCompany!: boolean
@@ -26,14 +28,17 @@ export default class AmalgamationMixin extends Vue {
     this.limitedRestoration,
     this.futureEffectiveFiling,
     this.foreign,
-    this.foreignUlc,
+    this.foreignUnlimited,
     this.cccMismatch,
-    this.ulcMismatch
+    this.foreignUnlimited2,
+    this.xproUlcCcc,
+    // this.needBcCompany,
+    this.foreignHorizontal
   ]
 
   /** If we don't have an address, assume business is not affiliated (except for staff). */
   notAffiliated (business: AmalgamatingBusinessIF): AmlStatuses {
-    if (business.type === AmlTypes.LEAR && !business.address && !this.isRoleStaff) {
+    if (!this.isRoleStaff && business.type === AmlTypes.LEAR && !business.address) {
       return AmlStatuses.ERROR_NOT_AFFILIATED
     }
     return null
@@ -41,7 +46,7 @@ export default class AmalgamationMixin extends Vue {
 
   /** Disallow if NIGS (except for staff). */
   notInGoodStanding (business: AmalgamatingBusinessIF): AmlStatuses {
-    if (business.type === AmlTypes.LEAR && business.isNotInGoodStanding && !this.isRoleStaff) {
+    if (!this.isRoleStaff && business.type === AmlTypes.LEAR && business.isNotInGoodStanding) {
       return AmlStatuses.ERROR_NOT_IN_GOOD_STANDING
     }
     return null
@@ -49,8 +54,98 @@ export default class AmalgamationMixin extends Vue {
 
   /** Disallow if limited restoration (except for staff). */
   limitedRestoration (business: AmalgamatingBusinessIF): AmlStatuses {
-    if (business.type === AmlTypes.LEAR && business.isLimitedRestoration && !this.isRoleStaff) {
+    if (!this.isRoleStaff && business.type === AmlTypes.LEAR && business.isLimitedRestoration) {
       return AmlStatuses.ERROR_LIMITED_RESTORATION
+    }
+    return null
+  }
+
+  /** Disallow if a future effective filing exists. */
+  futureEffectiveFiling (business: AmalgamatingBusinessIF): AmlStatuses {
+    if (business.type === AmlTypes.LEAR && business.isFutureEffective) {
+      return AmlStatuses.ERROR_FUTURE_EFFECTIVE_FILING
+    }
+    return null
+  }
+
+  /**
+   * Disallow altogether if foreign or extra-pro (except for staff).
+   * (Could happen if staff added it and regular user resumes draft.)
+   */
+  foreign (business: AmalgamatingBusinessIF): AmlStatuses {
+    if (!this.isRoleStaff && business.type === AmlTypes.FOREIGN) {
+      return AmlStatuses.ERROR_FOREIGN
+    }
+    if (!this.isRoleStaff && business.type === AmlTypes.LEAR && business.legalType === CorpTypeCd.EXTRA_PRO_A) {
+      return AmlStatuses.ERROR_FOREIGN
+    }
+    return null
+  }
+
+  /** Disallow if foreign into ULC if there is also a limited company. */
+  foreignUnlimited (business: AmalgamatingBusinessIF): AmlStatuses {
+    if (business.type === AmlTypes.FOREIGN && this.isTypeBcUlcCompany && this.isAnyLimited) {
+      return AmlStatuses.ERROR_FOREIGN_UNLIMITED
+    }
+    return null
+  }
+
+  /** Disallow CCC mismatch. */
+  cccMismatch (business: AmalgamatingBusinessIF): AmlStatuses {
+    if (business.type === AmlTypes.LEAR && business.legalType === CorpTypeCd.BC_CCC && !this.isTypeBcCcc) {
+      return AmlStatuses.ERROR_CCC_MISMATCH
+    }
+    return null
+  }
+
+  /** Disallow if foreign into ULC if there is also a limited company. */
+  foreignUnlimited2 (business: AmalgamatingBusinessIF): AmlStatuses {
+    if (business.type === AmlTypes.FOREIGN && this.isTypeBcUlcCompany && this.isAnyLimited) {
+      return AmlStatuses.ERROR_FOREIGN_UNLIMITED2
+    }
+    return null
+  }
+
+  /** Disallow extra-pro (A company) into ULC or CCC. */
+  xproUlcCcc (business: AmalgamatingBusinessIF): AmlStatuses {
+    if (
+      business.type === AmlTypes.LEAR &&
+      business.legalType === CorpTypeCd.EXTRA_PRO_A &&
+      (!this.isTypeBcUlcCompany || !this.isTypeBcCcc)
+    ) {
+      return AmlStatuses.ERROR_XPRO_ULC_CCC
+    }
+    return null
+  }
+
+  /** Disallow if ULC and there is also a foreign. */
+  foreignUnlimited3 (business: AmalgamatingBusinessIF): AmlStatuses {
+    if (
+      business.type === AmlTypes.LEAR &&
+      business.legalType === CorpTypeCd.BC_ULC_COMPANY &&
+      this.isAnyForeign
+    ) {
+      return AmlStatuses.ERROR_FOREIGN_UNLIMITED3
+    }
+    return null
+  }
+
+  // NOT CURRENTLY USED
+  // /**
+  //  * Disallow only foreign businesses (including EPs).
+  //  * (An amalgamation where all TINGs are foreign will be Phase 2.)
+  //  */
+  // needBcCompany (): AmlStatuses {
+  //   if (this.isAllForeignOrEp) {
+  //     return AmlStatuses.ERROR_NEED_BC_COMPANY
+  //   }
+  //   return null
+  // }
+
+  /** Disallow if foreign in a short-form horizontal amalgamation. */
+  foreignHorizontal (business: AmalgamatingBusinessIF): AmlStatuses {
+    if (business.type === AmlTypes.FOREIGN && this.isAmalgamationFilingHorizontal) {
+      return AmlStatuses.ERROR_FOREIGN_HORIZONTAL
     }
     return null
   }
@@ -60,25 +155,20 @@ export default class AmalgamationMixin extends Vue {
    * Otherwise, return error.
    */
   async fetchAmalgamatingBusinessInfo (item: any): Promise<any> {
-    // Get the auth info, business info, addresses and filings in parallel.
-    // Return data array; if any call failed, that item will be undefined.
+    // Get the auth info, business info, addresses and filings concurrently.
+    // Return data array; if any call failed, that item will be null.
     const data = await Promise.allSettled([
       AuthServices.fetchAuthInfo(item.identifier),
       LegalServices.fetchBusinessInfo(item.identifier),
       LegalServices.fetchAddresses(item.identifier),
       LegalServices.fetchFirstOrOnlyFiling(item.identifier)
-    ]).then(results => results.map((result: any) => result.value))
-
-    const authInfo = data[0]
-    const businessInfo = data[1]
-    const addresses = data[2]
-    const firstFiling = data[3]
+    ]).then(results => results.map((result: any) => result.value || null))
 
     return {
-      authInfo,
-      businessInfo,
-      addresses,
-      firstFiling
+      authInfo: data[0],
+      businessInfo: data[1],
+      addresses: data[2],
+      firstFiling: data[3]
     }
   }
 
@@ -131,89 +221,65 @@ export default class AmalgamationMixin extends Vue {
       }
     }
 
-    this.setAmalgamatingBusinesses(
-      await Promise.all(this.getAmalgamatingBusinesses.map(fetchTingInfo))
-    )
+    const promises = this.getAmalgamatingBusinesses.map(fetchTingInfo)
+    const amalgamatingBusinesses = await Promise.all(promises)
+    this.setAmalgamatingBusinesses(amalgamatingBusinesses)
   }
-
-  /** Disallow if future effective filing. */
-  futureEffectiveFiling (business: AmalgamatingBusinessIF): AmlStatuses {
-    if (business.type === AmlTypes.LEAR && business.isFutureEffective) {
-      return AmlStatuses.ERROR_FUTURE_EFFECTIVE_FILING
-    }
-    return null
-  }
-
-  /**
-   * Disallow altogether if foreign (except for staff).
-   * (Could happen if staff added it and regular user resumes draft.)
-   */
-  foreign (business: AmalgamatingBusinessIF): AmlStatuses {
-    if (business.type === AmlTypes.FOREIGN && !this.isRoleStaff) {
-      return AmlStatuses.ERROR_FOREIGN
-    }
-    return null
-  }
-
-  /** Disallow if foreign into ULC if there is also a limited. */
-  foreignUlc (business: AmalgamatingBusinessIF): AmlStatuses {
-    if (business.type === AmlTypes.FOREIGN && this.isTypeBcUlcCompany && this.isAnyLimited) {
-      return AmlStatuses.ERROR_FOREIGN
-    }
-    return null
-  }
-
-  /** Disallow CCC mismatch. */
-  cccMismatch (business: AmalgamatingBusinessIF): AmlStatuses {
-    if (business.type === AmlTypes.LEAR && business.legalType === CorpTypeCd.BC_CCC && !this.isTypeBcCcc) {
-      return AmlStatuses.ERROR_CCC_MISMATCH
-    }
-    return null
-  }
-
-  /** Disallow ULC mismatch. */
-  ulcMismatch (business: AmalgamatingBusinessIF): AmlStatuses {
-    if (
-      business.type === AmlTypes.LEAR &&
-      business.legalType === CorpTypeCd.BC_ULC_COMPANY &&
-      !this.isTypeBcUlcCompany
-    ) {
-      return AmlStatuses.ERROR_ULC_MISMATCH
-    }
-    return null
-  }
-
-  // TODO: cannot add foreign ULC if there is a BC company and ted is ULC
-
-  // TODO: cannot add BC company if there is a foreign ULC and ted is ULC
 
   //
   // HELPERS
+  // (not all are used atm)
   //
+
+  /** True if all companies in the table are foreign. */
+  get isAllForeign (): boolean {
+    return this.getAmalgamatingBusinesses.every(business => (business.type === AmlTypes.FOREIGN))
+  }
+
+  /** True if all companies in the table are foreign or extra-provincial. */
+  get isAllForeignOrEp (): boolean {
+    return this.getAmalgamatingBusinesses.every(business =>
+      (business.type === AmlTypes.FOREIGN ||
+        (business.type === AmlTypes.LEAR && business.legalType === CorpTypeCd.EXTRA_PRO_A)
+      )
+    )
+  }
 
   /** True if there a foreign company in the table. */
   get isAnyForeign (): boolean {
     return this.getAmalgamatingBusinesses.some(business => (business.type === AmlTypes.FOREIGN))
   }
 
-  /** True if there a CCC in the table. */
+  /** True if there a Benefit Company in the table. */
+  get isAnyBen (): boolean {
+    return this.getAmalgamatingBusinesses.some(business =>
+      (business.type === AmlTypes.LEAR && business.legalType === CorpTypeCd.BENEFIT_COMPANY)
+    )
+  }
+
+  /** True if there is a BC CCC in the table. */
   get isAnyCcc (): boolean {
     return this.getAmalgamatingBusinesses.some(business =>
       (business.type === AmlTypes.LEAR && business.legalType === CorpTypeCd.BC_CCC)
     )
   }
 
-  /** True if there a limited company in the table. */
+  /** True if there is a BC (Limited) Company in the table. */
   get isAnyLimited (): boolean {
     return this.getAmalgamatingBusinesses.some(business =>
       (business.type === AmlTypes.LEAR && business.legalType === CorpTypeCd.BC_COMPANY)
     )
   }
 
-  /** True if there is an unlimited company in the table. */
+  /** True if there is an BC ULC Company in the table. */
   get isAnyUnlimited (): boolean {
     return this.getAmalgamatingBusinesses.some(business =>
       (business.type === AmlTypes.LEAR && business.legalType === CorpTypeCd.BC_ULC_COMPANY)
     )
+  }
+
+  /** True if there is a BC company in the table. */
+  get isAnyBcCompany (): boolean {
+    return (this.isAnyBen || this.isAnyCcc || this.isAnyLimited || this.isAnyUnlimited)
   }
 }
