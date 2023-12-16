@@ -49,8 +49,9 @@
               to add to this application.</span>
 
             <BusinessLookup
+              :key="Math.random()"
               :showErrors="false"
-              :businessLookup="initialBusinessLookupObject"
+              :businessLookup="{ ...EmptyBusinessLookup }"
               :BusinessLookupServices="BusinessLookupServices"
               legalTypes="BC,BEN,CC,ULC,A"
               label="Business Name or Incorporation Number"
@@ -209,16 +210,16 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
   }
 
   readonly BusinessLookupServices = BusinessLookupServices
+  readonly EmptyBusinessLookup = EmptyBusinessLookup
 
   @Getter(useStore) getAmalgamatingBusinessesValid!: boolean
   @Getter(useStore) getShowErrors!: boolean
-  @Getter(useStore) isAmalgamationFilingHorizontal!: boolean
+  // @Getter(useStore) isAmalgamationFilingHorizontal!: boolean
 
   @Action(useStore) pushAmalgamatingBusiness!: (x: AmalgamatingBusinessIF) => void
   @Action(useStore) setAmalgamatingBusinessesValid!: (x: boolean) => void
 
   // Local properties
-  initialBusinessLookupObject = EmptyBusinessLookup
   businessTableValid = false
   snackbar = false
   snackbarText = ''
