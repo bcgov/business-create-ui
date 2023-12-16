@@ -168,13 +168,13 @@
 
       <template #action="{ attrs }">
         <v-btn
-          color="error"
-          class="font-weight-bold"
-          text
+          color="white"
+          icon
+          aria-label="Close Notification"
           v-bind="attrs"
           @click="snackbar = false"
         >
-          Close
+          <v-icon>mdi-close</v-icon>
         </v-btn>
       </template>
     </v-snackbar>
