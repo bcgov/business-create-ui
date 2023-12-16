@@ -9,7 +9,7 @@ import {
   BusinessTypes,
   CoopTypes,
   DissolutionTypes,
-  EntityState,
+  EntityStates,
   FilingNames,
   FilingTypes,
   RelationshipTypes,
@@ -1209,7 +1209,7 @@ export const useStore = defineStore('store', {
     setAdminFreeze (adminFreeze: boolean) {
       this.stateModel.business.adminFreeze = adminFreeze
     },
-    setEntityState (entityState: EntityState) {
+    setEntityState (entityState: EntityStates) {
       this.stateModel.business.state = entityState
     },
     setBusinessNumber (taxId: string) {

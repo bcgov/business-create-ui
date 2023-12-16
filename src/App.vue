@@ -258,7 +258,7 @@ import { AmalgamationRegResources, DissolutionResources, IncorporationResources,
 import { AuthServices, LegalServices, PayServices } from '@/services/'
 
 // Enums and Constants
-import { EntityState, ErrorTypes, FilingCodes, FilingNames, FilingStatus, FilingTypes, NameRequestStates, RouteNames,
+import { EntityStates, ErrorTypes, FilingCodes, FilingNames, FilingStatus, FilingTypes, NameRequestStates, RouteNames,
   StaffPaymentOptions } from '@/enums'
 import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
 
@@ -310,7 +310,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   @Action(useStore) setCurrentDate!: (x: string) => void
   @Action(useStore) setCurrentJsDate!: (x: Date) => void
   @Action(useStore) setCurrentStep!: (x: number) => void
-  @Action(useStore) setEntityState!: (x: EntityState) => void
+  @Action(useStore) setEntityState!: (x: EntityStates) => void
   @Action(useStore) setFeePrices!: (x: Array<FeesIF>) => void
   @Action(useStore) setFilingType!: (x: FilingTypes) => void
   @Action(useStore) setGoodStanding!: (x: boolean) => void
