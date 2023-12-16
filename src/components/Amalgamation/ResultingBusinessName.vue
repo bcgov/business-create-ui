@@ -103,9 +103,9 @@ export default class ResultingBusinessName extends Mixins(NameRequestMixin) {
   formType = null as CorrectNameOptions
 
   readonly correctionNameChoices = [
-    CorrectNameOptions.CORRECT_NAME,
-    CorrectNameOptions.CORRECT_NAME_TO_NUMBER,
-    CorrectNameOptions.CORRECT_NEW_NR
+    CorrectNameOptions.CORRECT_AML_ADOPT,
+    CorrectNameOptions.CORRECT_NEW_NR,
+    CorrectNameOptions.CORRECT_NEW_NUMBERED,
   ]
 
   /** The company name. */
@@ -190,5 +190,4 @@ export default class ResultingBusinessName extends Mixins(NameRequestMixin) {
     top: 28px;
   }
 }
-
 </style>
