@@ -236,7 +236,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
     }
 
     // restore the amalgamating businesses array
-    if (draftFiling.amalgamation.amalgamatingBusinesses) {
+    if (draftFiling.amalgamationApplication.amalgamatingBusinesses) {
       this.setAmalgamatingBusinesses([
         // *** TODO: remove static items when they are no longer needed for testing
         // {
@@ -253,14 +253,14 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         //   foreignJurisdiction: { country: 'US' },
         //   role: AmlRoles.AMALGAMATING
         // },
-        ...draftFiling.amalgamation.amalgamatingBusinesses
+        ...draftFiling.amalgamationApplication.amalgamatingBusinesses
       ])
       this.refetchAmalgamatingBusinessesInfo()
     }
 
     // restore the amalgamation court approval
-    if (draftFiling.amalgamation.courtApproval) {
-      this.setAmalgamationCourtApproval(draftFiling.amalgamation.courtApproval)
+    if (draftFiling.amalgamationApplication.courtApproval) {
+      this.setAmalgamationCourtApproval(draftFiling.amalgamationApplication.courtApproval)
     }
 
     // restore Office Addresses

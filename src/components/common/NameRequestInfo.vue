@@ -203,6 +203,7 @@
         </v-row>
       </div>
     </template>
+
     <template v-else-if="isAmalgamationFiling && !getNameRequestNumber">
       <!-- Numbered Amalgamation-->
       <div class="section-container">

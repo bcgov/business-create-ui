@@ -45,7 +45,7 @@ export const routes = [
     meta: {
       step: 1,
       requiresAuth: true,
-      filingType: FilingTypes.AMALGAMATION,
+      filingType: FilingTypes.AMALGAMATION_APPLICATION,
       filingSubType: AmalgamationTypes.REGULAR
     }
   },
@@ -56,7 +56,7 @@ export const routes = [
     meta: {
       step: 2,
       requiresAuth: true,
-      filingType: FilingTypes.AMALGAMATION,
+      filingType: FilingTypes.AMALGAMATION_APPLICATION,
       filingSubType: AmalgamationTypes.REGULAR
     }
   },
@@ -67,7 +67,7 @@ export const routes = [
     meta: {
       step: 3,
       requiresAuth: true,
-      filingType: FilingTypes.AMALGAMATION,
+      filingType: FilingTypes.AMALGAMATION_APPLICATION,
       filingSubType: AmalgamationTypes.REGULAR
     }
   },
@@ -78,7 +78,7 @@ export const routes = [
     meta: {
       step: 4,
       requiresAuth: true,
-      filingType: FilingTypes.AMALGAMATION,
+      filingType: FilingTypes.AMALGAMATION_APPLICATION,
       filingSubType: AmalgamationTypes.REGULAR
     }
   },
@@ -89,7 +89,7 @@ export const routes = [
     meta: {
       step: 5,
       requiresAuth: true,
-      filingType: FilingTypes.AMALGAMATION,
+      filingType: FilingTypes.AMALGAMATION_APPLICATION,
       filingSubType: AmalgamationTypes.REGULAR
     }
   },
