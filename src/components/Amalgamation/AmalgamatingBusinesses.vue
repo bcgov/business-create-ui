@@ -112,7 +112,7 @@
                 v-model="legalName"
                 filled
                 label="Business' full legal name in home jurisdiction"
-                :rules="foreignBusinessRules"
+                :rules="foreignBusinessLegalNameRules"
               />
             </v-col>
             <v-col
@@ -124,7 +124,7 @@
                 v-model="corpNumber"
                 filled
                 label="Corporate number in home jurisdiction"
-                :rules="foreignBusinessRules"
+                :rules="foreignBusinessCorpNumberRules"
               />
             </v-col>
             <v-col
@@ -236,8 +236,12 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
   isAddingAmalgamatingForeignBusiness = false
 
   /** TextField rules for "Add an Amalgamating Foreign Business" Panel. */
-  get foreignBusinessRules (): Array<(v) => boolean | string> {
-    return [ v => !!v || 'Required.' ]
+  get foreignBusinessLegalNameRules (): Array<(v) => boolean | string> {
+    return [ v => !!v || 'Full legal name is required' ]
+  }
+
+  get foreignBusinessCorpNumberRules (): Array<(v) => boolean | string> {
+    return [ v => !!v || 'Corporate number is required' ]
   }
 
   /** Called when Jurisdiction menu item is changed. */
@@ -362,7 +366,7 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
       this.legalName &&
       this.corpNumber
     )
-    this.jurisdictionErrorMessage = this.jurisdiction ? '' : 'Required.'
+    this.jurisdictionErrorMessage = this.jurisdiction ? '' : 'Home jurisdiction is required'
     this.$refs.foreignBusinessForm.validate()
   }
 
