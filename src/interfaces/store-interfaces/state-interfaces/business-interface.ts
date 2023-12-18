@@ -1,4 +1,4 @@
-import { EntityState } from '@/enums'
+import { EntityStates } from '@/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import { IsoDatePacific, ApiDateTimeUtc } from '@bcrs-shared-components/interfaces'
 import { ContactPointIF, OfficeAddressIF } from '@/interfaces'
@@ -36,7 +36,7 @@ export interface BusinessIF {
   officeAddress: OfficeAddressIF
   nextAnnualReport: ApiDateTimeUtc // used for BCOMP only
   taxId?: string // aka Business Number // may be undefined
-  state: EntityState
+  state: EntityStates
   stateFiling?: string
   startDate: ApiDateTimeUtc
   submitter: string // not used

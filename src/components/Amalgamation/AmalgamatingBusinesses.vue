@@ -49,8 +49,9 @@
               to add to this application.</span>
 
             <BusinessLookup
+              :key="Math.random()"
               :showErrors="false"
-              :businessLookup="initialBusinessLookupObject"
+              :businessLookup="{ ...EmptyBusinessLookup }"
               :BusinessLookupServices="BusinessLookupServices"
               legalTypes="BC,BEN,CC,ULC,A"
               label="Business Name or Incorporation Number"
@@ -168,13 +169,13 @@
 
       <template #action="{ attrs }">
         <v-btn
-          color="error"
-          class="font-weight-bold"
-          text
+          color="white"
+          icon
+          aria-label="Close Notification"
           v-bind="attrs"
           @click="snackbar = false"
         >
-          Close
+          <v-icon>mdi-close</v-icon>
         </v-btn>
       </template>
     </v-snackbar>
@@ -190,7 +191,7 @@ import { BusinessLookupServices } from '@/services'
 import { BusinessLookup } from '@bcrs-shared-components/business-lookup'
 import { Jurisdiction } from '@bcrs-shared-components/jurisdiction'
 import { AmalgamatingBusinessIF, BusinessLookupResultIF, EmptyBusinessLookup } from '@/interfaces'
-import { AmlRoles, AmlTypes } from '@/enums'
+import { AmlRoles, AmlTypes, EntityStates } from '@/enums'
 import { JurisdictionLocation } from '@bcrs-shared-components/enums'
 import BusinessTable from '@/components/Amalgamation/BusinessTable.vue'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
@@ -209,16 +210,16 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
   }
 
   readonly BusinessLookupServices = BusinessLookupServices
+  readonly EmptyBusinessLookup = EmptyBusinessLookup
 
   @Getter(useStore) getAmalgamatingBusinessesValid!: boolean
   @Getter(useStore) getShowErrors!: boolean
-  @Getter(useStore) isAmalgamationFilingHorizontal!: boolean
+  // @Getter(useStore) isAmalgamationFilingHorizontal!: boolean
 
   @Action(useStore) pushAmalgamatingBusiness!: (x: AmalgamatingBusinessIF) => void
   @Action(useStore) setAmalgamatingBusinessesValid!: (x: boolean) => void
 
   // Local properties
-  initialBusinessLookupObject = EmptyBusinessLookup
   businessTableValid = false
   snackbar = false
   snackbarText = ''
@@ -322,7 +323,8 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
       address: business.addresses.registeredOffice.mailingAddress,
       isNotInGoodStanding: (business.businessInfo.goodStanding === false),
       isFutureEffective: (business.firstFiling.isFutureEffective === true),
-      isLimitedRestoration: await this.isLimitedRestoration(business)
+      isLimitedRestoration: await this.isLimitedRestoration(business),
+      isHistorical: (business.businessInfo.state === EntityStates.HISTORICAL)
     }
 
     // Add the new business to the amalgamating businesses list.

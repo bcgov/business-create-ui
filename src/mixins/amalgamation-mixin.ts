@@ -24,6 +24,7 @@ export default class AmalgamationMixin extends Vue {
   /** Iterable array of rule functions, sorted by importance. */
   readonly rules = [
     this.notAffiliated,
+    this.notHistorical,
     this.notInGoodStanding,
     this.limitedRestoration,
     this.futureEffectiveFiling,
@@ -40,6 +41,17 @@ export default class AmalgamationMixin extends Vue {
   notAffiliated (business: AmalgamatingBusinessIF): AmlStatuses {
     if (!this.isRoleStaff && business.type === AmlTypes.LEAR && !business.address) {
       return AmlStatuses.ERROR_NOT_AFFILIATED
+    }
+    return null
+  }
+
+  /**
+   * Disallow historical business.
+   * (Could happen if it was added while active and is now historical.)
+   */
+  notHistorical (business: AmalgamatingBusinessIF): AmlStatuses {
+    if (business.type === AmlTypes.LEAR && business.isHistorical) {
+      return AmlStatuses.ERROR_HISTORICAL
     }
     return null
   }
