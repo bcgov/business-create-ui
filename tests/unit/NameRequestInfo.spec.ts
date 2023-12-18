@@ -220,7 +220,7 @@ describe('Numbered Amalgamation Info component', () => {
   let wrapper: any
 
   beforeEach(() => {
-    store.stateModel.tombstone.filingType = FilingTypes.AMALGAMATION
+    store.stateModel.tombstone.filingType = FilingTypes.AMALGAMATION_APPLICATION
     store.stateModel.tempId = 'T1234567'
     store.stateModel.entityType = CorpTypeCd.BENEFIT_COMPANY
     store.stateModel.nameRequest.nrNum = null

@@ -82,9 +82,9 @@ export const useStore = defineStore('store', {
       return (width < new Vuetify().framework.breakpoint.thresholds.sm)
     },
 
-    /** Whether the current filing is an Amalgamation. */
+    /** Whether the current filing is an Amalgamation Application. */
     isAmalgamationFiling (): boolean {
-      return (this.stateModel.tombstone.filingType === FilingTypes.AMALGAMATION)
+      return (this.stateModel.tombstone.filingType === FilingTypes.AMALGAMATION_APPLICATION)
     },
 
     /** Whether the current filing is a Regular Amalgamation. */
@@ -102,7 +102,7 @@ export const useStore = defineStore('store', {
       return (this.getAmalgamationType === AmalgamationTypes.VERTICAL)
     },
 
-    /** Whether the current filing is an Incorporation. */
+    /** Whether the current filing is an Incorporation Application. */
     isIncorporationFiling (): boolean {
       return (this.stateModel.tombstone.filingType === FilingTypes.INCORPORATION_APPLICATION)
     },
@@ -140,7 +140,7 @@ export const useStore = defineStore('store', {
     /** The current filing name. */
     getFilingName (): FilingNames {
       switch (this.getFilingType) {
-        case FilingTypes.AMALGAMATION: return FilingNames.AMALGAMATION
+        case FilingTypes.AMALGAMATION_APPLICATION: return FilingNames.AMALGAMATION_APPLICATION
         case FilingTypes.INCORPORATION_APPLICATION: return FilingNames.INCORPORATION_APPLICATION
         case FilingTypes.REGISTRATION: return FilingNames.REGISTRATION
         case FilingTypes.RESTORATION: return FilingNames.RESTORATION_APPLICATION
@@ -287,7 +287,7 @@ export const useStore = defineStore('store', {
 
     getEntityIdentifier (): string {
       switch (this.getFilingType) {
-        case FilingTypes.AMALGAMATION: return this.getTempId
+        case FilingTypes.AMALGAMATION_APPLICATION: return this.getTempId
         case FilingTypes.INCORPORATION_APPLICATION: return this.getTempId
         case FilingTypes.REGISTRATION: return this.getTempId
         case FilingTypes.RESTORATION: return this.getBusinessId

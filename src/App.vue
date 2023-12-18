@@ -732,7 +732,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       // then try to re-route them
       if (this.$route.meta.filingType !== this.getFilingType) {
         switch (this.getFilingType) {
-          case FilingTypes.AMALGAMATION:
+          case FilingTypes.AMALGAMATION_APPLICATION:
             this.$router.push(RouteNames.AMALG_REG_INFORMATION).catch(() => {})
             return
           case FilingTypes.DISSOLUTION:
@@ -883,7 +883,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     // parse draft filing into the store and get the resources
     let resources: ResourceIF
     switch (this.getFilingType) {
-      case FilingTypes.AMALGAMATION:
+      case FilingTypes.AMALGAMATION_APPLICATION:
         draftFiling = {
           ...this.buildAmalgamationFiling(),
           ...draftFiling

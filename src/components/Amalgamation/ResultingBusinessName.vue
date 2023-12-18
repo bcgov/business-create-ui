@@ -105,7 +105,7 @@ export default class ResultingBusinessName extends Mixins(NameRequestMixin) {
   readonly correctionNameChoices = [
     CorrectNameOptions.CORRECT_AML_ADOPT,
     CorrectNameOptions.CORRECT_NEW_NR,
-    CorrectNameOptions.CORRECT_NEW_NUMBERED,
+    CorrectNameOptions.CORRECT_AML_NUMBERED
   ]
 
   /** The company name. */
