@@ -148,6 +148,7 @@
             :isEditing="true"
             :folioNumberLabel="true"
             @update="setFolioNumber($event)"
+            @valid="setFolioNumberValidity($event)"
           />
         </div>
       </v-card>
@@ -310,6 +311,7 @@ export default class AmalgamationRegularReviewConfirm extends Vue {
   @Action(useStore) setEffectiveDate!: (x: Date) => void
   @Action(useStore) setEffectiveDateTimeValid!: (x: boolean) => void
   @Action(useStore) setFolioNumber!: (x: string) => void
+  @Action(useStore) setFolioNumberValidity!: (x: boolean) => void
   @Action(useStore) setHasPlanOfArrangement!: (x: boolean) => void
   @Action(useStore) setIsFutureEffective!: (x: boolean) => void
 

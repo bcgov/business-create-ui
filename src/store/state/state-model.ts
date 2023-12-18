@@ -23,6 +23,7 @@ export const stateModel: StateModelIF = {
     userLastName: '',
     userAddress: null,
     folioNumber: '',
+    folioNumberValid: false,
     transactionalFolioNumber: '',
     transactionalFolioNumberValid: false
   },

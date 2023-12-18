@@ -170,6 +170,11 @@ export const useStore = defineStore('store', {
       return this.stateModel.tombstone.folioNumber
     },
 
+    /** Is true when the transactional folio number is valid. */
+    getFolioNumberValid (): boolean {
+      return this.stateModel.tombstone.folioNumberValid
+    },
+
     /** The transactional folio number. */
     getTransactionalFolioNumber (): string {
       return this.stateModel.tombstone.transactionalFolioNumber
@@ -575,11 +580,14 @@ export const useStore = defineStore('store', {
     /** Whether all the amalgamation (regular) steps are valid. */
     isAmalgamationRegularValid (): boolean {
       // *** TODO: add checks for review page components
+      const isFolioNumberValid = this.getFolioNumberValid
+
       return (
         this.getAmalgamatingBusinessesValid &&
         this.isDefineCompanyValid &&
         this.isAddPeopleAndRolesValid &&
-        this.isCreateShareStructureValid
+        this.isCreateShareStructureValid &&
+        isFolioNumberValid
       )
     },
 
@@ -1028,6 +1036,9 @@ export const useStore = defineStore('store', {
     setFolioNumber (folioNumber: string) {
       this.stateModel.tombstone.folioNumber = folioNumber
       if (!this.stateModel.ignoreChanges) this.stateModel.haveChanges = true
+    },
+    setFolioNumberValidity (valid: boolean) {
+      this.stateModel.tombstone.folioNumberValid = valid
     },
     setTransactionalFolioNumber (folioNumber: string) {
       this.stateModel.tombstone.transactionalFolioNumber = folioNumber

@@ -13,6 +13,7 @@ describe('Folio number component', () => {
       vuetify
     })
 
+    expect(wrapper.find('.folio-number-title').text()).toBe('Folio Number')
     expect(wrapper.find('#folio-number-editing').exists()).toBe(true)
     expect(wrapper.find('#folio-number-read-only').exists()).toBe(false)
 
@@ -27,6 +28,17 @@ describe('Folio number component', () => {
 
     expect(wrapper.find('#folio-number-editing').exists()).toBe(false)
     expect(wrapper.find('#folio-number-read-only').exists()).toBe(true)
+
+    wrapper.destroy()
+  })
+
+  it('displays correct label', async () => {
+    const wrapper = mount(FolioNumber, {
+      propsData: { folioNumberLabel: true, isEditing: true },
+      vuetify
+    })
+
+    expect(wrapper.find('.folio-number-title').text()).toBe('Folio or Reference Number')
 
     wrapper.destroy()
   })
