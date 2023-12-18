@@ -40,7 +40,7 @@ export interface AmalgamationFilingIF {
     legalType: CorpTypeCd
     identifier: string
   }
-  amalgamation: {
+  amalgamationApplication: {
     amalgamatingBusinesses: AmalgamatingBusinessIF[]
     courtApproval: boolean
     type: AmalgamationTypes

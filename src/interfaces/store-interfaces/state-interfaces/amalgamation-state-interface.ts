@@ -19,6 +19,7 @@ interface AmalgamatingLearIF {
   isNotInGoodStanding?: boolean // whether business is in good standing
   isFutureEffective?: boolean // whether business has a FE filing
   isLimitedRestoration?: boolean // whether business is in limited restoration
+  isHistorical?: boolean // whether business is historical
 }
 
 /** Interface for foreign amalgamating businesses. */

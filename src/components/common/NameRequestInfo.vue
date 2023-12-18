@@ -97,6 +97,7 @@
         </v-row>
       </div>
     </template>
+
     <template v-else-if="isAmalgamationFiling && !getNameRequestNumber">
       <!-- Numbered Amalgamation-->
       <div class="section-container">
@@ -154,6 +155,7 @@
         </v-row>
       </div>
     </template>
+
     <template v-else>
       <!-- Numbered Company -->
       <div class="section-container">

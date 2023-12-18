@@ -49,13 +49,7 @@
         </template>
       </ExpandableHelp>
 
-      <v-card
-        flat
-        class="mt-5"
-      >
-        <NameRequestInfo />
-        <NameTranslations class="mt-n8" />
-      </v-card>
+      <ResultingBusinessName class="mt-5" />
     </section>
   </div>
 </template>
@@ -64,25 +58,24 @@
 import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { Getter, Action } from 'pinia-class'
 import { useStore } from '@/store/store'
-import { CommonMixin } from '@/mixins'
-import { RouteNames } from '@/enums'
+import { CommonMixin, NameRequestMixin } from '@/mixins'
+import { CorrectNameOptions, RouteNames } from '@/enums'
 import { ExpandableHelp } from '@bcrs-shared-components/expandable-help'
 import AmalgamatingBusinesses from '@/components/Amalgamation/AmalgamatingBusinesses.vue'
+import ResultingBusinessName from '@/components/Amalgamation/ResultingBusinessName.vue'
 import BusinessTypeHelp from '@/components/Amalgamation/BusinessTypeHelp.vue'
-import NameRequestInfo from '@/components/common/NameRequestInfo.vue'
-import NameTranslations from '@/components/common/NameTranslations.vue'
 
 @Component({
   components: {
     AmalgamatingBusinesses,
     BusinessTypeHelp,
     ExpandableHelp,
-    NameRequestInfo,
-    NameTranslations
+    ResultingBusinessName
   }
 })
-export default class AmalgamationRegularInformation extends Mixins(CommonMixin) {
+export default class AmalgamationRegularInformation extends Mixins(CommonMixin, NameRequestMixin) {
   @Getter(useStore) getAmalgamatingBusinessesValid!: boolean
+  @Getter(useStore) getCorrectNameOption!: CorrectNameOptions
   @Getter(useStore) getNameTranslationsValid!: boolean
   @Getter(useStore) getShowErrors!: boolean
 
@@ -99,11 +92,16 @@ export default class AmalgamationRegularInformation extends Mixins(CommonMixin) 
     'resulting-business-name'
   ]
 
+  /** Whether the Resulting Business Name and Type section is valid. */
+  get getResultingBusinessNameValid (): boolean {
+    return (this.getNameTranslationsValid && !!this.getCorrectNameOption)
+  }
+
   /** Object of valid flags. Must match validComponents above. */
   get validFlags (): object {
     return {
       validAmalgamatingBusinesses: this.getAmalgamatingBusinessesValid,
-      validNameTranslations: this.getNameTranslationsValid
+      validResultingBusinessName: this.getResultingBusinessNameValid
     }
   }
 
@@ -121,22 +119,25 @@ export default class AmalgamationRegularInformation extends Mixins(CommonMixin) 
     this.$root.$on('showSpinner', (flag = false) => { this.showSpinner = flag })
   }
 
+  /** When amalgamating businesses validity changes, update this step's validity. */
   @Watch('getAmalgamatingBusinessesValid')
   private onAmalgamatingBusinessesValid (): void {
     this.setDefineCompanyStepValidity(
       this.amalgamatingBusinessesValid &&
-      this.getNameTranslationsValid
+      this.getResultingBusinessNameValid
     )
   }
 
-  @Watch('getNameTranslationsValid', { deep: true })
+  /** When resulting businesses name validity changes, update this step's validity. */
+  @Watch('getResultingBusinessNameValid', { deep: true })
   private onNameTranslationsValid (): void {
     this.setDefineCompanyStepValidity(
       this.amalgamatingBusinessesValid &&
-      this.getNameTranslationsValid
+      this.getResultingBusinessNameValid
     )
   }
 
+  /** When we route to this step, validate the step and scroll to any errors. */
   @Watch('$route')
   private async scrollToInvalidComponent (): Promise<void> {
     if (this.getShowErrors && this.$route.name === RouteNames.AMALG_REG_INFORMATION) {
@@ -169,45 +170,7 @@ h2::before {
   content: counter(header-counter) '. ';
 }
 
-.value.name-request {
-  width: 100%;
-  min-width: 24rem;
-}
-
-.meta-container {
-  display: flex;
-  flex-flow: column nowrap;
-  position: relative;
-
-  > label:first-child {
-    font-weight: bold;
-  }
-}
-
-@media (min-width: 768px) {
-  .meta-container {
-    flex-flow: row nowrap;
-
-    > label:first-child {
-      flex: 0 0 auto;
-      padding-right: 2rem;
-      width: 12rem;
-    }
-  }
-}
-
-// #business-buttons-container {
-//   .v-btn + .v-btn {
-//     margin-left: 0.5rem;
-//   }
-// }
-
 header p {
   padding-top: 0.5rem;
-}
-
-// Vuetify Overrides
-:deep(.v-select__selection--comma) {
-  overflow: inherit;
 }
 </style>
