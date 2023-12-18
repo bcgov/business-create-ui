@@ -258,7 +258,7 @@ import { AmalgamationRegResources, DissolutionResources, IncorporationResources,
 import { AuthServices, LegalServices, PayServices } from '@/services/'
 
 // Enums and Constants
-import { EntityState, ErrorTypes, FilingCodes, FilingNames, FilingStatus, FilingTypes, NameRequestStates, RouteNames,
+import { EntityStates, ErrorTypes, FilingCodes, FilingNames, FilingStatus, FilingTypes, NameRequestStates, RouteNames,
   StaffPaymentOptions } from '@/enums'
 import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
 
@@ -310,7 +310,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   @Action(useStore) setCurrentDate!: (x: string) => void
   @Action(useStore) setCurrentJsDate!: (x: Date) => void
   @Action(useStore) setCurrentStep!: (x: number) => void
-  @Action(useStore) setEntityState!: (x: EntityState) => void
+  @Action(useStore) setEntityState!: (x: EntityStates) => void
   @Action(useStore) setFeePrices!: (x: Array<FeesIF>) => void
   @Action(useStore) setFilingType!: (x: FilingTypes) => void
   @Action(useStore) setGoodStanding!: (x: boolean) => void
@@ -732,7 +732,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       // then try to re-route them
       if (this.$route.meta.filingType !== this.getFilingType) {
         switch (this.getFilingType) {
-          case FilingTypes.AMALGAMATION:
+          case FilingTypes.AMALGAMATION_APPLICATION:
             this.$router.push(RouteNames.AMALG_REG_INFORMATION).catch(() => {})
             return
           case FilingTypes.DISSOLUTION:
@@ -883,7 +883,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     // parse draft filing into the store and get the resources
     let resources: ResourceIF
     switch (this.getFilingType) {
-      case FilingTypes.AMALGAMATION:
+      case FilingTypes.AMALGAMATION_APPLICATION:
         draftFiling = {
           ...this.buildAmalgamationFiling(),
           ...draftFiling

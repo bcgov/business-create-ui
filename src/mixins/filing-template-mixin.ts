@@ -122,7 +122,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
   @Action(useStore) setTransactionalFolioNumber!: (x: string) => void
 
   /**
-   * Builds an amalgamation filing from store data. Used when saving a filing.
+   * Builds an amalgamation application filing from store data. Used when saving a filing.
    * @returns the filing body to save
    */
   buildAmalgamationFiling (): AmalgamationFilingIF {
@@ -137,7 +137,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
     // Build the main filing.
     const filing: AmalgamationFilingIF = {
       header: {
-        name: FilingTypes.AMALGAMATION,
+        name: FilingTypes.AMALGAMATION_APPLICATION,
         certifiedBy: this.getCertifyState.certifiedBy,
         date: this.getCurrentDate,
         filingId: this.getFilingId,
@@ -148,7 +148,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         legalType: this.getEntityType,
         identifier: this.getTempId
       },
-      amalgamation: {
+      amalgamationApplication: {
         amalgamatingBusinesses: this.getAmalgamatingBusinesses,
         type: this.getAmalgamationType,
         nameRequest: {
@@ -169,16 +169,16 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
       }
     }
 
-    filing.amalgamation.shareStructure = {
+    filing.amalgamationApplication.shareStructure = {
       shareClasses: this.getCreateShareStructureStep.shareClasses
     }
-    filing.amalgamation.incorporationAgreement = {
+    filing.amalgamationApplication.incorporationAgreement = {
       agreementType: this.getIncorporationAgreementStep.agreementType
     }
 
     const courtOrder = this.getCourtOrderStep.courtOrder
     if (courtOrder && (courtOrder.hasPlanOfArrangement || courtOrder.fileNumber)) {
-      filing.amalgamation.courtOrder = {
+      filing.amalgamationApplication.courtOrder = {
         fileNumber: courtOrder.fileNumber,
         effectOfOrder: courtOrder.hasPlanOfArrangement ? EffectOfOrders.PLAN_OF_ARRANGEMENT : '',
         hasPlanOfArrangement: courtOrder.hasPlanOfArrangement
@@ -187,8 +187,8 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
 
     // If this is a named IA then add Name Request Number and Approved Name.
     if (this.getNameRequestNumber) {
-      filing.amalgamation.nameRequest.nrNumber = this.getNameRequestNumber
-      filing.amalgamation.nameRequest.legalName = this.getNameRequestApprovedName
+      filing.amalgamationApplication.nameRequest.nrNumber = this.getNameRequestNumber
+      filing.amalgamationApplication.nameRequest.legalName = this.getNameRequestApprovedName
     }
 
     // If this is a future effective filing then save the effective date.
@@ -204,7 +204,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
   }
 
   /**
-   * Parses a draft amalgamation filing into the store. Used when loading a filing.
+   * Parses a draft amalgamation application filing into the store. Used when loading a filing.
    * @param draftFiling the filing body to parse
    */
   parseAmalgamationDraft (draftFiling: any): void {
@@ -217,13 +217,13 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
     this.setFilingId(+draftFiling.header.filingId)
 
     // restore Amalgamation Type
-    this.setAmalgamationType(draftFiling.amalgamation.type || AmalgamationTypes.REGULAR)
+    this.setAmalgamationType(draftFiling.amalgamationApplication.type || AmalgamationTypes.REGULAR)
 
     // restore Entity Type
-    this.setEntityType(draftFiling.amalgamation.nameRequest.legalType)
+    this.setEntityType(draftFiling.amalgamationApplication.nameRequest.legalType)
 
     // restore the amalgamating businesses array
-    if (draftFiling.amalgamation.amalgamatingBusinesses) {
+    if (draftFiling.amalgamationApplication.amalgamatingBusinesses) {
       this.setAmalgamatingBusinesses([
         // *** TODO: remove static items when they are no longer needed for testing
         // {
@@ -240,59 +240,59 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         //   foreignJurisdiction: { country: 'US' },
         //   role: AmlRoles.AMALGAMATING
         // },
-        ...draftFiling.amalgamation.amalgamatingBusinesses
+        ...draftFiling.amalgamationApplication.amalgamatingBusinesses
       ])
       this.refetchAmalgamatingBusinessesInfo()
     }
 
     // restore the amalgamation court approval
-    if (draftFiling.amalgamation.courtApproval) {
-      this.setAmalgamationCourtApproval(draftFiling.amalgamation.courtApproval)
+    if (draftFiling.amalgamationApplication.courtApproval) {
+      this.setAmalgamationCourtApproval(draftFiling.amalgamationApplication.courtApproval)
     }
 
     // restore Office Addresses
     // *** TODO: verify whether we need to assign fallback
     // *** also fix IAs and registrations the same way?
-    if (draftFiling.amalgamation.offices) {
-      this.setOfficeAddresses(draftFiling.amalgamation.offices)
+    if (draftFiling.amalgamationApplication.offices) {
+      this.setOfficeAddresses(draftFiling.amalgamationApplication.offices)
     }
 
     // restore Name Translations
-    if (draftFiling.amalgamation.nameTranslations) {
-      this.setNameTranslations(draftFiling.amalgamation.nameTranslations)
+    if (draftFiling.amalgamationApplication.nameTranslations) {
+      this.setNameTranslations(draftFiling.amalgamationApplication.nameTranslations)
     }
 
     // restore Business Contact
-    if (draftFiling.amalgamation.contactPoint) {
+    if (draftFiling.amalgamationApplication.contactPoint) {
       this.setBusinessContact({
-        ...draftFiling.amalgamation.contactPoint,
-        confirmEmail: draftFiling.amalgamation.contactPoint.email
+        ...draftFiling.amalgamationApplication.contactPoint,
+        confirmEmail: draftFiling.amalgamationApplication.contactPoint.email
       })
     } else {
       this.setBusinessContact({ ...EmptyContactPoint })
     }
 
     // restore Persons and Organizations
-    if (draftFiling.amalgamation.parties) {
-      this.setOrgPersonList(draftFiling.amalgamation.parties || [])
+    if (draftFiling.amalgamationApplication.parties) {
+      this.setOrgPersonList(draftFiling.amalgamationApplication.parties || [])
     }
 
     // restore Share Structure
-    this.setShareClasses(draftFiling.amalgamation.shareStructure
-      ? draftFiling.amalgamation.shareStructure.shareClasses
+    this.setShareClasses(draftFiling.amalgamationApplication.shareStructure
+      ? draftFiling.amalgamationApplication.shareStructure.shareClasses
       : [])
 
     // restore Incorporation Agreement
     this.setIncorporationAgreementStepData({
-      agreementType: draftFiling.amalgamation.incorporationAgreement?.agreementType,
+      agreementType: draftFiling.amalgamationApplication.incorporationAgreement?.agreementType,
       valid: false
     })
     // set court order fields
-    if (draftFiling.amalgamation.courtOrder?.fileNumber) {
-      this.setCourtOrderFileNumber(draftFiling.amalgamation.courtOrder.fileNumber)
+    if (draftFiling.amalgamationApplication.courtOrder?.fileNumber) {
+      this.setCourtOrderFileNumber(draftFiling.amalgamationApplication.courtOrder.fileNumber)
     }
-    if (draftFiling.amalgamation.courtOrder?.hasPlanOfArrangement) {
-      this.setHasPlanOfArrangement(draftFiling.amalgamation.courtOrder.hasPlanOfArrangement)
+    if (draftFiling.amalgamationApplication.courtOrder?.hasPlanOfArrangement) {
+      this.setHasPlanOfArrangement(draftFiling.amalgamationApplication.courtOrder.hasPlanOfArrangement)
     }
 
     // restore Certify state
@@ -322,7 +322,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
   }
 
   /**
-   * Builds an incorporation filing from store data. Used when saving a filing.
+   * Builds an incorporation application filing from store data. Used when saving a filing.
    * @returns the filing body to save
    */
   buildIncorporationFiling (): IncorporationFilingIF {
@@ -425,7 +425,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
   }
 
   /**
-   * Parses a draft incorporation filing into the store. Used when loading a filing.
+   * Parses a draft incorporation application  filing into the store. Used when loading a filing.
    * @param draftFiling the filing body to parse
    */
   parseIncorporationDraft (draftFiling: any): void {

@@ -73,6 +73,9 @@ export default class BusinessStatus extends Vue {
         return 'This business has a future effective filing. It cannot be part of an amalgamation ' +
           'until all future effective filings have come into effect.'
 
+      case AmlStatuses.ERROR_HISTORICAL:
+        return 'This business is historical. It cannot be part of an amalgamation.'
+
       case AmlStatuses.ERROR_LIMITED_RESTORATION:
         return 'This business is under limited restoration. It cannot be part of an amalgamation ' +
           'unless it is fully restored.'
