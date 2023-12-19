@@ -305,7 +305,6 @@ export default class AmalgamationRegularReviewConfirm extends Vue {
   @Getter(useStore) getFolioNumber!: string
   @Getter(useStore) getFolioNumberValid!: boolean
   @Getter(useStore) getIncorporationAgreementStep!: IncorporationAgreementIF
-  @Getter(useStore) getShowErrors!: boolean
   @Getter(useStore) getUserEmail!: string
   @Getter(useStore) getValidateSteps!: boolean
   @Getter(useStore) isRoleStaff!: boolean
