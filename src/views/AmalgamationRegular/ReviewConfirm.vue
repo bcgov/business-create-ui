@@ -143,7 +143,7 @@
         class="mt-6"
       >
         <div
-          class="pa-4"
+          class="px-4 pt-8 pb-6"
           :class="{ 'invalid-section': isFolioInvalid}"
         >
           <FolioNumber

@@ -11,7 +11,7 @@
           sm="3"
           class="pr-4"
         >
-          <label class="folio-number-title title-label">{{ folioLabel }}</label>
+          <label class="folio-number-title title-label">{{ fnLabel }}</label>
         </v-col>
         <v-col
           cols="12"
@@ -76,7 +76,7 @@ export default class FolioNumber extends Vue {
   folioNumber = null as string
   formValid = false
 
-  get folioLabel (): string {
+  get fnLabel (): string {
     return this.folioNumberLabel ? 'Folio or Reference Number' : 'Folio Number'
   }
 
