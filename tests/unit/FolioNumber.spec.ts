@@ -13,6 +13,7 @@ describe('Folio number component', () => {
       vuetify
     })
 
+    expect(wrapper.find('.folio-number-title').text()).toBe('Folio or Reference Number')
     expect(wrapper.find('#folio-number-editing').exists()).toBe(true)
     expect(wrapper.find('#folio-number-read-only').exists()).toBe(false)
 

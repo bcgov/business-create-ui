@@ -11,7 +11,7 @@
           sm="3"
           class="pr-4"
         >
-          <label class="folio-number-title title-label">Folio Number</label>
+          <label class="folio-number-title title-label">Folio or Reference Number</label>
         </v-col>
         <v-col
           cols="12"
