@@ -142,7 +142,10 @@
         flat
         class="mt-6"
       >
-        <div class="pa-4">
+        <div
+          class="pa-4"
+          :class="{ 'invalid-section': isFolioInvalid}"
+        >
           <FolioNumber
             :initialValue="getFolioNumber"
             :isEditing="true"
@@ -300,7 +303,9 @@ export default class AmalgamationRegularReviewConfirm extends Vue {
   @Getter(useStore) getEntityType!: CorpTypeCd
   @Getter(useStore) getFilingName!: FilingNames
   @Getter(useStore) getFolioNumber!: string
+  @Getter(useStore) getFolioNumberValid!: boolean
   @Getter(useStore) getIncorporationAgreementStep!: IncorporationAgreementIF
+  @Getter(useStore) getShowErrors!: boolean
   @Getter(useStore) getUserEmail!: string
   @Getter(useStore) getValidateSteps!: boolean
   @Getter(useStore) isRoleStaff!: boolean
@@ -333,6 +338,11 @@ export default class AmalgamationRegularReviewConfirm extends Vue {
   /** Is true when the Court Order conditions are not met. */
   get isCourtOrderInvalid (): boolean {
     return (this.getValidateSteps && !this.getCourtOrderStep.valid)
+  }
+
+  /** Is true when the Folio Number is not valid */
+  get isFolioInvalid (): boolean {
+    return this.getValidateSteps && !(this.getFolioNumberValid)
   }
 }
 </script>
