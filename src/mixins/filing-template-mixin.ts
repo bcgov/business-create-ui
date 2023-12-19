@@ -315,8 +315,11 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
       this.parseStaffPayment(draftFiling)
     }
 
-    if (draftFiling.header.folioNumber) {
-      this.setFolioNumber(draftFiling.header.folioNumber)
+    // if this is a premium account and Folio Number exists then restore it
+    if (this.isPremiumAccount) {
+      if (draftFiling.header.folioNumber) {
+        this.setFolioNumber(draftFiling.header.folioNumber)
+      }
     }
   }
 

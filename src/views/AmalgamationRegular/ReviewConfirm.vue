@@ -125,6 +125,7 @@
 
     <!-- Folio or Reference Number -->
     <section
+      v-if="isPremiumAccount"
       id="folio-number-section"
       class="mt-10"
     >
@@ -143,13 +144,12 @@
         class="mt-6"
       >
         <div
-          class="px-4 pt-8 pb-6"
+          class="px-4 py-8"
           :class="{ 'invalid-section': isFolioInvalid}"
         >
           <FolioNumber
             :initialValue="getFolioNumber"
             :isEditing="true"
-            :folioNumberLabel="true"
             @update="setFolioNumber($event)"
             @valid="setFolioNumberValidity($event)"
           />
@@ -307,6 +307,7 @@ export default class AmalgamationRegularReviewConfirm extends Vue {
   @Getter(useStore) getIncorporationAgreementStep!: IncorporationAgreementIF
   @Getter(useStore) getUserEmail!: string
   @Getter(useStore) getValidateSteps!: boolean
+  @Getter(useStore) isPremiumAccount!: boolean
   @Getter(useStore) isRoleStaff!: boolean
 
   @Action(useStore) setCertifyState!: (x: CertifyIF) => void

@@ -11,7 +11,7 @@
           sm="3"
           class="pr-4"
         >
-          <label class="folio-number-title title-label">{{ fnLabel }}</label>
+          <label class="folio-number-title title-label">Folio or Reference Number</label>
         </v-col>
         <v-col
           cols="12"
@@ -70,15 +70,10 @@ export default class FolioNumber extends Vue {
   @Prop({ default: null }) readonly initialValue!: string
   @Prop({ default: false }) readonly isEditing!: boolean
   @Prop({ default: false }) readonly showErrors!: boolean
-  @Prop({ default: false }) readonly folioNumberLabel!: boolean
 
   // Local properties
   folioNumber = null as string
   formValid = false
-
-  get fnLabel (): string {
-    return this.folioNumberLabel ? 'Folio or Reference Number' : 'Folio Number'
-  }
 
   // Validation rules
   readonly rules: Array<VuetifyRuleFunction> = [

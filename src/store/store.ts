@@ -580,14 +580,12 @@ export const useStore = defineStore('store', {
     /** Whether all the amalgamation (regular) steps are valid. */
     isAmalgamationRegularValid (): boolean {
       // *** TODO: add checks for review page components
-      const isFolioNumberValid = this.getFolioNumberValid
-
       return (
         this.getAmalgamatingBusinessesValid &&
         this.isDefineCompanyValid &&
         this.isAddPeopleAndRolesValid &&
         this.isCreateShareStructureValid &&
-        isFolioNumberValid
+        this.getFolioNumberValid
       )
     },
 
