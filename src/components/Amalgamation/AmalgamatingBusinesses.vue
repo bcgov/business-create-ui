@@ -13,7 +13,6 @@
     </v-btn>
 
     <v-btn
-      v-if="isRoleStaff"
       id="btn-add-amalgamating-foreign-business"
       outlined
       color="primary"
