@@ -170,7 +170,7 @@ export const useStore = defineStore('store', {
       return this.stateModel.tombstone.folioNumber
     },
 
-    /** Is true when the transactional folio number is valid. */
+    /** Is true when the folio number is valid. */
     getFolioNumberValid (): boolean {
       return this.stateModel.tombstone.folioNumberValid
     },
