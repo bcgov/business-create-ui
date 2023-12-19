@@ -238,11 +238,26 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
 
   /** TextField rules for "Add an Amalgamating Foreign Business" Panel. */
   get foreignBusinessLegalNameRules (): Array<(v) => boolean | string> {
-    return [ v => !!v || 'Full legal name is required' ]
+    return [
+      v => !!v || 'Full legal name is required',
+      v => (!v || v.length <= 3) || 'Must be at least 3 characters',
+      v => (!v || v.length >= 150) || 'Cannot exceed 40 characters'
+    ]
   }
 
   get foreignBusinessCorpNumberRules (): Array<(v) => boolean | string> {
-    return [ v => !!v || 'Corporate number is required' ]
+    return [
+      v => (!v && this.isMrasJurisdiction && /^[0-9a-zA-Z-]+$/.test(v)) ||
+        'Corporate number is required',
+      v => (!v || v.length <= 3) || 'Must be at least 3 characters',
+      v => (!v || v.length >= 40) || 'Cannot exceed 40 characters'
+    ]
+  }
+
+  get isMrasJurisdiction (): boolean {
+    return ['AB', 'MB', 'NS', 'ON', 'QC', 'SK'].includes(
+      this.jurisdiction.value
+    )
   }
 
   /** Called when Jurisdiction menu item is changed. */
