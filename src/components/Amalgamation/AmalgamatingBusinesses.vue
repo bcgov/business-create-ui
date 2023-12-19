@@ -13,6 +13,7 @@
     </v-btn>
 
     <v-btn
+      v-if="isRoleStaff"
       id="btn-add-amalgamating-foreign-business"
       outlined
       color="primary"
@@ -124,7 +125,7 @@
                 v-model="corpNumber"
                 filled
                 label="Corporate number in home jurisdiction"
-                :rules="foreignBusinessCorpNumberRules"
+                :rules="isMrasJurisdiction ? foreignBusinessCorpNumberRules : []"
               />
             </v-col>
             <v-col
@@ -246,8 +247,7 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
 
   get foreignBusinessCorpNumberRules (): Array<(v) => boolean | string> {
     return [
-      v => ((!!v && this.isMrasJurisdiction) || /^[0-9a-zA-Z-]+$/.test(v)) ||
-        'Corporate number is required',
+      v => /^[0-9a-zA-Z-]+$/.test(v) || 'Corporate number is required',
       v => (!v || v.length >= 3) || 'Must be at least 3 characters',
       v => (!v || v.length <= 40) || 'Cannot exceed 40 characters'
     ]
