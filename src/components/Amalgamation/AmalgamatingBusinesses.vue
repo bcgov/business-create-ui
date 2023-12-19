@@ -239,22 +239,22 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
   get foreignBusinessLegalNameRules (): Array<(v) => boolean | string> {
     return [
       v => !!v || 'Full legal name is required',
-      v => (!v || v.length <= 3) || 'Must be at least 3 characters',
-      v => (!v || v.length >= 150) || 'Cannot exceed 40 characters'
+      v => (!v || v.length >= 3) || 'Must be at least 3 characters',
+      v => (!v || v.length <= 150) || 'Cannot exceed 40 characters'
     ]
   }
 
   get foreignBusinessCorpNumberRules (): Array<(v) => boolean | string> {
     return [
-      v => (!v && this.isMrasJurisdiction && /^[0-9a-zA-Z-]+$/.test(v)) ||
+      v => ((!!v && this.isMrasJurisdiction) || /^[0-9a-zA-Z-]+$/.test(v)) ||
         'Corporate number is required',
-      v => (!v || v.length <= 3) || 'Must be at least 3 characters',
-      v => (!v || v.length >= 40) || 'Cannot exceed 40 characters'
+      v => (!v || v.length >= 3) || 'Must be at least 3 characters',
+      v => (!v || v.length <= 40) || 'Cannot exceed 40 characters'
     ]
   }
 
   get isMrasJurisdiction (): boolean {
-    return ['AB', 'MB', 'NS', 'ON', 'QC', 'SK'].includes(
+    return !!this.jurisdiction && ['AB', 'MB', 'NS', 'ON', 'QC', 'SK'].includes(
       this.jurisdiction.value
     )
   }
