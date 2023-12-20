@@ -382,9 +382,9 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
   /** Validate Add Amalgamating Foreign Business. */
   validateAddAmalgamatingForeignBusiness (): void {
     this.isForeignBusinessValid = (
-      !!this.jurisdiction &&
-      !!this.legalName &&
-      (!this.isMrasJurisdiction || !!this.corpNumber)
+      this.jurisdiction &&
+      this.legalName &&
+      (!this.isMrasJurisdiction || this.corpNumber)
     )
     this.jurisdictionErrorMessage = this.jurisdiction ? '' : 'Home jurisdiction is required'
     this.$refs.foreignBusinessForm.validate()
