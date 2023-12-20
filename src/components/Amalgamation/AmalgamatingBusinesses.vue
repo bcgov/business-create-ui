@@ -495,10 +495,12 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
     )
 
     // Reset "Add an Amalgamating Foreign Business" Panel on change
+    this.isForeignBusinessValid = null
     this.jurisdiction = null
     this.legalName = null
     this.corpNumber = null
     this.jurisdictionErrorMessage = ''
+    this.isMrasJurisdiction = false
   }
 }
 </script>
