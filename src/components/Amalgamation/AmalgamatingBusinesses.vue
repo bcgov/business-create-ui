@@ -190,6 +190,7 @@ import { AmalgamationMixin, CommonMixin } from '@/mixins'
 import { BusinessLookupServices } from '@/services'
 import { BusinessLookup } from '@bcrs-shared-components/business-lookup'
 import { Jurisdiction } from '@bcrs-shared-components/jurisdiction'
+import { MrasJurisdictions } from '@bcrs-shared-components/jurisdiction/list-data'
 import { AmalgamatingBusinessIF, BusinessLookupResultIF, EmptyBusinessLookup } from '@/interfaces'
 import { AmlRoles, AmlTypes, EntityStates } from '@/enums'
 import { JurisdictionLocation } from '@bcrs-shared-components/enums'
@@ -260,8 +261,8 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
     this.jurisdiction = jurisdiction
     this.isCan = jurisdiction.group === 0
     this.jurisdictionErrorMessage = this.jurisdiction ? '' : 'Home jurisdiction is required'
-    this.isMrasJurisdiction = ['AB', 'MB', 'NS', 'ON', 'QC', 'SK'].includes(
-      this.jurisdiction.value
+    this.isMrasJurisdiction = MrasJurisdictions.includes(
+      this.jurisdiction.text.toLowerCase()
     )
 
     // Update validation on jurisdiction change
@@ -382,9 +383,9 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
   /** Validate Add Amalgamating Foreign Business. */
   validateAddAmalgamatingForeignBusiness (): void {
     this.isForeignBusinessValid = (
-      this.jurisdiction &&
-      this.legalName &&
-      (!this.isMrasJurisdiction || this.corpNumber)
+      !!this.jurisdiction &&
+      !!this.legalName &&
+      (!this.isMrasJurisdiction || !!this.corpNumber)
     )
     this.jurisdictionErrorMessage = this.jurisdiction ? '' : 'Home jurisdiction is required'
     this.$refs.foreignBusinessForm.validate()
