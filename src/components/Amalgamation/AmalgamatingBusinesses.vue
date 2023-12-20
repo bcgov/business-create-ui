@@ -125,7 +125,7 @@
                 v-model="corpNumber"
                 filled
                 label="Corporate number in home jurisdiction"
-                :rules="isMrasJurisdiction ? foreignBusinessCorpNumberRules : []"
+                :rules="foreignBusinessCorpNumberRules"
               />
             </v-col>
             <v-col
@@ -229,7 +229,8 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
   legalName = null
   corpNumber = null
   isCan = false
-  isForeignBusinessValid = false
+  isForeignBusinessValid = null
+  isMrasJurisdiction = false
   jurisdictionErrorMessage = ''
 
   // Button properties
@@ -247,23 +248,26 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
 
   get foreignBusinessCorpNumberRules (): Array<(v) => boolean | string> {
     return [
-      v => /^[0-9a-zA-Z-]+$/.test(v) || 'Corporate number is required',
+      v => (!this.isMrasJurisdiction || (!!v && /^[0-9a-zA-Z-]+$/.test(v))) ||
+        'Corporate number is required',
       v => (!v || v.length >= 3) || 'Must be at least 3 characters',
       v => (!v || v.length <= 40) || 'Cannot exceed 40 characters'
     ]
-  }
-
-  get isMrasJurisdiction (): boolean {
-    return !!this.jurisdiction && ['AB', 'MB', 'NS', 'ON', 'QC', 'SK'].includes(
-      this.jurisdiction.value
-    )
   }
 
   /** Called when Jurisdiction menu item is changed. */
   onJurisdictionChange (jurisdiction: any): void {
     this.jurisdiction = jurisdiction
     this.isCan = jurisdiction.group === 0
-    this.jurisdictionErrorMessage = this.jurisdiction ? '' : 'Required.'
+    this.jurisdictionErrorMessage = this.jurisdiction ? '' : 'Home jurisdiction is required'
+    this.isMrasJurisdiction = ['AB', 'MB', 'NS', 'ON', 'QC', 'SK'].includes(
+      this.jurisdiction.value
+    )
+
+    // Update validation on jurisdiction change
+    if (this.isForeignBusinessValid != null) {
+      this.validateAddAmalgamatingForeignBusiness()
+    }
   }
 
   async saveAmalgamatingBusiness (businessLookup: BusinessLookupResultIF): Promise<void> {
@@ -378,9 +382,9 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
   /** Validate Add Amalgamating Foreign Business. */
   validateAddAmalgamatingForeignBusiness (): void {
     this.isForeignBusinessValid = (
-      this.jurisdiction &&
-      this.legalName &&
-      this.corpNumber
+      !!this.jurisdiction &&
+      !!this.legalName &&
+      (!this.isMrasJurisdiction || !!this.corpNumber)
     )
     this.jurisdictionErrorMessage = this.jurisdiction ? '' : 'Home jurisdiction is required'
     this.$refs.foreignBusinessForm.validate()
@@ -398,10 +402,12 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
     )
 
     // Reset "Add an Amalgamating Foreign Business" Panel on change
+    this.isForeignBusinessValid = null
     this.jurisdiction = null
     this.legalName = null
     this.corpNumber = null
     this.jurisdictionErrorMessage = ''
+    this.isMrasJurisdiction = false
   }
 }
 </script>
