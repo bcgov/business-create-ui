@@ -267,7 +267,7 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
     )
 
     // Update validation on jurisdiction change
-    if (this.isForeignBusinessValid != null) {
+    if (this.isForeignBusinessValid !== null) {
       this.validateAddAmalgamatingForeignBusiness()
     }
   }
