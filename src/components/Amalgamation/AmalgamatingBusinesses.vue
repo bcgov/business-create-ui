@@ -242,7 +242,7 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
     return [
       v => !!v || 'Full legal name is required',
       v => (!v || v.length >= 3) || 'Must be at least 3 characters',
-      v => (!v || v.length <= 150) || 'Cannot exceed 40 characters'
+      v => (!v || v.length <= 150) || 'Cannot exceed 150 characters'
     ]
   }
 
