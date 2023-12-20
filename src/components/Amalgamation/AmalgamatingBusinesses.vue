@@ -230,9 +230,10 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
   legalName = null
   corpNumber = null
   isCan = false
-  isForeignBusinessValid = null
   isMrasJurisdiction = false
   jurisdictionErrorMessage = ''
+  // Null for no validation, false for invalid, true for valid
+  isForeignBusinessValid = null
 
   // Button properties
   isAddingAmalgamatingBusiness = false
