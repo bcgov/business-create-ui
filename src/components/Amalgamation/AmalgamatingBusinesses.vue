@@ -190,6 +190,7 @@ import { AmalgamationMixin, CommonMixin } from '@/mixins'
 import { BusinessLookupServices } from '@/services'
 import { BusinessLookup } from '@bcrs-shared-components/business-lookup'
 import { Jurisdiction } from '@bcrs-shared-components/jurisdiction'
+import { MrasJurisdictions } from '@bcrs-shared-components/jurisdiction/list-data'
 import { AmalgamatingBusinessIF, BusinessLookupResultIF, EmptyBusinessLookup } from '@/interfaces'
 import { AmlRoles, AmlTypes, EntityStates } from '@/enums'
 import { JurisdictionLocation } from '@bcrs-shared-components/enums'
@@ -229,8 +230,10 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
   legalName = null
   corpNumber = null
   isCan = false
-  isForeignBusinessValid = false
+  isMrasJurisdiction = false
   jurisdictionErrorMessage = ''
+  // Null for no validation, false for invalid, true for valid
+  isForeignBusinessValid = null
 
   // Button properties
   isAddingAmalgamatingBusiness = false
@@ -238,18 +241,35 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
 
   /** TextField rules for "Add an Amalgamating Foreign Business" Panel. */
   get foreignBusinessLegalNameRules (): Array<(v) => boolean | string> {
-    return [ v => !!v || 'Full legal name is required' ]
+    return [
+      v => !!v || 'Full legal name is required',
+      v => (!v || v.length >= 3) || 'Must be at least 3 characters',
+      v => (!v || v.length <= 150) || 'Cannot exceed 150 characters'
+    ]
   }
 
   get foreignBusinessCorpNumberRules (): Array<(v) => boolean | string> {
-    return [ v => !!v || 'Corporate number is required' ]
+    return [
+      v => (!this.isMrasJurisdiction || (!!v && /^[0-9a-zA-Z-]+$/.test(v))) ||
+        'Corporate number is required',
+      v => (!v || v.length >= 3) || 'Must be at least 3 characters',
+      v => (!v || v.length <= 40) || 'Cannot exceed 40 characters'
+    ]
   }
 
   /** Called when Jurisdiction menu item is changed. */
   onJurisdictionChange (jurisdiction: any): void {
     this.jurisdiction = jurisdiction
     this.isCan = jurisdiction.group === 0
-    this.jurisdictionErrorMessage = this.jurisdiction ? '' : 'Required.'
+    this.jurisdictionErrorMessage = this.jurisdiction ? '' : 'Home jurisdiction is required'
+    this.isMrasJurisdiction = MrasJurisdictions.includes(
+      this.jurisdiction.text.toLowerCase()
+    )
+
+    // Update validation on jurisdiction change
+    if (this.isForeignBusinessValid !== null) {
+      this.validateAddAmalgamatingForeignBusiness()
+    }
   }
 
   async saveAmalgamatingBusiness (businessLookup: BusinessLookupResultIF): Promise<void> {
@@ -364,9 +384,9 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
   /** Validate Add Amalgamating Foreign Business. */
   validateAddAmalgamatingForeignBusiness (): void {
     this.isForeignBusinessValid = (
-      this.jurisdiction &&
-      this.legalName &&
-      this.corpNumber
+      !!this.jurisdiction &&
+      !!this.legalName &&
+      (!this.isMrasJurisdiction || !!this.corpNumber)
     )
     this.jurisdictionErrorMessage = this.jurisdiction ? '' : 'Home jurisdiction is required'
     this.$refs.foreignBusinessForm.validate()
@@ -384,10 +404,12 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
     )
 
     // Reset "Add an Amalgamating Foreign Business" Panel on change
+    this.isForeignBusinessValid = null
     this.jurisdiction = null
     this.legalName = null
     this.corpNumber = null
     this.jurisdictionErrorMessage = ''
+    this.isMrasJurisdiction = false
   }
 }
 </script>
