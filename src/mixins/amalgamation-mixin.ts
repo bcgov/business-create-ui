@@ -88,7 +88,7 @@ export default class AmalgamationMixin extends Vue {
     if (!this.isRoleStaff && business.type === AmlTypes.FOREIGN) {
       return AmlStatuses.ERROR_FOREIGN
     }
-    if (!this.isRoleStaff && business.type === AmlTypes.LEAR && business.legalType === CorpTypeCd.EXTRA_PRO_A) {
+    if (!this.isRoleStaff && business.type === AmlTypes.FOREIGN && business.corpNumber[0] === CorpTypeCd.EXTRA_PRO_A) {
       return AmlStatuses.ERROR_FOREIGN
     }
     return null
@@ -121,8 +121,8 @@ export default class AmalgamationMixin extends Vue {
   /** Disallow extra-pro (A company) into ULC or CCC. */
   xproUlcCcc (business: AmalgamatingBusinessIF): AmlStatuses {
     if (
-      business.type === AmlTypes.LEAR &&
-      business.legalType === CorpTypeCd.EXTRA_PRO_A &&
+      business.type === AmlTypes.FOREIGN &&
+      business.corpNumber[0] === CorpTypeCd.EXTRA_PRO_A &&
       (!this.isTypeBcUlcCompany || !this.isTypeBcCcc)
     ) {
       return AmlStatuses.ERROR_XPRO_ULC_CCC
@@ -248,15 +248,6 @@ export default class AmalgamationMixin extends Vue {
   /** True if all companies in the table are foreign. */
   get isAllForeign (): boolean {
     return this.getAmalgamatingBusinesses.every(business => (business.type === AmlTypes.FOREIGN))
-  }
-
-  /** True if all companies in the table are foreign or extra-provincial. */
-  get isAllForeignOrEp (): boolean {
-    return this.getAmalgamatingBusinesses.every(business =>
-      (business.type === AmlTypes.FOREIGN ||
-        (business.type === AmlTypes.LEAR && business.legalType === CorpTypeCd.EXTRA_PRO_A)
-      )
-    )
   }
 
   /** True if there a foreign company in the table. */

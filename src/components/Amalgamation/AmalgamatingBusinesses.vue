@@ -276,6 +276,34 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
     // Show spinner since the network calls below can take a few seconds.
     this.$root.$emit('showSpinner', true)
 
+    // Special case to handle Extra-pro A companies
+    if (businessLookup.legalType === 'A') {
+      const tingBusiness = {
+        type: AmlTypes.FOREIGN,
+        role: AmlRoles.AMALGAMATING,
+        foreignJurisdiction: {
+          region: 'British Columbia',
+          country: 'CA'
+        },
+        legalName: businessLookup.name,
+        corpNumber: businessLookup.identifier
+      } as AmalgamatingBusinessIF
+
+      // Check for duplicate
+      if (this.checkForDuplicateInTable(tingBusiness, true)) {
+        // Hide spinner.
+        this.$root.$emit('showSpinner', false)
+        return
+      }
+
+      this.pushAmalgamatingBusiness(tingBusiness)
+      // Close the "Add an Amalgamating Business" panel.
+      this.isAddingAmalgamatingBusiness = false
+      // Hide spinner.
+      this.$root.$emit('showSpinner', false)
+      return
+    }
+
     // Get the business information
     const business = await this.fetchAmalgamatingBusinessInfo(businessLookup)
 
@@ -322,13 +350,9 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
     }
 
     // Check for duplicate.
-    if (this.getAmalgamatingBusinesses.find((b: any) => b.identifier === business.businessInfo.identifier)) {
-      this.snackbarText = 'Business is already in table.'
-      this.snackbar = true
-
+    if (this.checkForDuplicateInTable(business, false)) {
       // Hide spinner.
       this.$root.$emit('showSpinner', false)
-
       return
     }
 
@@ -379,6 +403,30 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
 
     // Close the "Add an Amalgamating Foreign Business" Panel.
     this.isAddingAmalgamatingForeignBusiness = false
+  }
+
+  /**
+   * Check if business is already in table and display snackbar text.
+   * @param business The business being added.
+   * @param extraPro Whether we are adding an extra provincial company or not (A companies).
+   */
+  checkForDuplicateInTable (business: any, extraPro: boolean): boolean {
+    // Check if duplicate exists for a company that is not an extra-provincial.
+    const duplicateNonExtraPro = !extraPro &&
+      this.getAmalgamatingBusinesses.find(
+        (b: any) => (b.identifier && b.identifier === business.businessInfo.identifier))
+
+    // Check if duplicate exists for a company that is an extra-provincial (A company).
+    const duplicateExtraPro = extraPro &&
+      this.getAmalgamatingBusinesses.find(
+        (b: any) => (b.corpNumber && b.corpNumber === business.corpNumber))
+
+    if (duplicateNonExtraPro || duplicateExtraPro) {
+      this.snackbarText = 'Business is already in table.'
+      this.snackbar = true
+      return true
+    }
+    return false
   }
 
   /** Validate Add Amalgamating Foreign Business. */
