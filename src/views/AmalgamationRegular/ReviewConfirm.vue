@@ -179,34 +179,9 @@
       </v-card>
     </section>
 
-    <!-- Certify -->
-    <section
-      id="certify-section"
-      class="mt-10"
-    >
-      <header>
-        <h2>Certify</h2>
-        <p class="mt-4">
-          Confirm the legal name of the person authorized to complete and submit this application.
-        </p>
-      </header>
-
-      <v-card
-        flat
-        class="mt-6"
-      >
-        <Certify
-          class="py-8 px-6"
-          :class="{ 'invalid-section': isCertifyInvalid }"
-          :disableEdit="!isRoleStaff"
-          :invalidSection="isCertifyInvalid"
-          :isStaff="isRoleStaff"
-        />
-      </v-card>
-    </section>
-
     <!-- Court Order and Plan of Arrangement -->
-    <!-- <section
+    <section
+      v-if="isRoleStaff"
       id="court-order-poa-section"
       class="mt-10"
     >
@@ -235,7 +210,33 @@
           @emitValid="setCourtOrderValidity($event)"
         />
       </v-card>
-    </section> -->
+    </section>
+
+    <!-- Certify -->
+    <section
+      id="certify-section"
+      class="mt-10"
+    >
+      <header>
+        <h2>Certify</h2>
+        <p class="mt-4">
+          Confirm the legal name of the person authorized to complete and submit this application.
+        </p>
+      </header>
+
+      <v-card
+        flat
+        class="mt-6"
+      >
+        <Certify
+          class="py-8 px-6"
+          :class="{ 'invalid-section': isCertifyInvalid }"
+          :disableEdit="!isRoleStaff"
+          :invalidSection="isCertifyInvalid"
+          :isStaff="isRoleStaff"
+        />
+      </v-card>
+    </section>
 
     <!-- Staff Payment -->
     <section
