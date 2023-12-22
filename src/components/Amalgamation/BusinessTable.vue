@@ -99,7 +99,6 @@ export default class BusinessTable extends Mixins(AmalgamationMixin) {
   readonly AmlTypes = AmlTypes
   readonly GetCorpFullDescription = GetCorpFullDescription
 
-  @Action(useStore) setDefineCompanyStepValidity!: (x: boolean) => void
   @Action(useStore) spliceAmalgamatingBusiness!: (x: number) => void
 
   /**
@@ -173,7 +172,10 @@ export default class BusinessTable extends Mixins(AmalgamationMixin) {
   @Watch('businesses', { deep: true, immediate: true })
   @Emit('valid')
   private emitValidity (): boolean {
-    return this.businesses.every(business => business.status === AmlStatuses.OK)
+    return (
+      (this.businesses.length > 0) &&
+      this.businesses.every(business => business.status === AmlStatuses.OK)
+    )
   }
 }
 </script>

@@ -142,7 +142,7 @@ export default class BusinessName extends Mixins(CommonMixin, DateMixin, NameReq
     return !!this.getNameRequestApprovedName
   }
 
-  /** Reset company name values to original. */
+  /** Resets company name values to original when Cancel was clicked. */
   resetName (): void {
     // clear out existing data
     this.setNameRequest(EmptyNameRequest)

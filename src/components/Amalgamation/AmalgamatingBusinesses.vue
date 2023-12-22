@@ -260,7 +260,7 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
   /** Called when Jurisdiction menu item is changed. */
   onJurisdictionChange (jurisdiction: any): void {
     this.jurisdiction = jurisdiction
-    this.isCan = jurisdiction.group === 0
+    this.isCan = (jurisdiction.group === 0)
     this.jurisdictionErrorMessage = this.jurisdiction ? '' : 'Home jurisdiction is required'
     this.isMrasJurisdiction = MrasJurisdictions.includes(
       this.jurisdiction.text.toLowerCase()
