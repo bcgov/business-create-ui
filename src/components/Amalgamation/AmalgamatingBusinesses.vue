@@ -277,13 +277,13 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
     this.$root.$emit('showSpinner', true)
 
     // Special case to handle Extra-pro A companies
-    if (businessLookup.legalType === 'A') {
+    if ((businessLookup.legalType as any) === CorpTypeCd.EXTRA_PRO_A) {
       const tingBusiness = {
         type: AmlTypes.FOREIGN,
         role: AmlRoles.AMALGAMATING,
         foreignJurisdiction: {
           region: 'British Columbia',
-          country: 'CA'
+          country: JurisdictionLocation.CA
         },
         legalName: businessLookup.name,
         corpNumber: businessLookup.identifier
@@ -291,8 +291,12 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
 
       // Check for duplicate
       if (this.checkForDuplicateInTable(tingBusiness, true)) {
+        this.snackbarText = 'Business is already in table.'
+        this.snackbar = true
+
         // Hide spinner.
         this.$root.$emit('showSpinner', false)
+
         return
       }
 
@@ -352,7 +356,12 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
     // Check for duplicate.
     if (this.checkForDuplicateInTable(business, false)) {
       // Hide spinner.
+      this.snackbarText = 'Business is already in table.'
+      this.snackbar = true
+
+      // Hide spinner.
       this.$root.$emit('showSpinner', false)
+
       return
     }
 
@@ -421,11 +430,7 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
       this.getAmalgamatingBusinesses.find(
         (b: any) => (b.corpNumber && b.corpNumber === business.corpNumber))
 
-    if (duplicateNonExtraPro || duplicateExtraPro) {
-      this.snackbarText = 'Business is already in table.'
-      this.snackbar = true
-      return true
-    }
+    if (duplicateNonExtraPro || duplicateExtraPro) return true
     return false
   }
 
