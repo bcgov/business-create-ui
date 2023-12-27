@@ -209,14 +209,16 @@ export default class AmalgamationMixin extends Vue {
   async refetchAmalgamatingBusinessesInfo (): Promise<void> {
     const fetchTingInfo = async (item: any): Promise<AmalgamatingBusinessIF> => {
       const tingBusiness = await this.fetchAmalgamatingBusinessInfo(item)
+      // *** TODO: need to improve this
+      // (no auth info means not affiliated, which may or may not be foreign)
       if (!tingBusiness.authInfo) {
         return {
-          type: AmlTypes.LEAR,
+          type: AmlTypes.FOREIGN,
           role: AmlRoles.AMALGAMATING,
-          identifier: item.identifier,
-          name: item.name,
-          legalType: item.legalType as unknown as CorpTypeCd
-        }
+          corpNumber: item.corpNumber,
+          legalName: item.legalName,
+          foreignJurisdiction: item.foreignJurisdiction
+        } as AmalgamatingBusinessIF
       } else {
         return {
           type: AmlTypes.LEAR,
@@ -229,7 +231,7 @@ export default class AmalgamationMixin extends Vue {
           isNotInGoodStanding: (tingBusiness.businessInfo.goodStanding === false),
           isFutureEffective: (tingBusiness.firstFiling.isFutureEffective === true),
           isLimitedRestoration: await this.isLimitedRestoration(tingBusiness)
-        }
+        } as AmalgamatingBusinessIF
       }
     }
 

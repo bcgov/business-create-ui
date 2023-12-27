@@ -6,7 +6,7 @@
     />
 
     <div
-      class="section-container"
+      class="section-container pt-0"
       :class="{ 'invalid-section': getShowErrors && !nameTranslationsValid }"
     >
       <v-row no-gutters>
@@ -23,7 +23,7 @@
         <v-col
           cols="12"
           sm="9"
-          class="pt-4 pt-sm-0"
+          class="pt-4 pt-sm-0 ml-n1"
         >
           <v-checkbox
             id="name-translation-checkbox"

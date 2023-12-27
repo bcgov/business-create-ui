@@ -11,10 +11,7 @@
         class="mt-5"
       >
         <NameRequestInfo />
-        <NameTranslations
-          v-if="!isTypeCoop"
-          class="mt-n8"
-        />
+        <NameTranslations v-if="!isTypeCoop" />
       </v-card>
     </section>
 

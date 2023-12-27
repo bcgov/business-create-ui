@@ -946,6 +946,12 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
         this.nameRequestInvalidErrorDialog = true
       })
 
+      //
+      // The NR checks below are sort-of a duplicate of code in BusinessName.vue and
+      // ResultingBusinessName.vue, but we assume the other checks passed if the user
+      // was able to add the NR to this filing, so these checks should be sufficient.
+      //
+
       // ensure NR was found
       if (!nrResponse) {
         this.nameRequestInvalidType = NameRequestStates.NOT_FOUND

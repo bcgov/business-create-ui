@@ -5,7 +5,7 @@
   >
     <!-- Editing Mode -->
     <div
-      v-if="!isNewName"
+      v-if="!getCorrectNameOption"
       class="section-container"
       :class="{ 'invalid-section': invalidSection }"
     >
@@ -27,6 +27,7 @@
         >
           <CorrectName
             actionTxt="choose the resulting business name"
+            :amalgamatingBusinesses="getAmalgamatingBusinesses"
             :businessId="getBusinessId"
             :companyName="companyName"
             :correctionNameChoices="correctionNameChoices"
@@ -46,7 +47,7 @@
     <!-- Display Mode -->
     <template v-else>
       <NameRequestInfo />
-      <NameTranslations class="mt-n8" />
+      <NameTranslations />
 
       <v-btn
         text
@@ -67,11 +68,11 @@
 import { Component, Mixins } from 'vue-property-decorator'
 import { Getter, Action } from 'pinia-class'
 import { useStore } from '@/store/store'
-import { NameRequestMixin } from '@/mixins'
-import { EmptyNameRequest, NameRequestIF } from '@/interfaces/'
+import { NameRequestMixin } from '@/mixins/'
+import { AmalgamatingBusinessIF, EmptyNameRequest, NameRequestIF, NameTranslationIF } from '@/interfaces/'
 import { LegalServices } from '@/services/'
 import { CorrectNameOptions, NrRequestActionCodes } from '@bcrs-shared-components/enums/'
-import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
+import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module/'
 import { CorrectName } from '@bcrs-shared-components/correct-name/'
 import NameRequestInfo from '@/components/common/NameRequestInfo.vue'
 import NameTranslations from '@/components/common/NameTranslations.vue'
@@ -84,6 +85,7 @@ import NameTranslations from '@/components/common/NameTranslations.vue'
   }
 })
 export default class ResultingBusinessName extends Mixins(NameRequestMixin) {
+  @Getter(useStore) getAmalgamatingBusinesses!: AmalgamatingBusinessIF[]
   @Getter(useStore) getBusinessId!: string
   @Getter(useStore) getBusinessLegalName!: string
   @Getter(useStore) getCorrectNameOption!: CorrectNameOptions
@@ -96,10 +98,9 @@ export default class ResultingBusinessName extends Mixins(NameRequestMixin) {
   @Action(useStore) setCorrectNameOption!: (x: CorrectNameOptions) => void
   @Action(useStore) setNameRequest!: (x: NameRequestIF) => void
   @Action(useStore) setNameRequestApprovedName!: (x: string) => void
+  @Action(useStore) setNameTranslations!: (x: NameTranslationIF[]) => void
 
   // Local properties
-  businessNameOption = null as string
-  // businessNameOption = this.getNameRequestNumber ? 'named' : 'numbered'
   formType = null as CorrectNameOptions
 
   readonly correctionNameChoices = [
@@ -112,25 +113,23 @@ export default class ResultingBusinessName extends Mixins(NameRequestMixin) {
   get companyName (): string {
     return (this.getNameRequestApprovedName || this.getBusinessLegalName)
   }
+
   /** This section's validity state (when prompted by app). */
   get invalidSection (): boolean {
     return (this.getShowErrors && !this.getCorrectNameOption)
   }
 
-  /** Called when component is created. */
-  created (): void {
-    // this.businessNameOption = this.getNameRequestNumber ? 'named' : 'numbered'
-  }
-
   /**
    * Fetches and validation a NR.
    * @param nrNum the NR number
-   * @param businessId the business id
+   * @param businessId the business id (not used here but needed in method signature)
    * @param phone the phone number to match
    * @param email the email address to match
    * @returns a promise to return the NR, or throws a printable error
    */
-  async fetchAndValidateNr (nrNum: string, businessId: string, phone: string, email: string): Promise<NameRequestIF> {
+  async fetchAndValidateNr (
+    nrNum: string, businessId: string, phone: string, email: string
+  ): Promise<NameRequestIF> {
     const nameRequest = await LegalServices.fetchValidContactNr(nrNum, phone, email)
     if (!nameRequest) throw new Error('Error fetching Name Request')
 
@@ -149,19 +148,13 @@ export default class ResultingBusinessName extends Mixins(NameRequestMixin) {
     this.setNameRequest(nameRequest)
   }
 
-  /** Whether a new business legal name was entered. */
-  get isNewName (): boolean {
-    // Approved Name is null when we start
-    // and is set when a name option is selected
-    return !!this.getNameRequestApprovedName
-  }
-
-  /** Reset company name values to original. */
+  /** Resets company name values to original when Cancel was clicked. */
   resetName (): void {
     // clear out existing data
     this.setNameRequest(EmptyNameRequest)
     this.setNameRequestApprovedName(null)
     this.setCorrectNameOption(null)
+    this.setNameTranslations([])
 
     // reset flag
     this.formType = null

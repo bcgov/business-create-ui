@@ -21,10 +21,7 @@
           id="business-type"
           class="mt-n8"
         />
-        <NameTranslations
-          id="name-translations"
-          class="mt-n8"
-        />
+        <NameTranslations id="name-translations" />
       </v-card>
     </section>
 

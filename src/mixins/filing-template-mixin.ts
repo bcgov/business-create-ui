@@ -12,9 +12,8 @@ import {
   ShareStructureIF, SpecialResolutionIF, StaffPaymentIF, StaffPaymentStepIF, UploadAffidavitIF
 } from '@/interfaces'
 import {
-  AmalgamationTypes, AmlRoles, AmlTypes, ApprovalTypes, BusinessTypes, CoopTypes, CorrectNameOptions,
-  DissolutionTypes, EffectOfOrders, FilingTypes, PartyTypes, RelationshipTypes, RestorationTypes, RoleTypes,
-  StaffPaymentOptions
+  AmalgamationTypes, ApprovalTypes, BusinessTypes, CoopTypes, CorrectNameOptions, DissolutionTypes,
+  EffectOfOrders, FilingTypes, PartyTypes, RelationshipTypes, RestorationTypes, RoleTypes, StaffPaymentOptions
 } from '@/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module/'
 
@@ -80,7 +79,6 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
   @Action(useStore) setCorrectNameOption!: (x: CorrectNameOptions) => void
   @Action(useStore) setCourtOrderFileNumber!: (x: string) => void
   @Action(useStore) setCustodianOfRecords!: (x: OrgPersonIF) => void
-  @Action(useStore) setDefineCompanyStepValidity!: (x: boolean) => void
   @Action(useStore) setDissolutionDate!: (x: string) => void
   @Action(useStore) setDissolutionStatementStepData!: (x: DissolutionStatementIF) => void
   @Action(useStore) setDissolutionType!: (x: DissolutionTypes) => void
@@ -169,13 +167,17 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
       }
     }
 
+    // Add share structure data.
     filing.amalgamationApplication.shareStructure = {
       shareClasses: this.getCreateShareStructureStep.shareClasses
     }
+
+    // Add incorporation agreement data.
     filing.amalgamationApplication.incorporationAgreement = {
       agreementType: this.getIncorporationAgreementStep.agreementType
     }
 
+    // Add court order / POA data.
     const courtOrder = this.getCourtOrderStep.courtOrder
     if (courtOrder && (courtOrder.hasPlanOfArrangement || courtOrder.fileNumber)) {
       filing.amalgamationApplication.courtOrder = {
@@ -185,10 +187,24 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
       }
     }
 
-    // If this is a named IA then add Name Request Number and Approved Name.
-    if (this.getNameRequestNumber) {
-      filing.amalgamationApplication.nameRequest.nrNumber = this.getNameRequestNumber
-      filing.amalgamationApplication.nameRequest.legalName = this.getNameRequestApprovedName
+    // Add business name data.
+    switch (this.getCorrectNameOption) {
+      case CorrectNameOptions.CORRECT_AML_ADOPT:
+        // save adopted name
+        filing.amalgamationApplication.nameRequest.correctNameOption = CorrectNameOptions.CORRECT_AML_ADOPT
+        filing.amalgamationApplication.nameRequest.legalName = this.getNameRequestApprovedName
+        break
+      case CorrectNameOptions.CORRECT_NEW_NR:
+        // save NR data
+        filing.amalgamationApplication.nameRequest.correctNameOption = CorrectNameOptions.CORRECT_NEW_NR
+        filing.amalgamationApplication.nameRequest.legalName = this.getNameRequestApprovedName
+        filing.amalgamationApplication.nameRequest.nrNumber = this.getNameRequestNumber
+        break
+      case CorrectNameOptions.CORRECT_AML_NUMBERED:
+        // save numbered name
+        filing.amalgamationApplication.nameRequest.correctNameOption = CorrectNameOptions.CORRECT_AML_NUMBERED
+        filing.amalgamationApplication.nameRequest.legalName = this.getNameRequestApprovedName
+        break
     }
 
     // If this is a future effective filing then save the effective date.
@@ -255,6 +271,26 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
     // *** also fix IAs and registrations the same way?
     if (draftFiling.amalgamationApplication.offices) {
       this.setOfficeAddresses(draftFiling.amalgamationApplication.offices)
+    }
+
+    // restore business name data
+    const nameRequest = draftFiling.amalgamationApplication.nameRequest as NameRequestFilingIF
+    switch (nameRequest?.correctNameOption) {
+      case CorrectNameOptions.CORRECT_AML_ADOPT:
+        this.setCorrectNameOption(CorrectNameOptions.CORRECT_AML_ADOPT)
+        // restore adopted name
+        this.setNameRequestApprovedName(nameRequest.legalName)
+        break
+      case CorrectNameOptions.CORRECT_NEW_NR:
+        this.setCorrectNameOption(CorrectNameOptions.CORRECT_NEW_NR)
+        // NB: do not restore Name Request data
+        // it will be reloaded from NR endpoint in App.vue
+        break
+      case CorrectNameOptions.CORRECT_AML_NUMBERED:
+        this.setCorrectNameOption(CorrectNameOptions.CORRECT_AML_NUMBERED)
+        // restore numbered name
+        this.setNameRequestApprovedName(nameRequest.legalName)
+        break
     }
 
     // restore Name Translations
