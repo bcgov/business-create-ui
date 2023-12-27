@@ -278,7 +278,7 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
 
     // Special case to handle Extra-pro A companies
     if ((businessLookup.legalType as any) === CorpTypeCd.EXTRA_PRO_A) {
-      const region = CanJurisdictions.find(x => x.value === JurisdictionLocation.BC)
+      const region = CanJurisdictions.find(jurisdiction => jurisdiction.value === JurisdictionLocation.BC)
       const tingBusiness = {
         type: AmlTypes.FOREIGN,
         role: AmlRoles.AMALGAMATING,
