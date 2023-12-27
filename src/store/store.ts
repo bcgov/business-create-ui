@@ -325,7 +325,7 @@ export const useStore = defineStore('store', {
       return this.stateModel.nameRequest
     },
 
-    /** The Name Request approved name. */
+    /** The approved name (from NR or Correct Name component). */
     getNameRequestApprovedName (): string {
       return this.stateModel.nameRequestApprovedName
     },
@@ -577,6 +577,15 @@ export const useStore = defineStore('store', {
       )
     },
 
+    /** Whether Amalgamation Information (regular) step is valid. */
+    isAmalgamationInformationRegValid (): boolean {
+      return (
+        this.getAmalgamatingBusinessesValid &&
+        !!this.getCorrectNameOption &&
+        this.getNameTranslationsValid
+      )
+    },
+
     /** Whether all the amalgamation (regular) steps are valid. */
     isAmalgamationRegularValid (): boolean {
       // *** TODO: add checks for review page components
@@ -584,7 +593,7 @@ export const useStore = defineStore('store', {
       const isCourtOrderValid = this.isRoleStaff ? this.getCourtOrderStep.valid : true
 
       return (
-        this.getAmalgamatingBusinessesValid &&
+        this.isAmalgamationInformationRegValid &&
         this.isDefineCompanyValid &&
         this.isAddPeopleAndRolesValid &&
         this.isCreateShareStructureValid &&

@@ -1,21 +1,30 @@
 <template>
   <div id="summary-define-company">
-    <section :class="{ 'invalid-section': !isDefineCompanyValid }">
+    <section :class="{ 'invalid-section': invalidSection }">
       <div
-        v-if="!isDefineCompanyValid"
+        v-if="invalidSection"
         class="defineCompanyStepErrorMessage"
       >
         <span>
           <v-icon color="error">mdi-information-outline</v-icon>
           <span class="error-text mx-1">This step is unfinished.</span>
-          <router-link
-            v-if="isAmalgamationFiling"
-            :to="{ path: `/${RouteNames.AMALG_REG_INFORMATION}` }"
-          >Return to this step to finish it</router-link>
+
+          <template v-if="isAmalgamationFiling">
+            <router-link
+              v-if="!isAmalgamationInformationRegValid"
+              :to="{ path: `/${RouteNames.AMALG_REG_INFORMATION}` }"
+            >Return to this step to finish it</router-link>
+            <router-link
+              v-else-if="!isDefineCompanyValid"
+              :to="{ path: `/${RouteNames.AMALG_REG_BUSINESS_INFO}` }"
+            >Return to this step to finish it</router-link>
+          </template>
+
           <router-link
             v-if="isIncorporationFiling"
             :to="{ path: `/${RouteNames.INCORPORATION_DEFINE_COMPANY}` }"
           >Return to this step to finish it</router-link>
+
           <router-link
             v-if="isFullRestorationFiling || isLimitedRestorationFiling"
             id="router-link"
@@ -24,6 +33,7 @@
         </span>
       </div>
 
+      <!-- Amalgamation Type -->
       <template v-if="isAmalgamationFiling">
         <article class="section-container pb-0">
           <v-row no-gutters>
@@ -50,8 +60,8 @@
         </article>
       </template>
 
+      <!-- Name -->
       <template v-if="showCompanyName">
-        <!-- Name -->
         <article class="section-container">
           <v-row no-gutters>
             <v-col
@@ -79,7 +89,7 @@
           <v-row
             v-if="getNameTranslations && getNameTranslations.length > 0"
             no-gutters
-            class="mt-3"
+            class="mt-6"
           >
             <v-col
               cols="12"
@@ -106,7 +116,7 @@
         <v-divider class="mx-6" />
       </template>
 
-      <!-- Type -->
+      <!-- Cooperative Type -->
       <template v-if="isTypeCoop">
         <article class="section-container">
           <v-row no-gutters>
@@ -195,6 +205,7 @@ export default class SummaryDefineCompany extends Vue {
   @Getter(useStore) getFolioNumber!: string
   @Getter(useStore) getNameRequestApprovedName!: string
   @Getter(useStore) getNameTranslations!: NameTranslationIF[]
+  @Getter(useStore) isAmalgamationInformationRegValid!: boolean
   @Getter(useStore) isAmalgamationFiling!: boolean
   @Getter(useStore) isAmalgamationFilingRegular!: boolean
   @Getter(useStore) isAmalgamationFilingHorizontal!: boolean
@@ -204,11 +215,28 @@ export default class SummaryDefineCompany extends Vue {
   @Getter(useStore) isIncorporationFiling!: boolean
   @Getter(useStore) isLimitedRestorationFiling!: boolean
   @Getter(useStore) isPremiumAccount!: boolean
+  @Getter(useStore) isTypeBcCcc!: boolean
+  @Getter(useStore) isTypeBcUlcCompany!: boolean
   @Getter(useStore) isTypeCoop!: boolean
+
+  /** Whether this section is invalid. */
+  get invalidSection (): boolean {
+    if (this.isAmalgamationFiling) {
+      return (!this.isAmalgamationInformationRegValid || !this.isDefineCompanyValid)
+    }
+    return !this.isDefineCompanyValid
+  }
 
   /** The company name. */
   get companyName (): string {
-    return this.getNameRequestApprovedName || '[Incorporation Number] B.C. LTD.'
+    // check if we have a name from a NR
+    if (this.getNameRequestApprovedName) return this.getNameRequestApprovedName
+
+    // otherwise name will be created from new incorporation number
+    const prefix = '[Incorporation Number]'
+    if (this.isTypeBcCcc) return `${prefix} B.C. COMMUNITY CONTRIBUTION COMPANY`
+    if (this.isTypeBcUlcCompany) return `${prefix} B.C. UNLIMITED LIABILITY COMPANY`
+    return `${prefix} B.C. LTD.`
   }
 
   /** The entity description. */

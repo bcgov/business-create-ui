@@ -79,7 +79,6 @@ export default class AmalgamationRegularInformation extends Mixins(CommonMixin, 
   @Getter(useStore) getNameTranslationsValid!: boolean
   @Getter(useStore) getShowErrors!: boolean
 
-  @Action(useStore) setDefineCompanyStepValidity!: (x: boolean) => void
   @Action(useStore) setIgnoreChanges!: (x: boolean) => void
 
   // Local properties
@@ -117,24 +116,6 @@ export default class AmalgamationRegularInformation extends Mixins(CommonMixin, 
 
     // listen for spinner show/hide events
     this.$root.$on('showSpinner', (flag = false) => { this.showSpinner = flag })
-  }
-
-  /** When amalgamating businesses validity changes, update this step's validity. */
-  @Watch('getAmalgamatingBusinessesValid')
-  private onAmalgamatingBusinessesValid (): void {
-    this.setDefineCompanyStepValidity(
-      this.amalgamatingBusinessesValid &&
-      this.getResultingBusinessNameValid
-    )
-  }
-
-  /** When resulting businesses name validity changes, update this step's validity. */
-  @Watch('getResultingBusinessNameValid', { deep: true })
-  private onNameTranslationsValid (): void {
-    this.setDefineCompanyStepValidity(
-      this.amalgamatingBusinessesValid &&
-      this.getResultingBusinessNameValid
-    )
   }
 
   /** When we route to this step, validate the step and scroll to any errors. */
