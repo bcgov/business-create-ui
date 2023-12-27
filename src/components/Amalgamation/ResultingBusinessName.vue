@@ -107,6 +107,7 @@ export default class ResultingBusinessName extends Mixins(AmalgamationMixin, Nam
   get companyName (): string {
     return (this.getNameRequestApprovedName || this.getBusinessLegalName)
   }
+
   /** This section's validity state (when prompted by app). */
   get invalidSection (): boolean {
     return (this.getShowErrors && !this.getCorrectNameOption)

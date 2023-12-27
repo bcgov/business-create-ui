@@ -204,11 +204,57 @@
       </div>
     </template>
 
-    <template v-else-if="isAmalgamationFiling && !getNameRequestNumber">
-      <!-- Numbered Amalgamation-->
+    <!-- display amalgamation adopted name info -->
+    <template v-else-if="isAmalgamationFiling && getCorrectNameOption === CorrectNameOptions.CORRECT_AML_ADOPT">
       <div class="section-container">
         <v-row
-          id="numbered-amalgamation-info"
+          id="amalgamation-adopted-info"
+          no-gutters
+        >
+          <v-col
+            cols="12"
+            sm="3"
+            class="pr-4"
+          >
+            <label>Resulting Business Name</label>
+          </v-col>
+
+          <v-col
+            id="adopted-name-value"
+            cols="12"
+            sm="9"
+          >
+            {{ getNameRequestApprovedName }}
+          </v-col>
+
+          <v-col
+            cols="12"
+            sm="3"
+            class="pr-4 mt-8"
+          >
+            <label>Resulting Business Type</label>
+          </v-col>
+
+          <v-col
+            cols="12"
+            sm="9"
+            class="mt-4 mt-sm-8"
+          >
+            <ul class="entity-type-description pl-0">
+              <li>
+                {{ getEntityTypeDescription }}
+              </li>
+            </ul>
+          </v-col>
+        </v-row>
+      </div>
+    </template>
+
+    <!-- display amalgamation numbered info -->
+    <template v-else-if="isAmalgamationFiling && getCorrectNameOption === CorrectNameOptions.CORRECT_AML_NUMBERED">
+      <div class="section-container">
+        <v-row
+          id="amalgamation-numbered-info"
           no-gutters
         >
           <v-col
@@ -294,6 +340,15 @@ export default class NameRequestInfo extends Mixins(CommonMixin, DateMixin) {
   @Getter(useStore) isTypeBcUlcCompany!: boolean
   @Getter(useStore) isTypeSoleProp: boolean
   @Getter(useStore) isAmalgamationFiling!: boolean
+  @Getter(useStore) isTypeBcCcc!: boolean
+  @Getter(useStore) isTypeBcUlcCompany!: boolean
+  @Getter(useStore) isTypeSoleProp: boolean
+
+  get numberedCompanySuffix (): string {
+    if (this.isTypeBcCcc) return 'B.C. COMMUNITY CONTRIBUTION COMPANY'
+    if (this.isTypeBcUlcCompany) return 'B.C. UNLIMITED LIABILITY COMPANY'
+    return 'B.C. LTD.'
+  }
 
   get numberedCompanySuffix (): string {
     if (this.isTypeBcCcc) return 'B.C. COMMUNITY CONTRIBUTION COMPANY'
