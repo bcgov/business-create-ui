@@ -190,7 +190,7 @@ import { AmalgamationMixin, CommonMixin } from '@/mixins'
 import { BusinessLookupServices } from '@/services'
 import { BusinessLookup } from '@bcrs-shared-components/business-lookup'
 import { Jurisdiction } from '@bcrs-shared-components/jurisdiction'
-import { MrasJurisdictions } from '@bcrs-shared-components/jurisdiction/list-data'
+import { CanJurisdictions, MrasJurisdictions } from '@bcrs-shared-components/jurisdiction/list-data'
 import { AmalgamatingBusinessIF, BusinessLookupResultIF, EmptyBusinessLookup } from '@/interfaces'
 import { AmlRoles, AmlTypes, EntityStates } from '@/enums'
 import { JurisdictionLocation } from '@bcrs-shared-components/enums'
@@ -278,11 +278,12 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
 
     // Special case to handle Extra-pro A companies
     if ((businessLookup.legalType as any) === CorpTypeCd.EXTRA_PRO_A) {
+      const region = CanJurisdictions.find(x => x.value === JurisdictionLocation.BC)
       const tingBusiness = {
         type: AmlTypes.FOREIGN,
         role: AmlRoles.AMALGAMATING,
         foreignJurisdiction: {
-          region: 'British Columbia',
+          region: region.text,
           country: JurisdictionLocation.CA
         },
         legalName: businessLookup.name,
@@ -290,7 +291,7 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
       } as AmalgamatingBusinessIF
 
       // Check for duplicate
-      if (this.checkForDuplicateInTable(tingBusiness, true)) {
+      if (this.checkForDuplicateInTable(tingBusiness)) {
         this.snackbarText = 'Business is already in table.'
         this.snackbar = true
 
@@ -354,7 +355,7 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
     }
 
     // Check for duplicate.
-    if (this.checkForDuplicateInTable(business, false)) {
+    if (this.checkForDuplicateInTable(business)) {
       // Hide spinner.
       this.snackbarText = 'Business is already in table.'
       this.snackbar = true
@@ -415,22 +416,16 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
   }
 
   /**
-   * Check if business is already in table and display snackbar text.
+   * Check if business is already in table.
    * @param business The business being added.
-   * @param extraPro Whether we are adding an extra provincial company or not (A companies).
    */
-  checkForDuplicateInTable (business: any, extraPro: boolean): boolean {
-    // Check if duplicate exists for a company that is not an extra-provincial.
-    const duplicateNonExtraPro = !extraPro &&
-      this.getAmalgamatingBusinesses.find(
-        (b: any) => (b.identifier && b.identifier === business.businessInfo.identifier))
+  checkForDuplicateInTable (business: any): boolean {
+    const checkDuplication = this.getAmalgamatingBusinesses.find((b: any) =>
+      (business.type === AmlTypes.LEAR && b.identifier === business.businessInfo.identifier) ||
+      (business.type === AmlTypes.FOREIGN && b.corpNumber === business.corpNumber)
+    )
 
-    // Check if duplicate exists for a company that is an extra-provincial (A company).
-    const duplicateExtraPro = extraPro &&
-      this.getAmalgamatingBusinesses.find(
-        (b: any) => (b.corpNumber && b.corpNumber === business.corpNumber))
-
-    if (duplicateNonExtraPro || duplicateExtraPro) return true
+    if (checkDuplication) return true
     return false
   }
 
