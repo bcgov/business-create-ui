@@ -306,6 +306,7 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
       this.isAddingAmalgamatingBusiness = false
       // Hide spinner.
       this.$root.$emit('showSpinner', false)
+
       return
     }
 
