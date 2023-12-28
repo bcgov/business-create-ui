@@ -356,7 +356,6 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
 
     // Check for duplicate.
     if (this.checkForDuplicateInTable(business)) {
-      // Hide spinner.
       this.snackbarText = 'Business is already in table.'
       this.snackbar = true
 
