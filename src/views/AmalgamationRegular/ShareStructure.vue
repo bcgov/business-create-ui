@@ -5,7 +5,7 @@
         <h2>1. Create Your Authorized Share Structure</h2>
       </header>
 
-      <p id="incorporation-share-structure">
+      <p id="amalgamation-regular-share-structure">
         Add at least one class of shares. A share class consists of the name of the class, the
         maximum number of shares in the class (including any associated Series), a par value for
         the class, and the currency the shares are valued in.
@@ -35,7 +35,7 @@
         </header>
 
         <p>
-          An incorporated business must issue shares. These shares represent ownership interest in
+          An amalgamated business must issue shares. These shares represent ownership interest in
           the company and give the shareholder a say in how the company is being run. For most
           small companies starting out, a simple share structure with just one class of shares (and
           no series) is typical.
@@ -66,12 +66,15 @@
           The staff at the Corporate Registry cannot provide advice on how to set up your company's
           share structure. If you do not understand what an authorized share structure is or what
           its purpose is or believe you need a more complex share structure, you should seek
-          professional advice or purchase an incorporation guide for detailed information and
+          professional advice or purchase an amalgamation guide for detailed information and
           infrastructure on establishing an authorized share structure.
         </p>
+        <!--
+        Need to double check if this is changed.
         <p>
           Refer to this <a :href="helpLink">link</a> to obtain more information on incorporating a company.
         </p>
+        -->
         <u
           class="help-btn"
           @click="helpToggle = !helpToggle"
@@ -316,14 +319,14 @@ export default class AmalgamationRegularShareStructure extends Mixins(CommonMixi
 
   @Watch('$route')
   private async scrollToInvalidComponent (): Promise<void> {
-    if (this.getShowErrors && this.$route.name === RouteNames.INCORPORATION_SHARE_STRUCTURE) {
+    if (this.getShowErrors && this.$route.name === RouteNames.AMALG_REG_SHARE_STRUCTURE) {
       // scroll to invalid components
       await this.$nextTick()
       await this.validateAndScroll(
         {
           shareStructure: this.getCreateShareStructureStep.valid
         },
-        ['incorporation-share-structure']
+        ['amalgamation-regular-share-structure']
       )
     }
   }
@@ -349,7 +352,7 @@ li {
   padding-top: 0.25rem;
 }
 
-p{
+p {
   padding-top: 0.5rem;
 }
 

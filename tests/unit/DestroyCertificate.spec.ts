@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { wrapperFactory } from '../jest-wrapper-factory'
+import { wrapperFactory } from '../vitest-wrapper-factory'
 import DestroyCertificate from '@/components/Dissolution/DestroyCertificate.vue'
 
 // Input field selectors to test changes to the DOM elements.

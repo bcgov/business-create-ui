@@ -1,4 +1,4 @@
-import { shallowWrapperFactory } from '../jest-wrapper-factory'
+import { shallowWrapperFactory } from '../vitest-wrapper-factory'
 import IncorporationReviewConfirm from '@/views/Incorporation/IncorporationReviewConfirm.vue'
 import { IncorporationResources } from '@/resources/'
 import SummaryDefineCompany from '@/components/common/SummaryDefineCompany.vue'

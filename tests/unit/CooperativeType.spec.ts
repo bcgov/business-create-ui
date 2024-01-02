@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { shallowWrapperFactory, wrapperFactory } from '../jest-wrapper-factory'
+import { shallowWrapperFactory, wrapperFactory } from '../vitest-wrapper-factory'
 import CooperativeType from '@/components/Dissolution/CooperativeType.vue'
 
 // Test Case Data

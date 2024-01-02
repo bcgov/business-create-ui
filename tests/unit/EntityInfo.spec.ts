@@ -1,4 +1,4 @@
-import { wrapperFactory } from '../jest-wrapper-factory'
+import { wrapperFactory } from '../vitest-wrapper-factory'
 import EntityInfo from '@/components/common/EntityInfo.vue'
 
 // Test Case Data

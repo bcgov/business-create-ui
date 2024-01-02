@@ -1,4 +1,4 @@
-import { shallowWrapperFactory } from '../jest-wrapper-factory'
+import { shallowWrapperFactory } from '../vitest-wrapper-factory'
 import { RegistrationReviewConfirm } from '@/views'
 import { RegistrationResources } from '@/resources'
 

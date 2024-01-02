@@ -34,7 +34,7 @@
 
       <!-- Amalgamating Businesses Information -->
       <v-card
-        id="people-and-roles-vcard"
+        id="amalgamating-businesses-information-vcard"
         flat
         class="mt-6"
       >
@@ -101,6 +101,7 @@
         class="mt-6"
         :class="{ 'invalid-section': isEffectiveDateTimeInvalid }"
         :effectiveDateTime="getEffectiveDateTime"
+        label="Amalgamation Date and Time"
         @valid="setEffectiveDateTimeValid($event)"
         @effectiveDate="setEffectiveDate($event)"
         @isFutureEffective="setIsFutureEffective($event)"
@@ -115,7 +116,7 @@
       <header>
         <h2>Document Delivery</h2>
         <p class="mt-4">
-          Copies of the incorporation documents will be sent to the email addresses listed below.
+          Copies of the amalgamation documents will be sent to the email addresses listed below.
         </p>
       </header>
 
@@ -270,7 +271,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
-import { ContactPointIF, CertifyIF, EffectiveDateTimeIF, IncorporationAgreementIF, ShareStructureIF,
+import { ContactPointIF, CertifyIF, EffectiveDateTimeIF, ShareStructureIF,
   CourtOrderStepIF } from '@/interfaces'
 import CardHeader from '@/components/common/CardHeader.vue'
 import Certify from '@/components/common/Certify.vue'
@@ -313,7 +314,6 @@ export default class AmalgamationRegularReviewConfirm extends Vue {
   @Getter(useStore) getEntityType!: CorpTypeCd
   @Getter(useStore) getFolioNumber!: string
   @Getter(useStore) getFolioNumberValid!: boolean
-  @Getter(useStore) getIncorporationAgreementStep!: IncorporationAgreementIF
   @Getter(useStore) getUserEmail!: string
   @Getter(useStore) getValidateSteps!: boolean
   @Getter(useStore) isPremiumAccount!: boolean

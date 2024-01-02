@@ -9,7 +9,7 @@
         sm="3"
         class="pr-4"
       >
-        <label>Incorporation Date and Time</label>
+        <label>{{ label }}</label>
       </v-col>
 
       <v-col
@@ -164,6 +164,8 @@ export default class IncorporationDateTime extends Mixins(DateMixin) {
   }
 
   @Prop({ default: null }) readonly effectiveDateTime!: EffectiveDateTimeIF
+
+  @Prop({ default: 'Incorporation Date and Time' }) readonly label!: string
 
   // Local properties
   isImmediate = false
