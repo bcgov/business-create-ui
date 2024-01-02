@@ -174,7 +174,7 @@
       <header>
         <h2>Amalgamation Statement</h2>
         <p class="mt-4">
-          [*** TODO: blurb ***]
+          Please indicate the statement applicable to this amalgamation.
         </p>
       </header>
 
@@ -182,8 +182,8 @@
         flat
         class="mt-6"
       >
-        <div class="pa-4">
-          [*** TODO: Amalgamation Statement component ***]
+        <div class="pt-4 pr-4 pl-1">
+          <AmalgamationStatement />
         </div>
       </v-card>
     </section>
@@ -280,6 +280,7 @@ import { CourtOrderPoa } from '@bcrs-shared-components/court-order-poa'
 import { DocumentDelivery } from '@bcrs-shared-components/document-delivery'
 import FolioNumber from '@/components/common/FolioNumber.vue'
 import BusinessTableSummary from '@/components/Amalgamation/BusinessTableSummary.vue'
+import AmalgamationStatement from '@/components/Amalgamation/AmalgamationStatement.vue'
 import IncorporationDateTime from '@/components/Incorporation/IncorporationDateTime.vue'
 import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
 import ListShareClass from '@/components/common/ListShareClass.vue'
@@ -289,6 +290,7 @@ import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp
 
 @Component({
   components: {
+    AmalgamationStatement,
     BusinessTableSummary,
     CardHeader,
     Certify,
