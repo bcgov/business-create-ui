@@ -272,7 +272,7 @@ p {
 .message-box {
   background-color: $BCgovGold0 !important;
   border-color: $BCgovGold5 !important;
-  border-radius: 0;
+  border-radius: 0 !important;
 
   p {
     margin: 1.25rem;
