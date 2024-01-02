@@ -291,6 +291,13 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         // restore numbered name
         this.setNameRequestApprovedName(nameRequest.legalName)
         break
+      default:
+        // fallback for draft created without Correct Name Option
+        // NB: do not restore Name Request data
+        // it will be reloaded from NR endpoint in App.vue
+        if (nameRequest.nrNumber) {
+          this.setCorrectNameOption(CorrectNameOptions.CORRECT_NEW_NR)
+        }
     }
 
     // restore Name Translations
