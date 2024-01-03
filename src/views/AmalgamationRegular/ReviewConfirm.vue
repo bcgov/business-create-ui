@@ -183,7 +183,12 @@
         class="mt-6"
       >
         <div class="pt-4 pr-4 pl-1">
-          <AmalgamationStatement />
+          <AmalgamationStatement
+            :class="{ 'invalid-section': isAmalgamationStatementInvalid }"
+            :invalidSection="isAmalgamationStatementInvalid"
+            @update="setAmalgamationCourtApproval($event)"
+            @valid="setAmalgamationCourtApprovalValid($event)"
+          />
         </div>
       </v-card>
     </section>
@@ -306,6 +311,7 @@ import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp
 })
 export default class AmalgamationRegularReviewConfirm extends Vue {
   @Getter(useStore) getAmalgamatingBusinessesValid!: boolean
+  @Getter(useStore) getAmalgamationCourtApprovalValid!: boolean
   @Getter(useStore) getBusinessContact!: ContactPointIF
   @Getter(useStore) getCertifyState!: CertifyIF
   @Getter(useStore) getCourtOrderStep!: CourtOrderStepIF
@@ -320,6 +326,8 @@ export default class AmalgamationRegularReviewConfirm extends Vue {
   @Getter(useStore) isPremiumAccount!: boolean
   @Getter(useStore) isRoleStaff!: boolean
 
+  @Action(useStore) setAmalgamationCourtApproval!: (x: boolean) => void
+  @Action(useStore) setAmalgamationCourtApprovalValid!: (x: boolean) => void
   @Action(useStore) setCertifyState!: (x: CertifyIF) => void
   @Action(useStore) setCourtOrderFileNumber!: (x: string) => void
   @Action(useStore) setCourtOrderValidity!: (x: boolean) => void
@@ -353,6 +361,11 @@ export default class AmalgamationRegularReviewConfirm extends Vue {
   /** Is true when the Folio Number is not valid */
   get isFolioInvalid (): boolean {
     return this.getValidateSteps && !(this.getFolioNumberValid)
+  }
+
+  /** Is true when the amalgamation statement is not valid */
+  get isAmalgamationStatementInvalid (): boolean {
+    return this.getValidateSteps && !(this.getAmalgamationCourtApprovalValid)
   }
 }
 </script>

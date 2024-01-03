@@ -21,6 +21,7 @@
         <v-radio-group
           v-model="courtApproval"
           class="mt-0 pt-0"
+          @change="changeCourtApproval()"
         >
           <v-radio
             class="radio-button"
@@ -30,9 +31,9 @@
           <div
             class="ml-8 statement-text"
           >
-            This amalgamation has been approved by the court and a copy of the 
-            entered court order approving the amalgamation has been obtained 
-            and has been deposited in the records office of each of the 
+            This amalgamation has been approved by the court and a copy of the
+            entered court order approving the amalgamation has been obtained
+            and has been deposited in the records office of each of the
             amalgamating companies.
           </div>
 
@@ -44,10 +45,10 @@
           <div
             class="ml-8 statement-text"
           >
-            This amalgamation has been effected without court approval. 
-            A copy of all of the required affidavits under section 277(1) 
-            have been obtained and the affidavit obtained from each 
-            amalgamating company has been deposited in that company’s 
+            This amalgamation has been effected without court approval.
+            A copy of all of the required affidavits under section 277(1)
+            have been obtained and the affidavit obtained from each
+            amalgamating company has been deposited in that company’s
             records office.
           </div>
         </v-radio-group>
@@ -56,16 +57,37 @@
   </v-card>
 </template>
 
-
 <script lang="ts">
-import { Component, Emit, Mixins, Prop, Vue, Watch } from 'vue-property-decorator'
+import Vue from 'vue'
+import { Emit, Watch } from 'vue-property-decorator'
 import { AmalgamationStateIF } from '@/interfaces/store-interfaces/state-interfaces/amalgamation-state-interface'
-import { CommonMixin } from '@/mixins'
+import { useStore } from '@/store/store'
+import { Getter } from 'pinia-class'
 
-export default class AmalgamationStatement extends Mixins(CommonMixin) {
-  
+export default class AmalgamationStatement extends Vue {
+  @Getter(useStore) getAmalgamationCourtApproval!: boolean
   // Local properties
-  courtApproval: AmalgamationStateIF = null
+  courtApproval: AmalgamationStateIF['courtApproval'] = null
+
+  changeCourtApproval (): void {
+    this.setCourtApproval(this.courtApproval)
+  }
+
+  @Emit('update')
+  private courtApprovalUpdate (): boolean {
+    return this.courtApproval
+  }
+
+  @Emit('valid')
+  private amalgamationStatementValid (event: boolean): boolean {
+    return event
+  }
+
+  @Watch('courtApproval')
+  private setCourtApproval (val) {
+    this.courtApprovalUpdate()
+    this.amalgamationStatementValid(true)
+  }
 }
 </script>
 
