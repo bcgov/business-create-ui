@@ -61,6 +61,7 @@ for (const test of amalgamationRegularBusinessInfo) {
 
       // verify amalgamation application vcard
       let vcard = section.find('#company-summary-vcard')
+      expect(vcard.findComponent(CardHeader).attributes('label')).toBe('Amalgamation Information')
       expect(vcard.findComponent(SummaryDefineCompany).exists()).toBe(true)
 
       // verify amalgamating businesses information vcard
