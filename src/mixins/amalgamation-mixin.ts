@@ -33,7 +33,7 @@ export default class AmalgamationMixin extends Vue {
     this.cccMismatch,
     this.foreignUnlimited2,
     this.xproUlcCcc,
-    // this.needBcCompany,
+    this.needBcCompany,
     this.foreignHorizontal
   ]
 
@@ -119,7 +119,7 @@ export default class AmalgamationMixin extends Vue {
   xproUlcCcc (business: AmalgamatingBusinessIF): AmlStatuses {
     if (
       business.type === AmlTypes.FOREIGN &&
-      (!this.isTypeBcUlcCompany || !this.isTypeBcCcc)
+      (this.isTypeBcUlcCompany || this.isTypeBcCcc)
     ) {
       return AmlStatuses.ERROR_XPRO_ULC_CCC
     }
@@ -138,17 +138,16 @@ export default class AmalgamationMixin extends Vue {
     return null
   }
 
-  // NOT CURRENTLY USED
-  // /**
-  //  * Disallow only foreign businesses (including EPs).
-  //  * (An amalgamation where all TINGs are foreign will be Phase 2.)
-  //  */
-  // needBcCompany (): AmlStatuses {
-  //   if (this.isAllForeignOrEp) {
-  //     return AmlStatuses.ERROR_NEED_BC_COMPANY
-  //   }
-  //   return null
-  // }
+  /**
+   * Disallow only foreign businesses (including EPs).
+   * (An amalgamation where all TINGs are foreign will be Phase 2.)
+   */
+  needBcCompany (): AmlStatuses {
+    if (this.isAllForeign) {
+      return AmlStatuses.ERROR_NEED_BC_COMPANY
+    }
+    return null
+  }
 
   /** Disallow if foreign in a short-form horizontal amalgamation. */
   foreignHorizontal (business: AmalgamatingBusinessIF): AmlStatuses {
@@ -205,9 +204,8 @@ export default class AmalgamationMixin extends Vue {
   async refetchAmalgamatingBusinessesInfo (): Promise<void> {
     const fetchTingInfo = async (item: any): Promise<AmalgamatingBusinessIF> => {
       const tingBusiness = await this.fetchAmalgamatingBusinessInfo(item)
-      // *** TODO: need to improve this
-      // (no auth info means not affiliated, which may or may not be foreign)
-      if (!tingBusiness.authInfo) {
+      // no auth info and business info means foreign, otherwise LEAR (affiliated or non-affiliated)
+      if (!tingBusiness.authInfo && !tingBusiness.businessInfo) {
         return {
           type: AmlTypes.FOREIGN,
           role: AmlRoles.AMALGAMATING,
@@ -221,9 +219,9 @@ export default class AmalgamationMixin extends Vue {
           role: AmlRoles.AMALGAMATING,
           identifier: tingBusiness.businessInfo.identifier,
           name: tingBusiness.businessInfo.legalName,
-          email: tingBusiness.authInfo.contacts[0].email,
+          email: tingBusiness.authInfo?.contacts[0].email,
           legalType: tingBusiness.businessInfo.legalType,
-          address: tingBusiness.addresses.registeredOffice.mailingAddress,
+          address: tingBusiness.addresses?.registeredOffice.mailingAddress,
           isNotInGoodStanding: (tingBusiness.businessInfo.goodStanding === false),
           isFutureEffective: (tingBusiness.firstFiling.isFutureEffective === true),
           isLimitedRestoration: await this.isLimitedRestoration(tingBusiness)
@@ -277,10 +275,5 @@ export default class AmalgamationMixin extends Vue {
     return this.getAmalgamatingBusinesses.some(business =>
       (business.type === AmlTypes.LEAR && business.legalType === CorpTypeCd.BC_ULC_COMPANY)
     )
-  }
-
-  /** True if there is a BC company in the table. */
-  get isAnyBcCompany (): boolean {
-    return (this.isAnyBen || this.isAnyCcc || this.isAnyLimited || this.isAnyUnlimited)
   }
 }

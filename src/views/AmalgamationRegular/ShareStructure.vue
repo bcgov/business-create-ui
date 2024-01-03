@@ -69,12 +69,9 @@
           professional advice or purchase an amalgamation guide for detailed information and
           infrastructure on establishing an authorized share structure.
         </p>
-        <!--
-        Need to double check if this is changed.
         <p>
-          Refer to this <a :href="helpLink">link</a> to obtain more information on incorporating a company.
+          Refer to this <a :href="helpLink">link</a> to obtain more information on amalgamating a company.
         </p>
-        -->
         <u
           class="help-btn"
           @click="helpToggle = !helpToggle"
@@ -195,7 +192,7 @@ export default class AmalgamationRegularShareStructure extends Mixins(CommonMixi
   }]
 
   readonly helpLink = 'https://www2.gov.bc.ca/gov/content/employment-business/business/' +
-    'managing-a-business/permits-licences/businesses-incorporated-companies'
+    'managing-a-business/permits-licences/businesses-incorporated-companies/incorporated-companies#amalgamate'
 
   showShareStructureForm = false
   currentShareStructure = null as ShareClassIF
