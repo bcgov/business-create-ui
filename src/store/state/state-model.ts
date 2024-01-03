@@ -210,6 +210,7 @@ export const stateModel: StateModelIF = {
     amalgamatingBusinesses: [],
     amalgamatingBusinessesValid: false,
     courtApproval: null,
+    courtApprovalValid: false,
     type: null
   },
   restoration: {
