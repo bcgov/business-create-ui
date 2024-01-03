@@ -21,7 +21,7 @@
         <v-radio-group
           v-model="courtApproval"
           class="mt-0 pt-0"
-          @change="changeCourtApproval()"
+          @change="setCourtApproval()"
         >
           <v-radio
             class="radio-button"
@@ -59,32 +59,40 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { Emit, Watch } from 'vue-property-decorator'
+import { Component, Emit } from 'vue-property-decorator'
 import { AmalgamationStateIF } from '@/interfaces/store-interfaces/state-interfaces/amalgamation-state-interface'
-import { useStore } from '@/store/store'
 import { Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 
+@Component({})
 export default class AmalgamationStatement extends Vue {
   @Getter(useStore) getAmalgamationCourtApproval!: boolean
+
   // Local properties
   courtApproval: AmalgamationStateIF['courtApproval'] = null
 
-  changeCourtApproval (): void {
-    this.setCourtApproval(this.courtApproval)
+  /** Called when component is mounted. */
+  mounted (): void {
+    if (this.getAmalgamationCourtApproval != null) {
+      this.courtApproval = this.getAmalgamationCourtApproval
+    }
   }
 
+  // Emit a boolean which is whether the court approval have been selected
   @Emit('update')
   private courtApprovalUpdate (): boolean {
+    console.log(this.courtApproval)
     return this.courtApproval
   }
 
+  // Emit a boolean (validation) which is either option being selected
   @Emit('valid')
   private amalgamationStatementValid (event: boolean): boolean {
     return event
   }
 
-  @Watch('courtApproval')
-  private setCourtApproval (val) {
+  // Once either option being selected, update court approval and validation
+  setCourtApproval (): void {
     this.courtApprovalUpdate()
     this.amalgamationStatementValid(true)
   }
