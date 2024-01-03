@@ -214,7 +214,7 @@
           <v-col
             cols="12"
             sm="3"
-            class="pr-4"
+            class="pt-1 pr-4"
           >
             <label>Resulting Business Name</label>
           </v-col>
@@ -260,7 +260,7 @@
           <v-col
             cols="12"
             sm="3"
-            class="pr-4"
+            class="pt-1 pr-4"
           >
             <label>Resulting Business Name</label>
           </v-col>
