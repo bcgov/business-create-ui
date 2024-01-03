@@ -27,7 +27,7 @@
       >
         <CardHeader
           icon="mdi-domain-plus"
-          :label="getFilingName"
+          label="Amalgamation Information"
         />
         <SummaryDefineCompany />
       </v-card>
@@ -286,7 +286,6 @@ import ListShareClass from '@/components/common/ListShareClass.vue'
 import SummaryDefineCompany from '@/components/common/SummaryDefineCompany.vue'
 import StaffPayment from '@/components/common/StaffPayment.vue'
 import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
-import { FilingNames } from '@bcrs-shared-components/enums'
 
 @Component({
   components: {
@@ -311,7 +310,6 @@ export default class AmalgamationRegularReviewConfirm extends Vue {
   @Getter(useStore) getCreateShareStructureStep!: ShareStructureIF
   @Getter(useStore) getEffectiveDateTime!: EffectiveDateTimeIF
   @Getter(useStore) getEntityType!: CorpTypeCd
-  @Getter(useStore) getFilingName!: FilingNames
   @Getter(useStore) getFolioNumber!: string
   @Getter(useStore) getFolioNumberValid!: boolean
   @Getter(useStore) getIncorporationAgreementStep!: IncorporationAgreementIF
