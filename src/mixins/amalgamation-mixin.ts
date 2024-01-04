@@ -143,7 +143,7 @@ export default class AmalgamationMixin extends Vue {
    * (An amalgamation where all TINGs are foreign will be Phase 2.)
    */
   needBcCompany (): AmlStatuses {
-    if (this.isAllForeign) {
+    if (!this.isAnyBcCompany) {
       return AmlStatuses.ERROR_NEED_BC_COMPANY
     }
     return null
@@ -219,9 +219,9 @@ export default class AmalgamationMixin extends Vue {
           role: AmlRoles.AMALGAMATING,
           identifier: tingBusiness.businessInfo.identifier,
           name: tingBusiness.businessInfo.legalName,
-          email: tingBusiness.authInfo?.contacts[0].email,
+          email: tingBusiness.authInfo?.contacts[0].email || null,
           legalType: tingBusiness.businessInfo.legalType,
-          address: tingBusiness.addresses?.registeredOffice.mailingAddress,
+          address: tingBusiness.addresses?.registeredOffice.mailingAddress || null,
           isNotInGoodStanding: (tingBusiness.businessInfo.goodStanding === false),
           isFutureEffective: (tingBusiness.firstFiling.isFutureEffective === true),
           isLimitedRestoration: await this.isLimitedRestoration(tingBusiness)
@@ -238,11 +238,6 @@ export default class AmalgamationMixin extends Vue {
   // HELPERS
   // (not all are used atm)
   //
-
-  /** True if all companies in the table are foreign. */
-  get isAllForeign (): boolean {
-    return this.getAmalgamatingBusinesses.every(business => (business.type === AmlTypes.FOREIGN))
-  }
 
   /** True if there a foreign company in the table. */
   get isAnyForeign (): boolean {
@@ -275,5 +270,10 @@ export default class AmalgamationMixin extends Vue {
     return this.getAmalgamatingBusinesses.some(business =>
       (business.type === AmlTypes.LEAR && business.legalType === CorpTypeCd.BC_ULC_COMPANY)
     )
+  }
+
+  /** True if there is a BC company in the table. */
+  get isAnyBcCompany (): boolean {
+    return (this.isAnyBen || this.isAnyCcc || this.isAnyLimited || this.isAnyUnlimited)
   }
 }

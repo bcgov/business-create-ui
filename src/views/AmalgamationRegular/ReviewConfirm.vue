@@ -97,7 +97,7 @@
         </p>
       </header>
 
-      <IncorporationDateTime
+      <EffectiveDateTime
         class="mt-6"
         :class="{ 'invalid-section': isEffectiveDateTimeInvalid }"
         :effectiveDateTime="getEffectiveDateTime"
@@ -280,7 +280,7 @@ import { DocumentDelivery } from '@bcrs-shared-components/document-delivery'
 import FolioNumber from '@/components/common/FolioNumber.vue'
 import BusinessTableSummary from '@/components/Amalgamation/BusinessTableSummary.vue'
 import AmalgamationStatement from '@/components/Amalgamation/AmalgamationStatement.vue'
-import IncorporationDateTime from '@/components/Incorporation/IncorporationDateTime.vue'
+import EffectiveDateTime from '@/components/common/EffectiveDateTime.vue'
 import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
 import ListShareClass from '@/components/common/ListShareClass.vue'
 import SummaryDefineCompany from '@/components/common/SummaryDefineCompany.vue'
@@ -296,7 +296,7 @@ import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp
     CourtOrderPoa,
     DocumentDelivery,
     FolioNumber,
-    IncorporationDateTime,
+    EffectiveDateTime,
     ListPeopleAndRoles,
     ListShareClass,
     SummaryDefineCompany,

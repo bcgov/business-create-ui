@@ -4,7 +4,7 @@ import { AmalgamationRegResources } from '@/resources/'
 import BusinessTableSummary from '@/components/Amalgamation/BusinessTableSummary.vue'
 import CardHeader from '@/components/common/CardHeader.vue'
 import { CourtOrderPoa } from '@bcrs-shared-components/court-order-poa'
-import IncorporationDateTime from '@/components/Incorporation/IncorporationDateTime.vue'
+import EffectiveDateTime from '@/components/common/EffectiveDateTime.vue'
 import ListShareClass from '@/components/common/ListShareClass.vue'
 import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
 import SummaryDefineCompany from '@/components/common/SummaryDefineCompany.vue'
@@ -84,7 +84,7 @@ for (const test of amalgamationRegularBusinessInfo) {
       const section = wrapper.findAll('section').at(1)
       expect(section.find('header h2').text()).toBe('Amalgamation Date and Time')
       expect(section.find('p').text()).toContain('Select the Date and Time of amalgamation for your business.')
-      expect(section.findComponent(IncorporationDateTime).exists()).toBe(true)
+      expect(section.findComponent(EffectiveDateTime).exists()).toBe(true)
     })
 
     it('displays Document Delivery section', () => {
