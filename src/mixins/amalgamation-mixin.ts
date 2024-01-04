@@ -138,10 +138,7 @@ export default class AmalgamationMixin extends Vue {
     return null
   }
 
-  /**
-   * Disallow only foreign businesses (including EPs).
-   * (An amalgamation where all TINGs are foreign will be Phase 2.)
-   */
+  /** Disallow if there are no BC Companies. */
   needBcCompany (): AmlStatuses {
     if (!this.isAnyBcCompany) {
       return AmlStatuses.ERROR_NEED_BC_COMPANY
