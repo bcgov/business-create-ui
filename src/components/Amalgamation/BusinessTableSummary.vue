@@ -1,55 +1,72 @@
 <template>
-  <v-simple-table id="business-table-summary">
-    <template #default>
-      <thead>
-        <tr>
-          <th>Business Name</th>
-          <th>Mailing Address</th>
-          <th>Role</th>
-        </tr>
-      </thead>
+  <section>
+    <div
+      v-if="!getAmalgamatingBusinessesValid"
+      class="defineCompanyStepErrorMessage"
+    >
+      <span>
+        <v-icon color="error">mdi-information-outline</v-icon>
+        <span class="error-text mx-1">This step is unfinished.</span>
+        <span>
+          <router-link
+            v-if="!getAmalgamatingBusinessesValid"
+            :to="{ path: `/${RouteNames.AMALG_REG_INFORMATION}` }"
+          >Return to this step to finish it</router-link>
+        </span>
+      </span>
+    </div>
+    <v-simple-table id="business-table-summary">
+      <template #default>
+        <thead>
+          <tr>
+            <th>Business Name</th>
+            <th>Mailing Address</th>
+            <th>Role</th>
+          </tr>
+        </thead>
 
-      <tbody>
-        <tr v-if="!getAmalgamatingBusinesses.length">
-          <td colspan="6">
-            <p class="text-center mb-0">
-              No businesses added
-            </p>
-          </td>
-        </tr>
+        <tbody>
+          <tr v-if="!getAmalgamatingBusinesses.length">
+            <td colspan="6">
+              <p class="text-center mb-0">
+                No businesses added
+              </p>
+            </td>
+          </tr>
 
-        <tr
-          v-for="item in getAmalgamatingBusinesses"
-          :key="key(item)"
-        >
-          <td class="business-name">
-            <v-icon color="gray9">
-              mdi-domain
-            </v-icon>
-            <strong>{{ name(item) }}</strong><br>{{ email(item) }}
-          </td>
+          <tr
+            v-for="item in getAmalgamatingBusinesses"
+            :key="key(item)"
+          >
+            <td class="business-name">
+              <v-icon color="gray9">
+                mdi-domain
+              </v-icon>
+              <strong>{{ name(item) }}</strong><br>{{ email(item) }}
+            </td>
 
-          <td class="business-address">
-            <template v-if="item.type === AmlTypes.LEAR">
-              <BaseAddress
-                v-if="item.address"
-                :address="item.address"
-              />
-              <span v-else>Affiliate to view</span>
-            </template>
+            <td class="business-address">
+              <template v-if="item.type === AmlTypes.LEAR">
+                <BaseAddress
+                  v-if="item.address"
+                  :address="item.address"
+                />
+                <span v-else>Affiliate to view</span>
+              </template>
 
-            <template v-if="item.type === AmlTypes.FOREIGN">
-              {{ jurisdiction(item) }}
-            </template>
-          </td>
+              <template v-if="item.type === AmlTypes.FOREIGN">
+                {{ jurisdiction(item) }}
+              </template>
+            </td>
 
-          <td class="business-role">
-            {{ role(item) }}
-          </td>
-        </tr>
-      </tbody>
-    </template>
-  </v-simple-table>
+            <td class="business-role">
+              {{ role(item) }}
+            </td>
+          </tr>
+        </tbody>
+      </template>
+    </v-simple-table>
+  </section>
 </template>
 
 <script lang="ts">
@@ -57,7 +74,7 @@ import { Component, Vue } from 'vue-property-decorator'
 import { Getter } from 'pinia-class'
 import { getName } from 'country-list'
 import { useStore } from '@/store/store'
-import { AmlRoles, AmlTypes } from '@/enums'
+import { AmlRoles, AmlTypes, RouteNames } from '@/enums'
 import { AmalgamatingBusinessIF } from '@/interfaces'
 import { BaseAddress } from '@bcrs-shared-components/base-address'
 
@@ -69,8 +86,10 @@ import { BaseAddress } from '@bcrs-shared-components/base-address'
 export default class BusinessTableSummary extends Vue {
   readonly AmlRoles = AmlRoles
   readonly AmlTypes = AmlTypes
+  readonly RouteNames = RouteNames
 
   @Getter(useStore) getAmalgamatingBusinesses!: AmalgamatingBusinessIF[]
+  @Getter(useStore) getAmalgamatingBusinessesValid!: boolean
 
   key (item: AmalgamatingBusinessIF): string {
     if (item?.type === AmlTypes.LEAR) return item.identifier
