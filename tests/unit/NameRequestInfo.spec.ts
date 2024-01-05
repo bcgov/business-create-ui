@@ -240,8 +240,7 @@ describe('Numbered Amalgamation Info component', () => {
     expect(wrapper.vm.$el.querySelector('.numbered-company-list-items')).toBeDefined()
   })
 
-  // *** TODO: fix this
-  it.skip('renders the numbered amalgamation content', () => {
+  it('renders the numbered amalgamation content', () => {
     const listItems = wrapper.vm.$el.querySelectorAll('.numbered-company-list-items li')
     expect(listItems.length).toEqual(4)
 
@@ -253,8 +252,7 @@ describe('Numbered Amalgamation Info component', () => {
     expect(listItems[3].textContent).toContain('It is not possible to request a specific Incorporation Number.')
   })
 
-  // *** TODO: fix this
-  it.skip('renders the entity type description content', () => {
+  it('renders the entity type description content', () => {
     const listItems = wrapper.vm.$el.querySelectorAll('.entity-type-description li')
     expect(listItems.length).toEqual(1)
 
@@ -287,8 +285,7 @@ describe('Name Request Info component without a NR', () => {
     expect(wrapper.vm.$el.querySelector('.numbered-company-list-items')).toBeDefined()
   })
 
-  // *** TODO: fix this
-  it.skip('renders the numbered company content', () => {
+  it('renders the numbered company content', () => {
     const listItems = wrapper.vm.$el.querySelectorAll('.numbered-company-list-items li')
     expect(listItems.length).toEqual(5)
 
