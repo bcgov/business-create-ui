@@ -262,7 +262,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
     }
 
     // restore the amalgamation court approval
-    if (draftFiling.amalgamationApplication.courtApproval != null) {
+    if (draftFiling.amalgamationApplication.courtApproval !== null) {
       this.setAmalgamationCourtApproval(draftFiling.amalgamationApplication.courtApproval)
     }
 

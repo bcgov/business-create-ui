@@ -2,6 +2,7 @@
   <v-card
     id="amalgamation-statement"
     flat
+    class="py-8 px-6"
   >
     <v-row>
       <v-col
@@ -17,10 +18,12 @@
       <v-col
         cols="12"
         sm="9"
+        class="pr-0"
       >
         <v-radio-group
           v-model="courtApproval"
           class="mt-0 pt-0"
+          hide-details="auto"
           @change="setCourtApproval()"
         >
           <v-radio
@@ -28,29 +31,29 @@
             label="With Court Approval"
             :value="true"
           />
-          <div
-            class="ml-8 statement-text"
+          <p
+            class="ml-8 mb-5 statement-text"
           >
             This amalgamation has been approved by the court and a copy of the
             entered court order approving the amalgamation has been obtained
             and has been deposited in the records office of each of the
             amalgamating companies.
-          </div>
+          </p>
 
           <v-radio
-            class="pt-4 radio-button"
+            class="radio-button"
             label="Without Court Approval"
             :value="false"
           />
-          <div
-            class="ml-8 statement-text"
+          <p
+            class="ml-8 mb-0 statement-text"
           >
             This amalgamation has been effected without court approval.
             A copy of all of the required affidavits under section 277(1)
             have been obtained and the affidavit obtained from each
             amalgamating company has been deposited in that company’s
             records office.
-          </div>
+          </p>
         </v-radio-group>
       </v-col>
     </v-row>
@@ -73,27 +76,22 @@ export default class AmalgamationStatement extends Vue {
 
   /** Called when component is mounted. */
   mounted (): void {
-    if (this.getAmalgamationCourtApproval != null) {
-      this.courtApproval = this.getAmalgamationCourtApproval
-    }
+    this.courtApproval = this.getAmalgamationCourtApproval
   }
 
-  // Emit a boolean which is whether the court approval have been selected
+  // Emit a boolean which is whether come with the court approval
   @Emit('update')
-  private courtApprovalUpdate (): boolean {
-    console.log(this.courtApproval)
-    return this.courtApproval
-  }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  private courtApprovalUpdate (courtApproval: boolean): void {}
 
   // Emit a boolean (validation) which is either option being selected
   @Emit('valid')
-  private amalgamationStatementValid (event: boolean): boolean {
-    return event
-  }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  private amalgamationStatementValid (valid: boolean): void {}
 
   // Once either option being selected, update court approval and validation
   setCourtApproval (): void {
-    this.courtApprovalUpdate()
+    this.courtApprovalUpdate(this.courtApproval)
     this.amalgamationStatementValid(true)
   }
 }
@@ -103,17 +101,26 @@ export default class AmalgamationStatement extends Vue {
 @import '@/assets/styles/theme.scss';
 
 #amalgamation-statement {
-  padding: 1.25rem;
-  line-height: 1.2rem;
-  font-size: 1rem;
+  font-size: 16px;
 }
 
 .statement-text {
   color: $gray7;
+  font-size: 16px;
+}
+
+:deep() {
+  // Fix text color for all the radio buttons
+  .radio-button {
+    label {
+      color: $gray7;
+      }
+  }
 }
 
 label {
   font-weight: bold;
+  color: $gray9;
 }
 
 </style>

@@ -591,7 +591,6 @@ export const useStore = defineStore('store', {
       // *** TODO: add checks for review page components
       const isFolioNumberValid = !this.isPremiumAccount || this.getFolioNumberValid
       const isCourtOrderValid = this.isRoleStaff ? this.getCourtOrderStep.valid : true
-      const isCourtApprovalValid = this.getAmalgamationCourtApprovalValid
 
       return (
         this.isAmalgamationInformationRegValid &&
@@ -600,7 +599,7 @@ export const useStore = defineStore('store', {
         this.isCreateShareStructureValid &&
         isFolioNumberValid &&
         isCourtOrderValid &&
-        isCourtApprovalValid
+        this.getAmalgamationCourtApprovalValid
       )
     },
 

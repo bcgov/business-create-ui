@@ -178,19 +178,12 @@
         </p>
       </header>
 
-      <v-card
-        flat
-        class="mt-6"
-      >
-        <div class="pt-4 pr-4 pl-1">
-          <AmalgamationStatement
-            :class="{ 'invalid-section': isAmalgamationStatementInvalid }"
-            :invalidSection="isAmalgamationStatementInvalid"
-            @update="setAmalgamationCourtApproval($event)"
-            @valid="setAmalgamationCourtApprovalValid($event)"
-          />
-        </div>
-      </v-card>
+      <AmalgamationStatement
+        :class="{ 'invalid-section': isAmalgamationStatementInvalid }"
+        :invalidSection="isAmalgamationStatementInvalid"
+        @update="setAmalgamationCourtApproval($event)"
+        @valid="setAmalgamationCourtApprovalValid($event)"
+      />
     </section>
 
     <!-- Court Order and Plan of Arrangement -->
