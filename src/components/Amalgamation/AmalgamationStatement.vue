@@ -79,11 +79,18 @@ export default class AmalgamationStatement extends Vue {
     this.courtApproval = this.getAmalgamationCourtApproval
   }
 
-  // Emit a boolean which is whether come with the court approval
+  /**
+   * Emit a value and event to the parent to handle updating.
+   * @param courtApproval The value to emit.
+   */
   @Emit('update')
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private courtApprovalUpdate (courtApproval: boolean): void {}
 
+  /**
+   * Emit a value and event to the parent to handle validation.
+   * @param valid The value to emit.
+   */
   // Emit a boolean (validation) which is either option being selected
   @Emit('valid')
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -101,12 +108,12 @@ export default class AmalgamationStatement extends Vue {
 @import '@/assets/styles/theme.scss';
 
 #amalgamation-statement {
-  font-size: 16px;
+  font-size: $px-16;
 }
 
 .statement-text {
   color: $gray7;
-  font-size: 16px;
+  font-size: $px-16;
 }
 
 :deep() {
