@@ -91,12 +91,11 @@ export default class AmalgamationStatement extends Vue {
    * Emit a value and event to the parent to handle validation.
    * @param valid The value to emit.
    */
-  // Emit a boolean (validation) which is either option being selected
   @Emit('valid')
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private amalgamationStatementValid (valid: boolean): void {}
 
-  // Once either option being selected, update court approval and validation
+  /** Update court approval and validation when either option is being selected. */
   setCourtApproval (): void {
     this.courtApprovalUpdate(this.courtApproval)
     this.amalgamationStatementValid(true)
