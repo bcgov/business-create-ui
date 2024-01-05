@@ -47,5 +47,6 @@ export interface AmalgamationStateIF {
   amalgamatingBusinesses: Array<AmalgamatingBusinessIF>
   amalgamatingBusinessesValid: boolean
   courtApproval: boolean
+  courtApprovalValid: boolean
   type: AmalgamationTypes
 }

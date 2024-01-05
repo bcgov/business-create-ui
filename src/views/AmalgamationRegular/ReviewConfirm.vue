@@ -174,18 +174,16 @@
       <header>
         <h2>Amalgamation Statement</h2>
         <p class="mt-4">
-          [*** TODO: blurb ***]
+          Please indicate the statement applicable to this amalgamation.
         </p>
       </header>
 
-      <v-card
-        flat
-        class="mt-6"
-      >
-        <div class="pa-4">
-          [*** TODO: Amalgamation Statement component ***]
-        </div>
-      </v-card>
+      <AmalgamationStatement
+        :class="{ 'invalid-section': isAmalgamationStatementInvalid }"
+        :invalidSection="isAmalgamationStatementInvalid"
+        @update="setAmalgamationCourtApproval($event)"
+        @valid="setAmalgamationCourtApprovalValid($event)"
+      />
     </section>
 
     <!-- Court Order and Plan of Arrangement -->
@@ -280,6 +278,7 @@ import { CourtOrderPoa } from '@bcrs-shared-components/court-order-poa'
 import { DocumentDelivery } from '@bcrs-shared-components/document-delivery'
 import FolioNumber from '@/components/common/FolioNumber.vue'
 import BusinessTableSummary from '@/components/Amalgamation/BusinessTableSummary.vue'
+import AmalgamationStatement from '@/components/Amalgamation/AmalgamationStatement.vue'
 import IncorporationDateTime from '@/components/Incorporation/IncorporationDateTime.vue'
 import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
 import ListShareClass from '@/components/common/ListShareClass.vue'
@@ -289,6 +288,7 @@ import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp
 
 @Component({
   components: {
+    AmalgamationStatement,
     BusinessTableSummary,
     CardHeader,
     Certify,
@@ -304,6 +304,7 @@ import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp
 })
 export default class AmalgamationRegularReviewConfirm extends Vue {
   @Getter(useStore) getAmalgamatingBusinessesValid!: boolean
+  @Getter(useStore) getAmalgamationCourtApprovalValid!: boolean
   @Getter(useStore) getBusinessContact!: ContactPointIF
   @Getter(useStore) getCertifyState!: CertifyIF
   @Getter(useStore) getCourtOrderStep!: CourtOrderStepIF
@@ -318,6 +319,8 @@ export default class AmalgamationRegularReviewConfirm extends Vue {
   @Getter(useStore) isPremiumAccount!: boolean
   @Getter(useStore) isRoleStaff!: boolean
 
+  @Action(useStore) setAmalgamationCourtApproval!: (x: boolean) => void
+  @Action(useStore) setAmalgamationCourtApprovalValid!: (x: boolean) => void
   @Action(useStore) setCertifyState!: (x: CertifyIF) => void
   @Action(useStore) setCourtOrderFileNumber!: (x: string) => void
   @Action(useStore) setCourtOrderValidity!: (x: boolean) => void
@@ -351,6 +354,11 @@ export default class AmalgamationRegularReviewConfirm extends Vue {
   /** Is true when the Folio Number is not valid */
   get isFolioInvalid (): boolean {
     return this.getValidateSteps && !(this.getFolioNumberValid)
+  }
+
+  /** Is true when the amalgamation statement is not valid */
+  get isAmalgamationStatementInvalid (): boolean {
+    return this.getValidateSteps && !(this.getAmalgamationCourtApprovalValid)
   }
 }
 </script>

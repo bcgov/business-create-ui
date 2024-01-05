@@ -599,7 +599,8 @@ export const useStore = defineStore('store', {
         this.isAddPeopleAndRolesValid &&
         this.isCreateShareStructureValid &&
         isFolioNumberValid &&
-        isCourtOrderValid
+        isCourtOrderValid &&
+        this.getAmalgamationCourtApprovalValid
       )
     },
 
@@ -779,6 +780,11 @@ export const useStore = defineStore('store', {
     /** The amalgamation court approval. */
     getAmalgamationCourtApproval (): boolean {
       return this.stateModel.amalgamation.courtApproval
+    },
+
+    /** The amalgamation court approval validity. */
+    getAmalgamationCourtApprovalValid (): boolean {
+      return this.stateModel.amalgamation.courtApprovalValid
     },
 
     //
@@ -1278,6 +1284,9 @@ export const useStore = defineStore('store', {
     },
     setAmalgamationCourtApproval (courtApproval: boolean) {
       this.stateModel.amalgamation.courtApproval = courtApproval
+    },
+    setAmalgamationCourtApprovalValid (valid: boolean) {
+      this.stateModel.amalgamation.courtApprovalValid = valid
     },
     setAmalgamationType (type: AmalgamationTypes) {
       this.stateModel.amalgamation.type = type
