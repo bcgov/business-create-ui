@@ -74,31 +74,6 @@
       </div>
     </template>
 
-    <!-- display changed name info -->
-    <template v-else-if="getNameRequestApprovedName">
-      <div class="section-container">
-        <v-row
-          id="changed-name-info"
-          no-gutters
-        >
-          <v-col
-            cols="12"
-            sm="3"
-            class="pr-4"
-          >
-            <label>Name</label>
-          </v-col>
-          <v-col
-            id="changed-name-value"
-            cols="12"
-            sm="9"
-          >
-            {{ getNameRequestApprovedName }}
-          </v-col>
-        </v-row>
-      </div>
-    </template>
-
     <!-- display amalgamation adopted name info -->
     <template v-else-if="isAmalgamationFiling && getCorrectNameOption === CorrectNameOptions.CORRECT_AML_ADOPT">
       <div class="section-container">
@@ -109,7 +84,7 @@
           <v-col
             cols="12"
             sm="3"
-            class="pr-4"
+            class="pt-1 pr-4"
           >
             <label>Resulting Business Name</label>
           </v-col>
@@ -155,7 +130,7 @@
           <v-col
             cols="12"
             sm="3"
-            class="pr-4"
+            class="pt-1 pr-4"
           >
             <label>Resulting Business Name</label>
           </v-col>
@@ -199,6 +174,31 @@
                 {{ getEntityTypeDescription }}
               </li>
             </ul>
+          </v-col>
+        </v-row>
+      </div>
+    </template>
+
+    <!-- display changed name info -->
+    <template v-else-if="getNameRequestApprovedName">
+      <div class="section-container">
+        <v-row
+          id="changed-name-info"
+          no-gutters
+        >
+          <v-col
+            cols="12"
+            sm="3"
+            class="pr-4"
+          >
+            <label>Name</label>
+          </v-col>
+          <v-col
+            id="changed-name-value"
+            cols="12"
+            sm="9"
+          >
+            {{ getNameRequestApprovedName }}
           </v-col>
         </v-row>
       </div>
@@ -363,6 +363,7 @@ ul {
   font-size: $px-20;
 }
 
+#numbered-company-title,
 #changed-name-value,
 #adopted-name-value {
   font-size: $px-22;
