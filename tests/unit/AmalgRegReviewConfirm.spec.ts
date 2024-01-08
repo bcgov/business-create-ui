@@ -1,6 +1,7 @@
 import { shallowWrapperFactory } from '../vitest-wrapper-factory'
 import { AmalgRegReviewConfirm } from '@/views'
 import { AmalgamationRegResources } from '@/resources/'
+import AmalgamationStatement from '@/components/Amalgamation/AmalgamationStatement.vue'
 import BusinessTableSummary from '@/components/Amalgamation/BusinessTableSummary.vue'
 import CardHeader from '@/components/common/CardHeader.vue'
 import { CourtOrderPoa } from '@bcrs-shared-components/court-order-poa'
@@ -95,10 +96,11 @@ for (const test of amalgamationRegularBusinessInfo) {
       expect(section.findComponent(DocumentDelivery).exists()).toBe(true)
     })
 
-    // TODO
-    it.skip('displays Amalgamation Statement section', () => {
+    it('displays Amalgamation Statement section', () => {
       const section = wrapper.findAll('section').at(3)
       expect(section.find('header h2').text()).toBe('Amalgamation Statement')
+      expect(section.find('p').text()).toContain('Please indicate the statement applicable to this amalgamation.')
+      expect(section.findComponent(AmalgamationStatement).exists()).toBe(true)
     })
 
     it('displays Court Order and Plan of Arrangement section', () => {

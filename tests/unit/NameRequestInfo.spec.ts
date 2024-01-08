@@ -245,8 +245,10 @@ describe('Numbered Amalgamation Info component', () => {
     expect(listItems.length).toEqual(4)
 
     expect(listItems[0].textContent).toContain('[Incorporation Number] B.C. LTD.')
-    expect(listItems[1].textContent).toContain('The company is to be amalgamated with a name created by adding "B.C. LTD." after the incorporation number.')
-    expect(listItems[2].textContent).toContain('Your Incorporation Number will be generated at the end of the filing transaction.')
+    expect(listItems[1].textContent).toContain(
+      'The company is to be amalgamated with a name created by adding "B.C. LTD." after the incorporation number.')
+    expect(listItems[2].textContent).toContain(
+      'Your Incorporation Number will be generated at the end of the filing transaction.')
     expect(listItems[3].textContent).toContain('It is not possible to request a specific Incorporation Number.')
   })
 
@@ -289,8 +291,10 @@ describe('Name Request Info component without a NR', () => {
 
     expect(listItems[0].textContent).toContain('[Incorporation Number] B.C. LTD.')
     expect(listItems[1].textContent).toContain('Entity Type: BC Benefit Company')
-    expect(listItems[2].textContent).toContain('The company is to be incorporated with a name created by adding "B.C. LTD." after the incorporation number.')
-    expect(listItems[3].textContent).toContain('Your Incorporation Number will be generated at the end of the filing transaction.')
+    expect(listItems[2].textContent).toContain(
+      'The company is to be incorporated with a name created by adding "B.C. LTD." after the incorporation number.')
+    expect(listItems[3].textContent).toContain(
+      'Your Incorporation Number will be generated at the end of the filing transaction.')
     expect(listItems[4].textContent).toContain('It is not possible to request a specific Incorporation Number.')
   })
 })
