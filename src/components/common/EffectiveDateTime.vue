@@ -9,7 +9,7 @@
         sm="3"
         class="pr-4"
       >
-        <label>Incorporation Date and Time</label>
+        <label>{{ label }}</label>
       </v-col>
 
       <v-col
@@ -157,13 +157,15 @@ import { EffectiveDateTimeIF, FormIF } from '@/interfaces'
 import { VuetifyRuleFunction } from '@/types'
 
 @Component({})
-export default class IncorporationDateTime extends Mixins(DateMixin) {
+export default class EffectiveDateTime extends Mixins(DateMixin) {
   // Refs
   $refs!: {
     dateTimeForm: FormIF
   }
 
   @Prop({ default: null }) readonly effectiveDateTime!: EffectiveDateTimeIF
+
+  @Prop({ default: 'Incorporation Date and Time' }) readonly label!: string
 
   // Local properties
   isImmediate = false

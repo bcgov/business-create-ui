@@ -9,7 +9,7 @@ import { useStore } from '@/store/store'
 import { createLocalVue, mount } from '@vue/test-utils'
 
 // Components
-import IncorporationDateTime from '@/components/Incorporation/IncorporationDateTime.vue'
+import EffectiveDateTime from '@/components/common/EffectiveDateTime.vue'
 
 const vuetify = new Vuetify({})
 setActivePinia(createPinia())
@@ -18,7 +18,7 @@ const store = useStore()
 // Prevent the warning "[Vuetify] Unable to locate target [data-app]"
 document.body.setAttribute('data-app', 'true')
 
-describe('Incorporation Date Time component', () => {
+describe('Effective Date Time component', () => {
   let wrapperFactory: any
   const today = new Date()
   store.stateModel.currentJsDate = today
@@ -45,7 +45,7 @@ describe('Incorporation Date Time component', () => {
     const localVue = createLocalVue()
 
     wrapperFactory = (propsData) => {
-      return mount(IncorporationDateTime, {
+      return mount(EffectiveDateTime, {
         propsData: {
           ...propsData
         },

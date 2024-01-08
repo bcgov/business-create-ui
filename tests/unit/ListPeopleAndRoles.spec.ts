@@ -1,4 +1,4 @@
-import { wrapperFactory, shallowWrapperFactory } from '../jest-wrapper-factory'
+import { wrapperFactory, shallowWrapperFactory } from '../vitest-wrapper-factory'
 import { createPinia, setActivePinia } from 'pinia'
 import { useStore } from '@/store/store'
 import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'

@@ -1,6 +1,6 @@
 /* eslint max-len: 0 */
 import { Wrapper } from '@vue/test-utils'
-import { wrapperFactory } from '../jest-wrapper-factory'
+import { wrapperFactory } from '../vitest-wrapper-factory'
 import TransactionalFolioNumber from '@/components/common/TransactionalFolioNumber.vue'
 
 const tests = [

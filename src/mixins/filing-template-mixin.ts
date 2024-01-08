@@ -241,21 +241,6 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
     // restore the amalgamating businesses array
     if (draftFiling.amalgamationApplication.amalgamatingBusinesses) {
       this.setAmalgamatingBusinesses([
-        // *** TODO: remove static items when they are no longer needed for testing
-        // {
-        //   type: AmlTypes.FOREIGN,
-        //   corpNumber: 'XYZ789',
-        //   legalName: 'Ice Cream Sandwich Canada',
-        //   foreignJurisdiction: { region: 'FEDERAL', country: 'CA' },
-        //   role: AmlRoles.AMALGAMATING
-        // },
-        // {
-        //   type: AmlTypes.FOREIGN,
-        //   corpNumber: 'ABC123',
-        //   legalName: 'Gingerbread USA',
-        //   foreignJurisdiction: { country: 'US' },
-        //   role: AmlRoles.AMALGAMATING
-        // },
         ...draftFiling.amalgamationApplication.amalgamatingBusinesses
       ])
       this.refetchAmalgamatingBusinessesInfo()
@@ -267,8 +252,6 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
     }
 
     // restore Office Addresses
-    // *** TODO: verify whether we need to assign fallback
-    // *** also fix IAs and registrations the same way?
     if (draftFiling.amalgamationApplication.offices) {
       this.setOfficeAddresses(draftFiling.amalgamationApplication.offices)
     }

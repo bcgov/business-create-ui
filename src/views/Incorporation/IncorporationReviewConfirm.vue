@@ -119,7 +119,7 @@
           </p>
         </header>
 
-        <IncorporationDateTime
+        <EffectiveDateTime
           class="mt-6"
           :class="{ 'invalid-section': isEffectiveDateTimeInvalid }"
           :effectiveDateTime="getEffectiveDateTime"
@@ -246,7 +246,7 @@ import CardHeader from '@/components/common/CardHeader.vue'
 import Certify from '@/components/common/Certify.vue'
 import { CourtOrderPoa } from '@bcrs-shared-components/court-order-poa'
 import { DocumentDelivery } from '@bcrs-shared-components/document-delivery'
-import IncorporationDateTime from '@/components/Incorporation/IncorporationDateTime.vue'
+import EffectiveDateTime from '@/components/common/EffectiveDateTime.vue'
 import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
 import ListShareClass from '@/components/common/ListShareClass.vue'
 import SummaryDefineCompany from '@/components/common/SummaryDefineCompany.vue'
@@ -262,7 +262,7 @@ import StaffPayment from '@/components/common/StaffPayment.vue'
     Certify,
     CourtOrderPoa,
     DocumentDelivery,
-    IncorporationDateTime,
+    EffectiveDateTime,
     ListPeopleAndRoles,
     ListShareClass,
     SummaryDefineCompany,
