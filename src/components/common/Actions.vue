@@ -104,12 +104,13 @@ import { Component, Emit, Mixins } from 'vue-property-decorator'
 import { Getter, Action } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { Navigate } from '@/utils'
-import { CommonMixin, DateMixin, FilingTemplateMixin, NameRequestMixin } from '@/mixins'
+import { AmalgamationMixin, CommonMixin, DateMixin, FilingTemplateMixin, NameRequestMixin } from '@/mixins'
 import { LegalServices } from '@/services/'
 import { FilingTypes, NameRequestStates, RouteNames } from '@/enums'
 
 @Component({})
-export default class Actions extends Mixins(CommonMixin, DateMixin, FilingTemplateMixin, NameRequestMixin) {
+export default class Actions extends Mixins(AmalgamationMixin, CommonMixin,
+  DateMixin, FilingTemplateMixin, NameRequestMixin) {
   @Getter(useStore) getCurrentStep!: number
   @Getter(useStore) getEntityIdentifier!: string
   @Getter(useStore) getFilingType!: string
@@ -242,6 +243,19 @@ export default class Actions extends Mixins(CommonMixin, DateMixin, FilingTempla
           await this._validateNameRequest(this.getNameRequestNumber)
         } catch (error) {
           console.log('Error validating NR in onClickFilePay(): ', error) // eslint-disable-line no-console
+          this.setIsFilingPaying(false)
+          return
+        }
+      }
+
+      // If we're filing an amalgamation, we need to re-fetch the business table data on file and pay.
+      // We do that in case one of the businesses became invalid (e.g. historical) while the draft is open.
+      if (this.getFilingType === FilingTypes.AMALGAMATION_APPLICATION) {
+        try {
+          await this.refetchAmalgamatingBusinessesInfo()
+          console.log(this.getAmalgamatingBusinesses)
+        } catch (error) {
+          console.log('Error validating table in onClickFilePay(): ', error) // eslint-disable-line no-console
           this.setIsFilingPaying(false)
           return
         }
