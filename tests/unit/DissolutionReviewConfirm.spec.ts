@@ -1,4 +1,4 @@
-import { shallowWrapperFactory, wrapperFactory } from '../jest-wrapper-factory'
+import { shallowWrapperFactory, wrapperFactory } from '../vitest-wrapper-factory'
 import DissolutionReviewConfirm from '@/views/Dissolution/DissolutionReviewConfirm.vue'
 import { DissolutionResources } from '@/resources/'
 

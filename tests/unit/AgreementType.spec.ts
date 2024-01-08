@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { wrapperFactory } from '../jest-wrapper-factory'
+import { wrapperFactory } from '../vitest-wrapper-factory'
 import AgreementType from '@/components/common/AgreementType.vue'
 import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 

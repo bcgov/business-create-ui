@@ -1,11 +1,11 @@
 import { shallowWrapperFactory } from '../vitest-wrapper-factory'
-import { RestorationBusinessInformation } from '@/views'
-import { RestorationResources } from '@/resources/'
+import { AmalgRegBusinessInfo } from '@/views'
+import { AmalgamationRegResources } from '@/resources/'
 import OfficeAddresses from '@/components/common/OfficeAddresses.vue'
 import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
 
 // Test Case Data
-const restorationBusinessInfo = [
+const amalgamationRegularBusinessInfo = [
   {
     entityType: 'BEN'
   },
@@ -20,20 +20,20 @@ const restorationBusinessInfo = [
   }
 ]
 
-for (const test of restorationBusinessInfo) {
-  describe(`Restoration Business Information for a ${test.entityType}`, () => {
+for (const test of amalgamationRegularBusinessInfo) {
+  describe(`Amalgamation Regular Business Information for a ${test.entityType}`, () => {
     let wrapper: any
 
     beforeAll(() => {
       wrapper = shallowWrapperFactory(
-        RestorationBusinessInformation,
+        AmalgRegBusinessInfo,
         null,
         {
           entityType: test.entityType,
           tombstone: { keycloakRoles: ['staff'] }
         },
         null,
-        RestorationResources
+        AmalgamationRegResources
       )
     })
 
@@ -42,7 +42,7 @@ for (const test of restorationBusinessInfo) {
     })
 
     it('renders the page', () => {
-      expect(wrapper.find('#restoration-business-information').exists()).toBe(true)
+      expect(wrapper.find('#amalgamation-regular-business-info').exists()).toBe(true)
     })
 
     it('displays Registered and Records Office Addresses section', () => {

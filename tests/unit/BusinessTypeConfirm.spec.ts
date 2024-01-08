@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import { Wrapper } from '@vue/test-utils'
 import { getLastEvent } from '../get-last-event'
-import { wrapperFactory } from '../jest-wrapper-factory'
+import { wrapperFactory } from '../vitest-wrapper-factory'
 import BusinessTypeConfirm from '@/components/Registration/BusinessTypeConfirm.vue'
 
 const validEvent = 'valid'

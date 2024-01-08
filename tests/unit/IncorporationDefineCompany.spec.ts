@@ -1,4 +1,4 @@
-import { shallowWrapperFactory } from '../jest-wrapper-factory'
+import { shallowWrapperFactory } from '../vitest-wrapper-factory'
 import DefineCompany from '@/views/Incorporation/IncorporationDefineCompany.vue'
 
 // Test Case Data
