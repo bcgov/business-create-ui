@@ -11,7 +11,7 @@
 
       <tbody>
         <tr v-if="!getAmalgamatingBusinesses.length">
-          <td colspan="6">
+          <td colspan="3">
             <p class="text-center mb-0">
               No businesses added
             </p>
