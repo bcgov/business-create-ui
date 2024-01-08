@@ -253,7 +253,6 @@ export default class Actions extends Mixins(AmalgamationMixin, CommonMixin,
       if (this.getFilingType === FilingTypes.AMALGAMATION_APPLICATION) {
         try {
           await this.refetchAmalgamatingBusinessesInfo()
-          console.log(this.getAmalgamatingBusinesses)
         } catch (error) {
           console.log('Error validating table in onClickFilePay(): ', error) // eslint-disable-line no-console
           this.setIsFilingPaying(false)
