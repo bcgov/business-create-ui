@@ -77,6 +77,9 @@ export default class AmalgamationStatement extends Vue {
   /** Called when component is mounted. */
   mounted (): void {
     this.courtApproval = this.getAmalgamationCourtApproval
+    if (this.courtApproval !== null) {
+      this.amalgamationStatementValid(true)
+    }
   }
 
   /**
