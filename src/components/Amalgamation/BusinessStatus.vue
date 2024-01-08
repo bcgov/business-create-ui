@@ -80,8 +80,8 @@ export default class BusinessStatus extends Vue {
         return 'This business is under limited restoration. It cannot be part of an amalgamation ' +
           'unless it is fully restored.'
 
-      // case AmlStatuses.ERROR_NEED_BC_COMPANY:
-      //   return 'You must add at least one BC company.'
+      case AmlStatuses.ERROR_NEED_BC_COMPANY:
+        return 'You must add at least one BC company.'
 
       case AmlStatuses.ERROR_NOT_AFFILIATED:
         return 'This business is not affiliated with the currently selected BC Registries account. ' +

@@ -31,7 +31,7 @@ export default class AmalgamationRegularPeopleRoles extends Mixins(CommonMixin) 
 
   @Watch('$route')
   private async scrollToInvalidComponent (): Promise<void> {
-    if (this.getShowErrors && this.$route.name === RouteNames.INCORPORATION_PEOPLE_ROLES) {
+    if (this.getShowErrors && this.$route.name === RouteNames.AMALG_REG_PEOPLE_ROLES) {
       // scroll to invalid components
       await this.$nextTick()
       await this.validateAndScroll(
