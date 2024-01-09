@@ -3,6 +3,7 @@ import { StatusCodes } from 'http-status-codes'
 import { AmalgamationFilingIF, BusinessIF, DissolutionFilingIF, IncorporationFilingIF, NameRequestIF,
   RegistrationFilingIF, RestorationFilingIF } from '@/interfaces'
 import { FilingTypes } from '@/enums'
+import { BusinessLookupServices } from '@/services'
 
 /**
  * Class that provides integration with the Legal API.
@@ -126,7 +127,8 @@ export default class LegalServices {
       url += '?draft=true'
     }
 
-    return axios.put(url, { filing }).then(response => {
+    return axios.put(url, { filing },
+      { headers: { 'accountId': BusinessLookupServices.accountId } }).then(response => {
       const filing = response?.data?.filing
       const filingId = +filing?.header?.filingId || 0
 
