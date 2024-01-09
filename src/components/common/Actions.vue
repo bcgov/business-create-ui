@@ -104,12 +104,13 @@ import { Component, Emit, Mixins } from 'vue-property-decorator'
 import { Getter, Action } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { Navigate } from '@/utils'
-import { CommonMixin, DateMixin, FilingTemplateMixin, NameRequestMixin } from '@/mixins'
+import { AmalgamationMixin, CommonMixin, DateMixin, FilingTemplateMixin, NameRequestMixin } from '@/mixins'
 import { LegalServices } from '@/services/'
 import { FilingTypes, NameRequestStates, RouteNames } from '@/enums'
 
 @Component({})
-export default class Actions extends Mixins(CommonMixin, DateMixin, FilingTemplateMixin, NameRequestMixin) {
+export default class Actions extends Mixins(AmalgamationMixin, CommonMixin,
+  DateMixin, FilingTemplateMixin, NameRequestMixin) {
   @Getter(useStore) getCurrentStep!: number
   @Getter(useStore) getEntityIdentifier!: string
   @Getter(useStore) getFilingType!: string
@@ -138,6 +139,7 @@ export default class Actions extends Mixins(CommonMixin, DateMixin, FilingTempla
 
   get isSummaryStep (): boolean {
     return (
+      this.$route.name === RouteNames.AMALG_REG_REVIEW_CONFIRM ||
       this.$route.name === RouteNames.DISSOLUTION_REVIEW_CONFIRM ||
       this.$route.name === RouteNames.INCORPORATION_REVIEW_CONFIRM ||
       this.$route.name === RouteNames.REGISTRATION_REVIEW_CONFIRM ||
@@ -213,6 +215,18 @@ export default class Actions extends Mixins(CommonMixin, DateMixin, FilingTempla
   async onClickFilePay (): Promise<void> {
     // Prompt Step validations
     this.setValidateSteps(true)
+
+    // If we're filing an amalgamation, we need to re-fetch the business table data on file and pay.
+    // We do that in case one of the businesses became invalid (e.g. historical) while the draft is open.
+    if (this.getFilingType === FilingTypes.AMALGAMATION_APPLICATION) {
+      try {
+        await this.refetchAmalgamatingBusinessesInfo()
+      } catch (error) {
+        console.log('Error validating table in onClickFilePay(): ', error) // eslint-disable-line no-console
+        this.setIsFilingPaying(false)
+        return
+      }
+    }
 
     if (this.isFilingValid) {
       // prevent double saving
