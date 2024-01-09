@@ -126,7 +126,8 @@ export default class LegalServices {
       url += '?draft=true'
     }
 
-    return axios.put(url, { filing }).then(response => {
+    return axios.put(url, { filing },
+      { headers: { 'Account-Id': this.accountId } }).then(response => {
       const filing = response?.data?.filing
       const filingId = +filing?.header?.filingId || 0
 
@@ -137,6 +138,18 @@ export default class LegalServices {
       return filing
     })
     // NB: for error handling, see "save-error-event"
+  }
+
+  /** The Account ID, from session storage. */
+  static get accountId (): string {
+    // if we can't get account id from ACCOUNT_ID
+    // then try to get it from CURRENT_ACCOUNT
+    let accountId = sessionStorage.getItem('ACCOUNT_ID')
+    if (!accountId) {
+      const currentAccount = sessionStorage.getItem('CURRENT_ACCOUNT')
+      accountId = JSON.parse(currentAccount)?.id
+    }
+    return accountId
   }
 
   /**
