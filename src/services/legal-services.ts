@@ -3,7 +3,6 @@ import { StatusCodes } from 'http-status-codes'
 import { AmalgamationFilingIF, BusinessIF, DissolutionFilingIF, IncorporationFilingIF, NameRequestIF,
   RegistrationFilingIF, RestorationFilingIF } from '@/interfaces'
 import { FilingTypes } from '@/enums'
-import { BusinessLookupServices } from '@/services'
 
 /**
  * Class that provides integration with the Legal API.
@@ -128,7 +127,7 @@ export default class LegalServices {
     }
 
     return axios.put(url, { filing },
-      { headers: { 'accountId': BusinessLookupServices.accountId } }).then(response => {
+      { headers: { 'Account-Id': this.accountId } }).then(response => {
       const filing = response?.data?.filing
       const filingId = +filing?.header?.filingId || 0
 
@@ -139,6 +138,18 @@ export default class LegalServices {
       return filing
     })
     // NB: for error handling, see "save-error-event"
+  }
+
+  /** The Account ID, from session storage. */
+  static get accountId (): string {
+    // if we can't get account id from ACCOUNT_ID
+    // then try to get it from CURRENT_ACCOUNT
+    let accountId = sessionStorage.getItem('ACCOUNT_ID')
+    if (!accountId) {
+      const currentAccount = sessionStorage.getItem('CURRENT_ACCOUNT')
+      accountId = JSON.parse(currentAccount)?.id
+    }
+    return accountId
   }
 
   /**
