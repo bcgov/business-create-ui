@@ -216,6 +216,18 @@ export default class Actions extends Mixins(AmalgamationMixin, CommonMixin,
     // Prompt Step validations
     this.setValidateSteps(true)
 
+    // If we're filing an amalgamation, we need to re-fetch the business table data on file and pay.
+    // We do that in case one of the businesses became invalid (e.g. historical) while the draft is open.
+    if (this.getFilingType === FilingTypes.AMALGAMATION_APPLICATION) {
+      try {
+        await this.refetchAmalgamatingBusinessesInfo()
+      } catch (error) {
+        console.log('Error validating table in onClickFilePay(): ', error) // eslint-disable-line no-console
+        this.setIsFilingPaying(false)
+        return
+      }
+    }
+
     if (this.isFilingValid) {
       // prevent double saving
       if (this.isBusySaving) return
@@ -243,18 +255,6 @@ export default class Actions extends Mixins(AmalgamationMixin, CommonMixin,
           await this._validateNameRequest(this.getNameRequestNumber)
         } catch (error) {
           console.log('Error validating NR in onClickFilePay(): ', error) // eslint-disable-line no-console
-          this.setIsFilingPaying(false)
-          return
-        }
-      }
-
-      // If we're filing an amalgamation, we need to re-fetch the business table data on file and pay.
-      // We do that in case one of the businesses became invalid (e.g. historical) while the draft is open.
-      if (this.getFilingType === FilingTypes.AMALGAMATION_APPLICATION) {
-        try {
-          await this.refetchAmalgamatingBusinessesInfo()
-        } catch (error) {
-          console.log('Error validating table in onClickFilePay(): ', error) // eslint-disable-line no-console
           this.setIsFilingPaying(false)
           return
         }
