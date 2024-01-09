@@ -1,7 +1,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
-import { AmlRoles, AmlStatuses, AmlTypes, RestorationTypes } from '@/enums'
+import { AmlRoles, AmlStatuses, AmlTypes, EntityStates, RestorationTypes } from '@/enums'
 import { AmalgamatingBusinessIF } from '@/interfaces'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import { AuthServices, LegalServices } from '@/services'
@@ -221,7 +221,8 @@ export default class AmalgamationMixin extends Vue {
           address: tingBusiness.addresses?.registeredOffice.mailingAddress || null,
           isNotInGoodStanding: (tingBusiness.businessInfo.goodStanding === false),
           isFutureEffective: (tingBusiness.firstFiling.isFutureEffective === true),
-          isLimitedRestoration: await this.isLimitedRestoration(tingBusiness)
+          isLimitedRestoration: await this.isLimitedRestoration(tingBusiness),
+          isHistorical: (tingBusiness.businessInfo.state === EntityStates.HISTORICAL)
         } as AmalgamatingBusinessIF
       }
     }
