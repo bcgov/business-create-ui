@@ -33,6 +33,7 @@ export default class AmalgamationMixin extends Vue {
     this.cccMismatch,
     this.foreignUnlimited2,
     this.xproUlcCcc,
+    this.foreignUnlimited3,
     this.needBcCompany,
     this.foreignHorizontal
   ]
