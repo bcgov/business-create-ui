@@ -58,16 +58,15 @@ export default class BusinessStatus extends Vue {
           'Form Horizontal amalgamation. '
 
       case AmlStatuses.ERROR_FOREIGN_UNLIMITED:
-        return 'A foreign corporation must not amalgamate with a limited company and continue as ' +
-          'an Unlimited Liability Company.'
+        return 'A foreign corporation must not amalgamate with a BC Company and continue as an ' +
+          'Unlimited Liability Company.'
 
       case AmlStatuses.ERROR_FOREIGN_UNLIMITED2:
         return 'A BC Company cannot amalgamate with an existing foreign corporation to form a BC ' +
           'Unlimited Liability Company.'
 
       case AmlStatuses.ERROR_FOREIGN_UNLIMITED3:
-        return 'A BC Company cannot amalgamate with a foreign company to form a BC Unlimited ' +
-          'Liability Company.'
+        return 'A BC Unlimited Liability Company cannot amalgamate with a foreign company.'
 
       case AmlStatuses.ERROR_FUTURE_EFFECTIVE_FILING:
         return 'This business has a future effective filing. It cannot be part of an amalgamation ' +

@@ -21,7 +21,7 @@ export default class AmalgamationMixin extends Vue {
 
   @Action(useStore) setAmalgamatingBusinesses!: (x: Array<any>) => void
 
-  /** Iterable array of rule functions, sorted by importance. */
+  /** Iterable array of rule functions, in order of processing. */
   readonly rules = [
     this.notAffiliated,
     this.notHistorical,
@@ -33,6 +33,7 @@ export default class AmalgamationMixin extends Vue {
     this.cccMismatch,
     this.foreignUnlimited2,
     this.xproUlcCcc,
+    this.foreignUnlimited3,
     this.needBcCompany,
     this.foreignHorizontal
   ]
@@ -91,9 +92,9 @@ export default class AmalgamationMixin extends Vue {
     return null
   }
 
-  /** Disallow if foreign into ULC if there is also a limited company. */
+  /** Disallow if foreign and there is also a BC company, into ULC. */
   foreignUnlimited (business: AmalgamatingBusinessIF): AmlStatuses {
-    if (business.type === AmlTypes.FOREIGN && this.isTypeBcUlcCompany && this.isAnyLimited) {
+    if (business.type === AmlTypes.FOREIGN && this.isAnyBcCompany && this.isTypeBcUlcCompany) {
       return AmlStatuses.ERROR_FOREIGN_UNLIMITED
     }
     return null
@@ -107,9 +108,14 @@ export default class AmalgamationMixin extends Vue {
     return null
   }
 
-  /** Disallow if foreign into ULC if there is also a limited company. */
+  /** Disallow if BC and there is also a foreign, into ULC. */
   foreignUnlimited2 (business: AmalgamatingBusinessIF): AmlStatuses {
-    if (business.type === AmlTypes.FOREIGN && this.isTypeBcUlcCompany && this.isAnyLimited) {
+    if (
+      business.type === AmlTypes.LEAR &&
+      business.legalType === CorpTypeCd.BC_COMPANY &&
+      this.isAnyForeign &&
+      this.isTypeBcUlcCompany
+    ) {
       return AmlStatuses.ERROR_FOREIGN_UNLIMITED2
     }
     return null
@@ -138,7 +144,7 @@ export default class AmalgamationMixin extends Vue {
     return null
   }
 
-  /** Disallow if there are no BC Companies. */
+  /** Disallow if there are no BC companies. */
   needBcCompany (): AmlStatuses {
     if (!this.isAnyBcCompany) {
       return AmlStatuses.ERROR_NEED_BC_COMPANY
