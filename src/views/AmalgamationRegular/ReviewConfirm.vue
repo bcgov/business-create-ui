@@ -331,6 +331,17 @@ export default class AmalgamationRegularReviewConfirm extends Vue {
   @Action(useStore) setHasPlanOfArrangement!: (x: boolean) => void
   @Action(useStore) setIsFutureEffective!: (x: boolean) => void
 
+  /**
+   * In case submitting the amalgamation failed, we want to reset the validity of Certify.
+   * This is since the checkbox has to be ticked again after the save dialog has been closed.
+   */
+  mounted (): void {
+    this.setCertifyState({
+      certifiedBy: this.getCertifyState.certifiedBy,
+      valid: false
+    })
+  }
+
   /** The entity description,  */
   get getEntityDescription (): string {
     return GetCorpFullDescription(this.getEntityType)
