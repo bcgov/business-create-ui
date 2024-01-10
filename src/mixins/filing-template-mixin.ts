@@ -201,9 +201,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         filing.amalgamationApplication.nameRequest.nrNumber = this.getNameRequestNumber
         break
       case CorrectNameOptions.CORRECT_AML_NUMBERED:
-        // save numbered name
         filing.amalgamationApplication.nameRequest.correctNameOption = CorrectNameOptions.CORRECT_AML_NUMBERED
-        filing.amalgamationApplication.nameRequest.legalName = this.getNameRequestApprovedName
         break
     }
 
@@ -271,8 +269,6 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         break
       case CorrectNameOptions.CORRECT_AML_NUMBERED:
         this.setCorrectNameOption(CorrectNameOptions.CORRECT_AML_NUMBERED)
-        // restore numbered name
-        this.setNameRequestApprovedName(nameRequest.legalName)
         break
       default:
         // fallback for draft created without Correct Name Option
