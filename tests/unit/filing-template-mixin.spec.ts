@@ -82,7 +82,7 @@ describe('Registration Filing', () => {
       naicsDescription: 'Some NAICS Description'
     }
     store.stateModel.nameRequest = {
-      legalType: CorpTypeCd.SOLE_PROP,
+      legalType: CorpTypeCd.SOLE_PROP as any,
       nrNum: 'NR 1234567'
     } as NameRequestIF
 

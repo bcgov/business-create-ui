@@ -38,9 +38,11 @@ export const shallowWrapperFactory = (
 ) => {
   setActivePinia(createPinia())
   const store = useStore()
+
   if (routeName) router.push({ name: routeName }).catch(() => {})
 
   if (stateValues) applyStoreValues(store, stateValues, resource)
+
   return shallowMount(component, {
     propsData: {
       ...propsData
@@ -61,8 +63,11 @@ export const wrapperFactory = (
 ) => {
   setActivePinia(createPinia())
   const store = useStore()
+
   if (routeName) router.push({ name: routeName }).catch(() => {})
+
   if (stateValues) applyStoreValues(store, stateValues, resource)
+
   return mount(component, {
     propsData: {
       ...propsData
@@ -74,9 +79,9 @@ export const wrapperFactory = (
   })
 }
 
-const applyStoreValues = (store, stateValues, resource = null) => {
+const applyStoreValues = (store, stateValues, resource) => {
   resource = resource || IncorporationResources
-  // Set Company Resources
+  // Set Company Resources (even if not needed)
   store.resourceModel = resource.find(x => x.entityType === stateValues.entityType)
 
   // Set individual state properties

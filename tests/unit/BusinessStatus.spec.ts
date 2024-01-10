@@ -27,7 +27,7 @@ describe('Business Status', () => {
     {
       label: 'Error Foreign Unlimited',
       status: AmlStatuses.ERROR_FOREIGN_UNLIMITED,
-      tooltip: 'A foreign corporation must not amalgamate with a limited company and continue as'
+      tooltip: 'A foreign corporation must not amalgamate with a BC Company and continue as an'
     },
     {
       label: 'Error Foreign Unlimited 2',
@@ -37,7 +37,7 @@ describe('Business Status', () => {
     {
       label: 'Error Foreign Unlimited 3',
       status: AmlStatuses.ERROR_FOREIGN_UNLIMITED3,
-      tooltip: 'A BC Company cannot amalgamate with a foreign company to form a BC Unlimited'
+      tooltip: 'A BC Unlimited Liability Company cannot amalgamate with a foreign company.'
     },
     {
       label: 'Error Future Effective Filing',

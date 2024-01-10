@@ -1,9 +1,10 @@
-import { AmlRoles, AmlTypes } from '@/enums'
+import { AmlRoles, AmlStatuses, AmlTypes } from '@/enums'
 import { wrapperFactory } from '../vitest-wrapper-factory'
 import BusinessTable from '@/components/Amalgamation/BusinessTable.vue'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
+import AmalgamationMixin from '@/mixins/amalgamation-mixin'
 
-describe('Business Table', () => {
+describe('Business Table - display', () => {
   it('displays correctly when there are no amalgamating businesses', () => {
     const wrapper = wrapperFactory(
       BusinessTable,
@@ -161,6 +162,82 @@ describe('Business Table', () => {
         expect(td.at(3).text()).toBe('Amalgamating Business')
         expect(td.at(4).exists()).toBe(true) // see separate BusinessTableStatus tests
         expect(td.at(5).find('.v-btn').exists()).toBe(true)
+      }
+
+      wrapper.destroy()
+    })
+  }
+})
+
+// *** FUTURE: get this working
+// ATM, local rules are mocked (eg, wrapper.vm.notAffiliated()), but not the actual rules in the mixin.
+// It's probably this: https://vitest.dev/guide/mocking.html#mocking-pitfalls.
+// Maybe try vi.mock() to mock the imported mixin?
+describe.skip('Business Table - rule evaluation', () => {
+  let wrapper: any
+
+  const rules = [
+    { methodName: 'notAffiliated', error: AmlStatuses.ERROR_NOT_AFFILIATED },
+    { methodName: 'notHistorical', error: AmlStatuses.ERROR_HISTORICAL },
+    { methodName: 'notInGoodStanding', error: AmlStatuses.ERROR_NOT_IN_GOOD_STANDING },
+    { methodName: 'limitedRestoration', error: AmlStatuses.ERROR_LIMITED_RESTORATION },
+    { methodName: 'futureEffectiveFiling', error: AmlStatuses.ERROR_FUTURE_EFFECTIVE_FILING },
+    { methodName: 'foreign', error: AmlStatuses.ERROR_FOREIGN },
+    { methodName: 'foreignUnlimited', error: AmlStatuses.ERROR_FOREIGN_UNLIMITED },
+    { methodName: 'cccMismatch', error: AmlStatuses.ERROR_CCC_MISMATCH },
+    { methodName: 'foreignUnlimited2', error: AmlStatuses.ERROR_FOREIGN_UNLIMITED2 },
+    { methodName: 'xproUlcCcc', error: AmlStatuses.ERROR_XPRO_ULC_CCC },
+    { methodName: 'needBcCompany', error: AmlStatuses.ERROR_NEED_BC_COMPANY },
+    { methodName: 'foreignHorizontal', error: AmlStatuses.ERROR_FOREIGN_HORIZONTAL }
+  ]
+
+  beforeAll(() => {
+    wrapper = wrapperFactory(
+      BusinessTable,
+      null,
+      {
+        amalgamation: {
+          amalgamatingBusinesses: [{ /* dummy business */ }]
+        },
+        tombstone: {
+          keycloakRoles: ['staff']
+        }
+      }
+    )
+
+    // mock all rules to return their error
+    for (let i = 0; i < rules.length; i++) {
+      vi.spyOn(wrapper.vm, rules[i].methodName).mockReturnValue(rules[i].error)
+    }
+    // *** these work
+    console.log('*** value1 = ', wrapper.vm.notAffiliated())
+    console.log('*** value2 = ', wrapper.vm.notHistorical())
+    console.log('*** value3 = ', wrapper.vm.notInGoodStanding())
+
+    // *** this doesn't work ("is not a function")
+    console.log('*** value4 = ', (AmalgamationMixin as any).notAffiliated())
+  })
+
+  it('has the expected number of rules', () => {
+    expect(wrapper.vm.rules.length).toBe(rules.length)
+  })
+
+  // check each rule sequentially
+  for (let i = 0; i < rules.length; i++) {
+    it.skip(`fails rule "${rules[i].methodName}"`, () => {
+      // first, verify that current rule fails
+      expect(wrapper.vm.businesses[0].status).toBe(rules[i].error)
+
+      // now override rule to return null
+      vi.spyOn(wrapper.vm, rules[i].methodName).mockReturnValue(null)
+
+      // if this is the last rule...
+      if (i === (rules.length - 1)) {
+        // verify that no rules have failed
+        expect(wrapper.vm.businesses[0].status).toBe(AmlStatuses.OK)
+      } else {
+        // verify that another rule has failed
+        expect(wrapper.vm.businesses[0].status).toBe(rules[i + 1].error)
       }
 
       wrapper.destroy()
