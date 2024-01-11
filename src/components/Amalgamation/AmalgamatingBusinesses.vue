@@ -192,7 +192,7 @@ import { BusinessLookup } from '@bcrs-shared-components/business-lookup'
 import { Jurisdiction } from '@bcrs-shared-components/jurisdiction'
 import { CanJurisdictions, MrasJurisdictions } from '@bcrs-shared-components/jurisdiction/list-data'
 import { AmalgamatingBusinessIF, BusinessLookupResultIF, EmptyBusinessLookup } from '@/interfaces'
-import { AmlRoles, AmlTypes, EntityStates } from '@/enums'
+import { AmlRoles, AmlTypes, EntityStates, FilingStatus } from '@/enums'
 import { JurisdictionLocation } from '@bcrs-shared-components/enums'
 import BusinessTable from '@/components/Amalgamation/BusinessTable.vue'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
@@ -366,6 +366,12 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
       return
     }
 
+    const isFutureEffective = (
+      business.firstFiling.isFutureEffective === true &&
+      business.firstFiling.status !== FilingStatus.COMPLETED &&
+      business.firstFiling.status !== FilingStatus.CORRECTED
+    )
+
     // Create amalgamating business object.
     const tingBusiness: AmalgamatingBusinessIF = {
       type: AmlTypes.LEAR,
@@ -376,7 +382,7 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
       legalType: business.businessInfo.legalType,
       address: business.addresses.registeredOffice.mailingAddress,
       isNotInGoodStanding: (business.businessInfo.goodStanding === false),
-      isFutureEffective: (business.firstFiling.isFutureEffective === true),
+      isFutureEffective,
       isLimitedRestoration: await this.isLimitedRestoration(business),
       isHistorical: (business.businessInfo.state === EntityStates.HISTORICAL)
     }
