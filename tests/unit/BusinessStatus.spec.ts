@@ -72,7 +72,7 @@ describe('Business Status', () => {
     {
       label: 'Error Pending Filing',
       status: AmlStatuses.ERROR_PENDING_FILING,
-      tooltip: 'This business has a pending filing. It cannot be part of an amalgamation until the'
+      tooltip: 'This business has a pending filing. It cannot be part of an amalgamation.'
     },
     {
       label: 'Error XPRO ULC CCC',

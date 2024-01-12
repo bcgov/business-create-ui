@@ -91,8 +91,7 @@ export default class BusinessStatus extends Vue {
           'businesses are in good standing.'
 
       case AmlStatuses.ERROR_PENDING_FILING:
-        return 'This business has a pending filing. It cannot be part of an amalgamation until the ' +
-          'filing is filed and paid.'
+        return 'This business has a pending filing. It cannot be part of an amalgamation.'
 
       case AmlStatuses.ERROR_XPRO_ULC_CCC:
         return 'An Extraprovincial Company cannot amalgamate to form a new BC Unlimited Liability ' +
