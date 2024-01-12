@@ -90,6 +90,9 @@ export default class BusinessStatus extends Vue {
         return 'This business is not in good standing. This filing cannot be submitted until all ' +
           'businesses are in good standing.'
 
+      case AmlStatuses.ERROR_PENDING_DISSOLUTION_FILING:
+        return 'This business has a pending dissolution filing. It cannot be part of an amalgamation.'
+
       case AmlStatuses.ERROR_XPRO_ULC_CCC:
         return 'An Extraprovincial Company cannot amalgamate to form a new BC Unlimited Liability ' +
           'Company or a new BC Community Contribution Company.'

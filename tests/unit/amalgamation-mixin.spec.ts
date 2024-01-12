@@ -20,6 +20,10 @@ describe('Amalgamation Mixin - rules', () => {
     wrapper.destroy()
   })
 
+  it('has the expected number of rules', () => {
+    expect(wrapper.vm.rules.length).toBe(14)
+  })
+
   it('correctly evaluates "notAffiliated" rule', () => {
     // init
     store.setKeycloakRoles([])
@@ -97,6 +101,17 @@ describe('Amalgamation Mixin - rules', () => {
 
     // verify not future effective only
     expect(wrapper.vm.futureEffectiveFiling({ type: AmlTypes.LEAR, isFutureEffective: false })).toBeNull()
+  })
+
+  it('correctly evaluates "pendingDissolutionFiling" rule', () => {
+    // verify rule
+    expect(wrapper.vm.pendingDissolutionFiling({ type: AmlTypes.LEAR, isPendingDissolution: true })).toBe(AmlStatuses.ERROR_PENDING_DISSOLUTION_FILING)
+
+    // verify not LEAR only
+    expect(wrapper.vm.pendingDissolutionFiling({ type: AmlTypes.FOREIGN, isPendingDissolution: true })).toBeNull()
+
+    // verify not pending dissolution only
+    expect(wrapper.vm.pendingDissolutionFiling({ type: AmlTypes.LEAR, isPendingDissolution: false })).toBeNull()
   })
 
   it('correctly evaluates "foreign" rule', () => {

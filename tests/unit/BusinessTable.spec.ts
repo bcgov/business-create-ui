@@ -182,11 +182,13 @@ describe.skip('Business Table - rule evaluation', () => {
     { methodName: 'notInGoodStanding', error: AmlStatuses.ERROR_NOT_IN_GOOD_STANDING },
     { methodName: 'limitedRestoration', error: AmlStatuses.ERROR_LIMITED_RESTORATION },
     { methodName: 'futureEffectiveFiling', error: AmlStatuses.ERROR_FUTURE_EFFECTIVE_FILING },
+    { methodName: 'pendingDissolutionFiling', error: AmlStatuses.ERROR_PENDING_DISSOLUTION_FILING },
     { methodName: 'foreign', error: AmlStatuses.ERROR_FOREIGN },
     { methodName: 'foreignUnlimited', error: AmlStatuses.ERROR_FOREIGN_UNLIMITED },
     { methodName: 'cccMismatch', error: AmlStatuses.ERROR_CCC_MISMATCH },
     { methodName: 'foreignUnlimited2', error: AmlStatuses.ERROR_FOREIGN_UNLIMITED2 },
     { methodName: 'xproUlcCcc', error: AmlStatuses.ERROR_XPRO_ULC_CCC },
+    { methodName: 'foreignUnlimited3', error: AmlStatuses.ERROR_FOREIGN_UNLIMITED3 },
     { methodName: 'needBcCompany', error: AmlStatuses.ERROR_NEED_BC_COMPANY },
     { methodName: 'foreignHorizontal', error: AmlStatuses.ERROR_FOREIGN_HORIZONTAL }
   ]
@@ -219,7 +221,8 @@ describe.skip('Business Table - rule evaluation', () => {
   })
 
   it('has the expected number of rules', () => {
-    expect(wrapper.vm.rules.length).toBe(rules.length)
+    expect(rules.length).toBe(14)
+    expect(wrapper.vm.rules.length).toBe(14)
   })
 
   // check each rule sequentially
