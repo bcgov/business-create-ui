@@ -20,11 +20,16 @@ export default class AmalgamationMixin extends Vue {
   @Getter(useStore) isTypeBcUlcCompany!: boolean
 
   @Action(useStore) setAmalgamatingBusinesses!: (x: Array<any>) => void
+  @Action(useStore) setCorrectNameOption!: (x: CorrectNameOptions) => void
+  @Action(useStore) setNameRequest!: (x: NameRequestIF) => void
+  @Action(useStore) setNameRequestApprovedName!: (x: string) => void
+  @Action(useStore) setNameTranslations!: (x: NameTranslationIF[]) => void
 
   /** Iterable array of rule functions, in order of processing. */
   readonly rules = [
     this.notAffiliated,
     this.notHistorical,
+    this.notFrozen,
     this.notInGoodStanding,
     this.limitedRestoration,
     this.futureEffectiveFiling,
@@ -54,6 +59,14 @@ export default class AmalgamationMixin extends Vue {
   notHistorical (business: AmalgamatingBusinessIF): AmlStatuses {
     if (business.type === AmlTypes.LEAR && business.isHistorical) {
       return AmlStatuses.ERROR_HISTORICAL
+    }
+    return null
+  }
+
+  /** Disallow frozen business. */
+  notFrozen (business: AmalgamatingBusinessIF): AmlStatuses {
+    if (business.type === AmlTypes.LEAR && business.isFrozen) {
+      return AmlStatuses.ERROR_FROZEN
     }
     return null
   }
@@ -169,6 +182,14 @@ export default class AmalgamationMixin extends Vue {
     return null
   }
 
+  /** Resets company name values to original in Resulting Business Name Component. */
+  resetValues (): void {
+    this.setNameRequest(EmptyNameRequest)
+    this.setNameRequestApprovedName(null)
+    this.setCorrectNameOption(null)
+    this.setNameTranslations([])
+  }
+
   /**
    * Get the business information, mailing address, email, and first filing if in LEAR.
    * Otherwise, return error.
@@ -200,8 +221,33 @@ export default class AmalgamationMixin extends Vue {
     // fetch state filing
     const stateFiling = await LegalServices.fetchFiling(business.businessInfo.stateFiling)
     return (
-      stateFiling.restoration.type === RestorationTypes.LIMITED ||
-      stateFiling.restoration.type === RestorationTypes.LTD_EXTEND
+      stateFiling?.restoration?.type === RestorationTypes.LIMITED ||
+      stateFiling?.restoration?.type === RestorationTypes.LTD_EXTEND
+    )
+  }
+
+  /**
+   * This business is future effective if the first filing in the ledger is future effective and is still
+   * not complete or corrected (ie, it's paid or pending).
+   * @param business The business to check if is Future Effective or not.
+   */
+  isFutureEffective (business: any): boolean {
+    return (
+      business.firstFiling?.isFutureEffective === true &&
+      business.firstFiling?.status !== FilingStatus.COMPLETED &&
+      business.firstFiling?.status !== FilingStatus.CORRECTED
+    )
+  }
+
+  /**
+   * This business is pending filing if the first filing in the ledger is still not complete or corrected
+   * (ie, it's paid or pending).
+   * @param business The business to check if is Pending Filing or not.
+   */
+  isPendingFiling (business: any): boolean {
+    return (
+      business.firstFiling?.status !== FilingStatus.COMPLETED &&
+      business.firstFiling?.status !== FilingStatus.CORRECTED
     )
   }
 
@@ -256,6 +302,7 @@ export default class AmalgamationMixin extends Vue {
           legalType: tingBusiness.businessInfo.legalType,
           address: tingBusiness.addresses?.registeredOffice.mailingAddress,
           isNotInGoodStanding: (tingBusiness.businessInfo.goodStanding === false),
+          isFrozen: (tingBusiness.businessInfo.adminFreeze === true),
           isFutureEffective: this.isFutureEffective(tingBusiness),
           isPendingFiling: this.isPendingFiling(tingBusiness),
           isLimitedRestoration: await this.isLimitedRestoration(tingBusiness),
