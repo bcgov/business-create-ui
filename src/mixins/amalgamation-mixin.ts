@@ -290,13 +290,12 @@ export default class AmalgamationMixin extends Vue {
   }
 
   /**
-   * This business is pending dissolution if the first filing in the ledger is a dissolution filing that
-   * is still not complete or corrected (ie, it's paid or pending).
-   * @param business The business to check if is Pending Dissolution or not.
+   * This business is pending filing if the first filing in the ledger is still not complete or corrected
+   * (ie, it's paid or pending).
+   * @param business The business to check if is Pending Filing or not.
    */
-  isPendingDissolution (business: any): boolean {
+  isPendingFiling (business: any): boolean {
     return (
-      business.firstFiling?.name === FilingTypes.DISSOLUTION &&
       business.firstFiling?.status !== FilingStatus.COMPLETED &&
       business.firstFiling?.status !== FilingStatus.CORRECTED
     )
