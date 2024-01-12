@@ -103,15 +103,15 @@ describe('Amalgamation Mixin - rules', () => {
     expect(wrapper.vm.futureEffectiveFiling({ type: AmlTypes.LEAR, isFutureEffective: false })).toBeNull()
   })
 
-  it('correctly evaluates "pendingDissolutionFiling" rule', () => {
+  it('correctly evaluates "pendingFiling" rule', () => {
     // verify rule
-    expect(wrapper.vm.pendingDissolutionFiling({ type: AmlTypes.LEAR, isPendingDissolution: true })).toBe(AmlStatuses.ERROR_PENDING_DISSOLUTION_FILING)
+    expect(wrapper.vm.pendingFiling({ type: AmlTypes.LEAR, isPendingFiling: true })).toBe(AmlStatuses.ERROR_PENDING_FILING)
 
     // verify not LEAR only
-    expect(wrapper.vm.pendingDissolutionFiling({ type: AmlTypes.FOREIGN, isPendingDissolution: true })).toBeNull()
+    expect(wrapper.vm.pendingFiling({ type: AmlTypes.FOREIGN, isPendingFiling: true })).toBeNull()
 
-    // verify not pending dissolution only
-    expect(wrapper.vm.pendingDissolutionFiling({ type: AmlTypes.LEAR, isPendingDissolution: false })).toBeNull()
+    // verify not pending filing only
+    expect(wrapper.vm.pendingFiling({ type: AmlTypes.LEAR, isPendingFiling: false })).toBeNull()
   })
 
   it('correctly evaluates "foreign" rule', () => {

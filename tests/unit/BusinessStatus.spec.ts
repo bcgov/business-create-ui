@@ -70,9 +70,9 @@ describe('Business Status', () => {
       tooltip: 'This business is not in good standing. This filing cannot be submitted until all'
     },
     {
-      label: 'Error Pending Dissolition Filing',
-      status: AmlStatuses.ERROR_PENDING_DISSOLUTION_FILING,
-      tooltip: 'This business has a pending dissolution filing. It cannot be part of an amalgamation.'
+      label: 'Error Pending Filing',
+      status: AmlStatuses.ERROR_PENDING_FILING,
+      tooltip: 'This business has a pending filing. It cannot be part of an amalgamation until the'
     },
     {
       label: 'Error XPRO ULC CCC',
