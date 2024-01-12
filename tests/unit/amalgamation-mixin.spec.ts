@@ -21,7 +21,7 @@ describe('Amalgamation Mixin - rules', () => {
   })
 
   it('has the expected number of rules', () => {
-    expect(wrapper.vm.rules.length).toBe(14)
+    expect(wrapper.vm.rules.length).toBe(15)
   })
 
   it('correctly evaluates "notAffiliated" rule', () => {
@@ -52,6 +52,17 @@ describe('Amalgamation Mixin - rules', () => {
 
     // verify not historical only
     expect(wrapper.vm.notHistorical({ type: AmlTypes.LEAR, isHistorical: false })).toBeNull()
+  })
+
+  it('correctly evaluates "notFrozen" rule', () => {
+    // verify rule
+    expect(wrapper.vm.notFrozen({ type: AmlTypes.LEAR, isFrozen: true })).toBe(AmlStatuses.ERROR_FROZEN)
+
+    // verify not LEAR only
+    expect(wrapper.vm.notFrozen({ type: AmlTypes.FOREIGN, isFrozen: true })).toBeNull()
+
+    // verify not frozen only
+    expect(wrapper.vm.notFrozen({ type: AmlTypes.LEAR, isFrozen: false })).toBeNull()
   })
 
   it('correctly evaluates "notInGoodStanding" rule', () => {
