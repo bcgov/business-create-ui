@@ -22,7 +22,7 @@ describe('Business Status', () => {
     {
       label: 'Error Foreign Horizontal',
       status: AmlStatuses.ERROR_FOREIGN_HORIZONTAL,
-      tooltip: 'A foreign company (including an Extraprovincial Company) cannot be part of a Short'
+      tooltip: 'A foreign company (including an Extraprovincial Company) cannot be part of a'
     },
     {
       label: 'Error Foreign Unlimited',

@@ -54,8 +54,8 @@ export default class BusinessStatus extends Vue {
         return 'A foreign corporation cannot be amalgamated except by Registries staff.'
 
       case AmlStatuses.ERROR_FOREIGN_HORIZONTAL:
-        return 'A foreign company (including an Extraprovincial Company) cannot be part of a Short ' +
-          'Form Horizontal amalgamation. '
+        return 'A foreign company (including an Extraprovincial Company) cannot be part of a ' +
+          'horizontal short form amalgamation. '
 
       case AmlStatuses.ERROR_FOREIGN_UNLIMITED:
         return 'A foreign corporation must not amalgamate with a BC Company and continue as an ' +
