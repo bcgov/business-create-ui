@@ -1,7 +1,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
-import { AmlRoles, AmlStatuses, AmlTypes, EntityStates, FilingStatus, FilingTypes, RestorationTypes } from '@/enums'
+import { AmlRoles, AmlStatuses, AmlTypes, EntityStates, FilingStatus, RestorationTypes } from '@/enums'
 import { AmalgamatingBusinessIF } from '@/interfaces'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import { AuthServices, LegalServices } from '@/services'
@@ -28,7 +28,7 @@ export default class AmalgamationMixin extends Vue {
     this.notInGoodStanding,
     this.limitedRestoration,
     this.futureEffectiveFiling,
-    this.pendingDissolutionFiling,
+    this.pendingFiling,
     this.foreign,
     this.foreignUnlimited,
     this.cccMismatch,
@@ -82,10 +82,10 @@ export default class AmalgamationMixin extends Vue {
     return null
   }
 
-  /** Disallow if a pending dissolution filing exists. */
-  pendingDissolutionFiling (business: AmalgamatingBusinessIF): AmlStatuses {
-    if (business.type === AmlTypes.LEAR && business.isPendingDissolution) {
-      return AmlStatuses.ERROR_PENDING_DISSOLUTION_FILING
+  /** Disallow if a pending filing exists. */
+  pendingFiling (business: AmalgamatingBusinessIF): AmlStatuses {
+    if (business.type === AmlTypes.LEAR && business.isPendingFiling) {
+      return AmlStatuses.ERROR_PENDING_FILING
     }
     return null
   }
@@ -219,13 +219,12 @@ export default class AmalgamationMixin extends Vue {
   }
 
   /**
-   * This business is pending dissolution if the first filing in the ledger is a dissolution filing that
-   * is still not complete or corrected (ie, it's paid or pending).
-   * @param business The business to check if is Pending Dissolution or not.
+   * This business is pending filing if the first filing in the ledger is still not complete or corrected
+   * (ie, it's paid or pending).
+   * @param business The business to check if is Pending Filing or not.
    */
-  isPendingDissolution (business: any): boolean {
+  isPendingFiling (business: any): boolean {
     return (
-      business.firstFiling?.name === FilingTypes.DISSOLUTION &&
       business.firstFiling?.status !== FilingStatus.COMPLETED &&
       business.firstFiling?.status !== FilingStatus.CORRECTED
     )
@@ -258,7 +257,7 @@ export default class AmalgamationMixin extends Vue {
           address: tingBusiness.addresses?.registeredOffice.mailingAddress,
           isNotInGoodStanding: (tingBusiness.businessInfo.goodStanding === false),
           isFutureEffective: this.isFutureEffective(tingBusiness),
-          isPendingDissolution: this.isPendingDissolution(tingBusiness),
+          isPendingFiling: this.isPendingFiling(tingBusiness),
           isLimitedRestoration: await this.isLimitedRestoration(tingBusiness),
           isHistorical: (tingBusiness.businessInfo.state === EntityStates.HISTORICAL)
         } as AmalgamatingBusinessIF

@@ -377,7 +377,7 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
       address: business.addresses.registeredOffice.mailingAddress,
       isNotInGoodStanding: (business.businessInfo.goodStanding === false),
       isFutureEffective: this.isFutureEffective(business),
-      isPendingDissolution: this.isPendingDissolution(business),
+      isPendingFiling: this.isPendingFiling(business),
       isLimitedRestoration: await this.isLimitedRestoration(business),
       isHistorical: (business.businessInfo.state === EntityStates.HISTORICAL)
     }

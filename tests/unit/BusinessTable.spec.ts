@@ -182,7 +182,7 @@ describe.skip('Business Table - rule evaluation', () => {
     { methodName: 'notInGoodStanding', error: AmlStatuses.ERROR_NOT_IN_GOOD_STANDING },
     { methodName: 'limitedRestoration', error: AmlStatuses.ERROR_LIMITED_RESTORATION },
     { methodName: 'futureEffectiveFiling', error: AmlStatuses.ERROR_FUTURE_EFFECTIVE_FILING },
-    { methodName: 'pendingDissolutionFiling', error: AmlStatuses.ERROR_PENDING_DISSOLUTION_FILING },
+    { methodName: 'pendingFiling', error: AmlStatuses.ERROR_PENDING_FILING },
     { methodName: 'foreign', error: AmlStatuses.ERROR_FOREIGN },
     { methodName: 'foreignUnlimited', error: AmlStatuses.ERROR_FOREIGN_UNLIMITED },
     { methodName: 'cccMismatch', error: AmlStatuses.ERROR_CCC_MISMATCH },
