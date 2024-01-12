@@ -47,26 +47,26 @@ export default class BusinessStatus extends Vue {
         return 'The currently selected BC Registries account has access to this business.'
 
       case AmlStatuses.ERROR_CCC_MISMATCH:
-        return 'A BC Community Contribution Company must amalgamate to form a new BC Community ' +
-          'Contribution Company.'
+        return 'A BC community contribution company must amalgamate to form a new BC community ' +
+          'contribution company.'
 
       case AmlStatuses.ERROR_FOREIGN:
         return 'A foreign corporation cannot be amalgamated except by Registries staff.'
 
       case AmlStatuses.ERROR_FOREIGN_HORIZONTAL:
-        return 'A foreign company (including an Extraprovincial Company) cannot be part of a ' +
+        return 'A foreign company (including an extraprovincial company) cannot be part of a ' +
           'horizontal short form amalgamation. '
 
       case AmlStatuses.ERROR_FOREIGN_UNLIMITED:
-        return 'A foreign corporation must not amalgamate with a BC Company and continue as an ' +
-          'Unlimited Liability Company.'
+        return 'A foreign corporation must not amalgamate with a BC company and continue as an ' +
+          'unlimited liability company.'
 
       case AmlStatuses.ERROR_FOREIGN_UNLIMITED2:
-        return 'A BC Company cannot amalgamate with an existing foreign corporation to form a BC ' +
-          'Unlimited Liability Company.'
+        return 'A BC company cannot amalgamate with an existing foreign corporation to form a BC ' +
+          'unlimited liability company.'
 
       case AmlStatuses.ERROR_FOREIGN_UNLIMITED3:
-        return 'A BC Unlimited Liability Company cannot amalgamate with a foreign company.'
+        return 'A BC unlimited liability company cannot amalgamate with a foreign company.'
 
       case AmlStatuses.ERROR_FUTURE_EFFECTIVE_FILING:
         return 'This business has a future effective filing. It cannot be part of an amalgamation ' +
@@ -94,8 +94,8 @@ export default class BusinessStatus extends Vue {
         return 'This business has a pending filing. It cannot be part of an amalgamation.'
 
       case AmlStatuses.ERROR_XPRO_ULC_CCC:
-        return 'An Extraprovincial Company cannot amalgamate to form a new BC Unlimited Liability ' +
-          'Company or a new BC Community Contribution Company.'
+        return 'An extraprovincial company cannot amalgamate to form a new BC unlimited liability ' +
+          'company or a new BC community contribution company.'
 
       default:
         return '(Unknown)' // should never happen

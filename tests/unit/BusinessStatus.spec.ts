@@ -12,7 +12,7 @@ describe('Business Status', () => {
     {
       label: 'Error CCC Mismatch',
       status: AmlStatuses.ERROR_CCC_MISMATCH,
-      tooltip: 'A BC Community Contribution Company must amalgamate to form a new BC Community'
+      tooltip: 'A BC community contribution company must amalgamate to form a new BC community'
     },
     {
       label: 'Error Foreign',
@@ -22,22 +22,22 @@ describe('Business Status', () => {
     {
       label: 'Error Foreign Horizontal',
       status: AmlStatuses.ERROR_FOREIGN_HORIZONTAL,
-      tooltip: 'A foreign company (including an Extraprovincial Company) cannot be part of a'
+      tooltip: 'A foreign company (including an extraprovincial company) cannot be part of a'
     },
     {
       label: 'Error Foreign Unlimited',
       status: AmlStatuses.ERROR_FOREIGN_UNLIMITED,
-      tooltip: 'A foreign corporation must not amalgamate with a BC Company and continue as an'
+      tooltip: 'A foreign corporation must not amalgamate with a BC company and continue as an'
     },
     {
       label: 'Error Foreign Unlimited 2',
       status: AmlStatuses.ERROR_FOREIGN_UNLIMITED2,
-      tooltip: 'A BC Company cannot amalgamate with an existing foreign corporation to form a BC'
+      tooltip: 'A BC company cannot amalgamate with an existing foreign corporation to form a BC'
     },
     {
       label: 'Error Foreign Unlimited 3',
       status: AmlStatuses.ERROR_FOREIGN_UNLIMITED3,
-      tooltip: 'A BC Unlimited Liability Company cannot amalgamate with a foreign company.'
+      tooltip: 'A BC unlimited liability company cannot amalgamate with a foreign company.'
     },
     {
       label: 'Error Future Effective Filing',
@@ -77,7 +77,7 @@ describe('Business Status', () => {
     {
       label: 'Error XPRO ULC CCC',
       status: AmlStatuses.ERROR_XPRO_ULC_CCC,
-      tooltip: 'An Extraprovincial Company cannot amalgamate to form a new BC Unlimited Liability'
+      tooltip: 'An extraprovincial company cannot amalgamate to form a new BC unlimited liability'
     }
   ]
 
