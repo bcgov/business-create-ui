@@ -277,6 +277,32 @@ export default class AmalgamationMixin extends Vue {
   }
 
   /**
+   * This business is future effective if the first filing in the ledger is future effective and is still
+   * not complete or corrected (ie, it's paid or pending).
+   * @param business The business to check if is Future Effective or not.
+   */
+  isFutureEffective (business: any): boolean {
+    return (
+      business.firstFiling?.isFutureEffective === true &&
+      business.firstFiling?.status !== FilingStatus.COMPLETED &&
+      business.firstFiling?.status !== FilingStatus.CORRECTED
+    )
+  }
+
+  /**
+   * This business is pending dissolution if the first filing in the ledger is a dissolution filing that
+   * is still not complete or corrected (ie, it's paid or pending).
+   * @param business The business to check if is Pending Dissolution or not.
+   */
+  isPendingDissolution (business: any): boolean {
+    return (
+      business.firstFiling?.name === FilingTypes.DISSOLUTION &&
+      business.firstFiling?.status !== FilingStatus.COMPLETED &&
+      business.firstFiling?.status !== FilingStatus.CORRECTED
+    )
+  }
+
+  /**
    * Re-fetch the draft amalgamating businesses information and set in the store.
    * Need to do that because the businesses might have changed since last draft save.
    */
