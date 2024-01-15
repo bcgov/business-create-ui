@@ -223,7 +223,7 @@ export default class Stepper extends Vue {
 
 .step__btn2 {
   position: absolute;
-  margin-top: -5px;
+  margin-top: -19px;
   margin-left: -16px;
   background-color: $BCgovInputBG;
   border-radius: 50%;
