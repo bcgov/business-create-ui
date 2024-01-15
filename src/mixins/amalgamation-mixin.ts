@@ -2,7 +2,8 @@ import { Component, Vue } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { AmlRoles, AmlStatuses, AmlTypes, EntityStates, FilingStatus, RestorationTypes } from '@/enums'
-import { AmalgamatingBusinessIF } from '@/interfaces'
+import { AmalgamatingBusinessIF, EmptyNameRequest, NameRequestIF, NameTranslationIF } from '@/interfaces'
+import { CorrectNameOptions } from '@bcrs-shared-components/enums/'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import { AuthServices, LegalServices } from '@/services'
 
@@ -20,11 +21,16 @@ export default class AmalgamationMixin extends Vue {
   @Getter(useStore) isTypeBcUlcCompany!: boolean
 
   @Action(useStore) setAmalgamatingBusinesses!: (x: Array<any>) => void
+  @Action(useStore) setCorrectNameOption!: (x: CorrectNameOptions) => void
+  @Action(useStore) setNameRequest!: (x: NameRequestIF) => void
+  @Action(useStore) setNameRequestApprovedName!: (x: string) => void
+  @Action(useStore) setNameTranslations!: (x: NameTranslationIF[]) => void
 
   /** Iterable array of rule functions, in order of processing. */
   readonly rules = [
     this.notAffiliated,
     this.notHistorical,
+    this.notFrozen,
     this.notInGoodStanding,
     this.limitedRestoration,
     this.futureEffectiveFiling,
@@ -54,6 +60,14 @@ export default class AmalgamationMixin extends Vue {
   notHistorical (business: AmalgamatingBusinessIF): AmlStatuses {
     if (business.type === AmlTypes.LEAR && business.isHistorical) {
       return AmlStatuses.ERROR_HISTORICAL
+    }
+    return null
+  }
+
+  /** Disallow frozen business. */
+  notFrozen (business: AmalgamatingBusinessIF): AmlStatuses {
+    if (business.type === AmlTypes.LEAR && business.isFrozen) {
+      return AmlStatuses.ERROR_FROZEN
     }
     return null
   }
@@ -169,6 +183,14 @@ export default class AmalgamationMixin extends Vue {
     return null
   }
 
+  /** Resets company name values to original in Resulting Business Name Component. */
+  resetValues (): void {
+    this.setNameRequest(EmptyNameRequest)
+    this.setNameRequestApprovedName(null)
+    this.setCorrectNameOption(null)
+    this.setNameTranslations([])
+  }
+
   /**
    * Get the business information, mailing address, email, and first filing if in LEAR.
    * Otherwise, return error.
@@ -198,10 +220,11 @@ export default class AmalgamationMixin extends Vue {
     // check for expired restoration
     if (this.getCurrentDate > business.businessInfo.restorationExpiryDate) return false
     // fetch state filing
-    const stateFiling = await LegalServices.fetchFiling(business.businessInfo.stateFiling)
+    const stateFiling =
+      await LegalServices.fetchFiling(business.businessInfo.stateFiling).catch(() => null) // on error, return null
     return (
-      stateFiling.restoration.type === RestorationTypes.LIMITED ||
-      stateFiling.restoration.type === RestorationTypes.LTD_EXTEND
+      stateFiling?.restoration?.type === RestorationTypes.LIMITED ||
+      stateFiling?.restoration?.type === RestorationTypes.LTD_EXTEND
     )
   }
 
@@ -256,6 +279,7 @@ export default class AmalgamationMixin extends Vue {
           legalType: tingBusiness.businessInfo.legalType,
           address: tingBusiness.addresses?.registeredOffice.mailingAddress,
           isNotInGoodStanding: (tingBusiness.businessInfo.goodStanding === false),
+          isFrozen: (tingBusiness.businessInfo.adminFreeze === true),
           isFutureEffective: this.isFutureEffective(tingBusiness),
           isPendingFiling: this.isPendingFiling(tingBusiness),
           isLimitedRestoration: await this.isLimitedRestoration(tingBusiness),

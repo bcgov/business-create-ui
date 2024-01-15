@@ -17,6 +17,7 @@ interface AmalgamatingLearIF {
   address?: AddressIF
   status?: AmlStatuses // computed status (base on business rules)
   isNotInGoodStanding?: boolean // whether business is in good standing
+  isFrozen?: boolean // whether business is frozen
   isFutureEffective?: boolean // whether business has a future effective filing
   isPendingFiling?: boolean // whether business has a pending filing
   isLimitedRestoration?: boolean // whether business is in limited restoration

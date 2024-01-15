@@ -376,6 +376,7 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
       legalType: business.businessInfo.legalType,
       address: business.addresses.registeredOffice.mailingAddress,
       isNotInGoodStanding: (business.businessInfo.goodStanding === false),
+      isFrozen: (business.businessInfo.adminFreeze === true),
       isFutureEffective: this.isFutureEffective(business),
       isPendingFiling: this.isPendingFiling(business),
       isLimitedRestoration: await this.isLimitedRestoration(business),
@@ -422,11 +423,14 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
    */
   checkForDuplicateInTable (business: any): boolean {
     const checkDuplication = this.getAmalgamatingBusinesses.find((b: any) =>
-      (business.type === AmlTypes.LEAR && b.identifier === business.businessInfo.identifier) ||
-      (business.type === AmlTypes.FOREIGN && b.corpNumber === business.corpNumber)
+      (b.type === AmlTypes.LEAR && b.identifier === business.businessInfo?.identifier) ||
+      (b.type === AmlTypes.FOREIGN && b.corpNumber === business.corpNumber)
     )
 
-    if (checkDuplication) return true
+    if (checkDuplication) {
+      this.isAddingAmalgamatingBusiness = false
+      return true
+    }
     return false
   }
 
