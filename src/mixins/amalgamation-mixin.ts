@@ -220,7 +220,8 @@ export default class AmalgamationMixin extends Vue {
     // check for expired restoration
     if (this.getCurrentDate > business.businessInfo.restorationExpiryDate) return false
     // fetch state filing
-    const stateFiling = await LegalServices.fetchFiling(business.businessInfo.stateFiling)
+    const stateFiling =
+      await LegalServices.fetchFiling(business.businessInfo.stateFiling).catch(() => null) // on error, return null
     return (
       stateFiling?.restoration?.type === RestorationTypes.LIMITED ||
       stateFiling?.restoration?.type === RestorationTypes.LTD_EXTEND

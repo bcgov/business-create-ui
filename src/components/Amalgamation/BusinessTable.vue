@@ -168,7 +168,7 @@ export default class BusinessTable extends Mixins(AmalgamationMixin) {
 
   removeBusiness (index: number): void {
     // If the company to be deleted is selected as the resulting business name, reset values.
-    const business = this.getAmalgamatingBusinesses.at(index) as any
+    const business = this.getAmalgamatingBusinesses[index] as any
     if (this.getNameRequestApprovedName && this.getNameRequestApprovedName === business.name) {
       this.resetValues()
     }
