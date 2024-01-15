@@ -66,10 +66,10 @@
 
 <script lang="ts">
 import { Component, Mixins } from 'vue-property-decorator'
-import { Getter, Action } from 'pinia-class'
+import { Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
-import { NameRequestMixin } from '@/mixins/'
-import { AmalgamatingBusinessIF, EmptyNameRequest, NameRequestIF, NameTranslationIF } from '@/interfaces/'
+import { AmalgamationMixin, NameRequestMixin } from '@/mixins/'
+import { NameRequestIF } from '@/interfaces/'
 import { LegalServices } from '@/services/'
 import { CorrectNameOptions, NrRequestActionCodes } from '@bcrs-shared-components/enums/'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module/'
@@ -84,8 +84,7 @@ import NameTranslations from '@/components/common/NameTranslations.vue'
     NameTranslations
   }
 })
-export default class ResultingBusinessName extends Mixins(NameRequestMixin) {
-  @Getter(useStore) getAmalgamatingBusinesses!: AmalgamatingBusinessIF[]
+export default class ResultingBusinessName extends Mixins(AmalgamationMixin, NameRequestMixin) {
   @Getter(useStore) getBusinessId!: string
   @Getter(useStore) getBusinessLegalName!: string
   @Getter(useStore) getCorrectNameOption!: CorrectNameOptions
@@ -94,11 +93,6 @@ export default class ResultingBusinessName extends Mixins(NameRequestMixin) {
   @Getter(useStore) getNameRequestApprovedName!: string
   @Getter(useStore) getNameRequestNumber!: string
   @Getter(useStore) getShowErrors!: boolean
-
-  @Action(useStore) setCorrectNameOption!: (x: CorrectNameOptions) => void
-  @Action(useStore) setNameRequest!: (x: NameRequestIF) => void
-  @Action(useStore) setNameRequestApprovedName!: (x: string) => void
-  @Action(useStore) setNameTranslations!: (x: NameTranslationIF[]) => void
 
   // Local properties
   formType = null as CorrectNameOptions
@@ -151,10 +145,7 @@ export default class ResultingBusinessName extends Mixins(NameRequestMixin) {
   /** Resets company name values to original when Cancel was clicked. */
   resetName (): void {
     // clear out existing data
-    this.setNameRequest(EmptyNameRequest)
-    this.setNameRequestApprovedName(null)
-    this.setCorrectNameOption(null)
-    this.setNameTranslations([])
+    this.resetValues()
 
     // reset flag
     this.formType = null

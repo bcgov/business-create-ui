@@ -50,6 +50,9 @@ export default class BusinessStatus extends Vue {
         return 'A BC community contribution company must amalgamate to form a new BC community ' +
           'contribution company.'
 
+      case AmlStatuses.ERROR_FROZEN:
+        return 'This business is frozen. Frozen businesses cannot be part of an amalgamation.'
+
       case AmlStatuses.ERROR_FOREIGN:
         return 'A foreign corporation cannot be amalgamated except by Registries staff.'
 

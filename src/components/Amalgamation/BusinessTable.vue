@@ -78,7 +78,7 @@
 
 <script lang="ts">
 import { Component, Emit, Mixins, Watch } from 'vue-property-decorator'
-import { Action } from 'pinia-class'
+import { Action, Getter } from 'pinia-class'
 import { getName } from 'country-list'
 import { useStore } from '@/store/store'
 import { AmlStatuses, AmlRoles, AmlTypes } from '@/enums'
@@ -98,6 +98,8 @@ export default class BusinessTable extends Mixins(AmalgamationMixin) {
   readonly AmlRoles = AmlRoles
   readonly AmlTypes = AmlTypes
   readonly GetCorpFullDescription = GetCorpFullDescription
+
+  @Getter(useStore) getNameRequestApprovedName!: string
 
   @Action(useStore) spliceAmalgamatingBusiness!: (x: number) => void
 
@@ -165,6 +167,12 @@ export default class BusinessTable extends Mixins(AmalgamationMixin) {
   }
 
   removeBusiness (index: number): void {
+    // If the company to be deleted is selected as the resulting business name, reset values.
+    const business = this.getAmalgamatingBusinesses[index] as any
+    if (this.getNameRequestApprovedName && this.getNameRequestApprovedName === business.name) {
+      this.resetValues()
+    }
+
     // Delete this item from amalgamating businesses list.
     this.spliceAmalgamatingBusiness(index)
   }
