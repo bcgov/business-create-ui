@@ -31,7 +31,7 @@
         <v-icon
           v-show="isValid(step.to)"
           class="step__btn2"
-          size="30"
+          size="24"
           color="success darken-1"
         >
           mdi-check-circle
@@ -39,7 +39,7 @@
         <v-icon
           v-show="!isValid(step.to) && getShowErrors && getValidateSteps"
           class="step__btn2"
-          size="30"
+          size="24"
           color="error darken-1"
         >
           mdi-close-circle
