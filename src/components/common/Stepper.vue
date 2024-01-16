@@ -31,7 +31,7 @@
         <v-icon
           v-show="isValid(step.to)"
           class="step__btn2"
-          size="30"
+          size="24"
           color="success darken-1"
         >
           mdi-check-circle
@@ -39,7 +39,7 @@
         <v-icon
           v-show="!isValid(step.to) && getShowErrors && getValidateSteps"
           class="step__btn2"
-          size="30"
+          size="24"
           color="error darken-1"
         >
           mdi-close-circle
@@ -223,7 +223,7 @@ export default class Stepper extends Vue {
 
 .step__btn2 {
   position: absolute;
-  margin-top: -5px;
+  margin-top: -30px;
   margin-left: -16px;
   background-color: $BCgovInputBG;
   border-radius: 50%;
