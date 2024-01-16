@@ -16,8 +16,6 @@ export const AmalgamationRegResourceBen: AmalgamationRegResourceIF = {
     blurb: `Add the people who will have a role in the amalgamated business. A person can be
       both the Completing Party and a Director.`,
     helpSection: null,
-    addIncorporator: true,
-    addOrganization: true,
     rules: [
       {
         id: RuleIds.NUM_COMPLETING_PARTY,
