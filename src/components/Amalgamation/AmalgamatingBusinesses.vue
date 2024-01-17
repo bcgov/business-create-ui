@@ -1,7 +1,7 @@
 <template>
   <div id="amalgamating-businesses">
     <v-btn
-      id="btn-add-amalgamating-business"
+      id="add-amalgamating-business-button"
       outlined
       color="primary"
       class="btn-outlined-primary"
@@ -14,7 +14,7 @@
 
     <v-btn
       v-if="isRoleStaff"
-      id="btn-add-amalgamating-foreign-business"
+      id="add-foreign-business-button"
       outlined
       color="primary"
       class="ml-2 btn-outlined-primary"
@@ -29,6 +29,7 @@
     <v-expand-transition>
       <v-card
         v-if="isAddingAmalgamatingBusiness"
+        id="add-amalgamating-business-panel"
         flat
         class="section-container mt-4 pr-0"
       >
@@ -80,6 +81,7 @@
     <v-expand-transition>
       <v-card
         v-if="isAddingAmalgamatingForeignBusiness"
+        id="add-foreign-business-panel"
         flat
         class="section-container mt-4"
       >
@@ -110,6 +112,7 @@
               offset="3"
             >
               <v-text-field
+                id="foreign-business-legal-name"
                 v-model="legalName"
                 filled
                 label="Business' full legal name in home jurisdiction"
@@ -122,6 +125,7 @@
               offset="3"
             >
               <v-text-field
+                id="foreign-business-corp-number"
                 v-model="corpNumber"
                 filled
                 label="Corporate number in home jurisdiction"
@@ -133,6 +137,7 @@
               class="ms-auto"
             >
               <v-btn
+                id="save-foreign-business-button"
                 large
                 color="primary"
                 class="mr-3"
@@ -141,6 +146,7 @@
                 <span>Add</span>
               </v-btn>
               <v-btn
+                id="cancel-foreign-business-button"
                 large
                 outlined
                 color="primary"
@@ -213,9 +219,7 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
   readonly BusinessLookupServices = BusinessLookupServices
   readonly EmptyBusinessLookup = EmptyBusinessLookup
 
-  @Getter(useStore) getAmalgamatingBusinessesValid!: boolean
   @Getter(useStore) getShowErrors!: boolean
-  // @Getter(useStore) isAmalgamationFilingHorizontal!: boolean
 
   @Action(useStore) pushAmalgamatingBusiness!: (x: AmalgamatingBusinessIF) => void
   @Action(useStore) setAmalgamatingBusinessesValid!: (x: boolean) => void
@@ -233,14 +237,13 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
   isMrasJurisdiction = false
   jurisdictionErrorMessage = ''
   // Null for no validation, false for invalid, true for valid
-  isForeignBusinessValid = null
+  isForeignBusinessValid = null as boolean
 
   // Button properties
   isAddingAmalgamatingBusiness = false
   isAddingAmalgamatingForeignBusiness = false
 
-  /** TextField rules for "Add an Amalgamating Foreign Business" Panel. */
-  get foreignBusinessLegalNameRules (): Array<(v) => boolean | string> {
+  get foreignBusinessLegalNameRules (): Array<(v: string) => boolean | string> {
     return [
       v => !!v || 'Full legal name is required',
       v => (!v || v.length >= 3) || 'Must be at least 3 characters',
@@ -248,7 +251,7 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
     ]
   }
 
-  get foreignBusinessCorpNumberRules (): Array<(v) => boolean | string> {
+  get foreignBusinessCorpNumberRules (): Array<(v: string) => boolean | string> {
     return [
       v => (!this.isMrasJurisdiction || (!!v && /^[0-9a-zA-Z-]+$/.test(v))) ||
         'Corporate number is required',
@@ -260,10 +263,10 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
   /** Called when Jurisdiction menu item is changed. */
   onJurisdictionChange (jurisdiction: any): void {
     this.jurisdiction = jurisdiction
-    this.isCan = (jurisdiction.group === 0)
-    this.jurisdictionErrorMessage = this.jurisdiction ? '' : 'Home jurisdiction is required'
+    this.isCan = (jurisdiction?.group === 0)
+    this.jurisdictionErrorMessage = jurisdiction ? '' : 'Home jurisdiction is required'
     this.isMrasJurisdiction = MrasJurisdictions.includes(
-      this.jurisdiction.text.toLowerCase()
+      this.jurisdiction?.text.toLowerCase()
     )
 
     // Update validation on jurisdiction change
@@ -276,7 +279,7 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
     // Show spinner since the network calls below can take a few seconds.
     this.$root.$emit('showSpinner', true)
 
-    // Special case to handle Extra-pro A companies
+    // Special case to handle Extra Pro A companies
     if ((businessLookup.legalType as any) === CorpTypeCd.EXTRA_PRO_A) {
       const region = CanJurisdictions.find(jurisdiction => jurisdiction.value === JurisdictionLocation.BC)
       const tingBusiness = {
@@ -302,8 +305,10 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
       }
 
       this.pushAmalgamatingBusiness(tingBusiness)
+
       // Close the "Add an Amalgamating Business" panel.
       this.isAddingAmalgamatingBusiness = false
+
       // Hide spinner.
       this.$root.$emit('showSpinner', false)
 
@@ -355,17 +360,6 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
       return
     }
 
-    // Check for duplicate.
-    if (this.checkForDuplicateInTable(business)) {
-      this.snackbarText = 'Business is already in table.'
-      this.snackbar = true
-
-      // Hide spinner.
-      this.$root.$emit('showSpinner', false)
-
-      return
-    }
-
     // Create amalgamating business object.
     const tingBusiness: AmalgamatingBusinessIF = {
       type: AmlTypes.LEAR,
@@ -381,6 +375,17 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
       isPendingFiling: this.isPendingFiling(business),
       isLimitedRestoration: await this.isLimitedRestoration(business),
       isHistorical: (business.businessInfo.state === EntityStates.HISTORICAL)
+    }
+
+    // Check for duplicate.
+    if (this.checkForDuplicateInTable(tingBusiness)) {
+      this.snackbarText = 'Business is already in table.'
+      this.snackbar = true
+
+      // Hide spinner.
+      this.$root.$emit('showSpinner', false)
+
+      return
     }
 
     // Add the new business to the amalgamating businesses list.
@@ -410,10 +415,21 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
       corpNumber: this.corpNumber
     } as AmalgamatingBusinessIF
 
+    // Check for duplicate.
+    if (this.checkForDuplicateInTable(tingBusiness)) {
+      this.snackbarText = 'Business is already in table.'
+      this.snackbar = true
+
+      // Hide spinner.
+      this.$root.$emit('showSpinner', false)
+
+      return
+    }
+
     // Set the amalgamated businesses array in the store.
     this.pushAmalgamatingBusiness(tingBusiness)
 
-    // Close the "Add an Amalgamating Foreign Business" Panel.
+    // Close the "Add an Amalgamating Foreign Business" panel.
     this.isAddingAmalgamatingForeignBusiness = false
   }
 
@@ -421,9 +437,9 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
    * Check if business is already in table.
    * @param business The business being added.
    */
-  checkForDuplicateInTable (business: any): boolean {
-    const checkDuplication = this.getAmalgamatingBusinesses.find((b: any) =>
-      (b.type === AmlTypes.LEAR && b.identifier === business.businessInfo?.identifier) ||
+  private checkForDuplicateInTable (business: any): boolean {
+    const checkDuplication = this.getAmalgamatingBusinesses.find((b: AmalgamatingBusinessIF) =>
+      (b.type === AmlTypes.LEAR && b.identifier === business.identifier) ||
       (b.type === AmlTypes.FOREIGN && b.corpNumber === business.corpNumber)
     )
 
@@ -435,7 +451,7 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
   }
 
   /** Validate Add Amalgamating Foreign Business. */
-  validateAddAmalgamatingForeignBusiness (): void {
+  private validateAddAmalgamatingForeignBusiness (): void {
     this.isForeignBusinessValid = (
       !!this.jurisdiction &&
       !!this.legalName &&
@@ -456,7 +472,7 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
       !this.isAddingAmalgamatingForeignBusiness
     )
 
-    // Reset "Add an Amalgamating Foreign Business" Panel on change
+    // Reset "Add an Amalgamating Foreign Business" panel on change
     this.isForeignBusinessValid = null
     this.jurisdiction = null
     this.legalName = null

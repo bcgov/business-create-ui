@@ -15,7 +15,6 @@ import EntityInfo from '@/components/common/EntityInfo.vue'
 import Stepper from '@/components/common/Stepper.vue'
 import { ConfirmDialog } from '@bcrs-shared-components/confirm-dialog'
 import mockRouter from './MockRouter'
-import { vi } from 'vitest'
 
 // mock fetch() as it is not defined in Jest
 // NB: it should be `global.fetch` but that doesn't work and this does

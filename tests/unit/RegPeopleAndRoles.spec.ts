@@ -12,7 +12,6 @@ import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
 import { RoleTypes } from '@/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import { OrgPersonIF, ResourceIF } from '@/interfaces'
-import { vi } from 'vitest'
 
 // mock the console.warn function to hide "[Vuetify] Unable to locate target XXX"
 console.warn = vi.fn()
