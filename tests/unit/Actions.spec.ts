@@ -16,7 +16,6 @@ import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import { CourtOrderStepIF, DefineCompanyIF, EffectiveDateTimeIF, IncorporationAgreementIF, NameRequestIF,
   OrgPersonIF, PeopleAndRoleIF, ShareStructureIF, TombstoneIF } from '@/interfaces'
 import { ShareClassIF } from '@bcrs-shared-components/interfaces'
-import { vi } from 'vitest'
 
 const vuetify = new Vuetify({})
 setActivePinia(createPinia())
