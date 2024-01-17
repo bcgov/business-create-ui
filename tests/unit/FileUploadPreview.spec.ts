@@ -4,7 +4,6 @@ import { mount, Wrapper } from '@vue/test-utils'
 import FileUploadPreview from '@/components/common/FileUploadPreview.vue'
 import { PdfPageSize } from '@/enums/pdfPageSize'
 import { waitForUpdate } from '../wait-for-update'
-import { vi } from 'vitest'
 
 const vuetify = new Vuetify({})
 
