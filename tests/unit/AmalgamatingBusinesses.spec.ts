@@ -12,29 +12,19 @@ setActivePinia(createPinia())
 const store = useStore()
 
 describe('Amalgamating Businesses - components and validity', () => {
-  it('renders as non-staff', async () => {
-    // initial state
-    store.stateModel.tombstone.keycloakRoles = []
+  let wrapper: any
 
-    const wrapper = mount(AmalgamatingBusinesses, { vuetify })
+  beforeEach(() => {
+    wrapper = mount(AmalgamatingBusinesses, { vuetify })
+  })
 
-    // verify components
-    expect(wrapper.findComponent(AmalgamatingBusinesses).exists()).toBe(true)
-    expect(wrapper.find('#add-amalgamating-business-button').exists()).toBe(true)
-    expect(wrapper.find('#add-foreign-business-button').exists()).toBe(false)
-    expect(wrapper.find('#add-amalgamating-business-panel').exists()).toBe(false)
-    expect(wrapper.find('#add-foreign-business-panel').exists()).toBe(false)
-    expect(wrapper.findComponent(BusinessTable).exists()).toBe(true)
-    expect(wrapper.find('.v-snack').exists()).toBe(true)
-
+  afterEach(() => {
     wrapper.destroy()
   })
 
   it('renders as staff', async () => {
-    // initial state
-    store.stateModel.tombstone.keycloakRoles = ['staff']
-
-    const wrapper = mount(AmalgamatingBusinesses, { vuetify })
+    // set state
+    await store.setKeycloakRoles(['staff'])
 
     // verify components
     expect(wrapper.findComponent(AmalgamatingBusinesses).exists()).toBe(true)
@@ -44,8 +34,20 @@ describe('Amalgamating Businesses - components and validity', () => {
     expect(wrapper.find('#add-foreign-business-panel').exists()).toBe(false)
     expect(wrapper.findComponent(BusinessTable).exists()).toBe(true)
     expect(wrapper.find('.v-snack').exists()).toBe(true)
+  })
 
-    wrapper.destroy()
+  it('renders as non-staff', async () => {
+    // set state
+    await store.setKeycloakRoles([])
+
+    // verify components
+    expect(wrapper.findComponent(AmalgamatingBusinesses).exists()).toBe(true)
+    expect(wrapper.find('#add-amalgamating-business-button').exists()).toBe(true)
+    expect(wrapper.find('#add-foreign-business-button').exists()).toBe(false)
+    expect(wrapper.find('#add-amalgamating-business-panel').exists()).toBe(false)
+    expect(wrapper.find('#add-foreign-business-panel').exists()).toBe(false)
+    expect(wrapper.findComponent(BusinessTable).exists()).toBe(true)
+    expect(wrapper.find('.v-snack').exists()).toBe(true)
   })
 
   const tests = [
@@ -62,13 +64,9 @@ describe('Amalgamating Businesses - components and validity', () => {
   for (let i = 0; i < tests.length; i++) {
     const { businessTableValid, isAddingAmalgamatingBusiness, isAddingAmalgamatingForeignBusiness, expected } = tests[i]
     it(`validates component - test ${i}`, async () => {
-      const wrapper = mount(AmalgamatingBusinesses, { vuetify })
-
       // set data and validate validity
       await wrapper.setData({ businessTableValid, isAddingAmalgamatingBusiness, isAddingAmalgamatingForeignBusiness })
       expect(store.stateModel.amalgamation.amalgamatingBusinessesValid).toBe(expected)
-
-      wrapper.destroy()
     })
   }
 })
