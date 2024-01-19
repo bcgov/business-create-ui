@@ -316,7 +316,7 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
     }
 
     // Get the business information
-    const business = await this.fetchAmalgamatingBusinessInfo(businessLookup)
+    const business = await this.fetchAmalgamatingBusinessInfo(businessLookup.identifier)
 
     // Check for unaffiliated business.
     if (!business.authInfo) {
@@ -350,6 +350,7 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
     }
 
     // Check for Legal API fetch issues.
+    // NB - don't check for null firstTask since that's valid
     if (!business.businessInfo || !business.addresses || !business.firstFiling) {
       this.snackbarText = 'Unable to add that business.'
       this.snackbar = true
@@ -372,6 +373,7 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
       isNotInGoodStanding: (business.businessInfo.goodStanding === false),
       isFrozen: (business.businessInfo.adminFreeze === true),
       isFutureEffective: this.isFutureEffective(business),
+      isDraftTask: this.isDraftTask(business),
       isPendingFiling: this.isPendingFiling(business),
       isLimitedRestoration: await this.isLimitedRestoration(business),
       isHistorical: (business.businessInfo.state === EntityStates.HISTORICAL)

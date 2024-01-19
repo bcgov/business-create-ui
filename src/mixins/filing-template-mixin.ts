@@ -76,7 +76,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
   @Action(useStore) setBusinessContact!: (x: ContactPointIF) => void
   @Action(useStore) setCertifyState!: (x: CertifyIF) => void
   @Action(useStore) setCooperativeType!: (x: CoopTypes) => void
-  @Action(useStore) setCorrectNameOption!: (x: CorrectNameOptions) => void
+  // @Action(useStore) setCorrectNameOption!: (x: CorrectNameOptions) => void
   @Action(useStore) setCourtOrderFileNumber!: (x: string) => void
   @Action(useStore) setCustodianOfRecords!: (x: OrgPersonIF) => void
   @Action(useStore) setDissolutionDate!: (x: string) => void
@@ -94,8 +94,8 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
   @Action(useStore) setFoundingDate!: (x: string) => void
   @Action(useStore) setLegalName!: (x: string) => void
   @Action(useStore) setMemorandum!: (x: CreateMemorandumIF) => void
-  @Action(useStore) setNameRequestApprovedName!: (x: string) => void
-  @Action(useStore) setNameTranslations!: (x: NameTranslationIF[]) => void
+  // @Action(useStore) setNameRequestApprovedName!: (x: string) => void
+  // @Action(useStore) setNameTranslations!: (x: NameTranslationIF[]) => void
   @Action(useStore) setOfficeAddresses!: (x: RegisteredRecordsAddressesIF) => void
   @Action(useStore) setOrgPersonList!: (x: OrgPersonIF[]) => void
   @Action(useStore) setRegistrationBusinessAddress!: (x: BusinessAddressIF) => void
