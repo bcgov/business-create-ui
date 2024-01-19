@@ -183,6 +183,7 @@ describe.skip('Business Table - rule evaluation', () => {
     { methodName: 'notInGoodStanding', error: AmlStatuses.ERROR_NOT_IN_GOOD_STANDING },
     { methodName: 'limitedRestoration', error: AmlStatuses.ERROR_LIMITED_RESTORATION },
     { methodName: 'futureEffectiveFiling', error: AmlStatuses.ERROR_FUTURE_EFFECTIVE_FILING },
+    { methodName: 'draftTask', error: AmlStatuses.ERROR_DRAFT_TASK },
     { methodName: 'pendingFiling', error: AmlStatuses.ERROR_PENDING_FILING },
     { methodName: 'foreign', error: AmlStatuses.ERROR_FOREIGN },
     { methodName: 'foreignUnlimited', error: AmlStatuses.ERROR_FOREIGN_UNLIMITED },
@@ -222,8 +223,8 @@ describe.skip('Business Table - rule evaluation', () => {
   })
 
   it('has the expected number of rules', () => {
-    expect(rules.length).toBe(15)
-    expect(wrapper.vm.rules.length).toBe(15)
+    expect(rules.length).toBe(16)
+    expect(wrapper.vm.rules.length).toBe(16)
   })
 
   // check each rule sequentially

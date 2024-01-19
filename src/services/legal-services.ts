@@ -1,7 +1,6 @@
 import { AxiosInstance as axios } from '@/utils'
 import { StatusCodes } from 'http-status-codes'
-import { AmalgamationFilingIF, BusinessIF, DissolutionFilingIF, IncorporationFilingIF, NameRequestIF,
-  RegistrationFilingIF, RestorationFilingIF } from '@/interfaces'
+import { BusinessIF, DissolutionFilingIF, IncorporationFilingIF, NameRequestIF } from '@/interfaces'
 import { FilingTypes } from '@/enums'
 
 /**
@@ -29,12 +28,11 @@ export default class LegalServices {
 
   /**
    * Fetches the first or only filing.
-   * This is expected to be a draft IA or Registration.
+   * This is probably a draft Amalgamation, IA or Registration.
    * @param tempId the temp registration number
    * @returns a promise to return the draft filing, else exception
    */
-  // eslint-disable-next-line max-len
-  static async fetchFirstOrOnlyFiling (tempId: string): Promise<AmalgamationFilingIF | IncorporationFilingIF | RegistrationFilingIF> {
+  static async fetchFirstOrOnlyFiling (tempId: string): Promise<any> {
     const url = `businesses/${tempId}/filings`
 
     return axios.get(url)
@@ -65,12 +63,11 @@ export default class LegalServices {
 
   /**
    * Fetches the first task.
-   * This is expected to be a draft Dissolution or Restoration.
+   * This is probably a draft Dissolution or Restoration.
    * @param businessId the business identifier
    * @returns a promise to return the draft filing, else exception
    */
-  // eslint-disable-next-line max-len
-  static async fetchFirstTask (businessId: string): Promise<DissolutionFilingIF | RestorationFilingIF> {
+  static async fetchFirstTask (businessId: string): Promise<any> {
     const url = `businesses/${businessId}/tasks`
     return axios.get(url)
       .then(response => {

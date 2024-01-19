@@ -21,7 +21,7 @@ describe('Amalgamation Mixin - rules', () => {
   })
 
   it('has the expected number of rules', () => {
-    expect(wrapper.vm.rules.length).toBe(15)
+    expect(wrapper.vm.rules.length).toBe(16)
   })
 
   it('correctly evaluates "notAffiliated" rule', () => {
@@ -112,6 +112,17 @@ describe('Amalgamation Mixin - rules', () => {
 
     // verify not future effective only
     expect(wrapper.vm.futureEffectiveFiling({ type: AmlTypes.LEAR, isFutureEffective: false })).toBeNull()
+  })
+
+  it('correctly evaluates "draftTask" rule', () => {
+    // verify rule
+    expect(wrapper.vm.draftTask({ type: AmlTypes.LEAR, isDraftTask: true })).toBe(AmlStatuses.ERROR_DRAFT_TASK)
+
+    // verify not LEAR only
+    expect(wrapper.vm.draftTask({ type: AmlTypes.FOREIGN, isDraftTask: true })).toBeNull()
+
+    // verify not draft task only
+    expect(wrapper.vm.draftTask({ type: AmlTypes.LEAR, isDraftTask: false })).toBeNull()
   })
 
   it('correctly evaluates "pendingFiling" rule', () => {
