@@ -15,7 +15,12 @@ describe('Business Status', () => {
       tooltip: 'A BC community contribution company must amalgamate to form a new BC community'
     },
     {
-      label: 'Error FROZEN',
+      label: 'Error Draft Task',
+      status: AmlStatuses.ERROR_DRAFT_TASK,
+      tooltip: 'This business has a draft task. It cannot be part of an amalgamation.'
+    },
+    {
+      label: 'Error Frozen',
       status: AmlStatuses.ERROR_FROZEN,
       tooltip: 'This business is frozen. Frozen businesses cannot be part of an amalgamation.'
     },
@@ -87,7 +92,7 @@ describe('Business Status', () => {
   ]
 
   it('has the expected number of tests', () => {
-    expect(tests.length).toBe(1 + 15) // OK + 14 errors
+    expect(tests.length).toBe(1 + 16) // OK + 16 errors
   })
 
   for (const test of tests) {

@@ -34,6 +34,7 @@ export default class AmalgamationMixin extends Vue {
     this.notInGoodStanding,
     this.limitedRestoration,
     this.futureEffectiveFiling,
+    this.draftTask,
     this.pendingFiling,
     this.foreign,
     this.foreignUnlimited,
@@ -92,6 +93,14 @@ export default class AmalgamationMixin extends Vue {
   futureEffectiveFiling (business: AmalgamatingBusinessIF): AmlStatuses {
     if (business.type === AmlTypes.LEAR && business.isFutureEffective) {
       return AmlStatuses.ERROR_FUTURE_EFFECTIVE_FILING
+    }
+    return null
+  }
+
+  /** Disallow if a draft task exists. */
+  draftTask (business: AmalgamatingBusinessIF): AmlStatuses {
+    if (business.type === AmlTypes.LEAR && business.isDraftTask) {
+      return AmlStatuses.ERROR_DRAFT_TASK
     }
     return null
   }
@@ -192,21 +201,22 @@ export default class AmalgamationMixin extends Vue {
   }
 
   /**
-   * Get the business information, mailing address, email, and first filing if in LEAR.
-   * Otherwise, return error.
+   * Fetches the business' auth information, business info, addresses, first task, and first filing.
+   * @param identifier The business identifier.
    */
-  async fetchAmalgamatingBusinessInfo (item: any): Promise<any> {
-    // Get the auth info, business info, addresses and filings concurrently.
+  async fetchAmalgamatingBusinessInfo (identifier: string): Promise<any> {
+    // Make all API calls concurrently without rejection.
     // NB - if any call failed, that item will be null.
-    const [ authInfo, businessInfo, addresses, firstFiling ] =
+    const [ authInfo, businessInfo, addresses, firstTask, firstFiling ] =
       await Promise.allSettled([
-        AuthServices.fetchAuthInfo(item.identifier),
-        LegalServices.fetchBusinessInfo(item.identifier),
-        LegalServices.fetchAddresses(item.identifier),
-        LegalServices.fetchFirstOrOnlyFiling(item.identifier)
+        AuthServices.fetchAuthInfo(identifier),
+        LegalServices.fetchBusinessInfo(identifier),
+        LegalServices.fetchAddresses(identifier),
+        LegalServices.fetchFirstTask(identifier),
+        LegalServices.fetchFirstOrOnlyFiling(identifier)
       ]).then(results => results.map((result: any) => result.value || null))
 
-    return { authInfo, businessInfo, addresses, firstFiling }
+    return { authInfo, businessInfo, addresses, firstTask, firstFiling }
   }
 
   /**
@@ -242,6 +252,17 @@ export default class AmalgamationMixin extends Vue {
   }
 
   /**
+   * This business is draft task if the first task in the Todo List is still draft (or pending).
+   * @param business The business to check if is Draft Task or not.
+   */
+  isDraftTask (business: any): boolean {
+    return (
+      business.firstTask?.header.status === FilingStatus.DRAFT ||
+      business.firstTask?.header.status === FilingStatus.PENDING
+    )
+  }
+
+  /**
    * This business is pending filing if the first filing in the ledger is still not complete or corrected
    * (ie, it's paid or pending).
    * @param business The business to check if is Pending Filing or not.
@@ -259,7 +280,7 @@ export default class AmalgamationMixin extends Vue {
    */
   async refetchAmalgamatingBusinessesInfo (): Promise<void> {
     const fetchTingInfo = async (item: any): Promise<AmalgamatingBusinessIF> => {
-      const tingBusiness = await this.fetchAmalgamatingBusinessInfo(item)
+      const tingBusiness = await this.fetchAmalgamatingBusinessInfo(item.identifier)
       // no auth info and business info means foreign, otherwise LEAR (affiliated or non-affiliated)
       if (!tingBusiness.authInfo && !tingBusiness.businessInfo) {
         return {
@@ -281,6 +302,7 @@ export default class AmalgamationMixin extends Vue {
           isNotInGoodStanding: (tingBusiness.businessInfo.goodStanding === false),
           isFrozen: (tingBusiness.businessInfo.adminFreeze === true),
           isFutureEffective: this.isFutureEffective(tingBusiness),
+          isDraftTask: this.isDraftTask(tingBusiness),
           isPendingFiling: this.isPendingFiling(tingBusiness),
           isLimitedRestoration: await this.isLimitedRestoration(tingBusiness),
           isHistorical: (tingBusiness.businessInfo.state === EntityStates.HISTORICAL)
