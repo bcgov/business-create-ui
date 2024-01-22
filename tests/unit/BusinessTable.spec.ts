@@ -195,14 +195,14 @@ describe('Business Table - validity', () => {
           amalgamatingBusinesses: [
             {
               address: {
-                  addressCity: 'Victoria',
-                  addressCountry: 'CA',
-                  addressRegion: 'BC',
-                  addressType: 'mailing',
-                  deliveryInstructions: '',
-                  postalCode: 'X8Y 1X1',
-                  streetAddress: 'test street',
-                  streetAddressAdditional: ''
+                addressCity: 'Victoria',
+                addressCountry: 'CA',
+                addressRegion: 'BC',
+                addressType: 'mailing',
+                deliveryInstructions: '',
+                postalCode: 'X8Y 1X1',
+                streetAddress: 'test street',
+                streetAddressAdditional: ''
               },
               email: 'no@reply.com',
               identifier: 'BC1111111',
@@ -234,14 +234,14 @@ describe('Business Table - validity', () => {
           amalgamatingBusinesses: [
             {
               address: {
-                  addressCity: 'Victoria',
-                  addressCountry: 'CA',
-                  addressRegion: 'BC',
-                  addressType: 'mailing',
-                  deliveryInstructions: '',
-                  postalCode: 'X8Y 1X1',
-                  streetAddress: 'test street',
-                  streetAddressAdditional: ''
+                addressCity: 'Victoria',
+                addressCountry: 'CA',
+                addressRegion: 'BC',
+                addressType: 'mailing',
+                deliveryInstructions: '',
+                postalCode: 'X8Y 1X1',
+                streetAddress: 'test street',
+                streetAddressAdditional: ''
               },
               email: 'no@reply.com',
               identifier: 'BC1111111',
@@ -257,14 +257,14 @@ describe('Business Table - validity', () => {
             },
             {
               address: {
-                  addressCity: 'Victoria',
-                  addressCountry: 'CA',
-                  addressRegion: 'BC',
-                  addressType: 'mailing',
-                  deliveryInstructions: '',
-                  postalCode: 'X8Y 1X2',
-                  streetAddress: 'test street 2',
-                  streetAddressAdditional: ''
+                addressCity: 'Victoria',
+                addressCountry: 'CA',
+                addressRegion: 'BC',
+                addressType: 'mailing',
+                deliveryInstructions: '',
+                postalCode: 'X8Y 1X2',
+                streetAddress: 'test street 2',
+                streetAddressAdditional: ''
               },
               email: 'no2@reply.com',
               identifier: 'BC2222222',
@@ -277,7 +277,7 @@ describe('Business Table - validity', () => {
               role: AmlRoles.AMALGAMATING,
               status: AmlStatuses.OK,
               type: AmlTypes.LEAR
-            },
+            }
           ]
         }
       }
