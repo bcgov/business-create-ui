@@ -181,7 +181,7 @@ export default class BusinessTable extends Mixins(AmalgamationMixin) {
   @Emit('valid')
   private emitValidity (): boolean {
     return (
-      (this.businesses.length > 0) &&
+      (this.businesses.length >= 2) &&
       this.businesses.every(business => business.status === AmlStatuses.OK)
     )
   }

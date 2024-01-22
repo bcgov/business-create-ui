@@ -169,6 +169,121 @@ describe('Business Table - display', () => {
   }
 })
 
+describe('Business Table - validity', () => {
+  it('emit invalid when there are no businesses in the table', () => {
+    const wrapper = wrapperFactory(
+      BusinessTable,
+      null,
+      {
+        amalgamation: {
+          amalgamatingBusinesses: []
+        }
+      }
+    )
+
+    expect(wrapper.emitted('valid').pop()[0]).toEqual(false)
+  })
+
+  it('emit invalid when there is only one business in the table', () => {
+    const wrapper = wrapperFactory(
+      BusinessTable,
+      null,
+      {
+        amalgamation: {
+          amalgamatingBusinesses: [
+            {
+              address: {
+                addressCity: 'Victoria',
+                addressCountry: 'CA',
+                addressRegion: 'BC',
+                addressType: 'mailing',
+                deliveryInstructions: '',
+                postalCode: 'X8Y 1X1',
+                streetAddress: 'test street',
+                streetAddressAdditional: ''
+              },
+              email: 'no@reply.com',
+              identifier: 'BC1111111',
+              isFrozen: false,
+              isFutureEffective: false,
+              isLimitedRestoration: false,
+              isNotInGoodStanding: false,
+              legalType: CorpTypeCd.BENEFIT_COMPANY,
+              name: 'TEST BEN',
+              role: AmlRoles.AMALGAMATING,
+              status: AmlStatuses.OK,
+              type: AmlTypes.LEAR
+            }
+          ]
+        }
+      }
+    )
+
+    expect(wrapper.emitted('valid').pop()[0]).toEqual(false)
+  })
+
+  it('emit valid when there are two or more businesses in the table', () => {
+    const wrapper = wrapperFactory(
+      BusinessTable,
+      null,
+      {
+        amalgamation: {
+          amalgamatingBusinesses: [
+            {
+              address: {
+                addressCity: 'Victoria',
+                addressCountry: 'CA',
+                addressRegion: 'BC',
+                addressType: 'mailing',
+                deliveryInstructions: '',
+                postalCode: 'X8Y 1X1',
+                streetAddress: 'test street',
+                streetAddressAdditional: ''
+              },
+              email: 'no@reply.com',
+              identifier: 'BC1111111',
+              isFrozen: false,
+              isFutureEffective: false,
+              isLimitedRestoration: false,
+              isNotInGoodStanding: false,
+              legalType: CorpTypeCd.BENEFIT_COMPANY,
+              name: 'TEST BEN',
+              role: AmlRoles.AMALGAMATING,
+              status: AmlStatuses.OK,
+              type: AmlTypes.LEAR
+            },
+            {
+              address: {
+                addressCity: 'Victoria',
+                addressCountry: 'CA',
+                addressRegion: 'BC',
+                addressType: 'mailing',
+                deliveryInstructions: '',
+                postalCode: 'X8Y 1X2',
+                streetAddress: 'test street 2',
+                streetAddressAdditional: ''
+              },
+              email: 'no2@reply.com',
+              identifier: 'BC2222222',
+              isFrozen: false,
+              isFutureEffective: false,
+              isLimitedRestoration: false,
+              isNotInGoodStanding: false,
+              legalType: CorpTypeCd.BC_COMPANY,
+              name: 'TEST BEN NUMBER 2',
+              role: AmlRoles.AMALGAMATING,
+              status: AmlStatuses.OK,
+              type: AmlTypes.LEAR
+            }
+          ]
+        }
+      }
+    )
+
+    expect(wrapper.emitted('valid').pop()[0]).toBe(true)
+  })
+})
+
 // *** FUTURE: get this working
 // ATM, local rules are mocked (eg, wrapper.vm.notAffiliated()), but not the actual rules in the mixin.
 // It's probably this: https://vitest.dev/guide/mocking.html#mocking-pitfalls.
