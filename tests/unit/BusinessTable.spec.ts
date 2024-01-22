@@ -1,4 +1,3 @@
-import Vue from 'vue'
 import { AmlRoles, AmlStatuses, AmlTypes } from '@/enums'
 import { wrapperFactory } from '../vitest-wrapper-factory'
 import BusinessTable from '@/components/Amalgamation/BusinessTable.vue'
@@ -171,7 +170,7 @@ describe('Business Table - display', () => {
 })
 
 describe('Business Table - validity', () => {
-  it('emit invalid when there are no businesses in the table', async () => {
+  it('emit invalid when there are no businesses in the table', () => {
     const wrapper = wrapperFactory(
       BusinessTable,
       null,
@@ -181,12 +180,11 @@ describe('Business Table - validity', () => {
         }
       }
     )
-    await Vue.nextTick()
 
     expect(wrapper.emitted('valid').pop()[0]).toEqual(false)
   })
 
-  it('emit invalid when there is only one business in the table', async () => {
+  it('emit invalid when there is only one business in the table', () => {
     const wrapper = wrapperFactory(
       BusinessTable,
       null,
@@ -220,12 +218,11 @@ describe('Business Table - validity', () => {
         }
       }
     )
-    await Vue.nextTick()
 
     expect(wrapper.emitted('valid').pop()[0]).toEqual(false)
   })
 
-  it('emit valid when there are two or more businesses in the table', async () => {
+  it('emit valid when there are two or more businesses in the table', () => {
     const wrapper = wrapperFactory(
       BusinessTable,
       null,
@@ -282,7 +279,6 @@ describe('Business Table - validity', () => {
         }
       }
     )
-    await Vue.nextTick()
 
     expect(wrapper.emitted('valid').pop()[0]).toBe(true)
   })
