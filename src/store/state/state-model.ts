@@ -213,6 +213,9 @@ export const stateModel: StateModelIF = {
     courtApprovalValid: false,
     type: null
   },
+  continuationIn: {
+    existingBusinessValid: false
+  },
   restoration: {
     applicationDate: null,
     approvalType: null,

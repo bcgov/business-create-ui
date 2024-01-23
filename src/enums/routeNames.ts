@@ -47,4 +47,11 @@ export enum RouteNames {
   RESTORATION_BUSINESS_INFORMATION = 'restoration-business-information',
   RESTORATION_BUSINESS_NAME = 'restoration-business-name',
   RESTORATION_REVIEW_CONFIRM = 'restoration-review-confirm',
+
+  // Continuation In route names
+  CONTINUATION_IN_BUSINESS_HOME = 'continuation-in-business-home',
+  CONTINUATION_IN_BUSINESS_BC = 'continuation-in-business-bc',
+  CONTINUATION_IN_PEOPLE_ROLES = 'continuation-in-people-roles',
+  CONTINUATION_IN_REVIEW_CONFIRM = 'continuation-in-review-confirm',
+  CONTINUATION_IN_SHARE_STRUCTURE = 'continuation-in-share-structure',
 }

@@ -15,6 +15,7 @@ function getLegalName (): string {
 
   switch (getFilingType) {
     case FilingTypes.AMALGAMATION_APPLICATION: return getNameRequestApprovedName
+    case FilingTypes.CONTINUATION_IN: return getNameRequestApprovedName
     case FilingTypes.DISSOLUTION: return getBusinessLegalName
     case FilingTypes.INCORPORATION_APPLICATION: return getNameRequestApprovedName
     case FilingTypes.REGISTRATION: return getNameRequestApprovedName

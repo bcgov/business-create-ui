@@ -23,6 +23,12 @@
           >Return to this step to finish it</router-link>
 
           <router-link
+            v-if="isContinuationInFiling"
+            id="router-link"
+            :to="{ path: `/${RouteNames.CONTINUATION_IN_PEOPLE_ROLES}` }"
+          >Return to this step to finish it</router-link>
+
+          <router-link
             v-if="isIncorporationFiling"
             id="router-link"
             :to="{ path: `/${RouteNames.INCORPORATION_PEOPLE_ROLES}` }"
@@ -246,6 +252,7 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
   @Getter(useStore) isAmalgamationFilingHorizontal!: boolean
   @Getter(useStore) isAmalgamationFilingRegular!: boolean
   @Getter(useStore) isAmalgamationFilingVertical!: boolean
+  @Getter(useStore) isContinuationInFiling!: boolean
   @Getter(useStore) isFullRestorationFiling!: boolean
   @Getter(useStore) isIncorporationFiling!: boolean
   @Getter(useStore) isLimitedRestorationFiling!: boolean

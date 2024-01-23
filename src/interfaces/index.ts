@@ -48,6 +48,7 @@ export * from './store-interfaces/state-interfaces/account-information-interface
 export * from './store-interfaces/state-interfaces/amalgamation-state-interface'
 export * from './store-interfaces/state-interfaces/auth-information-interface'
 export * from './store-interfaces/state-interfaces/business-interface'
+export * from './store-interfaces/state-interfaces/continuation-in-state-interface'
 export * from './store-interfaces/state-interfaces/dissolution-state-interface'
 export * from './store-interfaces/state-interfaces/document-delivery-interface'
 export * from './store-interfaces/state-interfaces/org-information-interface'

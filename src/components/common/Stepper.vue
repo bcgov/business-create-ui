@@ -102,6 +102,12 @@ export default class Stepper extends Vue {
       case RouteNames.AMALG_SHORT_PEOPLE_ROLES: return this.isAddPeopleAndRolesValid
       case RouteNames.AMALG_SHORT_REVIEW_CONFIRM: return this.isFilingValid
 
+      case RouteNames.CONTINUATION_IN_BUSINESS_HOME: return false // *** TODO
+      case RouteNames.CONTINUATION_IN_BUSINESS_BC: return false // *** TODO
+      case RouteNames.CONTINUATION_IN_PEOPLE_ROLES: return this.isAddPeopleAndRolesValid
+      case RouteNames.CONTINUATION_IN_SHARE_STRUCTURE: return this.isCreateShareStructureValid
+      case RouteNames.CONTINUATION_IN_REVIEW_CONFIRM: return this.isFilingValid
+
       case RouteNames.DISSOLUTION_AFFIDAVIT: return this.isAffidavitValid
       case RouteNames.DISSOLUTION_DEFINE_DISSOLUTION: return this.isDissolutionDefineDissolutionValid
       case RouteNames.DISSOLUTION_RESOLUTION: return this.isResolutionValid
