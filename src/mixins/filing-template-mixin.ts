@@ -384,11 +384,6 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
       shareClasses: this.getCreateShareStructureStep.shareClasses
     }
 
-    // Add incorporation agreement data.
-    filing.continuationIn.incorporationAgreement = {
-      agreementType: this.getIncorporationAgreementStep.agreementType
-    }
-
     // Add business name data.
     switch (this.getCorrectNameOption) {
       case CorrectNameOptions.CORRECT_AML_ADOPT:

@@ -96,9 +96,6 @@ export interface ContinuationInFilingIF {
     shareStructure?: {
       shareClasses: ShareClassIF[]
     }
-    incorporationAgreement?: {
-      agreementType: string
-    }
     // ULC only:
     courtOrder?: CourtOrderIF
   }
