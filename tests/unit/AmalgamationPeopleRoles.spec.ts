@@ -1,5 +1,6 @@
 import { shallowWrapperFactory } from '../vitest-wrapper-factory'
-import { AmalgRegPeopleRoles } from '@/views'
+import { AmalgamationPeopleRoles } from '@/views'
+// *** FUTURE: add tests for AmalgamationShortResources
 import { AmalgamationRegResources } from '@/resources/'
 import PeopleAndRoles from '@/components/common/PeopleAndRoles.vue'
 
@@ -25,9 +26,10 @@ for (const test of amalgamationRegularBusinessInfo) {
 
     beforeAll(() => {
       wrapper = shallowWrapperFactory(
-        AmalgRegPeopleRoles,
+        AmalgamationPeopleRoles,
         null,
         {
+          // *** FUTURE: add tests for regular vs short-form amalgamations
           entityType: test.entityType,
           tombstone: { keycloakRoles: ['staff'] }
         },
@@ -41,7 +43,7 @@ for (const test of amalgamationRegularBusinessInfo) {
     })
 
     it('renders the page', () => {
-      expect(wrapper.find('#amalgamation-regular-people-roles').exists()).toBe(true)
+      expect(wrapper.find('#amalgamation-people-roles').exists()).toBe(true)
     })
 
     it('displays the header and renders the People and Roles component correctly', () => {

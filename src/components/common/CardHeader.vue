@@ -1,9 +1,18 @@
 <template>
   <header class="v-card-header rounded-t">
-    <v-icon color="appDkBlue">
+    <v-icon
+      v-if="icon"
+      color="appDkBlue"
+    >
       {{ icon }}
     </v-icon>
-    <label class="v-card-label pl-2">{{ label }}</label>
+    <label
+      v-if="label"
+      class="v-card-label"
+      :class="{ 'pl-2': !!icon }"
+    >
+      {{ label }}
+    </label>
   </header>
 </template>
 
@@ -12,8 +21,8 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 
 @Component({})
 export default class CardHeader extends Vue {
-  @Prop({ required: true }) readonly icon!: string
-  @Prop({ required: true }) readonly label!: string
+  @Prop({ default: null }) readonly icon!: string
+  @Prop({ default: null }) readonly label!: string
 }
 </script>
 

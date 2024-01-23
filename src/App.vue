@@ -156,8 +156,9 @@
               lg="9"
             >
               <header>
-                <h1>{{ getFilingName }}</h1>
+                <h1>{{ header }}</h1>
               </header>
+
               <p
                 v-if="isFirmDissolution"
                 class="mt-4"
@@ -250,10 +251,10 @@ import * as Views from '@/views'
 // Mixins, interfaces, etc
 import { CommonMixin, DateMixin, FilingTemplateMixin, NameRequestMixin } from '@/mixins'
 import { AccountInformationIF, AddressIF, BreadcrumbIF, BusinessWarningIF, CompletingPartyIF,
-  ConfirmDialogType, EmptyFees, FeesIF, FilingDataIF, NameRequestIF, OrgInformationIF, PartyIF, ResourceIF,
+  ConfirmDialogType, EmptyFees, FeesIF, FilingDataIF, OrgInformationIF, PartyIF, ResourceIF,
   StepIF } from '@/interfaces'
-import { AmalgamationRegResources, DissolutionResources, IncorporationResources, RegistrationResources,
-  RestorationResources, getEntityDashboardBreadcrumb, getMyBusinessRegistryBreadcrumb,
+import { AmalgamationRegResources, AmalgamationShortResources, DissolutionResources, IncorporationResources,
+  RegistrationResources, RestorationResources, getEntityDashboardBreadcrumb, getMyBusinessRegistryBreadcrumb,
   getRegistryDashboardBreadcrumb, getSbcStaffDashboardBreadcrumb, getStaffDashboardBreadcrumb } from '@/resources'
 import { AuthServices, LegalServices, PayServices } from '@/services/'
 
@@ -261,6 +262,7 @@ import { AuthServices, LegalServices, PayServices } from '@/services/'
 import { EntityStates, ErrorTypes, FilingCodes, FilingNames, FilingStatus, FilingTypes, NameRequestStates, RouteNames,
   StaffPaymentOptions } from '@/enums'
 import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
+import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 
 @Component({
   components: {
@@ -295,7 +297,9 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   @Getter(useStore) getUserLastName!: string
   @Getter(useStore) getUserEmail!: string
   @Getter(useStore) getUserPhone!: string
-  @Getter(useStore) isAmalgamationFiling!: boolean
+  // @Getter(useStore) isAmalgamationFilingHorizontal!: boolean
+  @Getter(useStore) isAmalgamationFilingRegular!: boolean
+  @Getter(useStore) isAmalgamationFilingVertical!: boolean
   @Getter(useStore) isDissolutionFiling!: boolean
   @Getter(useStore) isIncorporationFiling!: boolean
   @Getter(useStore) isMobile!: boolean
@@ -320,7 +324,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   @Action(useStore) setLastAddressChangeDate!: (x: string) => void
   @Action(useStore) setLastAnnualReportDate!: (x: string) => void
   @Action(useStore) setLastDirectorChangeDate!: (x: string) => void
-  @Action(useStore) setNameRequest!: (x: NameRequestIF) => void
+  // @Action(useStore) setNameRequest!: (x: NameRequestIF) => void
   @Action(useStore) setParties!: (x: Array<PartyIF>) => void
   @Action(useStore) setResources!: (x: ResourceIF) => void
   @Action(useStore) setUserAddress!: (x: AddressIF) => void
@@ -387,6 +391,19 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     }
 
     return crumbs
+  }
+
+  /** The page header (title). */
+  get header (): string {
+    if (this.isAmalgamationFilingRegular) {
+      return `${this.getFilingName} (Regular)`
+    } else if (this.isAmalgamationFilingHorizontal) {
+      return `${this.getFilingName} (Horizontal Short-form)`
+    } else if (this.isAmalgamationFilingVertical) {
+      return `${this.getFilingName} (Vertical Short-form)`
+    } else {
+      return this.getFilingName
+    }
   }
 
   /** Data for fee summary component. */
@@ -733,7 +750,13 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       if (this.$route.meta.filingType !== this.getFilingType) {
         switch (this.getFilingType) {
           case FilingTypes.AMALGAMATION_APPLICATION:
-            this.$router.push(RouteNames.AMALG_REG_INFORMATION).catch(() => {})
+            if (this.isAmalgamationFilingRegular) {
+              this.$router.push(RouteNames.AMALG_REG_INFORMATION).catch(() => {})
+            } else if (this.isAmalgamationFilingHorizontal || this.isAmalgamationFilingVertical) {
+              this.$router.push(RouteNames.AMALG_SHORT_INFORMATION).catch(() => {})
+            } else {
+              throw new Error('invalid amalgamation filing type')
+            }
             return
           case FilingTypes.DISSOLUTION:
             if (this.isTypeFirm) {
@@ -889,7 +912,13 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
           ...draftFiling
         }
         this.parseAmalgamationDraft(draftFiling)
-        resources = AmalgamationRegResources.find(x => x.entityType === this.getEntityType) as ResourceIF
+        if (this.isAmalgamationFilingRegular) {
+          resources = AmalgamationRegResources.find(x => x.entityType === this.getEntityType) as ResourceIF
+        } else if (this.isAmalgamationFilingHorizontal || this.isAmalgamationFilingVertical) {
+          resources = AmalgamationShortResources.find(x => x.entityType === this.getEntityType) as ResourceIF
+        } else {
+          throw new Error('invalid amalgamation filing type')
+        }
         break
       case FilingTypes.INCORPORATION_APPLICATION:
         draftFiling = {
@@ -968,7 +997,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       }
 
       // ensure types match
-      if (nrResponse.legalType !== this.getEntityType) {
+      if ((nrResponse.legalType as unknown as CorpTypeCd) !== this.getEntityType) {
         console.log('NR legal type doesn\'t match entity type') // eslint-disable-line no-console
         this.nameRequestInvalidType = NameRequestStates.INVALID
         this.nameRequestInvalidErrorDialog = true
@@ -1252,6 +1281,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     // enable validation when review pages are shown
     if (
       this.isRouteName(RouteNames.AMALG_REG_REVIEW_CONFIRM) ||
+      this.isRouteName(RouteNames.AMALG_SHORT_REVIEW_CONFIRM) ||
       this.isRouteName(RouteNames.DISSOLUTION_REVIEW_CONFIRM) ||
       this.isRouteName(RouteNames.INCORPORATION_REVIEW_CONFIRM) ||
       this.isRouteName(RouteNames.REGISTRATION_REVIEW_CONFIRM) ||

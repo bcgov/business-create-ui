@@ -9,21 +9,31 @@
         <span>
           <v-icon color="error">mdi-information-outline</v-icon>
           <span class="error-text mx-1">This step is unfinished.</span>
+
           <router-link
-            v-if="isAmalgamationFiling"
+            v-if="isAmalgamationFilingRegular"
             id="router-link"
             :to="{ path: `/${RouteNames.AMALG_REG_PEOPLE_ROLES}` }"
           >Return to this step to finish it</router-link>
+
+          <router-link
+            v-if="isAmalgamationFilingHorizontal || isAmalgamationFilingVertical"
+            id="router-link"
+            :to="{ path: `/${RouteNames.AMALG_SHORT_PEOPLE_ROLES}` }"
+          >Return to this step to finish it</router-link>
+
           <router-link
             v-if="isIncorporationFiling"
             id="router-link"
             :to="{ path: `/${RouteNames.INCORPORATION_PEOPLE_ROLES}` }"
           >Return to this step to finish it</router-link>
+
           <router-link
             v-if="isRegistrationFiling"
             id="router-link"
             :to="{ path: `/${RouteNames.REGISTRATION_PEOPLE_ROLES}` }"
           >Return to this step to finish it</router-link>
+
           <router-link
             v-if="isFullRestorationFiling || isLimitedRestorationFiling"
             id="router-link"
@@ -233,7 +243,9 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
 
   @Getter(useStore) getAddPeopleAndRoleStep!: PeopleAndRoleIF
   @Getter(useStore) getShowErrors!: boolean
-  @Getter(useStore) isAmalgamationFiling!: boolean
+  @Getter(useStore) isAmalgamationFilingHorizontal!: boolean
+  @Getter(useStore) isAmalgamationFilingRegular!: boolean
+  @Getter(useStore) isAmalgamationFilingVertical!: boolean
   @Getter(useStore) isFullRestorationFiling!: boolean
   @Getter(useStore) isIncorporationFiling!: boolean
   @Getter(useStore) isLimitedRestorationFiling!: boolean

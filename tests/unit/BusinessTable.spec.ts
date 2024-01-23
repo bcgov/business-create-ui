@@ -284,7 +284,7 @@ describe('Business Table - validity', () => {
   })
 })
 
-// *** FUTURE: get this working
+// FUTURE: try to get this working
 // ATM, local rules are mocked (eg, wrapper.vm.notAffiliated()), but not the actual rules in the mixin.
 // It's probably this: https://vitest.dev/guide/mocking.html#mocking-pitfalls.
 // Maybe try vi.mock() to mock the imported mixin?
@@ -328,13 +328,13 @@ describe.skip('Business Table - rule evaluation', () => {
     for (let i = 0; i < rules.length; i++) {
       vi.spyOn(wrapper.vm, rules[i].methodName).mockReturnValue(rules[i].error)
     }
-    // *** these work
-    console.log('*** value1 = ', wrapper.vm.notAffiliated())
-    console.log('*** value2 = ', wrapper.vm.notHistorical())
-    console.log('*** value3 = ', wrapper.vm.notInGoodStanding())
+    // THESE WORK:
+    console.log('value1 = ', wrapper.vm.notAffiliated())
+    console.log('value2 = ', wrapper.vm.notHistorical())
+    console.log('value3 = ', wrapper.vm.notInGoodStanding())
 
-    // *** this doesn't work ("is not a function")
-    console.log('*** value4 = ', (AmalgamationMixin as any).notAffiliated())
+    // THIS DOESN'T WORK ("is not a function"):
+    console.log('value4 = ', (AmalgamationMixin as any).notAffiliated())
   })
 
   it('has the expected number of rules', () => {

@@ -70,13 +70,13 @@ import { RegistrationStateIF } from '@/interfaces'
 
 @Component({})
 export default class Stepper extends Vue {
-  @Getter(useStore) isAmalgamationInformationRegValid!: boolean
   @Getter(useStore) getRegistration!: RegistrationStateIF
   @Getter(useStore) getShowErrors!: boolean
   @Getter(useStore) getSteps!: Array<any>
   @Getter(useStore) getValidateSteps!: boolean
   @Getter(useStore) isAddPeopleAndRolesValid!: boolean
   @Getter(useStore) isAffidavitValid!: boolean
+  @Getter(useStore) isAmalgamationInformationValid!: boolean
   @Getter(useStore) isBusySaving!: boolean
   @Getter(useStore) isCreateShareStructureValid!: boolean
   @Getter(useStore) isDefineCompanyValid!: boolean
@@ -91,11 +91,16 @@ export default class Stepper extends Vue {
   /** Returns true if the step route is valid. */
   isValid (route: RouteNames): boolean {
     switch (route) {
-      case RouteNames.AMALG_REG_INFORMATION: return this.isAmalgamationInformationRegValid
+      case RouteNames.AMALG_REG_INFORMATION: return this.isAmalgamationInformationValid
       case RouteNames.AMALG_REG_BUSINESS_INFO: return this.isDefineCompanyValid
       case RouteNames.AMALG_REG_PEOPLE_ROLES: return this.isAddPeopleAndRolesValid
       case RouteNames.AMALG_REG_SHARE_STRUCTURE: return this.isCreateShareStructureValid
       case RouteNames.AMALG_REG_REVIEW_CONFIRM: return this.isFilingValid
+
+      case RouteNames.AMALG_SHORT_INFORMATION: return this.isAmalgamationInformationValid
+      case RouteNames.AMALG_SHORT_BUSINESS_INFO: return this.isDefineCompanyValid
+      case RouteNames.AMALG_SHORT_PEOPLE_ROLES: return this.isAddPeopleAndRolesValid
+      case RouteNames.AMALG_SHORT_REVIEW_CONFIRM: return this.isFilingValid
 
       case RouteNames.DISSOLUTION_AFFIDAVIT: return this.isAffidavitValid
       case RouteNames.DISSOLUTION_DEFINE_DISSOLUTION: return this.isDissolutionDefineDissolutionValid

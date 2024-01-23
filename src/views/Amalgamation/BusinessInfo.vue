@@ -1,28 +1,54 @@
 <template>
-  <div id="amalgamation-regular-business-info">
+  <div id="amalgamation-business-info">
     <!-- Registered Office Addresses -->
     <section
       v-show="isEntityType"
       class="mt-10"
     >
       <header id="office-address-header">
-        <h2>
-          Registered and Records Office Addresses
-        </h2>
-        <p>
+        <h2>Registered and Records Office Addresses</h2>
+        <p v-if="isAmalgamationFilingRegular">
           Enter the Registered Office and Records Office Mailing and Delivery Addresses of the Resulting
           businesses. All addresses must be located in BC.
         </p>
+        <p v-if="isAmalgamationFilingHorizontal || isAmalgamationFilingVertical">
+          The resulting business will adopt the following Registered Office and Records Office Mailing
+          and Delivery Addresses of the holding / primary company in this amalgamation.
+        </p>
       </header>
 
-      <div :class="{ 'invalid-section': getShowErrors && !addressFormValid }">
-        <OfficeAddresses
-          :showErrors="getShowErrors"
-          :inputAddresses="addresses"
-          @update:addresses="setOfficeAddresses($event)"
-          @valid="onOfficeAddressesValid($event)"
-        />
-      </div>
+      <OfficeAddresses
+        v-if="isAmalgamationFilingRegular"
+        :showErrors="getShowErrors"
+        :inputAddresses="addresses"
+        @update:addresses="setOfficeAddresses($event)"
+        @valid="onOfficeAddressesValid($event)"
+      />
+
+      <template v-if="isAmalgamationFilingHorizontal || isAmalgamationFilingVertical">
+        <v-card
+          outlined
+          class="message-box"
+        >
+          <p>
+            <strong>Important: </strong>To update the registered office and records office addresses,
+            save this draft application and visit the holding company's dashboard. Make the address
+            changes there and come back to this application.
+          </p>
+        </v-card>
+
+        <v-card
+          flat
+          class="mt-6"
+        >
+          <CardHeader label="Addresses" />
+          <!-- *** FUTURE: need to finish layout here -->
+          <OfficeAddresses
+            :inputAddresses="addresses"
+            :isEditing="false"
+          />
+        </v-card>
+      </template>
     </section>
 
     <!-- Registered Office Contact Information -->
@@ -32,9 +58,14 @@
     >
       <header id="registered-office-contact-header">
         <h2>Registered Office Contact Information</h2>
-        <p>
+        <p v-if="isAmalgamationFilingRegular">
           Enter the contact information for the resulting business. The BC Business Registry will use this
           to communicate with the business in the future, including sending documents and notifications.
+        </p>
+        <p v-if="isAmalgamationFilingHorizontal || isAmalgamationFilingVertical">
+          The resulting business will use this contact information adopted from the holding / primary business
+          in this amalgamation. The BC Business Registry will use this to communicate with the business in the
+          future, including sending documents and notifications.
         </p>
       </header>
 
@@ -70,18 +101,23 @@ import { RouteNames } from '@/enums'
 import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
 import FolioNumber from '@/components/common/FolioNumber.vue'
 import OfficeAddresses from '@/components/common/OfficeAddresses.vue'
+import CardHeader from '@/components/common/CardHeader.vue'
 
 @Component({
   components: {
     BusinessContactInfo,
+    CardHeader,
     FolioNumber,
     OfficeAddresses
   }
 })
-export default class AmalgamationRegularBusinessInfo extends Mixins(CommonMixin) {
+export default class AmalgamationBusinessInfo extends Mixins(CommonMixin) {
   @Getter(useStore) getBusinessContact!: ContactPointIF
   @Getter(useStore) getDefineCompanyStep!: DefineCompanyIF
   @Getter(useStore) getShowErrors!: boolean
+  @Getter(useStore) isAmalgamationFilingHorizontal!: boolean
+  @Getter(useStore) isAmalgamationFilingRegular!: boolean
+  @Getter(useStore) isAmalgamationFilingVertical!: boolean
   @Getter(useStore) isEntityType!: boolean
 
   @Action(useStore) setBusinessContact!: (x: ContactPointIF) => void
@@ -168,7 +204,13 @@ export default class AmalgamationRegularBusinessInfo extends Mixins(CommonMixin)
 
   @Watch('$route')
   private async scrollToInvalidComponent (): Promise<void> {
-    if (this.getShowErrors && this.$route.name === RouteNames.AMALG_REG_BUSINESS_INFO) {
+    if (
+      this.getShowErrors &&
+      (
+        this.$route.name === RouteNames.AMALG_REG_BUSINESS_INFO ||
+        this.$route.name === RouteNames.AMALG_SHORT_BUSINESS_INFO
+      )
+    ) {
       // scroll to invalid components
       await this.$nextTick()
       await this.validateAndScroll(this.validFlags, this.validComponents)
@@ -180,7 +222,7 @@ export default class AmalgamationRegularBusinessInfo extends Mixins(CommonMixin)
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
 
-#amalgamation-regular-business-info {
+#amalgamation-business-info {
   /* Set "header-counter" to 0 */
   counter-reset: header-counter;
 }
