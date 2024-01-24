@@ -166,9 +166,6 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         parties: fixNullAddressType(this.getAddPeopleAndRoleStep.orgPeople),
         shareStructure: {
           shareClasses: this.getCreateShareStructureStep.shareClasses
-        },
-        incorporationAgreement: {
-          agreementType: this.getIncorporationAgreementStep.agreementType
         }
       }
     }
@@ -300,12 +297,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
       ? draftFiling.amalgamationApplication.shareStructure.shareClasses
       : [])
 
-    // restore Incorporation Agreement
-    this.setIncorporationAgreementStepData({
-      agreementType: draftFiling.amalgamationApplication.incorporationAgreement?.agreementType,
-      valid: false
-    })
-    // set court order fields
+    // restore court order file number / POA
     if (draftFiling.amalgamationApplication.courtOrder?.fileNumber) {
       this.setCourtOrderFileNumber(draftFiling.amalgamationApplication.courtOrder.fileNumber)
     }
