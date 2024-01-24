@@ -54,11 +54,4 @@ export enum RouteNames {
   RESTORATION_BUSINESS_INFORMATION = 'restoration-business-information',
   RESTORATION_BUSINESS_NAME = 'restoration-business-name',
   RESTORATION_REVIEW_CONFIRM = 'restoration-review-confirm',
-
-  // Amalgamation (regular) route names
-  AMALG_REG_BUSINESS_INFO = 'amalg-reg-business-info',
-  AMALG_REG_INFORMATION = 'amalg-reg-information',
-  AMALG_REG_PEOPLE_ROLES = 'amalg-reg-people-roles',
-  AMALG_REG_REVIEW_CONFIRM = 'amalg-reg-review-confirm',
-  AMALG_REG_SHARE_STRUCTURE = 'amalg-reg-share-structure',
 }

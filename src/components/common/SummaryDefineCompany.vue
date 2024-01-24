@@ -222,7 +222,6 @@ export default class SummaryDefineCompany extends Vue {
   @Getter(useStore) getFolioNumber!: string
   @Getter(useStore) getNameRequestApprovedName!: string
   @Getter(useStore) getNameTranslations!: NameTranslationIF[]
-  @Getter(useStore) isAmalgamationInformationRegValid!: boolean
   @Getter(useStore) isAmalgamationFiling!: boolean
   @Getter(useStore) isAmalgamationFilingHorizontal!: boolean
   @Getter(useStore) isAmalgamationFilingRegular!: boolean

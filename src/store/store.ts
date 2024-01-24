@@ -639,6 +639,8 @@ export const useStore = defineStore('store', {
       const isCertifyValid = this.getCertifyState.valid && !!this.getCertifyState.certifiedBy
       const isEffectiveDateTimeValid = this.getEffectiveDateTime.valid
       const isFolioNumberValid = !this.isPremiumAccount || this.getFolioNumberValid
+      const isCourtOrderValid = this.isRoleStaff ? this.getCourtOrderStep.valid : true
+      const isCertifyValid = this.getCertifyState.valid && !!this.getCertifyState.certifiedBy
       const isStaffPaymentValid = this.isRoleStaff ? this.getStaffPaymentStep.valid : true
 
       return (

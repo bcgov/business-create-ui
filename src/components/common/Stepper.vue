@@ -70,7 +70,6 @@ import { RegistrationStateIF } from '@/interfaces'
 
 @Component({})
 export default class Stepper extends Vue {
-  @Getter(useStore) isAmalgamationInformationRegValid!: boolean
   @Getter(useStore) getRegistration!: RegistrationStateIF
   @Getter(useStore) getShowErrors!: boolean
   @Getter(useStore) getSteps!: Array<any>
