@@ -298,8 +298,8 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   @Getter(useStore) getUserEmail!: string
   @Getter(useStore) getUserPhone!: string
   // @Getter(useStore) isAmalgamationFilingHorizontal!: boolean
-  @Getter(useStore) isAmalgamationFilingRegular!: boolean
-  @Getter(useStore) isAmalgamationFilingVertical!: boolean
+  // @Getter(useStore) isAmalgamationFilingRegular!: boolean
+  // @Getter(useStore) isAmalgamationFilingVertical!: boolean
   @Getter(useStore) isDissolutionFiling!: boolean
   @Getter(useStore) isIncorporationFiling!: boolean
   @Getter(useStore) isMobile!: boolean

@@ -71,6 +71,8 @@ export default class BusinessTableSummary extends Vue {
   readonly AmlTypes = AmlTypes
 
   @Getter(useStore) getAmalgamatingBusinesses!: AmalgamatingBusinessIF[]
+  @Getter(useStore) isAmalgamationFilingHorizontal!: boolean
+  @Getter(useStore) isAmalgamationFilingVertical!: boolean
 
   key (item: AmalgamatingBusinessIF): string {
     if (item?.type === AmlTypes.LEAR) return item.identifier
@@ -102,7 +104,8 @@ export default class BusinessTableSummary extends Vue {
 
   role (item: AmalgamatingBusinessIF): string {
     if (item.role === AmlRoles.AMALGAMATING) return 'Amalgamating Business'
-    if (item.role === AmlRoles.HOLDING) return 'Holding Company'
+    if (item.role === AmlRoles.HOLDING && this.isAmalgamationFilingHorizontal) return 'Primary Company'
+    if (item.role === AmlRoles.HOLDING && this.isAmalgamationFilingVertical) return 'Holding Company'
     return '(Unknown)' // should never happen
   }
 }

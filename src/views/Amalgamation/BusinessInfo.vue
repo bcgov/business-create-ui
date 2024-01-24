@@ -31,9 +31,9 @@
           class="message-box"
         >
           <p>
-            <strong>Important: </strong>To update the registered office and records office addresses,
-            save this draft application and visit the holding company's dashboard. Make the address
-            changes there and come back to this application.
+            <strong>Important: </strong>To update the registered office and records office addresses, save
+            this draft application and visit the {{ isAmalgamationFilingHorizontal ? 'primary' : 'holding' }}
+            company's dashboard. Make the address changes there and come back to this application.
           </p>
         </v-card>
 

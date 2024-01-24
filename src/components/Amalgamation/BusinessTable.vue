@@ -100,6 +100,8 @@ export default class BusinessTable extends Mixins(AmalgamationMixin) {
   readonly GetCorpFullDescription = GetCorpFullDescription
 
   @Getter(useStore) getNameRequestApprovedName!: string
+  // @Getter(useStore) isAmalgamationFilingHorizontal!: boolean
+  // @Getter(useStore) isAmalgamationFilingVertical!: boolean
 
   @Action(useStore) spliceAmalgamatingBusiness!: (x: number) => void
 
@@ -162,7 +164,8 @@ export default class BusinessTable extends Mixins(AmalgamationMixin) {
 
   role (item: AmalgamatingBusinessIF): string {
     if (item.role === AmlRoles.AMALGAMATING) return 'Amalgamating Business'
-    if (item.role === AmlRoles.HOLDING) return 'Holding Company'
+    if (item.role === AmlRoles.HOLDING && this.isAmalgamationFilingHorizontal) return 'Primary Company'
+    if (item.role === AmlRoles.HOLDING && this.isAmalgamationFilingVertical) return 'Holding Company'
     return '(Unknown)' // should never happen
   }
 
