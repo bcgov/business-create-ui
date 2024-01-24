@@ -1,5 +1,6 @@
 import { shallowWrapperFactory } from '../vitest-wrapper-factory'
-import { AmalgRegReviewConfirm } from '@/views'
+import { AmalgamationReviewConfirm } from '@/views'
+// *** FUTURE: add tests for AmalgamationShortResources
 import { AmalgamationRegResources } from '@/resources/'
 import AmalgamationStatement from '@/components/Amalgamation/AmalgamationStatement.vue'
 import BusinessTableSummary from '@/components/Amalgamation/BusinessTableSummary.vue'
@@ -35,9 +36,10 @@ for (const test of amalgamationRegularBusinessInfo) {
 
     beforeAll(() => {
       wrapper = shallowWrapperFactory(
-        AmalgRegReviewConfirm,
+        AmalgamationReviewConfirm,
         null,
         {
+          // *** FUTURE: add tests for regular vs short-form amalgamations
           entityType: test.entityType,
           tombstone: { keycloakRoles: ['staff'] }
         },
@@ -51,7 +53,7 @@ for (const test of amalgamationRegularBusinessInfo) {
     })
 
     it('renders the page', () => {
-      expect(wrapper.find('#amalgamation-regular-review-confirm').exists()).toBe(true)
+      expect(wrapper.find('#amalgamation-review-confirm').exists()).toBe(true)
     })
 
     it('displays Review and Confirm section', async () => {

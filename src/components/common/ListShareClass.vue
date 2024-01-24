@@ -9,11 +9,17 @@
         <span>
           <v-icon color="error">mdi-information-outline</v-icon>
           <span class="error-text mx-1">This step is unfinished.</span>
+
+          <!--
+            This return link is only for regular amalgamations, since short-form amalgamations adopt
+            their shares from the holding/primary company and therefore can't be in error nor edited.
+          -->
           <router-link
             v-if="isAmalgamationFiling"
             id="router-link"
             :to="{ path: `/${RouteNames.AMALG_REG_SHARE_STRUCTURE}` }"
           >Return to this step to finish it</router-link>
+
           <router-link
             v-if="isIncorporationFiling"
             id="router-link"

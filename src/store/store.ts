@@ -69,9 +69,10 @@ import {
   ValidationDetailIF
 } from '@/interfaces'
 
-// Possible to move getters / actions into seperate files:
+// It's possible to move getters / actions into seperate files:
 // https://github.com/vuejs/pinia/issues/802#issuecomment-1018780409
-// Not sure if I'd recommend that though.
+// Not sure if that's a good idea though.
+
 export const useStore = defineStore('store', {
   state: (): StateIF => ({ resourceModel, stateModel }),
   getters: {
@@ -87,19 +88,28 @@ export const useStore = defineStore('store', {
       return (this.stateModel.tombstone.filingType === FilingTypes.AMALGAMATION_APPLICATION)
     },
 
+    /** Whether the current filing is a Horizontal Short-form Amalgamation. */
+    isAmalgamationFilingHorizontal (): boolean {
+      return (
+        this.isAmalgamationFiling &&
+        this.getAmalgamationType === AmalgamationTypes.HORIZONTAL
+      )
+    },
+
     /** Whether the current filing is a Regular Amalgamation. */
     isAmalgamationFilingRegular (): boolean {
-      return (this.getAmalgamationType === AmalgamationTypes.REGULAR)
+      return (
+        this.isAmalgamationFiling &&
+        this.getAmalgamationType === AmalgamationTypes.REGULAR
+      )
     },
 
-    /** Whether the current filing is a Horizontal Amalgamation. */
-    isAmalgamationFilingHorizontal (): boolean {
-      return (this.getAmalgamationType === AmalgamationTypes.HORIZONTAL)
-    },
-
-    /** Whether the current filing is a Vertical Amalgamation. */
+    /** Whether the current filing is a Vertical Short-form Amalgamation. */
     isAmalgamationFilingVertical (): boolean {
-      return (this.getAmalgamationType === AmalgamationTypes.VERTICAL)
+      return (
+        this.isAmalgamationFiling &&
+        this.getAmalgamationType === AmalgamationTypes.VERTICAL
+      )
     },
 
     /** Whether the current filing is an Incorporation Application. */
@@ -521,12 +531,7 @@ export const useStore = defineStore('store', {
 
     /** Whether the subject filing is valid. */
     isFilingValid (): boolean {
-      if (this.isAmalgamationFiling) {
-        if (this.isAmalgamationFilingRegular) return this.isAmalgamationRegularValid
-        if (this.isAmalgamationFilingHorizontal) return false // FUTURE
-        if (this.isAmalgamationFilingVertical) return false // FUTURE
-        return false // should never happen
-      }
+      if (this.isAmalgamationFiling) return this.isAmalgamationValid
       if (this.isIncorporationFiling) return this.isIncorporationApplicationValid
       if (this.isDissolutionFiling) return this.isDissolutionValid
       if (this.isRegistrationFiling) return this.isRegistrationValid
@@ -577,32 +582,40 @@ export const useStore = defineStore('store', {
       )
     },
 
-    /** Whether Amalgamation Information (regular) step is valid. */
-    isAmalgamationInformationRegValid (): boolean {
-      return (
-        this.getAmalgamatingBusinessesValid &&
-        !!this.getCorrectNameOption &&
-        this.getNameTranslationsValid
-      )
+    /** Whether Amalgamation Information step is valid. */
+    isAmalgamationInformationValid (): boolean {
+      if (this.isAmalgamationFilingRegular) {
+        return (
+          this.getAmalgamatingBusinessesValid &&
+          !!this.getCorrectNameOption &&
+          this.getNameTranslationsValid
+        )
+      } else {
+        return (
+          // *** FUTURE: verify/update this as needed
+          this.getAmalgamatingBusinessesValid
+        )
+      }
     },
 
-    /** Whether all the amalgamation (regular) steps are valid. */
-    isAmalgamationRegularValid (): boolean {
-      const isCertifyValid = this.getCertifyState.valid && !!this.getCertifyState.certifiedBy
-      const isCourtOrderValid = this.isRoleStaff ? this.getCourtOrderStep.valid : true
+    /** Whether all the amalgamation steps are valid. */
+    isAmalgamationValid (): boolean {
       const isFolioNumberValid = !this.isPremiumAccount || this.getFolioNumberValid
+      const isCourtOrderValid = this.isRoleStaff ? this.getCourtOrderStep.valid : true
+      const isCertifyValid = this.getCertifyState.valid && !!this.getCertifyState.certifiedBy
       const isStaffPaymentValid = this.isRoleStaff ? this.getStaffPaymentStep.valid : true
 
       return (
-        this.isAmalgamationInformationRegValid &&
+        this.isAmalgamationInformationValid &&
         this.isDefineCompanyValid &&
         this.isAddPeopleAndRolesValid &&
         this.isCreateShareStructureValid &&
-        isCertifyValid &&
-        isCourtOrderValid &&
+        this.getEffectiveDateTime.valid &&
         isFolioNumberValid &&
-        isStaffPaymentValid &&
-        this.getAmalgamationCourtApprovalValid
+        this.getAmalgamationCourtApprovalValid &&
+        isCourtOrderValid &&
+        isCertifyValid &&
+        isStaffPaymentValid
       )
     },
 
@@ -908,13 +921,13 @@ export const useStore = defineStore('store', {
 
     /** The resource filing data. */
     getFilingData (): Array<FilingDataIF> {
-      if (this.isFullRestorationFiling) {
-        return [this.resourceModel.filingData[0]]
+      switch (true) {
+        case this.isFullRestorationFiling: return [this.resourceModel.filingData[0]]
+        case this.isLimitedRestorationFiling: return [this.resourceModel.filingData[1]]
+        case this.isAmalgamationFilingHorizontal: return [this.resourceModel.filingData[0]]
+        case this.isAmalgamationFilingVertical: return [this.resourceModel.filingData[1]]
+        default: return this.resourceModel.filingData
       }
-      if (this.isLimitedRestorationFiling) {
-        return [this.resourceModel.filingData[1]]
-      }
-      return this.resourceModel.filingData
     },
 
     /** The incorporation agreement sample article. */

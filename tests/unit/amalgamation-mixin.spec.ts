@@ -3,7 +3,7 @@ import { wrapperFactory } from '../vitest-wrapper-factory'
 import MixinTester from '@/mixin-tester.vue'
 import { createPinia, setActivePinia } from 'pinia'
 import { useStore } from '@/store/store'
-import { AmalgamationTypes, AmlStatuses, AmlTypes } from '@/enums'
+import { AmalgamationTypes, AmlStatuses, AmlTypes, FilingTypes } from '@/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 
 setActivePinia(createPinia())
@@ -273,6 +273,7 @@ describe('Amalgamation Mixin - rules', () => {
 
   it('correctly evaluates "foreignHorizontal" rule', () => {
     // init
+    store.setFilingType(FilingTypes.AMALGAMATION_APPLICATION)
     store.setAmalgamationType(AmalgamationTypes.HORIZONTAL)
 
     // verify rule

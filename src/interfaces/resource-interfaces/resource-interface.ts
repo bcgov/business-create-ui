@@ -5,8 +5,8 @@ import {
 } from '@/interfaces'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 
-/** Amalgamation (regular) resource interface. */
-export interface AmalgamationRegResourceIF {
+/** Amalgamation (regular and short-form) resource interface. */
+export interface AmalgamationResourceIF {
   entityType: CorpTypeCd
   displayName: string
   steps: Array<StepIF>
@@ -106,5 +106,5 @@ export interface RestorationResourceIF {
   }
 }
 
-export interface ResourceIF extends AmalgamationRegResourceIF, DissolutionResourceIF,
+export interface ResourceIF extends AmalgamationResourceIF, DissolutionResourceIF,
   IncorporationResourceIF, RegistrationResourceIF, RestorationResourceIF {}

@@ -140,6 +140,7 @@ export default class Actions extends Mixins(AmalgamationMixin, CommonMixin,
   get isSummaryStep (): boolean {
     return (
       this.$route.name === RouteNames.AMALG_REG_REVIEW_CONFIRM ||
+      this.$route.name === RouteNames.AMALG_SHORT_REVIEW_CONFIRM ||
       this.$route.name === RouteNames.DISSOLUTION_REVIEW_CONFIRM ||
       this.$route.name === RouteNames.INCORPORATION_REVIEW_CONFIRM ||
       this.$route.name === RouteNames.REGISTRATION_REVIEW_CONFIRM ||

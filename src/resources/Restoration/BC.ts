@@ -8,7 +8,7 @@ export const RestorationResourceBc: RestorationResourceIF = {
   displayName: GetCorpFullDescription(CorpTypeCd.BC_COMPANY),
   steps: RestorationSteps,
   filingData: [
-    // order matters - see resource-getters.ts
+    // order matters - see getFilingData()
     {
       entityType: CorpTypeCd.BC_COMPANY,
       filingTypeCode: FilingCodes.RESTORATION_FULL

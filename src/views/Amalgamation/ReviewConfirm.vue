@@ -1,5 +1,5 @@
 <template>
-  <div id="amalgamation-regular-review-confirm">
+  <div id="amalgamation-review-confirm">
     <!-- Review and Confirm -->
     <section class="mt-10">
       <header>
@@ -76,7 +76,7 @@
         <ListShareClass
           :isSummary="true"
           :shareClasses="getCreateShareStructureStep.shareClasses"
-          :showErrorSummary="!getCreateShareStructureStep.valid"
+          :showErrorSummary="showErrorSummary"
           :isAmalgamationFiling="true"
         />
       </v-card>
@@ -303,7 +303,7 @@ import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp
     StaffPayment
   }
 })
-export default class AmalgamationRegularReviewConfirm extends Vue {
+export default class AmalgamationReviewConfirm extends Vue {
   @Getter(useStore) getAmalgamatingBusinessesValid!: boolean
   @Getter(useStore) getAmalgamationCourtApprovalValid!: boolean
   @Getter(useStore) getBusinessContact!: ContactPointIF
@@ -316,6 +316,7 @@ export default class AmalgamationRegularReviewConfirm extends Vue {
   @Getter(useStore) getFolioNumberValid!: boolean
   @Getter(useStore) getUserEmail!: string
   @Getter(useStore) getValidateSteps!: boolean
+  @Getter(useStore) isAmalgamationFilingRegular!: boolean
   @Getter(useStore) isPremiumAccount!: boolean
   @Getter(useStore) isRoleStaff!: boolean
 
@@ -340,6 +341,12 @@ export default class AmalgamationRegularReviewConfirm extends Vue {
       certifiedBy: this.getCertifyState.certifiedBy,
       valid: false
     })
+  }
+
+  /** Whether to show the List Share Class error summary -- only for regular amalgamations. */
+  get showErrorSummary (): boolean {
+    if (this.isAmalgamationFilingRegular) return (!this.getCreateShareStructureStep.valid)
+    return false
   }
 
   /** The entity description,  */
@@ -377,7 +384,7 @@ export default class AmalgamationRegularReviewConfirm extends Vue {
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
 
-#amalgamation-regular-review-confirm {
+#amalgamation-review-confirm {
   /* Set "header-counter" to 0 */
   counter-reset: header-counter;
 }

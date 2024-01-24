@@ -9,14 +9,25 @@
           <v-icon color="error">mdi-information-outline</v-icon>
           <span class="error-text mx-1">This step is unfinished.</span>
 
-          <template v-if="isAmalgamationFiling">
+          <template v-if="isAmalgamationFilingRegular">
             <router-link
-              v-if="!isAmalgamationInformationRegValid"
+              v-if="!isAmalgamationInformationValid"
               :to="{ path: `/${RouteNames.AMALG_REG_INFORMATION}` }"
             >Return to this step to finish it</router-link>
             <router-link
               v-else-if="!isDefineCompanyValid"
               :to="{ path: `/${RouteNames.AMALG_REG_BUSINESS_INFO}` }"
+            >Return to this step to finish it</router-link>
+          </template>
+
+          <template v-if="isAmalgamationFilingHorizontal || isAmalgamationFilingVertical">
+            <router-link
+              v-if="!isAmalgamationInformationValid"
+              :to="{ path: `/${RouteNames.AMALG_SHORT_INFORMATION}` }"
+            >Return to this step to finish it</router-link>
+            <router-link
+              v-else-if="!isDefineCompanyValid"
+              :to="{ path: `/${RouteNames.AMALG_SHORT_BUSINESS_INFO}` }"
             >Return to this step to finish it</router-link>
           </template>
 
@@ -50,10 +61,7 @@
               class="pt-4 pt-sm-0"
             >
               <div id="amalgamation-type">
-                <span v-if="isAmalgamationFilingRegular">Regular</span>
-                <span v-else-if="isAmalgamationFilingHorizontal">Horizontal</span>
-                <span v-else-if="isAmalgamationFilingVertical">Vertical</span>
-                <span v-else>[Unknown]</span>
+                {{ amalgamationType || '[Unknown]' }}
               </div>
             </v-col>
           </v-row>
@@ -205,11 +213,11 @@ export default class SummaryDefineCompany extends Vue {
   @Getter(useStore) getFolioNumber!: string
   @Getter(useStore) getNameRequestApprovedName!: string
   @Getter(useStore) getNameTranslations!: NameTranslationIF[]
-  @Getter(useStore) isAmalgamationInformationRegValid!: boolean
   @Getter(useStore) isAmalgamationFiling!: boolean
-  @Getter(useStore) isAmalgamationFilingRegular!: boolean
   @Getter(useStore) isAmalgamationFilingHorizontal!: boolean
+  @Getter(useStore) isAmalgamationFilingRegular!: boolean
   @Getter(useStore) isAmalgamationFilingVertical!: boolean
+  @Getter(useStore) isAmalgamationInformationValid!: boolean
   @Getter(useStore) isDefineCompanyValid!: boolean
   @Getter(useStore) isFullRestorationFiling!: boolean
   @Getter(useStore) isIncorporationFiling!: boolean
@@ -222,9 +230,17 @@ export default class SummaryDefineCompany extends Vue {
   /** Whether this section is invalid. */
   get invalidSection (): boolean {
     if (this.isAmalgamationFiling) {
-      return (!this.isAmalgamationInformationRegValid || !this.isDefineCompanyValid)
+      // *** FUTURE: update this for short-form amalgamation (needs to be valid)
+      return (!this.isAmalgamationInformationValid || !this.isDefineCompanyValid)
     }
     return !this.isDefineCompanyValid
+  }
+
+  get amalgamationType (): string {
+    if (this.isAmalgamationFilingRegular) return 'Regular'
+    if (this.isAmalgamationFilingHorizontal) return 'Horizontal'
+    if (this.isAmalgamationFilingVertical) return 'Vertical'
+    return null
   }
 
   /** The company name. */

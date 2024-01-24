@@ -1,11 +1,11 @@
 <template>
-  <div id="amalgamation-regular-share-structure">
+  <div id="amalgamation-share-structure">
     <section class="mt-10">
       <header>
         <h2>1. Create Your Authorized Share Structure</h2>
       </header>
 
-      <p id="amalgamation-regular-share-structure">
+      <p>
         Add at least one class of shares. A share class consists of the name of the class, the
         maximum number of shares in the class (including any associated Series), a par value for
         the class, and the currency the shares are valued in.
@@ -170,7 +170,7 @@ import ShareStructure from '@/components/common/ShareStructure.vue'
     ShareStructure
   }
 })
-export default class AmalgamationRegularShareStructure extends Mixins(CommonMixin) {
+export default class AmalgamationShareStructure extends Mixins(CommonMixin) {
   @Getter(useStore) getCreateShareStructureStep!: ShareStructureIF
   @Getter(useStore) getShowErrors!: boolean
 
@@ -323,7 +323,7 @@ export default class AmalgamationRegularShareStructure extends Mixins(CommonMixi
         {
           shareStructure: this.getCreateShareStructureStep.valid
         },
-        ['amalgamation-regular-share-structure']
+        ['amalgamation-share-structure']
       )
     }
   }

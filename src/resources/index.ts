@@ -1,5 +1,5 @@
 import {
-  AmalgamationRegResourceIF,
+  AmalgamationResourceIF,
   DissolutionResourceIF,
   IncorporationResourceIF,
   RegistrationResourceIF,
@@ -12,6 +12,13 @@ import {
   AmalgamationRegResourceCc,
   AmalgamationRegResourceUlc
 } from './AmalgamationRegular/'
+
+import {
+  AmalgamationShortResourceBc,
+  AmalgamationShortResourceBen,
+  AmalgamationShortResourceCc,
+  AmalgamationShortResourceUlc
+} from './AmalgamationShort/'
 
 import {
   DissolutionResourceBc,
@@ -43,11 +50,18 @@ import {
   RestorationResourceUlc
 } from './Restoration/'
 
-export const AmalgamationRegResources: Array<AmalgamationRegResourceIF> = [
+export const AmalgamationRegResources: Array<AmalgamationResourceIF> = [
   AmalgamationRegResourceBc,
   AmalgamationRegResourceBen,
   AmalgamationRegResourceCc,
   AmalgamationRegResourceUlc
+]
+
+export const AmalgamationShortResources: Array<AmalgamationResourceIF> = [
+  AmalgamationShortResourceBc,
+  AmalgamationShortResourceBen,
+  AmalgamationShortResourceCc,
+  AmalgamationShortResourceUlc
 ]
 
 export const DissolutionResources: Array<DissolutionResourceIF> = [

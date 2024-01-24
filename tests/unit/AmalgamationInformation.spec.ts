@@ -1,10 +1,12 @@
 import { shallowWrapperFactory } from '../vitest-wrapper-factory'
-import { AmalgRegInformation } from '@/views'
+import { AmalgamationInformation } from '@/views'
+// *** FUTURE: add tests for AmalgamationShortResources
 import { AmalgamationRegResources } from '@/resources/'
 import AmalgamatingBusinesses from '@/components/Amalgamation/AmalgamatingBusinesses.vue'
 import { ExpandableHelp } from '@bcrs-shared-components/expandable-help'
 import ResultingBusinessName from '@/components/Amalgamation/ResultingBusinessName.vue'
 import BusinessTypeHelp from '@/components/Amalgamation/BusinessTypeHelp.vue'
+import { AmalgamationTypes, FilingTypes } from '@bcrs-shared-components/enums'
 
 // Test Case Data
 const amalgamationRegularBusinessInfo = [
@@ -28,11 +30,15 @@ for (const test of amalgamationRegularBusinessInfo) {
 
     beforeAll(() => {
       wrapper = shallowWrapperFactory(
-        AmalgRegInformation,
+        AmalgamationInformation,
         null,
         {
+          amalgamation: { type: AmalgamationTypes.REGULAR }, // *** FUTURE: add tests for short-form amalgamations
           entityType: test.entityType,
-          tombstone: { keycloakRoles: ['staff'] }
+          tombstone: {
+            filingType: FilingTypes.AMALGAMATION_APPLICATION,
+            keycloakRoles: ['staff']
+          }
         },
         null,
         AmalgamationRegResources
@@ -44,7 +50,7 @@ for (const test of amalgamationRegularBusinessInfo) {
     })
 
     it('renders the page', () => {
-      expect(wrapper.find('#amalgamation-regular-information').exists()).toBe(true)
+      expect(wrapper.find('#amalgamation-information').exists()).toBe(true)
     })
 
     it('displays the Amalgamation Businesses section', () => {
