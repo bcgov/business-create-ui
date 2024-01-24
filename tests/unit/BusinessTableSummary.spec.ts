@@ -1,4 +1,4 @@
-import { AmlRoles, AmlTypes } from '@/enums'
+import { AmalgamationTypes, AmlRoles, AmlTypes, FilingTypes } from '@/enums'
 import { wrapperFactory } from '../vitest-wrapper-factory'
 import BusinessTableSummary from '@/components/Amalgamation/BusinessTableSummary.vue'
 
@@ -35,7 +35,38 @@ describe('Business Table Summary', () => {
 
   const amalgamatingBusinesses = [
     {
-      label: 'LEAR holding business',
+      label: 'LEAR holding business - reg amalgamation',
+      amalgamationType: AmalgamationTypes.REGULAR,
+      type: AmlTypes.LEAR,
+      identifier: 'BC1111111',
+      name: 'Test Business 1',
+      email: 'bc1111111@example.com',
+      address: {
+        streetAddress: '123 Main St',
+        addressCity: 'Victoria',
+        addressCountry: 'CA',
+        postalCode: 'V8V 8V8'
+      },
+      role: AmlRoles.HOLDING
+    },
+    {
+      label: 'LEAR holding business - horiz amalgamation',
+      amalgamationType: AmalgamationTypes.HORIZONTAL,
+      type: AmlTypes.LEAR,
+      identifier: 'BC1111111',
+      name: 'Test Business 1',
+      email: 'bc1111111@example.com',
+      address: {
+        streetAddress: '123 Main St',
+        addressCity: 'Victoria',
+        addressCountry: 'CA',
+        postalCode: 'V8V 8V8'
+      },
+      role: AmlRoles.HOLDING
+    },
+    {
+      label: 'LEAR primary business - vert amalgamation',
+      amalgamationType: AmalgamationTypes.VERTICAL,
       type: AmlTypes.LEAR,
       identifier: 'BC1111111',
       name: 'Test Business 1',
@@ -50,6 +81,7 @@ describe('Business Table Summary', () => {
     },
     {
       label: 'LEAR amalgamating business with no address',
+      amalgamationType: AmalgamationTypes.REGULAR,
       type: AmlTypes.LEAR,
       identifier: 'BC2222222',
       name: 'Test Business 2',
@@ -59,6 +91,7 @@ describe('Business Table Summary', () => {
     },
     {
       label: 'foreign business in Federal jurisdiction',
+      amalgamationType: AmalgamationTypes.REGULAR,
       type: AmlTypes.FOREIGN,
       corpNumber: 'CA-3333333',
       legalName: 'Test Business 3',
@@ -71,6 +104,7 @@ describe('Business Table Summary', () => {
     },
     {
       label: 'foreign business in USA jurisdiction',
+      amalgamationType: AmalgamationTypes.REGULAR,
       type: AmlTypes.FOREIGN,
       corpNumber: 'US-4444444',
       legalName: 'Test Business 4',
@@ -89,7 +123,12 @@ describe('Business Table Summary', () => {
         null,
         {
           amalgamation: {
+            type: business.amalgamationType,
             amalgamatingBusinesses: [ business ]
+          },
+          tombstone: {
+            filingType: FilingTypes.AMALGAMATION_APPLICATION,
+            keycloakRoles: []
           }
         }
       )
@@ -124,7 +163,10 @@ describe('Business Table Summary', () => {
         if (business.role === AmlRoles.AMALGAMATING) {
           expect(td.at(2).text()).toBe('Amalgamating Business')
         }
-        if (business.role === AmlRoles.HOLDING) {
+        if (business.role === AmlRoles.HOLDING && business.amalgamationType === AmalgamationTypes.HORIZONTAL) {
+          expect(td.at(2).text()).toBe('Primary Company')
+        }
+        if (business.role === AmlRoles.HOLDING && business.amalgamationType === AmalgamationTypes.VERTICAL) {
           expect(td.at(2).text()).toBe('Holding Company')
         }
       }
