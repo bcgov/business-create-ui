@@ -22,6 +22,7 @@ export const AmalgamationShortResourceBen: AmalgamationResourceIF = {
     header: '1. Add People to your Application',
     blurb: 'Add the Completing Party to this application',
     helpSection: null,
+    addPerson: false,
     rules: [
       {
         id: RuleIds.NUM_COMPLETING_PARTY,
