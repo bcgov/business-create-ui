@@ -16,6 +16,8 @@ export default class AmalgamationMixin extends Vue {
   @Getter(useStore) getAmalgamatingBusinesses!: AmalgamatingBusinessIF[]
   @Getter(useStore) getCurrentDate!: string
   @Getter(useStore) isAmalgamationFilingHorizontal!: boolean
+  @Getter(useStore) isAmalgamationFilingRegular!: boolean
+  @Getter(useStore) isAmalgamationFilingVertical!: boolean
   @Getter(useStore) isRoleStaff!: boolean
   @Getter(useStore) isTypeBcCcc!: boolean
   @Getter(useStore) isTypeBcUlcCompany!: boolean

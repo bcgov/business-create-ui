@@ -1,8 +1,10 @@
 import { shallowWrapperFactory } from '../vitest-wrapper-factory'
-import { AmalgRegBusinessInfo } from '@/views'
+import { AmalgamationBusinessInfo } from '@/views'
+// *** FUTURE: add tests for AmalgamationShortResources
 import { AmalgamationRegResources } from '@/resources/'
 import OfficeAddresses from '@/components/common/OfficeAddresses.vue'
 import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
+import { AmalgamationTypes, FilingTypes } from '@bcrs-shared-components/enums'
 
 // Test Case Data
 const amalgamationRegularBusinessInfo = [
@@ -26,11 +28,15 @@ for (const test of amalgamationRegularBusinessInfo) {
 
     beforeAll(() => {
       wrapper = shallowWrapperFactory(
-        AmalgRegBusinessInfo,
+        AmalgamationBusinessInfo,
         null,
         {
+          amalgamation: { type: AmalgamationTypes.REGULAR }, // *** FUTURE: add tests for short-form amalgamations
           entityType: test.entityType,
-          tombstone: { keycloakRoles: ['staff'] }
+          tombstone: {
+            filingType: FilingTypes.AMALGAMATION_APPLICATION,
+            keycloakRoles: ['staff']
+          }
         },
         null,
         AmalgamationRegResources
@@ -42,7 +48,7 @@ for (const test of amalgamationRegularBusinessInfo) {
     })
 
     it('renders the page', () => {
-      expect(wrapper.find('#amalgamation-regular-business-info').exists()).toBe(true)
+      expect(wrapper.find('#amalgamation-business-info').exists()).toBe(true)
     })
 
     it('displays Registered and Records Office Addresses section', () => {

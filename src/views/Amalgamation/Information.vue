@@ -1,5 +1,5 @@
 <template>
-  <div id="amalgamation-regular-information">
+  <div id="amalgamation-information">
     <v-fade-transition>
       <div
         v-show="showSpinner"
@@ -23,7 +23,14 @@
       <header id="amalgamating-businesses">
         <h2>Amalgamating Businesses</h2>
         <p class="mt-4">
-          Add the amalgamating businesses to the list.
+          <template v-if="isAmalgamationFilingRegular">
+            Add the amalgamating businesses to the list.
+          </template>
+          <template v-if="isAmalgamationFilingHorizontal || isAmalgamationFilingVertical">
+            Add the holding business and the amalgamating businesses below. The amalgamated business
+            will adopt as its notice of articles, the notice of articles of the amalgamating holding
+            company.
+          </template>
         </p>
         <p class="mt-4">
           <strong>Important:</strong> The amalgamating businesses must be visible on your
@@ -73,11 +80,14 @@ import BusinessTypeHelp from '@/components/Amalgamation/BusinessTypeHelp.vue'
     ResultingBusinessName
   }
 })
-export default class AmalgamationRegularInformation extends Mixins(CommonMixin, NameRequestMixin) {
+export default class AmalgamationInformation extends Mixins(CommonMixin, NameRequestMixin) {
   @Getter(useStore) getAmalgamatingBusinessesValid!: boolean
   @Getter(useStore) getCorrectNameOption!: CorrectNameOptions
   @Getter(useStore) getNameTranslationsValid!: boolean
   @Getter(useStore) getShowErrors!: boolean
+  @Getter(useStore) isAmalgamationFilingHorizontal!: boolean
+  @Getter(useStore) isAmalgamationFilingRegular!: boolean
+  @Getter(useStore) isAmalgamationFilingVertical!: boolean
 
   @Action(useStore) setIgnoreChanges!: (x: boolean) => void
 
@@ -121,7 +131,13 @@ export default class AmalgamationRegularInformation extends Mixins(CommonMixin, 
   /** When we route to this step, validate the step and scroll to any errors. */
   @Watch('$route')
   private async scrollToInvalidComponent (): Promise<void> {
-    if (this.getShowErrors && this.$route.name === RouteNames.AMALG_REG_INFORMATION) {
+    if (
+      this.getShowErrors &&
+      (
+        this.$route.name === RouteNames.AMALG_REG_INFORMATION ||
+        this.$route.name === RouteNames.AMALG_SHORT_INFORMATION
+      )
+    ) {
       // scroll to invalid components
       await this.$nextTick()
       await this.validateAndScroll(this.validFlags, this.validComponents)
@@ -140,7 +156,7 @@ export default class AmalgamationRegularInformation extends Mixins(CommonMixin, 
   border-color: rgb(33, 33, 33); // grey darken-4
 }
 
-#amalgamation-regular-information {
+#amalgamation-information {
   /* Set "header-counter" to 0 */
   counter-reset: header-counter;
 }

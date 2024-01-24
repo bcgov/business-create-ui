@@ -1,4 +1,4 @@
-import { AmlRoles, AmlStatuses, AmlTypes } from '@/enums'
+import { AmalgamationTypes, AmlRoles, AmlStatuses, AmlTypes, FilingTypes } from '@/enums'
 import { wrapperFactory } from '../vitest-wrapper-factory'
 import BusinessTable from '@/components/Amalgamation/BusinessTable.vue'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
@@ -40,7 +40,42 @@ describe('Business Table - display', () => {
 
   const amalgamatingBusinesses = [
     {
-      label: 'BC Limited holding business',
+      label: 'BC Limited holding business - reg amalgamation',
+      amalgamationType: AmalgamationTypes.REGULAR,
+      type: AmlTypes.LEAR,
+      identifier: 'BC1111111',
+      name: 'My BC Limited Company',
+      email: 'bc1111111@example.com',
+      address: {
+        streetAddress: '123 Main St',
+        addressCity: 'Victoria',
+        addressCountry: 'CA',
+        postalCode: 'V8V 8V8'
+      },
+      legalType: CorpTypeCd.BC_COMPANY,
+      expectedBusinessType: 'BC Limited Company',
+      role: AmlRoles.HOLDING
+    },
+    {
+      label: 'BC Limited holding business - horiz amalgamation',
+      amalgamationType: AmalgamationTypes.HORIZONTAL,
+      type: AmlTypes.LEAR,
+      identifier: 'BC1111111',
+      name: 'My BC Limited Company',
+      email: 'bc1111111@example.com',
+      address: {
+        streetAddress: '123 Main St',
+        addressCity: 'Victoria',
+        addressCountry: 'CA',
+        postalCode: 'V8V 8V8'
+      },
+      legalType: CorpTypeCd.BC_COMPANY,
+      expectedBusinessType: 'BC Limited Company',
+      role: AmlRoles.HOLDING
+    },
+    {
+      label: 'BC Limited primary business - vert amalgamation',
+      amalgamationType: AmalgamationTypes.VERTICAL,
       type: AmlTypes.LEAR,
       identifier: 'BC1111111',
       name: 'My BC Limited Company',
@@ -57,6 +92,7 @@ describe('Business Table - display', () => {
     },
     {
       label: 'Benefit Company amalgamating business with no address',
+      amalgamationType: AmalgamationTypes.REGULAR,
       type: AmlTypes.LEAR,
       identifier: 'BC2222222',
       name: 'My Benefit Company',
@@ -68,6 +104,7 @@ describe('Business Table - display', () => {
     },
     {
       label: 'foreign business in Federal jurisdiction',
+      amalgamationType: AmalgamationTypes.REGULAR,
       type: AmlTypes.FOREIGN,
       corpNumber: 'CA-3333333',
       legalName: 'My Federal Business',
@@ -81,6 +118,7 @@ describe('Business Table - display', () => {
     },
     {
       label: 'foreign business in USA jurisdiction',
+      amalgamationType: AmalgamationTypes.REGULAR,
       type: AmlTypes.FOREIGN,
       corpNumber: 'US-4444444',
       legalName: 'My USA Business',
@@ -100,7 +138,12 @@ describe('Business Table - display', () => {
         null,
         {
           amalgamation: {
+            type: business.amalgamationType,
             amalgamatingBusinesses: [ business ]
+          },
+          tombstone: {
+            filingType: FilingTypes.AMALGAMATION_APPLICATION,
+            keycloakRoles: []
           }
         }
       )
@@ -146,7 +189,10 @@ describe('Business Table - display', () => {
         if (business.role === AmlRoles.AMALGAMATING) {
           expect(td.at(3).text()).toBe('Amalgamating Business')
         }
-        if (business.role === AmlRoles.HOLDING) {
+        if (business.role === AmlRoles.HOLDING && business.amalgamationType === AmalgamationTypes.HORIZONTAL) {
+          expect(td.at(3).text()).toBe('Primary Company')
+        }
+        if (business.role === AmlRoles.HOLDING && business.amalgamationType === AmalgamationTypes.VERTICAL) {
           expect(td.at(3).text()).toBe('Holding Company')
         }
 
@@ -284,7 +330,7 @@ describe('Business Table - validity', () => {
   })
 })
 
-// *** FUTURE: get this working
+// FUTURE: try to get this working
 // ATM, local rules are mocked (eg, wrapper.vm.notAffiliated()), but not the actual rules in the mixin.
 // It's probably this: https://vitest.dev/guide/mocking.html#mocking-pitfalls.
 // Maybe try vi.mock() to mock the imported mixin?
@@ -328,13 +374,13 @@ describe.skip('Business Table - rule evaluation', () => {
     for (let i = 0; i < rules.length; i++) {
       vi.spyOn(wrapper.vm, rules[i].methodName).mockReturnValue(rules[i].error)
     }
-    // *** these work
-    console.log('*** value1 = ', wrapper.vm.notAffiliated())
-    console.log('*** value2 = ', wrapper.vm.notHistorical())
-    console.log('*** value3 = ', wrapper.vm.notInGoodStanding())
+    // THESE WORK:
+    console.log('value1 = ', wrapper.vm.notAffiliated())
+    console.log('value2 = ', wrapper.vm.notHistorical())
+    console.log('value3 = ', wrapper.vm.notInGoodStanding())
 
-    // *** this doesn't work ("is not a function")
-    console.log('*** value4 = ', (AmalgamationMixin as any).notAffiliated())
+    // THIS DOESN'T WORK ("is not a function"):
+    console.log('value4 = ', (AmalgamationMixin as any).notAffiliated())
   })
 
   it('has the expected number of rules', () => {

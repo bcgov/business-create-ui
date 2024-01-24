@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import { shallowWrapperFactory } from '../vitest-wrapper-factory'
-import { AmalgRegShareStructure } from '@/views'
+import { AmalgamationShareStructure } from '@/views'
+// *** FUTURE: add tests for AmalgamationShortResources
 import { AmalgamationRegResources } from '@/resources/'
 import ListShareClass from '@/components/common/ListShareClass.vue'
 import ShareStructure from '@/components/common/ShareStructure.vue'
@@ -27,7 +28,7 @@ for (const test of amalgamationRegularBusinessInfo) {
 
     beforeAll(() => {
       wrapper = shallowWrapperFactory(
-        AmalgRegShareStructure,
+        AmalgamationShareStructure,
         null,
         {
           entityType: test.entityType,
@@ -43,7 +44,7 @@ for (const test of amalgamationRegularBusinessInfo) {
     })
 
     it('renders the page', () => {
-      expect(wrapper.find('#amalgamation-regular-share-structure').exists()).toBe(true)
+      expect(wrapper.find('#amalgamation-share-structure').exists()).toBe(true)
     })
 
     it('displays the correct headers and text', () => {

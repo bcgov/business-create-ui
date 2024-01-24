@@ -1,5 +1,5 @@
 <template>
-  <div id="amalgamation-regular-people-roles">
+  <div id="amalgamation-people-roles">
     <section class="mt-10">
       <header id="people-role-header">
         <h2>{{ getPeopleAndRolesResource.header }}</h2>
@@ -24,14 +24,20 @@ import PeopleAndRoles from '@/components/common/PeopleAndRoles.vue'
     PeopleAndRoles
   }
 })
-export default class AmalgamationRegularPeopleRoles extends Mixins(CommonMixin) {
+export default class AmalgamationPeopleRoles extends Mixins(CommonMixin) {
   @Getter(useStore) getAddPeopleAndRoleStep!: PeopleAndRoleIF
   @Getter(useStore) getPeopleAndRolesResource!: PeopleAndRolesResourceIF
   @Getter(useStore) getShowErrors!: boolean
 
   @Watch('$route')
   private async scrollToInvalidComponent (): Promise<void> {
-    if (this.getShowErrors && this.$route.name === RouteNames.AMALG_REG_PEOPLE_ROLES) {
+    if (
+      this.getShowErrors &&
+      (
+        this.$route.name === RouteNames.AMALG_REG_PEOPLE_ROLES ||
+        this.$route.name === RouteNames.AMALG_SHORT_PEOPLE_ROLES
+      )
+    ) {
       // scroll to invalid components
       await this.$nextTick()
       await this.validateAndScroll(

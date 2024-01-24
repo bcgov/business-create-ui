@@ -6,11 +6,11 @@
 export { default as Signin } from './auth/Signin.vue'
 export { default as Signout } from './auth/Signout.vue'
 
-export { default as AmalgRegBusinessInfo } from './AmalgamationRegular/BusinessInfo.vue'
-export { default as AmalgRegInformation } from './AmalgamationRegular/Information.vue'
-export { default as AmalgRegPeopleRoles } from './AmalgamationRegular/PeopleRoles.vue'
-export { default as AmalgRegReviewConfirm } from './AmalgamationRegular/ReviewConfirm.vue'
-export { default as AmalgRegShareStructure } from './AmalgamationRegular/ShareStructure.vue'
+export { default as AmalgamationBusinessInfo } from './Amalgamation/BusinessInfo.vue'
+export { default as AmalgamationInformation } from './Amalgamation/Information.vue'
+export { default as AmalgamationPeopleRoles } from './Amalgamation/PeopleRoles.vue'
+export { default as AmalgamationReviewConfirm } from './Amalgamation/ReviewConfirm.vue'
+export { default as AmalgamationShareStructure } from './Amalgamation/ShareStructure.vue'
 
 export { default as DissolutionAffidavit } from './Dissolution/DissolutionAffidavit.vue'
 export { default as DissolutionDefineDissolution } from './Dissolution/DissolutionDefineDissolution.vue'
