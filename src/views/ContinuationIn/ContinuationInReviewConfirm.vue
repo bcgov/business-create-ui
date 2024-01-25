@@ -120,40 +120,6 @@
       </v-card>
     </section>
 
-    <!-- Folio or Reference Number -->
-    <section
-      v-if="isPremiumAccount"
-      id="folio-number-section"
-      class="mt-10"
-    >
-      <header>
-        <h2>Folio or Reference Number for this Filing</h2>
-        <p class="mt-4">
-          Enter the folio or reference number you want to use for this filing for you own tracking purposes. The
-          Business Folio or Reference Number is displayed below (if available). Entering a different value below will
-          not change the Business Folio or Reference Number. Only the number below will appear on the transaction report
-          and receipt for this filing.
-        </p>
-      </header>
-
-      <v-card
-        flat
-        class="mt-6"
-      >
-        <div
-          class="px-4 py-8"
-          :class="{ 'invalid-section': isFolioInvalid}"
-        >
-          <FolioNumber
-            :initialValue="getFolioNumber"
-            :isEditing="true"
-            @update="setFolioNumber($event)"
-            @valid="setFolioNumberValidity($event)"
-          />
-        </div>
-      </v-card>
-    </section>
-
     <!-- Certify -->
     <section
       id="certify-section"
@@ -209,7 +175,6 @@ import { ContactPointIF, CertifyIF, EffectiveDateTimeIF, ShareStructureIF } from
 import CardHeader from '@/components/common/CardHeader.vue'
 import Certify from '@/components/common/Certify.vue'
 import { DocumentDelivery } from '@bcrs-shared-components/document-delivery'
-import FolioNumber from '@/components/common/FolioNumber.vue'
 import EffectiveDateTime from '@/components/common/EffectiveDateTime.vue'
 import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
 import ListShareClass from '@/components/common/ListShareClass.vue'
@@ -222,7 +187,6 @@ import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp
     CardHeader,
     Certify,
     DocumentDelivery,
-    FolioNumber,
     EffectiveDateTime,
     ListPeopleAndRoles,
     ListShareClass,
@@ -236,8 +200,6 @@ export default class ContinuationInReviewConfirm extends Vue {
   @Getter(useStore) getCreateShareStructureStep!: ShareStructureIF
   @Getter(useStore) getEffectiveDateTime!: EffectiveDateTimeIF
   @Getter(useStore) getEntityType!: CorpTypeCd
-  @Getter(useStore) getFolioNumber!: string
-  @Getter(useStore) getFolioNumberValid!: boolean
   @Getter(useStore) getUserEmail!: string
   @Getter(useStore) getValidateSteps!: boolean
   @Getter(useStore) isPremiumAccount!: boolean
@@ -246,8 +208,6 @@ export default class ContinuationInReviewConfirm extends Vue {
   @Action(useStore) setCertifyState!: (x: CertifyIF) => void
   @Action(useStore) setEffectiveDate!: (x: Date) => void
   @Action(useStore) setEffectiveDateTimeValid!: (x: boolean) => void
-  @Action(useStore) setFolioNumber!: (x: string) => void
-  @Action(useStore) setFolioNumberValidity!: (x: boolean) => void
   @Action(useStore) setHasPlanOfArrangement!: (x: boolean) => void
   @Action(useStore) setIsFutureEffective!: (x: boolean) => void
 
@@ -275,11 +235,6 @@ export default class ContinuationInReviewConfirm extends Vue {
   /** Is true when the certify conditions are not met. */
   get isCertifyInvalid (): boolean {
     return this.getValidateSteps && !(this.getCertifyState.certifiedBy && this.getCertifyState.valid)
-  }
-
-  /** Is true when the Folio Number is not valid */
-  get isFolioInvalid (): boolean {
-    return this.getValidateSteps && !(this.getFolioNumberValid)
   }
 }
 </script>

@@ -39,7 +39,7 @@ export default class ContinuationInPeopleRoles extends Mixins(CommonMixin) {
           peopleAndRoles: this.getAddPeopleAndRoleStep.valid
         },
         [
-          'people-and-roles'
+          'continuation-in-people-roles'
         ]
       )
     }

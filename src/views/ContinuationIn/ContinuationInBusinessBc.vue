@@ -1,5 +1,14 @@
 <template>
   <div id="continuation-in-business-bc">
+    <!-- Company Name -->
+    <section class="mt-10">
+      <header id="company-name">
+        <h2>Company Name</h2>
+      </header>
+
+      <div>**TODO: Add component</div>
+    </section>
+
     <!-- Registered Office Addresses -->
     <section
       v-show="isEntityType"
@@ -52,6 +61,40 @@
         />
       </v-card>
     </section>
+
+    <!-- Folio or Reference Number -->
+    <section
+      v-if="isPremiumAccount"
+      id="folio-number-section"
+      class="mt-10"
+    >
+      <header>
+        <h2>Folio or Reference Number for this Filing</h2>
+        <p class="mt-4">
+          Enter the folio or reference number you want to use for this filing for you own tracking purposes. The
+          Business Folio or Reference Number is displayed below (if available). Entering a different value below will
+          not change the Business Folio or Reference Number. Only the number below will appear on the transaction report
+          and receipt for this filing.
+        </p>
+      </header>
+
+      <v-card
+        flat
+        class="mt-6"
+      >
+        <div
+          class="px-4 py-8"
+          :class="{ 'invalid-section': isFolioInvalid}"
+        >
+          <FolioNumber
+            :initialValue="getFolioNumber"
+            :isEditing="true"
+            @update="setFolioNumber($event)"
+            @valid="setFolioNumberValidity($event)"
+          />
+        </div>
+      </v-card>
+    </section>
   </div>
 </template>
 
@@ -81,11 +124,16 @@ import OfficeAddresses from '@/components/common/OfficeAddresses.vue'
 export default class ContinuationInBusinessBc extends Mixins(CommonMixin) {
   @Getter(useStore) getBusinessContact!: ContactPointIF
   @Getter(useStore) getDefineCompanyStep!: DefineCompanyIF
+  @Getter(useStore) getFolioNumber!: string
+  @Getter(useStore) getFolioNumberValid!: boolean
   @Getter(useStore) getShowErrors!: boolean
   @Getter(useStore) isEntityType!: boolean
+  @Getter(useStore) isPremiumAccount!: boolean
 
   @Action(useStore) setBusinessContact!: (x: ContactPointIF) => void
   @Action(useStore) setDefineCompanyStepValidity!: (x: boolean) => void
+  @Action(useStore) setFolioNumber!: (x: string) => void
+  @Action(useStore) setFolioNumberValidity!: (x: boolean) => void
   @Action(useStore) setIgnoreChanges!: (x: boolean) => void
   @Action(useStore) setOfficeAddresses!: (x: RegisteredRecordsAddressesIF) => void
 
@@ -164,6 +212,11 @@ export default class ContinuationInBusinessBc extends Mixins(CommonMixin) {
       this.businessContactFormValid &&
       this.addressFormValid
     )
+  }
+
+  /** Is true when the Folio Number is not valid */
+  get isFolioInvalid (): boolean {
+    return !(this.getFolioNumberValid)
   }
 
   @Watch('$route')

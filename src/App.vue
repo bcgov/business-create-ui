@@ -253,9 +253,10 @@ import { CommonMixin, DateMixin, FilingTemplateMixin, NameRequestMixin } from '@
 import { AccountInformationIF, AddressIF, BreadcrumbIF, BusinessWarningIF, CompletingPartyIF,
   ConfirmDialogType, EmptyFees, FeesIF, FilingDataIF, OrgInformationIF, PartyIF, ResourceIF,
   StepIF } from '@/interfaces'
-import { AmalgamationRegResources, AmalgamationShortResources, ContinuationInResources, DissolutionResources, IncorporationResources,
-  RegistrationResources, RestorationResources, getEntityDashboardBreadcrumb, getMyBusinessRegistryBreadcrumb,
-  getRegistryDashboardBreadcrumb, getSbcStaffDashboardBreadcrumb, getStaffDashboardBreadcrumb } from '@/resources'
+import { AmalgamationRegResources, AmalgamationShortResources, ContinuationInResources,
+  DissolutionResources, IncorporationResources, RegistrationResources, RestorationResources,
+  getEntityDashboardBreadcrumb, getMyBusinessRegistryBreadcrumb, getRegistryDashboardBreadcrumb,
+  getSbcStaffDashboardBreadcrumb, getStaffDashboardBreadcrumb } from '@/resources'
 import { AuthServices, LegalServices, PayServices } from '@/services/'
 
 // Enums and Constants

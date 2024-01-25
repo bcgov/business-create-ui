@@ -124,14 +124,6 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
    * @returns the filing body to save
    */
   buildAmalgamationFiling (): AmalgamationFilingIF {
-    function fixNullAddressType (orgPeople: OrgPersonIF[]): OrgPersonIF[] {
-      return orgPeople.map(p => {
-        if (p.deliveryAddress?.addressType === null) delete p.deliveryAddress.addressType
-        if (p.mailingAddress?.addressType === null) delete p.mailingAddress.addressType
-        return p
-      })
-    }
-
     // Build the main filing.
     const filing: AmalgamationFilingIF = {
       header: {
@@ -163,7 +155,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
             : {}
         },
         courtApproval: this.getAmalgamationCourtApproval,
-        parties: fixNullAddressType(this.getAddPeopleAndRoleStep.orgPeople),
+        parties: this.fixNullAddressType(this.getAddPeopleAndRoleStep.orgPeople),
         shareStructure: {
           shareClasses: this.getCreateShareStructureStep.shareClasses
         }
@@ -338,14 +330,6 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
    * @returns the filing body to save
    */
   buildContinuationInFiling (): ContinuationInFilingIF {
-    function fixNullAddressType (orgPeople: OrgPersonIF[]): OrgPersonIF[] {
-      return orgPeople.map(p => {
-        if (p.deliveryAddress?.addressType === null) delete p.deliveryAddress.addressType
-        if (p.mailingAddress?.addressType === null) delete p.mailingAddress.addressType
-        return p
-      })
-    }
-
     // Build the main filing.
     const filing: ContinuationInFilingIF = {
       header: {
@@ -375,13 +359,11 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
             ? { extension: +this.getBusinessContact.extension }
             : {}
         },
-        parties: fixNullAddressType(this.getAddPeopleAndRoleStep.orgPeople)
+        parties: this.fixNullAddressType(this.getAddPeopleAndRoleStep.orgPeople),
+        shareStructure: {
+          shareClasses: this.getCreateShareStructureStep.shareClasses
+        }
       }
-    }
-
-    // Add share structure data.
-    filing.continuationIn.shareStructure = {
-      shareClasses: this.getCreateShareStructureStep.shareClasses
     }
 
     // Add business name data.
@@ -518,14 +500,6 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
    * @returns the filing body to save
    */
   buildIncorporationFiling (): IncorporationFilingIF {
-    function fixNullAddressType (orgPeople: OrgPersonIF[]): OrgPersonIF[] {
-      return orgPeople.map(p => {
-        if (p.deliveryAddress?.addressType === null) delete p.deliveryAddress.addressType
-        if (p.mailingAddress?.addressType === null) delete p.mailingAddress.addressType
-        return p
-      })
-    }
-
     // Build the main filing.
     const filing: IncorporationFilingIF = {
       header: {
@@ -554,7 +528,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
             ? { extension: +this.getBusinessContact.extension }
             : {}
         },
-        parties: fixNullAddressType(this.getAddPeopleAndRoleStep.orgPeople)
+        parties: this.fixNullAddressType(this.getAddPeopleAndRoleStep.orgPeople)
       }
     }
 
@@ -1479,5 +1453,18 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
       }
     }
     return toReturn
+  }
+
+  /**
+   * Fixes addresses by deleting the type in case it was null.
+   * @param orgPeople The array of orgs/people
+   * @returns the array of orgs/people after addresses been fixed
+   */
+  fixNullAddressType (orgPeople: OrgPersonIF[]): OrgPersonIF[] {
+    return orgPeople.map(p => {
+      if (p.deliveryAddress?.addressType === null) delete p.deliveryAddress.addressType
+      if (p.mailingAddress?.addressType === null) delete p.mailingAddress.addressType
+      return p
+    })
   }
 }
