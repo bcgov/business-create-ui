@@ -15,21 +15,6 @@ export interface AmalgamationResourceIF {
   reviewAndConfirm: {
     completingPartyStatement: CompletingPartyStatementIF
   }
-
-  shareClasses?: {
-    countMinimum: number
-  }
-  incorporationArticles?: {
-    articles: string,
-    articlesTooltip: string,
-    provisions?: string,
-    provisionTooltip?: string
-  }
-  incorporationAgreement?: {
-    helpSection: Array<HelpSectionIF>
-    article: string
-    documents: Array<IncorporationAgreementTypeIF>
-  }
 }
 
 /** Dissolution resource interface. */

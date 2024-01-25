@@ -7,23 +7,27 @@
     >
       <header id="office-address-header">
         <h2>Registered and Records Office Addresses</h2>
+
         <p v-if="isAmalgamationFilingRegular">
           Enter the Registered Office and Records Office Mailing and Delivery Addresses of the Resulting
           businesses. All addresses must be located in BC.
         </p>
+
         <p v-if="isAmalgamationFilingHorizontal || isAmalgamationFilingVertical">
           The resulting business will adopt the following Registered Office and Records Office Mailing
-          and Delivery Addresses of the holding / primary company in this amalgamation.
+          and Delivery Addresses of the {{ isAmalgamationFilingHorizontal ? 'primary' : 'holding' }}
+          company in this amalgamation.
         </p>
       </header>
 
-      <OfficeAddresses
-        v-if="isAmalgamationFilingRegular"
-        :showErrors="getShowErrors"
-        :inputAddresses="addresses"
-        @update:addresses="setOfficeAddresses($event)"
-        @valid="onOfficeAddressesValid($event)"
-      />
+      <template v-if="isAmalgamationFilingRegular">
+        <OfficeAddresses
+          :showErrors="getShowErrors"
+          :inputAddresses="addresses"
+          @update:addresses="setOfficeAddresses($event)"
+          @valid="onOfficeAddressesValid($event)"
+        />
+      </template>
 
       <template v-if="isAmalgamationFilingHorizontal || isAmalgamationFilingVertical">
         <v-card
@@ -42,11 +46,13 @@
           class="mt-6"
         >
           <CardHeader label="Addresses" />
-          <!-- *** FUTURE: need to finish layout here -->
-          <OfficeAddresses
-            :inputAddresses="addresses"
-            :isEditing="false"
-          />
+          <article class="section-container">
+            <OfficeAddresses
+              :inputAddresses="addresses"
+              :isEditing="false"
+              @valid="onOfficeAddressesValid($event)"
+            />
+          </article>
         </v-card>
       </template>
     </section>

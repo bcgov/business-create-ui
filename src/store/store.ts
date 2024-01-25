@@ -66,7 +66,8 @@ import {
   StateIF,
   StepIF,
   UploadAffidavitIF,
-  ValidationDetailIF
+  ValidationDetailIF,
+  PeopleAndRolesResourceIF
 } from '@/interfaces'
 
 // It's possible to move getters / actions into seperate files:
@@ -593,8 +594,10 @@ export const useStore = defineStore('store', {
         )
       } else {
         return (
-          // *** FUTURE: verify/update this as needed
-          this.getAmalgamatingBusinessesValid
+          // *** FUTURE: update this when Resulting Company Name is implemented
+          this.getAmalgamatingBusinessesValid &&
+          !!this.getCorrectNameOption &&
+          this.getNameTranslationsValid
         )
       }
     },
@@ -881,7 +884,7 @@ export const useStore = defineStore('store', {
     },
 
     /** The People and Roles object. */
-    getPeopleAndRolesResource (): any {
+    getPeopleAndRolesResource (): PeopleAndRolesResourceIF {
       return this.resourceModel.peopleAndRoles
     },
 

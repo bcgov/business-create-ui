@@ -29,9 +29,6 @@ export const AmalgamationRegResourceBc: AmalgamationResourceIF = {
       }
     ]
   },
-  shareClasses: {
-    countMinimum: 1
-  },
   reviewAndConfirm: {
     completingPartyStatement: {
       certifyStatements: [],
