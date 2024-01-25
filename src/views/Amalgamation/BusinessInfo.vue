@@ -7,6 +7,7 @@
     >
       <header id="office-address-header">
         <h2>Registered and Records Office Addresses</h2>
+
         <p v-if="isAmalgamationFilingRegular">
           Enter the Registered Office and Records Office Mailing and Delivery Addresses of the Resulting
           businesses. All addresses must be located in BC.

@@ -184,7 +184,6 @@
         <span>Add the Completing Party</span>
       </v-btn>
 
-      <!-- *** FUTURE: don't show Add a Person for short-form amalgamation -->
       <v-btn
         v-if="getPeopleAndRolesResource.addPerson !== false"
         id="btn-add-person"
