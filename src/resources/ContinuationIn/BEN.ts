@@ -29,9 +29,6 @@ export const ContinuationInResourceBen: ContinuationInResourceIF = {
       }
     ]
   },
-  shareClasses: {
-    countMinimum: 1
-  },
   reviewAndConfirm: {
     completingPartyStatement: {
       certifyStatements: [],

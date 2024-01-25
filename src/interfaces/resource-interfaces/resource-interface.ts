@@ -27,9 +27,6 @@ export interface ContinuationInResourceIF {
   reviewAndConfirm: {
     completingPartyStatement: CompletingPartyStatementIF
   }
-  shareClasses?: {
-    countMinimum: number
-  }
 }
 
 /** Dissolution resource interface. */

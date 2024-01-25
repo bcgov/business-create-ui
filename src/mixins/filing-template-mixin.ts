@@ -462,11 +462,6 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
       ? draftFiling.continuationIn.shareStructure.shareClasses
       : [])
 
-    // restore Incorporation Agreement
-    this.setIncorporationAgreementStepData({
-      agreementType: draftFiling.continuationIn.incorporationAgreement?.agreementType,
-      valid: false
-    })
     // restore Certify state
     this.setCertifyState({
       valid: false,
