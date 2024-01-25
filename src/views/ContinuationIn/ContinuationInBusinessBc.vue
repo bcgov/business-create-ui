@@ -71,7 +71,7 @@
       <header>
         <h2>Folio or Reference Number for this Filing</h2>
         <p class="mt-4">
-          Enter the folio or reference number you want to use for this filing for you own tracking purposes. The
+          Enter the folio or reference number you want to use for this filing for your own tracking purposes. The
           Business Folio or Reference Number is displayed below (if available). Entering a different value below will
           not change the Business Folio or Reference Number. Only the number below will appear on the transaction report
           and receipt for this filing.
