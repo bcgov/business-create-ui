@@ -19,6 +19,13 @@ export enum RouteNames {
   AMALG_SHORT_PEOPLE_ROLES = 'amalg-short-people-roles',
   AMALG_SHORT_REVIEW_CONFIRM = 'amalg-short-review-confirm',
 
+  // Continuation In route names
+  CONTINUATION_IN_BUSINESS_HOME = 'continuation-in-business-home',
+  CONTINUATION_IN_BUSINESS_BC = 'continuation-in-business-bc',
+  CONTINUATION_IN_PEOPLE_ROLES = 'continuation-in-people-roles',
+  CONTINUATION_IN_REVIEW_CONFIRM = 'continuation-in-review-confirm',
+  CONTINUATION_IN_SHARE_STRUCTURE = 'continuation-in-share-structure',
+
   // Dissolution route names
   DISSOLUTION_AFFIDAVIT = 'dissolution-affidavit',
   DISSOLUTION_DEFINE_DISSOLUTION = 'dissolution-define-dissolution',

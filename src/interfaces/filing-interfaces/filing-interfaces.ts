@@ -62,6 +62,45 @@ export interface AmalgamationFilingIF {
   }
 }
 
+/** Interface for continuation in filing data saved to the Legal API. */
+export interface ContinuationInFilingIF {
+  header: {
+    name: FilingTypes
+    certifiedBy: string
+    date: string
+    effectiveDate?: string // should be set only for future effective filings
+    filingId?: number // for existing filings (not used when building a new filing)
+    folioNumber?: string // only displayed for certain account types
+    isFutureEffective: boolean
+
+    // staff payment properties:
+    routingSlipNumber?: string
+    bcolAccountNumber?: string
+    datNumber?: string
+    waiveFees?: boolean
+    priority?: boolean
+  }
+  business: {
+    legalType: CorpTypeCd
+    identifier: string
+  }
+  continuationIn: {
+    foreignJurisdiction: any
+    nameRequest: NameRequestFilingIF
+    nameTranslations: NameTranslationIF[]
+    offices: RegisteredRecordsAddressesIF | object
+    contactPoint: ContactPointIF
+    parties: PartyIF[]
+
+    // BEN / CC / BC / ULC only:
+    shareStructure?: {
+      shareClasses: ShareClassIF[]
+    }
+    // ULC only:
+    courtOrder?: CourtOrderIF
+  }
+}
+
 /** Interface for incorporation filing data saved to the Legal API. */
 export interface IncorporationFilingIF {
   header: {

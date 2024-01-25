@@ -32,6 +32,11 @@
           </template>
 
           <router-link
+            v-if="isContinuationInFiling"
+            :to="{ path: `/${RouteNames.CONTINUATION_IN_BUSINESS_BC}` }"
+          >Return to this step to finish it</router-link>
+
+          <router-link
             v-if="isIncorporationFiling"
             :to="{ path: `/${RouteNames.INCORPORATION_DEFINE_COMPANY}` }"
           >Return to this step to finish it</router-link>
@@ -218,6 +223,7 @@ export default class SummaryDefineCompany extends Vue {
   @Getter(useStore) isAmalgamationFilingRegular!: boolean
   @Getter(useStore) isAmalgamationFilingVertical!: boolean
   @Getter(useStore) isAmalgamationInformationValid!: boolean
+  @Getter(useStore) isContinuationInFiling!: boolean
   @Getter(useStore) isDefineCompanyValid!: boolean
   @Getter(useStore) isFullRestorationFiling!: boolean
   @Getter(useStore) isIncorporationFiling!: boolean

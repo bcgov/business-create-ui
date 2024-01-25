@@ -113,6 +113,11 @@ export const useStore = defineStore('store', {
       )
     },
 
+    /** Whether the current filing is a Continuation In. */
+    isContinuationInFiling (): boolean {
+      return (this.stateModel.tombstone.filingType === FilingTypes.CONTINUATION_IN)
+    },
+
     /** Whether the current filing is an Incorporation Application. */
     isIncorporationFiling (): boolean {
       return (this.stateModel.tombstone.filingType === FilingTypes.INCORPORATION_APPLICATION)
@@ -152,6 +157,7 @@ export const useStore = defineStore('store', {
     getFilingName (): FilingNames {
       switch (this.getFilingType) {
         case FilingTypes.AMALGAMATION_APPLICATION: return FilingNames.AMALGAMATION_APPLICATION
+        case FilingTypes.CONTINUATION_IN: return FilingNames.CONTINUATION_IN_APPLICATION
         case FilingTypes.INCORPORATION_APPLICATION: return FilingNames.INCORPORATION_APPLICATION
         case FilingTypes.REGISTRATION: return FilingNames.REGISTRATION
         case FilingTypes.RESTORATION: return FilingNames.RESTORATION_APPLICATION
@@ -304,6 +310,7 @@ export const useStore = defineStore('store', {
     getEntityIdentifier (): string {
       switch (this.getFilingType) {
         case FilingTypes.AMALGAMATION_APPLICATION: return this.getTempId
+        case FilingTypes.CONTINUATION_IN: return this.getTempId
         case FilingTypes.INCORPORATION_APPLICATION: return this.getTempId
         case FilingTypes.REGISTRATION: return this.getTempId
         case FilingTypes.RESTORATION: return this.getBusinessId
@@ -534,6 +541,7 @@ export const useStore = defineStore('store', {
     /** Whether the subject filing is valid. */
     isFilingValid (): boolean {
       if (this.isAmalgamationFiling) return this.isAmalgamationValid
+      if (this.isContinuationInFiling) return this.isContinuationInValid
       if (this.isIncorporationFiling) return this.isIncorporationApplicationValid
       if (this.isDissolutionFiling) return this.isDissolutionValid
       if (this.isRegistrationFiling) return this.isRegistrationValid
@@ -619,6 +627,27 @@ export const useStore = defineStore('store', {
         this.getAmalgamationCourtApprovalValid &&
         isCourtOrderValid &&
         isCertifyValid &&
+        isStaffPaymentValid
+      )
+    },
+
+    /**
+     * Whether all the continuation in steps are valid.
+     * TODO: Add all the remaining checks when all components are in place.
+     */
+    isContinuationInValid (): boolean {
+      const isCertifyValid = this.getCertifyState.valid && !!this.getCertifyState.certifiedBy
+      const isEffectiveDateTimeValid = this.getEffectiveDateTime.valid
+      const isFolioNumberValid = !this.isPremiumAccount || this.getFolioNumberValid
+      const isStaffPaymentValid = this.isRoleStaff ? this.getStaffPaymentStep.valid : true
+
+      return (
+        this.isDefineCompanyValid &&
+        this.isAddPeopleAndRolesValid &&
+        this.isCreateShareStructureValid &&
+        isCertifyValid &&
+        isEffectiveDateTimeValid &&
+        isFolioNumberValid &&
         isStaffPaymentValid
       )
     },

@@ -132,6 +132,8 @@ export default class EntityInfo extends Mixins(DateMixin) {
     switch (this.getFilingType) {
       case FilingTypes.AMALGAMATION_APPLICATION:
         return (this.getNameRequestApprovedName || numberedDescription)
+      case FilingTypes.CONTINUATION_IN:
+        return (this.getNameRequestApprovedName || numberedDescription)
       case FilingTypes.DISSOLUTION:
         return (this.getBusinessLegalName || numberedDescription)
       case FilingTypes.INCORPORATION_APPLICATION:

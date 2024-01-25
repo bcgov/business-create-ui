@@ -253,9 +253,10 @@ import { CommonMixin, DateMixin, FilingTemplateMixin, NameRequestMixin } from '@
 import { AccountInformationIF, AddressIF, BreadcrumbIF, BusinessWarningIF, CompletingPartyIF,
   ConfirmDialogType, EmptyFees, FeesIF, FilingDataIF, OrgInformationIF, PartyIF, ResourceIF,
   StepIF } from '@/interfaces'
-import { AmalgamationRegResources, AmalgamationShortResources, DissolutionResources, IncorporationResources,
-  RegistrationResources, RestorationResources, getEntityDashboardBreadcrumb, getMyBusinessRegistryBreadcrumb,
-  getRegistryDashboardBreadcrumb, getSbcStaffDashboardBreadcrumb, getStaffDashboardBreadcrumb } from '@/resources'
+import { AmalgamationRegResources, AmalgamationShortResources, ContinuationInResources,
+  DissolutionResources, IncorporationResources, RegistrationResources, RestorationResources,
+  getEntityDashboardBreadcrumb, getMyBusinessRegistryBreadcrumb, getRegistryDashboardBreadcrumb,
+  getSbcStaffDashboardBreadcrumb, getStaffDashboardBreadcrumb } from '@/resources'
 import { AuthServices, LegalServices, PayServices } from '@/services/'
 
 // Enums and Constants
@@ -300,6 +301,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   // @Getter(useStore) isAmalgamationFilingHorizontal!: boolean
   // @Getter(useStore) isAmalgamationFilingRegular!: boolean
   // @Getter(useStore) isAmalgamationFilingVertical!: boolean
+  @Getter(useStore) isContinuationInFiling!: boolean
   @Getter(useStore) isDissolutionFiling!: boolean
   @Getter(useStore) isIncorporationFiling!: boolean
   @Getter(useStore) isMobile!: boolean
@@ -759,6 +761,9 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
               throw new Error('invalid amalgamation filing type')
             }
             return
+          case FilingTypes.CONTINUATION_IN:
+            this.$router.push(RouteNames.CONTINUATION_IN_BUSINESS_HOME).catch(() => {})
+            return
           case FilingTypes.DISSOLUTION:
             if (this.isTypeFirm) {
               this.$router.push(RouteNames.DISSOLUTION_FIRM).catch(() => {})
@@ -920,6 +925,14 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
         } else {
           throw new Error('invalid amalgamation filing type')
         }
+        break
+      case FilingTypes.CONTINUATION_IN:
+        draftFiling = {
+          ...this.buildContinuationInFiling(),
+          ...draftFiling
+        }
+        this.parseContinuationInDraft(draftFiling)
+        resources = ContinuationInResources.find(x => x.entityType === this.getEntityType) as ResourceIF
         break
       case FilingTypes.INCORPORATION_APPLICATION:
         draftFiling = {
@@ -1288,6 +1301,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     if (
       this.isRouteName(RouteNames.AMALG_REG_REVIEW_CONFIRM) ||
       this.isRouteName(RouteNames.AMALG_SHORT_REVIEW_CONFIRM) ||
+      this.isRouteName(RouteNames.CONTINUATION_IN_REVIEW_CONFIRM) ||
       this.isRouteName(RouteNames.DISSOLUTION_REVIEW_CONFIRM) ||
       this.isRouteName(RouteNames.INCORPORATION_REVIEW_CONFIRM) ||
       this.isRouteName(RouteNames.REGISTRATION_REVIEW_CONFIRM) ||
