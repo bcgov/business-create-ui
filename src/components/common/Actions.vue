@@ -310,6 +310,8 @@ export default class Actions extends Mixins(AmalgamationMixin, CommonMixin,
     switch (this.getFilingType) {
       case FilingTypes.AMALGAMATION_APPLICATION:
         return this.buildAmalgamationFiling()
+      case FilingTypes.CONTINUATION_IN:
+        return this.buildContinuationInFiling()
       case FilingTypes.INCORPORATION_APPLICATION:
         return this.buildIncorporationFiling()
       case FilingTypes.REGISTRATION:

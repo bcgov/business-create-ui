@@ -3,6 +3,7 @@ import * as Views from '@/views'
 import {
   AmalgamationRegularRoutes,
   AmalgamationShortRoutes,
+  ContinuationInRoutes,
   DissolutionFirmRoutes,
   DissolutionRoutes,
   IncorporationRoutes,
@@ -31,6 +32,7 @@ export const routes = [
   },
   ...AmalgamationRegularRoutes,
   ...AmalgamationShortRoutes,
+  ...ContinuationInRoutes,
   ...DissolutionFirmRoutes,
   ...DissolutionRoutes,
   ...IncorporationRoutes,

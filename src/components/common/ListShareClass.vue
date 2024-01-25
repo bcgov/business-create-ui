@@ -21,6 +21,11 @@
           >Return to this step to finish it</router-link>
 
           <router-link
+            v-if="isContinuationInFiling"
+            id="router-link"
+            :to="{ path: `/${RouteNames.CONTINUATION_IN_SHARE_STRUCTURE}` }"
+          >Return to this step to finish it</router-link>
+          <router-link
             v-if="isIncorporationFiling"
             id="router-link"
             :to="{ path: `/${RouteNames.INCORPORATION_SHARE_STRUCTURE}` }"
@@ -223,6 +228,7 @@ export default class ListShareClass extends Vue {
   @Prop({ default: () => [] }) readonly shareClasses!: any
   @Prop({ default: false }) readonly componentDisabled!: boolean
   @Prop({ default: false }) readonly isAmalgamationFiling!: boolean
+  @Prop({ default: false }) readonly isContinuationInFiling!: boolean
   @Prop({ default: false }) readonly isIncorporationFiling!: boolean
   @Prop({ default: false }) readonly isSummary!: boolean
   @Prop({ default: false }) readonly showErrorSummary!: boolean

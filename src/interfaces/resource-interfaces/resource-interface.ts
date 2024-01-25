@@ -17,6 +17,18 @@ export interface AmalgamationResourceIF {
   }
 }
 
+/** Continuation in resource interface. */
+export interface ContinuationInResourceIF {
+  entityType: CorpTypeCd
+  displayName: string
+  steps: Array<StepIF>
+  filingData: Array<FilingDataIF>
+  peopleAndRoles: PeopleAndRolesResourceIF
+  reviewAndConfirm: {
+    completingPartyStatement: CompletingPartyStatementIF
+  }
+}
+
 /** Dissolution resource interface. */
 export interface DissolutionResourceIF {
   entityType: CorpTypeCd
@@ -91,5 +103,5 @@ export interface RestorationResourceIF {
   }
 }
 
-export interface ResourceIF extends AmalgamationResourceIF, DissolutionResourceIF,
-  IncorporationResourceIF, RegistrationResourceIF, RestorationResourceIF {}
+export interface ResourceIF extends AmalgamationResourceIF, ContinuationInResourceIF,
+  DissolutionResourceIF, IncorporationResourceIF, RegistrationResourceIF, RestorationResourceIF {}

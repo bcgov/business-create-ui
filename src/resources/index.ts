@@ -1,5 +1,6 @@
 import {
   AmalgamationResourceIF,
+  ContinuationInResourceIF,
   DissolutionResourceIF,
   IncorporationResourceIF,
   RegistrationResourceIF,
@@ -19,6 +20,13 @@ import {
   AmalgamationShortResourceCc,
   AmalgamationShortResourceUlc
 } from './AmalgamationShort/'
+
+import {
+  ContinuationInResourceBc,
+  ContinuationInResourceBen,
+  ContinuationInResourceCc,
+  ContinuationInResourceUlc
+} from './ContinuationIn/'
 
 import {
   DissolutionResourceBc,
@@ -62,6 +70,13 @@ export const AmalgamationShortResources: Array<AmalgamationResourceIF> = [
   AmalgamationShortResourceBen,
   AmalgamationShortResourceCc,
   AmalgamationShortResourceUlc
+]
+
+export const ContinuationInResources: Array<ContinuationInResourceIF> = [
+  ContinuationInResourceBc,
+  ContinuationInResourceBen,
+  ContinuationInResourceCc,
+  ContinuationInResourceUlc
 ]
 
 export const DissolutionResources: Array<DissolutionResourceIF> = [

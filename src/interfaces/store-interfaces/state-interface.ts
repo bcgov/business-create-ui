@@ -7,6 +7,7 @@ import {
   ContactPointIF,
   BusinessIF,
   CertifyIF,
+  ContinuationInStateIF,
   CompletingPartyIF,
   CourtOrderStepIF,
   CreateMemorandumIF,
@@ -73,6 +74,7 @@ export interface StateModelIF {
   completingParty?: CompletingPartyIF
   parties?: Array<PartyIF>
   amalgamation: AmalgamationStateIF
+  continuationIn: ContinuationInStateIF
   restoration: RestorationStateIF
 
   // staffPaymentStep and courtOrder are common and for now are only used in dissolution
