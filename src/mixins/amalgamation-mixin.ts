@@ -287,7 +287,7 @@ export default class AmalgamationMixin extends Vue {
       if (!tingBusiness.authInfo && !tingBusiness.businessInfo) {
         return {
           type: AmlTypes.FOREIGN,
-          role: AmlRoles.AMALGAMATING,
+          role: AmlRoles.AMALGAMATING, // *** FUTURE: can we really assume this?
           corpNumber: item.corpNumber,
           legalName: item.legalName,
           foreignJurisdiction: item.foreignJurisdiction
@@ -295,7 +295,7 @@ export default class AmalgamationMixin extends Vue {
       } else {
         return {
           type: AmlTypes.LEAR,
-          role: AmlRoles.AMALGAMATING,
+          role: item.role, // amalgamating or holding
           identifier: tingBusiness.businessInfo.identifier,
           name: tingBusiness.businessInfo.legalName,
           email: tingBusiness.authInfo?.contacts[0].email,

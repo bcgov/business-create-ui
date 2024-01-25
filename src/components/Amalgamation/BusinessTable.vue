@@ -110,6 +110,7 @@ export default class BusinessTable extends Mixins(AmalgamationMixin) {
    * In other words, this is where the business rules are evaluated.
    */
   get businesses (): AmalgamatingBusinessIF[] {
+    // iterate overall all amalgamating businesses
     return this.getAmalgamatingBusinesses.map(business => {
       // evaluate the rules for the current business
       // assign the value of the first failed rule (if any) else OK
@@ -181,12 +182,9 @@ export default class BusinessTable extends Mixins(AmalgamationMixin) {
   }
 
   @Watch('businesses', { deep: true, immediate: true })
-  @Emit('valid')
-  private emitValidity (): boolean {
-    return (
-      (this.businesses.length >= 2) &&
-      this.businesses.every(business => business.status === AmlStatuses.OK)
-    )
+  @Emit('allOk')
+  private emitAllOk (): boolean {
+    return this.businesses.every(business => business.status === AmlStatuses.OK)
   }
 }
 </script>

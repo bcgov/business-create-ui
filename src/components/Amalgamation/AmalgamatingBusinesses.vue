@@ -1,29 +1,81 @@
 <template>
   <div id="amalgamating-businesses">
-    <v-btn
-      id="add-amalgamating-business-button"
-      outlined
-      color="primary"
-      class="btn-outlined-primary"
-      :disabled="isAddingAmalgamatingBusiness || isAddingAmalgamatingForeignBusiness"
-      @click="isAddingAmalgamatingBusiness = true"
-    >
-      <v-icon>mdi-domain-plus</v-icon>
-      <span>Add an Amalgamating Business</span>
-    </v-btn>
+    <section class="checklist-section">
+      <div class="subhead">
+        Your application must include the following:
+      </div>
+      <ul>
+        <li v-if="isAmalgamationFilingHorizontal || isAmalgamationFilingVertical">
+          <v-icon
+            v-if="haveHoldingBusiness"
+            color="green darken-2"
+            class="cp-valid"
+          >
+            mdi-check
+          </v-icon>
+          <v-icon
+            v-else-if="getShowErrors"
+            color="error"
+            class="cp-invalid"
+          >
+            mdi-close
+          </v-icon>
+          <v-icon v-else>
+            mdi-circle-small
+          </v-icon>
+          <span class="rule-item-txt">The {{ isAmalgamationFilingHorizontal ? 'primary' : 'holding' }}
+            business</span>
+        </li>
 
-    <v-btn
-      v-if="isRoleStaff"
-      id="add-foreign-business-button"
-      outlined
-      color="primary"
-      class="ml-2 btn-outlined-primary"
-      :disabled="isAddingAmalgamatingBusiness || isAddingAmalgamatingForeignBusiness"
-      @click="isAddingAmalgamatingForeignBusiness = true"
-    >
-      <v-icon>mdi-domain-plus</v-icon>
-      <span>Add an Amalgamating Foreign Business</span>
-    </v-btn>
+        <li>
+          <v-icon
+            v-if="haveAmalgamatingBusinesses"
+            color="green darken-2"
+            class="incorp-valid"
+          >
+            mdi-check
+          </v-icon>
+          <v-icon
+            v-else-if="getShowErrors"
+            color="error"
+            class="incorp-invalid"
+          >
+            mdi-close
+          </v-icon>
+          <v-icon v-else>
+            mdi-circle-small
+          </v-icon>
+          <span class="rule-item-txt">Amalgamating businesses</span>
+        </li>
+      </ul>
+    </section>
+
+    <div class="buttons-section mt-6">
+      <v-btn
+        id="add-amalgamating-business-button"
+        outlined
+        color="primary"
+        class="btn-outlined-primary"
+        :disabled="isAddingAmalgamatingBusiness || isAddingAmalgamatingForeignBusiness"
+        @click="isAddingAmalgamatingBusiness = true"
+      >
+        <v-icon>mdi-domain-plus</v-icon>
+        <span>Add an Amalgamating Business</span>
+      </v-btn>
+
+      <v-btn
+        v-if="isRoleStaff"
+        id="add-foreign-business-button"
+        outlined
+        color="primary"
+        class="ml-2 btn-outlined-primary"
+        :disabled="isAddingAmalgamatingBusiness || isAddingAmalgamatingForeignBusiness"
+        @click="isAddingAmalgamatingForeignBusiness = true"
+      >
+        <v-icon>mdi-domain-plus</v-icon>
+        <span>Add an Amalgamating Foreign Business</span>
+      </v-btn>
+    </div>
 
     <!-- Add an Amalgamating Business button clicked -->
     <v-expand-transition>
@@ -163,7 +215,7 @@
     <BusinessTable
       class="mt-8"
       :class="{ 'invalid-section': getShowErrors && !businessTableValid }"
-      @valid="businessTableValid=$event"
+      @allOk="allOk=$event"
     />
 
     <!-- snackbar to temporarily show fetch errors -->
@@ -219,13 +271,17 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
   readonly BusinessLookupServices = BusinessLookupServices
   readonly EmptyBusinessLookup = EmptyBusinessLookup
 
+  // @Getter(useStore) getAmalgamatingBusinesses!: Array<AmalgamatingBusinessIF>
   @Getter(useStore) getShowErrors!: boolean
+  // @Getter(useStore) isAmalgamationFilingHorizontal!: boolean
+  // @Getter(useStore) isAmalgamationFilingRegular!: boolean
+  // @Getter(useStore) isAmalgamationFilingVertical!: boolean
 
   @Action(useStore) pushAmalgamatingBusiness!: (x: AmalgamatingBusinessIF) => void
   @Action(useStore) setAmalgamatingBusinessesValid!: (x: boolean) => void
 
   // Local properties
-  businessTableValid = false
+  allOk = false
   snackbar = false
   snackbarText = ''
 
@@ -236,8 +292,7 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
   isCan = false
   isMrasJurisdiction = false
   jurisdictionErrorMessage = ''
-  // Null for no validation, false for invalid, true for valid
-  isForeignBusinessValid = null as boolean
+  isForeignBusinessValid = null as boolean // null/false/true for no validation/invalid/valid
 
   // Button properties
   isAddingAmalgamatingBusiness = false
@@ -258,6 +313,41 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
       v => (!v || v.length >= 3) || 'Must be at least 3 characters',
       v => (!v || v.length <= 40) || 'Cannot exceed 40 characters'
     ]
+  }
+
+  /** Whether the business table is valid. */
+  get businessTableValid (): boolean {
+    if (this.isAmalgamationFilingRegular) {
+      return (this.haveAmalgamatingBusinesses && this.allOk)
+    } else {
+      return (this.haveHoldingBusiness && this.haveAmalgamatingBusinesses && this.allOk)
+    }
+  }
+
+  /**
+   * Whether we have a holding/primary business in the table.
+   * (Only used for short-form amalgamations.)
+   */
+  get haveHoldingBusiness (): boolean {
+    return this.getAmalgamatingBusinesses.some((b: AmalgamatingBusinessIF) =>
+      b.role === AmlRoles.HOLDING
+    )
+  }
+
+  /**
+   * Whether we have enough amalgamating businesses in the table.
+   * - Regular amalgamations require 2 or more.
+   * - Horizontal and vertical amalgamations require 1 or more.
+   */
+  get haveAmalgamatingBusinesses (): boolean {
+    const amalgamating = this.getAmalgamatingBusinesses.filter((b: AmalgamatingBusinessIF) =>
+      b.role === AmlRoles.AMALGAMATING
+    )
+    if (this.isAmalgamationFilingRegular) {
+      return (amalgamating.length >= 2)
+    } else {
+      return (amalgamating.length >= 1)
+    }
   }
 
   /** Called when Jurisdiction menu item is changed. */
@@ -468,13 +558,14 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
   @Watch('isAddingAmalgamatingBusiness')
   @Watch('isAddingAmalgamatingForeignBusiness')
   private onBusinessTableValid (): void {
+    // this component is valid if the business table is valid and we're not adding a business
     this.setAmalgamatingBusinessesValid(
       this.businessTableValid &&
       !this.isAddingAmalgamatingBusiness &&
       !this.isAddingAmalgamatingForeignBusiness
     )
 
-    // Reset "Add an Amalgamating Foreign Business" panel on change
+    // reset "Add an Amalgamating Foreign Business" panel on change
     this.isForeignBusinessValid = null
     this.jurisdiction = null
     this.legalName = null
@@ -487,6 +578,32 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
 
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
+
+.checklist-section {
+  .subhead {
+    font-weight: bold;
+    color: $gray9;
+  }
+
+  .v-icon.mdi-circle-small {
+    margin-top: -2px;
+  }
+
+  ul {
+    padding-top: 0.5rem;
+    list-style: none;
+    margin-left: 0;
+    padding-left: 1rem;
+  }
+
+  li {
+    padding-top: 0.5rem;
+  }
+
+  .rule-item-txt {
+    margin-left: 0.5rem;
+  }
+}
 
 .v-btn:not(.v-btn--round).v-size--default {
   height: 44px;
