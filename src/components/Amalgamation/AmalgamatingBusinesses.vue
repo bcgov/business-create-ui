@@ -5,7 +5,28 @@
         Your application must include the following:
       </div>
       <ul>
-        <li v-if="isAmalgamationFilingHorizontal || isAmalgamationFilingVertical">
+        <li v-if="isAmalgamationFilingHorizontal">
+          <v-icon
+            v-if="havePrimaryBusiness"
+            color="green darken-2"
+            class="cp-valid"
+          >
+            mdi-check
+          </v-icon>
+          <v-icon
+            v-else-if="getShowErrors"
+            color="error"
+            class="cp-invalid"
+          >
+            mdi-close
+          </v-icon>
+          <v-icon v-else>
+            mdi-circle-small
+          </v-icon>
+          <span class="rule-item-txt">Primary business whose shares are not to be cancelled</span>
+        </li>
+
+        <li v-if="isAmalgamationFilingVertical">
           <v-icon
             v-if="haveHoldingBusiness"
             color="green darken-2"
@@ -23,8 +44,7 @@
           <v-icon v-else>
             mdi-circle-small
           </v-icon>
-          <span class="rule-item-txt">The {{ isAmalgamationFilingHorizontal ? 'primary' : 'holding' }}
-            business</span>
+          <span class="rule-item-txt">The holding business</span>
         </li>
 
         <li>
@@ -319,18 +339,31 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
   get businessTableValid (): boolean {
     if (this.isAmalgamationFilingRegular) {
       return (this.haveAmalgamatingBusinesses && this.allOk)
-    } else {
+    } else if (this.isAmalgamationFilingHorizontal) {
+      return (this.havePrimaryBusiness && this.haveAmalgamatingBusinesses && this.allOk)
+    } else if (this.isAmalgamationFilingVertical) {
       return (this.haveHoldingBusiness && this.haveAmalgamatingBusinesses && this.allOk)
     }
+    return false // should never happen
   }
 
   /**
-   * Whether we have a holding/primary business in the table.
+   * Whether we have a holding business in the table.
    * (Only used for short-form amalgamations.)
    */
   get haveHoldingBusiness (): boolean {
     return this.getAmalgamatingBusinesses.some((b: AmalgamatingBusinessIF) =>
       b.role === AmlRoles.HOLDING
+    )
+  }
+
+  /**
+   * Whether we have a primary business in the table.
+   * (Only used for short-form amalgamations.)
+   */
+  get havePrimaryBusiness (): boolean {
+    return this.getAmalgamatingBusinesses.some((b: AmalgamatingBusinessIF) =>
+      b.role === AmlRoles.PRIMARY
     )
   }
 

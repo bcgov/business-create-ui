@@ -73,6 +73,18 @@ describe('Amalgamating Businesses - components and validity', () => {
     expect(wrapper.vm.haveHoldingBusiness).toBe(true)
   })
 
+  it('computes havePrimaryBusiness correctly', () => {
+    // verify with no holding businesses
+    store.stateModel.amalgamation.amalgamatingBusinesses = []
+    expect(wrapper.vm.havePrimaryBusiness).toBe(false)
+
+    // verify with a holding business
+    store.stateModel.amalgamation.amalgamatingBusinesses = [
+      { role: AmlRoles.PRIMARY } as AmalgamatingBusinessIF
+    ]
+    expect(wrapper.vm.havePrimaryBusiness).toBe(true)
+  })
+
   it('computes haveAmalgamatingBusinesses correctly - regular amalgamation', () => {
     store.stateModel.amalgamation.type = AmalgamationTypes.REGULAR
 

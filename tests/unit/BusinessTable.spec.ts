@@ -40,23 +40,6 @@ describe('Business Table - display', () => {
 
   const amalgamatingBusinesses = [
     {
-      label: 'BC Limited holding business - reg amalgamation',
-      amalgamationType: AmalgamationTypes.REGULAR,
-      type: AmlTypes.LEAR,
-      identifier: 'BC1111111',
-      name: 'My BC Limited Company',
-      email: 'bc1111111@example.com',
-      address: {
-        streetAddress: '123 Main St',
-        addressCity: 'Victoria',
-        addressCountry: 'CA',
-        postalCode: 'V8V 8V8'
-      },
-      legalType: CorpTypeCd.BC_COMPANY,
-      expectedBusinessType: 'BC Limited Company',
-      role: AmlRoles.HOLDING
-    },
-    {
       label: 'BC Limited holding business - horiz amalgamation',
       amalgamationType: AmalgamationTypes.HORIZONTAL,
       type: AmlTypes.LEAR,
@@ -71,7 +54,7 @@ describe('Business Table - display', () => {
       },
       legalType: CorpTypeCd.BC_COMPANY,
       expectedBusinessType: 'BC Limited Company',
-      role: AmlRoles.HOLDING
+      role: AmlRoles.PRIMARY
     },
     {
       label: 'BC Limited primary business - vert amalgamation',
@@ -189,11 +172,11 @@ describe('Business Table - display', () => {
         if (business.role === AmlRoles.AMALGAMATING) {
           expect(td.at(3).text()).toBe('Amalgamating Business')
         }
-        if (business.role === AmlRoles.HOLDING && business.amalgamationType === AmalgamationTypes.HORIZONTAL) {
-          expect(td.at(3).text()).toBe('Primary Company')
+        if (business.role === AmlRoles.HOLDING) {
+          expect(td.at(3).text()).toBe('Holding Business')
         }
-        if (business.role === AmlRoles.HOLDING && business.amalgamationType === AmalgamationTypes.VERTICAL) {
-          expect(td.at(3).text()).toBe('Holding Company')
+        if (business.role === AmlRoles.PRIMARY) {
+          expect(td.at(3).text()).toBe('Primary Business')
         }
 
         expect(td.at(4).exists()).toBe(true) // see separate BusinessTableStatus tests
@@ -338,7 +321,7 @@ describe.skip('Business Table - rule evaluation', () => {
 
   // check each rule sequentially
   for (let i = 0; i < rules.length; i++) {
-    it.skip(`fails rule "${rules[i].methodName}"`, () => {
+    it(`fails rule "${rules[i].methodName}"`, () => {
       // first, verify that current rule fails
       expect(wrapper.vm.businesses[0].status).toBe(rules[i].error)
 

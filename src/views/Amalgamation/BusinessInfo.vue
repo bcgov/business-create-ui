@@ -16,7 +16,7 @@
         <p v-if="isAmalgamationFilingHorizontal || isAmalgamationFilingVertical">
           The resulting business will adopt the following Registered Office and Records Office Mailing
           and Delivery Addresses of the {{ isAmalgamationFilingHorizontal ? 'primary' : 'holding' }}
-          company in this amalgamation.
+          business in this amalgamation.
         </p>
       </header>
 
@@ -37,7 +37,7 @@
           <p>
             <strong>Important: </strong>To update the registered office and records office addresses, save
             this draft application and visit the {{ isAmalgamationFilingHorizontal ? 'primary' : 'holding' }}
-            company's dashboard. Make the address changes there and come back to this application.
+            business' dashboard. Make the address changes there and come back to this application.
           </p>
         </v-card>
 
