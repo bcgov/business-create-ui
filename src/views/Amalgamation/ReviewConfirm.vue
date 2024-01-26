@@ -8,15 +8,6 @@
           Review the information in your application. If you need to change or complete anything,
           return to the step to make the necessary change.
         </p>
-
-        <v-card
-          outlined
-          class="message-box"
-        >
-          <p>
-            <strong>Important: </strong>Amalgamation cannot be undone without a court order.
-          </p>
-        </v-card>
       </header>
 
       <!-- Amalgamation Information -->
@@ -393,10 +384,5 @@ h2::before {
   /* Increment "header-counter" by 1 */
   counter-increment: header-counter;
   content: counter(header-counter) '. ';
-}
-
-// override base class text size
-.message-box p {
-  font-size: $px-16;
 }
 </style>
