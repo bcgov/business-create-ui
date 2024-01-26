@@ -150,7 +150,7 @@ describe('Amalgamating Businesses - components and validity', () => {
     { businessTableValid: false, isAddingAmalgamatingBusiness: false, isAddingAmalgamatingForeignBusiness: true, expected: false },
     { businessTableValid: false, isAddingAmalgamatingBusiness: true, isAddingAmalgamatingForeignBusiness: false, expected: false },
     { businessTableValid: false, isAddingAmalgamatingBusiness: true, isAddingAmalgamatingForeignBusiness: true, expected: false },
-    { businessTableValid: true, isAddingAmalgamatingBusiness: true, isAddingAmalgamatingForeignBusiness: true, expected: true },
+    { businessTableValid: true, isAddingAmalgamatingBusiness: false, isAddingAmalgamatingForeignBusiness: false, expected: true },
     { businessTableValid: true, isAddingAmalgamatingBusiness: false, isAddingAmalgamatingForeignBusiness: true, expected: false },
     { businessTableValid: true, isAddingAmalgamatingBusiness: true, isAddingAmalgamatingForeignBusiness: false, expected: false },
     { businessTableValid: true, isAddingAmalgamatingBusiness: true, isAddingAmalgamatingForeignBusiness: true, expected: false }
