@@ -1,8 +1,9 @@
 <template>
   <div id="name-request-info">
+    <!-- display name request info -->
     <template v-if="getNameRequestNumber">
       <!-- Name Request -->
-      <div class="section-container mb-n8">
+      <div class="section-container">
         <v-row
           id="name-request"
           no-gutters
@@ -20,7 +21,7 @@
             sm="8"
             class="pt-4 pt-sm-0"
           >
-            <ul class="name-request-list-items">
+            <ul class="name-request-list-items pl-1">
               <li id="name-request-title">
                 <strong>{{ getNameRequestNumber }}</strong> - {{ getNameRequestApprovedName }}
               </li>
@@ -44,7 +45,7 @@
       </div>
 
       <!-- Name Request Applicant -->
-      <div class="section-container">
+      <div class="section-container pt-0">
         <v-row
           id="name-request-applicant"
           no-gutters
@@ -62,7 +63,7 @@
             sm="9"
             class="pt-4 pt-sm-0"
           >
-            <ul class="applicant-list-items">
+            <ul class="applicant-list-items pl-1">
               <li><strong>Name:</strong> {{ formatFullName(applicant) }}</li>
               <li><strong>Address:</strong> {{ formatFullAddress(applicant) }}</li>
               <li><strong>Email:</strong> {{ applicant.emailAddress }}</li>
@@ -73,8 +74,113 @@
       </div>
     </template>
 
+    <!-- display amalgamation adopted name info -->
+    <template v-else-if="isAmalgamationFiling && getCorrectNameOption === CorrectNameOptions.CORRECT_AML_ADOPT">
+      <div class="section-container">
+        <v-row
+          id="amalgamation-adopted-info"
+          no-gutters
+        >
+          <v-col
+            cols="12"
+            sm="3"
+            class="pt-1 pr-4"
+          >
+            <label>Resulting Business Name</label>
+          </v-col>
+
+          <v-col
+            id="adopted-name-value"
+            cols="12"
+            sm="9"
+          >
+            {{ getNameRequestApprovedName }}
+          </v-col>
+
+          <v-col
+            cols="12"
+            sm="3"
+            class="pr-4 mt-8"
+          >
+            <label>Resulting Business Type</label>
+          </v-col>
+
+          <v-col
+            cols="12"
+            sm="9"
+            class="mt-4 mt-sm-8"
+          >
+            <ul class="entity-type-description pl-0">
+              <li>
+                {{ getEntityTypeDescription }}
+              </li>
+            </ul>
+          </v-col>
+        </v-row>
+      </div>
+    </template>
+
+    <!-- display amalgamation numbered info -->
+    <template v-else-if="isAmalgamationFiling && getCorrectNameOption === CorrectNameOptions.CORRECT_AML_NUMBERED">
+      <div class="section-container">
+        <v-row
+          id="amalgamation-numbered-info"
+          no-gutters
+        >
+          <v-col
+            cols="12"
+            sm="3"
+            class="pt-1 pr-4"
+          >
+            <label>Resulting Business Name</label>
+          </v-col>
+
+          <v-col
+            cols="12"
+            sm="9"
+          >
+            <ul class="numbered-company-list-items pl-0">
+              <li id="numbered-company-title">
+                <strong>[Incorporation Number]</strong> {{ numberedCompanySuffix }}
+              </li>
+              <li class="bullet-point mt-4 ml-6">
+                <span>The company is to be amalgamated with a name created by adding
+                  "{{ numberedCompanySuffix }}" after the incorporation number.</span>
+              </li>
+              <li class="bullet-point ml-6">
+                Your Incorporation Number will be generated at the end of the filing transaction.
+              </li>
+              <li class="bullet-point ml-6">
+                It is not possible to request a specific Incorporation Number.
+              </li>
+            </ul>
+          </v-col>
+
+          <v-col
+            cols="12"
+            sm="3"
+            class="pr-4 mt-8"
+          >
+            <label>Resulting Business Type</label>
+          </v-col>
+
+          <v-col
+            cols="12"
+            sm="9"
+            class="mt-4 mt-sm-8"
+          >
+            <ul class="entity-type-description pl-0">
+              <li>
+                {{ getEntityTypeDescription }}
+              </li>
+            </ul>
+          </v-col>
+        </v-row>
+      </div>
+    </template>
+
+    <!-- display changed name info -->
     <template v-else-if="getNameRequestApprovedName">
-      <!-- Changed Name -->
       <div class="section-container">
         <v-row
           id="changed-name-info"
@@ -88,7 +194,7 @@
             <label>Name</label>
           </v-col>
           <v-col
-            id="changed-name-title"
+            id="changed-name-value"
             cols="12"
             sm="9"
           >
@@ -98,8 +204,8 @@
       </div>
     </template>
 
+    <!-- display other numbered company info -->
     <template v-else>
-      <!-- Numbered Company -->
       <div class="section-container">
         <v-row
           id="numbered-company-info"
@@ -117,23 +223,19 @@
             cols="12"
             sm="9"
           >
-            <ul class="numbered-company-list-items">
+            <ul class="numbered-company-list-items pl-0">
               <li id="numbered-company-title">
-                <strong>[Incorporation Number]</strong> B.C. LTD.
+                <strong>[Incorporation Number]</strong> {{ numberedCompanySuffix }}
               </li>
               <li class="mt-4">
                 <strong>Entity Type:</strong> {{ getEntityTypeDescription }}
               </li>
-              <li class="mt-2">
-                <strong>Request Type:</strong> {{ requestType }}
-              </li>
               <li class="bullet-point mt-4 ml-6">
-                You will be filing this Incorporation Application for a company
-                created by adding "B.C. LTD." after the Incorporation Number.
+                <span>The company is to be incorporated with a name created by adding
+                  "{{ numberedCompanySuffix }}" after the incorporation number.</span>
               </li>
               <li class="bullet-point ml-6">
-                Your Incorporation Number will be generated at the end of the filing
-                transaction.
+                Your Incorporation Number will be generated at the end of the filing transaction.
               </li>
               <li class="bullet-point ml-6">
                 It is not possible to request a specific Incorporation Number.
@@ -150,28 +252,38 @@
 import { Component, Mixins } from 'vue-property-decorator'
 import { Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
-import { NameRequestStates, NrRequestActionCodes } from '@/enums'
-import { CorpTypeCd } from '@bcrs-shared-components/enums/'
+import { CorrectNameOptions, NameRequestStates, NrRequestActionCodes } from '@/enums'
 import { NrApplicantIF, NameRequestIF } from '@/interfaces'
 import { CommonMixin, DateMixin } from '@/mixins'
-import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
+import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 import { Capitalize } from '@/utils'
 
 @Component({})
 export default class NameRequestInfo extends Mixins(CommonMixin, DateMixin) {
   // For template
   readonly NameRequestStates = NameRequestStates
+  readonly CorrectNameOptions = CorrectNameOptions
 
   readonly RECEIVED_STATE = 'Received'
   readonly NOT_RECEIVED_STATE = 'Not Received'
   readonly NOT_REQUIRED_STATE = 'Not Required'
   readonly WAIVED_STATE = 'Waived'
 
+  @Getter(useStore) getCorrectNameOption!: CorrectNameOptions
   @Getter(useStore) getEntityType!: CorpTypeCd
   @Getter(useStore) getNameRequest!: NameRequestIF
   @Getter(useStore) getNameRequestApprovedName!: string
   @Getter(useStore) getNameRequestNumber!: string
+  @Getter(useStore) isAmalgamationFiling!: boolean
+  @Getter(useStore) isTypeBcCcc!: boolean
+  @Getter(useStore) isTypeBcUlcCompany!: boolean
   @Getter(useStore) isTypeSoleProp: boolean
+
+  get numberedCompanySuffix (): string {
+    if (this.isTypeBcCcc) return 'B.C. COMMUNITY CONTRIBUTION COMPANY'
+    if (this.isTypeBcUlcCompany) return 'B.C. UNLIMITED LIABILITY COMPANY'
+    return 'B.C. LTD.'
+  }
 
   /** The entity type description.  */
   get getEntityTypeDescription (): string {
@@ -187,6 +299,7 @@ export default class NameRequestInfo extends Mixins(CommonMixin, DateMixin) {
     switch (this.getNameRequest.request_action_cd) {
       case NrRequestActionCodes.NEW_BUSINESS: return 'New Business'
       case NrRequestActionCodes.RESTORE: return 'Restoration Request'
+      case NrRequestActionCodes.AMALGAMATE: return 'Amalgamation'
     }
     return '' // should never happen
   }
@@ -250,10 +363,13 @@ ul {
   font-size: $px-20;
 }
 
-#changed-name-title {
+#numbered-company-title,
+#changed-name-value,
+#adopted-name-value {
   font-size: $px-22;
   font-weight: bold;
   color: $gray9;
+  padding-right: 80px; // to prevent overlap with button
 }
 
 .numbered-company-list-items {

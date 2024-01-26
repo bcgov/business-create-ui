@@ -1,8 +1,9 @@
-import { BusinessAddressIF, CourtOrderIF, RegisteredRecordsAddressesIF, NaicsIF, NameTranslationIF,
-  OfficeAddressIF, PartyIF, ShareClassIF, SpecialResolutionIF } from '@/interfaces'
-import { ApprovalTypes, BusinessTypes, DissolutionStatementTypes, DissolutionTypes, FilingTypes,
-  RestorationTypes, RelationshipTypes } from '@/enums'
-import { CorpTypeCd, CorrectNameOptions } from '@bcrs-shared-components/enums/'
+import { AmalgamatingBusinessIF, BusinessAddressIF, CourtOrderIF, RegisteredRecordsAddressesIF, NaicsIF,
+  NameTranslationIF, OfficeAddressIF, PartyIF, ShareClassIF, SpecialResolutionIF } from '@/interfaces'
+import { AmalgamationTypes, ApprovalTypes, BusinessTypes, DissolutionStatementTypes, DissolutionTypes,
+  FilingTypes, RestorationTypes, RelationshipTypes } from '@/enums'
+import { CorrectNameOptions } from '@bcrs-shared-components/enums/'
+import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module/'
 import { ContactPointIF } from '@bcrs-shared-components/interfaces'
 
 /**
@@ -15,6 +16,89 @@ export interface NameRequestFilingIF {
   legalName?: string // only set when there is a name change (including NR)
   nrNumber?: string // only set when there is an NR
   correctNameOption?: CorrectNameOptions // only used by UI for save and resume
+}
+
+/** Interface for amalgamation filing data saved to the Legal API. */
+export interface AmalgamationFilingIF {
+  header: {
+    name: FilingTypes
+    certifiedBy: string
+    date: string
+    effectiveDate?: string // should be set only for future effective filings
+    filingId?: number // for existing filings (not used when building a new filing)
+    folioNumber?: string // only displayed for certain account types
+    isFutureEffective: boolean
+
+    // staff payment properties:
+    routingSlipNumber?: string
+    bcolAccountNumber?: string
+    datNumber?: string
+    waiveFees?: boolean
+    priority?: boolean
+  }
+  business: {
+    legalType: CorpTypeCd
+    identifier: string
+  }
+  amalgamationApplication: {
+    amalgamatingBusinesses: AmalgamatingBusinessIF[]
+    courtApproval: boolean
+    type: AmalgamationTypes
+    nameRequest: NameRequestFilingIF
+    nameTranslations: NameTranslationIF[]
+    offices: RegisteredRecordsAddressesIF | object
+    contactPoint: ContactPointIF
+    parties: PartyIF[]
+
+    // BEN / CC / BC / ULC only:
+    shareStructure?: {
+      shareClasses: ShareClassIF[]
+    }
+    incorporationAgreement?: {
+      agreementType: string
+    }
+    // ULC only:
+    courtOrder?: CourtOrderIF
+  }
+}
+
+/** Interface for continuation in filing data saved to the Legal API. */
+export interface ContinuationInFilingIF {
+  header: {
+    name: FilingTypes
+    certifiedBy: string
+    date: string
+    effectiveDate?: string // should be set only for future effective filings
+    filingId?: number // for existing filings (not used when building a new filing)
+    folioNumber?: string // only displayed for certain account types
+    isFutureEffective: boolean
+
+    // staff payment properties:
+    routingSlipNumber?: string
+    bcolAccountNumber?: string
+    datNumber?: string
+    waiveFees?: boolean
+    priority?: boolean
+  }
+  business: {
+    legalType: CorpTypeCd
+    identifier: string
+  }
+  continuationIn: {
+    foreignJurisdiction: any
+    nameRequest: NameRequestFilingIF
+    nameTranslations: NameTranslationIF[]
+    offices: RegisteredRecordsAddressesIF | object
+    contactPoint: ContactPointIF
+    parties: PartyIF[]
+
+    // BEN / CC / BC / ULC only:
+    shareStructure?: {
+      shareClasses: ShareClassIF[]
+    }
+    // ULC only:
+    courtOrder?: CourtOrderIF
+  }
 }
 
 /** Interface for incorporation filing data saved to the Legal API. */
@@ -78,7 +162,7 @@ export interface IncorporationFilingIF {
 /** Interface for registration filing data saved to the Legal API. */
 export interface RegistrationFilingIF {
   header: {
-    name: string
+    name: FilingTypes
     certifiedBy: string
     date: string
     effectiveDate?: string // not saved by UI but may be provided by API
@@ -118,7 +202,7 @@ export interface RegistrationFilingIF {
 /** Interface for dissolution filing data saved to the Legal API. */
 export interface DissolutionFilingIF {
   header: {
-    name: string
+    name: FilingTypes
     certifiedBy: string
     date: string
     effectiveDate?: string // Optional and should be set only for future effective filings
@@ -168,7 +252,7 @@ export interface DissolutionFilingIF {
 /** Interface for restoration filing data saved to the Legal API. */
 export interface RestorationFilingIF {
   header: {
-    name: string
+    name: FilingTypes
     certifiedBy: string
     date: string
     effectiveDate?: string // not saved by UI but may be provided by API

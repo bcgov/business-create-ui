@@ -150,6 +150,8 @@ export default class SaveErrorDialog extends Vue {
   /** The filing name. */
   get filingName (): string {
     switch (this.getFilingType) {
+      case FilingTypes.AMALGAMATION_APPLICATION: return 'Application'
+      case FilingTypes.CONTINUATION_IN: return 'Application'
       case FilingTypes.INCORPORATION_APPLICATION: return 'Application'
       case FilingTypes.REGISTRATION: return 'Registration'
       case FilingTypes.RESTORATION: return 'Restoration'

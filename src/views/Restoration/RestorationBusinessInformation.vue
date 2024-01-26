@@ -61,7 +61,7 @@ import { AddressIF, ContactPointIF, DefineCompanyIF, RegisteredRecordsAddressesI
   from '@/interfaces'
 import { CommonMixin } from '@/mixins'
 import { RouteNames } from '@/enums'
-import { CorpTypeCd } from '@bcrs-shared-components/enums/'
+import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
 import OfficeAddresses from '@/components/common/OfficeAddresses.vue'
 
@@ -91,7 +91,7 @@ export default class RestorationBusinessInformation extends Mixins(CommonMixin) 
   readonly CorpTypeCd = CorpTypeCd
 
   get addresses (): RegisteredRecordsAddressesIF {
-    return this.getDefineCompanyStep.officeAddresses as RegisteredRecordsAddressesIF
+    return this.getDefineCompanyStep.officeAddresses
   }
 
   /** Called when component is created. */

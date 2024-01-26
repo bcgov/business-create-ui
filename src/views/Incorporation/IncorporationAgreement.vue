@@ -82,9 +82,9 @@
           class="incorporation-agreement-help"
         >
           <div
-            v-for="(item, index) in getIncorporationAgreementResource.helpSection"
-            :id="`agreement-help-${index}`"
-            :key="index"
+            v-for="(item, index1) in getIncorporationAgreementResource.helpSection"
+            :id="`agreement-help-${index1}`"
+            :key="index1"
             class="help-div"
           >
             <h3>
@@ -98,17 +98,17 @@
               {{ item.header }}
             </h3>
             <ul
-              v-for="(text, index) in item.helpText"
-              :id="`agreement-help-text-${index}`"
-              :key="index"
+              v-for="(text, index2) in item.helpText"
+              :id="`agreement-help-text-${index2}`"
+              :key="index2"
               class="help-div"
             >
               <li>{{ text }}</li>
             </ul>
             <ul
-              v-for="(text, index) in item.statements"
-              :id="`agreement-statements-${index}`"
-              :key="index"
+              v-for="(text, index2) in item.statements"
+              :id="`agreement-statements-${index2}`"
+              :key="index2"
               class="articles-statements"
             >
               <li>{{ text }}</li>
@@ -170,93 +170,91 @@
     </section>
 
     <!-- Sample Templates -->
-    <template>
-      <section class="mt-10">
-        <header>
-          <h2>2. Sample Templates</h2>
-        </header>
+    <section class="mt-10">
+      <header>
+        <h2>2. Sample Templates</h2>
+      </header>
 
-        <p>
-          For your convenience, we have provided a sample Incorporation Agreement and a set of sample
-          {{ entityDescription }} Articles.
-        </p>
-        <v-card
-          flat
-          class="share-structure-check-panel py-8 px-6"
-        >
-          <div class="share-structure-check-header">
-            <v-icon color="black">
-              mdi-information-outline
+      <p>
+        For your convenience, we have provided a sample Incorporation Agreement and a set of sample
+        {{ entityDescription }} Articles.
+      </p>
+      <v-card
+        flat
+        class="share-structure-check-panel py-8 px-6"
+      >
+        <div class="share-structure-check-header">
+          <v-icon color="black">
+            mdi-information-outline
+          </v-icon>
+          <span> Share Structure Check:</span>
+        </div>
+
+        <div class="share-structure-check-text">
+          The sample articles CAN ONLY be used if the company's share structure DOES NOT contain a class or series
+          with special rights or restrictions.
+          <span
+            class="read-more-btn"
+            @click="readMoreFlag = true"
+          >
+            <span v-if="!readMoreFlag">Read more...</span>
+          </span>
+          <div v-if="readMoreFlag">
+            <div class="read-more-line">
+              If the corporation's share structure contains a class or series with special rights or restrictions,
+              you need to create a unique set of Articles for the company and outline these special rights or
+              restrictions in the Articles.
+            </div>
+            <div class="read-more-line">
+              We recommend seeking professional assistance from a lawyer or accountant to help you prepare your
+              Incorporation Agreement and Articles.
+              <span
+                class="read-more-btn"
+                @click="readMoreFlag = false"
+              >
+                <span>Read less...</span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-flex flex-column flex-sm-row justify-center align-center mt-6">
+          <img
+            src="@/assets/images/BCRegistries_Sample_IncoporationAgreement_x2.png"
+            class="preview-image"
+          >
+          <div class="px-8" />
+          <div class="download-link-container py-5">
+            <v-icon
+              color="primary"
+              class="mt-n1"
+            >
+              mdi-file-pdf-outline
             </v-icon>
-            <span> Share Structure Check:</span>
-          </div>
-
-          <div class="share-structure-check-text">
-            The sample articles CAN ONLY be used if the company's share structure DOES NOT contain a class or series
-            with special rights or restrictions.
-            <span
-              class="read-more-btn"
-              @click="readMoreFlag = true"
+            <a
+              :href="documentURL"
+              download
+              class="ml-1"
             >
-              <span v-if="!readMoreFlag">Read more...</span>
-            </span>
-            <div v-if="readMoreFlag">
-              <div class="read-more-line">
-                If the corporation's share structure contains a class or series with special rights or restrictions,
-                you need to create a unique set of Articles for the company and outline these special rights or
-                restrictions in the Articles.
-              </div>
-              <div class="read-more-line">
-                We recommend seeking professional assistance from a lawyer or accountant to help you prepare your
-                Incorporation Agreement and Articles.
-                <span
-                  class="read-more-btn"
-                  @click="readMoreFlag = false"
-                >
-                  <span>Read less...</span>
-                </span>
-              </div>
-            </div>
+              Download the sample Incorporation Agreement and Company Articles
+            </a>
           </div>
+        </div>
+      </v-card>
+    </section>
 
-          <div class="d-flex flex-column flex-sm-row justify-center align-center mt-6">
-            <img
-              src="@/assets/images/BCRegistries_Sample_IncoporationAgreement_x2.png"
-              class="preview-image"
-            >
-            <div class="px-8" />
-            <div class="download-link-container py-5">
-              <v-icon
-                color="primary"
-                class="mt-n1"
-              >
-                mdi-file-pdf-outline
-              </v-icon>
-              <a
-                :href="documentURL"
-                download
-                class="ml-1"
-              >
-                Download the sample Incorporation Agreement and Company Articles
-              </a>
-            </div>
-          </div>
-        </v-card>
-      </section>
+    <section class="mt-10">
+      <header id="confirm-agreement">
+        <h2>3. Confirm Incorporation Agreement and Article Completion</h2>
+      </header>
 
-      <section class="mt-10">
-        <header id="confirm-agreement">
-          <h2>3. Confirm Incorporation Agreement and Article Completion</h2>
-        </header>
-
-        <v-card
-          flat
-          class="mt-6"
-        >
-          <AgreementType :showErrorSummary="!getIncorporationAgreementStep.valid" />
-        </v-card>
-      </section>
-    </template>
+      <v-card
+        flat
+        class="mt-6"
+      >
+        <AgreementType :showErrorSummary="!getIncorporationAgreementStep.valid" />
+      </v-card>
+    </section>
   </div>
 </template>
 
@@ -267,9 +265,8 @@ import { useStore } from '@/store/store'
 import AgreementType from '@/components/common/AgreementType.vue'
 import { IncorporationAgreementIF } from '@/interfaces'
 import { RouteNames } from '@/enums'
-import { CorpTypeCd } from '@bcrs-shared-components/enums/'
 import { CommonMixin } from '@/mixins'
-import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
+import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 
 @Component({
   components: {

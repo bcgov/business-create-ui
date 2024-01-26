@@ -3,7 +3,31 @@ import {
   PeopleAndRolesResourceIF, StepIF, CreateRulesResourceIF, CreateMemorandumResourceIF,
   CreateResolutionResourceIF, CustodianResourceIF, CompletingPartyStatementIF
 } from '@/interfaces'
-import { CorpTypeCd } from '@bcrs-shared-components/enums/'
+import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
+
+/** Amalgamation (regular and short-form) resource interface. */
+export interface AmalgamationResourceIF {
+  entityType: CorpTypeCd
+  displayName: string
+  steps: Array<StepIF>
+  filingData: Array<FilingDataIF>
+  peopleAndRoles: PeopleAndRolesResourceIF
+  reviewAndConfirm: {
+    completingPartyStatement: CompletingPartyStatementIF
+  }
+}
+
+/** Continuation in resource interface. */
+export interface ContinuationInResourceIF {
+  entityType: CorpTypeCd
+  displayName: string
+  steps: Array<StepIF>
+  filingData: Array<FilingDataIF>
+  peopleAndRoles: PeopleAndRolesResourceIF
+  reviewAndConfirm: {
+    completingPartyStatement: CompletingPartyStatementIF
+  }
+}
 
 /** Dissolution resource interface. */
 export interface DissolutionResourceIF {
@@ -79,5 +103,5 @@ export interface RestorationResourceIF {
   }
 }
 
-export interface ResourceIF extends DissolutionResourceIF, IncorporationResourceIF, RegistrationResourceIF,
-  RestorationResourceIF {}
+export interface ResourceIF extends AmalgamationResourceIF, ContinuationInResourceIF,
+  DissolutionResourceIF, IncorporationResourceIF, RegistrationResourceIF, RestorationResourceIF {}

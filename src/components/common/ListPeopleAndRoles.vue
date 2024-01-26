@@ -9,16 +9,37 @@
         <span>
           <v-icon color="error">mdi-information-outline</v-icon>
           <span class="error-text mx-1">This step is unfinished.</span>
+
+          <router-link
+            v-if="isAmalgamationFilingRegular"
+            id="router-link"
+            :to="{ path: `/${RouteNames.AMALG_REG_PEOPLE_ROLES}` }"
+          >Return to this step to finish it</router-link>
+
+          <router-link
+            v-if="isAmalgamationFilingHorizontal || isAmalgamationFilingVertical"
+            id="router-link"
+            :to="{ path: `/${RouteNames.AMALG_SHORT_PEOPLE_ROLES}` }"
+          >Return to this step to finish it</router-link>
+
+          <router-link
+            v-if="isContinuationInFiling"
+            id="router-link"
+            :to="{ path: `/${RouteNames.CONTINUATION_IN_PEOPLE_ROLES}` }"
+          >Return to this step to finish it</router-link>
+
           <router-link
             v-if="isIncorporationFiling"
             id="router-link"
             :to="{ path: `/${RouteNames.INCORPORATION_PEOPLE_ROLES}` }"
           >Return to this step to finish it</router-link>
+
           <router-link
             v-if="isRegistrationFiling"
             id="router-link"
             :to="{ path: `/${RouteNames.REGISTRATION_PEOPLE_ROLES}` }"
           >Return to this step to finish it</router-link>
+
           <router-link
             v-if="isFullRestorationFiling || isLimitedRestorationFiling"
             id="router-link"
@@ -56,8 +77,8 @@
 
         <!-- List Content -->
         <v-row
-          v-for="(orgPerson, index) in personList"
-          :key="index"
+          v-for="(orgPerson, index1) in personList"
+          :key="index1"
           class="people-roles-content"
           no-gutters
         >
@@ -124,8 +145,8 @@
             class="roles-column"
           >
             <p
-              v-for="(role, index) in orgPerson.roles"
-              :key="index"
+              v-for="(role, index2) in orgPerson.roles"
+              :key="index2"
             >
               {{ role.roleType }}
             </p>
@@ -149,11 +170,11 @@
             <div class="float-right">
               <span class="edit-action">
                 <v-btn
-                  :id="`officer-${index}-change-btn`"
+                  :id="`officer-${index1}-change-btn`"
                   text
                   color="primary"
                   :tabindex="disabled ? -1 : 0"
-                  @click="disabled ? null : emitPersonInfo(index)"
+                  @click="disabled ? null : emitPersonInfo(index1)"
                 >
                   <v-icon small>mdi-pencil</v-icon>
                   <span>Edit</span>
@@ -180,7 +201,7 @@
                     </v-btn>
                   </template>
                   <v-list class="more-actions-list">
-                    <v-list-item @click="emitRemovePerson(index)">
+                    <v-list-item @click="emitRemovePerson(index1)">
                       <v-list-item-title>
                         <v-icon
                           small
@@ -228,6 +249,10 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
 
   @Getter(useStore) getAddPeopleAndRoleStep!: PeopleAndRoleIF
   @Getter(useStore) getShowErrors!: boolean
+  @Getter(useStore) isAmalgamationFilingHorizontal!: boolean
+  @Getter(useStore) isAmalgamationFilingRegular!: boolean
+  @Getter(useStore) isAmalgamationFilingVertical!: boolean
+  @Getter(useStore) isContinuationInFiling!: boolean
   @Getter(useStore) isFullRestorationFiling!: boolean
   @Getter(useStore) isIncorporationFiling!: boolean
   @Getter(useStore) isLimitedRestorationFiling!: boolean

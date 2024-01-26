@@ -122,8 +122,8 @@ import HelpSection from '@/components/common/HelpSection.vue'
 import { CustodianResourceIF, DissolutionStatementIF } from '@/interfaces'
 import { CommonMixin } from '@/mixins'
 import { RouteNames } from '@/enums'
-import { CorpTypeCd } from '@bcrs-shared-components/enums/'
-import { GetCorpFullDescription, GetCorpNumberedDescription } from '@bcrs-shared-components/corp-type-module'
+import { CorpTypeCd, GetCorpFullDescription, GetCorpNumberedDescription }
+  from '@bcrs-shared-components/corp-type-module'
 
 @Component({
   components: {

@@ -156,8 +156,9 @@
               lg="9"
             >
               <header>
-                <h1>{{ getFilingName }}</h1>
+                <h1>{{ header }}</h1>
               </header>
+
               <p
                 v-if="isFirmDissolution"
                 class="mt-4"
@@ -249,18 +250,20 @@ import * as Views from '@/views'
 
 // Mixins, interfaces, etc
 import { CommonMixin, DateMixin, FilingTemplateMixin, NameRequestMixin } from '@/mixins'
-import { AccountInformationIF, AddressIF, BreadcrumbIF, BusinessIF, BusinessWarningIF, CompletingPartyIF,
-  ConfirmDialogType, EmptyFees, FeesIF, FilingDataIF, NameRequestIF, OrgInformationIF, PartyIF, ResourceIF,
+import { AccountInformationIF, AddressIF, BreadcrumbIF, BusinessWarningIF, CompletingPartyIF,
+  ConfirmDialogType, EmptyFees, FeesIF, FilingDataIF, OrgInformationIF, PartyIF, ResourceIF,
   StepIF } from '@/interfaces'
-import { DissolutionResources, IncorporationResources, RegistrationResources, RestorationResources,
+import { AmalgamationRegResources, AmalgamationShortResources, ContinuationInResources,
+  DissolutionResources, IncorporationResources, RegistrationResources, RestorationResources,
   getEntityDashboardBreadcrumb, getMyBusinessRegistryBreadcrumb, getRegistryDashboardBreadcrumb,
   getSbcStaffDashboardBreadcrumb, getStaffDashboardBreadcrumb } from '@/resources'
 import { AuthServices, LegalServices, PayServices } from '@/services/'
 
 // Enums and Constants
-import { EntityState, ErrorTypes, FilingCodes, FilingNames, FilingStatus, FilingTypes, NameRequestStates, RouteNames,
+import { EntityStates, ErrorTypes, FilingCodes, FilingNames, FilingStatus, FilingTypes, NameRequestStates, RouteNames,
   StaffPaymentOptions } from '@/enums'
 import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
+import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 
 @Component({
   components: {
@@ -295,6 +298,10 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   @Getter(useStore) getUserLastName!: string
   @Getter(useStore) getUserEmail!: string
   @Getter(useStore) getUserPhone!: string
+  // @Getter(useStore) isAmalgamationFilingHorizontal!: boolean
+  // @Getter(useStore) isAmalgamationFilingRegular!: boolean
+  // @Getter(useStore) isAmalgamationFilingVertical!: boolean
+  @Getter(useStore) isContinuationInFiling!: boolean
   @Getter(useStore) isDissolutionFiling!: boolean
   @Getter(useStore) isIncorporationFiling!: boolean
   @Getter(useStore) isMobile!: boolean
@@ -309,7 +316,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   @Action(useStore) setCurrentDate!: (x: string) => void
   @Action(useStore) setCurrentJsDate!: (x: Date) => void
   @Action(useStore) setCurrentStep!: (x: number) => void
-  @Action(useStore) setEntityState!: (x: EntityState) => void
+  @Action(useStore) setEntityState!: (x: EntityStates) => void
   @Action(useStore) setFeePrices!: (x: Array<FeesIF>) => void
   @Action(useStore) setFilingType!: (x: FilingTypes) => void
   @Action(useStore) setGoodStanding!: (x: boolean) => void
@@ -319,7 +326,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   @Action(useStore) setLastAddressChangeDate!: (x: string) => void
   @Action(useStore) setLastAnnualReportDate!: (x: string) => void
   @Action(useStore) setLastDirectorChangeDate!: (x: string) => void
-  @Action(useStore) setNameRequest!: (x: NameRequestIF) => void
+  // @Action(useStore) setNameRequest!: (x: NameRequestIF) => void
   @Action(useStore) setOperatingName!: (x: string) => void
   @Action(useStore) setParties!: (x: Array<PartyIF>) => void
   @Action(useStore) setResources!: (x: ResourceIF) => void
@@ -389,6 +396,19 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     return crumbs
   }
 
+  /** The page header (title). */
+  get header (): string {
+    if (this.isAmalgamationFilingRegular) {
+      return `${this.getFilingName} (Regular)`
+    } else if (this.isAmalgamationFilingHorizontal) {
+      return `${this.getFilingName} (Horizontal Short-form)`
+    } else if (this.isAmalgamationFilingVertical) {
+      return `${this.getFilingName} (Vertical Short-form)`
+    } else {
+      return this.getFilingName
+    }
+  }
+
   /** Data for fee summary component. */
   get feeFilingData (): Array<FilingDataIF> {
     let filingData = [] as Array<FilingDataIF>
@@ -455,7 +475,9 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
 
   /** The About text. */
   get aboutText (): string {
-    return import.meta.env.ABOUT_TEXT
+    const aboutApp = import.meta.env.ABOUT_APP
+    const aboutSbc = import.meta.env.ABOUT_SBC
+    return `${aboutApp}<br>${aboutSbc}`
   }
 
   /** Whether to use stepper view. */
@@ -675,14 +697,10 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
         if (!this.getBusinessId && !this.getTempId) throw new Error('Neither business id nor temp id exist')
 
         if (this.getBusinessId) {
-          // this should be a Dissolution or Restoration filing
-          // (only dissolutions/restorations have a business id)
-          await this.handleDissolutionOrRestoration(this.getBusinessId)
+          await this.handleDraftWithBusinessId(this.getBusinessId)
         }
         if (this.getTempId) {
-          // this should be an Incorporation or Registration filing
-          // (only incorporations/registrations have a temp id)
-          await this.handleIaOrRegistration(this.getTempId)
+          await this.handleDraftWithTempId(this.getTempId)
         }
       } catch (error) {
         // Log exception to Sentry due to incomplete business data.
@@ -734,6 +752,18 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       // then try to re-route them
       if (this.$route.meta.filingType !== this.getFilingType) {
         switch (this.getFilingType) {
+          case FilingTypes.AMALGAMATION_APPLICATION:
+            if (this.isAmalgamationFilingRegular) {
+              this.$router.push(RouteNames.AMALG_REG_INFORMATION).catch(() => {})
+            } else if (this.isAmalgamationFilingHorizontal || this.isAmalgamationFilingVertical) {
+              this.$router.push(RouteNames.AMALG_SHORT_INFORMATION).catch(() => {})
+            } else {
+              throw new Error('invalid amalgamation filing type')
+            }
+            return
+          case FilingTypes.CONTINUATION_IN:
+            this.$router.push(RouteNames.CONTINUATION_IN_BUSINESS_HOME).catch(() => {})
+            return
           case FilingTypes.DISSOLUTION:
             if (this.isTypeFirm) {
               this.$router.push(RouteNames.DISSOLUTION_FIRM).catch(() => {})
@@ -777,7 +807,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
         this.setCertifyState(
           {
             valid: this.getCertifyState.valid,
-            certifiedBy: userInfo.firstName
+            certifiedBy: userInfo.firstname
               ? `${userInfo.firstname} ${userInfo.lastname}`
               : `${userInfo.lastname}`
           }
@@ -795,8 +825,11 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     }
   }
 
-  /** Fetches draft Dissolution or Restoration and sets the resources. */
-  private async handleDissolutionOrRestoration (businessId: string): Promise<void> {
+  /**
+   * Fetches draft Dissolution / Restoration and sets the resources.
+   * (Only dissolutions/restorations have a Business ID.)
+   */
+  private async handleDraftWithBusinessId (businessId: string): Promise<void> {
     // ensure user is authorized to use this business
     await this.checkAuth(businessId).catch(error => {
       console.log('Auth error =', error) // eslint-disable-line no-console
@@ -837,7 +870,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
         resources = RestorationResources.find(x => x.entityType === this.getEntityType) as ResourceIF
         break
       default:
-        throw new Error(`handleDissolutionOrRestoration(): invalid filing type = ${this.getFilingType}`)
+        throw new Error(`handleDraftWithBusinessId(): invalid filing type = ${this.getFilingType}`)
     }
 
     // set the resources
@@ -854,8 +887,11 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     }
   }
 
-  /** Fetches draft IA or Registration and sets the resources. */
-  private async handleIaOrRegistration (tempId: string): Promise<void> {
+  /**
+   * Fetches draft Amalgamation / IA / Registration and sets the resources.
+   * (Only amalgamations/incorporations/registrations have a Temp ID.)
+   */
+  private async handleDraftWithTempId (tempId: string): Promise<void> {
     // ensure user is authorized to use this IA
     await this.checkAuth(tempId).catch(error => {
       console.log('Auth error =', error) // eslint-disable-line no-console
@@ -876,6 +912,28 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     // parse draft filing into the store and get the resources
     let resources: ResourceIF
     switch (this.getFilingType) {
+      case FilingTypes.AMALGAMATION_APPLICATION:
+        draftFiling = {
+          ...this.buildAmalgamationFiling(),
+          ...draftFiling
+        }
+        this.parseAmalgamationDraft(draftFiling)
+        if (this.isAmalgamationFilingRegular) {
+          resources = AmalgamationRegResources.find(x => x.entityType === this.getEntityType) as ResourceIF
+        } else if (this.isAmalgamationFilingHorizontal || this.isAmalgamationFilingVertical) {
+          resources = AmalgamationShortResources.find(x => x.entityType === this.getEntityType) as ResourceIF
+        } else {
+          throw new Error('invalid amalgamation filing type')
+        }
+        break
+      case FilingTypes.CONTINUATION_IN:
+        draftFiling = {
+          ...this.buildContinuationInFiling(),
+          ...draftFiling
+        }
+        this.parseContinuationInDraft(draftFiling)
+        resources = ContinuationInResources.find(x => x.entityType === this.getEntityType) as ResourceIF
+        break
       case FilingTypes.INCORPORATION_APPLICATION:
         draftFiling = {
           ...this.buildIncorporationFiling(),
@@ -893,7 +951,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
         resources = RegistrationResources.find(x => x.entityType === this.getEntityType) as ResourceIF
         break
       default:
-        throw new Error(`handleIaOrRegistration(): invalid filing type = ${this.getFilingType}`)
+        throw new Error(`handleDraftWithTempId(): invalid filing type = ${this.getFilingType}`)
     }
 
     // set the resources
@@ -925,10 +983,16 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       const nrNumber = filing[filing.header?.name].nameRequest.nrNumber
 
       // fetch NR data
-      const nrResponse = await LegalServices.fetchNameRequest(nrNumber).catch(error => {
+      const nrResponse = await LegalServices.fetchValidContactNr(nrNumber).catch(error => {
         console.log('NR error =', error) // eslint-disable-line no-console
         this.nameRequestInvalidErrorDialog = true
       })
+
+      //
+      // The NR checks below are sort-of a duplicate of code in BusinessName.vue and
+      // ResultingBusinessName.vue, but we assume the other checks passed if the user
+      // was able to add the NR to this filing, so these checks should be sufficient.
+      //
 
       // ensure NR was found
       if (!nrResponse) {
@@ -947,7 +1011,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       }
 
       // ensure types match
-      if (nrResponse.legalType !== this.getEntityType) {
+      if ((nrResponse.legalType as unknown as CorpTypeCd) !== this.getEntityType) {
         console.log('NR legal type doesn\'t match entity type') // eslint-disable-line no-console
         this.nameRequestInvalidType = NameRequestStates.INVALID
         this.nameRequestInvalidErrorDialog = true
@@ -1145,9 +1209,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
 
   /** Fetches and stores business info. */
   private async loadBusinessInfo (businessId: string): Promise<void> {
-    const response = await LegalServices.fetchBusinessInfo(businessId)
-
-    const business = response?.data?.business as BusinessIF
+    const business = await LegalServices.fetchBusinessInfo(businessId).catch(() => {})
 
     if (!business) {
       throw new Error('Invalid business info')
@@ -1237,6 +1299,9 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
 
     // enable validation when review pages are shown
     if (
+      this.isRouteName(RouteNames.AMALG_REG_REVIEW_CONFIRM) ||
+      this.isRouteName(RouteNames.AMALG_SHORT_REVIEW_CONFIRM) ||
+      this.isRouteName(RouteNames.CONTINUATION_IN_REVIEW_CONFIRM) ||
       this.isRouteName(RouteNames.DISSOLUTION_REVIEW_CONFIRM) ||
       this.isRouteName(RouteNames.INCORPORATION_REVIEW_CONFIRM) ||
       this.isRouteName(RouteNames.REGISTRATION_REVIEW_CONFIRM) ||

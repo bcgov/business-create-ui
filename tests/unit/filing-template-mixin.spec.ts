@@ -2,7 +2,8 @@ import { wrapperFactory } from '../vitest-wrapper-factory'
 import MixinTester from '@/mixin-tester.vue'
 import { createPinia, setActivePinia } from 'pinia'
 import { useStore } from '@/store/store'
-import { BusinessTypes, CorpTypeCd, PartyTypes, RoleTypes } from '@/enums'
+import { BusinessTypes, PartyTypes, RoleTypes } from '@/enums'
+import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import { NameRequestIF } from '@/interfaces'
 
 setActivePinia(createPinia())
@@ -81,7 +82,7 @@ describe('Registration Filing', () => {
       naicsDescription: 'Some NAICS Description'
     }
     store.stateModel.nameRequest = {
-      legalType: CorpTypeCd.SOLE_PROP,
+      legalType: CorpTypeCd.SOLE_PROP as any,
       nrNum: 'NR 1234567'
     } as NameRequestIF
 

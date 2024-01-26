@@ -5,6 +5,7 @@
       <v-text-field
         id="name-translation-input"
         v-model="nameTranslation"
+        autofocus
         filled
         persistent-hint
         label="Enter Name Translation"

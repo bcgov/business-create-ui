@@ -21,10 +21,7 @@
           id="business-type"
           class="mt-n8"
         />
-        <NameTranslations
-          id="name-translations"
-          class="mt-n8"
-        />
+        <NameTranslations id="name-translations" />
       </v-card>
     </section>
 
@@ -69,7 +66,7 @@ import { Getter, Action } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { CommonMixin } from '@/mixins'
 import { RouteNames } from '@/enums'
-import { CorpTypeCd } from '@bcrs-shared-components/enums/'
+import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import ApprovalType from '@/components/Restoration/ApprovalType.vue'
 import BusinessName from '@/components/Restoration/BusinessName.vue'
 import BusinessType from '@/components/Restoration/BusinessType.vue'
@@ -87,7 +84,7 @@ import RestorationType from '@/components/Restoration/RestorationType.vue'
 })
 export default class RestorationBusinessName extends Mixins(CommonMixin) {
   @Getter(useStore) getApprovalTypeValid!: boolean
-  @Getter(useStore) getBusinessNameValid!: boolean
+  @Getter(useStore) getRestorationBusinessNameValid!: boolean
   @Getter(useStore) getNameTranslationsValid!: boolean
   @Getter(useStore) getRestorationTypeValid!: boolean
   @Getter(useStore) getShowErrors!: boolean
@@ -108,7 +105,7 @@ export default class RestorationBusinessName extends Mixins(CommonMixin) {
   /** Object of valid flags. Must match validComponents. */
   get validFlags (): object {
     return {
-      businessName: this.getBusinessNameValid,
+      businessName: this.getRestorationBusinessNameValid,
       bameTranslation: this.getNameTranslationsValid,
       restorationType: this.getRestorationTypeValid,
       approavalType: this.getApprovalTypeValid

@@ -3,12 +3,9 @@ import Vuetify from 'vuetify'
 import { mount, Wrapper } from '@vue/test-utils'
 import { getLastEvent } from '../get-last-event'
 import { createPinia, setActivePinia } from 'pinia'
-import { useStore } from '@/store/store'
 import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
 
 setActivePinia(createPinia())
-const store = useStore()
-
 const vuetify = new Vuetify({})
 
 // Events

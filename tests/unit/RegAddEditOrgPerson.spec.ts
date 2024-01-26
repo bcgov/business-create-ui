@@ -7,8 +7,7 @@ import { createPinia, setActivePinia } from 'pinia'
 import { useStore } from '@/store/store'
 import RegAddEditOrgPerson from '@/components/common/RegAddEditOrgPerson.vue'
 import { EmptyOrgPerson } from '@/interfaces'
-import { CorpTypeCd } from '@/enums'
-import { vi } from 'vitest'
+import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 
 // mock the console.warn function to hide "[Vuetify] Unable to locate target XXX"
 console.warn = vi.fn()
@@ -211,7 +210,7 @@ function createComponent (
   })
 }
 
-store.stateModel.nameRequest.legalType = CorpTypeCd.SOLE_PROP
+store.stateModel.entityType = CorpTypeCd.SOLE_PROP
 store.stateModel.currentDate = '2021-04-01'
 
 describe('Registration Add/Edit Org/Person component', () => {
@@ -363,7 +362,8 @@ describe('Registration Add/Edit Org/Person component', () => {
     wrapper.destroy()
   })
 
-  it('displays form data for proprietor-org (SP) - manual add', async () => {
+  it('displays form data for proprietor-org (SP) - manual add - registries staff only', async () => {
+    store.stateModel.tombstone.keycloakRoles = ['staff']
     const wrapper = createComponent(validProprietorOrg, -1, null)
 
     await wrapper.find('.lookup-toggle').trigger('click')
@@ -375,29 +375,37 @@ describe('Registration Add/Edit Org/Person component', () => {
     wrapper.destroy()
   })
 
-  it('displays form data for proprietor-org (SP) - business lookup', () => {
+  it('displays form data for proprietor-org (SP) - business lookup - registries staff', () => {
+    store.stateModel.tombstone.keycloakRoles = ['staff']
     const wrapper = createComponent(validProprietorOrg, -1, null)
 
-    expect(wrapper.find('.business-lookup-article label').text()).toContain('Business or Corporation Registered in B.C')
+    expect(wrapper.findAll('.business-lookup-article label').at(0).text())
+      .toContain('Business or Corporation Registered in B.C')
+    expect(wrapper.findAll('.business-lookup-article label').at(1).text())
+      .toContain('Business or Corporation Name or Incorporation Number')
     expect(wrapper.findAll('.business-lookup-article p').at(0).text()).toContain('the Proprietor')
 
     wrapper.destroy()
   })
 
-  it('displays form data for proprietor-org (SP) - edit', async () => {
+  it('displays form data for proprietor-org (SP) - business lookup - SBC staff or client', () => {
+    store.stateModel.tombstone.keycloakRoles = ['']
+    const wrapper = createComponent(validProprietorOrg, -1, null)
+
+    expect(wrapper.find('.business-lookup-article label').text()).toContain('Business')
+    expect(wrapper.findAll('.business-lookup-article p').at(0).text())
+      .toContain('Enter an existing B.C. business as the proprietor')
+
+    wrapper.destroy()
+  })
+
+  it('displays form data for proprietor-org (SP) - edit - registries staff', async () => {
+    store.stateModel.tombstone.keycloakRoles = ['staff']
     const wrapper = createComponent(validProprietorOrg, 0, null)
 
-    await wrapper.find('.lookup-toggle').trigger('click')
-
     // verify input values
-    const confirmCheckboxInput = wrapper.find(`${confirmCheckboxSelector} input`)
-    const orgNameInput = wrapper.find(`${orgNameSelector} input`)
     const emailInput = wrapper.find(`${emailAddressSelector} input`)
     // FUTURE: verify mailing address and delivery address
-    expect((confirmCheckboxInput.element as HTMLInputElement).checked)
-      .toEqual(validProprietorOrg.confirmBusiness)
-    expect((orgNameInput.element as HTMLInputElement).value)
-      .toEqual(validProprietorOrg.officer.organizationName)
     expect((emailInput.element as HTMLInputElement).value)
       .toEqual(validProprietorOrg.officer.email)
 
@@ -409,7 +417,26 @@ describe('Registration Add/Edit Org/Person component', () => {
     wrapper.destroy()
   })
 
-  it('displays form data for partner-org (GP) - manual add', async () => {
+  it('displays form data for proprietor-org (SP) - edit - SBC staff or client', async () => {
+    store.stateModel.tombstone.keycloakRoles = ['']
+    const wrapper = createComponent(validProprietorOrg, 0, null)
+
+    // verify input values
+    const emailInput = wrapper.find(`${emailAddressSelector} input`)
+    // FUTURE: verify mailing address and delivery address
+    expect((emailInput.element as HTMLInputElement).value)
+      .toEqual(validProprietorOrg.officer.email)
+
+    // verify buttons
+    expect(wrapper.find(buttonDoneSelector).attributes('disabled')).toBeUndefined()
+    expect(wrapper.find(buttonRemoveSelector).attributes('disabled')).toBeUndefined()
+    expect(wrapper.find(buttonCancelSelector).attributes('disabled')).toBeUndefined()
+
+    wrapper.destroy()
+  })
+
+  it('displays form data for partner-org (GP) - manual add - registries staff only', async () => {
+    store.stateModel.tombstone.keycloakRoles = ['staff']
     const wrapper = createComponent(validPartnerOrg, -1, null)
 
     await wrapper.find('.lookup-toggle').trigger('click')
@@ -421,16 +448,32 @@ describe('Registration Add/Edit Org/Person component', () => {
     wrapper.destroy()
   })
 
-  it('displays form data for partner-org (GP) - business lookup', () => {
+  it('displays form data for partner-org (GP) - business lookup - registries staff', () => {
+    store.stateModel.tombstone.keycloakRoles = ['staff']
     const wrapper = createComponent(validPartnerOrg, -1, null)
 
-    expect(wrapper.find('.business-lookup-article label').text()).toContain('Business or Corporation Registered in B.C')
+    expect(wrapper.findAll('.business-lookup-article label').at(0).text())
+      .toContain('Business or Corporation Registered in B.C')
+    expect(wrapper.findAll('.business-lookup-article label').at(1).text())
+      .toContain('Business or Corporation Name or Incorporation Number')
     expect(wrapper.findAll('.business-lookup-article p').at(0).text()).toContain('a partner')
 
     wrapper.destroy()
   })
 
-  it('displays form data for partner-org (GP) - edit', async () => {
+  it('displays form data for partner-org (GP) - business lookup - SBC staff or client', () => {
+    store.stateModel.tombstone.keycloakRoles = ['']
+    const wrapper = createComponent(validPartnerOrg, -1, null)
+
+    expect(wrapper.find('.business-lookup-article label').text()).toContain('Business')
+    expect(wrapper.findAll('.business-lookup-article p').at(0).text())
+      .toContain('Enter an existing B.C. business as a partner')
+
+    wrapper.destroy()
+  })
+
+  it('displays form data for partner-org (GP) - edit - registries staff', async () => {
+    store.stateModel.tombstone.keycloakRoles = ['staff']
     const wrapper = createComponent(validPartnerOrg, 0, null)
 
     await wrapper.find('.lookup-toggle').trigger('click')
@@ -449,6 +492,24 @@ describe('Registration Add/Edit Org/Person component', () => {
       .toEqual(validPartnerOrg.confirmBusiness)
     expect((orgNameInput.element as HTMLInputElement).value)
       .toEqual(validPartnerOrg.officer.organizationName)
+    expect((emailInput.element as HTMLInputElement).value)
+      .toEqual(validPartnerOrg.officer.email)
+
+    // verify buttons
+    expect(wrapper.find(buttonDoneSelector).attributes('disabled')).toBeUndefined()
+    expect(wrapper.find(buttonRemoveSelector).attributes('disabled')).toBeUndefined()
+    expect(wrapper.find(buttonCancelSelector).attributes('disabled')).toBeUndefined()
+
+    wrapper.destroy()
+  })
+
+  it('displays form data for partner-org (GP) - edit - SBC staff or client', async () => {
+    store.stateModel.tombstone.keycloakRoles = ['']
+    const wrapper = createComponent(validPartnerOrg, 0, null)
+
+    // verify input values
+    const emailInput = wrapper.find(`${emailAddressSelector} input`)
+    // FUTURE: verify mailing address and delivery address
     expect((emailInput.element as HTMLInputElement).value)
       .toEqual(validPartnerOrg.officer.email)
 
@@ -506,7 +567,8 @@ describe('Registration Add/Edit Org/Person component', () => {
     wrapper.destroy()
   })
 
-  it('does not display error message when user enters valid org name', async () => {
+  it('does not display error message when user enters valid org name - registries staff only', async () => {
+    store.stateModel.tombstone.keycloakRoles = ['staff']
     const wrapper = createComponent(validProprietorOrg, NaN, null)
 
     await wrapper.find('.lookup-toggle').trigger('click')
@@ -524,7 +586,8 @@ describe('Registration Add/Edit Org/Person component', () => {
     wrapper.destroy()
   })
 
-  it('displays error message when user enters invalid org name', async () => {
+  it('displays error message when user enters invalid org name - registries staff only', async () => {
+    store.stateModel.tombstone.keycloakRoles = ['staff']
     const wrapper = createComponent(validProprietorOrg, NaN, null)
 
     await wrapper.find('.lookup-toggle').trigger('click')
@@ -541,6 +604,7 @@ describe('Registration Add/Edit Org/Person component', () => {
     expect(wrapper.vm.$data.addPersonOrgFormValid).toBe(false)
 
     wrapper.destroy()
+    store.stateModel.tombstone.keycloakRoles = ['']
   })
 
   it('does not display error message when user enters valid person names', async () => {

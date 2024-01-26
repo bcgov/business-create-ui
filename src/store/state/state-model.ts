@@ -23,6 +23,7 @@ export const stateModel: StateModelIF = {
     userLastName: '',
     userAddress: null,
     folioNumber: '',
+    folioNumberValid: false,
     transactionalFolioNumber: '',
     transactionalFolioNumberValid: false
   },
@@ -205,6 +206,16 @@ export const stateModel: StateModelIF = {
     businessNumber: null,
     businessTypeConfirm: false,
     isAutoPopulatedBusinessNumber: false
+  },
+  amalgamation: {
+    amalgamatingBusinesses: [],
+    amalgamatingBusinessesValid: false,
+    courtApproval: null,
+    courtApprovalValid: false,
+    type: null
+  },
+  continuationIn: {
+    existingBusinessValid: false
   },
   restoration: {
     applicationDate: null,

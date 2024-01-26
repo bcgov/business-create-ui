@@ -11,10 +11,7 @@
         class="mt-5"
       >
         <NameRequestInfo />
-        <NameTranslations
-          v-if="!isTypeCoop"
-          class="mt-n8"
-        />
+        <NameTranslations v-if="!isTypeCoop" />
       </v-card>
     </section>
 
@@ -182,7 +179,7 @@ import {
 } from '@/interfaces'
 import { CommonMixin } from '@/mixins'
 import { CoopTypes, RouteNames } from '@/enums'
-import { CorpTypeCd } from '@bcrs-shared-components/enums/'
+import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
 import CooperativeType from '@/components/Dissolution/CooperativeType.vue'
 import FolioNumber from '@/components/common/FolioNumber.vue'
@@ -237,7 +234,7 @@ export default class IncorporationDefineCompany extends Mixins(CommonMixin) {
   /** Object of valid flags. Must match validComponents. */
   get validFlags (): object {
     return {
-      validNameTranslation: this.isTypeCoop ? true : this.getNameTranslationsValid,
+      validNameTranslations: this.isTypeCoop ? true : this.getNameTranslationsValid,
       validCooperativeType: this.isTypeCoop ? this.hasValidCooperativeType : true,
       validAddressForm: this.addressFormValid,
       validBusinessContactForm: this.businessContactFormValid
@@ -245,7 +242,7 @@ export default class IncorporationDefineCompany extends Mixins(CommonMixin) {
   }
 
   get addresses (): RegisteredRecordsAddressesIF {
-    return this.getDefineCompanyStep.officeAddresses as RegisteredRecordsAddressesIF
+    return this.getDefineCompanyStep.officeAddresses
   }
 
   /** Called when component is created. */
@@ -298,7 +295,7 @@ export default class IncorporationDefineCompany extends Mixins(CommonMixin) {
   }
 
   @Watch('getNameTranslationsValid', { deep: true })
-  private onNameTranslationsValid (valid: boolean): void {
+  private onNameTranslationsValid (): void {
     this.setDefineCompanyStepValidity(
       this.businessContactFormValid &&
       this.addressFormValid &&

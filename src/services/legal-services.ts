@@ -1,8 +1,6 @@
-// Libraries
 import { AxiosInstance as axios } from '@/utils'
 import { StatusCodes } from 'http-status-codes'
-import { DissolutionFilingIF, IncorporationFilingIF, NameRequestIF, RegistrationFilingIF, RestorationFilingIF }
-  from '@/interfaces'
+import { BusinessIF, DissolutionFilingIF, IncorporationFilingIF, NameRequestIF } from '@/interfaces'
 import { FilingTypes } from '@/enums'
 
 /**
@@ -10,23 +8,50 @@ import { FilingTypes } from '@/enums'
  */
 export default class LegalServices {
   /**
+   * Fetches filings list.
+   * @param businessId the business identifier (aka entity inc no)
+   * @returns the filings list
+   */
+  static async fetchFilings (businessId: string): Promise<any[]> {
+    const url = `businesses/${businessId}/filings`
+    return axios.get(url)
+      .then(response => {
+        const filings = response?.data?.filings
+        if (!filings) {
+          // eslint-disable-next-line no-console
+          console.log('fetchFilings() error - invalid response =', response)
+          throw new Error('Invalid filings list')
+        }
+        return filings
+      })
+  }
+
+  /**
    * Fetches the first or only filing.
-   * This is expected to be a draft IA or Registration.
+   * This is probably a draft Amalgamation, IA or Registration.
    * @param tempId the temp registration number
    * @returns a promise to return the draft filing, else exception
    */
-  static async fetchFirstOrOnlyFiling (tempId: string): Promise<IncorporationFilingIF | RegistrationFilingIF> {
+  static async fetchFirstOrOnlyFiling (tempId: string): Promise<any> {
     const url = `businesses/${tempId}/filings`
+
     return axios.get(url)
       .then(response => {
-        let filing
-        // if response is a list then look at only the first filing
-        if (Array.isArray(response?.data?.filings)) filing = response.data.filings[0].filing
-        // otherwise expect response to be a single filing
-        if (response?.data?.filing) filing = response.data.filing
+        let filing, filingName, filingId
 
-        const filingName = filing?.header?.name as FilingTypes
-        const filingId = +filing?.header?.filingId || 0
+        // if response is a list then look at only the first filing
+        if (Array.isArray(response?.data?.filings)) {
+          filing = response.data.filings[0]
+          filingName = filing?.name as FilingTypes
+          filingId = filing?.filingId
+        }
+
+        // otherwise expect response to be a single filing
+        if (response?.data?.filing) {
+          filing = response.data.filing
+          filingName = filing?.header?.name as FilingTypes
+          filingId = +filing?.header?.filingId || 0
+        }
 
         if (!filing || !filingName || !filingId) {
           throw new Error('Invalid API response')
@@ -38,12 +63,11 @@ export default class LegalServices {
 
   /**
    * Fetches the first task.
-   * This is expected to be a draft Dissolution or Restoration.
+   * This is probably a draft Dissolution or Restoration.
    * @param businessId the business identifier
    * @returns a promise to return the draft filing, else exception
    */
-  // eslint-disable-next-line max-len
-  static async fetchFirstTask (businessId: string): Promise<DissolutionFilingIF | RestorationFilingIF> {
+  static async fetchFirstTask (businessId: string): Promise<any> {
     const url = `businesses/${businessId}/tasks`
     return axios.get(url)
       .then(response => {
@@ -60,18 +84,19 @@ export default class LegalServices {
   }
 
   /**
-   * Fetches the specified filing.
-   * @param businessId the business identifier
-   * @param filingId the filing id
-   * @returns a promise to return the filing, else exception
+   * Fetches a filing.
+   * @param url the full URL to fetch the filing
+   * @returns the filing object
    */
-  static async fetchFiling (businessId: string, filingId: number): Promise<any> {
-    // get the draft filing from the tasks endpoint
-    const url = `businesses/${businessId}/filings/${filingId}`
+  static async fetchFiling (url: string): Promise<any> {
     return axios.get(url)
       .then(response => {
         const filing = response?.data?.filing
-        if (!filing) throw new Error('Invalid API response')
+        if (!filing) {
+          // eslint-disable-next-line no-console
+          console.log('fetchFiling() error - invalid response =', response)
+          throw new Error('Invalid filing')
+        }
         return filing
       })
   }
@@ -98,7 +123,8 @@ export default class LegalServices {
       url += '?draft=true'
     }
 
-    return axios.put(url, { filing }).then(response => {
+    return axios.put(url, { filing },
+      { headers: { 'Account-Id': this.accountId } }).then(response => {
       const filing = response?.data?.filing
       const filingId = +filing?.header?.filingId || 0
 
@@ -111,15 +137,29 @@ export default class LegalServices {
     // NB: for error handling, see "save-error-event"
   }
 
+  /** The Account ID, from session storage. */
+  static get accountId (): string {
+    // if we can't get account id from ACCOUNT_ID
+    // then try to get it from CURRENT_ACCOUNT
+    let accountId = sessionStorage.getItem('ACCOUNT_ID')
+    if (!accountId) {
+      const currentAccount = sessionStorage.getItem('CURRENT_ACCOUNT')
+      accountId = JSON.parse(currentAccount)?.id
+    }
+    return accountId
+  }
+
   /**
-   * Fetches name request data.
+   * Fetches name request data with phone and email validation.
    * @param nrNumber the name request number (eg, NR 1234567)
+   * @param phone the name request phone (eg, 12321232)
+   * @param email the name request email (eg, nr@example.com)
    * @returns a promise to return the NR data, or null if not found
    */
-  static async fetchNameRequest (nrNumber: string): Promise<NameRequestIF> {
+  static async fetchValidContactNr (nrNumber: string, phone = '', email = ''): Promise<NameRequestIF> {
     if (!nrNumber) throw new Error('Invalid parameter \'nrNumber\'')
 
-    const url = `nameRequests/${nrNumber}`
+    const url = `nameRequests/${nrNumber}/validate?phone=${phone}&email=${email}`
     return axios.get(url)
       .then(response => {
         const data = response?.data
@@ -128,6 +168,10 @@ export default class LegalServices {
       }).catch(error => {
         if (error?.response?.status === StatusCodes.NOT_FOUND) {
           return null // NR not found (not an error)
+        } else if (error?.response?.status === StatusCodes.BAD_REQUEST) {
+          throw new Error('Sent invalid email or phone number.') // Sent invalid email or phone
+        } else if (error?.response?.status === StatusCodes.FORBIDDEN) {
+          throw new Error('Not sent email or phone number.') // Not sent the email or phone
         }
         throw error
       })
@@ -169,10 +213,14 @@ export default class LegalServices {
   /**
    * Fetches business info.
    * @param businessId the business identifier
-   * @returns a promise to return the info from the response, else exception
+   * @returns a promise to return the business info, else exception
    */
-  static async fetchBusinessInfo (businessId: string): Promise<any> {
+  static async fetchBusinessInfo (businessId: string): Promise<BusinessIF> {
     const url = `businesses/${businessId}`
-    return axios.get(url)
+    return axios.get(url).then(response => {
+      const data = response?.data
+      if (!data) throw new Error('Invalid API response')
+      return data.business
+    })
   }
 }

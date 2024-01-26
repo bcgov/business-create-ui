@@ -161,8 +161,8 @@ import { NewShareClass, NewShareSeries, ShareClassIF, ShareStructureIF }
   from '@/interfaces'
 import { CommonMixin } from '@/mixins'
 import { RouteNames } from '@/enums'
-import ListShareClass from '@/components/Incorporation/ListShareClass.vue'
-import ShareStructure from '@/components/Incorporation/ShareStructure.vue'
+import ListShareClass from '@/components/common/ListShareClass.vue'
+import ShareStructure from '@/components/common/ShareStructure.vue'
 
 @Component({
   components: {

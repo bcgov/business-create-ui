@@ -1,15 +1,14 @@
 import { RestorationResourceIF } from '@/interfaces'
 import { FilingCodes, RuleIds } from '@/enums'
-import { CorpTypeCd } from '@bcrs-shared-components/enums/'
 import { RestorationSteps } from './steps'
-import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
+import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 
 export const RestorationResourceCc: RestorationResourceIF = {
   entityType: CorpTypeCd.BC_CCC,
   displayName: GetCorpFullDescription(CorpTypeCd.BC_CCC),
   steps: RestorationSteps,
   filingData: [
-    // order matters - see resource-getters.ts
+    // order matters - see getFilingData()
     {
       entityType: CorpTypeCd.BC_CCC,
       filingTypeCode: FilingCodes.RESTORATION_FULL

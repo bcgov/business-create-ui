@@ -13,6 +13,7 @@ export interface TombstoneIF {
   userLastName: string // from auth user info
   userAddress: AddressIF // from auth org info
   folioNumber: string // from auth user info or from user
+  folioNumberValid: boolean
   transactionalFolioNumber: string
   transactionalFolioNumberValid: boolean
 }

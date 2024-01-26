@@ -7,8 +7,8 @@ import LegalServices from '@/services/legal-services'
 import BusinessName from '@/components/Restoration/BusinessName.vue'
 import { CorrectName } from '@bcrs-shared-components/correct-name/'
 import NameRequestInfo from '@/components/common/NameRequestInfo.vue'
-import { CorpTypeCd, CorrectNameOptions, FilingTypes } from '@/enums'
-import { vi } from 'vitest'
+import { CorrectNameOptions, FilingTypes } from '@/enums'
+import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 
 // mock the console.warn function to hide "[Vuetify] Unable to locate target XXX"
 console.warn = vi.fn()
@@ -18,7 +18,7 @@ setActivePinia(createPinia())
 const store = useStore()
 
 // mock services function
-const mockFetchNameRequest = vi.spyOn((LegalServices as any), 'updateFiling').mockImplementation()
+vi.spyOn((LegalServices as any), 'updateFiling').mockImplementation(() => {})
 
 describe('Business Name component', () => {
   let wrapper: any

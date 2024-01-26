@@ -74,23 +74,23 @@
           </p>
           <ul class="bulleted-list mt-4">
             <li
-              v-for="(item, index) in getCreateRulesResource.helpSection.helpText.section2.items"
-              :key="index"
+              v-for="(item, index1) in getCreateRulesResource.helpSection.helpText.section2.items"
+              :key="index1"
             >
               <span
                 v-if="item.type === ItemTypes.TEXT"
                 v-html="item.value"
               />
               <template v-if="item.type === ItemTypes.PARTIAL_ITEMS">
-                <template v-for="(partialItem, index) in item.value">
+                <template v-for="(partialItem, index2) in item.value">
                   <span
                     v-if="partialItem.type === ItemTypes.TEXT"
-                    :key="index"
+                    :key="index2"
                     v-html="partialItem.value"
                   />
                   <a
                     v-if="partialItem.type === ItemTypes.LINK"
-                    :key="index"
+                    :key="index2"
                     :href="partialItem.value.href"
                     target="_blank"
                   >

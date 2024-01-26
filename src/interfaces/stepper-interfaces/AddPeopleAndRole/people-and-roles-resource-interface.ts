@@ -16,6 +16,7 @@ export interface PeopleAndRolesResourceIF {
   }
   blurb2?: string | Array<string>
   addIncorporator?: boolean
+  addPerson?: boolean
   addOrganization?: boolean
   addBusiness?: boolean
   rules: Array<RuleIF>

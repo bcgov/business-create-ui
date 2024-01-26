@@ -4,12 +4,15 @@ import { mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { useStore } from '@/store/store'
 import NameRequestInfo from '@/components/common/NameRequestInfo.vue'
-import { CorpTypeCd, NameRequestStates } from '@/enums'
+import { NameRequestStates, FilingTypes, CorrectNameOptions } from '@/enums'
+import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import { NameRequestIF } from '@/interfaces'
 
 const vuetify = new Vuetify({})
 setActivePinia(createPinia())
 const store = useStore()
+
+// Prevent the warning "[Vuetify] Unable to locate target [data-app]"
 document.body.setAttribute('data-app', 'true')
 
 const mockNrData = {
@@ -213,6 +216,50 @@ describe('Name Request Info with a NR', () => {
   })
 })
 
+describe('Numbered Amalgamation Info component', () => {
+  let wrapper: any
+
+  beforeEach(() => {
+    store.stateModel.tombstone.filingType = FilingTypes.AMALGAMATION_APPLICATION
+    store.stateModel.tempId = 'T1234567'
+    store.stateModel.entityType = CorpTypeCd.BENEFIT_COMPANY
+    store.stateModel.nameRequest.nrNum = null
+    store.stateModel.nameRequestApprovedName = null
+    store.stateModel.correctNameOption = CorrectNameOptions.CORRECT_AML_NUMBERED
+    wrapper = mount(NameRequestInfo, { vuetify })
+  })
+
+  afterEach(() => {
+    wrapper.destroy()
+  })
+
+  it('renders numbered company info', () => {
+    expect(wrapper.vm.$el.querySelector('#amalgamation-numbered-info').textContent)
+      .toContain('Resulting Business Name')
+
+    expect(wrapper.vm.$el.querySelector('.numbered-company-list-items')).toBeDefined()
+  })
+
+  it('renders the numbered amalgamation content', () => {
+    const listItems = wrapper.vm.$el.querySelectorAll('.numbered-company-list-items li')
+    expect(listItems.length).toEqual(4)
+
+    expect(listItems[0].textContent).toContain('[Incorporation Number] B.C. LTD.')
+    expect(listItems[1].textContent).toContain(
+      'The company is to be amalgamated with a name created by adding "B.C. LTD." after the incorporation number.')
+    expect(listItems[2].textContent).toContain(
+      'Your Incorporation Number will be generated at the end of the filing transaction.')
+    expect(listItems[3].textContent).toContain('It is not possible to request a specific Incorporation Number.')
+  })
+
+  it('renders the entity type description content', () => {
+    const listItems = wrapper.vm.$el.querySelectorAll('.entity-type-description li')
+    expect(listItems.length).toEqual(1)
+
+    expect(listItems[0].textContent).toContain(' BC Benefit Company ')
+  })
+})
+
 describe('Name Request Info component without a NR', () => {
   let wrapper: any
 
@@ -223,6 +270,7 @@ describe('Name Request Info component without a NR', () => {
     store.stateModel.tempId = 'T1234567'
     store.stateModel.nameRequest.nrNum = null
     store.stateModel.nameRequestApprovedName = null
+    store.stateModel.tombstone.filingType = FilingTypes.REGISTRATION
     wrapper = mount(NameRequestInfo, { vuetify })
   })
 
@@ -239,13 +287,14 @@ describe('Name Request Info component without a NR', () => {
 
   it('renders the numbered company content', () => {
     const listItems = wrapper.vm.$el.querySelectorAll('.numbered-company-list-items li')
-    expect(listItems.length).toEqual(6)
+    expect(listItems.length).toEqual(5)
 
     expect(listItems[0].textContent).toContain('[Incorporation Number] B.C. LTD.')
     expect(listItems[1].textContent).toContain('Entity Type: BC Benefit Company')
-    expect(listItems[2].textContent).toContain('Request Type: New Business')
-    expect(listItems[3].textContent).toContain('You will be filing this Incorporation Application')
-    expect(listItems[4].textContent).toContain('Your Incorporation Number will be generated at the end')
-    expect(listItems[5].textContent).toContain('It is not possible to request a specific Incorporation Number')
+    expect(listItems[2].textContent).toContain(
+      'The company is to be incorporated with a name created by adding "B.C. LTD." after the incorporation number.')
+    expect(listItems[3].textContent).toContain(
+      'Your Incorporation Number will be generated at the end of the filing transaction.')
+    expect(listItems[4].textContent).toContain('It is not possible to request a specific Incorporation Number.')
   })
 })

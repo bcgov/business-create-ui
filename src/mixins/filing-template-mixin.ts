@@ -1,28 +1,31 @@
 import { Component, Mixins } from 'vue-property-decorator'
 import { Getter, Action } from 'pinia-class'
 import { useStore } from '@/store/store'
-import { DateMixin } from '@/mixins'
+import { AmalgamationMixin, DateMixin } from '@/mixins'
 import {
-  BusinessAddressIF, ContactPointIF, CertifyIF, CompletingPartyIF, CourtOrderIF, CourtOrderStepIF,
-  CreateMemorandumIF, CreateResolutionIF, CreateRulesIF, DefineCompanyIF, DissolutionFilingIF,
-  DissolutionStatementIF, DocumentDeliveryIF, EffectiveDateTimeIF, EmptyNaics, IncorporationAgreementIF,
-  IncorporationFilingIF, NaicsIF, NameRequestFilingIF, NameTranslationIF, OfficeAddressIF, OrgPersonIF, PartyIF,
-  PeopleAndRoleIF, RegisteredRecordsAddressesIF, RegistrationFilingIF, RegistrationStateIF, RestorationFilingIF,
-  RestorationStateIF, ShareClassIF, ShareStructureIF, SpecialResolutionIF, StaffPaymentIF, StaffPaymentStepIF,
-  UploadAffidavitIF
+  AmalgamationFilingIF, BusinessAddressIF, ContactPointIF, CertifyIF, CompletingPartyIF, ContinuationInFilingIF,
+  CourtOrderIF, CourtOrderStepIF, CreateMemorandumIF, CreateResolutionIF, CreateRulesIF, DefineCompanyIF,
+  DissolutionFilingIF, DissolutionStatementIF, DocumentDeliveryIF, EffectiveDateTimeIF, EmptyContactPoint,
+  EmptyNaics, IncorporationAgreementIF, IncorporationFilingIF, NaicsIF, NameRequestFilingIF,
+  NameTranslationIF, OfficeAddressIF, OrgPersonIF, PartyIF, PeopleAndRoleIF, RegisteredRecordsAddressesIF,
+  RegistrationFilingIF, RegistrationStateIF, RestorationFilingIF, RestorationStateIF, ShareClassIF,
+  ShareStructureIF, SpecialResolutionIF, StaffPaymentIF, StaffPaymentStepIF, UploadAffidavitIF
 } from '@/interfaces'
-import { ApprovalTypes, BusinessTypes, CoopTypes, DissolutionTypes, EffectOfOrders, FilingTypes,
-  PartyTypes, RelationshipTypes, RestorationTypes, RoleTypes, StaffPaymentOptions
+import {
+  AmalgamationTypes, ApprovalTypes, BusinessTypes, CoopTypes, CorrectNameOptions, DissolutionTypes,
+  EffectOfOrders, FilingTypes, PartyTypes, RelationshipTypes, RestorationTypes, RoleTypes, StaffPaymentOptions
 } from '@/enums'
-import { CorpTypeCd, CorrectNameOptions } from '@bcrs-shared-components/enums/'
+import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module/'
 
 /**
  * Mixin that provides the integration with the Legal API.
  */
 @Component({})
-export default class FilingTemplateMixin extends Mixins(DateMixin) {
+export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateMixin) {
   @Getter(useStore) getAddPeopleAndRoleStep!: PeopleAndRoleIF
   @Getter(useStore) getAffidavitStep!: UploadAffidavitIF
+  @Getter(useStore) getAmalgamationCourtApproval!: boolean
+  @Getter(useStore) getAmalgamationType!: AmalgamationTypes
   @Getter(useStore) getBusinessContact!: ContactPointIF
   @Getter(useStore) getBusinessFoundingDate!: string
   @Getter(useStore) getBusinessId!: string
@@ -38,7 +41,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Getter(useStore) getCreateRulesStep!: CreateRulesIF
   @Getter(useStore) getCreateResolutionStep!: CreateResolutionIF
   @Getter(useStore) getCreateShareStructureStep!: ShareStructureIF
-  @Getter(useStore) getCurrentDate!: string
+  // @Getter(useStore) getCurrentDate!: string
   @Getter(useStore) getDefineCompanyStep!: DefineCompanyIF
   @Getter(useStore) getDissolutionDate!: string
   @Getter(useStore) getDissolutionCustodian!: OrgPersonIF
@@ -61,20 +64,21 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Getter(useStore) getTempId!: string
   @Getter(useStore) getTransactionalFolioNumber!: string
   @Getter(useStore) isPremiumAccount!: boolean
-  @Getter(useStore) isRoleStaff!: boolean
   @Getter(useStore) isTypeCoop!: boolean
   @Getter(useStore) isTypeFirm!: boolean
   @Getter(useStore) isTypeSoleProp!: boolean
 
   @Action(useStore) setAffidavit!: (x: UploadAffidavitIF) => void
+  @Action(useStore) setAmalgamationType!: (x: AmalgamationTypes) => void
+  // @Action(useStore) setAmalgamatingBusinesses!: (x: Array<any>) => void
+  @Action(useStore) setAmalgamationCourtApproval!: (x: boolean) => void
   @Action(useStore) setBusinessAddress!: (x: OfficeAddressIF) => void
   @Action(useStore) setBusinessContact!: (x: ContactPointIF) => void
   @Action(useStore) setCertifyState!: (x: CertifyIF) => void
   @Action(useStore) setCooperativeType!: (x: CoopTypes) => void
-  @Action(useStore) setCorrectNameOption!: (x: CorrectNameOptions) => void
+  // @Action(useStore) setCorrectNameOption!: (x: CorrectNameOptions) => void
   @Action(useStore) setCourtOrderFileNumber!: (x: string) => void
   @Action(useStore) setCustodianOfRecords!: (x: OrgPersonIF) => void
-  @Action(useStore) setDefineCompanyStepValidity!: (x: boolean) => void
   @Action(useStore) setDissolutionDate!: (x: string) => void
   @Action(useStore) setDissolutionStatementStepData!: (x: DissolutionStatementIF) => void
   @Action(useStore) setDissolutionType!: (x: DissolutionTypes) => void
@@ -90,8 +94,8 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Action(useStore) setFoundingDate!: (x: string) => void
   @Action(useStore) setLegalName!: (x: string) => void
   @Action(useStore) setMemorandum!: (x: CreateMemorandumIF) => void
-  @Action(useStore) setNameRequestApprovedName!: (x: string) => void
-  @Action(useStore) setNameTranslations!: (x: NameTranslationIF[]) => void
+  // @Action(useStore) setNameRequestApprovedName!: (x: string) => void
+  // @Action(useStore) setNameTranslations!: (x: NameTranslationIF[]) => void
   @Action(useStore) setOfficeAddresses!: (x: RegisteredRecordsAddressesIF) => void
   @Action(useStore) setOrgPersonList!: (x: OrgPersonIF[]) => void
   @Action(useStore) setRegistrationBusinessAddress!: (x: BusinessAddressIF) => void
@@ -116,18 +120,381 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   @Action(useStore) setTransactionalFolioNumber!: (x: string) => void
 
   /**
-   * Builds an incorporation filing from store data. Used when saving a filing.
+   * Builds an amalgamation application filing from store data. Used when saving a filing.
+   * @returns the filing body to save
+   */
+  buildAmalgamationFiling (): AmalgamationFilingIF {
+    // Build the main filing.
+    const filing: AmalgamationFilingIF = {
+      header: {
+        name: FilingTypes.AMALGAMATION_APPLICATION,
+        certifiedBy: this.getCertifyState.certifiedBy,
+        date: this.getCurrentDate,
+        filingId: this.getFilingId,
+        folioNumber: this.getFolioNumber,
+        isFutureEffective: this.getEffectiveDateTime.isFutureEffective
+      },
+      business: {
+        legalType: this.getEntityType,
+        identifier: this.getTempId
+      },
+      amalgamationApplication: {
+        amalgamatingBusinesses: this.getAmalgamatingBusinesses,
+        type: this.getAmalgamationType,
+        nameRequest: {
+          legalType: this.getEntityType
+        },
+        nameTranslations: this.getNameTranslations,
+        offices: this.getDefineCompanyStep.officeAddresses,
+        contactPoint: {
+          email: this.getBusinessContact.email,
+          phone: this.getBusinessContact.phone,
+          // don't save extension if it's empty
+          ...this.getBusinessContact.extension
+            ? { extension: +this.getBusinessContact.extension }
+            : {}
+        },
+        courtApproval: this.getAmalgamationCourtApproval,
+        parties: this.fixNullAddressType(this.getAddPeopleAndRoleStep.orgPeople),
+        shareStructure: {
+          shareClasses: this.getCreateShareStructureStep.shareClasses
+        }
+      }
+    }
+
+    // Add court order / POA data.
+    const courtOrder = this.getCourtOrderStep.courtOrder
+    if (courtOrder && (courtOrder.hasPlanOfArrangement || courtOrder.fileNumber)) {
+      filing.amalgamationApplication.courtOrder = {
+        fileNumber: courtOrder.fileNumber,
+        effectOfOrder: courtOrder.hasPlanOfArrangement ? EffectOfOrders.PLAN_OF_ARRANGEMENT : '',
+        hasPlanOfArrangement: courtOrder.hasPlanOfArrangement
+      }
+    }
+
+    // Add business name data.
+    switch (this.getCorrectNameOption) {
+      case CorrectNameOptions.CORRECT_AML_ADOPT:
+        // save adopted name
+        filing.amalgamationApplication.nameRequest.correctNameOption = CorrectNameOptions.CORRECT_AML_ADOPT
+        filing.amalgamationApplication.nameRequest.legalName = this.getNameRequestApprovedName
+        break
+      case CorrectNameOptions.CORRECT_NEW_NR:
+        // save NR data
+        filing.amalgamationApplication.nameRequest.correctNameOption = CorrectNameOptions.CORRECT_NEW_NR
+        filing.amalgamationApplication.nameRequest.legalName = this.getNameRequestApprovedName
+        filing.amalgamationApplication.nameRequest.nrNumber = this.getNameRequestNumber
+        break
+      case CorrectNameOptions.CORRECT_AML_NUMBERED:
+        filing.amalgamationApplication.nameRequest.correctNameOption = CorrectNameOptions.CORRECT_AML_NUMBERED
+        break
+    }
+
+    // If this is a future effective filing then save the effective date.
+    if (this.getEffectiveDateTime.isFutureEffective) {
+      filing.header.effectiveDate = this.dateToApi(this.getEffectiveDateTime.effectiveDate)
+    }
+
+    if (this.isRoleStaff) {
+      // Add staff payment data.
+      this.buildStaffPayment(filing)
+    }
+    return filing
+  }
+
+  /**
+   * Parses a draft amalgamation application filing into the store. Used when loading a filing.
+   * @param draftFiling the filing body to parse
+   */
+  parseAmalgamationDraft (draftFiling: any): void {
+    // FUTURE: set types so each of these validate their parameters
+    // ref: https://www.typescriptlang.org/docs/handbook/generics.html
+
+    // NB: don't parse Name Request object -- NR is fetched from namex/NRO instead
+
+    // save filing id
+    this.setFilingId(+draftFiling.header.filingId)
+
+    // restore Amalgamation Type
+    this.setAmalgamationType(draftFiling.amalgamationApplication.type || AmalgamationTypes.REGULAR)
+
+    // restore Entity Type
+    this.setEntityType(draftFiling.amalgamationApplication.nameRequest.legalType)
+
+    // restore the amalgamating businesses array
+    if (draftFiling.amalgamationApplication.amalgamatingBusinesses) {
+      this.setAmalgamatingBusinesses([
+        ...draftFiling.amalgamationApplication.amalgamatingBusinesses
+      ])
+      this.refetchAmalgamatingBusinessesInfo()
+    }
+
+    // restore the amalgamation court approval selection which the saved value is either true or false
+    if (draftFiling.amalgamationApplication.courtApproval !== null) {
+      this.setAmalgamationCourtApproval(draftFiling.amalgamationApplication.courtApproval)
+    }
+
+    // restore Office Addresses
+    if (draftFiling.amalgamationApplication.offices) {
+      this.setOfficeAddresses(draftFiling.amalgamationApplication.offices)
+    }
+
+    // restore business name data
+    const nameRequest = draftFiling.amalgamationApplication.nameRequest as NameRequestFilingIF
+    switch (nameRequest?.correctNameOption) {
+      case CorrectNameOptions.CORRECT_AML_ADOPT:
+        this.setCorrectNameOption(CorrectNameOptions.CORRECT_AML_ADOPT)
+        // restore adopted name
+        this.setNameRequestApprovedName(nameRequest.legalName)
+        break
+      case CorrectNameOptions.CORRECT_NEW_NR:
+        this.setCorrectNameOption(CorrectNameOptions.CORRECT_NEW_NR)
+        // NB: do not restore Name Request data
+        // it will be reloaded from NR endpoint in App.vue
+        break
+      case CorrectNameOptions.CORRECT_AML_NUMBERED:
+        this.setCorrectNameOption(CorrectNameOptions.CORRECT_AML_NUMBERED)
+        break
+      default:
+        // fallback for draft created without Correct Name Option
+        // NB: do not restore Name Request data
+        // it will be reloaded from NR endpoint in App.vue
+        if (nameRequest.nrNumber) {
+          this.setCorrectNameOption(CorrectNameOptions.CORRECT_NEW_NR)
+        }
+    }
+
+    // restore Name Translations
+    if (draftFiling.amalgamationApplication.nameTranslations) {
+      this.setNameTranslations(draftFiling.amalgamationApplication.nameTranslations)
+    }
+
+    // restore Business Contact
+    if (draftFiling.amalgamationApplication.contactPoint) {
+      this.setBusinessContact({
+        ...draftFiling.amalgamationApplication.contactPoint,
+        confirmEmail: draftFiling.amalgamationApplication.contactPoint.email
+      })
+    } else {
+      this.setBusinessContact({ ...EmptyContactPoint })
+    }
+
+    // restore Persons and Organizations
+    if (draftFiling.amalgamationApplication.parties) {
+      this.setOrgPersonList(draftFiling.amalgamationApplication.parties || [])
+    }
+
+    // restore Share Structure
+    this.setShareClasses(draftFiling.amalgamationApplication.shareStructure
+      ? draftFiling.amalgamationApplication.shareStructure.shareClasses
+      : [])
+
+    // restore court order file number / POA
+    if (draftFiling.amalgamationApplication.courtOrder?.fileNumber) {
+      this.setCourtOrderFileNumber(draftFiling.amalgamationApplication.courtOrder.fileNumber)
+    }
+    if (draftFiling.amalgamationApplication.courtOrder?.hasPlanOfArrangement) {
+      this.setHasPlanOfArrangement(draftFiling.amalgamationApplication.courtOrder.hasPlanOfArrangement)
+    }
+
+    // restore Certify state
+    this.setCertifyState({
+      valid: false,
+      certifiedBy: draftFiling.header.certifiedBy
+    })
+
+    // restore Future Effective data
+    if (draftFiling.header.isFutureEffective) {
+      this.setIsFutureEffective(true)
+      const effectiveDate = this.apiToDate(draftFiling.header.effectiveDate)
+      // Check that Effective Date is in the future, to improve UX and
+      // to work around the default effective date set by the back end.
+      if (effectiveDate >= this.getCurrentJsDate) this.setEffectiveDate(effectiveDate)
+    }
+
+    if (this.isRoleStaff) {
+      // restore Staff Payment data
+      this.parseStaffPayment(draftFiling)
+    }
+
+    // if this is a premium account and Folio Number exists then restore it
+    if (this.isPremiumAccount) {
+      if (draftFiling.header.folioNumber) {
+        this.setFolioNumber(draftFiling.header.folioNumber)
+      }
+    }
+  }
+
+  /**
+   * Builds an continuation in filing from store data. Used when saving a filing.
+   * @returns the filing body to save
+   */
+  buildContinuationInFiling (): ContinuationInFilingIF {
+    // Build the main filing.
+    const filing: ContinuationInFilingIF = {
+      header: {
+        name: FilingTypes.CONTINUATION_IN,
+        certifiedBy: this.getCertifyState.certifiedBy,
+        date: this.getCurrentDate,
+        filingId: this.getFilingId,
+        folioNumber: this.getFolioNumber,
+        isFutureEffective: this.getEffectiveDateTime.isFutureEffective
+      },
+      business: {
+        legalType: this.getEntityType,
+        identifier: this.getTempId
+      },
+      continuationIn: {
+        foreignJurisdiction: '',
+        nameRequest: {
+          legalType: this.getEntityType
+        },
+        nameTranslations: this.getNameTranslations,
+        offices: this.getDefineCompanyStep.officeAddresses,
+        contactPoint: {
+          email: this.getBusinessContact.email,
+          phone: this.getBusinessContact.phone,
+          // don't save extension if it's empty
+          ...this.getBusinessContact.extension
+            ? { extension: +this.getBusinessContact.extension }
+            : {}
+        },
+        parties: this.fixNullAddressType(this.getAddPeopleAndRoleStep.orgPeople),
+        shareStructure: {
+          shareClasses: this.getCreateShareStructureStep.shareClasses
+        }
+      }
+    }
+
+    // Add business name data.
+    switch (this.getCorrectNameOption) {
+      case CorrectNameOptions.CORRECT_AML_ADOPT:
+        // save adopted name
+        filing.continuationIn.nameRequest.correctNameOption = CorrectNameOptions.CORRECT_AML_ADOPT
+        filing.continuationIn.nameRequest.legalName = this.getNameRequestApprovedName
+        break
+      case CorrectNameOptions.CORRECT_NEW_NR:
+        // save NR data
+        filing.continuationIn.nameRequest.correctNameOption = CorrectNameOptions.CORRECT_NEW_NR
+        filing.continuationIn.nameRequest.legalName = this.getNameRequestApprovedName
+        filing.continuationIn.nameRequest.nrNumber = this.getNameRequestNumber
+        break
+      case CorrectNameOptions.CORRECT_AML_NUMBERED:
+        filing.continuationIn.nameRequest.correctNameOption = CorrectNameOptions.CORRECT_AML_NUMBERED
+        break
+    }
+
+    // If this is a future effective filing then save the effective date.
+    if (this.getEffectiveDateTime.isFutureEffective) {
+      filing.header.effectiveDate = this.dateToApi(this.getEffectiveDateTime.effectiveDate)
+    }
+
+    if (this.isRoleStaff) {
+      // Add staff payment data.
+      this.buildStaffPayment(filing)
+    }
+    return filing
+  }
+
+  /**
+   * Parses a draft continuation in filing into the store. Used when loading a filing.
+   * @param draftFiling the filing body to parse
+   */
+  parseContinuationInDraft (draftFiling: any): void {
+    // save filing id
+    this.setFilingId(+draftFiling.header.filingId)
+
+    // restore Entity Type
+    this.setEntityType(draftFiling.continuationIn.nameRequest.legalType)
+
+    // restore Office Addresses
+    if (draftFiling.continuationIn.offices) {
+      this.setOfficeAddresses(draftFiling.continuationIn.offices)
+    }
+
+    // restore business name data
+    const nameRequest = draftFiling.continuationIn.nameRequest as NameRequestFilingIF
+    switch (nameRequest?.correctNameOption) {
+      case CorrectNameOptions.CORRECT_AML_ADOPT:
+        this.setCorrectNameOption(CorrectNameOptions.CORRECT_AML_ADOPT)
+        // restore adopted name
+        this.setNameRequestApprovedName(nameRequest.legalName)
+        break
+      case CorrectNameOptions.CORRECT_NEW_NR:
+        this.setCorrectNameOption(CorrectNameOptions.CORRECT_NEW_NR)
+        // NB: do not restore Name Request data
+        // it will be reloaded from NR endpoint in App.vue
+        break
+      case CorrectNameOptions.CORRECT_AML_NUMBERED:
+        this.setCorrectNameOption(CorrectNameOptions.CORRECT_AML_NUMBERED)
+        break
+      default:
+        // fallback for draft created without Correct Name Option
+        // NB: do not restore Name Request data
+        // it will be reloaded from NR endpoint in App.vue
+        if (nameRequest.nrNumber) {
+          this.setCorrectNameOption(CorrectNameOptions.CORRECT_NEW_NR)
+        }
+    }
+
+    // restore Name Translations
+    if (draftFiling.continuationIn.nameTranslations) {
+      this.setNameTranslations(draftFiling.continuationIn.nameTranslations)
+    }
+
+    // restore Business Contact
+    if (draftFiling.continuationIn.contactPoint) {
+      this.setBusinessContact({
+        ...draftFiling.continuationIn.contactPoint,
+        confirmEmail: draftFiling.continuationIn.contactPoint.email
+      })
+    } else {
+      this.setBusinessContact({ ...EmptyContactPoint })
+    }
+
+    // restore Persons and Organizations
+    if (draftFiling.continuationIn.parties) {
+      this.setOrgPersonList(draftFiling.continuationIn.parties || [])
+    }
+
+    // restore Share Structure
+    this.setShareClasses(draftFiling.continuationIn.shareStructure
+      ? draftFiling.continuationIn.shareStructure.shareClasses
+      : [])
+
+    // restore Certify state
+    this.setCertifyState({
+      valid: false,
+      certifiedBy: draftFiling.header.certifiedBy
+    })
+
+    // restore Future Effective data
+    if (draftFiling.header.isFutureEffective) {
+      this.setIsFutureEffective(true)
+      const effectiveDate = this.apiToDate(draftFiling.header.effectiveDate)
+      // Check that Effective Date is in the future, to improve UX and
+      // to work around the default effective date set by the back end.
+      if (effectiveDate >= this.getCurrentJsDate) this.setEffectiveDate(effectiveDate)
+    }
+
+    if (this.isRoleStaff) {
+      // restore Staff Payment data
+      this.parseStaffPayment(draftFiling)
+    }
+
+    // if this is a premium account and Folio Number exists then restore it
+    if (this.isPremiumAccount) {
+      if (draftFiling.header.folioNumber) {
+        this.setFolioNumber(draftFiling.header.folioNumber)
+      }
+    }
+  }
+
+  /**
+   * Builds an incorporation application filing from store data. Used when saving a filing.
    * @returns the filing body to save
    */
   buildIncorporationFiling (): IncorporationFilingIF {
-    function fixNullAddressType (orgPeople: OrgPersonIF[]): OrgPersonIF[] {
-      return orgPeople.map(p => {
-        if (p.deliveryAddress?.addressType === null) delete p.deliveryAddress.addressType
-        if (p.mailingAddress?.addressType === null) delete p.mailingAddress.addressType
-        return p
-      })
-    }
-
     // Build the main filing.
     const filing: IncorporationFilingIF = {
       header: {
@@ -156,7 +523,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
             ? { extension: +this.getBusinessContact.extension }
             : {}
         },
-        parties: fixNullAddressType(this.getAddPeopleAndRoleStep.orgPeople)
+        parties: this.fixNullAddressType(this.getAddPeopleAndRoleStep.orgPeople)
       }
     }
 
@@ -219,7 +586,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
   }
 
   /**
-   * Parses a draft incorporation filing into the store. Used when loading a filing.
+   * Parses a draft incorporation application  filing into the store. Used when loading a filing.
    * @param draftFiling the filing body to parse
    */
   parseIncorporationDraft (draftFiling: any): void {
@@ -242,7 +609,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
       this.setNameTranslations(draftFiling.incorporationApplication.nameTranslations)
     }
 
-    // restore Contact Info
+    // restore Business Contact
     this.setBusinessContact({
       ...draftFiling.incorporationApplication.contactPoint,
       confirmEmail: draftFiling.incorporationApplication.contactPoint.email
@@ -524,7 +891,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
     // restore Business Type
     this.setRegistrationBusinessType(draftFiling.registration.businessType)
 
-    // restore Contact Info
+    // restore Business Contact
     this.setBusinessContact({
       ...draftFiling.registration.contactPoint,
       confirmEmail: draftFiling.registration.contactPoint.email
@@ -647,7 +1014,7 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
       this.setOfficeAddresses(draftFiling.restoration.offices)
     }
 
-    // restore Contact Info
+    // restore Business Contact
     if (draftFiling.restoration.contactPoint) {
       this.setBusinessContact({
         ...draftFiling.restoration.contactPoint,
@@ -932,9 +1299,8 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
    * Builds dissolution staff payment data from store data.
    * @param filing the filing body to update
    */
-  private buildStaffPayment (
-    filing: DissolutionFilingIF | RegistrationFilingIF | RestorationFilingIF | IncorporationFilingIF
-  ): void {
+  // eslint-disable-next-line max-len
+  private buildStaffPayment (filing: AmalgamationFilingIF | ContinuationInFilingIF | DissolutionFilingIF | RegistrationFilingIF | RestorationFilingIF | IncorporationFilingIF): void {
     // Populate Staff Payment according to payment option
     const staffPayment = this.getStaffPaymentStep.staffPayment
     switch (staffPayment.option) {
@@ -980,9 +1346,8 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
    * Parses dissolution staff payment data into the store.
    * @param filing the filing body to parse
    */
-  private parseStaffPayment (
-    filing: DissolutionFilingIF | RegistrationFilingIF | RestorationFilingIF | IncorporationFilingIF
-  ): void {
+  // eslint-disable-next-line max-len
+  private parseStaffPayment (filing: AmalgamationFilingIF | ContinuationInFilingIF | DissolutionFilingIF | RegistrationFilingIF | RestorationFilingIF | IncorporationFilingIF): void {
     // Parse staff payment
     if (filing.header.routingSlipNumber) {
       this.setStaffPayment({
@@ -1083,5 +1448,18 @@ export default class FilingTemplateMixin extends Mixins(DateMixin) {
       }
     }
     return toReturn
+  }
+
+  /**
+   * Fixes addresses by deleting the type in case it was null.
+   * @param orgPeople The array of orgs/people
+   * @returns the array of orgs/people after addresses been fixed
+   */
+  fixNullAddressType (orgPeople: OrgPersonIF[]): OrgPersonIF[] {
+    return orgPeople.map(p => {
+      if (p.deliveryAddress?.addressType === null) delete p.deliveryAddress.addressType
+      if (p.mailingAddress?.addressType === null) delete p.mailingAddress.addressType
+      return p
+    })
   }
 }

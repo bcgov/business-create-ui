@@ -1,13 +1,11 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify'
 import { createPinia, setActivePinia } from 'pinia'
-import { useStore } from '@/store/store'
 import { mount } from '@vue/test-utils'
 import FilingSurveyDialog from '@/dialogs/FilingSurveyDialog.vue'
 
 const vuetify = new Vuetify({})
 setActivePinia(createPinia())
-const store = useStore()
 
 describe('Filing Survey Dialog', () => {
   it('renders the component properly', () => {

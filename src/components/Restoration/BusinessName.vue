@@ -66,7 +66,8 @@ import { useStore } from '@/store/store'
 import { EmptyNameRequest, NameRequestIF } from '@/interfaces/'
 import { CommonMixin, DateMixin, NameRequestMixin } from '@/mixins/'
 import { NrRequestActionCodes } from '@/enums/'
-import { CorpTypeCd, CorrectNameOptions } from '@bcrs-shared-components/enums/'
+import { CorrectNameOptions } from '@bcrs-shared-components/enums/'
+import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import { LegalServices } from '@/services/'
 import { CorrectName } from '@bcrs-shared-components/correct-name/'
 import NameRequestInfo from '@/components/common/NameRequestInfo.vue'
@@ -141,7 +142,7 @@ export default class BusinessName extends Mixins(CommonMixin, DateMixin, NameReq
     return !!this.getNameRequestApprovedName
   }
 
-  /** Reset company name values to original. */
+  /** Resets company name values to original when Cancel was clicked. */
   resetName (): void {
     // clear out existing data
     this.setNameRequest(EmptyNameRequest)
@@ -155,16 +156,17 @@ export default class BusinessName extends Mixins(CommonMixin, DateMixin, NameReq
   /**
    * Fetches and validation a NR.
    * @param nrNum the NR number
+   * @param businessId the business id
    * @param phone the phone number to match
    * @param email the email address to match
    * @returns a promise to return the NR, or throws a printable error
    */
-  async fetchAndValidateNr (nrNum: string, phone: string, email: string): Promise<NameRequestIF> {
-    const nameRequest = await LegalServices.fetchNameRequest(nrNum)
+  async fetchAndValidateNr (nrNum: string, businessId: string, phone: string, email: string): Promise<NameRequestIF> {
+    const nameRequest = await LegalServices.fetchValidContactNr(nrNum, phone, email)
     if (!nameRequest) throw new Error('Error fetching Name Request')
 
     // validateNameRequest() already throws printable errors
-    return this.validateNameRequest(nameRequest, this.requestActionCode, phone, email)
+    return this.validateNameRequest(nameRequest, this.requestActionCode)
   }
 
   /** On company name update, sets store accordingly. */
@@ -180,7 +182,7 @@ export default class BusinessName extends Mixins(CommonMixin, DateMixin, NameReq
 
   /** Updates component validity initially and when correct name option has changed. */
   @Watch('getCorrectNameOption', { immediate: true })
-  private updateComponentValidity (val: boolean): void {
+  private updateComponentValidity (): void {
     this.setBusinessNameValid(!!this.getCorrectNameOption)
   }
 }

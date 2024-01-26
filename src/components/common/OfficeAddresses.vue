@@ -327,7 +327,7 @@ import { isEmpty } from 'lodash'
 import { OfficeAddressSchema } from '@/schemas'
 import { BaseAddress } from '@bcrs-shared-components/base-address'
 import { AddressIF, DefineCompanyIF, RegisteredRecordsAddressesIF } from '@/interfaces'
-import { CorpTypeCd } from '@bcrs-shared-components/enums/'
+import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import { CommonMixin } from '@/mixins'
 
 @Component({
@@ -616,7 +616,7 @@ export default class OfficeAddresses extends Mixins(CommonMixin) {
 
   // Watchers
   @Watch('formValid')
-  private onFormValidityChange (val: boolean): void {
+  private onFormValidityChange (): void {
     this.emitValid()
   }
 

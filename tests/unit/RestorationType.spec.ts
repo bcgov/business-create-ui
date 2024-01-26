@@ -6,7 +6,6 @@ import { mount } from '@vue/test-utils'
 import RestorationType from '@/components/Restoration/RestorationType.vue'
 import { RestorationTypes } from '@/enums'
 import { RestorationStateIF } from '@/interfaces'
-import { vi } from 'vitest'
 
 // mock the console.warn function to hide "[Vuetify] Unable to locate target XXX"
 console.warn = vi.fn()

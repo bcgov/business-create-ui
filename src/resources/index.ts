@@ -1,5 +1,32 @@
-import { DissolutionResourceIF, IncorporationResourceIF, RegistrationResourceIF, RestorationResourceIF }
-  from '@/interfaces'
+import {
+  AmalgamationResourceIF,
+  ContinuationInResourceIF,
+  DissolutionResourceIF,
+  IncorporationResourceIF,
+  RegistrationResourceIF,
+  RestorationResourceIF
+} from '@/interfaces'
+
+import {
+  AmalgamationRegResourceBc,
+  AmalgamationRegResourceBen,
+  AmalgamationRegResourceCc,
+  AmalgamationRegResourceUlc
+} from './AmalgamationRegular/'
+
+import {
+  AmalgamationShortResourceBc,
+  AmalgamationShortResourceBen,
+  AmalgamationShortResourceCc,
+  AmalgamationShortResourceUlc
+} from './AmalgamationShort/'
+
+import {
+  ContinuationInResourceBc,
+  ContinuationInResourceBen,
+  ContinuationInResourceCc,
+  ContinuationInResourceUlc
+} from './ContinuationIn/'
 
 import {
   DissolutionResourceBc,
@@ -31,6 +58,27 @@ import {
   RestorationResourceUlc
 } from './Restoration/'
 
+export const AmalgamationRegResources: Array<AmalgamationResourceIF> = [
+  AmalgamationRegResourceBc,
+  AmalgamationRegResourceBen,
+  AmalgamationRegResourceCc,
+  AmalgamationRegResourceUlc
+]
+
+export const AmalgamationShortResources: Array<AmalgamationResourceIF> = [
+  AmalgamationShortResourceBc,
+  AmalgamationShortResourceBen,
+  AmalgamationShortResourceCc,
+  AmalgamationShortResourceUlc
+]
+
+export const ContinuationInResources: Array<ContinuationInResourceIF> = [
+  ContinuationInResourceBc,
+  ContinuationInResourceBen,
+  ContinuationInResourceCc,
+  ContinuationInResourceUlc
+]
+
 export const DissolutionResources: Array<DissolutionResourceIF> = [
   DissolutionResourceBc,
   DissolutionResourceBen,
@@ -61,4 +109,4 @@ export const RestorationResources: Array<RestorationResourceIF> = [
   RestorationResourceUlc
 ]
 
-export * from './BreadCrumbResource'
+export * from './BreadcrumbResource'

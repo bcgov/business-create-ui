@@ -4,7 +4,6 @@
  */
 
 // external shared components
-export { BaseAddress } from '@bcrs-shared-components/base-address'
 export { ContactInfo } from '@bcrs-shared-components/contact-info'
 export { Certify } from '@bcrs-shared-components/certify'
 export { CourtOrderPoa } from '@bcrs-shared-components/court-order-poa'

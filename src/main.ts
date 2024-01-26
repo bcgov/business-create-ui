@@ -85,7 +85,8 @@ async function start () {
   }
 
   // start Vue application
-  console.info('Starting app...') // eslint-disable-line no-console
+  const aboutApp = import.meta.env.ABOUT_APP
+  console.info(`Starting ${aboutApp}...`) // eslint-disable-line no-console
   new Vue({
     vuetify: new Vuetify({
       iconfont: 'mdi',
@@ -98,7 +99,8 @@ async function start () {
             successCheckmark: '#2e8540', // same as $app-dk-green
             error: '#d3272c', // same as $app-red
             gray7: '#495057', // same as $gray7
-            gray9: '#212529' // same as $gray9
+            gray9: '#212529', // same as $gray9
+            warning: '#f8661a' // same as $app-orange
           }
         }
       }

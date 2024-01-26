@@ -11,11 +11,11 @@ import { AxiosInstance as axios } from '@/utils'
 import Actions from '@/components/common/Actions.vue'
 import mockRouter from './MockRouter'
 import LegalServices from '@/services/legal-services'
-import { CorpTypeCd, FilingTypes } from '@/enums'
+import { FilingTypes } from '@/enums'
+import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import { CourtOrderStepIF, DefineCompanyIF, EffectiveDateTimeIF, IncorporationAgreementIF, NameRequestIF,
   OrgPersonIF, PeopleAndRoleIF, ShareStructureIF, TombstoneIF } from '@/interfaces'
 import { ShareClassIF } from '@bcrs-shared-components/interfaces'
-import { vi } from 'vitest'
 
 const vuetify = new Vuetify({})
 setActivePinia(createPinia())
@@ -122,7 +122,7 @@ describe('Emits error event if NR validation fails in file and pay', () => {
 
     // GET NR data
     sinon.stub(axios, 'get')
-      .withArgs('nameRequests/NR 1234567')
+      .withArgs('nameRequests/NR 1234567/validate?phone=&email=')
       .returns(new Promise(resolve => resolve({
         data: expiredNR
       })))
@@ -378,7 +378,7 @@ describe('Actions component - Filing Functionality', () => {
 
     // GET NR data
     sinon.stub(axios, 'get')
-      .withArgs('nameRequests/NR 1234567')
+      .withArgs('nameRequests/NR 1234567/validate?phone=&email=')
       .returns(new Promise(resolve => resolve({
         data: { ...nrData }
       })))

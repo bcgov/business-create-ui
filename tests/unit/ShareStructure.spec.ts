@@ -3,10 +3,10 @@ import Vuetify from 'vuetify'
 import { mount, Wrapper, createLocalVue } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { useStore } from '@/store/store'
-import ShareStructure from '@/components/Incorporation/ShareStructure.vue'
+import ShareStructure from '@/components/common/ShareStructure.vue'
 import { ShareClassIF } from '@/interfaces'
 import { waitForUpdate } from '../wait-for-update'
-import { CorpTypeCd } from '@/enums'
+import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 
 const vuetify = new Vuetify({})
 setActivePinia(createPinia())
@@ -47,7 +47,10 @@ function createComponent (
 ): Wrapper<ShareStructure> {
   const localVue = createLocalVue()
   localVue.use(Vuetify)
+
+  // Prevent the warning "[Vuetify] Unable to locate target [data-app]"
   document.body.setAttribute('data-app', 'true')
+
   return mount(ShareStructure, {
     localVue,
     propsData: {

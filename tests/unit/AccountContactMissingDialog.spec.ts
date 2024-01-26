@@ -1,20 +1,13 @@
 import { shallowMount } from '@vue/test-utils'
 import AccountContactMissingDialog from '@/dialogs/AccountContactMissingDialog.vue'
 import Vuetify from 'vuetify'
-import Vue from 'vue'
 
-Vue.use(Vuetify)
+const vuetify = new Vuetify({})
 
 // Prevent the warning "[Vuetify] Unable to locate target [data-app]"
 document.body.setAttribute('data-app', 'true')
 
 describe('AccountContactMissingDialog.vue', () => {
-  let vuetify: any
-
-  beforeEach(() => {
-    vuetify = new Vuetify()
-  })
-
   it('renders the dialog', () => {
     const wrapper = shallowMount(AccountContactMissingDialog, {
       vuetify,
@@ -37,6 +30,7 @@ describe('AccountContactMissingDialog.vue', () => {
       vuetify,
       propsData: { dialog: true }
     })
+    const vm = wrapper.vm as any
 
     // Override window.location
     Object.defineProperty(window, 'location', {
@@ -45,7 +39,7 @@ describe('AccountContactMissingDialog.vue', () => {
     })
 
     // Calling the method directly
-    wrapper.vm.redirectToUserProfile()
+    vm.redirectToUserProfile()
 
     // Checking the logic inside the method
     expect(window.location.href).toBe('https://dev.account.bcregistry.gov.bc.ca/userprofile')

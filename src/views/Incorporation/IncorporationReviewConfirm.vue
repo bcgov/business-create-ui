@@ -119,7 +119,7 @@
           </p>
         </header>
 
-        <IncorporationDateTime
+        <EffectiveDateTime
           class="mt-6"
           :class="{ 'invalid-section': isEffectiveDateTimeInvalid }"
           :effectiveDateTime="getEffectiveDateTime"
@@ -241,19 +241,18 @@ import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { ContactPointIF, CertifyIF, EffectiveDateTimeIF, IncorporationAgreementIF,
   ShareStructureIF, CourtOrderStepIF } from '@/interfaces'
-import { CorpTypeCd } from '@bcrs-shared-components/enums/'
 import AgreementType from '@/components/common/AgreementType.vue'
 import CardHeader from '@/components/common/CardHeader.vue'
 import Certify from '@/components/common/Certify.vue'
 import { CourtOrderPoa } from '@bcrs-shared-components/court-order-poa'
 import { DocumentDelivery } from '@bcrs-shared-components/document-delivery'
-import IncorporationDateTime from '@/components/Incorporation/IncorporationDateTime.vue'
+import EffectiveDateTime from '@/components/common/EffectiveDateTime.vue'
 import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
-import ListShareClass from '@/components/Incorporation/ListShareClass.vue'
-import SummaryDefineCompany from '@/components/Incorporation/SummaryDefineCompany.vue'
+import ListShareClass from '@/components/common/ListShareClass.vue'
+import SummaryDefineCompany from '@/components/common/SummaryDefineCompany.vue'
 import UploadMemorandumSummary from '@/components/Incorporation/UploadMemorandumSummary.vue'
 import UploadRulesSummary from '@/components/Incorporation/UploadRulesSummary.vue'
-import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
+import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 import StaffPayment from '@/components/common/StaffPayment.vue'
 
 @Component({
@@ -263,7 +262,7 @@ import StaffPayment from '@/components/common/StaffPayment.vue'
     Certify,
     CourtOrderPoa,
     DocumentDelivery,
-    IncorporationDateTime,
+    EffectiveDateTime,
     ListPeopleAndRoles,
     ListShareClass,
     SummaryDefineCompany,

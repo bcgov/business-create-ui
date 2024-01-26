@@ -4,21 +4,24 @@ import Vuetify from 'vuetify'
 import { resourceModel, stateModel } from './state'
 import {
   AccountTypes,
+  AmalgamationTypes,
   ApprovalTypes,
   BusinessTypes,
   CoopTypes,
   DissolutionTypes,
-  EntityState,
+  EntityStates,
   FilingNames,
   FilingTypes,
   RelationshipTypes,
   RestorationTypes
 } from '@/enums'
-import { CorpTypeCd, CorrectNameOptions } from '@bcrs-shared-components/enums/'
+import { CorrectNameOptions } from '@bcrs-shared-components/enums/'
+import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import {
   AccountInformationIF,
   AddressIF,
   AffidavitResourceIF,
+  AmalgamatingBusinessIF,
   BusinessAddressIF,
   BusinessWarningIF,
   CertifyIF,
@@ -63,12 +66,14 @@ import {
   StateIF,
   StepIF,
   UploadAffidavitIF,
-  ValidationDetailIF
+  ValidationDetailIF,
+  PeopleAndRolesResourceIF
 } from '@/interfaces'
 
-// Possible to move getters / actions into seperate files:
+// It's possible to move getters / actions into seperate files:
 // https://github.com/vuejs/pinia/issues/802#issuecomment-1018780409
-// Not sure if I'd recommend that though.
+// Not sure if that's a good idea though.
+
 export const useStore = defineStore('store', {
   state: (): StateIF => ({ resourceModel, stateModel }),
   getters: {
@@ -79,7 +84,41 @@ export const useStore = defineStore('store', {
       return (width < new Vuetify().framework.breakpoint.thresholds.sm)
     },
 
-    /** Whether the current filing is an Incorporation. */
+    /** Whether the current filing is an Amalgamation Application. */
+    isAmalgamationFiling (): boolean {
+      return (this.stateModel.tombstone.filingType === FilingTypes.AMALGAMATION_APPLICATION)
+    },
+
+    /** Whether the current filing is a Horizontal Short-form Amalgamation. */
+    isAmalgamationFilingHorizontal (): boolean {
+      return (
+        this.isAmalgamationFiling &&
+        this.getAmalgamationType === AmalgamationTypes.HORIZONTAL
+      )
+    },
+
+    /** Whether the current filing is a Regular Amalgamation. */
+    isAmalgamationFilingRegular (): boolean {
+      return (
+        this.isAmalgamationFiling &&
+        this.getAmalgamationType === AmalgamationTypes.REGULAR
+      )
+    },
+
+    /** Whether the current filing is a Vertical Short-form Amalgamation. */
+    isAmalgamationFilingVertical (): boolean {
+      return (
+        this.isAmalgamationFiling &&
+        this.getAmalgamationType === AmalgamationTypes.VERTICAL
+      )
+    },
+
+    /** Whether the current filing is a Continuation In. */
+    isContinuationInFiling (): boolean {
+      return (this.stateModel.tombstone.filingType === FilingTypes.CONTINUATION_IN)
+    },
+
+    /** Whether the current filing is an Incorporation Application. */
     isIncorporationFiling (): boolean {
       return (this.stateModel.tombstone.filingType === FilingTypes.INCORPORATION_APPLICATION)
     },
@@ -117,6 +156,8 @@ export const useStore = defineStore('store', {
     /** The current filing name. */
     getFilingName (): FilingNames {
       switch (this.getFilingType) {
+        case FilingTypes.AMALGAMATION_APPLICATION: return FilingNames.AMALGAMATION_APPLICATION
+        case FilingTypes.CONTINUATION_IN: return FilingNames.CONTINUATION_IN_APPLICATION
         case FilingTypes.INCORPORATION_APPLICATION: return FilingNames.INCORPORATION_APPLICATION
         case FilingTypes.REGISTRATION: return FilingNames.REGISTRATION
         case FilingTypes.RESTORATION: return FilingNames.RESTORATION_APPLICATION
@@ -144,6 +185,11 @@ export const useStore = defineStore('store', {
     /** The account folio number. */
     getFolioNumber (): string {
       return this.stateModel.tombstone.folioNumber
+    },
+
+    /** Is true when the folio number is valid. */
+    getFolioNumberValid (): boolean {
+      return this.stateModel.tombstone.folioNumberValid
     },
 
     /** The transactional folio number. */
@@ -263,6 +309,8 @@ export const useStore = defineStore('store', {
 
     getEntityIdentifier (): string {
       switch (this.getFilingType) {
+        case FilingTypes.AMALGAMATION_APPLICATION: return this.getTempId
+        case FilingTypes.CONTINUATION_IN: return this.getTempId
         case FilingTypes.INCORPORATION_APPLICATION: return this.getTempId
         case FilingTypes.REGISTRATION: return this.getTempId
         case FilingTypes.RESTORATION: return this.getBusinessId
@@ -296,7 +344,7 @@ export const useStore = defineStore('store', {
       return this.stateModel.nameRequest
     },
 
-    /** The Name Request approved name. */
+    /** The approved name (from NR or Correct Name component). */
     getNameRequestApprovedName (): string {
       return this.stateModel.nameRequestApprovedName
     },
@@ -468,7 +516,7 @@ export const useStore = defineStore('store', {
     /** Is true when the step is valid. */
     isRestoreBusinessNameValid (): boolean {
       return (
-        this.getBusinessNameValid &&
+        this.getRestorationBusinessNameValid &&
         this.getNameTranslationsValid &&
         this.getRestorationTypeValid &&
         this.getApprovalTypeValid
@@ -492,6 +540,8 @@ export const useStore = defineStore('store', {
 
     /** Whether the subject filing is valid. */
     isFilingValid (): boolean {
+      if (this.isAmalgamationFiling) return this.isAmalgamationValid
+      if (this.isContinuationInFiling) return this.isContinuationInValid
       if (this.isIncorporationFiling) return this.isIncorporationApplicationValid
       if (this.isDissolutionFiling) return this.isDissolutionValid
       if (this.isRegistrationFiling) return this.isRegistrationValid
@@ -542,13 +592,73 @@ export const useStore = defineStore('store', {
       )
     },
 
+    /** Whether Amalgamation Information step is valid. */
+    isAmalgamationInformationValid (): boolean {
+      if (this.isAmalgamationFilingRegular) {
+        return (
+          this.getAmalgamatingBusinessesValid &&
+          !!this.getCorrectNameOption &&
+          this.getNameTranslationsValid
+        )
+      } else {
+        return (
+          // *** FUTURE: update this when Resulting Company Name is implemented
+          this.getAmalgamatingBusinessesValid &&
+          !!this.getCorrectNameOption &&
+          this.getNameTranslationsValid
+        )
+      }
+    },
+
+    /** Whether all the amalgamation steps are valid. */
+    isAmalgamationValid (): boolean {
+      const isFolioNumberValid = !this.isPremiumAccount || this.getFolioNumberValid
+      const isCourtOrderValid = this.isRoleStaff ? this.getCourtOrderStep.valid : true
+      const isCertifyValid = this.getCertifyState.valid && !!this.getCertifyState.certifiedBy
+      const isStaffPaymentValid = this.isRoleStaff ? this.getStaffPaymentStep.valid : true
+
+      return (
+        this.isAmalgamationInformationValid &&
+        this.isDefineCompanyValid &&
+        this.isAddPeopleAndRolesValid &&
+        this.isCreateShareStructureValid &&
+        this.getEffectiveDateTime.valid &&
+        isFolioNumberValid &&
+        this.getAmalgamationCourtApprovalValid &&
+        isCourtOrderValid &&
+        isCertifyValid &&
+        isStaffPaymentValid
+      )
+    },
+
+    /**
+     * Whether all the continuation in steps are valid.
+     * TODO: Add all the remaining checks when all components are in place.
+     */
+    isContinuationInValid (): boolean {
+      const isCertifyValid = this.getCertifyState.valid && !!this.getCertifyState.certifiedBy
+      const isEffectiveDateTimeValid = this.getEffectiveDateTime.valid
+      const isFolioNumberValid = !this.isPremiumAccount || this.getFolioNumberValid
+      const isStaffPaymentValid = this.isRoleStaff ? this.getStaffPaymentStep.valid : true
+
+      return (
+        this.isDefineCompanyValid &&
+        this.isAddPeopleAndRolesValid &&
+        this.isCreateShareStructureValid &&
+        isCertifyValid &&
+        isEffectiveDateTimeValid &&
+        isFolioNumberValid &&
+        isStaffPaymentValid
+      )
+    },
+
     /** Whether all the incorporation steps are valid. */
     isIncorporationApplicationValid (): boolean {
       // Base company steps
       const isBaseStepsValid = (
-        this.getCreateShareStructureStep.valid &&
+        this.isCreateShareStructureValid &&
         this.getEffectiveDateTime.valid &&
-        this.getIncorporationAgreementStep.valid &&
+        this.isIncorporationAgreementValid &&
         this.getCourtOrderStep.valid
       )
 
@@ -680,13 +790,18 @@ export const useStore = defineStore('store', {
       return this.stateModel.documentDelivery
     },
 
+    /** The amalgamation type. */
+    getAmalgamationType (): AmalgamationTypes {
+      return this.stateModel.amalgamation.type
+    },
+
     /** The restoration object. */
     getRestoration (): RestorationStateIF {
       return this.stateModel.restoration
     },
 
-    /** The business name validity. */
-    getBusinessNameValid (): boolean {
+    /** The restoration business name validity. */
+    getRestorationBusinessNameValid (): boolean {
       return this.stateModel.restoration.businessNameValid
     },
 
@@ -698,6 +813,26 @@ export const useStore = defineStore('store', {
     /** The approval type validity. */
     getApprovalTypeValid (): boolean {
       return this.stateModel.restoration.approvalTypeValid
+    },
+
+    /** The amalgamating businesses. */
+    getAmalgamatingBusinesses (): Array<AmalgamatingBusinessIF> {
+      return this.stateModel.amalgamation.amalgamatingBusinesses
+    },
+
+    /** The amalgamating businesses validity. */
+    getAmalgamatingBusinessesValid (): boolean {
+      return this.stateModel.amalgamation.amalgamatingBusinessesValid
+    },
+
+    /** The amalgamation court approval. */
+    getAmalgamationCourtApproval (): boolean {
+      return this.stateModel.amalgamation.courtApproval
+    },
+
+    /** The amalgamation court approval validity. */
+    getAmalgamationCourtApprovalValid (): boolean {
+      return this.stateModel.amalgamation.courtApprovalValid
     },
 
     //
@@ -778,11 +913,11 @@ export const useStore = defineStore('store', {
     },
 
     /** The People and Roles object. */
-    getPeopleAndRolesResource (): any {
+    getPeopleAndRolesResource (): PeopleAndRolesResourceIF {
       return this.resourceModel.peopleAndRoles
     },
 
-    /** The Incorporation Articles */
+    /** The Incorporation Articles. */
     getIncorporationArticlesResource (): any {
       return this.resourceModel.incorporationArticles
     },
@@ -819,13 +954,13 @@ export const useStore = defineStore('store', {
 
     /** The resource filing data. */
     getFilingData (): Array<FilingDataIF> {
-      if (this.isFullRestorationFiling) {
-        return [this.resourceModel.filingData[0]]
+      switch (true) {
+        case this.isFullRestorationFiling: return [this.resourceModel.filingData[0]]
+        case this.isLimitedRestorationFiling: return [this.resourceModel.filingData[1]]
+        case this.isAmalgamationFilingHorizontal: return [this.resourceModel.filingData[0]]
+        case this.isAmalgamationFilingVertical: return [this.resourceModel.filingData[1]]
+        default: return this.resourceModel.filingData
       }
-      if (this.isLimitedRestorationFiling) {
-        return [this.resourceModel.filingData[1]]
-      }
-      return this.resourceModel.filingData
     },
 
     /** The incorporation agreement sample article. */
@@ -970,6 +1105,9 @@ export const useStore = defineStore('store', {
     setFolioNumber (folioNumber: string) {
       this.stateModel.tombstone.folioNumber = folioNumber
       if (!this.stateModel.ignoreChanges) this.stateModel.haveChanges = true
+    },
+    setFolioNumberValidity (valid: boolean) {
+      this.stateModel.tombstone.folioNumberValid = valid
     },
     setTransactionalFolioNumber (folioNumber: string) {
       this.stateModel.tombstone.transactionalFolioNumber = folioNumber
@@ -1151,7 +1289,7 @@ export const useStore = defineStore('store', {
     setAdminFreeze (adminFreeze: boolean) {
       this.stateModel.business.adminFreeze = adminFreeze
     },
-    setEntityState (entityState: EntityState) {
+    setEntityState (entityState: EntityStates) {
       this.stateModel.business.state = entityState
     },
     setBusinessNumber (taxId: string) {
@@ -1177,6 +1315,31 @@ export const useStore = defineStore('store', {
     },
     setWindowWidth (width: number) {
       this.stateModel.windowWidth = width
+    },
+    setAmalgamatingBusinesses (amalgamatingBusinesses: Array<AmalgamatingBusinessIF>) {
+      this.stateModel.amalgamation.amalgamatingBusinesses = amalgamatingBusinesses
+    },
+    /** Adds specified item to end of amalgamating businesses list. */
+    pushAmalgamatingBusiness (item: AmalgamatingBusinessIF) {
+      this.stateModel.amalgamation.amalgamatingBusinesses.push(item)
+      if (!this.stateModel.ignoreChanges) this.stateModel.haveChanges = true
+    },
+    /** Deletes item at specified index from amalgamating businesses list. */
+    spliceAmalgamatingBusiness (index: number) {
+      this.stateModel.amalgamation.amalgamatingBusinesses.splice(index, 1)
+      if (!this.stateModel.ignoreChanges) this.stateModel.haveChanges = true
+    },
+    setAmalgamatingBusinessesValid (valid: boolean) {
+      this.stateModel.amalgamation.amalgamatingBusinessesValid = valid
+    },
+    setAmalgamationCourtApproval (courtApproval: boolean) {
+      this.stateModel.amalgamation.courtApproval = courtApproval
+    },
+    setAmalgamationCourtApprovalValid (valid: boolean) {
+      this.stateModel.amalgamation.courtApprovalValid = valid
+    },
+    setAmalgamationType (type: AmalgamationTypes) {
+      this.stateModel.amalgamation.type = type
     },
     setRestorationType (type: RestorationTypes) {
       this.stateModel.restoration.type = type

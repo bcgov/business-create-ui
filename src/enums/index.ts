@@ -1,8 +1,8 @@
+export * from './amalgamationEnums'
 export * from './bulletListTypes'
 export * from './dissolutionStatementTypes'
 export * from './dissolutionTypes'
 export * from './effectOfOrders'
-export * from './entityState'
 export * from './entitySubtypes'
 export * from './filingStatus'
 export * from './itemTypes'
@@ -16,10 +16,10 @@ export * from './views'
 export * from './errorTypes'
 
 // external enums
-export { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 export {
   AccountTypes,
   ApprovalTypes,
+  AmalgamationTypes,
   CorrectNameOptions,
   EffectiveDateTypes,
   EntityStates,

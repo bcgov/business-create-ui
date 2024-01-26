@@ -2,7 +2,8 @@ import { wrapperFactory, shallowWrapperFactory } from '../vitest-wrapper-factory
 import { createPinia, setActivePinia } from 'pinia'
 import { useStore } from '@/store/store'
 import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
-import { CorpTypeCd, FilingTypes } from '@/enums'
+import { FilingTypes } from '@/enums'
+import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 
 setActivePinia(createPinia())
 const store = useStore()

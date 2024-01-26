@@ -58,7 +58,7 @@
         <h2>Business Dissolution Date</h2>
         <p class="mt-4 ">
           Enter the dissolution date of the business.
-          The dissolution date must be after the business start date and registration date.
+          The dissolution date must be on or after the registration date.
           The dissolution date cannot be in the future.
         </p>
       </header>
@@ -304,7 +304,6 @@ import { CompletingParty } from '@bcrs-shared-components/completing-party'
 import StaffPayment from '@/components/common/StaffPayment.vue'
 import TransactionalFolioNumber from '@/components/common/TransactionalFolioNumber.vue'
 import { RoleTypes, RouteNames } from '@/enums'
-import { CorpTypeCd } from '@bcrs-shared-components/enums/'
 import { VuetifyRuleFunction } from '@/types'
 
 import {
@@ -318,7 +317,7 @@ import {
   StaffPaymentStepIF
 } from '@/interfaces'
 import { PersonAddressSchema } from '@/schemas/'
-import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
+import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 
 @Component({
   components: {
@@ -469,7 +468,7 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
   /** The minimum start date that can be entered (greater than registration date). */
   get startDateMin (): Date {
     const date = this.apiToDate(this.getBusinessFoundingDate)
-    date.setDate(date.getDate() + 1)
+    date.setDate(date.getDate())
     return date
   }
 

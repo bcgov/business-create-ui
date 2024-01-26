@@ -185,6 +185,7 @@
       </v-btn>
 
       <v-btn
+        v-if="getPeopleAndRolesResource.addPerson !== false"
         id="btn-add-person"
         outlined
         color="primary"
