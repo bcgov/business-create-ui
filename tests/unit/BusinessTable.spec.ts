@@ -216,7 +216,7 @@ describe('Business Table - display', () => {
 })
 
 describe('Business Table - validity', () => {
-  it('emit invalid when there are no businesses in the table', () => {
+  it('emits True when there are no businesses in the table', () => {
     const wrapper = wrapperFactory(
       BusinessTable,
       null,
@@ -227,10 +227,10 @@ describe('Business Table - validity', () => {
       }
     )
 
-    expect(wrapper.emitted('valid').pop()[0]).toEqual(false)
+    expect(wrapper.emitted('allOk').pop()[0]).toEqual(true)
   })
 
-  it('emit invalid when there is only one business in the table', () => {
+  it('emits False when not every business is OK', () => {
     const wrapper = wrapperFactory(
       BusinessTable,
       null,
@@ -238,87 +238,35 @@ describe('Business Table - validity', () => {
         amalgamation: {
           amalgamatingBusinesses: [
             {
-              address: {
-                addressCity: 'Victoria',
-                addressCountry: 'CA',
-                addressRegion: 'BC',
-                addressType: 'mailing',
-                deliveryInstructions: '',
-                postalCode: 'X8Y 1X1',
-                streetAddress: 'test street',
-                streetAddressAdditional: ''
-              },
-              email: 'no@reply.com',
-              identifier: 'BC1111111',
-              isFrozen: false,
-              isFutureEffective: false,
-              isLimitedRestoration: false,
-              isNotInGoodStanding: false,
-              legalType: CorpTypeCd.BENEFIT_COMPANY,
-              name: 'TEST BEN',
-              role: AmlRoles.AMALGAMATING,
-              status: AmlStatuses.OK,
-              type: AmlTypes.LEAR
+              address: {},
+              legalType: CorpTypeCd.BC_COMPANY,
+              type: AmlTypes.LEAR,
+              isHistorical: true // status will be "ERROR_HISTORICAL"
             }
           ]
         }
       }
     )
 
-    expect(wrapper.emitted('valid').pop()[0]).toEqual(false)
+    expect(wrapper.emitted('allOk').pop()[0]).toEqual(false)
   })
 
-  it('emit valid when there are two or more businesses in the table', () => {
+  it('emits True when every business is OK', () => {
     const wrapper = wrapperFactory(
       BusinessTable,
       null,
       {
         amalgamation: {
           amalgamatingBusinesses: [
+            // both of these will be status "OK"
             {
-              address: {
-                addressCity: 'Victoria',
-                addressCountry: 'CA',
-                addressRegion: 'BC',
-                addressType: 'mailing',
-                deliveryInstructions: '',
-                postalCode: 'X8Y 1X1',
-                streetAddress: 'test street',
-                streetAddressAdditional: ''
-              },
-              email: 'no@reply.com',
-              identifier: 'BC1111111',
-              isFrozen: false,
-              isFutureEffective: false,
-              isLimitedRestoration: false,
-              isNotInGoodStanding: false,
-              legalType: CorpTypeCd.BENEFIT_COMPANY,
-              name: 'TEST BEN',
-              role: AmlRoles.AMALGAMATING,
-              status: AmlStatuses.OK,
+              address: {},
+              legalType: CorpTypeCd.BC_COMPANY,
               type: AmlTypes.LEAR
             },
             {
-              address: {
-                addressCity: 'Victoria',
-                addressCountry: 'CA',
-                addressRegion: 'BC',
-                addressType: 'mailing',
-                deliveryInstructions: '',
-                postalCode: 'X8Y 1X2',
-                streetAddress: 'test street 2',
-                streetAddressAdditional: ''
-              },
-              email: 'no2@reply.com',
-              identifier: 'BC2222222',
-              isFrozen: false,
-              isFutureEffective: false,
-              isLimitedRestoration: false,
-              isNotInGoodStanding: false,
+              address: {},
               legalType: CorpTypeCd.BC_COMPANY,
-              name: 'TEST BEN NUMBER 2',
-              role: AmlRoles.AMALGAMATING,
-              status: AmlStatuses.OK,
               type: AmlTypes.LEAR
             }
           ]
@@ -326,7 +274,7 @@ describe('Business Table - validity', () => {
       }
     )
 
-    expect(wrapper.emitted('valid').pop()[0]).toBe(true)
+    expect(wrapper.emitted('allOk').pop()[0]).toBe(true)
   })
 })
 
