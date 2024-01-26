@@ -1,4 +1,5 @@
 import { FilingTypes } from '@/enums'
+import { GetCorpNumberedDescription } from '@bcrs-shared-components/corp-type-module'
 import { BreadcrumbIF } from '@/interfaces'
 import { createPinia, setActivePinia } from 'pinia'
 import { useStore } from '@/store/store'
@@ -8,18 +9,24 @@ const store = useStore()
 
 /** Returns legal name. */
 function getLegalName (): string {
-  // name comes from different places depending on filing type
-  switch (store.getFilingType) {
-    case FilingTypes.DISSOLUTION: return store.getBusinessLegalName
-    case FilingTypes.INCORPORATION_APPLICATION: return store.getNameRequestApprovedName
-    case FilingTypes.REGISTRATION: return store.getNameRequestApprovedName
-    case FilingTypes.RESTORATION: return store.getNameRequestApprovedName
+  const getFilingType: FilingTypes = store.getFilingType
+  const getBusinessLegalName: string = store.getBusinessLegalName
+  const getNameRequestApprovedName: string = store.getNameRequestApprovedName
+
+  switch (getFilingType) {
+    case FilingTypes.AMALGAMATION_APPLICATION: return getNameRequestApprovedName
+    case FilingTypes.CONTINUATION_IN: return getNameRequestApprovedName
+    case FilingTypes.DISSOLUTION: return getBusinessLegalName
+    case FilingTypes.INCORPORATION_APPLICATION: return getNameRequestApprovedName
+    case FilingTypes.REGISTRATION: return getNameRequestApprovedName
+    case FilingTypes.RESTORATION: return getNameRequestApprovedName
   }
 }
 
 /** Returns numbered entity name. */
 function getNumberedEntityName (): string {
-  return GetCorpNumberedDescription(store.getEntityType as any)
+  const getEntityType = store.getEntityType
+  return GetCorpNumberedDescription(getEntityType)
 }
 
 /** Returns URL param string with Account ID if present, else empty string. */

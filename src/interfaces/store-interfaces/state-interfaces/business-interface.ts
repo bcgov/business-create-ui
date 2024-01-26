@@ -45,7 +45,7 @@ export interface BusinessIF {
   officeAddress: OfficeAddressIF
   nextAnnualReport: ApiDateTimeUtc // used for BCOMP only
   startDate: ApiDateTimeUtc
-  state: EntityState
+  state: EntityStates
   stateFiling?: string
   submitter: string // not used
   taxId?: string // aka Business Number // may be undefined
