@@ -11,7 +11,6 @@ import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import { AmalgamationTypes, EntityStates, FilingTypes, RestorationTypes } from '@bcrs-shared-components/enums'
 import { AuthServices, LegalServices } from '@/services'
 import { AmalgamatingBusinessIF } from '@/interfaces'
-import flushPromises from 'flush-promises'
 
 const vuetify = new Vuetify({})
 setActivePinia(createPinia())
@@ -115,48 +114,53 @@ describe('Amalgamating Businesses - components and validity', () => {
     ]
     expect(wrapper.vm.haveAmalgamatingBusinesses).toBe(true)
   })
+})
 
+describe('Amalgamating Businesses - computes businessTableValid correctly', () => {
   const businessTableValidTests = [
     // NB: for regular, haveHoldingBusiness isn't used
-    { type: AmalgamationTypes.REGULAR, haveHoldingBusiness: null, haveAmalgamatingBusinesses: false, allOk: false, expected: false },
-    { type: AmalgamationTypes.REGULAR, haveHoldingBusiness: null, haveAmalgamatingBusinesses: false, allOk: true, expected: false },
-    { type: AmalgamationTypes.REGULAR, haveHoldingBusiness: null, haveAmalgamatingBusinesses: true, allOk: false, expected: false },
-    { type: AmalgamationTypes.REGULAR, haveHoldingBusiness: null, haveAmalgamatingBusinesses: true, allOk: true, expected: true },
-    { type: AmalgamationTypes.HORIZONTAL, haveHoldingBusiness: false, haveAmalgamatingBusinesses: false, allOk: false, expected: false },
-    { type: AmalgamationTypes.HORIZONTAL, haveHoldingBusiness: false, haveAmalgamatingBusinesses: false, allOk: true, expected: false },
-    { type: AmalgamationTypes.HORIZONTAL, haveHoldingBusiness: false, haveAmalgamatingBusinesses: true, allOk: false, expected: false },
-    { type: AmalgamationTypes.HORIZONTAL, haveHoldingBusiness: false, haveAmalgamatingBusinesses: true, allOk: true, expected: false },
-    { type: AmalgamationTypes.HORIZONTAL, haveHoldingBusiness: true, haveAmalgamatingBusinesses: false, allOk: false, expected: false },
-    { type: AmalgamationTypes.HORIZONTAL, haveHoldingBusiness: true, haveAmalgamatingBusinesses: false, allOk: true, expected: false },
-    { type: AmalgamationTypes.HORIZONTAL, haveHoldingBusiness: true, haveAmalgamatingBusinesses: true, allOk: false, expected: false },
-    { type: AmalgamationTypes.HORIZONTAL, haveHoldingBusiness: true, haveAmalgamatingBusinesses: true, allOk: true, expected: true }
+    { type: AmalgamationTypes.REGULAR, haveAmalgamatingBusinesses: false, allOk: false, expected: false },
+    { type: AmalgamationTypes.REGULAR, haveAmalgamatingBusinesses: false, allOk: true, expected: false },
+    { type: AmalgamationTypes.REGULAR, haveAmalgamatingBusinesses: true, allOk: false, expected: false },
+    { type: AmalgamationTypes.REGULAR, haveAmalgamatingBusinesses: true, allOk: true, expected: true },
+    { type: AmalgamationTypes.VERTICAL, haveHoldingBusiness: false, haveAmalgamatingBusinesses: false, allOk: false, expected: false },
+    { type: AmalgamationTypes.VERTICAL, haveHoldingBusiness: false, haveAmalgamatingBusinesses: false, allOk: true, expected: false },
+    { type: AmalgamationTypes.VERTICAL, haveHoldingBusiness: false, haveAmalgamatingBusinesses: true, allOk: false, expected: false },
+    { type: AmalgamationTypes.VERTICAL, haveHoldingBusiness: false, haveAmalgamatingBusinesses: true, allOk: true, expected: false },
+    { type: AmalgamationTypes.VERTICAL, haveHoldingBusiness: true, haveAmalgamatingBusinesses: false, allOk: false, expected: false },
+    { type: AmalgamationTypes.VERTICAL, haveHoldingBusiness: true, haveAmalgamatingBusinesses: false, allOk: true, expected: false },
+    { type: AmalgamationTypes.VERTICAL, haveHoldingBusiness: true, haveAmalgamatingBusinesses: true, allOk: false, expected: false },
+    { type: AmalgamationTypes.VERTICAL, haveHoldingBusiness: true, haveAmalgamatingBusinesses: true, allOk: true, expected: true }
   ]
 
   for (let i = 0; i < businessTableValidTests.length; i++) {
-    it.skip(`computes businessTableValid correctly - test ${i}`, () => {
+    it(`test ${i}`, () => {
+      store.stateModel.tombstone.filingType = FilingTypes.AMALGAMATION_APPLICATION
       store.stateModel.amalgamation.type = businessTableValidTests[i].type
 
-      // mount a new wrapper to mock computed property and set data
       // NB: use shallowMount so BusinessTable doesn't affect data
-      const wrapper2 = shallowMount(AmalgamatingBusinesses, {
+      const wrapper = shallowMount(AmalgamatingBusinesses, {
         computed: {
-          haveAmalgamatingBusinesses: () => businessTableValidTests[i].haveAmalgamatingBusinesses,
-          haveHoldingBusiness: () => businessTableValidTests[i].haveHoldingBusiness
+          haveAmalgamatingBusinesses: {
+            get (): boolean { return businessTableValidTests[i].haveAmalgamatingBusinesses }
+          },
+          haveHoldingBusiness: {
+            get (): boolean { return businessTableValidTests[i].haveHoldingBusiness }
+          }
         },
         data: () => ({ allOk: businessTableValidTests[i].allOk }),
         vuetify
       }) as any
 
-      // verify
-      console.log('>>> haveAmalgamatingBusinesses =', wrapper.vm.haveAmalgamatingBusinesses)
-      console.log('>>> haveHoldingBusiness =', wrapper.vm.haveHoldingBusiness)
-      console.log('>>> businessTableValid =', wrapper.vm.businessTableValid)
-      expect(wrapper2.vm.allOk).toBe(businessTableValidTests[i].expected)
+      // verify store getter
+      expect(wrapper.vm.businessTableValid).toBe(businessTableValidTests[i].expected)
 
-      wrapper2.destroy()
+      wrapper.destroy()
     })
   }
+})
 
+describe('Amalgamating Businesses - validates component correctly', () => {
   const amalgamatingBusinessesValidTests = [
     { businessTableValid: false, isAddingAmalgamatingBusiness: false, isAddingAmalgamatingForeignBusiness: false, expected: false },
     { businessTableValid: false, isAddingAmalgamatingBusiness: false, isAddingAmalgamatingForeignBusiness: true, expected: false },
@@ -169,12 +173,13 @@ describe('Amalgamating Businesses - components and validity', () => {
   ]
 
   for (let i = 0; i < amalgamatingBusinessesValidTests.length; i++) {
-    it.skip(`validates component - test ${i}`, async () => {
-      // mount a new wrapper to mock computed property and set data
+    it(`test ${i}`, () => {
       // NB: use shallowMount so BusinessTable doesn't affect data
-      const wrapper2 = shallowMount(AmalgamatingBusinesses, {
+      const wrapper = shallowMount(AmalgamatingBusinesses, {
         computed: {
-          businessTableValid: () => amalgamatingBusinessesValidTests[i].businessTableValid
+          businessTableValid: {
+            get (): boolean { return amalgamatingBusinessesValidTests[i].businessTableValid }
+          }
         },
         data: () => ({
           isAddingAmalgamatingBusiness: amalgamatingBusinessesValidTests[i].isAddingAmalgamatingBusiness,
@@ -182,15 +187,12 @@ describe('Amalgamating Businesses - components and validity', () => {
         }),
         vuetify
       }) as any
-      await flushPromises()
 
-      // verify
-      console.log('>>> businessTableValid =', wrapper.vm.businessTableValid)
-      console.log('>>> isAddingAmalgamatingBusiness =', wrapper.vm.isAddingAmalgamatingBusiness)
-      console.log('>>> isAddingAmalgamatingForeignBusiness =', wrapper.vm.isAddingAmalgamatingForeignBusiness)
+      // call function and verify store getter
+      wrapper.vm.onBusinessTableValid()
       expect(store.getAmalgamatingBusinessesValid).toBe(amalgamatingBusinessesValidTests[i].expected)
 
-      wrapper2.destroy()
+      wrapper.destroy()
     })
   }
 })
