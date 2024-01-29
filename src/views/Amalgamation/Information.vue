@@ -34,7 +34,7 @@
           class="mt-3"
         >
           Add the primary business and the amalgamating businesses below. The amalgamated business will
-          adopt as its notice of articles, the notice of articles of the primary company whose shares
+          adopt as its notice of articles, the notice of articles of the primary business whose shares
           are not to be cancelled.
         </p>
         <p
@@ -42,7 +42,7 @@
           class="mt-3"
         >
           Add the holding business and the amalgamating businesses below. The amalgamated business will
-          adopt as its notice of articles, the notice of articles of the amalgamating holding company.
+          adopt as its notice of articles, the notice of articles of the amalgamating holding business.
         </p>
         <p class="mt-3">
           <strong>Important:</strong> The amalgamating businesses must be visible on your
