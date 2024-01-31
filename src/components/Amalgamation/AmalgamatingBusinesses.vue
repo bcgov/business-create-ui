@@ -235,6 +235,7 @@
     <BusinessTable
       class="mt-8"
       :class="{ 'invalid-section': getShowErrors && !businessTableValid }"
+      @newHoldingPrimaryBusiness="newHoldingPrimaryBusiness($event)"
       @allOk="allOk=$event"
     />
 
@@ -492,7 +493,7 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
       name: business.businessInfo.legalName,
       email: business.authInfo.contacts[0].email,
       legalType: business.businessInfo.legalType,
-      address: business.addresses.registeredOffice.mailingAddress,
+      addresses: business.addresses,
       isNotInGoodStanding: (business.businessInfo.goodStanding === false),
       isFrozen: (business.businessInfo.adminFreeze === true),
       isFutureEffective: this.isFutureEffective(business),
@@ -556,6 +557,26 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
 
     // Close the "Add an Amalgamating Foreign Business" panel.
     this.isAddingAmalgamatingForeignBusiness = false
+  }
+
+  /** Sets the specified business as the new holding/primary business. */
+  async newHoldingPrimaryBusiness (business: AmalgamatingBusinessIF): Promise<void> {
+    try {
+      // show spinner since the network calls below can take a few seconds
+      this.$root.$emit('showSpinner', true)
+
+      // fetch the new holding/primary business' data and update the prepopulated data
+      // this will overwrite office addresses, directors, share structure and contact info
+      this.updatePrepopulatedData(business, true)
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.log('Error setting new holding/primary business =', error)
+      this.snackbarText = 'Error marking new business.'
+      this.snackbar = true
+    } finally {
+      // hide spinner
+      this.$root.$emit('showSpinner', false)
+    }
   }
 
   /**

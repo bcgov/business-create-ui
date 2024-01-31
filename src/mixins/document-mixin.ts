@@ -37,7 +37,7 @@ export default class DocumentMixin extends Vue {
         }
         return data
       }).catch(error => {
-        console.log('Get presigned url error =', error) // eslint-disable-line no-console
+        console.log('Error getting presigned url =', error) // eslint-disable-line no-console
         throw error
       })
   }

@@ -1,12 +1,26 @@
 import { AxiosInstance as axios } from '@/utils'
 import { StatusCodes } from 'http-status-codes'
-import { BusinessIF, DissolutionFilingIF, IncorporationFilingIF, NameRequestIF } from '@/interfaces'
-import { FilingTypes } from '@/enums'
+import { BusinessIF, DissolutionFilingIF, IncorporationFilingIF, NameRequestIF, OrgPersonIF }
+  from '@/interfaces'
+import { FilingTypes, RoleTypes } from '@/enums'
+import { ShareStructureIF } from '@bcrs-shared-components/interfaces'
 
 /**
  * Class that provides integration with the Legal API.
  */
 export default class LegalServices {
+  /** The Account ID, from session storage. */
+  static get accountId (): string {
+    // if we can't get account id from ACCOUNT_ID
+    // then try to get it from CURRENT_ACCOUNT
+    let accountId = sessionStorage.getItem('ACCOUNT_ID')
+    if (!accountId) {
+      const currentAccount = sessionStorage.getItem('CURRENT_ACCOUNT')
+      accountId = JSON.parse(currentAccount)?.id
+    }
+    return accountId
+  }
+
   /**
    * Fetches filings list.
    * @param businessId the business identifier (aka entity inc no)
@@ -137,18 +151,6 @@ export default class LegalServices {
     // NB: for error handling, see "save-error-event"
   }
 
-  /** The Account ID, from session storage. */
-  static get accountId (): string {
-    // if we can't get account id from ACCOUNT_ID
-    // then try to get it from CURRENT_ACCOUNT
-    let accountId = sessionStorage.getItem('ACCOUNT_ID')
-    if (!accountId) {
-      const currentAccount = sessionStorage.getItem('CURRENT_ACCOUNT')
-      accountId = JSON.parse(currentAccount)?.id
-    }
-    return accountId
-  }
-
   /**
    * Fetches name request data with phone and email validation.
    * @param nrNumber the name request number (eg, NR 1234567)
@@ -182,13 +184,80 @@ export default class LegalServices {
    * @param businessId the business identifier
    * @returns a promise to return the parties from the response, else exception
    */
-  static fetchParties (businessId: string): Promise<any> {
+  static async fetchParties (businessId: string): Promise<any> {
     const url = `businesses/${businessId}/parties`
     return axios.get(url).then(response => {
       const data = response?.data
-      if (!data) throw new Error('Invalid response data')
+      if (!data) throw new Error('Invalid API response')
       return data
     })
+  }
+
+  /**
+   * Fetches the directors of the current business.
+   * @param businessId the business identifier
+   * @returns a promise to return the directors from the response, else exception
+   */
+  static async fetchDirectors (businessId: string): Promise<OrgPersonIF[]> {
+    const url = `businesses/${businessId}/directors`
+
+    return axios.get(url)
+      .then(response => {
+        const directors = response?.data?.directors as Array<any>
+
+        if (!directors) throw new Error('Invalid API response')
+
+        // return director list converted to org-person list
+        return directors.map(director => {
+          // WORK-AROUND WARNING !!!
+          // convert directors from "middleInitial" to "middleName"
+          const middleInitial = director.officer['middleInitial']
+          if (middleInitial !== undefined) {
+            director.officer.middleName = middleInitial
+            delete director.officer['middleInitial']
+          }
+
+          const orgPerson: OrgPersonIF = {
+            deliveryAddress: director.deliveryAddress,
+            mailingAddress: director.mailingAddress,
+            officer: director.officer,
+            roles: [
+              {
+                appointmentDate: director.appointmentDate,
+                cessationDate: director.cessationDate,
+                roleType: RoleTypes.DIRECTOR
+              }
+            ],
+            isLookupBusiness: null
+          }
+
+          return orgPerson
+        })
+      })
+  }
+
+  /**
+   * Fetch the share structure of the current business.
+   * @param businessId the business identifier
+   * @returns a promise to return the share structure from the response, else exception
+   */
+  static async fetchShareStructure (businessId: string): Promise<ShareStructureIF> {
+    const url = `businesses/${businessId}/share-classes`
+
+    return axios.get(url)
+      .then(response => {
+        const shareStructure = response.data as ShareStructureIF
+
+        if (!shareStructure) throw new Error('Invalid API response')
+
+        // apply a type to share classes and series
+        shareStructure.shareClasses.forEach(shareClass => {
+          shareClass.type = 'Class'
+          shareClass.series.forEach(shareSeries => { shareSeries.type = 'Series' })
+        })
+
+        return shareStructure
+      })
   }
 
   /**
@@ -196,7 +265,7 @@ export default class LegalServices {
    * @param businessId the business identifier
    * @returns a promise to return the addresses from the response, else exception
    */
-  static fetchAddresses (businessId: string): Promise<any> {
+  static async fetchAddresses (businessId: string): Promise<any> {
     const url = `businesses/${businessId}/addresses`
     return axios.get(url).then(response => {
       const data = response?.data

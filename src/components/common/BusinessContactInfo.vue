@@ -58,7 +58,7 @@
             />
           </v-col>
 
-          <!-- Phone Number -->
+          <!-- Phone Number + Extension -->
           <v-col
             cols="12"
             sm="3"
@@ -176,7 +176,7 @@ export default class BusinessContactInfo extends Mixins(CommonMixin) {
   // Rules for template
   readonly Rules = Rules
 
-  contact = this.initialValue
+  contact = { ...EmptyContactPoint } as ContactPointIF
   formValid = false
 
   // Rules
@@ -205,8 +205,8 @@ export default class BusinessContactInfo extends Mixins(CommonMixin) {
   }
 
   @Watch('formValid')
-  private onFormValidityChange (val: boolean): void {
-    this.emitValid(val)
+  private onFormValidityChange (valid: boolean): void {
+    this.emitValid(valid)
   }
 
   // Events
