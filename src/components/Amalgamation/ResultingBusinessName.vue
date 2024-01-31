@@ -16,7 +16,7 @@
           class="pr-4"
         >
           <label :class="{ 'error-text': invalidSection }">
-            <strong>Resulting Business Name</strong>
+            <strong>Company Name</strong>
           </label>
         </v-col>
 
@@ -47,9 +47,12 @@
     <!-- Display Mode -->
     <template v-else>
       <NameRequestInfo />
-      <NameTranslations />
+      <NameTranslations
+        v-if="isRegularAmalgamation"
+      />
 
       <v-btn
+        v-if="isRegularAmalgamation"
         text
         color="primary"
         class="btn-undo"
@@ -65,7 +68,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins } from 'vue-property-decorator'
+import { Component, Mixins, Prop } from 'vue-property-decorator'
 import { Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { AmalgamationMixin, NameRequestMixin } from '@/mixins/'
@@ -94,8 +97,8 @@ export default class ResultingBusinessName extends Mixins(AmalgamationMixin, Nam
   @Getter(useStore) getNameRequestNumber!: string
   @Getter(useStore) getShowErrors!: boolean
 
-  // @Action(useStore) setCorrectNameOption!: (x: CorrectNameOptions) => void
-  // @Action(useStore) setEntityType!: (x: CorpTypeCd) => void
+  // Props
+  @Prop({ default: false }) readonly isRegularAmalgamation!: boolean
 
   // Local properties
   formType = null as CorrectNameOptions
@@ -171,26 +174,3 @@ export default class ResultingBusinessName extends Mixins(AmalgamationMixin, Nam
   }
 }
 </script>
-
-<style lang="scss" scoped>
-// position the Undo button "on top of" NameRequestInfo
-.btn-undo {
-  position: absolute;
-  top: 22px;
-  right: 20px;
-}
-
-// "sm" breakpoint
-@media (min-width: 600px) {
-  .btn-undo {
-    top: 24px;
-  }
-}
-
-// "md" breakpoint
-@media (min-width: 960px) {
-  .btn-undo {
-    top: 28px;
-  }
-}
-</style>
