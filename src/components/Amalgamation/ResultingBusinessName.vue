@@ -5,7 +5,7 @@
   >
     <!-- Editing Mode -->
     <div
-      v-if="!getCorrectNameOption"
+      v-if="!getCorrectNameOption && isAmalgamationFilingRegular"
       class="section-container"
       :class="{ 'invalid-section': invalidSection }"
     >
@@ -16,7 +16,7 @@
           class="pr-4"
         >
           <label :class="{ 'error-text': invalidSection }">
-            <strong>Company Name</strong>
+            <strong>Resulting Business Name</strong>
           </label>
         </v-col>
 
@@ -48,11 +48,11 @@
     <template v-else>
       <NameRequestInfo />
       <NameTranslations
-        v-if="isRegularAmalgamation"
+        v-if="isAmalgamationFilingRegular"
       />
 
       <v-btn
-        v-if="isRegularAmalgamation"
+        v-if="isAmalgamationFilingRegular"
         text
         color="primary"
         class="btn-undo"
@@ -68,7 +68,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Prop } from 'vue-property-decorator'
+import { Component, Mixins } from 'vue-property-decorator'
 import { Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { AmalgamationMixin, NameRequestMixin } from '@/mixins/'
@@ -96,9 +96,6 @@ export default class ResultingBusinessName extends Mixins(AmalgamationMixin, Nam
   @Getter(useStore) getNameRequestApprovedName!: string
   @Getter(useStore) getNameRequestNumber!: string
   @Getter(useStore) getShowErrors!: boolean
-
-  // Props
-  @Prop({ default: false }) readonly isRegularAmalgamation!: boolean
 
   // Local properties
   formType = null as CorrectNameOptions
@@ -136,6 +133,17 @@ export default class ResultingBusinessName extends Mixins(AmalgamationMixin, Nam
     // validateNameRequest() already throws printable errors
     return this.validateNameRequest(nameRequest, NrRequestActionCodes.AMALGAMATE)
   }
+  // mounted () {
+  //   // Call the watcher method manually on component mount
+  //   this.onIsAmalgamationFilingRegularChanged(this.isAmalgamationFilingRegular)
+  // }
+
+  // @Watch('isAmalgamationFilingRegular')
+  // onIsAmalgamationFilingRegularChanged (newVal: boolean) {
+  //   if (!newVal) {
+  //     this.setCorrectNameOption(CorrectNameOptions.CORRECT_AML_ADOPT)
+  //   }
+  // }
 
   /** On company name update, sets store accordingly. */
   onUpdateCompanyName (name: string): void {
@@ -174,3 +182,24 @@ export default class ResultingBusinessName extends Mixins(AmalgamationMixin, Nam
   }
 }
 </script>
+
+<style lang="scss" scoped>
+// position the Undo button "on top of" NameRequestInfo
+.btn-undo {
+  position: absolute;
+  top: 22px;
+  right: 20px;
+}
+// "sm" breakpoint
+@media (min-width: 600px) {
+  .btn-undo {
+    top: 24px;
+  }
+}
+// "md" breakpoint
+@media (min-width: 960px) {
+  .btn-undo {
+    top: 28px;
+  }
+}
+</style>

@@ -73,21 +73,16 @@
       </ExpandableHelp>
 
       <p
-        v-if="isAmalgamationFilingVertical"
-        class="mt-3">
-        This is a vertical short form amalgamation under section 273 of Business Corporations Act.
-        The amalgamated business will adopt as its notice of articles, the notice of articles of the holding business.
+        v-else
+        class="mt-3"
+      >
+        This is a {{ isAmalgamationFilingVertical ? 'vertical' : 'horizontal' }} short form amalgamation
+        under section 273 of Business Corporations Act.
+        The amalgamated business will adopt as its notice of articles, the notice of articles of the
+        {{ isAmalgamationFilingVertical ? 'holding' : 'primary' }} business.
       </p>
-      <p
-        v-if="isAmalgamationFilingHorizontal"
-        class="mt-3">
-        This is a horizontal short form amalgamation under section 273 of Business Corporations Act.
-        The amalgamated business will adopt as its notice of articles, the notice of articles of the primary business.
-      </p>
-      <ResultingBusinessName
-        :isRegularAmalgamation="isAmalgamationFilingRegular"
-        class="mt-5"
-      />
+
+      <ResultingBusinessName class="mt-5" />
     </section>
   </div>
 </template>
