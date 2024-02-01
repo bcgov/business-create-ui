@@ -5,8 +5,8 @@ import {
   AmlRoles, AmlStatuses, AmlTypes, EntityStates, FilingStatus, RestorationTypes, RoleTypes
 } from '@/enums'
 import {
-  AmalgamatingBusinessIF, ContactPointIF, EmptyNameRequest, NameRequestIF, NameTranslationIF,
-  OrgPersonIF, PeopleAndRoleIF, RegisteredRecordsAddressesIF, ShareClassIF
+  AmalgamatingBusinessIF, ContactPointIF, EmptyContactPoint, EmptyNameRequest, NameRequestIF,
+  NameTranslationIF, OrgPersonIF, PeopleAndRoleIF, RegisteredRecordsAddressesIF, ShareClassIF
 } from '@/interfaces'
 import { CorrectNameOptions } from '@bcrs-shared-components/enums/'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
@@ -216,6 +216,7 @@ export default class AmalgamationMixin extends Vue {
   /**
    * Fetches the business' auth information, business info, addresses, first task, and first filing.
    * @param identifier The business identifier.
+   * @returns An object of business information sub-objects, some of which may be null.
    */
   async fetchAmalgamatingBusinessInfo (identifier: string): Promise<any> {
     // Make all API calls concurrently without rejection.
@@ -309,7 +310,7 @@ export default class AmalgamationMixin extends Vue {
           role: item.role, // amalgamating or holding
           identifier: tingBusiness.businessInfo.identifier,
           name: tingBusiness.businessInfo.legalName,
-          email: tingBusiness.authInfo?.contacts[0].email,
+          authInfo: tingBusiness.authInfo,
           legalType: tingBusiness.businessInfo.legalType,
           addresses: tingBusiness.addresses,
           isNotInGoodStanding: (tingBusiness.businessInfo.goodStanding === false),
@@ -344,21 +345,19 @@ export default class AmalgamationMixin extends Vue {
       throw new Error('updatePrepopulatedData(): invalid business')
     }
 
-    // first, fetch new directors/share structure/auth info
-    // NB - business addresses have already been fetched
+    // first, fetch directors and share structure
+    // NB - addresses and auth info have already been fetched
     // NB - make all API calls concurrently without rejection
     // NB - if any call failed, that item will be null
-    const [ directors, shareStructure, authInfo ] =
+    const [ directors, shareStructure ] =
       await Promise.allSettled([
         LegalServices.fetchDirectors(business.identifier),
-        LegalServices.fetchShareStructure(business.identifier),
-        AuthServices.fetchAuthInfo(business.identifier)
+        LegalServices.fetchShareStructure(business.identifier)
       ]).then(results => results.map((result: any) => result.value || null))
 
     // check for errors before changing anything
     if (!directors) throw new Error('Unable to fetch directors')
     if (!shareStructure) throw new Error('Unable to fetch share structure')
-    if (!authInfo) throw new Error('Unable to fetch auth info')
 
     // unset previous holding/primary business, if any
     const previous = this.getAmalgamatingBusinesses.find((b: AmalgamatingBusinessIF) =>
@@ -388,12 +387,17 @@ export default class AmalgamationMixin extends Vue {
     // overwrite business contact -- only when user has marked new holding/primary business,
     // otherwise leave existing data from restored draft
     if (isNew) {
-      this.setBusinessContact({
-        email: authInfo.contacts[0].email,
-        confirmEmail: authInfo.contacts[0].email,
-        phone: authInfo.contacts[0].phone,
-        extension: authInfo.contacts[0].extension
-      })
+      if (business.authInfo?.contacts[0]) {
+        this.setBusinessContact({
+          email: business.authInfo.contacts[0].email,
+          confirmEmail: business.authInfo.contacts[0].email,
+          phone: business.authInfo.contacts[0].phone,
+          extension: business.authInfo.contacts[0].extension
+        })
+      } else {
+        // safety check - clear old business contact
+        this.setBusinessContact({ ...EmptyContactPoint })
+      }
     }
 
     // set new resulting business name and type

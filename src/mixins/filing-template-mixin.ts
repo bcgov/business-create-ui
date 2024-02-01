@@ -248,7 +248,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
       // (eg, became historical) since the last draft save.
       const holdingPrimary = await this.refetchAmalgamatingBusinessesInfo()
       // If there's a holding or primary business, fetch its data and update the prepopulated data.
-      // This will overwrite office addresses, directors and share structure from above.
+      // This will overwrite office addresses, directors and share structure that were set above.
       if (holdingPrimary) await this.updatePrepopulatedData(holdingPrimary)
     }
 
