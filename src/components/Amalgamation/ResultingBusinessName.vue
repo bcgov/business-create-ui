@@ -94,6 +94,8 @@ export default class ResultingBusinessName extends Mixins(AmalgamationMixin, Nam
   @Getter(useStore) getNameRequestNumber!: string
   @Getter(useStore) getShowErrors!: boolean
 
+  // @Action(useStore) setCorrectNameOption!: (x: CorrectNameOptions) => void
+
   // Local properties
   formType = null as CorrectNameOptions
 

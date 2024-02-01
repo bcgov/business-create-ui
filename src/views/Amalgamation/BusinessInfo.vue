@@ -68,10 +68,15 @@
           Enter the contact information for the resulting business. The BC Business Registry will use this
           to communicate with the business in the future, including sending documents and notifications.
         </p>
-        <p v-if="isAmalgamationFilingHorizontal || isAmalgamationFilingVertical">
-          The resulting business will use this contact information adopted from the holding / primary business
-          in this amalgamation. The BC Business Registry will use this to communicate with the business in the
-          future, including sending documents and notifications.
+        <p v-if="isAmalgamationFilingHorizontal">
+          The resulting business will use this contact information adopted from the primary business in this
+          amalgamation. The BC Business Registry will use this to communicate with the business in the future,
+          including sending documents and notifications.
+        </p>
+        <p v-if="isAmalgamationFilingVertical">
+          The resulting business will use this contact information adopted from the holding business in this
+          amalgamation. The BC Business Registry will use this to communicate with the business in the future,
+          including sending documents and notifications.
         </p>
       </header>
 
