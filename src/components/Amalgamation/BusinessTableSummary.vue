@@ -85,7 +85,7 @@ export default class BusinessTableSummary extends Vue {
   }
 
   email (item: AmalgamatingBusinessIF): string {
-    if (item?.type === AmlTypes.LEAR) return item.email
+    if (item?.type === AmlTypes.LEAR) return item.authInfo?.contacts[0]?.email
     return null // should never happen
   }
 

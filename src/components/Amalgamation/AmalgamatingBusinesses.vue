@@ -491,7 +491,7 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
       role: AmlRoles.AMALGAMATING,
       identifier: business.businessInfo.identifier,
       name: business.businessInfo.legalName,
-      email: business.authInfo.contacts[0].email,
+      authInfo: business.authInfo,
       legalType: business.businessInfo.legalType,
       addresses: business.addresses,
       isNotInGoodStanding: (business.businessInfo.goodStanding === false),
