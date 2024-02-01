@@ -917,7 +917,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
           ...this.buildAmalgamationFiling(),
           ...draftFiling
         }
-        this.parseAmalgamationDraft(draftFiling)
+        await this.parseAmalgamationDraft(draftFiling)
         if (this.isAmalgamationFilingRegular) {
           resources = AmalgamationRegResources.find(x => x.entityType === this.getEntityType) as ResourceIF
         } else if (this.isAmalgamationFilingHorizontal || this.isAmalgamationFilingVertical) {

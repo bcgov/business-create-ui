@@ -32,8 +32,8 @@
           <td class="business-address">
             <template v-if="item.type === AmlTypes.LEAR">
               <BaseAddress
-                v-if="item.address"
-                :address="item.address"
+                v-if="item.addresses"
+                :address="registeredOfficeMailingAddress(item)"
               />
               <span v-else>Affiliate to view</span>
             </template>
@@ -58,7 +58,7 @@ import { Getter } from 'pinia-class'
 import { getName } from 'country-list'
 import { useStore } from '@/store/store'
 import { AmlRoles, AmlTypes } from '@/enums'
-import { AmalgamatingBusinessIF } from '@/interfaces'
+import { AddressIF, AmalgamatingBusinessIF } from '@/interfaces'
 import { BaseAddress } from '@bcrs-shared-components/base-address'
 
 @Component({
@@ -86,6 +86,11 @@ export default class BusinessTableSummary extends Vue {
 
   email (item: AmalgamatingBusinessIF): string {
     if (item?.type === AmlTypes.LEAR) return item.email
+    return null // should never happen
+  }
+
+  registeredOfficeMailingAddress (item: AmalgamatingBusinessIF): AddressIF {
+    if (item?.type === AmlTypes.LEAR) return item.addresses?.registeredOffice?.mailingAddress
     return null // should never happen
   }
 

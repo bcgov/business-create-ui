@@ -217,11 +217,14 @@ export default class Actions extends Mixins(AmalgamationMixin, CommonMixin,
     // Prompt Step validations
     this.setValidateSteps(true)
 
-    // If we're filing an amalgamation, we need to re-fetch the business table data on file and pay.
-    // We do that in case one of the businesses became invalid (e.g. historical) while the draft is open.
     if (this.getFilingType === FilingTypes.AMALGAMATION_APPLICATION) {
       try {
-        await this.refetchAmalgamatingBusinessesInfo()
+        // Re-fetch the business table data. We do this in case one of the businesses has changed (eg,
+        // became historical) while the draft was open.
+        const holdingPrimary = await this.refetchAmalgamatingBusinessesInfo()
+        // If there's a holding or primary business, re-fetch its data and update the prepopulated data.
+        // This will overwrite office addresses, directors and share structure.
+        if (holdingPrimary) await this.updatePrepopulatedData(holdingPrimary)
       } catch (error) {
         console.log('Error validating table in onClickFilePay(): ', error) // eslint-disable-line no-console
         this.setIsFilingPaying(false)

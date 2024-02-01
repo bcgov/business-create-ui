@@ -36,8 +36,8 @@
           <td class="business-address">
             <template v-if="item.type === AmlTypes.LEAR">
               <BaseAddress
-                v-if="item.address"
-                :address="item.address"
+                v-if="item.addresses"
+                :address="registeredOfficeMailingAddress(item)"
               />
               <span v-else>Affiliate to view</span>
             </template>
@@ -56,19 +56,68 @@
           </td>
 
           <td class="business-actions">
-            <v-btn
-              text
-              color="primary"
-              @click="removeBusiness(index)"
-            >
-              <v-icon
-                small
+            <template v-if="showActionsMenu(item)">
+              <v-btn
+                text
                 color="primary"
+                class="remove-btn mt-n2 ml-n4"
+                @click="removeBusiness(index)"
               >
-                mdi-delete
-              </v-icon>
-              <span class="ml-2">Remove</span>
-            </v-btn>
+                <v-icon
+                  small
+                  color="primary"
+                >
+                  mdi-delete
+                </v-icon>
+                <span class="ml-1">Remove</span>
+              </v-btn>
+
+              <!-- more actions menu -->
+              <v-menu
+                offset-y
+                left
+              >
+                <template #activator="{ on }">
+                  <v-btn
+                    v-if="showMoreActionsMenu(item)"
+                    text
+                    small
+                    color="primary"
+                    class="more-actions-btn mt-n2 p0"
+                    v-on="on"
+                  >
+                    <v-icon>mdi-menu-down</v-icon>
+                  </v-btn>
+                </template>
+                <v-list>
+                  <v-list-item
+                    class="mark-as-btn"
+                    @click="emitHoldingPrimaryBusiness(item)"
+                  >
+                    <v-list-item-title>
+                      <v-icon
+                        size="20"
+                        color="primary"
+                      >
+                        mdi-domain
+                      </v-icon>
+                      <span
+                        v-if="isAmalgamationFilingHorizontal"
+                        class="ml-1"
+                      >
+                        Mark as Primary Business
+                      </span>
+                      <span
+                        v-if="isAmalgamationFilingVertical"
+                        class="ml-1"
+                      >
+                        Mark as Holding Business
+                      </span>
+                    </v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </v-menu>
+            </template>
           </td>
         </tr>
       </tbody>
@@ -82,7 +131,7 @@ import { Action, Getter } from 'pinia-class'
 import { getName } from 'country-list'
 import { useStore } from '@/store/store'
 import { AmlStatuses, AmlRoles, AmlTypes } from '@/enums'
-import { AmalgamatingBusinessIF } from '@/interfaces'
+import { AddressIF, AmalgamatingBusinessIF } from '@/interfaces'
 import { BaseAddress } from '@bcrs-shared-components/base-address'
 import BusinessStatus from './BusinessStatus.vue'
 import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
@@ -100,8 +149,25 @@ export default class BusinessTable extends Mixins(AmalgamationMixin) {
   readonly GetCorpFullDescription = GetCorpFullDescription
 
   @Getter(useStore) getNameRequestApprovedName!: string
+  // @Getter(useStore) isAmalgamationFilingHorizontal!: boolean
+  // @Getter(useStore) isAmalgamationFilingVertical!: boolean
 
   @Action(useStore) spliceAmalgamatingBusiness!: (x: number) => void
+
+  /** Whether to show the actions menu for specified item. */
+  showActionsMenu (item: AmalgamatingBusinessIF): boolean {
+    // don't show for holding or primary business
+    return (item.role !== AmlRoles.HOLDING && item.role !== AmlRoles.PRIMARY)
+  }
+
+  /** Whether to show the more actions menu for specified item. */
+  showMoreActionsMenu (item: AmalgamatingBusinessIF): boolean {
+    // only show for short-form amalgamating businesses
+    return (
+      (this.isAmalgamationFilingHorizontal || this.isAmalgamationFilingVertical) &&
+      item.role === AmlRoles.AMALGAMATING
+    )
+  }
 
   /**
    * This is the list of amalgamating businesses with computed statuses.
@@ -128,8 +194,10 @@ export default class BusinessTable extends Mixins(AmalgamationMixin) {
   }
 
   key (item: AmalgamatingBusinessIF): string {
-    if (item?.type === AmlTypes.LEAR) return item.identifier
-    if (item?.type === AmlTypes.FOREIGN) return item.corpNumber
+    // make the key depend on whether the more actions menu is shown (for reactivity)
+    let x = this.showMoreActionsMenu(item) ? 'y' : 'n'
+    if (item?.type === AmlTypes.LEAR) return `${item.identifier}-${x}`
+    if (item?.type === AmlTypes.FOREIGN) return `${item.corpNumber}-${x}`
     return null // should never happen
   }
 
@@ -148,6 +216,11 @@ export default class BusinessTable extends Mixins(AmalgamationMixin) {
     if (item?.type === AmlTypes.LEAR) return GetCorpFullDescription(item.legalType)
     if (item?.type === AmlTypes.FOREIGN) return 'Foreign'
     return '(Unknown)' // should never happen
+  }
+
+  registeredOfficeMailingAddress (item: AmalgamatingBusinessIF): AddressIF {
+    if (item?.type === AmlTypes.LEAR) return item.addresses?.registeredOffice?.mailingAddress
+    return null // should never happen
   }
 
   jurisdiction (item: AmalgamatingBusinessIF): string {
@@ -181,6 +254,10 @@ export default class BusinessTable extends Mixins(AmalgamationMixin) {
     this.spliceAmalgamatingBusiness(index)
   }
 
+  @Emit('newHoldingPrimaryBusiness')
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  emitHoldingPrimaryBusiness (item: AmalgamatingBusinessIF): void {}
+
   @Watch('businesses', { deep: true, immediate: true })
   @Emit('allOk')
   private emitAllOk (): boolean {
@@ -208,7 +285,7 @@ export default class BusinessTable extends Mixins(AmalgamationMixin) {
     }
   }
 
-  // table body rows
+  // table body rows and columns
   & > tbody> tr {
     & > td {
       color: $gray7;
@@ -241,19 +318,41 @@ export default class BusinessTable extends Mixins(AmalgamationMixin) {
       max-width: 120px;
     }
     & td.business-actions {
-      max-width: 125px;
-      .v-btn {
-        margin-top: -8px;
-        margin-left: -16px;
-      }
-      .v-icon {
+      min-width: 180px;
+
+      // nudge icon down a bit to line up with text
+      .remove-btn .v-icon {
         margin-top: 2px;
       }
+
+      .more-actions-btn {
+        border-left: 1px solid $gray4;
+        border-radius: 0 4px 4px 0;
+        padding: 0 !important;
+        min-width: 28px !important;
+      }
     }
+
     // disable hover color
     &:hover:not(.v-data-table__expanded__content):not(.v-data-table__empty-wrapper) {
       background-color: inherit;
     }
+  }
+}
+
+// style the more actions buttons
+.v-list-item {
+  min-height: 0;
+  padding: 0.5rem 1rem;
+
+  .v-list-item__title {
+    font-size: $px-14;
+    color: $app-blue;
+  }
+
+  // nudge icon up a bit to line up with text
+  .v-icon {
+    margin-top: -2px;
   }
 }
 </style>
