@@ -201,7 +201,7 @@
                 v-model="identifier"
                 filled
                 label="Corporate number in home jurisdiction"
-                :rules="foreignBusinessIdnetifierRules"
+                :rules="foreignBusinessIdentifierRules"
               />
             </v-col>
             <v-col
@@ -327,7 +327,7 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
     ]
   }
 
-  get foreignBusinessIdnetifierRules (): Array<(v: string) => boolean | string> {
+  get foreignBusinessIdentifierRules (): Array<(v: string) => boolean | string> {
     return [
       v => (!this.isMrasJurisdiction || (!!v && /^[0-9a-zA-Z-]+$/.test(v))) ||
         'Corporate number is required',
