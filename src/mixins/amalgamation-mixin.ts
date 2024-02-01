@@ -294,17 +294,17 @@ export default class AmalgamationMixin extends Vue {
    */
   async refetchAmalgamatingBusinessesInfo (): Promise<AmalgamatingBusinessIF> {
     const fetchTingInfo = async (item: any): Promise<AmalgamatingBusinessIF> => {
-      const tingBusiness = await this.fetchAmalgamatingBusinessInfo(item.identifier)
-      // no auth info and business info means foreign, otherwise LEAR (affiliated or non-affiliated)
-      if (!tingBusiness.authInfo && !tingBusiness.businessInfo) {
+      // check if foreign
+      if (item.foreignJurisdiction) {
         return {
           type: AmlTypes.FOREIGN,
           role: AmlRoles.AMALGAMATING, // *** FUTURE: can we really assume this?
-          corpNumber: item.corpNumber,
+          identifier: item.identifier,
           legalName: item.legalName,
           foreignJurisdiction: item.foreignJurisdiction
         } as AmalgamatingBusinessIF
       } else {
+        const tingBusiness = await this.fetchAmalgamatingBusinessInfo(item.identifier)
         return {
           type: AmlTypes.LEAR,
           role: item.role, // amalgamating or holding

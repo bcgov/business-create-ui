@@ -97,7 +97,7 @@ describe('Business Table - display', () => {
       label: 'foreign business in Federal jurisdiction',
       amalgamationType: AmalgamationTypes.REGULAR,
       type: AmlTypes.FOREIGN,
-      corpNumber: 'CA-3333333',
+      identifier: 'CA-3333333',
       legalName: 'My Federal Business',
       expectedBusinessType: 'Foreign',
       foreignJurisdiction: {
@@ -111,7 +111,7 @@ describe('Business Table - display', () => {
       label: 'foreign business in USA jurisdiction',
       amalgamationType: AmalgamationTypes.REGULAR,
       type: AmlTypes.FOREIGN,
-      corpNumber: 'US-4444444',
+      identifier: 'US-4444444',
       legalName: 'My USA Business',
       expectedBusinessType: 'Foreign',
       foreignJurisdiction: {

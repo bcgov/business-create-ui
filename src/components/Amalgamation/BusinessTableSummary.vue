@@ -20,7 +20,7 @@
 
         <tr
           v-for="item in getAmalgamatingBusinesses"
-          :key="key(item)"
+          :key="item.identifier"
         >
           <td class="business-name">
             <v-icon color="gray9">
@@ -71,12 +71,6 @@ export default class BusinessTableSummary extends Vue {
   readonly AmlTypes = AmlTypes
 
   @Getter(useStore) getAmalgamatingBusinesses!: AmalgamatingBusinessIF[]
-
-  key (item: AmalgamatingBusinessIF): string {
-    if (item?.type === AmlTypes.LEAR) return item.identifier
-    if (item?.type === AmlTypes.FOREIGN) return item.corpNumber
-    return null // should never happen
-  }
 
   name (item: AmalgamatingBusinessIF): string {
     if (item?.type === AmlTypes.LEAR) return item.name

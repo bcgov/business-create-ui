@@ -198,10 +198,10 @@
             >
               <v-text-field
                 id="foreign-business-corp-number"
-                v-model="corpNumber"
+                v-model="identifier"
                 filled
                 label="Corporate number in home jurisdiction"
-                :rules="foreignBusinessCorpNumberRules"
+                :rules="foreignBusinessIdnetifierRules"
               />
             </v-col>
             <v-col
@@ -309,7 +309,7 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
   // Foreign business properties
   jurisdiction = null
   legalName = null
-  corpNumber = null
+  identifier = null
   isCan = false
   isMrasJurisdiction = false
   jurisdictionErrorMessage = ''
@@ -327,7 +327,7 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
     ]
   }
 
-  get foreignBusinessCorpNumberRules (): Array<(v: string) => boolean | string> {
+  get foreignBusinessIdnetifierRules (): Array<(v: string) => boolean | string> {
     return [
       v => (!this.isMrasJurisdiction || (!!v && /^[0-9a-zA-Z-]+$/.test(v))) ||
         'Corporate number is required',
@@ -414,7 +414,7 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
           country: JurisdictionLocation.CA
         },
         legalName: businessLookup.name,
-        corpNumber: businessLookup.identifier
+        identifier: businessLookup.identifier
       } as AmalgamatingBusinessIF
 
       // Check for duplicate
@@ -538,7 +538,7 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
         country: this.isCan ? JurisdictionLocation.CA : this.jurisdiction.value
       },
       legalName: this.legalName,
-      corpNumber: this.corpNumber
+      identifier: this.identifier
     } as AmalgamatingBusinessIF
 
     // Check for duplicate.
@@ -585,8 +585,7 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
    */
   private checkForDuplicateInTable (business: any): boolean {
     const checkDuplication = this.getAmalgamatingBusinesses.find((b: AmalgamatingBusinessIF) =>
-      (b.type === AmlTypes.LEAR && b.identifier === business.identifier) ||
-      (b.type === AmlTypes.FOREIGN && b.corpNumber === business.corpNumber)
+      (b.identifier === business.identifier)
     )
 
     if (checkDuplication) {
@@ -601,7 +600,7 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
     this.isForeignBusinessValid = (
       !!this.jurisdiction &&
       !!this.legalName &&
-      (!this.isMrasJurisdiction || !!this.corpNumber)
+      (!this.isMrasJurisdiction || !!this.identifier)
     )
     this.jurisdictionErrorMessage = this.jurisdiction ? '' : 'Home jurisdiction is required'
     this.$refs.foreignBusinessForm.validate()
@@ -623,7 +622,7 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
     this.isForeignBusinessValid = null
     this.jurisdiction = null
     this.legalName = null
-    this.corpNumber = null
+    this.identifier = null
     this.jurisdictionErrorMessage = ''
     this.isMrasJurisdiction = false
   }
