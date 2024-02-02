@@ -196,9 +196,7 @@ export default class BusinessTable extends Mixins(AmalgamationMixin) {
   key (item: AmalgamatingBusinessIF): string {
     // make the key depend on whether the more actions menu is shown (for reactivity)
     let x = this.showMoreActionsMenu(item) ? 'y' : 'n'
-    if (item?.type === AmlTypes.LEAR) return `${item.identifier}-${x}`
-    if (item?.type === AmlTypes.FOREIGN) return `${item.corpNumber}-${x}`
-    return null // should never happen
+    return `${item.identifier}-${x}`
   }
 
   name (item: AmalgamatingBusinessIF): string {

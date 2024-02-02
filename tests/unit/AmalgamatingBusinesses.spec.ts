@@ -257,7 +257,7 @@ describe('Amalgamating Businesses - add amalgamating business', () => {
     expect(business.role).toBe(AmlRoles.AMALGAMATING)
     expect(business.foreignJurisdiction).toEqual({ country: 'CA', region: 'British Columbia' })
     expect(business.legalName).toBe('Extra Pro Business')
-    expect(business.corpNumber).toBe('A1234567')
+    expect(business.identifier).toBe('A1234567')
 
     // verify panel is now closed
     expect(wrapper.vm.isAddingAmalgamatingBusiness).toBe(false)
@@ -418,7 +418,7 @@ describe('Amalgamating Businesses - add amalgamating business', () => {
         role: AmlRoles.AMALGAMATING,
         foreignJurisdiction: { country: 'CA', region: 'British Columbia' },
         legalName: 'Extra Pro Business',
-        corpNumber: 'A1234567'
+        identifier: 'A1234567'
       }
     ]
     expect(store.getAmalgamatingBusinesses.length).toBe(1)
@@ -636,7 +636,7 @@ describe('Amalgamating Businesses - add amalgamating foreign business', () => {
       isCan: true,
       jurisdiction: { text: 'BC', value: 'CA' },
       legalName: 'Foreign Business',
-      corpNumber: 'ABC-123'
+      identifier: 'ABC-123'
     })
 
     // simulate Save button action
@@ -652,7 +652,7 @@ describe('Amalgamating Businesses - add amalgamating foreign business', () => {
     expect(business.role).toBe(AmlRoles.AMALGAMATING)
     expect(business.foreignJurisdiction).toEqual({ country: 'CA', region: 'BC' })
     expect(business.legalName).toBe('Foreign Business')
-    expect(business.corpNumber).toBe('ABC-123')
+    expect(business.identifier).toBe('ABC-123')
 
     // verify panel is now closed
     expect(wrapper.vm.isAddingAmalgamatingForeignBusiness).toBe(false)
@@ -666,7 +666,7 @@ describe('Amalgamating Businesses - add amalgamating foreign business', () => {
         role: AmlRoles.AMALGAMATING,
         foreignJurisdiction: { country: 'CA', region: 'British Columbia' },
         legalName: 'Foreign Business',
-        corpNumber: 'ABC-123'
+        identifier: 'ABC-123'
       }
     ]
     expect(store.getAmalgamatingBusinesses.length).toBe(1)
@@ -679,7 +679,7 @@ describe('Amalgamating Businesses - add amalgamating foreign business', () => {
       isCan: true,
       jurisdiction: { text: 'British Columbia', value: 'CA' },
       legalName: 'Foreign Business',
-      corpNumber: 'ABC-123'
+      identifier: 'ABC-123'
     })
 
     // verify snackbar is not displayed
@@ -730,39 +730,39 @@ describe('Amalgamating Businesses - add amalgamating foreign business', () => {
     // open panel
     await wrapper.find('#add-foreign-business-button').trigger('click')
 
-    const corpNumber = wrapper.find('#foreign-business-corp-number')
+    const identifier = wrapper.find('#foreign-business-corp-number')
 
     // verify empty legal name - MRAS jurisdiction
     await wrapper.setData({ isMrasJurisdiction: true })
-    await corpNumber.setValue('')
-    await corpNumber.trigger('change')
+    await identifier.setValue('')
+    await identifier.trigger('change')
     expect(wrapper.find('.v-messages__message').text()).toBe('Corporate number is required')
 
     // verify empty legal name - non-MRAS jurisdiction
     await wrapper.setData({ isMrasJurisdiction: false })
-    await corpNumber.setValue('')
-    await corpNumber.trigger('change')
+    await identifier.setValue('')
+    await identifier.trigger('change')
     expect(wrapper.find('.v-messages__message').text()).toBe('Corporate number is required')
 
     // verify invalid legal name - MRAS jurisdiction
     await wrapper.setData({ isMrasJurisdiction: true })
-    await corpNumber.setValue('+++')
-    await corpNumber.trigger('change')
+    await identifier.setValue('+++')
+    await identifier.trigger('change')
     expect(wrapper.find('.v-messages__message').text()).toBe('Corporate number is required')
 
     // verify legal name too short
-    await corpNumber.setValue('xx')
-    await corpNumber.trigger('change')
+    await identifier.setValue('xx')
+    await identifier.trigger('change')
     expect(wrapper.find('.v-messages__message').text()).toBe('Must be at least 3 characters')
 
     // verify legal name too long
-    await corpNumber.setValue('x'.repeat(41))
-    await corpNumber.trigger('change')
+    await identifier.setValue('x'.repeat(41))
+    await identifier.trigger('change')
     expect(wrapper.find('.v-messages__message').text()).toBe('Cannot exceed 40 characters')
 
     // verify valid legal name (max length)
-    await corpNumber.setValue('x'.repeat(40))
-    await corpNumber.trigger('change')
+    await identifier.setValue('x'.repeat(40))
+    await identifier.trigger('change')
     expect(wrapper.find('.v-messages__message').exists()).toBe(false)
   })
 
