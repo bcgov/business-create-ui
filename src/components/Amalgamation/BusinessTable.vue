@@ -162,10 +162,11 @@ export default class BusinessTable extends Mixins(AmalgamationMixin) {
 
   /** Whether to show the more actions menu for specified item. */
   showMoreActionsMenu (item: AmalgamatingBusinessIF): boolean {
-    // only show for short-form amalgamating businesses
+    // only show for short-form amalgamating LEAR businesses
     return (
       (this.isAmalgamationFilingHorizontal || this.isAmalgamationFilingVertical) &&
-      item.role === AmlRoles.AMALGAMATING
+      item.role === AmlRoles.AMALGAMATING &&
+      item.type === AmlTypes.LEAR
     )
   }
 
