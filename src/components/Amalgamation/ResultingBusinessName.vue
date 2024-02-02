@@ -31,7 +31,7 @@
             :businessId="getBusinessId"
             :companyName="companyName"
             :correctionNameChoices="correctionNameChoices"
-            :entityType="getEntityType"
+            :entityType="null"
             :fetchAndValidateNr="fetchAndValidateNr"
             :formType="formType"
             :nameRequest="getNameRequest"
@@ -72,10 +72,10 @@ import { AmalgamationMixin, NameRequestMixin } from '@/mixins/'
 import { NameRequestIF } from '@/interfaces/'
 import { LegalServices } from '@/services/'
 import { CorrectNameOptions, NrRequestActionCodes } from '@bcrs-shared-components/enums/'
-import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module/'
 import { CorrectName } from '@bcrs-shared-components/correct-name/'
 import NameRequestInfo from '@/components/common/NameRequestInfo.vue'
 import NameTranslations from '@/components/common/NameTranslations.vue'
+import { AmlTypes } from '@/enums'
 
 @Component({
   components: {
@@ -85,16 +85,17 @@ import NameTranslations from '@/components/common/NameTranslations.vue'
   }
 })
 export default class ResultingBusinessName extends Mixins(AmalgamationMixin, NameRequestMixin) {
+  // @Getter(useStore) getAmalgamatingBusinesses!: Array<AmalgamatingBusinessIF>
   @Getter(useStore) getBusinessId!: string
   @Getter(useStore) getBusinessLegalName!: string
   @Getter(useStore) getCorrectNameOption!: CorrectNameOptions
-  @Getter(useStore) getEntityType!: CorpTypeCd
   @Getter(useStore) getNameRequest!: NameRequestIF
   @Getter(useStore) getNameRequestApprovedName!: string
   @Getter(useStore) getNameRequestNumber!: string
   @Getter(useStore) getShowErrors!: boolean
 
   // @Action(useStore) setCorrectNameOption!: (x: CorrectNameOptions) => void
+  // @Action(useStore) setEntityType!: (x: CorpTypeCd) => void
 
   // Local properties
   formType = null as CorrectNameOptions
@@ -116,7 +117,7 @@ export default class ResultingBusinessName extends Mixins(AmalgamationMixin, Nam
   }
 
   /**
-   * Fetches and validation a NR.
+   * Fetches and validates a NR.
    * @param nrNum the NR number
    * @param businessId the business id (not used here but needed in method signature)
    * @param phone the phone number to match
@@ -137,14 +138,30 @@ export default class ResultingBusinessName extends Mixins(AmalgamationMixin, Nam
   onUpdateCompanyName (name: string): void {
     this.setCorrectNameOption(this.formType)
     this.setNameRequestApprovedName(name)
+
+    // if adopting a business' name, also adopt its legal type
+    if (this.formType === CorrectNameOptions.CORRECT_AML_ADOPT) {
+      const business = this.getAmalgamatingBusinesses.find(b =>
+        (b.type === AmlTypes.LEAR && b.name === name)
+      )
+      if (business?.type === AmlTypes.LEAR) {
+        this.setEntityType(business.legalType)
+      }
+    }
   }
 
   /** On name request update, sets store accordingly. */
   onUpdateNameRequest (nameRequest: NameRequestIF): void {
     this.setNameRequest(nameRequest)
+
+    // as we are using a new NR, also use its legal type
+    this.setEntityType(nameRequest.legalType)
   }
 
-  /** Resets company name values to original when Cancel was clicked. */
+  /**
+   * Resets company name values to original when Cancel is clicked.
+   * NB - does not reset the original legal type.
+   */
   resetName (): void {
     // clear out existing data
     this.resetValues()
