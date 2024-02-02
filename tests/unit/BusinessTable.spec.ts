@@ -45,12 +45,16 @@ describe('Business Table - display', () => {
       type: AmlTypes.LEAR,
       identifier: 'BC1111111',
       name: 'My BC Limited Company',
-      email: 'bc1111111@example.com',
-      address: {
-        streetAddress: '123 Main St',
-        addressCity: 'Victoria',
-        addressCountry: 'CA',
-        postalCode: 'V8V 8V8'
+      authInfo: { contacts: [ { email: 'bc1111111@example.com' } ] },
+      addresses: {
+        registeredOffice: {
+          mailingAddress: {
+            streetAddress: '123 Main St',
+            addressCity: 'Victoria',
+            addressCountry: 'CA',
+            postalCode: 'V8V 8V8'
+          }
+        }
       },
       legalType: CorpTypeCd.BC_COMPANY,
       expectedBusinessType: 'BC Limited Company',
@@ -62,12 +66,16 @@ describe('Business Table - display', () => {
       type: AmlTypes.LEAR,
       identifier: 'BC1111111',
       name: 'My BC Limited Company',
-      email: 'bc1111111@example.com',
-      address: {
-        streetAddress: '123 Main St',
-        addressCity: 'Victoria',
-        addressCountry: 'CA',
-        postalCode: 'V8V 8V8'
+      authInfo: { contacts: [ { email: 'bc1111111@example.com' } ] },
+      addresses: {
+        registeredOffice: {
+          mailingAddress: {
+            streetAddress: '123 Main St',
+            addressCity: 'Victoria',
+            addressCountry: 'CA',
+            postalCode: 'V8V 8V8'
+          }
+        }
       },
       legalType: CorpTypeCd.BC_COMPANY,
       expectedBusinessType: 'BC Limited Company',
@@ -79,7 +87,7 @@ describe('Business Table - display', () => {
       type: AmlTypes.LEAR,
       identifier: 'BC2222222',
       name: 'My Benefit Company',
-      email: 'bc2222222@example.com',
+      authInfo: { contacts: [ { email: 'bc2222222@example.com' } ] },
       address: undefined,
       legalType: CorpTypeCd.BENEFIT_COMPANY,
       expectedBusinessType: 'BC Benefit Company',
@@ -89,7 +97,7 @@ describe('Business Table - display', () => {
       label: 'foreign business in Federal jurisdiction',
       amalgamationType: AmalgamationTypes.REGULAR,
       type: AmlTypes.FOREIGN,
-      corpNumber: 'CA-3333333',
+      identifier: 'CA-3333333',
       legalName: 'My Federal Business',
       expectedBusinessType: 'Foreign',
       foreignJurisdiction: {
@@ -103,7 +111,7 @@ describe('Business Table - display', () => {
       label: 'foreign business in USA jurisdiction',
       amalgamationType: AmalgamationTypes.REGULAR,
       type: AmlTypes.FOREIGN,
-      corpNumber: 'US-4444444',
+      identifier: 'US-4444444',
       legalName: 'My USA Business',
       expectedBusinessType: 'Foreign',
       foreignJurisdiction: {
@@ -156,15 +164,15 @@ describe('Business Table - display', () => {
 
       if ((business.type === AmlTypes.LEAR)) {
         expect(td.at(0).text()).toContain(business.name)
-        expect(td.at(0).text()).toContain(business.email)
+        expect(td.at(0).text()).toContain(business.authInfo.contacts[0].email)
 
         expect(td.at(1).text()).toContain(business.expectedBusinessType)
 
-        if (business.address) {
-          expect(td.at(2).text()).toContain(business.address.streetAddress)
-          expect(td.at(2).text()).toContain(business.address.addressCity)
+        if (business.addresses) {
+          expect(td.at(2).text()).toContain(business.addresses.registeredOffice.mailingAddress.streetAddress)
+          expect(td.at(2).text()).toContain(business.addresses.registeredOffice.mailingAddress.addressCity)
           expect(td.at(2).text()).toContain('Canada')
-          expect(td.at(2).text()).toContain(business.address.postalCode)
+          expect(td.at(2).text()).toContain(business.addresses.registeredOffice.mailingAddress.postalCode)
         } else {
           expect(td.at(2).text()).toBe('Affiliate to view')
         }
@@ -181,7 +189,10 @@ describe('Business Table - display', () => {
 
         expect(td.at(4).exists()).toBe(true) // see separate BusinessTableStatus tests
 
-        expect(td.at(5).find('.v-btn').exists()).toBe(true)
+        if (business.role === AmlRoles.AMALGAMATING) {
+          // button only exists on amalgamating businesses (not holding or primary)
+          expect(td.at(5).find('.v-btn').exists()).toBe(true)
+        }
       }
 
       if ((business.type === AmlTypes.FOREIGN)) {
@@ -243,12 +254,12 @@ describe('Business Table - validity', () => {
           amalgamatingBusinesses: [
             // both of these will be status "OK"
             {
-              address: {},
+              addresses: {},
               legalType: CorpTypeCd.BC_COMPANY,
               type: AmlTypes.LEAR
             },
             {
-              address: {},
+              addresses: {},
               legalType: CorpTypeCd.BC_COMPANY,
               type: AmlTypes.LEAR
             }

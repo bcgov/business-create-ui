@@ -1,8 +1,13 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
-import { AmlRoles, AmlStatuses, AmlTypes, EntityStates, FilingStatus, RestorationTypes } from '@/enums'
-import { AmalgamatingBusinessIF, EmptyNameRequest, NameRequestIF, NameTranslationIF } from '@/interfaces'
+import {
+  AmlRoles, AmlStatuses, AmlTypes, EntityStates, FilingStatus, RestorationTypes, RoleTypes
+} from '@/enums'
+import {
+  AmalgamatingBusinessIF, ContactPointIF, EmptyContactPoint, EmptyNameRequest, NameRequestIF,
+  NameTranslationIF, OrgPersonIF, PeopleAndRoleIF, RegisteredRecordsAddressesIF, ShareClassIF
+} from '@/interfaces'
 import { CorrectNameOptions } from '@bcrs-shared-components/enums/'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import { AuthServices, LegalServices } from '@/services'
@@ -13,6 +18,7 @@ import { AuthServices, LegalServices } from '@/services'
  */
 @Component({})
 export default class AmalgamationMixin extends Vue {
+  @Getter(useStore) getAddPeopleAndRoleStep!: PeopleAndRoleIF
   @Getter(useStore) getAmalgamatingBusinesses!: AmalgamatingBusinessIF[]
   @Getter(useStore) getCurrentDate!: string
   @Getter(useStore) isAmalgamationFilingHorizontal!: boolean
@@ -23,10 +29,15 @@ export default class AmalgamationMixin extends Vue {
   @Getter(useStore) isTypeBcUlcCompany!: boolean
 
   @Action(useStore) setAmalgamatingBusinesses!: (x: Array<any>) => void
+  @Action(useStore) setBusinessContact!: (x: ContactPointIF) => void
   @Action(useStore) setCorrectNameOption!: (x: CorrectNameOptions) => void
+  @Action(useStore) setEntityType!: (x: CorpTypeCd) => void
   @Action(useStore) setNameRequest!: (x: NameRequestIF) => void
   @Action(useStore) setNameRequestApprovedName!: (x: string) => void
   @Action(useStore) setNameTranslations!: (x: NameTranslationIF[]) => void
+  @Action(useStore) setOfficeAddresses!: (x: RegisteredRecordsAddressesIF) => void
+  @Action(useStore) setOrgPersonList!: (x: OrgPersonIF[]) => void
+  @Action(useStore) setShareClasses!: (x: ShareClassIF[]) => void
 
   /** Iterable array of rule functions, in order of processing. */
   readonly rules = [
@@ -48,9 +59,9 @@ export default class AmalgamationMixin extends Vue {
     this.foreignHorizontal
   ]
 
-  /** If we don't have an address, assume business is not affiliated (except for staff). */
+  /** If we don't have addresses, assume business is not affiliated (except for staff). */
   notAffiliated (business: AmalgamatingBusinessIF): AmlStatuses {
-    if (!this.isRoleStaff && business.type === AmlTypes.LEAR && !business.address) {
+    if (!this.isRoleStaff && business.type === AmlTypes.LEAR && !business.addresses) {
       return AmlStatuses.ERROR_NOT_AFFILIATED
     }
     return null
@@ -205,6 +216,7 @@ export default class AmalgamationMixin extends Vue {
   /**
    * Fetches the business' auth information, business info, addresses, first task, and first filing.
    * @param identifier The business identifier.
+   * @returns An object of business information sub-objects, some of which may be null.
    */
   async fetchAmalgamatingBusinessInfo (identifier: string): Promise<any> {
     // Make all API calls concurrently without rejection.
@@ -277,30 +289,30 @@ export default class AmalgamationMixin extends Vue {
   }
 
   /**
-   * Re-fetch the draft amalgamating businesses information and set in the store.
-   * Need to do that because the businesses might have changed since last draft save.
+   * Re-fetches the draft amalgamating businesses information and updates the store.
+   * @returns The holding/primary business (if there is one).
    */
-  async refetchAmalgamatingBusinessesInfo (): Promise<void> {
+  async refetchAmalgamatingBusinessesInfo (): Promise<AmalgamatingBusinessIF> {
     const fetchTingInfo = async (item: any): Promise<AmalgamatingBusinessIF> => {
-      const tingBusiness = await this.fetchAmalgamatingBusinessInfo(item.identifier)
-      // no auth info and business info means foreign, otherwise LEAR (affiliated or non-affiliated)
-      if (!tingBusiness.authInfo && !tingBusiness.businessInfo) {
+      // check if foreign
+      if (item.foreignJurisdiction) {
         return {
           type: AmlTypes.FOREIGN,
-          role: AmlRoles.AMALGAMATING, // *** FUTURE: can we really assume this?
-          corpNumber: item.corpNumber,
+          role: AmlRoles.AMALGAMATING,
+          identifier: item.identifier,
           legalName: item.legalName,
           foreignJurisdiction: item.foreignJurisdiction
         } as AmalgamatingBusinessIF
       } else {
+        const tingBusiness = await this.fetchAmalgamatingBusinessInfo(item.identifier)
         return {
           type: AmlTypes.LEAR,
           role: item.role, // amalgamating or holding
           identifier: tingBusiness.businessInfo.identifier,
           name: tingBusiness.businessInfo.legalName,
-          email: tingBusiness.authInfo?.contacts[0].email,
+          authInfo: tingBusiness.authInfo,
           legalType: tingBusiness.businessInfo.legalType,
-          address: tingBusiness.addresses?.registeredOffice.mailingAddress,
+          addresses: tingBusiness.addresses,
           isNotInGoodStanding: (tingBusiness.businessInfo.goodStanding === false),
           isFrozen: (tingBusiness.businessInfo.adminFreeze === true),
           isFutureEffective: this.isFutureEffective(tingBusiness),
@@ -315,6 +327,82 @@ export default class AmalgamationMixin extends Vue {
     const promises = this.getAmalgamatingBusinesses.map(fetchTingInfo)
     const amalgamatingBusinesses = await Promise.all(promises)
     this.setAmalgamatingBusinesses(amalgamatingBusinesses)
+
+    // return the holding/primary business (or undefined)
+    return this.getAmalgamatingBusinesses.find(business =>
+      (business.role === AmlRoles.HOLDING || business.role === AmlRoles.PRIMARY)
+    )
+  }
+
+  /**
+   * (Re)fetches the holding/primary business' data and updates the prepopulated data.
+   * @param business The holding/primary business.
+   * @param isNew Whether the business is new (ie, set by user, not restored from draft).
+   */
+  async updatePrepopulatedData (business: AmalgamatingBusinessIF, isNew = false): Promise<void> {
+    // safety check
+    if (!business || business.type !== AmlTypes.LEAR) {
+      throw new Error('updatePrepopulatedData(): invalid business')
+    }
+
+    // first, fetch directors and share structure
+    // NB - addresses and auth info have already been fetched
+    // NB - make all API calls concurrently without rejection
+    // NB - if any call failed, that item will be null
+    const [ directors, shareStructure ] =
+      await Promise.allSettled([
+        LegalServices.fetchDirectors(business.identifier),
+        LegalServices.fetchShareStructure(business.identifier)
+      ]).then(results => results.map((result: any) => result.value || null))
+
+    // check for errors before changing anything
+    if (!directors) throw new Error('Unable to fetch directors')
+    if (!shareStructure) throw new Error('Unable to fetch share structure')
+
+    // unset previous holding/primary business, if any
+    const previous = this.getAmalgamatingBusinesses.find((b: AmalgamatingBusinessIF) =>
+      b.role === AmlRoles.HOLDING || b.role === AmlRoles.PRIMARY
+    )
+    if (previous) {
+      previous.role = AmlRoles.AMALGAMATING
+    }
+
+    // set this business as the new holding/primary business
+    if (this.isAmalgamationFilingVertical) business.role = AmlRoles.HOLDING
+    if (this.isAmalgamationFilingHorizontal) business.role = AmlRoles.PRIMARY
+
+    // overwrite office addresses
+    this.setOfficeAddresses(business.addresses)
+
+    // overwrite directors (but keep completing party, if there is one)
+    const completingParty = this.getAddPeopleAndRoleStep.orgPeople.find((p: OrgPersonIF) =>
+      p.roles.some(role => role.roleType === RoleTypes.COMPLETING_PARTY)
+    )
+    if (completingParty) this.setOrgPersonList([ ...directors, completingParty ])
+    else this.setOrgPersonList(directors)
+
+    // overwrite share structure
+    this.setShareClasses(shareStructure.shareClasses)
+
+    // overwrite business contact -- only when user has marked new holding/primary business,
+    // otherwise leave existing data from restored draft
+    if (isNew) {
+      if (business.authInfo?.contacts[0]) {
+        this.setBusinessContact({
+          email: business.authInfo.contacts[0].email,
+          confirmEmail: business.authInfo.contacts[0].email,
+          phone: business.authInfo.contacts[0].phone,
+          extension: business.authInfo.contacts[0].extension
+        })
+      } else {
+        // safety check - clear old business contact
+        this.setBusinessContact({ ...EmptyContactPoint })
+      }
+    }
+
+    // set new resulting business name and type
+    this.setNameRequestApprovedName(business.name)
+    this.setEntityType(business.legalType)
   }
 
   //

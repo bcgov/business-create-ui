@@ -29,18 +29,18 @@ describe('Amalgamation Mixin - rules', () => {
     store.setKeycloakRoles([])
 
     // verify rule
-    expect(wrapper.vm.notAffiliated({ type: AmlTypes.LEAR, address: null })).toBe(AmlStatuses.ERROR_NOT_AFFILIATED)
+    expect(wrapper.vm.notAffiliated({ type: AmlTypes.LEAR, addresses: null })).toBe(AmlStatuses.ERROR_NOT_AFFILIATED)
 
     // verify staff only
     store.setKeycloakRoles(['staff'])
-    expect(wrapper.vm.notAffiliated({ type: AmlTypes.LEAR, address: null })).toBeNull()
+    expect(wrapper.vm.notAffiliated({ type: AmlTypes.LEAR, addresses: null })).toBeNull()
     store.setKeycloakRoles([])
 
     // verify not LEAR only
-    expect(wrapper.vm.notAffiliated({ type: AmlTypes.FOREIGN, address: null })).toBeNull()
+    expect(wrapper.vm.notAffiliated({ type: AmlTypes.FOREIGN, addresses: null })).toBeNull()
 
     // verify address exists only
-    expect(wrapper.vm.notAffiliated({ type: AmlTypes.LEAR, address: {} })).toBeNull()
+    expect(wrapper.vm.notAffiliated({ type: AmlTypes.LEAR, addresses: {} })).toBeNull()
   })
 
   it('correctly evaluates "notHistorical" rule', () => {

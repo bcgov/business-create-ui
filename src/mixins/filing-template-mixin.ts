@@ -3,17 +3,18 @@ import { Getter, Action } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { AmalgamationMixin, DateMixin } from '@/mixins'
 import {
-  AmalgamationFilingIF, BusinessAddressIF, ContactPointIF, CertifyIF, CompletingPartyIF, ContinuationInFilingIF,
-  CourtOrderIF, CourtOrderStepIF, CreateMemorandumIF, CreateResolutionIF, CreateRulesIF, DefineCompanyIF,
-  DissolutionFilingIF, DissolutionStatementIF, DocumentDeliveryIF, EffectiveDateTimeIF, EmptyContactPoint,
-  EmptyNaics, IncorporationAgreementIF, IncorporationFilingIF, NaicsIF, NameRequestFilingIF,
-  NameTranslationIF, OfficeAddressIF, OrgPersonIF, PartyIF, PeopleAndRoleIF, RegisteredRecordsAddressesIF,
-  RegistrationFilingIF, RegistrationStateIF, RestorationFilingIF, RestorationStateIF, ShareClassIF,
-  ShareStructureIF, SpecialResolutionIF, StaffPaymentIF, StaffPaymentStepIF, UploadAffidavitIF
+  AmalgamationFilingIF, BusinessAddressIF, ContactPointIF, CertifyIF, CompletingPartyIF,
+  ContinuationInFilingIF, CourtOrderIF, CourtOrderStepIF, CreateMemorandumIF, CreateResolutionIF,
+  CreateRulesIF, DefineCompanyIF, DissolutionFilingIF, DissolutionStatementIF, DocumentDeliveryIF,
+  EffectiveDateTimeIF, EmptyContactPoint, EmptyNaics, IncorporationAgreementIF, IncorporationFilingIF,
+  NaicsIF, NameRequestFilingIF, NameTranslationIF, OfficeAddressIF, OrgPersonIF, PartyIF,
+  RegistrationFilingIF, RegistrationStateIF, RestorationFilingIF, RestorationStateIF, ShareStructureIF,
+  SpecialResolutionIF, StaffPaymentIF, StaffPaymentStepIF, UploadAffidavitIF
 } from '@/interfaces'
 import {
   AmalgamationTypes, ApprovalTypes, BusinessTypes, CoopTypes, CorrectNameOptions, DissolutionTypes,
-  EffectOfOrders, FilingTypes, PartyTypes, RelationshipTypes, RestorationTypes, RoleTypes, StaffPaymentOptions
+  EffectOfOrders, FilingTypes, PartyTypes, RelationshipTypes, RestorationTypes, RoleTypes,
+  StaffPaymentOptions
 } from '@/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module/'
 
@@ -22,7 +23,7 @@ import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module/'
  */
 @Component({})
 export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateMixin) {
-  @Getter(useStore) getAddPeopleAndRoleStep!: PeopleAndRoleIF
+  // @Getter(useStore) getAddPeopleAndRoleStep!: PeopleAndRoleIF
   @Getter(useStore) getAffidavitStep!: UploadAffidavitIF
   @Getter(useStore) getAmalgamationCourtApproval!: boolean
   @Getter(useStore) getAmalgamationType!: AmalgamationTypes
@@ -73,7 +74,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
   // @Action(useStore) setAmalgamatingBusinesses!: (x: Array<any>) => void
   @Action(useStore) setAmalgamationCourtApproval!: (x: boolean) => void
   @Action(useStore) setBusinessAddress!: (x: OfficeAddressIF) => void
-  @Action(useStore) setBusinessContact!: (x: ContactPointIF) => void
+  // @Action(useStore) setBusinessContact!: (x: ContactPointIF) => void
   @Action(useStore) setCertifyState!: (x: CertifyIF) => void
   @Action(useStore) setCooperativeType!: (x: CoopTypes) => void
   // @Action(useStore) setCorrectNameOption!: (x: CorrectNameOptions) => void
@@ -84,7 +85,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
   @Action(useStore) setDissolutionType!: (x: DissolutionTypes) => void
   @Action(useStore) setDocumentOptionalEmail!: (x: string) => void
   @Action(useStore) setEffectiveDate!: (x: Date) => void
-  @Action(useStore) setEntityType!: (x: CorpTypeCd) => void
+  // @Action(useStore) setEntityType!: (x: CorpTypeCd) => void
   @Action(useStore) setFilingId!: (x: number) => void
   @Action(useStore) setFolioNumber!: (x: string) => void
   @Action(useStore) setIncorporationAgreementStepData!: (x: IncorporationAgreementIF) => void
@@ -96,8 +97,8 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
   @Action(useStore) setMemorandum!: (x: CreateMemorandumIF) => void
   // @Action(useStore) setNameRequestApprovedName!: (x: string) => void
   // @Action(useStore) setNameTranslations!: (x: NameTranslationIF[]) => void
-  @Action(useStore) setOfficeAddresses!: (x: RegisteredRecordsAddressesIF) => void
-  @Action(useStore) setOrgPersonList!: (x: OrgPersonIF[]) => void
+  // @Action(useStore) setOfficeAddresses!: (x: RegisteredRecordsAddressesIF) => void
+  // @Action(useStore) setOrgPersonList!: (x: OrgPersonIF[]) => void
   @Action(useStore) setRegistrationBusinessAddress!: (x: BusinessAddressIF) => void
   @Action(useStore) setRegistrationBusinessNumber!: (x: string) => void
   @Action(useStore) setRegistrationBusinessType!: (x: BusinessTypes) => void
@@ -114,7 +115,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
   @Action(useStore) setRestorationRelationships!: (x: RelationshipTypes[]) => void
   @Action(useStore) setRestorationType!: (x: RestorationTypes) => void
   @Action(useStore) setRules!: (x: CreateRulesIF) => void
-  @Action(useStore) setShareClasses!: (x: ShareClassIF[]) => void
+  // @Action(useStore) setShareClasses!: (x: ShareClassIF[]) => void
   @Action(useStore) setStaffPayment!: (x: StaffPaymentIF) => void
   @Action(useStore) setBusinessStartDate!: (x: string) => void
   @Action(useStore) setTransactionalFolioNumber!: (x: string) => void
@@ -206,11 +207,9 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
    * Parses a draft amalgamation application filing into the store. Used when loading a filing.
    * @param draftFiling the filing body to parse
    */
-  parseAmalgamationDraft (draftFiling: any): void {
+  async parseAmalgamationDraft (draftFiling: any): Promise<void> {
     // FUTURE: set types so each of these validate their parameters
     // ref: https://www.typescriptlang.org/docs/handbook/generics.html
-
-    // NB: don't parse Name Request object -- NR is fetched from namex/NRO instead
 
     // save filing id
     this.setFilingId(+draftFiling.header.filingId)
@@ -221,22 +220,36 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
     // restore Entity Type
     this.setEntityType(draftFiling.amalgamationApplication.nameRequest.legalType)
 
-    // restore the amalgamating businesses array
+    // restore Office Addresses
+    // NB - short-form amalg will overwrite this from the holding/primary business
+    if (draftFiling.amalgamationApplication.offices) {
+      this.setOfficeAddresses(draftFiling.amalgamationApplication.offices)
+    }
+
+    // restore Persons and Organizations
+    // NB - short-form amalg will overwrite this from the holding/primary business
+    if (draftFiling.amalgamationApplication.parties) {
+      this.setOrgPersonList(draftFiling.amalgamationApplication.parties)
+    }
+
+    // restore Share Classes
+    // NB - short-form amalg will overwrite this from the holding/primary business
+    if (draftFiling.amalgamationApplication.shareStructure) {
+      this.setShareClasses(draftFiling.amalgamationApplication.shareStructure.shareClasses)
+    }
+
+    // restore the Amalgamating Businesses
     if (draftFiling.amalgamationApplication.amalgamatingBusinesses) {
       this.setAmalgamatingBusinesses([
         ...draftFiling.amalgamationApplication.amalgamatingBusinesses
       ])
-      this.refetchAmalgamatingBusinessesInfo()
-    }
 
-    // restore the amalgamation court approval selection which the saved value is either true or false
-    if (draftFiling.amalgamationApplication.courtApproval !== null) {
-      this.setAmalgamationCourtApproval(draftFiling.amalgamationApplication.courtApproval)
-    }
-
-    // restore Office Addresses
-    if (draftFiling.amalgamationApplication.offices) {
-      this.setOfficeAddresses(draftFiling.amalgamationApplication.offices)
+      // Re-fetch the business table data. We do this in case one of the businesses has changed
+      // (eg, became historical) since the last draft save.
+      const holdingPrimary = await this.refetchAmalgamatingBusinessesInfo()
+      // If there's a holding or primary business, fetch its data and update the prepopulated data.
+      // This will overwrite office addresses, directors and share structure that were set above.
+      if (holdingPrimary) await this.updatePrepopulatedData(holdingPrimary)
     }
 
     // restore business name data
@@ -288,19 +301,21 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         ...draftFiling.amalgamationApplication.contactPoint,
         confirmEmail: draftFiling.amalgamationApplication.contactPoint.email
       })
-    } else {
-      this.setBusinessContact({ ...EmptyContactPoint })
     }
 
-    // restore Persons and Organizations
-    if (draftFiling.amalgamationApplication.parties) {
-      this.setOrgPersonList(draftFiling.amalgamationApplication.parties || [])
+    // restore Future Effective data
+    if (draftFiling.header.isFutureEffective) {
+      this.setIsFutureEffective(true)
+      const effectiveDate = this.apiToDate(draftFiling.header.effectiveDate)
+      // Check that Effective Date is in the future, to improve UX and
+      // to work around the default effective date set by the back end.
+      if (effectiveDate >= this.getCurrentJsDate) this.setEffectiveDate(effectiveDate)
     }
 
-    // restore Share Structure
-    this.setShareClasses(draftFiling.amalgamationApplication.shareStructure
-      ? draftFiling.amalgamationApplication.shareStructure.shareClasses
-      : [])
+    // restore the Amalgamation Court Approval if it's True or False
+    if (draftFiling.amalgamationApplication.courtApproval !== null) {
+      this.setAmalgamationCourtApproval(draftFiling.amalgamationApplication.courtApproval)
+    }
 
     // restore court order file number / POA
     if (draftFiling.amalgamationApplication.courtOrder?.fileNumber) {
@@ -316,21 +331,14 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
       certifiedBy: draftFiling.header.certifiedBy
     })
 
-    // restore Future Effective data
-    if (draftFiling.header.isFutureEffective) {
-      this.setIsFutureEffective(true)
-      const effectiveDate = this.apiToDate(draftFiling.header.effectiveDate)
-      // Check that Effective Date is in the future, to improve UX and
-      // to work around the default effective date set by the back end.
-      if (effectiveDate >= this.getCurrentJsDate) this.setEffectiveDate(effectiveDate)
-    }
-
+    // NB: Staff role is mutually exclusive with premium account.
     if (this.isRoleStaff) {
       // restore Staff Payment data
       this.parseStaffPayment(draftFiling)
     }
 
     // if this is a premium account and Folio Number exists then restore it
+    // NB: Premium account is mutually exclusive with staff role.
     if (this.isPremiumAccount) {
       if (draftFiling.header.folioNumber) {
         this.setFolioNumber(draftFiling.header.folioNumber)
@@ -490,12 +498,14 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
       if (effectiveDate >= this.getCurrentJsDate) this.setEffectiveDate(effectiveDate)
     }
 
+    // NB: Staff role is mutually exclusive with premium account.
     if (this.isRoleStaff) {
       // restore Staff Payment data
       this.parseStaffPayment(draftFiling)
     }
 
     // if this is a premium account and Folio Number exists then restore it
+    // NB: Premium account is mutually exclusive with staff role.
     if (this.isPremiumAccount) {
       if (draftFiling.header.folioNumber) {
         this.setFolioNumber(draftFiling.header.folioNumber)
@@ -720,12 +730,14 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
       if (effectiveDate >= this.getCurrentJsDate) this.setEffectiveDate(effectiveDate)
     }
 
+    // NB: Staff role is mutually exclusive with premium account.
     if (this.isRoleStaff) {
       // restore Staff Payment data
       this.parseStaffPayment(draftFiling)
     }
 
     // if this is a premium account and Folio Number exists then restore it
+    // NB: Premium account is mutually exclusive with staff role.
     if (this.isPremiumAccount) {
       if (draftFiling.header.folioNumber) {
         this.setFolioNumber(draftFiling.header.folioNumber)
