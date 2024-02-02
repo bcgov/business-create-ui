@@ -135,17 +135,6 @@ export default class ResultingBusinessName extends Mixins(AmalgamationMixin, Nam
     // validateNameRequest() already throws printable errors
     return this.validateNameRequest(nameRequest, NrRequestActionCodes.AMALGAMATE)
   }
-  // mounted () {
-  //   // Call the watcher method manually on component mount
-  //   this.onIsAmalgamationFilingRegularChanged(this.isAmalgamationFilingRegular)
-  // }
-
-  // @Watch('isAmalgamationFilingRegular')
-  // onIsAmalgamationFilingRegularChanged (newVal: boolean) {
-  //   if (!newVal) {
-  //     this.setCorrectNameOption(CorrectNameOptions.CORRECT_AML_ADOPT)
-  //   }
-  // }
 
   /** On company name update, sets store accordingly. */
   onUpdateCompanyName (name: string): void {

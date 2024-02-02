@@ -257,15 +257,6 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
 
     if (this.getAmalgamationType !== AmalgamationTypes.REGULAR) {
       this.setCorrectNameOption(CorrectNameOptions.CORRECT_AML_ADOPT)
-
-      const holdingBusiness = draftFiling.amalgamationApplication.amalgamatingBusinesses.find(
-        (business) => business.role === 'holding'
-      )
-      if (holdingBusiness) {
-        this.fetchAmalgamatingBusinessInfo(holdingBusiness.identifier).then((result) => {
-          this.setNameRequestApprovedName(result.businessInfo.legalName);
-        })
-      }
     }
     switch (nameRequest?.correctNameOption) {
       case CorrectNameOptions.CORRECT_AML_ADOPT:
