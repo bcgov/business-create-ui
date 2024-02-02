@@ -36,7 +36,7 @@ interface AmalgamatingForeignIF {
     country: string
   }
   legalName: string
-  corpNumber: string
+  identifier: string
 
   // properties for UI only:
   status?: AmlStatuses
