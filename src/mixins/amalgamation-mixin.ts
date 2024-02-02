@@ -298,7 +298,7 @@ export default class AmalgamationMixin extends Vue {
       if (item.foreignJurisdiction) {
         return {
           type: AmlTypes.FOREIGN,
-          role: AmlRoles.AMALGAMATING, // *** FUTURE: can we really assume this?
+          role: AmlRoles.AMALGAMATING,
           identifier: item.identifier,
           legalName: item.legalName,
           foreignJurisdiction: item.foreignJurisdiction
