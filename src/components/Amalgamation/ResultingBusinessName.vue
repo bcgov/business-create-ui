@@ -5,7 +5,7 @@
   >
     <!-- Editing Mode -->
     <div
-      v-if="!getCorrectNameOption"
+      v-if="!getCorrectNameOption && isAmalgamationFilingRegular"
       class="section-container"
       :class="{ 'invalid-section': invalidSection }"
     >
@@ -47,9 +47,12 @@
     <!-- Display Mode -->
     <template v-else>
       <NameRequestInfo />
-      <NameTranslations />
+      <NameTranslations
+        v-if="isAmalgamationFilingRegular"
+      />
 
       <v-btn
+        v-if="isAmalgamationFilingRegular"
         text
         color="primary"
         class="btn-undo"
@@ -179,14 +182,12 @@ export default class ResultingBusinessName extends Mixins(AmalgamationMixin, Nam
   top: 22px;
   right: 20px;
 }
-
 // "sm" breakpoint
 @media (min-width: 600px) {
   .btn-undo {
     top: 24px;
   }
 }
-
 // "md" breakpoint
 @media (min-width: 960px) {
   .btn-undo {

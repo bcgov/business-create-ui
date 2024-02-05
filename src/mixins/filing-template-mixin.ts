@@ -143,7 +143,8 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         amalgamatingBusinesses: this.getAmalgamatingBusinesses,
         type: this.getAmalgamationType,
         nameRequest: {
-          legalType: this.getEntityType
+          legalType: this.getEntityType,
+          correctNameOption: this.getCorrectNameOption
         },
         nameTranslations: this.getNameTranslations,
         offices: this.getDefineCompanyStep.officeAddresses,
@@ -254,6 +255,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
 
     // restore business name data
     const nameRequest = draftFiling.amalgamationApplication.nameRequest as NameRequestFilingIF
+
     switch (nameRequest?.correctNameOption) {
       case CorrectNameOptions.CORRECT_AML_ADOPT:
         this.setCorrectNameOption(CorrectNameOptions.CORRECT_AML_ADOPT)

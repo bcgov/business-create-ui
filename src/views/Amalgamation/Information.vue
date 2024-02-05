@@ -63,6 +63,7 @@
       </header>
 
       <ExpandableHelp
+        v-if="isAmalgamationFilingRegular"
         class="mt-4"
         helpLabel="Help with Business Type"
       >
@@ -70,6 +71,16 @@
           <BusinessTypeHelp />
         </template>
       </ExpandableHelp>
+
+      <p
+        v-else
+        class="mt-3"
+      >
+        This is a {{ isAmalgamationFilingVertical ? 'vertical' : 'horizontal' }} short form amalgamation
+        under section 273 of Business Corporations Act.
+        The amalgamated business will adopt as its notice of articles, the notice of articles of the
+        {{ isAmalgamationFilingVertical ? 'holding' : 'primary' }} business.
+      </p>
 
       <ResultingBusinessName class="mt-5" />
     </section>
