@@ -1,7 +1,5 @@
 import { shallowWrapperFactory } from '../vitest-wrapper-factory'
 import { AmalgamationReviewConfirm } from '@/views'
-// *** FUTURE: add tests for AmalgamationShortResources
-import { AmalgamationRegResources } from '@/resources/'
 import AmalgamationStatement from '@/components/Amalgamation/AmalgamationStatement.vue'
 import BusinessTableSummary from '@/components/Amalgamation/BusinessTableSummary.vue'
 import CardHeader from '@/components/common/CardHeader.vue'
@@ -31,7 +29,7 @@ const amalgamationRegularBusinessInfo = [
 ]
 
 for (const test of amalgamationRegularBusinessInfo) {
-  describe(`Restoration Review Confirm for a ${test.entityType}`, () => {
+  describe(`Amalgamation-Regular Review Confirm for a ${test.entityType}`, () => {
     let wrapper: any
 
     beforeAll(() => {
@@ -44,7 +42,7 @@ for (const test of amalgamationRegularBusinessInfo) {
           tombstone: { keycloakRoles: ['staff'] }
         },
         null,
-        AmalgamationRegResources
+        null
       )
     })
 

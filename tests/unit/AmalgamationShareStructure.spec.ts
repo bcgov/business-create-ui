@@ -1,8 +1,6 @@
 import Vue from 'vue'
 import { shallowWrapperFactory } from '../vitest-wrapper-factory'
 import { AmalgamationShareStructure } from '@/views'
-// *** FUTURE: add tests for AmalgamationShortResources
-import { AmalgamationRegResources } from '@/resources/'
 import ListShareClass from '@/components/common/ListShareClass.vue'
 import ShareStructure from '@/components/common/ShareStructure.vue'
 
@@ -23,7 +21,7 @@ const amalgamationRegularBusinessInfo = [
 ]
 
 for (const test of amalgamationRegularBusinessInfo) {
-  describe(`Amalgamation Regular Business Information for a ${test.entityType}`, () => {
+  describe(`Amalgamation-Regular Share Structure for a ${test.entityType}`, () => {
     let wrapper: any
 
     beforeAll(() => {
@@ -31,11 +29,12 @@ for (const test of amalgamationRegularBusinessInfo) {
         AmalgamationShareStructure,
         null,
         {
+          // *** FUTURE: add tests for regular vs short-form amalgamations
           entityType: test.entityType,
           tombstone: { keycloakRoles: ['staff'] }
         },
         null,
-        AmalgamationRegResources
+        null
       )
     })
 

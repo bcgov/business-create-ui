@@ -667,8 +667,8 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     // reset errors in case this method is invoked more than once (ie, retry)
     this.resetFlags()
 
-    // don't check FF during Vitest tests
-    if (!this.isVitestRunning) {
+    // only check FF when not in Vitest tests
+    if (import.meta.env.VITEST === undefined) {
       // check that current route matches a supported filing type
       const supportedFilings = await GetFeatureFlag('supported-filings')
       if (!supportedFilings?.includes(this.$route.meta.filingType)) {
@@ -753,31 +753,31 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
         switch (this.getFilingType) {
           case FilingTypes.AMALGAMATION_APPLICATION:
             if (this.isAmalgamationFilingRegular) {
-              this.$router.push(RouteNames.AMALG_REG_INFORMATION).catch(() => {})
+              this.$router.replace(RouteNames.AMALG_REG_INFORMATION).catch(() => {})
             } else if (this.isAmalgamationFilingHorizontal || this.isAmalgamationFilingVertical) {
-              this.$router.push(RouteNames.AMALG_SHORT_INFORMATION).catch(() => {})
+              this.$router.replace(RouteNames.AMALG_SHORT_INFORMATION).catch(() => {})
             } else {
               throw new Error('invalid amalgamation filing type')
             }
             return
           case FilingTypes.CONTINUATION_IN:
-            this.$router.push(RouteNames.CONTINUATION_IN_BUSINESS_HOME).catch(() => {})
+            this.$router.replace(RouteNames.CONTINUATION_IN_BUSINESS_HOME).catch(() => {})
             return
           case FilingTypes.DISSOLUTION:
             if (this.isTypeFirm) {
-              this.$router.push(RouteNames.DISSOLUTION_FIRM).catch(() => {})
+              this.$router.replace(RouteNames.DISSOLUTION_FIRM).catch(() => {})
             } else {
-              this.$router.push(RouteNames.DISSOLUTION_DEFINE_DISSOLUTION).catch(() => {})
+              this.$router.replace(RouteNames.DISSOLUTION_DEFINE_DISSOLUTION).catch(() => {})
             }
             return
           case FilingTypes.INCORPORATION_APPLICATION:
-            this.$router.push(RouteNames.INCORPORATION_DEFINE_COMPANY).catch(() => {})
+            this.$router.replace(RouteNames.INCORPORATION_DEFINE_COMPANY).catch(() => {})
             return
           case FilingTypes.REGISTRATION:
-            this.$router.push(RouteNames.REGISTRATION_DEFINE_BUSINESS).catch(() => {})
+            this.$router.replace(RouteNames.REGISTRATION_DEFINE_BUSINESS).catch(() => {})
             return
           case FilingTypes.RESTORATION:
-            this.$router.push(RouteNames.RESTORATION_BUSINESS_NAME).catch(() => {})
+            this.$router.replace(RouteNames.RESTORATION_BUSINESS_NAME).catch(() => {})
             return
           default:
             this.invalidRouteDialog = true

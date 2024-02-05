@@ -31,7 +31,10 @@ export const AmalgamationRegResourceBc: AmalgamationResourceIF = {
   },
   reviewAndConfirm: {
     completingPartyStatement: {
-      certifyStatements: [],
+      certifyStatements: [
+        'I have relevant knowledge of the business and that I am authorized to make this filing.',
+        'I understand that this amalgamation cannot be reversed without a court order.'
+      ],
       certifyClause: `Note: It is an offence to make a false or misleading statement in respect
         of a material fact in a record submitted to the Corporate Registry for filing.
         See section 427 of the Business Corporations Act.`,
