@@ -119,7 +119,7 @@ export const IncorporationResourceBen: IncorporationResourceIF = {
         ResourcePhrases.BELIEVE_SIGNATURE,
         ResourcePhrases.RELEVANT_KNOWLEDGE_OF_COMPANY
       ],
-      certifyClause: ResourcePhrases.OFFENSE_SECTION_427,
+      certifyClause: ResourcePhrases.OFFENCE_SECTION_427,
       entityDisplay: null
     }
   }

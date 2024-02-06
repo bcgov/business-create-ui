@@ -33,7 +33,7 @@ export const ContinuationInResourceBc: ContinuationInResourceIF = {
   reviewAndConfirm: {
     completingPartyStatement: {
       certifyStatements: [],
-      certifyClause: ResourcePhrases.OFFENSE_SECTION_427,
+      certifyClause: ResourcePhrases.OFFENCE_SECTION_427,
       entityDisplay: null
     }
   }

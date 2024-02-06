@@ -60,7 +60,7 @@ export const DissolutionResourceBen: DissolutionResourceIF = {
   reviewAndConfirm: {
     completingPartyStatement: {
       certifyStatements: [],
-      certifyClause: ResourcePhrases.OFFENSE_SECTION_427,
+      certifyClause: ResourcePhrases.OFFENCE_SECTION_427,
       entityDisplay: GetCorpFullDescription(CorpTypeCd.BENEFIT_COMPANY)
     }
   },
