@@ -143,12 +143,14 @@ export default class ResultingBusinessName extends Mixins(AmalgamationMixin, Nam
     this.setNameRequestApprovedName(name)
 
     // if adopting a business' name, also adopt its legal type
+    // and update resources (since legal type may have changed)
     if (this.formType === CorrectNameOptions.CORRECT_AML_ADOPT) {
       const business = this.getAmalgamatingBusinesses.find(b =>
         (b.type === AmlTypes.LEAR && b.name === name)
       )
       if (business?.type === AmlTypes.LEAR) {
         this.setEntityType(business.legalType)
+        this.updateResources()
       }
     }
   }
@@ -158,7 +160,9 @@ export default class ResultingBusinessName extends Mixins(AmalgamationMixin, Nam
     this.setNameRequest(nameRequest)
 
     // as we are using a new NR, also use its legal type
+    // and update resources (since legal type may have changed)
     this.setEntityType(nameRequest.legalType)
+    this.updateResources()
   }
 
   /**

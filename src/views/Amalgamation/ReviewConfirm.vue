@@ -362,12 +362,12 @@ export default class AmalgamationReviewConfirm extends Vue {
 
   /** Is true when the Folio Number is not valid */
   get isFolioInvalid (): boolean {
-    return this.getValidateSteps && !(this.getFolioNumberValid)
+    return (this.getValidateSteps && !this.getFolioNumberValid)
   }
 
   /** Is true when the amalgamation statement is not valid */
   get isAmalgamationStatementInvalid (): boolean {
-    return this.getValidateSteps && !(this.getAmalgamationCourtApprovalValid)
+    return (this.getValidateSteps && !this.getAmalgamationCourtApprovalValid)
   }
 }
 </script>

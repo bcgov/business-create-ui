@@ -303,7 +303,7 @@ export default class Actions extends Mixins(AmalgamationMixin, CommonMixin,
         this.setIsFilingPaying(false)
       }
     } else {
-      // don't call window.scrollTo during Vitest tests because jsdom doesn't implement it
+      // otherwise, smooth-scroll to the top of the page
       window.scrollTo({ top: 0, behavior: 'smooth' })
     }
   }
