@@ -2,6 +2,7 @@ import { DissolutionResourceIF } from '@/interfaces'
 import { BulletListTypes, FilingCodes, ItemTypes } from '@/enums'
 import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 import { DissolutionStepsCorp } from './steps'
+import { ResourcePhrases } from '../ResourcePhrases'
 
 export const DissolutionResourceBen: DissolutionResourceIF = {
   entityType: CorpTypeCd.BENEFIT_COMPANY,
@@ -59,9 +60,7 @@ export const DissolutionResourceBen: DissolutionResourceIF = {
   reviewAndConfirm: {
     completingPartyStatement: {
       certifyStatements: [],
-      certifyClause: `Note: It is an offence to make a false or misleading statement in respect
-        of a material fact in a record submitted to the Corporate Registry for filing.
-        See section 427 of the Business Corporations Act.`,
+      certifyClause: ResourcePhrases.OFFENSE_SECTION_427,
       entityDisplay: GetCorpFullDescription(CorpTypeCd.BENEFIT_COMPANY)
     }
   },
