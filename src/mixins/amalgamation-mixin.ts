@@ -6,11 +6,13 @@ import {
 } from '@/enums'
 import {
   AmalgamatingBusinessIF, ContactPointIF, EmptyContactPoint, EmptyNameRequest, NameRequestIF,
-  NameTranslationIF, OrgPersonIF, PeopleAndRoleIF, RegisteredRecordsAddressesIF, ShareClassIF
+  NameTranslationIF, OrgPersonIF, PeopleAndRoleIF, RegisteredRecordsAddressesIF, ResourceIF,
+  ShareClassIF
 } from '@/interfaces'
 import { CorrectNameOptions } from '@bcrs-shared-components/enums/'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import { AuthServices, LegalServices } from '@/services'
+import { AmalgamationRegResources, AmalgamationShortResources } from '@/resources'
 
 /**
  * Mixin that provides amalgamation rules, etc.
@@ -21,6 +23,7 @@ export default class AmalgamationMixin extends Vue {
   @Getter(useStore) getAddPeopleAndRoleStep!: PeopleAndRoleIF
   @Getter(useStore) getAmalgamatingBusinesses!: AmalgamatingBusinessIF[]
   @Getter(useStore) getCurrentDate!: string
+  @Getter(useStore) getEntityType!: CorpTypeCd
   @Getter(useStore) isAmalgamationFilingHorizontal!: boolean
   @Getter(useStore) isAmalgamationFilingRegular!: boolean
   @Getter(useStore) isAmalgamationFilingVertical!: boolean
@@ -37,6 +40,7 @@ export default class AmalgamationMixin extends Vue {
   @Action(useStore) setNameTranslations!: (x: NameTranslationIF[]) => void
   @Action(useStore) setOfficeAddresses!: (x: RegisteredRecordsAddressesIF) => void
   @Action(useStore) setOrgPersonList!: (x: OrgPersonIF[]) => void
+  @Action(useStore) setResources!: (x: ResourceIF) => void
   @Action(useStore) setShareClasses!: (x: ShareClassIF[]) => void
 
   /** Iterable array of rule functions, in order of processing. */
@@ -403,6 +407,17 @@ export default class AmalgamationMixin extends Vue {
     // set new resulting business name and type
     this.setNameRequestApprovedName(business.name)
     this.setEntityType(business.legalType)
+
+    // set new resources (since entity type may have changed)
+    if (this.isAmalgamationFilingRegular) {
+      const resources = AmalgamationRegResources.find(x => x.entityType === this.getEntityType) as ResourceIF
+      this.setResources(resources)
+    } else if (this.isAmalgamationFilingHorizontal || this.isAmalgamationFilingVertical) {
+      const resources = AmalgamationShortResources.find(x => x.entityType === this.getEntityType) as ResourceIF
+      this.setResources(resources)
+    } else {
+      throw new Error('invalid amalgamation filing type')
+    }
   }
 
   //

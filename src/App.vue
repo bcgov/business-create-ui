@@ -328,7 +328,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   @Action(useStore) setLastDirectorChangeDate!: (x: string) => void
   // @Action(useStore) setNameRequest!: (x: NameRequestIF) => void
   @Action(useStore) setParties!: (x: Array<PartyIF>) => void
-  @Action(useStore) setResources!: (x: ResourceIF) => void
+  // @Action(useStore) setResources!: (x: ResourceIF) => void
   @Action(useStore) setUserAddress!: (x: AddressIF) => void
   @Action(useStore) setUserEmail!: (x: string) => void
   @Action(useStore) setUserFirstName!: (x: string) => void

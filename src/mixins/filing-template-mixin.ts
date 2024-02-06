@@ -50,7 +50,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
   @Getter(useStore) getDissolutionType!: DissolutionTypes
   @Getter(useStore) getDocumentDelivery!: DocumentDeliveryIF
   @Getter(useStore) getEffectiveDateTime!: EffectiveDateTimeIF
-  @Getter(useStore) getEntityType!: CorpTypeCd
+  // @Getter(useStore) getEntityType!: CorpTypeCd
   @Getter(useStore) getFilingId!: number
   @Getter(useStore) getFolioNumber!: string
   @Getter(useStore) getIncorporationAgreementStep!: IncorporationAgreementIF
