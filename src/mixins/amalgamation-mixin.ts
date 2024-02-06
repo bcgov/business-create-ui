@@ -404,11 +404,18 @@ export default class AmalgamationMixin extends Vue {
       }
     }
 
-    // set new resulting business name and type
+    // set new resulting business name and legal type
+    // and update resources (since legal  type may have changed)
     this.setNameRequestApprovedName(business.name)
     this.setEntityType(business.legalType)
+    this.updateResources()
+  }
 
-    // set new resources (since entity type may have changed)
+  /**
+   * Updates the resources, for use when the entity type may have changed.
+   * NB - this is specific to amalgamation filings.
+   */
+  updateResources (): void {
     if (this.isAmalgamationFilingRegular) {
       const resources = AmalgamationRegResources.find(x => x.entityType === this.getEntityType) as ResourceIF
       this.setResources(resources)
