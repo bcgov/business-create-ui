@@ -43,7 +43,7 @@ export default class AmalgamationMixin extends Vue {
   @Action(useStore) setResources!: (x: ResourceIF) => void
   @Action(useStore) setShareClasses!: (x: ShareClassIF[]) => void
 
-  /** Iterable array of rule functions, in order of processing. */
+  /** Iterable array of rule functions, in order of evaluation. */
   readonly rules = [
     this.notAffiliated,
     this.notHistorical,
@@ -262,11 +262,23 @@ export default class AmalgamationMixin extends Vue {
    * @param business The business to check if is Future Effective or not.
    */
   isFutureEffective (business: any): boolean {
-    return (
+    // check if business has a future-effective filing in its ledger
+    if (
       business.firstFiling?.isFutureEffective === true &&
       business.firstFiling?.status !== FilingStatus.COMPLETED &&
       business.firstFiling?.status !== FilingStatus.CORRECTED
-    )
+    ) {
+      return true
+    }
+
+    // check if business is part of a future-effective amalgamation
+    if (
+      business.businessInfo?.warnings?.some((w: any) => w.warningType === 'FUTURE_EFFECTIVE_AMALGAMATION')
+    ) {
+      return true
+    }
+
+    return false
   }
 
   /**
