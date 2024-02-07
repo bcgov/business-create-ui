@@ -25,7 +25,7 @@ const amalgamationRegularBusinessInfo = [
 ]
 
 for (const test of amalgamationRegularBusinessInfo) {
-  describe(`Amalgamation Regular Business Information for a ${test.entityType}`, () => {
+  describe(`Amalgamation-Regular Information for a ${test.entityType}`, () => {
     let wrapper: any
 
     beforeAll(() => {

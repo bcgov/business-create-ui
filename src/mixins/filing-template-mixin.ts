@@ -50,7 +50,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
   @Getter(useStore) getDissolutionType!: DissolutionTypes
   @Getter(useStore) getDocumentDelivery!: DocumentDeliveryIF
   @Getter(useStore) getEffectiveDateTime!: EffectiveDateTimeIF
-  @Getter(useStore) getEntityType!: CorpTypeCd
+  // @Getter(useStore) getEntityType!: CorpTypeCd
   @Getter(useStore) getFilingId!: number
   @Getter(useStore) getFolioNumber!: string
   @Getter(useStore) getIncorporationAgreementStep!: IncorporationAgreementIF
@@ -143,7 +143,8 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         amalgamatingBusinesses: this.getAmalgamatingBusinesses,
         type: this.getAmalgamationType,
         nameRequest: {
-          legalType: this.getEntityType
+          legalType: this.getEntityType,
+          correctNameOption: this.getCorrectNameOption
         },
         nameTranslations: this.getNameTranslations,
         offices: this.getDefineCompanyStep.officeAddresses,
@@ -254,6 +255,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
 
     // restore business name data
     const nameRequest = draftFiling.amalgamationApplication.nameRequest as NameRequestFilingIF
+
     switch (nameRequest?.correctNameOption) {
       case CorrectNameOptions.CORRECT_AML_ADOPT:
         this.setCorrectNameOption(CorrectNameOptions.CORRECT_AML_ADOPT)
@@ -300,7 +302,10 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
     }
 
     // restore the Amalgamation Court Approval if it's True or False
-    if (draftFiling.amalgamationApplication.courtApproval !== null) {
+    if (
+      draftFiling.amalgamationApplication.courtApproval === true ||
+      draftFiling.amalgamationApplication.courtApproval === false
+    ) {
       this.setAmalgamationCourtApproval(draftFiling.amalgamationApplication.courtApproval)
     }
 

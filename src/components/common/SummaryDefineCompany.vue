@@ -236,7 +236,6 @@ export default class SummaryDefineCompany extends Vue {
   /** Whether this section is invalid. */
   get invalidSection (): boolean {
     if (this.isAmalgamationFiling) {
-      // *** FUTURE: update this for short-form amalgamation (needs to be valid)
       return (!this.isAmalgamationInformationValid || !this.isDefineCompanyValid)
     }
     return !this.isDefineCompanyValid

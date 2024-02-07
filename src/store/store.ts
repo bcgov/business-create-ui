@@ -601,16 +601,21 @@ export const useStore = defineStore('store', {
         )
       } else {
         return (
-          // *** FUTURE: update this when Resulting Company Name is implemented
           this.getAmalgamatingBusinessesValid &&
-          !!this.getCorrectNameOption &&
-          this.getNameTranslationsValid
+          // NB - this is the only valid Correct Name Option for short-form amalgamations:
+          (this.getCorrectNameOption === CorrectNameOptions.CORRECT_AML_ADOPT)
+          // NB - there are no name translations for short-form amalgamations
         )
       }
     },
 
     /** Whether all the amalgamation steps are valid. */
     isAmalgamationValid (): boolean {
+      const isCreateShareStructureValid = (
+        this.isAmalgamationFilingHorizontal ||
+        this.isAmalgamationFilingVertical ||
+        this.isCreateShareStructureValid
+      )
       const isFolioNumberValid = !this.isPremiumAccount || this.getFolioNumberValid
       const isCourtOrderValid = this.isRoleStaff ? this.getCourtOrderStep.valid : true
       const isCertifyValid = this.getCertifyState.valid && !!this.getCertifyState.certifiedBy
@@ -620,7 +625,7 @@ export const useStore = defineStore('store', {
         this.isAmalgamationInformationValid &&
         this.isDefineCompanyValid &&
         this.isAddPeopleAndRolesValid &&
-        this.isCreateShareStructureValid &&
+        isCreateShareStructureValid &&
         this.getEffectiveDateTime.valid &&
         isFolioNumberValid &&
         this.getAmalgamationCourtApprovalValid &&

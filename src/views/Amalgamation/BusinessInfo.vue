@@ -1,6 +1,6 @@
 <template>
   <div id="amalgamation-business-info">
-    <!-- Registered Office Addresses -->
+    <!-- Office Addresses -->
     <section
       v-show="isEntityType"
       class="mt-10"
@@ -14,9 +14,9 @@
         </p>
 
         <p v-if="isAmalgamationFilingHorizontal || isAmalgamationFilingVertical">
-          The resulting business will adopt the following Registered Office and Records Office Mailing
-          and Delivery Addresses of the {{ isAmalgamationFilingHorizontal ? 'primary' : 'holding' }}
-          business in this amalgamation.
+          The resulting business will adopt the following Registered Office and Records Office Mailing and
+          Delivery Addresses of the {{ isAmalgamationFilingHorizontal ? 'primary' : 'holding' }} business
+          in this amalgamation.
         </p>
       </header>
 

@@ -2,6 +2,7 @@ import { AmalgamationResourceIF } from '@/interfaces'
 import { FilingCodes, RuleIds } from '@/enums'
 import { AmalgamationRegularSteps } from './steps'
 import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
+import { ResourcePhrases } from '../ResourcePhrases'
 
 export const AmalgamationRegResourceCc: AmalgamationResourceIF = {
   entityType: CorpTypeCd.BC_CCC,
@@ -31,10 +32,11 @@ export const AmalgamationRegResourceCc: AmalgamationResourceIF = {
   },
   reviewAndConfirm: {
     completingPartyStatement: {
-      certifyStatements: [],
-      certifyClause: `Note: It is an offence to make a false or misleading statement in respect
-        of a material fact in a record submitted to the Corporate Registry for filing.
-        See section 427 of the Business Corporations Act.`,
+      certifyStatements: [
+        ResourcePhrases.RELEVANT_KNOWLEDGE_OF_BUSINESS,
+        ResourcePhrases.AMALGAMATION_CANNOT_BE_REVERSED
+      ],
+      certifyClause: ResourcePhrases.OFFENCE_SECTION_427,
       entityDisplay: null
     }
   }
