@@ -550,17 +550,18 @@ describe('List People And Roles component - Short form amalgamation', () => {
     wrapper = shallowWrapperFactory(
       ListPeopleAndRoles,
       {
-        showDirectors: false,
+        showDirectors: false
       },
       {
-        addPeopleAndRoleStep: { orgPeople: mockPersonList }      }
+        addPeopleAndRoleStep: { orgPeople: mockPersonList }
+      }
     )
 
     expect(wrapper.findAll('.people-roles-content').length).toEqual(1)
     expect(wrapper.find('.people-roles-content').exists()).toBe(true)
   })
 
-  it('displays correct number of peoples/roles list  - showDirectors default value (true)', () => {
+  it('displays correct number of peoples/roles list - showDirectors default value (true)', () => {
     wrapper = shallowWrapperFactory(
       ListPeopleAndRoles,
       null,

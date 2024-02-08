@@ -77,8 +77,7 @@
 
         <!-- List Content -->
         <v-row
-          v-for="(orgPerson, index1) in personList"
-          v-if="getShowDirectors(orgPerson)"
+          v-for="(orgPerson, index1) in filteredPersonList"
           :key="index1"
           class="people-roles-content"
           no-gutters
@@ -265,13 +264,15 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
 
   // Local properties
   protected activeIndex: number // is NaN for new org/person
-  private showDirectorsDefault = true
 
-  getShowDirectors (orgPerson: OrgPersonIF): boolean {
-    if (this.isDirector(orgPerson)) {
-      return this.showDirectors
+  /**
+  * PersonList is filtered by RoleType.
+  */
+  get filteredPersonList (): Array<OrgPersonIF> {
+    if (!this.showDirectors) {
+      return this.personList.filter(person => person.roles.some(role => role.roleType !== RoleTypes.DIRECTOR))
     } else {
-      return this.showDirectorsDefault
+      return this.personList
     }
   }
 
