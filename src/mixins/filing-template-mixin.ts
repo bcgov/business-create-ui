@@ -1468,14 +1468,15 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
   }
 
   /**
-   * Fixes addresses by deleting the type in case it was null.
+   * Fixes addresses by deleting the type in case it is null. Also fixes null officer email.
    * @param orgPeople The array of orgs/people
-   * @returns the array of orgs/people after addresses been fixed
+   * @returns the array of orgs/people with fixed address types and email
    */
   fixNullAddressType (orgPeople: OrgPersonIF[]): OrgPersonIF[] {
     return orgPeople.map(p => {
       if (p.deliveryAddress?.addressType === null) delete p.deliveryAddress.addressType
       if (p.mailingAddress?.addressType === null) delete p.mailingAddress.addressType
+      if (p.officer?.email === null) delete p.officer.email
       return p
     })
   }
