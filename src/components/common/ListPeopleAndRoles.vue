@@ -266,11 +266,11 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
   protected activeIndex: number // is NaN for new org/person
 
   /**
-  * PersonList is filtered by RoleType.
-  */
+   * PersonList is filtered by RoleType.
+   */
   get filteredPersonList (): Array<OrgPersonIF> {
     if (!this.showDirectors) {
-      return this.personList.filter(person => person.roles.some(role => role.roleType !== RoleTypes.DIRECTOR))
+      return this.personList.filter(person => !this.isDirector(person))
     } else {
       return this.personList
     }
