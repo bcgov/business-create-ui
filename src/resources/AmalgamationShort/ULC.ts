@@ -24,6 +24,7 @@ export const AmalgamationShortResourceUlc: AmalgamationResourceIF = {
     blurb: 'Add the Completing Party to this application',
     helpSection: null,
     addPerson: false,
+    showDirectors: false,
     rules: [
       {
         id: RuleIds.NUM_COMPLETING_PARTY,
