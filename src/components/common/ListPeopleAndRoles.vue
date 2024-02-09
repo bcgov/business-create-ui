@@ -77,7 +77,7 @@
 
         <!-- List Content -->
         <v-row
-          v-for="(orgPerson, index1) in personList"
+          v-for="(orgPerson, index1) in filteredPersonList"
           :key="index1"
           class="people-roles-content"
           no-gutters
@@ -246,6 +246,7 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
   @Prop({ default: true }) readonly showDeliveryAddressColumn!: boolean
   @Prop({ default: true }) readonly showRolesColumn!: boolean
   @Prop({ default: false }) readonly showEmailColumn!: boolean
+  @Prop({ default: true }) readonly showDirectors!: boolean
 
   @Getter(useStore) getAddPeopleAndRoleStep!: PeopleAndRoleIF
   @Getter(useStore) getShowErrors!: boolean
@@ -263,6 +264,17 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
 
   // Local properties
   protected activeIndex: number // is NaN for new org/person
+
+  /**
+   * PersonList is filtered by RoleType.
+   */
+  get filteredPersonList (): Array<OrgPersonIF> {
+    if (!this.showDirectors) {
+      return this.personList.filter(person => !this.isDirector(person))
+    } else {
+      return this.personList
+    }
+  }
 
   get tableHeaders (): Array<string> {
     const headers = ['Name', 'Mailing Address']
