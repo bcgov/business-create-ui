@@ -36,11 +36,10 @@ export const AmalgamationShortResourceUlc: AmalgamationResourceIF = {
   reviewAndConfirm: {
     completingPartyStatement: {
       certifyStatements: [
-        ResourcePhrases.RELEVANT_KNOWLEDGE_OF_BUSINESS,
         ResourcePhrases.AMALGAMATION_CANNOT_BE_REVERSED
       ],
       certifyClause: ResourcePhrases.OFFENCE_SECTION_427,
-      entityDisplay: null
+      entityDisplay: 'business'
     }
   }
 }
