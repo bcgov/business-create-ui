@@ -27,7 +27,7 @@
         >
           <CorrectName
             actionTxt="choose the resulting business name"
-            :amalgamatingBusinesses="getAmalgamatingBusinesses"
+            :amalgamatingBusinesses="amalgamatingBusinesses"
             :businessId="getBusinessId"
             :companyName="companyName"
             :correctionNameChoices="correctionNameChoices"
@@ -71,14 +71,15 @@
 import { Component, Mixins } from 'vue-property-decorator'
 import { Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
+import { AmlTypes } from '@/enums'
 import { AmalgamationMixin, NameRequestMixin } from '@/mixins/'
-import { NameRequestIF } from '@/interfaces/'
+import { AmalgamatingBusinessIF, NameRequestIF } from '@/interfaces/'
 import { LegalServices } from '@/services/'
 import { CorrectNameOptions, NrRequestActionCodes } from '@bcrs-shared-components/enums/'
 import { CorrectName } from '@bcrs-shared-components/correct-name/'
 import NameRequestInfo from '@/components/common/NameRequestInfo.vue'
 import NameTranslations from '@/components/common/NameTranslations.vue'
-import { AmlTypes } from '@/enums'
+import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 
 @Component({
   components: {
@@ -92,6 +93,7 @@ export default class ResultingBusinessName extends Mixins(AmalgamationMixin, Nam
   @Getter(useStore) getBusinessId!: string
   @Getter(useStore) getBusinessLegalName!: string
   @Getter(useStore) getCorrectNameOption!: CorrectNameOptions
+  // @Getter(useStore) getEntityType!: CorpTypeCd
   @Getter(useStore) getNameRequest!: NameRequestIF
   @Getter(useStore) getNameRequestApprovedName!: string
   @Getter(useStore) getNameRequestNumber!: string
@@ -108,6 +110,25 @@ export default class ResultingBusinessName extends Mixins(AmalgamationMixin, Nam
     CorrectNameOptions.CORRECT_NEW_NR,
     CorrectNameOptions.CORRECT_AML_NUMBERED
   ]
+
+  /**
+   * The list of amalgamating businesses, excluding foreigns and including only businesses of a
+   * compatible entity type: ULC to ULC, LTD to LTD, and CCC to CCC.
+   */
+  get amalgamatingBusinesses (): AmalgamatingBusinessIF[] {
+    return this.getAmalgamatingBusinesses.filter(business =>
+      (business.type !== AmlTypes.FOREIGN) &&
+      (
+        // check if entity types match
+        this.getEntityType === business.legalType ||
+        (
+          // allow BCs and BENs to match
+          [CorpTypeCd.BC_COMPANY, CorpTypeCd.BENEFIT_COMPANY].includes(this.getEntityType) &&
+          [CorpTypeCd.BC_COMPANY, CorpTypeCd.BENEFIT_COMPANY].includes(business.legalType)
+        )
+      )
+    )
+  }
 
   /** The company name. */
   get companyName (): string {
