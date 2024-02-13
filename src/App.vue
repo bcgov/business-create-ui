@@ -260,8 +260,8 @@ import { AmalgamationRegResources, AmalgamationShortResources, ContinuationInRes
 import { AuthServices, LegalServices, PayServices } from '@/services/'
 
 // Enums and Constants
-import { EntityStates, ErrorTypes, FilingCodes, FilingNames, FilingStatus, FilingTypes, NameRequestStates, RouteNames,
-  StaffPaymentOptions } from '@/enums'
+import { EntityStates, ErrorTypes, FilingCodes, FilingNames, FilingStatus, FilingTypes, NameRequestStates,
+  RouteNames, StaffPaymentOptions } from '@/enums'
 import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 
@@ -291,7 +291,6 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   @Getter(useStore) getFilingName!: FilingNames
   @Getter(useStore) getFilingType!: FilingTypes
   @Getter(useStore) getHaveChanges!: boolean
-  @Getter(useStore) getKeycloakRoles!: Array<string>
   @Getter(useStore) getOrgInformation!: OrgInformationIF
   @Getter(useStore) getSteps!: Array<StepIF>
   @Getter(useStore) getUserFirstName!: string
@@ -305,7 +304,6 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   @Getter(useStore) isDissolutionFiling!: boolean
   @Getter(useStore) isIncorporationFiling!: boolean
   @Getter(useStore) isMobile!: boolean
-  @Getter(useStore) isRestorationFiling!: boolean
   @Getter(useStore) isSbcStaff!: boolean
 
   @Action(useStore) setAccountInformation!: (x: AccountInformationIF) => void
@@ -876,6 +874,8 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     // set the resources
     if (!resources) throw new Error(`Invalid ${this.getEntityType} resources`)
     this.setResources(resources)
+    // NB - for some reason, need to call this here so the store updates this getter
+    const dummy = this.getFilingData // eslint-disable-line
 
     // Fetch and validate the NR and set the data to the store. This method is different
     // from the validateNameRequest method in Actions.vue. This method sets the data to
