@@ -1,5 +1,10 @@
 import { BusinessLookupResultIF } from '@/interfaces'
 import { AxiosInstance as axios } from '@/utils'
+import { createPinia, setActivePinia } from 'pinia'
+import { useStore } from '@/store/store'
+
+setActivePinia(createPinia())
+const store = useStore()
 
 /**
  * Class that provides integration with the BusinessLookup API.
@@ -15,18 +20,6 @@ export default class BusinessLookupServices {
     return sessionStorage.getItem('BUSINESS_API_KEY')
   }
 
-  /** The Account ID, from session storage. */
-  static get accountId (): string {
-    // if we can't get account id from ACCOUNT_ID
-    // then try to get it from CURRENT_ACCOUNT
-    let accountId = sessionStorage.getItem('ACCOUNT_ID')
-    if (!accountId) {
-      const currentAccount = sessionStorage.getItem('CURRENT_ACCOUNT')
-      accountId = JSON.parse(currentAccount)?.id
-    }
-    return accountId
-  }
-
   /**
    * Searches for business by code or words.
    * @param query code or words to search
@@ -38,13 +31,14 @@ export default class BusinessLookupServices {
     const url = this.businessApiUrl +
       `businesses/search/facets?start=0&rows=20&categories=legalType:${legalTypes}::status:ACTIVE` +
       `&query=value:${encodeURIComponent(query)}`
-
-    return axios.get(url, {
+    const config = {
       headers: {
         'x-apikey': this.businessApiKey,
-        'Account-Id': this.accountId
+        'Account-Id': store.getAccountId
       }
-    }).then(response => {
+    }
+
+    return axios.get(url, config).then(response => {
       const results: Array<BusinessLookupResultIF> = response?.data?.searchResults?.results
       if (!results) {
         throw new Error('Invalid API response')

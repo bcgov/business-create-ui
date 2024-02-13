@@ -2,6 +2,11 @@
 import { AxiosInstance as axios } from '@/utils'
 import { AuthInformationIF, ContactPointIF } from '@/interfaces'
 import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
+import { createPinia, setActivePinia } from 'pinia'
+import { useStore } from '@/store/store'
+
+setActivePinia(createPinia())
+const store = useStore()
 
 /**
  * Class that provides integration with the Auth API.
@@ -34,8 +39,9 @@ export default class AuthServices {
 
     const authApiUrl = sessionStorage.getItem(SessionStorageKeys.AuthApiUrl)
     const url = `${authApiUrl}entities/${businessId}`
+    const config = { headers: { 'Account-Id': store.getAccountId } }
 
-    return axios.get(url).then(response => {
+    return axios.get(url, config).then(response => {
       if (response?.data) {
         return {
           contacts: response.data.contacts
