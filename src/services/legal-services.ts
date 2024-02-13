@@ -167,9 +167,9 @@ export default class LegalServices {
         if (error?.response?.status === StatusCodes.NOT_FOUND) {
           return null // NR not found (not an error)
         } else if (error?.response?.status === StatusCodes.BAD_REQUEST) {
-          throw new Error('Sent invalid email or phone number.') // Sent invalid email or phone
+          throw new Error('Invalid email or phone number.')
         } else if (error?.response?.status === StatusCodes.FORBIDDEN) {
-          throw new Error('Not sent email or phone number.') // Not sent the email or phone
+          throw new Error('Missing email or phone number.')
         }
         throw error
       })

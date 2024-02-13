@@ -16,6 +16,8 @@ export interface NameRequestFilingIF {
   legalName?: string // only set when there is a name change (including NR)
   nrNumber?: string // only set when there is an NR
   correctNameOption?: CorrectNameOptions // only used by UI for save and resume
+  applicantPhone?: string // only used by UI for save and resume
+  applicantEmail?: string // only used by UI for save and resume
 }
 
 /** Interface for amalgamation filing data saved to the Legal API. */

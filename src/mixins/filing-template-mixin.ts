@@ -7,9 +7,9 @@ import {
   ContinuationInFilingIF, CourtOrderIF, CourtOrderStepIF, CreateMemorandumIF, CreateResolutionIF,
   CreateRulesIF, DefineCompanyIF, DissolutionFilingIF, DissolutionStatementIF, DocumentDeliveryIF,
   EffectiveDateTimeIF, EmptyContactPoint, EmptyNaics, IncorporationAgreementIF, IncorporationFilingIF,
-  NaicsIF, NameRequestFilingIF, NameTranslationIF, OfficeAddressIF, OrgPersonIF, PartyIF,
-  RegistrationFilingIF, RegistrationStateIF, RestorationFilingIF, RestorationStateIF, ShareStructureIF,
-  SpecialResolutionIF, StaffPaymentIF, StaffPaymentStepIF, UploadAffidavitIF
+  NaicsIF, NrApplicantIF, NameRequestFilingIF, NameTranslationIF, OfficeAddressIF, OrgPersonIF,
+  PartyIF, RegistrationFilingIF, RegistrationStateIF, RestorationFilingIF, RestorationStateIF,
+  ShareStructureIF, SpecialResolutionIF, StaffPaymentIF, StaffPaymentStepIF, UploadAffidavitIF
 } from '@/interfaces'
 import {
   AmalgamationTypes, ApprovalTypes, BusinessTypes, CoopTypes, CorrectNameOptions, DissolutionTypes,
@@ -55,6 +55,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
   @Getter(useStore) getFolioNumber!: string
   @Getter(useStore) getIncorporationAgreementStep!: IncorporationAgreementIF
   @Getter(useStore) getMemorandum!: any
+  @Getter(useStore) getNameRequestApplicant!: NrApplicantIF
   @Getter(useStore) getNameRequestApprovedName!: string
   @Getter(useStore) getNameRequestNumber!: string
   @Getter(useStore) getNameTranslations!: NameTranslationIF[]
@@ -186,6 +187,8 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         filing.amalgamationApplication.nameRequest.correctNameOption = CorrectNameOptions.CORRECT_NEW_NR
         filing.amalgamationApplication.nameRequest.legalName = this.getNameRequestApprovedName
         filing.amalgamationApplication.nameRequest.nrNumber = this.getNameRequestNumber
+        filing.amalgamationApplication.nameRequest.applicantPhone = this.getNameRequestApplicant.phoneNumber
+        filing.amalgamationApplication.nameRequest.applicantEmail = this.getNameRequestApplicant.emailAddress
         break
       case CorrectNameOptions.CORRECT_AML_NUMBERED:
         filing.amalgamationApplication.nameRequest.correctNameOption = CorrectNameOptions.CORRECT_AML_NUMBERED
@@ -391,6 +394,8 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         filing.continuationIn.nameRequest.correctNameOption = CorrectNameOptions.CORRECT_NEW_NR
         filing.continuationIn.nameRequest.legalName = this.getNameRequestApprovedName
         filing.continuationIn.nameRequest.nrNumber = this.getNameRequestNumber
+        filing.continuationIn.nameRequest.applicantPhone = this.getNameRequestApplicant.phoneNumber
+        filing.continuationIn.nameRequest.applicantEmail = this.getNameRequestApplicant.emailAddress
         break
       case CorrectNameOptions.CORRECT_AML_NUMBERED:
         filing.continuationIn.nameRequest.correctNameOption = CorrectNameOptions.CORRECT_AML_NUMBERED
@@ -857,6 +862,8 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         filing.restoration.nameRequest.correctNameOption = CorrectNameOptions.CORRECT_NEW_NR
         filing.restoration.nameRequest.legalName = this.getNameRequestApprovedName
         filing.restoration.nameRequest.nrNumber = this.getNameRequestNumber
+        filing.restoration.nameRequest.applicantPhone = this.getNameRequestApplicant.phoneNumber
+        filing.restoration.nameRequest.applicantEmail = this.getNameRequestApplicant.emailAddress
         break
     }
 
