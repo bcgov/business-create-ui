@@ -650,42 +650,6 @@ describe('Voluntary Dissolution - Define Dissolution page for a BEN', () => {
     store.stateModel.effectiveDateTime.isFutureEffective = false
     store.stateModel.staffPaymentStep.staffPayment.isPriority = false
 
-    const feesPromise = new Promise(resolve => resolve({
-      data:
-      {
-        filingFees: 20.0,
-        filingType: 'Voluntary dissolution',
-        filingTypeCode: 'DIS_VOL',
-        futureEffectiveFees: 0,
-        priorityFees: 0,
-        processingFees: 0,
-        serviceFees: 1.50,
-        tax: {
-          gst: 0,
-          pst: 0
-        },
-        total: 21.5
-      }
-    }))
-
-    const feesFutureEffectivePromise = new Promise(resolve => resolve({
-      data:
-      {
-        filingFees: 20.0,
-        filingType: 'Voluntary dissolution',
-        filingTypeCode: 'DIS_VOL',
-        futureEffectiveFees: 100.0,
-        priorityFees: 0,
-        processingFees: 0,
-        serviceFees: 1.5,
-        tax: {
-          gst: 0,
-          pst: 0
-        },
-        total: 121.5
-      }
-    }))
-
     const get = sinon.stub(axios, 'get')
 
     // GET current user's info
@@ -732,11 +696,43 @@ describe('Voluntary Dissolution - Define Dissolution page for a BEN', () => {
 
     // GET filing fees
     get.withArgs('https://pay.api.url/fees/BEN/DIS_VOL')
-      .returns(feesPromise)
+      .returns(new Promise(resolve => resolve({
+        data:
+        {
+          filingFees: 20.0,
+          filingType: 'Voluntary dissolution',
+          filingTypeCode: 'DIS_VOL',
+          futureEffectiveFees: 0,
+          priorityFees: 0,
+          processingFees: 0,
+          serviceFees: 1.50,
+          tax: {
+            gst: 0,
+            pst: 0
+          },
+          total: 21.5
+        }
+      })))
 
     // GET filing fees with future effective flag
     get.withArgs('https://pay.api.url/fees/BEN/DIS_VOL?futureEffective=true')
-      .returns(feesFutureEffectivePromise)
+      .returns(new Promise(resolve => resolve({
+        data:
+        {
+          filingFees: 20.0,
+          filingType: 'Voluntary dissolution',
+          filingTypeCode: 'DIS_VOL',
+          futureEffectiveFees: 100.0,
+          priorityFees: 0,
+          processingFees: 0,
+          serviceFees: 1.5,
+          tax: {
+            gst: 0,
+            pst: 0
+          },
+          total: 121.5
+        }
+      })))
 
     // GET auth info
     get.withArgs('https://auth.api.url/entities/BC0870803')
