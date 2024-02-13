@@ -21,6 +21,7 @@ export default class LegalServices {
    */
   static async fetchFilings (businessId: string): Promise<any[]> {
     const url = `businesses/${businessId}/filings`
+
     return axios.get(url)
       .then(response => {
         const filings = response?.data?.filings
@@ -76,6 +77,7 @@ export default class LegalServices {
    */
   static async fetchFirstTask (businessId: string): Promise<any> {
     const url = `businesses/${businessId}/tasks`
+
     return axios.get(url)
       .then(response => {
         const filing = response?.data?.tasks?.[0]?.task.filing
@@ -155,6 +157,7 @@ export default class LegalServices {
     if (!nrNumber) throw new Error('Invalid parameter \'nrNumber\'')
 
     const url = `nameRequests/${nrNumber}/validate?phone=${phone}&email=${email}`
+
     return axios.get(url)
       .then(response => {
         const data = response?.data
@@ -179,6 +182,7 @@ export default class LegalServices {
    */
   static async fetchParties (businessId: string): Promise<any> {
     const url = `businesses/${businessId}/parties`
+
     return axios.get(url).then(response => {
       const data = response?.data
       if (!data) throw new Error('Invalid API response')
@@ -260,6 +264,7 @@ export default class LegalServices {
    */
   static async fetchAddresses (businessId: string): Promise<any> {
     const url = `businesses/${businessId}/addresses`
+
     return axios.get(url).then(response => {
       const data = response?.data
       if (!data) throw new Error('Invalid API response')
@@ -279,6 +284,7 @@ export default class LegalServices {
    */
   static async fetchBusinessInfo (businessId: string): Promise<BusinessIF> {
     const url = `businesses/${businessId}`
+
     return axios.get(url).then(response => {
       const data = response?.data
       if (!data) throw new Error('Invalid API response')
