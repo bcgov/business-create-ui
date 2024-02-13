@@ -31,7 +31,7 @@ function getNumberedEntityName (): string {
 
 /** Returns URL param string with Account ID if present, else empty string. */
 function getParams (): string {
-  const accountId: number = JSON.parse(sessionStorage.getItem('CURRENT_ACCOUNT'))?.id
+  const accountId = store.getAccountId
   return accountId ? `?accountid=${accountId}` : ''
 }
 

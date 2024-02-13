@@ -320,22 +320,34 @@ export default class AmalgamationMixin extends Vue {
           foreignJurisdiction: item.foreignJurisdiction
         } as AmalgamatingBusinessIF
       } else {
-        const tingBusiness = await this.fetchAmalgamatingBusinessInfo(item.identifier)
+        const business = await this.fetchAmalgamatingBusinessInfo(item.identifier)
+
+        // if auth info is empty then business is not (no longer) affiliated with current account
+        if (!business.authInfo) {
+          return {
+            type: AmlTypes.LEAR,
+            role: item.role,
+            identifier: item.identifier,
+            name: item.name,
+            legalType: item.legalType
+          } as AmalgamatingBusinessIF
+        }
+
         return {
           type: AmlTypes.LEAR,
           role: item.role, // amalgamating or holding
-          identifier: tingBusiness.businessInfo.identifier,
-          name: tingBusiness.businessInfo.legalName,
-          authInfo: tingBusiness.authInfo,
-          legalType: tingBusiness.businessInfo.legalType,
-          addresses: tingBusiness.addresses,
-          isNotInGoodStanding: (tingBusiness.businessInfo.goodStanding === false),
-          isFrozen: (tingBusiness.businessInfo.adminFreeze === true),
-          isFutureEffective: this.isFutureEffective(tingBusiness),
-          isDraftTask: this.isDraftTask(tingBusiness),
-          isPendingFiling: this.isPendingFiling(tingBusiness),
-          isLimitedRestoration: await this.isLimitedRestoration(tingBusiness),
-          isHistorical: (tingBusiness.businessInfo.state === EntityStates.HISTORICAL)
+          identifier: business.businessInfo.identifier,
+          name: business.businessInfo.legalName,
+          authInfo: business.authInfo,
+          legalType: business.businessInfo.legalType,
+          addresses: business.addresses,
+          isNotInGoodStanding: (business.businessInfo.goodStanding === false),
+          isFrozen: (business.businessInfo.adminFreeze === true),
+          isFutureEffective: this.isFutureEffective(business),
+          isDraftTask: this.isDraftTask(business),
+          isPendingFiling: this.isPendingFiling(business),
+          isLimitedRestoration: await this.isLimitedRestoration(business),
+          isHistorical: (business.businessInfo.state === EntityStates.HISTORICAL)
         } as AmalgamatingBusinessIF
       }
     }
@@ -356,13 +368,13 @@ export default class AmalgamationMixin extends Vue {
    * @param isNew Whether the business is new (ie, set by user, not restored from draft).
    */
   async updatePrepopulatedData (business: AmalgamatingBusinessIF, isNew = false): Promise<void> {
-    // safety check
-    if (!business || business.type !== AmlTypes.LEAR) {
-      throw new Error('updatePrepopulatedData(): invalid business')
-    }
+    // safety checks
+    if (!business || business.type !== AmlTypes.LEAR) throw new Error('Invalid business')
+    if (!business.addresses) throw new Error('Missing business addresses')
+    if (!business.authInfo) throw new Error('Missing share classes')
 
     // first, fetch directors and share structure
-    // NB - addresses and auth info have already been fetched
+    // NB - addresses and auth info have already been fetched (and checked above)
     // NB - make all API calls concurrently without rejection
     // NB - if any call failed, that item will be null
     const [ directors, shareStructure ] =
