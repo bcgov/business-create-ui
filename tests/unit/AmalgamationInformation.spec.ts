@@ -1,6 +1,5 @@
 import { shallowWrapperFactory } from '../vitest-wrapper-factory'
 import { AmalgamationInformation } from '@/views'
-// *** FUTURE: add tests for AmalgamationShortResources
 import { AmalgamationRegResources, AmalgamationShortResources } from '@/resources/'
 import AmalgamatingBusinesses from '@/components/Amalgamation/AmalgamatingBusinesses.vue'
 import { ExpandableHelp } from '@bcrs-shared-components/expandable-help'
