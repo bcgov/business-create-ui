@@ -29,7 +29,6 @@ for (const test of amalgamationRegularBusinessInfo) {
         AmalgamationShareStructure,
         null,
         {
-          // *** FUTURE: add tests for regular vs short-form amalgamations
           entityType: test.entityType,
           tombstone: { keycloakRoles: ['staff'] }
         },
