@@ -5,7 +5,7 @@ import PeopleAndRoles from '@/components/common/PeopleAndRoles.vue'
 import { AmalgamationTypes, FilingTypes } from '@bcrs-shared-components/enums'
 
 // Test Case Data
-const amalgamationRegularBusinessInfo = [
+const amalgamationBusinessInfo = [
   {
     entityType: 'BEN'
   },
@@ -20,7 +20,7 @@ const amalgamationRegularBusinessInfo = [
   }
 ]
 
-for (const test of amalgamationRegularBusinessInfo) {
+for (const test of amalgamationBusinessInfo) {
   describe(`Amalgamation-Regular People and Roles for a ${test.entityType}`, () => {
     let wrapper: any
 
@@ -54,6 +54,9 @@ for (const test of amalgamationRegularBusinessInfo) {
     })
   })
 
+  /**
+   * Unit tests for Vertical will be similar to the test below
+   */
   describe(`Amalgamation-Short People and Roles for a ${test.entityType}`, () => {
     let wrapper: any
 
