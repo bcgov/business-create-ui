@@ -73,11 +73,11 @@ describe('Amalgamating Businesses - components and validity', () => {
   })
 
   it('computes havePrimaryBusiness correctly', () => {
-    // verify with no holding businesses
+    // verify with no primary businesses
     store.stateModel.amalgamation.amalgamatingBusinesses = []
     expect(wrapper.vm.havePrimaryBusiness).toBe(false)
 
-    // verify with a holding business
+    // verify with a primary business
     store.stateModel.amalgamation.amalgamatingBusinesses = [
       { role: AmlRoles.PRIMARY } as AmalgamatingBusinessIF
     ]
