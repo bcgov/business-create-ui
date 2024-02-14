@@ -980,12 +980,17 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   private async processNameRequest (filing: any): Promise<void> {
     try {
       const nrNumber = filing[filing.header?.name].nameRequest.nrNumber
+      const applicantPhone = filing[filing.header?.name].nameRequest.applicantPhone // may be undefined
+      const applicantEmail = filing[filing.header?.name].nameRequest.applicantEmail // may be undefined
 
-      // fetch NR data
-      const nrResponse = await LegalServices.fetchValidContactNr(nrNumber).catch(error => {
-        console.log('NR error =', error) // eslint-disable-line no-console
-        this.nameRequestInvalidErrorDialog = true
-      })
+      // Fetch NR data using saved applicant phone or email (eg, restoration or amalgamation).
+      // NB - if NR is affiliated to the current account (eg, IA or registration) then phone and email
+      // don't matter.
+      const nrResponse = await LegalServices.fetchValidContactNr(nrNumber, applicantPhone, applicantEmail)
+        .catch(error => {
+          console.log('NR error =', error) // eslint-disable-line no-console
+          this.nameRequestInvalidErrorDialog = true
+        })
 
       //
       // The NR checks below are sort-of a duplicate of code in BusinessName.vue and

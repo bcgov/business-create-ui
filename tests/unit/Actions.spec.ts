@@ -11,7 +11,7 @@ import { AxiosInstance as axios } from '@/utils'
 import Actions from '@/components/common/Actions.vue'
 import mockRouter from './MockRouter'
 import LegalServices from '@/services/legal-services'
-import { FilingTypes } from '@/enums'
+import { FilingTypes, NameRequestStates } from '@/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import { CourtOrderStepIF, DefineCompanyIF, EffectiveDateTimeIF, IncorporationAgreementIF, NameRequestIF,
   OrgPersonIF, PeopleAndRoleIF, ShareStructureIF, TombstoneIF } from '@/interfaces'
@@ -67,7 +67,7 @@ const nrData = {
   nrNum: 'NR 1234567',
   request_action_cd: 'NEW',
   requestTypeCd: 'BC',
-  state: 'APPROVED'
+  state: NameRequestStates.APPROVED
 }
 
 describe('Actions component', () => {
@@ -118,7 +118,7 @@ describe('Emits error event if NR validation fails in file and pay', () => {
 
     const expiredNR = { ...nrData }
     expiredNR.expirationDate = 'Thu, 31 Dec 2019 23:59:59 GMT'
-    expiredNR.state = 'EXPIRED'
+    expiredNR.state = NameRequestStates.EXPIRED
 
     // GET NR data
     sinon.stub(axios, 'get')
@@ -130,8 +130,10 @@ describe('Emits error event if NR validation fails in file and pay', () => {
     // init store
     store.stateModel.currentDate = '2020/01/29'
     store.stateModel.nameRequest = {
+      applicants: {},
       legalType: CorpTypeCd.BENEFIT_COMPANY,
-      nrNum: 'NR 1234567'
+      nrNum: 'NR 1234567',
+      state: NameRequestStates.APPROVED
     } as NameRequestIF
     store.stateModel.nameRequestApprovedName = 'My Name Request Inc.'
     store.stateModel.tombstone = {
@@ -386,8 +388,10 @@ describe('Actions component - Filing Functionality', () => {
     // init store
     store.stateModel.currentDate = '2020/01/29'
     store.stateModel.nameRequest = {
+      applicants: {},
       legalType: CorpTypeCd.BENEFIT_COMPANY,
-      nrNum: 'NR 1234567'
+      nrNum: 'NR 1234567',
+      state: NameRequestStates.APPROVED
     } as NameRequestIF
     store.stateModel.nameRequestApprovedName = 'My Name Request Inc.'
     store.stateModel.nameTranslations = []
