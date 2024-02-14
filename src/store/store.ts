@@ -50,11 +50,13 @@ import {
   NaicsIF,
   NameRequestIF,
   NameTranslationIF,
+  NrApplicantIF,
   OfficeAddressIF,
   OrgInformationIF,
   OrgPersonIF,
   PartyIF,
   PeopleAndRoleIF,
+  PeopleAndRolesResourceIF,
   RegisteredRecordsAddressesIF,
   RegistrationStateIF,
   ResourceIF,
@@ -66,8 +68,7 @@ import {
   StateIF,
   StepIF,
   UploadAffidavitIF,
-  ValidationDetailIF,
-  PeopleAndRolesResourceIF
+  ValidationDetailIF
 } from '@/interfaces'
 
 // It's possible to move getters / actions into seperate files:
@@ -351,9 +352,19 @@ export const useStore = defineStore('store', {
       return this.stateModel.business.officeAddress
     },
 
+    /** The Correct Name Option. */
+    getCorrectNameOption (): CorrectNameOptions {
+      return this.stateModel.correctNameOption
+    },
+
     /** The Name Request object. */
     getNameRequest (): NameRequestIF {
       return this.stateModel.nameRequest
+    },
+
+    /** The Name Request applicant (may be empty object). */
+    getNameRequestApplicant (): NrApplicantIF {
+      return this.getNameRequest.applicants // object not array
     },
 
     /** The approved name (from NR or Correct Name component). */
@@ -361,14 +372,9 @@ export const useStore = defineStore('store', {
       return this.stateModel.nameRequestApprovedName
     },
 
-    /** The Correct Name Option. */
-    getCorrectNameOption (): CorrectNameOptions {
-      return this.stateModel.correctNameOption
-    },
-
     /** The Name Request number. */
     getNameRequestNumber (): string {
-      return this.getNameRequest?.nrNum
+      return this.getNameRequest.nrNum
     },
 
     /** The Company Step object. */
