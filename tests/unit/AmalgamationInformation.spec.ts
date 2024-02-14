@@ -100,7 +100,6 @@ for (const test of amalgamationBusinessInfo) {
     })
 
     it('displays the Amalgamation Businesses section', () => {
-      console.log(wrapper.html())
       const section = wrapper.findAll('section').at(0)
       expect(section.find('header h2').text()).toBe('Amalgamating Businesses')
       expect(section.find('p').text()).toContain('Add the primary business and the amalgamating businesses below.')
