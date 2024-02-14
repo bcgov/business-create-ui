@@ -2,9 +2,10 @@ import { shallowWrapperFactory } from '../vitest-wrapper-factory'
 import { AmalgamationPeopleRoles } from '@/views'
 import { AmalgamationRegResources, AmalgamationShortResources } from '@/resources/'
 import PeopleAndRoles from '@/components/common/PeopleAndRoles.vue'
+import { AmalgamationTypes, FilingTypes } from '@bcrs-shared-components/enums'
 
 // Test Case Data
-const amalgamationRegularBusinessInfo = [
+const amalgamationBusinessInfo = [
   {
     entityType: 'BEN'
   },
@@ -19,7 +20,7 @@ const amalgamationRegularBusinessInfo = [
   }
 ]
 
-for (const test of amalgamationRegularBusinessInfo) {
+for (const test of amalgamationBusinessInfo) {
   describe(`Amalgamation-Regular People and Roles for a ${test.entityType}`, () => {
     let wrapper: any
 
@@ -28,8 +29,11 @@ for (const test of amalgamationRegularBusinessInfo) {
         AmalgamationPeopleRoles,
         null,
         {
+          amalgamation: { type: AmalgamationTypes.REGULAR },
           entityType: test.entityType,
-          tombstone: { keycloakRoles: ['staff'] }
+          tombstone: {
+            filingType: FilingTypes.AMALGAMATION_APPLICATION,
+            keycloakRoles: ['staff'] }
         },
         null,
         AmalgamationRegResources
@@ -50,9 +54,10 @@ for (const test of amalgamationRegularBusinessInfo) {
     })
   })
 
-  // *** TODO: finish the tests for short-form amalgamations
-  // especially differences between regular and short-form
-  describe(`Amalgamation-Regular People and Roles for a ${test.entityType}`, () => {
+  /**
+   * Unit tests for Vertical will be similar to the test below
+   */
+  describe(`Amalgamation-Short People and Roles for a ${test.entityType}`, () => {
     let wrapper: any
 
     beforeAll(() => {
@@ -60,8 +65,11 @@ for (const test of amalgamationRegularBusinessInfo) {
         AmalgamationPeopleRoles,
         null,
         {
+          amalgamation: { type: AmalgamationTypes.HORIZONTAL },
           entityType: test.entityType,
-          tombstone: { keycloakRoles: ['staff'] }
+          tombstone: {
+            filingType: FilingTypes.AMALGAMATION_APPLICATION,
+            keycloakRoles: ['staff'] }
         },
         null,
         AmalgamationShortResources
