@@ -567,7 +567,7 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
 
       // fetch the new holding/primary business' data and update the prepopulated data
       // this will overwrite office addresses, directors, share structure and contact info
-      this.updatePrepopulatedData(business, true)
+      await this.updatePrepopulatedData(business, true)
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log('Error setting new holding/primary business =', error)
