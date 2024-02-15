@@ -157,7 +157,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
             : {}
         },
         courtApproval: this.getAmalgamationCourtApproval,
-        parties: this.fixNullAddressType(this.getAddPeopleAndRoleStep.orgPeople),
+        parties: this.fixOrgPeopleProperties(this.getAddPeopleAndRoleStep.orgPeople),
         shareStructure: {
           shareClasses: this.getCreateShareStructureStep.shareClasses
         }
@@ -371,7 +371,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
             ? { extension: +this.getBusinessContact.extension }
             : {}
         },
-        parties: this.fixNullAddressType(this.getAddPeopleAndRoleStep.orgPeople),
+        parties: this.fixOrgPeopleProperties(this.getAddPeopleAndRoleStep.orgPeople),
         shareStructure: {
           shareClasses: this.getCreateShareStructureStep.shareClasses
         }
@@ -537,7 +537,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
             ? { extension: +this.getBusinessContact.extension }
             : {}
         },
-        parties: this.fixNullAddressType(this.getAddPeopleAndRoleStep.orgPeople)
+        parties: this.fixOrgPeopleProperties(this.getAddPeopleAndRoleStep.orgPeople)
       }
     }
 
@@ -1467,15 +1467,18 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
   }
 
   /**
-   * Fixes addresses by deleting the type in case it is null. Also fixes null officer email.
-   * @param orgPeople The array of orgs/people
-   * @returns the array of orgs/people with fixed address types and email
+   * For all orgs/people elements, fixes the following properties:
+   * - delivery address type if it's null
+   * - mailing address type if it's null
+   * - officer email if it's null or empty
+   * @param orgPeople the original array of orgs/people
+   * @returns a new array of orgs/people with fixed properties
    */
-  fixNullAddressType (orgPeople: OrgPersonIF[]): OrgPersonIF[] {
+  fixOrgPeopleProperties (orgPeople: OrgPersonIF[]): OrgPersonIF[] {
     return orgPeople.map(p => {
       if (p.deliveryAddress?.addressType === null) delete p.deliveryAddress.addressType
       if (p.mailingAddress?.addressType === null) delete p.mailingAddress.addressType
-      if (p.officer?.email === null) delete p.officer.email
+      if (p.officer?.email === null || p.officer?.email === '') delete p.officer.email
       return p
     })
   }
