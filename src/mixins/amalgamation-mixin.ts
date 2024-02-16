@@ -429,7 +429,7 @@ export default class AmalgamationMixin extends Vue {
     }
 
     // set new resulting business name and legal type
-    // and update resources (since legal  type may have changed)
+    // and update resources (since legal type may have changed)
     this.setNameRequestApprovedName(business.name)
     this.setEntityType(business.legalType)
     this.updateResources()
