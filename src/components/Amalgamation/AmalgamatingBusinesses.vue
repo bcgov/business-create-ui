@@ -1,5 +1,13 @@
 <template>
   <div id="amalgamating-businesses">
+    <GenericErrorDialog
+      attach="#amalgamating-businesses"
+      :dialog="errorDialog"
+      :message="errorDialogMessage"
+      :title="errorDialogTitle"
+      @close="errorDialog = false"
+    />
+
     <section class="checklist-section">
       <div class="subhead">
         Your application must include the following:
@@ -239,7 +247,7 @@
       @allOk="allOk=$event"
     />
 
-    <!-- snackbar to temporarily show fetch errors -->
+    <!-- snackbar to temporarily show certain errors -->
     <v-snackbar
       v-model="snackbar"
       timeout="3000"
@@ -275,11 +283,13 @@ import { AmlRoles, AmlTypes, EntityStates } from '@/enums'
 import { JurisdictionLocation } from '@bcrs-shared-components/enums'
 import BusinessTable from '@/components/Amalgamation/BusinessTable.vue'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
+import { GenericErrorDialog } from '@/dialogs/'
 
 @Component({
   components: {
     BusinessLookup,
     BusinessTable,
+    GenericErrorDialog,
     Jurisdiction
   }
 })
@@ -305,6 +315,9 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
   allOk = false
   snackbar = false
   snackbarText = ''
+  errorDialog = false
+  errorDialogMessage = undefined as string
+  errorDialogTitle = undefined as string
 
   // Foreign business properties
   jurisdiction = null
@@ -446,8 +459,9 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
     if (!business.authInfo) {
       // If a staff account couldn't fetch the auth info then the business doesn't exist.
       if (this.isRoleStaff) {
-        this.snackbarText = 'Business doesn\'t exist in LEAR.'
-        this.snackbar = true
+        // Report error.
+        console.log('Missing auth info.')
+        this.showUnableToAddBusinessDialog()
 
         // Hide spinner.
         this.$root.$emit('showSpinner', false)
@@ -476,8 +490,9 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
     // Check for Legal API fetch issues.
     // NB - don't check for null firstTask since that's valid
     if (!business.businessInfo || !business.addresses || !business.firstFiling) {
-      this.snackbarText = 'Unable to add that business.'
-      this.snackbar = true
+      // Report error.
+      console.log('Missing business info or addresses or first filing.')
+      this.showSomethingWentWrongDialog()
 
       // Hide spinner.
       this.$root.$emit('showSpinner', false)
@@ -562,21 +577,36 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
   /** Sets the specified business as the new holding/primary business. */
   async newHoldingPrimaryBusiness (business: AmalgamatingBusinessIF): Promise<void> {
     try {
-      // show spinner since the network calls below can take a few seconds
+      // Show spinner since the network calls below can take a few seconds.
       this.$root.$emit('showSpinner', true)
 
-      // fetch the new holding/primary business' data and update the prepopulated data
-      // this will overwrite office addresses, directors, share structure and contact info
+      // Fetch the new holding/primary business' data and update the prepopulated data.
+      // This will overwrite office addresses, directors, share structure, contact info,
+      // legal name and legal type.
       await this.updatePrepopulatedData(business, true)
     } catch (error) {
-      // eslint-disable-next-line no-console
+      // Report error.
       console.log('Error setting new holding/primary business =', error)
-      this.snackbarText = 'Error marking new business.'
-      this.snackbar = true
+      this.showSomethingWentWrongDialog()
     } finally {
-      // hide spinner
+      // Hide spinner.
       this.$root.$emit('showSpinner', false)
     }
+  }
+
+  private showUnableToAddBusinessDialog (): void {
+    this.errorDialogTitle = 'Unable to add business'
+    this.errorDialogMessage = 'The business you selected could not be added to this filing. This is ' +
+      'likely because that business has not been moved to the modernized system yet.<br><br> Please ' +
+      'contact us:'
+    this.errorDialog = true
+  }
+
+  private showSomethingWentWrongDialog (): void {
+    this.errorDialogTitle = 'Something went wrong'
+    this.errorDialogMessage = 'An error occurred. Please try again in a few minutes. If this error ' +
+      'persists, please contact us.'
+    this.errorDialog = true
   }
 
   /**

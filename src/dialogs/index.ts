@@ -8,6 +8,7 @@ export { default as AccountContactMissingDialog } from './AccountContactMissingD
 export { default as FetchErrorDialog } from './FetchErrorDialog.vue'
 export { default as FileAndPayInvalidNameRequestDialog } from './FileAndPayInvalidNameRequestDialog.vue'
 export { default as FilingSurveyDialog } from './FilingSurveyDialog.vue'
+export { default as GenericErrorDialog } from './GenericErrorDialog.vue'
 export { default as InvalidFilingDialog } from './InvalidFilingDialog.vue'
 export { default as InvalidRouteDialog } from './InvalidRouteDialog.vue'
 export { default as NameRequestInvalidErrorDialog } from './NameRequestInvalidErrorDialog.vue'
