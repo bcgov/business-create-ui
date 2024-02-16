@@ -235,9 +235,6 @@ export default class Actions extends Mixins(AmalgamationMixin, CommonMixin,
       }
     }
 
-    // *** TODO: verify that filing is invalid if the business table now have invalid items
-    // or do we need to await this.$nextTick() here for things to validate?
-
     if (this.isFilingValid) {
       // prevent double saving
       if (this.isBusySaving) return
