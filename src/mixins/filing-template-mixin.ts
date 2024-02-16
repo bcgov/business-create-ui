@@ -241,20 +241,6 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
       this.setShareClasses(draftFiling.amalgamationApplication.shareStructure.shareClasses)
     }
 
-    // restore the Amalgamating Businesses
-    if (draftFiling.amalgamationApplication.amalgamatingBusinesses) {
-      this.setAmalgamatingBusinesses([
-        ...draftFiling.amalgamationApplication.amalgamatingBusinesses
-      ])
-
-      // Re-fetch the business table data. We do this in case one of the businesses has changed
-      // (eg, became historical) since the last draft save.
-      const holdingPrimary = await this.refetchAmalgamatingBusinessesInfo()
-      // If there's a holding or primary business, fetch its data and update the prepopulated data.
-      // This will overwrite office addresses, directors and share structure that were set above.
-      if (holdingPrimary) await this.updatePrepopulatedData(holdingPrimary)
-    }
-
     // restore business name data
     const nameRequest = draftFiling.amalgamationApplication.nameRequest as NameRequestFilingIF
     switch (nameRequest?.correctNameOption) {
@@ -289,6 +275,22 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         ...draftFiling.amalgamationApplication.contactPoint,
         confirmEmail: draftFiling.amalgamationApplication.contactPoint.email
       })
+    }
+
+    // restore the Amalgamating Businesses
+    if (draftFiling.amalgamationApplication.amalgamatingBusinesses) {
+      this.setAmalgamatingBusinesses([
+        ...draftFiling.amalgamationApplication.amalgamatingBusinesses
+      ])
+
+      // Re-fetch the business table data. We do this in case one of the businesses has changed
+      // (eg, became historical) since the last draft save.
+      const holdingPrimary = await this.refetchAmalgamatingBusinessesInfo()
+
+      // If there's a holding or primary business, fetch its data and update the prepopulated data.
+      // This will overwrite office addresses, directors, share structure, legal name and legal type
+      // that were set above from draft data.
+      if (holdingPrimary) await this.updatePrepopulatedData(holdingPrimary)
     }
 
     // restore Future Effective data
