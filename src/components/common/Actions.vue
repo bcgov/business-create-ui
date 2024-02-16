@@ -224,8 +224,9 @@ export default class Actions extends Mixins(AmalgamationMixin, CommonMixin,
         // Re-fetch the business table data. We do this in case one of the businesses has changed (eg,
         // became historical) while the draft was open.
         const holdingPrimary = await this.refetchAmalgamatingBusinessesInfo()
+
         // If there's a holding or primary business, re-fetch its data and update the prepopulated data.
-        // This will overwrite office addresses, directors and share structure.
+        // This will overwrite office addresses, directors, share structure, legal name and legal type.
         if (holdingPrimary) await this.updatePrepopulatedData(holdingPrimary)
       } catch (error) {
         console.log('Error validating table in onClickFilePay(): ', error) // eslint-disable-line no-console
