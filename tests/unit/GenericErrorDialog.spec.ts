@@ -16,7 +16,7 @@ describe('GenericErrorDialog.vue', () => {
     wrapper.destroy()
   })
 
-  it('renders the dialog with default title and message', () => {
+  it('renders the dialog with default text and title', () => {
     const wrapper = mount(GenericErrorDialog, {
       vuetify,
       propsData: { dialog: true }
@@ -31,15 +31,15 @@ describe('GenericErrorDialog.vue', () => {
     wrapper.destroy()
   })
 
-  it('renders the dialog with custom title and message', () => {
+  it('renders the dialog with custom text and title', () => {
     const wrapper = mount(GenericErrorDialog, {
       vuetify,
-      propsData: { dialog: true, message: 'Custom message', title: 'Custom title' }
+      propsData: { dialog: true, text: 'Custom text', title: 'Custom title' }
     })
 
     expect(wrapper.find('div[role="dialog"]').exists()).toBe(true)
     expect(wrapper.find('.v-card__title').text()).toBe('Custom title')
-    expect(wrapper.find('.v-card__text > div').text()).toBe('Custom message')
+    expect(wrapper.find('.v-card__text > div').text()).toBe('Custom text')
     expect(wrapper.find('.v-card__text').findComponent(RegistriesContactInfo).exists()).toBe(true)
     expect(wrapper.find('.v-card__actions').text()).toBe('Close')
 

@@ -12,9 +12,9 @@
 
       <v-card-text class="pre-wrap">
         <div
-          v-show="!!message"
+          v-show="!!text"
           class="font-15"
-          v-html="message"
+          v-html="text"
         />
 
         <RegistriesContactInfo class="mt-6" />
@@ -45,7 +45,7 @@ import RegistriesContactInfo from '@/components/common/RegistriesContactInfo.vue
 export default class GenericErrorDialog extends Vue {
   @Prop({ default: '' }) readonly attach!: string
   @Prop({ default: false }) readonly dialog!: boolean
-  @Prop({ default: 'Please contact us:' }) readonly message!: string
+  @Prop({ default: 'Please contact us:' }) readonly text!: string
   @Prop({ default: 'An error occurred' }) readonly title!: string
 
   @Emit() close (): void {}

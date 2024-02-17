@@ -3,7 +3,7 @@
     <GenericErrorDialog
       attach="#amalgamating-businesses"
       :dialog="errorDialog"
-      :message="errorDialogMessage"
+      :text="errorDialogText"
       :title="errorDialogTitle"
       @close="errorDialog = false"
     />
@@ -316,7 +316,7 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
   snackbar = false
   snackbarText = ''
   errorDialog = false
-  errorDialogMessage = undefined as string
+  errorDialogText = undefined as string
   errorDialogTitle = undefined as string
 
   // Foreign business properties
@@ -596,7 +596,7 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
 
   private showUnableToAddBusinessDialog (): void {
     this.errorDialogTitle = 'Unable to add business'
-    this.errorDialogMessage = 'The business you selected could not be added to this filing. This is ' +
+    this.errorDialogText = 'The business you selected could not be added to this filing. This is ' +
       'likely because that business has not been moved to the modernized system yet.<br><br> Please ' +
       'contact us:'
     this.errorDialog = true
@@ -604,7 +604,7 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
 
   private showSomethingWentWrongDialog (): void {
     this.errorDialogTitle = 'Something went wrong'
-    this.errorDialogMessage = 'An error occurred. Please try again in a few minutes. If this error ' +
+    this.errorDialogText = 'An error occurred. Please try again in a few minutes. If this error ' +
       'persists, please contact us.'
     this.errorDialog = true
   }
