@@ -277,7 +277,7 @@ import { AmalgamationMixin, CommonMixin } from '@/mixins'
 import { BusinessLookupServices } from '@/services'
 import { BusinessLookup } from '@bcrs-shared-components/business-lookup'
 import { Jurisdiction } from '@bcrs-shared-components/jurisdiction'
-import { CanJurisdictions, MrasJurisdictions } from '@bcrs-shared-components/jurisdiction/list-data'
+import { MrasJurisdictions } from '@bcrs-shared-components/jurisdiction/list-data'
 import { AmalgamatingBusinessIF, BusinessLookupResultIF, EmptyBusinessLookup } from '@/interfaces'
 import { AmlRoles, AmlTypes, EntityStates } from '@/enums'
 import { JurisdictionLocation } from '@bcrs-shared-components/enums'
@@ -316,8 +316,8 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
   snackbar = false
   snackbarText = ''
   errorDialog = false
-  errorDialogText = undefined as string
-  errorDialogTitle = undefined as string
+  errorDialogText = ''
+  errorDialogTitle = ''
 
   // Foreign business properties
   jurisdiction = null
@@ -418,12 +418,11 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
 
     // Special case to handle Extra Pro A companies
     if ((businessLookup.legalType as any) === CorpTypeCd.EXTRA_PRO_A) {
-      const region = CanJurisdictions.find(jurisdiction => jurisdiction.value === JurisdictionLocation.BC)
       const tingBusiness = {
         type: AmlTypes.FOREIGN,
         role: AmlRoles.AMALGAMATING,
         foreignJurisdiction: {
-          region: region.text,
+          region: JurisdictionLocation.BC,
           country: JurisdictionLocation.CA
         },
         legalName: businessLookup.name,
@@ -549,7 +548,7 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
       type: AmlTypes.FOREIGN,
       role: AmlRoles.AMALGAMATING,
       foreignJurisdiction: {
-        region: this.isCan ? this.jurisdiction.text : '',
+        region: this.isCan ? this.jurisdiction.value : '', // no region outside Canada
         country: this.isCan ? JurisdictionLocation.CA : this.jurisdiction.value
       },
       legalName: this.legalName,
