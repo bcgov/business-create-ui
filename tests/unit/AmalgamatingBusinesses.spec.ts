@@ -322,9 +322,10 @@ describe('Amalgamating Businesses - add amalgamating business', () => {
     // verify data
     expect(store.getAmalgamatingBusinesses.length).toBe(0)
 
-    // verify snackbar is displayed
-    expect(wrapper.vm.snackbar).toBe(true)
-    expect(wrapper.vm.snackbarText).toBe('Business doesn\'t exist in LEAR.')
+    // verify dialog is displayed
+    expect(wrapper.vm.errorDialog).toBe(true)
+    expect(wrapper.vm.errorDialogTitle).toBe('Unable to add business')
+    expect(wrapper.vm.errorDialogText).toContain('The business you selected could not be added to this filing.')
 
     vi.resetAllMocks()
   })
@@ -349,9 +350,10 @@ describe('Amalgamating Businesses - add amalgamating business', () => {
     // verify data
     expect(store.getAmalgamatingBusinesses.length).toBe(0)
 
-    // verify snackbar is displayed
-    expect(wrapper.vm.snackbar).toBe(true)
-    expect(wrapper.vm.snackbarText).toBe('Unable to add that business.')
+    // verify dialog is displayed
+    expect(wrapper.vm.errorDialog).toBe(true)
+    expect(wrapper.vm.errorDialogTitle).toBe('Something went wrong')
+    expect(wrapper.vm.errorDialogText).toContain('An error occurred.')
 
     vi.resetAllMocks()
   })
@@ -376,9 +378,10 @@ describe('Amalgamating Businesses - add amalgamating business', () => {
     // verify data
     expect(store.getAmalgamatingBusinesses.length).toBe(0)
 
-    // verify snackbar is displayed
-    expect(wrapper.vm.snackbar).toBe(true)
-    expect(wrapper.vm.snackbarText).toBe('Unable to add that business.')
+    // verify dialog is displayed
+    expect(wrapper.vm.errorDialog).toBe(true)
+    expect(wrapper.vm.errorDialogTitle).toBe('Something went wrong')
+    expect(wrapper.vm.errorDialogText).toContain('An error occurred.')
 
     vi.resetAllMocks()
   })
@@ -403,9 +406,10 @@ describe('Amalgamating Businesses - add amalgamating business', () => {
     // verify data
     expect(store.getAmalgamatingBusinesses.length).toBe(0)
 
-    // verify snackbar is displayed
-    expect(wrapper.vm.snackbar).toBe(true)
-    expect(wrapper.vm.snackbarText).toBe('Unable to add that business.')
+    // verify dialog is displayed
+    expect(wrapper.vm.errorDialog).toBe(true)
+    expect(wrapper.vm.errorDialogTitle).toBe('Something went wrong')
+    expect(wrapper.vm.errorDialogText).toContain('An error occurred.')
 
     vi.resetAllMocks()
   })
