@@ -255,7 +255,7 @@ describe('Amalgamating Businesses - add amalgamating business', () => {
     const business = store.getAmalgamatingBusinesses[0] as any
     expect(business.type).toBe(AmlTypes.FOREIGN)
     expect(business.role).toBe(AmlRoles.AMALGAMATING)
-    expect(business.foreignJurisdiction).toEqual({ country: 'CA', region: 'British Columbia' })
+    expect(business.foreignJurisdiction).toEqual({ country: 'CA', region: 'BC' })
     expect(business.legalName).toBe('Extra Pro Business')
     expect(business.identifier).toBe('A1234567')
 
@@ -638,7 +638,7 @@ describe('Amalgamating Businesses - add amalgamating foreign business', () => {
     // simulate form data
     await wrapper.setData({
       isCan: true,
-      jurisdiction: { text: 'BC', value: 'CA' },
+      jurisdiction: { text: 'Alberta', value: 'AB' },
       legalName: 'Foreign Business',
       identifier: 'ABC-123'
     })
@@ -654,7 +654,7 @@ describe('Amalgamating Businesses - add amalgamating foreign business', () => {
     const business = store.getAmalgamatingBusinesses[0] as any
     expect(business.type).toBe(AmlTypes.FOREIGN)
     expect(business.role).toBe(AmlRoles.AMALGAMATING)
-    expect(business.foreignJurisdiction).toEqual({ country: 'CA', region: 'BC' })
+    expect(business.foreignJurisdiction).toEqual({ country: 'CA', region: 'AB' })
     expect(business.legalName).toBe('Foreign Business')
     expect(business.identifier).toBe('ABC-123')
 
@@ -668,7 +668,7 @@ describe('Amalgamating Businesses - add amalgamating foreign business', () => {
       {
         type: AmlTypes.FOREIGN,
         role: AmlRoles.AMALGAMATING,
-        foreignJurisdiction: { country: 'CA', region: 'British Columbia' },
+        foreignJurisdiction: { country: 'CA', region: 'AB' },
         legalName: 'Foreign Business',
         identifier: 'ABC-123'
       }
@@ -681,7 +681,7 @@ describe('Amalgamating Businesses - add amalgamating foreign business', () => {
     // simulate form data
     await wrapper.setData({
       isCan: true,
-      jurisdiction: { text: 'British Columbia', value: 'CA' },
+      jurisdiction: { text: 'Alberta', value: 'AB' },
       legalName: 'Foreign Business',
       identifier: 'ABC-123'
     })
