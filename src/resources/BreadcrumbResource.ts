@@ -35,6 +35,7 @@ function getParams (): string {
   return accountId ? `?accountid=${accountId}` : ''
 }
 
+/** Returns the breadcrumb to the entity (business) dashboard. */
 export function getEntityDashboardBreadcrumb (): BreadcrumbIF {
   const getEntityIdentifier: string = store.getEntityIdentifier
   return {
@@ -43,6 +44,7 @@ export function getEntityDashboardBreadcrumb (): BreadcrumbIF {
   }
 }
 
+/** Returns the breadcrumb to the BC Registries dashboard. */
 export function getRegistryDashboardBreadcrumb (): BreadcrumbIF {
   return {
     text: 'BC Registries Dashboard',
@@ -50,13 +52,15 @@ export function getRegistryDashboardBreadcrumb (): BreadcrumbIF {
   }
 }
 
+/** Returns the breadcrumb to the My Business Registry page. */
 export function getMyBusinessRegistryBreadcrumb (): BreadcrumbIF {
   return {
     text: 'My Business Registry',
-    href: `${sessionStorage.getItem('BUSINESSES_URL')}business/${getParams()}`
+    href: `${sessionStorage.getItem('BUSINESSES_URL')}account/${store.getAccountId}/business`
   }
 }
 
+/** Returns the breadcrumb to the SBC Staff dashboard. */
 export function getSbcStaffDashboardBreadcrumb (): BreadcrumbIF {
   return {
     text: 'Staff Dashboard',
@@ -64,9 +68,10 @@ export function getSbcStaffDashboardBreadcrumb (): BreadcrumbIF {
   }
 }
 
+/** Returns the breadcrumb to the Staff dashboard. */
 export function getStaffDashboardBreadcrumb (): BreadcrumbIF {
   return {
     text: 'Staff Dashboard',
-    href: `${sessionStorage.getItem('BUSINESSES_URL')}staff/${getParams()}`
+    href: `${sessionStorage.getItem('BUSINESSES_URL')}staff/dashboard/active`
   }
 }
