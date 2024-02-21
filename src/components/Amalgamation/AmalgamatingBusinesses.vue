@@ -455,20 +455,8 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
     const business = await this.fetchAmalgamatingBusinessInfo(businessLookup.identifier)
 
     // Check for unaffiliated business.
-    if (!business.authInfo) {
-      // If a staff account couldn't fetch the auth info then the business doesn't exist.
-      if (this.isRoleStaff) {
-        // Report error.
-        console.log('Missing auth info.')
-        this.showUnableToAddBusinessDialog()
-
-        // Hide spinner.
-        this.$root.$emit('showSpinner', false)
-
-        return
-      }
-
-      // Otherwise, assume the business is unaffiliated and add it to the table.
+    // NB: staff will never see this scenario
+    if (business.authInfo?.status === 'FORBIDDEN') {
       this.pushAmalgamatingBusiness({
         type: AmlTypes.LEAR,
         role: AmlRoles.AMALGAMATING,
@@ -486,11 +474,23 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
       return
     }
 
-    // Check for Legal API fetch issues.
-    // NB - don't check for null firstTask since that's valid
-    if (!business.businessInfo || !business.addresses || !business.firstFiling) {
+    // Check for business not in LEAR (Auth/Legal dbs).
+    if (business.authInfo?.status === 'NOT_FOUND') {
       // Report error.
-      console.log('Missing business info or addresses or first filing.')
+      console.log('Missing auth info.')
+      this.showUnableToAddBusinessDialog()
+
+      // Hide spinner.
+      this.$root.$emit('showSpinner', false)
+
+      return
+    }
+
+    // Check for fetch issues.
+    // NB - don't check for null firstTask since that's valid
+    if (!business.authInfo || !business.businessInfo || !business.addresses || !business.firstFiling) {
+      // Report error.
+      console.log('Missing auth info or business info or addresses or first filing.')
       this.showSomethingWentWrongDialog()
 
       // Hide spinner.
