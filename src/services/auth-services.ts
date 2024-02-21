@@ -1,5 +1,5 @@
-// Libraries
 import { AxiosInstance as axios } from '@/utils'
+import { StatusCodes } from 'http-status-codes'
 import { AuthInformationIF, ContactPointIF } from '@/interfaces'
 import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
 import { createPinia, setActivePinia } from 'pinia'
@@ -25,7 +25,7 @@ export default class AuthServices {
 
     return axios.get(url).then(response => {
       if (response?.data?.roles) return response.data.roles
-      throw new Error('Invalid response data ')
+      throw new Error('Invalid response data')
     })
   }
 
@@ -54,7 +54,14 @@ export default class AuthServices {
           folioNumber: response.data.folioNumber
         }
       }
-      throw new Error('Invalid response data ')
+      throw new Error('Invalid response data')
+    }).catch(error => {
+      if (error?.response?.status === StatusCodes.FORBIDDEN) {
+        return { status: 'FORBIDDEN' } as AuthInformationIF
+      } else if (error?.response?.status === StatusCodes.NOT_FOUND) {
+        return { status: 'NOT_FOUND' } as AuthInformationIF
+      }
+      throw error
     })
   }
 
@@ -68,7 +75,7 @@ export default class AuthServices {
 
     return axios.get(url).then(response => {
       if (response?.data) return response.data
-      throw new Error('Invalid response data ')
+      throw new Error('Invalid response data')
     })
   }
 

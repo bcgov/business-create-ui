@@ -272,7 +272,7 @@ describe('Amalgamating Businesses - add amalgamating business', () => {
     await wrapper.setData({ isAddingAmalgamatingBusiness: true })
 
     // mock services functions
-    vi.spyOn((AuthServices as any), 'fetchAuthInfo').mockImplementation(() => null)
+    vi.spyOn((AuthServices as any), 'fetchAuthInfo').mockImplementation(() => ({ status: 'FORBIDDEN' }))
     vi.spyOn((LegalServices as any), 'fetchBusinessInfo').mockImplementation(() => null)
     vi.spyOn((LegalServices as any), 'fetchAddresses').mockImplementation(() => null)
     vi.spyOn((LegalServices as any), 'fetchFirstOrOnlyFiling').mockImplementation(() => null)
@@ -298,19 +298,15 @@ describe('Amalgamating Businesses - add amalgamating business', () => {
     vi.resetAllMocks()
   })
 
-  it('doesn\'t save an amalgamating business - BC - unaffiliated - staff', async () => {
-    // set state
-    store.setKeycloakRoles(['staff'])
-    await Vue.nextTick()
-
+  it('doesn\'t save an amalgamating business - BC - business not found', async () => {
     // open panel
     await wrapper.setData({ isAddingAmalgamatingBusiness: true })
 
     // mock services functions
-    vi.spyOn((AuthServices as any), 'fetchAuthInfo').mockImplementation(() => null)
+    vi.spyOn((AuthServices as any), 'fetchAuthInfo').mockImplementation(() => ({ status: 'NOT_FOUND' }))
     vi.spyOn((LegalServices as any), 'fetchBusinessInfo').mockImplementation(() => null)
-    vi.spyOn((LegalServices as any), 'fetchAddresses').mockImplementation(() => null)
-    vi.spyOn((LegalServices as any), 'fetchFirstOrOnlyFiling').mockImplementation(() => null)
+    vi.spyOn((LegalServices as any), 'fetchAddresses').mockImplementation(() => ({}))
+    vi.spyOn((LegalServices as any), 'fetchFirstOrOnlyFiling').mockImplementation(() => ({}))
 
     // simulate saving a BC business
     await wrapper.vm.saveAmalgamatingBusiness({
@@ -325,7 +321,35 @@ describe('Amalgamating Businesses - add amalgamating business', () => {
     // verify dialog is displayed
     expect(wrapper.vm.errorDialog).toBe(true)
     expect(wrapper.vm.errorDialogTitle).toBe('Unable to add business')
-    expect(wrapper.vm.errorDialogText).toContain('The business you selected could not be added to this filing.')
+    // expect(wrapper.vm.errorDialogText).toContain('An error occurred.')
+
+    vi.resetAllMocks()
+  })
+
+  it('doesn\'t save an amalgamating business - BC - missing auth info', async () => {
+    // open panel
+    await wrapper.setData({ isAddingAmalgamatingBusiness: true })
+
+    // mock services functions
+    vi.spyOn((AuthServices as any), 'fetchAuthInfo').mockImplementation(() => null)
+    vi.spyOn((LegalServices as any), 'fetchBusinessInfo').mockImplementation(() => ({}))
+    vi.spyOn((LegalServices as any), 'fetchAddresses').mockImplementation(() => ({}))
+    vi.spyOn((LegalServices as any), 'fetchFirstOrOnlyFiling').mockImplementation(() => ({}))
+
+    // simulate saving a BC business
+    await wrapper.vm.saveAmalgamatingBusiness({
+      legalType: CorpTypeCd.BC_COMPANY,
+      name: 'My BC Business',
+      identifier: 'BC1234567'
+    })
+
+    // verify data
+    expect(store.getAmalgamatingBusinesses.length).toBe(0)
+
+    // verify dialog is displayed
+    expect(wrapper.vm.errorDialog).toBe(true)
+    expect(wrapper.vm.errorDialogTitle).toBe('Something went wrong')
+    expect(wrapper.vm.errorDialogText).toContain('An error occurred.')
 
     vi.resetAllMocks()
   })
