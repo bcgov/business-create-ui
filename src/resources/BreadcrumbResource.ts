@@ -9,9 +9,9 @@ const store = useStore()
 
 /** Returns legal name. */
 function getLegalName (): string {
-  const getFilingType: FilingTypes = store.getFilingType
-  const getBusinessLegalName: string = store.getBusinessLegalName
-  const getNameRequestApprovedName: string = store.getNameRequestApprovedName
+  const getFilingType = store.getFilingType
+  const getBusinessLegalName = store.getBusinessLegalName
+  const getNameRequestApprovedName = store.getNameRequestApprovedName
 
   switch (getFilingType) {
     case FilingTypes.AMALGAMATION_APPLICATION: return getNameRequestApprovedName
