@@ -39,61 +39,6 @@ export const routes = [
   ...RegistrationRoutes,
   ...RestorationRoutes,
   {
-    path: '/amalg-reg-information',
-    name: RouteNames.AMALG_REG_INFORMATION,
-    component: Views.AmalgRegInformation,
-    meta: {
-      step: 1,
-      requiresAuth: true,
-      filingType: FilingTypes.AMALGAMATION_APPLICATION,
-      filingSubType: AmalgamationTypes.REGULAR
-    }
-  },
-  {
-    path: '/amalg-reg-business-info',
-    name: RouteNames.AMALG_REG_BUSINESS_INFO,
-    component: Views.AmalgRegBusinessInfo,
-    meta: {
-      step: 2,
-      requiresAuth: true,
-      filingType: FilingTypes.AMALGAMATION_APPLICATION,
-      filingSubType: AmalgamationTypes.REGULAR
-    }
-  },
-  {
-    path: '/amalg-reg-people-roles',
-    name: RouteNames.AMALG_REG_PEOPLE_ROLES,
-    component: Views.AmalgRegPeopleRoles,
-    meta: {
-      step: 3,
-      requiresAuth: true,
-      filingType: FilingTypes.AMALGAMATION_APPLICATION,
-      filingSubType: AmalgamationTypes.REGULAR
-    }
-  },
-  {
-    path: '/amalg-reg-share-structure',
-    name: RouteNames.AMALG_REG_SHARE_STRUCTURE,
-    component: Views.AmalgRegShareStructure,
-    meta: {
-      step: 4,
-      requiresAuth: true,
-      filingType: FilingTypes.AMALGAMATION_APPLICATION,
-      filingSubType: AmalgamationTypes.REGULAR
-    }
-  },
-  {
-    path: '/amalg-reg-review-confirm',
-    name: RouteNames.AMALG_REG_REVIEW_CONFIRM,
-    component: Views.AmalgRegReviewConfirm,
-    meta: {
-      step: 5,
-      requiresAuth: true,
-      filingType: FilingTypes.AMALGAMATION_APPLICATION,
-      filingSubType: AmalgamationTypes.REGULAR
-    }
-  },
-  {
     // default/fallback route
     // must be last
     // NB: this route is IA-specific but App::fetchData() will reroute
