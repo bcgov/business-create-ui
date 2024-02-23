@@ -655,26 +655,6 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
     this.jurisdictionErrorMessage = ''
     this.isMrasJurisdiction = false
   }
-
-  /** Sets validity according to various flags. */
-  @Watch('businessTableValid')
-  @Watch('isAddingAmalgamatingBusiness')
-  @Watch('isAddingAmalgamatingForeignBusiness')
-  private onBusinessTableValid (): void {
-    this.setAmalgamatingBusinessesValid(
-      this.businessTableValid &&
-      !this.isAddingAmalgamatingBusiness &&
-      !this.isAddingAmalgamatingForeignBusiness
-    )
-
-    // Reset "Add an Amalgamating Foreign Business" Panel on change
-    this.isForeignBusinessValid = null
-    this.jurisdiction = null
-    this.legalName = null
-    this.corpNumber = null
-    this.jurisdictionErrorMessage = ''
-    this.isMrasJurisdiction = false
-  }
 }
 </script>
 
