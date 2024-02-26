@@ -1,4 +1,4 @@
-import { AddressIF } from '@/interfaces'
+import { AuthInformationIF, RegisteredRecordsAddressesIF } from '@/interfaces'
 import { AmlStatuses, AmalgamationTypes, AmlRoles, AmlTypes } from '@/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 
@@ -12,9 +12,9 @@ interface AmalgamatingLearIF {
 
   // properties for UI only:
   name?: string
-  email?: string
+  authInfo?: AuthInformationIF
   legalType?: CorpTypeCd
-  address?: AddressIF
+  addresses?: RegisteredRecordsAddressesIF
   status?: AmlStatuses // computed status (base on business rules)
   isNotInGoodStanding?: boolean // whether business is in good standing
   isFrozen?: boolean // whether business is frozen
@@ -36,7 +36,7 @@ interface AmalgamatingForeignIF {
     country: string
   }
   legalName: string
-  corpNumber: string
+  identifier: string
 
   // properties for UI only:
   status?: AmlStatuses

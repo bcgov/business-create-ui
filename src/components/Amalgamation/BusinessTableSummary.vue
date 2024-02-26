@@ -20,7 +20,7 @@
 
         <tr
           v-for="item in getAmalgamatingBusinesses"
-          :key="key(item)"
+          :key="item.identifier"
         >
           <td class="business-name">
             <v-icon color="gray9">
@@ -32,8 +32,8 @@
           <td class="business-address">
             <template v-if="item.type === AmlTypes.LEAR">
               <BaseAddress
-                v-if="item.address"
-                :address="item.address"
+                v-if="item.addresses"
+                :address="registeredOfficeMailingAddress(item)"
               />
               <span v-else>Affiliate to view</span>
             </template>
@@ -58,7 +58,7 @@ import { Getter } from 'pinia-class'
 import { getName } from 'country-list'
 import { useStore } from '@/store/store'
 import { AmlRoles, AmlTypes } from '@/enums'
-import { AmalgamatingBusinessIF } from '@/interfaces'
+import { AddressIF, AmalgamatingBusinessIF } from '@/interfaces'
 import { BaseAddress } from '@bcrs-shared-components/base-address'
 
 @Component({
@@ -71,14 +71,6 @@ export default class BusinessTableSummary extends Vue {
   readonly AmlTypes = AmlTypes
 
   @Getter(useStore) getAmalgamatingBusinesses!: AmalgamatingBusinessIF[]
-  @Getter(useStore) isAmalgamationFilingHorizontal!: boolean
-  @Getter(useStore) isAmalgamationFilingVertical!: boolean
-
-  key (item: AmalgamatingBusinessIF): string {
-    if (item?.type === AmlTypes.LEAR) return item.identifier
-    if (item?.type === AmlTypes.FOREIGN) return item.corpNumber
-    return null // should never happen
-  }
 
   name (item: AmalgamatingBusinessIF): string {
     if (item?.type === AmlTypes.LEAR) return item.name
@@ -87,7 +79,12 @@ export default class BusinessTableSummary extends Vue {
   }
 
   email (item: AmalgamatingBusinessIF): string {
-    if (item?.type === AmlTypes.LEAR) return item.email
+    if (item?.type === AmlTypes.LEAR) return item.authInfo?.contacts[0]?.email
+    return null // should never happen
+  }
+
+  registeredOfficeMailingAddress (item: AmalgamatingBusinessIF): AddressIF {
+    if (item?.type === AmlTypes.LEAR) return item.addresses?.registeredOffice?.mailingAddress
     return null // should never happen
   }
 
@@ -103,10 +100,12 @@ export default class BusinessTableSummary extends Vue {
   }
 
   role (item: AmalgamatingBusinessIF): string {
-    if (item.role === AmlRoles.AMALGAMATING) return 'Amalgamating Business'
-    if (item.role === AmlRoles.HOLDING && this.isAmalgamationFilingHorizontal) return 'Primary Company'
-    if (item.role === AmlRoles.HOLDING && this.isAmalgamationFilingVertical) return 'Holding Company'
-    return '(Unknown)' // should never happen
+    switch (item.role) {
+      case AmlRoles.AMALGAMATING: return 'Amalgamating Business'
+      case AmlRoles.HOLDING: return 'Holding Business'
+      case AmlRoles.PRIMARY: return 'Primary Business'
+      default: return '(Unknown)' // should never happen
+    }
   }
 }
 </script>

@@ -241,6 +241,7 @@
       <ListPeopleAndRoles
         :isSummary="false"
         :disabled="showOrgPersonForm"
+        :showDirectors="getPeopleAndRolesResource.showDirectors"
         @editPerson="onEditPerson($event)"
         @removePerson="onRemovePerson($event)"
       />

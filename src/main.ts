@@ -27,7 +27,7 @@ import '@/assets/styles/layout.scss'
 import '@/assets/styles/overrides.scss'
 
 // Helpers
-import { FetchConfig, GetFeatureFlag, InitLdClient, Navigate } from '@/utils'
+import { FetchConfig, GetFeatureFlag, InitLdClient, Navigate, Sleep } from '@/utils'
 import KeycloakService from 'sbc-common-components/src/services/keycloak.services'
 
 // get rid of "You are running Vue in development mode" console message
@@ -78,7 +78,7 @@ async function start () {
   await KeycloakService.setKeycloakConfigUrl(keycloakConfig)
 
   // initialize token service which will do a check-sso to initiate session
-  // don't start during Vitest tests as it messes up the test JWT
+  // only do when not in Vitest tests as it messes up the test JWT
   if (import.meta.env.VITEST === undefined) {
     console.info('Starting token refresh service...') // eslint-disable-line no-console
     await KeycloakService.initializeToken()
@@ -113,14 +113,18 @@ async function start () {
 }
 
 // execution and error handling
-start().catch(error => {
-  // log any error after configuring sentry.
-  // it helps to identify configuration issues specific to the environment.
-  // note that it won't log anything related to `FetchConfig()` since sentry is depending on a config value.
+start().catch(async (error) => {
+  // Log any error after configuring sentry.
+  // It helps to identify configuration issues specific to the environment.
+  // Note that it won't log anything related to `FetchConfig()` since sentry is depending on a config value.
   Sentry.captureException(error)
+
   console.error(error) // eslint-disable-line no-console
+  await Sleep(100) // wait for console error to be shown before alert
+
   alert('There was an error starting this page. (See console for details.)\n' +
     'Please try again later.')
+
   // try to navigate to Business Registry home page
   Navigate(sessionStorage.getItem('BUSINESSES_URL'))
 })

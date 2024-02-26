@@ -467,3 +467,109 @@ describe('List People And Roles component - BEN restoration', () => {
     expect(wrapper.find('.people-roles-content').exists()).toBe(true)
   })
 })
+
+describe('List People And Roles component - Short form amalgamation', () => {
+  let wrapper: any
+
+  const mockPersonList = [
+    {
+      officer: {
+        id: 0,
+        firstName: 'Jon',
+        lastName: 'Doe',
+        middleName: 'D',
+        organizationName: '',
+        partyType: 'person',
+        email: 'completing-party@example.com'
+      },
+      roles: [
+        { roleType: 'Completing Party', appointmentDate: '2020-03-30' }
+      ],
+      mailingAddress: {
+        streetAddress: '123 Fake Street',
+        streetAddressAdditional: '',
+        addressCity: 'Victoria',
+        addressRegion: 'BC',
+        postalCode: 'V8Z 5C6',
+        addressCountry: 'CA'
+      }
+    },
+    {
+      officer: {
+        id: 1,
+        firstName: '',
+        lastName: '',
+        middleName: '',
+        organizationName: 'Sysco Foods Company',
+        partyType: 'organization'
+      },
+      roles: [
+        { roleType: 'Director', appointmentDate: '2020-03-30' }
+      ],
+      mailingAddress: {
+        streetAddress: '123 Fake Street',
+        streetAddressAdditional: '',
+        addressCity: 'Victoria',
+        addressRegion: 'BC',
+        postalCode: 'V8Z 5C6',
+        addressCountry: 'CA'
+      },
+      deliveryAddress: {
+        streetAddress: '123 Fake Street',
+        streetAddressAdditional: '',
+        addressCity: 'Victoria',
+        addressRegion: 'BC',
+        postalCode: 'V8Z 5C6',
+        addressCountry: 'CA'
+      }
+    }
+  ]
+
+  beforeAll(() => {
+    store.stateModel.entityType = CorpTypeCd.BENEFIT_COMPANY
+    store.stateModel.tombstone.filingType = FilingTypes.AMALGAMATION_APPLICATION
+  })
+
+  afterEach(() => {
+    wrapper.destroy()
+  })
+
+  it('does not show the peoples/roles list if there is no data to display', () => {
+    wrapper = shallowWrapperFactory(
+      ListPeopleAndRoles,
+      null,
+      { addPeopleAndRoleStep: { orgPeople: [] } }
+    )
+
+    expect(wrapper.findAll('.people-roles-content').length).toEqual(0)
+    expect(wrapper.find('.people-roles-header').exists()).toBe(false)
+    expect(wrapper.find('.people-roles-content').exists()).toBe(false)
+  })
+
+  it('displays correct number of peoples/roles list - showDirectors set to false', () => {
+    wrapper = shallowWrapperFactory(
+      ListPeopleAndRoles,
+      {
+        showDirectors: false
+      },
+      {
+        addPeopleAndRoleStep: { orgPeople: mockPersonList }
+      }
+    )
+
+    expect(wrapper.findAll('.people-roles-content').length).toEqual(1)
+    expect(wrapper.find('.people-roles-content').exists()).toBe(true)
+  })
+
+  it('displays correct number of peoples/roles list - showDirectors default value (true)', () => {
+    wrapper = shallowWrapperFactory(
+      ListPeopleAndRoles,
+      null,
+      { addPeopleAndRoleStep: { orgPeople: mockPersonList } }
+    )
+
+    expect(wrapper.findAll('.people-roles-content').length).toEqual(2)
+    expect(wrapper.find('.people-roles-header').exists()).toBe(true)
+    expect(wrapper.find('.people-roles-content').exists()).toBe(true)
+  })
+})

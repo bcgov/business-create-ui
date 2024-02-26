@@ -41,7 +41,10 @@
           </span>
 
           <!-- more actions menu -->
-          <v-menu offset-y>
+          <v-menu
+            offset-y
+            left
+          >
             <template #activator="{ on }">
               <v-btn
                 text
@@ -149,7 +152,7 @@ export default class ListNameTranslations extends Vue {
   }
 }
 
-// move icon up a bit to line up with text
+// nudge icon up a bit to line up with text
 .v-icon.mdi-delete {
   margin-top: -2px;
 }

@@ -1,4 +1,4 @@
-import { shallowWrapperFactory, wrapperFactory } from '../vitest-wrapper-factory'
+import { wrapperFactory } from '../vitest-wrapper-factory'
 import IncorporationAgreement from '@/views/Incorporation/IncorporationAgreement.vue'
 import { IncorporationResources } from '@/resources/'
 

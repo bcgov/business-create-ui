@@ -115,6 +115,8 @@ export default class Actions extends Mixins(AmalgamationMixin, CommonMixin,
   @Getter(useStore) getEntityIdentifier!: string
   @Getter(useStore) getFilingType!: string
   @Getter(useStore) getMaxStep!: number
+  // @Getter(useStore) getNameRequestApplicant!: NrApplicantIF
+  // @Getter(useStore) getNameRequestNumber!: string
   @Getter(useStore) getSteps!: Array<any>
   @Getter(useStore) isBusySaving!: boolean
   @Getter(useStore) isEntityType!: boolean
@@ -217,11 +219,15 @@ export default class Actions extends Mixins(AmalgamationMixin, CommonMixin,
     // Prompt Step validations
     this.setValidateSteps(true)
 
-    // If we're filing an amalgamation, we need to re-fetch the business table data on file and pay.
-    // We do that in case one of the businesses became invalid (e.g. historical) while the draft is open.
     if (this.getFilingType === FilingTypes.AMALGAMATION_APPLICATION) {
       try {
-        await this.refetchAmalgamatingBusinessesInfo()
+        // Re-fetch the business table data. We do this in case one of the businesses has changed (eg,
+        // became historical) while the draft was open.
+        const holdingPrimary = await this.refetchAmalgamatingBusinessesInfo()
+
+        // If there's a holding or primary business, re-fetch its data and update the prepopulated data.
+        // This will overwrite office addresses, directors, share structure, legal name and legal type.
+        if (holdingPrimary) await this.updatePrepopulatedData(holdingPrimary)
       } catch (error) {
         console.log('Error validating table in onClickFilePay(): ', error) // eslint-disable-line no-console
         this.setIsFilingPaying(false)
@@ -247,13 +253,16 @@ export default class Actions extends Mixins(AmalgamationMixin, CommonMixin,
         return
       }
 
-      // If this is a named company IA, validate NR before filing submission. This method is different
-      // from the processNameRequest method in App.vue. This method shows a generic message if
-      // the Name Request is not valid and clicking ok in the pop up redirects to the Manage Businesses
-      // dashboard.
+      // If a NR was used, validate it before filing submission. This method is different from the
+      // processNameRequest method in App.vue -- this method shows a generic message if the NR is
+      // not valid and clicking OK in the pop up redirects to the Manage Businesses dashboard.
       if (this.getNameRequestNumber) {
         try {
-          await this._validateNameRequest(this.getNameRequestNumber)
+          await this._validateNameRequest(
+            this.getNameRequestNumber,
+            this.getNameRequestApplicant.phoneNumber,
+            this.getNameRequestApplicant.emailAddress
+          )
         } catch (error) {
           console.log('Error validating NR in onClickFilePay(): ', error) // eslint-disable-line no-console
           this.setIsFilingPaying(false)
@@ -300,7 +309,7 @@ export default class Actions extends Mixins(AmalgamationMixin, CommonMixin,
         this.setIsFilingPaying(false)
       }
     } else {
-      // don't call window.scrollTo during Vitest tests because jsdom doesn't implement it
+      // otherwise, smooth-scroll to the top of the page
       window.scrollTo({ top: 0, behavior: 'smooth' })
     }
   }
@@ -325,11 +334,12 @@ export default class Actions extends Mixins(AmalgamationMixin, CommonMixin,
 
   // FUTURE: merge this with NameRequestMixin::validateNameRequest()
   /** Fetches NR and validates it. */
-  private async _validateNameRequest (nrNumber: string): Promise<void> {
-    const nameRequest = await LegalServices.fetchValidContactNr(nrNumber).catch(error => {
-      this.$root.$emit('name-request-retrieve-error')
-      throw new Error(error)
-    })
+  private async _validateNameRequest (nrNumber: string, phone = '', email = ''): Promise<void> {
+    const nameRequest = await LegalServices.fetchValidContactNr(nrNumber, phone, email)
+      .catch(error => {
+        this.$root.$emit('name-request-retrieve-error')
+        throw new Error(error)
+      })
 
     // ensure NR was found
     if (!nameRequest) {

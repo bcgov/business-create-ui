@@ -2,6 +2,7 @@ import { ContinuationInResourceIF } from '@/interfaces'
 import { FilingCodes, RuleIds } from '@/enums'
 import { ContinuationInSteps } from './steps'
 import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
+import { ResourcePhrases } from '../ResourcePhrases'
 
 export const ContinuationInResourceBc: ContinuationInResourceIF = {
   entityType: CorpTypeCd.BC_COMPANY,
@@ -32,9 +33,7 @@ export const ContinuationInResourceBc: ContinuationInResourceIF = {
   reviewAndConfirm: {
     completingPartyStatement: {
       certifyStatements: [],
-      certifyClause: `Note: It is an offence to make a false or misleading statement in respect
-        of a material fact in a record submitted to the Corporate Registry for filing.
-        See section 427 of the Business Corporations Act.`,
+      certifyClause: ResourcePhrases.OFFENCE_SECTION_427,
       entityDisplay: null
     }
   }

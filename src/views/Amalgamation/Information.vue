@@ -1,5 +1,6 @@
 <template>
   <div id="amalgamation-information">
+    <!-- spinner for data fetch -->
     <v-fade-transition>
       <div
         v-show="showSpinner"
@@ -22,23 +23,37 @@
     <section class="mt-10">
       <header id="amalgamating-businesses">
         <h2>Amalgamating Businesses</h2>
-        <p class="mt-4">
-          <template v-if="isAmalgamationFilingRegular">
-            Add the amalgamating businesses to the list.
-          </template>
-          <template v-if="isAmalgamationFilingHorizontal || isAmalgamationFilingVertical">
-            Add the holding business and the amalgamating businesses below. The amalgamated business
-            will adopt as its notice of articles, the notice of articles of the amalgamating holding
-            company.
-          </template>
+        <p
+          v-if="isAmalgamationFilingRegular"
+          class="mt-3"
+        >
+          Add the amalgamating businesses to the list.
         </p>
-        <p class="mt-4">
+        <p
+          v-if="isAmalgamationFilingHorizontal"
+          class="mt-3"
+        >
+          Add the primary business and the amalgamating businesses below. The amalgamated business will
+          adopt as its notice of articles, the notice of articles of the primary business whose shares
+          are not to be cancelled.
+        </p>
+        <p
+          v-if="isAmalgamationFilingVertical"
+          class="mt-3"
+        >
+          Add the holding business and the amalgamating businesses below. The amalgamated business will
+          adopt as its notice of articles, the notice of articles of the amalgamating holding business.
+        </p>
+        <p class="mt-3">
           <strong>Important:</strong> The amalgamating businesses must be visible on your
           My Business Registry list before the amalgamation filing can be completed.
         </p>
       </header>
 
-      <AmalgamatingBusinesses @valid="amalgamatingBusinessesValid=$event" />
+      <AmalgamatingBusinesses
+        class="mt-5"
+        @valid="amalgamatingBusinessesValid=$event"
+      />
     </section>
 
     <!-- Resulting Business Name and Type -->
@@ -48,6 +63,7 @@
       </header>
 
       <ExpandableHelp
+        v-if="isAmalgamationFilingRegular"
         class="mt-4"
         helpLabel="Help with Business Type"
       >
@@ -55,6 +71,16 @@
           <BusinessTypeHelp />
         </template>
       </ExpandableHelp>
+
+      <p
+        v-else
+        class="mt-3"
+      >
+        This is a {{ isAmalgamationFilingVertical ? 'vertical' : 'horizontal' }} short form amalgamation
+        under section 273 of Business Corporations Act.
+        The amalgamated business will adopt as its notice of articles, the notice of articles of the
+        {{ isAmalgamationFilingVertical ? 'holding' : 'primary' }} business.
+      </p>
 
       <ResultingBusinessName class="mt-5" />
     </section>

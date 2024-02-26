@@ -163,7 +163,7 @@ export default class EffectiveDateTime extends Mixins(DateMixin) {
     dateTimeForm: FormIF
   }
 
-  @Prop({ default: null }) readonly effectiveDateTime!: EffectiveDateTimeIF
+  @Prop({ required: true }) readonly effectiveDateTime!: EffectiveDateTimeIF
 
   @Prop({ default: 'Incorporation Date and Time' }) readonly label!: string
 
@@ -238,7 +238,7 @@ export default class EffectiveDateTime extends Mixins(DateMixin) {
 
   /** Construct the Date Object for storage */
   private constructDate (): void {
-    if (this.isFutureEffective) {
+    if (this.isFutureEffective && this.dateText) {
       // Format the selected date string and create Date
       const dateToValidate = this.yyyyMmDdToDate(this.dateText)
 

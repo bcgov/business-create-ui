@@ -35,34 +35,23 @@ describe('Business Table Summary', () => {
 
   const amalgamatingBusinesses = [
     {
-      label: 'LEAR holding business - reg amalgamation',
-      amalgamationType: AmalgamationTypes.REGULAR,
-      type: AmlTypes.LEAR,
-      identifier: 'BC1111111',
-      name: 'Test Business 1',
-      email: 'bc1111111@example.com',
-      address: {
-        streetAddress: '123 Main St',
-        addressCity: 'Victoria',
-        addressCountry: 'CA',
-        postalCode: 'V8V 8V8'
-      },
-      role: AmlRoles.HOLDING
-    },
-    {
       label: 'LEAR holding business - horiz amalgamation',
       amalgamationType: AmalgamationTypes.HORIZONTAL,
       type: AmlTypes.LEAR,
       identifier: 'BC1111111',
       name: 'Test Business 1',
-      email: 'bc1111111@example.com',
-      address: {
-        streetAddress: '123 Main St',
-        addressCity: 'Victoria',
-        addressCountry: 'CA',
-        postalCode: 'V8V 8V8'
+      authInfo: { contacts: [ { email: 'bc1111111@example.com' } ] },
+      addresses: {
+        registeredOffice: {
+          mailingAddress: {
+            streetAddress: '123 Main St',
+            addressCity: 'Victoria',
+            addressCountry: 'CA',
+            postalCode: 'V8V 8V8'
+          }
+        }
       },
-      role: AmlRoles.HOLDING
+      role: AmlRoles.PRIMARY
     },
     {
       label: 'LEAR primary business - vert amalgamation',
@@ -70,12 +59,16 @@ describe('Business Table Summary', () => {
       type: AmlTypes.LEAR,
       identifier: 'BC1111111',
       name: 'Test Business 1',
-      email: 'bc1111111@example.com',
-      address: {
-        streetAddress: '123 Main St',
-        addressCity: 'Victoria',
-        addressCountry: 'CA',
-        postalCode: 'V8V 8V8'
+      authInfo: { contacts: [ { email: 'bc1111111@example.com' } ] },
+      addresses: {
+        registeredOffice: {
+          mailingAddress: {
+            streetAddress: '123 Main St',
+            addressCity: 'Victoria',
+            addressCountry: 'CA',
+            postalCode: 'V8V 8V8'
+          }
+        }
       },
       role: AmlRoles.HOLDING
     },
@@ -85,7 +78,7 @@ describe('Business Table Summary', () => {
       type: AmlTypes.LEAR,
       identifier: 'BC2222222',
       name: 'Test Business 2',
-      email: 'bc2222222@example.com',
+      authInfo: { contacts: [ { email: 'bc2222222@example.com' } ] },
       address: undefined,
       role: AmlRoles.AMALGAMATING
     },
@@ -93,7 +86,7 @@ describe('Business Table Summary', () => {
       label: 'foreign business in Federal jurisdiction',
       amalgamationType: AmalgamationTypes.REGULAR,
       type: AmlTypes.FOREIGN,
-      corpNumber: 'CA-3333333',
+      identifier: 'CA-3333333',
       legalName: 'Test Business 3',
       foreignJurisdiction: {
         country: 'CA',
@@ -106,7 +99,7 @@ describe('Business Table Summary', () => {
       label: 'foreign business in USA jurisdiction',
       amalgamationType: AmalgamationTypes.REGULAR,
       type: AmlTypes.FOREIGN,
-      corpNumber: 'US-4444444',
+      identifier: 'US-4444444',
       legalName: 'Test Business 4',
       foreignJurisdiction: {
         country: 'US'
@@ -149,13 +142,13 @@ describe('Business Table Summary', () => {
 
       if ((business.type === AmlTypes.LEAR)) {
         expect(td.at(0).text()).toContain(business.name)
-        expect(td.at(0).text()).toContain(business.email)
+        expect(td.at(0).text()).toContain(business.authInfo.contacts[0].email)
 
-        if (business.address) {
-          expect(td.at(1).text()).toContain(business.address.streetAddress)
-          expect(td.at(1).text()).toContain(business.address.addressCity)
+        if (business.addresses) {
+          expect(td.at(1).text()).toContain(business.addresses.registeredOffice.mailingAddress.streetAddress)
+          expect(td.at(1).text()).toContain(business.addresses.registeredOffice.mailingAddress.addressCity)
           expect(td.at(1).text()).toContain('Canada')
-          expect(td.at(1).text()).toContain(business.address.postalCode)
+          expect(td.at(1).text()).toContain(business.addresses.registeredOffice.mailingAddress.postalCode)
         } else {
           expect(td.at(1).text()).toBe('Affiliate to view')
         }
@@ -163,11 +156,11 @@ describe('Business Table Summary', () => {
         if (business.role === AmlRoles.AMALGAMATING) {
           expect(td.at(2).text()).toBe('Amalgamating Business')
         }
-        if (business.role === AmlRoles.HOLDING && business.amalgamationType === AmalgamationTypes.HORIZONTAL) {
-          expect(td.at(2).text()).toBe('Primary Company')
+        if (business.role === AmlRoles.HOLDING) {
+          expect(td.at(2).text()).toBe('Holding Business')
         }
-        if (business.role === AmlRoles.HOLDING && business.amalgamationType === AmalgamationTypes.VERTICAL) {
-          expect(td.at(2).text()).toBe('Holding Company')
+        if (business.role === AmlRoles.PRIMARY) {
+          expect(td.at(2).text()).toBe('Primary Business')
         }
       }
 

@@ -50,11 +50,13 @@ import {
   NaicsIF,
   NameRequestIF,
   NameTranslationIF,
+  NrApplicantIF,
   OfficeAddressIF,
   OrgInformationIF,
   OrgPersonIF,
   PartyIF,
   PeopleAndRoleIF,
+  PeopleAndRolesResourceIF,
   RegisteredRecordsAddressesIF,
   RegistrationStateIF,
   ResourceIF,
@@ -66,8 +68,7 @@ import {
   StateIF,
   StepIF,
   UploadAffidavitIF,
-  ValidationDetailIF,
-  PeopleAndRolesResourceIF
+  ValidationDetailIF
 } from '@/interfaces'
 
 // It's possible to move getters / actions into seperate files:
@@ -77,6 +78,18 @@ import {
 export const useStore = defineStore('store', {
   state: (): StateIF => ({ resourceModel, stateModel }),
   getters: {
+    /** The Account ID, from session storage. */
+    getAccountId (): string {
+      // if we can't get account id from ACCOUNT_ID
+      // then try to get it from CURRENT_ACCOUNT
+      let accountId = sessionStorage.getItem('ACCOUNT_ID')
+      if (!accountId) {
+        const currentAccount = sessionStorage.getItem('CURRENT_ACCOUNT')
+        accountId = JSON.parse(currentAccount)?.id
+      }
+      return accountId
+    },
+
     /** True if current screen width is mobile. */
     isMobile (): boolean {
     // fall back to base window width if no window size changes have occurred
@@ -339,9 +352,19 @@ export const useStore = defineStore('store', {
       return this.stateModel.business.officeAddress
     },
 
+    /** The Correct Name Option. */
+    getCorrectNameOption (): CorrectNameOptions {
+      return this.stateModel.correctNameOption
+    },
+
     /** The Name Request object. */
     getNameRequest (): NameRequestIF {
       return this.stateModel.nameRequest
+    },
+
+    /** The Name Request applicant (may be empty object). */
+    getNameRequestApplicant (): NrApplicantIF {
+      return this.getNameRequest.applicants // object not array
     },
 
     /** The approved name (from NR or Correct Name component). */
@@ -349,14 +372,9 @@ export const useStore = defineStore('store', {
       return this.stateModel.nameRequestApprovedName
     },
 
-    /** The Correct Name Option. */
-    getCorrectNameOption (): CorrectNameOptions {
-      return this.stateModel.correctNameOption
-    },
-
     /** The Name Request number. */
     getNameRequestNumber (): string {
-      return this.getNameRequest?.nrNum
+      return this.getNameRequest.nrNum
     },
 
     /** The Company Step object. */
@@ -602,16 +620,21 @@ export const useStore = defineStore('store', {
         )
       } else {
         return (
-          // *** FUTURE: update this when Resulting Company Name is implemented
           this.getAmalgamatingBusinessesValid &&
-          !!this.getCorrectNameOption &&
-          this.getNameTranslationsValid
+          // NB - this is the only valid Correct Name Option for short-form amalgamations:
+          (this.getCorrectNameOption === CorrectNameOptions.CORRECT_AML_ADOPT)
+          // NB - there are no name translations for short-form amalgamations
         )
       }
     },
 
     /** Whether all the amalgamation steps are valid. */
     isAmalgamationValid (): boolean {
+      const isCreateShareStructureValid = (
+        this.isAmalgamationFilingHorizontal ||
+        this.isAmalgamationFilingVertical ||
+        this.isCreateShareStructureValid
+      )
       const isFolioNumberValid = !this.isPremiumAccount || this.getFolioNumberValid
       const isCourtOrderValid = this.isRoleStaff ? this.getCourtOrderStep.valid : true
       const isCertifyValid = this.getCertifyState.valid && !!this.getCertifyState.certifiedBy
@@ -621,7 +644,7 @@ export const useStore = defineStore('store', {
         this.isAmalgamationInformationValid &&
         this.isDefineCompanyValid &&
         this.isAddPeopleAndRolesValid &&
-        this.isCreateShareStructureValid &&
+        isCreateShareStructureValid &&
         this.getEffectiveDateTime.valid &&
         isFolioNumberValid &&
         this.getAmalgamationCourtApprovalValid &&

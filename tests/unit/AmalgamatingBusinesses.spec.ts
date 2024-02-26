@@ -3,13 +3,14 @@ import Vue from 'vue'
 import Vuetify from 'vuetify'
 import { createPinia, setActivePinia } from 'pinia'
 import { useStore } from '@/store/store'
-import { mount } from '@vue/test-utils'
+import { mount, shallowMount } from '@vue/test-utils'
 import AmalgamatingBusinesses from '@/components/Amalgamation/AmalgamatingBusinesses.vue'
 import BusinessTable from '@/components/Amalgamation/BusinessTable.vue'
 import { AmlRoles, AmlTypes, FilingStatus } from '@/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
-import { EntityStates, RestorationTypes } from '@bcrs-shared-components/enums'
+import { AmalgamationTypes, EntityStates, FilingTypes, RestorationTypes } from '@bcrs-shared-components/enums'
 import { AuthServices, LegalServices } from '@/services'
+import { AmalgamatingBusinessIF } from '@/interfaces'
 
 const vuetify = new Vuetify({})
 setActivePinia(createPinia())
@@ -19,6 +20,9 @@ describe('Amalgamating Businesses - components and validity', () => {
   let wrapper: any
 
   beforeEach(() => {
+    // initial state
+    store.stateModel.tombstone.filingType = FilingTypes.AMALGAMATION_APPLICATION
+
     wrapper = mount(AmalgamatingBusinesses, { vuetify })
   })
 
@@ -56,7 +60,108 @@ describe('Amalgamating Businesses - components and validity', () => {
     expect(wrapper.find('.v-snack').exists()).toBe(true)
   })
 
-  const tests = [
+  it('computes haveHoldingBusiness correctly', () => {
+    // verify with no holding businesses
+    store.stateModel.amalgamation.amalgamatingBusinesses = []
+    expect(wrapper.vm.haveHoldingBusiness).toBe(false)
+
+    // verify with a holding business
+    store.stateModel.amalgamation.amalgamatingBusinesses = [
+      { role: AmlRoles.HOLDING } as AmalgamatingBusinessIF
+    ]
+    expect(wrapper.vm.haveHoldingBusiness).toBe(true)
+  })
+
+  it('computes havePrimaryBusiness correctly', () => {
+    // verify with no primary businesses
+    store.stateModel.amalgamation.amalgamatingBusinesses = []
+    expect(wrapper.vm.havePrimaryBusiness).toBe(false)
+
+    // verify with a primary business
+    store.stateModel.amalgamation.amalgamatingBusinesses = [
+      { role: AmlRoles.PRIMARY } as AmalgamatingBusinessIF
+    ]
+    expect(wrapper.vm.havePrimaryBusiness).toBe(true)
+  })
+
+  it('computes haveAmalgamatingBusinesses correctly - regular amalgamation', () => {
+    store.stateModel.amalgamation.type = AmalgamationTypes.REGULAR
+
+    // verify amalgamation with less than 2 amalgamating businesses
+    store.stateModel.amalgamation.amalgamatingBusinesses = [
+      { role: AmlRoles.AMALGAMATING } as AmalgamatingBusinessIF
+    ]
+    expect(wrapper.vm.haveAmalgamatingBusinesses).toBe(false)
+
+    // verify amalgamation with 2 amalgamating businesses
+    store.stateModel.amalgamation.amalgamatingBusinesses = [
+      { role: AmlRoles.AMALGAMATING } as AmalgamatingBusinessIF,
+      { role: AmlRoles.AMALGAMATING } as AmalgamatingBusinessIF
+    ]
+    expect(wrapper.vm.haveAmalgamatingBusinesses).toBe(true)
+  })
+
+  it('computes haveAmalgamatingBusinesses correctly - short-form amalgamation', () => {
+    store.stateModel.amalgamation.type = AmalgamationTypes.HORIZONTAL
+
+    // verify with less than 1 amalgamating business
+    store.stateModel.amalgamation.amalgamatingBusinesses = []
+    expect(wrapper.vm.haveAmalgamatingBusinesses).toBe(false)
+
+    // verify with 1 amalgamating business
+    store.stateModel.amalgamation.amalgamatingBusinesses = [
+      { role: AmlRoles.AMALGAMATING } as AmalgamatingBusinessIF
+    ]
+    expect(wrapper.vm.haveAmalgamatingBusinesses).toBe(true)
+  })
+})
+
+describe('Amalgamating Businesses - computes businessTableValid correctly', () => {
+  const businessTableValidTests = [
+    // NB: for regular, haveHoldingBusiness isn't used
+    { type: AmalgamationTypes.REGULAR, haveAmalgamatingBusinesses: false, allOk: false, expected: false },
+    { type: AmalgamationTypes.REGULAR, haveAmalgamatingBusinesses: false, allOk: true, expected: false },
+    { type: AmalgamationTypes.REGULAR, haveAmalgamatingBusinesses: true, allOk: false, expected: false },
+    { type: AmalgamationTypes.REGULAR, haveAmalgamatingBusinesses: true, allOk: true, expected: true },
+    { type: AmalgamationTypes.VERTICAL, haveHoldingBusiness: false, haveAmalgamatingBusinesses: false, allOk: false, expected: false },
+    { type: AmalgamationTypes.VERTICAL, haveHoldingBusiness: false, haveAmalgamatingBusinesses: false, allOk: true, expected: false },
+    { type: AmalgamationTypes.VERTICAL, haveHoldingBusiness: false, haveAmalgamatingBusinesses: true, allOk: false, expected: false },
+    { type: AmalgamationTypes.VERTICAL, haveHoldingBusiness: false, haveAmalgamatingBusinesses: true, allOk: true, expected: false },
+    { type: AmalgamationTypes.VERTICAL, haveHoldingBusiness: true, haveAmalgamatingBusinesses: false, allOk: false, expected: false },
+    { type: AmalgamationTypes.VERTICAL, haveHoldingBusiness: true, haveAmalgamatingBusinesses: false, allOk: true, expected: false },
+    { type: AmalgamationTypes.VERTICAL, haveHoldingBusiness: true, haveAmalgamatingBusinesses: true, allOk: false, expected: false },
+    { type: AmalgamationTypes.VERTICAL, haveHoldingBusiness: true, haveAmalgamatingBusinesses: true, allOk: true, expected: true }
+  ]
+
+  for (let i = 0; i < businessTableValidTests.length; i++) {
+    it(`test ${i}`, () => {
+      store.stateModel.tombstone.filingType = FilingTypes.AMALGAMATION_APPLICATION
+      store.stateModel.amalgamation.type = businessTableValidTests[i].type
+
+      // NB: use shallowMount so BusinessTable doesn't affect data
+      const wrapper = shallowMount(AmalgamatingBusinesses, {
+        computed: {
+          haveAmalgamatingBusinesses: {
+            get (): boolean { return businessTableValidTests[i].haveAmalgamatingBusinesses }
+          },
+          haveHoldingBusiness: {
+            get (): boolean { return businessTableValidTests[i].haveHoldingBusiness }
+          }
+        },
+        data: () => ({ allOk: businessTableValidTests[i].allOk }),
+        vuetify
+      }) as any
+
+      // verify store getter
+      expect(wrapper.vm.businessTableValid).toBe(businessTableValidTests[i].expected)
+
+      wrapper.destroy()
+    })
+  }
+})
+
+describe('Amalgamating Businesses - validates component correctly', () => {
+  const amalgamatingBusinessesValidTests = [
     { businessTableValid: false, isAddingAmalgamatingBusiness: false, isAddingAmalgamatingForeignBusiness: false, expected: false },
     { businessTableValid: false, isAddingAmalgamatingBusiness: false, isAddingAmalgamatingForeignBusiness: true, expected: false },
     { businessTableValid: false, isAddingAmalgamatingBusiness: true, isAddingAmalgamatingForeignBusiness: false, expected: false },
@@ -67,12 +172,27 @@ describe('Amalgamating Businesses - components and validity', () => {
     { businessTableValid: true, isAddingAmalgamatingBusiness: true, isAddingAmalgamatingForeignBusiness: true, expected: false }
   ]
 
-  for (let i = 0; i < tests.length; i++) {
-    const { businessTableValid, isAddingAmalgamatingBusiness, isAddingAmalgamatingForeignBusiness, expected } = tests[i]
-    it(`validates component - test ${i}`, async () => {
-      // set data and verify validity
-      await wrapper.setData({ businessTableValid, isAddingAmalgamatingBusiness, isAddingAmalgamatingForeignBusiness })
-      expect(store.stateModel.amalgamation.amalgamatingBusinessesValid).toBe(expected)
+  for (let i = 0; i < amalgamatingBusinessesValidTests.length; i++) {
+    it(`test ${i}`, () => {
+      // NB: use shallowMount so BusinessTable doesn't affect data
+      const wrapper = shallowMount(AmalgamatingBusinesses, {
+        computed: {
+          businessTableValid: {
+            get (): boolean { return amalgamatingBusinessesValidTests[i].businessTableValid }
+          }
+        },
+        data: () => ({
+          isAddingAmalgamatingBusiness: amalgamatingBusinessesValidTests[i].isAddingAmalgamatingBusiness,
+          isAddingAmalgamatingForeignBusiness: amalgamatingBusinessesValidTests[i].isAddingAmalgamatingForeignBusiness
+        }),
+        vuetify
+      }) as any
+
+      // call function and verify store getter
+      wrapper.vm.onBusinessTableValid()
+      expect(store.getAmalgamatingBusinessesValid).toBe(amalgamatingBusinessesValidTests[i].expected)
+
+      wrapper.destroy()
     })
   }
 })
@@ -131,13 +251,13 @@ describe('Amalgamating Businesses - add amalgamating business', () => {
     })
 
     // verify data
-    expect(store.stateModel.amalgamation.amalgamatingBusinesses.length).toBe(1)
-    const business = store.stateModel.amalgamation.amalgamatingBusinesses[0] as any
+    expect(store.getAmalgamatingBusinesses.length).toBe(1)
+    const business = store.getAmalgamatingBusinesses[0] as any
     expect(business.type).toBe(AmlTypes.FOREIGN)
     expect(business.role).toBe(AmlRoles.AMALGAMATING)
-    expect(business.foreignJurisdiction).toEqual({ country: 'CA', region: 'British Columbia' })
+    expect(business.foreignJurisdiction).toEqual({ country: 'CA', region: 'BC' })
     expect(business.legalName).toBe('Extra Pro Business')
-    expect(business.corpNumber).toBe('A1234567')
+    expect(business.identifier).toBe('A1234567')
 
     // verify panel is now closed
     expect(wrapper.vm.isAddingAmalgamatingBusiness).toBe(false)
@@ -152,7 +272,7 @@ describe('Amalgamating Businesses - add amalgamating business', () => {
     await wrapper.setData({ isAddingAmalgamatingBusiness: true })
 
     // mock services functions
-    vi.spyOn((AuthServices as any), 'fetchAuthInfo').mockImplementation(() => null)
+    vi.spyOn((AuthServices as any), 'fetchAuthInfo').mockImplementation(() => ({ status: 'FORBIDDEN' }))
     vi.spyOn((LegalServices as any), 'fetchBusinessInfo').mockImplementation(() => null)
     vi.spyOn((LegalServices as any), 'fetchAddresses').mockImplementation(() => null)
     vi.spyOn((LegalServices as any), 'fetchFirstOrOnlyFiling').mockImplementation(() => null)
@@ -165,8 +285,8 @@ describe('Amalgamating Businesses - add amalgamating business', () => {
     })
 
     // verify data
-    expect(store.stateModel.amalgamation.amalgamatingBusinesses.length).toBe(1)
-    const business = store.stateModel.amalgamation.amalgamatingBusinesses[0] as any
+    expect(store.getAmalgamatingBusinesses.length).toBe(1)
+    const business = store.getAmalgamatingBusinesses[0] as any
     expect(business.type).toBe(AmlTypes.LEAR)
     expect(business.role).toBe(AmlRoles.AMALGAMATING)
     expect(business.identifier).toBe('BC1234567')
@@ -178,19 +298,15 @@ describe('Amalgamating Businesses - add amalgamating business', () => {
     vi.resetAllMocks()
   })
 
-  it('doesn\'t save an amalgamating business - BC - unaffiliated - staff', async () => {
-    // set state
-    store.setKeycloakRoles(['staff'])
-    await Vue.nextTick()
-
+  it('doesn\'t save an amalgamating business - BC - business not found', async () => {
     // open panel
     await wrapper.setData({ isAddingAmalgamatingBusiness: true })
 
     // mock services functions
-    vi.spyOn((AuthServices as any), 'fetchAuthInfo').mockImplementation(() => null)
+    vi.spyOn((AuthServices as any), 'fetchAuthInfo').mockImplementation(() => ({ status: 'NOT_FOUND' }))
     vi.spyOn((LegalServices as any), 'fetchBusinessInfo').mockImplementation(() => null)
-    vi.spyOn((LegalServices as any), 'fetchAddresses').mockImplementation(() => null)
-    vi.spyOn((LegalServices as any), 'fetchFirstOrOnlyFiling').mockImplementation(() => null)
+    vi.spyOn((LegalServices as any), 'fetchAddresses').mockImplementation(() => ({}))
+    vi.spyOn((LegalServices as any), 'fetchFirstOrOnlyFiling').mockImplementation(() => ({}))
 
     // simulate saving a BC business
     await wrapper.vm.saveAmalgamatingBusiness({
@@ -200,11 +316,40 @@ describe('Amalgamating Businesses - add amalgamating business', () => {
     })
 
     // verify data
-    expect(store.stateModel.amalgamation.amalgamatingBusinesses.length).toBe(0)
+    expect(store.getAmalgamatingBusinesses.length).toBe(0)
 
-    // verify snackbar is displayed
-    expect(wrapper.vm.snackbar).toBe(true)
-    expect(wrapper.vm.snackbarText).toBe('Business doesn\'t exist in LEAR.')
+    // verify dialog is displayed
+    expect(wrapper.vm.errorDialog).toBe(true)
+    expect(wrapper.vm.errorDialogTitle).toBe('Unable to add business')
+    // expect(wrapper.vm.errorDialogText).toContain('An error occurred.')
+
+    vi.resetAllMocks()
+  })
+
+  it('doesn\'t save an amalgamating business - BC - missing auth info', async () => {
+    // open panel
+    await wrapper.setData({ isAddingAmalgamatingBusiness: true })
+
+    // mock services functions
+    vi.spyOn((AuthServices as any), 'fetchAuthInfo').mockImplementation(() => null)
+    vi.spyOn((LegalServices as any), 'fetchBusinessInfo').mockImplementation(() => ({}))
+    vi.spyOn((LegalServices as any), 'fetchAddresses').mockImplementation(() => ({}))
+    vi.spyOn((LegalServices as any), 'fetchFirstOrOnlyFiling').mockImplementation(() => ({}))
+
+    // simulate saving a BC business
+    await wrapper.vm.saveAmalgamatingBusiness({
+      legalType: CorpTypeCd.BC_COMPANY,
+      name: 'My BC Business',
+      identifier: 'BC1234567'
+    })
+
+    // verify data
+    expect(store.getAmalgamatingBusinesses.length).toBe(0)
+
+    // verify dialog is displayed
+    expect(wrapper.vm.errorDialog).toBe(true)
+    expect(wrapper.vm.errorDialogTitle).toBe('Something went wrong')
+    expect(wrapper.vm.errorDialogText).toContain('An error occurred.')
 
     vi.resetAllMocks()
   })
@@ -227,11 +372,12 @@ describe('Amalgamating Businesses - add amalgamating business', () => {
     })
 
     // verify data
-    expect(store.stateModel.amalgamation.amalgamatingBusinesses.length).toBe(0)
+    expect(store.getAmalgamatingBusinesses.length).toBe(0)
 
-    // verify snackbar is displayed
-    expect(wrapper.vm.snackbar).toBe(true)
-    expect(wrapper.vm.snackbarText).toBe('Unable to add that business.')
+    // verify dialog is displayed
+    expect(wrapper.vm.errorDialog).toBe(true)
+    expect(wrapper.vm.errorDialogTitle).toBe('Something went wrong')
+    expect(wrapper.vm.errorDialogText).toContain('An error occurred.')
 
     vi.resetAllMocks()
   })
@@ -254,11 +400,12 @@ describe('Amalgamating Businesses - add amalgamating business', () => {
     })
 
     // verify data
-    expect(store.stateModel.amalgamation.amalgamatingBusinesses.length).toBe(0)
+    expect(store.getAmalgamatingBusinesses.length).toBe(0)
 
-    // verify snackbar is displayed
-    expect(wrapper.vm.snackbar).toBe(true)
-    expect(wrapper.vm.snackbarText).toBe('Unable to add that business.')
+    // verify dialog is displayed
+    expect(wrapper.vm.errorDialog).toBe(true)
+    expect(wrapper.vm.errorDialogTitle).toBe('Something went wrong')
+    expect(wrapper.vm.errorDialogText).toContain('An error occurred.')
 
     vi.resetAllMocks()
   })
@@ -281,11 +428,12 @@ describe('Amalgamating Businesses - add amalgamating business', () => {
     })
 
     // verify data
-    expect(store.stateModel.amalgamation.amalgamatingBusinesses.length).toBe(0)
+    expect(store.getAmalgamatingBusinesses.length).toBe(0)
 
-    // verify snackbar is displayed
-    expect(wrapper.vm.snackbar).toBe(true)
-    expect(wrapper.vm.snackbarText).toBe('Unable to add that business.')
+    // verify dialog is displayed
+    expect(wrapper.vm.errorDialog).toBe(true)
+    expect(wrapper.vm.errorDialogTitle).toBe('Something went wrong')
+    expect(wrapper.vm.errorDialogText).toContain('An error occurred.')
 
     vi.resetAllMocks()
   })
@@ -298,10 +446,10 @@ describe('Amalgamating Businesses - add amalgamating business', () => {
         role: AmlRoles.AMALGAMATING,
         foreignJurisdiction: { country: 'CA', region: 'British Columbia' },
         legalName: 'Extra Pro Business',
-        corpNumber: 'A1234567'
+        identifier: 'A1234567'
       }
     ]
-    expect(store.stateModel.amalgamation.amalgamatingBusinesses.length).toBe(1)
+    expect(store.getAmalgamatingBusinesses.length).toBe(1)
 
     // open panel
     await wrapper.setData({ isAddingAmalgamatingBusiness: true })
@@ -321,7 +469,7 @@ describe('Amalgamating Businesses - add amalgamating business', () => {
     expect(wrapper.vm.snackbarText).toBe('Business is already in table.')
 
     // verify data
-    expect(store.stateModel.amalgamation.amalgamatingBusinesses.length).toBe(1)
+    expect(store.getAmalgamatingBusinesses.length).toBe(1)
 
     // verify panel is now closed
     expect(wrapper.vm.isAddingAmalgamatingBusiness).toBe(false)
@@ -371,15 +519,15 @@ describe('Amalgamating Businesses - add amalgamating business', () => {
     })
 
     // verify data
-    expect(store.stateModel.amalgamation.amalgamatingBusinesses.length).toBe(1)
-    const business = store.stateModel.amalgamation.amalgamatingBusinesses[0] as any
+    expect(store.getAmalgamatingBusinesses.length).toBe(1)
+    const business = store.getAmalgamatingBusinesses[0] as any
     expect(business.type).toBe(AmlTypes.LEAR)
     expect(business.role).toBe(AmlRoles.AMALGAMATING)
     expect(business.identifier).toBe('BC1234567')
     expect(business.name).toBe('My BC Business')
-    expect(business.email).toBe('email@example.com')
+    expect(business.authInfo.contacts[0].email).toBe('email@example.com')
     expect(business.legalType).toBe(CorpTypeCd.BC_COMPANY)
-    expect(business.address.streetAddress).toBe('123 Main St')
+    expect(business.addresses.registeredOffice.mailingAddress.streetAddress).toBe('123 Main St')
     expect(business.isNotInGoodStanding).toBe(false)
     expect(business.isFrozen).toBe(false)
     expect(business.isFutureEffective).toBe(false)
@@ -403,7 +551,7 @@ describe('Amalgamating Businesses - add amalgamating business', () => {
         identifier: 'BC1234567'
       }
     ]
-    expect(store.stateModel.amalgamation.amalgamatingBusinesses.length).toBe(1)
+    expect(store.getAmalgamatingBusinesses.length).toBe(1)
 
     // open panel
     await wrapper.setData({ isAddingAmalgamatingBusiness: true })
@@ -451,7 +599,7 @@ describe('Amalgamating Businesses - add amalgamating business', () => {
     expect(wrapper.vm.snackbarText).toBe('Business is already in table.')
 
     // verify data
-    expect(store.stateModel.amalgamation.amalgamatingBusinesses.length).toBe(1)
+    expect(store.getAmalgamatingBusinesses.length).toBe(1)
 
     // verify panel is now closed
     expect(wrapper.vm.isAddingAmalgamatingBusiness).toBe(false)
@@ -514,9 +662,9 @@ describe('Amalgamating Businesses - add amalgamating foreign business', () => {
     // simulate form data
     await wrapper.setData({
       isCan: true,
-      jurisdiction: { text: 'BC', value: 'CA' },
+      jurisdiction: { text: 'Alberta', value: 'AB' },
       legalName: 'Foreign Business',
-      corpNumber: 'ABC-123'
+      identifier: 'ABC-123'
     })
 
     // simulate Save button action
@@ -526,13 +674,13 @@ describe('Amalgamating Businesses - add amalgamating foreign business', () => {
     expect(wrapper.vm.isForeignBusinessValid).toBe(true)
 
     // verify data
-    expect(store.stateModel.amalgamation.amalgamatingBusinesses.length).toBe(1)
-    const business = store.stateModel.amalgamation.amalgamatingBusinesses[0] as any
+    expect(store.getAmalgamatingBusinesses.length).toBe(1)
+    const business = store.getAmalgamatingBusinesses[0] as any
     expect(business.type).toBe(AmlTypes.FOREIGN)
     expect(business.role).toBe(AmlRoles.AMALGAMATING)
-    expect(business.foreignJurisdiction).toEqual({ country: 'CA', region: 'BC' })
+    expect(business.foreignJurisdiction).toEqual({ country: 'CA', region: 'AB' })
     expect(business.legalName).toBe('Foreign Business')
-    expect(business.corpNumber).toBe('ABC-123')
+    expect(business.identifier).toBe('ABC-123')
 
     // verify panel is now closed
     expect(wrapper.vm.isAddingAmalgamatingForeignBusiness).toBe(false)
@@ -544,12 +692,12 @@ describe('Amalgamating Businesses - add amalgamating foreign business', () => {
       {
         type: AmlTypes.FOREIGN,
         role: AmlRoles.AMALGAMATING,
-        foreignJurisdiction: { country: 'CA', region: 'British Columbia' },
+        foreignJurisdiction: { country: 'CA', region: 'AB' },
         legalName: 'Foreign Business',
-        corpNumber: 'ABC-123'
+        identifier: 'ABC-123'
       }
     ]
-    expect(store.stateModel.amalgamation.amalgamatingBusinesses.length).toBe(1)
+    expect(store.getAmalgamatingBusinesses.length).toBe(1)
 
     // open panel
     await wrapper.setData({ isAddingAmalgamatingForeignBusiness: true })
@@ -557,9 +705,9 @@ describe('Amalgamating Businesses - add amalgamating foreign business', () => {
     // simulate form data
     await wrapper.setData({
       isCan: true,
-      jurisdiction: { text: 'British Columbia', value: 'CA' },
+      jurisdiction: { text: 'Alberta', value: 'AB' },
       legalName: 'Foreign Business',
-      corpNumber: 'ABC-123'
+      identifier: 'ABC-123'
     })
 
     // verify snackbar is not displayed
@@ -573,7 +721,7 @@ describe('Amalgamating Businesses - add amalgamating foreign business', () => {
     expect(wrapper.vm.snackbarText).toBe('Business is already in table.')
 
     // verify data
-    expect(store.stateModel.amalgamation.amalgamatingBusinesses.length).toBe(1)
+    expect(store.getAmalgamatingBusinesses.length).toBe(1)
 
     // verify panel is still open
     expect(wrapper.vm.isAddingAmalgamatingForeignBusiness).toBe(true)
@@ -610,39 +758,39 @@ describe('Amalgamating Businesses - add amalgamating foreign business', () => {
     // open panel
     await wrapper.find('#add-foreign-business-button').trigger('click')
 
-    const corpNumber = wrapper.find('#foreign-business-corp-number')
+    const identifier = wrapper.find('#foreign-business-corp-number')
 
     // verify empty legal name - MRAS jurisdiction
     await wrapper.setData({ isMrasJurisdiction: true })
-    await corpNumber.setValue('')
-    await corpNumber.trigger('change')
+    await identifier.setValue('')
+    await identifier.trigger('change')
     expect(wrapper.find('.v-messages__message').text()).toBe('Corporate number is required')
 
     // verify empty legal name - non-MRAS jurisdiction
     await wrapper.setData({ isMrasJurisdiction: false })
-    await corpNumber.setValue('')
-    await corpNumber.trigger('change')
+    await identifier.setValue('')
+    await identifier.trigger('change')
     expect(wrapper.find('.v-messages__message').text()).toBe('Corporate number is required')
 
     // verify invalid legal name - MRAS jurisdiction
     await wrapper.setData({ isMrasJurisdiction: true })
-    await corpNumber.setValue('+++')
-    await corpNumber.trigger('change')
+    await identifier.setValue('+++')
+    await identifier.trigger('change')
     expect(wrapper.find('.v-messages__message').text()).toBe('Corporate number is required')
 
     // verify legal name too short
-    await corpNumber.setValue('xx')
-    await corpNumber.trigger('change')
+    await identifier.setValue('xx')
+    await identifier.trigger('change')
     expect(wrapper.find('.v-messages__message').text()).toBe('Must be at least 3 characters')
 
     // verify legal name too long
-    await corpNumber.setValue('x'.repeat(41))
-    await corpNumber.trigger('change')
+    await identifier.setValue('x'.repeat(41))
+    await identifier.trigger('change')
     expect(wrapper.find('.v-messages__message').text()).toBe('Cannot exceed 40 characters')
 
     // verify valid legal name (max length)
-    await corpNumber.setValue('x'.repeat(40))
-    await corpNumber.trigger('change')
+    await identifier.setValue('x'.repeat(40))
+    await identifier.trigger('change')
     expect(wrapper.find('.v-messages__message').exists()).toBe(false)
   })
 

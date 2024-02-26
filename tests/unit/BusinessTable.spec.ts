@@ -40,38 +40,25 @@ describe('Business Table - display', () => {
 
   const amalgamatingBusinesses = [
     {
-      label: 'BC Limited holding business - reg amalgamation',
-      amalgamationType: AmalgamationTypes.REGULAR,
-      type: AmlTypes.LEAR,
-      identifier: 'BC1111111',
-      name: 'My BC Limited Company',
-      email: 'bc1111111@example.com',
-      address: {
-        streetAddress: '123 Main St',
-        addressCity: 'Victoria',
-        addressCountry: 'CA',
-        postalCode: 'V8V 8V8'
-      },
-      legalType: CorpTypeCd.BC_COMPANY,
-      expectedBusinessType: 'BC Limited Company',
-      role: AmlRoles.HOLDING
-    },
-    {
       label: 'BC Limited holding business - horiz amalgamation',
       amalgamationType: AmalgamationTypes.HORIZONTAL,
       type: AmlTypes.LEAR,
       identifier: 'BC1111111',
       name: 'My BC Limited Company',
-      email: 'bc1111111@example.com',
-      address: {
-        streetAddress: '123 Main St',
-        addressCity: 'Victoria',
-        addressCountry: 'CA',
-        postalCode: 'V8V 8V8'
+      authInfo: { contacts: [ { email: 'bc1111111@example.com' } ] },
+      addresses: {
+        registeredOffice: {
+          mailingAddress: {
+            streetAddress: '123 Main St',
+            addressCity: 'Victoria',
+            addressCountry: 'CA',
+            postalCode: 'V8V 8V8'
+          }
+        }
       },
       legalType: CorpTypeCd.BC_COMPANY,
       expectedBusinessType: 'BC Limited Company',
-      role: AmlRoles.HOLDING
+      role: AmlRoles.PRIMARY
     },
     {
       label: 'BC Limited primary business - vert amalgamation',
@@ -79,12 +66,16 @@ describe('Business Table - display', () => {
       type: AmlTypes.LEAR,
       identifier: 'BC1111111',
       name: 'My BC Limited Company',
-      email: 'bc1111111@example.com',
-      address: {
-        streetAddress: '123 Main St',
-        addressCity: 'Victoria',
-        addressCountry: 'CA',
-        postalCode: 'V8V 8V8'
+      authInfo: { contacts: [ { email: 'bc1111111@example.com' } ] },
+      addresses: {
+        registeredOffice: {
+          mailingAddress: {
+            streetAddress: '123 Main St',
+            addressCity: 'Victoria',
+            addressCountry: 'CA',
+            postalCode: 'V8V 8V8'
+          }
+        }
       },
       legalType: CorpTypeCd.BC_COMPANY,
       expectedBusinessType: 'BC Limited Company',
@@ -96,7 +87,7 @@ describe('Business Table - display', () => {
       type: AmlTypes.LEAR,
       identifier: 'BC2222222',
       name: 'My Benefit Company',
-      email: 'bc2222222@example.com',
+      authInfo: { contacts: [ { email: 'bc2222222@example.com' } ] },
       address: undefined,
       legalType: CorpTypeCd.BENEFIT_COMPANY,
       expectedBusinessType: 'BC Benefit Company',
@@ -106,7 +97,7 @@ describe('Business Table - display', () => {
       label: 'foreign business in Federal jurisdiction',
       amalgamationType: AmalgamationTypes.REGULAR,
       type: AmlTypes.FOREIGN,
-      corpNumber: 'CA-3333333',
+      identifier: 'CA-3333333',
       legalName: 'My Federal Business',
       expectedBusinessType: 'Foreign',
       foreignJurisdiction: {
@@ -120,7 +111,7 @@ describe('Business Table - display', () => {
       label: 'foreign business in USA jurisdiction',
       amalgamationType: AmalgamationTypes.REGULAR,
       type: AmlTypes.FOREIGN,
-      corpNumber: 'US-4444444',
+      identifier: 'US-4444444',
       legalName: 'My USA Business',
       expectedBusinessType: 'Foreign',
       foreignJurisdiction: {
@@ -173,15 +164,15 @@ describe('Business Table - display', () => {
 
       if ((business.type === AmlTypes.LEAR)) {
         expect(td.at(0).text()).toContain(business.name)
-        expect(td.at(0).text()).toContain(business.email)
+        expect(td.at(0).text()).toContain(business.authInfo.contacts[0].email)
 
         expect(td.at(1).text()).toContain(business.expectedBusinessType)
 
-        if (business.address) {
-          expect(td.at(2).text()).toContain(business.address.streetAddress)
-          expect(td.at(2).text()).toContain(business.address.addressCity)
+        if (business.addresses) {
+          expect(td.at(2).text()).toContain(business.addresses.registeredOffice.mailingAddress.streetAddress)
+          expect(td.at(2).text()).toContain(business.addresses.registeredOffice.mailingAddress.addressCity)
           expect(td.at(2).text()).toContain('Canada')
-          expect(td.at(2).text()).toContain(business.address.postalCode)
+          expect(td.at(2).text()).toContain(business.addresses.registeredOffice.mailingAddress.postalCode)
         } else {
           expect(td.at(2).text()).toBe('Affiliate to view')
         }
@@ -189,16 +180,19 @@ describe('Business Table - display', () => {
         if (business.role === AmlRoles.AMALGAMATING) {
           expect(td.at(3).text()).toBe('Amalgamating Business')
         }
-        if (business.role === AmlRoles.HOLDING && business.amalgamationType === AmalgamationTypes.HORIZONTAL) {
-          expect(td.at(3).text()).toBe('Primary Company')
+        if (business.role === AmlRoles.HOLDING) {
+          expect(td.at(3).text()).toBe('Holding Business')
         }
-        if (business.role === AmlRoles.HOLDING && business.amalgamationType === AmalgamationTypes.VERTICAL) {
-          expect(td.at(3).text()).toBe('Holding Company')
+        if (business.role === AmlRoles.PRIMARY) {
+          expect(td.at(3).text()).toBe('Primary Business')
         }
 
         expect(td.at(4).exists()).toBe(true) // see separate BusinessTableStatus tests
 
-        expect(td.at(5).find('.v-btn').exists()).toBe(true)
+        if (business.role === AmlRoles.AMALGAMATING) {
+          // button only exists on amalgamating businesses (not holding or primary)
+          expect(td.at(5).find('.v-btn').exists()).toBe(true)
+        }
       }
 
       if ((business.type === AmlTypes.FOREIGN)) {
@@ -216,7 +210,7 @@ describe('Business Table - display', () => {
 })
 
 describe('Business Table - validity', () => {
-  it('emit invalid when there are no businesses in the table', () => {
+  it('emits True when there are no businesses in the table', () => {
     const wrapper = wrapperFactory(
       BusinessTable,
       null,
@@ -227,10 +221,10 @@ describe('Business Table - validity', () => {
       }
     )
 
-    expect(wrapper.emitted('valid').pop()[0]).toEqual(false)
+    expect(wrapper.emitted('allOk').pop()[0]).toEqual(true)
   })
 
-  it('emit invalid when there is only one business in the table', () => {
+  it('emits False when not every business is OK', () => {
     const wrapper = wrapperFactory(
       BusinessTable,
       null,
@@ -238,87 +232,35 @@ describe('Business Table - validity', () => {
         amalgamation: {
           amalgamatingBusinesses: [
             {
-              address: {
-                addressCity: 'Victoria',
-                addressCountry: 'CA',
-                addressRegion: 'BC',
-                addressType: 'mailing',
-                deliveryInstructions: '',
-                postalCode: 'X8Y 1X1',
-                streetAddress: 'test street',
-                streetAddressAdditional: ''
-              },
-              email: 'no@reply.com',
-              identifier: 'BC1111111',
-              isFrozen: false,
-              isFutureEffective: false,
-              isLimitedRestoration: false,
-              isNotInGoodStanding: false,
-              legalType: CorpTypeCd.BENEFIT_COMPANY,
-              name: 'TEST BEN',
-              role: AmlRoles.AMALGAMATING,
-              status: AmlStatuses.OK,
-              type: AmlTypes.LEAR
+              address: {},
+              legalType: CorpTypeCd.BC_COMPANY,
+              type: AmlTypes.LEAR,
+              isHistorical: true // status will be "ERROR_HISTORICAL"
             }
           ]
         }
       }
     )
 
-    expect(wrapper.emitted('valid').pop()[0]).toEqual(false)
+    expect(wrapper.emitted('allOk').pop()[0]).toEqual(false)
   })
 
-  it('emit valid when there are two or more businesses in the table', () => {
+  it('emits True when every business is OK', () => {
     const wrapper = wrapperFactory(
       BusinessTable,
       null,
       {
         amalgamation: {
           amalgamatingBusinesses: [
+            // both of these will be status "OK"
             {
-              address: {
-                addressCity: 'Victoria',
-                addressCountry: 'CA',
-                addressRegion: 'BC',
-                addressType: 'mailing',
-                deliveryInstructions: '',
-                postalCode: 'X8Y 1X1',
-                streetAddress: 'test street',
-                streetAddressAdditional: ''
-              },
-              email: 'no@reply.com',
-              identifier: 'BC1111111',
-              isFrozen: false,
-              isFutureEffective: false,
-              isLimitedRestoration: false,
-              isNotInGoodStanding: false,
-              legalType: CorpTypeCd.BENEFIT_COMPANY,
-              name: 'TEST BEN',
-              role: AmlRoles.AMALGAMATING,
-              status: AmlStatuses.OK,
+              addresses: {},
+              legalType: CorpTypeCd.BC_COMPANY,
               type: AmlTypes.LEAR
             },
             {
-              address: {
-                addressCity: 'Victoria',
-                addressCountry: 'CA',
-                addressRegion: 'BC',
-                addressType: 'mailing',
-                deliveryInstructions: '',
-                postalCode: 'X8Y 1X2',
-                streetAddress: 'test street 2',
-                streetAddressAdditional: ''
-              },
-              email: 'no2@reply.com',
-              identifier: 'BC2222222',
-              isFrozen: false,
-              isFutureEffective: false,
-              isLimitedRestoration: false,
-              isNotInGoodStanding: false,
+              addresses: {},
               legalType: CorpTypeCd.BC_COMPANY,
-              name: 'TEST BEN NUMBER 2',
-              role: AmlRoles.AMALGAMATING,
-              status: AmlStatuses.OK,
               type: AmlTypes.LEAR
             }
           ]
@@ -326,7 +268,7 @@ describe('Business Table - validity', () => {
       }
     )
 
-    expect(wrapper.emitted('valid').pop()[0]).toBe(true)
+    expect(wrapper.emitted('allOk').pop()[0]).toBe(true)
   })
 })
 
@@ -390,7 +332,7 @@ describe.skip('Business Table - rule evaluation', () => {
 
   // check each rule sequentially
   for (let i = 0; i < rules.length; i++) {
-    it.skip(`fails rule "${rules[i].methodName}"`, () => {
+    it(`fails rule "${rules[i].methodName}"`, () => {
       // first, verify that current rule fails
       expect(wrapper.vm.businesses[0].status).toBe(rules[i].error)
 

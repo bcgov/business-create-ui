@@ -1,6 +1,6 @@
 <template>
   <div id="amalgamation-business-info">
-    <!-- Registered Office Addresses -->
+    <!-- Office Addresses -->
     <section
       v-show="isEntityType"
       class="mt-10"
@@ -14,9 +14,9 @@
         </p>
 
         <p v-if="isAmalgamationFilingHorizontal || isAmalgamationFilingVertical">
-          The resulting business will adopt the following Registered Office and Records Office Mailing
-          and Delivery Addresses of the {{ isAmalgamationFilingHorizontal ? 'primary' : 'holding' }}
-          company in this amalgamation.
+          The resulting business will adopt the following Registered Office and Records Office Mailing and
+          Delivery Addresses of the {{ isAmalgamationFilingHorizontal ? 'primary' : 'holding' }} business
+          in this amalgamation.
         </p>
       </header>
 
@@ -37,7 +37,7 @@
           <p>
             <strong>Important: </strong>To update the registered office and records office addresses, save
             this draft application and visit the {{ isAmalgamationFilingHorizontal ? 'primary' : 'holding' }}
-            company's dashboard. Make the address changes there and come back to this application.
+            business' dashboard. Make the address changes there and come back to this application.
           </p>
         </v-card>
 
@@ -68,10 +68,15 @@
           Enter the contact information for the resulting business. The BC Business Registry will use this
           to communicate with the business in the future, including sending documents and notifications.
         </p>
-        <p v-if="isAmalgamationFilingHorizontal || isAmalgamationFilingVertical">
-          The resulting business will use this contact information adopted from the holding / primary business
-          in this amalgamation. The BC Business Registry will use this to communicate with the business in the
-          future, including sending documents and notifications.
+        <p v-if="isAmalgamationFilingHorizontal">
+          The resulting business will use this contact information adopted from the primary business in this
+          amalgamation. The BC Business Registry will use this to communicate with the business in the future,
+          including sending documents and notifications.
+        </p>
+        <p v-if="isAmalgamationFilingVertical">
+          The resulting business will use this contact information adopted from the holding business in this
+          amalgamation. The BC Business Registry will use this to communicate with the business in the future,
+          including sending documents and notifications.
         </p>
       </header>
 

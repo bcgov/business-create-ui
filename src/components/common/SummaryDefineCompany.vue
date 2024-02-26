@@ -37,6 +37,10 @@
           >Return to this step to finish it</router-link>
 
           <router-link
+            v-if="isAmalgamationFiling"
+            :to="{ path: `/${RouteNames.AMALG_REG_INFORMATION}` }"
+          >Return to this step to finish it</router-link>
+          <router-link
             v-if="isIncorporationFiling"
             :to="{ path: `/${RouteNames.INCORPORATION_DEFINE_COMPANY}` }"
           >Return to this step to finish it</router-link>
@@ -236,7 +240,6 @@ export default class SummaryDefineCompany extends Vue {
   /** Whether this section is invalid. */
   get invalidSection (): boolean {
     if (this.isAmalgamationFiling) {
-      // *** FUTURE: update this for short-form amalgamation (needs to be valid)
       return (!this.isAmalgamationInformationValid || !this.isDefineCompanyValid)
     }
     return !this.isDefineCompanyValid

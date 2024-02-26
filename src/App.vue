@@ -260,8 +260,8 @@ import { AmalgamationRegResources, AmalgamationShortResources, ContinuationInRes
 import { AuthServices, LegalServices, PayServices } from '@/services/'
 
 // Enums and Constants
-import { EntityStates, ErrorTypes, FilingCodes, FilingNames, FilingStatus, FilingTypes, NameRequestStates, RouteNames,
-  StaffPaymentOptions } from '@/enums'
+import { EntityStates, ErrorTypes, FilingCodes, FilingNames, FilingStatus, FilingTypes, NameRequestStates,
+  RouteNames, StaffPaymentOptions } from '@/enums'
 import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 
@@ -291,7 +291,6 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   @Getter(useStore) getFilingName!: FilingNames
   @Getter(useStore) getFilingType!: FilingTypes
   @Getter(useStore) getHaveChanges!: boolean
-  @Getter(useStore) getKeycloakRoles!: Array<string>
   @Getter(useStore) getOrgInformation!: OrgInformationIF
   @Getter(useStore) getSteps!: Array<StepIF>
   @Getter(useStore) getUserFirstName!: string
@@ -305,7 +304,6 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   @Getter(useStore) isDissolutionFiling!: boolean
   @Getter(useStore) isIncorporationFiling!: boolean
   @Getter(useStore) isMobile!: boolean
-  @Getter(useStore) isRestorationFiling!: boolean
   @Getter(useStore) isSbcStaff!: boolean
 
   @Action(useStore) setAccountInformation!: (x: AccountInformationIF) => void
@@ -329,7 +327,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   // @Action(useStore) setNameRequest!: (x: NameRequestIF) => void
   @Action(useStore) setOperatingName!: (x: string) => void
   @Action(useStore) setParties!: (x: Array<PartyIF>) => void
-  @Action(useStore) setResources!: (x: ResourceIF) => void
+  // @Action(useStore) setResources!: (x: ResourceIF) => void
   @Action(useStore) setUserAddress!: (x: AddressIF) => void
   @Action(useStore) setUserEmail!: (x: string) => void
   @Action(useStore) setUserFirstName!: (x: string) => void
@@ -668,8 +666,8 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     // reset errors in case this method is invoked more than once (ie, retry)
     this.resetFlags()
 
-    // don't check FF during Vitest tests
-    if (!this.isVitestRunning) {
+    // only check FF when not in Vitest tests
+    if (import.meta.env.VITEST === undefined) {
       // check that current route matches a supported filing type
       const supportedFilings = await GetFeatureFlag('supported-filings')
       if (!supportedFilings?.includes(this.$route.meta.filingType)) {
@@ -754,31 +752,31 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
         switch (this.getFilingType) {
           case FilingTypes.AMALGAMATION_APPLICATION:
             if (this.isAmalgamationFilingRegular) {
-              this.$router.push(RouteNames.AMALG_REG_INFORMATION).catch(() => {})
+              this.$router.replace(RouteNames.AMALG_REG_INFORMATION).catch(() => {})
             } else if (this.isAmalgamationFilingHorizontal || this.isAmalgamationFilingVertical) {
-              this.$router.push(RouteNames.AMALG_SHORT_INFORMATION).catch(() => {})
+              this.$router.replace(RouteNames.AMALG_SHORT_INFORMATION).catch(() => {})
             } else {
               throw new Error('invalid amalgamation filing type')
             }
             return
           case FilingTypes.CONTINUATION_IN:
-            this.$router.push(RouteNames.CONTINUATION_IN_BUSINESS_HOME).catch(() => {})
+            this.$router.replace(RouteNames.CONTINUATION_IN_BUSINESS_HOME).catch(() => {})
             return
           case FilingTypes.DISSOLUTION:
             if (this.isTypeFirm) {
-              this.$router.push(RouteNames.DISSOLUTION_FIRM).catch(() => {})
+              this.$router.replace(RouteNames.DISSOLUTION_FIRM).catch(() => {})
             } else {
-              this.$router.push(RouteNames.DISSOLUTION_DEFINE_DISSOLUTION).catch(() => {})
+              this.$router.replace(RouteNames.DISSOLUTION_DEFINE_DISSOLUTION).catch(() => {})
             }
             return
           case FilingTypes.INCORPORATION_APPLICATION:
-            this.$router.push(RouteNames.INCORPORATION_DEFINE_COMPANY).catch(() => {})
+            this.$router.replace(RouteNames.INCORPORATION_DEFINE_COMPANY).catch(() => {})
             return
           case FilingTypes.REGISTRATION:
-            this.$router.push(RouteNames.REGISTRATION_DEFINE_BUSINESS).catch(() => {})
+            this.$router.replace(RouteNames.REGISTRATION_DEFINE_BUSINESS).catch(() => {})
             return
           case FilingTypes.RESTORATION:
-            this.$router.push(RouteNames.RESTORATION_BUSINESS_NAME).catch(() => {})
+            this.$router.replace(RouteNames.RESTORATION_BUSINESS_NAME).catch(() => {})
             return
           default:
             this.invalidRouteDialog = true
@@ -876,6 +874,8 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     // set the resources
     if (!resources) throw new Error(`Invalid ${this.getEntityType} resources`)
     this.setResources(resources)
+    // NB - for some reason, need to call this here so the store updates this getter
+    const dummy = this.getFilingData // eslint-disable-line
 
     // Fetch and validate the NR and set the data to the store. This method is different
     // from the validateNameRequest method in Actions.vue. This method sets the data to
@@ -917,7 +917,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
           ...this.buildAmalgamationFiling(),
           ...draftFiling
         }
-        this.parseAmalgamationDraft(draftFiling)
+        await this.parseAmalgamationDraft(draftFiling)
         if (this.isAmalgamationFilingRegular) {
           resources = AmalgamationRegResources.find(x => x.entityType === this.getEntityType) as ResourceIF
         } else if (this.isAmalgamationFilingHorizontal || this.isAmalgamationFilingVertical) {
@@ -981,12 +981,17 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   private async processNameRequest (filing: any): Promise<void> {
     try {
       const nrNumber = filing[filing.header?.name].nameRequest.nrNumber
+      const applicantPhone = filing[filing.header?.name].nameRequest.applicantPhone // may be undefined
+      const applicantEmail = filing[filing.header?.name].nameRequest.applicantEmail // may be undefined
 
-      // fetch NR data
-      const nrResponse = await LegalServices.fetchValidContactNr(nrNumber).catch(error => {
-        console.log('NR error =', error) // eslint-disable-line no-console
-        this.nameRequestInvalidErrorDialog = true
-      })
+      // Fetch NR data using saved applicant phone or email (eg, restoration or amalgamation).
+      // NB - if NR is affiliated to the current account (eg, IA or registration) then phone and email
+      // don't matter.
+      const nrResponse = await LegalServices.fetchValidContactNr(nrNumber, applicantPhone, applicantEmail)
+        .catch(error => {
+          console.log('NR error =', error) // eslint-disable-line no-console
+          this.nameRequestInvalidErrorDialog = true
+        })
 
       //
       // The NR checks below are sort-of a duplicate of code in BusinessName.vue and
