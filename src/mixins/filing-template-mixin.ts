@@ -149,8 +149,8 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         nameTranslations: this.getNameTranslations,
         offices: this.getDefineCompanyStep.officeAddresses,
         contactPoint: {
-          email: this.getBusinessContact.email,
-          phone: this.getBusinessContact.phone,
+          email: this.getBusinessContact.email || '',
+          phone: this.getBusinessContact.phone || '',
           // don't save extension if it's empty
           ...this.getBusinessContact.extension
             ? { extension: +this.getBusinessContact.extension }
@@ -366,8 +366,8 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         nameTranslations: this.getNameTranslations,
         offices: this.getDefineCompanyStep.officeAddresses,
         contactPoint: {
-          email: this.getBusinessContact.email,
-          phone: this.getBusinessContact.phone,
+          email: this.getBusinessContact.email || '',
+          phone: this.getBusinessContact.phone || '',
           // don't save extension if it's empty
           ...this.getBusinessContact.extension
             ? { extension: +this.getBusinessContact.extension }
@@ -532,8 +532,8 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         nameTranslations: this.getNameTranslations,
         offices: this.getDefineCompanyStep.officeAddresses,
         contactPoint: {
-          email: this.getBusinessContact.email,
-          phone: this.getBusinessContact.phone,
+          email: this.getBusinessContact.email || '',
+          phone: this.getBusinessContact.phone || '',
           // don't save extension if it's empty
           ...this.getBusinessContact.extension
             ? { extension: +this.getBusinessContact.extension }
@@ -764,8 +764,8 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         },
         businessType: this.getRegistration.businessType,
         contactPoint: {
-          email: this.getBusinessContact.email,
-          phone: this.getBusinessContact.phone,
+          email: this.getBusinessContact.email || '',
+          phone: this.getBusinessContact.phone || '',
           // don't save extension if it's empty
           ...this.getBusinessContact.extension
             ? { extension: +this.getBusinessContact.extension }
@@ -821,8 +821,8 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         applicationDate: this.getRestoration.applicationDate || undefined, // can't be null
         approvalType: this.getRestoration.approvalType,
         contactPoint: {
-          email: this.getBusinessContact.email,
-          phone: this.getBusinessContact.phone,
+          email: this.getBusinessContact.email || '',
+          phone: this.getBusinessContact.phone || '',
           // don't save extension if it's empty
           ...this.getBusinessContact.extension
             ? { extension: +this.getBusinessContact.extension }
