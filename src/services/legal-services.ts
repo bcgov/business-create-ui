@@ -224,8 +224,7 @@ export default class LegalServices {
                 cessationDate: director.cessationDate,
                 roleType: RoleTypes.DIRECTOR
               }
-            ],
-            isLookupBusiness: null
+            ]
           }
 
           return orgPerson

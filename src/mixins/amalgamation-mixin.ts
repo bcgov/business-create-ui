@@ -415,12 +415,13 @@ export default class AmalgamationMixin extends Vue {
     // overwrite business contact -- only when user has marked new holding/primary business,
     // otherwise leave existing data from restored draft
     if (isNew) {
-      if (business.authInfo?.contacts[0]) {
+      const businessContact = business.authInfo?.contacts[0]
+      if (businessContact) {
         this.setBusinessContact({
-          email: business.authInfo.contacts[0].email,
-          confirmEmail: business.authInfo.contacts[0].email,
-          phone: business.authInfo.contacts[0].phone,
-          extension: business.authInfo.contacts[0].extension
+          email: businessContact.email,
+          confirmEmail: businessContact.email,
+          phone: businessContact.phone,
+          extension: businessContact.extension
         })
       } else {
         // safety check - clear old business contact
