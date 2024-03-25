@@ -12,7 +12,6 @@
       </v-card-title>
 
       <v-card-text id="dialog-text">
-        <!-- display errors -->
         <div class="font-14 mb-4">
           <p>
             <b>
@@ -37,7 +36,6 @@
 
       <v-divider class="my-0" />
 
-      <!-- if there are errors, or neither errors nor warnings... -->
       <v-card-actions>
         <v-spacer />
         <v-btn

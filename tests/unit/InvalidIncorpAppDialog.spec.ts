@@ -1,12 +1,12 @@
 import Vuetify from 'vuetify'
-import { shallowMount } from '@vue/test-utils'
-import NameRequestInvalidErrorDialog from '@/dialogs/NameRequestInvalidErrorDialog.vue'
+import { mount, shallowMount } from '@vue/test-utils'
+import InvalidIncorpAppDialog from '@/dialogs/InvalidIncorpAppDialog.vue'
 
 const vuetify = new Vuetify({})
 
-describe('Name Request Invalid Error Dialog', () => {
+describe('Invalid Incorp App Dialog', () => {
   it('displays Not Found message', () => {
-    const wrapper = shallowMount(NameRequestInvalidErrorDialog,
+    const wrapper = shallowMount(InvalidIncorpAppDialog,
       {
         vuetify,
         propsData: {
@@ -23,7 +23,7 @@ describe('Name Request Invalid Error Dialog', () => {
   })
 
   it('displays Expired message', () => {
-    const wrapper = shallowMount(NameRequestInvalidErrorDialog,
+    const wrapper = shallowMount(InvalidIncorpAppDialog,
       {
         vuetify,
         propsData: {
@@ -40,7 +40,7 @@ describe('Name Request Invalid Error Dialog', () => {
   })
 
   it('displays Already Consumed message', () => {
-    const wrapper = shallowMount(NameRequestInvalidErrorDialog,
+    const wrapper = shallowMount(InvalidIncorpAppDialog,
       {
         vuetify,
         propsData: {
@@ -57,7 +57,7 @@ describe('Name Request Invalid Error Dialog', () => {
   })
 
   it('displays Not Approved message', () => {
-    const wrapper = shallowMount(NameRequestInvalidErrorDialog,
+    const wrapper = shallowMount(InvalidIncorpAppDialog,
       {
         vuetify,
         propsData: {
@@ -74,7 +74,7 @@ describe('Name Request Invalid Error Dialog', () => {
   })
 
   it('displays Unexpected Error message', () => {
-    const wrapper = shallowMount(NameRequestInvalidErrorDialog,
+    const wrapper = shallowMount(InvalidIncorpAppDialog,
       {
         vuetify,
         propsData: {
@@ -91,7 +91,7 @@ describe('Name Request Invalid Error Dialog', () => {
   })
 
   it('displays Awaiting Consent message', () => {
-    const wrapper = shallowMount(NameRequestInvalidErrorDialog,
+    const wrapper = shallowMount(InvalidIncorpAppDialog,
       {
         vuetify,
         propsData: {
@@ -108,7 +108,7 @@ describe('Name Request Invalid Error Dialog', () => {
   })
 
   it('displays Invalid Response message', () => {
-    const wrapper = shallowMount(NameRequestInvalidErrorDialog,
+    const wrapper = shallowMount(InvalidIncorpAppDialog,
       {
         vuetify,
         propsData: {

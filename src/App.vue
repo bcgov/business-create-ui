@@ -4,11 +4,11 @@
     class="app-container"
   >
     <!-- Dialogs -->
-    <NameRequestInvalidErrorDialog
+    <InvalidIncorpAppDialog
       attach="#app"
-      :dialog="nameRequestInvalidErrorDialog"
+      :dialog="invalidIncorpAppDialog"
       :type="nameRequestInvalidType"
-      @okay="nameRequestInvalidErrorDialog = false"
+      @okay="invalidIncorpAppDialog = false"
       @redirect="goToDashboard(true)"
     />
 
@@ -348,7 +348,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   invalidRouteDialog = false
   paymentErrorDialog = false
   saveErrorDialog = false
-  nameRequestInvalidErrorDialog = false
+  invalidIncorpAppDialog = false
   nameRequestInvalidType = ''
   haveData = false
   saveErrors = []
@@ -448,7 +448,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     return (
       this.accountAuthorizationDialog ||
       this.accountContactMissingDialog ||
-      this.nameRequestInvalidErrorDialog ||
+      this.invalidIncorpAppDialog ||
       this.fetchErrorDialog ||
       this.filingSurveyDialog ||
       this.invalidFilingDialog ||
@@ -541,7 +541,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
 
     this.$root.$on('name-request-retrieve-error', async () => {
       console.log('Error while retrieving NR during File and Pay') // eslint-disable-line no-console
-      this.nameRequestInvalidErrorDialog = true
+      this.invalidIncorpAppDialog = true
     })
 
     // init app
@@ -989,7 +989,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       const nrResponse = await LegalServices.fetchValidContactNr(nrNumber, applicantPhone, applicantEmail)
         .catch(error => {
           console.log('NR error =', error) // eslint-disable-line no-console
-          this.nameRequestInvalidErrorDialog = true
+          this.invalidIncorpAppDialog = true
         })
 
       //
@@ -1001,7 +1001,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       // ensure NR was found
       if (!nrResponse) {
         this.nameRequestInvalidType = NameRequestStates.NOT_FOUND
-        this.nameRequestInvalidErrorDialog = true
+        this.invalidIncorpAppDialog = true
         return
       }
 
@@ -1010,7 +1010,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       if (error) {
         console.log(error) // eslint-disable-line no-console
         this.nameRequestInvalidType = NameRequestStates.INVALID
-        this.nameRequestInvalidErrorDialog = true
+        this.invalidIncorpAppDialog = true
         return
       }
 
@@ -1018,7 +1018,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       if ((nrResponse.legalType as unknown as CorpTypeCd) !== this.getEntityType) {
         console.log('NR legal type doesn\'t match entity type') // eslint-disable-line no-console
         this.nameRequestInvalidType = NameRequestStates.INVALID
-        this.nameRequestInvalidErrorDialog = true
+        this.invalidIncorpAppDialog = true
         return
       }
 
@@ -1027,7 +1027,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       if (state !== NameRequestStates.APPROVED && state !== NameRequestStates.CONDITIONAL) {
         console.log('NR is not consumable') // eslint-disable-line no-console
         this.nameRequestInvalidType = state || NameRequestStates.INVALID
-        this.nameRequestInvalidErrorDialog = true
+        this.invalidIncorpAppDialog = true
         return
       }
 
@@ -1046,7 +1046,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   /** Resets all error flags/states. */
   private resetFlags (): void {
     this.haveData = false
-    this.nameRequestInvalidErrorDialog = false
+    this.invalidIncorpAppDialog = false
     this.invalidFilingDialog = false
     this.accountAuthorizationDialog = false
     this.accountContactMissingDialog = false

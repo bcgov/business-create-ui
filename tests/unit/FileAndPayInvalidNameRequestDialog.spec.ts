@@ -16,7 +16,7 @@ store.stateModel.nameRequest = {
 } as NameRequestIF
 store.stateModel.nameRequestApprovedName = 'My Name Request Inc.'
 
-describe('FileAndPayInvalidNameRequestDialog - Verify that dialog is displayed correctly', () => {
+describe('File And Pay Invalid Name Request Dialog', () => {
   it('displays dialog with the proper store data', async () => {
     const wrapper = shallowMount(FileAndPayInvalidNameRequestDialog,
       {
@@ -39,6 +39,7 @@ describe('FileAndPayInvalidNameRequestDialog - Verify that dialog is displayed c
     expect(wrapper.findAll('.info-section').at(1).text())
       .toContain('available to anyone wishing to start their business with that name.')
     expect(wrapper.find('#dialog-okay-button')).toBeDefined()
+
     wrapper.destroy()
   })
 })

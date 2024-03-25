@@ -1,18 +1,13 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify'
-import { createPinia, setActivePinia } from 'pinia'
 import { shallowMount, mount } from '@vue/test-utils'
-import InvalidIncorporationApplicationDialog from '@/dialogs/InvalidFilingDialog.vue'
+import InvalidFilingDialog from '@/dialogs/InvalidFilingDialog.vue'
 
 const vuetify = new Vuetify({})
-setActivePinia(createPinia())
-
-// Prevent the warning "[Vuetify] Unable to locate target [data-app]"
-document.body.setAttribute('data-app', 'true')
 
 describe('Invalid Filing Dialog', () => {
   it('renders the component properly', () => {
-    const wrapper = shallowMount(InvalidIncorporationApplicationDialog,
+    const wrapper = shallowMount(InvalidFilingDialog,
       {
         vuetify,
         propsData: { dialog: true }
@@ -29,7 +24,7 @@ describe('Invalid Filing Dialog', () => {
   })
 
   it('emits an event when Exit button is clicked', async () => {
-    const wrapper = mount(InvalidIncorporationApplicationDialog,
+    const wrapper = mount(InvalidFilingDialog,
       {
         vuetify,
         propsData: { dialog: true }

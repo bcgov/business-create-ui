@@ -10,8 +10,9 @@ export { default as FileAndPayInvalidNameRequestDialog } from './FileAndPayInval
 export { default as FilingSurveyDialog } from './FilingSurveyDialog.vue'
 export { default as GenericErrorDialog } from './GenericErrorDialog.vue'
 export { default as InvalidFilingDialog } from './InvalidFilingDialog.vue'
+export { default as InvalidIncorpAppDialog } from './InvalidIncorpAppDialog.vue'
 export { default as InvalidRouteDialog } from './InvalidRouteDialog.vue'
-export { default as NameRequestInvalidErrorDialog } from './NameRequestInvalidErrorDialog.vue'
+export { default as NameRequestErrorDialog } from './NameRequestErrorDialog.vue'
 export { default as PaymentErrorDialog } from './PaymentErrorDialog.vue'
 export { default as SaveErrorDialog } from './SaveErrorDialog.vue'
 

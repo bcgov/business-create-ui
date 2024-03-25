@@ -1,5 +1,12 @@
 <template>
   <div id="business-name">
+    <NameRequestErrorDialog
+      attach="#business-name"
+      :dialog="nameRequestErrorDialog"
+      :error="nameRequestError"
+      @okay="nameRequestErrorDialog = false"
+    />
+
     <!-- Editing Mode -->
     <div
       v-if="!isNewName"
@@ -31,6 +38,7 @@
             :fetchAndValidateNr="fetchAndValidateNr"
             :formType="formType"
             :nameRequest="getNameRequest"
+            @error="displayError($event)"
             @cancel="resetName()"
             @update:companyName="onUpdateCompanyName($event)"
             @update:formType="formType = $event"
@@ -71,10 +79,12 @@ import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import { LegalServices } from '@/services/'
 import { CorrectName } from '@bcrs-shared-components/correct-name/'
 import NameRequestInfo from '@/components/common/NameRequestInfo.vue'
+import { NameRequestErrorDialog } from '@/dialogs/'
 
 @Component({
   components: {
     CorrectName,
+    NameRequestErrorDialog,
     NameRequestInfo
   }
 })
@@ -96,7 +106,9 @@ export default class BusinessName extends Mixins(CommonMixin, DateMixin, NameReq
   @Action(useStore) setNameRequestApprovedName!: (x: string) => void
 
   // Local variable
-  formType: CorrectNameOptions = null
+  formType = null as CorrectNameOptions
+  nameRequestErrorDialog = false
+  nameRequestError = ''
 
   /** The company name. */
   get companyName (): string {
@@ -142,6 +154,12 @@ export default class BusinessName extends Mixins(CommonMixin, DateMixin, NameReq
     return !!this.getNameRequestApprovedName
   }
 
+  /** Displays fetch/validation error from CorrectName shared component. */
+  displayError (error: string): void {
+    this.nameRequestError = error || 'Unknown error. Please try again.'
+    this.nameRequestErrorDialog = true
+  }
+
   /** Resets company name values to original when Cancel was clicked. */
   resetName (): void {
     // clear out existing data
@@ -154,19 +172,22 @@ export default class BusinessName extends Mixins(CommonMixin, DateMixin, NameReq
   }
 
   /**
-   * Fetches and validation a NR.
+   * Fetches and validates a NR.
    * @param nrNum the NR number
-   * @param businessId the business id
+   * @param businessId the business id (not used here but needed in method signature)
    * @param phone the phone number to match
    * @param email the email address to match
    * @returns a promise to return the NR, or throws a printable error
    */
-  async fetchAndValidateNr (nrNum: string, businessId: string, phone: string, email: string): Promise<NameRequestIF> {
+  async fetchAndValidateNr (
+    nrNum: string, businessId: string, phone: string, email: string
+  ): Promise<NameRequestIF> {
     const nameRequest = await LegalServices.fetchValidContactNr(nrNum, phone, email)
-    if (!nameRequest) throw new Error('Error fetching Name Request')
+    if (!nameRequest) throw new Error('Unable to fetch Name Request.')
 
-    // validateNameRequest() already throws printable errors
-    return this.validateNameRequest(nameRequest, this.requestActionCode)
+    // validateNameRequest() throws printable errors
+    return this.validateNameRequest(nameRequest, this.requestActionCode, this.getBusinessId,
+      null, null, this.getEntityType)
   }
 
   /** On company name update, sets store accordingly. */

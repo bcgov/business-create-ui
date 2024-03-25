@@ -4,7 +4,7 @@
     width="45rem"
     persistent
     :attach="attach"
-    content-class="namerequest-invalid-error-dialog"
+    content-class="invalid-incorp-app-dialog"
   >
     <v-card>
       <v-card-title id="dialog-title">
@@ -93,7 +93,7 @@ import { Component, Emit, Prop, Vue } from 'vue-property-decorator'
 import { NameRequestStates } from '@/enums'
 
 @Component({})
-export default class NameRequestInvalidErrorDialog extends Vue {
+export default class InvalidIncorpAppDialog extends Vue {
   // Enum for template
   readonly NameRequestStates = NameRequestStates
 

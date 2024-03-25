@@ -1,70 +1,77 @@
 <template>
-  <v-card
-    id="resulting-business-name"
-    flat
-  >
-    <!-- Editing Mode -->
-    <div
-      v-if="!getCorrectNameOption && isAmalgamationFilingRegular"
-      class="section-container"
-      :class="{ 'invalid-section': invalidSection }"
-    >
-      <v-row no-gutters>
-        <v-col
-          cols="12"
-          sm="3"
-          class="pr-4"
-        >
-          <label :class="{ 'error-text': invalidSection }">
-            <strong>Resulting Business Name</strong>
-          </label>
-        </v-col>
+  <div id="resulting-business-name">
+    <NameRequestErrorDialog
+      attach="#resulting-business-name"
+      :dialog="nameRequestErrorDialog"
+      :error="nameRequestError"
+      @okay="nameRequestErrorDialog = false"
+    />
 
-        <v-col
-          cols="12"
-          sm="9"
-          class="pt-4 pt-sm-0"
-        >
-          <CorrectName
-            actionTxt="choose the resulting business name"
-            :amalgamatingBusinesses="amalgamatingBusinesses"
-            :businessId="getBusinessId"
-            :companyName="companyName"
-            :correctionNameChoices="correctionNameChoices"
-            :entityType="null"
-            :fetchAndValidateNr="fetchAndValidateNr"
-            :formType="formType"
-            :nameRequest="getNameRequest"
-            @cancel="resetName()"
-            @update:companyName="onUpdateCompanyName($event)"
-            @update:formType="formType = $event"
-            @update:nameRequest="onUpdateNameRequest($event)"
-          />
-        </v-col>
-      </v-row>
-    </div>
-
-    <!-- Display Mode -->
-    <template v-else>
-      <NameRequestInfo />
-      <NameTranslations
-        v-if="isAmalgamationFilingRegular"
-      />
-
-      <v-btn
-        v-if="isAmalgamationFilingRegular"
-        text
-        color="primary"
-        class="btn-undo"
-        @click="resetName()"
+    <v-card flat>
+      <!-- Editing Mode -->
+      <div
+        v-if="!getCorrectNameOption && isAmalgamationFilingRegular"
+        class="section-container"
+        :class="{ 'invalid-section': invalidSection }"
       >
-        <v-icon small>
-          mdi-undo
-        </v-icon>
-        <span>Undo</span>
-      </v-btn>
-    </template>
-  </v-card>
+        <v-row no-gutters>
+          <v-col
+            cols="12"
+            sm="3"
+            class="pr-4"
+          >
+            <label :class="{ 'error-text': invalidSection }">
+              <strong>Resulting Business Name</strong>
+            </label>
+          </v-col>
+
+          <v-col
+            cols="12"
+            sm="9"
+            class="pt-4 pt-sm-0"
+          >
+            <CorrectName
+              actionTxt="choose the resulting business name"
+              :amalgamatingBusinesses="amalgamatingBusinesses"
+              :businessId="getBusinessId"
+              :companyName="companyName"
+              :correctionNameChoices="correctionNameChoices"
+              :entityType="null"
+              :fetchAndValidateNr="fetchAndValidateNr"
+              :formType="formType"
+              :nameRequest="getNameRequest"
+              @error="displayError($event)"
+              @cancel="resetName()"
+              @update:companyName="onUpdateCompanyName($event)"
+              @update:formType="formType = $event"
+              @update:nameRequest="onUpdateNameRequest($event)"
+            />
+          </v-col>
+        </v-row>
+      </div>
+
+      <!-- Display Mode -->
+      <template v-else>
+        <NameRequestInfo />
+        <NameTranslations
+          v-if="isAmalgamationFilingRegular"
+        />
+
+        <v-btn
+          v-if="isAmalgamationFilingRegular"
+          text
+          color="primary"
+          class="btn-undo"
+          @click="resetName()"
+        >
+          <v-icon small>
+            mdi-undo
+          </v-icon>
+          <span>Undo</span>
+        </v-btn>
+      </template>
+    </v-card>
+  </div>
 </template>
 
 <script lang="ts">
@@ -80,10 +87,12 @@ import { CorrectName } from '@bcrs-shared-components/correct-name/'
 import NameRequestInfo from '@/components/common/NameRequestInfo.vue'
 import NameTranslations from '@/components/common/NameTranslations.vue'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
+import { NameRequestErrorDialog } from '@/dialogs/'
 
 @Component({
   components: {
     CorrectName,
+    NameRequestErrorDialog,
     NameRequestInfo,
     NameTranslations
   }
@@ -104,6 +113,8 @@ export default class ResultingBusinessName extends Mixins(AmalgamationMixin, Nam
 
   // Local properties
   formType = null as CorrectNameOptions
+  nameRequestErrorDialog = false
+  nameRequestError = ''
 
   readonly correctionNameChoices = [
     CorrectNameOptions.CORRECT_AML_ADOPT,
@@ -152,10 +163,11 @@ export default class ResultingBusinessName extends Mixins(AmalgamationMixin, Nam
     nrNum: string, businessId: string, phone: string, email: string
   ): Promise<NameRequestIF> {
     const nameRequest = await LegalServices.fetchValidContactNr(nrNum, phone, email)
-    if (!nameRequest) throw new Error('Error fetching Name Request')
+    if (!nameRequest) throw new Error('Unable to fetch Name Request.')
 
-    // validateNameRequest() already throws printable errors
-    return this.validateNameRequest(nameRequest, NrRequestActionCodes.AMALGAMATE)
+    // validateNameRequest() throws printable errors
+    return this.validateNameRequest(nameRequest, NrRequestActionCodes.AMALGAMATE, null, null,
+      null, this.getEntityType)
   }
 
   /** On company name update, sets store accordingly. */
@@ -184,6 +196,12 @@ export default class ResultingBusinessName extends Mixins(AmalgamationMixin, Nam
     // and update resources (since legal type may have changed)
     this.setEntityType(nameRequest.legalType)
     this.updateResources()
+  }
+
+  /** Displays fetch/validation error from CorrectName shared component. */
+  displayError (error: string): void {
+    this.nameRequestError = error || 'Unknown error. Please try again.'
+    this.nameRequestErrorDialog = true
   }
 
   /**
