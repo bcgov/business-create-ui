@@ -4,8 +4,8 @@ import { createPinia, setActivePinia } from 'pinia'
 import { useStore } from '@/store/store'
 import { mount } from '@vue/test-utils'
 import SummaryRestoreBusiness from '@/components/Restoration/SummaryRestoreBusiness.vue'
-import { ApprovalTypes, CorrectNameOptions, FilingTypes, RelationshipTypes, RestorationTypes }
-  from '@/enums'
+import { ApprovalTypes, FilingTypes, RelationshipTypes, RestorationTypes } from '@/enums'
+import { CorrectNameOptions } from '@bcrs-shared-components/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 
 // mock the console.warn function to hide "[Vuetify] Unable to locate target XXX"

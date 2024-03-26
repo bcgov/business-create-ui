@@ -252,7 +252,7 @@
 import { Component, Mixins } from 'vue-property-decorator'
 import { Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
-import { CorrectNameOptions, NameRequestStates, NrRequestActionCodes } from '@/enums'
+import { CorrectNameOptions, NameRequestStates, NrRequestActionCodes } from '@bcrs-shared-components/enums'
 import { NrApplicantIF, NameRequestIF } from '@/interfaces'
 import { CommonMixin, DateMixin } from '@/mixins'
 import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'

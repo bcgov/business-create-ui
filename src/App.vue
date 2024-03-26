@@ -4,18 +4,25 @@
     class="app-container"
   >
     <!-- Dialogs -->
-    <NameRequestInvalidErrorDialog
+    <InvalidFilingDialog
       attach="#app"
-      :dialog="nameRequestInvalidErrorDialog"
-      :type="nameRequestInvalidType"
-      @okay="nameRequestInvalidErrorDialog = false"
+      :dialog="invalidFilingDialog"
+      :type="invalidFilingError"
+      @okay="invalidFilingDialog = false"
       @redirect="goToDashboard(true)"
+    />
+
+    <NameRequestErrorDialog
+      attach="#app"
+      :dialog="nameRequestErrorDialog"
+      :error="nameRequestError"
+      @okay="nameRequestErrorDialog = false"
     />
 
     <FileAndPayInvalidNameRequestDialog
       attach="#app"
       :dialog="fileAndPayInvalidNameRequestDialog"
-      @okay="goToManageBusinessDashboard()"
+      @okay="fileAndPayInvalidNameRequestDialog = false"
     />
 
     <AccountAuthorizationDialog
@@ -31,9 +38,9 @@
       @exit="goToDashboard(true)"
     />
 
-    <InvalidFilingDialog
+    <FilingNotExistDialog
       attach="#app"
-      :dialog="invalidFilingDialog"
+      :dialog="filingNotExistDialog"
       @exit="goToDashboard(true)"
     />
 
@@ -260,8 +267,9 @@ import { AmalgamationRegResources, AmalgamationShortResources, ContinuationInRes
 import { AuthServices, LegalServices, PayServices } from '@/services/'
 
 // Enums and Constants
-import { EntityStates, ErrorTypes, FilingCodes, FilingNames, FilingStatus, FilingTypes, NameRequestStates,
-  RouteNames, StaffPaymentOptions } from '@/enums'
+import { NameRequestStates, NrRequestActionCodes } from '@bcrs-shared-components/enums'
+import { EntityStates, ErrorTypes, FilingCodes, FilingNames, FilingStatus, FilingTypes, RouteNames,
+  StaffPaymentOptions } from '@/enums'
 import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 
@@ -344,12 +352,14 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   accountContactMissingDialog = false
   fetchErrorDialog = false
   filingSurveyDialog = false
-  invalidFilingDialog = false
+  filingNotExistDialog = false
   invalidRouteDialog = false
   paymentErrorDialog = false
   saveErrorDialog = false
-  nameRequestInvalidErrorDialog = false
-  nameRequestInvalidType = ''
+  invalidFilingDialog = false
+  invalidFilingError = null as NameRequestStates
+  nameRequestError = ''
+  nameRequestErrorDialog = false
   haveData = false
   saveErrors = []
   saveWarnings = []
@@ -448,10 +458,10 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     return (
       this.accountAuthorizationDialog ||
       this.accountContactMissingDialog ||
-      this.nameRequestInvalidErrorDialog ||
+      this.invalidFilingDialog ||
       this.fetchErrorDialog ||
       this.filingSurveyDialog ||
-      this.invalidFilingDialog ||
+      this.filingNotExistDialog ||
       this.invalidRouteDialog ||
       this.paymentErrorDialog ||
       this.saveErrorDialog ||
@@ -535,13 +545,14 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     })
 
     this.$root.$on('name-request-invalid-error', async error => {
-      console.log('NR error during File and Pay =', error) // eslint-disable-line no-console
+      console.log('Invalid NR during File and Pay =', error) // eslint-disable-line no-console
       this.fileAndPayInvalidNameRequestDialog = true
     })
 
     this.$root.$on('name-request-retrieve-error', async () => {
-      console.log('Error while retrieving NR during File and Pay') // eslint-disable-line no-console
-      this.nameRequestInvalidErrorDialog = true
+      console.log('Error fetching NR during File and Pay') // eslint-disable-line no-console
+      this.nameRequestError = 'An unexpected error has occurred. Please try your action again.'
+      this.nameRequestErrorDialog = true
     })
 
     // init app
@@ -844,8 +855,8 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     this.setFilingType(draftFiling.header.name)
 
     // check if filing is in a valid state to be edited
-    this.invalidFilingDialog = !this.hasValidFilingState(draftFiling)
-    if (this.invalidFilingDialog) return null
+    this.filingNotExistDialog = !this.hasValidFilingState(draftFiling)
+    if (this.filingNotExistDialog) return null
 
     // parse draft filing into the store and get the resources
     let resources: ResourceIF
@@ -876,10 +887,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     // NB - for some reason, need to call this here so the store updates this getter
     const dummy = this.getFilingData // eslint-disable-line
 
-    // Fetch and validate the NR and set the data to the store. This method is different
-    // from the validateNameRequest method in Actions.vue. This method sets the data to
-    // the store shows a specific message for different invalid states and redirection is
-    // to the Filings Dashboard.
+    // Fetch and validate the NR (if present) and set the data to the store.
     const nrNumber = draftFiling[draftFiling.header?.name]?.nameRequest?.nrNumber
     if (nrNumber) {
       await this.processNameRequest(draftFiling)
@@ -905,8 +913,8 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     this.setFilingType(draftFiling.header.name)
 
     // check if filing is in a valid state to be edited
-    this.invalidFilingDialog = !this.hasValidFilingState(draftFiling)
-    if (this.invalidFilingDialog) return null
+    this.filingNotExistDialog = !this.hasValidFilingState(draftFiling)
+    if (this.filingNotExistDialog) return null
 
     // parse draft filing into the store and get the resources
     let resources: ResourceIF
@@ -961,10 +969,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     const nameRequest = draftFiling[draftFiling.header?.name]?.nameRequest
     if (!nameRequest) throw new Error('Missing Name Request object')
 
-    // Fetch and validate the NR and set the data to the store. This method is different
-    // from the validateNameRequest method in Actions.vue. This method sets the data to
-    // the store shows a specific message for different invalid states and redirection is
-    // to the Filings Dashboard.
+    // Fetch and validate the NR (if present) and set the data to the store.
     if (nameRequest?.nrNumber) {
       await this.processNameRequest(draftFiling)
     }
@@ -976,32 +981,44 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     return (filingStatus === FilingStatus.DRAFT)
   }
 
-  /** Fetches NR and validates it. */
+  /**
+   * Fetches NR, validates it, and stores the data.
+   * This method is different from _validateNameRequest() in Actions.vue. On error, this method displays
+   * a dialog with messages for different invalid conditions and then redirects to the Entity Dashboard.
+   */
   private async processNameRequest (filing: any): Promise<void> {
     try {
-      const nrNumber = filing[filing.header?.name].nameRequest.nrNumber
-      const applicantPhone = filing[filing.header?.name].nameRequest.applicantPhone // may be undefined
-      const applicantEmail = filing[filing.header?.name].nameRequest.applicantEmail // may be undefined
+      // safety check
+      if (!filing.header?.name) {
+        console.log('Invalid filing name') // eslint-disable-line no-console
+        this.invalidFilingError = null // unexpected error
+        this.invalidFilingDialog = true
+        return
+      }
 
       // Fetch NR data using saved applicant phone or email (eg, restoration or amalgamation).
       // NB - if NR is affiliated to the current account (eg, IA or registration) then phone and email
       // don't matter.
-      const nrResponse = await LegalServices.fetchValidContactNr(nrNumber, applicantPhone, applicantEmail)
+      const nrNumber = filing[filing.header.name].nameRequest.nrNumber
+      const applicantPhone = filing[filing.header.name].nameRequest.applicantPhone // may be undefined
+      const applicantEmail = filing[filing.header.name].nameRequest.applicantEmail // may be undefined
+      const nrResponse = await LegalServices.fetchNameRequest(nrNumber, applicantPhone, applicantEmail)
         .catch(error => {
-          console.log('NR error =', error) // eslint-disable-line no-console
-          this.nameRequestInvalidErrorDialog = true
+          console.log('NR fetch error =', error) // eslint-disable-line no-console
+          // this will trigger NR not found error, below
+          return null
         })
 
       //
-      // The NR checks below are sort-of a duplicate of code in BusinessName.vue and
-      // ResultingBusinessName.vue, but we assume the other checks passed if the user
-      // was able to add the NR to this filing, so these checks should be sufficient.
+      // The NR checks below are sort-of a duplicate of code in NameRequestMixin::validateNameRequest()
+      // but we assume the other checks passed if the user was able to add the NR to this filing, so
+      // these checks should be sufficient.
       //
 
       // ensure NR was found
       if (!nrResponse) {
-        this.nameRequestInvalidType = NameRequestStates.NOT_FOUND
-        this.nameRequestInvalidErrorDialog = true
+        this.invalidFilingError = NameRequestStates.NOT_FOUND
+        this.invalidFilingDialog = true
         return
       }
 
@@ -1009,34 +1026,59 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       const error = this.isNrInvalid(nrResponse)
       if (error) {
         console.log(error) // eslint-disable-line no-console
-        this.nameRequestInvalidType = NameRequestStates.INVALID
-        this.nameRequestInvalidErrorDialog = true
+        this.invalidFilingError = NameRequestStates.INVALID
+        this.invalidFilingDialog = true
         return
       }
 
-      // ensure types match
+      // match action code
+      if ((
+        this.getFilingType === FilingTypes.AMALGAMATION_APPLICATION &&
+        nrResponse.request_action_cd !== NrRequestActionCodes.AMALGAMATE
+      ) || (
+        this.getFilingType === FilingTypes.CONTINUATION_IN &&
+        nrResponse.request_action_cd !== NrRequestActionCodes.MOVE
+      ) || (
+        this.getFilingType === FilingTypes.INCORPORATION_APPLICATION &&
+        nrResponse.request_action_cd !== NrRequestActionCodes.NEW_BUSINESS
+      ) || (
+        this.getFilingType === FilingTypes.REGISTRATION &&
+        nrResponse.request_action_cd !== NrRequestActionCodes.NEW_BUSINESS
+      ) || (
+        this.getFilingType === FilingTypes.RESTORATION &&
+        nrResponse.request_action_cd !== NrRequestActionCodes.RESTORE
+      )) {
+        console.log('NR request action code doesn\'t match filing type') // eslint-disable-line no-console
+        this.invalidFilingError = NameRequestStates.INVALID
+        this.invalidFilingDialog = true
+        return
+      }
+
+      // match legal type
       if ((nrResponse.legalType as unknown as CorpTypeCd) !== this.getEntityType) {
         console.log('NR legal type doesn\'t match entity type') // eslint-disable-line no-console
-        this.nameRequestInvalidType = NameRequestStates.INVALID
-        this.nameRequestInvalidErrorDialog = true
+        this.invalidFilingError = NameRequestStates.INVALID
+        this.invalidFilingDialog = true
         return
       }
 
+      // store the NR
+      this.setNameRequest(nrResponse)
+
+      // store the approved name
+      const approvedName = this.getNrApprovedName(nrResponse)
+      this.setNameRequestApprovedName(approvedName)
+
       // ensure NR is consumable
+      // do this after storing data so filing displays correctly
+      // this error will be caught again on File and Pay
       const state = this.getNrState(nrResponse)
       if (state !== NameRequestStates.APPROVED && state !== NameRequestStates.CONDITIONAL) {
         console.log('NR is not consumable') // eslint-disable-line no-console
-        this.nameRequestInvalidType = state || NameRequestStates.INVALID
-        this.nameRequestInvalidErrorDialog = true
+        this.invalidFilingError = state || NameRequestStates.INVALID
+        this.invalidFilingDialog = true
         return
       }
-
-      // save the NR
-      this.setNameRequest(nrResponse)
-
-      // save the approved name
-      const approvedName = this.getNrApprovedName(nrResponse)
-      this.setNameRequestApprovedName(approvedName)
     } catch (error) {
       // errors should be handled above
       console.error('Unhandled error in processNameRequest() =', error) // eslint-disable-line no-console
@@ -1046,8 +1088,8 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   /** Resets all error flags/states. */
   private resetFlags (): void {
     this.haveData = false
-    this.nameRequestInvalidErrorDialog = false
     this.invalidFilingDialog = false
+    this.filingNotExistDialog = false
     this.accountAuthorizationDialog = false
     this.accountContactMissingDialog = false
     this.fetchErrorDialog = false

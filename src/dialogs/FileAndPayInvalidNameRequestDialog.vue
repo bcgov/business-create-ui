@@ -8,28 +8,25 @@
   >
     <v-card>
       <v-card-title id="dialog-title">
-        Invalid Name Request (NR) / Incorporation Application
+        Invalid Name Request / Filing
       </v-card-title>
 
       <v-card-text id="dialog-text">
-        <!-- display errors -->
-        <div class="font-14 mb-4">
-          <p>
-            <b>
-              The Name Request {{ getNameRequestNumber }} and the Incorporation Application for
-              {{ getNameRequestApprovedName }} are no longer valid.
-            </b>
-          </p>
-          <p>If you still wish to incorporate a Benefit Company, please contact Registry Staff as soon as possible.</p>
-          <div class="mt-5 info-section">
-            IMPORTANT:
-          </div>
-          <div class="info-section">
-            Once the reservation period for a Name Request expires or is otherwise cancelled, that name becomes
-            available to anyone wishing to start their business with that name.
-          </div>
+        <p>
+          The Name Request {{ getNameRequestNumber }} and the filing for {{ getNameRequestApprovedName }} are
+          no longer valid.
+        </p>
+
+        <p>
+          If you are trying to register a new business, please contact Registry Staff as soon as possible.
+        </p>
+
+        <div class="mt-5 info-section">
+          IMPORTANT: If a Name Request expires or is otherwise cancelled, that name becomes available to anyone
+          wishing to use it for their business.
         </div>
-        <p class="font-14">
+
+        <p class="mt-5">
           Registries contact information:
         </p>
         <RegistriesContactInfo />
@@ -37,7 +34,6 @@
 
       <v-divider class="my-0" />
 
-      <!-- if there are errors, or neither errors nor warnings... -->
       <v-card-actions>
         <v-spacer />
         <v-btn
@@ -77,3 +73,12 @@ export default class FileAndPayInvalidNameRequestDialog extends Vue {
   @Emit() okay (): void {}
 }
 </script>
+
+<style lang="scss" scoped>
+@import '@/assets/styles/theme.scss';
+
+p, .info-section {
+  font-size: $px-15;
+  color: $gray9;
+}
+</style>

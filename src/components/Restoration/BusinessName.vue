@@ -1,5 +1,12 @@
 <template>
   <div id="business-name">
+    <NameRequestErrorDialog
+      attach="#business-name"
+      :dialog="nameRequestErrorDialog"
+      :error="nameRequestError"
+      @okay="nameRequestErrorDialog = false"
+    />
+
     <!-- Editing Mode -->
     <div
       v-if="!isNewName"
@@ -31,6 +38,7 @@
             :fetchAndValidateNr="fetchAndValidateNr"
             :formType="formType"
             :nameRequest="getNameRequest"
+            @error="displayError($event)"
             @cancel="resetName()"
             @update:companyName="onUpdateCompanyName($event)"
             @update:formType="formType = $event"
@@ -62,19 +70,21 @@
 <script lang="ts">
 import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
+import { StatusCodes } from 'http-status-codes'
 import { useStore } from '@/store/store'
 import { EmptyNameRequest, NameRequestIF } from '@/interfaces/'
 import { CommonMixin, DateMixin, NameRequestMixin } from '@/mixins/'
-import { NrRequestActionCodes } from '@/enums/'
-import { CorrectNameOptions } from '@bcrs-shared-components/enums/'
+import { CorrectNameOptions, NrRequestActionCodes } from '@bcrs-shared-components/enums/'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import { LegalServices } from '@/services/'
 import { CorrectName } from '@bcrs-shared-components/correct-name/'
 import NameRequestInfo from '@/components/common/NameRequestInfo.vue'
+import { NameRequestErrorDialog } from '@/dialogs/'
 
 @Component({
   components: {
     CorrectName,
+    NameRequestErrorDialog,
     NameRequestInfo
   }
 })
@@ -96,7 +106,9 @@ export default class BusinessName extends Mixins(CommonMixin, DateMixin, NameReq
   @Action(useStore) setNameRequestApprovedName!: (x: string) => void
 
   // Local variable
-  formType: CorrectNameOptions = null
+  formType = null as CorrectNameOptions
+  nameRequestErrorDialog = false
+  nameRequestError = ''
 
   /** The company name. */
   get companyName (): string {
@@ -125,16 +137,6 @@ export default class BusinessName extends Mixins(CommonMixin, DateMixin, NameReq
     ]
   }
 
-  /** The request action code for this filing type. */
-  get requestActionCode (): NrRequestActionCodes {
-    if (this.isRestorationFiling) {
-      return NrRequestActionCodes.RESTORE
-    }
-
-    // fallback case - not used for now
-    return null
-  }
-
   /** Whether a new business legal name was entered. */
   get isNewName (): boolean {
     // Approved Name is null when we start
@@ -142,31 +144,42 @@ export default class BusinessName extends Mixins(CommonMixin, DateMixin, NameReq
     return !!this.getNameRequestApprovedName
   }
 
-  /** Resets company name values to original when Cancel was clicked. */
-  resetName (): void {
-    // clear out existing data
-    this.setNameRequest(EmptyNameRequest)
-    this.setNameRequestApprovedName(null)
-    this.setCorrectNameOption(null)
-
-    // reset flag
-    this.formType = null
-  }
-
   /**
-   * Fetches and validation a NR.
+   * Fetches and validates a NR.
    * @param nrNum the NR number
-   * @param businessId the business id
    * @param phone the phone number to match
    * @param email the email address to match
-   * @returns a promise to return the NR, or throws a printable error
+   * @returns a promise to return the NR, else exception
    */
-  async fetchAndValidateNr (nrNum: string, businessId: string, phone: string, email: string): Promise<NameRequestIF> {
-    const nameRequest = await LegalServices.fetchValidContactNr(nrNum, phone, email)
-    if (!nameRequest) throw new Error('Error fetching Name Request')
+  async fetchAndValidateNr (nrNum: string, phone: string, email: string): Promise<NameRequestIF> {
+    // try to fetch the name request
+    const nameRequest = await LegalServices.fetchNameRequest(nrNum, phone, email)
+      .catch(error => {
+        // throw an error that can be displayed to the user
+        if (error?.response?.status === StatusCodes.NOT_FOUND) {
+          throw new Error('The Name Request could not be found.')
+        }
+        if (error?.response?.status === StatusCodes.BAD_REQUEST) {
+          // incorrect email or phone
+          throw new Error('The Name Request is not registered with this Email Address or Phone Number.')
+        }
+        if (error?.response?.status === StatusCodes.FORBIDDEN) {
+          // missing email or phone
+          throw new Error('The Name Request is not registered with this Email Address or Phone Number.')
+        }
+        throw error
+      })
 
-    // validateNameRequest() already throws printable errors
-    return this.validateNameRequest(nameRequest, this.requestActionCode)
+    // try to validate the name request
+    // (may throw an error that can be displayed to the user)
+    return this.validateNameRequest(nameRequest, NrRequestActionCodes.RESTORE, this.getBusinessId, phone,
+      email, this.getEntityType)
+  }
+
+  /** Displays fetch/validation error from CorrectName shared component. */
+  displayError (error: string): void {
+    this.nameRequestError = error || 'Unknown error. Please try again.'
+    this.nameRequestErrorDialog = true
   }
 
   /** On company name update, sets store accordingly. */
@@ -178,6 +191,17 @@ export default class BusinessName extends Mixins(CommonMixin, DateMixin, NameReq
   /** On name request update, sets store accordingly. */
   onUpdateNameRequest (nameRequest: NameRequestIF): void {
     this.setNameRequest(nameRequest)
+  }
+
+  /** Resets company name values to original when Cancel was clicked. */
+  resetName (): void {
+    // clear out existing data
+    this.setNameRequest(EmptyNameRequest)
+    this.setNameRequestApprovedName(null)
+    this.setCorrectNameOption(null)
+
+    // reset flag
+    this.formType = null
   }
 
   /** Updates component validity initially and when correct name option has changed. */
