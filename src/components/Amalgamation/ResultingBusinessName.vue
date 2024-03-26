@@ -77,6 +77,7 @@
 <script lang="ts">
 import { Component, Mixins } from 'vue-property-decorator'
 import { Getter } from 'pinia-class'
+import { StatusCodes } from 'http-status-codes'
 import { useStore } from '@/store/store'
 import { AmlTypes } from '@/enums'
 import { AmalgamationMixin, NameRequestMixin } from '@/mixins/'
@@ -154,20 +155,39 @@ export default class ResultingBusinessName extends Mixins(AmalgamationMixin, Nam
   /**
    * Fetches and validates a NR.
    * @param nrNum the NR number
-   * @param businessId the business id (not used here but needed in method signature)
    * @param phone the phone number to match
    * @param email the email address to match
-   * @returns a promise to return the NR, or throws a printable error
+   * @returns a promise to return the NR, else exception
    */
-  async fetchAndValidateNr (
-    nrNum: string, businessId: string, phone: string, email: string
-  ): Promise<NameRequestIF> {
-    const nameRequest = await LegalServices.fetchValidContactNr(nrNum, phone, email)
-    if (!nameRequest) throw new Error('Unable to fetch Name Request.')
+  async fetchAndValidateNr (nrNum: string, phone: string, email: string): Promise<NameRequestIF> {
+    // try to fetch the name request
+    const nameRequest = await LegalServices.fetchNameRequest(nrNum, phone, email)
+      .catch(error => {
+        // throw an error that can be displayed to the user
+        if (error?.response?.status === StatusCodes.NOT_FOUND) {
+          throw new Error('The Name Request could not be found.')
+        }
+        if (error?.response?.status === StatusCodes.BAD_REQUEST) {
+          // incorrect email or phone
+          throw new Error('The Name Request is not registered with this Email Address or Phone Number.')
+        }
+        if (error?.response?.status === StatusCodes.FORBIDDEN) {
+          // missing email or phone
+          throw new Error('The Name Request is not registered with this Email Address or Phone Number.')
+        }
+        throw error
+      })
 
-    // validateNameRequest() throws printable errors
-    return this.validateNameRequest(nameRequest, NrRequestActionCodes.AMALGAMATE, null, null,
-      null, this.getEntityType)
+    // try to validate the name request
+    // (may throw an error that can be displayed to the user)
+    return this.validateNameRequest(nameRequest, NrRequestActionCodes.AMALGAMATE, null, phone, email,
+      this.getEntityType)
+  }
+
+  /** Displays fetch/validation error from CorrectName shared component. */
+  displayError (error: string): void {
+    this.nameRequestError = error || 'Unknown error. Please try again.'
+    this.nameRequestErrorDialog = true
   }
 
   /** On company name update, sets store accordingly. */
@@ -196,12 +216,6 @@ export default class ResultingBusinessName extends Mixins(AmalgamationMixin, Nam
     // and update resources (since legal type may have changed)
     this.setEntityType(nameRequest.legalType)
     this.updateResources()
-  }
-
-  /** Displays fetch/validation error from CorrectName shared component. */
-  displayError (error: string): void {
-    this.nameRequestError = error || 'Unknown error. Please try again.'
-    this.nameRequestErrorDialog = true
   }
 
   /**

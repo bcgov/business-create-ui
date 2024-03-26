@@ -106,7 +106,8 @@ import { useStore } from '@/store/store'
 import { Navigate } from '@/utils'
 import { AmalgamationMixin, CommonMixin, DateMixin, FilingTemplateMixin, NameRequestMixin } from '@/mixins'
 import { LegalServices } from '@/services/'
-import { FilingTypes, NameRequestStates, RouteNames } from '@/enums'
+import { FilingTypes, RouteNames } from '@/enums'
+import { NameRequestStates } from '@bcrs-shared-components/enums'
 
 @Component({})
 export default class Actions extends Mixins(AmalgamationMixin, CommonMixin,
@@ -253,9 +254,7 @@ export default class Actions extends Mixins(AmalgamationMixin, CommonMixin,
         return
       }
 
-      // If a NR was used, validate it before filing submission. This method is different from the
-      // processNameRequest method in App.vue -- this method shows a generic message if the NR is
-      // not valid and clicking OK in the pop up redirects to the Manage Businesses dashboard.
+      // If a NR was used, validate it before filing submission.
       if (this.getNameRequestNumber) {
         try {
           await this._validateNameRequest(
@@ -264,7 +263,7 @@ export default class Actions extends Mixins(AmalgamationMixin, CommonMixin,
             this.getNameRequestApplicant.emailAddress
           )
         } catch (error) {
-          console.log('Error validating NR in onClickFilePay(): ', error) // eslint-disable-line no-console
+          console.log('Error validating NR in onClickFilePay():', error) // eslint-disable-line no-console
           this.setIsFilingPaying(false)
           return
         }
@@ -332,33 +331,30 @@ export default class Actions extends Mixins(AmalgamationMixin, CommonMixin,
     }
   }
 
-  // FUTURE: merge this with NameRequestMixin::validateNameRequest()
-  /** Fetches NR and validates it. */
+  /**
+   * Fetches NR and validates it.
+   * This method is different from processNameRequest() in App.vue -- it checks fewer things.
+   * On error, this method emits an event that displays one of two dialogs.
+   */
   private async _validateNameRequest (nrNumber: string, phone = '', email = ''): Promise<void> {
-    const nameRequest = await LegalServices.fetchValidContactNr(nrNumber, phone, email)
+    const nameRequest = await LegalServices.fetchNameRequest(nrNumber, phone, email)
       .catch(error => {
         this.$root.$emit('name-request-retrieve-error')
-        throw new Error(error)
+        throw new Error(`NR fetch error = ${error}`)
       })
 
-    // ensure NR was found
-    if (!nameRequest) {
+    // ensure NR is still valid (safety check)
+    const invalid = this.isNrInvalid(nameRequest)
+    if (invalid) {
       this.$root.$emit('name-request-invalid-error', NameRequestStates.INVALID)
-      throw new Error('Invalid Name Request')
+      throw new Error(`Invalid NR data = ${invalid}`)
     }
 
-    // ensure NR is valid
-    const error = this.isNrInvalid(nameRequest)
-    if (error) {
-      this.$root.$emit('name-request-invalid-error', NameRequestStates.INVALID)
-      throw new Error(error)
-    }
-
-    // ensure NR is consumable
+    // ensure NR is still consumable
     const state = this.getNrState(nameRequest)
     if (state !== NameRequestStates.APPROVED && state !== NameRequestStates.CONDITIONAL) {
       this.$root.$emit('name-request-invalid-error', state || NameRequestStates.INVALID)
-      throw new Error('Invalid Name request')
+      throw new Error(`Invalid NR state = {$state}`)
     }
   }
 

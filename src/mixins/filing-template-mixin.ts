@@ -12,10 +12,10 @@ import {
   ShareStructureIF, SpecialResolutionIF, StaffPaymentIF, StaffPaymentStepIF, UploadAffidavitIF
 } from '@/interfaces'
 import {
-  AmalgamationTypes, ApprovalTypes, BusinessTypes, CoopTypes, CorrectNameOptions, DissolutionTypes,
-  EffectOfOrders, FilingTypes, PartyTypes, RelationshipTypes, RestorationTypes, RoleTypes,
-  StaffPaymentOptions
+  AmalgamationTypes, ApprovalTypes, BusinessTypes, CoopTypes, DissolutionTypes, EffectOfOrders,
+  FilingTypes, PartyTypes, RelationshipTypes, RestorationTypes, RoleTypes, StaffPaymentOptions
 } from '@/enums'
+import { CorrectNameOptions } from '@bcrs-shared-components/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module/'
 
 /**

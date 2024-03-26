@@ -15,7 +15,7 @@ const store = useStore()
  */
 export default class LegalServices {
   /**
-   * Fetches filings list.
+   * Fetches the filings list.
    * @param businessId the business identifier (aka entity inc no)
    * @returns the filings list
    */
@@ -147,13 +147,13 @@ export default class LegalServices {
   }
 
   /**
-   * Fetches name request data with phone and email validation.
+   * Fetches a name request with optional phone and email for authorization.
    * @param nrNumber the name request number (eg, NR 1234567)
-   * @param phone the name request phone (eg, 12321232)
-   * @param email the name request email (eg, nr@example.com)
-   * @returns a promise to return the NR data, or null if not found
+   * @param phone the name request phone number (eg, 123-4567)
+   * @param email the name request email address (eg, me@example.com)
+   * @returns a promise to return the NR data, else exception
    */
-  static async fetchValidContactNr (nrNumber: string, phone = '', email = ''): Promise<NameRequestIF> {
+  static async fetchNameRequest (nrNumber: string, phone = '', email = ''): Promise<NameRequestIF> {
     if (!nrNumber) throw new Error('Invalid parameter \'nrNumber\'')
 
     const url = `nameRequests/${nrNumber}/validate?phone=${phone}&email=${email}`
@@ -163,20 +163,11 @@ export default class LegalServices {
         const data = response?.data
         if (!data) throw new Error('Invalid API response')
         return data
-      }).catch(error => {
-        if (error?.response?.status === StatusCodes.NOT_FOUND) {
-          return null // NR not found (not an error)
-        } else if (error?.response?.status === StatusCodes.BAD_REQUEST) {
-          throw new Error('Invalid email or phone number.')
-        } else if (error?.response?.status === StatusCodes.FORBIDDEN) {
-          throw new Error('Missing email or phone number.')
-        }
-        throw error
       })
   }
 
   /**
-   * Fetches parties list.
+   * Fetches the parties list.
    * @param businessId the business identifier
    * @returns a promise to return the parties from the response, else exception
    */
@@ -257,7 +248,7 @@ export default class LegalServices {
   }
 
   /**
-   * Fetches addresses.
+   * Fetches the addresses.
    * @param businessId the business identifier
    * @returns a promise to return the addresses from the response, else exception
    */
@@ -277,7 +268,7 @@ export default class LegalServices {
   }
 
   /**
-   * Fetches business info.
+   * Fetches the business info.
    * @param businessId the business identifier
    * @returns a promise to return the business info, else exception
    */

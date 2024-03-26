@@ -7,7 +7,8 @@ import LegalServices from '@/services/legal-services'
 import BusinessName from '@/components/Restoration/BusinessName.vue'
 import { CorrectName } from '@bcrs-shared-components/correct-name/'
 import NameRequestInfo from '@/components/common/NameRequestInfo.vue'
-import { CorrectNameOptions, FilingTypes } from '@/enums'
+import { FilingTypes } from '@/enums'
+import { CorrectNameOptions } from '@bcrs-shared-components/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 
 // mock the console.warn function to hide "[Vuetify] Unable to locate target XXX"
@@ -159,11 +160,6 @@ describe('Business Name component', () => {
     expect(correctionNameChoices.length).toBe(2)
     expect(correctionNameChoices[0]).toBe('correct-name-to-number')
     expect(correctionNameChoices[1]).toBe('correct-new-nr')
-  })
-
-  it('computes requestActionCode correctly', async () => {
-    // verify initial value
-    expect(wrapper.vm.requestActionCode).toBe('REH')
   })
 
   it('computes isNewName correctly', async () => {
