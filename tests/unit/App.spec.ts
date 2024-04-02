@@ -1129,7 +1129,7 @@ describe('Breadcrumbs for firms', () => {
       {
         business: { legalName: 'My Legal Name' },
         entityType: CorpTypeCd.SOLE_PROP,
-        alternateName: 'My Altenate Name',
+        alternateName: 'My Alternate Name',
         tombstone: {
           filingType: FilingTypes.DISSOLUTION,
           keycloakRoles: []
