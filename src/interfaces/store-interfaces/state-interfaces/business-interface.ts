@@ -11,7 +11,7 @@ export interface BusinessWarningIF {
   filing: string
 }
 
-/** The Alternate Name (aka operating name) object. */
+/** The Alternate Name object. */
 export interface AlternateNameIF {
   entityType: CorpTypeCd
   identifier: string

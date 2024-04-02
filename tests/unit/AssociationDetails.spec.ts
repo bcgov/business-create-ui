@@ -3,7 +3,7 @@ import AssociationDetails from '@/components/Dissolution/AssociationDetails.vue'
 import { CorpTypeCd } from '@bcrs-shared-components/enums/'
 
 describe('Association Details component for firms', () => {
-  it('displays operating name correctly for a SP', () => {
+  it('displays alternate name correctly for a SP', () => {
     const wrapper = shallowWrapperFactory(
       AssociationDetails,
       {
@@ -20,12 +20,12 @@ describe('Association Details component for firms', () => {
           officeAddress: {}
         },
         entityType: CorpTypeCd.SOLE_PROP,
-        alternateName: 'My Operating Name'
+        alternateName: 'My Alternate Name'
       }
     )
 
     expect(wrapper.find('#entity-label').text()).toBe('Business')
-    expect(wrapper.find('#company-name').text()).toBe('My Operating Name')
+    expect(wrapper.find('#company-name').text()).toBe('My Alternate Name')
     expect(wrapper.find('#entity-description').text()).toBe('BC Sole Proprietorship')
     expect(wrapper.find('#business-id').text()).toBe('FM1234567')
     expect(wrapper.find('#address-label').text()).toBe('Business Address')

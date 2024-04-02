@@ -1129,7 +1129,7 @@ describe('Breadcrumbs for firms', () => {
       {
         business: { legalName: 'My Legal Name' },
         entityType: CorpTypeCd.SOLE_PROP,
-        alternateName: 'My Operating Name',
+        alternateName: 'My Altenate Name',
         tombstone: {
           filingType: FilingTypes.DISSOLUTION,
           keycloakRoles: []
@@ -1140,7 +1140,7 @@ describe('Breadcrumbs for firms', () => {
     const breadcrumbs = (wrapper.vm as any).breadcrumbs
     expect(breadcrumbs.at(0).text).toBe('BC Registries Dashboard')
     expect(breadcrumbs.at(1).text).toBe('My Business Registry')
-    expect(breadcrumbs.at(2).text).toBe('My Operating Name')
+    expect(breadcrumbs.at(2).text).toBe('My Alternate Name')
     expect(breadcrumbs.at(3).text).toBe('Dissolution')
 
     wrapper.destroy()
