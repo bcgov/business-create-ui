@@ -43,7 +43,7 @@ export interface StateModelIF {
   dissolution: DissolutionStateIF
   nameRequest: NameRequestIF
   nameRequestApprovedName: string
-  operatingName: string
+  alternateName: string
   correctNameOption: CorrectNameOptions
   nameTranslations: NameTranslationIF[]
   nameTranslationsValid: boolean

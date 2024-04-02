@@ -20,7 +20,7 @@ describe('Association Details component for firms', () => {
           officeAddress: {}
         },
         entityType: CorpTypeCd.SOLE_PROP,
-        operatingName: 'My Operating Name'
+        alternateName: 'My Operating Name'
       }
     )
 

@@ -333,7 +333,7 @@ export const useStore = defineStore('store', {
 
     /** The Business Legal Name (or Operating Name if this is a firm). */
     getBusinessLegalName (): string {
-      if (this.isTypeFirm) return this.stateModel.operatingName || 'Unknown'
+      if (this.isTypeFirm) return this.stateModel.alternateName || 'Unknown'
       return this.stateModel.business.legalName
     },
 
@@ -1038,8 +1038,8 @@ export const useStore = defineStore('store', {
     setFoundingDate (foundingDate: string) {
       this.stateModel.business.foundingDate = foundingDate
     },
-    setOperatingName (name: string) {
-      this.stateModel.operatingName = name
+    setAlternateName (name: string) {
+      this.stateModel.alternateName = name
     },
     setFilingType (filingType: FilingTypes) {
       this.stateModel.tombstone.filingType = filingType
