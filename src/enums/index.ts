@@ -27,6 +27,7 @@ export {
   FilingNames,
   FilingTypes,
   NameRequestStates,
+  NameTypes,
   NrRequestActionCodes,
   RelationshipTypes,
   RestorationTypes,

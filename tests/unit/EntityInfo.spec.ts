@@ -154,19 +154,19 @@ describe('Entity Info component for firms', () => {
     wrapper.destroy()
   })
 
-  it('displays operating name correctly for a SP dissolution', () => {
+  it('displays alternate name correctly for a SP dissolution', () => {
     const wrapper = shallowWrapperFactory(
       EntityInfo,
       null,
       {
         business: { legalName: 'My Legal Name' },
         entityType: CorpTypeCd.SOLE_PROP,
-        operatingName: 'My Operating Name',
+        alternateName: 'My Alternate Name',
         tombstone: { filingType: FilingTypes.DISSOLUTION }
       }
     )
 
-    expect(wrapper.find('#entity-legal-name').text()).toBe('My Operating Name')
+    expect(wrapper.find('#entity-legal-name').text()).toBe('My Alternate Name')
 
     wrapper.destroy()
   })
