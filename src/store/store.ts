@@ -333,7 +333,7 @@ export const useStore = defineStore('store', {
 
     /** The Business Legal Name (or Alternate Name if this is a firm). */
     getBusinessLegalName (): string {
-      if (this.isTypeFirm) return this.stateModel.alternateName || this.stateModel.business.legalName
+      if (this.isTypeFirm) return this.stateModel.alternateName || 'Unknown'
       return this.stateModel.business.legalName
     },
 
