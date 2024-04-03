@@ -8,7 +8,6 @@ export * from './filingStatus'
 export * from './itemTypes'
 export * from './partyTypes'
 export * from './modes'
-export * from './nameType'
 export * from './numWord'
 export * from './pdfPageSize'
 export * from './routeNames'
@@ -28,6 +27,7 @@ export {
   FilingNames,
   FilingTypes,
   NameRequestStates,
+  NameTypes,
   NrRequestActionCodes,
   RelationshipTypes,
   RestorationTypes,
