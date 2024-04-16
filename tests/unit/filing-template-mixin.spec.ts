@@ -5,6 +5,7 @@ import { useStore } from '@/store/store'
 import { BusinessTypes, PartyTypes, RoleTypes } from '@/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import { NameRequestIF } from '@/interfaces'
+import { CorrectNameOptions } from '@bcrs-shared-components/enums'
 
 setActivePinia(createPinia())
 const store = useStore()
@@ -202,6 +203,7 @@ describe('Registration Filing', () => {
             extension: 444
           },
           nameRequest: {
+            correctNameOption: CorrectNameOptions.CORRECT_NEW_NR,
             legalName: 'My Approved Name',
             legalType: 'SP',
             nrNumber: 'NR 1234567'
