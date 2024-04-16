@@ -70,6 +70,7 @@ import {
   UploadAffidavitIF,
   ValidationDetailIF
 } from '@/interfaces'
+import { GetFeatureFlag } from '@/utils'
 
 // It's possible to move getters / actions into seperate files:
 // https://github.com/vuejs/pinia/issues/802#issuecomment-1018780409
@@ -331,8 +332,12 @@ export const useStore = defineStore('store', {
       }
     },
 
-    /** The Business Legal Name. */
+    /** The Business Legal Name (or Alternate Name if this is a firm). */
     getBusinessLegalName (): string {
+      if (!GetFeatureFlag('enable-legal-name-fix')) {
+        return this.stateModel.business.legalName
+      }
+      if (this.isTypeFirm) return this.stateModel.alternateName || 'Unknown'
       return this.stateModel.business.legalName
     },
 
@@ -1036,6 +1041,9 @@ export const useStore = defineStore('store', {
     },
     setFoundingDate (foundingDate: string) {
       this.stateModel.business.foundingDate = foundingDate
+    },
+    setAlternateName (name: string) {
+      this.stateModel.alternateName = name
     },
     setFilingType (filingType: FilingTypes) {
       this.stateModel.tombstone.filingType = filingType

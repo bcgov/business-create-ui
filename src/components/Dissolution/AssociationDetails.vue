@@ -8,7 +8,7 @@
           sm="3"
           class="pr-4"
         >
-          <label>{{ entityLabel }}</label>
+          <label id="entity-label">{{ entityLabel }}</label>
         </v-col>
 
         <v-col
@@ -17,10 +17,15 @@
           class="mt-n1"
         >
           <label id="company-name">{{ entityName }}</label>
-          <div class="my-1">
+          <div
+            id="entity-description"
+            class="my-1"
+          >
             {{ entityDescription }}
           </div>
-          <div>{{ getBusinessId }}</div>
+          <div id="business-id">
+            {{ getBusinessId }}
+          </div>
         </v-col>
       </v-row>
     </article>
@@ -35,7 +40,7 @@
           sm="3"
           class="pr-4"
         >
-          <label>{{ addressLabel }}</label>
+          <label id="address-label">{{ addressLabel }}</label>
         </v-col>
 
         <v-col
@@ -194,12 +199,12 @@ export default class AssociationDetails extends Mixins(CommonMixin, DateMixin) {
 
   /** The entity name. */
   get entityName (): string {
-    return this.getBusinessLegalName || GetCorpNumberedDescription(this.getEntityType)
+    return this.getBusinessLegalName || GetCorpNumberedDescription(this.getEntityType as any)
   }
 
   /** The entity description.  */
   get entityDescription (): string {
-    return GetCorpFullDescription(this.getEntityType)
+    return GetCorpFullDescription(this.getEntityType as any)
   }
 
   /** The business start date. */
