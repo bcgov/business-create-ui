@@ -2,6 +2,7 @@ import { shallowWrapperFactory, wrapperFactory } from '../vitest-wrapper-factory
 import EntityInfo from '@/components/common/EntityInfo.vue'
 import { FilingTypes } from '@/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/enums/'
+import * as utils from '@/utils'
 
 // Test Case Data
 const mockEntityInfo = [
@@ -154,7 +155,11 @@ describe('Entity Info component for firms', () => {
     wrapper.destroy()
   })
 
-  it('displays alternate name correctly for a SP dissolution', () => {
+  it('displays alternate name correctly for a SP dissolution - With Legal Name fix', () => {
+    vi.spyOn(utils, 'GetFeatureFlag').mockImplementation(flag => {
+      if (flag === 'enable-legal-name-fix') return true
+      return null
+    })
     const wrapper = shallowWrapperFactory(
       EntityInfo,
       null,
@@ -167,6 +172,27 @@ describe('Entity Info component for firms', () => {
     )
 
     expect(wrapper.find('#entity-legal-name').text()).toBe('My Alternate Name')
+
+    wrapper.destroy()
+  })
+
+  it('displays alternate name correctly for a SP dissolution - Without Legal Name fix', () => {
+    vi.spyOn(utils, 'GetFeatureFlag').mockImplementation(flag => {
+      if (flag === 'enable-legal-name-fix') return false
+      return null
+    })
+    const wrapper = shallowWrapperFactory(
+      EntityInfo,
+      null,
+      {
+        business: { legalName: 'My Legal Name' },
+        entityType: CorpTypeCd.SOLE_PROP,
+        alternateName: 'My Alternate Name',
+        tombstone: { filingType: FilingTypes.DISSOLUTION }
+      }
+    )
+
+    expect(wrapper.find('#entity-legal-name').text()).toBe('My Legal Name')
 
     wrapper.destroy()
   })

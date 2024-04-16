@@ -18,6 +18,7 @@ import { ConfirmDialog } from '@bcrs-shared-components/confirm-dialog'
 import mockRouter from './MockRouter'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import { FilingTypes } from '@bcrs-shared-components/enums'
+import * as utils from '@/utils'
 
 // mock fetch() as it is not defined in Jest
 // NB: it should be `global.fetch` but that doesn't work and this does
@@ -1096,7 +1097,7 @@ describe('Restoration - App page', () => {
   })
 })
 
-describe('Breadcrumbs for firms', () => {
+describe('Breadcrumbs for firms - Without Easy Legal Name Fix', () => {
   it('computes breadcrumbs correctly for a SP registration', () => {
     const wrapper = shallowWrapperFactory(
       App,
@@ -1121,7 +1122,65 @@ describe('Breadcrumbs for firms', () => {
     wrapper.destroy()
   })
 
-  it('computes breadcrumbs correctly for a SP dissolution', () => {
+  it('computes breadcrumbs correctly for a SP dissolution with alternateName', () => {
+    vi.spyOn(utils, 'GetFeatureFlag').mockImplementation(flag => {
+      if (flag === 'enable-legal-name-fix') return false
+      return null
+    })
+    const wrapper = shallowWrapperFactory(
+      App,
+      null,
+      {
+        business: { legalName: 'My Legal Name' },
+        entityType: CorpTypeCd.SOLE_PROP,
+        alternateName: 'My Alternate Name',
+        tombstone: {
+          filingType: FilingTypes.DISSOLUTION,
+          keycloakRoles: []
+        }
+      }
+    )
+
+    const breadcrumbs = (wrapper.vm as any).breadcrumbs
+    expect(breadcrumbs.at(0).text).toBe('BC Registries Dashboard')
+    expect(breadcrumbs.at(1).text).toBe('My Business Registry')
+    expect(breadcrumbs.at(2).text).toBe('My Legal Name')
+    expect(breadcrumbs.at(3).text).toBe('Dissolution')
+
+    wrapper.destroy()
+  })
+})
+
+describe('Breadcrumbs for firms - With Easy Legal Name Fix', () => {
+  it('computes breadcrumbs correctly for a SP registration', () => {
+    const wrapper = shallowWrapperFactory(
+      App,
+      null,
+      {
+        business: { legalName: 'My Legal Name' },
+        entityType: CorpTypeCd.SOLE_PROP,
+        nameRequestApprovedName: 'My NR Approved Name',
+        tombstone: {
+          filingType: FilingTypes.REGISTRATION,
+          keycloakRoles: []
+        }
+      }
+    )
+
+    const breadcrumbs = (wrapper.vm as any).breadcrumbs
+    expect(breadcrumbs.at(0).text).toBe('BC Registries Dashboard')
+    expect(breadcrumbs.at(1).text).toBe('My Business Registry')
+    expect(breadcrumbs.at(2).text).toBe('My NR Approved Name')
+    expect(breadcrumbs.at(3).text).toBe('Registration')
+
+    wrapper.destroy()
+  })
+
+  it('computes breadcrumbs correctly for a SP dissolution with alternateName', () => {
+    vi.spyOn(utils, 'GetFeatureFlag').mockImplementation(flag => {
+      if (flag === 'enable-legal-name-fix') return true
+      return null
+    })
     const wrapper = shallowWrapperFactory(
       App,
       null,
