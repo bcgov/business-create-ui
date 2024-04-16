@@ -384,6 +384,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
     switch (this.getCorrectNameOption) {
       case CorrectNameOptions.CORRECT_AML_ADOPT:
         // save adopted name
+        // *** FUTURE: is there really an adopted name option in a continuation in?
         filing.continuationIn.nameRequest.correctNameOption = CorrectNameOptions.CORRECT_AML_ADOPT
         filing.continuationIn.nameRequest.legalName = this.getNameRequestApprovedName
         break
@@ -584,9 +585,13 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
     }
 
     // If this is a named IA then add Name Request Number and Approved Name.
+    // Otherwise it's a numbered IA.
     if (this.getNameRequestNumber) {
+      filing.incorporationApplication.nameRequest.correctNameOption = CorrectNameOptions.CORRECT_NEW_NR
       filing.incorporationApplication.nameRequest.nrNumber = this.getNameRequestNumber
       filing.incorporationApplication.nameRequest.legalName = this.getNameRequestApprovedName
+    } else {
+      filing.incorporationApplication.nameRequest.correctNameOption = CorrectNameOptions.CORRECT_NAME_TO_NUMBER
     }
 
     // If this is a future effective filing then save the effective date.
@@ -772,6 +777,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
             : {}
         },
         nameRequest: {
+          correctNameOption: CorrectNameOptions.CORRECT_NEW_NR,
           legalName: this.getNameRequestApprovedName,
           legalType: this.getEntityType,
           nrNumber: this.getNameRequestNumber

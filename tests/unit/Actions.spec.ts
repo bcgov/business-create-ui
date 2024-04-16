@@ -12,7 +12,7 @@ import Actions from '@/components/common/Actions.vue'
 import mockRouter from './MockRouter'
 import LegalServices from '@/services/legal-services'
 import { FilingTypes } from '@/enums'
-import { NameRequestStates } from '@bcrs-shared-components/enums'
+import { CorrectNameOptions, NameRequestStates } from '@bcrs-shared-components/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import { CourtOrderStepIF, DefineCompanyIF, EffectiveDateTimeIF, IncorporationAgreementIF, NameRequestIF,
   OrgPersonIF, PeopleAndRoleIF, ShareStructureIF, TombstoneIF } from '@/interfaces'
@@ -212,6 +212,7 @@ describe('Actions component - Filing Functionality', () => {
     },
     incorporationApplication: {
       nameRequest: {
+        correctNameOption: CorrectNameOptions.CORRECT_NEW_NR,
         nrNumber: 'NR 1234567',
         legalType: 'BEN',
         legalName: 'My Name Request Inc.'
