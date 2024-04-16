@@ -40,7 +40,7 @@ describe('Association Details component for firms', () => {
     wrapper.destroy()
   })
 
-  it('displays alternate name correctly for a SP - Without Legal Name Fix', () => {
+  it('displays legal name correctly for a SP - Without Legal Name Fix', () => {
     vi.spyOn(utils, 'GetFeatureFlag').mockImplementation(flag => {
       if (flag === 'enable-legal-name-fix') return false
       return null

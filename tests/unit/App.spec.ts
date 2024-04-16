@@ -1122,7 +1122,7 @@ describe('Breadcrumbs for firms - Without Easy Legal Name Fix', () => {
     wrapper.destroy()
   })
 
-  it('computes breadcrumbs correctly for a SP dissolution with alternateName', () => {
+  it('computes breadcrumbs correctly for a SP dissolution', () => {
     vi.spyOn(utils, 'GetFeatureFlag').mockImplementation(flag => {
       if (flag === 'enable-legal-name-fix') return false
       return null
@@ -1176,7 +1176,7 @@ describe('Breadcrumbs for firms - With Easy Legal Name Fix', () => {
     wrapper.destroy()
   })
 
-  it('computes breadcrumbs correctly for a SP dissolution with alternateName', () => {
+  it('computes breadcrumbs correctly for a SP dissolution', () => {
     vi.spyOn(utils, 'GetFeatureFlag').mockImplementation(flag => {
       if (flag === 'enable-legal-name-fix') return true
       return null

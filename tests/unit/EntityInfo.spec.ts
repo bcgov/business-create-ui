@@ -176,7 +176,7 @@ describe('Entity Info component for firms', () => {
     wrapper.destroy()
   })
 
-  it('displays alternate name correctly for a SP dissolution - Without Legal Name fix', () => {
+  it('displays legal name correctly for a SP dissolution - Without Legal Name fix', () => {
     vi.spyOn(utils, 'GetFeatureFlag').mockImplementation(flag => {
       if (flag === 'enable-legal-name-fix') return false
       return null
