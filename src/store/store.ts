@@ -70,7 +70,7 @@ import {
   UploadAffidavitIF,
   ValidationDetailIF
 } from '@/interfaces'
-import { GetFeatureFlag } from '@/utils'
+import { GetFeatureFlag } from '../utils/feature-flag-utils'
 
 // It's possible to move getters / actions into seperate files:
 // https://github.com/vuejs/pinia/issues/802#issuecomment-1018780409
