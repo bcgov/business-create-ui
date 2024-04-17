@@ -1099,6 +1099,10 @@ describe('Restoration - App page', () => {
 
 describe('Breadcrumbs for firms - Without Easy Legal Name Fix', () => {
   it('computes breadcrumbs correctly for a SP registration', () => {
+    vi.spyOn(utils, 'GetFeatureFlag').mockImplementation(flag => {
+      if (flag === 'enable-legal-name-fix') return false
+      return null
+    })
     const wrapper = shallowWrapperFactory(
       App,
       null,
@@ -1123,10 +1127,6 @@ describe('Breadcrumbs for firms - Without Easy Legal Name Fix', () => {
   })
 
   it('computes breadcrumbs correctly for a SP dissolution', () => {
-    vi.spyOn(utils, 'GetFeatureFlag').mockImplementation(flag => {
-      if (flag === 'enable-legal-name-fix') return false
-      return null
-    })
     const wrapper = shallowWrapperFactory(
       App,
       null,
@@ -1153,6 +1153,10 @@ describe('Breadcrumbs for firms - Without Easy Legal Name Fix', () => {
 
 describe('Breadcrumbs for firms - With Easy Legal Name Fix', () => {
   it('computes breadcrumbs correctly for a SP registration', () => {
+    vi.spyOn(utils, 'GetFeatureFlag').mockImplementation(flag => {
+      if (flag === 'enable-legal-name-fix') return true
+      return null
+    })
     const wrapper = shallowWrapperFactory(
       App,
       null,
@@ -1177,10 +1181,6 @@ describe('Breadcrumbs for firms - With Easy Legal Name Fix', () => {
   })
 
   it('computes breadcrumbs correctly for a SP dissolution', () => {
-    vi.spyOn(utils, 'GetFeatureFlag').mockImplementation(flag => {
-      if (flag === 'enable-legal-name-fix') return true
-      return null
-    })
     const wrapper = shallowWrapperFactory(
       App,
       null,
