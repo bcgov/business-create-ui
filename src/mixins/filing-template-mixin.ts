@@ -758,6 +758,10 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         folioNumber: this.getFolioNumber, // default FN; may be overwritten by staff BCOL FN
         isFutureEffective: false
       },
+      business: {
+        legalType: this.getEntityType,
+        identifier: this.getTempId
+      },
       registration: {
         business: {
           identifier: this.getTempId,
