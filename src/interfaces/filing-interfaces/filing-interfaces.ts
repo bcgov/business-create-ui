@@ -180,6 +180,10 @@ export interface RegistrationFilingIF {
     waiveFees?: boolean
     priority?: boolean
   }
+  business: {
+    legalType: CorpTypeCd
+    identifier: string
+  }
   registration: {
     business: {
       identifier: string
