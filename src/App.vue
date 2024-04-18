@@ -316,6 +316,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
 
   @Action(useStore) setAccountInformation!: (x: AccountInformationIF) => void
   @Action(useStore) setAdminFreeze!: (x: boolean) => void
+  @Action(useStore) setAlternateName!: (x: string) => void
   @Action(useStore) setBusinessId!: (x: string) => void
   @Action(useStore) setBusinessNumber!: (x: string) => void
   @Action(useStore) setCompletingParty!: (x: CompletingPartyIF) => void
@@ -1267,6 +1268,11 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
 
     // FUTURE: change this to a single setter/object?
     this.setAdminFreeze(business.adminFreeze)
+    {
+      // store alternate name if it exists (only used for firms atm)
+      const alternateName = business.alternateNames?.find(x => x.identifier === business.identifier)
+      if (alternateName) this.setAlternateName(alternateName.name)
+    }
     this.setLegalName(business.legalName)
     this.setEntityState(business.state)
     this.setBusinessNumber(business.taxId || null) // may be empty

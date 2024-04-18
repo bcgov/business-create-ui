@@ -151,12 +151,12 @@ export default class DissolutionDefineDissolution extends Mixins(CommonMixin) {
   @Action(useStore) setCustodianValidity!: (x: boolean) => void
 
   get corpDescription (): string {
-    return GetCorpFullDescription(this.getEntityType)
+    return GetCorpFullDescription(this.getEntityType as any)
   }
 
   /** The entity name. */
   get entityName (): string {
-    return this.getBusinessLegalName || GetCorpNumberedDescription(this.getEntityType)
+    return this.getBusinessLegalName || GetCorpNumberedDescription(this.getEntityType as any)
   }
 
   /** The entity designation. */
