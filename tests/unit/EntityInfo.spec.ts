@@ -2,7 +2,14 @@ import { shallowWrapperFactory, wrapperFactory } from '../vitest-wrapper-factory
 import EntityInfo from '@/components/common/EntityInfo.vue'
 import { FilingTypes } from '@/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/enums/'
-import * as utils from '@/utils'
+import * as FeatureFlags from '@/utils/feature-flag-utils'
+
+// mock the entire module
+// it's the only way to override any exported function
+vi.mock('@/utils/feature-flags', () => {
+  // we just care about this one function
+  return { GetFeatureFlag: vi.fn() }
+})
 
 // Test Case Data
 const mockEntityInfo = [
@@ -156,7 +163,7 @@ describe('Entity Info component for firms', () => {
   })
 
   it('displays alternate name correctly for a SP dissolution - With Legal Name fix', () => {
-    vi.spyOn(utils, 'GetFeatureFlag').mockImplementation(flag => {
+    vi.spyOn(FeatureFlags, 'GetFeatureFlag').mockImplementation(flag => {
       if (flag === 'enable-legal-name-fix') return true
       return null
     })
@@ -177,7 +184,7 @@ describe('Entity Info component for firms', () => {
   })
 
   it('displays legal name correctly for a SP dissolution - Without Legal Name fix', () => {
-    vi.spyOn(utils, 'GetFeatureFlag').mockImplementation(flag => {
+    vi.spyOn(FeatureFlags, 'GetFeatureFlag').mockImplementation(flag => {
       if (flag === 'enable-legal-name-fix') return false
       return null
     })

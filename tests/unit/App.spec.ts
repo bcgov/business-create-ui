@@ -18,7 +18,7 @@ import { ConfirmDialog } from '@bcrs-shared-components/confirm-dialog'
 import mockRouter from './MockRouter'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import { FilingTypes } from '@bcrs-shared-components/enums'
-import * as utils from '@/utils'
+import * as FeatureFlags from '@/utils/feature-flag-utils'
 
 // mock fetch() as it is not defined in Jest
 // NB: it should be `global.fetch` but that doesn't work and this does
@@ -39,6 +39,13 @@ console.warn = vi.fn()
 const vuetify = new Vuetify({})
 setActivePinia(createPinia())
 const store = useStore()
+
+// mock the entire module
+// it's the only way to override any exported function
+vi.mock('@/utils/feature-flags', () => {
+  // we just care about this one function
+  return { GetFeatureFlag: vi.fn() }
+})
 
 // Prevent the warning "[Vuetify] Unable to locate target [data-app]"
 document.body.setAttribute('data-app', 'true')
@@ -1099,7 +1106,7 @@ describe('Restoration - App page', () => {
 
 describe('Breadcrumbs for firms - Without Easy Legal Name Fix', () => {
   it('computes breadcrumbs correctly for a SP registration', () => {
-    vi.spyOn(utils, 'GetFeatureFlag').mockImplementation(flag => {
+    vi.spyOn(FeatureFlags, 'GetFeatureFlag').mockImplementation(flag => {
       if (flag === 'enable-legal-name-fix') return false
       return null
     })
@@ -1127,6 +1134,10 @@ describe('Breadcrumbs for firms - Without Easy Legal Name Fix', () => {
   })
 
   it('computes breadcrumbs correctly for a SP dissolution', () => {
+    vi.spyOn(FeatureFlags, 'GetFeatureFlag').mockImplementation(flag => {
+      if (flag === 'enable-legal-name-fix') return false
+      return null
+    })
     const wrapper = shallowWrapperFactory(
       App,
       null,
@@ -1153,7 +1164,7 @@ describe('Breadcrumbs for firms - Without Easy Legal Name Fix', () => {
 
 describe('Breadcrumbs for firms - With Easy Legal Name Fix', () => {
   it('computes breadcrumbs correctly for a SP registration', () => {
-    vi.spyOn(utils, 'GetFeatureFlag').mockImplementation(flag => {
+    vi.spyOn(FeatureFlags, 'GetFeatureFlag').mockImplementation(flag => {
       if (flag === 'enable-legal-name-fix') return true
       return null
     })
@@ -1181,6 +1192,10 @@ describe('Breadcrumbs for firms - With Easy Legal Name Fix', () => {
   })
 
   it('computes breadcrumbs correctly for a SP dissolution', () => {
+    vi.spyOn(FeatureFlags, 'GetFeatureFlag').mockImplementation(flag => {
+      if (flag === 'enable-legal-name-fix') return true
+      return null
+    })
     const wrapper = shallowWrapperFactory(
       App,
       null,

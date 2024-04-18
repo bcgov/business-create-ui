@@ -1,11 +1,18 @@
 import { shallowWrapperFactory } from '../vitest-wrapper-factory'
 import AssociationDetails from '@/components/Dissolution/AssociationDetails.vue'
 import { CorpTypeCd } from '@bcrs-shared-components/enums/'
-import * as utils from '@/utils'
+import * as FeatureFlags from '@/utils/feature-flag-utils'
+
+// mock the entire module
+// it's the only way to override any exported function
+vi.mock('@/utils/feature-flags', () => {
+  // we just care about this one function
+  return { GetFeatureFlag: vi.fn() }
+})
 
 describe('Association Details component for firms', () => {
   it('displays alternate name correctly for a SP - With Legal Name Fix', () => {
-    vi.spyOn(utils, 'GetFeatureFlag').mockImplementation(flag => {
+    vi.spyOn(FeatureFlags, 'GetFeatureFlag').mockImplementation(flag => {
       if (flag === 'enable-legal-name-fix') return true
       return null
     })
@@ -41,7 +48,7 @@ describe('Association Details component for firms', () => {
   })
 
   it('displays legal name correctly for a SP - Without Legal Name Fix', () => {
-    vi.spyOn(utils, 'GetFeatureFlag').mockImplementation(flag => {
+    vi.spyOn(FeatureFlags, 'GetFeatureFlag').mockImplementation(flag => {
       if (flag === 'enable-legal-name-fix') return false
       return null
     })
