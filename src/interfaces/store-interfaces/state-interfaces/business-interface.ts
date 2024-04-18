@@ -1,7 +1,6 @@
 import { EntityStates } from '@/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
-import { IsoDatePacific, ApiDateTimeUtc } from '@bcrs-shared-components/interfaces'
-import { NameTypes } from '@bcrs-shared-components/enums'
+import { AlternateNameIF, ApiDateTimeUtc, IsoDatePacific } from '@bcrs-shared-components/interfaces'
 import { ContactPointIF, OfficeAddressIF } from '@/interfaces'
 
 /** The Business Warning object. */
@@ -10,16 +9,6 @@ export interface BusinessWarningIF {
   message: string
   warningType: string
   filing: string
-}
-
-/** The Alternate Name object. */
-export interface AlternateNameIF {
-  entityType: CorpTypeCd
-  identifier: string
-  name: string
-  nameRegisteredDate: ApiDateTimeUtc
-  nameStartDate: IsoDatePacific
-  nameType: NameTypes
 }
 
 /** The Business object from the API. */
