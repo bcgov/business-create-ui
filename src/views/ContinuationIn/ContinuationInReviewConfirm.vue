@@ -252,9 +252,4 @@ h2::before {
   counter-increment: header-counter;
   content: counter(header-counter) '. ';
 }
-
-// override base class text size
-.message-box p {
-  font-size: $px-16;
-}
 </style>

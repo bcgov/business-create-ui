@@ -3,10 +3,7 @@
     id="dissolution-firm"
     class="mt-10"
   >
-    <v-card
-      outlined
-      class="message-box rounded-0"
-    >
+    <MessageBox color="gold">
       <p>
         <strong>Important:</strong> You are about to dissolve
         <strong class="text-capitalize">{{ getBusinessLegalName }}</strong>.
@@ -15,7 +12,7 @@
         be struck from the register and dissolved, ceasing to be a registered
         business under the Partnership Act.
       </p>
-    </v-card>
+    </MessageBox>
 
     <!-- Dissolution Summary -->
     <section class="mt-10">
@@ -305,6 +302,7 @@ import StaffPayment from '@/components/common/StaffPayment.vue'
 import TransactionalFolioNumber from '@/components/common/TransactionalFolioNumber.vue'
 import { RoleTypes, RouteNames } from '@/enums'
 import { VuetifyRuleFunction } from '@/types'
+import MessageBox from '@/components/common/MessageBox.vue'
 
 import {
   ContactPointIF,
@@ -329,7 +327,8 @@ import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp
     TransactionalFolioNumber,
     ListPeopleAndRoles,
     DatePickerShared,
-    CompletingParty
+    CompletingParty,
+    MessageBox
   }
 })
 export default class DissolutionFirm extends Mixins(DateMixin) {

@@ -694,7 +694,7 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
 #foreignBusinessForm {
   // un-bold v-text-field labels
   :deep(.v-label) {
-      font-weight: normal;
+    font-weight: normal;
     color: $gray7;
   }
 }

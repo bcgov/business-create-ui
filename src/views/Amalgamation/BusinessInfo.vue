@@ -30,16 +30,13 @@
       </template>
 
       <template v-if="isAmalgamationFilingHorizontal || isAmalgamationFilingVertical">
-        <v-card
-          outlined
-          class="message-box"
-        >
+        <MessageBox color="gold">
           <p>
             <strong>Important: </strong>To update the registered office and records office addresses, save
             this draft application and visit the {{ isAmalgamationFilingHorizontal ? 'primary' : 'holding' }}
             business' dashboard. Make the address changes there and come back to this application.
           </p>
-        </v-card>
+        </MessageBox>
 
         <v-card
           flat
@@ -113,13 +110,15 @@ import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
 import FolioNumber from '@/components/common/FolioNumber.vue'
 import OfficeAddresses from '@/components/common/OfficeAddresses.vue'
 import CardHeader from '@/components/common/CardHeader.vue'
+import MessageBox from '@/components/common/MessageBox.vue'
 
 @Component({
   components: {
     BusinessContactInfo,
     CardHeader,
     FolioNumber,
-    OfficeAddresses
+    OfficeAddresses,
+    MessageBox
   }
 })
 export default class AmalgamationBusinessInfo extends Mixins(CommonMixin) {

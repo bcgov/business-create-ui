@@ -30,7 +30,7 @@
       <router-link
         :to="{ path: `/${RouteNames.DISSOLUTION_RESOLUTION}` }"
       >
-        Return to this step to finish it
+        <span>Return to this step to finish it</span>
       </router-link>
     </section>
 
@@ -51,7 +51,7 @@
         <router-link
           :to="{ path: `/${RouteNames.DISSOLUTION_RESOLUTION}` }"
         >
-          Return to this step to finish it
+          <span>Return to this step to finish it</span>
         </router-link>
       </div>
 
