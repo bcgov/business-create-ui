@@ -4,6 +4,7 @@ import { AmalgamationBusinessInfo } from '@/views'
 import OfficeAddresses from '@/components/common/OfficeAddresses.vue'
 import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
 import { AmalgamationTypes, CorpTypeCd, FilingTypes } from '@bcrs-shared-components/enums'
+import MessageBox from '@/components/common/MessageBox.vue'
 
 describe('Amalgamation Business Information - regular amalgamation', () => {
   let wrapper: any
@@ -35,7 +36,7 @@ describe('Amalgamation Business Information - regular amalgamation', () => {
     expect(section.find('header h2').text()).toBe('Registered and Records Office Addresses')
     expect(section.find('header p').text()).toContain('Enter the Registered Office and Records Office Mailing and Delivery Addresses of the Resulting')
     expect(section.findComponent(OfficeAddresses).exists()).toBe(true)
-    expect(section.find('.message-box').exists()).toBe(false)
+    expect(section.findComponent(MessageBox).exists()).toBe(false)
   })
 
   it('renders contact information section', () => {
@@ -75,8 +76,8 @@ describe('Amalgamation Business Information - horizontal amalgamation', () => {
     const section = wrapper.findAll('section').at(0)
     expect(section.find('header h2').text()).toBe('Registered and Records Office Addresses')
     expect(section.find('header p').text()).toContain('Delivery Addresses of the primary business')
-    expect(section.find('.message-box').exists()).toBe(true)
-    expect(section.find('.message-box p').text()).toContain('this draft application and visit the primary')
+    expect(section.findComponent(MessageBox).exists()).toBe(true)
+    expect(section.findComponent(MessageBox).find('p').text()).toContain('this draft application and visit the primary')
     expect(section.findComponent(OfficeAddresses).exists()).toBe(true)
   })
 
@@ -117,8 +118,8 @@ describe('Amalgamation Business Information - vertical amalgamation', () => {
     const section = wrapper.findAll('section').at(0)
     expect(section.find('header h2').text()).toBe('Registered and Records Office Addresses')
     expect(section.find('header p').text()).toContain('Delivery Addresses of the holding business')
-    expect(section.find('.message-box').exists()).toBe(true)
-    expect(section.find('.message-box p').text()).toContain('this draft application and visit the holding')
+    expect(section.findComponent(MessageBox).exists()).toBe(true)
+    expect(section.findComponent(MessageBox).find('p').text()).toContain('this draft application and visit the holding')
     expect(section.findComponent(OfficeAddresses).exists()).toBe(true)
   })
 

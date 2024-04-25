@@ -62,10 +62,9 @@
           cols="12"
           sm="9"
         >
-          <v-card
+          <MessageBox
             v-if="isCompletingParty && !isRoleStaff"
-            outlined
-            class="message-box rounded-0"
+            color="gold"
           >
             <p>
               <strong>Important:</strong> The Completing Party information below is based on your
@@ -76,7 +75,7 @@
               If you make changes to your address below, please update your address in the account
               settings after you have completed this filing to ensure your information is up to date.
             </p>
-          </v-card>
+          </MessageBox>
 
           <div
             v-if="isCompletingParty && !isRoleStaff"
@@ -226,15 +225,12 @@
                   v-if="hasBusinessSelectedFromLookup"
                   class="mt-6"
                 >
-                  <v-card
-                    outlined
-                    class="message-box rounded-0"
-                  >
+                  <MessageBox color="gold">
                     <p>
                       <strong>Important:</strong> If the addresses shown below are out of date, you
                       may update them here. The updates are applicable only to this application.
                     </p>
-                  </v-card>
+                  </MessageBox>
                 </div>
                 <div v-else-if="isProprietor">
                   <p class="mt-6 mb-0">
@@ -288,15 +284,12 @@
                   v-if="hasBusinessSelectedFromLookup"
                   class="mt-6"
                 >
-                  <v-card
-                    outlined
-                    class="message-box rounded-0"
-                  >
+                  <MessageBox color="gold">
                     <p>
                       <strong>Important:</strong> If the addresses shown below are out of date, you
                       may update them here. The updates are applicable only to this application.
                     </p>
-                  </v-card>
+                  </MessageBox>
                 </div>
                 <div v-if="isProprietor">
                   <p class="mb-0">
@@ -515,6 +508,7 @@ import HelpContactUs from '@/components/Registration/HelpContactUs.vue'
 import { AddEditOrgPersonMixin } from '@/mixins'
 import { BusinessLookupServices } from '@/services'
 import { VuetifyRuleFunction } from '@/types'
+import MessageBox from '@/components/common/MessageBox.vue'
 
 /** This is a sub-component of PeopleAndRoles. */
 @Component({
@@ -523,7 +517,8 @@ import { VuetifyRuleFunction } from '@/types'
     ConfirmDialog,
     DeliveryAddress: BaseAddress,
     MailingAddress: BaseAddress,
-    HelpContactUs
+    HelpContactUs,
+    MessageBox
   },
   directives: {
     mask

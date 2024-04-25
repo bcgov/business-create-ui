@@ -49,10 +49,9 @@
           cols="12"
           sm="9"
         >
-          <v-card
+          <MessageBox
             v-if="isCompletingParty && !isRoleStaff && isTypeCoop"
-            outlined
-            class="message-box rounded-0"
+            color="gold"
           >
             <p>
               <strong>Important:</strong> The Completing Party information below is based on your
@@ -63,7 +62,7 @@
               If you make changes to your address below, please update your address in the account
               settings after you have completed this filing to ensure your information is up to date.
             </p>
-          </v-card>
+          </MessageBox>
 
           <div
             v-if="isCompletingParty && !isRoleStaff && isTypeCoop"
@@ -286,13 +285,15 @@ import { Component, Mixins } from 'vue-property-decorator'
 import { BaseAddress } from '@bcrs-shared-components/base-address'
 import { ConfirmDialog } from '@bcrs-shared-components/confirm-dialog'
 import { AddEditOrgPersonMixin } from '@/mixins'
+import MessageBox from '@/components/common/MessageBox.vue'
 
 /** This is a sub-component of PeopleAndRoles. */
 @Component({
   components: {
     ConfirmDialog,
     DeliveryAddress: BaseAddress,
-    MailingAddress: BaseAddress
+    MailingAddress: BaseAddress,
+    MessageBox
   }
 })
 export default class AddEditOrgPerson extends Mixins(AddEditOrgPersonMixin) {

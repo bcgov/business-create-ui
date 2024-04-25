@@ -1,8 +1,8 @@
 <template>
   <div id="dissolution-define-dissolution">
-    <v-card
-      outlined
-      class="message-box mt-10"
+    <MessageBox
+      color="gold"
+      class="mt-10"
     >
       <p>
         <strong>Important:</strong> You are about to voluntarily dissolve <strong>{{ entityName }}</strong>.
@@ -10,7 +10,7 @@
         is struck from the register and dissolved, ceasing to be an incorporated {{ entityDesignation }}
         under the {{ entityAct }}. All assets and liabilities must be addressed prior to filing.
       </p>
-    </v-card>
+    </MessageBox>
 
     <section class="mt-10">
       <header id="association-details">
@@ -124,6 +124,7 @@ import { CommonMixin } from '@/mixins'
 import { RouteNames } from '@/enums'
 import { CorpTypeCd, GetCorpFullDescription, GetCorpNumberedDescription }
   from '@bcrs-shared-components/corp-type-module'
+import MessageBox from '@/components/common/MessageBox.vue'
 
 @Component({
   components: {
@@ -132,7 +133,8 @@ import { CorpTypeCd, GetCorpFullDescription, GetCorpNumberedDescription }
     CustodianOfRecords,
     DestroyCertificate,
     DissolutionStatement,
-    HelpSection
+    HelpSection,
+    MessageBox
   }
 })
 export default class DissolutionDefineDissolution extends Mixins(CommonMixin) {
