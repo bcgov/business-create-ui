@@ -198,7 +198,7 @@ export const useStore = defineStore('store', {
     },
 
     getContinuationInBusinessInfo (): any {
-      return this.stateModel.continuationIn.existingBusinessInfo
+      return this.getContinuationIn.existingBusinessInfo
     },
 
     /** The account folio number. */

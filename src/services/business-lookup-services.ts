@@ -22,9 +22,9 @@ export default class BusinessLookupServices {
 
   /**
    * Searches for business by code or words.
-   * @param query code or words to search
-   * @param status status to match (ACTIVE or HISTORICAL or '' to match all statuses)
-   * @param legalTypes the legal types we're searching for
+   * @param query - code or words to search
+   * @param status - status to match (ACTIVE or HISTORICAL or '' to match all statuses)
+   * @param legalTypes - the legal types we're searching for
    * @returns a promise to return the search results
    */
   static async search (query: string, status: string, legalTypes: string): Promise<BusinessLookupResultIF[]> {
