@@ -17,7 +17,7 @@ export interface AmalgamationResourceIF {
   }
 }
 
-/** Continuation in resource interface. */
+/** Continuation In resource interface. */
 export interface ContinuationInResourceIF {
   entityType: CorpTypeCd
   displayName: string

@@ -75,7 +75,7 @@ import ManualBusinessInfo from '@/components/ContinuationIn/ManualBusinessInfo.v
 export default class ContinuationInBusinessHome extends Mixins(CommonMixin, NameRequestMixin) {
   @Getter(useStore) getShowErrors!: boolean
 
-  @Action(useStore) setContinuationInStep1Valid!: (x: boolean) => void
+  @Action(useStore) setContinuationInBusinessHomeValid!: (x: boolean) => void
   @Action(useStore) setIgnoreChanges!: (x: boolean) => void
 
   // Local properties
@@ -124,7 +124,7 @@ export default class ContinuationInBusinessHome extends Mixins(CommonMixin, Name
   @Watch('continuationAuthorizationValid', { immediate: true })
   @Watch('existingBusinessInformationValid', { immediate: true })
   private isExistingBusinessInformationValid () {
-    this.setContinuationInStep1Valid(
+    this.setContinuationInBusinessHomeValid(
       this.continuationAuthorizationValid &&
       this.existingBusinessInformationValid
     )

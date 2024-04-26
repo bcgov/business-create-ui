@@ -1,8 +1,8 @@
 <template>
   <div id="summary-business-home-jurisdiction">
-    <section :class="{ 'invalid-section': !isContinuationInStep1Valid }">
+    <section :class="{ 'invalid-section': !isContinuationInBusinessHomeValid }">
       <div
-        v-if="!isContinuationInStep1Valid"
+        v-if="!isContinuationInBusinessHomeValid"
         class="businessHomeStepErrorMessage"
       >
         <span>
@@ -260,7 +260,7 @@ export default class SummaryDefineCompany extends Vue {
 
   // Getters
   @Getter(useStore) getContinuationInBusinessInfo!: any
-  @Getter(useStore) isContinuationInStep1Valid!: boolean
+  @Getter(useStore) isContinuationInBusinessHomeValid!: boolean
 
   get homeJurisdiction (): string {
     const hj = this.getContinuationInBusinessInfo?.homeJurisdiction

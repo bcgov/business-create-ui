@@ -545,9 +545,9 @@ export const useStore = defineStore('store', {
       return this.getDefineCompanyStep.valid
     },
 
-    /** Is true when the Continuation in Business Home step is valid. */
-    isContinuationInStep1Valid (): boolean {
-      return this.getContinuationIn.step1Valid
+    /** Is true when the Continuation In Business Home step is valid. */
+    isContinuationInBusinessHomeValid (): boolean {
+      return this.getContinuationIn.businessHomeValid
     },
 
     /** Is true when the step is valid. */
@@ -684,7 +684,7 @@ export const useStore = defineStore('store', {
       const isStaffPaymentValid = this.isRoleStaff ? this.getStaffPaymentStep.valid : true
 
       return (
-        this.isContinuationInStep1Valid &&
+        this.isContinuationInBusinessHomeValid &&
         this.isDefineCompanyValid &&
         this.isAddPeopleAndRolesValid &&
         this.isCreateShareStructureValid &&
@@ -1144,8 +1144,8 @@ export const useStore = defineStore('store', {
     setDefineCompanyStepValidity (valid: boolean) {
       this.stateModel.defineCompanyStep.valid = valid
     },
-    setContinuationInStep1Valid (valid: boolean) {
-      this.getContinuationIn.step1Valid = valid
+    setContinuationInBusinessHomeValid (valid: boolean) {
+      this.getContinuationIn.businessHomeValid = valid
     },
     setOfficeAddresses (addresses: RegisteredRecordsAddressesIF) {
       this.stateModel.defineCompanyStep.officeAddresses = addresses

@@ -78,7 +78,7 @@ export default class Stepper extends Vue {
   @Getter(useStore) isAffidavitValid!: boolean
   @Getter(useStore) isAmalgamationInformationValid!: boolean
   @Getter(useStore) isBusySaving!: boolean
-  @Getter(useStore) isContinuationInStep1Valid!: boolean
+  @Getter(useStore) isContinuationInBusinessHomeValid!: boolean
   @Getter(useStore) isCreateShareStructureValid!: boolean
   @Getter(useStore) isDefineCompanyValid!: boolean
   @Getter(useStore) isDissolutionDefineDissolutionValid!: boolean
@@ -103,7 +103,7 @@ export default class Stepper extends Vue {
       case RouteNames.AMALG_SHORT_PEOPLE_ROLES: return this.isAddPeopleAndRolesValid
       case RouteNames.AMALG_SHORT_REVIEW_CONFIRM: return this.isFilingValid
 
-      case RouteNames.CONTINUATION_IN_BUSINESS_HOME: return this.isContinuationInStep1Valid
+      case RouteNames.CONTINUATION_IN_BUSINESS_HOME: return this.isContinuationInBusinessHomeValid
       case RouteNames.CONTINUATION_IN_BUSINESS_BC: return false // *** TODO
       case RouteNames.CONTINUATION_IN_PEOPLE_ROLES: return this.isAddPeopleAndRolesValid
       case RouteNames.CONTINUATION_IN_SHARE_STRUCTURE: return this.isCreateShareStructureValid
