@@ -39,7 +39,9 @@
               <span class="error-text mx-1">This step is unfinished.</span>
               <router-link
                 :to="{ path: `/${RouteNames.DISSOLUTION_DEFINE_DISSOLUTION}` }"
-              >Return to this step to finish it</router-link>
+              >
+                <span>Return to this step to finish it</span>
+              </router-link>
             </span>
           </section>
 
@@ -202,7 +204,7 @@
           <router-link
             :to="{ path: `/${RouteNames.DISSOLUTION_AFFIDAVIT}` }"
           >
-            Return to this step to finish it
+            <span>Return to this step to finish it</span>
           </router-link>
         </section>
 

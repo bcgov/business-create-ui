@@ -267,6 +267,7 @@
                 </div>
 
                 <BusinessLookup
+                  class="mt-5"
                   :showErrors="enableRules"
                   :businessLookup="inProgressBusinessLookup"
                   :BusinessLookupServices="BusinessLookupServices"
@@ -305,6 +306,7 @@
                 <HelpContactUs class="help" />
 
                 <BusinessLookup
+                  class="mt-5"
                   :showErrors="enableRules"
                   :businessLookup="inProgressBusinessLookup"
                   :BusinessLookupServices="BusinessLookupServices"

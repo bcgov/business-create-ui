@@ -22,10 +22,10 @@ import {
 } from './AmalgamationShort/'
 
 import {
-  ContinuationInResourceBc,
-  ContinuationInResourceBen,
-  ContinuationInResourceCc,
-  ContinuationInResourceUlc
+  ContinuationInResourceC,
+  ContinuationInResourceCben,
+  ContinuationInResourceCcc,
+  ContinuationInResourceCul
 } from './ContinuationIn/'
 
 import {
@@ -73,10 +73,10 @@ export const AmalgamationShortResources: Array<AmalgamationResourceIF> = [
 ]
 
 export const ContinuationInResources: Array<ContinuationInResourceIF> = [
-  ContinuationInResourceBc,
-  ContinuationInResourceBen,
-  ContinuationInResourceCc,
-  ContinuationInResourceUlc
+  ContinuationInResourceC,
+  ContinuationInResourceCben,
+  ContinuationInResourceCcc,
+  ContinuationInResourceCul
 ]
 
 export const DissolutionResources: Array<DissolutionResourceIF> = [

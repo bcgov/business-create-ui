@@ -36,6 +36,7 @@ import {
   CreateRulesIF,
   CreateRulesResourceIF,
   CompletingPartyStatementIF,
+  ContinuationInStateIF,
   CustodianResourceIF,
   DefineCompanyIF,
   DissolutionStatementIF,
@@ -100,7 +101,7 @@ export const useStore = defineStore('store', {
 
     /** Whether the current filing is an Amalgamation Application. */
     isAmalgamationFiling (): boolean {
-      return (this.stateModel.tombstone.filingType === FilingTypes.AMALGAMATION_APPLICATION)
+      return (this.getFilingType === FilingTypes.AMALGAMATION_APPLICATION)
     },
 
     /** Whether the current filing is a Horizontal Short-form Amalgamation. */
@@ -129,27 +130,27 @@ export const useStore = defineStore('store', {
 
     /** Whether the current filing is a Continuation In. */
     isContinuationInFiling (): boolean {
-      return (this.stateModel.tombstone.filingType === FilingTypes.CONTINUATION_IN)
+      return (this.getFilingType === FilingTypes.CONTINUATION_IN)
     },
 
     /** Whether the current filing is an Incorporation Application. */
     isIncorporationFiling (): boolean {
-      return (this.stateModel.tombstone.filingType === FilingTypes.INCORPORATION_APPLICATION)
+      return (this.getFilingType === FilingTypes.INCORPORATION_APPLICATION)
     },
 
     /** Whether the current filing is a Dissolution. */
     isDissolutionFiling (): boolean {
-      return (this.stateModel.tombstone.filingType === FilingTypes.DISSOLUTION)
+      return (this.getFilingType === FilingTypes.DISSOLUTION)
     },
 
     /** Whether the current filing is a Registration. */
     isRegistrationFiling (): boolean {
-      return (this.stateModel.tombstone.filingType === FilingTypes.REGISTRATION)
+      return (this.getFilingType === FilingTypes.REGISTRATION)
     },
 
     /** Whether the current filing is a Restoration. */
     isRestorationFiling (): boolean {
-      return (this.stateModel.tombstone.filingType === FilingTypes.RESTORATION)
+      return (this.getFilingType === FilingTypes.RESTORATION)
     },
 
     /** Whether the current filing is a Limited Restoration. */
@@ -183,7 +184,7 @@ export const useStore = defineStore('store', {
 
     /** Whether the user has "staff" Keycloak role. */
     isRoleStaff (): boolean {
-      return this.stateModel.tombstone.keycloakRoles.includes('staff')
+      return this.getKeycloakRoles.includes('staff')
     },
 
     /** Whether the entity type has been identified. */
@@ -194,6 +195,10 @@ export const useStore = defineStore('store', {
     /** The current entityType. */
     getEntityType (): CorpTypeCd {
       return this.stateModel.entityType
+    },
+
+    getContinuationInBusinessInfo (): any {
+      return this.stateModel.continuationIn.existingBusinessInfo
     },
 
     /** The account folio number. */
@@ -386,6 +391,11 @@ export const useStore = defineStore('store', {
       return this.stateModel.defineCompanyStep
     },
 
+    /** The Continuation In object. */
+    getContinuationIn (): ContinuationInStateIF {
+      return this.stateModel.continuationIn
+    },
+
     /** The Cooperative association type. */
     getCooperativeType (): CoopTypes {
       return this.getDefineCompanyStep.cooperativeType
@@ -535,6 +545,11 @@ export const useStore = defineStore('store', {
       return this.getDefineCompanyStep.valid
     },
 
+    /** Is true when the Continuation in Business Home step is valid. */
+    isContinuationInStep1Valid (): boolean {
+      return this.getContinuationIn.step1Valid
+    },
+
     /** Is true when the step is valid. */
     isRestoreBusinessNameValid (): boolean {
       return (
@@ -669,6 +684,7 @@ export const useStore = defineStore('store', {
       const isStaffPaymentValid = this.isRoleStaff ? this.getStaffPaymentStep.valid : true
 
       return (
+        this.isContinuationInStep1Valid &&
         this.isDefineCompanyValid &&
         this.isAddPeopleAndRolesValid &&
         this.isCreateShareStructureValid &&
@@ -1100,6 +1116,9 @@ export const useStore = defineStore('store', {
     setCurrentJsDate (date: Date) {
       this.stateModel.currentJsDate = date
     },
+    setContinuationInBusinessInfo (val: any) {
+      this.stateModel.continuationIn.existingBusinessInfo = val
+    },
     setIsFutureEffective (isFutureEffective: boolean) {
       this.stateModel.effectiveDateTime.isFutureEffective = isFutureEffective
       if (!this.stateModel.ignoreChanges) this.stateModel.haveChanges = true
@@ -1124,6 +1143,9 @@ export const useStore = defineStore('store', {
     },
     setDefineCompanyStepValidity (valid: boolean) {
       this.stateModel.defineCompanyStep.valid = valid
+    },
+    setContinuationInStep1Valid (valid: boolean) {
+      this.getContinuationIn.step1Valid = valid
     },
     setOfficeAddresses (addresses: RegisteredRecordsAddressesIF) {
       this.stateModel.defineCompanyStep.officeAddresses = addresses

@@ -87,18 +87,15 @@ export interface ContinuationInFilingIF {
     identifier: string
   }
   continuationIn: {
-    foreignJurisdiction: any
+    existingBusinessInfo: any // FUTURE: create an interface for this object
+    continuationAuthorization: any // FUTURE: create an interface for this object
     nameRequest: NameRequestFilingIF
     nameTranslations: NameTranslationIF[]
     offices: RegisteredRecordsAddressesIF | object
     contactPoint: ContactPointIF
     parties: PartyIF[]
-
-    // BEN / CC / BC / ULC only:
-    shareStructure?: {
-      shareClasses: ShareClassIF[]
-    }
-    // ULC only:
+    shareStructure: { shareClasses: ShareClassIF[] }
+    // ULC only: // *** TODO: verify this
     courtOrder?: CourtOrderIF
   }
 }

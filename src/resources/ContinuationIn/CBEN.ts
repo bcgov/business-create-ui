@@ -4,12 +4,12 @@ import { ContinuationInSteps } from './steps'
 import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 import { ResourcePhrases } from '../ResourcePhrases'
 
-export const ContinuationInResourceCc: ContinuationInResourceIF = {
-  entityType: CorpTypeCd.BC_CCC,
-  displayName: GetCorpFullDescription(CorpTypeCd.BC_CCC),
+export const ContinuationInResourceCben: ContinuationInResourceIF = {
+  entityType: CorpTypeCd.BEN_CONTINUE_IN,
+  displayName: GetCorpFullDescription(CorpTypeCd.BEN_CONTINUE_IN),
   steps: ContinuationInSteps,
   filingData: [{
-    entityType: CorpTypeCd.BC_CCC,
+    entityType: CorpTypeCd.BEN_CONTINUE_IN,
     filingTypeCode: FilingCodes.CONTINUATION_IN
   }],
   peopleAndRoles: {
@@ -25,8 +25,8 @@ export const ContinuationInResourceCc: ContinuationInResourceIF = {
       },
       {
         id: RuleIds.NUM_DIRECTORS,
-        text: 'At least three Directors',
-        test: (num) => { return (num >= 3) }
+        text: 'At least one Director',
+        test: (num) => { return (num >= 1) }
       }
     ]
   },

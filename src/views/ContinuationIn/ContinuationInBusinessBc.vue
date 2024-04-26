@@ -6,7 +6,7 @@
         <h2>Company Name</h2>
       </header>
 
-      <div>**TODO: Add component</div>
+      <div>** Correct Name component goes here **</div>
     </section>
 
     <!-- Registered Office Addresses -->
