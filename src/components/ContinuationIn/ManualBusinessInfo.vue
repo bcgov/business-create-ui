@@ -49,7 +49,7 @@
             class="float-sm-right float-none"
             text
             color="primary"
-            @click="undoBusiness()"
+            @click="reset()"
           >
             <v-icon small>
               mdi-undo
@@ -160,7 +160,8 @@ export default class ManualBusinessInfo extends Vue {
     this.setContinuationInBusinessInfo(this.businessLookup)
   }
 
-  undoBusiness () {
+  /** Resets this component back to its initial state. */
+  reset () {
     this.businessLookup = { ...EmptyBusinessLookup }
     this.setContinuationInBusinessInfo(this.businessLookup)
     // set this component to inactive (which shows the other component)
