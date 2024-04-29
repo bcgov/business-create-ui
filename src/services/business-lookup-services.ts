@@ -22,15 +22,16 @@ export default class BusinessLookupServices {
 
   /**
    * Searches for business by code or words.
-   * @param query code or words to search
-   * @param searchStatus not used here but needed as it's a parameter needed for other UIs
-   * @param legalTypes the legal types we're searching for
+   * @param query - code or words to search
+   * @param status - status to match (ACTIVE or HISTORICAL or '' to match all statuses)
+   * @param legalTypes - the legal types we're searching for
    * @returns a promise to return the search results
    */
-  static async search (query: string, searchStatus: string, legalTypes: string): Promise<BusinessLookupResultIF[]> {
-    const url = this.businessApiUrl +
-      `businesses/search/facets?start=0&rows=20&categories=legalType:${legalTypes}::status:ACTIVE` +
-      `&query=value:${encodeURIComponent(query)}`
+  static async search (query: string, status: string, legalTypes: string): Promise<BusinessLookupResultIF[]> {
+    let url = this.businessApiUrl + 'businesses/search/facets?start=0&rows=20'
+    url += `&categories=legalType:${legalTypes}${status ? '::status:' + status : ''}`
+    url += `&query=value:${encodeURIComponent(query)}`
+
     const config = {
       headers: {
         'x-apikey': this.businessApiKey,

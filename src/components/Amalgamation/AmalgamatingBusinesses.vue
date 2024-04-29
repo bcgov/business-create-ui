@@ -131,6 +131,7 @@
 
             <BusinessLookup
               :key="Math.random()"
+              class="mt-5"
               :showErrors="false"
               :businessLookup="{ ...EmptyBusinessLookup }"
               :BusinessLookupServices="BusinessLookupServices"

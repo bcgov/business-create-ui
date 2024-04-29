@@ -1,7 +1,10 @@
 <template>
   <div id="continuation-in-review-confirm">
     <!-- Review and Confirm -->
-    <section class="mt-10">
+    <section
+      id="review-and-confirm-section"
+      class="mt-10"
+    >
       <header>
         <h2>Review and Confirm</h2>
         <p class="mt-4">
@@ -20,8 +23,7 @@
           icon="mdi-domain-plus"
           label="Your Business in Home Jurisdiction"
         />
-        <span class="pl-6">**TODO: Change this to the proper component</span>
-        <SummaryDefineCompany />
+        <SummaryBusinessHomeJurisdiction />
       </v-card>
 
       <!-- Your Business in BC -->
@@ -178,6 +180,7 @@ import { DocumentDelivery } from '@bcrs-shared-components/document-delivery'
 import EffectiveDateTime from '@/components/common/EffectiveDateTime.vue'
 import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
 import ListShareClass from '@/components/common/ListShareClass.vue'
+import SummaryBusinessHomeJurisdiction from '@/components/ContinuationIn/SummaryBusinessHomeJurisdiction.vue'
 import SummaryDefineCompany from '@/components/common/SummaryDefineCompany.vue'
 import StaffPayment from '@/components/common/StaffPayment.vue'
 import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
@@ -191,6 +194,7 @@ import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp
     ListPeopleAndRoles,
     ListShareClass,
     SummaryDefineCompany,
+    SummaryBusinessHomeJurisdiction,
     StaffPayment
   }
 })

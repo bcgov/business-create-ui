@@ -1,46 +1,58 @@
 <template>
   <div id="continuation-in-business-home">
-    <v-fade-transition>
-      <div
-        v-show="showSpinner"
-        class="loading-container grayed-out"
-      >
-        <div class="loading__content">
-          <v-progress-circular
-            color="primary"
-            size="50"
-            indeterminate
-          />
-          <div class="loading-msg white--text">
-            Fetching data
-          </div>
-        </div>
-      </div>
-    </v-fade-transition>
-
     <!-- Existing Business Information -->
     <section class="mt-10">
       <header id="existing-Business-information">
         <h2>Existing Business Information</h2>
         <p class="mt-4">
-          Enter information about your existing business.
+          Enter information about your existing business. If your company is extra-provinvicially
+          registered in B.C., that registration will be made historic when this continuation in
+          application is processed.
         </p>
       </header>
 
-      <div>**TODO: Add component</div>
+      <v-card
+        flat
+        class="py-8 px-6"
+        :class="{ 'invalid-section': getShowErrors && !existingBusinessInformationValid }"
+      >
+        <v-expand-transition>
+          <ExtraproRegistration
+            v-if="!manualBusinessInfoActive"
+            @active="extraproRegistrationActive = $event"
+            @valid="extraproRegistrationValid = $event"
+          />
+        </v-expand-transition>
+
+        <div :class="{ 'mt-6': !extraproRegistrationActive && !manualBusinessInfoActive }" />
+
+        <v-expand-transition>
+          <ManualBusinessInfo
+            v-if="!extraproRegistrationActive"
+            @active="manualBusinessInfoActive = $event"
+            @valid="manualBusinessInfoValid = $event"
+          />
+        </v-expand-transition>
+      </v-card>
     </section>
 
     <!-- Continuation Authorization -->
     <section class="mt-10">
       <header id="continuation-authorization">
         <h2>Continuation Authorization</h2>
+        <p class="mt-4">
+          You must provide proof of authorization to continue out of your home jurisdiction.
+          This may be reviewed by our staff.
+        </p>
       </header>
-      <p class="mt-4">
-        You must provide proof of authorization to continue out of your home jurisdiction.
-        This may be reviewed by our staff.
-      </p>
 
-      <div>**TODO: Add component</div>
+      <v-card
+        flat
+        class="py-8 px-6"
+        :class="{ 'invalid-section': getShowErrors && !continuationAuthorizationValid }"
+      >
+        <div>** Continuation Authorization component goes here **</div>
+      </v-card>
     </section>
   </div>
 </template>
@@ -51,22 +63,50 @@ import { Getter, Action } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { CommonMixin, NameRequestMixin } from '@/mixins'
 import { RouteNames } from '@/enums'
+import ExtraproRegistration from '@/components/ContinuationIn/ExtraproRegistration.vue'
+import ManualBusinessInfo from '@/components/ContinuationIn/ManualBusinessInfo.vue'
 
-@Component({})
+@Component({
+  components: {
+    ManualBusinessInfo,
+    ExtraproRegistration
+  }
+})
 export default class ContinuationInBusinessHome extends Mixins(CommonMixin, NameRequestMixin) {
   @Getter(useStore) getShowErrors!: boolean
 
+  @Action(useStore) setContinuationInBusinessHomeValid!: (x: boolean) => void
   @Action(useStore) setIgnoreChanges!: (x: boolean) => void
 
   // Local properties
-  showSpinner = false
+  manualBusinessInfoActive = false
+  manualBusinessInfoValid = false
+  extraproRegistrationActive = false
+  extraproRegistrationValid = false
 
-  /** Array of valid components. Must match validFlags below. **TODO: Add components. */
-  readonly validComponents = []
+  /** Array of valid components. Must match validFlags below. */
+  readonly validComponents = [
+    'existing-business-information',
+    'continuation-authorization'
+  ]
 
-  /** Object of valid flags. Must match validComponents above. **TODO: Add flags. */
+  /** Object of valid flags. Must match validComponents above. */
   get validFlags (): object {
-    return {}
+    return {
+      existingBusinessInformationValid: this.existingBusinessInformationValid,
+      continuationAuthorizationValid: this.continuationAuthorizationValid
+    }
+  }
+
+  /** Whether the Existing Business Information section is valid. */
+  get existingBusinessInformationValid (): boolean {
+    return (this.extraproRegistrationValid || this.manualBusinessInfoValid)
+  }
+
+  /** Whether the Continuation Authorization section is valid. */
+  get continuationAuthorizationValid (): boolean {
+    // FUTURE: implement this
+    return true
   }
 
   /** Called when component is created. */
@@ -78,9 +118,16 @@ export default class ContinuationInBusinessHome extends Mixins(CommonMixin, Name
     this.$nextTick(() => {
       this.setIgnoreChanges(false)
     })
+  }
 
-    // listen for spinner show/hide events
-    this.$root.$on('showSpinner', (flag = false) => { this.showSpinner = flag })
+  /** Watch all components on this page and set validity in store accordingly. */
+  @Watch('continuationAuthorizationValid', { immediate: true })
+  @Watch('existingBusinessInformationValid', { immediate: true })
+  private isExistingBusinessInformationValid () {
+    this.setContinuationInBusinessHomeValid(
+      this.continuationAuthorizationValid &&
+      this.existingBusinessInformationValid
+    )
   }
 
   /** When we route to this step, validate the step and scroll to any errors. */
@@ -116,7 +163,7 @@ h2::before {
   content: counter(header-counter) '. ';
 }
 
-header p {
+header > p {
   padding-top: 0.5rem;
 }
 </style>

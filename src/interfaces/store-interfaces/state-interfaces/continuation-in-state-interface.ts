@@ -1,4 +1,6 @@
 // TODO: Add properties as needed
 export interface ContinuationInStateIF {
-  existingBusinessValid: boolean
+  businessHomeValid: boolean
+  businessBcValid: boolean
+  existingBusinessInfo: any // FUTURE: create an interface for this object
 }

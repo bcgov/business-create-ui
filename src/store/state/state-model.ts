@@ -215,7 +215,9 @@ export const stateModel: StateModelIF = {
     type: null
   },
   continuationIn: {
-    existingBusinessValid: false
+    businessHomeValid: false,
+    businessBcValid: false,
+    existingBusinessInfo: null
   },
   restoration: {
     applicationDate: null,

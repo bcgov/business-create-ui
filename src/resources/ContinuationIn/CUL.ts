@@ -4,12 +4,12 @@ import { ContinuationInSteps } from './steps'
 import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 import { ResourcePhrases } from '../ResourcePhrases'
 
-export const ContinuationInResourceBen: ContinuationInResourceIF = {
-  entityType: CorpTypeCd.BENEFIT_COMPANY,
-  displayName: GetCorpFullDescription(CorpTypeCd.BENEFIT_COMPANY),
+export const ContinuationInResourceCul: ContinuationInResourceIF = {
+  entityType: CorpTypeCd.ULC_CONTINUE_IN,
+  displayName: GetCorpFullDescription(CorpTypeCd.ULC_CONTINUE_IN),
   steps: ContinuationInSteps,
   filingData: [{
-    entityType: CorpTypeCd.BENEFIT_COMPANY,
+    entityType: CorpTypeCd.ULC_CONTINUE_IN,
     filingTypeCode: FilingCodes.CONTINUATION_IN
   }],
   peopleAndRoles: {

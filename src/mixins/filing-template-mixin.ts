@@ -6,9 +6,9 @@ import {
   AmalgamationFilingIF, BusinessAddressIF, ContactPointIF, CertifyIF, CompletingPartyIF,
   ContinuationInFilingIF, CourtOrderIF, CourtOrderStepIF, CreateMemorandumIF, CreateResolutionIF,
   CreateRulesIF, DefineCompanyIF, DissolutionFilingIF, DissolutionStatementIF, DocumentDeliveryIF,
-  EffectiveDateTimeIF, EmptyContactPoint, EmptyNaics, IncorporationAgreementIF, IncorporationFilingIF,
-  NaicsIF, NrApplicantIF, NameRequestFilingIF, NameTranslationIF, OfficeAddressIF, OrgPersonIF,
-  PartyIF, RegistrationFilingIF, RegistrationStateIF, RestorationFilingIF, RestorationStateIF,
+  EffectiveDateTimeIF, EmptyNaics, IncorporationAgreementIF, IncorporationFilingIF, NaicsIF,
+  NrApplicantIF, NameRequestFilingIF, NameTranslationIF, OfficeAddressIF, OrgPersonIF, PartyIF,
+  RegistrationFilingIF, RegistrationStateIF, RestorationFilingIF, RestorationStateIF,
   ShareStructureIF, SpecialResolutionIF, StaffPaymentIF, StaffPaymentStepIF, UploadAffidavitIF
 } from '@/interfaces'
 import {
@@ -36,6 +36,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
   @Getter(useStore) getBusinessStartDate!: string
   @Getter(useStore) getCertifyState!: CertifyIF
   @Getter(useStore) getCompletingParty!: CompletingPartyIF
+  @Getter(useStore) getContinuationInBusinessInfo!: any
   @Getter(useStore) getCorrectNameOption!: CorrectNameOptions
   @Getter(useStore) getCourtOrderStep!: CourtOrderStepIF
   @Getter(useStore) getCreateMemorandumStep!: CreateMemorandumIF
@@ -77,6 +78,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
   @Action(useStore) setBusinessAddress!: (x: OfficeAddressIF) => void
   // @Action(useStore) setBusinessContact!: (x: ContactPointIF) => void
   @Action(useStore) setCertifyState!: (x: CertifyIF) => void
+  @Action(useStore) setContinuationInBusinessInfo!: (x: any) => void
   @Action(useStore) setCooperativeType!: (x: CoopTypes) => void
   // @Action(useStore) setCorrectNameOption!: (x: CorrectNameOptions) => void
   @Action(useStore) setCourtOrderFileNumber!: (x: string) => void
@@ -359,7 +361,8 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         identifier: this.getTempId
       },
       continuationIn: {
-        foreignJurisdiction: '',
+        existingBusinessInfo: this.getContinuationInBusinessInfo,
+        continuationAuthorization: {},
         nameRequest: {
           legalType: this.getEntityType
         },
@@ -424,6 +427,13 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
     // restore Entity Type
     this.setEntityType(draftFiling.continuationIn.nameRequest.legalType)
 
+    // restore existing business information
+    if (draftFiling.continuationIn.existingBusinessInfo) {
+      this.setContinuationInBusinessInfo(draftFiling.continuationIn.existingBusinessInfo)
+    }
+
+    // FUTURE: restore continuation authorization
+
     // restore Office Addresses
     if (draftFiling.continuationIn.offices) {
       this.setOfficeAddresses(draftFiling.continuationIn.offices)
@@ -463,19 +473,17 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         ...draftFiling.continuationIn.contactPoint,
         confirmEmail: draftFiling.continuationIn.contactPoint.email
       })
-    } else {
-      this.setBusinessContact({ ...EmptyContactPoint })
     }
 
     // restore Persons and Organizations
     if (draftFiling.continuationIn.parties) {
-      this.setOrgPersonList(draftFiling.continuationIn.parties || [])
+      this.setOrgPersonList(draftFiling.continuationIn.parties)
     }
 
     // restore Share Structure
-    this.setShareClasses(draftFiling.continuationIn.shareStructure
-      ? draftFiling.continuationIn.shareStructure.shareClasses
-      : [])
+    if (draftFiling.continuationIn.shareStructure?.shareClasses) {
+      this.setShareClasses(draftFiling.continuationIn.shareStructure.shareClasses)
+    }
 
     // restore Certify state
     this.setCertifyState({

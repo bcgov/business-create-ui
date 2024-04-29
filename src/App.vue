@@ -311,6 +311,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   @Getter(useStore) isContinuationInFiling!: boolean
   @Getter(useStore) isDissolutionFiling!: boolean
   @Getter(useStore) isIncorporationFiling!: boolean
+  @Getter(useStore) isRestorationFiling!: boolean
   @Getter(useStore) isMobile!: boolean
   @Getter(useStore) isSbcStaff!: boolean
 
@@ -722,8 +723,24 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
         throw error // go to catch()
       }
 
-      // FUTURE: since we know what type of filing this is,
-      // add staff check for certain filings (ie, restorations)
+      // get Keycloak roles
+      const keycloakRoles = await this.loadKeycloakRoles().catch(error => {
+        console.log('Keycloak roles error =', error) // eslint-disable-line no-console
+        this.accountAuthorizationDialog = true
+        throw error // go to catch()
+      })
+
+      // Now that we know what type of filing this is, and what the user's roles are,
+      // add staff check for certain filings.
+      // FUTURE: enable this?
+      // if (this.isContinuationInFiling && !this.isRoleStaff) {
+      //   this.accountAuthorizationDialog = true
+      //   throw new Error('Only staff can access Continuation In filings')
+      // }
+      // if (this.isRestorationFiling && !this.isRoleStaff) {
+      //   this.accountAuthorizationDialog = true
+      //   throw new Error('Only staff can access Restoration filings')
+      // }
 
       // get user info
       const userInfo = await this.loadUserInfo().catch(error => {
@@ -733,13 +750,6 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
         } else {
           this.accountAuthorizationDialog = true
         }
-        throw error // go to catch()
-      })
-
-      // get Keycloak roles
-      const keycloakRoles = await this.loadKeycloakRoles().catch(error => {
-        console.log('Keycloak roles error =', error) // eslint-disable-line no-console
-        this.accountAuthorizationDialog = true
         throw error // go to catch()
       })
 
@@ -767,7 +777,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
             } else if (this.isAmalgamationFilingHorizontal || this.isAmalgamationFilingVertical) {
               this.$router.replace(RouteNames.AMALG_SHORT_INFORMATION).catch(() => {})
             } else {
-              throw new Error('invalid amalgamation filing type')
+              throw new Error('Invalid amalgamation filing type')
             }
             return
           case FilingTypes.CONTINUATION_IN:
@@ -896,13 +906,12 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   }
 
   /**
-   * Fetches draft Amalgamation / IA / Registration and sets the resources.
-   * (Only amalgamations/incorporations/registrations have a Temp ID.)
+   * Fetches draft Amalgamation / Continuation In / IA / Registration and sets the resources.
+   * (Only amalgamations/continuation ins/incorporations/registrations have a Temp ID.)
    */
   private async handleDraftWithTempId (tempId: string): Promise<void> {
     // ensure user is authorized to use this IA
     await this.checkAuth(tempId).catch(error => {
-      console.log('Auth error =', error) // eslint-disable-line no-console
       this.accountAuthorizationDialog = true
       throw error
     })
@@ -931,7 +940,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
         } else if (this.isAmalgamationFilingHorizontal || this.isAmalgamationFilingVertical) {
           resources = AmalgamationShortResources.find(x => x.entityType === this.getEntityType) as ResourceIF
         } else {
-          throw new Error('invalid amalgamation filing type')
+          throw new Error('Invalid amalgamation filing type')
         }
         break
       case FilingTypes.CONTINUATION_IN:
