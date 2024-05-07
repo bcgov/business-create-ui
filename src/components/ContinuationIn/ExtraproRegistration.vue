@@ -387,10 +387,10 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
   async fileSelected (file): Promise<void> {
     // *** TODO: finish implementing -- see UploadMemorandum.vue
     if (file) {
-      // add reactive property to business object
+      // add property reactively to business object
       this.$set(this.business, 'affidavitFileKey', '123')
     } else {
-      // delete the affidavit property if the file is cleared
+      // delete property reactively if the file is cleared
       this.$delete(this.business, 'affidavitFileKey')
       // FUTURE: should also delete the file from Minio
     }

@@ -466,7 +466,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         },
         identifier: continuationIn.foreignJurisdiction.identifier,
         incorporationDate: continuationIn.foreignJurisdiction.incorporationDate,
-        isConfirmed: continuationIn.isConfirmed,
+        isConfirmed: false, // don't restore confirmation checkbox
         isUlc: continuationIn.isUlc,
         legalName: continuationIn.foreignJurisdiction.legalName,
         mode: continuationIn.mode,
