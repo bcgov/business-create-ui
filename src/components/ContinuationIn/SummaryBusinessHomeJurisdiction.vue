@@ -54,7 +54,7 @@
               class="pt-4 pt-sm-0"
             >
               <div id="identifying-number">
-                {{ identifyingNumber || '[Unknown]' }}
+                {{ identifier || '[Unknown]' }}
               </div>
             </v-col>
           </v-row>
@@ -75,8 +75,8 @@
               sm="9"
               class="pt-4 pt-sm-0"
             >
-              <div id="business-name">
-                {{ businessName || '[Unknown]' }}
+              <div id="name">
+                {{ name || '[Unknown]' }}
               </div>
             </v-col>
           </v-row>
@@ -127,28 +127,29 @@
         </article>
 
         <!-- Extraprovincial Registration in B.C. -->
-        <template v-if="extraproRegistration">
-          <article class="section-container">
-            <v-row no-gutters>
-              <v-col
-                cols="12"
-                sm="3"
-                class="pr-4"
-              >
-                <label>Extraprovincial Registration in B.C.</label>
-              </v-col>
-              <v-col
-                cols="12"
-                sm="9"
-                class="pt-4 pt-sm-0"
-              >
-                <div id="extrapro-registration">
-                  {{ extraproRegistration }}
-                </div>
-              </v-col>
-            </v-row>
-          </article>
-        </template>
+        <article
+          v-if="isLookup"
+          class="section-container"
+        >
+          <v-row no-gutters>
+            <v-col
+              cols="12"
+              sm="3"
+              class="pr-4"
+            >
+              <label>Extraprovincial Registration in B.C.</label>
+            </v-col>
+            <v-col
+              cols="12"
+              sm="9"
+              class="pt-4 pt-sm-0"
+            >
+              <div id="extrapro-registration">
+                {{ extraproRegistration }}
+              </div>
+            </v-col>
+          </v-row>
+        </article>
       </div>
 
       <v-divider class="mx-6" />
@@ -252,6 +253,7 @@ import { Getter } from 'pinia-class'
 import { getName } from 'country-list'
 import { useStore } from '@/store/store'
 import { RouteNames } from '@/enums'
+import { ExistingBusinessInfoIF } from '@/interfaces'
 
 @Component({})
 export default class SummaryDefineCompany extends Vue {
@@ -259,11 +261,23 @@ export default class SummaryDefineCompany extends Vue {
   readonly RouteNames = RouteNames
 
   // Getters
-  @Getter(useStore) getContinuationInBusinessInfo!: any
+  @Getter(useStore) getExistingBusinessInfo!: ExistingBusinessInfoIF
   @Getter(useStore) isContinuationInBusinessHomeValid!: boolean
 
+  /** Whether the existing business data was looked up (ie, is an extrapro). */
+  get isLookup (): boolean {
+    return this.getExistingBusinessInfo?.mode === 'LOOKUP'
+  }
+
+  // NOT NEEDED ATM
+  // /** Whether the existing business data was manually entered. */
+  // get isManual (): boolean {
+  //   return this.getExistingBusinessInfo?.mode === 'MANUAL'
+  // }
+
+  /** The home jurisdiction. */
   get homeJurisdiction (): string {
-    const hj = this.getContinuationInBusinessInfo?.homeJurisdiction
+    const hj = this.getExistingBusinessInfo?.homeJurisdiction
     if (hj?.country) {
       const country = getName(hj.country)
       const region = (hj.region === 'FEDERAL' ? 'Federal' : hj.region)
@@ -273,28 +287,31 @@ export default class SummaryDefineCompany extends Vue {
     return null
   }
 
-  get identifyingNumber (): string {
-    return this.getContinuationInBusinessInfo?.homeIdentifier
+  /** The identifier in the home jurisdiction. */
+  get identifier (): string {
+    return this.getExistingBusinessInfo?.identifier
   }
 
-  get businessName (): string {
-    return this.getContinuationInBusinessInfo?.homeName
+  /** The name in the home jurisdiction. */
+  get name (): string {
+    return this.getExistingBusinessInfo?.legalName
   }
 
+  /** The incorporation date in the home jurisdiction. */
   get incorporationDate (): string {
-    return this.getContinuationInBusinessInfo?.registrationDate
+    return this.getExistingBusinessInfo?.incorporationDate
   }
 
+  /** The business number (aka tax id). */
   get businessNumber (): string {
-    return this.getContinuationInBusinessInfo?.bn
+    return this.getExistingBusinessInfo?.taxId
   }
 
+  /** The expro identifier and name (in BC). */
   get extraproRegistration (): string {
-    if (this.getContinuationInBusinessInfo?.mode === 'LOOKUP') {
-      const identifier = this.getContinuationInBusinessInfo?.identifier
-      const name = this.getContinuationInBusinessInfo?.name
-      if (identifier && name) return `${identifier} - ${name}`
-    }
+    const identifier = this.getExistingBusinessInfo?.businessIdentifier
+    const name = this.getExistingBusinessInfo?.businessLegalName
+    if (identifier && name) return `${identifier} - ${name}`
     return null
   }
 

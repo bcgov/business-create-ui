@@ -131,7 +131,7 @@ export default class AmalgamationMixin extends Vue {
   }
 
   /**
-   * Disallow altogether if foreign or extra-pro (except for staff).
+   * Disallow altogether if foreign or extrapro (except for staff).
    * (Could happen if staff added it and regular user resumes draft.)
    */
   foreign (business: AmalgamatingBusinessIF): AmlStatuses {
@@ -170,7 +170,7 @@ export default class AmalgamationMixin extends Vue {
     return null
   }
 
-  /** Disallow extra-pro (A company) into ULC or CCC. */
+  /** Disallow extrapro (A company) into ULC or CCC. */
   xproUlcCcc (business: AmalgamatingBusinessIF): AmlStatuses {
     if (
       business.type === AmlTypes.FOREIGN &&

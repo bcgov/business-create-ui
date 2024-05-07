@@ -43,6 +43,7 @@ import {
   DissolutionStateIF,
   DocumentDeliveryIF,
   EffectiveDateTimeIF,
+  ExistingBusinessInfoIF,
   FeesIF,
   FilingDataIF,
   IncorporationAgreementIF,
@@ -197,7 +198,7 @@ export const useStore = defineStore('store', {
       return this.stateModel.entityType
     },
 
-    getContinuationInBusinessInfo (): any {
+    getExistingBusinessInfo (): ExistingBusinessInfoIF {
       return this.getContinuationIn.existingBusinessInfo
     },
 
@@ -543,6 +544,11 @@ export const useStore = defineStore('store', {
         return (!!this.getCooperativeType && this.getDefineCompanyStep.valid)
       }
       return this.getDefineCompanyStep.valid
+    },
+
+    /** Is true when the Continuation In Business BC step is valid. */
+    isContinuationInBusinessBcValid (): boolean {
+      return this.getContinuationIn.businessBcValid
     },
 
     /** Is true when the Continuation In Business Home step is valid. */
@@ -1116,8 +1122,9 @@ export const useStore = defineStore('store', {
     setCurrentJsDate (date: Date) {
       this.stateModel.currentJsDate = date
     },
-    setContinuationInBusinessInfo (val: any) {
+    setExistingBusinessInfo (val: ExistingBusinessInfoIF) {
       this.stateModel.continuationIn.existingBusinessInfo = val
+      if (!this.stateModel.ignoreChanges) this.stateModel.haveChanges = true
     },
     setIsFutureEffective (isFutureEffective: boolean) {
       this.stateModel.effectiveDateTime.isFutureEffective = isFutureEffective
@@ -1143,6 +1150,9 @@ export const useStore = defineStore('store', {
     },
     setDefineCompanyStepValidity (valid: boolean) {
       this.stateModel.defineCompanyStep.valid = valid
+    },
+    setContinuationInBusinessBcValid (valid: boolean) {
+      this.getContinuationIn.businessBcValid = valid
     },
     setContinuationInBusinessHomeValid (valid: boolean) {
       this.getContinuationIn.businessHomeValid = valid

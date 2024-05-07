@@ -148,6 +148,40 @@
       </v-card>
     </section>
 
+    <!-- Court Order / POA -->
+    <section
+      v-if="isRoleStaff"
+      id="court-order-poa-section"
+      class="mt-10"
+    >
+      <header>
+        <h2>Court Order and Plan of Arrangement</h2>
+        <p class="mt-4">
+          If this filing is pursuant to a court order, enter the court order number. If this filing
+          is pursuant to a plan of arrangement, enter the court order number and select Plan of
+          Arrangement.
+        </p>
+      </header>
+
+      <v-card
+        flat
+        class="mt-6"
+      >
+        <div>** Court Order / POA component goes here **</div>
+        <!-- <CourtOrderPoa
+          class="py-8 px-6"
+          :class="{ 'invalid-section': isCourtOrderInvalid }"
+          :draftCourtOrderNumber="getCourtOrderStep.courtOrder.fileNumber"
+          :hasDraftPlanOfArrangement="getCourtOrderStep.courtOrder.hasPlanOfArrangement"
+          :courtOrderNumberRequired="false"
+          :invalidSection="isCourtOrderInvalid"
+          @emitCourtNumber="setCourtOrderFileNumber($event)"
+          @emitPoa="setHasPlanOfArrangement($event)"
+          @emitValid="setCourtOrderValidity($event)"
+        /> -->
+      </v-card>
+    </section>
+
     <!-- Staff Payment -->
     <section
       v-if="isRoleStaff"
