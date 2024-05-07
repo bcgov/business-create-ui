@@ -254,7 +254,6 @@
         </v-row>
       </template>
     </template>
-    <pre>business={{ business }}</pre>
   </div>
 </template>
 
