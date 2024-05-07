@@ -281,4 +281,20 @@ export default class LegalServices {
       return data.business
     })
   }
+
+  /**
+   * Fetches an extraprovincial company's business info from COLIN.
+   * @param businessId the business identifier
+   * @returns a promise to return the business info, else exception
+   */
+  static async fetchColinBusinessInfo (businessId: string): Promise<BusinessIF> {
+    // FUTURE: update this as needed
+    const url = `businesses/${businessId}?entityType=A`
+
+    return axios.get(url).then(response => {
+      const data = response?.data
+      if (!data) throw new Error('Invalid API response')
+      return data.business
+    })
+  }
 }

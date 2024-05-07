@@ -1,8 +1,8 @@
-import { AmalgamatingBusinessIF, BusinessAddressIF, CourtOrderIF, RegisteredRecordsAddressesIF, NaicsIF,
-  NameTranslationIF, OfficeAddressIF, PartyIF, ShareClassIF, SpecialResolutionIF } from '@/interfaces'
+import { AmalgamatingBusinessIF, BusinessAddressIF, CourtOrderIF, NaicsIF, NameTranslationIF, OfficeAddressIF,
+  OrgPersonIF, PartyIF, RegisteredRecordsAddressesIF, ShareClassIF, SpecialResolutionIF } from '@/interfaces'
 import { AmalgamationTypes, ApprovalTypes, BusinessTypes, DissolutionStatementTypes, DissolutionTypes,
   FilingTypes, RestorationTypes, RelationshipTypes } from '@/enums'
-import { CorrectNameOptions } from '@bcrs-shared-components/enums/'
+import { CorrectNameOptions, EntityStates } from '@bcrs-shared-components/enums/'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module/'
 import { ContactPointIF } from '@bcrs-shared-components/interfaces'
 
@@ -64,7 +64,10 @@ export interface AmalgamationFilingIF {
   }
 }
 
-/** Interface for continuation in filing data saved to the Legal API. */
+/**
+ * Interface for continuation in filing data saved to the Legal API.
+ * Ref: https://github.com/bcgov/business-schemas/blob/main/src/registry_schemas/schemas/continuation_in.json
+ */
 export interface ContinuationInFilingIF {
   header: {
     name: FilingTypes
@@ -83,20 +86,43 @@ export interface ContinuationInFilingIF {
     priority?: boolean
   }
   business: {
-    legalType: CorpTypeCd
     identifier: string
+    legalType: CorpTypeCd
   }
   continuationIn: {
-    existingBusinessInfo: any // FUTURE: create an interface for this object
-    continuationAuthorization: any // FUTURE: create an interface for this object
+    business?: { // expro data in BC
+      identifier: string
+      legalName: string
+    }
+    foreignJurisdiction: { // data in home jurisdiction
+      country: string
+      region?: string
+      legalName: string
+      identifier: string
+      incorporationDate: string
+      taxId?: string
+      affidavitFileKey: string
+    }
+    authorization: {
+      files: Array<{
+        fileKey: string
+        fileName: string
+      }>
+      authorityName: string
+      date: string // YYYY-MM-DD
+      expiryDate?: string // YYYY-MM-DD
+    }
+    contactPoint: ContactPointIF
     nameRequest: NameRequestFilingIF
     nameTranslations: NameTranslationIF[]
-    offices: RegisteredRecordsAddressesIF | object
-    contactPoint: ContactPointIF
-    parties: PartyIF[]
+    offices: RegisteredRecordsAddressesIF
+    parties: OrgPersonIF[]
     shareStructure: { shareClasses: ShareClassIF[] }
-    // ULC only: // *** TODO: verify this
     courtOrder?: CourtOrderIF
+    isConfirmed?: boolean // used only by UI
+    isUlc?: boolean // used only by UI
+    mode?: 'LOOKUP' | 'MANUAL' // used only by UI
+    status?: EntityStates // only used by UI
   }
 }
 

@@ -5,9 +5,8 @@
       <header id="existing-Business-information">
         <h2>Existing Business Information</h2>
         <p class="mt-4">
-          Enter information about your existing business. If your company is extra-provinvicially
-          registered in B.C., that registration will be made historic when this continuation in
-          application is processed.
+          Enter information about your existing business. If your company is extraprovincially registered
+          in B.C., that registration will be made historic when this continuation application is processed.
         </p>
       </header>
 
@@ -123,7 +122,7 @@ export default class ContinuationInBusinessHome extends Mixins(CommonMixin, Name
   /** Watch all components on this page and set validity in store accordingly. */
   @Watch('continuationAuthorizationValid', { immediate: true })
   @Watch('existingBusinessInformationValid', { immediate: true })
-  private isExistingBusinessInformationValid () {
+  private onContinuationInBusinessHomeValid () {
     this.setContinuationInBusinessHomeValid(
       this.continuationAuthorizationValid &&
       this.existingBusinessInformationValid

@@ -29,7 +29,7 @@
           :showErrors="getShowErrors"
           :inputAddresses="addresses"
           @update:addresses="setOfficeAddresses($event)"
-          @valid="onOfficeAddressesValid($event)"
+          @valid="addressFormValid = $event"
         />
       </div>
     </section>
@@ -57,24 +57,22 @@
           :isEditing="true"
           :showErrors="getShowErrors"
           @update="setBusinessContact($event)"
-          @valid="onBusinessContactInfoValid($event)"
+          @valid="businessContactFormValid = $event"
         />
       </v-card>
     </section>
 
-    <!-- Folio or Reference Number -->
+    <!-- Folio / Reference Number -->
     <section
       v-if="isPremiumAccount"
       id="folio-number-section"
       class="mt-10"
     >
-      <header>
-        <h2>Folio or Reference Number for this Filing</h2>
+      <header id="folio-reference-number-header">
+        <h2>Folio / Reference Number (Optional)</h2>
         <p class="mt-4">
-          Enter the folio or reference number you want to use for this filing for your own tracking purposes. The
-          Business Folio or Reference Number is displayed below (if available). Entering a different value below will
-          not change the Business Folio or Reference Number. Only the number below will appear on the transaction report
-          and receipt for this filing.
+          Add an optional Folio or Reference Number about this business for your own tracking purposes.
+          This information is not used by the BC Business Registry.
         </p>
       </header>
 
@@ -84,7 +82,7 @@
       >
         <div
           class="px-4 py-8"
-          :class="{ 'invalid-section': isFolioInvalid}"
+          :class="{ 'invalid-section': getShowErrors && !getFolioNumberValid}"
         >
           <FolioNumber
             :initialValue="getFolioNumber"
@@ -131,7 +129,7 @@ export default class ContinuationInBusinessBc extends Mixins(CommonMixin) {
   @Getter(useStore) isPremiumAccount!: boolean
 
   @Action(useStore) setBusinessContact!: (x: ContactPointIF) => void
-  @Action(useStore) setDefineCompanyStepValidity!: (x: boolean) => void
+  @Action(useStore) setContinuationInBusinessBcValid!: (x: boolean) => void
   @Action(useStore) setFolioNumber!: (x: string) => void
   @Action(useStore) setFolioNumberValidity!: (x: boolean) => void
   @Action(useStore) setIgnoreChanges!: (x: boolean) => void
@@ -143,14 +141,16 @@ export default class ContinuationInBusinessBc extends Mixins(CommonMixin) {
   /** Array of valid components. Must match validFlags. */
   readonly validComponents = [
     'office-address-header',
-    'registered-office-contact-header'
+    'registered-office-contact-header',
+    'folio-reference-number-header'
   ]
 
   /** Object of valid flags. Must match validComponents. */
   get validFlags (): object {
     return {
       validAddressForm: this.addressFormValid,
-      validBusinessContactForm: this.businessContactFormValid
+      validBusinessContactForm: this.businessContactFormValid,
+      validFolioReferenceNumber: !this.isPremiumAccount || this.getFolioNumberValid
     }
   }
 
@@ -198,25 +198,15 @@ export default class ContinuationInBusinessBc extends Mixins(CommonMixin) {
     })
   }
 
-  onOfficeAddressesValid (valid: boolean): void {
-    this.addressFormValid = valid
-    this.setDefineCompanyStepValidity(
+  @Watch('addressFormValid', { immediate: true })
+  @Watch('businessContactFormValid', { immediate: true })
+  @Watch('getFolioNumberValid', { immediate: true })
+  private onContinuationInBusinessBcValid (): void {
+    this.setContinuationInBusinessBcValid(
+      this.addressFormValid &&
       this.businessContactFormValid &&
-      this.addressFormValid
+      (!this.isPremiumAccount || this.getFolioNumberValid)
     )
-  }
-
-  onBusinessContactInfoValid (valid: boolean): void {
-    this.businessContactFormValid = valid
-    this.setDefineCompanyStepValidity(
-      this.businessContactFormValid &&
-      this.addressFormValid
-    )
-  }
-
-  /** Is true when the Folio Number is not valid */
-  get isFolioInvalid (): boolean {
-    return !(this.getFolioNumberValid)
   }
 
   @Watch('$route')

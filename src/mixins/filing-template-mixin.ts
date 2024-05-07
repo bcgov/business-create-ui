@@ -6,10 +6,11 @@ import {
   AmalgamationFilingIF, BusinessAddressIF, ContactPointIF, CertifyIF, CompletingPartyIF,
   ContinuationInFilingIF, CourtOrderIF, CourtOrderStepIF, CreateMemorandumIF, CreateResolutionIF,
   CreateRulesIF, DefineCompanyIF, DissolutionFilingIF, DissolutionStatementIF, DocumentDeliveryIF,
-  EffectiveDateTimeIF, EmptyNaics, IncorporationAgreementIF, IncorporationFilingIF, NaicsIF,
-  NrApplicantIF, NameRequestFilingIF, NameTranslationIF, OfficeAddressIF, OrgPersonIF, PartyIF,
-  RegistrationFilingIF, RegistrationStateIF, RestorationFilingIF, RestorationStateIF,
-  ShareStructureIF, SpecialResolutionIF, StaffPaymentIF, StaffPaymentStepIF, UploadAffidavitIF
+  EffectiveDateTimeIF, EmptyNaics, ExistingBusinessInfoIF, IncorporationAgreementIF,
+  IncorporationFilingIF, NaicsIF, NrApplicantIF, NameRequestFilingIF, NameTranslationIF,
+  OfficeAddressIF, OrgPersonIF, PartyIF, RegistrationFilingIF, RegistrationStateIF, RestorationFilingIF,
+  RestorationStateIF, ShareStructureIF, SpecialResolutionIF, StaffPaymentIF, StaffPaymentStepIF,
+  UploadAffidavitIF
 } from '@/interfaces'
 import {
   AmalgamationTypes, ApprovalTypes, BusinessTypes, CoopTypes, DissolutionTypes, EffectOfOrders,
@@ -52,6 +53,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
   @Getter(useStore) getDocumentDelivery!: DocumentDeliveryIF
   @Getter(useStore) getEffectiveDateTime!: EffectiveDateTimeIF
   // @Getter(useStore) getEntityType!: CorpTypeCd
+  @Getter(useStore) getExistingBusinessInfo!: ExistingBusinessInfoIF
   @Getter(useStore) getFilingId!: number
   @Getter(useStore) getFolioNumber!: string
   @Getter(useStore) getIncorporationAgreementStep!: IncorporationAgreementIF
@@ -89,6 +91,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
   @Action(useStore) setDocumentOptionalEmail!: (x: string) => void
   @Action(useStore) setEffectiveDate!: (x: Date) => void
   // @Action(useStore) setEntityType!: (x: CorpTypeCd) => void
+  @Action(useStore) setExistingBusinessInfo!: (x: ExistingBusinessInfoIF) => void
   @Action(useStore) setFilingId!: (x: number) => void
   @Action(useStore) setFolioNumber!: (x: string) => void
   @Action(useStore) setIncorporationAgreementStepData!: (x: IncorporationAgreementIF) => void
@@ -357,17 +360,25 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         isFutureEffective: this.getEffectiveDateTime.isFutureEffective
       },
       business: {
-        legalType: this.getEntityType,
-        identifier: this.getTempId
+        identifier: this.getTempId,
+        legalType: this.getEntityType
       },
       continuationIn: {
-        existingBusinessInfo: this.getContinuationInBusinessInfo,
-        continuationAuthorization: {},
-        nameRequest: {
-          legalType: this.getEntityType
+        foreignJurisdiction: {
+          country: this.getExistingBusinessInfo?.homeJurisdiction?.country,
+          region: this.getExistingBusinessInfo?.homeJurisdiction?.region || undefined,
+          legalName: this.getExistingBusinessInfo?.legalName,
+          identifier: this.getExistingBusinessInfo?.identifier,
+          incorporationDate: this.getExistingBusinessInfo?.incorporationDate,
+          taxId: this.getExistingBusinessInfo?.taxId || undefined,
+          affidavitFileKey: this.getExistingBusinessInfo?.affidavitFileKey
         },
-        nameTranslations: this.getNameTranslations,
-        offices: this.getDefineCompanyStep.officeAddresses,
+        authorization: {
+          files: [],
+          authorityName: null,
+          date: null,
+          expiryDate: null || undefined
+        },
         contactPoint: {
           email: this.getBusinessContact.email || '',
           phone: this.getBusinessContact.phone || '',
@@ -376,32 +387,43 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
             ? { extension: +this.getBusinessContact.extension }
             : {}
         },
+        nameRequest: {
+          legalName: this.getNameRequestApprovedName || undefined,
+          legalType: this.getEntityType,
+          nrNumber: this.getNameRequestNumber || undefined
+        },
+        nameTranslations: this.getNameTranslations,
+        offices: this.getDefineCompanyStep.officeAddresses,
         parties: this.fixOrgPeopleProperties(this.getAddPeopleAndRoleStep.orgPeople),
         shareStructure: {
           shareClasses: this.getCreateShareStructureStep.shareClasses
-        }
+        },
+        // save properties used only for UI:
+        isConfirmed: this.getExistingBusinessInfo?.isConfirmed,
+        isUlc: this.getExistingBusinessInfo?.isUlc,
+        mode: this.getExistingBusinessInfo?.mode,
+        status: this.getExistingBusinessInfo?.status
       }
     }
 
-    // Add business name data.
-    switch (this.getCorrectNameOption) {
-      case CorrectNameOptions.CORRECT_AML_ADOPT:
-        // save adopted name
-        // *** FUTURE: is there really an adopted name option in a continuation in?
-        filing.continuationIn.nameRequest.correctNameOption = CorrectNameOptions.CORRECT_AML_ADOPT
-        filing.continuationIn.nameRequest.legalName = this.getNameRequestApprovedName
-        break
-      case CorrectNameOptions.CORRECT_NEW_NR:
-        // save NR data
-        filing.continuationIn.nameRequest.correctNameOption = CorrectNameOptions.CORRECT_NEW_NR
-        filing.continuationIn.nameRequest.legalName = this.getNameRequestApprovedName
-        filing.continuationIn.nameRequest.nrNumber = this.getNameRequestNumber
-        filing.continuationIn.nameRequest.applicantPhone = this.getNameRequestApplicant.phoneNumber
-        filing.continuationIn.nameRequest.applicantEmail = this.getNameRequestApplicant.emailAddress
-        break
-      case CorrectNameOptions.CORRECT_AML_NUMBERED:
-        filing.continuationIn.nameRequest.correctNameOption = CorrectNameOptions.CORRECT_AML_NUMBERED
-        break
+    // Add expro business information (expro only).
+    if (this.getExistingBusinessInfo?.mode === 'LOOKUP') {
+      filing.continuationIn.business = {
+        identifier: this.getExistingBusinessInfo.businessIdentifier,
+        legalName: this.getExistingBusinessInfo.businessLegalName
+      }
+    }
+
+    // FUTURE: save continuation authorization
+
+    // Add court order / POA data.
+    const courtOrder = this.getCourtOrderStep.courtOrder
+    if (courtOrder && (courtOrder.hasPlanOfArrangement || courtOrder.fileNumber)) {
+      filing.continuationIn.courtOrder = {
+        fileNumber: courtOrder.fileNumber,
+        effectOfOrder: courtOrder.hasPlanOfArrangement ? EffectOfOrders.PLAN_OF_ARRANGEMENT : '',
+        hasPlanOfArrangement: courtOrder.hasPlanOfArrangement
+      }
     }
 
     // If this is a future effective filing then save the effective date.
@@ -420,27 +442,48 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
    * Parses a draft continuation in filing into the store. Used when loading a filing.
    * @param draftFiling the filing body to parse
    */
-  parseContinuationInDraft (draftFiling: any): void {
+  parseContinuationInDraft (draftFiling: ContinuationInFilingIF): void {
+    const continuationIn = draftFiling.continuationIn
+
     // save filing id
     this.setFilingId(+draftFiling.header.filingId)
 
     // restore Entity Type
-    this.setEntityType(draftFiling.continuationIn.nameRequest.legalType)
+    this.setEntityType(continuationIn.nameRequest.legalType)
 
     // restore existing business information
-    if (draftFiling.continuationIn.existingBusinessInfo) {
-      this.setContinuationInBusinessInfo(draftFiling.continuationIn.existingBusinessInfo)
+    if (
+      continuationIn.business &&
+      continuationIn.foreignJurisdiction
+    ) {
+      this.setExistingBusinessInfo({
+        affidavitFileKey: continuationIn.foreignJurisdiction.affidavitFileKey,
+        businessIdentifier: continuationIn.business.identifier,
+        businessLegalName: continuationIn.business.legalName,
+        homeJurisdiction: {
+          country: continuationIn.foreignJurisdiction.country,
+          region: continuationIn.foreignJurisdiction.region
+        },
+        identifier: continuationIn.foreignJurisdiction.identifier,
+        incorporationDate: continuationIn.foreignJurisdiction.incorporationDate,
+        isConfirmed: continuationIn.isConfirmed,
+        isUlc: continuationIn.isUlc,
+        legalName: continuationIn.foreignJurisdiction.legalName,
+        mode: continuationIn.mode,
+        status: continuationIn.status,
+        taxId: continuationIn.foreignJurisdiction.taxId
+      })
     }
 
     // FUTURE: restore continuation authorization
 
     // restore Office Addresses
-    if (draftFiling.continuationIn.offices) {
-      this.setOfficeAddresses(draftFiling.continuationIn.offices)
+    if (continuationIn.offices) {
+      this.setOfficeAddresses(continuationIn.offices)
     }
 
     // restore business name data
-    const nameRequest = draftFiling.continuationIn.nameRequest as NameRequestFilingIF
+    const nameRequest = continuationIn.nameRequest as NameRequestFilingIF
     switch (nameRequest?.correctNameOption) {
       case CorrectNameOptions.CORRECT_AML_ADOPT:
         this.setCorrectNameOption(CorrectNameOptions.CORRECT_AML_ADOPT)
@@ -463,26 +506,34 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
     }
 
     // restore Name Translations
-    if (draftFiling.continuationIn.nameTranslations) {
-      this.setNameTranslations(draftFiling.continuationIn.nameTranslations)
+    if (continuationIn.nameTranslations) {
+      this.setNameTranslations(continuationIn.nameTranslations)
     }
 
     // restore Business Contact
-    if (draftFiling.continuationIn.contactPoint) {
+    if (continuationIn.contactPoint) {
       this.setBusinessContact({
-        ...draftFiling.continuationIn.contactPoint,
-        confirmEmail: draftFiling.continuationIn.contactPoint.email
+        ...continuationIn.contactPoint,
+        confirmEmail: continuationIn.contactPoint.email
       })
     }
 
     // restore Persons and Organizations
-    if (draftFiling.continuationIn.parties) {
-      this.setOrgPersonList(draftFiling.continuationIn.parties)
+    if (continuationIn.parties) {
+      this.setOrgPersonList(continuationIn.parties)
     }
 
     // restore Share Structure
-    if (draftFiling.continuationIn.shareStructure?.shareClasses) {
-      this.setShareClasses(draftFiling.continuationIn.shareStructure.shareClasses)
+    if (continuationIn.shareStructure?.shareClasses) {
+      this.setShareClasses(continuationIn.shareStructure.shareClasses)
+    }
+
+    // restore court order file number / POA
+    if (continuationIn.courtOrder?.fileNumber) {
+      this.setCourtOrderFileNumber(continuationIn.courtOrder.fileNumber)
+    }
+    if (continuationIn.courtOrder?.hasPlanOfArrangement) {
+      this.setHasPlanOfArrangement(continuationIn.courtOrder.hasPlanOfArrangement)
     }
 
     // restore Certify state

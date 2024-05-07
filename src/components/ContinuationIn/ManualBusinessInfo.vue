@@ -93,7 +93,7 @@ import { Component, Emit, Vue, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { isEqual } from 'lodash'
-import { BusinessLookupResultIF, EmptyBusinessLookup } from '@/interfaces'
+import { BusinessLookupResultIF, EmptyBusinessLookup, ExistingBusinessInfoIF } from '@/interfaces'
 import ExtraproBusinessLookup from './ExtraproBusinessLookup.vue'
 
 @Component({
@@ -102,10 +102,10 @@ import ExtraproBusinessLookup from './ExtraproBusinessLookup.vue'
   }
 })
 export default class ManualBusinessInfo extends Vue {
-  @Getter(useStore) getContinuationInBusinessInfo!: any
+  @Getter(useStore) getExistingBusinessInfo!: ExistingBusinessInfoIF
   @Getter(useStore) getShowErrors!: boolean
 
-  @Action(useStore) setContinuationInBusinessInfo!: (x: any) => void
+  @Action(useStore) setExistingBusinessInfo!: (x: ExistingBusinessInfoIF) => void
 
   // Local properties
   active = false
@@ -144,7 +144,7 @@ export default class ManualBusinessInfo extends Vue {
 
   mounted (): void {
     // get the business info object from the store or initialize it
-    this.businessLookup = this.getContinuationInBusinessInfo || { ...EmptyBusinessLookup }
+    this.businessLookup = this.getExistingBusinessInfo || { ...EmptyBusinessLookup }
 
     // if mode is MANUAL, set this component to active (which hides the other component)
     if (this.businessLookup.mode === 'MANUAL') this.active = true
@@ -157,13 +157,13 @@ export default class ManualBusinessInfo extends Vue {
   setBusiness (businessLookup: BusinessLookupResultIF) {
     this.businessLookup = { ...businessLookup } // for reactivity
     this.businessLookup.mode = 'MANUAL'
-    this.setContinuationInBusinessInfo(this.businessLookup)
+    this.setExistingBusinessInfo(this.businessLookup)
   }
 
   /** Resets this component back to its initial state. */
   reset () {
     this.businessLookup = { ...EmptyBusinessLookup }
-    this.setContinuationInBusinessInfo(this.businessLookup)
+    this.setExistingBusinessInfo(this.businessLookup)
     // set this component to inactive (which shows the other component)
     this.active = false
   }

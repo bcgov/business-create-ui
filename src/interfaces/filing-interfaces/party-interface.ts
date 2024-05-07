@@ -1,6 +1,7 @@
 import { AddressIF, RolesIF } from '@/interfaces'
 import { PartyTypes } from '@/enums'
 import { CompletingPartyIF as CompletingPartyIFCommon } from '@bcrs-shared-components/interfaces'
+
 //
 // Interfaces for exchanging Party (aka OrgPerson) with the API.
 // Ref: https://github.com/bcgov/business-schemas/blob/main/src/registry_schemas/schemas/party.json
