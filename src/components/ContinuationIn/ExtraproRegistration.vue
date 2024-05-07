@@ -481,7 +481,7 @@ ul {
   li::before {
     content: "\2022";
     display: inline-block;
-    width: 1.5em;
+    width: 1.25em;
     margin-left: -1.5em;
     padding-left: 0.25rem;
   }
