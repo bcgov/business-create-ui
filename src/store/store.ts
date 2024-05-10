@@ -36,6 +36,7 @@ import {
   CreateRulesIF,
   CreateRulesResourceIF,
   CompletingPartyStatementIF,
+  ContinuationAuthorizationIF,
   ContinuationInStateIF,
   CustodianResourceIF,
   DefineCompanyIF,
@@ -196,6 +197,10 @@ export const useStore = defineStore('store', {
     /** The current entityType. */
     getEntityType (): CorpTypeCd {
       return this.stateModel.entityType
+    },
+
+    getContinuationAuthorization (): ContinuationAuthorizationIF {
+      return this.getContinuationIn.continuationAuthorization
     },
 
     getExistingBusinessInfo (): ExistingBusinessInfoIF {
@@ -1121,6 +1126,10 @@ export const useStore = defineStore('store', {
     },
     setCurrentJsDate (date: Date) {
       this.stateModel.currentJsDate = date
+    },
+    setContinuationAuthorization (val: ContinuationAuthorizationIF) {
+      this.stateModel.continuationIn.continuationAuthorization = val
+      if (!this.stateModel.ignoreChanges) this.stateModel.haveChanges = true
     },
     setExistingBusinessInfo (val: ExistingBusinessInfoIF) {
       this.stateModel.continuationIn.existingBusinessInfo = val

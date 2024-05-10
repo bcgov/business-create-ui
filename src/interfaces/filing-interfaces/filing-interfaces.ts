@@ -1,5 +1,6 @@
-import { AmalgamatingBusinessIF, BusinessAddressIF, CourtOrderIF, NaicsIF, NameTranslationIF, OfficeAddressIF,
-  OrgPersonIF, PartyIF, RegisteredRecordsAddressesIF, ShareClassIF, SpecialResolutionIF } from '@/interfaces'
+import { AmalgamatingBusinessIF, BusinessAddressIF, ContinuationAuthorizationIF, CourtOrderIF, NaicsIF,
+  NameTranslationIF, OfficeAddressIF, OrgPersonIF, PartyIF, RegisteredRecordsAddressesIF, ShareClassIF,
+  SpecialResolutionIF } from '@/interfaces'
 import { AmalgamationTypes, ApprovalTypes, BusinessTypes, DissolutionStatementTypes, DissolutionTypes,
   FilingTypes, RestorationTypes, RelationshipTypes } from '@/enums'
 import { CorrectNameOptions, EntityStates } from '@bcrs-shared-components/enums/'
@@ -103,15 +104,7 @@ export interface ContinuationInFilingIF {
       taxId?: string
       affidavitFileKey: string
     }
-    authorization: {
-      files: Array<{
-        fileKey: string
-        fileName: string
-      }>
-      authorityName: string
-      date: string // YYYY-MM-DD
-      expiryDate?: string // YYYY-MM-DD
-    }
+    authorization: ContinuationAuthorizationIF
     contactPoint: ContactPointIF
     nameRequest: NameRequestFilingIF
     nameTranslations: NameTranslationIF[]

@@ -288,7 +288,7 @@ describe('FileUploadPreview component', () => {
     inputFilesGet.mockReturnValue([oneMBFile])
     await fileInput.trigger('change')
     await waitForUpdate(3)
-    expect(wrapper.emitted('isFileValid').pop()[0]).toEqual(true)
+    expect(wrapper.emitted('fileValidity').pop()[0]).toEqual(true)
 
     wrapper.destroy()
   })

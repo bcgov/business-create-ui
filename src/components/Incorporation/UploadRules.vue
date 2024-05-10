@@ -263,14 +263,14 @@
               class="pt-4 pt-sm-0"
             >
               <FileUploadPreview
-                :inputFileLabel="INPUT_FILE_LABEL"
+                inputFileLabel="Rules of Association"
                 :maxSize="MAX_FILE_SIZE"
                 :pdfPageSize="PdfPageSize.LETTER_SIZE"
                 :inputFile="uploadRulesDoc"
                 :showErrors="getShowErrors"
                 :customErrorMessage="fileUploadCustomErrorMsg"
-                @fileSelected="fileSelected($event)"
-                @isFileValid="isFileUploadValidFn($event)"
+                @fileValidity="onFileValidity($event)"
+                @fileSelected="onFileSelected($event)"
               />
             </v-col>
           </v-row>
@@ -287,8 +287,8 @@ import { useStore } from '@/store/store'
 import {
   CreateRulesIF,
   CreateRulesResourceIF,
-  DocumentUpload,
   FormIF,
+  PresignedUrlIF,
   ValidationDetailIF
 } from '@/interfaces'
 import { RouteNames, ItemTypes, PdfPageSize } from '@/enums'
@@ -305,8 +305,6 @@ export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
   $refs!: {
     confirmRulesChk: FormIF
   }
-
-  readonly INPUT_FILE_LABEL = 'Rules of Association'
 
   // Local variables
   hasValidUploadFile = false
@@ -340,12 +338,12 @@ export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
     this.uploadRulesDocKey = null
   }
 
-  isFileUploadValidFn (val) {
-    this.hasValidUploadFile = val
+  onFileValidity (valid: boolean) {
+    this.hasValidUploadFile = valid
     this.updateRulesStepValidity()
   }
 
-  async fileSelected (file) {
+  async onFileSelected (file: File) {
     // reset state of file uploader to ensure not in manual error mode
     this.fileUploadCustomErrorMsg = ''
     if (file) {
@@ -370,7 +368,7 @@ export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
     const isPendingUpload = !this.uploadRulesDocKey
     if (isPendingUpload && this.hasValidUploadFile) {
       // NB: will throw if API error
-      const doc: DocumentUpload = await this.getPresignedUrl(this.uploadRulesDoc.name)
+      const doc: PresignedUrlIF = await this.getPresignedUrl(this.uploadRulesDoc.name)
 
       // NB: will return error response if API error
       const res = await this.uploadToUrl(doc.preSignedUrl, this.uploadRulesDoc, doc.key, this.getKeycloakGuid)

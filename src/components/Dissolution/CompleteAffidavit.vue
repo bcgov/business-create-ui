@@ -235,14 +235,14 @@
               class="pt-4 pt-sm-0"
             >
               <FileUploadPreview
-                :inputFileLabel="INPUT_FILE_LABEL"
+                inputFileLabel="Affidavit"
                 :maxSize="MAX_FILE_SIZE"
                 :pdfPageSize="PdfPageSize.LETTER_SIZE"
                 :inputFile="uploadAffidavitDoc"
                 :showErrors="getShowErrors"
                 :customErrorMessage="fileUploadCustomErrorMsg"
-                @fileSelected="fileSelected($event)"
-                @isFileValid="onFileUploadValid($event)"
+                @fileValidity="onFileValidity($event)"
+                @fileSelected="onFileSelected($event)"
               />
             </v-col>
           </v-row>
@@ -258,8 +258,8 @@ import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import {
   AffidavitResourceIF,
-  DocumentUpload,
   FormIF,
+  PresignedUrlIF,
   ValidationDetailIF,
   UploadAffidavitIF
 } from '@/interfaces'
@@ -278,8 +278,6 @@ export default class CompleteAffidavit extends Mixins(CommonMixin, DocumentMixin
   $refs!: {
     confirmAffidavitChk: FormIF
   }
-
-  readonly INPUT_FILE_LABEL = 'Affidavit'
 
   affidavitConfirmed = false
   fileUploadCustomErrorMsg = ''
@@ -333,12 +331,12 @@ export default class CompleteAffidavit extends Mixins(CommonMixin, DocumentMixin
     this.uploadAffidavitDocKey = null
   }
 
-  onFileUploadValid (val) {
-    this.hasValidUploadFile = val
+  onFileValidity (valid: boolean) {
+    this.hasValidUploadFile = valid
     this.updateAffidavitStepValidity()
   }
 
-  async fileSelected (file) {
+  async onFileSelected (file: File) {
     // reset state of file uploader to ensure not in manual error mode
     this.fileUploadCustomErrorMsg = ''
     if (file) {
@@ -363,7 +361,7 @@ export default class CompleteAffidavit extends Mixins(CommonMixin, DocumentMixin
     const isPendingUpload = !this.uploadAffidavitDocKey
     if (isPendingUpload && this.hasValidUploadFile) {
       // NB: will throw if API error
-      const doc: DocumentUpload = await this.getPresignedUrl(this.uploadAffidavitDoc.name)
+      const doc: PresignedUrlIF = await this.getPresignedUrl(this.uploadAffidavitDoc.name)
 
       // NB: will return error response if API error
       const res = await this.uploadToUrl(doc.preSignedUrl, this.uploadAffidavitDoc, doc.key, this.getKeycloakGuid)

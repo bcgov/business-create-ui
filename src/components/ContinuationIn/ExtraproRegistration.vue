@@ -166,21 +166,21 @@
 
               <FileUploadPreview
                 class="mt-4"
-                :inputFileLabel="INPUT_FILE_LABEL"
+                inputFileLabel="Affidavit from directors"
                 :maxSize="MAX_FILE_SIZE"
                 :pdfPageSize="PdfPageSize.LETTER_SIZE"
                 :inputFile="uploadMemorandumDoc"
                 :showErrors="getShowErrors"
                 :customErrorMessage="UPLOAD_FAILED_MESSAGE"
-                @fileSelected="fileSelected($event)"
-                @isFileValid="isFileUploadValidFn($event)"
+                @fileValidity="onFileValidity($event)"
+                @fileSelected="onFileSelected($event)"
               />
             </v-col>
           </v-row>
         </v-expand-transition>
 
         <v-row
-          class="mt-4"
+          class="mt-8"
           no-gutters
         >
           <v-col
@@ -289,8 +289,6 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
 
   @Action(useStore) setExistingBusinessInfo!: (x: ExistingBusinessInfoIF) => void
 
-  readonly INPUT_FILE_LABEL = 'Affidavit from directors is required'
-
   // Local properties
   active = false
   business = {} as ExistingBusinessInfoIF
@@ -384,7 +382,11 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async fileSelected (file): Promise<void> {
+  onFileValidity (valid: boolean): void {
+    // *** TODO: implement -- see UploadMemorandum.vue
+  }
+
+  async onFileSelected (file: File): Promise<void> {
     // *** TODO: finish implementing -- see UploadMemorandum.vue
     if (file) {
       // add property reactively to business object
@@ -394,11 +396,6 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
       this.$delete(this.business, 'affidavitFileKey')
       // FUTURE: should also delete the file from Minio
     }
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  isFileUploadValidFn (val): void {
-    // *** TODO: implement -- see UploadMemorandum.vue
   }
 
   @Watch('business.isUlc')
