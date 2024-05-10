@@ -247,8 +247,7 @@
               class="pt-4 pt-sm-0"
             >
               <div id="authorization-date">
-                {{ yyyyMmDdToPacificDate(getContinuationAuthorization?.date, true, false) ||
-                  '[Unknown]' }}
+                {{ authorizationDate || '[Unknown]' }}
               </div>
             </v-col>
           </v-row>
@@ -270,8 +269,7 @@
               class="pt-4 pt-sm-0"
             >
               <div id="expiry-date">
-                {{ yyyyMmDdToPacificDate(getContinuationAuthorization?.expiryDate, true, false) ||
-                  '[Unknown]' }}
+                {{ expiryDate || '[Unknown]' }}
               </div>
             </v-col>
           </v-row>
@@ -349,6 +347,14 @@ export default class SummaryDefineCompany extends Mixins(DateMixin) {
     const name = this.getExistingBusinessInfo?.businessLegalName
     if (identifier && name) return `${identifier} - ${name}`
     return null
+  }
+
+  get authorizationDate (): string {
+    return this.yyyyMmDdToPacificDate(this.getContinuationAuthorization?.date, true, false)
+  }
+
+  get expiryDate (): string {
+    return this.yyyyMmDdToPacificDate(this.getContinuationAuthorization?.expiryDate, true, false)
   }
 }
 </script>

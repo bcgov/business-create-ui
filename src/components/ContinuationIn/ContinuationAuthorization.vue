@@ -190,7 +190,6 @@ import { PdfPageSize } from '@/enums'
 import { VuetifyRuleFunction } from '@/types'
 import FileUploadPreview from '@/components/common/FileUploadPreview.vue'
 import { DatePicker as DatePickerShared } from '@bcrs-shared-components/date-picker'
-// import { LegalServices } from '@/services'
 
 @Component({
   components: {
@@ -281,6 +280,9 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
 
       // verify that file doesn't already exist
       if (this.authorization.files.find(f => f.file.name === file.name)) {
+        // put file uploader into manual error mode by passing custom error message
+        this.fileUploadCustomErrorMsg = 'Duplicate file.'
+
         this.snackbarText = 'File already uploaded. It will not be saved again.'
         this.snackbar = true
         return
