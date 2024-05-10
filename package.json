@@ -33,7 +33,7 @@
     "@bcrs-shared-components/genesys-web-message": "1.0.0",
     "@bcrs-shared-components/help-business-number": "1.1.1",
     "@bcrs-shared-components/interfaces": "1.1.13",
-    "@bcrs-shared-components/jurisdiction": "1.0.1",
+    "@bcrs-shared-components/jurisdiction": "1.1.2",
     "@bcrs-shared-components/limited-restoration-panel": "1.0.5",
     "@bcrs-shared-components/mixins": "1.1.44",
     "@bcrs-shared-components/nature-of-business": "1.2.14",

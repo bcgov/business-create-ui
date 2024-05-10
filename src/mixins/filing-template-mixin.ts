@@ -452,14 +452,11 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
     this.setEntityType(continuationIn.nameRequest.legalType)
 
     // restore existing business information
-    if (
-      continuationIn.business &&
-      continuationIn.foreignJurisdiction
-    ) {
+    if (continuationIn.foreignJurisdiction) {
       this.setExistingBusinessInfo({
         affidavitFileKey: continuationIn.foreignJurisdiction.affidavitFileKey,
-        businessIdentifier: continuationIn.business.identifier,
-        businessLegalName: continuationIn.business.legalName,
+        businessIdentifier: continuationIn.business?.identifier || null,
+        businessLegalName: continuationIn.business?.legalName || null,
         homeJurisdiction: {
           country: continuationIn.foreignJurisdiction.country,
           region: continuationIn.foreignJurisdiction.region

@@ -25,6 +25,7 @@
 
     <!-- active = display/edit mode -->
     <template v-if="active">
+      <!-- Jurisdiction -->
       <v-row no-gutters>
         <v-col
           cols="12"
@@ -37,7 +38,12 @@
           cols="12"
           sm="7"
         >
-          ** Jurisdiction selector goes here **
+          <Jurisdiction
+            :showUsaJurisdictions="true"
+            :initialValue="jurisdictionInitialVal"
+            :errorMessages="jurisdictionErrorMessage"
+            @change="onJurisdictionChange($event)"
+          />
         </v-col>
 
         <v-col
@@ -59,24 +65,135 @@
         </v-col>
       </v-row>
 
-      <v-row
-        class="mt-4"
-        no-gutters
-      >
+      <!-- Identifying Number -->
+      <v-row no-gutters>
+        <v-col
+          cols="12"
+          sm="3"
+        />
+
+        <v-col
+          cols="12"
+          sm="7"
+        >
+          <v-text-field
+            id="business-name"
+            v-model="business.identifier"
+            filled
+            label="Identifying Number"
+            :rules="getShowErrors ? identifyingNumberRules : []"
+          />
+        </v-col>
+
+        <v-col
+          cols="12"
+          sm="2"
+        >
+          <!-- empty column to line up with Undo button above -->
+        </v-col>
+      </v-row>
+
+      <!-- Business Name -->
+      <v-row no-gutters>
         <v-col
           cols="12"
           sm="3"
         >
-          <label>Identifying Number</label>
+          <label>Business Name in Home Jurisdiction</label>
         </v-col>
 
         <v-col
           cols="12"
           sm="7"
         >
-          ** Identifying number input goes here **
+          <v-text-field
+            id="business-name"
+            v-model="business.legalName"
+            filled
+            label="Business Name in Home Jurisdiction"
+            :rules="getShowErrors ? businessNameRules : []"
+          />
         </v-col>
 
+        <v-col
+          cols="12"
+          sm="2"
+        >
+          <!-- empty column to line up with Undo button above -->
+        </v-col>
+      </v-row>
+
+      <!-- Business Number-->
+      <v-row no-gutters>
+        <v-col
+          cols="12"
+          sm="3"
+        />
+
+        <v-col
+          cols="12"
+          sm="7"
+        >
+          <v-text-field
+            id="business-number"
+            v-model="business.taxId"
+            filled
+            label="Business Number (Optional)"
+          />
+        </v-col>
+
+        <v-col
+          cols="12"
+          sm="2"
+        >
+          <!-- empty column to line up with Undo button above -->
+        </v-col>
+      </v-row>
+
+      <!-- Incorporation Date -->
+      <v-row no-gutters>
+        <v-col
+          cols="12"
+          sm="3"
+        />
+
+        <v-col
+          cols="12"
+          sm="7"
+        >
+          <DatePickerShared
+            id="incorporation-date"
+            title="Incorporation Date in Home Jurisdiction"
+            :initialValue="getExistingBusinessInfo.incorporationDate"
+            :inputRules="getShowErrors ? incorporationDateRules : []"
+            @emitDateSync="startDateChanged($event)"
+          />
+        </v-col>
+
+        <v-col
+          cols="12"
+          sm="2"
+        >
+          <!-- empty column to line up with Undo button above -->
+        </v-col>
+      </v-row>
+
+      <v-row no-gutters>
+        <v-col
+          cols="12"
+          sm="3"
+        />
+
+        <v-col
+          cols="12"
+          sm="7"
+        >
+          <MessageBox color="gold">
+            <strong>Important:</strong> Verify that this information matches exactly the current information
+            in the home jurisdiction.
+          </MessageBox>
+        </v-col>
+        <pre>{{ business }}</pre>
         <v-col
           cols="12"
           sm="2"
@@ -89,19 +206,25 @@
 </template>
 
 <script lang="ts">
-import { Component, Emit, Vue, Watch } from 'vue-property-decorator'
+import { Component, Emit, Mixins, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
+import { DateMixin } from '@/mixins'
 import { isEqual } from 'lodash'
-import { BusinessLookupResultIF, EmptyBusinessLookup, ExistingBusinessInfoIF } from '@/interfaces'
-import ExtraproBusinessLookup from './ExtraproBusinessLookup.vue'
+import { ExistingBusinessInfoIF } from '@/interfaces'
+import MessageBox from '@/components/common/MessageBox.vue'
+import { Jurisdiction } from '@bcrs-shared-components/jurisdiction'
+import { DatePicker as DatePickerShared } from '@bcrs-shared-components/date-picker'
+import { JurisdictionLocation } from '@bcrs-shared-components/enums'
 
 @Component({
   components: {
-    ExtraproBusinessLookup
+    DatePickerShared,
+    Jurisdiction,
+    MessageBox
   }
 })
-export default class ManualBusinessInfo extends Vue {
+export default class ManualBusinessInfo extends Mixins(DateMixin) {
   @Getter(useStore) getExistingBusinessInfo!: ExistingBusinessInfoIF
   @Getter(useStore) getShowErrors!: boolean
 
@@ -109,7 +232,10 @@ export default class ManualBusinessInfo extends Vue {
 
   // Local properties
   active = false
-  businessLookup = null
+  business = {} as ExistingBusinessInfoIF
+  jurisdiction = null
+  dateText = ''
+  jurisdictionErrorMessage = ''
   manualBusinessInfoValid = false
 
   /** Whether to show this component. */
@@ -119,53 +245,92 @@ export default class ManualBusinessInfo extends Vue {
 
   /** Whether we have a looked-up business. */
   get haveLookupBusiness (): boolean {
-    return !isEqual(this.businessLookup, EmptyBusinessLookup)
-  }
-
-  /** The jurisdiction. */
-  get jurisdiction (): string {
-    return 'Unknown'
-  }
-
-  /** The business name. */
-  get businessName (): string {
-    return this.businessLookup.name
-  }
-
-  /** The business number. */
-  get businessNumber (): string {
-    return this.businessLookup.bn || ''
-  }
-
-  /** The incorporation date. */
-  get incorporationDate (): string {
-    return 'Unknown'
+    return !isEqual(this.business, {})
   }
 
   mounted (): void {
     // get the business info object from the store or initialize it
-    this.businessLookup = this.getExistingBusinessInfo || { ...EmptyBusinessLookup }
+    if (this.getExistingBusinessInfo) this.business = this.getExistingBusinessInfo
 
     // if mode is MANUAL, set this component to active (which hides the other component)
-    if (this.businessLookup.mode === 'MANUAL') this.active = true
+    if (this.business.mode === 'MANUAL') this.active = true
   }
 
   onClick (): void {
     this.active = true
   }
 
-  setBusiness (businessLookup: BusinessLookupResultIF) {
-    this.businessLookup = { ...businessLookup } // for reactivity
-    this.businessLookup.mode = 'MANUAL'
-    this.setExistingBusinessInfo(this.businessLookup)
+  get jurisdictionInitialVal (): any {
+    let jur = {
+      country: this.getExistingBusinessInfo.homeJurisdiction.country,
+      region: this.getExistingBusinessInfo.homeJurisdiction.region
+    }
+    return jur
   }
 
   /** Resets this component back to its initial state. */
   reset () {
-    this.businessLookup = { ...EmptyBusinessLookup }
-    this.setExistingBusinessInfo(this.businessLookup)
+    this.business = {} as unknown as ExistingBusinessInfoIF
+    this.setExistingBusinessInfo(this.business)
+    this.dateText = ''
     // set this component to inactive (which shows the other component)
     this.active = false
+  }
+
+  onJurisdictionChange (jurisdiction: any): void {
+    if (jurisdiction?.group === 0) {
+      this.business.homeJurisdiction.country = JurisdictionLocation.CA
+      this.business.homeJurisdiction.region = jurisdiction.value
+    }
+
+    if (jurisdiction?.group === 1) {
+      this.business.homeJurisdiction.country = JurisdictionLocation.US
+      this.business.homeJurisdiction.region = jurisdiction.value
+    }
+
+    if (jurisdiction?.group === 2) {
+      this.business.homeJurisdiction.country = jurisdiction.value
+      this.business.homeJurisdiction.region = ''
+    }
+  }
+
+  startDateChanged (dateString: string): void {
+    this.dateText = dateString
+    this.business.incorporationDate = this.dateText
+  }
+
+  get identifyingNumberRules (): Array<(v: string) => boolean | string> {
+    return [
+      v => !!v || 'Identifying Number is required'
+    ]
+  }
+
+  get businessNameRules (): Array<(v: string) => boolean | string> {
+    return [
+      v => !!v || 'Business Name is required'
+    ]
+  }
+
+  get incorporationDateRules (): Array<(v: string) => boolean | string> {
+    return [
+      v => !!v || 'Incorporation Date is required'
+    ]
+  }
+
+  private validatePage (): void {
+    this.manualBusinessInfoValid = (
+      !!this.jurisdiction &&
+      !!this.business.identifier &&
+      !!this.business.legalName &&
+      !!this.business.incorporationDate
+    )
+    this.jurisdictionErrorMessage = this.jurisdiction ? '' : 'Home jurisdiction is required'
+  }
+
+  @Watch('business', { deep: true })
+  private async onBusinessChanged (): Promise<void> {
+    this.setExistingBusinessInfo(this.business)
+    this.active = true
   }
 
   @Watch('manualBusinessInfoValid', { immediate: true })
