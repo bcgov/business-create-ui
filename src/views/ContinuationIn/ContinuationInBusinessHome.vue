@@ -67,6 +67,7 @@ import { RouteNames } from '@/enums'
 import ContinuationAuthorization from '@/components/ContinuationIn/ContinuationAuthorization.vue'
 import ExtraproRegistration from '@/components/ContinuationIn/ExtraproRegistration.vue'
 import ManualBusinessInfo from '@/components/ContinuationIn/ManualBusinessInfo.vue'
+import { ExistingBusinessInfoIF } from '@/interfaces'
 
 @Component({
   components: {
@@ -79,6 +80,8 @@ export default class ContinuationInBusinessHome extends Mixins(CommonMixin, Name
   @Getter(useStore) getShowErrors!: boolean
 
   @Action(useStore) setContinuationInBusinessHomeValid!: (x: boolean) => void
+  @Action(useStore) setExistingBusinessInfo!: (x: ExistingBusinessInfoIF) => void
+
   @Action(useStore) setIgnoreChanges!: (x: boolean) => void
 
   // Local properties
