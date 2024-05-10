@@ -15,5 +15,5 @@ export interface ExistingBusinessInfoIF {
   legalName: string // legal name in home jurisdiction
   mode: 'LOOKUP' | 'MANUAL' // only used by UI
   status?: EntityStates // only used by UI
-  taxId?: string
+  taxId?: string // aka Business Number
 }

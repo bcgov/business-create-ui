@@ -1,6 +1,6 @@
 <template>
   <v-form
-    ref="fileUploadInput"
+    ref="form"
     lazy-validation
   >
     <v-file-input
@@ -13,10 +13,11 @@
       :rules="fileUploadRules"
       show-size
       color="primary"
-      hint="File must be a PDF. Maximum 30MB."
+      :hint="hint"
+      hide-details="auto"
       persistent-hint
       :error-messages="customErrorMessages"
-      @change="fileChange($event)"
+      @change="onChange($event)"
     />
   </v-form>
 </template>
@@ -25,6 +26,7 @@
 import { Component, Emit, Mixins, Prop, Watch } from 'vue-property-decorator'
 import { DocumentMixin } from '@/mixins'
 import { PdfPageSize } from '@/enums'
+import { FormIF } from '@/interfaces'
 
 @Component({})
 export default class FileUploadPreview extends Mixins(DocumentMixin) {
@@ -35,10 +37,11 @@ export default class FileUploadPreview extends Mixins(DocumentMixin) {
   @Prop({ default: null }) readonly pdfPageSize!: PdfPageSize
   @Prop({ default: false }) readonly showErrors!: boolean
   @Prop({ default: '' }) readonly customErrorMessage!: string
+  @Prop({ default: 'File must be a PDF. Maximum 30MB.' }) readonly hint!: string
 
   // Refs
   $refs: {
-    fileUploadInput: HTMLFormElement
+    form: FormIF
   }
 
   // Local variables
@@ -47,14 +50,14 @@ export default class FileUploadPreview extends Mixins(DocumentMixin) {
 
   get fileUploadRules () {
     return [
-      (file) => {
+      (file: File) => {
         if (this.isRequired) {
           return !!file || this.inputFileLabel + ' is required'
         }
         return true
       },
-      (file) => {
-        if (this.maxSize) {
+      (file: File) => {
+        if (file && this.maxSize) {
           const maxSizeMB = this.maxSize / 1024
           const errorMsg = 'Exceeds maximum ' + maxSizeMB.toString() + ' MB file size'
           return (file?.size <= (this.maxSize * 1024)) || errorMsg
@@ -68,13 +71,10 @@ export default class FileUploadPreview extends Mixins(DocumentMixin) {
   async mounted (): Promise<void> {
     if (this.inputFile) {
       this.fileUpload = this.inputFile
+      // wait for v-file-input to settle
       await this.$nextTick()
-      this.isFileValid(this.fileUpload)
     }
-  }
-
-  async fileChange (file): Promise<void> {
-    await this.emitFileSelected(file)
+    await this.computeEmitFileValidity(this.fileUpload)
   }
 
   // Note: the validation is done this way as opposed to being all defined in the validation rules(fileUploadRules)
@@ -82,9 +82,9 @@ export default class FileUploadPreview extends Mixins(DocumentMixin) {
   //  around this limitation.  vuelidate does support this but this would mean introducing a component that
   //  is using a different validation approach or updating all components to use vuelidate.  Have decided
   //  to do this for the time being.
-  private async validateFileInput (file): Promise<boolean> {
+  private async validateFileInput (file: File): Promise<boolean> {
     this.customErrorMessages = []
-    const isValid = this.$refs.fileUploadInput.validate() as boolean
+    const isValid = this.$refs.form.validate()
     // only perform page size validation when other validation has passed
     if (isValid && file) {
       if (typeof file.arrayBuffer === 'undefined') { return true }
@@ -108,7 +108,7 @@ export default class FileUploadPreview extends Mixins(DocumentMixin) {
     return isValid
   }
 
-  private async validatePageSize (file): Promise<boolean> {
+  private async validatePageSize (file: File): Promise<boolean> {
     if (this.pdfPageSize && typeof file.arrayBuffer !== 'undefined') {
       const isValidPageSize = await this.isPageSize(file, this.pdfPageSize)
       return isValidPageSize
@@ -116,17 +116,20 @@ export default class FileUploadPreview extends Mixins(DocumentMixin) {
     return true
   }
 
+  /** First computes and emits file validity, then emits File Selected event. */
   @Emit('fileSelected')
-  async emitFileSelected (file): Promise<any> {
-    await this.isFileValid(file)
+  async onChange (file: File): Promise<File> {
+    await this.computeEmitFileValidity(file)
     return file
   }
 
-  @Emit('isFileValid')
-  async isFileValid (file): Promise<boolean> {
+  /** First computes file validity, then emits File Validity event. */
+  @Emit('fileValidity')
+  private async computeEmitFileValidity (file: File): Promise<boolean> {
     return this.validateFileInput(file)
   }
 
+  /** Validates the file input when "showErrors" changes to True. */
   @Watch('showErrors')
   private async onShowErrorsChanged (): Promise<void> {
     if (this.showErrors) {
@@ -134,6 +137,7 @@ export default class FileUploadPreview extends Mixins(DocumentMixin) {
     }
   }
 
+  /** Sets custom error message if is changed from its initial value. */
   @Watch('customErrorMessage')
   private onCustomErrorMessage (val: string): void {
     this.customErrorMessages = val ? [val] : []

@@ -309,14 +309,14 @@
               class="pt-4 pt-sm-0"
             >
               <FileUploadPreview
-                :inputFileLabel="INPUT_FILE_LABEL"
+                inputFileLabel="Memorandum of Association"
                 :maxSize="MAX_FILE_SIZE"
                 :pdfPageSize="PdfPageSize.LETTER_SIZE"
                 :inputFile="uploadMemorandumDoc"
                 :showErrors="getShowErrors"
                 :customErrorMessage="fileUploadCustomErrorMsg"
-                @fileSelected="fileSelected($event)"
-                @isFileValid="isFileUploadValidFn($event)"
+                @fileValidity="onFileValidity($event)"
+                @fileSelected="onFileSelected($event)"
               />
             </v-col>
           </v-row>
@@ -336,8 +336,8 @@ import { useStore } from '@/store/store'
 import {
   CreateMemorandumIF,
   CreateMemorandumResourceIF,
-  DocumentUpload,
   FormIF,
+  PresignedUrlIF,
   ValidationDetailIF
 } from '@/interfaces'
 
@@ -370,8 +370,6 @@ export default class UploadMemorandum extends Mixins(CommonMixin, DocumentMixin)
   @Action(useStore) setMemorandum!: (x: CreateMemorandumIF) => void
   @Action(useStore) setMemorandumStepValidity!: (x: ValidationDetailIF) => void
 
-  readonly INPUT_FILE_LABEL = 'Memorandum of Association'
-
   // Local variables
   fileUploadCustomErrorMsg = ''
   hasMemorandumConfirmed = false
@@ -399,12 +397,12 @@ export default class UploadMemorandum extends Mixins(CommonMixin, DocumentMixin)
     this.uploadMemorandumDocKey = null
   }
 
-  isFileUploadValidFn (val) {
-    this.hasValidUploadFile = val
+  onFileValidity (valid: boolean) {
+    this.hasValidUploadFile = valid
     this.updateMemorandumStepValidity()
   }
 
-  async fileSelected (file) {
+  async onFileSelected (file: File) {
     // reset state of file uploader to ensure not in manual error mode
     this.fileUploadCustomErrorMsg = ''
     if (file) {
@@ -429,7 +427,7 @@ export default class UploadMemorandum extends Mixins(CommonMixin, DocumentMixin)
     const isPendingUpload = !this.uploadMemorandumDocKey
     if (isPendingUpload && this.hasValidUploadFile) {
       // NB: will throw if API error
-      const doc: DocumentUpload = await this.getPresignedUrl(this.uploadMemorandumDoc.name)
+      const doc: PresignedUrlIF = await this.getPresignedUrl(this.uploadMemorandumDoc.name)
 
       // NB: will return error response if API error
       const res = await this.uploadToUrl(doc.preSignedUrl, this.uploadMemorandumDoc, doc.key, this.getKeycloakGuid)

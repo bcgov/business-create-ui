@@ -170,12 +170,44 @@
               sm="9"
               class="pt-4 pt-sm-0"
             >
-              <div id="continuation-authorization">
-                {{ continuationAuthorization || '[Unknown]' }}
-              </div>
+              <ul id="continuation-authorization-file">
+                <li
+                  v-for="(item, index) in getContinuationAuthorization?.files"
+                  :key="index"
+                >
+                  <v-icon color="green darken-2">
+                    mdi-check
+                  </v-icon>
+                  <span>{{ getContinuationAuthorization?.files[index]?.fileName }}</span>
+                </li>
+              </ul>
+
+              <ul
+                id="continuation-authorization-confirm"
+                class="mt-4"
+              >
+                <li>
+                  <v-icon
+                    v-if="getContinuationAuthorization?.isConfirmed"
+                    color="green darken-2"
+                  >
+                    mdi-check
+                  </v-icon>
+                  <v-icon
+                    v-else
+                    color="error"
+                  >
+                    mdi-close
+                  </v-icon>
+                  <span>I confirm that I have current and valid authorization to continue this business
+                    into B.C.</span>
+                </li>
+              </ul>
             </v-col>
           </v-row>
         </article>
+
+        <v-divider class="mx-6 mt-8 mb-3" />
 
         <!-- Authority Name -->
         <article class="section-container">
@@ -193,7 +225,7 @@
               class="pt-4 pt-sm-0"
             >
               <div id="authority-name">
-                {{ authorityName || '[Unknown]' }}
+                {{ getContinuationAuthorization?.authorityName || '[Unknown]' }}
               </div>
             </v-col>
           </v-row>
@@ -215,7 +247,8 @@
               class="pt-4 pt-sm-0"
             >
               <div id="authorization-date">
-                {{ authorizationDate || '[Unknown]' }}
+                {{ yyyyMmDdToPacificDate(getContinuationAuthorization?.date, true, false) ||
+                  '[Unknown]' }}
               </div>
             </v-col>
           </v-row>
@@ -237,7 +270,8 @@
               class="pt-4 pt-sm-0"
             >
               <div id="expiry-date">
-                {{ expiryDate || '[Unknown]' }}
+                {{ yyyyMmDdToPacificDate(getContinuationAuthorization?.expiryDate, true, false) ||
+                  '[Unknown]' }}
               </div>
             </v-col>
           </v-row>
@@ -248,19 +282,21 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Mixins } from 'vue-property-decorator'
 import { Getter } from 'pinia-class'
 import { getName } from 'country-list'
 import { useStore } from '@/store/store'
 import { RouteNames } from '@/enums'
-import { ExistingBusinessInfoIF } from '@/interfaces'
+import { ContinuationAuthorizationIF, ExistingBusinessInfoIF } from '@/interfaces'
+import { DateMixin } from '@/mixins'
 
 @Component({})
-export default class SummaryDefineCompany extends Vue {
+export default class SummaryDefineCompany extends Mixins(DateMixin) {
   // for template
   readonly RouteNames = RouteNames
 
   // Getters
+  @Getter(useStore) getContinuationAuthorization!: ContinuationAuthorizationIF
   @Getter(useStore) getExistingBusinessInfo!: ExistingBusinessInfoIF
   @Getter(useStore) isContinuationInBusinessHomeValid!: boolean
 
@@ -314,22 +350,6 @@ export default class SummaryDefineCompany extends Vue {
     if (identifier && name) return `${identifier} - ${name}`
     return null
   }
-
-  get continuationAuthorization (): string {
-    return null // FUTURE: implement this
-  }
-
-  get authorityName (): string {
-    return null // FUTURE: implement this
-  }
-
-  get authorizationDate (): string {
-    return null // FUTURE: implement this
-  }
-
-  get expiryDate (): string {
-    return null // FUTURE: implement this
-  }
 }
 </script>
 
@@ -354,5 +374,19 @@ article:not(:first-child) {
 // clear bottom whitespace for all articles except last one
 article:not(:last-child) {
   padding-bottom: 0;
+}
+
+// align the list v-icons and text
+.continuation-authorization-summary {
+  ul {
+    list-style: none;
+    margin-left: 2rem;
+    padding-left: 0;
+
+    li > i {
+      margin-left: -2rem;
+      padding-right: 10px;
+    }
+  }
 }
 </style>

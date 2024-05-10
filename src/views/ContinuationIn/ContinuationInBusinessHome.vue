@@ -6,7 +6,7 @@
         <h2>Existing Business Information</h2>
         <p class="mt-4">
           Enter information about your existing business. If your company is extraprovincially registered
-          in B.C., that registration will be made historic when this continuation application is processed.
+          in B.C., that registration will be made historical when this continuation application is processed.
         </p>
       </header>
 
@@ -50,7 +50,9 @@
         class="py-8 px-6"
         :class="{ 'invalid-section': getShowErrors && !continuationAuthorizationValid }"
       >
-        <div>** Continuation Authorization component goes here **</div>
+        <ContinuationAuthorization
+          @valid="continuationAuthorizationValid = $event"
+        />
       </v-card>
     </section>
   </div>
@@ -62,11 +64,13 @@ import { Getter, Action } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { CommonMixin, NameRequestMixin } from '@/mixins'
 import { RouteNames } from '@/enums'
+import ContinuationAuthorization from '@/components/ContinuationIn/ContinuationAuthorization.vue'
 import ExtraproRegistration from '@/components/ContinuationIn/ExtraproRegistration.vue'
 import ManualBusinessInfo from '@/components/ContinuationIn/ManualBusinessInfo.vue'
 
 @Component({
   components: {
+    ContinuationAuthorization,
     ManualBusinessInfo,
     ExtraproRegistration
   }
@@ -82,6 +86,7 @@ export default class ContinuationInBusinessHome extends Mixins(CommonMixin, Name
   manualBusinessInfoValid = false
   extraproRegistrationActive = false
   extraproRegistrationValid = false
+  continuationAuthorizationValid = false
 
   /** Array of valid components. Must match validFlags below. */
   readonly validComponents = [
@@ -100,12 +105,6 @@ export default class ContinuationInBusinessHome extends Mixins(CommonMixin, Name
   /** Whether the Existing Business Information section is valid. */
   get existingBusinessInformationValid (): boolean {
     return (this.extraproRegistrationValid || this.manualBusinessInfoValid)
-  }
-
-  /** Whether the Continuation Authorization section is valid. */
-  get continuationAuthorizationValid (): boolean {
-    // FUTURE: implement this
-    return true
   }
 
   /** Called when component is created. */

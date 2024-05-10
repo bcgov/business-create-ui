@@ -4,13 +4,13 @@ import { useStore } from '@/store/store'
 import { AmalgamationMixin, DateMixin } from '@/mixins'
 import {
   AmalgamationFilingIF, BusinessAddressIF, ContactPointIF, CertifyIF, CompletingPartyIF,
-  ContinuationInFilingIF, CourtOrderIF, CourtOrderStepIF, CreateMemorandumIF, CreateResolutionIF,
-  CreateRulesIF, DefineCompanyIF, DissolutionFilingIF, DissolutionStatementIF, DocumentDeliveryIF,
-  EffectiveDateTimeIF, EmptyNaics, ExistingBusinessInfoIF, IncorporationAgreementIF,
-  IncorporationFilingIF, NaicsIF, NrApplicantIF, NameRequestFilingIF, NameTranslationIF,
-  OfficeAddressIF, OrgPersonIF, PartyIF, RegistrationFilingIF, RegistrationStateIF, RestorationFilingIF,
-  RestorationStateIF, ShareStructureIF, SpecialResolutionIF, StaffPaymentIF, StaffPaymentStepIF,
-  UploadAffidavitIF
+  ContinuationAuthorizationIF, ContinuationInFilingIF, CourtOrderIF, CourtOrderStepIF,
+  CreateMemorandumIF, CreateResolutionIF, CreateRulesIF, DefineCompanyIF, DissolutionFilingIF,
+  DissolutionStatementIF, DocumentDeliveryIF, EffectiveDateTimeIF, EmptyNaics,
+  ExistingBusinessInfoIF, IncorporationAgreementIF, IncorporationFilingIF, NaicsIF, NrApplicantIF,
+  NameRequestFilingIF, NameTranslationIF, OfficeAddressIF, OrgPersonIF, PartyIF,
+  RegistrationFilingIF, RegistrationStateIF, RestorationFilingIF, RestorationStateIF,
+  ShareStructureIF, SpecialResolutionIF, StaffPaymentIF, StaffPaymentStepIF, UploadAffidavitIF
 } from '@/interfaces'
 import {
   AmalgamationTypes, ApprovalTypes, BusinessTypes, CoopTypes, DissolutionTypes, EffectOfOrders,
@@ -37,7 +37,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
   @Getter(useStore) getBusinessStartDate!: string
   @Getter(useStore) getCertifyState!: CertifyIF
   @Getter(useStore) getCompletingParty!: CompletingPartyIF
-  @Getter(useStore) getContinuationInBusinessInfo!: any
+  @Getter(useStore) getContinuationAuthorization!: ContinuationAuthorizationIF
   @Getter(useStore) getCorrectNameOption!: CorrectNameOptions
   @Getter(useStore) getCourtOrderStep!: CourtOrderStepIF
   @Getter(useStore) getCreateMemorandumStep!: CreateMemorandumIF
@@ -80,7 +80,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
   @Action(useStore) setBusinessAddress!: (x: OfficeAddressIF) => void
   // @Action(useStore) setBusinessContact!: (x: ContactPointIF) => void
   @Action(useStore) setCertifyState!: (x: CertifyIF) => void
-  @Action(useStore) setContinuationInBusinessInfo!: (x: any) => void
+  @Action(useStore) setContinuationAuthorization!: (x: ContinuationAuthorizationIF) => void
   @Action(useStore) setCooperativeType!: (x: CoopTypes) => void
   // @Action(useStore) setCorrectNameOption!: (x: CorrectNameOptions) => void
   @Action(useStore) setCourtOrderFileNumber!: (x: string) => void
@@ -373,12 +373,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
           taxId: this.getExistingBusinessInfo?.taxId || undefined,
           affidavitFileKey: this.getExistingBusinessInfo?.affidavitFileKey
         },
-        authorization: {
-          files: [],
-          authorityName: null,
-          date: null,
-          expiryDate: null || undefined
-        },
+        authorization: this.getContinuationAuthorization,
         contactPoint: {
           email: this.getBusinessContact.email || '',
           phone: this.getBusinessContact.phone || '',
@@ -452,14 +447,11 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
     this.setEntityType(continuationIn.nameRequest.legalType)
 
     // restore existing business information
-    if (
-      continuationIn.business &&
-      continuationIn.foreignJurisdiction
-    ) {
+    if (continuationIn.foreignJurisdiction) {
       this.setExistingBusinessInfo({
         affidavitFileKey: continuationIn.foreignJurisdiction.affidavitFileKey,
-        businessIdentifier: continuationIn.business.identifier,
-        businessLegalName: continuationIn.business.legalName,
+        businessIdentifier: continuationIn.business?.identifier, // FUTURE: need fallback to null?
+        businessLegalName: continuationIn.business?.legalName, // FUTURE: need fallback to null?
         homeJurisdiction: {
           country: continuationIn.foreignJurisdiction.country,
           region: continuationIn.foreignJurisdiction.region
@@ -475,7 +467,13 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
       })
     }
 
-    // FUTURE: restore continuation authorization
+    // restore continuation authorization
+    if (continuationIn.authorization) {
+      this.setContinuationAuthorization({
+        ...continuationIn.authorization,
+        isConfirmed: false // don't restore confirmation checkbox
+      })
+    }
 
     // restore Office Addresses
     if (continuationIn.offices) {

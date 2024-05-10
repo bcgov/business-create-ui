@@ -1,5 +1,6 @@
 // Filing interfaces
 export * from './filing-interfaces/court-order-interface'
+export * from './filing-interfaces/continuation-authorization-interface'
 export * from './filing-interfaces/existing-business-info-interface'
 export * from './filing-interfaces/filing-data-interface'
 export * from './filing-interfaces/filing-interfaces'
@@ -61,11 +62,11 @@ export * from './store-interfaces/state-interface'
 // Utils interfaces
 export * from './utils-interfaces/address-schema-interface'
 export * from './utils-interfaces/confirm-dialog-type'
-export * from './utils-interfaces/document-upload-interface'
 export * from './utils-interfaces/form-field-type'
 export * from './utils-interfaces/form-type'
 export * from './utils-interfaces/key-value-interface'
 export * from './utils-interfaces/pdf-info-interface'
+export * from './utils-interfaces/presigned-url-interface'
 export * from './utils-interfaces/validation-detail-interface'
 export * from './utils-interfaces/validation-item-detail-interface'
 

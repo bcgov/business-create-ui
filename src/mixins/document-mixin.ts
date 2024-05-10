@@ -1,7 +1,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { AxiosResponse } from 'axios'
 import { AxiosInstance as axios } from '@/utils'
-import { DocumentUpload, PdfInfoIF } from '@/interfaces'
+import { PresignedUrlIF, PdfInfoIF } from '@/interfaces'
 import { PdfPageSize } from '@/enums'
 import * as pdfjs from 'pdfjs-dist/legacy/build/pdf'
 
@@ -28,7 +28,12 @@ export default class DocumentMixin extends Vue {
     this.pdfjsLib.GlobalWorkerOptions.workerSrc = await import('pdfjs-dist/legacy/build/pdf.worker.entry')
   }
 
-  async getPresignedUrl (fileName: string): Promise<DocumentUpload> {
+  /**
+   * Gets a pre-signed URL for the specified filename.
+   * @param filename the file name
+   * @returns the presigned url object
+   */
+  async getPresignedUrl (fileName: string): Promise<PresignedUrlIF> {
     const url = `documents/${fileName}/signatures`
     return axios.get(url)
       .then(response => {
@@ -37,12 +42,17 @@ export default class DocumentMixin extends Vue {
           throw new Error('Invalid API response')
         }
         return data
-      }).catch(error => {
-        console.log('Error getting presigned url =', error) // eslint-disable-line no-console
-        throw error
       })
   }
 
+  /**
+   * Uploads the specified file to the specified (Minio) URL.
+   * @param url the URL to upload to
+   * @param file the file to upload
+   * @param key the file key
+   * @param userId the file user id
+   * @returns the axios response or the error response
+   */
   async uploadToUrl (url: string, file: File, key: string, userId: string): Promise<AxiosResponse> {
     const options = {
       headers: {
