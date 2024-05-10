@@ -172,13 +172,13 @@
             >
               <ul id="continuation-authorization-file">
                 <li
-                  v-for="(item, index) in getContinuationAuthorization?.files"
-                  :key="index"
+                  v-for="item in getContinuationAuthorization?.files"
+                  :key="item.fileKey"
                 >
                   <v-icon color="green darken-2">
                     mdi-check
                   </v-icon>
-                  <span>{{ getContinuationAuthorization?.files[index]?.fileName }}</span>
+                  <span>{{ item.fileName }}</span>
                 </li>
               </ul>
 
