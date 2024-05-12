@@ -25,182 +25,190 @@
 
     <!-- active = display/edit mode -->
     <template v-if="active">
-      <!-- Jurisdiction -->
-      <v-row no-gutters>
-        <v-col
-          cols="12"
-          sm="3"
-        >
-          <label>Jurisdiction</label>
-        </v-col>
-
-        <v-col
-          cols="12"
-          sm="7"
-        >
-          <Jurisdiction
-            :showUsaJurisdictions="true"
-            :initialValue="jurisdictionInitialVal"
-            :errorMessages="jurisdictionErrorMessage"
-            @change="onJurisdictionChange($event)"
-          />
-        </v-col>
-
-        <v-col
-          cols="12"
-          sm="2"
-        >
-          <v-btn
-            id="undo-button"
-            class="float-sm-right float-none"
-            text
-            color="primary"
-            @click="reset()"
+      <v-form
+        ref="manualFormRef"
+        lazy-validation
+        @submit.prevent
+      >
+        <!-- Jurisdiction -->
+        <v-row no-gutters>
+          <v-col
+            cols="12"
+            sm="3"
           >
-            <v-icon small>
-              mdi-undo
-            </v-icon>
-            <span>Undo</span>
-          </v-btn>
-        </v-col>
-      </v-row>
+            <label>Jurisdiction</label>
+          </v-col>
 
-      <!-- Identifying Number -->
-      <v-row no-gutters>
-        <v-col
-          cols="12"
-          sm="3"
-        />
+          <v-col
+            cols="12"
+            sm="7"
+          >
+            <Jurisdiction
+              :showUsaJurisdictions="true"
+              :initialValue="jurisdictionInitialVal"
+              :errorMessages="jurisdictionErrorMessage"
+              @change="onJurisdictionChange($event)"
+            />
+          </v-col>
 
-        <v-col
-          cols="12"
-          sm="7"
-        >
-          <v-text-field
-            id="business-name"
-            v-model="business.identifier"
-            filled
-            label="Identifying Number"
-            :rules="getShowErrors ? identifyingNumberRules : []"
+          <v-col
+            cols="12"
+            sm="2"
+          >
+            <v-btn
+              id="undo-button"
+              class="float-sm-right float-none"
+              text
+              color="primary"
+              @click="reset()"
+            >
+              <v-icon small>
+                mdi-undo
+              </v-icon>
+              <span>Undo</span>
+            </v-btn>
+          </v-col>
+        </v-row>
+
+        <!-- Identifying Number -->
+        <v-row no-gutters>
+          <v-col
+            cols="12"
+            sm="3"
           />
-        </v-col>
 
-        <v-col
-          cols="12"
-          sm="2"
-        >
-          <!-- empty column to line up with Undo button above -->
-        </v-col>
-      </v-row>
+          <v-col
+            cols="12"
+            sm="7"
+          >
+            <v-text-field
+              id="business-name"
+              v-model="business.identifier"
+              filled
+              label="Identifying Number"
+              :rules="getShowErrors ? identifyingNumberRules : []"
+            />
+          </v-col>
 
-      <!-- Business Name -->
-      <v-row no-gutters>
-        <v-col
-          cols="12"
-          sm="3"
-        >
-          <label>Business Name in Home Jurisdiction</label>
-        </v-col>
+          <v-col
+            cols="12"
+            sm="2"
+          >
+            <!-- empty column to line up with Undo button above -->
+          </v-col>
+        </v-row>
 
-        <v-col
-          cols="12"
-          sm="7"
-        >
-          <v-text-field
-            id="business-name"
-            v-model="business.legalName"
-            filled
-            label="Business Name in Home Jurisdiction"
-            :rules="getShowErrors ? businessNameRules : []"
+        <!-- Business Name -->
+        <v-row no-gutters>
+          <v-col
+            cols="12"
+            sm="3"
+          >
+            <label>Business Name in Home Jurisdiction</label>
+          </v-col>
+
+          <v-col
+            cols="12"
+            sm="7"
+          >
+            <v-text-field
+              id="business-name"
+              v-model="business.legalName"
+              filled
+              label="Business Name in Home Jurisdiction"
+              :rules="getShowErrors ? businessNameRules : []"
+            />
+          </v-col>
+
+          <v-col
+            cols="12"
+            sm="2"
+          >
+            <!-- empty column to line up with Undo button above -->
+          </v-col>
+        </v-row>
+
+        <!-- Business Number-->
+        <v-row no-gutters>
+          <v-col
+            cols="12"
+            sm="3"
           />
-        </v-col>
 
-        <v-col
-          cols="12"
-          sm="2"
-        >
-          <!-- empty column to line up with Undo button above -->
-        </v-col>
-      </v-row>
+          <v-col
+            cols="12"
+            sm="7"
+          >
+            <v-text-field
+              id="business-number"
+              v-model="business.taxId"
+              filled
+              label="Business Number (Optional)"
+            />
+          </v-col>
 
-      <!-- Business Number-->
-      <v-row no-gutters>
-        <v-col
-          cols="12"
-          sm="3"
-        />
+          <v-col
+            cols="12"
+            sm="2"
+          >
+            <!-- empty column to line up with Undo button above -->
+          </v-col>
+        </v-row>
 
-        <v-col
-          cols="12"
-          sm="7"
-        >
-          <v-text-field
-            id="business-number"
-            v-model="business.taxId"
-            filled
-            label="Business Number (Optional)"
+        <!-- Incorporation Date -->
+        <v-row no-gutters>
+          <v-col
+            cols="12"
+            sm="3"
           />
-        </v-col>
 
-        <v-col
-          cols="12"
-          sm="2"
-        >
-          <!-- empty column to line up with Undo button above -->
-        </v-col>
-      </v-row>
+          <v-col
+            cols="12"
+            sm="7"
+          >
+            <DatePickerShared
+              id="incorporation-date"
+              ref="incorporationDateRef"
+              title="Incorporation Date in Home Jurisdiction"
+              :initialValue="getExistingBusinessInfo.incorporationDate"
+              :inputRules="getShowErrors ? incorporationDateRules : []"
+              :maxDate="getCurrentDate"
+              @emitDateSync="business.incorporationDate = $event"
+            />
+          </v-col>
 
-      <!-- Incorporation Date -->
-      <v-row no-gutters>
-        <v-col
-          cols="12"
-          sm="3"
-        />
+          <v-col
+            cols="12"
+            sm="2"
+          >
+            <!-- empty column to line up with Undo button above -->
+          </v-col>
+        </v-row>
 
-        <v-col
-          cols="12"
-          sm="7"
-        >
-          <DatePickerShared
-            id="incorporation-date"
-            title="Incorporation Date in Home Jurisdiction"
-            :initialValue="getExistingBusinessInfo.incorporationDate"
-            :inputRules="getShowErrors ? incorporationDateRules : []"
-            @emitDateSync="startDateChanged($event)"
+        <v-row no-gutters>
+          <v-col
+            cols="12"
+            sm="3"
           />
-        </v-col>
 
-        <v-col
-          cols="12"
-          sm="2"
-        >
-          <!-- empty column to line up with Undo button above -->
-        </v-col>
-      </v-row>
-
-      <v-row no-gutters>
-        <v-col
-          cols="12"
-          sm="3"
-        />
-
-        <v-col
-          cols="12"
-          sm="7"
-        >
-          <MessageBox color="gold">
-            <strong>Important:</strong> Verify that this information matches exactly the current information
-            in the home jurisdiction.
-          </MessageBox>
-        </v-col>
-        <pre>{{ business }}</pre>
-        <v-col
-          cols="12"
-          sm="2"
-        >
-          <!-- empty column to line up with Undo button above -->
-        </v-col>
-      </v-row>
+          <v-col
+            cols="12"
+            sm="7"
+          >
+            <MessageBox color="gold">
+              <strong>Important:</strong> Verify that this information matches exactly the current information
+              in the home jurisdiction.
+            </MessageBox>
+          </v-col>
+          <pre>{{ business }}</pre>
+          <v-col
+            cols="12"
+            sm="2"
+          >
+            <!-- empty column to line up with Undo button above -->
+          </v-col>
+        </v-row>
+      </v-form>
     </template>
   </div>
 </template>
@@ -216,6 +224,7 @@ import MessageBox from '@/components/common/MessageBox.vue'
 import { Jurisdiction } from '@bcrs-shared-components/jurisdiction'
 import { DatePicker as DatePickerShared } from '@bcrs-shared-components/date-picker'
 import { JurisdictionLocation } from '@bcrs-shared-components/enums'
+import { FormIF } from '@bcrs-shared-components/interfaces'
 
 @Component({
   components: {
@@ -225,6 +234,13 @@ import { JurisdictionLocation } from '@bcrs-shared-components/enums'
   }
 })
 export default class ManualBusinessInfo extends Mixins(DateMixin) {
+  // Refs
+  $refs!: {
+    manualFormRef: FormIF
+    incorporationDateRef: DatePickerShared
+  }
+
+  @Getter(useStore) getCurrentDate!: string
   @Getter(useStore) getExistingBusinessInfo!: ExistingBusinessInfoIF
   @Getter(useStore) getShowErrors!: boolean
 
@@ -262,8 +278,8 @@ export default class ManualBusinessInfo extends Mixins(DateMixin) {
 
   get jurisdictionInitialVal (): any {
     let jur = {
-      country: this.getExistingBusinessInfo.homeJurisdiction.country,
-      region: this.getExistingBusinessInfo.homeJurisdiction.region
+      country: this.getExistingBusinessInfo ? this.getExistingBusinessInfo.homeJurisdiction?.country : '',
+      region: this.getExistingBusinessInfo ? this.getExistingBusinessInfo.homeJurisdiction?.region : ''
     }
     return jur
   }
@@ -271,8 +287,8 @@ export default class ManualBusinessInfo extends Mixins(DateMixin) {
   /** Resets this component back to its initial state. */
   reset () {
     this.business = {} as unknown as ExistingBusinessInfoIF
+    console.log('Reset', this.business)
     this.setExistingBusinessInfo(this.business)
-    this.dateText = ''
     // set this component to inactive (which shows the other component)
     this.active = false
   }
@@ -294,11 +310,6 @@ export default class ManualBusinessInfo extends Mixins(DateMixin) {
     }
   }
 
-  startDateChanged (dateString: string): void {
-    this.dateText = dateString
-    this.business.incorporationDate = this.dateText
-  }
-
   get identifyingNumberRules (): Array<(v: string) => boolean | string> {
     return [
       v => !!v || 'Identifying Number is required'
@@ -317,26 +328,31 @@ export default class ManualBusinessInfo extends Mixins(DateMixin) {
     ]
   }
 
-  private validatePage (): void {
-    this.manualBusinessInfoValid = (
-      !!this.jurisdiction &&
-      !!this.business.identifier &&
-      !!this.business.legalName &&
-      !!this.business.incorporationDate
-    )
-    this.jurisdictionErrorMessage = this.jurisdiction ? '' : 'Home jurisdiction is required'
+  // @Watch('business', { deep: true })
+  // private async onBusinessChanged (): Promise<void> {
+  //   this.setExistingBusinessInfo(this.business)
+  //   this.active = true
+  // }
+
+  @Watch('getShowErrors')
+  @Watch('business.incorporationDate')
+  private onShowErrors (): void {
+    if (this.getShowErrors) {
+      this.$refs.manualFormRef.validate()
+      this.$refs.incorporationDateRef.validateForm()
+      this.jurisdictionErrorMessage = this.jurisdiction ? '' : 'Home jurisdiction is required'
+    }
   }
 
+  // @Watch('manualBusinessInfoValid', { immediate: true })
   @Watch('business', { deep: true })
-  private async onBusinessChanged (): Promise<void> {
+  @Emit('valid')
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  private onComponentValid (val: boolean): void {
+    this.setExistingBusinessInfo(this.business)
     this.setExistingBusinessInfo(this.business)
     this.active = true
   }
-
-  @Watch('manualBusinessInfoValid', { immediate: true })
-  @Emit('valid')
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  private onComponentValid (val: boolean): void {}
 
   @Watch('active', { immediate: true })
   @Emit('active')
