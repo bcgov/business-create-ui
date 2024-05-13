@@ -9,7 +9,7 @@
   >
     <header>
       <p>
-        Upload the authorization for the continuation from the foreign jursidiction.
+        Upload the continuation authorization letter from your home jursidiction.
       </p>
 
       <ul>
@@ -45,9 +45,10 @@
           inputFileLabel="Continuation authorization"
           :maxSize="MAX_FILE_SIZE"
           :pdfPageSize="PdfPageSize.LETTER_SIZE"
+          :hint="authorization.files[index]?.file ? 'File uploaded.' : undefined"
           :inputFile="authorization.files[index]?.file"
           :showErrors="getShowErrors"
-          :customErrorMessage="fileUploadCustomErrorMsg"
+          :customErrorMessage.sync="customErrorMessage[index]"
           :isRequired="getShowErrors && (index === 0)"
           @fileValidity="onFileValidity($event)"
           @fileSelected="onFileSelected(index, $event)"
@@ -139,7 +140,7 @@
             :nudgeTop="85"
             :initialValue="authorization.expiryDate"
             :inputRules="getShowErrors ? expiryDateRules: []"
-            :minDate="authorization.date"
+            :minDate="getCurrentDate"
             @emitDateSync="authorization.expiryDate = $event"
           />
         </v-col>
@@ -153,7 +154,8 @@
         :rules="getShowErrors ? [(v) => !!v] : []"
       >
         <template #label>
-          <span>I confirm that I have current and valid authorization to continue this business into B.C.</span>
+          <span>I confirm that I have current and valid authorization to continue this business into
+            B.C.</span>
         </template>
       </v-checkbox>
     </v-form>
@@ -218,7 +220,7 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
   // Local properties
   authorization = null as ContinuationAuthorizationIF
   fileValidity = false
-  fileUploadCustomErrorMsg = ''
+  customErrorMessage = ['', '', '', '', '']
   snackbar = false
   snackbarText = ''
 
@@ -230,17 +232,20 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
 
   get authorizationDateRules (): Array<VuetifyRuleFunction> {
     return [
-      (v) => !!v || 'Authorization Date is required',
-      () => (this.authorization.date <= this.getCurrentDate) ||
-        'Authorization Date cannot be in the future'
+      () => !!this.authorization.date ||
+        'Authorization Date is required',
+      () => {
+        return (this.authorization.date <= this.getCurrentDate) ||
+          'Authorization Date cannot be in the future'
+      }
     ]
   }
 
   get expiryDateRules (): Array<VuetifyRuleFunction> {
     return [
       () => !this.authorization.expiryDate ||
-        (this.authorization.expiryDate >= this.authorization.date) ||
-        'Expiry Date cannot be before Authorization Date'
+        (this.authorization.expiryDate >= this.getCurrentDate) ||
+        'Expiry Date cannot be in the past'
     ]
   }
 
@@ -267,12 +272,10 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
    * This is called right after the File Validity event.
    */
   async onFileSelected (index: number, file: File): Promise<void> {
-    // reset state of file uploader to ensure not in manual error mode
-    this.fileUploadCustomErrorMsg = ''
-
     if (file) {
       // verify that file is valid
       if (!this.fileValidity) {
+        // NB: as this is validity according to the component, do not overwrite current error message
         this.snackbarText = 'Invalid file. It will not be saved.'
         this.snackbar = true
         return // don't add to list
@@ -280,12 +283,12 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
 
       // verify that file doesn't already exist
       if (this.authorization.files.find(f => f.file.name === file.name)) {
-        // put file uploader into manual error mode by passing custom error message
-        this.fileUploadCustomErrorMsg = 'Duplicate file.'
+        // put file uploader into manual error mode by setting custom error message
+        this.customErrorMessage[index] = 'Duplicate file.'
 
         this.snackbarText = 'File already uploaded. It will not be saved again.'
         this.snackbar = true
-        return
+        return // don't add to list
       }
 
       // try to upload to Minio
@@ -295,12 +298,12 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
         const res = await this.uploadToUrl(psu.preSignedUrl, file, psu.key, this.getKeycloakGuid)
         if (!res || res.status !== 200) throw new Error()
       } catch {
-        // put file uploader into manual error mode by passing custom error message
-        this.fileUploadCustomErrorMsg = this.UPLOAD_FAILED_MESSAGE
+        // put file uploader into manual error mode by setting custom error message
+        this.customErrorMessage[index] = this.UPLOAD_FAILED_MESSAGE
 
         this.snackbarText = 'File upload error. Please try again.'
         this.snackbar = true
-        return
+        return // don't add to list
       }
 
       // add file to array

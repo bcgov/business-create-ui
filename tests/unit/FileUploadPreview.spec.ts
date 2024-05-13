@@ -259,7 +259,7 @@ describe('FileUploadPreview component', () => {
     wrapper.destroy()
   })
 
-  it('fileSelected event emitted when file is selected', async () => {
+  it('events are emitted when file is selected', async () => {
     const wrapper = mount(FileUploadPreview, {
       propsData: { maxSize: 10 * 1024 },
       vuetify
@@ -271,24 +271,10 @@ describe('FileUploadPreview component', () => {
     inputFilesGet.mockReturnValue([oneMBFile])
     await fileInput.trigger('change')
     await waitForUpdate(3)
+
+    // although file is invalid, check that `fileSelected` and `fileValidity` events were emitted
     expect(wrapper.emitted('fileSelected').pop()[0]).toEqual(oneMBFile)
-
-    wrapper.destroy()
-  })
-
-  it('isFileValid event emitted when file is selected', async () => {
-    const wrapper = mount(FileUploadPreview, {
-      propsData: { maxSize: 10 * 1024 },
-      vuetify
-    })
-
-    const fileInput = wrapper.find('input[type="file"]')
-    setupFileInput(fileInput)
-    inputValue = oneMBFile.name
-    inputFilesGet.mockReturnValue([oneMBFile])
-    await fileInput.trigger('change')
-    await waitForUpdate(3)
-    expect(wrapper.emitted('fileValidity').pop()[0]).toEqual(true)
+    expect(wrapper.emitted('fileValidity').pop()[0]).toEqual(false)
 
     wrapper.destroy()
   })

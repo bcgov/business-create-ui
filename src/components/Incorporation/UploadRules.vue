@@ -385,7 +385,7 @@ export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
           docKey: doc.key
         })
       } else {
-        // put file uploader into manual error mode by passing custom error message
+        // put file uploader into manual error mode by setting custom error message
         this.fileUploadCustomErrorMsg = this.UPLOAD_FAILED_MESSAGE
         this.hasValidUploadFile = false
         this.updateRulesStepValidity()
