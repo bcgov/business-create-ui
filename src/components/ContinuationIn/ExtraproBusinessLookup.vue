@@ -1,62 +1,60 @@
 <template>
   <div id="extrapro-business-lookup">
-    <div class="input-block">
-      <v-autocomplete
-        v-model="selectedBusiness"
-        filled
-        no-filter
-        append-icon=""
-        return-object
-        autocomplete="chrome-off"
-        menu-props="{ maxHeight: 380 }"
-        hint="Enter at least 3 characters"
-        hide-details="auto"
-        item-text="identifier"
-        :disabled="state === States.SUMMARY"
-        :label="businessLookupLabel"
-        :name="Math.random()"
-        :items="searchResults"
-        :loading="state == States.SEARCHING"
-        :hide-no-data="state != States.NO_RESULTS"
-        @update:search-input="onSearchInput($event)"
-      >
-        <!-- Empty selection slot will stop re-triggering of search-input event -->
-        <template #selection="" />
+    <v-autocomplete
+      v-model="selectedBusiness"
+      filled
+      no-filter
+      append-icon=""
+      return-object
+      autocomplete="chrome-off"
+      menu-props="{ maxHeight: 380 }"
+      hint="Enter at least 3 characters"
+      hide-details="auto"
+      item-text="identifier"
+      :disabled="state === States.SUMMARY"
+      :label="businessLookupLabel"
+      :name="Math.random()"
+      :items="searchResults"
+      :loading="state == States.SEARCHING"
+      :hide-no-data="state != States.NO_RESULTS"
+      @update:search-input="onSearchInput($event)"
+    >
+      <!-- Empty selection slot will stop re-triggering of search-input event -->
+      <template #selection="" />
 
-        <template #no-data>
-          <v-list-item>
-            <div>No matches found.</div>
-          </v-list-item>
-        </template>
+      <template #no-data>
+        <v-list-item>
+          <div>No matches found.</div>
+        </v-list-item>
+      </template>
 
-        <template #item="{ item }">
-          <v-row class="business-lookup-result pt-1">
-            <v-col
-              cols="3"
-              class="result-identifier d-inline-flex"
-            >
-              {{ item.identifier }}
-              <!-- *** TODO: remove after testing: -->
-              ({{ item.status?.charAt(0) }})
-            </v-col>
+      <template #item="{ item }">
+        <v-row class="business-lookup-result pt-1">
+          <v-col
+            cols="3"
+            class="result-identifier d-inline-flex"
+          >
+            {{ item.identifier }}
+            <!-- *** TODO: remove after testing: -->
+            ({{ item.status?.charAt(0) }})
+          </v-col>
 
-            <v-col
-              cols="7"
-              class="result-name flex-1-1"
-            >
-              {{ item.name }}
-            </v-col>
+          <v-col
+            cols="7"
+            class="result-name flex-1-1"
+          >
+            {{ item.name }}
+          </v-col>
 
-            <v-col
-              cols="2"
-              class="result-action"
-            >
-              Select
-            </v-col>
-          </v-row>
-        </template>
-      </v-autocomplete>
-    </div>
+          <v-col
+            cols="2"
+            class="result-action"
+          >
+            Select
+          </v-col>
+        </v-row>
+      </template>
+    </v-autocomplete>
   </div>
 </template>
 
