@@ -14,7 +14,10 @@
           cols="12"
           sm="9"
         >
-          <div class="font-14 ml-3">
+          <div
+            id="manual-business-info-link"
+            class="font-14 ml-3"
+          >
             Not extraprovincially registered in B.C.?
             &nbsp; &nbsp;
             <a @click="onClick()">Enter your business information manually</a>
@@ -219,7 +222,7 @@ import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { DateMixin } from '@/mixins'
 import { isEqual } from 'lodash'
-import { ExistingBusinessInfoIF } from '@/interfaces'
+import { EmptyBusinessLookup, ExistingBusinessInfoIF } from '@/interfaces'
 import MessageBox from '@/components/common/MessageBox.vue'
 import { Jurisdiction } from '@bcrs-shared-components/jurisdiction'
 import { DatePicker as DatePickerShared } from '@bcrs-shared-components/date-picker'
@@ -248,9 +251,9 @@ export default class ManualBusinessInfo extends Mixins(DateMixin) {
 
   // Local properties
   active = false
+  businessLookup = null
   business = {} as ExistingBusinessInfoIF
   jurisdiction = null
-  dateText = ''
   jurisdictionErrorMessage = ''
   manualBusinessInfoValid = false
 
@@ -261,7 +264,7 @@ export default class ManualBusinessInfo extends Mixins(DateMixin) {
 
   /** Whether we have a looked-up business. */
   get haveLookupBusiness (): boolean {
-    return !isEqual(this.business, {})
+    return !isEqual(this.business, EmptyBusinessLookup)
   }
 
   mounted (): void {
@@ -274,29 +277,40 @@ export default class ManualBusinessInfo extends Mixins(DateMixin) {
 
   onClick (): void {
     this.active = true
+    this.business = {} as ExistingBusinessInfoIF
   }
 
   get jurisdictionInitialVal (): any {
+    let region = ''
+    if (this.getExistingBusinessInfo.homeJurisdiction?.region === 'Federal') {
+      region = JurisdictionLocation.FD
+    } else {
+      region = this.getExistingBusinessInfo ? this.getExistingBusinessInfo.homeJurisdiction?.region : ''
+    }
+
     let jur = {
       country: this.getExistingBusinessInfo ? this.getExistingBusinessInfo.homeJurisdiction?.country : '',
-      region: this.getExistingBusinessInfo ? this.getExistingBusinessInfo.homeJurisdiction?.region : ''
+      region: region
     }
     return jur
   }
 
   /** Resets this component back to its initial state. */
   reset () {
-    this.business = {} as unknown as ExistingBusinessInfoIF
-    console.log('Reset', this.business)
-    this.setExistingBusinessInfo(this.business)
-    // set this component to inactive (which shows the other component)
+    this.businessLookup = { ...EmptyBusinessLookup }
+    this.setExistingBusinessInfo(this.businessLookup)
     this.active = false
   }
 
   onJurisdictionChange (jurisdiction: any): void {
+    this.jurisdiction = jurisdiction
     if (jurisdiction?.group === 0) {
       this.business.homeJurisdiction.country = JurisdictionLocation.CA
-      this.business.homeJurisdiction.region = jurisdiction.value
+      if (jurisdiction.value === JurisdictionLocation.FD) {
+        this.business.homeJurisdiction.region = 'Federal'
+      } else {
+        this.business.homeJurisdiction.region = jurisdiction.value
+      }
     }
 
     if (jurisdiction?.group === 1) {
@@ -308,6 +322,8 @@ export default class ManualBusinessInfo extends Mixins(DateMixin) {
       this.business.homeJurisdiction.country = jurisdiction.value
       this.business.homeJurisdiction.region = ''
     }
+
+    this.jurisdictionErrorMessage = this.jurisdiction ? '' : 'Home jurisdiction is required'
   }
 
   get identifyingNumberRules (): Array<(v: string) => boolean | string> {
@@ -328,14 +344,15 @@ export default class ManualBusinessInfo extends Mixins(DateMixin) {
     ]
   }
 
-  // @Watch('business', { deep: true })
-  // private async onBusinessChanged (): Promise<void> {
-  //   this.setExistingBusinessInfo(this.business)
-  //   this.active = true
-  // }
+  @Watch('business', { deep: true })
+  private async onBusinessChanged (): Promise<void> {
+    this.setExistingBusinessInfo(this.business)
+    this.active = true
+  }
 
   @Watch('getShowErrors')
   @Watch('business.incorporationDate')
+  @Watch('business.homeJurisdiction')
   private onShowErrors (): void {
     if (this.getShowErrors) {
       this.$refs.manualFormRef.validate()
@@ -344,14 +361,16 @@ export default class ManualBusinessInfo extends Mixins(DateMixin) {
     }
   }
 
-  // @Watch('manualBusinessInfoValid', { immediate: true })
-  @Watch('business', { deep: true })
+  @Watch('manualBusinessInfoValid', { immediate: true })
   @Emit('valid')
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  private onComponentValid (val: boolean): void {
-    this.setExistingBusinessInfo(this.business)
-    this.setExistingBusinessInfo(this.business)
-    this.active = true
+  private onComponentValid (val: boolean): boolean {
+    return (
+      !!this.business.homeJurisdiction &&
+      !!this.business.identifier &&
+      !!this.business.legalName &&
+      !!this.business.incorporationDate
+    )
   }
 
   @Watch('active', { immediate: true })
