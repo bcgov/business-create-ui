@@ -6,7 +6,8 @@
         <h2>Company Name</h2>
       </header>
 
-      <div>** Correct Name component goes here **</div>
+      <div><name-request-info></name-request-info></div>
+      <div><name-translations></name-translations></div>
     </section>
 
     <!-- Registered Office Addresses -->
@@ -111,11 +112,15 @@ import { RouteNames } from '@/enums'
 import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
 import FolioNumber from '@/components/common/FolioNumber.vue'
 import OfficeAddresses from '@/components/common/OfficeAddresses.vue'
+import NameRequestInfo from '@/components/common/NameRequestInfo.vue'
+import NameTranslations from '@/components/common/NameTranslations.vue'
 
 @Component({
   components: {
     BusinessContactInfo,
     FolioNumber,
+    NameRequestInfo,
+    NameTranslations,
     OfficeAddresses
   }
 })

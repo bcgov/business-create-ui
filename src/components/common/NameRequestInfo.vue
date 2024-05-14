@@ -300,6 +300,7 @@ export default class NameRequestInfo extends Mixins(CommonMixin, DateMixin) {
       case NrRequestActionCodes.NEW_BUSINESS: return 'New Business'
       case NrRequestActionCodes.RESTORE: return 'Restoration Request'
       case NrRequestActionCodes.AMALGAMATE: return 'Amalgamation'
+      case NrRequestActionCodes.MOVE: return 'Continuation In'
     }
     return '' // should never happen
   }
@@ -341,6 +342,7 @@ export default class NameRequestInfo extends Mixins(CommonMixin, DateMixin) {
   get applicant (): NrApplicantIF {
     return this.getNameRequest.applicants // object not array
   }
+
 }
 </script>
 
