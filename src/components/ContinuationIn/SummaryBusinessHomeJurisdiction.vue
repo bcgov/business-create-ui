@@ -269,7 +269,7 @@
               class="pt-4 pt-sm-0"
             >
               <div id="expiry-date">
-                {{ expiryDate || '[Unknown]' }}
+                {{ expiryDate || '[Not entered]' }}
               </div>
             </v-col>
           </v-row>

@@ -51,7 +51,7 @@ export default class DocumentMixin extends Vue {
    * @param file the file to upload
    * @param key the file key
    * @param userId the file user id
-   * @returns the axios response or the error response
+   * @returns a promise to return the axios response or the error response
    */
   async uploadToUrl (url: string, file: File, key: string, userId: string): Promise<AxiosResponse> {
     const options = {
@@ -71,10 +71,10 @@ export default class DocumentMixin extends Vue {
   }
 
   /**
-   * Checks whether pdf file is using specified page size by checking width and height of all pages of pdf file
-   * @param file pdf file to be checked
-   * @param pageSize enum value used to represent page size to check for
-   * @return Promise<boolean> whether pdf file is expected page size
+   * Checks whether all pages of given pdf file are of specified size.
+   * @param file the pdf file to be checked
+   * @param pageSize the page size to check for
+   * @return a promise to return whether the pdf file is expected page size
    */
   async isPageSize (file: File, pageSize: PdfPageSize): Promise<boolean> {
     const pageSizeInfo = this.pageSizeDict[pageSize]
@@ -86,6 +86,7 @@ export default class DocumentMixin extends Vue {
       const [x, y, w, h] = page._pageInfo.view
       const width = w - x
       const height = h - y
+      // check width and height
       const isValidPageSize = (width / pageSizeInfo.pointsPerInch === pageSizeInfo.width) &&
         (height / pageSizeInfo.pointsPerInch === pageSizeInfo.height)
       if (!isValidPageSize) return false
@@ -93,6 +94,12 @@ export default class DocumentMixin extends Vue {
     return true
   }
 
+  /**
+   * Retrieves file information for the given pdf file, specifically whether the file is
+   * encrypted or locked.
+   * @param file the pdf file
+   * @return a promise to return the PDF info object, or null on error
+   */
   async retrieveFileInfo (file: File): Promise<PdfInfoIF> {
     try {
       const arrayBuffer = await file.arrayBuffer()
@@ -104,7 +111,7 @@ export default class DocumentMixin extends Vue {
       if ((error as any).name === 'PasswordException') {
         return { isEncrypted: true, isContentLocked: true }
       }
+      return null // invalid pdf file
     }
-    return { isEncrypted: false, isContentLocked: false }
   }
 }

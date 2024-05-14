@@ -83,29 +83,38 @@ export default class FileUploadPreview extends Mixins(DocumentMixin) {
   //  is using a different validation approach or updating all components to use vuelidate.  Have decided
   //  to do this for the time being.
   private async validateFileInput (file: File): Promise<boolean> {
-    this.customErrorMessages = []
+    // clear any existing error messages
+    this.setCustomErrorMessage(null)
+
+    // validate the form (using rules)
     const isValid = this.$refs.form.validate()
-    // only perform page size validation when other validation has passed
-    if (isValid && file) {
+    if (!isValid) return false
+
+    // perform perform PDF validations
+    if (file) {
       if (typeof file.arrayBuffer === 'undefined') { return true }
       const fileInfo = await this.retrieveFileInfo(file)
+      if (!fileInfo) {
+        this.setCustomErrorMessage('Invalid PDF file')
+        return false
+      }
       if (fileInfo.isEncrypted) {
-        this.customErrorMessages = ['File must be unencrypted']
+        this.setCustomErrorMessage('File must be unencrypted')
         return false
       }
       if (fileInfo.isContentLocked) {
-        this.customErrorMessages = ['File content cannot be locked']
+        this.setCustomErrorMessage('File content cannot be locked')
         return false
       }
-      const pageSizeIsValid = await this.validatePageSize(file)
-      if (!pageSizeIsValid) {
+      const isPageSizeValid = await this.validatePageSize(file)
+      if (!isPageSizeValid) {
         // show page size validation error
         const pageSizeErrorMsg = this.pageSizeDict[this.pdfPageSize].validationErrorMsg
-        this.customErrorMessages = [pageSizeErrorMsg]
+        this.setCustomErrorMessage(pageSizeErrorMsg)
+        return false
       }
-      return isValid && pageSizeIsValid
     }
-    return isValid
+    return true
   }
 
   private async validatePageSize (file: File): Promise<boolean> {
@@ -137,9 +146,13 @@ export default class FileUploadPreview extends Mixins(DocumentMixin) {
     }
   }
 
-  /** Sets custom error message if is changed from its initial value. */
+  /**
+   * Automatically sets custom error message if prop changed, or if called, and syncs value back
+   * to the parent component.
+   */
   @Watch('customErrorMessage')
-  private onCustomErrorMessage (val: string): void {
+  @Emit('update:customErrorMessage')
+  private setCustomErrorMessage (val: string): void {
     this.customErrorMessages = val ? [val] : []
   }
 }

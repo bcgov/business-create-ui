@@ -17,7 +17,7 @@ export default class LegalServices {
   /**
    * Fetches the filings list.
    * @param businessId the business identifier (aka entity inc no)
-   * @returns the filings list
+   * @returns a promise to return the filings list
    */
   static async fetchFilings (businessId: string): Promise<any[]> {
     const url = `businesses/${businessId}/filings`
@@ -38,7 +38,7 @@ export default class LegalServices {
    * Fetches the first or only filing.
    * This is probably a draft Amalgamation, IA or Registration.
    * @param tempId the temp registration number
-   * @returns a promise to return the draft filing, else exception
+   * @returns a promise to return the draft filing
    */
   static async fetchFirstOrOnlyFiling (tempId: string): Promise<any> {
     const url = `businesses/${tempId}/filings`
@@ -73,7 +73,7 @@ export default class LegalServices {
    * Fetches the first task.
    * This is probably a draft Dissolution or Restoration.
    * @param businessId the business identifier
-   * @returns a promise to return the draft filing, else exception
+   * @returns a promise to return the draft filing
    */
   static async fetchFirstTask (businessId: string): Promise<any> {
     const url = `businesses/${businessId}/tasks`
@@ -95,7 +95,7 @@ export default class LegalServices {
   /**
    * Fetches a filing.
    * @param url the full URL to fetch the filing
-   * @returns the filing object
+   * @returns a promise to return the filing object
    */
   static async fetchFiling (url: string): Promise<any> {
     return axios.get(url)
@@ -115,7 +115,7 @@ export default class LegalServices {
    * @param id the business identifier or temp registration number
    * @param filing the filing object
    * @param isDraft whether to save draft or complete the filing
-   * @returns a promise to return the updated filing, else exception
+   * @returns a promise to return the updated filing
    */
   static async updateFiling (
     id: string,
@@ -151,7 +151,7 @@ export default class LegalServices {
    * @param nrNumber the name request number (eg, NR 1234567)
    * @param phone the name request phone number (eg, 123-4567)
    * @param email the name request email address (eg, me@example.com)
-   * @returns a promise to return the NR data, else exception
+   * @returns a promise to return the NR data
    */
   static async fetchNameRequest (nrNumber: string, phone = '', email = ''): Promise<NameRequestIF> {
     if (!nrNumber) throw new Error('Invalid parameter \'nrNumber\'')
@@ -169,7 +169,7 @@ export default class LegalServices {
   /**
    * Fetches the parties list.
    * @param businessId the business identifier
-   * @returns a promise to return the parties from the response, else exception
+   * @returns a promise to return the parties from the response
    */
   static async fetchParties (businessId: string): Promise<any> {
     const url = `businesses/${businessId}/parties`
@@ -184,7 +184,7 @@ export default class LegalServices {
   /**
    * Fetches the directors of the current business.
    * @param businessId the business identifier
-   * @returns a promise to return the directors from the response, else exception
+   * @returns a promise to return the directors from the response
    */
   static async fetchDirectors (businessId: string): Promise<OrgPersonIF[]> {
     const url = `businesses/${businessId}/directors`
@@ -226,7 +226,7 @@ export default class LegalServices {
   /**
    * Fetch the share structure of the current business.
    * @param businessId the business identifier
-   * @returns a promise to return the share structure from the response, else exception
+   * @returns a promise to return the share structure from the response
    */
   static async fetchShareStructure (businessId: string): Promise<ShareStructureIF> {
     const url = `businesses/${businessId}/share-classes`
@@ -250,7 +250,7 @@ export default class LegalServices {
   /**
    * Fetches the addresses.
    * @param businessId the business identifier
-   * @returns a promise to return the addresses from the response, else exception
+   * @returns a promise to return the addresses from the response
    */
   static async fetchAddresses (businessId: string): Promise<any> {
     const url = `businesses/${businessId}/addresses`
@@ -270,7 +270,7 @@ export default class LegalServices {
   /**
    * Fetches the business info.
    * @param businessId the business identifier
-   * @returns a promise to return the business info, else exception
+   * @returns a promise to return the business info
    */
   static async fetchBusinessInfo (businessId: string): Promise<BusinessIF> {
     const url = `businesses/${businessId}`
@@ -285,7 +285,7 @@ export default class LegalServices {
   /**
    * Fetches an extraprovincial company's business info from COLIN.
    * @param businessId the business identifier
-   * @returns a promise to return the business info, else exception
+   * @returns a promise to return the business info
    */
   static async fetchColinBusinessInfo (businessId: string): Promise<BusinessIF> {
     // FUTURE: update this as needed
