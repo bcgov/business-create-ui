@@ -6,8 +6,8 @@
         <h2>Company Name</h2>
       </header>
 
-      <div><name-request-info></name-request-info></div>
-      <div><name-translations></name-translations></div>
+      <div><name-request-info /></div>
+      <div><name-translations /></div>
     </section>
 
     <!-- Registered Office Addresses -->
