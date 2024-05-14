@@ -342,7 +342,6 @@ export default class NameRequestInfo extends Mixins(CommonMixin, DateMixin) {
   get applicant (): NrApplicantIF {
     return this.getNameRequest.applicants // object not array
   }
-
 }
 </script>
 
