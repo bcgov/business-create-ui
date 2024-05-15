@@ -15,7 +15,6 @@
           sm="9"
         >
           <div
-            id="manual-business-info-link"
             class="font-14 ml-3"
           >
             Not extraprovincially registered in B.C.?
@@ -211,7 +210,6 @@
           </v-col>
         </v-row>
       </v-form>
-      <pre>{{ business }}</pre>
     </template>
   </div>
 </template>
@@ -325,6 +323,7 @@ export default class ManualBusinessInfo extends Mixins(CountriesProvincesMixin, 
   reset () {
     this.businessLookup = { ...EmptyBusinessLookup }
     this.setExistingBusinessInfo(this.businessLookup)
+    // set this component to inactive (which shows the other component)
     this.active = false
   }
 
