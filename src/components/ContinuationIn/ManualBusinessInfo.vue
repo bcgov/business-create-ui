@@ -41,6 +41,7 @@
           sm="7"
         >
           <Jurisdiction
+            class="mb-n3"
             :showUsaJurisdictions="true"
             :initialValue="jurisdictionInitialVal"
             :errorMessages="jurisdictionErrorMessage"
@@ -87,6 +88,7 @@
               id="business-name"
               v-model="business.identifier"
               filled
+              hide-details="auto"
               label="Identifying Number"
               :rules="getShowErrors ? identifyingNumberRules : []"
             />
@@ -101,7 +103,10 @@
         </v-row>
 
         <!-- Business Name -->
-        <v-row no-gutters>
+        <v-row
+          class="mt-4"
+          no-gutters
+        >
           <v-col
             cols="12"
             sm="3"
@@ -117,6 +122,7 @@
               id="business-name"
               v-model="business.legalName"
               filled
+              hide-details="auto"
               label="Business Name in Home Jurisdiction"
               :rules="getShowErrors ? businessNameRules : []"
             />
@@ -131,7 +137,10 @@
         </v-row>
 
         <!-- Business Number-->
-        <v-row no-gutters>
+        <v-row
+          class="mt-4"
+          no-gutters
+        >
           <v-col
             cols="12"
             sm="3"
@@ -145,6 +154,7 @@
               id="business-number"
               v-model="business.taxId"
               filled
+              hide-details="auto"
               label="Business Number (Optional)"
             />
           </v-col>
@@ -158,7 +168,10 @@
         </v-row>
 
         <!-- Incorporation Date -->
-        <v-row no-gutters>
+        <v-row
+          class="mt-4"
+          no-gutters
+        >
           <v-col
             cols="12"
             sm="3"
@@ -172,6 +185,8 @@
               id="incorporation-date"
               ref="incorporationDateRef"
               title="Incorporation Date in Home Jurisdiction"
+              :nudgeRight="40"
+              :nudgeTop="85"
               :initialValue="getExistingBusinessInfo.incorporationDate"
               :inputRules="getShowErrors ? incorporationDateRules : []"
               :maxDate="getCurrentDate"
@@ -187,7 +202,10 @@
           </v-col>
         </v-row>
 
-        <v-row no-gutters>
+        <v-row
+          class="mt-4 hide-details"
+          no-gutters
+        >
           <v-col
             cols="12"
             sm="3"
@@ -197,7 +215,10 @@
             cols="12"
             sm="7"
           >
-            <MessageBox color="gold">
+            <MessageBox
+              color="gold"
+              class="mt-n6"
+            >
               <strong>Important:</strong> Verify that this information matches exactly the current information
               in the home jurisdiction.
             </MessageBox>
@@ -336,7 +357,7 @@ export default class ManualBusinessInfo extends Mixins(CountriesProvincesMixin, 
     if (jurisdiction?.group === 0) {
       this.business.homeJurisdiction.country = JurisdictionLocation.CA
       if (jurisdiction.value === JurisdictionLocation.FD) {
-        this.business.homeJurisdiction.region = 'Federal'
+        this.business.homeJurisdiction.region = 'FEDERAL'
       } else {
         this.business.homeJurisdiction.region = jurisdiction.value
       }
@@ -393,7 +414,6 @@ export default class ManualBusinessInfo extends Mixins(CountriesProvincesMixin, 
     }
   }
 
-  @Watch('manualBusinessInfoValid', { immediate: true })
   @Watch('business', { deep: true })
   @Emit('valid')
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -9,5 +9,4 @@ export { default as FilingTemplateMixin } from '@/mixins/filing-template-mixin'
 export { default as PeopleRolesMixin } from '@/mixins/people-roles-mixin'
 
 // external mixin
-export { NameRequestMixin } from '@bcrs-shared-components/mixins'
-export { CountriesProvincesMixin } from '@bcrs-shared-components/mixins'
+export { CountriesProvincesMixin, NameRequestMixin } from '@bcrs-shared-components/mixins'
