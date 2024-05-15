@@ -352,10 +352,6 @@ export default class ManualBusinessInfo extends Mixins(CountriesProvincesMixin, 
       this.business.homeJurisdiction.region = ''
     }
 
-    if (this.jurisdiction && !this.isMrasJurisdiction) {
-      this.setShowErrors(false)
-    }
-
     this.jurisdictionErrorMessage = this.jurisdiction ? '' : 'Home jurisdiction is required'
   }
 
