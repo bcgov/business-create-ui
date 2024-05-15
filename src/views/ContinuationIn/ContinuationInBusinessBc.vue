@@ -3,14 +3,17 @@
     <!-- Company Name -->
     <section class="mt-10">
       <header id="company-name">
-        <h2>Company Name</h2>
-        <p></p>
+        <h2 class="mb-4">
+          Company Name
+        </h2>
       </header>
 
-      <v-card flat class="py-8 px-6">
-      <NameRequestInfo />
-      <NameTranslations />
-    </v-card>
+      <v-card
+        flat
+        class="py-2 px-6">
+        <NameRequestInfo />
+        <NameTranslations />
+      </v-card>
     </section>
 
     <!-- Registered Office Addresses -->
