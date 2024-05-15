@@ -385,15 +385,12 @@ export default class ManualBusinessInfo extends Mixins(CountriesProvincesMixin, 
 
   @Watch('getShowErrors')
   @Watch('business.homeJurisdiction')
-  private onValidateJurisdiction (): void {
+  @Watch('business.incorporationDate')
+  private onShowErrors (): void {
     if (!this.jurisdiction && this.getShowErrors) {
       this.jurisdictionErrorMessage = this.jurisdiction ? '' : 'Home jurisdiction is required'
     }
-  }
 
-  @Watch('getShowErrors')
-  @Watch('business.incorporationDate')
-  private onShowErrors (): void {
     if (this.jurisdiction && !this.isMrasJurisdiction && this.getShowErrors) {
       this.$refs.manualFormRef.validate()
       this.$refs.incorporationDateRef.validateForm()
@@ -401,6 +398,7 @@ export default class ManualBusinessInfo extends Mixins(CountriesProvincesMixin, 
   }
 
   @Watch('manualBusinessInfoValid', { immediate: true })
+  @Watch('business', { deep: true })
   @Emit('valid')
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private onComponentValid (val: boolean): boolean {
