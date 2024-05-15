@@ -1,3 +1,4 @@
+
 export { default as AddEditOrgPersonMixin } from './add-edit-org-person-mixin'
 export { default as AmalgamationMixin } from './amalgamation-mixin'
 export { default as CommonMixin } from './common-mixin'
@@ -9,3 +10,4 @@ export { default as PeopleRolesMixin } from '@/mixins/people-roles-mixin'
 
 // external mixin
 export { NameRequestMixin } from '@bcrs-shared-components/mixins'
+export { CountriesProvincesMixin } from '@bcrs-shared-components/mixins'

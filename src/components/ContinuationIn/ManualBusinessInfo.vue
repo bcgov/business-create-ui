@@ -28,51 +28,51 @@
 
     <!-- active = display/edit mode -->
     <template v-if="active">
+      <!-- Jurisdiction -->
+      <v-row no-gutters>
+        <v-col
+          cols="12"
+          sm="3"
+        >
+          <label>Jurisdiction</label>
+        </v-col>
+
+        <v-col
+          cols="12"
+          sm="7"
+        >
+          <Jurisdiction
+            :showUsaJurisdictions="true"
+            :initialValue="jurisdictionInitialVal"
+            :errorMessages="jurisdictionErrorMessage"
+            @change="onJurisdictionChange($event)"
+          />
+        </v-col>
+
+        <v-col
+          cols="12"
+          sm="2"
+        >
+          <v-btn
+            id="undo-button"
+            class="float-sm-right float-none"
+            text
+            color="primary"
+            @click="reset()"
+          >
+            <v-icon small>
+              mdi-undo
+            </v-icon>
+            <span>Undo</span>
+          </v-btn>
+        </v-col>
+      </v-row>
       <v-form
+        v-if="jurisdiction && !isMrasJurisdiction"
         ref="manualFormRef"
         lazy-validation
         @submit.prevent
       >
-        <!-- Jurisdiction -->
-        <v-row no-gutters>
-          <v-col
-            cols="12"
-            sm="3"
-          >
-            <label>Jurisdiction</label>
-          </v-col>
-
-          <v-col
-            cols="12"
-            sm="7"
-          >
-            <Jurisdiction
-              :showUsaJurisdictions="true"
-              :initialValue="jurisdictionInitialVal"
-              :errorMessages="jurisdictionErrorMessage"
-              @change="onJurisdictionChange($event)"
-            />
-          </v-col>
-
-          <v-col
-            cols="12"
-            sm="2"
-          >
-            <v-btn
-              id="undo-button"
-              class="float-sm-right float-none"
-              text
-              color="primary"
-              @click="reset()"
-            >
-              <v-icon small>
-                mdi-undo
-              </v-icon>
-              <span>Undo</span>
-            </v-btn>
-          </v-col>
-        </v-row>
-
         <!-- Identifying Number -->
         <v-row no-gutters>
           <v-col
@@ -203,7 +203,6 @@
               in the home jurisdiction.
             </MessageBox>
           </v-col>
-          <pre>{{ business }}</pre>
           <v-col
             cols="12"
             sm="2"
@@ -212,6 +211,7 @@
           </v-col>
         </v-row>
       </v-form>
+      <pre>{{ business }}</pre>
     </template>
   </div>
 </template>
@@ -221,13 +221,15 @@ import { Component, Emit, Mixins, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { DateMixin } from '@/mixins'
-import { isEqual } from 'lodash'
-import { EmptyBusinessLookup, ExistingBusinessInfoIF } from '@/interfaces'
+import { cloneDeep, isEqual } from 'lodash'
+import { EmptyBusinessLookup, EmptyExistingBusinessInfoIF, ExistingBusinessInfoIF } from '@/interfaces'
 import MessageBox from '@/components/common/MessageBox.vue'
 import { Jurisdiction } from '@bcrs-shared-components/jurisdiction'
 import { DatePicker as DatePickerShared } from '@bcrs-shared-components/date-picker'
 import { JurisdictionLocation } from '@bcrs-shared-components/enums'
+import { CountriesProvincesMixin } from '@/mixins/'
 import { FormIF } from '@bcrs-shared-components/interfaces'
+import { MrasJurisdictions } from '@bcrs-shared-components/jurisdiction/list-data'
 
 @Component({
   components: {
@@ -236,7 +238,7 @@ import { FormIF } from '@bcrs-shared-components/interfaces'
     MessageBox
   }
 })
-export default class ManualBusinessInfo extends Mixins(DateMixin) {
+export default class ManualBusinessInfo extends Mixins(CountriesProvincesMixin, DateMixin) {
   // Refs
   $refs!: {
     manualFormRef: FormIF
@@ -248,12 +250,14 @@ export default class ManualBusinessInfo extends Mixins(DateMixin) {
   @Getter(useStore) getShowErrors!: boolean
 
   @Action(useStore) setExistingBusinessInfo!: (x: ExistingBusinessInfoIF) => void
+  @Action(useStore) setShowErrors!: (x: boolean) => void
 
   // Local properties
   active = false
   businessLookup = null
   business = {} as ExistingBusinessInfoIF
   jurisdiction = null
+  isMrasJurisdiction = false
   jurisdictionErrorMessage = ''
   manualBusinessInfoValid = false
 
@@ -264,7 +268,7 @@ export default class ManualBusinessInfo extends Mixins(DateMixin) {
 
   /** Whether we have a looked-up business. */
   get haveLookupBusiness (): boolean {
-    return !isEqual(this.business, EmptyBusinessLookup)
+    return !isEqual(this.business, {})
   }
 
   mounted (): void {
@@ -276,22 +280,44 @@ export default class ManualBusinessInfo extends Mixins(DateMixin) {
   }
 
   onClick (): void {
+    this.isMrasJurisdiction = false
+    this.jurisdiction = null
+    this.business = cloneDeep(EmptyExistingBusinessInfoIF)
     this.active = true
-    this.business = {} as ExistingBusinessInfoIF
   }
 
+  /** Jurisdiction initial value for draft. */
   get jurisdictionInitialVal (): any {
+    let country = this.getExistingBusinessInfo ? this.getExistingBusinessInfo.homeJurisdiction?.country : ''
+    let regions
     let region = ''
-    if (this.getExistingBusinessInfo.homeJurisdiction?.region === 'Federal') {
-      region = JurisdictionLocation.FD
-    } else {
-      region = this.getExistingBusinessInfo ? this.getExistingBusinessInfo.homeJurisdiction?.region : ''
+    let jurisdictionText = ''
+    let jur
+
+    if (this.getExistingBusinessInfo.homeJurisdiction) {
+      if (this.getExistingBusinessInfo.homeJurisdiction?.region === 'Federal') {
+        region = JurisdictionLocation.FD
+      } else {
+        region = this.getExistingBusinessInfo ? this.getExistingBusinessInfo.homeJurisdiction?.region : ''
+      }
     }
 
-    let jur = {
-      country: this.getExistingBusinessInfo ? this.getExistingBusinessInfo.homeJurisdiction?.country : '',
-      region: region
+    if (country && region) {
+      jur = {
+        country: country,
+        region: region
+      }
+
+      // set local jurisdiction property
+      this.jurisdiction = jur || ''
+
+      regions = this.getCountryRegions(country) as any[]
+      jurisdictionText = regions.find(p => p.short === region).name
+
+      // set local property based on jurisdiction value
+      this.isMrasJurisdiction = MrasJurisdictions.includes(jurisdictionText.toLowerCase())
     }
+
     return jur
   }
 
@@ -302,8 +328,12 @@ export default class ManualBusinessInfo extends Mixins(DateMixin) {
     this.active = false
   }
 
+  /** When Jurisdiction value changes */
   onJurisdictionChange (jurisdiction: any): void {
     this.jurisdiction = jurisdiction
+    this.isMrasJurisdiction = MrasJurisdictions.includes(
+      this.jurisdiction?.text.toLowerCase()
+    )
     if (jurisdiction?.group === 0) {
       this.business.homeJurisdiction.country = JurisdictionLocation.CA
       if (jurisdiction.value === JurisdictionLocation.FD) {
@@ -321,6 +351,10 @@ export default class ManualBusinessInfo extends Mixins(DateMixin) {
     if (jurisdiction?.group === 2) {
       this.business.homeJurisdiction.country = jurisdiction.value
       this.business.homeJurisdiction.region = ''
+    }
+
+    if (this.jurisdiction && !this.isMrasJurisdiction) {
+      this.setShowErrors(false)
     }
 
     this.jurisdictionErrorMessage = this.jurisdiction ? '' : 'Home jurisdiction is required'
@@ -351,13 +385,19 @@ export default class ManualBusinessInfo extends Mixins(DateMixin) {
   }
 
   @Watch('getShowErrors')
-  @Watch('business.incorporationDate')
   @Watch('business.homeJurisdiction')
+  private onValidateJurisdiction (): void {
+    if (!this.jurisdiction && this.getShowErrors) {
+      this.jurisdictionErrorMessage = this.jurisdiction ? '' : 'Home jurisdiction is required'
+    }
+  }
+
+  @Watch('getShowErrors')
+  @Watch('business.incorporationDate')
   private onShowErrors (): void {
-    if (this.getShowErrors) {
+    if (this.jurisdiction && !this.isMrasJurisdiction && this.getShowErrors) {
       this.$refs.manualFormRef.validate()
       this.$refs.incorporationDateRef.validateForm()
-      this.jurisdictionErrorMessage = this.jurisdiction ? '' : 'Home jurisdiction is required'
     }
   }
 
