@@ -10,7 +10,8 @@
 
       <v-card
         flat
-        class="py-2 px-6">
+        class="py-2 px-6"
+      >
         <NameRequestInfo />
         <NameTranslations />
       </v-card>
