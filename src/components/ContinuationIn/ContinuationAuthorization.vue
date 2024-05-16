@@ -27,7 +27,7 @@
     <v-row
       v-for="(num, index) in numUploads"
       :key="authorization.files[index]?.fileKey"
-      class="mt-4 mb-n2"
+      class="upload-file-row mt-4 mb-n2"
       no-gutters
     >
       <v-col
@@ -45,7 +45,7 @@
           inputFileLabel="Continuation authorization"
           :maxSize="MAX_FILE_SIZE"
           :pdfPageSize="PdfPageSize.LETTER_SIZE"
-          :hint="authorization.files[index]?.file ? 'File uploaded.' : undefined"
+          :hint="authorization.files[index]?.file ? 'File uploaded' : undefined"
           :inputFile="authorization.files[index]?.file"
           :showErrors="getShowErrors"
           :customErrorMessage.sync="customErrorMessage[index]"
@@ -147,9 +147,8 @@
       </v-row>
 
       <v-checkbox
-        id="continuation-authorization-checkbox"
         v-model="authorization.isConfirmed"
-        class="mt-6"
+        class="continuation-authorization-checkbox mt-7"
         hide-details
         :rules="getShowErrors ? [(v) => !!v] : []"
       >
@@ -159,26 +158,6 @@
         </template>
       </v-checkbox>
     </v-form>
-
-    <!-- snackbar to temporarily show errors -->
-    <v-snackbar
-      v-model="snackbar"
-      timeout="3000"
-    >
-      {{ snackbarText }}
-
-      <template #action="{ attrs }">
-        <v-btn
-          color="white"
-          icon
-          aria-label="Close Notification"
-          v-bind="attrs"
-          @click="snackbar = false"
-        >
-          <v-icon>mdi-close</v-icon>
-        </v-btn>
-      </template>
-    </v-snackbar>
   </div>
 </template>
 
@@ -221,8 +200,6 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
   authorization = null as ContinuationAuthorizationIF
   fileValidity = false
   customErrorMessage = ['', '', '', '', '']
-  snackbar = false
-  snackbarText = ''
 
   get authorityNameRules (): Array<VuetifyRuleFunction> {
     return [
@@ -276,18 +253,14 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
       // verify that file is valid
       if (!this.fileValidity) {
         // NB: as this is validity according to the component, do not overwrite current error message
-        this.snackbarText = 'Invalid file. It will not be saved.'
-        this.snackbar = true
         return // don't add to list
       }
 
       // verify that file doesn't already exist
       if (this.authorization.files.find(f => f.file.name === file.name)) {
         // put file uploader into manual error mode by setting custom error message
-        this.customErrorMessage[index] = 'Duplicate file.'
-
-        this.snackbarText = 'File already uploaded. It will not be saved again.'
-        this.snackbar = true
+        this.customErrorMessage[index] = 'Duplicate file'
+        this.$forceUpdate() // force file upload component to react
         return // don't add to list
       }
 
@@ -300,9 +273,7 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
       } catch {
         // put file uploader into manual error mode by setting custom error message
         this.customErrorMessage[index] = this.UPLOAD_FAILED_MESSAGE
-
-        this.snackbarText = 'File upload error. Please try again.'
-        this.snackbar = true
+        this.$forceUpdate() // force file upload component to react
         return // don't add to list
       }
 

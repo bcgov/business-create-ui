@@ -79,29 +79,31 @@
       </section>
     </v-expand-transition>
 
-    <p>Your application must include the following:</p>
-    <ul>
-      <li>
-        <v-icon
-          v-if="shareClasses.length > 0"
-          color="green darken-2"
-          class="cp-valid"
-        >
-          mdi-check
-        </v-icon>
-        <v-icon
-          v-else-if="getShowErrors"
-          color="error"
-          class="cp-invalid"
-        >
-          mdi-close
-        </v-icon>
-        <v-icon v-else>
-          mdi-circle-small
-        </v-icon>
-        <span class="ml-2">At least one Class of Shares</span>
-      </li>
-    </ul>
+    <section class="pt-2">
+      <p>Your application must include the following:</p>
+      <ul>
+        <li>
+          <v-icon
+            v-if="shareClasses.length > 0"
+            color="green darken-2"
+            class="cp-valid"
+          >
+            mdi-check
+          </v-icon>
+          <v-icon
+            v-else-if="getShowErrors"
+            color="error"
+            class="cp-invalid"
+          >
+            mdi-close
+          </v-icon>
+          <v-icon v-else>
+            mdi-circle-small
+          </v-icon>
+          <span class="ml-2">At least one Class of Shares</span>
+        </li>
+      </ul>
+    </section>
 
     <div class="py-8">
       <v-btn
