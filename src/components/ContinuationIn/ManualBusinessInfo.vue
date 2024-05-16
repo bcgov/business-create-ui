@@ -74,7 +74,10 @@
         @submit.prevent
       >
         <!-- Identifying Number -->
-        <v-row no-gutters>
+        <v-row
+          class="mt-2"
+          no-gutters
+        >
           <v-col
             cols="12"
             sm="3"
@@ -104,7 +107,7 @@
 
         <!-- Business Name -->
         <v-row
-          class="mt-4"
+          class="mt-6"
           no-gutters
         >
           <v-col
@@ -138,7 +141,7 @@
 
         <!-- Business Number-->
         <v-row
-          class="mt-4"
+          class="mt-6"
           no-gutters
         >
           <v-col
@@ -156,6 +159,7 @@
               filled
               hide-details="auto"
               label="Business Number (Optional)"
+              :hint="'First 9 digits of the CRA Business Number if you have one'"
             />
           </v-col>
 
@@ -169,7 +173,7 @@
 
         <!-- Incorporation Date -->
         <v-row
-          class="mt-4"
+          class="mt-6"
           no-gutters
         >
           <v-col
@@ -202,10 +206,7 @@
           </v-col>
         </v-row>
 
-        <v-row
-          class="mt-4 hide-details"
-          no-gutters
-        >
+        <v-row no-gutters>
           <v-col
             cols="12"
             sm="3"
@@ -217,7 +218,6 @@
           >
             <MessageBox
               color="gold"
-              class="mt-n6"
             >
               <strong>Important:</strong> Verify that this information matches exactly the current information
               in the home jurisdiction.
@@ -278,7 +278,6 @@ export default class ManualBusinessInfo extends Mixins(CountriesProvincesMixin, 
   jurisdiction = null
   isMrasJurisdiction = false
   jurisdictionErrorMessage = ''
-  manualBusinessInfoValid = false
 
   /** Whether to show this component. */
   get showComponent (): boolean {
@@ -314,7 +313,7 @@ export default class ManualBusinessInfo extends Mixins(CountriesProvincesMixin, 
     let jur
 
     if (this.getExistingBusinessInfo.homeJurisdiction) {
-      if (this.getExistingBusinessInfo.homeJurisdiction?.region === 'Federal') {
+      if (this.getExistingBusinessInfo.homeJurisdiction?.region === 'FEDERAL') {
         region = JurisdictionLocation.FD
       } else {
         region = this.getExistingBusinessInfo ? this.getExistingBusinessInfo.homeJurisdiction?.region : ''
@@ -373,6 +372,10 @@ export default class ManualBusinessInfo extends Mixins(CountriesProvincesMixin, 
       this.business.homeJurisdiction.region = ''
     }
 
+    if (this.jurisdiction) {
+      this.setShowErrors(false)
+    }
+
     this.jurisdictionErrorMessage = this.jurisdiction ? '' : 'Home jurisdiction is required'
   }
 
@@ -407,7 +410,6 @@ export default class ManualBusinessInfo extends Mixins(CountriesProvincesMixin, 
     if (!this.jurisdiction && this.getShowErrors) {
       this.jurisdictionErrorMessage = this.jurisdiction ? '' : 'Home jurisdiction is required'
     }
-
     if (this.jurisdiction && !this.isMrasJurisdiction && this.getShowErrors) {
       this.$refs.manualFormRef.validate()
       this.$refs.incorporationDateRef.validateForm()
