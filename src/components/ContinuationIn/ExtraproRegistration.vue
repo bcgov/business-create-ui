@@ -120,6 +120,7 @@
           >
             <v-radio-group
               v-model="business.isUlc"
+              class="mt-0 pt-0"
               row
             >
               <v-radio

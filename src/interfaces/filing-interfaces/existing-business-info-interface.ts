@@ -2,6 +2,7 @@ import { EntityStates } from '@bcrs-shared-components/enums'
 
 export interface ExistingBusinessInfoIF {
   affidavitFileKey?: string
+  businessFoundingDate?: string // registration date in BC (expro only)
   businessIdentifier?: string // identifier in BC (expro only)
   businessLegalName?: string // legal name in BC (expro only)
   homeJurisdiction: {

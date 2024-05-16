@@ -469,10 +469,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
 
     // restore continuation authorization
     if (continuationIn.authorization) {
-      this.setContinuationAuthorization({
-        ...continuationIn.authorization,
-        isConfirmed: false // don't restore confirmation checkbox
-      })
+      this.setContinuationAuthorization(continuationIn.authorization)
     }
 
     // restore Office Addresses

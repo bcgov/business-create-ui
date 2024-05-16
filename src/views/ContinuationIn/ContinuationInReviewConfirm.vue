@@ -20,7 +20,7 @@
         class="mt-6"
       >
         <CardHeader
-          icon="mdi-domain-plus"
+          icon="mdi-home-city-outline"
           label="Your Business in Home Jurisdiction"
         />
         <SummaryBusinessHomeJurisdiction />

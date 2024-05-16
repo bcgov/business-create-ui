@@ -8,7 +8,7 @@ export const ContinuationInSteps = [
   {
     id: 'step-1-btn',
     step: 1,
-    icon: 'mdi-domain-plus',
+    icon: 'mdi-home-city-outline',
     text: 'Your Business in\nHome Jurisdiction',
     to: RouteNames.CONTINUATION_IN_BUSINESS_HOME,
     component: Views.CONTINUATION_IN_BUSINESS_HOME
