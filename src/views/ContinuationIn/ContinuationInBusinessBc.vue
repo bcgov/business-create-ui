@@ -142,6 +142,7 @@ export default class ContinuationInBusinessBc extends Mixins(CommonMixin) {
 
   @Action(useStore) setBusinessContact!: (x: ContactPointIF) => void
   @Action(useStore) setContinuationInBusinessBcValid!: (x: boolean) => void
+  @Action(useStore) setDefineCompanyStepValidity!: (x: boolean) => void
   @Action(useStore) setFolioNumber!: (x: string) => void
   @Action(useStore) setFolioNumberValidity!: (x: boolean) => void
   @Action(useStore) setIgnoreChanges!: (x: boolean) => void
@@ -214,11 +215,12 @@ export default class ContinuationInBusinessBc extends Mixins(CommonMixin) {
   @Watch('businessContactFormValid', { immediate: true })
   @Watch('getFolioNumberValid', { immediate: true })
   private onContinuationInBusinessBcValid (): void {
-    this.setContinuationInBusinessBcValid(
-      this.addressFormValid &&
-      this.businessContactFormValid &&
-      (!this.isPremiumAccount || this.getFolioNumberValid)
-    )
+    const allValid = this.addressFormValid &&
+                   this.businessContactFormValid &&
+                   (!this.isPremiumAccount || this.getFolioNumberValid)
+    this.setContinuationInBusinessBcValid(allValid)
+    // Update the overall Define Company Step validity
+    this.setDefineCompanyStepValidity(allValid)
   }
 
   @Watch('$route')
