@@ -7,9 +7,76 @@
     v-if="authorization"
     id="continuation-authorization"
   >
+    <v-form
+      ref="formRef"
+      lazy-validation
+      @submit.prevent
+    >
+      <v-row no-gutters>
+        <v-col
+          cols="12"
+          sm="3"
+        >
+          <label>Authorization Date</label>
+        </v-col>
+
+        <v-col
+          cols="12"
+          sm="9"
+          class="pl-8"
+        >
+          <DatePickerShared
+            ref="authorizationDateRef"
+            title="Authorization Date"
+            :nudgeRight="40"
+            :nudgeTop="85"
+            hint="The date the authorization was issued."
+            :persistentHint="true"
+            :initialValue="authorization.date"
+            :inputRules="getShowErrors ? authorizationDateRules : []"
+            :maxDate="getCurrentDate"
+            @emitDateSync="authorization.date = $event"
+          />
+        </v-col>
+      </v-row>
+
+      <v-row
+        class="mt-2"
+        no-gutters
+      >
+        <v-col
+          cols="12"
+          sm="3"
+        >
+          <label>Expiry Date</label>
+        </v-col>
+
+        <v-col
+          cols="12"
+          sm="9"
+          class="pl-8"
+        >
+          <DatePickerShared
+            ref="expiryDateRef"
+            title="Expiry Date (Optional)"
+            :nudgeRight="40"
+            :nudgeTop="85"
+            hint="The date the authorization expires."
+            :persistentHint="true"
+            :initialValue="authorization.expiryDate"
+            :inputRules="getShowErrors ? expiryDateRules: []"
+            :minDate="getCurrentDate"
+            @emitDateSync="authorization.expiryDate = $event"
+          />
+        </v-col>
+      </v-row>
+    </v-form>
+
+    <v-divider class="mt-6 mb-8" />
+
     <header>
       <p>
-        Upload the continuation authorization letter from your home jursidiction.
+        Upload documents that support proof of authorization from your home jursidiction.
       </p>
 
       <ul>
@@ -34,7 +101,7 @@
         cols="12"
         sm="3"
       >
-        <label v-if="index === 0">Upload File (5 maximum)</label>
+        <label v-if="index === 0">Upload File</label>
       </v-col>
 
       <v-col
@@ -55,109 +122,6 @@
         />
       </v-col>
     </v-row>
-
-    <v-form
-      ref="formRef"
-      lazy-validation
-      @submit.prevent
-    >
-      <v-row
-        class="mt-6"
-        no-gutters
-      >
-        <v-col
-          cols="12"
-          sm="3"
-        >
-          <label>Authority Name</label>
-        </v-col>
-
-        <v-col
-          cols="12"
-          sm="9"
-          class="pl-8"
-        >
-          <v-text-field
-            v-model="authorization.authorityName"
-            class="authority-name"
-            filled
-            hide-details="auto"
-            label="Authority Name"
-            :rules="getShowErrors ? authorityNameRules : []"
-          />
-        </v-col>
-      </v-row>
-
-      <v-row
-        class="mt-6"
-        no-gutters
-      >
-        <v-col
-          cols="12"
-          sm="3"
-        >
-          <label>Authorization Date</label>
-        </v-col>
-
-        <v-col
-          cols="12"
-          sm="9"
-          class="pl-8"
-        >
-          <DatePickerShared
-            ref="authorizationDateRef"
-            title="Authorization Date"
-            :nudgeRight="40"
-            :nudgeTop="85"
-            :initialValue="authorization.date"
-            :inputRules="getShowErrors ? authorizationDateRules : []"
-            :maxDate="getCurrentDate"
-            @emitDateSync="authorization.date = $event"
-          />
-        </v-col>
-      </v-row>
-
-      <v-row
-        class="mt-6"
-        no-gutters
-      >
-        <v-col
-          cols="12"
-          sm="3"
-        >
-          <label>Expiry Date</label>
-        </v-col>
-
-        <v-col
-          cols="12"
-          sm="9"
-          class="pl-8"
-        >
-          <DatePickerShared
-            ref="expiryDateRef"
-            title="Expiry Date (Optional)"
-            :nudgeRight="40"
-            :nudgeTop="85"
-            :initialValue="authorization.expiryDate"
-            :inputRules="getShowErrors ? expiryDateRules: []"
-            :minDate="getCurrentDate"
-            @emitDateSync="authorization.expiryDate = $event"
-          />
-        </v-col>
-      </v-row>
-
-      <v-checkbox
-        v-model="authorization.isConfirmed"
-        class="continuation-authorization-checkbox mt-7"
-        hide-details
-        :rules="getShowErrors ? [(v) => !!v] : []"
-      >
-        <template #label>
-          <span>I confirm that I have current and valid authorization to continue this business into
-            B.C.</span>
-        </template>
-      </v-checkbox>
-    </v-form>
   </div>
 </template>
 
@@ -200,12 +164,6 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
   authorization = null as ContinuationAuthorizationIF
   fileValidity = false
   customErrorMessage = ['', '', '', '', '']
-
-  get authorityNameRules (): Array<VuetifyRuleFunction> {
-    return [
-      (v: string) => !!v || 'Authority Name is required'
-    ]
-  }
 
   get authorizationDateRules (): Array<VuetifyRuleFunction> {
     return [
@@ -313,10 +271,8 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
 
     // then emit the validity
     return (
-      (this.authorization.files.length >= 1) &&
-      !!this.authorization.authorityName &&
       !!this.authorization.date &&
-      (this.authorization.isConfirmed === true)
+      (this.authorization.files.length >= 1)
     )
   }
 }
