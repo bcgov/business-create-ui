@@ -114,6 +114,7 @@ export default class FileUploadPreview extends Mixins(DocumentMixin) {
         return false
       }
     }
+    // if we get this far then the file must be valid
     return true
   }
 
