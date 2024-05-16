@@ -218,11 +218,13 @@ import SummaryBusinessHomeJurisdiction from '@/components/ContinuationIn/Summary
 import SummaryDefineCompany from '@/components/common/SummaryDefineCompany.vue'
 import StaffPayment from '@/components/common/StaffPayment.vue'
 import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
+// import { CourtOrderPoa } from '@bcrs-shared-components/court-order-poa'
 
 @Component({
   components: {
     CardHeader,
     Certify,
+    // CourtOrderPoa,
     DocumentDelivery,
     EffectiveDateTime,
     ListPeopleAndRoles,
