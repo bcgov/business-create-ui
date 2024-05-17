@@ -551,11 +551,6 @@ export const useStore = defineStore('store', {
       return this.getDefineCompanyStep.valid
     },
 
-    /** Is true when the Continuation In Business BC step is valid. */
-    isContinuationInBusinessBcValid (): boolean {
-      return this.getContinuationIn.businessBcValid
-    },
-
     /** Is true when the Continuation In Business Home step is valid. */
     isContinuationInBusinessHomeValid (): boolean {
       return this.getContinuationIn.businessHomeValid
@@ -1159,9 +1154,6 @@ export const useStore = defineStore('store', {
     },
     setDefineCompanyStepValidity (valid: boolean) {
       this.stateModel.defineCompanyStep.valid = valid
-    },
-    setContinuationInBusinessBcValid (valid: boolean) {
-      this.getContinuationIn.businessBcValid = valid
     },
     setContinuationInBusinessHomeValid (valid: boolean) {
       this.getContinuationIn.businessHomeValid = valid
