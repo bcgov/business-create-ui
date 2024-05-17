@@ -2,7 +2,7 @@
   <div id="continuation-in-business-bc">
     <!-- Company Name -->
     <section class="mt-10">
-      <header id="company-name">
+      <header id="company-name-header">
         <h2 class="mb-4">
           Company Name
         </h2>
@@ -142,7 +142,6 @@ export default class ContinuationInBusinessBc extends Mixins(CommonMixin) {
   @Getter(useStore) isPremiumAccount!: boolean
 
   @Action(useStore) setBusinessContact!: (x: ContactPointIF) => void
-  @Action(useStore) setContinuationInBusinessBcValid!: (x: boolean) => void
   @Action(useStore) setDefineCompanyStepValidity!: (x: boolean) => void
   @Action(useStore) setFolioNumber!: (x: string) => void
   @Action(useStore) setFolioNumberValidity!: (x: boolean) => void
@@ -154,19 +153,19 @@ export default class ContinuationInBusinessBc extends Mixins(CommonMixin) {
 
   /** Array of valid components. Must match validFlags. */
   readonly validComponents = [
+    'company-name-header',
     'office-address-header',
     'registered-office-contact-header',
-    'folio-reference-number-header',
-    'name-translation-header'
+    'folio-reference-number-header'
   ]
 
   /** Object of valid flags. Must match validComponents. */
   get validFlags (): object {
     return {
+      validCompanyNameForm: this.getNameTranslationsValid,
       validAddressForm: this.addressFormValid,
       validBusinessContactForm: this.businessContactFormValid,
-      validFolioReferenceNumber: !this.isPremiumAccount || this.getFolioNumberValid,
-      validNameTranslation: this.getNameTranslationsValid
+      validFolioReferenceNumber: !this.isPremiumAccount || this.getFolioNumberValid
     }
   }
 
