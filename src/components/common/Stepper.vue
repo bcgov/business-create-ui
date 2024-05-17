@@ -78,7 +78,6 @@ export default class Stepper extends Vue {
   @Getter(useStore) isAffidavitValid!: boolean
   @Getter(useStore) isAmalgamationInformationValid!: boolean
   @Getter(useStore) isBusySaving!: boolean
-  @Getter(useStore) isisDefineCompanyValid!: boolean
   @Getter(useStore) isContinuationInBusinessHomeValid!: boolean
   @Getter(useStore) isCreateShareStructureValid!: boolean
   @Getter(useStore) isDefineCompanyValid!: boolean
