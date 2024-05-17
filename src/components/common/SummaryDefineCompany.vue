@@ -5,48 +5,62 @@
         v-if="invalidSection"
         class="defineCompanyStepErrorMessage"
       >
-        <span>
-          <v-icon color="error">mdi-information-outline</v-icon>
-          <span class="error-text mx-1">This step is unfinished.</span>
+        <v-icon color="error">
+          mdi-information-outline
+        </v-icon>
+        <span class="error-text mx-1">This step is unfinished.</span>
 
-          <template v-if="isAmalgamationFilingRegular">
-            <router-link
-              v-if="!isAmalgamationInformationValid"
-              :to="{ path: `/${RouteNames.AMALG_REG_INFORMATION}` }"
-            >Return to this step to finish it</router-link>
-            <router-link
-              v-else-if="!isDefineCompanyValid"
-              :to="{ path: `/${RouteNames.AMALG_REG_BUSINESS_INFO}` }"
-            >Return to this step to finish it</router-link>
-          </template>
-
-          <template v-if="isAmalgamationFilingHorizontal || isAmalgamationFilingVertical">
-            <router-link
-              v-if="!isAmalgamationInformationValid"
-              :to="{ path: `/${RouteNames.AMALG_SHORT_INFORMATION}` }"
-            >Return to this step to finish it</router-link>
-            <router-link
-              v-else-if="!isDefineCompanyValid"
-              :to="{ path: `/${RouteNames.AMALG_SHORT_BUSINESS_INFO}` }"
-            >Return to this step to finish it</router-link>
-          </template>
-
+        <template v-if="isAmalgamationFilingRegular">
           <router-link
-            v-if="isContinuationInFiling"
-            :to="{ path: `/${RouteNames.CONTINUATION_IN_BUSINESS_BC}` }"
-          >Return to this step to finish it</router-link>
-
+            v-if="!isAmalgamationInformationValid"
+            :to="{ path: `/${RouteNames.AMALG_REG_INFORMATION}` }"
+          >
+            <span>Return to this step to finish it</span>
+          </router-link>
           <router-link
-            v-if="isIncorporationFiling"
-            :to="{ path: `/${RouteNames.INCORPORATION_DEFINE_COMPANY}` }"
-          >Return to this step to finish it</router-link>
+            v-else-if="!isDefineCompanyValid"
+            :to="{ path: `/${RouteNames.AMALG_REG_BUSINESS_INFO}` }"
+          >
+            <span>Return to this step to finish it</span>
+          </router-link>
+        </template>
 
+        <template v-if="isAmalgamationFilingHorizontal || isAmalgamationFilingVertical">
           <router-link
-            v-if="isFullRestorationFiling || isLimitedRestorationFiling"
-            id="router-link"
-            :to="{ path: `/${RouteNames.RESTORATION_BUSINESS_INFORMATION}` }"
-          >Return to this step to finish it</router-link>
-        </span>
+            v-if="!isAmalgamationInformationValid"
+            :to="{ path: `/${RouteNames.AMALG_SHORT_INFORMATION}` }"
+          >
+            <span>Return to this step to finish it</span>
+          </router-link>
+          <router-link
+            v-else-if="!isDefineCompanyValid"
+            :to="{ path: `/${RouteNames.AMALG_SHORT_BUSINESS_INFO}` }"
+          >
+            <span>Return to this step to finish it</span>
+          </router-link>
+        </template>
+
+        <router-link
+          v-if="isContinuationInFiling"
+          :to="{ path: `/${RouteNames.CONTINUATION_IN_BUSINESS_BC}` }"
+        >
+          <span>Return to this step to finish it</span>
+        </router-link>
+
+        <router-link
+          v-if="isIncorporationFiling"
+          :to="{ path: `/${RouteNames.INCORPORATION_DEFINE_COMPANY}` }"
+        >
+          <span>Return to this step to finish it</span>
+        </router-link>
+
+        <router-link
+          v-if="isFullRestorationFiling || isLimitedRestorationFiling"
+          id="router-link"
+          :to="{ path: `/${RouteNames.RESTORATION_BUSINESS_INFORMATION}` }"
+        >
+          <span>Return to this step to finish it</span>
+        </router-link>
       </div>
 
       <!-- Amalgamation Type -->

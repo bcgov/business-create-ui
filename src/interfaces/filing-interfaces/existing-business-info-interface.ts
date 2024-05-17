@@ -2,6 +2,7 @@ import { EntityStates } from '@bcrs-shared-components/enums'
 
 export interface ExistingBusinessInfoIF {
   affidavitFileKey?: string
+  businessFoundingDate?: string // registration date in BC (expro only)
   businessIdentifier?: string // identifier in BC (expro only)
   businessLegalName?: string // legal name in BC (expro only)
   homeJurisdiction: {
@@ -15,5 +16,18 @@ export interface ExistingBusinessInfoIF {
   legalName: string // legal name in home jurisdiction
   mode: 'LOOKUP' | 'MANUAL' // only used by UI
   status?: EntityStates // only used by UI
-  taxId?: string // aka Business Number
+  taxId?: string
+}
+
+export const EmptyExistingBusinessInfoIF: ExistingBusinessInfoIF = {
+  homeJurisdiction: {
+    country: '',
+    region: ''
+  },
+  identifier: '',
+  incorporationDate: '',
+  legalName: '',
+  mode: null,
+  status: null,
+  taxId: ''
 }
