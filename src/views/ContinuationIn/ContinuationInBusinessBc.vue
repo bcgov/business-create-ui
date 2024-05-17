@@ -2,11 +2,19 @@
   <div id="continuation-in-business-bc">
     <!-- Company Name -->
     <section class="mt-10">
-      <header id="company-name">
-        <h2>Company Name</h2>
+      <header id="company-name-header">
+        <h2 class="mb-4">
+          Company Name
+        </h2>
       </header>
 
-      <div>** Correct Name component goes here **</div>
+      <v-card
+        flat
+        class="py-2 px-6"
+      >
+        <NameRequestInfo />
+        <NameTranslations />
+      </v-card>
     </section>
 
     <!-- Registered Office Addresses -->
@@ -111,11 +119,15 @@ import { RouteNames } from '@/enums'
 import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
 import FolioNumber from '@/components/common/FolioNumber.vue'
 import OfficeAddresses from '@/components/common/OfficeAddresses.vue'
+import NameRequestInfo from '@/components/common/NameRequestInfo.vue'
+import NameTranslations from '@/components/common/NameTranslations.vue'
 
 @Component({
   components: {
     BusinessContactInfo,
     FolioNumber,
+    NameRequestInfo,
+    NameTranslations,
     OfficeAddresses
   }
 })
@@ -124,12 +136,13 @@ export default class ContinuationInBusinessBc extends Mixins(CommonMixin) {
   @Getter(useStore) getDefineCompanyStep!: DefineCompanyIF
   @Getter(useStore) getFolioNumber!: string
   @Getter(useStore) getFolioNumberValid!: boolean
+  @Getter(useStore) getNameTranslationsValid!: boolean
   @Getter(useStore) getShowErrors!: boolean
   @Getter(useStore) isEntityType!: boolean
   @Getter(useStore) isPremiumAccount!: boolean
 
   @Action(useStore) setBusinessContact!: (x: ContactPointIF) => void
-  @Action(useStore) setContinuationInBusinessBcValid!: (x: boolean) => void
+  @Action(useStore) setDefineCompanyStepValidity!: (x: boolean) => void
   @Action(useStore) setFolioNumber!: (x: string) => void
   @Action(useStore) setFolioNumberValidity!: (x: boolean) => void
   @Action(useStore) setIgnoreChanges!: (x: boolean) => void
@@ -140,6 +153,7 @@ export default class ContinuationInBusinessBc extends Mixins(CommonMixin) {
 
   /** Array of valid components. Must match validFlags. */
   readonly validComponents = [
+    'company-name-header',
     'office-address-header',
     'registered-office-contact-header',
     'folio-reference-number-header'
@@ -148,6 +162,7 @@ export default class ContinuationInBusinessBc extends Mixins(CommonMixin) {
   /** Object of valid flags. Must match validComponents. */
   get validFlags (): object {
     return {
+      validCompanyNameForm: this.getNameTranslationsValid,
       validAddressForm: this.addressFormValid,
       validBusinessContactForm: this.businessContactFormValid,
       validFolioReferenceNumber: !this.isPremiumAccount || this.getFolioNumberValid
@@ -201,11 +216,14 @@ export default class ContinuationInBusinessBc extends Mixins(CommonMixin) {
   @Watch('addressFormValid', { immediate: true })
   @Watch('businessContactFormValid', { immediate: true })
   @Watch('getFolioNumberValid', { immediate: true })
-  private onContinuationInBusinessBcValid (): void {
-    this.setContinuationInBusinessBcValid(
+  @Watch('getNameTranslationsValid', { immediate: true })
+  // Update the overall Define Company Step validity
+  private onDefineCompanyStepValid (): void {
+    this.setDefineCompanyStepValidity(
       this.addressFormValid &&
       this.businessContactFormValid &&
-      (!this.isPremiumAccount || this.getFolioNumberValid)
+      (!this.isPremiumAccount || this.getFolioNumberValid) &&
+      this.getNameTranslationsValid
     )
   }
 

@@ -4,6 +4,8 @@ import ContinuationInBusinessBc from '@/views/ContinuationIn/ContinuationInBusin
 import OfficeAddresses from '@/components/common/OfficeAddresses.vue'
 import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
 import FolioNumber from '@/components/common/FolioNumber.vue'
+import NameRequestInfo from '@/components/common/NameRequestInfo.vue'
+import NameTranslations from '@/components/common/NameTranslations.vue'
 
 describe('Continuation In Business BC component', () => {
   it('renders the component correctly', async () => {
@@ -28,7 +30,8 @@ describe('Continuation In Business BC component', () => {
     const firstSection = wrapper.findAll('section').at(0)
     expect(firstSection.find('header').exists()).toBe(true)
     expect(firstSection.find('header h2').text()).toBe('Company Name')
-    // FUTURE: finish this ^^^
+    expect(firstSection.findComponent(NameRequestInfo).exists()).toBe(true)
+    expect(firstSection.findComponent(NameTranslations).exists()).toBe(true)
 
     const secondSection = wrapper.findAll('section').at(1)
     expect(secondSection.find('header').exists()).toBe(true)
