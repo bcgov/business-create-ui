@@ -136,6 +136,7 @@ export default class ContinuationInBusinessBc extends Mixins(CommonMixin) {
   @Getter(useStore) getDefineCompanyStep!: DefineCompanyIF
   @Getter(useStore) getFolioNumber!: string
   @Getter(useStore) getFolioNumberValid!: boolean
+  @Getter(useStore) getNameTranslationsValid!: boolean
   @Getter(useStore) getShowErrors!: boolean
   @Getter(useStore) isEntityType!: boolean
   @Getter(useStore) isPremiumAccount!: boolean
@@ -155,7 +156,8 @@ export default class ContinuationInBusinessBc extends Mixins(CommonMixin) {
   readonly validComponents = [
     'office-address-header',
     'registered-office-contact-header',
-    'folio-reference-number-header'
+    'folio-reference-number-header',
+    'name-translation-header'
   ]
 
   /** Object of valid flags. Must match validComponents. */
@@ -163,7 +165,8 @@ export default class ContinuationInBusinessBc extends Mixins(CommonMixin) {
     return {
       validAddressForm: this.addressFormValid,
       validBusinessContactForm: this.businessContactFormValid,
-      validFolioReferenceNumber: !this.isPremiumAccount || this.getFolioNumberValid
+      validFolioReferenceNumber: !this.isPremiumAccount || this.getFolioNumberValid,
+      validNameTranslation: this.getNameTranslationsValid
     }
   }
 
@@ -214,13 +217,15 @@ export default class ContinuationInBusinessBc extends Mixins(CommonMixin) {
   @Watch('addressFormValid', { immediate: true })
   @Watch('businessContactFormValid', { immediate: true })
   @Watch('getFolioNumberValid', { immediate: true })
-  private onContinuationInBusinessBcValid (): void {
-    const allValid = this.addressFormValid &&
-                   this.businessContactFormValid &&
-                   (!this.isPremiumAccount || this.getFolioNumberValid)
-    this.setContinuationInBusinessBcValid(allValid)
-    // Update the overall Define Company Step validity
-    this.setDefineCompanyStepValidity(allValid)
+  @Watch('getNameTranslationsValid', { immediate: true })
+  // Update the overall Define Company Step validity
+  private onDefineCompanyStepValid (): void {
+    this.setDefineCompanyStepValidity(
+      this.addressFormValid &&
+      this.businessContactFormValid &&
+      (!this.isPremiumAccount || this.getFolioNumberValid) &&
+      this.getNameTranslationsValid
+    )
   }
 
   @Watch('$route')
