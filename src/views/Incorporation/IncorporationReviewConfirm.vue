@@ -183,7 +183,7 @@
 
     <!-- Court Order and Plan of Arrangement -->
     <section
-      v-if="isBaseCompany"
+      v-if="isBaseCompany && isRoleStaff"
       id="court-order-poa-section"
       class="mt-10"
     >
