@@ -81,19 +81,19 @@ for (const test of reviewConfirmTestCases) {
       expect(wrapper.find('#certify-section').exists()).toBe(true)
     })
 
-    it('displays Court Order and Plan of Arrangement section only for BEN, ULC, CC, BC', () => {
+    it('displays Court Order and POA only for BEN, ULC, CC, BC; and only for staff', () => {
       wrapper = shallowWrapperFactory(
         IncorporationReviewConfirm,
         null,
         {
-          entityType: test.entityType
+          entityType: test.entityType,
+          tombstone: { keycloakRoles: test.isStaff ? ['staff'] : [] }
         },
         null,
         IncorporationResources
       )
-
-      expect(wrapper.find('#court-order-poa-section').exists()).toBe(['BEN', 'ULC', 'CC', 'BC']
-        .includes(test.entityType))
+      const shouldBeVisible = ['BEN', 'ULC', 'CC', 'BC'].includes(test.entityType) && test.isStaff
+      expect(wrapper.find('#court-order-poa-section').exists()).toBe(shouldBeVisible)
     })
 
     it('displays Staff Payment section only for staff', () => {
