@@ -79,7 +79,7 @@
       <v-form
         v-if="isBusinessActive"
         ref="formRef"
-        lazy-validation
+        v-model="formValid"
         @submit.prevent
       >
         <!-- Home Jurisdiction -->
@@ -125,7 +125,6 @@
             cols="12"
             sm="9"
           >
-            <!-- *** TODO: add rules -->
             <v-text-field
               v-model="business.homeLegalName"
               class="name-home-jurisdiction"
@@ -163,8 +162,7 @@
               :initialValue="business.homeIncorporationDate"
               :inputRules="getShowErrors ? incorporationDateRules: []"
               :maxDate="getCurrentDate"
-              :disablePicker="!isBusinessActive"
-              @emitDateSync="business.homeIncorporationDate = $event"
+              @emitDateSync="$set(business, 'homeIncorporationDate', $event)"
             />
           </v-col>
         </v-row>
@@ -185,7 +183,6 @@
             cols="12"
             sm="9"
           >
-            <!-- *** TODO: add rules -->
             <v-text-field
               v-model="business.taxId"
               v-mask="['#########']"
@@ -199,47 +196,49 @@
           </v-col>
         </v-row>
 
-        <!-- Upload Affidavit -->
-        <v-row
-          v-if="isAffidavitRequired"
-          class="mt-6"
-          no-gutters
-        >
-          <v-col
-            cols="12"
-            sm="3"
+        <v-expand-transition>
+          <!-- Upload Affidavit -->
+          <v-row
+            v-if="isContinuationInAffidavitRequired"
+            class="mt-6"
+            no-gutters
           >
-            <label>Upload Affidavit</label>
-          </v-col>
+            <v-col
+              cols="12"
+              sm="3"
+            >
+              <label>Upload Affidavit</label>
+            </v-col>
 
-          <v-col
-            cols="12"
-            sm="9"
-          >
-            <p>
-              Upload the affidavit from the directors.
-            </p>
+            <v-col
+              cols="12"
+              sm="9"
+            >
+              <p>
+                Upload the affidavit from the directors.
+              </p>
 
-            <ul>
-              <li>Use a white background and a legible font with contrasting font colour</li>
-              <li>PDF file type (maximum 30 MB file size)</li>
-            </ul>
+              <ul>
+                <li>Use a white background and a legible font with contrasting font colour</li>
+                <li>PDF file type (maximum 30 MB file size)</li>
+              </ul>
 
-            <FileUploadPreview
-              class="mt-4"
-              inputFileLabel="Affidavit from directors"
-              :maxSize="MAX_FILE_SIZE"
-              :pdfPageSize="PdfPageSize.LETTER_SIZE"
-              :hint="business.affidavitFile ? 'File uploaded' : undefined"
-              :inputFile="business.affidavitFile"
-              :showErrors="getShowErrors"
-              :customErrorMessage.sync="customErrorMessage"
-              :isRequired="true"
-              @fileValidity="onFileValidity($event)"
-              @fileSelected="onFileSelected($event)"
-            />
-          </v-col>
-        </v-row>
+              <FileUploadPreview
+                class="mt-4"
+                inputFileLabel="Affidavit from directors"
+                :maxSize="MAX_FILE_SIZE"
+                :pdfPageSize="PdfPageSize.LETTER_SIZE"
+                :hint="business.affidavitFile ? 'File uploaded' : undefined"
+                :inputFile="business.affidavitFile"
+                :showErrors="getShowErrors"
+                :customErrorMessage.sync="customErrorMessage"
+                :isRequired="getShowErrors"
+                @fileValidity="onFileValidity($event)"
+                @fileSelected="onFileSelected($event)"
+              />
+            </v-col>
+          </v-row>
+        </v-expand-transition>
 
         <!-- message box -->
         <v-row
@@ -311,7 +310,7 @@
           >
             <div class="home-jurisdiction font-15">
               <label>Home Jurisdiction:</label>
-              {{ homeJurisdiction || '[Unknown]' }}
+              {{ homeJurisdictionText || '[Unknown]' }}
             </div>
             <div class="name-in-bc font-15 mt-2">
               <label>Name in B.C.:</label>
@@ -396,7 +395,6 @@
 import { Component, Emit, Mixins, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { StatusCodes } from 'http-status-codes'
-import { isEqual } from 'lodash'
 import { mask } from 'vue-the-mask'
 import { useStore } from '@/store/store'
 import { DateMixin, DocumentMixin } from '@/mixins'
@@ -443,14 +441,14 @@ export default class ExtraproRegistration extends Mixins(DateMixin, DocumentMixi
   @Getter(useStore) getExistingBusinessInfo!: ExistingBusinessInfoIF
   @Getter(useStore) getKeycloakGuid!: string
   @Getter(useStore) getShowErrors!: boolean
-  @Getter(useStore) isTypeUlcContinueIn!: boolean
+  @Getter(useStore) isContinuationInAffidavitRequired!: boolean
 
   @Action(useStore) setExistingBusinessInfo!: (x: ExistingBusinessInfoIF) => void
 
   // Local properties
   active = false
   business = {} as ExistingBusinessInfoIF
-  jurisdictionErrorMessage = ''
+  formValid = false
   customErrorMessage = ''
   uploadMemorandumDoc = null as File
   uploadMemorandumDocKey = null as string
@@ -463,49 +461,26 @@ export default class ExtraproRegistration extends Mixins(DateMixin, DocumentMixi
     ' this business will be cancelled and made historical in the B.C. Registry once the continuation' +
     ' application application has been submitted.'
 
-  /** Whether we have a looked-up business. */
-  get haveLookupBusiness (): boolean {
-    return !isEqual(this.business, {})
-  }
-
   /** Whether the business is active (otherwise it's historical). */
   get isBusinessActive (): boolean {
     return (this.business.status === EntityStates.ACTIVE)
   }
 
-  /**
-   * Whether the director's affidavit is required.
-   * Is true if the business is a Continued In ULC in Alberta or Nova Scotia.
-   */
-  get isAffidavitRequired (): boolean {
-    return (
-      this.isTypeUlcContinueIn &&
-      this.business.homeJurisdiction?.country === JurisdictionLocation.CA &&
-      (
-        this.business.homeJurisdiction?.region === 'AB' ||
-        this.business.homeJurisdiction?.region === 'NB'
-      )
-    )
-  }
-
   readonly businessNameRules: Array<VuetifyRuleFunction> = [
-    v => !!v || 'Name is required',
-    v => (v && v.length <= 1000) || 'Cannot exceed 1000 characters'
+    (v) => !!v || 'Name is required',
+    (v) => (v && v.length <= 1000) || 'Cannot exceed 1000 characters'
   ]
 
-  get incorporationDateRules (): Array<VuetifyRuleFunction> {
-    return [
-      () => !!this.business.homeIncorporationDate || !this.isBusinessActive ||
-        'Date is required',
-      () => {
-        return (this.business.homeIncorporationDate <= this.getCurrentDate) ||
-          'Date cannot be in the future'
-      }
-    ]
+  readonly incorporationDateRules: Array<VuetifyRuleFunction> = [
+    (v) => !!v || 'Incorporation Date is required'
+  ]
+
+  get jurisdictionErrorMessage (): string {
+    return (this.getShowErrors && !this.business.homeJurisdiction) ? 'Jurisdiction is required' : ''
   }
 
   /** The text version of the home jurisdiction. */
-  get homeJurisdiction (): string {
+  get homeJurisdictionText (): string {
     const jurisdiction = this.business.homeJurisdiction // may be null
 
     if (jurisdiction?.country === JurisdictionLocation.CA) {
@@ -540,12 +515,10 @@ export default class ExtraproRegistration extends Mixins(DateMixin, DocumentMixi
       this.errorDialogText = 'An error occurred. Please try searching for the business again.'
       this.errorDialog = true
 
-      // *** TODO: test/update this
       // toggle active flag to re-render the ExtraproBusinessLookup component (and thus reset it)
-      // this.active = true
-      // await this.$nextTick()
-      // this.active = false
-      this.$forceUpdate() // force file upload component to react // *** TEST THIS
+      this.active = true
+      await this.$nextTick()
+      this.active = false
 
       return
     }
@@ -608,33 +581,31 @@ export default class ExtraproRegistration extends Mixins(DateMixin, DocumentMixi
 
   /** Called when user has selected a jurisdiction. */
   onJurisdictionChange (jurisdiction: any): void {
-    this.business.homeJurisdiction = jurisdiction
+    this.business.homeJurisdiction = null
 
     if (jurisdiction?.group === 0) {
-      this.business.homeJurisdiction.country = JurisdictionLocation.CA
-      if (jurisdiction.value === JurisdictionLocation.FD) {
-        this.business.homeJurisdiction.region = 'FEDERAL'
-      } else {
-        this.business.homeJurisdiction.region = jurisdiction.value
-      }
+      // set property reactively (in case it was null)
+      this.$set(this.business, 'homeJurisdiction', {
+        country: JurisdictionLocation.CA,
+        region: (jurisdiction.value === JurisdictionLocation.FD) ? 'FEDERAL' : jurisdiction.value
+      })
     }
 
     if (jurisdiction?.group === 1) {
-      this.business.homeJurisdiction.country = JurisdictionLocation.US
-      this.business.homeJurisdiction.region = jurisdiction.value
+      // set property reactively (in case it was null)
+      this.$set(this.business, 'homeJurisdiction', {
+        country: JurisdictionLocation.US,
+        region: jurisdiction.value
+      })
     }
 
     if (jurisdiction?.group === 2) {
-      this.business.homeJurisdiction.country = jurisdiction.value
-      this.business.homeJurisdiction.region = ''
+      // set property reactively (in case it was null)
+      this.$set(this.business, 'homeJurisdiction', {
+        country: jurisdiction.value,
+        region: ''
+      })
     }
-
-    // *** TODO: need this?
-    // if (this.jurisdiction) {
-    //   this.setShowErrors(false)
-    // }
-
-    this.jurisdictionErrorMessage = this.business.homeJurisdiction ? '' : 'Home jurisdiction is required'
   }
 
   /**
@@ -685,28 +656,41 @@ export default class ExtraproRegistration extends Mixins(DateMixin, DocumentMixi
     }
   }
 
+  /** Validates the form and other components. */
+  @Watch('active')
   @Watch('getShowErrors')
-  private onGetShowErrors (): void {
-    this.$refs.formRef.validate()
-    this.$refs.incorporationDateRef.validateForm()
-    // this.onComponentValid()
+  private async onGetShowErrors (): Promise<void> {
+    if (this.active && this.getShowErrors) {
+      await this.$nextTick() // wait for form to finish rendering
+      this.$refs.formRef?.validate()
+      this.$refs.incorporationDateRef?.validateForm()
+    }
   }
 
-  @Watch('business', { deep: true })
+  /** Emits form validity. */
+  @Watch('isBusinessActive')
+  @Watch('business.homeJurisdiction')
+  @Watch('business.homeIncorporationDate')
+  @Watch('isContinuationInAffidavitRequired')
+  @Watch('business.affidavitFileKey')
+  @Watch('formValid')
   @Emit('valid')
   private onComponentValid (): boolean {
-    // this component is valid if we have looked up a business
-    // and the business is active
-    // and we have the affidavit if it's required
-    // and the user has checked the confirmation
+    // this component is valid if we have an active business
+    // and we have the home jurisdiction (custom component)
+    // and we have the home incorporation date (custom component)
+    // and we have the affidavit file, if required (custom component)
+    // and the other form (Vuetify) components are valid
     return (
-      this.haveLookupBusiness &&
       this.isBusinessActive &&
-      (!this.isAffidavitRequired || !!this.business.affidavitFileKey) &&
-      this.business.isConfirmed
+      !!this.business.homeJurisdiction &&
+      !!this.business.homeIncorporationDate &&
+      (!this.isContinuationInAffidavitRequired || !!this.business.affidavitFileKey) &&
+      this.formValid
     )
   }
 
+  /** Informs parent component whether we have become active or inactive. */
   @Watch('active', { immediate: true })
   @Emit('active')
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

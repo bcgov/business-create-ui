@@ -458,13 +458,14 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         affidavitFileKey: continuationIn.foreignJurisdiction.affidavitFileKey,
         affidavitFileName: continuationIn.foreignJurisdiction.affidavitFileName,
         affidavitFileUrl: continuationIn.foreignJurisdiction.affidavitFileUrl,
-        bcFoundingDate: this.dateToYyyyMmDd(foundingDate), // FUTURE: need fallback to null?
-        bcIdentifier: continuationIn.business?.identifier, // FUTURE: need fallback to null?
-        bcLegalName: continuationIn.business?.legalName, // FUTURE: need fallback to null?
-        homeJurisdiction: {
+        bcFoundingDate: this.dateToYyyyMmDd(foundingDate),
+        bcIdentifier: continuationIn.business?.identifier,
+        bcLegalName: continuationIn.business?.legalName,
+        // store homeJurisdiction as null if not saved
+        homeJurisdiction: continuationIn.foreignJurisdiction.country ? {
           country: continuationIn.foreignJurisdiction.country,
           region: continuationIn.foreignJurisdiction.region
-        },
+        } : null,
         homeIdentifier: continuationIn.foreignJurisdiction.identifier,
         homeIncorporationDate: continuationIn.foreignJurisdiction.incorporationDate,
         homeLegalName: continuationIn.foreignJurisdiction.legalName,

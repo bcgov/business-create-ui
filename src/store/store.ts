@@ -15,7 +15,10 @@ import {
   RelationshipTypes,
   RestorationTypes
 } from '@/enums'
-import { CorrectNameOptions } from '@bcrs-shared-components/enums/'
+import {
+  CorrectNameOptions,
+  JurisdictionLocation
+} from '@bcrs-shared-components/enums/'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import {
   AccountInformationIF,
@@ -199,12 +202,30 @@ export const useStore = defineStore('store', {
       return this.stateModel.entityType
     },
 
+    /** The continuation in Continuation Authorization object. */
     getContinuationAuthorization (): ContinuationAuthorizationIF {
       return this.getContinuationIn.continuationAuthorization
     },
 
+    /** The continuation in Existing Business Info object. */
     getExistingBusinessInfo (): ExistingBusinessInfoIF {
       return this.getContinuationIn.existingBusinessInfo
+    },
+
+    /**
+     * Whether a continuation in Director's Affidavit is required.
+     * Is true if the business is a Continued In ULC from Alberta or Nova Scotia.
+     */
+    isContinuationInAffidavitRequired (): boolean {
+      const homeJurisdiction = this.getExistingBusinessInfo?.homeJurisdiction
+      return (
+        this.isTypeUlcContinueIn &&
+        (homeJurisdiction?.country === JurisdictionLocation.CA) &&
+        (
+          homeJurisdiction?.region === 'AB' ||
+          homeJurisdiction?.region === 'NS'
+        )
+      )
     },
 
     /** The account folio number. */
@@ -704,9 +725,9 @@ export const useStore = defineStore('store', {
      * TODO: Add all the remaining checks when all components are in place.
      */
     isContinuationInValid (): boolean {
-      const isCertifyValid = this.getCertifyState.valid && !!this.getCertifyState.certifiedBy
       const isEffectiveDateTimeValid = this.getEffectiveDateTime.valid
-      const isFolioNumberValid = !this.isPremiumAccount || this.getFolioNumberValid
+      const isCertifyValid = this.getCertifyState.valid && !!this.getCertifyState.certifiedBy
+      const isCourtOrderValid = this.isRoleStaff ? this.getCourtOrderStep.valid : true
       const isStaffPaymentValid = this.isRoleStaff ? this.getStaffPaymentStep.valid : true
 
       return (
@@ -714,9 +735,9 @@ export const useStore = defineStore('store', {
         this.isDefineCompanyValid &&
         this.isAddPeopleAndRolesValid &&
         this.isCreateShareStructureValid &&
-        isCertifyValid &&
         isEffectiveDateTimeValid &&
-        isFolioNumberValid &&
+        isCertifyValid &&
+        isCourtOrderValid &&
         isStaffPaymentValid
       )
     },

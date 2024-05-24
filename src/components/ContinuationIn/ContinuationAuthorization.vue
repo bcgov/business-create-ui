@@ -93,7 +93,7 @@
 
     <div class="pt-4" />
 
-    <!-- file upload component(s) -->
+    <!-- file upload components -->
     <v-row
       v-for="(num, index) in numUploads"
       :key="authorization.files[index]?.fileKey"
@@ -174,10 +174,8 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
     return [
       () => !!this.authorization.date ||
         'Authorization Date is required',
-      () => {
-        return (this.authorization.date <= this.getCurrentDate) ||
-          'Authorization Date cannot be in the future'
-      }
+      () => (this.authorization.date <= this.getCurrentDate) ||
+        'Authorization Date cannot be in the future'
     ]
   }
 
@@ -217,7 +215,7 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
       // verify that file is valid
       if (!this.fileValidity) {
         // NB: as this is validity according to the component, do not overwrite current error message
-        return // don't add to list
+        return // don't add to array
       }
 
       // verify that file doesn't already exist
@@ -238,7 +236,7 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
         // put file uploader into manual error mode by setting custom error message
         this.customErrorMessage[index] = this.UPLOAD_FAILED_MESSAGE
         this.$forceUpdate() // force file upload component to react
-        return // don't add to list
+        return // don't add to array
       }
 
       // add file to array

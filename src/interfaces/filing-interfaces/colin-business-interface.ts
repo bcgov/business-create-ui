@@ -1,3 +1,6 @@
+/**
+ * The data object from the COLIN Fetch Public Business call.
+ */
 export interface ColinBusinessIF {
   businessNumber: string // aka tax id
   corpState: string // not used

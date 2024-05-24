@@ -2,7 +2,7 @@
   <div id="continuation-in-business-home">
     <!-- Existing Business Information -->
     <section class="mt-10">
-      <header id="existing-Business-information">
+      <header id="existing-business-information">
         <h2>Existing Business Information</h2>
         <p class="mt-4">
           Enter information about your existing business. If your company is extraprovincially registered
@@ -132,7 +132,7 @@ export default class ContinuationInBusinessHome extends Mixins(CommonMixin, Name
   @Watch('$route')
   private async scrollToInvalidComponent (): Promise<void> {
     if (this.getShowErrors && this.$route.name === RouteNames.CONTINUATION_IN_BUSINESS_HOME) {
-      // scroll to invalid components
+      // scroll to invalid section
       await this.$nextTick()
       await this.validateAndScroll(this.validFlags, this.validComponents)
     }

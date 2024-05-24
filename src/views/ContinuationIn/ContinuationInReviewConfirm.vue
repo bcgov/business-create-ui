@@ -167,8 +167,7 @@
         flat
         class="mt-6"
       >
-        <div>** Court Order / POA component goes here **</div>
-        <!-- <CourtOrderPoa
+        <CourtOrderPoa
           class="py-8 px-6"
           :class="{ 'invalid-section': isCourtOrderInvalid }"
           :draftCourtOrderNumber="getCourtOrderStep.courtOrder.fileNumber"
@@ -178,7 +177,7 @@
           @emitCourtNumber="setCourtOrderFileNumber($event)"
           @emitPoa="setHasPlanOfArrangement($event)"
           @emitValid="setCourtOrderValidity($event)"
-        /> -->
+        />
       </v-card>
     </section>
 
@@ -207,7 +206,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
-import { ContactPointIF, CertifyIF, EffectiveDateTimeIF, ShareStructureIF } from '@/interfaces'
+import { ContactPointIF, CertifyIF, EffectiveDateTimeIF, ShareStructureIF, CourtOrderStepIF } from '@/interfaces'
 import CardHeader from '@/components/common/CardHeader.vue'
 import Certify from '@/components/common/Certify.vue'
 import { DocumentDelivery } from '@bcrs-shared-components/document-delivery'
@@ -218,13 +217,13 @@ import SummaryBusinessHomeJurisdiction from '@/components/ContinuationIn/Summary
 import SummaryDefineCompany from '@/components/common/SummaryDefineCompany.vue'
 import StaffPayment from '@/components/common/StaffPayment.vue'
 import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
-// import { CourtOrderPoa } from '@bcrs-shared-components/court-order-poa'
+import { CourtOrderPoa } from '@bcrs-shared-components/court-order-poa'
 
 @Component({
   components: {
     CardHeader,
     Certify,
-    // CourtOrderPoa,
+    CourtOrderPoa,
     DocumentDelivery,
     EffectiveDateTime,
     ListPeopleAndRoles,
@@ -237,15 +236,17 @@ import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp
 export default class ContinuationInReviewConfirm extends Vue {
   @Getter(useStore) getBusinessContact!: ContactPointIF
   @Getter(useStore) getCertifyState!: CertifyIF
+  @Getter(useStore) getCourtOrderStep!: CourtOrderStepIF
   @Getter(useStore) getCreateShareStructureStep!: ShareStructureIF
   @Getter(useStore) getEffectiveDateTime!: EffectiveDateTimeIF
   @Getter(useStore) getEntityType!: CorpTypeCd
   @Getter(useStore) getUserEmail!: string
   @Getter(useStore) getValidateSteps!: boolean
-  @Getter(useStore) isPremiumAccount!: boolean
   @Getter(useStore) isRoleStaff!: boolean
 
   @Action(useStore) setCertifyState!: (x: CertifyIF) => void
+  @Action(useStore) setCourtOrderFileNumber!: (x: string) => void
+  @Action(useStore) setCourtOrderValidity!: (x: boolean) => void
   @Action(useStore) setEffectiveDate!: (x: Date) => void
   @Action(useStore) setEffectiveDateTimeValid!: (x: boolean) => void
   @Action(useStore) setHasPlanOfArrangement!: (x: boolean) => void
@@ -275,6 +276,11 @@ export default class ContinuationInReviewConfirm extends Vue {
   /** Is true when the certify conditions are not met. */
   get isCertifyInvalid (): boolean {
     return this.getValidateSteps && !(this.getCertifyState.certifiedBy && this.getCertifyState.valid)
+  }
+
+  /** Is true when the Court Order conditions are not met. */
+  get isCourtOrderInvalid (): boolean {
+    return (this.getValidateSteps && !this.getCourtOrderStep.valid)
   }
 }
 </script>

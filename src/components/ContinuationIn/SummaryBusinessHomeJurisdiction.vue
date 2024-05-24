@@ -223,14 +223,37 @@
               class="pt-4 pt-sm-0"
             >
               <ul id="continuation-authorization-file">
+                <!-- the director's affidavit file -->
+                <li v-if="isContinuationInAffidavitRequired">
+                  <template v-if="getExistingBusinessInfo.affidavitFileName">
+                    <v-icon color="primary">
+                      mdi-file-pdf-outline
+                    </v-icon>
+                    <span>{{ getExistingBusinessInfo.affidavitFileName }}</span>
+                  </template>
+                  <template v-else>
+                    <v-icon color="error">
+                      mdi-close
+                    </v-icon>
+                    <span>Missing Affidavit</span>
+                  </template>
+                </li>
+
+                <!-- the proof of authorization files -->
                 <li
                   v-for="item in getContinuationAuthorization?.files"
                   :key="item.fileKey"
                 >
-                  <v-icon color="green darken-2">
-                    mdi-check
+                  <v-icon color="primary">
+                    mdi-file-pdf-outline
                   </v-icon>
                   <span>{{ item.fileName }}</span>
+                </li>
+                <li v-if="!getContinuationAuthorization?.files?.length">
+                  <v-icon color="error">
+                    mdi-close
+                  </v-icon>
+                  <span>Missing Authorization Files</span>
                 </li>
               </ul>
             </v-col>
@@ -305,6 +328,7 @@ export default class SummaryBusinessHomeJurisdiction extends Mixins(DateMixin) {
   // Getters
   @Getter(useStore) getContinuationAuthorization!: ContinuationAuthorizationIF
   @Getter(useStore) getExistingBusinessInfo!: ExistingBusinessInfoIF
+  @Getter(useStore) isContinuationInAffidavitRequired!: boolean
   @Getter(useStore) isContinuationInBusinessHomeValid!: boolean
 
   /** Whether the existing business is an extrapro. */
@@ -380,6 +404,10 @@ article:not(:last-child) {
     list-style: none;
     margin-left: 2rem;
     padding-left: 0;
+
+    li:not(:first-child) {
+      margin-top: 0.25rem;
+    }
 
     li > i {
       margin-left: -2rem;

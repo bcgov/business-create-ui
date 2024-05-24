@@ -20,17 +20,3 @@ export interface ExistingBusinessInfoIF {
   status?: EntityStates // only used by UI
   taxId?: string
 }
-
-// *** TODO: delete this if not used
-export const EmptyExistingBusinessInfoIF: ExistingBusinessInfoIF = {
-  homeJurisdiction: {
-    country: '',
-    region: ''
-  },
-  homeIdentifier: '',
-  homeIncorporationDate: '',
-  homeLegalName: '',
-  mode: null,
-  status: null,
-  taxId: ''
-}

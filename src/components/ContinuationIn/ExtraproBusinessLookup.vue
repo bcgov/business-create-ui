@@ -34,9 +34,8 @@
             cols="3"
             class="result-identifier d-inline-flex"
           >
-            {{ item.identifier }}
-            <!-- *** TODO: remove after testing: -->
-            ({{ item.status?.charAt(0) }})
+            <span>{{ item.identifier }}</span>
+            <span v-if="showBusinessSearchStatus">&nbsp;({{ item.status?.charAt(0) }})</span>
           </v-col>
 
           <v-col
@@ -64,6 +63,7 @@ import { Component, Emit, Watch } from 'vue-property-decorator'
 import { debounce } from 'lodash'
 import { BusinessLookupResultIF } from '@/interfaces'
 import { BusinessLookupServices } from '@/services'
+import { GetFeatureFlag } from '@/utils/feature-flag-utils'
 
 /* eslint-disable no-unused-vars */
 enum States {
@@ -90,6 +90,10 @@ export default class ExtraproBusinessLookup extends Vue {
   selectedBusiness: BusinessLookupResultIF = null
 
   readonly businessLookupLabel = 'Extraprovincial registration number or name of the business in B.C.'
+
+  get showBusinessSearchStatus (): boolean {
+    return Boolean(GetFeatureFlag('show-business-search-status'))
+  }
 
   /** Called when Search Input has been updated. */
   onSearchInput (searchInput: string) {
