@@ -1,5 +1,14 @@
 <template>
   <div id="extrapro-registration">
+    <GenericErrorDialog
+      attach="#extrapro-registration"
+      :dialog="errorDialog"
+      :text="errorDialogText"
+      :title="errorDialogTitle"
+      :showContactInfo="false"
+      @close="errorDialog = false"
+    />
+
     <!-- inactive = ready to search to start -->
     <template v-if="!active">
       <v-row no-gutters>
@@ -24,6 +33,7 @@
 
     <!-- active = display/edit mode -->
     <template v-if="active">
+      <!-- Extraprovincial Registration in B.C. + Undo button-->
       <v-row no-gutters>
         <v-col
           cols="12"
@@ -42,7 +52,7 @@
             hide-details
             label="B.C. Extraprovincial Incorporation Number"
             readonly
-            :value="incorporationNumber"
+            :value="business.bcIdentifier"
           />
         </v-col>
 
@@ -65,123 +75,175 @@
         </v-col>
       </v-row>
 
-      <v-row
-        class="mt-6"
-        no-gutters
+      <!-- active business -->
+      <v-form
+        v-if="isBusinessActive"
+        ref="formRef"
+        lazy-validation
+        @submit.prevent
       >
-        <v-col
-          cols="12"
-          sm="3"
-        >
-          <label>Extraprovincial Registration Information</label>
-        </v-col>
-
-        <v-col
-          cols="12"
-          sm="9"
-        >
-          <p id="home-jurisdiction">
-            <label>Home Jurisdiction: </label>
-            <span>{{ homeJurisdiction || '[Unknown]' }}</span>
-          </p>
-
-          <p id="business-name">
-            <label>Business Name: </label>
-            <span>{{ businessName }}</span>
-          </p>
-
-          <p id="business-number">
-            <label>Business Number: </label>
-            <span>{{ businessNumber || '[Unknown]' }}</span>
-          </p>
-
-          <p id="incorporation-date">
-            <label>Incorporation Date: </label>
-            <span>{{ incorporationDate || '[Unknown]' }}</span>
-          </p>
-        </v-col>
-      </v-row>
-
-      <template v-if="isBusinessActive">
+        <!-- Home Jurisdiction -->
         <v-row
-          class="mt-4"
+          class="mt-6"
           no-gutters
         >
           <v-col
             cols="12"
             sm="3"
           >
-            <label>Type of Business in Home Jurisdiction</label>
+            <label>Home Jurisdiction</label>
           </v-col>
 
           <v-col
             cols="12"
             sm="9"
           >
-            <v-radio-group
-              v-model="business.isUlc"
-              class="mt-0 pt-0"
-              row
-            >
-              <v-radio
-                label="Unlimited Liability Company"
-                :value="true"
-              />
-              <v-radio
-                label="Other"
-                :value="false"
-              />
-            </v-radio-group>
+            <Jurisdiction
+              class="home-jurisdiction"
+              :showUsaJurisdictions="true"
+              label="Home Jurisdiction"
+              :initialValue="business.homeJurisdiction"
+              :errorMessages="jurisdictionErrorMessage"
+              @change="onJurisdictionChange($event)"
+            />
           </v-col>
         </v-row>
 
-        <v-expand-transition>
-          <v-row
-            v-if="business.isUlc"
-            class="mt-4"
-            no-gutters
-          >
-            <v-col
-              cols="12"
-              sm="3"
-            >
-              <label>Upload Affidavit</label>
-            </v-col>
-
-            <v-col
-              cols="12"
-              sm="9"
-            >
-              <p>
-                Upload the affidavit from the directors.
-              </p>
-
-              <ul>
-                <li>
-                  Use a white background and a legible font with contrasting font colour
-                </li>
-                <li>
-                  PDF file type (maximum 30 MB file size)
-                </li>
-              </ul>
-
-              <FileUploadPreview
-                class="mt-4"
-                inputFileLabel="Affidavit from directors"
-                :maxSize="MAX_FILE_SIZE"
-                :pdfPageSize="PdfPageSize.LETTER_SIZE"
-                :inputFile="uploadMemorandumDoc"
-                :showErrors="getShowErrors"
-                :customErrorMessage="UPLOAD_FAILED_MESSAGE"
-                @fileValidity="onFileValidity($event)"
-                @fileSelected="onFileSelected($event)"
-              />
-            </v-col>
-          </v-row>
-        </v-expand-transition>
-
+        <!-- Name in Home Jurisdiction -->
         <v-row
-          class="mt-8"
+          class="mt-6"
+          no-gutters
+        >
+          <v-col
+            cols="12"
+            sm="3"
+          >
+            <label>Name in Home Jurisdiction</label>
+          </v-col>
+
+          <v-col
+            cols="12"
+            sm="9"
+          >
+            <!-- *** TODO: add rules -->
+            <v-text-field
+              v-model="business.homeLegalName"
+              class="name-home-jurisdiction"
+              filled
+              hide-details="auto"
+              label="Name in Home Jurisdiction"
+              :rules="getShowErrors ? businessNameRules : []"
+            />
+          </v-col>
+        </v-row>
+
+        <!-- Date of Incorporation, Continuation or Amalgamation in Home Jurisdiction -->
+        <v-row
+          class="mt-6"
+          no-gutters
+        >
+          <v-col
+            cols="12"
+            sm="3"
+          >
+            <label>Date of Incorporation, Continuation or Amalgamation in Home Jurisdiction</label>
+          </v-col>
+
+          <v-col
+            cols="12"
+            sm="9"
+          >
+            <DatePickerShared
+              id="incorporation-date"
+              ref="incorporationDateRef"
+              title="Date of Incorporation, Continuation or Amalgamation in Home Jurisdiction"
+              :nudgeRight="40"
+              :nudgeTop="85"
+              :persistentHint="true"
+              :initialValue="business.homeIncorporationDate"
+              :inputRules="getShowErrors ? incorporationDateRules: []"
+              :maxDate="getCurrentDate"
+              :disablePicker="!isBusinessActive"
+              @emitDateSync="business.homeIncorporationDate = $event"
+            />
+          </v-col>
+        </v-row>
+
+        <!-- Business Number -->
+        <v-row
+          class="mt-6"
+          no-gutters
+        >
+          <v-col
+            cols="12"
+            sm="3"
+          >
+            <label>Business Number</label>
+          </v-col>
+
+          <v-col
+            cols="12"
+            sm="9"
+          >
+            <!-- *** TODO: add rules -->
+            <v-text-field
+              v-model="business.taxId"
+              v-mask="['#########']"
+              class="business-number"
+              filled
+              hide-details="auto"
+              label="Business Number (Optional)"
+              hint="First 9 digits of the CRA Business Number if you have one"
+              :rules="getShowErrors ? Rules.BusinessNumberRules : []"
+            />
+          </v-col>
+        </v-row>
+
+        <!-- Upload Affidavit -->
+        <v-row
+          v-if="isAffidavitRequired"
+          class="mt-6"
+          no-gutters
+        >
+          <v-col
+            cols="12"
+            sm="3"
+          >
+            <label>Upload Affidavit</label>
+          </v-col>
+
+          <v-col
+            cols="12"
+            sm="9"
+          >
+            <p>
+              Upload the affidavit from the directors.
+            </p>
+
+            <ul>
+              <li>Use a white background and a legible font with contrasting font colour</li>
+              <li>PDF file type (maximum 30 MB file size)</li>
+            </ul>
+
+            <FileUploadPreview
+              class="mt-4"
+              inputFileLabel="Affidavit from directors"
+              :maxSize="MAX_FILE_SIZE"
+              :pdfPageSize="PdfPageSize.LETTER_SIZE"
+              :hint="business.affidavitFile ? 'File uploaded' : undefined"
+              :inputFile="business.affidavitFile"
+              :showErrors="getShowErrors"
+              :customErrorMessage.sync="customErrorMessage"
+              :isRequired="true"
+              @fileValidity="onFileValidity($event)"
+              @fileSelected="onFileSelected($event)"
+            />
+          </v-col>
+        </v-row>
+
+        <!-- message box -->
+        <v-row
+          class="mt-6"
           no-gutters
         >
           <v-col
@@ -202,8 +264,9 @@
           </v-col>
         </v-row>
 
+        <!-- Confirmation -->
         <v-row
-          class="mt-8"
+          class="mt-6"
           no-gutters
         >
           <v-col
@@ -218,20 +281,91 @@
             sm="9"
           >
             <v-checkbox
-              id="extrapro-registration-checkbox"
               v-model="business.isConfirmed"
-              class="pt-0 mt-0"
+              class="confirmation pt-0 mt-0"
               hide-details
               :label="checkboxLabel"
               :rules="getShowErrors ? [(v) => !!v] : []"
             />
           </v-col>
         </v-row>
-      </template>
+      </v-form>
 
-      <template v-else>
+      <!-- historical business -->
+      <template v-if="!isBusinessActive">
+        <!-- Home Jurisdiction, Name in B.C., Date of Registration in B.C. -->
         <v-row
-          class="mt-2"
+          class="mt-6"
+          no-gutters
+        >
+          <v-col
+            cols="12"
+            sm="3"
+          >
+            <!-- empty column -->
+          </v-col>
+
+          <v-col
+            cols="12"
+            sm="9"
+          >
+            <div class="home-jurisdiction font-15">
+              <label>Home Jurisdiction:</label>
+              {{ homeJurisdiction || '[Unknown]' }}
+            </div>
+            <div class="name-in-bc font-15 mt-2">
+              <label>Name in B.C.:</label>
+              {{ business.bcLegalName }}
+            </div>
+            <div class="date-registration-bc font-15 mt-2">
+              <label>Date of Registration in B.C.:</label>
+              {{ yyyyMmDdToPacificDate(business.bcFoundingDate, true, false) || '[Unknown]' }}
+            </div>
+          </v-col>
+        </v-row>
+
+        <v-divider class="mx-6 mt-6" />
+
+        <!-- Business Information in Home Jurisdiction -->
+        <v-row
+          class="mt-6"
+          no-gutters
+        >
+          <v-col
+            cols="12"
+            sm="3"
+          >
+            <label>Business Information in Home Jurisdiction</label>
+          </v-col>
+
+          <v-col
+            cols="12"
+            sm="9"
+          >
+            <div class="business-name font-15">
+              <label>Business Name:</label>
+              {{ business.homeLegalName || '[Unknown]' }}
+            </div>
+            <div class="registration-number font-15 mt-2">
+              <label>Registration Number:</label>
+              {{ business.homeIdentifier || '[Unknown]' }}
+            </div>
+            <div class="business-number font-15 mt-2">
+              <label>Business Number:</label>
+              {{ business.taxId || '[Unknown]' }}
+            </div>
+            <div class="incorporation-date font-15 mt-2">
+              <label>Date of Incorporation, Continuation or Amalgamation in Home Jurisdiction:</label>
+              {{ yyyyMmDdToPacificDate(business.homeIncorporationDate, true, false) || '[Unknown]' }}
+            </div>
+          </v-col>
+        </v-row>
+
+        <v-divider class="mx-6 mt-6" />
+
+        <!-- message box -->
+        <v-row
+          class="mt-6"
           no-gutters
         >
           <v-col
@@ -261,40 +395,69 @@
 <script lang="ts">
 import { Component, Emit, Mixins, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
+import { StatusCodes } from 'http-status-codes'
 import { isEqual } from 'lodash'
-import { getName } from 'country-list'
+import { mask } from 'vue-the-mask'
 import { useStore } from '@/store/store'
-import { DocumentMixin } from '@/mixins'
-import { BusinessLookupResultIF, ExistingBusinessInfoIF } from '@/interfaces'
+import { DateMixin, DocumentMixin } from '@/mixins'
+import { BusinessLookupResultIF, ColinBusinessIF, ExistingBusinessInfoIF, FormIF, PresignedUrlIF } from '@/interfaces'
 import { PdfPageSize } from '@/enums'
-import { EntityStates } from '@bcrs-shared-components/enums'
+import { EntityStates, JurisdictionLocation } from '@bcrs-shared-components/enums'
+import { ColinServices } from '@/services'
+import { VuetifyRuleFunction } from '@/types'
+import { CanJurisdictions, IntlJurisdictions, UsaJurisdiction } from '@bcrs-shared-components/jurisdiction/list-data'
+import { Jurisdiction } from '@bcrs-shared-components/jurisdiction'
+import { GenericErrorDialog } from '@/dialogs/'
+import { Rules } from '@/rules'
 import ExtraproBusinessLookup from './ExtraproBusinessLookup.vue'
 import MessageBox from '@/components/common/MessageBox.vue'
 import RegistriesContactInfo from '@/components/common/RegistriesContactInfo.vue'
 import FileUploadPreview from '@/components/common/FileUploadPreview.vue'
-// import { LegalServices } from '@/services'
+import { DatePicker as DatePickerShared } from '@bcrs-shared-components/date-picker'
 
 @Component({
   components: {
+    DatePickerShared,
     ExtraproBusinessLookup,
     FileUploadPreview,
+    GenericErrorDialog,
+    Jurisdiction,
     MessageBox,
     RegistriesContactInfo
+  },
+  directives: {
+    mask
   }
 })
-export default class ExtraproRegistration extends Mixins(DocumentMixin) {
-  readonly PdfPageSize = PdfPageSize
+export default class ExtraproRegistration extends Mixins(DateMixin, DocumentMixin) {
+  // Refs
+  $refs!: {
+    formRef: FormIF,
+    incorporationDateRef: DatePickerShared
+  }
 
+  readonly PdfPageSize = PdfPageSize
+  readonly Rules = Rules
+
+  @Getter(useStore) getCurrentDate!: string
   @Getter(useStore) getExistingBusinessInfo!: ExistingBusinessInfoIF
+  @Getter(useStore) getKeycloakGuid!: string
   @Getter(useStore) getShowErrors!: boolean
+  @Getter(useStore) isTypeUlcContinueIn!: boolean
 
   @Action(useStore) setExistingBusinessInfo!: (x: ExistingBusinessInfoIF) => void
 
   // Local properties
   active = false
   business = {} as ExistingBusinessInfoIF
+  jurisdictionErrorMessage = ''
+  customErrorMessage = ''
   uploadMemorandumDoc = null as File
   uploadMemorandumDocKey = null as string
+  fileValidity = false
+  errorDialog = false
+  errorDialogText = ''
+  errorDialogTitle = ''
 
   readonly checkboxLabel = 'I understand and acknowledge that the extraprovincial registration of' +
     ' this business will be cancelled and made historical in the B.C. Registry once the continuation' +
@@ -305,119 +468,242 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
     return !isEqual(this.business, {})
   }
 
-  /** The incorporation number in BC (eg, A1234567). */
-  get incorporationNumber (): string {
-    return this.business.businessIdentifier
-  }
-
-  /** The home jurisdiction. */
-  get homeJurisdiction (): string {
-    const hj = this.business.homeJurisdiction
-    if (hj?.country) {
-      const country = getName(hj.country)
-      const region = (hj.region === 'FEDERAL' ? 'Federal' : hj.region)
-      if (region) return `${region}, ${country}`
-      return country
-    }
-    return null
-  }
-
-  /** The business name in BC. */
-  get businessName (): string {
-    return this.business.businessLegalName
-  }
-
-  /** The business number (aka tax id). */
-  get businessNumber (): string {
-    return this.business.taxId
-  }
-
-  /** The incorporation date in the home jurisdiction. */
-  get incorporationDate (): string {
-    // FUTURE: format date as needed
-    return this.business.incorporationDate
-  }
-
-  /** Whether the business is Active (otherwise it's Historical). */
+  /** Whether the business is active (otherwise it's historical). */
   get isBusinessActive (): boolean {
     return (this.business.status === EntityStates.ACTIVE)
   }
 
-  mounted (): void {
-    // set existing business info object from the store, if it exists
-    if (this.getExistingBusinessInfo) this.business = this.getExistingBusinessInfo
-
-    // if mode is LOOKUP, set this component to active (which hides the other component)
-    if (this.business.mode === 'LOOKUP') this.active = true
+  /**
+   * Whether the director's affidavit is required.
+   * Is true if the business is a Continued In ULC in Alberta or Nova Scotia.
+   */
+  get isAffidavitRequired (): boolean {
+    return (
+      this.isTypeUlcContinueIn &&
+      this.business.homeJurisdiction?.country === JurisdictionLocation.CA &&
+      (
+        this.business.homeJurisdiction?.region === 'AB' ||
+        this.business.homeJurisdiction?.region === 'NB'
+      )
+    )
   }
 
-  async setBusiness (result: BusinessLookupResultIF): Promise<void> {
-    // FUTURE: fetch extra business data from COLIN and add to business object
-    // NOTE: fetch for both active and historical businesses
-    // const businessInfo = await LegalServices.fetchColinBusinessInfo(business.identifier)
-    //   .catch(() => {})
+  readonly businessNameRules: Array<VuetifyRuleFunction> = [
+    v => !!v || 'Name is required',
+    v => (v && v.length <= 1000) || 'Cannot exceed 1000 characters'
+  ]
 
-    // FUTURE: convert FD to FEDERAL and add other COLIN conversions here
+  get incorporationDateRules (): Array<VuetifyRuleFunction> {
+    return [
+      () => !!this.business.homeIncorporationDate || !this.isBusinessActive ||
+        'Date is required',
+      () => {
+        return (this.business.homeIncorporationDate <= this.getCurrentDate) ||
+          'Date cannot be in the future'
+      }
+    ]
+  }
+
+  /** The text version of the home jurisdiction. */
+  get homeJurisdiction (): string {
+    const jurisdiction = this.business.homeJurisdiction // may be null
+
+    if (jurisdiction?.country === JurisdictionLocation.CA) {
+      if (jurisdiction?.region === 'FEDERAL') return 'Federal'
+      return CanJurisdictions.find(can => can.value === jurisdiction?.region)?.text || 'Canada'
+    }
+
+    if (jurisdiction?.country === JurisdictionLocation.US) {
+      const state = UsaJurisdiction.find(usa => usa.value === jurisdiction?.region)?.text
+      return (state ? `${state}, US` : 'USA')
+    }
+
+    return IntlJurisdictions.find(intl => intl.value === jurisdiction?.country)?.text || null
+  }
+
+  /** Called when this component is mounted. */
+  mounted (): void {
+    // point business variable to Existing Business Info object from the store, if it exists
+    if (this.getExistingBusinessInfo) this.business = this.getExistingBusinessInfo
+
+    // if mode is EXPRO, set this component to active (which hides the other component)
+    if (this.business.mode === 'EXPRO') this.active = true
+  }
+
+  /** Called when user has searched for and selected a business. */
+  async setBusiness (result: BusinessLookupResultIF): Promise<void> {
+    // fetch expro business data from COLIN and add to business object
+    const businessInfo = await ColinServices.fetchPublicBusiness(result.identifier)
+      .catch(() => (null as ColinBusinessIF))
+    if (!businessInfo) {
+      this.errorDialogTitle = 'Could not fetch business data'
+      this.errorDialogText = 'An error occurred. Please try searching for the business again.'
+      this.errorDialog = true
+
+      // *** TODO: test/update this
+      // toggle active flag to re-render the ExtraproBusinessLookup component (and thus reset it)
+      // this.active = true
+      // await this.$nextTick()
+      // this.active = false
+      this.$forceUpdate() // force file upload component to react // *** TEST THIS
+
+      return
+    }
 
     this.business = {
-      homeJurisdiction: null, // get from COLIN
-      businessIdentifier: result.identifier,
-      businessLegalName: result.name,
-      identifier: null, // get from COLIN
-      incorporationDate: null, // get from COLIN
-      legalName: null, // get from COLIN
-      mode: 'LOOKUP',
+      bcFoundingDate: this.dateToYyyyMmDd(this.apiToDate(businessInfo.foundingDate)),
+      bcIdentifier: businessInfo.identifier,
+      bcLegalName: businessInfo.legalName,
+      homeJurisdiction: this.getHomeJurisdiction(businessInfo.jurisdiction || ''),
+      homeIdentifier: businessInfo.homeJurisdictionNumber,
+      homeIncorporationDate: this.dateToYyyyMmDd(this.apiToDate(businessInfo.homeRecognitionDate)),
+      homeLegalName: businessInfo.homeCompanyName,
+      mode: 'EXPRO',
       status: result.status,
-      taxId: result.bn?.substring(0, 9) || null
+      taxId: businessInfo.businessNumber?.substring(0, 9) || null
     }
     this.setExistingBusinessInfo(this.business)
     this.active = true
   }
 
+  /** Returns jurisdiction object for the given COLIN jurisdiction string. */
+  private getHomeJurisdiction (jurisdiction: string): any {
+    // safety check
+    if (jurisdiction) {
+      const provinces = CanJurisdictions.map(j => j.value).filter(p => p !== JurisdictionLocation.FD)
+      const states = UsaJurisdiction.map(j => j.value)
+      const countries = IntlJurisdictions.map(j => j.value)
+        .filter(c => (c !== JurisdictionLocation.CA && c !== JurisdictionLocation.US))
+
+      // look for BC, AB, etc
+      if (provinces.includes(jurisdiction)) {
+        return { country: JurisdictionLocation.CA, region: jurisdiction }
+      }
+      // look for FD
+      if (jurisdiction === JurisdictionLocation.FD) {
+        return { country: JurisdictionLocation.CA, region: 'FEDERAL' }
+      }
+      // look for "US, <state>"
+      if (
+        jurisdiction.startsWith(JurisdictionLocation.US) &&
+        states.includes(jurisdiction.substring(3))
+      ) {
+        return { country: JurisdictionLocation.US, region: jurisdiction }
+      }
+      // look for known countries
+      if (countries.includes(jurisdiction)) {
+        return { country: jurisdiction }
+      }
+    }
+    return null
+  }
+
   /** Resets this component back to its initial state. */
   reset () {
-    this.business = {} as unknown as ExistingBusinessInfoIF
+    this.business = {} as ExistingBusinessInfoIF
     this.setExistingBusinessInfo(this.business)
     // set this component to inactive (which shows the other component)
     this.active = false
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  onFileValidity (valid: boolean): void {
-    // *** TODO: implement -- see UploadMemorandum.vue
+  /** Called when user has selected a jurisdiction. */
+  onJurisdictionChange (jurisdiction: any): void {
+    this.business.homeJurisdiction = jurisdiction
+
+    if (jurisdiction?.group === 0) {
+      this.business.homeJurisdiction.country = JurisdictionLocation.CA
+      if (jurisdiction.value === JurisdictionLocation.FD) {
+        this.business.homeJurisdiction.region = 'FEDERAL'
+      } else {
+        this.business.homeJurisdiction.region = jurisdiction.value
+      }
+    }
+
+    if (jurisdiction?.group === 1) {
+      this.business.homeJurisdiction.country = JurisdictionLocation.US
+      this.business.homeJurisdiction.region = jurisdiction.value
+    }
+
+    if (jurisdiction?.group === 2) {
+      this.business.homeJurisdiction.country = jurisdiction.value
+      this.business.homeJurisdiction.region = ''
+    }
+
+    // *** TODO: need this?
+    // if (this.jurisdiction) {
+    //   this.setShowErrors(false)
+    // }
+
+    this.jurisdictionErrorMessage = this.business.homeJurisdiction ? '' : 'Home jurisdiction is required'
   }
 
+  /**
+   * Called when FileUploadPreview tells us whether a file is valid.
+   * This is called right before the File Selected event.
+   */
+  onFileValidity (valid: boolean): void {
+    this.fileValidity = valid
+  }
+
+  /**
+   * Called when FileUploadPreview tells us about a new or cleared file.
+   * This is called right after the File Validity event.
+   */
   async onFileSelected (file: File): Promise<void> {
-    // *** TODO: finish implementing -- see UploadMemorandum.vue
     if (file) {
-      // add property reactively to business object
-      this.$set(this.business, 'affidavitFileKey', '123')
+      if (this.fileValidity) {
+        // try to upload to Minio
+        let psu: PresignedUrlIF
+        try {
+          psu = await this.getPresignedUrl(file.name)
+          const res = await this.uploadToUrl(psu.preSignedUrl, file, psu.key, this.getKeycloakGuid)
+          if (!res || res.status !== StatusCodes.OK) throw new Error()
+        } catch {
+          // put file uploader into manual error mode by setting custom error message
+          this.customErrorMessage = this.UPLOAD_FAILED_MESSAGE
+          this.$forceUpdate() // force file upload component to react
+          return // don't add to list
+        }
+
+        // add properties reactively to business object
+        this.$set(this.business, 'affidavitFile', {
+          name: file.name,
+          lastModified: file.lastModified,
+          size: file.size
+        } as File)
+        this.$set(this.business, 'affidavitFileKey', psu.key)
+        this.$set(this.business, 'affidavitFileName', file.name)
+        this.$set(this.business, 'affidavitFileUrl', psu.preSignedUrl)
+      }
     } else {
-      // delete property reactively if the file is cleared
+      // delete properties reactively when the file is cleared
+      this.$delete(this.business, 'affidavitFile')
       this.$delete(this.business, 'affidavitFileKey')
+      this.$delete(this.business, 'affidavitFileName')
+      this.$delete(this.business, 'affidavitFileUrl')
       // FUTURE: should also delete the file from Minio
     }
   }
 
-  @Watch('business.isUlc')
-  onIsUlcChanged (val: boolean): void {
-    // delete the affidavit property if the business is not a ULC
-    if (!val) {
-      delete this.business.affidavitFileKey
-    }
+  @Watch('getShowErrors')
+  private onGetShowErrors (): void {
+    this.$refs.formRef.validate()
+    this.$refs.incorporationDateRef.validateForm()
+    // this.onComponentValid()
   }
 
   @Watch('business', { deep: true })
   @Emit('valid')
   private onComponentValid (): boolean {
-    // this component is valid if we have looked up an active business
-    // and we have the affidavit if the business in the home jurisdiction is ULC
+    // this component is valid if we have looked up a business
+    // and the business is active
+    // and we have the affidavit if it's required
     // and the user has checked the confirmation
     return (
       this.haveLookupBusiness &&
       this.isBusinessActive &&
-      ((this.business.isUlc === false) || !!this.business.affidavitFileKey) &&
-      (this.business.isConfirmed === true)
+      (!this.isAffidavitRequired || !!this.business.affidavitFileKey) &&
+      this.business.isConfirmed
     )
   }
 
@@ -445,19 +731,6 @@ label {
 // disable the clickable v-textfield label
 :deep(.incorporation-number label) {
   pointer-events: none;
-}
-
-// style the radio buttons
-:deep(.v-radio) {
-  background: rgba(0, 0, 0, 0.06); // same as Vuetify
-  height: 3.5rem;
-  padding: 1rem;
-  width: 47%;
-
-  label {
-    font-weight: normal;
-    color: $gray7;
-  }
 }
 
 // align the checkbox with its label

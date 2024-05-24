@@ -33,7 +33,6 @@
           :isTypeSoleProp="isTypeSoleProp"
         />
         <v-text-field
-          ref="textField"
           v-model="value"
           v-mask="['#########']"
           filled
@@ -53,7 +52,6 @@
 <script lang="ts">
 import { Component, Emit, Prop, Vue, Watch } from 'vue-property-decorator'
 import { mask } from 'vue-the-mask'
-import { FormIF } from '@/interfaces'
 import { Rules } from '@/rules'
 import { HelpBusinessNumber } from '@bcrs-shared-components/help-business-number'
 
@@ -73,10 +71,6 @@ import { HelpBusinessNumber } from '@bcrs-shared-components/help-business-number
   }
 })
 export default class BusinessNumber extends Vue {
-  $refs!: {
-    textField: FormIF
-  }
-
   /** The registration business number. */
   @Prop({ required: true }) readonly businessNumber!: string
 

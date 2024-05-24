@@ -367,11 +367,14 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         foreignJurisdiction: {
           country: this.getExistingBusinessInfo?.homeJurisdiction?.country,
           region: this.getExistingBusinessInfo?.homeJurisdiction?.region || undefined,
-          legalName: this.getExistingBusinessInfo?.legalName,
-          identifier: this.getExistingBusinessInfo?.identifier,
-          incorporationDate: this.getExistingBusinessInfo?.incorporationDate,
+          legalName: this.getExistingBusinessInfo?.homeLegalName,
+          identifier: this.getExistingBusinessInfo?.homeIdentifier,
+          incorporationDate: this.getExistingBusinessInfo?.homeIncorporationDate,
           taxId: this.getExistingBusinessInfo?.taxId || undefined,
-          affidavitFileKey: this.getExistingBusinessInfo?.affidavitFileKey
+          affidavitFile: this.getExistingBusinessInfo?.affidavitFile,
+          affidavitFileKey: this.getExistingBusinessInfo?.affidavitFileKey,
+          affidavitFileName: this.getExistingBusinessInfo?.affidavitFileName,
+          affidavitFileUrl: this.getExistingBusinessInfo?.affidavitFileUrl
         },
         authorization: this.getContinuationAuthorization,
         contactPoint: {
@@ -394,18 +397,19 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
           shareClasses: this.getCreateShareStructureStep.shareClasses
         },
         // save properties used only for UI:
-        isConfirmed: this.getExistingBusinessInfo?.isConfirmed,
-        isUlc: this.getExistingBusinessInfo?.isUlc,
+        isConfirmed: this.getExistingBusinessInfo?.isConfirmed || false,
         mode: this.getExistingBusinessInfo?.mode,
         status: this.getExistingBusinessInfo?.status
       }
     }
 
-    // Add expro business information (expro only).
-    if (this.getExistingBusinessInfo?.mode === 'LOOKUP') {
+    // Add expro business information.
+    if (this.getExistingBusinessInfo?.mode === 'EXPRO') {
+      const foundingDate = this.yyyyMmDdToDate(this.getExistingBusinessInfo.bcFoundingDate)
       filing.continuationIn.business = {
-        identifier: this.getExistingBusinessInfo.businessIdentifier,
-        legalName: this.getExistingBusinessInfo.businessLegalName
+        foundingDate: this.dateToApi(foundingDate),
+        identifier: this.getExistingBusinessInfo.bcIdentifier,
+        legalName: this.getExistingBusinessInfo.bcLegalName
       }
     }
 
@@ -448,19 +452,23 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
 
     // restore existing business information
     if (continuationIn.foreignJurisdiction) {
+      const foundingDate = this.apiToDate(continuationIn.business?.foundingDate)
       this.setExistingBusinessInfo({
+        affidavitFile: continuationIn.foreignJurisdiction.affidavitFile,
         affidavitFileKey: continuationIn.foreignJurisdiction.affidavitFileKey,
-        businessIdentifier: continuationIn.business?.identifier, // FUTURE: need fallback to null?
-        businessLegalName: continuationIn.business?.legalName, // FUTURE: need fallback to null?
+        affidavitFileName: continuationIn.foreignJurisdiction.affidavitFileName,
+        affidavitFileUrl: continuationIn.foreignJurisdiction.affidavitFileUrl,
+        bcFoundingDate: this.dateToYyyyMmDd(foundingDate), // FUTURE: need fallback to null?
+        bcIdentifier: continuationIn.business?.identifier, // FUTURE: need fallback to null?
+        bcLegalName: continuationIn.business?.legalName, // FUTURE: need fallback to null?
         homeJurisdiction: {
           country: continuationIn.foreignJurisdiction.country,
           region: continuationIn.foreignJurisdiction.region
         },
-        identifier: continuationIn.foreignJurisdiction.identifier,
-        incorporationDate: continuationIn.foreignJurisdiction.incorporationDate,
+        homeIdentifier: continuationIn.foreignJurisdiction.identifier,
+        homeIncorporationDate: continuationIn.foreignJurisdiction.incorporationDate,
+        homeLegalName: continuationIn.foreignJurisdiction.legalName,
         isConfirmed: false, // don't restore confirmation checkbox
-        isUlc: continuationIn.isUlc,
-        legalName: continuationIn.foreignJurisdiction.legalName,
         mode: continuationIn.mode,
         status: continuationIn.status,
         taxId: continuationIn.foreignJurisdiction.taxId

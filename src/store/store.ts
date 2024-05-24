@@ -252,7 +252,7 @@ export const useStore = defineStore('store', {
       return (this.getEntityType === CorpTypeCd.BC_COMPANY)
     },
 
-    /** Whether the entity is a BC ULC Company. */
+    /** Whether the entity is a BC Unlimited Liability Company. */
     isTypeBcUlcCompany (): boolean {
       return (this.getEntityType === CorpTypeCd.BC_ULC_COMPANY)
     },
@@ -265,6 +265,26 @@ export const useStore = defineStore('store', {
     /** Whether the entity is a General Partnership. */
     isTypePartnership (): boolean {
       return (this.getEntityType === CorpTypeCd.PARTNERSHIP)
+    },
+
+    /** Whether the entity is a Continued In BC Company. */
+    isTypeContinueIn (): boolean {
+      return (this.getEntityType === CorpTypeCd.CONTINUE_IN)
+    },
+
+    /** Whether the entity is a Continued In Benefit Company. */
+    isTypeBenContinueIn (): boolean {
+      return (this.getEntityType === CorpTypeCd.BEN_CONTINUE_IN)
+    },
+
+    /** Whether the entity is a Continued In Community Contribution Company. */
+    isTypeCccContinueIn (): boolean {
+      return (this.getEntityType === CorpTypeCd.CCC_CONTINUE_IN)
+    },
+
+    /** Whether the entity is a Continued In Unlimited Liability Company. */
+    isTypeUlcContinueIn (): boolean {
+      return (this.getEntityType === CorpTypeCd.ULC_CONTINUE_IN)
     },
 
     /** Is True if entity is a Sole Proprietorship or General Partnership. */

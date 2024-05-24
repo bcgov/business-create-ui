@@ -52,6 +52,9 @@ export async function FetchConfig (): Promise<any> {
   const authApiUrl: string = (import.meta.env.VUE_APP_AUTH_API_URL + import.meta.env.VUE_APP_AUTH_API_VERSION + '/')
   sessionStorage.setItem('AUTH_API_URL', authApiUrl)
 
+  const colinApiUrl: string = (import.meta.env.VUE_APP_COLIN_API_URL + import.meta.env.VUE_APP_COLIN_API_VERSION + '/')
+  sessionStorage.setItem('COLIN_API_URL', colinApiUrl)
+
   const payApiUrl: string = (import.meta.env.VUE_APP_PAY_API_URL + import.meta.env.VUE_APP_PAY_API_VERSION + '/')
   sessionStorage.setItem('PAY_API_URL', payApiUrl)
 

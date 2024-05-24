@@ -41,7 +41,7 @@
         <h2>Continuation Authorization</h2>
         <p class="mt-4">
           You must provide proof of authorization to continue out of your home jurisdiction.
-          This may be reviewed by our staff.
+          This will be reviewed by our staff.
         </p>
       </header>
 

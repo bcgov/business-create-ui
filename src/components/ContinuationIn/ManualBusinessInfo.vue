@@ -27,7 +27,7 @@
 
     <!-- active = display/edit mode -->
     <template v-if="active">
-      <!-- Jurisdiction -->
+      <!-- Jurisdiction + Undo button -->
       <v-row no-gutters>
         <v-col
           cols="12"
@@ -41,7 +41,7 @@
           sm="7"
         >
           <Jurisdiction
-            class="mb-n3"
+            class="home-jurisdiction"
             :showUsaJurisdictions="true"
             :initialValue="jurisdictionInitialVal"
             :errorMessages="jurisdictionErrorMessage"
@@ -67,6 +67,7 @@
           </v-btn>
         </v-col>
       </v-row>
+
       <v-form
         v-if="jurisdiction && !isMrasJurisdiction"
         ref="manualFormRef"
@@ -75,21 +76,24 @@
       >
         <!-- Identifying Number -->
         <v-row
-          class="mt-2"
+          class="mt-6"
           no-gutters
         >
           <v-col
             cols="12"
             sm="3"
-          />
+          >
+            <!-- empty column -->
+          </v-col>
 
           <v-col
             cols="12"
             sm="7"
           >
+            <!-- *** TODO: add rules -->
             <v-text-field
-              id="business-name"
-              v-model="business.identifier"
+              v-model="business.homeIdentifier"
+              class="identifying-number"
               filled
               hide-details="auto"
               label="Identifying Number"
@@ -121,9 +125,10 @@
             cols="12"
             sm="7"
           >
+            <!-- *** TODO: add rules -->
             <v-text-field
-              id="business-name"
-              v-model="business.legalName"
+              v-model="business.homeLegalName"
+              class="business-name"
               filled
               hide-details="auto"
               label="Business Name in Home Jurisdiction"
@@ -147,19 +152,23 @@
           <v-col
             cols="12"
             sm="3"
-          />
+          >
+            <!-- empty column -->
+          </v-col>
 
           <v-col
             cols="12"
             sm="7"
           >
+            <!-- *** TODO: add rules -->
             <v-text-field
-              id="business-number"
               v-model="business.taxId"
+              v-mask="['#########']"
+              class="business-number"
               filled
               hide-details="auto"
               label="Business Number (Optional)"
-              :hint="'First 9 digits of the CRA Business Number if you have one'"
+              hint="First 9 digits of the CRA Business Number if you have one"
             />
           </v-col>
 
@@ -179,7 +188,9 @@
           <v-col
             cols="12"
             sm="3"
-          />
+          >
+            <!-- empty column -->
+          </v-col>
 
           <v-col
             cols="12"
@@ -191,10 +202,10 @@
               title="Incorporation Date in Home Jurisdiction"
               :nudgeRight="40"
               :nudgeTop="85"
-              :initialValue="getExistingBusinessInfo.incorporationDate"
+              :initialValue="getExistingBusinessInfo.homeIncorporationDate"
               :inputRules="getShowErrors ? incorporationDateRules : []"
               :maxDate="getCurrentDate"
-              @emitDateSync="business.incorporationDate = $event"
+              @emitDateSync="business.homeIncorporationDate = $event"
             />
           </v-col>
 
@@ -206,11 +217,14 @@
           </v-col>
         </v-row>
 
+        <!-- message box -->
         <v-row no-gutters>
           <v-col
             cols="12"
             sm="3"
-          />
+          >
+            <!-- empty column -->
+          </v-col>
 
           <v-col
             cols="12"
@@ -238,10 +252,11 @@
 <script lang="ts">
 import { Component, Emit, Mixins, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
+import { cloneDeep } from 'lodash'
+import { mask } from 'vue-the-mask'
 import { useStore } from '@/store/store'
 import { DateMixin } from '@/mixins'
-import { cloneDeep, isEqual } from 'lodash'
-import { EmptyBusinessLookup, EmptyExistingBusinessInfoIF, ExistingBusinessInfoIF } from '@/interfaces'
+import { EmptyExistingBusinessInfoIF, ExistingBusinessInfoIF } from '@/interfaces'
 import MessageBox from '@/components/common/MessageBox.vue'
 import { Jurisdiction } from '@bcrs-shared-components/jurisdiction'
 import { DatePicker as DatePickerShared } from '@bcrs-shared-components/date-picker'
@@ -255,6 +270,9 @@ import { MrasJurisdictions } from '@bcrs-shared-components/jurisdiction/list-dat
     DatePickerShared,
     Jurisdiction,
     MessageBox
+  },
+  directives: {
+    mask
   }
 })
 export default class ManualBusinessInfo extends Mixins(CountriesProvincesMixin, DateMixin) {
@@ -273,44 +291,38 @@ export default class ManualBusinessInfo extends Mixins(CountriesProvincesMixin, 
 
   // Local properties
   active = false
-  businessLookup = null
   business = {} as ExistingBusinessInfoIF
   jurisdiction = null
   isMrasJurisdiction = false
   jurisdictionErrorMessage = ''
 
-  /** Whether to show this component. */
-  get showComponent (): boolean {
-    return true
-  }
-
-  /** Whether we have a looked-up business. */
-  get haveLookupBusiness (): boolean {
-    return !isEqual(this.business, {})
-  }
-
+  /** Called when this component is mounted. */
   mounted (): void {
-    // get the business info object from the store or initialize it
-    if (this.getExistingBusinessInfo) this.business = this.getExistingBusinessInfo
+    // point business variable to Existing Business Info object from the store, if it exists
+    if (this.getExistingBusinessInfo) {
+      this.business = this.getExistingBusinessInfo
+    } else {
+      this.business = cloneDeep(EmptyExistingBusinessInfoIF)
+      this.setExistingBusinessInfo(this.business)
+    }
 
     // if mode is MANUAL, set this component to active (which hides the other component)
     if (this.business.mode === 'MANUAL') this.active = true
   }
 
+  /** Called when user clicks to enter business info manually. */
   onClick (): void {
+    this.business.mode = 'MANUAL'
     this.isMrasJurisdiction = false
     this.jurisdiction = null
-    this.business = cloneDeep(EmptyExistingBusinessInfoIF)
     this.active = true
   }
 
   /** Jurisdiction initial value for draft. */
   get jurisdictionInitialVal (): any {
-    let country = this.getExistingBusinessInfo ? this.getExistingBusinessInfo.homeJurisdiction?.country : ''
-    let regions
+    const country = this.getExistingBusinessInfo ? this.getExistingBusinessInfo.homeJurisdiction?.country : ''
     let region = ''
-    let jurisdictionText = ''
-    let jur
+    let jur = {}
 
     if (this.getExistingBusinessInfo.homeJurisdiction) {
       if (this.getExistingBusinessInfo.homeJurisdiction?.region === 'FEDERAL') {
@@ -321,16 +333,13 @@ export default class ManualBusinessInfo extends Mixins(CountriesProvincesMixin, 
     }
 
     if (country && region) {
-      jur = {
-        country: country,
-        region: region
-      }
+      jur = { country, region }
 
       // set local jurisdiction property
-      this.jurisdiction = jur || ''
+      this.jurisdiction = jur || null
 
-      regions = this.getCountryRegions(country) as any[]
-      jurisdictionText = regions.find(p => p.short === region).name
+      const regions = this.getCountryRegions(country)
+      const jurisdictionText = regions.find(p => p.short === region).name
 
       // set local property based on jurisdiction value
       this.isMrasJurisdiction = MrasJurisdictions.includes(jurisdictionText.toLowerCase())
@@ -341,35 +350,36 @@ export default class ManualBusinessInfo extends Mixins(CountriesProvincesMixin, 
 
   /** Resets this component back to its initial state. */
   reset () {
-    this.businessLookup = { ...EmptyBusinessLookup }
-    this.setExistingBusinessInfo(this.businessLookup)
+    this.business = cloneDeep(EmptyExistingBusinessInfoIF)
+    this.setExistingBusinessInfo(this.business)
     // set this component to inactive (which shows the other component)
     this.active = false
   }
 
-  /** When Jurisdiction value changes */
+  /** Called when Jurisdiction value has changed. */
   onJurisdictionChange (jurisdiction: any): void {
     this.jurisdiction = jurisdiction
-    this.isMrasJurisdiction = MrasJurisdictions.includes(
-      this.jurisdiction?.text.toLowerCase()
-    )
+    this.isMrasJurisdiction = MrasJurisdictions.includes(this.jurisdiction?.text.toLowerCase())
+
     if (jurisdiction?.group === 0) {
-      this.business.homeJurisdiction.country = JurisdictionLocation.CA
-      if (jurisdiction.value === JurisdictionLocation.FD) {
-        this.business.homeJurisdiction.region = 'FEDERAL'
-      } else {
-        this.business.homeJurisdiction.region = jurisdiction.value
+      this.business.homeJurisdiction = {
+        country: JurisdictionLocation.CA,
+        region: (jurisdiction.value === JurisdictionLocation.FD) ? 'FEDERAL' : jurisdiction.value
       }
     }
 
     if (jurisdiction?.group === 1) {
-      this.business.homeJurisdiction.country = JurisdictionLocation.US
-      this.business.homeJurisdiction.region = jurisdiction.value
+      this.business.homeJurisdiction = {
+        country: JurisdictionLocation.US,
+        region: jurisdiction.value
+      }
     }
 
     if (jurisdiction?.group === 2) {
-      this.business.homeJurisdiction.country = jurisdiction.value
-      this.business.homeJurisdiction.region = ''
+      this.business.homeJurisdiction = {
+        country: jurisdiction.value,
+        region: ''
+      }
     }
 
     if (this.jurisdiction) {
@@ -397,12 +407,6 @@ export default class ManualBusinessInfo extends Mixins(CountriesProvincesMixin, 
     ]
   }
 
-  @Watch('business', { deep: true })
-  private async onBusinessChanged (): Promise<void> {
-    this.setExistingBusinessInfo(this.business)
-    this.active = true
-  }
-
   @Watch('getShowErrors')
   @Watch('business.homeJurisdiction')
   @Watch('business.incorporationDate')
@@ -422,9 +426,9 @@ export default class ManualBusinessInfo extends Mixins(CountriesProvincesMixin, 
   private onComponentValid (val: boolean): boolean {
     return (
       !!this.business.homeJurisdiction &&
-      !!this.business.identifier &&
-      !!this.business.legalName &&
-      !!this.business.incorporationDate
+      !!this.business.homeIdentifier &&
+      !!this.business.homeLegalName &&
+      !!this.business.homeIncorporationDate
     )
   }
 

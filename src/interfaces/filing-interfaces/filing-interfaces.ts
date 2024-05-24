@@ -92,6 +92,7 @@ export interface ContinuationInFilingIF {
   }
   continuationIn: {
     business?: { // expro data in BC
+      foundingDate: string // API format
       identifier: string
       legalName: string
     }
@@ -100,9 +101,12 @@ export interface ContinuationInFilingIF {
       region?: string
       legalName: string
       identifier: string
-      incorporationDate: string
+      incorporationDate: string // YYYY-MM-DD
       taxId?: string
-      affidavitFileKey: string
+      affidavitFile?: File
+      affidavitFileKey?: string
+      affidavitFileName?: string
+      affidavitFileUrl?: string
     }
     authorization: ContinuationAuthorizationIF
     contactPoint: ContactPointIF
@@ -113,8 +117,7 @@ export interface ContinuationInFilingIF {
     shareStructure: { shareClasses: ShareClassIF[] }
     courtOrder?: CourtOrderIF
     isConfirmed?: boolean // used only by UI
-    isUlc?: boolean // used only by UI
-    mode?: 'LOOKUP' | 'MANUAL' // used only by UI
+    mode?: 'EXPRO' | 'MANUAL' // used only by UI
     status?: EntityStates // only used by UI
   }
 }

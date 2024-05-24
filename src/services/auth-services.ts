@@ -113,8 +113,8 @@ export default class AuthServices {
       phone: contactInfo.phone,
       phoneExtension: contactInfo.extension
     }
-    const authUrl = sessionStorage.getItem('AUTH_API_URL')
-    const url = `${authUrl}entities/${businessId}/contacts`
+    const authApiUrl = sessionStorage.getItem('AUTH_API_URL')
+    const url = `${authApiUrl}entities/${businessId}/contacts`
 
     return axios.put(url, data).then(response => {
       const contacts = response?.data?.contacts[0]
