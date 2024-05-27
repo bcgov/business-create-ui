@@ -197,7 +197,7 @@
               class="pt-4 pt-sm-0"
             >
               <div id="business-number">
-                {{ getExistingBusinessInfo?.taxId || '[Unknown]' }}
+                {{ getExistingBusinessInfo?.taxId || '[Not Entered]' }}
               </div>
             </v-col>
           </v-row>

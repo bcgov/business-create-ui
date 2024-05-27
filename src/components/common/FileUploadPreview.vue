@@ -1,15 +1,15 @@
 <template>
   <v-form
     ref="form"
+    class="file-upload-preview"
     lazy-validation
   >
     <v-file-input
       v-model="fileUpload"
-      label="Select a file to upload"
+      :label="label"
       filled
       dense
       accept=".pdf"
-      class="file-upload-preview"
       :rules="fileUploadRules"
       show-size
       color="primary"
@@ -38,6 +38,7 @@ export default class FileUploadPreview extends Mixins(DocumentMixin) {
   @Prop({ default: false }) readonly showErrors!: boolean
   @Prop({ default: '' }) readonly customErrorMessage!: string
   @Prop({ default: 'File must be a PDF. Maximum 30MB.' }) readonly hint!: string
+  @Prop({ default: 'Select a file to upload' }) readonly label!: string
 
   // Refs
   $refs: {
@@ -61,6 +62,13 @@ export default class FileUploadPreview extends Mixins(DocumentMixin) {
           const maxSizeMB = this.maxSize / 1024
           const errorMsg = 'Exceeds maximum ' + maxSizeMB.toString() + ' MB file size'
           return (file?.size <= (this.maxSize * 1024)) || errorMsg
+        }
+        return true
+      },
+      (file: File) => {
+        if (file) {
+          const pattern = /^(.*)\.(pdf)$/i
+          return pattern.test(file.name) || 'Invalid file extension'
         }
         return true
       }
@@ -162,7 +170,7 @@ export default class FileUploadPreview extends Mixins(DocumentMixin) {
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
 
-:deep(.file-upload-preview) {
+:deep(.v-file-input) {
   .v-input__append-outer {
     margin-top: 10px !important
   }

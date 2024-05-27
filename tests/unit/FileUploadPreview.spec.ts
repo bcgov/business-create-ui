@@ -63,9 +63,9 @@ describe('FileUploadPreview component', () => {
       vuetify
     })
 
-    expect(wrapper.find('.file-upload-preview').exists()).toBe(true)
-    expect(wrapper.find('.file-upload-preview input[type="file"]').exists()).toBe(true)
-    expect(wrapper.find('.file-upload-preview button').exists()).toBe(true)
+    expect(wrapper.find('.v-file-input').exists()).toBe(true)
+    expect(wrapper.find('.v-file-input input[type="file"]').exists()).toBe(true)
+    expect(wrapper.find('.v-file-input button').exists()).toBe(true)
     expect(wrapper.find('.v-messages__message').text()).toEqual('File must be a PDF. Maximum 30MB.')
 
     wrapper.destroy()
@@ -77,7 +77,7 @@ describe('FileUploadPreview component', () => {
       vuetify
     })
 
-    const fileInput = wrapper.find('.file-upload-preview input[type="file"]')
+    const fileInput = wrapper.find('.v-file-input input[type="file"]')
     await fileInput.trigger('change')
     expect(wrapper.find('.error--text .v-messages__message').exists()).toBeFalsy()
 
@@ -90,7 +90,7 @@ describe('FileUploadPreview component', () => {
       vuetify
     })
 
-    const fileInput = wrapper.find('.file-upload-preview input[type="file"]')
+    const fileInput = wrapper.find('.v-file-input input[type="file"]')
     await fileInput.trigger('change')
     const messages = wrapper.findAll('.error--text .v-messages__message')
     expect(messages.length).toBe(1)
