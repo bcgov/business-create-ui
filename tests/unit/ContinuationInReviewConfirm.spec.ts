@@ -13,7 +13,7 @@ import { CourtOrderPoa } from '@bcrs-shared-components/court-order-poa'
 import StaffPayment from '@/components/common/StaffPayment.vue'
 
 describe('Continuation In Review Confirm component', () => {
-  it('renders the component correctly - first section', async () => {
+  it('renders the component correctly - Review and Confirm section', async () => {
     const wrapper = wrapperFactory(ContinuationInReviewConfirm)
     await Vue.nextTick()
 
@@ -41,7 +41,7 @@ describe('Continuation In Review Confirm component', () => {
     wrapper.destroy()
   })
 
-  it('renders the component correctly - second section', async () => {
+  it('renders the component correctly - Continuation Effective Date and Time section', async () => {
     const wrapper = wrapperFactory(ContinuationInReviewConfirm)
     await Vue.nextTick()
 
@@ -58,7 +58,7 @@ describe('Continuation In Review Confirm component', () => {
     wrapper.destroy()
   })
 
-  it('renders the component correctly - third section', async () => {
+  it('renders the component correctly - Document Delivery section', async () => {
     const wrapper = wrapperFactory(ContinuationInReviewConfirm)
     await Vue.nextTick()
 
@@ -75,7 +75,7 @@ describe('Continuation In Review Confirm component', () => {
     wrapper.destroy()
   })
 
-  it('renders the component correctly - fourth section', async () => {
+  it('renders the component correctly - Certify section', async () => {
     const wrapper = wrapperFactory(ContinuationInReviewConfirm)
     await Vue.nextTick()
 
@@ -92,7 +92,7 @@ describe('Continuation In Review Confirm component', () => {
     wrapper.destroy()
   })
 
-  it.skip('renders the component correctly - fifth section', async () => {
+  it('renders the component correctly - Court Order / POA section', async () => {
     const wrapper = wrapperFactory(
       ContinuationInReviewConfirm,
       null,
@@ -119,7 +119,7 @@ describe('Continuation In Review Confirm component', () => {
     wrapper.destroy()
   })
 
-  it('renders the component correctly - sixth section', async () => {
+  it('renders the component correctly - Staff Payment section', async () => {
     const wrapper = wrapperFactory(
       ContinuationInReviewConfirm,
       null,

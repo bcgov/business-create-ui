@@ -1,6 +1,11 @@
 import axios from 'axios'
 import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
 
+/**
+ * This file exports an instance of Axios with a bearer token added to the request
+ * headers.
+ */
+
 const instance = axios.create()
 
 instance.interceptors.request.use(

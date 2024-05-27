@@ -17,7 +17,9 @@
           v-html="text"
         />
 
-        <RegistriesContactInfo class="mt-6" />
+        <div class="mt-6" />
+
+        <RegistriesContactInfo v-if="showContactInfo" />
       </v-card-text>
 
       <v-card-actions class="justify-center pt-0 pb-9">
@@ -47,6 +49,7 @@ export default class GenericErrorDialog extends Vue {
   @Prop({ default: false }) readonly dialog!: boolean
   @Prop({ default: 'Please contact us:' }) readonly text!: string
   @Prop({ default: 'An error occurred' }) readonly title!: string
+  @Prop({ default: true }) readonly showContactInfo!: boolean
 
   @Emit() close (): void {}
 }

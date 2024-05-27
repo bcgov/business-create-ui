@@ -42,7 +42,7 @@
 
         <!-- Registration Number in B.C. -->
         <article
-          v-if="isLookup"
+          v-if="isExpro"
           class="section-container"
         >
           <v-row no-gutters>
@@ -59,15 +59,15 @@
               class="pt-4 pt-sm-0"
             >
               <div id="registration-number-bc">
-                {{ getExistingBusinessInfo?.businessIdentifier || '[Unknown]' }}
+                {{ getExistingBusinessInfo?.bcIdentifier || '[Unknown]' }}
               </div>
             </v-col>
           </v-row>
         </article>
 
-        <!-- Registered Name in B.C. -->
+        <!-- Name in B.C. -->
         <article
-          v-if="isLookup"
+          v-if="isExpro"
           class="section-container"
         >
           <v-row no-gutters>
@@ -76,15 +76,15 @@
               sm="3"
               class="pr-4"
             >
-              <label>Registered Name in B.C.</label>
+              <label>Name in B.C.</label>
             </v-col>
             <v-col
               cols="12"
               sm="9"
               class="pt-4 pt-sm-0"
             >
-              <div id="registered-name-bc">
-                {{ getExistingBusinessInfo?.businessLegalName || '[Unknown]' }}
+              <div id="name-bc">
+                {{ getExistingBusinessInfo?.bcLegalName || '[Unknown]' }}
               </div>
             </v-col>
           </v-row>
@@ -92,7 +92,7 @@
 
         <!-- Date of Registration in B.C. -->
         <article
-          v-if="isLookup"
+          v-if="isExpro"
           class="section-container"
         >
           <v-row no-gutters>
@@ -109,30 +109,7 @@
               class="pt-4 pt-sm-0"
             >
               <div id="registration-date-bc">
-                <!-- *** TODO: verify/fix format -->
-                {{ getExistingBusinessInfo?.businessFoundingDate || '[Unknown]' }}
-              </div>
-            </v-col>
-          </v-row>
-        </article>
-
-        <!-- Registered Name in Home Jurisdiction -->
-        <article class="section-container">
-          <v-row no-gutters>
-            <v-col
-              cols="12"
-              sm="3"
-              class="pr-4"
-            >
-              <label>Registered Name in Home Jurisdiction</label>
-            </v-col>
-            <v-col
-              cols="12"
-              sm="9"
-              class="pt-4 pt-sm-0"
-            >
-              <div id="registered-name-home">
-                {{ getExistingBusinessInfo?.legalName || '[Unknown]' }}
+                {{ registrationDateBc || '[Unknown]' }}
               </div>
             </v-col>
           </v-row>
@@ -154,13 +131,13 @@
               class="pt-4 pt-sm-0"
             >
               <div id="registration-number-home">
-                {{ getExistingBusinessInfo?.identifier || '[Unknown]' }}
+                {{ getExistingBusinessInfo?.homeIdentifier || '[Unknown]' }}
               </div>
             </v-col>
           </v-row>
         </article>
 
-        <!-- Date of Incorporation, Continuation or Amalgamation in Foreign Jurisdiction -->
+        <!-- Name in Home Jurisdiction -->
         <article class="section-container">
           <v-row no-gutters>
             <v-col
@@ -168,7 +145,29 @@
               sm="3"
               class="pr-4"
             >
-              <label>Date of Incorporation, Continuation or Amalgamation in Foreign Jurisdiction</label>
+              <label>Name in Home Jurisdiction</label>
+            </v-col>
+            <v-col
+              cols="12"
+              sm="9"
+              class="pt-4 pt-sm-0"
+            >
+              <div id="name-home">
+                {{ getExistingBusinessInfo?.homeLegalName || '[Unknown]' }}
+              </div>
+            </v-col>
+          </v-row>
+        </article>
+
+        <!-- Date of Incorporation, Continuation or Amalgamation in Home Jurisdiction -->
+        <article class="section-container">
+          <v-row no-gutters>
+            <v-col
+              cols="12"
+              sm="3"
+              class="pr-4"
+            >
+              <label>Date of Incorporation, Continuation or Amalgamation in Home Jurisdiction</label>
             </v-col>
             <v-col
               cols="12"
@@ -176,7 +175,7 @@
               class="pt-4 pt-sm-0"
             >
               <div id="incorporation-date-home">
-                {{ getExistingBusinessInfo?.incorporationDate || '[Unknown]' }}
+                {{ incorporationDateHome || '[Unknown]' }}
               </div>
             </v-col>
           </v-row>
@@ -224,14 +223,37 @@
               class="pt-4 pt-sm-0"
             >
               <ul id="continuation-authorization-file">
+                <!-- the director's affidavit file -->
+                <li v-if="isContinuationInAffidavitRequired">
+                  <template v-if="getExistingBusinessInfo.affidavitFileName">
+                    <v-icon color="primary">
+                      mdi-file-pdf-outline
+                    </v-icon>
+                    <span>{{ getExistingBusinessInfo.affidavitFileName }}</span>
+                  </template>
+                  <template v-else>
+                    <v-icon color="error">
+                      mdi-close
+                    </v-icon>
+                    <span>Missing Affidavit</span>
+                  </template>
+                </li>
+
+                <!-- the proof of authorization files -->
                 <li
                   v-for="item in getContinuationAuthorization?.files"
                   :key="item.fileKey"
                 >
-                  <v-icon color="green darken-2">
-                    mdi-check
+                  <v-icon color="primary">
+                    mdi-file-pdf-outline
                   </v-icon>
                   <span>{{ item.fileName }}</span>
+                </li>
+                <li v-if="!getContinuationAuthorization?.files?.length">
+                  <v-icon color="error">
+                    mdi-close
+                  </v-icon>
+                  <span>Missing Authorization Files</span>
                 </li>
               </ul>
             </v-col>
@@ -291,11 +313,12 @@
 <script lang="ts">
 import { Component, Mixins } from 'vue-property-decorator'
 import { Getter } from 'pinia-class'
-import { getName } from 'country-list'
 import { useStore } from '@/store/store'
 import { RouteNames } from '@/enums'
 import { ContinuationAuthorizationIF, ExistingBusinessInfoIF } from '@/interfaces'
 import { DateMixin } from '@/mixins'
+import { CanJurisdictions, IntlJurisdictions, UsaJurisdiction } from '@bcrs-shared-components/jurisdiction/list-data'
+import { JurisdictionLocation } from '@bcrs-shared-components/enums'
 
 @Component({})
 export default class SummaryBusinessHomeJurisdiction extends Mixins(DateMixin) {
@@ -305,64 +328,47 @@ export default class SummaryBusinessHomeJurisdiction extends Mixins(DateMixin) {
   // Getters
   @Getter(useStore) getContinuationAuthorization!: ContinuationAuthorizationIF
   @Getter(useStore) getExistingBusinessInfo!: ExistingBusinessInfoIF
+  @Getter(useStore) isContinuationInAffidavitRequired!: boolean
   @Getter(useStore) isContinuationInBusinessHomeValid!: boolean
 
-  // *** data from COLIN looks like this:
-  // 'business': {
-  //     'businessNumber': self.business_number,
-  //     'corpState': self.corp_state,
-  //     'corpStateClass': self.corp_state_class,
-  //     'email': self.email,
-  //     'foundingDate': self.founding_date,
-  //     'goodStanding': self.good_standing,
-  //     'identifier': self.corp_num,
-  //     'jurisdiction': self.jurisdiction,
-  //     'homeRecognitionDate': self.home_recogn_dt,
-  //     'homeJurisdictionNumber': self.home_juris_num,
-  //     'homeCompanyName': self.home_company_nme,
-  //     'lastAgmDate': self.last_agm_date,
-  //     'lastArDate': self.last_ar_date,
-  //     'lastLedgerTimestamp': self.last_ledger_timestamp,
-  //     'legalName': self.corp_name,
-  //     'legalType': self.corp_type,
-  //     'status': self.status
-  // }
-
-  /** Whether the existing business data was looked up (ie, is an extrapro). */
-  get isLookup (): boolean {
-    return this.getExistingBusinessInfo?.mode === 'LOOKUP'
+  /** Whether the existing business is an extrapro. */
+  get isExpro (): boolean {
+    return this.getExistingBusinessInfo?.mode === 'EXPRO'
   }
 
-  // NOT NEEDED ATM
-  // /** Whether the existing business data was manually entered. */
-  // get isManual (): boolean {
-  //   return this.getExistingBusinessInfo?.mode === 'MANUAL'
-  // }
-
-  /** The home jurisdiction. */
+  /** The text version of the home jurisdiction. */
   get homeJurisdiction (): string {
-    const hj = this.getExistingBusinessInfo?.homeJurisdiction
-    if (hj?.country) {
-      const country = getName(hj.country)
-      const region = (hj.region === 'FEDERAL' ? 'Federal' : hj.region)
-      if (region) return `${region}, ${country}`
-      return country
+    const jurisdiction = this.getExistingBusinessInfo?.homeJurisdiction // may be undefined or null
+
+    if (jurisdiction?.country === JurisdictionLocation.CA) {
+      if (jurisdiction?.region === 'FEDERAL') return 'Federal'
+      return CanJurisdictions.find(can => can.value === jurisdiction?.region)?.text || 'Canada'
     }
-    return null
+
+    if (jurisdiction?.country === JurisdictionLocation.US) {
+      const state = UsaJurisdiction.find(usa => usa.value === jurisdiction?.region)?.text
+      return (state ? `${state}, US` : 'USA')
+    }
+
+    return IntlJurisdictions.find(intl => intl.value === jurisdiction?.country)?.text || null
   }
 
-  /** The expro identifier and name (in BC). */
-  get extraproRegistration (): string {
-    const identifier = this.getExistingBusinessInfo?.businessIdentifier
-    const name = this.getExistingBusinessInfo?.businessLegalName
-    if (identifier && name) return `${identifier} - ${name}`
-    return null
+  /** The formatted date of registration in BC. */
+  get registrationDateBc (): string {
+    return this.yyyyMmDdToPacificDate(this.getExistingBusinessInfo?.bcFoundingDate, true, false)
   }
 
+  /** The formatted date of incorporation in the home jurisdiction. */
+  get incorporationDateHome (): string {
+    return this.yyyyMmDdToPacificDate(this.getExistingBusinessInfo?.homeIncorporationDate, true, false)
+  }
+
+  /** The formatted authorization date. */
   get authorizationDate (): string {
     return this.yyyyMmDdToPacificDate(this.getContinuationAuthorization?.date, true, false)
   }
 
+  /** The formatted expiry date. */
   get expiryDate (): string {
     return this.yyyyMmDdToPacificDate(this.getContinuationAuthorization?.expiryDate, true, false)
   }
@@ -398,6 +404,10 @@ article:not(:last-child) {
     list-style: none;
     margin-left: 2rem;
     padding-left: 0;
+
+    li:not(:first-child) {
+      margin-top: 0.25rem;
+    }
 
     li > i {
       margin-left: -2rem;

@@ -12,7 +12,8 @@ describe('Summary Business Home Jurisdiction component', () => {
       null,
       null,
       {
-        isLookup: () => true
+        isLookup: () => true,
+        isExpro: () => true
       }
     )
     await Vue.nextTick()
@@ -31,11 +32,11 @@ describe('Summary Business Home Jurisdiction component', () => {
 
     expect(articles.at(0).find('label').text()).toBe('Home Jurisdiction')
     expect(articles.at(1).find('label').text()).toBe('Registration Number in B.C.')
-    expect(articles.at(2).find('label').text()).toBe('Registered Name in B.C.')
+    expect(articles.at(2).find('label').text()).toBe('Name in B.C.')
     expect(articles.at(3).find('label').text()).toBe('Date of Registration in B.C.')
-    expect(articles.at(4).find('label').text()).toBe('Registered Name in Home Jurisdiction')
-    expect(articles.at(5).find('label').text()).toBe('Registration Number in Home Jurisdiction')
-    expect(articles.at(6).find('label').text()).toBe('Date of Incorporation, Continuation or Amalgamation in Foreign Jurisdiction')
+    expect(articles.at(4).find('label').text()).toBe('Registration Number in Home Jurisdiction')
+    expect(articles.at(5).find('label').text()).toBe('Name in Home Jurisdiction')
+    expect(articles.at(6).find('label').text()).toBe('Date of Incorporation, Continuation or Amalgamation in Home Jurisdiction')
     expect(articles.at(7).find('label').text()).toBe('Business Number')
 
     wrapper.destroy()

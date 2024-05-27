@@ -5,6 +5,7 @@ import {
   EmptyNameRequest,
   EmptyOfficer,
   EmptyNaics,
+  ExistingBusinessInfoIF,
   StateModelIF
 } from '@/interfaces'
 import { EmptyAddress } from '@bcrs-shared-components/interfaces'
@@ -217,7 +218,7 @@ export const stateModel: StateModelIF = {
   continuationIn: {
     businessHomeValid: false,
     continuationAuthorization: null,
-    existingBusinessInfo: null
+    existingBusinessInfo: {} as ExistingBusinessInfoIF
   },
   restoration: {
     applicationDate: null,

@@ -27,7 +27,7 @@
 
     <!-- active = display/edit mode -->
     <template v-if="active">
-      <!-- Jurisdiction -->
+      <!-- Jurisdiction + Undo button -->
       <v-row no-gutters>
         <v-col
           cols="12"
@@ -41,8 +41,9 @@
           sm="7"
         >
           <Jurisdiction
-            class="mb-n3"
+            class="home-jurisdiction"
             :showUsaJurisdictions="true"
+            label="Jurisdiction"
             :initialValue="jurisdictionInitialVal"
             :errorMessages="jurisdictionErrorMessage"
             @change="onJurisdictionChange($event)"
@@ -67,29 +68,31 @@
           </v-btn>
         </v-col>
       </v-row>
+
       <v-form
-        v-if="jurisdiction && !isMrasJurisdiction"
         ref="manualFormRef"
-        lazy-validation
+        v-model="formValid"
         @submit.prevent
       >
         <!-- Identifying Number -->
         <v-row
-          class="mt-2"
+          class="mt-6"
           no-gutters
         >
           <v-col
             cols="12"
             sm="3"
-          />
+          >
+            <!-- empty column -->
+          </v-col>
 
           <v-col
             cols="12"
             sm="7"
           >
             <v-text-field
-              id="business-name"
-              v-model="business.identifier"
+              v-model="business.homeIdentifier"
+              class="identifying-number"
               filled
               hide-details="auto"
               label="Identifying Number"
@@ -122,8 +125,8 @@
             sm="7"
           >
             <v-text-field
-              id="business-name"
-              v-model="business.legalName"
+              v-model="business.homeLegalName"
+              class="business-name"
               filled
               hide-details="auto"
               label="Business Name in Home Jurisdiction"
@@ -147,19 +150,23 @@
           <v-col
             cols="12"
             sm="3"
-          />
+          >
+            <!-- empty column -->
+          </v-col>
 
           <v-col
             cols="12"
             sm="7"
           >
             <v-text-field
-              id="business-number"
               v-model="business.taxId"
+              v-mask="['#########']"
+              class="business-number"
               filled
               hide-details="auto"
               label="Business Number (Optional)"
-              :hint="'First 9 digits of the CRA Business Number if you have one'"
+              hint="First 9 digits of the CRA Business Number if you have one"
+              :rules="getShowErrors ? Rules.BusinessNumberRules : []"
             />
           </v-col>
 
@@ -179,7 +186,9 @@
           <v-col
             cols="12"
             sm="3"
-          />
+          >
+            <!-- empty column -->
+          </v-col>
 
           <v-col
             cols="12"
@@ -191,10 +200,11 @@
               title="Incorporation Date in Home Jurisdiction"
               :nudgeRight="40"
               :nudgeTop="85"
-              :initialValue="getExistingBusinessInfo.incorporationDate"
+              :persistentHint="true"
+              :initialValue="getExistingBusinessInfo.homeIncorporationDate"
               :inputRules="getShowErrors ? incorporationDateRules : []"
               :maxDate="getCurrentDate"
-              @emitDateSync="business.incorporationDate = $event"
+              @emitDateSync="$set(business, 'homeIncorporationDate', $event)"
             />
           </v-col>
 
@@ -206,11 +216,14 @@
           </v-col>
         </v-row>
 
+        <!-- message box -->
         <v-row no-gutters>
           <v-col
             cols="12"
             sm="3"
-          />
+          >
+            <!-- empty column -->
+          </v-col>
 
           <v-col
             cols="12"
@@ -238,23 +251,27 @@
 <script lang="ts">
 import { Component, Emit, Mixins, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
+import { mask } from 'vue-the-mask'
 import { useStore } from '@/store/store'
 import { DateMixin } from '@/mixins'
-import { cloneDeep, isEqual } from 'lodash'
-import { EmptyBusinessLookup, EmptyExistingBusinessInfoIF, ExistingBusinessInfoIF } from '@/interfaces'
+import { ExistingBusinessInfoIF } from '@/interfaces'
+import { Rules } from '@/rules'
+import { VuetifyRuleFunction } from '@/types'
 import MessageBox from '@/components/common/MessageBox.vue'
 import { Jurisdiction } from '@bcrs-shared-components/jurisdiction'
 import { DatePicker as DatePickerShared } from '@bcrs-shared-components/date-picker'
 import { JurisdictionLocation } from '@bcrs-shared-components/enums'
 import { CountriesProvincesMixin } from '@/mixins/'
 import { FormIF } from '@bcrs-shared-components/interfaces'
-import { MrasJurisdictions } from '@bcrs-shared-components/jurisdiction/list-data'
 
 @Component({
   components: {
     DatePickerShared,
     Jurisdiction,
     MessageBox
+  },
+  directives: {
+    mask
   }
 })
 export default class ManualBusinessInfo extends Mixins(CountriesProvincesMixin, DateMixin) {
@@ -264,53 +281,57 @@ export default class ManualBusinessInfo extends Mixins(CountriesProvincesMixin, 
     incorporationDateRef: DatePickerShared
   }
 
+  readonly Rules = Rules
+
   @Getter(useStore) getCurrentDate!: string
   @Getter(useStore) getExistingBusinessInfo!: ExistingBusinessInfoIF
   @Getter(useStore) getShowErrors!: boolean
 
   @Action(useStore) setExistingBusinessInfo!: (x: ExistingBusinessInfoIF) => void
-  @Action(useStore) setShowErrors!: (x: boolean) => void
 
   // Local properties
   active = false
-  businessLookup = null
   business = {} as ExistingBusinessInfoIF
-  jurisdiction = null
-  isMrasJurisdiction = false
-  jurisdictionErrorMessage = ''
+  formValid = false
 
-  /** Whether to show this component. */
-  get showComponent (): boolean {
-    return true
+  readonly identifyingNumberRules: Array<VuetifyRuleFunction> = [
+    (v) => !!v || 'Identifying Number is required'
+  ]
+
+  readonly businessNameRules: Array<VuetifyRuleFunction> = [
+    (v) => !!v || 'Business Name is required',
+    (v) => (v && v.length <= 1000) || 'Cannot exceed 1000 characters'
+  ]
+
+  readonly incorporationDateRules: Array<VuetifyRuleFunction> = [
+    (v) => !!v || 'Incorporation Date is required'
+  ]
+
+  get jurisdictionErrorMessage (): string {
+    return (this.getShowErrors && !this.business.homeJurisdiction) ? 'Jurisdiction is required' : ''
   }
 
-  /** Whether we have a looked-up business. */
-  get haveLookupBusiness (): boolean {
-    return !isEqual(this.business, {})
-  }
-
+  /** Called when this component is mounted. */
   mounted (): void {
-    // get the business info object from the store or initialize it
-    if (this.getExistingBusinessInfo) this.business = this.getExistingBusinessInfo
+    // point business variable to Existing Business Info object from the store, if it exists
+    if (this.getExistingBusinessInfo) {
+      this.business = this.getExistingBusinessInfo
+    }
 
     // if mode is MANUAL, set this component to active (which hides the other component)
     if (this.business.mode === 'MANUAL') this.active = true
   }
 
+  /** Called when user clicks to enter business info manually. */
   onClick (): void {
-    this.isMrasJurisdiction = false
-    this.jurisdiction = null
-    this.business = cloneDeep(EmptyExistingBusinessInfoIF)
+    this.business.mode = 'MANUAL'
     this.active = true
   }
 
   /** Jurisdiction initial value for draft. */
   get jurisdictionInitialVal (): any {
-    let country = this.getExistingBusinessInfo ? this.getExistingBusinessInfo.homeJurisdiction?.country : ''
-    let regions
+    const country = this.getExistingBusinessInfo ? this.getExistingBusinessInfo.homeJurisdiction?.country : ''
     let region = ''
-    let jurisdictionText = ''
-    let jur
 
     if (this.getExistingBusinessInfo.homeJurisdiction) {
       if (this.getExistingBusinessInfo.homeJurisdiction?.region === 'FEDERAL') {
@@ -320,114 +341,74 @@ export default class ManualBusinessInfo extends Mixins(CountriesProvincesMixin, 
       }
     }
 
-    if (country && region) {
-      jur = {
-        country: country,
-        region: region
-      }
+    if (country && region) return { country, region }
 
-      // set local jurisdiction property
-      this.jurisdiction = jur || ''
-
-      regions = this.getCountryRegions(country) as any[]
-      jurisdictionText = regions.find(p => p.short === region).name
-
-      // set local property based on jurisdiction value
-      this.isMrasJurisdiction = MrasJurisdictions.includes(jurisdictionText.toLowerCase())
-    }
-
-    return jur
+    return null
   }
 
   /** Resets this component back to its initial state. */
   reset () {
-    this.businessLookup = { ...EmptyBusinessLookup }
-    this.setExistingBusinessInfo(this.businessLookup)
+    this.business = {} as ExistingBusinessInfoIF
+    this.setExistingBusinessInfo(this.business)
     // set this component to inactive (which shows the other component)
     this.active = false
   }
 
-  /** When Jurisdiction value changes */
+  /** Called when Jurisdiction value has changed. */
   onJurisdictionChange (jurisdiction: any): void {
-    this.jurisdiction = jurisdiction
-    this.isMrasJurisdiction = MrasJurisdictions.includes(
-      this.jurisdiction?.text.toLowerCase()
-    )
     if (jurisdiction?.group === 0) {
-      this.business.homeJurisdiction.country = JurisdictionLocation.CA
-      if (jurisdiction.value === JurisdictionLocation.FD) {
-        this.business.homeJurisdiction.region = 'FEDERAL'
-      } else {
-        this.business.homeJurisdiction.region = jurisdiction.value
-      }
+      // set property reactively (in case it was null)
+      this.$set(this.business, 'homeJurisdiction', {
+        country: JurisdictionLocation.CA,
+        region: (jurisdiction.value === JurisdictionLocation.FD) ? 'FEDERAL' : jurisdiction.value
+      })
     }
 
     if (jurisdiction?.group === 1) {
-      this.business.homeJurisdiction.country = JurisdictionLocation.US
-      this.business.homeJurisdiction.region = jurisdiction.value
+      // set property reactively (in case it was null)
+      this.$set(this.business, 'homeJurisdiction', {
+        country: JurisdictionLocation.US,
+        region: jurisdiction.value
+      })
     }
 
     if (jurisdiction?.group === 2) {
-      this.business.homeJurisdiction.country = jurisdiction.value
-      this.business.homeJurisdiction.region = ''
+      // set property reactively (in case it was null)
+      this.$set(this.business, 'homeJurisdiction', {
+        country: jurisdiction.value,
+        region: ''
+      })
     }
-
-    if (this.jurisdiction) {
-      this.setShowErrors(false)
-    }
-
-    this.jurisdictionErrorMessage = this.jurisdiction ? '' : 'Home jurisdiction is required'
   }
 
-  get identifyingNumberRules (): Array<(v: string) => boolean | string> {
-    return [
-      v => !!v || 'Identifying Number is required'
-    ]
-  }
-
-  get businessNameRules (): Array<(v: string) => boolean | string> {
-    return [
-      v => !!v || 'Business Name is required'
-    ]
-  }
-
-  get incorporationDateRules (): Array<(v: string) => boolean | string> {
-    return [
-      v => !!v || 'Incorporation Date is required'
-    ]
-  }
-
-  @Watch('business', { deep: true })
-  private async onBusinessChanged (): Promise<void> {
-    this.setExistingBusinessInfo(this.business)
-    this.active = true
-  }
-
+  /** Validates the form and other components. */
+  @Watch('active')
   @Watch('getShowErrors')
-  @Watch('business.homeJurisdiction')
-  @Watch('business.incorporationDate')
-  private onShowErrors (): void {
-    if (!this.jurisdiction && this.getShowErrors) {
-      this.jurisdictionErrorMessage = this.jurisdiction ? '' : 'Home jurisdiction is required'
-    }
-    if (this.jurisdiction && !this.isMrasJurisdiction && this.getShowErrors) {
-      this.$refs.manualFormRef.validate()
-      this.$refs.incorporationDateRef.validateForm()
+  private async onGetShowErrors (): Promise<void> {
+    if (this.active && this.getShowErrors) {
+      await this.$nextTick() // wait for form to finish rendering
+      this.$refs.manualFormRef?.validate()
+      this.$refs.incorporationDateRef?.validateForm()
     }
   }
 
-  @Watch('business', { deep: true })
+  /** Emits form validity. */
+  @Watch('business.homeJurisdiction')
+  @Watch('business.homeIncorporationDate')
+  @Watch('formValid')
   @Emit('valid')
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  private onComponentValid (val: boolean): boolean {
+  private onComponentValid (): boolean {
+    // this form is valid if we have the home jurisdiction (custom component)
+    // and we have the home incorporation date (custom component)
+    // and the other form (Vuetify) components are valid
     return (
       !!this.business.homeJurisdiction &&
-      !!this.business.identifier &&
-      !!this.business.legalName &&
-      !!this.business.incorporationDate
+      !!this.business.homeIncorporationDate &&
+      this.formValid
     )
   }
 
+  /** Emit whether we have become active or inactive. */
   @Watch('active', { immediate: true })
   @Emit('active')
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
