@@ -4,7 +4,7 @@
       <!-- Summary Warning -->
       <div
         v-if="isSummary && showErrorSummary"
-        class="share-summary-invalid-message"
+        class="share-summary-invalid-message pa-5"
       >
         <span>
           <v-icon color="error">mdi-information-outline</v-icon>
@@ -343,11 +343,6 @@ export default class ListShareClass extends Vue {
 
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
-
-.share-summary-invalid-message {
-  padding: 1.25rem;
-  color: $app-red;
-}
 
 tbody {
   tr:hover {

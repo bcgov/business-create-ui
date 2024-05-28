@@ -33,7 +33,7 @@
 
     <!-- active = display/edit mode -->
     <template v-if="active">
-      <!-- Extraprovincial Registration in B.C. + Undo button-->
+      <!-- Extraprovincial Registration in B.C. + clear button-->
       <v-row no-gutters>
         <v-col
           cols="12"
@@ -44,36 +44,43 @@
 
         <v-col
           cols="12"
-          sm="7"
+          sm="9"
+          class="d-flex justify-space-between"
         >
           <v-text-field
-            class="incorporation-number"
+            class="expro-registration-number"
             filled
             hide-details
-            label="B.C. Extraprovincial Incorporation Number"
+            label="B.C. Extraprovincial Registration Number"
             readonly
+            xclearable
             :value="business.bcIdentifier"
+            @click:append="reset()"
           />
-        </v-col>
-
-        <v-col
-          cols="12"
-          sm="2"
-        >
-          <v-btn
-            id="undo-button"
-            class="float-sm-right float-none"
-            text
-            color="primary"
-            @click="reset()"
+          <v-tooltip
+            top
+            content-class="top-tooltip"
+            transition="fade-transition"
           >
-            <v-icon small>
-              mdi-undo
-            </v-icon>
-            <span>Undo</span>
-          </v-btn>
+            <template #activator="{ on }">
+              <!-- align clear button on top of incorporation number text field -->
+              <v-btn
+                class="clear-info-btn float-right mt-3 ml-n10 mr-1"
+                color="primary"
+                icon
+                aria-label="Clear existing business information"
+                @click="reset()"
+                v-on="on"
+              >
+                <v-icon>mdi-close</v-icon>
+              </v-btn>
+            </template>
+            Clear existing business information.
+          </v-tooltip>
         </v-col>
       </v-row>
+
+      <v-divider class="mt-8" />
 
       <!-- active business -->
       <v-form
@@ -84,14 +91,14 @@
       >
         <!-- Home Jurisdiction -->
         <v-row
-          class="mt-6"
+          class="mt-8"
           no-gutters
         >
           <v-col
             cols="12"
             sm="3"
           >
-            <label>Home Jurisdiction</label>
+            <label>Home Jurisdiction Information</label>
           </v-col>
 
           <v-col
@@ -109,7 +116,7 @@
           </v-col>
         </v-row>
 
-        <!-- Registration in Home Jurisdiction -->
+        <!-- Identifying Number in Home Jurisdiction -->
         <v-row
           class="mt-6"
           no-gutters
@@ -118,7 +125,7 @@
             cols="12"
             sm="3"
           >
-            <label>Registration in Home Jurisdiction</label>
+            <!-- empty column -->
           </v-col>
 
           <v-col
@@ -127,10 +134,10 @@
           >
             <v-text-field
               v-model="business.homeIdentifier"
-              class="registration-home-jurisdiction"
+              class="identifying-number-home"
               filled
               hide-details="auto"
-              label="Registration in Home Jurisdiction"
+              label="Identifying Number in Home Jurisdiction"
               :rules="getShowErrors ? homeIdentifierRules : []"
             />
           </v-col>
@@ -145,7 +152,7 @@
             cols="12"
             sm="3"
           >
-            <label>Name in Home Jurisdiction</label>
+            <!-- empty column -->
           </v-col>
 
           <v-col
@@ -163,7 +170,7 @@
           </v-col>
         </v-row>
 
-        <!-- Date of Incorporation, Continuation or Amalgamation in Home Jurisdiction -->
+        <!-- Date of Incorporation -->
         <v-row
           class="mt-6"
           no-gutters
@@ -172,7 +179,7 @@
             cols="12"
             sm="3"
           >
-            <label>Date of Incorporation, Continuation or Amalgamation in Home Jurisdiction</label>
+            <!-- empty column -->
           </v-col>
 
           <v-col
@@ -182,9 +189,10 @@
             <DatePickerShared
               id="incorporation-date"
               ref="incorporationDateRef"
-              title="Date of Incorporation, Continuation or Amalgamation in Home Jurisdiction"
+              title="Date of Incorporation"
               :nudgeRight="40"
               :nudgeTop="85"
+              hint="Date of Incorporation, Continuation or Amalgamation in Home Jurisdiction"
               :persistentHint="true"
               :initialValue="business.homeIncorporationDate"
               :inputRules="getShowErrors ? incorporationDateRules: []"
@@ -196,14 +204,14 @@
 
         <!-- Business Number -->
         <v-row
-          class="mt-6"
+          class="mt-4"
           no-gutters
         >
           <v-col
             cols="12"
             sm="3"
           >
-            <label>Business Number</label>
+            <!-- empty column -->
           </v-col>
 
           <v-col
@@ -269,7 +277,7 @@
 
         <!-- message box -->
         <v-row
-          class="mt-6"
+          class="mt-8"
           no-gutters
         >
           <v-col
@@ -292,7 +300,7 @@
 
         <!-- Confirmation -->
         <v-row
-          class="mt-6"
+          class="mt-8"
           no-gutters
         >
           <v-col
@@ -494,7 +502,7 @@ export default class ExtraproRegistration extends Mixins(DateMixin, DocumentMixi
   }
 
   readonly homeIdentifierRules: Array<VuetifyRuleFunction> = [
-    (v) => !!v || 'Registration is required',
+    (v) => !!v || 'Identifying Number is required',
     (v) => (v && v.length <= 50) || 'Cannot exceed 50 characters'
   ]
 
@@ -505,9 +513,9 @@ export default class ExtraproRegistration extends Mixins(DateMixin, DocumentMixi
 
   get incorporationDateRules (): Array<VuetifyRuleFunction> {
     return [
-      (v) => !!v || 'Incorporation Date is required',
+      (v) => !!v || 'Date of Incorporation is required',
       () => (this.business.homeIncorporationDate <= this.getCurrentDate) ||
-        'Incorporation Date cannot be in the future'
+        'Date of Incorporation cannot be in the future'
     ]
   }
 
@@ -755,6 +763,19 @@ label {
   pointer-events: none;
 }
 
+#incorporation-date {
+  // show pointer on hover
+  :deep(.v-input__slot) {
+    pointer-events: auto;
+    cursor: pointer;
+  }
+
+  // set icon color
+  :deep(.v-input__icon--append .v-icon) {
+    color: $app-blue !important;
+  }
+}
+
 // align the checkbox with its label
 :deep(.v-input--checkbox .v-input__slot) {
   align-items: flex-start;
@@ -767,6 +788,7 @@ label {
   color: $gray9;
 }
 
+// style the upload affidavit bullets
 ul {
   list-style: none;
   color: $gray7;

@@ -27,7 +27,7 @@
 
     <!-- active = display/edit mode -->
     <template v-if="active">
-      <!-- Jurisdiction + Undo button -->
+      <!-- Jurisdiction + clear button -->
       <v-row no-gutters>
         <v-col
           cols="12"
@@ -38,7 +38,8 @@
 
         <v-col
           cols="12"
-          sm="7"
+          sm="9"
+          class="d-flex justify-space-between"
         >
           <Jurisdiction
             class="home-jurisdiction"
@@ -46,28 +47,33 @@
             label="Jurisdiction"
             :initialValue="jurisdictionInitialVal"
             :errorMessages="jurisdictionErrorMessage"
+            :showAppendIcon="false"
             @change="onJurisdictionChange($event)"
           />
-        </v-col>
-
-        <v-col
-          cols="12"
-          sm="2"
-        >
-          <v-btn
-            id="undo-button"
-            class="float-sm-right float-none"
-            text
-            color="primary"
-            @click="reset()"
+          <v-tooltip
+            top
+            content-class="top-tooltip"
+            transition="fade-transition"
           >
-            <v-icon small>
-              mdi-undo
-            </v-icon>
-            <span>Undo</span>
-          </v-btn>
+            <template #activator="{ on }">
+              <!-- align clear button on top of jurisdiction component -->
+              <v-btn
+                class="clear-info-btn float-right mt-3 ml-n10 mr-1"
+                color="primary"
+                icon
+                aria-label="Clear existing business information"
+                @click="reset()"
+                v-on="on"
+              >
+                <v-icon>mdi-close</v-icon>
+              </v-btn>
+            </template>
+            Clear existing business information.
+          </v-tooltip>
         </v-col>
       </v-row>
+
+      <v-divider class="mt-8" />
 
       <v-form
         ref="formRef"
@@ -75,6 +81,33 @@
         @submit.prevent
       >
         <!-- Identifying Number -->
+        <v-row
+          class="mt-8"
+          no-gutters
+        >
+          <v-col
+            cols="12"
+            sm="3"
+          >
+            <label>Business Information in Home Jurisdiction</label>
+          </v-col>
+
+          <v-col
+            cols="12"
+            sm="9"
+          >
+            <v-text-field
+              v-model="business.homeIdentifier"
+              class="identifying-number"
+              filled
+              hide-details="auto"
+              label="Identifying Number"
+              :rules="getShowErrors ? identifyingNumberRules : []"
+            />
+          </v-col>
+        </v-row>
+
+        <!-- Business Name in Home Jurisdiction -->
         <v-row
           class="mt-6"
           no-gutters
@@ -88,41 +121,7 @@
 
           <v-col
             cols="12"
-            sm="7"
-          >
-            <v-text-field
-              v-model="business.homeIdentifier"
-              class="identifying-number"
-              filled
-              hide-details="auto"
-              label="Identifying Number"
-              :rules="getShowErrors ? identifyingNumberRules : []"
-            />
-          </v-col>
-
-          <v-col
-            cols="12"
-            sm="2"
-          >
-            <!-- empty column to line up with Undo button above -->
-          </v-col>
-        </v-row>
-
-        <!-- Business Name -->
-        <v-row
-          class="mt-6"
-          no-gutters
-        >
-          <v-col
-            cols="12"
-            sm="3"
-          >
-            <label>Business Name in Home Jurisdiction</label>
-          </v-col>
-
-          <v-col
-            cols="12"
-            sm="7"
+            sm="9"
           >
             <v-text-field
               v-model="business.homeLegalName"
@@ -132,13 +131,6 @@
               label="Business Name in Home Jurisdiction"
               :rules="getShowErrors ? businessNameRules : []"
             />
-          </v-col>
-
-          <v-col
-            cols="12"
-            sm="2"
-          >
-            <!-- empty column to line up with Undo button above -->
           </v-col>
         </v-row>
 
@@ -156,7 +148,7 @@
 
           <v-col
             cols="12"
-            sm="7"
+            sm="9"
           >
             <v-text-field
               v-model="business.taxId"
@@ -168,13 +160,6 @@
               hint="First 9 digits of the CRA Business Number if you have one"
               :rules="getShowErrors ? Rules.BusinessNumberRules : []"
             />
-          </v-col>
-
-          <v-col
-            cols="12"
-            sm="2"
-          >
-            <!-- empty column to line up with Undo button above -->
           </v-col>
         </v-row>
 
@@ -192,7 +177,7 @@
 
           <v-col
             cols="12"
-            sm="7"
+            sm="9"
           >
             <DatePickerShared
               id="incorporation-date"
@@ -200,24 +185,19 @@
               title="Incorporation Date in Home Jurisdiction"
               :nudgeRight="40"
               :nudgeTop="85"
-              :persistentHint="true"
               :initialValue="getExistingBusinessInfo.homeIncorporationDate"
               :inputRules="getShowErrors ? incorporationDateRules : []"
               :maxDate="getCurrentDate"
               @emitDateSync="$set(business, 'homeIncorporationDate', $event)"
             />
           </v-col>
-
-          <v-col
-            cols="12"
-            sm="2"
-          >
-            <!-- empty column to line up with Undo button above -->
-          </v-col>
         </v-row>
 
         <!-- message box -->
-        <v-row no-gutters>
+        <v-row
+          class="mt-8"
+          no-gutters
+        >
           <v-col
             cols="12"
             sm="3"
@@ -227,7 +207,7 @@
 
           <v-col
             cols="12"
-            sm="7"
+            sm="9"
           >
             <MessageBox
               color="gold"
@@ -235,12 +215,6 @@
               <strong>Important:</strong> Verify that this information matches exactly the current information
               in the home jurisdiction.
             </MessageBox>
-          </v-col>
-          <v-col
-            cols="12"
-            sm="2"
-          >
-            <!-- empty column to line up with Undo button above -->
           </v-col>
         </v-row>
       </v-form>
@@ -435,5 +409,18 @@ label {
 // add whitespace between first and second columns
 .col-sm-3 {
   padding-right: 1rem !important;
+}
+
+#incorporation-date {
+  // show pointer on hover
+  :deep(.v-input__slot) {
+    pointer-events: auto;
+    cursor: pointer;
+  }
+
+  // set icon color
+  :deep(.v-input__icon--append .v-icon) {
+    color: $app-blue !important;
+  }
 }
 </style>

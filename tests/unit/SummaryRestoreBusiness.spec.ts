@@ -27,7 +27,7 @@ describe('Summary Restore Business component', () => {
   }
 
   function expectErrorMessage (exists = true): void {
-    expect(wrapper.find('div.restoreBusinessStepErrorMessage').exists()).toBe(exists)
+    expect(wrapper.find('div.restore-business-step-error-message').exists()).toBe(exists)
   }
 
   beforeEach(() => {

@@ -3,7 +3,7 @@
     <section :class="{ 'invalid-section': invalidSection }">
       <div
         v-if="invalidSection"
-        class="defineCompanyStepErrorMessage"
+        class="define-company-step-error-message pt-5 pl-5"
       >
         <v-icon color="error">
           mdi-information-outline
@@ -294,12 +294,6 @@ export default class SummaryDefineCompany extends Vue {
 
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
-
-.defineCompanyStepErrorMessage {
-  padding-top: 1.25rem;
-  padding-left: 1.25rem;
-  color: $app-red;
-}
 
 #company-name {
   font-size: $px-22;

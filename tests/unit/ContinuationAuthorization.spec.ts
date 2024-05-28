@@ -25,7 +25,7 @@ describe('Continuation Authorization component', () => {
     expect(wrapper.findAll('header li').at(0).text()).toContain('Use a white background')
     expect(wrapper.findAll('header li').at(1).text()).toContain('PDF file type')
 
-    expect(wrapper.find('.upload-file-row .col-sm-3 label').text()).toBe('Upload File')
+    expect(wrapper.find('.upload-file-row .col-sm-3 label').text()).toBe('Upload File (Maximum 5)')
     expect(wrapper.find('.upload-file-row .col-sm-9').findComponent(FileUploadPreview).exists()).toBe(true)
 
     wrapper.destroy()

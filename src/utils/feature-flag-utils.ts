@@ -13,8 +13,7 @@ const defaultFlagSet: LDFlagSet = {
   'enable-web-chat': false, // by default, old webchat is disabled
   'enable-genesys-web-message': false, // by default, genesys web message is disabled
   'sentry-enable': false, // by default, no sentry logs
-  'banner-text': '', // by default, there is no banner text
-  'show-business-search-status': false // by default, don't show status in results
+  'banner-text': '' // by default, there is no banner text
 }
 
 /**

@@ -3,7 +3,7 @@
     <section :class="{ 'invalid-section': !isRestoreBusinessNameValid }">
       <div
         v-if="!isRestoreBusinessNameValid"
-        class="restoreBusinessStepErrorMessage"
+        class="restore-business-step-error-message pt-5 pl-5"
       >
         <span>
           <v-icon color="error">mdi-information-outline</v-icon>
@@ -217,12 +217,6 @@ export default class SummaryRestoreBusiness extends Mixins(DateMixin) {
 
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
-
-.restoreBusinessStepErrorMessage {
-  padding-top: 1.25rem;
-  padding-left: 1.25rem;
-  color: $app-red;
-}
 
 .v-icon.mdi-information-outline {
   margin-top: -2px;

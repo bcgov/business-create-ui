@@ -1,9 +1,17 @@
 <template>
   <div id="summary-business-home-jurisdiction">
+    <GenericErrorDialog
+      attach="#summary-business-home-jurisdiction"
+      :dialog="errorDialog"
+      :text="errorDialogText"
+      :title="errorDialogTitle"
+      @close="errorDialog = false"
+    />
+
     <section :class="{ 'invalid-section': !isContinuationInBusinessHomeValid }">
       <div
         v-if="!isContinuationInBusinessHomeValid"
-        class="businessHomeStepErrorMessage"
+        class="business-home-step-error-message pt-5 pl-5"
       >
         <v-icon color="error">
           mdi-information-outline
@@ -220,47 +228,62 @@
             <v-col
               cols="12"
               sm="9"
-              class="pt-4 pt-sm-0"
             >
-              <ul id="continuation-authorization-file">
-                <!-- the director's affidavit file -->
-                <li v-if="isContinuationInAffidavitRequired">
-                  <template v-if="getExistingBusinessInfo.affidavitFileName">
-                    <v-icon color="primary">
-                      mdi-file-pdf-outline
-                    </v-icon>
-                    <span>{{ getExistingBusinessInfo.affidavitFileName }}</span>
-                  </template>
-                  <template v-else>
-                    <v-icon color="error">
-                      mdi-close
-                    </v-icon>
-                    <span>Missing Affidavit</span>
-                  </template>
-                </li>
-
-                <!-- the proof of authorization files -->
-                <li
-                  v-for="item in getContinuationAuthorization?.files"
-                  :key="item.fileKey"
+              <!-- the director's affidavit file -->
+              <template v-if="isContinuationInAffidavitRequired">
+                <v-btn
+                  v-if="getExistingBusinessInfo.affidavitFileName"
+                  text
+                  color="primary"
+                  class="download-affidavit-btn mt-sm-n2 d-block"
+                  :disabled="isDownloading"
+                  :loading="isDownloading"
+                  tabindex="-1"
+                  @click="download(affidavitDocument)"
                 >
-                  <v-icon color="primary">
-                    mdi-file-pdf-outline
-                  </v-icon>
-                  <span>{{ item.fileName }}</span>
-                </li>
-                <li v-if="!getContinuationAuthorization?.files?.length">
+                  <v-icon>mdi-file-pdf-outline</v-icon>
+                  <span>{{ getExistingBusinessInfo.affidavitFileName }}</span>
+                </v-btn>
+                <div
+                  v-else
+                  class="pl-4"
+                >
                   <v-icon color="error">
                     mdi-close
                   </v-icon>
-                  <span>Missing Authorization Files</span>
-                </li>
-              </ul>
+                  <span class="pl-2">Missing Affidavit</span>
+                </div>
+              </template>
+
+              <!-- the proof of authorization file(s) -->
+              <v-btn
+                v-for="item in getContinuationAuthorization?.files"
+                :key="item.fileKey"
+                text
+                color="primary"
+                class="download-authorization-btn d-block"
+                :disabled="isDownloading"
+                :loading="isDownloading"
+                tabindex="-1"
+                @click="download(authorizationDocument(item))"
+              >
+                <v-icon>mdi-file-pdf-outline</v-icon>
+                <span>{{ item.fileName }}</span>
+              </v-btn>
+              <div
+                v-if="!getContinuationAuthorization?.files?.length"
+                class="pl-4"
+              >
+                <v-icon color="error">
+                  mdi-close
+                </v-icon>
+                <span class="pl-2">Missing Authorization File(s)</span>
+              </div>
             </v-col>
           </v-row>
         </article>
 
-        <v-divider class="mx-6 mt-8 mb-3" />
+        <v-divider class="mx-6 mt-6 mb-3" />
 
         <!-- Authorization Date -->
         <article class="section-container">
@@ -314,13 +337,19 @@
 import { Component, Mixins } from 'vue-property-decorator'
 import { Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
+import { GenericErrorDialog } from '@/dialogs/'
 import { RouteNames } from '@/enums'
-import { ContinuationAuthorizationIF, ExistingBusinessInfoIF } from '@/interfaces'
+import { ContinuationAuthorizationIF, DocumentIF, ExistingBusinessInfoIF } from '@/interfaces'
 import { DateMixin } from '@/mixins'
 import { CanJurisdictions, IntlJurisdictions, UsaJurisdiction } from '@bcrs-shared-components/jurisdiction/list-data'
 import { JurisdictionLocation } from '@bcrs-shared-components/enums'
+import { LegalServices } from '@/services'
 
-@Component({})
+@Component({
+  components: {
+    GenericErrorDialog
+  }
+})
 export default class SummaryBusinessHomeJurisdiction extends Mixins(DateMixin) {
   // for template
   readonly RouteNames = RouteNames
@@ -330,6 +359,12 @@ export default class SummaryBusinessHomeJurisdiction extends Mixins(DateMixin) {
   @Getter(useStore) getExistingBusinessInfo!: ExistingBusinessInfoIF
   @Getter(useStore) isContinuationInAffidavitRequired!: boolean
   @Getter(useStore) isContinuationInBusinessHomeValid!: boolean
+
+  // local variables
+  errorDialog = false
+  errorDialogText = ''
+  errorDialogTitle = ''
+  isDownloading = false
 
   /** Whether the existing business is an extrapro. */
   get isExpro (): boolean {
@@ -372,17 +407,42 @@ export default class SummaryBusinessHomeJurisdiction extends Mixins(DateMixin) {
   get expiryDate (): string {
     return this.yyyyMmDdToPacificDate(this.getContinuationAuthorization?.expiryDate, true, false)
   }
+
+  get affidavitDocument (): DocumentIF {
+    return {
+      title: 'Director Affidavit',
+      filename: this.getExistingBusinessInfo.affidavitFileName,
+      // link: this.getExistingBusinessInfo.affidavitFileUrl
+      link: 'https://minio-dev.apps.silver.devops.gov.bc.ca/businesses/36cfc3bd-dd76-4e6c-8234-521e5df09afb.pdf'
+    }
+  }
+
+  authorizationDocument (item: { fileName: string, fileUrl: string }): DocumentIF {
+    return {
+      title: 'Authorization Document',
+      filename: item.fileName,
+      link: item.fileUrl
+    }
+  }
+
+  async download (document: DocumentIF): Promise<void> {
+    if (!document) return // safety check
+
+    this.isDownloading = true
+    await LegalServices.fetchDocument(document).catch(error => {
+      // eslint-disable-next-line no-console
+      console.log('fetchDocument() error =', error)
+      this.errorDialogTitle = 'Unable to download document'
+      this.errorDialogText = 'We were unable to download your document. If this error persists, please contact us.'
+      this.errorDialog = true
+    })
+    this.isDownloading = false
+  }
 }
 </script>
 
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
-
-.businessHomeStepErrorMessage {
-  padding-top: 1.25rem;
-  padding-left: 1.25rem;
-  color: $app-red;
-}
 
 .v-icon.mdi-information-outline {
   margin-top: -2px;
@@ -398,21 +458,19 @@ article:not(:last-child) {
   padding-bottom: 0;
 }
 
-// align the list v-icons and text
-#continuation-authorization-summary {
-  ul {
-    list-style: none;
-    margin-left: 2rem;
-    padding-left: 0;
+.download-affidavit-btn,
+.download-authorization-btn {
+  // FUTURE: remove this line when the download functionality is fixed
+  // also remove "tabindex" from both download buttons in the template
+  pointer-events: none;
 
-    li:not(:first-child) {
-      margin-top: 0.25rem;
-    }
-
-    li > i {
-      margin-left: -2rem;
-      padding-right: 10px;
-    }
+  // nudge icon down a bit to line up with text
+  .v-icon {
+    margin-top: 2px;
+  }
+  // make button text larger than default
+  span {
+    font-size: $px-16;
   }
 }
 </style>
