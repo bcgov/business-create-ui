@@ -70,7 +70,7 @@
       </v-row>
 
       <v-form
-        ref="manualFormRef"
+        ref="formRef"
         v-model="formValid"
         @submit.prevent
       >
@@ -277,7 +277,7 @@ import { FormIF } from '@bcrs-shared-components/interfaces'
 export default class ManualBusinessInfo extends Mixins(CountriesProvincesMixin, DateMixin) {
   // Refs
   $refs!: {
-    manualFormRef: FormIF
+    formRef: FormIF
     incorporationDateRef: DatePickerShared
   }
 
@@ -295,7 +295,8 @@ export default class ManualBusinessInfo extends Mixins(CountriesProvincesMixin, 
   formValid = false
 
   readonly identifyingNumberRules: Array<VuetifyRuleFunction> = [
-    (v) => !!v || 'Identifying Number is required'
+    (v) => !!v || 'Identifying Number is required',
+    (v) => (v && v.length <= 50) || 'Cannot exceed 50 characters'
   ]
 
   readonly businessNameRules: Array<VuetifyRuleFunction> = [
@@ -303,9 +304,13 @@ export default class ManualBusinessInfo extends Mixins(CountriesProvincesMixin, 
     (v) => (v && v.length <= 1000) || 'Cannot exceed 1000 characters'
   ]
 
-  readonly incorporationDateRules: Array<VuetifyRuleFunction> = [
-    (v) => !!v || 'Incorporation Date is required'
-  ]
+  get incorporationDateRules (): Array<VuetifyRuleFunction> {
+    return [
+      (v) => !!v || 'Incorporation Date is required',
+      () => (this.business.homeIncorporationDate <= this.getCurrentDate) ||
+        'Incorporation Date cannot be in the future'
+    ]
+  }
 
   get jurisdictionErrorMessage (): string {
     return (this.getShowErrors && !this.business.homeJurisdiction) ? 'Jurisdiction is required' : ''
@@ -386,9 +391,11 @@ export default class ManualBusinessInfo extends Mixins(CountriesProvincesMixin, 
   @Watch('getShowErrors')
   private async onGetShowErrors (): Promise<void> {
     if (this.active && this.getShowErrors) {
-      await this.$nextTick() // wait for form to finish rendering
-      this.$refs.manualFormRef?.validate()
-      this.$refs.incorporationDateRef?.validateForm()
+      // wait for form to finish rendering
+      await this.$nextTick()
+      // validate the form and our custom component that doesn't support form validation
+      this.$refs.formRef.validate()
+      this.$refs.incorporationDateRef.validateForm()
     }
   }
 

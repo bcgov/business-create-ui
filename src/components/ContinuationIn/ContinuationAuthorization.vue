@@ -95,8 +95,6 @@
 
     <!-- file upload components -->
     <v-row
-      v-for="(num, index) in numUploads"
-      :key="authorization.files[index]?.fileKey"
       class="upload-file-row mt-4 mb-n2"
       no-gutters
     >
@@ -104,7 +102,7 @@
         cols="12"
         sm="3"
       >
-        <label v-if="index === 0">Upload File</label>
+        <label>Upload File</label>
       </v-col>
 
       <v-col
@@ -112,10 +110,13 @@
         sm="9"
       >
         <FileUploadPreview
+          v-for="(num, index) in numUploads"
+          :key="authorization.files[index]?.fileKey"
           inputFileLabel="Continuation authorization"
           :maxSize="MAX_FILE_SIZE"
           :pdfPageSize="PdfPageSize.LETTER_SIZE"
-          :hint="authorization.files[index]?.file ? 'File uploaded' : undefined"
+          :label="authorization.files[index]?.file ? 'File uploaded' : undefined"
+          hint=" "
           :inputFile="authorization.files[index]?.file"
           :showErrors="getShowErrors"
           :customErrorMessage.sync="customErrorMessage[index]"
@@ -123,6 +124,18 @@
           @fileValidity="onFileValidity($event)"
           @fileSelected="onFileSelected(index, $event)"
         />
+
+        <v-btn
+          id="add-another-file-button"
+          outlined
+          color="primary"
+          class="btn-outlined-primary mt-6 ml-8"
+          :disabled="false"
+          @click="void 0"
+        >
+          <v-icon>mdi-plus</v-icon>
+          <span>Add another file</span>
+        </v-btn>
       </v-col>
     </v-row>
   </div>
@@ -172,10 +185,8 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
 
   get authorizationDateRules (): Array<VuetifyRuleFunction> {
     return [
-      () => !!this.authorization.date ||
-        'Authorization Date is required',
-      () => (this.authorization.date <= this.getCurrentDate) ||
-        'Authorization Date cannot be in the future'
+      (v) => !!v || 'Authorization Date is required',
+      () => (this.authorization.date <= this.getCurrentDate) || 'Authorization Date cannot be in the future'
     ]
   }
 
@@ -258,9 +269,11 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
 
   @Watch('getShowErrors')
   @Watch('authorization.date') // because Expiry Date depends on this
-  private onShowErrors (): void {
+  private async onGetShowErrors (): Promise<void> {
     if (this.getShowErrors) {
-      // validate the form and the components that don't support form validation
+      // wait for form to finish rendering
+      await this.$nextTick()
+      // validate the form and our custom components that don't support form validation
       this.$refs.formRef.validate()
       this.$refs.authorizationDateRef.validateForm()
       this.$refs.expiryDateRef.validateForm()
@@ -326,4 +339,8 @@ ul {
     padding-left: 0.25rem;
   }
 }
+
+// .file-upload-preview:not(:first-of-type) {
+//   margin-top: 1rem;
+// }
 </style>

@@ -109,6 +109,33 @@
           </v-col>
         </v-row>
 
+        <!-- Registration in Home Jurisdiction -->
+        <v-row
+          class="mt-6"
+          no-gutters
+        >
+          <v-col
+            cols="12"
+            sm="3"
+          >
+            <label>Registration in Home Jurisdiction</label>
+          </v-col>
+
+          <v-col
+            cols="12"
+            sm="9"
+          >
+            <v-text-field
+              v-model="business.homeIdentifier"
+              class="registration-home-jurisdiction"
+              filled
+              hide-details="auto"
+              label="Registration in Home Jurisdiction"
+              :rules="getShowErrors ? homeIdentifierRules : []"
+            />
+          </v-col>
+        </v-row>
+
         <!-- Name in Home Jurisdiction -->
         <v-row
           class="mt-6"
@@ -131,7 +158,7 @@
               filled
               hide-details="auto"
               label="Name in Home Jurisdiction"
-              :rules="getShowErrors ? businessNameRules : []"
+              :rules="getShowErrors ? homeLegalNameRules : []"
             />
           </v-col>
         </v-row>
@@ -466,14 +493,23 @@ export default class ExtraproRegistration extends Mixins(DateMixin, DocumentMixi
     return (this.business.status === EntityStates.ACTIVE)
   }
 
-  readonly businessNameRules: Array<VuetifyRuleFunction> = [
+  readonly homeIdentifierRules: Array<VuetifyRuleFunction> = [
+    (v) => !!v || 'Registration is required',
+    (v) => (v && v.length <= 50) || 'Cannot exceed 50 characters'
+  ]
+
+  readonly homeLegalNameRules: Array<VuetifyRuleFunction> = [
     (v) => !!v || 'Name is required',
     (v) => (v && v.length <= 1000) || 'Cannot exceed 1000 characters'
   ]
 
-  readonly incorporationDateRules: Array<VuetifyRuleFunction> = [
-    (v) => !!v || 'Incorporation Date is required'
-  ]
+  get incorporationDateRules (): Array<VuetifyRuleFunction> {
+    return [
+      (v) => !!v || 'Incorporation Date is required',
+      () => (this.business.homeIncorporationDate <= this.getCurrentDate) ||
+        'Incorporation Date cannot be in the future'
+    ]
+  }
 
   get jurisdictionErrorMessage (): string {
     return (this.getShowErrors && !this.business.homeJurisdiction) ? 'Jurisdiction is required' : ''
@@ -661,9 +697,11 @@ export default class ExtraproRegistration extends Mixins(DateMixin, DocumentMixi
   @Watch('getShowErrors')
   private async onGetShowErrors (): Promise<void> {
     if (this.active && this.getShowErrors) {
-      await this.$nextTick() // wait for form to finish rendering
-      this.$refs.formRef?.validate()
-      this.$refs.incorporationDateRef?.validateForm()
+      // wait for form to finish rendering
+      await this.$nextTick()
+      // validate the form and our custom component that doesn't support form validation
+      this.$refs.formRef.validate()
+      this.$refs.incorporationDateRef.validateForm()
     }
   }
 
