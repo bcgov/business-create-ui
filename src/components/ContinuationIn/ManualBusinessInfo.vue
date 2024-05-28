@@ -193,6 +193,50 @@
           </v-col>
         </v-row>
 
+        <v-expand-transition>
+          <!-- Upload Affidavit -->
+          <v-row
+            v-if="isContinuationInAffidavitRequired"
+            class="mt-6"
+            no-gutters
+          >
+            <v-col
+              cols="12"
+              sm="3"
+            >
+              <label>Upload Affidavit</label>
+            </v-col>
+
+            <v-col
+              cols="12"
+              sm="9"
+            >
+              <p>
+                Upload the affidavit from the directors.
+              </p>
+
+              <ul>
+                <li>Use a white background and a legible font with contrasting font colour</li>
+                <li>PDF file type (maximum 30 MB file size)</li>
+              </ul>
+
+              <FileUploadPreview
+                class="mt-4"
+                inputFileLabel="Affidavit from directors"
+                :maxSize="MAX_FILE_SIZE"
+                :pdfPageSize="PdfPageSize.LETTER_SIZE"
+                :hint="business.affidavitFile ? 'File uploaded' : undefined"
+                :inputFile="business.affidavitFile"
+                :showErrors="getShowErrors"
+                :customErrorMessage.sync="customErrorMessage"
+                :isRequired="getShowErrors"
+                @fileValidity="onFileValidity($event)"
+                @fileSelected="onFileSelected($event)"
+              />
+            </v-col>
+          </v-row>
+        </v-expand-transition>
+
         <!-- message box -->
         <v-row
           class="mt-8"
@@ -225,10 +269,12 @@
 <script lang="ts">
 import { Component, Emit, Mixins, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
+import { StatusCodes } from 'http-status-codes'
 import { mask } from 'vue-the-mask'
 import { useStore } from '@/store/store'
-import { DateMixin } from '@/mixins'
-import { ExistingBusinessInfoIF } from '@/interfaces'
+import { DateMixin, DocumentMixin } from '@/mixins'
+import { ExistingBusinessInfoIF, PresignedUrlIF } from '@/interfaces'
+import { PdfPageSize } from '@/enums'
 import { Rules } from '@/rules'
 import { VuetifyRuleFunction } from '@/types'
 import MessageBox from '@/components/common/MessageBox.vue'
@@ -237,10 +283,12 @@ import { DatePicker as DatePickerShared } from '@bcrs-shared-components/date-pic
 import { JurisdictionLocation } from '@bcrs-shared-components/enums'
 import { CountriesProvincesMixin } from '@/mixins/'
 import { FormIF } from '@bcrs-shared-components/interfaces'
+import FileUploadPreview from '@/components/common/FileUploadPreview.vue'
 
 @Component({
   components: {
     DatePickerShared,
+    FileUploadPreview,
     Jurisdiction,
     MessageBox
   },
@@ -248,25 +296,30 @@ import { FormIF } from '@bcrs-shared-components/interfaces'
     mask
   }
 })
-export default class ManualBusinessInfo extends Mixins(CountriesProvincesMixin, DateMixin) {
+export default class ManualBusinessInfo extends Mixins(CountriesProvincesMixin, DateMixin, DocumentMixin) {
   // Refs
   $refs!: {
     formRef: FormIF
     incorporationDateRef: DatePickerShared
   }
 
+  readonly PdfPageSize = PdfPageSize
   readonly Rules = Rules
 
   @Getter(useStore) getCurrentDate!: string
   @Getter(useStore) getExistingBusinessInfo!: ExistingBusinessInfoIF
+  @Getter(useStore) getKeycloakGuid!: string
   @Getter(useStore) getShowErrors!: boolean
+  @Getter(useStore) isContinuationInAffidavitRequired!: boolean
 
   @Action(useStore) setExistingBusinessInfo!: (x: ExistingBusinessInfoIF) => void
 
   // Local properties
   active = false
   business = {} as ExistingBusinessInfoIF
+  customErrorMessage = ''
   formValid = false
+  fileValidity = false
 
   readonly identifyingNumberRules: Array<VuetifyRuleFunction> = [
     (v) => !!v || 'Identifying Number is required',
@@ -360,6 +413,54 @@ export default class ManualBusinessInfo extends Mixins(CountriesProvincesMixin, 
     }
   }
 
+  /**
+   * Called when FileUploadPreview tells us whether a file is valid.
+   * This is called right before the File Selected event.
+   */
+  onFileValidity (valid: boolean): void {
+    this.fileValidity = valid
+  }
+
+  /**
+   * Called when FileUploadPreview tells us about a new or cleared file.
+   * This is called right after the File Validity event.
+   */
+  async onFileSelected (file: File): Promise<void> {
+    if (file) {
+      if (this.fileValidity) {
+        // try to upload to Minio
+        let psu: PresignedUrlIF
+        try {
+          psu = await this.getPresignedUrl(file.name)
+          const res = await this.uploadToUrl(psu.preSignedUrl, file, psu.key, this.getKeycloakGuid)
+          if (!res || res.status !== StatusCodes.OK) throw new Error()
+        } catch {
+          // put file uploader into manual error mode by setting custom error message
+          this.customErrorMessage = this.UPLOAD_FAILED_MESSAGE
+          this.$forceUpdate() // force file upload component to react
+          return // don't add to list
+        }
+
+        // add properties reactively to business object
+        this.$set(this.business, 'affidavitFile', {
+          name: file.name,
+          lastModified: file.lastModified,
+          size: file.size
+        } as File)
+        this.$set(this.business, 'affidavitFileKey', psu.key)
+        this.$set(this.business, 'affidavitFileName', file.name)
+        this.$set(this.business, 'affidavitFileUrl', psu.preSignedUrl)
+      }
+    } else {
+      // delete properties reactively when the file is cleared
+      this.$delete(this.business, 'affidavitFile')
+      this.$delete(this.business, 'affidavitFileKey')
+      this.$delete(this.business, 'affidavitFileName')
+      this.$delete(this.business, 'affidavitFileUrl')
+      // FUTURE: should also delete the file from Minio
+    }
+  }
+
   /** Validates the form and other components. */
   @Watch('active')
   @Watch('getShowErrors')
@@ -381,10 +482,12 @@ export default class ManualBusinessInfo extends Mixins(CountriesProvincesMixin, 
   private onComponentValid (): boolean {
     // this form is valid if we have the home jurisdiction (custom component)
     // and we have the home incorporation date (custom component)
+    // and we have the affidavit file, if required (custom component)
     // and the other form (Vuetify) components are valid
     return (
       !!this.business.homeJurisdiction &&
       !!this.business.homeIncorporationDate &&
+      (!this.isContinuationInAffidavitRequired || !!this.business.affidavitFileKey) &&
       this.formValid
     )
   }
