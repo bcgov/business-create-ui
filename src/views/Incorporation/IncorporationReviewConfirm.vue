@@ -183,7 +183,7 @@
 
     <!-- Court Order and Plan of Arrangement -->
     <section
-      v-if="isBaseCompany && isRoleStaff"
+      v-if="isBaseCompany && !isRoleUser"
       id="court-order-poa-section"
       class="mt-10"
     >
@@ -313,6 +313,15 @@ export default class IncorporationReviewConfirm extends Vue {
   /** Is true when the Court Order conditions are not met. */
   get isCourtOrderInvalid (): boolean {
     return (this.getValidateSteps && !this.getCourtOrderStep.valid)
+  }
+
+  /** Is true when the role is user, set the court order component to valid */
+  get isRoleUser (): boolean {
+    if (!this.isRoleStaff) {
+      this.setCourtOrderValidity(true)
+      return true
+    }
+    return false
   }
 }
 </script>
