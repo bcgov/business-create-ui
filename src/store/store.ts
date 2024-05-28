@@ -748,8 +748,7 @@ export const useStore = defineStore('store', {
       const isBaseStepsValid = (
         this.isCreateShareStructureValid &&
         this.getEffectiveDateTime.valid &&
-        this.isIncorporationAgreementValid &&
-        this.getCourtOrderStep.valid
+        this.isIncorporationAgreementValid
       )
 
       // Coop steps
@@ -764,6 +763,8 @@ export const useStore = defineStore('store', {
 
       const isCertifyValid = this.getCertifyState.valid && !!this.getCertifyState.certifiedBy
 
+      const isCourtOrderValid = this.isRoleStaff ? this.getCourtOrderStep.valid : true
+
       const isStaffPaymentValid = this.isRoleStaff ? this.getStaffPaymentStep.valid : true
 
       return (
@@ -771,6 +772,7 @@ export const useStore = defineStore('store', {
         this.isAddPeopleAndRolesValid &&
         isDocumentValid &&
         isCertifyValid &&
+        isCourtOrderValid &&
         isStaffPaymentValid
       )
     },
