@@ -1,8 +1,7 @@
 import { AxiosInstance as axios } from '@/utils'
 import { StatusCodes } from 'http-status-codes'
-import { AxiosResponse } from 'axios'
-import { BusinessIF, DissolutionFilingIF, DocumentIF, IncorporationFilingIF, NameRequestIF,
-  OrgPersonIF } from '@/interfaces'
+import { BusinessIF, DissolutionFilingIF, IncorporationFilingIF, NameRequestIF, OrgPersonIF }
+  from '@/interfaces'
 import { FilingTypes, RoleTypes } from '@/enums'
 import { ShareStructureIF } from '@bcrs-shared-components/interfaces'
 import { createPinia, setActivePinia } from 'pinia'
@@ -280,53 +279,6 @@ export default class LegalServices {
       const data = response?.data
       if (!data) throw new Error('Invalid API response')
       return data.business
-    })
-  }
-
-  /**
-   * Fetches a document and prompts browser to open/save it.
-   * @param document the document info object
-   * @returns the axios response
-   */
-  static async fetchDocument (document: DocumentIF): Promise<AxiosResponse> {
-    // safety checks
-    if (!document?.link || !document?.filename) {
-      throw new Error('Invalid parameters')
-    }
-
-    const config = {
-      headers: { 'Accept': 'application/pdf' },
-      responseType: 'blob' as 'json'
-    }
-
-    return axios.get(document.link, config).then(response => {
-      if (!response) throw new Error('Null response')
-
-      /* solution from https://github.com/axios/axios/issues/1392 */
-
-      // it is necessary to create a new blob object with mime-type explicitly set
-      // otherwise only Chrome works like it should
-      const blob = new Blob([response.data], { type: 'application/pdf' })
-
-      // use Navigator.msSaveOrOpenBlob if available (possibly IE)
-      // warning: this is now deprecated
-      // ref: https://developer.mozilla.org/en-US/docs/Web/API/Navigator/msSaveOrOpenBlob
-      if (window.navigator && window.navigator['msSaveOrOpenBlob']) {
-        window.navigator['msSaveOrOpenBlob'](blob, document.filename)
-      } else {
-        // for other browsers, create a link pointing to the ObjectURL containing the blob
-        const url = window.URL.createObjectURL(blob)
-        const a = window.document.createElement('a')
-        window.document.body.appendChild(a)
-        a.setAttribute('style', 'display: none')
-        a.href = url
-        a.download = document.filename
-        a.click()
-        window.URL.revokeObjectURL(url)
-        a.remove()
-      }
-
-      return response
     })
   }
 }

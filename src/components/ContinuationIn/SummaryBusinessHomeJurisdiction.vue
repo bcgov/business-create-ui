@@ -238,8 +238,7 @@
                   class="download-affidavit-btn mt-sm-n2 d-block"
                   :disabled="isDownloading"
                   :loading="isDownloading"
-                  tabindex="-1"
-                  @click="download(affidavitDocument)"
+                  @click="downloadAffidavitDocument()"
                 >
                   <v-icon>mdi-file-pdf-outline</v-icon>
                   <span>{{ getExistingBusinessInfo.affidavitFileName }}</span>
@@ -264,8 +263,7 @@
                 class="download-authorization-btn d-block"
                 :disabled="isDownloading"
                 :loading="isDownloading"
-                tabindex="-1"
-                @click="download(authorizationDocument(item))"
+                @click="downloadAuthorizationDocument(item)"
               >
                 <v-icon>mdi-file-pdf-outline</v-icon>
                 <span>{{ item.fileName }}</span>
@@ -339,18 +337,17 @@ import { Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { GenericErrorDialog } from '@/dialogs/'
 import { RouteNames } from '@/enums'
-import { ContinuationAuthorizationIF, DocumentIF, ExistingBusinessInfoIF } from '@/interfaces'
-import { DateMixin } from '@/mixins'
+import { ContinuationAuthorizationIF, ExistingBusinessInfoIF } from '@/interfaces'
+import { DateMixin, DocumentMixin } from '@/mixins'
 import { CanJurisdictions, IntlJurisdictions, UsaJurisdiction } from '@bcrs-shared-components/jurisdiction/list-data'
 import { JurisdictionLocation } from '@bcrs-shared-components/enums'
-import { LegalServices } from '@/services'
 
 @Component({
   components: {
     GenericErrorDialog
   }
 })
-export default class SummaryBusinessHomeJurisdiction extends Mixins(DateMixin) {
+export default class SummaryBusinessHomeJurisdiction extends Mixins(DateMixin, DocumentMixin) {
   // for template
   readonly RouteNames = RouteNames
 
@@ -408,28 +405,22 @@ export default class SummaryBusinessHomeJurisdiction extends Mixins(DateMixin) {
     return this.yyyyMmDdToPacificDate(this.getContinuationAuthorization?.expiryDate, true, false)
   }
 
-  get affidavitDocument (): DocumentIF {
-    return {
-      title: 'Director Affidavit',
-      filename: this.getExistingBusinessInfo.affidavitFileName,
-      // link: this.getExistingBusinessInfo.affidavitFileUrl
-      link: 'https://minio-dev.apps.silver.devops.gov.bc.ca/businesses/36cfc3bd-dd76-4e6c-8234-521e5df09afb.pdf'
-    }
+  /** Downloads the director affidavit document. */
+  async downloadAffidavitDocument (): Promise<void> {
+    await this.download(this.getExistingBusinessInfo.affidavitFileKey,
+      this.getExistingBusinessInfo.affidavitFileName)
   }
 
-  authorizationDocument (item: { fileName: string, fileUrl: string }): DocumentIF {
-    return {
-      title: 'Authorization Document',
-      filename: item.fileName,
-      link: item.fileUrl
-    }
+  /** Downloads the specified authorization document. */
+  async downloadAuthorizationDocument (item: { fileKey: string, fileName: string }): Promise<void> {
+    await this.download(item.fileKey, item.fileName)
   }
 
-  async download (document: DocumentIF): Promise<void> {
-    if (!document) return // safety check
+  private async download (documentKey: string, documentName: string): Promise<void> {
+    if (!documentKey || !documentName) return // safety check
 
     this.isDownloading = true
-    await LegalServices.fetchDocument(document).catch(error => {
+    await this.downloadDocument(documentKey, documentName).catch(error => {
       // eslint-disable-next-line no-console
       console.log('fetchDocument() error =', error)
       this.errorDialogTitle = 'Unable to download document'
@@ -460,10 +451,6 @@ article:not(:last-child) {
 
 .download-affidavit-btn,
 .download-authorization-btn {
-  // FUTURE: remove this line when the download functionality is fixed
-  // also remove "tabindex" from both download buttons in the template
-  pointer-events: none;
-
   // nudge icon down a bit to line up with text
   .v-icon {
     margin-top: 2px;

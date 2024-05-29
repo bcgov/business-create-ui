@@ -373,8 +373,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
           taxId: this.getExistingBusinessInfo?.taxId || undefined,
           affidavitFile: this.getExistingBusinessInfo?.affidavitFile,
           affidavitFileKey: this.getExistingBusinessInfo?.affidavitFileKey,
-          affidavitFileName: this.getExistingBusinessInfo?.affidavitFileName,
-          affidavitFileUrl: this.getExistingBusinessInfo?.affidavitFileUrl
+          affidavitFileName: this.getExistingBusinessInfo?.affidavitFileName
         },
         authorization: this.getContinuationAuthorization,
         contactPoint: {
@@ -457,7 +456,6 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         affidavitFile: continuationIn.foreignJurisdiction.affidavitFile,
         affidavitFileKey: continuationIn.foreignJurisdiction.affidavitFileKey,
         affidavitFileName: continuationIn.foreignJurisdiction.affidavitFileName,
-        affidavitFileUrl: continuationIn.foreignJurisdiction.affidavitFileUrl,
         bcFoundingDate: this.dateToYyyyMmDd(foundingDate),
         bcIdentifier: continuationIn.business?.identifier,
         bcLegalName: continuationIn.business?.legalName,

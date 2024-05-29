@@ -53,7 +53,6 @@
             hide-details
             label="B.C. Extraprovincial Registration Number"
             readonly
-            xclearable
             :value="business.bcIdentifier"
             @click:append="reset()"
           />
@@ -688,15 +687,13 @@ export default class ExtraproRegistration extends Mixins(DateMixin, DocumentMixi
         } as File)
         this.$set(this.business, 'affidavitFileKey', psu.key)
         this.$set(this.business, 'affidavitFileName', file.name)
-        this.$set(this.business, 'affidavitFileUrl', psu.preSignedUrl)
       }
     } else {
       // delete properties reactively when the file is cleared
       this.$delete(this.business, 'affidavitFile')
       this.$delete(this.business, 'affidavitFileKey')
       this.$delete(this.business, 'affidavitFileName')
-      this.$delete(this.business, 'affidavitFileUrl')
-      // FUTURE: should also delete the file from Minio
+      // FUTURE: should also delete the file from Minio (ticket #21110)
     }
   }
 

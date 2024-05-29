@@ -4,7 +4,6 @@ export interface ExistingBusinessInfoIF {
   affidavitFile?: File // only used by UI
   affidavitFileKey?: string
   affidavitFileName?: string
-  affidavitFileUrl?: string // presigned URL for future deletion (ticket 21110)
   bcFoundingDate?: string // expro only (YYYY-MM-DD)
   bcIdentifier?: string // expro only
   bcLegalName?: string // expro only

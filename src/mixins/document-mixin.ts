@@ -71,6 +71,55 @@ export default class DocumentMixin extends Vue {
   }
 
   /**
+   * Downloads a Minio document from Legal API and prompts browser to open/save it.
+   * @param documentKey the document key
+   * @param documentName the document filename
+   * @returns a promise to return the axios response or the error response
+   */
+  async downloadDocument (documentKey: string, documentName: string): Promise<AxiosResponse> {
+    // safety checks
+    if (!documentKey || !documentName) {
+      throw new Error('Invalid parameters')
+    }
+
+    const url = `documents/${documentKey}`
+    const config = {
+      headers: { 'Accept': 'application/pdf' },
+      responseType: 'blob' as 'json'
+    }
+
+    return axios.get(url, config).then(response => {
+      if (!response) throw new Error('Null response')
+
+      /* solution below is from https://github.com/axios/axios/issues/1392 */
+
+      // it is necessary to create a new blob object with mime-type explicitly set
+      // otherwise only Chrome works like it should
+      const blob = new Blob([response.data], { type: 'application/pdf' })
+
+      // use Navigator.msSaveOrOpenBlob if available (possibly IE)
+      // warning: this is now deprecated
+      // ref: https://developer.mozilla.org/en-US/docs/Web/API/Navigator/msSaveOrOpenBlob
+      if (window.navigator && window.navigator['msSaveOrOpenBlob']) {
+        window.navigator['msSaveOrOpenBlob'](blob, documentName)
+      } else {
+        // for other browsers, create a link pointing to the ObjectURL containing the blob
+        const url = window.URL.createObjectURL(blob)
+        const a = window.document.createElement('a')
+        window.document.body.appendChild(a)
+        a.setAttribute('style', 'display: none')
+        a.href = url
+        a.download = documentName
+        a.click()
+        window.URL.revokeObjectURL(url)
+        a.remove()
+      }
+
+      return response
+    })
+  }
+
+  /**
    * Checks whether all pages of given pdf file are of specified size.
    * @param file the pdf file to be checked
    * @param pageSize the page size to check for

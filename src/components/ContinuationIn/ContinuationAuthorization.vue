@@ -244,8 +244,7 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
           size: file.size
         } as File,
         fileKey: psu.key,
-        fileName: file.name,
-        fileUrl: psu.preSignedUrl
+        fileName: file.name
       })
     } else {
       // remove file from array
