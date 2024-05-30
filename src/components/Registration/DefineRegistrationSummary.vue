@@ -3,7 +3,7 @@
     <section :class="{ 'invalid-section': !defineBusinessValid }">
       <div
         v-if="!defineBusinessValid"
-        class="define-registration-step-error-message"
+        class="define-registration-step-error-message pt-5 pl-5"
       >
         <span>
           <v-icon color="error">mdi-information-outline</v-icon>
@@ -204,12 +204,6 @@ export default class DefineRegistrationSummary extends Mixins(DateMixin) {
 
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
-
-.define-registration-step-error-message {
-  padding-top: 1.25rem;
-  padding-left: 1.25rem;
-  color: $app-red;
-}
 
 #company-name {
   font-size: $px-22;

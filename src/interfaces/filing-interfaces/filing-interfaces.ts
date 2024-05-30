@@ -106,7 +106,6 @@ export interface ContinuationInFilingIF {
       affidavitFile?: File
       affidavitFileKey?: string
       affidavitFileName?: string
-      affidavitFileUrl?: string
     }
     authorization: ContinuationAuthorizationIF
     contactPoint: ContactPointIF

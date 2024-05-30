@@ -68,7 +68,7 @@
         <!-- EDIT SECTION -->
         <v-row
           no-gutters
-          class="pb-0"
+          class="py-0"
         >
           <v-col
             cols="12"
@@ -593,13 +593,6 @@ h2::before {
     .col-9 {
       padding: 0 0.5rem 0 0 !important;
     }
-  }
-}
-
-#dissolution-date-section .v-card {
-  // remove extra space taken by error message
-  :deep(.v-text-field__details) {
-    margin-bottom: -8px !important;
   }
 }
 

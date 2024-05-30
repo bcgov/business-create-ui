@@ -4,7 +4,7 @@
       <!-- Summary Warning -->
       <div
         v-if="isSummary && showErrorSummary"
-        class="people-roles-invalid-message"
+        class="people-roles-invalid-message pa-5"
       >
         <span>
           <v-icon color="error">mdi-information-outline</v-icon>
@@ -356,11 +356,6 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
 // gutter so content doesn't run into next column
 .col:not(:last-of-type) {
   padding-right: 0.5rem;
-}
-
-.people-roles-invalid-message {
-  padding: 1.25rem;
-  color: $app-red;
 }
 
 #people-roles-list {

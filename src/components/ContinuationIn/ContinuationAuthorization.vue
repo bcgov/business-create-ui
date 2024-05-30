@@ -27,11 +27,12 @@
           class="pl-8"
         >
           <DatePickerShared
+            id="authorization-date"
             ref="authorizationDateRef"
             title="Authorization Date"
             :nudgeRight="40"
             :nudgeTop="85"
-            hint="The date the authorization was issued."
+            hint="The date the authorization was issued"
             :persistentHint="true"
             :initialValue="authorization.date"
             :inputRules="getShowErrors ? authorizationDateRules : []"
@@ -43,7 +44,7 @@
 
       <!-- Expiry Date -->
       <v-row
-        class="mt-2"
+        class="mt-4"
         no-gutters
       >
         <v-col
@@ -59,11 +60,12 @@
           class="pl-8"
         >
           <DatePickerShared
+            id="expiry-date"
             ref="expiryDateRef"
             title="Expiry Date (Optional)"
             :nudgeRight="40"
             :nudgeTop="85"
-            hint="The date the authorization expires."
+            hint="The date the authorization expires"
             :persistentHint="true"
             :initialValue="authorization.expiryDate"
             :inputRules="getShowErrors ? expiryDateRules: []"
@@ -95,6 +97,8 @@
 
     <!-- file upload components -->
     <v-row
+      v-for="(num, index) in numUploads"
+      :key="authorization.files[index]?.fileKey"
       class="upload-file-row mt-4 mb-n2"
       no-gutters
     >
@@ -102,7 +106,7 @@
         cols="12"
         sm="3"
       >
-        <label>Upload File</label>
+        <label v-if="index === 0">Upload File (Maximum 5)</label>
       </v-col>
 
       <v-col
@@ -110,13 +114,10 @@
         sm="9"
       >
         <FileUploadPreview
-          v-for="(num, index) in numUploads"
-          :key="authorization.files[index]?.fileKey"
           inputFileLabel="Continuation authorization"
           :maxSize="MAX_FILE_SIZE"
           :pdfPageSize="PdfPageSize.LETTER_SIZE"
-          :label="authorization.files[index]?.file ? 'File uploaded' : undefined"
-          hint=" "
+          :hint="authorization.files[index]?.file ? 'File uploaded' : undefined"
           :inputFile="authorization.files[index]?.file"
           :showErrors="getShowErrors"
           :customErrorMessage.sync="customErrorMessage[index]"
@@ -124,18 +125,6 @@
           @fileValidity="onFileValidity($event)"
           @fileSelected="onFileSelected(index, $event)"
         />
-
-        <v-btn
-          id="add-another-file-button"
-          outlined
-          color="primary"
-          class="btn-outlined-primary mt-6 ml-8"
-          :disabled="false"
-          @click="void 0"
-        >
-          <v-icon>mdi-plus</v-icon>
-          <span>Add another file</span>
-        </v-btn>
       </v-col>
     </v-row>
   </div>
@@ -176,12 +165,10 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
 
   @Action(useStore) setContinuationAuthorization!: (x: ContinuationAuthorizationIF) => void
 
-  readonly INPUT_FILE_LABEL = 'Continuation authorization'
-
   // Local properties
   authorization = null as ContinuationAuthorizationIF
   fileValidity = false
-  customErrorMessage = ['', '', '', '', '']
+  customErrorMessage = ['', '', '', '', ''] // max 5 files
 
   get authorizationDateRules (): Array<VuetifyRuleFunction> {
     return [
@@ -193,12 +180,11 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
   get expiryDateRules (): Array<VuetifyRuleFunction> {
     return [
       () => !this.authorization.expiryDate ||
-        (this.authorization.expiryDate >= this.getCurrentDate) ||
-        'Expiry Date cannot be in the past'
+        (this.authorization.expiryDate >= this.getCurrentDate) || 'Expiry Date cannot be in the past'
     ]
   }
 
-  /** The number of file upload componenets to display (max 5). */
+  /** The number of file upload components to display (max 5). */
   get numUploads (): number {
     return Math.min((this.authorization.files.length + 1), 5)
   }
@@ -226,7 +212,7 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
       // verify that file is valid
       if (!this.fileValidity) {
         // NB: as this is validity according to the component, do not overwrite current error message
-        return // don't add to array
+        return // don't add to array and don't change existing file
       }
 
       // verify that file doesn't already exist
@@ -258,8 +244,7 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
           size: file.size
         } as File,
         fileKey: psu.key,
-        fileName: file.name,
-        fileUrl: psu.preSignedUrl
+        fileName: file.name
       })
     } else {
       // remove file from array
@@ -315,6 +300,20 @@ label {
   padding-right: 1rem !important;
 }
 
+#authorization-date,
+#expiry-date {
+  // show pointer on hover
+  :deep(.v-input__slot) {
+    pointer-events: auto;
+    cursor: pointer;
+  }
+
+  // set icon color
+  :deep(.v-input__icon--append .v-icon) {
+    color: $app-blue !important;
+  }
+}
+
 // align the checkbox with its label
 :deep(.v-input--checkbox .v-input__slot) {
   align-items: flex-start;
@@ -339,8 +338,4 @@ ul {
     padding-left: 0.25rem;
   }
 }
-
-// .file-upload-preview:not(:first-of-type) {
-//   margin-top: 1rem;
-// }
 </style>
