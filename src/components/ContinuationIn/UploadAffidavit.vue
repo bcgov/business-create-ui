@@ -1,47 +1,29 @@
 <template>
-  <v-expand-transition>
+ <div>
     <!-- Upload Affidavit -->
-    <v-row
-      v-if="isContinuationInAffidavitRequired"
-      class="mt-6"
-      no-gutters
-    >
-      <v-col
-        cols="12"
-        sm="3"
-      >
-        <label>Upload Affidavit</label>
-      </v-col>
+    <p>
+      Upload the affidavit from the directors.
+    </p>
 
-      <v-col
-        cols="12"
-        sm="9"
-      >
-        <p>
-          Upload the affidavit from the directors.
-        </p>
+    <ul>
+      <li>Use a white background and a legible font with contrasting font colour</li>
+      <li>PDF file type (maximum 30 MB file size)</li>
+    </ul>
 
-        <ul>
-          <li>Use a white background and a legible font with contrasting font colour</li>
-          <li>PDF file type (maximum 30 MB file size)</li>
-        </ul>
-
-        <FileUploadPreview
-          class="mt-4"
-          inputFileLabel="Affidavit from directors"
-          :maxSize="MAX_FILE_SIZE"
-          :pdfPageSize="PdfPageSize.LETTER_SIZE"
-          :hint="business.affidavitFile ? 'File uploaded' : undefined"
-          :inputFile="business.affidavitFile"
-          :showErrors="getShowErrors"
-          :customErrorMessage.sync="customErrorMessage"
-          :isRequired="getShowErrors"
-          @fileValidity="onFileValidity($event)"
-          @fileSelected="onFileSelected($event)"
-        />
-      </v-col>
-    </v-row>
-  </v-expand-transition>
+    <FileUploadPreview
+      class="mt-4"
+      inputFileLabel="Affidavit from directors"
+      :maxSize="MAX_FILE_SIZE"
+      :pdfPageSize="PdfPageSize.LETTER_SIZE"
+      :hint="business.affidavitFile ? 'File uploaded' : undefined"
+      :inputFile="business.affidavitFile"
+      :showErrors="getShowErrors"
+      :customErrorMessage.sync="customErrorMessage"
+      :isRequired="getShowErrors"
+      @fileValidity="onFileValidity($event)"
+      @fileSelected="onFileSelected($event)"
+    />
+  </div>
 </template>
 
 <script lang="ts">
@@ -64,7 +46,6 @@ export default class UploadAffidavit extends Mixins(DateMixin, DocumentMixin) {
   @Getter(useStore) getExistingBusinessInfo!: ExistingBusinessInfoIF
   @Getter(useStore) getKeycloakGuid!: string
   @Getter(useStore) getShowErrors!: boolean
-  @Getter(useStore) isContinuationInAffidavitRequired!: boolean
 
   // The business is the same object that the parent is working with
   @Prop({ default: null }) readonly business!: ExistingBusinessInfoIF
@@ -123,12 +104,6 @@ export default class UploadAffidavit extends Mixins(DateMixin, DocumentMixin) {
 
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
-
-// set style for all root labels
-label {
-  font-weight: bold;
-  color: $gray9;
-}
 
 // style the upload affidavit bullets
 ul {

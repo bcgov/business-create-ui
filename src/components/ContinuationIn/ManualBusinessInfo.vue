@@ -194,9 +194,27 @@
         </v-row>
 
         <!-- Upload Affidavit -->
-        <UploadAffidavit
-          :business="business"
-        />
+        <v-row
+          v-if="isContinuationInAffidavitRequired"
+          class="mt-6"
+          no-gutters
+        >
+          <v-col
+            cols="12"
+            sm="3"
+          >
+            <label>Upload Affidavit</label>
+          </v-col>
+
+          <v-col
+            cols="12"
+            sm="9"
+          >
+            <UploadAffidavit
+              :business="business"
+            />
+          </v-col>
+        </v-row>
 
         <!-- message box -->
         <v-row
@@ -232,9 +250,8 @@ import { Component, Emit, Mixins, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { mask } from 'vue-the-mask'
 import { useStore } from '@/store/store'
-import { DateMixin, DocumentMixin } from '@/mixins'
+import { DateMixin } from '@/mixins'
 import { ExistingBusinessInfoIF } from '@/interfaces'
-import { PdfPageSize } from '@/enums'
 import { Rules } from '@/rules'
 import { VuetifyRuleFunction } from '@/types'
 import MessageBox from '@/components/common/MessageBox.vue'
@@ -258,19 +275,17 @@ import UploadAffidavit from './UploadAffidavit.vue'
     mask
   }
 })
-export default class ManualBusinessInfo extends Mixins(CountriesProvincesMixin, DateMixin, DocumentMixin) {
+export default class ManualBusinessInfo extends Mixins(CountriesProvincesMixin, DateMixin) {
   // Refs
   $refs!: {
     formRef: FormIF
     incorporationDateRef: DatePickerShared
   }
 
-  readonly PdfPageSize = PdfPageSize
   readonly Rules = Rules
 
   @Getter(useStore) getCurrentDate!: string
   @Getter(useStore) getExistingBusinessInfo!: ExistingBusinessInfoIF
-  @Getter(useStore) getKeycloakGuid!: string
   @Getter(useStore) getShowErrors!: boolean
   @Getter(useStore) isContinuationInAffidavitRequired!: boolean
 
@@ -279,7 +294,6 @@ export default class ManualBusinessInfo extends Mixins(CountriesProvincesMixin, 
   // Local properties
   active = false
   business = {} as ExistingBusinessInfoIF
-  customErrorMessage = ''
   formValid = false
 
   readonly identifyingNumberRules: Array<VuetifyRuleFunction> = [
