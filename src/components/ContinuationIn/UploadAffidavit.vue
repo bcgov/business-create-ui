@@ -1,5 +1,5 @@
 <template>
- <div>
+  <div>
     <!-- Upload Affidavit -->
     <p>
       Upload the affidavit from the directors.
