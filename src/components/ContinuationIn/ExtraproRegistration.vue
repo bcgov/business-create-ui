@@ -233,7 +233,6 @@
         <!-- Upload Affidavit -->
         <UploadAffidavit
           :business="business"
-          @updateBusiness="updateBusiness"
         />
 
         <!-- message box -->
@@ -611,13 +610,6 @@ export default class ExtraproRegistration extends Mixins(DateMixin, DocumentMixi
         region: ''
       })
     }
-  }
-
-  /**
-   * Called when a Director's Affidavit is uploaded.
-   */
-  updateBusiness (updatedBusiness: any): void {
-    this.business = updatedBusiness
   }
 
   /** Validates the form and other components. */

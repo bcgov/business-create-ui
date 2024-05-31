@@ -66,6 +66,7 @@ export default class UploadAffidavit extends Mixins(DateMixin, DocumentMixin) {
   @Getter(useStore) getShowErrors!: boolean
   @Getter(useStore) isContinuationInAffidavitRequired!: boolean
 
+  // The business is the same object that the parent is working with
   @Prop({ default: null }) readonly business!: ExistingBusinessInfoIF
 
   // Local properties
@@ -108,16 +109,12 @@ export default class UploadAffidavit extends Mixins(DateMixin, DocumentMixin) {
         } as File)
         this.$set(this.business, 'affidavitFileKey', psu.key)
         this.$set(this.business, 'affidavitFileName', file.name)
-        // emit the updated business object
-        this.$emit('updateBusiness', this.business)
       }
     } else {
       // delete properties reactively when the file is cleared
       this.$delete(this.business, 'affidavitFile')
       this.$delete(this.business, 'affidavitFileKey')
       this.$delete(this.business, 'affidavitFileName')
-      // emit the updated business object
-      this.$emit('updateBusiness', this.business)
       // FUTURE: should also delete the file from Minio
     }
   }

@@ -196,13 +196,6 @@
         <!-- Upload Affidavit -->
         <UploadAffidavit
           :business="business"
-          @updateBusiness="updateBusiness"
-        />
-
-        <!-- empty column -->
-        <v-col
-          cols="12"
-          sm="3"
         />
 
         <!-- message box -->
@@ -379,13 +372,6 @@ export default class ManualBusinessInfo extends Mixins(CountriesProvincesMixin, 
         region: ''
       })
     }
-  }
-
-  /**
-   * Called when a Director's Affidavit is uploaded.
-   */
-  updateBusiness (updatedBusiness: any): void {
-    this.business = updatedBusiness
   }
 
   /** Validates the form and other components. */
