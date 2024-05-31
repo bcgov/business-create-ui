@@ -191,8 +191,8 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
 
   /** Called when this component is mounted. */
   mounted (): void {
-    // set or initialize authorization object
-    this.authorization = this.getContinuationAuthorization || { files: [] } as ContinuationAuthorizationIF
+    this.authorization = this.getContinuationAuthorization ||
+      { files: [], date: null, expiryDate: null } as ContinuationAuthorizationIF
   }
 
   /**
@@ -268,10 +268,11 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
   @Watch('authorization', { deep: true })
   @Emit('valid')
   private onComponentValid (): boolean {
-    // first save the authorization to the store
+    // sync local object to the store
     this.setContinuationAuthorization(this.authorization)
 
-    // then emit the validity
+    // this component is valid if we have the authorization date
+    // and at least one file uploaded
     return (
       !!this.authorization.date &&
       (this.authorization.files.length >= 1)
