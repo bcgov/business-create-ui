@@ -421,7 +421,6 @@ import { Rules } from '@/rules'
 import ExtraproBusinessLookup from './ExtraproBusinessLookup.vue'
 import MessageBox from '@/components/common/MessageBox.vue'
 import RegistriesContactInfo from '@/components/common/RegistriesContactInfo.vue'
-import FileUploadPreview from '@/components/common/FileUploadPreview.vue'
 import UploadAffidavit from './UploadAffidavit.vue'
 import { DatePicker as DatePickerShared } from '@bcrs-shared-components/date-picker'
 
@@ -429,7 +428,6 @@ import { DatePicker as DatePickerShared } from '@bcrs-shared-components/date-pic
   components: {
     DatePickerShared,
     ExtraproBusinessLookup,
-    FileUploadPreview,
     GenericErrorDialog,
     Jurisdiction,
     MessageBox,

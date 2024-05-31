@@ -82,7 +82,7 @@ export default class UploadAffidavit extends Mixins(DateMixin, DocumentMixin) {
           return // don't add to list
         }
 
-        // add properties reactively to business object and emit to parent coponent
+        // add properties reactively to business object, it is the same object the parent is working with
         this.$set(this.business, 'affidavitFile', {
           name: file.name,
           lastModified: file.lastModified,

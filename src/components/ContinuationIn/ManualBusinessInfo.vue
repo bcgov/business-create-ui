@@ -260,13 +260,11 @@ import { DatePicker as DatePickerShared } from '@bcrs-shared-components/date-pic
 import { JurisdictionLocation } from '@bcrs-shared-components/enums'
 import { CountriesProvincesMixin } from '@/mixins/'
 import { FormIF } from '@bcrs-shared-components/interfaces'
-import FileUploadPreview from '@/components/common/FileUploadPreview.vue'
 import UploadAffidavit from './UploadAffidavit.vue'
 
 @Component({
   components: {
     DatePickerShared,
-    FileUploadPreview,
     Jurisdiction,
     MessageBox,
     UploadAffidavit
