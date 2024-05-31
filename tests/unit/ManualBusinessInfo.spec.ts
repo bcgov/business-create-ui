@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import { wrapperFactory } from '../vitest-wrapper-factory'
-import ExtraproRegistration from '@/components/ContinuationIn/ExtraproRegistration.vue'
+import ManualBusinessInfo from '@/components/ContinuationIn/ManualBusinessInfo.vue'
 import UploadAffidavit from '@/components/ContinuationIn/UploadAffidavit.vue'
 import { ExistingBusinessInfoIF } from '@/interfaces'
 import { shallowMount } from '@vue/test-utils'
@@ -8,14 +8,14 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
-describe('Extrapro Registration component', () => {
+describe('Manual BusinessInfo component', () => {
   it('renders the component correctly', async () => {
-    const wrapper = wrapperFactory(ExtraproRegistration)
+    const wrapper = wrapperFactory(ManualBusinessInfo)
     await Vue.nextTick()
 
     // verify component main exists
-    expect(wrapper.findComponent(ExtraproRegistration).exists()).toBe(true)
-    expect(wrapper.find('#extrapro-registration').exists()).toBe(true)
+    expect(wrapper.findComponent(ManualBusinessInfo).exists()).toBe(true)
+    expect(wrapper.find('#manual-business-info').exists()).toBe(true)
 
     wrapper.destroy()
   })
@@ -34,7 +34,7 @@ describe('Extrapro Registration component', () => {
       homeIdentifier: '',
       homeIncorporationDate: '',
       homeLegalName: '',
-      mode: 'EXPRO'
+      mode: 'MANUAL'
     }
     const getters = {
       isContinuationInAffidavitRequired: () => true,
